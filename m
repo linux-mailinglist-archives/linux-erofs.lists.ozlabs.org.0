@@ -2,37 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A8652BD40
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 04:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE5402BD42
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 04:32:54 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45CdDJ6bt9zDqHg
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 12:32:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45CdDN29v4zDqL4
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 12:32:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.32; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
- receiver=<UNKNOWN>)
+ (client-ip=45.249.212.191; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45CdD84vvtzDqHL
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 May 2019 12:32:39 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45CdDB4zZ6zDqHL
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 May 2019 12:32:42 +1000 (AEST)
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id 8EADA6FD8AA61A335DF6;
- Tue, 28 May 2019 10:32:34 +0800 (CST)
+ by Forcepoint Email with ESMTP id A01172B9E052B8072D83;
+ Tue, 28 May 2019 10:32:39 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 10:32:27 +0800
+ 2019 10:32:29 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Chao Yu <yuchao0@huawei.com>, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
-Subject: [PATCH 1/2] staging: erofs: support statx
-Date: Tue, 28 May 2019 10:31:46 +0800
-Message-ID: <20190528023147.94117-1-gaoxiang25@huawei.com>
+Subject: [PATCH 2/2] staging: erofs: fix i_blocks calculation
+Date: Tue, 28 May 2019 10:31:47 +0800
+Message-ID: <20190528023147.94117-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528023147.94117-1-gaoxiang25@huawei.com>
+References: <20190528023147.94117-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -54,86 +56,63 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-statx() has already been supported in commit a528d35e8bfc
-("statx: Add a system call to make enhanced file info available"),
-user programs can get more useful attributes.
+For compressed files, i_blocks should not be calculated
+by using i_size. i_u.compressed_blocks is used instead.
+
+In addition, i_blocks is miscalculated for non-compressed
+files previously, fix it as well.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/inode.c    | 18 ++++++++++++++++++
- drivers/staging/erofs/internal.h |  2 ++
- drivers/staging/erofs/namei.c    |  1 +
- 3 files changed, 21 insertions(+)
+ drivers/staging/erofs/inode.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index c7d3b815a798..8da144943ed6 100644
+index 8da144943ed6..b1b790767089 100644
 --- a/drivers/staging/erofs/inode.c
 +++ b/drivers/staging/erofs/inode.c
-@@ -285,7 +285,23 @@ struct inode *erofs_iget(struct super_block *sb,
- 	return inode;
+@@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
+ 	struct erofs_vnode *vi = EROFS_V(inode);
+ 	struct erofs_inode_v1 *v1 = data;
+ 	const unsigned int advise = le16_to_cpu(v1->i_advise);
++	erofs_blk_t nblks = 0;
+ 
+ 	vi->data_mapping_mode = __inode_data_mapping(advise);
+ 
+@@ -60,6 +61,10 @@ static int read_inode(struct inode *inode, void *data)
+ 			le32_to_cpu(v2->i_ctime_nsec);
+ 
+ 		inode->i_size = le64_to_cpu(v2->i_size);
++
++		/* total blocks for compressed files */
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = v2->i_u.compressed_blocks;
+ 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
+ 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+ 
+@@ -90,6 +95,8 @@ static int read_inode(struct inode *inode, void *data)
+ 			sbi->build_time_nsec;
+ 
+ 		inode->i_size = le32_to_cpu(v1->i_size);
++		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
++			nblks = v1->i_u.compressed_blocks;
+ 	} else {
+ 		errln("unsupported on-disk inode version %u of nid %llu",
+ 		      __inode_version(advise), vi->nid);
+@@ -97,8 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+ 		return -EIO;
+ 	}
+ 
+-	/* measure inode.i_blocks as the generic filesystem */
+-	inode->i_blocks = ((inode->i_size - 1) >> 9) + 1;
++	if (!nblks)
++		/* measure inode.i_blocks as generic filesystems */
++		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
++	else
++		inode->i_blocks = nblks >> LOG_SECTORS_PER_BLOCK;
+ 	return 0;
  }
  
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags)
-+{
-+	struct inode *const inode = d_inode(path->dentry);
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+
-+	if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
-+		stat->attributes |= STATX_ATTR_COMPRESSED;
-+
-+	stat->attributes |= STATX_ATTR_IMMUTABLE;
-+
-+	generic_fillattr(inode, stat);
-+	return 0;
-+}
-+
- const struct inode_operations erofs_generic_iops = {
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-@@ -294,6 +310,7 @@ const struct inode_operations erofs_generic_iops = {
- 
- const struct inode_operations erofs_symlink_iops = {
- 	.get_link = page_get_link,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-@@ -302,6 +319,7 @@ const struct inode_operations erofs_symlink_iops = {
- 
- const struct inode_operations erofs_fast_symlink_iops = {
- 	.get_link = simple_get_link,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index c47778b3fabd..911333cdeef4 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -556,6 +556,8 @@ static inline bool is_inode_fast_symlink(struct inode *inode)
- }
- 
- struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid, bool dir);
-+int erofs_getattr(const struct path *path, struct kstat *stat,
-+		  u32 request_mask, unsigned int query_flags);
- 
- /* namei.c */
- extern const struct inode_operations erofs_dir_iops;
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index d8d9dc9dab43..fd3ae78d0ba5 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -247,6 +247,7 @@ static struct dentry *erofs_lookup(struct inode *dir,
- 
- const struct inode_operations erofs_dir_iops = {
- 	.lookup = erofs_lookup,
-+	.getattr = erofs_getattr,
- #ifdef CONFIG_EROFS_FS_XATTR
- 	.listxattr = erofs_listxattr,
- #endif
 -- 
 2.17.1
 
