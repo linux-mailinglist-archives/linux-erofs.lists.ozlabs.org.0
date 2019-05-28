@@ -2,39 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE5402BD42
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 04:32:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 266C22BD58
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 04:37:05 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45CdDN29v4zDqL4
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 12:32:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45CdKB5H3BzDqJC
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2019 12:37:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.191; helo=huawei.com;
+ (client-ip=45.249.212.190; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45CdDB4zZ6zDqHL
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 May 2019 12:32:42 +1000 (AEST)
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id A01172B9E052B8072D83;
- Tue, 28 May 2019 10:32:39 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45CdK64QlczDqJ1
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 May 2019 12:36:58 +1000 (AEST)
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id 7F76DD1DE4B16BE386D3;
+ Tue, 28 May 2019 10:36:53 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 10:32:29 +0800
+ 2019 10:36:46 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Chao Yu <yuchao0@huawei.com>, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
-Subject: [PATCH 2/2] staging: erofs: fix i_blocks calculation
-Date: Tue, 28 May 2019 10:31:47 +0800
-Message-ID: <20190528023147.94117-2-gaoxiang25@huawei.com>
+Subject: [PATCH v2 2/2] staging: erofs: fix i_blocks calculation
+Date: Tue, 28 May 2019 10:36:02 +0800
+Message-ID: <20190528023602.178923-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528023147.94117-1-gaoxiang25@huawei.com>
-References: <20190528023147.94117-1-gaoxiang25@huawei.com>
+In-Reply-To: <20190528023147.94117-2-gaoxiang25@huawei.com>
+References: <20190528023147.94117-2-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -59,16 +59,23 @@ Sender: "Linux-erofs"
 For compressed files, i_blocks should not be calculated
 by using i_size. i_u.compressed_blocks is used instead.
 
-In addition, i_blocks is miscalculated for non-compressed
+In addition, i_blocks was miscalculated for non-compressed
 files previously, fix it as well.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
+change log v2:
+ - fix description in commit message
+ - fix to 'inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK'
+
+Thanks,
+Gao Xiang
+
  drivers/staging/erofs/inode.c | 14 ++++++++++++--
  1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 8da144943ed6..b1b790767089 100644
+index 8da144943ed6..6e67e018784e 100644
 --- a/drivers/staging/erofs/inode.c
 +++ b/drivers/staging/erofs/inode.c
 @@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
@@ -109,7 +116,7 @@ index 8da144943ed6..b1b790767089 100644
 +		/* measure inode.i_blocks as generic filesystems */
 +		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
 +	else
-+		inode->i_blocks = nblks >> LOG_SECTORS_PER_BLOCK;
++		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
  	return 0;
  }
  
