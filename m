@@ -2,71 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF0F8305F7
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 02:52:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60D2D305F8
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 02:52:19 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45FQrq0jYCzDqSt
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 10:52:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45FQrw5ddvzDqTv
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 10:52:16 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1559263931;
-	bh=GtDSntCTlvHcSt/O9HR30VcqAB8gtjl6pEnjkrcnOp8=;
+	s=201707; t=1559263936;
+	bh=GDJnRqugkH//pGRbpbmmiqKU6rOciawMbyQVBhX7glU=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=e7o7D7Mw7D36Vq/rqlM2+l/N4VFYUHj/wRy7ivlIyCeDZ8j2H1IiXyEB53tI1UHtg
-	 tMR3VTYHqfhnlheedU6t3YB8q0j+gYAXpFb9cHG8EwdeML2TPcA6JdBenGFC9V/31r
-	 0AQWH/moHUdkfGnpoqcdnGcerrqiT3t8TqDts7LVAV3DyLPsnZcu1tI+xFC7je+32Y
-	 sTJYiayMU+qZQ414lc2bUBr6xgFtHCukMosAd0D8DYJBbD+3UyZo2+6CVDuCOqT4CZ
-	 RjoXj+gSN5pkMJp8+ZLd0YhkG3i/7qKHRNEN6NxtqQOBuW5+XzQNyWf+ufTaf3SIdS
-	 DtJfDpNCXuV/A==
+	b=aOMY6Ezznrrl1FfDUQ0KBf48AAo/XOWuvtm5wS8+NchSkfinJ+uomD4p4VE6WuQvw
+	 PNq2AKGOr6vZr/1c6GLgMau3WyyQGV4CmNUxtNeMfW1icQBD6r0kJ5dVx7h1Q8Jqpr
+	 UWgp6zkwq7hgYbF411fyVWlj2OYwkv0sTWUgHoe0yNr+BvrT2H0trio6HInFnTOVh0
+	 jbSNKynhGVFEX+XMgyswm0lzGMnBwzIfYqr+AR8mgkMZWPhduQ093y4v7uYgrthXkF
+	 Ru7uuegkJhZukV2bpVJwFfk1pHNAU+oHKo/I8fCttLxJUivbgZbadeRuBwJscpR1Qo
+	 mlqPkwADlKfng==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.83; helo=sonic313-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.148; helo=sonic310-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="K6GM4GcO"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="BYcAls9I"; 
  dkim-atps=neutral
-Received: from sonic313-20.consmr.mail.gq1.yahoo.com
- (sonic313-20.consmr.mail.gq1.yahoo.com [98.137.65.83])
+Received: from sonic310-22.consmr.mail.gq1.yahoo.com
+ (sonic310-22.consmr.mail.gq1.yahoo.com [98.137.69.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45FQrY4dHQzDqV9
- for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2019 10:51:57 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45FQrc0Sd3zDqV3
+ for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2019 10:51:59 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1559263913; bh=qLYab7wcYpgCdA+vDShSs9fOafnkajo1UO3OdS7I44E=;
+ t=1559263918; bh=U9+vf6Os/tMza5y1PDASWfPrfq0VNbS2PdC/Zi4r460=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=K6GM4GcOaArHI4u972GY9n8E02mEyw8oes2BmlqzvOZnDlmgVDyjTlAI1bhRLmChBqE2jaxw3H7hheuoUeTSRZuZAKygs4hfuo1dhYbzJw6U/xXMXv59bUAHkOLe86rCqjSS4ToqnT4MP2MH+CyssAZK1FbZ5mOwLrwU4n4qVP0yAcSYlsqQ3l0iQWfGDe3FliawXjFGgXNXx6ljH4Ab4XrpS6hgxfXSjqPtSRVqSdTL9UGhrZpVEtwjJ9JlCILMVRIHmgUILZj3dDJLOPO/3I+gS5G3OKhcCjcno0gjnl/aI8XD1fOGLyMxBGUBF1+2HfknhebaJBkBG7jKK4gecQ==
-X-YMail-OSG: 4XWujK0VM1l5p1whDOjd2QoH5S.G6Dax9P2EBga6YDd_CsNaA_ic0_LsQLJQGBw
- aTEFCSAy0yLENlhNgsD0NHfo08aPNH01Ds4AP1aietAEpo0Y.zwiqlzDfoYMTGFk2ffHDWiXbwdR
- TaGu5n0WH7BcuAF28Qkd0HOL5ek9ybSheW0DBpFTNIDPOtIp6n9xngfCjmM3iQZBejhTeRTNLt5c
- VXFRNxHtUmZzzzf0aM2XY7KYjC3zDgZp0X5X0Qx492_vRW8ZniW0B70NNNoc_2m2coTn1G57vlk0
- IkyFFkYrITsv_T31fBnkodpD_VB2oly7QA6nmt.QEVIW2lVT5_FlV7Zl1eKnMvVkgE.5WvdLrq_c
- xyeFi0NE.IEdcrFYTA3F5wP_BTYb8V4Exdr_MuvJ1NI2uJa1Vp_yf5CuftkXWyB7YCpios3AjOLR
- EuJwtKnwJIZscpK871.dFGqXsaNht6F2cyhk5TvAZPKlZFwzTYg1FLSOec.otyKofCtz933WgVnj
- ggg4zCkw1C0oIi16.bIRw52BBUYpI_SlncmtcEdvEo8lSymQs1ScHDlZJaSQC0Jyv17uqO90iJ19
- XWbjvETZI6cJ.._tmjkjC7OEmHwIvF.gm8dYz3KXmLDdueBRkXE4VSVemiOK9gnZXKnCGZjlzjDD
- KriRm95C6OGdqWkot9jpPoHMcTH8eeUD45U4ahF6Ex0BuUWAaZ5AkOWUWaXgfrFKWNHSA9HP3D8L
- _as5w0Zul2.7tGMkS0Y_QpX27JVz7Jlnqd8Zf0D7S7b8_ykk12vANtmxDJccPudDLNsUXWtmQ3D9
- p0h3g5.MYsx5j3LbjKJZVK0x2gOgycAJWDKf4yQ6ImhagpEN.TqUSBxgLHKh5Wol60txFsfhxQuU
- wbvTJDDAJhrT0S0X2AM5b7P9_YQhv8gAJlXJ71lBvmVUnNLzKFTaPCbsOKrgSbR8tFUwbcCshg73
- oIxTzqTup7kpWkO8GBiz0mYconettsk0flOEqW4BcAALZOggeEkxPZ875d8JgiMOlbmJJd5lce21
- uZvX6fV9UeeEQSzPC9elSK7WSsdM6TAu7eXGkQR9VYaxlxryPjmhFh1.digbbkhESBvRyqcJkem2
- UyLAlT3GpODn3DwgVu2ibH534UbWGhLyn7R2SOD2xWTAhvv3CQQaA41xbA0MRX0JMbbT3MnuxuGd
- uqrCxJ8HC8S0gWZ8PvfqpH9BneRWDyE9QjLHaaplsA7gfIYuZn.KzoA_dcTU-
+ b=BYcAls9IuGuB7maI3JIuPWqb0SqOvCGr4scrlyieK2zv3mfvEUEUyzlYgOGdcZMPnfusvdOaxvTTALHhcocJ7w0Xk38XBhG05g/JXyJBF6sBBdJTnOz0FioETwhHkzLw67/nh4edaB7ycF0DVGMSnp7bqwoubUOpRu1Cxp4iGgwGbisW2SzY+U3U+wlJXJb1wnq+NEpWFAe28qG3frdv4r5N1NiS/qiROV7QQN2bX9YeWIX0FRxQbGxHFG/BpS6MkLedTTXZHRFI6opDjXi8XLFoC2uEe0yp0+oXasgNNdSVzdMocj263vQiYbye+UCC53ZMkTrpRLLxPcBgVnWtBQ==
+X-YMail-OSG: Dq2_3Q0VM1lisZ.bWiDWRXf5x0gp38iAHAaiWmT8edL7PhC9yMfT.9gpaR3lTUV
+ Lles4viydVXbmG3u8OVu3k_fPUeFkQvzaBQeV2zVbHregKi7J4ebrEhR74tDieQwDs4GiKdZpYG2
+ cw6EHUWH_7OOvv4XrcS1JDsqXgPlsGsodk4akDRxMO7WL5RYDfFIJnssEInwxquHqO9GQFXCYjL5
+ w_8BoRsjqxZSwD9_z6_xeUgUMGddR8Xqnd8Ds3Qr60.Hw.4aNa2fObRS7BHt0nE7Zh94o.r2yrkG
+ yA3b4c8xu5wYm8JZBq4dwV1047eHrulneDJEfqr.o1yLhkfatD1gs4kvlOu61jjUZNcFI93Mf.7i
+ 1zL3iySyTNrFC1Gq_vrihlVqUJvuPthILzYiLSXYxqY8N6iGjZT1NY4q4K7vK7JsfJe0LWVgy8dT
+ L6TJ5oJ5ZE74C_nO7xYzgDG7ezbWm03aavgEWnQ6FF6nNjjPwTj5WRwPtNvazX0RC.cMG43LCA3i
+ SPDI6JBllqPWkDfSw3g5XeDYyHHWr22YKMQ7b_xTrl5rO5XuHSKDp3nUynQ.PUb364tugPX6rKyo
+ 5WzRcBoFQtYoWD556m57sEn0sY1mNYnv.dCPrxmN6Z6poN7P3v7Z4GzMEPwS5KOYxHhUtM5u4PX4
+ 6_3Qju_J_.KP12tkm77MasXucsyWT_63ZCPQYKbxBLNgAn54JVb4POjiChjAUIpCOmoKgZCLyWDA
+ jQblQbUP5U5XvhnKZbIpNN2itkUhrWzBHyQeGzUq_RcgoAiVGE_W6v4Z01aH.KXZbEBc2VPfIFpB
+ OcG1_1f_0oOWS4CNZinFExqrCHoNfGTXhDqDDYg_ZtYc3XgCyqDcPmOrj6Bq4sBRxosRtQHYOouA
+ Xr7EnJb1XyA9kprETyNSjUvB_Jvbv9RZwKpRkZsE.gjerCetzcqbWwOhLBC10kmMbJjeHSK2RkQE
+ dgieht2meNO5Rn.5Ppcn_IgeQvrtkq.yB4F6M0GT8.L2Ebjv1ft9e_Y9wn3FMOKAdarK5_ZmyCfC
+ F4RUf4vw6ewrNaOM_4ZiY4wDw0TObmgL4Mvs4EB_wbrgj7C69P4O5VG50hR.TlZFhJx8_Oq4UNrd
+ s23gm6KK0vB7_XEM66JHFmvDlaNMZp6RxnkIOL3Ue.KTAebKRw1BWu5ssH3Rbbt5vGB7Z3rAgK2G
+ c7ExinLVaYlAUIUi3QQ7bO2eTf1wCBzcHe0pDqC2wHKlzi41fEWfnNKapEg--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Fri, 31 May 2019 00:51:53 +0000
+ sonic310.consmr.mail.gq1.yahoo.com with HTTP; Fri, 31 May 2019 00:51:58 +0000
 Received: from 125.120.86.223 (EHLO localhost.localdomain) ([125.120.86.223])
  by smtp417.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
  ID a9e989b6e54ef4fb7ecb5a20a6091749; 
- Fri, 31 May 2019 00:51:53 +0000 (UTC)
+ Fri, 31 May 2019 00:51:55 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 11/13] erofs-utils: propagate compressed size to its callers
-Date: Fri, 31 May 2019 08:50:45 +0800
-Message-Id: <20190531005047.22093-12-hsiangkao@aol.com>
+Subject: [PATCH 12/13] erofs-utils: add a README
+Date: Fri, 31 May 2019 08:50:46 +0800
+Message-Id: <20190531005047.22093-13-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190531005047.22093-1-hsiangkao@aol.com>
 References: <20190531005047.22093-1-hsiangkao@aol.com>
@@ -89,76 +89,31 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-It will be later used for marking whether it can
-decompress in-place.
+This patch adds a README and some warnings here.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- lib/compress.c         | 2 +-
- lib/compressor.c       | 4 ++--
- lib/compressor_lz4.c   | 2 +-
- lib/compressor_lz4hc.c | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ README | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 README
 
-diff --git a/lib/compress.c b/lib/compress.c
-index 205a4f2..7bfb8ce 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -131,7 +131,7 @@ static int vle_compress_one(struct erofs_inode *inode,
- 		ret = erofs_compress_destsize(h, compressionlevel,
- 					      ctx->queue + ctx->head,
- 					      &count, dst, EROFS_BLKSIZ);
--		if (ret) {
-+		if (ret <= 0) {
- 			if (ret != -EAGAIN) {
- 				erofs_err("failed to compress %s: %s",
- 					  inode->i_srcpath,
-diff --git a/lib/compressor.c b/lib/compressor.c
-index a6138c6..570db14 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -26,13 +26,13 @@ int erofs_compress_destsize(struct erofs_compress *c,
- 
- 	ret = c->alg->compress_destsize(c, compression_level,
- 					src, srcsize, dst, dstsize);
--	if (ret)
-+	if (ret < 0)
- 		return ret;
- 
- 	/* check if there is enough gains to compress */
- 	if (*srcsize <= dstsize * c->compress_threshold / 100)
- 		return -EAGAIN;
--	return 0;
-+	return ret;
- }
- 
- int erofs_compressor_init(struct erofs_compress *c,
-diff --git a/lib/compressor_lz4.c b/lib/compressor_lz4.c
-index eacd21c..0d33223 100644
---- a/lib/compressor_lz4.c
-+++ b/lib/compressor_lz4.c
-@@ -21,7 +21,7 @@ static int lz4_compress_destsize(struct erofs_compress *c,
- 	if (!rc)
- 		return -EFAULT;
- 	*srcsize = srcSize;
--	return 0;
-+	return rc;
- }
- 
- static int compressor_lz4_exit(struct erofs_compress *c)
-diff --git a/lib/compressor_lz4hc.c b/lib/compressor_lz4hc.c
-index 3bbb754..d9413e2 100644
---- a/lib/compressor_lz4hc.c
-+++ b/lib/compressor_lz4hc.c
-@@ -25,7 +25,7 @@ static int lz4hc_compress_destsize(struct erofs_compress *c,
- 	if (!rc)
- 		return -EFAULT;
- 	*srcsize = srcSize;
--	return 0;
-+	return rc;
- }
- 
- static int compressor_lz4hc_exit(struct erofs_compress *c)
+diff --git a/README b/README
+new file mode 100644
+index 0000000..4d509be
+--- /dev/null
++++ b/README
+@@ -0,0 +1,11 @@
++
++The new erofs-utils introduces a completely new framework,
++which is more cleaner but still under development for now.
++
++Use the old the mkfs-dev branch of erofs-utils temporarily
++to build erofs image instead:
++git clone git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b mkfs-dev
++
++Thanks,
++Gao Xiang
++
 -- 
 2.17.1
 
