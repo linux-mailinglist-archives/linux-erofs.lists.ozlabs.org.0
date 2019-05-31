@@ -2,71 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F83A305E8
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 02:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D0C48305EC
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 02:51:46 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45FQqx6PmSzDqT7
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 10:51:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45FQrJ2vhvzDqTL
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2019 10:51:44 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1559263885;
-	bh=oOufX2D/RKwc8WFQm7oaUVUaa9RAx0/Tq6CY90yTmVY=;
+	s=201707; t=1559263904;
+	bh=3dbT3qqm5Otr4+n7HOaMIes714dptL0JPALfT94KC5s=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=CMfNYiCzx+hsVtWvrxEfhYS5EDzxW2LYstuQpVntFQEtGiIBLTyUZ1550d8b13kWc
-	 S+thXBT+gMiB+oxBLEovi88kOUFSyInNonMb9l7Iu/4dEF2+S1OmBKEvL0iu7iPoml
-	 3miUk4dxYSHZBMp8XZRC/N/+3mI7uoWzFp6oZ3Ve6PVgpwWErzgHMBz5jOJys2fjAb
-	 gfVkT5qOGRlZKL7V6vGNHBzCoGVoHuQv95phn48W7uTiqN5BsBaZXm+s/pU+26LzaW
-	 hODnOGhyYTT2g+th+w82r7bXkszO83oYMZu8FSKAQpJP6kFSMuPwpInE+ohyVK3OLK
-	 4aFI+V7GmmZ3g==
+	b=FDYIwRpkF9kKLGN3cjJw/JJGS7vkwZO7kStOZk/xCo8WVMCvaVbow6igt9YRLDSVP
+	 HRP8vexJEtRwBh0t485ss1zDZB+8uekGKyBvKXavaDSzAE/sB3DcdZoB9Z1YBa+Kvw
+	 G2VPYvGKn1MsQoyN/ycMsnEKrXXMFZyPBxONXFm/snKBZvnMjSzIGgi4U0c1j3uSsE
+	 qSlAytKw7FTHmdwU815CuVmrAf/GkXFKs3cwVbeS4PdQz26nJRw0UCA7w7lvYjLMpo
+	 2Ua+cQPlTkt9qrlMIKqpxRhmN1dNjZSiMA7Y8JfNbwDQefz4cUUf2g9ZMeFh5aZBdz
+	 CXFEJln7apu1Q==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.31; helo=sonic315-55.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.148; helo=sonic310-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="TTMBVFmq"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="lCXLlt84"; 
  dkim-atps=neutral
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com
- (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
+Received: from sonic310-22.consmr.mail.gq1.yahoo.com
+ (sonic310-22.consmr.mail.gq1.yahoo.com [98.137.69.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45FQqn70QyzDqSw
- for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2019 10:51:17 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45FQqv178YzDqSt
+ for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2019 10:51:22 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1559263874; bh=tLTFrJcCquG8Uoj5YWqPnxRfFIVId5aKlTmRLxs8iI0=;
+ t=1559263878; bh=H6QMh1j1va8UU4ELfny1cw1jls3BghbO1Qw05W8idJE=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=TTMBVFmqfXUyFzAeByXapjIo9GpipppoBVweGoPKWvsQ2lcliHBycVqQeDt1W6GyyAbZzPdFUxMipIZfsOcC9sAjFdBUMyAui9uaICJPNuBwaknDVknhs+W6FzcN0Q+TesRVilSv4d89XtvWuBIH3utRs7A+UH/1j395oMuqdRqXsmvOghRl2Hr7CIlRAO57rPNbqgTUu4FA0uvTx/9c56gLfMQVzUC0M0wRi+tSXiuV7ZjPdqjrGgvUjXm05udTtQgKXzbQTWDTdE+TBiFzPZb8AkfBBVD99XJGQ5HhMnRk1XStXxq/VYqTtKHePQsVdi1t/eorYO3l7Ar3Zq7Uyw==
-X-YMail-OSG: 9zZG1xMVM1mjkJR5y8ulGYqF2tMH3WggjfhYy60XJKQ9eftgw4rG94Io7R6XBmW
- VlI4yFASX3N7HEVj.F2qR_eVc1Te7zvvSwcC6.3mnEnayVD3qnG1d7foaJKUGRwwQmcDOPQYOQwj
- bS4ea3LAkxStE2_AVx7dPUut6eZEuGuZ3_Ub9gWoBwWhDHio5FKT0yziOFYzDqqn2LhIyToD.3yT
- NZKs1.Kv1THRRZapRLp1zuNDvCazXBIS08YYs42qdRrTC6ebCj3S7yLAmm1_ABPx4H2_y2RmiLGh
- JNfqEsfszsWG.LQijFaL0nr92BtKJwnDvxTdLuOvW85GXbKjW1TbatZgI4yfBir_vRcx.FiqrXMR
- nT_CULzj3W3by.wfhEJTdy2KBbuCxvaKu8CL2MC8.FW3g6bMQH6GsWrmGtpW3zdV8siEWkMMGYql
- 6OprYaDRs_CzkqBMCLPiYRUJEQcjNWoKE0_1nOpygVoXZ3WY3Q1BHfYuln.h5GyZmddkE.hlKtPp
- gZ3VNwjeRzlTBios2Vsw0GOh3Nx4VTcE_E4quu4vc3pFQxXsLmw.x50vl2HzWP0axlP.qcZ2rOT1
- wiZvSZKU0Gs1Yi8NgmNF9KoHu2q_ACfTe5Gw_yoZNEFr9NDHFyuJFmx3yFSFakcfhxGXRtdhrK9Y
- 1mw2z4eaKKjtDjiHeLNe9zEeXFMfgqngsNIu0q2gvCapxjjGR9eeJjvipX9zZNnAVzp5Yf7ZnVsm
- 64OGVPVtgnmLQBj.9VS3NbAG85cwSv3iq3JtYxQ9VftaQDmZFO7FSDarwyswW3glI2u33vt6flqI
- .sG8lEi0N0fvN6vtQnZe4mPqKNvDbL4ieE3tcpJlSTW7bQWgWdyU3snD1VEWCnf9f89W8hc7aIjr
- l59x2EXAqEWpj0htURiNbzfqlNBbxiYLis3LR8GwjfXbv3OoGEadG_V5vWS_WuaoUdmgd42sHiJg
- P3SjaGspmyhdwbdYiV3S1F3YIjnpytYk4cC.QOA5mPZrKhfiZIrGYeu2MuG.F_AJC9S7mcRM_8Rp
- 96s7fWpqI.tpPD6OoBbna.XgtAfTYi0KyKOvLEiJJwOH8VrKM9g6wt0YMkX27iOpXckkYVo1HVgE
- oBPh0dqCmu_eGzP1c76JAfgKM4gGL5JiLBkfPbAgpDkaRTkARyoKTXRvNjytVGYFTjoKiaD_3NKu
- t5sarBYiQQcmm2O6g1W0Xk_dICwZ8MmR6I2_vdZ5DgEkqXgHf2Df9IgCPn23HyLLPRVE-
+ b=lCXLlt84JSVtJmH/QEyfMolBjiuyovh/HiQFVnYNe4lgDUkAPRwRInINJyVpf8EwGC7wWCOXmKVgjsIH5oh/xl5F8qdOyLvWpv+BDuNLn8L6aM6cXD2AsobByYvT5K7XfmTPZu9KPeI7EXUvf1cip5OzciPkpkmXr/Ay1JKq6f2ySp30qObpxAreKYud5Ky7xusTjobnD34Z0brhgoA9B7g2+y5nMzeUAchBY6TLdgzTPBgKnkZ0JNMAe5uvDszQwRuGjMF060LaLpzYofJ8arZh1e9dQ45rOXEGBAteT7/y7bOsvpEqpQiydD8gB66Uj8ySoHEcoIEwCTa4pKV8Lw==
+X-YMail-OSG: eZKfdJMVM1mciQY1UjyPAv6yYIIsqNALLxyf9VmM1ynxzO8cAhzTrPavUX.rpOt
+ 9dRuKcIe78xlKqPcQgIOuuMHS11f_DReOI3bUQ_mw94USZKcEjk_jBqTa8hZ4_c_jeOL8wkToEB1
+ o_7h7sF.FKCrhkUuc6weeJrcgjHoeWTPYu5.XfO3KN468fwuyeLPp5eaKKwEiPLN8WcRHX6avC8P
+ G.6zyfasMOdLPwvZ_Yj.U444frs6IVUzfFWQf8__PWoxMlS0_RcHbhT5Jn5J1vbLy27b328DN59j
+ rqjxH9SwxdfAw18l33NcngAllYRH5Kx0f0g_INGoEHs89m5tCEv7m4V_II7P5DlEHMd3xRaaBf5O
+ bxxeoTaZYr_Q8OcG8A9Pvku8OKqPN4t2PoNCSiE.dIDcNfj6mC0E19v16yEMY3vcaT.niTI1HGjg
+ e8k0.TOyFbp.TvTIkOQT7hidI329yEFYmvBBkwb9Eal2947EsGyi2oCrg28gXc3bo2xasScs84gd
+ Upiuxnk2rctAcTjQvV_0ka.TbKsaNPoQs2In6MZSNSK2CEX_wr9uxsRtlNrKBqo8g7QxG7AupIqZ
+ xPh4oioK6c5ZTzdD5Ncpgp0KD4JWy7DRTMd2LaP5bkPJP2IflCm9w.DgOpJAKJmVzsJMhCq_exSY
+ 2NvO1E7I8CFOIcLmCL6PbKjccaRvqsei1ZcN4eKQIqS2NeuuMW.vMwKRqlnoOuBuiK6JtMYDdyDu
+ R2N8YpM8Y5Mm3GT.36iOxV9DaP6ik1ZlNIMQJrd.XxhDHSNm3omnWFXqdTz_dA4_JrstvjUFgNyu
+ Zzf08lCrm4RRjIVFBvdi_p4sZJq4sLg0dEUf4aTLoaPtSo406TmvwyvyLkAE_z37Zba4.OvJzn7i
+ dVLtn8IeIPSDWM_dOEFImZ40gOY90651cluaSU_fVX7lS7eIvnFKioEh.jYKbdouIJCWk7SfptBl
+ GX2yWr3e7VWyEv_OzNIGQMZONsPCm3bmTXE3YfvTdVmfFqI1fybRwzIE.oLigZAOMLDBfndWo8NF
+ weWkL8AJOvwHFPgJfmCZpZvMdrN1CfKSoVCB3JNAJxpcONYLn0xhxIK3LJYPiMgMfWlVVU7yYjYv
+ CU.3FJuRuDT5ap.4EIXtBazsVSRVQfh2uT7CFLwxW.e5OMRZ5KF8YvLnoGBipRbLbLBOXoLnA3Lj
+ hH1qlZ8YrxbqHNmNpaFvO3jIYSjKSj3MFN31vAvEzz9b_qbXMwT2gtPzOz0rhq.VzyQ--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Fri, 31 May 2019 00:51:14 +0000
+ sonic310.consmr.mail.gq1.yahoo.com with HTTP; Fri, 31 May 2019 00:51:18 +0000
 Received: from 125.120.86.223 (EHLO localhost.localdomain) ([125.120.86.223])
  by smtp417.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
  ID a9e989b6e54ef4fb7ecb5a20a6091749; 
- Fri, 31 May 2019 00:51:14 +0000 (UTC)
+ Fri, 31 May 2019 00:51:17 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 03/13] erofs-utils: introduce miscellaneous files
-Date: Fri, 31 May 2019 08:50:37 +0800
-Message-Id: <20190531005047.22093-4-hsiangkao@aol.com>
+Subject: [PATCH 04/13] erofs-utils: add input/output functions
+Date: Fri, 31 May 2019 08:50:38 +0800
+Message-Id: <20190531005047.22093-5-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190531005047.22093-1-hsiangkao@aol.com>
 References: <20190531005047.22093-1-hsiangkao@aol.com>
@@ -90,379 +90,201 @@ Sender: "Linux-erofs"
 
 From: Li Guifu <bluce.liguifu@huawei.com>
 
-This patch introduces a global configuration scheme, some
-functions which can print messages in different level,
-build scripts and .gitignore file.
+This patch adds definitions and functions which are
+mainly used for reading and writing target image files.
 
 Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
 Signed-off-by: Miao Xie <miaoxie@huawei.com>
 Signed-off-by: Fang Wei <fangwei1@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- .gitignore             |  25 ++++++++++
- Makefile.am            |   6 +++
- VERSION                |   2 +
- autogen.sh             |   9 ++++
- configure.ac           | 107 +++++++++++++++++++++++++++++++++++++++++
- include/erofs/config.h |  31 ++++++++++++
- include/erofs/print.h  |  67 ++++++++++++++++++++++++++
- lib/Makefile.am        |   7 +++
- lib/config.c           |  36 ++++++++++++++
- 9 files changed, 290 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 Makefile.am
- create mode 100644 VERSION
- create mode 100755 autogen.sh
- create mode 100644 configure.ac
- create mode 100644 include/erofs/config.h
- create mode 100644 include/erofs/print.h
- create mode 100644 lib/Makefile.am
- create mode 100644 lib/config.c
+ include/erofs/io.h |  33 ++++++++++++
+ lib/Makefile.am    |   2 +-
+ lib/io.c           | 123 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 157 insertions(+), 1 deletion(-)
+ create mode 100644 include/erofs/io.h
+ create mode 100644 lib/io.c
 
-diff --git a/.gitignore b/.gitignore
+diff --git a/include/erofs/io.h b/include/erofs/io.h
 new file mode 100644
-index 0000000..3a39a1e
+index 0000000..9471388
 --- /dev/null
-+++ b/.gitignore
-@@ -0,0 +1,25 @@
-+.*
-+*~
-+*.diff
-+*.o
-+*.la
-+*.a
-+*.patch
-+*.rej
-+
-+#
-+# Generated files
-+#
-+aclocal.m4
-+autom4te.cache
-+config.*
-+Makefile
-+Makefile.in
-+config/
-+m4/
-+configure
-+configure.scan
-+libtool
-+stamp-h
-+stamp-h1
-+
-diff --git a/Makefile.am b/Makefile.am
-new file mode 100644
-index 0000000..ee5fd92
---- /dev/null
-+++ b/Makefile.am
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+ACLOCAL_AMFLAGS = -I m4
-+
-+SUBDIRS=lib
-diff --git a/VERSION b/VERSION
-new file mode 100644
-index 0000000..a27f297
---- /dev/null
-+++ b/VERSION
-@@ -0,0 +1,2 @@
-+0.1
-+2019-04-20
-diff --git a/autogen.sh b/autogen.sh
-new file mode 100755
-index 0000000..fdda7e1
---- /dev/null
-+++ b/autogen.sh
-@@ -0,0 +1,9 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+aclocal && \
-+autoheader && \
-+autoconf && \
-+libtoolize && \
-+automake -a -c
-+
-diff --git a/configure.ac b/configure.ac
-new file mode 100644
-index 0000000..9c6d8bb
---- /dev/null
-+++ b/configure.ac
-@@ -0,0 +1,107 @@
-+#                                               -*- Autoconf -*-
-+# Process this file with autoconf to produce a configure script.
-+
-+AC_PREREQ([2.69])
-+
-+m4_define([erofs_utils_version], m4_esyscmd([sed -n '1p' VERSION | tr -d '\n']))
-+m4_define([erofs_utils_date], m4_esyscmd([sed -n '2p' VERSION | tr -d '\n']))
-+
-+AC_INIT([erofs-utils], [erofs_utils_version], [linux-erofs@lists.ozlabs.org])
-+AC_CONFIG_SRCDIR([config.h.in])
-+AC_CONFIG_HEADERS([config.h])
-+AC_CONFIG_MACRO_DIR([m4])
-+AC_CONFIG_AUX_DIR(config)
-+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
-+
-+# Checks for programs.
-+AM_PROG_AR
-+AC_PROG_CC
-+AC_PROG_INSTALL
-+
-+LT_INIT
-+
-+dnl EROFS_UTILS_PARSE_DIRECTORY
-+dnl Input:  $1 = a string to a relative or absolute directory
-+dnl Output: $2 = the variable to set with the absolute directory
-+AC_DEFUN([EROFS_UTILS_PARSE_DIRECTORY],
-+[
-+ dnl Check if argument is a directory
-+ if test -d $1 ; then
-+    dnl Get the absolute path of the directory
-+    dnl in case of relative directory.
-+    dnl If realpath is not a valid command,
-+    dnl an error is produced and we keep the given path.
-+    local_tmp=`realpath $1 2>/dev/null`
-+    if test "$local_tmp" != "" ; then
-+       if test -d "$local_tmp" ; then
-+           $2="$local_tmp"
-+       else
-+           $2=$1
-+       fi
-+    else
-+       $2=$1
-+    fi
-+    dnl Check for space in the directory
-+    if test `echo $1|cut -d' ' -f1` != $1 ; then
-+        AC_MSG_ERROR($1 directory shall not contain any space.)
-+    fi
-+ else
-+    AC_MSG_ERROR($1 shall be a valid directory)
-+ fi
-+])
-+
-+# Checks for libraries.
-+
-+# Checks for header files.
-+AC_CHECK_HEADERS(m4_flatten([
-+	dirent.h
-+	fcntl.h
-+	inttypes.h
-+	linux/types.h
-+	limits.h
-+	stddef.h
-+	stdint.h
-+	stdlib.h
-+	string.h
-+	sys/stat.h
-+	sys/time.h
-+	unistd.h
-+]))
-+
-+# Checks for typedefs, structures, and compiler characteristics.
-+AC_C_INLINE
-+AC_TYPE_INT64_T
-+AC_TYPE_SIZE_T
-+AC_TYPE_SSIZE_T
-+AC_CHECK_MEMBERS([struct stat.st_rdev])
-+AC_TYPE_UINT64_T
-+
-+#
-+# Check to see if llseek() is declared in unistd.h.  On some libc's
-+# it is, and on others it isn't..... Thank you glibc developers....
-+#
-+AC_CHECK_DECL(llseek,
-+  [AC_DEFINE(HAVE_LLSEEK_PROTOTYPE, 1,
-+    [Define to 1 if llseek declared in unistd.h])],,
-+  [#include <unistd.h>])
-+
-+#
-+# Check to see if lseek64() is declared in unistd.h.  Glibc's header files
-+# are so convoluted that I can't tell whether it will always be defined,
-+# and if it isn't defined while lseek64 is defined in the library,
-+# disaster will strike.
-+#
-+# Warning!  Use of --enable-gcc-wall may throw off this test.
-+#
-+AC_CHECK_DECL(lseek64,[AC_DEFINE(HAVE_LSEEK64_PROTOTYPE, 1,
-+  [Define to 1 if lseek64 declared in unistd.h])],,
-+  [#define _LARGEFILE_SOURCE
-+   #define _LARGEFILE64_SOURCE
-+   #include <unistd.h>])
-+
-+# Checks for library functions.
-+AC_CHECK_FUNCS([gettimeofday memset realpath strdup strerror strrchr strtoull])
-+
-+AC_CONFIG_FILES([Makefile
-+		 lib/Makefile])
-+AC_OUTPUT
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-new file mode 100644
-index 0000000..e31732b
---- /dev/null
-+++ b/include/erofs/config.h
-@@ -0,0 +1,31 @@
++++ b/include/erofs/io.h
+@@ -0,0 +1,33 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
-+ * erofs_utils/include/erofs/config.h
++ * erofs_utils/include/erofs/io.h
 + *
 + * Copyright (C) 2018-2019 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Li Guifu <bluce.liguifu@huawei.com>
 + */
-+#ifndef __EROFS_CONFIG_H
-+#define __EROFS_CONFIG_H
++#ifndef __EROFS_IO_H
++#define __EROFS_IO_H
 +
-+#include "defs.h"
++#include <unistd.h>
++#include "internal.h"
 +
-+struct erofs_configure {
-+	const char *c_version;
-+	int c_dbg_lvl;
-+	bool c_dry_run;
-+
-+	/* related arguments for mkfs.erofs */
-+	char *c_img_path;
-+	char *c_src_path;
-+};
-+
-+extern struct erofs_configure cfg;
-+
-+void erofs_init_configure(void);
-+void erofs_show_config(void);
-+void erofs_exit_configure(void);
-+
++#ifndef O_BINARY
++#define O_BINARY	0
 +#endif
 +
-diff --git a/include/erofs/print.h b/include/erofs/print.h
-new file mode 100644
-index 0000000..bc0b8d4
---- /dev/null
-+++ b/include/erofs/print.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * erofs_utils/include/erofs/print.h
-+ *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Li Guifu <bluce.liguifu@huawei.com>
-+ */
-+#ifndef __EROFS_PRINT_H
-+#define __EROFS_PRINT_H
++int dev_open(const char *devname);
++void dev_close(void);
++int dev_write(const void *buf, u64 offset, size_t len);
++int dev_fsync(void);
++u64 dev_length(void);
 +
-+#include "config.h"
-+#include <stdio.h>
-+
-+#define FUNC_LINE_FMT "%s() Line[%d] "
-+
-+#ifndef pr_fmt
-+#define pr_fmt(fmt) "EROFS: " FUNC_LINE_FMT fmt "\n"
-+#endif
-+
-+#define erofs_dbg(fmt, ...) do {				\
-+	if (cfg.c_dbg_lvl >= 7) {				\
-+		fprintf(stdout,					\
-+			pr_fmt(fmt),				\
-+			__func__,				\
-+			__LINE__,				\
-+			##__VA_ARGS__);				\
-+	}							\
-+} while (0)
-+
-+#define erofs_info(fmt, ...) do {				\
-+	if (cfg.c_dbg_lvl >= 3) {				\
-+		fprintf(stdout,					\
-+			pr_fmt(fmt),				\
-+			__func__,				\
-+			__LINE__,				\
-+			##__VA_ARGS__);				\
-+		fflush(stdout);					\
-+	}							\
-+} while (0)
-+
-+#define erofs_warn(fmt, ...) do {				\
-+	if (cfg.c_dbg_lvl >= 2) {				\
-+		fprintf(stdout,					\
-+			pr_fmt(fmt),				\
-+			__func__,				\
-+			__LINE__,				\
-+			##__VA_ARGS__);				\
-+		fflush(stdout);					\
-+	}							\
-+} while (0)
-+
-+#define erofs_err(fmt, ...) do {				\
-+	if (cfg.c_dbg_lvl >= 0) {				\
-+		fprintf(stderr,					\
-+			"Err: " pr_fmt(fmt),			\
-+			__func__,				\
-+			__LINE__,				\
-+			##__VA_ARGS__);				\
-+	}							\
-+} while (0)
-+
-+#define erofs_dump(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
-+
++static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
++			    u32 nblocks)
++{
++	return dev_write(buf, blknr_to_addr(blkaddr),
++			 blknr_to_addr(nblocks));
++}
 +
 +#endif
 +
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-new file mode 100644
-index 0000000..6f1da26
---- /dev/null
+index 6f1da26..a2c1b24 100644
+--- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+noinst_LTLIBRARIES = liberofs.la
-+liberofs_la_SOURCES = config.c
-+liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
-+
-diff --git a/lib/config.c b/lib/config.c
+@@ -2,6 +2,6 @@
+ # Makefile.am
+ 
+ noinst_LTLIBRARIES = liberofs.la
+-liberofs_la_SOURCES = config.c
++liberofs_la_SOURCES = config.c io.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ 
+diff --git a/lib/io.c b/lib/io.c
 new file mode 100644
-index 0000000..6ff8e4d
+index 0000000..f624535
 --- /dev/null
-+++ b/lib/config.c
-@@ -0,0 +1,36 @@
++++ b/lib/io.c
+@@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * erofs_utils/lib/config.c
++ * erofs_utils/lib/io.c
 + *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
++ * Copyright (C) 2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Li Guifu <bluce.liguifu@huawei.com>
 + */
-+#include <string.h>
++#define _LARGEFILE64_SOURCE
++#include <sys/stat.h>
++#include "erofs/io.h"
++
++#define pr_fmt(fmt) "EROFS IO: " FUNC_LINE_FMT fmt "\n"
 +#include "erofs/print.h"
 +
-+struct erofs_configure cfg;
++static const char *erofs_devname;
++static int erofs_devfd = -1;
++static u64 erofs_devsz;
 +
-+void erofs_init_configure(void)
++void dev_close(void)
 +{
-+	memset(&cfg, 0, sizeof(cfg));
-+
-+	cfg.c_dbg_lvl  = 0;
-+	cfg.c_version  = PACKAGE_VERSION;
-+	cfg.c_dry_run  = false;
++	close(erofs_devfd);
++	erofs_devname = NULL;
++	erofs_devfd   = -1;
++	erofs_devsz   = 0;
 +}
 +
-+void erofs_show_config(void)
++int dev_open(const char *dev)
 +{
-+	const struct erofs_configure *c = &cfg;
++	struct stat st;
++	int fd, ret;
 +
-+	erofs_dump("\tc_version:           [%8s]\n", c->c_version);
-+	erofs_dump("\tc_dbg_lvl:           [%8d]\n", c->c_dbg_lvl);
-+	erofs_dump("\tc_dry_run:           [%8d]\n", c->c_dry_run);
++	fd = open(dev, O_RDWR | O_CREAT | O_BINARY, 0644);
++	if (fd < 0) {
++		erofs_err("failed to open(%s).", dev);
++		return -errno;
++	}
++
++	ret = fstat(fd, &st);
++	if (ret) {
++		erofs_err("failed to fstat(%s).", dev);
++		close(fd);
++		return -errno;
++	}
++
++	switch (st.st_mode & S_IFMT) {
++	case S_IFBLK:
++		erofs_devsz = st.st_size;
++		break;
++	case S_IFREG:
++		ret = ftruncate(fd, 0);
++		if (ret) {
++			erofs_err("failed to ftruncate(%s).", dev);
++			close(fd);
++			return -errno;
++		}
++		/* INT64_MAX is the limit of kernel vfs */
++		erofs_devsz = INT64_MAX;
++		break;
++	default:
++		erofs_err("bad file type (%s, %o).", dev, st.st_mode);
++		close(fd);
++		return -EINVAL;
++	}
++
++	erofs_devname = dev;
++	erofs_devfd = fd;
++	erofs_devsz = round_down(erofs_devsz, EROFS_BLKSIZ);
++
++	erofs_info("successfully to open %s", dev);
++	return 0;
 +}
 +
-+void erofs_exit_configure(void)
++u64 dev_length(void)
 +{
-+
++	return erofs_devsz;
 +}
 +
++int dev_write(const void *buf, u64 offset, size_t len)
++{
++	int ret;
++
++	if (cfg.c_dry_run)
++		return 0;
++
++	if (!buf) {
++		erofs_err("buf is NULL");
++		return -EINVAL;
++	}
++
++	if (offset >= erofs_devsz || len > erofs_devsz ||
++	    offset > erofs_devsz - len) {
++		erofs_err("Write posion[%" PRIu64 ", %zd] is too large beyond the end of device(%" PRIu64 ").",
++			  offset, len, erofs_devsz);
++		return -EINVAL;
++	}
++
++	ret = pwrite64(erofs_devfd, buf, len, (off64_t)offset);
++	if (ret != (int)len) {
++		if (ret < 0) {
++			erofs_err("Failed to write data into device - %s:[%" PRIu64 ", %zd].",
++				  erofs_devname, offset, len);
++			return -errno;
++		}
++
++		erofs_err("Writing data into device - %s:[%" PRIu64 ", %zd] - was truncated.",
++			  erofs_devname, offset, len);
++		return -ERANGE;
++	}
++	return 0;
++}
++
++int dev_fsync(void)
++{
++	int ret;
++
++	ret = fsync(erofs_devfd);
++	if (ret) {
++		erofs_err("Could not fsync device!!!");
++		return -EIO;
++	}
++	return 0;
++}
 -- 
 2.17.1
 
