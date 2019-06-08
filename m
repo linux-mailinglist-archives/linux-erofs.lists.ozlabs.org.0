@@ -1,73 +1,80 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81A7539FA0
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jun 2019 14:15:26 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E72E039C3E
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jun 2019 11:49:35 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45LZP92RktzDqHp
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jun 2019 19:49:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45LddR5FlZzDqRp
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jun 2019 22:15:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1559996123;
+	bh=CY1FETP721CCUzaNVOseQQWpilAUH+fafBvv3Fo10As=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=JuILH133UIgCCjpachQSg69FTfLtL5nF6V186m0HJmKqpTXzk7TNdLUWL5c8wyzWL
+	 o4MHrUJOArmipMYmV+Zn7UbBICMhKIKSze873urcWZSYRK7vwgoFoGyrwuMUlJMWnY
+	 l+fCZplO1emhDpype49y92/pTXJ3snP9r+pejK+G475hL59Fp77tDaRdnjzg1dvsm7
+	 gsg86KFMXZxwB8kksaiCIBt7kwdWphae7djyRBHHM70ZjdJoZGKlCdJhDMimEh5fD0
+	 qapHOJsehBCns8bq1Tp9vD2GGyHjja0jhf4TLMe4Bsn5ZzAn/sbBh98d+XQYlu+cwO
+	 XHEvj7cQFGmog==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::442; helo=mail-pf1-x442.google.com;
- envelope-from=hariprasad.kelam@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=98.137.69.82; helo=sonic314-19.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="ZOHbvL/S"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="r9GHNBdf"; 
  dkim-atps=neutral
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com
- [IPv6:2607:f8b0:4864:20::442])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic314-19.consmr.mail.gq1.yahoo.com
+ (sonic314-19.consmr.mail.gq1.yahoo.com [98.137.69.82])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45LZP24mz7zDqFS
- for <linux-erofs@lists.ozlabs.org>; Sat,  8 Jun 2019 19:49:26 +1000 (AEST)
-Received: by mail-pf1-x442.google.com with SMTP id d126so2555447pfd.2
- for <linux-erofs@lists.ozlabs.org>; Sat, 08 Jun 2019 02:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=date:from:to:subject:message-id:mime-version:content-disposition
- :user-agent; bh=ceB58BsT2jhuXKLvpsF6nc1EbvAVeMuXaSf+CtPNzlg=;
- b=ZOHbvL/SIifcsBkKsIMBtCrqGGFpB9o8aoUYAqXaYK5rea2+tx1pKid0Xi8Vynev58
- f4lILw2GUYXpeCcgNH6FgWHFCQaUtzuGBRUWW48lR3mLLdEZv9dsA1qa9AUccDBNi22I
- FgsktcRehMLN1neRxc76Eny2dhNClfBg9lqgOzMnQoQykFEJW79rJ6r5sHMy70/8OX7y
- 2sLhGA1S2c1im9T5w19fWhB6zgCHOChLxh+z3iWJNKNclF2wDv5mkWF/sxsNjI6OO3je
- NO3scrCxGmlU6VWSp9bmE2IM6I/n0jD+PCx/zfE5FgHtmru881NJywKLdNRLfXXsSYdj
- onpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:subject:message-id:mime-version
- :content-disposition:user-agent;
- bh=ceB58BsT2jhuXKLvpsF6nc1EbvAVeMuXaSf+CtPNzlg=;
- b=WJ/lGOWnMOGpc2qf4JNTeQbaLXvv4w7B3qBI56kfomQtFgHCWh1CuvSl9judRn1jSt
- abwiCmQ0GqrCz2GHHDc3PhFgbGSZnSeA6PJvYYXCdC7f12uAowOFWvbk+5wI17gXJ/rD
- v287nSyNZLKx6jObLVozJdZrEkY8iQV1jaWH1DuWFUYQ73d6NkRKB28Ha4yAKJACklv+
- idOAEiIazcSDAz1FoskDpSnPVEIZEhqpxRdzu8Gqr36Ck7SaIemVosOq7b2fyyND9HzR
- QaQpeKi0baNicouL2f5HZLcI9AvkivOndqcRxMSHiMiORAozHn+MU1NdDYC0uerZyiG1
- ySuQ==
-X-Gm-Message-State: APjAAAWzjIMBSWQsHPRdfBmb6RW9PsR8gjTUipEoIAr8vjUAH0WhfuHE
- isOP8ikMdSnH5Hq6OMgvA0E=
-X-Google-Smtp-Source: APXvYqynnyl6j4lWBQSS4y8CNh8+wxRD6csIB5VrA1DZZsD6AFefijgTYBS9fQJ9CefQtd5iIsDANQ==
-X-Received: by 2002:a62:65c7:: with SMTP id z190mr63825619pfb.73.1559987363342; 
- Sat, 08 Jun 2019 02:49:23 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
- by smtp.gmail.com with ESMTPSA id z11sm4017605pjq.13.2019.06.08.02.49.20
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Sat, 08 Jun 2019 02:49:22 -0700 (PDT)
-Date: Sat, 8 Jun 2019 15:19:18 +0530
-From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To: Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
- linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: erofs: make use of DBG_BUGON
-Message-ID: <20190608094918.GA11605@hari-Inspiron-1545>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45LdR42PmzzDqFm
+ for <linux-erofs@lists.ozlabs.org>; Sat,  8 Jun 2019 22:06:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1559995574; bh=9E7MyQwq36DvghPQy6gbYSm5lbo+i9g9K12tGggIgLM=;
+ h=Subject:To:References:Cc:From:Date:In-Reply-To:From:Subject;
+ b=r9GHNBdfTrGLdNxj56yG+fGQud77WJx4xUHXbzfggSV9sJlANrSYsCvTs/W43HtH2U3g+8f3x7gVgJtWKBlPGw8qU8T1UH472yeVrC5//sr2y9t0f7h66BFAVXJXVwjSHAeeuTXnkAGCC2apX8Y8aZmuH4iBwwhfra9aFxMJfukDgL6vJWTtItwGSheBLV+g8aPgH527HONbu+AZD8ssjTYZntFkuRZvA7XTSlsC5srEvhThHuVgBYpjhCXCc6I00hguMBoIvRQvCOoKOR2WURnTvBorRSYmnqGvqJBforNoklFu9bV8hjxc2zA2A5NJSk2i9OuKo/tYyeI5u3byVw==
+X-YMail-OSG: _4r6oOMVM1kH7YRduJ1JYn5fyb2KOPttvNkglhqqCq6jnBgKu8OubVI_xEvmyEo
+ XawmcGsu7eaISjVB7govGwor3Lv3LjdyQzP1F2nVX_3BFjPWG4S9Rn4bUeo68fhf58GZhYKHMDwa
+ vBu4.Gh4cYYJ4a.3km5VA_iC7izhpPeuzc5I7a_L.6ie_1i6TWY4qJM.GT4lniFw49cmwcL_uvra
+ qEZhZN8WnlBESdUPDSd1aMc9JJCTyEJPROTq7VjMBkIYc075A8R8iBPfiWN1F7I6GMHMkIYyRIkU
+ M7YwVuuPEi4ZY9wkeVlXB_qS3Pf.r9vnb9PGg9w8kX89L6E7gQgk6UiIGa4kdbxkdY7hAu7HmlVU
+ uqMz.oeVKVkMr9v2xjFwBnUAn.sQsPC3LwpghbB4v87W_9T_U9pGFtpecbGGA04xYggw46yqeoom
+ koMV.V70oC5pChfdevkqi6QucSKqbXIom84RRsNr5oob7uiWOYTlIcAMK3MO8bz_TT0b.WRI3aAv
+ Nz4oud87s0Aw9GwilkltRCGoRkg2UstH8k_XS0BE8AkCSKoxnwwJ9bHObofuY4lzDAPYDUjltf1m
+ p4G0V.m6SFvHn3RQhDifz2xNDnW_74fQyC4T1FT7rtb.SV5Pt9uDoAK84Ihs4h3CoQlzkr89OLNR
+ HVc1pLxbHIKgFZKUU8YQHlCTpl9_iuLrZqxnJ3tNveN7f0rmI8HD8cjpkG._8YjhZuoYRraruJ4l
+ d8vik1f8BN9csyA6mP7WBM6nCFFWcmM05PZxWDqKHRtec4I4tTaqTUc2PPT6g5E8OOaYC1wJjwMh
+ pGXepoSCH_TYM2YJvfqjcSd5yi2m4ilkHraILk11887h4qETnNuFZ2XQZ.ECn39bjW.uG_9RrITU
+ 9gbxuwV6wuQbEw3lBjOlLZO7R70K_wBzFY_OWda0F0FCuTTRqvmG3ribTSSF9WGn182KfwNoy2xw
+ UNSaLSTvhTcLoAlcQBW7.t.tFzWysiK8XGjc7CCbTos2gkCNH7srHDvQ9onVEbmcdK69Y0szV8aN
+ .gOm7womykJxf31YPQAFlToQw6oUgKcfVU3uzPbtq9xLdChzG6Bwz41aNkRuPkP5VcH3hhiP9KQh
+ 8m_hF83O6PgwaATFlJbwyw5UwKoE6HcO2YeXxzeyZD1IhpIU2aMZvpvUljMpxLvKtT4cNJWiuV6M
+ MfDElje1ByvLUIz_RdAg5bBG.4_HUNJux62uVfpgM2g--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic314.consmr.mail.gq1.yahoo.com with HTTP; Sat, 8 Jun 2019 12:06:14 +0000
+Received: from 125.120.226.196 (EHLO [192.168.0.101]) ([125.120.226.196])
+ by smtp403.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID
+ 3dfb8dff750982ce7b5096f4cd30efc9; 
+ Sat, 08 Jun 2019 12:06:14 +0000 (UTC)
+Subject: Re: [PATCH] staging: erofs: fix warning Comparison to bool
+To: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+References: <20190608093937.GA10461@hari-Inspiron-1545>
+Message-ID: <8aa1fe39-27f3-e74b-5985-c67e04be2f31@aol.com>
+Date: Sat, 8 Jun 2019 20:06:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190608093937.GA10461@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,50 +86,43 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-DBG_BUGON is introduced and it could only crash when EROFS_FS_DEBUG
-(EROFS developping feature) is on.
-replace BUG_ON with DBG_BUGON.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/erofs/unzip_vle.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index 517e5ce..902e67d 100644
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -147,7 +147,7 @@ static inline unsigned z_erofs_onlinepage_index(struct page *page)
- {
- 	union z_erofs_onlinepage_converter u;
- 
--	BUG_ON(!PagePrivate(page));
-+	DBG_BUGON(!PagePrivate(page));
- 	u.v = &page_private(page);
- 
- 	return atomic_read(u.o) >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-@@ -179,7 +179,7 @@ static inline void z_erofs_onlinepage_fixup(struct page *page,
- 		if (!index)
- 			return;
- 
--		BUG_ON(id != index);
-+		DBG_BUGON(id != index);
- 	}
- 
- 	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-@@ -193,7 +193,7 @@ static inline void z_erofs_onlinepage_endio(struct page *page)
- 	union z_erofs_onlinepage_converter u;
- 	unsigned v;
- 
--	BUG_ON(!PagePrivate(page));
-+	DBG_BUGON(!PagePrivate(page));
- 	u.v = &page_private(page);
- 
- 	v = atomic_dec_return(u.o);
--- 
-2.7.4
+On 2019/6/8 ??????5:39, Hariprasad Kelam wrote:
+> fix below warnings reported by coccicheck
+> 
+> drivers/staging/erofs/unzip_vle.c:332:11-18: WARNING: Comparison to bool
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+
+Thanks,
+Gao Xiang
+
+> ---
+>  drivers/staging/erofs/unzip_vle.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+> index 9ecaa87..f3d0d2c 100644
+> --- a/drivers/staging/erofs/unzip_vle.c
+> +++ b/drivers/staging/erofs/unzip_vle.c
+> @@ -329,7 +329,7 @@ try_to_claim_workgroup(struct z_erofs_vle_workgroup *grp,
+>  		       z_erofs_vle_owned_workgrp_t *owned_head,
+>  		       bool *hosted)
+>  {
+> -	DBG_BUGON(*hosted == true);
+> +	DBG_BUGON(*hosted);
+>  
+>  	/* let's claim these following types of workgroup */
+>  retry:
+> 
