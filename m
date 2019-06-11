@@ -1,44 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E7373C0FC
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2019 03:41:08 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45NCQ94Zy1zDqK1
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2019 11:41:05 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78A8D3C0FE
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2019 03:41:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45NCQc54lZzDqRB
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2019 11:41:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.32; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ (client-ip=45.249.212.190; helo=huawei.com; envelope-from=yuchao0@huawei.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45NCQ55Mx4zDqHr
- for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jun 2019 11:41:01 +1000 (AEST)
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id DA99D164984551320A66;
- Tue, 11 Jun 2019 09:40:55 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45NCQX5ZQmzDqJQ
+ for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jun 2019 11:41:24 +1000 (AEST)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+ by Forcepoint Email with ESMTP id 2BAAF7B73AFA17A6A68B;
+ Tue, 11 Jun 2019 09:41:21 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
  (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 09:40:49 +0800
-Subject: Re: [PATCH] staging: erofs: fix warning Comparison to bool
+ 2019 09:41:13 +0800
+Subject: Re: [PATCH] staging: erofs: make use of DBG_BUGON
 To: Hariprasad Kelam <hariprasad.kelam@gmail.com>, Gao Xiang
  <gaoxiang25@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  <linux-erofs@lists.ozlabs.org>, <devel@driverdev.osuosl.org>,
  <linux-kernel@vger.kernel.org>
-References: <20190608093937.GA10461@hari-Inspiron-1545>
+References: <20190608094918.GA11605@hari-Inspiron-1545>
 From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <29d5ff1b-744f-44e7-2b3b-5e330efc3412@huawei.com>
-Date: Tue, 11 Jun 2019 09:40:48 +0800
+Message-ID: <f35ac2bf-14e2-2fff-cb89-caca4f790298@huawei.com>
+Date: Tue, 11 Jun 2019 09:41:13 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190608093937.GA10461@hari-Inspiron-1545>
+In-Reply-To: <20190608094918.GA11605@hari-Inspiron-1545>
 Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,10 +59,10 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019/6/8 17:39, Hariprasad Kelam wrote:
-> fix below warnings reported by coccicheck
-> 
-> drivers/staging/erofs/unzip_vle.c:332:11-18: WARNING: Comparison to bool
+On 2019/6/8 17:49, Hariprasad Kelam wrote:
+> DBG_BUGON is introduced and it could only crash when EROFS_FS_DEBUG
+> (EROFS developping feature) is on.
+> replace BUG_ON with DBG_BUGON.
 > 
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
