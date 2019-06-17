@@ -1,41 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3B9848334
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2019 14:55:51 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45SB5v0L04zDqXJ
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2019 22:55:47 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C1D04845D
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2019 15:45:48 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45SCCV1jK9zDqXT
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2019 23:45:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=none (mailfrom) smtp.mailfrom=canonical.com
- (client-ip=91.189.89.112; helo=youngberry.canonical.com;
- envelope-from=colin.king@canonical.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.191; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=fail (p=none dis=none) header.from=canonical.com
-Received: from youngberry.canonical.com (youngberry.canonical.com
- [91.189.89.112])
- (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45SB5j1zf5zDqVD
- for <linux-erofs@lists.ozlabs.org>; Mon, 17 Jun 2019 22:55:37 +1000 (AEST)
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
- by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
- (Exim 4.76) (envelope-from <colin.king@canonical.com>)
- id 1hcrAX-0005Q0-EF; Mon, 17 Jun 2019 12:55:29 +0000
-From: Colin King <colin.king@canonical.com>
-To: Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org
-Subject: [PATCH] staging: erofs: clean up initialization of pointer de
-Date: Mon, 17 Jun 2019 13:55:29 +0100
-Message-Id: <20190617125529.28327-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45SCCC6psDzDqXL
+ for <linux-erofs@lists.ozlabs.org>; Mon, 17 Jun 2019 23:45:25 +1000 (AEST)
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id 2E8C9E9969F150E33548;
+ Mon, 17 Jun 2019 21:45:19 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Jun
+ 2019 21:45:09 +0800
+Subject: Re: [PATCH] staging: erofs: clean up initialization of pointer de
+To: Colin King <colin.king@canonical.com>, Chao Yu <yuchao0@huawei.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+References: <20190617125529.28327-1-colin.king@canonical.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <470b93fd-ef5e-0019-b58d-8e38e7944e13@huawei.com>
+Date: Mon, 17 Jun 2019 21:45:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
+In-Reply-To: <20190617125529.28327-1-colin.king@canonical.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -47,39 +52,27 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Colin Ian King <colin.king@canonical.com>
 
-Currently pointer de is being initialized with a value that is
-never read and a few statements later de is being re-assigned. Clean
-this up by ininitialzing de and removing the re-assignment.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/erofs/dir.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On 2019/6/17 20:55, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently pointer de is being initialized with a value that is
+> never read and a few statements later de is being re-assigned. Clean
+> this up by ininitialzing de and removing the re-assignment.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-index 9bbc68729c11..dbf6a151886c 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -42,10 +42,9 @@ static int erofs_fill_dentries(struct dir_context *ctx,
- 			       void *dentry_blk, unsigned int *ofs,
- 			       unsigned int nameoff, unsigned int maxsize)
- {
--	struct erofs_dirent *de = dentry_blk;
-+	struct erofs_dirent *de = dentry_blk + *ofs;
- 	const struct erofs_dirent *end = dentry_blk + nameoff;
- 
--	de = dentry_blk + *ofs;
- 	while (de < end) {
- 		const char *de_name;
- 		unsigned int de_namelen;
--- 
-2.20.1
+Loods good for me,
 
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+
+Thanks,
+Gao Xiang
