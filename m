@@ -1,52 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82A0C4C97F
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2019 10:30:40 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC84D49A32
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Jun 2019 09:16:55 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45SfXP10dDzDqg8
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Jun 2019 17:16:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45Tw4Y2wK2zDr9M
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2019 18:30:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.32; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
- receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::443; helo=mail-pf1-x443.google.com;
+ envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="LmN+7kal"; 
+ dkim-atps=neutral
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com
+ [IPv6:2607:f8b0:4864:20::443])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45SfTK0Wg9zDqRB
- for <linux-erofs@lists.ozlabs.org>; Tue, 18 Jun 2019 17:14:12 +1000 (AEST)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 57A751F306E6E079F216;
- Tue, 18 Jun 2019 15:14:06 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
- 2019 15:13:58 +0800
-Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
- <20190617203609.GA22034@kroah.com>
- <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
- <20190618054709.GA4271@kroah.com>
- <df18d7f9-f65a-5697-c7c4-edb1ad846c3e@huawei.com>
- <20190618064523.GA6015@kroah.com>
- <2a6abbf9-20a9-c1dd-0091-d8e3009037eb@huawei.com>
- <20190618070503.GB9160@kroah.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <08079e72-3ab5-fc9e-d229-13540badf199@huawei.com>
-Date: Tue, 18 Jun 2019 15:13:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190618070503.GB9160@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45Tw4P3zvwzDr8N
+ for <linux-erofs@lists.ozlabs.org>; Thu, 20 Jun 2019 18:30:29 +1000 (AEST)
+Received: by mail-pf1-x443.google.com with SMTP id t16so1233047pfe.11
+ for <linux-erofs@lists.ozlabs.org>; Thu, 20 Jun 2019 01:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=M2u0R8cF7eueZ/4hSaCEDvL0USB3CKQxKznV4wooalQ=;
+ b=LmN+7kaldve+jVzHuEu1Ji9YCSTSwYNQzhStjdJLVx0r+Fa2qt/3YkrW1bKKW/iP0Y
+ LA6ajX4+ETtbuLypGzABuxGWjaNH2Moi8xiLSRMMdkxxSVkJcBaKw9pKiBULfhShAlEz
+ 82HA5g+au08NEnRIzefuj+Lsl6CFxuLmhxbey35yRXAKGZSd5FJVACVejlbofC+Gg8kw
+ ccIMbtK7wpfOQnr9rgQPhLk/JilfvlujZZGtSwCF+KEQNxH1naqtMGMh3Ai1dMeJIq3T
+ rRGxef9391JVtEC7GhnDCpgWgyAqk2ss4A6btuBsZC8fyfh459EXU0Ck70ZxBAiFXljs
+ qQAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=M2u0R8cF7eueZ/4hSaCEDvL0USB3CKQxKznV4wooalQ=;
+ b=pKizbKAFxM5GmCFwTYZWwriOiPB7mn0lp+tmWqD73Ha6dowtAsjCRCtY0Q/b5T9YIz
+ zQtIha9wHwvtFnNWOKgViiBw45IBz6LiEFDQtE9vA0pvr8RNo/zFPpV5zJXRX8/H6jAX
+ 9FqS30fwg7uytwuNrkIBFHZBgLUoP1ofN9X1SG9zsH07axmRoBV2ENX77Rjn4tQQ8Lgo
+ pPMmj1/d5VvW0eJTiNmix8syeIt5xtmFcjWVVGKbq0uN/TyM419st31hn1hCo7E3tMat
+ V4cU61BYfz3hTBMHJKK63xhzX05GkPTh/GRLyoUo4RkYL5BH3gGH0c2/Jo/nN7EMUq/N
+ 1TDw==
+X-Gm-Message-State: APjAAAWiVcsddooy91wRKj2k6x/rM6VZRdPtcqP4if7a9yN4tqENSViE
+ ifEwPkuvfS77NZdSde1JLEY=
+X-Google-Smtp-Source: APXvYqzVibTxjdUPYRS+z+HxWmKnniAsGRLJE1Hq0dOjiZOKPMvB6O1MQ2YIGd0wctcDDX5S/cwjYg==
+X-Received: by 2002:a17:90a:be08:: with SMTP id
+ a8mr1771499pjs.69.1561019427123; 
+ Thu, 20 Jun 2019 01:30:27 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([218.189.10.173])
+ by smtp.gmail.com with ESMTPSA id l8sm19571238pgb.76.2019.06.20.01.30.24
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Thu, 20 Jun 2019 01:30:26 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: gaoxiang25@huawei.com,
+	yuchao0@huawei.com,
+	gregkh@linuxfoundation.org
+Subject: [PATCH] staging: erofs: remove needless CONFIG_EROFS_FS_SECURITY
+Date: Thu, 20 Jun 2019 16:30:04 +0800
+Message-Id: <20190620083004.2488-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,88 +75,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, weidu.du@huawei.com,
- linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: huyue2@yulong.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Yue Hu <huyue2@yulong.com>
 
+erofs_xattr_security_handler is already marked __maybe_unused, no need
+to add CONFIG_EROFS_FS_SECURITY condition.
 
-On 2019/6/18 15:05, Greg Kroah-Hartman wrote:
-> On Tue, Jun 18, 2019 at 02:52:21PM +0800, Gao Xiang wrote:
->>
->>
->> On 2019/6/18 14:45, Greg Kroah-Hartman wrote:
->>> On Tue, Jun 18, 2019 at 02:18:00PM +0800, Gao Xiang wrote:
->>>>
->>>>
->>>> On 2019/6/18 13:47, Greg Kroah-Hartman wrote:
->>>>> On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
->>>>>>
->>>>>>
->>>>>> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
->>>>>>> On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
->>>>>>>> At last, this is RFC patch v1, which means it is not suitable for
->>>>>>>> merging soon... I'm still working on it, testing its stability
->>>>>>>> these days and hope these patches get merged for 5.3 LTS
->>>>>>>> (if 5.3 is a LTS version).
->>>>>>>
->>>>>>> Why would 5.3 be a LTS kernel?
->>>>>>>
->>>>>>> curious as to how you came up with that :)
->>>>>>
->>>>>> My personal thought is about one LTS kernel one year...
->>>>>> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
->>>>>> which is not suitable for all historical LTSs...just prepare for 5.3...
->>>>>
->>>>> I try to pick the "last" kernel that is released each year, which
->>>>> sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
->>>>> release cycle.
->>>>>
->>>>> So odds are it will be 5.4 for the next LTS kernel, but we will not know
->>>>> more until it gets closer to release time.
->>>>
->>>> Thanks for kindly explanation :)
->>>>
->>>> Anyway, I will test these patches, land to our commerical products and try the best
->>>> efforts on making it more stable for Linux upstream to merge.
->>>
->>> Sounds great.
->>>
->>> But why do you need to add compression to get this code out of staging?
->>> Why not move it out now and then add compression and other new features
->>> to it then?
->>
->> Move out of staging could be over several linux versions since I'd like to get
->> majority fs people agreed to this.
-> 
-> You never know until you try :)
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ drivers/staging/erofs/xattr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks for your encouragement :)
-Actually, I personally gave a brief talk on this year LSF/MM 2019 but since I cannot speak
-English well so the entire effect is not good enough :(...
+diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+index df40654..06024ac 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -499,13 +499,11 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+ 	.get	= erofs_xattr_generic_get,
+ };
+ 
+-#ifdef CONFIG_EROFS_FS_SECURITY
+ const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
+ 	.prefix	= XATTR_SECURITY_PREFIX,
+ 	.flags	= EROFS_XATTR_INDEX_SECURITY,
+ 	.get	= erofs_xattr_generic_get,
+ };
+-#endif
+ 
+ const struct xattr_handler *erofs_xattr_handlers[] = {
+ 	&erofs_xattr_user_handler,
+-- 
+1.9.1
 
-I will personally contact with important people ... to get their agreements on this file
-system soon.
-
-> 
->> Decompression inplace is an important part of erofs to show its performance
->> benefits over existed compress filesystems and I tend to merge it in advance.
-> 
-> There is no requirement to show benefits over other filesystems in order
-> to get it merged, but I understand the feeling.  That's fine, we can
-> wait, we are not going anywhere...
-
-Thanks again. I am just proving that the erofs solution may be one of the best compression
-solutions in performance first scenerio :)
-
-Thanks,
-Gao Xiang
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
