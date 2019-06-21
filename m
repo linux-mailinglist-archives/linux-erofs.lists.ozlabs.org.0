@@ -1,54 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A6EA4E0BE
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 09:02:59 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45VV4w0328zDqB5
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 17:02:56 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 852234E15E
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 09:47:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45VW3p0W6XzDqdM
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 17:47:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=linuxfoundation.org
- (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=gregkh@linuxfoundation.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
- header.from=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.b="bcjScGWR"; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.191; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45VV4p1HjmzDq5n
- for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2019 17:02:48 +1000 (AEST)
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl
- [83.86.89.107])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id 1DE862083B;
- Fri, 21 Jun 2019 07:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1561100566;
- bh=V2/ZszNh8MaMq+1MrkmLu3HXHRSK/lWKDZYg8J7l7f4=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=bcjScGWRo2Dcr6gz3qELAjBxdKcR+WPANMXHjmb6IMWNRy8DcpSV1hJTl6XtROLim
- l7LFnUEqItG3ZUfpKK039oC4vYDDGKu8NUqoL42Nuszv4ZiadBOUGjEzEV7F8BwtN0
- HNOSG1KbElQYPyqohRq6DbRzbu3UfP3PxjVxWL+M=
-Date: Fri, 21 Jun 2019 09:02:44 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH] staging: erofs: remove needless dummy functions of
- erofs_{get,list}xattr
-Message-ID: <20190621070244.GC3029@kroah.com>
-References: <20190621040808.3708-1-zbestahu@gmail.com>
- <f6b2ced7-79ea-9cc6-5e88-43552b5947a9@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45VW3j73JqzDqcw
+ for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2019 17:46:54 +1000 (AEST)
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id B47A5D2C162734A6E23B;
+ Fri, 21 Jun 2019 15:46:46 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
+ 2019 15:46:39 +0800
+Subject: Re: [PATCH v2 1/8] staging: erofs: add compacted ondisk compression
+ indexes
+To: Gao Xiang <gaoxiang25@huawei.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+References: <20190620160719.240682-1-gaoxiang25@huawei.com>
+ <20190620160719.240682-2-gaoxiang25@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <72114ec6-3b52-3a64-0387-a35eae10a74d@huawei.com>
+Date: Fri, 21 Jun 2019 15:46:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6b2ced7-79ea-9cc6-5e88-43552b5947a9@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190620160719.240682-2-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,61 +55,236 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@yulong.com, linux-erofs@lists.ozlabs.org,
- Yue Hu <zbestahu@gmail.com>
+Cc: devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Du Wei <weidu.du@huawei.com>,
+ linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Jun 21, 2019 at 01:08:39PM +0800, Gao Xiang wrote:
-> Hi Yue,
+On 2019/6/21 0:07, Gao Xiang wrote:
+> This patch introduces new compacted compression indexes.
 > 
-> On 2019/6/21 12:08, Yue Hu wrote:
-> > From: Yue Hu <huyue2@yulong.com>
-> > 
-> > The two dummy functions of erofs_getxattr()/erofs_listxattr() will never
-> > be used if disable CONFIG_EROFS_FS_XATTR.
-> > 
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>
-> > ---
-> >  drivers/staging/erofs/xattr.h | 13 -------------
-> >  1 file changed, 13 deletions(-)
-> > 
-> > diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
-> > index 35ba5ac..2c1e46f 100644
-> > --- a/drivers/staging/erofs/xattr.h
-> > +++ b/drivers/staging/erofs/xattr.h
-> > @@ -72,19 +72,6 @@ static inline const struct xattr_handler *erofs_xattr_handler(unsigned index)
-> >  
-> >  int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
-> >  ssize_t erofs_listxattr(struct dentry *, char *, size_t);
-> > -#else
-> > -static int __maybe_unused erofs_getxattr(struct inode *inode, int index,
-> > -	const char *name,
-> > -	void *buffer, size_t buffer_size)
-> > -{
-> > -	return -ENOTSUPP;
-> > -}
-> > -
-> > -static ssize_t __maybe_unused erofs_listxattr(struct dentry *dentry,
-> > -	char *buffer, size_t buffer_size)
-> > -{
-> > -	return -ENOTSUPP;
-> > -}
-> >  #endif
+> In contract to legacy compression indexes that
+>    each 4k logical cluster has an 8-byte index,
+> compacted ondisk compression indexes will have
+>    amortized 2 bytes for each 4k logical cluster (compacted 2B)
+>    amortized 4 bytes for each 4k logical cluster (compacted 4B)
 > 
-> It's mainly used for erofs to directly call erofs_getxattr / erofs_listxattr (even 
-> xattr feature is off) to get a xattr in erofs itself, just follow what other
-> filesystems (e.g. f2fs) did, although these apis have not been used internally
-> yet but used as callbacks in inode_operations only.
+> In detail, several continuous clusters will be encoded in
+> a compacted pack with cluster types, offsets, and one blkaddr
+> at the end of the pack to leave 4-byte margin for better
+> decoding performance, as illustrated below:
+>    _____________________________________________
+>   |___@_____ encoded bits __________|_ blkaddr _|
+>   0       .                                     amortized * vcnt
+>   .          .
+>   .             .                   amortized * vcnt - 4
+>   .                .
+>   .___________________.
+>   |_type_|_clusterofs_|
 > 
-> I have no positive or negative tendency since the patch is minor and the only
-> benefit of this patch is that it removes some code which seems redundant currently.
-> However, if erofs_getxattr is needed later, it should be added back of course.
-> Therefore I think it could depend on Greg whether accept this patch or not.
+> Note that compacted 2 / 4B should be aligned with 32 / 8 bytes
+> in order to avoid each pack crossing page boundary.
+> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+>  drivers/staging/erofs/data.c      |  4 +--
+>  drivers/staging/erofs/erofs_fs.h  | 57 +++++++++++++++++++++++++------
+>  drivers/staging/erofs/inode.c     |  5 +--
+>  drivers/staging/erofs/internal.h  | 11 ++----
+>  drivers/staging/erofs/unzip_vle.c |  8 ++---
+>  5 files changed, 56 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+> index 746685f90564..cc31c3e5984c 100644
+> --- a/drivers/staging/erofs/data.c
+> +++ b/drivers/staging/erofs/data.c
+> @@ -124,7 +124,7 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+>  	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
+>  
+>  	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
+> -	lastblk = nblocks - is_inode_layout_inline(inode);
+> +	lastblk = nblocks - is_inode_flat_inline(inode);
+>  
+>  	if (unlikely(offset >= inode->i_size)) {
+>  		/* leave out-of-bound access unmapped */
+> @@ -139,7 +139,7 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+>  	if (offset < blknr_to_addr(lastblk)) {
+>  		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
+>  		map->m_plen = blknr_to_addr(lastblk) - offset;
+> -	} else if (is_inode_layout_inline(inode)) {
+> +	} else if (is_inode_flat_inline(inode)) {
+>  		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
+>  		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+>  
+> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+> index 8ddb2b3e7d39..a05139f1df60 100644
+> --- a/drivers/staging/erofs/erofs_fs.h
+> +++ b/drivers/staging/erofs/erofs_fs.h
+> @@ -49,19 +49,29 @@ struct erofs_super_block {
+>   * erofs inode data mapping:
+>   * 0 - inode plain without inline data A:
+>   * inode, [xattrs], ... | ... | no-holed data
+> - * 1 - inode VLE compression B:
+> + * 1 - inode VLE compression B (legacy):
+>   * inode, [xattrs], extents ... | ...
+>   * 2 - inode plain with inline data C:
+>   * inode, [xattrs], last_inline_data, ... | ... | no-holed data
+> - * 3~7 - reserved
+> + * 3 - inode compression D:
+> + * inode, [xattrs], map_header, extents ... | ...
+> + * 4~7 - reserved
+>   */
+>  enum {
+> -	EROFS_INODE_LAYOUT_PLAIN,
+> -	EROFS_INODE_LAYOUT_COMPRESSION,
+> -	EROFS_INODE_LAYOUT_INLINE,
+> +	EROFS_INODE_FLAT_PLAIN,
+> +	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
+> +	EROFS_INODE_FLAT_INLINE,
+> +	EROFS_INODE_FLAT_COMPRESSION,
+>  	EROFS_INODE_LAYOUT_MAX
+>  };
+>  
+> +static bool erofs_inode_is_data_compressed(unsigned int datamode)
+> +{
+> +	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
+> +		return true;
+> +	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
+> +}
+> +
+>  /* bit definitions of inode i_advise */
+>  #define EROFS_I_VERSION_BITS            1
+>  #define EROFS_I_DATA_MAPPING_BITS       3
+> @@ -176,11 +186,37 @@ struct erofs_xattr_entry {
+>  	sizeof(struct erofs_xattr_entry) + \
+>  	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
+>  
+> -/* have to be aligned with 8 bytes on disk */
+> -struct erofs_extent_header {
+> -	__le32 eh_checksum;
+> -	__le32 eh_reserved[3];
+> -} __packed;
+> +/* available compression algorithm types */
+> +enum {
+> +	Z_EROFS_COMPRESSION_LZ4,
+> +	Z_EROFS_COMPRESSION_MAX
+> +};
+> +
+> +/*
+> + * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
+> + *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
+> + *                                  (4B) + 2B + (4B) if compacted 2B is on.
+> + */
+> +#define Z_EROFS_ADVISE_COMPACTED_2B_BIT         0
+> +
+> +#define Z_EROFS_ADVISE_COMPACTED_2B     (1 << Z_EROFS_ADVISE_COMPACTED_2B_BIT)
+> +
+> +struct z_erofs_map_header {
+> +	__le32	h_reserved1;
+> +	__le16	h_advise;
+> +	/*
+> +	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
+> +	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
+> +	 */
+> +	__u8	h_algorithmtype;
+> +	/*
+> +	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
+> +	 * bit 3-4 : (physical - logical) cluster bits of head 1:
+> +	 *       For example, if logical clustersize = 4096, 1 for 8192.
+> +	 * bit 5-7 : (physical - logical) cluster bits of head 2.
+> +	 */
+> +	__u8	h_clusterbits;
+> +};
+>  
+>  /*
+>   * Z_EROFS Variable-sized Logical Extent cluster type:
+> @@ -270,7 +306,6 @@ static inline void erofs_check_ondisk_layout_definitions(void)
+>  	BUILD_BUG_ON(sizeof(struct erofs_inode_v2) != 64);
+>  	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
+>  	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
+> -	BUILD_BUG_ON(sizeof(struct erofs_extent_header) != 16);
+>  	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
+>  	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
+>  
+> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+> index e51348f7e838..3539290b8e45 100644
+> --- a/drivers/staging/erofs/inode.c
+> +++ b/drivers/staging/erofs/inode.c
+> @@ -127,12 +127,9 @@ static int fill_inline_data(struct inode *inode, void *data,
+>  {
+>  	struct erofs_vnode *vi = EROFS_V(inode);
+>  	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
+> -	const int mode = vi->datamode;
+> -
+> -	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
+>  
+>  	/* should be inode inline C */
+> -	if (mode != EROFS_INODE_LAYOUT_INLINE)
+> +	if (!is_inode_flat_inline(inode))
+>  		return 0;
+>  
+>  	/* fast symlink (following ext4) */
+> diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+> index 1666cceecb3c..c851d0be6cf6 100644
+> --- a/drivers/staging/erofs/internal.h
+> +++ b/drivers/staging/erofs/internal.h
+> @@ -382,19 +382,14 @@ static inline unsigned long inode_datablocks(struct inode *inode)
+>  	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
+>  }
+>  
+> -static inline bool is_inode_layout_plain(struct inode *inode)
+> -{
+> -	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_PLAIN;
+> -}
+> -
+>  static inline bool is_inode_layout_compression(struct inode *inode)
+>  {
+> -	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_COMPRESSION;
+> +	return erofs_inode_is_data_compressed(EROFS_V(inode)->datamode);
+>  }
+>  
+> -static inline bool is_inode_layout_inline(struct inode *inode)
+> +static inline bool is_inode_flat_inline(struct inode *inode)
+>  {
+> -	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_INLINE;
+> +	return EROFS_V(inode)->datamode == EROFS_INODE_FLAT_INLINE;
+>  }
+>  
+>  extern const struct super_operations erofs_sops;
+> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+> index f3d0d2c03939..0db9bc50f67c 100644
+> --- a/drivers/staging/erofs/unzip_vle.c
+> +++ b/drivers/staging/erofs/unzip_vle.c
+> @@ -1643,8 +1643,8 @@ vle_extent_blkaddr(struct inode *inode, pgoff_t index)
+>  	struct erofs_vnode *vi = EROFS_V(inode);
+>  
+>  	unsigned int ofs = Z_EROFS_VLE_EXTENT_ALIGN(vi->inode_isize +
+> -		vi->xattr_isize) + sizeof(struct erofs_extent_header) +
+> -		index * sizeof(struct z_erofs_vle_decompressed_index);
+> +						    vi->xattr_isize) +
+> +		16 + index * sizeof(struct z_erofs_vle_decompressed_index);
+>  
+>  	return erofs_blknr(iloc(sbi, vi->nid) + ofs);
+>  }
+> @@ -1656,8 +1656,8 @@ vle_extent_blkoff(struct inode *inode, pgoff_t index)
+>  	struct erofs_vnode *vi = EROFS_V(inode);
+>  
+>  	unsigned int ofs = Z_EROFS_VLE_EXTENT_ALIGN(vi->inode_isize +
+> -		vi->xattr_isize) + sizeof(struct erofs_extent_header) +
+> -		index * sizeof(struct z_erofs_vle_decompressed_index);
+> +						    vi->xattr_isize) +
+> +		16 + index * sizeof(struct z_erofs_vle_decompressed_index);
 
-Let's leave this as-is for now.
+We can add one macro to wrap above offset (16) for better readability, anyway,
+this patch looks good to me. :)
 
-thanks,
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-greg k-h
+Thanks,
+
+>  
+>  	return erofs_blkoff(iloc(sbi, vi->nid) + ofs);
+>  }
+> 
