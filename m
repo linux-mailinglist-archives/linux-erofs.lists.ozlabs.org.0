@@ -2,46 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA3A04E00A
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 07:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 502E54E0BC
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 09:01:42 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45VRvM1sRnzDqdD
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 15:24:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45VV3Q28pqzDqdD
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2019 17:01:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.190; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+ spf=pass (mailfrom) smtp.mailfrom=linuxfoundation.org
+ (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=gregkh@linuxfoundation.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
+ header.from=linuxfoundation.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.b="ILZQNeJR"; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45VRYT0BF9zDqBh
- for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2019 15:09:00 +1000 (AEST)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id C00F3B77834E19A36577;
- Fri, 21 Jun 2019 13:08:54 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
- 2019 13:08:46 +0800
-Subject: Re: [PATCH] staging: erofs: remove needless dummy functions of
- erofs_{get,list}xattr
-To: Yue Hu <zbestahu@gmail.com>, <yuchao0@huawei.com>,
- <gregkh@linuxfoundation.org>
-References: <20190621040808.3708-1-zbestahu@gmail.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <f6b2ced7-79ea-9cc6-5e88-43552b5947a9@huawei.com>
-Date: Fri, 21 Jun 2019 13:08:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45VV3G3SGQzDqcg
+ for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2019 17:01:30 +1000 (AEST)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl
+ [83.86.89.107])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 8457B2083B;
+ Fri, 21 Jun 2019 07:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1561100488;
+ bh=BTcp4fDsaV7iSGi7Qev5B5v/M0ne6mptcsFgiq3fBgU=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=ILZQNeJRHbANYzoHXQoj0Y4zkQFkLgV6ouY1Bxs2h2elJf1LuTOM2aBk+1vS+Atf9
+ NN3bGFOYynXpWAEO1s2rL2hJ4mP6r7dwjIxBtc5I3MoXxKw8Lgg4RplQz3yew4p3vt
+ q79wV7YlfhcoiEj5tg/x/T7xz4JBeqPHZ/BIT4eM=
+Date: Fri, 21 Jun 2019 09:01:25 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Yue Hu <zbestahu@gmail.com>
+Subject: Re: [PATCH] staging: erofs: remove needless CONFIG_EROFS_FS_SECURITY
+Message-ID: <20190621070125.GB3029@kroah.com>
+References: <20190620083004.2488-1-zbestahu@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621040808.3708-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620083004.2488-1-zbestahu@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,60 +58,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@yulong.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, huyue2@yulong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
-
-On 2019/6/21 12:08, Yue Hu wrote:
+On Thu, Jun 20, 2019 at 04:30:04PM +0800, Yue Hu wrote:
 > From: Yue Hu <huyue2@yulong.com>
 > 
-> The two dummy functions of erofs_getxattr()/erofs_listxattr() will never
-> be used if disable CONFIG_EROFS_FS_XATTR.
+> erofs_xattr_security_handler is already marked __maybe_unused, no need
+> to add CONFIG_EROFS_FS_SECURITY condition.
 > 
 > Signed-off-by: Yue Hu <huyue2@yulong.com>
 > ---
->  drivers/staging/erofs/xattr.h | 13 -------------
->  1 file changed, 13 deletions(-)
+>  drivers/staging/erofs/xattr.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
-> index 35ba5ac..2c1e46f 100644
-> --- a/drivers/staging/erofs/xattr.h
-> +++ b/drivers/staging/erofs/xattr.h
-> @@ -72,19 +72,6 @@ static inline const struct xattr_handler *erofs_xattr_handler(unsigned index)
+> diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+> index df40654..06024ac 100644
+> --- a/drivers/staging/erofs/xattr.c
+> +++ b/drivers/staging/erofs/xattr.c
+> @@ -499,13 +499,11 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+>  	.get	= erofs_xattr_generic_get,
+>  };
 >  
->  int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
->  ssize_t erofs_listxattr(struct dentry *, char *, size_t);
-> -#else
-> -static int __maybe_unused erofs_getxattr(struct inode *inode, int index,
-> -	const char *name,
-> -	void *buffer, size_t buffer_size)
-> -{
-> -	return -ENOTSUPP;
-> -}
-> -
-> -static ssize_t __maybe_unused erofs_listxattr(struct dentry *dentry,
-> -	char *buffer, size_t buffer_size)
-> -{
-> -	return -ENOTSUPP;
-> -}
->  #endif
+> -#ifdef CONFIG_EROFS_FS_SECURITY
+>  const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
+>  	.prefix	= XATTR_SECURITY_PREFIX,
+>  	.flags	= EROFS_XATTR_INDEX_SECURITY,
+>  	.get	= erofs_xattr_generic_get,
+>  };
+> -#endif
 
-It's mainly used for erofs to directly call erofs_getxattr / erofs_listxattr (even 
-xattr feature is off) to get a xattr in erofs itself, just follow what other
-filesystems (e.g. f2fs) did, although these apis have not been used internally
-yet but used as callbacks in inode_operations only.
+It's nicer just to leave this as-is for now, the memory savings isn't
+much at all.
 
-I have no positive or negative tendency since the patch is minor and the only
-benefit of this patch is that it removes some code which seems redundant currently.
-However, if erofs_getxattr is needed later, it should be added back of course.
-Therefore I think it could depend on Greg whether accept this patch or not.
+thanks,
 
-Thanks,
-Gao Xiang
-
->  
->  #ifdef CONFIG_EROFS_FS_POSIX_ACL
-> 
+greg k-h
