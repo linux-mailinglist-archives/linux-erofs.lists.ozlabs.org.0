@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F2E7562F1
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 09:14:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 50CF1562F3
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 09:14:20 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45YZ5N03z5zDqXR
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 17:14:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45YZ5j2Y76zDqXR
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 17:14:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,26 +18,26 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45YZ5F4FxrzDqW2
- for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 17:13:50 +1000 (AEST)
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id C9EE18BFD69C7550F6E3;
- Wed, 26 Jun 2019 15:13:43 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45YZ5b482ZzDqW2
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 17:14:11 +1000 (AEST)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id 7383ED8A4FDEEF3C92B8;
+ Wed, 26 Jun 2019 15:14:07 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Jun
- 2019 15:13:36 +0800
-Subject: Re: [PATCH RESEND] staging: erofs: remove unsupported ->datamode
- check in fill_inline_data()
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Jun
+ 2019 15:13:54 +0800
+Subject: Re: [PATCH RESEND] staging: erofs: return the error value if
+ fill_inline_data() fails
 To: Yue Hu <zbestahu@gmail.com>, <gaoxiang25@huawei.com>,
  <gregkh@linuxfoundation.org>
-References: <20190626032831.7252-1-zbestahu@gmail.com>
+References: <20190626033038.9456-1-zbestahu@gmail.com>
 From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <654721e9-fdca-f21f-c244-9e9c8c421f4b@huawei.com>
-Date: Wed, 26 Jun 2019 15:13:35 +0800
+Message-ID: <96f12ad4-e9dc-a688-2c26-2dd285b7b795@huawei.com>
+Date: Wed, 26 Jun 2019 15:13:52 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190626032831.7252-1-zbestahu@gmail.com>
+In-Reply-To: <20190626033038.9456-1-zbestahu@gmail.com>
 Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,11 +60,13 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019/6/26 11:28, Yue Hu wrote:
+On 2019/6/26 11:30, Yue Hu wrote:
 > From: Yue Hu <huyue2@yulong.com>
 > 
-> Already check if ->datamode is supported in read_inode(), no need to check
-> again in the next fill_inline_data() only called by fill_inode().
+> We should consider the error returned by fill_inline_data() when filling
+> last page in fill_inode(). If not getting inode will be successful even
+> though last page is bad. That is illogical. Also change -EAGAIN to 0 in
+> fill_inline_data() to stand for successful filling.
 > 
 > Signed-off-by: Yue Hu <huyue2@yulong.com>
 
