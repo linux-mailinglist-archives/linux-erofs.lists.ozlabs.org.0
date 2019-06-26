@@ -1,47 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DAE456510
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 11:03:54 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45YcX65wpmzDqXT
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 19:03:50 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 349DD56703
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 12:40:15 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45YfgJ2pYGzDqXW
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 20:40:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.35; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
- receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::644; helo=mail-pl1-x644.google.com;
+ envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="jE10eCHU"; 
+ dkim-atps=neutral
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com
+ [IPv6:2607:f8b0:4864:20::644])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45YcWx61QgzDqX8
- for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 19:03:41 +1000 (AEST)
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 51FC098D895276A11E5E;
- Wed, 26 Jun 2019 17:03:36 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Jun
- 2019 17:02:57 +0800
-Subject: Re: [PATCH RESEND] staging: erofs: return the error value if
- fill_inline_data() fails
-To: Yue Hu <zbestahu@gmail.com>, <yuchao0@huawei.com>,
- <gregkh@linuxfoundation.org>
-References: <20190626033038.9456-1-zbestahu@gmail.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <a503962c-0d06-d186-3230-b208410939b0@huawei.com>
-Date: Wed, 26 Jun 2019 17:02:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190626033038.9456-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45Yfg65LcSzDqTT
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 20:40:01 +1000 (AEST)
+Received: by mail-pl1-x644.google.com with SMTP id cl9so1212118plb.10
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 03:40:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=MQ9/uWGOCU6xhcJrjFrAp9D/DzotiwWryJhU2sg3dXk=;
+ b=jE10eCHUEAtvgZ94+vzcssYMO6mjwEBNyQyS+979T7V9H88qMRlbM80AALrr4PL7wH
+ rN819o1exHNmFlXu6lKk5huqMmX25BQjPANXDQP3CqO115DTSItqtIIM+GlhUvJeJM4r
+ Gh6hFKstZvm6Uq50/GjK9JmC/elmcYbePclzDX+j5AvGfUDAjt/8yL2eXwAx9St6tqQr
+ gfqWMtfSZEyYrgrjqG/Mru4BLY/83hPufoyrajO724AHU9zgMjmLkdqHYvumvHTCWNKd
+ vZZJwRPGkChzW6iHZvaqkeEqI88Ge6P5ak0ReP7ZL+iyU4Rt3SUsoqLxhC8HsenwNKu3
+ m3Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=MQ9/uWGOCU6xhcJrjFrAp9D/DzotiwWryJhU2sg3dXk=;
+ b=kj2JFCxrK6CnN0euRBRuDMIzoqa4mvMgYusNRUtZLFhchwSZYXIIhg64HAHanOaYxB
+ aHBkqAmz6Stth59RQGHIitKHhR9dMyW4gK/q+exmkUfxKpSa3YVsrBdV9/QlTwFfpT1h
+ Cy1EpR/yhAfhYfulM1iBTc9HCFStpA8fSle5snXPOynlZsMMMgCr0GP/NnEoKJsrdCTk
+ IuXACctEOu0zbiyaeQaTKnp+9Dp+lG0ipDytFAhUYx2WLtJ2wbOL3NbD8ZyC8gMoM/+Z
+ 1vPAy79/Z0yCKCcg7HjeO3eGPMNpG2UbduhEJEASCHthZ7ixMw8Jf+4rEEFZJpiECPVh
+ D3Yw==
+X-Gm-Message-State: APjAAAUxdbfR/YqeWARJNI/UhbwRsF5e/QpkoAcF991KbIF6MgpLqk/C
+ 03+jPfgll3tGoLj+F7iaOzw=
+X-Google-Smtp-Source: APXvYqwu8/FNRhg68Nb2ZF2ohaD+QcYRJVvaXt1TRS6mrgnz8RwmTp+ic/QQpLHJzCrhlbheGAJdFA==
+X-Received: by 2002:a17:902:246:: with SMTP id
+ 64mr4519837plc.311.1561545598410; 
+ Wed, 26 Jun 2019 03:39:58 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([218.189.10.173])
+ by smtp.gmail.com with ESMTPSA id x7sm18584969pfa.125.2019.06.26.03.39.55
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Wed, 26 Jun 2019 03:39:57 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: gaoxiang25@huawei.com,
+	yuchao0@huawei.com,
+	gregkh@linuxfoundation.org
+Subject: [PATCH RESEND] staging: erofs: remove unsupported ->datamode check in
+ fill_inline_data()
+Date: Wed, 26 Jun 2019 18:39:36 +0800
+Message-Id: <20190626103936.9064-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,53 +76,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
- huyue2@yulong.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, huyue2@yulong.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+From: Yue Hu <huyue2@yulong.com>
 
-On 2019/6/26 11:30, Yue Hu wrote:
-> From: Yue Hu <huyue2@yulong.com>
-> 
-> We should consider the error returned by fill_inline_data() when filling
-> last page in fill_inode(). If not getting inode will be successful even
-> though last page is bad. That is illogical. Also change -EAGAIN to 0 in
-> fill_inline_data() to stand for successful filling.
-> 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
+Already check if ->datamode is supported in read_inode(), no need to check
+again in the next fill_inline_data() only called by fill_inode().
 
-ditto, add the tags from other guyes.
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+---
+ drivers/staging/erofs/inode.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index e51348f..d6e1e16 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -129,8 +129,6 @@ static int fill_inline_data(struct inode *inode, void *data,
+ 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
+ 	const int mode = vi->datamode;
+ 
+-	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
+-
+ 	/* should be inode inline C */
+ 	if (mode != EROFS_INODE_LAYOUT_INLINE)
+ 		return 0;
+-- 
+1.9.1
 
-> ---
->  drivers/staging/erofs/inode.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-> index d6e1e16..1433f25 100644
-> --- a/drivers/staging/erofs/inode.c
-> +++ b/drivers/staging/erofs/inode.c
-> @@ -156,7 +156,7 @@ static int fill_inline_data(struct inode *inode, void *data,
->  		inode->i_link = lnk;
->  		set_inode_fast_symlink(inode);
->  	}
-> -	return -EAGAIN;
-> +	return 0;
->  }
->  
->  static int fill_inode(struct inode *inode, int isdir)
-> @@ -223,7 +223,7 @@ static int fill_inode(struct inode *inode, int isdir)
->  		inode->i_mapping->a_ops = &erofs_raw_access_aops;
->  
->  		/* fill last page if inline data is available */
-> -		fill_inline_data(inode, data, ofs);
-> +		err = fill_inline_data(inode, data, ofs);
->  	}
->  
->  out_unlock:
-> 
