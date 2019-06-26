@@ -1,47 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AB0556731
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 12:52:35 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45YfxX21Z4zDqWh
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 20:52:32 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5236456752
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 13:00:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45Yg7D1ncRzDqXW
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jun 2019 21:00:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.190; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::642; helo=mail-pl1-x642.google.com;
+ envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="rBDF2Ibh"; 
+ dkim-atps=neutral
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com
+ [IPv6:2607:f8b0:4864:20::642])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45YfxQ0g5dzDqWs
- for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 20:52:24 +1000 (AEST)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 6E58F3CB74AA66A3D694;
- Wed, 26 Jun 2019 18:52:18 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Jun
- 2019 18:52:08 +0800
-Subject: Re: [PATCH RESEND] staging: erofs: remove unsupported ->datamode
- check in fill_inline_data()
-To: Yue Hu <zbestahu@gmail.com>, <yuchao0@huawei.com>,
- <gregkh@linuxfoundation.org>
-References: <20190626103936.9064-1-zbestahu@gmail.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <9c9c656e-2f29-d086-362e-76bf1760191a@huawei.com>
-Date: Wed, 26 Jun 2019 18:51:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190626103936.9064-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45Yg7657NgzDqWy
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 21:00:49 +1000 (AEST)
+Received: by mail-pl1-x642.google.com with SMTP id e5so1233862pls.13
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jun 2019 04:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=VdhU2ks81jo9UrjXZOm8gn8RMZx/sg7VdDnqoRepyqE=;
+ b=rBDF2IbhJqsbejWYMTlxvc33psvRPXREmLlH1kdj1sffS2GEpRGBd/3KU+XhYKueKo
+ X+EQyfMddlzhcC9Tl0wzQORvQ1bW66K6b0gsa9wt3R6/H1Axhm8w2kKwnFbpwFlcOdvz
+ 6tRlrliU4HwUEcR9KZQ09pXc+vpCSgC2wdEePTtVVRRSlKeQQ5s81RkbDssKTwnhZneg
+ ct0dmSY17I3QbZ/5SUFm/H3tyoEyMLNhw2PFHI+ZNJscDX4J3xybD9YWMs9gYK+2Op7/
+ en73nUmQ3xiIIGmzxayHgcccJ8POvkUb5YkUA2t14LWTKWYmjBgHKbXO17UO+1IBF+8j
+ MZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=VdhU2ks81jo9UrjXZOm8gn8RMZx/sg7VdDnqoRepyqE=;
+ b=mKWXSdfqRN1VdlgUyjSXVSn1xZUXT16HJEiDR3Emnt/fVL5IpGDP8Rxz+osHJlx5if
+ dt3HTRKjAy8jodSj4Crh/ArwUqn8NcgDRN7E2R/+ipcdSemKtcdbhgoGeeLX+FjDrmCB
+ BZ9CGMA3NUgGhseEv3VTIAcKwNJpKgVtj3eLziWizpcIZ4QB1eSSBh5t1UdesAAaNJKO
+ 4HxzH9wFBGVHXD3MwhtmU9S+P8hJeelm/CMGXWSu7c/kx5/dJTj7CUl8gm7V8kMkQFFz
+ cOceutPjrrQF+Afp4o/dIMxwXCQXmGj/xKduNZoB9oLc4ApDuAhPyPyzyNfkKVFDS2xl
+ eLKA==
+X-Gm-Message-State: APjAAAXE/jBfVVSlLH0Bi55lAiwQ7yJNa80Sn7fKq1q7enVXKpZcvS8Q
+ tjv3NIvpWL62mb68ZJlXQns=
+X-Google-Smtp-Source: APXvYqzBd85hjMi95y7wvZswP72zOfwbAYxL/u39AlDoY64MjcDYg9no5lCwuw6Hum4qX/JCV/hAtQ==
+X-Received: by 2002:a17:902:542:: with SMTP id 60mr4831596plf.68.1561546846595; 
+ Wed, 26 Jun 2019 04:00:46 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([218.189.10.173])
+ by smtp.gmail.com with ESMTPSA id w187sm19008873pfb.4.2019.06.26.04.00.43
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Wed, 26 Jun 2019 04:00:45 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: gaoxiang25@huawei.com,
+	yuchao0@huawei.com,
+	gregkh@linuxfoundation.org
+Subject: [PATCH RESEND v2] staging: erofs: remove unsupported ->datamode check
+ in fill_inline_data()
+Date: Wed, 26 Jun 2019 19:00:32 +0800
+Message-Id: <20190626110032.3688-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,45 +75,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
- huyue2@yulong.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, huyue2@yulong.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+From: Yue Hu <huyue2@yulong.com>
 
-On 2019/6/26 18:39, Yue Hu wrote:
-> From: Yue Hu <huyue2@yulong.com>
-> 
-> Already check if ->datamode is supported in read_inode(), no need to check
-> again in the next fill_inline_data() only called by fill_inode().
-> 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
-> Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Already check if ->datamode is supported in read_inode(), no need to check
+again in the next fill_inline_data() only called by fill_inode().
 
-Bump the patch version in the title as Greg said...
-Otherwise, it is hard to differ which patch is the latest patch...
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+---
+v2: add tags.
 
-Thanks,
-Gao Xiang
+ drivers/staging/erofs/inode.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> ---
->  drivers/staging/erofs/inode.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-> index e51348f..d6e1e16 100644
-> --- a/drivers/staging/erofs/inode.c
-> +++ b/drivers/staging/erofs/inode.c
-> @@ -129,8 +129,6 @@ static int fill_inline_data(struct inode *inode, void *data,
->  	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
->  	const int mode = vi->datamode;
->  
-> -	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
-> -
->  	/* should be inode inline C */
->  	if (mode != EROFS_INODE_LAYOUT_INLINE)
->  		return 0;
-> 
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index e51348f..d6e1e16 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -129,8 +129,6 @@ static int fill_inline_data(struct inode *inode, void *data,
+ 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
+ 	const int mode = vi->datamode;
+ 
+-	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
+-
+ 	/* should be inode inline C */
+ 	if (mode != EROFS_INODE_LAYOUT_INLINE)
+ 		return 0;
+-- 
+1.9.1
+
