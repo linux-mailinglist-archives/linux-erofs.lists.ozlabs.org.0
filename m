@@ -2,67 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61FA257F92
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2019 11:46:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B13F59228
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2019 05:46:28 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45ZFRJ3jgqzDqdl
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2019 19:46:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45ZjNx1dGBzDql8
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2019 13:46:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::444; helo=mail-pf1-x444.google.com;
+ (client-ip=2607:f8b0:4864:20::641; helo=mail-pl1-x641.google.com;
  envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="s7enxB+I"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="texMjThj"; 
  dkim-atps=neutral
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com
- [IPv6:2607:f8b0:4864:20::444])
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com
+ [IPv6:2607:f8b0:4864:20::641])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45ZFRC6BQSzDqdG
- for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jun 2019 19:46:46 +1000 (AEST)
-Received: by mail-pf1-x444.google.com with SMTP id m30so947474pff.8
- for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jun 2019 02:46:46 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45ZjMV6XZbzDqMg
+ for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2019 13:45:10 +1000 (AEST)
+Received: by mail-pl1-x641.google.com with SMTP id bi6so2420440plb.12
+ for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jun 2019 20:45:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=from:to:cc:subject:date:message-id;
- bh=uMmVaqGs6Qzw1v02Xne45iZzGkIbUBWZpJMKSMkhWCo=;
- b=s7enxB+IExQARnhO0Qax0ABS2Hi6if5hn8MT8/E9KB4L+I8bWQEYmgRCgrbAoBA5PZ
- 8/ENKEDKnCFRMDJPKphqSHG+Wfb1srI7LDWUfcv6SyGcIXuW8r2byhT6R6LW9/QW1XbK
- S0VmYxJGA0bCxTFxrItDMEye/uFBR95uyHbq+8RdjXlNQXxAchyFRzfFp/oE7VylKZ8c
- tFAk/jv0V6dgRI+BVy7G2ud84jqP71+C82mrfD2usIBsg18ed01xUNkA6hPsjB4vdynO
- kDiQAFpPoFdGLnJnIbB+Ggy8V7qb0Zemn76gL1DZ8OyLIGB4rJoFFGGqAQkga9fz1wuB
- WQWA==
+ bh=KXeTyYem+OqmfXAB9jLbUiQJPmVsVcB9d5ZOaBgKddE=;
+ b=texMjThj9ELOsjSLEq9Y653PtH5SuvN1GG5Y4WjBzQ78DmK8vothKCoDarMC/zabdf
+ dOx030cYIzc2IAzYObguAgEwet0sMRx14n3TP0n0+MNWPt5RHK6rrxHbh6XcVYO1rEVP
+ DEUVrqxC1J13RZ3/9TWHkAHH+H4YTqjlMVaweakNMu2a9f5z/XGDci/PJiQkZBgrKGyh
+ 6NDYgauYnoWeIRAl79kkIBELWXk2PqWWLlBtvxyeJkj/4GI9anNqNBhwRP2gLP9G+xuE
+ ZnkeLoPywR6luGzYn0SGkGMvfKGXJk7XdVD2taqRfYJM/ermdOONmkpTjndt+g10z4Wf
+ i4sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=uMmVaqGs6Qzw1v02Xne45iZzGkIbUBWZpJMKSMkhWCo=;
- b=DFyVk8n6GzkSYbO1YdAJ8h/OC9o5k0x5EkOhhCtcREFH6H48vvDGxCDt5ZelN25kAR
- pv24DQL5AEyxUmOpMPFhZMxFTkleXeLRNF7Q/1A+SI6lfGunZrh81Wu7crtjtXCZTabm
- EG26ua/9QcFNG34PRttjBRt2fu7TS+U6qGNo29mk2Xw1pgPN/8RdlP59cQpMQGdFEQId
- ujvyu2oRqxolMMW4TEx/ma1QXvW0hDeVm0dK8NTiufTceY+2mS+DnRwxH7ahL0BL+N3R
- BLP0LMj6p3vph4tpsRUSVFDxD86//RVVmOyZ3aHLibprbuuxckIg+ivK556Fkc4x/DWh
- ZSNQ==
-X-Gm-Message-State: APjAAAUpNZ4ljYZt8cjW8E931EGYu1TJvaDHSIrK0OUzZFk+GIKjHPly
- mlDep1FfwySgp1T5WQatAvg=
-X-Google-Smtp-Source: APXvYqzV988AIws0jlsYMBuVHSS5AnNS0myfaZDDR3n7w9cPoWvRFgrEcd3t71Hz1fqgEMUY3UzZ0w==
-X-Received: by 2002:a63:f746:: with SMTP id f6mr2945161pgk.56.1561628803496;
- Thu, 27 Jun 2019 02:46:43 -0700 (PDT)
+ bh=KXeTyYem+OqmfXAB9jLbUiQJPmVsVcB9d5ZOaBgKddE=;
+ b=JYAgQFGTgPztewyhEUNOWd9+NRA9dRujH3iGI6L9uLOba0LFi6dVkIUs89Uv/SqvMC
+ FIag/ACE93WNmQM9q/tieXUxgp0ItVW6SPOtyurpZl1vI25Q034ApfQx+8DOPWl2coPG
+ j7R2/y3I8FgJNPG5+BndSnlG4Cbmrny2HDa19IpdA/4sL3J90SeERrUEQl6rlPBxO+6G
+ x7jYYjVcSRl6QSm/McS7xVJahecxvjxt4+rbJISqS9BTFJ0UCUEQ2w43jvLX9wfkUz3B
+ V7eJfFRxmE9TP0SAULKsjL95vkZgMZFry6ZkSKX3iiJQG5Rbh+M2HJz9XvkvpGQH+kTU
+ TBwg==
+X-Gm-Message-State: APjAAAUk5nVssYcz+DNktcGXHG9HnP3N0CYgb2IU/IGbIHIqPkdxBqqX
+ 7y8JqVUeFXSwrF57qcAyeEw=
+X-Google-Smtp-Source: APXvYqziLzLlQJalN1m0zwRWAZgf0EFjLz1Ds/0ZjyAtyiCKJGWj0KUtdxBH5Eh1IDYaR6xlQFjF5w==
+X-Received: by 2002:a17:902:aa83:: with SMTP id
+ d3mr8633526plr.74.1561693507494; 
+ Thu, 27 Jun 2019 20:45:07 -0700 (PDT)
 Received: from huyue2.ccdomain.com ([218.189.10.173])
- by smtp.gmail.com with ESMTPSA id 64sm4653324pfe.128.2019.06.27.02.46.39
+ by smtp.gmail.com with ESMTPSA id c69sm629715pje.6.2019.06.27.20.45.04
  (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Thu, 27 Jun 2019 02:46:42 -0700 (PDT)
+ Thu, 27 Jun 2019 20:45:06 -0700 (PDT)
 From: Yue Hu <zbestahu@gmail.com>
 To: gaoxiang25@huawei.com,
 	yuchao0@huawei.com,
 	gregkh@linuxfoundation.org
-Subject: [PATCH RESEND v2] staging: erofs: return the error value if
- fill_inline_data() fails
-Date: Thu, 27 Jun 2019 17:46:15 +0800
-Message-Id: <20190627094615.2224-1-zbestahu@gmail.com>
+Subject: [PATCH] staging: erofs: don't check special inode layout
+Date: Fri, 28 Jun 2019 11:42:34 +0800
+Message-Id: <20190628034234.8832-1-zbestahu@gmail.com>
 X-Mailer: git-send-email 2.17.1.windows.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -83,42 +83,28 @@ Sender: "Linux-erofs"
 
 From: Yue Hu <huyue2@yulong.com>
 
-We should consider the error returned by fill_inline_data() when filling
-last page in fill_inode(). If not getting inode will be successful even
-though last page is bad. That is illogical. Also change -EAGAIN to 0 in
-fill_inline_data() to stand for successful filling.
+Currently, we will check if inode layout is compression or inline if
+the inode is special in fill_inode(). Also set ->i_mapping->a_ops for
+it. That is pointless since the both modes won't be set for special
+inode when creating EROFS filesystem image. So, let's avoid it.
 
 Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
 ---
-no change
-
- drivers/staging/erofs/inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/erofs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index d6e1e16..1433f25 100644
+index 1433f25..2fe0f6d 100644
 --- a/drivers/staging/erofs/inode.c
 +++ b/drivers/staging/erofs/inode.c
-@@ -156,7 +156,7 @@ static int fill_inline_data(struct inode *inode, void *data,
- 		inode->i_link = lnk;
- 		set_inode_fast_symlink(inode);
- 	}
--	return -EAGAIN;
-+	return 0;
- }
- 
- static int fill_inode(struct inode *inode, int isdir)
-@@ -223,7 +223,7 @@ static int fill_inode(struct inode *inode, int isdir)
- 		inode->i_mapping->a_ops = &erofs_raw_access_aops;
- 
- 		/* fill last page if inline data is available */
--		fill_inline_data(inode, data, ofs);
-+		err = fill_inline_data(inode, data, ofs);
- 	}
- 
- out_unlock:
+@@ -205,6 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
+ 			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
+ 			inode->i_op = &erofs_generic_iops;
+ 			init_special_inode(inode, inode->i_mode, inode->i_rdev);
++			goto out_unlock;
+ 		} else {
+ 			err = -EIO;
+ 			goto out_unlock;
 -- 
 1.9.1
 
