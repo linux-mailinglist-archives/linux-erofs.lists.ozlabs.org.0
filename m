@@ -2,46 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A239B5A9A0
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 10:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB7565A9BC
+	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 10:57:54 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45bRsR5NQyzDqty
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 18:40:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45bSFr1jLnzDqtt
+	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 18:57:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.190; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ (client-ip=45.249.212.187; helo=huawei.com; envelope-from=yuchao0@huawei.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from huawei.com (szxga01-in.huawei.com [45.249.212.187])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45bRqw1PHnzDqwy
- for <linux-erofs@lists.ozlabs.org>; Sat, 29 Jun 2019 18:38:51 +1000 (AEST)
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 41C8D1123E9AD6730A49;
- Sat, 29 Jun 2019 16:38:46 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 29 Jun
- 2019 16:38:39 +0800
-Subject: Re: [PATCH] staging: erofs: don't check special inode layout
-To: Yue Hu <zbestahu@gmail.com>, Gao Xiang <gaoxiang25@huawei.com>
-References: <20190628034234.8832-1-zbestahu@gmail.com>
- <276837dc-b18a-6f20-fc33-d988dff5ae9f@huawei.com>
- <20190628121952.000028fc.zbestahu@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45bSCv1j8NzDqwB
+ for <linux-erofs@lists.ozlabs.org>; Sat, 29 Jun 2019 18:56:09 +1000 (AEST)
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
+ by Forcepoint Email with ESMTP id B7DA94CFFB944B0649E6;
+ Sat, 29 Jun 2019 16:56:03 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Jun 2019 16:56:03 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 29 Jun 2019 16:56:02 +0800
 From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <a3743d00-a5c8-6e2a-7b1b-f5111ca59009@huawei.com>
-Date: Sat, 29 Jun 2019 16:38:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+To: <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH 1/2] iomap: introduce IOMAP_TAIL
+Date: Sat, 29 Jun 2019 16:55:38 +0800
+Message-ID: <20190629085539.29237-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190628121952.000028fc.zbestahu@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme770-chm.china.huawei.com (10.3.19.116) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -54,91 +53,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@yulong.com,
- Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019/6/28 12:19, Yue Hu wrote:
-> On Fri, 28 Jun 2019 11:50:21 +0800
-> Gao Xiang <gaoxiang25@huawei.com> wrote:
-> 
->> Hi Yue,
->>
->> On 2019/6/28 11:42, Yue Hu wrote:
->>> From: Yue Hu <huyue2@yulong.com>
->>>
->>> Currently, we will check if inode layout is compression or inline if
->>> the inode is special in fill_inode(). Also set ->i_mapping->a_ops for
->>> it. That is pointless since the both modes won't be set for special
->>> inode when creating EROFS filesystem image. So, let's avoid it.
->>>
->>> Signed-off-by: Yue Hu <huyue2@yulong.com>  
->>
->> Have you test this patch with some actual image with legacy mkfs since
->> new mkfs framework have not supported special inode...
-> 
-> Hi Xiang,
-> 
-> I'm studying the testing :)
-> 
-> However, already check the code handling for special inode in leagcy mkfs as below:
-> 
-> ```c
->                 break;
->         case EROFS_FT_BLKDEV:
->         case EROFS_FT_CHRDEV:
->         case EROFS_FT_FIFO:
->         case EROFS_FT_SOCK:
->                 mkfs_rank_inode(d);
->                 break;
-> 
->         default:
->                 erofs_err("inode[%s] file_type error =%d",
->                           d->i_fullpath,
-> ```
-> 
-> No special inode layout operations, so this change should be fine.
-> 
-> Thx.
-> 
->>
->> I think that is fine in priciple, however, in case to introduce some potential
->> issues, I will test this patch later. I will give a Reviewed-by tag after I tested
->> this patch.
+Some filesystems like erofs/reiserfs have the ability to pack tail
+data into metadata, however iomap framework can only support mapping
+inline data with IOMAP_INLINE type, it restricts that:
+- inline data should be locating at page #0.
+- inline size should equal to .i_size
+So we can not use IOMAP_INLINE to handle tail-packing case.
 
-This patch looks good to me, if this won't fail any tests from Xiang, you can add:
+This patch introduces new mapping type IOMAP_TAIL to map tail-packed
+data for further use of erofs.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/iomap.c            | 22 ++++++++++++++++++++++
+ include/linux/iomap.h |  1 +
+ 2 files changed, 23 insertions(+)
 
-Thanks,
+diff --git a/fs/iomap.c b/fs/iomap.c
+index 12654c2e78f8..ae7777ce77d0 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -280,6 +280,23 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
+ 	SetPageUptodate(page);
+ }
+ 
++static void
++iomap_read_tail_data(struct inode *inode, struct page *page,
++		struct iomap *iomap)
++{
++	size_t size = i_size_read(inode) & (PAGE_SIZE - 1);
++	void *addr;
++
++	if (PageUptodate(page))
++		return;
++
++	addr = kmap_atomic(page);
++	memcpy(addr, iomap->inline_data, size);
++	memset(addr + size, 0, PAGE_SIZE - size);
++	kunmap_atomic(addr);
++	SetPageUptodate(page);
++}
++
+ static loff_t
+ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		struct iomap *iomap)
+@@ -298,6 +315,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		return PAGE_SIZE;
+ 	}
+ 
++	if (iomap->type == IOMAP_TAIL) {
++		iomap_read_tail_data(inode, page, iomap);
++		return PAGE_SIZE;
++	}
++
+ 	/* zero post-eof blocks as the page may be mapped */
+ 	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
+ 	if (plen == 0)
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 2103b94cb1bf..7e1ee48e3db7 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -25,6 +25,7 @@ struct vm_fault;
+ #define IOMAP_MAPPED	0x03	/* blocks allocated at @addr */
+ #define IOMAP_UNWRITTEN	0x04	/* blocks allocated at @addr in unwritten state */
+ #define IOMAP_INLINE	0x05	/* data inline in the inode */
++#define IOMAP_TAIL	0x06	/* tail data packed in metdata */
+ 
+ /*
+  * Flags for all iomap mappings:
+-- 
+2.18.0.rc1
 
-> 
-> Thanks.
-> 
->>
->> Thanks,
->> Gao Xiang
->>
->>> ---
->>>  drivers/staging/erofs/inode.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
->>> index 1433f25..2fe0f6d 100644
->>> --- a/drivers/staging/erofs/inode.c
->>> +++ b/drivers/staging/erofs/inode.c
->>> @@ -205,6 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
->>>  			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
->>>  			inode->i_op = &erofs_generic_iops;
->>>  			init_special_inode(inode, inode->i_mode, inode->i_rdev);
->>> +			goto out_unlock;
->>>  		} else {
->>>  			err = -EIO;
->>>  			goto out_unlock;
->>>   
-> 
-> .
-> 
