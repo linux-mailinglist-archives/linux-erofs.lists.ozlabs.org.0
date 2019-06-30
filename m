@@ -1,49 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47FD95A9BB
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 10:57:50 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45bSFl3bnyzDqw4
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2019 18:57:47 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 030D25B15F
+	for <lists+linux-erofs@lfdr.de>; Sun, 30 Jun 2019 20:59:38 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45cKYd2mgRzDqWT
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Jul 2019 04:59:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1561921173;
+	bh=Uvqfr8qVoZPEAep6cDwBL4XXqSnziyg/10JkoonAYB0=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=MLJfOQScLvCdWPLHW+CNfR8nu5/jO/zAwQxapTWK6oCEPG3Aqy7yenjqZtx4r5+7o
+	 ed0eoMaVWNo4omxc2/p1IUi5BAyd7eFYLJuJfNiNZipLUxuHbhJCSZQ0QsKGI7vzFJ
+	 SqWTT/BaOj9j30dBnqeEpByH/G8RdYDc82HuFxZfs3YmcVecDnJtoxfQht/u0RJwIj
+	 LX//PhmF/QnJHFI2rsXFnCDhBS769b/3weoM/fUwYqQWRNEIarSXKusaANTMezQOiy
+	 FxfLeoksO453jxcjGJ/+wrwVsoDaA3l5RNHaAgWu0+lCg5v5HPeBalsHDtGGRjeWag
+	 Yiz7YUN1+Q4sQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.189; helo=huawei.com; envelope-from=yuchao0@huawei.com;
- receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.31; helo=sonic308-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.b="CW+oGbza"; 
+ dkim-atps=neutral
+Received: from sonic308-55.consmr.mail.gq1.yahoo.com
+ (sonic308-55.consmr.mail.gq1.yahoo.com [98.137.68.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45bSCv2c3RzDqwD
- for <linux-erofs@lists.ozlabs.org>; Sat, 29 Jun 2019 18:56:09 +1000 (AEST)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
- by Forcepoint Email with ESMTP id 11A261560CA182C29280;
- Sat, 29 Jun 2019 16:56:04 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 29 Jun 2019 16:56:03 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 29 Jun 2019 16:56:03 +0800
-From: Chao Yu <yuchao0@huawei.com>
-To: <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH 2/2] staging: erofs: use iomap interface for raw data access
-Date: Sat, 29 Jun 2019 16:55:39 +0800
-Message-ID: <20190629085539.29237-2-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20190629085539.29237-1-yuchao0@huawei.com>
-References: <20190629085539.29237-1-yuchao0@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme770-chm.china.huawei.com (10.3.19.116) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45cKYS12QMzDqT4
+ for <linux-erofs@lists.ozlabs.org>; Mon,  1 Jul 2019 04:59:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1561921156; bh=qvS6AX1nqTURIJxkra+F23NzHGUKeOF9WJqZLfkSZ3I=;
+ h=From:To:Cc:Subject:Date:From:Subject;
+ b=CW+oGbzaBWtkvpId2t7MjFmW3VQ1LGlDqhON0VM2t/0CxgH2BBjkyQKOquW/AXGsvZil2x/axn8pSyW5zDy1VgTvJjBFBtkNthJOhDImFuF9ydc+dvHHVRRcE0rkUlQxUcXrTJk/k6aHK5PNclXNyfOVT3eQnF+X9faLTBnE+YP84nMeMkcH4Usw/F1pqIeYhoX4u9SeNE5aPjZjITBTSfMQ9kN+jlbTPan4bkjbq76Q3Pjy93GrOgyXcxd4zvCbqbzQYQdZdg05r3KviubxLLiIRpXcMvhGeC6oRI+66uIlMvMFxUPjbHuAzfFNPnm+y1qEBC6R9RkUwq1zvVcPlw==
+X-YMail-OSG: _MUMI6UVM1kHv.o_3n8h5.C86RBWmC5Ch5VWinQzlhBgdFfZyAkqN9w.q0VDv8O
+ Bq9_fJ0niS4mJdEJX41zaNPoEBzdm.tTw3mfdOMbcWRGuxtZRygQcbDSILjfbJYHHb7WJQJ2M6B_
+ 8HQCd7dMN4viBzEBufJeYgzPtIcEY0NBEZVKsWTDHUvQ_ukCnhSix81RWjSMp1rv4shCKr.j3P5P
+ QWHZ4.o_ehIKIZhBNBKQR9vKDsAL.H7rClKvw1h0elZEWGMrFbcD1J6hL4qjiW9l8qzkIFRp2zHU
+ 9CTcnEpcqKaQD0GIkoPoi..vWvUsWBUSp08LXnT0bmj32AewdLZ4ZWnJS5PvJoBGRr_6egNFCl4M
+ _ZQuGUpSsZKWLgqwmk2FvbfEqxneyW9rLUA12kcSgUi4a84KBAIqs7K59cq1j_Zck5FBomu.tjFY
+ dBxgANcpbre88L.WWoGP_RKI694ntxZMgcSPo82XRl0iMrEQmdt6hCmlDWRANLXlWiVJCsISd8ZO
+ KxedfV_HVtTwvCJYzUwc0QlUloGcBRtY0PF13_047K1m7pg1mp4NC7VtEGp2k035dF3LW2miBjob
+ C.ubNzB4a2Uo_NnlK5noM27sGWWsBEPvnpnuXC3CJbrDSW9ywmaqwKPqJaS4Cxbkn6czw_ET.Luq
+ 9LtQIHA5sMYC8zLgD0CIU0uA2OFTYlE.LqPu8ZVGhoDbYTzeYSrPoYP08xD5Ao4AyxPuSEFH9emA
+ ZvgTcx1A8msiqfMcM8EUyLMV.p0M7tO.w6SsGk3JRjcAFjUS0M0ls7eBKI1aE_HqQgLNQlwUp4O5
+ Y5lcAA0cwNjR4tpgfHWYkOsxnNFzQ.3Jw_OEC6UIqX5QD2kUOQXN.UH0XyEF8BbdktSzuAC.NF1A
+ KXmB9ORyvvv_O8inwLQ1N5EtinF8ThdmTEfjinP7ThaF7zE2z3zPuxhWziHVE45e.kttoRyFhjJR
+ 82r6PmUl8sFRyGXDWe4YhDxcS7TQhpyA1OfmjOaHggE8PrqX_mi9CYc0qtpLXuOrdFwBNCsn7yau
+ ErZ5xWgKVFfHFHDW5r7nwzI2N2U94_Yux6TMx9TZB5Ed_TunUSAgUyz_VN8lqYvttnh3K8DONMVL
+ 39OrpEG4EbCILlzmT.oZ86fgtQ4svSTqUp9aZ2ktxhUOxXI5dRr6xrAxVp4qahdXNFEGNGsrtNEr
+ 5okIlXlIeW8H5N2BzOdG1w9Mht7wdD0OUIUEWNJHd_LdcpFBab5_Igyd_Avg-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sun, 30 Jun 2019 18:59:16 +0000
+Received: from 115.192.39.149 (EHLO localhost.localdomain) ([115.192.39.149])
+ by smtp430.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 4f455e50a02bda45690c67a6db1d1f3b; 
+ Sun, 30 Jun 2019 18:59:13 +0000 (UTC)
+To: Chao Yu <yuchao0@huawei.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
+Date: Mon,  1 Jul 2019 02:58:46 +0800
+Message-Id: <20190630185846.16624-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,335 +79,134 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>, Du Wei <weidu.du@huawei.com>,
+ Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As Christoph suggested, for the raw data access interfaces,
-we'd better use iomap framework interface instead, it can
-help to avoid a lot of duplicated codes, and also it can get
-rid of accessing private field of block layer directly.
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-https://lkml.org/lkml/2019/4/12/605
+Like all lz77-based algrithms, lz4 has a dynamically populated
+("sliding window") dictionary and the maximum lookback distance
+is 65535. Therefore the number of bounced pages could be limited
+by erofs based on this property.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+However, just now we observed some lz4 sequences in the extreme
+case cannot be decompressed correctly after this feature is enabled,
+the root causes after analysis are clear as follows:
+1) max bounced pages should be 17 rather than 16 pages;
+2) considering the following case, the broken implementation
+   could reuse unsafely in advance (in other words, reuse it
+   less than a safe distance),
+   0 1 2 ... 16 17 18 ... 33 34
+   b             p  b         b
+   note that the bounce page that we are concerned was allocated
+   at 0, and it reused at 18 since page 17 exists, but it mis-reused
+   at 34 in advance again, which causes decompress failure.
+
+This patch resolves the issue by introducing a bitmap to mark
+whether the page in the same position of last round is a bounced
+page or not, and a micro stack data structure to store all
+available bounced pages.
+
+Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/data.c | 249 ++++++++++++-----------------------
- 1 file changed, 83 insertions(+), 166 deletions(-)
+ drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 08c55e4278ee..6201a77dfb99 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -12,6 +12,7 @@
-  */
- #include "internal.h"
- #include <linux/prefetch.h>
-+#include <linux/iomap.h>
+diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+index 80f1f39719ba..1fb0abb98dff 100644
+--- a/drivers/staging/erofs/decompressor.c
++++ b/drivers/staging/erofs/decompressor.c
+@@ -13,7 +13,7 @@
+ #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
+ #endif
  
- #include <trace/events/erofs.h>
+-#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
++#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
+ #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
+ #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
+ #endif
+@@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+ 	const unsigned int nr =
+ 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+ 	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
+-	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+-					  BITS_PER_LONG)] = { 0 };
++	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
++					   BITS_PER_LONG)] = { 0 };
+ 	void *kaddr = NULL;
+-	unsigned int i, j, k;
++	unsigned int i, j, top;
  
-@@ -111,6 +112,15 @@ struct page *__erofs_get_meta_page(struct super_block *sb,
- 	return ERR_PTR(err);
- }
+-	for (i = 0; i < nr; ++i) {
++	top = 0;
++	for (i = j = 0; i < nr; ++i, ++j) {
+ 		struct page *const page = rq->out[i];
++		struct page *victim;
  
-+struct page *__erofs_find_meta_page(struct super_block *sb,
-+				    erofs_blk_t blkaddr)
-+{
-+	struct inode *const bd_inode = sb->s_bdev->bd_inode;
-+	struct address_space *const mapping = bd_inode->i_mapping;
+-		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
+-		if (availables[j])
+-			__set_bit(j, unused);
++		if (j >= LZ4_MAX_DISTANCE_PAGES)
++			j = 0;
 +
-+	return find_get_page(mapping, blkaddr);
-+}
-+
- static int erofs_map_blocks_flatmode(struct inode *inode,
- 				     struct erofs_map_blocks *map,
- 				     int flags)
-@@ -185,167 +195,106 @@ int erofs_map_blocks(struct inode *inode,
- 	return erofs_map_blocks_flatmode(inode, map, flags);
- }
++		/* 'valid' bounced can only be tested after a complete round */
++		if (test_bit(j, bounced)) {
++			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
++			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
++			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
++		}
  
--static inline struct bio *erofs_read_raw_page(struct bio *bio,
--					      struct address_space *mapping,
--					      struct page *page,
--					      erofs_off_t *last_block,
--					      unsigned int nblocks,
--					      bool ra)
-+static int erofs_iomap_begin(struct inode *inode, loff_t pos,
-+			     loff_t length, unsigned int flags,
-+			     struct iomap *iomap)
- {
--	struct inode *const inode = mapping->host;
--	struct super_block *const sb = inode->i_sb;
--	erofs_off_t current_block = (erofs_off_t)page->index;
-+	struct erofs_map_blocks map = {
-+		.m_la = pos,
-+	};
-+	erofs_blk_t blknr;
-+	unsigned int blkoff;
- 	int err;
+ 		if (page) {
++			__clear_bit(j, bounced);
+ 			if (kaddr) {
+ 				if (kaddr + PAGE_SIZE == page_address(page))
+ 					kaddr += PAGE_SIZE;
+@@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+ 			continue;
+ 		}
+ 		kaddr = NULL;
++		__set_bit(j, bounced);
  
--	DBG_BUGON(!nblocks);
+-		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
+-		if (k < LZ4_MAX_DISTANCE_PAGES) {
+-			j = k;
+-			get_page(availables[j]);
++		if (top) {
++			victim = availables[--top];
++			get_page(victim);
+ 		} else {
+-			DBG_BUGON(availables[j]);
 -
--	if (PageUptodate(page)) {
--		err = 0;
--		goto has_updated;
--	}
--
--	if (cleancache_get_page(page) == 0) {
--		err = 0;
--		SetPageUptodate(page);
--		goto has_updated;
--	}
-+	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (unlikely(err))
-+		return err;
- 
--	/* note that for readpage case, bio also equals to NULL */
--	if (bio &&
--	    /* not continuous */
--	    *last_block + 1 != current_block) {
--submit_bio_retry:
--		__submit_bio(bio, REQ_OP_READ, 0);
--		bio = NULL;
-+	/* holed page */
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		iomap->type = IOMAP_HOLE;
-+		iomap->addr = IOMAP_NULL_ADDR;
-+		iomap->length = EROFS_BLKSIZ;
-+		return 0;
+ 			if (!list_empty(pagepool)) {
+-				availables[j] = lru_to_page(pagepool);
+-				list_del(&availables[j]->lru);
+-				DBG_BUGON(page_ref_count(availables[j]) != 1);
++				victim = lru_to_page(pagepool);
++				list_del(&victim->lru);
++				DBG_BUGON(page_ref_count(victim) != 1);
+ 			} else {
+-				availables[j] = alloc_pages(GFP_KERNEL, 0);
+-				if (!availables[j])
++				victim = alloc_pages(GFP_KERNEL, 0);
++				if (!victim)
+ 					return -ENOMEM;
+ 			}
+-			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
++			victim->mapping = Z_EROFS_MAPPING_STAGING;
+ 		}
+-		rq->out[i] = availables[j];
+-		__clear_bit(j, unused);
++		rq->out[i] = victim;
  	}
- 
--	if (!bio) {
--		struct erofs_map_blocks map = {
--			.m_la = blknr_to_addr(current_block),
--		};
--		erofs_blk_t blknr;
--		unsigned int blkoff;
--
--		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
--		if (unlikely(err))
--			goto err_out;
--
--		/* zero out the holed page */
--		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
--			zero_user_segment(page, 0, PAGE_SIZE);
--			SetPageUptodate(page);
--
--			/* imply err = 0, see erofs_map_blocks */
--			goto has_updated;
--		}
--
--		/* for RAW access mode, m_plen must be equal to m_llen */
--		DBG_BUGON(map.m_plen != map.m_llen);
-+	/* for RAW access mode, m_plen must be equal to m_llen */
-+	DBG_BUGON(map.m_plen != map.m_llen);
- 
--		blknr = erofs_blknr(map.m_pa);
--		blkoff = erofs_blkoff(map.m_pa);
-+	blknr = erofs_blknr(map.m_pa);
-+	blkoff = erofs_blkoff(map.m_pa);
- 
--		/* deal with inline page */
--		if (map.m_flags & EROFS_MAP_META) {
--			void *vsrc, *vto;
--			struct page *ipage;
-+	/* deal with inline page */
-+	if (map.m_flags & EROFS_MAP_META) {
-+		struct page *ipage;
-+		void *addr;
- 
--			DBG_BUGON(map.m_plen > PAGE_SIZE);
-+		DBG_BUGON(map.m_plen > PAGE_SIZE);
- 
--			ipage = erofs_get_meta_page(inode->i_sb, blknr, 0);
-+		ipage = erofs_get_meta_page(inode->i_sb, blknr, false);
-+		if (IS_ERR(ipage))
-+			return PTR_ERR(ipage);
- 
--			if (IS_ERR(ipage)) {
--				err = PTR_ERR(ipage);
--				goto err_out;
--			}
--
--			vsrc = kmap_atomic(ipage);
--			vto = kmap_atomic(page);
--			memcpy(vto, vsrc + blkoff, map.m_plen);
--			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
--			kunmap_atomic(vto);
--			kunmap_atomic(vsrc);
--			flush_dcache_page(page);
--
--			SetPageUptodate(page);
--			/* TODO: could we unlock the page earlier? */
--			unlock_page(ipage);
--			put_page(ipage);
-+		addr = kmap_atomic(ipage);
- 
--			/* imply err = 0, see erofs_map_blocks */
--			goto has_updated;
--		}
--
--		/* pa must be block-aligned for raw reading */
--		DBG_BUGON(erofs_blkoff(map.m_pa));
--
--		/* max # of continuous pages */
--		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
--			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
--		if (nblocks > BIO_MAX_PAGES)
--			nblocks = BIO_MAX_PAGES;
--
--		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
--				     read_endio, false);
--		if (IS_ERR(bio)) {
--			err = PTR_ERR(bio);
--			bio = NULL;
--			goto err_out;
--		}
-+		iomap->addr = map.m_pa;
-+		iomap->offset = map.m_la;
-+		iomap->length = map.m_plen;
-+		if (!map.m_la)
-+			iomap->type = IOMAP_INLINE;
-+		else
-+			iomap->type = IOMAP_TAIL;
-+		iomap->private = addr;
-+		iomap->inline_data = addr + blkoff;
-+		return 0;
- 	}
- 
--	err = bio_add_page(bio, page, PAGE_SIZE, 0);
--	/* out of the extent or bio is full */
--	if (err < PAGE_SIZE)
--		goto submit_bio_retry;
-+	/* pa must be block-aligned for raw reading */
-+	DBG_BUGON(blkoff);
- 
--	*last_block = current_block;
-+	iomap->addr = map.m_pa;
-+	iomap->offset = map.m_la;
-+	iomap->length = map.m_llen;
-+	iomap->type = IOMAP_MAPPED;
-+	iomap->flags |= IOMAP_F_MERGED;
-+	iomap->bdev = inode->i_sb->s_bdev;
-+	return 0;
-+}
- 
--	/* shift in advance in case of it followed by too many gaps */
--	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
--		/* err should reassign to 0 after submitting */
--		err = 0;
--		goto submit_bio_out;
--	}
-+static int erofs_iomap_end(struct inode *inode, loff_t pos,
-+			   loff_t length, ssize_t written,
-+			   unsigned int flags, struct iomap *iomap)
-+{
-+	if (iomap->type == IOMAP_INLINE || iomap->type == IOMAP_TAIL) {
-+		struct page *ipage;
-+		void *addr = (void *)iomap->private;
- 
--	return bio;
-+		kunmap_atomic(addr);
- 
--err_out:
--	/* for sync reading, set page error immediately */
--	if (!ra) {
--		SetPageError(page);
--		ClearPageUptodate(page);
--	}
--has_updated:
--	unlock_page(page);
--
--	/* if updated manually, continuous pages has a gap */
--	if (bio)
--submit_bio_out:
--		__submit_bio(bio, REQ_OP_READ, 0);
-+		ipage = __erofs_find_meta_page(inode->i_sb,
-+					       erofs_blknr(iomap->addr));
-+		DBG_BUGON(!ipage);
- 
--	return unlikely(err) ? ERR_PTR(err) : NULL;
-+		unlock_page(ipage);
-+		put_page(ipage);
-+		put_page(ipage);
-+	}
-+	return 0;
+ 	return kaddr ? 1 : 0;
  }
- 
-+const struct iomap_ops erofs_iomap_ops = {
-+	.iomap_begin		= erofs_iomap_begin,
-+	.iomap_end		= erofs_iomap_end,
-+};
-+
- /*
-  * since we dont have write or truncate flows, so no inode
-  * locking needs to be held at the moment.
-  */
- static int erofs_raw_access_readpage(struct file *file, struct page *page)
- {
--	erofs_off_t last_block;
--	struct bio *bio;
--
- 	trace_erofs_readpage(page, true);
--
--	bio = erofs_read_raw_page(NULL, page->mapping,
--				  page, &last_block, 1, false);
--
--	if (IS_ERR(bio))
--		return PTR_ERR(bio);
--
--	DBG_BUGON(bio);	/* since we have only one bio -- must be NULL */
--	return 0;
-+	return iomap_readpage(page, &erofs_iomap_ops);
- }
- 
- static int erofs_raw_access_readpages(struct file *filp,
-@@ -353,42 +302,10 @@ static int erofs_raw_access_readpages(struct file *filp,
- 				      struct list_head *pages,
- 				      unsigned int nr_pages)
- {
--	erofs_off_t last_block;
--	struct bio *bio = NULL;
--	gfp_t gfp = readahead_gfp_mask(mapping);
- 	struct page *page = list_last_entry(pages, struct page, lru);
- 
- 	trace_erofs_readpages(mapping->host, page, nr_pages, true);
--
--	for (; nr_pages; --nr_pages) {
--		page = list_entry(pages->prev, struct page, lru);
--
--		prefetchw(&page->flags);
--		list_del(&page->lru);
--
--		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
--			bio = erofs_read_raw_page(bio, mapping, page,
--						  &last_block, nr_pages, true);
--
--			/* all the page errors are ignored when readahead */
--			if (IS_ERR(bio)) {
--				pr_err("%s, readahead error at page %lu of nid %llu\n",
--				       __func__, page->index,
--				       EROFS_V(mapping->host)->nid);
--
--				bio = NULL;
--			}
--		}
--
--		/* pages could still be locked */
--		put_page(page);
--	}
--	DBG_BUGON(!list_empty(pages));
--
--	/* the rare case (end in gaps) */
--	if (unlikely(bio))
--		__submit_bio(bio, REQ_OP_READ, 0);
--	return 0;
-+	return iomap_readpages(mapping, pages, nr_pages, &erofs_iomap_ops);
- }
- 
- /* for uncompressed (aligned) files and raw access for other files */
 -- 
-2.18.0.rc1
+2.17.1
 
