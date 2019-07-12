@@ -1,45 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C6616679B
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2019 09:17:33 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED4665A20
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Jul 2019 17:10:05 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45kzxk4rj7zDqS1
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2019 01:10:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45lPQ16VSnzDqR2
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2019 17:17:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.190; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::541; helo=mail-pg1-x541.google.com;
+ envelope-from=nishkadg.linux@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="DDiDxcyp"; 
+ dkim-atps=neutral
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com
+ [IPv6:2607:f8b0:4864:20::541])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45kzj30WWDzDqjx
- for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jul 2019 00:59:01 +1000 (AEST)
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id A035CB428B1CAA18567C;
- Thu, 11 Jul 2019 22:58:58 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 11 Jul
- 2019 22:58:49 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Theodore Ts'o <tytso@mit.edu>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v2 24/24] erofs: add document
-Date: Thu, 11 Jul 2019 22:57:55 +0800
-Message-ID: <20190711145755.33908-25-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190711145755.33908-1-gaoxiang25@huawei.com>
-References: <20190711145755.33908-1-gaoxiang25@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45lPJv6lB3zDqt3
+ for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jul 2019 17:13:03 +1000 (AEST)
+Received: by mail-pg1-x541.google.com with SMTP id z75so4121770pgz.5
+ for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jul 2019 00:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=cmo1tqBeA/Sh2ClKCCO0JqdGpQ8IAK8NK0uVuzIyLd0=;
+ b=DDiDxcyprjE4Ta3ztfW9tsjVQv/DEicG6Tlr0nncKQgg7hJxObowvlEhKvRearNs5h
+ gTwMEe7djLb+a7fCtQZuARPC+zJS+vDRTSioHGz7CITml5bJ6BXzuC2DKoJkTfFEq406
+ K6ATKZAsyYneolthA4B2I5zh25q7Q5uzNpom3Ad7TmotH5xwkT3AAAce2HJT3hsD5hsP
+ 2AYAmRpxBYfuCixamSHDd+ejE9KMqSLTCDy3eyFNyUNQEgmjL6OoUvbQYvU4Lc3UIEjd
+ vWp7TiwC2beD+iLJRQpvA3tTkL0P/5jkxlkiSv38l1o1pzuNKzuTfTdWxxwr5hyNTZ4K
+ QPiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=cmo1tqBeA/Sh2ClKCCO0JqdGpQ8IAK8NK0uVuzIyLd0=;
+ b=V8XSarSt8gJlaNytkkqDgZ1e6eQdn4/Dw9QKXj9Kond47+cDiROO3ozb4otQlEZWuP
+ 6ncZmfg0IJOcDXWonedTazwuGo4IHfy2+gXPryd7kh3lsVwd5SDx2bUrBP2YPHeTKilA
+ LvBV+PZgExVV8oJ+EvJ5KI493qIj6u3Z5QxqU2xtH77fVLvzBGJtdlR/2aRraZBPU6rR
+ t10bdOQvZa+Q5/xjH90GP8cZXr7dsRXprIJXse4NdxzZPJxnZxrLYsACqLDKLUYyfkqy
+ zoMJuCyyYSpPTesoO35DVxziBHn1g9k32wJf73UGlCq5reaIcemW5MtbSj45v5I76iS2
+ qRdA==
+X-Gm-Message-State: APjAAAXc+Q4Py02tuYbxMb1YT4S2IBRcCiyRqGst0jpJWMC3dYFti7uz
+ oDChYnDiytYRuj9j+JI/bjM=
+X-Google-Smtp-Source: APXvYqyyxt02F7w2fO44SgdWkmlW43gvemD8er2ox2KKleaFdRacxH9sTUY3sUMYU/OElvDtowYPRA==
+X-Received: by 2002:a17:90a:de02:: with SMTP id
+ m2mr9851109pjv.18.1562915581568; 
+ Fri, 12 Jul 2019 00:13:01 -0700 (PDT)
+Received: from localhost.localdomain ([110.227.64.207])
+ by smtp.gmail.com with ESMTPSA id u69sm12391982pgu.77.2019.07.12.00.12.58
+ (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+ Fri, 12 Jul 2019 00:13:01 -0700 (PDT)
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+To: gaoxiang25@huawei.com, yuchao0@huawei.com, gregkh@linuxfoundation.org,
+ linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org
+Subject: [PATCH] staging: erofs: Remove function erofs_kill_sb()
+Date: Fri, 12 Jul 2019 12:42:47 +0530
+Message-Id: <20190712071247.2357-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,239 +78,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- Miao Xie <miaoxie@huawei.com>
+Cc: Nishka Dasgupta <nishkadg.linux@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This documents key features, usage, and
-on-disk design of erofs.
+Remove function erofs_kill_sb as all it does is call kill_block_super.
+Modify references to the former to point to the latter.
+Issue found with Coccinelle.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- Documentation/filesystems/erofs.txt | 211 ++++++++++++++++++++++++++++
- 1 file changed, 211 insertions(+)
- create mode 100644 Documentation/filesystems/erofs.txt
+ drivers/staging/erofs/super.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-new file mode 100644
-index 000000000000..b7ff62fb61a4
---- /dev/null
-+++ b/Documentation/filesystems/erofs.txt
-@@ -0,0 +1,211 @@
-+Overview
-+========
-+
-+EROFS file-system stands for Enhanced Read-Only File System. Different
-+from other read-only file systems, it aims to be designed for flexibility,
-+scalability, but be kept simple and high performance.
-+
-+It is designed as a better filesystem solution for the following scenarios:
-+ - read-only storage media or
-+
-+ - part of a fully trusted read-only solution, which means it needs to be
-+   immutable and bit-for-bit identical to the official golden image for
-+   their releases due to security and other considerations and
-+
-+ - hope to save some extra storage space with guaranteed end-to-end performance
-+   by using reduced metadata and transparent file compression, especially
-+   for those embedded devices with limited memory (ex, smartphone);
-+
-+Here is the main features of EROFS:
-+ - Little endian on-disk design;
-+
-+ - Currently 4KB block size (nobh) and therefore maximum 16TB address space;
-+
-+ - Metadata & data could be mixed by design;
-+
-+ - 2 inode versions for different requirements:
-+                          v1            v2
-+   Inode metadata size:   32 bytes      64 bytes
-+   Max file size:         4 GB          16 EB (also limited by max. vol size)
-+   Max uids/gids:         65536         4294967296
-+   File creation time:    no            yes (64 + 32-bit timestamp)
-+   Max hardlinks:         65536         4294967296
-+   Metadata reserved:     4 bytes       14 bytes
-+
-+ - Support extended attributes (xattrs) as an option;
-+
-+ - Support xattr inline and tail-end data inline for all files;
-+
-+ - Support POSIX.1e ACLs by using xattrs;
-+
-+ - Support statx();
-+
-+ - Support transparent file compression as an option:
-+   LZ4 algorithm with 4 KB fixed-output compression for high performance;
-+
-+The following git tree provides the file system user-space tools under
-+development (ex, formatting tool mkfs.erofs):
-+>> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
-+
-+Bugs and patches are welcome, please kindly help us and send to the following
-+linux-erofs mailing list:
-+>> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
-+
-+Note that EROFS is still working in progress as a Linux staging driver,
-+Cc the staging mailing list as well is highly recommended:
-+>> Linux Driver Project Developer List <devel@driverdev.osuosl.org>
-+
-+Mount options
-+=============
-+
-+fault_injection=%d     Enable fault injection in all supported types with
-+                       specified injection rate. Supported injection type:
-+                       Type_Name                Type_Value
-+                       FAULT_KMALLOC            0x000000001
-+                       FAULT_READ_IO            0x000000002
-+(no)user_xattr         Setup Extended User Attributes. Note: xattr is enabled
-+                       by default if CONFIG_EROFS_FS_XATTR is selected.
-+(no)acl                Setup POSIX Access Control List. Note: acl is enabled
-+                       by default if CONFIG_EROFS_FS_POSIX_ACL is selected.
-+
-+On-disk details
-+===============
-+
-+Summary
-+-------
-+Different from other read-only file systems, an EROFS volume is designed
-+to be as simple as possible:
-+
-+                                |-> aligned with the block size
-+   ____________________________________________________________
-+  | |SB| | ... | Metadata | ... | Data | Metadata | ... | Data |
-+  |_|__|_|_____|__________|_____|______|__________|_____|______|
-+  0 +1K
-+
-+All data areas should be aligned with the block size, but metadata areas
-+may not. All metadatas can be now observed in two different spaces (views):
-+ 1. Inode metadata space
-+    Each valid inode should be aligned with an inode slot, which is a fixed
-+    value (32 bytes) and designed to be kept in line with v1 inode size.
-+
-+    Each inode can be directly found with the following formula:
-+         inode offset = meta_blkaddr * block_size + 32 * nid
-+
-+                                |-> aligned with 8B
-+                                           |-> followed closely
-+    + meta_blkaddr blocks                                      |-> another slot
-+     _____________________________________________________________________
-+    |  ...   | inode |  xattrs  | extents  | data inline | ... | inode ...
-+    |________|_______|(optional)|(optional)|__(optional)_|_____|__________
-+             |-> aligned with the inode slot size
-+                  .                   .
-+                .                         .
-+              .                              .
-+            .                                    .
-+          .                                         .
-+        .                                              .
-+      .____________________________________________________|-> aligned with 4B
-+      | xattr_ibody_header | shared xattrs | inline xattrs |
-+      |____________________|_______________|_______________|
-+      |->    12 bytes    <-|->x * 4 bytes<-|               .
-+                          .                .                 .
-+                    .                      .                   .
-+               .                           .                     .
-+           ._______________________________.______________________.
-+           | id | id | id | id |  ... | id | ent | ... | ent| ... |
-+           |____|____|____|____|______|____|_____|_____|____|_____|
-+                                           |-> aligned with 4B
-+                                                       |-> aligned with 4B
-+
-+    Inode could be 32 or 64 bytes, which can be distinguished from a common
-+    field which all inode versions have -- i_advise:
-+
-+        __________________               __________________
-+       |     i_advise     |             |     i_advise     |
-+       |__________________|             |__________________|
-+       |        ...       |             |        ...       |
-+       |                  |             |                  |
-+       |__________________| 32 bytes    |                  |
-+                                        |                  |
-+                                        |__________________| 64 bytes
-+
-+    Xattrs, extents, data inline are followed by the corresponding inode with
-+    proper alignes, and they could be optional for different data mappings,
-+    _currently_ there are totally 3 valid data mappings supported:
-+
-+     1) flat file data without data inline (no extent);
-+     2) fixed-output size data compression (must have extents);
-+     3) flat file data with tail-end data inline (no extent);
-+
-+    The size of the optional xattrs is indicated by i_xattr_count in inode
-+    header. Large xattrs or xattrs shared by many different files can be
-+    stored in shared xattrs metadata rather than inlined right after inode.
-+
-+ 2. Shared xattrs metadata space
-+    Shared xattrs space is similar to the above inode space, started with
-+    a specific block indicated by xattr_blkaddr, organized one by one with
-+    proper align.
-+
-+    Each share xattr can also be directly found by the following formula:
-+         xattr offset = xattr_blkaddr * block_size + 4 * xattr_id
-+
-+                           |-> aligned by  4 bytes
-+    + xattr_blkaddr blocks                     |-> aligned with 4 bytes
-+     _________________________________________________________________________
-+    |  ...   | xattr_entry |  xattr data | ... |  xattr_entry | xattr data  ...
-+    |________|_____________|_____________|_____|______________|_______________
-+
-+Directories
-+-----------
-+All directories are now organized in a compact on-disk format. Note that
-+each directory block is divided into index and name areas in order to support
-+random file lookup, and all directory entries are _strictly_ recorded in
-+alphabetical order in order to support improved prefix binary search
-+algorithm (could refer to the related source code).
-+
-+                 ___________________________
-+                /                           |
-+               /              ______________|________________
-+              /              /              | nameoff1       | nameoffN-1
-+ ____________.______________._______________v________________v__________
-+| dirent | dirent | ... | dirent | filename | filename | ... | filename |
-+|___.0___|____1___|_____|___N-1__|____0_____|____1_____|_____|___N-1____|
-+     \                           ^
-+      \                          |                           * could have
-+       \                         |                             trailing '\0'
-+        \________________________| nameoff0
-+
-+                             Directory block
-+
-+Note that apart from the offset of the first filename, nameoff0 also indicates
-+the total number of directory entries in this block since it is no need to
-+introduce another on-disk field at all.
-+
-+Compression
-+-----------
-+Currently, EROFS supports 4KB fixed-output clustersize transparent file
-+compression, as illustrated below:
-+
-+         |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
-+         clusterofs                      clusterofs            clusterofs
-+         |                               |                     |   logical data
-+_________v_______________________________v_____________________v_______________
-+... |    .        |             |        .    |             |  .          | ...
-+____|____.________|_____________|________.____|_____________|__.__________|____
-+    |-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|
-+         size          size          size          size          size
-+          .                             .                .                   .
-+           .                       .               .                  .
-+            .                  .              .                .
-+      _______._____________._____________._____________._____________________
-+         ... |             |             |             | ... physical data
-+      _______|_____________|_____________|_____________|_____________________
-+             |-> cluster <-|-> cluster <-|-> cluster <-|
-+                  size          size          size
-+
-+Currently each on-disk physical cluster can contain 4KB (un)compressed data
-+at most. For each logical cluster, there is a corresponding on-disk index to
-+describe its cluster type, physical cluster address, etc.
-+
-+See "struct z_erofs_vle_decompressed_index" in erofs_fs.h for more details.
-+
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index 54494412eba4..3e2a65ba1945 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -554,16 +554,11 @@ static struct dentry *erofs_mount(
+ 		&priv, erofs_fill_super);
+ }
+ 
+-static void erofs_kill_sb(struct super_block *sb)
+-{
+-	kill_block_super(sb);
+-}
+-
+ static struct file_system_type erofs_fs_type = {
+ 	.owner          = THIS_MODULE,
+ 	.name           = "erofs",
+ 	.mount          = erofs_mount,
+-	.kill_sb        = erofs_kill_sb,
++	.kill_sb        = kill_block_super,
+ 	.fs_flags       = FS_REQUIRES_DEV,
+ };
+ MODULE_ALIAS_FS("erofs");
 -- 
-2.17.1
+2.19.1
 
