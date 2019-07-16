@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31EF46A29F
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 09:05:29 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45nryG4D4JzDqLP
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 17:05:26 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 954F76A29E
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 09:05:26 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45nryC3xnYzDqXM
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 17:05:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,19 +18,19 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45nrxY1SrhzDqXg
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45nrxY30JpzDqWh
  for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2019 17:04:49 +1000 (AEST)
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 7A7233C1CB0DF048D43B;
+ by Forcepoint Email with ESMTP id 842BA64216A023A4014F;
  Tue, 16 Jul 2019 15:04:45 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Jul
- 2019 15:04:37 +0800
+ 2019 15:04:38 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
-Subject: [PATCH v2 12/17] erofs-utils: add README
-Date: Tue, 16 Jul 2019 15:04:14 +0800
-Message-ID: <20190716070419.30203-13-gaoxiang25@huawei.com>
+Subject: [PATCH v2 13/17] erofs-utils: introduce dev_fillzero
+Date: Tue, 16 Jul 2019 15:04:15 +0800
+Message-ID: <20190716070419.30203-14-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190716070419.30203-1-gaoxiang25@huawei.com>
 References: <20190716070419.30203-1-gaoxiang25@huawei.com>
@@ -54,502 +54,120 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds README, open source license,
-maintainers, etc.
+add dev_fillzero() to fill zero within a range.
+FALLOC_FL_PUNCH_HOLE is perferred if supported.
 
-Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- AUTHORS   |   9 ++
- COPYING   | 359 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- ChangeLog |   0
- README    |  91 ++++++++++++++
- 4 files changed, 459 insertions(+)
- create mode 100644 AUTHORS
- create mode 100644 COPYING
- create mode 100644 ChangeLog
- create mode 100644 README
+ configure.ac       |  3 ++-
+ include/erofs/io.h |  1 +
+ lib/cache.c        |  5 ++---
+ lib/io.c           | 27 +++++++++++++++++++++++++++
+ 4 files changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/AUTHORS b/AUTHORS
-new file mode 100644
-index 0000000..121cf6a
---- /dev/null
-+++ b/AUTHORS
-@@ -0,0 +1,9 @@
-+EROFS USERSPACE UTILITIES
-+M: Li Guifu <bluce.liguifu@huawei.com>
-+M: Miao Xie <miaoxie@huawei.com>
-+M: Fang Wei <fangwei1@huawei.com>
-+R: Gao Xiang <gaoxiang25@huawei.com>
-+R: Chao Yu <yuchao0@huawei.com>
-+S: Maintained
-+L: linux-erofs@lists.ozlabs.org
-+
-diff --git a/COPYING b/COPYING
-new file mode 100644
-index 0000000..b7eaaf4
---- /dev/null
-+++ b/COPYING
-@@ -0,0 +1,359 @@
-+Valid-License-Identifier: GPL-2.0
-+Valid-License-Identifier: GPL-2.0-only
-+Valid-License-Identifier: GPL-2.0+
-+Valid-License-Identifier: GPL-2.0-or-later
-+SPDX-URL: https://spdx.org/licenses/GPL-2.0.html
-+Usage-Guide:
-+  To use this license in source code, put one of the following SPDX
-+  tag/value pairs into a comment according to the placement
-+  guidelines in the licensing rules documentation.
-+  For 'GNU General Public License (GPL) version 2 only' use:
-+    SPDX-License-Identifier: GPL-2.0
-+  or
-+    SPDX-License-Identifier: GPL-2.0-only
-+  For 'GNU General Public License (GPL) version 2 or any later version' use:
-+    SPDX-License-Identifier: GPL-2.0+
-+  or
-+    SPDX-License-Identifier: GPL-2.0-or-later
-+License-Text:
-+
-+		    GNU GENERAL PUBLIC LICENSE
-+		       Version 2, June 1991
-+
-+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-+                       51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-+ Everyone is permitted to copy and distribute verbatim copies
-+ of this license document, but changing it is not allowed.
-+
-+			    Preamble
-+
-+  The licenses for most software are designed to take away your
-+freedom to share and change it.  By contrast, the GNU General Public
-+License is intended to guarantee your freedom to share and change free
-+software--to make sure the software is free for all its users.  This
-+General Public License applies to most of the Free Software
-+Foundation's software and to any other program whose authors commit to
-+using it.  (Some other Free Software Foundation software is covered by
-+the GNU Library General Public License instead.)  You can apply it to
-+your programs, too.
-+
-+  When we speak of free software, we are referring to freedom, not
-+price.  Our General Public Licenses are designed to make sure that you
-+have the freedom to distribute copies of free software (and charge for
-+this service if you wish), that you receive source code or can get it
-+if you want it, that you can change the software or use pieces of it
-+in new free programs; and that you know you can do these things.
-+
-+  To protect your rights, we need to make restrictions that forbid
-+anyone to deny you these rights or to ask you to surrender the rights.
-+These restrictions translate to certain responsibilities for you if you
-+distribute copies of the software, or if you modify it.
-+
-+  For example, if you distribute copies of such a program, whether
-+gratis or for a fee, you must give the recipients all the rights that
-+you have.  You must make sure that they, too, receive or can get the
-+source code.  And you must show them these terms so they know their
-+rights.
-+
-+  We protect your rights with two steps: (1) copyright the software, and
-+(2) offer you this license which gives you legal permission to copy,
-+distribute and/or modify the software.
-+
-+  Also, for each author's protection and ours, we want to make certain
-+that everyone understands that there is no warranty for this free
-+software.  If the software is modified by someone else and passed on, we
-+want its recipients to know that what they have is not the original, so
-+that any problems introduced by others will not reflect on the original
-+authors' reputations.
-+
-+  Finally, any free program is threatened constantly by software
-+patents.  We wish to avoid the danger that redistributors of a free
-+program will individually obtain patent licenses, in effect making the
-+program proprietary.  To prevent this, we have made it clear that any
-+patent must be licensed for everyone's free use or not licensed at all.
-+
-+  The precise terms and conditions for copying, distribution and
-+modification follow.
-+
-+		    GNU GENERAL PUBLIC LICENSE
-+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-+
-+  0. This License applies to any program or other work which contains
-+a notice placed by the copyright holder saying it may be distributed
-+under the terms of this General Public License.  The "Program", below,
-+refers to any such program or work, and a "work based on the Program"
-+means either the Program or any derivative work under copyright law:
-+that is to say, a work containing the Program or a portion of it,
-+either verbatim or with modifications and/or translated into another
-+language.  (Hereinafter, translation is included without limitation in
-+the term "modification".)  Each licensee is addressed as "you".
-+
-+Activities other than copying, distribution and modification are not
-+covered by this License; they are outside its scope.  The act of
-+running the Program is not restricted, and the output from the Program
-+is covered only if its contents constitute a work based on the
-+Program (independent of having been made by running the Program).
-+Whether that is true depends on what the Program does.
-+
-+  1. You may copy and distribute verbatim copies of the Program's
-+source code as you receive it, in any medium, provided that you
-+conspicuously and appropriately publish on each copy an appropriate
-+copyright notice and disclaimer of warranty; keep intact all the
-+notices that refer to this License and to the absence of any warranty;
-+and give any other recipients of the Program a copy of this License
-+along with the Program.
-+
-+You may charge a fee for the physical act of transferring a copy, and
-+you may at your option offer warranty protection in exchange for a fee.
-+
-+  2. You may modify your copy or copies of the Program or any portion
-+of it, thus forming a work based on the Program, and copy and
-+distribute such modifications or work under the terms of Section 1
-+above, provided that you also meet all of these conditions:
-+
-+    a) You must cause the modified files to carry prominent notices
-+    stating that you changed the files and the date of any change.
-+
-+    b) You must cause any work that you distribute or publish, that in
-+    whole or in part contains or is derived from the Program or any
-+    part thereof, to be licensed as a whole at no charge to all third
-+    parties under the terms of this License.
-+
-+    c) If the modified program normally reads commands interactively
-+    when run, you must cause it, when started running for such
-+    interactive use in the most ordinary way, to print or display an
-+    announcement including an appropriate copyright notice and a
-+    notice that there is no warranty (or else, saying that you provide
-+    a warranty) and that users may redistribute the program under
-+    these conditions, and telling the user how to view a copy of this
-+    License.  (Exception: if the Program itself is interactive but
-+    does not normally print such an announcement, your work based on
-+    the Program is not required to print an announcement.)
-+
-+These requirements apply to the modified work as a whole.  If
-+identifiable sections of that work are not derived from the Program,
-+and can be reasonably considered independent and separate works in
-+themselves, then this License, and its terms, do not apply to those
-+sections when you distribute them as separate works.  But when you
-+distribute the same sections as part of a whole which is a work based
-+on the Program, the distribution of the whole must be on the terms of
-+this License, whose permissions for other licensees extend to the
-+entire whole, and thus to each and every part regardless of who wrote it.
-+
-+Thus, it is not the intent of this section to claim rights or contest
-+your rights to work written entirely by you; rather, the intent is to
-+exercise the right to control the distribution of derivative or
-+collective works based on the Program.
-+
-+In addition, mere aggregation of another work not based on the Program
-+with the Program (or with a work based on the Program) on a volume of
-+a storage or distribution medium does not bring the other work under
-+the scope of this License.
-+
-+  3. You may copy and distribute the Program (or a work based on it,
-+under Section 2) in object code or executable form under the terms of
-+Sections 1 and 2 above provided that you also do one of the following:
-+
-+    a) Accompany it with the complete corresponding machine-readable
-+    source code, which must be distributed under the terms of Sections
-+    1 and 2 above on a medium customarily used for software interchange; or,
-+
-+    b) Accompany it with a written offer, valid for at least three
-+    years, to give any third party, for a charge no more than your
-+    cost of physically performing source distribution, a complete
-+    machine-readable copy of the corresponding source code, to be
-+    distributed under the terms of Sections 1 and 2 above on a medium
-+    customarily used for software interchange; or,
-+
-+    c) Accompany it with the information you received as to the offer
-+    to distribute corresponding source code.  (This alternative is
-+    allowed only for noncommercial distribution and only if you
-+    received the program in object code or executable form with such
-+    an offer, in accord with Subsection b above.)
-+
-+The source code for a work means the preferred form of the work for
-+making modifications to it.  For an executable work, complete source
-+code means all the source code for all modules it contains, plus any
-+associated interface definition files, plus the scripts used to
-+control compilation and installation of the executable.  However, as a
-+special exception, the source code distributed need not include
-+anything that is normally distributed (in either source or binary
-+form) with the major components (compiler, kernel, and so on) of the
-+operating system on which the executable runs, unless that component
-+itself accompanies the executable.
-+
-+If distribution of executable or object code is made by offering
-+access to copy from a designated place, then offering equivalent
-+access to copy the source code from the same place counts as
-+distribution of the source code, even though third parties are not
-+compelled to copy the source along with the object code.
-+
-+  4. You may not copy, modify, sublicense, or distribute the Program
-+except as expressly provided under this License.  Any attempt
-+otherwise to copy, modify, sublicense or distribute the Program is
-+void, and will automatically terminate your rights under this License.
-+However, parties who have received copies, or rights, from you under
-+this License will not have their licenses terminated so long as such
-+parties remain in full compliance.
-+
-+  5. You are not required to accept this License, since you have not
-+signed it.  However, nothing else grants you permission to modify or
-+distribute the Program or its derivative works.  These actions are
-+prohibited by law if you do not accept this License.  Therefore, by
-+modifying or distributing the Program (or any work based on the
-+Program), you indicate your acceptance of this License to do so, and
-+all its terms and conditions for copying, distributing or modifying
-+the Program or works based on it.
-+
-+  6. Each time you redistribute the Program (or any work based on the
-+Program), the recipient automatically receives a license from the
-+original licensor to copy, distribute or modify the Program subject to
-+these terms and conditions.  You may not impose any further
-+restrictions on the recipients' exercise of the rights granted herein.
-+You are not responsible for enforcing compliance by third parties to
-+this License.
-+
-+  7. If, as a consequence of a court judgment or allegation of patent
-+infringement or for any other reason (not limited to patent issues),
-+conditions are imposed on you (whether by court order, agreement or
-+otherwise) that contradict the conditions of this License, they do not
-+excuse you from the conditions of this License.  If you cannot
-+distribute so as to satisfy simultaneously your obligations under this
-+License and any other pertinent obligations, then as a consequence you
-+may not distribute the Program at all.  For example, if a patent
-+license would not permit royalty-free redistribution of the Program by
-+all those who receive copies directly or indirectly through you, then
-+the only way you could satisfy both it and this License would be to
-+refrain entirely from distribution of the Program.
-+
-+If any portion of this section is held invalid or unenforceable under
-+any particular circumstance, the balance of the section is intended to
-+apply and the section as a whole is intended to apply in other
-+circumstances.
-+
-+It is not the purpose of this section to induce you to infringe any
-+patents or other property right claims or to contest validity of any
-+such claims; this section has the sole purpose of protecting the
-+integrity of the free software distribution system, which is
-+implemented by public license practices.  Many people have made
-+generous contributions to the wide range of software distributed
-+through that system in reliance on consistent application of that
-+system; it is up to the author/donor to decide if he or she is willing
-+to distribute software through any other system and a licensee cannot
-+impose that choice.
-+
-+This section is intended to make thoroughly clear what is believed to
-+be a consequence of the rest of this License.
-+
-+  8. If the distribution and/or use of the Program is restricted in
-+certain countries either by patents or by copyrighted interfaces, the
-+original copyright holder who places the Program under this License
-+may add an explicit geographical distribution limitation excluding
-+those countries, so that distribution is permitted only in or among
-+countries not thus excluded.  In such case, this License incorporates
-+the limitation as if written in the body of this License.
-+
-+  9. The Free Software Foundation may publish revised and/or new versions
-+of the General Public License from time to time.  Such new versions will
-+be similar in spirit to the present version, but may differ in detail to
-+address new problems or concerns.
-+
-+Each version is given a distinguishing version number.  If the Program
-+specifies a version number of this License which applies to it and "any
-+later version", you have the option of following the terms and conditions
-+either of that version or of any later version published by the Free
-+Software Foundation.  If the Program does not specify a version number of
-+this License, you may choose any version ever published by the Free Software
-+Foundation.
-+
-+  10. If you wish to incorporate parts of the Program into other free
-+programs whose distribution conditions are different, write to the author
-+to ask for permission.  For software which is copyrighted by the Free
-+Software Foundation, write to the Free Software Foundation; we sometimes
-+make exceptions for this.  Our decision will be guided by the two goals
-+of preserving the free status of all derivatives of our free software and
-+of promoting the sharing and reuse of software generally.
-+
-+			    NO WARRANTY
-+
-+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
-+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-+PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
-+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
-+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
-+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
-+REPAIR OR CORRECTION.
-+
-+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
-+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
-+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
-+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
-+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
-+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
-+POSSIBILITY OF SUCH DAMAGES.
-+
-+		     END OF TERMS AND CONDITIONS
-+
-+	    How to Apply These Terms to Your New Programs
-+
-+  If you develop a new program, and you want it to be of the greatest
-+possible use to the public, the best way to achieve this is to make it
-+free software which everyone can redistribute and change under these terms.
-+
-+  To do so, attach the following notices to the program.  It is safest
-+to attach them to the start of each source file to most effectively
-+convey the exclusion of warranty; and each file should have at least
-+the "copyright" line and a pointer to where the full notice is found.
-+
-+    <one line to give the program's name and a brief idea of what it does.>
-+    Copyright (C) <year>  <name of author>
-+
-+    This program is free software; you can redistribute it and/or modify
-+    it under the terms of the GNU General Public License as published by
-+    the Free Software Foundation; either version 2 of the License, or
-+    (at your option) any later version.
-+
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+
-+    You should have received a copy of the GNU General Public License
-+    along with this program; if not, write to the Free Software
-+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-+
-+
-+Also add information on how to contact you by electronic and paper mail.
-+
-+If the program is interactive, make it output a short notice like this
-+when it starts in an interactive mode:
-+
-+    Gnomovision version 69, Copyright (C) year name of author
-+    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-+    This is free software, and you are welcome to redistribute it
-+    under certain conditions; type `show c' for details.
-+
-+The hypothetical commands `show w' and `show c' should show the appropriate
-+parts of the General Public License.  Of course, the commands you use may
-+be called something other than `show w' and `show c'; they could even be
-+mouse-clicks or menu items--whatever suits your program.
-+
-+You should also get your employer (if you work as a programmer) or your
-+school, if any, to sign a "copyright disclaimer" for the program, if
-+necessary.  Here is a sample; alter the names:
-+
-+  Yoyodyne, Inc., hereby disclaims all copyright interest in the program
-+  `Gnomovision' (which makes passes at compilers) written by James Hacker.
-+
-+  <signature of Ty Coon>, 1 April 1989
-+  Ty Coon, President of Vice
-+
-+This General Public License does not permit incorporating your program into
-+proprietary programs.  If your program is a subroutine library, you may
-+consider it more useful to permit linking proprietary applications with the
-+library.  If this is what you want to do, use the GNU Library General
-+Public License instead of this License.
-diff --git a/ChangeLog b/ChangeLog
-new file mode 100644
-index 0000000..e69de29
-diff --git a/README b/README
-new file mode 100644
-index 0000000..fec20aa
---- /dev/null
-+++ b/README
-@@ -0,0 +1,91 @@
-+erofs-utils
-+===========
-+
-+erofs-utils includes user-space tools for erofs filesystem images.
-+Currently only mkfs.erofs is available.
-+
-+mkfs.erofs
-+----------
-+
-+It can create 2 primary kinds of erofs images: (un)compressed.
-+
-+ - For compressed images, it's able to use several compression
-+   algorithms, but lz4(hc) are only supported due to the current
-+   linux kernel implementation.
-+
-+ - For uncompressed images, it can decide whether the last page of
-+   a file should be inlined or not properly [1].
-+
-+Dependencies
-+~~~~~~~~~~~~
-+
-+ lz4-1.8.0+ for lz4 enabled [2], lz4-1.9.0+ recommended
-+
-+How to build for lz4-1.9.0 or above
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+To build you can run the following commands in order:
-+
-+::
-+
-+	$ ./autogen.sh
-+	$ ./configure
-+	$ make
-+
-+mkfs.erofs binary will be generated under mkfs folder.
-+
-+How to build for lz4-1.8.0~1.8.3
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+For these old lz4 versions, lz4hc algorithm cannot be supported without
-+lz4 static libary due to LZ4_compress_HC_destSize unstable api usage,
-+which means only lz4 algrithm is available if lz4 static library isn't found.
-+
-+On Fedora, static lz4 can be installed using:
-+
-+	yum install lz4-static.x86_64
-+
-+However, it's not recommended to use those versions since there was a bug
-+in these compressors, see [2] as well.
-+
-+Obsoleted erofs.mkfs
-+~~~~~~~~~~~~~~~~~~~~
-+
-+There is an original erofs.mkfs version developped by Li Guifu,
-+which was replaced by the new erofs-utils implementation.
-+
-+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted_mkfs
-+
-+It may still be useful since new erofs-utils has not been widely used in
-+commercial products. However, if that happens, please report bug to us
-+as well.
-+
-+Contribution
-+------------
-+
-+erofs-utils is a GPLv2+ project as a part of erofs file system,
-+feel free to send patches or feedback to us.
-+
-+To:
-+  linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
-+  Li Guifu                   <bluce.liguifu@huawei.com>
-+  Miao Xie                   <miaoxie@huawei.com>
-+  Fang Wei                   <fangwei1@huawei.com>
-+
-+Cc:
-+  Gao Xiang                  <gaoxiang25@huawei.com>
-+  Chao Yu                    <yuchao0@huawei.com>
-+
-+Comments
-+--------
-+
-+[1] According to the erofs on-disk format, the last page of files could
-+    be inlined aggressively with its metadata in order to reduce the I/O
-+    overhead and save the storage space.
-+
-+[2] There was a bug until lz4-1.8.3, which can crash erofs-utils randomly.
-+    Fortunately bugfix by our colleague Qiuyang Sun was merged in lz4-1.9.0.
-+
-+    For more details, please refer to
-+    https://github.com/lz4/lz4/commit/660d21272e4c8a0f49db5fc1e6853f08713dff82
-+
+diff --git a/configure.ac b/configure.ac
+index 6cc0c60..6f4eacc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -72,6 +72,7 @@ AC_CHECK_HEADERS(m4_flatten([
+ 	dirent.h
+ 	fcntl.h
+ 	inttypes.h
++	linux/falloc.h
+ 	linux/types.h
+ 	limits.h
+ 	stddef.h
+@@ -115,7 +116,7 @@ AC_CHECK_DECL(lseek64,[AC_DEFINE(HAVE_LSEEK64_PROTOTYPE, 1,
+    #include <unistd.h>])
+ 
+ # Checks for library functions.
+-AC_CHECK_FUNCS([gettimeofday memset realpath strdup strerror strrchr strtoull])
++AC_CHECK_FUNCS([fallocate gettimeofday memset realpath strdup strerror strrchr strtoull])
+ 
+ # Configure lz4
+ test -z $LZ4_LIBS && LZ4_LIBS='-llz4'
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 9471388..aafb1e7 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -19,6 +19,7 @@
+ int dev_open(const char *devname);
+ void dev_close(void);
+ int dev_write(const void *buf, u64 offset, size_t len);
++int dev_fillzero(u64 offset, size_t len);
+ int dev_fsync(void);
+ u64 dev_length(void);
+ 
+diff --git a/lib/cache.c b/lib/cache.c
+index 967b543..76e6d78 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -274,7 +274,6 @@ erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb, bool end)
+ 
+ bool erofs_bflush(struct erofs_buffer_block *bb)
+ {
+-	static const char zero[EROFS_BLKSIZ] = {0};
+ 	struct erofs_buffer_block *p, *n;
+ 	erofs_blk_t blkaddr;
+ 
+@@ -304,8 +303,8 @@ bool erofs_bflush(struct erofs_buffer_block *bb)
+ 
+ 		padding = EROFS_BLKSIZ - p->buffers.off % EROFS_BLKSIZ;
+ 		if (padding != EROFS_BLKSIZ)
+-			dev_write(zero, blknr_to_addr(blkaddr) - padding,
+-				  padding);
++			dev_fillzero(blknr_to_addr(blkaddr) - padding,
++				     padding);
+ 
+ 		DBG_BUGON(!list_empty(&p->buffers.list));
+ 
+diff --git a/lib/io.c b/lib/io.c
+index f624535..d39661c 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -7,8 +7,12 @@
+  * Created by Li Guifu <bluce.liguifu@huawei.com>
+  */
+ #define _LARGEFILE64_SOURCE
++#define _GNU_SOURCE
+ #include <sys/stat.h>
+ #include "erofs/io.h"
++#ifdef HAVE_LINUX_FALLOC_H
++#include <linux/falloc.h>
++#endif
+ 
+ #define pr_fmt(fmt) "EROFS IO: " FUNC_LINE_FMT fmt "\n"
+ #include "erofs/print.h"
+@@ -110,6 +114,29 @@ int dev_write(const void *buf, u64 offset, size_t len)
+ 	return 0;
+ }
+ 
++int dev_fillzero(u64 offset, size_t len)
++{
++	static const char zero[EROFS_BLKSIZ] = {0};
++	int ret;
++
++	if (cfg.c_dry_run)
++		return 0;
++
++#if defined(HAVE_FALLOCATE) && defined(FALLOC_FL_PUNCH_HOLE)
++	if (fallocate(erofs_devfd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
++		      offset, len) >= 0)
++		return 0;
++#endif
++	while (len > EROFS_BLKSIZ) {
++		ret = dev_write(zero, offset, EROFS_BLKSIZ);
++		if (ret)
++			return ret;
++		len -= EROFS_BLKSIZ;
++		offset += EROFS_BLKSIZ;
++	}
++	return dev_write(zero, offset, len);
++}
++
+ int dev_fsync(void)
+ {
+ 	int ret;
 -- 
 2.17.1
 
