@@ -2,50 +2,82 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A26A6B15F
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 23:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E3706B26B
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jul 2019 01:34:16 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45pDbc2RWwzDqX2
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jul 2019 07:50:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45pGv830xmzDqXl
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jul 2019 09:34:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1563320052;
+	bh=Z6PflyExIYKKQzw1GKdihig0FI6S0mOUgJErmh1ZV2c=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=OUFlqVDqVJqlE/1bBbXGgl+EG34zv4rppndOB7LDlfze8vbUS0zg2ZUe9lCQqDLBw
+	 SFkvWknXQFL9OwHaneChDfKPz4C8+HJxMhvR04CwuyxKZPBkp1bpcMcTGYEwRiqZPi
+	 it60Fd3t1rHuNteViS6bPRAaH7bFfFcGUYzGlXAEa+y0cgzNTxn6cK3pa7JCj8F83U
+	 YHEQRGHLIFVp50FBcpcJo0KbIZsKvfMNPO5X8kchOaz+2Qoz4Y2UtJfgLU03zu65jU
+	 YAIBMKZFm3lQiNuZ566NuxCJdXMotjdiIvwOmWQxBsNew8BlS1tiAoml8B4fTvlzYb
+	 jv8KMKlsxzIrw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=linuxfoundation.org
- (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=gregkh@linuxfoundation.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
- header.from=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.b="HoHXWOHW"; 
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.b="PVe4kiri"; 
  dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from sonic308-8.consmr.mail.gq1.yahoo.com
+ (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45pDbX1RsdzDqQH
- for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jul 2019 07:50:30 +1000 (AEST)
-Received: from localhost (unknown [113.157.217.50])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id 21C7B206C2;
- Tue, 16 Jul 2019 21:50:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1563313828;
- bh=G0Z3+W5+zm4O3AXRhymJcQTu/MjNvBgYP41CWsNye3U=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=HoHXWOHW/zh+IdYaM/4vfsRzwoOyMKXQA/J8h3OxGqc5zOSkZMuiJ63LAla243XMY
- 0jV3VaWbvH0XJ+wrc6Ass0SbW4OQqfzVjlQ2FDRm/1FwQEPxq9uB4C+1AH/BV6hobB
- FqkaBtOopPsgsMlNCtplJXiOqb4GHvNAQsw83YY8=
-Date: Wed, 17 Jul 2019 06:50:26 +0900
-From: Greg KH <gregkh@linuxfoundation.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45pGv11DRczDqKM
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jul 2019 09:34:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1563320038; bh=eQsOILpAk6Vbtm+EGhtjPKkUHl3i1+dBRnpfvAZdzuk=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject;
+ b=PVe4kirigHzpfKQeCGjrW0wWxId5E/LcARfuZUG6a60U9DYUk2Eg3uab5AVf0zTmpPBPSUg3twztiNj3u3fh9r3DlGSZBK8E09ryqQCcIKsNn6vbKxNu/hh6vXGQnrc5M6cPwbbwlPkzjkJEc8ePf5jAIDb5UGqxdJfwQxTklEwwtoahiT8lTVC13FC9+s864wbMa4tWDdJPFZdzmjhT81Oqp7+d4PcD4SMfM7YFqzGSStMA4tYCKccG9g6bq0twUcupXDPYsG1xLHRGtCx+3V4tNTMZuuKCw9dIh7ePal/X1083qMAKFOfhf9sHUuiw1gbETve9FMRO7zSXFM56iQ==
+X-YMail-OSG: 7Cjd.AQVM1nM74a3uMg2CdzFQZC8GK2O89yFYBF3MWX74MDygjGbB.zbg_0J61T
+ TO4HqoDwMlpclWtGAl7doajLucKZ5MOx.eGyrXHjLhxqIRwUTiz42m9f_s8a..7bzBjTN_Y8Nzte
+ xlj.NyNO3hWjR6RP_QB5XGmRNEkvepp0rsY3xYhOVTUW_hoGbMY5pupz3Y0sOZlBRz0xt1QL.miP
+ rwRS0c5.oohRxbo.86E3SePAkTgtlagZ2mRExR0X0eVU_mnc9bySLUtrRbna7uDyYp27HojsaiSv
+ bm9u6UZTBszwxfbnSLweo8WGoz2s2ch2ZZ8.w4tK5hiF6ItvUMMye30WE1DxZg6G0RPVGSr.neUD
+ w7l8SoE_8PmrgT8lK3QQs.XXMBldTk1IWlDs3XTYiwWWtBlaudVP.ZRI0I0IcZ5TY0XecDgjdOS0
+ 32paLT9wkPjZMJze1xOMwdApzLDT8aWIuiRIN12eR1ZlqQnykHY3khNmodk.z6g4Ni7cOvT962KM
+ NR4rkEc9qbAiV8KRmoz7v3LukZ6KtYD2tvFOyPDlIZMDOXX8u9uDwA4LQXq43TT6c39HTLp9s1XQ
+ yGyWSgX6l6rseCw.yqHTtgekvJ0vevAsDHrCZg1j3czymfX9MiSr6WAW4zXKdXZMredK9DOAb4vg
+ XwmkO_F5BxsImSt22TUAC2NopUfAW3.Or.ECCvGidzoBRXCK71mYpSbff1KQ_6EYGMu6JXwOvk9h
+ lB8JNhzOgFcxo846QFklJqN25VtIGq6stUJzifMSOg.PWiuTRSLSv1U5Ii2Fzd1yLgFFMyqjPNyH
+ jP3aomH12CgsOOcIRGipdfxJhC7ZVsdw.VJFukKVN2wBZadw6NDsj7j.FEhnEl0VbiLG4v35dvoM
+ o0Tb7LXRc5FIu5g17bSejhXQJExMakCiDyD4udYc01SK.Jthnpvm_PFDjHBQpTypuuUj1HtlDH5Y
+ bBt7jvkxPCG_fHSl1SZ0K4MpzG9dpd_sheEPxcMO3.WNtfqcjll7QPdteSPOWavhzOABsPi3BNCX
+ thMoDZ9nbvaLTnCYHB_c7Z4HPlQk175AuiGF5F2fSQ6GusgGytIHnkFFpe5ipXyA8.zLd0gxSuHn
+ lnvGuUlgI7IYNSPdXDYT8LLr_PdpbvkFwFpZpLsTuv1hMKEtdBeBDfRC.H6Tw9_JzA8yt0yw2rDO
+ kbyCU5yQu9JGDOdUCsqSQnJSnTtB4mLHL9GLljkzuf9gF7IYbjkta0gwGf6mhtToT8o6fhoAIPA-
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Tue, 16 Jul 2019 23:33:58 +0000
+Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID f13fd5f4c65f932ad3e93487cc771fc0; 
+ Tue, 16 Jul 2019 23:33:55 +0000 (UTC)
+Subject: Re: [PATCH] staging: erofs: a few minor style fixes found using
+ checkpatch
 To: Karen Palacio <karen.palacio.1994@gmail.com>
-Subject: Re: [PATCH] v2: staging: erofs: fix typo
-Message-ID: <20190716215026.GA18144@kroah.com>
-References: <1563311783-12754-1-git-send-email-karen.palacio.1994@gmail.com>
+References: <1563294942-31395-1-git-send-email-karen.palacio.1994@gmail.com>
+ <1a0b5e37-a5a1-7a2f-0185-860a4aab4b2b@aol.com>
+ <CALQQ+Lk9bL2Zs72u30Xe_1p=0389SvOpPMkLfzGHVSenbszfCA@mail.gmail.com>
+Message-ID: <15c63135-5ea3-515a-65f2-f56c70e90333@aol.com>
+Date: Wed, 17 Jul 2019 07:33:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563311783-12754-1-git-send-email-karen.palacio.1994@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALQQ+Lk9bL2Zs72u30Xe_1p=0389SvOpPMkLfzGHVSenbszfCA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,15 +89,232 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org, yucha0@huawei.com
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+ gregkh@linuxfoundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Jul 16, 2019 at 06:16:23PM -0300, Karen Palacio wrote:
-> Fix typo in Kconfig
-> Signed-off-by: Karen Palacio <karen.palacio.1994@gmail.com>
+Hi Karen,
 
-I need a blank line before the signed-off-by line :(
+On 2019/7/17 ??????2:56, Karen Palacio wrote:
+> Hello, thanks for the fast reply.??
+> 
+> />NACK, all linux filesystems use Opt_xxx. EROFS should obey this practice.
+> /I wasn't aware of that convention, my apologies.
+> 
+> Should I fix that, keep the other changes and resend as v2, or
+> are you not interested in style patches? I'm interested in contributing
+> to this
+> driver, but as I get familiar with it I was planning on making it pass
+> checkpatch as much as possible.
 
-3rd try?
+Style patches is OK for me as well except for changing some common
+practice (it will make EROFS odd compared with other filesystems) and
+thanks for your interest :)
+
+Actually, if you notice that, I'm promoting erofs from staging. I would
+suggest that you could also take a look at that patchset...
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Karen Palacio.
+> 
+> El mar., 16 jul. 2019 a las 14:03, Gao Xiang (<hsiangkao@aol.com
+> <mailto:hsiangkao@aol.com>>) escribi??:
+> 
+> 
+> 
+>     On 2019/7/17 ????12:35, Karen Palacio wrote:
+>     > Fix camel case use in variable names,
+>     > Fix multiple assignments done in a single line,
+>     > Fix end of line containing '('.
+> 
+>     One type one patch...
+> 
+>     >
+>     > Signed-off-by: Karen Palacio <karen.palacio.1994@gmail.com
+>     <mailto:karen.palacio.1994@gmail.com>>
+>     > ---
+>     >?? drivers/staging/erofs/super.c | 55
+>     ++++++++++++++++++++++---------------------
+>     >?? 1 file changed, 28 insertions(+), 27 deletions(-)
+>     >
+>     > diff --git a/drivers/staging/erofs/super.c
+>     b/drivers/staging/erofs/super.c
+>     > index 5449441..e281125 100644
+>     > --- a/drivers/staging/erofs/super.c
+>     > +++ b/drivers/staging/erofs/super.c
+>     > @@ -228,21 +228,21 @@ static void default_options(struct
+>     erofs_sb_info *sbi)
+>     >?? }
+>     >??
+>     >?? enum {
+>     > -?? ?? ??Opt_user_xattr,
+>     > -?? ?? ??Opt_nouser_xattr,
+>     > -?? ?? ??Opt_acl,
+>     > -?? ?? ??Opt_noacl,
+>     > -?? ?? ??Opt_fault_injection,
+>     > -?? ?? ??Opt_err
+>     > +?? ?? ??opt_user_xattr,
+>     > +?? ?? ??opt_nouser_xattr,
+>     > +?? ?? ??opt_acl,
+>     > +?? ?? ??opt_noacl,
+>     > +?? ?? ??opt_fault_injection,
+>     > +?? ?? ??opt_err
+> 
+>     NACK, all linux filesystems use Opt_xxx. EROFS should obey this
+>     practice.
+> 
+>     fs/ext4/super.c
+>     1436 enum {
+>     1437?? ?? ?? ?? ??Opt_bsd_df, Opt_minix_df, Opt_grpid, Opt_nogrpid,
+>     1438?? ?? ?? ?? ??Opt_resgid, Opt_resuid, Opt_sb, Opt_err_cont,
+>     Opt_err_panic, Opt_err_ro,
+>     1439?? ?? ?? ?? ??Opt_nouid32, Opt_debug, Opt_removed,
+>     1440?? ?? ?? ?? ??Opt_user_xattr, Opt_nouser_xattr, Opt_acl, Opt_noacl,
+>     1441?? ?? ?? ?? ??Opt_auto_da_alloc, Opt_noauto_da_alloc, Opt_noload,
+>     1442?? ?? ?? ?? ??Opt_commit, Opt_min_batch_time, Opt_max_batch_time,
+>     Opt_journal_dev,
+>     1443?? ?? ?? ?? ??Opt_journal_path, Opt_journal_checksum,
+>     Opt_journal_async_commit,
+>     1444?? ?? ?? ?? ??Opt_abort, Opt_data_journal, Opt_data_ordered,
+>     Opt_data_writeback,
+>     1445?? ?? ?? ?? ??Opt_data_err_abort, Opt_data_err_ignore,
+>     Opt_test_dummy_encryption,
+>     1446?? ?? ?? ?? ??Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota,
+>     Opt_offgrpjquota,
+>     1447?? ?? ?? ?? ??Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1,
+>     Opt_quota,
+> 
+>     fs/btrfs/super.c
+>     ??294 enum {
+>     ??295?? ?? ?? ?? ??Opt_acl, Opt_noacl,
+>     ??296?? ?? ?? ?? ??Opt_clear_cache,
+>     ??297?? ?? ?? ?? ??Opt_commit_interval,
+>     ??298?? ?? ?? ?? ??Opt_compress,
+>     ??299?? ?? ?? ?? ??Opt_compress_force,
+>     ??300?? ?? ?? ?? ??Opt_compress_force_type,
+>     ??301?? ?? ?? ?? ??Opt_compress_type,
+>     ??302?? ?? ?? ?? ??Opt_degraded,
+>     ??303?? ?? ?? ?? ??Opt_device,
+>     ??304?? ?? ?? ?? ??Opt_fatal_errors,
+> 
+>     Thanks,
+>     Gao Xiang
+> 
+> 
+>     >?? };
+>     >??
+>     >?? static match_table_t erofs_tokens = {
+>     > -?? ?? ??{Opt_user_xattr, "user_xattr"},
+>     > -?? ?? ??{Opt_nouser_xattr, "nouser_xattr"},
+>     > -?? ?? ??{Opt_acl, "acl"},
+>     > -?? ?? ??{Opt_noacl, "noacl"},
+>     > -?? ?? ??{Opt_fault_injection, "fault_injection=%u"},
+>     > -?? ?? ??{Opt_err, NULL}
+>     > +?? ?? ??{opt_user_xattr, "user_xattr"},
+>     > +?? ?? ??{opt_nouser_xattr, "nouser_xattr"},
+>     > +?? ?? ??{opt_acl, "acl"},
+>     > +?? ?? ??{opt_noacl, "noacl"},
+>     > +?? ?? ??{opt_fault_injection, "fault_injection=%u"},
+>     > +?? ?? ??{opt_err, NULL}
+>     >?? };
+>     >??
+>     >?? static int parse_options(struct super_block *sb, char *options)
+>     > @@ -260,41 +260,42 @@ static int parse_options(struct super_block
+>     *sb, char *options)
+>     >?? ?? ?? ?? ?? ?? ?? ??if (!*p)
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??continue;
+>     >??
+>     > -?? ?? ?? ?? ?? ?? ??args[0].to = args[0].from = NULL;
+>     > +?? ?? ?? ?? ?? ?? ??args[0].to = NULL;
+>     > +?? ?? ?? ?? ?? ?? ??args[0].from = NULL;
+>     >?? ?? ?? ?? ?? ?? ?? ??token = match_token(p, erofs_tokens, args);
+>     >??
+>     >?? ?? ?? ?? ?? ?? ?? ??switch (token) {
+>     >?? #ifdef CONFIG_EROFS_FS_XATTR
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_user_xattr:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_user_xattr:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??set_opt(EROFS_SB(sb), XATTR_USER);
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_nouser_xattr:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_nouser_xattr:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??clear_opt(EROFS_SB(sb), XATTR_USER);
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     >?? #else
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_user_xattr:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_user_xattr:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??infoln("user_xattr options not supported");
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_nouser_xattr:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_nouser_xattr:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??infoln("nouser_xattr options not supported");
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     >?? #endif
+>     >?? #ifdef CONFIG_EROFS_FS_POSIX_ACL
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_acl:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_acl:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??set_opt(EROFS_SB(sb), POSIX_ACL);
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_noacl:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_noacl:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??clear_opt(EROFS_SB(sb), POSIX_ACL);
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     >?? #else
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_acl:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_acl:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??infoln("acl options not supported");
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_noacl:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_noacl:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??infoln("noacl options not supported");
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??break;
+>     >?? #endif
+>     > -?? ?? ?? ?? ?? ?? ??case Opt_fault_injection:
+>     > +?? ?? ?? ?? ?? ?? ??case opt_fault_injection:
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??err = erofs_build_fault_attr(EROFS_SB(sb),
+>     args);
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??if (err)
+>     >?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??return err;
+>     > @@ -525,7 +526,6 @@ static void erofs_put_super(struct super_block
+>     *sb)
+>     >?? ?? ?? ??sb->s_fs_info = NULL;
+>     >?? }
+>     >??
+>     > -
+>     >?? struct erofs_mount_private {
+>     >?? ?? ?? ??const char *dev_name;
+>     >?? ?? ?? ??char *options;
+>     > @@ -541,9 +541,9 @@ static int erofs_fill_super(struct super_block
+>     *sb,
+>     >?? ?? ?? ?? ?? ?? ?? ??priv->options, silent);
+>     >?? }
+>     >??
+>     > -static struct dentry *erofs_mount(
+>     > -?? ?? ??struct file_system_type *fs_type, int flags,
+>     > -?? ?? ??const char *dev_name, void *data)
+>     > +static struct dentry *erofs_mount(struct file_system_type *fs_type,
+>     > +?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??int flags,
+>     > +?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??const char *dev_name, void *data)
+>     >?? {
+>     >?? ?? ?? ??struct erofs_mount_private priv = {
+>     >?? ?? ?? ?? ?? ?? ?? ??.dev_name = dev_name,
+>     > @@ -623,7 +623,8 @@ static int erofs_statfs(struct dentry *dentry,
+>     struct kstatfs *buf)
+>     >?? ?? ?? ??buf->f_type = sb->s_magic;
+>     >?? ?? ?? ??buf->f_bsize = EROFS_BLKSIZ;
+>     >?? ?? ?? ??buf->f_blocks = sbi->blocks;
+>     > -?? ?? ??buf->f_bfree = buf->f_bavail = 0;
+>     > +?? ?? ??buf->f_bfree = 0;
+>     > +?? ?? ??buf->f_bavail = 0;
+>     >??
+>     >?? ?? ?? ??buf->f_files = ULLONG_MAX;
+>     >?? ?? ?? ??buf->f_ffree = ULLONG_MAX - sbi->inos;
+>     >
+> 
