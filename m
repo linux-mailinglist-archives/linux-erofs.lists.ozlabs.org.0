@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0BAF6A298
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 09:05:07 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 722866A29A
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 09:05:13 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45nrxm3kvGzDqTk
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 17:05:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45nrxr4xMlzDqLP
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2019 17:05:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,19 +18,19 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45nrxR16NRzDqTh
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45nrxR1BWWzDqTk
  for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2019 17:04:42 +1000 (AEST)
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id 6DFD7CBACC5B03A1D0E9;
+ by Forcepoint Email with ESMTP id 63B9CFD2F50C78A4E429;
  Tue, 16 Jul 2019 15:04:40 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Jul
- 2019 15:04:32 +0800
+ 2019 15:04:33 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
-Subject: [PATCH v2 07/17] erofs-utils: introduce mkfs support
-Date: Tue, 16 Jul 2019 15:04:09 +0800
-Message-ID: <20190716070419.30203-8-gaoxiang25@huawei.com>
+Subject: [PATCH v2 08/17] erofs-utils: introduce generic compression framework
+Date: Tue, 16 Jul 2019 15:04:10 +0800
+Message-ID: <20190716070419.30203-9-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190716070419.30203-1-gaoxiang25@huawei.com>
 References: <20190716070419.30203-1-gaoxiang25@huawei.com>
@@ -54,244 +54,165 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Li Guifu <bluce.liguifu@huawei.com>
+This patch adds a new flexable compression framework
+to user-space utilities, which is designed in order
+to integrate more compression algorithms easily.
 
-This patch adds mkfs support to erofs-utils, and
-it's able to build uncompressed images at the moment.
-
-Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- Makefile.am      |   2 +-
- configure.ac     |   3 +-
- mkfs/Makefile.am |   9 +++
- mkfs/main.c      | 179 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 191 insertions(+), 2 deletions(-)
- create mode 100644 mkfs/Makefile.am
- create mode 100644 mkfs/main.c
+ lib/Makefile.am  |  2 +-
+ lib/compressor.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/compressor.h | 48 +++++++++++++++++++++++++++++++
+ 3 files changed, 123 insertions(+), 1 deletion(-)
+ create mode 100644 lib/compressor.c
+ create mode 100644 lib/compressor.h
 
-diff --git a/Makefile.am b/Makefile.am
-index ee5fd92..d94ab73 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -3,4 +3,4 @@
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 5257d71..64da708 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -2,6 +2,6 @@
+ # Makefile.am
  
- ACLOCAL_AMFLAGS = -I m4
+ noinst_LTLIBRARIES = liberofs.la
+-liberofs_la_SOURCES = config.c io.c cache.c inode.c
++liberofs_la_SOURCES = config.c io.c cache.c inode.c compressor.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
  
--SUBDIRS=lib
-+SUBDIRS=lib mkfs
-diff --git a/configure.ac b/configure.ac
-index 9c6d8bb..49f1a7d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -103,5 +103,6 @@ AC_CHECK_DECL(lseek64,[AC_DEFINE(HAVE_LSEEK64_PROTOTYPE, 1,
- AC_CHECK_FUNCS([gettimeofday memset realpath strdup strerror strrchr strtoull])
- 
- AC_CONFIG_FILES([Makefile
--		 lib/Makefile])
-+		 lib/Makefile
-+		 mkfs/Makefile])
- AC_OUTPUT
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
+diff --git a/lib/compressor.c b/lib/compressor.c
 new file mode 100644
-index 0000000..257f864
+index 0000000..cc97cfb
 --- /dev/null
-+++ b/mkfs/Makefile.am
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+AUTOMAKE_OPTIONS = foreign
-+bin_PROGRAMS     = mkfs.erofs
-+mkfs_erofs_SOURCES = main.c
-+mkfs_erofs_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
-+mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la
-+
-diff --git a/mkfs/main.c b/mkfs/main.c
-new file mode 100644
-index 0000000..ec1712f
---- /dev/null
-+++ b/mkfs/main.c
-@@ -0,0 +1,179 @@
++++ b/lib/compressor.c
+@@ -0,0 +1,74 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * mkfs/main.c
++ * erofs-utils/lib/compressor.c
 + *
 + * Copyright (C) 2018-2019 HUAWEI, Inc.
 + *             http://www.huawei.com/
-+ * Created by Li Guifu <bluce.liguifu@huawei.com>
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#define _GNU_SOURCE
-+#include <time.h>
-+#include <sys/time.h>
-+#include <stdlib.h>
-+#include <limits.h>
-+#include <libgen.h>
-+#include "erofs/config.h"
-+#include "erofs/print.h"
-+#include "erofs/cache.h"
-+#include "erofs/inode.h"
-+#include "erofs/io.h"
++#include "erofs/internal.h"
++#include "compressor.h"
 +
-+#define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
++#define EROFS_CONFIG_COMPR_DEF_BOUNDARY		(128)
 +
-+static void usage(void)
++int erofs_compress_destsize(struct erofs_compress *c,
++			    int compression_level,
++			    void *src,
++			    unsigned int *srcsize,
++			    void *dst,
++			    unsigned int dstsize)
 +{
-+	fprintf(stderr, "usage: [options] FILE DIRECTORY\n\n");
-+	fprintf(stderr, "Generate erofs image from DIRECTORY to FILE, and [options] are:\n");
-+	fprintf(stderr, " -d#       set output message level to # (maximum 9)\n");
++	int ret;
++
++	DBG_BUGON(!c->alg);
++	if (!c->alg->compress_destsize)
++		return -ENOTSUP;
++
++	ret = c->alg->compress_destsize(c, compression_level,
++					src, srcsize, dst, dstsize);
++	if (ret)
++		return ret;
++
++	/* check if there is enough gains to compress */
++	if (*srcsize <= dstsize * c->compress_threshold / 100)
++		return -EAGAIN;
++	return 0;
 +}
 +
-+u64 parse_num_from_str(const char *str)
++int erofs_compressor_init(struct erofs_compress *c,
++			  char *alg_name)
 +{
-+	u64 num      = 0;
-+	char *endptr = NULL;
++	static struct erofs_compressor *compressors[] = {
++	};
 +
-+	num = strtoull(str, &endptr, 10);
-+	BUG_ON(num == ULLONG_MAX);
-+	return num;
-+}
++	int ret, i;
 +
-+static int mkfs_parse_options_cfg(int argc, char *argv[])
-+{
-+	int opt;
++	/* should be written in "minimum compression ratio * 100" */
++	c->compress_threshold = 100;
 +
-+	while ((opt = getopt(argc, argv, "d:z:")) != -1) {
-+		switch (opt) {
-+		case 'd':
-+			cfg.c_dbg_lvl = parse_num_from_str(optarg);
-+			break;
++	/* optimize for 4k size page */
++	c->destsize_alignsize = PAGE_SIZE;
++	c->destsize_redzone_begin = PAGE_SIZE - 16;
++	c->destsize_redzone_end = EROFS_CONFIG_COMPR_DEF_BOUNDARY;
 +
-+		default: /* '?' */
-+			return -EINVAL;
++	ret = -EINVAL;
++
++	for (i = 0; i < ARRAY_SIZE(compressors); ++i) {
++		ret = compressors[i]->init(c, alg_name);
++		if (!ret) {
++			DBG_BUGON(!c->alg);
++			return 0;
 +		}
 +	}
++	return ret;
++}
 +
-+	if (optind >= argc)
-+		return -EINVAL;
++int erofs_compressor_exit(struct erofs_compress *c)
++{
++	DBG_BUGON(!c->alg);
 +
-+	cfg.c_img_path = strdup(argv[optind++]);
-+	if (!cfg.c_img_path)
-+		return -ENOMEM;
-+
-+	if (optind > argc) {
-+		erofs_err("Source directory is missing");
-+		return -EINVAL;
-+	}
-+
-+	cfg.c_src_path = realpath(argv[optind++], NULL);
-+	if (!cfg.c_src_path) {
-+		erofs_err("Failed to parse source directory: %s",
-+			  erofs_strerror(-errno));
-+		return -ENOENT;
-+	}
-+
-+	if (optind < argc) {
-+		erofs_err("Unexpected argument: %s\n", argv[optind]);
-+		return -EINVAL;
-+	}
++	if (c->alg->exit)
++		return c->alg->exit(c);
 +	return 0;
 +}
 +
-+int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
-+				  erofs_nid_t root_nid)
-+{
-+	struct erofs_super_block sb = {
-+		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
-+		.blkszbits = LOG_BLOCK_SIZE,
-+		.inos   = 0,
-+		.blocks = 0,
-+		.meta_blkaddr  = sbi.meta_blkaddr,
-+		.xattr_blkaddr = 0,
-+	};
-+	const unsigned int sb_blksize =
-+		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
-+	char *buf;
-+	struct timeval t;
+diff --git a/lib/compressor.h b/lib/compressor.h
+new file mode 100644
+index 0000000..8ad9d11
+--- /dev/null
++++ b/lib/compressor.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * erofs-utils/lib/compressor.h
++ *
++ * Copyright (C) 2018-2019 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_LIB_COMPRESSOR_H
++#define __EROFS_LIB_COMPRESSOR_H
 +
-+	if (!gettimeofday(&t, NULL)) {
-+		sb.build_time      = cpu_to_le64(t.tv_sec);
-+		sb.build_time_nsec = cpu_to_le32(t.tv_usec);
-+	}
++#include "erofs/defs.h"
 +
-+	sb.blocks       = cpu_to_le32(erofs_mapbh(NULL, true));
-+	sb.root_nid     = cpu_to_le16(root_nid);
++struct erofs_compress;
 +
-+	buf = calloc(sb_blksize, 1);
-+	if (!buf) {
-+		erofs_err("Failed to allocate memory for sb: %s",
-+			  erofs_strerror(-errno));
-+		return -ENOMEM;
-+	}
-+	memcpy(buf + EROFS_SUPER_OFFSET, &sb, sizeof(sb));
++struct erofs_compressor {
++	int default_level;
++	int best_level;
 +
-+	bh->fsprivate = buf;
-+	bh->op = &erofs_buf_write_bhops;
-+	return 0;
-+}
++	int (*init)(struct erofs_compress *c, char *alg_name);
++	int (*exit)(struct erofs_compress *c);
 +
-+int main(int argc, char **argv)
-+{
-+	int err = 0;
-+	struct erofs_buffer_head *sb_bh;
-+	struct erofs_inode *root_inode;
-+	erofs_nid_t root_nid;
++	int (*compress_destsize)(struct erofs_compress *c,
++				 int compress_level,
++				 void *src, unsigned int *srcsize,
++				 void *dst, unsigned int dstsize);
++};
 +
-+	erofs_init_configure();
-+	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
++struct erofs_compress {
++	struct erofs_compressor *alg;
 +
-+	err = mkfs_parse_options_cfg(argc, argv);
-+	if (err) {
-+		if (err == -EINVAL)
-+			usage();
-+		return 1;
-+	}
++	unsigned int compress_threshold;
 +
-+	err = dev_open(cfg.c_img_path);
-+	if (err) {
-+		usage();
-+		return 1;
-+	}
++	/* *_destsize specific */
++	unsigned int destsize_alignsize;
++	unsigned int destsize_redzone_begin;
++	unsigned int destsize_redzone_end;
++};
 +
-+	erofs_show_config();
++int erofs_compress_destsize(struct erofs_compress *c, int compression_level,
++			    void *src, unsigned int *srcsize,
++			    void *dst, unsigned int dstsize);
 +
-+	sb_bh = erofs_buffer_init();
-+	err = erofs_bh_balloon(sb_bh, EROFS_SUPER_END);
-+	if (err < 0) {
-+		erofs_err("Failed to balloon erofs_super_block: %s",
-+			  erofs_strerror(err));
-+		goto exit;
-+	}
++int erofs_compressor_init(struct erofs_compress *c, char *alg_name);
++int erofs_compressor_exit(struct erofs_compress *c);
 +
-+	erofs_inode_manager_init();
++#endif
 +
-+	root_inode = erofs_mkfs_build_tree_from_path(NULL, cfg.c_src_path);
-+	if (IS_ERR(root_inode)) {
-+		err = PTR_ERR(root_inode);
-+		goto exit;
-+	}
-+
-+	root_nid = erofs_lookupnid(root_inode);
-+	erofs_iput(root_inode);
-+
-+	err = erofs_mkfs_update_super_block(sb_bh, root_nid);
-+	if (err)
-+		goto exit;
-+
-+	/* flush all remaining buffers */
-+	if (!erofs_bflush(NULL))
-+		err = -EIO;
-+exit:
-+	dev_close();
-+	erofs_exit_configure();
-+
-+	if (err) {
-+		erofs_err("\tCould not format the device : %s\n",
-+			  erofs_strerror(err));
-+		return 1;
-+	}
-+	return err;
-+}
 -- 
 2.17.1
 
