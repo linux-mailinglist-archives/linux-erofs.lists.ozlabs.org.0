@@ -2,45 +2,64 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43AE26C9E7
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 09:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 692176C9EB
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 09:27:17 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45q5Dn2P7qzDqGv
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 17:22:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45q5LV59JgzDqRX
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 17:27:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.35; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ spf=pass (mailfrom) smtp.mailfrom=qq.com
+ (client-ip=113.96.223.47; helo=qq.com; envelope-from=353779207@qq.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
+ dmarc=pass (p=none dis=none) header.from=qq.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=qq.com header.i=@qq.com header.b="GtAgClr4"; 
+ dkim-atps=neutral
+Received: from qq.com (smtpbg403.qq.com [113.96.223.47])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45q5Dg4V9czDqCq
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 17:22:11 +1000 (AEST)
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 5F9C6F4AF73ED5EDABB5;
- Thu, 18 Jul 2019 15:22:06 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 18 Jul
- 2019 15:21:59 +0800
-Subject: =?UTF-8?B?UmU6IOWbnuWkje+8muWbnuWkje+8muWbnuWkje+8muWbnuWkje+8mg==?=
- =?UTF-8?B?5Zue5aSN77yaZXJvc+aAp+iDvemXrumimA==?=
-To: ZHOU <353779207@qq.com>
-References: <tencent_E808F13AAE9BDE391B1E8F73AECBEB542408@qq.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <6c6ec4f9-0ba5-fb31-84ce-fbf70d95fe01@huawei.com>
-Date: Thu, 18 Jul 2019 15:21:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <tencent_E808F13AAE9BDE391B1E8F73AECBEB542408@qq.com>
-Content-Type: text/plain; charset="gb18030"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45q5LQ541wzDqDZ
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 17:27:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+ t=1563434788; bh=NC/RA0UkmbULtXlBfQuFXOxDZ9CQblq/y+Vq6+6Sww0=;
+ h=From:To:Subject:Mime-Version:Date:Message-ID;
+ b=GtAgClr44Kl15wxEmKZhgDa4JAjRqbD0+GoHbd2JLi6TnoA7WIgGdRJs+jqPrAt3M
+ 5S7lKhdvVh6sFQFFW1G/IjZSBiZ+vx6TBt5zb4NcDbqyA0qitVaofR2Z/2yl4PGYGT
+ ExQnGOCo3ipgvok1awh8D5I2bcXu9IFwu29dHVSU=
+X-QQ-FEAT: muhurRMRtvg1pW55yUawyVpCtNpklXj1/i5ZfRAmLryUhPcvCqEALEjGg2Go5
+ QjK1lu25vPX2GEy/ao2Vui/sJSPbolsbvFD49sUhNKaXbZzDdJieM1A02KzLqx9hm02Eyy8
+ muSWwO7RnpQEGnUVpVvpCUD255vINctDqt8UZlO+e+3heKFR0503e1slz3zNjd6Z8JAR+TB
+ mnbr62lDTtHEl8iSAN3hjX0ok4TI+ZOBI3gdCdm1gWXPFhHeWvs5Vuyf7bQ8EdykmyjYkzY
+ pcasHqTNAp6psUM71N1ZYDhMbf7rDxRfhp0VfPad1oQUfB+hD6+7vH89hw8K+3Qh+4mw==
+X-QQ-SSF: 0000000000000060
+X-QQ-WAPMAIL: 1
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 117.136.75.97
+X-QQ-STYLE: 
+X-QQ-mid: riamail29t1563434787t2604590
+From: "=?gb18030?B?WkhPVQ==?=" <353779207@qq.com>
+To: "=?gb18030?B?R2FvIFhpYW5n?=" <gaoxiang25@huawei.com>
+Subject: =?gb18030?B?u9i4tKO6u9i4tKO6u9i4tKO6u9i4tKO6u9i4tKO6?=
+ =?gb18030?B?u9i4tKO6ZXJvc9DUxNzOyszi?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="----=_NextPart_5D301F23_08C66FE8_55FF19EC"
+Content-Transfer-Encoding: 8Bit
+Date: Thu, 18 Jul 2019 15:26:27 +0800
+X-Priority: 3
+Message-ID: <tencent_079288C49FB9CE79036DA43DC2B8DAAE870A@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-ReplyHash: 482806190
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1]) by smtp.qq.com (ESMTP) with SMTP
+ id ; Thu, 18 Jul 2019 15:26:27 +0800 (CST)
+Feedback-ID: riamail:qq.com:bgforeign:bgforeign4
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,137 +71,233 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>
+Cc: =?gb18030?B?bGludXgtZXJvZnM=?= <linux-erofs@lists.ozlabs.org>,
+ =?gb18030?B?TWlhbyBYaWU=?= <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format.
+
+------=_NextPart_5D301F23_08C66FE8_55FF19EC
+Content-Type: text/plain;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+usO1xA0KDQoNCkIuUg0KDQotLS0tLS0tLS0tLS0tLS0tLS0g1K3KvNPKvP4gLS0tLS0tLS0t
+LS0tLS0tLS0tDQq3orz+yMs6IEdhbyBYaWFuZyA8Z2FveGlhbmcyNUBodWF3ZWkuY29tPg0K
+t6LLzcqxvOQ6IDIwMTnE6jfUwjE4yNUgMTU6MjINCsrVvP7IyzogWkhPVSA8MzUzNzc5MjA3
+QHFxLmNvbT4NCrOty806IE1pYW8gWGllIDxtaWFveGllQGh1YXdlaS5jb20+LCBsaW51eC1l
+cm9mcyA8bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZz4NCtb3zOI6ILvYuLSjurvYuLSj
+urvYuLSjurvYuLSjurvYuLSjurvYuLSjumVyb3PQ1MTczsrM4g0KDQoNCg0KDQoNCk9uIDIw
+MTkvNy8xOCAxNToxMywgWkhPVSB3cm90ZToNCj4gRGVhciBHYW8geGlhbmcsDQo+IM2ouf1m
+aW+y4srUo6y3os/WuPpjcHW197bI09C52M+1o6zErMjPtffGtbLfwtTPwmVyb2Zzy9nCysL9
+09pleHQ0oaO9q7X3xrWy38LUtffV+7W9cGVyZm9ybWFuY2UgxKPKvaOstMvKsWVyb2Zzy9nC
+yr3PZXh0NL/s0rvQqaOsDQoNCg0K1eK49si3yrW63MbmudajrMrHsrvKx2Vyb2ZztcSyu9G5
+y/XEo8q9tcTC37ytsci9z7zytaVjcHUgbG9hZGluZ7K71tijrLK7u+G0pbeiDQphbmRyb2lk
+tcRDUFW198a1o6y2+Mbky/vOxLz+z7XNs9PJ09rC37ytsci9z7i01NPI3dLXtKW3okNQVbX3
+xrWjrMrHt/G/ydLUye7I6w0K0dC+v9K7z8K5ss/tz8K94bn7oaMNCg0KDQq1q7K7tuCho8Ht
+zeKjrNTacGPJz9PDbHo0ttSy4srUzsS8/r340NDRucv1o6y3os/WvLi69bK7v8nRucv1o6zT
+prjDysey4srUzsS8/tGh1PHJz9Ky09DOyszioaO689D4yrnTw77f09C9z7Tz0bnL9dDUtcSy
+4srUzsS8/r340NDU2bLiytShow0KPiANCj4gVGhhbmtzDQo+IEIuUg0KPiANCj4gDQo+IC0t
+LS0tLS0tLS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS0NCj4gKreivP7I
+yzoqIEdhbyBYaWFuZyA8Z2FveGlhbmcyNUBodWF3ZWkuY29tPg0KPiAqt6LLzcqxvOQ6KiAy
+MDE5xOo31MIxOMjVIDExOjU2DQo+ICrK1bz+yMs6KiBaSE9VIDwzNTM3NzkyMDdAcXEuY29t
+Pg0KPiAqs63LzToqIE1pYW8gWGllIDxtaWFveGllQGh1YXdlaS5jb20+LCBsaW51eC1lcm9m
+cyA8bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZz4NCj4gKtb3zOI6KiC72Li0o7q72Li0
+o7q72Li0o7q72Li0o7q72Li0o7plcm9z0NTE3M7KzOINCj4gDQo+IA0KPiANCj4gT24gMjAx
+OS83LzE4IDExOjUzLCBaSE9VIHdyb3RlOg0KPj4gaW96b25lILjEtq+63NCho6zWu8rH1Npv
+cGVuyrHRodPDT19SRE9OTFksIMi7uvPG9NPDLStF0aHP7sq508O2wMGitcTOxLz+1/bWu7bB
+suLK1A0KPiANCj4g19zWrsTjz8jEw2Zpb9PD0MLU9rbAwaK31sf4o6ixo9akz+DNrLXETEJB
+o6my4tK7z8Kyu9G5y/Wjv9Xi1tayu9G5y/W1xMfpv/bIw87SutzSybvzo6wNCj4g0rK+9bXD
+w7vIzrrOsdjSqsilvfjSu7K9veLKzaOsxOO1xM7EvP7T0Mqyw7TM2MritcTC8KO/DQo+IA0K
+Pj4NCj4+ILjQ0LvWp7PWDQo+PiBCLlINCj4+DQo+Pg0KPj4NCj4+DQo+Pg0KPj4NCj4+IC0t
+LS0tLS0tLS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS0NCj4+ICq3orz+
+yMs6KiBHYW8gWGlhbmcgPGdhb3hpYW5nMjVAaHVhd2VpLmNvbT4NCj4+ICq3osvNyrG85Doq
+IDIwMTnE6jfUwjE4yNUgMTE6NDYNCj4+ICrK1bz+yMs6KiBaSE9VIDwzNTM3NzkyMDdAcXEu
+Y29tPg0KPj4gKrOty806KiBNaWFvIFhpZSA8bWlhb3hpZUBodWF3ZWkuY29tPiwgbGludXgt
+ZXJvZnMgPGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc+DQo+PiAq1vfM4joqILvYuLSj
+urvYuLSjurvYuLSjurvYuLSjumVyb3PQ1MTczsrM4g0KPj4NCj4+DQo+Pg0KPj4gT24gMjAx
+OS83LzE4IDExOjM5LCBaSE9VIHdyb3RlOg0KPj4+ILrDtcSjrLjDY29uZmlnIENPTkZJR19F
+Uk9GU19GU19aSVBfQ0FDSEVfQklQT0xBUiDS0b6txvTTw8HLtcShow0KPj4+ILLiytTKsdGh
+08PNrNK7zKjJ6LG4o6y31sf40rvWwqOsyrnTw2xvb3C3vcq9ZXJvZnO4+mV4dDSy7rK7tuCj
+rM7S1NnX0M+4vOyy6dK7z8JMQkGhow0KPj4NCj4+IGxvb3C3vcq90uLS5bK7tPOjrLK71qq1
+wGlvem9uZcTj1PXDtLjEtcSjrNKysrvWqrXAxOPDx7XExNq6y8rHt/G21GV4dDTT0LjEtq+j
+rA0KPj4gztK+9bXDxOO/ydLUz8jEw7Hq17y1xGZpb7Li0rvPwqOssrvQ6NKq1/bIzrrO0N64
+xKOsbWtmc9PQsdjSqtKyvajS6cq508PUrcq8tPrC66Oszai5/dDC1Pa31sf41/ay4srUoaMN
+Cj4+DQo+Pj4NCj4+PiDQu9C7uPiz9rXEvajS6Q0KPj4+DQo+Pj4gQi5SDQo+Pj4NCj4+Pg0K
+Pj4+DQo+Pj4NCj4+Pg0KPj4+IC0tLS0tLS0tLS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0t
+LS0tLS0tLS0tLS0NCj4+PiAqt6K8/sjLOiogR2FvIFhpYW5nIDxnYW94aWFuZzI1QGh1YXdl
+aS5jb20+DQo+Pj4gKreiy83KsbzkOiogMjAxOcTqN9TCMTjI1SAxMToyOA0KPj4+ICrK1bz+
+yMs6KiBaSE9VIDwzNTM3NzkyMDdAcXEuY29tPg0KPj4+ICqzrcvNOiogTWlhbyBYaWUgPG1p
+YW94aWVAaHVhd2VpLmNvbT4sIGxpbnV4LWVyb2ZzIDxsaW51eC1lcm9mc0BsaXN0cy5vemxh
+YnMub3JnPg0KPj4+ICrW98ziOiogu9i4tKO6u9i4tKO6u9i4tKO6ZXJvc9DUxNzOysziDQo+
+Pj4NCj4+Pg0KPj4+DQo+Pj4gT24gMjAxOS83LzE4IDExOjI0LCBaSE9VIHdyb3RlOg0KPj4+
+PiDKx7XEIL+0tPrC68H3s8xlcm9mc7j8vPK94CCyu9OmuMOz9s/W0NTE3Lbxu6+1xM7KzOIg
+we3N4tTa1/Z4YXR0csqxo6zO0sO709DG9NPDc2hhcmW1xLe9yr2jrNXi1NphbmRyb2lkyc/T
+prjDsru74dOwz+y1vdDUxNywyaOs0vLOqtTatsFzZWN1cml0ecr00NS687vhu7q05rW9a2Vy
+bmVs1tANCj4+Pg0KPj4+IMO709CjrM7SvvW1w8Tjw8fPyMXFsunPwtfUvLqy4srUtcTH6b/2
+o6ixyMjnyse38bj6YW5kcm9pZMTausu1xLX3tsjS8svY09C52KOpo6zE48PHv8nS1LzTbG9n
+xcWy6aOsDQo+Pj4gwe3N4r2o0umy4srUyrnTw8/gzay1xExCQcf40/KyosfSsdzD4rLiytTH
+sNC0yOvG5Mv7yMjK/b7do6jX7rrDysdmbGFzaLW9z+DNrLXETEJBuvPWsb3TsuLK1KOpo6wN
+Cj4+PiDL5rv6tsGyu9G5y/Wyu9OmuMPKx8Tjy7W1xMfpv/aho9G5y/W1xMr9vt1jb25maWfQ
+6NKqv6rG9ENPTkZJR19FUk9GU19GU19aSVBfQ0FDSEVfQklQT0xBUg0KPj4+DQo+Pj4+DQo+
+Pj4+IEIuUg0KPj4+Pg0KPj4+Pg0KPj4+PiAtLS0tLS0tLS0tLS0tLS0tLS0g1K3KvNPKvP4g
+LS0tLS0tLS0tLS0tLS0tLS0tDQo+Pj4+ICq3orz+yMs6KiBHYW8gWGlhbmcgPGdhb3hpYW5n
+MjVAaHVhd2VpLmNvbT4NCj4+Pj4gKreiy83KsbzkOiogMjAxOcTqN9TCMTjI1SAxMToxOQ0K
+Pj4+PiAqytW8/sjLOiogWkhPVSA8MzUzNzc5MjA3QHFxLmNvbT4NCj4+Pj4gKrOty806KiBN
+aWFvIFhpZSA8bWlhb3hpZUBodWF3ZWkuY29tPiwgbGludXgtZXJvZnMgPGxpbnV4LWVyb2Zz
+QGxpc3RzLm96bGFicy5vcmc+DQo+Pj4+ICrW98ziOiogu9i4tKO6u9i4tKO6ZXJvc9DUxNzO
+ysziDQo+Pj4+DQo+Pj4+DQo+Pj4+DQo+Pj4+IE9uIDIwMTkvNy8xOCAxMToxNSwgWkhPVSB3
+cm90ZToNCj4+Pj4+IERlYXIgeGlhbmcsDQo+Pj4+PiDDu9PQxvTTw2RpcmVjdElPLA0KPj4+
+Pj4gusO1xCzO0rOiytTSu8/CxPrM4bmptcSy4srUt723qKGjDQo+Pj4+DQo+Pj4+INbBydm2
+1NPasrvRucv1tcTH6b/2o6zE0dLUwO294svmu/q2wdPQsu7S7KGjDQo+Pj4+DQo+Pj4+INC7
+0Luhow0KPj4+Pg0KPj4+Pj4NCj4+Pj4+ILfHs6O40NC7DQo+Pj4+Pg0KPj4+Pj4NCj4+Pj4+
+IC0tLS0tLS0tLS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS0NCj4+Pj4+
+ICq3orz+yMs6KiBHYW8gWGlhbmcgPGdhb3hpYW5nMjVAaHVhd2VpLmNvbT4NCj4+Pj4+ICq3
+osvNyrG85DoqIDIwMTnE6jfUwjE4yNUgMTE6MTANCj4+Pj4+ICrK1bz+yMs6KiBaSE9VIDwz
+NTM3NzkyMDdAcXEuY29tPg0KPj4+Pj4gKrOty806KiBNaWFvIFhpZSA8bWlhb3hpZUBodWF3
+ZWkuY29tPiwgbGludXgtZXJvZnMgPGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc+DQo+
+Pj4+PiAq1vfM4joqILvYuLSjumVyb3PQ1MTczsrM4g0KPj4+Pj4NCj4+Pj4+DQo+Pj4+Pg0K
+Pj4+Pj4gT24gMjAxOS83LzE4IDEwOjU0LCBHYW8gWGlhbmcgd3JvdGU6DQo+Pj4+Pj4+ILfF
+yOtlcm9mc9bQo6yy4srUw/zB7s6qo7ouL2lvem9uZSAtaSAyIC1zIDMwMG0gLXIgNGsgLStF
+IC13IC1mIC4vdmVuZG9yL3RtcF9maWxlDQo+Pj4+Pj4gztKyu8fls/7V4rj2tPqx7cqyw7TS
+4su8o6zKx7fx09C21NOmtcRmaW+1xMP8we6how0KPj4+Pj4+DQo+Pj4+Pg0KPj4+Pj4gwe3N
+4qOsztLDx72o0um1xMvmu/q2wXBhdHRlcm6jqNKyysfO0sPHsuLK1LnY16K1xKOpyscNCj4+
+Pj4+IGVjaG8gMyA+IC9wcm9jL3N5cy92bS9kcm9wX2NhY2hlcw0KPj4+Pj4gLi9maW8gLS1y
+ZWFkb25seSAtcnc9cmFuZHJlYWQgLXNpemU9MTAwJSAtYnM9NGsgLW5hbWU9am9iMQ0KPj4+
+Pj4NCj4+Pj4+INLyzqq++LTztuDK/dOm08PDu9PQZGlyZWN0IEkvT8frx/OjrMO709BkaXJl
+Y3QgSS9PtsHCt762o6y2zMbaw7vT0GRpcmVjdCBJL0/Wp7PWvMa7rqOsDQo+Pj4+PiDSsrK7
+vajS6cq508NkaXJlY3QgSS9PsuLK1NDUxNyhow==
+
+------=_NextPart_5D301F23_08C66FE8_55FF19EC
+Content-Type: text/html;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4OyI+usO1xDwv
+ZGl2PjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9tOjhweDsiPjxi
+cj48L2Rpdj48ZGl2IHN0eWxlPSJtaW4taGVpZ2h0OjIycHg7bWFyZ2luLWJvdHRvbTo4cHg7
+Ij5CLlI8L2Rpdj48ZGl2IGlkPSJvcmlnaW5hbC1jb250ZW50Ij48YnI+PGRpdj48ZGl2IHN0
+eWxlPSJmb250LXNpemU6NzAlO3BhZGRpbmc6MnB4IDA7Ij4tLS0tLS0tLS0tLS0tLS0tLS0g
+1K3KvNPKvP4gLS0tLS0tLS0tLS0tLS0tLS0tPC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXpl
+OjcwJTtiYWNrZ3JvdW5kOiNmMGYwZjA7Y29sb3I6IzIxMjEyMTtwYWRkaW5nOjhweDtib3Jk
+ZXItcmFkaXVzOjRweCI+PGRpdj48Yj63orz+yMs6PC9iPiBHYW8gWGlhbmcgJmx0O2dhb3hp
+YW5nMjVAaHVhd2VpLmNvbSZndDs8L2Rpdj48ZGl2PjxiPreiy83KsbzkOjwvYj4gMjAxOcTq
+N9TCMTjI1SAxNToyMjwvZGl2PjxkaXY+PGI+ytW8/sjLOjwvYj4gWkhPVSAmbHQ7MzUzNzc5
+MjA3QHFxLmNvbSZndDs8L2Rpdj48ZGl2PjxiPrOty806PC9iPiBNaWFvIFhpZSAmbHQ7bWlh
+b3hpZUBodWF3ZWkuY29tJmd0OywgbGludXgtZXJvZnMgJmx0O2xpbnV4LWVyb2ZzQGxpc3Rz
+Lm96bGFicy5vcmcmZ3Q7PC9kaXY+PGRpdj48Yj7W98ziOjwvYj4gu9i4tKO6u9i4tKO6u9i4
+tKO6u9i4tKO6u9i4tKO6u9i4tKO6ZXJvc9DUxNzOysziPC9kaXY+PC9kaXY+PC9kaXY+PGJy
+Pjxicj48YnI+T24gMjAxOS83LzE4IDE1OjEzLCBaSE9VIHdyb3RlOjxicj4mZ3Q7IERlYXIg
+R2FvIHhpYW5nLDxicj4mZ3Q7IM2ouf1maW+y4srUo6y3os/WuPpjcHW197bI09C52M+1o6zE
+rMjPtffGtbLfwtTPwmVyb2Zzy9nCysL909pleHQ0oaO9q7X3xrWy38LUtffV+7W9cGVyZm9y
+bWFuY2UgxKPKvaOstMvKsWVyb2Zzy9nCyr3PZXh0NL/s0rvQqaOsPGJyPjxicj48YnI+1eK4
+9si3yrW63MbmudajrMrHsrvKx2Vyb2ZztcSyu9G5y/XEo8q9tcTC37ytsci9z7zytaVjcHUg
+bG9hZGluZ7K71tijrLK7u+G0pbeiPGJyPmFuZHJvaWS1xENQVbX3xrWjrLb4xuTL+87EvP7P
+tc2z08nT2sLfvK2xyL3PuLTU08jd0te0pbeiQ1BVtffGtaOsyse38b/J0tTJ7sjrPGJyPtHQ
+vr/Su8/CubLP7c/CveG5+6GjPGJyPjxicj48YnI+tauyu7bgoaPB7c3io6zU2nBjyc/Tw2x6
+NLbUsuLK1M7EvP69+NDQ0bnL9aOst6LP1ry4uvWyu7/J0bnL9aOs06a4w8rHsuLK1M7EvP7R
+odTxyc/SstPQzsrM4qGjuvPQ+Mq508O+39PQvc+089G5y/XQ1LXEsuLK1M7EvP69+NDQ1Nmy
+4srUoaM8YnI+Jmd0OyA8YnI+Jmd0OyBUaGFua3M8YnI+Jmd0OyBCLlI8YnI+Jmd0OyA8YnI+
+Jmd0OyA8YnI+Jmd0OyAtLS0tLS0tLS0tLS0tLS0tLS0g1K3KvNPKvP4gLS0tLS0tLS0tLS0t
+LS0tLS0tPGJyPiZndDsgKreivP7IyzoqIEdhbyBYaWFuZyAmbHQ7Z2FveGlhbmcyNUBodWF3
+ZWkuY29tJmd0Ozxicj4mZ3Q7ICq3osvNyrG85DoqIDIwMTnE6jfUwjE4yNUgMTE6NTY8YnI+
+Jmd0OyAqytW8/sjLOiogWkhPVSAmbHQ7MzUzNzc5MjA3QHFxLmNvbSZndDs8YnI+Jmd0OyAq
+s63LzToqIE1pYW8gWGllICZsdDttaWFveGllQGh1YXdlaS5jb20mZ3Q7LCBsaW51eC1lcm9m
+cyAmbHQ7bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZyZndDs8YnI+Jmd0OyAq1vfM4joq
+ILvYuLSjurvYuLSjurvYuLSjurvYuLSjurvYuLSjumVyb3PQ1MTczsrM4jxicj4mZ3Q7IDxi
+cj4mZ3Q7IDxicj4mZ3Q7IDxicj4mZ3Q7IE9uIDIwMTkvNy8xOCAxMTo1MywgWkhPVSB3cm90
+ZTo8YnI+Jmd0OyZndDsgaW96b25lILjEtq+63NCho6zWu8rH1NpvcGVuyrHRodPDT19SRE9O
+TFksIMi7uvPG9NPDLStF0aHP7sq508O2wMGitcTOxLz+1/bWu7bBsuLK1Dxicj4mZ3Q7IDxi
+cj4mZ3Q7INfc1q7E48/IxMNmaW/Tw9DC1Pa2wMGit9bH+KOosaPWpM/gzay1xExCQaOpsuLS
+u8/CsrvRucv1o7/V4tbWsrvRucv1tcTH6b/2yMPO0rrc0sm786OsPGJyPiZndDsg0rK+9bXD
+w7vIzrrOsdjSqsilvfjSu7K9veLKzaOsxOO1xM7EvP7T0Mqyw7TM2MritcTC8KO/PGJyPiZn
+dDsgPGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7ILjQ0LvWp7PWPGJyPiZndDsmZ3Q7IEIuUjxi
+cj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7
+Jmd0Ozxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyAtLS0tLS0tLS0tLS0tLS0tLS0g1K3KvNPK
+vP4gLS0tLS0tLS0tLS0tLS0tLS0tPGJyPiZndDsmZ3Q7ICq3orz+yMs6KiBHYW8gWGlhbmcg
+Jmx0O2dhb3hpYW5nMjVAaHVhd2VpLmNvbSZndDs8YnI+Jmd0OyZndDsgKreiy83KsbzkOiog
+MjAxOcTqN9TCMTjI1SAxMTo0Njxicj4mZ3Q7Jmd0OyAqytW8/sjLOiogWkhPVSAmbHQ7MzUz
+Nzc5MjA3QHFxLmNvbSZndDs8YnI+Jmd0OyZndDsgKrOty806KiBNaWFvIFhpZSAmbHQ7bWlh
+b3hpZUBodWF3ZWkuY29tJmd0OywgbGludXgtZXJvZnMgJmx0O2xpbnV4LWVyb2ZzQGxpc3Rz
+Lm96bGFicy5vcmcmZ3Q7PGJyPiZndDsmZ3Q7ICrW98ziOiogu9i4tKO6u9i4tKO6u9i4tKO6
+u9i4tKO6ZXJvc9DUxNzOysziPGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7
+PGJyPiZndDsmZ3Q7IE9uIDIwMTkvNy8xOCAxMTozOSwgWkhPVSB3cm90ZTo8YnI+Jmd0OyZn
+dDsmZ3Q7ILrDtcSjrLjDY29uZmlnIENPTkZJR19FUk9GU19GU19aSVBfQ0FDSEVfQklQT0xB
+UiDS0b6txvTTw8HLtcShozxicj4mZ3Q7Jmd0OyZndDsgsuLK1Mqx0aHTw82s0rvMqMnosbij
+rLfWx/jSu9bCo6zKudPDbG9vcLe9yr1lcm9mc7j6ZXh0NLLusru24KOsztLU2dfQz7i87LLp
+0rvPwkxCQaGjPGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7IGxvb3C3vcq90uLS5bK7tPOjrLK7
+1qq1wGlvem9uZcTj1PXDtLjEtcSjrNKysrvWqrXAxOPDx7XExNq6y8rHt/G21GV4dDTT0LjE
+tq+jrDxicj4mZ3Q7Jmd0OyDO0r71tcPE47/J0tTPyMTDserXvLXEZmlvsuLSu8/Co6yyu9Do
+0qrX9sjOus7Q3rjEo6xta2Zz09Cx2NKq0rK9qNLpyrnTw9Styry0+sLro6zNqLn90MLU9rfW
+x/jX9rLiytShozxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7
+INC70Lu4+LP2tcS9qNLpPGJyPiZndDsmZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDsgQi5SPGJy
+PiZndDsmZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7PGJyPiZndDsm
+Z3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7IC0tLS0tLS0tLS0tLS0t
+LS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS08YnI+Jmd0OyZndDsmZ3Q7ICq3orz+
+yMs6KiBHYW8gWGlhbmcgJmx0O2dhb3hpYW5nMjVAaHVhd2VpLmNvbSZndDs8YnI+Jmd0OyZn
+dDsmZ3Q7ICq3osvNyrG85DoqIDIwMTnE6jfUwjE4yNUgMTE6Mjg8YnI+Jmd0OyZndDsmZ3Q7
+ICrK1bz+yMs6KiBaSE9VICZsdDszNTM3NzkyMDdAcXEuY29tJmd0Ozxicj4mZ3Q7Jmd0OyZn
+dDsgKrOty806KiBNaWFvIFhpZSAmbHQ7bWlhb3hpZUBodWF3ZWkuY29tJmd0OywgbGludXgt
+ZXJvZnMgJmx0O2xpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcmZ3Q7PGJyPiZndDsmZ3Q7
+Jmd0OyAq1vfM4joqILvYuLSjurvYuLSjurvYuLSjumVyb3PQ1MTczsrM4jxicj4mZ3Q7Jmd0
+OyZndDs8YnI+Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDsg
+T24gMjAxOS83LzE4IDExOjI0LCBaSE9VIHdyb3RlOjxicj4mZ3Q7Jmd0OyZndDsmZ3Q7IMrH
+tcQgv7S0+sLrwfezzGVyb2ZzuPy88r3gILK706a4w7P2z9bQ1MTctvG7r7XEzsrM4iDB7c3i
+1NrX9nhhdHRyyrGjrM7Sw7vT0Mb008NzaGFyZbXEt73KvaOs1eLU2mFuZHJvaWTJz9OmuMOy
+u7vh07DP7LW90NTE3LDJo6zS8s6q1Nq2wXNlY3VyaXR5yvTQ1Lrzu+G7urTmtb1rZXJuZWzW
+0Dxicj4mZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7IMO709CjrM7SvvW1w8Tjw8fPyMXF
+sunPwtfUvLqy4srUtcTH6b/2o6ixyMjnyse38bj6YW5kcm9pZMTausu1xLX3tsjS8svY09C5
+2KOpo6zE48PHv8nS1LzTbG9nxcWy6aOsPGJyPiZndDsmZ3Q7Jmd0OyDB7c3ivajS6bLiytTK
+udPDz+DNrLXETEJBx/jT8rKix9Kx3MPisuLK1Mew0LTI68bky/vIyMr9vt2jqNfuusPKx2Zs
+YXNotb3P4M2stcRMQkG689axvdOy4srUo6mjrDxicj4mZ3Q7Jmd0OyZndDsgy+a7+rbBsrvR
+ucv1srvTprjDysfE48u1tcTH6b/2oaPRucv1tcTK/b7dY29uZmln0OjSqr+qxvRDT05GSUdf
+RVJPRlNfRlNfWklQX0NBQ0hFX0JJUE9MQVI8YnI+Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7
+Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyBCLlI8YnI+Jmd0OyZndDsmZ3Q7Jmd0Ozxi
+cj4mZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7Jmd0OyZndDsgLS0tLS0tLS0tLS0tLS0t
+LS0tINStyrzTyrz+IC0tLS0tLS0tLS0tLS0tLS0tLTxicj4mZ3Q7Jmd0OyZndDsmZ3Q7ICq3
+orz+yMs6KiBHYW8gWGlhbmcgJmx0O2dhb3hpYW5nMjVAaHVhd2VpLmNvbSZndDs8YnI+Jmd0
+OyZndDsmZ3Q7Jmd0OyAqt6LLzcqxvOQ6KiAyMDE5xOo31MIxOMjVIDExOjE5PGJyPiZndDsm
+Z3Q7Jmd0OyZndDsgKsrVvP7IyzoqIFpIT1UgJmx0OzM1Mzc3OTIwN0BxcS5jb20mZ3Q7PGJy
+PiZndDsmZ3Q7Jmd0OyZndDsgKrOty806KiBNaWFvIFhpZSAmbHQ7bWlhb3hpZUBodWF3ZWku
+Y29tJmd0OywgbGludXgtZXJvZnMgJmx0O2xpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcm
+Z3Q7PGJyPiZndDsmZ3Q7Jmd0OyZndDsgKtb3zOI6KiC72Li0o7q72Li0o7plcm9z0NTE3M7K
+zOI8YnI+Jmd0OyZndDsmZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7
+Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyBPbiAyMDE5LzcvMTggMTE6MTUsIFpIT1Ug
+d3JvdGU6PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7IERlYXIgeGlhbmcsPGJyPiZndDsmZ3Q7
+Jmd0OyZndDsmZ3Q7IMO709DG9NPDZGlyZWN0SU8sPGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7
+ILrDtcQsztKzosrU0rvPwsT6zOG5qbXEsuLK1Le9t6ihozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7
+PGJyPiZndDsmZ3Q7Jmd0OyZndDsg1sHJ2bbU09qyu9G5y/W1xMfpv/ajrMTR0tTA7b3iy+a7
++rbB09Cy7tLsoaM8YnI+Jmd0OyZndDsmZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7INC7
+0Luhozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZn
+dDsmZ3Q7Jmd0OyZndDsmZ3Q7ILfHs6O40NC7PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJy
+PiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7IC0tLS0tLS0t
+LS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS08YnI+Jmd0OyZndDsmZ3Q7
+Jmd0OyZndDsgKreivP7IyzoqIEdhbyBYaWFuZyAmbHQ7Z2FveGlhbmcyNUBodWF3ZWkuY29t
+Jmd0Ozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7Jmd0OyAqt6LLzcqxvOQ6KiAyMDE5xOo31MIxOMjV
+IDExOjEwPGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7ICrK1bz+yMs6KiBaSE9VICZsdDszNTM3
+NzkyMDdAcXEuY29tJmd0Ozxicj4mZ3Q7Jmd0OyZndDsmZ3Q7Jmd0OyAqs63LzToqIE1pYW8g
+WGllICZsdDttaWFveGllQGh1YXdlaS5jb20mZ3Q7LCBsaW51eC1lcm9mcyAmbHQ7bGludXgt
+ZXJvZnNAbGlzdHMub3psYWJzLm9yZyZndDs8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyZndDsgKtb3
+zOI6KiC72Li0o7plcm9z0NTE3M7KzOI8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyZndDs8YnI+Jmd0
+OyZndDsmZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyZndDs8YnI+Jmd0OyZndDsm
+Z3Q7Jmd0OyZndDsgT24gMjAxOS83LzE4IDEwOjU0LCBHYW8gWGlhbmcgd3JvdGU6PGJyPiZn
+dDsmZ3Q7Jmd0OyZndDsmZ3Q7Jmd0OyZndDsgt8XI62Vyb2Zz1tCjrLLiytTD/MHuzqqjui4v
+aW96b25lIC1pIDIgLXMgMzAwbSAtciA0ayAtK0UgLXcgLWYgLi92ZW5kb3IvdG1wX2ZpbGU8
+YnI+Jmd0OyZndDsmZ3Q7Jmd0OyZndDsmZ3Q7IM7SsrvH5bP+1eK49rT6se3KssO00uLLvKOs
+yse38dPQttTTprXEZmlvtcTD/MHuoaM8YnI+Jmd0OyZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJy
+PiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7IMHtzeKjrM7S
+w8e9qNLptcTL5rv6tsFwYXR0ZXJuo6jSssrHztLDx7LiytS52NeitcSjqcrHPGJyPiZndDsm
+Z3Q7Jmd0OyZndDsmZ3Q7IGVjaG8gMyAmZ3Q7IC9wcm9jL3N5cy92bS9kcm9wX2NhY2hlczxi
+cj4mZ3Q7Jmd0OyZndDsmZ3Q7Jmd0OyAuL2ZpbyAtLXJlYWRvbmx5IC1ydz1yYW5kcmVhZCAt
+c2l6ZT0xMDAlIC1icz00ayAtbmFtZT1qb2IxPGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7PGJy
+PiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7INLyzqq++LTztuDK/dOm08PDu9PQZGlyZWN0IEkvT8fr
+x/OjrMO709BkaXJlY3QgSS9PtsHCt762o6y2zMbaw7vT0GRpcmVjdCBJL0/Wp7PWvMa7rqOs
+PGJyPiZndDsmZ3Q7Jmd0OyZndDsmZ3Q7INKysru9qNLpyrnTw2RpcmVjdCBJL0+y4srU0NTE
+3KGjPGJyPjwvZGl2Pg==
+
+------=_NextPart_5D301F23_08C66FE8_55FF19EC--
 
 
-On 2019/7/18 15:13, ZHOU wrote:
-> Dear Gao xiang,
-> 通过fio测试，发现跟cpu调度有关系，默认调频策略下erofs速率慢于ext4。将调频策略调整到performance 模式，此时erofs速率较ext4快一些，
 
-
-这个确实很奇怪，是不是erofs的不压缩模式的逻辑比较简单cpu loading不重，不会触发
-android的CPU调频，而其他文件系统由于逻辑比较复杂容易触发CPU调频，是否可以深入
-研究一下共享下结果。
-
-
-但不多。另外，在pc上用lz4对测试文件进行压缩，发现几乎不可压缩，应该是测试文件选择上也有问题。后续使用具有较大压缩性的测试文件进行再测试。
-> 
-> Thanks
-> B.R
-> 
-> 
-> ------------------ 原始邮件 ------------------
-> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
-> *发送时间:* 2019年7月18日 11:56
-> *收件人:* ZHOU <353779207@qq.com>
-> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
-> *主题:* 回复：回复：回复：回复：回复：eros性能问题
-> 
-> 
-> 
-> On 2019/7/18 11:53, ZHOU wrote:
->> iozone 改动很小，只是在open时选用O_RDONLY, 然后启用-+E选项使用独立的文件做只读测试
-> 
-> 总之你先拿fio用新增独立分区（保证相同的LBA）测一下不压缩？这种不压缩的情况让我很疑惑，
-> 也觉得没任何必要去进一步解释，你的文件有什么特殊的吗？
-> 
->>
->> 感谢支持
->> B.R
->>
->>
->>
->>
->>
->>
->> ------------------ 原始邮件 ------------------
->> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
->> *发送时间:* 2019年7月18日 11:46
->> *收件人:* ZHOU <353779207@qq.com>
->> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
->> *主题:* 回复：回复：回复：回复：eros性能问题
->>
->>
->>
->> On 2019/7/18 11:39, ZHOU wrote:
->>> 好的，该config CONFIG_EROFS_FS_ZIP_CACHE_BIPOLAR 已经启用了的。
->>> 测试时选用同一台设备，分区一致，使用loop方式erofs跟ext4差不多，我再仔细检查一下LBA。
->>
->> loop方式意义不大，不知道iozone你怎么改的，也不知道你们的内核是否对ext4有改动，
->> 我觉得你可以先拿标准的fio测一下，不需要做任何修改，mkfs有必要也建议使用原始代码，通过新增分区做测试。
->>
->>>
->>> 谢谢给出的建议
->>>
->>> B.R
->>>
->>>
->>>
->>>
->>>
->>> ------------------ 原始邮件 ------------------
->>> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
->>> *发送时间:* 2019年7月18日 11:28
->>> *收件人:* ZHOU <353779207@qq.com>
->>> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
->>> *主题:* 回复：回复：回复：eros性能问题
->>>
->>>
->>>
->>> On 2019/7/18 11:24, ZHOU wrote:
->>>> 是的 看代码流程erofs更简洁 不应该出现性能恶化的问题 另外在做xattr时，我没有启用share的方式，这在android上应该不会影响到性能吧，因为在读security属性后会缓存到kernel中
->>>
->>> 没有，我觉得你们先排查下自己测试的情况（比如是否跟android内核的调度因素有关），你们可以加log排查，
->>> 另外建议测试使用相同的LBA区域并且避免测试前写入其他热数据（最好是flash到相同的LBA后直接测试），
->>> 随机读不压缩不应该是你说的情况。压缩的数据config需要开启CONFIG_EROFS_FS_ZIP_CACHE_BIPOLAR
->>>
->>>>
->>>> B.R
->>>>
->>>>
->>>> ------------------ 原始邮件 ------------------
->>>> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
->>>> *发送时间:* 2019年7月18日 11:19
->>>> *收件人:* ZHOU <353779207@qq.com>
->>>> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
->>>> *主题:* 回复：回复：eros性能问题
->>>>
->>>>
->>>>
->>>> On 2019/7/18 11:15, ZHOU wrote:
->>>>> Dear xiang,
->>>>> 没有启用directIO,
->>>>> 好的,我尝试一下您提供的测试方法。
->>>>
->>>> 至少对于不压缩的情况，难以理解随机读有差异。
->>>>
->>>> 谢谢。
->>>>
->>>>>
->>>>> 非常感谢
->>>>>
->>>>>
->>>>> ------------------ 原始邮件 ------------------
->>>>> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
->>>>> *发送时间:* 2019年7月18日 11:10
->>>>> *收件人:* ZHOU <353779207@qq.com>
->>>>> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
->>>>> *主题:* 回复：eros性能问题
->>>>>
->>>>>
->>>>>
->>>>> On 2019/7/18 10:54, Gao Xiang wrote:
->>>>>>> 放入erofs中，测试命令为：./iozone -i 2 -s 300m -r 4k -+E -w -f ./vendor/tmp_file
->>>>>> 我不清楚这个代表什么意思，是否有对应的fio的命令。
->>>>>>
->>>>>
->>>>> 另外，我们建议的随机读pattern（也是我们测试关注的）是
->>>>> echo 3 > /proc/sys/vm/drop_caches
->>>>> ./fio --readonly -rw=randread -size=100% -bs=4k -name=job1
->>>>>
->>>>> 因为绝大多数应用没有direct I/O请求，没有direct I/O读路径，短期没有direct I/O支持计划，
->>>>> 也不建议使用direct I/O测试性能。
