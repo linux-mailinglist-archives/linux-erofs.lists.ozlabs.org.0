@@ -1,50 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14E2A6C81E
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 05:47:43 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35FC76C7C0
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 05:29:07 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45q03h3SN8zDqN5
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 13:29:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45q0T74tGbzDqCl
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 13:47:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.32; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ spf=pass (mailfrom) smtp.mailfrom=qq.com
+ (client-ip=113.96.223.41; helo=qq.com; envelope-from=353779207@qq.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
+ dmarc=pass (p=none dis=none) header.from=qq.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=qq.com header.i=@qq.com header.b="LavS5unK"; 
+ dkim-atps=neutral
+Received: from qq.com (smtpbg401.qq.com [113.96.223.41])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45q03b3wrMzDqFL
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 13:28:58 +1000 (AEST)
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 1F4971F49DFF655B2654;
- Thu, 18 Jul 2019 11:28:56 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 18 Jul
- 2019 11:28:46 +0800
-Subject: =?UTF-8?B?UmU6IOWbnuWkje+8muWbnuWkje+8mmVyb3PmgKfog73pl67popg=?=
-To: ZHOU <353779207@qq.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45q0JS5bQLzDqZL
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 13:40:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+ t=1563421186; bh=ypcUydfVijzu2SrwJKf/L928Y/sUN177TUqsSPepAMY=;
+ h=From:To:Subject:Mime-Version:Date:Message-ID;
+ b=LavS5unKsZ858+py6wExr3x5qPpuh2nnLHbZIfmA6pmVm/jta8Mj7pnoQAeNY/JXb
+ H9b1i8yWO4znvZxCj0GeYG0h3phVwzOvvQVEd9XOZdXznBcJG/M9DCOnJtdgJVdTOO
+ 4MuHP1Wcj9m9BMHl+qtBqgVQ/IHIW3al+yIMTwl0=
+X-QQ-FEAT: 4wspUTD6Rm6RNh6mYirPxrQ4J5V1jaqzPs2oRD4bcE5+XvJRhDFHo1a5rP+IW
+ OcXdk9oaezBsLA/1Tqoe2rvc6Jm7qaF/FOqnBKx9ZU9pZPULj5R72SDqdEvXhrxa3oh2lh2
+ qzvKfh11CymEsoc0yD3IafI1ngHIM+Hzpc/CqXMl6maNzHK0os0WTxJPHm2EuGFglA522Sv
+ n+FFwL1eb9e+jVLJPXv+6JVlbFR9Z3jiJTqY9NpOFSBYhlm0Xbu9aH/qEBnb+eIaaOz7I1M
+ mxH1D+H2cuvIwvqX0xmF/QdH3JMCS9zVSQshkiqAGD3s+cYOtmU8OasZZcQr7Z0eZ+Vw==
+X-QQ-SSF: 0000000000000060
+X-QQ-WAPMAIL: 1
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 117.136.75.97
 References: <tencent_43D5609D92443B9ED755C87B7843FA71D705@qq.com>
  <d3efd7a5-c781-6163-d04a-c2e6382ea760@huawei.com>
  <c85d590a-2eed-2501-b144-33a95fc0bec2@huawei.com>
  <tencent_4AE55DADBCB537681FA35D97D66948F2E209@qq.com>
  <5050b57d-bf2d-9615-fb2c-9f3edfbd84d5@huawei.com>
  <tencent_EE6B36FC1F655D8BD645489CE3A15DB1BC09@qq.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <4c80715b-8f99-86be-a8b3-532b65152e1a@huawei.com>
-Date: Thu, 18 Jul 2019 11:28:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <tencent_EE6B36FC1F655D8BD645489CE3A15DB1BC09@qq.com>
-Content-Type: text/plain; charset="gb18030"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ <4c80715b-8f99-86be-a8b3-532b65152e1a@huawei.com>
+X-QQ-STYLE: 
+X-QQ-mid: riamail29t1563421185t2895398
+From: "=?gb18030?B?WkhPVQ==?=" <353779207@qq.com>
+To: "=?gb18030?B?R2FvIFhpYW5n?=" <gaoxiang25@huawei.com>
+Subject: =?gb18030?B?u9i4tKO6u9i4tKO6u9i4tKO6ZXJvc9DUxNzOyszi?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="----=_NextPart_5D2FEA01_085C4970_08CF8F9C"
+Content-Transfer-Encoding: 8Bit
+Date: Thu, 18 Jul 2019 11:39:45 +0800
+X-Priority: 3
+Message-ID: <tencent_5C79776DF03DE2BACEAFEB9154C623BBDE0A@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-ReplyHash: 1292797882
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1]) by smtp.qq.com (ESMTP) with SMTP
+ id ; Thu, 18 Jul 2019 11:39:45 +0800 (CST)
+Feedback-ID: riamail:qq.com:bgforeign:bgforeign2
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,63 +77,134 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>
+Cc: =?gb18030?B?bGludXgtZXJvZnM=?= <linux-erofs@lists.ozlabs.org>,
+ =?gb18030?B?TWlhbyBYaWU=?= <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format.
+
+------=_NextPart_5D2FEA01_085C4970_08CF8F9C
+Content-Type: text/plain;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+usO1xKOsuMNjb25maWcgQ09ORklHX0VST0ZTX0ZTX1pJUF9DQUNIRV9CSVBPTEFSINLRvq3G
+9NPDwcu1xKGjDQqy4srUyrHRodPDzazSu8yoyeixuKOst9bH+NK71sKjrMq508Nsb29wt73K
+vWVyb2ZzuPpleHQ0su6yu7bgo6zO0tTZ19DPuLzssunSu8/CTEJBoaMNCg0KDQrQu9C7uPiz
+9rXEvajS6Q0KDQoNCkIuUg0KDQoNCg0KDQoNCg0KDQoNCi0tLS0tLS0tLS0tLS0tLS0tLSDU
+rcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS0NCreivP7IyzogR2FvIFhpYW5nIDxnYW94aWFu
+ZzI1QGh1YXdlaS5jb20+DQq3osvNyrG85DogMjAxOcTqN9TCMTjI1SAxMToyOA0KytW8/sjL
+OiBaSE9VIDwzNTM3NzkyMDdAcXEuY29tPg0Ks63LzTogTWlhbyBYaWUgPG1pYW94aWVAaHVh
+d2VpLmNvbT4sIGxpbnV4LWVyb2ZzIDxsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnPg0K
+1vfM4jogu9i4tKO6u9i4tKO6u9i4tKO6ZXJvc9DUxNzOysziDQoNCg0KDQoNCg0KT24gMjAx
+OS83LzE4IDExOjI0LCBaSE9VIHdyb3RlOg0KPiDKx7XEIL+0tPrC68H3s8xlcm9mc7j8vPK9
+4CCyu9OmuMOz9s/W0NTE3Lbxu6+1xM7KzOIgwe3N4tTa1/Z4YXR0csqxo6zO0sO709DG9NPD
+c2hhcmW1xLe9yr2jrNXi1NphbmRyb2lkyc/TprjDsru74dOwz+y1vdDUxNywyaOs0vLOqtTa
+tsFzZWN1cml0ecr00NS687vhu7q05rW9a2VybmVs1tANCg0Kw7vT0KOsztK+9bXDxOPDx8/I
+xcWy6c/C19S8urLiytS1xMfpv/ajqLHIyOfKx7fxuPphbmRyb2lkxNq6y7XEtfe2yNLyy9jT
+0LnYo6mjrMTjw8e/ydLUvNNsb2fFxbLpo6wNCsHtzeK9qNLpsuLK1Mq508PP4M2stcRMQkHH
++NPysqLH0rHcw+Ky4srUx7DQtMjrxuTL+8jIyv2+3aOo1+66w8rHZmxhc2i1vc/gzay1xExC
+Qbrz1rG907LiytSjqaOsDQrL5rv6tsGyu9G5y/Wyu9OmuMPKx8Tjy7W1xMfpv/aho9G5y/W1
+xMr9vt1jb25maWfQ6NKqv6rG9ENPTkZJR19FUk9GU19GU19aSVBfQ0FDSEVfQklQT0xBUg0K
+DQo+IA0KPiBCLlINCj4gDQo+IA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0g1K3KvNPKvP4gLS0t
+LS0tLS0tLS0tLS0tLS0tDQo+ICq3orz+yMs6KiBHYW8gWGlhbmcgPGdhb3hpYW5nMjVAaHVh
+d2VpLmNvbT4NCj4gKreiy83KsbzkOiogMjAxOcTqN9TCMTjI1SAxMToxOQ0KPiAqytW8/sjL
+OiogWkhPVSA8MzUzNzc5MjA3QHFxLmNvbT4NCj4gKrOty806KiBNaWFvIFhpZSA8bWlhb3hp
+ZUBodWF3ZWkuY29tPiwgbGludXgtZXJvZnMgPGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5v
+cmc+DQo+ICrW98ziOiogu9i4tKO6u9i4tKO6ZXJvc9DUxNzOysziDQo+IA0KPiANCj4gDQo+
+IE9uIDIwMTkvNy8xOCAxMToxNSwgWkhPVSB3cm90ZToNCj4+IERlYXIgeGlhbmcsDQo+PiDD
+u9PQxvTTw2RpcmVjdElPLA0KPj4gusO1xCzO0rOiytTSu8/CxPrM4bmptcSy4srUt723qKGj
+DQo+IA0KPiDWwcnZttTT2rK70bnL9bXEx+m/9qOsxNHS1MDtveLL5rv6tsHT0LLu0uyhow0K
+PiANCj4g0LvQu6GjDQo+IA0KPj4NCj4+ILfHs6O40NC7DQo+Pg0KPj4NCj4+IC0tLS0tLS0t
+LS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS0NCj4+ICq3orz+yMs6KiBH
+YW8gWGlhbmcgPGdhb3hpYW5nMjVAaHVhd2VpLmNvbT4NCj4+ICq3osvNyrG85DoqIDIwMTnE
+6jfUwjE4yNUgMTE6MTANCj4+ICrK1bz+yMs6KiBaSE9VIDwzNTM3NzkyMDdAcXEuY29tPg0K
+Pj4gKrOty806KiBNaWFvIFhpZSA8bWlhb3hpZUBodWF3ZWkuY29tPiwgbGludXgtZXJvZnMg
+PGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc+DQo+PiAq1vfM4joqILvYuLSjumVyb3PQ
+1MTczsrM4g0KPj4NCj4+DQo+Pg0KPj4gT24gMjAxOS83LzE4IDEwOjU0LCBHYW8gWGlhbmcg
+d3JvdGU6DQo+Pj4+ILfFyOtlcm9mc9bQo6yy4srUw/zB7s6qo7ouL2lvem9uZSAtaSAyIC1z
+IDMwMG0gLXIgNGsgLStFIC13IC1mIC4vdmVuZG9yL3RtcF9maWxlDQo+Pj4gztKyu8fls/7V
+4rj2tPqx7cqyw7TS4su8o6zKx7fx09C21NOmtcRmaW+1xMP8we6how0KPj4+DQo+Pg0KPj4g
+we3N4qOsztLDx72o0um1xMvmu/q2wXBhdHRlcm6jqNKyysfO0sPHsuLK1LnY16K1xKOpyscN
+Cj4+IGVjaG8gMyA+IC9wcm9jL3N5cy92bS9kcm9wX2NhY2hlcw0KPj4gLi9maW8gLS1yZWFk
+b25seSAtcnc9cmFuZHJlYWQgLXNpemU9MTAwJSAtYnM9NGsgLW5hbWU9am9iMQ0KPj4NCj4+
+INLyzqq++LTztuDK/dOm08PDu9PQZGlyZWN0IEkvT8frx/OjrMO709BkaXJlY3QgSS9PtsHC
+t762o6y2zMbaw7vT0GRpcmVjdCBJL0/Wp7PWvMa7rqOsDQo+PiDSsrK7vajS6cq508NkaXJl
+Y3QgSS9PsuLK1NDUxNyhow==
+
+------=_NextPart_5D2FEA01_085C4970_08CF8F9C
+Content-Type: text/html;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4OyI+usO1xKOs
+uMNjb25maWcgQ09ORklHX0VST0ZTX0ZTX1pJUF9DQUNIRV9CSVBPTEFSINLRvq3G9NPDwcu1
+xKGjPC9kaXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4
+OyI+suLK1Mqx0aHTw82s0rvMqMnosbijrLfWx/jSu9bCo6zKudPDbG9vcLe9yr1lcm9mc7j6
+ZXh0NLLusru24KOsztLU2dfQz7i87LLp0rvPwkxCQaGjPC9kaXY+PGRpdiBzdHlsZT0ibWlu
+LWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4OyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9
+Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9tOjhweDsiPtC70Lu4+LP2tcS9qNLpPC9k
+aXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4OyI+PGJy
+PjwvZGl2PjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9tOjhweDsi
+PkIuUjwvZGl2PjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9tOjhw
+eDsiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJtaW4taGVpZ2h0OjIycHg7bWFyZ2luLWJvdHRv
+bTo4cHg7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1i
+b3R0b206OHB4OyI+PGJyPjwvZGl2PjxkaXYgaWQ9Im9yaWdpbmFsLWNvbnRlbnQiPjxicj48
+YnI+PGRpdj48ZGl2IHN0eWxlPSJmb250LXNpemU6NzAlO3BhZGRpbmc6MnB4IDA7Ij4tLS0t
+LS0tLS0tLS0tLS0tLS0g1K3KvNPKvP4gLS0tLS0tLS0tLS0tLS0tLS0tPC9kaXY+PGRpdiBz
+dHlsZT0iZm9udC1zaXplOjcwJTtiYWNrZ3JvdW5kOiNmMGYwZjA7Y29sb3I6IzIxMjEyMTtw
+YWRkaW5nOjhweDtib3JkZXItcmFkaXVzOjRweCI+PGRpdj48Yj63orz+yMs6PC9iPiBHYW8g
+WGlhbmcgJmx0O2dhb3hpYW5nMjVAaHVhd2VpLmNvbSZndDs8L2Rpdj48ZGl2PjxiPreiy83K
+sbzkOjwvYj4gMjAxOcTqN9TCMTjI1SAxMToyODwvZGl2PjxkaXY+PGI+ytW8/sjLOjwvYj4g
+WkhPVSAmbHQ7MzUzNzc5MjA3QHFxLmNvbSZndDs8L2Rpdj48ZGl2PjxiPrOty806PC9iPiBN
+aWFvIFhpZSAmbHQ7bWlhb3hpZUBodWF3ZWkuY29tJmd0OywgbGludXgtZXJvZnMgJmx0O2xp
+bnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcmZ3Q7PC9kaXY+PGRpdj48Yj7W98ziOjwvYj4g
+u9i4tKO6u9i4tKO6u9i4tKO6ZXJvc9DUxNzOysziPC9kaXY+PC9kaXY+PC9kaXY+PGJyPjxi
+cj48YnI+T24gMjAxOS83LzE4IDExOjI0LCBaSE9VIHdyb3RlOjxicj4mZ3Q7IMrHtcQgv7S0
++sLrwfezzGVyb2ZzuPy88r3gILK706a4w7P2z9bQ1MTctvG7r7XEzsrM4iDB7c3i1NrX9nhh
+dHRyyrGjrM7Sw7vT0Mb008NzaGFyZbXEt73KvaOs1eLU2mFuZHJvaWTJz9OmuMOyu7vh07DP
+7LW90NTE3LDJo6zS8s6q1Nq2wXNlY3VyaXR5yvTQ1Lrzu+G7urTmtb1rZXJuZWzW0Dxicj48
+YnI+w7vT0KOsztK+9bXDxOPDx8/IxcWy6c/C19S8urLiytS1xMfpv/ajqLHIyOfKx7fxuPph
+bmRyb2lkxNq6y7XEtfe2yNLyy9jT0LnYo6mjrMTjw8e/ydLUvNNsb2fFxbLpo6w8YnI+we3N
+4r2o0umy4srUyrnTw8/gzay1xExCQcf40/KyosfSsdzD4rLiytTHsNC0yOvG5Mv7yMjK/b7d
+o6jX7rrDysdmbGFzaLW9z+DNrLXETEJBuvPWsb3TsuLK1KOpo6w8YnI+y+a7+rbBsrvRucv1
+srvTprjDysfE48u1tcTH6b/2oaPRucv1tcTK/b7dY29uZmln0OjSqr+qxvRDT05GSUdfRVJP
+RlNfRlNfWklQX0NBQ0hFX0JJUE9MQVI8YnI+PGJyPiZndDsgPGJyPiZndDsgQi5SPGJyPiZn
+dDsgPGJyPiZndDsgPGJyPiZndDsgLS0tLS0tLS0tLS0tLS0tLS0tINStyrzTyrz+IC0tLS0t
+LS0tLS0tLS0tLS0tLTxicj4mZ3Q7ICq3orz+yMs6KiBHYW8gWGlhbmcgJmx0O2dhb3hpYW5n
+MjVAaHVhd2VpLmNvbSZndDs8YnI+Jmd0OyAqt6LLzcqxvOQ6KiAyMDE5xOo31MIxOMjVIDEx
+OjE5PGJyPiZndDsgKsrVvP7IyzoqIFpIT1UgJmx0OzM1Mzc3OTIwN0BxcS5jb20mZ3Q7PGJy
+PiZndDsgKrOty806KiBNaWFvIFhpZSAmbHQ7bWlhb3hpZUBodWF3ZWkuY29tJmd0OywgbGlu
+dXgtZXJvZnMgJmx0O2xpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcmZ3Q7PGJyPiZndDsg
+Ktb3zOI6KiC72Li0o7q72Li0o7plcm9z0NTE3M7KzOI8YnI+Jmd0OyA8YnI+Jmd0OyA8YnI+
+Jmd0OyA8YnI+Jmd0OyBPbiAyMDE5LzcvMTggMTE6MTUsIFpIT1Ugd3JvdGU6PGJyPiZndDsm
+Z3Q7IERlYXIgeGlhbmcsPGJyPiZndDsmZ3Q7IMO709DG9NPDZGlyZWN0SU8sPGJyPiZndDsm
+Z3Q7ILrDtcQsztKzosrU0rvPwsT6zOG5qbXEsuLK1Le9t6ihozxicj4mZ3Q7IDxicj4mZ3Q7
+INbBydm21NPasrvRucv1tcTH6b/2o6zE0dLUwO294svmu/q2wdPQsu7S7KGjPGJyPiZndDsg
+PGJyPiZndDsg0LvQu6GjPGJyPiZndDsgPGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7ILfHs6O4
+0NC7PGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7IC0tLS0tLS0tLS0tLS0t
+LS0tLSDUrcq808q8/iAtLS0tLS0tLS0tLS0tLS0tLS08YnI+Jmd0OyZndDsgKreivP7Iyzoq
+IEdhbyBYaWFuZyAmbHQ7Z2FveGlhbmcyNUBodWF3ZWkuY29tJmd0Ozxicj4mZ3Q7Jmd0OyAq
+t6LLzcqxvOQ6KiAyMDE5xOo31MIxOMjVIDExOjEwPGJyPiZndDsmZ3Q7ICrK1bz+yMs6KiBa
+SE9VICZsdDszNTM3NzkyMDdAcXEuY29tJmd0Ozxicj4mZ3Q7Jmd0OyAqs63LzToqIE1pYW8g
+WGllICZsdDttaWFveGllQGh1YXdlaS5jb20mZ3Q7LCBsaW51eC1lcm9mcyAmbHQ7bGludXgt
+ZXJvZnNAbGlzdHMub3psYWJzLm9yZyZndDs8YnI+Jmd0OyZndDsgKtb3zOI6KiC72Li0o7pl
+cm9z0NTE3M7KzOI8YnI+Jmd0OyZndDs8YnI+Jmd0OyZndDs8YnI+Jmd0OyZndDs8YnI+Jmd0
+OyZndDsgT24gMjAxOS83LzE4IDEwOjU0LCBHYW8gWGlhbmcgd3JvdGU6PGJyPiZndDsmZ3Q7
+Jmd0OyZndDsgt8XI62Vyb2Zz1tCjrLLiytTD/MHuzqqjui4vaW96b25lIC1pIDIgLXMgMzAw
+bSAtciA0ayAtK0UgLXcgLWYgLi92ZW5kb3IvdG1wX2ZpbGU8YnI+Jmd0OyZndDsmZ3Q7IM7S
+srvH5bP+1eK49rT6se3KssO00uLLvKOsyse38dPQttTTprXEZmlvtcTD/MHuoaM8YnI+Jmd0
+OyZndDsmZ3Q7PGJyPiZndDsmZ3Q7PGJyPiZndDsmZ3Q7IMHtzeKjrM7Sw8e9qNLptcTL5rv6
+tsFwYXR0ZXJuo6jSssrHztLDx7LiytS52NeitcSjqcrHPGJyPiZndDsmZ3Q7IGVjaG8gMyAm
+Z3Q7IC9wcm9jL3N5cy92bS9kcm9wX2NhY2hlczxicj4mZ3Q7Jmd0OyAuL2ZpbyAtLXJlYWRv
+bmx5IC1ydz1yYW5kcmVhZCAtc2l6ZT0xMDAlIC1icz00ayAtbmFtZT1qb2IxPGJyPiZndDsm
+Z3Q7PGJyPiZndDsmZ3Q7INLyzqq++LTztuDK/dOm08PDu9PQZGlyZWN0IEkvT8frx/OjrMO7
+09BkaXJlY3QgSS9PtsHCt762o6y2zMbaw7vT0GRpcmVjdCBJL0/Wp7PWvMa7rqOsPGJyPiZn
+dDsmZ3Q7INKysru9qNLpyrnTw2RpcmVjdCBJL0+y4srU0NTE3KGjPGJyPjwvZGl2Pg==
+
+------=_NextPart_5D2FEA01_085C4970_08CF8F9C--
 
 
-On 2019/7/18 11:24, ZHOU wrote:
-> 是的 看代码流程erofs更简洁 不应该出现性能恶化的问题 另外在做xattr时，我没有启用share的方式，这在android上应该不会影响到性能吧，因为在读security属性后会缓存到kernel中
 
-没有，我觉得你们先排查下自己测试的情况（比如是否跟android内核的调度因素有关），你们可以加log排查，
-另外建议测试使用相同的LBA区域并且避免测试前写入其他热数据（最好是flash到相同的LBA后直接测试），
-随机读不压缩不应该是你说的情况。压缩的数据config需要开启CONFIG_EROFS_FS_ZIP_CACHE_BIPOLAR
-
-> 
-> B.R
-> 
-> 
-> ------------------ 原始邮件 ------------------
-> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
-> *发送时间:* 2019年7月18日 11:19
-> *收件人:* ZHOU <353779207@qq.com>
-> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
-> *主题:* 回复：回复：eros性能问题
-> 
-> 
-> 
-> On 2019/7/18 11:15, ZHOU wrote:
->> Dear xiang,
->> 没有启用directIO,
->> 好的,我尝试一下您提供的测试方法。
-> 
-> 至少对于不压缩的情况，难以理解随机读有差异。
-> 
-> 谢谢。
-> 
->>
->> 非常感谢
->>
->>
->> ------------------ 原始邮件 ------------------
->> *发件人:* Gao Xiang <gaoxiang25@huawei.com>
->> *发送时间:* 2019年7月18日 11:10
->> *收件人:* ZHOU <353779207@qq.com>
->> *抄送:* Miao Xie <miaoxie@huawei.com>, linux-erofs <linux-erofs@lists.ozlabs.org>
->> *主题:* 回复：eros性能问题
->>
->>
->>
->> On 2019/7/18 10:54, Gao Xiang wrote:
->>>> 放入erofs中，测试命令为：./iozone -i 2 -s 300m -r 4k -+E -w -f ./vendor/tmp_file
->>> 我不清楚这个代表什么意思，是否有对应的fio的命令。
->>>
->>
->> 另外，我们建议的随机读pattern（也是我们测试关注的）是
->> echo 3 > /proc/sys/vm/drop_caches
->> ./fio --readonly -rw=randread -size=100% -bs=4k -name=job1
->>
->> 因为绝大多数应用没有direct I/O请求，没有direct I/O读路径，短期没有direct I/O支持计划，
->> 也不建议使用direct I/O测试性能。
