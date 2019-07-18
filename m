@@ -1,45 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8DB96C50B
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 04:49:35 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7CE56C43E
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 03:33:18 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45pxV40pK4zDqTh
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 11:33:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45pzB526nbzDqL2
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2019 12:49:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.35; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ spf=pass (mailfrom) smtp.mailfrom=qq.com
+ (client-ip=113.96.223.53; helo=qq.com; envelope-from=353779207@qq.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
+ dmarc=pass (p=none dis=none) header.from=qq.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=qq.com header.i=@qq.com header.b="GN+Yj4Zj"; 
+ dkim-atps=neutral
+X-Greylist: delayed 64 seconds by postgrey-1.36 at bilbo;
+ Thu, 18 Jul 2019 12:49:25 AEST
+Received: from qq.com (smtpbg405.qq.com [113.96.223.53])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45pxTs2xPYzDqSP
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 11:33:02 +1000 (AEST)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 863E7F5BEE83D3520A83
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 09:32:55 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 18 Jul
- 2019 09:32:50 +0800
-Subject: Re: erofs compilation failure.
-To: Pratik Shinde <pratikshinde320@gmail.com>
-References: <CAGu0czSPMpsmWxxmBYk96t3ixO=_vnNXXveZNzR-dhQSg_mtfg@mail.gmail.com>
-From: Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <56c96bca-fc01-fa3d-67e2-920a9c4afc61@huawei.com>
-Date: Thu, 18 Jul 2019 09:32:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <CAGu0czSPMpsmWxxmBYk96t3ixO=_vnNXXveZNzR-dhQSg_mtfg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45pz9x4xKRzDqH2
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2019 12:49:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+ t=1563418066; bh=ZtB7xohY6vgnFmDV6LlT+Ey90ofAQl+i65Ri7l33VFs=;
+ h=From:To:Subject:Mime-Version:Date:Message-ID;
+ b=GN+Yj4ZjcftRrdp3ek6r9bclmdaXRuNKX7l8SrdtxSaZX5kgsO/B3IO4MnRQm08Zz
+ RGZfXOigXlkOxeDXoiKR5JMwv9og3G87GK8vvliCPnPW9WaJLvcvXu8dmVxKAp/3R6
+ smYyv6X74kBzcJKLC2SBQZDaoRDXccbBD9wuPXsY=
+X-QQ-FEAT: oPaMyR2CQO8ftyYsxQIyfBTD3obS4ablovZ7AS8gdS8C96t02D5ZZItrq4Ti4
+ yotXePEE4zD/hnqjd18GR7RomUjLPIk0aiDj71NBVKmvWaEazqzV2YSdKR98an7+wpGt7H8
+ ULpFgT6l6Dlq6NeDmrs2kp0NmmWK12MPYM6+58gtFV+CbAV64aluE7GOVAWsdPuGAl8C0s4
+ NlO1np9Yw3kSfprggVAO06TkU2T3lpoUJw2h7IRk7lAu1dz5O0YsYN/7rUcVSBeUau+oX8R
+ Xf4hgsDWA8HRQj9vsZlu+UbWGEcIPbNG5MaF7q6FwmNIBS
+X-QQ-SSF: 0000000000000060
+X-QQ-WAPMAIL: 1
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 117.136.75.97
+X-QQ-STYLE: 
+X-QQ-mid: riamail29t1563418065t6202446
+From: "=?gb18030?B?WkhPVQ==?=" <353779207@qq.com>
+To: "=?gb18030?B?bGludXgtZXJvZnM=?=" <linux-erofs@lists.ozlabs.org>
+Subject: =?gb18030?B?ZXJvc9DUxNzOyszi?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="----=_NextPart_5D2FDDD0_08D9DA88_5FB8180F"
+Content-Transfer-Encoding: 8Bit
+Date: Thu, 18 Jul 2019 10:47:44 +0800
+X-Priority: 3
+Message-ID: <tencent_43D5609D92443B9ED755C87B7843FA71D705@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1]) by smtp.qq.com (ESMTP) with SMTP
+ id ; Thu, 18 Jul 2019 10:47:45 +0800 (CST)
+Feedback-ID: riamail:qq.com:bgforeign:bgforeign2
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,42 +71,139 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format.
+
+------=_NextPart_5D2FDDD0_08D9DA88_5FB8180F
+Content-Type: text/plain;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+RGVhciBzaXIgb3IgbWFkYW0sDQoNCiANCg0Kuty40NC7u6rOqrrNufPNxbbTvatlcm9mc7+q
+1LSz9sC0o6y3x7OjuNDQu8T6w8e1xLi2s/a6zbmxz9ehow0KDQogDQoNCr3xxOrT0NDSv7S1
+vWVyb2ZztPrC66OssqLRodTxwcvSu7j2YW5kcm9pZCBwxr3MqKOocWNvbSBzZG00MjmjrCBr
+ZXJuZWwgNC45LCAgZW1tYzUuMaOp1/fOqtLG1rKhow0KDQrRodTx0sbWsrXE1LRrZXJuZWyw
+5rG+ysc0LjE5o6zEv7HqsOaxvjQuOaO7bWtmc9Gh1PG31tanbWtmcy1kZXahow0KDQrSxtay
+uf2zzNbQzO2808HLeGF0dHK6zWNhcGFiaWxpdHm1yMr00NSjrM/W1NrS0b6tv8nS1NTayeix
+uMnPzerDwNTL0NChow0KDQogDQoNCtDUxNyy4srUo7oNCg0KsuLK1Lmkvt/RodPDaW96b25l
+o6zQ3rjEaW96b25lvavG5NC0yv2+3bK/t9bGwbHOo6y2wcr9vt2yu9Cj0emjrMi7uvO0tL2o
+0ru49svmu/rK/b7dsuLK1M7EvP6jrA0KDQq3xcjrZXJvZnPW0KOssuLK1MP8we7OqqO6Li9p
+b3pvbmUgLWkgMiAtcyAzMDBtIC1yIDRrIC0rRSAtdyAtZiAuL3ZlbmRvci90bXBfZmlsZQ0K
+DQrX7tbVy+a7+rbB0NTE3MnPo6yyu7ncysfRucv1u7nKx7K70bnL9ba8vc9leHQ0o6y05tTa
+vc+087Lu0uyjug0KDQp2ZW5kb3K31sf4suLK1KO6DQoNCmV4dDQgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDI2MTEzDQoNCmVyb2ZzIG5vIGNvbXByZXNzICAgICAg
+ICAgICAgICAgMjA5NzANCg0KZXJvZnMgY3AgNCByYXRpbyAgICAgICAgICAgICAgICAgICAg
+MjE0ODUNCg0KZXJvZnMgY3AgMTAwIHJhdGlvICAgICAgICAgICAgICAgIDE5OTQ5DQoNCmYy
+ZnOjqHVzZXJkYXRho6kgICAgICAgICAgICAgICAgIDMyNzY2DQoNCiANCg0KbG9vcLLiytSj
+qL61z/HOxLz+1rG907fFyOt1c2VyZGF0YaOsbW91bnS1vXRtcMS/wryjqaO6DQoNCmV4dDQg
+ICAgICAgICAgICAgICAgICAgICAgICAyOTU2MSAgIDMwMzE4ICAyOTUzMQ0KDQplcm9mcyBj
+cCAyMCByYXRpbyAgICAgMzA1MjUgICAzMDYzMCAgMzAwMzcNCg0KIA0KDQrU2suz0PK2wcnP
+w+ajrGVyb2Zz0+tleHQ0w7vT0MP3z9Sy7tLsoaMNCg0KIA0KDQrEv8ewo6zT9rW9tcTOyszi
+ysfQ1MTcyc/T62V4dDTU2svmu/q2wcnPw+a7ubTm1Nqy7r7go6zH687K06a4w7TTxMS3vcPm
+yKXTxbuvPw0KDQogDQoNCrfHs6O40NC7o6ENCg0KIA0KDQotLSANCg0KVGhhbmtzICYgUmVn
+YXJkcywNCg0KaGVuZ2d1by56aG91INbcuuO5+g==
+
+------=_NextPart_5D2FDDD0_08D9DA88_5FB8180F
+Content-Type: text/html;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0b206OHB4OyI+RGVhciBz
+aXIgb3IgbWFkYW0sPC9kaXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1i
+b3R0b206OHB4OyI+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206
+IDAuM2VtOyI+Jm5ic3A7PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4t
+Ym90dG9tOiAwLjNlbTsiPrrcuNDQu7uqzqq6zbnzzcW2072rPHNwYW4gbGFuZz0iRU4tVVMi
+PmVyb2ZzPC9zcGFuPr+q1LSz9sC0o6y3x7OjuNDQu8T6w8e1xLi2s/a6zbmxz9ehozxzcGFu
+IGxhbmc9IkVOLVVTIj48bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1h
+bCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+Jm5ic3A7PC9wPjxwIGNsYXNzPSJN
+c29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAwLjNlbTsiPr3xxOrT0NDSv7S1vTxz
+cGFuIGxhbmc9IkVOLVVTIj5lcm9mczwvc3Bhbj60+sLro6yyotGh1PHBy9K7uPY8c3BhbiBs
+YW5nPSJFTi1VUyI+YW5kcm9pZCBwPC9zcGFuPsa9zKijqDxzcGFuIGxhbmc9IkVOLVVTIj5x
+Y29tIHNkbTQyOTwvc3Bhbj6jrCZuYnNwOzxzcGFuIGxhbmc9IkVOLVVTIj5rZXJuZWwgNC45
+LCAmbmJzcDtlbW1jNS4xPC9zcGFuPqOp1/fOqtLG1rKhozxzcGFuIGxhbmc9IkVOLVVTIj48
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
+bi1ib3R0b206IDAuM2VtOyI+0aHU8dLG1rK1xNS0PHNwYW4gbGFuZz0iRU4tVVMiPmtlcm5l
+bDwvc3Bhbj6w5rG+ysc8c3BhbiBsYW5nPSJFTi1VUyI+NC4xOTwvc3Bhbj6jrMS/seqw5rG+
+PHNwYW4gbGFuZz0iRU4tVVMiPjQuOTwvc3Bhbj6juzxzcGFuIGxhbmc9IkVOLVVTIj5ta2Zz
+PC9zcGFuPtGh1PG31tanPHNwYW4gbGFuZz0iRU4tVVMiPm1rZnMtZGV2PC9zcGFuPqGjPHNw
+YW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9y
+bWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij7Sxtayuf2zzNbQzO2808HLPHNw
+YW4gbGFuZz0iRU4tVVMiPnhhdHRyPC9zcGFuPrrNPHNwYW4gbGFuZz0iRU4tVVMiPmNhcGFi
+aWxpdHk8L3NwYW4+tcjK9NDUo6zP1tTa0tG+rb/J0tTU2snosbjJz83qw8DUy9DQoaM8c3Bh
+biBsYW5nPSJFTi1VUyI+PG86cD48L286cD48L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAwLjNlbTsiPiZuYnNwOzwvcD48cCBjbGFzcz0i
+TXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij7Q1MTcsuLK1KO6PHNw
+YW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9y
+bWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij6y4srUuaS+39Gh08M8c3BhbiBs
+YW5nPSJFTi1VUyI+aW96b25lPC9zcGFuPqOs0N64xDxzcGFuIGxhbmc9IkVOLVVTIj5pb3pv
+bmU8L3NwYW4+vavG5NC0yv2+3bK/t9bGwbHOo6y2wcr9vt2yu9Cj0emjrMi7uvO0tL2o0ru4
+9svmu/rK/b7dsuLK1M7EvP6jrDxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2Vt
+OyI+t8XI6zxzcGFuIGxhbmc9IkVOLVVTIj5lcm9mczwvc3Bhbj7W0KOssuLK1MP8we7OqqO6
+PHNwYW4gbGFuZz0iRU4tVVMiPi4vaW96b25lIC1pIDIgLXMgMzAwbSAtciA0ayAtK0UgLXcg
+LWYgLi92ZW5kb3IvdG1wX2ZpbGU8bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1z
+b05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+1+7W1cvmu/q2wdDUxNzJ
+z6Ossru53MrH0bnL9bu5yseyu9G5y/W2vL3PPHNwYW4gbGFuZz0iRU4tVVMiPmV4dDQ8L3Nw
+YW4+o6y05tTavc+087Lu0uyjujxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2Vt
+OyI+PHNwYW4gbGFuZz0iRU4tVVMiPnZlbmRvcjwvc3Bhbj631sf4suLK1KO6PHNwYW4gbGFu
+Zz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFsIiBz
+dHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij5leHQ0ICZuYnNwOyAmbmJzcDsgJm5ic3A7
+ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
+cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZu
+YnNwOzI2MTEzPG86cD48L286cD48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1h
+cmdpbi1ib3R0b206IDAuM2VtOyI+ZXJvZnMgbm8gY29tcHJlc3MmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJm5i
+c3A7ICZuYnNwOzIwOTcwPG86cD48L286cD48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
+bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+ZXJvZnMgY3AgNCByYXRpbyAmbmJzcDsgJm5i
+c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDsyMTQ4NTxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJt
+YXJnaW4tYm90dG9tOiAwLjNlbTsiPmVyb2ZzIGNwIDEwMCByYXRpbyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmbmJzcDsg
+Jm5ic3A7Jm5ic3A7IDE5OTQ5PG86cD48L286cD48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIg
+c3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+PHNwYW4gbGFuZz0iRU4tVVMiPmYyZnM8
+L3NwYW4+o6g8c3BhbiBsYW5nPSJFTi1VUyI+dXNlcmRhdGE8L3NwYW4+o6k8c3BhbiBsYW5n
+PSJFTi1VUyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyAmbmJzcDsgMzI3NjY8bzpwPjwv
+bzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0
+b206IDAuM2VtOyI+Jm5ic3A7PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJn
+aW4tYm90dG9tOiAwLjNlbTsiPjxzcGFuIGxhbmc9IkVOLVVTIj5sb29wPC9zcGFuPrLiytSj
+qL61z/HOxLz+1rG907fFyOs8c3BhbiBsYW5nPSJFTi1VUyI+dXNlcmRhdGE8L3NwYW4+o6w8
+c3BhbiBsYW5nPSJFTi1VUyI+bW91bnQ8L3NwYW4+tb08c3BhbiBsYW5nPSJFTi1VUyI+dG1w
+PC9zcGFuPsS/wryjqaO6PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwv
+cD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij5l
+eHQ0ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7Mjk1NjEgJm5ic3A7IDMwMzE4Jm5i
+c3A7IDI5NTMxPG86cD48L286cD48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1h
+cmdpbi1ib3R0b206IDAuM2VtOyI+ZXJvZnMgY3AgMjAgcmF0aW8mbmJzcDsgJm5ic3A7Jm5i
+c3A7IDMwNTI1ICZuYnNwOyAzMDYzMCZuYnNwOyAzMDAzNzxvOnA+PC9vOnA+PC9wPjxwIGNs
+YXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAwLjNlbTsiPiZuYnNwOzwv
+cD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMC4zZW07Ij7U
+2suz0PK2wcnPw+ajrDxzcGFuIGxhbmc9IkVOLVVTIj5lcm9mczwvc3Bhbj7T6zxzcGFuIGxh
+bmc9IkVOLVVTIj5leHQ0PC9zcGFuPsO709DD98/Usu7S7KGjPHNwYW4gbGFuZz0iRU4tVVMi
+PjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFy
+Z2luLWJvdHRvbTogMC4zZW07Ij4mbmJzcDs8L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
+bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+xL/HsKOs0/a1vbXEzsrM4srH0NTE3MnP0+s8
+c3BhbiBsYW5nPSJFTi1VUyI+ZXh0NDwvc3Bhbj7U2svmu/q2wcnPw+a7ubTm1Nqy7r7go6zH
+687K06a4w7TTxMS3vcPmyKXTxbuvPHNwYW4gbGFuZz0iRU4tVVMiPj88bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAu
+M2VtOyI+Jm5ic3A7PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90
+dG9tOiAwLjNlbTsiPrfHs6O40NC7o6E8c3BhbiBsYW5nPSJFTi1VUyI+PG86cD48L286cD48
+L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAw
+LjNlbTsiPiZuYnNwOzwvcD48cCBhbGlnbj0ibGVmdCIgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
+bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+PHNwYW4gbGFuZz0iRU4tVVMiPi0tJm5ic3A7
+PC9zcGFuPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgYWxp
+Z249ImxlZnQiIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAwLjNl
+bTsiPjxzcGFuIGxhbmc9IkVOLVVTIj5UaGFua3MgJmFtcDsgUmVnYXJkcyw8L3NwYW4+PHNw
+YW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBhbGlnbj0ibGVmdCIg
+Y2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDAuM2VtOyI+PHNwYW4g
+bGFuZz0iRU4tVVMiPmhlbmdndW8uemhvdSZuYnNwOzwvc3Bhbj7W3Lrjufo8L3A+PC9kaXY+
+PGRpdiBpZD0ib3JpZ2luYWwtY29udGVudCI+PC9kaXY+
+
+------=_NextPart_5D2FDDD0_08D9DA88_5FB8180F--
 
 
-On 2019/7/18 3:47, Pratik Shinde wrote:
-> Hi All,
-> 
-> I hope this is the correct channel to talk about this issue.
-> I am trying to compile erofs with latest kernel source as follows:
-> 
-> ps@ps:~/linux/drivers/staging/erofs$ pwd
-> /home/ps/linux/drivers/staging/erofs
-> ps@ps:~/linux/drivers/staging/erofs$  make -C ~/linux  M=`pwd`
-> make: Entering directory '/home/ps/linux'
-> make[1]: *** No rule to make target '/home/ps/linux/drivers/staging/erofs/super.o', needed by '/home/ps/linux/drivers/staging/erofs/erofs.o'.  Stop.
-> Makefile:1612: recipe for target '_module_/home/ps/linux/drivers/staging/erofs' failed
-> make: *** [_module_/home/ps/linux/drivers/staging/erofs] Error 2
-> make: Leaving directory '/home/ps/linux'
-> 
-> I ran the above make command under strace, it looks like make is not able to locate dependent '.o' files, e.g data.o, super.o etc. But, its should compile those dependencies first ? In the strace I cannot see gcc invoked on this '.c' files.
-> 
-> Is this the correct way of compiling the source ?
 
-seems not.. Actually the question is not for erofs development.
-I didn't observe any compile error on erofs.
-
-Could you please refer guides on the internet?
-
-Thanks,
-Gao Xiang
-
-> Help appreciated. !
-> 
-> Thank you.
-> --Pratik.
-> 
