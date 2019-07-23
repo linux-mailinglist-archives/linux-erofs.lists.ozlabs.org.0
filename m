@@ -1,83 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id C326B726A0
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 06:29:41 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACA0172597
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 05:53:21 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45thJt34DKzDqPg
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 13:53:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1563940398;
-	bh=xvwX+fcyYdEyPkRiwAD2UGHBWYdjhzUkAuCVJDJ50y0=;
-	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=b8er3vonD0l2nOpKLhQnXHV4zHNeYGhKJXzmtPsheHquXdTwynQ1maqm3iSDd61AA
-	 F5joq1HEHs+FW+ySs3Xr3LZxS74yd7gs9Et8sVk7DzTaxEbe5auxPd2LvoGwdnBmNv
-	 UWz2afLXQgO3HXLxeLJ5TSPOcAjF5/n34Qzi/ygS0KJEjInxrT72s7eK/5ZIu49fyz
-	 HbnybGJI5mxKvbyqIWTmFW3PpqFwo/EOXWhQQdUur76GJeyvPa3++8ZMQGotBefY1k
-	 0PILBX9v9hd2OSP/CYHNuTeZ2A9+c7gGFeqqpONcmz7TOHsMWH/QbCsQ41Y8qUVqWK
-	 lkFMNdtfuVcbA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 45tj6q0PzgzDqCB
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 14:29:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=87.248.110.83; helo=sonic302-20.consmr.mail.ir2.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com;
+ envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="hOJdM8Gt"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="TwtFIvpl"; 
  dkim-atps=neutral
-Received: from sonic302-20.consmr.mail.ir2.yahoo.com
- (sonic302-20.consmr.mail.ir2.yahoo.com [87.248.110.83])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com
+ [IPv6:2607:f8b0:4864:20::42d])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45tK9V0H1mzDq6M
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jul 2019 23:30:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1563888627; bh=c4EtERWmOlLnToAQZFFQ0tgD2PCoHHVP3KPET20i2Rc=;
- h=Subject:To:References:From:Cc:Date:In-Reply-To:From:Subject;
- b=hOJdM8Gt6pVCW6YyQ4XNXehelrl4JV9ErwYmtuxtnPNLyirHGF5FIg+8u7bp/3smfRPf0K2JXSfR3pQbMzzIzRzTW2sL80QGy3UPQOKTgxFtRcHaIoBey3zgH5d71CCHRi+mIWYiblGE0DCqQVLvdQq3LCDHY93VQ67jiZvuyKotHSxQv/lYoqJCG+zHqgl0hMQJkc3QVfrGAurWMF4pOPAogiYikej6rNV1KwvOFFmyXR6XLyl/3pNGPMMkegjjU0EFMCV657rZMgO1g4szXJTivxt+mPopzZ3S9xygr3dtBfNYg5p/V7sx7Kx6MmN7ih0m4zH/CrkwA09aHKn/vQ==
-X-YMail-OSG: VoRN6A4VM1l4MgAqDai7A20BNgPpLNGiGMptXZ7gTvP5UI0rOPzpRWwlssVYXrV
- b2E9kl3T.Wep2Eta6JYh71obWB5nE_4KkNvxKwBYubwNj4qjqO3N0c_hjVcXuUmO.X3eRDMXlHan
- Jw.EBIKmd2apV8D9AeKyU2.vJ01GnaXNGTinjm5bXnwVwy8bwbNq7Lex6fEACpIMtr.dr9qwiw85
- AHsRu5PbYo.kV280ouRr0Cl2QbdJkNJAMAXhcd_Od0Ni5YOCMgLKuZRcFKN2W6Yr2BP4YFBiU5Z5
- K81E29DdBVU2oYN1pmyRHKkb_yPZfY4g_lJHOiKBEHA7b2_bCsTcsD1LcOOo9h495WONkuK8U6hh
- eXFhX_fZEcKJbPAWiGy2eejGfgAuGqXiQi0eG7FsXcSaHEa62haLXZXljFwbT.iz26WmW6.kysxp
- CzzT2DvIvEHT97cNsz5JpvB90wjzL68rAzFuximpb4SbxOSGylB_cMGY9r.Sexz8YeWTK3yF4Wjy
- ayyWk4zcBkqMlGIvdAbkopbDjwYBlf.UPb7jxF477PR598s4IoMIl.ZDw3MxPM717lpjK2EK7TjD
- dp85PXh5Io0twhxdXxLRXLaoM3jSqLuaHsg7XmrhZlD6aDeY7I2DXkvXJfRre6.ci_.rCENk7jmK
- er5H47j3qzn3xCY01rW8IeuXTpPlr8Jy8Ut7D2kNBVUPOPUJN.RLvDONW8iDxbYymQFMY_cS0fJ2
- jGOStknuyGmgUD5mxxZFPyNf.3tNXpYGOUsy7yNOQBWcqqT5Eqgf0gXcBClWL5TJ7nXsG9mXStz4
- SAfLWLcxGbdbvMaLk2oAFYGH5LqygXQNgipBJpaK0NVXMT7bf8hPkMJZPsx5Z499AwPqZQyR07J2
- Bmw3hEEuTC6s9lWwaQsAmUJMj9zDak6btygzElH64_KOYHbJy2QdIcxKPQ2YQ.fP6a.Llx56wYJ8
- ccgYJ7auCAxfuoF6tBokKZBReZn49XZ8trDUAekir3LmKEFuz7QnkTEA6JvQQHW31y0t4.5C9SSz
- HmYM5kRIBKhuPmnnbKj7LKzimeUIQZeRTFj.7Yvis6BNMrl4PuUJIpbPcJl1lRjUKorm0ZlrX2O6
- pherF28Haf5FWhVQo6Lmt_qs6S4RLYJDZYiOSs6OYLP6Lt788lwG9UBc8fIO1VC.MaHyos4iIeKB
- zzgYB_t4KlbsOTz2q3BpQ84Pqtde6eV6iJ4Yk4mkly0e.aNinRnDY
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic302.consmr.mail.ir2.yahoo.com with HTTP; Tue, 23 Jul 2019 13:30:27 +0000
-Received: by smtp426.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 2f2ae19cf287ab3910bb19c095c0ecd7; 
- Tue, 23 Jul 2019 13:30:22 +0000 (UTC)
-Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
-To: dsterba@suse.cz
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-24-gaoxiang25@huawei.com>
- <20190722101818.GN20977@twin.jikos.cz>
- <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
- <20190723123104.GB2868@twin.jikos.cz>
-Message-ID: <b623d1bc-7cb5-e466-10e1-bb3bfefcae10@aol.com>
-Date: Tue, 23 Jul 2019 21:30:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190723123104.GB2868@twin.jikos.cz>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45tTwZ1mf9zDqLh
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jul 2019 06:05:01 +1000 (AEST)
+Received: by mail-pf1-x42d.google.com with SMTP id y15so19677981pfn.5
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jul 2019 13:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=41afmad6GcKIsZXr/OQJK3US4ekIMgKbEsxQIRuLRTA=;
+ b=TwtFIvplK+issrV/ZTMJ01K4vN2wrasgoAabYmsqGEXLZipX66fON9lwO1LjOtvka+
+ 5CLKeqwbYK3aHc6WiCXLdBoKuh2K1JH6vtfhcs51qZwixgdRwFpG+zr8qKhiaK9j288R
+ +i01pd/2DoSbpIBBCiCxDVl8nNFAOQI2di238Pty6ceh510IbvXZVDVYoylJdaMJH4uT
+ kfyA7XymF+WW37c11p3HnkvUsM4Gi2/jIsMUsZd41oAEfAzLOzzPJjJLj+kE6YmsVRA1
+ o+6+E6Y/CklA6gnG8heX3wZ9ueqL+BN2hXEriGPghNhVGZYPlNvqb94hp5d5q6qaLwSG
+ BALw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=41afmad6GcKIsZXr/OQJK3US4ekIMgKbEsxQIRuLRTA=;
+ b=SUGSaYYXGEEDoivWBW/EI0RzAhSADdXZ0mMKtB52PwxhiJwFQhsn/EWOFKYIICEJS/
+ eamKXt5XLJDMNhTSOdFJR1Z+bGxegCND3ZK0p4Wg4oHhS+ZDUGd99WyEgdcEtAgjXCc3
+ Dq3uaP0kKPNQPcTtw4p4mxaxYuVu7dfMlQydrijeaynlsHS2BCIWeDPl7n/OBlkc/1Zw
+ 8vRKNDfRzME83Yq9y4kON586cC4a54SJn1HcBYgyd2romnv9dOTZabSIgLURnUAVznWx
+ BuJDAH7xTi09TbQp5TfHjmYJ5VyFTgNvPL0IumeQJmU22XYgDpmw4BqjDpSQOY54iZIq
+ p55A==
+X-Gm-Message-State: APjAAAVvp+PmI5e/Ad2+fUr/RXUzI+r60TD6aM/FD0tcMtKwLYFt8VmW
+ Q6/GWsd+niRbLwxLibzaR8DeqtyG
+X-Google-Smtp-Source: APXvYqyQmxFiu/EapzPR6xC73FXCp2S8mzJ4qswLMZCEQNssDoSqmAFkE1h79mcyhJofOJnanKIBcw==
+X-Received: by 2002:a63:9dcb:: with SMTP id
+ i194mr32529254pgd.444.1563912297711; 
+ Tue, 23 Jul 2019 13:04:57 -0700 (PDT)
+Received: from localhost.localdomain ([139.5.48.149])
+ by smtp.gmail.com with ESMTPSA id y23sm45890016pfo.106.2019.07.23.13.04.53
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 23 Jul 2019 13:04:56 -0700 (PDT)
+From: Pratik Shinde <pratikshinde320@gmail.com>
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [PATCH] erofs-utils: Add missing error code handling.
+Date: Wed, 24 Jul 2019 01:34:29 +0530
+Message-Id: <20190723200429.7132-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,145 +74,70 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
- Theodore Ts'o <tytso@mit.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Handling error conditions that are missing in few scenarios.
 
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ lib/inode.c | 10 ++++++++--
+ mkfs/main.c | 10 ++++++++--
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-On 2019/7/23 ????8:31, David Sterba wrote:
-> On Mon, Jul 22, 2019 at 06:58:59PM +0800, Gao Xiang wrote:
->> On 2019/7/22 ????6:18, David Sterba wrote:
->>> On Mon, Jul 22, 2019 at 10:50:42AM +0800, Gao Xiang wrote:
->>>> +choice
->>>> +	prompt "EROFS Data Decompression mode"
->>>> +	depends on EROFS_FS_ZIP
->>>> +	default EROFS_FS_ZIP_CACHE_READAROUND
->>>> +	help
->>>> +	  EROFS supports three options for decompression.
->>>> +	  "In-place I/O Only" consumes the minimum memory
->>>> +	  with lowest random read.
->>>> +
->>>> +	  "Cached Decompression for readaround" consumes
->>>> +	  the maximum memory with highest random read.
->>>> +
->>>> +	  If unsure, select "Cached Decompression for readaround"
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_DISABLED
->>>> +	bool "In-place I/O Only"
->>>> +	help
->>>> +	  Read compressed data into page cache and do in-place
->>>> +	  I/O decompression directly.
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_READAHEAD
->>>> +	bool "Cached Decompression for readahead"
->>>> +	help
->>>> +	  For each request, it caches the last compressed page
->>>> +	  for further reading.
->>>> +	  It still does in-place I/O for the rest compressed pages.
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_READAROUND
->>>> +	bool "Cached Decompression for readaround"
->>>> +	help
->>>> +	  For each request, it caches the both end compressed pages
->>>> +	  for further reading.
->>>> +	  It still does in-place I/O for the rest compressed pages.
->>>> +
->>>> +	  Recommended for performance priority.
->>>
->>> The number of individual Kconfig options is quite high, are you sure you
->>> need them to be split like that?
->>
->> You mean the above? these are 3 cache strategies, which impact the
->> runtime memory consumption and performance. I tend to leave the above
->> as it-is...
-> 
-> No, I mean all Kconfig options, they're scattered over several patches,
-> best seen in the checked out branch. The cache strategies are actually
-> just one config option (choice).
+diff --git a/lib/inode.c b/lib/inode.c
+index 179aa26..08d38c0 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -752,8 +752,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 	}
+ 	closedir(_dir);
+ 
+-	erofs_prepare_dir_file(dir);
+-	erofs_prepare_inode_buffer(dir);
++	ret = erofs_prepare_dir_file(dir);
++	if(!ret)
++		goto err_closedir;
++
++	ret = erofs_prepare_inode_buffer(dir);
++	if(!ret)
++		goto err_closedir;
++
+ 	if (IS_ROOT(dir))
+ 		erofs_fixup_meta_blkaddr(dir);
+ 
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 1348587..9c9530d 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -200,18 +200,24 @@ int main(int argc, char **argv)
+ 	if (err) {
+ 		if (err == -EINVAL)
+ 			usage();
+-		return 1;
++		return err;
+ 	}
+ 
+ 	err = dev_open(cfg.c_img_path);
+ 	if (err) {
+ 		usage();
+-		return 1;
++		return err;
+ 	}
+ 
+ 	erofs_show_config();
+ 
+ 	sb_bh = erofs_buffer_init();
++	if(IS_ERR(sb_bh)) {
++		err = PTR_ERR(sb_bh);
++		erofs_err("Failed to initialize super block buffer head : %s",
++			  erofs_strerror(err));
++		goto exit;
++	}
+ 	err = erofs_bh_balloon(sb_bh, EROFS_SUPER_END);
+ 	if (err < 0) {
+ 		erofs_err("Failed to balloon erofs_super_block: %s",
+-- 
+2.9.3
 
-I will change the cache strategy at runtime as Ted suggested.
-The cost is actually that erofs will always need a managed_cache inode
-even though users just use in-place IO for their products.
-
-However, I notice that using separated Kconfig will make test harder,
-so that it leads to more bugs, that is what I really care about.
-
-Therefore I think making it at runtime is OK for me.
-
-> 
->> I'm not sure vm_map_ram() is always better than vmap() for all
->> platforms (it has noticeable performance impact). However that
->> seems true for my test machines (x86-64, arm64).
->>
->> If vm_map_ram() is always the optimal choice compared with vmap(),
->> I will remove vmap() entirely, that is OK. But I am not sure for
->> every platforms though.
-> 
-> You can select the implementation by platform, I don't know what are the
-> criteria like cpu type etc, but I expect it's something that can be
-> determined at module load time. Eventually a module parameter can be the
-> the way to set it.
-
-OK, module parameter makes sense for me, and the overhead may be
-unnoticeable. I think it is fine to me.
-
-> 
->>> And so on. I'd suggest to go through all the options and reconsider them
->>> to be built-in, or runtime settings. Debugging features like the fault
->>> injections could be useful on non-debugging builds too, so a separate
->>> option is fine, otherwise grouping other debugging options under the
->>> main EROFS_FS_DEBUG would look more logical.
->>
->> The remaining one is EROFS_FS_CLUSTER_PAGE_LIMIT. It impacts the total
->> size of z_erofs_pcluster structure. It's a hard limit, and should be
->> configured as small as possible. I can remove it right now since multi-block
->> compression is not available now. However, it will be added again after
->> multi-block compression is supported.
->>
->> So, How about leave it right now and use the default value?
-> 
-> From the Kconfig and build-time settings perspective I think it's
-> misplaced. This affects testing, you'd have to rebuild and reinstall the
-> module to test any change, while it's "just" a number that can be either
-> module parameter, sysfs knob, mount option or special ioctl.
-> 
-> But I may be wrong, EROFS is a special purpose filesystem, so the
-> fine-grained build options might make sense (eg. due to smaller code).
-> The question should be how does each option affect typical production
-> build targets. Fewer is IMHO better.
-I have to admit, EROFS still has some special stuffs now (since we still
-have some TODO), However, I don't think EROFS cannot be effectively used
-for many productive uses right now.
-
-Considering that using linux-staging stuff is dangerous / unsuitable for
-most of companies, out of staging is better...
-
-And we still have to improve it to be more generic by time like what other fses do
-(IMO, writing a generic compression fs is not hard, many fses are there.
-I need to think more carefully in case of some performance loss which is out of
-too straight-forward generic code)...
-
-To be more specific, as for EROFS_FS_CLUSTER_PAGE_LIMIT...
-
-In the long term, I can introduce "struct biovec_slab"-like to erofs as
-in block/bio.c to support variable-sized z_erofs_pcluster.
-
-In the short term, I think EROFS_FS_CLUSTER_PAGE_LIMIT can be better set to
-the default value. It is a hard uplimit of the structure z_erofs_pcluster,
-which will greatly impact the memory consumption...
-
-Even if EROFS_FS_CLUSTER_PAGE_LIMIT is removed in the later Linux version
-by introducing biovec_slab-like stuff, I think it will have little influence
-to users? so I think that is a minor thing? Or I misunderstand something?
-
-Thanks,
-Gao Xiang
