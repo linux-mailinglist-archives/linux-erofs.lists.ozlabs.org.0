@@ -1,68 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id C326B726A0
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 06:29:41 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45tj6q0PzgzDqCB
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 14:29:39 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5629C726C8
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 06:41:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45tjN66kygzDqCM
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jul 2019 14:41:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com;
- envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.35; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="TwtFIvpl"; 
- dkim-atps=neutral
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com
- [IPv6:2607:f8b0:4864:20::42d])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45tTwZ1mf9zDqLh
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jul 2019 06:05:01 +1000 (AEST)
-Received: by mail-pf1-x42d.google.com with SMTP id y15so19677981pfn.5
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jul 2019 13:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id;
- bh=41afmad6GcKIsZXr/OQJK3US4ekIMgKbEsxQIRuLRTA=;
- b=TwtFIvplK+issrV/ZTMJ01K4vN2wrasgoAabYmsqGEXLZipX66fON9lwO1LjOtvka+
- 5CLKeqwbYK3aHc6WiCXLdBoKuh2K1JH6vtfhcs51qZwixgdRwFpG+zr8qKhiaK9j288R
- +i01pd/2DoSbpIBBCiCxDVl8nNFAOQI2di238Pty6ceh510IbvXZVDVYoylJdaMJH4uT
- kfyA7XymF+WW37c11p3HnkvUsM4Gi2/jIsMUsZd41oAEfAzLOzzPJjJLj+kE6YmsVRA1
- o+6+E6Y/CklA6gnG8heX3wZ9ueqL+BN2hXEriGPghNhVGZYPlNvqb94hp5d5q6qaLwSG
- BALw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=41afmad6GcKIsZXr/OQJK3US4ekIMgKbEsxQIRuLRTA=;
- b=SUGSaYYXGEEDoivWBW/EI0RzAhSADdXZ0mMKtB52PwxhiJwFQhsn/EWOFKYIICEJS/
- eamKXt5XLJDMNhTSOdFJR1Z+bGxegCND3ZK0p4Wg4oHhS+ZDUGd99WyEgdcEtAgjXCc3
- Dq3uaP0kKPNQPcTtw4p4mxaxYuVu7dfMlQydrijeaynlsHS2BCIWeDPl7n/OBlkc/1Zw
- 8vRKNDfRzME83Yq9y4kON586cC4a54SJn1HcBYgyd2romnv9dOTZabSIgLURnUAVznWx
- BuJDAH7xTi09TbQp5TfHjmYJ5VyFTgNvPL0IumeQJmU22XYgDpmw4BqjDpSQOY54iZIq
- p55A==
-X-Gm-Message-State: APjAAAVvp+PmI5e/Ad2+fUr/RXUzI+r60TD6aM/FD0tcMtKwLYFt8VmW
- Q6/GWsd+niRbLwxLibzaR8DeqtyG
-X-Google-Smtp-Source: APXvYqyQmxFiu/EapzPR6xC73FXCp2S8mzJ4qswLMZCEQNssDoSqmAFkE1h79mcyhJofOJnanKIBcw==
-X-Received: by 2002:a63:9dcb:: with SMTP id
- i194mr32529254pgd.444.1563912297711; 
- Tue, 23 Jul 2019 13:04:57 -0700 (PDT)
-Received: from localhost.localdomain ([139.5.48.149])
- by smtp.gmail.com with ESMTPSA id y23sm45890016pfo.106.2019.07.23.13.04.53
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Tue, 23 Jul 2019 13:04:56 -0700 (PDT)
-From: Pratik Shinde <pratikshinde320@gmail.com>
-To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
- fangwei1@huawei.com
-Subject: [PATCH] erofs-utils: Add missing error code handling.
-Date: Wed, 24 Jul 2019 01:34:29 +0530
-Message-Id: <20190723200429.7132-1-pratikshinde320@gmail.com>
-X-Mailer: git-send-email 2.9.3
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45tdDm0vSRzDqBY
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jul 2019 11:34:30 +1000 (AEST)
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+ by Forcepoint Email with ESMTP id F1AFEECF8AE29D77CD50
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jul 2019 09:34:25 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Jul
+ 2019 09:34:16 +0800
+Subject: Re: [PATCH] erofs-utils: Add missing error code handling.
+To: Pratik Shinde <pratikshinde320@gmail.com>, <linux-erofs@lists.ozlabs.org>, 
+ <bluce.liguifu@huawei.com>, <miaoxie@huawei.com>, <fangwei1@huawei.com>
+References: <20190723200429.7132-1-pratikshinde320@gmail.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <980200eb-fa95-2de2-d68c-c52a323a540b@huawei.com>
+Date: Wed, 24 Jul 2019 09:34:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
+MIME-Version: 1.0
+In-Reply-To: <20190723200429.7132-1-pratikshinde320@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,66 +56,90 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Handling error conditions that are missing in few scenarios.
+Hi Pratik,
 
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
----
- lib/inode.c | 10 ++++++++--
- mkfs/main.c | 10 ++++++++--
- 2 files changed, 16 insertions(+), 4 deletions(-)
+This patch isn't in erofs mailing list. I don't know what is wrong...
+Could you resend the patch? It'd be better in the mailing list....
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 179aa26..08d38c0 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -752,8 +752,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 	}
- 	closedir(_dir);
- 
--	erofs_prepare_dir_file(dir);
--	erofs_prepare_inode_buffer(dir);
-+	ret = erofs_prepare_dir_file(dir);
-+	if(!ret)
-+		goto err_closedir;
-+
-+	ret = erofs_prepare_inode_buffer(dir);
-+	if(!ret)
-+		goto err_closedir;
-+
- 	if (IS_ROOT(dir))
- 		erofs_fixup_meta_blkaddr(dir);
- 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 1348587..9c9530d 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -200,18 +200,24 @@ int main(int argc, char **argv)
- 	if (err) {
- 		if (err == -EINVAL)
- 			usage();
--		return 1;
-+		return err;
- 	}
- 
- 	err = dev_open(cfg.c_img_path);
- 	if (err) {
- 		usage();
--		return 1;
-+		return err;
- 	}
- 
- 	erofs_show_config();
- 
- 	sb_bh = erofs_buffer_init();
-+	if(IS_ERR(sb_bh)) {
-+		err = PTR_ERR(sb_bh);
-+		erofs_err("Failed to initialize super block buffer head : %s",
-+			  erofs_strerror(err));
-+		goto exit;
-+	}
- 	err = erofs_bh_balloon(sb_bh, EROFS_SUPER_END);
- 	if (err < 0) {
- 		erofs_err("Failed to balloon erofs_super_block: %s",
--- 
-2.9.3
+On 2019/7/24 4:04, Pratik Shinde wrote:
+> Handling error conditions that are missing in few scenarios.
+> 
+> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> ---
+>  lib/inode.c | 10 ++++++++--
+>  mkfs/main.c | 10 ++++++++--
+>  2 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 179aa26..08d38c0 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -752,8 +752,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+>  	}
+>  	closedir(_dir);
+>  
+> -	erofs_prepare_dir_file(dir);
+> -	erofs_prepare_inode_buffer(dir);
+> +	ret = erofs_prepare_dir_file(dir);
+> +	if(!ret)
+> +		goto err_closedir;
+> +
+> +	ret = erofs_prepare_inode_buffer(dir);
+> +	if(!ret)
+> +		goto err_closedir;
+> +
+>  	if (IS_ROOT(dir))
+>  		erofs_fixup_meta_blkaddr(dir);
+>  
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index 1348587..9c9530d 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -200,18 +200,24 @@ int main(int argc, char **argv)
+>  	if (err) {
+>  		if (err == -EINVAL)
+>  			usage();
+> -		return 1;
+> +		return err;
 
+current erofs-utils will return 1; when failure...
+If you suggest to return the real error code, could you fix the following as well?
+and it should be return -err; since a positive error code is perfered? I have no idea....
+
+253 exit:
+254         z_erofs_compress_exit();
+255         dev_close();
+256         erofs_exit_configure();
+257
+258         if (err) {
+259                 erofs_err("\tCould not format the device : %s\n",
+260                           erofs_strerror(err));
+261                 return 1;
+262         }
+263         return err;
+
+Thanks,
+Gao Xiang
+
+>  	}
+>  
+>  	err = dev_open(cfg.c_img_path);
+>  	if (err) {
+>  		usage();
+> -		return 1;
+> +		return err;
+>  	}
+>  
+>  	erofs_show_config();
+>  
+>  	sb_bh = erofs_buffer_init();
+> +	if(IS_ERR(sb_bh)) {
+> +		err = PTR_ERR(sb_bh);
+> +		erofs_err("Failed to initialize super block buffer head : %s",
+> +			  erofs_strerror(err));
+> +		goto exit;
+> +	}
+>  	err = erofs_bh_balloon(sb_bh, EROFS_SUPER_END);
+>  	if (err < 0) {
+>  		erofs_err("Failed to balloon erofs_super_block: %s",
+> 
