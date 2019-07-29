@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA73E7856D
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2019 08:53:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 95DDA78553
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2019 08:52:50 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45xr460VhhzDqC9
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2019 16:53:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45xr3g2J66zDqDm
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2019 16:52:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,20 +18,21 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45xr3K27B4zDqBb
- for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jul 2019 16:52:29 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45xr3K1kn2zDqBW
+ for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jul 2019 16:52:28 +1000 (AEST)
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 16BD23741BC7E5CDB2FA;
+ by Forcepoint Email with ESMTP id 21B1FA02D945F686E4E7;
  Mon, 29 Jul 2019 14:52:25 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Jul
- 2019 14:52:14 +0800
+ 2019 14:52:15 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  <devel@driverdev.osuosl.org>
-Subject: [PATCH 01/22] staging: erofs: update source file headers
-Date: Mon, 29 Jul 2019 14:51:38 +0800
-Message-ID: <20190729065159.62378-2-gaoxiang25@huawei.com>
+Subject: [PATCH 02/22] staging: erofs: rename source files for better
+ understanding
+Date: Mon, 29 Jul 2019 14:51:39 +0800
+Message-ID: <20190729065159.62378-3-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190729065159.62378-1-gaoxiang25@huawei.com>
 References: <20190729065159.62378-1-gaoxiang25@huawei.com>
@@ -56,375 +57,135 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-- Use the correct style for all SPDX License Identifiers;
-- Get rid of the unnecessary license boilerplate;
-- Use "GPL-2.0-only" instead of "GPL-2.0" suggested-by Stephen.
+Keep in line with erofs-outofstaging patchset as well, see
+https://lore.kernel.org/linux-fsdevel/20190725095658.155779-1-gaoxiang25@huawei.com/
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/Kconfig                      | 2 +-
  drivers/staging/erofs/Makefile                     | 2 +-
- drivers/staging/erofs/compress.h                   | 2 +-
- drivers/staging/erofs/data.c                       | 6 +-----
- drivers/staging/erofs/decompressor.c               | 2 +-
- drivers/staging/erofs/dir.c                        | 6 +-----
- drivers/staging/erofs/erofs_fs.h                   | 8 ++------
- drivers/staging/erofs/include/linux/tagptr.h       | 6 +++---
- drivers/staging/erofs/include/trace/events/erofs.h | 2 +-
- drivers/staging/erofs/inode.c                      | 6 +-----
- drivers/staging/erofs/internal.h                   | 8 ++------
- drivers/staging/erofs/namei.c                      | 6 +-----
- drivers/staging/erofs/super.c                      | 6 +-----
- drivers/staging/erofs/unzip_pagevec.h              | 8 ++------
- drivers/staging/erofs/unzip_vle.c                  | 6 +-----
- drivers/staging/erofs/unzip_vle.h                  | 8 ++------
- drivers/staging/erofs/utils.c                      | 7 +------
- drivers/staging/erofs/xattr.c                      | 6 +-----
- drivers/staging/erofs/xattr.h                      | 8 ++------
- drivers/staging/erofs/zmap.c                       | 2 +-
- 20 files changed, 27 insertions(+), 80 deletions(-)
+ drivers/staging/erofs/{include/linux => }/tagptr.h | 6 +++---
+ drivers/staging/erofs/{unzip_vle.c => zdata.c}     | 4 ++--
+ drivers/staging/erofs/{unzip_vle.h => zdata.h}     | 8 ++++----
+ drivers/staging/erofs/{unzip_pagevec.h => zpvec.h} | 8 ++++----
+ 5 files changed, 14 insertions(+), 14 deletions(-)
+ rename drivers/staging/erofs/{include/linux => }/tagptr.h (97%)
+ rename drivers/staging/erofs/{unzip_vle.c => zdata.c} (99%)
+ rename drivers/staging/erofs/{unzip_vle.h => zdata.h} (97%)
+ rename drivers/staging/erofs/{unzip_pagevec.h => zpvec.h} (96%)
 
-diff --git a/drivers/staging/erofs/Kconfig b/drivers/staging/erofs/Kconfig
-index d04b798a8efb..2577cbb46a5b 100644
---- a/drivers/staging/erofs/Kconfig
-+++ b/drivers/staging/erofs/Kconfig
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0
-+# SPDX-License-Identifier: GPL-2.0-only
- 
- config EROFS_FS
- 	tristate "EROFS filesystem support"
 diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
-index e704d9e51514..3ade87e78d06 100644
+index 3ade87e78d06..5cdae21cb5af 100644
 --- a/drivers/staging/erofs/Makefile
 +++ b/drivers/staging/erofs/Makefile
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0
-+# SPDX-License-Identifier: GPL-2.0-only
+@@ -9,5 +9,5 @@ obj-$(CONFIG_EROFS_FS) += erofs.o
+ ccflags-y += -I $(srctree)/$(src)/include
+ erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+-erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o zmap.o decompressor.o
++erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
  
- EROFS_VERSION = "1.0pre1"
- 
-diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
-index c43aa3374d28..043013f9ef1b 100644
---- a/drivers/staging/erofs/compress.h
-+++ b/drivers/staging/erofs/compress.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * linux/drivers/staging/erofs/compress.h
-  *
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index f73e4720cd3e..75b859e48084 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/data.c
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #include "internal.h"
- #include <linux/prefetch.h>
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index 1fb0abb98dff..b75524d0b322 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/decompressor.c
-  *
-diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-index dbf6a151886c..2fbfc4935077 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/dir.c
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #include "internal.h"
- 
-diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-index 9f61abb7c1ca..9cd749d56920 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/drivers/staging/erofs/erofs_fs.h
-@@ -1,14 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
-+/*
-  * linux/drivers/staging/erofs/erofs_fs.h
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is dual-licensed; you may select either the GNU General Public
-- * License version 2 or Apache License, Version 2.0. See the file COPYING
-- * in the main directory of the Linux distribution for more details.
-  */
- #ifndef __EROFS_FS_H
- #define __EROFS_FS_H
-diff --git a/drivers/staging/erofs/include/linux/tagptr.h b/drivers/staging/erofs/include/linux/tagptr.h
-index ccd106dbd48e..b3f13773fb99 100644
+diff --git a/drivers/staging/erofs/include/linux/tagptr.h b/drivers/staging/erofs/tagptr.h
+similarity index 97%
+rename from drivers/staging/erofs/include/linux/tagptr.h
+rename to drivers/staging/erofs/tagptr.h
+index b3f13773fb99..a72897c86744 100644
 --- a/drivers/staging/erofs/include/linux/tagptr.h
-+++ b/drivers/staging/erofs/include/linux/tagptr.h
-@@ -1,6 +1,6 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-- * Tagged pointer implementation
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * A tagged pointer implementation
++++ b/drivers/staging/erofs/tagptr.h
+@@ -4,8 +4,8 @@
   *
   * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
   */
-diff --git a/drivers/staging/erofs/include/trace/events/erofs.h b/drivers/staging/erofs/include/trace/events/erofs.h
-index 660c92fc1803..bfb2da9c4eee 100644
---- a/drivers/staging/erofs/include/trace/events/erofs.h
-+++ b/drivers/staging/erofs/include/trace/events/erofs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only */
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM erofs
+-#ifndef _LINUX_TAGPTR_H
+-#define _LINUX_TAGPTR_H
++#ifndef __EROFS_FS_TAGPTR_H
++#define __EROFS_FS_TAGPTR_H
  
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 4c3d8bf8d249..c13d66ccc74a 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/inode.c
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #include "xattr.h"
+ #include <linux/types.h>
+ #include <linux/build_bug.h>
+@@ -106,5 +106,5 @@ tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
+ 	ptptr->v &= ~tags; \
+ *ptptr; })
  
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 0ebc294120c2..501429ec0f91 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -1,14 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-  * linux/drivers/staging/erofs/internal.h
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #ifndef __INTERNAL_H
- #define __INTERNAL_H
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index fd3ae78d0ba5..50816b4c05fc 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/namei.c
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #include "internal.h"
- #include "xattr.h"
-diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-index 3e2a65ba1945..38cd7a59750a 100644
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/super.c
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #include <linux/module.h>
- #include <linux/buffer_head.h>
-diff --git a/drivers/staging/erofs/unzip_pagevec.h b/drivers/staging/erofs/unzip_pagevec.h
-index e65dbca93ae8..f07302c3c3f5 100644
---- a/drivers/staging/erofs/unzip_pagevec.h
-+++ b/drivers/staging/erofs/unzip_pagevec.h
-@@ -1,14 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-  * linux/drivers/staging/erofs/unzip_pagevec.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #ifndef __EROFS_UNZIP_PAGEVEC_H
- #define __EROFS_UNZIP_PAGEVEC_H
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 56c009cf611e..28a98e79c1e9 100644
+-#endif
++#endif	/* __EROFS_FS_TAGPTR_H */
+ 
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/zdata.c
+similarity index 99%
+rename from drivers/staging/erofs/unzip_vle.c
+rename to drivers/staging/erofs/zdata.c
+index 28a98e79c1e9..f7667628bbf1 100644
 --- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/staging/erofs/zdata.c
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0-only
  /*
-  * linux/drivers/staging/erofs/unzip_vle.c
+- * linux/drivers/staging/erofs/unzip_vle.c
++ * linux/drivers/staging/erofs/zdata.c
   *
   * Copyright (C) 2018 HUAWEI, Inc.
   *             http://www.huawei.com/
   * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
   */
- #include "unzip_vle.h"
+-#include "unzip_vle.h"
++#include "zdata.h"
  #include "compress.h"
-diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index df91ad149439..d92515cd1c06 100644
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -1,14 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-  * linux/drivers/staging/erofs/unzip_vle.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
- #ifndef __EROFS_FS_UNZIP_VLE_H
- #define __EROFS_FS_UNZIP_VLE_H
-diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
-index 4bbd3bf34acd..a68dbe375fa0 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/drivers/staging/erofs/utils.c
-@@ -1,16 +1,11 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/utils.c
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
-  */
--
- #include "internal.h"
- #include <linux/pagevec.h>
+ #include <linux/prefetch.h>
  
-diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
-index df40654b9fbb..b29177a17347 100644
---- a/drivers/staging/erofs/xattr.c
-+++ b/drivers/staging/erofs/xattr.c
-@@ -1,14 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
+diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/zdata.h
+similarity index 97%
+rename from drivers/staging/erofs/unzip_vle.h
+rename to drivers/staging/erofs/zdata.h
+index d92515cd1c06..8d0119d697da 100644
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/zdata.h
+@@ -1,16 +1,16 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
  /*
-  * linux/drivers/staging/erofs/xattr.c
+- * linux/drivers/staging/erofs/unzip_vle.h
++ * linux/drivers/staging/erofs/zdata.h
   *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  * Copyright (C) 2018 HUAWEI, Inc.
   *             http://www.huawei.com/
   * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
   */
- #include <linux/security.h>
- #include "xattr.h"
-diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
-index 3990805dfc6c..fbcd57bdf886 100644
---- a/drivers/staging/erofs/xattr.h
-+++ b/drivers/staging/erofs/xattr.h
-@@ -1,14 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-  * linux/drivers/staging/erofs/xattr.h
+-#ifndef __EROFS_FS_UNZIP_VLE_H
+-#define __EROFS_FS_UNZIP_VLE_H
++#ifndef __EROFS_FS_ZDATA_H
++#define __EROFS_FS_ZDATA_H
+ 
+ #include "internal.h"
+-#include "unzip_pagevec.h"
++#include "zpvec.h"
+ 
+ #define Z_EROFS_NR_INLINE_PAGEVECS      3
+ 
+diff --git a/drivers/staging/erofs/unzip_pagevec.h b/drivers/staging/erofs/zpvec.h
+similarity index 96%
+rename from drivers/staging/erofs/unzip_pagevec.h
+rename to drivers/staging/erofs/zpvec.h
+index f07302c3c3f5..77bf6877bad8 100644
+--- a/drivers/staging/erofs/unzip_pagevec.h
++++ b/drivers/staging/erofs/zpvec.h
+@@ -1,15 +1,15 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/unzip_pagevec.h
++ * linux/drivers/staging/erofs/zpvec.h
   *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  * Copyright (C) 2018 HUAWEI, Inc.
   *             http://www.huawei.com/
   * Created by Gao Xiang <gaoxiang25@huawei.com>
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file COPYING in the main directory of the Linux
-- * distribution for more details.
   */
- #ifndef __EROFS_XATTR_H
- #define __EROFS_XATTR_H
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index 9c0bd65c46bf..205e884ca4e0 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * linux/drivers/staging/erofs/zmap.c
-  *
+-#ifndef __EROFS_UNZIP_PAGEVEC_H
+-#define __EROFS_UNZIP_PAGEVEC_H
++#ifndef __EROFS_FS_ZPVEC_H
++#define __EROFS_FS_ZPVEC_H
+ 
+-#include <linux/tagptr.h>
++#include "tagptr.h"
+ 
+ /* page type in pagevec for unzip subsystem */
+ enum z_erofs_page_type {
 -- 
 2.17.1
 
