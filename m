@@ -1,44 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8967C7C810
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 18:02:25 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45zJ8s07qRzDqfS
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2019 02:02:21 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02D2F7CC06
+	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 20:33:21 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 45zMW155RwzDqmM
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2019 04:33:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.191; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=neutral (mailfrom) smtp.mailfrom=edecegyt.net
+ (client-ip=59.190.138.76; helo=otokuni119-kyoto.jp;
+ envelope-from=mbohday@edecegyt.net; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45zJ4h24nMzDqkW
- for <linux-erofs@lists.ozlabs.org>; Thu,  1 Aug 2019 01:58:43 +1000 (AEST)
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id 2481227EAE3666F9148E;
- Wed, 31 Jul 2019 23:58:41 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 23:58:35 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chao Yu
- <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
-Subject: [PATCH v2 22/22] staging: erofs: update Kconfig
-Date: Wed, 31 Jul 2019 23:57:52 +0800
-Message-ID: <20190731155752.210602-23-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190731155752.210602-1-gaoxiang25@huawei.com>
-References: <20190731155752.210602-1-gaoxiang25@huawei.com>
+ dmarc=none (p=none dis=none) header.from=edecegyt.net
+X-Greylist: delayed 1810 seconds by postgrey-1.36 at bilbo;
+ Thu, 01 Aug 2019 04:33:14 AEST
+Received: from otokuni119-kyoto.jp (ns1.otokuni119-kyoto.jp [59.190.138.76])
+ by lists.ozlabs.org (Postfix) with ESMTP id 45zMVy6T3fzDqlj
+ for <linux-erofs@lists.ozlabs.org>; Thu,  1 Aug 2019 04:33:14 +1000 (AEST)
+Received: from [102.165.38.24] (unknown [102.165.38.24])
+ by localhost.localdomain (Postfix) with ESMTPA id E7EF09DA001
+ for <linux-erofs@lists.ozlabs.org>; Thu,  1 Aug 2019 02:55:45 +0900 (JST)
+Content-Type: multipart/alternative; boundary="===============0972580097=="
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Subject: Funds !! (Ref: LGWB/20M/DD/029719)
+To: linux-erofs@lists.ozlabs.org
+From: "Kenneth F. McKenzie Jr."  <mbohday@edecegyt.net>
+Date: Wed, 31 Jul 2019 10:54:10 -0700
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,126 +40,116 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- weidu.du@huawei.com, Miao Xie <miaoxie@huawei.com>
+Reply-To: mboghday@edecegyt.net
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Message-Id: <45zMW155RwzDqmM@lists.ozlabs.org>
 
-Keep in line with erofs-outofstaging patchset:
- - turn on CONFIG_EROFS_FS_ZIP by default;
- - turn on CONFIG_EROFS_FS_SECURITY by default suggested by David;
- - update Kconfig description.
+You will not see this in a MIME-aware mail reader.
+--===============0972580097==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/Kconfig | 54 ++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+Ref: LGWB/20M/DD/029719
+  =
 
-diff --git a/drivers/staging/erofs/Kconfig b/drivers/staging/erofs/Kconfig
-index 1a8e48943e50..16316d1adca3 100644
---- a/drivers/staging/erofs/Kconfig
-+++ b/drivers/staging/erofs/Kconfig
-@@ -4,16 +4,16 @@ config EROFS_FS
- 	tristate "EROFS filesystem support"
- 	depends on BLOCK
- 	help
--	  EROFS(Enhanced Read-Only File System) is a lightweight
-+	  EROFS (Enhanced Read-Only File System) is a lightweight
- 	  read-only file system with modern designs (eg. page-sized
- 	  blocks, inline xattrs/data, etc.) for scenarios which need
--	  high-performance read-only requirements, eg. firmwares in
--	  mobile phone or LIVECDs.
-+	  high-performance read-only requirements, e.g. Android OS
-+	  for mobile phones and LIVECDs.
- 
--	  It also provides VLE compression support, focusing on
--	  random read improvements, keeping relatively lower
--	  compression ratios, which is useful for high-performance
--	  devices with limited memory and ROM space.
-+	  It also provides fixed-sized output compression support,
-+	  which improves storage density, keeps relatively higher
-+	  compression ratios, which is more useful to achieve high
-+	  performance for embedded devices with limited memory.
- 
- 	  If unsure, say N.
- 
-@@ -21,11 +21,19 @@ config EROFS_FS_DEBUG
- 	bool "EROFS debugging feature"
- 	depends on EROFS_FS
- 	help
--	  Print EROFS debugging messages and enable more BUG_ONs
--	  which check the filesystem consistency aggressively.
-+	  Print debugging messages and enable more BUG_ONs which check
-+	  filesystem consistency and find potential issues aggressively,
-+	  which can be used for Android eng build, for example.
- 
- 	  For daily use, say N.
- 
-+config EROFS_FAULT_INJECTION
-+	bool "EROFS fault injection facility"
-+	depends on EROFS_FS
-+	help
-+	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
-+	  If unsure, say N.
-+
- config EROFS_FS_XATTR
- 	bool "EROFS extended attributes"
- 	depends on EROFS_FS
-@@ -54,6 +62,7 @@ config EROFS_FS_POSIX_ACL
- config EROFS_FS_SECURITY
- 	bool "EROFS Security Labels"
- 	depends on EROFS_FS_XATTR
-+	default y
- 	help
- 	  Security labels provide an access control facility to support Linux
- 	  Security Models (LSMs) accepted by AppArmor, SELinux, Smack and TOMOYO
-@@ -63,22 +72,15 @@ config EROFS_FS_SECURITY
- 
- 	  If you are not using a security module, say N.
- 
--config EROFS_FAULT_INJECTION
--	bool "EROFS fault injection facility"
--	depends on EROFS_FS
--	help
--	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
--	  If unsure, say N.
--
- config EROFS_FS_ZIP
--	bool "EROFS Data Compresssion Support"
-+	bool "EROFS Data Compression Support"
- 	depends on EROFS_FS
- 	select LZ4_DECOMPRESS
-+	default y
- 	help
--	  Currently we support LZ4 VLE Compression only.
--	  Play at your own risk.
-+	  Enable fixed-sized output compression for EROFS.
- 
--	  If you don't want to use compression feature, say N.
-+	  If you don't want to enable compression feature, say N.
- 
- config EROFS_FS_CLUSTER_PAGE_LIMIT
- 	int "EROFS Cluster Pages Hard Limit"
-@@ -86,11 +88,11 @@ config EROFS_FS_CLUSTER_PAGE_LIMIT
- 	range 1 256
- 	default "1"
- 	help
--	  Indicates VLE compressed pages hard limit of a
--	  compressed cluster.
-+	  Indicates maximum # of pages of a compressed
-+	  physical cluster.
- 
--	  For example, if files of a image are compressed
--	  into 8k-unit, the hard limit should not be less
--	  than 2. Otherwise, the image cannot be mounted
--	  correctly on this kernel.
-+	  For example, if files in a image were compressed
-+	  into 8k-unit, hard limit should not be configured
-+	  less than 2. Otherwise, the image will be refused
-+	  to mount on this kernel.
- 
--- 
-2.17.1
+ Hello, this is Lt. Gen. Barnett (Ms.) of the U.S. Army Aviation and Missil=
+e Research, Development, and Engineering Center (AMRDEC) base in Afghanista=
+n.
+  =
 
+ It will interest you to know that I have named you my beneficiary to recei=
+ve ($20 Million USD) containing in two trunks (boxes); the consignments whi=
+ch arrived the United States today is presently at the JFK Airport New York.
+  =
+
+ My desire and purpose is to have the U.S Military Air & Surface Transporta=
+tion Company (ADM Europa LLC) in New York to deliver the funds to you (or) =
+to any overseas address under your supervision as long as I=2019m assured t=
+hat it will be safe in your care until I return home ending of the year.
+  =
+
+ Please e-mail your address and contact information; the deal is 60/40 spli=
+t (60% for me and 40% for you); I am not a greedy person and I hope you wil=
+l not double cross a single mother who have sacrificed her life in the serv=
+ice of the nation.
+  =
+
+ God bless you !!
+  =
+
+ Respectfully,
+    Lt. Gen. Wendy Barnett (Ms.),
+ APO 1256, SD...Delta Force 18 TG Airborne Corps
+
+--===============0972580097==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+
+<HTML><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Dutf-8"/></head><BODY><P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt">=
+<SPAN lang=3DEN-US style=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-ser=
+if; COLOR: #222a35'>Ref: LGWB/20M/DD/029719<?xml:namespace prefix =3D "o" n=
+s =3D "urn:schemas-microsoft-com:office:office" /><o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>Hell=
+o, this is Lt. Gen. Barnett (Ms.) of the U.S. Army Aviation and Missile Res=
+earch, Development, and Engineering Center (AMRDEC) base in Afghanistan.<o:=
+p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>It w=
+ill interest you to know that I have named you my beneficiary to receive ($=
+20 Million USD) containing in two trunks (boxes); the consignments which ar=
+rived the United States today is presently at the JFK Airport New York.<o:p=
+></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>My d=
+esire and purpose is to have the U.S Military Air &amp; Surface Transportat=
+ion Company (ADM Europa LLC) in New York to deliver the funds to you (or) t=
+o any overseas address under your supervision as long as I=E2=80=99m assure=
+d that it will be safe in your care until I return home ending of the year.=
+<o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>Plea=
+se e-mail your address and contact information; the deal is 60/40 split (60=
+% for me and 40% for you); I am not a greedy person and I hope you will not=
+ double cross a single mother who have sacrificed her life in the service o=
+f the nation.<o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>God =
+bless you !!<o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><o:p=
+>&nbsp;</o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>Resp=
+ectfully,<o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'><SPA=
+N style=3D"mso-spacerun: yes">&nbsp;&nbsp; </SPAN>Lt. Gen. Wendy Barnett (M=
+s.),<o:p></o:p></SPAN></P>
+<P class=3DMsoNormal style=3D"MARGIN: 0cm 0cm 0pt"><SPAN lang=3DEN-US style=
+=3D'FONT-SIZE: 14pt; FONT-FAMILY: "Tahoma",sans-serif; COLOR: #222a35'>APO =
+1256, SD...Delta Force 18 TG Airborne Corps<o:p></o:p></SPAN></P></BODY></H=
+TML>
+--===============0972580097==--
