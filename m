@@ -1,44 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA1287BCF7
+	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 11:25:11 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94A427BCEF
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 11:24:20 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 45z7KY0XHdzDqbh
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 19:24:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 45z7LX6kv7zDqRn
+	for <lists+linux-erofs@lfdr.de>; Wed, 31 Jul 2019 19:25:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.35; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ (client-ip=45.249.212.190; helo=huawei.com; envelope-from=yuchao0@huawei.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45z7KT1N5qzDqL4
- for <linux-erofs@lists.ozlabs.org>; Wed, 31 Jul 2019 19:24:10 +1000 (AEST)
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id 7B3BBD6D3775D669C5E5;
- Wed, 31 Jul 2019 17:24:05 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 45z7LR5xdWzDqND
+ for <linux-erofs@lists.ozlabs.org>; Wed, 31 Jul 2019 19:25:03 +1000 (AEST)
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+ by Forcepoint Email with ESMTP id B8264849D44371CC7C17;
+ Wed, 31 Jul 2019 17:24:58 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 17:23:58 +0800
-Subject: Re: [PATCH 18/22] staging: erofs: turn cache strategies into mount
- options
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 17:24:51 +0800
+Subject: Re: [PATCH 19/22] staging: erofs: tidy up utils.c
 To: Gao Xiang <gaoxiang25@huawei.com>, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
 References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-19-gaoxiang25@huawei.com>
+ <20190729065159.62378-20-gaoxiang25@huawei.com>
 From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <b5186ece-53c4-a1c9-98c1-f3b39d9bc607@huawei.com>
-Date: Wed, 31 Jul 2019 17:23:57 +0800
+Message-ID: <f1685688-d78a-6fb7-7b6b-d34f5b04e47f@huawei.com>
+Date: Wed, 31 Jul 2019 17:24:50 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190729065159.62378-19-gaoxiang25@huawei.com>
+In-Reply-To: <20190729065159.62378-20-gaoxiang25@huawei.com>
 Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -62,15 +61,10 @@ Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 2019/7/29 14:51, Gao Xiang wrote:
-> Kill all kconfig cache strategies and turn them into mount options
-> "cache_strategy={disable|readahead|readaround}".
+> keep in line with erofs-outofstaging patchset:
+>  - Update comments in erofs_try_to_release_workgroup;
+>  - code style cleanup.
 > 
-> As the first step, cached pages can still be usable after cache
-> is disabled by remounting, and these pages will be fallen out
-> over time, which can be refined in the later version if some
-> requirement is needed. Update related document as well.
-> 
-> Suggested-by: Theodore Ts'o <tytso@mit.edu>
 > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
