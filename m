@@ -2,74 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D3D80A6A
-	for <lists+linux-erofs@lfdr.de>; Sun,  4 Aug 2019 12:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF1DC80A70
+	for <lists+linux-erofs@lfdr.de>; Sun,  4 Aug 2019 12:34:15 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 461cKM4wQczDqbf
-	for <lists+linux-erofs@lfdr.de>; Sun,  4 Aug 2019 20:17:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1564913863;
-	bh=Cv9pMgh4AkENF8v3o461xOtN/eRhY/dCU2pvkL2GcmQ=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=NXfA81/8sTVejJv8+cRQVMqV1+hYOGS8DhWVrV8UtDqREKRsQz15OStABgX35u+Jl
-	 vn5/IMmDq/tegCt2BhEyfEEbLddEPUOrnuYhzeBtRtJeVL3IjD4H6sfBCQwIKKYfk8
-	 EmIMUrEsBm7HAz6aV6TflpSSgSYlcPCpi9fMwJcJov72dZRrykg0ng8U0Pqs2if2tp
-	 i2RBf1zP6iC24oPMkAdJTxMN69bxCWAQnlY1ovrmbuFaM75DQZUggPj4Co/+UlWKUC
-	 T0T7djtr3WReP50WrqPpSdfzm/o/KszeeDcnYj9Fc7d8sUnPRRl2IJbgUhFOqkETmF
-	 LyPfBGPa4RoRg==
+	by lists.ozlabs.org (Postfix) with ESMTP id 461chP1z0yzDqcc
+	for <lists+linux-erofs@lfdr.de>; Sun,  4 Aug 2019 20:34:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.68.82; helo=sonic306-19.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2a00:1450:4864:20::535; helo=mail-ed1-x535.google.com;
+ envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Received: from sonic306-19.consmr.mail.gq1.yahoo.com
- (sonic306-19.consmr.mail.gq1.yahoo.com [98.137.68.82])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="gzNP+YVN"; 
+ dkim-atps=neutral
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com
+ [IPv6:2a00:1450:4864:20::535])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 461cK66YgRzDqT9
- for <linux-erofs@lists.ozlabs.org>; Sun,  4 Aug 2019 20:17:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1564913832; bh=EqFv3igTPDiL0oo7UHNkhX5ZQA2vsv48kEywHQf/gBQ=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=Lnc7GhoqgXxhsMRWKA63be/9iqXtoQ0SzI8CLd2S+OYLqFyzSP4lFE0hLIQx7mQNFZK6DmHatrk+cIEn/uQsqTYCKpNKyFdc2qIW5bO3SgtB9UJk3wwPRpL/QNrO7FaOj6WwAIPubjOaZAdGn9lyai83S4ACUp9dsog0Kb440sdArb7vgP+++hzG+y9qvpaEt8I0JVG8bCD4RPx4Rrh5nJ5IO3wWQNo9Sz92uQUm6VtPMS5aeN4VTzxBgOcDm4Nsa6KxpxDF5rtJjt8ylmM2Z/QcKyoU/1iKwJqJf/fwgHiR4TPjQQ+7tPa/fuR05Rj+hPdElg4lyXRceDKwOYRHNg==
-X-YMail-OSG: eAsWtG8VM1nDLozeneuZm0xNQO3LZMxIe6GzPV2cdF02eXDwL9oIq61uLH_4pbd
- 4ioHo786ISeL6SpPiCSJAIyi9QigyDLZneSqP8S5XYbVOvBei4jwNpy2WJZuQDWV75CNYOQTDUI0
- Fiz4T1_PjxRXTfV2noiKo7xwC_xs0FGD6GbowQ2CI1OOGPxyfsfaEoN3.p26PBLeaNK_ovbLQaQq
- LQwFiCUPpB3NaXrLDnyEkrcfeU28GfSN3F1t.dn8QjLvBj_j5rGCDtxLG3FrNsIap7mRqmyCczMV
- C6MLd5OykMHQmTG9k0BXlmCCMW5JxobEBaerfnz0oHuR4KkPLfyx4mJ2.zRm05ZAcHtOS4SzPVFF
- WWX4lT6QYIKl3QdncOQrSgxq.7DqPOPPnb8DSm4n55jK4Rbv5eDa4cTY7ykK.o7UWd7UWzEucmiN
- _IzmkFyS49lRAJjfTvXuDhbaW5MWCTxBIivvsr2SYawKMbk6qv9kRn0hONXViLNEzG5NKujWRU50
- TCNt1Wa_flEU53rzjoJm8o8I0z_XOX3PvU9a_YQiC5cQwK_OFJ9M0HMTo1JJ9tzEWZljEDi.2b8_
- oHmbWuGPvcIzeQCZSLsXjOz2qAuMxjOaaU8lF.NaOt_p9IkN99cPdZrnllqrHAzE6sq2.99WL59g
- r3i7frV_inr6milA6MFfb6mvX9zqoaJcnTVP8eQ33vR35AgO2r0FdHwFFORxzE5rVqlu68xEYDgo
- ibLR3MG8DjNz_j8CyXCCab6bXl8YuTal3HT1UUAV9ikyfdg98ZprWSf._u9vbNx4SqzcDsKVaL6Z
- X1arFGFfUZKbKIlRdgAjiX21KgVhsPaQBPCYWoJTX5yiYZEaVFjqRLpQSm_t9E14j86MyJkeA9mr
- 1a1MhjRfQN5w6ThfRXuGPT9y4bkYC5.wr6XkqxIlcXs_Nr5R89EIOmYrvctJvFIJT8pHuqTBrZC5
- NgCPFgd_4X7PAXU4UmILan.6AMvvcBxwrqGaac3UkPlKAJSqnJXvQb6FtF6zx8WIsw.sFvg.FkHq
- Hw2KI1STCOU99lwIRY7dsqF3dtheVGSPUtdVozZLk34HeC0o4O9qEBe_hxpXb0iZZ.ip3svB5iis
- kwOLtpC..4UDgDxh5d3NqrfK5S2btJpyoxpv9b0yQAbwlk2zsJzl7petF3g.iFTCGButQyo7HZ.7
- wUrKPa.WP2qyFTW4wjUWHNXKhQ6veFJV1W0aUSECMv.WSnR59RE0cRdXKHEp4Gro.3cvaMDhZh1h
- JV23h5s5kE7LAhoQ6SJOt_Q--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sun, 4 Aug 2019 10:17:12 +0000
-Received: by smtp410.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 3edc1ebed2e0f0d7708a04d4a3db1850; 
- Sun, 04 Aug 2019 10:17:07 +0000 (UTC)
-Date: Sun, 4 Aug 2019 18:16:58 +0800
-To: Pratik Shinde <pratikshinde320@gmail.com>
-Subject: Re: [PATCH v2] erofs-utils: code for handling incorrect debug level.
-Message-ID: <20190804101644.GA19667@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190804081943.20666-1-pratikshinde320@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 461chH32BTzDqcP
+ for <linux-erofs@lists.ozlabs.org>; Sun,  4 Aug 2019 20:34:04 +1000 (AEST)
+Received: by mail-ed1-x535.google.com with SMTP id v15so76175825eds.9
+ for <linux-erofs@lists.ozlabs.org>; Sun, 04 Aug 2019 03:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=S9kvxJmqqOakOY44UaVWdJhlYMM2omNdtJKg4yk/2Fc=;
+ b=gzNP+YVNREYq/K+LLBXlVAMqTdEriI50OgY7kjFyNZsTzI9Tjv0odU4JGUIznMtuJA
+ nRw+o5SrwZJjBtceyeVOQojyCnB3qfEAce4HYTx/n2gr4VqIzjHtnjqDUyLt28xtPkZj
+ y1NqGvQkREEAQFAm8VTTC7q9Jl7e1kIJ+GCrhmH0N8i+byTdsCepmNUduChwklR8zrKH
+ GzqTg29j4k/X54v8KHa/Pr14uZaXMPnF8e8LlAekE8VWJLWGpyLBNBRKo5CV+/alAphp
+ QyPMz5vOrxAbiTcS9+IROxbp6RnE5c2X3hZtc2TUMvUu09F8XzR4GO9NsacV32YwjYUy
+ KR8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=S9kvxJmqqOakOY44UaVWdJhlYMM2omNdtJKg4yk/2Fc=;
+ b=cFT1RLYm5fy5x3pVclRSAyuqtGe9VApjYNs8IH7ODaDTRcwXpdNmbI78Ab5uKXqn7N
+ QEvxKWuEBwycbIIPsQQa0mxw0Akcns4meO3TT6/SdBLzv6XjW5W3MNLq3pbgI5d2VGer
+ KVN2zPoHMqtAkDf/Jkyqf3OfXpNBSQUGF4L9OfnzjUWvhV3ZxKSEe5MH0hDRgV5rL/Mk
+ u/duQ+XFtTPWUxR62xjP0HrhUTJoyYUHK/ULzixToQUV73WP/EjCelZiaz6eQbO9RnPH
+ 4PM6ohTuiFClTAf4RGjW7s3oZoyKZOzkFNqj1sXNAA+Y5SYWjupxOiqzbQ6GMuqcQe+2
+ fcZQ==
+X-Gm-Message-State: APjAAAUHvZ1WT3PT/qA8AjnBr+fj7+4rXJ+RbsxGgYF83L6jfSG3Xyit
+ Qe+V4Wb+waLov1tSxjm9pGdGbISPVH6mitiOHKQ=
+X-Google-Smtp-Source: APXvYqy2l05YFadueA1QvppdAKfe4xGaxP3nWArs2WJPAgmuR3YREP4urbBxiAaICQ8gV+Lm/15ExpJ0tCPT8YJNixo=
+X-Received: by 2002:aa7:c509:: with SMTP id o9mr91778587edq.164.1564914840271; 
+ Sun, 04 Aug 2019 03:34:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190804081943.20666-1-pratikshinde320@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190804081943.20666-1-pratikshinde320@gmail.com>
+ <20190804101644.GA19667@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20190804101644.GA19667@hsiangkao-HP-ZHAN-66-Pro-G1>
+From: Pratik Shinde <pratikshinde320@gmail.com>
+Date: Sun, 4 Aug 2019 16:03:49 +0530
+Message-ID: <CAGu0czRmt9X7yPmhj=7umo3wPoAt3Z_V2hYGV==kb2eohy2Skw@mail.gmail.com>
+Subject: Re: [PATCH v2] erofs-utils: code for handling incorrect debug level.
+To: Gao Xiang <hsiangkao@aol.com>
+Content-Type: multipart/alternative; boundary="0000000000002880b9058f4821c2"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,132 +73,285 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
 Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Aug 04, 2019 at 01:49:43PM +0530, Pratik Shinde wrote:
-> handling the case of incorrect debug level.
-> Added an enumerated type for supported debug levels.
-> Using 'atoi' in place of 'parse_num_from_str'.
-> 
-> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-> ---
->  include/erofs/print.h | 18 +++++++++++++-----
->  mkfs/main.c           | 19 ++++++++-----------
->  2 files changed, 21 insertions(+), 16 deletions(-)
-> 
-> diff --git a/include/erofs/print.h b/include/erofs/print.h
-> index bc0b8d4..296cbbf 100644
-> --- a/include/erofs/print.h
-> +++ b/include/erofs/print.h
-> @@ -12,6 +12,15 @@
->  #include "config.h"
->  #include <stdio.h>
->  
-> +enum {
-> +	EROFS_MSG_MIN = 0,
-> +	EROFS_ERR     = 0,
-> +	EROFS_WARN    = 2,
-> +	EROFS_INFO    = 3,
-> +	EROFS_DBG     = 7,
-> +	EROFS_MSG_MAX = 9
-> +};
-> +
->  #define FUNC_LINE_FMT "%s() Line[%d] "
->  
->  #ifndef pr_fmt
-> @@ -19,7 +28,7 @@
->  #endif
->  
->  #define erofs_dbg(fmt, ...) do {				\
-> -	if (cfg.c_dbg_lvl >= 7) {				\
-> +	if (cfg.c_dbg_lvl >= EROFS_DBG) {			\
->  		fprintf(stdout,					\
->  			pr_fmt(fmt),				\
->  			__func__,				\
-> @@ -29,7 +38,7 @@
->  } while (0)
->  
->  #define erofs_info(fmt, ...) do {				\
-> -	if (cfg.c_dbg_lvl >= 3) {				\
-> +	if (cfg.c_dbg_lvl >= EROFS_INFO) {			\
->  		fprintf(stdout,					\
->  			pr_fmt(fmt),				\
->  			__func__,				\
-> @@ -40,7 +49,7 @@
->  } while (0)
->  
->  #define erofs_warn(fmt, ...) do {				\
-> -	if (cfg.c_dbg_lvl >= 2) {				\
-> +	if (cfg.c_dbg_lvl >= EROFS_WARN) {			\
->  		fprintf(stdout,					\
->  			pr_fmt(fmt),				\
->  			__func__,				\
-> @@ -51,7 +60,7 @@
->  } while (0)
->  
->  #define erofs_err(fmt, ...) do {				\
-> -	if (cfg.c_dbg_lvl >= 0) {				\
-> +	if (cfg.c_dbg_lvl >= EROFS_ERR) {			\
->  		fprintf(stderr,					\
->  			"Err: " pr_fmt(fmt),			\
->  			__func__,				\
-> @@ -64,4 +73,3 @@
->  
->  
->  #endif
-> -
-> diff --git a/mkfs/main.c b/mkfs/main.c
-> index fdb65fd..d915d00 100644
-> --- a/mkfs/main.c
-> +++ b/mkfs/main.c
-> @@ -30,16 +30,6 @@ static void usage(void)
->  	fprintf(stderr, " -EX[,...] X=extended options\n");
->  }
->  
-> -u64 parse_num_from_str(const char *str)
-> -{
-> -	u64 num      = 0;
-> -	char *endptr = NULL;
-> -
-> -	num = strtoull(str, &endptr, 10);
-> -	BUG_ON(num == ULLONG_MAX);
-> -	return num;
-> -}
-> -
->  static int parse_extended_opts(const char *opts)
->  {
->  #define MATCH_EXTENTED_OPT(opt, token, keylen) \
-> @@ -108,7 +98,14 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
->  			break;
->  
->  		case 'd':
-> -			cfg.c_dbg_lvl = parse_num_from_str(optarg);
-> +			cfg.c_dbg_lvl = atoi(optarg);
-> +			if (cfg.c_dbg_lvl < EROFS_MSG_MIN
-> +			    || cfg.c_dbg_lvl > EROFS_MSG_MAX) {
-> +				fprintf(stderr,
-> +					"invalid debug level %d\n",
-> +					cfg.c_dbg_lvl);
+--0000000000002880b9058f4821c2
+Content-Type: text/plain; charset="UTF-8"
 
-How about using erofs_err as my previous patch attached?
-I wonder if there are some specfic reasons to directly use fprintf instead?
+Hi Gao,
 
-I will apply it with this minor fixup (no need to resend again), if you have
-other considerations, reply me in this thread, thanks. :)
+I used fprintf here because we are printing this error message in case of
+invalid 'cfg.c_dbg_lvl'. Hence I thought
+we cannot rely on erofs_err().
+e.g
+$ mkfs.erofs -d -1 <erofs image> <directory>
+In this case debug level is '-1' which is invalid.If we try to print the
+error message using erofs_err() with c_dbg_lvl = -1,
+it will not print anything.
+While applying the minor fixup, just reset the c_dbg_lvl to 0 , so that
+erofs_err() will be able to log the error message.
 
-Thanks,
-Gao Xiang
+--Pratik.
 
-> +				return -EINVAL;
-> +			}
->  			break;
->  
->  		case 'E':
-> -- 
-> 2.9.3
-> 
+
+On Sun, Aug 4, 2019 at 3:47 PM Gao Xiang <hsiangkao@aol.com> wrote:
+
+> On Sun, Aug 04, 2019 at 01:49:43PM +0530, Pratik Shinde wrote:
+> > handling the case of incorrect debug level.
+> > Added an enumerated type for supported debug levels.
+> > Using 'atoi' in place of 'parse_num_from_str'.
+> >
+> > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> > ---
+> >  include/erofs/print.h | 18 +++++++++++++-----
+> >  mkfs/main.c           | 19 ++++++++-----------
+> >  2 files changed, 21 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/include/erofs/print.h b/include/erofs/print.h
+> > index bc0b8d4..296cbbf 100644
+> > --- a/include/erofs/print.h
+> > +++ b/include/erofs/print.h
+> > @@ -12,6 +12,15 @@
+> >  #include "config.h"
+> >  #include <stdio.h>
+> >
+> > +enum {
+> > +     EROFS_MSG_MIN = 0,
+> > +     EROFS_ERR     = 0,
+> > +     EROFS_WARN    = 2,
+> > +     EROFS_INFO    = 3,
+> > +     EROFS_DBG     = 7,
+> > +     EROFS_MSG_MAX = 9
+> > +};
+> > +
+> >  #define FUNC_LINE_FMT "%s() Line[%d] "
+> >
+> >  #ifndef pr_fmt
+> > @@ -19,7 +28,7 @@
+> >  #endif
+> >
+> >  #define erofs_dbg(fmt, ...) do {                             \
+> > -     if (cfg.c_dbg_lvl >= 7) {                               \
+> > +     if (cfg.c_dbg_lvl >= EROFS_DBG) {                       \
+> >               fprintf(stdout,                                 \
+> >                       pr_fmt(fmt),                            \
+> >                       __func__,                               \
+> > @@ -29,7 +38,7 @@
+> >  } while (0)
+> >
+> >  #define erofs_info(fmt, ...) do {                            \
+> > -     if (cfg.c_dbg_lvl >= 3) {                               \
+> > +     if (cfg.c_dbg_lvl >= EROFS_INFO) {                      \
+> >               fprintf(stdout,                                 \
+> >                       pr_fmt(fmt),                            \
+> >                       __func__,                               \
+> > @@ -40,7 +49,7 @@
+> >  } while (0)
+> >
+> >  #define erofs_warn(fmt, ...) do {                            \
+> > -     if (cfg.c_dbg_lvl >= 2) {                               \
+> > +     if (cfg.c_dbg_lvl >= EROFS_WARN) {                      \
+> >               fprintf(stdout,                                 \
+> >                       pr_fmt(fmt),                            \
+> >                       __func__,                               \
+> > @@ -51,7 +60,7 @@
+> >  } while (0)
+> >
+> >  #define erofs_err(fmt, ...) do {                             \
+> > -     if (cfg.c_dbg_lvl >= 0) {                               \
+> > +     if (cfg.c_dbg_lvl >= EROFS_ERR) {                       \
+> >               fprintf(stderr,                                 \
+> >                       "Err: " pr_fmt(fmt),                    \
+> >                       __func__,                               \
+> > @@ -64,4 +73,3 @@
+> >
+> >
+> >  #endif
+> > -
+> > diff --git a/mkfs/main.c b/mkfs/main.c
+> > index fdb65fd..d915d00 100644
+> > --- a/mkfs/main.c
+> > +++ b/mkfs/main.c
+> > @@ -30,16 +30,6 @@ static void usage(void)
+> >       fprintf(stderr, " -EX[,...] X=extended options\n");
+> >  }
+> >
+> > -u64 parse_num_from_str(const char *str)
+> > -{
+> > -     u64 num      = 0;
+> > -     char *endptr = NULL;
+> > -
+> > -     num = strtoull(str, &endptr, 10);
+> > -     BUG_ON(num == ULLONG_MAX);
+> > -     return num;
+> > -}
+> > -
+> >  static int parse_extended_opts(const char *opts)
+> >  {
+> >  #define MATCH_EXTENTED_OPT(opt, token, keylen) \
+> > @@ -108,7 +98,14 @@ static int mkfs_parse_options_cfg(int argc, char
+> *argv[])
+> >                       break;
+> >
+> >               case 'd':
+> > -                     cfg.c_dbg_lvl = parse_num_from_str(optarg);
+> > +                     cfg.c_dbg_lvl = atoi(optarg);
+> > +                     if (cfg.c_dbg_lvl < EROFS_MSG_MIN
+> > +                         || cfg.c_dbg_lvl > EROFS_MSG_MAX) {
+> > +                             fprintf(stderr,
+> > +                                     "invalid debug level %d\n",
+> > +                                     cfg.c_dbg_lvl);
+>
+> How about using erofs_err as my previous patch attached?
+> I wonder if there are some specfic reasons to directly use fprintf instead?
+>
+> I will apply it with this minor fixup (no need to resend again), if you
+> have
+> other considerations, reply me in this thread, thanks. :)
+>
+> Thanks,
+> Gao Xiang
+>
+> > +                             return -EINVAL;
+> > +                     }
+> >                       break;
+> >
+> >               case 'E':
+> > --
+> > 2.9.3
+> >
+>
+
+--0000000000002880b9058f4821c2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSBHYW8sPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIHVz
+ZWQgZnByaW50ZiBoZXJlIGJlY2F1c2Ugd2UgYXJlIHByaW50aW5nIHRoaXMgZXJyb3IgbWVzc2Fn
+ZSBpbiBjYXNlIG9mIGludmFsaWQgJiMzOTtjZmcuY19kYmdfbHZsJiMzOTsuIEhlbmNlIEkgdGhv
+dWdodDwvZGl2PjxkaXY+d2UgY2Fubm90IHJlbHkgb24gZXJvZnNfZXJyKCkuPC9kaXY+PGRpdj5l
+Lmc8L2Rpdj48ZGl2PiQgbWtmcy5lcm9mcyAtZCAtMSAmbHQ7ZXJvZnMgaW1hZ2UmZ3Q7ICZsdDtk
+aXJlY3RvcnkmZ3Q7PC9kaXY+PGRpdj5JbiB0aGlzIGNhc2UgZGVidWcgbGV2ZWwgaXMgJiMzOTst
+MSYjMzk7IHdoaWNoIGlzIGludmFsaWQuSWYgd2UgdHJ5IHRvIHByaW50IHRoZSBlcnJvciBtZXNz
+YWdlIHVzaW5nIGVyb2ZzX2VycigpIHdpdGggDQpjX2RiZ19sdmwgPSAtMSw8L2Rpdj48ZGl2Pml0
+IHdpbGwgbm90IHByaW50IGFueXRoaW5nLjwvZGl2PjxkaXY+V2hpbGUgYXBwbHlpbmcgdGhlIG1p
+bm9yIGZpeHVwLCBqdXN0IHJlc2V0IHRoZSANCmNfZGJnX2x2bCB0byAwICwgc28gdGhhdCBlcm9m
+c19lcnIoKSB3aWxsIGJlIGFibGUgdG8gbG9nIHRoZSBlcnJvciBtZXNzYWdlLjwvZGl2PjxkaXY+
+PGJyPjwvZGl2PjxkaXY+LS1QcmF0aWsuPC9kaXY+PGRpdj48YnI+PC9kaXY+PC9kaXY+PGJyPjxk
+aXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+
+T24gU3VuLCBBdWcgNCwgMjAxOSBhdCAzOjQ3IFBNIEdhbyBYaWFuZyAmbHQ7PGEgaHJlZj0ibWFp
+bHRvOmhzaWFuZ2thb0Bhb2wuY29tIj5oc2lhbmdrYW9AYW9sLmNvbTwvYT4mZ3Q7IHdyb3RlOjxi
+cj48L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4
+IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFk
+ZGluZy1sZWZ0OjFleCI+T24gU3VuLCBBdWcgMDQsIDIwMTkgYXQgMDE6NDk6NDNQTSArMDUzMCwg
+UHJhdGlrIFNoaW5kZSB3cm90ZTo8YnI+DQomZ3Q7IGhhbmRsaW5nIHRoZSBjYXNlIG9mIGluY29y
+cmVjdCBkZWJ1ZyBsZXZlbC48YnI+DQomZ3Q7IEFkZGVkIGFuIGVudW1lcmF0ZWQgdHlwZSBmb3Ig
+c3VwcG9ydGVkIGRlYnVnIGxldmVscy48YnI+DQomZ3Q7IFVzaW5nICYjMzk7YXRvaSYjMzk7IGlu
+IHBsYWNlIG9mICYjMzk7cGFyc2VfbnVtX2Zyb21fc3RyJiMzOTsuPGJyPg0KJmd0OyA8YnI+DQom
+Z3Q7IFNpZ25lZC1vZmYtYnk6IFByYXRpayBTaGluZGUgJmx0OzxhIGhyZWY9Im1haWx0bzpwcmF0
+aWtzaGluZGUzMjBAZ21haWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+cHJhdGlrc2hpbmRlMzIwQGdt
+YWlsLmNvbTwvYT4mZ3Q7PGJyPg0KJmd0OyAtLS08YnI+DQomZ3Q7wqAgaW5jbHVkZS9lcm9mcy9w
+cmludC5oIHwgMTggKysrKysrKysrKysrKy0tLS0tPGJyPg0KJmd0O8KgIG1rZnMvbWFpbi5jwqAg
+wqAgwqAgwqAgwqAgwqB8IDE5ICsrKysrKysrLS0tLS0tLS0tLS08YnI+DQomZ3Q7wqAgMiBmaWxl
+cyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSk8YnI+DQomZ3Q7IDxi
+cj4NCiZndDsgZGlmZiAtLWdpdCBhL2luY2x1ZGUvZXJvZnMvcHJpbnQuaCBiL2luY2x1ZGUvZXJv
+ZnMvcHJpbnQuaDxicj4NCiZndDsgaW5kZXggYmMwYjhkNC4uMjk2Y2JiZiAxMDA2NDQ8YnI+DQom
+Z3Q7IC0tLSBhL2luY2x1ZGUvZXJvZnMvcHJpbnQuaDxicj4NCiZndDsgKysrIGIvaW5jbHVkZS9l
+cm9mcy9wcmludC5oPGJyPg0KJmd0OyBAQCAtMTIsNiArMTIsMTUgQEA8YnI+DQomZ3Q7wqAgI2lu
+Y2x1ZGUgJnF1b3Q7Y29uZmlnLmgmcXVvdDs8YnI+DQomZ3Q7wqAgI2luY2x1ZGUgJmx0O3N0ZGlv
+LmgmZ3Q7PGJyPg0KJmd0O8KgIDxicj4NCiZndDsgK2VudW0gezxicj4NCiZndDsgK8KgIMKgIMKg
+RVJPRlNfTVNHX01JTiA9IDAsPGJyPg0KJmd0OyArwqAgwqAgwqBFUk9GU19FUlLCoCDCoCDCoD0g
+MCw8YnI+DQomZ3Q7ICvCoCDCoCDCoEVST0ZTX1dBUk7CoCDCoCA9IDIsPGJyPg0KJmd0OyArwqAg
+wqAgwqBFUk9GU19JTkZPwqAgwqAgPSAzLDxicj4NCiZndDsgK8KgIMKgIMKgRVJPRlNfREJHwqAg
+wqAgwqA9IDcsPGJyPg0KJmd0OyArwqAgwqAgwqBFUk9GU19NU0dfTUFYID0gOTxicj4NCiZndDsg
+K307PGJyPg0KJmd0OyArPGJyPg0KJmd0O8KgICNkZWZpbmUgRlVOQ19MSU5FX0ZNVCAmcXVvdDsl
+cygpIExpbmVbJWRdICZxdW90Ozxicj4NCiZndDvCoCA8YnI+DQomZ3Q7wqAgI2lmbmRlZiBwcl9m
+bXQ8YnI+DQomZ3Q7IEBAIC0xOSw3ICsyOCw3IEBAPGJyPg0KJmd0O8KgICNlbmRpZjxicj4NCiZn
+dDvCoCA8YnI+DQomZ3Q7wqAgI2RlZmluZSBlcm9mc19kYmcoZm10LCAuLi4pIGRvIHvCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoFw8YnI+DQomZ3Q7IC3CoCDCoCDC
+oGlmIChjZmcuY19kYmdfbHZsICZndDs9IDcpIHvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoFw8YnI+DQomZ3Q7ICvCoCDCoCDCoGlmIChjZmcuY19kYmdfbHZs
+ICZndDs9IEVST0ZTX0RCRykge8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgXDxi
+cj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGZwcmludGYoc3Rkb3V0LMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgXDxicj4NCiZndDvCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHByX2ZtdChmbXQpLMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIFw8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqBfX2Z1bmNfXyzCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoFw8YnI+DQomZ3Q7IEBAIC0yOSw3ICszOCw3IEBAPGJyPg0KJmd0O8KgIH0g
+d2hpbGUgKDApPGJyPg0KJmd0O8KgIDxicj4NCiZndDvCoCAjZGVmaW5lIGVyb2ZzX2luZm8oZm10
+LCAuLi4pIGRvIHvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBcPGJy
+Pg0KJmd0OyAtwqAgwqAgwqBpZiAoY2ZnLmNfZGJnX2x2bCAmZ3Q7PSAzKSB7wqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBcPGJyPg0KJmd0OyArwqAgwqAgwqBp
+ZiAoY2ZnLmNfZGJnX2x2bCAmZ3Q7PSBFUk9GU19JTkZPKSB7wqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgXDxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGZwcmludGYoc3Rk
+b3V0LMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgXDxi
+cj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHByX2ZtdChmbXQpLMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIFw8YnI+DQomZ3Q7wqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBfX2Z1bmNfXyzCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoFw8YnI+DQomZ3Q7IEBAIC00MCw3ICs0OSw3IEBA
+PGJyPg0KJmd0O8KgIH0gd2hpbGUgKDApPGJyPg0KJmd0O8KgIDxicj4NCiZndDvCoCAjZGVmaW5l
+IGVyb2ZzX3dhcm4oZm10LCAuLi4pIGRvIHvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCBcPGJyPg0KJmd0OyAtwqAgwqAgwqBpZiAoY2ZnLmNfZGJnX2x2bCAmZ3Q7PSAy
+KSB7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBcPGJyPg0K
+Jmd0OyArwqAgwqAgwqBpZiAoY2ZnLmNfZGJnX2x2bCAmZ3Q7PSBFUk9GU19XQVJOKSB7wqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgXDxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoGZwcmludGYoc3Rkb3V0LMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgXDxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oHByX2ZtdChmbXQpLMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIFw8
+YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBfX2Z1bmNfXyzCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoFw8YnI+DQomZ3Q7IEBA
+IC01MSw3ICs2MCw3IEBAPGJyPg0KJmd0O8KgIH0gd2hpbGUgKDApPGJyPg0KJmd0O8KgIDxicj4N
+CiZndDvCoCAjZGVmaW5lIGVyb2ZzX2VycihmbXQsIC4uLikgZG8ge8KgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgXDxicj4NCiZndDsgLcKgIMKgIMKgaWYgKGNmZy5j
+X2RiZ19sdmwgJmd0Oz0gMCkge8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgXDxicj4NCiZndDsgK8KgIMKgIMKgaWYgKGNmZy5jX2RiZ19sdmwgJmd0Oz0gRVJP
+RlNfRVJSKSB7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBcPGJyPg0KJmd0O8Kg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgZnByaW50ZihzdGRlcnIswqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBcPGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgJnF1b3Q7RXJyOiAmcXVvdDsgcHJfZm10KGZtdCkswqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgXDxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoF9fZnVuY19fLMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgXDxicj4NCiZndDsgQEAgLTY0LDQgKzczLDMgQEA8YnI+DQomZ3Q7wqAgPGJyPg0K
+Jmd0O8KgIDxicj4NCiZndDvCoCAjZW5kaWY8YnI+DQomZ3Q7IC08YnI+DQomZ3Q7IGRpZmYgLS1n
+aXQgYS9ta2ZzL21haW4uYyBiL21rZnMvbWFpbi5jPGJyPg0KJmd0OyBpbmRleCBmZGI2NWZkLi5k
+OTE1ZDAwIDEwMDY0NDxicj4NCiZndDsgLS0tIGEvbWtmcy9tYWluLmM8YnI+DQomZ3Q7ICsrKyBi
+L21rZnMvbWFpbi5jPGJyPg0KJmd0OyBAQCAtMzAsMTYgKzMwLDYgQEAgc3RhdGljIHZvaWQgdXNh
+Z2Uodm9pZCk8YnI+DQomZ3Q7wqAgwqAgwqAgwqBmcHJpbnRmKHN0ZGVyciwgJnF1b3Q7IC1FWFss
+Li4uXSBYPWV4dGVuZGVkIG9wdGlvbnNcbiZxdW90Oyk7PGJyPg0KJmd0O8KgIH08YnI+DQomZ3Q7
+wqAgPGJyPg0KJmd0OyAtdTY0IHBhcnNlX251bV9mcm9tX3N0cihjb25zdCBjaGFyICpzdHIpPGJy
+Pg0KJmd0OyAtezxicj4NCiZndDsgLcKgIMKgIMKgdTY0IG51bcKgIMKgIMKgID0gMDs8YnI+DQom
+Z3Q7IC3CoCDCoCDCoGNoYXIgKmVuZHB0ciA9IE5VTEw7PGJyPg0KJmd0OyAtPGJyPg0KJmd0OyAt
+wqAgwqAgwqBudW0gPSBzdHJ0b3VsbChzdHIsICZhbXA7ZW5kcHRyLCAxMCk7PGJyPg0KJmd0OyAt
+wqAgwqAgwqBCVUdfT04obnVtID09IFVMTE9OR19NQVgpOzxicj4NCiZndDsgLcKgIMKgIMKgcmV0
+dXJuIG51bTs8YnI+DQomZ3Q7IC19PGJyPg0KJmd0OyAtPGJyPg0KJmd0O8KgIHN0YXRpYyBpbnQg
+cGFyc2VfZXh0ZW5kZWRfb3B0cyhjb25zdCBjaGFyICpvcHRzKTxicj4NCiZndDvCoCB7PGJyPg0K
+Jmd0O8KgICNkZWZpbmUgTUFUQ0hfRVhURU5URURfT1BUKG9wdCwgdG9rZW4sIGtleWxlbikgXDxi
+cj4NCiZndDsgQEAgLTEwOCw3ICs5OCwxNCBAQCBzdGF0aWMgaW50IG1rZnNfcGFyc2Vfb3B0aW9u
+c19jZmcoaW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSk8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBicmVhazs8YnI+DQomZ3Q7wqAgPGJyPg0KJmd0O8KgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgY2FzZSAmIzM5O2QmIzM5Ozo8YnI+DQomZ3Q7IC3CoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoGNmZy5jX2RiZ19sdmwgPSBwYXJzZV9udW1fZnJvbV9zdHIob3B0YXJn
+KTs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNmZy5jX2RiZ19s
+dmwgPSBhdG9pKG9wdGFyZyk7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqBpZiAoY2ZnLmNfZGJnX2x2bCAmbHQ7IEVST0ZTX01TR19NSU48YnI+DQomZ3Q7ICvCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHx8IGNmZy5jX2RiZ19sdmwgJmd0OyBF
+Uk9GU19NU0dfTUFYKSB7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqBmcHJpbnRmKHN0ZGVyciw8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCZxdW90O2ludmFsaWQgZGVi
+dWcgbGV2ZWwgJWRcbiZxdW90Oyw8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNmZy5jX2RiZ19sdmwpOzxicj4NCjxicj4N
+CkhvdyBhYm91dCB1c2luZyBlcm9mc19lcnIgYXMgbXkgcHJldmlvdXMgcGF0Y2ggYXR0YWNoZWQ/
+PGJyPg0KSSB3b25kZXIgaWYgdGhlcmUgYXJlIHNvbWUgc3BlY2ZpYyByZWFzb25zIHRvIGRpcmVj
+dGx5IHVzZSBmcHJpbnRmIGluc3RlYWQ/PGJyPg0KPGJyPg0KSSB3aWxsIGFwcGx5IGl0IHdpdGgg
+dGhpcyBtaW5vciBmaXh1cCAobm8gbmVlZCB0byByZXNlbmQgYWdhaW4pLCBpZiB5b3UgaGF2ZTxi
+cj4NCm90aGVyIGNvbnNpZGVyYXRpb25zLCByZXBseSBtZSBpbiB0aGlzIHRocmVhZCwgdGhhbmtz
+LiA6KTxicj4NCjxicj4NClRoYW5rcyw8YnI+DQpHYW8gWGlhbmc8YnI+DQo8YnI+DQomZ3Q7ICvC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHJldHVybiAtRUlOVkFM
+Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTxicj4NCiZndDvC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGJyZWFrOzxicj4NCiZndDvCoCA8YnI+
+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXNlICYjMzk7RSYjMzk7Ojxicj4NCiZndDsg
+LS0gPGJyPg0KJmd0OyAyLjkuMzxicj4NCiZndDsgPGJyPg0KPC9ibG9ja3F1b3RlPjwvZGl2Pg0K
+--0000000000002880b9058f4821c2--
