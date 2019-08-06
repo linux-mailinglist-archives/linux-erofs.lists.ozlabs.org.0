@@ -2,74 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 521D683718
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 18:36:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B54083799
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 19:03:32 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4630cv6G0PzDr27
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 02:35:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4631Dd3HGfzDr3S
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 03:03:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1565111009;
+	bh=7byVa89Wjxqr48e4qprl5BHB7qRvaU0nhL2Ugp8R8IM=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Sab18NXBCr/10kN+Z/qV+w6tg/xu5DyLwDgITAptxpwUAw5IkDTK39zcXoHQGaZBA
+	 LcZRgZ9w+WEtIABRsP4UDdRCz5t2BTW4Kx84UV5BQWZhEZGOxQWwW21uGovImCIVRL
+	 vdlOy9UpsYBqmjbD+TUfR6kFKZf0PgwpZQApyOon7NfpkPFM+QO5nTgUaybR9uLrvh
+	 qcpgYQQiez94ls0Se9c3tqlsOttFK6SDiaykdUkPJ1vGw0LKLQa+S0EkfUeP+etyYK
+	 HqEBIPquxEEIxRny3mXy4jPj63s9Ds0gzEV2Y6k3PXKabVAInn8BZ2bUAunuXyldXh
+	 yN1EzczJ111TA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmx.com
- (client-ip=212.227.15.18; helo=mout.gmx.net; envelope-from=hsiangkao@gmx.com;
- receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=77.238.176.99; helo=sonic301-22.consmr.mail.ir2.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=gmx.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- secure) header.d=gmx.net header.i=@gmx.net header.b="T0FfVdbX"; 
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.b="E24UfZNd"; 
  dkim-atps=neutral
-X-Greylist: delayed 323 seconds by postgrey-1.36 at bilbo;
- Wed, 07 Aug 2019 02:35:49 AEST
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from sonic301-22.consmr.mail.ir2.yahoo.com
+ (sonic301-22.consmr.mail.ir2.yahoo.com [77.238.176.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4630cj5wJFzDqrW
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 02:35:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=badeba3b8450; t=1565109343;
- bh=OKJ6Bjq0pdODNE0rerFhIjfk8FpULoo7FFZuga/aehU=;
- h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=T0FfVdbXT1rimwmpMxCaNbzDrAAQSsGOws0S+g7KwDbNlNUIGVvG0+tksc0D9icOH
- s+i+3nvb7Q1A0WlfhxzV3QsZH6prf+lQKn8r0hcHdrvqnFFA4uO6TlPUl6DXXUmaPr
- 3/lcJGp0hoU3pPaRKkd35+fPnwdgOC8mD/aXZbo4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([60.177.33.208]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MWRVh-1hokiU03pL-00Xpwa; Tue, 06 Aug 2019 18:29:57 +0200
-Date: Wed, 7 Aug 2019 00:29:48 +0800
-From: Gao Xiang <hsiangkao@gmx.com>
-To: shenmeng999@126.com
-Subject: Re: [PATCH] erofs-utils: get block device size correctly
-Message-ID: <20190806162947.GA28162@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <1565105005-21709-1-git-send-email-shenmeng999@126.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4631DW5YSQzDr11
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 03:03:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1565110994; bh=OGfEqfx+PU4InM0VSbOYRNhJFzEA/rXojevv3mMEsbI=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=E24UfZNd5y/93bIO8AIK1WRL5l3AvfcVQd++GnimXLA4gR252vHsJi8k20+oURzT9w3wS92yBC/DDjRFRS8YCdg0tAJAta6BEqaj25S18QcJzGxgwFJ8x/zEn6TGVWcErkq66KW4SS109tfLATR+tTPZzzAjN47ErRJyhPQjt8WrCTp1u2ILIXcPYMhf46fJksOYnJ9Mwpz62UYBK27V2PJRIqsU+Xyi50JGMntJ95v6ct6VF0xAUyT9e6k5KsABHuOsvTCdR78uqQLZVY3b7qL/awMnptKyM0TIaZBRKJMtwO4uhyAK2z7G1WcS2pu1y+gRANlCTFItOYh4bkgeBg==
+X-YMail-OSG: sl1gkSwVM1mlHDEiCdaH5dj7rsgViEgTQ3a6APzIjZvHoF1PNh8AdYZocdONKXb
+ DehHMC3hV8mbP2YRe6_SnmdQQtkOXiuatzZxsjswEf.dHL9RDFe52j3Ea.QU29gtRweDu7id2oKj
+ hXXXElssWDQgY.XnofRaJm.RSJ2sFha5tiCVB8Nn_WrrGaZdX_Jqp2U8IxRQwBYaoxrXWp5J5tcE
+ xYrjyrhQD0exM2ILMUpC4YQUPCeJYkdmTHhUC5vrgeT9Vzufc2V3.5GQCz84d7tugwqfGLUB3sxs
+ s95K0Rn81hYEjC0wfFNwDC4H_VX_HUp4UJqFcwiaGkIAg8HRdaAUB.k6rF46KxvOlobREg3nGUsY
+ mBRyWi0gPKRhJdk946XQ4TbieDTjNwUUmORU7PKqkefgBoBEJWSgD2VySrTya1ZAVZoJr6EE8pXT
+ gBUQ87pm4doEnbtWwfM9XLJhaouK2jKB6fhWp7NxDiYOIQNer8_my3FtsUbtxS584m462LYqEJ6f
+ 4KrKgQPr534DA.p5fhxf6QbVPIppQMsZ5WPigBeajM9KmLbcmaMSQue2XaxHN4jwym_L6Owdman3
+ NRlXrxqOOxfQl5ENsEe7AcvIOjXWQ1LD0BEkmB61nUwa2zh5jDnbCn1HM4LIssrWO72z_OjydP3K
+ vC1ARwrEbZUllkReaxbmnk7PEQY2bd1r2Ya0NcSQ9Fem5pfrNGVQy5QfdCOcPbbWdHt4GiDKQyn0
+ X3grpvJkl9QTKL4oP.G6D1suJaS2OLkFs8rKEKP4Xell0qSBC10f55SY1bQPzzLr7Mr6cTnsTxr3
+ VkIz3d8TnFi8bVFDOtazRIsYNigMp3ohRsTf9FwSDRK7SblzKBF8bCoFbjDwbBPrEQLHwjeFFjee
+ 0ljSMjbIwfO_7RJq1oHK3NFTYo5_2n23HDeLukA2E2xkYQOOgtz_s4kSq0kqbtTZX9vkSFHRbV94
+ uKQCtyV_ZEjLuyU.MCs2FhejKDQxoIJGUFYbFNMU9mXVX.iP_AJjv.1n.9s8H5dgk2HaeXlBmbQ0
+ MuzYGTPsK6NIkofKI6bIxSVF1BfLyKjVBOlO1cQJ2TBGcLcyFrao6jAMC4iMOa9oTR5JlxZGh5yx
+ k870EeUkAb1Hh3smqInaGEMA6u.FQErg037R3OTAJt15QCoKSFboc2d1EKe4Ywnxqk3Pq1CS8EZf
+ hC7Thr59WMZjgZUzlmngacmH5IgHTpqRD_BGXn50aYE_bLCy8DRrm_fIMDqDQMR43gG4YiYf01Vc
+ k68WnBIHCfPMWRieLByE9LBAWCw--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic301.consmr.mail.ir2.yahoo.com with HTTP; Tue, 6 Aug 2019 17:03:14 +0000
+Received: by smtp406.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID af769fc35dd430e77b6ac1739d1acdf0; 
+ Tue, 06 Aug 2019 17:03:11 +0000 (UTC)
+Date: Wed, 7 Aug 2019 01:02:58 +0800
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH RFC] erofs: move erofs out of staging
+Message-ID: <20190806170252.GB29093@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190806094925.228906-1-gaoxiang25@huawei.com>
+ <20190807013423.02fd6990@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565105005-21709-1-git-send-email-shenmeng999@126.com>
+In-Reply-To: <20190807013423.02fd6990@canb.auug.org.au>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Provags-ID: V03:K1:6xFMaKTK48cHTOA8IQNfD5tlfBFi5o8Wgt1zWaJ2CTeGlMOt3t1
- g9yE7znIN15AC+Xqw+8hQCoywRr03OAqQX7N07KbEWlvHBEZqY4a6c0Gps5GdfW4uY0QI6o
- tfp6Zdu1gJ7ZkGcNXiDyhJRC4GdzU7BQkNHqSnRkInR3eH/gZRls5YNBVLOTlc+rwFosDoI
- oH3MLE7KclWhVQr8Tp3XA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OCodbY6eXeY=:cmA11PuZKM3NwWf+rBdxc9
- OSVTZqPj4ylv0KL6Pwgr/2tfSJH0r/X0F/hwfq/yjjUgabPX08OiI6uWzV90AZNJIgDfj0Em5
- YYmMiSruPXzYyEalYwEUWYvKGiEYSuGJTPEOggvYqXvPNp+IzByuOYgaUD2toicc8mus2Ah90
- weWHQp5b4DqnH5F8SzorKFm0JUXtoyRBzWjIwAZa5i0es7qWJafW0COxi7HcsNJ+9ntcWzSnT
- gyIUZXiZlJY0+AsVAfMdcHqF35dvxG85sdFrqXLrBSbLo9794C3gk7+UmIge7g9FhNS8d5ypy
- h7LIi5IOZ3zwo959a5Czts3/3V301aFYnizSez5sEP0frciTM60MPTi6Mk68w1fz1bgDZHcpv
- LHPew6uuUEfLys/I6YZfiGkThjuFX5UkXYnYG/q0DWNByFPtYi6vy7rB2hKqY+SIiYCD6Wb8n
- DVmKNY34+saxfBg+sIGnNHjVgqEEK/uh+pj3cd+4X1rQ0nsYM7h2R84ezuCQC4lmW2uW9pwFg
- 8oDIxJmVvZjHU9wXvYyH0QVh8JZhf+AjvUNYkI6ra12ZnGD+2o1ytdR/gbXQ0XKx6ymkQUyTb
- R6CtsYeB8OcRcR0ycXvXjKdbTFg478y4ER7LhbFys6f9rnIV4VfGkcbHxvF78/xM8Bl1/CIvU
- 6N+k/EAs2aG4xg55V7XjNoYY88fad1raH340YVflBxDlYuh7locmPs3tvG39nWHg/2ZpB1nUM
- +UIq+R7aVp3GMBsnOMh98CWWlILrWemf/2J3piKnNeeTqbJogReD2UjCMi1gNORT4j57uswlO
- CM5jDEVQHEgK4685R+2CXHnQyU87uvBDt9TOkYuUjprSD+4Hbq/lrc5UI/hv1Rm0IexsqK4Bj
- 5bKbBCVDXiTWPcPL0Hk8jFJVCgyNgZniFu6bt76yvk1dUj9XuOhioh5/hM3vvG+KKtP4LEJP4
- ABiV0lj60lyE76m7hAGPW6sVGOoO6AqyJ27a1sY1FsJT0HUScpbJXFBO/H4sl2MzKGSCeyVem
- /A6P1fAW31b7hF7Zi4+qFb5qtwQRcr+dYyhp5qLaBrH7QnDeAbmWwlVTtwJ2VJDAzUAobqCpt
- iTNLQr2snA/oJ9EOkzwt8jGVxef1lKIbkLjhPlE+aI56llVgAB+5kVl/Q==
-Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,69 +85,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: devel@driverdev.osuosl.org, "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
+ Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
+ David Sterba <dsterba@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+ Christoph Hellwig <hch@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Miao Xie <miaoxie@huawei.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, linux-erofs@lists.ozlabs.org,
+ Andrew Morton <akpm@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi shenmeng,
+Hi Stephen,
 
-On Tue, Aug 06, 2019 at 11:23:25PM +0800, shenmeng999@126.com wrote:
-> From: shenmeng996 <shenmeng999@126.com>
->
-> fstat return block device's size of zero.
-> use ioctl to get block device's size.
->
-> Signed-off-by: shenmeng996 <shenmeng999@126.com>
-> ---
->  lib/io.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/io.c b/lib/io.c
-> index 93328d3..ae3ac37 100644
-> --- a/lib/io.c
-> +++ b/lib/io.c
-> @@ -9,6 +9,8 @@
->  #define _LARGEFILE64_SOURCE
->  #define _GNU_SOURCE
->  #include <sys/stat.h>
-> +#include <sys/ioctl.h>
-> +#include <linux/fs.h>
->  #include "erofs/io.h"
->  #ifdef HAVE_LINUX_FALLOC_H
->  #include <linux/falloc.h>
-> @@ -49,7 +51,12 @@ int dev_open(const char *dev)
->
->  	switch (st.st_mode & S_IFMT) {
->  	case S_IFBLK:
-> -		erofs_devsz =3D st.st_size;
-> +		ret =3D ioctl(fd, BLKGETSIZE64, &erofs_devsz);
+On Wed, Aug 07, 2019 at 01:34:23AM +1000, Stephen Rothwell wrote:
+> Hi Gao,
+> 
+> One small suggestion: just remove the file names from the comments at
+> the top of the files rather than change them to reflect that they have
+> moved.  We can usually tell the name of a file by its name :-)
 
-Thanks for your patch :)
+Thanks for your reply :)
 
-I got some reports of this issue months ago, but I'm afraid
-that we should support the legacy BLKGETSIZE approach as well
-as what other filesystem userspace tools do...
+For this part, EROFS initially followed what ext4, f2fs, even fsverity do,
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/ext4/namei.c
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/f2fs/namei.c
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/tree/fs/verity/verify.c?h=fsverity
 
-Could you kindly take some time to make a full patch of it? :)
-
-BTW, from the point of view of use, it's better to generate
-a image file indirectly and `dd' to the real device rather than
-directly use block device as the output since erofs-utils
-will do unaligned read/write even overwrite, which isn't
-very friendly to flash-based devices...
+I think I can remove these filenames as you suggested in the next version.
+I thought these are some common practice and there is no obvious right or
+wrong of this kind of stuffs.
 
 Thanks,
 Gao Xiang
 
-> +		if (ret) {
-> +			erofs_err("failed to ioctl(%s).", dev);
-> +			close(fd);
-> +			return -errno;
-> +		}
->  		break;
->  	case S_IFREG:
->  		ret =3D ftruncate(fd, 0);
-> --
-> 1.8.3.1
->
+
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
