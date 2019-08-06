@@ -1,78 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 521D683718
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 18:36:02 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEBE88362C
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 18:06:06 +0200 (CEST)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 462zyM3Z1VzDr2K
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 02:06:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1565107563;
-	bh=DHP4DF1EnenClBUlRq4TLZAh31LZPaVO82uFLBQBj6s=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=HiY+SpaVgm75B+ZrqoWJQ5hNJR45M3geaPaswQnjRhSEZzyDEjArePQOmw3SsWWSX
-	 aYOMkdv/GLmPlzb/EUR4PzjqQTm/hscHWl4bfC8OnKTP5dran80C8ghTgrGyXiyEIm
-	 G+UFTfESAQ8Q0zfw3wJRUOfdXqRbfDkgt4KZM6Bf5tgtzwYDkfPjU4x/vtNzLAEMVz
-	 RY1q0ABzryaGVgFoDtZa+qyLaioLkgQXRq/blh+xY47IvjWAGJkOItFhTzt+PoCou0
-	 19LZjQjTvLo/DLFKj2XVOznwOcYJubzQ8NRZ6d080Ei/hUTUHfsKMkZSgjt7ROnSYn
-	 0TS5HvApej7LA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4630cv6G0PzDr27
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 02:35:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.147; helo=sonic309-21.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmx.com
+ (client-ip=212.227.15.18; helo=mout.gmx.net; envelope-from=hsiangkao@gmx.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="EoY3eQxa"; 
+ dmarc=none (p=none dis=none) header.from=gmx.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ secure) header.d=gmx.net header.i=@gmx.net header.b="T0FfVdbX"; 
  dkim-atps=neutral
-Received: from sonic309-21.consmr.mail.gq1.yahoo.com
- (sonic309-21.consmr.mail.gq1.yahoo.com [98.137.65.147])
+X-Greylist: delayed 323 seconds by postgrey-1.36 at bilbo;
+ Wed, 07 Aug 2019 02:35:49 AEST
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 462zy83dmpzDqnf
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 02:05:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1565107540; bh=8HychvbxGzNr3Ctz8JDHfuO8aCS9Nj/73bL7rsyOfHI=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=EoY3eQxaVAkuzEpP0a856aW7Q8gqK/dg+gH40ztZCMF024ymU1HIjJxGeixzZimoWLpt/cjzyer/eR1+S4cG1Bim3L720DRo1pUKOMxJroucpNo6Vtxp/XrpGAoHofexhwDEgMMOToMDG5CQXXN6mGXadOQJXZ/2bcVgD8uSLob+PyakHVBvmqZP0n+UAR+IsjeY7Xq0inUfuUQwAh6rQgaHf0uRPti9NtJGLazYnk8hwPIQXCdMGcKJlPdav8i7c1DSvhRRIKdTHfKGfMBkOJBKDNv38ttisXvPMGEEZPWdsiyYuemFj5Ss4CR6uwPX3bnAUARfKJylZAA5wVIkoA==
-X-YMail-OSG: lSuiMpAVM1l.V4hhSDc3Y9wvJGUuO4aPlb4sdNBeOR3vupaAnnqqtMsm8Zot6NL
- 1lvUy_a3z7Z3HMNmzEEseNUSi47jtvKjXKvhquUny9cpnELg8FsmaRxiH7TQ62gi9p56tRbFj1Od
- JTCTIXTU_NzIEQDfo1H_ME_vNTaVMCeYJJkECQFPS1Alms7TKFSWw0Aj3lodWpUAuN35cZ3d6K3c
- 54ZrPq5CtH6I2YWRaEBE1TtrJPQ18hhZIOWDl_JDP7m7ejoK4ACOSqAcT.9IhvE6c7U3aA2KAH8X
- ysf0B4Z7WY14GtJWm7mb7hBfQn_pysHMFTy3lzCGaV278qPhNlFxfzxLiO9jTx7zXdcZzf0S3ouc
- gT7qWanlpNYM0tC8YB38dTZBXVahlHt1fiwaqBP3wyg6JrrcLketucoe22aGbzinbi6CBtFYnogP
- 5XyIoPwX5lC8w_zch2dqxgUOMnYslsbL1i0X5cxLdtHFi5GyLIcziJzyehlz3RTiy6MwXdOCIMhE
- mixga3HZMCQFaApftqeYGJIkED9pv8GKect8lRqDzj.HSrnNCtcKi7qtQLfDmOoPdOQchSlXyIfo
- 3zKV88mPfl6vf1SZDKntq7LvugzdpVr6sUhM4oVq.frTLkhBenfh7LT0hoLvZOoM8kePovagsTWW
- ENHFx8L67qioBk70wdf.j38BKvLo_Npyr0oGODqnu_l9uc8caIsHDHAzG8E87DEame_7mk6Iyzi6
- fbW8BGByk0.gRRpPBTGFKtR68e8ivtXkvnCLdFmtb5gOUORdrmNfKYNIHdJJjvicYSyeKiWOeyvO
- nvPGMuQNZ6pa.dg40qzaBCSmm6R9DO0ZoYTzmTbSjyyUSPIn3fmrcqld46LIvlB.ZsFkanH.OLYY
- 8fb3Dj6KFDOGRW_zmDsmeMnW2MDVs9xQoHbOX1WDIjwhr9Nrnk7ndRQe7in6uW7u8s_NKg7Z4Moo
- 5HIGeD7.SG_0hLtdPGsjFGMkK33MVGjVA9JHBUwLS0XwlwXiEzArMZjQCR8U7eGQsAzaCUspM1g7
- 72lvu45HdpA6cxrJtpOPsG8vgGoly8Go4w00npGAXiRB9vHKzdE36FbLMB5CZVJ0NsiP9oOcz6E6
- wx_CAi_NG_G2vCbBta1ATa6QZrb7nr0Rsop2nbIMAR1bvYvUz3yATZtnv2VtHUTFWbL78mUqwSun
- d3t5_cpHEJE8qiZFtmmRoYD5ZV_e40yYH2FXjzMTSKyftBpP4Zl67meRrEjK6VhsZJZEK_ABHqxT
- QliO7f9NMuD2236OB9tzdXqN0Wdo-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Tue, 6 Aug 2019 16:05:40 +0000
-Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID e1834d8f894579dcf0a23a387e31f975; 
- Tue, 06 Aug 2019 16:05:38 +0000 (UTC)
-Date: Wed, 7 Aug 2019 00:05:30 +0800
-To: Pratik Shinde <pratikshinde320@gmail.com>
-Subject: Re: Test case suite for erofs.
-Message-ID: <20190806160524.GA26612@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CAGu0czRhmT7vSnFB-9pnJS=fhZp7RFL2ZwYfbc1RK-p5ddQ6tw@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4630cj5wJFzDqrW
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 02:35:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=badeba3b8450; t=1565109343;
+ bh=OKJ6Bjq0pdODNE0rerFhIjfk8FpULoo7FFZuga/aehU=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=T0FfVdbXT1rimwmpMxCaNbzDrAAQSsGOws0S+g7KwDbNlNUIGVvG0+tksc0D9icOH
+ s+i+3nvb7Q1A0WlfhxzV3QsZH6prf+lQKn8r0hcHdrvqnFFA4uO6TlPUl6DXXUmaPr
+ 3/lcJGp0hoU3pPaRKkd35+fPnwdgOC8mD/aXZbo4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([60.177.33.208]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MWRVh-1hokiU03pL-00Xpwa; Tue, 06 Aug 2019 18:29:57 +0200
+Date: Wed, 7 Aug 2019 00:29:48 +0800
+From: Gao Xiang <hsiangkao@gmx.com>
+To: shenmeng999@126.com
+Subject: Re: [PATCH] erofs-utils: get block device size correctly
+Message-ID: <20190806162947.GA28162@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <1565105005-21709-1-git-send-email-shenmeng999@126.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGu0czRhmT7vSnFB-9pnJS=fhZp7RFL2ZwYfbc1RK-p5ddQ6tw@mail.gmail.com>
+In-Reply-To: <1565105005-21709-1-git-send-email-shenmeng999@126.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Provags-ID: V03:K1:6xFMaKTK48cHTOA8IQNfD5tlfBFi5o8Wgt1zWaJ2CTeGlMOt3t1
+ g9yE7znIN15AC+Xqw+8hQCoywRr03OAqQX7N07KbEWlvHBEZqY4a6c0Gps5GdfW4uY0QI6o
+ tfp6Zdu1gJ7ZkGcNXiDyhJRC4GdzU7BQkNHqSnRkInR3eH/gZRls5YNBVLOTlc+rwFosDoI
+ oH3MLE7KclWhVQr8Tp3XA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OCodbY6eXeY=:cmA11PuZKM3NwWf+rBdxc9
+ OSVTZqPj4ylv0KL6Pwgr/2tfSJH0r/X0F/hwfq/yjjUgabPX08OiI6uWzV90AZNJIgDfj0Em5
+ YYmMiSruPXzYyEalYwEUWYvKGiEYSuGJTPEOggvYqXvPNp+IzByuOYgaUD2toicc8mus2Ah90
+ weWHQp5b4DqnH5F8SzorKFm0JUXtoyRBzWjIwAZa5i0es7qWJafW0COxi7HcsNJ+9ntcWzSnT
+ gyIUZXiZlJY0+AsVAfMdcHqF35dvxG85sdFrqXLrBSbLo9794C3gk7+UmIge7g9FhNS8d5ypy
+ h7LIi5IOZ3zwo959a5Czts3/3V301aFYnizSez5sEP0frciTM60MPTi6Mk68w1fz1bgDZHcpv
+ LHPew6uuUEfLys/I6YZfiGkThjuFX5UkXYnYG/q0DWNByFPtYi6vy7rB2hKqY+SIiYCD6Wb8n
+ DVmKNY34+saxfBg+sIGnNHjVgqEEK/uh+pj3cd+4X1rQ0nsYM7h2R84ezuCQC4lmW2uW9pwFg
+ 8oDIxJmVvZjHU9wXvYyH0QVh8JZhf+AjvUNYkI6ra12ZnGD+2o1ytdR/gbXQ0XKx6ymkQUyTb
+ R6CtsYeB8OcRcR0ycXvXjKdbTFg478y4ER7LhbFys6f9rnIV4VfGkcbHxvF78/xM8Bl1/CIvU
+ 6N+k/EAs2aG4xg55V7XjNoYY88fad1raH340YVflBxDlYuh7locmPs3tvG39nWHg/2ZpB1nUM
+ +UIq+R7aVp3GMBsnOMh98CWWlILrWemf/2J3piKnNeeTqbJogReD2UjCMi1gNORT4j57uswlO
+ CM5jDEVQHEgK4685R+2CXHnQyU87uvBDt9TOkYuUjprSD+4Hbq/lrc5UI/hv1Rm0IexsqK4Bj
+ 5bKbBCVDXiTWPcPL0Hk8jFJVCgyNgZniFu6bt76yvk1dUj9XuOhioh5/hM3vvG+KKtP4LEJP4
+ ABiV0lj60lyE76m7hAGPW6sVGOoO6AqyJ27a1sY1FsJT0HUScpbJXFBO/H4sl2MzKGSCeyVem
+ /A6P1fAW31b7hF7Zi4+qFb5qtwQRcr+dYyhp5qLaBrH7QnDeAbmWwlVTtwJ2VJDAzUAobqCpt
+ iTNLQr2snA/oJ9EOkzwt8jGVxef1lKIbkLjhPlE+aI56llVgAB+5kVl/Q==
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,39 +81,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Pratik,
+Hi shenmeng,
 
-On Tue, Aug 06, 2019 at 08:18:42PM +0530, Pratik Shinde wrote:
-> Hello Maintainers,
-> 
-> I wanted to ask if there is any plan for writing a test case suite for
-> erofs. If not, how do you think is the idea of having a dedicated test case
-> suite, so as to maintain quality of fs?
-> Let me know your thoughts.
+On Tue, Aug 06, 2019 at 11:23:25PM +0800, shenmeng999@126.com wrote:
+> From: shenmeng996 <shenmeng999@126.com>
+>
+> fstat return block device's size of zero.
+> use ioctl to get block device's size.
+>
+> Signed-off-by: shenmeng996 <shenmeng999@126.com>
+> ---
+>  lib/io.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/io.c b/lib/io.c
+> index 93328d3..ae3ac37 100644
+> --- a/lib/io.c
+> +++ b/lib/io.c
+> @@ -9,6 +9,8 @@
+>  #define _LARGEFILE64_SOURCE
+>  #define _GNU_SOURCE
+>  #include <sys/stat.h>
+> +#include <sys/ioctl.h>
+> +#include <linux/fs.h>
+>  #include "erofs/io.h"
+>  #ifdef HAVE_LINUX_FALLOC_H
+>  #include <linux/falloc.h>
+> @@ -49,7 +51,12 @@ int dev_open(const char *dev)
+>
+>  	switch (st.st_mode & S_IFMT) {
+>  	case S_IFBLK:
+> -		erofs_devsz =3D st.st_size;
+> +		ret =3D ioctl(fd, BLKGETSIZE64, &erofs_devsz);
 
-Currently we have a modified ro-fsstress for EROFS to do fuzzer tests,
-and we have dedicated constructed images to do all regression tests.
+Thanks for your patch :)
 
-Yes, I personally think that is not enough (thus we have a large beta
-users as a supplement) and we asked squashfs maintainers for their tools
-last year but without any luck.
+I got some reports of this issue months ago, but I'm afraid
+that we should support the legacy BLKGETSIZE approach as well
+as what other filesystem userspace tools do...
 
-new xfstest testcases for read-only filesystems developped by another HUAWEI
-team is also available at https://www.spinics.net/lists/fstests/msg11398.html
-but without further progress till now...
+Could you kindly take some time to make a full patch of it? :)
 
-It's better to develop more testcases for EROFS, and we can put forward
-xfstest as well. :)
+BTW, from the point of view of use, it's better to generate
+a image file indirectly and `dd' to the real device rather than
+directly use block device as the output since erofs-utils
+will do unaligned read/write even overwrite, which isn't
+very friendly to flash-based devices...
 
 Thanks,
 Gao Xiang
 
-> 
-> -Pratik
+> +		if (ret) {
+> +			erofs_err("failed to ioctl(%s).", dev);
+> +			close(fd);
+> +			return -errno;
+> +		}
+>  		break;
+>  	case S_IFREG:
+>  		ret =3D ftruncate(fd, 0);
+> --
+> 1.8.3.1
+>
