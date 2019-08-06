@@ -1,51 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80BDF8355B
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 17:34:46 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 462zGB6h98zDr0l
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 01:34:42 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A3681835F3
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 17:55:30 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 462zk72Lv9zDqvx
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 01:55:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Received: from ozlabs.org (bilbo.ozlabs.org [203.11.71.1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 462zG23JmYzDqcw
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 01:34:34 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
- header.from=canb.auug.org.au
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=canb.auug.org.au header.i=@canb.auug.org.au
- header.b="dcShrCbs"; dkim-atps=neutral
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest
- SHA256) (No client certificate requested)
- by mail.ozlabs.org (Postfix) with ESMTPSA id 462zFv3F9sz9sMr;
- Wed,  7 Aug 2019 01:34:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
- s=201702; t=1565105672;
- bh=5FHAJ2a0H+dgGw8qV5krRpvfMTW4QMVUNBiIFTz7ukc=;
- h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
- b=dcShrCbsau/hwzLIEVX+xCQkjw8ytUmuBphP7Wzk0Os+PeYJL4E9AZojKIxsW/XCC
- xTyuNmwgEnwSEW6/Kz8amhaNxd/QkXfyj6TN7B3JHn6lyvGiqz9io4rs24B6/81qqU
- aHhTQCVVCoPKVEFdalsWvjQTI3tUyZFaUFc133mkcqknYyDVNSEChFStksBky28u+/
- GQO177sJv9EuIy1iyMEkE5ZTlNxx7pwHSxx0QCJI51C+dfkT0hpyUbfm+uzI+0mdxe
- ZEqmwK2hiOD8JXrhyc//NCp7AK7xY6zJ2JDZpiGvVhYTi+uG79dj7xnbSdH/Jt6dGk
- vLa4gCEEgqDLA==
-Date: Wed, 7 Aug 2019 01:34:23 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH RFC] erofs: move erofs out of staging
-Message-ID: <20190807013423.02fd6990@canb.auug.org.au>
-In-Reply-To: <20190806094925.228906-1-gaoxiang25@huawei.com>
-References: <20190806094925.228906-1-gaoxiang25@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3zuq9Mbh_pVR5QZxswgd1wJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (mailfrom) smtp.mailfrom=126.com
+ (client-ip=220.181.15.112; helo=m15-112.126.com;
+ envelope-from=shenmeng999@126.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=126.com header.i=@126.com header.b="Wy+FaWjF"; 
+ dkim-atps=neutral
+Received: from m15-112.126.com (m15-112.126.com [220.181.15.112])
+ by lists.ozlabs.org (Postfix) with ESMTP id 462zjx4zqczDqWL
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 01:55:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+ s=s110527; h=From:Subject:Date:Message-Id; bh=KiR86I9jJxzj8jQmGa
+ 2Td54AuK8jQpDbFJoyyw9TZEc=; b=Wy+FaWjFsmRc66h2JXuYFiXL0AX/K/GMLT
+ T5UhO0D9yECRY4KsX7nn9vgADntt9rStFdgg12YtGgc9XNCTnrfHMFcyqLMVZUq6
+ JD2Ei1ghmxHa+tcDmeikC+WFxJf2wjxoyEnOxf8HntctY/QfkYQMX01OR0tkn9kJ
+ KzjMY7R2o=
+Received: from localhost.localdomain.localdomain (unknown [112.44.106.84])
+ by smtp2 (Coremail) with SMTP id DMmowAAnKAhvm0ldY9OWJQ--.39443S2;
+ Tue, 06 Aug 2019 23:23:28 +0800 (CST)
+From: shenmeng999@126.com
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [PATCH] erofs-utils: get block device size correctly
+Date: Tue,  6 Aug 2019 23:23:25 +0800
+Message-Id: <1565105005-21709-1-git-send-email-shenmeng999@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DMmowAAnKAhvm0ldY9OWJQ--.39443S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtFyfKrWDtFykWFyxGr4fAFb_yoWfAFc_Cw
+ 1xAr1DWrs7tF4SvrWrJrsFvryvk397Gr4IgryrArW2vr1UGws5Gw1kXayrKF45Wr4Dur17
+ uayYqrWfCw1YgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+ 9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUYLAw3UUUUU==
+X-Originating-IP: [112.44.106.84]
+X-CM-SenderInfo: xvkh0z5hqjmmaz6rjloofrz/1tbitRAJ01pD+YvbWwAAsU
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,48 +55,48 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
- Theodore Ts'o <tytso@mit.edu>, "Darrick J . Wong" <darrick.wong@oracle.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
- Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
- David Sterba <dsterba@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Miao Xie <miaoxie@huawei.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Pavel Machek <pavel@denx.de>,
- linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+Cc: shenmeng996 <shenmeng999@126.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---Sig_/3zuq9Mbh_pVR5QZxswgd1wJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: shenmeng996 <shenmeng999@126.com>
 
-Hi Gao,
+fstat return block device's size of zero.
+use ioctl to get block device's size.
 
-One small suggestion: just remove the file names from the comments at
-the top of the files rather than change them to reflect that they have
-moved.  We can usually tell the name of a file by its name :-)
+Signed-off-by: shenmeng996 <shenmeng999@126.com>
+---
+ lib/io.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/lib/io.c b/lib/io.c
+index 93328d3..ae3ac37 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -9,6 +9,8 @@
+ #define _LARGEFILE64_SOURCE
+ #define _GNU_SOURCE
+ #include <sys/stat.h>
++#include <sys/ioctl.h>
++#include <linux/fs.h>
+ #include "erofs/io.h"
+ #ifdef HAVE_LINUX_FALLOC_H
+ #include <linux/falloc.h>
+@@ -49,7 +51,12 @@ int dev_open(const char *dev)
+ 
+ 	switch (st.st_mode & S_IFMT) {
+ 	case S_IFBLK:
+-		erofs_devsz = st.st_size;
++		ret = ioctl(fd, BLKGETSIZE64, &erofs_devsz);
++		if (ret) {
++			erofs_err("failed to ioctl(%s).", dev);
++			close(fd);
++			return -errno;	
++		}
+ 		break;
+ 	case S_IFREG:
+ 		ret = ftruncate(fd, 0);
+-- 
+1.8.3.1
 
---Sig_/3zuq9Mbh_pVR5QZxswgd1wJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Jnf8ACgkQAVBC80lX
-0GyktAf/awWVta3LRhqpez+RTEQC6IzKAlgR8ULIAJpHB3OZFNlv6Lxvbg3l/Jdq
-XZAoR3RqQTr49hpHePfnENWdxIFa7DUCyOjO5MeWyP7VpVBEk48YSFnBUtPIzh7m
-+UdrAt+zOdjzdRd6/v2DGhd8dXLZ+rsupL9XA75ak2iVEGjEnlTorjwKDaYy2VR+
-cV0mFcFNBEHs2Ok2wTfYYzUx7id7/tcVfjWuzvyvd1d0Y53FLgWLvIVCsJNM0HmH
-LlpVkiVpMFDCC3SMSiffhkOkNigEV1vY3wxlS2qniRz+qXbAMqPv8CRbtdO92bkM
-LBThN5N6CBu+SqQgGSvGv08yzx+eqg==
-=sZOX
------END PGP SIGNATURE-----
-
---Sig_/3zuq9Mbh_pVR5QZxswgd1wJ--
