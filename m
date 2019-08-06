@@ -2,76 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C973D82406
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Aug 2019 19:31:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8494282F0F
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 11:50:15 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 462PvD0hkjzDqWT
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 03:31:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1565026280;
-	bh=gaUTXxyJHEyGTkyZkCaYRcmQ2KCCGKKN/pd+a89odjo=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=XDqMZ09QbC/U8WExs30HJY9VbwhB0LJ+yKFtvyuk9tbnlkQwrFWuWA+DkPj8wWaVv
-	 kg7racfeQx4XiKjkr7wd67qVVY5R5Q4bG8+6gXeiFTJ9RBdRDXz7lZJRUh+1fls5L4
-	 1ibuDRI4bsXs/ZKtrjHwo61hpzKlVw1c+Pqpg4F0VnZkaDvuc6ySdfoT2mNo4Ml0Yv
-	 l7Msn+a4YSf0ROTw1IBwtY6JZWTN03ajfK9f0ch/CgMmPux6hJz4smwttlH6lxzI/v
-	 6b+WKQ//vkyjwjMeNG8aX3ezeUoSSptC/4+cqtTdPjL5yQ5UklQ6in0A1E+WW9p7zQ
-	 EDf9nf6MhNIWQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 462qcg6n6zzDr48
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 19:50:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=77.238.178.146; helo=sonic308-18.consmr.mail.ir2.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.32; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Received: from sonic308-18.consmr.mail.ir2.yahoo.com
- (sonic308-18.consmr.mail.ir2.yahoo.com [77.238.178.146])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 462Pts0BQlzDqV1
- for <linux-erofs@lists.ozlabs.org>; Tue,  6 Aug 2019 03:30:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1565026243; bh=4cQCXIwuF2kUV6QQLwLADVcVKHaJUmL8k5LHwYyohq4=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=UpcUW9XWf2crjzfS6UUGGmopBVcdwkMKbo4+kBHEoUM8fInYwKYOyLNEMTMY0qBwUK5er6F2MsDWRnPqeBMZH9AaMS71asy33bzg6TR6W/aNhW2xtpVKTcgkFMxJ74nbFmWiTQ3pGkXfcGGONFtFApNyA2tg39Ev7h7nKrstdyKNN9BpX2STgJc74bwPwndOXCVPJPnWxkYF6uJYmSVA8Bs4MDa8JxZbWOKh98x73G6R3++WkcznC2aFiTzLIlppM59bmv4vrS1zS5wIn1Bhd2f/vqo5Uqv9nUmv3PJImzLvL66Z6Mb3aOk0TgUGdm4gq06hklBJ9a2CKwJgfaFcdw==
-X-YMail-OSG: fCF627UVM1kaNnmWEyq24Cynn4ZXjdhcvI9NVwKpRkaTJOWmP5sKB64CZxhRaeG
- cc.vOPPdmLAh7KA3NSyW94z1M9h.HpVq4bdM73rgE0ybnjhkawLOkBpHvv9Jc.gVI9GPuiMgGgGe
- 8GrF8yG5r6uE5UNOoXfUsM4PuevFob_ISUY5sFZNrycjT_c6FP8Q4KkIajS080q9rCo7Se4lgkag
- dRS00XkxJYRqGWSAXIZZD.MrJ3P1s80q3RZOmNd0fyTRVxEhcw8IraOq3RB9gu6bHG.oQChQixWf
- nNwkBwLzqfZKgzQUFf0oLKA_n6SS0K5CH5HMQwvWiBGECU8ou71.iYHHTybZeZxJhyEAu4REiMDY
- .33K4JpVJ46uXZQSPMuH1WzVCdJ.iUrTusIGZpFuFAwRKBXnHZXaPwNG1..2iO0iVbVwm1litD6f
- e8ULDOhFXT9UK7Xmva_xnbkz7BJR7iC_cG11WAUhP_e0EwI_sF3MnwuupLcqi0HD.9nsYjcHNKq7
- vPHFTnQguCTY7oe6_pomx_6_TXYCxx1DBSldHWFKjPbfxPPhvdQs8O6jXOpY2Le6.kmGjaArqkTl
- SZqH0KlA3E5ItBur60DcMwrFx6BdR80nE69hvcknHIzMAkYso_xTHs8HwI0lcZ.1hwp7pXqROL1G
- pNCx3NpwPmwz7fuI3daXhcoeg9uBQJ4vJZGM_IRtZ2ciblPb9IKUTEgV9SJ2K_.uz4gNgRxg4ZtE
- JZ6sTTL6sCFM9tFl0wTWbTOAhA._m7EmirReAHNIlqFNsevkoTdw7y1lWRUXNruWCxLNozJxQOIy
- Lwvp.ji0WlSU_AdnMLf4D4wFCPwkBHqRv3EIopRL5IPVxpqqJXhvDOoejZGdm0dUDE5D_DprJaPg
- U2SZQbC1nku_7n1zf82DzDFfY_IxZd2V2uitkJI3a6QsMXqLxsvqYZgHJbOyqfxoHIFm2W9S9xgN
- 8.YsCJM9IMkweZrzbD5vZ9GXCTqdpCRG9uwcqtT1TgF74zOfaQ.2dFmpcc8FaVRxPcbeGcz.wZyc
- kt3yU9ukAW_g2z7kX_GHE8tErmStU2LNOr6kF4U6HWMqZn63U9TGii6U7P2MwvRAXdt9XA.gZL.P
- Oq3X5FLe9YbXoZ.dAN2RRUhPOYDw.YoFMoT1KqJ_cM8n2eWFLOQaambrc_sFWu0MFbPOTwSgdv9x
- DHzauvEkDLp3hxmBbMVXQh8TjAVm2GYh0CTIu2OhZsGKGJJ2o9L6MSvRSVrxqrQ53.wuAgp3ltft
- fySjpviyXzQg2C3z.clLX7Y.ZKYkaAUZBy.prR2Z7B0nj
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.ir2.yahoo.com with HTTP; Mon, 5 Aug 2019 17:30:43 +0000
-Received: by smtp412.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 60145a086d817a02e0252cdf41a109d8; 
- Mon, 05 Aug 2019 17:30:37 +0000 (UTC)
-Date: Tue, 6 Aug 2019 01:30:30 +0800
-To: Li Guifu <blucerlee@gmail.com>
-Subject: Re: [PATCH] erofs-utils: introduce xattr support
-Message-ID: <20190805172850.GA13290@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190726095030.012035@grr.la>
- <2a1f9482-3d46-5bb5-97d9-9b84cab46236@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 462qcX0gP7zDr1r
+ for <linux-erofs@lists.ozlabs.org>; Tue,  6 Aug 2019 19:50:02 +1000 (AEST)
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+ by Forcepoint Email with ESMTP id D20BEE76F0AB788BFF58;
+ Tue,  6 Aug 2019 17:49:55 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 6 Aug 2019
+ 17:49:48 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>,
+ <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>
+Subject: [PATCH RFC] erofs: move erofs out of staging
+Date: Tue, 6 Aug 2019 17:49:25 +0800
+Message-ID: <20190806094925.228906-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a1f9482-3d46-5bb5-97d9-9b84cab46236@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,990 +49,591 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: htyuxe+dhbrei4sq0df8@grr.la, linux-erofs@lists.ozlabs.org
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-erofs@lists.ozlabs.org,
+ Theodore Ts'o <tytso@mit.edu>, "Darrick J .
+ Wong" <darrick.wong@oracle.com>, Pavel Machek <pavel@denx.de>,
+ Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+ Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
+ LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>,
+ Miao Xie <miaoxie@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Guifu,
+EROFS filesytem has been merged into linux-staging tree for a year.
 
-On Mon, Aug 05, 2019 at 10:54:52PM +0800, Li Guifu wrote:
-> Hi
-> It seems look good, a great step.
-> A new develop branch is a googd choice to make this more stable
-> and the hash function would better use a light weight one like
-> full_name_hash in the kernel
+During the past year, EROFS was greatly improved by many contributors,
+self-tested, betaed by a large number of our internal users, and
+successfully applied to 10+ million mobile phones as a part of EMUI
+9.1 [1] which are already on the market.
 
-Yes, you are right. it seems a great baby step of xattr.
-I will make a new branch to test this of course.
+Decompression inplace and compacted indexes have been merged for
+linux-5.3, which improves its read performance and becomes a part of
+EROFS. A brief meterial about EROFS at Open Source Summit China 2019 [2]
+and a USENIX ATC'19 paper [3] describing most of its design are
+available as well.
 
-BTW, Guifu, please help review this patch as well, and
-don't forget to tag "Reviewed-by:" if it looks good to you.
+Again, the goal of EROFS is to save extra storage space with guaranteed
+end-to-end performance for read-only files and we have a dedicated
+kernel team keeping on working on this filesystem in order to make
+it better.
+
+EROFS behaves as a block-based filesystem driver, the main code is ~7KLOC,
+self-contained and stable enough to move out of staging. We will keep
+on developping / tuning EROFS with the evolution of Linux kernel
+as the other in-kernel filesystems.
+
+Recently, the related topic [4] got a few suggestions from fs people,
+and now it turns into silence again for a period of time. Perhaps it's
+a good signal since no strong objections raised here. Regretfully
+no explicit ACK of this topic till now as well and I have been looking
+forward to get some external ACKs of this stuff all the time, sincerely...
+
+As Pavel suggested earlier [5], it is better to do it as one commit
+since git can do moves and all histories will be saved in this way.
+
+Let's promote it from staging and enhance it more actively!
+
+[1] http://web.archive.org/web/20190326175036/https://consumer.huawei.com/en/emui/
+[2] https://sched.co/Nru2
+[3] https://www.usenix.org/conference/atc19/presentation/gao
+[4] https://lore.kernel.org/linux-fsdevel/20190802125347.166018-1-gaoxiang25@huawei.com/
+[5] https://lore.kernel.org/linux-fsdevel/20190714104940.GA1282@xo-6d-61-c0.localdomain/
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Pavel Machek <pavel@denx.de>
+Cc: David Sterba <dsterba@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Darrick J . Wong <darrick.wong@oracle.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Li Guifu <bluce.liguifu@huawei.com>
+Cc: Fang Wei <fangwei1@huawei.com>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <devel@driverdev.osuosl.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+
+Hi folks,
+
+This patch is marked as a RFC patch since it's still some early
+for linux-5.4-rc1.
+
+However, I, Chao and other people currently working on EROFS
+stuffs would like to know what the next step is. We already proved
+the advantage of our compression solution and do good enough
+as a part of staging driver.
+
+EROFS was initially developped myself as a homebrew in my leisure
+time in the end of 2017 in order to demo fixed-sized output compression,
+I persuaded my boss to try to work on this new solution for system
+partitions on our Android products at the very beginning of 2018 after
+we failed to switch to squashfs suggested by Google in 2016. Chao and
+other colleagues were joined into this project at that time. Chao was
+happy to be the co-maintainer of linux kernel EROFS as well. This work
+was very cautious at the very high level of HUAWEI but it turns to be
+a success now.
+
+We also persuaded our bosses to make a decision of open-source this
+filesystem at the early stage since we know it's hard to maintain as
+an out-of-tree Linux filesystem in the long term and we are happy to
+apply it into wider use cases. For example, use it into desktop
+distrbutions or Docker images.
+
+On the one hand, as words documented in "Documentation/process/2.Process.rst",
+entry into staging is not the end of the story and distributors also
+tend to be relatively reluctant to enable staging drivers as well.
+
+On the other hand, there are many cooking stuffs of EROFS on the way
+from Chao (iomap), Guifu (erofs-fuse) and me (new algorithm support),
+but we'd like to get whether EROFS can be a part of Linux mainstream
+at least to play with it even further.
+
+Please kindly share comments about EROFS, thanks!
 
 Thanks,
 Gao Xiang
 
-> 
-> ?? 2019/7/26 19:50, htyuxe+dhbrei4sq0df8@grr.la ????:
-> > load xattrs from source files and pack them into target image.
-> > ---
-> >   include/erofs/hashtable.h | 502 ++++++++++++++++++++++++++++++++++++++
-> >   include/erofs/internal.h  |   2 +-
-> >   include/erofs/xattr.h     |  22 ++
-> >   lib/Makefile.am           |   3 +-
-> >   lib/inode.c               |  23 ++
-> >   lib/xattr.c               | 319 ++++++++++++++++++++++++
-> >   6 files changed, 869 insertions(+), 2 deletions(-)
-> >   create mode 100644 include/erofs/hashtable.h
-> >   create mode 100644 include/erofs/xattr.h
-> >   create mode 100644 lib/xattr.c
-> > 
-> > diff --git a/include/erofs/hashtable.h b/include/erofs/hashtable.h
-> > new file mode 100644
-> > index 0000000..349a655
-> > --- /dev/null
-> > +++ b/include/erofs/hashtable.h
-> > @@ -0,0 +1,502 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * include/erofs/hashtable.h
-> > + *
-> > + */
-> > +
-> > +#ifndef __EROFS_HASHTABLE_H
-> > +#define __EROFS_HASHTABLE_H
-> > +
-> > +#define BITS_PER_LONG 32
-> > +#ifndef __always_inline
-> > +#define __always_inline inline
-> > +#endif
-> > +
-> > +/* 2^31 + 2^29 - 2^25 + 2^22 - 2^19 - 2^16 + 1 */
-> > +#define GOLDEN_RATIO_PRIME_32 0x9e370001UL
-> > +/*  2^63 + 2^61 - 2^57 + 2^54 - 2^51 - 2^18 + 1 */
-> > +#define GOLDEN_RATIO_PRIME_64 0x9e37fffffffc0001UL
-> > +
-> > +#if BITS_PER_LONG == 32
-> > +#define GOLDEN_RATIO_PRIME GOLDEN_RATIO_PRIME_32
-> > +#define hash_long(val, bits) hash_32(val, bits)
-> > +#elif BITS_PER_LONG == 64
-> > +#define hash_long(val, bits) hash_64(val, bits)
-> > +#define GOLDEN_RATIO_PRIME GOLDEN_RATIO_PRIME_64
-> > +#else
-> > +#error Wordsize not 32 or 64
-> > +#endif
-> > +
-> > +struct hlist_head {
-> > +	struct hlist_node *first;
-> > +};
-> > +
-> > +struct hlist_node {
-> > +	struct hlist_node *next, **pprev;
-> > +};
-> > +
-> > +/*
-> > + * Architectures might want to move the poison pointer offset
-> > + * into some well-recognized area such as 0xdead000000000000,
-> > + * that is also not mappable by user-space exploits:
-> > + */
-> > +#ifdef CONFIG_ILLEGAL_POINTER_VALUE
-> > +# define POISON_POINTER_DELTA _AC(CONFIG_ILLEGAL_POINTER_VALUE, UL)
-> > +#else
-> > +# define POISON_POINTER_DELTA 0
-> > +#endif
-> > +
-> > +/*
-> > + * These are non-NULL pointers that will result in page faults
-> > + * under normal circumstances, used to verify that nobody uses
-> > + * non-initialized list entries.
-> > + */
-> > +#define LIST_POISON1 ((void *) 0x00100100 + POISON_POINTER_DELTA)
-> > +#define LIST_POISON2 ((void *) 0x00200200 + POISON_POINTER_DELTA)
-> > +
-> > +#undef offsetof
-> > +#ifdef __compiler_offsetof
-> > +#define offsetof(TYPE, MEMBER) __compiler_offsetof(TYPE, MEMBER)
-> > +#else
-> > +#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
-> > +#endif
-> > +
-> > +/*
-> > + * Double linked lists with a single pointer list head.
-> > + * Mostly useful for hash tables where the two pointer list head is
-> > + * too wasteful.
-> > + * You lose the ability to access the tail in O(1).
-> > + */
-> > +
-> > +#define HLIST_HEAD_INIT { .first = NULL }
-> > +#define HLIST_HEAD(name) struct hlist_head name = { .first = NULL }
-> > +#define INIT_HLIST_HEAD(ptr) ((ptr)->first = NULL)
-> > +static inline void INIT_HLIST_NODE(struct hlist_node *h)
-> > +{
-> > +	h->next = NULL;
-> > +	h->pprev = NULL;
-> > +}
-> > +
-> > +static inline int hlist_unhashed(const struct hlist_node *h)
-> > +{
-> > +	return !h->pprev;
-> > +}
-> > +
-> > +static inline int hlist_empty(const struct hlist_head *h)
-> > +{
-> > +	return !h->first;
-> > +}
-> > +
-> > +static inline void __hlist_del(struct hlist_node *n)
-> > +{
-> > +	struct hlist_node *next = n->next;
-> > +	struct hlist_node **pprev = n->pprev;
-> > +
-> > +	*pprev = next;
-> > +	if (next)
-> > +		next->pprev = pprev;
-> > +}
-> > +
-> > +static inline void hlist_del(struct hlist_node *n)
-> > +{
-> > +	__hlist_del(n);
-> > +	n->next = LIST_POISON1;
-> > +	n->pprev = LIST_POISON2;
-> > +}
-> > +
-> > +static inline void hlist_del_init(struct hlist_node *n)
-> > +{
-> > +	if (!hlist_unhashed(n)) {
-> > +		__hlist_del(n);
-> > +		INIT_HLIST_NODE(n);
-> > +	}
-> > +}
-> > +
-> > +static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
-> > +{
-> > +	struct hlist_node *first = h->first;
-> > +
-> > +	n->next = first;
-> > +	if (first)
-> > +		first->pprev = &n->next;
-> > +	h->first = n;
-> > +	n->pprev = &h->first;
-> > +}
-> > +
-> > +/* next must be != NULL */
-> > +static inline void hlist_add_before(struct hlist_node *n,
-> > +					struct hlist_node *next)
-> > +{
-> > +	n->pprev = next->pprev;
-> > +	n->next = next;
-> > +	next->pprev = &n->next;
-> > +	*(n->pprev) = n;
-> > +}
-> > +
-> > +static inline void hlist_add_behind(struct hlist_node *n,
-> > +				    struct hlist_node *prev)
-> > +{
-> > +	n->next = prev->next;
-> > +	prev->next = n;
-> > +	n->pprev = &prev->next;
-> > +
-> > +	if (n->next)
-> > +		n->next->pprev  = &n->next;
-> > +}
-> > +
-> > +/* after that we'll appear to be on some hlist and hlist_del will work */
-> > +static inline void hlist_add_fake(struct hlist_node *n)
-> > +{
-> > +	n->pprev = &n->next;
-> > +}
-> > +
-> > +/*
-> > + * Move a list from one list head to another. Fixup the pprev
-> > + * reference of the first entry if it exists.
-> > + */
-> > +static inline void hlist_move_list(struct hlist_head *old,
-> > +				   struct hlist_head *new)
-> > +{
-> > +	new->first = old->first;
-> > +	if (new->first)
-> > +		new->first->pprev = &new->first;
-> > +	old->first = NULL;
-> > +}
-> > +
-> > +#define hlist_entry(ptr, type, member) container_of(ptr, type, member)
-> > +
-> > +#define hlist_for_each(pos, head) \
-> > +	for (pos = (head)->first; pos; pos = pos->next)
-> > +
-> > +#define hlist_for_each_safe(pos, n, head) \
-> > +	for (pos = (head)->first; pos && ({ n = pos->next; 1; }); \
-> > +	     pos = n)
-> > +
-> > +#define hlist_entry_safe(ptr, type, member) \
-> > +	({ typeof(ptr) ____ptr = (ptr); \
-> > +	   ____ptr ? hlist_entry(____ptr, type, member) : NULL; \
-> > +	})
-> > +
-> > +/**
-> > + * hlist_for_each_entry	- iterate over list of given type
-> > + * @pos:the type * to use as a loop cursor.
-> > + * @head:the head for your list.
-> > + * @member:the name of the hlist_node within the struct.
-> > + */
-> > +#define hlist_for_each_entry(pos, head, member)				\
-> > +	for (pos = hlist_entry_safe((head)->first, typeof(*(pos)), member);\
-> > +	     pos;							\
-> > +	     pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member))
-> > +
-> > +/**
-> > + * hlist_for_each_entry_continue
-> > + * iterate over a hlist continuing after current point
-> > + * @pos:the type * to use as a loop cursor.
-> > + * @member:the name of the hlist_node within the struct.
-> > + */
-> > +#define hlist_for_each_entry_continue(pos, member)			\
-> > +	for (pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member);\
-> > +	     pos;							\
-> > +	     pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member))
-> > +
-> > +/**
-> > + * hlist_for_each_entry_from
-> > + * iterate over a hlist continuing from current point
-> > + * @pos:	the type * to use as a loop cursor.
-> > + * @member:	the name of the hlist_node within the struct.
-> > + */
-> > +#define hlist_for_each_entry_from(pos, member)				\
-> > +	for (; pos;							\
-> > +	     pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member))
-> > +
-> > +/**
-> > + * hlist_for_each_entry_safe
-> > + * iterate over list of given type safe against removal of list entry
-> > + * @pos:the type * to use as a loop cursor.
-> > + * @n:another &struct hlist_node to use as temporary storage
-> > + * @head:the head for your list.
-> > + * @member:the name of the hlist_node within the struct.
-> > + */
-> > +#define hlist_for_each_entry_safe(pos, n, head, member) 		\
-> > +	for (pos = hlist_entry_safe((head)->first, typeof(*pos), member);\
-> > +		pos && ({ n = pos->member.next; 1; });			\
-> > +		pos = hlist_entry_safe(n, typeof(*pos), member))
-> > +
-> > +static __always_inline u64 hash_64(u64 val, unsigned int bits)
-> > +{
-> > +	u64 hash = val;
-> > +
-> > +#if defined(CONFIG_ARCH_HAS_FAST_MULTIPLIER) && BITS_PER_LONG == 64
-> > +	hash = hash * GOLDEN_RATIO_PRIME_64;
-> > +#else
-> > +	/*  Sigh, gcc can't optimise this alone like it does for 32 bits. */
-> > +	u64 n = hash;
-> > +
-> > +	n <<= 18;
-> > +	hash -= n;
-> > +	n <<= 33;
-> > +	hash -= n;
-> > +	n <<= 3;
-> > +	hash += n;
-> > +	n <<= 3;
-> > +	hash -= n;
-> > +	n <<= 4;
-> > +	hash += n;
-> > +	n <<= 2;
-> > +	hash += n;
-> > +#endif
-> > +
-> > +	/* High bits are more random, so use them. */
-> > +	return hash >> (64 - bits);
-> > +}
-> > +
-> > +static inline u32 hash_32(u32 val, unsigned int bits)
-> > +{
-> > +	/* On some cpus multiply is faster, on others gcc will do shifts */
-> > +	u32 hash = val * GOLDEN_RATIO_PRIME_32;
-> > +
-> > +	/* High bits are more random, so use them. */
-> > +	return hash >> (32 - bits);
-> > +}
-> > +
-> > +/**
-> > + * ilog2 - log of base 2 of 32-bit or a 64-bit unsigned value
-> > + * @n - parameter
-> > + *
-> > + * constant-capable log of base 2 calculation
-> > + * - this can be used to initialise global variables from constant data, hence
-> > + *   the massive ternary operator construction
-> > + *
-> > + * selects the appropriately-sized optimised version depending on sizeof(n)
-> > + */
-> > +#define ilog2(n)				\
-> > +(								\
-> > +	(n) & (1ULL << 63) ? 63 :	\
-> > +	(n) & (1ULL << 62) ? 62 :	\
-> > +	(n) & (1ULL << 61) ? 61 :	\
-> > +	(n) & (1ULL << 60) ? 60 :	\
-> > +	(n) & (1ULL << 59) ? 59 :	\
-> > +	(n) & (1ULL << 58) ? 58 :	\
-> > +	(n) & (1ULL << 57) ? 57 :	\
-> > +	(n) & (1ULL << 56) ? 56 :	\
-> > +	(n) & (1ULL << 55) ? 55 :	\
-> > +	(n) & (1ULL << 54) ? 54 :	\
-> > +	(n) & (1ULL << 53) ? 53 :	\
-> > +	(n) & (1ULL << 52) ? 52 :	\
-> > +	(n) & (1ULL << 51) ? 51 :	\
-> > +	(n) & (1ULL << 50) ? 50 :	\
-> > +	(n) & (1ULL << 49) ? 49 :	\
-> > +	(n) & (1ULL << 48) ? 48 :	\
-> > +	(n) & (1ULL << 47) ? 47 :	\
-> > +	(n) & (1ULL << 46) ? 46 :	\
-> > +	(n) & (1ULL << 45) ? 45 :	\
-> > +	(n) & (1ULL << 44) ? 44 :	\
-> > +	(n) & (1ULL << 43) ? 43 :	\
-> > +	(n) & (1ULL << 42) ? 42 :	\
-> > +	(n) & (1ULL << 41) ? 41 :	\
-> > +	(n) & (1ULL << 40) ? 40 :	\
-> > +	(n) & (1ULL << 39) ? 39 :	\
-> > +	(n) & (1ULL << 38) ? 38 :	\
-> > +	(n) & (1ULL << 37) ? 37 :	\
-> > +	(n) & (1ULL << 36) ? 36 :	\
-> > +	(n) & (1ULL << 35) ? 35 :	\
-> > +	(n) & (1ULL << 34) ? 34 :	\
-> > +	(n) & (1ULL << 33) ? 33 :	\
-> > +	(n) & (1ULL << 32) ? 32 :	\
-> > +	(n) & (1ULL << 31) ? 31 :	\
-> > +	(n) & (1ULL << 30) ? 30 :	\
-> > +	(n) & (1ULL << 29) ? 29 :	\
-> > +	(n) & (1ULL << 28) ? 28 :	\
-> > +	(n) & (1ULL << 27) ? 27 :	\
-> > +	(n) & (1ULL << 26) ? 26 :	\
-> > +	(n) & (1ULL << 25) ? 25 :	\
-> > +	(n) & (1ULL << 24) ? 24 :	\
-> > +	(n) & (1ULL << 23) ? 23 :	\
-> > +	(n) & (1ULL << 22) ? 22 :	\
-> > +	(n) & (1ULL << 21) ? 21 :	\
-> > +	(n) & (1ULL << 20) ? 20 :	\
-> > +	(n) & (1ULL << 19) ? 19 :	\
-> > +	(n) & (1ULL << 18) ? 18 :	\
-> > +	(n) & (1ULL << 17) ? 17 :	\
-> > +	(n) & (1ULL << 16) ? 16 :	\
-> > +	(n) & (1ULL << 15) ? 15 :	\
-> > +	(n) & (1ULL << 14) ? 14 :	\
-> > +	(n) & (1ULL << 13) ? 13 :	\
-> > +	(n) & (1ULL << 12) ? 12 :	\
-> > +	(n) & (1ULL << 11) ? 11 :	\
-> > +	(n) & (1ULL << 10) ? 10 :	\
-> > +	(n) & (1ULL <<  9) ?  9 :	\
-> > +	(n) & (1ULL <<  8) ?  8 :	\
-> > +	(n) & (1ULL <<  7) ?  7 :	\
-> > +	(n) & (1ULL <<  6) ?  6 :	\
-> > +	(n) & (1ULL <<  5) ?  5 :	\
-> > +	(n) & (1ULL <<  4) ?  4 :	\
-> > +	(n) & (1ULL <<  3) ?  3 :	\
-> > +	(n) & (1ULL <<  2) ?  2 :	\
-> > +	(n) & (1ULL <<  1) ?  1 : 0	\
-> > +)
-> > +
-> > +static const uint16_t crc16tab[256] = {
-> > +	0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
-> > +	0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
-> > +	0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
-> > +	0x9339, 0x8318, 0xb37b, 0xa35a, 0xd3bd, 0xc39c, 0xf3ff, 0xe3de,
-> > +	0x2462, 0x3443, 0x0420, 0x1401, 0x64e6, 0x74c7, 0x44a4, 0x5485,
-> > +	0xa56a, 0xb54b, 0x8528, 0x9509, 0xe5ee, 0xf5cf, 0xc5ac, 0xd58d,
-> > +	0x3653, 0x2672, 0x1611, 0x0630, 0x76d7, 0x66f6, 0x5695, 0x46b4,
-> > +	0xb75b, 0xa77a, 0x9719, 0x8738, 0xf7df, 0xe7fe, 0xd79d, 0xc7bc,
-> > +	0x48c4, 0x58e5, 0x6886, 0x78a7, 0x0840, 0x1861, 0x2802, 0x3823,
-> > +	0xc9cc, 0xd9ed, 0xe98e, 0xf9af, 0x8948, 0x9969, 0xa90a, 0xb92b,
-> > +	0x5af5, 0x4ad4, 0x7ab7, 0x6a96, 0x1a71, 0x0a50, 0x3a33, 0x2a12,
-> > +	0xdbfd, 0xcbdc, 0xfbbf, 0xeb9e, 0x9b79, 0x8b58, 0xbb3b, 0xab1a,
-> > +	0x6ca6, 0x7c87, 0x4ce4, 0x5cc5, 0x2c22, 0x3c03, 0x0c60, 0x1c41,
-> > +	0xedae, 0xfd8f, 0xcdec, 0xddcd, 0xad2a, 0xbd0b, 0x8d68, 0x9d49,
-> > +	0x7e97, 0x6eb6, 0x5ed5, 0x4ef4, 0x3e13, 0x2e32, 0x1e51, 0x0e70,
-> > +	0xff9f, 0xefbe, 0xdfdd, 0xcffc, 0xbf1b, 0xaf3a, 0x9f59, 0x8f78,
-> > +	0x9188, 0x81a9, 0xb1ca, 0xa1eb, 0xd10c, 0xc12d, 0xf14e, 0xe16f,
-> > +	0x1080, 0x00a1, 0x30c2, 0x20e3, 0x5004, 0x4025, 0x7046, 0x6067,
-> > +	0x83b9, 0x9398, 0xa3fb, 0xb3da, 0xc33d, 0xd31c, 0xe37f, 0xf35e,
-> > +	0x02b1, 0x1290, 0x22f3, 0x32d2, 0x4235, 0x5214, 0x6277, 0x7256,
-> > +	0xb5ea, 0xa5cb, 0x95a8, 0x8589, 0xf56e, 0xe54f, 0xd52c, 0xc50d,
-> > +	0x34e2, 0x24c3, 0x14a0, 0x0481, 0x7466, 0x6447, 0x5424, 0x4405,
-> > +	0xa7db, 0xb7fa, 0x8799, 0x97b8, 0xe75f, 0xf77e, 0xc71d, 0xd73c,
-> > +	0x26d3, 0x36f2, 0x0691, 0x16b0, 0x6657, 0x7676, 0x4615, 0x5634,
-> > +	0xd94c, 0xc96d, 0xf90e, 0xe92f, 0x99c8, 0x89e9, 0xb98a, 0xa9ab,
-> > +	0x5844, 0x4865, 0x7806, 0x6827, 0x18c0, 0x08e1, 0x3882, 0x28a3,
-> > +	0xcb7d, 0xdb5c, 0xeb3f, 0xfb1e, 0x8bf9, 0x9bd8, 0xabbb, 0xbb9a,
-> > +	0x4a75, 0x5a54, 0x6a37, 0x7a16, 0x0af1, 0x1ad0, 0x2ab3, 0x3a92,
-> > +	0xfd2e, 0xed0f, 0xdd6c, 0xcd4d, 0xbdaa, 0xad8b, 0x9de8, 0x8dc9,
-> > +	0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1,
-> > +	0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8,
-> > +	0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
-> > +};
-> > +
-> > +uint16_t crc16(const char *buf, int len)
-> > +{
-> > +	int counter;
-> > +	uint16_t crc = 0;
-> > +
-> > +	for (counter = 0; counter < len; counter++)
-> > +		crc = (crc<<8) ^ crc16tab[((crc>>8) ^ *buf++)&0x00FF];
-> > +	return crc;
-> > +}
-> > +
-> > +#define DEFINE_HASHTABLE(name, bits)					\
-> > +	struct hlist_head name[1 << (bits)] =				\
-> > +			{ [0 ... ((1 << (bits)) - 1)] = HLIST_HEAD_INIT }
-> > +
-> > +#define DECLARE_HASHTABLE(name, bits)					\
-> > +	struct hlist_head name[1 << (bits)]
-> > +
-> > +#define HASH_SIZE(name) (ARRAY_SIZE(name))
-> > +#define HASH_BITS(name) ilog2(HASH_SIZE(name))
-> > +
-> > +/* Use hash_32 when possible to allow for fast 32bit hashing in 64bit kernels*/
-> > +#define hash_min(val, bits)						\
-> > +	(sizeof(val) <= 4 ? hash_32(val, bits) : hash_long(val, bits))
-> > +
-> > +static inline void __hash_init(struct hlist_head *ht, unsigned int sz)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < sz; i++)
-> > +		INIT_HLIST_HEAD(&ht[i]);
-> > +}
-> > +
-> > +/**
-> > + * hash_init - initialize a hash table
-> > + * @hashtable: hashtable to be initialized
-> > + *
-> > + * Calculates the size of the hashtable from the given parameter, otherwise
-> > + * same as hash_init_size.
-> > + *
-> > + * This has to be a macro since HASH_BITS() will not work on pointers since
-> > + * it calculates the size during preprocessing.
-> > + */
-> > +#define hash_init(hashtable) __hash_init(hashtable, HASH_SIZE(hashtable))
-> > +
-> > +/**
-> > + * hash_add - add an object to a hashtable
-> > + * @hashtable: hashtable to add to
-> > + * @node: the &struct hlist_node of the object to be added
-> > + * @key: the key of the object to be added
-> > + */
-> > +#define hash_add(hashtable, node, key)					\
-> > +	hlist_add_head(node, &hashtable[hash_min(key, HASH_BITS(hashtable))])
-> > +
-> > +/**
-> > + * hash_hashed - check whether an object is in any hashtable
-> > + * @node: the &struct hlist_node of the object to be checked
-> > + */
-> > +static inline bool hash_hashed(struct hlist_node *node)
-> > +{
-> > +	return !hlist_unhashed(node);
-> > +}
-> > +
-> > +static inline bool __hash_empty(struct hlist_head *ht, unsigned int sz)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < sz; i++)
-> > +		if (!hlist_empty(&ht[i]))
-> > +			return false;
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +/**
-> > + * hash_empty - check whether a hashtable is empty
-> > + * @hashtable: hashtable to check
-> > + *
-> > + * This has to be a macro since HASH_BITS() will not work on pointers since
-> > + * it calculates the size during preprocessing.
-> > + */
-> > +#define hash_empty(hashtable) __hash_empty(hashtable, HASH_SIZE(hashtable))
-> > +
-> > +/**
-> > + * hash_del - remove an object from a hashtable
-> > + * @node: &struct hlist_node of the object to remove
-> > + */
-> > +static inline void hash_del(struct hlist_node *node)
-> > +{
-> > +	hlist_del_init(node);
-> > +}
-> > +
-> > +/**
-> > + * hash_for_each - iterate over a hashtable
-> > + * @name: hashtable to iterate
-> > + * @bkt: integer to use as bucket loop cursor
-> > + * @obj: the type * to use as a loop cursor for each entry
-> > + * @member: the name of the hlist_node within the struct
-> > + */
-> > +#define hash_for_each(name, bkt, obj, member)				\
-> > +	for ((bkt) = 0, obj = NULL; obj == NULL && (bkt) < HASH_SIZE(name);\
-> > +			(bkt)++)\
-> > +		hlist_for_each_entry(obj, &name[bkt], member)
-> > +
-> > +/**
-> > + * hash_for_each_safe - iterate over a hashtable safe against removal of
-> > + * hash entry
-> > + * @name: hashtable to iterate
-> > + * @bkt: integer to use as bucket loop cursor
-> > + * @tmp: a &struct used for temporary storage
-> > + * @obj: the type * to use as a loop cursor for each entry
-> > + * @member: the name of the hlist_node within the struct
-> > + */
-> > +#define hash_for_each_safe(name, bkt, tmp, obj, member)			\
-> > +	for ((bkt) = 0, obj = NULL; obj == NULL && (bkt) < HASH_SIZE(name);\
-> > +			(bkt)++)\
-> > +		hlist_for_each_entry_safe(obj, tmp, &name[bkt], member)
-> > +
-> > +/**
-> > + * hash_for_each_possible - iterate over all possible objects hashing to the
-> > + * same bucket
-> > + * @name: hashtable to iterate
-> > + * @obj: the type * to use as a loop cursor for each entry
-> > + * @member: the name of the hlist_node within the struct
-> > + * @key: the key of the objects to iterate over
-> > + */
-> > +#define hash_for_each_possible(name, obj, member, key)			\
-> > +	hlist_for_each_entry(obj, &name[hash_min(key, HASH_BITS(name))], member)
-> > +
-> > +#endif
-> > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> > index b7ce6f8..33a72b5 100644
-> > --- a/include/erofs/internal.h
-> > +++ b/include/erofs/internal.h
-> > @@ -59,7 +59,7 @@ struct erofs_sb_info {
-> >   extern struct erofs_sb_info sbi;
-> >   struct erofs_inode {
-> > -	struct list_head i_hash, i_subdirs;
-> > +	struct list_head i_hash, i_subdirs, i_xattrs;
-> >   	unsigned int i_count;
-> >   	struct erofs_inode *i_parent;
-> > diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-> > new file mode 100644
-> > index 0000000..dff9fd6
-> > --- /dev/null
-> > +++ b/include/erofs/xattr.h
-> > @@ -0,0 +1,22 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * include/erofs/xattr.h
-> > + *
-> > + */
-> > +
-> > +#ifndef __EROFS_XATTR_H
-> > +#define __EROFS_XATTR_H
-> > +
-> > +#define XATTR_COUNT(_size)	({\
-> > +	u32 __size = le16_to_cpu(_size); \
-> > +	((__size) == 0) ? 0 : \
-> > +	(_size - sizeof(struct erofs_xattr_ibody_header)) / \
-> > +	sizeof(struct erofs_xattr_entry) + 1; })
-> > +
-> > +
-> > +int cust_xattr(struct list_head *hlist);
-> > +int read_xattr_from_src(const char *path, struct list_head *hlist);
-> > +int xattr_entry_size(struct list_head *hlist);
-> > +char *xattr_data(struct list_head *hlist, int size);
-> > +
-> > +#endif
-> > diff --git a/lib/Makefile.am b/lib/Makefile.am
-> > index dea82f7..cbe3243 100644
-> > --- a/lib/Makefile.am
-> > +++ b/lib/Makefile.am
-> > @@ -2,7 +2,8 @@
-> >   # Makefile.am
-> >   noinst_LTLIBRARIES = liberofs.la
-> > -liberofs_la_SOURCES = config.c io.c cache.c inode.c compress.c compressor.c
-> > +liberofs_la_SOURCES = config.c io.c cache.c inode.c compress.c compressor.c \
-> > +		      xattr.c
-> >   liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
-> >   if ENABLE_LZ4
-> >   liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-> > diff --git a/lib/inode.c b/lib/inode.c
-> > index 8b38270..615f117 100644
-> > --- a/lib/inode.c
-> > +++ b/lib/inode.c
-> > @@ -18,6 +18,7 @@
-> >   #include "erofs/cache.h"
-> >   #include "erofs/io.h"
-> >   #include "erofs/compress.h"
-> > +#include "erofs/xattr.h"
-> >   struct erofs_sb_info sbi;
-> > @@ -364,8 +365,10 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
-> >   	/* let's support v1 currently */
-> >   	struct erofs_inode_v1 v1 = {0};
-> >   	int ret;
-> > +	uint16_t count = XATTR_COUNT(inode->xattr_isize);
-> >   	v1.i_advise = cpu_to_le16(0 | (inode->data_mapping_mode << 1));
-> > +	v1.i_xattr_icount = cpu_to_le16(count);
-> >   	v1.i_mode = cpu_to_le16(inode->i_mode);
-> >   	v1.i_nlink = cpu_to_le16(inode->i_nlink);
-> >   	v1.i_size = cpu_to_le32((u32)inode->i_size);
-> > @@ -399,6 +402,20 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
-> >   		return false;
-> >   	off += inode->inode_isize;
-> > +	if (inode->xattr_isize) {
-> > +		char *pbuf = xattr_data(&inode->i_xattrs, inode->xattr_isize);
-> > +
-> > +		if (IS_ERR(pbuf))
-> > +			return false;
-> > +
-> > +		ret = dev_write(pbuf, off, inode->xattr_isize);
-> > +		free(pbuf);
-> > +		if (ret)
-> > +			return false;
-> > +
-> > +		off += inode->xattr_isize;
-> > +	}
-> > +
-> >   	if (inode->extent_isize) {
-> >   		/* write compression metadata */
-> >   		off = Z_EROFS_VLE_EXTENT_ALIGN(off);
-> > @@ -452,6 +469,7 @@ int erofs_prepare_inode_buffer(struct erofs_inode *inode)
-> >   	DBG_BUGON(inode->bh || inode->bh_inline);
-> > +	inode->xattr_isize = xattr_entry_size(&inode->i_xattrs);
-> >   	inodesize = inode->inode_isize + inode->xattr_isize +
-> >   		    inode->extent_isize;
-> > @@ -612,6 +630,7 @@ struct erofs_inode *erofs_new_inode(void)
-> >   	inode->i_count = 1;
-> >   	init_list_head(&inode->i_subdirs);
-> > +	init_list_head(&inode->i_xattrs);
-> >   	inode->xattr_isize = 0;
-> >   	inode->extent_isize = 0;
-> > @@ -699,6 +718,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
-> >   	struct dirent *dp;
-> >   	struct erofs_dentry *d;
-> > +	ret = read_xattr_from_src(dir->i_srcpath, &dir->i_xattrs);
-> > +	if (ret)
-> > +		return ERR_PTR(ret);
-> > +
-> >   	if (!S_ISDIR(dir->i_mode)) {
-> >   		if (S_ISLNK(dir->i_mode)) {
-> >   			char *const symlink = malloc(dir->i_size);
-> > diff --git a/lib/xattr.c b/lib/xattr.c
-> > new file mode 100644
-> > index 0000000..6278abc
-> > --- /dev/null
-> > +++ b/lib/xattr.c
-> > @@ -0,0 +1,319 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * lib/xattr.c
-> > + *
-> > + */
-> > +
-> > +#include <stdlib.h>
-> > +#include <sys/types.h>
-> > +#include <sys/xattr.h>
-> > +#include <linux/xattr.h>
-> > +#include <errno.h>
-> > +#include <string.h>
-> > +
-> > +#include "erofs/defs.h"
-> > +#include "erofs/print.h"
-> > +#include "erofs/list.h"
-> > +#include "erofs/internal.h"
-> > +#include "erofs/hashtable.h"
-> > +#include "err.h"
-> > +#define EROFS_XATTR_HASH_TABLE_BITS 16
-> > +
-> > +struct xattr_item {
-> > +	const char *buf;
-> > +	unsigned int keylen;
-> > +	unsigned int vallen;
-> > +	unsigned int count;
-> > +	u8 index;
-> > +	struct hlist_node node;
-> > +};
-> > +
-> > +struct xattr_list {
-> > +	struct xattr_item *item;
-> > +	struct list_head list;
-> > +};
-> > +
-> > +DECLARE_HASHTABLE(my_hash_table, EROFS_XATTR_HASH_TABLE_BITS);
-> > +
-> > +struct xattr_prefix {
-> > +	const char *prefix;
-> > +	uint16_t prefix_len;
-> > +	u8 index;
-> > +} prefix[] = {
-> > +	{
-> > +		XATTR_USER_PREFIX,
-> > +		XATTR_USER_PREFIX_LEN,
-> > +		EROFS_XATTR_INDEX_USER
-> > +	},
-> > +	{
-> > +		XATTR_SECURITY_PREFIX,
-> > +		XATTR_SYSTEM_PREFIX_LEN,
-> > +		EROFS_XATTR_INDEX_SECURITY
-> > +	},
-> > +	{
-> > +		XATTR_TRUSTED_PREFIX,
-> > +		XATTR_TRUSTED_PREFIX_LEN,
-> > +		EROFS_XATTR_INDEX_TRUSTED
-> > +	},
-> > +	{NULL, 0, 0},
-> > +};
-> > +
-> > +static inline void hxattr_add(struct hlist_node *node, uint16_t key)
-> > +{
-> > +	hash_add(my_hash_table, node, key);
-> > +}
-> > +
-> > +static inline void hxattr_del(struct hlist_node *node)
-> > +{
-> > +	hash_del(node);
-> > +}
-> > +
-> > +static struct xattr_item *hxattr_match(const char *buf, int len, u8 index)
-> > +{
-> > +	struct xattr_item *item;
-> > +	uint16_t mkey = crc16(buf, len);
-> > +
-> > +	hash_for_each_possible(my_hash_table, item, node, mkey) {
-> > +		if (index == item->index &&
-> > +		    len == (item->keylen + item->vallen) &&
-> > +		    !memcmp(buf, item->buf, len)) {
-> > +			return item;
-> > +		}
-> > +	}
-> > +
-> > +	return ERR_PTR(-ENOENT);
-> > +}
-> > +
-> > +static bool match_index(const char *key, u8 *index, uint16_t *len)
-> > +{
-> > +	struct xattr_prefix *p = prefix;
-> > +
-> > +	while (p->prefix) {
-> > +		if (strncmp(p->prefix, key, p->prefix_len)) {
-> > +			*len = p->prefix_len;
-> > +			*index = p->index;
-> > +			return true;
-> > +		}
-> > +		p++;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +static struct xattr_item *new_xattr(const char *buf, u8 index,
-> > +				    int keylen, int vallen)
-> > +{
-> > +	struct xattr_item *item = malloc(sizeof(*item));
-> > +
-> > +	if (!item)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	memset(item, 0, sizeof(*item));
-> > +	INIT_HLIST_NODE(&item->node);
-> > +	item->buf = buf;
-> > +	item->keylen = keylen;
-> > +	item->vallen = vallen;
-> > +	item->count = 1;
-> > +	item->index = index;
-> > +	if (!item->index)
-> > +		return ERR_PTR(-EPERM);
-> > +
-> > +	return item;
-> > +}
-> > +
-> > +static int xattr_add(struct list_head *hlist, struct xattr_item *item)
-> > +{
-> > +	struct xattr_list *mlist = malloc(sizeof(*mlist));
-> > +
-> > +	if (!mlist)
-> > +		return -ENOMEM;
-> > +
-> > +	init_list_head(&mlist->list);
-> > +	mlist->item = item;
-> > +	list_add(&mlist->list, hlist);
-> > +	return 0;
-> > +}
-> > +
-> > +static struct xattr_item *list_xattr_value(const char *path, const char *key)
-> > +{
-> > +	ssize_t keylen, vallen;
-> > +	char *kxattr;
-> > +	struct xattr_item *item;
-> > +	u8 index;
-> > +	uint16_t prelen, suflen;
-> > +
-> > +	/* Output attribute key.*/
-> > +	erofs_info("path:%s key: [%s] ", path, key);
-> > +
-> > +	keylen = strlen(key);
-> > +	if (!match_index(key, &index, &prelen))
-> > +		return ERR_PTR(-ENODATA);
-> > +
-> > +	BUG_ON(keylen < prelen);
-> > +	/* Determine length of the value.*/
-> > +	vallen = lgetxattr(path, key, NULL, 0);
-> > +	if (vallen == -1)
-> > +		return ERR_PTR(-errno);
-> > +
-> > +	/*
-> > +	 * Allocate value buffer.
-> > +	 * One extra byte is needed to append 0x00.
-> > +	 */
-> > +	suflen = keylen - prelen;
-> > +	kxattr = malloc(suflen + vallen + 1);
-> > +	if (!kxattr)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	if (vallen == 0)
-> > +		goto value_0;
-> > +
-> > +	/* Copy value to buffer.*/
-> > +	vallen = lgetxattr(path, key, kxattr + suflen, vallen);
-> > +	if (vallen == -1) {
-> > +		free(kxattr);
-> > +		return ERR_PTR(-errno);
-> > +	}
-> > +
-> > +value_0:
-> > +	memcpy(kxattr, key + prelen, suflen);
-> > +	/* Output attribute value.*/
-> > +	kxattr[suflen + vallen] = '\0';
-> > +	erofs_info("value: [%s]", kxattr + suflen);
-> > +
-> > +	/* kxattr is used at xattr_add(), neednt free if SUCCESS */
-> > +	item = hxattr_match(kxattr, suflen + vallen, index);
-> > +	if (!IS_ERR(item)) {
-> > +		item->count++;
-> > +		free(kxattr);
-> > +		return item;
-> > +	}
-> > +
-> > +	item = new_xattr(kxattr, index, suflen, vallen);
-> > +	if (IS_ERR(item))
-> > +		free(kxattr);
-> > +
-> > +	return item;
-> > +}
-> > +
-> > +int read_xattr_from_src(const char *path, struct list_head *hlist)
-> > +{
-> > +	int ret = 0;
-> > +	char *kbuf, *key;
-> > +	ssize_t buflen = llistxattr(path, NULL, 0);
-> > +
-> > +	if (buflen == -1)
-> > +		return -errno;
-> > +	else if (buflen == 0)
-> > +		return 0;
-> > +
-> > +	/* Allocate the buffer.*/
-> > +	kbuf = malloc(buflen);
-> > +	if (!kbuf)
-> > +		return -errno;
-> > +
-> > +	/* Copy the list of attribute keys to the buffer.*/
-> > +	buflen = llistxattr(path, kbuf, buflen);
-> > +	if (buflen == -1) {
-> > +		ret = -errno;
-> > +		goto exit_err;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Loop over the list of zero terminated strings with the
-> > +	 * attribute keys. Use the remaining buffer length to determine
-> > +	 * the end of the list.
-> > +	 */
-> > +	key = kbuf;
-> > +	while (buflen > 0) {
-> > +		size_t keylen = strlen(key) + 1;
-> > +		struct xattr_item *item = list_xattr_value(path, key);
-> > +
-> > +		if (!item) {
-> > +			ret = -errno;
-> > +			goto exit_err;
-> > +		}
-> > +
-> > +		if (!hash_hashed(&item->node)) {
-> > +			uint16_t mkey;
-> > +
-> > +			mkey = crc16(item->buf, item->keylen + item->vallen);
-> > +			hxattr_add(&item->node, mkey);
-> > +		}
-> > +
-> > +		if (hlist) {
-> > +			ret = xattr_add(hlist, item);
-> > +			if (ret < 0)
-> > +				goto exit_err;
-> > +		}
-> > +
-> > +		buflen -= keylen;
-> > +		key += keylen;
-> > +	}
-> > +
-> > +exit_err:
-> > +	free(kbuf);
-> > +	return ret;
-> > +
-> > +}
-> > +
-> > +int xattr_entry_size(struct list_head *hlist)
-> > +{
-> > +	int sum = 0;
-> > +	struct xattr_list *lst;
-> > +
-> > +	if (list_empty(hlist))
-> > +		return 0;
-> > +
-> > +	list_for_each_entry(lst, hlist, list) {
-> > +		struct xattr_item *item = lst->item;
-> > +
-> > +		sum += sizeof(struct erofs_xattr_entry);
-> > +		sum += item->keylen + item->vallen;
-> > +		sum = EROFS_XATTR_ALIGN(sum);
-> > +	}
-> > +
-> > +	sum += sizeof(struct erofs_xattr_ibody_header);
-> > +
-> > +	return EROFS_XATTR_ALIGN(sum);
-> > +}
-> > +
-> > +char *xattr_data(struct list_head *hlist, int xattr_size)
-> > +{
-> > +	struct xattr_list *lst;
-> > +	char *buf, *pbuf;
-> > +	unsigned int size = 0;
-> > +	struct erofs_xattr_ibody_header header = {
-> > +		.h_checksum = 0,
-> > +		.h_shared_count = 0,
-> > +	};
-> > +
-> > +	erofs_info("xattr_size=%d", xattr_size);
-> > +	buf = malloc(xattr_size);
-> > +	if (!buf)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	memset(buf, 0, xattr_size);
-> > +	pbuf = buf + sizeof(struct erofs_xattr_ibody_header);
-> > +
-> > +	list_for_each_entry(lst, hlist, list) {
-> > +		struct erofs_xattr_entry entry;
-> > +		struct xattr_item *item = lst->item;
-> > +
-> > +		entry.e_name_index = item->index;
-> > +		entry.e_name_len = item->keylen;
-> > +		entry.e_value_size = cpu_to_le16(item->vallen);
-> > +
-> > +		BUG_ON(size > xattr_size);
-> > +		memcpy(pbuf + size, &entry, sizeof(entry));
-> > +
-> > +		size += sizeof(struct erofs_xattr_entry);
-> > +		memcpy(pbuf + size, item->buf, item->keylen + item->vallen);
-> > +		size += item->keylen + item->vallen;
-> > +		size = EROFS_XATTR_ALIGN(size);
-> > +	}
-> > +
-> > +	memcpy(buf, &header, sizeof(header));
-> > +
-> > +	return buf;
-> > +}
-> > +
-> > 
+ .../filesystems/erofs.txt                     |  4 --
+ drivers/staging/Kconfig                       |  2 -
+ drivers/staging/Makefile                      |  1 -
+ drivers/staging/erofs/TODO                    | 46 -------------------
+ fs/Kconfig                                    |  1 +
+ fs/Makefile                                   |  1 +
+ {drivers/staging => fs}/erofs/Kconfig         |  0
+ {drivers/staging => fs}/erofs/Makefile        |  4 +-
+ {drivers/staging => fs}/erofs/compress.h      |  2 +-
+ {drivers/staging => fs}/erofs/data.c          |  2 +-
+ {drivers/staging => fs}/erofs/decompressor.c  |  2 +-
+ {drivers/staging => fs}/erofs/dir.c           |  2 +-
+ {drivers/staging => fs}/erofs/erofs_fs.h      |  3 +-
+ {drivers/staging => fs}/erofs/inode.c         |  2 +-
+ {drivers/staging => fs}/erofs/internal.h      |  3 +-
+ {drivers/staging => fs}/erofs/namei.c         |  2 +-
+ {drivers/staging => fs}/erofs/super.c         |  2 +-
+ {drivers/staging => fs}/erofs/tagptr.h        |  0
+ {drivers/staging => fs}/erofs/utils.c         |  2 +-
+ {drivers/staging => fs}/erofs/xattr.c         |  2 +-
+ {drivers/staging => fs}/erofs/xattr.h         |  2 +-
+ {drivers/staging => fs}/erofs/zdata.c         |  2 +-
+ {drivers/staging => fs}/erofs/zdata.h         |  2 +-
+ {drivers/staging => fs}/erofs/zmap.c          |  2 +-
+ {drivers/staging => fs}/erofs/zpvec.h         |  2 +-
+ .../include => include}/trace/events/erofs.h  |  0
+ include/uapi/linux/magic.h                    |  1 +
+ 27 files changed, 21 insertions(+), 73 deletions(-)
+ rename {drivers/staging/erofs/Documentation => Documentation}/filesystems/erofs.txt (98%)
+ delete mode 100644 drivers/staging/erofs/TODO
+ rename {drivers/staging => fs}/erofs/Kconfig (100%)
+ rename {drivers/staging => fs}/erofs/Makefile (68%)
+ rename {drivers/staging => fs}/erofs/compress.h (97%)
+ rename {drivers/staging => fs}/erofs/data.c (99%)
+ rename {drivers/staging => fs}/erofs/decompressor.c (99%)
+ rename {drivers/staging => fs}/erofs/dir.c (98%)
+ rename {drivers/staging => fs}/erofs/erofs_fs.h (99%)
+ rename {drivers/staging => fs}/erofs/inode.c (99%)
+ rename {drivers/staging => fs}/erofs/internal.h (99%)
+ rename {drivers/staging => fs}/erofs/namei.c (99%)
+ rename {drivers/staging => fs}/erofs/super.c (99%)
+ rename {drivers/staging => fs}/erofs/tagptr.h (100%)
+ rename {drivers/staging => fs}/erofs/utils.c (99%)
+ rename {drivers/staging => fs}/erofs/xattr.c (99%)
+ rename {drivers/staging => fs}/erofs/xattr.h (98%)
+ rename {drivers/staging => fs}/erofs/zdata.c (99%)
+ rename {drivers/staging => fs}/erofs/zdata.h (99%)
+ rename {drivers/staging => fs}/erofs/zmap.c (99%)
+ rename {drivers/staging => fs}/erofs/zpvec.h (98%)
+ rename {drivers/staging/erofs/include => include}/trace/events/erofs.h (100%)
+
+diff --git a/drivers/staging/erofs/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
+similarity index 98%
+rename from drivers/staging/erofs/Documentation/filesystems/erofs.txt
+rename to Documentation/filesystems/erofs.txt
+index 0eab600ca7ca..38aa9126ec98 100644
+--- a/drivers/staging/erofs/Documentation/filesystems/erofs.txt
++++ b/Documentation/filesystems/erofs.txt
+@@ -49,10 +49,6 @@ Bugs and patches are welcome, please kindly help us and send to the following
+ linux-erofs mailing list:
+ >> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
+ 
+-Note that EROFS is still working in progress as a Linux staging driver,
+-Cc the staging mailing list as well is highly recommended:
+->> Linux Driver Project Developer List <devel@driverdev.osuosl.org>
+-
+ Mount options
+ =============
+ 
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 7c96a01eef6c..d972ec8e71fb 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -112,8 +112,6 @@ source "drivers/staging/gasket/Kconfig"
+ 
+ source "drivers/staging/axis-fifo/Kconfig"
+ 
+-source "drivers/staging/erofs/Kconfig"
+-
+ source "drivers/staging/fieldbus/Kconfig"
+ 
+ source "drivers/staging/kpc2000/Kconfig"
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index fcaac9693b83..6018b9a4a077 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -46,7 +46,6 @@ obj-$(CONFIG_DMA_RALINK)	+= ralink-gdma/
+ obj-$(CONFIG_SOC_MT7621)	+= mt7621-dts/
+ obj-$(CONFIG_STAGING_GASKET_FRAMEWORK)	+= gasket/
+ obj-$(CONFIG_XIL_AXIS_FIFO)	+= axis-fifo/
+-obj-$(CONFIG_EROFS_FS)		+= erofs/
+ obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
+ obj-$(CONFIG_KPC2000)		+= kpc2000/
+ obj-$(CONFIG_ISDN_CAPI)		+= isdn/
+diff --git a/drivers/staging/erofs/TODO b/drivers/staging/erofs/TODO
+deleted file mode 100644
+index a8608b2f72bd..000000000000
+--- a/drivers/staging/erofs/TODO
++++ /dev/null
+@@ -1,46 +0,0 @@
+-
+-EROFS is still working in progress, thus it is not suitable
+-for all productive uses. play at your own risk :)
+-
+-TODO List:
+- - add the missing error handling code
+-   (mainly existed in xattr and decompression submodules);
+-
+- - finalize erofs ondisk format design  (which means that
+-   minor on-disk revisions could happen later);
+-
+- - documentation and detailed technical analysis;
+-
+- - general code review and clean up
+-   (including confusing variable names and code snippets);
+-
+- - support larger compressed clustersizes for selection
+-   (currently erofs only works as expected with the page-sized
+-    compressed cluster configuration, usually 4KB);
+-
+- - support more lossless data compression algorithms
+-   in addition to LZ4 algorithms in VLE approach;
+-
+- - data deduplication and other useful features.
+-
+-The following git tree provides the file system user-space
+-tools under development (ex, formatting tool mkfs.erofs):
+->> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+-
+-The open-source development of erofs-utils is at the early stage.
+-Contact the original author Li Guifu <bluce.liguifu@huawei.com> and
+-the co-maintainer Fang Wei <fangwei1@huawei.com> for the latest news
+-and more details.
+-
+-Code, suggestions, etc, are welcome. Please feel free to
+-ask and send patches,
+-
+-To:
+-  linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
+-  Gao Xiang                  <gaoxiang25@huawei.com>
+-  Chao Yu                    <yuchao0@huawei.com>
+-
+-Cc: (for linux-kernel upstream patches)
+-  Greg Kroah-Hartman         <gregkh@linuxfoundation.org>
+-  linux-staging mailing list <devel@driverdev.osuosl.org>
+-
+diff --git a/fs/Kconfig b/fs/Kconfig
+index bfb1c6095c7a..669d46550e6d 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
+ source "fs/pstore/Kconfig"
+ source "fs/sysv/Kconfig"
+ source "fs/ufs/Kconfig"
++source "fs/erofs/Kconfig"
+ 
+ endif # MISC_FILESYSTEMS
+ 
+diff --git a/fs/Makefile b/fs/Makefile
+index d60089fd689b..b2e4973a0bea 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
+ obj-$(CONFIG_CEPH_FS)		+= ceph/
+ obj-$(CONFIG_PSTORE)		+= pstore/
+ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
++obj-$(CONFIG_EROFS_FS)		+= erofs/
+diff --git a/drivers/staging/erofs/Kconfig b/fs/erofs/Kconfig
+similarity index 100%
+rename from drivers/staging/erofs/Kconfig
+rename to fs/erofs/Kconfig
+diff --git a/drivers/staging/erofs/Makefile b/fs/erofs/Makefile
+similarity index 68%
+rename from drivers/staging/erofs/Makefile
+rename to fs/erofs/Makefile
+index 5cdae21cb5af..46f2aa4ba46c 100644
+--- a/drivers/staging/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -1,12 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-EROFS_VERSION = "1.0pre1"
++EROFS_VERSION = "1.0"
+ 
+ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+ 
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+-# staging requirement: to be self-contained in its own directory
+-ccflags-y += -I $(srctree)/$(src)/include
+ erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
+diff --git a/drivers/staging/erofs/compress.h b/fs/erofs/compress.h
+similarity index 97%
+rename from drivers/staging/erofs/compress.h
+rename to fs/erofs/compress.h
+index 043013f9ef1b..57035b7646ef 100644
+--- a/drivers/staging/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/compress.h
++ * linux/fs/erofs/compress.h
+  *
+  * Copyright (C) 2019 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/data.c b/fs/erofs/data.c
+similarity index 99%
+rename from drivers/staging/erofs/data.c
+rename to fs/erofs/data.c
+index 75b859e48084..4d0123ef15f5 100644
+--- a/drivers/staging/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/data.c
++ * linux/fs/erofs/data.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/decompressor.c b/fs/erofs/decompressor.c
+similarity index 99%
+rename from drivers/staging/erofs/decompressor.c
+rename to fs/erofs/decompressor.c
+index 5361a2bbedb6..1e9e1359e40c 100644
+--- a/drivers/staging/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/decompressor.c
++ * linux/fs/erofs/decompressor.c
+  *
+  * Copyright (C) 2019 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/dir.c b/fs/erofs/dir.c
+similarity index 98%
+rename from drivers/staging/erofs/dir.c
+rename to fs/erofs/dir.c
+index 2fbfc4935077..7cf7da8574c4 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/dir.c
++ * linux/fs/erofs/dir.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+similarity index 99%
+rename from drivers/staging/erofs/erofs_fs.h
+rename to fs/erofs/erofs_fs.h
+index e82e833985e4..25bda459f2e6 100644
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
+ /*
+- * linux/drivers/staging/erofs/erofs_fs.h
++ * linux/fs/erofs/erofs_fs.h
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+@@ -10,7 +10,6 @@
+ #define __EROFS_FS_H
+ 
+ /* Enhanced(Extended) ROM File System */
+-#define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+ #define EROFS_SUPER_OFFSET      1024
+ 
+ /*
+diff --git a/drivers/staging/erofs/inode.c b/fs/erofs/inode.c
+similarity index 99%
+rename from drivers/staging/erofs/inode.c
+rename to fs/erofs/inode.c
+index 286729143365..2c771063889b 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/inode.c
++ * linux/fs/erofs/inode.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/internal.h b/fs/erofs/internal.h
+similarity index 99%
+rename from drivers/staging/erofs/internal.h
+rename to fs/erofs/internal.h
+index 118e7c7e4d4d..f4b50b59cda3 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/internal.h
++ * linux/fs/erofs/internal.h
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+@@ -16,6 +16,7 @@
+ #include <linux/bio.h>
+ #include <linux/buffer_head.h>
+ #include <linux/cleancache.h>
++#include <linux/magic.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include "erofs_fs.h"
+diff --git a/drivers/staging/erofs/namei.c b/fs/erofs/namei.c
+similarity index 99%
+rename from drivers/staging/erofs/namei.c
+rename to fs/erofs/namei.c
+index 8e06526da023..ccce53d46547 100644
+--- a/drivers/staging/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/namei.c
++ * linux/fs/erofs/namei.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/super.c b/fs/erofs/super.c
+similarity index 99%
+rename from drivers/staging/erofs/super.c
+rename to fs/erofs/super.c
+index f65a1ff9f42f..95187619b3e3 100644
+--- a/drivers/staging/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/super.c
++ * linux/fs/erofs/super.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/tagptr.h b/fs/erofs/tagptr.h
+similarity index 100%
+rename from drivers/staging/erofs/tagptr.h
+rename to fs/erofs/tagptr.h
+diff --git a/drivers/staging/erofs/utils.c b/fs/erofs/utils.c
+similarity index 99%
+rename from drivers/staging/erofs/utils.c
+rename to fs/erofs/utils.c
+index 814c2ee037ae..c48e417d3926 100644
+--- a/drivers/staging/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/utils.c
++ * linux/fs/erofs/utils.c
+  *
+  * Copyright (C) 2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/xattr.c b/fs/erofs/xattr.c
+similarity index 99%
+rename from drivers/staging/erofs/xattr.c
+rename to fs/erofs/xattr.c
+index b29177a17347..148ceaf72790 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/xattr.c
++ * linux/fs/erofs/xattr.c
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/xattr.h b/fs/erofs/xattr.h
+similarity index 98%
+rename from drivers/staging/erofs/xattr.h
+rename to fs/erofs/xattr.h
+index 63cc87e3d3f4..d4213fff57e7 100644
+--- a/drivers/staging/erofs/xattr.h
++++ b/fs/erofs/xattr.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/xattr.h
++ * linux/fs/erofs/xattr.h
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/zdata.c b/fs/erofs/zdata.c
+similarity index 99%
+rename from drivers/staging/erofs/zdata.c
+rename to fs/erofs/zdata.c
+index 2d7aaf98f7de..24be7d98bce3 100644
+--- a/drivers/staging/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/zdata.c
++ * linux/fs/erofs/zdata.c
+  *
+  * Copyright (C) 2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/zdata.h b/fs/erofs/zdata.h
+similarity index 99%
+rename from drivers/staging/erofs/zdata.h
+rename to fs/erofs/zdata.h
+index e11fe1959ca2..506ca46727db 100644
+--- a/drivers/staging/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/zdata.h
++ * linux/fs/erofs/zdata.h
+  *
+  * Copyright (C) 2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/zmap.c b/fs/erofs/zmap.c
+similarity index 99%
+rename from drivers/staging/erofs/zmap.c
+rename to fs/erofs/zmap.c
+index aeed5c674d9e..d887ea6d4fd5 100644
+--- a/drivers/staging/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * linux/drivers/staging/erofs/zmap.c
++ * linux/fs/erofs/zmap.c
+  *
+  * Copyright (C) 2018-2019 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/zpvec.h b/fs/erofs/zpvec.h
+similarity index 98%
+rename from drivers/staging/erofs/zpvec.h
+rename to fs/erofs/zpvec.h
+index 9798f5627786..bb7689e67836 100644
+--- a/drivers/staging/erofs/zpvec.h
++++ b/fs/erofs/zpvec.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * linux/drivers/staging/erofs/zpvec.h
++ * linux/fs/erofs/zpvec.h
+  *
+  * Copyright (C) 2018 HUAWEI, Inc.
+  *             http://www.huawei.com/
+diff --git a/drivers/staging/erofs/include/trace/events/erofs.h b/include/trace/events/erofs.h
+similarity index 100%
+rename from drivers/staging/erofs/include/trace/events/erofs.h
+rename to include/trace/events/erofs.h
+diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+index 1274c692e59c..903cc2d2750b 100644
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@ -19,6 +19,7 @@
+ #define SQUASHFS_MAGIC		0x73717368
+ #define ECRYPTFS_SUPER_MAGIC	0xf15f
+ #define EFS_SUPER_MAGIC		0x414A53
++#define EROFS_SUPER_MAGIC_V1	0xE0F5E1E2
+ #define EXT2_SUPER_MAGIC	0xEF53
+ #define EXT3_SUPER_MAGIC	0xEF53
+ #define XENFS_SUPER_MAGIC	0xabba1974
+-- 
+2.17.1
+
