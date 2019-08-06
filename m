@@ -2,62 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BA048344B
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 16:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80BDF8355B
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2019 17:34:46 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 462yFX6wcwzDr2J
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 00:49:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 462zGB6h98zDr0l
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2019 01:34:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2a00:1450:4864:20::52b; helo=mail-ed1-x52b.google.com;
- envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="f6XcpSav"; 
- dkim-atps=neutral
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com
- [IPv6:2a00:1450:4864:20::52b])
+Received: from ozlabs.org (bilbo.ozlabs.org [203.11.71.1])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 462yFR75YgzDqkT
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 00:48:59 +1000 (AEST)
-Received: by mail-ed1-x52b.google.com with SMTP id w13so82627075eds.4
- for <linux-erofs@lists.ozlabs.org>; Tue, 06 Aug 2019 07:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:from:date:message-id:subject:to;
- bh=pBm/J3PgHIa4qP5C5yz7He+tg7ZRNQ/TWTJXyDm/pYo=;
- b=f6XcpSavj6Ndw3Rw8bhtmcgoZ6YXhviM/MphDrTwdIWXucn7aUUAKDyjRpsVsPo6XB
- pDx+wCApzpTfRcENdpIPZGp7lVFZdqZqX5eNHsK4UZd3D6a7Q7cMpXQ30LHJ7F+B28eY
- 9NUY7AJPqmjj3ijGs7kob9RBBqbspr1Dj6YFuV2n9QaXDdgBbwNB6/oSNvsAp7fkw/LD
- XOuq2F2YhJROn0F3/TRpiuAVlUe+BjLI+jH9OjtC9zPtpZUYenhW39bXbbpYPJAkWwqP
- pkXDQfmsoc6djtwROFg6tCHQ3lAx91B6gXDjL1APeFZoHVAdYCti0vIge8GBaBHUNqPw
- 7Rnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
- bh=pBm/J3PgHIa4qP5C5yz7He+tg7ZRNQ/TWTJXyDm/pYo=;
- b=lWE2J9cvEiRxpqEDbmmSOBam9+C3YXq4dFl5zXIt6ZV8IovGxw/gwYJlNWjXLjARv8
- 7heHOELqQ/8ecE94p7Jtr4vQUJjtHzs55jQ1aCm+o1m8KDKKMePMoR0aSmgLMJP5L1fj
- 7klZlbhcIaWIUxgmfivIZB/Cvn6qpH5GI5CH+nZ8eQU5468yNa9n652QBFouFEBgG4i5
- P1FtNl/r/eTw/fbrtVWnwcDTeCTF2LukybgDpIkI7WJ7+rp7cA2K33ZmMUopqgzo1Sxq
- hvotZztLDQ3HG3Aw84vPAZw0rLBgRIrnuiToTiNlN0WJ0PrWHZfdjKnrC0FWGHgpkxRT
- bF1w==
-X-Gm-Message-State: APjAAAUZgb1delXLOzCRPvNAEiCHIhIk/KqY5JbW/BODKNWyU5O4nIbd
- cSDeN7U2VoBoaqoNfHLqNfI9Pe2YTwu8KxIuYvEgvA==
-X-Google-Smtp-Source: APXvYqwyHAihw6xqaRNAwktKcVqtJzSq30t/x5hwUZlyRTA5E6b1S1nJALVlV8HoJzfamqKLYfllKaXDZnbhPFjcexM=
-X-Received: by 2002:aa7:c509:: with SMTP id o9mr4309516edq.164.1565102934431; 
- Tue, 06 Aug 2019 07:48:54 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 462zG23JmYzDqcw
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Aug 2019 01:34:34 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
+ header.from=canb.auug.org.au
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ secure) header.d=canb.auug.org.au header.i=@canb.auug.org.au
+ header.b="dcShrCbs"; dkim-atps=neutral
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail.ozlabs.org (Postfix) with ESMTPSA id 462zFv3F9sz9sMr;
+ Wed,  7 Aug 2019 01:34:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+ s=201702; t=1565105672;
+ bh=5FHAJ2a0H+dgGw8qV5krRpvfMTW4QMVUNBiIFTz7ukc=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=dcShrCbsau/hwzLIEVX+xCQkjw8ytUmuBphP7Wzk0Os+PeYJL4E9AZojKIxsW/XCC
+ xTyuNmwgEnwSEW6/Kz8amhaNxd/QkXfyj6TN7B3JHn6lyvGiqz9io4rs24B6/81qqU
+ aHhTQCVVCoPKVEFdalsWvjQTI3tUyZFaUFc133mkcqknYyDVNSEChFStksBky28u+/
+ GQO177sJv9EuIy1iyMEkE5ZTlNxx7pwHSxx0QCJI51C+dfkT0hpyUbfm+uzI+0mdxe
+ ZEqmwK2hiOD8JXrhyc//NCp7AK7xY6zJ2JDZpiGvVhYTi+uG79dj7xnbSdH/Jt6dGk
+ vLa4gCEEgqDLA==
+Date: Wed, 7 Aug 2019 01:34:23 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH RFC] erofs: move erofs out of staging
+Message-ID: <20190807013423.02fd6990@canb.auug.org.au>
+In-Reply-To: <20190806094925.228906-1-gaoxiang25@huawei.com>
+References: <20190806094925.228906-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Tue, 6 Aug 2019 20:18:42 +0530
-Message-ID: <CAGu0czRhmT7vSnFB-9pnJS=fhZp7RFL2ZwYfbc1RK-p5ddQ6tw@mail.gmail.com>
-Subject: Test case suite for erofs.
-To: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="000000000000719cd6058f73ec46"
+Content-Type: multipart/signed; boundary="Sig_/3zuq9Mbh_pVR5QZxswgd1wJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,31 +57,48 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+ Theodore Ts'o <tytso@mit.edu>, "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
+ Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
+ David Sterba <dsterba@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Miao Xie <miaoxie@huawei.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000719cd6058f73ec46
-Content-Type: text/plain; charset="UTF-8"
-
-Hello Maintainers,
-
-I wanted to ask if there is any plan for writing a test case suite for
-erofs. If not, how do you think is the idea of having a dedicated test case
-suite, so as to maintain quality of fs?
-Let me know your thoughts.
-
--Pratik
-
---000000000000719cd6058f73ec46
-Content-Type: text/html; charset="UTF-8"
+--Sig_/3zuq9Mbh_pVR5QZxswgd1wJ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"auto">Hello Maintainers,<div dir=3D"auto"><br></div><div dir=3D=
-"auto">I wanted to ask if there is any plan for writing a test case suite f=
-or erofs. If not, how do you think is the idea of having a dedicated test c=
-ase suite, so as to maintain quality of fs?</div><div dir=3D"auto">Let me k=
-now your thoughts.=C2=A0</div><div dir=3D"auto"><br></div><div dir=3D"auto"=
->-Pratik</div></div>
+Hi Gao,
 
---000000000000719cd6058f73ec46--
+One small suggestion: just remove the file names from the comments at
+the top of the files rather than change them to reflect that they have
+moved.  We can usually tell the name of a file by its name :-)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3zuq9Mbh_pVR5QZxswgd1wJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Jnf8ACgkQAVBC80lX
+0GyktAf/awWVta3LRhqpez+RTEQC6IzKAlgR8ULIAJpHB3OZFNlv6Lxvbg3l/Jdq
+XZAoR3RqQTr49hpHePfnENWdxIFa7DUCyOjO5MeWyP7VpVBEk48YSFnBUtPIzh7m
++UdrAt+zOdjzdRd6/v2DGhd8dXLZ+rsupL9XA75ak2iVEGjEnlTorjwKDaYy2VR+
+cV0mFcFNBEHs2Ok2wTfYYzUx7id7/tcVfjWuzvyvd1d0Y53FLgWLvIVCsJNM0HmH
+LlpVkiVpMFDCC3SMSiffhkOkNigEV1vY3wxlS2qniRz+qXbAMqPv8CRbtdO92bkM
+LBThN5N6CBu+SqQgGSvGv08yzx+eqg==
+=sZOX
+-----END PGP SIGNATURE-----
+
+--Sig_/3zuq9Mbh_pVR5QZxswgd1wJ--
