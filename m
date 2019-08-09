@@ -2,39 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45AB486258
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2019 14:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 251718843F
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Aug 2019 22:45:46 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4647cd2kkyzDqjL
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2019 22:54:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 464y1g0T79zDrGx
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Aug 2019 06:45:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.187; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=none (mailfrom) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga01-in.huawei.com [45.249.212.187])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4647cT5txQzDqRZ
- for <linux-erofs@lists.ozlabs.org>; Thu,  8 Aug 2019 22:54:33 +1000 (AEST)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
- by Forcepoint Email with ESMTP id 09FD6F34FF96F504C555;
- Thu,  8 Aug 2019 20:54:28 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 8 Aug 2019 20:54:27 +0800
-Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
- (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 8
- Aug 2019 20:54:27 +0800
-Date: Thu, 8 Aug 2019 21:11:39 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Dave Chinner <david@fromorbit.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 464y1Q5vfwzDrFD
+ for <linux-erofs@lists.ozlabs.org>; Sat, 10 Aug 2019 06:45:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+ Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+ Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+ List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+ bh=r3dsx6QVmSUscYTWrHVh0F7zwcjR91dpsterxBkUC8s=; b=TLJg1pKD9j6YHm/H37OhEVDOl
+ 8da2sYlD4V5mVM84jMZdKOKy9/DTnFcQjQW0txNN/sjDRCo8WEoF9cWP2tFIGMAumjDEpKavemMRs
+ 4s14f9uX8lSxORoFI9iIpY5fljFbZNmKKgUpZNQRurkaZtGWiuGjmwnbKC9c6mv1UqaDrz7BPhyw3
+ /AI+Ae+NXenu8vna83hq60qECoatL4uG0fG6u0J2CGrE/Nk7dvKys9fLrf+BbEwaa3bGahn4rhzTU
+ DPkfLQuLi4oSQV4zomrIgQPE8vhPr06zoiEVlT2IfCBMIvVHcjCfLhXoktwK4JN0cdeyh32lj4cMF
+ 5m5xYhuaA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red
+ Hat Linux)) id 1hwBlF-000213-GK; Fri, 09 Aug 2019 20:45:17 +0000
+Date: Fri, 9 Aug 2019 13:45:17 -0700
+From: Matthew Wilcox <willy@infradead.org>
+To: Gao Xiang <gaoxiang25@huawei.com>, Dave Chinner <david@fromorbit.com>,
+ Goldwyn Rodrigues <RGoldwyn@suse.com>, "hch@lst.de" <hch@lst.de>,
+ "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+ "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+ "ruansy.fnst@cn.fujitsu.com" <ruansy.fnst@cn.fujitsu.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ linux-erofs@lists.ozlabs.org, miaoxie@huawei.com
 Subject: Re: [PATCH 10/13] iomap: use a function pointer for dio submits
-Message-ID: <20190808131139.GH28630@138>
+Message-ID: <20190809204517.GR5482@bombadil.infradead.org>
 References: <20190802220048.16142-1-rgoldwyn@suse.de>
  <20190802220048.16142-11-rgoldwyn@suse.de>
  <20190804234321.GC7689@dread.disaster.area>
@@ -42,17 +54,11 @@ References: <20190802220048.16142-1-rgoldwyn@suse.de>
  <20190805215458.GH7689@dread.disaster.area>
  <20190808042640.GA28630@138>
  <20190808054936.GA5319@sol.localdomain>
- <20190808081647.GI7689@dread.disaster.area>
- <20190808091632.GF28630@138> <20190808112139.GG28630@138>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190808112139.GG28630@138>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.175.124.28]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190808054936.GA5319@sol.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,82 +70,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "ruansy.fnst@cn.fujitsu.com" <ruansy.fnst@cn.fujitsu.com>,
- "darrick.wong@oracle.com" <darrick.wong@oracle.com>, miaoxie@huawei.com,
- Eric Biggers <ebiggers@kernel.org>, Goldwyn Rodrigues <RGoldwyn@suse.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- linux-erofs@lists.ozlabs.org, "hch@lst.de" <hch@lst.de>,
- "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Aug 08, 2019 at 07:21:39PM +0800, Gao Xiang wrote:
-> On Thu, Aug 08, 2019 at 05:29:47PM +0800, Gao Xiang wrote:
-> > On Thu, Aug 08, 2019 at 06:16:47PM +1000, Dave Chinner wrote:
-> > > On Wed, Aug 07, 2019 at 10:49:36PM -0700, Eric Biggers wrote:
-> > > > FWIW, the only order that actually makes sense is decrypt->decompress->verity.
-> > > 
-> > > *nod*
-> > > 
-> > > Especially once we get the inline encryption support for fscrypt so
-> > > the storage layer can offload the encrypt/decrypt to hardware via
-> > > the bio containing plaintext. That pretty much forces fscrypt to be
-> > > the lowest layer of the filesystem transformation stack.  This
-> > > hardware offload capability also places lots of limits on what you
-> > > can do with block-based verity layers below the filesystem. e.g.
-> > > using dm-verity when you don't know if there's hardware encryption
-> > > below or software encryption on top becomes problematic...
-> 
-> ...and I'm not talking of fs-verity, I personally think fs-verity
-> is great. I am only talking about a generic stuff.
-> 
-> In order to know which level becomes problematic, there even could
-> be another choice "decrypt->verity1->decompress->verity2" for such
-> requirement (assuming verity1/2 themselves are absolutely bug-free),
-> verity1 can be a strong merkle tree and verity2 is a weak form (just
-> like a simple Adler-32/crc32 in compressed block), thus we can locate
-> whether it's a decrypt or decompress bug.
-> 
-> Many compression algorithm containers already have such a weak
-> form such as gzip algorithm, so there is no need to add such
-> an extra step to postprocess.
-> 
-> and I have no idea which (decrypt->verity1->decompress->verity2 or
-> decrypt->decompress->verity) is faster since verity2 is rather simple.
-> However, if we use the only strong form in the end, there could be
-> a lot of extra IO and expensive multiple-level computations if files
-> are highly compressible.
-> 
-> On the other hand, such verity2 can be computed offline / avoided
-> by fuzzer tools for read-only scenerios (for example, after building
-> these images and do a full image verification with the given kernel)
-> in order to make sure its stability (In any case, I'm talking about
-> how to make those algorithms bug-free).
-> 
-> All I want to say is I think "decrypt->verity->decompress" is
-> reasonable as well.
-
-... And another fundamental concern is that if we don't verify earlier
-(I mean on-disk data), then untrusted data will be transformed
-(decompressed and even decrypted if no inline encryption) with risk,
-and it seems _vulnerable_ if such decrypt / decompress algorithms have
-_security issues_ (such as Buffer Overflow). It seems that it's less
-security than do verity earlier.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Gao Xiang
-> 
+On Wed, Aug 07, 2019 at 10:49:36PM -0700, Eric Biggers wrote:
+> On Thu, Aug 08, 2019 at 12:26:42PM +0800, Gao Xiang wrote:
+> >     1. decrypt->verity->decompress
 > > 
-> > Add a word, I was just talking benefits between "decrypt->decompress->
-> > verity" and "decrypt->verity->decompress", I think both forms are
-> > compatible with inline en/decryption. I don't care which level
-> > "decrypt" is at... But maybe some user cares. Am I missing something?
+> >     2. verity->decompress->decrypt
 > > 
-> > Thanks,
-> > Gao Xiang
+> >     3. decompress->decrypt->verity
 > > 
+> >    1. and 2. could cause less computation since it processes
+> >    compressed data, and the security is good enough since
+> >    the behavior of decompression algorithm is deterministic.
+> >    3 could cause more computation.
+> > 
+> > All I want to say is the post process is so complicated since we have
+> > many selection if encryption, decompression, verification are all involved.
+> > 
+> > Maybe introduce a core subset to IOMAP is better for long-term
+> > maintainment and better performance. And we should consider it
+> > more carefully.
+> > 
+> 
+> FWIW, the only order that actually makes sense is decrypt->decompress->verity.
+
+That used to be true, but a paper in 2004 suggested it's not true.
+Further work in this space in 2009 based on block ciphers:
+https://arxiv.org/pdf/1009.1759
+
+It looks like it'd be computationally expensive to do, but feasible.
+
+> Decrypt before decompress, i.e. encrypt after compress, because only the
+> plaintext can be compressible; the ciphertext isn't.
