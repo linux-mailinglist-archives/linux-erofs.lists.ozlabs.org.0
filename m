@@ -1,45 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50CED8D0D1
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 12:38:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 188128D1B1
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 13:04:50 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 467mJB23x2zDqgf
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 20:38:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 467mv3403DzDqkg
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 21:04:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.32; helo=huawei.com; envelope-from=gaoxiang25@huawei.com;
+ spf=pass (mailfrom) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx1.suse.de; envelope-from=jack@suse.cz;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 467mJ20CFMzDqYp
- for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 20:37:52 +1000 (AEST)
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
- by Forcepoint Email with ESMTP id 383BC3802EDB3BCF20C5;
- Wed, 14 Aug 2019 18:37:47 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
- 2019 18:37:40 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <yuchao0@huawei.com>, Pavel Machek <pavel@denx.de>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
- <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH v2 3/3] staging: erofs: correct all misused ENOTSUPP
-Date: Wed, 14 Aug 2019 18:37:05 +0800
-Message-ID: <20190814103705.60698-3-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190814103705.60698-1-gaoxiang25@huawei.com>
-References: <20190814103705.60698-1-gaoxiang25@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 467mp92DhpzDqM7
+ for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 21:00:32 +1000 (AEST)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx1.suse.de (Postfix) with ESMTP id 3537FADEF;
+ Wed, 14 Aug 2019 11:00:26 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+ id 81D741E4200; Wed, 14 Aug 2019 13:00:22 +0200 (CEST)
+Date: Wed, 14 Aug 2019 13:00:22 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mark Salyzyn <salyzyn@android.com>
+Subject: Re: [PATCH v2] Add flags option to get xattr method paired to
+ __vfs_getxattr
+Message-ID: <20190814110022.GB26273@quack2.suse.cz>
+References: <20190813145527.26289-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813145527.26289-1-salyzyn@android.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailman-Approved-At: Wed, 14 Aug 2019 21:04:44 +1000
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,141 +50,113 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- weidu.du@huawei.com, Miao Xie <miaoxie@huawei.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Dave Kleikamp <shaggy@kernel.org>,
+ jfs-discussion@lists.sourceforge.net,
+ Phillip Lougher <phillip@squashfs.org.uk>, linux-integrity@vger.kernel.org,
+ Martin Brandenburg <martin@omnibond.com>, samba-technical@lists.samba.org,
+ Dominique Martinet <asmadeus@codewreck.org>, Mimi Zohar <zohar@linux.ibm.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-mm@kvack.org,
+ Chris Mason <clm@fb.com>, netdev@vger.kernel.org,
+ Andreas Dilger <adilger.kernel@dilger.ca>, linux-xfs@vger.kernel.org,
+ Eric Paris <eparis@parisplace.org>, linux-f2fs-devel@lists.sourceforge.net,
+ linux-afs@lists.infradead.org, Stephen Smalley <sds@tycho.nsa.gov>,
+ Mike Marshall <hubcap@omnibond.com>, devel@driverdev.osuosl.org,
+ linux-cifs@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+ Sage Weil <sage@redhat.com>, "Darrick J. Wong" <darrick.wong@oracle.com>,
+ Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>,
+ linux-unionfs@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+ James Morris <jmorris@namei.org>, cluster-devel@redhat.com,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Vyacheslav Dubeyko <slava@dubeyko.com>,
+ Casey Schaufler <casey@schaufler-ca.com>, v9fs-developer@lists.sourceforge.net,
+ Ilya Dryomov <idryomov@gmail.com>, linux-ext4@vger.kernel.org,
+ kernel-team@android.com, devel@lists.orangefs.org,
+ Serge Hallyn <serge@hallyn.com>, Eric Van Hensbergen <ericvh@gmail.com>,
+ ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ Josef Bacik <josef@toxicpanda.com>, reiserfs-devel@vger.kernel.org,
+ Bob Peterson <rpeterso@redhat.com>, Joel Becker <jlbec@evilplan.org>,
+ Anna Schumaker <anna.schumaker@netapp.com>, David Sterba <dsterba@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org,
+ selinux@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Andreas Gruenbacher <agruenba@redhat.com>, David Howells <dhowells@redhat.com>,
+ linux-nfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+ linux-fsdevel@vger.kernel.org, Artem Bityutskiy <dedekind1@gmail.com>,
+ Mathieu Malaterre <malat@debian.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miklos Szeredi <miklos@szeredi.hu>, Jeff Layton <jlayton@kernel.org>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Tyler Hicks <tyhicks@canonical.com>, Steve French <sfrench@samba.org>,
+ Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= <ernesto.mnd.fernandez@gmail.com>,
+ linux-btrfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+ Jan Kara <jack@suse.com>, Tejun Heo <tj@kernel.org>,
+ linux-mtd@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
+ David Woodhouse <dwmw2@infradead.org>, "David S. Miller" <davem@davemloft.net>,
+ ocfs2-devel@oss.oracle.com, Alexander Viro <viro@zeniv.linux.org.uk>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As Chao pointed out [1], ENOTSUPP is used for NFS
-protocol only, we should use EOPNOTSUPP instead...
+On Tue 13-08-19 07:55:06, Mark Salyzyn wrote:
+...
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 90dd78f0eb27..71f887518d6f 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+...
+>  ssize_t
+>  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
+> -	       void *value, size_t size)
+> +	       void *value, size_t size, int flags)
+>  {
+>  	const struct xattr_handler *handler;
+> -
+> -	handler = xattr_resolve_name(inode, &name);
+> -	if (IS_ERR(handler))
+> -		return PTR_ERR(handler);
+> -	if (!handler->get)
+> -		return -EOPNOTSUPP;
+> -	return handler->get(handler, dentry, inode, name, value, size);
+> -}
+> -EXPORT_SYMBOL(__vfs_getxattr);
+> -
+> -ssize_t
+> -vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+> -{
+> -	struct inode *inode = dentry->d_inode;
+>  	int error;
+>  
+> +	if (flags & XATTR_NOSECURITY)
+> +		goto nolsm;
 
-[1] https://lore.kernel.org/lkml/108ee2f9-75dd-b8ab-8da7-b81c17bafbf6@huawei.com/
+Hum, is it OK for XATTR_NOSECURITY to skip even the xattr_permission()
+check? I understand that for reads of security xattrs it actually does not
+matter in practice but conceptually that seems wrong to me as
+XATTR_NOSECURITY is supposed to skip just security-module checks to avoid
+recursion AFAIU.
 
-Reported-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/decompressor.c | 2 +-
- drivers/staging/erofs/internal.h     | 6 +++---
- drivers/staging/erofs/xattr.c        | 2 +-
- drivers/staging/erofs/xattr.h        | 4 ++--
- drivers/staging/erofs/zmap.c         | 8 ++++----
- 5 files changed, 11 insertions(+), 11 deletions(-)
+> diff --git a/include/uapi/linux/xattr.h b/include/uapi/linux/xattr.h
+> index c1395b5bd432..1216d777d210 100644
+> --- a/include/uapi/linux/xattr.h
+> +++ b/include/uapi/linux/xattr.h
+> @@ -17,8 +17,9 @@
+>  #if __UAPI_DEF_XATTR
+>  #define __USE_KERNEL_XATTR_DEFS
+>  
+> -#define XATTR_CREATE	0x1	/* set value, fail if attr already exists */
+> -#define XATTR_REPLACE	0x2	/* set value, fail if attr does not exist */
+> +#define XATTR_CREATE	 0x1	/* set value, fail if attr already exists */
+> +#define XATTR_REPLACE	 0x2	/* set value, fail if attr does not exist */
+> +#define XATTR_NOSECURITY 0x4	/* get value, do not involve security check */
+>  #endif
 
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index 5361a2bbedb6..32a811ac704a 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -124,7 +124,7 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 	int ret;
- 
- 	if (rq->inputsize > PAGE_SIZE)
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	src = kmap_atomic(*rq->in);
- 	inputmargin = 0;
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 12f737cbc0c0..0e8d58546c52 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -403,12 +403,12 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 			    struct erofs_map_blocks *map,
- 			    int flags);
- #else
--static inline int z_erofs_fill_inode(struct inode *inode) { return -ENOTSUPP; }
-+static inline int z_erofs_fill_inode(struct inode *inode) { return -EOPNOTSUPP; }
- static inline int z_erofs_map_blocks_iter(struct inode *inode,
- 					  struct erofs_map_blocks *map,
- 					  int flags)
- {
--	return -ENOTSUPP;
-+	return -EOPNOTSUPP;
- }
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
-@@ -516,7 +516,7 @@ void *erofs_get_pcpubuf(unsigned int pagenr);
- #else
- static inline void *erofs_get_pcpubuf(unsigned int pagenr)
- {
--	return ERR_PTR(-ENOTSUPP);
-+	return ERR_PTR(-EOPNOTSUPP);
- }
- 
- #define erofs_put_pcpubuf(buf) do {} while (0)
-diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
-index c5bfc9be412f..e7e5840e3f9d 100644
---- a/drivers/staging/erofs/xattr.c
-+++ b/drivers/staging/erofs/xattr.c
-@@ -71,7 +71,7 @@ static int init_inode_xattrs(struct inode *inode)
- 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
- 		errln("xattr_isize %d of nid %llu is not supported yet",
- 		      vi->xattr_isize, vi->nid);
--		ret = -ENOTSUPP;
-+		ret = -EOPNOTSUPP;
- 		goto out_unlock;
- 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
- 		if (unlikely(vi->xattr_isize)) {
-diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
-index 63cc87e3d3f4..e20249647541 100644
---- a/drivers/staging/erofs/xattr.h
-+++ b/drivers/staging/erofs/xattr.h
-@@ -74,13 +74,13 @@ static inline int erofs_getxattr(struct inode *inode, int index,
- 				 const char *name, void *buffer,
- 				 size_t buffer_size)
- {
--	return -ENOTSUPP;
-+	return -EOPNOTSUPP;
- }
- 
- static inline ssize_t erofs_listxattr(struct dentry *dentry,
- 				      char *buffer, size_t buffer_size)
- {
--	return -ENOTSUPP;
-+	return -EOPNOTSUPP;
- }
- #endif	/* !CONFIG_EROFS_FS_XATTR */
- 
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index 5551e615e8ea..b61b9b5950ac 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -68,7 +68,7 @@ static int fill_inode_lazy(struct inode *inode)
- 	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
- 		errln("unknown compression format %u for nid %llu, please upgrade kernel",
- 		      vi->z_algorithmtype[0], vi->nid);
--		err = -ENOTSUPP;
-+		err = -EOPNOTSUPP;
- 		goto unmap_done;
- 	}
- 
-@@ -79,7 +79,7 @@ static int fill_inode_lazy(struct inode *inode)
- 	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
- 		errln("unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
- 		      vi->z_physical_clusterbits[0], vi->nid);
--		err = -ENOTSUPP;
-+		err = -EOPNOTSUPP;
- 		goto unmap_done;
- 	}
- 
-@@ -211,7 +211,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	else if (1 << amortizedshift == 2 && lclusterbits == 12)
- 		vcnt = 16;
- 	else
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
- 	base = round_down(eofs, vcnt << amortizedshift);
-@@ -275,7 +275,7 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 	int err;
- 
- 	if (lclusterbits != 12)
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (lcn >= totalidx)
- 		return -EINVAL;
+It seems confusing to export XATTR_NOSECURITY definition to userspace when
+that is kernel-internal flag. I'd just define it in include/linux/xattr.h
+somewhere from the top of flags space (like 0x40000000).
+
+Otherwise the patch looks OK to me (cannot really comment on the security
+module aspect of this whole thing though).
+
+								Honza
 -- 
-2.17.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
