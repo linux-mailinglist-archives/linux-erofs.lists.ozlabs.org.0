@@ -2,45 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D3908CA27
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 06:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B330A8CBF2
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 08:36:30 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 467bpb5TPkzDqb0
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 14:15:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 467fxS28sxzDqRM
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 16:36:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.190; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ (client-ip=45.249.212.32; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 467bpV1qD0zDqXl
- for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 14:15:14 +1000 (AEST)
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 000CB60CD10D94A268ED;
- Wed, 14 Aug 2019 12:15:10 +0800 (CST)
-Received: from localhost.localdomain (10.175.124.28) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
- 2019 12:15:00 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <yuchao0@huawei.com>, Pavel Machek <pavel@denx.de>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
- <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH RESEND 2/2] staging: erofs: differentiate unsupported on-disk
- format
-Date: Wed, 14 Aug 2019 12:32:08 +0800
-Message-ID: <20190814043208.15591-2-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190814043208.15591-1-gaoxiang25@huawei.com>
-References: <20190814042525.4925-2-gaoxiang25@huawei.com>
- <20190814043208.15591-1-gaoxiang25@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 467fxL55M9zDqgG
+ for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 16:36:22 +1000 (AEST)
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id 5C3344B258C7E88C4652;
+ Wed, 14 Aug 2019 14:36:15 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
+ 2019 14:36:08 +0800
+Subject: Re: [PATCH] staging: erofs: removing an extra call to iloc() in
+ fill_inode()
+To: Pratik Shinde <pratikshinde320@gmail.com>, Gao Xiang
+ <gaoxiang25@huawei.com>
+References: <20190813203840.13782-1-pratikshinde320@gmail.com>
+ <20190814015944.GA11254@138>
+ <418907b6-0b6b-3b08-c6fd-939a206f061f@huawei.com>
+ <20190814022442.GA28602@138>
+ <CAGu0czT2z3Rx_PFot1mgZJ=X75N3pZoDeNDk5DNkyTcfZ7PBcg@mail.gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <554b5085-7e73-bb56-4128-e9eaed827505@huawei.com>
+Date: Wed, 14 Aug 2019 14:36:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
+In-Reply-To: <CAGu0czT2z3Rx_PFot1mgZJ=X75N3pZoDeNDk5DNkyTcfZ7PBcg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -53,74 +58,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- weidu.du@huawei.com, Miao Xie <miaoxie@huawei.com>
+Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-For some specific fields, use ENOTSUPP instead of EIO
-for values which look sane but aren't supported right now.
+On 2019/8/14 11:52, Pratik Shinde wrote:
+> Yes.since we already have a function with same name (and we are using it in same
+> context).
+> 'inode_loc' was the most meaningful name I could come up with :)
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/inode.c | 4 ++--
- drivers/staging/erofs/zmap.c  | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+[snip]
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 461fd4213ce7..1088cd154efa 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -24,7 +24,7 @@ static int read_inode(struct inode *inode, void *data)
- 		errln("unsupported data mapping %u of nid %llu",
- 		      vi->datamode, vi->nid);
- 		DBG_BUGON(1);
--		return -EIO;
-+		return -ENOTSUPP;
- 	}
- 
- 	if (__inode_version(advise) == EROFS_INODE_LAYOUT_V2) {
-@@ -95,7 +95,7 @@ static int read_inode(struct inode *inode, void *data)
- 		errln("unsupported on-disk inode version %u of nid %llu",
- 		      __inode_version(advise), vi->nid);
- 		DBG_BUGON(1);
--		return -EIO;
-+		return -ENOTSUPP;
- 	}
- 
- 	if (!nblks)
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index 16b3625604f4..f955d0752792 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -178,7 +178,7 @@ static int vle_legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 		break;
- 	default:
- 		DBG_BUGON(1);
--		return -EIO;
-+		return -ENOTSUPP;
- 	}
- 	m->type = type;
- 	return 0;
-@@ -362,7 +362,7 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
- 		errln("unknown type %u at lcn %lu of nid %llu",
- 		      m->type, lcn, vi->nid);
- 		DBG_BUGON(1);
--		return -EIO;
-+		return -ENOTSUPP;
- 	}
- 	return 0;
- }
-@@ -436,7 +436,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 	default:
- 		errln("unknown type %u at offset %llu of nid %llu",
- 		      m.type, ofs, vi->nid);
--		err = -EIO;
-+		err = -ENOTSUPP;
- 		goto unmap_out;
- 	}
- 
--- 
-2.17.2
+On Wed, Aug 14, 2019 at 7:37 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+> iloc is the name of static inline helper function in internal.h
+> used for shorter lines...
 
+Correct, so let's keep as it is.
+
+Thanks,
