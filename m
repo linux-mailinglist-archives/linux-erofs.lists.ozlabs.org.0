@@ -2,69 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C12B68C9F5
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 05:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9DD18CA10
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 06:08:52 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 467bKB0N9CzDqZp
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 13:53:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 467bg55JmVzDqgs
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2019 14:08:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2a00:1450:4864:20::543; helo=mail-ed1-x543.google.com;
- envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.191; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="YDUzjZzm"; 
- dkim-atps=neutral
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com
- [IPv6:2a00:1450:4864:20::543])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 467bK160QzzDqWn
- for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 13:53:09 +1000 (AEST)
-Received: by mail-ed1-x543.google.com with SMTP id f22so5847110edt.4
- for <linux-erofs@lists.ozlabs.org>; Tue, 13 Aug 2019 20:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=eFTwxVAuuVTeOrfNBrtNY1A96R72MYG/avRbGm83rfM=;
- b=YDUzjZzm6WN4PknJMsnNYBW+BENAHzRSUoHx/QItj/EaIWHjJRukTh8eDHoqTzYyWt
- 7pTvUZP2gJNhWNNn7jPiErcexXW1ki4IQxStXO1DISbS8hsJpnS48l4zoSxn8Ws+VZzt
- aoX94GsTqOsgyrOOL4MVyv6kejLnjJ2MNDfk++7+1TlqsEvBwlz50W0nSB3mPs/wrek2
- 13h9iN4ear2AVtQdr+C5Os6XPQ7IleV3BxgV0qpx/LQl1HNVUicQFX0k2H2tFmmGhWGq
- rzOyqvCrNo+pmm7SVvZ5qy1a50WU68/ADa+0eneFCTjXI4+w3F3KoVYyXnF1VIF7Gi/7
- rnlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=eFTwxVAuuVTeOrfNBrtNY1A96R72MYG/avRbGm83rfM=;
- b=lqhCnRrCpmxrHwmnDKjHvAqDBoRENbA6EoqE9URNtVYBwW3PWZYmlwUuUTzPoIPDKi
- PngShyhTSX/Dzr61PaYj4EboPV7lkvafVunbdEviRyGsdHkS6CdDM+TsTXbvRyroD01o
- 3NA2uEsYGPkTWOe2X35/w0GASR6JRWj2Ok9XVNFRhmBVfd6+US5pIJTxYvuSKKi30My3
- rOULYhD4Fuv/4jt+acgg+OLorTEEjS2S17fbpV1ZGdPOJ3rm+o4UKFBVOrEyNALiwLdO
- bWE2vy596sEcI4bYFMG7p854pnMMItApLuIqoDm7ltMkZUUbEYkgFHvf4wDscKvfNgb6
- kGQg==
-X-Gm-Message-State: APjAAAU30y/cvtHzAnMWDQusPsdcKwCvwlKPrI6WUQY1fT20jcCxcQc/
- rF7ngvJ9dqE74j4sMPE7T+pt6543QqVDzxVb17g=
-X-Google-Smtp-Source: APXvYqwusFRit3vB456zVM1T9JttA6KdKIFNRDWIt5KmvatOsmVMvvRWIFNsnT4sL8rjsNjzRZR4pZDZxsl2oJBKOTw=
-X-Received: by 2002:a17:906:a3c4:: with SMTP id
- ca4mr38329116ejb.5.1565754784841; 
- Tue, 13 Aug 2019 20:53:04 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 467bfv3D1LzDqXq
+ for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2019 14:08:39 +1000 (AEST)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id 34E9DFD20040FEE61D17;
+ Wed, 14 Aug 2019 12:08:23 +0800 (CST)
+Received: from localhost.localdomain (10.175.124.28) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 14 Aug
+ 2019 12:08:17 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Chao Yu <yuchao0@huawei.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
+ <linux-fsdevel@vger.kernel.org>
+Subject: [PATCH 1/2] staging: erofs: introduce EFSCORRUPTED and more logs
+Date: Wed, 14 Aug 2019 12:25:24 +0800
+Message-ID: <20190814042525.4925-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <20190813203840.13782-1-pratikshinde320@gmail.com>
- <20190814015944.GA11254@138> <418907b6-0b6b-3b08-c6fd-939a206f061f@huawei.com>
- <20190814022442.GA28602@138>
-In-Reply-To: <20190814022442.GA28602@138>
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Wed, 14 Aug 2019 09:22:53 +0530
-Message-ID: <CAGu0czT2z3Rx_PFot1mgZJ=X75N3pZoDeNDk5DNkyTcfZ7PBcg@mail.gmail.com>
-Subject: Re: [PATCH] staging: erofs: removing an extra call to iloc() in
- fill_inode()
-To: Gao Xiang <gaoxiang25@huawei.com>
-Content-Type: multipart/alternative; boundary="000000000000c1830d05900bb160"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -76,170 +49,240 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
- linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ weidu.du@huawei.com, Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000c1830d05900bb160
-Content-Type: text/plain; charset="UTF-8"
+Previously, EROFS uses EIO to indicate that filesystem is
+corrupted as well, but other filesystems tend to use
+EUCLEAN instead, let's follow what others do right now.
 
-Yes.since we already have a function with same name (and we are using it in
-same context).
-'inode_loc' was the most meaningful name I could come up with :)
+Also, add some more prints to the syslog.
 
---Pratik.
+Suggested-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
 
-On Wed, Aug 14, 2019 at 7:37 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+This patchset has dependency on the previous patchset yesterday
+ https://lore.kernel.org/lkml/20190813023054.73126-1-gaoxiang25@huawei.com/
 
-> On Wed, Aug 14, 2019 at 09:56:09AM +0800, Chao Yu wrote:
-> > On 2019/8/14 9:59, Gao Xiang wrote:
-> > > Hi Pratik,
-> > >
-> > > On Wed, Aug 14, 2019 at 02:08:40AM +0530, Pratik Shinde wrote:
-> > >> in fill_inode() we call iloc() twice.Avoiding the extra call by
-> > >> storing the result.
-> > >>
-> > >> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-> > >
-> > > I have no objection of this patch, but I'd like to
-> > > hear Chao/Greg's idea about this...
-> >
-> > It looks more clean. :)
-> >
-> > Nitpick, maybe change 'inode_loc' to shorter 'iloc' will be better.
->
-> iloc is the name of static inline helper function in internal.h
-> used for shorter lines...
->
-> Thanks,
-> Gao Xiang
->
-> >
-> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> >
-> > Thanks,
-> >
-> > >
-> > > Thanks,
-> > > Gao Xiang
-> > >
-> > >> ---
-> > >>  drivers/staging/erofs/inode.c | 7 ++++---
-> > >>  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >>
-> > >> diff --git a/drivers/staging/erofs/inode.c
-> b/drivers/staging/erofs/inode.c
-> > >> index 4c3d8bf..d82ba6c 100644
-> > >> --- a/drivers/staging/erofs/inode.c
-> > >> +++ b/drivers/staging/erofs/inode.c
-> > >> @@ -167,11 +167,12 @@ static int fill_inode(struct inode *inode, int
-> isdir)
-> > >>    int err;
-> > >>    erofs_blk_t blkaddr;
-> > >>    unsigned int ofs;
-> > >> +  erofs_off_t inode_loc;
-> > >>
-> > >>    trace_erofs_fill_inode(inode, isdir);
-> > >> -
-> > >> -  blkaddr = erofs_blknr(iloc(sbi, vi->nid));
-> > >> -  ofs = erofs_blkoff(iloc(sbi, vi->nid));
-> > >> +  inode_loc = iloc(sbi, vi->nid);
-> > >> +  blkaddr = erofs_blknr(inode_loc);
-> > >> +  ofs = erofs_blkoff(inode_loc);
-> > >>
-> > >>    debugln("%s, reading inode nid %llu at %u of blkaddr %u",
-> > >>            __func__, vi->nid, ofs, blkaddr);
-> > >> --
-> > >> 2.9.3
-> > >>
-> > > .
-> > >
->
+Thanks,
+Gao Xiang
 
---000000000000c1830d05900bb160
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ drivers/staging/erofs/data.c     |  6 ++++--
+ drivers/staging/erofs/dir.c      | 15 ++++++++-------
+ drivers/staging/erofs/inode.c    | 17 ++++++++++++-----
+ drivers/staging/erofs/internal.h |  2 ++
+ drivers/staging/erofs/namei.c    |  6 ++++--
+ drivers/staging/erofs/xattr.c    |  5 +++--
+ drivers/staging/erofs/zmap.c     |  5 +++--
+ 7 files changed, 36 insertions(+), 20 deletions(-)
 
-<div dir=3D"ltr"><div>Yes.since we already have a function with same name (=
-and we are using it in same context).</div><div>&#39;inode_loc&#39; was the=
- most meaningful name I could come up with :)</div><div><br></div><div>--Pr=
-atik.<br></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
-=3D"gmail_attr">On Wed, Aug 14, 2019 at 7:37 AM Gao Xiang &lt;<a href=3D"ma=
-ilto:gaoxiang25@huawei.com">gaoxiang25@huawei.com</a>&gt; wrote:<br></div><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">On Wed, Aug 14, 2019 at 09=
-:56:09AM +0800, Chao Yu wrote:<br>
-&gt; On 2019/8/14 9:59, Gao Xiang wrote:<br>
-&gt; &gt; Hi Pratik,<br>
-&gt; &gt; <br>
-&gt; &gt; On Wed, Aug 14, 2019 at 02:08:40AM +0530, Pratik Shinde wrote:<br=
->
-&gt; &gt;&gt; in fill_inode() we call iloc() twice.Avoiding the extra call =
-by<br>
-&gt; &gt;&gt; storing the result.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; Signed-off-by: Pratik Shinde &lt;<a href=3D"mailto:pratikshin=
-de320@gmail.com" target=3D"_blank">pratikshinde320@gmail.com</a>&gt;<br>
-&gt; &gt; <br>
-&gt; &gt; I have no objection of this patch, but I&#39;d like to<br>
-&gt; &gt; hear Chao/Greg&#39;s idea about this...<br>
-&gt; <br>
-&gt; It looks more clean. :)<br>
-&gt; <br>
-&gt; Nitpick, maybe change &#39;inode_loc&#39; to shorter &#39;iloc&#39; wi=
-ll be better.<br>
-<br>
-iloc is the name of static inline helper function in internal.h<br>
-used for shorter lines...<br>
-<br>
-Thanks,<br>
-Gao Xiang<br>
-<br>
-&gt; <br>
-&gt; Reviewed-by: Chao Yu &lt;<a href=3D"mailto:yuchao0@huawei.com" target=
-=3D"_blank">yuchao0@huawei.com</a>&gt;<br>
-&gt; <br>
-&gt; Thanks,<br>
-&gt; <br>
-&gt; &gt; <br>
-&gt; &gt; Thanks,<br>
-&gt; &gt; Gao Xiang<br>
-&gt; &gt; <br>
-&gt; &gt;&gt; ---<br>
-&gt; &gt;&gt;=C2=A0 drivers/staging/erofs/inode.c | 7 ++++---<br>
-&gt; &gt;&gt;=C2=A0 1 file changed, 4 insertions(+), 3 deletions(-)<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/=
-erofs/inode.c<br>
-&gt; &gt;&gt; index 4c3d8bf..d82ba6c 100644<br>
-&gt; &gt;&gt; --- a/drivers/staging/erofs/inode.c<br>
-&gt; &gt;&gt; +++ b/drivers/staging/erofs/inode.c<br>
-&gt; &gt;&gt; @@ -167,11 +167,12 @@ static int fill_inode(struct inode *ino=
-de, int isdir)<br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 int err;<br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 erofs_blk_t blkaddr;<br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 unsigned int ofs;<br>
-&gt; &gt;&gt; +=C2=A0 erofs_off_t inode_loc;<br>
-&gt; &gt;&gt;=C2=A0 <br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 trace_erofs_fill_inode(inode, isdir);<br>
-&gt; &gt;&gt; -<br>
-&gt; &gt;&gt; -=C2=A0 blkaddr =3D erofs_blknr(iloc(sbi, vi-&gt;nid));<br>
-&gt; &gt;&gt; -=C2=A0 ofs =3D erofs_blkoff(iloc(sbi, vi-&gt;nid));<br>
-&gt; &gt;&gt; +=C2=A0 inode_loc =3D iloc(sbi, vi-&gt;nid);<br>
-&gt; &gt;&gt; +=C2=A0 blkaddr =3D erofs_blknr(inode_loc);<br>
-&gt; &gt;&gt; +=C2=A0 ofs =3D erofs_blkoff(inode_loc);<br>
-&gt; &gt;&gt;=C2=A0 <br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 debugln(&quot;%s, reading inode nid %llu at %u o=
-f blkaddr %u&quot;,<br>
-&gt; &gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 __func__, vi-&gt;nid=
-, ofs, blkaddr);<br>
-&gt; &gt;&gt; -- <br>
-&gt; &gt;&gt; 2.9.3<br>
-&gt; &gt;&gt;<br>
-&gt; &gt; .<br>
-&gt; &gt; <br>
-</blockquote></div>
+diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+index 4cdb743c8b8d..72c4b4c5296b 100644
+--- a/drivers/staging/erofs/data.c
++++ b/drivers/staging/erofs/data.c
+@@ -143,10 +143,12 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+ 			vi->xattr_isize + erofs_blkoff(map->m_la);
+ 		map->m_plen = inode->i_size - offset;
+ 
+-		/* inline data should locate in one meta block */
++		/* inline data should be located in one meta block */
+ 		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
++			errln("inline data cross block boundary @ nid %llu",
++			      vi->nid);
+ 			DBG_BUGON(1);
+-			err = -EIO;
++			err = -EFSCORRUPTED;
+ 			goto err_out;
+ 		}
+ 
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 2fbfc4935077..01efc96e1212 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -34,7 +34,7 @@ static void debug_one_dentry(unsigned char d_type, const char *de_name,
+ #endif
+ }
+ 
+-static int erofs_fill_dentries(struct dir_context *ctx,
++static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
+ 			       void *dentry_blk, unsigned int *ofs,
+ 			       unsigned int nameoff, unsigned int maxsize)
+ {
+@@ -63,8 +63,9 @@ static int erofs_fill_dentries(struct dir_context *ctx,
+ 		/* a corrupted entry is found */
+ 		if (unlikely(nameoff + de_namelen > maxsize ||
+ 			     de_namelen > EROFS_NAME_LEN)) {
++			errln("bogus dirent @ nid %llu", EROFS_V(dir)->nid);
+ 			DBG_BUGON(1);
+-			return -EIO;
++			return -EFSCORRUPTED;
+ 		}
+ 
+ 		debug_one_dentry(d_type, de_name, de_namelen);
+@@ -104,10 +105,9 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 
+ 		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
+ 			     nameoff >= PAGE_SIZE)) {
+-			errln("%s, invalid de[0].nameoff %u",
+-			      __func__, nameoff);
+-
+-			err = -EIO;
++			errln("%s, invalid de[0].nameoff %u @ nid %llu",
++			      __func__, nameoff, EROFS_V(dir)->nid);
++			err = -EFSCORRUPTED;
+ 			goto skip_this;
+ 		}
+ 
+@@ -123,7 +123,8 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 				goto skip_this;
+ 		}
+ 
+-		err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
++		err = erofs_fill_dentries(dir, ctx, de, &ofs,
++					  nameoff, maxsize);
+ skip_this:
+ 		kunmap(dentry_page);
+ 
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 286729143365..461fd4213ce7 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -43,7 +43,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
+ 			inode->i_rdev = 0;
+ 		else
+-			return -EIO;
++			goto bogusimode;
+ 
+ 		i_uid_write(inode, le32_to_cpu(v2->i_uid));
+ 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
+@@ -76,7 +76,7 @@ static int read_inode(struct inode *inode, void *data)
+ 		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
+ 			inode->i_rdev = 0;
+ 		else
+-			return -EIO;
++			goto bogusimode;
+ 
+ 		i_uid_write(inode, le16_to_cpu(v1->i_uid));
+ 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
+@@ -104,6 +104,11 @@ static int read_inode(struct inode *inode, void *data)
+ 	else
+ 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+ 	return 0;
++
++bogusimode:
++	errln("bogus i_mode (%o) @ nid %llu", inode->i_mode, vi->nid);
++	DBG_BUGON(1);
++	return -EFSCORRUPTED;
+ }
+ 
+ /*
+@@ -137,9 +142,11 @@ static int fill_inline_data(struct inode *inode, void *data,
+ 
+ 		/* inline symlink data shouldn't across page boundary as well */
+ 		if (unlikely(m_pofs + inode->i_size > PAGE_SIZE)) {
+-			DBG_BUGON(1);
+ 			kfree(lnk);
+-			return -EIO;
++			errln("inline data cross block boundary @ nid %llu",
++			      vi->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
+ 		}
+ 
+ 		/* get in-page inline data */
+@@ -200,7 +207,7 @@ static int fill_inode(struct inode *inode, int isdir)
+ 			init_special_inode(inode, inode->i_mode, inode->i_rdev);
+ 			goto out_unlock;
+ 		} else {
+-			err = -EIO;
++			err = -EFSCORRUPTED;
+ 			goto out_unlock;
+ 		}
+ 
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index 4ce5991c381f..12f737cbc0c0 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -548,5 +548,7 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
++#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
++
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
+index 8e06526da023..c0963f5a2d22 100644
+--- a/drivers/staging/erofs/namei.c
++++ b/drivers/staging/erofs/namei.c
+@@ -116,10 +116,12 @@ static struct page *find_target_block_classic(struct inode *dir,
+ 			struct erofs_qstr dname;
+ 
+ 			if (unlikely(!ndirents)) {
+-				DBG_BUGON(1);
+ 				kunmap_atomic(de);
+ 				put_page(page);
+-				page = ERR_PTR(-EIO);
++				errln("corrupted dir block %d @ nid %llu",
++				      mid, EROFS_V(dir)->nid);
++				DBG_BUGON(1);
++				page = ERR_PTR(-EFSCORRUPTED);
+ 				goto out;
+ 			}
+ 
+diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+index 289c7850ec96..c5bfc9be412f 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -75,8 +75,9 @@ static int init_inode_xattrs(struct inode *inode)
+ 		goto out_unlock;
+ 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+ 		if (unlikely(vi->xattr_isize)) {
++			errln("bogus xattr ibody @ nid %llu", vi->nid);
+ 			DBG_BUGON(1);
+-			ret = -EIO;
++			ret = -EFSCORRUPTED;
+ 			goto out_unlock;	/* xattr ondisk layout error */
+ 		}
+ 		ret = -ENOATTR;
+@@ -237,7 +238,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
+ 		if (unlikely(*tlimit < entry_sz)) {
+ 			DBG_BUGON(1);
+-			return -EIO;
++			return -EFSCORRUPTED;
+ 		}
+ 		*tlimit -= entry_sz;
+ 	}
+diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
+index aeed5c674d9e..16b3625604f4 100644
+--- a/drivers/staging/erofs/zmap.c
++++ b/drivers/staging/erofs/zmap.c
+@@ -338,8 +338,9 @@ static int vle_extent_lookback(struct z_erofs_maprecorder *m,
+ 	int err;
+ 
+ 	if (lcn < lookback_distance) {
++		errln("bogus lookback distance @ nid %llu", vi->nid);
+ 		DBG_BUGON(1);
+-		return -EIO;
++		return -EFSCORRUPTED;
+ 	}
+ 
+ 	/* load extent head logical cluster if needed */
+@@ -419,7 +420,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 		if (unlikely(!m.lcn)) {
+ 			errln("invalid logical cluster 0 at nid %llu",
+ 			      vi->nid);
+-			err = -EIO;
++			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+ 		}
+ 		end = (m.lcn << lclusterbits) | m.clusterofs;
+-- 
+2.17.2
 
---000000000000c1830d05900bb160--
