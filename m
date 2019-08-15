@@ -1,52 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BB238E7D8
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 11:11:13 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14A548F02F
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 18:10:22 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 468LKV6HQJzDr6q
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 19:11:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 468Wd65KFzzDr80
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 02:10:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=linuxfoundation.org
- (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=gregkh@linuxfoundation.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
- header.from=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.b="K3L5k2vJ"; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ spf=pass (mailfrom) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx1.suse.de; envelope-from=jack@suse.cz;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 468LCh2xTrzDqJl
- for <linux-erofs@lists.ozlabs.org>; Thu, 15 Aug 2019 19:06:08 +1000 (AEST)
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl
- [83.86.89.107])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id CEF3A218A6;
- Thu, 15 Aug 2019 09:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1565859965;
- bh=Mc3YrEyyDx8AvnWtpvQCsXoWv0AaiAhsDt9By4lPmxc=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=K3L5k2vJ2kFpsG2wfCLVkOngcZzZqI9yll1frug6xM0uM7bdwF/+iA26VOaSAndDN
- v6ed2vDKBv2obKuG2LL7maD7MOtU/i9uIyZSa3nZVUd+iYA5s3wlBu9pi47qQOVRbO
- /OliDX5MrGyc2/QiINacfpFQxVdBu/vbpytThbqc=
-Date: Thu, 15 Aug 2019 11:06:03 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
-Message-ID: <20190815090603.GD4938@kroah.com>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 468VlH4T0vzDr4C
+ for <linux-erofs@lists.ozlabs.org>; Fri, 16 Aug 2019 01:30:33 +1000 (AEST)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx1.suse.de (Postfix) with ESMTP id 84639B02E;
+ Thu, 15 Aug 2019 15:30:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+ id F3E6E1E4200; Thu, 15 Aug 2019 17:30:24 +0200 (CEST)
+Date: Thu, 15 Aug 2019 17:30:24 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mark Salyzyn <salyzyn@android.com>
+Subject: Re: [PATCH v2] Add flags option to get xattr method paired to
+ __vfs_getxattr
+Message-ID: <20190815153024.GP14313@quack2.suse.cz>
+References: <20190813145527.26289-1-salyzyn@android.com>
+ <20190814110022.GB26273@quack2.suse.cz>
+ <71d66fd1-cc94-fd0c-dfa7-115ba8a6b95a@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <71d66fd1-cc94-fd0c-dfa7-115ba8a6b95a@android.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailman-Approved-At: Fri, 16 Aug 2019 02:10:13 +1000
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,88 +52,146 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
- Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
- Miao Xie <miaoxie@huawei.com>, devel@driverdev.osuosl.org,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- "Darrick J . Wong" <darrick.wong@oracle.com>,
- Richard Weinberger <richard@nod.at>, Christoph Hellwig <hch@infradead.org>,
- linux-erofs@lists.ozlabs.org, Alexander Viro <viro@zeniv.linux.org.uk>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Pavel Machek <pavel@denx.de>, LKML <linux-kernel@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Dave Kleikamp <shaggy@kernel.org>,
+ jfs-discussion@lists.sourceforge.net,
+ Phillip Lougher <phillip@squashfs.org.uk>, Jan Kara <jack@suse.cz>,
+ linux-integrity@vger.kernel.org, Martin Brandenburg <martin@omnibond.com>,
+ samba-technical@lists.samba.org, Dominique Martinet <asmadeus@codewreck.org>,
+ Mimi Zohar <zohar@linux.ibm.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-mm@kvack.org, Chris Mason <clm@fb.com>, netdev@vger.kernel.org,
+ Andreas Dilger <adilger.kernel@dilger.ca>, linux-xfs@vger.kernel.org,
+ Eric Paris <eparis@parisplace.org>, linux-f2fs-devel@lists.sourceforge.net,
+ linux-afs@lists.infradead.org, Stephen Smalley <sds@tycho.nsa.gov>,
+ Mike Marshall <hubcap@omnibond.com>, devel@driverdev.osuosl.org,
+ linux-cifs@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+ Sage Weil <sage@redhat.com>, "Darrick J. Wong" <darrick.wong@oracle.com>,
+ Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>,
+ linux-unionfs@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+ James Morris <jmorris@namei.org>, cluster-devel@redhat.com,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Vyacheslav Dubeyko <slava@dubeyko.com>,
+ Casey Schaufler <casey@schaufler-ca.com>, v9fs-developer@lists.sourceforge.net,
+ Ilya Dryomov <idryomov@gmail.com>, linux-ext4@vger.kernel.org,
+ kernel-team@android.com, devel@lists.orangefs.org,
+ Serge Hallyn <serge@hallyn.com>, Eric Van Hensbergen <ericvh@gmail.com>,
+ ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ Josef Bacik <josef@toxicpanda.com>, reiserfs-devel@vger.kernel.org,
+ Bob Peterson <rpeterso@redhat.com>, Joel Becker <jlbec@evilplan.org>,
+ Anna Schumaker <anna.schumaker@netapp.com>, David Sterba <dsterba@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org,
+ selinux@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Andreas Gruenbacher <agruenba@redhat.com>, David Howells <dhowells@redhat.com>,
+ linux-nfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+ linux-fsdevel@vger.kernel.org, Artem Bityutskiy <dedekind1@gmail.com>,
+ Mathieu Malaterre <malat@debian.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miklos Szeredi <miklos@szeredi.hu>, Jeff Layton <jlayton@kernel.org>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Tyler Hicks <tyhicks@canonical.com>, Steve French <sfrench@samba.org>,
+ Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= <ernesto.mnd.fernandez@gmail.com>,
+ linux-btrfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+ Jan Kara <jack@suse.com>, Tejun Heo <tj@kernel.org>,
+ linux-mtd@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
+ David Woodhouse <dwmw2@infradead.org>, "David S. Miller" <davem@davemloft.net>,
+ ocfs2-devel@oss.oracle.com, Alexander Viro <viro@zeniv.linux.org.uk>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Aug 15, 2019 at 12:41:31PM +0800, Gao Xiang wrote:
-> [I strip the previous cover letter, the old one can be found in v6:
->  https://lore.kernel.org/r/20190802125347.166018-1-gaoxiang25@huawei.com/]
+On Wed 14-08-19 07:54:16, Mark Salyzyn wrote:
+> On 8/14/19 4:00 AM, Jan Kara wrote:
+> > On Tue 13-08-19 07:55:06, Mark Salyzyn wrote:
+> > ...
+> > > diff --git a/fs/xattr.c b/fs/xattr.c
+> > > index 90dd78f0eb27..71f887518d6f 100644
+> > > --- a/fs/xattr.c
+> > > +++ b/fs/xattr.c
+> > ...
+> > >   ssize_t
+> > >   __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
+> > > -	       void *value, size_t size)
+> > > +	       void *value, size_t size, int flags)
+> > >   {
+> > >   	const struct xattr_handler *handler;
+> > > -
+> > > -	handler = xattr_resolve_name(inode, &name);
+> > > -	if (IS_ERR(handler))
+> > > -		return PTR_ERR(handler);
+> > > -	if (!handler->get)
+> > > -		return -EOPNOTSUPP;
+> > > -	return handler->get(handler, dentry, inode, name, value, size);
+> > > -}
+> > > -EXPORT_SYMBOL(__vfs_getxattr);
+> > > -
+> > > -ssize_t
+> > > -vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+> > > -{
+> > > -	struct inode *inode = dentry->d_inode;
+> > >   	int error;
+> > > +	if (flags & XATTR_NOSECURITY)
+> > > +		goto nolsm;
+> > Hum, is it OK for XATTR_NOSECURITY to skip even the xattr_permission()
+> > check? I understand that for reads of security xattrs it actually does not
+> > matter in practice but conceptually that seems wrong to me as
+> > XATTR_NOSECURITY is supposed to skip just security-module checks to avoid
+> > recursion AFAIU.
 > 
-> We'd like to submit a formal moving patch applied to staging tree
-> for 5.4, before that we'd like to hear if there are some ACKs,
-> suggestions or NAKs, objections of EROFS. Therefore, we can improve
-> it in this round or rethink about the whole thing.
+> Good catch I think.
 > 
-> As related materials mentioned [1] [2], the goal of EROFS is to
-> save extra storage space with guaranteed end-to-end performance
-> for read-only files, which has better performance over exist Linux
-> compression filesystems based on fixed-sized output compression
-> and inplace decompression. It even has better performance in
-> a large compression ratio range compared with generic uncompressed
-> filesystems with proper CPU-storage combinations. And we think this
-> direction is correct and a dedicated kernel team is continuously /
-> actively working on improving it, enough testers and beta / end
-> users using it.
+> I was attempting to make this change purely inert, no change in
+> functionality, only a change in API. Adding a call to xattr_permission would
+> incur a change in overall functionality, as it would introduce into the
+> current and original __vfs_getxattr a call to xattr_permission that was not
+> there before.
 > 
-> EROFS has been applied to almost all in-service HUAWEI smartphones
-> (Yes, the number is still increasing by time) and it seems like
-> a success. It can be used in more wider scenarios. We think it's
-> useful for Linux / Android OS community and it's the time moving
-> out of staging.
+> (I will have to defer the real answer and requirements to the security
+> folks)
 > 
-> In order to get started, latest stable mkfs.erofs is available at
+> AFAIK you are correct, and to make the call would reduce the attack surface,
+> trading a very small amount of CPU utilization, for a much larger amount of
+> trust.
 > 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
-> 
-> with README in the repository.
-> 
-> We are still tuning sequential read performance for ultra-fast
-> speed NVME SSDs like Samsung 970PRO, but at least now you can
-> try on your PC with some data with proper compression ratio,
-> the latest Linux kernel, USB stick for convenience sake and
-> a not very old-fashioned CPU. There are also benchmarks available
-> in the above materials mentioned.
-> 
-> EROFS is a self-contained filesystem driver. Although there are
-> still some TODOs to be more generic, we will actively keep on
-> developping / tuning EROFS with the evolution of Linux kernel
-> as the other in-kernel filesystems.
-> 
-> As I mentioned before in LSF/MM 2019, in the future, we'd like
-> to generalize the decompression engine into a library for other
-> fses to use after the whole system is mature like fscrypt.
-> However, such metadata should be designed respectively for
-> each fs, and synchronous metadata read cost will be larger
-> than EROFS because of those ondisk limitation. Therefore EROFS
-> is still a better choice for read-only scenarios.
-> 
-> EROFS is now ready for reviewing and moving, and the code is
-> already cleaned up as shiny floors... Please kindly take some
-> precious time, share your comments about EROFS and let us know
-> your opinion about this. It's really important for us since
-> generally speaking, we like to use Linux _in-tree_ stuffs rather
-> than lack of supported out-of-tree / orphan stuffs as well.
+> Given the long history of this patch set (for overlayfs) and the large
+> amount of stakeholders, I would _prefer_ to submit a followup independent
+> functionality/security change to _vfs_get_xattr _after_ this makes it in.
 
-I know everyone is busy, but given the length this has been in staging,
-and the constant good progress toward cleaning it all up that has been
-happening, I want to get this moved out of staging soon.
+You're right. The problem was there before. So ack to changing this later.
 
-So, unless there are any objections, I'll take this patchset in a week
-into my staging tree to move the filesystem into the "real" part of the
-kernel.
+> > > diff --git a/include/uapi/linux/xattr.h b/include/uapi/linux/xattr.h
+> > > index c1395b5bd432..1216d777d210 100644
+> > > --- a/include/uapi/linux/xattr.h
+> > > +++ b/include/uapi/linux/xattr.h
+> > > @@ -17,8 +17,9 @@
+> > >   #if __UAPI_DEF_XATTR
+> > >   #define __USE_KERNEL_XATTR_DEFS
+> > > -#define XATTR_CREATE	0x1	/* set value, fail if attr already exists */
+> > > -#define XATTR_REPLACE	0x2	/* set value, fail if attr does not exist */
+> > > +#define XATTR_CREATE	 0x1	/* set value, fail if attr already exists */
+> > > +#define XATTR_REPLACE	 0x2	/* set value, fail if attr does not exist */
+> > > +#define XATTR_NOSECURITY 0x4	/* get value, do not involve security check */
+> > >   #endif
+> > It seems confusing to export XATTR_NOSECURITY definition to userspace when
+> > that is kernel-internal flag. I'd just define it in include/linux/xattr.h
+> > somewhere from the top of flags space (like 0x40000000).
+> > 
+> > Otherwise the patch looks OK to me (cannot really comment on the security
+> > module aspect of this whole thing though).
+> 
+> Good point. However, we do need to keep these flags together to reduce
+> maintenance risk, I personally abhor two locations for flags bits even if
+> one comes from the opposite bit-side; collisions are undetectable at build
+> time. Although I have not gone through the entire thought experiment, I am
+> expecting that fuse could possibly benefit from this flag (if exposed) since
+> it also has a security recursion. That said, fuse is probably the example of
+> a gaping wide attack surface if user space had access to it ... your
+> xattr_permissions call addition requested above would be realistically, not
+> just pedantically, required!
 
-thanks,
+Yeah, flags bits in two places are bad as well. So maybe at least
+#ifdef __KERNEL__ bit around the definitiona and a comment that it is
+kernel internal flag?
 
-greg k-h
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
