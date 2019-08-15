@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90C8C8E404
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 06:44:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C50A8E407
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 06:44:46 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 468DPq3KCkzDqx9
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 14:44:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 468DQ26n6RzDqX7
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2019 14:44:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,20 +18,20 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 468DN66X3RzDqwW
- for <linux-erofs@lists.ozlabs.org>; Thu, 15 Aug 2019 14:43:02 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 468DNC2Dy1zDqX7
+ for <linux-erofs@lists.ozlabs.org>; Thu, 15 Aug 2019 14:43:06 +1000 (AEST)
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 4DE8ACCE8F94411EEACC;
- Thu, 15 Aug 2019 12:42:58 +0800 (CST)
+ by Forcepoint Email with ESMTP id 5F6593E01510F6C46D09;
+ Thu, 15 Aug 2019 12:43:03 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 15 Aug
- 2019 12:42:51 +0800
+ 2019 12:42:53 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>, "Alexander
  Viro" <viro@zeniv.linux.org.uk>
-Subject: [PATCH v8 14/24] erofs: introduce superblock registration
-Date: Thu, 15 Aug 2019 12:41:45 +0800
-Message-ID: <20190815044155.88483-15-gaoxiang25@huawei.com>
+Subject: [PATCH v8 15/24] erofs: introduce erofs shrinker
+Date: Thu, 15 Aug 2019 12:41:46 +0800
+Message-ID: <20190815044155.88483-16-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
 References: <20190815044155.88483-1-gaoxiang25@huawei.com>
@@ -63,134 +63,200 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In order to introducing shrinker solution for erofs,
-let's manage all mounted erofs instances at first.
+This patch adds a dedicated shrinker targeting to free
+unneeded memory consumed by a number of erofs in-memory
+data structures.
+
+Like F2FS and UBIFS, it also adds:
+  - sbi->umount_mutex to avoid races on shrinker and put_super;
+  - sbi->shrinker_run_no to not revisit recently scanned objects.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Makefile   |  2 +-
- fs/erofs/internal.h | 13 +++++++++++++
- fs/erofs/super.c    |  9 +++++++++
- fs/erofs/utils.c    | 32 ++++++++++++++++++++++++++++++++
- 4 files changed, 55 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/utils.c
+ fs/erofs/internal.h |  7 ++++
+ fs/erofs/super.c    |  6 +++
+ fs/erofs/utils.c    | 93 ++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 105 insertions(+), 1 deletion(-)
 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 481a966caf06..930770be124f 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -5,7 +5,7 @@ EROFS_VERSION = "1.0"
- ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
--erofs-objs := super.o inode.o data.o namei.o dir.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += zmap.o
- 
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 8432f488409d..62f1e3ffe0a2 100644
+index 62f1e3ffe0a2..4bcdf32a45ad 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -60,6 +60,10 @@ typedef u64 erofs_off_t;
- typedef u32 erofs_blk_t;
- 
- struct erofs_sb_info {
-+#ifdef CONFIG_EROFS_FS_ZIP
-+	/* list for all registered superblocks, mainly for shrinker */
-+	struct list_head list;
-+#endif	/* CONFIG_EROFS_FS_ZIP */
+@@ -63,6 +63,9 @@ struct erofs_sb_info {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	/* list for all registered superblocks, mainly for shrinker */
+ 	struct list_head list;
++	struct mutex umount_mutex;
++
++	unsigned int shrinker_run_no;
+ #endif	/* CONFIG_EROFS_FS_ZIP */
  	u32 blocks;
  	u32 meta_blkaddr;
- #ifdef CONFIG_EROFS_FS_XATTR
-@@ -400,6 +404,15 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- /* dir.c */
- extern const struct file_operations erofs_dir_fops;
+@@ -408,9 +411,13 @@ extern const struct file_operations erofs_dir_fops;
+ #ifdef CONFIG_EROFS_FS_ZIP
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
++int __init erofs_init_shrinker(void);
++void erofs_exit_shrinker(void);
+ #else
+ static inline void erofs_shrinker_register(struct super_block *sb) {}
+ static inline void erofs_shrinker_unregister(struct super_block *sb) {}
++static inline int erofs_init_shrinker(void) { return 0; }
++static inline void erofs_exit_shrinker(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
  
-+/* utils.c */
-+#ifdef CONFIG_EROFS_FS_ZIP
-+void erofs_shrinker_register(struct super_block *sb);
-+void erofs_shrinker_unregister(struct super_block *sb);
-+#else
-+static inline void erofs_shrinker_register(struct super_block *sb) {}
-+static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-+#endif	/* !CONFIG_EROFS_FS_ZIP */
-+
  #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
- 
- #endif	/* __EROFS_INTERNAL_H */
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 561ae6f7fe13..2eca3b25db75 100644
+index 2eca3b25db75..09992cc3b2fd 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -354,6 +354,8 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (unlikely(!sb->s_root))
- 		return -ENOMEM;
+@@ -413,6 +413,9 @@ static int __init erofs_module_init(void)
+ 	if (err)
+ 		goto icache_err;
  
-+	erofs_shrinker_register(sb);
-+
- 	if (!silent)
- 		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
++	err = erofs_init_shrinker();
++	if (err)
++		goto shrinker_err;
+ 	err = register_filesystem(&erofs_fs_type);
+ 	if (err)
+ 		goto fs_err;
+@@ -421,6 +424,8 @@ static int __init erofs_module_init(void)
  	return 0;
-@@ -385,6 +387,12 @@ static void erofs_kill_sb(struct super_block *sb)
- 	sb->s_fs_info = NULL;
- }
  
-+/* called when ->s_root is non-NULL */
-+static void erofs_put_super(struct super_block *sb)
-+{
-+	erofs_shrinker_unregister(sb);
-+}
-+
- static struct file_system_type erofs_fs_type = {
- 	.owner          = THIS_MODULE,
- 	.name           = "erofs",
-@@ -496,6 +504,7 @@ static int erofs_remount(struct super_block *sb, int *flags, char *data)
+ fs_err:
++	erofs_exit_shrinker();
++shrinker_err:
+ 	erofs_exit_inode_cache();
+ icache_err:
+ 	return err;
+@@ -429,6 +434,7 @@ static int __init erofs_module_init(void)
+ static void __exit erofs_module_exit(void)
+ {
+ 	unregister_filesystem(&erofs_fs_type);
++	erofs_exit_shrinker();
+ 	erofs_exit_inode_cache();
+ 	infoln("successfully finalize erofs");
  }
- 
- const struct super_operations erofs_sops = {
-+	.put_super = erofs_put_super,
- 	.alloc_inode = alloc_inode,
- 	.free_inode = free_inode,
- 	.statfs = erofs_statfs,
 diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-new file mode 100644
-index 000000000000..791b2df1f761
---- /dev/null
+index 791b2df1f761..cab7d77c4e59 100644
+--- a/fs/erofs/utils.c
 +++ b/fs/erofs/utils.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * linux/fs/erofs/utils.c
-+ *
-+ * Copyright (C) 2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "internal.h"
+@@ -9,6 +9,12 @@
+ #include "internal.h"
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
++/* global shrink count (for all mounted EROFS instances) */
++static atomic_long_t erofs_global_shrink_cnt;
 +
-+#ifdef CONFIG_EROFS_FS_ZIP
-+/* protects the mounted 'erofs_sb_list' */
-+static DEFINE_SPINLOCK(erofs_sb_list_lock);
-+static LIST_HEAD(erofs_sb_list);
++/* protected by 'erofs_sb_list_lock' */
++static unsigned int shrinker_run_no;
 +
-+void erofs_shrinker_register(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ /* protects the mounted 'erofs_sb_list' */
+ static DEFINE_SPINLOCK(erofs_sb_list_lock);
+ static LIST_HEAD(erofs_sb_list);
+@@ -17,6 +23,8 @@ void erofs_shrinker_register(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
++	mutex_init(&sbi->umount_mutex);
++
+ 	spin_lock(&erofs_sb_list_lock);
+ 	list_add(&sbi->list, &erofs_sb_list);
+ 	spin_unlock(&erofs_sb_list_lock);
+@@ -24,9 +32,92 @@ void erofs_shrinker_register(struct super_block *sb)
+ 
+ void erofs_shrinker_unregister(struct super_block *sb)
+ {
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++
++	mutex_lock(&sbi->umount_mutex);
++	/* will add shrink final handler here */
 +
 +	spin_lock(&erofs_sb_list_lock);
-+	list_add(&sbi->list, &erofs_sb_list);
++	list_del(&sbi->list);
 +	spin_unlock(&erofs_sb_list_lock);
++	mutex_unlock(&sbi->umount_mutex);
 +}
 +
-+void erofs_shrinker_unregister(struct super_block *sb)
++static unsigned long erofs_shrink_count(struct shrinker *shrink,
++					struct shrink_control *sc)
 +{
-+	spin_lock(&erofs_sb_list_lock);
-+	list_del(&EROFS_SB(sb)->list);
-+	spin_unlock(&erofs_sb_list_lock);
++	return atomic_long_read(&erofs_global_shrink_cnt);
 +}
-+#endif	/* !CONFIG_EROFS_FS_ZIP */
 +
++static unsigned long erofs_shrink_scan(struct shrinker *shrink,
++				       struct shrink_control *sc)
++{
++	struct erofs_sb_info *sbi;
++	struct list_head *p;
++
++	unsigned long nr = sc->nr_to_scan;
++	unsigned int run_no;
++	unsigned long freed = 0;
++
+ 	spin_lock(&erofs_sb_list_lock);
+-	list_del(&EROFS_SB(sb)->list);
++	do {
++		run_no = ++shrinker_run_no;
++	} while (run_no == 0);
++
++	/* Iterate over all mounted superblocks and try to shrink them */
++	p = erofs_sb_list.next;
++	while (p != &erofs_sb_list) {
++		sbi = list_entry(p, struct erofs_sb_info, list);
++
++		/*
++		 * We move the ones we do to the end of the list, so we stop
++		 * when we see one we have already done.
++		 */
++		if (sbi->shrinker_run_no == run_no)
++			break;
++
++		if (!mutex_trylock(&sbi->umount_mutex)) {
++			p = p->next;
++			continue;
++		}
++
++		spin_unlock(&erofs_sb_list_lock);
++		sbi->shrinker_run_no = run_no;
++
++		/* will add shrink handler here */
++
++		spin_lock(&erofs_sb_list_lock);
++		/* Get the next list element before we move this one */
++		p = p->next;
++
++		/*
++		 * Move this one to the end of the list to provide some
++		 * fairness.
++		 */
++		list_move_tail(&sbi->list, &erofs_sb_list);
++		mutex_unlock(&sbi->umount_mutex);
++
++		if (freed >= nr)
++			break;
++	}
+ 	spin_unlock(&erofs_sb_list_lock);
++	return freed;
++}
++
++static struct shrinker erofs_shrinker_info = {
++	.scan_objects = erofs_shrink_scan,
++	.count_objects = erofs_shrink_count,
++	.seeks = DEFAULT_SEEKS,
++};
++
++int __init erofs_init_shrinker(void)
++{
++	return register_shrinker(&erofs_shrinker_info);
++}
++
++void erofs_exit_shrinker(void)
++{
++	unregister_shrinker(&erofs_shrinker_info);
+ }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
 -- 
 2.17.1
 
