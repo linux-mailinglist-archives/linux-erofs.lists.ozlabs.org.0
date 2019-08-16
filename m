@@ -2,67 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFCE68FBBD
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 09:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B4248FBD9
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 09:13:02 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 468vbm0wN7zDrL9
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 17:10:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 468vfg4vXrzDrdQ
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 17:12:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::444; helo=mail-pf1-x444.google.com;
- envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.191; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="uv35nsyP"; 
- dkim-atps=neutral
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com
- [IPv6:2607:f8b0:4864:20::444])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 468vbc2NP0zDrKj
- for <linux-erofs@lists.ozlabs.org>; Fri, 16 Aug 2019 17:10:20 +1000 (AEST)
-Received: by mail-pf1-x444.google.com with SMTP id 129so2676930pfa.4
- for <linux-erofs@lists.ozlabs.org>; Fri, 16 Aug 2019 00:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id;
- bh=k5yhjYXhzIvgVVXVbfUjZGOTp1F4rSJQyC6/j00Klao=;
- b=uv35nsyPOhdGN0c2e2tEv/wAT2T/32wnO67hoeIvUlA544hruvvsf0G18zqPY3is2K
- HzBONua/LI4nFpHDLBePx4sDsEeelmAxO08jfCLR4QaKL87KNs6eaCoFKdjsPlcxGBYm
- CKT5/gpNB85cv5DtaZbayvN4cSo3iU/7P6jQOXnTwRR+B6E3tiMtShKz+jen4RmlLvgi
- MCzApbFazkbSi7JLj+zdenchUv0a1xaQsdgWMoGSV3V/xFHKKGx8d//S+fPZW8BDsJSV
- +1SDLM1P7xM07HRndGBV7oTp/NiMIYi2582ZhFCMw3htWcIl6/Wg/rJ70QGtoG8tF9u4
- yH2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=k5yhjYXhzIvgVVXVbfUjZGOTp1F4rSJQyC6/j00Klao=;
- b=kc8XMwwLqG/8F3UlR04q8MVLgN2eZTAsR0qFhlpFcZtxeB48jnRvwp2rwTuG2ojnEB
- Sr9esS1526xbFdviFF5qw28tvIQqjxI8eTi+krby0kTIEkrkNgGHwJzXfMokZtMm7LMR
- k8zLImV2s7jg2xHWD2WPiypu7shhfIflwS+i5OJOCM39LfxewxqNVegKKzgSFTLNs6BF
- 5UjZXFRecNsbBbFIXeyXi7bMaVvAbSv4nksVeNFR7HM7AnXWmvf782ppcoeLBYljjUKn
- 6QjoDmpI0KvEUQO06G7V+M1CaKAQ388H0cIaLd+20ZA6z9ANlD7/sI27X74zyM/RVY9f
- 8Esw==
-X-Gm-Message-State: APjAAAXviHZpg0ypnlQs4zeqGeKFQdtadcVO/aWtRf5VEkRcA/6Y1shV
- To2zYMCT+SrSwygLbxuu9yT7MsztTCc=
-X-Google-Smtp-Source: APXvYqxeonT28/mEWKkjSICHwlTQNmO5KN3FewEMQ+VlHQjmDeQzfV8xQ/DNWYLkM4SagQu3nGGZRA==
-X-Received: by 2002:aa7:85d6:: with SMTP id z22mr9084329pfn.262.1565939415236; 
- Fri, 16 Aug 2019 00:10:15 -0700 (PDT)
-Received: from localhost.localdomain ([42.107.88.47])
- by smtp.gmail.com with ESMTPSA id c70sm6560062pfb.163.2019.08.16.00.10.11
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Fri, 16 Aug 2019 00:10:14 -0700 (PDT)
-From: Pratik Shinde <pratikshinde320@gmail.com>
-To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
- fangwei1@huawei.com
-Subject: [PATCH] erofs-utils : Fail the image creation when source path is not
- a directory file.
-Date: Fri, 16 Aug 2019 12:38:46 +0530
-Message-Id: <20190816070846.21557-1-pratikshinde320@gmail.com>
-X-Mailer: git-send-email 2.9.3
+ by lists.ozlabs.org (Postfix) with ESMTPS id 468vf671vVzDrbt
+ for <linux-erofs@lists.ozlabs.org>; Fri, 16 Aug 2019 17:12:30 +1000 (AEST)
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+ by Forcepoint Email with ESMTP id 0B2F5E6B3FC0967671C6;
+ Fri, 16 Aug 2019 15:12:25 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 16 Aug
+ 2019 15:12:16 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Chao Yu <yuchao0@huawei.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
+ <linux-fsdevel@vger.kernel.org>
+Subject: [PATCH] staging: erofs: use common file type conversion
+Date: Fri, 16 Aug 2019 15:11:42 +0800
+Message-ID: <20190816071142.8633-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,61 +49,103 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>, weidu.du@huawei.com,
+ Linus Torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In the erofs.mkfs utility, if the source path is not a directory,image
-creation should not proceed.since root of the filesystem needs to be a directory.
+Deduplicate the EROFS file type conversion implementation and
+remove EROFS_FT_* definitions since it's the same as defined
+by POSIX, let's follow ext2 as Linus pointed out [1]
+commit e10892189428 ("ext2: use common file type conversion").
 
-In the erofs kernel code, we return error in case root inode(read from disk) is not
-a directory.But the mkfs utility lets you create an image based on Regular file
-(S_IFREG) too.
+[1] https://lore.kernel.org/r/CAHk-=wiUs+b=iVKM3mVooXgVk7cmmC67KTmnAuL0cd_cMMVAKw@mail.gmail.com/
 
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- mkfs/main.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/staging/erofs/dir.c      | 16 +---------------
+ drivers/staging/erofs/erofs_fs.h | 17 +++++------------
+ drivers/staging/erofs/namei.c    |  2 +-
+ 3 files changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 93cacca..e72b9e2 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -12,6 +12,7 @@
- #include <stdlib.h>
- #include <limits.h>
- #include <libgen.h>
-+#include <sys/stat.h>
- #include "erofs/config.h"
- #include "erofs/print.h"
- #include "erofs/cache.h"
-@@ -76,8 +77,8 @@ static int parse_extended_opts(const char *opts)
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 01efc96e1212..5f38382637e6 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -8,17 +8,6 @@
+  */
+ #include "internal.h"
  
- static int mkfs_parse_options_cfg(int argc, char *argv[])
+-static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
+-	[EROFS_FT_UNKNOWN]	= DT_UNKNOWN,
+-	[EROFS_FT_REG_FILE]	= DT_REG,
+-	[EROFS_FT_DIR]		= DT_DIR,
+-	[EROFS_FT_CHRDEV]	= DT_CHR,
+-	[EROFS_FT_BLKDEV]	= DT_BLK,
+-	[EROFS_FT_FIFO]		= DT_FIFO,
+-	[EROFS_FT_SOCK]		= DT_SOCK,
+-	[EROFS_FT_SYMLINK]	= DT_LNK,
+-};
+-
+ static void debug_one_dentry(unsigned char d_type, const char *de_name,
+ 			     unsigned int de_namelen)
  {
--	int opt, i;
--
-+	int opt, i, ret;
-+	struct stat64 st;
- 	while ((opt = getopt(argc, argv, "d:z:E:")) != -1) {
- 		switch (opt) {
- 		case 'z':
-@@ -135,7 +136,14 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 			  erofs_strerror(-errno));
- 		return -ENOENT;
+@@ -46,10 +35,7 @@ static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
+ 		unsigned int de_namelen;
+ 		unsigned char d_type;
+ 
+-		if (de->file_type < EROFS_FT_MAX)
+-			d_type = erofs_filetype_table[de->file_type];
+-		else
+-			d_type = DT_UNKNOWN;
++		d_type = fs_ftype_to_dtype(de->file_type);
+ 
+ 		nameoff = le16_to_cpu(de->nameoff);
+ 		de_name = (char *)dentry_blk + nameoff;
+diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+index 8dc2a75e478f..6db70f395937 100644
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/drivers/staging/erofs/erofs_fs.h
+@@ -282,18 +282,11 @@ struct erofs_dirent {
+ 	__u8 reserved;  /* 11, reserved */
+ } __packed;
+ 
+-/* file types used in inode_info->flags */
+-enum {
+-	EROFS_FT_UNKNOWN,
+-	EROFS_FT_REG_FILE,
+-	EROFS_FT_DIR,
+-	EROFS_FT_CHRDEV,
+-	EROFS_FT_BLKDEV,
+-	EROFS_FT_FIFO,
+-	EROFS_FT_SOCK,
+-	EROFS_FT_SYMLINK,
+-	EROFS_FT_MAX
+-};
++/*
++ * EROFS file types should match generic FT_* types and
++ * it seems no need to add BUILD_BUG_ONs since potential
++ * unmatchness will break other fses as well...
++ */
+ 
+ #define EROFS_NAME_LEN      255
+ 
+diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
+index c0963f5a2d22..8334a910acef 100644
+--- a/drivers/staging/erofs/namei.c
++++ b/drivers/staging/erofs/namei.c
+@@ -237,7 +237,7 @@ static struct dentry *erofs_lookup(struct inode *dir,
+ 	} else {
+ 		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
+ 			dentry->d_name.name, nid, d_type);
+-		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
++		inode = erofs_iget(dir->i_sb, nid, d_type == FT_DIR);
  	}
--
-+	ret = lstat64(cfg.c_src_path, &st);
-+	if (ret)
-+		return -EINVAL;
-+	if ((st.st_mode & S_IFMT) != S_IFDIR) {
-+		erofs_err("root of the filesystem is not a directory - %s",
-+			  cfg.c_src_path);
-+		return -EINVAL;
-+	}
- 	if (optind < argc) {
- 		erofs_err("Unexpected argument: %s\n", argv[optind]);
- 		return -EINVAL;
+ 	return d_splice_alias(inode, dentry);
+ }
 -- 
-2.9.3
+2.17.1
 
