@@ -2,51 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 237AC90301
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 15:29:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36AA190469
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 17:11:40 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46940b1rdxzDrWQ
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Aug 2019 23:29:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4696Gt3tcjzDqYj
+	for <lists+linux-erofs@lfdr.de>; Sat, 17 Aug 2019 01:11:34 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=intel.com
- (client-ip=192.55.52.43; helo=mga05.intel.com; envelope-from=lkp@intel.com;
+ spf=pass (mailfrom) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx1.suse.de; envelope-from=jack@suse.cz;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46940P0GpBzDrTM
- for <linux-erofs@lists.ozlabs.org>; Fri, 16 Aug 2019 23:28:45 +1000 (AEST)
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
- by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
- 16 Aug 2019 06:28:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,393,1559545200"; 
- d="gz'50?scan'50,208,50";a="171415115"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
- by orsmga008.jf.intel.com with ESMTP; 16 Aug 2019 06:28:26 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
- (envelope-from <lkp@intel.com>)
- id 1hycHK-0008An-BD; Fri, 16 Aug 2019 21:28:26 +0800
-Date: Fri, 16 Aug 2019 21:27:42 +0800
-From: kbuild test robot <lkp@intel.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4696Gg5dnvzDqGP
+ for <linux-erofs@lists.ozlabs.org>; Sat, 17 Aug 2019 01:11:21 +1000 (AEST)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx1.suse.de (Postfix) with ESMTP id 5CEA1AFFC;
+ Fri, 16 Aug 2019 15:11:15 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+ id 965C61E4009; Fri, 16 Aug 2019 17:11:11 +0200 (CEST)
+Date: Fri, 16 Aug 2019 17:11:11 +0200
+From: Jan Kara <jack@suse.cz>
 To: Mark Salyzyn <salyzyn@android.com>
 Subject: Re: [PATCH v4] Add flags option to get xattr method paired to
  __vfs_getxattr
-Message-ID: <201908162141.9dc5Bnb4%lkp@intel.com>
+Message-ID: <20190816151111.GC3041@quack2.suse.cz>
 References: <20190815155019.229988-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="zvcimmft6x7e25cr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20190815155019.229988-1-salyzyn@android.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,39 +56,37 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Dave Kleikamp <shaggy@kernel.org>,
  Mimi Zohar <zohar@linux.ibm.com>, Adrian Hunter <adrian.hunter@intel.com>,
  David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>,
  "David S. Miller" <davem@davemloft.net>,
- Andreas Dilger <adilger.kernel@dilger.ca>, ocfs2-devel@oss.oracle.com,
- Eric Paris <eparis@parisplace.org>, netdev@vger.kernel.org,
- Tyler Hicks <tyhicks@canonical.com>, linux-afs@lists.infradead.org,
- Mike Marshall <hubcap@omnibond.com>, devel@driverdev.osuosl.org,
- linux-xfs@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
- Sage Weil <sage@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
- Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>,
- linux-unionfs@vger.kernel.org, Hugh Dickins <hughd@google.com>,
- James Morris <jmorris@namei.org>, cluster-devel@redhat.com,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Eric Paris <eparis@parisplace.org>,
+ netdev@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>,
+ devel@driverdev.osuosl.org, linux-xfs@vger.kernel.org,
+ Andreas Gruenbacher <agruenba@redhat.com>, Sage Weil <sage@redhat.com>,
+ Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>,
+ Mark Fasheh <mark@fasheh.com>, linux-unionfs@vger.kernel.org,
+ Hugh Dickins <hughd@google.com>, James Morris <jmorris@namei.org>,
+ cluster-devel@redhat.com, Joseph Qi <joseph.qi@linux.alibaba.com>,
  Vyacheslav Dubeyko <slava@dubeyko.com>,
  Casey Schaufler <casey@schaufler-ca.com>, v9fs-developer@lists.sourceforge.net,
  Ilya Dryomov <idryomov@gmail.com>, linux-ext4@vger.kernel.org,
  kernel-team@android.com, linux-mm@kvack.org, devel@lists.orangefs.org,
  Serge Hallyn <serge@hallyn.com>,
- Ernesto =?unknown-8bit?Q?A=2E_Fern=C3=A1ndez?=
- <ernesto.mnd.fernandez@gmail.com>, linux-cifs@vger.kernel.org,
- Eric Van Hensbergen <ericvh@gmail.com>, ecryptfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, Josef Bacik <josef@toxicpanda.com>,
+ Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= <ernesto.mnd.fernandez@gmail.com>,
+ linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@gmail.com>,
+ ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ Josef Bacik <josef@toxicpanda.com>,
  "Darrick J. Wong" <darrick.wong@oracle.com>, reiserfs-devel@vger.kernel.org,
  Tejun Heo <tj@kernel.org>, Joel Becker <jlbec@evilplan.org>,
  linux-mtd@lists.infradead.org, David Sterba <dsterba@suse.com>,
  Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org,
  selinux@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
  Paul Moore <paul@paul-moore.com>, linux-nfs@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, Theodore Ts'o <tytso@mit.edu>,
- linux-fsdevel@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>,
- Mathieu Malaterre <malat@debian.org>,
+ Theodore Ts'o <tytso@mit.edu>, linux-fsdevel@vger.kernel.org,
+ Stephen Smalley <sds@tycho.nsa.gov>, Mathieu Malaterre <malat@debian.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Artem Bityutskiy <dedekind1@gmail.com>, Jeff Layton <jlayton@kernel.org>,
  linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Mark Salyzyn <salyzyn@android.com>, Steve French <sfrench@samba.org>,
- linux-security-module@vger.kernel.org, kbuild-all@01.org,
+ Tyler Hicks <tyhicks@canonical.com>, Steve French <sfrench@samba.org>,
+ linux-security-module@vger.kernel.org, ocfs2-devel@oss.oracle.com,
  Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>,
  Phillip Lougher <phillip@squashfs.org.uk>,
  Andrew Morton <akpm@linux-foundation.org>,
@@ -108,569 +97,987 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Thu 15-08-19 08:49:58, Mark Salyzyn wrote:
+> Add a flag option to get xattr method that could have a bit flag of
+> XATTR_NOSECURITY passed to it.  XATTR_NOSECURITY is generally then
+> set in the __vfs_getxattr path.
+> 
+> This handles the case of a union filesystem driver that is being
+> requested by the security layer to report back the xattr data.
+> 
+> For the use case where access is to be blocked by the security layer.
+> 
+> The path then could be security(dentry) ->
+> __vfs_getxattr(dentry...XATTR_NOSECUIRTY) ->
+> handler->get(dentry...XATTR_NOSECURITY) ->
+> __vfs_getxattr(lower_dentry...XATTR_NOSECUIRTY) ->
+> lower_handler->get(lower_dentry...XATTR_NOSECUIRTY)
+> which would report back through the chain data and success as
+> expected, the logging security layer at the top would have the
+> data to determine the access permissions and report back the target
+> context that was blocked.
+> 
+> Without the get handler flag, the path on a union filesystem would be
+> the errant security(dentry) -> __vfs_getxattr(dentry) ->
+> handler->get(dentry) -> vfs_getxattr(lower_dentry) -> nested ->
+> security(lower_dentry, log off) -> lower_handler->get(lower_dentry)
+> which would report back through the chain no data, and -EACCES.
+> 
+> For selinux for both cases, this would translate to a correctly
+> determined blocked access. In the first case with this change a correct avc
+> log would be reported, in the second legacy case an incorrect avc log
+> would be reported against an uninitialized u:object_r:unlabeled:s0
+> context making the logs cosmetically useless for audit2allow.
+> 
+> This patch series is inert and is the wide-spread addition of the
+> flags option for xattr functions, and a replacement of _vfs_getxattr
+> with __vfs_getxattr(...XATTR_NOSECURITY).
+> 
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: Stephen Smalley <sds@tycho.nsa.gov>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@android.com
+> Cc: linux-security-module@vger.kernel.org
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: stable@vger.kernel.org # 4.4, 4.9, 4.14 & 4.19
 
---zvcimmft6x7e25cr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The patch looks good to me. I can see you've missed conversion of one place
+in ext2 which 0-day spotted so that will need fixing. Otherwise feel free
+to add:
 
-Hi Mark,
+Acked-by: Jan Kara <jack@suse.cz>
 
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
-[cannot apply to v5.3-rc4 next-20190814]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Mark-Salyzyn/Add-flags-option-to-get-xattr-method-paired-to-__vfs_getxattr/20190816-155049
-config: x86_64-lkp (attached as .config)
-compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=x86_64 
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
->> fs/ext2/xattr_security.c:56:9: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-     .get = ext2_xattr_security_get,
-            ^~~~~~~~~~~~~~~~~~~~~~~
-   fs/ext2/xattr_security.c:56:9: note: (near initialization for 'ext2_xattr_security_handler.get')
-   cc1: some warnings being treated as errors
-
-vim +56 fs/ext2/xattr_security.c
-
-9d8f13ba3f4833 Mimi Zohar        2011-06-06  53  
-749c72efa4bd91 Stephen Hemminger 2010-05-13  54  const struct xattr_handler ext2_xattr_security_handler = {
-^1da177e4c3f41 Linus Torvalds    2005-04-16  55  	.prefix	= XATTR_SECURITY_PREFIX,
-^1da177e4c3f41 Linus Torvalds    2005-04-16 @56  	.get	= ext2_xattr_security_get,
-
-:::::: The code at line 56 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---zvcimmft6x7e25cr
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-nP2qpO1FvFoL6W4Mkjn6mQHYcf4/T6DxIXe/AQA=
-
---zvcimmft6x7e25cr--
+								Honza
+> ---
+> v4:
+> - ifdef __KERNEL__ around XATTR_NOSECURITY to
+>   keep it colocated in uapi headers.
+> 
+> v3:
+> - poor aim on ubifs not ubifs_xattr_get, but static xattr_get
+> 
+> v2:
+> - Missed a spot: ubifs, erofs and afs.
+> 
+> v1:
+> - Removed from an overlayfs patch set, and made independent.
+>   Expect this to be the basis of some security improvements.
+> ---
+>  drivers/staging/erofs/xattr.c     |  3 ++-
+>  fs/9p/acl.c                       |  3 ++-
+>  fs/9p/xattr.c                     |  3 ++-
+>  fs/afs/xattr.c                    |  8 +++----
+>  fs/btrfs/xattr.c                  |  3 ++-
+>  fs/ceph/xattr.c                   |  3 ++-
+>  fs/cifs/xattr.c                   |  2 +-
+>  fs/ecryptfs/inode.c               |  6 ++++--
+>  fs/ecryptfs/mmap.c                |  2 +-
+>  fs/ext2/xattr_trusted.c           |  2 +-
+>  fs/ext2/xattr_user.c              |  2 +-
+>  fs/ext4/xattr_security.c          |  2 +-
+>  fs/ext4/xattr_trusted.c           |  2 +-
+>  fs/ext4/xattr_user.c              |  2 +-
+>  fs/f2fs/xattr.c                   |  4 ++--
+>  fs/fuse/xattr.c                   |  4 ++--
+>  fs/gfs2/xattr.c                   |  3 ++-
+>  fs/hfs/attr.c                     |  2 +-
+>  fs/hfsplus/xattr.c                |  3 ++-
+>  fs/hfsplus/xattr_trusted.c        |  3 ++-
+>  fs/hfsplus/xattr_user.c           |  3 ++-
+>  fs/jffs2/security.c               |  3 ++-
+>  fs/jffs2/xattr_trusted.c          |  3 ++-
+>  fs/jffs2/xattr_user.c             |  3 ++-
+>  fs/jfs/xattr.c                    |  5 +++--
+>  fs/kernfs/inode.c                 |  3 ++-
+>  fs/nfs/nfs4proc.c                 |  6 ++++--
+>  fs/ocfs2/xattr.c                  |  9 +++++---
+>  fs/orangefs/xattr.c               |  3 ++-
+>  fs/overlayfs/super.c              |  8 ++++---
+>  fs/posix_acl.c                    |  2 +-
+>  fs/reiserfs/xattr_security.c      |  3 ++-
+>  fs/reiserfs/xattr_trusted.c       |  3 ++-
+>  fs/reiserfs/xattr_user.c          |  3 ++-
+>  fs/squashfs/xattr.c               |  2 +-
+>  fs/ubifs/xattr.c                  |  3 ++-
+>  fs/xattr.c                        | 36 +++++++++++++++----------------
+>  fs/xfs/xfs_xattr.c                |  3 ++-
+>  include/linux/xattr.h             |  9 ++++----
+>  include/uapi/linux/xattr.h        |  7 ++++--
+>  mm/shmem.c                        |  3 ++-
+>  net/socket.c                      |  3 ++-
+>  security/commoncap.c              |  6 ++++--
+>  security/integrity/evm/evm_main.c |  3 ++-
+>  security/selinux/hooks.c          | 11 ++++++----
+>  security/smack/smack_lsm.c        |  5 +++--
+>  46 files changed, 126 insertions(+), 84 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+> index df40654b9fbb..69440065432c 100644
+> --- a/drivers/staging/erofs/xattr.c
+> +++ b/drivers/staging/erofs/xattr.c
+> @@ -463,7 +463,8 @@ int erofs_getxattr(struct inode *inode, int index,
+>  
+>  static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *name, void *buffer, size_t size)
+> +				   const char *name, void *buffer, size_t size,
+> +				   int flags)
+>  {
+>  	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+>  
+> diff --git a/fs/9p/acl.c b/fs/9p/acl.c
+> index 6261719f6f2a..cb14e8b312bc 100644
+> --- a/fs/9p/acl.c
+> +++ b/fs/9p/acl.c
+> @@ -214,7 +214,8 @@ int v9fs_acl_mode(struct inode *dir, umode_t *modep,
+>  
+>  static int v9fs_xattr_get_acl(const struct xattr_handler *handler,
+>  			      struct dentry *dentry, struct inode *inode,
+> -			      const char *name, void *buffer, size_t size)
+> +			      const char *name, void *buffer, size_t size,
+> +			      int flags)
+>  {
+>  	struct v9fs_session_info *v9ses;
+>  	struct posix_acl *acl;
+> diff --git a/fs/9p/xattr.c b/fs/9p/xattr.c
+> index ac8ff8ca4c11..5cfa772452fd 100644
+> --- a/fs/9p/xattr.c
+> +++ b/fs/9p/xattr.c
+> @@ -139,7 +139,8 @@ ssize_t v9fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+>  
+>  static int v9fs_xattr_handler_get(const struct xattr_handler *handler,
+>  				  struct dentry *dentry, struct inode *inode,
+> -				  const char *name, void *buffer, size_t size)
+> +				  const char *name, void *buffer, size_t size,
+> +				  int flags)
+>  {
+>  	const char *full_name = xattr_full_name(handler, name);
+>  
+> diff --git a/fs/afs/xattr.c b/fs/afs/xattr.c
+> index 5552d034090a..7e2d97653f5a 100644
+> --- a/fs/afs/xattr.c
+> +++ b/fs/afs/xattr.c
+> @@ -163,7 +163,7 @@ static const struct xattr_handler afs_xattr_afs_acl_handler = {
+>  static int afs_xattr_get_yfs(const struct xattr_handler *handler,
+>  			     struct dentry *dentry,
+>  			     struct inode *inode, const char *name,
+> -			     void *buffer, size_t size)
+> +			     void *buffer, size_t size, int flags)
+>  {
+>  	struct afs_fs_cursor fc;
+>  	struct afs_status_cb *scb;
+> @@ -334,7 +334,7 @@ static const struct xattr_handler afs_xattr_yfs_handler = {
+>  static int afs_xattr_get_cell(const struct xattr_handler *handler,
+>  			      struct dentry *dentry,
+>  			      struct inode *inode, const char *name,
+> -			      void *buffer, size_t size)
+> +			      void *buffer, size_t size, int flags)
+>  {
+>  	struct afs_vnode *vnode = AFS_FS_I(inode);
+>  	struct afs_cell *cell = vnode->volume->cell;
+> @@ -361,7 +361,7 @@ static const struct xattr_handler afs_xattr_afs_cell_handler = {
+>  static int afs_xattr_get_fid(const struct xattr_handler *handler,
+>  			     struct dentry *dentry,
+>  			     struct inode *inode, const char *name,
+> -			     void *buffer, size_t size)
+> +			     void *buffer, size_t size, int flags)
+>  {
+>  	struct afs_vnode *vnode = AFS_FS_I(inode);
+>  	char text[16 + 1 + 24 + 1 + 8 + 1];
+> @@ -397,7 +397,7 @@ static const struct xattr_handler afs_xattr_afs_fid_handler = {
+>  static int afs_xattr_get_volume(const struct xattr_handler *handler,
+>  			      struct dentry *dentry,
+>  			      struct inode *inode, const char *name,
+> -			      void *buffer, size_t size)
+> +			      void *buffer, size_t size, int flags)
+>  {
+>  	struct afs_vnode *vnode = AFS_FS_I(inode);
+>  	const char *volname = vnode->volume->name;
+> diff --git a/fs/btrfs/xattr.c b/fs/btrfs/xattr.c
+> index 95d9aebff2c4..1e522e145344 100644
+> --- a/fs/btrfs/xattr.c
+> +++ b/fs/btrfs/xattr.c
+> @@ -353,7 +353,8 @@ ssize_t btrfs_listxattr(struct dentry *dentry, char *buffer, size_t size)
+>  
+>  static int btrfs_xattr_handler_get(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *name, void *buffer, size_t size)
+> +				   const char *name, void *buffer, size_t size,
+> +				   int flags)
+>  {
+>  	name = xattr_full_name(handler, name);
+>  	return btrfs_getxattr(inode, name, buffer, size);
+> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+> index 37b458a9af3a..edb7eb9ae83e 100644
+> --- a/fs/ceph/xattr.c
+> +++ b/fs/ceph/xattr.c
+> @@ -1171,7 +1171,8 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+>  
+>  static int ceph_get_xattr_handler(const struct xattr_handler *handler,
+>  				  struct dentry *dentry, struct inode *inode,
+> -				  const char *name, void *value, size_t size)
+> +				  const char *name, void *value, size_t size,
+> +				  int flags)
+>  {
+>  	if (!ceph_is_valid_xattr(name))
+>  		return -EOPNOTSUPP;
+> diff --git a/fs/cifs/xattr.c b/fs/cifs/xattr.c
+> index 9076150758d8..7f71c06ce631 100644
+> --- a/fs/cifs/xattr.c
+> +++ b/fs/cifs/xattr.c
+> @@ -199,7 +199,7 @@ static int cifs_creation_time_get(struct dentry *dentry, struct inode *inode,
+>  
+>  static int cifs_xattr_get(const struct xattr_handler *handler,
+>  			  struct dentry *dentry, struct inode *inode,
+> -			  const char *name, void *value, size_t size)
+> +			  const char *name, void *value, size_t size, int flags)
+>  {
+>  	ssize_t rc = -EOPNOTSUPP;
+>  	unsigned int xid;
+> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+> index 18426f4855f1..c710c7533729 100644
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -1018,7 +1018,8 @@ ecryptfs_getxattr_lower(struct dentry *lower_dentry, struct inode *lower_inode,
+>  		goto out;
+>  	}
+>  	inode_lock(lower_inode);
+> -	rc = __vfs_getxattr(lower_dentry, lower_inode, name, value, size);
+> +	rc = __vfs_getxattr(lower_dentry, lower_inode, name, value, size,
+> +			    XATTR_NOSECURITY);
+>  	inode_unlock(lower_inode);
+>  out:
+>  	return rc;
+> @@ -1103,7 +1104,8 @@ const struct inode_operations ecryptfs_main_iops = {
+>  
+>  static int ecryptfs_xattr_get(const struct xattr_handler *handler,
+>  			      struct dentry *dentry, struct inode *inode,
+> -			      const char *name, void *buffer, size_t size)
+> +			      const char *name, void *buffer, size_t size,
+> +			      int flags)
+>  {
+>  	return ecryptfs_getxattr(dentry, inode, name, buffer, size);
+>  }
+> diff --git a/fs/ecryptfs/mmap.c b/fs/ecryptfs/mmap.c
+> index cffa0c1ec829..2362be3e3b4d 100644
+> --- a/fs/ecryptfs/mmap.c
+> +++ b/fs/ecryptfs/mmap.c
+> @@ -422,7 +422,7 @@ static int ecryptfs_write_inode_size_to_xattr(struct inode *ecryptfs_inode)
+>  	}
+>  	inode_lock(lower_inode);
+>  	size = __vfs_getxattr(lower_dentry, lower_inode, ECRYPTFS_XATTR_NAME,
+> -			      xattr_virt, PAGE_SIZE);
+> +			      xattr_virt, PAGE_SIZE, XATTR_NOSECURITY);
+>  	if (size < 0)
+>  		size = 8;
+>  	put_unaligned_be64(i_size_read(ecryptfs_inode), xattr_virt);
+> diff --git a/fs/ext2/xattr_trusted.c b/fs/ext2/xattr_trusted.c
+> index 49add1107850..8d313664f0fa 100644
+> --- a/fs/ext2/xattr_trusted.c
+> +++ b/fs/ext2/xattr_trusted.c
+> @@ -18,7 +18,7 @@ ext2_xattr_trusted_list(struct dentry *dentry)
+>  static int
+>  ext2_xattr_trusted_get(const struct xattr_handler *handler,
+>  		       struct dentry *unused, struct inode *inode,
+> -		       const char *name, void *buffer, size_t size)
+> +		       const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	return ext2_xattr_get(inode, EXT2_XATTR_INDEX_TRUSTED, name,
+>  			      buffer, size);
+> diff --git a/fs/ext2/xattr_user.c b/fs/ext2/xattr_user.c
+> index c243a3b4d69d..712b7c95cc64 100644
+> --- a/fs/ext2/xattr_user.c
+> +++ b/fs/ext2/xattr_user.c
+> @@ -20,7 +20,7 @@ ext2_xattr_user_list(struct dentry *dentry)
+>  static int
+>  ext2_xattr_user_get(const struct xattr_handler *handler,
+>  		    struct dentry *unused, struct inode *inode,
+> -		    const char *name, void *buffer, size_t size)
+> +		    const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	if (!test_opt(inode->i_sb, XATTR_USER))
+>  		return -EOPNOTSUPP;
+> diff --git a/fs/ext4/xattr_security.c b/fs/ext4/xattr_security.c
+> index 197a9d8a15ef..50fb71393fb6 100644
+> --- a/fs/ext4/xattr_security.c
+> +++ b/fs/ext4/xattr_security.c
+> @@ -15,7 +15,7 @@
+>  static int
+>  ext4_xattr_security_get(const struct xattr_handler *handler,
+>  			struct dentry *unused, struct inode *inode,
+> -			const char *name, void *buffer, size_t size)
+> +			const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	return ext4_xattr_get(inode, EXT4_XATTR_INDEX_SECURITY,
+>  			      name, buffer, size);
+> diff --git a/fs/ext4/xattr_trusted.c b/fs/ext4/xattr_trusted.c
+> index e9389e5d75c3..64bd8f86c1f1 100644
+> --- a/fs/ext4/xattr_trusted.c
+> +++ b/fs/ext4/xattr_trusted.c
+> @@ -22,7 +22,7 @@ ext4_xattr_trusted_list(struct dentry *dentry)
+>  static int
+>  ext4_xattr_trusted_get(const struct xattr_handler *handler,
+>  		       struct dentry *unused, struct inode *inode,
+> -		       const char *name, void *buffer, size_t size)
+> +		       const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	return ext4_xattr_get(inode, EXT4_XATTR_INDEX_TRUSTED,
+>  			      name, buffer, size);
+> diff --git a/fs/ext4/xattr_user.c b/fs/ext4/xattr_user.c
+> index d4546184b34b..b7301373820e 100644
+> --- a/fs/ext4/xattr_user.c
+> +++ b/fs/ext4/xattr_user.c
+> @@ -21,7 +21,7 @@ ext4_xattr_user_list(struct dentry *dentry)
+>  static int
+>  ext4_xattr_user_get(const struct xattr_handler *handler,
+>  		    struct dentry *unused, struct inode *inode,
+> -		    const char *name, void *buffer, size_t size)
+> +		    const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	if (!test_opt(inode->i_sb, XATTR_USER))
+>  		return -EOPNOTSUPP;
+> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+> index b32c45621679..76559da8dfba 100644
+> --- a/fs/f2fs/xattr.c
+> +++ b/fs/f2fs/xattr.c
+> @@ -24,7 +24,7 @@
+>  
+>  static int f2fs_xattr_generic_get(const struct xattr_handler *handler,
+>  		struct dentry *unused, struct inode *inode,
+> -		const char *name, void *buffer, size_t size)
+> +		const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	struct f2fs_sb_info *sbi = F2FS_SB(inode->i_sb);
+>  
+> @@ -79,7 +79,7 @@ static bool f2fs_xattr_trusted_list(struct dentry *dentry)
+>  
+>  static int f2fs_xattr_advise_get(const struct xattr_handler *handler,
+>  		struct dentry *unused, struct inode *inode,
+> -		const char *name, void *buffer, size_t size)
+> +		const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	if (buffer)
+>  		*((char *)buffer) = F2FS_I(inode)->i_advise;
+> diff --git a/fs/fuse/xattr.c b/fs/fuse/xattr.c
+> index 433717640f78..d1ef7808304e 100644
+> --- a/fs/fuse/xattr.c
+> +++ b/fs/fuse/xattr.c
+> @@ -176,7 +176,7 @@ int fuse_removexattr(struct inode *inode, const char *name)
+>  
+>  static int fuse_xattr_get(const struct xattr_handler *handler,
+>  			 struct dentry *dentry, struct inode *inode,
+> -			 const char *name, void *value, size_t size)
+> +			 const char *name, void *value, size_t size, int flags)
+>  {
+>  	return fuse_getxattr(inode, name, value, size);
+>  }
+> @@ -199,7 +199,7 @@ static bool no_xattr_list(struct dentry *dentry)
+>  
+>  static int no_xattr_get(const struct xattr_handler *handler,
+>  			struct dentry *dentry, struct inode *inode,
+> -			const char *name, void *value, size_t size)
+> +			const char *name, void *value, size_t size, int flags)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> diff --git a/fs/gfs2/xattr.c b/fs/gfs2/xattr.c
+> index bbe593d16bea..a9db067a99c1 100644
+> --- a/fs/gfs2/xattr.c
+> +++ b/fs/gfs2/xattr.c
+> @@ -588,7 +588,8 @@ static int __gfs2_xattr_get(struct inode *inode, const char *name,
+>  
+>  static int gfs2_xattr_get(const struct xattr_handler *handler,
+>  			  struct dentry *unused, struct inode *inode,
+> -			  const char *name, void *buffer, size_t size)
+> +			  const char *name, void *buffer, size_t size,
+> +			  int flags)
+>  {
+>  	struct gfs2_inode *ip = GFS2_I(inode);
+>  	struct gfs2_holder gh;
+> diff --git a/fs/hfs/attr.c b/fs/hfs/attr.c
+> index 74fa62643136..08222a9c5d31 100644
+> --- a/fs/hfs/attr.c
+> +++ b/fs/hfs/attr.c
+> @@ -115,7 +115,7 @@ static ssize_t __hfs_getxattr(struct inode *inode, enum hfs_xattr_type type,
+>  
+>  static int hfs_xattr_get(const struct xattr_handler *handler,
+>  			 struct dentry *unused, struct inode *inode,
+> -			 const char *name, void *value, size_t size)
+> +			 const char *name, void *value, size_t size, int flags)
+>  {
+>  	return __hfs_getxattr(inode, handler->flags, value, size);
+>  }
+> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+> index bb0b27d88e50..381c2aaedbc8 100644
+> --- a/fs/hfsplus/xattr.c
+> +++ b/fs/hfsplus/xattr.c
+> @@ -839,7 +839,8 @@ static int hfsplus_removexattr(struct inode *inode, const char *name)
+>  
+>  static int hfsplus_osx_getxattr(const struct xattr_handler *handler,
+>  				struct dentry *unused, struct inode *inode,
+> -				const char *name, void *buffer, size_t size)
+> +				const char *name, void *buffer, size_t size,
+> +				int flags)
+>  {
+>  	/*
+>  	 * Don't allow retrieving properly prefixed attributes
+> diff --git a/fs/hfsplus/xattr_trusted.c b/fs/hfsplus/xattr_trusted.c
+> index fbad91e1dada..54d926314f8c 100644
+> --- a/fs/hfsplus/xattr_trusted.c
+> +++ b/fs/hfsplus/xattr_trusted.c
+> @@ -14,7 +14,8 @@
+>  
+>  static int hfsplus_trusted_getxattr(const struct xattr_handler *handler,
+>  				    struct dentry *unused, struct inode *inode,
+> -				    const char *name, void *buffer, size_t size)
+> +				    const char *name, void *buffer,
+> +				    size_t size, int flags)
+>  {
+>  	return hfsplus_getxattr(inode, name, buffer, size,
+>  				XATTR_TRUSTED_PREFIX,
+> diff --git a/fs/hfsplus/xattr_user.c b/fs/hfsplus/xattr_user.c
+> index 74d19faf255e..4d2b1ffff887 100644
+> --- a/fs/hfsplus/xattr_user.c
+> +++ b/fs/hfsplus/xattr_user.c
+> @@ -14,7 +14,8 @@
+>  
+>  static int hfsplus_user_getxattr(const struct xattr_handler *handler,
+>  				 struct dentry *unused, struct inode *inode,
+> -				 const char *name, void *buffer, size_t size)
+> +				 const char *name, void *buffer, size_t size,
+> +				 int flags)
+>  {
+>  
+>  	return hfsplus_getxattr(inode, name, buffer, size,
+> diff --git a/fs/jffs2/security.c b/fs/jffs2/security.c
+> index c2332e30f218..e6f42fe435af 100644
+> --- a/fs/jffs2/security.c
+> +++ b/fs/jffs2/security.c
+> @@ -50,7 +50,8 @@ int jffs2_init_security(struct inode *inode, struct inode *dir,
+>  /* ---- XATTR Handler for "security.*" ----------------- */
+>  static int jffs2_security_getxattr(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *name, void *buffer, size_t size)
+> +				   const char *name, void *buffer, size_t size,
+> +				   int flags)
+>  {
+>  	return do_jffs2_getxattr(inode, JFFS2_XPREFIX_SECURITY,
+>  				 name, buffer, size);
+> diff --git a/fs/jffs2/xattr_trusted.c b/fs/jffs2/xattr_trusted.c
+> index 5d6030826c52..9dccaae549f5 100644
+> --- a/fs/jffs2/xattr_trusted.c
+> +++ b/fs/jffs2/xattr_trusted.c
+> @@ -18,7 +18,8 @@
+>  
+>  static int jffs2_trusted_getxattr(const struct xattr_handler *handler,
+>  				  struct dentry *unused, struct inode *inode,
+> -				  const char *name, void *buffer, size_t size)
+> +				  const char *name, void *buffer, size_t size,
+> +				  int flags)
+>  {
+>  	return do_jffs2_getxattr(inode, JFFS2_XPREFIX_TRUSTED,
+>  				 name, buffer, size);
+> diff --git a/fs/jffs2/xattr_user.c b/fs/jffs2/xattr_user.c
+> index 9d027b4abcf9..c0983a3e810b 100644
+> --- a/fs/jffs2/xattr_user.c
+> +++ b/fs/jffs2/xattr_user.c
+> @@ -18,7 +18,8 @@
+>  
+>  static int jffs2_user_getxattr(const struct xattr_handler *handler,
+>  			       struct dentry *unused, struct inode *inode,
+> -			       const char *name, void *buffer, size_t size)
+> +			       const char *name, void *buffer, size_t size,
+> +			       int flags)
+>  {
+>  	return do_jffs2_getxattr(inode, JFFS2_XPREFIX_USER,
+>  				 name, buffer, size);
+> diff --git a/fs/jfs/xattr.c b/fs/jfs/xattr.c
+> index db41e7803163..5c79a35bf62f 100644
+> --- a/fs/jfs/xattr.c
+> +++ b/fs/jfs/xattr.c
+> @@ -925,7 +925,7 @@ static int __jfs_xattr_set(struct inode *inode, const char *name,
+>  
+>  static int jfs_xattr_get(const struct xattr_handler *handler,
+>  			 struct dentry *unused, struct inode *inode,
+> -			 const char *name, void *value, size_t size)
+> +			 const char *name, void *value, size_t size, int flags)
+>  {
+>  	name = xattr_full_name(handler, name);
+>  	return __jfs_getxattr(inode, name, value, size);
+> @@ -942,7 +942,8 @@ static int jfs_xattr_set(const struct xattr_handler *handler,
+>  
+>  static int jfs_xattr_get_os2(const struct xattr_handler *handler,
+>  			     struct dentry *unused, struct inode *inode,
+> -			     const char *name, void *value, size_t size)
+> +			     const char *name, void *value, size_t size,
+> +			     int flags)
+>  {
+>  	if (is_known_namespace(name))
+>  		return -EOPNOTSUPP;
+> diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
+> index f3f3984cce80..89db24ce644e 100644
+> --- a/fs/kernfs/inode.c
+> +++ b/fs/kernfs/inode.c
+> @@ -309,7 +309,8 @@ int kernfs_xattr_set(struct kernfs_node *kn, const char *name,
+>  
+>  static int kernfs_vfs_xattr_get(const struct xattr_handler *handler,
+>  				struct dentry *unused, struct inode *inode,
+> -				const char *suffix, void *value, size_t size)
+> +				const char *suffix, void *value, size_t size,
+> +				int flags)
+>  {
+>  	const char *name = xattr_full_name(handler, suffix);
+>  	struct kernfs_node *kn = inode->i_private;
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 1406858bae6c..1905597f86fb 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7218,7 +7218,8 @@ static int nfs4_xattr_set_nfs4_acl(const struct xattr_handler *handler,
+>  
+>  static int nfs4_xattr_get_nfs4_acl(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *key, void *buf, size_t buflen)
+> +				   const char *key, void *buf, size_t buflen,
+> +				   int flags)
+>  {
+>  	return nfs4_proc_get_acl(inode, buf, buflen);
+>  }
+> @@ -7243,7 +7244,8 @@ static int nfs4_xattr_set_nfs4_label(const struct xattr_handler *handler,
+>  
+>  static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
+>  				     struct dentry *unused, struct inode *inode,
+> -				     const char *key, void *buf, size_t buflen)
+> +				     const char *key, void *buf, size_t buflen,
+> +				     int flags)
+>  {
+>  	if (security_ismaclabel(key))
+>  		return nfs4_get_security_label(inode, buf, buflen);
+> diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+> index 90c830e3758e..525835807c86 100644
+> --- a/fs/ocfs2/xattr.c
+> +++ b/fs/ocfs2/xattr.c
+> @@ -7242,7 +7242,8 @@ int ocfs2_init_security_and_acl(struct inode *dir,
+>   */
+>  static int ocfs2_xattr_security_get(const struct xattr_handler *handler,
+>  				    struct dentry *unused, struct inode *inode,
+> -				    const char *name, void *buffer, size_t size)
+> +				    const char *name, void *buffer, size_t size,
+> +				    int flags)
+>  {
+>  	return ocfs2_xattr_get(inode, OCFS2_XATTR_INDEX_SECURITY,
+>  			       name, buffer, size);
+> @@ -7314,7 +7315,8 @@ const struct xattr_handler ocfs2_xattr_security_handler = {
+>   */
+>  static int ocfs2_xattr_trusted_get(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *name, void *buffer, size_t size)
+> +				   const char *name, void *buffer, size_t size,
+> +				   int flags)
+>  {
+>  	return ocfs2_xattr_get(inode, OCFS2_XATTR_INDEX_TRUSTED,
+>  			       name, buffer, size);
+> @@ -7340,7 +7342,8 @@ const struct xattr_handler ocfs2_xattr_trusted_handler = {
+>   */
+>  static int ocfs2_xattr_user_get(const struct xattr_handler *handler,
+>  				struct dentry *unused, struct inode *inode,
+> -				const char *name, void *buffer, size_t size)
+> +				const char *name, void *buffer, size_t size,
+> +				int flags)
+>  {
+>  	struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+>  
+> diff --git a/fs/orangefs/xattr.c b/fs/orangefs/xattr.c
+> index bdc285aea360..ef4180bff7bb 100644
+> --- a/fs/orangefs/xattr.c
+> +++ b/fs/orangefs/xattr.c
+> @@ -541,7 +541,8 @@ static int orangefs_xattr_get_default(const struct xattr_handler *handler,
+>  				      struct inode *inode,
+>  				      const char *name,
+>  				      void *buffer,
+> -				      size_t size)
+> +				      size_t size,
+> +				      int flags)
+>  {
+>  	return orangefs_inode_getxattr(inode, name, buffer, size);
+>  
+> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+> index b368e2e102fa..a7b21f2ea2dd 100644
+> --- a/fs/overlayfs/super.c
+> +++ b/fs/overlayfs/super.c
+> @@ -854,7 +854,7 @@ static unsigned int ovl_split_lowerdirs(char *str)
+>  static int __maybe_unused
+>  ovl_posix_acl_xattr_get(const struct xattr_handler *handler,
+>  			struct dentry *dentry, struct inode *inode,
+> -			const char *name, void *buffer, size_t size)
+> +			const char *name, void *buffer, size_t size, int flags)
+>  {
+>  	return ovl_xattr_get(dentry, inode, handler->name, buffer, size);
+>  }
+> @@ -919,7 +919,8 @@ ovl_posix_acl_xattr_set(const struct xattr_handler *handler,
+>  
+>  static int ovl_own_xattr_get(const struct xattr_handler *handler,
+>  			     struct dentry *dentry, struct inode *inode,
+> -			     const char *name, void *buffer, size_t size)
+> +			     const char *name, void *buffer, size_t size,
+> +			     int flags)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> @@ -934,7 +935,8 @@ static int ovl_own_xattr_set(const struct xattr_handler *handler,
+>  
+>  static int ovl_other_xattr_get(const struct xattr_handler *handler,
+>  			       struct dentry *dentry, struct inode *inode,
+> -			       const char *name, void *buffer, size_t size)
+> +			       const char *name, void *buffer, size_t size,
+> +			       int flags)
+>  {
+>  	return ovl_xattr_get(dentry, inode, name, buffer, size);
+>  }
+> diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+> index 84ad1c90d535..cd55621e570b 100644
+> --- a/fs/posix_acl.c
+> +++ b/fs/posix_acl.c
+> @@ -832,7 +832,7 @@ EXPORT_SYMBOL (posix_acl_to_xattr);
+>  static int
+>  posix_acl_xattr_get(const struct xattr_handler *handler,
+>  		    struct dentry *unused, struct inode *inode,
+> -		    const char *name, void *value, size_t size)
+> +		    const char *name, void *value, size_t size, int flags)
+>  {
+>  	struct posix_acl *acl;
+>  	int error;
+> diff --git a/fs/reiserfs/xattr_security.c b/fs/reiserfs/xattr_security.c
+> index 20be9a0e5870..eedfa07a4fd0 100644
+> --- a/fs/reiserfs/xattr_security.c
+> +++ b/fs/reiserfs/xattr_security.c
+> @@ -11,7 +11,8 @@
+>  
+>  static int
+>  security_get(const struct xattr_handler *handler, struct dentry *unused,
+> -	     struct inode *inode, const char *name, void *buffer, size_t size)
+> +	     struct inode *inode, const char *name, void *buffer, size_t size,
+> +	     int flags)
+>  {
+>  	if (IS_PRIVATE(inode))
+>  		return -EPERM;
+> diff --git a/fs/reiserfs/xattr_trusted.c b/fs/reiserfs/xattr_trusted.c
+> index 5ed48da3d02b..2d11d98605dd 100644
+> --- a/fs/reiserfs/xattr_trusted.c
+> +++ b/fs/reiserfs/xattr_trusted.c
+> @@ -10,7 +10,8 @@
+>  
+>  static int
+>  trusted_get(const struct xattr_handler *handler, struct dentry *unused,
+> -	    struct inode *inode, const char *name, void *buffer, size_t size)
+> +	    struct inode *inode, const char *name, void *buffer, size_t size,
+> +	    int flags)
+>  {
+>  	if (!capable(CAP_SYS_ADMIN) || IS_PRIVATE(inode))
+>  		return -EPERM;
+> diff --git a/fs/reiserfs/xattr_user.c b/fs/reiserfs/xattr_user.c
+> index a573ca45bacc..2a59d85c69c9 100644
+> --- a/fs/reiserfs/xattr_user.c
+> +++ b/fs/reiserfs/xattr_user.c
+> @@ -9,7 +9,8 @@
+>  
+>  static int
+>  user_get(const struct xattr_handler *handler, struct dentry *unused,
+> -	 struct inode *inode, const char *name, void *buffer, size_t size)
+> +	 struct inode *inode, const char *name, void *buffer, size_t size,
+> +	 int flags)
+>  {
+>  	if (!reiserfs_xattrs_user(inode->i_sb))
+>  		return -EOPNOTSUPP;
+> diff --git a/fs/squashfs/xattr.c b/fs/squashfs/xattr.c
+> index e1e3f3dd5a06..d8d58c990652 100644
+> --- a/fs/squashfs/xattr.c
+> +++ b/fs/squashfs/xattr.c
+> @@ -204,7 +204,7 @@ static int squashfs_xattr_handler_get(const struct xattr_handler *handler,
+>  				      struct dentry *unused,
+>  				      struct inode *inode,
+>  				      const char *name,
+> -				      void *buffer, size_t size)
+> +				      void *buffer, size_t size, int flags)
+>  {
+>  	return squashfs_xattr_get(inode, handler->flags, name,
+>  		buffer, size);
+> diff --git a/fs/ubifs/xattr.c b/fs/ubifs/xattr.c
+> index 9aefbb60074f..26e1a74f178e 100644
+> --- a/fs/ubifs/xattr.c
+> +++ b/fs/ubifs/xattr.c
+> @@ -669,7 +669,8 @@ int ubifs_init_security(struct inode *dentry, struct inode *inode,
+>  
+>  static int xattr_get(const struct xattr_handler *handler,
+>  			   struct dentry *dentry, struct inode *inode,
+> -			   const char *name, void *buffer, size_t size)
+> +			   const char *name, void *buffer, size_t size,
+> +			   int flags)
+>  {
+>  	dbg_gen("xattr '%s', ino %lu ('%pd'), buf size %zd", name,
+>  		inode->i_ino, dentry, size);
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 90dd78f0eb27..71f887518d6f 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -281,7 +281,7 @@ vfs_getxattr_alloc(struct dentry *dentry, const char *name, char **xattr_value,
+>  		return PTR_ERR(handler);
+>  	if (!handler->get)
+>  		return -EOPNOTSUPP;
+> -	error = handler->get(handler, dentry, inode, name, NULL, 0);
+> +	error = handler->get(handler, dentry, inode, name, NULL, 0, 0);
+>  	if (error < 0)
+>  		return error;
+>  
+> @@ -292,32 +292,20 @@ vfs_getxattr_alloc(struct dentry *dentry, const char *name, char **xattr_value,
+>  		memset(value, 0, error + 1);
+>  	}
+>  
+> -	error = handler->get(handler, dentry, inode, name, value, error);
+> +	error = handler->get(handler, dentry, inode, name, value, error, 0);
+>  	*xattr_value = value;
+>  	return error;
+>  }
+>  
+>  ssize_t
+>  __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
+> -	       void *value, size_t size)
+> +	       void *value, size_t size, int flags)
+>  {
+>  	const struct xattr_handler *handler;
+> -
+> -	handler = xattr_resolve_name(inode, &name);
+> -	if (IS_ERR(handler))
+> -		return PTR_ERR(handler);
+> -	if (!handler->get)
+> -		return -EOPNOTSUPP;
+> -	return handler->get(handler, dentry, inode, name, value, size);
+> -}
+> -EXPORT_SYMBOL(__vfs_getxattr);
+> -
+> -ssize_t
+> -vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+> -{
+> -	struct inode *inode = dentry->d_inode;
+>  	int error;
+>  
+> +	if (flags & XATTR_NOSECURITY)
+> +		goto nolsm;
+>  	error = xattr_permission(inode, name, MAY_READ);
+>  	if (error)
+>  		return error;
+> @@ -339,7 +327,19 @@ vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+>  		return ret;
+>  	}
+>  nolsm:
+> -	return __vfs_getxattr(dentry, inode, name, value, size);
+> +	handler = xattr_resolve_name(inode, &name);
+> +	if (IS_ERR(handler))
+> +		return PTR_ERR(handler);
+> +	if (!handler->get)
+> +		return -EOPNOTSUPP;
+> +	return handler->get(handler, dentry, inode, name, value, size, flags);
+> +}
+> +EXPORT_SYMBOL(__vfs_getxattr);
+> +
+> +ssize_t
+> +vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+> +{
+> +	return __vfs_getxattr(dentry, dentry->d_inode, name, value, size, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(vfs_getxattr);
+>  
+> diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+> index 3123b5aaad2a..cafc99c48e20 100644
+> --- a/fs/xfs/xfs_xattr.c
+> +++ b/fs/xfs/xfs_xattr.c
+> @@ -18,7 +18,8 @@
+>  
+>  static int
+>  xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+> -		struct inode *inode, const char *name, void *value, size_t size)
+> +		struct inode *inode, const char *name, void *value, size_t size,
+> +		int flags)
+>  {
+>  	int xflags = handler->flags;
+>  	struct xfs_inode *ip = XFS_I(inode);
+> diff --git a/include/linux/xattr.h b/include/linux/xattr.h
+> index 6dad031be3c2..4df9dcdc48c5 100644
+> --- a/include/linux/xattr.h
+> +++ b/include/linux/xattr.h
+> @@ -30,10 +30,10 @@ struct xattr_handler {
+>  	const char *prefix;
+>  	int flags;      /* fs private flags */
+>  	bool (*list)(struct dentry *dentry);
+> -	int (*get)(const struct xattr_handler *, struct dentry *dentry,
+> +	int (*get)(const struct xattr_handler *handler, struct dentry *dentry,
+>  		   struct inode *inode, const char *name, void *buffer,
+> -		   size_t size);
+> -	int (*set)(const struct xattr_handler *, struct dentry *dentry,
+> +		   size_t size, int flags);
+> +	int (*set)(const struct xattr_handler *handler, struct dentry *dentry,
+>  		   struct inode *inode, const char *name, const void *buffer,
+>  		   size_t size, int flags);
+>  };
+> @@ -46,7 +46,8 @@ struct xattr {
+>  	size_t value_len;
+>  };
+>  
+> -ssize_t __vfs_getxattr(struct dentry *, struct inode *, const char *, void *, size_t);
+> +ssize_t __vfs_getxattr(struct dentry *dentry, struct inode *inode,
+> +		       const char *name, void *buffer, size_t size, int flags);
+>  ssize_t vfs_getxattr(struct dentry *, const char *, void *, size_t);
+>  ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+>  int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
+> diff --git a/include/uapi/linux/xattr.h b/include/uapi/linux/xattr.h
+> index c1395b5bd432..1eba02616274 100644
+> --- a/include/uapi/linux/xattr.h
+> +++ b/include/uapi/linux/xattr.h
+> @@ -17,8 +17,11 @@
+>  #if __UAPI_DEF_XATTR
+>  #define __USE_KERNEL_XATTR_DEFS
+>  
+> -#define XATTR_CREATE	0x1	/* set value, fail if attr already exists */
+> -#define XATTR_REPLACE	0x2	/* set value, fail if attr does not exist */
+> +#define XATTR_CREATE	 0x1	/* set value, fail if attr already exists */
+> +#define XATTR_REPLACE	 0x2	/* set value, fail if attr does not exist */
+> +#ifdef __KERNEL__ /* following is kernel internal, colocated for maintenance */
+> +#define XATTR_NOSECURITY 0x4	/* get value, do not involve security check */
+> +#endif
+>  #endif
+>  
+>  /* Namespaces */
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 2bed4761f279..1013fcbd0a94 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -3206,7 +3206,8 @@ static int shmem_initxattrs(struct inode *inode,
+>  
+>  static int shmem_xattr_handler_get(const struct xattr_handler *handler,
+>  				   struct dentry *unused, struct inode *inode,
+> -				   const char *name, void *buffer, size_t size)
+> +				   const char *name, void *buffer, size_t size,
+> +				   int flags)
+>  {
+>  	struct shmem_inode_info *info = SHMEM_I(inode);
+>  
+> diff --git a/net/socket.c b/net/socket.c
+> index 6a9ab7a8b1d2..6b0fea92dd02 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -300,7 +300,8 @@ static const struct dentry_operations sockfs_dentry_operations = {
+>  
+>  static int sockfs_xattr_get(const struct xattr_handler *handler,
+>  			    struct dentry *dentry, struct inode *inode,
+> -			    const char *suffix, void *value, size_t size)
+> +			    const char *suffix, void *value, size_t size,
+> +			    int flags)
+>  {
+>  	if (value) {
+>  		if (dentry->d_name.len + 1 > size)
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index f4ee0ae106b2..378a2f66a73d 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -297,7 +297,8 @@ int cap_inode_need_killpriv(struct dentry *dentry)
+>  	struct inode *inode = d_backing_inode(dentry);
+>  	int error;
+>  
+> -	error = __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS, NULL, 0);
+> +	error = __vfs_getxattr(dentry, inode, XATTR_NAME_CAPS, NULL, 0,
+> +			       XATTR_NOSECURITY);
+>  	return error > 0;
+>  }
+>  
+> @@ -586,7 +587,8 @@ int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data
+>  
+>  	fs_ns = inode->i_sb->s_user_ns;
+>  	size = __vfs_getxattr((struct dentry *)dentry, inode,
+> -			      XATTR_NAME_CAPS, &data, XATTR_CAPS_SZ);
+> +			      XATTR_NAME_CAPS, &data, XATTR_CAPS_SZ,
+> +			      XATTR_NOSECURITY);
+>  	if (size == -ENODATA || size == -EOPNOTSUPP)
+>  		/* no data, that's ok */
+>  		return -ENODATA;
+> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+> index f9a81b187fae..921c8f2afcaf 100644
+> --- a/security/integrity/evm/evm_main.c
+> +++ b/security/integrity/evm/evm_main.c
+> @@ -100,7 +100,8 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
+>  		return -EOPNOTSUPP;
+>  
+>  	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
+> -		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
+> +		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0,
+> +				       XATTR_NOSECURITY);
+>  		if (error < 0) {
+>  			if (error == -ENODATA)
+>  				continue;
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 74dd46de01b6..b0822da0658f 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -552,7 +552,8 @@ static int sb_finish_set_opts(struct super_block *sb)
+>  			goto out;
+>  		}
+>  
+> -		rc = __vfs_getxattr(root, root_inode, XATTR_NAME_SELINUX, NULL, 0);
+> +		rc = __vfs_getxattr(root, root_inode, XATTR_NAME_SELINUX, NULL,
+> +				    0, XATTR_NOSECURITY);
+>  		if (rc < 0 && rc != -ENODATA) {
+>  			if (rc == -EOPNOTSUPP)
+>  				pr_warn("SELinux: (dev %s, type "
+> @@ -1378,12 +1379,14 @@ static int inode_doinit_use_xattr(struct inode *inode, struct dentry *dentry,
+>  		return -ENOMEM;
+>  
+>  	context[len] = '\0';
+> -	rc = __vfs_getxattr(dentry, inode, XATTR_NAME_SELINUX, context, len);
+> +	rc = __vfs_getxattr(dentry, inode, XATTR_NAME_SELINUX, context, len,
+> +			    XATTR_NOSECURITY);
+>  	if (rc == -ERANGE) {
+>  		kfree(context);
+>  
+>  		/* Need a larger buffer.  Query for the right size. */
+> -		rc = __vfs_getxattr(dentry, inode, XATTR_NAME_SELINUX, NULL, 0);
+> +		rc = __vfs_getxattr(dentry, inode, XATTR_NAME_SELINUX, NULL, 0,
+> +				    XATTR_NOSECURITY);
+>  		if (rc < 0)
+>  			return rc;
+>  
+> @@ -1394,7 +1397,7 @@ static int inode_doinit_use_xattr(struct inode *inode, struct dentry *dentry,
+>  
+>  		context[len] = '\0';
+>  		rc = __vfs_getxattr(dentry, inode, XATTR_NAME_SELINUX,
+> -				    context, len);
+> +				    context, len, XATTR_NOSECURITY);
+>  	}
+>  	if (rc < 0) {
+>  		kfree(context);
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 4c5e5a438f8b..158b35772be1 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -292,7 +292,8 @@ static struct smack_known *smk_fetch(const char *name, struct inode *ip,
+>  	if (buffer == NULL)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	rc = __vfs_getxattr(dp, ip, name, buffer, SMK_LONGLABEL);
+> +	rc = __vfs_getxattr(dp, ip, name, buffer, SMK_LONGLABEL,
+> +			    XATTR_NOSECURITY);
+>  	if (rc < 0)
+>  		skp = ERR_PTR(rc);
+>  	else if (rc == 0)
+> @@ -3442,7 +3443,7 @@ static void smack_d_instantiate(struct dentry *opt_dentry, struct inode *inode)
+>  			} else {
+>  				rc = __vfs_getxattr(dp, inode,
+>  					XATTR_NAME_SMACKTRANSMUTE, trattr,
+> -					TRANS_TRUE_SIZE);
+> +					TRANS_TRUE_SIZE, XATTR_NOSECURITY);
+>  				if (rc >= 0 && strncmp(trattr, TRANS_TRUE,
+>  						       TRANS_TRUE_SIZE) != 0)
+>  					rc = -EINVAL;
+> -- 
+> 2.23.0.rc1.153.gdeed80330f-goog
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
