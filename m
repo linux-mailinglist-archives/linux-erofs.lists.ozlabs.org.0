@@ -1,75 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A9290F6C
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Aug 2019 10:23:57 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2EBB9136C
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 00:07:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 469YB254YtzDrhN
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Aug 2019 18:23:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 469vSW0BvxzDrdJ
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 08:07:39 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1566030234;
-	bh=YrXOL+0eR7tjPdCg4reuAtlNKicfLJ77wxVTKAv2Q54=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=EiJFa/8Ik8HCRznhKjZvMzBzjkckHMe1vLNg70TGG/kSo7OLdCEk/8UDogowOJGAT
-	 JzsVvtBLr5AhXKctOyxQWVKFber43cTz1o2u0X35Zx9IBBCQl9/Y/yroft1KvHtOF1
-	 tkuGq3SkeJbuNo2vreptPZNP5LrJP2ox6SNDQWoPOSipBslh3lWTiGZq+uy7HMs5vC
-	 18QNbNELjpDbJ8p0Qlhpo2WdmsYX7wg3ot4KaenupqtpHwzXpv9QtlLCGsQLPdeOJd
-	 oDAJaMVgr2ChCilk0llgOH/LvjiQ00U2nqoZl/pStu3apf4KKwq/JTSf6kJdEaFt8j
-	 GuPpnL3NGdUyA==
+	s=201707; t=1566079659;
+	bh=VSqMqNzeZnSv6aIVyqtbTkz9Qp56T4sm7JC+NotSQYI=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=ZQ4GCHLGT2VdJIRQAHp8eGqHj9xZhSDhmawXIdHrb/CpLz+gidbJoTuU2RSi37tsS
+	 pbptn6ZsAI2nu/CJhIZ3pGBjcRwtlVvdIPXSPNerih+I5h/qYXse0wUvZnH0WOHwAY
+	 jQMA3WYV57QCpQ0xK+9bPeKKDrllbMfupsETW1QMuGUvk0LCSat8jJNe7qVsdNR34z
+	 o5APMX7NqF65X9BzuDbu/f5ZOKp1//eJX6kRAECpaurzfud0eWPrraWT2JS9lfY4Sx
+	 XKzAO9Eh50HI99ofBgiArvYx9ta3cnFP1SUDzwi1e8vD9ldPxNxs0iM70JJTN2Wktz
+	 VZoXPbYioSfsQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.32; helo=sonic315-8.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.206; helo=sonic304-25.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="mZ1GYqA6"; 
- dkim-atps=neutral
-Received: from sonic315-8.consmr.mail.gq1.yahoo.com
- (sonic315-8.consmr.mail.gq1.yahoo.com [98.137.65.32])
+Received: from sonic304-25.consmr.mail.gq1.yahoo.com
+ (sonic304-25.consmr.mail.gq1.yahoo.com [98.137.68.206])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 469Y9l4mlrzDrh8
- for <linux-erofs@lists.ozlabs.org>; Sat, 17 Aug 2019 18:23:34 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 469vSH0NMwzDrRJ
+ for <linux-erofs@lists.ozlabs.org>; Sun, 18 Aug 2019 08:07:23 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1566030210; bh=dcXWv/xr00uuu1Svcd98Upx96pdeSkAOr52nKZFZO1s=;
- h=From:To:Cc:Subject:Date:From:Subject;
- b=mZ1GYqA6WhwkyUox4cb+Xy54C+UV1qeJTvIPpz9d099q1taHPrdTNNkFR0KOCccV8wsvUM1QQkSl9ynClI/Ngy+KNFE1E2d5Mft0Zl9+mvBvfUq+F43NmGlXQGkWIJ8+pHvliIe1jyROZUZt76Zgh3dsV4oPk2VYikCvzfIGZu09JqjrxPvE8/s2O1sSSsCkcY/z90mOzwa4RVodxUU9NBBzDs6cDRqG6DhADcmDZHUzQzWfnyMKskLhbbplZy2TuJGyv5LYsXGsG6jFnQa2cqX6wlgH6GKHdYHkOuezffRo2AZqxBzuj+pw7lUB14iNLWEGbUGdxNmBj07gsHYRwQ==
-X-YMail-OSG: lIZP6_wVM1k.nJ2giN.m2dzcEpDlr0KvzPytcOgmJa5HPuooKiQscPJDpSim6WL
- 0kKbQzBwBIAACjqbj.WJoTFDrcYkWjbpBLodRkvxRz56gjcsc86Vt88igtbgezn4dflE.WJX8Q7n
- Spz3X9PJpANyTX_atIZ0XgJ1TslwbNv5fM_SZAuWkhpVmeOsVGvgXPJXMSJ9B4LtIcwuiGQTtFJ.
- TXgwerE7JPEMLIE7bX9rijQHfkw_.6VU_yURPPPHEvy38sK1JccnvEnYs4iZ4EGOEDv9G_.aH5is
- C3meGbty6aSZ_7XdhsMAgTVo6IPgO11qu.J19_kX9G3QJxJn_aL9WsmairQuiYbUUAp1_1w_513b
- nkaFD_k0roertizYaKwwHuv0Hj1tyn69SVhvcAUe4iGdX8Wj_kQqtaWCDXJ4s6M37sZUrAD6A2m3
- Yrp.a7XGwPWzFc5JcQ7X2DofwHHo4izLYgd0v.vFMCctPlr0PbnLK0yfIiOOuSDDw4IOxsEWA91G
- hrGtwOGvUNtOYyXbQjDiAviOATaadMsVJcM9x8IZn.uuZmegZcECBa913Y.chWVrau33p061u33V
- 5pFqRMF5CPPCfm2H.K1Cxnv3FDzOYQkl4Gn.fy6BUqs1Uqy.EDN24xmyXoL.Nbs555LceLim.LAA
- 2q331TRAZkYOdzdTE1Z0G8rSzczM2GEQ4JGPhxJG8LXFkWe0hdOaiXDLVRrtGz6LpGVc9EkpvZe0
- 9T4H_WtHA4E_ToCg3nQa9aOeyTgJH9kIvADjVUosPTxYxFgPo.mTmVnh8UpPTpzjKoC6AtWrZlzD
- M4yAbNz0YnUUN_wymV5pqZtneBZXi88VmaNobJiqZfVNa9E6CqG.meOmqZhGE_J9mBVQUHqqXi4S
- M00JacIvlGlbnKQKVYXoqw3rgaF8y5LYXakflWw1UbXyFE8MBxn5d4fXu.NVJTaYt2wguMBS73BG
- FtX5zjY9z3VjH7TOHpSQK.BeNOqaBi_L22JlqAwxf15AUaFjc5KGukoDumF.cDa0HmPdxGS58QHY
- wsaG1PyD4NrZdUWf.6ozJGx2LysfZTZ2OSiuFLc.vrsZWMigD2ROoiCRVYfjtS.3u7TStaRgU0Ox
- Hs5hUHv.g0am8n5WnJzr1ExLJT.HQEJ1n4lb16byCmI6OvcBFaVYB7weDfX3Nak9_TJT.zom1_nt
- _WaCVlmP2r0l6a3MAgrtuBTpuy89GxE91Tw2zolNxeAxRTuJtk.4RDfbbewVYa6YhpQ_dYrWGJKk
- pTTu7zSeRPe2pvkElmHDB3ZAk_1jbFBDW0ABDUKo2_Y6o9_OFnaDjqg--
+ t=1566079639; bh=26eP1y8zgvwC7tDEbSrCZDGdjPiTLQsD1xucwKQlOQE=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=IQmWtUpiqH0I56d8gXpOUepQBjIeos+73NC/v6LtHOw1YWBDT38CUFSR9kTSOzfsaGuxtm25NEAuP+vmQ17anzsSkCXgL8BxMwBj8snkbfgsrKBPN/nNGZ22DgxekdFnAMNYz959desiE+T4i+GmtiXWuo3V3pcBarJG2uxLy65OheQ0Wq4b66Y00Lo/1cfeEEINY5SnqgN/SlSKkS7e0QyJii0NaiLGtWBQ+/Dk/sOKMi48apgj68S+DWdiKvPScYMjAqx+ZlY8eU0XF4f6lpqiXlXvwPdl4Ls9yHp0wK4iYtd3tqvhWR1EYkdlcauXxOz7pmoQ14ATwX4FdUMRTg==
+X-YMail-OSG: vHJ52NwVM1mNmnrN5URQmFswc5FfTt7..sdPljkO27m9bxGo.BsD7T6P1ZQvERg
+ CtMm7RU.R6VsQW19a402hg.Q.ABAsR0_.qkwY09O6RB8OVvwdy.5xsN.Vrnf0f7qqzMMUzZDyDDH
+ AvWcgr22As4vhRCrYZO5kk4FnOd3rko1ubfVKcWf0D2P44VBOzndwPPK2pphLGp3PU304Yrxakzj
+ 28HFCirgd11ioC5EsD7ESmYzHLSz4dbLsl1pnMmuDvUNU7A1bw8HKqtzG5WOI7.eI89VoO.ALb_y
+ RLQn3RlQxPkPm9pPpAgOtiDOfOYlqpwHTCj9x7aYPjH986kIQiNQ4JwXn5F96zTNul5qXELeZENb
+ KD_UiDW5NGFeUjAb__cYvsNFUxAiwRfro_edIs6_VwPIfI5Tbit.5hS8mELUFXwPkesrDEosWDvD
+ Hit55xcQaI_Z9UzfnljAoXNkjRtP1qIKpcUodU9jd1Yt4XjFnRIzNSZw438P2.X36Jtp3hquhHGm
+ 8R3WQ0erGzhWCfZ9Cvjel1fZjNNvOIEzG3AEHfFDob92KADLM1tTvd2kb0eq9qhDhFvAGiM2fWf.
+ 9UUcZ26C9GeO5GeGoGEJeMu4qmrLOw0TXhf7phvpqd1_E9x_l.ujtzasiKALLq7.0G5qp.JNT2Ek
+ cFurYuI1AkDRi4ueWDTDBLTnGU2MrTq8NbCIQ6Q087Yz47zfLJrMf4znrrakT.HrtUbVUUix.kHS
+ PSvycxxvAywh5197lyeLKrGdThNLMCOkHGb._TxLx61QUOp1IABfbQiYjiED0DnGSEjYM69YIcli
+ zeep.PEZqs1K.5dnPzhX_6n4c546ebUIcihtXB3LLxR.GQ35kDUosAjFoup9PyhnS.YMOzxi3dt9
+ rta0a7GtoHVgKm9YWpYbSP3EQ54QaQL0H01kEHtxQLy4P5a8HgBaKs4sA3lXo.Oyr23pAzKqz9X2
+ cZQWYAUbD8A1mWf0QdTo5_4Q.H3ZrFAuIkNldjd0mvy.Ph2ZXqUmYLb_a.Tap5g8HGpCMsIRmcfH
+ YB2FqExCDjaKYFaOq8TUDWb5UFG3WSA7y5aF0.x67vJzVpIZaW0spPXoXrGdE437qnp29hv3jpKc
+ gpvMOq1f3cUU8FQJqp6uI8NTodga9B47ChtLrRNJd7q7hbmQlgzwLJM8Sj2dkJH6wsfHuHSkVsL4
+ UTzRjOO0hBiOiRy94OMtXccMH7Du5LuIKrdW.D6ESa6SVoiEPmeZKhApKvhxBki2Xi.LdYJFfOz5
+ WRhdce1iVz7obXGl1Qz7Esx0MqvQyTIGe1_s7SMLc1dBMxevdkJ4-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Aug 2019 08:23:30 +0000
-Received: by smtp414.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 8351dc6d646f886d8d571aa7fc628ee4; 
- Sat, 17 Aug 2019 08:23:30 +0000 (UTC)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
- devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] erofs: move erofs out of staging
-Date: Sat, 17 Aug 2019 16:23:13 +0800
-Message-Id: <20190817082313.21040-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
+ sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Aug 2019 22:07:19 +0000
+Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID f1835cace093bf9aad1c22c8c8f4eeda; 
+ Sat, 17 Aug 2019 22:07:16 +0000 (UTC)
+Date: Sun, 18 Aug 2019 06:07:07 +0800
+To: Richard Weinberger <richard@nod.at>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+Message-ID: <20190817220706.GA11443@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
+ <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1746679415.68815.1566076790942.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,581 +85,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Theodore Ts'o <tytso@mit.edu>,
- "Darrick J . Wong" <darrick.wong@oracle.com>, Pavel Machek <pavel@denx.de>,
- Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
- Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
- Christoph Hellwig <hch@infradead.org>, Miao Xie <miaoxie@huawei.com>,
- Richard Weinberger <richard@nod.at>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+ David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+ devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Christoph Hellwig <hch@infradead.org>, Amir Goldstein <amir73il@gmail.com>,
+ linux-erofs@lists.ozlabs.org, Al Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, tytso <tytso@mit.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+ torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-EROFS filesystem has been merged into linux-staging for a year.
+Hi Richard,
 
-EROFS is designed to be a better solution of saving extra storage
-space with guaranteed end-to-end performance for read-only files
-with the help of reduced metadata, fixed-sized output compression
-and decompression inplace technologies.
+On Sat, Aug 17, 2019 at 11:19:50PM +0200, Richard Weinberger wrote:
+> ----- Urspr?ngliche Mail -----
+> > Von: "Gao Xiang" <hsiangkao@aol.com>
+> > An: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Al Viro" <viro@zeniv.linux.org.uk>, "linux-fsdevel"
+> > <linux-fsdevel@vger.kernel.org>, devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org, "linux-kernel"
+> > <linux-kernel@vger.kernel.org>
+> > CC: "Andrew Morton" <akpm@linux-foundation.org>, "Stephen Rothwell" <sfr@canb.auug.org.au>, "tytso" <tytso@mit.edu>,
+> > "Pavel Machek" <pavel@denx.de>, "David Sterba" <dsterba@suse.cz>, "Amir Goldstein" <amir73il@gmail.com>, "Christoph
+> > Hellwig" <hch@infradead.org>, "Darrick J . Wong" <darrick.wong@oracle.com>, "Dave Chinner" <david@fromorbit.com>,
+> > "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>, "richard" <richard@nod.at>, "torvalds"
+> > <torvalds@linux-foundation.org>, "Chao Yu" <yuchao0@huawei.com>, "Miao Xie" <miaoxie@huawei.com>, "Li Guifu"
+> > <bluce.liguifu@huawei.com>, "Fang Wei" <fangwei1@huawei.com>, "Gao Xiang" <gaoxiang25@huawei.com>
+> > Gesendet: Samstag, 17. August 2019 10:23:13
+> > Betreff: [PATCH] erofs: move erofs out of staging
+> 
+> > EROFS filesystem has been merged into linux-staging for a year.
+> > 
+> > EROFS is designed to be a better solution of saving extra storage
+> > space with guaranteed end-to-end performance for read-only files
+> > with the help of reduced metadata, fixed-sized output compression
+> > and decompression inplace technologies.
+>  
+> How does erofs compare to squashfs?
+> IIUC it is designed to be faster. Do you have numbers?
+> Feel free to point me older mails if you already showed numbers,
+> I have to admit I didn't follow the development very closely.
 
-In the past year, EROFS was greatly improved by many people as
-a staging driver, self-tested, betaed by a large number of our
-internal users, successfully applied to almost all in-service
-HUAWEI smartphones as the part of EMUI 9.1 and proven to be stable
-enough to be moved out of staging.
+You can see the following related material which has microbenchmark
+tested on my laptop:
+https://static.sched.com/hosted_files/kccncosschn19eng/19/EROFS%20file%20system_OSS2019_Final.pdf
 
-EROFS is a self-contained filesystem driver. Although there are
-still some TODOs to be more generic, we have a dedicated team
-actively keeping on working on EROFS in order to make it better
-with the evolution of Linux kernel as the other in-kernel filesystems.
+which was mentioned in the related topic as well:
+https://lore.kernel.org/r/20190815044155.88483-1-gaoxiang25@huawei.com/
 
-As Pavel suggested, it's better to do as one commit since git
-can do moves and all histories will be saved in this way.
-
-Let's promote it from staging and enhance it more actively as
-a "real" part of kernel for more wider scenarios!
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Theodore Ts'o <tytso@mit.edu>
-Cc: Pavel Machek <pavel@denx.de>
-Cc: David Sterba <dsterba@suse.cz>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Darrick J . Wong <darrick.wong@oracle.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Chao Yu <yuchao0@huawei.com>
-Cc: Miao Xie <miaoxie@huawei.com>
-Cc: Li Guifu <bluce.liguifu@huawei.com>
-Cc: Fang Wei <fangwei1@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-
-Hi,
-
- This is a formal moving patch based on a previous patch for staging tree
- https://lore.kernel.org/r/20190816071142.8633-1-gaoxiang25@huawei.com/
-
- The previous related topic is
- https://lore.kernel.org/r/20190815044155.88483-1-gaoxiang25@huawei.com/
-
-changelog since RFC:
- - Update commit message for better conclusion;
- - Remove the file names from the comments at the top of the files suggested by Stephen;
- - Update MAINTAINERS reminded by a kind person.
-
-Thank you very much,
+Thanks,
 Gao Xiang
 
- .../filesystems/erofs.txt                     |  4 --
- MAINTAINERS                                   | 14 +++---
- drivers/staging/Kconfig                       |  2 -
- drivers/staging/Makefile                      |  1 -
- drivers/staging/erofs/TODO                    | 46 -------------------
- fs/Kconfig                                    |  1 +
- fs/Makefile                                   |  1 +
- {drivers/staging => fs}/erofs/Kconfig         |  0
- {drivers/staging => fs}/erofs/Makefile        |  4 +-
- {drivers/staging => fs}/erofs/compress.h      |  2 -
- {drivers/staging => fs}/erofs/data.c          |  2 -
- {drivers/staging => fs}/erofs/decompressor.c  |  2 -
- {drivers/staging => fs}/erofs/dir.c           |  2 -
- {drivers/staging => fs}/erofs/erofs_fs.h      |  3 --
- {drivers/staging => fs}/erofs/inode.c         |  2 -
- {drivers/staging => fs}/erofs/internal.h      |  3 +-
- {drivers/staging => fs}/erofs/namei.c         |  2 -
- {drivers/staging => fs}/erofs/super.c         |  2 -
- {drivers/staging => fs}/erofs/tagptr.h        |  0
- {drivers/staging => fs}/erofs/utils.c         |  2 -
- {drivers/staging => fs}/erofs/xattr.c         |  2 -
- {drivers/staging => fs}/erofs/xattr.h         |  2 -
- {drivers/staging => fs}/erofs/zdata.c         |  2 -
- {drivers/staging => fs}/erofs/zdata.h         |  2 -
- {drivers/staging => fs}/erofs/zmap.c          |  2 -
- {drivers/staging => fs}/erofs/zpvec.h         |  2 -
- .../include => include}/trace/events/erofs.h  |  0
- include/uapi/linux/magic.h                    |  1 +
- 28 files changed, 12 insertions(+), 96 deletions(-)
- rename {drivers/staging/erofs/Documentation => Documentation}/filesystems/erofs.txt (98%)
- delete mode 100644 drivers/staging/erofs/TODO
- rename {drivers/staging => fs}/erofs/Kconfig (100%)
- rename {drivers/staging => fs}/erofs/Makefile (68%)
- rename {drivers/staging => fs}/erofs/compress.h (96%)
- rename {drivers/staging => fs}/erofs/data.c (99%)
- rename {drivers/staging => fs}/erofs/decompressor.c (99%)
- rename {drivers/staging => fs}/erofs/dir.c (98%)
- rename {drivers/staging => fs}/erofs/erofs_fs.h (99%)
- rename {drivers/staging => fs}/erofs/inode.c (99%)
- rename {drivers/staging => fs}/erofs/internal.h (99%)
- rename {drivers/staging => fs}/erofs/namei.c (99%)
- rename {drivers/staging => fs}/erofs/super.c (99%)
- rename {drivers/staging => fs}/erofs/tagptr.h (100%)
- rename {drivers/staging => fs}/erofs/utils.c (99%)
- rename {drivers/staging => fs}/erofs/xattr.c (99%)
- rename {drivers/staging => fs}/erofs/xattr.h (98%)
- rename {drivers/staging => fs}/erofs/zdata.c (99%)
- rename {drivers/staging => fs}/erofs/zdata.h (99%)
- rename {drivers/staging => fs}/erofs/zmap.c (99%)
- rename {drivers/staging => fs}/erofs/zpvec.h (98%)
- rename {drivers/staging/erofs/include => include}/trace/events/erofs.h (100%)
-
-diff --git a/drivers/staging/erofs/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-similarity index 98%
-rename from drivers/staging/erofs/Documentation/filesystems/erofs.txt
-rename to Documentation/filesystems/erofs.txt
-index 0eab600ca7ca..38aa9126ec98 100644
---- a/drivers/staging/erofs/Documentation/filesystems/erofs.txt
-+++ b/Documentation/filesystems/erofs.txt
-@@ -49,10 +49,6 @@ Bugs and patches are welcome, please kindly help us and send to the following
- linux-erofs mailing list:
- >> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
- 
--Note that EROFS is still working in progress as a Linux staging driver,
--Cc the staging mailing list as well is highly recommended:
-->> Linux Driver Project Developer List <devel@driverdev.osuosl.org>
--
- Mount options
- =============
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 429d61119980..5a8dbcafed00 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6046,6 +6046,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kristoffer/linux-hpc.git
- F:	drivers/video/fbdev/s1d13xxxfb.c
- F:	include/video/s1d13xxxfb.h
- 
-+EROFS FILE SYSTEM
-+M:	Gao Xiang <gaoxiang25@huawei.com>
-+M:	Chao Yu <yuchao0@huawei.com>
-+L:	linux-erofs@lists.ozlabs.org
-+S:	Maintained
-+F:	fs/erofs/
-+
- ERRSEQ ERROR TRACKING INFRASTRUCTURE
- M:	Jeff Layton <jlayton@kernel.org>
- S:	Maintained
-@@ -15215,13 +15222,6 @@ M:	H Hartley Sweeten <hsweeten@visionengravers.com>
- S:	Odd Fixes
- F:	drivers/staging/comedi/
- 
--STAGING - EROFS FILE SYSTEM
--M:	Gao Xiang <gaoxiang25@huawei.com>
--M:	Chao Yu <yuchao0@huawei.com>
--L:	linux-erofs@lists.ozlabs.org
--S:	Maintained
--F:	drivers/staging/erofs/
--
- STAGING - FIELDBUS SUBSYSTEM
- M:	Sven Van Asbroeck <TheSven73@gmail.com>
- S:	Maintained
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 7c96a01eef6c..d972ec8e71fb 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -112,8 +112,6 @@ source "drivers/staging/gasket/Kconfig"
- 
- source "drivers/staging/axis-fifo/Kconfig"
- 
--source "drivers/staging/erofs/Kconfig"
--
- source "drivers/staging/fieldbus/Kconfig"
- 
- source "drivers/staging/kpc2000/Kconfig"
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index fcaac9693b83..6018b9a4a077 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -46,7 +46,6 @@ obj-$(CONFIG_DMA_RALINK)	+= ralink-gdma/
- obj-$(CONFIG_SOC_MT7621)	+= mt7621-dts/
- obj-$(CONFIG_STAGING_GASKET_FRAMEWORK)	+= gasket/
- obj-$(CONFIG_XIL_AXIS_FIFO)	+= axis-fifo/
--obj-$(CONFIG_EROFS_FS)		+= erofs/
- obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
- obj-$(CONFIG_KPC2000)		+= kpc2000/
- obj-$(CONFIG_ISDN_CAPI)		+= isdn/
-diff --git a/drivers/staging/erofs/TODO b/drivers/staging/erofs/TODO
-deleted file mode 100644
-index a8608b2f72bd..000000000000
---- a/drivers/staging/erofs/TODO
-+++ /dev/null
-@@ -1,46 +0,0 @@
--
--EROFS is still working in progress, thus it is not suitable
--for all productive uses. play at your own risk :)
--
--TODO List:
-- - add the missing error handling code
--   (mainly existed in xattr and decompression submodules);
--
-- - finalize erofs ondisk format design  (which means that
--   minor on-disk revisions could happen later);
--
-- - documentation and detailed technical analysis;
--
-- - general code review and clean up
--   (including confusing variable names and code snippets);
--
-- - support larger compressed clustersizes for selection
--   (currently erofs only works as expected with the page-sized
--    compressed cluster configuration, usually 4KB);
--
-- - support more lossless data compression algorithms
--   in addition to LZ4 algorithms in VLE approach;
--
-- - data deduplication and other useful features.
--
--The following git tree provides the file system user-space
--tools under development (ex, formatting tool mkfs.erofs):
-->> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
--
--The open-source development of erofs-utils is at the early stage.
--Contact the original author Li Guifu <bluce.liguifu@huawei.com> and
--the co-maintainer Fang Wei <fangwei1@huawei.com> for the latest news
--and more details.
--
--Code, suggestions, etc, are welcome. Please feel free to
--ask and send patches,
--
--To:
--  linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
--  Gao Xiang                  <gaoxiang25@huawei.com>
--  Chao Yu                    <yuchao0@huawei.com>
--
--Cc: (for linux-kernel upstream patches)
--  Greg Kroah-Hartman         <gregkh@linuxfoundation.org>
--  linux-staging mailing list <devel@driverdev.osuosl.org>
--
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bfb1c6095c7a..669d46550e6d 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
- source "fs/pstore/Kconfig"
- source "fs/sysv/Kconfig"
- source "fs/ufs/Kconfig"
-+source "fs/erofs/Kconfig"
- 
- endif # MISC_FILESYSTEMS
- 
-diff --git a/fs/Makefile b/fs/Makefile
-index d60089fd689b..b2e4973a0bea 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_EROFS_FS)		+= erofs/
-diff --git a/drivers/staging/erofs/Kconfig b/fs/erofs/Kconfig
-similarity index 100%
-rename from drivers/staging/erofs/Kconfig
-rename to fs/erofs/Kconfig
-diff --git a/drivers/staging/erofs/Makefile b/fs/erofs/Makefile
-similarity index 68%
-rename from drivers/staging/erofs/Makefile
-rename to fs/erofs/Makefile
-index 5cdae21cb5af..46f2aa4ba46c 100644
---- a/drivers/staging/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--EROFS_VERSION = "1.0pre1"
-+EROFS_VERSION = "1.0"
- 
- ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
--# staging requirement: to be self-contained in its own directory
--ccflags-y += -I $(srctree)/$(src)/include
- erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
-diff --git a/drivers/staging/erofs/compress.h b/fs/erofs/compress.h
-similarity index 96%
-rename from drivers/staging/erofs/compress.h
-rename to fs/erofs/compress.h
-index 043013f9ef1b..07d279fd5d67 100644
---- a/drivers/staging/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/compress.h
-- *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/data.c b/fs/erofs/data.c
-similarity index 99%
-rename from drivers/staging/erofs/data.c
-rename to fs/erofs/data.c
-index 72c4b4c5296b..fda16ec8863e 100644
---- a/drivers/staging/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/data.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/decompressor.c b/fs/erofs/decompressor.c
-similarity index 99%
-rename from drivers/staging/erofs/decompressor.c
-rename to fs/erofs/decompressor.c
-index 32a811ac704a..5f4b7f302863 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/decompressor.c
-- *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/dir.c b/fs/erofs/dir.c
-similarity index 98%
-rename from drivers/staging/erofs/dir.c
-rename to fs/erofs/dir.c
-index 5f38382637e6..637d70108d59 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/dir.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-similarity index 99%
-rename from drivers/staging/erofs/erofs_fs.h
-rename to fs/erofs/erofs_fs.h
-index 6db70f395937..afa7d45ca958 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
- /*
-- * linux/drivers/staging/erofs/erofs_fs.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-@@ -10,7 +8,6 @@
- #define __EROFS_FS_H
- 
- /* Enhanced(Extended) ROM File System */
--#define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
- /*
-diff --git a/drivers/staging/erofs/inode.c b/fs/erofs/inode.c
-similarity index 99%
-rename from drivers/staging/erofs/inode.c
-rename to fs/erofs/inode.c
-index cbc2c342a37f..80f4fe919ee7 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/inode.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/internal.h b/fs/erofs/internal.h
-similarity index 99%
-rename from drivers/staging/erofs/internal.h
-rename to fs/erofs/internal.h
-index 0e8d58546c52..620b73fcc416 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/internal.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-@@ -15,6 +13,7 @@
- #include <linux/pagemap.h>
- #include <linux/bio.h>
- #include <linux/buffer_head.h>
-+#include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include "erofs_fs.h"
-diff --git a/drivers/staging/erofs/namei.c b/fs/erofs/namei.c
-similarity index 99%
-rename from drivers/staging/erofs/namei.c
-rename to fs/erofs/namei.c
-index 8334a910acef..8832b5d95d91 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/namei.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/super.c b/fs/erofs/super.c
-similarity index 99%
-rename from drivers/staging/erofs/super.c
-rename to fs/erofs/super.c
-index f65a1ff9f42f..bd3b1ae05b21 100644
---- a/drivers/staging/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/super.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/tagptr.h b/fs/erofs/tagptr.h
-similarity index 100%
-rename from drivers/staging/erofs/tagptr.h
-rename to fs/erofs/tagptr.h
-diff --git a/drivers/staging/erofs/utils.c b/fs/erofs/utils.c
-similarity index 99%
-rename from drivers/staging/erofs/utils.c
-rename to fs/erofs/utils.c
-index 814c2ee037ae..1dd041aa0f5a 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/utils.c
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/xattr.c b/fs/erofs/xattr.c
-similarity index 99%
-rename from drivers/staging/erofs/xattr.c
-rename to fs/erofs/xattr.c
-index e7e5840e3f9d..a8286998a079 100644
---- a/drivers/staging/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/xattr.c
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/xattr.h b/fs/erofs/xattr.h
-similarity index 98%
-rename from drivers/staging/erofs/xattr.h
-rename to fs/erofs/xattr.h
-index e20249647541..c5ca47d814dd 100644
---- a/drivers/staging/erofs/xattr.h
-+++ b/fs/erofs/xattr.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/xattr.h
-- *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zdata.c b/fs/erofs/zdata.c
-similarity index 99%
-rename from drivers/staging/erofs/zdata.c
-rename to fs/erofs/zdata.c
-index 2d7aaf98f7de..48251cb2aa39 100644
---- a/drivers/staging/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/zdata.c
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zdata.h b/fs/erofs/zdata.h
-similarity index 99%
-rename from drivers/staging/erofs/zdata.h
-rename to fs/erofs/zdata.h
-index e11fe1959ca2..4fc547bc01f9 100644
---- a/drivers/staging/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/zdata.h
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zmap.c b/fs/erofs/zmap.c
-similarity index 99%
-rename from drivers/staging/erofs/zmap.c
-rename to fs/erofs/zmap.c
-index b61b9b5950ac..764656151662 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * linux/drivers/staging/erofs/zmap.c
-- *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/zpvec.h b/fs/erofs/zpvec.h
-similarity index 98%
-rename from drivers/staging/erofs/zpvec.h
-rename to fs/erofs/zpvec.h
-index 9798f5627786..bd3cee16491c 100644
---- a/drivers/staging/erofs/zpvec.h
-+++ b/fs/erofs/zpvec.h
-@@ -1,7 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * linux/drivers/staging/erofs/zpvec.h
-- *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-diff --git a/drivers/staging/erofs/include/trace/events/erofs.h b/include/trace/events/erofs.h
-similarity index 100%
-rename from drivers/staging/erofs/include/trace/events/erofs.h
-rename to include/trace/events/erofs.h
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index 1274c692e59c..903cc2d2750b 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -19,6 +19,7 @@
- #define SQUASHFS_MAGIC		0x73717368
- #define ECRYPTFS_SUPER_MAGIC	0xf15f
- #define EFS_SUPER_MAGIC		0x414A53
-+#define EROFS_SUPER_MAGIC_V1	0xE0F5E1E2
- #define EXT2_SUPER_MAGIC	0xEF53
- #define EXT3_SUPER_MAGIC	0xEF53
- #define XENFS_SUPER_MAGIC	0xabba1974
--- 
-2.17.1
-
+> 
+> Thanks,
+> //richard
