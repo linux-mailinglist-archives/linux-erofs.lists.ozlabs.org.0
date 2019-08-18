@@ -1,83 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FDF69143B
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 05:01:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D67D191449
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 05:19:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46B1zq4FGBzDqcy
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 13:01:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46B2NX4PNyzDrbK
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 13:19:40 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1566097303;
-	bh=puu+mfepHRHESwBv4mX+jdntiNkldma095zYnXD04uw=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	s=201707; t=1566098380;
+	bh=S48WEQlVMdj/aIDwvWLa0Aokd4kbp1sFrcT9QVPIpfg=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=HZtGMmHZrOMnE3MBhITVoqzoxj5KPIPW5tKoWt7YqsgV4k5bRQkuyNu6nn9BHG4jZ
-	 M5eX1f9U4wKBDDmd4vIYhrpvQNJwYwRnDqON6pkWQK3L5VCZtJEg3MZzl/wgLIsI/n
-	 bmg021uRK1ppe/b32QdUTps4lDgUnauYxweODCQ82/2oziLkCQ4LRboOQDqXAORiQE
-	 UP7DUyWTQAOg5UHjifh+GXzIlwkTLwhfCyjwwgvRp/mxCGIe2wB0pSb3Srm+QAX3MM
-	 VlcP9vLRqM9FoDQ8i5HIkHz3M3lZRUcp/w0o86fau3Wh0lgzah8mapve78XIkp4xA7
-	 EmCOJrG7HaXTg==
+	b=jfsZQMRZdxx8PgWtgLubeDe+mzY3abHtUm4aP3L1Tf8c2OBk/AjKhei6laCdU7pny
+	 lF5DMsbeHYeq4Y0EV+n4K1pgYSksLSPqMwSZJJuJM9vI7Xz2BxlnoJ+PS4C5V10+wS
+	 SDMf05M4HpsAHoLauWZfbGcUl770xr29gYkD+sX+UuIraGLrtc8dO/eieZalD6eBuc
+	 x7UyMSGY4+v4dJOLtG8bxg70UjgwuHJ70oqPBw1sfQg3b4XN2V6z0obh08cpI83Lxd
+	 ZE6OlHAas/OCzkzHFV+NPa9NE0SOg83bhFlUltoBNpyxkHBlNbn5Uas7OH/keF4Gm3
+	 XR0nwR+E1hbew==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.69.84; helo=sonic314-21.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.148; helo=sonic309-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="LIeaEYsc"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="kZV5VM6c"; 
  dkim-atps=neutral
-Received: from sonic314-21.consmr.mail.gq1.yahoo.com
- (sonic314-21.consmr.mail.gq1.yahoo.com [98.137.69.84])
+Received: from sonic309-22.consmr.mail.gq1.yahoo.com
+ (sonic309-22.consmr.mail.gq1.yahoo.com [98.137.65.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46B1zX5pfXzDrTQ
- for <linux-erofs@lists.ozlabs.org>; Sun, 18 Aug 2019 13:01:27 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46B2NK5xRpzDrVL
+ for <linux-erofs@lists.ozlabs.org>; Sun, 18 Aug 2019 13:19:28 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1566097281; bh=I4C6rCQzwDF8szQde73gehM1EeR+FLkMDXAWM2PWei0=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=LIeaEYsczsqtRf493QsS5KzQsZg1T9VF0F1j0fYENqYOc/REzKc+saTP3doZjsZ07TqlentmL2Sy63QiGuU49Xijepagr5r3dsPspLp57s5ye6WvKCmFhLVo8GG0TvoDLhHpAYKcOxCwENPd/bVdjL3c4PA8oyZix2HpWoRF6fSogrbJccmxu9LUwvmfIlWNLTT2XfnreCxxT0s0rmAyWRGkU5puHrj/DQkblb7KDguWGVdBdYUbC51jZruBUpfcexEbXJFX+QLR9g6lumAbuyN/m5dhG+3POH/3E4NNt2luUPG3ZK/fRDIrqXpdBAIYftJFxHm0lUju2KMYrHV2+g==
-X-YMail-OSG: Gr2FzTQVM1kUMeQJOwp8RVW_Ff5tqdXg5JrVzwEBe0rO5WDIsvncv7IBkpTLHyn
- ZAb_zyZP3JjwswQZDWIO9MqKqWuUz6mSfLtQxL4u8TjZ5nIkPCQmCjv3mbpOhuBhWhOXSuUMR0cY
- UHrv6PsDmYeP5.uiUo5hC9u9lI8ODKrLFmfRSY_4g8I5QoUe7W2CNVv31rVzvJRzK7wC6SohJ7lC
- hS9Fx1NGc7IOJJ.H7uHrLpOkPMv3LOUB8Ku5tfNVnoVernKkEva2XSy8JaTRXopEjxGLfOs71mO2
- lp5_Tn5r.8c.ofpz.Xlnt7oxaFrGn3YvysFwkMdKrrnU459O4y3P6bR.Rn7vH76IIX.UhDI8_TS4
- uR7hRFkdoqdrw7eBvFRGVFlbXspbn8SUFqzpkRPhoIPtXzcyOyvQItN2m_OXTtE7EVnLAfg_MPaY
- u1A.NQAQNJaYp.9jIMs5Ss_Xx0.btWlrbJ5stDDyP00eiSJp1pt0d_OV6HGmTes7uXt5NP9aX8c2
- X1ia.S7RxvGYQTVN.ulBlRgm4GxKLtaBmE1y8G5ZEGVzcrzCLz50mI.Dc7xajZHTEhz9wwKvUW4U
- C9e0evW_YIPX79K3BiuOobKSfzL_xsAViBoPXjtaMXmMx1zujiIo2MZvTd3D_vMSnB7EioAC_xVF
- EHHbtvmuk3p1J.rP4WupOy7lwQYOYE14Q1vzObM8S2vmdZDqkNVREa_w7kSzo9Xlsez.vvjsTeGp
- Ykq2GJpKOaFkgGMOQHV5MxuCOZ8Sn05nhCDCG_kECBprd1ekeDLz49EUol2GC7N1yU0dNaEDlyys
- g24e33ZxljD_YT3EUzTDyt6z9GKHSa1dUZHqYpA5U5JwXdjGMtxxyOuQrfsBFVm7jwp3ExjnDeDD
- nRCgaA7w8qQn6JqkBN1jj3Tm8FWWj9eLLNNeVhtqTAUvvtHMQuGO2qBOye8kXan6wBaOrePilxF9
- JWZDgSEeclN8q0FitALbDqYHkSWTPmllFSfAtLFu_GMAZQLCWxL3czRWBNd6Cxqtlg_d43s3SIIr
- QMDk3cOz9uPIO6kWkDpdc1GVfbYLG6T73w5_7V1.Zzxn02wGvKYJNGBjRf4c9.3.ete6b0GYR6RZ
- lS9Gq8YZfTIiVqe.0ZAwjbC7MET3w0rrjOaqZz30MV_Zajd0dOMb1djHNpJguEfggpkp9LVPyPko
- x8AeHh2Jly1W0xq3WAqRHankPneXNgYTk7Qj.TIWBnVhfpBszlob_iC1KNHVnaMt7BzD_TTte26G
- 2EhAjWG9b_6WuiescpSbAiJa04.qVAr8TZnY-
+ t=1566098365; bh=kcWMxbdQGZI1Ki+C3vmBFZF1GbOm6oYitbF6P/0gDu8=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
+ b=kZV5VM6cLvFxjQP2mcKTMF88r23oUK3sIvk4uIGh9vL+rYIBc+N8zN8/KVMR23b6GsuP4tcoujVCCP/QWpvzFbtsr2RSqF/8A8JgN7Mzb8Ap8WoN7L5EupMIa1AvwTabgBLGzADpOLwaBcEqFMQeoSZM1rtMKrDycN7rjATmddF+FyPwaYExdZ+dha4lrJh4MddR8WSqszEXrDXlCna0SQi0kk8k8O19afLlGsUkl3HRFDD9vh4VUY/juqGFScbq0+3yweRxNhZVJoADr9YVcJ8ntY/3vC9zuj5OXR7LuiTu5AhGFIaDdljT25d6lD57O5J0A+GHhIGWCZNnMNqMjQ==
+X-YMail-OSG: MuPWzmUVM1liylvvXTnzJSRaYkcnE0k9DYFPaXxZ8EmmejdOiSChLUL9tXFmdtf
+ Zgnj7r6chKVz60b3mPqhzQVLH0NFVBOCZgqoR2ZyvvHYeRJsdmwiZ1lwzvyZl_5vR6D4LqbS83VU
+ p7Yx_ZJbK0zXg9eIaCdJ_FItdYCe8mBC2ma2GbJNG.m0hzlNrgg3wN4Y2FnitqHHK2Ku6JS9P6pZ
+ gpsyAyGZVJGmxGZ6a8KjOGfPK3XPQ9PWsOQKym8I8EZGgpWBnP5rrJghfVDk2DtCQDixEewVzn0s
+ NV.DFzno_QcKktpOZdZldBAIf9QDhGwlYGDbEdHslz.T_w8PTlz305TZ6355uCUdo4QxSKMkXFCg
+ oqmOCrm7cH7ArmxEE6i4_MHXjbTZJEhHDQ0Kv1LLyR1KgCveX8g7SWywZFMt.we8PQktTqZUEvIs
+ zfhIBfQDHryJQDdkzQq1K.zv_ftNitfIZd4OHDlNASa24uezXNrFy8cEmtHOY0jytRzZxJUlHS0D
+ pAHhq5L9_85SWzMy8hktdQuRWaJCc0ipX8YxT3ap2qNozAwqKPXKQnpOe_1d7bsoKYWJhkvCOlUh
+ 1IDOXPIIYVPGBw4d4ZQUckU8qycfXq9mBRmie2Mae5isaAY5lho58NCOd91SorjeeXgQ8kE4.g3n
+ KhjYKlsnU.o9wjNR96gMt2lW3yFFXPetK.wovryqwsWmWkFDJvSnXJBwc8dfx3qwnMchKVQu0aQR
+ ql.f5ju5a93PA6FHhcIuSQVKyP_rTZyJrTc8PF1xbfbNge60kWwpo0RSIAi1gtnuGNWEEN6wbcbD
+ ZCg_yFXw7sRu2FFFXF0BIqLjSi0XwD0FyDzSl4Ymwkto8NWDLWUqhvAGQ41mBeMajhfmBMEHDV5t
+ 073G2MWQkV4DdrextI2DfgkiYCQNwYu1YjJi8Tw_CDv3nl31uOKPeexl0YSwda1UvZMnzOokYIrZ
+ 8tdkdnuduz08LFb3N3I_JWnSAslaE14_BqgLkcECpqDT8mpuyLglJBr_f8ugprkPwrs5boE12c8c
+ yniou.57ldkNqglV.nqKkU0dVknyebLOFsyX4Kx6uELwvRVNxfwchSaFXKkPlOszJNek12tR9YL8
+ Dt4HEdwdngzQPIF_.duAPM5nnxZMbF.6fxWKz97L0rnKr8ofhntdUZ5wS7NnsRz3h8V0P5_MYDvy
+ I3lS8GZKeIwgdJeJIO81zGomSoz5PgJu6CCzuNSqArozCx2ATBdN1Hn0yhslaCS7Qp..HIqj_XQd
+ r3M_orrz5zM0wvum7KCU89JZG7ey8qTs-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic314.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 03:01:21 +0000
-Received: by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 67844616e4907afc199d186c2f61c1e0; 
- Sun, 18 Aug 2019 03:01:19 +0000 (UTC)
-Date: Sun, 18 Aug 2019 11:01:10 +0800
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2] staging: erofs: fix an error handling in
- erofs_readdir()
-Message-ID: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190818014835.5874-1-hsiangkao@aol.com>
- <20190818015631.6982-1-hsiangkao@aol.com>
- <20190818022055.GA14592@bombadil.infradead.org>
- <20190818023240.GA7739@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818025339.GB14592@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818025339.GB14592@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+ sonic309.consmr.mail.gq1.yahoo.com with HTTP; Sun, 18 Aug 2019 03:19:25 +0000
+Received: by smtp408.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID a3b7a5fc66b8e7b96dca9858a77755c0; 
+ Sun, 18 Aug 2019 03:19:21 +0000 (UTC)
+To: Chao Yu <yuchao0@huawei.com>, Richard Weinberger <richard@nod.at>,
+ Matthew Wilcox <willy@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
+Date: Sun, 18 Aug 2019 11:18:55 +0800
+Message-Id: <20190818031855.9723-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -91,76 +86,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, Richard Weinberger <richard@nod.at>,
- Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ stable@vger.kernel.org, Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Aug 17, 2019 at 07:53:39PM -0700, Matthew Wilcox wrote:
-> On Sun, Aug 18, 2019 at 10:32:45AM +0800, Gao Xiang wrote:
-> > On Sat, Aug 17, 2019 at 07:20:55PM -0700, Matthew Wilcox wrote:
-> > > On Sun, Aug 18, 2019 at 09:56:31AM +0800, Gao Xiang wrote:
-> > > > @@ -82,8 +82,12 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
-> > > >  		unsigned int nameoff, maxsize;
-> > > >  
-> > > >  		dentry_page = read_mapping_page(mapping, i, NULL);
-> > > > -		if (IS_ERR(dentry_page))
-> > > > -			continue;
-> > > > +		if (IS_ERR(dentry_page)) {
-> > > > +			errln("fail to readdir of logical block %u of nid %llu",
-> > > > +			      i, EROFS_V(dir)->nid);
-> > > > +			err = PTR_ERR(dentry_page);
-> > > > +			break;
-> > > 
-> > > I don't think you want to use the errno that came back from
-> > > read_mapping_page() (which is, I think, always going to be -EIO).
-> > > Rather you want -EFSCORRUPTED, at least if I understand the recent
-> > > patches to ext2/ext4/f2fs/xfs/...
-> > 
-> > Thanks for your reply and noticing this. :)
-> > 
-> > Yes, as I talked with you about read_mapping_page() in a xfs related
-> > topic earlier, I think I fully understand what returns here.
-> > 
-> > I actually had some concern about that before sending out this patch.
-> > You know the status is
-> >    PG_uptodate is not set and PG_error is set here.
-> > 
-> > But we cannot know it is actually a disk read error or due to
-> > corrupted images (due to lack of page flags or some status, and
-> > I think it could be a waste of page structure space for such
-> > corrupted image or disk error)...
-> > 
-> > And some people also like propagate errors from insiders...
-> > (and they could argue about err = -EFSCORRUPTED as well..)
-> > 
-> > I'd like hear your suggestion about this after my words above?
-> > still return -EFSCORRUPTED?
-> 
-> I don't think it matters whether it's due to a disk error or a corrupted
-> image.  We can't read the directory entry, so we should probably return
-> -EFSCORRUPTED.  Thinking about it some more, read_mapping_page() can
-> also return -ENOMEM, so it should probably look something like this:
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-OK, I will send the next version like what you described below.
-I realized that at first but I have no tendency to return
-EFSCORRUPTED or EIO here.
+Richard observed a forever loop of erofs_read_raw_page() [1]
+which can be generated by forcely setting ->u.i_blkaddr
+to 0xdeadbeef (as my understanding block layer can
+handle access beyond end of device correctly).
 
-Thanks,
-Gao Xiang
+After digging into that, it seems the problem is highly
+related with directories and then I found the root cause
+is an improper error handling in erofs_readdir().
 
-> 
-> 		err = 0;
-> 		if (dentry_page == ERR_PTR(-ENOMEM))
-> 			err = -ENOMEM;
-> 		else if (IS_ERR(dentry_page)) {
-> 			errln("fail to readdir of logical block %u of nid %llu",
-> 			      i, EROFS_V(dir)->nid);
-> 			err = -EFSCORRUPTED;
-> 		}
-> 
-> 		if (err)
-> 			break;
+Let's fix it now.
+
+[1] https://lore.kernel.org/r/1163995781.68824.1566084358245.JavaMail.zimbra@nod.at/
+
+Reported-by: Richard Weinberger <richard@nod.at>
+Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changelog from v2:
+ - transform EIO to EFSCORRUPTED as suggested by Matthew;
+
+changelog from v1:
+ - fix the incorrect external link in commit message.
+
+This patch is based on the following patch as well
+https://lore.kernel.org/r/20190816071142.8633-1-gaoxiang25@huawei.com/
+
+and
+https://lore.kernel.org/r/20190817082313.21040-1-hsiangkao@aol.com/
+can still be properly applied after this patch.
+
+ drivers/staging/erofs/dir.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 5f38382637e6..eb430a031b20 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -82,8 +82,17 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 		unsigned int nameoff, maxsize;
+ 
+ 		dentry_page = read_mapping_page(mapping, i, NULL);
+-		if (IS_ERR(dentry_page))
+-			continue;
++		if (dentry_page == ERR_PTR(-ENOMEM)) {
++			errln("no memory to readdir of logical block %u of nid %llu",
++			      i, EROFS_V(dir)->nid);
++			err = -ENOMEM;
++			break;
++		} else if (IS_ERR(dentry_page)) {
++			errln("fail to readdir of logical block %u of nid %llu",
++			      i, EROFS_V(dir)->nid);
++			err = -EFSCORRUPTED;
++			break;
++		}
+ 
+ 		de = (struct erofs_dirent *)kmap(dentry_page);
+ 
+-- 
+2.17.1
+
