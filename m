@@ -2,57 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 784719168D
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 14:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8184E91695
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 14:33:38 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46BGbg22j1zDr70
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 22:30:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46BGgg3FWSzDrCJ
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 22:33:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=kernel.org
- (client-ip=198.145.29.99; helo=mail.kernel.org; envelope-from=chao@kernel.org;
- receiver=<UNKNOWN>)
+ spf=none (mailfrom) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=kernel.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.b="VrUFUjME"; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.b="D8+f2Wvk"; dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46BGbY21vlzDr63
- for <linux-erofs@lists.ozlabs.org>; Sun, 18 Aug 2019 22:30:01 +1000 (AEST)
-Received: from [192.168.0.101] (unknown [180.111.132.43])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id B1DAD2087E;
- Sun, 18 Aug 2019 12:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1566131399;
- bh=v0gcBuO1hviSpiMM1PO7wDaoD+BZFcnxIpQG+kcLKoY=;
- h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
- b=VrUFUjMEpts/vzRuYKhEerx/4UgqX16CgFBSOI+pF0TAT4R+fK2iiGA/fHqmQo+/5
- XNM2D7/hafRuysbTTZZkilM0jk5GCEaZRlvd+PX3qVDaeyqsoGTh+TfLzlp4s6VNAj
- s64ifh0Qt7uUx9GupQ/Ds3FLVaxYip545xWbZN8w=
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46BGgW17p6zDr8v
+ for <linux-erofs@lists.ozlabs.org>; Sun, 18 Aug 2019 22:33:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+ Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+ List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+ bh=xzB0N5KXoocholH/YOkGDtfICAB0yGZ8RmgdPY4pQBk=; b=D8+f2WvkG3p4WYc9upT4VTsHh
+ f5SeQ1l6W8TPkD72cRq3W/6BHXnBllsfy1ZRsOACKqpIfcdUUAeByjXNJlgPSq9O6kKyUS/vDaaB4
+ TMH0oiTgiT4gbsjz/lmiTBkQV/X1Ifiq/f5X6PXYemIACo1rf3KK5yxYaJhdlgAXXPwEktdLrNdly
+ 3vYZcGes35B0aRNrWAwQ16HHXF/hiODC26eK1gpfhSbGTlhsZcluX2QuzZAsAYbte77evggr1Piz0
+ UKbu6+itGXx4A24C1YJJc27Hgbnu4ZqXCrZ0eNPmmHhmA+VZctKuXUPyxYACWV2lHw2uck+Y+2NYi
+ qkVoejm9Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red
+ Hat Linux)) id 1hzKN0-0004ZF-AZ; Sun, 18 Aug 2019 12:33:14 +0000
+Date: Sun, 18 Aug 2019 05:33:14 -0700
+From: Matthew Wilcox <willy@infradead.org>
+To: Gao Xiang <hsiangkao@aol.com>
 Subject: Re: [PATCH v3 RESEND] staging: erofs: fix an error handling in
  erofs_readdir()
-To: Gao Xiang <hsiangkao@aol.com>, Chao Yu <yuchao0@huawei.com>,
- Richard Weinberger <richard@nod.at>, Matthew Wilcox <willy@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
- linux-fsdevel@vger.kernel.org
+Message-ID: <20190818123314.GA29733@bombadil.infradead.org>
 References: <20190818030109.GA8225@hsiangkao-HP-ZHAN-66-Pro-G1>
  <20190818032111.9862-1-hsiangkao@aol.com>
-From: Chao Yu <chao@kernel.org>
-Message-ID: <dcd15b52-7e96-7928-42c6-0dcdd9bdf382@kernel.org>
-Date: Sun, 18 Aug 2019 20:29:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20190818032111.9862-1-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: Mutt/1.11.4 (2019-03-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,33 +63,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org, Miao Xie <miaoxie@huawei.com>
+Cc: devel@driverdev.osuosl.org, Richard Weinberger <richard@nod.at>,
+ Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
+ stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019-8-18 11:21, Gao Xiang wrote:
-> From: Gao Xiang <gaoxiang25@huawei.com>
-> 
-> Richard observed a forever loop of erofs_read_raw_page() [1]
-> which can be generated by forcely setting ->u.i_blkaddr
-> to 0xdeadbeef (as my understanding block layer can
-> handle access beyond end of device correctly).
-> 
-> After digging into that, it seems the problem is highly
-> related with directories and then I found the root cause
-> is an improper error handling in erofs_readdir().
-> 
-> Let's fix it now.
-> 
-> [1] https://lore.kernel.org/r/1163995781.68824.1566084358245.JavaMail.zimbra@nod.at/
-> 
-> Reported-by: Richard Weinberger <richard@nod.at>
-> Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
-> Cc: <stable@vger.kernel.org> # 4.19+
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+On Sun, Aug 18, 2019 at 11:21:11AM +0800, Gao Xiang wrote:
+> +		if (dentry_page == ERR_PTR(-ENOMEM)) {
+> +			errln("no memory to readdir of logical block %u of nid %llu",
+> +			      i, EROFS_V(dir)->nid);
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+I don't think you need the error message.  If we get a memory allocation
+failure, there's already going to be a lot of spew in the logs from the
+mm system.  And if we do fail to allocate memory, we don't need to know
+the logical block number or the nid -- it has nothiing to do with those;
+the system simply ran out of memory.
 
-Thanks,
+> +			err = -ENOMEM;
+> +			break;
+> +		} else if (IS_ERR(dentry_page)) {
+> +			errln("fail to readdir of logical block %u of nid %llu",
+> +			      i, EROFS_V(dir)->nid);
+> +			err = -EFSCORRUPTED;
+> +			break;
+> +		}
+>  
+>  		de = (struct erofs_dirent *)kmap(dentry_page);
+>  
+> -- 
+> 2.17.1
+> 
