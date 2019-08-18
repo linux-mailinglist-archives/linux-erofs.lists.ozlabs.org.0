@@ -2,82 +2,60 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56DA391879
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 19:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DA299188C
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Aug 2019 20:00:45 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46BPds68c1zDr9K
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Aug 2019 03:47:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46BPx70n5bzDrCJ
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Aug 2019 04:00:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
- smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:e::133;
- helo=bombadil.infradead.org;
- envelope-from=batv+0e271e77d026f8461fef+5838+infradead.org+hch@bombadil.srs.infradead.org;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="cwMKV/Q6"; dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46BPdk1rCbzDqk7
- for <linux-erofs@lists.ozlabs.org>; Mon, 19 Aug 2019 03:47:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
- Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
- Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
- List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=mD1gjFdZeddiT1lyKp4zbNta586P6sG7Wqwm56zb/+M=; b=cwMKV/Q6FbyRV+Q4pjP4jU6SQ
- bD4hwrBEbAdfkZuMb6Si+KorGu2u+uRQpnLID6Nlv394avOs58QdPY6/7PmFEZX5MiB7b3GKnQDb9
- 9XI4JzoHO6cA7VND75mnlARaUv1kYqsP6m8Hx+TowvJbMeSgvnNqaZ2A4eD1Ap461Q5tAiyEfi4Hg
- GYuoB9f/O1dW+wlwuNZsy0BoRMDqHdwthV/4EWgLFroGr8it1xiExbC8zJhzuxwumuo8B7lTACgQ/
- xE+dPGureFbXv5+EPX2+mwRkHxNSqdhShW8dpaQ6JbwmizbGPdwF4TWKC73X9HuHuQn5OpOY+FACS
- KhZd8MclA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1hzPGg-0004ac-SC; Sun, 18 Aug 2019 17:47:02 +0000
-Date: Sun, 18 Aug 2019 10:47:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christoph Hellwig <hch@infradead.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
- Richard Weinberger <richard@nod.at>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
- Chao Yu <yuchao0@huawei.com>, Dave Chinner <david@fromorbit.com>,
- David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
- devel <devel@driverdev.osuosl.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Darrick <darrick.wong@oracle.com>,
- Amir Goldstein <amir73il@gmail.com>,
- linux-erofs <linux-erofs@lists.ozlabs.org>,
- Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
- Pavel Machek <pavel@denx.de>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190818174702.GA17633@infradead.org>
-References: <1405781266.69008.1566116210649.JavaMail.zimbra@nod.at>
+ spf=permerror (mailfrom) smtp.mailfrom=nod.at
+ (client-ip=195.201.40.130; helo=lithops.sigma-star.at;
+ envelope-from=richard@nod.at; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=nod.at
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46BPx21s5xzDqf5
+ for <linux-erofs@lists.ozlabs.org>; Mon, 19 Aug 2019 04:00:36 +1000 (AEST)
+Received: from localhost (localhost [127.0.0.1])
+ by lithops.sigma-star.at (Postfix) with ESMTP id BE1ED608311C;
+ Sun, 18 Aug 2019 20:00:32 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+ by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+ with ESMTP id 4gGs7GazpkF2; Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+ by lithops.sigma-star.at (Postfix) with ESMTP id 7F2846083139;
+ Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+ by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+ with ESMTP id Uj_qxmxjUq0m; Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+ by lithops.sigma-star.at (Postfix) with ESMTP id 097BB608311C;
+ Sun, 18 Aug 2019 20:00:29 +0200 (CEST)
+Date: Sun, 18 Aug 2019 20:00:28 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: tytso <tytso@mit.edu>
+Message-ID: <538856932.69442.1566151228866.JavaMail.zimbra@nod.at>
+In-Reply-To: <20190818174621.GB12940@mit.edu>
+References: <20190817082313.21040-1-hsiangkao@aol.com>
  <20190818084521.GA17909@hsiangkao-HP-ZHAN-66-Pro-G1>
  <1133002215.69049.1566119033047.JavaMail.zimbra@nod.at>
  <20190818090949.GA30276@kroah.com>
  <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
  <20190818151154.GA32157@mit.edu>
- <20190818155812.GB13230@infradead.org>
- <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
+ <1897345637.69314.1566148000847.JavaMail.zimbra@nod.at>
+ <20190818174621.GB12940@mit.edu>
+Subject: Re: [PATCH] erofs: move erofs out of staging
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818172938.GA14413@sol.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
- bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: erofs: move erofs out of staging
+Thread-Index: sAbiegKjjTKQmAd1TwyH6s3S7iROUA==
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,20 +67,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+ Dave Chinner <david@fromorbit.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+ devel <devel@driverdev.osuosl.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Darrick <darrick.wong@oracle.com>, Christoph Hellwig <hch@infradead.org>,
+ torvalds <torvalds@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Aug 18, 2019 at 10:29:38AM -0700, Eric Biggers wrote:
-> Not sure what you're even disagreeing with, as I *do* expect new filesystems to
-> be held to a high standard, and to be written with the assumption that the
-> on-disk data may be corrupted or malicious.  We just can't expect the bar to be
-> so high (e.g. no bugs) that it's never been attained by *any* filesystem even
-> after years/decades of active development.  If the developers were careful, the
-> code generally looks robust, and they are willing to address such bugs as they
-> are found, realistically that's as good as we can expect to get...
+----- Urspr=C3=BCngliche Mail -----
+> Von: "tytso" <tytso@mit.edu>
+> An: "richard" <richard@nod.at>
+> CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Gao Xiang" <hsian=
+gkao@aol.com>, "Jan Kara" <jack@suse.cz>, "Chao
+> Yu" <yuchao0@huawei.com>, "Dave Chinner" <david@fromorbit.com>, "David St=
+erba" <dsterba@suse.cz>, "Miao Xie"
+> <miaoxie@huawei.com>, "devel" <devel@driverdev.osuosl.org>, "Stephen Roth=
+well" <sfr@canb.auug.org.au>, "Darrick"
+> <darrick.wong@oracle.com>, "Christoph Hellwig" <hch@infradead.org>, "Amir=
+ Goldstein" <amir73il@gmail.com>,
+> "linux-erofs" <linux-erofs@lists.ozlabs.org>, "Al Viro" <viro@zeniv.linux=
+.org.uk>, "Jaegeuk Kim" <jaegeuk@kernel.org>,
+> "linux-kernel" <linux-kernel@vger.kernel.org>, "Li Guifu" <bluce.liguifu@=
+huawei.com>, "Fang Wei" <fangwei1@huawei.com>,
+> "Pavel Machek" <pavel@denx.de>, "linux-fsdevel" <linux-fsdevel@vger.kerne=
+l.org>, "Andrew Morton"
+> <akpm@linux-foundation.org>, "torvalds" <torvalds@linux-foundation.org>
+> Gesendet: Sonntag, 18. August 2019 19:46:21
+> Betreff: Re: [PATCH] erofs: move erofs out of staging
 
-Well, the impression I got from Richards quick look and the reply to it is
-that there is very little attempt to validate the ondisk data structure
-and there is absolutely no priority to do so.  Which is very different
-from there is a bug or two here and there.
+> On Sun, Aug 18, 2019 at 07:06:40PM +0200, Richard Weinberger wrote:
+>> > So holding a file system like EROFS to a higher standard than say,
+>> > ext4, xfs, or btrfs hardly seems fair.
+>>=20
+>> Nobody claimed that.
+>=20
+> Pointing out that erofs has issues in this area when Gao Xiang is
+> asking if erofs can be moved out of staging and join the "official
+> clubhouse" of file systems could certainly be reasonable interpreted
+> as such.  Reporting such vulnerablities are a good thing, and
+> hopefully all file system maintainers will welcome them.  Doing them
+> on a e-mail thread about promoting out of erofs is certainly going to
+> lead to inferences of a double standard.
+
+Well, this was not at all my intention.
+erofs raised my attention and instead of wasting a new thread
+I answered here and reported what I found while looking at it.
+That's all.
+
+Thanks,
+//richard
