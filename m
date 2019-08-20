@@ -1,68 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C148957BB
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 08:58:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ACF895802
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 09:15:47 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46CM7l2MyLzDqd1
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 16:58:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46CMX03xZxzDqdw
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 17:15:44 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=intel.com
- (client-ip=192.55.52.136; helo=mga12.intel.com;
- envelope-from=philip.li@intel.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.35; helo=huawei.com; envelope-from=yuchao0@huawei.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46CM7g3MhZzDqcJ
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 16:58:06 +1000 (AEST)
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
- by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
- 19 Aug 2019 23:58:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; d="scan'208";a="262076234"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
- by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 23:58:02 -0700
-Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 23:58:02 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 19 Aug 2019 23:58:02 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.19]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.163]) with mapi id 14.03.0439.000;
- Tue, 20 Aug 2019 14:58:00 +0800
-From: "Li, Philip" <philip.li@intel.com>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: RE: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Thread-Topic: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Thread-Index: AQHVVciSAydYtdJuwUarX+BT1XqKVqcDFXgA////3wCAAIa24A==
-Date: Tue, 20 Aug 2019 06:58:00 +0000
-Message-ID: <831EE4E5E37DCC428EB295A351E66249520C70FE@shsmsx102.ccr.corp.intel.com>
-References: <20190818031855.9723-1-hsiangkao@aol.com>
- <201908182116.RRufKUpl%lkp@intel.com>
- <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190820065038.GG4479@intel.com> <20190820065010.GG159846@architecture4>
-In-Reply-To: <20190820065010.GG159846@architecture4>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDcxM2U4NjEtNmJjNS00OWM4LTllYjgtYzNhZmJhMjQwY2JlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiS0YrbEh1azRwaVQ0b0RWbSszQVwvSHNpNVZqNmpGK0hHTjh5Z2l5TndJMFhYdWFWVE10S0txTHdJOWRFZ2dxcWcifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46CMWq3jW9zDqdh
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 17:15:33 +1000 (AEST)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id 1012B334FDD0942BBE70;
+ Tue, 20 Aug 2019 15:15:28 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 20 Aug
+ 2019 15:15:18 +0800
+Subject: Re: [PATCH] erofs: move erofs out of staging
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>, Gao Xiang <hsiangkao@aol.com>,
+ "Darrick J. Wong" <darrick.wong@oracle.com>
+References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+ <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
+Date: Tue, 20 Aug 2019 15:15:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,173 +65,188 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
- lkp <lkp@intel.com>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "kbuild-all@01.org" <kbuild-all@01.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
+ Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+ devel <devel@driverdev.osuosl.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Richard Weinberger <richard@nod.at>, Eric Biggers <ebiggers@kernel.org>,
+ torvalds <torvalds@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readd=
-ir()
->=20
-> Hi Philip,
->=20
-> On Tue, Aug 20, 2019 at 02:50:38PM +0800, Philip Li wrote:
-> > On Sun, Aug 18, 2019 at 09:25:04PM +0800, Gao Xiang wrote:
-> > > On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
-> > > > Hi Gao,
-> > > >
-> > > > I love your patch! Yet something to improve:
-> > > >
-> > > > [auto build test ERROR on linus/master]
-> > > > [cannot apply to v5.3-rc4 next-20190816]
-> > > > [if your patch is applied to the wrong git tree, please drop us a n=
-ote to help
-> improve the system]
-> > >
-> > > ... those patches should be applied to staging tree
-> > > since linux-next has not been updated yet...
-> > thanks for the feedback, we will consider this to our todo list.
->=20
-> Yes, many confusing reports anyway...
-> (Just my personal suggestion, maybe we can add some hints on the patch em=
-ail
-> to indicate which tree can be applied successfully for ci in the future..=
-.)
-thanks, this is good idea. On the other side, we support to add --base opti=
-on to git format-patch
-to automatically suggest the base, refer to https://stackoverflow.com/a/374=
-06982 for detail.
-Meanwhile, we will enhance the internal logic to find suitable base if poss=
-ible.
+On 2019/8/20 10:38, Qu Wenruo wrote:
+> 
+> 
+> On 2019/8/20 上午10:24, Chao Yu wrote:
+>> On 2019/8/20 8:55, Qu Wenruo wrote:
+>>> [...]
+>>>>>> I have made a simple fuzzer to inject messy in inode metadata,
+>>>>>> dir data, compressed indexes and super block,
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?h=experimental-fuzzer
+>>>>>>
+>>>>>> I am testing with some given dirs and the following script.
+>>>>>> Does it look reasonable?
+>>>>>>
+>>>>>> # !/bin/bash
+>>>>>>
+>>>>>> mkdir -p mntdir
+>>>>>>
+>>>>>> for ((i=0; i<1000; ++i)); do
+>>>>>> 	mkfs/mkfs.erofs -F$i testdir_fsl.fuzz.img testdir_fsl > /dev/null 2>&1
+>>>>>
+>>>>> mkfs fuzzes the image? Er....
+>>>>
+>>>> Thanks for your reply.
+>>>>
+>>>> First, This is just the first step of erofs fuzzer I wrote yesterday night...
+>>>>
+>>>>>
+>>>>> Over in XFS land we have an xfs debugging tool (xfs_db) that knows how
+>>>>> to dump (and write!) most every field of every metadata type.  This
+>>>>> makes it fairly easy to write systematic level 0 fuzzing tests that
+>>>>> check how well the filesystem reacts to garbage data (zeroing,
+>>>>> randomizing, oneing, adding and subtracting small integers) in a field.
+>>>>> (It also knows how to trash entire blocks.)
+>>>
+>>> The same tool exists for btrfs, although lacks the write ability, but
+>>> that dump is more comprehensive and a great tool to learn the on-disk
+>>> format.
+>>>
+>>>
+>>> And for the fuzzing defending part, just a few kernel releases ago,
+>>> there is none for btrfs, and now we have a full static verification
+>>> layer to cover (almost) all on-disk data at read and write time.
+>>> (Along with enhanced runtime check)
+>>>
+>>> We have covered from vague values inside tree blocks and invalid/missing
+>>> cross-ref find at runtime.
+>>>
+>>> Currently the two layered check works pretty fine (well, sometimes too
+>>> good to detect older, improper behaved kernel).
+>>> - Tree blocks with vague data just get rejected by verification layer
+>>>   So that all members should fit on-disk format, from alignment to
+>>>   generation to inode mode.
+>>>
+>>>   The error will trigger a good enough (TM) error message for developer
+>>>   to read, and if we have other copies, we retry other copies just as
+>>>   we hit a bad copy.
+>>>
+>>> - At runtime, we have much less to check
+>>>   Only cross-ref related things can be wrong now. since everything
+>>>   inside a single tree block has already be checked.
+>>>
+>>> In fact, from my respect of view, such read time check should be there
+>>> from the very beginning.
+>>> It acts kinda of a on-disk format spec. (In fact, by implementing the
+>>> verification layer itself, it already exposes a lot of btrfs design
+>>> trade-offs)
+>>>
+>>> Even for a fs as complex (buggy) as btrfs, we only take 1K lines to
+>>> implement the verification layer.
+>>> So I'd like to see every new mainlined fs to have such ability.
+>>
+>> Out of curiosity, it looks like every mainstream filesystem has its own
+>> fuzz/injection tool in their tool-set, if it's really such a generic
+>> requirement, why shouldn't there be a common tool to handle that, let specified
+>> filesystem fill the tool's callback to seek a node/block and supported fields
+>> can be fuzzed in inode.
+> 
+> It could be possible for XFS/EXT* to share the same infrastructure
+> without much hassle.
+> (If not considering external journal)
+> 
+> But for btrfs, it's like a regular fs on a super large dm-linear, which
+> further builds its chunks on different dm-raid1/dm-linear/dm-raid56.
+> 
+> So not sure if it's possible for btrfs, as it contains its logical
+> address layer bytenr (the most common one) along with per-chunk physical
+> mapping bytenr (in another tree).
 
->=20
+Yeah, it looks like we need searching more levels mapping to find the final
+physical block address of inode/node/data in btrfs.
+
+IMO, in a little lazy way, we can reform and reuse existed function in
+btrfs-progs which can find the mapping info of inode/node/data according to
+specified ino or ino+pg_no.
+
+> 
+> It may depends on the granularity. But definitely a good idea to do so
+> in a generic way.
+> Currently we depend on super kind student developers/reporters on such
+
+Yup, I just guess Wen Xu may be interested in working on a generic way to fuzz
+filesystem, as I know they dig deep in filesystem code when doing fuzz. BTW,
+which impresses me is, constructing checkpoint by injecting one byte, and then
+write a correct recalculated checksum value on that checkpoint, making that
+checkpoint looks valid...
+
+Thanks,
+
+> fuzzed images, and developers sometimes get inspired by real world
+> corruption (or his/her mood) to add some valid but hard-to-hit corner
+> case check.
+> 
 > Thanks,
-> Gao Xiang
->=20
-> >
-> > >
-> > > Thanks,
-> > > Gao Xiang
-> > >
-> > > >
-> > > > url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-=
-erofs-fix-
-> an-error-handling-in-erofs_readdir/20190818-191344
-> > > > config: arm64-allyesconfig (attached as .config)
-> > > > compiler: aarch64-linux-gcc (GCC) 7.4.0
-> > > > reproduce:
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-
-> tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         # save the attached .config to linux build tree
-> > > >         GCC_VERSION=3D7.4.0 make.cross ARCH=3Darm64
-> > > >
-> > > > If you fix the issue, kindly add following tag
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > All errors (new ones prefixed by >>):
-> > > >
-> > > >    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
-> > > > >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undecl=
-ared
-> (first use in this function); did you mean 'FS_NRSUPER'?
-> > > >        err =3D -EFSCORRUPTED;
-> > > >               ^~~~~~~~~~~~
-> > > >               FS_NRSUPER
-> > > >    drivers/staging/erofs/dir.c:110:11: note: each undeclared identi=
-fier is
-> reported only once for each function it appears in
-> > > >
-> > > > vim +110 drivers/staging/erofs/dir.c
-> > > >
-> > > >     85
-> > > >     86	static int erofs_readdir(struct file *f, struct dir_context =
-*ctx)
-> > > >     87	{
-> > > >     88		struct inode *dir =3D file_inode(f);
-> > > >     89		struct address_space *mapping =3D dir->i_mapping;
-> > > >     90		const size_t dirsize =3D i_size_read(dir);
-> > > >     91		unsigned int i =3D ctx->pos / EROFS_BLKSIZ;
-> > > >     92		unsigned int ofs =3D ctx->pos % EROFS_BLKSIZ;
-> > > >     93		int err =3D 0;
-> > > >     94		bool initial =3D true;
-> > > >     95
-> > > >     96		while (ctx->pos < dirsize) {
-> > > >     97			struct page *dentry_page;
-> > > >     98			struct erofs_dirent *de;
-> > > >     99			unsigned int nameoff, maxsize;
-> > > >    100
-> > > >    101			dentry_page =3D read_mapping_page(mapping, i,
-> NULL);
-> > > >    102			if (dentry_page =3D=3D ERR_PTR(-ENOMEM)) {
-> > > >    103				errln("no memory to readdir of logical
-> block %u of nid %llu",
-> > > >    104				      i, EROFS_V(dir)->nid);
-> > > >    105				err =3D -ENOMEM;
-> > > >    106				break;
-> > > >    107			} else if (IS_ERR(dentry_page)) {
-> > > >    108				errln("fail to readdir of logical block %u of
-> nid %llu",
-> > > >    109				      i, EROFS_V(dir)->nid);
-> > > >  > 110				err =3D -EFSCORRUPTED;
-> > > >    111				break;
-> > > >    112			}
-> > > >    113
-> > > >    114			de =3D (struct erofs_dirent *)kmap(dentry_page);
-> > > >    115
-> > > >    116			nameoff =3D le16_to_cpu(de->nameoff);
-> > > >    117
-> > > >    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-> > > >    119				     nameoff >=3D PAGE_SIZE)) {
-> > > >    120				errln("%s, invalid de[0].nameoff %u",
-> > > >    121				      __func__, nameoff);
-> > > >    122
-> > > >    123				err =3D -EIO;
-> > > >    124				goto skip_this;
-> > > >    125			}
-> > > >    126
-> > > >    127			maxsize =3D min_t(unsigned int,
-> > > >    128					dirsize - ctx->pos + ofs,
-> PAGE_SIZE);
-> > > >    129
-> > > >    130			/* search dirents at the arbitrary position */
-> > > >    131			if (unlikely(initial)) {
-> > > >    132				initial =3D false;
-> > > >    133
-> > > >    134				ofs =3D roundup(ofs, sizeof(struct
-> erofs_dirent));
-> > > >    135				if (unlikely(ofs >=3D nameoff))
-> > > >    136					goto skip_this;
-> > > >    137			}
-> > > >    138
-> > > >    139			err =3D erofs_fill_dentries(ctx, de, &ofs, nameoff,
-> maxsize);
-> > > >    140	skip_this:
-> > > >    141			kunmap(dentry_page);
-> > > >    142
-> > > >    143			put_page(dentry_page);
-> > > >    144
-> > > >    145			ctx->pos =3D blknr_to_addr(i) + ofs;
-> > > >    146
-> > > >    147			if (unlikely(err))
-> > > >    148				break;
-> > > >    149			++i;
-> > > >    150			ofs =3D 0;
-> > > >    151		}
-> > > >    152		return err < 0 ? err : 0;
-> > > >    153	}
-> > > >    154
-> > > >
-> > > > ---
-> > > > 0-DAY kernel test infrastructure                Open Source Technol=
-ogy Center
-> > > > https://lists.01.org/pipermail/kbuild-all                   Intel C=
-orporation
-> > >
-> > >
+> Qu
+> 
+>> It can help to avoid redundant work whenever Linux
+>> welcomes a new filesystem....
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Actually, compared with XFS, EROFS has rather simple on-disk format.
+>>>> What we inject one time is quite deterministic.
+>>>>
+>>>> The first step just purposely writes some random fuzzed data to
+>>>> the base inode metadata, compressed indexes, or dir data field
+>>>> (one round one field) to make it validity and coverability.
+>>>>
+>>>>>
+>>>>> You might want to write such a debugging tool for erofs so that you can
+>>>>> take apart crashed images to get a better idea of what went wrong, and
+>>>>> to write easy fuzzing tests.
+>>>>
+>>>> Yes, we will do such a debugging tool of course. Actually Li Guifu is now
+>>>> developping a erofs-fuse to support old linux versions or other OSes for
+>>>> archiveing only use, we will base on that code to develop a better fuzzer
+>>>> tool as well.
+>>>
+>>> Personally speaking, debugging tool is way more important than a running
+>>> kernel module/fuse.
+>>> It's human trying to write the code, most of time is spent educating
+>>> code readers, thus debugging tool is way more important than dead cold code.
+>>>
+>>> Thanks,
+>>> Qu
+>>>>
+>>>> Thanks,
+>>>> Gao Xiang
+>>>>
+>>>>>
+>>>>> --D
+>>>>>
+>>>>>> 	umount mntdir
+>>>>>> 	mount -t erofs -o loop testdir_fsl.fuzz.img mntdir
+>>>>>> 	for j in `find mntdir -type f`; do
+>>>>>> 		md5sum $j > /dev/null
+>>>>>> 	done
+>>>>>> done
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Gao Xiang
+>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Gao Xiang
+>>>>>>>
+>>>
+> 
