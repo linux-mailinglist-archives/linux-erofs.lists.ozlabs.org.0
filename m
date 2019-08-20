@@ -2,54 +2,113 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07D6D9581B
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 09:17:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A16395A1F
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 10:47:28 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46CMZ203PGzDqfC
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 17:17:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46CPYm4MMwzDqgw
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Aug 2019 18:47:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.188; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmx.com
+ (client-ip=212.227.15.18; helo=mout.gmx.net;
+ envelope-from=quwenruo.btrfs@gmx.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
+ dmarc=none (p=none dis=none) header.from=gmx.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ secure) header.d=gmx.net header.i=@gmx.net header.b="JJV9v6iy"; 
+ dkim-atps=neutral
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46CMYy39ZvzDqf2
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 17:17:26 +1000 (AEST)
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
- by Forcepoint Email with ESMTP id 5C1EF788C0609428E3B8;
- Tue, 20 Aug 2019 15:17:23 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 20 Aug 2019 15:17:22 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 20 Aug 2019 15:17:22 +0800
-Date: Tue, 20 Aug 2019 15:16:45 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: "Li, Philip" <philip.li@intel.com>
-Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Message-ID: <20190820071645.GH159846@architecture4>
-References: <20190818031855.9723-1-hsiangkao@aol.com>
- <201908182116.RRufKUpl%lkp@intel.com>
- <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190820065038.GG4479@intel.com>
- <20190820065010.GG159846@architecture4>
- <831EE4E5E37DCC428EB295A351E66249520C70FE@shsmsx102.ccr.corp.intel.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46CPYZ6Z79zDqgf
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 18:47:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=badeba3b8450; t=1566290783;
+ bh=EBVlGBCVrp4icYHnuaKiKD9FrToj2NDpH6MM6Vo97lc=;
+ h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+ b=JJV9v6iyMorgp+P5rIi/fp1UTsuXteW+REqL1lFQ/q9FwgPpyT1JeK9yrz0OcSCAi
+ vdcpWM1l3ique3/6TbCXMVFJz0GHQbczRWeMATVE9gv8KPpZya7fJDHY2YA9Rg/9iN
+ GEvYem0LAReXuvfXZ+98mad/N28Ah97KRAhKafeA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx002
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 0Ln897-1iTHBT1qFp-00hQ9d; Tue, 20
+ Aug 2019 10:46:23 +0200
+Subject: Re: [PATCH] erofs: move erofs out of staging
+To: Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
+ "Darrick J. Wong" <darrick.wong@oracle.com>
+References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+ <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
+ <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
+ bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
+ ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
+ rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
+ FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
+ 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
+ ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
+ CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
+ f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
+ mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
+ 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
+ h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
+Message-ID: <735b8d15-bcb5-b11b-07c1-0617eb1e5ce9@gmx.com>
+Date: Tue, 20 Aug 2019 16:46:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <831EE4E5E37DCC428EB295A351E66249520C70FE@shsmsx102.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer"
+X-Provags-ID: V03:K1:1wqXq/0in6IfAkHB8akysmuzP9uzNyxmHmhAzExPc371ksQFLD8
+ Cdt5AwTNnmMiYFAbDW6BkoUQ5T8DnWNT9tDAzkbqTk5jP1Ob1r0WLgr4yca+Ns9SZwjDu2X
+ vkxKKN+M7bd6AkuTNBtZViIGlYmC1n9zfAYzXFKoUFCyq4gfVULmvt90V+b5m6SmsjEaHRT
+ hA/DT864MFqJJ5XBPvvZw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VS2uBzGSQXA=:Njk4aHa8Y50tGMR18ReoZa
+ NmXttE2l1C55nPmuFyQrrh62SYMRWm9X36GKiZEoIUeM8TB2xwBr0jydBQe2n05nQ2nbXHpcy
+ 6M6eFHMrxuABqWR5lj9RtTBm0ehpbuWw77o/BH+s6WubSMMUJFfBMvIcbFcX6EdMPhgCLVkV8
+ 6L/3zLFR0XSDO+betOYm8G2iqOMGuwxvFpGPDfET8a3gs+0fshyAM+RlE0bqUh0yoEYk6za2m
+ kvADanb80T+n25MOow/jvMcAFgPLC/73EpuneQV7YAC6Br2oJm4J2g6TH5Mo35Qs6vZaOU3AJ
+ pz/t+vHj/48pFWOmGaB7fiyVCNcjryKkjJGwVqKPrk3bDRFKTmRGjUxr2KKBYPuIJpxVrcd+z
+ b8l1R/6W1FyGA28UG7HBFj8XjpK0gPyABhSP1Gh+4He+P9pVyU25oFuRg75NQ9mvG/gwSW/fk
+ P+EMjqgLsWXozwz5HXCA0xvUoc4mNki53NocP9MphwEKhda/8d6Alfzs8b5w0BZF7sS+eCz0A
+ B12SPsbAlkKJAZ4bfHP9Jh2ykxKTrnSn5sPgH+XXIS/5qqx7NXINDWBTfoWfZn3Qec4Jwz3pF
+ gcQ6j6uhW/U5vQ04EKEpA22zisTLbtHQCiq5OqVuqDpYjAsPwTbEmWw5afnXdN+fVkKyn0Ske
+ buM2LE7dprg0u4Pu4Pu4WTyI6sWB2N094Qx5g14v6Jp+O3zd3+b40IxZCWNORqo4l9MCgUzhb
+ Reo94c+tLiLdQwdha4vGge3tUXmfFL5YkMScvWonoSu8oFiY3lNcwyfyqTNvg14xEA0zh5obT
+ hBqsMEZ9a/ZQXf58+jSEboVH6xD2Rbx/nwRe18sruv6e2dNt5N8m+DnocbEt5QTeoNi7VIQ19
+ Zm6t90xt8S3hy4KOgDo/5FgRMW4AfCpkCoVbM2cLDfnBWNoFrzGnECmze2P/CpKOD47fM3Ev/
+ TM9tsKwb45PT7J3d+Z2Iv1J/DVz+jHxboSMOB7KRZv98Um/sFmLOHvV+vPUMo/dw+nfs/0wpW
+ wI0RHzpmoCoSU8+hBb/TZySB6WmtIMYliISUA41rGk5osjB5ayEYG1doBHbMtRe3wMriP68g1
+ kMV74UgROZsV4NuYqHFk4kOTQaBkNxLm2HUaNpGl0oJ3Cb5LmjolWsxtaFtR3yUobkc9sMRXt
+ oMvejVAWWtRNLHha3Q4/6q+M3N6tAjcW3Voxz3hsTcpPuDIA==
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,168 +120,149 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
- lkp <lkp@intel.com>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "kbuild-all@01.org" <kbuild-all@01.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
+ Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+ devel <devel@driverdev.osuosl.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Richard Weinberger <richard@nod.at>, Eric Biggers <ebiggers@kernel.org>,
+ torvalds <torvalds@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 20, 2019 at 06:58:00AM +0000, Li, Philip wrote:
-> > Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-> > 
-> > Hi Philip,
-> > 
-> > On Tue, Aug 20, 2019 at 02:50:38PM +0800, Philip Li wrote:
-> > > On Sun, Aug 18, 2019 at 09:25:04PM +0800, Gao Xiang wrote:
-> > > > On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
-> > > > > Hi Gao,
-> > > > >
-> > > > > I love your patch! Yet something to improve:
-> > > > >
-> > > > > [auto build test ERROR on linus/master]
-> > > > > [cannot apply to v5.3-rc4 next-20190816]
-> > > > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system]
-> > > >
-> > > > ... those patches should be applied to staging tree
-> > > > since linux-next has not been updated yet...
-> > > thanks for the feedback, we will consider this to our todo list.
-> > 
-> > Yes, many confusing reports anyway...
-> > (Just my personal suggestion, maybe we can add some hints on the patch email
-> > to indicate which tree can be applied successfully for ci in the future...)
-> thanks, this is good idea. On the other side, we support to add --base option to git format-patch
-> to automatically suggest the base, refer to https://stackoverflow.com/a/37406982 for detail.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer
+Content-Type: multipart/mixed; boundary="slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN";
+ protected-headers="v1"
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+To: Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
+ "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>, "Theodore Y. Ts'o"
+ <tytso@mit.edu>, Eric Biggers <ebiggers@kernel.org>,
+ Richard Weinberger <richard@nod.at>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
+ Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
+ Miao Xie <miaoxie@huawei.com>, devel <devel@driverdev.osuosl.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, Amir Goldstein
+ <amir73il@gmail.com>, linux-erofs <linux-erofs@lists.ozlabs.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+ Pavel Machek <pavel@denx.de>, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ torvalds <torvalds@linux-foundation.org>
+Message-ID: <735b8d15-bcb5-b11b-07c1-0617eb1e5ce9@gmx.com>
+Subject: Re: [PATCH] erofs: move erofs out of staging
+References: <790210571.69061.1566120073465.JavaMail.zimbra@nod.at>
+ <20190818151154.GA32157@mit.edu> <20190818155812.GB13230@infradead.org>
+ <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+ <c6f6de48-2594-05e4-2048-9a9c59c018d7@gmx.com>
+ <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
+In-Reply-To: <c9a27e20-33fa-2cad-79f2-ecc26f6f3490@huawei.com>
 
-Thanks for your information :) It seems a new patch format,
-I will take a try later.
+--slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+[...]
+>=20
+> Yeah, it looks like we need searching more levels mapping to find the f=
+inal
+> physical block address of inode/node/data in btrfs.
+>=20
+> IMO, in a little lazy way, we can reform and reuse existed function in
+> btrfs-progs which can find the mapping info of inode/node/data accordin=
+g to
+> specified ino or ino+pg_no.
+
+Maybe no need to go as deep as ino.
+
+What about just go physical bytenr? E.g. for XFS/EXT* choose a random
+bytenr. Then verify if that block is used, if not, try again.
+
+If used, check if it's metadata. If not, try again.
+(feel free to corrupt data, in fact btrfs uses some data as space cache,
+so it should make some sense)
+
+If metadata, corrupt that bytenr/bytenr range in the metadata block,
+regenerate checksum, call it a day and let kernel suffer.
+
+For btrfs, just do extra physical -> logical convert in the first place,
+then follow the same workflow.
+It should work for any fs as long as it's on single device.
+
+>=20
+>>
+>> It may depends on the granularity. But definitely a good idea to do so=
+
+>> in a generic way.
+>> Currently we depend on super kind student developers/reporters on such=
+
+>=20
+> Yup, I just guess Wen Xu may be interested in working on a generic way =
+to fuzz
+> filesystem, as I know they dig deep in filesystem code when doing fuzz.=
+
+
+Don't forget Yoon Jungyeon, I see more than one times he reported fuzzed
+images with proper reproducer and bugzilla links.
+Even using his personal mail address, not school mail address.
+
+Those guys are really awesome!
+
+> BTW,
+> which impresses me is, constructing checkpoint by injecting one byte, a=
+nd then
+> write a correct recalculated checksum value on that checkpoint, making =
+that
+> checkpoint looks valid...
+
+IIRC F2FS guys may be also investigating a similar mechanism, as they
+also got a hard fight against reports from those awesome reporters.
+
+So such fuzzed image is a new trend for fs development.
 
 Thanks,
-Gao Xiang
+Qu
 
-> Meanwhile, we will enhance the internal logic to find suitable base if possible.
-> 
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > >
-> > > >
-> > > > Thanks,
-> > > > Gao Xiang
-> > > >
-> > > > >
-> > > > > url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-erofs-fix-
-> > an-error-handling-in-erofs_readdir/20190818-191344
-> > > > > config: arm64-allyesconfig (attached as .config)
-> > > > > compiler: aarch64-linux-gcc (GCC) 7.4.0
-> > > > > reproduce:
-> > > > >         wget https://raw.githubusercontent.com/intel/lkp-
-> > tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > >         chmod +x ~/bin/make.cross
-> > > > >         # save the attached .config to linux build tree
-> > > > >         GCC_VERSION=7.4.0 make.cross ARCH=arm64
-> > > > >
-> > > > > If you fix the issue, kindly add following tag
-> > > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > >
-> > > > > All errors (new ones prefixed by >>):
-> > > > >
-> > > > >    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
-> > > > > >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undeclared
-> > (first use in this function); did you mean 'FS_NRSUPER'?
-> > > > >        err = -EFSCORRUPTED;
-> > > > >               ^~~~~~~~~~~~
-> > > > >               FS_NRSUPER
-> > > > >    drivers/staging/erofs/dir.c:110:11: note: each undeclared identifier is
-> > reported only once for each function it appears in
-> > > > >
-> > > > > vim +110 drivers/staging/erofs/dir.c
-> > > > >
-> > > > >     85
-> > > > >     86	static int erofs_readdir(struct file *f, struct dir_context *ctx)
-> > > > >     87	{
-> > > > >     88		struct inode *dir = file_inode(f);
-> > > > >     89		struct address_space *mapping = dir->i_mapping;
-> > > > >     90		const size_t dirsize = i_size_read(dir);
-> > > > >     91		unsigned int i = ctx->pos / EROFS_BLKSIZ;
-> > > > >     92		unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
-> > > > >     93		int err = 0;
-> > > > >     94		bool initial = true;
-> > > > >     95
-> > > > >     96		while (ctx->pos < dirsize) {
-> > > > >     97			struct page *dentry_page;
-> > > > >     98			struct erofs_dirent *de;
-> > > > >     99			unsigned int nameoff, maxsize;
-> > > > >    100
-> > > > >    101			dentry_page = read_mapping_page(mapping, i,
-> > NULL);
-> > > > >    102			if (dentry_page == ERR_PTR(-ENOMEM)) {
-> > > > >    103				errln("no memory to readdir of logical
-> > block %u of nid %llu",
-> > > > >    104				      i, EROFS_V(dir)->nid);
-> > > > >    105				err = -ENOMEM;
-> > > > >    106				break;
-> > > > >    107			} else if (IS_ERR(dentry_page)) {
-> > > > >    108				errln("fail to readdir of logical block %u of
-> > nid %llu",
-> > > > >    109				      i, EROFS_V(dir)->nid);
-> > > > >  > 110				err = -EFSCORRUPTED;
-> > > > >    111				break;
-> > > > >    112			}
-> > > > >    113
-> > > > >    114			de = (struct erofs_dirent *)kmap(dentry_page);
-> > > > >    115
-> > > > >    116			nameoff = le16_to_cpu(de->nameoff);
-> > > > >    117
-> > > > >    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-> > > > >    119				     nameoff >= PAGE_SIZE)) {
-> > > > >    120				errln("%s, invalid de[0].nameoff %u",
-> > > > >    121				      __func__, nameoff);
-> > > > >    122
-> > > > >    123				err = -EIO;
-> > > > >    124				goto skip_this;
-> > > > >    125			}
-> > > > >    126
-> > > > >    127			maxsize = min_t(unsigned int,
-> > > > >    128					dirsize - ctx->pos + ofs,
-> > PAGE_SIZE);
-> > > > >    129
-> > > > >    130			/* search dirents at the arbitrary position */
-> > > > >    131			if (unlikely(initial)) {
-> > > > >    132				initial = false;
-> > > > >    133
-> > > > >    134				ofs = roundup(ofs, sizeof(struct
-> > erofs_dirent));
-> > > > >    135				if (unlikely(ofs >= nameoff))
-> > > > >    136					goto skip_this;
-> > > > >    137			}
-> > > > >    138
-> > > > >    139			err = erofs_fill_dentries(ctx, de, &ofs, nameoff,
-> > maxsize);
-> > > > >    140	skip_this:
-> > > > >    141			kunmap(dentry_page);
-> > > > >    142
-> > > > >    143			put_page(dentry_page);
-> > > > >    144
-> > > > >    145			ctx->pos = blknr_to_addr(i) + ofs;
-> > > > >    146
-> > > > >    147			if (unlikely(err))
-> > > > >    148				break;
-> > > > >    149			++i;
-> > > > >    150			ofs = 0;
-> > > > >    151		}
-> > > > >    152		return err < 0 ? err : 0;
-> > > > >    153	}
-> > > > >    154
-> > > > >
-> > > > > ---
-> > > > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > > >
-> > > >
+>=20
+> Thanks,
+>=20
+
+
+--slQR6rSH5UnNorxY9BmaW69TgYDvJmTLN--
+
+--4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl1bs0sACgkQwj2R86El
+/qiHxgf9EuNDrR5H/dHCixK+MxIhu42YyiGiZIYxH9qGLoZN6JLd1FkWYuzGJrlv
+96F5Y50vW6iPslAnlmp3tFdmeEI6IMCiELXZAKjZOzbaba2bdzJWJUG75ZGpdxay
+IUaBIbOsiGealuKPcoEkeU9yzq9CtzoXgbLDt9Y5osokp0cRdzfzRVEUSQ/gj4QE
+EzOVDdNwTZbaaZboFlaSD4hbEgkNFxnq9C3qn4trxe4pVp7oaeK17wi3I1KHXo0Q
+I3griKjozf0Cp6rka4a3nCpZ/ML3busRZclXsLlnbHKGA0gQFpPkUqTrrojZORx4
+wBuwYdhYEWzsLK0+NcDgCe2z/ZRCog==
+=VtSx
+-----END PGP SIGNATURE-----
+
+--4LVjIQCVca5X3T5GkfFKKDlO5YDcA3qer--
