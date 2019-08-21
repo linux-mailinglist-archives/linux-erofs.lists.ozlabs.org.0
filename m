@@ -2,68 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6281896E25
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 02:19:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1C3496E27
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 02:19:16 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46CpDk5YH6zDrFd
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 10:19:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46CpDx3VZMzDrFL
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 10:19:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::641; helo=mail-pl1-x641.google.com;
+ (client-ip=2607:f8b0:4864:20::542; helo=mail-pg1-x542.google.com;
  envelope-from=caitlynannefinn@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="Y+y5p8B0"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="MH13mfy/"; 
  dkim-atps=neutral
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com
- [IPv6:2607:f8b0:4864:20::641])
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com
+ [IPv6:2607:f8b0:4864:20::542])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46CpDb4tx4zDqCW
- for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 10:18:51 +1000 (AEST)
-Received: by mail-pl1-x641.google.com with SMTP id f19so310803plr.3
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46CpDd2cqVzDqCW
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 10:18:54 +1000 (AEST)
+Received: by mail-pg1-x542.google.com with SMTP id i18so228611pgl.11
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 17:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id;
- bh=57gZcRfgDGHX2fT3IVW27Y0VYhsGx0ciLsG0pvlDHNg=;
- b=Y+y5p8B0lzLHuW5kG8ttgFqeebFNxTZObxgwNZkCBWf+QQLk00bDixWY6RzBduTqFe
- edkSMEFNdGWiMeFMUGvE8Ae01qK/32fR2gRIRFVPzil18srA2XfLmQjEsfo8mzvUMVbA
- RL/7fcoiT827dXrb1ZWE6jpZ+ICelcQjWSlgt/twGBWHQp5Cl8AM1QMACZULkNzs57ED
- 5xs/UTcKuYOkLDepi0uEoAzSc3ZgBU7E1IWpHOc+3KYCRw7OL4sY1yGjY8zlOahyLHS0
- 7PdiWY1g4wEPPteK4PzrROEZ5K4ceX8WLZKAQhJgfIvYYIswBZXC7qYGmhxFijfxG4VM
- j8hQ==
+ h=from:to:cc:subject:date:message-id:in-reply-to:references;
+ bh=c3LQHcY3+YvhpAJ3SOOoCNwpGf42ZIdm9oft5Rg6R8E=;
+ b=MH13mfy/rC2MWrFrghbk3ERrfOJ7Acc2V5PTmjiUJ2UNkoWSzaaCcQ+L1XS6wjV1NZ
+ fnz/Qw3+jI0mJo5ZTwDo2D43ey6zMwlKjjFfvwWh95XuqfRYmFrLLfMos7MItV2S8S4r
+ znUOap6+GdVm2fAzNACWW30Jy8d/tsw+kmVMyv6/B25kbodcxkaJo2wRykahpVFG8GUV
+ dgOV2Ww4hpl5Ll8M+MI+YDNaYItpk3EPoFrpBOsm7F/Rsj+1E8WEStN6Mu2h0GQ82wrl
+ 9VzRMbOjLagbaCiurxsYGBiJDRP4OQ9MOCrslguAFBz+LQ5B8KmQZW2F1xZJapyuE3iy
+ MMSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=57gZcRfgDGHX2fT3IVW27Y0VYhsGx0ciLsG0pvlDHNg=;
- b=LrlIuJ56abWif2TbVSlGbSQPf7BX74JkY6wf+QziGN+13rnnF07ZMacoC+7SEf49+7
- 8flRZvQmlIP01hHv5r0h6QQ2m52rhSB3ma6Rqi0wNDn1CsvzHkwD86TdIB5NQWzANnMg
- QQ4vpcZ+tBJ0fMgyZVcde8AxnDcg6+vNEq0u9yhgpRW9X3MPcSU4Cul8Ti0jhdDQP1hl
- Hgecsi0kiFZPT+W3XxtpJcZAn+pOFhWrsXNIhaASQ5piR127n6HJ/Tg5s3YAUILhyMYN
- 6tOwzQnhXEiT1YnBRxPEYgoToCXTT9wEwHorcgkqYmWt7tbycqGtxwHnfmB8GBEUruz4
- JUKQ==
-X-Gm-Message-State: APjAAAXmKzr3tGnwV4pSXojmC5a4hTX2cmrf7lnnRcPwYxsbtjD+E0E6
- q9DKXPjqvWgey7zyeGNC+5Y=
-X-Google-Smtp-Source: APXvYqxQmbLxyDLbT0LkOLDX9rn36HoZ95N9Vdi5ziVyq4qecfy7S6EgpHIvECqUKI4WrFTEsbf1Iw==
-X-Received: by 2002:a17:902:346:: with SMTP id
- 64mr31089028pld.151.1566346729667; 
- Tue, 20 Aug 2019 17:18:49 -0700 (PDT)
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+ :references;
+ bh=c3LQHcY3+YvhpAJ3SOOoCNwpGf42ZIdm9oft5Rg6R8E=;
+ b=L7FGn378CddJvzgekfaTMjrM/tjtlKbkxY3l6GFbloL8yXYevbs8/GfgiTawg1+ezN
+ GZbQwSKUWYiE8ARHOK4zHVXA2SSQDAuwMCqY3mFu0IQIl4w3ZAZSu6QU+TNx6B9mvZ/c
+ dTV5FIi6TVKKL2an2HFDzC4VkWalN1bE8D3yxwH/aLxV8G2Lq8Cirr4fJeZPNLjKIXdc
+ XiJTRTvn8FBHfeM5erdXzsAgiDiZ0ZPkHnCnxTilTFVvTEz4QCNE9D91xVaHaHTSguUI
+ u7Aq2bv1Qy5TblBzcZJO0j6glcv3HptpC0tQu4R6XKGdAyUTiv6niReknbjgKNYmbc2R
+ EzGw==
+X-Gm-Message-State: APjAAAXW7Ps43dtGRwjvvhOEemP7oJ9wWhvelpl9lrZcEdo2iKP0iTOg
+ 39JMAfy94dVYWbzPdyj8KsE=
+X-Google-Smtp-Source: APXvYqwwan2OY/ZV7PXfeMhMGdEvRd4vEiJuNjIlg98ZfD/In7j14ai4ajqEPw9W14GV2GUgiaRNmg==
+X-Received: by 2002:a17:90a:9202:: with SMTP id
+ m2mr2663705pjo.16.1566346730545; 
+ Tue, 20 Aug 2019 17:18:50 -0700 (PDT)
 Received: from localhost.localdomain (wsip-184-188-36-2.sd.sd.cox.net.
  [184.188.36.2])
- by smtp.googlemail.com with ESMTPSA id g2sm18806323pfm.32.2019.08.20.17.18.48
+ by smtp.googlemail.com with ESMTPSA id g2sm18806323pfm.32.2019.08.20.17.18.49
  (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
- Tue, 20 Aug 2019 17:18:49 -0700 (PDT)
+ Tue, 20 Aug 2019 17:18:50 -0700 (PDT)
 From: Caitlyn <caitlynannefinn@gmail.com>
 To: Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 0/2] Submitting my first patch series (Checkpatch fixes)
-Date: Tue, 20 Aug 2019 20:18:18 -0400
-Message-Id: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+Subject: [PATCH 1/2] staging/erofs/xattr.h: Fixed misaligned function
+ arguments.
+Date: Tue, 20 Aug 2019 20:18:19 -0400
+Message-Id: <1566346700-28536-2-git-send-email-caitlynannefinn@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,21 +86,35 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello!
+Indented some function arguments to fix checkpath warnings.
 
-This patch series cleans up some checkpatch fixes in erofs. The patches
-include balancing conditional braces and fixing some indentation. No testing
-done, all patches build and checkpath cleanly.
+Signed-off-by: Caitlyn <caitlynannefinn@gmail.com>
+---
+ drivers/staging/erofs/xattr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Caitlyn (2):
-  staging/erofs/xattr.h: Fixed misaligned function arguments.
-  staging/erofs: Balanced braces around a few conditional statements.
-
- drivers/staging/erofs/inode.c     |  4 ++--
- drivers/staging/erofs/unzip_vle.c | 12 ++++++------
- drivers/staging/erofs/xattr.h     |  6 +++---
- 3 files changed, 11 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
+index 35ba5ac..d86f5cd 100644
+--- a/drivers/staging/erofs/xattr.h
++++ b/drivers/staging/erofs/xattr.h
+@@ -74,14 +74,14 @@ int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
+ ssize_t erofs_listxattr(struct dentry *, char *, size_t);
+ #else
+ static int __maybe_unused erofs_getxattr(struct inode *inode, int index,
+-	const char *name,
+-	void *buffer, size_t buffer_size)
++					 const char *name, void *buffer,
++					 size_t buffer_size)
+ {
+ 	return -ENOTSUPP;
+ }
+ 
+ static ssize_t __maybe_unused erofs_listxattr(struct dentry *dentry,
+-	char *buffer, size_t buffer_size)
++					      char *buffer, size_t buffer_size)
+ {
+ 	return -ENOTSUPP;
+ }
 -- 
 2.7.4
 
