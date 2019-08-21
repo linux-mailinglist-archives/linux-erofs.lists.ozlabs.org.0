@@ -1,52 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBDF596F88
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 04:32:18 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F60A97008
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 05:10:11 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46CsBS1d04zDqnB
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 12:32:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Ct280JG3zDr9j
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 13:10:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.189; helo=huawei.com;
+ (client-ip=45.249.212.190; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46CsBL6FDqzDqgr
- for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 12:32:10 +1000 (AEST)
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
- by Forcepoint Email with ESMTP id AAA6243E135E022D3262;
- Wed, 21 Aug 2019 10:32:03 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 21 Aug 2019 10:32:03 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 21 Aug 2019 10:32:02 +0800
-Date: Wed, 21 Aug 2019 10:31:22 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Ct233fG6zDr99
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 13:10:01 +1000 (AEST)
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id B3456DC69904F5E4D189;
+ Wed, 21 Aug 2019 11:09:55 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
+ 2019 11:09:48 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
-To: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 2/2] staging/erofs: Balanced braces around a few
- conditional statements.
-Message-ID: <20190821023122.GA159802@architecture4>
-References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
- <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
- <7aaca457a3d3feb951082d0659eec568a908971f.camel@perches.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 4/6] staging: erofs: avoid loop in submit chains
+Date: Wed, 21 Aug 2019 11:09:08 +0800
+Message-ID: <20190821030908.40282-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7aaca457a3d3feb951082d0659eec568a908971f.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -59,65 +47,91 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- Caitlyn <caitlynannefinn@gmail.com>, linux-erofs@lists.ozlabs.org,
- "Tobin C . Harding" <me@tobin.cc>
+Cc: devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>, weidu.du@huawei.com,
+ linux-fsdevel@vger.kernel.org, Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 20, 2019 at 07:26:46PM -0700, Joe Perches wrote:
-> On Tue, 2019-08-20 at 20:18 -0400, Caitlyn wrote:
-> > Balanced braces to fix some checkpath warnings in inode.c and
-> > unzip_vle.c
-> []
-> > diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-> []
-> > @@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
-> >  	mutex_lock(&work->lock);
-> >  	nr_pages = work->nr_pages;
-> >  
-> > -	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
-> > +	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
-> >  		pages = pages_onstack;
-> > -	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > -		 mutex_trylock(&z_pagemap_global_lock))
-> > +	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > +		 mutex_trylock(&z_pagemap_global_lock)) {
-> 
-> Extra space after tab
+As reported by erofs-utils fuzzer, 2 conditions
+can happen in corrupted images, which can cause
+unexpected behaviors.
+ - access the same pcluster one more time;
+ - access the tail end pcluster again, e.g.
+            _ access again (will trigger tail merging)
+           |
+     1 2 3 1 2             ->   1 2 3 1
+     |_ tail end of the chain    \___/ (unexpected behavior)
+Let's detect and avoid them now.
 
-There is actually balanced braces in linux-next.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/erofs/zdata.c#n762
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+Hi Greg,
 
-> 
-> >  		pages = z_pagemap_global;
-> > -	else {
-> > +	} else {
-> >  repeat:
-> >  		pages = kvmalloc_array(nr_pages, sizeof(struct page *),
-> >  				       GFP_KERNEL);
-> >  
-> >  		/* fallback to global pagemap for the lowmem scenario */
-> >  		if (unlikely(!pages)) {
-> > -			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES)
-> > +			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES) {
-> >  				goto repeat;
-> > -			else {
-> > +			} else {
-> 
-> Unnecessary else
+ It seems that you picked up [PATCH 4/6], could you replace it
+ with this v2? It seems that I missed a condition here, which
+ can be observed after a much longer fuzzing on corrupted
+ compressed images. Or you could just drop this [PATCH 4/6]
+ patch when you apply to staging-next since those patches are
+ independent.
 
-There is not the "goto repeat" in linux-next anymore.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/erofs/zdata.c#n765
-
-Thanks,
+Thanks you very much,
 Gao Xiang
 
-> 
-> >  				mutex_lock(&z_pagemap_global_lock);
-> >  				pages = z_pagemap_global;
-> >  			}
-> 
-> 
+ drivers/staging/erofs/zdata.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
+index 2d7aaf98f7de..5f8d3ac0e813 100644
+--- a/drivers/staging/erofs/zdata.c
++++ b/drivers/staging/erofs/zdata.c
+@@ -132,7 +132,7 @@ enum z_erofs_collectmode {
+ struct z_erofs_collector {
+ 	struct z_erofs_pagevec_ctor vector;
+ 
+-	struct z_erofs_pcluster *pcl;
++	struct z_erofs_pcluster *pcl, *tailpcl;
+ 	struct z_erofs_collection *cl;
+ 	struct page **compressedpages;
+ 	z_erofs_next_pcluster_t owned_head;
+@@ -353,6 +353,11 @@ static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
+ 		return NULL;
+ 
+ 	pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
++		DBG_BUGON(1);
++		erofs_workgroup_put(grp);
++		return ERR_PTR(-EFSCORRUPTED);
++	}
+ 
+ 	cl = z_erofs_primarycollection(pcl);
+ 	if (unlikely(cl->pageofs != (map->m_la & ~PAGE_MASK))) {
+@@ -379,7 +384,13 @@ static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
+ 		}
+ 	}
+ 	mutex_lock(&cl->lock);
++	/* used to check tail merging loop due to corrupted images */
++	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
++		clt->tailpcl = pcl;
+ 	clt->mode = try_to_claim_pcluster(pcl, &clt->owned_head);
++	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
++	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
++		clt->tailpcl = NULL;
+ 	clt->pcl = pcl;
+ 	clt->cl = cl;
+ 	return cl;
+@@ -432,6 +443,9 @@ static struct z_erofs_collection *clregister(struct z_erofs_collector *clt,
+ 		kmem_cache_free(pcluster_cachep, pcl);
+ 		return ERR_PTR(-EAGAIN);
+ 	}
++	/* used to check tail merging loop due to corrupted images */
++	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
++		clt->tailpcl = pcl;
+ 	clt->owned_head = &pcl->next;
+ 	clt->pcl = pcl;
+ 	clt->cl = cl;
+-- 
+2.17.1
+
