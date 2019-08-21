@@ -2,72 +2,77 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44DA496E26
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 02:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD1296E75
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 02:40:02 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46CpDp72c6zDrFm
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 10:19:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Cpht5F6nzDqTD
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 10:39:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1566347998;
+	bh=3L0ttFN6yuOqS3IgKoYwq0g+vZaJmZiiChWp5ZFA68E=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=kKTi0H2wNvEAarHOQTa7J5sPAQ7d5NOULoozNf0NapL077aI0iSDmWsLXCainYykI
+	 pqOOdDSadfUcFkIOfg9MqkUhU0zXhuUfD/mCju9sMC5D3UScGfKRdyYGJ97CJwkIuS
+	 bf2jtZ0HLZDREqI3YQn3VfczhgAuYVNUWFI1Oep8AIViSb+P//7UoyfrOQX5ti+vV4
+	 kVbkm3V5v/dY00JwGZ13UUbUrKF79vxBcD7e35Nc4u8JSsnrPsFTsxtlkcvu3cucx2
+	 95ACoiZDtDxkHUPS9o9kFaZcl9eU30vYhLbZC3CjQTsZ7R8IhPyscQSRoqyaV/eLMB
+	 Sc7LdcveJONwg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::642; helo=mail-pl1-x642.google.com;
- envelope-from=caitlynannefinn@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=77.238.176.164; helo=sonic311-32.consmr.mail.ir2.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="k4427tlh"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="cjO6zdAg"; 
  dkim-atps=neutral
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com
- [IPv6:2607:f8b0:4864:20::642])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic311-32.consmr.mail.ir2.yahoo.com
+ (sonic311-32.consmr.mail.ir2.yahoo.com [77.238.176.164])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46CpDd2mmYzDqdw
- for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 10:18:54 +1000 (AEST)
-Received: by mail-pl1-x642.google.com with SMTP id y8so290121plr.12
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Aug 2019 17:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id:in-reply-to:references;
- bh=wYmP7l7xYXEkpyG7dJwFSke/FRHdQ6zd7wLrtCe0Nro=;
- b=k4427tlhkbAql47p/Igzqz9qG7iGY4VAjnTQCSvYQF2yNIuU9dyzJC4kHtm0M4r5eR
- sqY80jG2mnHwORi1nDP7JqJPuHA2FqonA4I3Rp8wmASaosWeQg4MUwiQfW+HIqn2T8Nh
- xORTETo+y/tIN3brE8Y+v2OMPBAiaQaX1f3NP23rJCEZRPPOvnvwCfuJnK57bBcfwqV/
- 7ixqGAQnp8uQnxqAZ9d2Fawi6vDDSM45A2MJPObeCosJZLGdPRdq3pING/UyJWnltOHt
- PnAUEVlSqR4ZDKjlLk5bYhYAZ0+EUbNrV2O0aVunvGz3l6+AhIFtwuRVz0siuG1io3cP
- Gx1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
- :references;
- bh=wYmP7l7xYXEkpyG7dJwFSke/FRHdQ6zd7wLrtCe0Nro=;
- b=Tp0qzK8kso0EMrNXQ1DSED/PpEWslrZUhjNVpc+DpTdDbB7JEvKeIs1fl2iPTlC3Uy
- 8HrYcsl8CPti7bu/c625lzq6kY0JuT0ozBjkeWv5NwqOKek1C+GbyMnvDlYUTpnJscZ3
- JFSagldeaWYcmGq5bw+iQkeXjVhUn9gJoDX7oKf5BgFnXUcUVjFGn6YMCWu1QH+T5h7c
- SEs3+M5DqXeQ8k4n9X758KSPJE507WsJSuxd0qraod5soHb7lywkuEHb6tAe6Obdh0vN
- 81JaHS5WOP3Dqy+exoDjWi5nAKZ1afFrObh1x2qLGRVV1Krdpow8SAWdEX/KXpJneBEE
- yQDQ==
-X-Gm-Message-State: APjAAAVnsJbrE4ZKtiTjNPI4uWsnpNqjmrkncyNJWh34gh+RLMyvwrKi
- BOWw3eYscLKbLtwLj0PvyYw=
-X-Google-Smtp-Source: APXvYqy4XOtwQD0YpAxEXf3o3I+klcEKkKhlauOgufGqS5op00QX4mOatNkI/mvUJE8aQ6wDXxuCsA==
-X-Received: by 2002:a17:902:6b07:: with SMTP id
- o7mr30180035plk.180.1566346731539; 
- Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
-Received: from localhost.localdomain (wsip-184-188-36-2.sd.sd.cox.net.
- [184.188.36.2])
- by smtp.googlemail.com with ESMTPSA id g2sm18806323pfm.32.2019.08.20.17.18.50
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
- Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
-From: Caitlyn <caitlynannefinn@gmail.com>
-To: Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 2/2] staging/erofs: Balanced braces around a few conditional
- statements.
-Date: Tue, 20 Aug 2019 20:18:20 -0400
-Message-Id: <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Cphj1HKjzDqQM
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 10:39:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1566347982; bh=dBz1oFdgnI/WKEGr74peQBzy6c6LbhKbyJcmv8I8LL8=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=cjO6zdAgZdoP/eR+2UwDbg4EHc7L79a8eHYvW6+PLb3NU/onSAymNusV/OQtMwCdgAbGu5Vel7ABoJcwS6+KQz1nyRlW9+33t3I2ykkDehqpkjh/5NyI/t2YcN29kXf/8yj5rn9sOmkevQCPukD78x8F2gAHfvNU1j8V/N2n+haZrDJPGs4ZzN41c7H0yop1x1p3N2pFo2M63WyW+SfVU00T2fO+FXxJ6vnbSdHQPfQWPlwerb4LADYF439OBOZ+alPE5Rpou+tauQWpUIs426kvr/JImM9FNO6IQ2R/1+C4/Gy32yvkfqotGbwpwvg86dVmqI/ipBzoluoWhoZIgw==
+X-YMail-OSG: .HtFFrsVM1m6qxT_kGxPkFMO1nJ9npRODAPvKCtCYnCvOjsoN7lJpSs1yEh.JlM
+ aPvjkilVSpUpBTe5FhGM8myRDj9y.Hvt_abptFP16G3ycLR7ZZqLfAZ081TXy876P5x5gpDFHqUg
+ NBgUHnR8BpFeMmpkQtuMEYrrFqdHQfAENM2ocH0_kFhlKFwvoWGMHEmy6zOHDPQPi0onR4v0Irtq
+ 4zgYalI0OBZckbpn8mwd_RHYHhXItkFXFeh6lP8Oz76AgklOps0zvr7M0JHxWx6JTu_ZoTevUEN2
+ _kEcHBfYgeXIRubAXkkml6.2QCTRfE657BNliFnClP9w1MxKJnLx0X0vA8EnN0VTPAnb5euUsMF8
+ ODxliNVZ4lAmzKF6bgN9cm_EnYLzMHPyfITaKR1BhWMAagitSIp2tPETh_oGT5ayeVQbMy7MjXoy
+ di5mEQ1ylQDST6CIzUQdo2o.oIa7keucoLL3xSUfshKFE60X4k9k50naVkDd4nVQJ7HmmgkA8YfI
+ VWAZCOfT_iZ7_XtaEX1fYeBEAoIwiA0ZDEwazERPEoeTrX.bPi88cvmz8BehOPH3PbX4eL7llnSb
+ ZEd3Uspd_.e8q.Eje1VH2AYPCWBDApMbc9c.kbjPeGR4gLDbMh7hegEDg6.vzNj.XHi3vNJHX.29
+ apPZdMfViWtU1NryPvxpdLRxjxqqnI4eRMhW6UpiUW1gMc4WCwcXF6v7H4jnxXTtt1WSnCXob35g
+ ytGIEE4qlzGnf5mddo7ivWrxcnwAUupipJGQDG0BLICWlRO3nAB8AcuHuzMNkQjPTEwiwldVRkcO
+ c4UAty8MlhFte0CHpjrMBNdcyZa27aFrDXs_vgGV.fi47p7xI.AQ3hivjzAbLV0rTvDh8bGSfp_Y
+ Ryqyq42K1YaxcCdHqdSKKXEZ5aiDDK_3gRk1v.aRfwBTmCL.0NlDSxJg19.ZtpntYAi.8DFzgnmB
+ IZARlJBF5VjRT.uYAL44vnJlsCqsyNFcK.L8n6TirJ36gkee1R4IpVJttouwH1gLfeEGlCrszUFK
+ r9HRz3fGS7moHe7LClIpSyrmf8aousPS8ef8MTHyKXO9MfpzAeJD9hwCo4Fjzywa3w9PE.Jt3709
+ _AgVoV6UW.xTAzjPcIrWNpCkRLGPhILlKYU10jk8s8jMLDxnE2RoNgnkEvBJGrceEnFnr1JHZ2zZ
+ 66ZxHV9SXHbKAsGZQ3MVLeXSmmI9pADk.a2nJ3.BnTdho6UpQCz2BDCGpO1gH_7RwpX7X2CDya2x
+ CHgJHxvKyVJxWWZnSJbbQ_YBMroxGTak-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic311.consmr.mail.ir2.yahoo.com with HTTP; Wed, 21 Aug 2019 00:39:42 +0000
+Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 79fa87127151e4dc10a6f5a22ec543fa; 
+ Wed, 21 Aug 2019 00:39:36 +0000 (UTC)
+Date: Wed, 21 Aug 2019 08:39:29 +0800
+To: Caitlyn <caitlynannefinn@gmail.com>
+Subject: Re: [PATCH 0/2] Submitting my first patch series (Checkpatch fixes)
+Message-ID: <20190821003717.GA18606@hsiangkao-HP-ZHAN-66-Pro-G1>
 References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,70 +84,44 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, "Tobin C . Harding" <me@tobin.cc>,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Caitlyn <caitlynannefinn@gmail.com>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Balanced braces to fix some checkpath warnings in inode.c and
-unzip_vle.c
+Hi Caitlyn,
 
-Signed-off-by: Caitlyn <caitlynannefinn@gmail.com>
----
- drivers/staging/erofs/inode.c     |  4 ++--
- drivers/staging/erofs/unzip_vle.c | 12 ++++++------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+On Tue, Aug 20, 2019 at 08:18:18PM -0400, Caitlyn wrote:
+> Hello!
+> 
+> This patch series cleans up some checkpatch fixes in erofs. The patches
+> include balancing conditional braces and fixing some indentation. No testing
+> done, all patches build and checkpath cleanly.
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 4c3d8bf..8de6fcd 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -278,9 +278,9 @@ struct inode *erofs_iget(struct super_block *sb,
- 		vi->nid = nid;
- 
- 		err = fill_inode(inode, isdir);
--		if (likely(!err))
-+		if (likely(!err)) {
- 			unlock_new_inode(inode);
--		else {
-+		} else {
- 			iget_failed(inode);
- 			inode = ERR_PTR(err);
- 		}
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index f0dab81..f431614 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	mutex_lock(&work->lock);
- 	nr_pages = work->nr_pages;
- 
--	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
-+	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
- 		pages = pages_onstack;
--	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
--		 mutex_trylock(&z_pagemap_global_lock))
-+	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-+		 mutex_trylock(&z_pagemap_global_lock)) {
- 		pages = z_pagemap_global;
--	else {
-+	} else {
- repeat:
- 		pages = kvmalloc_array(nr_pages, sizeof(struct page *),
- 				       GFP_KERNEL);
- 
- 		/* fallback to global pagemap for the lowmem scenario */
- 		if (unlikely(!pages)) {
--			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES)
-+			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES) {
- 				goto repeat;
--			else {
-+			} else {
- 				mutex_lock(&z_pagemap_global_lock);
- 				pages = z_pagemap_global;
- 			}
--- 
-2.7.4
+I think you need to work on the latest staging tree or linux-next.
+This patchset cannot be applied (there is the only valid place in inode.c,
+I will reply in the following patch.)
 
+Thanks,
+Gao Xiang
+
+> 
+> Caitlyn (2):
+>   staging/erofs/xattr.h: Fixed misaligned function arguments.
+>   staging/erofs: Balanced braces around a few conditional statements.
+> 
+>  drivers/staging/erofs/inode.c     |  4 ++--
+>  drivers/staging/erofs/unzip_vle.c | 12 ++++++------
+>  drivers/staging/erofs/xattr.h     |  6 +++---
+>  3 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
+> _______________________________________________
+> devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
