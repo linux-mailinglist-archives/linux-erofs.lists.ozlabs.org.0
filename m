@@ -2,82 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1866C97F6D
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 17:52:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F9A98050
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2019 18:38:52 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46DBxt03bqzDqnW
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2019 01:52:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1566402754;
-	bh=XqFCbLFVf0riDfs2WIC9jy0ErofcF43Rv22cRPocL/Q=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=GU+LLnFO89KYhXHhaqlyps2l40dh2XXkbLiIszpNW9vWVmFmBr8yPnoigWZ5XPyVx
-	 qWiX5cGmEqMe5WfdVrmF3NnaxSoEsdIOH7AskWu/OUgQLiaoKZ4VhCqL6bbIZr0F1f
-	 gSbNvJ2oMux1NFvqlkXRWHBpyDtr6JYD1zzuZ0Ltgt9D/pyPJN9VBHsr/LH8kaOV/o
-	 rzPB9uAOX3HvvUvVhVV+WfaBCgsM6MWC+ACOQTOHup3uzC8iquL6n98J6o2XRlxjQn
-	 piuXU4n3NOAuPrjgq4fhzKZXkQgzOfySDpvnCSX778G32Euj4cB7FtTx1cqGbpqOgo
-	 /G2pZyHbe7A6w==
+	by lists.ozlabs.org (Postfix) with ESMTP id 46DCzF267RzDqRC
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2019 02:38:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.69.82; helo=sonic314-19.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::444; helo=mail-pf1-x444.google.com;
+ envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="tpWLkJHv"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="CnpdoA6S"; 
  dkim-atps=neutral
-Received: from sonic314-19.consmr.mail.gq1.yahoo.com
- (sonic314-19.consmr.mail.gq1.yahoo.com [98.137.69.82])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com
+ [IPv6:2607:f8b0:4864:20::444])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46DBxh6fKCzDqcK
- for <linux-erofs@lists.ozlabs.org>; Thu, 22 Aug 2019 01:52:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1566402738; bh=iTroMwNCz0Ok+97McvMjs1IUkl8f42sTIG9Axgs6bb8=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=tpWLkJHvp5wDL9lOErA+mK5oaMKtJi0s4i09AHBLHbf95o6w5ASKzs6O/9dKtvC5Pa/wp+acouUpwhClDxofcjmsVmABXh4l45rl0wVMz6viNMNt9ihbZTNDQD6PYeHWieJtCzbHxHWxZGk8rimEdbOi5aF9CUHlkQh2pTiHzCkRDt1IQRyfyTP794vvDGOZOmuud/xj30fkkl+it+3IJDlhTNu/v+2cfSO5x1LltfcEeeSEvpQYAQ2ZPduS13fRUWdYxiSF8dvHQ7nB2AKhRTHfOlL8Y34q1adsdmNPxmFylGk2ctfX3Je8iJ8QTw5cRtpUHrBAoDxlwgF0SrX28Q==
-X-YMail-OSG: ACr3z4gVM1nQcSJWKwDoFqS9sY8unHRHRiwM9wt_EilF9KlIPY1BSkpT9aqvnq8
- NHM1x8Yzu3SZPqv6Loh.JKQsZN.qZGVhNBBisiIACy1lnFbWqd_mEFFCDSyvgBMPgDiW0NMSgJnV
- Vywe6hfL15SYBJ.Nj4lUpjpbPBxCxoLa94lr08SfRDRmmYl7JQCcT0ih.iuxckBLtlKJ0ALw9AlM
- 5BFHSJ9BTMS9pHgX07eLgozEoakSvBbE1DiVovzTF34Q6Z9t2V_rXeAJ4HJsHFRfmIhqhXABuj5w
- J6qOqdbdv2oP0VHnSmtJZFJpnlwrobY5qzoPUHaCpRzuY2Dnnrxi_CtxAR_Ojo2tWFC2Juh9IBZa
- KaiJw4rAKHL.1Od2mzdmf1Pg1Dcm3XYwblQk71jU8jMS7o8J9aYiqt6wHNdjoSEL3wL_vyr2Yqc6
- TaBeOe2ePbE1tOplYVPjZQPwZHgh8OBhoQS6HaIgd6Ej5D27QpKYNum3OO91VQ2y1nzLBsNwelmP
- AZCRO1DF8rR1EBzytFg8nAtFRZ2c3A11JFjQi4E18RbleqsUWD6x0NKXDqOrLGNoVQ4ZMX__br9M
- 7cVRZJstjrv10E7G9Onsdd1Xd0DJbnNy36u1mCMr26k0yscqul4BYP2D1PN_YHq65HrVCA5q1_x6
- GKpy5N.VSrbERBBVaUemEBK.eAnzkD0vftwdXp0bMh.fkPkkdWeqdH_d8ym0zBCy7XIN1sArvI2t
- 7lmmg4AgJ0Q.dxn6ZI8dMTFSFwuJXkWOFeeMvrZZoqwIAElwRcU3cCwTpnjciR_CaV8B0pIZBi0U
- JLXSsUVCu.N11CuwbRm8e4gGzB6HWjfOYnCug0FQRfDilv7_88oLkudbdRPzhhQDW7Ij6GC_Y2yg
- OkpS9uO59tlPbq3Q0ZagSxx5CWzpxyVd1F1s4dzWHeonvvC_JfG3XwRVlUgKfArQRpyC73P20Abd
- huyiX.nUI1u7.Utfo8RTX6gt2hUaC6Sjr.B5bQoSeaN7jQlrY19Ipk3dkVC7vyfGwcItJ5ju4Yt1
- Kk4Zo46YSt6jwUtRv6YvJapziBmjHQ46k0_yxhDqAeAalOdXtzDy37LDtSNt4R8_8fUnrvjiB9T0
- a4FcIse013QugDOgvyGmVdHmMkj.PxauN4XPqdGHu04SEpWiHH53XDyMhz6BtXXWpjT7.6PZB_44
- .MMyM1l6w1xYeWYq01w.7kcvqCFhcIifG4kT1Jz0eLh2FYh9wPepNH1IPMgNhgli_0gPGkaM5SVN
- yjKYGiCAbGpiQ9cR71Tzp7N7acQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic314.consmr.mail.gq1.yahoo.com with HTTP; Wed, 21 Aug 2019 15:52:18 +0000
-Received: by smtp403.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 49078682cac6f4c277a5635d11b259eb; 
- Wed, 21 Aug 2019 15:52:17 +0000 (UTC)
-Date: Wed, 21 Aug 2019 23:52:09 +0800
-To: "Tobin C. Harding" <me@tobin.cc>
-Subject: Re: [PATCH 2/2] staging/erofs: Balanced braces around a few
- conditional statements.
-Message-ID: <20190821155205.GB5060@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
- <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
- <7aaca457a3d3feb951082d0659eec568a908971f.camel@perches.com>
- <20190821023122.GA159802@architecture4>
- <20190821151241.GF12461@ares>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821151241.GF12461@ares>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46DCz81C0ZzDqQC
+ for <linux-erofs@lists.ozlabs.org>; Thu, 22 Aug 2019 02:38:43 +1000 (AEST)
+Received: by mail-pf1-x444.google.com with SMTP id i30so1769649pfk.9
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2019 09:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=5HSx9u1kStwCMGO6efub2/3ZVk7xFOLAP7qgCt/Iscg=;
+ b=CnpdoA6SvnHT0ne7LLGn9PZ1l6SovcQhcHLQg/q/tFj6GFHFpUGjCaKTdC2q9CVbpd
+ NaPW+Z+5dgCVg7xAKJ9ari1DXx6xoqSJAHqEKXtTQiDtvTICCMXfU9O5Cfx73wBNUFUp
+ c843NlR/D4esUfz1sgOeRm9ueBi0rR8uppXDv5bi3Q4Wa5KToPwMlB0F4OJxw/sQlO+x
+ u6saMWl0YE0IHUsCYBE+3V+CzujveQejwey+kDd+n4xh6juFsXTzP4Fevw+ihqyoT8am
+ 7SA7Qoo6MtabER+04i+f0XEOwBhi1Uc1p2U1bjxuseelUH/kqjUdWc8yUWOEQ3Mr0ABX
+ 4eew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=5HSx9u1kStwCMGO6efub2/3ZVk7xFOLAP7qgCt/Iscg=;
+ b=LNgZHxR5Pa9z/WnxDTLZXltFvEPQgH9bRFpwZVfJTT1dDIYezx561C2v/byzoP5V89
+ ojBhq8DFnmQxhB+8ss+gqFCmWsXfT8WHrcrpuMTC9VoH9koXLQOAZ/H0RRZl+IZasCGx
+ U/TNj4n8wHSjzjWRc+75joz9WymvUweS5hyXMqAguYl6wRs1yW8kQvAWoQeqr+LOZxT0
+ xXJs8Nt9/Lmf9U57/2eVPfw0fr0BKbROn5h/Hj9htuaEVzFUR767pX/kYLFkqdWNEQ+5
+ DqBwCAeO7Hjqkim80pVFcI0JFze+2a42vJMWIuiK6SFAvoy0xS+GZTkquurcMw43Rhsm
+ SFTQ==
+X-Gm-Message-State: APjAAAX32b9zC0nAS5Iuo2ZZyy/AtrQmlyO1QEOJrLTixtR14uwRTimu
+ P/8rGxX4qRWLcwUo+l7BPxuvA6Pi
+X-Google-Smtp-Source: APXvYqyn5fhvVZLUt5kZ09YTz0EnWRFhf40PzKsuzZnJ3C0sCXR3gxsg5qvuDH3nMR5H1iS22z4gSA==
+X-Received: by 2002:a17:90b:8e:: with SMTP id bb14mr858647pjb.35.1566405518931; 
+ Wed, 21 Aug 2019 09:38:38 -0700 (PDT)
+Received: from localhost.localdomain ([103.97.240.130])
+ by smtp.gmail.com with ESMTPSA id v14sm23489800pfm.164.2019.08.21.09.38.34
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Wed, 21 Aug 2019 09:38:37 -0700 (PDT)
+From: Pratik Shinde <pratikshinde320@gmail.com>
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [PATCH] erofs-utils: erofs debug utility.
+Date: Wed, 21 Aug 2019 22:08:08 +0530
+Message-Id: <20190821163808.6643-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,56 +73,152 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
- linux-erofs@lists.ozlabs.org, Caitlyn <caitlynannefinn@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Tobin,
+Hello Maintainers,
 
-On Wed, Aug 21, 2019 at 08:13:35AM -0700, Tobin C. Harding wrote:
-> On Wed, Aug 21, 2019 at 10:31:22AM +0800, Gao Xiang wrote:
-> > On Tue, Aug 20, 2019 at 07:26:46PM -0700, Joe Perches wrote:
-> > > On Tue, 2019-08-20 at 20:18 -0400, Caitlyn wrote:
-> > > > Balanced braces to fix some checkpath warnings in inode.c and
-> > > > unzip_vle.c
-> > > []
-> > > > diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-> > > []
-> > > > @@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
-> > > >  	mutex_lock(&work->lock);
-> > > >  	nr_pages = work->nr_pages;
-> > > >  
-> > > > -	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
-> > > > +	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
-> > > >  		pages = pages_onstack;
-> > > > -	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > > > -		 mutex_trylock(&z_pagemap_global_lock))
-> > > > +	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > > > +		 mutex_trylock(&z_pagemap_global_lock)) {
-> > > 
-> > > Extra space after tab
-> > 
-> > There is actually balanced braces in linux-next.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/erofs/zdata.c#n762
-> 
-> Which tree did these changes go in through please Gao?  I believe
-> Caitlyn was working off of the staging-next branch of Greg's staging
-> tree.
+After going through the recent mail thread between linux's filesystem folks
+on erofs channel, I felt erofs needs an interactive debug utility (like xfs_db)
+which can be used to examine erofs images & can also be used to inject errors OR
+fuzzing for testing purpose & dumping different erofs meta data structures
+for debugging.
+In order to demonstrate above I wrote an experimental patch that simply dumps
+the superblock of an image after mkfs completes.the full fletch utility will run
+independently and be able to seek / print / modify any byte of an erofs image,
+dump structures/lists/directory content of an image.
 
-I don't think so, the reason is that unzip_vle.c was renamed to zdata.c
-months ago, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/erofs?h=staging-next
+NOTE:This is an experimental patch just to demonstrate the purpose. The patch
+lacks a lot of things like coding standard, and new code runs in the context
+of mkfs itself.kindly ignore it.
 
-so I think the patch is outdated when I first look at it.
+kindly provide your feedback on this.
 
-Thanks,
-Gao Xiang
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ include/erofs/io.h |  8 ++++++++
+ lib/io.c           | 27 +++++++++++++++++++++++++++
+ mkfs/main.c        | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
 
-> 
-> thanks,
-> Tobin.
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 4b574bd..e91d6ee 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -18,6 +18,7 @@
+ 
+ int dev_open(const char *devname);
+ void dev_close(void);
++int dev_read(void *buf, u64 offset, size_t len);
+ int dev_write(const void *buf, u64 offset, size_t len);
+ int dev_fillzero(u64 offset, size_t len, bool padding);
+ int dev_fsync(void);
+@@ -30,5 +31,12 @@ static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
+ 			 blknr_to_addr(nblocks));
+ }
+ 
++static inline int blk_read(void *buf, erofs_blk_t blkaddr,
++			   u32 nblocks)
++{
++	return dev_read(buf, blknr_to_addr(blkaddr),
++			blknr_to_addr(nblocks));
++}
++
+ #endif
+ 
+diff --git a/lib/io.c b/lib/io.c
+index 15c5a35..87d7d6c 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -109,6 +109,33 @@ u64 dev_length(void)
+ 	return erofs_devsz;
+ }
+ 
++int dev_read(void *buf, u64 offset, size_t len)
++{
++	int ret;
++
++	if (cfg.c_dry_run)
++		return 0;
++
++	if (!buf) {
++		erofs_err("buf is NULL");
++		return -EINVAL;
++	}
++	if (offset >= erofs_devsz || len > erofs_devsz ||
++	    offset > erofs_devsz - len) {
++		erofs_err("read posion[%" PRIu64 ", %zd] is too large beyond the end of device(%" PRIu64 ").",
++			  offset, len, erofs_devsz);
++		return -EINVAL;
++	}
++
++	ret = pread64(erofs_devfd, buf, len, (off64_t)offset);
++	if (ret != (int)len) {
++		erofs_err("Failed to read data from device - %s:[%" PRIu64 ", %zd].",
++			  erofs_devname, offset, len);
++		return -errno;
++	}
++	return 0;
++}
++
+ int dev_write(const void *buf, u64 offset, size_t len)
+ {
+ 	int ret;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index f127fe1..109486e 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -182,6 +182,41 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	return 0;
+ }
+ 
++void erofs_dump_super(char *img_path)
++{
++	struct erofs_super_block *sb;
++	char buf[EROFS_BLKSIZ];
++	unsigned int blksz;
++	int ret = 0;
++
++	if (img_path == NULL) {
++		erofs_err("image path cannot be null");
++		return;
++	}
++	ret = blk_read(buf, 0, 1);
++	if (ret) {
++		erofs_err("error reading super-block structure");
++		return;
++	}
++
++	sb = (struct erofs_super_block *)((u8 *)buf + EROFS_SUPER_OFFSET);
++	if (le32_to_cpu(sb->magic) != EROFS_SUPER_MAGIC_V1) {
++		erofs_err("not a erofs image");
++		return;
++	}
++
++	erofs_dump("magic: 0x%x\n", le32_to_cpu(sb->magic));
++	blksz = 1 << sb->blkszbits;
++	erofs_dump("block size: %d\n", blksz);
++	erofs_dump("root inode: %d\n", le32_to_cpu(sb->root_nid));
++	erofs_dump("inodes: %llu\n", le64_to_cpu(sb->inos));
++	erofs_dump("build time: %u\n", le32_to_cpu(sb->build_time));
++	erofs_dump("blocks: %u\n", le32_to_cpu(sb->blocks));
++	erofs_dump("meta block: %u\n", le32_to_cpu(sb->meta_blkaddr));
++	erofs_dump("xattr block: %u\n", le32_to_cpu(sb->xattr_blkaddr));
++	erofs_dump("requirements: 0x%x\n", le32_to_cpu(sb->requirements));
++}
++
+ int main(int argc, char **argv)
+ {
+ 	int err = 0;
+@@ -268,6 +303,7 @@ int main(int argc, char **argv)
+ 		err = -EIO;
+ exit:
+ 	z_erofs_compress_exit();
++	erofs_dump_super("dummy");
+ 	dev_close();
+ 	erofs_exit_configure();
+ 
+-- 
+2.9.3
+
