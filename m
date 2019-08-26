@@ -2,76 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C90D19D237
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 17:01:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A12329D2D7
+	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 17:33:29 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46HFZb5bFPzDqcx
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 01:01:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46HGHV48skzDqWw
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 01:33:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1566833606;
+	bh=WPcLqBr9HzvVct7VvJ5lE/73KjntQp5k5kq9ne/yros=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=CmWKe+Xp097SduL6eiUwdWYZmBhBMuVqtlu+J3tGi/k0V6B7yinCf9FoVHRKzEArG
+	 BYwOlekKDPlc8m9O0QmGqX91N2MpueYJPRjitr+TWw64UAOzgj0CjfPmnAAFLNrMEO
+	 vNmSPnJeKK3aB7kXRS3F3SQoB11Gw9jbLKcmhMihUPulQAxPz8PvwKGjA0m/YMG8Jx
+	 Knb59F5jeOJ6stx9/XR3PdB+jtYKoOwFtG/QLZgr7hc1rluF8ar3E1ewBZmT8yLa6x
+	 yGYJQXQWV2E3VD8EYXet/zTDT/uczIujN8D3FZc/N6D1Tm1G0aNivbu0pbOUCoOu9A
+	 /wb41R8Yp5OWw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::643; helo=mail-pl1-x643.google.com;
- envelope-from=blucerlee@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=77.238.177.145; helo=sonic314-19.consmr.mail.ir2.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="K1fPfeIC"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="I3qxZnnS"; 
  dkim-atps=neutral
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com
- [IPv6:2607:f8b0:4864:20::643])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic314-19.consmr.mail.ir2.yahoo.com
+ (sonic314-19.consmr.mail.ir2.yahoo.com [77.238.177.145])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46HFYp3YrMzDqc8
- for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 01:00:45 +1000 (AEST)
-Received: by mail-pl1-x643.google.com with SMTP id f19so10163894plr.3
- for <linux-erofs@lists.ozlabs.org>; Mon, 26 Aug 2019 08:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=subject:to:references:from:message-id:date:user-agent:mime-version
- :in-reply-to:content-transfer-encoding;
- bh=y05JoCwyZAklLkZKj7ea6f08y1IpJyCq24ihfEcW9gA=;
- b=K1fPfeICWEkstVWrq2KFYDzGYV7q6Y/rCCLsqpYweNBtUvb9IORvmbSCstETJ2Ooi7
- t7cV1kGRkcYe8/iNUbwaZv5a9Su0rdVYO9zRpYnaqF+EJsNqNuMfMw4WLSdL87ydOJND
- IEOnYKwUbfc1cSONWJd1dHCpB/TlrbtERwjyB5ObGprH9UnBDa+qtNnV29ZYwzILmBs3
- gcjNNkYHi414bAYUy/Yz1Tib7JKUEWZVxeJi5jeufIv1rWBnV9sKO9YkF/YJHyg2aLg7
- Ao8QYoxjQYborICco/04sc6p8YCx80S9VEp9r+UJZ/4krf1nbNTCuMSiCicrysCROqJ5
- q18Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:subject:to:references:from:message-id:date
- :user-agent:mime-version:in-reply-to:content-transfer-encoding;
- bh=y05JoCwyZAklLkZKj7ea6f08y1IpJyCq24ihfEcW9gA=;
- b=nbUL3R7PR/wBGafa897hCIX8pkpxpUZf6a2/+N7XoydrvJlRvf7ZX5DygEVc88/A/Z
- QT3OZw6zxqziDLA2gl9UwGPkriIz608YQ01qjU1C4oLLnf0oRU9/LHRAB0e4W3nuKgg0
- CflVFnz9YMH2/4F3nnz8o7UlaFyWXHTdO+EIJi0OPuGHJ6BGzMqIhBlU3ef2b7ytNnKh
- KVAi4Z1trnxSUBOjAJX01XoqAzIyaZ1I6DPVnZocBl41+3ybDp5nsneLOY+soV47RqBw
- Egxx2D90I4e6IxIKNWY/sKTUGW2G4zWlJ1GxdGmhm1xU/FMzbuet3xg4Gj37M4OmHpBX
- 7HXg==
-X-Gm-Message-State: APjAAAVeV0TcQDSf0+PxQoqWhFFNnXR+vB6DMxaqI8enOYtol9brOxtv
- qlzRskam6mln3OZGbv+Ji8stJGWj1Qa2zI2G
-X-Google-Smtp-Source: APXvYqw/bHpQzp0ByorxE/L5ZnAqTti7PUFOY6Pa0z73UvJhDpotGuptuXiI2NFEUTY3f9F7swKa7A==
-X-Received: by 2002:a17:902:9889:: with SMTP id
- s9mr19774504plp.100.1566831641122; 
- Mon, 26 Aug 2019 08:00:41 -0700 (PDT)
-Received: from [0.0.0.0] (220-136-220-14.dynamic-ip.hinet.net.
- [220.136.220.14])
- by smtp.gmail.com with ESMTPSA id p10sm11431845pjr.14.2019.08.26.08.00.36
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Mon, 26 Aug 2019 08:00:40 -0700 (PDT)
-Subject: Re: [PATCH] erofs-utils: fix a memory leak of compressmeta
-To: Gao Xiang <hsiangkao@aol.com>, bluce.liguifu@huawei.com,
- linux-erofs@lists.ozlabs.org
-References: <20190825033638.30216-1-hsiangkao@aol.com>
-From: Li Guifu <blucerlee@gmail.com>
-Message-ID: <57313d60-291a-60b7-6eaa-940a2baf1de3@gmail.com>
-Date: Mon, 26 Aug 2019 23:00:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190825033638.30216-1-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46HGHM36X6zDqPB
+ for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 01:33:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1566833591; bh=qz6sG9s2jSBiRtVLK+t0nY4ldmBT+6BoJCYgSXPyocY=;
+ h=From:To:Cc:Subject:Date:From:Subject;
+ b=I3qxZnnSDkGXvVzYg3IIss3za705wnr8jqqE6xgqfnsS0BJ4IP7mMuChDoOhHgDsWtVLrRMWm7aQBdDrg4AsxAFVfFH5qpcTzOzcze4mvyqgXnZOj0FEgyLxdKYpHv+J2N4NG7RBncwePpEtXZWToZRLO40b0C4YKKzvBynJe76JJa5biW70A9x+n8argOUMtKzkiJDe5vf2kcegu6mraQEKgdyNevRZER33SSgyujykBFnH7yWR1dS7EoUiKJ1QQ4/CzlwahmqqGbHYYVqx5ZNyn31svqmL0zYH+LkNthtRccVbLstdK3sOSFY6fn0EohX34zHQ5tx6OSuln+T9rQ==
+X-YMail-OSG: a9sdTH0VM1n2F_NELl44BLjgwiIW5D_ofwwlB0NH86wMKInA660AlTJd4m0UUau
+ swJAMR0gEV8Z5qMPnAz1kuqa.5AMN.02D4VKaCpxF03.HVa.JsDUsn_woRKxw3qry4537M3bs0dF
+ I0aHPeZkDpo6TjFpJ3kvtXbSIQRmy7rFABrEOIyh5ElngmrcBQNp6Y7uE2OHc91FANrTd3RpPRRV
+ yTb5ypvSRwC2hhg5UTDEAG6Bt06CdevN9nyJm.Myzy3IjT8GIi4jpShgjEEJ_64yrXZ0s82GjgWw
+ 9oimQv8ywnsn0qal4AE59QDsLQQ9xdek_9WX8UcXYpykTpw.4b6Fzeks6mm7TyMzp5ArE2diFO1.
+ fG1b.T_VaLMDUFVLJEAxdcjIhMpvZnC8B5OXXaZANJG0W_BnlAwsOtw.rqnrADGO.sW6LpkzlZkU
+ 0sZ8rv47OSsSEbwj37RvLd9fuzFkwfGr_9WUqKdTSsYtoKOJlLMUzSpht904mCApcng07lWRzRnj
+ _vKYTUF7vrlpC4dwj8EknBdiVdwcCoAQyDuNxlRy1QDvAnyfZ3JQ1bq0JxDEeAeJ.Uk46C_KthiL
+ zZTBc1L6IOClRyY8kiWU7EqGDZ8CBX0Wu_UO._tKqbgpXMtbHQALtDIa.D.8Zp81kbgNEh6.Wca0
+ CENhMm5lHPGEGI2e.jJ4N22WJKZ_jNBeuOPtnSpTjuLH5mWBYJHeKoMeezPnETnmGTKbpqBSnJoe
+ EGKYT4.vdCqMJzyjXo8USgMqe8XIMkdCxJwMHXuuRdIxXMIMCOyKfHqYnZjicG6OVrdoDv6ZgYET
+ vdPN4PsUm3ETG2_36fy_Uov.J6UGCkZgYQcQHrD4SjUUm0Q_RVMJPO6LlsErorC7PQHzs50FRiOs
+ im47dqCVr5vPsGgcZ6Yesawf4LJQMWGE9DS8erlH5OLtNAMOyp6x36wa27dMEbTToPiMrt4Qrapk
+ Xl7P5ALmsfWpez_sr_cGXYUC38naTZdodaZkiUefeS8kA.S827lrUHeX6Bm.sLhostuKqDbwnnFT
+ tWNx1i5p.Km7D5UizRjDhsk69HX0uRDuxOowOucWFgaE9GjPKAejuWUUZYziNuJ7J7OahmAMimOk
+ puXNlWX9XNxvhIKYmMKa2rhu9iJEQKbzfT9VhLCQSUfcKYX6w77L_1fMn_DkoH4RVnx_7Y0T4MI2
+ LKOlSpYiRehtAphs5j2tAcNGQbC9aHVs6UU93APjbw4BBT4C2MnyzyVVOt0D1gN.0XJ87azYgt10
+ Q93LtLygSaLo75aa5yPG0cdbY0zzGIBPF3g--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic314.consmr.mail.ir2.yahoo.com with HTTP; Mon, 26 Aug 2019 15:33:11 +0000
+Received: by smtp410.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 019bd98dbbe63a79be20e4fc3c20a9bc; 
+ Mon, 26 Aug 2019 15:33:07 +0000 (UTC)
+To: bluce.liguifu@huawei.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fix up "-E legacy-compress" option
+Date: Mon, 26 Aug 2019 23:32:30 +0800
+Message-Id: <20190826153230.14892-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,21 +79,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+"-E legacy-compress" isn't parsed properly, fix it now.
 
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+---
+ mkfs/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-在 2019/8/25 11:36, Gao Xiang via Linux-erofs 写道:
-> compressmeta should be freed after successfully written.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> ---
->   lib/inode.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 75e1d47..5efbf30 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -34,7 +34,7 @@ static void usage(void)
+ static int parse_extended_opts(const char *opts)
+ {
+ #define MATCH_EXTENTED_OPT(opt, token, keylen) \
+-	(keylen == sizeof(opt) && !memcmp(token, opt, sizeof(opt)))
++	(keylen == sizeof(opt) - 1 && !memcmp(token, opt, sizeof(opt) - 1))
+ 
+ 	const char *token, *next, *tokenend, *value __maybe_unused;
+ 	unsigned int keylen, vallen;
+-- 
+2.17.1
 
-Reviewed-by: Li Guifu <blucerlee@gmail.com>
-
-Thanks,
