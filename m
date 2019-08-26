@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E399E9D055
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 15:23:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5BB19D189
+	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 16:21:54 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46HCPz2Q8dzDqR2
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 23:23:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46HDhv4lFDzDqg4
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 00:21:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -18,22 +18,24 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46HCPn2MJLzDqN2
- for <linux-erofs@lists.ozlabs.org>; Mon, 26 Aug 2019 23:23:40 +1000 (AEST)
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 086A83DE10F13807F273;
- Mon, 26 Aug 2019 21:23:34 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46HCVg6tSCzDqPn
+ for <linux-erofs@lists.ozlabs.org>; Mon, 26 Aug 2019 23:27:55 +1000 (AEST)
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id D51777CE6EC814E9F398;
+ Mon, 26 Aug 2019 21:27:52 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 26 Aug
- 2019 21:23:26 +0800
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 26 Aug
+ 2019 21:27:42 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Chao Yu <yuchao0@huawei.com>, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
-Subject: [PATCH] erofs: fix compile warnings when moving out
+Subject: [PATCH RESEND] erofs: fix compile warnings when moving out
  include/trace/events/erofs.h
-Date: Mon, 26 Aug 2019 21:22:34 +0800
-Message-ID: <20190826132234.96939-1-gaoxiang25@huawei.com>
+Date: Mon, 26 Aug 2019 21:26:53 +0800
+Message-ID: <20190826132653.100731-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190826132234.96939-1-gaoxiang25@huawei.com>
+References: <20190826132234.96939-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -49,8 +51,9 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- weidu.du@huawei.com, Miao Xie <miaoxie@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>, weidu.du@huawei.com,
+ Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -97,6 +100,8 @@ of adding to blacklist...
 Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
+
+[RESEND] Cc Stephen as well. no change at all...
 
 Hi Chao and Greg,
  It seems the root cause reported by Stephen is the following (sorry for
