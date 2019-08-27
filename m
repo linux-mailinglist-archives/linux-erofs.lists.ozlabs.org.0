@@ -1,75 +1,80 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E1329D324
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Aug 2019 17:40:41 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B6F19E397
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 11:04:27 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46HGRp3jDczDqjW
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 01:40:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Hjc70Gz3zDqvd
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 19:04:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=gmail.com
- (client-ip=2607:f8b0:4864:20::444; helo=mail-pf1-x444.google.com;
- envelope-from=blucerlee@gmail.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=oracle.com
+ (client-ip=156.151.31.85; helo=userp2120.oracle.com;
+ envelope-from=dan.carpenter@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ dmarc=pass (p=none dis=none) header.from=oracle.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="k7+oImz0"; 
+ unprotected) header.d=oracle.com header.i=@oracle.com header.b="MJuBpJKj"; 
  dkim-atps=neutral
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com
- [IPv6:2607:f8b0:4864:20::444])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from userp2120.oracle.com (userp2120.oracle.com [156.151.31.85])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46HGQG1w6TzDqhD
- for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 01:39:17 +1000 (AEST)
-Received: by mail-pf1-x444.google.com with SMTP id y9so11663024pfl.4
- for <linux-erofs@lists.ozlabs.org>; Mon, 26 Aug 2019 08:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=subject:to:references:from:message-id:date:user-agent:mime-version
- :in-reply-to:content-transfer-encoding;
- bh=c1Eip0w9mvXAgEAoLppCWk1qdmdHf377p7DiyqTqquk=;
- b=k7+oImz0X8C0Ps1LFhYPe4BcSZOTqemEUQ5RaxNUsmOdkVwjSXh+EE4XuShmLfT0Qf
- qLRLDAzM+WKr0wwRJvzicXcNtsbNHWI+h1RAvNXiBfzeh5sXQRKLl35Rls5on0fauaYi
- v76PWGlnZZEhYeo/Vds63TyIytKNspWz5jYB9FYiVmRfuEw1rvZesBrmHLcCH8ZRTs1W
- VKYTdpC8Fs8Odw2MzSf5y50EtZ/t9/86Z+7O81TAOf5wLiR84COMNtiHG1+IGxfQ3lTl
- 8mz2OMCQrj/KF2ZmwEwPmjFszqthP29pIgMiJLLzESa7PdS2icwtUmyoz0+EmEwAG4rI
- XDDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:subject:to:references:from:message-id:date
- :user-agent:mime-version:in-reply-to:content-transfer-encoding;
- bh=c1Eip0w9mvXAgEAoLppCWk1qdmdHf377p7DiyqTqquk=;
- b=e5UkdV++iYITkMujKEF+MvgpRY0ASeqhwcqGHWVvShKx9Qrj/8eDBAZWPqjpwt/3QD
- SMb7c2dtMuA9TTCJp94rDkgMXkOz0tHrfxzH11Oo6GH+FrgaBnRAAPphbRfd1yN7HXX+
- 1Q2Tdfy54YmPA8rbHtgR5iMWZTAEvdTXjhnMG0U6il6iTuTvFj7g+840aLb4aRlnyagA
- 89gzTCIGrRY6iVIED49S3i9FuGfjfyZR6cKJdBxhgDyssGKVsFwrFHY0L++nm4v/DJm5
- AqNuRtpG+Wopp8LUua3N2D7DJixm9Is4QW6vppa4HNcsaqTC2dQMx2V2fKhwfW3XatfR
- s6fQ==
-X-Gm-Message-State: APjAAAWxLVFz5ygWiVK+5tB3/g7vcLfxRokcKjtQhAXu9kTR8an2lUFA
- rp0+4G2FfgOsw4e6Y2RGU2JZTyWIDfg=
-X-Google-Smtp-Source: APXvYqyG1yEdkAOVL7q8hvTOKdbJwmaJ/MhoddrrRUWOP9nuq5t5D9ZaiJRkvy3lfIXIy9yGWLnWbw==
-X-Received: by 2002:a63:e44b:: with SMTP id i11mr16510208pgk.297.1566833955079; 
- Mon, 26 Aug 2019 08:39:15 -0700 (PDT)
-Received: from [0.0.0.0] (li104-163.members.linode.com. [72.14.189.163])
- by smtp.gmail.com with ESMTPSA id h17sm14013607pfo.24.2019.08.26.08.39.10
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Mon, 26 Aug 2019 08:39:14 -0700 (PDT)
-Subject: Re: [PATCH] erofs-utils: fix up "-E legacy-compress" option
-To: Gao Xiang <hsiangkao@aol.com>, bluce.liguifu@huawei.com,
- linux-erofs@lists.ozlabs.org
-References: <20190826153230.14892-1-hsiangkao@aol.com>
-From: Li Guifu <blucerlee@gmail.com>
-Message-ID: <d2f59966-8e5e-0eff-3d2c-4c07c022c58c@gmail.com>
-Date: Mon, 26 Aug 2019 23:39:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Hjbx5tr5zDqt0
+ for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 19:04:12 +1000 (AEST)
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+ by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7R93Zb5174278;
+ Tue, 27 Aug 2019 09:04:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
+ h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=AXbHuSlNAdI5bKuIK3j4yHiJU5GYkC8zm7kbQXmi5yQ=;
+ b=MJuBpJKje3S0K5HqBGm1s6JPqGsMPsvwMJCb1tsCOaLoYLK8tKTayemkPD1uEIt6Wjzm
+ eFPW3+OcoCJ2Z9om26oxjRNE6QTGnnlVfyp0Sqq2ieee5DN0s0b78Axpr/s47TGRzeX+
+ OM272OdN/SNxSc8RhySJ0dQZD3N/1O4EIzSAGstHnOg0bkmXw+Ii+t9pWMZvG1nVemhJ
+ cY9ZmBFJPpQGQKH0VXLZoGTE7CCZivu8r8xmIQS7Dpxg1C59lZVTETAjx1l15ZlKmFU0
+ gg5AUN2Bv97gFx6tPP7vquwYFQjR/dwv9f9eytiWGJydcd02HGKm6zMWNbR2NMGtk0RX RQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+ by userp2120.oracle.com with ESMTP id 2un16y8b5h-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Tue, 27 Aug 2019 09:04:05 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+ by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7R93G3l171504;
+ Tue, 27 Aug 2019 09:04:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+ by aserp3020.oracle.com with ESMTP id 2umj2ye5x4-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Tue, 27 Aug 2019 09:04:05 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+ by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7R941cG002738;
+ Tue, 27 Aug 2019 09:04:01 GMT
+Received: from mwanda (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
+ with ESMTP ; Tue, 27 Aug 2019 02:04:01 -0700
+Date: Tue, 27 Aug 2019 12:03:55 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+To: xiang@kernel.org
+Subject: [bug report] staging: erofs: tidy up decompression frontend
+Message-ID: <20190827090355.GA29280@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20190826153230.14892-1-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361
+ signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1
+ malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908270102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361
+ signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908270102
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,21 +86,106 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hello Gao Xiang,
 
+This is a semi-automatic email about new static checker warnings.
 
-在 2019/8/26 23:32, Gao Xiang via Linux-erofs 写道:
-> "-E legacy-compress" isn't parsed properly, fix it now.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> ---
->   mkfs/main.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+The patch 97e86a858bc3: "staging: erofs: tidy up decompression
+frontend" from Jul 31, 2019, leads to the following Smatch complaint:
 
-Reviewed-by: Li Guifu <blucerlee@gmail.com>
+    fs/erofs/zdata.c:670 z_erofs_do_read_page()
+    error: we previously assumed 'clt->cl' could be null (see line 596)
 
-Thanks,
+fs/erofs/zdata.c
+   595			/* didn't get a valid collection previously (very rare) */
+   596			if (!clt->cl)
+                            ^^^^^^^^
+New NULL check.
+
+   597				goto restart_now;
+   598			goto hitted;
+   599		}
+   600	
+   601		/* go ahead the next map_blocks */
+   602		debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
+   603	
+   604		if (z_erofs_collector_end(clt))
+   605			fe->backmost = false;
+   606	
+   607		map->m_la = offset + cur;
+   608		map->m_llen = 0;
+   609		err = z_erofs_map_blocks_iter(inode, map, 0);
+   610		if (unlikely(err))
+   611			goto err_out;
+   612	
+   613	restart_now:
+   614		if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED)))
+   615			goto hitted;
+   616	
+   617		err = z_erofs_collector_begin(clt, inode, map);
+   618		if (unlikely(err))
+   619			goto err_out;
+   620	
+   621		/* preload all compressed pages (maybe downgrade role if necessary) */
+   622		if (should_alloc_managed_pages(fe, sbi->cache_strategy, map->m_la))
+   623			cache_strategy = DELAYEDALLOC;
+   624		else
+   625			cache_strategy = DONTALLOC;
+   626	
+   627		preload_compressed_pages(clt, MNGD_MAPPING(sbi),
+   628					 cache_strategy, pagepool);
+   629	
+   630		tight &= (clt->mode >= COLLECT_PRIMARY_HOOKED);
+   631	hitted:
+   632		cur = end - min_t(unsigned int, offset + end - map->m_la, end);
+   633		if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED))) {
+   634			zero_user_segment(page, cur, end);
+   635			goto next_part;
+   636		}
+   637	
+   638		/* let's derive page type */
+   639		page_type = cur ? Z_EROFS_VLE_PAGE_TYPE_HEAD :
+   640			(!spiltted ? Z_EROFS_PAGE_TYPE_EXCLUSIVE :
+   641				(tight ? Z_EROFS_PAGE_TYPE_EXCLUSIVE :
+   642					Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED));
+   643	
+   644		if (cur)
+   645			tight &= (clt->mode >= COLLECT_PRIMARY_FOLLOWED);
+   646	
+   647	retry:
+   648		err = z_erofs_attach_page(clt, page, page_type);
+   649		/* should allocate an additional staging page for pagevec */
+   650		if (err == -EAGAIN) {
+   651			struct page *const newpage =
+   652				__stagingpage_alloc(pagepool, GFP_NOFS);
+   653	
+   654			err = z_erofs_attach_page(clt, newpage,
+   655						  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
+   656			if (likely(!err))
+   657				goto retry;
+   658		}
+   659	
+   660		if (unlikely(err))
+   661			goto err_out;
+   662	
+   663		index = page->index - (map->m_la >> PAGE_SHIFT);
+   664	
+   665		z_erofs_onlinepage_fixup(page, index, true);
+   666	
+   667		/* bump up the number of spiltted parts of a page */
+   668		++spiltted;
+   669		/* also update nr_pages */
+   670		clt->cl->nr_pages = max_t(pgoff_t, clt->cl->nr_pages, index + 1);
+                ^^^^^^^^^^^^^^^^^                  ^^^^^^^^^^^^^^^^^
+Unchecked dereferences.
+
+   671	next_part:
+   672		/* can be used for verification */
+
+regards,
+dan carpenter
