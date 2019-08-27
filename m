@@ -2,51 +2,84 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D8739E55B
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 12:08:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D07819E600
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 12:44:33 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46Hl1Y6vsBzDqxh
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 20:08:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Hlqf5Wj4zDqwB
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2019 20:44:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.255; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=oracle.com
+ (client-ip=156.151.31.86; helo=userp2130.oracle.com;
+ envelope-from=dan.carpenter@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga08-in.huawei.com [45.249.212.255])
+ dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=oracle.com header.i=@oracle.com header.b="Bmls6pqm"; 
+ dkim-atps=neutral
+Received: from userp2130.oracle.com (userp2130.oracle.com [156.151.31.86])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46HkzW0wJZzDqTl
- for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 20:06:14 +1000 (AEST)
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
- by Forcepoint Email with ESMTP id B3149CC8D70EA1D8CA95;
- Tue, 27 Aug 2019 18:06:08 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 27 Aug 2019 18:06:08 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 27 Aug 2019 18:06:08 +0800
-Date: Tue, 27 Aug 2019 18:05:23 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Dan Carpenter <dan.carpenter@oracle.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Hlnz11RdzDqCc
+ for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2019 20:43:01 +1000 (AEST)
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+ by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RAcerr041167;
+ Tue, 27 Aug 2019 10:42:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
+ h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=vKexk7If5cUe5lacoGkKKCw9TkibOjRrBzBG1sEXvdU=;
+ b=Bmls6pqmRSrLyI6jDIJlFSGQbrZiM23nY5seYDmiOEnVMDrpbVFYqjYraQQRGpfF6YaL
+ s1ZAhTmQXiwPAAOlDnKBbCS4fAiWJiIxs6KFpFMA4p5S9Edbbqu8xkAcPtiaYVayuVS0
+ aQ9BfJtEVFrJSFyYGG2UbCVpspSLIKgUeC3a7InYZNMrA6QwrbdQgId4NgVoIruHm5Ux
+ 8l6jJLgd5+6q7kO04ETVwghqBIw+93FkmBNABg6Lc3WtVK5R025MmmwyArYzvEadD+9n
+ +olu5ICQe9u6jy8qQKM8l+35pf3ZYfKTimlJHmKrJX+P7LXbXw0iV0mQNcnpOh6UKzpq 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+ by userp2130.oracle.com with ESMTP id 2un1xa8eu3-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Tue, 27 Aug 2019 10:42:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+ by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RAcgbF035335;
+ Tue, 27 Aug 2019 10:42:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+ by aserp3020.oracle.com with ESMTP id 2umj2yhcce-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Tue, 27 Aug 2019 10:42:47 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+ by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7RAglUC011921;
+ Tue, 27 Aug 2019 10:42:47 GMT
+Received: from kadam (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
+ with ESMTP ; Tue, 27 Aug 2019 03:42:46 -0700
+Date: Tue, 27 Aug 2019 13:42:40 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
 Subject: Re: [bug report] staging: erofs: tidy up decompression frontend
-Message-ID: <20190827100523.GA236561@architecture4>
+Message-ID: <20190827104040.GO3964@kadam>
 References: <20190827090355.GA29280@mwanda>
  <20190827093629.GA55193@architecture4>
  <20190827095347.GN3964@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20190827095347.GN3964@kadam>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361
+ signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=912
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908270121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361
+ signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=981 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908270121
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,76 +96,12 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 27, 2019 at 12:53:47PM +0300, Dan Carpenter wrote:
-> On Tue, Aug 27, 2019 at 05:36:29PM +0800, Gao Xiang wrote:
-> > Hi Dan,
-> > 
-> > Thanks for your report.
-> > 
-> > On Tue, Aug 27, 2019 at 12:03:55PM +0300, Dan Carpenter wrote:
-> > > Hello Gao Xiang,
-> > > 
-> > > This is a semi-automatic email about new static checker warnings.
-> > > 
-> > > The patch 97e86a858bc3: "staging: erofs: tidy up decompression
-> > > frontend" from Jul 31, 2019, leads to the following Smatch complaint:
-> > > 
-> > >     fs/erofs/zdata.c:670 z_erofs_do_read_page()
-> > >     error: we previously assumed 'clt->cl' could be null (see line 596)
-> > > 
-> > > fs/erofs/zdata.c
-> > >    595			/* didn't get a valid collection previously (very rare) */
-> > >    596			if (!clt->cl)
-> > >                             ^^^^^^^^
-> > > New NULL check.
-> > > 
-> > >    597				goto restart_now;
-> > >    598			goto hitted;
-> > >    599		}
-> > >    600	
-> > >    601		/* go ahead the next map_blocks */
-> > >    602		debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
-> > >    603	
-> > >    604		if (z_erofs_collector_end(clt))
-> > >    605			fe->backmost = false;
-> > >    606	
-> > >    607		map->m_la = offset + cur;
-> > >    608		map->m_llen = 0;
-> > >    609		err = z_erofs_map_blocks_iter(inode, map, 0);
-> > >    610		if (unlikely(err))
-> > >    611			goto err_out;
-> > >    612	
-> > >    613	restart_now:
-> > >    614		if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED)))
-> > >    615			goto hitted;
-> > >    616	
-> > >    617		err = z_erofs_collector_begin(clt, inode, map);
-> > 
-> > At a glance, clt->cl will be all initialized in all successful paths
-> > in z_erofs_collector_begin, or it all fall back into err_out...
-> > I have no idea what is wrong here...
-> > 
-> > Some detailed path from Smatch for NIL dereferences?
-> > 
-> 
-> Ah.  Sorry for that.  It's a false positive.  I will investigate and
-> fix Smatch.
+It turns out that my Smatch cross function DB was slightly out of date
+after the move from staging/ to fs/.  Once I rebuilt the DB then the
+warning went away.
 
-Yeah.. I was little confused, since this patch mostly renames many names...
-and the main logic is unchanged for months... and for this case there are 2 paths...
+Anyway, thanks for taking the time to look at this.
 
- 1) hit line 614 --> goto hitted --> hit line 633 --> goto next_part; (will skip line 670);
- 2) hit line 617 --> go into z_erofs_collector_begin -->
-    all successful paths will assign clt->cl, so clt->cl != NULL...
+regards,
+dan carpenter
 
-Though z_erofs_do_read_page is currently somewhat complicated (mostly due to some
-historical fixes in order to backport friendly), I will simplify this function
-in the later version (..and with care in case of introducing new bugs) :-)
-
-Thanks,
-Gao Xiang
-
-> 
-> regards,
-> dan carpenter
-> 
