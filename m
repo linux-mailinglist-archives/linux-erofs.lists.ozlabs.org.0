@@ -1,52 +1,85 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24161A00DE
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2019 13:41:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BF11A0161
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2019 14:12:15 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46JP2v4M3KzDr7J
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2019 21:41:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46JPkN4bYWzDqjG
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2019 22:12:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.189; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=oracle.com
+ (client-ip=141.146.126.78; helo=aserp2120.oracle.com;
+ envelope-from=dan.carpenter@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
+ dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=oracle.com header.i=@oracle.com header.b="fICn6659"; 
+ dkim-atps=neutral
+Received: from aserp2120.oracle.com (aserp2120.oracle.com [141.146.126.78])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46JP2q5zntzDr6f
- for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2019 21:41:23 +1000 (AEST)
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
- by Forcepoint Email with ESMTP id 026FCDF128C668A46E99;
- Wed, 28 Aug 2019 19:41:20 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 28 Aug 2019 19:41:19 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 28 Aug 2019 19:41:19 +0800
-Date: Wed, 28 Aug 2019 19:40:33 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Dan Carpenter <dan.carpenter@oracle.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46JPkF42fszDqC0
+ for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2019 22:12:04 +1000 (AEST)
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+ by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SCApOd168816;
+ Wed, 28 Aug 2019 12:11:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
+ h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=jxuwhh6N6Ylboq2mCwfPlVJ1Ye3Dfi5dlfJtglOof1Q=;
+ b=fICn6659VoWixS1b7QywOccoNdrMnfF4tZs1s+76TlMC1s0bE+zb9mgtH1sNOTmD1njx
+ dQL60kCtGlzi/6pxF9j9VWPIQ6mYjS1/h514pRQzZNJjAOZe2zfXKUo0lYycyLrZRmg4
+ pHsS8F0OkSP/GL6si4LEV/z4o2ao7URs453NC6dvx6KBXycY6nFDWC15Ag3bGBHi8F/G
+ 2ryUC6HgQxrWiYNeUqfP8OL/Ao5kuGeI8kmIkmXWs9Arf6w6j3EeqC3e9XqU/aPSpVrX
+ 0G7R+MfnogLK1zNl143oFbUCRyJenutTyiMrpUIkcIlTqiYaakkk3rrctWbWaZO0H1ig aw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+ by aserp2120.oracle.com with ESMTP id 2unscq809r-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Wed, 28 Aug 2019 12:11:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+ by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SC7gaF046358;
+ Wed, 28 Aug 2019 12:11:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+ by aserp3030.oracle.com with ESMTP id 2undupvw9k-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Wed, 28 Aug 2019 12:11:57 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+ by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7SCBoPf020868;
+ Wed, 28 Aug 2019 12:11:50 GMT
+Received: from kadam (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
+ with ESMTP ; Wed, 28 Aug 2019 05:11:49 -0700
+Date: Wed, 28 Aug 2019 15:11:44 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
 Subject: Re: [bug report] staging: erofs: introduce erofs_grab_bio
-Message-ID: <20190828114033.GB68628@architecture4>
+Message-ID: <20190828121143.GC8372@kadam>
 References: <20190828105541.GA21320@mwanda>
  <20190828110249.GA56298@architecture4>
- <20190828113612.GB8372@kadam>
+ <20190828113929.GA68628@architecture4>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828113612.GB8372@kadam>
+In-Reply-To: <20190828113929.GA68628@architecture4>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362
+ signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=869
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908280131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362
+ signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=925 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908280132
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,83 +91,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: miaoxie@huawei.com, xiang@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, miaoxie@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 28, 2019 at 02:36:13PM +0300, Dan Carpenter wrote:
-> On Wed, Aug 28, 2019 at 07:02:49PM +0800, Gao Xiang wrote:
-> > Hi Dan,
-> > 
-> > On Wed, Aug 28, 2019 at 01:55:41PM +0300, Dan Carpenter wrote:
-> > > Hello Gao Xiang,
-> > > 
-> > > The patch 8be31270362b: "staging: erofs: introduce erofs_grab_bio"
-> > > from Aug 21, 2018, leads to the following static checker warning:
-> > > 
-> > > 	fs/erofs/zdata.c:1272 z_erofs_vle_submit_all()
-> > > 	error: 'bio' dereferencing possible ERR_PTR()
-> > > 
-> > > fs/erofs/zdata.c
-> > >   1259                  if (bio && force_submit) {
-> > >   1260  submit_bio_retry:
-> > >   1261                          __submit_bio(bio, REQ_OP_READ, 0);
-> > >   1262                          bio = NULL;
-> > >   1263                  }
-> > >   1264  
-> > >   1265                  if (!bio) {
-> > >   1266                          bio = erofs_grab_bio(sb, first_index + i,
-> > >   1267                                               BIO_MAX_PAGES, bi_private,
-> > >   1268                                               z_erofs_vle_read_endio, true);
-> > > 
-> > > This assumes erofs_grab_bio() can't fail.  It returns ERR_PTR(-ENOMEM)
-> > > on failure.
-> > 
-> > I think there is no problem at all as well.
-> > The last argument of erofs_grab_bio is nofail, and here is "true".
-> > 
-> > 415 static inline struct bio *erofs_grab_bio(struct super_block *sb,
-> > 416                                          erofs_blk_t blkaddr,
-> > 417                                          unsigned int nr_pages,
-> > 418                                          void *bi_private, bio_end_io_t endio,
-> > 419                                          bool nofail)
-> > 420 {
-> > 421         const gfp_t gfp = GFP_NOIO;
-> > 422         struct bio *bio;
-> > 423
-> > 424         do {
-> > 425                 if (nr_pages == 1) {
-> > 426                         bio = bio_alloc(gfp | (nofail ? __GFP_NOFAIL : 0), 1);
-> > 427                         if (unlikely(!bio)) {
-> > 428                                 DBG_BUGON(nofail);
-> > 429                                 return ERR_PTR(-ENOMEM);
-> > 430                         }
-> > 431                         break;
-> > 432                 }
-> > 433                 bio = bio_alloc(gfp, nr_pages);
-> > 434                 nr_pages /= 2;
-> > 435         } while (unlikely(!bio));
-> > 436
-> > 437         bio->bi_end_io = endio;
-> > 438         bio_set_dev(bio, sb->s_bdev);
-> > 439         bio->bi_iter.bi_sector = (sector_t)blkaddr << LOG_SECTORS_PER_BLOCK;
-> > 440         bio->bi_private = bi_private;
-> > 441         return bio;
-> > 442 }
-> > 
-> > You can see __GFP_NOFAIL is set, Am I missing something?
-> > 
-> 
-> Ah.  Yes.  You're right.
+On Wed, Aug 28, 2019 at 07:39:29PM +0800, Gao Xiang wrote:
+> (p.s. It makes me little confused these subject prefixes are "[bug report]", if they are
+> really bugs, that is fine... If it be something unconfirmed (need our confirmation..,),
+> could you kindly change the prefix into some other representations...? I will still look
+> into all of them at least... and that makes me feel a bit better and easy.... thanks...)
 
-That is fine :) Thanks,
+Of course I thought it *was* a bug...
 
-Cheers,
-Gao Xiang
+I've sent probably 1800 of these emails.  It's a script but I look over
+the email before sending.  Maybe when people start using the Link: tag
+I will be able to make these show up as reply to an email.
 
-> 
-> regards,
-> dan 
-> 
-> 
+Normally, I sent them out in a much more timely sort of way but all the
+erofs warnings show up as new with the move out of staging so I have
+been re-reviewing the warnings.
+
+So last August when this code was new, I must have seen the warning but
+read the code correctly.  I checked before I sent this email to make
+sure we hadn't discusssed it before.
+
+But this time I got confused by the DBG_BUGON().  I decided to treat it
+as a no-op because it can be configured to do nothing if you have
+CONFIG_EROFS_FS_DEBUG disabled.  Plus it has "DBG" in the name so it
+felt like debug code.  But I ended up focussing on it instead of seeing
+the "(nofail ? __GFP_NOFAIL : 0)" bit.  The DBG_BUGON() is unreachable
+and misleading nonsense fluff.  :(
+
+regards,
+dan carpenter
+
