@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3AFCA154E
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2019 12:00:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B807EA159E
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2019 12:16:09 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46Jyll22dSzDrRl
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2019 20:00:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Jz5z1LKBzDrWN
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2019 20:16:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
@@ -18,39 +18,39 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="bp3AoDSf"; dkim-atps=neutral
+ header.b="A8ByRWni"; dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46JylY36nszDrRP
- for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2019 20:00:09 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Jz5v5z4pzDrVX
+ for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2019 20:16:03 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
  :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
  Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
  Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
  List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=ojvjtMNTisxFOJO+an7pTOSumsB4I4+hef57OZeho2g=; b=bp3AoDSf4qgAAB94kJbT59OqP
- rpIL3QyW0xfu/xvUkLXN5yOKH7n2pp+OydVGEZ/oBOSbxu+Re3oKrCJwJhV2F8VxSBfruw9yJc2Lr
- zgJRrFH+tzVm2xXqGYY/MyB88arocy0WOjfXW+to+6MAiA9EfgpdQ4kWGYPwFbAUVCrQ0Isc43K9V
- wxozfqLEkdTZtDKNmiFa7DXImCx5UY3tHfD3x36AeTA9mj+P6o7U0GewJXuhXja5VpWidq6Su0M6X
- CV4kpTix605UaB6UnorPay44KwdvOP8/gOAjHF3t6wT2EXXI+uCkweUskHxQxsZwDiEpYHsTd3gjk
- TVDORcw4w==;
+ bh=+tvFhqmaMhEec6GVANstlSqfji2crmXW2QTn7NNJoKM=; b=A8ByRWni1NBWV0UmmUIN/6rpi
+ X3+y753F9ZqsThDJt7o7aQDx8POSMk6vACgG+5/80a1/+RSMhyYSRrmPLRpcTkxdB4r9jhP39z00m
+ SNB0dmwp7a4mnINr37mvl1dEDK1Kpg50ghRaa+oGg1UZDZiYC/NOIUUu0XDWQCgHzf/0eIckqUF/1
+ 9a6jhptLbC3I1vcXNZkpwv9AOY3c3Cp/r9EJxRPf72G+6RzZ1mF7BuKGpEZuA321ML2zD8nGEkrax
+ VLgAfbmTT85kCCq9Gz0D6elE0GxuabOBX7ZlxpsnO0v9ywXu50/taO3Jf5w3NjCzs7tXNKdGet3j8
+ t6Mc6EgUA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1i3HDe-0007NV-H4; Thu, 29 Aug 2019 09:59:54 +0000
-Date: Thu, 29 Aug 2019 02:59:54 -0700
+ Linux)) id 1i3HSz-0004ua-L6; Thu, 29 Aug 2019 10:15:45 +0000
+Date: Thu, 29 Aug 2019 03:15:45 -0700
 From: Christoph Hellwig <hch@infradead.org>
 To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190829095954.GB20598@infradead.org>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190829101545.GC20598@infradead.org>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802125347.166018-2-gaoxiang25@huawei.com>
+In-Reply-To: <20190802125347.166018-4-gaoxiang25@huawei.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
  bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -80,116 +80,137 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> --- /dev/null
-> +++ b/fs/erofs/erofs_fs.h
-> @@ -0,0 +1,316 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
-> +/*
-> + * linux/fs/erofs/erofs_fs.h
-
-Please remove the pointless file names in the comment headers.
-
-> +struct erofs_super_block {
-> +/*  0 */__le32 magic;           /* in the little endian */
-> +/*  4 */__le32 checksum;        /* crc32c(super_block) */
-> +/*  8 */__le32 features;        /* (aka. feature_compat) */
-> +/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-
-Please remove all the byte offset comments.  That is something that can
-easily be checked with gdb or pahole.
-
-> +/* 64 */__u8 volume_name[16];   /* volume name */
-> +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
-> +
-> +/* 84 */__u8 reserved2[44];
-> +} __packed;                     /* 128 bytes */
-
-Please don't add __packed.  In this case I think you don't need it
-(but double check with pahole), but even if you would need it using
-proper padding fields and making sure all fields are naturally aligned
-will give you much better code generation on architectures that don't
-support native unaligned access.
-
-> +/*
-> + * erofs inode data mapping:
-> + * 0 - inode plain without inline data A:
-> + * inode, [xattrs], ... | ... | no-holed data
-> + * 1 - inode VLE compression B (legacy):
-> + * inode, [xattrs], extents ... | ...
-> + * 2 - inode plain with inline data C:
-> + * inode, [xattrs], last_inline_data, ... | ... | no-holed data
-> + * 3 - inode compression D:
-> + * inode, [xattrs], map_header, extents ... | ...
-> + * 4~7 - reserved
-> + */
-> +enum {
-> +	EROFS_INODE_FLAT_PLAIN,
-
-This one doesn't actually seem to be used.
-
-> +	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
-
-why are we adding a legacy field to a brand new file system?
-
-> +	EROFS_INODE_FLAT_INLINE,
-> +	EROFS_INODE_FLAT_COMPRESSION,
-> +	EROFS_INODE_LAYOUT_MAX
-
-It seems like these come from the on-disk format, in which case they
-should have explicit values assigned to them.
-
-Btw, I think it generally helps file system implementation quality
-if you use a separate header for the on-disk structures vs in-memory
-structures, as that keeps it clear in everyones mind what needs to
-stay persistent and what can be chenged easily.
-
-> +static bool erofs_inode_is_data_compressed(unsigned int datamode)
+On Fri, Aug 02, 2019 at 08:53:26PM +0800, Gao Xiang wrote:
+> +static int __init erofs_init_inode_cache(void)
 > +{
-> +	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-> +		return true;
-> +	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
+> +	erofs_inode_cachep = kmem_cache_create("erofs_inode",
+> +					       sizeof(struct erofs_vnode), 0,
+> +					       SLAB_RECLAIM_ACCOUNT,
+> +					       init_once);
+> +
+> +	return erofs_inode_cachep ? 0 : -ENOMEM;
+
+Please just use normal if/else.  Also having this function seems
+entirely pointless.
+
+> +static void erofs_exit_inode_cache(void)
+> +{
+> +	kmem_cache_destroy(erofs_inode_cachep);
 > +}
 
-This looks like a really obsfucated way to write:
+Same for this one.
 
-	return datamode == EROFS_INODE_FLAT_COMPRESSION ||
-		datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
+> +static void free_inode(struct inode *inode)
 
-> +/* 28 */__le32 i_reserved2;
-> +} __packed;
+Please use an erofs_ prefix for all your functions.
 
-Sane comment as above.
+> +{
+> +	struct erofs_vnode *vi = EROFS_V(inode);
+
+Why is this called vnode instead of inode?  That seems like a rather
+odd naming for a Linux file system.
 
 > +
-> +/* 32 bytes on-disk inode */
-> +#define EROFS_INODE_LAYOUT_V1   0
-> +/* 64 bytes on-disk inode */
-> +#define EROFS_INODE_LAYOUT_V2   1
+> +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
+> +	if (is_inode_fast_symlink(inode))
+> +		kfree(inode->i_link);
+
+is_inode_fast_symlink only shows up in a later patch.  And really
+obsfucates the check here in the only caller as you can just do an
+unconditional kfree here - i_link will be NULL except for the case
+where you explicitly set it.
+
+Also this code is nothing like ext4, so the code seems a little confusing.
+
+> +static bool check_layout_compatibility(struct super_block *sb,
+> +				       struct erofs_super_block *layout)
+> +{
+> +	const unsigned int requirements = le32_to_cpu(layout->requirements);
+
+Why is the variable name for the on-disk subperblock layout?  We usually
+still calls this something with sb in the name, e.g. dsb. for disk
+super block.
+
+> +	EROFS_SB(sb)->requirements = requirements;
 > +
-> +struct erofs_inode_v2 {
-> +/*  0 */__le16 i_advise;
+> +	/* check if current kernel meets all mandatory requirements */
+> +	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
+> +		errln("unidentified requirements %x, please upgrade kernel version",
+> +		      requirements & ~EROFS_ALL_REQUIREMENTS);
+> +		return false;
+> +	}
+> +	return true;
 
-Why do we have two inode version in a newly added file system?
+Note that normally we call this features, but that doesn't really
+matter too much.
 
-> +#define ondisk_xattr_ibody_size(count)	({\
-> +	u32 __count = le16_to_cpu(count); \
-> +	((__count) == 0) ? 0 : \
-> +	sizeof(struct erofs_xattr_ibody_header) + \
-> +		sizeof(__u32) * ((__count) - 1); })
+> +static int superblock_read(struct super_block *sb)
+> +{
+> +	struct erofs_sb_info *sbi;
+> +	struct buffer_head *bh;
+> +	struct erofs_super_block *layout;
+> +	unsigned int blkszbits;
+> +	int ret;
+> +
+> +	bh = sb_bread(sb, 0);
 
-This would be much more readable as a function.
+Is there any good reasons to use buffer heads like this in new code
+vs directly using bios?
 
-> +#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
-> +	sizeof(struct erofs_xattr_entry) + \
-> +	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
+> +
+> +	sbi->blocks = le32_to_cpu(layout->blocks);
+> +	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+> +	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
+> +	sbi->root_nid = le16_to_cpu(layout->root_nid);
+> +	sbi->inos = le64_to_cpu(layout->inos);
+> +
+> +	sbi->build_time = le64_to_cpu(layout->build_time);
+> +	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
+> +
+> +	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
+> +	memcpy(sbi->volume_name, layout->volume_name,
+> +	       sizeof(layout->volume_name));
 
-Same here.
+s_uuid should preferably be a uuid_t (assuming it is a real BE uuid,
+if it is le it should be a guid_t).
 
-> +/* available compression algorithm types */
-> +enum {
-> +	Z_EROFS_COMPRESSION_LZ4,
-> +	Z_EROFS_COMPRESSION_MAX
-> +};
+> +/* set up default EROFS parameters */
+> +static void default_options(struct erofs_sb_info *sbi)
+> +{
+> +}
 
-Seems like an on-disk value again that should use explicitly assigned
-numbers.
+No need to add an empty function.
+
+> +static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+> +{
+> +	struct inode *inode;
+> +	struct erofs_sb_info *sbi;
+> +	int err;
+> +
+> +	infoln("fill_super, device -> %s", sb->s_id);
+> +	infoln("options -> %s", (char *)data);
+
+That is some very verbose debug info.  We usually don't add that and
+let people trace the function instead.  Also you should probably
+implement the new mount API.
+new mount API.
+
+> +static void erofs_kill_sb(struct super_block *sb)
+> +{
+> +	struct erofs_sb_info *sbi;
+> +
+> +	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+> +	infoln("unmounting for %s", sb->s_id);
+> +
+> +	kill_block_super(sb);
+> +
+> +	sbi = EROFS_SB(sb);
+> +	if (!sbi)
+> +		return;
+> +	kfree(sbi);
+> +	sb->s_fs_info = NULL;
+> +}
+
+Why is this needed?  You can just free your sb privatte information in
+->put_super and wire up kill_block_super as the ->kill_sb method
+directly.
