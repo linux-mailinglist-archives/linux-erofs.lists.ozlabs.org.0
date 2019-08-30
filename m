@@ -2,49 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99F70A2D50
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 05:29:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 053EAA2D79
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 05:41:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KQ2r0FmJzDrMh
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 13:29:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KQJN33jczDrS3
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 13:41:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.191; helo=huawei.com; envelope-from=yuchao0@huawei.com;
- receiver=<UNKNOWN>)
+ (client-ip=45.249.212.190; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KQ2m3lZYzDrKj
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 13:29:52 +1000 (AEST)
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id C580825E6CF6E6376F14;
- Fri, 30 Aug 2019 11:29:48 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
- 2019 11:29:38 +0800
-Subject: Re: [PATCH v2 3/7] erofs: use a better form for complicated on-disk
- fields
-To: Gao Xiang <gaoxiang25@huawei.com>, Dan Carpenter
- <dan.carpenter@oracle.com>, Christoph Hellwig <hch@infradead.org>, "Joe
- Perches" <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- <devel@driverdev.osuosl.org>
-References: <20190830030040.10599-1-gaoxiang25@huawei.com>
- <20190830030040.10599-3-gaoxiang25@huawei.com>
-From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <018574c9-e0b8-1fa8-fd6f-9197b9c7d281@huawei.com>
-Date: Fri, 30 Aug 2019 11:29:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KQCr3NLyzDrqf
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 13:37:44 +1000 (AEST)
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id 0B38CB72B4ED08EE3147;
+ Fri, 30 Aug 2019 11:37:40 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
+ 2019 11:37:30 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Chao Yu <yuchao0@huawei.com>, Dan Carpenter <dan.carpenter@oracle.com>,
+ Christoph Hellwig <hch@infradead.org>, Joe Perches <joe@perches.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
+Subject: [PATCH v3 1/7] erofs: on-disk format should have explicitly assigned
+ numbers
+Date: Fri, 30 Aug 2019 11:36:37 +0800
+Message-ID: <20190830033643.51019-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190830032006.GA20217@architecture4>
+References: <20190830032006.GA20217@architecture4>
 MIME-Version: 1.0
-In-Reply-To: <20190830030040.10599-3-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -63,18 +58,62 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019/8/30 11:00, Gao Xiang wrote:
-> As Joe Perches [1] suggested, let's use a better
-> form to describe complicated on-disk fields.
-> 
-> p.s. it has different tab alignment looking between
->      the real file and patch file.
-> p.p.s. due to changing a different form, some lines
->        have to exceed 80 characters.
-> [1] https://lore.kernel.org/r/67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com/
-> Reported-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+As Christoph claimed [1], on-disk format should have
+explicitly assigned numbers. I have to change it.
 
+[1] https://lore.kernel.org/r/20190829095954.GB20598@infradead.org/
+Reported-by: Christoph Hellwig <hch@infradead.org>
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+no change
 
-Thanks,
+ fs/erofs/erofs_fs.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index afa7d45ca958..2447ad4d0920 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -52,10 +52,10 @@ struct erofs_super_block {
+  * 4~7 - reserved
+  */
+ enum {
+-	EROFS_INODE_FLAT_PLAIN,
+-	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
+-	EROFS_INODE_FLAT_INLINE,
+-	EROFS_INODE_FLAT_COMPRESSION,
++	EROFS_INODE_FLAT_PLAIN			= 0,
++	EROFS_INODE_FLAT_COMPRESSION_LEGACY	= 1,
++	EROFS_INODE_FLAT_INLINE			= 2,
++	EROFS_INODE_FLAT_COMPRESSION		= 3,
+ 	EROFS_INODE_LAYOUT_MAX
+ };
+ 
+@@ -181,7 +181,7 @@ struct erofs_xattr_entry {
+ 
+ /* available compression algorithm types */
+ enum {
+-	Z_EROFS_COMPRESSION_LZ4,
++	Z_EROFS_COMPRESSION_LZ4	= 0,
+ 	Z_EROFS_COMPRESSION_MAX
+ };
+ 
+@@ -239,10 +239,10 @@ struct z_erofs_map_header {
+  *                (di_advise could be 0, 1 or 2)
+  */
+ enum {
+-	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN,
+-	Z_EROFS_VLE_CLUSTER_TYPE_HEAD,
+-	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD,
+-	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED,
++	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
++	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
++	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_MAX
+ };
+ 
+-- 
+2.17.1
+
