@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CFCAA3ACA
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 17:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A7B72A3AD1
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 17:47:06 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KkNc3RDNzDqx4
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 01:46:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KkPM4sFszDqxW
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 01:47:03 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
@@ -18,41 +18,40 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="ACtDIJSR"; dkim-atps=neutral
+ header.b="UNxWJcbn"; dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KkNK2B0dzDqwr
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 01:46:03 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KkPF5QdNzDqwr
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 01:46:57 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
  :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
  Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
  Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
  List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=wePmmyRAqzc9E8AvYvRy4CjZhcBEJxH2FmSPiZPoaEw=; b=ACtDIJSRM2EBOX+MHFb+Pg7Gj
- okiQGHIbGoDwFEpUIcFKrJ5P2TzxRrH8kQt1x1ttlmn8Hi6EYwnOS5wxfPX12SyRasM7GrLFcfwGx
- SpmwqgAHfveVdSQRIdU/UNLxWv8nu5nF0S836rOWWjtWiQyyofMPsjTctBlFlFLwk0O+rjXPPnoeG
- 0IU3703HDn+vjNLkMF6/eqk5amnwC0IUBIaE9ezBMcoSxbwHmp0lqRizsJo4jiPkejwxITaV14R6V
- VyhLyMS9aa2J98Zbwpo/kX8fZcwV27B+kZWNwBCvhPEgnijY51i27p6dW51LFFz8No1uGrBKNHO6J
- 1NLVlItmg==;
+ bh=VI0bXCVY8P10H0YT3Rjq7E9GvaiLma/bGh4rBPUdQKg=; b=UNxWJcbn1PB9qyM05AHzrOjp5
+ 5OskrUVMmr8E657vBPDa4nkoWpXwS48U5vGj4wCTVjhSjPsYF9oRgdHtWUmvFMhrCJAYi/vj/FF0A
+ eqtZ6wSH1lfvGv1GPkgsPpPIerkGgc7t5x48gBu1tOfBVOwSYvcK0/+EU/sPIZC46P/wLirq4zdqU
+ XfhYtWeTiF4DB0ggGTGH8aPlSjIycvvzNj0plwZ/TqjzP75Kh270DOEmNsNXfzL6jiP1W4xRkNnM5
+ QTf5A+zcHpKdOVTuqhQsqOUXWgmr7Sb/YmJMUEZy2PoFRAneQ98gZ5p6Kk+TNiIOqEihoP7TgLOWt
+ aI3ChGSWA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1i3j5z-0005dZ-2P; Fri, 30 Aug 2019 15:45:51 +0000
-Date: Fri, 30 Aug 2019 08:45:51 -0700
+ Linux)) id 1i3j6w-0005vs-1C; Fri, 30 Aug 2019 15:46:50 +0000
+Date: Fri, 30 Aug 2019 08:46:50 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 2/7] erofs: some marcos are much more readable as a
- function
-Message-ID: <20190830154551.GA11571@infradead.org>
-References: <20190830030040.10599-1-gaoxiang25@huawei.com>
- <20190830030040.10599-2-gaoxiang25@huawei.com>
- <5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
+Message-ID: <20190830154650.GB11571@infradead.org>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+ <20190830033643.51019-6-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b2ecf5cec1a6aa3834e9af41886a7fcb18ae86a.camel@perches.com>
+In-Reply-To: <20190830033643.51019-6-gaoxiang25@huawei.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
  bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -70,29 +69,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
  Christoph Hellwig <hch@infradead.org>, weidu.du@huawei.com,
- linux-erofs@lists.ozlabs.org, Dan Carpenter <dan.carpenter@oracle.com>
+ Joe Perches <joe@perches.com>, linux-erofs@lists.ozlabs.org,
+ Dan Carpenter <dan.carpenter@oracle.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Aug 29, 2019 at 08:16:27PM -0700, Joe Perches wrote:
-> > -		sizeof(__u32) * ((__count) - 1); })
-> > +static inline unsigned int erofs_xattr_ibody_size(__le16 d_icount)
-> > +{
-> > +	unsigned int icount = le16_to_cpu(d_icount);
-> > +
-> > +	if (!icount)
-> > +		return 0;
-> > +
-> > +	return sizeof(struct erofs_xattr_ibody_header) +
-> > +		sizeof(__u32) * (icount - 1);
-> 
-> Maybe use struct_size()?
+On Fri, Aug 30, 2019 at 11:36:42AM +0800, Gao Xiang wrote:
+> As Dan Carpenter suggested [1], I have to remove
+> all erofs likely/unlikely annotations.
 
-Declaring a variable that is only used for struct_size is rather ugly.
-But while we are nitpicking: you don't need to byteswap to check for 0,
-so the local variable could be avoided.
-
-Also what is that magic -1 for?  Normally we use that for the
-deprecated style where a variable size array is declared using
-varname[1], but that doesn't seem to be the case for erofs.
+Do you have to remove all of them, or just those where you don't have
+a particularly good reason why you think in this particular case they
+might actually matter?
