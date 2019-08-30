@@ -1,53 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C33AA3B4B
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 18:05:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B147A3C03
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 18:28:32 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KkpT4HqJzDqSd
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 02:05:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KlK95FNSzDr2y
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 02:28:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
+ smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:e::133;
+ helo=bombadil.infradead.org;
+ envelope-from=batv+b0e6514120785512acaa+5850+infradead.org+hch@bombadil.srs.infradead.org;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.189; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KkpL71kWzDqNx
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 02:05:14 +1000 (AEST)
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
- by Forcepoint Email with ESMTP id BE52241B7913997FE1D5;
- Sat, 31 Aug 2019 00:05:10 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 31 Aug 2019 00:05:10 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 31 Aug 2019 00:05:09 +0800
-Date: Sat, 31 Aug 2019 00:04:20 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
-Message-ID: <20190830160415.GC69026@architecture4>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KlJz4brRzDr2K
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 02:28:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+ Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+ List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+ bh=RdPMpAXXBaiQno2G62m49MFypxqlVKUtgB8faAoi/bA=; b=m0ltjgx7t4ynixYMj9EPQrDSd
+ gouxhmamQQK46+oauBJCwjtVgtNnrQh3DY23q1oViqIYVv0QTxvU8EoQ2QX088A3jt8it37QT5tav
+ +G99U5Hvmr8MWiuaitu6f4u0/16jw6KiM7gZ1aQphmP3iwQ4Ep8Ka7z0Z1hi8dRKhi7TrUA50F4rN
+ 6tsT6WTOz8bN8V7WcePdcW6dl7pBthWt1CXoQ36kayghdBUUFC2rvbk2mlhO/aFNG+K6fyaE5nxxt
+ s8RKesu5J5MzBXL4CN/QjwpPqfrgUu3acD8Zy1p3mVZi/IUFVrm/eTTNm+BVfU3APEHcq1XOQIYIO
+ cSh/4TjEA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
+ Linux)) id 1i3jky-0006Lt-Fu; Fri, 30 Aug 2019 16:28:12 +0000
+Date: Fri, 30 Aug 2019 09:28:12 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH v3 7/7] erofs: redundant assignment in
+ __erofs_get_meta_page()
+Message-ID: <20190830162812.GA10694@infradead.org>
 References: <20190830032006.GA20217@architecture4>
  <20190830033643.51019-1-gaoxiang25@huawei.com>
- <20190830033643.51019-6-gaoxiang25@huawei.com>
- <20190830154650.GB11571@infradead.org>
+ <20190830033643.51019-7-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830154650.GB11571@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190830033643.51019-7-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
+ bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,31 +66,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
- weidu.du@huawei.com, Joe Perches <joe@perches.com>,
- linux-erofs@lists.ozlabs.org, Dan Carpenter <dan.carpenter@oracle.com>
+ Christoph Hellwig <hch@infradead.org>, weidu.du@huawei.com,
+ Joe Perches <joe@perches.com>, linux-erofs@lists.ozlabs.org,
+ Dan Carpenter <dan.carpenter@oracle.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christoph,
+> -		err = bio_add_page(bio, page, PAGE_SIZE, 0);
+> -		if (err != PAGE_SIZE) {
+> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE) {
+>  			err = -EFAULT;
+>  			goto err_out;
+>  		}
 
-On Fri, Aug 30, 2019 at 08:46:50AM -0700, Christoph Hellwig wrote:
-> On Fri, Aug 30, 2019 at 11:36:42AM +0800, Gao Xiang wrote:
-> > As Dan Carpenter suggested [1], I have to remove
-> > all erofs likely/unlikely annotations.
-> 
-> Do you have to remove all of them, or just those where you don't have
-> a particularly good reason why you think in this particular case they
-> might actually matter?
+This patch looks like an improvement.  But looking at that whole
+area just makes me cringe.
 
-I just added unlikely/likely for all erofs error handling paths or
-rare happened cases at first... (That is all in my thought...)
+Why is there __erofs_get_meta_page with the two weird booleans instead
+of a single erofs_get_meta_page that gets and gfp_t for additional
+flags and an unsigned int for additional bio op flags.
 
-I don't have some benchmark data for each unlikely/likely case (and I have
-no idea "is that worth to take time to benchmark rather than do another more
-useful stuffs"), so..I have to kill them all...
+Why do need ioprio support to start with?  Seeing that in a new
+fs look kinda odd.  Do you have benchmarks that show the difference?
 
-Thanks,
-Gao Xiang
+That function then calls erofs_grab_bio, which tries to handle a
+bio_alloc failure, except that the function will not actually fail
+due the mempool backing it.  It also seems like and awfully
+huge function to inline.
 
+Why is there __submit_bio which really just obsfucates what is
+going on?  Also why is __submit_bio using bio_set_op_attrs instead
+of opencode it as the comment right next to it asks you to?
 
+Also I really don't understand why you can't just use read_cache_page
+or even read_cache_page_gfp instead of __erofs_get_meta_page.
+That function is a whole lot of duplication of functionality shared
+by a lot of other file systems.
