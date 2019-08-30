@@ -2,83 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7492EA268F
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2019 20:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 51499A2C3D
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 03:25:06 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KBhZ5LB0zDrby
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 04:58:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1567105102;
-	bh=OEZh/ctsesBRc/QtTLGBmAr/R4BSWdaJ9oRK1r9HLZw=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=bLAmkhDxAEjj+r9+mbBb6/9eOFbBQH7yRZXXFE0A/WB5/hKihAtxnxipF2dKTBO/C
-	 CsVsonl0uVyNGKXqlSDQ1+ypfyC7B4tnuraJdXZyW7I1lspjxgc65xy/XoPW4bpjZy
-	 fiGL3lchcAHcFS+vI3jlhwNzU+xS2/YqCKxMisH/7g3BqaJYfcCxvmfYPD/6eS4iKC
-	 qw8X/1mJQqQxiPNwOO/IrnwEkWJXgiWJ1EkT8drBAf8/xb2CeroNSFHXC3ZTv+rV5U
-	 9Lyd4+9/J/FVoCbO1G+PsJVsljf8P+R8Y7CZkRDZKIhadeW/hLg1ehC3hmt7mfeyWo
-	 V7W5cFB/IjKxQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KMGl5bZLzDr7p
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 11:25:03 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=77.238.178.146; helo=sonic308-18.consmr.mail.ir2.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=none (mailfrom) smtp.mailfrom=omnibond.com
+ (client-ip=2607:f8b0:4864:20::c43; helo=mail-yw1-xc43.google.com;
+ envelope-from=hubcap@omnibond.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=none (p=none dis=none) header.from=omnibond.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="DAagERDO"; 
+ unprotected) header.d=omnibond-com.20150623.gappssmtp.com
+ header.i=@omnibond-com.20150623.gappssmtp.com header.b="rsF3TnYv"; 
  dkim-atps=neutral
-Received: from sonic308-18.consmr.mail.ir2.yahoo.com
- (sonic308-18.consmr.mail.ir2.yahoo.com [77.238.178.146])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-xc43.google.com (mail-yw1-xc43.google.com
+ [IPv6:2607:f8b0:4864:20::c43])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KBgZ4170zDrfP
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 04:57:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1567105041; bh=xvUFAFsLiQVngerBLgBQpnYPOm7q0BCalX6FGZiM+Ww=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=DAagERDOXrHhMUC8zEcq68gmd0VDfcWX0hbLUvkchU472lelQqvE4xGhRwcIap1gw1U7VWAR9tN4oLe510R1614jkaT6rGwhaWjeC6Y9wd+fWOjU2f88hMHI3KXlHwhfHCmjJ6rHyLscVa+ejy1NVRFNGlaKESwezvxnjihcCQR9yGkUcm6FeW8cjJqd/4WP885Uth2uRjha7N0zPlUHdQPRBBzXRQvyObViDntYGqOKVuoZVWF0cV+1sk9A3vJ4/UyWKD8IopW53GoAMitDu81w4yb3+01jVbCJPRCnAe/IhNrheLwvesgDWJbBeBHK4U5baBnkhx5sgB4o10BZHA==
-X-YMail-OSG: xR_woKYVM1naap7cqEV1L8CUGlYle8X5EFiEEsFTDvJ_B6Q_WpVmRKMxGFuAs_w
- MTW7BINu4UH.7oZDrB6s4TS2shswFwTKhoXPPFUZXjcu1SvHgOmJHoN_WKb9AMfcTDPTsEs4IH95
- 9YwToRGQDRY0c1ek7drmu.IUZOwM722QE05q1Vvtpy7ty9yhEPh7PzAfBLG7FDqhH14XIbudPoJ7
- HpgrHn3iT8yOnz7fA3afkNouDCPaVzFivQF.HdCuFD8xJmO7.oQqR_9BQv5kBHb6mJYGmWwR3bQc
- II0bTNtP61ZRLwUE_nkAmkEjwHXh5Ej2vj2YWlpOGsTLPs9OA_O8E9iBbE880h_f4PH3ZxOxOH_r
- .A8rHaKQN19lBmDmw_JwpYt1MHDQmFpWG832BBXBCkfXRO3iuPu0uZvB.3MW71b2szl7ehe8b3Gq
- 1aPHOhNOZgffGSl_mWiHq6ClZxIFowyju.R.C9I4WzatFtRyNIiSC.O9.f8p4sA5eZHc7ORYcsIq
- UNtGSaM60Pv8_XhitGftXkcL0EpEwMEDUJ6xfcCHMNwx3GiJmqPglbgPSBPL9iOOEBgJqqPJf1zJ
- UsRRBfV8D75SFqqbujZuehLmnvglfzIAcwrXq3m5p85Hjp96D2yXhgBVRexuxsW8n4hi0uu2Mvbf
- kk2EJ84LI1mq03MMxsgNEX0WAnGWMzHPZxbdB5hO9As8nJ8ecEBWQlz2ieBuBDaus4cMsI2yM6OG
- UdSn7RLq8uXtFpDXSSijAdCkbxVBLS_2s7aGLPlWmXKVHavLFoetKe95WS9emodRsknWumeMX_uf
- QiTcIKR3pwowCSS09aEYNDXEm.BA8V9I91JG2QBT7LzTDckKnCXetPrYODIM2koS.IvIc6TrRQ0i
- 1bzZddGjdYGYbna.J5RPgR1eI_3.KJ3dEYRkg66pt7WKQ6tni0aSI4PH5ORjw0S8tvs_gznpRF3M
- ..KXIQ5oLUiqx6PiuJfo9kh7gM1DrRvUK.JtJ9zQNSzwV_n29q.TM6OimUke0_RM7c0aWUAKXyEG
- kuITRnwu0rilVIdI8_JKJ_ST5FUsL4FwiFomxNprLcG_p9liTFrFmdQczOgMJooq8XEO_VHFVXub
- 20YYGxWAzbfsMm9DMmpHcWW7g72zDzaB_HB3dwdEvWOrdY2JqDkYi_qA07_r694OAerHM5w0QmFt
- W5ukpVPVVZ3MMtbiBSShmgC37M6K_dgcOBo51qBX3uI7XdA36PhFHBpvG.7ty_FB962Oj3E8eaFV
- HcmWgpPqn.ncxdFxqlHsKL.Y-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.ir2.yahoo.com with HTTP; Thu, 29 Aug 2019 18:57:21 +0000
-Received: by smtp420.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 82b6ee7c086d1bafb8e1884cc30d4767; 
- Thu, 29 Aug 2019 18:57:18 +0000 (UTC)
-Date: Fri, 30 Aug 2019 02:57:10 +0800
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] staging: erofs: using switch-case while checking the
- inode type.
-Message-ID: <20190829185706.GA21327@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190829130813.11721-1-pratikshinde320@gmail.com>
- <20190829135607.GA195010@architecture4>
- <CAGu0czRasWHj53uF5zAoDRjbxU2sgN6HtazN_9Y-mkK6NjO-LQ@mail.gmail.com>
- <20190829141522.GA15562@architecture4>
- <20190829150436.GI23584@kadam>
- <20190829151352.GA100055@architecture4>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KMGf4WmNzDr2y
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 11:24:53 +1000 (AEST)
+Received: by mail-yw1-xc43.google.com with SMTP id m11so1848157ywh.3
+ for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2019 18:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=omnibond-com.20150623.gappssmtp.com; s=20150623;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc:content-transfer-encoding;
+ bh=4TfZVE6zvYYuoOuB/Rxqa+Mlm3vtxZPY12krCFPSTtI=;
+ b=rsF3TnYvnJjkhMrqd8jgi2b1fWfnS720m/snkWNYBAl3jogwp2mEsqA8h0meBBMFCG
+ mupgLKrOXopsTT3mx+lDcAZLHUPbfCw/vXrZaEIvlfIiq4H0dj/IKCul0NWP4fpGLsu4
+ 48Lini1zfDu9D/EL0CeWiI8kZAXrgg08x+hcJWXhpsmSN701z4+zSsQ5V2A/N+PZ/ko+
+ cAveXQxi5GTfOnxm/M0L2QMcpa0QpEp0UoezlsX6vklrx1noOLsykTvVpPGdg1yASetm
+ NGCTD4uF7gFM2G4DP0Fj0jWpPyOxMpJF0KkXFU1tGtaTorkpzYDBwzJA49OyfPjy95xt
+ U/rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc:content-transfer-encoding;
+ bh=4TfZVE6zvYYuoOuB/Rxqa+Mlm3vtxZPY12krCFPSTtI=;
+ b=hNGq1R2OF46IX1O30cqE6yLPO/6zvFUlgoXQEVE8HNTrUtmHOXvZ8kxakpIu3qrSLy
+ GG0m4NabXqmdTzR9SGJCVbUm5NPlwkAibHjzTaHCYOLAvRFgIGfJD3hnDJ/H3RXPg+4r
+ jU3JkT//9ElQd6I86J3/q2DzI6mO2BFbmQvJK0g1A9Ud6WgVbgv2QbhbzDLQGc1nu+CX
+ stniF1KdlEtRo5H+GnMASH4vUW650vy/ju2pkJov0JMejg77DjH2E3PLxNbEBdyLZUdq
+ ZIuDM8pxvOluOOvkTm7wvDM3qNjOAjlzQR9qFtK3U+SsY93sJkHupn1bEvyTYvLcSSsM
+ RYcw==
+X-Gm-Message-State: APjAAAWBkxTqMsv/mZ8UEZX+a2fkkX/0Sjy+bUzMQogAmeuhv2tt4mkR
+ p8gaywQQVo+FtZVm0lZQXbfP1ZvN/NxVQ/eHFdv9eg==
+X-Google-Smtp-Source: APXvYqwS/gBw6GYqWJhwCNBmHR6+W2ONQRTVjMY8ZXLyRIgVZbf1blJaiiDec2a/U/ArNO35ME5xZuocZ9cXu0GpPKQ=
+X-Received: by 2002:a0d:d596:: with SMTP id x144mr9018446ywd.69.1567128290041; 
+ Thu, 29 Aug 2019 18:24:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829151352.GA100055@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190827150544.151031-1-salyzyn@android.com>
+ <20190828142423.GA1955@infradead.org>
+ <5dd09a38-fffb-36f2-505b-be2ddf6bb750@android.com>
+In-Reply-To: <5dd09a38-fffb-36f2-505b-be2ddf6bb750@android.com>
+From: Mike Marshall <hubcap@omnibond.com>
+Date: Thu, 29 Aug 2019 21:24:38 -0400
+Message-ID: <CAOg9mSTCC4Z3RpEyppC50B+pnSBbV0sr-F7hbsM-B+z3c-AZVA@mail.gmail.com>
+Subject: Re: [PATCH v8] Add flags option to get xattr method paired to
+ __vfs_getxattr
+To: Mark Salyzyn <salyzyn@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,68 +79,90 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
- linux-erofs@lists.ozlabs.org
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Hugh Dickins <hughd@google.com>,
+ James Morris <jmorris@namei.org>, Christoph Hellwig <hch@infradead.org>,
+ devel@lists.orangefs.org, Eric Van Hensbergen <ericvh@gmail.com>,
+ Joel Becker <jlbec@evilplan.org>, Anna Schumaker <anna.schumaker@netapp.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Mathieu Malaterre <malat@debian.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.com>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Dave Kleikamp <shaggy@kernel.org>,
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+ Mimi Zohar <zohar@linux.ibm.com>, linux-cifs@vger.kernel.org,
+ Paul Moore <paul@paul-moore.com>, "Darrick J. Wong" <darrick.wong@oracle.com>,
+ Eric Sandeen <sandeen@sandeen.net>, kernel-team@android.com,
+ selinux@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+ reiserfs-devel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ Miklos Szeredi <miklos@szeredi.hu>, "Linux F2FS DEV,
+ Mailing List" <linux-f2fs-devel@lists.sourceforge.net>,
+ Benjamin Coddington <bcodding@redhat.com>, linux-integrity@vger.kernel.org,
+ Martin Brandenburg <martin@omnibond.com>, Chris Mason <clm@fb.com>,
+ linux-mtd <linux-mtd@lists.infradead.org>, linux-afs@lists.infradead.org,
+ Jonathan Corbet <corbet@lwn.net>, Vyacheslav Dubeyko <slava@dubeyko.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ Ilya Dryomov <idryomov@gmail.com>,
+ Ext4 Developers List <linux-ext4@vger.kernel.org>,
+ Stephen Smalley <sds@tycho.nsa.gov>, Serge Hallyn <serge@hallyn.com>,
+ Eric Paris <eparis@parisplace.org>, ceph-devel <ceph-devel@vger.kernel.org>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ linux-mm <linux-mm@kvack.org>, samba-technical@lists.samba.org,
+ linux-xfs@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ "David S. Miller" <davem@davemloft.net>, ocfs2-devel@oss.oracle.com,
+ jfs-discussion@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
+ Eric Biggers <ebiggers@google.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, David Howells <dhowells@redhat.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, devel@driverdev.osuosl.org,
+ "J. Bruce Fields" <bfields@redhat.com>,
+ Andreas Gruenbacher <agruenba@redhat.com>, Sage Weil <sage@redhat.com>,
+ Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>,
+ cluster-devel@redhat.com, Steve French <sfrench@samba.org>,
+ V9FS Developers <v9fs-developer@lists.sourceforge.net>,
+ Bharath Vedartham <linux.bhar@gmail.com>, Jann Horn <jannh@google.com>,
+ ecryptfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ Dave Chinner <dchinner@redhat.com>, David Sterba <dsterba@suse.com>,
+ Artem Bityutskiy <dedekind1@gmail.com>, netdev@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, stable@vger.kernel.org,
+ Tyler Hicks <tyhicks@canonical.com>, linux-security-module@vger.kernel.org,
+ Phillip Lougher <phillip@squashfs.org.uk>,
+ David Woodhouse <dwmw2@infradead.org>, linux-btrfs@vger.kernel.org,
+ Alexander Viro <viro@zeniv.linux.org.uk>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Dan,
+I added this patch series on top of Linux 5.3-rc6 and ran xfstests
+on orangefs with no regressions.
 
-On Thu, Aug 29, 2019 at 11:13:53PM +0800, Gao Xiang wrote:
-> Hi Dan,
-> 
-> On Thu, Aug 29, 2019 at 06:04:36PM +0300, Dan Carpenter wrote:
-> > On Thu, Aug 29, 2019 at 10:15:22PM +0800, Gao Xiang wrote:
-> > > I am very happy that you send a patch about this, but we have
-> > > to take care of handling "fall through" properly at least,
-> > > and I don't want to introduce some extra compile warnings
-> > > instead at this time.
-> > 
-> > I can't apply the patch so I maybe missed something.  I don't see
-> > a fall through issue.  We have the code so you could use ^^^^^^^^ to
-> > indicate which lines have a fall through problem.
-> > 
-> > > 
-> > > EROFS is sensitive for now and I have no idea what the "real"
-> > > point is.
-> > 
-> > What does "sensitive" mean here?  Now that it's out of staging we
-> > aren't applying clean up patches?
+Acked-by: Mike Marshall <hubcap@omnibond.com>
 
-Again, due to language obstacle, I have to give a detailed explanation
-of what "sensitive" meant here.
+-Mike
 
-I meant it seems all topic had no relationship with EROFS at all, but
-someone mentioned erofs in different topics, I have no idea what is
-wrong with EROFS, and I have no idea where it is like POS.
-
-As your unlikely/likely concern, I think I discussed with you earlier,
-in fact, most of EROFS unlikely is due to error handling paths, which are
-meaningful in my thought.
-
-If you argue that it has little performance difference, I think unlikely
-in IS_ERR can also be killed as well since for most use cases in Linux
-it is true that they are little performance difference at all. But I
-think totally it will have some impact.
-
-Anyway, I didn't find some formal standard about this, and I remove all
-of these as you like.
-
-Thanks,
-Gao Xiang
-
-> 
-> Of course not, I mean we should avoid "fall through" problem
-> but I have no time to verify this patch since I am fixing what
-> hch said as well.
-> 
-> Thanks,
-> Gao Xiang
-> 
-> > 
-> > regards,
-> > dan carpenter
-> > 
+On Wed, Aug 28, 2019 at 10:40 AM Mark Salyzyn <salyzyn@android.com> wrote:
+>
+> On 8/28/19 7:24 AM, Christoph Hellwig wrote:
+> > On Tue, Aug 27, 2019 at 08:05:15AM -0700, Mark Salyzyn wrote:
+> >> Replace arguments for get and set xattr methods, and __vfs_getxattr
+> >> and __vfs_setaxtr functions with a reference to the following now
+> >> common argument structure:
+> > Yikes.  That looks like a mess.  Why can't we pass a kernel-only
+> > flag in the existing flags field for =E2=82=8B>set and add a flags fiel=
+d
+> > to ->get?  Passing methods by structure always tends to be a mess.
+>
+> This was a response to GregKH@ criticism, an earlier patch set just
+> added a flag as you stated to get method, until complaints of an
+> excessively long argument list and fragility to add or change more
+> arguments.
+>
+> So many ways have been tried to skin this cat ... the risk was taken to
+> please some, and we now have hundreds of stakeholders, when the first
+> patch set was less than a dozen. A recipe for failure?
+>
+> -- Mark
+>
