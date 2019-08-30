@@ -1,81 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ED76A363B
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 14:06:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F58BA3644
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 14:07:06 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KdVr5nvGzDqw6
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 22:06:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1567166788;
-	bh=2KTWx79IbkS7jvCuPQzksUk6MDz/328fKKwliW1zrtE=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=Z2qh/jc91FEt3BzFDIRsoYMmt3WzYLvb/FgJDnAdJERYwyh4j9k5bSYkEgjdy6nwZ
-	 vVQE+iD1rOhvBTpEqpWH18ZRUZEFVKgUMt9O8cZhEQJcOxf62hgm8W+MXuVsDoiuuQ
-	 R4k7l5XMOhVQh3ryIBsviNcLARcxgVArHd4YQ+Y8itw6alAeWNmLOAtujoIaXBgWkQ
-	 +xFuN1YQTNCmKCwdA2sAYI7WDLGzeZmBGeYGhdIzaTXjmv8fFdwfiBh0ek7oy5uWHX
-	 gprVHoU4CohIJlYeFPbdl/gTvZ21q5p7JPVcNmPT98sDr6s53yX4nktXT6NXLDf0UU
-	 cmc9Hp/o5HPpQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KdWW1RXzzDqw6
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 22:07:03 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.64.205; helo=sonic303-24.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx1.suse.de; envelope-from=dsterba@suse.cz;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="XPYhccin"; 
- dkim-atps=neutral
-Received: from sonic303-24.consmr.mail.gq1.yahoo.com
- (sonic303-24.consmr.mail.gq1.yahoo.com [98.137.64.205])
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KdVl2P90zDqvL
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 22:06:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1567166778; bh=hGegLswRsXDMS7Mt0Mf9JkYB6NpI8ypuxStTJrsPGuE=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=XPYhccin0vNwy0qHU/AFTWVWWumy4xlu62gU/kiwuUoSqccL/ITAYQfsT9GOtawMrO6JpuewW8xTsbQ0K+IE1P0OK1p3dlFFmA7oBIRozcBGpxAxoweipZ6Hjf0lZIfZwP+B+ZwSd0lyf26Tz1Lb3lIHfIJUEwD6qm8gALrCt6YNkQ5Zw2Hb58z6MIzzzNXNcUUlOl98VnHwRgFWAltTinKnARKy0UWZg7pYVosX0/k91Ko2F+9/kmbQMOOsH8Qqr95UOzIr2fgy2wwa78Z8MyxHnd321+TudzHx3F8X4iKgj5R7FgRZtXxjI8DeX70HdBMMIQnxr+A9RvPUosm+9g==
-X-YMail-OSG: n7uX8fwVM1kpk7u0piUdmYrLH_5BBhUDBSNQd97K.Kneq0njub_LkIXQ7gDURbp
- 1JG5yVYKXHMcVq2P2Pwvr6tfUZ84yLbsUH18ynkMR8x50aXD2KUBVMux3qitqGbXwIfi2vgNFASf
- HNLNJl7aSQ7bJokzgnWM60lfcWZqjkerLFWKZV0mDfGjZavIR_pQz63xIeDheWxqwkAbUa7vjKAu
- C_r6zNVenso.eP34gWhvnCtpkeN9scOPp7457MFWsrrE2GEbaImWiHf4CZfev7vkiI6Dflp.wetb
- 3jHaY2y9C9DgnjRfnZSnfaDEyOkjlrPrlklDeEirfcUAyIxsqNBfYozJmR.._K8bW9KmJtoKzq3N
- iRoNCI1hVqBIfDuA7PHDFRaM0fITssZURRpvFM1Dq6VpdtIU.RIEs_CraHjun8aSrXeSosCZ7mRi
- 5Xe8oM1dw9Y571MR6iguM2Q95_D.1VLYZMMM2hNXzybUVolDJH7UtocP8_Ug7aCOseZtOfGJvd6e
- ADU.KWtv88Ts2OZuVspPL4vrBvHmywXBogxA81GLyEq8iIlaaICpdcrfC46xpfnXCNl85md5pG7z
- V4ln6zDzYSe5SgNBCoAOdyqZcPMZ6ja2pCq7T1xQzDefnZofKx1rk3mY1P1KwSlXFlClalTDzqNy
- S7g33ExlvnR0NbsuMD5Tjv4YhwC8b4lUJ77okhXGWJ4iZC5kUeVy9Bui_65NJANxpb4ZjYNJspx2
- _H9MbxdCtkse1hfCSIFwtq.qVEPXmFpPx04uYOy7piWiZMLRSV_zWEktduCp.HftEgVKZFpX_F.W
- GPl4d2YVsE3G1z6iP.2_9y8bgEnN34qQ9qlJs17NWNoEq28eU5noISOv1lUXeWgCDk8LpaZrGLzV
- 0KU4R7w8Z02F3df7egyCvIZVnmu.V8huCRkrplLgwByuvHs9_zPKbgueNcqNVLdj7HzWajD1E7hY
- gp2NVF9pmrxaAypliSgt0rSAnOVbGYw7_WYpbOnf9eLafigu3JmfTPuwwxi0rgZNmZ8W9HQN2Z40
- n4EB7ykmOkVq03fvjIYIas4L5hbYZZBT8GBrEmVkKDwGdNxY72ZhAJTpaeHbsp90JIFk2eoH8rON
- Tt3N0jpnWgfshM2qavDU44SU3u35In3DF5lTsYrashl0SjStUN9Bquw3rJHYgLB.mCDfu4zh6J9l
- jxBdV1es6ULUQVLDVP2WxfQNgnVV9Bbs0I1jmtoNUol58WyFAV8zG5a5EtGNJECL49RFtEXwB0R2
- a1Pgqh833px_HmEH195a41YfEZZg9dzAB5AE-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic303.consmr.mail.gq1.yahoo.com with HTTP; Fri, 30 Aug 2019 12:06:18 +0000
-Received: by smtp408.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 27fd797655cd7ababf61147ca3d721bf; 
- Fri, 30 Aug 2019 12:06:14 +0000 (UTC)
-Date: Fri, 30 Aug 2019 20:06:05 +0800
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
-Message-ID: <20190830120601.GC10981@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190830032006.GA20217@architecture4>
- <20190830033643.51019-1-gaoxiang25@huawei.com>
- <20190830033643.51019-6-gaoxiang25@huawei.com>
- <20190830113047.GG8372@kadam>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KdWR3DF2zDqvL
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 22:06:57 +1000 (AEST)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx1.suse.de (Postfix) with ESMTP id 0B3E4B662;
+ Fri, 30 Aug 2019 12:06:53 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+ id 4079DDA809; Fri, 30 Aug 2019 14:07:14 +0200 (CEST)
+Date: Fri, 30 Aug 2019 14:07:14 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
+Message-ID: <20190830120714.GN2752@twin.jikos.cz>
+Mail-Followup-To: dsterba@suse.cz, Joe Perches <joe@perches.com>,
+ Gao Xiang <gaoxiang25@huawei.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+ Amir Goldstein <amir73il@gmail.com>,
+ "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Dave Chinner <david@fromorbit.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+ Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190829095954.GB20598@infradead.org>
+ <20190829103252.GA64893@architecture4>
+ <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830113047.GG8372@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,44 +69,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Christoph Hellwig <hch@infradead.org>, weidu.du@huawei.com,
- Joe Perches <joe@perches.com>, Miao Xie <miaoxie@huawei.com>
+Reply-To: dsterba@suse.cz
+Cc: Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+ LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+ devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Amir Goldstein <amir73il@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
+ linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Dan,
-
-On Fri, Aug 30, 2019 at 02:30:47PM +0300, Dan Carpenter wrote:
-> On Fri, Aug 30, 2019 at 11:36:42AM +0800, Gao Xiang wrote:
-> > As Dan Carpenter suggested [1], I have to remove
-> > all erofs likely/unlikely annotations.
+On Thu, Aug 29, 2019 at 08:58:17AM -0700, Joe Perches wrote:
+> On Thu, 2019-08-29 at 18:32 +0800, Gao Xiang wrote:
+> > Hi Christoph,
 > > 
-> > [1] https://lore.kernel.org/linux-fsdevel/20190829154346.GK23584@kadam/
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> > ---
+> > On Thu, Aug 29, 2019 at 02:59:54AM -0700, Christoph Hellwig wrote:
+> > > > --- /dev/null
+> > > > +++ b/fs/erofs/erofs_fs.h
+> > > > @@ -0,0 +1,316 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
+> > > > +/*
+> > > > + * linux/fs/erofs/erofs_fs.h
+> > > 
+> > > Please remove the pointless file names in the comment headers.
+> > 
+> > Already removed in the latest version.
+> > 
+> > > > +struct erofs_super_block {
+> > > > +/*  0 */__le32 magic;           /* in the little endian */
+> > > > +/*  4 */__le32 checksum;        /* crc32c(super_block) */
+> > > > +/*  8 */__le32 features;        /* (aka. feature_compat) */
+> > > > +/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+> > > 
+> > > Please remove all the byte offset comments.  That is something that can
+> > > easily be checked with gdb or pahole.
+> > 
+> > I have no idea the actual issue here.
+> > It will help all developpers better add fields or calculate
+> > these offsets in their mind, and with care.
+> > 
+> > Rather than they didn't run "gdb" or "pahole" and change it by mistake.
 > 
-> Thanks!
+> I think Christoph is not right here.
 > 
-> This is a nice readability improvement and I'm so sure it won't impact
-> benchmarking at all.
-> 
-> Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Using external tools for validation is extra work
+> when necessary for understanding the code.
 
-It seems Greg merged another version... I have no idea but thanks for
-your acked-by :)
-	https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=8d8a09b093d7073465c824f74caf315c073d3875
+The advantage of using the external tools that the information about
+offsets is provably correct ...
 
-THanks,
-Gao Xiang
-
+> The expected offset is somewhat valuable, but
+> perhaps the form is a bit off given the visual
+> run-in to the field types.
 > 
-> regards,
-> dan carpenter
->
- 
+> The extra work with this form is manipulating all
+> the offsets whenever a structure change occurs.
+
+... while this is error prone.
+
+> The comments might be better with a form more like:
+> 
+> struct erofs_super_block {	/* offset description */
+> 	__le32 magic;		/*   0  */
+> 	__le32 checksum;	/*   4  crc32c(super_block) */
+> 	__le32 features;	/*   8  (aka. feature_compat) */
+> 	__u8 blkszbits;		/*  12  support block_size == PAGE_SIZE only */
