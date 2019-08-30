@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C218A3C2C
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 18:39:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12613A3C3D
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 18:40:36 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KlYp5ThyzDqSk
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 02:39:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Klb43BtKzDqb1
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 02:40:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
@@ -18,41 +18,41 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="Rw7TDZKu"; dkim-atps=neutral
+ header.b="XKxQMKVi"; dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KlYk6ypVzDqQN
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 02:39:22 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KlZz1nwtzDqQP
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 02:40:27 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
  :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
  Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
  Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
  List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=7hicMWakuRgs2TegBlYfwBT8iDprxzvg2SB2m6q1kQA=; b=Rw7TDZKu0oaHU45vECHr0BFIb
- QCsALEEmmqL6rPuPL/LqiIl68Hknd4ElB/B166cyi03n5AYPEP585r85yRxsXQlGrftxyqJLVT8kY
- oRdwaT7wD8Ho9SgDQ1/Y2TgrPgEocQPCGElTwPJ5cOtRQ8Y/6pD6y4/B3j6nh6lkNcvchE+l1mkhR
- hRKYJtKpSy2gGiNJCMIbnDF7tS6LfuVSauP6kIaz1gPpANUw+xYUPe0Cda6+eBd/31Riixe9Pc+8d
- GGOCuDkCQkPBO9ka4u10YGEG3XHCnlJ44NCL7WPiMEPGMSbeIgSRUTO1xa2Ww78gWyhWxluJjW6+U
- ECqizR7OQ==;
+ bh=AT7c8Uf6oRKSCvH0T7rxwpH4EoIuzd5Fl8xv/gJGnw4=; b=XKxQMKVi9kAdTU+vbb0Unuz1w
+ 1OC04HlMkxRWKs69JYntBAUF4Vq2rS9l2rajiJty/VLSOfmjDMy+0igRW96PttjZ1sVU4ZpTv/387
+ URunnMETnkxIuM82Rxm4Ch3c6EgKekyOk6PUM01SL5x0M70Gwdlqg/fz3lOS1cSnIsj0jJQEAQopu
+ LkT2Rihs462KZRs+vsR+k/TmnMtkm28eZgXiXoUJwS2Ll1xhYkJN1fpn+44WyZolCVtFv+DYTc6JK
+ F7IsP1hyzpQH9I9Ix7oOpfg+bKAuiOZusNnDVQsLRBCmrqavz6liyImmftILLHQIWu8d4n01QmuYH
+ J05OeGxHA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1i3jva-0001L9-Az; Fri, 30 Aug 2019 16:39:10 +0000
-Date: Fri, 30 Aug 2019 09:39:10 -0700
+ Linux)) id 1i3jwb-0002a3-O7; Fri, 30 Aug 2019 16:40:13 +0000
+Date: Fri, 30 Aug 2019 09:40:13 -0700
 From: Christoph Hellwig <hch@infradead.org>
 To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: [PATCH v6 03/24] erofs: add super block operations
-Message-ID: <20190830163910.GB29603@infradead.org>
+Subject: Re: [PATCH v6 04/24] erofs: add raw address_space operations
+Message-ID: <20190830164013.GC29603@infradead.org>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-4-gaoxiang25@huawei.com>
- <20190829101545.GC20598@infradead.org>
- <20190829105048.GB64893@architecture4>
+ <20190802125347.166018-5-gaoxiang25@huawei.com>
+ <20190829101721.GD20598@infradead.org>
+ <20190829114610.GF64893@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829105048.GB64893@architecture4>
+In-Reply-To: <20190829114610.GF64893@architecture4>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
  bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -83,62 +83,21 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Aug 29, 2019 at 06:50:48PM +0800, Gao Xiang wrote:
-> > Please use an erofs_ prefix for all your functions.
+On Thu, Aug 29, 2019 at 07:46:11PM +0800, Gao Xiang wrote:
+> Hi Christoph,
 > 
-> It is already a static function, I have no idea what is wrong here.
-
-Which part of all wasn't clear?  Have you looked at the prefixes for
-most functions in the various other big filesystems?
-
-> > > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
-> > > +	if (is_inode_fast_symlink(inode))
-> > > +		kfree(inode->i_link);
-> > 
-> > is_inode_fast_symlink only shows up in a later patch.  And really
-> > obsfucates the check here in the only caller as you can just do an
-> > unconditional kfree here - i_link will be NULL except for the case
-> > where you explicitly set it.
+> On Thu, Aug 29, 2019 at 03:17:21AM -0700, Christoph Hellwig wrote:
+> > The actual address_space operations seem to largely duplicate
+> > the iomap versions.  Please use those instead.  Also I don't think
+> > any new file system should write up ->bmap these days.
 > 
-> I cannot fully understand your point (sorry about my English),
-> I will reply you about this later.
-
-With that I mean that you should:
-
- 1) remove is_inode_fast_symlink and just opencode it in the few places
-    using it
- 2) remove the check in this place entirely as it is not needed
- 3) remove the comment quoted above as it is more confusing than not
-    having the comment
-
-> > Is there any good reasons to use buffer heads like this in new code
-> > vs directly using bios?
+> iomap doesn't support tail-end packing inline data till now,
+> I think Chao and I told you and Andreas before [1].
 > 
-> This page can save in bdev page cache, it contains not only the erofs
-> superblock so it can be fetched in page cache later.
+> Since EROFS keeps a self-contained driver for now, we will use
+> iomap if it supports tail-end packing inline data later.
 
-If you want it in the page cache why not use read_mapping_page or similar?
-
-> > > +/* set up default EROFS parameters */
-> > > +static void default_options(struct erofs_sb_info *sbi)
-> > > +{
-> > > +}
-> > 
-> > No need to add an empty function.
-> 
-> Later patch will fill this function.
-
-Please only add the function in the patch actually adding the
-functionality.
-
-> > > +}
-> > 
-> > Why is this needed?  You can just free your sb privatte information in
-> > ->put_super and wire up kill_block_super as the ->kill_sb method
-> > directly.
-> 
-> See Al's comments,
-> https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
-
-With that code it makes sense.  In this paticular patch it does not.
-So please add it only when actually needed.
+Well, so work with the maintainers to enhance the core kernel.  That
+is how Linux development works.  We've added various iomap enhancements
+for gfs in the last merge windows, and we've added more for the brand
+new zonefs file system we plan to merge for 5.4.
