@@ -2,46 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA718A318E
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 09:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F627A3487
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 11:57:00 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KWqr3QZhzDvHQ
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 17:50:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KZdP4ZQBzDr3S
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 19:56:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.35; helo=huawei.com; envelope-from=yuchao0@huawei.com;
- receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::541; helo=mail-pg1-x541.google.com;
+ envelope-from=pratikshinde320@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="lSZRzawc"; 
+ dkim-atps=neutral
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com
+ [IPv6:2607:f8b0:4864:20::541])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KWnQ3N2XzF0c1
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 17:48:42 +1000 (AEST)
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id EE31C4723AAB79C3E0CD;
- Fri, 30 Aug 2019 15:48:37 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 30 Aug
- 2019 15:48:27 +0800
-Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
-To: Gao Xiang <gaoxiang25@huawei.com>, <linux-fsdevel@vger.kernel.org>,
- <devel@driverdev.osuosl.org>, Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
-From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <9ba5968d-45a6-c66e-52df-ae232cc42365@huawei.com>
-Date: Fri, 30 Aug 2019 15:48:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190815044155.88483-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KZdH6t1xzDr2j
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 19:56:49 +1000 (AEST)
+Received: by mail-pg1-x541.google.com with SMTP id o13so3284900pgp.12
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2019 02:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=6/TpWOxycK339vhmQQxRey5svz2q6FKJZFsDs0FbtbE=;
+ b=lSZRzawc9YXdT75P8dh7crJ6Z47mml87kaxgsVa64YFWd2Uhhe8kSnSE4z9mF2UFXW
+ uIh1gKPpxZE8J9Af9gNiBbDgRHFRTR0g/WZt1Lz8kGYCYyMob1EzLLZ/bO66pTjgeovC
+ lHw1tjwQWCfullMi7Ue5yX4s9dfhj2C+WnGejuaOM1DEmBp/IS0Z/059bugWFHD4dMZU
+ LFm5+e6DnovFNSgtO7TzJHsEaQmhLCsswB++qFqgavGXIrf817mFaGpK/BnokUBB4Kyt
+ 0iaBbeO9X1GVqCXKOkQAj2ImIPRzBgcuQxq70OM3B8NugNYCPbXHKkHHFbIq3PCwat9R
+ Apdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=6/TpWOxycK339vhmQQxRey5svz2q6FKJZFsDs0FbtbE=;
+ b=AyyVYgstkN8I4WN+iWNsl9Nwruz8TSmC2G7SdbO2rQ9lI06wPqYT3vbwB2qrRyZjV2
+ 1frMaS464bhwbwjxkObtMolk0Xxey2Mfu3QruZQvJlXSKdB6wxSCAcIlvGHi9yju4P8m
+ mqu38zwaTdXnaso9c1cakwqEAd3Ci9tB4+1uU2tX/VQWnI3HAcUlTyDuGutfoTcQXoe9
+ sx1GNO/FfNLapu1p6d3W+UOYaaYahtUMkO/0XM2RochvTp3aZMUCFpUmdLbqAEtg/w/c
+ VxvdA4s9FV3JUkl5YLM4HrTErcaJr/V/UOya3i6ts1aRqPT1bHVVoVMibPFPxWqhgxOs
+ rqyg==
+X-Gm-Message-State: APjAAAVW2Ss9HNFeVHxIXuYCzlcEvd75NjAXMzxuDSSKln2XSTv7J7jC
+ 02wEVCLrYfExAqKSJsriABQEUHEUIrmQbA==
+X-Google-Smtp-Source: APXvYqwCNbBxQFvSYtI71czk/W0eMQLf6UKu4OCvs/HJ2vx4FWUDNfeYaz9WrHo8YM19hDXUAPPJ0g==
+X-Received: by 2002:aa7:8a47:: with SMTP id n7mr17898071pfa.182.1567159005718; 
+ Fri, 30 Aug 2019 02:56:45 -0700 (PDT)
+Received: from localhost.localdomain ([42.107.64.5])
+ by smtp.gmail.com with ESMTPSA id o3sm19501196pje.1.2019.08.30.02.56.41
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Fri, 30 Aug 2019 02:56:44 -0700 (PDT)
+From: Pratik Shinde <pratikshinde320@gmail.com>
+To: linux-erofs@lists.ozlabs.org,
+	gaoxiang25@huawei.com,
+	yuchao0@huawei.com
+Subject: [PATCH] erofs: using switch-case while checking the inode type.
+Date: Fri, 30 Aug 2019 15:26:15 +0530
+Message-Id: <20190830095615.10995-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,270 +74,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-erofs@lists.ozlabs.org,
- Theodore Ts'o <tytso@mit.edu>, "Darrick J . Wong" <darrick.wong@oracle.com>,
- Pavel Machek <pavel@denx.de>, Jan Kara <jack@suse.cz>,
- Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
- LKML <linux-kernel@vger.kernel.org>, David Sterba <dsterba@suse.cz>,
- Christoph Hellwig <hch@infradead.org>, Richard Weinberger <richard@nod.at>,
- Miao Xie <miaoxie@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2019/8/15 12:41, Gao Xiang wrote:
-> [I strip the previous cover letter, the old one can be found in v6:
->  https://lore.kernel.org/r/20190802125347.166018-1-gaoxiang25@huawei.com/]
-> 
-> We'd like to submit a formal moving patch applied to staging tree
-> for 5.4, before that we'd like to hear if there are some ACKs,
-> suggestions or NAKs, objections of EROFS. Therefore, we can improve
-> it in this round or rethink about the whole thing.
-> 
-> As related materials mentioned [1] [2], the goal of EROFS is to
-> save extra storage space with guaranteed end-to-end performance
-> for read-only files, which has better performance over exist Linux
-> compression filesystems based on fixed-sized output compression
-> and inplace decompression. It even has better performance in
-> a large compression ratio range compared with generic uncompressed
-> filesystems with proper CPU-storage combinations. And we think this
-> direction is correct and a dedicated kernel team is continuously /
-> actively working on improving it, enough testers and beta / end
-> users using it.
-> 
-> EROFS has been applied to almost all in-service HUAWEI smartphones
-> (Yes, the number is still increasing by time) and it seems like
-> a success. It can be used in more wider scenarios. We think it's
-> useful for Linux / Android OS community and it's the time moving
-> out of staging.
-> 
-> In order to get started, latest stable mkfs.erofs is available at
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
-> 
-> with README in the repository.
-> 
-> We are still tuning sequential read performance for ultra-fast
-> speed NVME SSDs like Samsung 970PRO, but at least now you can
-> try on your PC with some data with proper compression ratio,
-> the latest Linux kernel, USB stick for convenience sake and
-> a not very old-fashioned CPU. There are also benchmarks available
-> in the above materials mentioned.
-> 
-> EROFS is a self-contained filesystem driver. Although there are
-> still some TODOs to be more generic, we will actively keep on
-> developping / tuning EROFS with the evolution of Linux kernel
-> as the other in-kernel filesystems.
-> 
-> As I mentioned before in LSF/MM 2019, in the future, we'd like
-> to generalize the decompression engine into a library for other
-> fses to use after the whole system is mature like fscrypt.
-> However, such metadata should be designed respectively for
-> each fs, and synchronous metadata read cost will be larger
-> than EROFS because of those ondisk limitation. Therefore EROFS
-> is still a better choice for read-only scenarios.
-> 
-> EROFS is now ready for reviewing and moving, and the code is
-> already cleaned up as shiny floors... Please kindly take some
-> precious time, share your comments about EROFS and let us know
-> your opinion about this. It's really important for us since
-> generally speaking, we like to use Linux _in-tree_ stuffs rather
-> than lack of supported out-of-tree / orphan stuffs as well.
+while filling the linux inode, using switch-case statement to check
+the type of inode.
+switch-case statement looks more clean here.
 
-EROFS proposes its very unique fixed-sized output compression and inplace
-decompression framework joining into the ecosystem of compression filesystem, I
-think it will enrich diversity of compression filesystem, and bring healthy
-competition there.
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ fs/erofs/inode.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-I do believe this is the right time to promote erofs to fs/ directory, let it be
-the formal member of filesystem clubhouse.
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 80f4fe9..6336cc1 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -190,22 +190,28 @@ static int fill_inode(struct inode *inode, int isdir)
+ 	err = read_inode(inode, data + ofs);
+ 	if (!err) {
+ 		/* setup the new inode */
+-		if (S_ISREG(inode->i_mode)) {
++		switch (inode->i_mode & S_IFMT) {
++		case S_IFREG:
+ 			inode->i_op = &erofs_generic_iops;
+ 			inode->i_fop = &generic_ro_fops;
+-		} else if (S_ISDIR(inode->i_mode)) {
++			break;
++		case S_IFDIR:
+ 			inode->i_op = &erofs_dir_iops;
+ 			inode->i_fop = &erofs_dir_fops;
+-		} else if (S_ISLNK(inode->i_mode)) {
++			break;
++		case S_IFLNK:
+ 			/* by default, page_get_link is used for symlink */
+ 			inode->i_op = &erofs_symlink_iops;
+ 			inode_nohighmem(inode);
+-		} else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
+-			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
++			break;
++		case S_IFCHR:
++		case S_IFBLK:
++		case S_IFIFO:
++		case S_IFSOCK:
+ 			inode->i_op = &erofs_generic_iops;
+ 			init_special_inode(inode, inode->i_mode, inode->i_rdev);
+ 			goto out_unlock;
+-		} else {
++		default:
+ 			err = -EFSCORRUPTED;
+ 			goto out_unlock;
+ 		}
+-- 
+2.9.3
 
-Acked-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks
-
-> 
-> Thank you in advance,
-> Gao Xiang
-> 
-> [1] https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
-> [2] https://www.usenix.org/conference/atc19/presentation/gao
-> 
-> Changelog from v7:
->  o keep up with the latest staging tree in addition to
->    the latest staging patch:
->    https://lore.kernel.org/r/20190814103705.60698-1-gaoxiang25@huawei.com/
->    - use EUCLEAN for fs corruption cases suggested by Pavel;
->    - turn EIO into EOPNOTSUPP for unsupported on-disk format;
->    - fix all misused ENOTSUPP into EOPNOTSUPP pointed out by Chao;
->  o update cover letter
-> 
-> It can also be found in git at tag "erofs_2019-08-15" (will be shown later) at:
->  https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/
-> 
-> and the latest fs code is available at:
->  https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/tree/fs/erofs?h=erofs-outofstaging
-> 
-> Changelog from v6:
->  o keep up with the latest staging patchset
->    https://lore.kernel.org/linux-fsdevel/20190813023054.73126-1-gaoxiang25@huawei.com/
->    in order to fix the following cases:
->    - inline erofs_inode_is_data_compressed() in erofs_fs.h;
->    - remove incomplete cleancache;
->    - remove all BUG_ON in EROFS.
->  o Removing the file names from the comments at the top of the files
->    suggested by Stephen will be applied to the real moving patch later.
-> 
-> Changelog from v5:
->  o keep up with "[PATCH v2] staging: erofs: updates according to erofs-outofstaging v4"
->     https://lore.kernel.org/lkml/20190731155752.210602-1-gaoxiang25@huawei.com/
->    which mainly addresses review comments from Chao:
->   - keep the marco EROFS_IO_MAX_RETRIES_NOFAIL in internal.h;
->   - kill a redundant NULL check in "__stagingpage_alloc";
->   - add some descriptions in document about "use_vmap";
->   - rearrange erofs_vmap of "staging: erofs: kill CONFIG_EROFS_FS_USE_VM_MAP_RAM";
-> 
->  o all changes have been merged into staging tree, which are under staging-testing:
->     https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/log/?h=staging-testing
-> 
-> Changelog from v4:
->  o rebase on Linux 5.3-rc1;
-> 
->  o keep up with "staging: erofs: updates according to erofs-outofstaging v4"
->    in order to get main code bit-for-bit identical with staging tree:
->     https://lore.kernel.org/lkml/20190729065159.62378-1-gaoxiang25@huawei.com/
-> 
-> Changelog from v3:
->  o use GPL-2.0-only for SPDX-License-Identifier suggested by Stephen;
-> 
->  o kill all kconfig cache strategies and turn them into mount options
->    "cache_strategy={disable|readahead|readaround}" suggested by Ted.
->    As the first step, cached pages can still be usable after cache is
->    disabled by remounting, and these pages will be fallen out over
->    time, which can be refined in the later version if some requirement
->    is needed. Update related document as well;
-> 
->  o turn on CONFIG_EROFS_FS_SECURITY by default suggested by David;
-> 
->  o kill CONFIG_EROFS_FS_IO_MAX_RETRIES and fold it into code; turn
->    EROFS_FS_USE_VM_MAP_RAM into a module parameter ("use_vmap")
->    suggested by David.
-> 
-> Changelog from v2:
->  o kill sbi->dev_name and clean up all failure handling in
->    fill_super() suggested by Al.
->    Note that the initialzation of managed_cache is now moved
->    after s_root is assigned since it's more preferred to iput()
->    in .put_super() and all inodes should be evicted before
->    the end of generic_shutdown_super(sb);
-> 
->  o fold in the following staging patches (and thanks):
->    staging: erofs:converting all 'unsigned' to 'unsigned int'
->    staging: erofs: Remove function erofs_kill_sb()
->     - However it was revoked due to erofs_kill_sb reused...
->    staging: erofs: avoid opened loop codes
->    staging: erofs: support bmap
-> 
->  o move EROFS_SUPER_MAGIC_V1 from linux/fs/erofs/erofs_fs.h to
->    include/uapi/linux/magic.h for userspace utilities.
-> 
-> Changelog from v1:
->  o resend the whole filesystem into a patchset suggested by Greg;
->  o code is more cleaner, especially for decompression frontend.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Theodore Ts'o <tytso@mit.edu>
-> Cc: Pavel Machek <pavel@denx.de>
-> Cc: David Sterba <dsterba@suse.cz>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Darrick J . Wong <darrick.wong@oracle.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-> Cc: Jan Kara <jack@suse.cz> 
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Chao Yu <yuchao0@huawei.com>
-> Cc: Miao Xie <miaoxie@huawei.com>
-> Cc: Li Guifu <bluce.liguifu@huawei.com>
-> Cc: Fang Wei <fangwei1@huawei.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> 
-> 
-> Gao Xiang (24):
->   erofs: add on-disk layout
->   erofs: add erofs in-memory stuffs
->   erofs: add super block operations
->   erofs: add raw address_space operations
->   erofs: add inode operations
->   erofs: support special inode
->   erofs: add directory operations
->   erofs: add namei functions
->   erofs: support tracepoint
->   erofs: update Kconfig and Makefile
->   erofs: introduce xattr & posixacl support
->   erofs: introduce tagged pointer
->   erofs: add compression indexes support
->   erofs: introduce superblock registration
->   erofs: introduce erofs shrinker
->   erofs: introduce workstation for decompression
->   erofs: introduce per-CPU buffers implementation
->   erofs: introduce pagevec for decompression subsystem
->   erofs: add erofs_allocpage()
->   erofs: introduce generic decompression backend
->   erofs: introduce LZ4 decompression inplace
->   erofs: introduce the decompression frontend
->   erofs: introduce cached decompression
->   erofs: add document
-> 
->  Documentation/filesystems/erofs.txt |  225 +++++
->  fs/Kconfig                          |    1 +
->  fs/Makefile                         |    1 +
->  fs/erofs/Kconfig                    |   98 ++
->  fs/erofs/Makefile                   |   11 +
->  fs/erofs/compress.h                 |   62 ++
->  fs/erofs/data.c                     |  425 ++++++++
->  fs/erofs/decompressor.c             |  360 +++++++
->  fs/erofs/dir.c                      |  148 +++
->  fs/erofs/erofs_fs.h                 |  316 ++++++
->  fs/erofs/inode.c                    |  333 +++++++
->  fs/erofs/internal.h                 |  555 +++++++++++
->  fs/erofs/namei.c                    |  253 +++++
->  fs/erofs/super.c                    |  666 +++++++++++++
->  fs/erofs/tagptr.h                   |  110 +++
->  fs/erofs/utils.c                    |  335 +++++++
->  fs/erofs/xattr.c                    |  705 ++++++++++++++
->  fs/erofs/xattr.h                    |   94 ++
->  fs/erofs/zdata.c                    | 1405 +++++++++++++++++++++++++++
->  fs/erofs/zdata.h                    |  195 ++++
->  fs/erofs/zmap.c                     |  463 +++++++++
->  fs/erofs/zpvec.h                    |  159 +++
->  include/trace/events/erofs.h        |  256 +++++
->  include/uapi/linux/magic.h          |    1 +
->  24 files changed, 7177 insertions(+)
->  create mode 100644 Documentation/filesystems/erofs.txt
->  create mode 100644 fs/erofs/Kconfig
->  create mode 100644 fs/erofs/Makefile
->  create mode 100644 fs/erofs/compress.h
->  create mode 100644 fs/erofs/data.c
->  create mode 100644 fs/erofs/decompressor.c
->  create mode 100644 fs/erofs/dir.c
->  create mode 100644 fs/erofs/erofs_fs.h
->  create mode 100644 fs/erofs/inode.c
->  create mode 100644 fs/erofs/internal.h
->  create mode 100644 fs/erofs/namei.c
->  create mode 100644 fs/erofs/super.c
->  create mode 100644 fs/erofs/tagptr.h
->  create mode 100644 fs/erofs/utils.c
->  create mode 100644 fs/erofs/xattr.c
->  create mode 100644 fs/erofs/xattr.h
->  create mode 100644 fs/erofs/zdata.c
->  create mode 100644 fs/erofs/zdata.h
->  create mode 100644 fs/erofs/zmap.c
->  create mode 100644 fs/erofs/zpvec.h
->  create mode 100644 include/trace/events/erofs.h
-> 
