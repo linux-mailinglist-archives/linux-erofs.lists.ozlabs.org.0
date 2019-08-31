@@ -2,55 +2,86 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BA7BA42E4
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 08:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F8B2A4436
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 12:58:45 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46L6R63JdDzDr82
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 16:49:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46LCyB6cLwzDqjl
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 20:58:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.188; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=oracle.com
+ (client-ip=156.151.31.85; helo=userp2120.oracle.com;
+ envelope-from=dan.carpenter@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
+ dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=oracle.com header.i=@oracle.com header.b="czS+OJhh"; 
+ dkim-atps=neutral
+Received: from userp2120.oracle.com (userp2120.oracle.com [156.151.31.85])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46L6R15WVKzDqlw
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 16:49:48 +1000 (AEST)
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
- by Forcepoint Email with ESMTP id 9D52E350C09520126B0B;
- Sat, 31 Aug 2019 14:49:43 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 31 Aug 2019 14:49:43 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 31 Aug 2019 14:49:42 +0800
-Date: Sat, 31 Aug 2019 14:48:53 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v6 03/24] erofs: add super block operations
-Message-ID: <20190831064853.GA162401@architecture4>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-4-gaoxiang25@huawei.com>
- <20190829101545.GC20598@infradead.org>
- <20190829105048.GB64893@architecture4>
- <20190830163910.GB29603@infradead.org>
- <20190830171510.GC107220@architecture4>
- <CAOQ4uxichLUsPyg5Fqg-pSL85oqoDFcQHZbzdrkXX_-kK=CjDQ@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46LCy06t9hzDqMf
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 20:58:30 +1000 (AEST)
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+ by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7VAt6gS012369;
+ Sat, 31 Aug 2019 10:57:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
+ h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ozxVxnuhOlY8BW1RqOr9u3YWuE9zaJOBgn+uoApcv8w=;
+ b=czS+OJhht/1HYcIw838trx7yLziM6sLYkilzvRpGO1UPTBNoOj82c4EBPcBLNPe8px7u
+ STu04aDn26y26C0eaeB18B3O833x1zPr8QF+o2cFs2yGFHBav96r1SjmzIRaJXPmDlqY
+ tr20ommYshXLk8YK2INTeHVUs6ZO9QLwO7tAn1MIETU4HAtsJrC2QCMBt4FldBAnfw2V
+ 8wNO6jcWZ7jyKzWVwjruunLrC4aEzcCvToanK2KLZg+tAUWedDaj2cX5YTFLmS0vrhhT
+ KiIxgXeAnDoLCHeSH1R/sI4Nvyw+UPiQS+fI0II7yznVdVItgojBy2m+f6UMiAk5IKpE 6Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+ by userp2120.oracle.com with ESMTP id 2uqqje006y-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Sat, 31 Aug 2019 10:57:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+ by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7VArlar022869;
+ Sat, 31 Aug 2019 10:57:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+ by aserp3020.oracle.com with ESMTP id 2uqgqhyvmq-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+ Sat, 31 Aug 2019 10:57:55 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+ by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7VAvh9D025043;
+ Sat, 31 Aug 2019 10:57:44 GMT
+Received: from kadam (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
+ with ESMTP ; Sat, 31 Aug 2019 03:57:43 -0700
+Date: Sat, 31 Aug 2019 13:57:32 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH v3 6/7] erofs: remove all likely/unlikely annotations
+Message-ID: <20190831105732.GH8372@kadam>
+References: <20190830032006.GA20217@architecture4>
+ <20190830033643.51019-1-gaoxiang25@huawei.com>
+ <20190830033643.51019-6-gaoxiang25@huawei.com>
+ <20190830154650.GB11571@infradead.org>
+ <20190830160415.GC69026@architecture4>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxichLUsPyg5Fqg-pSL85oqoDFcQHZbzdrkXX_-kK=CjDQ@mail.gmail.com>
+In-Reply-To: <20190830160415.GC69026@architecture4>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365
+ signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=786
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908310129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9365
+ signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=847 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908310129
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,92 +93,21 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
- linux-erofs@lists.ozlabs.org, Theodore Ts'o <tytso@mit.edu>,
- "Darrick J . Wong" <darrick.wong@oracle.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
- Dave Chinner <david@fromorbit.com>, David Sterba <dsterba@suse.cz>,
- LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>,
- Miao Xie <miaoxie@huawei.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Pavel Machek <pavel@denx.de>, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, weidu.du@huawei.com,
+ Joe Perches <joe@perches.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Aug 31, 2019 at 09:34:44AM +0300, Amir Goldstein wrote:
-> On Fri, Aug 30, 2019 at 8:16 PM Gao Xiang <gaoxiang25@huawei.com> wrote:
-> >
-> > Hi Christoph,
-> >
-> > On Fri, Aug 30, 2019 at 09:39:10AM -0700, Christoph Hellwig wrote:
-> > > On Thu, Aug 29, 2019 at 06:50:48PM +0800, Gao Xiang wrote:
-> > > > > Please use an erofs_ prefix for all your functions.
-> > > >
-> > > > It is already a static function, I have no idea what is wrong here.
-> > >
-> > > Which part of all wasn't clear?  Have you looked at the prefixes for
-> > > most functions in the various other big filesystems?
-> >
-> > I will add erofs prefix to free_inode as you said.
-> >
-> > At least, all non-prefix functions in erofs are all static functions,
-> > it won't pollute namespace... I will add "erofs_" to other meaningful
-> > callbacks...And as you can see...
-> >
-> > cifs/cifsfs.c
-> > 1303:cifs_init_inodecache(void)
-> > 1509:   rc = cifs_init_inodecache();
-> >
-> > hpfs/super.c
-> > 254:static int init_inodecache(void)
-> > 771:    int err = init_inodecache();
-> >
-> > minix/inode.c
-> > 84:static int __init init_inodecache(void)
-> > 665:    int err = init_inodecache();
-> >
-> 
-> Hi Gao,
-> 
-> "They did it first" is never a good reply for code review comments.
-> Nobody cares if you copy&paste code with init_inodecache().
-> I understand why you thought static function names do not pollute
-> the (linker) namespace, but they do pollute the global namespace.
-> 
-> free_inode() as a local function name is one of the worst examples
-> for VFS namespace pollution.
-> 
-> VFS code uses function names like those a lot in the global namespace, e.g.:
-> clear_inode(),new_inode().
-> 
-> For example from recent history of namespace collision caused by your line
-> of thinking, see:
-> e6fd2093a85d md: namespace private helper names
-> 
-> Besides, you really have nothing to loose from prefixing everything
-> with erofs_, do you? It's better for review, for debugging...
+On Sat, Aug 31, 2019 at 12:04:20AM +0800, Gao Xiang wrote:
+> I don't have some benchmark data for each unlikely/likely case (and I have
+> no idea "is that worth to take time to benchmark rather than do another more
+> useful stuffs"), so..I have to kill them all...
 
-Hi Amir,
+We don't really require benchmarks, just that a reasonable person would
+think it might make a difference.
 
-Thanks for you kind reply...
-
-Yes, I understand that some generic header files
-could have the same function names and cause bad
-behaviors...
-
-I will fix them, my only one question is "if all
-function/variable names are prefixed with "erofs_"
-(including all inline helpers in header files),
-it seems somewhat strange... (too many statements
-start "erofs_" in the source code...)"
-
-I will fix common and short names at once...
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Amir.
+regards,
+dan carpenter
