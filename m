@@ -2,51 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 586FCA3DE6
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2019 20:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F0EBAA4179
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 02:55:53 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46KpP80jP0zDr2j
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 04:47:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46KyZZ60vSzDqcN
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2019 10:55:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.255; helo=huawei.com;
+ (client-ip=45.249.212.188; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46KpP42T3jzDr2K
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 04:47:03 +1000 (AEST)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
- by Forcepoint Email with ESMTP id 6A8539DBA69EB7AA3A3A;
- Sat, 31 Aug 2019 02:46:56 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46KyZR306JzDqW9
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2019 10:55:41 +1000 (AEST)
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+ by Forcepoint Email with ESMTP id 6683374D304E71526AA5;
+ Sat, 31 Aug 2019 08:55:36 +0800 (CST)
 Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 31 Aug 2019 02:46:55 +0800
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 31 Aug 2019 08:55:35 +0800
 Received: from architecture4 (10.140.130.215) by
  dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 31 Aug 2019 02:46:54 +0800
-Date: Sat, 31 Aug 2019 02:46:06 +0800
+ 15.1.1591.10; Sat, 31 Aug 2019 08:55:35 +0800
+Date: Sat, 31 Aug 2019 08:54:46 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v6 05/24] erofs: add inode operations
-Message-ID: <20190830184606.GA175612@architecture4>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190831005446.GA233871@architecture4>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-6-gaoxiang25@huawei.com>
- <20190829102426.GE20598@infradead.org>
- <20190829115922.GG64893@architecture4>
- <20190830164205.GD29603@infradead.org>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
+ <20190829105048.GB64893@architecture4>
+ <20190830163910.GB29603@infradead.org>
+ <20190830171510.GC107220@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190830164205.GD29603@infradead.org>
+In-Reply-To: <20190830171510.GC107220@architecture4>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
  dggeme762-chm.china.huawei.com (10.3.19.108)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -76,55 +77,51 @@ Sender: "Linux-erofs"
 
 Hi Christoph,
 
-On Fri, Aug 30, 2019 at 09:42:05AM -0700, Christoph Hellwig wrote:
-> On Thu, Aug 29, 2019 at 07:59:22PM +0800, Gao Xiang wrote:
-> > On Thu, Aug 29, 2019 at 03:24:26AM -0700, Christoph Hellwig wrote:
+On Sat, Aug 31, 2019 at 01:15:10AM +0800, Gao Xiang wrote:
+
+[]
+
 > > 
-> > []
-> > 
+> > > > > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
+> > > > > +	if (is_inode_fast_symlink(inode))
+> > > > > +		kfree(inode->i_link);
+> > > > 
+> > > > is_inode_fast_symlink only shows up in a later patch.  And really
+> > > > obsfucates the check here in the only caller as you can just do an
+> > > > unconditional kfree here - i_link will be NULL except for the case
+> > > > where you explicitly set it.
 > > > 
-> > > > +
-> > > > +		/* fill last page if inline data is available */
-> > > > +		err = fill_inline_data(inode, data, ofs);
-> > > 
-> > > Well, I think you should move the is_inode_flat_inline and
-> > > (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) checks from that
-> > > helper here, as otherwise you make everyone wonder why you'd always
-> > > fill out the inline data.
+> > > I cannot fully understand your point (sorry about my English),
+> > > I will reply you about this later.
 > > 
-> > Currently, fill_inline_data() only fills for fast symlink,
-> > later we can fill any tail-end block (such as dir block)
-> > for our requirements.
-> 
-> So change it when that later changes actually come in.  And even then
-> having the checks outside the function is a lot more obvious.
+> > With that I mean that you should:
+> > 
+> >  1) remove is_inode_fast_symlink and just opencode it in the few places
+> >     using it
+> >  2) remove the check in this place entirely as it is not needed
 
-Okay.
+Add some words about this suggestion since I'm addressing this place, it
+seems it could not (or I am not sure at least) be freed unconditionally
 
-> 
-> > And I think that is minor.
-> 
-> The problem is that each of these issues might appear minor on their
-> own.  But combined a lot of the coding style choices lead to code that
-> is more suitable an obsfucated code contest than the Linux kernel as
-> trying to understand even just a few places requires jumping through
-> tons of helpers with misleading names and spread over various files.
-> 
-> > The consideration is simply because iget_locked performs better
-> > than iget5_locked.
-> 
-> In what benchmark do the differences show up?
+	union {
+		struct pipe_inode_info	*i_pipe;
+		struct block_device	*i_bdev;
+		struct cdev		*i_cdev;
+		char			*i_link;
+		unsigned		i_dir_seq;
+	};
 
-In a word, no benchmark here, just because
-"unsigned long on 32-bit platforms is 4 bytes."
-but erofs nid is a 64-bit number.
+while I saw what shmem did, it seems that they handle as follows:
+3636 static void shmem_free_in_core_inode(struct inode *inode)
+3637 {
+3638         if (S_ISLNK(inode->i_mode))
+3639                 kfree(inode->i_link);
+3640         kmem_cache_free(shmem_inode_cachep, SHMEM_I(inode));
+3641 }
 
-iget_locked will do find_inode_fast (no callback at all)
-rather than iget5_locked --> find_inode (test callback) ->
-            inode_insert5(set callback) for each new inode.
-
-For most 64-bit platforms, iget_locked is enough,
-32-bit platforms become rare...
+I think that would be some check on it to get it is a symlink (for
+i_dir_seq it seems unsafe).... I think the original check is ok but
+I will opencode it instead.
 
 Thanks,
 Gao Xiang
