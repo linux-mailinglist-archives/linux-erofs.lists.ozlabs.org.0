@@ -1,73 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DCDEA47B4
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 07:53:15 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E90FA47B6
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 07:53:20 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46Lj7C55yKzDqlr
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 15:53:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46Lj7K58ZHzDqsp
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 15:53:17 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1567317191;
-	bh=leehfY0w7Sm5V210KeoIUcvw63cDKldZTUWE06V1Ods=;
+	s=201707; t=1567317197;
+	bh=LVCVoQG62aIkWWt4A4R8oS16Pd+iGevRYihqZLj8uE4=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=f5r1ChixpOFq4gasWrVkskdnwBakOHNrCTJSJszAyx7R4y/R1pQZBT3z1QA+ecNm/
-	 AD90f+O601WIFX7KrrhgxucUmiUPqw2PeAVr1DF8tNOEuMbK+ezcGHYve2Q2Yfcg+/
-	 2ZmtlnU3wgn0oJ0bYhL1nKLYAUoR+4EQp7Fy9blWz3LCPheSH6VE0E2oju/7/p3tEd
-	 vuBaO1AxMzWwq289eVGbLBXgzv4mEtUts+EhTCKx2Y7ZWj3z53o8eqz69oJPkfSsjQ
-	 SMNjjjQZE8HjmOugNYmqtPPjsS3INfgUBM++T+5C2Ep+MXjPqThpu7g9ROt3jaC41V
-	 p5lfiXKyVav/g==
+	b=JmDvdCOnfpNs25yHi5KmB2w4TtVm6UY2ArDqL13gGnGJZN6jW7TtQGVqRV53bgPUl
+	 Uq6pxQ/DgT7yiGXPLuh/Y1WweZbb8f1i6gBjMgNE6oE5lsl+GzMHJpNNDRHPEbP+Sr
+	 CzzBAOc05sxjl5avOD/4NMuXVEw4CoYMgr/5vfAtIgRriMJmXrbgELLSQKuESTGg0b
+	 TOL6W9qrJ4T94BZlosUID3b4Dff0MN8DLQjl932xBQnWk5Fi2Elp30NSJXAyGM0Qek
+	 AyRcyEailGOZCVHJsbj1WNJHazVxnVRHtFg0pBZ390ahq3sze3BhOjQhQUy8bicqsU
+	 0hS9YUK7L2Gww==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.64.32; helo=sonic307-8.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.204; helo=sonic304-23.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="q+MeV2ah"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="rl4KOY4l"; 
  dkim-atps=neutral
-Received: from sonic307-8.consmr.mail.gq1.yahoo.com
- (sonic307-8.consmr.mail.gq1.yahoo.com [98.137.64.32])
+Received: from sonic304-23.consmr.mail.gq1.yahoo.com
+ (sonic304-23.consmr.mail.gq1.yahoo.com [98.137.68.204])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46Lj6h0YtfzDqlr
- for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2019 15:52:42 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46Lj6p6p6kzDqsL
+ for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2019 15:52:48 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1567317159; bh=f05SOMjhcbrllSkIEXOI4eRR/x6TrSdhoBITnwjaQY0=;
+ t=1567317165; bh=bYGgbUkpYatgcwL6URU/dubCdNrEU0TuOnNro854EfY=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=q+MeV2ah9X/xMnfHbHWejNVpqJ0n1Pot/QtnxizQW7z3YeaPC7ounQjdo6lP/n754/1GSxw/IYc+ITIUic5kiGY4tsWH8NFA5hKOzQjEiXvQuSPCLHMSQedxtdetNnJNxd/TnrrIKkXBM6S3Um04JzeKzpWHAiy3mYL1NjAhtOB9ZJtmWATWtydtQHZfnkv74rIsSUTgEDlATY4eUxx4NL7ItVta3Cchll1T49b5zvyECSyZHTbOvrOBSNRalXl+hiCqsA+LCQX+MLKKtHbuCzRv8vxaiRSzDi1Ppvt26tFe6hO6l4BiuILG+WZuJ6PlB5S19OU5kaAh7oWmQwzz/w==
-X-YMail-OSG: 3OgvbfcVM1m.J9qM0HpXLxrcKXINJlnPJ7PNZ4hqbBeAmGwoLwx6qbstNjAc0EG
- AUAbS5ZwM0l9wQRfcyV_msAVm5XUcG6mlIJAD7q34CZyJIpKr7iMTlwjVCCgFNU_Tz5ma424Xr8W
- Mm6de3ZKqLNRpMbNuMasHAJ1EK3yA5skDN10jBPzITd4uypFvM0ki5Rg8hTfc3_zeFpWY0kR6PIj
- S.22fH9dQPHRMi23WVzTLTQPfUAAeoa5whlgF7SgmNJhjcIce7nn0vydJ8RHmtkWuSb_oYOKC3AX
- FAdMZUP17tijU4g981P4b9z1_SQSF5xeDSlvrL1eblj21G0EsGbToYRm6RWCg.iI_gljVexK1HrC
- g89ZE3eF3HgOdSJC4a61pzDNt13TuPzn__m.xskI6L4Ac9Ko5wModz8NZ9BNx_JVEcUJ9ft9fWMO
- .F4fhlS._f7WBDZz2ef_3bUfi1lYm0j.3C1ahpTNbbEJs4bCQ768NRgQQBLjYxXLjkI1Mo7mUPhZ
- SlEgubBACKU3TKCl0Auc3soLYX25KPc83IRU4r8Ft9Pkg1iQ_TQzpb.411uEDygvImnfXXdbUAOr
- ieiz4Qw4Y6sup8fm_dgl5a0srmwTmDt1pNkklUlIrYaJCYJ2fGZZR4_vxbB1s.m4v_kgPPB3NDeK
- w4C8KsLPJGNI9FASs7xSXLATNRMJtWCepaAY7ovkv881ZulqPFDbUYejwndWree6aFVO7lQWPNp4
- O1rKdK09s5rkbWgVTCitWGZQ95Iy2Ma.5duWMwbDTBas_.ZFBksS40GIlVC0_6Bj7QW_MdTiuAiu
- kZ84drzYplODx2PKf5vI9bZ0etbh3GzCMX4WD0Ogq3__PzmN5UfWgSeqDTO1u9Qobv9KIcOvzX8y
- KGgZTN_G2dDw6HunTGapzsXWJDlFMlM4Jdxt0GVYJa_1di61O.mYxx2OOErF6jU3zQcBXUD2Q9yI
- 6su_HtEiLVmoAgYtbtjRJ4f7EMw.FDwnRWsaiiPxRg7O5sstrctqS2uaH6sDHFRzxX1u.G6MKaMh
- 7_dz23L8oQpofzjCmpvDN2oXjl9DnHdiTZMLKV2b6Hktm4qW5ftqdQFt8EWR3dD5f7bqTB8.x5Zm
- DC1aRh8SF4I7a76nna_rdY6fHvFHGD5_2TMpKz5Ye43clJXVp.lY83_Sj2whgk_2HlQFoWZDgLFy
- t0O8io_sdtDXRaxlMiHe3MovujHltXa_khQbsKRuh9IN97tYIKUtePoOO75mg7uvIqscwtfKshcw
- WrIuLGSvdSAvQxIo_s77.iPqN47euyW3w.IgO.B6EFWdy
+ b=rl4KOY4lM7ZrLdBU0izAjz+sU2EuhRICXLFz2E2MLdnwpp7Mn9fIPGus8pvS29wUbe8i+yrIWGD/2oSAK+SCGyFpPIanID+ZZ4Up3jqEOfeYRHFAAcrJPRo4dU/iv7WdTUNo+t4zqzHQ4vjNHnI3J8XbErk8ZzANotbTZoZVZaTHsOqDyx6/1LhLQrSTIzNXoUkCN8D3GCPpsjITgxstvLeZkBiZ5rdNQ8IcYZsILsLc1FAcQo2BFEDkoJsv8OLiu1MvvEIXdYPwlsm5LowCY2HgBdubZRcWxZIyX3DDHWXuy+RX06I+gNGunJmqoVM24hdVUYY69Y5/6VfJSJ9/qg==
+X-YMail-OSG: IC0uT7EVM1m1o32FvlT6x3EAXzOIEpnZdF6fgPBQ_5PD54Rxfx9Gim0t7X1W7zI
+ NZZF5.8Clla8YAOY9pjaNeKHAwA_wP5INOANqq9FiLntQQfvp.CmKSK2yL_a_qTkO7B5wDrzkRMH
+ jY7ykuO5MYjiD7bRnc1DyvN2oXeF.Cy1PBSuJgIZQE3Cfys5yh4lY4gUqUxDVNMNlR_ileIlfbPA
+ 7y7.hpd0Dhe2fpl7LLbnSH6r2th7zc3fpZu6odRdXVMvsvSbf5NjZoMt80Rd.5pTDuiMknypCkOY
+ oWLFMcdzO9IYnJa_nef6SQyJx3qJuTmcBkRt_gwAMMOSU.seCXpfWNIBEFdcr56mKf5wuBRfYeW4
+ 1zYX1DVNj6rxNHPpQOiDHESjDf9ShaSyKTaUB0C0k.V_rUV92hPrBpausKIJmTzoGU8WwqFEZT96
+ 7qh_4FPTDybxCb8GR8B7a6RlEgZnyhKOnlyqIT8V5Gwbqo43Lp96n.qEnMMruu1yQ8jxx8uZ4Fb6
+ nQFoB06UgxCQSAZGbgOvzjrprFvf.PJ_ZBdVaOx0okWljF5tRfwEoEKNKb8W_.Bt_fVqGdQYd6Uo
+ hqiHnAhNpZnhQTe1FRXTal2pgrvN599y4mKfuDO7PSwV4rQ_jl8zwVrGNZuYDz2yez7XHI.VcTNK
+ 9sx7MKwe9_Y1xxd3x1sP2m_I9u6lLARO8RnXbKcupXJ6usQciWqTu_R3quCEqIr59cZQQG7lFLXo
+ 7kCcv7RsOoLYoyO.A2EyI_yGbLa3c.LGsfh3qVMcVpcXTPg_xFk6pDcfFr3N4jXotsGAe5kYSboV
+ _kEThYWrTZxGrRfzd8i86Wn5zI6sGDivNiQBjiNtmvpn_LJHLOA6CwsLCEgl6I4S.Tc4VpaUBKE9
+ NtzAvHx6bvt19ApGdmdbZdxOUzbT9Xlxe2M.NgD1231_D1KjXfNSbizhfNUoryJwGgjCLKxuHKGl
+ 0RG_CrHnYnI3czEeaPPK4IbJv84bVZtIGlUr1TTSiUaBX6_QGwdwihR2GPJd54U.KHi7aYr7CNlm
+ 6wHwrKM8Cxyput4UkuRAyUr5un_ovBkib0hHG0gM9j5lA.h_xwqIJS3xsmJP8bOgMqFAjwVtmAIy
+ YtwcnV9anlraMRpnb8ehmcEE9Q3dSkWyo9zlUQgJMMcYaHUcWg05arPcuesg0FuBSmEizQIFWup.
+ sSJK7YX9860s2C69O2kx6KQ5W0gZAYWOhmtK0F3xDyK2ZO3EgNntVQViD3pk.3.WRDrojkT62zXA
+ 4pMEVL5rv6IGFG.OUYA1D5ip3ogrR.oV2GBXP.g--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic307.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 05:52:39 +0000
+ sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 05:52:45 +0000
 Received: by smtp406.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
  ID 426e3b5ec1af9e36f409445c51071a70; 
- Sun, 01 Sep 2019 05:52:39 +0000 (UTC)
+ Sun, 01 Sep 2019 05:52:43 +0000 (UTC)
 To: Christoph Hellwig <hch@infradead.org>, Chao Yu <yuchao0@huawei.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 10/21] erofs: kill is_inode_layout_compression()
-Date: Sun,  1 Sep 2019 13:51:19 +0800
-Message-Id: <20190901055130.30572-11-hsiangkao@aol.com>
+Subject: [PATCH 11/21] erofs: use dsb instead of layout for ondisk super_block
+Date: Sun,  1 Sep 2019 13:51:20 +0800
+Message-Id: <20190901055130.30572-12-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190901055130.30572-1-hsiangkao@aol.com>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
@@ -93,88 +93,100 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-As Christoph suggested [1], "The name of this helper
-is a little odd.  But I think just opencoding it seems
-generally cleaner anyway. "
+As Christoph pointed out [1], "Why is the variable name
+for the on-disk subperblock layout? We usually still
+calls this something with sb in the name, e.g. dsb.
+for disksuper block. " Let's fix it.
 
-[1] https://lore.kernel.org/r/20190829102426.GE20598@infradead.org/
-Reported-by: Christoph Hellwig <hch@infradead.org>
+[1] https://lore.kernel.org/r/20190829101545.GC20598@infradead.org/
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/data.c     | 2 +-
- fs/erofs/inode.c    | 8 ++++----
- fs/erofs/internal.h | 5 -----
- 3 files changed, 5 insertions(+), 10 deletions(-)
+ fs/erofs/super.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index d736d2e551a1..e2e40ec2bfd1 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -169,7 +169,7 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- int erofs_map_blocks(struct inode *inode,
- 		     struct erofs_map_blocks *map, int flags)
- {
--	if (is_inode_layout_compression(inode)) {
-+	if (erofs_inode_is_data_compressed(EROFS_I(inode)->datamode)) {
- 		int err = z_erofs_map_blocks_iter(inode, map, flags);
- 
- 		if (map->mpage) {
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 29a52138fa9d..d501ceb62c29 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -56,7 +56,7 @@ static int read_inode(struct inode *inode, void *data)
- 		inode->i_size = le64_to_cpu(v2->i_size);
- 
- 		/* total blocks for compressed files */
--		if (is_inode_layout_compression(inode))
-+		if (erofs_inode_is_data_compressed(vi->datamode))
- 			nblks = le32_to_cpu(v2->i_u.compressed_blocks);
- 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
- 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-@@ -87,7 +87,7 @@ static int read_inode(struct inode *inode, void *data)
- 			sbi->build_time_nsec;
- 
- 		inode->i_size = le32_to_cpu(v1->i_size);
--		if (is_inode_layout_compression(inode))
-+		if (erofs_inode_is_data_compressed(vi->datamode))
- 			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
- 	} else {
- 		errln("unsupported on-disk inode version %u of nid %llu",
-@@ -204,7 +204,7 @@ static int fill_inode(struct inode *inode, int isdir)
- 			goto out_unlock;
- 		}
- 
--		if (is_inode_layout_compression(inode)) {
-+		if (erofs_inode_is_data_compressed(vi->datamode)) {
- 			err = z_erofs_fill_inode(inode);
- 			goto out_unlock;
- 		}
-@@ -283,7 +283,7 @@ int erofs_getattr(const struct path *path, struct kstat *stat,
- {
- 	struct inode *const inode = d_inode(path->dentry);
- 
--	if (is_inode_layout_compression(inode))
-+	if (erofs_inode_is_data_compressed(EROFS_I(inode)->datamode))
- 		stat->attributes |= STATX_ATTR_COMPRESSED;
- 
- 	stat->attributes |= STATX_ATTR_IMMUTABLE;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 4442a6622504..6bd82a82b11f 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -327,11 +327,6 @@ static inline unsigned long inode_datablocks(struct inode *inode)
- 	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 8c43af5d5e57..c1a42ea7b72f 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -47,9 +47,9 @@ static void free_inode(struct inode *inode)
  }
  
--static inline bool is_inode_layout_compression(struct inode *inode)
--{
--	return erofs_inode_is_data_compressed(EROFS_I(inode)->datamode);
--}
--
- static inline bool is_inode_flat_inline(struct inode *inode)
+ static bool check_layout_compatibility(struct super_block *sb,
+-				       struct erofs_super_block *layout)
++				       struct erofs_super_block *dsb)
  {
- 	return EROFS_I(inode)->datamode == EROFS_INODE_FLAT_INLINE;
+-	const unsigned int requirements = le32_to_cpu(layout->requirements);
++	const unsigned int requirements = le32_to_cpu(dsb->requirements);
+ 
+ 	EROFS_SB(sb)->requirements = requirements;
+ 
+@@ -66,7 +66,7 @@ static int superblock_read(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+ 	struct buffer_head *bh;
+-	struct erofs_super_block *layout;
++	struct erofs_super_block *dsb;
+ 	unsigned int blkszbits;
+ 	int ret;
+ 
+@@ -78,16 +78,16 @@ static int superblock_read(struct super_block *sb)
+ 	}
+ 
+ 	sbi = EROFS_SB(sb);
+-	layout = (struct erofs_super_block *)((u8 *)bh->b_data
+-		 + EROFS_SUPER_OFFSET);
++	dsb = (struct erofs_super_block *)((u8 *)bh->b_data +
++					   EROFS_SUPER_OFFSET);
+ 
+ 	ret = -EINVAL;
+-	if (le32_to_cpu(layout->magic) != EROFS_SUPER_MAGIC_V1) {
++	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
+ 		errln("cannot find valid erofs superblock");
+ 		goto out;
+ 	}
+ 
+-	blkszbits = layout->blkszbits;
++	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+ 		errln("blksize %u isn't supported on this platform",
+@@ -95,25 +95,25 @@ static int superblock_read(struct super_block *sb)
+ 		goto out;
+ 	}
+ 
+-	if (!check_layout_compatibility(sb, layout))
++	if (!check_layout_compatibility(sb, dsb))
+ 		goto out;
+ 
+-	sbi->blocks = le32_to_cpu(layout->blocks);
+-	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
++	sbi->blocks = le32_to_cpu(dsb->blocks);
++	sbi->meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
+ #ifdef CONFIG_EROFS_FS_XATTR
+-	sbi->xattr_blkaddr = le32_to_cpu(layout->xattr_blkaddr);
++	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
+ #endif
+ 	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
+-	sbi->root_nid = le16_to_cpu(layout->root_nid);
+-	sbi->inos = le64_to_cpu(layout->inos);
++	sbi->root_nid = le16_to_cpu(dsb->root_nid);
++	sbi->inos = le64_to_cpu(dsb->inos);
+ 
+-	sbi->build_time = le64_to_cpu(layout->build_time);
+-	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
++	sbi->build_time = le64_to_cpu(dsb->build_time);
++	sbi->build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
+ 
+-	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
++	memcpy(&sb->s_uuid, dsb->uuid, sizeof(dsb->uuid));
+ 
+-	ret = strscpy(sbi->volume_name, layout->volume_name,
+-		      sizeof(layout->volume_name));
++	ret = strscpy(sbi->volume_name, dsb->volume_name,
++		      sizeof(dsb->volume_name));
+ 	if (ret < 0) {	/* -E2BIG */
+ 		errln("bad volume name without NIL terminator");
+ 		ret = -EFSCORRUPTED;
 -- 
 2.17.1
 
