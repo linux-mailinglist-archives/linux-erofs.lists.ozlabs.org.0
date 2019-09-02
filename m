@@ -2,59 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A06A520A
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 10:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25C6CA5420
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 12:36:21 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46MNrw0L15zDqd7
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 18:43:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46MRMQ2kSNzDqbg
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 20:36:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=none (mailfrom) smtp.mailfrom=ucw.cz
- (client-ip=195.113.26.193; helo=atrey.karlin.mff.cuni.cz;
- envelope-from=pavel@ucw.cz; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=huawei.com
+ (client-ip=45.249.212.187; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=denx.de
-Received: from atrey.karlin.mff.cuni.cz (atrey.karlin.mff.cuni.cz
- [195.113.26.193])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga01-in.huawei.com [45.249.212.187])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46MNrq0kFkzDqc9
- for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 18:43:07 +1000 (AEST)
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
- id ACB57809D3; Mon,  2 Sep 2019 10:42:50 +0200 (CEST)
-Date: Mon, 2 Sep 2019 10:43:03 +0200
-From: Pavel Machek <pavel@denx.de>
-To: dsterba@suse.cz, Joe Perches <joe@perches.com>,
- Gao Xiang <gaoxiang25@huawei.com>, Christoph Hellwig <hch@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
- Amir Goldstein <amir73il@gmail.com>,
- "Darrick J . Wong" <darrick.wong@oracle.com>,
- Dave Chinner <david@fromorbit.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
- LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
- Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46MRMJ72tVzDqYn
+ for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 20:36:11 +1000 (AEST)
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+ by Forcepoint Email with ESMTP id 32EA73D857F82B433D68;
+ Mon,  2 Sep 2019 18:36:05 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 2 Sep 2019 18:36:04 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 2 Sep 2019 18:36:03 +0800
+Date: Mon, 2 Sep 2019 18:35:12 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Pavel Machek <pavel@denx.de>
 Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190902084303.GC19557@amd>
+Message-ID: <20190902103509.GA42552@architecture4>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
  <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
- <20190829103252.GA64893@architecture4>
- <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
- <20190830120714.GN2752@twin.jikos.cz>
+ <20190829095954.GB20598@infradead.org> <20190902084020.GB19557@amd>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190830120714.GN2752@twin.jikos.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190902084020.GB19557@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,57 +58,44 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-erofs@lists.ozlabs.org, Theodore Ts'o <tytso@mit.edu>,
+ "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>,
+ Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
+ David Sterba <dsterba@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Miao Xie <miaoxie@huawei.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi Pavel,
 
---lMM8JwqTlfDpEaS6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(Thanks...)
 
-Hi!
+On Mon, Sep 02, 2019 at 10:40:20AM +0200, Pavel Machek wrote:
 
-> > > Rather than they didn't run "gdb" or "pahole" and change it by mistak=
-e.
-> >=20
-> > I think Christoph is not right here.
-> >=20
-> > Using external tools for validation is extra work
-> > when necessary for understanding the code.
->=20
-> The advantage of using the external tools that the information about
-> offsets is provably correct ...
+> 
+> So __packed is right thing to do. If architecture accesses that
+> slowly, that's ungood, but different structures between architectures
+> would be really bad.
 
-No. gdb tells you what the actual offsets _are_.
+(...a little word, it seems that Christoph was trying to say that
+ it's unnecessary to __packed for this case since we designed most
+ erofs on-disk format in natural alignment... Anyway, I updated,
+ that seems okay...)
 
-> > The expected offset is somewhat valuable, but
-> > perhaps the form is a bit off given the visual
-> > run-in to the field types.
-> >=20
-> > The extra work with this form is manipulating all
-> > the offsets whenever a structure change occurs.
->=20
-> ... while this is error prone.
+Thanks,
+Gao Xiang
 
-While the comment tells you what they _should be_.
+> 
+> Best regards,
+> 								Pavel
+> -- 
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
---lMM8JwqTlfDpEaS6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1s1hcACgkQMOfwapXb+vLwegCgmC1y9HxKZu/YFm0T4U+rH5ko
-oJcAni3phOqqriczOS1slpVzLy+HY7Nv
-=pnr4
------END PGP SIGNATURE-----
-
---lMM8JwqTlfDpEaS6--
