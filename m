@@ -2,82 +2,41 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0071FA489F
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 11:39:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AD11A5205
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 10:40:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46Lp8Z6RZgzDqlQ
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2019 19:39:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1567330782;
-	bh=gNSvDjSgtvxodXDIOL9OPoosEhK6OgJxjBHTlLXhv6U=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=lQW3sMAwjnqCuW90zEl7y9XaaV3Ei/pyZvGTGhXrIevbSZwL91gAm7DcWAkAEFMpv
-	 W/toGyl9aRlmLI/UBv4syQU2lpd8HP8p81lG/2te/s7CfHGjD9zRM36QSyOLSUjB6Z
-	 lDzxnTr9H+xas6Q96Srw2nL4MNeA2iH1JA8HYR3pi1I8wnaAkgR4c+rl5ciiUfU62D
-	 i8jXLL0R098ICXIMYm0BTgOos5doh2wNIwrq2XnSbZpcxwuP4VYxJDuv7FQ8vX8iRn
-	 0XOlBvmdRLlUNWR+lMTeJmDyQ0G0WicF8QO8SZ3G14MuiFooyLDN49xbxIxEZk8lc1
-	 XXEBhrUXpqqCg==
+	by lists.ozlabs.org (Postfix) with ESMTP id 46MNnz5tBTzDqd7
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 18:40:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.64.147; helo=sonic301-21.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=none (mailfrom) smtp.mailfrom=ucw.cz
+ (client-ip=195.113.26.193; helo=atrey.karlin.mff.cuni.cz;
+ envelope-from=pavel@ucw.cz; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="MfPXUqTO"; 
- dkim-atps=neutral
-Received: from sonic301-21.consmr.mail.gq1.yahoo.com
- (sonic301-21.consmr.mail.gq1.yahoo.com [98.137.64.147])
+ dmarc=none (p=none dis=none) header.from=denx.de
+Received: from atrey.karlin.mff.cuni.cz (atrey.karlin.mff.cuni.cz
+ [195.113.26.193])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46Lp8S0L4NzDqgX
- for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2019 19:39:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1567330771; bh=cHlH9WiAvjL21Ab1gMYZyJ5FOMKVRsvNZyUnXUBAmGo=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=MfPXUqTOfnneZL37s56uLRiVNXb/M4DXFFztSTMa06uZCQZkBANnS/h23XQpTSBDtq4fX3ZbBa+MLYGk7VEX3qZlVauR8E30nfpxh+lJ7EaSQMU8fyDTStFsS2EiCGTe6Xbc/haS5SM4+JEeF4ctnKcyc5F3crKT+wZCLfYdsIKxyBRwwJkiuv4GDfOiM8Js6o14Z7hwHJcswVwU0/xmO1XjyHBGoOUt8gem91Sdpdn0KKMkAjzGqVMXpIgnH8e5TyDqm+fpxeRljp6+MdHyN26uGARwyWc3y1F9azzgMMmJPzOtQNqStk3CunWFaf3+RU1Yd+JrdRs2ce/j16AveQ==
-X-YMail-OSG: tSsyId0VM1l6cGeulFe5p.tIwPmQXn8GOW_0lfxtbeyd1dMhHMVsQe_1t5dK3Lt
- ko3BaUa_o4XZSFIu.kaZeAiY63TfQZm9KmR8YiQmo1IHijjm3GWJqgn_QFnfkzQ0r.CIBkS63ZsH
- IOgB_98F3LollxWzIK3aLQf_CpGhoV0YT2mXc4NGiqFYBPa3m4HsA4cGwX9DRrpxXy3wtUR1sfuu
- 34ahEtxknsFvV.X4PFRBA3RZzofOLZmI9sfsun9kzDkBBLg5cb0dbrDBkRuu6za_HsdajtIR6Zd9
- krkQ0uXsy3sbEAFQYIL9tZaO2f0M9r_hIa0oeiHdAWlAYitb_9Ko2SkDs7bab7ynbp79EIoBeSP5
- eLk2PTuXclDo4PZqM1K1q4wujCp91nRVwGep9MomW3mSpXH9CVWqY0SRt7FfitdtjGi0EjRv6f1G
- 2bda9S.Sy7DQhpvqr0_vsGVIltWxF_7eA5rmbFr3.Lr0EDkf.wnelI5YEjM0eK.294dmbF7aCz_j
- BdMITfDdCI6uZjZI1zuqH_dQiCtpiOei9WMJtjidNhPtPTUBgCM11GIGUZ_VefFblu0vWK9FJKOk
- HKsx7DPe7N4KKrBbJf7JoOwvOKZyM_uFcS73dQDLCuS5gIOW_lHA4aPK4G7uoH6MaIXYkbYY1HbP
- K4FPwbWLefVj1ykMhTADONRuR6XrKC6djnY5jXIvnK4dQIXT_UXzPZntALaCRK1yom0lnIYtlNzs
- .2tXMLetoh7OV6FgGEMKA4W6y1_mmtOKTcLKKwA0KnDdJJ9HygI6rsgmXB_e141l68v.Oy_z4FQx
- MS32vW3.2QpkntNrxZDVgIT067.WKaWjrKDYK2efCKOISecfqjE10HGJBkXwSgdjIx93DBN0MiuB
- A8kfCSEMN1dhfjhx0WACWuiHe9D_LuKFovc2YV.ibQememms0F42dk5IYD5XdEUl3Zpxi3ZrJlul
- vXXu9qrpbiuA0rcmV8m1NKLVVySAuLr67znzTgltqT0TLRi5iIWqSWK7YiVJxg8u2c8eWvgNQMou
- k1U6aA9hBup7vFmS0OWDlUxlCZ0X.l7QYtVzH9nwmvlfgYGXB13PsHUWNCcOjGMX9EN0lIlp4G_d
- QWxEpmjJRQYS6xGzDM2EcDJ1bQa2iPmXFR57PLwnPk4tPBSrq7G54eAJZ4ECX6APRNu5vq1UqZHj
- HUJ.86x2dwrX50ZrF.x9nFhSQg8yRXxI4FXU4vfVFqLOQ06LMyrLVbfzECR4JNYvp4ZWtvS1Ln.N
- j8URE72BAnOj8gsGP4BF.0W6ZAdJAtAf5J7m9ZKsoW3tQddU1VB0uTa5poSs14fXke9TKNxOu6ti
- wGSD2i7hN41nw
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic301.consmr.mail.gq1.yahoo.com with HTTP; Sun, 1 Sep 2019 09:39:31 +0000
-Received: by smtp401.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 682a89ffe636f493a8dcfa91a6749f63; 
- Sun, 01 Sep 2019 09:39:26 +0000 (UTC)
-Date: Sun, 1 Sep 2019 17:39:13 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46MNnr0pmSzDqcN
+ for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 18:40:26 +1000 (AEST)
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+ id 28B04813BA; Mon,  2 Sep 2019 10:40:07 +0200 (CEST)
+Date: Mon, 2 Sep 2019 10:40:20 +0200
+From: Pavel Machek <pavel@denx.de>
 To: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v6 06/24] erofs: support special inode
-Message-ID: <20190901093912.GB6267@hsiangkao-HP-ZHAN-66-Pro-G1>
+Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
+Message-ID: <20190902084020.GB19557@amd>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-7-gaoxiang25@huawei.com>
- <20190829102503.GF20598@infradead.org>
+ <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190829095954.GB20598@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
 Content-Disposition: inline
-In-Reply-To: <20190829102503.GF20598@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_181)
+In-Reply-To: <20190829095954.GB20598@infradead.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,61 +48,80 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
- linux-erofs@lists.ozlabs.org, Jan Kara <jack@suse.cz>,
+Cc: Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+ LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+ devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
  "Darrick J . Wong" <darrick.wong@oracle.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
- Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
- LKML <linux-kernel@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Pavel Machek <pavel@denx.de>, David Sterba <dsterba@suse.cz>,
+ Amir Goldstein <amir73il@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ David Sterba <dsterba@suse.cz>, Pavel Machek <pavel@denx.de>,
  linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Miao Xie <miaoxie@huawei.com>
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christoph,
 
-On Thu, Aug 29, 2019 at 03:25:03AM -0700, Christoph Hellwig wrote:
-> On Fri, Aug 02, 2019 at 08:53:29PM +0800, Gao Xiang wrote:
-> > This patch adds to support special inode, such as
-> > block dev, char, socket, pipe inode.
-> > 
-> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> > ---
-> >  fs/erofs/inode.c | 27 +++++++++++++++++++++++++--
-> >  1 file changed, 25 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-> > index b6ea997bc4ae..637bf6e4de44 100644
-> > --- a/fs/erofs/inode.c
-> > +++ b/fs/erofs/inode.c
-> > @@ -34,7 +34,16 @@ static int read_inode(struct inode *inode, void *data)
-> >  		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
-> >  
-> >  		inode->i_mode = le16_to_cpu(v2->i_mode);
-> > -		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-> > +		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-> > +		    S_ISLNK(inode->i_mode))
-> > +			vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-> > +		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
-> > +			inode->i_rdev =
-> > +				new_decode_dev(le32_to_cpu(v2->i_u.rdev));
-> > +		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
-> > +			inode->i_rdev = 0;
-> > +		else
-> > +			return -EIO;
-> 
-> Please use a switch statement when dealing with the file modes to
-> make everything easier to read.
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixed in
-https://lore.kernel.org/linux-fsdevel/20190901055130.30572-18-hsiangkao@aol.com/
+Hi!
 
-Thanks,
-Gao Xiang
+> > +struct erofs_super_block {
+> > +/*  0 */__le32 magic;           /* in the little endian */
+> > +/*  4 */__le32 checksum;        /* crc32c(super_block) */
+> > +/*  8 */__le32 features;        /* (aka. feature_compat) */
+> > +/* 12 */__u8 blkszbits;         /* support block_size =3D=3D PAGE_SIZE=
+ only */
+>=20
+> Please remove all the byte offset comments.  That is something that can
+> easily be checked with gdb or pahole.
 
+I don't think I agree. gdb will tell you byte offsets _on one
+architecture_. But filesystem is supposed to be portable between them.=20
+
+> > +/* 64 */__u8 volume_name[16];   /* volume name */
+> > +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
+> > +
+> > +/* 84 */__u8 reserved2[44];
+> > +} __packed;                     /* 128 bytes */
+>=20
+> Please don't add __packed.  In this case I think you don't need it
+> (but double check with pahole), but even if you would need it using
+> proper padding fields and making sure all fields are naturally aligned
+> will give you much better code generation on architectures that don't
+> support native unaligned access.
+
+This is on-disk structure, right?
+
+drivers/staging/erofs/super.c:	struct erofs_super_block *layout;
+drivers/staging/erofs/super.c:	layout =3D (struct erofs_super_block
+*)((u8 *)bh->b_data
+
+So __packed is right thing to do. If architecture accesses that
+slowly, that's ungood, but different structures between architectures
+would be really bad.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1s1XQACgkQMOfwapXb+vK1qgCeMhRodxdCMHktGBYzM6YZ0upo
+P8IAnRXsAoM5UyuAx4MPbJJVq8NtKIG8
+=L04e
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
