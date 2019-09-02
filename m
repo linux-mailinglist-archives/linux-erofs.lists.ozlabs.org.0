@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68E5AA56B5
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 14:53:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC613A56BF
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 14:54:54 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46MVPw6KdZzDqRN
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 22:53:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46MVRH4ZJWzDqTn
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 22:54:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
@@ -18,41 +18,42 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="Ts1URB2b"; dkim-atps=neutral
+ header.b="nfwL6FD/"; dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46MVPk3shzzDq9B
- for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 22:53:30 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46MVR914m5zDqJV
+ for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 22:54:45 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
  :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
  Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
  Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
  List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=7/PnToezagXqwbE0JThYjiZtwfyfOHMmdhe3eq0wzJQ=; b=Ts1URB2bALfk7/nZqBL5ACev6
- d6mytq+WkKmBdI1Wv08vqYRnZWfBrvhlqsGyKr5I4haxAzvi1W0/AiztPOWlODIwH8mprivMNHXAc
- /06Rn4wqK72ipJdREnrX+N2KdwFs0alrXDItr685VeLgZ3ZdyJyTHlhsH34pP3K2yCdVqH8DnTs/j
- vj3YiKH5xkSRPnqzeWZNfNKawQNVoLDPMLBBr5QpqV1hzO5AjsTVVWeY8JPW2d9Hgv32yOgh3txYF
- oA9lsn52rb0jx+KDpVn29SBne/zu8ILFVNgmCDcXXK3YpY12eWYPnQfPLQI15eG/7BOC75MyP0cRr
- CqX5qv0Kg==;
+ bh=Cfou+aUkoFJmVggCmG5eZbSGsSmpOejeEZjjhO0gxJ4=; b=nfwL6FD/J5EAsuQwSDBysBDcS
+ l4z7uQMeWEypiiaMxnhvBiPDbiKdqtKF8yZaWdcy/67tm+ZPiBujr4hww6UUL2LKJGKZuCEx8Mfiw
+ KR/KFNkASy3e7RmEVI9D91/iZLmvxSrzqaeRhrIqQroiOFxTYd1yTOyPhfAzRdVpS/7LrPAgab/dv
+ Xy+1eLJYjahB6DI6QNqSKKeh+EdsIkKAlxXZOwq85lzYWfTn0SQPjKsZOnoIsaoKUcWPVvnkqMGvA
+ xXZDRWaYbqIPpRL1pLS8KqxGbZydOOwozGUN8EHI3LhJvnJymhNZHJXpcwW3sowqW2OJQG5msHlRH
+ kibL2g0KA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1i4lpg-0004bl-IN; Mon, 02 Sep 2019 12:53:20 +0000
-Date: Mon, 2 Sep 2019 05:53:20 -0700
+ Linux)) id 1i4lqw-0004g0-Qu; Mon, 02 Sep 2019 12:54:38 +0000
+Date: Mon, 2 Sep 2019 05:54:38 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Gao Xiang <hsiangkao@aol.com>
-Subject: Re: [PATCH v6 05/24] erofs: add inode operations
-Message-ID: <20190902125320.GA16726@infradead.org>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: [PATCH 16/21] erofs: kill magic underscores
+Message-ID: <20190902125438.GA17750@infradead.org>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-6-gaoxiang25@huawei.com>
- <20190829102426.GE20598@infradead.org>
- <20190901093326.GA6267@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190901055130.30572-1-hsiangkao@aol.com>
+ <20190901055130.30572-17-hsiangkao@aol.com>
+ <20190902122627.GN15931@infradead.org>
+ <20190902123937.GA17916@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901093326.GA6267@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20190902123937.GA17916@architecture4>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
  bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -67,38 +68,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Stephen Rothwell <sfr@canb.auug.org.au>,
- linux-erofs@lists.ozlabs.org, Jan Kara <jack@suse.cz>,
- "Darrick J . Wong" <darrick.wong@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Amir Goldstein <amir73il@gmail.com>, Dave Chinner <david@fromorbit.com>,
- LKML <linux-kernel@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Christoph Hellwig <hch@infradead.org>, Pavel Machek <pavel@denx.de>,
- David Sterba <dsterba@suse.cz>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Miao Xie <miaoxie@huawei.com>
+Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Christoph Hellwig <hch@infradead.org>, linux-fsdevel@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Sep 01, 2019 at 05:34:00PM +0800, Gao Xiang wrote:
-> > > +	return iget5_locked(sb, hashval, erofs_ilookup_test_actor,
-> > > +		erofs_iget_set_actor, &nid);
-> > > +#endif
+On Mon, Sep 02, 2019 at 08:39:37PM +0800, Gao Xiang wrote:
 > > 
-> > Just use the slightly more complicated 32-bit version everywhere so that
-> > you have a single actually tested code path.  And then remove this
-> > helper.
+> > > +	if (erofs_inode_version(advise) == EROFS_INODE_LAYOUT_V2) {
+> > 
+> > I still need to wade through the old thread - but didn't you say this
+> > wasn't really a new vs old version but a compat vs full inode?  Maybe
+> > the names aren't that suitable either?
 > 
-> As I said before, 64-bit platforms is common currently,
-> I think iget_locked is enough.
-> https://lore.kernel.org/r/20190830184606.GA175612@architecture4/
+> Could you kindly give some suggestions for better naming about it?
+> there are all supported by EROFS... (Actually we only mainly use v1...)
 
-The problem with that is that you now have two entirely different
-code paths.  And the 32-bit one will probably get very little testing
-and eventually bitrot.  We defintively had problems of that sort in
-XFS in the past, so my suggestion is to not go down the root of
-separate code for 32-bit vs 64-bit unless it makes a real difference
-for a real-life workload.
+Maybe EROFS_INODE_LAYOUT_COMPACT and EROFS_INODE_LAYOUT_EXTENDED?
