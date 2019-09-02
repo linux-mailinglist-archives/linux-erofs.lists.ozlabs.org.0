@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F0A8A558F
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 14:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CB4FA5592
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 14:07:58 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46MTND2QfczDqZB
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 22:07:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46MTP702VyzDqZB
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2019 22:07:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (mailfrom)
@@ -18,40 +18,40 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=infradead.org header.i=@infradead.org
- header.b="T9I9NsTn"; dkim-atps=neutral
+ header.b="e1NgQmXy"; dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46MTN800rvzDqMh
- for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 22:07:03 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46MTP23K6CzDqMh
+ for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2019 22:07:50 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
  :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
  Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
  Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
  List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
- bh=sQDD21Z9frf8D/J1ALbMqvAMuCO6kNLcplZgjbOP9Ts=; b=T9I9NsTnMeqHA6FV7Ueo7zG9p
- cWOS+hlOGdcm5R3dZMKq9T+x0AIklGPo4cXYylow7gWVrxBwe1y/ZzBn64iT6dp5pI/Yo0Mlrvw3z
- U4xKLF8StZ0fNKtATrpJ2+R/sUnw+zKlkkqK8do2JcWJu/vXMJPZtOb+YHc6pJJvpA7ZUNlbbZPzl
- tO3VOo1fjFw6ML+0bbPue9uXl7J+y0dITKTzxLSMCpd4FtEL1u3XiATcknTHBFa09gc6KZAZod9fd
- hV0IyF9NJ0uuyVZ3o43pNZQILibVfugVzGDHvY5RE8JieZfq9oLlMGm2F6uOFrExRceyX2MR1L7FS
- Hc6k8JvEQ==;
+ bh=7Oks1cgmbtAsxCs1TYU+vI3codTgdNBAbLyudCDF34M=; b=e1NgQmXyfdoylBK1YZuNte/Tr
+ oVXW7b8+0Oqvh+P9q3MHylNL+tmQwG+n+Mz68cp+mCtjlWqLtmYHpb5wDymlyERG7NVNweJcCG1Vv
+ k0ZLWt3YMLpuV8VUUWJlS43ZrTVlNF4u4EKs12bMHUtdTtRfJHgDgb5CVTWBG4wsCDLeXjU1NBW/T
+ GaLfKudvIJkAXUraumOM046AWnwfbkdYqm1pPCXxgXKabvCEXtTgtJvCMidGctRG/v+VpY+B2dzmP
+ NVcXfxVn8ykRrGhm4zlVpi8B3inqPDjb9c0EBCVdnLszKLswxoFi0DRamtBasFOAzNIjPVcvEKP9+
+ /lRggLsLQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat
- Linux)) id 1i4l6o-0005UW-Pr; Mon, 02 Sep 2019 12:06:58 +0000
-Date: Mon, 2 Sep 2019 05:06:58 -0700
+ Linux)) id 1i4l7Y-0005WV-E0; Mon, 02 Sep 2019 12:07:44 +0000
+Date: Mon, 2 Sep 2019 05:07:44 -0700
 From: Christoph Hellwig <hch@infradead.org>
 To: Gao Xiang <hsiangkao@aol.com>
-Subject: Re: [PATCH 04/21] erofs: kill __packed for on-disk structures
-Message-ID: <20190902120658.GD15931@infradead.org>
+Subject: Re: [PATCH 05/21] erofs: update erofs_inode_is_data_compressed helper
+Message-ID: <20190902120744.GE15931@infradead.org>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
  <20190901055130.30572-1-hsiangkao@aol.com>
- <20190901055130.30572-5-hsiangkao@aol.com>
+ <20190901055130.30572-6-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901055130.30572-5-hsiangkao@aol.com>
+In-Reply-To: <20190901055130.30572-6-hsiangkao@aol.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
  bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -73,14 +73,18 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Sep 01, 2019 at 01:51:13PM +0800, Gao Xiang wrote:
+On Sun, Sep 01, 2019 at 01:51:14PM +0800, Gao Xiang wrote:
 > From: Gao Xiang <gaoxiang25@huawei.com>
 > 
-> As Christoph suggested "Please don't add __packed" [1],
-> remove all __packed except struct erofs_dirent here.
+> As Christoph said, "This looks like a really obsfucated
+> way to write:
+> 	return datamode == EROFS_INODE_FLAT_COMPRESSION ||
+> 		datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY; "
 > 
-> Note that all on-disk fields except struct erofs_dirent
-> (12 bytes with a 8-byte nid) in EROFS are naturally aligned.
+> Although I had my own consideration, it's the right way for now.
 
-Thanks.  The users of various architectures where this generates a lot
-better code will thank you.
+Well, if you do check one field for two values it really helps to do
+the same style of check for both.  All your choice how you do the check,
+but don't mix multiple styles..
+
+So this looks good.
