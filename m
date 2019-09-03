@@ -1,56 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53186A63B8
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2019 10:18:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8987A6769
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2019 13:29:13 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46N0GQ5pfhzDqgH
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2019 18:18:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46N4Tz0YSHzDqbc
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2019 21:29:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.189; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=none (mailfrom) smtp.mailfrom=ucw.cz
+ (client-ip=195.113.26.193; helo=atrey.karlin.mff.cuni.cz;
+ envelope-from=pavel@ucw.cz; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
+ dmarc=none (p=none dis=none) header.from=denx.de
+Received: from atrey.karlin.mff.cuni.cz (atrey.karlin.mff.cuni.cz
+ [195.113.26.193])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46N0GL4RsdzDqWp
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Sep 2019 18:18:48 +1000 (AEST)
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
- by Forcepoint Email with ESMTP id 6E25654F8C19C09BEE56;
- Tue,  3 Sep 2019 16:18:42 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Sep 2019 16:18:41 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 3 Sep 2019 16:18:41 +0800
-Date: Tue, 3 Sep 2019 16:17:49 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 00/21] erofs: patchset addressing Christoph's comments
-Message-ID: <20190903081749.GA89379@architecture4>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46N4Rt1zPszDqkb
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Sep 2019 21:27:16 +1000 (AEST)
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+ id BFF3C819EF; Tue,  3 Sep 2019 13:26:54 +0200 (CEST)
+Date: Tue, 3 Sep 2019 13:27:07 +0200
+From: Pavel Machek <pavel@denx.de>
+To: dsterba@suse.cz, Pavel Machek <pavel@denx.de>,
+ Joe Perches <joe@perches.com>, Gao Xiang <gaoxiang25@huawei.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
+ "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Dave Chinner <david@fromorbit.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+ Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
+Message-ID: <20190903112707.GA3844@amd>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190901055130.30572-1-hsiangkao@aol.com>
- <20190902124645.GA8369@infradead.org>
- <20190902142452.GE2664@architecture4>
- <20190902152323.GB14009@infradead.org>
- <20190902155037.GD179615@architecture4>
- <20190903065803.GA11205@infradead.org>
+ <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190829095954.GB20598@infradead.org>
+ <20190829103252.GA64893@architecture4>
+ <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
+ <20190830120714.GN2752@twin.jikos.cz> <20190902084303.GC19557@amd>
+ <20190902140712.GV2752@twin.jikos.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
 Content-Disposition: inline
-In-Reply-To: <20190903065803.GA11205@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190902140712.GV2752@twin.jikos.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,185 +67,64 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: devel@driverdev.osuosl.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fsdevel@vger.kernel.org,
- linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christoph,
 
-On Mon, Sep 02, 2019 at 11:58:03PM -0700, Christoph Hellwig wrote:
-> On Mon, Sep 02, 2019 at 11:50:38PM +0800, Gao Xiang wrote:
-> > > > You means killing erofs_get_meta_page or avoid erofs_read_raw_page?
-> > > > 
-> > > >  - For killing erofs_get_meta_page, here is the current erofs_get_meta_page:
-> > > 
-> > > > I think it is simple enough. read_cache_page need write a similar
-> > > > filler, or read_cache_page_gfp will call .readpage, and then
-> > > > introduce buffer_heads, that is what I'd like to avoid now (no need these
-> > > > bd_inode buffer_heads in memory...)
-> > > 
-> > > If using read_cache_page_gfp and ->readpage works, please do.  The
-> > > fact that the block device inode uses buffer heads is an implementation
-> > > detail that might not last very long and should be invisible to you.
-> > > It also means you can get rid of a lot of code that you don't have
-> > > to maintain and others don't have to update for global API changes.
-> > 
-> > I care about those useless buffer_heads in memory for our products...
-> > 
-> > Since we are nobh filesystem (a little request, could I use it
-> > after buffer_heads are fully avoided, I have no idea why I need
-> > those buffer_heads in memory.... But I think bd_inode is good
-> > for caching metadata...)
-> 
-> Then please use read_cache_page with iomap_readpage(s), and write
-> comment explaining why your are not using read_cache_page_gfp.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I implement a prelimitary version, but I have no idea it is a really
-cleanup for now.
+Hi!
 
-From 001e3e64c81e4ced0d22b147e6abf90060e704b5 Mon Sep 17 00:00:00 2001
-From: Gao Xiang <gaoxiang25@huawei.com>
-Date: Tue, 3 Sep 2019 16:13:00 +0800
-Subject: [PATCH] erofs: use iomap_readpage for erofs_get_meta_page
+> > No. gdb tells you what the actual offsets _are_.
+>=20
+> Ok, reading your reply twice, I think we have different perspectives. I
+> don't trust the comments.
+>=20
+> The tool I had in mind is pahole that parses dwarf information about the
+> structures, the same as gdb does. The actual value of the struct members
+> is the thing that needs to be investigated in memory dumps or disk image
+> dumps.
+>=20
+> > > > The expected offset is somewhat valuable, but
+> > > > perhaps the form is a bit off given the visual
+> > > > run-in to the field types.
+> > > >=20
+> > > > The extra work with this form is manipulating all
+> > > > the offsets whenever a structure change occurs.
+> > >=20
+> > > ... while this is error prone.
+> >=20
+> > While the comment tells you what they _should be_.
+>=20
+> That's exactly the source of confusion and bugs. For me an acceptable
+> way of asserting that a value has certain offset is a build check, eg.
+> like
+>=20
+> BUILD_BUG_ON(strct my_superblock, magic, 16);
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/Kconfig |  1 +
- fs/erofs/data.c  | 91 ++++++++++++++++++++++++++----------------------
- 2 files changed, 51 insertions(+), 41 deletions(-)
+Yes, that would work, too. As would documentation file with the disk
+structures.
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 9d634d3a1845..c9eeb0bf4737 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -3,6 +3,7 @@
- config EROFS_FS
- 	tristate "EROFS filesystem support"
- 	depends on BLOCK
-+	select FS_IOMAP
- 	help
- 	  EROFS (Enhanced Read-Only File System) is a lightweight
- 	  read-only file system with modern designs (eg. page-sized
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 3881c0689134..34c6e05fab71 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -5,6 +5,9 @@
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "internal.h"
-+#include <linux/iomap.h>
-+#include <linux/mpage.h>
-+#include <linux/sched/mm.h>
- #include <linux/prefetch.h>
- 
- #include <trace/events/erofs.h>
-@@ -51,54 +54,60 @@ static struct bio *erofs_grab_raw_bio(struct super_block *sb,
- 	return bio;
- }
- 
--struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
-+static int erofs_meta_iomap_begin(struct inode *inode, loff_t pos,
-+				  loff_t length, unsigned int flags,
-+				  struct iomap *iomap)
- {
--	struct inode *const bd_inode = sb->s_bdev->bd_inode;
--	struct address_space *const mapping = bd_inode->i_mapping;
--	/* prefer retrying in the allocator to blindly looping below */
--	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS);
--	struct page *page;
--	int err;
--
--repeat:
--	page = find_or_create_page(mapping, blkaddr, gfp);
--	if (!page)
--		return ERR_PTR(-ENOMEM);
--
--	DBG_BUGON(!PageLocked(page));
--
--	if (!PageUptodate(page)) {
--		struct bio *bio;
-+	const unsigned int blkbits = inode->i_blkbits;
-+
-+	iomap->flags = 0;
-+	iomap->bdev = I_BDEV(inode);
-+	iomap->offset = round_down(pos, 1 << blkbits);
-+	iomap->addr = iomap->offset;
-+	iomap->length = round_up(length, 1 << blkbits);
-+	iomap->type = IOMAP_MAPPED;
-+	return 0;
-+}
- 
--		bio = erofs_grab_raw_bio(sb, blkaddr, 1, true);
-+static const struct iomap_ops erofs_meta_iomap_ops = {
-+	.iomap_begin = erofs_meta_iomap_begin,
-+};
- 
--		if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE) {
--			err = -EFAULT;
--			goto err_out;
--		}
-+static int
-+erofs_meta_get_block(struct inode *inode, sector_t iblock,
-+		     struct buffer_head *bh, int create)
-+{
-+	bh->b_bdev = I_BDEV(inode);
-+	bh->b_blocknr = iblock;
-+	set_buffer_mapped(bh);
-+	return 0;
-+}
- 
--		submit_bio(bio);
--		lock_page(page);
-+static int erofs_read_meta_page(void *file, struct page *page)
-+{
-+	/* in case of getting some pages with buffer_heads */
-+	if (i_blocksize(page->mapping->host) == PAGE_SIZE &&
-+	    !page_has_buffers(page))
-+		return iomap_readpage(page, &erofs_meta_iomap_ops);
-+
-+	/*
-+	 * cannot use blkdev_readpage or blkdev_get_block directly
-+	 * since static in block_dev.c
-+	 */
-+	return mpage_readpage(page, erofs_meta_get_block);
-+}
- 
--		/* this page has been truncated by others */
--		if (page->mapping != mapping) {
--			unlock_page(page);
--			put_page(page);
--			goto repeat;
--		}
-+struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
-+{
-+	struct inode *const bd_inode = sb->s_bdev->bd_inode;
-+	struct address_space *const mapping = bd_inode->i_mapping;
-+	unsigned int nofs_flag;
-+	struct page *page;
- 
--		/* more likely a read error */
--		if (!PageUptodate(page)) {
--			err = -EIO;
--			goto err_out;
--		}
--	}
-+	nofs_flag = memalloc_nofs_save();
-+	page = read_cache_page(mapping, blkaddr, erofs_read_meta_page, NULL);
-+	memalloc_nofs_restore(nofs_flag);
- 	return page;
--
--err_out:
--	unlock_page(page);
--	put_page(page);
--	return ERR_PTR(err);
- }
- 
- static int erofs_map_blocks_flatmode(struct inode *inode,
--- 
-2.17.1
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1uTgsACgkQMOfwapXb+vL2IgCgs+lvDMnGJBdzf4Ded3ls5qz4
+u/sAn1m34p0fdk6NLGSW8jaPems7I5EL
+=38MN
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
