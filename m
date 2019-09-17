@@ -1,75 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8219B470F
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 07:50:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC251B4710
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 07:50:10 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46XXJC3B63zF453
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 15:50:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46XXJJ1Mt7zF453
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 15:50:08 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1568699403;
-	bh=0pGRMXJVLCNEfRpO1AoyiMHriQQrPUWnqhfx/ElEcBk=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
-	b=M5j0TrXBebPsWDrR0d3a0wImeH9n4rZ1hg7+MHfGS5CnK8359+aU6jRTIfn/izJQQ
-	 yvTZkTy1f9tgzmzuOX0vypGea7ShsDht/9F6oXKOSV+/zlpSpfiI5LhNR4nxzLHPJS
-	 HWDIDceI89/MUEcCgI1zmZOx/gzY8Iz3QmiWI3tZO1p6d+aba5WSHqk5Y7wek0MvpB
-	 cUWsOGD2rFblDin/DdH3tIIQ0xsz0U4EJ1ntjGjj1gEK0dFHQ+0CSiw0mBCNZaTWmQ
-	 MrtpSfBMYxJyjpmViThvTGjy6z91OgUIUkxvNG2Uk7YqnOcGjk6SHnyJ7jZwBo36vJ
-	 2+PHqEnoKYLjA==
+	s=201707; t=1568699408;
+	bh=42C5Ks7VVmdn1ADQ79bSnHMMhhZ72Cvu7A6NzvLSO5M=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=W8GKHT27zJ2fDDDEWiA9Zrby3T+X+YMmgB5pwP4NHAsV3ueX7J6puIVmNAMiRm/G9
+	 jkGpE+hAJpbSBEQWoVOHYWFmszw31K150zPJLfX1miBrOiVGFscLjQX5zQY8aQDSq6
+	 NrxOr8g7IMgCSS6uticOsx93J3Xm+BEUaML6V0remVBav5cWK8BCkqkhiqE/Ga/Z6j
+	 mWH12eTJWZc7pVWCaYoT6qy/d/R+E3Qo5FIbxAcPsrKH82mtRmlr59wqOt2TX9xUv8
+	 lMK3jhl60wpKHFJ+t0xMIP3ChV9ZdwLgaPTBTjWgpBhs1EWR9rwyRWNTextFIfHFFY
+	 PqHGT37pcQldw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.148; helo=sonic309-22.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.66.148; helo=sonic317-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="rPNzEBL4"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="Qy+4WEck"; 
  dkim-atps=neutral
-Received: from sonic309-22.consmr.mail.gq1.yahoo.com
- (sonic309-22.consmr.mail.gq1.yahoo.com [98.137.65.148])
+Received: from sonic317-22.consmr.mail.gq1.yahoo.com
+ (sonic317-22.consmr.mail.gq1.yahoo.com [98.137.66.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46XXHm1s3YzDqfB
- for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2019 15:49:37 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46XXHv1fclzF4Fq
+ for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2019 15:49:46 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1568699372; bh=meKByR0AbMJ3VTi5/TxqaQIVVAS6oSWuF9nXMvcZYlw=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=rPNzEBL4Tef9tiwMGJGqaOfbDL2aKExvZLNwGcXgnhN9fCC5GjcWstXIiMzLDvq5O7NTZBgDrczA8p4E08S7U2lN3jwuUYZI8N2tmSTHnt2mXlYesIaSTaQoemYsDac05hExFWrSyhasdRKQYg8Hhk7wHCaOod0Ec5DQbWxYxIyVXGBZ0n6DAzUWTVBWYOF3H+Qg2DvqPFOs5IvZGfXK06oGU+01XKNmL0GjV4Bjh8prP9Hawo93e3/JcYyF58cXjt2onC0HjH4HftzLHrswJ3IA3/l+ltmBTx8+I8rOxEILQJYfGCzX2rzHX2UMM5+sFkmfk/dBVSvsg8bT2JoDfg==
-X-YMail-OSG: .wLnJnMVM1m9qRbVPQlblkuKuR6D2mYrDHvMicd4aUp0ynqcyspYJhOTg77p4in
- CqRCALySnl1xZk7tLfoIXEWn1vdKR_OhxISzojcsWz9tOFdsWf8wYxTeRPLCFzhNlXe0JUcePUXd
- RMYAsqNgaaJrOnGkoKJdohZCCEFxeNN1hFVY6PpFT.Sb5lFrgcMHHyNhTYJ5Xjg.LtfjN3OeWzDP
- 85kIfUcG7ddx.SR8Wrz7OSi7usoMpQKZJ7r3kp12q8VhZ.QA5VnGaDvsMO7pQIaTjs1YCTojtPXc
- dMWBN.IEnToGMMre84dKeGyE0SPHbqkqjZDFuFvlQg7cGkhXrvQuNtXKMGaLwMadLlDM87_f6WKN
- NY7GcSqSCUI2JM8eP1XXHB21fmvvaKn79RX3Ipt0zYiN9P62Frio_pBVntzSMIKIOEPbT4qgRhwG
- cICXPh06eMLS_.JJE62fECMkyozkD93n2oAPhphktXOSe3EJMa7BDT1PAvE3Hm8u4t1fogebtmXg
- 5OwxToucXc_6SRnp.hrGayijRpgCuqJOdxh2r0740wUe1rohzRSA7VJDtb5UCcBwunSy3anIkuqo
- WNpJhGuBfbaE0YvyvrhVUOli9ltIoIVVbTjufFYVKC3TORmENrPo66Pw30fL_3ZRtU.YHGbFi23C
- Cd2ToOON.nkX4avmjjKnfPzyeMnf7uRU_H_sbQ13jbixveNkBumfGLdp_gOmEeinlS0H8196DH_A
- 77h0BgULSNxWUur..dRjGtoYXJdstFjB6dEp_eJPEdsq.oxQkM5GHZGpPb_Zj1xlHhZbnwin1XcM
- AGuh14DEZwYO2noS7AeJueVcYSucQzsepwqIGzArlvFqAZwrlYNnzrJRzz_P7pJjHyPClLsGK8nQ
- Wo0azldiKAxWbnzjeaTNpS.kEO4_Zs8RUrql_J9nVaCnOFKNJ.xk7F.nLPfwCRbV2JPbDw.Pk5HX
- 4i8ViUq8lhdibfAIwFsNctbfY_o8oJ103sMF1yRci.K8ItGIPrb8nzPFWz9BntHHuccmUwVccSEB
- E9SLqM8PeFmymMjaopRTqFimzVh.9QifuUSe1f.b96b_w7.SzRj6u5IQKFkkBh70TWsyAiRtJSk_
- 7cD0IaLKxYcyuBLEylqOi2bNeGRmZuT0eCGyba22FiV2MDnhHCW8GlVpK277uR_iOVbg22V6CBmr
- KzQrgsBeytRHaNhiavN9mhWz4u4yQA7mOOQfhaS8cmL4wrt0U164avx3p841Kk8Yxsn1iiJ0CVfv
- beJL.xhqRVZG.ZvkkwvJSG8RnOyC5KvgDSPnpMT5UkRMyCXIdiO2QKJ_wPF9BZm4blAJZsbT0omH
- kcB1apkbQ5FGf38P3Jd32YpACOFIQ3be9ZRn5q5kj3RfBI03mj0I63sw-
+ t=1568699382; bh=m6yRXfZllEjz0YkYMdLQugkc0X59Q7ix9hD19XKr42I=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
+ b=Qy+4WEckCfTTcsRVsAZA/tNOK5xm25dDXPuSo3S1bIDjOCMoWWx8LpEIs2a4a9L5wyI2NcQyLb4+4VzQ7KFkDV1utmtsPNABeOh1pwkr59/49SFw1uhNz6L2mIbgIg3sVwKM15EgbTvP7dIyjd2fDGyNOibM8HHJSfRpDvpL+TG9jt8Vd1HvWWdx6dQZ6Xy2LFLLpzAJbuVz3eethl7lCiN9zW4e18Yw8BMU1jjDE6LUbdGEpDOWPcPcnu5t7JUVULbpqAI95bk7w+Vn+TDFidOZeIwJeA6/eBu6BmSnoAVvcLKjKO7VozvMUaUckK3fujSKMrMohO42Urk8VNW8jA==
+X-YMail-OSG: fEP.HhIVM1mZkIG5nfWSHH0gb4pKUnqx1p0T44iIZNz3_xMN3pFxCA9IvRIX.yJ
+ DM3ZX7bexgaU4WIDfJzJDtmMNSgjbzWeRxRskddRZkHJxaIodpUm9i6bVwnrt10ppeIf0m8vgdfN
+ BWVvZ3ZeVygtatuQsCzM9fdA_cNmaqmtbnMBXf8l9WR_oSOOJcE14D8vtA5BZOIwGBd78LSk16wi
+ oMTF.VTHluw_ioaBjs07Z1CdxcOfsSyfpJEyImvlCzri9gR.fTDtaHrNDCdbG1V07pils7wi6LDf
+ kD2tt99_7hBiCapSfWcs7NwRKtMBeMZNpWtfoB3oRr1Dow7XQxPbQG46EaSiaLr93zTlfjndK9EH
+ xl6OK8HGAwK9INOYa8mt5xIxdS0fCbO6TmOZ8ZMjOMy7YaubbRnNFISjhQKURhuwSOCHVfaKLeR9
+ Vp9H1FK0tuRPpGYZl9GTnZ6a9y1uBBT4GwRR2ctLIw6egDXEdhtCZaTnBz6mUx1UnFW8IdcEBFJq
+ VjNIJha7Zzk8NB0O3HzMjnhkZODyM8AdER897vMX4Ftt0zcuYGlZlMxingrXjRl9dhwIObaiuKOQ
+ RUA9pDR96FAzgKe7IhAn._XIvliwbU8ppWU92uyQ_YaLcKVlv0GJwTxdLTvNF24FSpP0PjsBH7OR
+ BB9eGEYugBQLNOwR_kVUNriL_tM8qJUIkxq5TQVjMih2uIuRdfYFJEJwuYnt9sb8k05aVl.op5hj
+ eteXQ7Ga7eoPgWZOlLLUrjVILjbUvI8OH8SHAE1W0IhaFhbUoB_.D0VDudeoPtOV7djvsmmF.daV
+ fW1xU50B4.QZUvB6liHGzVgHS3ikStLDQ8NGqP9TBEtFiV0Lla0KYbYX2C7yIvUQD.afssd6RhFm
+ qdHv5ID4RFuNNfOUHbo8XT2kibyT2SOCNcZ9FsHKftFBRMYuKCRxZq9ttev4ZGp607wX8j5_hjCh
+ T0cul3Wjbe5hxS5knLMWu3LKl6cvnP5jQVWErXmFDg_7H3msUaIdSCFdJJ3uwGl3Q6etVTvSHxVw
+ GEpwB7fKZs9I2l9lFmg4pPMvtk6joB.G3pzebhJrd8ow8oAX1.uolciFfDrdIo6qfEo9xdNK6mjU
+ ua6U3VQtJEoyCD7pElVSWR2_NGDOrQEZ9OW5ybeZatQWvzLNow.NNAj9NV_FFdVERlaa8ChRb4oY
+ sPxfwnxOIFrb7aZouobtr6eCKZ9OkDCNELRhHUeOsY3ckrCfB7BMJpQj6zLtooIjBbEgvHcSdPmF
+ HT_w9qhxWLonQp39hBJtYrUQynITEQAhXrtYJk7kyQC59Lpah_Sxt6Lm2W2FrFD_vdHnrfks5.xY
+ eAZk0HM2y169jw9sTl_wD6HZB_gw1vJOjXvdRPHM-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Tue, 17 Sep 2019 05:49:32 +0000
+ sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 17 Sep 2019 05:49:42 +0000
 Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
  ID 0ca914cfda0cd9061c391ed841b64b5d; 
- Tue, 17 Sep 2019 05:49:30 +0000 (UTC)
+ Tue, 17 Sep 2019 05:49:36 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
  fangwei1@huawei.com
-Subject: [PATCH 1/3] erofs-utils: complete special file support
-Date: Tue, 17 Sep 2019 13:49:11 +0800
-Message-Id: <20190917054913.24187-1-hsiangkao@aol.com>
+Subject: [PATCH 2/3] erofs-utils: resize image to the correct size
+Date: Tue, 17 Sep 2019 13:49:12 +0800
+Message-Id: <20190917054913.24187-2-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.17.1
-References: <20190917054913.24187-1-hsiangkao.ref@aol.com>
+In-Reply-To: <20190917054913.24187-1-hsiangkao@aol.com>
+References: <20190917054913.24187-1-hsiangkao@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,115 +91,131 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-Special file was already supported by obsoleted_mkfs,
-let's complete it for new erofs-utils now.
+In the end, it's necessary to resize image to
+the proper size since buffers could be dropped.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
+ include/erofs/io.h |  1 +
+ lib/io.c           | 32 +++++++++++++++++++++++++++++++-
+ mkfs/main.c        | 11 ++++++++---
+ 3 files changed, 40 insertions(+), 4 deletions(-)
 
-Hi Guifu,
-Could you kindly take a look of these patches?
-
-Thanks,
-Gao Xiang
-
- configure.ac |  1 +
- lib/inode.c  | 34 ++++++++++++++++++++++++++++++----
- 2 files changed, 31 insertions(+), 4 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index fcdf30a..07e034e 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -82,6 +82,7 @@ AC_CHECK_HEADERS(m4_flatten([
- 	string.h
- 	sys/ioctl.h
- 	sys/stat.h
-+	sys/sysmacros.h
- 	sys/time.h
- 	unistd.h
- ]))
-diff --git a/lib/inode.c b/lib/inode.c
-index e3495f4..c8cf847 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -12,6 +12,7 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <sys/stat.h>
-+#include <sys/sysmacros.h>
- #include <dirent.h>
- #include "erofs/print.h"
- #include "erofs/inode.h"
-@@ -128,7 +129,6 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
- 	int ret;
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 4b574bd..9775047 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -21,6 +21,7 @@ void dev_close(void);
+ int dev_write(const void *buf, u64 offset, size_t len);
+ int dev_fillzero(u64 offset, size_t len, bool padding);
+ int dev_fsync(void);
++int dev_resize(erofs_blk_t nblocks);
+ u64 dev_length(void);
  
- 	if (!nblocks) {
--		inode->bh_data = NULL;
- 		/* it has only tail-end inlined data */
- 		inode->u.i_blkaddr = NULL_ADDR;
- 		return 0;
-@@ -302,6 +302,11 @@ int erofs_write_file(struct erofs_inode *inode)
- 	unsigned int nblocks, i;
- 	int ret, fd;
+ static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
+diff --git a/lib/io.c b/lib/io.c
+index 15c5a35..7f5f94d 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -79,6 +79,7 @@ int dev_open(const char *dev)
+ 			close(fd);
+ 			return ret;
+ 		}
++		erofs_devsz = round_down(erofs_devsz, EROFS_BLKSIZ);
+ 		break;
+ 	case S_IFREG:
+ 		ret = ftruncate(fd, 0);
+@@ -98,7 +99,6 @@ int dev_open(const char *dev)
  
-+	if (!inode->i_size) {
-+		inode->data_mapping_mode = EROFS_INODE_FLAT_PLAIN;
-+		return 0;
-+	}
-+
- 	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
- 		ret = erofs_write_compressed_file(inode);
+ 	erofs_devname = dev;
+ 	erofs_devfd = fd;
+-	erofs_devsz = round_down(erofs_devsz, EROFS_BLKSIZ);
  
-@@ -573,6 +578,14 @@ out:
+ 	erofs_info("successfully to open %s", dev);
+ 	return 0;
+@@ -177,3 +177,33 @@ int dev_fsync(void)
+ 	}
  	return 0;
  }
- 
-+static u32 erofs_new_encode_dev(dev_t dev)
-+{
-+	const unsigned int major = major(dev);
-+	const unsigned int minor = minor(dev);
 +
-+	return (minor & 0xff) | (major << 8) | ((minor & ~0xff) << 12);
++int dev_resize(unsigned int blocks)
++{
++	int ret;
++	struct stat st;
++	u64 length;
++
++	if (cfg.c_dry_run || erofs_devsz != INT64_MAX)
++		return 0;
++
++	ret = fstat(erofs_devfd, &st);
++	if (ret) {
++		erofs_err("failed to fstat.");
++		return -errno;
++	}
++
++	length = (u64)blocks * EROFS_BLKSIZ;
++	if (st.st_size == length)
++		return 0;
++	if (st.st_size > length)
++		return ftruncate(erofs_devfd, length);
++
++	length = length - st.st_size;
++#if defined(HAVE_FALLOCATE)
++	if (fallocate(erofs_devfd, 0, st.st_size, length) >= 0)
++		return 0;
++#endif
++	return dev_fillzero(st.st_size, length, true);
 +}
 +
- int erofs_fill_inode(struct erofs_inode *inode,
- 		     struct stat64 *st,
- 		     const char *path)
-@@ -582,10 +595,22 @@ int erofs_fill_inode(struct erofs_inode *inode,
- 	inode->i_gid = st->st_gid;
- 	inode->i_nlink = 1;	/* fix up later if needed */
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 5efbf30..2dfd68e 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -145,7 +145,8 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ }
  
--	if (!S_ISDIR(inode->i_mode))
--		inode->i_size = st->st_size;
--	else
-+	switch (inode->i_mode & S_IFMT) {
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFIFO:
-+	case S_IFSOCK:
-+		inode->u.i_rdev = erofs_new_encode_dev(st->st_rdev);
-+	case S_IFDIR:
- 		inode->i_size = 0;
-+		break;
-+	case S_IFREG:
-+	case S_IFLNK:
-+		inode->i_size = st->st_size;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
+ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+-				  erofs_nid_t root_nid)
++				  erofs_nid_t root_nid,
++				  erofs_blk_t *blocks)
+ {
+ 	struct erofs_super_block sb = {
+ 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
+@@ -166,7 +167,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 		sb.build_time_nsec = cpu_to_le32(t.tv_usec);
+ 	}
  
- 	strncpy(inode->i_srcpath, path, sizeof(inode->i_srcpath) - 1);
- 	inode->i_srcpath[sizeof(inode->i_srcpath) - 1] = '\0';
-@@ -613,6 +638,7 @@ struct erofs_inode *erofs_new_inode(void)
- 	inode->i_count = 1;
+-	sb.blocks       = cpu_to_le32(erofs_mapbh(NULL, true));
++	*blocks         = erofs_mapbh(NULL, true);
++	sb.blocks       = cpu_to_le32(*blocks);
+ 	sb.root_nid     = cpu_to_le16(root_nid);
  
- 	init_list_head(&inode->i_subdirs);
-+	inode->idata_size = 0;
- 	inode->xattr_isize = 0;
- 	inode->extent_isize = 0;
+ 	buf = calloc(sb_blksize, 1);
+@@ -189,6 +191,7 @@ int main(int argc, char **argv)
+ 	struct erofs_inode *root_inode;
+ 	erofs_nid_t root_nid;
+ 	struct stat64 st;
++	erofs_blk_t nblocks;
  
+ 	erofs_init_configure();
+ 	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
+@@ -250,13 +253,15 @@ int main(int argc, char **argv)
+ 	root_nid = erofs_lookupnid(root_inode);
+ 	erofs_iput(root_inode);
+ 
+-	err = erofs_mkfs_update_super_block(sb_bh, root_nid);
++	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks);
+ 	if (err)
+ 		goto exit;
+ 
+ 	/* flush all remaining buffers */
+ 	if (!erofs_bflush(NULL))
+ 		err = -EIO;
++	else
++		err = dev_resize(nblocks);
+ exit:
+ 	z_erofs_compress_exit();
+ 	dev_close();
 -- 
 2.17.1
 
