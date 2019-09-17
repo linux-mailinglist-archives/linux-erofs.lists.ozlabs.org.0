@@ -2,81 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DC30AD154
-	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2019 01:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8219B470F
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 07:50:06 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46RSr50QRKzDqR6
-	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2019 09:56:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46XXJC3B63zF453
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2019 15:50:03 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1567986997;
-	bh=w9TijnosMQuiRdSX4oAdACkBEIZjIyJFwDgPGa5p5l0=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=njOWQUJ9W4UVZxGPyvX9C9F9WTNtrIiMtf5g/oqxlIBYDNkkcCPcA9VTWjP9UVhHz
-	 itScDKyDv91V8XOz6Qai1y2h/Si+hxN3KoVvzKkRTTQYIddKBtaKqn0G/XhruigUCk
-	 3n+ylWhUUANQOfCP8pzgCEkHMt+EEx43Urr5+C420bpe4YRwxDuS0pZsDquiDrmhoj
-	 NR9NcnWTovHkpbjKKJmpMMZRtelxeEjGd0SLiQwEO+yNmq0f8OtCtY7Q+J+hKJC+TT
-	 37akWwPpBdpQTyJLFMnJINDEJMQpEY08FGANrsMtbK5htDkUqDDfnrub0d2zkONg9D
-	 sLEn57K0HlaIg==
+	s=201707; t=1568699403;
+	bh=0pGRMXJVLCNEfRpO1AoyiMHriQQrPUWnqhfx/ElEcBk=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=M5j0TrXBebPsWDrR0d3a0wImeH9n4rZ1hg7+MHfGS5CnK8359+aU6jRTIfn/izJQQ
+	 yvTZkTy1f9tgzmzuOX0vypGea7ShsDht/9F6oXKOSV+/zlpSpfiI5LhNR4nxzLHPJS
+	 HWDIDceI89/MUEcCgI1zmZOx/gzY8Iz3QmiWI3tZO1p6d+aba5WSHqk5Y7wek0MvpB
+	 cUWsOGD2rFblDin/DdH3tIIQ0xsz0U4EJ1ntjGjj1gEK0dFHQ+0CSiw0mBCNZaTWmQ
+	 MrtpSfBMYxJyjpmViThvTGjy6z91OgUIUkxvNG2Uk7YqnOcGjk6SHnyJ7jZwBo36vJ
+	 2+PHqEnoKYLjA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (mailfrom) smtp.mailfrom=aol.com
- (client-ip=98.137.65.110; helo=sonic313-47.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.148; helo=sonic309-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="tL/8v1jp"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="rPNzEBL4"; 
  dkim-atps=neutral
-Received: from sonic313-47.consmr.mail.gq1.yahoo.com
- (sonic313-47.consmr.mail.gq1.yahoo.com [98.137.65.110])
+Received: from sonic309-22.consmr.mail.gq1.yahoo.com
+ (sonic309-22.consmr.mail.gq1.yahoo.com [98.137.65.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46RSqs0Q7wzDqNH
- for <linux-erofs@lists.ozlabs.org>; Mon,  9 Sep 2019 09:56:21 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46XXHm1s3YzDqfB
+ for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2019 15:49:37 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1567986978; bh=8Bw5voSTyYrsH2EAJhL50ttNNY3dDd4r+nOeI5GfOvg=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=tL/8v1jpjRvms20TUNCbAmRx/hdb5qPyZX8CthEXrsS++H29mh99uWuDhZuUn5dW/RuQjNtVb7fH3qhz4DdGxqhFw8D3TYQW5qZdlNqsA5QiPcY327ov14m8oxwY4LAMGszvJLASLnjHOFnor40OYZ1O1EJMY1yZVUHuuZyZZjNIbD7KFIgUb/xg0GU7g2xTyM9/mHt1zwqWV/Y0KFMct21VDiGj2Do4Uo8QYg11EjITLkaMOdk13XF7vZegHQZZ8lj1xnp5e6/5aNmrtY3VReG6KV7unBMz5k8w3IGP0TSo7NtEt0tzPDKsjzyyGcnzigEgW0CWqNJpRejFnpEeow==
-X-YMail-OSG: J6SKBjYVM1mjNqKqQ3tXtlQ2CuiSFiySX37CDfVPT6pWvSJDNsYFAdWDyjgLNgz
- W4O45.ExIXNMOLRi84GdjesazT6pQ.IdxnITBU.I2M1Na.ioLp63wsw4hR1putkUB4G23V3XXH.f
- MXb5WIL4fJhcdS_gXe3oGCwTLQdYk60eXp9MABgS3ziXNTTP6FwINwPXIy_MsgWYD_fr9zbhYkmo
- t0kYM4rCjb9ttRq2JYvml1za2cEi7Of7ymlz3B203DTmd2yllgGjcYFestrxckUtFQB6vlbK3CGz
- NWEg2pe_695mjCV0uAu7P68gNr6WxjZgsvwiuR0jb3b_BIuQOu19qFd1LZUNU4TNe9BuVL2tqQNy
- SB6QhObYOIy07zyhFLIRU03Hw.j5bXBtbr.G6gclW95kSnkJMXkTWo3Atms85EMWUY2YcGB3_J5T
- TVXh9GuvJHspXclpLlgvMn2ymW7lTGldCOnhv9hRIaI9arVek4TQ8uWU2rs2C61VW4bVA_5I8aM7
- 1NDq30wL1ckHgLoa.otgt_ZGv3fztY05..p6ePatmgoyb4eEYQWXj2zJ1d6HheFAL1tSApygb3UA
- loKoyS5.kJWkX5xgvXEQioefSMPxSG_COpteAJN5xJNa_hNNkFaBJXc3IuJ8xTa5F0xSLdPQRKNB
- 69FGfNiygKp6w4KZpU_.vzgO3c6Kdj2zeNGm0FlzC7_aBuHybalJKi6.LiC9bxBprReOwEqdEWD8
- bGF_mn0pTgMmtoVxG.DhgMsL2DaDF__UhnwoNrKdN5KmCQ8MVvYqveYuKLZ3.PQax63UyR9s_KIo
- kTlH0FKKptH18ZIpczH5IyrBiPDl4Nd8TSUxway_KtZ_a_uc0LA0s3H.4vJzvddJOTyrwYH9nYHo
- SnlXqk6wCdq0blVDFIwzvIAQpEzId84f6pYr7vyg5Vt9UH3wHUpjHuqfPzYtk0VZd7WtArhJDaOO
- PbUGojP9qgjOnR4X.b3oT7ySXZv0oda8N_SwxA0K0LD55CKgH0lzmCAWPojHvQOwtqup3zO_zUkQ
- 1CILTF7Wgmmdxs6tQBwQV34aGPkAnvaO9wVXdyKpI77.clbvoH7jnMxczbxOplTEy5LqBb8Qgt_z
- cbEwnFD2JSAIp2aEb2Euqsfl1m1SjrxdOqah5WdY_Scu03ZAggPT8gJfO7oEyOOVZ_qnHDOG6DWT
- CBWbY6Dl986wEj8bnTDh_vYuZBu6ft2mqucbGACzyi7JrXSFwWXoPnTUrWHDo.c0nJwnj8uEpOzR
- CTRsYIZMQFmpITJXao7rZ4e3JXjpqEiQ_OcTwjRFdk6hwQLEFPizLE9.rcK69cnjCzv7IZ0R68WZ
- uXrIBL9Dh1EAnaOV00cl3ZVx8_o8wCoH9pskcaMezpIn2aqq.Q3RMvnYmB5z1zZWFapL1E2XNXK2
- epV2g11X7x6NeSJIOwAgomIJ71_PAPEviBFsYzkzEX7hB0itAP6bgS26mxQ--
+ t=1568699372; bh=meKByR0AbMJ3VTi5/TxqaQIVVAS6oSWuF9nXMvcZYlw=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=rPNzEBL4Tef9tiwMGJGqaOfbDL2aKExvZLNwGcXgnhN9fCC5GjcWstXIiMzLDvq5O7NTZBgDrczA8p4E08S7U2lN3jwuUYZI8N2tmSTHnt2mXlYesIaSTaQoemYsDac05hExFWrSyhasdRKQYg8Hhk7wHCaOod0Ec5DQbWxYxIyVXGBZ0n6DAzUWTVBWYOF3H+Qg2DvqPFOs5IvZGfXK06oGU+01XKNmL0GjV4Bjh8prP9Hawo93e3/JcYyF58cXjt2onC0HjH4HftzLHrswJ3IA3/l+ltmBTx8+I8rOxEILQJYfGCzX2rzHX2UMM5+sFkmfk/dBVSvsg8bT2JoDfg==
+X-YMail-OSG: .wLnJnMVM1m9qRbVPQlblkuKuR6D2mYrDHvMicd4aUp0ynqcyspYJhOTg77p4in
+ CqRCALySnl1xZk7tLfoIXEWn1vdKR_OhxISzojcsWz9tOFdsWf8wYxTeRPLCFzhNlXe0JUcePUXd
+ RMYAsqNgaaJrOnGkoKJdohZCCEFxeNN1hFVY6PpFT.Sb5lFrgcMHHyNhTYJ5Xjg.LtfjN3OeWzDP
+ 85kIfUcG7ddx.SR8Wrz7OSi7usoMpQKZJ7r3kp12q8VhZ.QA5VnGaDvsMO7pQIaTjs1YCTojtPXc
+ dMWBN.IEnToGMMre84dKeGyE0SPHbqkqjZDFuFvlQg7cGkhXrvQuNtXKMGaLwMadLlDM87_f6WKN
+ NY7GcSqSCUI2JM8eP1XXHB21fmvvaKn79RX3Ipt0zYiN9P62Frio_pBVntzSMIKIOEPbT4qgRhwG
+ cICXPh06eMLS_.JJE62fECMkyozkD93n2oAPhphktXOSe3EJMa7BDT1PAvE3Hm8u4t1fogebtmXg
+ 5OwxToucXc_6SRnp.hrGayijRpgCuqJOdxh2r0740wUe1rohzRSA7VJDtb5UCcBwunSy3anIkuqo
+ WNpJhGuBfbaE0YvyvrhVUOli9ltIoIVVbTjufFYVKC3TORmENrPo66Pw30fL_3ZRtU.YHGbFi23C
+ Cd2ToOON.nkX4avmjjKnfPzyeMnf7uRU_H_sbQ13jbixveNkBumfGLdp_gOmEeinlS0H8196DH_A
+ 77h0BgULSNxWUur..dRjGtoYXJdstFjB6dEp_eJPEdsq.oxQkM5GHZGpPb_Zj1xlHhZbnwin1XcM
+ AGuh14DEZwYO2noS7AeJueVcYSucQzsepwqIGzArlvFqAZwrlYNnzrJRzz_P7pJjHyPClLsGK8nQ
+ Wo0azldiKAxWbnzjeaTNpS.kEO4_Zs8RUrql_J9nVaCnOFKNJ.xk7F.nLPfwCRbV2JPbDw.Pk5HX
+ 4i8ViUq8lhdibfAIwFsNctbfY_o8oJ103sMF1yRci.K8ItGIPrb8nzPFWz9BntHHuccmUwVccSEB
+ E9SLqM8PeFmymMjaopRTqFimzVh.9QifuUSe1f.b96b_w7.SzRj6u5IQKFkkBh70TWsyAiRtJSk_
+ 7cD0IaLKxYcyuBLEylqOi2bNeGRmZuT0eCGyba22FiV2MDnhHCW8GlVpK277uR_iOVbg22V6CBmr
+ KzQrgsBeytRHaNhiavN9mhWz4u4yQA7mOOQfhaS8cmL4wrt0U164avx3p841Kk8Yxsn1iiJ0CVfv
+ beJL.xhqRVZG.ZvkkwvJSG8RnOyC5KvgDSPnpMT5UkRMyCXIdiO2QKJ_wPF9BZm4blAJZsbT0omH
+ kcB1apkbQ5FGf38P3Jd32YpACOFIQ3be9ZRn5q5kj3RfBI03mj0I63sw-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Sun, 8 Sep 2019 23:56:18 +0000
-Received: by smtp416.mail.sg3.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 2eacc41cc96e05ff3db40f99becfb3a1; 
- Sun, 08 Sep 2019 23:54:16 +0000 (UTC)
-Date: Mon, 9 Sep 2019 07:54:12 +0800
-To: Jan Engelhardt <jengelh@inai.de>
-Subject: Re: [PATCH erofs-utils v2] build: cure compiler warnings
-Message-ID: <20190908235409.GA9570@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190908214821.32265-1-jengelh@inai.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908214821.32265-1-jengelh@inai.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_181)
+ sonic309.consmr.mail.gq1.yahoo.com with HTTP; Tue, 17 Sep 2019 05:49:32 +0000
+Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 0ca914cfda0cd9061c391ed841b64b5d; 
+ Tue, 17 Sep 2019 05:49:30 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [PATCH 1/3] erofs-utils: complete special file support
+Date: Tue, 17 Sep 2019 13:49:11 +0800
+Message-Id: <20190917054913.24187-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
+References: <20190917054913.24187-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,74 +83,121 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jan,
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-(cc erofs mailing list...)
+Special file was already supported by obsoleted_mkfs,
+let's complete it for new erofs-utils now.
 
-On Sun, Sep 08, 2019 at 11:48:21PM +0200, Jan Engelhardt wrote:
-> On i586 I observe:
-> 
-> In file included from inode.c:16:
-> inode.c: In function 'erofs_mkfs_build_tree':
-> ../include/erofs/print.h:27:21: error: format '%lu' expects argument of type
-> 'long unsigned int', but argument 7 has type 'erofs_nid_t' {aka 'long long unsigned int'} [-Werror=format=]
->    27 | #define pr_fmt(fmt) "EROFS: " FUNC_LINE_FMT fmt "\n"
-> ../include/erofs/print.h:43:4: note: in expansion of macro 'pr_fmt'
->    43 |    pr_fmt(fmt),    \
-> inode.c:792:3: note: in expansion of macro 'erofs_info'
->   792 |   erofs_info("add file %s/%s (nid %lu, type %d)",
-> inode.c:792:37: note: format string is defined here
->   792 |   erofs_info("add file %s/%s (nid %lu, type %d)",
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
 
-Thanks for your patch. This patch looks good to me, applied with
-minor update (80 character per line) and adding a unique prefix to
-the subject line.
-
-I've been on vacation in Japan for about a week, could not be reply in time..
+Hi Guifu,
+Could you kindly take a look of these patches?
 
 Thanks,
 Gao Xiang
 
-> ---
->  lib/compress.c | 4 ++--
->  lib/inode.c    | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/compress.c b/lib/compress.c
-> index a977c87..cadf598 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -457,8 +457,8 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
->  	ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
->  	DBG_BUGON(ret);
->  
-> -	erofs_info("compressed %s (%lu bytes) into %u blocks",
-> -		   inode->i_srcpath, inode->i_size, compressed_blocks);
-> +	erofs_info("compressed %s (%llu bytes) into %u blocks",
-> +		   inode->i_srcpath, (unsigned long long)inode->i_size, compressed_blocks);
->  
->  	/*
->  	 * TODO: need to move erofs_bdrop to erofs_write_tail_end
-> diff --git a/lib/inode.c b/lib/inode.c
-> index 141a300..db9ad99 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -789,8 +789,8 @@ fail:
->  
->  		d->type = erofs_type_by_mode[d->inode->i_mode >> S_SHIFT];
->  		erofs_d_invalidate(d);
-> -		erofs_info("add file %s/%s (nid %lu, type %d)",
-> -			   dir->i_srcpath, d->name, d->nid, d->type);
-> +		erofs_info("add file %s/%s (nid %llu, type %d)",
-> +			   dir->i_srcpath, d->name, (unsigned long long)d->nid, d->type);
->  	}
->  	erofs_write_dir_file(dir);
->  	erofs_write_tail_end(dir);
-> -- 
-> 2.23.0
-> 
+ configure.ac |  1 +
+ lib/inode.c  | 34 ++++++++++++++++++++++++++++++----
+ 2 files changed, 31 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index fcdf30a..07e034e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -82,6 +82,7 @@ AC_CHECK_HEADERS(m4_flatten([
+ 	string.h
+ 	sys/ioctl.h
+ 	sys/stat.h
++	sys/sysmacros.h
+ 	sys/time.h
+ 	unistd.h
+ ]))
+diff --git a/lib/inode.c b/lib/inode.c
+index e3495f4..c8cf847 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -12,6 +12,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ #include <dirent.h>
+ #include "erofs/print.h"
+ #include "erofs/inode.h"
+@@ -128,7 +129,6 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
+ 	int ret;
+ 
+ 	if (!nblocks) {
+-		inode->bh_data = NULL;
+ 		/* it has only tail-end inlined data */
+ 		inode->u.i_blkaddr = NULL_ADDR;
+ 		return 0;
+@@ -302,6 +302,11 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	unsigned int nblocks, i;
+ 	int ret, fd;
+ 
++	if (!inode->i_size) {
++		inode->data_mapping_mode = EROFS_INODE_FLAT_PLAIN;
++		return 0;
++	}
++
+ 	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+ 		ret = erofs_write_compressed_file(inode);
+ 
+@@ -573,6 +578,14 @@ out:
+ 	return 0;
+ }
+ 
++static u32 erofs_new_encode_dev(dev_t dev)
++{
++	const unsigned int major = major(dev);
++	const unsigned int minor = minor(dev);
++
++	return (minor & 0xff) | (major << 8) | ((minor & ~0xff) << 12);
++}
++
+ int erofs_fill_inode(struct erofs_inode *inode,
+ 		     struct stat64 *st,
+ 		     const char *path)
+@@ -582,10 +595,22 @@ int erofs_fill_inode(struct erofs_inode *inode,
+ 	inode->i_gid = st->st_gid;
+ 	inode->i_nlink = 1;	/* fix up later if needed */
+ 
+-	if (!S_ISDIR(inode->i_mode))
+-		inode->i_size = st->st_size;
+-	else
++	switch (inode->i_mode & S_IFMT) {
++	case S_IFCHR:
++	case S_IFBLK:
++	case S_IFIFO:
++	case S_IFSOCK:
++		inode->u.i_rdev = erofs_new_encode_dev(st->st_rdev);
++	case S_IFDIR:
+ 		inode->i_size = 0;
++		break;
++	case S_IFREG:
++	case S_IFLNK:
++		inode->i_size = st->st_size;
++		break;
++	default:
++		return -EINVAL;
++	}
+ 
+ 	strncpy(inode->i_srcpath, path, sizeof(inode->i_srcpath) - 1);
+ 	inode->i_srcpath[sizeof(inode->i_srcpath) - 1] = '\0';
+@@ -613,6 +638,7 @@ struct erofs_inode *erofs_new_inode(void)
+ 	inode->i_count = 1;
+ 
+ 	init_list_head(&inode->i_subdirs);
++	inode->idata_size = 0;
+ 	inode->xattr_isize = 0;
+ 	inode->extent_isize = 0;
+ 
+-- 
+2.17.1
+
