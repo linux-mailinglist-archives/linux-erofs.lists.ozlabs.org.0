@@ -1,51 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BF08C2884
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Sep 2019 23:18:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A607AC2FB1
+	for <lists+linux-erofs@lfdr.de>; Tue,  1 Oct 2019 11:10:15 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46hwHB4f02zDqPW
-	for <lists+linux-erofs@lfdr.de>; Tue,  1 Oct 2019 07:18:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46jD4h3FWBzDqGJ
+	for <lists+linux-erofs@lfdr.de>; Tue,  1 Oct 2019 19:10:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1569921012;
+	bh=kn1FN48dWMtKd+RApOOahlyqJFzmSD4JxKWhCL3wSK4=;
+	h=Date:To:Subject:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=EH50zIpgGcTifSvLHVTkIzJz7tJGkHim3DcKgNBWCXo7qpI6HgUEtevyUe+o3pTlK
+	 SElm6Hfdhnl+nAyrhDLixS/tSbZTDFHTdRel8TStSBWVTY1zjQSiBpRahFUTPOpEH0
+	 IfHU8e1Nr1x4b1T9mUIB4T1PezvEbBi0NunVHuIQzxnsPm8Qo8K4J4U0MmP9KmjVMO
+	 QV92YxcYs28uYO5KYUgnqUbjt8wHBizyww1I4LiLWqcflCKxE9xOhmcrUnUXMapJcN
+	 wXN3ZS4qV6wpE6jQ0+zUwW7pGmJ4JhRTqGxlcSGvwc3MpP19Z0pNlEkAul+305TWHS
+	 AbbCIKR+1oVcw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Received: from ozlabs.org (bilbo.ozlabs.org [203.11.71.1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46hwH612dbzDq75
- for <linux-erofs@lists.ozlabs.org>; Tue,  1 Oct 2019 07:18:10 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
- header.from=canb.auug.org.au
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (mailfrom) smtp.mailfrom=aol.com
+ (client-ip=77.238.176.205; helo=sonic306-19.consmr.mail.ir2.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=canb.auug.org.au header.i=@canb.auug.org.au
- header.b="g6iRAOE+"; dkim-atps=neutral
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest
- SHA256) (No client certificate requested)
- by mail.ozlabs.org (Postfix) with ESMTPSA id 46hwH55jwxz9sPd;
- Tue,  1 Oct 2019 07:18:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
- s=201702; t=1569878289;
- bh=1mEA4xwhRbxGuczCIfw2IuZyscWuWOg24jsY/OLdadw=;
- h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
- b=g6iRAOE+lyeZz2NOqoFdZoG0tG9carZG1Buy+oEWJJbAqUIJfff5EfC6S2Y9Mu7rz
- KltVRrCZau4PKzUD5F/HUl0vTANQQ2a00V20mNdUB6q/LfEX5ioxaBXtdN4D3S7bjh
- t4isjtf+eXCX3D6vc3zLf5bH6QYdmPhr9gGCxlqjltf1HuCRIMgOSboOT4071sM13W
- 9lzg3Hr1+GNPVkuynoTfm+ChrsdgRVmXdbK0jraw14Wfup4E/WlCqSp4yFUnHN4WVx
- 4vtOPUxRPhRIXc5XDOqExMtd+7Ng36gKP+PAcF3Uu86xAOokoEKQxIsGxf8IN6DNja
- 5LgFsXVOKFAtQ==
-Date: Tue, 1 Oct 2019 07:18:09 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20191001071809.2d9aa557@canb.auug.org.au>
-In-Reply-To: <20190919120110.GA48697@architecture4>
-References: <20190919120110.GA48697@architecture4>
+ unprotected) header.d=aol.com header.i=@aol.com header.b="U61gxEK+"; 
+ dkim-atps=neutral
+Received: from sonic306-19.consmr.mail.ir2.yahoo.com
+ (sonic306-19.consmr.mail.ir2.yahoo.com [77.238.176.205])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46jD4Y2LrRzDq6k
+ for <linux-erofs@lists.ozlabs.org>; Tue,  1 Oct 2019 19:10:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1569920997; bh=/Hwz0MxqOic/tYrg0VLHTdYvhqlYjwGMfuUdJ4Fp1gw=;
+ h=Date:From:To:Cc:Subject:From:Subject;
+ b=U61gxEK+IDw4uA0RGTv14T/OvCrEnaFObS7Rk+qMd+ExdBGY4iLyWIlC9ZSN83BhK0QMpSTuMmI6/dEs6GsGKID32blYobZm1QfcsosYvlnXoqKzrOZZLr0DMZX+FZMU+Mj5AJvKPvxj6yVHjUNvxawJy5w39kF8Z0X+kG1s4GBstkyPsLq14SVJsStFw5T8fG1T2IjaH4GzM1nGQYcBntqDYlm2m9URDwKk3oBaO+dFyNvC3fpXHdOPgLsXrBoIQsVInYKwDVvddI3ZZYdQuhgEFaKgdyy0cAZRHf/ag2Gwa8105xX6EkMJh4DABGfpm4Um7CaJIADF4cpcAMHAwQ==
+X-YMail-OSG: 5mUTXrMVM1k6R82NABifyxjoDszBtHVPR2e.tbio8GPgSirabd608Yq.SXoqhNt
+ yNMRlGhgfg4LzQcXcl8W7ViIGWt0b4zzFl1I0e5sSciWQ0q3s5hid81LFyWRU0sSfirwtDUxovFC
+ 9eeOJ3ca5VS3CumyG6deR0Nzgf1qI.b8ga_1A9zymtOByx4DVjenHexP26aF26rAs7ye6FYFHAJS
+ BVAVCeI63RZIE7Pl_Mk7_9iy55J0zfVZ1WD6GPzaT43cM3gg66VFJWXOG8afjFz9iV53pQ7vZTnW
+ c5IxHP9xyU23x8Y4JV99QvpR1mzXv9mmM7Cj7OEKmImSDNUkH8YGI0cpCHVefT4MfjPWrPB1LVXe
+ sMyRED5yXJGtLdeUCx9P.tSeddXvoNihEhWj20JDaeA0g79Hg2MpxJDH4lM4TyAz.6KCpEm_.4nN
+ rvnhnC36KUorRfKGAtqOhnjx6Rq.I48tzo2UPOZkeiWcPq77EGIn_aQz3tRgt5QeDXqfGIiCi9HJ
+ vaz22IZIZNCafrJEUkwgUsApkIZtzuuXARWrGfX587vNste_cfLhRuCjuGffvyuvjchDHiskDxhY
+ 14GTRaB1aht5citBSO9fpOSHndeB2SHGJYiJBpi47mGO._8cxiliKH9K73MIdgC0CqKPhNDjHOJd
+ mtXgkXqJoM5lUMtXri1P7SXwTACgYvroesASs4TYcXJWYsLXJpeYvpaPgGPkDCUiZIa6sUwYopQr
+ t2gXMc.EReqivzkzQPzuDgqT1YzmjR9ThIlaQoCmz.mMd_36G.uoKanct7Qnp_Ckgoxg9bCTasxO
+ 3_TmeDGFqmlvqeU8.0bAAvU5_9dYjt.d_BKX4zKS4Ezc9NqkIP_Xgj4UVpHaernyxqu5Nh2Hwkk_
+ oCih6J_ocH_coPSAx23.1kFLaCILEJMZnwfB0qKUxnfv4aNK4DI4ZFIhMs.zZTQSazFuKGYBRtUO
+ o0y0SLk7U652r8jGnpPtkwhXd1YO84Z3cxuPjq93_Gbs_XP04.jaad2dTPxPqoSshu3ZpMBN1RIm
+ VKk0iBTH_kE9nwG6gJKJ66JwCYbwe1Z8m0oqfnxEIoQd1shsdE0dUO3ppFdTg8vNfrZch0eSQxLF
+ Hy2fYdGwMSP9eyoTNWFrfK_yNrJXFVaNxBdgHraOd17yma8CHAX8ck7bO9IjPhFQG34DNnKzyQ0z
+ o63v6mYlXQ1gGaeBL3Cs.BlNK98PcolUiyP1raRxfAi4C1NKV7qvqhk8PlJyUnvh0rA5A58s8Tky
+ RTPnbrfgdISglKo89GLbP3Pvz_puVB64q8IKOS_DKavZ4NRz1J2Ac6NOoJXoiC1WFltjz70KJcGP
+ K
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic306.consmr.mail.ir2.yahoo.com with HTTP; Tue, 1 Oct 2019 09:09:57 +0000
+Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID c999365307370019789162bfab3ecb7c; 
+ Tue, 01 Oct 2019 09:09:53 +0000 (UTC)
+Date: Tue, 1 Oct 2019 17:09:43 +0800
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 5.4-rc2
+Message-ID: <20191001090938.GA30542@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ow_/GIm5is3fmJ=3TGV+Omj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,66 +82,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Mark Brown <broonie@kernel.org>, linux-next@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---Sig_/Ow_/GIm5is3fmJ=3TGV+Omj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Hi Gao,
+Could you consider this pull request for 5.4-rc2?
 
-On Thu, 19 Sep 2019 20:01:10 +0800 Gao Xiang <gaoxiang25@huawei.com> wrote:
->
-> Could you kindly help add the erofs -next tree to linux-next?
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
->=20
-> This can test all erofs patches with the latest linux-next tree
-> and make erofs better...
+3 patches of those address regressions due to recent cleanups, mainly
+founded by stress test on latest mainline kernel (no more regression
+out compared with older kernels for more than a week). The other patch
+updates sub-entries in MAINTAINERS.
 
-Added from today.
+All commits have been in -next for a week (since 20190924). In order to
+avoiding using a random base of a random day, I just rebased those fixes
+on -rc1 stable point without any change, which are now in next-20191001
+as well. This merges cleanly with master.
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+This is my first pull request, due to National Day holiday I'd use my
+personal email. I refered many other past pull requests these days,
+kindly let me know if something wrong...
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+Thanks,
+Gao Xiang
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
---Sig_/Ow_/GIm5is3fmJ=3TGV+Omj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+are available in the Git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.4-rc2-fixes
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2ScREACgkQAVBC80lX
-0GzQrgf/RMOZptYLQcyn8LIj0INbJu3TYymh1/PaNtbIuVO9p8/VpKgUaCfLO2L7
-5yrmAgnlDNoUjPTXTAD1mazO6MO126vobx9sA96DdH225d57QhSz2QtEJnOU5D5C
-jgKEuyd8E11y5HnHeyoaKE9WcgzhQeHrlqDyOh0TeZR/NunyWB9YeiNYFJvKWK6E
-vmD+JutUuL7y494qIX6YHxh8F/d99Ag/zhep5cG93HGDW+/zwrr+8LfBYudoqfHa
-hENVtn84AZlDcBEECJeMx+Phk8CjFgm+dmtdnfBy78FfIp4wx+hbdj/qjapAWHRQ
-8KneSpCGqIfsFMbRzkK0dw36FTyJOg==
-=6uv6
------END PGP SIGNATURE-----
+for you to fetch changes up to dc76ea8c1087b5c44235566ed4be2202d21a8504:
 
---Sig_/Ow_/GIm5is3fmJ=3TGV+Omj--
+  erofs: fix mis-inplace determination related with noio chain (2019-10-01 04:54:45 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+- Resolve 3 regressions due to recent cleanups:
+  Fix error handling due to avoiding sb_bread in erofs_read_superblock;
+  Fix locking in erofs_get_meta_page;
+  Fix mis-inplace behavior due to decompression frontend cleanup.
+- Update sub-entries in MAINTAINERS in order to better blame.
+
+----------------------------------------------------------------
+Gao Xiang (3):
+      MAINTAINERS: erofs: complete sub-entries for erofs
+      erofs: fix erofs_get_meta_page locking due to a cleanup
+      erofs: fix mis-inplace determination related with noio chain
+
+Wei Yongjun (1):
+      erofs: fix return value check in erofs_read_superblock()
+
+ MAINTAINERS      |  3 +++
+ fs/erofs/data.c  | 10 +++++++---
+ fs/erofs/super.c |  4 ++--
+ fs/erofs/zdata.c | 12 ++++++++++--
+ 4 files changed, 22 insertions(+), 7 deletions(-)
+
