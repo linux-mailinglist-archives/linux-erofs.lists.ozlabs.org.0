@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFF08D144E
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2019 18:42:26 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51D75D145C
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2019 18:44:00 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46pKkm19dwzDqX9
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2019 03:42:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46pKmX2wdwzDqXJ
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2019 03:43:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -16,50 +16,51 @@ Authentication-Results: lists.ozlabs.org;
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="Xl9iNoIN"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="BUKe56TO"; 
  dkim-atps=neutral
 Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com
  [IPv6:2607:f8b0:4864:20::52c])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46pKkg25ZDzDqGW
- for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2019 03:42:19 +1100 (AEDT)
-Received: by mail-pg1-x52c.google.com with SMTP id e1so1762568pgj.6
- for <linux-erofs@lists.ozlabs.org>; Wed, 09 Oct 2019 09:42:19 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46pKmS28KczDqTG
+ for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2019 03:43:52 +1100 (AEDT)
+Received: by mail-pg1-x52c.google.com with SMTP id p1so1764772pgi.4
+ for <linux-erofs@lists.ozlabs.org>; Wed, 09 Oct 2019 09:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=from:to:cc:subject:date:message-id;
  bh=3hk98JuCeWHOrIUfRtRz6SrmpiW5uP4+Af+s4mVv/2w=;
- b=Xl9iNoINKhZWO0XyIEjdRJrP3Sh58gCuF+zZ6hY9h4iQw8yZwsgEmM5T8cbbOaO088
- wW4ErH4dWf5id4kVTQbFIIqXFCH9YFBgMllGRYc6xH3GdP8d4ZsXOA5WBMQKVfyEjtGY
- /S6FUKbQciU8Re1ScsxLJh4C2hO51GliBZsSXZKJHsjW9lCOsgsAMMPNutndqdNaSqEw
- qnnwUMiz6vq2g3xhTJhUghDBCPAipL4p9P6d4n/MTVP4caQr7QUlhbNBg5oy8KPiH+KU
- eYtkjBipStKJBX/tmeIY87njGvAR3GJ43sGJSpi0xeWPtqBxUnXi57wNEO6EPM38wzo2
- dp+w==
+ b=BUKe56TOlt9+HSf2NU3Vmj3vixunqlVGmdOc9HbiQLvbgYCpfxhxazycLkD1pHNsXA
+ mryWewlqyk7UJsIJEWasD1iZHPuCID1aQpwJowA202RFAZhnsgyO97nD29D2QJzv4df6
+ F6FvMBGTna4Xb1pf/MZOefyH+nbjWH1Wdarpw67NvPFTpOeMTod3RdQCupH39aAjS3IM
+ vMd1lHxv6BdlOQ7RDwYetPUBOc6bTQ5mbjA+Dc6zOb6ygZBkzIcjRPVrOQym1oT1WLFH
+ GfHoU1SYB02FlfihNGxa1bMxoIoxbkc3CIDurZbVylyW5CTvr2GWx12ys6qZwLhNYjeH
+ xtTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:from:to:cc:subject:date:message-id;
  bh=3hk98JuCeWHOrIUfRtRz6SrmpiW5uP4+Af+s4mVv/2w=;
- b=T85+t/axzH5PCie9HBlJXJys2OaZl9pJmRH8Jh3oavhrgOoI7HQtx/z68e8nT7A63F
- 5UkVP6dNfXY/1aUQ8cjNZzUeDju4WMMWwtQItArWV8NCsln8vOSWE/KXxxcclChlFATo
- 4uJjrEbu+uD318x94om3V3d/Gzj+r6+7pAnaBQ0g+n9mlgjwUdqnotLbtGAsf+Y0TtyN
- sQV1E4BPOWjh2GBj/bzTq5Rqyep9nZ8j1oLxIjV8eFFwlhRuY6WXCQUioedptnyA9EA/
- J0TcjKHiy1czzGwYFd9yYzTfoYlutBKvYfxfdbGGcd/O1UJfVfpjAZxXdZQiM8NOWzmm
- K/Tg==
-X-Gm-Message-State: APjAAAUzedUapjpIqhuYVOBm0u+LM3qHytJkmXJd5ljqRhsVrqdFGtYK
- qgf8blroZjk8kFedDenEcDaRN3JM
-X-Google-Smtp-Source: APXvYqwhmRTFszDL/SFletW1k0p7JAde/O7w5SlydyveAvl5L6D9Z+PtUYlfgp+YbVz9PQMYCeqqzA==
-X-Received: by 2002:a63:1b0d:: with SMTP id b13mr5371800pgb.312.1570639335547; 
- Wed, 09 Oct 2019 09:42:15 -0700 (PDT)
+ b=lnjj5kBl1WjJue8fjBuE8tNnZMqU508qoR/F9tthNvAPeOK/sLNx+iOdv1eSbnCGmA
+ 85KBagDqetfZ38pMU3oQbvYNJDmEoyTvOfOwpnlQqBzJ5qwhZ535UaciPkeLHs6nHuMF
+ hJYGG/kh3GGzA9mr2JDTqSJ/1IvM15WBwJoKFItbrZe5gDpAwbMnxwGUuy0oM+U4pEfx
+ P/LoYFG2FQkv7VtUefAQ4N+jnUrVcm4Ip4gb1l7/xUV3vp+Yxl8o1C+1ZnFtSiCYwUyz
+ 33TZBqniIgS5lPXKgnhufLoD8BudVG6F7wyKj88qxrBVjOC2dwHEXvZHsr+2o+9vT3bX
+ QM9Q==
+X-Gm-Message-State: APjAAAWVK90nyflDuwgLu3OBA2Chat+IbEOfH3A7Kxvr4xeUJksYXH6R
+ xxhIAEpbQxbHwvV2E1p3C9aPdmhi
+X-Google-Smtp-Source: APXvYqz49DiDhxcGU4u/y8A5XH6zCSXoqVzZGIrPHWbxN5RxInlqvYimCzPlUIeK3jgXX4dzfgmE4w==
+X-Received: by 2002:a17:90a:8c86:: with SMTP id
+ b6mr5434577pjo.129.1570639429469; 
+ Wed, 09 Oct 2019 09:43:49 -0700 (PDT)
 Received: from localhost (li2016-34.members.linode.com. [172.105.123.34])
- by smtp.gmail.com with ESMTPSA id 37sm3108122pgv.32.2019.10.09.09.42.14
+ by smtp.gmail.com with ESMTPSA id j17sm2696015pfr.70.2019.10.09.09.43.48
  (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
- Wed, 09 Oct 2019 09:42:15 -0700 (PDT)
+ Wed, 09 Oct 2019 09:43:49 -0700 (PDT)
 From: Li Guifu <blucerlee@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH preview][] erofs-utils:intriduce fixed timestamp using "-T"
-Date: Thu, 10 Oct 2019 00:41:27 +0800
-Message-Id: <20191009164127.15401-1-blucerlee@gmail.com>
+Subject: [PATCH preview][] erofs-utils:introduce fixed timestamp using "-T"
+Date: Thu, 10 Oct 2019 00:43:36 +0800
+Message-Id: <20191009164336.15596-1-blucerlee@gmail.com>
 X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
