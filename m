@@ -1,51 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1078DD6F79
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2019 08:14:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00460D7978
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2019 17:12:08 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46slW03LvNzDqgs
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2019 17:14:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46szRm39RjzDr4Y
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Oct 2019 02:12:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (mailfrom) smtp.mailfrom=huawei.com
- (client-ip=45.249.212.188; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ spf=pass (mailfrom) smtp.mailfrom=gmail.com
+ (client-ip=2607:f8b0:4864:20::444; helo=mail-pf1-x444.google.com;
+ envelope-from=blucerlee@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="ilhBaD6N"; 
+ dkim-atps=neutral
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com
+ [IPv6:2607:f8b0:4864:20::444])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46slVs0tXwzDqJL
- for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2019 17:13:54 +1100 (AEDT)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
- by Forcepoint Email with ESMTP id 981ADFDE3AB8AB9170F5
- for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2019 14:13:33 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 15 Oct 2019 14:13:32 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 15 Oct 2019 14:13:32 +0800
-Date: Tue, 15 Oct 2019 14:16:33 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Pratik Shinde <pratikshinde320@gmail.com>
-Subject: Re: [PATCH-v3] erofs-utils:code for calculating crc checksum of
- erofs blocks.
-Message-ID: <20191015061633.GA201268@architecture4>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46szRb4TNfzDr2y
+ for <linux-erofs@lists.ozlabs.org>; Wed, 16 Oct 2019 02:11:55 +1100 (AEDT)
+Received: by mail-pf1-x444.google.com with SMTP id y22so12687671pfr.3
+ for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2019 08:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=subject:to:references:from:message-id:date:user-agent:mime-version
+ :in-reply-to:content-transfer-encoding;
+ bh=26zNHNhcEJ5famWSGhSZAKABPGyqyW8rKBC2gKeGNS4=;
+ b=ilhBaD6NKhBe8fu0owaKxEByBf24Ni9YcOKQ8WUpFSo9OsOaK2XHNwpGGvJZB87HNj
+ +qGV1rzSavzq6/a1GeVxcPdxHxc7KQiaNRirT0NfQVb1bPswJQJMAB8vdUXO+lZ/xhmr
+ pxK1zgNprQ4WuRgu4cmY/IbpAfT3iS3RIqP2h2nziMsXvjy+Dv4Ge+NFONb4rdfJshn6
+ Kb1rUYcWHl9tYGYpcqTnEM+ZHy5XY187MU61XKbFnDtfAF8t+Sfo1wc2/gDIDroB9l8t
+ 6Lin3+9wh3458Y7BKnRT4M2djGZT9f8LAn05WZlQuNYTxe/mlWlSthfAHHt5wWVoenFX
+ LS1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:subject:to:references:from:message-id:date
+ :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+ bh=26zNHNhcEJ5famWSGhSZAKABPGyqyW8rKBC2gKeGNS4=;
+ b=npiPScjCWeEacIhNOmqUkKiGUeU1xU+UeusTMohWm0JYbNnUhA6crbLczXWer09p4i
+ LnHih3RozOUonfEQ5wyj1EVVHis7b8fN41DyusSZHDjjECEtWmhLM/eoCqYBzWrNXnPh
+ A2MwhyLs3mZrnolWh8VRYgJzUPN3hA1jHX1ne8Bicro6C2Y/5Bj0Zb14WOsYYktcnCwd
+ K8BVuMOfGc2NgMM+mZWE7bKR67QZYVjqk39MsOLXcDgvJ8vqB66MbQAfLbR/wyfiJz5N
+ y7PlDjfFwlGwkE4FbT6qv3Ibr/BwZUXcErhBEGg9m49bJWJQVwDPfOFjCxcFbxNykar0
+ l5cQ==
+X-Gm-Message-State: APjAAAVmBO7whr6YySApcJEs9fxZMsoa1ZyJGCwe/jqQozYgp2b7pvJ6
+ /fncGDJMrA+zkE5or7VTrt8=
+X-Google-Smtp-Source: APXvYqxx4dcQ6KlWv6gS+/y8akGMevDhVumZqG24dF+c/T+OxPwGx4nWbbmH0dnJPalw5v7URAW2KQ==
+X-Received: by 2002:a63:8ac8:: with SMTP id y191mr807192pgd.324.1571152310311; 
+ Tue, 15 Oct 2019 08:11:50 -0700 (PDT)
+Received: from [0.0.0.0] (li868-97.members.linode.com. [139.162.27.97])
+ by smtp.gmail.com with ESMTPSA id p24sm6875403pgc.72.2019.10.15.08.11.46
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 15 Oct 2019 08:11:49 -0700 (PDT)
+Subject: Re: [PATCH-v3] erofs-utils:code for calculating crc checksum of erofs
+ blocks.
+To: Pratik Shinde <pratikshinde320@gmail.com>, linux-erofs@lists.ozlabs.org,
+ bluce.liguifu@huawei.com, miaoxie@huawei.com, fangwei1@huawei.com
 References: <20191015051830.7756-1-pratikshinde320@gmail.com>
+From: Li Guifu <blucerlee@gmail.com>
+Message-ID: <2e0cf8fd-4b60-d8a4-e7ed-17e9f7674826@gmail.com>
+Date: Tue, 15 Oct 2019 23:11:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
 In-Reply-To: <20191015051830.7756-1-pratikshinde320@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,63 +82,62 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Pratik,
+Hi Pratik, Gao Xiang
 
-On Tue, Oct 15, 2019 at 10:48:30AM +0530, Pratik Shinde wrote:
+Can sbi.fearture merge into sbi.feature_incompat ?
+If not, it will has two feature parameter
+
+It has the blocks field in the super block, chksum_blocks duplicates it.
+and chksum may be used to check whole erofs image file.
+
 > Added code for calculating crc of erofs blocks (4K size).for now it calculates
 > checksum of first block. but can modified to calculate crc for any no. of blocks
 > 
 > 1) Added 'chksum_blocks' field to erofs_super_block
 > 2) removed unnecessary prints
-
-I think leaving some prints is necessary, but users should know
-something is wrong when doing checksumming, so these prints should
-be better with words "checksumming"....
-
 > 3) moved EROFS_FEATURE_SB_CHKSUM include/erofs_fs.h
 > 
 > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
 > ---
->  include/erofs/internal.h |  1 +
->  include/erofs/io.h       |  8 ++++++
->  include/erofs_fs.h       |  3 ++-
->  lib/io.c                 | 27 +++++++++++++++++++
->  mkfs/main.c              | 70 ++++++++++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 108 insertions(+), 1 deletion(-)
+>   include/erofs/internal.h |  1 +
+>   include/erofs/io.h       |  8 ++++++
+>   include/erofs_fs.h       |  3 ++-
+>   lib/io.c                 | 27 +++++++++++++++++++
+>   mkfs/main.c              | 70 ++++++++++++++++++++++++++++++++++++++++++++++++
+>   5 files changed, 108 insertions(+), 1 deletion(-)
 > 
 > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
 > index 5384946..53335bc 100644
 > --- a/include/erofs/internal.h
 > +++ b/include/erofs/internal.h
 > @@ -55,6 +55,7 @@ struct erofs_sb_info {
->  	u32 feature_incompat;
->  	u64 build_time;
->  	u32 build_time_nsec;
+>   	u32 feature_incompat;
+>   	u64 build_time;
+>   	u32 build_time_nsec;
 > +	u32 feature;
->  };
->  
->  /* global sbi */
+>   };
+>   
+>   /* global sbi */
 > diff --git a/include/erofs/io.h b/include/erofs/io.h
 > index 9775047..e0ca8d9 100644
 > --- a/include/erofs/io.h
 > +++ b/include/erofs/io.h
 > @@ -19,6 +19,7 @@
->  int dev_open(const char *devname);
->  void dev_close(void);
->  int dev_write(const void *buf, u64 offset, size_t len);
+>   int dev_open(const char *devname);
+>   void dev_close(void);
+>   int dev_write(const void *buf, u64 offset, size_t len);
 > +int dev_read(void *buf, u64 offset, size_t len);
->  int dev_fillzero(u64 offset, size_t len, bool padding);
->  int dev_fsync(void);
->  int dev_resize(erofs_blk_t nblocks);
+>   int dev_fillzero(u64 offset, size_t len, bool padding);
+>   int dev_fsync(void);
+>   int dev_resize(erofs_blk_t nblocks);
 > @@ -31,5 +32,12 @@ static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
->  			 blknr_to_addr(nblocks));
->  }
->  
+>   			 blknr_to_addr(nblocks));
+>   }
+>   
 > +static inline int blk_read(void *buf, erofs_blk_t start,
 > +			    u32 nblocks)
 > +{
@@ -121,49 +145,37 @@ be better with words "checksumming"....
 > +			 blknr_to_addr(nblocks));
 > +}
 > +
->  #endif
->  
+>   #endif
+>   
 > diff --git a/include/erofs_fs.h b/include/erofs_fs.h
 > index f29aa25..8bd29d6 100644
 > --- a/include/erofs_fs.h
 > +++ b/include/erofs_fs.h
 > @@ -19,6 +19,7 @@
->   */
->  #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
->  #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
+>    */
+>   #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
+>   #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
 > +#define EROFS_FEATURE_SB_CHKSUM	0x0001
->  
->  /* 128-byte erofs on-disk super block */
->  struct erofs_super_block {
+>   
+>   /* 128-byte erofs on-disk super block */
+>   struct erofs_super_block {
 > @@ -39,7 +40,7 @@ struct erofs_super_block {
->  	__u8 uuid[16];          /* 128-bit uuid for volume */
->  	__u8 volume_name[16];   /* volume name */
->  	__le32 feature_incompat;
+>   	__u8 uuid[16];          /* 128-bit uuid for volume */
+>   	__u8 volume_name[16];   /* volume name */
+>   	__le32 feature_incompat;
 > -
 > +	__le32 chksum_blocks;	/* number of blocks used for checksum */
->  	__u8 reserved2[44];
-
-reserved2[44]  --> reserved2[40];
-
-I think totally this patch is ok, you can resend or I will take
-this version to experimental branch with small modification
-tonight... And after the kernel side is ready, we can test
-properly and merge into mainline.
-
-Thanks,
-Gao Xiang
-
-
->  };
->  
+>   	__u8 reserved2[44];
+>   };
+>   
 > diff --git a/lib/io.c b/lib/io.c
 > index 7f5f94d..52f9424 100644
 > --- a/lib/io.c
 > +++ b/lib/io.c
 > @@ -207,3 +207,30 @@ int dev_resize(unsigned int blocks)
->  	return dev_fillzero(st.st_size, length, true);
->  }
->  
+>   	return dev_fillzero(st.st_size, length, true);
+>   }
+>   
 > +int dev_read(void *buf, u64 offset, size_t len)
 > +{
 > +	int ret;
@@ -196,39 +208,39 @@ Gao Xiang
 > --- a/mkfs/main.c
 > +++ b/mkfs/main.c
 > @@ -22,6 +22,9 @@
->  
->  #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
->  
+>   
+>   #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
+>   
 > +/* number of blocks for calculating checksum */
 > +#define EROFS_CKSUM_BLOCKS	1
 > +
->  static void usage(void)
->  {
->  	fprintf(stderr, "usage: [options] FILE DIRECTORY\n\n");
+>   static void usage(void)
+>   {
+>   	fprintf(stderr, "usage: [options] FILE DIRECTORY\n\n");
 > @@ -85,6 +88,10 @@ static int parse_extended_opts(const char *opts)
->  				return -EINVAL;
->  			cfg.c_force_inodeversion = FORCE_INODE_EXTENDED;
->  		}
+>   				return -EINVAL;
+>   			cfg.c_force_inodeversion = FORCE_INODE_EXTENDED;
+>   		}
 > +
 > +		if (MATCH_EXTENTED_OPT("nocrc", token, keylen)) {
 > +			sbi.feature &= ~EROFS_FEATURE_SB_CHKSUM;
 > +		}
->  	}
->  	return 0;
->  }
+>   	}
+>   	return 0;
+>   }
 > @@ -180,6 +187,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
->  		.meta_blkaddr  = sbi.meta_blkaddr,
->  		.xattr_blkaddr = 0,
->  		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
+>   		.meta_blkaddr  = sbi.meta_blkaddr,
+>   		.xattr_blkaddr = 0,
+>   		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
 > +		.checksum = 0,
 > +		.chksum_blocks = cpu_to_le32(EROFS_CKSUM_BLOCKS)
->  	};
->  	const unsigned int sb_blksize =
->  		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
+>   	};
+>   	const unsigned int sb_blksize =
+>   		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
 > @@ -202,6 +211,64 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
->  	return 0;
->  }
->  
+>   	return 0;
+>   }
+>   
 > +#define CRCPOLY	0x82F63B78
 > +static inline u32 crc32c(u32 seed, unsigned char const *in, size_t len)
 > +{
@@ -287,26 +299,24 @@ Gao Xiang
 > +	}
 > +}
 > +
->  int main(int argc, char **argv)
->  {
->  	int err = 0;
+>   int main(int argc, char **argv)
+>   {
+>   	int err = 0;
 > @@ -217,6 +284,7 @@ int main(int argc, char **argv)
->  
->  	cfg.c_legacy_compress = false;
->  	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
+>   
+>   	cfg.c_legacy_compress = false;
+>   	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
 > +	sbi.feature = EROFS_FEATURE_SB_CHKSUM;
->  
->  	err = mkfs_parse_options_cfg(argc, argv);
->  	if (err) {
+>   
+>   	err = mkfs_parse_options_cfg(argc, argv);
+>   	if (err) {
 > @@ -301,6 +369,8 @@ int main(int argc, char **argv)
->  		err = -EIO;
->  	else
->  		err = dev_resize(nblocks);
+>   		err = -EIO;
+>   	else
+>   		err = dev_resize(nblocks);
 > +	if (sbi.feature & EROFS_FEATURE_SB_CHKSUM)
 > +		erofs_write_sb_checksum();
->  exit:
->  	z_erofs_compress_exit();
->  	dev_close();
-> -- 
-> 2.9.3
+>   exit:
+>   	z_erofs_compress_exit();
+>   	dev_close();
 > 
