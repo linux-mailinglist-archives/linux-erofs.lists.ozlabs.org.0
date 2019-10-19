@@ -2,66 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F03D2DD7D8
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Oct 2019 11:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E133DD940
+	for <lists+linux-erofs@lfdr.de>; Sat, 19 Oct 2019 17:08:55 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46wJJ96jV7zDqRx
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Oct 2019 20:58:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46wRB95LrrzDqQC
+	for <lists+linux-erofs@lfdr.de>; Sun, 20 Oct 2019 02:08:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::442;
- helo=mail-pf1-x442.google.com; envelope-from=pratikshinde320@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::443;
+ helo=mail-pf1-x443.google.com; envelope-from=pratikshinde320@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="IO0ueq1Y"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="SN7IOSuY"; 
  dkim-atps=neutral
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com
- [IPv6:2607:f8b0:4864:20::442])
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com
+ [IPv6:2607:f8b0:4864:20::443])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46wJJ34qnbzDqPK
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Oct 2019 20:58:24 +1100 (AEDT)
-Received: by mail-pf1-x442.google.com with SMTP id q7so5356338pfh.8
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Oct 2019 02:58:24 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46wRB01KQwzDqNT
+ for <linux-erofs@lists.ozlabs.org>; Sun, 20 Oct 2019 02:08:37 +1100 (AEDT)
+Received: by mail-pf1-x443.google.com with SMTP id a2so5640763pfo.10
+ for <linux-erofs@lists.ozlabs.org>; Sat, 19 Oct 2019 08:08:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=from:to:cc:subject:date:message-id;
- bh=BObdq/Z6kzvXQ3UbMDnD/ZCL+Pm1d826GKkmSE2E89E=;
- b=IO0ueq1YM7ijEnPzLW2m5MUVwTk7KJRvH4kew71oNm4UgNY76EBCKbD80rvogp4VEz
- Hq32dVHc0YH+V7IR9rZI7dceJeWtVeYe5t6HJj7lzQuBWGHBCxDy5c4mnTk8serIoG8f
- G2Fb2F3FQ2xRRfpfcsm63wnmeLA7KzS25j3Bae23PyZ7RFPnwjaaM7F8AXSHufTuwpm1
- TcB9vcPVoN0MqEV6eBh7W1I5O0MV/EXu1tVcE1fuy5XvtISK5Jr99d8JgheHeqKFDbHQ
- C4ZHodqf6I9pJ4ApkWPqFLFo7USGvIZCZP+c5T6LVv2aCMnOJQCh0u5Fx0SWj/Rexsek
- Micg==
+ bh=RBNdnWNGd/fDZuum7rUNULtPk/0kje1pR/G1QQe9Z/0=;
+ b=SN7IOSuY0oSU8/w8m0ckyBG6nxUDI6dW3vqHl/0tdXNswKCMjjHZFgqYolEpT/12aS
+ N17GpD1EH2Q3PrccFRvJzUKh4QSKSj3JjuakgIHmIdz7iLg0Cmw2qd01qgbqavBHb9ob
+ srcEYu4fL/tV7R8E9sNPINSsBbpHi4VHKSiY+FG1gC4qrJV+8J+zd+vnaj0bDQZri3DQ
+ 0AbiLTqFEY+f3O7OVLq4mt+O/r3GnEK8WUpoCOaRuA5WNa9kBBoQgmWoc782aKLC+Nq+
+ QxQ7cwdYfB8R1aN26PGrj/qbqn8lhHe4QrFslx0yH6HLHaAVvQgwxfzraG5CJ+jV9zdi
+ wOGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=BObdq/Z6kzvXQ3UbMDnD/ZCL+Pm1d826GKkmSE2E89E=;
- b=Ui+5dP9yAFj++yE9ida7q7J1oVZDLX4CULWDF3vOaXydHUazora2l7NmSiRlHNGcRx
- q+alXZXg1xgKhB/0O2n2HSM/KSVR9xxrAgTcpzQ1/MWoBQiqWfCsHS5e7mqp4GissVwz
- XHivWcwaAwCUODLJFngunH/6cD59CFYpDJ2ZHsDEMrZBlruMQEdpNph7ypQQ5nzrJqFa
- Ab7ZJaUVt17rFRDc7GR701E9QxVCsUXd/cbGKfARE+vie8La2TEclduIxd1Xp4P7JsbH
- Iz6GM+P7aZq0QztfrmAlORhIIwzValEP9Vmhv1etF2VaSJjXYmhV5Mo/SuyZ+hV6pyKm
- Flqg==
-X-Gm-Message-State: APjAAAX9+ocAJV6z2IPMP0wEa5fUs42mRUqrYhYBw5iobs2UDyTnzfPS
- Z3x8CDtbD1bAjkl8ms52xGSTBPBc
-X-Google-Smtp-Source: APXvYqxUT8B/TtuRB/fs5dgyrKKi2wPdDhEUCp6nRPrJ20Pg5lcPYCnjE49bAjP/lzw1v2aS5kTEnA==
-X-Received: by 2002:a63:d754:: with SMTP id w20mr14475020pgi.156.1571479098274; 
- Sat, 19 Oct 2019 02:58:18 -0700 (PDT)
-Received: from localhost.localdomain ([42.108.243.191])
- by smtp.gmail.com with ESMTPSA id s141sm10619136pfs.13.2019.10.19.02.58.14
+ bh=RBNdnWNGd/fDZuum7rUNULtPk/0kje1pR/G1QQe9Z/0=;
+ b=H6z3KvUdkGQXuSMggYp5IALKN85YoLB5LVtK1vM78UrwqTxRdMJYuAMx/NIBDwkJre
+ VKoS9kbIOcRLWA6UNnKTobhD5laL+JgTVUani5E2M7bqj7ZStPJ5kv3wtG8+bTiqEr//
+ P2wYetH+yRBhyNfX5wBiqL4CMqpSq1tGtQrQ8AcvXiR/kIGgSEHFUxdF+BJOnpduafrt
+ 8b1GbsAQO6uhSdjZEki6D2ZDO4nleDZY3izm2v6JdL6rat9e8zQmEr7zm1R3/YO1htZH
+ NHaY8av9HWztq/j0VyJtOlCj+7llOb+GA7H7M9FkDShQMwm7nBANxHfzElo6q5+gVZXQ
+ fsZg==
+X-Gm-Message-State: APjAAAV5GRuJpNaQyDpD1CkaO5ZsLVLe0OCtNk+aYgfiuyq8iOXK//jE
+ a/L1s/qcve0WWYKNiYfM7BmdcOR8+NQ=
+X-Google-Smtp-Source: APXvYqxkekhE3Asxriez2T0uiOWNieE23tUquJFJEvMdM98sTYl+oDbMWjsWOEdXR8VqJdTf4AQiPA==
+X-Received: by 2002:a17:90a:2ec3:: with SMTP id
+ h3mr17860231pjs.131.1571497705244; 
+ Sat, 19 Oct 2019 08:08:25 -0700 (PDT)
+Received: from localhost.localdomain ([42.108.227.22])
+ by smtp.gmail.com with ESMTPSA id v12sm9340995pgc.41.2019.10.19.08.08.21
  (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Sat, 19 Oct 2019 02:58:17 -0700 (PDT)
+ Sat, 19 Oct 2019 08:08:24 -0700 (PDT)
 From: Pratik Shinde <pratikshinde320@gmail.com>
 To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
  fangwei1@huawei.com
-Subject: [PATCH-v4] erofs-utils:code for calculating crc checksum of erofs
+Subject: [PATCH-v5] erofs-utils:code for calculating crc checksum of erofs
  blocks
-Date: Sat, 19 Oct 2019 15:28:02 +0530
-Message-Id: <20191019095802.30958-1-pratikshinde320@gmail.com>
+Date: Sat, 19 Oct 2019 20:38:03 +0530
+Message-Id: <20191019150803.9259-1-pratikshinde320@gmail.com>
 X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -82,8 +83,8 @@ Added code for calculating crc of erofs blocks (4K size).for now it calculates
 checksum of first block. but can modified to calculate crc for any no. of blocks
 
 Fill 'feature_compat' field of erofs_super_block so that it
-can be used on kernel side.
-.
+can be used on kernel side. also fixing one typo.
+
 Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
 ---
  include/erofs/internal.h |  1 +
@@ -189,7 +190,7 @@ index 7f5f94d..52f9424 100644
 +	return 0;
 +}
 diff --git a/mkfs/main.c b/mkfs/main.c
-index 91a018f..fa793a9 100644
+index 91a018f..c7cb923 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
 @@ -22,6 +22,9 @@
@@ -217,7 +218,7 @@ index 91a018f..fa793a9 100644
  		.meta_blkaddr  = sbi.meta_blkaddr,
  		.xattr_blkaddr = 0,
  		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
-+		.feature_compat = cpu_to_le32(sb.feature),
++		.feature_compat = cpu_to_le32(sbi.feature),
 +		.checksum = 0,
 +		.chksum_blocks = cpu_to_le32(EROFS_CKSUM_BLOCKS)
  	};
