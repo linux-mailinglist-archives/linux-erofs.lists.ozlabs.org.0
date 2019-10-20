@@ -2,78 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCCEDDECC
-	for <lists+linux-erofs@lfdr.de>; Sun, 20 Oct 2019 16:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A3742DDEDE
+	for <lists+linux-erofs@lfdr.de>; Sun, 20 Oct 2019 16:28:28 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46x1tB0JcYzDqNN
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2019 01:12:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46x2F61NPtzDqNP
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2019 01:28:26 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1571580722;
-	bh=hSKflkgzaMNNDGK8slvxNserl/JGSzqmgz4sGIJkiAE=;
+	s=201707; t=1571581706;
+	bh=4STigPER9/xP8puFG0ZaY7OgTKA5amPZZyjPM2BoV/w=;
 	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Gd+1M4DUQolhP3A6S4CFDbHfBrorKJCNsyju1BvQUvEJdNMjBnpq+4knsRWOMLt7Q
-	 50jpldTIKAXh+8NnTpX5xSDKZQiO5Eq57LWv5uQg0foOOPqgC8D5+uktV5REDMEL0P
-	 Gutk9Vd9qisaOhhCN5QfD41MdxuXKsi32EMn9Ym4oen2w0iMScyvxSoSiZTMVLPe6r
-	 ENWNki81+kmc7yhJvDqQfoRWRzyKAb6S9cvNJuoiR/9WAMiBLHE1x4hm4+ccs5ENDw
-	 coDcKmpkiAEcuXghUUZEhg10e4RPrxAI4tIYIASYEeYoUqRe0rOJ1Z7yElNji9pIAK
-	 f5/ynKXKIcCQg==
+	b=ko2H76Rx/OW3Pxmf4OzF/jnY8OtT/gSRdHOXcvTBOw19F0gAwWTbMv1bomSSzLDa2
+	 5aEnDw14UkiK3mOyqMstEcxlZroqxbVW4OJBoSHfMgVjqBxZTurwzG6q6Lc6BY65QL
+	 sDg/Yqs0u/bBuk2rzSZTXIxMuIShNtDrTaeu0dqewi3QHbD9Eza5xybtXX3QZDscSp
+	 TPgHKIEj0E4y+wKwsW8a+JETys83bxoYeGp0AAlX9o55SnnJNbSWUltqPCFukpTjS+
+	 JuXdph0cFEJN5YtoL1U2m+cXzOlr5QDSFzK2/1zSm9DTDbwPCOrnCESM88LHm0Bxuw
+	 NZtu2MFjKPfrA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=77.238.177.32; helo=sonic310-11.consmr.mail.ir2.yahoo.com;
+ (client-ip=98.137.65.30; helo=sonic315-54.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="r8f5ICqf"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="f7x9Fcz8"; 
  dkim-atps=neutral
-Received: from sonic310-11.consmr.mail.ir2.yahoo.com
- (sonic310-11.consmr.mail.ir2.yahoo.com [77.238.177.32])
+Received: from sonic315-54.consmr.mail.gq1.yahoo.com
+ (sonic315-54.consmr.mail.gq1.yahoo.com [98.137.65.30])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46x1t31YVLzDqNC
- for <linux-erofs@lists.ozlabs.org>; Mon, 21 Oct 2019 01:11:51 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46x2Dv67bbzDqN9
+ for <linux-erofs@lists.ozlabs.org>; Mon, 21 Oct 2019 01:28:14 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1571580707; bh=Y1l0wx18wuQstkaZXyva39/EUcH7QH1CR9o9Tzt6myQ=;
+ t=1571581690; bh=9HI9FuTA4CkVTlLmcP66B7miBRiCC1kJCPMirOasTSY=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=r8f5ICqf8TJx/Uvb6200rXnFcvwgdJK4C0iUY9R6UxnsdoAIKk30Mdp/LGhqMO/5pcjk6JwoKQrvp1Y4S9kKzwK6GXScmajE7jJmbZTJO5sAYLNhQsqRNDyci3tDNI7gZXb34fOTSKqPDqgIj/J7trZAG8LPvH+VITDz3piR4J4LERbcxOQdIpLYR2PsAQLeqDkSmblo3LDunuNaH7lqMD1eYw83wzKeSzc7HyMz0gXGcu09rhSJrYPC0Ecitd40JiVoE9j1yJgrPdJaDgolUJva3VasrVKfqgQmwKYa0UzC/c1jyZA0FT4ajRp7zVn0OqeYt1yn7+/dHJ8JRR2Ntw==
-X-YMail-OSG: ZGuNK_EVM1loGjrAD314aA2Pg4zyXu.CBSUneM26SvywW6_DOKfB8VFQNAnbB1.
- XdoGnGfFuLEJC1ld9cLFSfOeyLLQlM_Q14oMrZhv.1Ol0Bu264Xb6LUiS9Kd24dajILskuHyVLKN
- PMhDvkzb24SzKgt2rKdqdY7hiTb42.CFuAgnI1MLNHZK8oqDxvq0y3rvorC92ai.aiHoqlVTvQ.U
- 5fM2EQnR6b2BSRiEbnhJ7LlGVASBHefQIY2PKlqBbIGx24Y9OJqBkQOJWZRFKdlpnPKE4CtUcYRy
- r7TiSAi9PdN9frkj_LT5o45FaGM.2_zyCIDAzi6mKZOQ3vKM3kHQ38yMRkY0R1eloC4DURPKBHcY
- LGh8nGjyjkkmKj9TnhlfPGlVIVnOPGBnJx9_HNKSPx5JqGjC12jORqANlXC7lCMuf0BRxw12t0Xk
- YpZq.dtTqcgTgbtccyEWCbLYdQLWciJC4HEqc4yKrxngx4HQbhdRMsJWXT8knVEhA01jZNzEp4oY
- rrFDqRpsggU7ZY1Y12kZM8CbOlruxSGQY7Gj.IZfVjnkrzGUZqsq_dAtTN1kFM67ONhjNh8_.s7E
- r.Op4saMpsFkkoc2ufY7b2TqSi5MNk7Xz70ZoC1YjVGH.M4g3VTDEMom0sJmhlbNPaFKHc6ui5ju
- HZMOzC4jDqLnNvzuJIYvshUTnh4YxPC67K3bPv3K2xSZ5WE5qnvp9mMDlzIuoM5UpJRg1JS5q772
- bu69LMRAruVkm.kAzUpBUIBaVzGK0SPHxH7axl.Uh9hW03ASPbQLezOiZnnO543s92_3zgqslZFa
- twEg8hVeIW2nV2kS4zgFjidPC2Mq0IUNmiL.IsJ_iVOd6zZUwUkNHCve9R.nflae5y9xzB9Jgp6j
- 9C0eNf5q_ikbHeuz8XkE69szBO_cyN.RYIxWZl1Ty2uXoA1zcfdS2mIivGEquzTXNzFEyg6c34UD
- newK50ZT15j8AIRaBfBRlvKfoWegUOo5fsiFrcFkNTw4a5RS3n5mfouhf.Luzk5QYKzSUME9RtnP
- cDmQ70PdsGsuygnBMPxsArouN4TWMmr6RPgVwgXE9JC.cMLzBydvhLvD_AHrcotq3vXitydhnhGb
- 4uVb0PRdQgqszxEvPqJb4i_sYFK7_55SkCMQq6IDEy6CFcWHvWL2qFq2eB9oe7GGsF90E2yuDVM7
- mv_KKceQPqSMspdnha0VIrov1tdzxpaBVAepkbPEVSt3R67gLcsYHuxbskhm8_w4LFL6I9FZEI3W
- mJXGhijCZXeraSTfNAfPZVYOALm_AxJhNUZY6SdW4HrGzHPDXDwemsjLTVXNhz_HnJimphPB6Vau
- wMTzAIZerKshqY3KiUDLbM3Zr7IMOAyjaHng-
+ b=f7x9Fcz8nJ9y7ceB0Yinmk9i/1aYZutE3YGbnc1HyBtTUUFywfpkRJLJHCfO2nKUirzMrqmk2JMKgxS7Z4OSmZhUGdOiA692RJIk5Av69IKYYpZ5Ly70JmyntyE/SteY2gdK2XxJLgvQsB3e/OkiSgVCYcz1ygxPkFbEEMOccy0tqK5RWUjTWpZ8Pa+zpTRwIuHoYkCS42pZ4Pt7Fb+JYxYYgm8EZWPpRCQuxNdlHJiWN9uL2/7L7m3+CwZDDZPU9AvBSljKrgseusLQoEvlpbMA8gSnKZMbjTNzj/lde+Bfwxzg2nYvUkhDJiXswoi2IUGV3eU2NAOZm7/OfIQc+w==
+X-YMail-OSG: vGmgYlkVM1lLuTflqb4h79JohVRVenJUENN.mX8adsD1A127zpSbTKcq5kw11DI
+ gKfwbT1r.gow9pHUcNil4ilvPJQdYi84lEhdEqXIHr.saF8LO2AAdhIzM9kdW.ZwOdt41A_P5ChK
+ 2YQYuQZCN_GYAmUWVMpbP6y6EdivPKgGdBTDe87ftxex57EBAR1PykIT..zbfTyi3bRLfKHqgprQ
+ JchI17vg4HUs.YaKcr.Tiqu51ac1H0rgKR93VPQdwor2hwjDcZ5AH5K.Mvd3bdeV_GGdV..m7Fa7
+ 2abcSivYRYsd47yT4MjtLIEtvi6muoTwpn.rKJGzMIrBBkuf.NefAIoAJqgkdKU324toGhLSuPhj
+ CO2TA1PwnzUuFYczyFySXdA4InJ8aqbZlqeTtjmuD0M0A17KnccZe8yyPhMKVQtdHpq8vfzT9JFs
+ vXqxX.X4UMnJAZ8gajlPmZbV62De7p_Am0gqlXBG9ef6PGPTKxthbbHlvhhgkDMG7FqkwbWHGVMp
+ 3XOlXS6IaMd4eylZcnv97CyHl8vkwFtP7NRDFo2Yq0n2fWerAoRZOclEMXC3nIMxzW7100iqgO_x
+ 136X5g93wtQOvmNBwzz9JgW3YGNq0ltFaOaKNLF6AS350PI1AEcV.RoP__J5o3vssNAlrrGjQ0jr
+ sPw_xGlC5c7kjdr4TwD4hkzHgGH1rhLXfodhtDF3ZaJj4hJs5tntgbhR7lRQUjFROoRCb4.tym3j
+ Ya1huVKvht_0eqrzn8bBztU27MSfujHzTtSTSy0KxmWVIQr3o06CnFqnlFY2txAmEMpq1hhpv4BO
+ dZYWHmF1G4wqZuyqSd8_R1UEazlB3alaUghk0DoPewLl74TxTXRchlPtqUROkmGwKwSvjy6eFIed
+ NVBCeuxmys6oRC.e5.gLnGxdVlU0uRYCNEX3ajA_t9urfHIBtBlF6QaCTPFSJuzIbfuQICDcDtpV
+ NnBYvavtpKWnYZWQpaTg.wGMHQeU09kGsUlOyXwdFz1cAijJKpS86OCsJ0J4FrJCdlWUXGNXrbEe
+ d2KBAPpTnlcCCLz9X1ABZLrcYZCereXFvfzlTyJKaWnRDJ6dXnjF5j0hutSMTqoPSw_IhtykqAub
+ ND0pZ8zSwgVEGh_xMuj07GRLxobo16zbzAp1tuHJ3iZkVQLQ8tf3cZUtIlT8q87zIUgen5XOTzlp
+ Vk9Whxbi7x8gYgugOAK5xSDGEm50Npxy_hBHBbKV3xxfLrXaB2Rs6rxexZ07N.KSbDD6VSGneSGL
+ EFIvnpAsRCcmyyyxOa2U2gt65HOYIQMTt5ojw.HzhaBptHKpzebNKB8Rf.eXN2xCHcxfF0zZsBxj
+ FOuSErtkXcPeRaMOuWpYbfpvt4.l57dw0sA--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic310.consmr.mail.ir2.yahoo.com with HTTP; Sun, 20 Oct 2019 14:11:47 +0000
-Received: by smtp420.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID f2862740572f26a0d438836b0b942179; 
- Sun, 20 Oct 2019 14:11:42 +0000 (UTC)
-Date: Sun, 20 Oct 2019 22:11:09 +0800
+ sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sun, 20 Oct 2019 14:28:10 +0000
+Received: by smtp418.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID f1a1dd6de85c866bc0f4aef17101619e; 
+ Sun, 20 Oct 2019 14:28:05 +0000 (UTC)
+Date: Sun, 20 Oct 2019 22:28:00 +0800
 To: Pratik Shinde <pratikshinde320@gmail.com>
-Subject: Re: [PATCH-v5] erofs-utils:code for calculating crc checksum of
- erofs blocks
-Message-ID: <20191020141102.GA30399@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191019150803.9259-1-pratikshinde320@gmail.com>
+Subject: Re: [PATCH] erofs: code for verifying superblock checksum of an
+ erofs image.
+Message-ID: <20191020142745.GB30399@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191020130320.10193-1-pratikshinde320@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191019150803.9259-1-pratikshinde320@gmail.com>
+In-Reply-To: <20191020130320.10193-1-pratikshinde320@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -88,300 +88,157 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Pratik and other folks,
+Hi Pritik,
 
-On Sat, Oct 19, 2019 at 08:38:03PM +0530, Pratik Shinde wrote:
-> Added code for calculating crc of erofs blocks (4K size).for now it calculates
-> checksum of first block. but can modified to calculate crc for any no. of blocks
-> 
-> Fill 'feature_compat' field of erofs_super_block so that it
-> can be used on kernel side. also fixing one typo.
+On Sun, Oct 20, 2019 at 06:33:20PM +0530, Pratik Shinde wrote:
+> Patch for kernel side changes of checksum feature.I used kernel's
+> crc32c library for calculating the checksum.
 > 
 > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> ---
+>  fs/erofs/erofs_fs.h |  5 +++--
+>  fs/erofs/internal.h |  2 +-
+>  fs/erofs/super.c    | 50 ++++++++++++++++++++++++++++++++++++++++++++++----
+>  3 files changed, 50 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index b1ee565..bab5506 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -17,6 +17,7 @@
+>   */
+>  #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
+>  #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
+> +#define EROFS_FEATURE_SB_CHKSUM 0x0001
 
-I will submit the following patch to experimental branch, some
-TODOs in it (and an additional TODO which is not mentioned in code
-is to move crc32c() to include/erofs/crc32.h).
+Thanks for your patch :) I will comment this patch tomorrow,
+but when you decide to send a kernel patch (it is a common
+practice), don't forget to run scripts/get_maintainer.pl and
+generally Cc all of them
+(It is really needed to Cc LKML mailing list linux-kernel@vger.kernel.org.)
 
-Further updates or comments for this version are welcomed.
-
-BTW, for all valid fields in feature_compat or feature_incompat,
-I'd like to introduce a -O option to toggle them as well (e.g.
--O +sbcrc or -O -sbcrc), which is not in this version as well...
+However, no rush to update and resend this patch.
+I will do detailed comments tomorrow, it needs some
+changes (especially stuffs in erofs_validate_sb_chksum()).
 
 Thanks,
 Gao Xiang
 
-From d96b797f86f2526e4f94a483d6b6442b53e61861 Mon Sep 17 00:00:00 2001
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Sat, 19 Oct 2019 20:38:03 +0530
-Subject: [PATCH v6] erofs-utils: code for calculating crc checksum of erofs
- blocks
-
-Added code for calculating crc of erofs blocks (4K size).
-For now it calculates checksum of first block. but it can
-be modified to calculate crc for any no. of blocks
-
-Fill 'feature_compat' field of erofs_super_block so that it
-can be used on kernel side. also fixing one typo.
-
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-[ Gao Xiang: minor updates based on Pratik patch. ]
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
-change since v5:
- - rename 'feature' to 'feature_compat' (so does related macro).
- - add some print messages;
- - fill all checksum fields in erofs_write_sb_checksum();
- - fix a memory leak in error handling path.
-
- include/erofs/internal.h |  1 +
- include/erofs/io.h       |  8 ++++
- include/erofs_fs.h       |  6 ++-
- lib/io.c                 | 27 ++++++++++++
- mkfs/main.c              | 92 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 132 insertions(+), 2 deletions(-)
-
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 25ce7b5..9e2bb9c 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -52,6 +52,7 @@ struct erofs_sb_info {
- 	erofs_blk_t meta_blkaddr;
- 	erofs_blk_t xattr_blkaddr;
- 
-+	u32 feature_compat;
- 	u32 feature_incompat;
- 	u64 build_time;
- 	u32 build_time_nsec;
-diff --git a/include/erofs/io.h b/include/erofs/io.h
-index 9775047..e0ca8d9 100644
---- a/include/erofs/io.h
-+++ b/include/erofs/io.h
-@@ -19,6 +19,7 @@
- int dev_open(const char *devname);
- void dev_close(void);
- int dev_write(const void *buf, u64 offset, size_t len);
-+int dev_read(void *buf, u64 offset, size_t len);
- int dev_fillzero(u64 offset, size_t len, bool padding);
- int dev_fsync(void);
- int dev_resize(erofs_blk_t nblocks);
-@@ -31,5 +32,12 @@ static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
- 			 blknr_to_addr(nblocks));
- }
- 
-+static inline int blk_read(void *buf, erofs_blk_t start,
-+			    u32 nblocks)
-+{
-+	return dev_read(buf, blknr_to_addr(start),
-+			 blknr_to_addr(nblocks));
-+}
-+
- #endif
- 
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index f29aa25..8daf043 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -13,6 +13,8 @@
- #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM		0x00000001
-+
- /*
-  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
-  * be incompatible with this kernel version.
-@@ -39,8 +41,8 @@ struct erofs_super_block {
- 	__u8 uuid[16];          /* 128-bit uuid for volume */
- 	__u8 volume_name[16];   /* volume name */
- 	__le32 feature_incompat;
--
--	__u8 reserved2[44];
-+	__le32 chksum_blocks;	/* number of blocks used for checksum */
-+	__u8 reserved2[40];
- };
- 
- /*
-diff --git a/lib/io.c b/lib/io.c
-index 7f5f94d..52f9424 100644
---- a/lib/io.c
-+++ b/lib/io.c
-@@ -207,3 +207,30 @@ int dev_resize(unsigned int blocks)
- 	return dev_fillzero(st.st_size, length, true);
- }
- 
-+int dev_read(void *buf, u64 offset, size_t len)
-+{
-+	int ret;
-+
-+	if (cfg.c_dry_run)
-+		return 0;
-+
-+	if (!buf) {
-+		erofs_err("buf is NULL");
-+		return -EINVAL;
-+	}
-+	if (offset >= erofs_devsz || len > erofs_devsz ||
-+	    offset > erofs_devsz - len) {
-+		erofs_err("read posion[%" PRIu64 ", %zd] is too large beyond"
-+			  "the end of device(%" PRIu64 ").",
-+			  offset, len, erofs_devsz);
-+		return -EINVAL;
-+	}
-+
-+	ret = pread64(erofs_devfd, buf, len, (off64_t)offset);
-+	if (ret != (int)len) {
-+		erofs_err("Failed to read data from device - %s:[%" PRIu64 ", %zd].",
-+			  erofs_devname, offset, len);
-+		return -errno;
-+	}
-+	return 0;
-+}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 71c81f5..fe84441 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -23,6 +23,9 @@
- 
- #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
- 
-+/* number of blocks for calculating checksum */
-+#define EROFS_CKSUM_BLOCKS	1
-+
- static void usage(void)
- {
- 	fprintf(stderr, "usage: [options] FILE DIRECTORY\n\n");
-@@ -87,6 +90,12 @@ static int parse_extended_opts(const char *opts)
- 				return -EINVAL;
- 			cfg.c_force_inodeversion = FORCE_INODE_EXTENDED;
- 		}
-+
-+		if (MATCH_EXTENTED_OPT("nosbcrc", token, keylen)) {
-+			if (vallen)
-+				return -EINVAL;
-+			sbi.feature_compat &= ~EROFS_FEATURE_COMPAT_SB_CHKSUM;
-+		}
- 	}
- 	return 0;
- }
-@@ -191,6 +200,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 		.meta_blkaddr  = sbi.meta_blkaddr,
- 		.xattr_blkaddr = sbi.xattr_blkaddr,
- 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
-+		.feature_compat = cpu_to_le32(sbi.feature_compat &
-+					      ~EROFS_FEATURE_COMPAT_SB_CHKSUM),
- 	};
- 	const unsigned int sb_blksize =
- 		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
-@@ -213,6 +224,83 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 	return 0;
- }
- 
-+#define CRCPOLY	0x82F63B78
-+static inline u32 crc32c(u32 seed, const u8 *in, size_t len)
-+{
-+	int i;
-+	u32 crc = seed;
-+
-+	while (len--) {
-+		crc ^= *in++;
-+		for (i = 0; i < 8; i++) {
-+			crc = (crc >> 1) ^ ((crc & 1) ? CRCPOLY : 0);
-+		}
-+	}
-+	return crc;
-+}
-+
-+/* calculate checksum for first n blocks */
-+static int erofs_calc_blk_checksum(erofs_blk_t nblks, u32 *crc)
-+{
-+	char *buf;
-+	int err;
-+
-+	/* TODO: limit memory size by mutiple reads */
-+	buf = malloc(nblks * EROFS_BLKSIZ);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	err = blk_read(buf, 0, nblks);
-+	if (err)
-+		goto out;
-+
-+	*crc = crc32c(0, (const u8 *)buf, nblks * EROFS_BLKSIZ);
-+out:
-+	free(buf);
-+	return err;
-+}
-+
-+static int erofs_write_sb_checksum(void)
-+{
-+	struct erofs_super_block *sb;
-+	char buf[EROFS_BLKSIZ];
-+	int ret;
-+	u32 crc;
-+
-+	ret = erofs_calc_blk_checksum(EROFS_CKSUM_BLOCKS, &crc);
-+	if (ret) {
-+		erofs_err("failed to calculate checksum: %s",
-+			  erofs_strerror(ret));
-+		return ret;
-+	}
-+
-+	/* TODO: no need to reread super block */
-+	ret = blk_read(buf, 0, 1);
-+	if (ret) {
-+		erofs_err("failed to read superblock to fill checksum");
-+		return -EIO;
-+	}
-+
-+	sb = (struct erofs_super_block *)((u8 *)buf + EROFS_SUPER_OFFSET);
-+	if (le32_to_cpu(sb->magic) != EROFS_SUPER_MAGIC_V1) {
-+		erofs_err("internal error: not an erofs valid image");
-+		return -EFAULT;
-+	}
-+	/* set up checksum field to erofs_super_block */
-+	sb->feature_compat = cpu_to_le32(le32_to_cpu(sb->feature_compat) |
-+					 EROFS_FEATURE_COMPAT_SB_CHKSUM);
-+	sb->chksum_blocks = cpu_to_le32(EROFS_CKSUM_BLOCKS);
-+	sb->checksum = cpu_to_le32(crc);
-+	ret = blk_write(buf, 0, 1);
-+	if (ret) {
-+		erofs_err("failed to write checksumed superblock: %s",
-+			  erofs_strerror(ret));
-+		return ret;
-+	}
-+	erofs_info("superblock checksum 0x%08x written", crc);
-+	return 0;
-+}
-+
- int main(int argc, char **argv)
- {
- 	int err = 0;
-@@ -228,6 +316,7 @@ int main(int argc, char **argv)
- 
- 	cfg.c_legacy_compress = false;
- 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
-+	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM;
- 
- 	err = mkfs_parse_options_cfg(argc, argv);
- 	if (err) {
-@@ -310,6 +399,9 @@ int main(int argc, char **argv)
- 		err = -EIO;
- 	else
- 		err = dev_resize(nblocks);
-+
-+	if (sbi.feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM)
-+		erofs_write_sb_checksum();
- exit:
- 	z_erofs_compress_exit();
- 	dev_close();
--- 
-2.17.1
-
-
+>  
+>  /* 128-byte erofs on-disk super block */
+>  struct erofs_super_block {
+> @@ -37,8 +38,8 @@ struct erofs_super_block {
+>  	__u8 uuid[16];          /* 128-bit uuid for volume */
+>  	__u8 volume_name[16];   /* volume name */
+>  	__le32 feature_incompat;
+> -
+> -	__u8 reserved2[44];
+> +	__le32 chksum_blocks;	/* number of blocks used for checksum */
+> +	__u8 reserved2[40];
+>  };
+>  
+>  /*
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 544a453..cd3af45 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -86,7 +86,7 @@ struct erofs_sb_info {
+>  	u8 uuid[16];                    /* 128-bit uuid for volume */
+>  	u8 volume_name[16];             /* volume name */
+>  	u32 feature_incompat;
+> -
+> +	u32 features;
+>  	unsigned int mount_opt;
+>  };
+>  
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 0e36949..94e1d6a 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/statfs.h>
+>  #include <linux/parser.h>
+>  #include <linux/seq_file.h>
+> +#include <linux/crc32c.h>
+>  #include "xattr.h"
+>  
+>  #define CREATE_TRACE_POINTS
+> @@ -46,6 +47,45 @@ void _erofs_info(struct super_block *sb, const char *function,
+>  	va_end(args);
+>  }
+>  
+> +static int erofs_validate_sb_chksum(struct erofs_super_block *dsb,
+> +				       struct super_block *sb)
+> +{
+> +	u32 disk_chksum = le32_to_cpu(dsb->checksum);
+> +	u32 nblocks = le32_to_cpu(dsb->chksum_blocks);
+> +	u32 crc;
+> +	struct erofs_super_block *dsb2;
+> +	char *buf;
+> +	unsigned int off = 0;
+> +	void *kaddr;
+> +	struct page *page;
+> +	int i, ret = -EINVAL;
+> +
+> +	buf = kmalloc(nblocks * EROFS_BLKSIZ, GFP_KERNEL);
+> +	if (!buf)
+> +		goto out;
+> +	for (i = 0; i < nblocks; i++) {
+> +		page = erofs_get_meta_page(sb, i);
+> +		if (IS_ERR(page))
+> +			goto out;
+> +		kaddr = kmap_atomic(page);
+> +		(void) memcpy(buf + off, kaddr, EROFS_BLKSIZ);
+> +		kunmap_atomic(kaddr);
+> +		unlock_page(page);
+> +		/* first page will be released by erofs_read_superblock */
+> +		if (i != 0)
+> +			put_page(page);
+> +		off += EROFS_BLKSIZ;
+> +	}
+> +	dsb2 = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
+> +	dsb2->checksum = 0;
+> +	crc = crc32c(0, buf, nblocks * EROFS_BLKSIZ);
+> +	if (crc != disk_chksum)
+> +		goto out;
+> +	ret = 0;
+> +out:	kfree(buf);
+> +	return ret;
+> +}
+> +
+>  static void erofs_inode_init_once(void *ptr)
+>  {
+>  	struct erofs_inode *vi = ptr;
+> @@ -109,18 +149,20 @@ static int erofs_read_superblock(struct super_block *sb)
+>  		erofs_err(sb, "cannot read erofs superblock");
+>  		return PTR_ERR(page);
+>  	}
+> -
+>  	sbi = EROFS_SB(sb);
+> -
+>  	data = kmap_atomic(page);
+>  	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+> -
+>  	ret = -EINVAL;
+>  	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
+>  		erofs_err(sb, "cannot find valid erofs superblock");
+>  		goto out;
+>  	}
+> -
+> +	if (dsb->feature_compat & EROFS_FEATURE_SB_CHKSUM) {
+> +		if (erofs_validate_sb_chksum(dsb, sb)) {
+> +			erofs_err(sb, "super block checksum incorrect");
+> +			goto out;
+> +		}
+> +	}
+>  	blkszbits = dsb->blkszbits;
+>  	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+>  	if (blkszbits != LOG_BLOCK_SIZE) {
+> -- 
+> 2.9.3
+> 
