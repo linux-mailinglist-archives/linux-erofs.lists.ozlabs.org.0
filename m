@@ -2,68 +2,76 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A806CE0B34
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Oct 2019 20:08:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DB54E0C29
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Oct 2019 21:03:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46yM1y41nwzDqJ7
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 05:08:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46yNFm28yjzDqHb
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 06:03:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1571771020;
+	bh=xvfZyDCb4qWHi/oz2hIQDxMUreJZohXnuqJ7CSx0Eow=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=VmnUuGVHHRvOaXfJRMd4fqjCQgJTh4auf0YqNkcduzQ0tH1xsXMhyoo7/54LySBT2
+	 JRMHsoZHNHeoZ5tAU1xc5VB6FPzdL/anI8M9RaepAPxsgrwIEaM3ASQpxXRaa/7Nn+
+	 F7YDilLF8hAq2qls2y/Of6PnsKtwoZTvXP0ue8QONv8sr7xqRDE2BGDdwqb83W4pmM
+	 m0hLsbVITtxGVI0/p8R29Gy2vG1wHo+Vtx7L++iCQ6ay57Gt2cIgrZZhq1K5IyIW1t
+	 b/Dk3AYOnUVAyxRISzD+/aEM7VV7o62Bhf2/w/EkwhW7Cbb0lXgTx6EtiV5SzKzEG/
+	 O/I7Bp//9zwrQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::542;
- helo=mail-pg1-x542.google.com; envelope-from=pratikshinde320@gmail.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.66.146; helo=sonic317-20.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="DMHFSLUJ"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="ilfpawaO"; 
  dkim-atps=neutral
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com
- [IPv6:2607:f8b0:4864:20::542])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic317-20.consmr.mail.gq1.yahoo.com
+ (sonic317-20.consmr.mail.gq1.yahoo.com [98.137.66.146])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46yM023JY2zDqKP
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 05:06:42 +1100 (AEDT)
-Received: by mail-pg1-x542.google.com with SMTP id e15so10392117pgu.13
- for <linux-erofs@lists.ozlabs.org>; Tue, 22 Oct 2019 11:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id;
- bh=C57rjg6MzRUCmDbY5EjraOl4/clbYwioVc55Zqi6SCI=;
- b=DMHFSLUJy7N2hDrh4gMPJFjEcTowuAM7wxu+qWBstze/RxyphtMddCieoG2G8BvQLT
- CVKO/b/SKx0d73/DMqsv6U7JEAaJ9US7vu1ZYc9x3gtmKbskCN4Yl7+pKQxaO3fm6JtU
- hHQIgdgF3UXP0FbaHEDySS0c6cfDXD1ssbbn1RFEqoKVczoytoBToNjJzLwT9ZGrsBNA
- VciZjlyRGcubwselE2wFRGm72Pq3Ctp197cAjEQkGecq6PmUuKSVPmU4CS8y/RadYQ49
- YVVZPFQzjYEGHT1ctY7ewuHMp3DZtatRiq8kOBFMkp+UOLignpQAow/KPaCES8IKZOFY
- +zkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=C57rjg6MzRUCmDbY5EjraOl4/clbYwioVc55Zqi6SCI=;
- b=G6anHAVuPYNInMWjJwOajeW17EdBLFO9D8eSpuKRtM/9fgVQOCDtftMgR5joGuagev
- GSWvpq5nCl5ThWDirXbkustv//LzFPp1fO9r9+Smsxgnwghasy2FLx7bc9/icE7+KFQL
- uQAu88wpUFPtIcDdqdkTxg8l3pJ6HmUf4bP5/N0+s0pm0jpXJX/KfLoxAIlJ7xpCeQ+O
- zmt/xjCs2yWk2x4EyDhRy6HHWivjYwfFELzSbyU1nb3iYX9U8eFtL0Pu5I3s+QmjOKPk
- sss6+WhbaIyCbHEvWSyB+A8Rl2rIqL/HC0kkQ+9pjyhhV+JWYr1n9n0fvjLvQ7AsYPyE
- SVvg==
-X-Gm-Message-State: APjAAAXztxauyiSLaf/cunW2KcvS298nerN/gP21DD046GAb2YLO3UHd
- m/3Mgoa/IPtt+vhXOXsmwmicQ3ErFlo37w==
-X-Google-Smtp-Source: APXvYqysMEhD3/SyyaKuW36KVVDfT583diD8uvaZHSczVswNE5j/t6bq+P8ysn5KBPHnHiRgl/MtmQ==
-X-Received: by 2002:a62:28b:: with SMTP id 133mr5653669pfc.242.1571767595328; 
- Tue, 22 Oct 2019 11:06:35 -0700 (PDT)
-Received: from localhost.localdomain ([42.107.68.32])
- by smtp.gmail.com with ESMTPSA id 193sm21789218pfc.59.2019.10.22.11.06.31
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Tue, 22 Oct 2019 11:06:34 -0700 (PDT)
-From: Pratik Shinde <pratikshinde320@gmail.com>
-To: linux-erofs@lists.ozlabs.org,
-	gaoxiang25@huawei.com,
-	yuchao0@huawei.com
-Subject: [PATCH-v3] erofs: code for verifying superblock checksum of an erofs
- image.
-Date: Tue, 22 Oct 2019 23:36:20 +0530
-Message-Id: <20191022180620.19638-1-pratikshinde320@gmail.com>
-X-Mailer: git-send-email 2.9.3
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46yN9q2FCTzDqPv
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 06:00:12 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1571770808; bh=vjmGUSwN55r83X2Mn1e3rPv1/sVwxHbTPZlfpbtprsc=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
+ b=ilfpawaO6G5guKb1m6d5mq7XhkhJipoTK3zXx2gdbACJEymqnnS3XiQr8l8RJg1vSs7dlpkXsEwrYbKpR4q/+xpu+OdvbOIp4t9anJiZbHOyST9gvAobaaFEHVyKxPeY35npJ9lHo4nMfj+z/mqmiohpK0d4OE4qCTVSJD3HGHOSrMj+NerkuTEODFdM/GQ3dqppR10Wcp6O/KDWeK9ZqV8c/TBtRiCxaNeEb/9oNQW117SuV6BiFl0nxcqxrBDd8SbUkVVJ7tao5TgZf4gD/0uxxmTjsZnQTP8sodNFDPsBJhCrsZEdh7/7Qsq8wYKKMcxLIPLTY2iJ2A0TneuIhg==
+X-YMail-OSG: AD_D0TIVM1mRh56xbkJ_iqtVLg2en5WpSXi7ce4q13tYBtrPx8tQqim8wPSgTgv
+ kvLU2Tti9ucxAWtdIjcCksrd3NowHijv2hNlF4NANUFHEswIn6TJHANfJv0f3o15VSrH35MWu5cr
+ OeCRQG9svmpLY9yd5gfl9J8HtSxe3Pd1neR2e5qDmvVy6NrXhMBCLr8zI4JPhTQs2yepp0iIa9QC
+ 0II5AKPc.ODgxLAr_a1KCMLi2DR9rp.xuxQvE4sqwCP8RtZR330LWru_5aA7.JR4YkwH6KM0G47H
+ pq.mzxrnDB1L.X.Br7H1G9VL9EuVe6HC7OzKh4DiudS5fK.EUYDo30m230wDRAmXupjQxYoCLIx.
+ 2lDq70hxYlpHyqLt6x1Anbqkaq31hMH8uHTj1uPuGMQW3k8e2_KCf80li7YaodrJBDLmJDc0ZNuU
+ oXwIV9wKSB5Ka1JqE7g7_pyWxKGlUR.F6Bi5dn1LIHSTOyS0ZLBwLQEzdCX9kFAROQj3LfOMZk3C
+ 9S6xR2mOqLBR5JnV5rfh4rQvOlJAm4XVUexUdZLp0UsNu3SUNFBSii6mewapM5YxQHiqfwUzpzwz
+ T9j19dcD43NViQBK9EXyD6h3ACThESIlKPpQeriM5ja8f02tvPTlYkxnU2jutbj9fcE9ddlKf_9C
+ _T2xqu4oVHZVxm2OLtAdg9KumXouNHPFm9tWm7EqnxVPhQs5e9HXVkm7JkTT_iNn2mWbjdivEiZ8
+ g68kSig7grFCiiBxOp7lneFKm.Ct1rbxJn4l50oykChJfS8Bw4jY1pqOu2RDW.sHIhcSP1ceqZkX
+ CDGQabIQVDsGPpXqF6nAlRq9lqOo4d7FkZs1Jx.ppGzMKtAE6g7awNQT9GKmZ20CV8WuJDeG158a
+ xVU8C61qpxjMKdnjOWkp.UhkO4g9e4IG4IwRqtluwHaM.CazWcMssOoJ14o_6Bkgt8Yik_E0ye5s
+ vHHyyV.oBtofdQdSQcT.IYnQqPa784_Pad.JHklR9JvN_UkSgsO4XKdrJO0Orsa5SjqpccdLx_oJ
+ GjOCDgdODysidcZd8YvRFM1nv88KBL40IEcwILALU6rnjbVXqW3veb2GtDAx8t.NlEGjwnA1NwEo
+ Et7Ba46Z2IlgbWdGUhkU9_KjA.VjZ4SBa7tV9WgLG0.ujI2FE_usZOXP89wvhlK64RrMF8I0ko.X
+ BnMwRHXTad7xnrkplSPz6iCtcMYhcYKVMW6IQkm1wr3SRcaSYGlMrbienB1Tn84hldcEVtbF.iXU
+ gTVpxqdysHd6Q2KmX5DiPChTNvAWDr3SbzSCGA.WfYhHRh0rpn_AMg96l7QDi6_mGIqie8bcvIpK
+ KEAbf.pipvJF3Uu64ZpAtOg8MTlkDCR03DOz2DXMP
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 22 Oct 2019 19:00:08 +0000
+Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID fc068d67395b99274d16e3cd955c5c72; 
+ Tue, 22 Oct 2019 19:00:03 +0000 (UTC)
+To: Li Guifu <bluce.liguifu@huawei.com>,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3] erofs-utils: list available compressors for help command
+Date: Wed, 23 Oct 2019 02:59:47 +0800
+Message-Id: <20191022185947.12326-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191022164954.GA4132@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191022164954.GA4132@hsiangkao-HP-ZHAN-66-Pro-G1>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,134 +83,198 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Patch for kernel side changes of checksum feature.Used kernel's
-crc32c library for calculating the checksum.
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+Users can get knowledge of supported compression
+algorithms then.
+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Li Guifu <blucerlee@gmail.com>
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fs/erofs/erofs_fs.h |  5 +++--
- fs/erofs/internal.h |  3 ++-
- fs/erofs/super.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 49 insertions(+), 3 deletions(-)
+ include/erofs/compress.h |  2 ++
+ lib/compressor.c         | 29 ++++++++++++++++++-----------
+ lib/compressor.h         |  4 +++-
+ lib/compressor_lz4.c     |  6 ++----
+ lib/compressor_lz4hc.c   |  7 ++-----
+ mkfs/main.c              | 15 +++++++++++++++
+ 6 files changed, 42 insertions(+), 21 deletions(-)
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index b1ee565..4d8097a 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -17,6 +17,7 @@
-  */
- #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
- #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM 		0x00000001
+diff --git a/include/erofs/compress.h b/include/erofs/compress.h
+index e0abb8f..fa91873 100644
+--- a/include/erofs/compress.h
++++ b/include/erofs/compress.h
+@@ -21,5 +21,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode);
+ int z_erofs_compress_init(void);
+ int z_erofs_compress_exit(void);
  
- /* 128-byte erofs on-disk super block */
- struct erofs_super_block {
-@@ -37,8 +38,8 @@ struct erofs_super_block {
- 	__u8 uuid[16];          /* 128-bit uuid for volume */
- 	__u8 volume_name[16];   /* volume name */
- 	__le32 feature_incompat;
--
--	__u8 reserved2[44];
-+	__le32 chksum_blocks;	/* number of blocks used for checksum */
-+	__u8 reserved2[40];
- };
++const char *z_erofs_list_available_compressors(unsigned int i);
++
+ #endif
  
- /*
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 544a453..cec27ca 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -86,7 +86,7 @@ struct erofs_sb_info {
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
- 	u32 feature_incompat;
--
-+	u32 feature_compat;
- 	unsigned int mount_opt;
- };
+diff --git a/lib/compressor.c b/lib/compressor.c
+index 8cc2f43..b2434e0 100644
+--- a/lib/compressor.c
++++ b/lib/compressor.c
+@@ -12,6 +12,15 @@
  
-@@ -426,6 +426,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
- #endif	/* !CONFIG_EROFS_FS_ZIP */
+ #define EROFS_CONFIG_COMPR_DEF_BOUNDARY		(128)
  
- #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+#define EFSBADCRC	EBADMSG		/* Bad crc found */
- 
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 0e36949..a2a638a 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -9,6 +9,7 @@
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
-+#include <linux/crc32c.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -46,6 +47,42 @@ void _erofs_info(struct super_block *sb, const char *function,
- 	va_end(args);
++static struct erofs_compressor *compressors[] = {
++#if LZ4_ENABLED
++#if LZ4HC_ENABLED
++		&erofs_compressor_lz4hc,
++#endif
++		&erofs_compressor_lz4,
++#endif
++};
++
+ int erofs_compress_destsize(struct erofs_compress *c,
+ 			    int compression_level,
+ 			    void *src,
+@@ -36,18 +45,13 @@ int erofs_compress_destsize(struct erofs_compress *c,
+ 	return ret;
  }
  
-+static int erofs_validate_sb_chksum(void  *sbdata, struct super_block *sb)
+-int erofs_compressor_init(struct erofs_compress *c,
+-			  char *alg_name)
++const char *z_erofs_list_available_compressors(unsigned int i)
+ {
+-	static struct erofs_compressor *compressors[] = {
+-#if LZ4_ENABLED
+-#if LZ4HC_ENABLED
+-		&erofs_compressor_lz4hc,
+-#endif
+-		&erofs_compressor_lz4,
+-#endif
+-	};
++	return i >= ARRAY_SIZE(compressors) ? NULL : compressors[i]->name;
++}
+ 
++int erofs_compressor_init(struct erofs_compress *c, char *alg_name)
 +{
-+	u32 disk_chksum, nblocks, crc = 0;
-+	void *kaddr;
-+	struct page *page;
-+	struct erofs_super_block *dsb;
-+	char *buf;
-+	int i, ret = 0;
+ 	int ret, i;
+ 
+ 	/* should be written in "minimum compression ratio * 100" */
+@@ -65,7 +69,10 @@ int erofs_compressor_init(struct erofs_compress *c,
+ 
+ 	ret = -EINVAL;
+ 	for (i = 0; i < ARRAY_SIZE(compressors); ++i) {
+-		ret = compressors[i]->init(c, alg_name);
++		if (alg_name && strcmp(alg_name, compressors[i]->name))
++			continue;
 +
-+	buf = kmalloc(EROFS_BLKSIZ, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+	memcpy(buf, sbdata, EROFS_BLKSIZ);
-+	dsb = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
-+	disk_chksum = le32_to_cpu(dsb->checksum);
-+	nblocks = le32_to_cpu(dsb->chksum_blocks);
-+	dsb->checksum = 0;
-+	crc = crc32c(0, buf, EROFS_BLKSIZ);
-+	for (i = 1; i < nblocks; i++) {
-+		page = erofs_get_meta_page(sb, i);
-+		if (IS_ERR(page)) {
-+			ret = PTR_ERR(page);
-+			goto out;
-+		}
-+		kaddr = kmap_atomic(page);
-+		crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
-+		kunmap_atomic(kaddr);
-+		unlock_page(page);
-+		put_page(page);
++		ret = compressors[i]->init(c);
+ 		if (!ret) {
+ 			DBG_BUGON(!c->alg);
+ 			return 0;
+diff --git a/lib/compressor.h b/lib/compressor.h
+index 6429b2a..b2471c4 100644
+--- a/lib/compressor.h
++++ b/lib/compressor.h
+@@ -14,10 +14,12 @@
+ struct erofs_compress;
+ 
+ struct erofs_compressor {
++	const char *name;
++
+ 	int default_level;
+ 	int best_level;
+ 
+-	int (*init)(struct erofs_compress *c, char *alg_name);
++	int (*init)(struct erofs_compress *c);
+ 	int (*exit)(struct erofs_compress *c);
+ 
+ 	int (*compress_destsize)(struct erofs_compress *c,
+diff --git a/lib/compressor_lz4.c b/lib/compressor_lz4.c
+index 0d33223..8540a0d 100644
+--- a/lib/compressor_lz4.c
++++ b/lib/compressor_lz4.c
+@@ -29,16 +29,14 @@ static int compressor_lz4_exit(struct erofs_compress *c)
+ 	return 0;
+ }
+ 
+-static int compressor_lz4_init(struct erofs_compress *c,
+-				 char *alg_name)
++static int compressor_lz4_init(struct erofs_compress *c)
+ {
+-	if (alg_name && strcmp(alg_name, "lz4"))
+-		return -EINVAL;
+ 	c->alg = &erofs_compressor_lz4;
+ 	return 0;
+ }
+ 
+ struct erofs_compressor erofs_compressor_lz4 = {
++	.name = "lz4",
+ 	.default_level = 0,
+ 	.best_level = 0,
+ 	.init = compressor_lz4_init,
+diff --git a/lib/compressor_lz4hc.c b/lib/compressor_lz4hc.c
+index 14e0175..6680563 100644
+--- a/lib/compressor_lz4hc.c
++++ b/lib/compressor_lz4hc.c
+@@ -37,12 +37,8 @@ static int compressor_lz4hc_exit(struct erofs_compress *c)
+ 	return 0;
+ }
+ 
+-static int compressor_lz4hc_init(struct erofs_compress *c,
+-				 char *alg_name)
++static int compressor_lz4hc_init(struct erofs_compress *c)
+ {
+-	if (alg_name && strcmp(alg_name, "lz4hc"))
+-		return -EINVAL;
+-
+ 	c->alg = &erofs_compressor_lz4hc;
+ 
+ 	c->private_data = LZ4_createStreamHC();
+@@ -52,6 +48,7 @@ static int compressor_lz4hc_init(struct erofs_compress *c,
+ }
+ 
+ struct erofs_compressor erofs_compressor_lz4hc = {
++	.name = "lz4hc",
+ 	.default_level = LZ4HC_CLEVEL_DEFAULT,
+ 	.best_level = LZ4HC_CLEVEL_MAX,
+ 	.init = compressor_lz4hc_init,
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 31cf1c2..1161b3f 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -29,6 +29,19 @@ static struct option long_options[] = {
+ 	{0, 0, 0, 0},
+ };
+ 
++static void print_available_compressors(FILE *f, const char *delim)
++{
++	unsigned int i = 0;
++	const char *s;
++
++	while ((s = z_erofs_list_available_compressors(i)) != NULL) {
++		if (i++)
++			fputs(delim, f);
++		fputs(s, f);
 +	}
-+	if (crc != disk_chksum)
-+		ret = -EFSBADCRC;
-+out:	kfree(buf);
-+	return ret;
++	fputc('\n', f);
 +}
 +
- static void erofs_inode_init_once(void *ptr)
+ static void usage(void)
  {
- 	struct erofs_inode *vi = ptr;
-@@ -121,6 +158,13 @@ static int erofs_read_superblock(struct super_block *sb)
- 		goto out;
- 	}
+ 	fprintf(stderr, "usage: [options] FILE DIRECTORY\n\n");
+@@ -39,6 +52,8 @@ static void usage(void)
+ 	fprintf(stderr, " -EX[,...] X=extended options\n");
+ 	fprintf(stderr, " -T#       set a fixed UNIX timestamp # to all files\n");
+ 	fprintf(stderr, " --help    display this help and exit\n");
++	fprintf(stderr, "\nAvailable compressors are: ");
++	print_available_compressors(stderr, ", ");
+ }
  
-+	if (dsb->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
-+		ret = erofs_validate_sb_chksum(data, sb);
-+		if (ret < 0) {
-+			erofs_err(sb, "super block checksum incorrect");
-+			goto out;
-+		}
-+	}
- 	blkszbits = dsb->blkszbits;
- 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
- 	if (blkszbits != LOG_BLOCK_SIZE) {
+ static int parse_extended_opts(const char *opts)
 -- 
-2.9.3
+2.17.1
 
