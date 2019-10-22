@@ -1,69 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B7F6E0799
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Oct 2019 17:40:28 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D1E9E07E9
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Oct 2019 17:52:26 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46yHlD4TkkzDqLG
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 02:40:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46yJ135hR8zDqDy
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 02:52:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::443;
- helo=mail-pf1-x443.google.com; envelope-from=pratikshinde320@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::644;
+ helo=mail-pl1-x644.google.com; envelope-from=blucerlee@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="ptV9anfs"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="d99/PvBg"; 
  dkim-atps=neutral
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com
- [IPv6:2607:f8b0:4864:20::443])
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com
+ [IPv6:2607:f8b0:4864:20::644])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46yHl5051bzDqKL
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 02:40:14 +1100 (AEDT)
-Received: by mail-pf1-x443.google.com with SMTP id q5so10871057pfg.13
- for <linux-erofs@lists.ozlabs.org>; Tue, 22 Oct 2019 08:40:14 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46yJ096jQxzDqLr
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 02:51:37 +1100 (AEDT)
+Received: by mail-pl1-x644.google.com with SMTP id d22so8545038pll.7
+ for <linux-erofs@lists.ozlabs.org>; Tue, 22 Oct 2019 08:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=from:to:cc:subject:date:message-id;
- bh=+0awgcrU0T0gJr+sSnKtP3Vx7pwyrZ4ja7Mttfvl/RM=;
- b=ptV9anfs6GPxZoupqgTAdWXbToAEdpkjso3HaFKaHa87FGi+1V9TCAfkSJBHlxcDl4
- KZ/BGcCqnStgrkx4RojbK921FbE80nYktDJMw1d1TfC2I7WMFECpNFfOqliYL/sqqygc
- o89ONML8Vgzkeu5Jk/23T2PUEJPIl/o3xv0Iq0huanxL+DlJvVHLopetTpNMZCmuEdPI
- sdjQwc/PZL5aHdSkDfBpCSQPjoWPF8k5h/RBsKoh+2alue0colVNMdmB+gipEu1Jqk6J
- XU7WDAZ+pe85eRf//yjQEke8MnXe45cdn06w4/gqgN1lTUX/QeEy6hdmLZnWCjz979KY
- MYHw==
+ h=subject:to:cc:references:from:message-id:date:user-agent
+ :mime-version:in-reply-to:content-language:content-transfer-encoding;
+ bh=7sgS4DBcCSZDH6k38fndK4SquIzeQnBi/vP/up0zF9w=;
+ b=d99/PvBgLw1UOzHpCVs7HCxFc2mIpSL5TXLy7+CyucodTtSNKFhzlYE4ZgEol1Mt/Z
+ sAJKhDE3ORgZKcrhApSdQM+KPzWmGppbyBpwSe4JopNfmvJAOK4dEfY8Zx+ENbT+42nP
+ 4XcNfsmcHBtXxPQAlhtKaNKwdNuqkY8FPMSneem3wOS/XOnim6UCQ8qpAO/10QzoZkJc
+ 8C12ULOP2Kxj8EhB/yU66kvpFJrxjlO5+AjoASfGoZ1rUlFtK6HSbErlmHATsgnkEIKi
+ Vs1TKjUIU8lZA4EJfaBUT4B+e9b9Tikj0UHp2JN92RB/f23lWSlys7OAMfNtu2mKiiw1
+ vJfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=+0awgcrU0T0gJr+sSnKtP3Vx7pwyrZ4ja7Mttfvl/RM=;
- b=QxDiyRe9fQT8RBz/ZWJJRnRVqPk3kgy0nrlwAqDodxAYUWotFK6fr97Ac8RuFNFuPq
- 2Jdw2yo+y3D5iwqDyVtAv0/0PKl5KZAD4jVpUjPNf97/KrjDvGj9fT1pNsrMJandRdGb
- bVVvTb8bo+A60XAXtIUzsDoDyWr9zNuTipGKVEJyaHt+h0+Pgezr01ApD35jF1iV83SO
- wQQsa7aKpAeYVKRlNAhpbYjxKgosTz2gCPgZqjICmuI8RKPhyjAKMKIafG2ZODnNQWdD
- Ui15NfwXUBpTg5gvdG7lT8r2/E4w5dM/E1Ou5M5heSV6CyfCFLUeBXdBOHT8EFswl659
- b0GA==
-X-Gm-Message-State: APjAAAVBLLT55q9rs8RpSgUN4f3uW1LIKp3vnrPdsjBtH6jNALOQOjfw
- wfqZrRmGViPdGc7D+oAcPsG9CeNAcgLscA==
-X-Google-Smtp-Source: APXvYqyhOzqPkG9SY667uXj7vH84dggmUhKFAaW+1vl+BwIHPrCdFqxt+lrxu5e11Q/329BPT36VxA==
-X-Received: by 2002:a62:ae06:: with SMTP id q6mr5021963pff.96.1571758810041;
- Tue, 22 Oct 2019 08:40:10 -0700 (PDT)
-Received: from localhost.localdomain ([42.107.68.84])
- by smtp.gmail.com with ESMTPSA id j10sm19681856pfn.128.2019.10.22.08.40.06
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Tue, 22 Oct 2019 08:40:09 -0700 (PDT)
-From: Pratik Shinde <pratikshinde320@gmail.com>
-To: linux-erofs@lists.ozlabs.org,
-	gaoxiang25@huawei.com,
-	yuchao0@huawei.com
-Subject: [PATCH-v2] erofs: code for verifying superblock checksum of an erofs
- image.
-Date: Tue, 22 Oct 2019 21:09:56 +0530
-Message-Id: <20191022153956.16867-1-pratikshinde320@gmail.com>
-X-Mailer: git-send-email 2.9.3
+ h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+ :user-agent:mime-version:in-reply-to:content-language
+ :content-transfer-encoding;
+ bh=7sgS4DBcCSZDH6k38fndK4SquIzeQnBi/vP/up0zF9w=;
+ b=H3zudbIDCoVFOFIVNUT/Q5FEK5T4E25gpkv0jM5JKmSrR9yT5zlWvgpG2oZCJ8CwOy
+ /0W7lcA4Z7MlrDlPkkL+lL3Gnjjxt/GjEHfmHR8Sl3KKekGh9kT045iXFE9U7B8hrfyq
+ Mn7YJpcVc+FFMUNV7GFHChQ5POztV/pkhyCqyrxrVsWXlrGJ3VAvfMLMolfudPryOmmW
+ szFa3Gjj6T4arxlWIMDpuD4tEYMp1mPH46M3M27uX2wCg0wapsKxGPTkHoclt+RtNeH/
+ aSMuYyWGQICYTsByPvT/xZFqrY77gnALTFZ6csOwyjGHEBGx5tBqDXjtsN4jsfOw/v9o
+ M95Q==
+X-Gm-Message-State: APjAAAXe0EOE58Lfnx29241sPB/N6ExnUc4JeKnLnvzaDpVTweO1t+En
+ mdOQNqkEfiVrfj362ej4OPs=
+X-Google-Smtp-Source: APXvYqzqQhLFO6lls6gE9g2NgXJ/5JB7+c+EiQ3ZL/8JBHafo1vZbEUMg2wUWStU0dbci13wCC82qA==
+X-Received: by 2002:a17:902:6b07:: with SMTP id
+ o7mr430699plk.215.1571759493887; 
+ Tue, 22 Oct 2019 08:51:33 -0700 (PDT)
+Received: from [0.0.0.0] (li1104-154.members.linode.com. [45.79.5.154])
+ by smtp.gmail.com with ESMTPSA id g12sm20009267pfb.97.2019.10.22.08.51.27
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 22 Oct 2019 08:51:33 -0700 (PDT)
+Subject: Re: [PATCH v2] erofs-utils: introduce long parameter option
+To: Gao Xiang <gaoxiang25@huawei.com>, Li Guifu <bluce.liguifu@huawei.com>
+References: <20191022025053.GA180717@architecture4>
+ <20191022041009.55166-1-gaoxiang25@huawei.com>
+From: Li Guifu <blucerlee@gmail.com>
+Message-ID: <e920ef02-6ec8-cce3-504d-2405b2178f08@gmail.com>
+Date: Tue, 22 Oct 2019 23:51:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20191022041009.55166-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,123 +84,24 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Patch for kernel side changes of checksum feature.Used kernel's
-crc32c library for calculating the checksum.
 
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
----
- fs/erofs/erofs_fs.h |  5 +++--
- fs/erofs/internal.h |  3 ++-
- fs/erofs/super.c    | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index b1ee565..4d8097a 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -17,6 +17,7 @@
-  */
- #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
- #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM 		0x00000001
- 
- /* 128-byte erofs on-disk super block */
- struct erofs_super_block {
-@@ -37,8 +38,8 @@ struct erofs_super_block {
- 	__u8 uuid[16];          /* 128-bit uuid for volume */
- 	__u8 volume_name[16];   /* volume name */
- 	__le32 feature_incompat;
--
--	__u8 reserved2[44];
-+	__le32 chksum_blocks;	/* number of blocks used for checksum */
-+	__u8 reserved2[40];
- };
- 
- /*
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 544a453..cec27ca 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -86,7 +86,7 @@ struct erofs_sb_info {
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
- 	u32 feature_incompat;
--
-+	u32 feature_compat;
- 	unsigned int mount_opt;
- };
- 
-@@ -426,6 +426,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
- #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+#define EFSBADCRC	EBADMSG		/* Bad crc found */
- 
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 0e36949..9cda72d 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -9,6 +9,7 @@
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
-+#include <linux/crc32c.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -46,6 +47,31 @@ void _erofs_info(struct super_block *sb, const char *function,
- 	va_end(args);
- }
- 
-+static int erofs_validate_sb_chksum(struct erofs_super_block *dsb,
-+				       struct super_block *sb)
-+{
-+	u32 disk_chksum, nblocks, crc = 0;
-+	void *kaddr;
-+	struct page *page;
-+	int i;
-+
-+	disk_chksum = le32_to_cpu(dsb->checksum);
-+	nblocks = le32_to_cpu(dsb->chksum_blocks);
-+	dsb->checksum = 0;
-+	for (i = 0; i < nblocks; i++) {
-+		page = erofs_get_meta_page(sb, i);
-+		if (IS_ERR(page))
-+			return PTR_ERR(page);
-+		kaddr = kmap(page);
-+		crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
-+		kunmap(page);
-+		unlock_page(page);
-+	}
-+	if (crc != disk_chksum)
-+		return -EFSBADCRC;
-+	return 0;
-+}
-+
- static void erofs_inode_init_once(void *ptr)
- {
- 	struct erofs_inode *vi = ptr;
-@@ -121,6 +147,13 @@ static int erofs_read_superblock(struct super_block *sb)
- 		goto out;
- 	}
- 
-+	if (dsb->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
-+		ret = erofs_validate_sb_chksum(dsb, sb);
-+		if (ret < 0) {
-+			erofs_err(sb, "super block checksum incorrect");
-+			goto out;
-+		}
-+	}
- 	blkszbits = dsb->blkszbits;
- 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
- 	if (blkszbits != LOG_BLOCK_SIZE) {
--- 
-2.9.3
+On 2019/10/22 12:10, Gao Xiang wrote:
+> From: Li Guifu <blucerlee@gmail.com>
+> 
+> Only long option "--help" is valid now.
+> 
+> Signed-off-by: Li Guifu <blucerlee@gmail.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
 
+It looks good
+
+Tested-by: Li Guifu <blucerlee@gmail.com>
+
+Thanks,
