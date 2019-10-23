@@ -1,50 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id C12A8E1487
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 10:43:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B97E0E1598
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 11:18:16 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 46ykRJ2fypzDqQH
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 19:43:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 46ylCn2RyxzDqNW
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Oct 2019 20:18:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=huawei.com;
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46ykR24mfczDqP9
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 19:42:52 +1100 (AEDT)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
- by Forcepoint Email with ESMTP id 11C1CFFCF3A22F217689;
- Wed, 23 Oct 2019 16:42:45 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 23 Oct 2019 16:42:44 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 23 Oct 2019 16:42:44 +0800
-Date: Wed, 23 Oct 2019 16:45:36 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46ylCg50tRzDqLx
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Oct 2019 20:18:03 +1100 (AEDT)
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id 8A8578B8953B1BAC344A;
+ Wed, 23 Oct 2019 17:17:53 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 23 Oct
+ 2019 17:17:43 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <yuchao0@huawei.com>
-Subject: Re: [PATCH v4] erofs: support superblock checksum
-Message-ID: <20191023084536.GA16289@architecture4>
-References: <20191022180620.19638-1-pratikshinde320@gmail.com>
- <20191023040557.230886-1-gaoxiang25@huawei.com>
- <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
+To: Li Guifu <bluce.liguifu@huawei.com>, <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH] erofs-utils: document more known matters to README
+Date: Wed, 23 Oct 2019 17:20:31 +0800
+Message-ID: <20191023092031.211186-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -57,63 +46,92 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
+Cc: Yann Collet <yann.collet.73@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Chao,
+We are about to release erofs-utils 1.0, add more words
+to README on known fixed issues about lz4 upstream library.
 
-On Wed, Oct 23, 2019 at 04:15:29PM +0800, Chao Yu wrote:
-> Hi, Xiang, Pratik,
-> 
-> On 2019/10/23 12:05, Gao Xiang wrote:
+Cc: Li Guifu <bluce.liguifu@huawei.com>
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Yann Collet <yann.collet.73@gmail.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ README | 41 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
-<snip>
-
-> >  }
-> >  
-> > +static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
-> > +{
-> > +	struct erofs_super_block *dsb;
-> > +	u32 expected_crc, nblocks, crc;
-> > +	void *kaddr;
-> > +	struct page *page;
-> > +	int i;
-> > +
-> > +	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
-> > +		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
-> > +	if (!dsb)
-> > +		return -ENOMEM;
-> > +
-> > +	expected_crc = le32_to_cpu(dsb->checksum);
-> > +	nblocks = le32_to_cpu(dsb->chksum_blocks);
-> 
-> Now, we try to use nblocks's value before checking its validation, I guess fuzz
-> test can easily make the value extreme larger, result in checking latter blocks
-> unnecessarily.
-> 
-> IMO, we'd better
-> 1. check validation of superblock to make sure all fields in sb are valid
-> 2. use .nblocks to count and check payload blocks following sb
-
-That is quite a good point. :-)
-
-My first thought is to check the following payloads of sb (e.g, some per-fs
-metadata should be checked at mount time together. or for small images, check
-the whole image at the mount time) as well since if we introduce a new feature
-to some kernel version, forward compatibility needs to be considered. So it's
-better to make proper scalability, for this case, we have some choices:
- 1) limit `chksum_blocks' upbound at runtime (e.g. refuse >= 65536 blocks,
-    totally 256M.)
- 2) just get rid of the whole `chksum_blocks' mess and checksum the first 4k
-    at all, don't consider any latter scalability.
-
-Some perferred idea about this? I plan to release erofs-utils v1.0 tomorrow
-and hold up this feature for the next erofs-utils release, but I think we can
-get it ready for v5.5 since it is not quite complex feature...
-
-Thanks,
-Gao Xiang
+diff --git a/README b/README
+index 9e65ad015a0b..60b8eed6c1d3 100644
+--- a/README
++++ b/README
+@@ -32,7 +32,9 @@ To build you can run the following commands in order:
+ 	$ ./configure
+ 	$ make
+ 
+-mkfs.erofs binary will be generated under mkfs folder.
++mkfs.erofs binary will be generated under mkfs folder. There are still
++some issues which affect the stability of LZ4_compress_destSize()
++* they have impacts on lz4 only rather than lz4HC * [3].
+ 
+ How to build for lz4-1.8.0~1.8.3
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -45,8 +47,8 @@ On Fedora, static lz4 can be installed using:
+ 
+ 	yum install lz4-static.x86_64
+ 
+-However, it's not recommended to use those versions since there was a bug
+-in these compressors, see [2] as well.
++However, it's not recommended to use those versions since there were bugs
++in these compressors, see [2] [3] as well.
+ 
+ How to generate erofs images
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -68,6 +70,14 @@ add "-E legacy-compress" to the command line, e.g.
+ 
+  $ mkfs.erofs -E legacy-compress -zlz4hc foo.erofs.img foo/
+ 
++
++Known issues
++~~~~~~~~~~~~
++
++1. LZ4HC cannot compress long zeroed buffer properly with
++   LZ4_compress_HC_destSize()
++   https://github.com/lz4/lz4/issues/784
++
+ Obsoleted erofs.mkfs
+ ~~~~~~~~~~~~~~~~~~~~
+ 
+@@ -109,3 +119,28 @@ Comments
+     For more details, please refer to
+     https://github.com/lz4/lz4/commit/660d21272e4c8a0f49db5fc1e6853f08713dff82
+ 
++[3] There are many crash fixes merged to lz4 1.9.2 for LZ4_compress_destSize(),
++    and I once ran into some crashs due to those issues.
++    * Again lz4HC is not effected for this section. *
++
++    [LZ4_compress_destSize] Allow 2 more bytes of match length
++    https://github.com/lz4/lz4/commit/690009e2c2f9e5dcb0d40e7c0c40610ce6006eda
++
++    [LZ4_compress_destSize] Fix rare data corruption bug
++    https://github.com/lz4/lz4/commit/6bc6f836a18d1f8fd05c8fc2b42f1d800bc25de1
++
++    [LZ4_compress_destSize] Fix overflow condition
++    https://github.com/lz4/lz4/commit/13a2d9e34ffc4170720ce417c73e396d0ac1471a
++
++    [LZ4_compress_destSize] Fix off-by-one error in fix
++    https://github.com/lz4/lz4/commit/7c32101c655d93b61fc212dcd512b87119dd7333
++
++    [LZ4_compress_destSize] Fix off-by-one error
++    https://github.com/lz4/lz4/commit/d7cad81093cd805110291f84d64d385557d0ffba
++
++    since upstream lz4 doesn't have stable branch for old versions, it's
++    preferred to use latest upstream lz4 library (although some regressions
++    could happen since new features are also introduced to latest upstream
++    version as well) or backport all stable bugfixes to old stable versions,
++    e.g. our unoffical lz4 fork: https://github.com/erofs/lz4
++
+-- 
+2.17.1
 
