@@ -2,66 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4370E893B
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Oct 2019 14:17:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 30935E8976
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Oct 2019 14:29:19 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 472XFG0H9BzF36D
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 00:17:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 472XVh2jpmzF36w
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 00:29:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::52e;
- helo=mail-ed1-x52e.google.com; envelope-from=pratikshinde320@gmail.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="jAZ6eeH3"; 
- dkim-atps=neutral
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com
- [IPv6:2a00:1450:4864:20::52e])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 472XDq54LnzF348
- for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2019 00:17:14 +1100 (AEDT)
-Received: by mail-ed1-x52e.google.com with SMTP id l25so10696651edt.6
- for <linux-erofs@lists.ozlabs.org>; Tue, 29 Oct 2019 06:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=sSyreHh/UjRpA/CEqhtTbigpjpicsO43mn5qouOrQeU=;
- b=jAZ6eeH3ywDDLkJd30NqznsbfGNWjkxYZfsww29n+yLROQJzoTBys2fQRjaVT6cJVe
- ivhyTTdUFjOP3ORcEfdm8ynaBtinAvJwSnwtd+LEL5KQVZnI9xYXcpwbjLEXXSvQG4Lc
- wpFxfQtWRn4l3Ku2lIfuzDrHwA/MDK81F4figDNDGp8GxZ/6gn6odT/jnEFFiOYoglv3
- mEWJf0MuKWE2ydzlHKfoX9gR5BdP5OccpZlituERoTQIMUN28VQvaLiact3QMN63xeXD
- QGcGLNWb3HvfIwK2NwG43Jm9LAgyQEDdIY/1X88sTUFPgYnCltubEXAsCwqI450ixpkR
- 5PXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=sSyreHh/UjRpA/CEqhtTbigpjpicsO43mn5qouOrQeU=;
- b=GRl8RuHFQA6wjvZmNaCNWf2QP2QCZ6EH7NkcUFa+FqMerTEvgnDr7tK944+/+IZCO/
- hchoopSmJAZW7sxTD/BjN/vVjjYmUIA5qNNFi0Kx1GnRp7B6qaFQPBVRTl99eKxG+45R
- 3QmGO8vf5vyYCrD6fat4ad2sF3gT41LDYVZzA0Fj6wEfSEk65WTFCvRrEu7iymLmVew/
- Li7r4buniizMzVI9OdpVIu1BWUsVQ/tDdSFk4H/cUELjJK4MIPz7aG05qO6Dv0krI2RM
- hw9v2Qiiq2toMoTNW/eDxWdW6pOrtZH+wNrVitIDqTMiJYhEkY7IEUnLet3o8YsfBle9
- +d+A==
-X-Gm-Message-State: APjAAAUQAiTTeBu7UGuDnXwZOAFlYC0kYpe1A0UPhgYUKnI+8e9YX7nf
- aYDa6pRL4qvALLWGSf3nfMD99JKjtJngXF5Fe/g=
-X-Google-Smtp-Source: APXvYqxNCHwoo5y0nD76XmeoGZRPjfnkbOgxe/AFL47zQes9rB03t8zwuKyoSpNZmAogtlRUFe8zigUUssOLh+UyCx0=
-X-Received: by 2002:a50:fa85:: with SMTP id w5mr18856641edr.113.1572355027865; 
- Tue, 29 Oct 2019 06:17:07 -0700 (PDT)
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 472XVS0RYHzF0hB
+ for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2019 00:28:59 +1100 (AEDT)
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+ by Forcepoint Email with ESMTP id 9511ECAAA1D4E5468C6D;
+ Tue, 29 Oct 2019 21:28:52 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 29 Oct 2019 21:28:52 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 29 Oct 2019 21:28:52 +0800
+Date: Tue, 29 Oct 2019 21:31:38 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Pratik Shinde <pratikshinde320@gmail.com>
+Subject: Re: New things in erofs
+Message-ID: <20191029133138.GA114663@architecture4>
 References: <CAGu0czSVS4exiJJPg9SL8MpjwQahPRRuTt5Ho5s8Lcc6BK2D7w@mail.gmail.com>
  <20191026112431.GA6326@hsiangkao-HP-ZHAN-66-Pro-G1>
-In-Reply-To: <20191026112431.GA6326@hsiangkao-HP-ZHAN-66-Pro-G1>
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Tue, 29 Oct 2019 18:46:56 +0530
-Message-ID: <CAGu0czQfmMoSa-Sm9t+ZYf2b_YAfZ2b2-qPyTAbYvYHB5z-hDw@mail.gmail.com>
-Subject: Re: New things in erofs
-To: Gao Xiang <hsiangkao@aol.com>
-Content-Type: multipart/alternative; boundary="000000000000e5952d05960c6ec3"
+ <CAGu0czQfmMoSa-Sm9t+ZYf2b_YAfZ2b2-qPyTAbYvYHB5z-hDw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAGu0czQfmMoSa-Sm9t+ZYf2b_YAfZ2b2-qPyTAbYvYHB5z-hDw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,88 +62,56 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000e5952d05960c6ec3
-Content-Type: text/plain; charset="UTF-8"
+Hi Pratik,
 
-Hi Gao,
+On Tue, Oct 29, 2019 at 06:46:56PM +0530, Pratik Shinde wrote:
+> Hi Gao,
+> 
+> Thanks.
+> I am exploring following things in erofs:
+> 1) Sparse file support for uncompressed files.
+> 2) erofs.fsck(erofs-utils)
+> 
+> I hope above items are in the development plan & patches are accepted for
+> them :)
 
-Thanks.
-I am exploring following things in erofs:
-1) Sparse file support for uncompressed files.
-2) erofs.fsck(erofs-utils)
+Yes, they are definitely in the development plan, it would be appreciated
+that you take some time to get them in shape if you have time. :-)
 
-I hope above items are in the development plan & patches are accepted for
-them :)
+You can post RFC patch at any time, I will help on this as well.
+For erofs.fsck (erofs-utils), it's better to share most common code in
+"lib/" with mkfs.erofs.
 
---Pratik.
+Thanks,
+Gao Xiang
 
-On Sat, Oct 26, 2019 at 4:54 PM Gao Xiang <hsiangkao@aol.com> wrote:
-
-> Hi Pratik,
->
-> On Sat, Oct 26, 2019 at 12:56:10PM +0530, Pratik Shinde wrote:
-> > Hi Gao,
+> 
+> --Pratik.
+> 
+> On Sat, Oct 26, 2019 at 4:54 PM Gao Xiang <hsiangkao@aol.com> wrote:
+> 
+> > Hi Pratik,
 > >
-> > Are there any new features/enhancements coming in erofs. Something that
-> we
-> > can contribute to?
+> > On Sat, Oct 26, 2019 at 12:56:10PM +0530, Pratik Shinde wrote:
+> > > Hi Gao,
+> > >
+> > > Are there any new features/enhancements coming in erofs. Something that
+> > we
+> > > can contribute to?
+> > >
+> > > P. S. - I saw your erofs roadmap pdf on github.
 > >
-> > P. S. - I saw your erofs roadmap pdf on github.
->
-> Thanks for your interest. As I mentioned before, I'm currently working on
-> adding a new XZ algorithm to erofs-utils because I'd like to make the
-> decompression framework more powerful and generic...
->
-> And there are many TODOs in the roadmap pdf, you can pick up something
-> if you have some time or you can raise up some new ideas. It's very
-> helpful to make EROFS better.
->
-> Thanks,
-> Gao Xiang
->
+> > Thanks for your interest. As I mentioned before, I'm currently working on
+> > adding a new XZ algorithm to erofs-utils because I'd like to make the
+> > decompression framework more powerful and generic...
 > >
-> > --Pratik
->
-
---000000000000e5952d05960c6ec3
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi Gao,</div><div><br></div><div>Thanks.</div><div>I =
-am exploring following things in erofs:</div><div>1) Sparse file support fo=
-r uncompressed files.</div><div>2) erofs.fsck(erofs-utils)<br></div><div><b=
-r></div><div>I hope above items are in the development plan &amp; patches a=
-re accepted for them :)</div><div><br></div><div>--Pratik.<br></div></div><=
-br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Sat,=
- Oct 26, 2019 at 4:54 PM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@aol.com"=
->hsiangkao@aol.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
-padding-left:1ex">Hi Pratik,<br>
-<br>
-On Sat, Oct 26, 2019 at 12:56:10PM +0530, Pratik Shinde wrote:<br>
-&gt; Hi Gao,<br>
-&gt; <br>
-&gt; Are there any new features/enhancements coming in erofs. Something tha=
-t we<br>
-&gt; can contribute to?<br>
-&gt; <br>
-&gt; P. S. - I saw your erofs roadmap pdf on github.<br>
-<br>
-Thanks for your interest. As I mentioned before, I&#39;m currently working =
-on<br>
-adding a new XZ algorithm to erofs-utils because I&#39;d like to make the<b=
-r>
-decompression framework more powerful and generic...<br>
-<br>
-And there are many TODOs in the roadmap pdf, you can pick up something<br>
-if you have some time or you can raise up some new ideas. It&#39;s very<br>
-helpful to make EROFS better.<br>
-<br>
-Thanks,<br>
-Gao Xiang<br>
-<br>
-&gt; <br>
-&gt; --Pratik<br>
-</blockquote></div>
-
---000000000000e5952d05960c6ec3--
+> > And there are many TODOs in the roadmap pdf, you can pick up something
+> > if you have some time or you can raise up some new ideas. It's very
+> > helpful to make EROFS better.
+> >
+> > Thanks,
+> > Gao Xiang
+> >
+> > >
+> > > --Pratik
+> >
