@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97088E95D9
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 06:06:53 +0100 (CET)
-Received: from bilbo.ozlabs.org (unknown [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 472xJT4MPGzF3fP
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 16:06:49 +1100 (AEDT)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCA08E965A
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 07:25:52 +0100 (CET)
+Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 472z3f0dCWzF3j7
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2019 17:25:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -17,22 +17,24 @@ Authentication-Results: lists.ozlabs.org;
 Received: from huawei.com (szxga05-in.huawei.com [45.249.212.191])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 472xJ94tbHzF245
- for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2019 16:06:31 +1100 (AEDT)
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 04441AD359BF000244D6;
- Wed, 30 Oct 2019 13:06:11 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 472z3V0SMNzF3gt
+ for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2019 17:25:38 +1100 (AEDT)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id E934D68700575BE842AA
+ for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2019 14:25:31 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
- 2019 13:06:00 +0800
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 14:25:23 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH v6] erofs: support superblock checksum
-Date: Wed, 30 Oct 2019 13:08:46 +0800
-Message-ID: <20191030050846.175623-1-gaoxiang25@huawei.com>
+To: Pratik Shinde <pratikshinde320@gmail.com>, Li Guifu
+ <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+ <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v9] erofs-utils: support calculating checksum of erofs blocks
+Date: Wed, 30 Oct 2019 14:28:09 +0800
+Message-ID: <20191030062809.34362-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030025616.GB161610@architecture4>
-References: <20191030025616.GB161610@architecture4>
+In-Reply-To: <20191030025506.GA161610@architecture4>
+References: <20191030025506.GA161610@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -48,58 +50,91 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 From: Pratik Shinde <pratikshinde320@gmail.com>
 
-Introduce superblock checksum feature in order to
-check at mounting time.
+Added code for calculating crc of erofs blocks (4K size).
+For now it calculates checksum of first block. but it can
+be modified to calculate crc for any no. of blocks.
 
-Note that the first 1024 bytes are ignore for x86
-boot sectors and other oddities.
+Note that the first 1024 bytes are not checksumed to allow
+for the installation of x86 boot sectors and other oddities.
+
+Fill 'feature_compat' field of erofs_super_block so that it
+can be used on kernel side. also fixing one typo.
 
 Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
-changes since v5:
- - update commit message which was missed in v5.
 
- fs/erofs/Kconfig    |  1 +
- fs/erofs/erofs_fs.h |  3 ++-
- fs/erofs/internal.h |  2 ++
- fs/erofs/super.c    | 36 ++++++++++++++++++++++++++++++++++--
- 4 files changed, 39 insertions(+), 3 deletions(-)
+changes since v8:
+ - propagate the error code to the caller reported by Chao,
+   which I didn't notice and is definitely an unintended
+   behavior.
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 9d634d3a1845..74b0aaa7114c 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -3,6 +3,7 @@
- config EROFS_FS
- 	tristate "EROFS filesystem support"
- 	depends on BLOCK
-+	select LIBCRC32C
- 	help
- 	  EROFS (Enhanced Read-Only File System) is a lightweight
- 	  read-only file system with modern designs (eg. page-sized
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index b1ee5654750d..385fa49c7749 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -11,6 +11,8 @@
+ include/erofs/internal.h |  1 +
+ include/erofs/io.h       |  8 +++++
+ include/erofs_fs.h       |  3 +-
+ lib/io.c                 | 27 ++++++++++++++++
+ mkfs/main.c              | 69 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 107 insertions(+), 1 deletion(-)
+
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 25ce7b54442d..9e2bb9ce33b6 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -52,6 +52,7 @@ struct erofs_sb_info {
+ 	erofs_blk_t meta_blkaddr;
+ 	erofs_blk_t xattr_blkaddr;
  
++	u32 feature_compat;
+ 	u32 feature_incompat;
+ 	u64 build_time;
+ 	u32 build_time_nsec;
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 97750478b5ab..e0ca8d949130 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -19,6 +19,7 @@
+ int dev_open(const char *devname);
+ void dev_close(void);
+ int dev_write(const void *buf, u64 offset, size_t len);
++int dev_read(void *buf, u64 offset, size_t len);
+ int dev_fillzero(u64 offset, size_t len, bool padding);
+ int dev_fsync(void);
+ int dev_resize(erofs_blk_t nblocks);
+@@ -31,5 +32,12 @@ static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
+ 			 blknr_to_addr(nblocks));
+ }
+ 
++static inline int blk_read(void *buf, erofs_blk_t start,
++			    u32 nblocks)
++{
++	return dev_read(buf, blknr_to_addr(start),
++			 blknr_to_addr(nblocks));
++}
++
+ #endif
+ 
+diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+index f29aa2516a99..bcc4f0c630ad 100644
+--- a/include/erofs_fs.h
++++ b/include/erofs_fs.h
+@@ -13,6 +13,8 @@
+ #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
  #define EROFS_SUPER_OFFSET      1024
  
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
++#define EROFS_FEATURE_COMPAT_SB_CHKSUM		0x00000001
 +
  /*
   * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
   * be incompatible with this kernel version.
-@@ -37,7 +39,6 @@ struct erofs_super_block {
+@@ -39,7 +41,6 @@ struct erofs_super_block {
  	__u8 uuid[16];          /* 128-bit uuid for volume */
  	__u8 volume_name[16];   /* volume name */
  	__le32 feature_incompat;
@@ -107,101 +142,149 @@ index b1ee5654750d..385fa49c7749 100644
  	__u8 reserved2[44];
  };
  
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 544a453f3076..a3778f597bf6 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -85,6 +85,7 @@ struct erofs_sb_info {
- 
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
-+	u32 feature_compat;
- 	u32 feature_incompat;
- 
- 	unsigned int mount_opt;
-@@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
- #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
- 
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 0e369494f2f2..2fcf44b656dd 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -9,6 +9,7 @@
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
-+#include <linux/crc32c.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -46,6 +47,30 @@ void _erofs_info(struct super_block *sb, const char *function,
- 	va_end(args);
+diff --git a/lib/io.c b/lib/io.c
+index 7f5f94dd6b1e..52f9424d201b 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -207,3 +207,30 @@ int dev_resize(unsigned int blocks)
+ 	return dev_fillzero(st.st_size, length, true);
  }
  
-+static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
++int dev_read(void *buf, u64 offset, size_t len)
 +{
-+	struct erofs_super_block *dsb;
-+	u32 expected_crc, crc;
++	int ret;
 +
-+	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
-+		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
-+	if (!dsb)
-+		return -ENOMEM;
++	if (cfg.c_dry_run)
++		return 0;
 +
-+	expected_crc = le32_to_cpu(dsb->checksum);
-+	dsb->checksum = 0;
-+	/* to allow for x86 boot sectors and other oddities. */
-+	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
-+	kfree(dsb);
++	if (!buf) {
++		erofs_err("buf is NULL");
++		return -EINVAL;
++	}
++	if (offset >= erofs_devsz || len > erofs_devsz ||
++	    offset > erofs_devsz - len) {
++		erofs_err("read posion[%" PRIu64 ", %zd] is too large beyond"
++			  "the end of device(%" PRIu64 ").",
++			  offset, len, erofs_devsz);
++		return -EINVAL;
++	}
 +
-+	if (crc != expected_crc) {
-+		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
-+			  crc, expected_crc);
-+		return -EFSBADCRC;
++	ret = pread64(erofs_devfd, buf, len, (off64_t)offset);
++	if (ret != (int)len) {
++		erofs_err("Failed to read data from device - %s:[%" PRIu64 ", %zd].",
++			  erofs_devname, offset, len);
++		return -errno;
 +	}
 +	return 0;
 +}
+diff --git a/mkfs/main.c b/mkfs/main.c
+index ab57896e9ca8..32e3c88215fd 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -109,6 +109,12 @@ static int parse_extended_opts(const char *opts)
+ 				return -EINVAL;
+ 			cfg.c_force_inodeversion = FORCE_INODE_EXTENDED;
+ 		}
 +
- static void erofs_inode_init_once(void *ptr)
- {
- 	struct erofs_inode *vi = ptr;
-@@ -112,7 +137,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 
- 	sbi = EROFS_SB(sb);
- 
--	data = kmap_atomic(page);
-+	data = kmap(page);
- 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
- 
- 	ret = -EINVAL;
-@@ -121,6 +146,13 @@ static int erofs_read_superblock(struct super_block *sb)
- 		goto out;
++		if (MATCH_EXTENTED_OPT("nosbcrc", token, keylen)) {
++			if (vallen)
++				return -EINVAL;
++			sbi.feature_compat &= ~EROFS_FEATURE_COMPAT_SB_CHKSUM;
++		}
  	}
+ 	return 0;
+ }
+@@ -218,6 +224,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 		.meta_blkaddr  = sbi.meta_blkaddr,
+ 		.xattr_blkaddr = sbi.xattr_blkaddr,
+ 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
++		.feature_compat = cpu_to_le32(sbi.feature_compat &
++					      ~EROFS_FEATURE_COMPAT_SB_CHKSUM),
+ 	};
+ 	const unsigned int sb_blksize =
+ 		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
+@@ -240,6 +248,63 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	return 0;
+ }
  
-+	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
-+	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
-+		ret = erofs_superblock_csum_verify(sb, data);
-+		if (ret)
-+			goto out;
++#define CRC32C_POLY_LE	0x82F63B78
++static inline u32 crc32c(u32 crc, const u8 *in, size_t len)
++{
++	int i;
++
++	while (len--) {
++		crc ^= *in++;
++		for (i = 0; i < 8; i++)
++			crc = (crc >> 1) ^ ((crc & 1) ? CRC32C_POLY_LE : 0);
++	}
++	return crc;
++}
++
++static int erofs_superblock_csum_set(void)
++{
++	int ret;
++	u8 buf[EROFS_BLKSIZ];
++	u32 crc;
++	struct erofs_super_block *sb;
++
++	ret = blk_read(buf, 0, 1);
++	if (ret) {
++		erofs_err("failed to read superblock to set checksum: %s",
++			  erofs_strerror(ret));
++		return ret;
 +	}
 +
- 	blkszbits = dsb->blkszbits;
- 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
- 	if (blkszbits != LOG_BLOCK_SIZE) {
-@@ -155,7 +187,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 	}
- 	ret = 0;
- out:
--	kunmap_atomic(data);
-+	kunmap(data);
- 	put_page(page);
- 	return ret;
- }
++	/*
++	 * skip the first 1024 bytes, to allow for the installation
++	 * of x86 boot sectors and other oddities.
++	 */
++	sb = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
++
++	if (le32_to_cpu(sb->magic) != EROFS_SUPER_MAGIC_V1) {
++		erofs_err("internal error: not an erofs valid image");
++		return -EFAULT;
++	}
++
++	/* turn on checksum feature */
++	sb->feature_compat = cpu_to_le32(le32_to_cpu(sb->feature_compat) |
++					 EROFS_FEATURE_COMPAT_SB_CHKSUM);
++	crc = crc32c(~0, (u8 *)sb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
++
++	/* set up checksum field to erofs_super_block */
++	sb->checksum = cpu_to_le32(crc);
++
++	ret = blk_write(buf, 0, 1);
++	if (ret) {
++		erofs_err("failed to write checksumed superblock: %s",
++			  erofs_strerror(ret));
++		return ret;
++	}
++
++	erofs_info("superblock checksum 0x%08x written", crc);
++	return 0;
++}
++
+ int main(int argc, char **argv)
+ {
+ 	int err = 0;
+@@ -255,6 +320,7 @@ int main(int argc, char **argv)
+ 
+ 	cfg.c_legacy_compress = false;
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
++	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM;
+ 
+ 	err = mkfs_parse_options_cfg(argc, argv);
+ 	if (err) {
+@@ -337,6 +403,9 @@ int main(int argc, char **argv)
+ 		err = -EIO;
+ 	else
+ 		err = dev_resize(nblocks);
++
++	if (!err && (sbi.feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM))
++		err = erofs_superblock_csum_set();
+ exit:
+ 	z_erofs_compress_exit();
+ 	dev_close();
 -- 
 2.17.1
 
