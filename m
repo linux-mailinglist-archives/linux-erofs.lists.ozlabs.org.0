@@ -2,84 +2,41 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48DA0EA9FE
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Oct 2019 05:53:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D091EB4EA
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Oct 2019 17:43:43 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 473XyD0BTKzF5Sf
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Oct 2019 15:53:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 473rk31NfXzF5n9
+	for <lists+linux-erofs@lfdr.de>; Fri,  1 Nov 2019 03:43:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oracle.com (client-ip=156.151.31.86; helo=userp2130.oracle.com;
- envelope-from=darrick.wong@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=oracle.com header.i=@oracle.com header.b="FG8284Xr"; 
- dkim-atps=neutral
-X-Greylist: delayed 6461 seconds by postgrey-1.36 at bilbo;
- Thu, 31 Oct 2019 15:52:54 AEDT
-Received: from userp2130.oracle.com (userp2130.oracle.com [156.151.31.86])
+ spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx1.suse.de; envelope-from=jack@suse.cz;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 473Xxy5Bm3zF5RK
- for <linux-erofs@lists.ozlabs.org>; Thu, 31 Oct 2019 15:52:53 +1100 (AEDT)
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
- by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V34KJ0006674;
- Thu, 31 Oct 2019 03:04:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
- h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=R/Vr+Pu7rw3pGCLYsYXxZcSpf8YLnxfz+H4uDX4EdTY=;
- b=FG8284XrOi/fFAtpnlUVDfmpmKixdM5871Xw1Cvlq9tptvltbAqaC8CShQqFLxcbvuC+
- kDfFQWqn14RNiRhwx4+kHuVsbtgrZJB7gt6m5dTDShz0v7KQ6I2yV0qg9xlh9uMWyujd
- d+r/CVCSzHkjs5kJu3PSkOx7TOCTN7W3w03hhnr/nbf1NAwSlwqm+906ls++KaHNAf5h
- rkFfil9x9sYdSX78VNCSWaOUu+iOKcm0x6+DPaSiM5A8byCBP0olXRUG8VrG6fmwArlm
- tAw1aVq6Ebzm3drTl68wgwn5Z47zAhhexHNkMQBLGkkuoq8WU+ytomDChOcvjqsbCugv ZQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
- by userp2130.oracle.com with ESMTP id 2vxwhfr49d-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Thu, 31 Oct 2019 03:04:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
- by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V32bxR084941;
- Thu, 31 Oct 2019 03:04:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
- by aserp3030.oracle.com with ESMTP id 2vykw0g8xe-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Thu, 31 Oct 2019 03:04:58 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
- by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9V34qKg018005;
- Thu, 31 Oct 2019 03:04:52 GMT
-Received: from localhost (/67.169.218.210)
- by default (Oracle Beehive Gateway v4.0)
- with ESMTP ; Wed, 30 Oct 2019 20:04:51 -0700
-Date: Wed, 30 Oct 2019 20:04:49 -0700
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 473rjr2D4ZzF5mL
+ for <linux-erofs@lists.ozlabs.org>; Fri,  1 Nov 2019 03:43:26 +1100 (AEDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx1.suse.de (Postfix) with ESMTP id 71E17B243;
+ Thu, 31 Oct 2019 16:43:23 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+ id 5597C1E482D; Thu, 31 Oct 2019 17:43:22 +0100 (CET)
+Date: Thu, 31 Oct 2019 17:43:22 +0100
+From: Jan Kara <jack@suse.cz>
 To: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 Subject: Re: [RFC] errno.h: Provide EFSCORRUPTED for everybody
-Message-ID: <20191031030449.GV15222@magnolia>
+Message-ID: <20191031164322.GC13321@quack2.suse.cz>
 References: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426
- signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910310029
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426
- signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
- priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910310029
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,6 +50,7 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: devel@driverdev.osuosl.org, linux-arch@vger.kernel.org,
  Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+ "Darrick J. Wong" <darrick.wong@oracle.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
  Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
@@ -103,30 +61,23 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 30, 2019 at 09:07:33PM -0400, Valdis Kletnieks wrote:
-> Three questions: (a) ACK/NAK on this patch,
-
-Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-> (b) should it be all in one patch, or one to add to errno.h and 6
-> patches for 6 filesystems?), and
-
-I don't particularly care, but I've a slight preference for changing it
-all at once so that it's obvious as a move.
-
+On Wed 30-10-19 21:07:33, Valdis Kletnieks wrote:
+> Three questions: (a) ACK/NAK on this patch, (b) should it be all in one
+> patch, or one to add to errno.h and 6 patches for 6 filesystems?), and
 > (c) if one patch, who gets to shepherd it through?
-
-Heh. :)
-
-I would add (d) can we do the same to EFSBADCRC, seeing as f2fs,
-ext4, xfs, and jbd2 all define it the same way?
-
---D
-
+> 
+> 
 > There's currently 6 filesystems that have the same #define. Move it
 > into errno.h so it's defined in just one place.
 > 
 > Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
 >  drivers/staging/exfat/exfat.h    | 2 --
 >  fs/erofs/internal.h              | 2 --
@@ -222,3 +173,6 @@ ext4, xfs, and jbd2 all define it the same way?
 > -- 
 > 2.24.0.rc1
 > 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
