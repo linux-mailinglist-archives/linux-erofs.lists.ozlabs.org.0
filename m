@@ -1,76 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA3ECED3B3
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Nov 2019 16:31:44 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7B77ED745
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 02:47:23 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 475fzd64bDzDrJ1
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 02:31:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1572795101;
-	bh=uuuGd1kgDtEBkx21NE/ytcSoRfcXODJDJnC/aQsgOdk=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=bOjGfC8zNvNuNUPyspxcbv3Z7PJjuUEFQXZVsfnCgN1MX8LECHwnm/QNAUTgc1QSy
-	 2XcPxKh0Ah6SsCZOpMs8sfe30VVhXAiCcutTaEFPTI6FcEqQt+n46onu0RVlFqPIn2
-	 prXtd/CmBzrkVw48MxIBSgZVaHzOFonq2Dzcrkc2/dRCdlLwUHMfg/XQrrmKvLiAN6
-	 kFoq7Y2OImgeCAtz7/EGe9M7MBqzOBwjxa5vA/MwQgMSsyVPVp82C1HQyUjE7Ezjw+
-	 kYl9hhZLHuG+p9+WTisX074cu51xUxoNnpjkMJZJDNtzQYyqW8Sw+FpxOSbd8f0rfe
-	 gRyJyd2Ld0ZUw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 475wdy6PBKzF38D
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 12:47:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.205; helo=sonic311-24.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=pass (sender SPF authorized) smtp.mailfrom=vt.edu
+ (client-ip=2607:b400:92:8400:0:33:fb76:806e; helo=omr2.cc.vt.edu;
+ envelope-from=valdis@vt.edu; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="fao4WoXb"; 
- dkim-atps=neutral
-Received: from sonic311-24.consmr.mail.gq1.yahoo.com
- (sonic311-24.consmr.mail.gq1.yahoo.com [98.137.65.205])
+ dmarc=pass (p=none dis=none) header.from=vt.edu
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu
+ [IPv6:2607:b400:92:8400:0:33:fb76:806e])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 475fzL39MJzDqZL
- for <linux-erofs@lists.ozlabs.org>; Mon,  4 Nov 2019 02:31:24 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1572795080; bh=6C2L0nR5xC/VgaZ/aZ7HjNajUT3aE8WNd4EMaz1+6o8=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=fao4WoXb07QazAFPj7UK18gLEwmIyQALhr3s5S8iHOt4HaI06iEb48axEXITSDV0aHRkZvirQQCL9UEhH8bHLdVPg/aH9RmuwBHgMCfGTZ3SM2qQ5YG8uSMZ7d6yl6KHwRZklp6qISev8kPKdfyRvTlXgJYR6LflKQIO7WFVFoAtTKL8/Ln6zCa49tY33fsdlifpwtz1FzpCxTRvdVgDYjP7Ewpce9gn+uXN2SjP+kdspdFm4rIuS8t8Sz82RWq3ecTQAX5H6TTV3GsQRoIacEKKFWtSxm0udh08LKr3j8n+TP9YbHXuHeGfsiGXiPtQbJDyWywna/7+HVFcGVesfQ==
-X-YMail-OSG: 56UsztAVM1l68CzR7looqzm2ELiEpq_MiYpookDxLDSrTaqZYBbLTnU8maE5Uld
- gUOTuw4YVlQFAtRpdiPhU73CKBdEy4Pd8__dgZde9CTntnZLP19TfBa_CRYykzv.Kku7Jwf9Rrau
- eOkAS4TptchwT8u99xhRSz5TDEm7Ep.VZjIUH.G2xhrJqDIzb7SjQEdVlIxEapAuU99nBQXuNk.u
- FZ4Wy3DfgAQWe5CY7PbMDOjC2maz9fMJl8ZwIcESnuj3c00TWe7RHEXcM29efbcJevjbqevOAdjY
- 0CJzVMmmD3C90pODcEfRcnu7hYxN2kQSFG933FqjAHsEonKi40pngJ33Rs_OPWIRdb_xfoESYsXV
- ZWAXcaJkr6NpXdi.rR_ihrpN.a_1pWTpluDbHv31STq_nIxmNX54QZXkHSYs.YmZKO.i_E.dcqzO
- 2wlb0nG6Dlh2XMG0DA1tWVwuHFok74i5OhscdV0.MEN2cPeYikb95wtJ3.aTGsQ32431mOjk8RTk
- XiPlZs7EeL5kbhi7rPCqcrATpyS7IU779aHsJRfE6vbHYK25K.TGwXImBKyFj5EvPTbS9hlLMeG0
- Pme0laJhVE7oDhjuMtRcyc8E8oaE5aH_.rrnYrXcmvftZmgffF.Ruqwc5TFQizUFc7Ku322NYlG.
- Kc1.FTknYdiElpQnz_DeiYcUupf1xdczFheVAjNU0dYHxjaAiD0bk3zGQmv4yeFEezX1TMfXYGNm
- o4zFKQ7OxKevuuQfzTXjQK4lwfckp0GTpKZAVBRu9kBj4plYLqd_izyYL6aXp8_53CWK1BTvyPj7
- D22ME4iZpjtATKKaV.iX2rErPgdcPhH0GD3XwHu0QjBE8twYhV7fPskVt9HlMTJ6Vtj0rCR3kSEY
- EZhukBB3UrMBwb0bYPUhw6iuqGME1SjPVcUzUYvkeW0v_pv231aT33vk_RvxMvKu3ignJy7M81j7
- CQh2KSfEVdE471MXbKuXRAFHDjY8qG365L1DcoUR_SNiLs46VFEGJRSU_IiKKC8tNUTKouXURgPe
- y2x6k52NIcU2NOoPZc0icYBXjQl3rqXLeKuJFF75bAqNHp0dl3hulNa.UK3f3roPB4w97Mlcgr_W
- C0oiboarF5VcCCIhl0okVN7TuXKLHWlUtSIPS3BxdiX0LDX1L.42gaRU1qLf9C4jH86FK65six9k
- E2pthvvEq39F4F0rDbHifhvy3MyNVsQq_mNF_pi0MrdJYdbC91EBc6oScxCsjO4rfW.IlGmkpCdd
- WF8OCi71CFHnJaTVzGNmz6igX_Xcw6lV78lxOGQ2ae2j7rRrMkYMjNRkDxUpqYv9k5E0pNqt1iYO
- lb_8Z9qkc8ejlYmLecgtRkctnL_Ipr7Kls9X4rcht87mn_lh1KtX8GwNnoWK7gg0jqp52XCMhR.6
- xbaEX4NmqBxKh
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic311.consmr.mail.gq1.yahoo.com with HTTP; Sun, 3 Nov 2019 15:31:20 +0000
-Received: by smtp404.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID f24b5b2ef490fb6c4b107b2d97cf1d16; 
- Sun, 03 Nov 2019 15:31:15 +0000 (UTC)
-To: Li Guifu <bluce.liguifu@huawei.com>,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: add manual for mkfs.erofs
-Date: Sun,  3 Nov 2019 23:30:55 +0800
-Message-Id: <20191103153055.11471-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
-References: <20191103153055.11471-1-hsiangkao.ref@aol.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 475wdj6BKCzF26V
+ for <linux-erofs@lists.ozlabs.org>; Mon,  4 Nov 2019 12:47:03 +1100 (AEDT)
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu
+ [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+ by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA41kuDU010101
+ for <linux-erofs@lists.ozlabs.org>; Sun, 3 Nov 2019 20:46:57 -0500
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199])
+ by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA41kpiR026635
+ for <linux-erofs@lists.ozlabs.org>; Sun, 3 Nov 2019 20:46:56 -0500
+Received: by mail-qk1-f199.google.com with SMTP id a186so13949105qkb.18
+ for <linux-erofs@lists.ozlabs.org>; Sun, 03 Nov 2019 17:46:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+ :in-reply-to:references:mime-version:content-transfer-encoding;
+ bh=r7c0I8SvMYKpHRjqYv9HI6yFzb55f/VPo02TJ216c5Q=;
+ b=VTwObiqQKUYOBpOxTHc00PPjC3huLFnzQ/gImCqfV4asarFHwXF3JA3btI+Rod0oZ/
+ yQ843Kg98v9o01Yy/eMY0I5gYGApLi0qqHFtFpNFJJBQnSijEmBOm5MUT0s5vwpmik2i
+ UghttixeaKqZ5AmQOW3QFBo2BpsWzWjeaK5hyFgcySKCnYmDDH/elnb9zvAPKzg0SP30
+ mCJj0G3TlWTBovQFMxXrJURI85Ckd6XInRUxLT5c3/iyvjfGoHURvbCXrzyB/UDwdTfW
+ S9Eglex8/gq0JzrroHbL84AVYD498OQifLHQGow05dPnNOHlap/tgE0/WM3TAZj7ENDl
+ CwjA==
+X-Gm-Message-State: APjAAAX+CrHfgJE9e+vxQfPHWS5BBXfwNBye89xNHwZ2ydWthxu5iCCN
+ i4xVX7Iy0XiyFl+gpH71qEEPbRNzWd1zjQEjljVAi/W1yaNyGjLo5YuWB5xDpSTS5a4+oquAzcT
+ TJEioCJ45mESdC33MgDEqDWP3561P90lH8js=
+X-Received: by 2002:a05:6214:70f:: with SMTP id
+ b15mr19848533qvz.97.1572832010214; 
+ Sun, 03 Nov 2019 17:46:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyZ6TMTqkBpyXQGPAZMIMj5EH3dwBQ8r4Ftf0xofxFI/BWghZasoJHnZlzuhtG3wrll2Arcjw==
+X-Received: by 2002:a05:6214:70f:: with SMTP id
+ b15mr19848512qvz.97.1572832009874; 
+ Sun, 03 Nov 2019 17:46:49 -0800 (PST)
+Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
+ by smtp.gmail.com with ESMTPSA id d2sm8195354qkg.77.2019.11.03.17.46.48
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sun, 03 Nov 2019 17:46:49 -0800 (PST)
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+To: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+Subject: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
+Date: Sun,  3 Nov 2019 20:45:06 -0500
+Message-Id: <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,134 +78,118 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Miao Xie <miaoxie@huawei.com>
+Cc: devel@driverdev.osuosl.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+ linux-arch@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+ Arnd Bergmann <arnd@arndb.de>, "Darrick J . Wong" <darrick.wong@oracle.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+ Gao Xiang <xiang@kernel.org>, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, Jan Kara <jack@suse.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds mkfs.erofs manpage, which is a requirement of a
-debian binary package (See Debian Policy Manual section 12.1 [1].)
+There's currently 6 filesystems that have the same #define. Move it
+into errno.h so it's defined in just one place.
 
-[1] https://www.debian.org/doc/debian-policy/ch-docs.html#manual-pages
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Acked-by: Theodore Ts'o <tytso@mit.edu>
 ---
- Makefile.am      |  2 +-
- configure.ac     |  1 +
- man/Makefile.am  |  5 ++++
- man/mkfs.erofs.1 | 68 ++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 1 deletion(-)
- create mode 100644 man/Makefile.am
- create mode 100644 man/mkfs.erofs.1
+ drivers/staging/exfat/exfat.h    | 2 --
+ fs/erofs/internal.h              | 2 --
+ fs/ext4/ext4.h                   | 1 -
+ fs/f2fs/f2fs.h                   | 1 -
+ fs/xfs/xfs_linux.h               | 1 -
+ include/linux/jbd2.h             | 1 -
+ include/uapi/asm-generic/errno.h | 1 +
+ 7 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/Makefile.am b/Makefile.am
-index d94ab73..1d20577 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -3,4 +3,4 @@
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 72cf40e123de..58b091a077e8 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -30,8 +30,6 @@
+ #undef DEBUG
+ #endif
  
- ACLOCAL_AMFLAGS = -I m4
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+-
+ #define DENTRY_SIZE		32	/* dir entry size */
+ #define DENTRY_SIZE_BITS	5
  
--SUBDIRS=lib mkfs
-+SUBDIRS = man lib mkfs
-diff --git a/configure.ac b/configure.ac
-index 4f88678..a93767f 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -173,6 +173,7 @@ AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453f3076..3980026a8882 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -425,7 +425,5 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
  
- AC_CONFIG_FILES([Makefile
-+		 man/Makefile
- 		 lib/Makefile
- 		 mkfs/Makefile])
- AC_OUTPUT
-diff --git a/man/Makefile.am b/man/Makefile.am
-new file mode 100644
-index 0000000..dcdbb35
---- /dev/null
-+++ b/man/Makefile.am
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+dist_man_MANS = mkfs.erofs.1
-+
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-new file mode 100644
-index 0000000..7fb1464
---- /dev/null
-+++ b/man/mkfs.erofs.1
-@@ -0,0 +1,68 @@
-+.\" Copyright (c) 2019 Gao Xiang <xiang@kernel.org>
-+.\"
-+.TH MKFS.EROFS 1
-+.SH NAME
-+mkfs.erofs \- tool to create an EROFS filesystem
-+.SH SYNOPSIS
-+\fBmkfs.erofs\fR [\fIOPTIONS\fR] \fIDESTINATION\fR \fISOURCE\fR
-+.SH DESCRIPTION
-+EROFS is a new enhanced lightweight linux read-only filesystem with modern
-+designs (eg. no buffer head, reduced metadata, inline xattrs/data, etc.) for
-+scenarios which need high-performance read-only requirements, e.g. Android OS
-+for smartphones and LIVECDs.
-+.PP
-+It also provides fixed-sized output compression support, which improves storage
-+density, keeps relatively higher compression ratios, which is more useful to
-+achieve high performance for embedded devices with limited memory since it has
-+unnoticable memory overhead and page cache thrashing.
-+.PP
-+mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
-+from \fISOURCE\fR directory.
-+.SH OPTIONS
-+.TP
-+.BI "\-z " compression-algorithm " [" ",#" "]"
-+Set an algorithm for file compression, which can be set with an optional
-+compression level separated by a comma.
-+.TP
-+.BI "\-d " #
-+Specify the level of debugging messages. The default is 0.
-+.TP
-+.BI "\-x " #
-+Specify the upper limit of an xattr which is still inlined. The default is 2.
-+Disable storing xattrs if < 0.
-+.TP
-+.BI "\-E " extended-option " [,...]"
-+Set extended options for the filesystem.  Extended options are comma separated,
-+and may take an argument using the equals ('=') sign.
-+The following extended options are supported:
-+.RS 1.2i
-+.TP
-+.BI legacy-compress
-+Disable "decompression in-place" and "compacted indexes" support, which is used
-+when generating EROFS images for kernel version < 5.3.
-+.TP
-+.BI force-inode-compact
-+Forcely generate compact inodes (32-byte inodes) to output.
-+.TP
-+.BI force-inode-extended
-+Forcely generate extended inodes (64-byte inodes) to output.
-+.RE
-+.TP
-+.BI "\-T " #
-+Set all files to this given UNIX timestamp. Reproducible builds requires setting
-+all to a specific one.
-+.TP
-+.B \-\-help
-+Display this help and exit.
-+.SH AUTHOR
-+This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
-+Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
-+continuously improvements from others.
-+.PP
-+This manual page was written by Gao Xiang <xiang@kernel.org>.
-+.SH AVAILABILITY
-+\fBmkfs.erofs\fR is part of erofs-utils package and is available from
-+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git.
-+.SH SEE ALSO
-+.BR mkfs (8).
-+
+-#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
+-
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 03db3e71676c..a86c2585457d 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3396,6 +3396,5 @@ static inline int ext4_buffer_uptodate(struct buffer_head *bh)
+ #endif	/* __KERNEL__ */
+ 
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ 
+ #endif	/* _EXT4_H */
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4024790028aa..04ebe77569a3 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3752,6 +3752,5 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
+ }
+ 
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ 
+ #endif /* _LINUX_F2FS_H */
+diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+index ca15105681ca..3409d02a7d21 100644
+--- a/fs/xfs/xfs_linux.h
++++ b/fs/xfs/xfs_linux.h
+@@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
+ 
+ #define ENOATTR		ENODATA		/* Attribute not found */
+ #define EWRONGFS	EINVAL		/* Mount with wrong filesystem type */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+ 
+ #define SYNCHRONIZE()	barrier()
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 603fbc4e2f70..69411d7e0431 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1657,6 +1657,5 @@ static inline tid_t  jbd2_get_latest_transaction(journal_t *journal)
+ #endif	/* __KERNEL__ */
+ 
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ 
+ #endif	/* _LINUX_JBD2_H */
+diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
+index cf9c51ac49f9..1d5ffdf54cb0 100644
+--- a/include/uapi/asm-generic/errno.h
++++ b/include/uapi/asm-generic/errno.h
+@@ -98,6 +98,7 @@
+ #define	EINPROGRESS	115	/* Operation now in progress */
+ #define	ESTALE		116	/* Stale file handle */
+ #define	EUCLEAN		117	/* Structure needs cleaning */
++#define	EFSCORRUPTED	EUCLEAN
+ #define	ENOTNAM		118	/* Not a XENIX named type file */
+ #define	ENAVAIL		119	/* No XENIX semaphores available */
+ #define	EISNAM		120	/* Is a named type file */
 -- 
-2.17.1
+2.24.0.rc1
 
