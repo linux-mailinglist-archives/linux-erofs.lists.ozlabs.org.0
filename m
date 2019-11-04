@@ -1,78 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AF9BED9E2
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 08:28:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8AB2EE514
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 17:49:11 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4764D23GRxzF4tN
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Nov 2019 18:28:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1572852530;
-	bh=5wGoFffOyLhbrtaBRTjaBZv+quolhmSq3FmD5wsquYI=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=dcccMauzTA6XgVw0lEhGvfHsVTc8JTE3GFpZNRRaXtMEmFcwkPUDicf99FKANtugL
-	 f94wUHgRCqnv1P3cu6puuzp5gc9VZd5OJ0lqxoYmXpqo6B8okoFXyPO8UpN4rnMwcL
-	 esGMPwogGTf6LsruMwYECt+8AH0IGmVDwT90vvPXGlBTdvaOIU8BauOKxDnRPnA6bB
-	 D3+GAZjVQ2dJ6bA40HZZ0tGOJSF11FetG0ayt3oblArYbBbN1L9ncNc/rdqVNHP+LO
-	 wMKbqyA7Ala595t8q8z1o4ttvAdKZ3gvsU0mjOZmYDm/91Vi6NX1/1E8WAlOARZFpc
-	 qygnH5jbgTgoQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 476JfY0skczF412
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Nov 2019 03:49:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::642;
+ helo=mail-pl1-x642.google.com; envelope-from=blucerlee@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.32; helo=sonic315-8.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="qrKq07Be"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="S8/OTEMf"; 
  dkim-atps=neutral
-Received: from sonic315-8.consmr.mail.gq1.yahoo.com
- (sonic315-8.consmr.mail.gq1.yahoo.com [98.137.65.32])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com
+ [IPv6:2607:f8b0:4864:20::642])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4764Cs6sSzzF4sh
- for <linux-erofs@lists.ozlabs.org>; Mon,  4 Nov 2019 18:28:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1572852516; bh=0eE0bcdVbuhPkLFS1oEwBg99TCBZogdb2RCTwHcRTIU=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=qrKq07Be6U1OT8w5sOmxggdG4vwfxiEkrzV2GFh9RVSQl9EqtE+X2+45zY9wWApkP12XWnxA1Y9QI8d3Ko7fbISpsRK7iLvBWolHKjNP2wCJqDtjF3kA0/Jm+86TV1QURi1fY36jaFli/XvOjyaPKHWkcRUobyAN4nbMFgXKtbwtgSW1x6CU/KnpxS599OfwflaaOfENSMRnanbF26M51WnHs7O6uHir367C1lY12RZK3aL0V4iVruiyW87c2YemM7qQvBsj6hxqAgq7Dl1oMxHym+4Kqqq9wb7adlqTKZOQ8LCtq3Vw9OYsxIsDO9lxnE7LNSY4fU558JFR+v2KIg==
-X-YMail-OSG: RR_ZlGwVM1lCID_sZgbsouDUrrgmTKPesWnJlIcZNYXlQSF11rfGMs_gDyOPuGI
- z5JOZ2XSZMYf8PcmECYk89dM64i2cqCtM4dmkX_wzDKwz.1qpkvQoUu1amw3HCC5AV8b7I0maza6
- RAKyzmCWYiiLTPXEFzzfl7S._ATpY_Ktbzkqdempq6FRvQaLA2OllGp2B7c7BfSJHqIZeg6ZbXwN
- nc9rjmQ9tfFaxBg2lejKyeO1DrSoJ552CRBczLRytYokTHnPIQFTsPGLY7XwrCQEqlgNc7lfcsFc
- JYI3R0z_JCGzaAYkSDs4T8emiBjR8otOp2RRjqT0hfuctFU7htFHFUFD1fLP1F29tlQjoXdUh3Qo
- Jy5tq4SKSmsvzPOg3Of_vAR_8gFwT8yyFeA0ewmBnjUc7..fCT6CHdkheJt7qId9zL5z.paURZ42
- wjGaIv00Us1.qqpDmJc_2rqH8xM4N_7k_H7Yc4zDiK1A2yh9CPR3q2.gJuOgyf95LjfafeRqTAX8
- sGrGQKbIHmUYCySSZ.SMnI2Pu2jHHSQ9Yj2Ej6p4lGQowmUE6LCTB54YscX1YHiL0qn9DsXl.G20
- _MRSjQJEyPXDZP0bjLt051Nmk4FofKVYFYSxcXVw2moyRgyUSY2gitP7RG4kk27Z2oSQN2aXt5IJ
- Via2jvppa88aXhAN4WlIYaDJurgic7j3QA4e_p9Pdo_bclscAKPFc1JhJWEBUci6RvShdOhrvt46
- 77ANJS0Wg0V5g.WWNhL2C0RVzo9cm3iEakn2s7epb8RQuAlngPih0lfc6R0GBZeRMtslhg0NjM4E
- D5chpBfY5pMlzL22OvRUglorORCcfjvi80xk4fHnXJt5908nVeOaFT3__1nUYmj8dhuFEr3co1Ap
- HIIoL70e_6FNBdXjxaOcY8D3.n4LH6lO1qQaYOZG1cemrN6W7sVS1YiTPOsHe6cIdFiXFisF8sx4
- ACBl_Bjqe76fLkZSRgh5AMEdGeNx_YbvR6zzHz8QNpbsCXlua4aV_Cd2NQOMDveIMBTeQ8vEO6Kf
- ow3atRAxefZDKRIXZQbbLj8Fcr533cdftNjjGdDbAcsrrKJRPQmJKP5FDeCaW.bYAqooi7.2TseS
- GcNAzqKGC5As5Ep14ZxADSnf6YMZdSlrwcYmM7M0fsy8LrkAVwv3VXquU.Qdd1fY8poV1yQyZIdy
- CgCao.URqMJFxnEakqVJB7k8b_7YUKIIvWCoSshMkmuCv152TDjPX79Ng8skQ9mWShWNzaHKu3gQ
- eWbjjldiMyATXHKuj7VZbIGnM0qXNgBNYcnK3safkxiNYA3tyvytwRP0cYEVj3NjyeiiM9uz0uOv
- eeqizZ9t6CxdtgZGp9FpnkcHSMRwm0yCmFnr4vf2nwboyt7Q5Dv2Pn_peA.WNRn6B0.1RiyTIrdP
- VFknawa5L7Sg5MYqU4bPGwA--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Mon, 4 Nov 2019 07:28:36 +0000
-Received: by smtp422.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 239129679cb26c683ce7e2126d239ff8; 
- Mon, 04 Nov 2019 07:28:34 +0000 (UTC)
-To: Li Guifu <bluce.liguifu@huawei.com>,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: add manual for mkfs.erofs
-Date: Mon,  4 Nov 2019 15:28:17 +0800
-Message-Id: <20191104072817.7936-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191103153055.11471-1-hsiangkao@aol.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 476JT20V9pzF406
+ for <linux-erofs@lists.ozlabs.org>; Tue,  5 Nov 2019 03:40:53 +1100 (AEDT)
+Received: by mail-pl1-x642.google.com with SMTP id q16so7782971pll.11
+ for <linux-erofs@lists.ozlabs.org>; Mon, 04 Nov 2019 08:40:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=subject:to:cc:references:from:message-id:date:user-agent
+ :mime-version:in-reply-to:content-language:content-transfer-encoding;
+ bh=HO6E5b2tsFcaRb0s/J4XLrYYq8Z+HR0AY5Z5nLqwomM=;
+ b=S8/OTEMfUx5jIqQI9/F9opacKcE/fMRZN/Amo3xSKUodBE0QQ6BhpvyLMSVY81zey8
+ JNgbGJIIWmarpNfj9PoL839t7xG/3nYVsQ8GTSbfIe38Nw4y6Q34yY1TMu+3xLlyojWK
+ 8xy7360TTwGg8BSTiVfMlVqIKjJCndkezIc4sunxPx/qrtEq03BNpcYxrWvwe0VXnfqf
+ qkmd9m3sDzrtvCknOofxqMW3eNba8kq6vXvBtkqA4NCQP2lOmJP5N/b5LUBaCz5FxYa7
+ ifNoX9oEA585hNH1FfAUz/tGBrQDtSbSKwYAO00ynNE72daNCqeCmzS0+8u4ik1viagq
+ wbKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+ :user-agent:mime-version:in-reply-to:content-language
+ :content-transfer-encoding;
+ bh=HO6E5b2tsFcaRb0s/J4XLrYYq8Z+HR0AY5Z5nLqwomM=;
+ b=pSPfILaP8OEA+XJGRY2B3DnJHm1UNGjbKAb4aT5wQrfaX6rk26CG80tc/rxBL85YaN
+ PTLs3cmo/CmihbYI3oDJdRtrjNYFK0oDieeiyBHF0lqFMpv9wxWypyCIKM9eLGOsjnGD
+ 0OH+NJNSf4DtGpO+HCF+SMjWCzZzlzgWVhT4pvCc5tatMgaHBpDB87pJqS044axmDB0U
+ CUEpy0ze8LOsuyWrfLDqnLA49rHCfARGFn2jqZ01d7vsnP5uQZRebiOvjai/UeldkZti
+ Z4yPyVpnBPpi0wKciPfABmedZe0b9o2K6du9GQYlatJMpFHdAZJjEW/VYyyRpuEc8LkY
+ GU8A==
+X-Gm-Message-State: APjAAAW3zFi/mJVe6Q8t+koUA9zQaqLuYXotQ3Sep6lzODzN6iR9qxsq
+ Hf5ewHkSziYQLYe7kljolj8=
+X-Google-Smtp-Source: APXvYqw5UMgxCUUzqv5zX+DqPuBeRA1Oz/fr9h66kzwh/CzimjuWzDyU3nwXbYOFC/P1tNFKIXUhxg==
+X-Received: by 2002:a17:902:9691:: with SMTP id
+ n17mr22839435plp.12.1572885649392; 
+ Mon, 04 Nov 2019 08:40:49 -0800 (PST)
+Received: from [0.0.0.0] (li1150-212.members.linode.com. [45.79.51.212])
+ by smtp.gmail.com with ESMTPSA id z7sm10168203pgk.10.2019.11.04.08.40.44
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Mon, 04 Nov 2019 08:40:48 -0800 (PST)
+Subject: Re: [PATCH v2] erofs-utils: add manual for mkfs.erofs
+To: Gao Xiang <hsiangkao@aol.com>, Li Guifu <bluce.liguifu@huawei.com>,
+ linux-erofs@lists.ozlabs.org
 References: <20191103153055.11471-1-hsiangkao@aol.com>
+ <20191104072817.7936-1-hsiangkao@aol.com>
+From: Li Guifu <blucerlee@gmail.com>
+Message-ID: <52e5b1f0-ad58-5664-e895-0b6566308509@gmail.com>
+Date: Tue, 5 Nov 2019 00:40:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20191104072817.7936-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,138 +85,21 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
 Cc: Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds mkfs.erofs manpage, which is a requirement of
-a debian binary package (See Debian Policy Manual section 12.1 [1].)
 
-[1] https://www.debian.org/doc/debian-policy/ch-docs.html#manual-pages
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
-changes since v1:
- - remove redundant whitespace in the previous version;
- - adjust long lines.
+On 2019/11/4 15:28, Gao Xiang wrote:
+> This patch adds mkfs.erofs manpage, which is a requirement of
+> a debian binary package (See Debian Policy Manual section 12.1 [1].)
+> 
+> [1] https://www.debian.org/doc/debian-policy/ch-docs.html#manual-pages
+> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+> ---
+It looks good
+Reviewed-by: Li Guifu <blucerlee@gmail.com>
+Tested-by: Li Guifu <blucerlee@gmail.com>
 
- Makefile.am      |  2 +-
- configure.ac     |  1 +
- man/Makefile.am  |  5 ++++
- man/mkfs.erofs.1 | 68 ++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 1 deletion(-)
- create mode 100644 man/Makefile.am
- create mode 100644 man/mkfs.erofs.1
-
-diff --git a/Makefile.am b/Makefile.am
-index d94ab73..1d20577 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -3,4 +3,4 @@
- 
- ACLOCAL_AMFLAGS = -I m4
- 
--SUBDIRS=lib mkfs
-+SUBDIRS = man lib mkfs
-diff --git a/configure.ac b/configure.ac
-index 4f88678..a93767f 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -173,6 +173,7 @@ AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
- 
- AC_CONFIG_FILES([Makefile
-+		 man/Makefile
- 		 lib/Makefile
- 		 mkfs/Makefile])
- AC_OUTPUT
-diff --git a/man/Makefile.am b/man/Makefile.am
-new file mode 100644
-index 0000000..dcdbb35
---- /dev/null
-+++ b/man/Makefile.am
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+dist_man_MANS = mkfs.erofs.1
-+
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-new file mode 100644
-index 0000000..d6bf828
---- /dev/null
-+++ b/man/mkfs.erofs.1
-@@ -0,0 +1,68 @@
-+.\" Copyright (c) 2019 Gao Xiang <xiang@kernel.org>
-+.\"
-+.TH MKFS.EROFS 1
-+.SH NAME
-+mkfs.erofs \- tool to create an EROFS filesystem
-+.SH SYNOPSIS
-+\fBmkfs.erofs\fR [\fIOPTIONS\fR] \fIDESTINATION\fR \fISOURCE\fR
-+.SH DESCRIPTION
-+EROFS is a new enhanced lightweight linux read-only filesystem with modern
-+designs (eg. no buffer head, reduced metadata, inline xattrs/data, etc.) for
-+scenarios which need high-performance read-only requirements, e.g. Android OS
-+for smartphones and LIVECDs.
-+.PP
-+It also provides fixed-sized output compression support, which improves storage
-+density, keeps relatively higher compression ratios, which is more useful to
-+achieve high performance for embedded devices with limited memory since it has
-+unnoticable memory overhead and page cache thrashing.
-+.PP
-+mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
-+from \fISOURCE\fR directory.
-+.SH OPTIONS
-+.TP
-+.BI "\-z " compression-algorithm " [" ",#" "]"
-+Set an algorithm for file compression, which can be set with an optional
-+compression level separated by a comma.
-+.TP
-+.BI "\-d " #
-+Specify the level of debugging messages. The default is 0.
-+.TP
-+.BI "\-x " #
-+Specify the upper limit of an xattr which is still inlined. The default is 2.
-+Disable storing xattrs if < 0.
-+.TP
-+.BI "\-E " extended-option " [,...]"
-+Set extended options for the filesystem. Extended options are comma separated,
-+and may take an argument using the equals ('=') sign.
-+The following extended options are supported:
-+.RS 1.2i
-+.TP
-+.BI legacy-compress
-+Disable "decompression in-place" and "compacted indexes" support, which is used
-+when generating EROFS images for kernel version < 5.3.
-+.TP
-+.BI force-inode-compact
-+Forcely generate compact inodes (32-byte inodes) to output.
-+.TP
-+.BI force-inode-extended
-+Forcely generate extended inodes (64-byte inodes) to output.
-+.RE
-+.TP
-+.BI "\-T " #
-+Set all files to the given UNIX timestamp. Reproducible builds requires setting
-+all to a specific one.
-+.TP
-+.B \-\-help
-+Display this help and exit.
-+.SH AUTHOR
-+This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
-+Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
-+continuously improvements from others.
-+.PP
-+This manual page was written by Gao Xiang <xiang@kernel.org>.
-+.SH AVAILABILITY
-+\fBmkfs.erofs\fR is part of erofs-utils package and is available from
-+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git.
-+.SH SEE ALSO
-+.BR mkfs (8).
-+
--- 
-2.17.1
-
+Thanks,
