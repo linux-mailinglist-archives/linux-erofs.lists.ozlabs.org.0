@@ -1,36 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DC13F8E8B
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 12:25:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F689F8E8E
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 12:25:24 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47C54x0NmQzF4J4
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 22:25:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47C55D40dWzF4K1
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 22:25:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=huawei.com;
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47C54S3k5pzF4FS
- for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 22:24:38 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47C54T5B44zF4FV
+ for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 22:24:41 +1100 (AEDT)
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 0BA47A979C19132017ED
- for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 19:24:28 +0800 (CST)
+ by Forcepoint Email with ESMTP id 0E5FB5C9D1D469B7B3D5
+ for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 19:24:33 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 12 Nov
- 2019 19:24:20 +0800
+ 2019 19:24:23 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 1/2] erofs-utils: complete missing memory handling
-Date: Tue, 12 Nov 2019 19:26:49 +0800
-Message-ID: <20191112112650.143498-1-gaoxiang25@huawei.com>
+Subject: [PATCH 2/2] erofs-utils: set up all compiler/linker variables
+ independently
+Date: Tue, 12 Nov 2019 19:26:50 +0800
+Message-ID: <20191112112650.143498-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191112112650.143498-1-gaoxiang25@huawei.com>
+References: <20191112112650.143498-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -51,75 +54,75 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Li Guifu <bluce.liguifu@huawei.com>
+Otherwise, the following checking will be effected
+and it can cause unexpected behavior on configuring.
 
-memory allocation failure should be handled
-properly in principle.
+Founded by the upcoming XZ algorithm patches.
 
-Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
-[ Gao Xiang: due to Huawei outgoing email limitation,
-  I have to help Guifu send out his patches at work. ]
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- lib/inode.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ configure.ac | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 86c465ee2f78..620db60f4a5b 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -264,6 +264,8 @@ int erofs_write_dir_file(struct erofs_inode *dir)
- 	if (used) {
- 		/* fill tail-end dir block */
- 		dir->idata = malloc(used);
-+		if (!dir->idata)
-+			return -ENOMEM;
- 		DBG_BUGON(used != dir->idata_size);
- 		fill_dirblock(dir->idata, dir->idata_size, q, head, d);
- 	}
-@@ -286,6 +288,8 @@ int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
- 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
- 	if (inode->idata_size) {
- 		inode->idata = malloc(inode->idata_size);
-+		if (!inode->idata)
-+			return -ENOMEM;
- 		memcpy(inode->idata, buf + blknr_to_addr(nblocks),
- 		       inode->idata_size);
- 	}
-@@ -347,9 +351,12 @@ int erofs_write_file(struct erofs_inode *inode)
- 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
- 	if (inode->idata_size) {
- 		inode->idata = malloc(inode->idata_size);
-+		if (!inode->idata)
-+			return -ENOMEM;
+diff --git a/configure.ac b/configure.ac
+index a93767f61578..a5adf172cc43 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -131,7 +131,7 @@ if test "x$enable_lz4" = "xyes"; then
+   test -z "${with_lz4_libdir}" || LZ4_LIBS="-L$with_lz4_libdir $LZ4_LIBS"
  
- 		ret = read(fd, inode->idata, inode->idata_size);
- 		if (ret < inode->idata_size) {
-+			free(inode->idata);
- 			close(fd);
- 			return -EIO;
- 		}
-@@ -825,12 +832,18 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		if (S_ISLNK(dir->i_mode)) {
- 			char *const symlink = malloc(dir->i_size);
+   saved_CPPFLAGS=${CPPFLAGS}
+-  CPPFLAGS="${LZ4_CFLAGS} ${CFLAGS}"
++  CPPFLAGS="${LZ4_CFLAGS} ${CPPFLAGS}"
  
-+			if (!symlink)
-+				return ERR_PTR(-ENOMEM);
- 			ret = readlink(dir->i_srcpath, symlink, dir->i_size);
--			if (ret < 0)
-+			if (ret < 0) {
-+				free(symlink);
- 				return ERR_PTR(-errno);
-+			}
+   AC_CHECK_HEADERS([lz4.h],[have_lz4h="yes"], [])
  
--			erofs_write_file_from_buffer(dir, symlink);
-+			ret = erofs_write_file_from_buffer(dir, symlink);
- 			free(symlink);
-+			if (ret)
-+				return ERR_PTR(ret);
- 		} else {
- 			erofs_write_file(dir);
- 		}
+@@ -150,28 +150,29 @@ if test "x$enable_lz4" = "xyes"; then
+       ])
+     ], [AC_MSG_ERROR([Cannot find proper lz4 version (>= 1.8.0)])])
+     LDFLAGS=${saved_LDFLAGS}
+-
+-    if test "x${have_lz4}" = "xyes"; then
+-      AC_DEFINE([LZ4_ENABLED], [1], [Define to 1 if lz4 is enabled.])
+-
+-      if test "x${have_lz4hc}" = "xyes"; then
+-        AC_DEFINE([LZ4HC_ENABLED], [1], [Define to 1 if lz4hc is enabled.])
+-      fi
+-
+-      if test "x${lz4_force_static}" = "xyes"; then
+-        LDFLAGS="-all-static ${LDFLAGS}"
+-      else
+-	test -z "${with_lz4_libdir}" || LZ4_LIBS="-R ${with_lz4_libdir} $LZ4_LIBS"
+-      fi
+-      LIBS="$LZ4_LIBS $LIBS"
+-    fi
+   fi
+-  CFLAGS=${saved_CPPFLAGS}
++  CPPFLAGS=${saved_CPPFLAGS}
+ fi
+ 
++# Set up needed symbols, conditionals and compiler/linker flags
+ AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
+ 
++if test "x${have_lz4}" = "xyes"; then
++  AC_DEFINE([LZ4_ENABLED], [1], [Define to 1 if lz4 is enabled.])
++
++  if test "x${have_lz4hc}" = "xyes"; then
++    AC_DEFINE([LZ4HC_ENABLED], [1], [Define to 1 if lz4hc is enabled.])
++  fi
++
++  if test "x${lz4_force_static}" = "xyes"; then
++    LDFLAGS="-all-static ${LDFLAGS}"
++  else
++    test -z "${with_lz4_libdir}" || LZ4_LIBS="-R ${with_lz4_libdir} $LZ4_LIBS"
++  fi
++  LIBS="$LZ4_LIBS $LIBS"
++fi
++
+ AC_CONFIG_FILES([Makefile
+ 		 man/Makefile
+ 		 lib/Makefile
 -- 
 2.17.1
 
