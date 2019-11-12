@@ -2,80 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0204F5066
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2019 16:58:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DC13F8E8B
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 12:25:10 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 478lLb6yQ7zF5ZR
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2019 02:58:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47C54x0NmQzF4J4
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2019 22:25:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::443;
- helo=mail-pf1-x443.google.com; envelope-from=blucerlee@gmail.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="ve0ORAtE"; 
- dkim-atps=neutral
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com
- [IPv6:2607:f8b0:4864:20::443])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 478hCn04rbzF74Z
- for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2019 00:37:40 +1100 (AEDT)
-Received: by mail-pf1-x443.google.com with SMTP id p24so4600860pfn.4
- for <linux-erofs@lists.ozlabs.org>; Fri, 08 Nov 2019 05:37:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=subject:to:cc:references:from:message-id:date:user-agent
- :mime-version:in-reply-to:content-language:content-transfer-encoding;
- bh=A5N3fvVYatpPlSo7AhCeNB1KINXjvUmtciNJSE6Q5oE=;
- b=ve0ORAtEUirsVM3GvDHRmRD+WvtbK9e5qrWph83JwMTKjYSFhEiTbu0VtTHbn5iuyE
- nh+5JbP5zPn7WFmz0YKP2RJkPAcngF4B36AIfUq2EURDbXMqRBuBCmHTW7Vndp3bTmE7
- hfPUInUPCkrFGbBKZkx/LCo9Rf42486BQCq8scSUxxipqGcL+Dn87zSdGTnJGRrzwNIW
- oUOxlaxeg2RIQkEKFRheQYsDqGJOsKkr0Yw1aRYZxiMDsUX2BzgBqB43gMKP3Ce6lBMT
- /k1oRTsHd4OPsOpcmk6ok8F4j/BpguOuzXpW9/dPleRXtUVAQ57obrVXF9p5gO/m9x+w
- SvBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:subject:to:cc:references:from:message-id:date
- :user-agent:mime-version:in-reply-to:content-language
- :content-transfer-encoding;
- bh=A5N3fvVYatpPlSo7AhCeNB1KINXjvUmtciNJSE6Q5oE=;
- b=Qm4petsAsDDawBaaa9K+Tyrp/EzHGmANEvc1FNxVqfCIQ7kP8Bnzw+sQLTNnlKK1Jk
- 8EL4aZK2jaEYsYsRzN+8IKJ6viRB9FH/XRmd8ehmtRAYyTJvoHsmNa043cREWvYoy8/4
- yYls6qjb3vWu10l4mSAGaamO4TH/rA9HJ+IRDKMp9YjHHJK41/qrQ16bPhzalb7IH2EH
- 8rLcsmv6L14rbltx8c1f+MiLRJeemkpPh8fKsedoSCdlzhTrmBpD7rrk7O09dxjUH8lQ
- 6ad8DuuB/yXpwi3CuMALIBBML0KAokssOwKdF8DYj2j2AmxcKpst0ZkmmgBHndgfSO5q
- HM0Q==
-X-Gm-Message-State: APjAAAVyqLaDrGuK3+ChsK5p3XpccYzTcPnz7lPSsO7Wqh5n7Lt/hRLM
- AIzmjBQ2VG+JHveNIWxK3cQ=
-X-Google-Smtp-Source: APXvYqwOvlUBHqrVG6ZRribJ4Ev8NG/418jIkxVf1xTyNAb2k3vvGy1YlGO9U2yyIDqM0yIjaZPUQA==
-X-Received: by 2002:a63:1624:: with SMTP id w36mr11185792pgl.404.1573220258131; 
- Fri, 08 Nov 2019 05:37:38 -0800 (PST)
-Received: from [0.0.0.0] (li1150-212.members.linode.com. [45.79.51.212])
- by smtp.gmail.com with ESMTPSA id f12sm6049659pfn.152.2019.11.08.05.37.19
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Fri, 08 Nov 2019 05:37:37 -0800 (PST)
-Subject: Re: [PATCH v9] erofs-utils: support calculating checksum of erofs
- blocks
-To: Gao Xiang <gaoxiang25@huawei.com>,
- Pratik Shinde <pratikshinde320@gmail.com>,
- Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
- linux-erofs@lists.ozlabs.org
-References: <20191030025506.GA161610@architecture4>
- <20191030062809.34362-1-gaoxiang25@huawei.com>
-From: Li Guifu <blucerlee@gmail.com>
-Message-ID: <bdd4a875-30fb-3a0c-43b3-270a545a32cf@gmail.com>
-Date: Fri, 8 Nov 2019 21:37:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47C54S3k5pzF4FS
+ for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 22:24:38 +1100 (AEDT)
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id 0BA47A979C19132017ED
+ for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2019 19:24:28 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 12 Nov
+ 2019 19:24:20 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 1/2] erofs-utils: complete missing memory handling
+Date: Tue, 12 Nov 2019 19:26:49 +0800
+Message-ID: <20191112112650.143498-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191030062809.34362-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,32 +46,80 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Li Guifu <bluce.liguifu@huawei.com>
 
+memory allocation failure should be handled
+properly in principle.
 
-On 2019/10/30 14:28, Gao Xiang wrote:
-> From: Pratik Shinde <pratikshinde320@gmail.com>
-> 
-> Added code for calculating crc of erofs blocks (4K size).
-> For now it calculates checksum of first block. but it can
-> be modified to calculate crc for any no. of blocks.
-> 
-> Note that the first 1024 bytes are not checksumed to allow
-> for the installation of x86 boot sectors and other oddities.
-> 
-> Fill 'feature_compat' field of erofs_super_block so that it
-> can be used on kernel side. also fixing one typo.
-> 
-> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
-> 
-It looks good
-Reviewed-by: Li Guifu <blucerlee@gmail.com>
+Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
+[ Gao Xiang: due to Huawei outgoing email limitation,
+  I have to help Guifu send out his patches at work. ]
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ lib/inode.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/lib/inode.c b/lib/inode.c
+index 86c465ee2f78..620db60f4a5b 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -264,6 +264,8 @@ int erofs_write_dir_file(struct erofs_inode *dir)
+ 	if (used) {
+ 		/* fill tail-end dir block */
+ 		dir->idata = malloc(used);
++		if (!dir->idata)
++			return -ENOMEM;
+ 		DBG_BUGON(used != dir->idata_size);
+ 		fill_dirblock(dir->idata, dir->idata_size, q, head, d);
+ 	}
+@@ -286,6 +288,8 @@ int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
+ 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+ 	if (inode->idata_size) {
+ 		inode->idata = malloc(inode->idata_size);
++		if (!inode->idata)
++			return -ENOMEM;
+ 		memcpy(inode->idata, buf + blknr_to_addr(nblocks),
+ 		       inode->idata_size);
+ 	}
+@@ -347,9 +351,12 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+ 	if (inode->idata_size) {
+ 		inode->idata = malloc(inode->idata_size);
++		if (!inode->idata)
++			return -ENOMEM;
+ 
+ 		ret = read(fd, inode->idata, inode->idata_size);
+ 		if (ret < inode->idata_size) {
++			free(inode->idata);
+ 			close(fd);
+ 			return -EIO;
+ 		}
+@@ -825,12 +832,18 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		if (S_ISLNK(dir->i_mode)) {
+ 			char *const symlink = malloc(dir->i_size);
+ 
++			if (!symlink)
++				return ERR_PTR(-ENOMEM);
+ 			ret = readlink(dir->i_srcpath, symlink, dir->i_size);
+-			if (ret < 0)
++			if (ret < 0) {
++				free(symlink);
+ 				return ERR_PTR(-errno);
++			}
+ 
+-			erofs_write_file_from_buffer(dir, symlink);
++			ret = erofs_write_file_from_buffer(dir, symlink);
+ 			free(symlink);
++			if (ret)
++				return ERR_PTR(ret);
+ 		} else {
+ 			erofs_write_file(dir);
+ 		}
+-- 
+2.17.1
+
