@@ -2,63 +2,81 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1323FF8B7
-	for <lists+linux-erofs@lfdr.de>; Sun, 17 Nov 2019 11:11:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02B7AFFAF6
+	for <lists+linux-erofs@lfdr.de>; Sun, 17 Nov 2019 18:31:28 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47G7CK5fy7zDqcw
-	for <lists+linux-erofs@lfdr.de>; Sun, 17 Nov 2019 21:11:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47GJzJ50SMzDqfJ
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2019 04:31:24 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1574011884;
+	bh=VgUZacBGjuPGPukJnAa1yL/a19s2b2oGqNcYyEDxjQY=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=oHsOIuPGRoFa52Kl0LJqB4fnW1tOSrQyddcGjUFJCy95e4o99HC2LgFt0oNL2YqCg
+	 UIy40ZFE4WBAB+WTGCIh3ubK/7kUbTysOxwVURFmS5O0JX9Hnlz58lmHcGfkJUsj3B
+	 JC+ec9FnUF8K0JkCzEOC4x1QnTmyW8RSjXn+9Ot9kiR7W5nBbhTf73h7MNv2NgvVYq
+	 tJeGeTPLpC1cDgbwB+htNnhcEkTydT/DA0nLtAF3J5ccOafMfShD3YGlf42WCKagFz
+	 d+YmLJrFklabyhvtV9QB/ukwfyJxXzze8rkZBpKdKV4dC4jlDsDkPvF3GB3KoBfFo/
+	 1LJ0mrZFBOSPA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::534;
- helo=mail-ed1-x534.google.com; envelope-from=pratikshinde320@gmail.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.31; helo=sonic308-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="KeCO6Oqt"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="DzB0cJrb"; 
  dkim-atps=neutral
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com
- [IPv6:2a00:1450:4864:20::534])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic308-55.consmr.mail.gq1.yahoo.com
+ (sonic308-55.consmr.mail.gq1.yahoo.com [98.137.68.31])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47G7CC5rGBzDqY6
- for <linux-erofs@lists.ozlabs.org>; Sun, 17 Nov 2019 21:11:02 +1100 (AEDT)
-Received: by mail-ed1-x534.google.com with SMTP id a24so11114021edt.0
- for <linux-erofs@lists.ozlabs.org>; Sun, 17 Nov 2019 02:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:from:date:message-id:subject:to:cc;
- bh=yaNFogrF+16XDw1ErHSzTBWC0QVu6RcU0Zkdw1QFmKQ=;
- b=KeCO6Oqtmg9QKXQe3aw3sRLYottLAl1m59oEWneetnYrMgR6/UFVmDg9ZxzlFeYwxc
- sqR8CxVycRP4pQGkCb68qdwUZgWPjaAOs0bbisUYAYpiB/NNu2RtJoj8N9OrNRzjcYOp
- S6Sfgoiz2bYQr8ZfdKc8IPRTENt6HUM5uvTGP21uL+UppXFa0ulv42VwiwzwItgCGj7U
- 98GBznqUw54Lyj6aKHUASsNcDae4AVLVFKquWM9aQVR9P/TKXSuJacDppqAbZV2e9TzF
- ezq3CDBS2JHEJdi0Kaien5yaXZNAW8mdgnK58WivZJsnfG7zBZ0ebYAlzcUECY7/3q0J
- pClA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
- bh=yaNFogrF+16XDw1ErHSzTBWC0QVu6RcU0Zkdw1QFmKQ=;
- b=ZXWoRcPuAJMkTy6iJwQ02WFTwgw+vailFC00ZPGeaiE0pm4DscGY4Q74O/tFmR1UQV
- TbwbkVbXEjTVY58JPHEyyJEz4XwKVAR5p05uqP/yvQnoylYiPit5xMbxlq6z1YFHyBzh
- oocwNkMogBMyCYd1uEgZXQRrO4U53YQa2snDBDHRwv8xl+6KNWrUiNhiT9B4Wrbvn1IY
- TaXIR5+uSFJyUwMcDVeCu0MSW7g1QfdFxythHH4WN0kNiibq50a9r+QS9qwAOIsyzr0W
- B98ivhc9k2TNqqFFWHEK+6COfgg3RldZIkGVO2OwwHqK7DhxW5kEUx+ZGqubcSe+f76t
- fpZg==
-X-Gm-Message-State: APjAAAX6aRdIDhYVsHpug06Y1XCdxgJfljTfiOu6h1ZGv1VE4Z2L7zac
- kDI+YhOg/IlKRCB+qWpwIwskgZ/LYA46yAVRxcY=
-X-Google-Smtp-Source: APXvYqyxfpVlaex/izvv8tO+qzj/zuA1ct/X0RhxheyUfHQLw7wnUhG6/DoD6sb0uHqApZYpbkXVcKhNMqMzqyYTlew=
-X-Received: by 2002:a17:906:1d19:: with SMTP id
- n25mr16509676ejh.151.1573985454815; 
- Sun, 17 Nov 2019 02:10:54 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47GJz41923zDqcg
+ for <linux-erofs@lists.ozlabs.org>; Mon, 18 Nov 2019 04:31:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1574011866; bh=ocX9V8gSr9+8jVrK0+Xxc2RmTOxN+n83vzZkdWijMZI=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=DzB0cJrbmkzuWfvi+gn4SZpMo274SaAeQkxQm6G0epf+eOP3bsn3kLy4HgDQvjHXhA2M1WGh2Gm2SDViR9VqeMakAchrwgLsHb5BhqbvRp3vS/JtR7qyppGZEuPC/Q/eHSefkZpMmbhldx8XTyphEPfOKqwnbf25TLoaBS49tEPjzlh3V6NyV9AY56/HADvNNXSKLUxhIbLz2tM3NqWc5/QCt627Ckm4p08Dncx+6JiLFyb87J4GUESCNnRYGl/F+rfwyHXGT+eLQidNy8hHMuFW7HN4Ln5NlMn2oaC3VB+uTzduCIZaWKAHazT/Z53pAw9/9vJPAu4N5nstUlGOYw==
+X-YMail-OSG: zDefk0cVM1ljE5v3dg0rb2iZiiGLQFEIclEMiV8lK1bFQlmemo0aY3NzfazNMed
+ XFdoAdFvnk2zbUWO_R3fZv4ZtEceP1jBXMNzetpTUDAG9VZ74F09BKF._9XabZ.Dt1zt.Bxw8tAm
+ DgUN4zagocAsAo3OR2EFv6Dv4fMiJPV1NJZoeyBIVKDnOauFwbHSb6trOOfOpqbS5h9C9uUbS4I8
+ RG2yd3mCpbRV6ZLNe5n10SrDisu3kdnR3WtdyTZGkTIwV2b42A052iPJPVKPODhHwJV_NyUbZr8o
+ drrvWOQdj9QCYta24.5EYPNvo7vGjkj.z10kFt1LhnE6ll4kW5KvOUIqRtHmLhiwRGjOgezkwGGg
+ 7NaXzwKRLdLgNJl884BpL4DPRtT.hP8q36ljiVAshhm2uZxNXwp4ZbPlqYPi3VcsOssiSRe0VN3k
+ C9BPYmJ56yYoLxwAbu_OWMr9hz2QulhPWhiLJep8fYGRwe1W.T3JuwiAFqqJ7h302FC0SlHHctzM
+ Jmo1jf9.eJ2Vcw6BBxvxqtzy_2uK6bqICQfqtgRvLX1O8Jkdu2RnJ0128yC6ZK4v30eUHqOv5umM
+ OVvH73IbbTyS9yTWKMQixr08tTnUbcjLGi9.vh_WNb07rl9PujwXzRoaSnXvCvGbfSEkUcBx7nrW
+ St3XtUHF2lUKUApiDurRNRFiERZjj9pec.q2B2sB_yedD35uhBY39.aHh_l46gFOvQo0U34mgGou
+ ZUkE.bLoXmzavYBGxr0zSYgZzFYlTnzjIm45SuiHfLmNYTVhy4OMiigwhqC851XbsycekPW248pL
+ SUjDve_l7bPBN15kfnAAiRaHOaXLlNAdXkquX9TfYvH5u5QXRo3zKfr4DjdCFVwpQG7cXM0zDRHI
+ t2MmwJ.qYsHGzorULnJVhP1IMs3xJ6x3ojQUle2J3qo0i5p0UuiD.q92rQjRYdvNC5b3p67aeBF_
+ flok2mLxaGX4Qmx215utMbcgM1pXU.YdpwLpRgzlwkz3ug6hC_1yIbvWNTJ8_.MNkKkWxOzRw.qz
+ ObyVAWQbVNif4QNehEAKDlcdrocJ3J5FhWulz1Ko37V6ZHldYLC0G4I2FyMb9LT00MoXZBNubSOy
+ lDT_w0BHladfhhaqNfDhODh1rvCNl2rsH08eLtY0V_eDWOPCSdAUVEeErcltrt5yUqUY6MpCa_9P
+ 1gIILGPwqZoFS4IlWOFvSUGT8tvxECEf.4BA4ulDgewA05G.J10y3Ru9JsQcpGMBElQGLAm.Ms04
+ iihMhQrybUn65km.sWpd53Sb4pArc69dxafs6oWNMU4Z6S_HFfyzK9oby4fwy3NJRnO05wpYZFzJ
+ 0P2PmTFwjV8v0esXFgoP8nQDbIogw7E.xkU3pp0sq5ba4T3G0qUj8i8fxnC.G2WfiFNSntYuJ07J
+ SOawX
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sun, 17 Nov 2019 17:31:06 +0000
+Received: by smtp402.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID c6798c62e8c1ead5e69d3febad10556a; 
+ Sun, 17 Nov 2019 17:31:02 +0000 (UTC)
+Date: Mon, 18 Nov 2019 01:30:55 +0800
+To: Pratik Shinde <pratikshinde320@gmail.com>
+Subject: Re: Support for uncompressed sparse files.
+Message-ID: <20191117173027.GA21516@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <CAGu0czQOorHC=JxQVpWDB2KD0NOzh13OuHj3r_4_U5hCWkkNwQ@mail.gmail.com>
 MIME-Version: 1.0
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Sun, 17 Nov 2019 15:40:43 +0530
-Message-ID: <CAGu0czQOorHC=JxQVpWDB2KD0NOzh13OuHj3r_4_U5hCWkkNwQ@mail.gmail.com>
-Subject: Support for uncompressed sparse files.
-To: Gao Xiang <hsiangkao@aol.com>, Gao Xiang <gaoxiang25@huawei.com>
-Content-Type: multipart/alternative; boundary="000000000000ea7ed20597880b7e"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGu0czQOorHC=JxQVpWDB2KD0NOzh13OuHj3r_4_U5hCWkkNwQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4
+ (Java/1.8.0_181)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,38 +88,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000ea7ed20597880b7e
-Content-Type: text/plain; charset="UTF-8"
+Hi Pratik,
 
-Hello Gao,
+On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:
+> Hello Gao,
+> 
+> I have started working on above functionality for erofs.
+> First thing we need to do is detect sparse files & determine location of
+> holes in it.
+> 
+> I was thinking of using lseek() with SEEK_HOLE & SEEK_DATA for detecting
+> holes.
+> Let me know what you think about the approach OR any other better approach
+> in your mind.
+> 
+> PS : support for SEEK_HOLE & SEEK_DATA came in 3.4 kernel.
 
-I have started working on above functionality for erofs.
-First thing we need to do is detect sparse files & determine location of
-holes in it.
+That is a good start to detect sparse files by SEEK_HOLE & SEEK_DATA.
 
-I was thinking of using lseek() with SEEK_HOLE & SEEK_DATA for detecting
-holes.
-Let me know what you think about the approach OR any other better approach
-in your mind.
+And as the first step, we need to design the on-disk extent format
+for uncompressed sparse files. Is there some preliminary proposed
+ideas for this as well? :-) (I'm not sure whether Chao is busy in
+other stuffs now, we'd get in line with sparse on-disk format.)
 
-PS : support for SEEK_HOLE & SEEK_DATA came in 3.4 kernel.
+Thanks,
+Gao Xiang
 
---000000000000ea7ed20597880b7e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hello Gao,</div><div><br></div><div>I have started wo=
-rking on above functionality for erofs.</div><div>First thing we need to do=
- is detect sparse files &amp; determine location of holes in it.</div><div>=
-<br></div><div>I was thinking of using lseek() with SEEK_HOLE &amp; SEEK_DA=
-TA for detecting holes.</div><div>Let me know what you think about the appr=
-oach OR any other better approach in your mind.<br></div><div><br></div><di=
-v>PS : support for SEEK_HOLE &amp; SEEK_DATA came in 3.4 kernel. <br></div>=
-<div> <br></div></div>
-
---000000000000ea7ed20597880b7e--
