@@ -2,51 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C3A510239D
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2019 12:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 113BB1024DD
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2019 13:51:36 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47HPKz4fkBzDqWr
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2019 22:51:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47HQgT0d8zzDqft
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2019 23:51:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=mykernel.net (client-ip=124.251.121.247;
- helo=sender2.zoho.com.cn; envelope-from=cgxu519@mykernel.net;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=mykernel.net
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=mykernel.net header.i=cgxu519@mykernel.net
- header.b="EzeTgs+u"; dkim-atps=neutral
-X-Greylist: delayed 764 seconds by postgrey-1.36 at bilbo;
- Tue, 19 Nov 2019 22:51:04 AEDT
-Received: from sender2.zoho.com.cn (sender3-of-o52.zoho.com.cn
- [124.251.121.247])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47HPKh1ZMMzDqMd
- for <linux-erofs@lists.ozlabs.org>; Tue, 19 Nov 2019 22:51:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574164253; 
- s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
- h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
- l=865; bh=+FwHwfxfCC02esvMwBIpiezVL59KIt/RyeILg7L7HdU=;
- b=EzeTgs+udigUBc3x4SreYE86cHePJThYfak062WykuFUFMMmlrz3bucj7Z+SICQu
- vdMhj8aP8xPJp/fXBqyap+xmSI5smXK/w1k0Lxg+86cmarFX9sb0W5DaSYXW5mTbd8X
- g3zsJJIomHGw93I5DDPDiBYly9rsvlQLosu8idIw=
-Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by
- mx.zoho.com.cn with SMTPS id 1574164251601930.7687279860228;
- Tue, 19 Nov 2019 19:50:51 +0800 (CST)
-From: Chengguang Xu <cgxu519@mykernel.net>
-To: xiang@kernel.org,
-	chao@kernel.org
-Message-ID: <20191119115049.3401-1-cgxu519@mykernel.net>
-Subject: [PATCH] erofs: remove unnecessary output in erofs_show_options()
-Date: Tue, 19 Nov 2019 19:50:49 +0800
-X-Mailer: git-send-email 2.20.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47HQgB6NlmzDqTl
+ for <linux-erofs@lists.ozlabs.org>; Tue, 19 Nov 2019 23:51:16 +1100 (AEDT)
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+ by Forcepoint Email with ESMTP id 2363D822664699911B1B;
+ Tue, 19 Nov 2019 20:51:07 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 19 Nov 2019 20:51:06 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 19 Nov 2019 20:51:06 +0800
+Date: Tue, 19 Nov 2019 20:53:31 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Chengguang Xu <cgxu519@mykernel.net>
+Subject: Re: [PATCH] erofs: add error handling for erofs_fill_super()
+Message-ID: <20191119125328.GA86789@architecture4>
+References: <20191119113744.11635-1-cgxu519@mykernel.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191119113744.11635-1-cgxu519@mykernel.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,38 +55,40 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Chengguang Xu <cgxu519@mykernel.net>, linux-erofs@lists.ozlabs.org
+Cc: miaoxie@huawei.com, xiang@kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-We have already handled cache_strategy option carefully,
-so incorrect setting could not pass option parsing.
-Meanwhile, print 'cache_strategy=3D(unknown)' can cause
-failure on remount.
+Hi Chengguang,
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- fs/erofs/super.c | 3 ---
- 1 file changed, 3 deletions(-)
+On Tue, Nov 19, 2019 at 07:37:44PM +0800, Chengguang Xu wrote:
+> There are some potential resource leaks in error case
+> of erofs_fill_super(), so add proper error handling
+> for it.
+> 
+> Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+> ---
+>  fs/erofs/super.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 0e369494f2f2..06e721bd1c8c 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -369,7 +369,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  	sb->s_fs_info = sbi;
+>  	err = erofs_read_superblock(sb);
+>  	if (err)
+> -		return err;
+> +		goto free;
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 06e721bd1c8c..65c7da996643 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -581,9 +581,6 @@ static int erofs_show_options(struct seq_file *seq, str=
-uct dentry *root)
- =09=09seq_puts(seq, ",cache_strategy=3Dreadahead");
- =09} else if (sbi->cache_strategy =3D=3D EROFS_ZIP_CACHE_READAROUND) {
- =09=09seq_puts(seq, ",cache_strategy=3Dreadaround");
--=09} else {
--=09=09seq_puts(seq, ",cache_strategy=3D(unknown)");
--=09=09DBG_BUGON(1);
- =09}
- #endif
- =09return 0;
---=20
-2.20.1
+Could you give some hints what is the potential leak exactly?
+Actually, it was modified on purpose recently, see the following threads:
+https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk
+and
+https://lore.kernel.org/r/20190721040547.GF17978@ZenIV.linux.org.uk
 
-
+Thanks,
+Gao Xiang
 
