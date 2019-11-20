@@ -1,53 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 582EC103764
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Nov 2019 11:23:56 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47HzLd3ZtgzDqrN
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Nov 2019 21:23:53 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id C4064104178
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Nov 2019 17:52:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 47J7zD66jGzDqtj
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Nov 2019 03:52:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=mykernel.net (client-ip=163.53.93.251;
- helo=sender3-pp-o92.zoho.com.cn; envelope-from=cgxu519@mykernel.net;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f2e;
+ helo=mail-qv1-xf2e.google.com; envelope-from=vmtran@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=mykernel.net
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=mykernel.net header.i=cgxu519@mykernel.net
- header.b="Ul2YIIFZ"; dkim-atps=neutral
-Received: from sender3-pp-o92.zoho.com.cn (sender2-pp-o92.zoho.com.cn
- [163.53.93.251])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="o0KmJsLD"; 
+ dkim-atps=neutral
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com
+ [IPv6:2607:f8b0:4864:20::f2e])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47HzLL39RPzDqlL
- for <linux-erofs@lists.ozlabs.org>; Wed, 20 Nov 2019 21:23:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574244492; 
- s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
- h=Date:From:Reply-To:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
- l=1333; bh=bI+cc8z3jGP2wVdb3YVmvSegQAtFB1j54+rsC4ghiRs=;
- b=Ul2YIIFZaPzzDDW47Hp3RK5xvXlDOLXlTNJ3EHSQwk3WZg7obFLBJGWP9aiA5Z+L
- QuxBwP+Pr4TlQrB4uxMta5dLsUtbOIjnLS8xLqw4YLk8Bq7nxAYwJwMtAe9k9EwO8DX
- WMAXYHXk8Tz7RP/9etZSIu8X6+kHr0ZgyGhDV98Y=
-Received: from mail.baihui.com by mx.zoho.com.cn
- with SMTP id 1574244491265376.2364367640208;
- Wed, 20 Nov 2019 18:08:11 +0800 (CST)
-Date: Wed, 20 Nov 2019 18:08:11 +0800
-From: Chengguang Xu <cgxu519@mykernel.net>
-To: "Gao Xiang" <gaoxiang25@huawei.com>
-Message-ID: <16e88489ffe.10e665830795.7449424624832388952@mykernel.net>
-In-Reply-To: <20191119125328.GA86789@architecture4>
-References: <20191119113744.11635-1-cgxu519@mykernel.net>
- <20191119125328.GA86789@architecture4>
-Subject: Re: [PATCH] erofs: add error handling for erofs_fill_super()
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47J7yy0DG0zDqqD
+ for <linux-erofs@lists.ozlabs.org>; Thu, 21 Nov 2019 03:52:19 +1100 (AEDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id y18so187024qve.2
+ for <linux-erofs@lists.ozlabs.org>; Wed, 20 Nov 2019 08:52:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:from:date:message-id:subject:to;
+ bh=rwjMhwh2RV1CJWmg0aX9BTHuKwko/WirVFcQBj0z08s=;
+ b=o0KmJsLDT2kEvygS6C/zh5R9Hzh5rJg3keCqsMDkDAECkiNoulTpQWQ1juXZwwk91/
+ i324bOt5fAgjjqtRWrCMQQtEFUQCsD5CORQ1WxKZeinXaMx1fXCz4t2eE9gQpZA1dxw2
+ PSExhUU/2cEQsL+6Fweqlt01N0JWNMkp8O0l8QnqK1/lOdXmQqT2QbiPgb0BpgMwAdeH
+ 5F9KcQl9yNb9D7uDMUfA4vwFG6wuNrzndXanAfQ2mc8owZOyWMA7muqofDcc7riqwF2h
+ TOw/GNPkx3hVZDaDY9d+TVfSZ4hPo/RJM9yALm0+u6nifEg3jcodEQtYZ+Rubbwdxodq
+ mz8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=rwjMhwh2RV1CJWmg0aX9BTHuKwko/WirVFcQBj0z08s=;
+ b=JdQBIX5mOn+MTAJAE/dJV1zzn4vz9rO2j37H8iMsylDeU3jLZ0/MUmojPpufAh3c9A
+ 3A8MVjUEZ0q8sBP8q4d7xdXk2uEyjxtQ/Ag3C/nMi2HE+u86oWXKyN3AvczzN9WTGsEI
+ 8tVn2XX6Hb9rWuCA52pEM8B0MS95D+h5Q+lyuHtUjrn4BIT0SuAc9U1FRD65YJc8mY1L
+ mce+gf/rAn1pC2/QQO/V8U3hJPY2NjTlwxPjM4i1ot5f0M42dhdkt2rLpvyjaQcvGDv/
+ 8rzH0bRRu1J8CWlBF48woiQ+3xEaDGSBCg/lgxUwAvpOdCSeFAUS6NQtAOeBrlwz+iOw
+ NQvQ==
+X-Gm-Message-State: APjAAAXvG/xGxZHWvkl6RIavcFlOV1vgOYeh/FMQTZD/UyTp8SRz6nwz
+ Nok0JpvImZYBU3MACGyB6B3sKuv+Ude0sJ0ckg2VekU7
+X-Google-Smtp-Source: APXvYqyeRjb+yrIHuS4XPBxl2zisDUFMsxj4pVm/UnWCNr4DUbvQf6ur2Y2ob2to3JcDBu+/4lZKpDYwegiUebUDGoU=
+X-Received: by 2002:a05:6214:14b2:: with SMTP id
+ bo18mr3552717qvb.72.1574268735519; 
+ Wed, 20 Nov 2019 08:52:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: ZohoCN Mail
-X-Mailer: ZohoCN Mail
+From: Vu Tran <vmtran@gmail.com>
+Date: Wed, 20 Nov 2019 11:52:04 -0500
+Message-ID: <CAHfisdKeLY8o=b8aAWhKgf9NndaMjBUmfro_D_jhXaGmXQ_6GA@mail.gmail.com>
+Subject: EROFS to support XZ compressed file
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000c2fd620597ca0014"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,47 +70,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: cgxu519@mykernel.net
-Cc: miaoxie <miaoxie@huawei.com>, xiang <xiang@kernel.org>,
- linux-erofs <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
- ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=BA=8C, 2019-11-19 20:51:13 Gao Xiang =
-<gaoxiang25@huawei.com> =E6=92=B0=E5=86=99 ----
- > Hi Chengguang,
- >=20
- > On Tue, Nov 19, 2019 at 07:37:44PM +0800, Chengguang Xu wrote:
- > > There are some potential resource leaks in error case
- > > of erofs_fill_super(), so add proper error handling
- > > for it.
- > >=20
- > > Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
- > > ---
- > >  fs/erofs/super.c | 31 +++++++++++++++++++++++--------
- > >  1 file changed, 23 insertions(+), 8 deletions(-)
- > >=20
- > > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
- > > index 0e369494f2f2..06e721bd1c8c 100644
- > > --- a/fs/erofs/super.c
- > > +++ b/fs/erofs/super.c
- > > @@ -369,7 +369,7 @@ static int erofs_fill_super(struct super_block *sb=
-, void *data, int silent)
- > >      sb->s_fs_info =3D sbi;
- > >      err =3D erofs_read_superblock(sb);
- > >      if (err)
- > > -        return err;
- > > +        goto free;
- >=20
- > Could you give some hints what is the potential leak exactly?
- > Actually, it was modified on purpose recently, see the following threads=
-:
- > https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk
- > and
- > https://lore.kernel.org/r/20190721040547.GF17978@ZenIV.linux.org.uk
+--000000000000c2fd620597ca0014
+Content-Type: text/plain; charset="UTF-8"
 
-Sorry, it seems I misread some part of code, please just drop the patch.
+Hi,
 
-Thanks
+In my understanding, the work for having EROFS to support XZ (in both
+kernel and userspace utils) is actively developing.  Is it possible to know
+the timeline for when the feature will be available for end users to try
+out?
 
+Thank you very much and Best Regards,
+Vu Tran
+
+--000000000000c2fd620597ca0014
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<div><br></div><div>In my understanding, the work for h=
+aving EROFS to support XZ (in both kernel and userspace utils) is actively =
+developing.=C2=A0 Is it possible to know the timeline for when the feature =
+will be available for end users to try out?</div><div><br></div><div>Thank =
+you very much and Best Regards,</div><div>Vu Tran</div></div>
+
+--000000000000c2fd620597ca0014--
