@@ -2,81 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A036010478C
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Nov 2019 01:32:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B0D01047E5
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Nov 2019 02:13:06 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47JL9s2JGFzDqvn
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Nov 2019 11:32:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1574296353;
-	bh=eKsj4oUT5cjytNRN8veebgij7X0X16wdkdVxxZGr0BA=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=NoVQ5qzidEnHcjkGnCeiNgMhSsdi8fqCWNS2Doke9UDSEzkruXGXZFSz1rBmmIYa3
-	 JvqoYokZ6ouFUY4Eo1foSnZGpXF1FljoA59KkjYrkP++uX2dLUIn0XNYcOhzvWAkbG
-	 fl7/xuA1EwTFhGQqPmV1U1K5qEVl0FCdkv1s68qT6a/udcvap9MtbeAeT3emkzOTS4
-	 mKmqxLOnBSl33Xgkuh+kOf0rJa1dSe7AJ1AMKSqmivPr3lX8G7sNZjIrhklabzFYXf
-	 aow45toCb9wbN/sZ5KRlRTdy+idbVWu0Q5Kqnc/KcZMaA3LllyuoW5XalUqVHBUf2i
-	 45gEPGdecxQNA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 47JM4b0B0MzDqq3
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Nov 2019 12:13:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=huawei.com;
+ envelope-from=yuchao0@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.31; helo=sonic316-55.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="KgeINcZB"; 
- dkim-atps=neutral
-Received: from sonic316-55.consmr.mail.gq1.yahoo.com
- (sonic316-55.consmr.mail.gq1.yahoo.com [98.137.69.31])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47JL9j5ZFvzDqvP
- for <linux-erofs@lists.ozlabs.org>; Thu, 21 Nov 2019 11:32:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1574296339; bh=9kmHso3mSurnOZWQzhC9+/Sw9IyGT+zjKJiHJB1GUFk=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=KgeINcZB+nI+0qRC70RenDgKt/GBUZTCWSKCNNat40BzKQ1Xv2W2luVhJvw4ajV6g794k8kUbWuyGSZr9vqufpyPIdIG8uLkvk9WyxjhI4AAnHmHBydc7f0LPznCaL/ts3OsGboWOcT4aGIM/z7guPtnS9zAkn/qLDRJFbOTfybqtKkmhtnySr2+tHndaH0YMZ2WrMDxaFWwbIlOpBgPImoi8Znh+4JxVdgvdAHKUbwe7OoxAnYsqwVdXGRqjYnXp55jwSOO1Os8XQoUMkfz+BLdKfWDJTtMnYAgX+ZOimYUUSJAiXqW+jHeDHLgA05SypYLhTSJkeZskfsw6ymlYA==
-X-YMail-OSG: .tzMujYVM1nolGPpia9K__k7sHu_4l9yqVYeYqG0cs6imXZn2yrpidDmhBAcvG3
- mToYQ08NoF08qFDKiCyVdGXMG.iv82rc6Ybh.MR8NRoNLIbaEb_7pT8F6AIdndbLYJ_G27kd7qhN
- DuLQL8WYzoXPR9EtWomJ8K8RSTAfGvYouFuedQJKxU7IKLcFnSja2kQOP5WGp8uWm9RgYKLWpeJY
- 2NJFOIh_G1Flg81rs96hEggC7OQ8GKRkSQWiY0RVF9g8YlW9XAK0ShcFbiu0Yn.xUKEsZYjTZgQj
- K99U_NimA9OWUvCFVVbwfSd8aDLIJOrFwTDJ.W7yxDW.fxvY6sGmKms6VEcxQCduLnWakxe9Niz8
- ydlLltYe5xuIatpXtjMzW2hnziyASMdjP7nf0eVp4.4djPPtjZEtYM8fvcFDowZL0biKqNglZdej
- .aeFlUbUbSWCkkl_Zrj4DEk.U3ehu.kfoH9Qwj6uA0khotc7.TgTkoLTHEyKn_i.xWL9XrLAwBd_
- _.yV3i1HaPV72gc5nhmxE.1l7tHnfaPpiw2jekHcRWCJt.qGyN3ssoyO1I6FK0Ngups5StgCoVIp
- 0c0SmiEKtd3jWmoKWKhjYmuA_Vy_ts.qjjiYogGbJ7Ji35Gu7zEV3LO4lO3xw1J_d5P0rkG9kgH9
- VPC9dPBXj6oJjFlsYqUi4Xdcgcyl4x9kMPTLphdSpJD9J92rO462MTARzWc9PjkNEWR0DJvYdFou
- g0WQo75o4Wh8YyxoD_1HXzippuPc6E_LMLJRI_uJh002.E1xEP1q66gchhKQQc.qnqqZcBN6vFh2
- tie9xEIBnauO_uKZdBBJpwzTJx32dUWZPBinf5u369t1Ptkwu7iZaqMjSqk2CXb4CXLqhDPvi9VZ
- aPHQAvVJsYpFKT7FXNiDVv5AXT0MJSESU69aaRIekXYPs7YFe9nKaVUw3xxZiG7WUaFTioYO4.nD
- QEVWzbeW2berTHg0XJ2N_jKVKeWO4jirPyCWyEgmHXHc9EfJWyQJgF3JEdFWv9E_jZTlbUgQvPm1
- VxeTUwLP7jTJ4iq2jZwchqWSgqiPhqKa.7ImGVssGzl5krtA947HDNmCNvzWO7Vanp0yoSK5.RvW
- AxihfMcVYH55M696w3uexn35XhLejoS15vJPaRGaTOzjzNy2FZiEs6Y8aE9OCg81pgokHhv5HYHH
- jCPLMLCNQNgUC8yjOJYhsnKESzBQ6ZIl3386Yajy1b8JXzyV21sKrfsmSf_LQ6q7fijsnFZ9_mBf
- bBs_R6OXroyRUbjY2Z7pVc0rQhmhXXFLku1ph5k6hfJ8OKFSxIRieDQvRGaU2dTSL_Cpc3PMd5Ka
- wfgNydLiOyrtIfiexfAfsHIr9YhoRWp3JblWERyFxnAzdxx.nQSQa1Ic6Mu1VhFun9AWxRoEo6g-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic316.consmr.mail.gq1.yahoo.com with HTTP; Thu, 21 Nov 2019 00:32:19 +0000
-Received: by smtp429.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 4312a8f81c27aab3243774b5ffad1dab; 
- Thu, 21 Nov 2019 00:32:18 +0000 (UTC)
-Date: Thu, 21 Nov 2019 08:32:13 +0800
-To: Vu Tran <vmtran@gmail.com>
-Subject: Re: EROFS to support XZ compressed file
-Message-ID: <20191121003205.GA23848@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CAHfisdKeLY8o=b8aAWhKgf9NndaMjBUmfro_D_jhXaGmXQ_6GA@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47JM4V0YLGzDqNN
+ for <linux-erofs@lists.ozlabs.org>; Thu, 21 Nov 2019 12:12:55 +1100 (AEDT)
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id BA7B8717D83CA5655174;
+ Thu, 21 Nov 2019 09:12:49 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 21 Nov
+ 2019 09:12:41 +0800
+Subject: Re: [PATCH v2] erofs: drop all vle annotations for runtime names
+To: Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <chao@kernel.org>,
+ <linux-erofs@lists.ozlabs.org>
+References: <20191108032526.40762-1-gaoxiang25@huawei.com>
+ <20191108033733.63919-1-gaoxiang25@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <c12e9c9d-74ed-2beb-4e07-f9fdd731d00f@huawei.com>
+Date: Thu, 21 Nov 2019 09:12:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHfisdKeLY8o=b8aAWhKgf9NndaMjBUmfro_D_jhXaGmXQ_6GA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_181)
+In-Reply-To: <20191108033733.63919-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -88,39 +53,48 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <xiang@kernel.org>, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Vu,
-
-On Wed, Nov 20, 2019 at 11:52:04AM -0500, Vu Tran wrote:
-> Hi,
+On 2019/11/8 11:37, Gao Xiang wrote:
+> VLE was an old informal name of fixed-sized output
+> compression came from released ATC'19 paper [1].
 > 
-> In my understanding, the work for having EROFS to support XZ (in both
-> kernel and userspace utils) is actively developing.  Is it possible to know
-> the timeline for when the feature will be available for end users to try
-> out?
+> Drop those old annotations since erofs can handle
+> all encoded clusters in block-aligned basis, which
+> is wider than fixed-sized output compression after
+> larger clustersize feature is fully implemented.
+> 
+> Unaligned encoded data won't be considered in EROFS
+> since it's not friendly to inplace I/O and decompression
+> inplace.
+> 
+> a) Fixed-sized output compression with 16KB pcluster:
+>   ___________________________________
+>  |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|
+>  |___ 0___|___ 1___|___ 2___|___ 3___| physical blocks
+> 
+> b) Block-aligned fixed-sized input compression with
+>    16KB pcluster:
+>   ___________________________________
+>  |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxx00000|
+>  |___ 0___|___ 1___|___ 2___|___ 3___| physical blocks
+> 
+> c) Block-unaligned fixed-sized input compression with
+>    16KB compression unit:
+>   ____________________________________________
+>  |..xxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|x.......|
+>  |___ 0___|___ 1___|___ 2___|___ 3___|___ 4___| physical blocks
+> 
+> Refine better names for those as well.
+> 
+> [1] https://www.usenix.org/conference/atc19/presentation/gao
+> 
+> Cc: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Streamed-based XZ decompression is not hard for the kernel part. I've talked
-to Chao about this offline, he will work on this. (AFAIK, Currently he's busy
-in other stuffs.). It can be tried out when this part is ready.
-
-For mkfs part, The problem of fitblk-like XZ compressor is compression time.
-Developping a multi-threaded mkfs is not hard even for fixed-sized output
-compression (segment-based compression), hacking LZMA2 compressor is more
-preferred. Finally I decided to take some time on this (I'm taking much
-time on LZMA format and (its entropy coding) range coder now.)
-
-We also hope other forks could join us as well, either filesystem guys
-or compression experts... It will be of great help...
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
 Thanks,
-Gao Xiang
-
-> 
-> Thank you very much and Best Regards,
-> Vu Tran
