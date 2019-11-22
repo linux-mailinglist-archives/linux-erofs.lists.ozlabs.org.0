@@ -2,72 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A371106872
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Nov 2019 09:59:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F213E1068E4
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Nov 2019 10:33:37 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47K9N75L7lzDrLk
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Nov 2019 19:59:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47KB7g3GrDzDrMp
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Nov 2019 20:33:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=haruue.moe (client-ip=2607:f8b0:4864:20::643;
- helo=mail-pl1-x643.google.com; envelope-from=i@haruue.moe; receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=haruue.moe
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=haruue.moe header.i=@haruue.moe header.b="mnNqqNkM"; 
- dkim-atps=neutral
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com
- [IPv6:2607:f8b0:4864:20::643])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47K9Mz422szDrKb
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Nov 2019 19:59:07 +1100 (AEDT)
-Received: by mail-pl1-x643.google.com with SMTP id f9so2851781plr.7
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Nov 2019 00:59:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=haruue.moe; s=gsuite-haruue-moe-v2;
- h=date:from:to:subject:message-id:mime-version:content-disposition
- :user-agent; bh=UdOC7/gOzd81jhGMAUohwjrfawEQLqd2Gd1fx2N6f3A=;
- b=mnNqqNkM509YFGlFgUeenMdC5PPJkkOcIV5XX2HWRpBWBLiZ93lULeOdDK0O1K84f7
- FD4ZiouFKM5/W7cEpuumEkeVkqP2NkwS27aAJWZDqvgsTABXbvDZmP+16IJ0juUfmaaZ
- NRiOREFwD07CCK6OupY1pEMOh5J9VFyp15wFliwzzWJRHI9zXXadD4Et4MAuGta9LOxS
- fnakW3De+Y3G82raC+1S9hIPKSA2afaBFiZTPXOGsl58kw+uQ7RQMP+umRW85OfNAAvO
- 5WLDu7Ww89nBMF5KSj9QGONDO9c6jiemoGgG9cc5HTrlLeo6WxjI4tTOWIZdIFGiS51V
- bJrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:subject:message-id:mime-version
- :content-disposition:user-agent;
- bh=UdOC7/gOzd81jhGMAUohwjrfawEQLqd2Gd1fx2N6f3A=;
- b=Qya6JIJn514GE0yn7YQrUFKX84RSep2PCPtMaplDfSXIsGYDC0TqVdVcQ0M8ZI8413
- Tq4yzEJIcIb104ZtZavvidt4FecNN5yFUh33+16tXrQ8cuwn12mZCx35QtS0RvqIQkJu
- vEHTCu/y5v7sBWltaZrAf0IQJNEPXmyDqzm5F7oLKy0lft5LU7ELB/c3HGHTSi0v1QAy
- RDXotBfwlxmwrXJWdBbGOMp+VJNB8V9TOshvGSRLekoCqM2loeuxOgpRds4f8AjUd9vQ
- A4Oeby+gVz9kafuKNbPKByju7Rr0viChqWGzbP07KoVCrGWGfq4F+vgFxjFnEPv8rT+q
- 2Dtw==
-X-Gm-Message-State: APjAAAWcWSeHZRLj40eLtejzNvzdhQGXfIAeBFMS8nG7zcwwxm+k1rwE
- Hz4KC6PeYMi2d0z6Ik9F6HcAKsLLXKc=
-X-Google-Smtp-Source: APXvYqx2fHLBek906xd8NujpXuhA6aQc0SSd4U83FRAQnxbRPsLTssC8ZqpBTxuQ5vBjjDTZwq3RoA==
-X-Received: by 2002:a17:90a:a00d:: with SMTP id
- q13mr17295441pjp.106.1574413143768; 
- Fri, 22 Nov 2019 00:59:03 -0800 (PST)
-Received: from usamimi.host.haruue.net (216.39.92.34.bc.googleusercontent.com.
- [34.92.39.216])
- by smtp.gmail.com with ESMTPSA id a16sm5704179pgb.7.2019.11.22.00.59.02
- for <linux-erofs@lists.ozlabs.org>
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Fri, 22 Nov 2019 00:59:02 -0800 (PST)
-Date: Fri, 22 Nov 2019 16:58:59 +0800
-From: Haruue Icymoon <i@haruue.moe>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: fix configure.ac
-Message-ID: <20191122085859.GA2414688@usamimi.host.haruue.net>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47KB7T3QdGzDrHZ
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Nov 2019 20:33:22 +1100 (AEDT)
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+ by Forcepoint Email with ESMTP id 0BBF05A8F2804053A12D;
+ Fri, 22 Nov 2019 17:33:10 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 22 Nov 2019 17:33:09 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Fri, 22 Nov 2019 17:33:09 +0800
+Date: Fri, 22 Nov 2019 17:35:30 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Haruue Icymoon <i@haruue.moe>
+Subject: Re: [PATCH] erofs-utils: fix configure.ac
+Message-ID: <20191122093529.GA106418@architecture4>
+References: <20191122085859.GA2414688@usamimi.host.haruue.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191122085859.GA2414688@usamimi.host.haruue.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,38 +55,55 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-./configure will fail when --with-lz4-libdir is not set, since
-$with_lz4_libdir will be an empty string and generate an empty -L
-into LDFLAGS. This patch fixes it.
+Hi Haruue,
 
-Signed-off-by: Haruue Icymoon <i@haruue.moe>
----
- configure.ac | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Nov 22, 2019 at 04:58:59PM +0800, Haruue Icymoon wrote:
+> ./configure will fail when --with-lz4-libdir is not set, since
+> $with_lz4_libdir will be an empty string and generate an empty -L
+> into LDFLAGS. This patch fixes it.
+> 
+> Signed-off-by: Haruue Icymoon <i@haruue.moe>
+> ---
+>  configure.ac | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/configure.ac b/configure.ac
+> index f925358..870dfb9 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -174,7 +174,7 @@ if test "x$enable_lz4" = "xyes"; then
+>  
+>    if test "x${have_lz4h}" = "xyes" ; then
+>      saved_LDFLAGS=${LDFLAGS}
+> -    LDFLAGS="-L$with_lz4_libdir ${LDFLAGS}"
+> +    test -z "${with_lz4_libdir}" || LDFLAGS="-L$with_lz4_libdir ${LDFLAGS}"
+>      AC_CHECK_LIB(lz4, LZ4_compress_destSize, [
+>        have_lz4="yes"
+>        have_lz4hc="yes"
+> -- 
+> 2.24.0
 
-diff --git a/configure.ac b/configure.ac
-index f925358..870dfb9 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -174,7 +174,7 @@ if test "x$enable_lz4" = "xyes"; then
- 
-   if test "x${have_lz4h}" = "xyes" ; then
-     saved_LDFLAGS=${LDFLAGS}
--    LDFLAGS="-L$with_lz4_libdir ${LDFLAGS}"
-+    test -z "${with_lz4_libdir}" || LDFLAGS="-L$with_lz4_libdir ${LDFLAGS}"
-     AC_CHECK_LIB(lz4, LZ4_compress_destSize, [
-       have_lz4="yes"
-       have_lz4hc="yes"
--- 
-2.24.0
+Thanks for your patch. *thumb*
 
+Applied to experimental branch now, and I will move it to dev branch
+tomorrow since it's a useful trivial build fix for some debian builds
+as well [1].
 
--- 
-Haruue Icymoon
-GPG: E16D 3FA4 E636 A602 2684  0D38 A54A 7E9C 812E EB09
-https://haruue.moe/
+[1] https://buildd.debian.org/status/package.php?p=erofs-utils
+    https://buildd.debian.org/status/fetch.php?pkg=erofs-utils&arch=hppa&ver=1.0-3&stamp=1573917897&raw=0
 
+Thanks,
+Gao Xiang
+
+> 
+> 
+> -- 
+> Haruue Icymoon
+> GPG: E16D 3FA4 E636 A602 2684  0D38 A54A 7E9C 812E EB09
+> https://haruue.moe/
+> 
