@@ -2,77 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C66510817E
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Nov 2019 03:52:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4837710847A
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Nov 2019 19:30:58 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47LF8M4TLyzDqsD
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Nov 2019 13:52:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1574563971;
-	bh=Pf8lx0Qp33qGehSSkjf0D+TNR6aP639BdfKoq9V0m9A=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=MRw7dKlkENhoNN8HipVovtUFqqJzO/DADnT1MyxAMFb8x2BgUamiAwxJzBFjDFnQI
-	 M5otH6ph1y9n/cAaNvxg6euo9Jh2OhlhWhEL1MwuicassGHMrJpdwozFj6zdqbUvpm
-	 A99BjgH/RX1Vo+mMYtATlUoDRImlQobjvX1RM1u7SZCrXrlYaWTbV/3uclgC3G6QU1
-	 U/sQhSVc/zWCAfbWdBI+bRzMtnsFcaHWF3SSMft8t0QV0NxgI+BD4rS/6hIk1/8xfM
-	 quZy6Jz8OZjTfi2zpIyuYsTSmRdTZTcIT2fsBTPBMYU3swizqO8zb7H+6ASscvfwd2
-	 zvJwH3zyzs4dQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 47Ldyj0shPzDqY0
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Nov 2019 05:30:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::534;
+ helo=mail-ed1-x534.google.com; envelope-from=pratikshinde320@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.204; helo=sonic303-23.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="N5QA0/P+"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="XBEJL9Qb"; 
  dkim-atps=neutral
-Received: from sonic303-23.consmr.mail.gq1.yahoo.com
- (sonic303-23.consmr.mail.gq1.yahoo.com [98.137.64.204])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com
+ [IPv6:2a00:1450:4864:20::534])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47LF8D4nylzDqrW
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Nov 2019 13:52:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1574563958; bh=UQ4wEZ2d5NEnClVo49438KLMoHozWpLWnEb3RCQEf1Y=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=N5QA0/P+b7sJ6mKtnfxMiNVv23FDYr2L3MKhgtRVVGAYAMXGzvVrdhn8SnfVFGD2YZ0AQsS3ruia3lEzJbx2yBRsbTaRGdjvGI1X8FVBBX4XkoZZZgBKTtg3k4hytokwo07oWZlKPVlSKFEkWdx5TLANT/pwMIfpSQQ465c7aOzcP5UzNqzJLc9k8ZXBLXgUBQJfQG6nPTbZtbnD1t+koFrTlnGJqLGM195+OMnRlx5SpMrTL6tf5+xBFsxt29qb4rH8NCNYWnTPPyj/OKxIcZtSk0JDde8OI8lZrguZnf3YrhOYiDnXXgOBh+/KWpUcqoBJKbBG0aIhX6IiOsSSgA==
-X-YMail-OSG: o8bN8bkVM1lr77BD6flAMTJxBebO6EqyEPf.bKp8RQ2MRvrXbbWyyCtuxzqvkxO
- VIioLoqljHOENu12xtKzhZ7nxdhgx8_in4Zbzb0gNlqpakWRkx0kMxhJlTvREvIqyrxKL3v.2MDi
- _OI_ABrPrrl7mZX1F_dxJuTQQzs76JeqpGF.OXB6oQ_F75rTp3qWLcOML46yvPimMvw1O1EDLZMV
- p9W..s886cdLZQaVF1R78fJjXbp6krM.qngPcloxlztTEHPstZYGGTEQRFyLXEGjYBYxl_y9olUv
- DZn2E.AojuknbP4a9fsmLlGvaBnnEFszZVWPHnlAfJ3v8iX50hOrghHVBafG6d5qrLL_EJnUImo3
- 3BZam8qDcVdrI1MDi2F73hci2RhZojo0GKVaSJfj3.fFR2MakSwN2kjECL3vCECxOwdU9Y9mZrvy
- XcWmfdEHmGGH_2C.c9gvk.4He4Nki8Q6jgoSVsa5a.MJeeAIrvpjPfww6Xm4Ct7KWq1NrnZnMhqz
- nnyQTvnQNVMLgVr5LVK1xbOFvKydgymTsgbPEz4ldpXTBcXi_Hui7pGoEsYHBVMq0XhG3LU5ayF9
- wrkvTjWJb65I4zOhQ5siYCsD1We64A5jHo2VMUL6ScmC8gkdeqmrVuVXs.7n4GeguviINB8EK5_i
- H_tI1dcD9DLoCE6Au1YxXDU89nb9fHWLz52KCfcV8UZLH4Dk0H5kyDmqChswugvlAYoH1EtzIozF
- KP9s6chiGBOpiyffG3UqZFIYZ2LU7EazIKASI6AfYlBCOBjtlE3j0wLl3QDI5ke_V1MoZd.iW49_
- FucMYtDnAFK4ix.2Fn0xrCFy_dzjCDbZBim58diqN6.r3xTItuxlNbWFSnGnCPk_iwEZWkEjs4wD
- CFknDwnDdpO995jF4elRuTHATBpY7Cb5DfAGMaBBZvFpUyGIeO353X_0yo3Lno_At0KntO6h5cPC
- eRHoYQXZ_exWMelXS8ysTVXN3HgRx45.fglDEjv_l72PygDi3iPlepRx9Cy9dr9fu9eMTMVRENvd
- Nohfdo8PpURk6VvQ2DlW0IZx850kP1pniQGzrMZI1oVVwBQrn.fUbhM7gz3HDsC.aVrChOCmQ8O0
- VnetiRKvQw3cOQDkutXBqcC8swB3PaVMspVU4Rjbw1tptXp47vJJu7JlC27gUJphuWDLqSTs9BkN
- UxiK3kJ9XLbPxNHzMMzzdgLOBOE3hndHnVsgEy88yQn6fGeODo3EpS1j0ghAm6CHi.QLkfp27G5f
- nxkgBptkrdhiu82e.7A4ltiDuYXHXL1ki68MhQg1o55eAe8NZPv5mMXVaSX2.5FtWMLZ1I8CGw2q
- Y3VNPlvJ1mjZvil9amjvDQKzMa.qIoZXRHOBwB.fr39IijOnK7jr9MCLyRml9Byw.9XHkwy4l4AM
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic303.consmr.mail.gq1.yahoo.com with HTTP; Sun, 24 Nov 2019 02:52:38 +0000
-Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 5bd6a20cd9601ad8d553e03d3cdf2cec; 
- Sun, 24 Nov 2019 02:52:33 +0000 (UTC)
-To: Chao Yu <yuchao0@huawei.com>,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: get rid of __stagingpage_alloc helper
-Date: Sun, 24 Nov 2019 10:52:17 +0800
-Message-Id: <20191124025217.12345-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.20.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47Ldyb6hyJzDqXT
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Nov 2019 05:30:47 +1100 (AEDT)
+Received: by mail-ed1-x534.google.com with SMTP id n26so10441888edw.6
+ for <linux-erofs@lists.ozlabs.org>; Sun, 24 Nov 2019 10:30:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=5QjZ/R0xWgcUXADRcl84yOb2gq856SPneGgCZg7qzfg=;
+ b=XBEJL9QbTz/UKqzBuSvuBFXxSLTLRoUV5j5Al4nnKU4dhuX0HI0TgQtFdR/IdherVC
+ 04BncBQ4RvCLIn70iM4K3uzrwsqrfDL+xBUt0eBFkiP47cYXDwRCESF2g2pYuAdAeeo9
+ 3zvStnvlM7GfLlZxVReHpk4XpjN1KzCbIGUpBt9qI8srwdCjSwd42WAOzZB5HlN1dG9P
+ gqQrhTL22JIST01MVmuGzJXLCo+K9NLBd6oMsLr11cHX+mB1CE272x4lqBQdIkjNbEMl
+ 1oedATFsPVTnAA3C4lioZb1hNQIFU0gKAHJvlqN/iPQfesW7lCII9c8LDEpaxf+0yBvC
+ RRZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=5QjZ/R0xWgcUXADRcl84yOb2gq856SPneGgCZg7qzfg=;
+ b=RFqdWkQhTuMCPIV4kAmlSLZVP1bYCCp+5e1PDz2cTNYKQIUHVsRhMSq1dodDRzGQwc
+ 8CPBGu67sTi3GS0b6yK6Mdy/UaQO2QegmvYRZ5gWYVDHwjhPlDsPOvXUwxtqv6w1MPkz
+ tSRkdbPh3/58IxU1tb61ulc2QHFTliWaOXL9PqiqBUDbmzguer7NRWEy/cAsPFKAyUbo
+ fJIX80ewc03t5gcswq1LeRSSjJg5g4u2kWfxFVtRLDzYj6etY+Ah9S0V7IsX/exmcVJD
+ ekRyp9mXzAZg0MMa4atbNlJiv9Me53XOw2ea84CfvS7KoojDC6ujHfwr1FenWZCds+Kr
+ D31g==
+X-Gm-Message-State: APjAAAXJiCW+C0OO/KT+5zKLbhhwHtnAvijkAJ+o7V/soKWeII2rAon9
+ eYNHnfEqe/yHPnDYSAHZDKSFdPWSeq4TPJ+ACY0=
+X-Google-Smtp-Source: APXvYqwOjbSipEYIutcqT1380QKxjawSk/bCKqldJW014w+wd5Ybx8iWUtxhNzEUisAbHIv3yNUWPb4GMz9HKXUyfWc=
+X-Received: by 2002:a17:906:f14a:: with SMTP id
+ gw10mr33683449ejb.29.1574620238848; 
+ Sun, 24 Nov 2019 10:30:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20191124025217.12345-1-hsiangkao.ref@aol.com>
+References: <CAGu0czQOorHC=JxQVpWDB2KD0NOzh13OuHj3r_4_U5hCWkkNwQ@mail.gmail.com>
+ <20191117173027.GA21516@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20191117173027.GA21516@hsiangkao-HP-ZHAN-66-Pro-G1>
+From: Pratik Shinde <pratikshinde320@gmail.com>
+Date: Mon, 25 Nov 2019 00:00:28 +0530
+Message-ID: <CAGu0czTT=s8xU0uLruAE3a3jnPDd_eQS290u45OACYrb3Z3L0Q@mail.gmail.com>
+Subject: Re: Support for uncompressed sparse files.
+To: Gao Xiang <hsiangkao@aol.com>
+Content-Type: multipart/alternative; boundary="000000000000fe2a8805981bd772"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,146 +74,116 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+--000000000000fe2a8805981bd772
+Content-Type: text/plain; charset="UTF-8"
 
-Now open code is much cleaner due to iterative development.
+Hi Gao,
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-changes since v1:
- - drop redundant nofail in erofs_allocpage since it has gfp;
- - add to managed cache then visible to pcluster;
- - stress testing survival for days on products
-   without unexpected behavior.
+In the current design, for uncompressed files, we only maintain the
+starting block address.because rest of the data blocks will follow it
+(continuous allocation).
+For sparse files we have to do following
+1) We don't want to allocate space for holes (Holes will be multiple of
+EROFS_BLKSZ ?)
+2) For read() operation on holes, return null data  = '\0'.
 
- fs/erofs/decompressor.c |  2 +-
- fs/erofs/internal.h     |  2 +-
- fs/erofs/utils.c        |  4 ++--
- fs/erofs/zdata.c        | 37 +++++++++++++++++--------------------
- 4 files changed, 21 insertions(+), 24 deletions(-)
+I have few thoughts about it:
+1) Without changing the current design much, we want to keep track of holes
+in file.
+    e.g maintaining some table OR bitmap(per inode), to check if given
+offset falls inside hole or real data.
+2) Accordingly changing the readpage() aop.
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 19f89f9fb10c..2890a67a1ded 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -73,7 +73,7 @@ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 			victim = availables[--top];
- 			get_page(victim);
- 		} else {
--			victim = erofs_allocpage(pagepool, GFP_KERNEL, false);
-+			victim = erofs_allocpage(pagepool, GFP_KERNEL);
- 			if (!victim)
- 				return -ENOMEM;
- 			victim->mapping = Z_EROFS_MAPPING_STAGING;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 544a453f3076..0c1175a08e54 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -382,7 +382,7 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c / zdata.c */
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail);
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
- 
- #if (EROFS_PCPUBUF_NR_PAGES > 0)
- void *erofs_get_pcpubuf(unsigned int pagenr);
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index f66043ee16b9..1e8e1450d5b0 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -7,7 +7,7 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail)
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
- {
- 	struct page *page;
- 
-@@ -16,7 +16,7 @@ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail)
- 		DBG_BUGON(page_ref_count(page) != 1);
- 		list_del(&page->lru);
- 	} else {
--		page = alloc_pages(gfp | (nofail ? __GFP_NOFAIL : 0), 0);
-+		page = alloc_page(gfp);
- 	}
- 	return page;
- }
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 93f8bc1a64f6..1c582a3a40a3 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -546,15 +546,6 @@ static bool z_erofs_collector_end(struct z_erofs_collector *clt)
- 	return true;
- }
- 
--static inline struct page *__stagingpage_alloc(struct list_head *pagepool,
--					       gfp_t gfp)
--{
--	struct page *page = erofs_allocpage(pagepool, gfp, true);
--
--	page->mapping = Z_EROFS_MAPPING_STAGING;
--	return page;
--}
--
- static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
- 				       unsigned int cachestrategy,
- 				       erofs_off_t la)
-@@ -661,8 +652,9 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 	/* should allocate an additional staging page for pagevec */
- 	if (err == -EAGAIN) {
- 		struct page *const newpage =
--			__stagingpage_alloc(pagepool, GFP_NOFS);
-+			erofs_allocpage(pagepool, GFP_NOFS | __GFP_NOFAIL);
- 
-+		newpage->mapping = Z_EROFS_MAPPING_STAGING;
- 		err = z_erofs_attach_page(clt, newpage,
- 					  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
- 		if (!err)
-@@ -1079,19 +1071,24 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
- 	unlock_page(page);
- 	put_page(page);
- out_allocpage:
--	page = __stagingpage_alloc(pagepool, gfp);
--	if (oldpage != cmpxchg(&pcl->compressed_pages[nr], oldpage, page)) {
--		list_add(&page->lru, pagepool);
--		cpu_relax();
--		goto repeat;
--	}
--	if (!tocache)
--		goto out;
--	if (add_to_page_cache_lru(page, mc, index + nr, gfp)) {
-+	page = erofs_allocpage(pagepool, gfp | __GFP_NOFAIL);
-+	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
-+		/* non-LRU / non-movable temporary page is needed */
- 		page->mapping = Z_EROFS_MAPPING_STAGING;
--		goto out;
-+		tocache = false;
- 	}
- 
-+	if (oldpage != cmpxchg(&pcl->compressed_pages[nr], oldpage, page)) {
-+		if (tocache) {
-+			/* since it added to managed cache successfully */
-+			unlock_page(page);
-+			put_page(page);
-+		} else {
-+			list_add(&page->lru, pagepool);
-+		}
-+		cond_resched();
-+		goto repeat;
-+	}
- 	set_page_private(page, (unsigned long)pcl);
- 	SetPagePrivate(page);
- out:	/* the only exit (for tracing and debugging) */
--- 
-2.20.1
+Let me know you thoughts on this.
 
+--Pratik.
+
+On Sun, Nov 17, 2019 at 11:01 PM Gao Xiang <hsiangkao@aol.com> wrote:
+
+> Hi Pratik,
+>
+> On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:
+> > Hello Gao,
+> >
+> > I have started working on above functionality for erofs.
+> > First thing we need to do is detect sparse files & determine location of
+> > holes in it.
+> >
+> > I was thinking of using lseek() with SEEK_HOLE & SEEK_DATA for detecting
+> > holes.
+> > Let me know what you think about the approach OR any other better
+> approach
+> > in your mind.
+> >
+> > PS : support for SEEK_HOLE & SEEK_DATA came in 3.4 kernel.
+>
+> That is a good start to detect sparse files by SEEK_HOLE & SEEK_DATA.
+>
+> And as the first step, we need to design the on-disk extent format
+> for uncompressed sparse files. Is there some preliminary proposed
+> ideas for this as well? :-) (I'm not sure whether Chao is busy in
+> other stuffs now, we'd get in line with sparse on-disk format.)
+>
+> Thanks,
+> Gao Xiang
+>
+>
+
+--000000000000fe2a8805981bd772
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi Gao,</div><div><br></div><div>In the current desig=
+n, for uncompressed files, we only maintain the starting block address.beca=
+use rest of the data blocks will follow it (continuous allocation).</div><d=
+iv>For sparse files we have to do following</div><div>1) We don&#39;t want =
+to allocate space for holes (Holes will be multiple of EROFS_BLKSZ ?)</div>=
+<div>2) For read() operation on holes, return null data=C2=A0 =3D &#39;\0&#=
+39;.</div><div><br></div><div>I have few thoughts about it:</div><div>1) Wi=
+thout changing the current design much, we want to keep track of holes in f=
+ile.</div><div>=C2=A0=C2=A0=C2=A0 e.g maintaining some table OR bitmap(per =
+inode), to check if given offset falls inside hole or real data.</div><div>=
+2) Accordingly changing the readpage() aop.</div><div><br></div><div>Let me=
+ know you thoughts on this.</div><div><br></div><div>--Pratik.<br></div></d=
+iv><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On =
+Sun, Nov 17, 2019 at 11:01 PM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@aol=
+.com">hsiangkao@aol.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_=
+quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
+204);padding-left:1ex">Hi Pratik,<br>
+<br>
+On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:<br>
+&gt; Hello Gao,<br>
+&gt; <br>
+&gt; I have started working on above functionality for erofs.<br>
+&gt; First thing we need to do is detect sparse files &amp; determine locat=
+ion of<br>
+&gt; holes in it.<br>
+&gt; <br>
+&gt; I was thinking of using lseek() with SEEK_HOLE &amp; SEEK_DATA for det=
+ecting<br>
+&gt; holes.<br>
+&gt; Let me know what you think about the approach OR any other better appr=
+oach<br>
+&gt; in your mind.<br>
+&gt; <br>
+&gt; PS : support for SEEK_HOLE &amp; SEEK_DATA came in 3.4 kernel.<br>
+<br>
+That is a good start to detect sparse files by SEEK_HOLE &amp; SEEK_DATA.<b=
+r>
+<br>
+And as the first step, we need to design the on-disk extent format<br>
+for uncompressed sparse files. Is there some preliminary proposed<br>
+ideas for this as well? :-) (I&#39;m not sure whether Chao is busy in<br>
+other stuffs now, we&#39;d get in line with sparse on-disk format.)<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+<br>
+</blockquote></div>
+
+--000000000000fe2a8805981bd772--
