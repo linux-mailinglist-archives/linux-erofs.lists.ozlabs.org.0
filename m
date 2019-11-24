@@ -2,67 +2,83 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4837710847A
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Nov 2019 19:30:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A410C1084AE
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Nov 2019 20:10:35 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47Ldyj0shPzDqY0
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Nov 2019 05:30:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47LfrS74TRzDqYW
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Nov 2019 06:10:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1574622633;
+	bh=bASilMXk8a6tF14LpCEbZgC3H+3xLiTAv/YHqpRVSa8=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=bSYPZRevQ42oWf7CobTgO7q4g9JcVYGlJCVKEiOuqkrHDLNQf+sr7Mw934/nEGgLo
+	 7LnFRyrMcuG08l0qTH6kLLe8Qyr6hYRthNke5G8GgEqbYGAbEjBxaVcbpUSTg/XRb3
+	 8KQ2X3QhlPZ3LvzgwmeWKz6CotGePGJVravqAL0I2T1R/UuqSjdfJO7Bj+Fbuz14mJ
+	 QCTeauMlNnLn3bqX9UhqCo8X+/tZ4JzNWxBuFv73DhWayVCxiD+3Gi61DEK+ECiAlG
+	 NDe6GzS2syaygi0RvcQchHEw7g0gtCGMRuzZLKSG4wp0ZaF3dZ/fq8c1Epg4v2kNIe
+	 cPtS/k25WeQBw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::534;
- helo=mail-ed1-x534.google.com; envelope-from=pratikshinde320@gmail.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.31; helo=sonic308-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.b="XBEJL9Qb"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="HMVp76OL"; 
  dkim-atps=neutral
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com
- [IPv6:2a00:1450:4864:20::534])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from sonic308-55.consmr.mail.gq1.yahoo.com
+ (sonic308-55.consmr.mail.gq1.yahoo.com [98.137.68.31])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47Ldyb6hyJzDqXT
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Nov 2019 05:30:47 +1100 (AEDT)
-Received: by mail-ed1-x534.google.com with SMTP id n26so10441888edw.6
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Nov 2019 10:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=5QjZ/R0xWgcUXADRcl84yOb2gq856SPneGgCZg7qzfg=;
- b=XBEJL9QbTz/UKqzBuSvuBFXxSLTLRoUV5j5Al4nnKU4dhuX0HI0TgQtFdR/IdherVC
- 04BncBQ4RvCLIn70iM4K3uzrwsqrfDL+xBUt0eBFkiP47cYXDwRCESF2g2pYuAdAeeo9
- 3zvStnvlM7GfLlZxVReHpk4XpjN1KzCbIGUpBt9qI8srwdCjSwd42WAOzZB5HlN1dG9P
- gqQrhTL22JIST01MVmuGzJXLCo+K9NLBd6oMsLr11cHX+mB1CE272x4lqBQdIkjNbEMl
- 1oedATFsPVTnAA3C4lioZb1hNQIFU0gKAHJvlqN/iPQfesW7lCII9c8LDEpaxf+0yBvC
- RRZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=5QjZ/R0xWgcUXADRcl84yOb2gq856SPneGgCZg7qzfg=;
- b=RFqdWkQhTuMCPIV4kAmlSLZVP1bYCCp+5e1PDz2cTNYKQIUHVsRhMSq1dodDRzGQwc
- 8CPBGu67sTi3GS0b6yK6Mdy/UaQO2QegmvYRZ5gWYVDHwjhPlDsPOvXUwxtqv6w1MPkz
- tSRkdbPh3/58IxU1tb61ulc2QHFTliWaOXL9PqiqBUDbmzguer7NRWEy/cAsPFKAyUbo
- fJIX80ewc03t5gcswq1LeRSSjJg5g4u2kWfxFVtRLDzYj6etY+Ah9S0V7IsX/exmcVJD
- ekRyp9mXzAZg0MMa4atbNlJiv9Me53XOw2ea84CfvS7KoojDC6ujHfwr1FenWZCds+Kr
- D31g==
-X-Gm-Message-State: APjAAAXJiCW+C0OO/KT+5zKLbhhwHtnAvijkAJ+o7V/soKWeII2rAon9
- eYNHnfEqe/yHPnDYSAHZDKSFdPWSeq4TPJ+ACY0=
-X-Google-Smtp-Source: APXvYqwOjbSipEYIutcqT1380QKxjawSk/bCKqldJW014w+wd5Ybx8iWUtxhNzEUisAbHIv3yNUWPb4GMz9HKXUyfWc=
-X-Received: by 2002:a17:906:f14a:: with SMTP id
- gw10mr33683449ejb.29.1574620238848; 
- Sun, 24 Nov 2019 10:30:38 -0800 (PST)
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47LfrB0h36zDqXt
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Nov 2019 06:10:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1574622612; bh=7ia0d5/+7N2lnZw8t1LoUMuMgmslhvBOPbVRAFMeios=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=HMVp76OLV/Z7rKxMcqP/MH/aIkrCIPqrsJQ8B6LJIAfdysPgbC5uXJMuLV/6h0em2/BlBf5Aj/al5/9OsXvURme3j3tTVV3TD0zOE+Cm3SutxSuZ9MsGZjrIbj31dNLvDBLxMWPTANF9zherPyjMulkiV+AFbFxx4f00wdv0lR6mkhIlJq7kVIjS5Va3n8WfO5+ODpxlsjjjcJn98SDECDnM6fFt/qhQqhhSFsp/rlUXEUaCqp8dDVTCD/j5MZUTEFi5CywYlZTUqC14MibeTBx/QsspDzHEUI1PWOR9axuTVimr0dY46ribf6KZFM3gkiKxff0bPCEl9Nev4WnpdQ==
+X-YMail-OSG: q257OrQVM1kKkn6o0ji2bRXgsmBLxANCSGO_F46J8O38X2LnljoAAy.QeYkEuzP
+ 9cZnWkwhUWGk7nf2eyb.XrgvtB8ifXmavBql8Yw9.YRWnTRZuPS6RcxkEDi0taH7oOhiXqyJ32gs
+ PjFQ098xfrk64XCKRQek.akErjebbp5piv.cG42OGzT2umqGkCKs0vueC.mPKKIhl236g7iZdMrc
+ QuWqyzVuBziLk2ufX6WyC9ReJNnN6rRxB6_S9qxsfP0pgLRPPVENt2dzsyGmq6u.CPwvXgQSgCfe
+ 70iugkfp5D9UDt7vqIbji.Mh5jS_1RySce7ZCAi0C9FJ6fXIPQ3LAcPafSsR48kD0.QV4NL399Op
+ MSp3TYlf0.d4m7wJLrPfpyTZ4ZNagZIKQQF9qUE6CWGRLyw14h2EL9vVBByeUeR5cJ9NQK2NW44G
+ 85A8xxCCgeuvl68.8wUWHcF0sOWjpxoSI9Dbk_fsvClOcNbKGXN4zxOqj3nbrNVCnFCHViOKbcGH
+ g5JOsqtJTxvXr5Zyftd7BNGqh.JK02hwfiuZ36KRMS0KCWGidFh8qB.pK5FkHOt5BWD2A8geEpqO
+ jx4qyNmWNahzKtLEdRQ5MelMwhsvMs6mz5KjkJoL6aN3kxf0Fl5VsPt_lowir2vwIln7GSTLfUKY
+ 28s4xcZdJsorTyUuCwCLPOxKvCYS5GwZ8CysTXE825HnsU3_rkYjxbivx3_6xFUL6A891yPQmGdb
+ UrUe8an098e7LfEjXx701Q4zwh6oUKv5B140huqzc0IH8zw0ARSPGTCEBer.LgvB71OQZZDd1iSl
+ wuD7VgaYFL.cDl4avr3vFyUGum_ov3dmLES7y77t3veNzGFqoIDSKXK9_InvhCWVDJ5r43dMtVEN
+ ESnrxCzARcRX.42iYavvCQLhesu3DSOuG31NzKC7UVDAEUeEoXyn9sGGoFsU84kxQVBKe8mi8E1Y
+ 6K5g3Bfb9jlrRiRsSnNlXZA8v.0yIl4sX8AZVLk5MvDIGGiJRojWmMQ2luByPbMwhmZj5HhzT7nE
+ 326XKMtVoYdqKyBmWjNbVKkPuYW5nzoM3yPZHM6Lp6.9y.CAgA1jMMHdcqCnv6u24RPJFsv0fSmV
+ S8Mqr4B1kjtNOi8OXFYlMry397MF9fcWBk5sXfWCNCRnnU7O1kxeBnfmUBoX_2ZKli3fvNKHJ3B3
+ bPYdaBF5BAcLiwOCYc.Lf4Wac3wLVSQ.23H2wq.BVD8d5xOD1CWis4ztqEriPAIXWdiutWNGj5Pj
+ bTR1nUL5dbCUTce3gA0NYP0SvhkVrlJ0i3Fwk7of4wdb0Wu.cqETXbSeoc0w45qsYW9f29l79ReJ
+ EnOTyp3p2UiYswtN8nuxEd_8hx7goQd3kX6QTqp34L._GNKISozGZ7_z1vNGBIzTSFMIoGCXqarn
+ wQA--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sun, 24 Nov 2019 19:10:12 +0000
+Received: by smtp415.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 4bbeceb15d081dd67cf1956eebd0154e; 
+ Sun, 24 Nov 2019 19:10:07 +0000 (UTC)
+Date: Mon, 25 Nov 2019 03:10:02 +0800
+To: Pratik Shinde <pratikshinde320@gmail.com>
+Subject: Re: Support for uncompressed sparse files.
+Message-ID: <20191124190959.GA2029@hsiangkao-HP-ZHAN-66-Pro-G1>
 References: <CAGu0czQOorHC=JxQVpWDB2KD0NOzh13OuHj3r_4_U5hCWkkNwQ@mail.gmail.com>
  <20191117173027.GA21516@hsiangkao-HP-ZHAN-66-Pro-G1>
-In-Reply-To: <20191117173027.GA21516@hsiangkao-HP-ZHAN-66-Pro-G1>
-From: Pratik Shinde <pratikshinde320@gmail.com>
-Date: Mon, 25 Nov 2019 00:00:28 +0530
-Message-ID: <CAGu0czTT=s8xU0uLruAE3a3jnPDd_eQS290u45OACYrb3Z3L0Q@mail.gmail.com>
-Subject: Re: Support for uncompressed sparse files.
-To: Gao Xiang <hsiangkao@aol.com>
-Content-Type: multipart/alternative; boundary="000000000000fe2a8805981bd772"
+ <CAGu0czTT=s8xU0uLruAE3a3jnPDd_eQS290u45OACYrb3Z3L0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGu0czTT=s8xU0uLruAE3a3jnPDd_eQS290u45OACYrb3Z3L0Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4
+ (Java/1.8.0_181)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,116 +90,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000fe2a8805981bd772
-Content-Type: text/plain; charset="UTF-8"
+Hi Pratik,
 
-Hi Gao,
+On Mon, Nov 25, 2019 at 12:00:28AM +0530, Pratik Shinde wrote:
+> Hi Gao,
+> 
+> In the current design, for uncompressed files, we only maintain the
+> starting block address.because rest of the data blocks will follow it
+> (continuous allocation).
+> For sparse files we have to do following
+> 1) We don't want to allocate space for holes (Holes will be multiple of
+> EROFS_BLKSZ ?)
+> 2) For read() operation on holes, return null data  = '\0'.
+> 
+> I have few thoughts about it:
+> 1) Without changing the current design much, we want to keep track of holes
+> in file.
+>     e.g maintaining some table OR bitmap(per inode), to check if given
+> offset falls inside hole or real data.
+> 2) Accordingly changing the readpage() aop.
+> 
+> Let me know you thoughts on this.
 
-In the current design, for uncompressed files, we only maintain the
-starting block address.because rest of the data blocks will follow it
-(continuous allocation).
-For sparse files we have to do following
-1) We don't want to allocate space for holes (Holes will be multiple of
-EROFS_BLKSZ ?)
-2) For read() operation on holes, return null data  = '\0'.
+I think it's roughly correct. Assume that holes aren't greatly fragmented,
+I think it's useful to introduce extent table format rather than
+some bitmap for sparse inodes.
 
-I have few thoughts about it:
-1) Without changing the current design much, we want to keep track of holes
-in file.
-    e.g maintaining some table OR bitmap(per inode), to check if given
-offset falls inside hole or real data.
-2) Accordingly changing the readpage() aop.
+Maybe we can start off with RFC PATCH of sparse files for mkfs, and thus
+we can have common sense with on-disk format as well.
 
-Let me know you thoughts on this.
+Thanks,
+Gao Xiang
 
---Pratik.
-
-On Sun, Nov 17, 2019 at 11:01 PM Gao Xiang <hsiangkao@aol.com> wrote:
-
-> Hi Pratik,
->
-> On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:
-> > Hello Gao,
+> 
+> --Pratik.
+> 
+> On Sun, Nov 17, 2019 at 11:01 PM Gao Xiang <hsiangkao@aol.com> wrote:
+> 
+> > Hi Pratik,
 > >
-> > I have started working on above functionality for erofs.
-> > First thing we need to do is detect sparse files & determine location of
-> > holes in it.
+> > On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:
+> > > Hello Gao,
+> > >
+> > > I have started working on above functionality for erofs.
+> > > First thing we need to do is detect sparse files & determine location of
+> > > holes in it.
+> > >
+> > > I was thinking of using lseek() with SEEK_HOLE & SEEK_DATA for detecting
+> > > holes.
+> > > Let me know what you think about the approach OR any other better
+> > approach
+> > > in your mind.
+> > >
+> > > PS : support for SEEK_HOLE & SEEK_DATA came in 3.4 kernel.
 > >
-> > I was thinking of using lseek() with SEEK_HOLE & SEEK_DATA for detecting
-> > holes.
-> > Let me know what you think about the approach OR any other better
-> approach
-> > in your mind.
+> > That is a good start to detect sparse files by SEEK_HOLE & SEEK_DATA.
 > >
-> > PS : support for SEEK_HOLE & SEEK_DATA came in 3.4 kernel.
->
-> That is a good start to detect sparse files by SEEK_HOLE & SEEK_DATA.
->
-> And as the first step, we need to design the on-disk extent format
-> for uncompressed sparse files. Is there some preliminary proposed
-> ideas for this as well? :-) (I'm not sure whether Chao is busy in
-> other stuffs now, we'd get in line with sparse on-disk format.)
->
-> Thanks,
-> Gao Xiang
->
->
-
---000000000000fe2a8805981bd772
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi Gao,</div><div><br></div><div>In the current desig=
-n, for uncompressed files, we only maintain the starting block address.beca=
-use rest of the data blocks will follow it (continuous allocation).</div><d=
-iv>For sparse files we have to do following</div><div>1) We don&#39;t want =
-to allocate space for holes (Holes will be multiple of EROFS_BLKSZ ?)</div>=
-<div>2) For read() operation on holes, return null data=C2=A0 =3D &#39;\0&#=
-39;.</div><div><br></div><div>I have few thoughts about it:</div><div>1) Wi=
-thout changing the current design much, we want to keep track of holes in f=
-ile.</div><div>=C2=A0=C2=A0=C2=A0 e.g maintaining some table OR bitmap(per =
-inode), to check if given offset falls inside hole or real data.</div><div>=
-2) Accordingly changing the readpage() aop.</div><div><br></div><div>Let me=
- know you thoughts on this.</div><div><br></div><div>--Pratik.<br></div></d=
-iv><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On =
-Sun, Nov 17, 2019 at 11:01 PM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@aol=
-.com">hsiangkao@aol.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_=
-quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
-204);padding-left:1ex">Hi Pratik,<br>
-<br>
-On Sun, Nov 17, 2019 at 03:40:43PM +0530, Pratik Shinde wrote:<br>
-&gt; Hello Gao,<br>
-&gt; <br>
-&gt; I have started working on above functionality for erofs.<br>
-&gt; First thing we need to do is detect sparse files &amp; determine locat=
-ion of<br>
-&gt; holes in it.<br>
-&gt; <br>
-&gt; I was thinking of using lseek() with SEEK_HOLE &amp; SEEK_DATA for det=
-ecting<br>
-&gt; holes.<br>
-&gt; Let me know what you think about the approach OR any other better appr=
-oach<br>
-&gt; in your mind.<br>
-&gt; <br>
-&gt; PS : support for SEEK_HOLE &amp; SEEK_DATA came in 3.4 kernel.<br>
-<br>
-That is a good start to detect sparse files by SEEK_HOLE &amp; SEEK_DATA.<b=
-r>
-<br>
-And as the first step, we need to design the on-disk extent format<br>
-for uncompressed sparse files. Is there some preliminary proposed<br>
-ideas for this as well? :-) (I&#39;m not sure whether Chao is busy in<br>
-other stuffs now, we&#39;d get in line with sparse on-disk format.)<br>
-<br>
-Thanks,<br>
-Gao Xiang<br>
-<br>
-</blockquote></div>
-
---000000000000fe2a8805981bd772--
+> > And as the first step, we need to design the on-disk extent format
+> > for uncompressed sparse files. Is there some preliminary proposed
+> > ideas for this as well? :-) (I'm not sure whether Chao is busy in
+> > other stuffs now, we'd get in line with sparse on-disk format.)
+> >
+> > Thanks,
+> > Gao Xiang
+> >
+> >
