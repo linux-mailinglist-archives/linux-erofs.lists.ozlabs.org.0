@@ -2,78 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A73110CDAA
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Nov 2019 18:18:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0450510DA8B
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Nov 2019 21:22:45 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47P49j36jszDr74
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Nov 2019 04:18:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1574961529;
-	bh=lP0FVBOOLlolrA4m6W12uHzPyejsp88sIGiMCc8X5ZE=;
-	h=Date:To:Subject:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=h9vANgjg1GbC4ClP09eIOEaXE3UPPVcdmE/aRkYvKxCIVYspOooUSdVNBJSrrH647
-	 U9vRzInF7OXeCW3FB1rjV2hkyDwUgxo9HOPbhIFgm3esiBxvb5Y3dqbGO43iznsGsU
-	 bx4Cip4ZMBmf7U/zj/bSBm7+wS7BjIUe7gITnZVARI/yWEmIHZ8Zv5ZmjXDOB71y5n
-	 opiF9+CM8MW7eHj1SBGKaVxPVnG6ucw3xbB7CuyogcVyD+owGUMW0aLYU01hfSJ/vg
-	 3U4K5KGZruherOYlGpXQL6YpOyenr35wbIuB+K0z+qJ6SE912vEF2hPUXYZveR1znP
-	 n7qVRKnt3IjgA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 47PmCQ26gdzDrBZ
+	for <lists+linux-erofs@lfdr.de>; Sat, 30 Nov 2019 07:22:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::435;
+ helo=mail-wr1-x435.google.com; envelope-from=fedora.dm0@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.82; helo=sonic313-19.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="h10ju8+H"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="E8gwu6NP"; 
  dkim-atps=neutral
-Received: from sonic313-19.consmr.mail.gq1.yahoo.com
- (sonic313-19.consmr.mail.gq1.yahoo.com [98.137.65.82])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com
+ [IPv6:2a00:1450:4864:20::435])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47P1jX3TGTzDqyq
- for <linux-erofs@lists.ozlabs.org>; Fri, 29 Nov 2019 02:27:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1574954859; bh=BBopnqo6qohFLaZDooxmr9jLgdzlSTJflqclumYEoow=;
- h=Date:From:To:Cc:Subject:References:From:Subject;
- b=h10ju8+H2GjcW9b8CtTWsyLgQ+A1aV9j7mgiwYISBqkLVtZ9bSeEHfjw8xz10X5eKaatMYzrPvx+NeIf8Q/xIkGC2ZnvugK1X+88M61YMyC8q+fMHPc8t0pT8lfF0FP5vQ/0AQ5jc6CcFU/AARkCK748lMvtV0eJQA5ec2l+rWNq89dZLiygeGUzd/Avr4mAqxGmwZWlKGSfnkEx7098XVcOrCcL+piD40E4YIc9+nxVzsOFMmRMzii983RA+j83JdkcQpYsKMPDmGbY8HlH1ImMm+5JC9jy3tBoSR7uAWOpfyOqAWT+Tq526KW9xchL39hCFF14Z+IKUs0+yD3KbQ==
-X-YMail-OSG: Xm6URX4VM1nRaeWmaNTm7ugAZVF1L..zbE2al1IEpUB6LFNtWbxbj7kKssMf3ZQ
- u6855OT2XAlkeoc9s.jbZ5pRjpzDaCZBbpYQRwjGQT5SqwO8RU6nrYngsHcwNMev24UHrntN2LfC
- RfOwA7jPdEXC8v0Wu5OciarIVZ42HzbBbNdQmwHh69_iv.zCrpQZwyyWOXjYJLXwyTjdgKSyDL3d
- SzA5DR_n1fMh_q4uxXvb6VeiMiUM0C.frGcJVur5ZejGqIbMOTriLRfFmlhqEOhiuVRGYPMYBicH
- mo6Qza1uphzTQDaoKSHn24QIqi9GqWFl_iUma86XgqMe87o1E9ucCst4O1.V_btr2ubB3XzEko9b
- Rw.EZLY42n..cbgL7v4r6Pj37V4bmFap56c8i6q4y0w8b5TwTUz2e7RHQiYCaxFdfcS8MM9Q20Hd
- c9t5BYXtG_hTcUaARsdRPiUDcDrULNxywVOsHy6RBJv_IxuqNibd94391R0NQpKEmvI0oujl.ulE
- q_zdzRMddCyfoIyXhR34NPo0hUw8318Dtv_1Wxj5VqLR5jRzrnAED39emgTV63el6xOrNcQOYR0Y
- 2gxyXhMTY1XUgaI1Q3O1N5fE.gkdWf3SIOwcWdJzTkchmmLVriFpgxrg1n_wsaCF2ARxFs7flC77
- EvLXnktbStcSwUE8J87RkeebghSEEsCzB7ZTQtnoMSy2YcNXty.9XThCggTUXx3DWQtPfbiyoAkn
- M74jxHBL4QI6rv53NtX.3gKMUuVXPyGcnTjoKaOfHsJzOEY55Tah7ihCYrU0jGXHN0YQ.9Durc3E
- GsiWG4BYu9aBotsVbXGOEtnVxF1aOU.JGV0z7lIiPHnw8U9WzKW1BALEb1kZ_V5MtWWFA36J3VZV
- MT83bWHyACiqJ.ni3H7LKMvEqYaFMDJbWERynFvbf_HCWF7.Tr0JPySc.m0qW15TYIIF1spc7ORB
- wQyMDsLg417WhVOKmTviO4FWsVv4.G_Wy80RXIwqchVQcAQJMaJcbbl0jlB3FPndF8dBdsVsei3J
- kwulrVk43s2PCV8R2k9eM0_.j3cyebDCWE2dNIyFjbG1DhMpd9AScUXmnk6yO77SQz8pHEwvNAes
- t.kjcGagwuEEXebvtGtH86cIw7I.E3wYT0GLmYqXHlhRhgIfT8ZxusbHEwaZuWcXplj4ENJyUKwn
- QSqEfWi8P8sPc5_.nbJANbJQMNa1zVXEeqIGF927vXBRDDI78sTVAoPdPqvZICvYHiVXiYNBNNIT
- KxHLGOBCF__10cffNyDzp2FiaDL7Kr8xT4bjlAF19EC_Egn0y9L_mdSTCCd9MCotKKw19sflv8fQ
- XGeweunuehWEVgT5we1aSDaaIvtD1WgrXhEOjRNCbRTGMxSqF_u_9KXAgWYBVW_OwT.nrSjo-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Thu, 28 Nov 2019 15:27:39 +0000
-Received: by smtp403.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 3a3072f52d7e668a9fb4b87cdd2c6c03; 
- Thu, 28 Nov 2019 15:27:34 +0000 (UTC)
-Date: Thu, 28 Nov 2019 23:27:16 +0800
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 5.5
-Message-ID: <20191128152711.GA4993@hsiangkao-HP-ZHAN-66-Pro-G1>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47PmCK4Q4SzDr3h
+ for <linux-erofs@lists.ozlabs.org>; Sat, 30 Nov 2019 07:22:33 +1100 (AEDT)
+Received: by mail-wr1-x435.google.com with SMTP id c14so11980795wrn.7
+ for <linux-erofs@lists.ozlabs.org>; Fri, 29 Nov 2019 12:22:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:from:date:message-id:subject:to;
+ bh=XvG6ZbXzmAcc5v4vD2yyLi9mBlhe0pjhbt9CQkgsIMg=;
+ b=E8gwu6NPV8X7yZC+pdOq5N4ELqAHlb8j9N28N8t+QbV1cYkNmFnRLPFAOaQH6HOQD1
+ gO28bYGfo+hBJpS1NnklZ9f8ltgFG1pR/B4aEJw+PKvP3U/eRKdB1sAKqiDxtO/M1gjb
+ aAJco8s2o9Gwn/roS9iqJHIRMbNP59GHZQlZI+YiM9a64KPX7VsoNJUUeyZtEM2YUhNl
+ neRkjLiDjNHOJmbZl13TGckKPyG5FkhXfkFSX3tbsDY4ivZ30Pe6wRf4yFdItQlUcTDL
+ HfrNcGJQ+ZqA0fgmG+H4E2e85OhBf2NsWjSOGe0cGjINDCbx+DqjrJvgsU44Cv6G7pY8
+ YOlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=XvG6ZbXzmAcc5v4vD2yyLi9mBlhe0pjhbt9CQkgsIMg=;
+ b=sJklyOn/gzJCTQQU0gDrP48fpDIWsKdk3r82MrFP/6M25l75jxmyiFlwY1WGeu3A4V
+ XeIElnMFS5ZCjAgIkAJaWK1Yr/j7/xDHxUH1fgpfn1TTNR9voMsKS8MN7uTiVB7ARMK7
+ UgKVzv/71iJx4iDzmwYuLW5jUNMZr1888nuhPiV84MwT+smAouFzOlNqJq8AgrLBnqlG
+ toilh58RTZXu+FW4nC2nN1OGLCXpE0xMk8l0k7zkzajvAc65x1dpOE8JTNGcRVlZa0mQ
+ lL8qxiTY2apazubeiNFkZs/30NMgb5YICjzMqVGU9CoG+SDU1wGpSV7dPPPP6U23HSJz
+ CPVQ==
+X-Gm-Message-State: APjAAAX+xJJxvPr2pr/X+tcn8TrT4XL0elRC6Unha0Qb5K6hhBwZkUuD
+ vOlSRRy1wo5E9JvEduCMe/1aLnOyomFQxPtpKtWIFKAd
+X-Google-Smtp-Source: APXvYqwP7HxAB4VR4RmyODfsOwEja4PAudG+a3B7S3AmYzZdeEcG85fbVU1gRqmULE3DAh7hKQmpFtLStv4zZ96TvBo=
+X-Received: by 2002:a05:6000:1612:: with SMTP id
+ u18mr32190957wrb.306.1575058946482; 
+ Fri, 29 Nov 2019 12:22:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-References: <20191128152711.GA4993.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_181)
+From: David Michael <fedora.dm0@gmail.com>
+Date: Fri, 29 Nov 2019 15:22:15 -0500
+Message-ID: <CAEvUa7nxnby+rxK-KRMA46=exeOMApkDMAV08AjMkkPnTPV4CQ@mail.gmail.com>
+Subject: Compatibility with overlayfs
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,72 +70,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+Hi,
 
-Could you consider this pull request for 5.5-rc1?
+I tried to test EROFS on Linux 5.4 as the root file system and mounted
+a writable overlay (with upper layer on tmpfs) over /etc, but I get
+ENODATA errors when attempting to modify files.  For example, adding a
+user results in "Failed to take /etc/passwd lock: No data available".
+Files can be modified after unlinking and restoring them so they're
+created on the upper layer.  This is not necessary with other
+read-only file systems (at least squashfs or ext4 with the read-only
+feature).  I tried while forcing compact and extended inodes.
 
-No major kernel updates for this round since I'm fully diving
-into LZMA algorithm internals now to provide high CR XZ algorihm
-support. It needs more work and time for me to get a better
-compression time.
+Is EROFS intended to be usable as a lower layer with overlayfs?
 
-All commits have been in linux-next and tested with no smoke out.
-This merges cleanly with master.
+Thanks.
 
-Happy Thanksgiving!
-Gao Xiang
-
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
-
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.5-rc1
-
-for you to fetch changes up to 3dcb5fa23e16ef50b09e7a56b47d8e4c04ca09c0:
-
-  erofs: remove unnecessary output in erofs_show_options() (2019-11-24 11:02:41 +0800)
-
-----------------------------------------------------------------
-Updates since last change:
-- Introduce superblock checksum support;
-- Set iowait when waiting I/O on the sync decompression path;
-- Several code cleanups.
-
-----------------------------------------------------------------
-Chengguang Xu (1):
-      erofs: remove unnecessary output in erofs_show_options()
-
-Gao Xiang (6):
-      erofs: clean up collection handling routines
-      erofs: remove dead code since managed cache is now built-in
-      erofs: get rid of __stagingpage_alloc helper
-      erofs: clean up decompress queue stuffs
-      erofs: set iowait for sync decompression
-      erofs: drop all vle annotations for runtime names
-
-Pratik Shinde (1):
-      erofs: support superblock checksum
-
- fs/erofs/Kconfig        |   1 +
- fs/erofs/decompressor.c |   2 +-
- fs/erofs/erofs_fs.h     |   3 +-
- fs/erofs/internal.h     |   7 +-
- fs/erofs/super.c        |  39 ++++++-
- fs/erofs/utils.c        |  17 ++-
- fs/erofs/zdata.c        | 288 +++++++++++++++++++++---------------------------
- fs/erofs/zdata.h        |   8 +-
- fs/erofs/zmap.c         |  28 ++---
- 9 files changed, 190 insertions(+), 203 deletions(-)
-
+David
