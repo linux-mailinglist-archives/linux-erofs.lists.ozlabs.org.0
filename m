@@ -2,49 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C81A10F4A7
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2019 02:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4845610FF8A
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2019 15:03:37 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47RlHC4p66zDqMB
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2019 12:47:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47S3c14HczzDqVc
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Dec 2019 01:03:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::542;
+ helo=mail-pg1-x542.google.com; envelope-from=pratikshinde320@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="nyrK+MJK"; 
+ dkim-atps=neutral
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com
+ [IPv6:2607:f8b0:4864:20::542])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47RlGx2zRGzDqM2
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Dec 2019 12:47:33 +1100 (AEDT)
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
- by Forcepoint Email with ESMTP id 9EB5E4E9EF8FF711A278;
- Tue,  3 Dec 2019 09:47:22 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Dec 2019 09:47:21 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 3 Dec 2019 09:47:21 +0800
-Date: Tue, 3 Dec 2019 09:52:41 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] erofs: zero out when listxattr is called with no xattr
-Message-ID: <20191203015238.GA210859@architecture4>
-References: <20191201084040.29275-1-hsiangkao@aol.com>
- <20191202221312.8F590206F0@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191202221312.8F590206F0@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47S3bn0PJnzDqSc
+ for <linux-erofs@lists.ozlabs.org>; Wed,  4 Dec 2019 01:03:13 +1100 (AEDT)
+Received: by mail-pg1-x542.google.com with SMTP id t3so1730333pgl.5
+ for <linux-erofs@lists.ozlabs.org>; Tue, 03 Dec 2019 06:03:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=ByhfT87Zg4y0GfbmEr5+AnqvM51//YzXO/5Fq2o/yAc=;
+ b=nyrK+MJK+PYu3IOGYuvxdOEfTcXevqAp7Je7DLZ6nPEGtY1Cxm7jH/Qf+2+lz0CS8o
+ dxqZsXjM2H2qPbKIWLyC4uMbfdUQIj9mTWbBBpDBWvgM2qr4Mo81zJ6Pa4NFNaiMLj9R
+ 6F8jB2NBv6mB0k4Lw5JsfNC/9kwM5GqITtx7iz98D/81xYiitT2xUjxgr+QqQLbP5BiI
+ avWaI3rbehH75IUuFPq2iREwydIfSj2/L2qFQ+GXJa5xoulumKb4HFCKZZtqX2bUiJ7X
+ SBL7jOQFRY2aGKBkSH5TLVSjEkXLnXW0cX4Mgs4hjddKkr6t5QMVTyHnGlC8l2aHkA9y
+ Zztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=ByhfT87Zg4y0GfbmEr5+AnqvM51//YzXO/5Fq2o/yAc=;
+ b=p/ctZKaEwPify749wpiKc+tB2vQBtM+T+QYNXTehBHpzcQtcz/4n38J0Li5wq7l79x
+ Av/5lWLMkwsYKMZhHtRSrh+IEY1D+9EN7zfQeutlQ5QYaXOyk3roJIbg7YmrGSofsdkJ
+ DQI6BYEwlQcMgaApa5Qly7TMGq76s/eeu2OZE9bejKr+DorbEpDnoMQ1PlCmUJy/YQxH
+ WbGJM72EIfVKTEBh8gSC8bHas1J8azQnn2FjubmO301XrsYV+1jnAu3scc0dtFPEVyIu
+ Xp6mW+RkALaLHwRMj7K/67lA+oaJbBQgZ2bijqI7Xcd91NXqRc5SNfNV/y95lpfLdmNo
+ S/Jw==
+X-Gm-Message-State: APjAAAUP5hx3GXymeY3kSfwJHpIreeLDpam076QNARJdeyseiyPxVjln
+ 3a+ApdGXb/zpan0UzMxV50Sad6Ud
+X-Google-Smtp-Source: APXvYqz9aa75SYyMmBojF9vjTw/Tu36QAfQvXnSRaoKFemyBxUpSOukwbXuYihfp/U+kx9pDp7zSsw==
+X-Received: by 2002:a62:8202:: with SMTP id w2mr5068910pfd.100.1575381789656; 
+ Tue, 03 Dec 2019 06:03:09 -0800 (PST)
+Received: from localhost.localdomain ([103.51.95.237])
+ by smtp.gmail.com with ESMTPSA id hi2sm3048904pjb.22.2019.12.03.06.03.05
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 03 Dec 2019 06:03:08 -0800 (PST)
+From: Pratik Shinde <pratikshinde320@gmail.com>
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [RFC] erofs-utils:code for detecting and tracking holes in
+ uncompressed sparse files.
+Date: Tue,  3 Dec 2019 19:32:50 +0530
+Message-Id: <20191203140250.23793-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,42 +74,146 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Sasha,
+NOTE: The patch is not fully complete yet, with this patch I just want to
+present rough idea of what I am trying to achieve.
 
-On Mon, Dec 02, 2019 at 10:13:11PM +0000, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: cadf1ccf1b00 ("staging: erofs: add error handling for xattr submodule").
-> 
-> The bot has tested the following trees: v5.4.1, v5.3.14, v4.19.87.
-> 
-> v5.4.1: Build OK!
-> v5.3.14: Failed to apply! Possible dependencies:
->     Unable to calculate
-> 
-> v4.19.87: Failed to apply! Possible dependencies:
->     Unable to calculate
+The patch does following :
+1) Detect holes (of size EROFS_BLKSIZ) in uncompressed files.
+2) Keep track of holes per file.
 
-Because of file movement, I'll backport manually then.
+In-order to track holes, I used an array of size = (file_size / blocksize)
+The array basically tracks number of holes before a particular logical file block.
+e.g blks[i] = 10 meaning ith block has 10 holes before it.
+If a particular block is a hole we set the index to '-1'.
 
-Thanks,
-Gao Xiang
+how read logic will change:
+1) currently we simply map read offset to a fs block.
+2) with holes in place the calculation of block number would be:
 
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-> 
-> -- 
-> Thanks,
-> Sasha
+   blkno = start_block + (offset >> block_size_shift) - (number of 
+   							 holes before block in which offset falls)
+
+3) If a read offset falls inside a hole (which can be found using above array). We
+   fill the user buffer with '\0' on the fly.
+
+through this,block no. lookup would still be performed in constant time.
+
+The biggest problem with this approach is - we have to store the hole tracking
+array for every file to the disk.Which doesn't seems to be practical.we can use a linkedlist,
+but that will make size of inode variable.
+
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ lib/inode.c | 67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 1 deletion(-)
+
+diff --git a/lib/inode.c b/lib/inode.c
+index 0e19b11..af31949 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -38,6 +38,61 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
+ 
+ struct list_head inode_hashtable[NR_INODE_HASHTABLE];
+ 
++
++#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) == start &&	\
++		             roundup(end, EROFS_BLKSIZ) == end &&	\
++			    (end - start) % EROFS_BLKSIZ == 0)
++#define HOLE_BLK		-1
++unsigned int erofs_detect_holes(struct erofs_inode *inode, int *blks)
++{
++	int i, fd, st, en;
++	unsigned int nblocks;
++	erofs_off_t data, hole, len;
++
++	nblocks = inode->i_size / EROFS_BLKSIZ;
++	for (i = 0; i < nblocks; i++)
++		blks[i] = 0;
++	fd = open(inode->i_srcpath, O_RDONLY);
++	if (fd < 0) {
++		return -errno;
++	}
++	len = lseek(fd, 0, SEEK_END);
++	if (lseek(fd, 0, SEEK_SET) == -1)
++		return -errno;
++	data = 0;
++	while (data < len) {
++		hole = lseek(fd, data, SEEK_HOLE);
++		if (hole == len)
++			break;
++		data = lseek(fd, hole, SEEK_DATA);
++		if (data < 0 || hole > data) {
++			return -EINVAL;
++		}
++		if (IS_HOLE(hole, data)) {
++			st = hole >> S_SHIFT;
++			en = data >> S_SHIFT;
++			nblocks -= (en - st);
++			for (i = st; i < en; i++)
++				blks[i] = HOLE_BLK;
++		}
++	}
++	return nblocks;
++}
++
++int erofs_fill_holedata(int *blks, unsigned int nblocks) {
++	int i, nholes = 0;
++	for (i = 0; i < nblocks; i++) {
++		if (blks[i] == -1)
++			nholes++;
++		else {
++			blks[i] = nholes;
++			if (nholes >= (i + 1))
++				return -EINVAL;
++		}
++	}
++	return 0;
++}
++
+ void erofs_inode_manager_init(void)
+ {
+ 	unsigned int i;
+@@ -305,6 +360,7 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ int erofs_write_file(struct erofs_inode *inode)
+ {
+ 	unsigned int nblocks, i;
++	int *blks;
+ 	int ret, fd;
+ 
+ 	if (!inode->i_size) {
+@@ -322,7 +378,13 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	/* fallback to all data uncompressed */
+ 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+ 	nblocks = inode->i_size / EROFS_BLKSIZ;
+-
++	blks = malloc(sizeof(int) * nblocks);
++	nblocks = erofs_detect_holes(inode, blks);
++	if (nblocks < 0)
++		return nblocks;
++	if ((ret = erofs_fill_holedata(blks, nblocks)) != 0) {
++		return ret;
++	}
+ 	ret = __allocate_inode_bh_data(inode, nblocks);
+ 	if (ret)
+ 		return ret;
+@@ -332,6 +394,8 @@ int erofs_write_file(struct erofs_inode *inode)
+ 		return -errno;
+ 
+ 	for (i = 0; i < nblocks; ++i) {
++		if (blks[i] == HOLE_BLK)
++			continue;
+ 		char buf[EROFS_BLKSIZ];
+ 
+ 		ret = read(fd, buf, EROFS_BLKSIZ);
+@@ -962,3 +1026,4 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
+ 	return erofs_mkfs_build_tree(inode);
+ }
+ 
++
+-- 
+2.9.3
+
