@@ -1,80 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79916115ACA
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2019 03:55:37 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47VDbW052mzDqhS
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2019 13:55:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1575687335;
-	bh=y2c5X9/uZJCekWFjugKANS/O/8PX9Ng5yGWBWLRvye4=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=Df144h2+1ETVDpeDEXf9JPbxZK0EkHYzhSUaOOicNbPrMQRFfrhlVraC3IdqaWkWE
-	 +LaKUL8i6ZXCKqNSIrFKi0PjLxo7ALhaO6paNjsmEcsipGVF1xZ56ykgXK4FEwnlsB
-	 b8CfVrJxXEM5mVhDyvDsBj2HfSfxr3j5lfTdmZOTbPA9XUROj1ZECW4fxCxWhyteud
-	 kpeoFKXYbidCKRdPc4TyQIlu8EIsiKrLl7kW/HLk7Wm2JeRl8KuaFcL8MPz4ImivVu
-	 tAzDywnkKIMcjuYuGXlaHh7a2LwshIb7m/ubiTe9mXwS0diEmXh5gr7Z0bohkeGWSV
-	 8rYJHca+cbwrA==
+	by mail.lfdr.de (Postfix) with ESMTPS id B6112116753
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Dec 2019 08:05:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 47WZ2f6TWnzDqPy
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Dec 2019 18:05:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::544;
+ helo=mail-ed1-x544.google.com; envelope-from=pratikshinde320@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.84; helo=sonic306-21.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="ixek0n5K"; 
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="U2+dTlsg"; 
  dkim-atps=neutral
-Received: from sonic306-21.consmr.mail.gq1.yahoo.com
- (sonic306-21.consmr.mail.gq1.yahoo.com [98.137.68.84])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com
+ [IPv6:2a00:1450:4864:20::544])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47VDbP4c84zDqf5
- for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2019 13:55:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1575687325; bh=fnUCfRD5mVXcUGhv6/aWxu50QM2W69ZxDy9DcMMOV2k=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=ixek0n5KeJzh5UAc+SLd+mznYZAfoqdZZM33wtIvcC2DYeBC6InbfgiMX93RYEsYWoczHdf6CY7fzZJnep2jBQotg3s7Jy6rbaHk2sQGsVdWICO5B4rhPePjhsrePQ4ah58pyotMqIqIPAVGG4NQquzxUH13xkbA3SwqCH007Tm/LrdMaVyw3HgN/4QBpfBtoAw1coIihuOrXNHup3DC569xtZ2+rqFIqlREVTW1UEL/bZMMxrmk8Cv7x84MTXDk9d3v6dAKQloZjEQaaSrgrwKGn1Gkj7Q9L8GpBZxL46NB7ewVPvmwFti/B5DMFHpJ9E5ipcTNbArCeffK+T9cpA==
-X-YMail-OSG: OnijvzAVM1mCIHcj2U.Ap9QvIggy1hepCdbynRqBQGOf1kME.7hUyGdC_2eP7Yg
- rCjF8O8e785m8dfSrs77lovyvxQYCA4sqJhUNikZMsng0ZCw4fA9FsQL.GqPfQl5Iy.o2ETO.Pg0
- 1zH3VLThioe.BsnOZ7SgvJPKwcTiWFLJBPFVQckab3Ok1fTwFUlqAreIvVF8W0dnUwA0FocuO7_s
- 9njN4py2z3hn87AIjZww_8fro745LOotcJ1saVFTNC6JSU.RiXFxdiMuKiEnbcARTwrt4w3Ib1tv
- hAL3__WcPRYtNc_aRYrZTqn8VqjxzJzqjJEf5vemDb1qh24uXtMHYUf8CpFm0hjsoXKud8LF_kBp
- zB8sa.UzWF2O6lYkCMu8cWaM8AxHDZUjc0Cz6YML9Nxkx6roF3mEQRIxBaryWqFqEKLLmgMVEC9G
- tF8P2CpLy7RtjMtQHZQxgN74IO_yvgrbK3x7fVWM9gWgvTr68hP4vocuD6otguVVa0aRs3fNOTu1
- 325tQs4IvwsaurwUZbg32xTSzibPyBcS8lklaVBteEio8eQoc0RMlf2kRDB0J0KuBOGtox3pJdAa
- T0vMeSWLU4HQ1C6fkvwKXHYOaBD93jenwHxpyh2URT1wlo4vSNIj01LwCyIT0XonbJ5oTaxqNn8J
- Hd.wo2bYsKDIQuzzSWcmo6plp40IbdEdNFl4515gXDtYZK8PmKs76RI7kbTVmOnlQ9M0aHxR_Aw0
- IUaFhdpue6Ul4bB6qa6ooot4iDprGbpkyDS8foDEaByFykLc7pwveRXwKqPirjsXrOw_atYMBapD
- VuOH0swjbVWdH.Rm1PtvDyUxQ.UHfPKy3CqqyqgGP0XFX6kjY.wBhJCpBr4S6H_.8Kl38KPTycJe
- nucqeZDQ67y3NO6HuHVVvBNI9u7rdDDjMVsqzq3t5t8oJQEnRd1XXd3egaxI_cHzFgloCRN8XxBy
- gKnv_SiNzEVY8LESNlBAmq8z_3KubTc56qtTfZ34HVOnpCHAPUTxqjK2EJvMFI0CibA6eMTQK4uy
- pMVyw7fOaPrfzqbtuyFe38w2BLsdJFeQbz_fi76qUfv2S2uduHzRjwNTymtSCDC7iIwNtFV0iu9B
- Ap1QvprEc_nsb_ckWhYcwfNbeYm7Ql5kv._Q5OxDWXZgPFha7leXJYZ14Gx1BRfXD7SD9L5gzoSg
- 0j7AIUurlFXO.tR7NAaiLz0ejhwqjEF1Gytm0EI2bZ35aviDz7LiBSdQed._RmPpe9moPczBQHh2
- zOmu.DvYLJ2Y.wKTBYqsFe_ffJ71V6RQN.qJlgJ1v9.MqF1jyjRFCzNNGPveH_O7RIdppusdyuAh
- 8oPP0uCAXo1OlAh1JvevYm2pwgvjQUovFUxOv9jq6sXFiYAoTL5DT4NBfP.6q8Iw0bfAy4H5OqeQ
- u9AA-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sat, 7 Dec 2019 02:55:25 +0000
-Received: by smtp432.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 2399de470237d8d6426da1f13fa9f534; 
- Sat, 07 Dec 2019 02:55:21 +0000 (UTC)
-To: Chao Yu <chao@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2] erofs: update documentation
-Date: Sat,  7 Dec 2019 10:55:09 +0800
-Message-Id: <20191207025509.6614-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191207023726.5359-1-hsiangkao@aol.com>
-References: <20191207023726.5359-1-hsiangkao@aol.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47WZ2V6L9hzDqPf
+ for <linux-erofs@lists.ozlabs.org>; Mon,  9 Dec 2019 18:05:06 +1100 (AEDT)
+Received: by mail-ed1-x544.google.com with SMTP id dc19so11709364edb.10
+ for <linux-erofs@lists.ozlabs.org>; Sun, 08 Dec 2019 23:05:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=qL7rIBafrVoWFDCKVBDYeMErygHwSb86CHDkMfZeZMo=;
+ b=U2+dTlsg9SH4wfQjlRNyla2iJ71GFbfEJ3bd5b/VXoIJ55WE1Qldmmxm16khWTWyVp
+ u6Uj5RK3PC7ddQ9d2z6kpvEiy1pbUxdtebhE6UYMEto8ZX25GoHAIZnQgaPODQfVoNJS
+ Z3dDkK/tZFyNbiTqOXF2mKQdaXSi7Ima1r7te7hMot8q9CmOQ/BRd5kjYSywEpxh3g5j
+ 8fo49wKefei1dwpodvrSBdCPLgCJD1QZF3hcqvXCIwy/zjYQu5MvLO0N1FDCLh9Vc3Q6
+ KGiI8UxtNu8c7hmoQGuaod2DhoaAlqULHjxGRnXuDZ+Gi49IPEsLmbuatDhHgW17J3S/
+ ETDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=qL7rIBafrVoWFDCKVBDYeMErygHwSb86CHDkMfZeZMo=;
+ b=RxvtBzwojvM7W2fwrXKQfrC92DMqxmbqA8nzxzRfGU3pcVOlgAmVdsMzunscVdHoTK
+ 9wc3oN+L1fP1LwzupxUxzpMa6a+BQJRn0iqLzQ/dtLHjnKx+VpvPnmAaOo80RQHOTOqz
+ oDXeZ6qd/WP2wY2xSQ3Hg7Av5n0/VJanBV2tlr5G7TdPlGb9AvUJGYbRQcoz7TbL+3kP
+ V/wDSa18u9BTzTKLi0JLxz9fr05YThdUZIm9IXUEgbMS/ReKiChLaBcCbegmsivbH7rV
+ jBSPHBYT8yn94Kg+jxdypo4NfUxcAvbL7XrbKMLlUEi3yw1Q7KIBBYbfqfbR8pIb1nBN
+ DcLw==
+X-Gm-Message-State: APjAAAXYc9TTsjR6Sa6zfZsIizp+d4I0gbwcEziqw9vYEiQthyreXh5i
+ IsO9/lbITAUmNguqQHnq1ki61JeZaUkiVZUkzJU=
+X-Google-Smtp-Source: APXvYqz6H3Wgfd0e692ilX0EPb1+Cy33vgwe02vbqc28k7nq8iV+L0hAPhqD+ac9s9gb2fSFBChPsZ1b/8sC17rAj3U=
+X-Received: by 2002:a17:907:11cc:: with SMTP id
+ va12mr29268486ejb.164.1575875102295; 
+ Sun, 08 Dec 2019 23:05:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191203140250.23793-1-pratikshinde320@gmail.com>
+ <20191204022734.GA60329@architecture4>
+In-Reply-To: <20191204022734.GA60329@architecture4>
+From: Pratik Shinde <pratikshinde320@gmail.com>
+Date: Mon, 9 Dec 2019 12:34:50 +0530
+Message-ID: <CAGu0czSNv--LQwrWXuzuT6S5BYs+tnCA8vqAREv7+Z4rEBdtsg@mail.gmail.com>
+Subject: Re: [RFC] erofs-utils:code for detecting and tracking holes in
+ uncompressed sparse files.
+To: Gao Xiang <gaoxiang25@huawei.com>
+Content-Type: multipart/alternative; boundary="000000000000aeca960599400383"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -86,112 +75,416 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
+Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+--000000000000aeca960599400383
+Content-Type: text/plain; charset="UTF-8"
 
-Some on-disk structures, fields have been renamed in v5.4,
-the corresponding document should be updated as well.
+Hello Gao,
 
-Also fix misrespresentation of file time and words about
-fixed-sized output compression, data inline, etc.
+Did you get any chance to look at this in detail.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-changes since v1:
- - mark that "fixed-sized output compression (with compacted indexes)"
-   was firstly introduced in v5.3 in order to minimumize metadata;
- - reduce whitespace between on-disk values and words about data mapping
-   details;
+--Pratik.
 
- Documentation/filesystems/erofs.txt | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+On Wed, Dec 4, 2019, 7:52 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
 
-diff --git a/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.txt
-index b0c085326e2e..db6d39c3ae71 100644
---- a/Documentation/filesystems/erofs.txt
-+++ b/Documentation/filesystems/erofs.txt
-@@ -24,11 +24,11 @@ Here is the main features of EROFS:
-  - Metadata & data could be mixed by design;
- 
-  - 2 inode versions for different requirements:
--                          v1            v2
-+                          compact (v1)  extended (v2)
-    Inode metadata size:   32 bytes      64 bytes
-    Max file size:         4 GB          16 EB (also limited by max. vol size)
-    Max uids/gids:         65536         4294967296
--   File creation time:    no            yes (64 + 32-bit timestamp)
-+   File change time:      no            yes (64 + 32-bit timestamp)
-    Max hardlinks:         65536         4294967296
-    Metadata reserved:     4 bytes       14 bytes
- 
-@@ -39,7 +39,7 @@ Here is the main features of EROFS:
-  - Support POSIX.1e ACLs by using xattrs;
- 
-  - Support transparent file compression as an option:
--   LZ4 algorithm with 4 KB fixed-output compression for high performance;
-+   LZ4 algorithm with 4 KB fixed-sized output compression for high performance.
- 
- The following git tree provides the file system user-space tools under
- development (ex, formatting tool mkfs.erofs):
-@@ -85,7 +85,7 @@ All data areas should be aligned with the block size, but metadata areas
- may not. All metadatas can be now observed in two different spaces (views):
-  1. Inode metadata space
-     Each valid inode should be aligned with an inode slot, which is a fixed
--    value (32 bytes) and designed to be kept in line with v1 inode size.
-+    value (32 bytes) and designed to be kept in line with compact inode size.
- 
-     Each inode can be directly found with the following formula:
-          inode offset = meta_blkaddr * block_size + 32 * nid
-@@ -117,10 +117,10 @@ may not. All metadatas can be now observed in two different spaces (views):
-                                                        |-> aligned with 4B
- 
-     Inode could be 32 or 64 bytes, which can be distinguished from a common
--    field which all inode versions have -- i_advise:
-+    field which all inode versions have -- i_format:
- 
-         __________________               __________________
--       |     i_advise     |             |     i_advise     |
-+       |     i_format     |             |     i_format     |
-        |__________________|             |__________________|
-        |        ...       |             |        ...       |
-        |                  |             |                  |
-@@ -129,12 +129,13 @@ may not. All metadatas can be now observed in two different spaces (views):
-                                         |__________________| 64 bytes
- 
-     Xattrs, extents, data inline are followed by the corresponding inode with
--    proper alignes, and they could be optional for different data mappings,
--    _currently_ there are totally 3 valid data mappings supported:
-+    proper alignment, and they could be optional for different data mappings.
-+    _currently_ total 4 valid data mappings are supported:
- 
--     1) flat file data without data inline (no extent);
--     2) fixed-output size data compression (must have extents);
--     3) flat file data with tail-end data inline (no extent);
-+     0  flat file data without data inline (no extent);
-+     1  fixed-sized output data compression (with non-compacted indexes);
-+     2  flat file data with tail packing data inline (no extent);
-+     3  fixed-sized output data compression (with compacted indexes, v5.3+).
- 
-     The size of the optional xattrs is indicated by i_xattr_count in inode
-     header. Large xattrs or xattrs shared by many different files can be
-@@ -182,8 +183,8 @@ introduce another on-disk field at all.
- 
- Compression
- -----------
--Currently, EROFS supports 4KB fixed-output clustersize transparent file
--compression, as illustrated below:
-+Currently, EROFS supports 4KB fixed-sized output transparent file compression,
-+as illustrated below:
- 
-          |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
-          clusterofs                      clusterofs            clusterofs
--- 
-2.20.1
+> Hi Pratik,
+>
+> I'll give detailed words this weekend if you have more questions
+> since I'm busying in other stupid intra-company stuffs now...
+>
+> On Tue, Dec 03, 2019 at 07:32:50PM +0530, Pratik Shinde wrote:
+> > NOTE: The patch is not fully complete yet, with this patch I just want to
+> > present rough idea of what I am trying to achieve.
+> >
+> > The patch does following :
+> > 1) Detect holes (of size EROFS_BLKSIZ) in uncompressed files.
+> > 2) Keep track of holes per file.
+> >
+> > In-order to track holes, I used an array of size = (file_size /
+> blocksize)
+> > The array basically tracks number of holes before a particular logical
+> file block.
+> > e.g blks[i] = 10 meaning ith block has 10 holes before it.
+> > If a particular block is a hole we set the index to '-1'.
+> >
+> > how read logic will change:
+> > 1) currently we simply map read offset to a fs block.
+> > 2) with holes in place the calculation of block number would be:
+> >
+> >    blkno = start_block + (offset >> block_size_shift) - (number of
+> >                                                        holes before
+> block in which offset falls)
+> >
+> > 3) If a read offset falls inside a hole (which can be found using above
+> array). We
+> >    fill the user buffer with '\0' on the fly.
+> >
+> > through this,block no. lookup would still be performed in constant time.
+> >
+> > The biggest problem with this approach is - we have to store the hole
+> tracking
+> > array for every file to the disk.Which doesn't seems to be practical.we
+> can use a linkedlist,
+> > but that will make size of inode variable.
+>
+> "variable-sized inode" isn't a problem here, which can be handled
+> similar to the case of "compress indexes".
+>
+> Probably no need to write linked list to the disk but generate linked list
+> in memory when writing data on the fly, and then transfer to a
+> variable-sized
+> extent array at the time of writing inode metadata (The order is firstly
+> data
+> and then metadata in erofs-utils so it looks practical.)
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> > ---
+> >  lib/inode.c | 67
+> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 66 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/lib/inode.c b/lib/inode.c
+> > index 0e19b11..af31949 100644
+> > --- a/lib/inode.c
+> > +++ b/lib/inode.c
+> > @@ -38,6 +38,61 @@ static unsigned char erofs_type_by_mode[S_IFMT >>
+> S_SHIFT] = {
+> >
+> >  struct list_head inode_hashtable[NR_INODE_HASHTABLE];
+> >
+> > +
+> > +#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) == start &&
+>       \
+> > +                          roundup(end, EROFS_BLKSIZ) == end &&       \
+> > +                         (end - start) % EROFS_BLKSIZ == 0)
+> > +#define HOLE_BLK             -1
+> > +unsigned int erofs_detect_holes(struct erofs_inode *inode, int *blks)
+> > +{
+> > +     int i, fd, st, en;
+> > +     unsigned int nblocks;
+> > +     erofs_off_t data, hole, len;
+> > +
+> > +     nblocks = inode->i_size / EROFS_BLKSIZ;
+> > +     for (i = 0; i < nblocks; i++)
+> > +             blks[i] = 0;
+> > +     fd = open(inode->i_srcpath, O_RDONLY);
+> > +     if (fd < 0) {
+> > +             return -errno;
+> > +     }
+> > +     len = lseek(fd, 0, SEEK_END);
+> > +     if (lseek(fd, 0, SEEK_SET) == -1)
+> > +             return -errno;
+> > +     data = 0;
+> > +     while (data < len) {
+> > +             hole = lseek(fd, data, SEEK_HOLE);
+> > +             if (hole == len)
+> > +                     break;
+> > +             data = lseek(fd, hole, SEEK_DATA);
+> > +             if (data < 0 || hole > data) {
+> > +                     return -EINVAL;
+> > +             }
+> > +             if (IS_HOLE(hole, data)) {
+> > +                     st = hole >> S_SHIFT;
+> > +                     en = data >> S_SHIFT;
+> > +                     nblocks -= (en - st);
+> > +                     for (i = st; i < en; i++)
+> > +                             blks[i] = HOLE_BLK;
+> > +             }
+> > +     }
+> > +     return nblocks;
+> > +}
+> > +
+> > +int erofs_fill_holedata(int *blks, unsigned int nblocks) {
+> > +     int i, nholes = 0;
+> > +     for (i = 0; i < nblocks; i++) {
+> > +             if (blks[i] == -1)
+> > +                     nholes++;
+> > +             else {
+> > +                     blks[i] = nholes;
+> > +                     if (nholes >= (i + 1))
+> > +                             return -EINVAL;
+> > +             }
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> >  void erofs_inode_manager_init(void)
+> >  {
+> >       unsigned int i;
+> > @@ -305,6 +360,7 @@ static bool erofs_file_is_compressible(struct
+> erofs_inode *inode)
+> >  int erofs_write_file(struct erofs_inode *inode)
+> >  {
+> >       unsigned int nblocks, i;
+> > +     int *blks;
+> >       int ret, fd;
+> >
+> >       if (!inode->i_size) {
+> > @@ -322,7 +378,13 @@ int erofs_write_file(struct erofs_inode *inode)
+> >       /* fallback to all data uncompressed */
+> >       inode->datalayout = EROFS_INODE_FLAT_INLINE;
+> >       nblocks = inode->i_size / EROFS_BLKSIZ;
+> > -
+> > +     blks = malloc(sizeof(int) * nblocks);
+> > +     nblocks = erofs_detect_holes(inode, blks);
+> > +     if (nblocks < 0)
+> > +             return nblocks;
+> > +     if ((ret = erofs_fill_holedata(blks, nblocks)) != 0) {
+> > +             return ret;
+> > +     }
+> >       ret = __allocate_inode_bh_data(inode, nblocks);
+> >       if (ret)
+> >               return ret;
+> > @@ -332,6 +394,8 @@ int erofs_write_file(struct erofs_inode *inode)
+> >               return -errno;
+> >
+> >       for (i = 0; i < nblocks; ++i) {
+> > +             if (blks[i] == HOLE_BLK)
+> > +                     continue;
+> >               char buf[EROFS_BLKSIZ];
+> >
+> >               ret = read(fd, buf, EROFS_BLKSIZ);
+> > @@ -962,3 +1026,4 @@ struct erofs_inode
+> *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
+> >       return erofs_mkfs_build_tree(inode);
+> >  }
+> >
+> > +
+> > --
+> > 2.9.3
+> >
+>
 
+--000000000000aeca960599400383
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Hello Gao,<div dir=3D"auto"><br></div><div dir=3D"auto">D=
+id you get any chance to look at this in detail.</div><div dir=3D"auto"><br=
+></div><div dir=3D"auto">--Pratik.</div></div><br><div class=3D"gmail_quote=
+"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Dec 4, 2019, 7:52 AM Gao Xi=
+ang &lt;<a href=3D"mailto:gaoxiang25@huawei.com">gaoxiang25@huawei.com</a>&=
+gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
+ .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Pratik,<br>
+<br>
+I&#39;ll give detailed words this weekend if you have more questions<br>
+since I&#39;m busying in other stupid intra-company stuffs now...<br>
+<br>
+On Tue, Dec 03, 2019 at 07:32:50PM +0530, Pratik Shinde wrote:<br>
+&gt; NOTE: The patch is not fully complete yet, with this patch I just want=
+ to<br>
+&gt; present rough idea of what I am trying to achieve.<br>
+&gt; <br>
+&gt; The patch does following :<br>
+&gt; 1) Detect holes (of size EROFS_BLKSIZ) in uncompressed files.<br>
+&gt; 2) Keep track of holes per file.<br>
+&gt; <br>
+&gt; In-order to track holes, I used an array of size =3D (file_size / bloc=
+ksize)<br>
+&gt; The array basically tracks number of holes before a particular logical=
+ file block.<br>
+&gt; e.g blks[i] =3D 10 meaning ith block has 10 holes before it.<br>
+&gt; If a particular block is a hole we set the index to &#39;-1&#39;.<br>
+&gt; <br>
+&gt; how read logic will change:<br>
+&gt; 1) currently we simply map read offset to a fs block.<br>
+&gt; 2) with holes in place the calculation of block number would be:<br>
+&gt; <br>
+&gt;=C2=A0 =C2=A0 blkno =3D start_block + (offset &gt;&gt; block_size_shift=
+) - (number of <br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 holes before block in =
+which offset falls)<br>
+&gt; <br>
+&gt; 3) If a read offset falls inside a hole (which can be found using abov=
+e array). We<br>
+&gt;=C2=A0 =C2=A0 fill the user buffer with &#39;\0&#39; on the fly.<br>
+&gt; <br>
+&gt; through this,block no. lookup would still be performed in constant tim=
+e.<br>
+&gt; <br>
+&gt; The biggest problem with this approach is - we have to store the hole =
+tracking<br>
+&gt; array for every file to the disk.Which doesn&#39;t seems to be practic=
+al.we can use a linkedlist,<br>
+&gt; but that will make size of inode variable.<br>
+<br>
+&quot;variable-sized inode&quot; isn&#39;t a problem here, which can be han=
+dled<br>
+similar to the case of &quot;compress indexes&quot;.<br>
+<br>
+Probably no need to write linked list to the disk but generate linked list<=
+br>
+in memory when writing data on the fly, and then transfer to a variable-siz=
+ed<br>
+extent array at the time of writing inode metadata (The order is firstly da=
+ta<br>
+and then metadata in erofs-utils so it looks practical.)<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+<br>
+&gt; <br>
+&gt; Signed-off-by: Pratik Shinde &lt;<a href=3D"mailto:pratikshinde320@gma=
+il.com" target=3D"_blank" rel=3D"noreferrer">pratikshinde320@gmail.com</a>&=
+gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 lib/inode.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++-<br>
+&gt;=C2=A0 1 file changed, 66 insertions(+), 1 deletion(-)<br>
+&gt; <br>
+&gt; diff --git a/lib/inode.c b/lib/inode.c<br>
+&gt; index 0e19b11..af31949 100644<br>
+&gt; --- a/lib/inode.c<br>
+&gt; +++ b/lib/inode.c<br>
+&gt; @@ -38,6 +38,61 @@ static unsigned char erofs_type_by_mode[S_IFMT &gt;=
+&gt; S_SHIFT] =3D {<br>
+&gt;=C2=A0 <br>
+&gt;=C2=A0 struct list_head inode_hashtable[NR_INODE_HASHTABLE];<br>
+&gt;=C2=A0 <br>
+&gt; +<br>
+&gt; +#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) =3D=3D star=
+t &amp;&amp;=C2=A0 =C2=A0 =C2=A0 =C2=A0 \<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 roundup(end, EROFS_BLKSIZ) =3D=3D end &amp;&amp;=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0\<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0(end - start) % EROFS_BLKSIZ =3D=3D 0)<br>
+&gt; +#define HOLE_BLK=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0-1<br=
+>
+&gt; +unsigned int erofs_detect_holes(struct erofs_inode *inode, int *blks)=
+<br>
+&gt; +{<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int i, fd, st, en;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int nblocks;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0erofs_off_t data, hole, len;<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0nblocks =3D inode-&gt;i_size / EROFS_BLKSIZ;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0for (i =3D 0; i &lt; nblocks; i++)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0blks[i] =3D 0;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0fd =3D open(inode-&gt;i_srcpath, O_RDONLY);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (fd &lt; 0) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -errno;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0len =3D lseek(fd, 0, SEEK_END);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (lseek(fd, 0, SEEK_SET) =3D=3D -1)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -errno;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0data =3D 0;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0while (data &lt; len) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0hole =3D lseek(fd, da=
+ta, SEEK_HOLE);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (hole =3D=3D len)<=
+br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0break;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0data =3D lseek(fd, ho=
+le, SEEK_DATA);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (data &lt; 0 || ho=
+le &gt; data) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0return -EINVAL;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (IS_HOLE(hole, dat=
+a)) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0st =3D hole &gt;&gt; S_SHIFT;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0en =3D data &gt;&gt; S_SHIFT;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0nblocks -=3D (en - st);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0for (i =3D st; i &lt; en; i++)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0blks[i] =3D HOLE_BLK;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0return nblocks;<br>
+&gt; +}<br>
+&gt; +<br>
+&gt; +int erofs_fill_holedata(int *blks, unsigned int nblocks) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int i, nholes =3D 0;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0for (i =3D 0; i &lt; nblocks; i++) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (blks[i] =3D=3D -1=
+)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0nholes++;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0blks[i] =3D nholes;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0if (nholes &gt;=3D (i + 1))<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; +}<br>
+&gt; +<br>
+&gt;=C2=A0 void erofs_inode_manager_init(void)<br>
+&gt;=C2=A0 {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int i;<br>
+&gt; @@ -305,6 +360,7 @@ static bool erofs_file_is_compressible(struct erof=
+s_inode *inode)<br>
+&gt;=C2=A0 int erofs_write_file(struct erofs_inode *inode)<br>
+&gt;=C2=A0 {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int nblocks, i;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int *blks;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret, fd;<br>
+&gt;=C2=A0 <br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!inode-&gt;i_size) {<br>
+&gt; @@ -322,7 +378,13 @@ int erofs_write_file(struct erofs_inode *inode)<b=
+r>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0/* fallback to all data uncompressed */<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0inode-&gt;datalayout =3D EROFS_INODE_FLAT_IN=
+LINE;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0nblocks =3D inode-&gt;i_size / EROFS_BLKSIZ;=
+<br>
+&gt; -<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0blks =3D malloc(sizeof(int) * nblocks);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0nblocks =3D erofs_detect_holes(inode, blks);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (nblocks &lt; 0)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return nblocks;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if ((ret =3D erofs_fill_holedata(blks, nblocks)) =
+!=3D 0) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D __allocate_inode_bh_data(inode, nblo=
+cks);<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
+&gt; @@ -332,6 +394,8 @@ int erofs_write_file(struct erofs_inode *inode)<br=
+>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -errno;<b=
+r>
+&gt;=C2=A0 <br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0for (i =3D 0; i &lt; nblocks; ++i) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (blks[i] =3D=3D HO=
+LE_BLK)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0continue;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0char buf[EROFS_B=
+LKSIZ];<br>
+&gt;=C2=A0 <br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D read(fd,=
+ buf, EROFS_BLKSIZ);<br>
+&gt; @@ -962,3 +1026,4 @@ struct erofs_inode *erofs_mkfs_build_tree_from_pa=
+th(struct erofs_inode *parent,<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return erofs_mkfs_build_tree(inode);<br>
+&gt;=C2=A0 }<br>
+&gt;=C2=A0 <br>
+&gt; +<br>
+&gt; -- <br>
+&gt; 2.9.3<br>
+&gt; <br>
+</blockquote></div>
+
+--000000000000aeca960599400383--
