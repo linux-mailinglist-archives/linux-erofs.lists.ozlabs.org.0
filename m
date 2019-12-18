@@ -2,56 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9073D123C64
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2019 02:26:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DC6EE124C48
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2019 16:54:28 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47cy564K8FzDqSQ
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2019 12:26:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47dKM545J9zDqjd
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2019 02:54:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::643;
+ helo=mail-pl1-x643.google.com; envelope-from=blucerlee@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="kQ1t9xPh"; 
+ dkim-atps=neutral
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com
+ [IPv6:2607:f8b0:4864:20::643])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47cy4t0jjVzDqSC
- for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2019 12:25:45 +1100 (AEDT)
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
- by Forcepoint Email with ESMTP id 06A6AD290F6E0806539B
- for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2019 09:25:36 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 18 Dec 2019 09:25:35 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 18 Dec 2019 09:25:34 +0800
-Date: Wed, 18 Dec 2019 09:25:26 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Pratik Shinde <pratikshinde320@gmail.com>
-Subject: Re: [RFC] erofs-utils:code for detecting and tracking holes in
- uncompressed sparse files.
-Message-ID: <20191218012525.GA185426@architecture4>
-References: <20191203140250.23793-1-pratikshinde320@gmail.com>
- <20191204022734.GA60329@architecture4>
- <CAGu0czSNv--LQwrWXuzuT6S5BYs+tnCA8vqAREv7+Z4rEBdtsg@mail.gmail.com>
- <20191209071815.GA144654@architecture4>
- <20191211054917.GA28738@architecture4>
- <CAGu0czQ3wM_1TvwLmuMxtmnqr8yrCgngsmkocp8z3MztAqRL6g@mail.gmail.com>
- <20191213072442.GA111839@architecture4>
- <CAGu0czST5HVpH2+mNWTjWMzYHqQW3r4dYE=JKz6bM6DRpxXzKA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAGu0czST5HVpH2+mNWTjWMzYHqQW3r4dYE=JKz6bM6DRpxXzKA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47dKKN0K75zDqkP
+ for <linux-erofs@lists.ozlabs.org>; Thu, 19 Dec 2019 02:52:52 +1100 (AEDT)
+Received: by mail-pl1-x643.google.com with SMTP id p27so1143389pli.10
+ for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2019 07:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=1yhihVfwuZ8e485HHQqqnzkj0QYBAsgemBaidsjEj0w=;
+ b=kQ1t9xPhyUwS37e9NQ5KbZ7MsAzed+WnKewC7DfdeL+8Kcs9Mgjc8+A6JE9GFFyU3z
+ v1Q4x2rvsXqqOx6SdCd4H169dl+fm+ISIZ+dzgKHNgc3ukwOpT5lYWGWc3AeEF7KaglK
+ Tnm22zBFELGktdUEiqUIpENE/acTeR/fxYR2N5gUQ94q/uaT1B3nhneFNJL1vEV5upl1
+ StdchtBQJCfmsdAAUfl+BT4zCaJySCW+eYYB7EGSyJrgruo7+b8XEEfOYV8L9yWTO5Ez
+ lYkIKcwcWIH/Pr3A1cdB7swCw65Yim3W6pCTMQgiJSOQUdpLvf5OV1vGHIpb2blEbvQh
+ K2Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=1yhihVfwuZ8e485HHQqqnzkj0QYBAsgemBaidsjEj0w=;
+ b=GvotAUrtl6MtbkEOTHIKD4RvLtxFVF4Qhw4EIuokF+xJ0FxBq5x8wh/O9jioLlb5I1
+ DB2mMlDmsfBFnKbqtc5zS+0OnJlLCKHdi9Bq9m9NAdWiiOkGG7hBft3wAO8T9BglTThw
+ zqU9GO0roEQwLnxmkSl/QRsHsQG5R0WFQ+PsXTQ5G68jjIykAOJIpaFXF7re/j71Z9m9
+ pkeZj7U7bvYYn3ncaGRKETsLtHl6toj3+w2MBXbOI1efyIP5zdydbLwnT+rn4CLhOPXm
+ QJ8jNdyN0Tlwb/5ZstXxjvrzRVjFFqyxzxtohqiFcUHkSRmYbBX+g0SChXxI7KcAb+an
+ muUw==
+X-Gm-Message-State: APjAAAVbKPKSOpNSbxKXx8e528A/b75WFNHoDhVAs51Rs0xJ+bEXDmP9
+ 5/zYQ01D15WBxJUZO/x6+Whg2WEs
+X-Google-Smtp-Source: APXvYqybDhHC/vuem/PjqI3LmNUG1gR5Vb3mHVUMg64rkRk6YvaQaWRxouiIhKnmxD7GnCSrH/yDVA==
+X-Received: by 2002:a17:90b:3011:: with SMTP id
+ hg17mr3601933pjb.90.1576684368614; 
+ Wed, 18 Dec 2019 07:52:48 -0800 (PST)
+Received: from localhost ([167.172.195.170])
+ by smtp.gmail.com with ESMTPSA id b8sm3307009pff.114.2019.12.18.07.52.45
+ (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+ Wed, 18 Dec 2019 07:52:47 -0800 (PST)
+From: Li Guifu <blucerlee@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v1] erofs-utils:code clean of write file
+Date: Wed, 18 Dec 2019 23:52:37 +0800
+Message-Id: <20191218155237.2222-1-blucerlee@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,332 +73,126 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, miaoxie@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Pratik,
+From: Li Guifu <bluce.liguifu@huawei.com>
 
-I write all comments inline as before.
+Make a code clean at function erofs_write_file() which
+has multi jump.
 
-On Tue, Dec 17, 2019 at 11:36:19PM +0530, Pratik Shinde wrote:
-> Hello Gao,
-> 
-> I went through my approach one more. I think maintaining an array for
-> tracking state of blocks (HOLE or DATA) is unnecessary. Instead We can
-> represent a HOLE using some structure e.g
-> struct hole {
->      start_block;
->      length;
-> }
-> and generate list of above type on the fly while writing a file.
+Signed-off-by: Li Guifu <blucerlee@gmail.com>
+---
+ lib/inode.c | 63 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 31 insertions(+), 32 deletions(-)
 
+diff --git a/lib/inode.c b/lib/inode.c
+index 0e19b11..052315a 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -302,22 +302,10 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ 	return true;
+ }
+ 
+-int erofs_write_file(struct erofs_inode *inode)
++int erofs_write_file_by_fd(int fd, struct erofs_inode *inode)
+ {
++	int ret;
+ 	unsigned int nblocks, i;
+-	int ret, fd;
+-
+-	if (!inode->i_size) {
+-		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+-		return 0;
+-	}
+-
+-	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+-		ret = erofs_write_compressed_file(inode);
+-
+-		if (!ret || ret != -ENOSPC)
+-			return ret;
+-	}
+ 
+ 	/* fallback to all data uncompressed */
+ 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+@@ -327,47 +315,58 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	if (ret)
+ 		return ret;
+ 
+-	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+-	if (fd < 0)
+-		return -errno;
+-
+ 	for (i = 0; i < nblocks; ++i) {
+ 		char buf[EROFS_BLKSIZ];
+ 
+ 		ret = read(fd, buf, EROFS_BLKSIZ);
+-		if (ret != EROFS_BLKSIZ) {
+-			if (ret < 0)
+-				goto fail;
+-			close(fd);
+-			return -EAGAIN;
+-		}
++		if (ret != EROFS_BLKSIZ)
++			return -errno;
+ 
+ 		ret = blk_write(buf, inode->u.i_blkaddr + i, 1);
+ 		if (ret)
+-			goto fail;
++			return ret;
+ 	}
+ 
+ 	/* read the tail-end data */
+ 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+ 	if (inode->idata_size) {
+ 		inode->idata = malloc(inode->idata_size);
+-		if (!inode->idata) {
+-			close(fd);
++		if (!inode->idata)
+ 			return -ENOMEM;
+-		}
+ 
+ 		ret = read(fd, inode->idata, inode->idata_size);
+ 		if (ret < inode->idata_size) {
+ 			free(inode->idata);
+ 			inode->idata = NULL;
+-			close(fd);
+ 			return -EIO;
+ 		}
+ 	}
+-	close(fd);
++
+ 	return 0;
+-fail:
+-	ret = -errno;
++}
++
++int erofs_write_file(struct erofs_inode *inode)
++{
++	int ret, fd;
++
++	if (!inode->i_size) {
++		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
++		return 0;
++	}
++
++	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
++		ret = erofs_write_compressed_file(inode);
++
++		if (!ret || ret != -ENOSPC)
++			return ret;
++	}
++
++	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
++	if (fd < 0)
++		return -errno;
++
++	ret = erofs_write_file_by_fd(fd, inode);
++
+ 	close(fd);
+ 	return ret;
+ }
+-- 
+2.17.1
 
-Yes, that is what I mean. :)
-
-
-> 
-> Now coming to what can be store on disk for tracking hole information:
-> 1) We can convert above generated list to a dynamic sized array & write the
-> array to disk. (Array can be made part of erofs_inode).
-> 2) More memory efficient approach would be to maintain a bitmap to
-> represent the state of block.(one bit per block).
-
-
-I tend to use 1), because even holes are exist, they could
-not be fragmented.
-
-
-In addition, Using bitmap only will take more time to calc
-runtimely than dynamic sized array (we could use binary search
-for dynamic sized array), e.g.
-
-   12   x    13    x  x  x  14
-
-if we only know the start address is 12 and we will access 14,
-we need to linearly scan the bitmap in order to know how many
-non-holes in advance.... It could take much time and I/O...
-
-
-> 
-> Along with this we can have some flags which can tell whether given file
-> has any holes OR not.based on that read logic can be handled.
-
-
-Yes, we could use a new data mapping (in i_format)
-in order to distinguish.
-
-
-> Let me know your thoughts.
-> I will start shaping my RFC patch accordingly.
-
-
-Thanks for taking time on this.
-
-Thanks,
-Gao Xiang
-
-> 
-> On Fri, Dec 13, 2019 at 12:54 PM Gao Xiang <gaoxiang25@huawei.com> wrote:
-> 
-> > On Fri, Dec 13, 2019 at 12:35:00PM +0530, Pratik Shinde wrote:
-> > > Gao,
-> > >
-> > > just returned from holidays. Let me rethink about this approach.
-> >
-> > Okay, no problem at all. :)
-> >
-> > Thanks,
-> > Gao Xiang
-> >
-> > >
-> > > --Pratik
-> > >
-> > >
-> > > On Wed, Dec 11, 2019, 11:14 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
-> > >
-> > > > On Mon, Dec 09, 2019 at 03:18:17PM +0800, Gao Xiang wrote:
-> > > > > Hi Pratik,
-> > > > >
-> > > > > On Mon, Dec 09, 2019 at 12:34:50PM +0530, Pratik Shinde wrote:
-> > > > > > Hello Gao,
-> > > > > >
-> > > > > > Did you get any chance to look at this in detail.
-> > > > >
-> > > > > I looked into your implementation weeks before.
-> > > > >
-> > > > > As my reply in the previous email, did you see it and could you
-> > check it
-> > > > out?
-> > > > >
-> > > > > Kernel emails are not top-posting so you could scroll down to the
-> > end.
-> > > > >
-> > > > > > > "variable-sized inode" isn't a problem here, which can be handled
-> > > > > > > similar to the case of "compress indexes".
-> > > > > > >
-> > > > > > > Probably no need to write linked list to the disk but generate
-> > > > linked list
-> > > > > > > in memory when writing data on the fly, and then transfer to a
-> > > > > > > variable-sized
-> > > > > > > extent array at the time of writing inode metadata (The order is
-> > > > firstly
-> > > > > > > data
-> > > > > > > and then metadata in erofs-utils so it looks practical.)
-> > > >
-> > > >
-> > > > Some feedback words here? Do you think it is unnecessary to use such
-> > > > array for limited fragmented holes (either in-memory or ondisk) as
-> > well?
-> > > >
-> > > > Thanks,
-> > > > Gao Xiang
-> > > >
-> > > >
-> > > > >
-> > > > > Thanks,
-> > > > > Gao Xiang
-> > > > >
-> > > > > >
-> > > > > > --Pratik.
-> > > > > >
-> > > > > > On Wed, Dec 4, 2019, 7:52 AM Gao Xiang <gaoxiang25@huawei.com>
-> > wrote:
-> > > > > >
-> > > > > > > Hi Pratik,
-> > > > > > >
-> > > > > > > I'll give detailed words this weekend if you have more questions
-> > > > > > > since I'm busying in other stupid intra-company stuffs now...
-> > > > > > >
-> > > > > > > On Tue, Dec 03, 2019 at 07:32:50PM +0530, Pratik Shinde wrote:
-> > > > > > > > NOTE: The patch is not fully complete yet, with this patch I
-> > just
-> > > > want to
-> > > > > > > > present rough idea of what I am trying to achieve.
-> > > > > > > >
-> > > > > > > > The patch does following :
-> > > > > > > > 1) Detect holes (of size EROFS_BLKSIZ) in uncompressed files.
-> > > > > > > > 2) Keep track of holes per file.
-> > > > > > > >
-> > > > > > > > In-order to track holes, I used an array of size = (file_size /
-> > > > > > > blocksize)
-> > > > > > > > The array basically tracks number of holes before a particular
-> > > > logical
-> > > > > > > file block.
-> > > > > > > > e.g blks[i] = 10 meaning ith block has 10 holes before it.
-> > > > > > > > If a particular block is a hole we set the index to '-1'.
-> > > > > > > >
-> > > > > > > > how read logic will change:
-> > > > > > > > 1) currently we simply map read offset to a fs block.
-> > > > > > > > 2) with holes in place the calculation of block number would
-> > be:
-> > > > > > > >
-> > > > > > > >    blkno = start_block + (offset >> block_size_shift) -
-> > (number of
-> > > > > > > >                                                        holes
-> > before
-> > > > > > > block in which offset falls)
-> > > > > > > >
-> > > > > > > > 3) If a read offset falls inside a hole (which can be found
-> > using
-> > > > above
-> > > > > > > array). We
-> > > > > > > >    fill the user buffer with '\0' on the fly.
-> > > > > > > >
-> > > > > > > > through this,block no. lookup would still be performed in
-> > constant
-> > > > time.
-> > > > > > > >
-> > > > > > > > The biggest problem with this approach is - we have to store
-> > the
-> > > > hole
-> > > > > > > tracking
-> > > > > > > > array for every file to the disk.Which doesn't seems to be
-> > > > practical.we
-> > > > > > > can use a linkedlist,
-> > > > > > > > but that will make size of inode variable.
-> > > > > > >
-> > > > > > > "variable-sized inode" isn't a problem here, which can be handled
-> > > > > > > similar to the case of "compress indexes".
-> > > > > > >
-> > > > > > > Probably no need to write linked list to the disk but generate
-> > > > linked list
-> > > > > > > in memory when writing data on the fly, and then transfer to a
-> > > > > > > variable-sized
-> > > > > > > extent array at the time of writing inode metadata (The order is
-> > > > firstly
-> > > > > > > data
-> > > > > > > and then metadata in erofs-utils so it looks practical.)
-> > > > > > >
-> > > > > > > Thanks,
-> > > > > > > Gao Xiang
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-> > > > > > > > ---
-> > > > > > > >  lib/inode.c | 67
-> > > > > > > ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> > > > > > > >  1 file changed, 66 insertions(+), 1 deletion(-)
-> > > > > > > >
-> > > > > > > > diff --git a/lib/inode.c b/lib/inode.c
-> > > > > > > > index 0e19b11..af31949 100644
-> > > > > > > > --- a/lib/inode.c
-> > > > > > > > +++ b/lib/inode.c
-> > > > > > > > @@ -38,6 +38,61 @@ static unsigned char
-> > erofs_type_by_mode[S_IFMT
-> > > > >>
-> > > > > > > S_SHIFT] = {
-> > > > > > > >
-> > > > > > > >  struct list_head inode_hashtable[NR_INODE_HASHTABLE];
-> > > > > > > >
-> > > > > > > > +
-> > > > > > > > +#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) ==
-> > > > start &&
-> > > > > > >       \
-> > > > > > > > +                          roundup(end, EROFS_BLKSIZ) == end &&
-> > > >    \
-> > > > > > > > +                         (end - start) % EROFS_BLKSIZ == 0)
-> > > > > > > > +#define HOLE_BLK             -1
-> > > > > > > > +unsigned int erofs_detect_holes(struct erofs_inode *inode, int
-> > > > *blks)
-> > > > > > > > +{
-> > > > > > > > +     int i, fd, st, en;
-> > > > > > > > +     unsigned int nblocks;
-> > > > > > > > +     erofs_off_t data, hole, len;
-> > > > > > > > +
-> > > > > > > > +     nblocks = inode->i_size / EROFS_BLKSIZ;
-> > > > > > > > +     for (i = 0; i < nblocks; i++)
-> > > > > > > > +             blks[i] = 0;
-> > > > > > > > +     fd = open(inode->i_srcpath, O_RDONLY);
-> > > > > > > > +     if (fd < 0) {
-> > > > > > > > +             return -errno;
-> > > > > > > > +     }
-> > > > > > > > +     len = lseek(fd, 0, SEEK_END);
-> > > > > > > > +     if (lseek(fd, 0, SEEK_SET) == -1)
-> > > > > > > > +             return -errno;
-> > > > > > > > +     data = 0;
-> > > > > > > > +     while (data < len) {
-> > > > > > > > +             hole = lseek(fd, data, SEEK_HOLE);
-> > > > > > > > +             if (hole == len)
-> > > > > > > > +                     break;
-> > > > > > > > +             data = lseek(fd, hole, SEEK_DATA);
-> > > > > > > > +             if (data < 0 || hole > data) {
-> > > > > > > > +                     return -EINVAL;
-> > > > > > > > +             }
-> > > > > > > > +             if (IS_HOLE(hole, data)) {
-> > > > > > > > +                     st = hole >> S_SHIFT;
-> > > > > > > > +                     en = data >> S_SHIFT;
-> > > > > > > > +                     nblocks -= (en - st);
-> > > > > > > > +                     for (i = st; i < en; i++)
-> > > > > > > > +                             blks[i] = HOLE_BLK;
-> > > > > > > > +             }
-> > > > > > > > +     }
-> > > > > > > > +     return nblocks;
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > > +int erofs_fill_holedata(int *blks, unsigned int nblocks) {
-> > > > > > > > +     int i, nholes = 0;
-> > > > > > > > +     for (i = 0; i < nblocks; i++) {
-> > > > > > > > +             if (blks[i] == -1)
-> > > > > > > > +                     nholes++;
-> > > > > > > > +             else {
-> > > > > > > > +                     blks[i] = nholes;
-> > > > > > > > +                     if (nholes >= (i + 1))
-> > > > > > > > +                             return -EINVAL;
-> > > > > > > > +             }
-> > > > > > > > +     }
-> > > > > > > > +     return 0;
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > >  void erofs_inode_manager_init(void)
-> > > > > > > >  {
-> > > > > > > >       unsigned int i;
-> > > > > > > > @@ -305,6 +360,7 @@ static bool
-> > erofs_file_is_compressible(struct
-> > > > > > > erofs_inode *inode)
-> > > > > > > >  int erofs_write_file(struct erofs_inode *inode)
-> > > > > > > >  {
-> > > > > > > >       unsigned int nblocks, i;
-> > > > > > > > +     int *blks;
-> > > > > > > >       int ret, fd;
-> > > > > > > >
-> > > > > > > >       if (!inode->i_size) {
-> > > > > > > > @@ -322,7 +378,13 @@ int erofs_write_file(struct erofs_inode
-> > > > *inode)
-> > > > > > > >       /* fallback to all data uncompressed */
-> > > > > > > >       inode->datalayout = EROFS_INODE_FLAT_INLINE;
-> > > > > > > >       nblocks = inode->i_size / EROFS_BLKSIZ;
-> > > > > > > > -
-> > > > > > > > +     blks = malloc(sizeof(int) * nblocks);
-> > > > > > > > +     nblocks = erofs_detect_holes(inode, blks);
-> > > > > > > > +     if (nblocks < 0)
-> > > > > > > > +             return nblocks;
-> > > > > > > > +     if ((ret = erofs_fill_holedata(blks, nblocks)) != 0) {
-> > > > > > > > +             return ret;
-> > > > > > > > +     }
-> > > > > > > >       ret = __allocate_inode_bh_data(inode, nblocks);
-> > > > > > > >       if (ret)
-> > > > > > > >               return ret;
-> > > > > > > > @@ -332,6 +394,8 @@ int erofs_write_file(struct erofs_inode
-> > *inode)
-> > > > > > > >               return -errno;
-> > > > > > > >
-> > > > > > > >       for (i = 0; i < nblocks; ++i) {
-> > > > > > > > +             if (blks[i] == HOLE_BLK)
-> > > > > > > > +                     continue;
-> > > > > > > >               char buf[EROFS_BLKSIZ];
-> > > > > > > >
-> > > > > > > >               ret = read(fd, buf, EROFS_BLKSIZ);
-> > > > > > > > @@ -962,3 +1026,4 @@ struct erofs_inode
-> > > > > > > *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
-> > > > > > > >       return erofs_mkfs_build_tree(inode);
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > > +
-> > > > > > > > --
-> > > > > > > > 2.9.3
-> > > > > > > >
-> > > > > > >
-> > > >
-> >
