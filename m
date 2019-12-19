@@ -1,54 +1,82 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2DB1268D5
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2019 19:19:32 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B2271259B4
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2019 03:51:18 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47dbwz2Fn6zDqmf
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2019 13:51:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47f0X112hczDqsl
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Dec 2019 05:19:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1576779569;
+	bh=4HdrA1yMXP97LzJ8x0u3PiUyX+tQWIK+zggfdjUHSdc=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=h5D8p6hH4fXRXg054l90d0qeeMUoP5uQMeToo2XAEK/OhQzmyZoeAZEejXT9xm5EY
+	 JB/n0ZEeFIJxmDnKu6dQ3gipI4CTsQ5Rhtbgem/IA+g6UXC07sN030KMYojt0ePlAg
+	 mAghprjOXUAfLX7TFEOTpJuF8pzKUtEblOYzfGQMoYXZbxm9rEnEWShFybduCoNbia
+	 ya3vpZdV1/P74JiIZFjYc69xaMrdRkMEMTxOpyQvkdjjWmfqWHCQ+WtR4vLjeypWmS
+	 2PL+Z2fgTxN4HUBfvsV2crIuIP2l6OGtEgEZsVn+aLIowsdfjd6NsTwpFX0APefRGq
+	 svGl0z/km827A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=superstar-medical.com (client-ip=31.3.155.109;
- helo=superstar-medical.com; envelope-from=bounce@superstar-medical.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none)
- header.from=superstar-medical.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=superstar-medical.com header.i=@superstar-medical.com
- header.b="LMNIhWtX"; dkim-atps=neutral
-X-Greylist: delayed 385 seconds by postgrey-1.36 at bilbo;
- Thu, 19 Dec 2019 13:50:56 AEDT
-Received: from superstar-medical.com (superstar-medical.com [31.3.155.109])
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.64.31; helo=sonic307-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.b="bKjwPLVy"; 
+ dkim-atps=neutral
+Received: from sonic307-55.consmr.mail.gq1.yahoo.com
+ (sonic307-55.consmr.mail.gq1.yahoo.com [98.137.64.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47dbwc2FFRzDqgN
- for <linux-erofs@lists.ozlabs.org>; Thu, 19 Dec 2019 13:50:53 +1100 (AEDT)
-Received: by superstar-medical.com (Postfix, from userid 0)
- id DA30B7E8D; Thu, 19 Dec 2019 10:44:23 +0800 (CST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 superstar-medical.com DA30B7E8D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=superstar-medical.com; s=default; t=1576723463;
- bh=Dm8idoQpgpu5sE0yCKDBKsK8esBkHZXVaQpdeKwNcVk=;
- h=To:Subject:Date:From:Reply-To:List-Unsubscribe:From;
- b=LMNIhWtXGCpjC+/TDIE+g6VEZdxjjzQ9fXW+E+7TEuuuQK15mzMnTEe/7ZNvyQyx/
- QWmviGYgLB5mr7zGfnVUU6YMEiqp8gyN1dxhFoz4iPwVpzVkwke9VKnEqRt233KIks
- eJwAhwcT34u9LsbrQmM5n/Wcy5hA7MkAA8WRBZ9U=
-To: linux-erofs@lists.ozlabs.org
-Subject: Are You Fine With Your Current Suppliers For Anesthesia Machine
-X-PHP-Originating-Script: 48:email.php
-Message-ID: <a474bd48efbc41b14545a441a354ffbd@www.superstar-medical.com>
-Date: Mon, 16 Dec 2019 01:35:06 +0000
-From: "Jenny" <admin@superstar-medical.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47f0Wv2PvxzDqld
+ for <linux-erofs@lists.ozlabs.org>; Fri, 20 Dec 2019 05:19:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1576779557; bh=AKJL3aZixwndm6U4xV6ByhUcHtPJ3ukkXetzKAJtJYc=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=bKjwPLVyPeTQki7FUFDejO5HvWuI+zFE1KccTh89dThqq4UDkoBh0zfKGuBN+hAxyTBEO7fc23kMY5GSTXX6FYrjKUR+dMFS3K0meEUsiqMT3RuqmFupCcaZe8AnkCp7l6oTdzSP/qGQqqGqPJk0vxw5vJAQeEeynkjf5EdzXQm2Zm5NT0w0yXuwFK0ZF7SPDiKu/ZgPucWAYLb1rgxvNLpYXTR9YL5PAkZkcESbBstF06QJMniUlmL/OHLGuhAPSzhtCEa7yQ/fo6zK7Mlp+DHAuIgBbE9fdiMaBVmyQvyGt/oizLH7x9n0beO76cst+1DisGa94yT6w53qJ0lHvQ==
+X-YMail-OSG: irxLGigVM1mCUPPpt1bJ9nsNi0zBojMJRbY8OnvkUzOXa5yqkLnVe7fvEeR6PS.
+ kDRxx5ViqgfEvuOWMW9sAxCxaRK.ZZfY8akFqMl8Yy8yBwxjpFIfFlG1aY.krQm06h7QovM6Kdj2
+ rVna2JzmGNZgx_vL77Wf6YUZfZ2jTYE6_H4JPht.mzV5clhipOBMJbZ5JWI7ekMu54E94OBmB2o4
+ 4nRE3lLq08_2i7h2b.K7A88Y8dj0Y06zVanGz_rRh0R4R4Gj.NImJo16pfkIfq5mENZOl3uGn2TS
+ dkgoNykyD5Aq2KZ7o77QGldlAXOxFFUg.4mv0tOep_v0sQXP44u0waF6hmb9XnMUF2DCD6JE7mAN
+ 2x4F1I30BsIQF8Swn0Ft_hghLOy6HyNkwkldE3VOujCb_hazypTvqwEdYvjwIQDpQSD5_Q1Epnba
+ uf8pdr1t_mk8Ucv9CJzWrkI9XjXh.T7Vj_3b0uZzZdtXMr2Ijhnl0iXy8.QRpvFvF94zowjVh.cm
+ vT5yDoZd3kVjoolDhe8iuTYBxykDoRd5iNUW3E_ZLJ5n.fnVWoz19hoJD0d1ZwpdiV67blMQH_3c
+ JcGcTp9UCPGlfGu0SrNkp__7Ac8Uon0UnYIKLCIEROWs7io66qNd4JHUVzzNJbcxwppoHcdFhgKN
+ A5uWeTXENvv2CKXjakToP45FcGVdE9lLAzcZAkj3LEtACbsTuU0bzzdL7SJ1Uq.KHGnIoT8rizAi
+ AHtR3eYJqy1u4JfVe5sfRLbu8zfJqFGV.y8TnCNjPQU3y3myBwLWerV3Cf.h.KCkGE2QaOFZlofC
+ kGjICe3.aKA.NGnuXOq.PVBIxVzg4KKjhgNf.9YapB_KxiKPcLgNiaPOKBlXUuaY3aeduCpIe.qf
+ pElPMU6elx35dBvggGU17fMQ6Lqn2vn.pkPS12yZ6Nr0Hg.m9HySlQfaRq_CmcAx5znMTLchhmvG
+ EeduMvLUZyWQ4jhBkH9_Y2Wbp_j9I727gBEmgtc5oSBMB7IZgsto4B7Z7AaSQZhAJOJoiCuXrraj
+ yCw1MT3BDjvKolWNBz2DEbd6scwaBbWLbfex2IZaaPVP1WTzRqQLZz9wRM70_wFYGtmynYKSRzrD
+ 5sCDchN0shdOXu7niZbL1AcC3k6ssp5mLTXC5be.70xfqs5aqmj.7g6ynM1cQB60J.MWWsOgRESQ
+ V8KUzqzy2an_crZJRI2SO_M3T.WMSaeXIKcTQXrn0IEgAYHd31NqhrNtvorYuSzNjKR3Rlw.wVN7
+ MCazEKtDMCvYzYIQ4L5phs01VBZy8kGINDozcSzdBLqDKbFoCPgOD7PD6MVaXN8rCC6lrAHvBTas
+ hSNk.q4D7uXf3ISkUQnpX1a04fefws8vcv3V1VaOwzYtOguGVvGMz5xnb4byhMMzix6lKPZpGUPU
+ e
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic307.consmr.mail.gq1.yahoo.com with HTTP; Thu, 19 Dec 2019 18:19:17 +0000
+Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID d0c44fe2bd4b1cd4b5d62b2b68ae834f; 
+ Thu, 19 Dec 2019 18:19:12 +0000 (UTC)
+Date: Fri, 20 Dec 2019 02:19:04 +0800
+To: Li Guifu <blucerlee@gmail.com>
+Subject: Re: [PATCH v1] erofs-utils:code clean of write file
+Message-ID: <20191219181901.GA9405@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191218155237.2222-1-blucerlee@gmail.com>
 MIME-Version: 1.0
-X-Mailer-LID: 2
-X-Mailer-RecptId: 182269
-X-Mailer-SID: 9
-X-Mailer-Sent-By: 1
-Content-Type: multipart/alternative; charset="UTF-8";
- boundary="b1_5df762187ce6c8bf56d296a4e3446a11"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218155237.2222-1-blucerlee@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4
+ (Java/1.8.0_181)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,328 +88,283 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: admin@superstar-medical.com
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---b1_5df762187ce6c8bf56d296a4e3446a11
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Hi Guifu,
 
-Hi, Nice Day! 
+Sorry for some delay, I'm busying in developping new fixed-sized output
+LZMA library approach now (I think I'm fully understand LZMA internals,
+hopefully in RFC shape and open source a preliminary effective
+implementation next month, and I don't want to delay it too longer...)
 
-This is Jenny from Superstar Medical from China.
+Some changes are made as below (and a new version at the end of this
+message and experimental branch). Comment as well if you have some
+other opinions...
 
-We searched in google and Noticed that you are in the market of medical
-equipment.
+p.s. could you take some time looking at the requirement, thanks a lot!
+https://lore.kernel.org/r/CAEvUa7=N7qUobof=vwpXF2XfXcW8R67SB3KV1phRN2ZmG23CvQ@mail.gmail.com/
 
-SO, I'm pleased to inform you that we have been working with many big
-companies in Europe and South America and many other countries in the
-world.
+On Wed, Dec 18, 2019 at 11:52:37PM +0800, Li Guifu wrote:
+> From: Li Guifu <bluce.liguifu@huawei.com>
+> 
+> Make a code clean at function erofs_write_file() which
+> has multi jump.
 
-As a leading manufacturer of medical equipment including anesthesia
-machine, ICU ventilator, CPAP system. We own our self-brand—SuperStar. At
-present, our brand ranks in the top three in the Chinese market, and the
-top ten in the global market.
+I've rewriten the commit message.
 
-We can provide the best price directly from our factory, even 20% cheaper
-than other suppliers. And our machines can be used at least for 20 years,
-with 15 year warranty.
+> 
+> Signed-off-by: Li Guifu <blucerlee@gmail.com>
+> ---
+>  lib/inode.c | 63 ++++++++++++++++++++++++++---------------------------
+>  1 file changed, 31 insertions(+), 32 deletions(-)
+> 
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 0e19b11..052315a 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -302,22 +302,10 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+>  	return true;
+>  }
+>  
+> -int erofs_write_file(struct erofs_inode *inode)
+> +int erofs_write_file_by_fd(int fd, struct erofs_inode *inode)
 
-Also, with our own factory, we can provide the machine at any time you
-need, as we already prepare all machines in stock and can ship to you
-within about one week. 
+I've rename the function to write_uncompressed_file_from_fd and
+change the variable order.
 
-We are in good position not only to supply you high quality machine, but
-also the excellent after sales service，Well-trained engineers will offer
-you any technical support.
+>  {
+> +	int ret;
+>  	unsigned int nblocks, i;
+> -	int ret, fd;
+> -
+> -	if (!inode->i_size) {
+> -		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+> -		return 0;
+> -	}
+> -
+> -	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+> -		ret = erofs_write_compressed_file(inode);
+> -
+> -		if (!ret || ret != -ENOSPC)
+> -			return ret;
+> -	}
+>  
+>  	/* fallback to all data uncompressed */
+>  	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+> @@ -327,47 +315,58 @@ int erofs_write_file(struct erofs_inode *inode)
+>  	if (ret)
+>  		return ret;
+>  
+> -	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+> -	if (fd < 0)
+> -		return -errno;
+> -
+>  	for (i = 0; i < nblocks; ++i) {
+>  		char buf[EROFS_BLKSIZ];
+>  
+>  		ret = read(fd, buf, EROFS_BLKSIZ);
+> -		if (ret != EROFS_BLKSIZ) {
+> -			if (ret < 0)
+> -				goto fail;
+> -			close(fd);
+> -			return -EAGAIN;
+> -		}
+> +		if (ret != EROFS_BLKSIZ)
+> +			return -errno;
 
-Upon receipt of your feedback, we will update you more relevant proposals
-and working videos for your options.
+I'd suggest the original approach.
 
-I believe in our strong patented technology and top-level after-sales
-service and even logistics advantages can greatly help your business
+Thanks,
+Gao Xiang
 
---b1_5df762187ce6c8bf56d296a4e3446a11
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+>  
+>  		ret = blk_write(buf, inode->u.i_blkaddr + i, 1);
+>  		if (ret)
+> -			goto fail;
+> +			return ret;
+>  	}
+>  
+>  	/* read the tail-end data */
+>  	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+>  	if (inode->idata_size) {
+>  		inode->idata = malloc(inode->idata_size);
+> -		if (!inode->idata) {
+> -			close(fd);
+> +		if (!inode->idata)
+>  			return -ENOMEM;
+> -		}
+>  
+>  		ret = read(fd, inode->idata, inode->idata_size);
+>  		if (ret < inode->idata_size) {
+>  			free(inode->idata);
+>  			inode->idata = NULL;
+> -			close(fd);
+>  			return -EIO;
+>  		}
+>  	}
+> -	close(fd);
+> +
+>  	return 0;
+> -fail:
+> -	ret = -errno;
+> +}
+> +
+> +int erofs_write_file(struct erofs_inode *inode)
+> +{
+> +	int ret, fd;
+> +
+> +	if (!inode->i_size) {
+> +		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+> +		return 0;
+> +	}
+> +
+> +	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+> +		ret = erofs_write_compressed_file(inode);
+> +
+> +		if (!ret || ret != -ENOSPC)
+> +			return ret;
+> +	}
+> +
+> +	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+> +	if (fd < 0)
+> +		return -errno;
+> +
+> +	ret = erofs_write_file_by_fd(fd, inode);
+> +
+>  	close(fd);
+>  	return ret;
+>  }
+> -- 
+> 2.17.1
+> 
 
-<html>
-<head>
-</head>
-<body>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta
-http-equiv="X-UA-Compatible" content="IE=edge" />
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">Hi, Nice Day!</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">This is Jenny from Superstar Medical from China.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">We searched in google and Noticed that you are in the
-market of medical equipment.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">SO, I'm pleased to inform you that we have been working
-with many big companies in Europe and South America and many other
-countries in the world.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">As a leading manufacturer of medical equipment including
-anesthesia machine, ICU ventilator, CPAP system. We own our
-self-brand&mdash;SuperStar. At present, our brand ranks in the top three in
-the Chinese market, and the top ten in the global market.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">We can provide the best price directly from our factory,
-even 20% cheaper than other suppliers. And our machines can be used at
-least for 20 years, with 15 year warranty.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">Also, with our own factory, we can provide the machine at
-any time you need, as we already prepare all machines in stock and can ship
-to you within about one week.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">We are in good position not only to supply you high
-quality machine, but also the excellent after sales service，Well-trained
-engineers will offer you any technical support.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">Upon receipt of your feedback, we will update you more
-relevant proposals and working videos for your options.</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">I believe in our strong patented technology and top-level
-after-sales service and even logistics advantages can greatly help your
-business</p>
-<p style="font-family: Helvetica Neue,Helvetica,Lucida
-Grande,tahoma,verdana,arial,sans-serif; font-size: 15px; line-height: 21px;
-color: #141823;">Also, you can click the WhatsApp among my sign to talk
-with me.</p>
-<table style="font-size: medium; font-family: Verdana,Arial;"
-cellspacing="0" cellpadding="0">
-<tbody>
-<tr>
-<td>
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr>
-<td style="vertical-align: middle;" width="120"><span style="margin-right:
-20px; display: block;"><img
-src="https://files.superstar-med.net/18/avatar.jpg" role="presentation"
-width="120" /></span></td>
-<td style="vertical-align: middle;">
-<h3 style="margin: 0px; font-size: 18px; color: #000000;"
-color="#000000"><span>Jenny</span><span></span></h3>
-<p style="margin: 0px; color: #000000; font-size: 14px; line-height: 22px;"
-color="#000000" font-size="medium"><span>Overseas Sales Manager</span></p>
-<p style="margin: 0px; font-weight: 500; color: #000000; font-size: 14px;
-line-height: 22px;" color="#000000"
-font-size="medium"><span>Marketing</span><span>&nbsp;|&nbsp;</span><span>Superstar
-Medical</span></p>
-</td>
-<td width="30">
-<div style="width: 30px;"></div>
-</td>
-<td style="width: 1px; border-bottom: medium none; border-left: 1px solid
-#eb772f;" color="#EB772F" direction="vertical" width="1"></td>
-<td width="30">
-<div style="width: 30px;"></div>
-</td>
-<td style="vertical-align: middle;">
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr style="vertical-align: middle;" height="25">
-<td style="vertical-align: middle;" width="30">
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr>
-<td style="vertical-align: bottom;"><span width="11" style="display:
-block;"><img style="display: block;"
-src="https://files.superstar-med.net/p/phone.png" color="#EB772F"
-/></span></td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="padding: 0px; color: #000000;"><a style="text-decoration: none;
-color: #000000; font-size: 12px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=1&F=H"
-color="#000000"><span>+86-15077898193</span></a></td>
-</tr>
-<tr style="vertical-align: middle;" height="25">
-<td style="vertical-align: middle;" width="30">
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr>
-<td style="vertical-align: bottom;"><span width="11" style="display:
-block;"><img style="display: block;"
-src="https://files.superstar-med.net/p/email.png" /></span></td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="padding: 0px;"><a style="text-decoration: none; color: #000000;
-font-size: 12px;" href="mailto:admin@superstar-medical.com"
-color="#000000"><span>admin@superstar-medical.com</span></a></td>
-</tr>
-<tr style="vertical-align: middle;" height="25">
-<td style="vertical-align: middle;" width="30">
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr>
-<td style="vertical-align: bottom;"><span width="11" style="display:
-block;" color="#EB772F"><img style="display: block;"
-src="https://files.superstar-med.net/p/website.png" color="#EB772F"
-/></span></td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="padding: 0px;"><a style="text-decoration: none; color: #000000;
-font-size: 12px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=3&F=H"
-color="#000000"><span>https://www.superstar-med.net/</span></a></td>
-</tr>
-<tr style="vertical-align: middle;" height="25">
-<td style="vertical-align: middle;" width="30">
-<table style="font-size: medium; font-family: Arial;" cellspacing="0"
-cellpadding="0">
-<tbody>
-<tr>
-<td style="vertical-align: bottom;"><span width="11" style="display:
-block;" color="#EB772F"><img style="display: block;"
-src="https://files.superstar-med.net/p/address.png" color="#EB772F"
-/></span></td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="padding: 0px;"><span style="font-size: 12px; color: #000000;"
-color="#000000"> No.6 building, Bofu Road,Zhongshan Park<br
-/>Nanjing,Jiangsu,China</span></td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td>
-<table style="font-size: medium; font-family: Arial; width: 100%;"
-cellspacing="0" cellpadding="0">
-<tbody>
-<tr>
-<td height="10"></td>
-</tr>
-<tr>
-<td style="width: 100%; border-bottom: 1px solid #eb772f; border-left:
-medium none; display: block;" color="#EB772F" direction="horizontal"
-height="1"></td>
-</tr>
-<tr>
-<td height="10"></td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td>
-<table style="font-size: medium; font-family: Arial; width: 100%;"
-cellspacing="0" cellpadding="0">
-<tbody>
-<tr>
-<td style="text-align: left;"><span style="display: block; text-align:
-left;"><a style="border-color: #6a78d1; border-style: solid; border-width:
-6px 12px; display: inline-block; background-color: #6a78d1; color: #ffffff;
-font-weight: bold; text-decoration: none; text-align: center; line-height:
-40px; font-size: 12px; border-radius: 3px;" target="_blank" rel="noopener
-noreferrer"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=14&F=H"
-color="#6A78D1">Find Me on WhatsApp Or Phone :
-+8615077898193</a></span></td>
-<td style="text-align: right; vertical-align: top;">
-<table style="font-size: medium; font-family: Arial; display:
-inline-block;" cellspacing="0" cellpadding="0">
-<tbody>
-<tr style="text-align: right;">
-<td><a style="display: inline-block; padding: 0px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=13&F=H"><img
-style="background-color: #6a78d1; display: block;"
-src="https://files.superstar-med.net/p/facebook.png" alt="facebook"
-height="24" /></a></td>
-<td width="5">
-<div></div>
-</td>
-<td><a style="display: inline-block; padding: 0px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=7&F=H"><img
-style="background-color: #6a78d1; display: block;"
-src="https://files.superstar-med.net/p/twitter.png" height="24"
-/></a></td>
-<td width="5">
-<div></div>
-</td>
-<td><a style="display: inline-block; padding: 0px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=4&F=H"><img
-style="background-color: #6a78d1; display: block;"
-src="https://files.superstar-med.net/p/linkedin.png" alt="linkedin"
-height="24" /></a></td>
-<td width="5">
-<div></div>
-</td>
-<td><a style="display: inline-block; padding: 0px;"
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=2&F=H"><img
-style="background-color: #6a78d1; display: block;"
-src="https://files.superstar-med.net/p/youtube.png" alt="youtube"
-height="24" /></a></td>
-<td width="5">
-<div></div>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td>
-<table style="font-size: medium; font-family: Arial; width: 100%;"
-cellspacing="0" cellpadding="0">
-<tbody>
-<tr>
-<td height="5"></td>
-</tr>
-<tr>
-<td><a
-href="http://www.superstar-medical.com/mail/link.php?M=182269&N=9&L=3&F=H"><img
-src="https://files.superstar-med.net/p/products.jpg" /></a></td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<br/><br><img
-src="http://www.superstar-medical.com/mail/open.php?M=182269&L=2&N=9&F=H&image=.jpg"
-height="1" width="10"></body>
-</html>
 
---b1_5df762187ce6c8bf56d296a4e3446a11--
+From 11302fc4dc5d53a7730405765828a744aee114f6 Mon Sep 17 00:00:00 2001
+From: Li Guifu <blucerlee@gmail.com>
+Date: Wed, 18 Dec 2019 23:52:37 +0800
+Subject: [PATCH] erofs-utils: clean up erofs_write_file()
+
+Introduce write_uncompressed_file_from_fd() to make
+error handling path in erofs_write_file() clearer.
+
+Signed-off-by: Li Guifu <blucerlee@gmail.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ lib/inode.c | 58 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/lib/inode.c b/lib/inode.c
+index 0e19b11..bd0652b 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -302,24 +302,11 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ 	return true;
+ }
+ 
+-int erofs_write_file(struct erofs_inode *inode)
++static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
+ {
++	int ret;
+ 	unsigned int nblocks, i;
+-	int ret, fd;
+ 
+-	if (!inode->i_size) {
+-		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+-		return 0;
+-	}
+-
+-	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+-		ret = erofs_write_compressed_file(inode);
+-
+-		if (!ret || ret != -ENOSPC)
+-			return ret;
+-	}
+-
+-	/* fallback to all data uncompressed */
+ 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+ 	nblocks = inode->i_size / EROFS_BLKSIZ;
+ 
+@@ -327,47 +314,60 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	if (ret)
+ 		return ret;
+ 
+-	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+-	if (fd < 0)
+-		return -errno;
+-
+ 	for (i = 0; i < nblocks; ++i) {
+ 		char buf[EROFS_BLKSIZ];
+ 
+ 		ret = read(fd, buf, EROFS_BLKSIZ);
+ 		if (ret != EROFS_BLKSIZ) {
+ 			if (ret < 0)
+-				goto fail;
+-			close(fd);
++				return -errno;
+ 			return -EAGAIN;
+ 		}
+ 
+ 		ret = blk_write(buf, inode->u.i_blkaddr + i, 1);
+ 		if (ret)
+-			goto fail;
++			return ret;
+ 	}
+ 
+ 	/* read the tail-end data */
+ 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+ 	if (inode->idata_size) {
+ 		inode->idata = malloc(inode->idata_size);
+-		if (!inode->idata) {
+-			close(fd);
++		if (!inode->idata)
+ 			return -ENOMEM;
+-		}
+ 
+ 		ret = read(fd, inode->idata, inode->idata_size);
+ 		if (ret < inode->idata_size) {
+ 			free(inode->idata);
+ 			inode->idata = NULL;
+-			close(fd);
+ 			return -EIO;
+ 		}
+ 	}
+-	close(fd);
+ 	return 0;
+-fail:
+-	ret = -errno;
++}
++
++int erofs_write_file(struct erofs_inode *inode)
++{
++	int ret, fd;
++
++	if (!inode->i_size) {
++		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
++		return 0;
++	}
++
++	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
++		ret = erofs_write_compressed_file(inode);
++
++		if (!ret || ret != -ENOSPC)
++			return ret;
++	}
++
++	/* fallback to all data uncompressed */
++	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
++	if (fd < 0)
++		return -errno;
++
++	ret = write_uncompressed_file_from_fd(inode, fd);
+ 	close(fd);
+ 	return ret;
+ }
+-- 
+2.20.1
+
 
