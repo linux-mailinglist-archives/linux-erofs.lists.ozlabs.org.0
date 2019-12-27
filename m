@@ -1,49 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AECE12B5B0
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Dec 2019 16:44:22 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9213F12B0DC
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Dec 2019 04:51:05 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47kXtG0fTMzDqG1
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Dec 2019 14:51:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47krjH0gjHzDqDm
+	for <lists+linux-erofs@lfdr.de>; Sat, 28 Dec 2019 02:44:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::642;
+ helo=mail-pl1-x642.google.com; envelope-from=pratikshinde320@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga03-in.huawei.com [45.249.212.189])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.b="Gob7+cSq"; 
+ dkim-atps=neutral
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com
+ [IPv6:2607:f8b0:4864:20::642])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47kXt22vzmzDqFZ
- for <linux-erofs@lists.ozlabs.org>; Fri, 27 Dec 2019 14:50:46 +1100 (AEDT)
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
- by Forcepoint Email with ESMTP id 40510CCD4E87E58BFA84;
- Fri, 27 Dec 2019 11:50:36 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Dec 2019 11:50:35 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 27 Dec 2019 11:50:35 +0800
-Date: Fri, 27 Dec 2019 11:50:16 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH RESEND] erofs: convert to use the new mount fs_context api
-Message-ID: <20191227035016.GA142350@architecture4>
-References: <20191226022519.53386-1-yuchao0@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191226022519.53386-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47krj32xbYzDqDX
+ for <linux-erofs@lists.ozlabs.org>; Sat, 28 Dec 2019 02:44:06 +1100 (AEDT)
+Received: by mail-pl1-x642.google.com with SMTP id g6so8911497plp.6
+ for <linux-erofs@lists.ozlabs.org>; Fri, 27 Dec 2019 07:44:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id;
+ bh=h8aN4bWjpslj7Cyhj6sBJOxjWLwm63ZEF3hqud7ZPaI=;
+ b=Gob7+cSq72fmqsGC9DPeL70SJkyQJ9WjP9azU+uPN6AlomvJhjsClG+x3cN8ohmVx6
+ nCe5Z7WlToi2L+22vSzkUIaMv9YVje82r0ERLcUE9f1FCxxM8KS/1VbDaxcbgPlQcMma
+ mWLDSGgYYxJghSGLduLTYKvIXU6RlYxX15KszPHlkyjxOan8fDbsvdETFdLOJLwS9Q/U
+ qP8T/tJ8Db8z6lAlDd7FfAyNJnICBBRtg3NTli0HdPaBY2FZLjdxh02ZMPRLThP1+e46
+ Z9vSo1piasLZOnvOzNtz2MuGgPKC/qG34LpBXvsz5uN+nwbf4J03EhCGjBLRyOPjlDC8
+ /aqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=h8aN4bWjpslj7Cyhj6sBJOxjWLwm63ZEF3hqud7ZPaI=;
+ b=i/E0aptV+uiy/2bw9gYG8EMIFqhFEgfn1GBZ6/wWWrWbdOu7z9JNLNzGBpailm8vAS
+ VDBabACmWFQn4BBRRRNsbcMFOkCUWJE+8UeesIlcO+Vcnpsk7d6RTfaOi9CqXSVwHQa9
+ jmyYZ1qJTgIaAmEXqTABksxQPg8uXKLDIziep7jrEJQN6t+rCxbazZ2WR9H+QVHaiiV8
+ /hrRIgkpR6dZhOpexCXnE1XYjKrrNGGPL4OwQKUtCj1jXjV5tfywjG1/JcfDNB5xb61G
+ Rg6HY8sIrItWeOuwH/wI2nP+2GUAs/Lndf8Y0czf0pdcoaXCu6oE4QcS/4xQ2vSTZIdE
+ p6UQ==
+X-Gm-Message-State: APjAAAWkp5wU8QvRs+h/UHbEKJ37BGW+7hi6fAmvwcFOO1uK5ipixpNq
+ fEvF21uGCbVb5f6UJOs1oEYboCfDuBwn5A==
+X-Google-Smtp-Source: APXvYqz95yYizlEDRsMYkL8D7/L9BRmonpj8Qx6iLnReWkMQ/OUKzOfDV7CNG0l1ZxGY3oEOGDLGtg==
+X-Received: by 2002:a17:902:59d8:: with SMTP id
+ d24mr50161047plj.318.1577461442828; 
+ Fri, 27 Dec 2019 07:44:02 -0800 (PST)
+Received: from localhost.localdomain ([103.97.240.51])
+ by smtp.gmail.com with ESMTPSA id ep12sm15340149pjb.7.2019.12.27.07.43.58
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Fri, 27 Dec 2019 07:44:01 -0800 (PST)
+From: Pratik Shinde <pratikshinde320@gmail.com>
+To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com, miaoxie@huawei.com,
+ fangwei1@huawei.com
+Subject: [RFC] erofs-utils: on-disk extent format for blocks.
+Date: Fri, 27 Dec 2019 21:13:48 +0530
+Message-Id: <20191227154348.21432-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,404 +74,280 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, David
- Howells <dhowells@redhat.com>, Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Al,
+since this patch is quite different from previous patches I am treating
+this as new patch.
 
-Greeting, we plan to convert erofs to new mount api for 5.6
+1) On disk extent format for erofs data blocks.
+2) Detect holes inside files & skip allocation for hole blocks.
 
-and I just notice your branch
-https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=untested.fs_parse
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ include/erofs/internal.h |  21 ++++++-
+ lib/inode.c              | 155 +++++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 156 insertions(+), 20 deletions(-)
 
-do a lot further work on fs context (e.g. "get rid of ->enums",
-"remove fs_parameter_description name field" and switch to
-use XXXfc() instead of XXXf() with prefixed string).
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index e13adda..128aa63 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -63,7 +63,7 @@ struct erofs_sb_info {
+ extern struct erofs_sb_info sbi;
+ 
+ struct erofs_inode {
+-	struct list_head i_hash, i_subdirs, i_xattrs;
++	struct list_head i_hash, i_subdirs, i_xattrs, i_extents;
+ 
+ 	unsigned int i_count;
+ 	struct erofs_inode *i_parent;
+@@ -93,6 +93,7 @@ struct erofs_inode {
+ 
+ 	unsigned int xattr_isize;
+ 	unsigned int extent_isize;
++	unsigned int extent_meta_isize;
+ 
+ 	erofs_nid_t nid;
+ 	struct erofs_buffer_head *bh;
+@@ -139,5 +140,23 @@ static inline const char *erofs_strerror(int err)
+ 	return msg;
+ }
+ 
++#define HOLE_BLK	-1
++/* on disk extent format */
++struct erofs_extent {
++	__le32 ee_lblk;
++	__le32 ee_pblk;
++	__le32 ee_len;
++};
++
++struct erofs_extent_node {
++	struct list_head next;
++	erofs_blk_t lblk;
++	erofs_blk_t pblk;
++	u32 len;
++};
++
++struct erofs_inline_extent_header {
++	u32 count;
++};
+ #endif
+ 
+diff --git a/lib/inode.c b/lib/inode.c
+index 0e19b11..a6af509 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -38,6 +38,99 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
+ 
+ struct list_head inode_hashtable[NR_INODE_HASHTABLE];
+ 
++
++#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) == start &&	\
++		             roundup(end, EROFS_BLKSIZ) == end &&	\
++			    (end - start) % EROFS_BLKSIZ == 0)
++
++/* returns the number of holes present in the file */
++unsigned int erofs_read_extents(struct erofs_inode *inode,
++				struct list_head *extents)
++{
++	int fd, st, en, dt;
++	unsigned int nholes = 0;
++	erofs_off_t data, hole, len, last_data;
++	struct erofs_extent_node *e_hole, *e_data;
++
++	fd = open(inode->i_srcpath, O_RDONLY);
++	if (fd < 0) {
++		return -errno;
++	}
++	len = lseek(fd, 0, SEEK_END);
++	if (lseek(fd, 0, SEEK_SET) == -1)
++		return -errno;
++	data = 0;
++	last_data = 0;
++	while (data < len) {
++		hole = lseek(fd, data, SEEK_HOLE);
++		if (hole == len)
++			break;
++		data = lseek(fd, hole, SEEK_DATA);
++		if (data < 0 || hole > data) {
++			return -EINVAL;
++		}
++		if (IS_HOLE(hole, data)) {
++			st = hole >> S_SHIFT;
++			en = data >> S_SHIFT;
++			dt = last_data >> S_SHIFT;
++			last_data = data;
++			e_data = malloc(sizeof(struct erofs_extent_node));
++			if (e_data == NULL)
++				return -ENOMEM;
++			e_data->lblk = dt;
++			e_data->len = (st - dt);
++			list_add_tail(&e_data->next, extents);
++			e_hole = malloc(sizeof(struct erofs_extent_node));
++			if (e_hole == NULL)
++				return -ENOMEM;
++			e_hole->lblk = st;
++			e_hole->pblk = HOLE_BLK;
++			e_hole->len = (en - st);
++			list_add_tail(&e_hole->next, extents);
++			nholes += e_hole->len;
++		}
++	}
++	/* rounddown to exclude tail-end data */
++	if (last_data < len && (len - last_data) >= EROFS_BLKSIZ) {
++		e_data = malloc(sizeof(struct erofs_extent_node));
++		if (e_data == NULL)
++			return -ENOMEM;
++		st = last_data >> S_SHIFT;
++		e_data->lblk = st;
++		e_data->len = rounddown((len - last_data), EROFS_BLKSIZ) >> S_SHIFT;
++		list_add_tail(&e_data->next, extents);
++	}
++	return nholes;
++}
++
++char *erofs_create_extent_buffer(struct list_head *extents, unsigned int size)
++{
++	struct erofs_extent_node *e_node;
++	struct erofs_inline_extent_header *header;
++	char *buf;
++	unsigned int p = 0;
++
++	buf = malloc(size);
++	if (buf == NULL)
++		return ERR_PTR(-ENOMEM);
++	header = (struct erofs_inline_extent_header *) buf;
++	header->count = 0;
++	p += sizeof(struct erofs_inline_extent_header);
++	list_for_each_entry(e_node, extents, next) {
++		const struct erofs_extent ee = {
++			.ee_lblk = cpu_to_le32(e_node->lblk),
++			.ee_pblk = cpu_to_le32(e_node->pblk),
++			.ee_len  = cpu_to_le32(e_node->len)
++		};
++		memcpy(buf + p, &ee, sizeof(struct erofs_extent));
++		p += sizeof(struct erofs_extent);
++		header->count++;
++		list_del(&e_node->next);
++		free(e_node);
++	}
++	return buf;
++}
++
+ void erofs_inode_manager_init(void)
+ {
+ 	unsigned int i;
+@@ -304,8 +397,9 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ 
+ int erofs_write_file(struct erofs_inode *inode)
+ {
+-	unsigned int nblocks, i;
++	unsigned int nblocks, i, j, nholes;
+ 	int ret, fd;
++	struct erofs_extent_node *e_node;
+ 
+ 	if (!inode->i_size) {
+ 		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+@@ -322,31 +416,43 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	/* fallback to all data uncompressed */
+ 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+ 	nblocks = inode->i_size / EROFS_BLKSIZ;
+-
+-	ret = __allocate_inode_bh_data(inode, nblocks);
++	nholes = erofs_read_extents(inode, &inode->i_extents);
++	if (nholes < 0)
++		return nholes;
++	if (nblocks < 0)
++		return nblocks;
++	ret = __allocate_inode_bh_data(inode, nblocks - nholes);
+ 	if (ret)
+ 		return ret;
+ 
+ 	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+ 	if (fd < 0)
+ 		return -errno;
+-
+-	for (i = 0; i < nblocks; ++i) {
+-		char buf[EROFS_BLKSIZ];
+-
+-		ret = read(fd, buf, EROFS_BLKSIZ);
+-		if (ret != EROFS_BLKSIZ) {
+-			if (ret < 0)
+-				goto fail;
+-			close(fd);
+-			return -EAGAIN;
++	i = inode->u.i_blkaddr;
++	inode->extent_meta_isize = sizeof(struct erofs_inline_extent_header);
++	list_for_each_entry(e_node, &inode->i_extents, next) {
++		inode->extent_meta_isize += sizeof(struct erofs_extent);
++		if (e_node->pblk == HOLE_BLK) {
++			lseek(fd, e_node->len * EROFS_BLKSIZ, SEEK_CUR);
++			continue;
+ 		}
++		e_node->pblk = i;
++		i += e_node->len;
++		for (j = 0; j < e_node->len; j++) {
++			char buf[EROFS_BLKSIZ];
++			ret = read(fd, buf, EROFS_BLKSIZ);
++			if (ret != EROFS_BLKSIZ) {
++				if (ret < 0)
++					goto fail;
++				close(fd);
++				return -EAGAIN;
++			}
++			ret = blk_write(buf, e_node->pblk + j, 1);
++			if (ret)
++				goto fail;
+ 
+-		ret = blk_write(buf, inode->u.i_blkaddr + i, 1);
+-		if (ret)
+-			goto fail;
++		}
+ 	}
+-
+ 	/* read the tail-end data */
+ 	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+ 	if (inode->idata_size) {
+@@ -479,8 +585,19 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 		if (ret)
+ 			return false;
+ 		free(inode->compressmeta);
++		off += inode->extent_isize;
+ 	}
+ 
++	if (inode->extent_meta_isize) {
++		char *extents = erofs_create_extent_buffer(&inode->i_extents,
++						   inode->extent_meta_isize);
++		if (IS_ERR(extents))
++			return false;
++		ret = dev_write(extents, off, inode->extent_meta_isize);
++		free(extents);
++		if (ret)
++			return false;
++	}
+ 	inode->bh = NULL;
+ 	erofs_iput(inode);
+ 	return erofs_bh_flush_generic_end(bh);
+@@ -737,10 +854,11 @@ struct erofs_inode *erofs_new_inode(void)
+ 
+ 	init_list_head(&inode->i_subdirs);
+ 	init_list_head(&inode->i_xattrs);
++	init_list_head(&inode->i_extents);
+ 
+ 	inode->idata_size = 0;
+ 	inode->xattr_isize = 0;
+-	inode->extent_isize = 0;
++	inode->extent_meta_isize = 0;
+ 
+ 	inode->bh = inode->bh_inline = inode->bh_data = NULL;
+ 	inode->idata = NULL;
+@@ -961,4 +1079,3 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
+ 
+ 	return erofs_mkfs_build_tree(inode);
+ }
+-
+-- 
+2.9.3
 
-Does it plan for 5.6 as well? If yes, we will update this patch
-based on the latest branch and maybe have chance to go though
-your tree if it can?
-
-Thanks,
-Gao Xiang
-
-On Thu, Dec 26, 2019 at 10:25:19AM +0800, Chao Yu wrote:
-> Convert the erofs to use new internal mount API as the old one will
-> be obsoleted and removed.  This allows greater flexibility in
-> communication of mount parameters between userspace, the VFS and the
-> filesystem.
-> 
-> See Documentation/filesystems/mount_api.txt for more information.
-> 
-> Cc: David Howells <dhowells@redhat.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
-> +Cc David Howells
->  fs/erofs/internal.h |   2 +-
->  fs/erofs/super.c    | 249 +++++++++++++++++++++-----------------------
->  2 files changed, 118 insertions(+), 133 deletions(-)
-> 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 1ed5beff7d11..a5fac25db6af 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -102,13 +102,13 @@ struct erofs_sb_info {
->  #define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
->  #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
->  
-> -#ifdef CONFIG_EROFS_FS_ZIP
->  enum {
->  	EROFS_ZIP_CACHE_DISABLED,
->  	EROFS_ZIP_CACHE_READAHEAD,
->  	EROFS_ZIP_CACHE_READAROUND
->  };
->  
-> +#ifdef CONFIG_EROFS_FS_ZIP
->  #define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
->  
->  /* basic unit of the workstation of a super_block */
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 057e6d7b5b7f..b90713760885 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -10,6 +10,8 @@
->  #include <linux/parser.h>
->  #include <linux/seq_file.h>
->  #include <linux/crc32c.h>
-> +#include <linux/fs_context.h>
-> +#include <linux/fs_parser.h>
->  #include "xattr.h"
->  
->  #define CREATE_TRACE_POINTS
-> @@ -192,41 +194,6 @@ static int erofs_read_superblock(struct super_block *sb)
->  	return ret;
->  }
->  
-> -#ifdef CONFIG_EROFS_FS_ZIP
-> -static int erofs_build_cache_strategy(struct super_block *sb,
-> -				      substring_t *args)
-> -{
-> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> -	const char *cs = match_strdup(args);
-> -	int err = 0;
-> -
-> -	if (!cs) {
-> -		erofs_err(sb, "Not enough memory to store cache strategy");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	if (!strcmp(cs, "disabled")) {
-> -		sbi->cache_strategy = EROFS_ZIP_CACHE_DISABLED;
-> -	} else if (!strcmp(cs, "readahead")) {
-> -		sbi->cache_strategy = EROFS_ZIP_CACHE_READAHEAD;
-> -	} else if (!strcmp(cs, "readaround")) {
-> -		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
-> -	} else {
-> -		erofs_err(sb, "Unrecognized cache strategy \"%s\"", cs);
-> -		err = -EINVAL;
-> -	}
-> -	kfree(cs);
-> -	return err;
-> -}
-> -#else
-> -static int erofs_build_cache_strategy(struct super_block *sb,
-> -				      substring_t *args)
-> -{
-> -	erofs_info(sb, "EROFS compression is disabled, so cache strategy is ignored");
-> -	return 0;
-> -}
-> -#endif
-> -
->  /* set up default EROFS parameters */
->  static void erofs_default_options(struct erofs_sb_info *sbi)
->  {
-> @@ -251,73 +218,79 @@ enum {
->  	Opt_err
->  };
->  
-> -static match_table_t erofs_tokens = {
-> -	{Opt_user_xattr, "user_xattr"},
-> -	{Opt_nouser_xattr, "nouser_xattr"},
-> -	{Opt_acl, "acl"},
-> -	{Opt_noacl, "noacl"},
-> -	{Opt_cache_strategy, "cache_strategy=%s"},
-> -	{Opt_err, NULL}
-> +static const struct fs_parameter_spec erofs_param_specs[] = {
-> +	fsparam_flag("user_xattr",	Opt_user_xattr),
-> +	fsparam_flag("nouser_xattr",	Opt_nouser_xattr),
-> +	fsparam_flag("acl",		Opt_acl),
-> +	fsparam_flag("noacl",		Opt_noacl),
-> +	fsparam_enum("cache_strategy",	Opt_cache_strategy),
-> +	{}
->  };
->  
-> -static int erofs_parse_options(struct super_block *sb, char *options)
-> -{
-> -	substring_t args[MAX_OPT_ARGS];
-> -	char *p;
-> -	int err;
-> -
-> -	if (!options)
-> -		return 0;
-> +static const struct fs_parameter_enum erofs_param_enums[] = {
-> +	{ Opt_cache_strategy, "disabled",	EROFS_ZIP_CACHE_DISABLED },
-> +	{ Opt_cache_strategy, "readahead",	EROFS_ZIP_CACHE_READAHEAD},
-> +	{ Opt_cache_strategy, "readaround",	EROFS_ZIP_CACHE_READAROUND},
-> +	{}
-> +};
->  
-> -	while ((p = strsep(&options, ","))) {
-> -		int token;
-> +static const struct fs_parameter_description erofs_fs_parameters = {
-> +	.name	= "erofs",
-> +	.specs	= erofs_param_specs,
-> +	.enums	= erofs_param_enums,
-> +};
->  
-> -		if (!*p)
-> -			continue;
-> +static int erofs_fc_parse_param(struct fs_context *fc,
-> +				struct fs_parameter *param)
-> +{
-> +	struct erofs_sb_info *sbi __maybe_unused = fc->s_fs_info;
-> +	struct fs_parse_result result;
-> +	int opt;
->  
-> -		args[0].to = args[0].from = NULL;
-> -		token = match_token(p, erofs_tokens, args);
-> +	opt = fs_parse(fc, &erofs_fs_parameters, param, &result);
-> +	if (opt < 0)
-> +		return opt;
->  
-> -		switch (token) {
-> +	switch (opt) {
->  #ifdef CONFIG_EROFS_FS_XATTR
-> -		case Opt_user_xattr:
-> -			set_opt(EROFS_SB(sb), XATTR_USER);
-> -			break;
-> -		case Opt_nouser_xattr:
-> -			clear_opt(EROFS_SB(sb), XATTR_USER);
-> -			break;
-> +	case Opt_user_xattr:
-> +		set_opt(sbi, XATTR_USER);
-> +		break;
-> +	case Opt_nouser_xattr:
-> +		clear_opt(sbi, XATTR_USER);
-> +		break;
->  #else
-> -		case Opt_user_xattr:
-> -			erofs_info(sb, "user_xattr options not supported");
-> -			break;
-> -		case Opt_nouser_xattr:
-> -			erofs_info(sb, "nouser_xattr options not supported");
-> -			break;
-> +	case Opt_user_xattr:
-> +		invalf(fc, "erofs: user_xattr options not supported");
-> +		break;
-> +	case Opt_nouser_xattr:
-> +		invalf(fc, "erofs: nouser_xattr options not supported");
-> +		break;
->  #endif
->  #ifdef CONFIG_EROFS_FS_POSIX_ACL
-> -		case Opt_acl:
-> -			set_opt(EROFS_SB(sb), POSIX_ACL);
-> -			break;
-> -		case Opt_noacl:
-> -			clear_opt(EROFS_SB(sb), POSIX_ACL);
-> -			break;
-> +	case Opt_acl:
-> +		set_opt(sbi, POSIX_ACL);
-> +		break;
-> +	case Opt_noacl:
-> +		clear_opt(sbi, POSIX_ACL);
-> +		break;
-> +#else
-> +	case Opt_acl:
-> +		invalf(fc, "erofs: acl options not supported");
-> +		break;
-> +	case Opt_noacl:
-> +		invalf(fc, "erofs: noacl options not supported");
-> +		break;
-> +#endif
-> +	case Opt_cache_strategy:
-> +#ifdef CONFIG_EROFS_FS_ZIP
-> +		sbi->cache_strategy = result.uint_32;
->  #else
-> -		case Opt_acl:
-> -			erofs_info(sb, "acl options not supported");
-> -			break;
-> -		case Opt_noacl:
-> -			erofs_info(sb, "noacl options not supported");
-> -			break;
-> +		errorf(fc, "erofs: compression not supported, cache strategy ignored");
->  #endif
-> -		case Opt_cache_strategy:
-> -			err = erofs_build_cache_strategy(sb, args);
-> -			if (err)
-> -				return err;
-> -			break;
-> -		default:
-> -			erofs_err(sb, "Unrecognized mount option \"%s\" or missing value", p);
-> -			return -EINVAL;
-> -		}
-> +		break;
-> +	default:
-> +		return invalf(fc, "erofs: invalid mount option: %s", param->key);
->  	}
->  	return 0;
->  }
-> @@ -381,7 +354,7 @@ static int erofs_init_managed_cache(struct super_block *sb)
->  static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
->  #endif
->  
-> -static int erofs_fill_super(struct super_block *sb, void *data, int silent)
-> +static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  {
->  	struct inode *inode;
->  	struct erofs_sb_info *sbi;
-> @@ -394,11 +367,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  		return -EINVAL;
->  	}
->  
-> -	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> -	if (!sbi)
-> -		return -ENOMEM;
-> -
-> -	sb->s_fs_info = sbi;
-> +	sbi = sb->s_fs_info;
->  	err = erofs_read_superblock(sb);
->  	if (err)
->  		return err;
-> @@ -412,12 +381,6 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  #ifdef CONFIG_EROFS_FS_XATTR
->  	sb->s_xattr = erofs_xattr_handlers;
->  #endif
-> -	/* set erofs default mount options */
-> -	erofs_default_options(sbi);
-> -
-> -	err = erofs_parse_options(sb, data);
-> -	if (err)
-> -		return err;
->  
->  	if (test_opt(sbi, POSIX_ACL))
->  		sb->s_flags |= SB_POSIXACL;
-> @@ -450,15 +413,61 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  	if (err)
->  		return err;
->  
-> -	erofs_info(sb, "mounted with opts: %s, root inode @ nid %llu.",
-> -		   (char *)data, ROOT_NID(sbi));
-> +	erofs_info(sb, "mounted with root inode @ nid %llu.", ROOT_NID(sbi));
-> +	return 0;
-> +}
-> +
-> +static int erofs_fc_get_tree(struct fs_context *fc)
-> +{
-> +	return get_tree_bdev(fc, erofs_fc_fill_super);
-> +}
-> +
-> +static int erofs_fc_reconfigure(struct fs_context *fc)
-> +{
-> +	struct super_block *sb = fc->root->d_sb;
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +
-> +	DBG_BUGON(!sb_rdonly(sb));
-> +
-> +	if (test_opt(sbi, POSIX_ACL))
-> +		fc->sb_flags |= SB_POSIXACL;
-> +	else
-> +		fc->sb_flags &= ~SB_POSIXACL;
-> +
-> +	fc->sb_flags |= SB_RDONLY;
->  	return 0;
->  }
->  
-> -static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
-> -				  const char *dev_name, void *data)
-> +static void erofs_fc_free(struct fs_context *fc)
->  {
-> -	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
-> +	/*
-> +	 * sbi stored in fs_context will be cleaned after transferring
-> +	 * to corresponding superblock on a successful new mount, or
-> +	 * free it here.
-> +	 */
-> +	kfree(fc->s_fs_info);
-> +}
-> +
-> +static const struct fs_context_operations erofs_context_ops = {
-> +	.parse_param	= erofs_fc_parse_param,
-> +	.get_tree       = erofs_fc_get_tree,
-> +	.reconfigure    = erofs_fc_reconfigure,
-> +	.free		= erofs_fc_free,
-> +};
-> +
-> +static int erofs_init_fs_context(struct fs_context *fc)
-> +{
-> +	struct erofs_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> +
-> +	if (!sbi)
-> +		return -ENOMEM;
-> +
-> +	/* set default mount options */
-> +	erofs_default_options(sbi);
-> +
-> +	fc->s_fs_info = sbi;
-> +	fc->ops = &erofs_context_ops;
-> +	return 0;
->  }
->  
->  /*
-> @@ -497,7 +506,7 @@ static void erofs_put_super(struct super_block *sb)
->  static struct file_system_type erofs_fs_type = {
->  	.owner          = THIS_MODULE,
->  	.name           = "erofs",
-> -	.mount          = erofs_mount,
-> +	.init_fs_context = erofs_init_fs_context,
->  	.kill_sb        = erofs_kill_sb,
->  	.fs_flags       = FS_REQUIRES_DEV,
->  };
-> @@ -603,36 +612,12 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
->  	return 0;
->  }
->  
-> -static int erofs_remount(struct super_block *sb, int *flags, char *data)
-> -{
-> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> -	unsigned int org_mnt_opt = sbi->mount_opt;
-> -	int err;
-> -
-> -	DBG_BUGON(!sb_rdonly(sb));
-> -	err = erofs_parse_options(sb, data);
-> -	if (err)
-> -		goto out;
-> -
-> -	if (test_opt(sbi, POSIX_ACL))
-> -		sb->s_flags |= SB_POSIXACL;
-> -	else
-> -		sb->s_flags &= ~SB_POSIXACL;
-> -
-> -	*flags |= SB_RDONLY;
-> -	return 0;
-> -out:
-> -	sbi->mount_opt = org_mnt_opt;
-> -	return err;
-> -}
-> -
->  const struct super_operations erofs_sops = {
->  	.put_super = erofs_put_super,
->  	.alloc_inode = erofs_alloc_inode,
->  	.free_inode = erofs_free_inode,
->  	.statfs = erofs_statfs,
->  	.show_options = erofs_show_options,
-> -	.remount_fs = erofs_remount,
->  };
->  
->  module_init(erofs_module_init);
-> -- 
-> 2.18.0.rc1
-> 
