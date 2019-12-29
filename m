@@ -2,61 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8DF512BFFE
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2019 03:46:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F28312C007
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2019 03:56:12 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 47llM34V2mzDqBy
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2019 13:46:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 47llZ16NzYzDqC3
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2019 13:56:09 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1577587599;
-	bh=Iwb1usuaa8ouq7ZsyLIt0MsGUMHPwgsczIln4/79Gps=;
+	s=201707; t=1577588169;
+	bh=PKAZITFr0hdU3kmDgkmM6vS+rlnetYIl9UNFqU2fq3w=;
 	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=FjY1m3bFiQXZys4yFcv5suQ/JGuobwwvnrVcdIdcBy57R6RYVZa8RDlmrf3UHRZ/O
-	 /Pl3ekmfbJU/Zt82U/hvLYMf5VOWgWrOPSfE17MmT8jamb8pfkmnDp8HfYzgW9KVTK
-	 Mb8DcMX+Ua4k91fVyklkzFtGkV/xCFJ2jRHRRt2SOX65bpJbCc/s3Teg9z5bpngvfH
-	 0U+1cM47m2BKAJSXxhysYfEBPgRGlOJ12bCGoHKbmdJOPte52uktXuO/coAHv03hk2
-	 GjBs/YQue0AqXN2yFZo1374IAjvhWC8w1jiFvL7/cIlX/6Bfeq0AGRwPGPUxCwUn8q
-	 wZB0X+tObtFLw==
+	b=jkk1W5/xW5vwEXNXEbzGjubqr75gXbJ+tf9lxf2+znjRux6qavNl1NkzNPCCrY/SY
+	 Oxz88P3HTaoHm2jabLkxXL0SQqkTvVp3p7jfjg2MF/3gvOfjOxIjBsGZvAApmQdEDy
+	 jDn9YiHuh5/XgLSC0kJfMtxK38tEuvlrIyUrQ35yTxcrW6NCpuOzNGNo/uANUJTYPv
+	 FBklYKsOfnaiz4X+L3IkV1rMBGezkyr1gOcWd3a/w/sMGehacMfjmBRB5A1lz1p7tl
+	 lrCuhHjv81ful10c0OoXP2ORfDgbLCB09MxyYzjL2vSAXHMVp7g4PQkRiQDpNzL4nQ
+	 qR0pdKLwJxUjw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.232; helo=sonic303-50.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.31; helo=sonic315-55.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.b="uFXDgE/6"; 
+ unprotected) header.d=aol.com header.i=@aol.com header.b="aMMZGvIf"; 
  dkim-atps=neutral
-Received: from sonic303-50.consmr.mail.gq1.yahoo.com
- (sonic303-50.consmr.mail.gq1.yahoo.com [98.137.64.232])
+Received: from sonic315-55.consmr.mail.gq1.yahoo.com
+ (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 47llLq443QzDq9P
- for <linux-erofs@lists.ozlabs.org>; Sun, 29 Dec 2019 13:46:24 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 47llYx0q0tzDqB4
+ for <linux-erofs@lists.ozlabs.org>; Sun, 29 Dec 2019 13:56:04 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1577587580; bh=6/Q6SNynxNQ8G8c617T7+WEqsKRr7oL+1YtlRaUeq+g=;
+ t=1577588161; bh=3s0U8zkRAmPGlJHVcUQGJigSeQHMv6X4fFbLFxGnCFk=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=uFXDgE/66xF3EsVJ5mGL8atE1oRVvcYc6hPaDiBcac66mzEHDWyJ8RhU3AmPuSlOxO8e0TwAFolvxlm3CMZ/snPwUa5Rtrx06Z+y/Hi1e66j5CbsllR/gzCnrSe/Jja7OLU5BwLnGStWQJwhVccBDTfaHyPP8tbbHXXW3PpAvqZasMJ3gzDSYt50VVZuedsHjduwJlRWMATPZMUkO52QBn5rfUWP5bz+JLtXE0Tvw4xkt4ggyl7uu0Rn1b2MzFhbaCg1Nf31LxmP3tK6PqfTzJP71i+7vxQssSjipJ9lAndoXSxUf9zGNflDuEuh6/Kj9pZbm6rqVo3y+xJKwiogQA==
-X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
+ b=aMMZGvIfvLhARx31FOLw140vC66AFZXpOhKBDfOjstTQiWoRIizNtWrneA4jMN+xYuaYoUuqDHgPHruf7uUiLfDL9wdm+3UbtzxCYfJfxALrdMPHGJlusLJKLYWlGFR5f8axQ5zlTyMRdtrUdDMge2iYkz4t4QdOTOdaPAROEXEEP0RyUWUC+a6AaV3bKTsgjgDWqiiHVPlzuCWJP7sV6F9MXLennmr1FP/O2wBQ2cmID0gwmlGnWF6NixaRgnnpZYyYWroDvJMS6wwGIXWfy3bGRK/KVnMuYvE9Nm+sjJ576NeHmpthD8eWT3GGI2ZieOD/xExHviz3Gkho5L5CkQ==
+X-YMail-OSG: wbYxTXEVM1lAef_B1LMU6fZ4han0HajH70QMV79Q7xKguND_9YqXRVxgRQAezXx
+ HHWBO6mvI1zmDQOJua.Br5lx2HFMNGOA3w52fHTtvouDROwpIxIUKYpKsTxfr0kvwoMBRf0c.PFJ
+ 3DfqvimX9cRwh1UkA4qJ5kn3uYGEZif3sj53eNiRZS1wZQMbYvmrn65F6lIvyb087RxcyCN9P1Jo
+ ByCuxnHI7b5nn9ylteke9caSMEQUJQOkPsOQHZInDZwjVwte_0wJB8Oixh5Fx.Z9Ein8nBQwXwgw
+ JlTWdG9YCcOU8oGSc9oqrFwrwNxWipNzDfDjLh4DOXJCxrEHGi43WqU4yBOHR9UwVihqkpDpBYvC
+ qlk7pc05sa_yTw83mdFUw4lKlaoZHr5HcugtdsnruGlIxQVMzVkvSzTTFBAg3ZB3CwUy9AVdBLrQ
+ a3aqbrRiJCs_Mv4zrkWn95frcZbPF0W64Ox1peahfmDaAp_VZ7nwkIpe5ji.E9c8cLkfznOCFm0c
+ L5382.sxe3mwf1vdHVn7v.XaFbG2koRXcDFlpnF7AWMtPPMc.SfRTdqpxolNnrs0a5NTYNi_mqhn
+ HuZzAhYgVhFVucRR4hXFKKYHUwjSzgQFsDawfkisGPzAmwSCgJfuLf0cM1vSgdPHRxSbBJSxM2MY
+ 6LQdrunbNJnKhu5MrGdcoUAT_QmrIn5NoMZeBnFTnaqDEYUEaMTwSYcgiraWHas0W5U2W3sNsPUQ
+ uUFEm14YV5fY60LH66s1AZnNmzu.WyFlc9N.dCNDJisWIqz_xHGLft7vnnsFCwTDFHm44o3h5Udu
+ 5p0MR8Bxr8009g1wbkzxkHHuMfwJr8d9T6HoNPdPyOLJlRZRwZGxz17G8uZqpdngVjudEBSBJH4o
+ 5m7EL_xAwZbGN5PiIg9RhFJAGUrQVAl8sSCvPHgwlLEAYzSVlhJUtjXXXCl7q24r1TogTG.ryXdC
+ WSVtqAKTemybVtrxQeM.rf_bd7Mvzwq.z7dYCKWzIVRaU3WJTkaZ9_nM37OjHvaisB2kPpeYhIN4
+ vpnNCFDM1fGSV5RhTkEKBBaG4MPzd0a7y7IHVy.z02zuYGBvZ9a4axdpBYkZLXIN9yCbhz8r6lG6
+ Du47xxeqY02uEr70gx9oV9fHLW3dZlG5DxLVVMzg.S_IOREyNvZ6U5TiCPhhi.g_ex5BsxHBxyMs
+ eWh3I.2RHBDAs0eH_G.SBl5wH1ntUHi2h5FbIIukY9ITScK9Dy4ZAlNV6If1vBICldqFZuUXVGa5
+ SFs8aPvkrWhbfViyoTyY9UOppE13dxGzoTD32Gf0qSVWFDlOkDcxleGsPj0HkKnujX6YR0RYFlOO
+ LqJWXJkQ.LdxuRgYcnNddSrmtJewebzX8xNPSCzsxMRVGZo4Pz3mySJvT0P87QzICGH2yXhsY4HW
+ hqLVz
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic303.consmr.mail.gq1.yahoo.com with HTTP; Sun, 29 Dec 2019 02:46:20 +0000
-Received: by smtp424.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 9f863a345b562991edc35c48481656f9; 
- Sun, 29 Dec 2019 02:44:18 +0000 (UTC)
-Date: Sun, 29 Dec 2019 10:44:08 +0800
-To: Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH RESEND] erofs: convert to use the new mount fs_context api
-Message-ID: <20191229024406.GA2215@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191226022519.53386-1-yuchao0@huawei.com>
- <20191227035016.GA142350@architecture4>
- <20191228212156.GU4203@ZenIV.linux.org.uk>
+ sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sun, 29 Dec 2019 02:56:01 +0000
+Received: by smtp422.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 4d36cfb06638d86296f193ee4bb3a5f8; 
+ Sun, 29 Dec 2019 02:55:59 +0000 (UTC)
+Date: Sun, 29 Dec 2019 10:55:48 +0800
+To: Pratik Shinde <pratikshinde320@gmail.com>
+Subject: Re: [RFC] erofs-utils: on-disk extent format for blocks.
+Message-ID: <20191229025546.GB2215@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191227154348.21432-1-pratikshinde320@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191228212156.GU4203@ZenIV.linux.org.uk>
+In-Reply-To: <20191227154348.21432-1-pratikshinde320@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4
  (Java/1.8.0_181)
@@ -73,82 +90,305 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: David Howells <dhowells@redhat.com>, linux-erofs@lists.ozlabs.org,
- Miao Xie <miaoxie@huawei.com>, linux-kernel@vger.kernel.org
+Cc: miaoxie@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Dec 28, 2019 at 09:21:56PM +0000, Al Viro wrote:
-> On Fri, Dec 27, 2019 at 11:50:16AM +0800, Gao Xiang wrote:
-> > Hi Al,
-> > 
-> > Greeting, we plan to convert erofs to new mount api for 5.6
-> > 
-> > and I just notice your branch
-> > https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=untested.fs_parse
-> > 
-> > do a lot further work on fs context (e.g. "get rid of ->enums",
-> > "remove fs_parameter_description name field" and switch to
-> > use XXXfc() instead of XXXf() with prefixed string).
-> > 
-> > Does it plan for 5.6 as well? If yes, we will update this patch
-> > based on the latest branch and maybe have chance to go though
-> > your tree if it can?
+Hi Pratik,
+
+On Fri, Dec 27, 2019 at 09:13:48PM +0530, Pratik Shinde wrote:
+> since this patch is quite different from previous patches I am treating
+> this as new patch.
 > 
-> FWIW, I would add the following to what you've already mentioned:
-
-Thanks for your reply and confirmation.
-
+> 1) On disk extent format for erofs data blocks.
+> 2) Detect holes inside files & skip allocation for hole blocks.
 > 
-> > > +static const struct fs_parameter_spec erofs_param_specs[] = {
-> > > +	fsparam_flag("user_xattr",	Opt_user_xattr),
-> > > +	fsparam_flag("nouser_xattr",	Opt_nouser_xattr),
-> > > +	fsparam_flag("acl",		Opt_acl),
-> > > +	fsparam_flag("noacl",		Opt_noacl),
-> better off as
-> 	fsparam_flag_no("user_xattr",	Opt_user_xattr),
-> 	fsparam_flag_no("acl",		Opt_acl),
-
-Got it. We didn't notice this new way. Will fix in the updated version.
-
+> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> ---
+>  include/erofs/internal.h |  21 ++++++-
+>  lib/inode.c              | 155 +++++++++++++++++++++++++++++++++++++++++------
+>  2 files changed, 156 insertions(+), 20 deletions(-)
 > 
-> > > +	case Opt_user_xattr:
-> 		if (result.boolean)
-> 			set_opt(sbi, XATTR_USER);
-> 		else
-> 			clear_opt(sbi, XATTR_USER);
-> > > +		break;
-> ....
-> > > +	default:
-> 		return -ENOPARAM;
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index e13adda..128aa63 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -63,7 +63,7 @@ struct erofs_sb_info {
+>  extern struct erofs_sb_info sbi;
+>  
+>  struct erofs_inode {
+> -	struct list_head i_hash, i_subdirs, i_xattrs;
+> +	struct list_head i_hash, i_subdirs, i_xattrs, i_extents;
+>  
+>  	unsigned int i_count;
+>  	struct erofs_inode *i_parent;
+> @@ -93,6 +93,7 @@ struct erofs_inode {
+>  
+>  	unsigned int xattr_isize;
+>  	unsigned int extent_isize;
+> +	unsigned int extent_meta_isize;
 
-Got it.
+maybe sparse_extent_isize is better...
 
-> 
-> BTW, what's the point of using invalf() in contexts where
-> the return value is ignored?  Why not simply go for errorf()
-> (or errorfc(), for that matter)?
+p.s. maybe we could send another patch rename extent_isize to
+compress_extent_isize or some better name...
 
-OK, We will check all invalf()s soon.
+>  
+>  	erofs_nid_t nid;
+>  	struct erofs_buffer_head *bh;
+> @@ -139,5 +140,23 @@ static inline const char *erofs_strerror(int err)
+>  	return msg;
+>  }
+>  
+> +#define HOLE_BLK	-1
+> +/* on disk extent format */
+> +struct erofs_extent {
+> +	__le32 ee_lblk;
+> +	__le32 ee_pblk;
+> +	__le32 ee_len;
+> +};
+> +
+> +struct erofs_extent_node {
+> +	struct list_head next;
+> +	erofs_blk_t lblk;
+> +	erofs_blk_t pblk;
+> +	u32 len;
+> +};
+> +
+> +struct erofs_inline_extent_header {
+> +	u32 count;
+> +};
+>  #endif
+>  
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 0e19b11..a6af509 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -38,6 +38,99 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
+>  
+>  struct list_head inode_hashtable[NR_INODE_HASHTABLE];
+>  
+> +
+> +#define IS_HOLE(start, end) (roundup(start, EROFS_BLKSIZ) == start &&	\
+> +		             roundup(end, EROFS_BLKSIZ) == end &&	\
+> +			    (end - start) % EROFS_BLKSIZ == 0)
 
-And may I ask one more question about this... I'm a bit confused,
-since we have erofs_err() which print sb->s_id as well, so which
-one (errorfc or erofs_err) is more perferred to choose in especially
-fill_super()?
+See below..
 
-> 
-> I do plan that branch (or an equivalent, as far as filesystems
-> are concerned - there might be a bit of additional rework in
-> the beginning + currently missing modifications of docs) for
-> 5.6.  So updated patch would be welcome - I can do that myself,
-> but if you can rebase it on top of that branch it would save
-> time.
+> +
+> +/* returns the number of holes present in the file */
+> +unsigned int erofs_read_extents(struct erofs_inode *inode,
+> +				struct list_head *extents)
+> +{
+> +	int fd, st, en, dt;
+> +	unsigned int nholes = 0;
+> +	erofs_off_t data, hole, len, last_data;
+> +	struct erofs_extent_node *e_hole, *e_data;
+> +
+> +	fd = open(inode->i_srcpath, O_RDONLY);
+> +	if (fd < 0) {
+> +		return -errno;
+> +	}
+> +	len = lseek(fd, 0, SEEK_END);
+> +	if (lseek(fd, 0, SEEK_SET) == -1)
+> +		return -errno;
+> +	data = 0;
+> +	last_data = 0;
+> +	while (data < len) {
+> +		hole = lseek(fd, data, SEEK_HOLE);
+> +		if (hole == len)
+> +			break;
+> +		data = lseek(fd, hole, SEEK_DATA);
+> +		if (data < 0 || hole > data) {
+> +			return -EINVAL;
+> +		}
+> +		if (IS_HOLE(hole, data)) {
+> +			st = hole >> S_SHIFT;
+> +			en = data >> S_SHIFT;
+> +			dt = last_data >> S_SHIFT;
 
-Yes, we will update this patch based on the latest branch later
-for this convert.
+Why using S_SHIFT here, some special meaning?
+
+> +			last_data = data;
+> +			e_data = malloc(sizeof(struct erofs_extent_node));
+> +			if (e_data == NULL)
+> +				return -ENOMEM;
+> +			e_data->lblk = dt;
+> +			e_data->len = (st - dt);
+> +			list_add_tail(&e_data->next, extents);
+> +			e_hole = malloc(sizeof(struct erofs_extent_node));
+> +			if (e_hole == NULL)
+> +				return -ENOMEM;
+> +			e_hole->lblk = st;
+> +			e_hole->pblk = HOLE_BLK;
+> +			e_hole->len = (en - st);
+> +			list_add_tail(&e_hole->next, extents);
+> +			nholes += e_hole->len;
+
+Maybe we don't need to emit all HOLK extents since all data extents
+are with _length_... It is easy to detect all holes between extents...
+
+If some block doesn't belong to any extent, it's a hole.
 
 Thanks,
 Gao Xiang
 
-
+> +		}
+> +	}
+> +	/* rounddown to exclude tail-end data */
+> +	if (last_data < len && (len - last_data) >= EROFS_BLKSIZ) {
+> +		e_data = malloc(sizeof(struct erofs_extent_node));
+> +		if (e_data == NULL)
+> +			return -ENOMEM;
+> +		st = last_data >> S_SHIFT;
+> +		e_data->lblk = st;
+> +		e_data->len = rounddown((len - last_data), EROFS_BLKSIZ) >> S_SHIFT;
+> +		list_add_tail(&e_data->next, extents);
+> +	}
+> +	return nholes;
+> +}
+> +
+> +char *erofs_create_extent_buffer(struct list_head *extents, unsigned int size)
+> +{
+> +	struct erofs_extent_node *e_node;
+> +	struct erofs_inline_extent_header *header;
+> +	char *buf;
+> +	unsigned int p = 0;
+> +
+> +	buf = malloc(size);
+> +	if (buf == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +	header = (struct erofs_inline_extent_header *) buf;
+> +	header->count = 0;
+> +	p += sizeof(struct erofs_inline_extent_header);
+> +	list_for_each_entry(e_node, extents, next) {
+> +		const struct erofs_extent ee = {
+> +			.ee_lblk = cpu_to_le32(e_node->lblk),
+> +			.ee_pblk = cpu_to_le32(e_node->pblk),
+> +			.ee_len  = cpu_to_le32(e_node->len)
+> +		};
+> +		memcpy(buf + p, &ee, sizeof(struct erofs_extent));
+> +		p += sizeof(struct erofs_extent);
+> +		header->count++;
+> +		list_del(&e_node->next);
+> +		free(e_node);
+> +	}
+> +	return buf;
+> +}
+> +
+>  void erofs_inode_manager_init(void)
+>  {
+>  	unsigned int i;
+> @@ -304,8 +397,9 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+>  
+>  int erofs_write_file(struct erofs_inode *inode)
+>  {
+> -	unsigned int nblocks, i;
+> +	unsigned int nblocks, i, j, nholes;
+>  	int ret, fd;
+> +	struct erofs_extent_node *e_node;
+>  
+>  	if (!inode->i_size) {
+>  		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+> @@ -322,31 +416,43 @@ int erofs_write_file(struct erofs_inode *inode)
+>  	/* fallback to all data uncompressed */
+>  	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+>  	nblocks = inode->i_size / EROFS_BLKSIZ;
+> -
+> -	ret = __allocate_inode_bh_data(inode, nblocks);
+> +	nholes = erofs_read_extents(inode, &inode->i_extents);
+> +	if (nholes < 0)
+> +		return nholes;
+> +	if (nblocks < 0)
+> +		return nblocks;
+> +	ret = __allocate_inode_bh_data(inode, nblocks - nholes);
+>  	if (ret)
+>  		return ret;
+>  
+>  	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+>  	if (fd < 0)
+>  		return -errno;
+> -
+> -	for (i = 0; i < nblocks; ++i) {
+> -		char buf[EROFS_BLKSIZ];
+> -
+> -		ret = read(fd, buf, EROFS_BLKSIZ);
+> -		if (ret != EROFS_BLKSIZ) {
+> -			if (ret < 0)
+> -				goto fail;
+> -			close(fd);
+> -			return -EAGAIN;
+> +	i = inode->u.i_blkaddr;
+> +	inode->extent_meta_isize = sizeof(struct erofs_inline_extent_header);
+> +	list_for_each_entry(e_node, &inode->i_extents, next) {
+> +		inode->extent_meta_isize += sizeof(struct erofs_extent);
+> +		if (e_node->pblk == HOLE_BLK) {
+> +			lseek(fd, e_node->len * EROFS_BLKSIZ, SEEK_CUR);
+> +			continue;
+>  		}
+> +		e_node->pblk = i;
+> +		i += e_node->len;
+> +		for (j = 0; j < e_node->len; j++) {
+> +			char buf[EROFS_BLKSIZ];
+> +			ret = read(fd, buf, EROFS_BLKSIZ);
+> +			if (ret != EROFS_BLKSIZ) {
+> +				if (ret < 0)
+> +					goto fail;
+> +				close(fd);
+> +				return -EAGAIN;
+> +			}
+> +			ret = blk_write(buf, e_node->pblk + j, 1);
+> +			if (ret)
+> +				goto fail;
+>  
+> -		ret = blk_write(buf, inode->u.i_blkaddr + i, 1);
+> -		if (ret)
+> -			goto fail;
+> +		}
+>  	}
+> -
+>  	/* read the tail-end data */
+>  	inode->idata_size = inode->i_size % EROFS_BLKSIZ;
+>  	if (inode->idata_size) {
+> @@ -479,8 +585,19 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+>  		if (ret)
+>  			return false;
+>  		free(inode->compressmeta);
+> +		off += inode->extent_isize;
+>  	}
+>  
+> +	if (inode->extent_meta_isize) {
+> +		char *extents = erofs_create_extent_buffer(&inode->i_extents,
+> +						   inode->extent_meta_isize);
+> +		if (IS_ERR(extents))
+> +			return false;
+> +		ret = dev_write(extents, off, inode->extent_meta_isize);
+> +		free(extents);
+> +		if (ret)
+> +			return false;
+> +	}
+>  	inode->bh = NULL;
+>  	erofs_iput(inode);
+>  	return erofs_bh_flush_generic_end(bh);
+> @@ -737,10 +854,11 @@ struct erofs_inode *erofs_new_inode(void)
+>  
+>  	init_list_head(&inode->i_subdirs);
+>  	init_list_head(&inode->i_xattrs);
+> +	init_list_head(&inode->i_extents);
+>  
+>  	inode->idata_size = 0;
+>  	inode->xattr_isize = 0;
+> -	inode->extent_isize = 0;
+> +	inode->extent_meta_isize = 0;
+>  
+>  	inode->bh = inode->bh_inline = inode->bh_data = NULL;
+>  	inode->idata = NULL;
+> @@ -961,4 +1079,3 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
+>  
+>  	return erofs_mkfs_build_tree(inode);
+>  }
+> -
+> -- 
+> 2.9.3
+> 
