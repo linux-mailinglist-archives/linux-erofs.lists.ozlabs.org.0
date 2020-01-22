@@ -1,40 +1,67 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88C01144AA2
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2020 04:58:12 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36983143807
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Jan 2020 09:06:31 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4821MS0gr8zDqSB
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Jan 2020 19:06:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 482WpT6HqrzDqQZ
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2020 14:58:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::235;
+ helo=mail-lj1-x235.google.com; envelope-from=saumya.iisc@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=kCGlK9ex; dkim-atps=neutral
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com
+ [IPv6:2a00:1450:4864:20::235])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4821MM3qySzDqQG
- for <linux-erofs@lists.ozlabs.org>; Tue, 21 Jan 2020 19:06:23 +1100 (AEDT)
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id B75F47C41E2D957151C1;
- Tue, 21 Jan 2020 16:06:18 +0800 (CST)
-Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 Jan
- 2020 16:06:10 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
-Subject: [RFC PATCH] erofs: convert workstn to XArray
-Date: Tue, 21 Jan 2020 16:05:22 +0800
-Message-ID: <20200121080522.61612-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 482WpN0RTfzDqQD
+ for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2020 14:58:01 +1100 (AEDT)
+Received: by mail-lj1-x235.google.com with SMTP id m26so5132406ljc.13
+ for <linux-erofs@lists.ozlabs.org>; Tue, 21 Jan 2020 19:58:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=dyhDSSSW14MiAu4fZim9QCY7gS3qDefw0xYHH/nUSrg=;
+ b=kCGlK9exH4JHJzUuGZ/PTXc9hUoduusen+8FS0k5bhPX5pVe71S5WgGKF+4AtsTWJj
+ 6vNeAcYH2ATkNJ6WZ3o6w030OJvh9GSXkkKVkZssQ/+YOxx7VELDsWhdFbPrIb0dph+E
+ znIAnpSQNjSkn/+tpf0xM4sHSNP9EOHgot/1mbHtbgDIOVM4v1yt9yMvlrIEg4qceK4D
+ N1baKz00t5uadQFFoiV7EzQFVfJqCuz8cRiWjKqXQ1LjEPnDFHa9lqy5p1MVpnHPZpbp
+ fDARluVrpSdZimBuvk+RFy1PNMQS4ZwA9tjn0/RAyZqTuSx9r4+6z/YLH6W67njllSLb
+ zOYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=dyhDSSSW14MiAu4fZim9QCY7gS3qDefw0xYHH/nUSrg=;
+ b=e3otjgDHi77/ACxDy8LWxtvZNX+w7Hv+YgF7PLGHbf+pgaUdl9qqDq332BCu58eV3x
+ 7Y9eNEhT06HOdOOU+MVfhQSQ876RPpSofCDUwhyDCvTNDWjxxOH54uceCL4H5pwiqsPm
+ gepm05n8ROhy/H1O1a3TNf/zSc+hRgJbyLWbLDA8Wm7JXDFxz2psuuZhed+MW54nWKBv
+ LWdH5ZBwcYBknzdK39eWNuN4wKk9KvCMr7TO5AKAeqTcAM6igs8StFx7nR8e8ez4/5+u
+ feUtBZhBapPwqlF65ColPshuz2ZPUuX+g4jfVV6J8VmuRodU54J1KSgiW58Zs1wOcrh4
+ d6Cg==
+X-Gm-Message-State: APjAAAVXjOHwxxehbCSZzkSZlHKl2ls7wrdNe7ggOOkFJXPEvhhMqZ0R
+ 5cOoCLy9G/dywD2TNWbeAfR3cWuOyxfTml6JHIM=
+X-Google-Smtp-Source: APXvYqxh6L1hdWhFxu2ceoNwzfLrtoHdo3RY4xJ/9z+zvy1n50xOQ/RwZvIf2kucxOiXJgEthlAMVV+Dn9UvKCYDoVA=
+X-Received: by 2002:a2e:7a13:: with SMTP id v19mr18137006ljc.43.1579665477091; 
+ Tue, 21 Jan 2020 19:57:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.160.196.180]
-X-CFilter-Loop: Reflected
+References: <CAHmfoRm7xUwuXfTZ2kr-x9fs59x7b707t183ggbLEtEyO_wznA@mail.gmail.com>
+ <20200120073859.GA32421@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20200120073859.GA32421@hsiangkao-HP-ZHAN-66-Pro-G1>
+From: Saumya Panda <saumya.iisc@gmail.com>
+Date: Wed, 22 Jan 2020 09:27:45 +0530
+Message-ID: <CAHmfoRn+YjEwxmZLTeDVN9Oja=7QTi14oEtpD5x7URT_X9dJ5w@mail.gmail.com>
+Subject: Re: Problem in EROFS: Not able to read the files after mount
+To: Gao Xiang <hsiangkao@aol.com>
+Content-Type: multipart/alternative; boundary="000000000000a0466a059cb28771"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,388 +73,207 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, linux-kernel@vger.kernel.org,
- Matthew Wilcox <willy@infradead.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-XArray has friendly apis and it will replace the old radix
-tree in the near future.
+--000000000000a0466a059cb28771
+Content-Type: text/plain; charset="UTF-8"
 
-This convert makes use of __xa_cmpxchg when inserting on
-a just inserted item by other thread. In detail, instead
-of totally looking up again as what we did for the old
-radix tree, it will try to legitimize the current in-tree
-item in the XArray therefore more effective.
+Hi Gao,
+  Thanks for the info. After I enabled the said configuration, I am now
+able to read the files after mount. But I am seeing Squashfs has better
+compression ratio compared to Erofs (more than 60% than that of Erofs). Am
+I missing something? I used lz4hc while making the Erofs image.
 
-In addition, naming is rather a challenge for non-English
-speaker like me. The basic idea of workstn is to provide
-a runtime sparse array with items arranged in the physical
-block number order. Such items (was called workgroup) can be
-used to record compress clusters or for later new features.
+ls -l enwik*
+-rw-r--r-- 1 saumya users  61280256 Jan 21 03:22 enwik8.erofs.img
+-rw-r--r-- 1 saumya users  37355520 Jan 21 03:34 enwik8.sqsh
+-rw-r--r-- 1 saumya users 558133248 Jan 21 03:25 enwik9.erofs.img
+-rw-r--r-- 1 saumya users 331481088 Jan 21 03:35 enwik9.sqsh
 
-However, both workgroup and workstn seem not good names from
-whatever point of view, so I'd like to rename them as pslot
-and managed_pslots to stand for physical slots. This patch
-handles the second as a part of the radix root convert.
+On Mon, Jan 20, 2020 at 1:11 PM Gao Xiang <hsiangkao@aol.com> wrote:
 
-Cc: Chao Yu <yuchao0@huawei.com>
-Cc: Matthew Wilcox <willy@infradead.org> 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
+> Hi Saumya,
+>
+> On Mon, Jan 20, 2020 at 12:25:15PM +0530, Saumya Panda wrote:
+> > Hi Experts,
+> >    I am testing EROFS in openSuse(Kernel: 5.4.7-1-default). I used the
+> > enwik8 and enwik9 as source file (
+> > https://cs.fit.edu/~mmahoney/compression/textdata.html) for compression.
+> > But after I mount the erofs image, I am not able to read it (it is saying
+> > operation not permitted). Simple "ls" command is not working. But if I
+> > create EROFS image without compression flag, then after mount I am able
+> to
+> > read the files. Seems there is some problem during compression.
+> >
+> > I will appreciate if someone can help me out why this is happening.
+>
+> Could you please check if your opensuse kernel has been enabled
+> the following configuration?
+>
+> CONFIG_EROFS_FS_ZIP=y
+> CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT=1
+>
+> By default, they should be enabled, but it seems not according to
+> the following information you mentioned.
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Steps followed:
+> > *Erofs image creation & mount: *
+> > mkfs.erofs -zlz4hc enwik8.erofs.img enwik8/
+> > mkfs.erofs 1.0
+> >         c_version:           [     1.0]
+> >         c_dbg_lvl:           [       0]
+> >         c_dry_run:           [       0]
+> > mount enwik8.erofs.img /mnt/enwik8/ -t erofs -o loop
+> >
+> > ls -l /mnt/enwik8/
+> > ls: cannot access '/mnt/enwik8/enwik8': Operation not supported
+> > total 0
+> > -????????? ? ? ? ?            ? enwik8
+> >
+> > The problem seen for both lz4 & lz4hc.
+> >
+> > *Erofs image creation & mount without compression: *
+> > mkfs.erofs  enwik8_nocomp.erofs.img enwik8/
+> > mkfs.erofs 1.0
+> >         c_version:           [     1.0]
+> >         c_dbg_lvl:           [       0]
+> >         c_dry_run:           [       0]
+> >
+> > mount enwik8_nocomp.erofs.img /mnt/enwik8_nocomp/ -t erofs -o loop
+> >
+> > ls -l /mnt/enwik8_nocomp/
+> > total 97660
+> > -rw-r--r-- 1 root root 100000000 Jan 20 01:27 enwik8
+> >
+> > *Original enwik8 file:*
+> > ls -l enwik8
+> > total 97660
+> > -rw-r--r-- 1 root root 100000000 Jan 20 01:14 enwik8
+> >
+> > *Source code used for Lz4 and Erofs utils:*
+> > https://github.com/hsiangkao/erofs-utils
+> > https://github.com/lz4/lz4
+> >
+> > --
+> > Thanks,
+> > Saumya Prakash Panda
+>
 
-(This patch is still under testing...)
 
- fs/erofs/internal.h |  8 ++---
- fs/erofs/super.c    |  2 +-
- fs/erofs/utils.c    | 85 ++++++++++++++++-----------------------------
- fs/erofs/zdata.c    | 65 ++++++++++++++++------------------
- 4 files changed, 64 insertions(+), 96 deletions(-)
-
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index c4c6dcdc89ad..b70f52c80852 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -52,8 +52,8 @@ struct erofs_sb_info {
- 	struct list_head list;
- 	struct mutex umount_mutex;
- 
--	/* the dedicated workstation for compression */
--	struct radix_tree_root workstn_tree;
-+	/* managed array arranged in physical block number */
-+	struct xarray managed_pslots;
- 
- 	/* threshold for decompression synchronously */
- 	unsigned int max_sync_decompress_pages;
-@@ -402,8 +402,8 @@ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
- int erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
- 					     pgoff_t index);
--int erofs_register_workgroup(struct super_block *sb,
--			     struct erofs_workgroup *grp);
-+struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
-+					       struct erofs_workgroup *grp);
- void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
- void erofs_shrinker_register(struct super_block *sb);
- void erofs_shrinker_unregister(struct super_block *sb);
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 057e6d7b5b7f..b514c67e5fc2 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -425,7 +425,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 		sb->s_flags &= ~SB_POSIXACL;
- 
- #ifdef CONFIG_EROFS_FS_ZIP
--	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
-+	xa_init(&sbi->managed_pslots);
- #endif
- 
- 	/* get the root inode */
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index fddc5059c930..354fa27fe13e 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -37,9 +37,6 @@ void *erofs_get_pcpubuf(unsigned int pagenr)
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
- 
--#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
--#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
--
- static int erofs_workgroup_get(struct erofs_workgroup *grp)
- {
- 	int o;
-@@ -66,7 +63,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
- 
- repeat:
- 	rcu_read_lock();
--	grp = radix_tree_lookup(&sbi->workstn_tree, index);
-+	grp = xa_load(&sbi->managed_pslots, index);
- 	if (grp) {
- 		if (erofs_workgroup_get(grp)) {
- 			/* prefer to relax rcu read side */
-@@ -80,43 +77,36 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
- 	return grp;
- }
- 
--int erofs_register_workgroup(struct super_block *sb,
--			     struct erofs_workgroup *grp)
-+struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
-+					       struct erofs_workgroup *grp)
- {
- 	struct erofs_sb_info *sbi;
--	int err;
--
--	/* grp shouldn't be broken or used before */
--	if (atomic_read(&grp->refcount) != 1) {
--		DBG_BUGON(1);
--		return -EINVAL;
--	}
--
--	err = radix_tree_preload(GFP_NOFS);
--	if (err)
--		return err;
--
--	sbi = EROFS_SB(sb);
--	xa_lock(&sbi->workstn_tree);
-+	struct erofs_workgroup *pre;
- 
- 	/*
--	 * Bump up reference count before making this workgroup
--	 * visible to other users in order to avoid potential UAF
--	 * without serialized by workstn_lock.
-+	 * Bump up a reference count before making this visible
-+	 * to others for the XArray in order to avoid potential
-+	 * UAF without serialized by xa_lock.
- 	 */
--	__erofs_workgroup_get(grp);
-+	atomic_inc(&grp->refcount);
- 
--	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
--	if (err)
--		/*
--		 * it's safe to decrease since the workgroup isn't visible
--		 * and refcount >= 2 (cannot be freezed).
--		 */
--		__erofs_workgroup_put(grp);
--
--	xa_unlock(&sbi->workstn_tree);
--	radix_tree_preload_end();
--	return err;
-+	sbi = EROFS_SB(sb);
-+repeat:
-+	xa_lock(&sbi->managed_pslots);
-+	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
-+			   NULL, grp, GFP_NOFS);
-+	if (pre != NULL) {
-+		/* try to legitimize the current in-tree one */
-+		if (erofs_workgroup_get(pre)) {
-+			xa_unlock(&sbi->managed_pslots);
-+			cond_resched();
-+			goto repeat;
-+		}
-+		atomic_dec(&grp->refcount);
-+		grp = pre;
-+	}
-+	xa_unlock(&sbi->managed_pslots);
-+	return grp;
- }
- 
- static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
-@@ -155,7 +145,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 
- 	/*
- 	 * Note that all cached pages should be unattached
--	 * before deleted from the radix tree. Otherwise some
-+	 * before deleted from the XArray. Otherwise some
- 	 * cached pages could be still attached to the orphan
- 	 * old workgroup when the new one is available in the tree.
- 	 */
-@@ -169,7 +159,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 	 * however in order to avoid some race conditions, add a
- 	 * DBG_BUGON to observe this in advance.
- 	 */
--	DBG_BUGON(radix_tree_delete(&sbi->workstn_tree, grp->index) != grp);
-+	DBG_BUGON(xa_erase(&sbi->managed_pslots, grp->index) != grp);
- 
- 	/*
- 	 * If managed cache is on, last refcount should indicate
-@@ -182,22 +172,11 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
- 					      unsigned long nr_shrink)
- {
--	pgoff_t first_index = 0;
--	void *batch[PAGEVEC_SIZE];
-+	struct erofs_workgroup *grp;
- 	unsigned int freed = 0;
-+	unsigned long index;
- 
--	int i, found;
--repeat:
--	xa_lock(&sbi->workstn_tree);
--
--	found = radix_tree_gang_lookup(&sbi->workstn_tree,
--				       batch, first_index, PAGEVEC_SIZE);
--
--	for (i = 0; i < found; ++i) {
--		struct erofs_workgroup *grp = batch[i];
--
--		first_index = grp->index + 1;
--
-+	xa_for_each(&sbi->managed_pslots, index, grp) {
- 		/* try to shrink each valid workgroup */
- 		if (!erofs_try_to_release_workgroup(sbi, grp))
- 			continue;
-@@ -206,10 +185,6 @@ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
- 		if (!--nr_shrink)
- 			break;
- 	}
--	xa_unlock(&sbi->workstn_tree);
--
--	if (i && nr_shrink)
--		goto repeat;
- 	return freed;
- }
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 4fedeb4496e4..df1a27536918 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -67,16 +67,6 @@ static void z_erofs_pcluster_init_once(void *ptr)
- 		pcl->compressed_pages[i] = NULL;
- }
- 
--static void z_erofs_pcluster_init_always(struct z_erofs_pcluster *pcl)
--{
--	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
--
--	atomic_set(&pcl->obj.refcount, 1);
--
--	DBG_BUGON(cl->nr_pages);
--	DBG_BUGON(cl->vcnt);
--}
--
- int __init z_erofs_init_zip_subsystem(void)
- {
- 	pcluster_cachep = kmem_cache_create("erofs_compress",
-@@ -341,26 +331,19 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
- 				     struct inode *inode,
- 				     struct erofs_map_blocks *map)
- {
--	struct erofs_workgroup *grp;
--	struct z_erofs_pcluster *pcl;
-+	struct z_erofs_pcluster *pcl = clt->pcl;
- 	struct z_erofs_collection *cl;
- 	unsigned int length;
- 
--	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
--	if (!grp)
--		return -ENOENT;
--
--	pcl = container_of(grp, struct z_erofs_pcluster, obj);
-+	/* to avoid unexpected loop formed by corrupted images */
- 	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
- 		DBG_BUGON(1);
--		erofs_workgroup_put(grp);
- 		return -EFSCORRUPTED;
- 	}
- 
- 	cl = z_erofs_primarycollection(pcl);
- 	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
- 		DBG_BUGON(1);
--		erofs_workgroup_put(grp);
- 		return -EFSCORRUPTED;
- 	}
- 
-@@ -368,7 +351,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
- 	if (length & Z_EROFS_PCLUSTER_FULL_LENGTH) {
- 		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
- 			DBG_BUGON(1);
--			erofs_workgroup_put(grp);
- 			return -EFSCORRUPTED;
- 		}
- 	} else {
-@@ -391,7 +373,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
- 	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
- 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
- 		clt->tailpcl = NULL;
--	clt->pcl = pcl;
- 	clt->cl = cl;
- 	return 0;
- }
-@@ -402,14 +383,14 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
- {
- 	struct z_erofs_pcluster *pcl;
- 	struct z_erofs_collection *cl;
--	int err;
-+	struct erofs_workgroup *grp;
- 
- 	/* no available workgroup, let's allocate one */
- 	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
- 	if (!pcl)
- 		return -ENOMEM;
- 
--	z_erofs_pcluster_init_always(pcl);
-+	atomic_set(&pcl->obj.refcount, 1);
- 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
- 
- 	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
-@@ -429,20 +410,27 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
- 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
- 
- 	cl = z_erofs_primarycollection(pcl);
-+
-+	/* must be cleaned before freeing to slab */
-+	DBG_BUGON(cl->nr_pages);
-+	DBG_BUGON(cl->vcnt);
-+
- 	cl->pageofs = map->m_la & ~PAGE_MASK;
- 
- 	/*
- 	 * lock all primary followed works before visible to others
- 	 * and mutex_trylock *never* fails for a new pcluster.
- 	 */
--	mutex_trylock(&cl->lock);
-+	DBG_BUGON(!mutex_trylock(&cl->lock));
- 
--	err = erofs_register_workgroup(inode->i_sb, &pcl->obj);
--	if (err) {
-+	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
-+	if (grp != &pcl->obj) {
-+		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
- 		mutex_unlock(&cl->lock);
- 		kmem_cache_free(pcluster_cachep, pcl);
--		return -EAGAIN;
-+		return -EEXIST;
- 	}
-+
- 	/* used to check tail merging loop due to corrupted images */
- 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
- 		clt->tailpcl = pcl;
-@@ -456,6 +444,7 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
- 				   struct inode *inode,
- 				   struct erofs_map_blocks *map)
- {
-+	struct erofs_workgroup *grp;
- 	int ret;
- 
- 	DBG_BUGON(clt->cl);
-@@ -469,21 +458,25 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
- 		return -EINVAL;
- 	}
- 
--repeat:
--	ret = z_erofs_lookup_collection(clt, inode, map);
--	if (ret == -ENOENT) {
-+	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
-+	if (grp) {
-+		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
-+	} else {
- 		ret = z_erofs_register_collection(clt, inode, map);
- 
--		/* someone registered at the same time, give another try */
--		if (ret == -EAGAIN) {
--			cond_resched();
--			goto repeat;
--		}
-+		if (!ret)
-+			goto out;
-+		if (ret != -EEXIST)
-+			return ret;
- 	}
- 
--	if (ret)
-+	ret = z_erofs_lookup_collection(clt, inode, map);
-+	if (ret) {
-+		erofs_workgroup_put(&clt->pcl->obj);
- 		return ret;
-+	}
- 
-+out:
- 	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
- 				  clt->cl->pagevec, clt->cl->vcnt);
- 
 -- 
-2.17.1
+Thanks,
+Saumya Prakash Panda
 
+--000000000000a0466a059cb28771
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi Gao,</div><div>=C2=A0 Thanks for the info. After I=
+ enabled the said configuration, I am now able to read the files after moun=
+t. But I am seeing Squashfs has better compression ratio compared to Erofs =
+(more than 60% than that of Erofs). Am I missing something? I used lz4hc wh=
+ile making the Erofs image. <br></div><div><br></div><div>ls -l enwik*<br>-=
+rw-r--r-- 1 saumya users =C2=A061280256 Jan 21 03:22 enwik8.erofs.img<br>-r=
+w-r--r-- 1 saumya users =C2=A037355520 Jan 21 03:34 enwik8.sqsh<br>-rw-r--r=
+-- 1 saumya users 558133248 Jan 21 03:25 enwik9.erofs.img<br>-rw-r--r-- 1 s=
+aumya users 331481088 Jan 21 03:35 enwik9.sqsh<br></div></div><br><div clas=
+s=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Jan 20, 202=
+0 at 1:11 PM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@aol.com">hsiangkao@a=
+ol.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left=
+:1ex">Hi Saumya,<br>
+<br>
+On Mon, Jan 20, 2020 at 12:25:15PM +0530, Saumya Panda wrote:<br>
+&gt; Hi Experts,<br>
+&gt;=C2=A0 =C2=A0 I am testing EROFS in openSuse(Kernel: 5.4.7-1-default). =
+I used the<br>
+&gt; enwik8 and enwik9 as source file (<br>
+&gt; <a href=3D"https://cs.fit.edu/~mmahoney/compression/textdata.html" rel=
+=3D"noreferrer" target=3D"_blank">https://cs.fit.edu/~mmahoney/compression/=
+textdata.html</a>) for compression.<br>
+&gt; But after I mount the erofs image, I am not able to read it (it is say=
+ing<br>
+&gt; operation not permitted). Simple &quot;ls&quot; command is not working=
+. But if I<br>
+&gt; create EROFS image without compression flag, then after mount I am abl=
+e to<br>
+&gt; read the files. Seems there is some problem during compression.<br>
+&gt; <br>
+&gt; I will appreciate if someone can help me out why this is happening.<br=
+>
+<br>
+Could you please check if your opensuse kernel has been enabled<br>
+the following configuration?<br>
+<br>
+CONFIG_EROFS_FS_ZIP=3Dy<br>
+CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT=3D1<br>
+<br>
+By default, they should be enabled, but it seems not according to<br>
+the following information you mentioned.<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+<br>
+&gt; <br>
+&gt; Steps followed:<br>
+&gt; *Erofs image creation &amp; mount: *<br>
+&gt; mkfs.erofs -zlz4hc enwik8.erofs.img enwik8/<br>
+&gt; mkfs.erofs 1.0<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_version:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A01.0]<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_dbg_lvl:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A0 =C2=A00]<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_dry_run:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A0 =C2=A00]<br>
+&gt; mount enwik8.erofs.img /mnt/enwik8/ -t erofs -o loop<br>
+&gt; <br>
+&gt; ls -l /mnt/enwik8/<br>
+&gt; ls: cannot access &#39;/mnt/enwik8/enwik8&#39;: Operation not supporte=
+d<br>
+&gt; total 0<br>
+&gt; -????????? ? ? ? ?=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ? enwik8<b=
+r>
+&gt; <br>
+&gt; The problem seen for both lz4 &amp; lz4hc.<br>
+&gt; <br>
+&gt; *Erofs image creation &amp; mount without compression: *<br>
+&gt; mkfs.erofs=C2=A0 enwik8_nocomp.erofs.img enwik8/<br>
+&gt; mkfs.erofs 1.0<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_version:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A01.0]<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_dbg_lvl:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A0 =C2=A00]<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_dry_run:=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0[=C2=A0 =C2=A0 =C2=A0 =C2=A00]<br>
+&gt; <br>
+&gt; mount enwik8_nocomp.erofs.img /mnt/enwik8_nocomp/ -t erofs -o loop<br>
+&gt; <br>
+&gt; ls -l /mnt/enwik8_nocomp/<br>
+&gt; total 97660<br>
+&gt; -rw-r--r-- 1 root root 100000000 Jan 20 01:27 enwik8<br>
+&gt; <br>
+&gt; *Original enwik8 file:*<br>
+&gt; ls -l enwik8<br>
+&gt; total 97660<br>
+&gt; -rw-r--r-- 1 root root 100000000 Jan 20 01:14 enwik8<br>
+&gt; <br>
+&gt; *Source code used for Lz4 and Erofs utils:*<br>
+&gt; <a href=3D"https://github.com/hsiangkao/erofs-utils" rel=3D"noreferrer=
+" target=3D"_blank">https://github.com/hsiangkao/erofs-utils</a><br>
+&gt; <a href=3D"https://github.com/lz4/lz4" rel=3D"noreferrer" target=3D"_b=
+lank">https://github.com/lz4/lz4</a><br>
+&gt; <br>
+&gt; -- <br>
+&gt; Thanks,<br>
+&gt; Saumya Prakash Panda<br>
+</blockquote></div><br clear=3D"all"><br>-- <br><div dir=3D"ltr" class=3D"g=
+mail_signature">Thanks,<br>Saumya Prakash Panda<br><br></div>
+
+--000000000000a0466a059cb28771--
