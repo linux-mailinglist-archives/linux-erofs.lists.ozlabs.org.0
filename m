@@ -1,84 +1,35 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30BB9144AD4
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2020 05:37:36 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 482Xgx3GXrzDqQX
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2020 15:37:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1579667853;
-	bh=B3BborpEB37b8TjbSmAH3Aoyqx1FhZnzornC9JyvmQY=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=PqB03dNHh/zytzCr+6d7li7ctyW5yZek9iAzhbdj0FEofDmvNuH5vHDwOLnMy/hPi
-	 Gkl5Lm4de1puPraydx17DTmJtJqzToNmGVWzqlWNWKhpoiQf5qY6U8U2IbxlHz2VtP
-	 MpCxjPod34k7QtG32yXGyhTl/kx7A/pzWIAF+rPk33Ms4hQHcC9PEzS4KR0TUfn0Gd
-	 F9ztzgnYM92HKMp3ClQpv7KXsSSn8fXUMOZ0Bg02/CoXpoAZo3KJwM/ywAFFieWJSc
-	 U7Y7sszmwDMjRjOmz7MhkJygPARAwdx+BLkf8J6TgRi3BUgsBBXzGsP22Ihq1cplKf
-	 a7tL2gKbIFKwA==
+	by mail.lfdr.de (Postfix) with ESMTPS id CCDA714630B
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 09:08:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 483FKP0CH5zDqVN
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 19:08:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=sina.com (client-ip=202.108.3.162;
+ helo=mail3-162.sinamail.sina.com.cn; envelope-from=blucerlee@sina.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.146; helo=sonic302-20.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=E2dlkmDy; dkim-atps=neutral
-Received: from sonic302-20.consmr.mail.gq1.yahoo.com
- (sonic302-20.consmr.mail.gq1.yahoo.com [98.137.68.146])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 482Xgd5JybzDqQ4
- for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2020 15:37:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1579667831; bh=y0kltOs44ya5MkDp5Qoku/FNKJEQ9FndGwq7CWlx5MA=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=E2dlkmDy1kAQgsSV3d/b+Rjo06in0ASXvKTFbyLDJnHuK0Ec5n+3rvljkyyV5mz6pJSMS/yNnasiXbzTNtqYFYDMn01GbmZPNSrj8q6M7VtbszBltdr58Db91PL7v2n3B3daHlCAzYJ9C5Vf7Fc+5I+l367/9DAe57DRtbpWhx4BwfpUwL6/7r6oSXAep25I2zMcTr6prkcP7kMmCJH9l8rjKLpzwfPN5UjINnmmwns7mhc4/h4MP5UhndjcPEDFwvsLff6VK2BaBGiM33cXTd1S3uzMkN84ZjOf+SOXcQNv2ALBygRT/kFW9HtalFVwpiE7FRFfscC1KVmxbrQUJA==
-X-YMail-OSG: 32tAxI8VM1nMeqUpqcqoX._fcyj.sEKlmECpcEIZPCiyJEaV9gOj_JcsLf3v0DE
- DnFnqz6W2q2Nrf8h_Exla3i_Jps.Jkqra3fskMzWZKPdlDmgQ8zcus44fz2LZQ50QHTjVL2gx_3k
- uBXGZQK9A2DMofm8jswtx9Aj_1eVim_YtZRSe2bjROAf_e5jKEvzgjR4xb2sbgVurT_pU3NONLZ5
- ANpUBB5Fgt51z.XRDNrpLOu63W_mZ4f3JO..xuV.Ccb7dSw9h4JSQ9_fYPgPGl9_OOnUZ2y.alfG
- GJBZ4oe5XtEUpkCzD.E4iGGIobcOWhSXxhBLItS5MbGA1ILQwWB.Qj1drqSLeeo2LsiSwVNWSN9p
- 4yY51IK0RLxJOfvxXa3lTud1qrnL2XPqYWeNbqWMvCQSaErdmOaOXbD5aaRVEmBOO1WNxEgAeqCG
- axksftEk6Fff6uwMGBn_t3zoHkAY7H6OznCsrp.MqJHD_6LEWZOEKvgCY_uq1bsy2G.JZ41HlVTD
- .zCtMoiO_5.g.oRTC1EnynuvTu2tAQacPrrKElUNMIahK9PC2rhYVdB53s3pBHdK0cfU4AcT9b9S
- .WEa0GEgdY31O12tD6xYLeRVOJEMEksXW69pXEX.LcgI26E_ZbkScqH87Hr8OIyl0rJQZBXi0bn7
- YrIswxIynFScyAG5ij0dcJB9dMQSSn42OXisjneJWlJKZFYkkeyEMKbkS1bPWV9ggu51JVUdW8tV
- nIwgWCcwNThpsmB2NZKHDXkFz9qLPFuFd_MdA5Uh_YfzC9TTG5MotVaqyF_tQYHH07BejQmTEZfo
- x5_tUJwewAiGzjlW9M3CtpRKhwu25weJbkjmw.IaZuRdq9rmiQ6ulj5L4Xm1GHyB9TBOR5qMEBDC
- GbqSrQlvJAw6FD_1DMfNqI6dvrl5q35w5mMYpHTK9uvDwQTtKA7Fk82nWhtKK_9DwHUIDq4swM9S
- A_A7.6M9rojjRQfz9QvAQS_XcuBXLIsZAOMONZUDsf1eeG8J2hFdtAox9O9rKHoo0Qd2NT_aUkU.
- gwLJ7Odo35LiQ49hTUvaNNSxwW0iugAQgWnJ6gemKCFNZ0htssYhW4KNEk6kkjw2rZvOWAfmkajt
- bieQ_.bHsscY549junjoyRp85Lk_VNmJDgUvR9SlnlKhMTTua_4ypA0Q5GmMUbxVcapm8QKVXyJX
- egrYlnQygUYW0ru1B6y.0oaWXfSQcOXWmqigbZRyFjRXFNQyz6lo.nkXTAUHmXjwchUNE2h_BsRR
- G.zvnBm0BGzjmEEVPhZhZ81hxzHwvq_0IiskwWW3I8b2iHlg8E3mD.IZrHRrqsebnQt0k9l7hWAi
- Zwj1n0y1deA9ayBWyTobUI6sudAslw27YYw2H6Wld2HIB.2Rte8YfUfxmg2lLr3dqbTtqOHQEKAA
- WBl6bYhyqX1JeE.9gECfu15zVbzFmbNBgFhZk_gCN
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic302.consmr.mail.gq1.yahoo.com with HTTP; Wed, 22 Jan 2020 04:37:11 +0000
-Received: by smtp401.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID d0534db1d9f8f83698a32c8ac31bb089; 
- Wed, 22 Jan 2020 04:37:09 +0000 (UTC)
-Date: Wed, 22 Jan 2020 12:37:03 +0800
-To: Saumya Panda <saumya.iisc@gmail.com>
-Subject: Re: Problem in EROFS: Not able to read the files after mount
-Message-ID: <20200122043655.GB6542@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CAHmfoRm7xUwuXfTZ2kr-x9fs59x7b707t183ggbLEtEyO_wznA@mail.gmail.com>
- <20200120073859.GA32421@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAHmfoRn+YjEwxmZLTeDVN9Oja=7QTi14oEtpD5x7URT_X9dJ5w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmfoRn+YjEwxmZLTeDVN9Oja=7QTi14oEtpD5x7URT_X9dJ5w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_181)
+ dmarc=none (p=none dis=none) header.from=sina.com
+Received: from mail3-162.sinamail.sina.com.cn (mail3-162.sinamail.sina.com.cn
+ [202.108.3.162])
+ by lists.ozlabs.org (Postfix) with SMTP id 483FKF4VsyzDqSD
+ for <linux-erofs@lists.ozlabs.org>; Thu, 23 Jan 2020 19:08:49 +1100 (AEDT)
+Received: from unknown (HELO localhost)([220.196.60.5]) by sina.com with ESMTP
+ id 5E2953F500022221; Thu, 23 Jan 2020 16:06:21 +0800 (CST)
+X-Sender: blucerlee@sina.com
+X-Auth-ID: blucerlee@sina.com
+X-SMAIL-MID: 20269849283273
+From: Li Guifu <blucerlee@sina.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v1] erofs-utils: introduce exclude dirs and files
+Date: Thu, 23 Jan 2020 16:06:12 +0800
+Message-Id: <20200123080612.3385-1-blucerlee@sina.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,38 +41,334 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: LGF <wylgf01@163.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Jan 22, 2020 at 09:27:45AM +0530, Saumya Panda wrote:
-> Hi Gao,
->   Thanks for the info. After I enabled the said configuration, I am now
-> able to read the files after mount. But I am seeing Squashfs has better
-> compression ratio compared to Erofs (more than 60% than that of Erofs). Am
-> I missing something? I used lz4hc while making the Erofs image.
-> 
-> ls -l enwik*
-> -rw-r--r-- 1 saumya users  61280256 Jan 21 03:22 enwik8.erofs.img
-> -rw-r--r-- 1 saumya users  37355520 Jan 21 03:34 enwik8.sqsh
-> -rw-r--r-- 1 saumya users 558133248 Jan 21 03:25 enwik9.erofs.img
-> -rw-r--r-- 1 saumya users 331481088 Jan 21 03:35 enwik9.sqsh
 
-Yes, it's working as expect. Currently EROFS is compressed in 4k
-fixed-sized output compression granularity as mentioned in many
-available materials. That is the use case for our smartphones.
-You should compare with similar block configuration of squashfs.
-and there are some 3rd data by other folks as well [1].
+From: Li Guifu <blucer.lee@foxmail.com>
 
-In the future, we will support other compression algorithms and
-larger compressed size (> 4k).
+Add support exlcude directory when build image with long option
+arg --exclude-path=dir1/dir2,dir11/dir22 or short option arg
+-e dir1/dir2,dir11/dir22 that seperated by ','
 
-[1] In chinese,
-    https://blog.csdn.net/scnutiger/article/details/102507596
+Signed-off-by: Li Guifu <blucer.lee@foxmail.com>
+---
+ include/erofs/exclude.h |  28 ++++++++
+ lib/Makefile.am         |   2 +-
+ lib/exclude.c           | 149 ++++++++++++++++++++++++++++++++++++++++
+ lib/inode.c             |  10 +++
+ mkfs/main.c             |  13 +++-
+ 5 files changed, 200 insertions(+), 2 deletions(-)
+ create mode 100644 include/erofs/exclude.h
+ create mode 100644 lib/exclude.c
 
-Thanks,
-Gao Xiang
+diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
+new file mode 100644
+index 0000000..3f9fb4d
+--- /dev/null
++++ b/include/erofs/exclude.h
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * erofs-utils\include\erofs\exclude.h
++ * Created by Li Guifu <blucer.lee@foxmail.com>
++ */
++
++#ifndef __EROFS_EXCLUDE_H
++#define __EROFS_EXCLUDE_H
++
++struct rule_entry {
++	struct list_head list;
++	struct list_head hlist;
++	char *name;
++};
++
++void erofs_init_rules(void);
++void erofs_free_rules(void);
++int erofs_parse_exclude_path(const char *args);
++struct rule_entry *erofs_pattern_matched(const char *s);
++struct rule_entry *erofs_entry_matched(struct rule_entry *e,
++				   const char *s, unsigned int len);
++
++static inline int erofs_is_pattern_end(struct rule_entry *e)
++{
++	return list_empty(&e->hlist);
++}
++#endif
++
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 1ff81f9..e4b51e6 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -3,7 +3,7 @@
+ 
+ noinst_LTLIBRARIES = liberofs.la
+ liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
+-		      compress.c compressor.c
++		      compress.c compressor.c exclude.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ if ENABLE_LZ4
+ liberofs_la_CFLAGS += ${LZ4_CFLAGS}
+diff --git a/lib/exclude.c b/lib/exclude.c
+new file mode 100644
+index 0000000..25a9d32
+--- /dev/null
++++ b/lib/exclude.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * erofs-utils\lib\exclude.c
++ * Created by Li Guifu <blucer.lee@foxmail.com>
++ */
++
++#include <string.h>
++#include <errno.h>
++#include <stdlib.h>
++
++#include "erofs/defs.h"
++#include "erofs/list.h"
++#include "erofs/print.h"
++#include "erofs/exclude.h"
++
++static struct rule_entry ext_rule;
++
++static struct rule_entry *new_entry(const char *s, unsigned int len)
++{
++	struct rule_entry *e = malloc(sizeof(struct rule_entry));
++
++	if (!e)
++		return NULL;
++
++	e->name = strndup(s, len);
++	if (!e->name)
++		goto err_strdup;
++
++	init_list_head(&e->hlist);
++	init_list_head(&e->list);
++
++	return e;
++
++err_strdup:
++	free(e);
++	return NULL;
++}
++
++struct rule_entry *erofs_entry_matched(struct rule_entry *e,
++				   const char *s, unsigned int len)
++{
++	struct rule_entry *pos;
++
++	while (*s == '/') {
++		s++;
++		len--;
++	}
++	list_for_each_entry(pos, &e->hlist, list) {
++		unsigned int l = strlen(pos->name);
++
++		if (l == len && !strcmp(pos->name, s))
++			return pos;
++	}
++
++	return NULL;
++}
++
++static int add_rules(struct rule_entry *e, const char *s)
++{
++	const char *ptr;
++	struct rule_entry *le;
++
++	while (*s == '/')
++		s++;
++	ptr = s;
++
++forward:
++	while(*ptr != '/' && *ptr != '\0')
++		ptr++;
++
++	le = erofs_entry_matched(e, s, ptr - s);
++	if (!le) {
++		struct rule_entry *me = new_entry(s, ptr - s);
++
++		if (!me)
++			return -ENOMEM;
++		list_add_tail(&me->list, &e->hlist);
++		le = me;
++	}
++	e = le;
++
++	if (*ptr++ != '\0') {
++		s = ptr;
++		goto forward;
++	}
++
++	return 0;
++}
++
++static void free_rules(struct list_head *h)
++{
++	struct rule_entry *e, *n;
++
++	list_for_each_entry_safe(e, n, h, list) {
++		list_del(&e->list);
++		free_rules(&e->hlist);
++		free(e->name);
++		free(e);
++	}
++}
++void erofs_init_rules(void)
++{
++	init_list_head(&ext_rule.list);
++	init_list_head(&ext_rule.hlist);
++	ext_rule.name = "/";
++}
++
++void erofs_free_rules(void)
++{
++	free_rules(&ext_rule.hlist);
++}
++
++int erofs_parse_exclude_path(const char *args)
++{
++	const char *str, *ptr = args;
++	const char sep = ',';
++
++forward:
++	while(*ptr != sep && *ptr != '\0')
++		ptr++;
++
++	str = strndup(args, ptr - args);
++	if (!str)
++		goto err_free_paths;
++
++	if (add_rules(&ext_rule, str))
++		goto err_free_paths;
++
++	if (*ptr++ != '\0') {
++		args = ptr;
++		goto forward;
++	}
++
++	return 0;
++
++err_free_paths:
++	erofs_free_rules();
++	return -ENOMEM;
++}
++
++struct rule_entry *erofs_pattern_matched(const char *s)
++{
++	unsigned int len = strlen(s);
++
++	if (!len)
++		return &ext_rule;
++
++	return erofs_entry_matched(&ext_rule, s, len);
++}
+diff --git a/lib/inode.c b/lib/inode.c
+index bd0652b..6278ff8 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -20,6 +20,7 @@
+ #include "erofs/io.h"
+ #include "erofs/compress.h"
+ #include "erofs/xattr.h"
++#include "erofs/exclude.h"
+ 
+ struct erofs_sb_info sbi;
+ 
+@@ -825,6 +826,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 	DIR *_dir;
+ 	struct dirent *dp;
+ 	struct erofs_dentry *d;
++	struct rule_entry *e;
+ 
+ 	ret = erofs_prepare_xattr_ibody(dir->i_srcpath, &dir->i_xattrs);
+ 	if (ret < 0)
+@@ -863,6 +865,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		return ERR_PTR(-errno);
+ 	}
+ 
++	e = erofs_pattern_matched(dir->i_srcpath + strlen(cfg.c_src_path));
+ 	while (1) {
+ 		/*
+ 		 * set errno to 0 before calling readdir() in order to
+@@ -876,7 +879,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		if (is_dot_dotdot(dp->d_name) ||
+ 		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
+ 			continue;
++		if (e) {
++			struct rule_entry *le;
+ 
++			le = erofs_entry_matched(e, dp->d_name,
++						 strlen(dp->d_name));
++			if (le && erofs_is_pattern_end(le))
++				continue;
++		}
+ 		d = erofs_d_alloc(dir, dp->d_name);
+ 		if (IS_ERR(d)) {
+ 			ret = PTR_ERR(d);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 817a6c1..ab718cb 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -21,6 +21,7 @@
+ #include "erofs/io.h"
+ #include "erofs/compress.h"
+ #include "erofs/xattr.h"
++#include "erofs/exclude.h"
+ 
+ #ifdef HAVE_LIBUUID
+ #include <uuid/uuid.h>
+@@ -30,6 +31,7 @@
+ 
+ static struct option long_options[] = {
+ 	{"help", no_argument, 0, 1},
++	{"exclude-path", required_argument, NULL, 'e'},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -127,7 +129,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	char *endptr;
+ 	int opt, i;
+ 
+-	while((opt = getopt_long(argc, argv, "d:x:z:E:T:",
++	while((opt = getopt_long(argc, argv, "d:x:z:E:T:e:",
+ 				 long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'z':
+@@ -178,6 +180,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			}
+ 			break;
+ 
++		case 'e':
++			if (erofs_parse_exclude_path(optarg)) {
++				usage();
++				exit(0);
++			}
++			break;
++
+ 		case 1:
+ 			usage();
+ 			exit(0);
+@@ -334,6 +343,7 @@ int main(int argc, char **argv)
+ 	struct timeval t;
+ 
+ 	erofs_init_configure();
++	erofs_init_rules();
+ 	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
+ 
+ 	cfg.c_legacy_compress = false;
+@@ -429,6 +439,7 @@ exit:
+ 	z_erofs_compress_exit();
+ 	dev_close();
+ 	erofs_exit_configure();
++	erofs_free_rules();
+ 
+ 	if (err) {
+ 		erofs_err("\tCould not format the device : %s\n",
+-- 
+2.17.1
+
 
