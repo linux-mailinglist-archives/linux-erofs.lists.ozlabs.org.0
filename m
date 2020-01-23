@@ -1,37 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id C00DA146529
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 10:54:43 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DF35146308
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 09:08:12 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 483FJT145lzDqVN
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 19:08:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 483HgN72YRzDqVk
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2020 20:54:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=sina.com (client-ip=202.108.3.21;
- helo=r3-21.sinamail.sina.com.cn; envelope-from=blucerlee@sina.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=sina.com
-X-Greylist: delayed 89 seconds by postgrey-1.36 at bilbo;
- Thu, 23 Jan 2020 19:08:04 AEDT
-Received: from r3-21.sinamail.sina.com.cn (r3-21.sinamail.sina.com.cn
- [202.108.3.21])
- by lists.ozlabs.org (Postfix) with SMTP id 483FJN5Vy1zDqPS
- for <linux-erofs@lists.ozlabs.org>; Thu, 23 Jan 2020 19:08:00 +1100 (AEDT)
-Received: from unknown (HELO localhost)([220.196.60.5]) by sina.com with ESMTP
- id 5E2954300001C3A8; Thu, 23 Jan 2020 16:07:20 +0800 (CST)
-X-Sender: blucerlee@sina.com
-X-Auth-ID: blucerlee@sina.com
-X-SMAIL-MID: 160376628778
-From: Li Guifu <blucerlee@sina.com>
-To: LGF <wylgf01@163.com>
-Subject: [PATCH v1] erofs-utils: introduce exclude dirs and files
-Date: Thu, 23 Jan 2020 16:07:11 +0800
-Message-Id: <20200123080711.3442-1-blucerlee@sina.com>
-X-Mailer: git-send-email 2.17.1
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 483HgC712rzDqK1
+ for <linux-erofs@lists.ozlabs.org>; Thu, 23 Jan 2020 20:54:30 +1100 (AEDT)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+ by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+ 23 Jan 2020 01:54:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; d="scan'208";a="222301752"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+ by fmsmga008.fm.intel.com with ESMTP; 23 Jan 2020 01:54:23 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+ (envelope-from <lkp@intel.com>)
+ id 1iuZBv-000Hig-6F; Thu, 23 Jan 2020 17:54:23 +0800
+Date: Thu, 23 Jan 2020 17:53:56 +0800
+From: kbuild test robot <lkp@intel.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: [xiang-erofs:dev-test] BUILD INCOMPLETE
+ 1e4a295567949ee8e6896a7db70afd1b6246966e
+Message-ID: <5e296d34.AM/d9JbV52ZgPbvs%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,334 +52,130 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
+branch HEAD: 1e4a295567949ee8e6896a7db70afd1b6246966e  erofs: clean up z_erofs_submit_queue()
 
-From: Li Guifu <blucer.lee@foxmail.com>
+TIMEOUT after 2887m
 
-Add support exlcude directory when build image with long option
-arg --exclude-path=dir1/dir2,dir11/dir22 or short option arg
--e dir1/dir2,dir11/dir22 that seperated by ','
 
-Signed-off-by: Li Guifu <blucer.lee@foxmail.com>
+Sorry we cannot finish the testset for your branch within a reasonable time.
+It's our fault -- either some build server is down or some build worker is busy
+doing bisects for _other_ trees. The branch will get more complete coverage and
+possible error reports when our build infrastructure is restored or catches up.
+There will be no more build success notification for this branch head, but you
+can expect reasonably good test coverage after waiting for 1 day.
+
+configs timed out: 80
+
+arc                              allyesconfig
+arc                                 defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+
+configs tested: 19
+configs skipped: 0
+
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                              fedora-25
+x86_64                                  kexec
+openrisc             randconfig-a001-20200121
+csky                 randconfig-a001-20200121
+xtensa               randconfig-a001-20200121
+sh                   randconfig-a001-20200121
+s390                 randconfig-a001-20200121
+
 ---
- include/erofs/exclude.h |  28 ++++++++
- lib/Makefile.am         |   2 +-
- lib/exclude.c           | 149 ++++++++++++++++++++++++++++++++++++++++
- lib/inode.c             |  10 +++
- mkfs/main.c             |  13 +++-
- 5 files changed, 200 insertions(+), 2 deletions(-)
- create mode 100644 include/erofs/exclude.h
- create mode 100644 lib/exclude.c
-
-diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
-new file mode 100644
-index 0000000..3f9fb4d
---- /dev/null
-+++ b/include/erofs/exclude.h
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils\include\erofs\exclude.h
-+ * Created by Li Guifu <blucer.lee@foxmail.com>
-+ */
-+
-+#ifndef __EROFS_EXCLUDE_H
-+#define __EROFS_EXCLUDE_H
-+
-+struct rule_entry {
-+	struct list_head list;
-+	struct list_head hlist;
-+	char *name;
-+};
-+
-+void erofs_init_rules(void);
-+void erofs_free_rules(void);
-+int erofs_parse_exclude_path(const char *args);
-+struct rule_entry *erofs_pattern_matched(const char *s);
-+struct rule_entry *erofs_entry_matched(struct rule_entry *e,
-+				   const char *s, unsigned int len);
-+
-+static inline int erofs_is_pattern_end(struct rule_entry *e)
-+{
-+	return list_empty(&e->hlist);
-+}
-+#endif
-+
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 1ff81f9..e4b51e6 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
- 
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
--		      compress.c compressor.c
-+		      compress.c compressor.c exclude.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/exclude.c b/lib/exclude.c
-new file mode 100644
-index 0000000..25a9d32
---- /dev/null
-+++ b/lib/exclude.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils\lib\exclude.c
-+ * Created by Li Guifu <blucer.lee@foxmail.com>
-+ */
-+
-+#include <string.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+
-+#include "erofs/defs.h"
-+#include "erofs/list.h"
-+#include "erofs/print.h"
-+#include "erofs/exclude.h"
-+
-+static struct rule_entry ext_rule;
-+
-+static struct rule_entry *new_entry(const char *s, unsigned int len)
-+{
-+	struct rule_entry *e = malloc(sizeof(struct rule_entry));
-+
-+	if (!e)
-+		return NULL;
-+
-+	e->name = strndup(s, len);
-+	if (!e->name)
-+		goto err_strdup;
-+
-+	init_list_head(&e->hlist);
-+	init_list_head(&e->list);
-+
-+	return e;
-+
-+err_strdup:
-+	free(e);
-+	return NULL;
-+}
-+
-+struct rule_entry *erofs_entry_matched(struct rule_entry *e,
-+				   const char *s, unsigned int len)
-+{
-+	struct rule_entry *pos;
-+
-+	while (*s == '/') {
-+		s++;
-+		len--;
-+	}
-+	list_for_each_entry(pos, &e->hlist, list) {
-+		unsigned int l = strlen(pos->name);
-+
-+		if (l == len && !strcmp(pos->name, s))
-+			return pos;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int add_rules(struct rule_entry *e, const char *s)
-+{
-+	const char *ptr;
-+	struct rule_entry *le;
-+
-+	while (*s == '/')
-+		s++;
-+	ptr = s;
-+
-+forward:
-+	while(*ptr != '/' && *ptr != '\0')
-+		ptr++;
-+
-+	le = erofs_entry_matched(e, s, ptr - s);
-+	if (!le) {
-+		struct rule_entry *me = new_entry(s, ptr - s);
-+
-+		if (!me)
-+			return -ENOMEM;
-+		list_add_tail(&me->list, &e->hlist);
-+		le = me;
-+	}
-+	e = le;
-+
-+	if (*ptr++ != '\0') {
-+		s = ptr;
-+		goto forward;
-+	}
-+
-+	return 0;
-+}
-+
-+static void free_rules(struct list_head *h)
-+{
-+	struct rule_entry *e, *n;
-+
-+	list_for_each_entry_safe(e, n, h, list) {
-+		list_del(&e->list);
-+		free_rules(&e->hlist);
-+		free(e->name);
-+		free(e);
-+	}
-+}
-+void erofs_init_rules(void)
-+{
-+	init_list_head(&ext_rule.list);
-+	init_list_head(&ext_rule.hlist);
-+	ext_rule.name = "/";
-+}
-+
-+void erofs_free_rules(void)
-+{
-+	free_rules(&ext_rule.hlist);
-+}
-+
-+int erofs_parse_exclude_path(const char *args)
-+{
-+	const char *str, *ptr = args;
-+	const char sep = ',';
-+
-+forward:
-+	while(*ptr != sep && *ptr != '\0')
-+		ptr++;
-+
-+	str = strndup(args, ptr - args);
-+	if (!str)
-+		goto err_free_paths;
-+
-+	if (add_rules(&ext_rule, str))
-+		goto err_free_paths;
-+
-+	if (*ptr++ != '\0') {
-+		args = ptr;
-+		goto forward;
-+	}
-+
-+	return 0;
-+
-+err_free_paths:
-+	erofs_free_rules();
-+	return -ENOMEM;
-+}
-+
-+struct rule_entry *erofs_pattern_matched(const char *s)
-+{
-+	unsigned int len = strlen(s);
-+
-+	if (!len)
-+		return &ext_rule;
-+
-+	return erofs_entry_matched(&ext_rule, s, len);
-+}
-diff --git a/lib/inode.c b/lib/inode.c
-index bd0652b..6278ff8 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -20,6 +20,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- struct erofs_sb_info sbi;
- 
-@@ -825,6 +826,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 	DIR *_dir;
- 	struct dirent *dp;
- 	struct erofs_dentry *d;
-+	struct rule_entry *e;
- 
- 	ret = erofs_prepare_xattr_ibody(dir->i_srcpath, &dir->i_xattrs);
- 	if (ret < 0)
-@@ -863,6 +865,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		return ERR_PTR(-errno);
- 	}
- 
-+	e = erofs_pattern_matched(dir->i_srcpath + strlen(cfg.c_src_path));
- 	while (1) {
- 		/*
- 		 * set errno to 0 before calling readdir() in order to
-@@ -876,7 +879,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		if (is_dot_dotdot(dp->d_name) ||
- 		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
- 			continue;
-+		if (e) {
-+			struct rule_entry *le;
- 
-+			le = erofs_entry_matched(e, dp->d_name,
-+						 strlen(dp->d_name));
-+			if (le && erofs_is_pattern_end(le))
-+				continue;
-+		}
- 		d = erofs_d_alloc(dir, dp->d_name);
- 		if (IS_ERR(d)) {
- 			ret = PTR_ERR(d);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 817a6c1..ab718cb 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -21,6 +21,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- #ifdef HAVE_LIBUUID
- #include <uuid/uuid.h>
-@@ -30,6 +31,7 @@
- 
- static struct option long_options[] = {
- 	{"help", no_argument, 0, 1},
-+	{"exclude-path", required_argument, NULL, 'e'},
- 	{0, 0, 0, 0},
- };
- 
-@@ -127,7 +129,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 	char *endptr;
- 	int opt, i;
- 
--	while((opt = getopt_long(argc, argv, "d:x:z:E:T:",
-+	while((opt = getopt_long(argc, argv, "d:x:z:E:T:e:",
- 				 long_options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'z':
-@@ -178,6 +180,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 			}
- 			break;
- 
-+		case 'e':
-+			if (erofs_parse_exclude_path(optarg)) {
-+				usage();
-+				exit(0);
-+			}
-+			break;
-+
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -334,6 +343,7 @@ int main(int argc, char **argv)
- 	struct timeval t;
- 
- 	erofs_init_configure();
-+	erofs_init_rules();
- 	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
- 
- 	cfg.c_legacy_compress = false;
-@@ -429,6 +439,7 @@ exit:
- 	z_erofs_compress_exit();
- 	dev_close();
- 	erofs_exit_configure();
-+	erofs_free_rules();
- 
- 	if (err) {
- 		erofs_err("\tCould not format the device : %s\n",
--- 
-2.17.1
-
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
