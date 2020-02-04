@@ -1,35 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF68B1509E5
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Feb 2020 16:38:55 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48BBnS5GcJzDqN9
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Feb 2020 02:38:52 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CC8C151D54
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Feb 2020 16:32:58 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48Bpc62wFhzDqKj
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Feb 2020 02:32:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=sina.com (client-ip=202.108.3.21;
- helo=r3-21.sinamail.sina.com.cn; envelope-from=blucerlee@sina.com;
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz
+ (client-ip=195.135.220.15; helo=mx2.suse.de; envelope-from=dsterba@suse.cz;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=sina.com
-Received: from r3-21.sinamail.sina.com.cn (r3-21.sinamail.sina.com.cn
- [202.108.3.21])
- by lists.ozlabs.org (Postfix) with SMTP id 48BBnF3h6NzDqHf
- for <linux-erofs@lists.ozlabs.org>; Tue,  4 Feb 2020 02:38:24 +1100 (AEDT)
-Received: from unknown (HELO localhost)([112.65.61.167]) by sina.com with ESMTP
- id 5E383E670002A396; Mon, 3 Feb 2020 23:38:17 +0800 (CST)
-X-Sender: blucerlee@sina.com
-X-Auth-ID: blucerlee@sina.com
-X-SMAIL-MID: 407313628748
-From: Li Guifu <blucerlee@sina.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: introduce exclude dirs and files
-Date: Mon,  3 Feb 2020 23:38:11 +0800
-Message-Id: <20200203153811.5239-1-blucerlee@sina.com>
-X-Mailer: git-send-email 2.17.1
+ dmarc=none (p=none dis=none) header.from=suse.cz
+Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Bpc05GgSzDqK5
+ for <linux-erofs@lists.ozlabs.org>; Wed,  5 Feb 2020 02:32:45 +1100 (AEDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+ by mx2.suse.de (Postfix) with ESMTP id 06D4EAF21;
+ Tue,  4 Feb 2020 15:32:41 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+ id C3975DA80D; Tue,  4 Feb 2020 16:32:27 +0100 (CET)
+Date: Tue, 4 Feb 2020 16:32:27 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v4 00/12] Change readahead API
+Message-ID: <20200204153227.GF2654@twin.jikos.cz>
+Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+ cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com
+References: <20200201151240.24082-1-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201151240.24082-1-willy@infradead.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,324 +54,118 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Reply-To: dsterba@suse.cz
+Cc: cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Sat, Feb 01, 2020 at 07:12:28AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> I would particularly value feedback on this from the gfs2 and ocfs2
+> maintainers.  They have non-trivial changes, and a review on patch 5
+> would be greatly appreciated.
+> 
+> This series adds a readahead address_space operation to eventually
+> replace the readpages operation.  The key difference is that
+> pages are added to the page cache as they are allocated (and
+> then looked up by the filesystem) instead of passing them on a
+> list to the readpages operation and having the filesystem add
+> them to the page cache.  It's a net reduction in code for each
+> implementation, more efficient than walking a list, and solves
+> the direct-write vs buffered-read problem reported by yu kuai at
+> https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+> 
+> v4:
+>  - Rebase on current Linus (a62aa6f7f50a ("Merge tag 'gfs2-for-5.6'"))
 
-From: Li Guifu <blucer.lee@foxmail.com>
+I've tried to test the patchset but haven't got very far, it crashes at boot
+ritht after VFS mounts the root. The patches are from mailinglist, applied on
+current master, bug I saw the same crash with the git branch in your
+repo (probably v1).
 
-Add excluded file feature "--exclude-path=", which can be used
-to build EROFS image without some user specific files or dirs.
-Such multiple files can be seperated by ','.
+(gdb) l *(ext4_mpage_readpages+0x1da/0xc20)
+0xffffffff813753f0 is in ext4_mpage_readpages (fs/ext4/readpage.c:226).
+221             return i_size_read(inode);
+222     }
+223
+224     int ext4_mpage_readpages(struct address_space *mapping, pgoff_t start,
+225                     struct page *page, unsigned nr_pages, bool is_readahead)
+226     {
+227             struct bio *bio = NULL;
+228             sector_t last_block_in_bio = 0;
+229
+230             struct inode *inode = mapping->host;
 
-Signed-off-by: Li Guifu <blucer.lee@foxmail.com>
----
- include/erofs/exclude.h |  28 ++++++++
- lib/Makefile.am         |   2 +-
- lib/exclude.c           | 149 ++++++++++++++++++++++++++++++++++++++++
- lib/inode.c             |  10 +++
- mkfs/main.c             |  11 +++
- 5 files changed, 199 insertions(+), 1 deletion(-)
- create mode 100644 include/erofs/exclude.h
- create mode 100644 lib/exclude.c
-
-diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
-new file mode 100644
-index 0000000..3581046
---- /dev/null
-+++ b/include/erofs/exclude.h
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * exclude.h
-+ * Created by Li Guifu <blucer.lee@foxmail.com>
-+ */
-+
-+#ifndef __EROFS_EXCLUDE_H
-+#define __EROFS_EXCLUDE_H
-+
-+struct exclude_rule {
-+	struct list_head list;
-+	struct list_head hlist;
-+	char *pattern;
-+};
-+
-+void erofs_init_exclude_rules(void);
-+void erofs_free_exclude_rules(void);
-+int erofs_parse_exclude_path(const char *args);
-+struct exclude_rule *erofs_pattern_matched(const char *s);
-+struct exclude_rule *erofs_entry_matched(struct exclude_rule *e,
-+					 const char *s, unsigned int len);
-+
-+static inline int erofs_is_pattern_end(struct exclude_rule *e)
-+{
-+	return list_empty(&e->hlist);
-+}
-+#endif
-+
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 1ff81f9..e4b51e6 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
- 
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
--		      compress.c compressor.c
-+		      compress.c compressor.c exclude.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/exclude.c b/lib/exclude.c
-new file mode 100644
-index 0000000..1c65fb9
---- /dev/null
-+++ b/lib/exclude.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * exclude.c
-+ * Created by Li Guifu <blucer.lee@foxmail.com>
-+ */
-+
-+#include <string.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+#include "erofs/err.h"
-+#include "erofs/defs.h"
-+#include "erofs/list.h"
-+#include "erofs/print.h"
-+#include "erofs/exclude.h"
-+
-+static struct exclude_rule exclude_rules;
-+
-+static struct exclude_rule *new_rule(const char *s, unsigned int len)
-+{
-+	struct exclude_rule *e = malloc(sizeof(struct exclude_rule));
-+
-+	if (!e)
-+		return ERR_PTR(-ENOMEM);
-+
-+	e->pattern = strndup(s, len);
-+	if (!e->pattern)
-+		goto err_strdup;
-+
-+	init_list_head(&e->hlist);
-+	init_list_head(&e->list);
-+
-+	return e;
-+
-+err_strdup:
-+	free(e);
-+	return ERR_PTR(-ENOMEM);
-+}
-+
-+struct exclude_rule *erofs_entry_matched(struct exclude_rule *e,
-+					 const char *s, unsigned int len)
-+{
-+	struct exclude_rule *pos;
-+
-+	while (*s == '/') {
-+		s++;
-+		len--;
-+	}
-+	list_for_each_entry(pos, &e->hlist, list) {
-+		unsigned int l = strlen(pos->pattern);
-+
-+		if (l == len && !strcmp(pos->pattern, s))
-+			return pos;
-+	}
-+
-+	return ERR_PTR(-ENOMEM);
-+}
-+
-+static int add_exclude_rules(struct exclude_rule *e, const char *s)
-+{
-+	const char *ptr;
-+	struct exclude_rule *erule;
-+
-+	while (*s == '/')
-+		s++;
-+	ptr = s;
-+
-+forward:
-+	while(*ptr != '/' && *ptr != '\0')
-+		ptr++;
-+
-+	erule = erofs_entry_matched(e, s, ptr - s);
-+	if (IS_ERR(erule)) {
-+		struct exclude_rule *r = new_rule(s, ptr - s);
-+
-+		if (IS_ERR(r))
-+			return PTR_ERR(r);
-+		list_add_tail(&r->list, &e->hlist);
-+		erule = r;
-+	}
-+	e = erule;
-+
-+	if (*ptr++ != '\0') {
-+		s = ptr;
-+		goto forward;
-+	}
-+
-+	return 0;
-+}
-+
-+static void free_exclude_rules(struct list_head *h)
-+{
-+	struct exclude_rule *e, *n;
-+
-+	list_for_each_entry_safe(e, n, h, list) {
-+		list_del(&e->list);
-+		free_exclude_rules(&e->hlist);
-+		free(e->pattern);
-+		free(e);
-+	}
-+}
-+void erofs_init_exclude_rules(void)
-+{
-+	init_list_head(&exclude_rules.list);
-+	init_list_head(&exclude_rules.hlist);
-+	exclude_rules.pattern = "/";
-+}
-+
-+void erofs_free_exclude_rules(void)
-+{
-+	free_exclude_rules(&exclude_rules.hlist);
-+}
-+
-+int erofs_parse_exclude_path(const char *args)
-+{
-+	const char *str, *ptr = args;
-+	const char sep = ',';
-+
-+forward:
-+	while(*ptr != sep && *ptr != '\0')
-+		ptr++;
-+
-+	str = strndup(args, ptr - args);
-+	if (!str)
-+		goto err_free_paths;
-+
-+	if (add_exclude_rules(&exclude_rules, str))
-+		goto err_free_paths;
-+
-+	if (*ptr++ != '\0') {
-+		args = ptr;
-+		goto forward;
-+	}
-+
-+	return 0;
-+
-+err_free_paths:
-+	erofs_free_exclude_rules();
-+	return -ENOMEM;
-+}
-+
-+struct exclude_rule *erofs_pattern_matched(const char *s)
-+{
-+	unsigned int len = strlen(s);
-+
-+	if (!len)
-+		return &exclude_rules;
-+
-+	return erofs_entry_matched(&exclude_rules, s, len);
-+}
-diff --git a/lib/inode.c b/lib/inode.c
-index bd0652b..567f1b8 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -20,6 +20,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- struct erofs_sb_info sbi;
- 
-@@ -825,6 +826,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 	DIR *_dir;
- 	struct dirent *dp;
- 	struct erofs_dentry *d;
-+	struct exclude_rule *e;
- 
- 	ret = erofs_prepare_xattr_ibody(dir->i_srcpath, &dir->i_xattrs);
- 	if (ret < 0)
-@@ -863,6 +865,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		return ERR_PTR(-errno);
- 	}
- 
-+	e = erofs_pattern_matched(dir->i_srcpath + strlen(cfg.c_src_path));
- 	while (1) {
- 		/*
- 		 * set errno to 0 before calling readdir() in order to
-@@ -876,7 +879,14 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		if (is_dot_dotdot(dp->d_name) ||
- 		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
- 			continue;
-+		if (!IS_ERR(e)) {
-+			struct exclude_rule *le;
- 
-+			le = erofs_entry_matched(e, dp->d_name,
-+						 strlen(dp->d_name));
-+			if (!IS_ERR(le) && erofs_is_pattern_end(le))
-+				continue;
-+		}
- 		d = erofs_d_alloc(dir, dp->d_name);
- 		if (IS_ERR(d)) {
- 			ret = PTR_ERR(d);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 817a6c1..6f32c60 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -21,6 +21,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- #ifdef HAVE_LIBUUID
- #include <uuid/uuid.h>
-@@ -30,6 +31,7 @@
- 
- static struct option long_options[] = {
- 	{"help", no_argument, 0, 1},
-+	{"exclude-path", required_argument, NULL, 2},
- 	{0, 0, 0, 0},
- };
- 
-@@ -178,6 +180,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 			}
- 			break;
- 
-+		case 2:
-+			if (erofs_parse_exclude_path(optarg)) {
-+				usage();
-+				exit(0);
-+			}
-+			break;
-+
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -334,6 +343,7 @@ int main(int argc, char **argv)
- 	struct timeval t;
- 
- 	erofs_init_configure();
-+	erofs_init_exclude_rules();
- 	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
- 
- 	cfg.c_legacy_compress = false;
-@@ -429,6 +439,7 @@ exit:
- 	z_erofs_compress_exit();
- 	dev_close();
- 	erofs_exit_configure();
-+	erofs_free_exclude_rules();
- 
- 	if (err) {
- 		erofs_err("\tCould not format the device : %s\n",
--- 
-2.17.1
-
-
+[    8.008531] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[    8.011482] #PF: supervisor read access in kernel mode
+[    8.014121] #PF: error_code(0x0000) - not-present page
+[    8.016767] PGD 0 P4D 0
+[    8.018352] Oops: 0000 [#1] SMP
+[    8.019716] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.5.0-default+ #955
+[    8.021746] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+[    8.025244] RIP: 0010:ext4_mpage_readpages+0x1da/0xc20
+[    8.026817] Code: 7c 24 4e 00 0f 85 23 04 00 00 44 29 74 24 3c 83 6c 24 48 01 0f 84 4d 04 00 00 80 7c 24 4e 00 0f 85 fc 05 00 00 48 8b 4c 24 18 <48> 8b 01 f6 c4 20 75 89 4c 8b 69 20 b9 0c 00 00 00 2b 4c 24 38 83
+[    8.031957] RSP: 0000:ffffb34f40013988 EFLAGS: 00010292
+[    8.033691] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[    8.035533] RDX: 0000000000000001 RSI: ffffffff960934c0 RDI: ffffffff9681a080
+[    8.036900] RBP: 0000000000000001 R08: ffffb34f40013a68 R09: 0000000000000000
+[    8.038461] R10: 0000000000000038 R11: 0000000000000000 R12: 0000000000000004
+[    8.040698] R13: ffff9668ba4e18e0 R14: 0000000000000001 R15: 0000000000000000
+[    8.042805] FS:  0000000000000000(0000) GS:ffff9668bda00000(0000) knlGS:0000000000000000
+[    8.045396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    8.047233] CR2: 0000000000000000 CR3: 000000002e011001 CR4: 0000000000160ee0
+[    8.049337] Call Trace:
+[    8.050435]  ? __lock_acquire+0xee0/0x1320
+[    8.051833]  ? release_pages+0x310/0x380
+[    8.053265]  ? mark_held_locks+0x50/0x80
+[    8.054468]  ext4_readahead+0x3b/0x50
+[    8.055877]  read_pages+0x65/0x1a0
+[    8.057167]  ? put_pages_list+0x90/0x90
+[    8.058689]  __do_page_cache_readahead+0x24b/0x2a0
+[    8.060394]  generic_file_buffered_read+0x7cf/0x9f0
+[    8.062137]  ? sched_clock+0x5/0x10
+[    8.063451]  ? up_read+0x18/0x240
+[    8.064774]  ? ext4_xattr_get+0x97/0x2c0
+[    8.066178]  new_sync_read+0x111/0x1a0
+[    8.067423]  vfs_read+0xc5/0x180
+[    8.068572]  kernel_read+0x2c/0x40
+[    8.069788]  prepare_binprm+0x171/0x1b0
+[    8.071311]  load_script+0x1c1/0x250
+[    8.072643]  search_binary_handler+0x5f/0x210
+[    8.074135]  exec_binprm+0xd7/0x290
+[    8.075463]  __do_execve_file.isra.0+0x570/0x800
+[    8.077400]  ? rest_init+0x2f1/0x2f5
+[    8.078979]  do_execve+0x21/0x30
+[    8.080420]  kernel_init+0xa4/0x11b
+[    8.081856]  ? rest_init+0x2f5/0x2f5
+[    8.083173]  ret_from_fork+0x24/0x30
+[    8.084695] Modules linked in:
+[    8.086055] CR2: 0000000000000000
+[    8.087572] ---[ end trace 0890c371a706b34a ]---
+[    8.089417] RIP: 0010:ext4_mpage_readpages+0x1da/0xc20
+[    8.116836] BUG: sleeping function called from invalid context at include/linux/percpu-rwsem.h:38
+[    8.119626] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1, name: swapper/0
+[    8.122392] INFO: lockdep is turned off.
+[    8.123694] irq event stamp: 18341344
+[    8.124735] hardirqs last  enabled at (18341343): [<ffffffff95230c42>] free_unref_page_list+0x232/0x270
+[    8.127918] hardirqs last disabled at (18341344): [<ffffffff95002b4b>] trace_hardirqs_off_thunk+0x1a/0x1c
+[    8.131145] softirqs last  enabled at (18341250): [<ffffffff95a00358>] __do_softirq+0x358/0x52b
+[    8.143060] softirqs last disabled at (18341243): [<ffffffff9508ae3d>] irq_exit+0x9d/0xb0
+[    8.145603] CPU: 2 PID: 1 Comm: swapper/0 Tainted: G      D           5.5.0-default+ #955
+[    8.148474] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+[    8.152440] Call Trace:
+[    8.153747]  dump_stack+0x71/0xa0
+[    8.155238]  ___might_sleep.cold+0xa6/0xf9
+[    8.156903]  exit_signals+0x31/0x310
+[    8.158431]  ? __do_execve_file.isra.0+0x570/0x800
+[    8.160179]  do_exit+0xa8/0xd60
+[    8.161632]  ? rest_init+0x2f1/0x2f5
+[    8.163204]  rewind_stack_do_exit+0x17/0x20
+[    8.164931] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    8.167575] Kernel Offset: 0x14000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
