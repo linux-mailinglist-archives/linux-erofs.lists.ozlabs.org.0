@@ -2,53 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D601315BF9C
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2020 14:43:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4460015C095
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2020 15:45:48 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48JHm02HxmzDqVd
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 00:43:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48JK7X5kJFzDqVj
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 01:45:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=rSzaYz7/; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=os.inf.tu-dresden.de (client-ip=141.76.48.99;
+ helo=os.inf.tu-dresden.de; envelope-from=mplaneta@os.inf.tu-dresden.de;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
+ header.from=os.inf.tu-dresden.de
+X-Greylist: delayed 1515 seconds by postgrey-1.36 at bilbo;
+ Fri, 14 Feb 2020 01:45:34 AEDT
+Received: from os.inf.tu-dresden.de (os.inf.tu-dresden.de [141.76.48.99])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48JHlg0qkGzDqSH
- for <linux-erofs@lists.ozlabs.org>; Fri, 14 Feb 2020 00:43:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=57P4Q/GU2ra8qTXmZpI2Z/3+4gqtkjqSHRcsBClNQtg=; b=rSzaYz7/rumIfdFG+MdlTwtWLq
- KJDbhGYitV4p48O5SGrNFqm7b6XrkzPNvpJkvwLsbmPzqOjljvrrI/kGme5i39kPjSCbZwMVJj/gp
- /vZh8pgUFXWHWX8sVicFVEOt39rpppNWYqPj6hi4J8dYGEOsWyymiKiHcRkxOz883kzq6ZSKHqjk3
- fsehuyu0gDewtgLxKPXDc7teJpZ6SJQvrPw6Tb1R8zCLV/rYe5SP5WtC5ElJI7KBaqIo6dB7dEuoo
- fa9oGjFgIiPAK7v7SmERxvNZ+0wRUV+dCDxCmPFGbyPDr/p1ZkogJK5cSzTw9SfomXbDVvK3/M17m
- Yx42/x7g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1j2Elw-0008Pa-QR; Thu, 13 Feb 2020 13:43:16 +0000
-Date: Thu, 13 Feb 2020 05:43:16 -0800
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 00/12] Change readahead API
-Message-ID: <20200213134316.GK7778@bombadil.infradead.org>
-References: <20200125013553.24899-1-willy@infradead.org>
- <20200212203852.8b7e0b28974e41227bd97329@linux-foundation.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48JK7L54WkzDqCw
+ for <linux-erofs@lists.ozlabs.org>; Fri, 14 Feb 2020 01:45:34 +1100 (AEDT)
+Received: from [2002:8d4c:3001:48::120:84] (helo=jupiter)
+ by os.inf.tu-dresden.de with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256) (Exim
+ 4.93.0.3) id 1j2FKe-0000pY-M0; Thu, 13 Feb 2020 15:19:08 +0100
+From: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+To: mplaneta@os.inf.tu-dresden.de, Zhou Wang <wangzhou1@hisilicon.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Alasdair Kergon <agk@redhat.com>,
+ Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+ Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
+ Chao Yu <chao@kernel.org>, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org
+Subject: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
+Date: Thu, 13 Feb 2020 15:18:23 +0100
+Message-Id: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212203852.8b7e0b28974e41227bd97329@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,83 +52,91 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: cluster-devel@redhat.com, Andreas Gruenbacher <agruenba@redhat.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Mark Fasheh <mark@fasheh.com>,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
- linux-fsdevel@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
- linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-btrfs@vger.kernel.org, Joel Becker <jlbec@evilplan.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Feb 12, 2020 at 08:38:52PM -0800, Andrew Morton wrote:
-> On Fri, 24 Jan 2020 17:35:41 -0800 Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > This series adds a readahead address_space operation to eventually
-> > replace the readpages operation.  The key difference is that
-> > pages are added to the page cache as they are allocated (and
-> > then looked up by the filesystem) instead of passing them on a
-> > list to the readpages operation and having the filesystem add
-> > them to the page cache.  It's a net reduction in code for each
-> > implementation, more efficient than walking a list, and solves
-> > the direct-write vs buffered-read problem reported by yu kuai at
-> > https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
-> 
-> Unclear which patch fixes this and how it did it?
+The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+unbound wq. I remove this flag from places where unbound queue is
+allocated. This is supposed to improve code readability.
 
-I suppose the problem isn't fixed until patch 13/13 is applied.
-What yu kuai is seeing is a race where readahead allocates a page,
-then passes it to iomap_readpages, which calls xfs_read_iomap_begin()
-which looks up the extent.  Then thread 2 does DIO which modifies the
-extent, because there's nothing to say that thread 1 is still using it.
-With this patch series, the readpages code puts the locked pages in the
-cache before calling iomap_readpages, so any racing write will block on
-the locked page until readahead is completed.
+1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
 
-If you're tempted to put this into -mm, I have a couple of new changes;
-one to fix a kernel-doc warning for mpage_readahead() and one to add
-kernel-doc for iomap_readahead():
+Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+---
+ drivers/crypto/hisilicon/qm.c | 3 +--
+ drivers/md/dm-crypt.c         | 2 +-
+ drivers/md/dm-verity-target.c | 2 +-
+ drivers/md/raid5.c            | 2 +-
+ fs/erofs/zdata.c              | 2 +-
+ 5 files changed, 5 insertions(+), 6 deletions(-)
 
-+++ b/fs/mpage.c
-@@ -339,9 +339,7 @@
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index b57da5ef8b5b..4a39cb2c6a0b 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -1148,8 +1148,7 @@ struct hisi_qp *hisi_qm_create_qp(struct hisi_qm *qm, u8 alg_type)
+ 	qp->qp_id = qp_id;
+ 	qp->alg_type = alg_type;
+ 	INIT_WORK(&qp->work, qm_qp_work_func);
+-	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
+-				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
++	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
+ 	if (!qp->wq) {
+ 		ret = -EFAULT;
+ 		goto err_free_qp_mem;
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index c6a529873d0f..44d56325fa27 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -3032,7 +3032,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 						  1, devname);
+ 	else
+ 		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+-						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
++						  WQ_MEM_RECLAIM | WQ_UNBOUND,
+ 						  num_online_cpus(), devname);
+ 	if (!cc->crypt_queue) {
+ 		ti->error = "Couldn't create kcryptd queue";
+diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+index 0d61e9c67986..20f92c7ea07e 100644
+--- a/drivers/md/dm-verity-target.c
++++ b/drivers/md/dm-verity-target.c
+@@ -1190,7 +1190,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	}
  
- /**
-  * mpage_readahead - start reads against pages
-- * @mapping: the address_space
-- * @start: The number of the first page to read.
-- * @nr_pages: The number of consecutive pages to read.
-+ * @rac: Describes which pages to read.
-  * @get_block: The filesystem's block mapper function.
-  *
-  * This function walks the pages and the blocks within each page, building and
-
-+++ b/fs/iomap/buffered-io.c
-@@ -395,6 +395,21 @@
- 	return done;
- }
+ 	/* WQ_UNBOUND greatly improves performance when running on ramdisk */
+-	v->verify_wq = alloc_workqueue("kverityd", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
++	v->verify_wq = alloc_workqueue("kverityd", WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+ 	if (!v->verify_wq) {
+ 		ti->error = "Cannot allocate workqueue";
+ 		r = -ENOMEM;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index ba00e9877f02..cd93a1731b82 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -8481,7 +8481,7 @@ static int __init raid5_init(void)
+ 	int ret;
  
-+/**
-+ * iomap_readahead - Attempt to read pages from a file.
-+ * @rac: Describes the pages to be read.
-+ * @ops: The operations vector for the filesystem.
-+ *
-+ * This function is for filesystems to call to implement their readahead
-+ * address_space operation.
-+ *
-+ * Context: The file is pinned by the caller, and the pages to be read are
-+ * all locked and have an elevated refcount.  This function will unlock
-+ * the pages (once I/O has completed on them, or I/O has been determined to
-+ * not be necessary).  It will also decrease the refcount once the pages
-+ * have been submitted for I/O.  After this point, the page may be removed
-+ * from the page cache, and should not be referenced.
-+ */
- void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
+ 	raid5_wq = alloc_workqueue("raid5wq",
+-		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE|WQ_SYSFS, 0);
++		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_SYSFS, 0);
+ 	if (!raid5_wq)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 80e47f07d946..b2a679f720e9 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -43,7 +43,7 @@ void z_erofs_exit_zip_subsystem(void)
+ static inline int z_erofs_init_workqueue(void)
  {
- 	struct inode *inode = rac->mapping->host;
+ 	const unsigned int onlinecpus = num_possible_cpus();
+-	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE;
++	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI;
+ 
+ 	/*
+ 	 * no need to spawn too many threads, limiting threads could minimum
+-- 
+2.24.1
 
-I'll do a v6 with those changes soon, but I would really like a bit more
-review from filesystem people, particularly ocfs2 and gfs2.
