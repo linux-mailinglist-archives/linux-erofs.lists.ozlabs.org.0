@@ -1,57 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id E446115AF9D
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2020 19:19:29 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48Hnwb0wG5zDqQP
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2020 05:19:27 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id A525915B8B1
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2020 05:39:12 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48J3gd3CLxzDqSc
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2020 15:39:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:e::133;
- helo=bombadil.infradead.org;
- envelope-from=batv+0636056a4212f82c3197+6016+infradead.org+hch@bombadil.srs.infradead.org;
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=linux-foundation.org (client-ip=198.145.29.99;
+ helo=mail.kernel.org; envelope-from=akpm@linux-foundation.org;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=qC1Fti8l; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none)
+ header.from=linux-foundation.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=default header.b=tbYlCnFj; dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48Hnv93S7MzDqRY
- for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2020 05:18:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=4+pGNKZQNPPjUYhUfxAE2vdkfqWETPzu/0lbzblOiLM=; b=qC1Fti8lZ0koII3U5Sa2TjOM28
- nosTSzdm25oQSeIMGq07AVlCw20djEBGUpWliyiKQwITDdQcoaxm1uXqtkNjwxfTpJNhiOtI8jhOb
- r7GEIlGzU7vqitlAbk9aJYzHnlfzWJw31vQC/Z3Til1uih5qj+enBDV26fhdRz3DdCxYbTIaNuUIX
- 2OnWR1DrQfnRApPtzcldB3qtqOzSKFM+aq41f9gck471QDMk1xCwWxmFurCQfy00JF0ZQaamhxAYP
- Bw2GDAtxWrBD9CBq026AuSAIvMitA8b0oUDL/p3WShFpcX4ybJFYzF5XIQaHgMzYrROtQoZVzZ4bv
- WrZl7SaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1j1waR-0004Q0-E1; Wed, 12 Feb 2020 18:18:11 +0000
-Date: Wed, 12 Feb 2020 10:18:11 -0800
-From: Christoph Hellwig <hch@infradead.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48J3gN269QzDqBS
+ for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2020 15:38:55 +1100 (AEDT)
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net
+ [73.231.172.41])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 18ED8206D7;
+ Thu, 13 Feb 2020 04:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1581568733;
+ bh=bv+0VtaMuMuDtzLYPkieCdmd5QR4JDDM6y220mrx378=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+ b=tbYlCnFj7ggSwK4cyg70rWxQrzUahCW2yOeoE3sZ/LlJjzcrzNUchpk3R5qfHHiaz
+ SHB7larZ7765fztRfvP4xU4fKtp8W2fvEWd3ELQPm1bzbJvc27CPLFeH48zYRK25QU
+ yPUch6WEdYHhO2730Z2ntH6BUkthDgGeRFY+B2E4=
+Date: Wed, 12 Feb 2020 20:38:52 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
-Message-ID: <20200212181811.GC9756@infradead.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-5-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211010348.6872-5-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
- bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Subject: Re: [PATCH 00/12] Change readahead API
+Message-Id: <20200212203852.8b7e0b28974e41227bd97329@linux-foundation.org>
+In-Reply-To: <20200125013553.24899-1-willy@infradead.org>
+References: <20200125013553.24899-1-willy@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,8 +58,8 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+Cc: cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
  linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
  linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
  linux-btrfs@vger.kernel.org
@@ -72,14 +67,18 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 10, 2020 at 05:03:39PM -0800, Matthew Wilcox wrote:
-> +struct readahead_control {
-> +	struct file *file;
-> +	struct address_space *mapping;
-> +/* private: use the readahead_* accessors instead */
-> +	pgoff_t start;
-> +	unsigned int nr_pages;
-> +	unsigned int batch_count;
+On Fri, 24 Jan 2020 17:35:41 -0800 Matthew Wilcox <willy@infradead.org> wrote:
 
-We often use __ prefixes for the private fields to make that a little
-more clear.
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This series adds a readahead address_space operation to eventually
+> replace the readpages operation.  The key difference is that
+> pages are added to the page cache as they are allocated (and
+> then looked up by the filesystem) instead of passing them on a
+> list to the readpages operation and having the filesystem add
+> them to the page cache.  It's a net reduction in code for each
+> implementation, more efficient than walking a list, and solves
+> the direct-write vs buffered-read problem reported by yu kuai at
+> https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+
+Unclear which patch fixes this and how it did it?
