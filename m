@@ -2,69 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2322015D0A1
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 04:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D34F15D0D8
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 05:04:31 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48JfFF1T5SzDqXd
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 14:36:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48Jfs80dQVzDqXd
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2020 15:04:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=nvidia.com (client-ip=216.228.121.65;
- helo=hqnvemgate26.nvidia.com; envelope-from=jhubbard@nvidia.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=hisilicon.com (client-ip=45.249.212.35; helo=huawei.com;
+ envelope-from=wangzhou1@hisilicon.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=nvidia.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=nvidia.com header.i=@nvidia.com header.a=rsa-sha256
- header.s=n1 header.b=TZf2FK1b; dkim-atps=neutral
-Received: from hqnvemgate26.nvidia.com (hqnvemgate26.nvidia.com
- [216.228.121.65])
+ dmarc=none (p=none dis=none) header.from=hisilicon.com
+X-Greylist: delayed 971 seconds by postgrey-1.36 at bilbo;
+ Fri, 14 Feb 2020 15:04:15 AEDT
+Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48JfF80dhRzDqX9
- for <linux-erofs@lists.ozlabs.org>; Fri, 14 Feb 2020 14:36:43 +1100 (AEDT)
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by
- hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
- id <B5e4615b90000>; Thu, 13 Feb 2020 19:36:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
- by hqpgpgate101.nvidia.com (PGP Universal service);
- Thu, 13 Feb 2020 19:36:39 -0800
-X-PGP-Universal: processed;
- by hqpgpgate101.nvidia.com on Thu, 13 Feb 2020 19:36:39 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 03:36:39 +0000
-Subject: Re: [PATCH v5 03/13] mm: Put readahead pages in cache earlier
-To: Matthew Wilcox <willy@infradead.org>, <linux-fsdevel@vger.kernel.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-4-willy@infradead.org>
-X-Nvconfidentiality: public
-From: John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b0cdd7b4-e103-a884-d8f7-2378905f7b3b@nvidia.com>
-Date: Thu, 13 Feb 2020 19:36:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Jfrv1wRPzDqX9
+ for <linux-erofs@lists.ozlabs.org>; Fri, 14 Feb 2020 15:04:09 +1100 (AEDT)
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id C36B0383C2D9BD887B39;
+ Fri, 14 Feb 2020 11:47:50 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Feb 2020
+ 11:47:47 +0800
+Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
+To: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>, Herbert Xu
+ <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>,
+ <dm-devel@redhat.com>, Song Liu <song@kernel.org>, Gao Xiang
+ <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-raid@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>
+References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E461863.3000004@hisilicon.com>
+Date: Fri, 14 Feb 2020 11:47:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <20200211010348.6872-4-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
- t=1581651385; bh=jodX0tIvBxH/fc59T73o9SPk6S3e+yDpKWnaNwpeJKk=;
- h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
- Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
- X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
- Content-Transfer-Encoding;
- b=TZf2FK1bESe06GQrr3QWPstwI5CI6ADgd3ekfkEEBCxsznAzp/43OrXvLIdUwk6v9
- 4PvhXV9KA2GzBIO5FVXywx6Yx4JZowfMDze3Z/5j54bStQRS61QiScPwZCgRgQ9xzt
- 7ai4uLewCJr+qbdYGw8j6AC1KIuz1sHeXguO+TyPFfs/5Cwmjn/6ETP0ytHeXfze8x
- aZXVC6Py5XJwaXp8pJ7Om4/J3JPHPE/2VYV1PRSOmD236D2IEEGhBl9TBFg0OLQxCY
- GWBBoVBH3FzkluFiC7gp+exF/Tlgdi2RCth1YbNLQQ91aeVldSsZAblIBpXwiH2ihX
- ePKdIST/oKi4w==
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -76,176 +58,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-ext4@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2/10/20 5:03 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On 2020/2/13 22:18, Maksym Planeta wrote:
+> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+> unbound wq. I remove this flag from places where unbound queue is
+> allocated. This is supposed to improve code readability.
 > 
-> At allocation time, put the pages in the cache unless we're using
-> ->readpages.
+> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 > ---
->  mm/readahead.c | 66 ++++++++++++++++++++++++++++++++------------------
->  1 file changed, 42 insertions(+), 24 deletions(-)
+>  drivers/crypto/hisilicon/qm.c | 3 +--
+>  drivers/md/dm-crypt.c         | 2 +-
+>  drivers/md/dm-verity-target.c | 2 +-
+>  drivers/md/raid5.c            | 2 +-
+>  fs/erofs/zdata.c              | 2 +-
+>  5 files changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index fc77d13af556..96c6ca68a174 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -114,10 +114,10 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
->  EXPORT_SYMBOL(read_cache_pages);
->  
->  static void read_pages(struct address_space *mapping, struct file *filp,
-> -		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
-> +		struct list_head *pages, pgoff_t start,
-> +		unsigned int nr_pages)
->  {
->  	struct blk_plug plug;
-> -	unsigned page_idx;
->  
->  	blk_start_plug(&plug);
->  
-> @@ -125,18 +125,17 @@ static void read_pages(struct address_space *mapping, struct file *filp,
->  		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
->  		/* Clean up the remaining pages */
->  		put_pages_list(pages);
-> -		goto out;
-> -	}
-> +	} else {
-> +		struct page *page;
-> +		unsigned long index;
->  
-> -	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
-> -		struct page *page = lru_to_page(pages);
-> -		list_del(&page->lru);
-> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
-> +		xa_for_each_range(&mapping->i_pages, index, page, start,
-> +				start + nr_pages - 1) {
->  			mapping->a_ops->readpage(filp, page);
-> -		put_page(page);
-> +			put_page(page);
-> +		}
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index b57da5ef8b5b..4a39cb2c6a0b 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1148,8 +1148,7 @@ struct hisi_qp *hisi_qm_create_qp(struct hisi_qm *qm, u8 alg_type)
+>  	qp->qp_id = qp_id;
+>  	qp->alg_type = alg_type;
+>  	INIT_WORK(&qp->work, qm_qp_work_func);
+> -	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
+> -				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
+> +	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
+
+I am OK with qm code.
+
+Thanks!
+Zhou
+
+>  	if (!qp->wq) {
+>  		ret = -EFAULT;
+>  		goto err_free_qp_mem;
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index c6a529873d0f..44d56325fa27 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -3032,7 +3032,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  						  1, devname);
+>  	else
+>  		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+> -						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
+> +						  WQ_MEM_RECLAIM | WQ_UNBOUND,
+>  						  num_online_cpus(), devname);
+>  	if (!cc->crypt_queue) {
+>  		ti->error = "Couldn't create kcryptd queue";
+> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> index 0d61e9c67986..20f92c7ea07e 100644
+> --- a/drivers/md/dm-verity-target.c
+> +++ b/drivers/md/dm-verity-target.c
+> @@ -1190,7 +1190,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 >  	}
 >  
-> -out:
->  	blk_finish_plug(&plug);
->  }
+>  	/* WQ_UNBOUND greatly improves performance when running on ramdisk */
+> -	v->verify_wq = alloc_workqueue("kverityd", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+> +	v->verify_wq = alloc_workqueue("kverityd", WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+>  	if (!v->verify_wq) {
+>  		ti->error = "Cannot allocate workqueue";
+>  		r = -ENOMEM;
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index ba00e9877f02..cd93a1731b82 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -8481,7 +8481,7 @@ static int __init raid5_init(void)
+>  	int ret;
 >  
-> @@ -149,17 +148,18 @@ static void read_pages(struct address_space *mapping, struct file *filp,
->   * Returns the number of pages requested, or the maximum amount of I/O allowed.
->   */
->  unsigned long __do_page_cache_readahead(struct address_space *mapping,
-> -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
-> +		struct file *filp, pgoff_t start, unsigned long nr_to_read,
->  		unsigned long lookahead_size)
+>  	raid5_wq = alloc_workqueue("raid5wq",
+> -		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE|WQ_SYSFS, 0);
+> +		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_SYSFS, 0);
+>  	if (!raid5_wq)
+>  		return -ENOMEM;
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 80e47f07d946..b2a679f720e9 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -43,7 +43,7 @@ void z_erofs_exit_zip_subsystem(void)
+>  static inline int z_erofs_init_workqueue(void)
 >  {
->  	struct inode *inode = mapping->host;
-> -	struct page *page;
->  	unsigned long end_index;	/* The last page we want to read */
->  	LIST_HEAD(page_pool);
->  	int page_idx;
-> +	pgoff_t page_offset = start;
->  	unsigned long nr_pages = 0;
->  	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-> +	bool use_list = mapping->a_ops->readpages;
->  
->  	if (isize == 0)
->  		goto out;
-> @@ -170,7 +170,7 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
->  	 * Preallocate as many pages as we will need.
->  	 */
->  	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
-> -		pgoff_t page_offset = offset + page_idx;
-> +		struct page *page;
-
-I see two distinct things happening in this patch, and I think they want to each be
-in their own patch:
-
-1) A significant refactoring of the page loop, and
-
-2) Changing the place where the page is added to the page cache. (Only this one is 
-   mentioned in the commit description.)
-
-We'll be more likely to spot any errors if these are teased apart.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
->  
->  		if (page_offset > end_index)
->  			break;
-> @@ -178,25 +178,43 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
->  		page = xa_load(&mapping->i_pages, page_offset);
->  		if (page && !xa_is_value(page)) {
->  			/*
-> -			 * Page already present?  Kick off the current batch of
-> -			 * contiguous pages before continuing with the next
-> -			 * batch.
-> +			 * Page already present?  Kick off the current batch
-> +			 * of contiguous pages before continuing with the
-> +			 * next batch.
-> +			 * It's possible this page is the page we should
-> +			 * be marking with PageReadahead.  However, we
-> +			 * don't have a stable ref to this page so it might
-> +			 * be reallocated to another user before we can set
-> +			 * the bit.  There's probably another page in the
-> +			 * cache marked with PageReadahead from the other
-> +			 * process which accessed this file.
->  			 */
-> -			if (nr_pages)
-> -				read_pages(mapping, filp, &page_pool, nr_pages,
-> -						gfp_mask);
-> -			nr_pages = 0;
-> -			continue;
-> +			goto skip;
->  		}
->  
->  		page = __page_cache_alloc(gfp_mask);
->  		if (!page)
->  			break;
-> -		page->index = page_offset;
-> -		list_add(&page->lru, &page_pool);
-> +		if (use_list) {
-> +			page->index = page_offset;
-> +			list_add(&page->lru, &page_pool);
-> +		} else if (add_to_page_cache_lru(page, mapping, page_offset,
-> +					gfp_mask) < 0) {
-> +			put_page(page);
-> +			goto skip;
-> +		}
-> +
->  		if (page_idx == nr_to_read - lookahead_size)
->  			SetPageReadahead(page);
->  		nr_pages++;
-> +		page_offset++;
-> +		continue;
-> +skip:
-> +		if (nr_pages)
-> +			read_pages(mapping, filp, &page_pool, start, nr_pages);
-> +		nr_pages = 0;
-> +		page_offset++;
-> +		start = page_offset;
->  	}
+>  	const unsigned int onlinecpus = num_possible_cpus();
+> -	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE;
+> +	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI;
 >  
 >  	/*
-> @@ -205,7 +223,7 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
->  	 * will then handle the error.
->  	 */
->  	if (nr_pages)
-> -		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
-> +		read_pages(mapping, filp, &page_pool, start, nr_pages);
->  	BUG_ON(!list_empty(&page_pool));
->  out:
->  	return nr_pages;
+>  	 * no need to spawn too many threads, limiting threads could minimum
 > 
+
