@@ -2,55 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3901160428
-	for <lists+linux-erofs@lfdr.de>; Sun, 16 Feb 2020 14:26:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90E1616042A
+	for <lists+linux-erofs@lfdr.de>; Sun, 16 Feb 2020 14:32:45 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48L7Dc6TyHzDqdx
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 00:26:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48L7Mt2xsyzDqdx
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 00:32:42 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1581859584;
-	bh=gtYn+2pH8fqWIcEEsn+Q9upKBNntWijpDZiLMdZeTpE=;
+	s=201707; t=1581859962;
+	bh=azVc5mBDSa5NOS51AdJsc63IlsYhmgQ480+rYdrq850=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=WYhYCULwqEbklSDCsbwQcAhmKocHBYp9az8z1Qoln7mFkFDU7i8CGT3q/yO6Z1N7T
-	 AT9ycitWYKXZZBEn4jSjANAycUQzyn1iTcaxyeTlfWR2JCEMMhgCsSNbflvrnLojqG
-	 OozqQ9hi6NRG1T968f/Ir0dtJK1EquhaxyRE+QrA62vfoZ/oa6eyTwmQ4eLesF11f3
-	 HBngjiartQAgwMh+MlFgZS/GvoUJrk7wnh/Bp8OGLyRbDD6bKm97dLRTeR0If0E0vG
-	 RoOZSCu/+oWhRq+3fLDKjkI5zTNkKr7oJhEa5lH0o2EwTtcv+pibKDftdxbtMuRUzT
-	 S06N22P1OpR1A==
+	b=bV62EXtnO6Cv1GVQ08/WvVXESIhwdZxuY9JoKviWHRlANL49hJeN3ZRn1DG3eTE8+
+	 8J9NyCUoH+Y+qtMRXHe6dkdLyWhs6KvkUMqhSP8md46Bi9H4SqFJSGMcf6MQYCPJhx
+	 jyfoRabwa5ezIRVbalDgcH17BJoLyV7d1McpVhLSVotbnxCHpOdfJPZSEB2hvoCxCb
+	 r+XhmNnqDqQfJupz8hJWAgle6FAeNfGYatG/9G1qMgHhnnuUN4F1behyKN4NxBlSIb
+	 m2G8/E701tn5neSQDtQ1mm9hO69SQTX/o3rtsQwWRdYZmqgypuPUNYiQSnau5Sxqe+
+	 vAxxPU4rz4zGQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.4;
- helo=out30-4.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.53;
+ helo=out30-53.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
  header.from=aliyun.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=Dvt2I3m8; dkim-atps=neutral
-Received: from out30-4.freemail.mail.aliyun.com
- (out30-4.freemail.mail.aliyun.com [115.124.30.4])
+ header.s=s1024 header.b=EYT5RE3h; dkim-atps=neutral
+Received: from out30-53.freemail.mail.aliyun.com
+ (out30-53.freemail.mail.aliyun.com [115.124.30.53])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48L7DR6lzhzDqdf
- for <linux-erofs@lists.ozlabs.org>; Mon, 17 Feb 2020 00:26:15 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48L7Mp1gCtzDqdf
+ for <linux-erofs@lists.ozlabs.org>; Mon, 17 Feb 2020 00:32:37 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1581859567; h=From:To:Subject:Date:Message-Id;
- bh=FOZH7UGcdrrxuRDJX5UPRivN/mv4LFV4hmmzrEUfSdQ=;
- b=Dvt2I3m8iaG7GfGN3p048f16zXeQJxO+Qbrx4tMwUCpNdi5aH2xMK1OJSSDgNNaUhcNjOooYgOG3wVINu6dU/oYzllk5FVjbKMy1kUt7ZH+wDyLWLzO4kJ3+z8MUc/sy5p1ozYUjTczt6pFROchZtNueI16wue9fFiPC2qUo9eM=
+ t=1581859943; h=From:To:Subject:Date:Message-Id;
+ bh=reMBb8Q5Up5MA+NvOmWKzWSYNpotKS/mTswc8XhEWwY=;
+ b=EYT5RE3hKp0lsPUSGDAHPmhpHqiteUiKqZdTA9u4xK/8RM4tYJYdS9cjslffVU1ajpIiicEoF8AOSTD5fNSYTVhKLf0JpK4UCh3TrvDCxnaO+dLA26epBNVkqfhTuZkGoCJHa9F4pbcYLtv7FptYluMT7R+fZRVpmZeAW4ZhpM4=
 X-Alimail-AntiSpam: AC=CONTINUE; BC=0.07357798|-1; CH=green;
  DM=CONTINUE|CONTINUE|true|0.171228-0.00788569-0.820886;
- DS=CONTINUE|ham_alarm|0.0013084-0.000113428-0.998578; FP=0|0|0|0|0|-1|-1|-1;
- HT=e01e04420; MF=bluce.lee@aliyun.com; NM=1; PH=DS; RN=5; RT=5; SR=0;
- TI=SMTPD_---0Tq5JATn_1581859565; 
+ DS=CONTINUE|ham_alarm|0.0013084-0.000113428-0.998578;
+ FP=10117728157975446754|1|1|3|0|-1|-1|-1; HT=e01e07488;
+ MF=bluce.lee@aliyun.com; NM=1; PH=DS; RN=5; RT=5; SR=0;
+ TI=SMTPD_---0Tq5JB-G_1581859941; 
 Received: from localhost(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0Tq5JATn_1581859565) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 16 Feb 2020 21:26:05 +0800
+ fp:SMTPD_---0Tq5JB-G_1581859941) by smtp.aliyun-inc.com(127.0.0.1);
+ Sun, 16 Feb 2020 21:32:21 +0800
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4] erofs-utils: introduce exclude dirs and files
-Date: Sun, 16 Feb 2020 21:26:03 +0800
-Message-Id: <20200216132603.49042-1-bluce.lee@aliyun.com>
+Subject: [PATCH v5] erofs-utils: introduce exclude dirs and files
+Date: Sun, 16 Feb 2020 21:32:19 +0800
+Message-Id: <20200216133219.50216-1-bluce.lee@aliyun.com>
 X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -81,13 +82,17 @@ options.
 Signed-off-by: Li Guifu <blucer.lee@foxmail.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
+change since v5:
+ - add regex free
+ - clean log print
+
  include/erofs/exclude.h |  28 +++++++++
  lib/Makefile.am         |   2 +-
- lib/exclude.c           | 127 ++++++++++++++++++++++++++++++++++++++++
+ lib/exclude.c           | 133 ++++++++++++++++++++++++++++++++++++++++
  lib/inode.c             |   5 ++
  man/mkfs.erofs.1        |   8 +++
- mkfs/main.c             |  36 ++++++++++--
- 6 files changed, 199 insertions(+), 7 deletions(-)
+ mkfs/main.c             |  36 +++++++++--
+ 6 files changed, 205 insertions(+), 7 deletions(-)
  create mode 100644 include/erofs/exclude.h
  create mode 100644 lib/exclude.c
 
@@ -140,10 +145,10 @@ index 1ff81f9..e4b51e6 100644
  liberofs_la_CFLAGS += ${LZ4_CFLAGS}
 diff --git a/lib/exclude.c b/lib/exclude.c
 new file mode 100644
-index 0000000..a293eec
+index 0000000..268a6f7
 --- /dev/null
 +++ b/lib/exclude.c
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,133 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * erofs-utils/lib/exclude.c
@@ -201,7 +206,7 @@ index 0000000..a293eec
 +	}
 +
 +	list_add_tail(&r->list, h);
-+	erofs_dump("Insert exclude path:[%s]\n", s);
++	erofs_info("Insert exclude:[%s]\n", s);
 +	return r;
 +err_rule:
 +	free(r);
@@ -215,6 +220,12 @@ index 0000000..a293eec
 +	list_for_each_entry_safe(r, n, &exclude_head, list) {
 +		list_del(&r->list);
 +		free(r->pattern);
++		free(r);
++	}
++
++	list_for_each_entry_safe(r, n, &regex_exclude_head, list) {
++		list_del(&r->list);
++		regfree(r->reg);
 +		free(r);
 +	}
 +}
