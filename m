@@ -1,58 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id A952416131D
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 14:17:37 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48Lkzy2bLvzDqjJ
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 00:17:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1581945454;
-	bh=67u7qJ4kopESfNWHNWIqTwhTGECFzUWNxHmK/Jdiv4M=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=J9DweTBj/O7yVflV+/vEv2Ai2vkDQyCRCVea+5e+Mi9TXDqHpWSAIIscTwQEXN98L
-	 3OZ87cL0tWSZMyS4N7aCjg//xjoHGFlrIGjmt72EZPIChoAEEwOTO0YBCdvu7krMlH
-	 yfX25euP1EyMmnQgJupP7O2ydTupWty9mZp8weI5gffA97WXzN5uU5kVMS9sKyqRp6
-	 3Rgo6Tj5jwF4IFsrQqNczWckrpGUVRRC7n8QkkUfycLdJgMhOxNbIox4MsAr7b1DVI
-	 kmumhz9TdMJ1TceUlbDfdQ2VdB/CsIZd+bqfinsoJ1WVOD6vSj3V8i7XC07OQWm2nc
-	 ih4e9f90G4low==
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FBA161771
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 17:13:42 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48Lpv71CmQzDqX2
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 03:13:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.40;
- helo=out30-40.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=bombadil.infradead.org (client-ip=2607:7c80:54:e::133;
+ helo=bombadil.infradead.org; envelope-from=mchehab@bombadil.infradead.org;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
- header.from=aliyun.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=llKwYabl; dkim-atps=neutral
-Received: from out30-40.freemail.mail.aliyun.com
- (out30-40.freemail.mail.aliyun.com [115.124.30.40])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=GMuzjHpY; 
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48LkzX6vRrzDqQK
- for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 00:17:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1581945417; h=From:To:Subject:Date:Message-Id;
- bh=rXiLp8UdwzA5xHJp/6RsCC6N5PHT0N8MSWA99G5aons=;
- b=llKwYablEXcBI6LozfYU5+naWTdpqEmB16d0KcN+fjcYnxnrulyQiv5i0o67VaqSRH9UY1Tly+4bmU3BoGQPiE393NvKyUYAbgvy8Zs1VNK1LeTrxD/3eTa7ysH8AcBERmbvieI/LePOl1/C2QXGSIuzRhYRlNirtZboB1rk5MM=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.06357798|-1; CH=green;
- DM=CONTINUE|CONTINUE|true|0.171228-0.00788569-0.820886;
- DS=CONTINUE|ham_alarm|0.0013084-0.000113428-0.998578;
- FP=10115476358161761506|2|1|3|0|-1|-1|-1; HT=e01e07488;
- MF=bluce.lee@aliyun.com; NM=1; PH=DS; RN=4; RT=4; SR=0;
- TI=SMTPD_---0TqA7Tzz_1581945414; 
-Received: from localhost(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0TqA7Tzz_1581945414) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 17 Feb 2020 21:16:55 +0800
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6] erofs-utils: introduce exclude dirs and files
-Date: Mon, 17 Feb 2020 21:16:53 +0800
-Message-Id: <20200217131653.54489-1-bluce.lee@aliyun.com>
-X-Mailer: git-send-email 2.17.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Lptz3m0czDq67
+ for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 03:13:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+ MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+ Content-ID:Content-Description:In-Reply-To:References;
+ bh=79mrsdMpZPq81EcHssJU6sAclSp6O+HRgk1tiwv0Vl8=; b=GMuzjHpYp20+IP116h8bDp0g41
+ ttVv3QJJR7FUdGUEREIUbjI+FUFjDSURRen682to2IXcwuRloQMyivCGW0qj86X72Kvp1WppX4YSF
+ KBNTZhQI4rrwMsNuFOEBTsFYSoyIjfuhXQtkFp51xA162kdPm79JVt9XIZ0172I/NqXRxeERVPF9L
+ kLpRpq7LmR/RnnjrPy/y+l34kcRu6hNJOaGfDY1XqGzt5O0+3y1BFL1SEB5+/2nSR6nonL9n110Kx
+ N4rWXQRqkj1rqfV3jAF6Ow+Wmr+s/DXyeHln9cn6x1qRSToaShgKICUy4iF4JXV3I10hB9VhSPmLY
+ BoN4dDdw==;
+Received: from ip-109-41-129-189.web.vodafone.de ([109.41.129.189]
+ helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1j3j0c-0006ud-6y; Mon, 17 Feb 2020 16:12:34 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
+ (envelope-from <mchehab@bombadil.infradead.org>)
+ id 1j3j0Z-000fYx-H7; Mon, 17 Feb 2020 17:12:31 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Subject: [PATCH 00/44] Manually convert filesystem FS documents to ReST
+Date: Mon, 17 Feb 2020 17:11:46 +0100
+Message-Id: <cover.1581955849.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,348 +62,185 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li Guifu <bluce.lee@aliyun.com>
-Cc: Li GuiFu <bluce.lee@aliyun.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>,
+ Martin Brandenburg <martin@omnibond.com>, Jan Kara <jack@suse.cz>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Amir Goldstein <amir73il@gmail.com>, Bob Copeland <me@bobcopeland.com>,
+ David Howells <dhowells@redhat.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ linux-mtd@lists.infradead.org, Tyler Hicks <code@tyhicks.com>,
+ linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>,
+ Naohiro Aota <naohiro.aota@wdc.com>, Christoph Hellwig <hch@infradead.org>,
+ linux-nilfs@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+ Sage Weil <sage@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>,
+ Chris Mason <clm@fb.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+ cluster-devel@redhat.com, v9fs-developer@lists.sourceforge.net,
+ Gao Xiang <xiang@kernel.org>, linux-ext4@vger.kernel.org,
+ Salah Triki <salah.triki@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>,
+ devel@lists.orangefs.org, ecryptfs@vger.kernel.org,
+ Eric Van Hensbergen <ericvh@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
+ linux-fsdevel@vger.kernel.org, Joel Becker <jlbec@evilplan.org>,
+ "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ ceph-devel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+ Anton Altaparmakov <anton@tuxera.com>, Damien Le Moal <damien.lemoal@wdc.com>,
+ Luis de Bethencourt <luisbg@kernel.org>, Nicolas Pitre <nico@fluxnic.net>,
+ linux-ntfs-dev@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
+ Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>,
+ Phillip Lougher <phillip@squashfs.org.uk>, Johannes Thumshirn <jth@kernel.org>,
+ linux-erofs@lists.ozlabs.org, linux-karma-devel@lists.sourceforge.net,
+ ocfs2-devel@oss.oracle.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Li GuiFu <bluce.lee@aliyun.com>
+There are lots of plain text documents under Documentation/filesystems.
 
-Add excluded file feature "--exclude-path=" and '--exclude-regex=',
-which can be used to build EROFS image without some user specific
-files or dirs. Note that you may give multiple '--exclude-path'
-or '--exclude-regex' options.
+Manually convert several of those to ReST and add them to the index file.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
----
- change since v6, fix as comments suggested by Gao Xiang
-  - update a new email address
-  - refact regex and pattern match
+Mauro Carvalho Chehab (44):
+  docs: filesystems: convert 9p.txt to ReST
+  docs: filesystems: convert adfs.txt to ReST
+  docs: filesystems: convert affs.txt to ReST
+  docs: filesystems: convert afs.txt to ReST
+  docs: filesystems: convert autofs-mount-control.txt to ReST
+  docs: filesystems: convert befs.txt to ReST
+  docs: filesystems: convert bfs.txt to ReST
+  docs: filesystems: convert btrfs.txt to ReST
+  docs: filesystems: convert ceph.txt to ReST
+  docs: filesystems: convert cramfs.txt to ReST
+  docs: filesystems: convert debugfs.txt to ReST
+  docs: filesystems: convert dlmfs.txt to ReST
+  docs: filesystems: convert ecryptfs.txt to ReST
+  docs: filesystems: convert efivarfs.txt to ReST
+  docs: filesystems: convert erofs.txt to ReST
+  docs: filesystems: convert ext2.txt to ReST
+  docs: filesystems: convert ext3.txt to ReST
+  docs: filesystems: convert f2fs.txt to ReST
+  docs: filesystems: convert gfs2.txt to ReST
+  docs: filesystems: convert gfs2-uevents.txt to ReST
+  docs: filesystems: convert hfsplus.txt to ReST
+  docs: filesystems: convert hfs.txt to ReST
+  docs: filesystems: convert hpfs.txt to ReST
+  docs: filesystems: convert inotify.txt to ReST
+  docs: filesystems: convert isofs.txt to ReST
+  docs: filesystems: convert nilfs2.txt to ReST
+  docs: filesystems: convert ntfs.txt to ReST
+  docs: filesystems: convert ocfs2-online-filecheck.txt to ReST
+  docs: filesystems: convert ocfs2.txt to ReST
+  docs: filesystems: convert omfs.txt to ReST
+  docs: filesystems: convert orangefs.txt to ReST
+  docs: filesystems: convert proc.txt to ReST
+  docs: filesystems: convert qnx6.txt to ReST
+  docs: filesystems: convert ramfs-rootfs-initramfs.txt to ReST
+  docs: filesystems: convert relay.txt to ReST
+  docs: filesystems: convert romfs.txt to ReST
+  docs: filesystems: convert squashfs.txt to ReST
+  docs: filesystems: convert sysfs.txt to ReST
+  docs: filesystems: convert sysv-fs.txt to ReST
+  docs: filesystems: convert tmpfs.txt to ReST
+  docs: filesystems: convert ubifs-authentication.rst.txt to ReST
+  docs: filesystems: convert ubifs.txt to ReST
+  docs: filesystems: convert udf.txt to ReST
+  docs: filesystems: convert zonefs.txt to ReST
 
- include/erofs/exclude.h |  26 ++++++++
- lib/Makefile.am         |   2 +-
- lib/exclude.c           | 136 ++++++++++++++++++++++++++++++++++++++++
- lib/inode.c             |   5 ++
- man/mkfs.erofs.1        |   8 +++
- mkfs/main.c             |  36 +++++++++--
- 6 files changed, 206 insertions(+), 7 deletions(-)
- create mode 100644 include/erofs/exclude.h
- create mode 100644 lib/exclude.c
+ Documentation/filesystems/{9p.txt => 9p.rst}  |  114 +-
+ .../filesystems/{adfs.txt => adfs.rst}        |   29 +-
+ .../filesystems/{affs.txt => affs.rst}        |   62 +-
+ .../filesystems/{afs.txt => afs.rst}          |   73 +-
+ ...t-control.txt => autofs-mount-control.rst} |  102 +-
+ .../filesystems/{befs.txt => befs.rst}        |   59 +-
+ .../filesystems/{bfs.txt => bfs.rst}          |   37 +-
+ .../filesystems/{btrfs.txt => btrfs.rst}      |    3 +
+ .../filesystems/{ceph.txt => ceph.rst}        |   26 +-
+ .../filesystems/{cramfs.txt => cramfs.rst}    |   19 +-
+ .../filesystems/{debugfs.txt => debugfs.rst}  |   54 +-
+ .../filesystems/{dlmfs.txt => dlmfs.rst}      |   28 +-
+ .../{ecryptfs.txt => ecryptfs.rst}            |   44 +-
+ .../{efivarfs.txt => efivarfs.rst}            |    5 +-
+ .../filesystems/{erofs.txt => erofs.rst}      |  175 +-
+ .../filesystems/{ext2.txt => ext2.rst}        |   41 +-
+ .../filesystems/{ext3.txt => ext3.rst}        |    2 +
+ .../filesystems/{f2fs.txt => f2fs.rst}        |  252 +--
+ .../{gfs2-uevents.txt => gfs2-uevents.rst}    |   20 +-
+ .../filesystems/{gfs2.txt => gfs2.rst}        |   20 +-
+ .../filesystems/{hfs.txt => hfs.rst}          |   23 +-
+ .../filesystems/{hfsplus.txt => hfsplus.rst}  |    2 +
+ .../filesystems/{hpfs.txt => hpfs.rst}        |  239 ++-
+ Documentation/filesystems/index.rst           |   46 +-
+ .../filesystems/{inotify.txt => inotify.rst}  |   33 +-
+ Documentation/filesystems/isofs.rst           |   64 +
+ Documentation/filesystems/isofs.txt           |   48 -
+ .../filesystems/{nilfs2.txt => nilfs2.rst}    |   40 +-
+ .../filesystems/{ntfs.txt => ntfs.rst}        |  143 +-
+ ...lecheck.txt => ocfs2-online-filecheck.rst} |   45 +-
+ .../filesystems/{ocfs2.txt => ocfs2.rst}      |   31 +-
+ Documentation/filesystems/omfs.rst            |  112 ++
+ Documentation/filesystems/omfs.txt            |  106 --
+ .../{orangefs.txt => orangefs.rst}            |  187 +-
+ .../filesystems/{proc.txt => proc.rst}        | 1498 +++++++++--------
+ .../filesystems/{qnx6.txt => qnx6.rst}        |   22 +
+ ...itramfs.txt => ramfs-rootfs-initramfs.rst} |   54 +-
+ .../filesystems/{relay.txt => relay.rst}      |  129 +-
+ .../filesystems/{romfs.txt => romfs.rst}      |   42 +-
+ .../{squashfs.txt => squashfs.rst}            |   60 +-
+ .../filesystems/{sysfs.txt => sysfs.rst}      |  324 ++--
+ .../filesystems/{sysv-fs.txt => sysv-fs.rst}  |  155 +-
+ .../filesystems/{tmpfs.txt => tmpfs.rst}      |   44 +-
+ .../filesystems/ubifs-authentication.rst      |   10 +-
+ .../filesystems/{ubifs.txt => ubifs.rst}      |   25 +-
+ .../filesystems/{udf.txt => udf.rst}          |   21 +-
+ .../filesystems/{zonefs.txt => zonefs.rst}    |  106 +-
+ 47 files changed, 2739 insertions(+), 2035 deletions(-)
+ rename Documentation/filesystems/{9p.txt => 9p.rst} (63%)
+ rename Documentation/filesystems/{adfs.txt => adfs.rst} (85%)
+ rename Documentation/filesystems/{affs.txt => affs.rst} (86%)
+ rename Documentation/filesystems/{afs.txt => afs.rst} (90%)
+ rename Documentation/filesystems/{autofs-mount-control.txt => autofs-mount-control.rst} (89%)
+ rename Documentation/filesystems/{befs.txt => befs.rst} (83%)
+ rename Documentation/filesystems/{bfs.txt => bfs.rst} (71%)
+ rename Documentation/filesystems/{btrfs.txt => btrfs.rst} (96%)
+ rename Documentation/filesystems/{ceph.txt => ceph.rst} (91%)
+ rename Documentation/filesystems/{cramfs.txt => cramfs.rst} (88%)
+ rename Documentation/filesystems/{debugfs.txt => debugfs.rst} (91%)
+ rename Documentation/filesystems/{dlmfs.txt => dlmfs.rst} (86%)
+ rename Documentation/filesystems/{ecryptfs.txt => ecryptfs.rst} (70%)
+ rename Documentation/filesystems/{efivarfs.txt => efivarfs.rst} (85%)
+ rename Documentation/filesystems/{erofs.txt => erofs.rst} (54%)
+ rename Documentation/filesystems/{ext2.txt => ext2.rst} (91%)
+ rename Documentation/filesystems/{ext3.txt => ext3.rst} (88%)
+ rename Documentation/filesystems/{f2fs.txt => f2fs.rst} (84%)
+ rename Documentation/filesystems/{gfs2-uevents.txt => gfs2-uevents.rst} (94%)
+ rename Documentation/filesystems/{gfs2.txt => gfs2.rst} (76%)
+ rename Documentation/filesystems/{hfs.txt => hfs.rst} (80%)
+ rename Documentation/filesystems/{hfsplus.txt => hfsplus.rst} (95%)
+ rename Documentation/filesystems/{hpfs.txt => hpfs.rst} (66%)
+ rename Documentation/filesystems/{inotify.txt => inotify.rst} (83%)
+ create mode 100644 Documentation/filesystems/isofs.rst
+ delete mode 100644 Documentation/filesystems/isofs.txt
+ rename Documentation/filesystems/{nilfs2.txt => nilfs2.rst} (89%)
+ rename Documentation/filesystems/{ntfs.txt => ntfs.rst} (85%)
+ rename Documentation/filesystems/{ocfs2-online-filecheck.txt => ocfs2-online-filecheck.rst} (77%)
+ rename Documentation/filesystems/{ocfs2.txt => ocfs2.rst} (88%)
+ create mode 100644 Documentation/filesystems/omfs.rst
+ delete mode 100644 Documentation/filesystems/omfs.txt
+ rename Documentation/filesystems/{orangefs.txt => orangefs.rst} (83%)
+ rename Documentation/filesystems/{proc.txt => proc.rst} (65%)
+ rename Documentation/filesystems/{qnx6.txt => qnx6.rst} (98%)
+ rename Documentation/filesystems/{ramfs-rootfs-initramfs.txt => ramfs-rootfs-initramfs.rst} (91%)
+ rename Documentation/filesystems/{relay.txt => relay.rst} (91%)
+ rename Documentation/filesystems/{romfs.txt => romfs.rst} (86%)
+ rename Documentation/filesystems/{squashfs.txt => squashfs.rst} (91%)
+ rename Documentation/filesystems/{sysfs.txt => sysfs.rst} (56%)
+ rename Documentation/filesystems/{sysv-fs.txt => sysv-fs.rst} (73%)
+ rename Documentation/filesystems/{tmpfs.txt => tmpfs.rst} (86%)
+ rename Documentation/filesystems/{ubifs.txt => ubifs.rst} (91%)
+ rename Documentation/filesystems/{udf.txt => udf.rst} (83%)
+ rename Documentation/filesystems/{zonefs.txt => zonefs.rst} (90%)
 
-diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
-new file mode 100644
-index 0000000..0a82dbe
---- /dev/null
-+++ b/include/erofs/exclude.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * erofs-utils/include/erofs/exclude.h
-+ *
-+ * Created by Li Guifu <bluce.lee@aliyun.com>
-+ */
-+#ifndef __EROFS_EXCLUDE_H
-+#define __EROFS_EXCLUDE_H
-+#include <sys/types.h>
-+#include <regex.h>
-+
-+struct erofs_exclude_rule {
-+	struct list_head list;
-+
-+	char *pattern;		/* save original pattern for exact or regex match */
-+	regex_t reg;
-+};
-+
-+void erofs_exclude_set_root(const char *rootdir);
-+void erofs_cleanup_exclude_rules(void);
-+
-+int erofs_parse_exclude_path(const char *args, bool is_regex);
-+struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
-+						 const char *name);
-+#endif
-+
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 1ff81f9..e4b51e6 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
- 
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
--		      compress.c compressor.c
-+		      compress.c compressor.c exclude.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/exclude.c b/lib/exclude.c
-new file mode 100644
-index 0000000..6dae67e
---- /dev/null
-+++ b/lib/exclude.c
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/lib/exclude.c
-+ *
-+ * Created by Li Guifu <bluce.lee@aliyun.com>
-+ */
-+#include <string.h>
-+#include <stdlib.h>
-+#include "erofs/err.h"
-+#include "erofs/list.h"
-+#include "erofs/print.h"
-+#include "erofs/exclude.h"
-+
-+#define EXCLUDE_RULE_EXACT_SIZE	offsetof(struct erofs_exclude_rule, reg)
-+#define EXCLUDE_RULE_REGEX_SIZE	sizeof(struct erofs_exclude_rule)
-+
-+static LIST_HEAD(exclude_head);
-+static LIST_HEAD(regex_exclude_head);
-+
-+static unsigned int rpathlen;		/* root directory prefix length */
-+
-+void erofs_exclude_set_root(const char *rootdir)
-+{
-+	rpathlen = strlen(rootdir);
-+}
-+
-+static void dump_regerror(int errcode, const char *s, const regex_t *preg)
-+{
-+	char str[1024]; /* overflow safe */
-+
-+	regerror(errcode, preg, str, 1024);
-+	erofs_err("invalid regex %s,because %s\n", s, str);
-+}
-+
-+static struct erofs_exclude_rule *erofs_insert_exclude(const char *s,
-+						       bool is_regex)
-+{
-+	int ret = -ENOMEM;
-+	struct erofs_exclude_rule *r;
-+	struct list_head *h;
-+	unsigned int size;
-+
-+	size = is_regex ? EXCLUDE_RULE_REGEX_SIZE : EXCLUDE_RULE_EXACT_SIZE;
-+	r = malloc(size);
-+	if (!r)
-+		return ERR_PTR(-ENOMEM);
-+
-+	r->pattern = strdup(s);
-+	if (!r->pattern)
-+		goto err_rule;
-+
-+	if (is_regex) {
-+		ret = regcomp(&r->reg, s, REG_EXTENDED|REG_NOSUB);
-+		if(ret) {
-+			dump_regerror(ret, s, &r->reg);
-+			goto err_rule;
-+		}
-+		h = &regex_exclude_head;
-+	} else {
-+		h = &exclude_head;
-+	}
-+
-+	list_add_tail(&r->list, h);
-+	erofs_info("Insert exclude:[%s]\n", s);
-+	return r;
-+
-+err_rule:
-+	free(r);
-+	return ERR_PTR(ret);
-+}
-+
-+static inline void erofs_free_exclude_rules(struct list_head *h)
-+{
-+	struct erofs_exclude_rule *r, *n;
-+
-+	list_for_each_entry_safe(r, n, h, list) {
-+		list_del(&r->list);
-+		free(r->pattern);
-+		free(r);
-+	}
-+}
-+
-+void erofs_cleanup_exclude_rules(void)
-+{
-+	erofs_free_exclude_rules(&exclude_head);
-+	erofs_free_exclude_rules(&regex_exclude_head);
-+}
-+
-+int erofs_parse_exclude_path(const char *args, bool is_regex)
-+{
-+	struct erofs_exclude_rule *r = erofs_insert_exclude(args, is_regex);
-+
-+	if (IS_ERR(r)) {
-+		erofs_cleanup_exclude_rules();
-+		return PTR_ERR(r);
-+	}
-+	return 0;
-+}
-+
-+struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
-+						 const char *name)
-+{
-+	char buf[PATH_MAX];
-+	const char *s;
-+	struct erofs_exclude_rule *r;
-+
-+	if (!dir) {
-+		/* no prefix */
-+		s = name;
-+	} else {
-+		sprintf(buf, "%s/%s", dir, name);
-+		s = buf;
-+	}
-+
-+	s += rpathlen;
-+	while (*s == '/')
-+		s++;
-+
-+	list_for_each_entry(r, &exclude_head, list) {
-+		if (!strcmp(r->pattern, s))
-+			return r;
-+	}
-+
-+	list_for_each_entry(r, &regex_exclude_head, list) {
-+		int ret = regexec(&r->reg, s, (size_t)0, NULL, 0);
-+
-+		if(!ret)
-+			return r;
-+		else if (ret != REG_NOMATCH)
-+			dump_regerror(ret, s, &r->reg);
-+
-+	}
-+
-+	return NULL;
-+}
-+
-diff --git a/lib/inode.c b/lib/inode.c
-index bd0652b..7114023 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -20,6 +20,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- struct erofs_sb_info sbi;
- 
-@@ -877,6 +878,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
- 			continue;
- 
-+		/* skip if it's a exclude file */
-+		if (erofs_is_exclude_path(dir->i_srcpath, dp->d_name))
-+			continue;
-+
- 		d = erofs_d_alloc(dir, dp->d_name);
- 		if (IS_ERR(d)) {
- 			ret = PTR_ERR(d);
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index d6bf828..ab19927 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -52,6 +52,14 @@ Forcely generate extended inodes (64-byte inodes) to output.
- Set all files to the given UNIX timestamp. Reproducible builds requires setting
- all to a specific one.
- .TP
-+.BI "\-\-exclude-path=" path
-+Ignore file that matches the exact literal path.
-+You may give multiple `--exclude-path' options.
-+.TP
-+.BI "\-\-exclude-regex=" path
-+Ignore file that matches the exact literal path given by a regex expression
-+You may give multiple `--exclude-regex` options
-+.TP
- .B \-\-help
- Display this help and exit.
- .SH AUTHOR
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 817a6c1..d0c9869 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -21,6 +21,7 @@
- #include "erofs/io.h"
- #include "erofs/compress.h"
- #include "erofs/xattr.h"
-+#include "erofs/exclude.h"
- 
- #ifdef HAVE_LIBUUID
- #include <uuid/uuid.h>
-@@ -30,6 +31,8 @@
- 
- static struct option long_options[] = {
- 	{"help", no_argument, 0, 1},
-+	{"exclude-path", required_argument, NULL, 2},
-+	{"exclude-regex", required_argument, NULL, 3},
- 	{0, 0, 0, 0},
- };
- 
-@@ -50,12 +53,14 @@ static void usage(void)
- {
- 	fputs("usage: [options] FILE DIRECTORY\n\n"
- 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
--	      " -zX[,Y]   X=compressor (Y=compression level, optional)\n"
--	      " -d#       set output message level to # (maximum 9)\n"
--	      " -x#       set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
--	      " -EX[,...] X=extended options\n"
--	      " -T#       set a fixed UNIX timestamp # to all files\n"
--	      " --help    display this help and exit\n"
-+	      " -zX[,Y]          X=compressor (Y=compression level, optional)\n"
-+	      " -d#              set output message level to # (maximum 9)\n"
-+	      " -x#              set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
-+	      " -EX[,...]        X=extended options\n"
-+	      " -T#              set a fixed UNIX timestamp # to all files\n"
-+	      " --exclude-path=X avoid including file X (X = exact literal path)\n"
-+	      " --exclude-regex=X avoid including file X (X = exact literal path of a regex)\n"
-+	      " --help           display this help and exit\n"
- 	      "\nAvailable compressors are: ", stderr);
- 	print_available_compressors(stderr, ", ");
- }
-@@ -178,6 +183,23 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 			}
- 			break;
- 
-+		case 2:
-+			opt = erofs_parse_exclude_path(optarg, false);
-+			if (opt) {
-+				erofs_err("failed to parse exclude path: %s",
-+					  erofs_strerror(opt));
-+				return opt;
-+			}
-+			break;
-+		case 3:
-+			opt = erofs_parse_exclude_path(optarg, true);
-+			if (opt) {
-+				erofs_err("failed to parse exclude path: %s",
-+					  erofs_strerror(opt));
-+				return opt;
-+			}
-+			break;
-+
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -372,6 +394,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	erofs_show_config();
-+	erofs_exclude_set_root(cfg.c_src_path);
- 
- 	sb_bh = erofs_buffer_init();
- 	if (IS_ERR(sb_bh)) {
-@@ -428,6 +451,7 @@ int main(int argc, char **argv)
- exit:
- 	z_erofs_compress_exit();
- 	dev_close();
-+	erofs_cleanup_exclude_rules();
- 	erofs_exit_configure();
- 
- 	if (err) {
 -- 
-2.17.1
+2.24.1
+
 
