@@ -1,52 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29072161A89
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 19:49:52 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9474216172E
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 17:13:05 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48LptQ4GhLzDqS9
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 03:13:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48LtMJ6MKxzDqXv
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 05:49:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=bombadil.infradead.org (client-ip=2607:7c80:54:e::133;
- helo=bombadil.infradead.org; envelope-from=mchehab@bombadil.infradead.org;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=fail (p=none dis=none) header.from=kernel.org
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=sDP0FQJf; 
+ dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org
  [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48Lpt86kCczDq67
- for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 03:12:48 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48LtHN52xdzDqXt
+ for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 05:46:24 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
- MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
- Reply-To:Content-Type:Content-ID:Content-Description;
- bh=sCEdXKX/OnbnlqCeyDnNw1soXSc6Zm8CxThqV0PKMgo=; b=FzBT7RrO0el3zbdX91nH3iSZgv
- 7Mf9mxrvWCUvCFVwa+4I1gwkTazc39gJtY4P+MvkFMaY5IE/Qsygd+7JUolHs0S6Apz30on0Kotti
- 7McBy9/vfny4ld+zQXgRnyBSq8tVkTxz004N5gB+FEAOBLQKssFzWGu7dRpkL25s7lcSS+zf6kE6R
- D9tGj8Xiu51BgBHsAhqm+zEHx0GdiI7tNnxZgXvBNGgpYwRKAquRCcuIB0z21Vwp3yJSDd5vNeyco
- NNYAl7GRCUCVmMNLmhuRQXUlKt5UQS3o2jQmz46QzVcL4LcMYMMSFsVBYbe0sFVvweBBkyrCqW94T
- nREqj7kQ==;
-Received: from x2f7f83d.dyn.telefonica.de ([2.247.248.61]
- helo=bombadil.infradead.org)
- by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
- id 1j3j0f-0006uc-Vf; Mon, 17 Feb 2020 16:12:45 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
- (envelope-from <mchehab@bombadil.infradead.org>)
- id 1j3j0a-000fa8-3o; Mon, 17 Feb 2020 17:12:32 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: [PATCH 15/44] docs: filesystems: convert erofs.txt to ReST
-Date: Mon, 17 Feb 2020 17:12:01 +0100
-Message-Id: <402d1d2f7252b8a683f7a9c6867bc5428da64026.1581955849.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1581955849.git.mchehab+huawei@kernel.org>
-References: <cover.1581955849.git.mchehab+huawei@kernel.org>
+ d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+ MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+ Content-ID:Content-Description:In-Reply-To:References;
+ bh=T1hWdYf0rB2BfBCCA/ycayjeULcD1RhEgE660nEF24U=; b=sDP0FQJf/K4vAFf0xbBt1NG5yU
+ BQo1zx2sDVZ4f5cBkmFWO1G5RYV/E561hS2Td5IkHpV55ScSQW46Pj3wPG/gZaXv5iWHZLxlFtSnT
+ BjLdIL++tZJlAw+Xzc28cr0VXtl8dDkruXjAEG9us+5NgJF/WpeRWy/LlJXX4j3I+4+SEJhRWETgz
+ Pc3A3JXDX5ggpPhYiDZYGDq58my+Q7ybdYT8YK8UL/adpWVgbm5fu+cJicN73uRbmjyuszU+cwKHN
+ CfFecxgyQQHpcERi6MFkYvGkiqN5jvoxW64RDHCkUV7Phh5O9263P2GEglbrJexeT6DAt54eb4wHq
+ 2EZUCDbw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1j3lPL-00058b-99; Mon, 17 Feb 2020 18:46:15 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: linux-fsdevel@vger.kernel.org
+Subject: [PATCH v6 00/19] Change readahead API
+Date: Mon, 17 Feb 2020 10:45:41 -0800
+Message-Id: <20200217184613.19668-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -60,340 +57,133 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Jonathan Corbet <corbet@lwn.net>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-fsdevel@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
- linux-erofs@lists.ozlabs.org
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Matthew Wilcox \(Oracle\)" <willy@infradead.org>,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-- Add a SPDX header;
-- Add a document title;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add table markups;
-- Add lists markups;
-- Add it to filesystems/index.rst.
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../filesystems/{erofs.txt => erofs.rst}      | 175 ++++++++++--------
- Documentation/filesystems/index.rst           |   1 +
- 2 files changed, 103 insertions(+), 73 deletions(-)
- rename Documentation/filesystems/{erofs.txt => erofs.rst} (54%)
+This series adds a readahead address_space operation to eventually
+replace the readpages operation.  The key difference is that
+pages are added to the page cache as they are allocated (and
+then looked up by the filesystem) instead of passing them on a
+list to the readpages operation and having the filesystem add
+them to the page cache.  It's a net reduction in code for each
+implementation, more efficient than walking a list, and solves
+the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-diff --git a/Documentation/filesystems/erofs.txt b/Documentation/filesystems/erofs.rst
-similarity index 54%
-rename from Documentation/filesystems/erofs.txt
-rename to Documentation/filesystems/erofs.rst
-index db6d39c3ae71..bf145171c2bf 100644
---- a/Documentation/filesystems/erofs.txt
-+++ b/Documentation/filesystems/erofs.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+Enhanced Read-Only File System - EROFS
-+======================================
-+
- Overview
- ========
- 
-@@ -6,6 +12,7 @@ from other read-only file systems, it aims to be designed for flexibility,
- scalability, but be kept simple and high performance.
- 
- It is designed as a better filesystem solution for the following scenarios:
-+
-  - read-only storage media or
- 
-  - part of a fully trusted read-only solution, which means it needs to be
-@@ -17,6 +24,7 @@ It is designed as a better filesystem solution for the following scenarios:
-    for those embedded devices with limited memory (ex, smartphone);
- 
- Here is the main features of EROFS:
-+
-  - Little endian on-disk design;
- 
-  - Currently 4KB block size (nobh) and therefore maximum 16TB address space;
-@@ -24,13 +32,17 @@ Here is the main features of EROFS:
-  - Metadata & data could be mixed by design;
- 
-  - 2 inode versions for different requirements:
-+
-+   =====================  ============  =====================================
-                           compact (v1)  extended (v2)
--   Inode metadata size:   32 bytes      64 bytes
--   Max file size:         4 GB          16 EB (also limited by max. vol size)
--   Max uids/gids:         65536         4294967296
--   File change time:      no            yes (64 + 32-bit timestamp)
--   Max hardlinks:         65536         4294967296
--   Metadata reserved:     4 bytes       14 bytes
-+   =====================  ============  =====================================
-+   Inode metadata size    32 bytes      64 bytes
-+   Max file size          4 GB          16 EB (also limited by max. vol size)
-+   Max uids/gids          65536         4294967296
-+   File change time       no            yes (64 + 32-bit timestamp)
-+   Max hardlinks          65536         4294967296
-+   Metadata reserved      4 bytes       14 bytes
-+   =====================  ============  =====================================
- 
-  - Support extended attributes (xattrs) as an option;
- 
-@@ -43,29 +55,36 @@ Here is the main features of EROFS:
- 
- The following git tree provides the file system user-space tools under
- development (ex, formatting tool mkfs.erofs):
-->> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
-+
-+- git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
- 
- Bugs and patches are welcome, please kindly help us and send to the following
- linux-erofs mailing list:
-->> linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
-+
-+- linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
- 
- Mount options
- =============
- 
-+===================    =========================================================
- (no)user_xattr         Setup Extended User Attributes. Note: xattr is enabled
-                        by default if CONFIG_EROFS_FS_XATTR is selected.
- (no)acl                Setup POSIX Access Control List. Note: acl is enabled
-                        by default if CONFIG_EROFS_FS_POSIX_ACL is selected.
- cache_strategy=%s      Select a strategy for cached decompression from now on:
--                         disabled: In-place I/O decompression only;
--                        readahead: Cache the last incomplete compressed physical
-+
-+		       ==========  =============================================
-+                         disabled  In-place I/O decompression only;
-+                        readahead  Cache the last incomplete compressed physical
-                                    cluster for further reading. It still does
-                                    in-place I/O decompression for the rest
-                                    compressed physical clusters;
--                       readaround: Cache the both ends of incomplete compressed
-+                       readaround  Cache the both ends of incomplete compressed
-                                    physical clusters for further reading.
-                                    It still does in-place I/O decompression
-                                    for the rest compressed physical clusters.
-+		       ==========  =============================================
-+===================    =========================================================
- 
- On-disk details
- ===============
-@@ -73,7 +92,7 @@ On-disk details
- Summary
- -------
- Different from other read-only file systems, an EROFS volume is designed
--to be as simple as possible:
-+to be as simple as possible::
- 
-                                 |-> aligned with the block size
-    ____________________________________________________________
-@@ -83,41 +102,45 @@ to be as simple as possible:
- 
- All data areas should be aligned with the block size, but metadata areas
- may not. All metadatas can be now observed in two different spaces (views):
-+
-  1. Inode metadata space
-+
-     Each valid inode should be aligned with an inode slot, which is a fixed
-     value (32 bytes) and designed to be kept in line with compact inode size.
- 
-     Each inode can be directly found with the following formula:
-          inode offset = meta_blkaddr * block_size + 32 * nid
- 
--                                |-> aligned with 8B
--                                           |-> followed closely
--    + meta_blkaddr blocks                                      |-> another slot
--     _____________________________________________________________________
--    |  ...   | inode |  xattrs  | extents  | data inline | ... | inode ...
--    |________|_______|(optional)|(optional)|__(optional)_|_____|__________
--             |-> aligned with the inode slot size
--                  .                   .
--                .                         .
--              .                              .
--            .                                    .
--          .                                         .
--        .                                              .
--      .____________________________________________________|-> aligned with 4B
--      | xattr_ibody_header | shared xattrs | inline xattrs |
--      |____________________|_______________|_______________|
--      |->    12 bytes    <-|->x * 4 bytes<-|               .
--                          .                .                 .
--                    .                      .                   .
--               .                           .                     .
--           ._______________________________.______________________.
--           | id | id | id | id |  ... | id | ent | ... | ent| ... |
--           |____|____|____|____|______|____|_____|_____|____|_____|
--                                           |-> aligned with 4B
--                                                       |-> aligned with 4B
-+    ::
-+
-+				    |-> aligned with 8B
-+					    |-> followed closely
-+	+ meta_blkaddr blocks                                      |-> another slot
-+	_____________________________________________________________________
-+	|  ...   | inode |  xattrs  | extents  | data inline | ... | inode ...
-+	|________|_______|(optional)|(optional)|__(optional)_|_____|__________
-+		|-> aligned with the inode slot size
-+		    .                   .
-+		    .                         .
-+		.                              .
-+		.                                    .
-+	    .                                         .
-+	    .                                              .
-+	.____________________________________________________|-> aligned with 4B
-+	| xattr_ibody_header | shared xattrs | inline xattrs |
-+	|____________________|_______________|_______________|
-+	|->    12 bytes    <-|->x * 4 bytes<-|               .
-+			    .                .                 .
-+			.                      .                   .
-+		.                           .                     .
-+	    ._______________________________.______________________.
-+	    | id | id | id | id |  ... | id | ent | ... | ent| ... |
-+	    |____|____|____|____|______|____|_____|_____|____|_____|
-+					    |-> aligned with 4B
-+							|-> aligned with 4B
- 
-     Inode could be 32 or 64 bytes, which can be distinguished from a common
--    field which all inode versions have -- i_format:
-+    field which all inode versions have -- i_format::
- 
-         __________________               __________________
-        |     i_format     |             |     i_format     |
-@@ -132,16 +155,19 @@ may not. All metadatas can be now observed in two different spaces (views):
-     proper alignment, and they could be optional for different data mappings.
-     _currently_ total 4 valid data mappings are supported:
- 
-+    ==  ====================================================================
-      0  flat file data without data inline (no extent);
-      1  fixed-sized output data compression (with non-compacted indexes);
-      2  flat file data with tail packing data inline (no extent);
-      3  fixed-sized output data compression (with compacted indexes, v5.3+).
-+    ==  ====================================================================
- 
-     The size of the optional xattrs is indicated by i_xattr_count in inode
-     header. Large xattrs or xattrs shared by many different files can be
-     stored in shared xattrs metadata rather than inlined right after inode.
- 
-  2. Shared xattrs metadata space
-+
-     Shared xattrs space is similar to the above inode space, started with
-     a specific block indicated by xattr_blkaddr, organized one by one with
-     proper align.
-@@ -149,11 +175,13 @@ may not. All metadatas can be now observed in two different spaces (views):
-     Each share xattr can also be directly found by the following formula:
-          xattr offset = xattr_blkaddr * block_size + 4 * xattr_id
- 
--                           |-> aligned by  4 bytes
--    + xattr_blkaddr blocks                     |-> aligned with 4 bytes
--     _________________________________________________________________________
--    |  ...   | xattr_entry |  xattr data | ... |  xattr_entry | xattr data  ...
--    |________|_____________|_____________|_____|______________|_______________
-+    ::
-+
-+			    |-> aligned by  4 bytes
-+	+ xattr_blkaddr blocks                     |-> aligned with 4 bytes
-+	_________________________________________________________________________
-+	|  ...   | xattr_entry |  xattr data | ... |  xattr_entry | xattr data  ...
-+	|________|_____________|_____________|_____|______________|_______________
- 
- Directories
- -----------
-@@ -163,19 +191,21 @@ random file lookup, and all directory entries are _strictly_ recorded in
- alphabetical order in order to support improved prefix binary search
- algorithm (could refer to the related source code).
- 
--                 ___________________________
--                /                           |
--               /              ______________|________________
--              /              /              | nameoff1       | nameoffN-1
-- ____________.______________._______________v________________v__________
--| dirent | dirent | ... | dirent | filename | filename | ... | filename |
--|___.0___|____1___|_____|___N-1__|____0_____|____1_____|_____|___N-1____|
--     \                           ^
--      \                          |                           * could have
--       \                         |                             trailing '\0'
--        \________________________| nameoff0
-+::
- 
--                             Directory block
-+		    ___________________________
-+		    /                           |
-+		/              ______________|________________
-+		/              /              | nameoff1       | nameoffN-1
-+    ____________.______________._______________v________________v__________
-+    | dirent | dirent | ... | dirent | filename | filename | ... | filename |
-+    |___.0___|____1___|_____|___N-1__|____0_____|____1_____|_____|___N-1____|
-+	\                           ^
-+	\                          |                           * could have
-+	\                         |                             trailing '\0'
-+	    \________________________| nameoff0
-+
-+				Directory block
- 
- Note that apart from the offset of the first filename, nameoff0 also indicates
- the total number of directory entries in this block since it is no need to
-@@ -184,28 +214,27 @@ introduce another on-disk field at all.
- Compression
- -----------
- Currently, EROFS supports 4KB fixed-sized output transparent file compression,
--as illustrated below:
-+as illustrated below::
- 
--         |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
--         clusterofs                      clusterofs            clusterofs
--         |                               |                     |   logical data
--_________v_______________________________v_____________________v_______________
--... |    .        |             |        .    |             |  .          | ...
--____|____.________|_____________|________.____|_____________|__.__________|____
--    |-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|
--         size          size          size          size          size
--          .                             .                .                   .
--           .                       .               .                  .
--            .                  .              .                .
--      _______._____________._____________._____________._____________________
--         ... |             |             |             | ... physical data
--      _______|_____________|_____________|_____________|_____________________
--             |-> cluster <-|-> cluster <-|-> cluster <-|
--                  size          size          size
-+	    |---- Variant-Length Extent ----|-------- VLE --------|----- VLE -----
-+	    clusterofs                      clusterofs            clusterofs
-+	    |                               |                     |   logical data
-+    _________v_______________________________v_____________________v_______________
-+    ... |    .        |             |        .    |             |  .          | ...
-+    ____|____.________|_____________|________.____|_____________|__.__________|____
-+	|-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|-> cluster <-|
-+	    size          size          size          size          size
-+	    .                             .                .                   .
-+	    .                       .               .                  .
-+		.                  .              .                .
-+	_______._____________._____________._____________._____________________
-+	    ... |             |             |             | ... physical data
-+	_______|_____________|_____________|_____________|_____________________
-+		|-> cluster <-|-> cluster <-|-> cluster <-|
-+		    size          size          size
- 
- Currently each on-disk physical cluster can contain 4KB (un)compressed data
- at most. For each logical cluster, there is a corresponding on-disk index to
- describe its cluster type, physical cluster address, etc.
- 
- See "struct z_erofs_vle_decompressed_index" in erofs_fs.h for more details.
--
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 4230f49d2732..03a493b27920 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -61,6 +61,7 @@ Documentation for filesystem implementations.
-    dlmfs
-    ecryptfs
-    efivarfs
-+   erofs
-    fuse
-    overlayfs
-    virtiofs
+The only unconverted filesystems are those which use fscache.
+Their conversion is pending Dave Howells' rewrite which will make the
+conversion substantially easier.
+
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
+
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
+
+Matthew Wilcox (Oracle) (19):
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Use readahead_control to pass arguments
+  mm: Rearrange readahead loop
+  mm: Remove 'page_offset' from readahead loop
+  mm: rename readahead loop variable to 'i'
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Add page_cache_readahead_limit
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  f2fs: Convert from readpages to readahead
+  fuse: Convert from readpages to readahead
+  iomap: Restructure iomap_readpages_actor
+  iomap: Convert from readpages to readahead
+  mm: Use memalloc_nofs_save in readahead path
+
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  13 ++
+ drivers/staging/exfat/exfat_super.c   |   7 +-
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  46 ++-----
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +--
+ fs/erofs/data.c                       |  39 ++----
+ fs/erofs/zdata.c                      |  29 ++--
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   3 +-
+ fs/ext4/inode.c                       |  23 ++--
+ fs/ext4/readpage.c                    |  22 ++-
+ fs/ext4/verity.c                      |  35 +----
+ fs/f2fs/data.c                        |  50 +++----
+ fs/f2fs/f2fs.h                        |   5 +-
+ fs/f2fs/verity.c                      |  35 +----
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  46 +++----
+ fs/gfs2/aops.c                        |  23 ++--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                | 118 +++++++----------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 ++----
+ fs/nilfs2/inode.c                     |  15 +--
+ fs/ocfs2/aops.c                       |  34 ++---
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               |  90 +++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/internal.h                         |   8 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 184 +++++++++++++++++---------
+ 43 files changed, 474 insertions(+), 533 deletions(-)
+
+
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
 -- 
-2.24.1
+2.25.0
 
