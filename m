@@ -1,48 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22F0716085C
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 03:54:48 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48LT9K2KWDzDqfD
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 13:54:45 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id ACF121608FA
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 04:32:36 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48LV0y1NMszDqJN
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2020 14:32:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=huawei.com;
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48LT982YCmzDqGk
- for <linux-erofs@lists.ozlabs.org>; Mon, 17 Feb 2020 13:54:35 +1100 (AEDT)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
- by Forcepoint Email with ESMTP id 2FE44C7D54DF1892BB97;
- Mon, 17 Feb 2020 10:54:28 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 17 Feb 2020 10:54:12 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 17 Feb 2020 10:54:12 +0800
-Date: Mon, 17 Feb 2020 10:52:55 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48LV0j71ppzDq63
+ for <linux-erofs@lists.ozlabs.org>; Mon, 17 Feb 2020 14:32:18 +1100 (AEDT)
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+ by Forcepoint Email with ESMTP id A8CF1A8145B0796C49BD;
+ Mon, 17 Feb 2020 11:32:11 +0800 (CST)
+Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Feb
+ 2020 11:32:01 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
-To: Li Guifu <bluce.lee@aliyun.com>
-Subject: Re: [PATCH v5] erofs-utils: introduce exclude dirs and files
-Message-ID: <20200217025253.GA33350@architecture4>
-References: <20200216133219.50216-1-bluce.lee@aliyun.com>
+To: Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v2] erofs: convert workstn to XArray
+Date: Mon, 17 Feb 2020 11:30:42 +0800
+Message-ID: <20200217033042.137855-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200216133219.50216-1-bluce.lee@aliyun.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -55,374 +46,391 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
+ Matthew Wilcox <willy@infradead.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Feb 16, 2020 at 09:32:19PM +0800, Li Guifu wrote:
-> From: Li GuiFu <bluce.lee@aliyun.com>
-> 
-> Add excluded file feature "--exclude-path=" and '--exlude-regex=',
+XArray has friendly apis and it will replace the old radix
+tree in the near future.
 
-typo
-                                                  ^ '--exclude-regex='
+This convert makes use of __xa_cmpxchg when inserting on
+a just inserted item by other thread. In detail, instead
+of totally looking up again as what we did for the old
+radix tree, it will try to legitimize the current in-tree
+item in the XArray therefore more effective.
 
-> which can be used to build EROFS image without some user specific
-> files or dirs.
-> Note that you may give multiple '--exclude-path' or '--exclude-regex'
-> options.
-> 
-> Signed-off-by: Li Guifu <blucer.lee@foxmail.com>
+In addition, naming is rather a challenge for non-English
+speaker like me. The basic idea of workstn is to provide
+a runtime sparse array with items arranged in the physical
+block number order. Such items (was called workgroup) can be
+used to record compress clusters or for later new features.
 
+However, both workgroup and workstn seem not good names from
+whatever point of view, so I'd like to rename them as pslot
+and managed_pslots to stand for physical slots. This patch
+handles the second as a part of the radix root convert.
 
-please fix your email here.
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changes since v1:
+ - update the comment above "struct xarray managed_pslots";
+ - get rid of "comparison to NULL" style in v1;
+ - stress tested without strange behaviors;
+   https://lore.kernel.org/r/20200206135631.1491-1-hsiangkao@aol.com
 
-Signed-off-by: Li GuiFu <bluce.lee@aliyun.com>
+ fs/erofs/internal.h |  8 ++---
+ fs/erofs/super.c    |  2 +-
+ fs/erofs/utils.c    | 85 ++++++++++++++++-----------------------------
+ fs/erofs/zdata.c    | 65 ++++++++++++++++------------------
+ 4 files changed, 64 insertions(+), 96 deletions(-)
 
-
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
-> change since v5:
->  - add regex free
->  - clean log print
-> 
->  include/erofs/exclude.h |  28 +++++++++
->  lib/Makefile.am         |   2 +-
->  lib/exclude.c           | 133 ++++++++++++++++++++++++++++++++++++++++
->  lib/inode.c             |   5 ++
->  man/mkfs.erofs.1        |   8 +++
->  mkfs/main.c             |  36 +++++++++--
->  6 files changed, 205 insertions(+), 7 deletions(-)
->  create mode 100644 include/erofs/exclude.h
->  create mode 100644 lib/exclude.c
-> 
-> diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
-> new file mode 100644
-> index 0000000..e158a14
-> --- /dev/null
-> +++ b/include/erofs/exclude.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * erofs-utils/include/erofs/exclude.h
-> + *
-> + * Created by Li Guifu <blucer.lee@foxmail.com>
-
-same here.
-
-Created by Li GuiFu <bluce.lee@aliyun.com>
-
-> + */
-> +#ifndef __EROFS_EXCLUDE_H
-> +#define __EROFS_EXCLUDE_H
-> +#include <sys/types.h>
-> +#include <regex.h>
-> +
-> +struct erofs_exclude_rule {
-> +	struct list_head list;
-> +
-> +	union {
-> +		char *pattern;
-> +		regex_t *reg;
-> +	};
-
-how about leave original pattern here. I mean
-
-struct erofs_exclude_rule {
-	struct list_head list;
-
-	char *pattern;		/* save original pattern for exact or regex match */
-	regex_t reg;
-};
-
-and define the following macros in "lib/exclude.c":
-
-#define EXCLUDE_RULE_EXACT_SIZE	offsetof(struct erofs_exclude_rule, reg)
-#define EXCLUDE_RULE_REGEX_SIZE	sizeof(struct erofs_exclude_rule)
-
-> +};
-> +
-> +void erofs_exclude_set_root(const char *rootdir);
-> +void erofs_cleanup_exclude_rules(void);
-> +
-> +int erofs_parse_exclude_path(const char *args, bool is_regex);
-> +struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
-> +						 const char *name);
-> +#endif
-> +
-> diff --git a/lib/Makefile.am b/lib/Makefile.am
-> index 1ff81f9..e4b51e6 100644
-> --- a/lib/Makefile.am
-> +++ b/lib/Makefile.am
-> @@ -3,7 +3,7 @@
->  
->  noinst_LTLIBRARIES = liberofs.la
->  liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
-> -		      compress.c compressor.c
-> +		      compress.c compressor.c exclude.c
->  liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
->  if ENABLE_LZ4
->  liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-> diff --git a/lib/exclude.c b/lib/exclude.c
-> new file mode 100644
-> index 0000000..268a6f7
-> --- /dev/null
-> +++ b/lib/exclude.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * erofs-utils/lib/exclude.c
-> + *
-> + * Created by Li Guifu <blucer.lee@foxmail.com>
-
-same here.
-
-> + */
-> +#include <string.h>
-> +#include <stdlib.h>
-> +#include "erofs/err.h"
-> +#include "erofs/list.h"
-> +#include "erofs/print.h"
-> +#include "erofs/exclude.h"
-> +
-> +static LIST_HEAD(exclude_head);
-> +static LIST_HEAD(regex_exclude_head);
-> +
-> +static unsigned int rpathlen;		/* root directory prefix length */
-> +
-> +void erofs_exclude_set_root(const char *rootdir)
-> +{
-> +	rpathlen = strlen(rootdir);
-> +}
-> +
-> +static struct erofs_exclude_rule
-> +*erofs_insert_exclude(const char *s, bool is_regex)
-
-
-static struct erofs_exclude_rule *erofs_insert_exclude(const char *s,
-						       bool is_regex)
-
-
-> +{
-> +	int ret = -ENOMEM;
-> +	struct erofs_exclude_rule *r;
-> +	struct list_head *h;
-> +
-> +	r = malloc(sizeof(*r));
-
-	if (is_regex)
-		r = malloc(EXCLUDE_RULE_REGEX_SIZE);
-	else
-		r = malloc(EXCLUDE_RULE_EXACT_SIZE);
-
-
-> +	if (!r)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	/* exact match */
-> +	if (is_regex) {
-> +		r->reg = malloc(sizeof(regex_t));
-> +		if (!r->reg)
-> +			goto err_rule;
-> +		ret = regcomp(r->reg, s, REG_EXTENDED|REG_NOSUB);
-> +		if(ret) {
-> +			char str[1024]; /* overflow safe */
-> +
-> +			regerror(ret, r->reg, str, 1024);
-> +			erofs_err("invalid regex %s,because %s\n", s, str);
-> +			goto err_rule;
-> +		}
-> +		h = &regex_exclude_head;
-> +	} else {
-> +		r->pattern = strdup(s);
-> +
-> +		if (!r->pattern)
-> +			goto err_rule;
-> +		h = &exclude_head;
-> +	}
-
-	r->pattern = strdup(s);
-	if (is_regex) {
-		ret = regcomp(r->reg, s, ...);
-
-		...
-
-		h = &regex_exclude_head;
-	} else {
-		h = &exclude_head;
-	}
-
-> +
-> +	list_add_tail(&r->list, h);
-> +	erofs_info("Insert exclude:[%s]\n", s);
-> +	return r;
-> +err_rule:
-> +	free(r);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +void erofs_cleanup_exclude_rules(void)
-> +{
-> +	struct erofs_exclude_rule *r, *n;
-> +
-> +	list_for_each_entry_safe(r, n, &exclude_head, list) {
-> +		list_del(&r->list);
-> +		free(r->pattern);
-> +		free(r);
-> +	}
-> +
-> +	list_for_each_entry_safe(r, n, &regex_exclude_head, list) {
-> +		list_del(&r->list);
-> +		regfree(r->reg);
-> +		free(r);
-> +	}
-
-some modification here.
-
-> +}
-> +
-> +int erofs_parse_exclude_path(const char *args, bool is_regex)
-> +{
-> +	struct erofs_exclude_rule *r = erofs_insert_exclude(args, is_regex);
-> +
-> +	if (IS_ERR(r)) {
-> +		erofs_cleanup_exclude_rules();
-> +		return PTR_ERR(r);
-> +	}
-> +	return 0;
-> +}
-> +
-> +struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
-> +						 const char *name)
-> +{
-> +	char buf[PATH_MAX];
-> +	const char *s;
-> +	struct erofs_exclude_rule *r;
-> +
-> +	if (!dir) {
-> +		/* no prefix */
-> +		s = name;
-> +	} else {
-> +		sprintf(buf, "%s/%s", dir, name);
-> +		s = buf;
-> +	}
-> +
-> +	s += rpathlen;
-> +	while (*s == '/')
-> +		s++;
-> +
-> +	list_for_each_entry(r, &exclude_head, list) {
-> +		if (!strcmp(r->pattern, s))
-> +			return r;
-> +	}
-> +
-> +	list_for_each_entry(r, &regex_exclude_head, list) {
-> +		int ret = regexec(r->reg, s, (size_t) 0, NULL, 0);
-> +
-> +		if(!ret) {
-> +			erofs_info("matched:%s\n", s);
-> +			return r;
-> +		} else if (ret != REG_NOMATCH) {
-> +			char str[1024]; /* overflow safe */
-> +
-> +			regerror(ret, r->reg, str, 1024);
-> +			erofs_err("invalid regex %s,because %s\n", s, str);
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> diff --git a/lib/inode.c b/lib/inode.c
-> index bd0652b..7114023 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -20,6 +20,7 @@
->  #include "erofs/io.h"
->  #include "erofs/compress.h"
->  #include "erofs/xattr.h"
-> +#include "erofs/exclude.h"
->  
->  struct erofs_sb_info sbi;
->  
-> @@ -877,6 +878,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
->  		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
->  			continue;
->  
-> +		/* skip if it's a exclude file */
-> +		if (erofs_is_exclude_path(dir->i_srcpath, dp->d_name))
-> +			continue;
-> +
->  		d = erofs_d_alloc(dir, dp->d_name);
->  		if (IS_ERR(d)) {
->  			ret = PTR_ERR(d);
-> diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-> index d6bf828..ab19927 100644
-> --- a/man/mkfs.erofs.1
-> +++ b/man/mkfs.erofs.1
-> @@ -52,6 +52,14 @@ Forcely generate extended inodes (64-byte inodes) to output.
->  Set all files to the given UNIX timestamp. Reproducible builds requires setting
->  all to a specific one.
->  .TP
-> +.BI "\-\-exclude-path=" path
-> +Ignore file that matches the exact literal path.
-> +You may give multiple `--exclude-path' options.
-> +.TP
-> +.BI "\-\-exclude-regex=" path
-> +Ignore file that matches the exact literal path given by a regex expression
-> +You may give multiple `--exclude-regex` options
-
-
-+Ignore files that match what is given by a regex expression
-+You may give multiple `--exclude-regex` options
-
-
-> +.TP
->  .B \-\-help
->  Display this help and exit.
->  .SH AUTHOR
-> diff --git a/mkfs/main.c b/mkfs/main.c
-> index 817a6c1..d0c9869 100644
-> --- a/mkfs/main.c
-> +++ b/mkfs/main.c
-> @@ -21,6 +21,7 @@
->  #include "erofs/io.h"
->  #include "erofs/compress.h"
->  #include "erofs/xattr.h"
-> +#include "erofs/exclude.h"
->  
->  #ifdef HAVE_LIBUUID
->  #include <uuid/uuid.h>
-> @@ -30,6 +31,8 @@
->  
->  static struct option long_options[] = {
->  	{"help", no_argument, 0, 1},
-> +	{"exclude-path", required_argument, NULL, 2},
-> +	{"exclude-regex", required_argument, NULL, 3},
->  	{0, 0, 0, 0},
->  };
->  
-> @@ -50,12 +53,14 @@ static void usage(void)
->  {
->  	fputs("usage: [options] FILE DIRECTORY\n\n"
->  	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
-> -	      " -zX[,Y]   X=compressor (Y=compression level, optional)\n"
-> -	      " -d#       set output message level to # (maximum 9)\n"
-> -	      " -x#       set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
-> -	      " -EX[,...] X=extended options\n"
-> -	      " -T#       set a fixed UNIX timestamp # to all files\n"
-> -	      " --help    display this help and exit\n"
-> +	      " -zX[,Y]          X=compressor (Y=compression level, optional)\n"
-> +	      " -d#              set output message level to # (maximum 9)\n"
-> +	      " -x#              set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
-> +	      " -EX[,...]        X=extended options\n"
-> +	      " -T#              set a fixed UNIX timestamp # to all files\n"
-> +	      " --exclude-path=X avoid including file X (X = exact literal path)\n"
-> +	      " --exclude-regex=X avoid including file X (X = exact literal path of a regex)\n"
-
-	      " --exclude-regex=X avoid including file X (X = regex path)\n"
-
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index c4c6dcdc89ad..b70f52c80852 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -52,8 +52,8 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
+ 
+-	/* the dedicated workstation for compression */
+-	struct radix_tree_root workstn_tree;
++	/* managed XArray arranged in physical block number */
++	struct xarray managed_pslots;
+ 
+ 	/* threshold for decompression synchronously */
+ 	unsigned int max_sync_decompress_pages;
+@@ -402,8 +402,8 @@ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+ int erofs_workgroup_put(struct erofs_workgroup *grp);
+ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 					     pgoff_t index);
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp);
+ void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 057e6d7b5b7f..b514c67e5fc2 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -425,7 +425,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+-	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++	xa_init(&sbi->managed_pslots);
+ #endif
+ 
+ 	/* get the root inode */
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index fddc5059c930..56ab5b3f73b0 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -37,9 +37,6 @@ void *erofs_get_pcpubuf(unsigned int pagenr)
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
+-#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
+-#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
+-
+ static int erofs_workgroup_get(struct erofs_workgroup *grp)
+ {
+ 	int o;
+@@ -66,7 +63,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 
+ repeat:
+ 	rcu_read_lock();
+-	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	grp = xa_load(&sbi->managed_pslots, index);
+ 	if (grp) {
+ 		if (erofs_workgroup_get(grp)) {
+ 			/* prefer to relax rcu read side */
+@@ -80,43 +77,36 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 	return grp;
+ }
+ 
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp)
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp)
+ {
+ 	struct erofs_sb_info *sbi;
+-	int err;
+-
+-	/* grp shouldn't be broken or used before */
+-	if (atomic_read(&grp->refcount) != 1) {
+-		DBG_BUGON(1);
+-		return -EINVAL;
+-	}
+-
+-	err = radix_tree_preload(GFP_NOFS);
+-	if (err)
+-		return err;
+-
+-	sbi = EROFS_SB(sb);
+-	xa_lock(&sbi->workstn_tree);
++	struct erofs_workgroup *pre;
+ 
+ 	/*
+-	 * Bump up reference count before making this workgroup
+-	 * visible to other users in order to avoid potential UAF
+-	 * without serialized by workstn_lock.
++	 * Bump up a reference count before making this visible
++	 * to others for the XArray in order to avoid potential
++	 * UAF without serialized by xa_lock.
+ 	 */
+-	__erofs_workgroup_get(grp);
++	atomic_inc(&grp->refcount);
+ 
+-	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
+-	if (err)
+-		/*
+-		 * it's safe to decrease since the workgroup isn't visible
+-		 * and refcount >= 2 (cannot be freezed).
+-		 */
+-		__erofs_workgroup_put(grp);
+-
+-	xa_unlock(&sbi->workstn_tree);
+-	radix_tree_preload_end();
+-	return err;
++	sbi = EROFS_SB(sb);
++repeat:
++	xa_lock(&sbi->managed_pslots);
++	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
++			   NULL, grp, GFP_NOFS);
++	if (pre) {
++		/* try to legitimize the current in-tree one */
++		if (erofs_workgroup_get(pre)) {
++			xa_unlock(&sbi->managed_pslots);
++			cond_resched();
++			goto repeat;
++		}
++		atomic_dec(&grp->refcount);
++		grp = pre;
++	}
++	xa_unlock(&sbi->managed_pslots);
++	return grp;
+ }
+ 
+ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
+@@ -155,7 +145,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 
+ 	/*
+ 	 * Note that all cached pages should be unattached
+-	 * before deleted from the radix tree. Otherwise some
++	 * before deleted from the XArray. Otherwise some
+ 	 * cached pages could be still attached to the orphan
+ 	 * old workgroup when the new one is available in the tree.
+ 	 */
+@@ -169,7 +159,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 	 * however in order to avoid some race conditions, add a
+ 	 * DBG_BUGON to observe this in advance.
+ 	 */
+-	DBG_BUGON(radix_tree_delete(&sbi->workstn_tree, grp->index) != grp);
++	DBG_BUGON(xa_erase(&sbi->managed_pslots, grp->index) != grp);
+ 
+ 	/*
+ 	 * If managed cache is on, last refcount should indicate
+@@ -182,22 +172,11 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 					      unsigned long nr_shrink)
+ {
+-	pgoff_t first_index = 0;
+-	void *batch[PAGEVEC_SIZE];
++	struct erofs_workgroup *grp;
+ 	unsigned int freed = 0;
++	unsigned long index;
+ 
+-	int i, found;
+-repeat:
+-	xa_lock(&sbi->workstn_tree);
+-
+-	found = radix_tree_gang_lookup(&sbi->workstn_tree,
+-				       batch, first_index, PAGEVEC_SIZE);
+-
+-	for (i = 0; i < found; ++i) {
+-		struct erofs_workgroup *grp = batch[i];
+-
+-		first_index = grp->index + 1;
+-
++	xa_for_each(&sbi->managed_pslots, index, grp) {
+ 		/* try to shrink each valid workgroup */
+ 		if (!erofs_try_to_release_workgroup(sbi, grp))
+ 			continue;
+@@ -206,10 +185,6 @@ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 		if (!--nr_shrink)
+ 			break;
+ 	}
+-	xa_unlock(&sbi->workstn_tree);
+-
+-	if (i && nr_shrink)
+-		goto repeat;
+ 	return freed;
+ }
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 80e47f07d946..0d77a166068f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -67,16 +67,6 @@ static void z_erofs_pcluster_init_once(void *ptr)
+ 		pcl->compressed_pages[i] = NULL;
+ }
+ 
+-static void z_erofs_pcluster_init_always(struct z_erofs_pcluster *pcl)
+-{
+-	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
+-
+-	atomic_set(&pcl->obj.refcount, 1);
+-
+-	DBG_BUGON(cl->nr_pages);
+-	DBG_BUGON(cl->vcnt);
+-}
+-
+ int __init z_erofs_init_zip_subsystem(void)
+ {
+ 	pcluster_cachep = kmem_cache_create("erofs_compress",
+@@ -341,26 +331,19 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 				     struct inode *inode,
+ 				     struct erofs_map_blocks *map)
+ {
+-	struct erofs_workgroup *grp;
+-	struct z_erofs_pcluster *pcl;
++	struct z_erofs_pcluster *pcl = clt->pcl;
+ 	struct z_erofs_collection *cl;
+ 	unsigned int length;
+ 
+-	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
+-	if (!grp)
+-		return -ENOENT;
+-
+-	pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	/* to avoid unexpected loop formed by corrupted images */
+ 	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+ 	cl = z_erofs_primarycollection(pcl);
+ 	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -368,7 +351,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	if (length & Z_EROFS_PCLUSTER_FULL_LENGTH) {
+ 		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
+ 			DBG_BUGON(1);
+-			erofs_workgroup_put(grp);
+ 			return -EFSCORRUPTED;
+ 		}
+ 	} else {
+@@ -391,7 +373,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		clt->tailpcl = NULL;
+-	clt->pcl = pcl;
+ 	clt->cl = cl;
+ 	return 0;
+ }
+@@ -402,14 +383,14 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ {
+ 	struct z_erofs_pcluster *pcl;
+ 	struct z_erofs_collection *cl;
+-	int err;
++	struct erofs_workgroup *grp;
+ 
+ 	/* no available workgroup, let's allocate one */
+ 	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
+ 	if (!pcl)
+ 		return -ENOMEM;
+ 
+-	z_erofs_pcluster_init_always(pcl);
++	atomic_set(&pcl->obj.refcount, 1);
+ 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+ 
+ 	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
+@@ -429,20 +410,27 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
+ 
+ 	cl = z_erofs_primarycollection(pcl);
++
++	/* must be cleaned before freeing to slab */
++	DBG_BUGON(cl->nr_pages);
++	DBG_BUGON(cl->vcnt);
++
+ 	cl->pageofs = map->m_la & ~PAGE_MASK;
+ 
+ 	/*
+ 	 * lock all primary followed works before visible to others
+ 	 * and mutex_trylock *never* fails for a new pcluster.
+ 	 */
+-	mutex_trylock(&cl->lock);
++	DBG_BUGON(!mutex_trylock(&cl->lock));
+ 
+-	err = erofs_register_workgroup(inode->i_sb, &pcl->obj);
+-	if (err) {
++	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
++	if (grp != &pcl->obj) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
+ 		mutex_unlock(&cl->lock);
+ 		kmem_cache_free(pcluster_cachep, pcl);
+-		return -EAGAIN;
++		return -EEXIST;
+ 	}
++
+ 	/* used to check tail merging loop due to corrupted images */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		clt->tailpcl = pcl;
+@@ -456,6 +444,7 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 				   struct inode *inode,
+ 				   struct erofs_map_blocks *map)
+ {
++	struct erofs_workgroup *grp;
+ 	int ret;
+ 
+ 	DBG_BUGON(clt->cl);
+@@ -469,21 +458,25 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 		return -EINVAL;
+ 	}
+ 
+-repeat:
+-	ret = z_erofs_lookup_collection(clt, inode, map);
+-	if (ret == -ENOENT) {
++	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
++	if (grp) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	} else {
+ 		ret = z_erofs_register_collection(clt, inode, map);
+ 
+-		/* someone registered at the same time, give another try */
+-		if (ret == -EAGAIN) {
+-			cond_resched();
+-			goto repeat;
+-		}
++		if (!ret)
++			goto out;
++		if (ret != -EEXIST)
++			return ret;
+ 	}
+ 
+-	if (ret)
++	ret = z_erofs_lookup_collection(clt, inode, map);
++	if (ret) {
++		erofs_workgroup_put(&clt->pcl->obj);
+ 		return ret;
++	}
+ 
++out:
+ 	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  clt->cl->pagevec, clt->cl->vcnt);
+ 
+-- 
+2.17.1
 
