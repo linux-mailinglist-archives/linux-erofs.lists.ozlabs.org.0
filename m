@@ -1,49 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28218161FDA
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 05:47:45 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFFED161FB6
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 05:02:47 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48M6dK0L8DzDqT3
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 15:02:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48M7d94wZ9zDqLs
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 15:47:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.helo=mail105.syd.optusnet.com.au (client-ip=211.29.132.249;
+ helo=mail105.syd.optusnet.com.au; envelope-from=david@fromorbit.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48M6d42DG4zDqQs
- for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 15:02:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=7wGa3YK3qBJM1kRhsgewapkT2JCnOADkdvrgCfI8+90=; b=oTTxMJX6amDV3Ionqdhrrglrcb
- W7H8kpBfSnTDWxOXNM7fFfN0yug+0CKzj9Ko8iqxRm7V6BVIbDWhEC5i1no59QsIWFL0/D6tAI2iv
- rfCKb7LLP1qh9qDF5mjh+jTUcyT5+O7Px3mmqtHkFpbin0++ry4u0Hbw15v1wdN54TlTK2c2lDqdh
- J8IWjfgf4ukQe4UHOQDrt6egCl1KRtL8tSJig+d4s2S5T6WjGgiQg/RAx1FTvaRP8UHvjnWbOAv6x
- T4khKePRX4dxjOA1oXQIsUE8Ii8jxjOmrdfGyI0GcE9KonY0mJiM64L+QsNgaS/eLh9tYlU78Q+ft
- X2WA0Kag==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1j3u4w-00078u-UB; Tue, 18 Feb 2020 04:01:46 +0000
-Date: Mon, 17 Feb 2020 20:01:46 -0800
-From: Matthew Wilcox <willy@infradead.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH 00/44] Manually convert filesystem FS documents to ReST
-Message-ID: <20200218040146.GM7778@bombadil.infradead.org>
-References: <cover.1581955849.git.mchehab+huawei@kernel.org>
+ dmarc=none (p=none dis=none) header.from=fromorbit.com
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au
+ [211.29.132.249])
+ by lists.ozlabs.org (Postfix) with ESMTP id 48M7d34rk3zDqDy
+ for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2020 15:47:33 +1100 (AEDT)
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au
+ [49.179.138.28])
+ by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D76033A19D6;
+ Tue, 18 Feb 2020 15:47:31 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+ (envelope-from <david@fromorbit.com>)
+ id 1j3unC-0005hw-70; Tue, 18 Feb 2020 15:47:30 +1100
+Date: Tue, 18 Feb 2020 15:47:30 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v6 01/19] mm: Return void from various readahead functions
+Message-ID: <20200218044730.GF10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1581955849.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200217184613.19668-2-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+ a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+ a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+ a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=XMwvCbM7UuQ64GsG45gA:9
+ a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,44 +55,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>,
- Martin Brandenburg <martin@omnibond.com>, Jan Kara <jack@suse.cz>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Amir Goldstein <amir73il@gmail.com>, Bob Copeland <me@bobcopeland.com>,
- David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>,
- linux-mtd@lists.infradead.org, Ilya Dryomov <idryomov@gmail.com>,
- linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>,
- Naohiro Aota <naohiro.aota@wdc.com>, Christoph Hellwig <hch@infradead.org>,
- linux-nilfs@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
- Sage Weil <sage@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Weinberger <richard@nod.at>, Tyler Hicks <code@tyhicks.com>,
- cluster-devel@redhat.com, v9fs-developer@lists.sourceforge.net,
- Gao Xiang <xiang@kernel.org>, linux-ext4@vger.kernel.org,
- Salah Triki <salah.triki@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>,
- devel@lists.orangefs.org, Eric Van Hensbergen <ericvh@gmail.com>,
- ecryptfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- Bob Peterson <rpeterso@redhat.com>,
- "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
- David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
- ceph-devel@vger.kernel.org, Ryusuke Konishi <konishi.ryusuke@gmail.com>,
- Anton Altaparmakov <anton@tuxera.com>, Damien Le Moal <damien.lemoal@wdc.com>,
- Luis de Bethencourt <luisbg@kernel.org>, Nicolas Pitre <nico@fluxnic.net>,
- linux-ntfs-dev@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>,
- linux-f2fs-devel@lists.sourceforge.net, ocfs2-devel@oss.oracle.com,
- Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
- Phillip Lougher <phillip@squashfs.org.uk>, Johannes Thumshirn <jth@kernel.org>,
- linux-erofs@lists.ozlabs.org, linux-karma-devel@lists.sourceforge.net,
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
  linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 17, 2020 at 05:11:46PM +0100, Mauro Carvalho Chehab wrote:
-> There are lots of plain text documents under Documentation/filesystems.
+On Mon, Feb 17, 2020 at 10:45:42AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Manually convert several of those to ReST and add them to the index file.
+> ondemand_readahead has two callers, neither of which use the return value.
+> That means that both ra_submit and __do_page_cache_readahead() can return
+> void, and we don't need to worry that a present page in the readahead
+> window causes us to return a smaller nr_pages than we ought to have.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-I think at least 90% of this material needs to be in admin-guide.  Should
-we create Documentation/admin-guide/filesystems/ and move most of these
-files there?
+Looks good.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
