@@ -2,54 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 267D91634B6
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 22:21:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD8971634E5
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 22:27:10 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48MYgj4jM8zDqFM
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 08:21:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MYpM3kLXzDqBr
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 08:27:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.helo=mail104.syd.optusnet.com.au (client-ip=211.29.132.246;
+ helo=mail104.syd.optusnet.com.au; envelope-from=david@fromorbit.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=L9ufQZtG; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48MYgf4PLbzDq6Q
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 08:21:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=0HtJTFPkdLwAcbGGhAHyzxa8a1mSgpc758IYlfDOg/k=; b=L9ufQZtGybPYd67zmz67Xgy4Tn
- mZsneK5DIi4+EdZSTDy3qMq6jC4G9yjF4A0m3HKQqgfmPcf89rxgAlz7TflzrDt+lPKQjG8DBB0Nc
- hFwG4XwkG9NeYBz6KYBZ58AKe0IfPIrYhHeqqinr+nlcKs9GdGtB8jhCcawcvPy3icitqNTTzH4jP
- ZCAGflog5kL6wL3IvL71BWNMv5PaAXyucj7tYF+EQU4HI4NEjXGWh1T+shXyemzhRpUXmIabqr29C
- 5LaP21DN5DNYTONx+gIE3+S5Zr0Asg51I2iJBLolcYDkCch1kyQ608fu1c/WOZsk9fwFBAcPrEAy8
- FZTOuLoQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1j4AIt-0003y5-Bi; Tue, 18 Feb 2020 21:21:15 +0000
-Date: Tue, 18 Feb 2020 13:21:15 -0800
-From: Matthew Wilcox <willy@infradead.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 01/19] mm: Return void from various readahead functions
-Message-ID: <20200218212115.GG24185@bombadil.infradead.org>
+ dmarc=none (p=none dis=none) header.from=fromorbit.com
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au
+ [211.29.132.246])
+ by lists.ozlabs.org (Postfix) with ESMTP id 48MYp92GMSzDq6M
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 08:26:57 +1100 (AEDT)
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au
+ [49.179.138.28])
+ by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0B3B97EA1A6;
+ Wed, 19 Feb 2020 08:26:54 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+ (envelope-from <david@fromorbit.com>)
+ id 1j4AOK-0003K5-Rm; Wed, 19 Feb 2020 08:26:52 +1100
+Date: Wed, 19 Feb 2020 08:26:52 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v6 00/19] Change readahead API
+Message-ID: <20200218212652.GR10776@dread.disaster.area>
 References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-2-willy@infradead.org>
- <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
+ <20200218045633.GH10776@dread.disaster.area>
+ <20200218134230.GN7778@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218134230.GN7778@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+ a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+ a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10
+ a=7-415B0cAAAA:8 a=13k90lvrXjaGpILklQQA:9 a=QEXdDO2ut3YA:10
+ a=biEYGPWJfzWAr4FL6Ov7:22
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,38 +66,47 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Feb 18, 2020 at 01:05:29PM -0800, John Hubbard wrote:
-> This is an easy review and obviously correct, so:
+On Tue, Feb 18, 2020 at 05:42:30AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 03:56:33PM +1100, Dave Chinner wrote:
+> > Latest version in your git tree:
+> > 
+> > $ ▶ glo -n 5 willy/readahead
+> > 4be497096c04 mm: Use memalloc_nofs_save in readahead path
+> > ff63497fcb98 iomap: Convert from readpages to readahead
+> > 26aee60e89b5 iomap: Restructure iomap_readpages_actor
+> > 8115bcca7312 fuse: Convert from readpages to readahead
+> > 3db3d10d9ea1 f2fs: Convert from readpages to readahead
+> > $
+> > 
+> > merged into a 5.6-rc2 tree fails at boot on my test vm:
+> > 
+> > [    2.423116] ------------[ cut here ]------------
+> > [    2.424957] list_add double add: new=ffffea000efff4c8, prev=ffff8883bfffee60, next=ffffea000efff4c8.
+> > [    2.428259] WARNING: CPU: 4 PID: 1 at lib/list_debug.c:29 __list_add_valid+0x67/0x70
+> > [    2.457484] Call Trace:
+> > [    2.458171]  __pagevec_lru_add_fn+0x15f/0x2c0
+> > [    2.459376]  pagevec_lru_move_fn+0x87/0xd0
+> > [    2.460500]  ? pagevec_move_tail_fn+0x2d0/0x2d0
+> > [    2.461712]  lru_add_drain_cpu+0x8d/0x160
+> > [    2.462787]  lru_add_drain+0x18/0x20
 > 
->     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> Are you sure that was 4be497096c04 ?  I ask because there was a
 
-Thanks
+Yes, because it's the only version I've actually merged into my
+working tree, compiled and tried to run. :P
 
-> Thoughts for the future of the API:
-> 
-> I will add that I could envision another patchset that went in the
-> opposite direction, and attempted to preserve the information about
-> how many pages were successfully read ahead. And that would be nice
-> to have (at least IMHO), even all the way out to the syscall level,
-> especially for the readahead syscall.
+> version pushed to that git tree that did contain a list double-add
+> (due to a mismerge when shuffling patches).  I noticed it and fixed
+> it, and 4be497096c04 doesn't have that problem.  I also test with
+> CONFIG_DEBUG_LIST turned on, but this problem you hit is going to be
+> probabilistic because it'll depend on the timing between whatever other
+> list is being used and the page actually being added to the LRU.
 
-Right, and that was where I went initially.  It turns out to be a
-non-trivial aount of work to do the book-keeping to find out how many
-pages were _attempted_, and since we don't wait for the I/O to complete,
-we don't know how many _succeeded_, and we also don't know how many
-weren't attempted because they were already there, and how many weren't
-attempted because somebody else has raced with us and is going to attempt
-them themselves, and how many weren't attempted because we just ran out
-of memory, and decided to give up.
+I'll see if I can reproduce it.
 
-Also, we don't know how many pages were successfully read, and then the
-system decided to evict before the program found out how many were read,
-let alone before it did any action based on that.
+Cheers,
 
-So, given all that complexity, and the fact that nobody actually does
-anything with the limited and incorrect information we tried to provide
-today, I think it's fair to say that anybody who wants to start to do
-anything with that information can delve into all the complexity around
-"what number should we return, and what does it really mean".  In the
-meantime, let's just ditch the complexity and pretense that this number
-means anything.
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
