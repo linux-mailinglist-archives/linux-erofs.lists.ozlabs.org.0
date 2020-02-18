@@ -2,54 +2,64 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2739716278C
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 14:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F15F91627AF
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2020 15:08:21 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48MMqz66J6zDqcX
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 00:57:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MN4307j2zDqSc
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 01:08:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1582034899;
+	bh=+N3O+ip1gStyUcv+NVhb+9w2+PeTmzC0tui3wydrYTY=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=NHgRHnNMhLLW2XbyzD+0ukpmRD3BigHxDz30ax+5zRdwWMX6gTK2SLbL19bNYzplt
+	 rgTn4A/c/YCHKA+U62Zd/jLyH57sa1PF82gRgSiKrSy6F/rcMUocQYZqBSBXY2oVyl
+	 Vn04xkmF+Pdo8q/V4o+was4m/i0sj9pX7o+H6Thw7gxbQg9ZDfkSgwvTFJ/xFoFcAd
+	 j7lT8VQvKS+gFOylh49C3ofCzjVExpWVTmDNJojeWEy0p+Eb1LBiChSdz/sd2syauD
+	 NoHv7DatfM0qIq3rHHJn+5GvCC2TvQxVRTUHGjMm0bkv2UY8Wfp2lqxyIHume7HNGl
+	 7bljzsuxEsJeA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=rGfMPaIH; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.4;
+ helo=out30-4.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
+ header.from=aliyun.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
+ header.s=s1024 header.b=NjH//N4A; dkim-atps=neutral
+Received: from out30-4.freemail.mail.aliyun.com
+ (out30-4.freemail.mail.aliyun.com [115.124.30.4])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48MMqk5JhKzDqcT
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 00:57:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=Jx8+RumY/EwaN3Vd/61tpY+Z1W663ztwfvZQrgDHUFQ=; b=rGfMPaIHAb3P6XbMGIvcdO+8rY
- sBmTkGPBJklVWdfNXRDuSKEjSq0AFVxR4igsRCNRWkLTSdZaPuKfDPGA85IxvS8KIcx7DFnTNZV6W
- BdpAM1dpoQIHKgx4dqZN2aRI0LWXjx8nIAWXYI687doAh4ldNBkXEkTVqekaKNY0CyubyWbqxE6M5
- Xg7Lryv3cm9nrFO31P1UJNHNA7wxuxRW2EtO7eKe5YABbDbdcnHZkGrigQTKXbiHgLY2umxIsSqvI
- Ual5Uy7fsYoF2dnMFCLJNX+0G4LlqI7WSviwe0Pg1FuWAxDtAWX90MWgUi414drJd5pYulG3q7dzP
- HhOcKxhQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1j43NY-0000gx-Gn; Tue, 18 Feb 2020 13:57:36 +0000
-Date: Tue, 18 Feb 2020 05:57:36 -0800
-From: Matthew Wilcox <willy@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v6 04/19] mm: Rearrange readahead loop
-Message-ID: <20200218135736.GP7778@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-5-willy@infradead.org>
- <20200218050824.GJ10776@dread.disaster.area>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48MN0T4btyzDqgM
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 01:05:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
+ t=1582034694; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
+ bh=+N3O+ip1gStyUcv+NVhb+9w2+PeTmzC0tui3wydrYTY=;
+ b=NjH//N4ALeETQNIH1w5Vwfq2czURjs6HhigEJf3lY0OsrGCkn7mBD91pD2GkHhh/WPxnAfOd6kgX7+WQDKLdjtCUuJ0L0D1Zt6Swf5rp1QH/3hTmZ6DtNwrCKOoNUx8rPyNmHe2E0WkFhyGmnVNR717v8d+RsndMzXS1RtRmHUM=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1427132|-1; CH=green;
+ DM=CONTINUE|CONTINUE|true|0.0613299-0.000903204-0.937767;
+ DS=CONTINUE|ham_regular_dialog|0.0181494-0.00449912-0.977351;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e04426; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=4; RT=4; SR=0; TI=SMTPD_---0TqIHai0_1582034692; 
+Received: from 192.168.0.101(mailfrom:bluce.lee@aliyun.com
+ fp:SMTPD_---0TqIHai0_1582034692) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 18 Feb 2020 22:04:52 +0800
+Subject: Re: [PATCH v6] erofs-utils: introduce exclude dirs and files
+To: Gao Xiang <gaoxiang25@huawei.com>
+References: <20200217131653.54489-1-bluce.lee@aliyun.com>
+ <20200218023214.GA215954@architecture4>
+Message-ID: <fcc63e13-110d-6c9d-b2c1-e731b3eab33b@aliyun.com>
+Date: Tue, 18 Feb 2020 22:04:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218050824.GJ10776@dread.disaster.area>
+In-Reply-To: <20200218023214.GA215954@architecture4>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,64 +71,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-btrfs@vger.kernel.org
+From: Li GuiFu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Li GuiFu <bluce.lee@aliyun.com>
+Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Feb 18, 2020 at 04:08:24PM +1100, Dave Chinner wrote:
-> On Mon, Feb 17, 2020 at 10:45:45AM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > Move the declaration of 'page' to inside the loop and move the 'kick
-> > off a fresh batch' code to the end of the function for easier use in
-> > subsequent patches.
-> 
-> Stale? the "kick off" code is moved to the tail of the loop, not the
-> end of the function.
+Good idea
 
-Braino; I meant to write end of the loop.
-
-> > @@ -183,14 +183,14 @@ void __do_page_cache_readahead(struct address_space *mapping,
-> >  		page = xa_load(&mapping->i_pages, page_offset);
-> >  		if (page && !xa_is_value(page)) {
-> >  			/*
-> > -			 * Page already present?  Kick off the current batch of
-> > -			 * contiguous pages before continuing with the next
-> > -			 * batch.
-> > +			 * Page already present?  Kick off the current batch
-> > +			 * of contiguous pages before continuing with the
-> > +			 * next batch.  This page may be the one we would
-> > +			 * have intended to mark as Readahead, but we don't
-> > +			 * have a stable reference to this page, and it's
-> > +			 * not worth getting one just for that.
-> >  			 */
-> > -			if (readahead_count(&rac))
-> > -				read_pages(&rac, &page_pool, gfp_mask);
-> > -			rac._nr_pages = 0;
-> > -			continue;
-> > +			goto read;
-> >  		}
-> >  
-> >  		page = __page_cache_alloc(gfp_mask);
-> > @@ -201,6 +201,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
-> >  		if (page_idx == nr_to_read - lookahead_size)
-> >  			SetPageReadahead(page);
-> >  		rac._nr_pages++;
-> > +		continue;
-> > +read:
-> > +		if (readahead_count(&rac))
-> > +			read_pages(&rac, &page_pool, gfp_mask);
-> > +		rac._nr_pages = 0;
-> >  	}
-> 
-> Also, why? This adds a goto from branched code that continues, then
-> adds a continue so the unbranched code doesn't execute the code the
-> goto jumps to. In absence of any explanation, this isn't an
-> improvement and doesn't make any sense...
-
-I thought I was explaining it ... "for easier use in subsequent patches".
+On 2020/2/18 10:32, Gao Xiang wrote:
+> On Mon, Feb 17, 2020 at 09:16:53PM +0800, Li Guifu wrote:
+>> From: Li GuiFu <bluce.lee@aliyun.com>
+>>
+>> Add excluded file feature "--exclude-path=" and '--exclude-regex=',
+>> which can be used to build EROFS image without some user specific
+>> files or dirs. Note that you may give multiple '--exclude-path'
+>> or '--exclude-regex' options.
+>>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>> Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
