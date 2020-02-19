@@ -1,49 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D56F163A4B
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 03:36:03 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48Mhfm4P2szDqgd
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 13:36:00 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9377163A60
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 03:41:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MhnH4fRkzDqRk
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 13:41:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=huawei.com;
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=huawei.com;
  envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from huawei.com (szxga01-in.huawei.com [45.249.212.187])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48Mhfc4pdxzDqdZ
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 13:35:49 +1100 (AEDT)
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
- by Forcepoint Email with ESMTP id 83358F8D75B7100BDEA5;
- Wed, 19 Feb 2020 10:35:42 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Mhms0BC3zDqhN
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 13:41:16 +1100 (AEDT)
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
+ by Forcepoint Email with ESMTP id 245B626217D9D6DA7E4E;
+ Wed, 19 Feb 2020 10:41:08 +0800 (CST)
 Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 19 Feb 2020 10:35:42 +0800
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Feb 2020 10:41:07 +0800
 Received: from architecture4 (10.160.196.180) by
  dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 19 Feb 2020 10:35:41 +0800
-Date: Wed, 19 Feb 2020 10:34:22 +0800
+ 15.1.1713.5; Wed, 19 Feb 2020 10:41:07 +0800
+Date: Wed, 19 Feb 2020 10:39:48 +0800
 From: Gao Xiang <gaoxiang25@huawei.com>
 To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v6 11/16] erofs: Convert compressed files from readpages
- to readahead
-Message-ID: <20200219023422.GA83440@architecture4>
+Subject: Re: [PATCH v6 12/19] erofs: Convert uncompressed files from
+ readpages to readahead
+Message-ID: <20200219023948.GB83440@architecture4>
 References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-20-willy@infradead.org>
+ <20200217184613.19668-21-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-20-willy@infradead.org>
+In-Reply-To: <20200217184613.19668-21-willy@infradead.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
+X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
  dggeme762-chm.china.huawei.com (10.3.19.108)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -66,93 +66,139 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 17, 2020 at 10:46:00AM -0800, Matthew Wilcox wrote:
+On Mon, Feb 17, 2020 at 10:46:01AM -0800, Matthew Wilcox wrote:
 > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Use the new readahead operation in erofs.
+> Use the new readahead operation in erofs
 > 
 > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
 
-It looks good to me, although some further optimization exists
-but we could make a straight-forward transform first, and
-I haven't tested the whole series for now...
-Will test it later.
+It looks good to me, and will test it later as well..
 
 Acked-by: Gao Xiang <gaoxiang25@huawei.com>
 
 Thanks,
 Gao Xiang
 
-> ---
->  fs/erofs/zdata.c | 29 +++++++++--------------------
->  1 file changed, 9 insertions(+), 20 deletions(-)
+>  fs/erofs/data.c              | 39 +++++++++++++-----------------------
+>  fs/erofs/zdata.c             |  2 +-
+>  include/trace/events/erofs.h |  6 +++---
+>  3 files changed, 18 insertions(+), 29 deletions(-)
 > 
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 17f45fcb8c5c..7c02015d501d 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -1303,28 +1303,23 @@ static bool should_decompress_synchronously(struct erofs_sb_info *sbi,
->  	return nr <= sbi->max_sync_decompress_pages;
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index fc3a8d8064f8..82ebcee9d178 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -280,47 +280,36 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+>  	return 0;
 >  }
 >  
-> -static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
-> -			     struct list_head *pages, unsigned int nr_pages)
-> +static void z_erofs_readahead(struct readahead_control *rac)
+> -static int erofs_raw_access_readpages(struct file *filp,
+> -				      struct address_space *mapping,
+> -				      struct list_head *pages,
+> -				      unsigned int nr_pages)
+> +static void erofs_raw_access_readahead(struct readahead_control *rac)
 >  {
-> -	struct inode *const inode = mapping->host;
-> +	struct inode *const inode = rac->mapping->host;
->  	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
->  
-> -	bool sync = should_decompress_synchronously(sbi, nr_pages);
-> +	bool sync = should_decompress_synchronously(sbi, readahead_count(rac));
->  	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
-> -	gfp_t gfp = mapping_gfp_constraint(mapping, GFP_KERNEL);
-> -	struct page *head = NULL;
-> +	struct page *page, *head = NULL;
->  	LIST_HEAD(pagepool);
->  
-> -	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
-> -			      nr_pages, false);
-> +	trace_erofs_readpages(inode, readahead_index(rac),
-> +			readahead_count(rac), false);
->  
-> -	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+>  	erofs_off_t last_block;
+>  	struct bio *bio = NULL;
+> -	gfp_t gfp = readahead_gfp_mask(mapping);
+> -	struct page *page = list_last_entry(pages, struct page, lru);
 > -
+> -	trace_erofs_readpages(mapping->host, page, nr_pages, true);
+> +	struct page *page;
+>  
 > -	for (; nr_pages; --nr_pages) {
-> -		struct page *page = lru_to_page(pages);
-> +	f.headoffset = readahead_offset(rac);
+> -		page = list_entry(pages->prev, struct page, lru);
+> +	trace_erofs_readpages(rac->mapping->host, readahead_index(rac),
+> +			readahead_count(rac), true);
 >  
 > +	readahead_for_each(rac, page) {
 >  		prefetchw(&page->flags);
 > -		list_del(&page->lru);
 >  
->  		/*
->  		 * A pure asynchronous readahead is indicated if
-> @@ -1333,11 +1328,6 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
->  		 */
->  		sync &= !(PageReadahead(page) && !head);
+> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
+> -			bio = erofs_read_raw_page(bio, mapping, page,
+> -						  &last_block, nr_pages, true);
+> +		bio = erofs_read_raw_page(bio, rac->mapping, page, &last_block,
+> +				readahead_count(rac), true);
 >  
-> -		if (add_to_page_cache_lru(page, mapping, page->index, gfp)) {
-> -			list_add(&page->lru, &pagepool);
-> -			continue;
-> -		}
-> -
->  		set_page_private(page, (unsigned long)head);
->  		head = page;
+> -			/* all the page errors are ignored when readahead */
+> -			if (IS_ERR(bio)) {
+> -				pr_err("%s, readahead error at page %lu of nid %llu\n",
+> -				       __func__, page->index,
+> -				       EROFS_I(mapping->host)->nid);
+> +		/* all the page errors are ignored when readahead */
+> +		if (IS_ERR(bio)) {
+> +			pr_err("%s, readahead error at page %lu of nid %llu\n",
+> +			       __func__, page->index,
+> +			       EROFS_I(rac->mapping->host)->nid);
+>  
+> -				bio = NULL;
+> -			}
+> +			bio = NULL;
+>  		}
+>  
+> -		/* pages could still be locked */
+>  		put_page(page);
 >  	}
-> @@ -1366,11 +1356,10 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+> -	DBG_BUGON(!list_empty(pages));
 >  
->  	/* clean up the remaining free pages */
->  	put_pages_list(&pagepool);
+>  	/* the rare case (end in gaps) */
+>  	if (bio)
+>  		submit_bio(bio);
 > -	return 0;
 >  }
 >  
->  const struct address_space_operations z_erofs_aops = {
->  	.readpage = z_erofs_readpage,
-> -	.readpages = z_erofs_readpages,
-> +	.readahead = z_erofs_readahead,
+>  static int erofs_get_block(struct inode *inode, sector_t iblock,
+> @@ -358,7 +347,7 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>  /* for uncompressed (aligned) files and raw access for other files */
+>  const struct address_space_operations erofs_raw_access_aops = {
+>  	.readpage = erofs_raw_access_readpage,
+> -	.readpages = erofs_raw_access_readpages,
+> +	.readahead = erofs_raw_access_readahead,
+>  	.bmap = erofs_bmap,
 >  };
 >  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 80e47f07d946..17f45fcb8c5c 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1315,7 +1315,7 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+>  	struct page *head = NULL;
+>  	LIST_HEAD(pagepool);
+>  
+> -	trace_erofs_readpages(mapping->host, lru_to_page(pages),
+> +	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
+>  			      nr_pages, false);
+>  
+>  	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+> diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+> index 27f5caa6299a..bf9806fd1306 100644
+> --- a/include/trace/events/erofs.h
+> +++ b/include/trace/events/erofs.h
+> @@ -113,10 +113,10 @@ TRACE_EVENT(erofs_readpage,
+>  
+>  TRACE_EVENT(erofs_readpages,
+>  
+> -	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
+> +	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
+>  		bool raw),
+>  
+> -	TP_ARGS(inode, page, nrpage, raw),
+> +	TP_ARGS(inode, start, nrpage, raw),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(dev_t,		dev	)
+> @@ -129,7 +129,7 @@ TRACE_EVENT(erofs_readpages,
+>  	TP_fast_assign(
+>  		__entry->dev	= inode->i_sb->s_dev;
+>  		__entry->nid	= EROFS_I(inode)->nid;
+> -		__entry->start	= page->index;
+> +		__entry->start	= start;
+>  		__entry->nrpage	= nrpage;
+>  		__entry->raw	= raw;
+>  	),
 > -- 
 > 2.25.0
 > 
