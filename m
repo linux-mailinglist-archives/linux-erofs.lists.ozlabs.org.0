@@ -2,49 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92186163B83
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 04:43:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA099163B8A
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 04:45:33 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48Mk8g4MTczDqdZ
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 14:43:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MkBz06GMzDqdZ
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 14:45:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.helo=mail105.syd.optusnet.com.au (client-ip=211.29.132.249;
- helo=mail105.syd.optusnet.com.au; envelope-from=david@fromorbit.com;
+ smtp.helo=mail104.syd.optusnet.com.au (client-ip=211.29.132.246;
+ helo=mail104.syd.optusnet.com.au; envelope-from=david@fromorbit.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=none (p=none dis=none) header.from=fromorbit.com
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au
- [211.29.132.249])
- by lists.ozlabs.org (Postfix) with ESMTP id 48Mk8Z0cdxzDqbq
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 14:43:25 +1100 (AEDT)
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au
+ [211.29.132.246])
+ by lists.ozlabs.org (Postfix) with ESMTP id 48MkBv2V3QzDqbq
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 14:45:27 +1100 (AEDT)
 Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au
  [49.179.138.28])
- by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 880BB3A1C09;
- Wed, 19 Feb 2020 14:43:25 +1100 (AEDT)
+ by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 086907EB642;
+ Wed, 19 Feb 2020 14:45:27 +1100 (AEDT)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
  (envelope-from <david@fromorbit.com>)
- id 1j4GGi-0005Z3-WB; Wed, 19 Feb 2020 14:43:25 +1100
-Date: Wed, 19 Feb 2020 14:43:24 +1100
+ id 1j4GIf-0005ZF-UR; Wed, 19 Feb 2020 14:45:25 +1100
+Date: Wed, 19 Feb 2020 14:45:25 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v6 19/19] mm: Use memalloc_nofs_save in readahead path
-Message-ID: <20200219034324.GG10776@dread.disaster.area>
+Subject: Re: [PATCH v6 00/19] Change readahead API
+Message-ID: <20200219034525.GH10776@dread.disaster.area>
 References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-33-willy@infradead.org>
+ <20200218045633.GH10776@dread.disaster.area>
+ <20200218134230.GN7778@bombadil.infradead.org>
+ <20200218212652.GR10776@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-33-willy@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218212652.GR10776@dread.disaster.area>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
  a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
- a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
- a=JfrnYn6hAAAA:8 a=pGLkceISAAAA:8 a=iox4zFpeAAAA:8 a=7-415B0cAAAA:8
- a=EUu7BJ-CshYY2WUz2RUA:9 a=Ins956pMss7IOATM:21 a=TqZTP-Om_uFHSJHF:21
- a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=WzC6qhA0u3u7Ye7llzcV:22
+ a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10
+ a=7-415B0cAAAA:8 a=TZYe3LLFzD7hkv9TfyEA:9 a=QEXdDO2ut3YA:10
  a=biEYGPWJfzWAr4FL6Ov7:22
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -57,66 +58,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- cluster-devel@redhat.com, linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
- linux-fsdevel@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
  linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
  linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 17, 2020 at 10:46:13AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Wed, Feb 19, 2020 at 08:26:52AM +1100, Dave Chinner wrote:
+> On Tue, Feb 18, 2020 at 05:42:30AM -0800, Matthew Wilcox wrote:
+> > On Tue, Feb 18, 2020 at 03:56:33PM +1100, Dave Chinner wrote:
+> > > Latest version in your git tree:
+> > > 
+> > > $ ▶ glo -n 5 willy/readahead
+> > > 4be497096c04 mm: Use memalloc_nofs_save in readahead path
+> > > ff63497fcb98 iomap: Convert from readpages to readahead
+> > > 26aee60e89b5 iomap: Restructure iomap_readpages_actor
+> > > 8115bcca7312 fuse: Convert from readpages to readahead
+> > > 3db3d10d9ea1 f2fs: Convert from readpages to readahead
+> > > $
+> > > 
+> > > merged into a 5.6-rc2 tree fails at boot on my test vm:
+> > > 
+> > > [    2.423116] ------------[ cut here ]------------
+> > > [    2.424957] list_add double add: new=ffffea000efff4c8, prev=ffff8883bfffee60, next=ffffea000efff4c8.
+> > > [    2.428259] WARNING: CPU: 4 PID: 1 at lib/list_debug.c:29 __list_add_valid+0x67/0x70
+> > > [    2.457484] Call Trace:
+> > > [    2.458171]  __pagevec_lru_add_fn+0x15f/0x2c0
+> > > [    2.459376]  pagevec_lru_move_fn+0x87/0xd0
+> > > [    2.460500]  ? pagevec_move_tail_fn+0x2d0/0x2d0
+> > > [    2.461712]  lru_add_drain_cpu+0x8d/0x160
+> > > [    2.462787]  lru_add_drain+0x18/0x20
+> > 
+> > Are you sure that was 4be497096c04 ?  I ask because there was a
 > 
-> Ensure that memory allocations in the readahead path do not attempt to
-> reclaim file-backed pages, which could lead to a deadlock.  It is
-> possible, though unlikely this is the root cause of a problem observed
-> by Cong Wang.
+> Yes, because it's the only version I've actually merged into my
+> working tree, compiled and tried to run. :P
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/readahead.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> > version pushed to that git tree that did contain a list double-add
+> > (due to a mismerge when shuffling patches).  I noticed it and fixed
+> > it, and 4be497096c04 doesn't have that problem.  I also test with
+> > CONFIG_DEBUG_LIST turned on, but this problem you hit is going to be
+> > probabilistic because it'll depend on the timing between whatever other
+> > list is being used and the page actually being added to the LRU.
 > 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 94d499cfb657..8f9c0dba24e7 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -22,6 +22,7 @@
->  #include <linux/mm_inline.h>
->  #include <linux/blk-cgroup.h>
->  #include <linux/fadvise.h>
-> +#include <linux/sched/mm.h>
->  
->  #include "internal.h"
->  
-> @@ -174,6 +175,18 @@ void page_cache_readahead_limit(struct address_space *mapping,
->  		._nr_pages = 0,
->  	};
->  
-> +	/*
-> +	 * Partway through the readahead operation, we will have added
-> +	 * locked pages to the page cache, but will not yet have submitted
-> +	 * them for I/O.  Adding another page may need to allocate memory,
-> +	 * which can trigger memory reclaim.  Telling the VM we're in
-> +	 * the middle of a filesystem operation will cause it to not
-> +	 * touch file-backed pages, preventing a deadlock.  Most (all?)
-> +	 * filesystems already specify __GFP_NOFS in their mapping's
-> +	 * gfp_mask, but let's be explicit here.
-> +	 */
-> +	unsigned int nofs = memalloc_nofs_save();
-> +
+> I'll see if I can reproduce it.
 
-So doesn't this largely remove the need for all the gfp flag futzing
-in the readahead path? i.e. almost all readahead allocations are now
-going to be GFP_NOFS | GFP_NORETRY | GFP_NOWARN ?
+Just updated to a current TOT Linus kernel and your latest branch,
+and so far this is 100% reproducable.
 
-If so, shouldn't we just strip all the gfp flags and masking out of
-the readahead path altogether?
+Not sure how I'm going to debug it yet, because it's init that is
+triggering it....
 
 Cheers,
 
