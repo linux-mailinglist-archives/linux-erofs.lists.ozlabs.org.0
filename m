@@ -2,69 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D296163962
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 02:32:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71E35163A10
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 03:22:33 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48MgFn4HYYzDqdV
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 12:32:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MhMB4sLVzDqgP
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 13:22:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=nvidia.com (client-ip=216.228.121.64;
- helo=hqnvemgate25.nvidia.com; envelope-from=jhubbard@nvidia.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=huawei.com;
+ envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=nvidia.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=nvidia.com header.i=@nvidia.com header.a=rsa-sha256
- header.s=n1 header.b=D1CWU0QJ; dkim-atps=neutral
-Received: from hqnvemgate25.nvidia.com (hqnvemgate25.nvidia.com
- [216.228.121.64])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga01-in.huawei.com [45.249.212.187])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48MgFc6FHvzDqbC
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 12:32:35 +1100 (AEDT)
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by
- hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
- id <B5e4c900f0000>; Tue, 18 Feb 2020 17:31:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
- by hqpgpgate102.nvidia.com (PGP Universal service);
- Tue, 18 Feb 2020 17:32:31 -0800
-X-PGP-Universal: processed;
- by hqpgpgate102.nvidia.com on Tue, 18 Feb 2020 17:32:31 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 01:32:31 +0000
-Subject: Re: [PATCH v6 09/19] mm: Add page_cache_readahead_limit
-To: Matthew Wilcox <willy@infradead.org>, <linux-fsdevel@vger.kernel.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-16-willy@infradead.org>
-X-Nvconfidentiality: public
-From: John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1263603d-f446-c447-2eac-697d105fa76c@nvidia.com>
-Date: Tue, 18 Feb 2020 17:32:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48MhM41cGmzDqCB
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 13:22:22 +1100 (AEDT)
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+ by Forcepoint Email with ESMTP id 0C486E40C3484EB635DD;
+ Wed, 19 Feb 2020 10:22:16 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Feb 2020 10:22:15 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 19 Feb 2020 10:22:15 +0800
+Date: Wed, 19 Feb 2020 10:20:56 +0800
+From: Gao Xiang <gaoxiang25@huawei.com>
+To: Li Guifu <bluce.lee@aliyun.com>
+Subject: Re: [PATCH v7] erofs-utils: introduce exclude dirs and files
+Message-ID: <20200219022056.GA56477@architecture4>
+References: <20200218143047.58488-1-bluce.lee@aliyun.com>
 MIME-Version: 1.0
-In-Reply-To: <20200217184613.19668-16-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
- t=1582075919; bh=a8ZomntyDZQd4T0ETmKn7kyy8sPKQZmX4XFar/4v0t8=;
- h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
- Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
- X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
- Content-Transfer-Encoding;
- b=D1CWU0QJZ/vJUMktO/sgLa0NnHUxAzBi1kB3pVWooMjgO2jXs6q5zixf/wAqu/IOj
- hr6pMYPnaPYV3Ou3y08ljYOt3n9jfzxdK6636RtEz2ipjrYs3b4hz65TVfyMrWizE8
- BxPE/Qh4U52+XVl1w9Y1JqrHWmAs8zmb1n5IGtB0T/8XlxD4CpXKwc33AZc13ZXKhr
- j3FFEWf0HWoIz+2Nn/3nFVgupnlhaFia1orj1/9DKmtEAFVKf0ZH9VZvLLwMWQNW7A
- KAP7iN3AiTFahALL3seMXUw0/Tn+K2lQR+L66VGAqWlcnZtVglzmkuRCBxmUoAyDSr
- JDYpNY+TxVunw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200218143047.58488-1-bluce.lee@aliyun.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -76,294 +55,377 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-ext4@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org, David Michael <fedora.dm0@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2/17/20 10:45 AM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Hi Guifu,
+
+On Tue, Feb 18, 2020 at 10:30:47PM +0800, Li Guifu wrote:
+> From: Li GuiFu <bluce.lee@aliyun.com>
 > 
-> ext4 and f2fs have duplicated the guts of the readahead code so
-> they can read past i_size.  Instead, separate out the guts of the
-> readahead code so they can call it directly.
+> Add excluded file feature "--exclude-path=" and '--exclude-regex=',
+> which can be used to build EROFS image without some user specific
+> files or dirs. Note that you may give multiple '--exclude-path'
+> or '--exclude-regex' options.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/ext4/verity.c        | 35 ++---------------------
->  fs/f2fs/verity.c        | 35 ++---------------------
->  include/linux/pagemap.h |  4 +++
->  mm/readahead.c          | 61 +++++++++++++++++++++++++++++------------
->  4 files changed, 52 insertions(+), 83 deletions(-)
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
+
+Applied to experimental branch with the following minor updates.
+
+If you have more suggestions, please kindly point out. Or I will
+push it out to dev branch later.
+
+Thanks,
+Gao Xiang
 
 
-Just some minor ideas below, mostly documentation, so:
+From 8cdf49bc529d05e741d540b4e5018e2b4215c90a Mon Sep 17 00:00:00 2001
+From: Li Guifu <bluce.lee@aliyun.com>
+Date: Tue, 18 Feb 2020 22:30:47 +0800
+Subject: [PATCH v8] erofs-utils: introduce exclude dirs and files
 
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Add excluded file feature "--exclude-path=" and '--exclude-regex=',
+which can be used to build EROFS image without some user specific
+files or dirs.
 
-> 
-> diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-> index dc5ec724d889..f6e0bf05933e 100644
-> --- a/fs/ext4/verity.c
-> +++ b/fs/ext4/verity.c
-> @@ -342,37 +342,6 @@ static int ext4_get_verity_descriptor(struct inode *inode, void *buf,
->  	return desc_size;
->  }
->  
-> -/*
-> - * Prefetch some pages from the file's Merkle tree.
-> - *
-> - * This is basically a stripped-down version of __do_page_cache_readahead()
-> - * which works on pages past i_size.
-> - */
-> -static void ext4_merkle_tree_readahead(struct address_space *mapping,
-> -				       pgoff_t start_index, unsigned long count)
-> -{
-> -	LIST_HEAD(pages);
-> -	unsigned int nr_pages = 0;
-> -	struct page *page;
-> -	pgoff_t index;
-> -	struct blk_plug plug;
-> -
-> -	for (index = start_index; index < start_index + count; index++) {
-> -		page = xa_load(&mapping->i_pages, index);
-> -		if (!page || xa_is_value(page)) {
-> -			page = __page_cache_alloc(readahead_gfp_mask(mapping));
-> -			if (!page)
-> -				break;
-> -			page->index = index;
-> -			list_add(&page->lru, &pages);
-> -			nr_pages++;
-> -		}
-> -	}
-> -	blk_start_plug(&plug);
-> -	ext4_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
-> -	blk_finish_plug(&plug);
-> -}
-> -
->  static struct page *ext4_read_merkle_tree_page(struct inode *inode,
->  					       pgoff_t index,
->  					       unsigned long num_ra_pages)
-> @@ -386,8 +355,8 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
->  		if (page)
->  			put_page(page);
->  		else if (num_ra_pages > 1)
-> -			ext4_merkle_tree_readahead(inode->i_mapping, index,
-> -						   num_ra_pages);
-> +			page_cache_readahead_limit(inode->i_mapping, NULL,
-> +					index, LONG_MAX, num_ra_pages, 0);
+The implementation is kept as simple as possible for now.
 
+Note that you may give multiple '--exclude-path' and '--exclude-regex'
+options.
 
-LONG_MAX seems bold at first, but then again I can't think of anything smaller 
-that makes any sense, and the previous code didn't have a limit either...OK.
+Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ include/erofs/exclude.h |  26 ++++++++
+ lib/Makefile.am         |   2 +-
+ lib/exclude.c           | 142 ++++++++++++++++++++++++++++++++++++++++
+ lib/inode.c             |   5 ++
+ man/mkfs.erofs.1        |   8 +++
+ mkfs/main.c             |  36 ++++++++--
+ 6 files changed, 211 insertions(+), 8 deletions(-)
+ create mode 100644 include/erofs/exclude.h
+ create mode 100644 lib/exclude.c
 
-I also wondered about the NULL file parameter, and wonder if we're stripping out
-information that is needed for authentication, given that that's what the newly
-written kerneldoc says the "file" arg is for. But it seems that if we're this 
-deep in the fs code's read routines, file system authentication has long since 
-been addressed.
-
-Any actually I don't yet (still working through the patches) see any authentication,
-so maybe that parameter will turn out to be unnecessary.
-
-Anyway, It's nice to see this factored out into a single routine.
-
-
->  		page = read_mapping_page(inode->i_mapping, index, NULL);
->  	}
->  	return page;
-> diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-> index d7d430a6f130..71a3e36721fa 100644
-> --- a/fs/f2fs/verity.c
-> +++ b/fs/f2fs/verity.c
-> @@ -222,37 +222,6 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
->  	return size;
->  }
->  
-> -/*
-> - * Prefetch some pages from the file's Merkle tree.
-> - *
-> - * This is basically a stripped-down version of __do_page_cache_readahead()
-> - * which works on pages past i_size.
-> - */
-> -static void f2fs_merkle_tree_readahead(struct address_space *mapping,
-> -				       pgoff_t start_index, unsigned long count)
-> -{
-> -	LIST_HEAD(pages);
-> -	unsigned int nr_pages = 0;
-> -	struct page *page;
-> -	pgoff_t index;
-> -	struct blk_plug plug;
-> -
-> -	for (index = start_index; index < start_index + count; index++) {
-> -		page = xa_load(&mapping->i_pages, index);
-> -		if (!page || xa_is_value(page)) {
-> -			page = __page_cache_alloc(readahead_gfp_mask(mapping));
-> -			if (!page)
-> -				break;
-> -			page->index = index;
-> -			list_add(&page->lru, &pages);
-> -			nr_pages++;
-> -		}
-> -	}
-> -	blk_start_plug(&plug);
-> -	f2fs_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
-> -	blk_finish_plug(&plug);
-> -}
-> -
->  static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
->  					       pgoff_t index,
->  					       unsigned long num_ra_pages)
-> @@ -266,8 +235,8 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
->  		if (page)
->  			put_page(page);
->  		else if (num_ra_pages > 1)
-> -			f2fs_merkle_tree_readahead(inode->i_mapping, index,
-> -						   num_ra_pages);
-> +			page_cache_readahead_limit(inode->i_mapping, NULL,
-> +					index, LONG_MAX, num_ra_pages, 0);
->  		page = read_mapping_page(inode->i_mapping, index, NULL);
->  	}
->  	return page;
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index bd4291f78f41..4f36c06d064d 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -389,6 +389,10 @@ extern struct page * read_cache_page_gfp(struct address_space *mapping,
->  				pgoff_t index, gfp_t gfp_mask);
->  extern int read_cache_pages(struct address_space *mapping,
->  		struct list_head *pages, filler_t *filler, void *data);
-> +void page_cache_readahead_limit(struct address_space *mapping,
-> +		struct file *file, pgoff_t offset, pgoff_t end_index,
-> +		unsigned long nr_to_read, unsigned long lookahead_size);
-> +
->  
->  static inline struct page *read_mapping_page(struct address_space *mapping,
->  				pgoff_t index, void *data)
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 975ff5e387be..94d499cfb657 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -142,35 +142,38 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages)
->  	blk_finish_plug(&plug);
->  }
->  
-> -/*
-> - * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
-> - * the pages first, then submits them for I/O. This avoids the very bad
-> - * behaviour which would occur if page allocations are causing VM writeback.
-> - * We really don't want to intermingle reads and writes like that.
-> +/**
-> + * page_cache_readahead_limit - Start readahead beyond a file's i_size.
-
-
-Maybe: 
-
-    "Start readahead to a caller-specified end point" ?
-
-(It's only *potentially* beyond files's i_size.)
-
-
-> + * @mapping: File address space.
-> + * @file: This instance of the open file; used for authentication.
-> + * @offset: First page index to read.
-> + * @end_index: The maximum page index to read.
-> + * @nr_to_read: The number of pages to read.
-
-
-How about:
-
-    "The number of pages to read, as long as end_index is not exceeded."
-
-
-> + * @lookahead_size: Where to start the next readahead.
-
-
-Pre-existing, but...it's hard to understand how a size is "where to start".
-Should we rename this arg?
-
-> + *
-> + * This function is for filesystems to call when they want to start
-> + * readahead potentially beyond a file's stated i_size.  If you want
-> + * to start readahead on a normal file, you probably want to call
-> + * page_cache_async_readahead() or page_cache_sync_readahead() instead.
-> + *
-> + * Context: File is referenced by caller.  Mutexes may be held by caller.
-> + * May sleep, but will not reenter filesystem to reclaim memory.
-
-
-In fact, can we say "must not reenter filesystem"? 
-
-
->   */
-> -void __do_page_cache_readahead(struct address_space *mapping,
-> -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
-> -		unsigned long lookahead_size)
-> +void page_cache_readahead_limit(struct address_space *mapping,
-> +		struct file *file, pgoff_t offset, pgoff_t end_index,
-> +		unsigned long nr_to_read, unsigned long lookahead_size)
->  {
-> -	struct inode *inode = mapping->host;
-> -	unsigned long end_index;	/* The last page we want to read */
->  	LIST_HEAD(page_pool);
->  	unsigned long i;
-> -	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
->  	bool use_list = mapping->a_ops->readpages;
->  	struct readahead_control rac = {
->  		.mapping = mapping,
-> -		.file = filp,
-> +		.file = file,
->  		._start = offset,
->  		._nr_pages = 0,
->  	};
->  
-> -	if (isize == 0)
-> -		return;
-> -
-> -	end_index = ((isize - 1) >> PAGE_SHIFT);
-> -
->  	/*
->  	 * Preallocate as many pages as we will need.
->  	 */
-> @@ -225,6 +228,30 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		read_pages(&rac, &page_pool);
->  	BUG_ON(!list_empty(&page_pool));
->  }
-> +EXPORT_SYMBOL_GPL(page_cache_readahead_limit);
-> +
-> +/*
-> + * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
-> + * the pages first, then submits them for I/O. This avoids the very bad
-> + * behaviour which would occur if page allocations are causing VM writeback.
-> + * We really don't want to intermingle reads and writes like that.
-> + */
-> +void __do_page_cache_readahead(struct address_space *mapping,
-> +		struct file *file, pgoff_t offset, unsigned long nr_to_read,
-> +		unsigned long lookahead_size)
-> +{
-> +	struct inode *inode = mapping->host;
-> +	unsigned long end_index;	/* The last page we want to read */
-> +	loff_t isize = i_size_read(inode);
-> +
-> +	if (isize == 0)
-> +		return;
-> +
-> +	end_index = ((isize - 1) >> PAGE_SHIFT);
-> +
-> +	page_cache_readahead_limit(mapping, file, offset, end_index,
-> +			nr_to_read, lookahead_size);
-> +}
->  
->  /*
->   * Chunk the readahead into 2 megabyte units, so that we don't pin too much
-> 
-
-
-thanks,
+diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
+new file mode 100644
+index 000000000000..6435538e35cf
+--- /dev/null
++++ b/include/erofs/exclude.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * erofs-utils/include/erofs/exclude.h
++ *
++ * Created by Li Guifu <bluce.lee@aliyun.com>
++ */
++#ifndef __EROFS_EXCLUDE_H
++#define __EROFS_EXCLUDE_H
++#include <sys/types.h>
++#include <regex.h>
++
++struct erofs_exclude_rule {
++	struct list_head list;
++
++	char *pattern;
++	regex_t reg;
++};
++
++void erofs_exclude_set_root(const char *rootdir);
++void erofs_cleanup_exclude_rules(void);
++
++int erofs_parse_exclude_path(const char *args, bool is_regex);
++struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
++						 const char *name);
++#endif
++
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 1ff81f9eebfe..e4b51e65f053 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -3,7 +3,7 @@
+ 
+ noinst_LTLIBRARIES = liberofs.la
+ liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c \
+-		      compress.c compressor.c
++		      compress.c compressor.c exclude.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ if ENABLE_LZ4
+ liberofs_la_CFLAGS += ${LZ4_CFLAGS}
+diff --git a/lib/exclude.c b/lib/exclude.c
+new file mode 100644
+index 000000000000..47b467dcbb1b
+--- /dev/null
++++ b/lib/exclude.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * erofs-utils/lib/exclude.c
++ *
++ * Created by Li Guifu <bluce.lee@aliyun.com>
++ */
++#include <string.h>
++#include <stdlib.h>
++#include "erofs/err.h"
++#include "erofs/list.h"
++#include "erofs/print.h"
++#include "erofs/exclude.h"
++
++#define EXCLUDE_RULE_EXACT_SIZE	offsetof(struct erofs_exclude_rule, reg)
++#define EXCLUDE_RULE_REGEX_SIZE	sizeof(struct erofs_exclude_rule)
++
++static LIST_HEAD(exclude_head);
++static LIST_HEAD(regex_exclude_head);
++
++static unsigned int rpathlen;		/* root directory prefix length */
++
++void erofs_exclude_set_root(const char *rootdir)
++{
++	rpathlen = strlen(rootdir);
++}
++
++static void dump_regerror(int errcode, const char *s, const regex_t *preg)
++{
++	char str[512];
++
++	regerror(errcode, preg, str, sizeof(str));
++	erofs_err("invalid regex %s (%s)\n", s, str);
++}
++
++static struct erofs_exclude_rule *erofs_insert_exclude(const char *s,
++						       bool is_regex)
++{
++	struct erofs_exclude_rule *r;
++	int ret;
++	struct list_head *h;
++
++	r = malloc(is_regex ? EXCLUDE_RULE_REGEX_SIZE :
++			      EXCLUDE_RULE_EXACT_SIZE);
++	if (!r)
++		return ERR_PTR(-ENOMEM);
++
++	r->pattern = strdup(s);
++	if (!r->pattern) {
++		ret = -ENOMEM;
++		goto err_rule;
++	}
++
++	if (is_regex) {
++		ret = regcomp(&r->reg, s, REG_EXTENDED|REG_NOSUB);
++		if (ret) {
++			dump_regerror(ret, s, &r->reg);
++			goto err_rule;
++		}
++		h = &regex_exclude_head;
++	} else {
++		h = &exclude_head;
++	}
++
++	list_add_tail(&r->list, h);
++	erofs_info("insert exclude %s: %s\n",
++		   is_regex ? "regex" : "path", s);
++	return r;
++
++err_rule:
++	if (r->pattern)
++		free(r->pattern);
++	free(r);
++	return ERR_PTR(ret);
++}
++
++void erofs_cleanup_exclude_rules(void)
++{
++	struct erofs_exclude_rule *r, *n;
++	struct list_head *h;
++
++	h = &exclude_head;
++	list_for_each_entry_safe(r, n, h, list) {
++		list_del(&r->list);
++		free(r->pattern);
++		free(r);
++	}
++
++	h = &regex_exclude_head;
++	list_for_each_entry_safe(r, n, h, list) {
++		list_del(&r->list);
++		free(r->pattern);
++		regfree(&r->reg);
++		free(r);
++	}
++}
++
++int erofs_parse_exclude_path(const char *args, bool is_regex)
++{
++	struct erofs_exclude_rule *r = erofs_insert_exclude(args, is_regex);
++
++	if (IS_ERR(r)) {
++		erofs_cleanup_exclude_rules();
++		return PTR_ERR(r);
++	}
++	return 0;
++}
++
++struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
++						 const char *name)
++{
++	char buf[PATH_MAX];
++	const char *s;
++	struct erofs_exclude_rule *r;
++
++	if (!dir) {
++		/* no prefix */
++		s = name;
++	} else {
++		sprintf(buf, "%s/%s", dir, name);
++		s = buf;
++	}
++
++	s += rpathlen;
++	while (*s == '/')
++		s++;
++
++	list_for_each_entry(r, &exclude_head, list) {
++		if (!strcmp(r->pattern, s))
++			return r;
++	}
++
++	list_for_each_entry(r, &regex_exclude_head, list) {
++		int ret = regexec(&r->reg, s, (size_t)0, NULL, 0);
++
++		if (!ret)
++			return r;
++		if (ret != REG_NOMATCH)
++			dump_regerror(ret, s, &r->reg);
++	}
++	return NULL;
++}
++
+diff --git a/lib/inode.c b/lib/inode.c
+index bd0652b1daed..711402346d72 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -20,6 +20,7 @@
+ #include "erofs/io.h"
+ #include "erofs/compress.h"
+ #include "erofs/xattr.h"
++#include "erofs/exclude.h"
+ 
+ struct erofs_sb_info sbi;
+ 
+@@ -877,6 +878,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		    !strncmp(dp->d_name, "lost+found", strlen("lost+found")))
+ 			continue;
+ 
++		/* skip if it's a exclude file */
++		if (erofs_is_exclude_path(dir->i_srcpath, dp->d_name))
++			continue;
++
+ 		d = erofs_d_alloc(dir, dp->d_name);
+ 		if (IS_ERR(d)) {
+ 			ret = PTR_ERR(d);
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index d6bf82838e0e..d47207adf379 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -52,6 +52,14 @@ Forcely generate extended inodes (64-byte inodes) to output.
+ Set all files to the given UNIX timestamp. Reproducible builds requires setting
+ all to a specific one.
+ .TP
++.BI "\-\-exclude-path=" path
++Ignore file that matches the exact literal path.
++You may give multiple `--exclude-path' options.
++.TP
++.BI "\-\-exclude-regex=" regex
++Ignore files that match the given regular expression.
++You may give multiple `--exclude-regex` options.
++.TP
+ .B \-\-help
+ Display this help and exit.
+ .SH AUTHOR
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 817a6c1ab967..940d4e8b845d 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -21,6 +21,7 @@
+ #include "erofs/io.h"
+ #include "erofs/compress.h"
+ #include "erofs/xattr.h"
++#include "erofs/exclude.h"
+ 
+ #ifdef HAVE_LIBUUID
+ #include <uuid/uuid.h>
+@@ -30,6 +31,8 @@
+ 
+ static struct option long_options[] = {
+ 	{"help", no_argument, 0, 1},
++	{"exclude-path", required_argument, NULL, 2},
++	{"exclude-regex", required_argument, NULL, 3},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -50,12 +53,14 @@ static void usage(void)
+ {
+ 	fputs("usage: [options] FILE DIRECTORY\n\n"
+ 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
+-	      " -zX[,Y]   X=compressor (Y=compression level, optional)\n"
+-	      " -d#       set output message level to # (maximum 9)\n"
+-	      " -x#       set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+-	      " -EX[,...] X=extended options\n"
+-	      " -T#       set a fixed UNIX timestamp # to all files\n"
+-	      " --help    display this help and exit\n"
++	      " -zX[,Y]           X=compressor (Y=compression level, optional)\n"
++	      " -d#               set output message level to # (maximum 9)\n"
++	      " -x#               set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
++	      " -EX[,...]         X=extended options\n"
++	      " -T#               set a fixed UNIX timestamp # to all files\n"
++	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
++	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
++	      " --help            display this help and exit\n"
+ 	      "\nAvailable compressors are: ", stderr);
+ 	print_available_compressors(stderr, ", ");
+ }
+@@ -177,7 +182,22 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
+-
++		case 2:
++			opt = erofs_parse_exclude_path(optarg, false);
++			if (opt) {
++				erofs_err("failed to parse exclude path: %s",
++					  erofs_strerror(opt));
++				return opt;
++			}
++			break;
++		case 3:
++			opt = erofs_parse_exclude_path(optarg, true);
++			if (opt) {
++				erofs_err("failed to parse exclude regex: %s",
++					  erofs_strerror(opt));
++				return opt;
++			}
++			break;
+ 		case 1:
+ 			usage();
+ 			exit(0);
+@@ -372,6 +392,7 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	erofs_show_config();
++	erofs_exclude_set_root(cfg.c_src_path);
+ 
+ 	sb_bh = erofs_buffer_init();
+ 	if (IS_ERR(sb_bh)) {
+@@ -428,6 +449,7 @@ int main(int argc, char **argv)
+ exit:
+ 	z_erofs_compress_exit();
+ 	dev_close();
++	erofs_cleanup_exclude_rules();
+ 	erofs_exit_configure();
+ 
+ 	if (err) {
 -- 
-John Hubbard
-NVIDIA
+2.17.1
+
