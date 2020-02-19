@@ -1,49 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEA1E163B20
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 04:24:56 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E86163B02
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 04:22:35 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48MjhS3ykCzDqZW
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 14:22:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48MjlB0VGZzDqZW
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2020 14:24:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.helo=mail105.syd.optusnet.com.au (client-ip=211.29.132.249;
- helo=mail105.syd.optusnet.com.au; envelope-from=david@fromorbit.com;
+ smtp.mailfrom=nvidia.com (client-ip=216.228.121.143;
+ helo=hqnvemgate24.nvidia.com; envelope-from=jhubbard@nvidia.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=fromorbit.com
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au
- [211.29.132.249])
- by lists.ozlabs.org (Postfix) with ESMTP id 48MjhP3WFGzDqPy
- for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 14:22:27 +1100 (AEDT)
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au
- [49.179.138.28])
- by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 3E55E3A35A2;
- Wed, 19 Feb 2020 14:22:27 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
- (envelope-from <david@fromorbit.com>)
- id 1j4FwP-0005Mo-TE; Wed, 19 Feb 2020 14:22:25 +1100
-Date: Wed, 19 Feb 2020 14:22:25 +1100
-From: Dave Chinner <david@fromorbit.com>
+ dmarc=pass (p=none dis=none) header.from=nvidia.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=nvidia.com header.i=@nvidia.com header.a=rsa-sha256
+ header.s=n1 header.b=UT3JHa9G; dkim-atps=neutral
+Received: from hqnvemgate24.nvidia.com (hqnvemgate24.nvidia.com
+ [216.228.121.143])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Mjl64wCCzDqXg
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2020 14:24:50 +1100 (AEDT)
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by
+ hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+ id <B5e4caa370000>; Tue, 18 Feb 2020 19:23:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+ by hqpgpgate102.nvidia.com (PGP Universal service);
+ Tue, 18 Feb 2020 19:24:46 -0800
+X-PGP-Universal: processed;
+ by hqpgpgate102.nvidia.com on Tue, 18 Feb 2020 19:24:46 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 03:24:45 +0000
+Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
 To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v6 16/19] fuse: Convert from readpages to readahead
-Message-ID: <20200219032225.GD10776@dread.disaster.area>
 References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-29-willy@infradead.org>
+ <20200217184613.19668-12-willy@infradead.org>
+ <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
+ <20200219010209.GI24185@bombadil.infradead.org>
+From: John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <ecd11199-4f0d-a59b-6172-feea0cb5fd29@nvidia.com>
+Date: Tue, 18 Feb 2020 19:24:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-29-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
- a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
- a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
- a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=x3J6VNESQafu8Wz7OnQA:9
- a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200219010209.GI24185@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+ t=1582082615; bh=ZlagFYC7xJwJLLO9AWUODeIShplyyORjVfFAOxTHQbA=;
+ h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+ Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+ X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+ Content-Transfer-Encoding;
+ b=UT3JHa9GumLgpABiUIYS6tLJDf3T0qe2BkLDiRHe+ga+cBFPusc4s18OsMU/jLBlX
+ E0NSDh7Wn3KmDNpXg+BOI8lgzx9nuhlOISv7Q+A953Wjg9k/Zip3jhxQxFwxXrhrTe
+ mlzaTkOvirZ1Dkj3aIXO2/ZqisJThErxhVI/lGBx6uo30YWSEpJjJbA16XPG9BlUce
+ E3OEkzQk82BcTRY/VG+SWUggGD+iAn6jEAnm7mW6H40rjA32wi90YTYCvMNdy0ZikV
+ ycz4GiE2GTViYC1vPo+1mK6ZrNv30Kr16tydwj5IHm3yOemZstl28tkGDlc3/UIRIS
+ mLk08n5euWN9Q==
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,18 +87,49 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 17, 2020 at 10:46:09AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On 2/18/20 5:02 PM, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 04:01:43PM -0800, John Hubbard wrote:
+>> How about this instead? It uses the "for" loop fully and more naturally,
+>> and is easier to read. And it does the same thing:
+>>
+>> static inline struct page *readahead_page(struct readahead_control *rac)
+>> {
+>> 	struct page *page;
+>>
+>> 	if (!rac->_nr_pages)
+>> 		return NULL;
+>>
+>> 	page = xa_load(&rac->mapping->i_pages, rac->_start);
+>> 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+>> 	rac->_batch_count = hpage_nr_pages(page);
+>>
+>> 	return page;
+>> }
+>>
+>> static inline struct page *readahead_next(struct readahead_control *rac)
+>> {
+>> 	rac->_nr_pages -= rac->_batch_count;
+>> 	rac->_start += rac->_batch_count;
+>>
+>> 	return readahead_page(rac);
+>> }
+>>
+>> #define readahead_for_each(rac, page)			\
+>> 	for (page = readahead_page(rac); page != NULL;	\
+>> 	     page = readahead_page(rac))
 > 
-> Use the new readahead operation in fuse.  Switching away from the
-> read_cache_pages() helper gets rid of an implicit call to put_page(),
-> so we can get rid of the get_page() call in fuse_readpages_fill().
+> I'm assuming you mean 'page = readahead_next(rac)' on that second line.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> If you keep reading all the way to the penultimate patch, it won't work
+> for iomap ... at least not in the same way.
+> 
 
-Looks OK.
+OK, so after an initial look at patch 18's ("iomap: Convert from readpages to
+readahead") use of readahead_page() and readahead_next(), I'm not sure what 
+I'm missing. Seems like it would work...?
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+thanks,
 -- 
-Dave Chinner
-david@fromorbit.com
+John Hubbard
+NVIDIA
+
