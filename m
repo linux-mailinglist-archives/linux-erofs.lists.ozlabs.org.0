@@ -2,47 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41602166582
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Feb 2020 18:54:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45143166A71
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Feb 2020 23:39:26 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48Nj042kF4zDqYk
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2020 04:54:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48NqJq3LgXzDqWH
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2020 09:39:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz
- (client-ip=195.135.220.15; helo=mx2.suse.de; envelope-from=dsterba@suse.cz;
- receiver=<UNKNOWN>)
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=suse.cz
-Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=tRp/RfyO; 
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48Nhzz3njLzDqQG
- for <linux-erofs@lists.ozlabs.org>; Fri, 21 Feb 2020 04:54:22 +1100 (AEDT)
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id 56EF1AE79;
- Thu, 20 Feb 2020 17:54:18 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
- id 2CDCCDA70E; Thu, 20 Feb 2020 18:54:01 +0100 (CET)
-Date: Thu, 20 Feb 2020 18:54:00 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v7 00/23] Change readahead API
-Message-ID: <20200220175400.GB2902@twin.jikos.cz>
-Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48NqJf2rKvzDqNW
+ for <linux-erofs@lists.ozlabs.org>; Fri, 21 Feb 2020 09:39:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=PJX15g/idnsbi9mBK4m/qgB4NAR6fjeo4oenehrzb84=; b=tRp/RfyOc8MMAOEnFbjVZPeWaN
+ 2KkzEKXiN/S1p09Bqu90S2Z278xQaeJcCcxdgeXrdpytnUBFOLEh/tcVUgBOZ3WDQA1fyr25gzLyH
+ gRM7sCok3nV4KM0JhdGQW17PpL0/Q+08nFcey+vxgYObaAojcT6v9r7vvwC4L45gbM+E1ObajSRbu
+ 9fqhh3Le7FzPdJj54Iv5P1uuGStaEN80lg311yLhBq1nMBvGvQ80nBsaseT/97o8elxjyPsMZtK46
+ 3NBlICNdJTCPRvVzyFRBHETaOyBq9s1mCrpI3p5mh7mcYzLn6aixyJdO3+xKTmslXOd/sUkUMeqtP
+ kTySNnYQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1j4uTN-0006hx-9M; Thu, 20 Feb 2020 22:39:09 +0000
+Date: Thu, 20 Feb 2020 14:39:09 -0800
+From: Matthew Wilcox <willy@infradead.org>
+To: dsterba@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
  linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
  ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 00/23] Change readahead API
+Message-ID: <20200220223909.GB24185@bombadil.infradead.org>
 References: <20200219210103.32400-1-willy@infradead.org>
+ <20200220175400.GB2902@twin.jikos.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-1-willy@infradead.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20200220175400.GB2902@twin.jikos.cz>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,109 +64,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: dsterba@suse.cz
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Feb 19, 2020 at 01:00:39PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, Feb 20, 2020 at 06:54:00PM +0100, David Sterba wrote:
+> On Wed, Feb 19, 2020 at 01:00:39PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > This series adds a readahead address_space operation to eventually
+> > replace the readpages operation.  The key difference is that
+> > pages are added to the page cache as they are allocated (and
+> > then looked up by the filesystem) instead of passing them on a
+> > list to the readpages operation and having the filesystem add
+> > them to the page cache.  It's a net reduction in code for each
+> > implementation, more efficient than walking a list, and solves
+> > the direct-write vs buffered-read problem reported by yu kuai at
+> > https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+> > 
+> > The only unconverted filesystems are those which use fscache.
+> > Their conversion is pending Dave Howells' rewrite which will make the
+> > conversion substantially easier.
+> > 
+> > I want to thank the reviewers; Dave Chinner, John Hubbard and Christoph
+> > Hellwig have done a marvellous job of providing constructive criticism.
+> > Eric Biggers pointed out how I'd broken ext4 (which led to a substantial
+> > change).  I've tried to take it all on board, but I may have missed
+> > something simply because you've done such a thorough job.
+> > 
+> > This series can also be found at
+> > http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v7
+> > (I also pushed the readahead_v6 tag there in case anyone wants to diff, and
+> > they're both based on 5.6-rc2 so they're easy to diff)
+> > 
+> > v7:
+> >  - Now passes an xfstests run on ext4!
 > 
-> This series adds a readahead address_space operation to eventually
-> replace the readpages operation.  The key difference is that
-> pages are added to the page cache as they are allocated (and
-> then looked up by the filesystem) instead of passing them on a
-> list to the readpages operation and having the filesystem add
-> them to the page cache.  It's a net reduction in code for each
-> implementation, more efficient than walking a list, and solves
-> the direct-write vs buffered-read problem reported by yu kuai at
-> https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
-> 
-> The only unconverted filesystems are those which use fscache.
-> Their conversion is pending Dave Howells' rewrite which will make the
-> conversion substantially easier.
-> 
-> I want to thank the reviewers; Dave Chinner, John Hubbard and Christoph
-> Hellwig have done a marvellous job of providing constructive criticism.
-> Eric Biggers pointed out how I'd broken ext4 (which led to a substantial
-> change).  I've tried to take it all on board, but I may have missed
-> something simply because you've done such a thorough job.
-> 
-> This series can also be found at
-> http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v7
-> (I also pushed the readahead_v6 tag there in case anyone wants to diff, and
-> they're both based on 5.6-rc2 so they're easy to diff)
-> 
-> v7:
->  - Now passes an xfstests run on ext4!
+> On btrfs it still chokes on the first test btrfs/001, with the following
+> warning, the test is stuck there.
 
-On btrfs it still chokes on the first test btrfs/001, with the following
-warning, the test is stuck there.
+Thanks.  The warning actually wasn't the problem, but it did need to
+be addressed.  I got a test system up & running with btrfs, and it's
+currently on generic/027 with the following patch:
 
-[   21.100922] WARNING: suspicious RCU usage
-[   21.103107] 5.6.0-rc2-default+ #996 Not tainted
-[   21.105133] -----------------------------
-[   21.106864] include/linux/xarray.h:1164 suspicious rcu_dereference_check() usage!
-[   21.109948]
-[   21.109948] other info that might help us debug this:
-[   21.109948]
-[   21.113373]
-[   21.113373] rcu_scheduler_active = 2, debug_locks = 1
-[   21.115801] 4 locks held by umount/793:
-[   21.117135]  #0: ffff964a736890e8 (&type->s_umount_key#26){+.+.}, at: deactivate_super+0x2f/0x40
-[   21.120188]  #1: ffff964a7347ba68 (&delayed_node->mutex){+.+.}, at: __btrfs_commit_inode_delayed_items+0x44c/0x4e0 [btrfs]
-[   21.123042]  #2: ffff964a612fe5c8 (&space_info->groups_sem){++++}, at: find_free_extent+0x27d/0xf00 [btrfs]
-[   21.126068]  #3: ffff964a60b93280 (&caching_ctl->mutex){+.+.}, at: btrfs_cache_block_group+0x1f0/0x500 [btrfs]
-[   21.129655]
-[   21.129655] stack backtrace:
-[   21.131943] CPU: 1 PID: 793 Comm: umount Not tainted 5.6.0-rc2-default+ #996
-[   21.134164] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-[   21.138076] Call Trace:
-[   21.139441]  dump_stack+0x71/0xa0
-[   21.140954]  xas_start+0x1a4/0x240
-[   21.142473]  xas_load+0xa/0x50
-[   21.143874]  xas_find+0x226/0x280
-[   21.145298]  extent_readahead+0xcb/0x4f0 [btrfs]
-[   21.146934]  ? mem_cgroup_commit_charge+0x56/0x400
-[   21.148654]  ? rcu_read_lock_sched_held+0x5d/0x90
-[   21.150382]  ? __add_to_page_cache_locked+0x327/0x380
-[   21.152155]  read_pages+0x80/0x1f0
-[   21.153531]  page_cache_readahead_unbounded+0x1b7/0x210
-[   21.155196]  __load_free_space_cache+0x1c1/0x730 [btrfs]
-[   21.157014]  load_free_space_cache+0xb9/0x190 [btrfs]
-[   21.158222]  btrfs_cache_block_group+0x1f8/0x500 [btrfs]
-[   21.159717]  ? finish_wait+0x90/0x90
-[   21.160723]  find_free_extent+0xa17/0xf00 [btrfs]
-[   21.161798]  ? kvm_sched_clock_read+0x14/0x30
-[   21.163022]  ? sched_clock_cpu+0x10/0x120
-[   21.164361]  btrfs_reserve_extent+0x9b/0x180 [btrfs]
-[   21.165952]  btrfs_alloc_tree_block+0xc1/0x350 [btrfs]
-[   21.167680]  ? __lock_acquire+0x272/0x1320
-[   21.169353]  alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
-[   21.171313]  __btrfs_cow_block+0x143/0x7a0 [btrfs]
-[   21.173080]  btrfs_cow_block+0x15f/0x310 [btrfs]
-[   21.174487]  btrfs_search_slot+0x93b/0xf70 [btrfs]
-[   21.175940]  btrfs_lookup_inode+0x3a/0xc0 [btrfs]
-[   21.177419]  ? __btrfs_commit_inode_delayed_items+0x417/0x4e0 [btrfs]
-[   21.179032]  ? __btrfs_commit_inode_delayed_items+0x44c/0x4e0 [btrfs]
-[   21.180787]  __btrfs_update_delayed_inode+0x73/0x260 [btrfs]
-[   21.182174]  __btrfs_commit_inode_delayed_items+0x46c/0x4e0 [btrfs]
-[   21.183907]  ? btrfs_first_delayed_node+0x4c/0x90 [btrfs]
-[   21.185204]  __btrfs_run_delayed_items+0x8e/0x140 [btrfs]
-[   21.186521]  btrfs_commit_transaction+0x312/0xae0 [btrfs]
-[   21.188142]  ? btrfs_attach_transaction_barrier+0x1f/0x50 [btrfs]
-[   21.189684]  sync_filesystem+0x6e/0x90
-[   21.190878]  generic_shutdown_super+0x22/0x100
-[   21.192693]  kill_anon_super+0x14/0x30
-[   21.194389]  btrfs_kill_super+0x12/0x20 [btrfs]
-[   21.196078]  deactivate_locked_super+0x2c/0x70
-[   21.197732]  cleanup_mnt+0x100/0x160
-[   21.199033]  task_work_run+0x90/0xc0
-[   21.200331]  exit_to_usermode_loop+0x96/0xa0
-[   21.201744]  do_syscall_64+0x1df/0x210
-[   21.203187]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 9c782c15f7f7..d23a224d2ad2 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -676,7 +676,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 		struct page **array, unsigned int array_sz)
+ {
+ 	unsigned int i = 0;
+-	XA_STATE(xas, &rac->mapping->i_pages, rac->_index);
++	XA_STATE(xas, &rac->mapping->i_pages, 0);
+ 	struct page *page;
+ 
+ 	BUG_ON(rac->_batch_count > rac->_nr_pages);
+@@ -684,6 +684,8 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 	rac->_index += rac->_batch_count;
+ 	rac->_batch_count = 0;
+ 
++	xas_set(&xas, rac->_index);
++	rcu_read_lock();
+ 	xas_for_each(&xas, page, rac->_index + rac->_nr_pages - 1) {
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 		VM_BUG_ON_PAGE(PageTail(page), page);
+@@ -702,6 +704,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 		if (i == array_sz)
+ 			break;
+ 	}
++	rcu_read_unlock();
+ 
+ 	return i;
+ }
