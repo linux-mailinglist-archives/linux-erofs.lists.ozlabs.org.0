@@ -2,49 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B0ED167D02
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2020 13:00:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 842F91681CC
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2020 16:35:57 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48P9593KBdzDqc5
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2020 23:00:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48PFsk4p5WzDqkg
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2020 02:35:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz
- (client-ip=195.135.220.15; helo=mx2.suse.de; envelope-from=dsterba@suse.cz;
- receiver=<UNKNOWN>)
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=suse.cz
-Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48P9511sGlzDq8W
- for <linux-erofs@lists.ozlabs.org>; Fri, 21 Feb 2020 23:00:20 +1100 (AEDT)
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id 9004EAF2B;
- Fri, 21 Feb 2020 12:00:16 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
- id B113FDA70E; Fri, 21 Feb 2020 12:59:58 +0100 (CET)
-Date: Fri, 21 Feb 2020 12:59:58 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v7 00/23] Change readahead API
-Message-ID: <20200221115957.GE2902@twin.jikos.cz>
-Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48PFsV1sS7zDqf2
+ for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2020 02:35:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=+ZsaQJllFuL8jpNObDQrHmpdC/B73n9RqMvE0qPHxaM=; b=e19h/tTJERLUFpOL5Gva3Nh5/X
+ wd0VH9aVgKh+1Blgs+9Q15ijaVkaoTLAy7WypYckq6maI2+/Qpa5TYpUzL45zkwW6/rKVd4gOa/Q3
+ 37XTTlJ3n85F+yMLVB8w0BnbSlS+Y+mVNSOJqRCX3b4kHG/mSGnd+/RHhL7LSbdq0PycpO3gHljyg
+ 1ePLpWP66QKkQwSW3hqI4AmWyW4KZvprzI+VqeFwh8xfQgZxihaUIj3MuUi6DWndVunwNc8HfQSPa
+ cJzgSNpVLmszdlcuXvTGALnsMeU2uXmuwM6kJU9UgfbmbAX46oAsryhNENVSPO0btKS8JfbqGc1YR
+ ErE1c+gA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1j5AL3-00062c-43; Fri, 21 Feb 2020 15:35:37 +0000
+Date: Fri, 21 Feb 2020 07:35:37 -0800
+From: Matthew Wilcox <willy@infradead.org>
+To: John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v7 11/24] mm: Move end_index check out of readahead loop
+Message-ID: <20200221153537.GE24185@bombadil.infradead.org>
 References: <20200219210103.32400-1-willy@infradead.org>
- <20200220175400.GB2902@twin.jikos.cz>
- <20200220223909.GB24185@bombadil.infradead.org>
+ <20200219210103.32400-12-willy@infradead.org>
+ <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220223909.GB24185@bombadil.infradead.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,9 +57,8 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: dsterba@suse.cz
-Cc: linux-xfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- dsterba@suse.cz, linux-kernel@vger.kernel.org, cluster-devel@redhat.com,
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
  linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
  linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
  linux-btrfs@vger.kernel.org
@@ -66,15 +66,37 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Feb 20, 2020 at 02:39:09PM -0800, Matthew Wilcox wrote:
-> > >  - Now passes an xfstests run on ext4!
-> > 
-> > On btrfs it still chokes on the first test btrfs/001, with the following
-> > warning, the test is stuck there.
+On Thu, Feb 20, 2020 at 07:50:39PM -0800, John Hubbard wrote:
+> This tiny patch made me pause, because I wasn't sure at first of the exact
+> intent of the lines above. Once I worked it out, it seemed like it might
+> be helpful (or overkill??) to add a few hints for the reader, especially since
+> there are no hints in the function's (minimal) documentation header. What
+> do you think of this?
 > 
-> Thanks.  The warning actually wasn't the problem, but it did need to
-> be addressed.  I got a test system up & running with btrfs, and it's
-> currently on generic/027 with the following patch:
+> 	/*
+> 	 * If we can't read *any* pages without going past the inodes's isize
+> 	 * limit, give up entirely:
+> 	 */
+> 	if (index > end_index)
+> 		return;
+> 
+> 	/* Cap nr_to_read, in order to avoid overflowing the ULONG type: */
+> 	if (index + nr_to_read < index)
+> 		nr_to_read = ULONG_MAX - index + 1;
+> 
+> 	/* Cap nr_to_read, to avoid reading past the inode's isize limit: */
+> 	if (index + nr_to_read >= end_index)
+> 		nr_to_read = end_index - index + 1;
 
-Thanks, with the fix applied the first 10 tests passed, I'll let the
-testsuite finish and let you know if ther are more warnings and such.
+A little verbose for my taste ... How about this?
+
+        end_index = (isize - 1) >> PAGE_SHIFT;
+        if (index > end_index)
+                return;
+        /* Avoid wrapping to the beginning of the file */
+        if (index + nr_to_read < index)
+                nr_to_read = ULONG_MAX - index + 1;
+        /* Don't read past the page containing the last byte of the file */
+        if (index + nr_to_read >= end_index)
+                nr_to_read = end_index - index + 1;
+
