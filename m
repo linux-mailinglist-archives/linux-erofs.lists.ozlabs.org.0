@@ -1,87 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC423168C1C
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2020 03:57:43 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48PY0M1BrnzDqs6
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2020 13:57:39 +1100 (AEDT)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78EC1168CE6
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2020 07:41:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48Pdz82ScQzDqgC
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2020 17:41:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oracle.com (client-ip=156.151.31.85; helo=userp2120.oracle.com;
- envelope-from=darrick.wong@oracle.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256
- header.s=corp-2020-01-29 header.b=c3zODm1y; 
- dkim-atps=neutral
-X-Greylist: delayed 6801 seconds by postgrey-1.36 at bilbo;
- Sat, 22 Feb 2020 13:57:24 AEDT
-Received: from userp2120.oracle.com (userp2120.oracle.com [156.151.31.85])
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48PY043RrXzDqqD
- for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2020 13:57:23 +1100 (AEDT)
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
- by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M12v9x008983;
- Sat, 22 Feb 2020 01:03:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
- h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=XwXe3LeeqYnY95Gva2rrGwtbjccLl5UHo7DG2XsOdG8=;
- b=c3zODm1yb49i9kkytlSqFRehssnrFi/WsLe9PUH0MxVrgeD7Zcrv1AA3nHEFQUb+CgbY
- tBReygqfSVl/nokJAz6/uP5hWXG+u7MUCmMUWgpLlO9WX1pzxBbDgFcbyH5O8FJx9N8m
- JlJbPmd/lUzxodbbNLPQ3Tox7y/3o7XOiPnsE1DUvNynyQ/514T/kuANgBIjMU81iw0x
- yItNZwQnDV+DLw+Ofh96I18IA/pwrhJMrMyoQTvYx8bOswz0wLJICgR+WJnzg4ZgaGfR
- 63HflMxNaV24t9qY1Xuy6oK4c2zjeSIrfU3d1mi6jAyeuzKIsRd5FXLnAr6b+2jonygi gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
- by userp2120.oracle.com with ESMTP id 2y8ud1kkxc-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Sat, 22 Feb 2020 01:03:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
- by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M12Sen061706;
- Sat, 22 Feb 2020 01:03:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
- by aserp3030.oracle.com with ESMTP id 2y8udg9kcq-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
- Sat, 22 Feb 2020 01:03:56 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
- by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01M13tL8064544;
- Sat, 22 Feb 2020 01:03:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
- by aserp3030.oracle.com with ESMTP id 2y8udg9kce-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Sat, 22 Feb 2020 01:03:55 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
- by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01M13tO0022000;
- Sat, 22 Feb 2020 01:03:55 GMT
-Received: from localhost (/10.145.179.117)
- by default (Oracle Beehive Gateway v4.0)
- with ESMTP ; Fri, 21 Feb 2020 17:03:55 -0800
-Date: Fri, 21 Feb 2020 17:03:53 -0800
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v7 22/24] iomap: Convert from readpages to readahead
-Message-ID: <20200222010353.GI9506@magnolia>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-23-willy@infradead.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Pdyz447ZzDqRX
+ for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2020 17:41:39 +1100 (AEDT)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+ by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384;
+ 21 Feb 2020 22:41:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,471,1574150400"; d="scan'208";a="229400081"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+ by fmsmga007.fm.intel.com with ESMTP; 21 Feb 2020 22:41:33 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+ (envelope-from <lkp@intel.com>)
+ id 1j5OTl-00081v-BN; Sat, 22 Feb 2020 14:41:33 +0800
+Date: Sat, 22 Feb 2020 14:41:21 +0800
+From: kbuild test robot <lkp@intel.com>
+To: Gao Xiang <gaoxiang25@huawei.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ f4ae4be738bf5c43ad009f654e4776fb9112786c
+Message-ID: <5e50cd11.WQCPCCYpT0UkRBnm%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-23-willy@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538
- signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
- lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002220003
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,279 +52,343 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
- linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-btrfs@vger.kernel.org
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Feb 19, 2020 at 01:01:01PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Use the new readahead operation in iomap.  Convert XFS and ZoneFS to
-> use it.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
+branch HEAD: f4ae4be738bf5c43ad009f654e4776fb9112786c  erofs: convert workstn to XArray
 
-Ok... so from what I saw in the mm patches, this series changes
-readahead to shove the locked pages into the page cache before calling
-the filesystem's ->readahead function.  Therefore, this (and the
-previous patch) are more or less just getting rid of all the iomap
-machinery to put pages in the cache and instead pulling them out of the
-mapping prior to submitting a read bio?
+elapsed time: 2706m
 
-If so,
+configs tested: 320
+configs skipped: 0
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
---D
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+s390                             allmodconfig
+s390                             allyesconfig
+nds32                             allnoconfig
+riscv                            allyesconfig
+h8300                    h8300h-sim_defconfig
+powerpc                             defconfig
+sh                               allmodconfig
+sparc64                             defconfig
+mips                              allnoconfig
+csky                                defconfig
+mips                      malta_kvm_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+nios2                         10m50_defconfig
+sparc                               defconfig
+m68k                           sun3_defconfig
+s390                       zfcpdump_defconfig
+sh                            titan_defconfig
+xtensa                          iss_defconfig
+microblaze                      mmu_defconfig
+m68k                             allmodconfig
+um                           x86_64_defconfig
+ia64                              allnoconfig
+i386                                defconfig
+x86_64                            allnoconfig
+m68k                          multi_defconfig
+openrisc                    or1ksim_defconfig
+s390                                defconfig
+arc                                 defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         3c120_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+alpha                               defconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                       h8s-sim_defconfig
+m68k                       m5475evb_defconfig
+arc                              allyesconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200220
+x86_64               randconfig-a002-20200220
+x86_64               randconfig-a003-20200220
+i386                 randconfig-a001-20200220
+i386                 randconfig-a002-20200220
+i386                 randconfig-a003-20200220
+x86_64               randconfig-a001-20200221
+x86_64               randconfig-a002-20200221
+x86_64               randconfig-a003-20200221
+i386                 randconfig-a001-20200221
+i386                 randconfig-a002-20200221
+i386                 randconfig-a003-20200221
+x86_64               randconfig-a001-20200219
+x86_64               randconfig-a002-20200219
+x86_64               randconfig-a003-20200219
+i386                 randconfig-a001-20200219
+i386                 randconfig-a002-20200219
+i386                 randconfig-a003-20200219
+alpha                randconfig-a001-20200221
+m68k                 randconfig-a001-20200221
+mips                 randconfig-a001-20200221
+nds32                randconfig-a001-20200221
+parisc               randconfig-a001-20200221
+riscv                randconfig-a001-20200221
+alpha                randconfig-a001-20200222
+m68k                 randconfig-a001-20200222
+mips                 randconfig-a001-20200222
+nds32                randconfig-a001-20200222
+parisc               randconfig-a001-20200222
+riscv                randconfig-a001-20200222
+alpha                randconfig-a001-20200220
+m68k                 randconfig-a001-20200220
+mips                 randconfig-a001-20200220
+nds32                randconfig-a001-20200220
+parisc               randconfig-a001-20200220
+riscv                randconfig-a001-20200220
+alpha                randconfig-a001-20200219
+m68k                 randconfig-a001-20200219
+nds32                randconfig-a001-20200219
+parisc               randconfig-a001-20200219
+riscv                randconfig-a001-20200219
+c6x                  randconfig-a001-20200221
+h8300                randconfig-a001-20200221
+microblaze           randconfig-a001-20200221
+nios2                randconfig-a001-20200221
+sparc64              randconfig-a001-20200221
+c6x                  randconfig-a001-20200220
+h8300                randconfig-a001-20200220
+microblaze           randconfig-a001-20200220
+nios2                randconfig-a001-20200220
+sparc64              randconfig-a001-20200220
+c6x                  randconfig-a001-20200222
+h8300                randconfig-a001-20200222
+microblaze           randconfig-a001-20200222
+nios2                randconfig-a001-20200222
+sparc64              randconfig-a001-20200222
+csky                 randconfig-a001-20200219
+openrisc             randconfig-a001-20200219
+s390                 randconfig-a001-20200219
+xtensa               randconfig-a001-20200219
+csky                 randconfig-a001-20200221
+openrisc             randconfig-a001-20200221
+s390                 randconfig-a001-20200221
+sh                   randconfig-a001-20200221
+xtensa               randconfig-a001-20200221
+csky                 randconfig-a001-20200220
+openrisc             randconfig-a001-20200220
+s390                 randconfig-a001-20200220
+sh                   randconfig-a001-20200220
+xtensa               randconfig-a001-20200220
+csky                 randconfig-a001-20200222
+openrisc             randconfig-a001-20200222
+s390                 randconfig-a001-20200222
+sh                   randconfig-a001-20200222
+xtensa               randconfig-a001-20200222
+x86_64               randconfig-b001-20200220
+x86_64               randconfig-b002-20200220
+x86_64               randconfig-b003-20200220
+i386                 randconfig-b001-20200220
+i386                 randconfig-b002-20200220
+i386                 randconfig-b003-20200220
+x86_64               randconfig-b001-20200221
+x86_64               randconfig-b002-20200221
+x86_64               randconfig-b003-20200221
+i386                 randconfig-b001-20200221
+i386                 randconfig-b002-20200221
+i386                 randconfig-b003-20200221
+x86_64               randconfig-b001-20200222
+x86_64               randconfig-b002-20200222
+x86_64               randconfig-b003-20200222
+i386                 randconfig-b001-20200222
+i386                 randconfig-b002-20200222
+i386                 randconfig-b003-20200222
+x86_64               randconfig-b001-20200219
+x86_64               randconfig-b002-20200219
+x86_64               randconfig-b003-20200219
+i386                 randconfig-b001-20200219
+i386                 randconfig-b002-20200219
+i386                 randconfig-b003-20200219
+x86_64               randconfig-c001-20200220
+x86_64               randconfig-c002-20200220
+x86_64               randconfig-c003-20200220
+i386                 randconfig-c001-20200220
+i386                 randconfig-c002-20200220
+i386                 randconfig-c003-20200220
+x86_64               randconfig-c001-20200221
+x86_64               randconfig-c002-20200221
+x86_64               randconfig-c003-20200221
+i386                 randconfig-c001-20200221
+i386                 randconfig-c002-20200221
+i386                 randconfig-c003-20200221
+x86_64               randconfig-c001-20200222
+x86_64               randconfig-c002-20200222
+x86_64               randconfig-c003-20200222
+i386                 randconfig-c001-20200222
+i386                 randconfig-c002-20200222
+i386                 randconfig-c003-20200222
+x86_64               randconfig-d001-20200220
+x86_64               randconfig-d002-20200220
+x86_64               randconfig-d003-20200220
+i386                 randconfig-d001-20200220
+i386                 randconfig-d002-20200220
+i386                 randconfig-d003-20200220
+x86_64               randconfig-d001-20200221
+x86_64               randconfig-d002-20200221
+x86_64               randconfig-d003-20200221
+i386                 randconfig-d001-20200221
+i386                 randconfig-d002-20200221
+i386                 randconfig-d003-20200221
+x86_64               randconfig-d001-20200222
+x86_64               randconfig-d002-20200222
+x86_64               randconfig-d003-20200222
+i386                 randconfig-d001-20200222
+i386                 randconfig-d002-20200222
+i386                 randconfig-d003-20200222
+x86_64               randconfig-e001-20200220
+x86_64               randconfig-e002-20200220
+x86_64               randconfig-e003-20200220
+i386                 randconfig-e001-20200220
+i386                 randconfig-e002-20200220
+i386                 randconfig-e003-20200220
+x86_64               randconfig-e001-20200222
+x86_64               randconfig-e002-20200222
+x86_64               randconfig-e003-20200222
+i386                 randconfig-e001-20200222
+i386                 randconfig-e002-20200222
+i386                 randconfig-e003-20200222
+x86_64               randconfig-e001-20200219
+x86_64               randconfig-e002-20200219
+x86_64               randconfig-e003-20200219
+i386                 randconfig-e001-20200219
+i386                 randconfig-e002-20200219
+i386                 randconfig-e003-20200219
+x86_64               randconfig-e001-20200221
+x86_64               randconfig-e002-20200221
+x86_64               randconfig-e003-20200221
+i386                 randconfig-e001-20200221
+i386                 randconfig-e002-20200221
+i386                 randconfig-e003-20200221
+x86_64               randconfig-f001-20200220
+x86_64               randconfig-f002-20200220
+x86_64               randconfig-f003-20200220
+i386                 randconfig-f001-20200220
+i386                 randconfig-f002-20200220
+i386                 randconfig-f003-20200220
+x86_64               randconfig-f001-20200221
+x86_64               randconfig-f002-20200221
+x86_64               randconfig-f003-20200221
+i386                 randconfig-f001-20200221
+i386                 randconfig-f002-20200221
+i386                 randconfig-f003-20200221
+x86_64               randconfig-f001-20200222
+x86_64               randconfig-f002-20200222
+x86_64               randconfig-f003-20200222
+i386                 randconfig-f001-20200222
+i386                 randconfig-f002-20200222
+i386                 randconfig-f003-20200222
+x86_64               randconfig-g001-20200222
+x86_64               randconfig-g002-20200222
+x86_64               randconfig-g003-20200222
+i386                 randconfig-g001-20200222
+i386                 randconfig-g002-20200222
+i386                 randconfig-g003-20200222
+x86_64               randconfig-g001-20200220
+x86_64               randconfig-g002-20200220
+x86_64               randconfig-g003-20200220
+i386                 randconfig-g001-20200220
+i386                 randconfig-g002-20200220
+i386                 randconfig-g003-20200220
+x86_64               randconfig-g001-20200221
+x86_64               randconfig-g002-20200221
+x86_64               randconfig-g003-20200221
+i386                 randconfig-g001-20200221
+i386                 randconfig-g002-20200221
+i386                 randconfig-g003-20200221
+x86_64               randconfig-h001-20200221
+x86_64               randconfig-h002-20200221
+x86_64               randconfig-h003-20200221
+i386                 randconfig-h001-20200221
+i386                 randconfig-h002-20200221
+i386                 randconfig-h003-20200221
+x86_64               randconfig-h001-20200220
+x86_64               randconfig-h002-20200220
+x86_64               randconfig-h003-20200220
+i386                 randconfig-h001-20200220
+i386                 randconfig-h002-20200220
+i386                 randconfig-h003-20200220
+x86_64               randconfig-h001-20200222
+x86_64               randconfig-h002-20200222
+x86_64               randconfig-h003-20200222
+i386                 randconfig-h001-20200222
+i386                 randconfig-h002-20200222
+i386                 randconfig-h003-20200222
+arc                  randconfig-a001-20200221
+arm                  randconfig-a001-20200221
+arm64                randconfig-a001-20200221
+ia64                 randconfig-a001-20200221
+powerpc              randconfig-a001-20200221
+sparc                randconfig-a001-20200221
+arc                  randconfig-a001-20200220
+arm                  randconfig-a001-20200220
+arm64                randconfig-a001-20200220
+ia64                 randconfig-a001-20200220
+powerpc              randconfig-a001-20200220
+sparc                randconfig-a001-20200220
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+s390                             alldefconfig
+s390                              allnoconfig
+s390                          debug_defconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                                  defconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-> ---
->  fs/iomap/buffered-io.c | 90 +++++++++++++++---------------------------
->  fs/iomap/trace.h       |  2 +-
->  fs/xfs/xfs_aops.c      | 13 +++---
->  fs/zonefs/super.c      |  7 ++--
->  include/linux/iomap.h  |  3 +-
->  5 files changed, 41 insertions(+), 74 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 31899e6cb0f8..66cf453f4bb7 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -214,9 +214,8 @@ iomap_read_end_io(struct bio *bio)
->  struct iomap_readpage_ctx {
->  	struct page		*cur_page;
->  	bool			cur_page_in_bio;
-> -	bool			is_readahead;
->  	struct bio		*bio;
-> -	struct list_head	*pages;
-> +	struct readahead_control *rac;
->  };
->  
->  static void
-> @@ -307,11 +306,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  		if (ctx->bio)
->  			submit_bio(ctx->bio);
->  
-> -		if (ctx->is_readahead) /* same as readahead_gfp_mask */
-> +		if (ctx->rac) /* same as readahead_gfp_mask */
->  			gfp |= __GFP_NORETRY | __GFP_NOWARN;
->  		ctx->bio = bio_alloc(gfp, min(BIO_MAX_PAGES, nr_vecs));
->  		ctx->bio->bi_opf = REQ_OP_READ;
-> -		if (ctx->is_readahead)
-> +		if (ctx->rac)
->  			ctx->bio->bi_opf |= REQ_RAHEAD;
->  		ctx->bio->bi_iter.bi_sector = sector;
->  		bio_set_dev(ctx->bio, iomap->bdev);
-> @@ -367,36 +366,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
->  }
->  EXPORT_SYMBOL_GPL(iomap_readpage);
->  
-> -static struct page *
-> -iomap_next_page(struct inode *inode, struct list_head *pages, loff_t pos,
-> -		loff_t length, loff_t *done)
-> -{
-> -	while (!list_empty(pages)) {
-> -		struct page *page = lru_to_page(pages);
-> -
-> -		if (page_offset(page) >= (u64)pos + length)
-> -			break;
-> -
-> -		list_del(&page->lru);
-> -		if (!add_to_page_cache_lru(page, inode->i_mapping, page->index,
-> -				GFP_NOFS))
-> -			return page;
-> -
-> -		/*
-> -		 * If we already have a page in the page cache at index we are
-> -		 * done.  Upper layers don't care if it is uptodate after the
-> -		 * readpages call itself as every page gets checked again once
-> -		 * actually needed.
-> -		 */
-> -		*done += PAGE_SIZE;
-> -		put_page(page);
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->  static loff_t
-> -iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> +iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
->  		void *data, struct iomap *iomap, struct iomap *srcmap)
->  {
->  	struct iomap_readpage_ctx *ctx = data;
-> @@ -404,10 +375,7 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
->  
->  	while (done < length) {
->  		if (!ctx->cur_page) {
-> -			ctx->cur_page = iomap_next_page(inode, ctx->pages,
-> -					pos, length, &done);
-> -			if (!ctx->cur_page)
-> -				break;
-> +			ctx->cur_page = readahead_page(ctx->rac);
->  			ctx->cur_page_in_bio = false;
->  		}
->  		ret = iomap_readpage_actor(inode, pos + done, length - done,
-> @@ -431,44 +399,48 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
->  	return done;
->  }
->  
-> -int
-> -iomap_readpages(struct address_space *mapping, struct list_head *pages,
-> -		unsigned nr_pages, const struct iomap_ops *ops)
-> +/**
-> + * iomap_readahead - Attempt to read pages from a file.
-> + * @rac: Describes the pages to be read.
-> + * @ops: The operations vector for the filesystem.
-> + *
-> + * This function is for filesystems to call to implement their readahead
-> + * address_space operation.
-> + *
-> + * Context: The file is pinned by the caller, and the pages to be read are
-> + * all locked and have an elevated refcount.  This function will unlock
-> + * the pages (once I/O has completed on them, or I/O has been determined to
-> + * not be necessary).  It will also decrease the refcount once the pages
-> + * have been submitted for I/O.  After this point, the page may be removed
-> + * from the page cache, and should not be referenced.
-> + */
-> +void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
->  {
-> +	struct inode *inode = rac->mapping->host;
-> +	loff_t pos = readahead_pos(rac);
-> +	loff_t length = readahead_length(rac);
->  	struct iomap_readpage_ctx ctx = {
-> -		.pages		= pages,
-> -		.is_readahead	= true,
-> +		.rac	= rac,
->  	};
-> -	loff_t pos = page_offset(list_entry(pages->prev, struct page, lru));
-> -	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
-> -	loff_t length = last - pos + PAGE_SIZE, ret = 0;
->  
-> -	trace_iomap_readpages(mapping->host, nr_pages);
-> +	trace_iomap_readahead(inode, readahead_count(rac));
->  
->  	while (length > 0) {
-> -		ret = iomap_apply(mapping->host, pos, length, 0, ops,
-> -				&ctx, iomap_readpages_actor);
-> +		loff_t ret = iomap_apply(inode, pos, length, 0, ops,
-> +				&ctx, iomap_readahead_actor);
->  		if (ret <= 0) {
->  			WARN_ON_ONCE(ret == 0);
-> -			goto done;
-> +			break;
->  		}
->  		pos += ret;
->  		length -= ret;
->  	}
-> -	ret = 0;
-> -done:
-> +
->  	if (ctx.bio)
->  		submit_bio(ctx.bio);
->  	BUG_ON(ctx.cur_page);
-> -
-> -	/*
-> -	 * Check that we didn't lose a page due to the arcance calling
-> -	 * conventions..
-> -	 */
-> -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
-> -	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(iomap_readpages);
-> +EXPORT_SYMBOL_GPL(iomap_readahead);
->  
->  /*
->   * iomap_is_partially_uptodate checks whether blocks within a page are
-> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
-> index 6dc227b8c47e..d6ba705f938a 100644
-> --- a/fs/iomap/trace.h
-> +++ b/fs/iomap/trace.h
-> @@ -39,7 +39,7 @@ DEFINE_EVENT(iomap_readpage_class, name,	\
->  	TP_PROTO(struct inode *inode, int nr_pages), \
->  	TP_ARGS(inode, nr_pages))
->  DEFINE_READPAGE_EVENT(iomap_readpage);
-> -DEFINE_READPAGE_EVENT(iomap_readpages);
-> +DEFINE_READPAGE_EVENT(iomap_readahead);
->  
->  DECLARE_EVENT_CLASS(iomap_page_class,
->  	TP_PROTO(struct inode *inode, struct page *page, unsigned long off,
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 58e937be24ce..6e68eeb50b07 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -621,14 +621,11 @@ xfs_vm_readpage(
->  	return iomap_readpage(page, &xfs_read_iomap_ops);
->  }
->  
-> -STATIC int
-> -xfs_vm_readpages(
-> -	struct file		*unused,
-> -	struct address_space	*mapping,
-> -	struct list_head	*pages,
-> -	unsigned		nr_pages)
-> +STATIC void
-> +xfs_vm_readahead(
-> +	struct readahead_control	*rac)
->  {
-> -	return iomap_readpages(mapping, pages, nr_pages, &xfs_read_iomap_ops);
-> +	iomap_readahead(rac, &xfs_read_iomap_ops);
->  }
->  
->  static int
-> @@ -644,7 +641,7 @@ xfs_iomap_swapfile_activate(
->  
->  const struct address_space_operations xfs_address_space_operations = {
->  	.readpage		= xfs_vm_readpage,
-> -	.readpages		= xfs_vm_readpages,
-> +	.readahead		= xfs_vm_readahead,
->  	.writepage		= xfs_vm_writepage,
->  	.writepages		= xfs_vm_writepages,
->  	.set_page_dirty		= iomap_set_page_dirty,
-> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
-> index 8bc6ef82d693..8327a01d3bac 100644
-> --- a/fs/zonefs/super.c
-> +++ b/fs/zonefs/super.c
-> @@ -78,10 +78,9 @@ static int zonefs_readpage(struct file *unused, struct page *page)
->  	return iomap_readpage(page, &zonefs_iomap_ops);
->  }
->  
-> -static int zonefs_readpages(struct file *unused, struct address_space *mapping,
-> -			    struct list_head *pages, unsigned int nr_pages)
-> +static void zonefs_readahead(struct readahead_control *rac)
->  {
-> -	return iomap_readpages(mapping, pages, nr_pages, &zonefs_iomap_ops);
-> +	iomap_readahead(rac, &zonefs_iomap_ops);
->  }
->  
->  /*
-> @@ -128,7 +127,7 @@ static int zonefs_writepages(struct address_space *mapping,
->  
->  static const struct address_space_operations zonefs_file_aops = {
->  	.readpage		= zonefs_readpage,
-> -	.readpages		= zonefs_readpages,
-> +	.readahead		= zonefs_readahead,
->  	.writepage		= zonefs_writepage,
->  	.writepages		= zonefs_writepages,
->  	.set_page_dirty		= iomap_set_page_dirty,
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 8b09463dae0d..bc20bd04c2a2 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -155,8 +155,7 @@ loff_t iomap_apply(struct inode *inode, loff_t pos, loff_t length,
->  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
->  		const struct iomap_ops *ops);
->  int iomap_readpage(struct page *page, const struct iomap_ops *ops);
-> -int iomap_readpages(struct address_space *mapping, struct list_head *pages,
-> -		unsigned nr_pages, const struct iomap_ops *ops);
-> +void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
->  int iomap_set_page_dirty(struct page *page);
->  int iomap_is_partially_uptodate(struct page *page, unsigned long from,
->  		unsigned long count);
-> -- 
-> 2.25.0
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
