@@ -2,86 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8784516993E
-	for <lists+linux-erofs@lfdr.de>; Sun, 23 Feb 2020 18:58:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3992E169CFF
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2020 05:34:21 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48QXwz30b4zDqRk
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2020 04:58:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48Qq2y3ngyzDqPR
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2020 15:34:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oracle.com (client-ip=156.151.31.85; helo=userp2120.oracle.com;
- envelope-from=darrick.wong@oracle.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256
- header.s=corp-2020-01-29 header.b=PakxXawg; 
- dkim-atps=neutral
-Received: from userp2120.oracle.com (userp2120.oracle.com [156.151.31.85])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48QXwm2DJtzDqR5
- for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2020 04:57:59 +1100 (AEDT)
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
- by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01NHvWju073441;
- Sun, 23 Feb 2020 17:57:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
- h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=LL53eGqGjRhh2FS0FiyzWSm5OLgF8ml4hem9pzFTyEA=;
- b=PakxXawgs/LSVhmYsY1+zuFHltffRjwbw3lP6hwl72y2PLEa8jNl5Ujy9gt6xfZOb6Mz
- pZe861TUQ4w4vRL9H8BDN/Ft61yUxW8ZBT4mCp1Nsu1+ZVxqNgCaBMfkolgljQ/nzIEm
- VO3l937hvjq7rdJRQatg9AN9IDP9fTPQ6OaBJMyOSZbxjNXA0Pa3NCTlr7d5UixoLlJV
- YrAW+AhpE2AJpG3fsJITXVfY9m9jcm9agVJeDdzcJ59kdJlQYXV/vdxaxGBdHC43mQUa
- BqvSk6611lS95oLYQySLRzScVf7fgUh60vjQJvd694prMF7sLeHaJsUvpLosCClFBjqK OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
- by userp2120.oracle.com with ESMTP id 2yavxrbtp0-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Sun, 23 Feb 2020 17:57:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
- by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01NHq2br019936;
- Sun, 23 Feb 2020 17:55:31 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
- by aserp3020.oracle.com with ESMTP id 2ybe3cnq93-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
- Sun, 23 Feb 2020 17:55:31 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
- by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01NHtVwC036442;
- Sun, 23 Feb 2020 17:55:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
- by aserp3020.oracle.com with ESMTP id 2ybe3cnq8s-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
- Sun, 23 Feb 2020 17:55:31 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
- by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01NHtP55027269;
- Sun, 23 Feb 2020 17:55:25 GMT
-Received: from localhost (/10.159.228.17)
- by default (Oracle Beehive Gateway v4.0)
- with ESMTP ; Sun, 23 Feb 2020 09:55:25 -0800
-Date: Sun, 23 Feb 2020 09:55:23 -0800
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v7 21/24] iomap: Restructure iomap_readpages_actor
-Message-ID: <20200223175523.GK9506@magnolia>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48Qq2h2Tl3zDqNs
+ for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2020 15:34:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=oZOe8S6XU8WPAzzWKK+7v8HQwuSfqOL+eNbf+Acq4Wc=; b=ALNrh1EBEZbPI0eohwoy43k7IJ
+ XJ2e9816/Cs/vRrqDf3S6gKYY5tNTkWN4kjJFPML+eVKwmz8Ej5/NJIR097xCbOVGT4n/3FVCtY3O
+ gn/yNbyTTS/qLVvgD8a/9uv4J4ws/6B3fng445cylTypcWambS3YaUfmoMD+/TOtojzWbjZpE6/zo
+ ghV8g3yRtNrjP80Aoo51Pd9fIJz1CgBzZuRDbL9STCkWsJuA7Fz9M8l7mClCERunvUnwRHI/iy7J0
+ DR9XgSFpwQPqfjwVfkmT0/g0k3jsyI3Efuhg2HSWlBcxnyFp7l7jjt1QI9lutMTR51+hhwlnhGP9z
+ +ZZz/7SQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1j65RL-0000Cd-GT; Mon, 24 Feb 2020 04:33:55 +0000
+Date: Sun, 23 Feb 2020 20:33:55 -0800
+From: Matthew Wilcox <willy@infradead.org>
+To: "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH v7 22/24] iomap: Convert from readpages to readahead
+Message-ID: <20200224043355.GL24185@bombadil.infradead.org>
 References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-22-willy@infradead.org>
- <20200222004425.GG9506@magnolia>
- <20200222015435.GH24185@bombadil.infradead.org>
+ <20200219210103.32400-23-willy@infradead.org>
+ <20200220154912.GC19577@infradead.org>
+ <20200220165734.GZ24185@bombadil.infradead.org>
+ <20200222010013.GH9506@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222015435.GH24185@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540
- signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0
- lowpriorityscore=0
- spamscore=0 clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002230148
+In-Reply-To: <20200222010013.GH9506@magnolia>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,106 +59,70 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+Cc: cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, Christoph Hellwig <hch@infradead.org>,
  linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
  linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-btrfs@vger.kernel.org
+ linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Feb 21, 2020 at 05:54:35PM -0800, Matthew Wilcox wrote:
-> On Fri, Feb 21, 2020 at 04:44:25PM -0800, Darrick J. Wong wrote:
-> > On Wed, Feb 19, 2020 at 01:01:00PM -0800, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > By putting the 'have we reached the end of the page' condition at the end
-> > > of the loop instead of the beginning, we can remove the 'submit the last
-> > > page' code from iomap_readpages().  Also check that iomap_readpage_actor()
-> > > didn't return 0, which would lead to an endless loop.
-> > > 
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > > ---
-> > >  fs/iomap/buffered-io.c | 32 ++++++++++++++++++--------------
-> > >  1 file changed, 18 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> > > index cb3511eb152a..31899e6cb0f8 100644
-> > > --- a/fs/iomap/buffered-io.c
-> > > +++ b/fs/iomap/buffered-io.c
-> > > @@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> > >  		void *data, struct iomap *iomap, struct iomap *srcmap)
-> > >  {
-> > >  	struct iomap_readpage_ctx *ctx = data;
-> > > -	loff_t done, ret;
-> > > -
-> > > -	for (done = 0; done < length; done += ret) {
-> > > -		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
-> > > -			if (!ctx->cur_page_in_bio)
-> > > -				unlock_page(ctx->cur_page);
-> > > -			put_page(ctx->cur_page);
-> > > -			ctx->cur_page = NULL;
-> > > -		}
-> > > +	loff_t ret, done = 0;
-> > > +
-> > > +	while (done < length) {
-> > >  		if (!ctx->cur_page) {
-> > >  			ctx->cur_page = iomap_next_page(inode, ctx->pages,
-> > >  					pos, length, &done);
-> > > @@ -418,6 +412,20 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> > >  		}
-> > >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
-> > >  				ctx, iomap, srcmap);
-> > > +		done += ret;
-> > > +
-> > > +		/* Keep working on a partial page */
-> > > +		if (ret && offset_in_page(pos + done))
-> > > +			continue;
-> > > +
-> > > +		if (!ctx->cur_page_in_bio)
-> > > +			unlock_page(ctx->cur_page);
-> > > +		put_page(ctx->cur_page);
-> > > +		ctx->cur_page = NULL;
-> > > +
-> > > +		/* Don't loop forever if we made no progress */
-> > > +		if (WARN_ON(!ret))
-> > > +			break;
-> > >  	}
-> > >  
-> > >  	return done;
-> > > @@ -451,11 +459,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
-> > >  done:
-> > >  	if (ctx.bio)
-> > >  		submit_bio(ctx.bio);
-> > > -	if (ctx.cur_page) {
-> > > -		if (!ctx.cur_page_in_bio)
-> > > -			unlock_page(ctx.cur_page);
-> > > -		put_page(ctx.cur_page);
-> > > -	}
-> > > +	BUG_ON(ctx.cur_page);
+On Fri, Feb 21, 2020 at 05:00:13PM -0800, Darrick J. Wong wrote:
+> On Thu, Feb 20, 2020 at 08:57:34AM -0800, Matthew Wilcox wrote:
+> > On Thu, Feb 20, 2020 at 07:49:12AM -0800, Christoph Hellwig wrote:
+> > +/**
+> > + * iomap_readahead - Attempt to read pages from a file.
+> > + * @rac: Describes the pages to be read.
+> > + * @ops: The operations vector for the filesystem.
+> > + *
+> > + * This function is for filesystems to call to implement their readahead
+> > + * address_space operation.
+> > + *
+> > + * Context: The file is pinned by the caller, and the pages to be read are
+> > + * all locked and have an elevated refcount.  This function will unlock
+> > + * the pages (once I/O has completed on them, or I/O has been determined to
+> > + * not be necessary).  It will also decrease the refcount once the pages
+> > + * have been submitted for I/O.  After this point, the page may be removed
+> > + * from the page cache, and should not be referenced.
+> > + */
 > > 
-> > Whoah, is the system totally unrecoverably hosed at this point?
+> > > Isn't the context documentation something that belongs into the aop
+> > > documentation?  I've never really seen the value of duplicating this
+> > > information in method instances, as it is just bound to be out of date
+> > > rather sooner than later.
 > > 
-> > I get that this /shouldn't/ happen, but should we somehow end up with a
-> > page here, are we unable either to release it or even just leak it?  I'd
-> > have thought a WARN_ON would be just fine here.
+> > I'm in two minds about it as well.  There's definitely no value in
+> > providing kernel-doc for implementations of a common interface ... so
+> > rather than fixing the nilfs2 kernel-doc, I just deleted it.  But this
+> > isn't just the implementation, like nilfs2_readahead() is, it's a library
+> > function for filesystems to call, so it deserves documentation.  On the
+> > other hand, there's no real thought to this on the part of the filesystem;
+> > the implementation just calls this with the appropriate ops pointer.
+> > 
+> > Then again, I kind of feel like we need more documentation of iomap to
+> > help filesystems convert to using it.  But maybe kernel-doc isn't the
+> > mechanism to provide that.
 > 
-> If we do find a page here, we don't actually know what to do with it.
-> It might be (currently) locked, it might have the wrong refcount.
-> Whatever is going on, it's probably better that we stop everything right
-> here rather than allow things to go further and possibly present bad
-> data to the application.  I mean, we could even be leaking the previous
-> contents of this page to userspace.  Or maybe the future contents of a
-> page which shouldn't be in the page cache any more, but userspace gets
-> a mapping to it.
+> I think we need more documentation of the parts of iomap where it can
+> call back into the filesystem (looking at you, iomap_dio_ops).
 > 
-> I'm not enthusiastic about putting in some code here to try to handle
-> a "can't happen" case, since it's never going to be tested, and might
-> end up causing more problems than it tries to solve.  Let's just stop.
+> I'm not opposed to letting this comment stay, though I don't see it as
+> all that necessary since iomap_readahead implements a callout that's
+> documented in vfs.rst and is thus subject to all the constraints listed
+> in the (*readahead) documentation.
 
-Seeing how Linus (and others like myself) are a bit allergic to BUG
-these days, could you add the first paragraph of the above justification
-as a comment adjacent to the BUG_ON(), please? :)
+Right.  And that's not currently in kernel-doc format, but should be.
+Something for a different patchset, IMO.
 
---D
+What we need documenting _here_ is the conditions under which the
+iomap_ops are called so the filesystem author doesn't need to piece them
+together from three different places.  Here's what I currently have:
+
+ * Context: The @ops callbacks may submit I/O (eg to read the addresses of
+ * blocks from disc), and may wait for it.  The caller may be trying to
+ * access a different page, and so sleeping excessively should be avoided.
+ * It may allocate memory, but should avoid large allocations.  This
+ * function is called with memalloc_nofs set, so allocations will not cause
+ * the filesystem to be reentered.
+
