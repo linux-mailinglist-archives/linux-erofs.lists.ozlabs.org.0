@@ -2,42 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E779016F946
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Feb 2020 09:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C14FE170548
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Feb 2020 18:01:39 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48S7nC0CLtzDqd2
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Feb 2020 19:11:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48SMXJ2tgLzDqjL
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Feb 2020 04:01:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:e::133;
+ helo=bombadil.infradead.org;
+ envelope-from=batv+7931773228f1d9803703+6030+infradead.org+hch@bombadil.srs.infradead.org;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga04-in.huawei.com [45.249.212.190])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=b4gRu9Om; 
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48S7n508ntzDqXX
- for <linux-erofs@lists.ozlabs.org>; Wed, 26 Feb 2020 19:11:51 +1100 (AEDT)
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
- by Forcepoint Email with ESMTP id 7D261C881805C3CF2165;
- Wed, 26 Feb 2020 16:11:46 +0800 (CST)
-Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Feb
- 2020 16:11:38 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH v2 3/3] erofs: handle corrupted images whose decompressed size
- less than it'd be
-Date: Wed, 26 Feb 2020 16:10:08 +0800
-Message-ID: <20200226081008.86348-3-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226081008.86348-1-gaoxiang25@huawei.com>
-References: <20200226081008.86348-1-gaoxiang25@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48SMX30DcQzDqcX
+ for <linux-erofs@lists.ozlabs.org>; Thu, 27 Feb 2020 04:01:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=hhQ9YBl81zQvhfWadY0dEbDydMLxnfW9YM0h14jX4a0=; b=b4gRu9OmDpOpG4+91cUD2P0Fvx
+ rwIA1FZxWgyqg54ixZ2mlE7je+4s02JEfApEECCDtBJZOsOCCCQypvdX4wlnpTzyq3GzniYslygSp
+ 0JLM3hJczJhHf6sPZnzEVoXaF0BjXMr7Sau/bOjj78BwbTBoLYT0As4XBg3LZA4cCSraqX2yl635x
+ P0GeGjaSAjr/yoe31Xsg5u1v6aDOjH3+k/QDvhsXylJIuy7m6nJ0VChbG4oj9ux1VoZSn++eE6CLS
+ nvwJVc8B+ap1PhLLk3dgexnb7LCihqx+unp7n6RFCEuxFFJLK99PLd8EgLQxWjGh2LTvEZCdFHFm2
+ mjT6Qmyw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1j703j-0006LS-7W; Wed, 26 Feb 2020 17:01:19 +0000
+Date: Wed, 26 Feb 2020 09:01:19 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v8 05/25] mm: Add new readahead_control API
+Message-ID: <20200226170119.GA22837@infradead.org>
+References: <20200225214838.30017-1-willy@infradead.org>
+ <20200225214838.30017-6-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.160.196.180]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225214838.30017-6-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
+ bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,56 +63,25 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
- Lasse Collin <lasse.collin@tukaani.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As Lasse pointed out, "Looking at fs/erofs/decompress.c,
-the return value from LZ4_decompress_safe_partial is only
-checked for negative value to catch errors. ... So if
-I understood it correctly, if there is bad data whose
-uncompressed size is much less than it should be, it can
-leave part of the output buffer untouched and expose the
-previous data as the file content. "
+On Tue, Feb 25, 2020 at 01:48:18PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Filesystems which implement the upcoming ->readahead method will get
+> their pages by calling readahead_page() or readahead_page_batch().
+> These functions support large pages, even though none of the filesystems
+> to be converted do yet.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Let's fix it now.
+Looks good,
 
-Cc: Lasse Collin <lasse.collin@tukaani.org>
-Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
-[ Gao Xiang: v5.3+, I will manually backport this to stable later. ]
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/decompressor.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index cd978af6bdb9..5d2d81940679 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -166,14 +166,18 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 		ret = LZ4_decompress_safe(src + inputmargin, out,
- 					  inlen, rq->outputsize);
- 
--	if (ret < 0) {
--		erofs_err(rq->sb, "failed to decompress, in[%u, %u] out[%u]",
--			  inlen, inputmargin, rq->outputsize);
-+	if (ret != rq->outputsize) {
-+		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
-+			  ret, inlen, inputmargin, rq->outputsize);
-+
- 		WARN_ON(1);
- 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, src + inputmargin, inlen, true);
- 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, out, rq->outputsize, true);
-+
-+		if (ret >= 0)
-+			memset(out + ret, 0, rq->outputsize - ret);
- 		ret = -EIO;
- 	}
- 
--- 
-2.17.1
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
