@@ -2,49 +2,77 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 560D0174419
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Feb 2020 02:13:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 872271744EE
+	for <lists+linux-erofs@lfdr.de>; Sat, 29 Feb 2020 05:51:21 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48TpLc6WDpzDrB5
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Feb 2020 12:13:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48TvBG6htjzDr7K
+	for <lists+linux-erofs@lfdr.de>; Sat, 29 Feb 2020 15:51:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1582951878;
+	bh=AxDI3Ru54g3+QxUNFScLbFlwy3YWtTbQItGreYbJyk0=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=joN5JoB2JMZhvLCUA4gPsRj/5twCl4M/EcV4A8nEZQjGMccGpogwBRrlswTzeW+5A
+	 x9q0LRk9SDUg7Ow26U/mCIMNYhWUaJaWXQbqWFC1ZZndNxOc1ucXmHVEmQmVPERC26
+	 Fa2XICjP52bLggqrh8p+gnOGbV92oUgGZ6HNQtzZLiaqqGdqTJUypiM/CxHWOTlwBQ
+	 xEYfyj/3YD6JJUGhYMvai0SkYYtHIs76G13EZoTTo6lHVciJ4VSasACAqp3XG4RCga
+	 +MwIeyEQHdQhpR18ocR7KXsfGjeII4N1+YvSfLoP5FddIOxhKKLrbY0T4NJXyY4+Sw
+	 DZ1czDX8uqCzA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=huawei.com;
- envelope-from=gaoxiang25@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from huawei.com (szxga08-in.huawei.com [45.249.212.255])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.65.84; helo=sonic313-21.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=RUAinSMO; dkim-atps=neutral
+Received: from sonic313-21.consmr.mail.gq1.yahoo.com
+ (sonic313-21.consmr.mail.gq1.yahoo.com [98.137.65.84])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48TpLV0RcDzDqPC
- for <linux-erofs@lists.ozlabs.org>; Sat, 29 Feb 2020 12:13:02 +1100 (AEDT)
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
- by Forcepoint Email with ESMTP id 259E8AE0469AE690B3C0;
- Sat, 29 Feb 2020 09:12:57 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 29 Feb 2020 09:12:56 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Sat, 29 Feb 2020 09:12:56 +0800
-Date: Sat, 29 Feb 2020 09:11:26 +0800
-From: Gao Xiang <gaoxiang25@huawei.com>
-To: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2 1/3] erofs: correct the remaining shrink objects
-Message-ID: <20200229011126.GA103844@architecture4>
-References: <20200226081008.86348-1-gaoxiang25@huawei.com>
- <20200228194452.17C3F2469D@mail.kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48TvB65qJVzDqyJ
+ for <linux-erofs@lists.ozlabs.org>; Sat, 29 Feb 2020 15:51:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1582951864; bh=FiSGQ8fN3th9vrikeFRzu+BHVkhKDAXonicQedsKVO8=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=RUAinSMOc57cq4hlkz0Q465u2X77NzFYKGyTUWwkpAzyWH6shORfFBj+w7cHjk+67Nyxfb+5RjiC8Nmeg2xNvd7L6ormjUQfI0MDlZvzVEPOjBCCRhK4kEbfo3zz8QKlpcMsN8f8HRLQqjai2F/+CtCKfBeFEOnWgAjfTDktrM2PO4BcsL3nnIW+2BUdUJMnhlhn3V0Rrdr8FJS9RYFCft+LCDbF5xnFVNSUYcsSNh9NKLPwNnmRvr30Kd21nd5D8GRufQZ4QWF9oTwt/HfjFWHE4wIjXIUKvYPW8BeZlmXlZJpkb8FA+RyzXDFKVfkf595C5ITLVCLhjqqOMpuXlg==
+X-YMail-OSG: jJxK7ykVM1n7KyiCtjdu35xJsn9M.g6KQZ6aoWJlU_tgWTfbLUvtBPdDPRuDRyf
+ AtOQ59SC1JsrMiL6eB9B5v4wF4Q1RZD9WEHCXlwawjk5s6MwNTQr.GgSNJiowc9ITBIBxy6HFqCa
+ LtlI5kpQ9IOJvLirXlL6FIT6rJb8JpaZUS7s7l9CiCdaYoia7d88evnx4NPgZZNv76ul_NwCQP6w
+ CLEL9UfEj1qIWMWVpRBjravf67Z37woYgrHRBOlZtf3woWobZcyluWH5l80rZbF0ypYNwMBZTrg8
+ 4ljryng2HswOl6Pfvzz1g5Xy7IsL3hLZgXxb6CWV2s2TqCwd0V27.Zqn2JrkV6CGuv4iI_nhT_r_
+ zj8bOOT7aC7a1KYRNWcwmaGwrxuEm6X3B7JRS_5oivajHpIIbQZDlCI1JBlh7dEOyjWh4xtWMELp
+ G2V6LfkOlJkYTkDn2FeR5pZ.3ZALxaOZpRxdzO0ETPdoNMToDmr67nHu7GMmcxjV1gJgfQLwIm0h
+ L9C4bRrhkquNdl97OuLJAmb2crDxs2XXCDSLDLQW_anWK3k1s7KcDmba.OgSNXA7IONit9.moAwQ
+ 9iTxAEFD0gpVQGkxEBEoP1hBcoR2sr79oN6PgBwCjoQJUjFD9KJLhTd8odOQucI2tghXtMex4pkg
+ 3QIXKhvihZRnHOOP4MiUxgU133r30ABO_uZkEelpcbS6C2uRwBpKnEI4.kdmKAcrhUWNDWVrIs9B
+ lQiA9pQmp9JCagokRq3LYFzJ8Ha0bcZpfxEJFxDJffVwVeE4HuKWGIAOpdQVLkPi1UcZe6qg_UUL
+ VHMqn3SjWy_ZufFlanQb3qvUer_fYFCuFW.fYNYbSn5pBRZ8Y97Yjp2OK9eI4JZrosBmIKryxvWg
+ 4HwR2yPtHvGYEHq.whkJjmvib_yjV.iSZVluzf8srHqTbtT5gzbOhM4n2ytEktrm4nanc2EG1wAR
+ bvHkSaGwqAaw3IDCQjNRbPvr7gCGHBIZqm_O4fn13.yXIFCED5VDUwA4aGsBhkRg3IwLr1T6WPTE
+ M3txwvw66pdJqx3BoofTffiXPORTzLVPDiakWOuOvV1hyjTJsojjYcHxwMZ.j3oWDEVKHn4GBI5S
+ AFzZg.1EAIOtQM3lBlP9wlJQkzpeFaa8vW2z.c3vjqA0YFWHKhmjMx2d_2MhsnDtzKk8TvgWeg9H
+ 4mksy_P5rDZirbNpb5XQxkfXl49fnaN0U_.uXjsqDxtMzT5ZdciQtOUEI3IQIkNLt0_qfxUPba1L
+ uZ7.WH_rN2wwlPA1tKB1DOUdnOxooL.gAO2j4lNvVXnM16b3Op3_6hLV7_iSL5TcKu2LMO.SzLCj
+ pYaqv0JPYwiuTSzGYuRr8JiXTGAWk8eELBdpsckVpFPlKjiwymzoiwPEowaf7lEyPVXZY7KNTMv2
+ nDkW9a4vOWiM0I3.dfYE-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic313.consmr.mail.gq1.yahoo.com with HTTP; Sat, 29 Feb 2020 04:51:04 +0000
+Received: by smtp409.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 16922bddfd3cbd213433d5c12bb81660; 
+ Sat, 29 Feb 2020 04:51:02 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [WIP] [PATCH v0.0-20200229 00/11] ez: LZMA fixed-sized output
+ compression
+Date: Sat, 29 Feb 2020 12:50:06 +0800
+Message-Id: <20200229045017.12424-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200228194452.17C3F2469D@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+References: <20200229045017.12424-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,58 +84,46 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-On Fri, Feb 28, 2020 at 07:44:50PM +0000, Sasha Levin wrote:
-> Hi
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag
-> fixing commit: e7e9a307be9d ("staging: erofs: introduce workstation for decompression").
-> 
-> The bot has tested the following trees: v5.5.6, v5.4.22, v4.19.106.
-> 
-> v5.5.6: Build OK!
-> v5.4.22: Failed to apply! Possible dependencies:
->     bda17a4577da ("erofs: remove dead code since managed cache is now built-in")
-> 
-> v4.19.106: Failed to apply! Possible dependencies:
->     05f9d4a0c8c4 ("staging: erofs: use the new LZ4_decompress_safe_partial()")
->     0a64d62d5399 ("staging: erofs: fixed -Wmissing-prototype warnings by making functions static.")
->     14f362b4f405 ("staging: erofs: clean up internal.h")
->     152a333a5895 ("staging: erofs: add compacted compression indexes support")
->     22fe04a77d10 ("staging: erofs: clean up shrinker stuffs")
->     3b423417d0d1 ("staging: erofs: clean up erofs_map_blocks_iter")
->     5fb76bb04216 ("staging: erofs: cleanup `z_erofs_vle_normalaccess_readpages'")
->     6e78901a9f23 ("staging: erofs: separate erofs_get_meta_page")
->     7dd68b147d60 ("staging: erofs: use explicit unsigned int type")
->     7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
->     89fcd8360e7b ("staging: erofs: change 'unsigned' to 'unsigned int'")
->     8be31270362b ("staging: erofs: introduce erofs_grab_bio")
->     ab47dd2b0819 ("staging: erofs: cleanup z_erofs_vle_work_{lookup, register}")
->     bda17a4577da ("erofs: remove dead code since managed cache is now built-in")
->     d1ab82443bed ("staging: erofs: Modify conditional checks")
->     e7dfb1cff65b ("staging: erofs: fixed -Wmissing-prototype warnings by moving prototypes to header file.")
->     f0950b02a74c ("staging: erofs: Modify coding style alignments")
+This is a WIP PREVIEW patchset, just for archiving to open
+source community only.
 
-I will manually backport this if it can not be automatically applied.
+For now, it implements LZMA SDK-like GetOptimumFast approach
+and GetOptimum is still on schedule.
+
+It's still buggy, lack of formal APIs and actively under
+development for a while...
+
+Usage:
+$ ./run.sh
+$ ./a.out output.bin.lzma infile
+
+It will compress the beginning as much as possible into
+4k RAW LZMA block.
 
 Thanks,
 Gao Xiang
 
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-> 
-> -- 
-> Thanks
-> Sasha
+Gao Xiang (11):
+  ez: add basic source files
+  ez: add helpers for unaligned accesses
+  ez: introduce bitops header file
+  ez: lzma: add range encoder
+  ez: lzma: add common header file
+  ez: lzma: add byte hashtable generated with CRC32
+  ez: lzma: add LZMA matchfinder
+  ez: lzma: add LZMA encoder
+  ez: lzma: checkpoint feature for range encoder
+  ez: lzma: add fixed-sized output compression
+  ez: lzma: add test program
+
+-- 
+2.20.1
+
