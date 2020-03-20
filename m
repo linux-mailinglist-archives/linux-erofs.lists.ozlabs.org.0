@@ -1,88 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1DBF18CC87
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 12:17:15 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48kLpJ75QrzDrS2
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 22:17:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1584703033;
-	bh=xI9JOlIkvqphrHO0tsL+Oeusi+Ms5zmidRXuYkrWQZY=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=F3RRMBnp/H0Vi32oV5rdLGVAOM3fqPBr2ck1H48qZHPurjz1LXnDKEKToYdqxsoBD
-	 NAFS8wqHqjYAu+tsH9CuKxuz2vdehE9EAV12RNPAbnST2wCJScw+okXy5fD+s94Yc1
-	 yvZC9UBBaoYSrDS7vGFOOUXwxYHd808hhI+LBz8txKshJpQZbnBox62ivf0La/FWJn
-	 ibRov6bjwtENxwrUSTUxDkLTPte0m1neKiZ1bCSiah8i/GynOPYO2/gas4AGsKf8/A
-	 SY37XBQ2MIS9IMrUG9hNVbYFkqt8GxUPf3ocj5mDpgBGZu7srQSxTCNug1iL03Ipl1
-	 yp9LGTG/a3QkA==
+	by mail.lfdr.de (Postfix) with ESMTPS id 631F918D120
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 15:37:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 48kRFb4qVNzDrNw
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2020 01:37:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=66.163.189.82; helo=sonic306-20.consmr.mail.ne1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=oAHfaqzd; dkim-atps=neutral
-Received: from sonic306-20.consmr.mail.ne1.yahoo.com
- (sonic306-20.consmr.mail.ne1.yahoo.com [66.163.189.82])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=cPnzWaQh; 
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48kLp32xt0zDrRC
- for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2020 22:16:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1584703013; bh=GgRqSlR8p3ZIc3duRogOha8GLvrwIP6DKJ9rs3iGdRc=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=oAHfaqzdn6g/8bGRktAW9U0n4gLkcdvIURGX1D4hbb9Qk+BezKci0fd4Duu38rXxpbMF1i/uxvK3ZpewYqLxvn+BLUuBZ3u8EmZZb9AgafamUU3rbbQNyoXmuqp6MGz21kazmf+qDvWTsVI+rK4Y7hVfJw3dXDGEe3vNT9jlLx5gGtti8txzSLeQNqQRDH88D2cyEI7t2H73RuiKUPUciC56Bh3+8D7pC92WmuGn5l7n18AoHo3Jd3QQ5uIE/ucGeGbqFLExoAqTNtfAnJQnvahGqZFVjqns8OesIV/Gar3xD6YKkbRS+0a1mjk3d4AitWbm5+n2gVU8E7PLI4w0OA==
-X-YMail-OSG: c_.v5F8VM1kXvQBV.CYVRB9.tS_gT1WG6isyceFAr8SVJHtmyxJ4lU4NeMfDmQi
- qNH.5z9gEe7scNE5sAbhl4OJm8SCwN5eemH.ndIBWmeUvAOTQXuBr_6aJeDoe5P4BRwetIzz3Fg8
- FfWBLKiuzyixRuvHvzL.naPBamGuhuDfEWn7bGQ9NF6IE.5iW2zGNAClcuTiCoadZfg_lbaienHg
- 6zxuApikk2O_v6KHNhLIiTNqxbF7RD9kPMtrGNnzw0j0_cPOPec.0wS2btITgvakarUx_pZBCG1u
- G_AXFQQ5eeqcPNmB.nP6x764.7By7dXuWrgUXzqoYy_ANn6Aqdc1fx2eaVFHPo9RXtifM8_7qd4d
- d0C4.tmGXuLXz2nlD.nX6RiQch7TU4Pgj6_VXbv5Vzwo9HLhTF7j_XN8Q7riA7.bwUVv1cArUzzh
- r5c8HCj13Fst1Ngx2M3zS0Z8ze9viYBvv0cyTznkplng79brnHjIkMGxYiQ46D1xwdNoQWKXkNsz
- FhbjiI_yiRsjfRzqO1JLyc2Pt17xyxgxjcb9IguxULaBi7oNJaAUcmDQtxyes6phOcXm.KguIBmr
- BWpHcYrVkDgQrY_H_8lbE9Gmcx28mPbfdpHPeaIUZk4lSrwgOFKQQiESqRIDUKmH583UWyozkvIZ
- fFScqgt4RCedyzQksdVKrTzJGQ2nKZcu4c9IJEshLTZHdkm3XLfEda_m1tSl9EzUGDN3ADj4.uq3
- dmYE_5pM5VlziE5W6JqAArf48MFCm1SKpdA1qEOiB2ejzYRGl8n_2DgeqapQuaIdecE44c5W4BPi
- 3tjCR8Yc6UhjOq6uBTStf4eGOUdejfu8ueV1etdhw7sfMZUbfrZf90jBEFdXB_7deinSWV19Bj4Z
- ozIxV24pxTNLeNwNs6q8YYRs2YCfJLbzaRpIszXYEmhIWLZ9TR7fBjAYFe73WHwLuWfxR9odggNY
- .TrWxznKnn9n71_f8vyqqtQkyuCAg1foowEOKYGLYrP1zWFB453W8b.GY3G_AX1a.iVPoNc618ah
- qwg5p0.hwFq6XHMm8jldQq8fJusCTqA32uu.91CYxhc0X9HTPR.w5kRAKGq4x3nrxB7ZUOLiRWzc
- Eo1aI0ylChIrxXajxsKgLYDkwmO0EPDREep_b2Of7WAXnSa0IMN8Hj3WoX6YHqWa8wtcW.vk7ClY
- 8k8ffciK.N6gNLv_XRPy_65Ir4Ih7Nr8n74GAoRI_4Pjw.icFcmqOrnRYjHumfTFLXwGZUUIybkY
- NPLmMYGNCY4mqTQOz8PDn.FBFZ9kiQ_kjLI_4U1eDLF_8QgigX_GNkoKbRkLYK.qy7VVRDR4BiPK
- LbGJ8mgap58s2rCoSvdeAMeGPi5Or.vuWElG0wNezAHagE4egV3D8P3FBAjNulpRcLcqKF_r95vM
- MN_Do
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic306.consmr.mail.ne1.yahoo.com with HTTP; Fri, 20 Mar 2020 11:16:53 +0000
-Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
- ID 19e0db855f7413596b0d48e05aeb0339; 
- Fri, 20 Mar 2020 11:16:47 +0000 (UTC)
-Date: Fri, 20 Mar 2020 19:16:36 +0800
-To: Saumya Panda <saumya.iisc@gmail.com>
-Subject: Re: Problem in EROFS: Not able to read the files after mount
-Message-ID: <20200320111625.GA1794@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CAHmfoRm7xUwuXfTZ2kr-x9fs59x7b707t183ggbLEtEyO_wznA@mail.gmail.com>
- <20200120073859.GA32421@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAHmfoRn+YjEwxmZLTeDVN9Oja=7QTi14oEtpD5x7URT_X9dJ5w@mail.gmail.com>
- <20200122043655.GB6542@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAHmfoRmXxEXqxJwakbQZmMz62_7DNai3KVzGu=U_yNEgYQvG=w@mail.gmail.com>
- <20200129045942.GB7472@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAHmfoRm8mfUdup7yPotvG7HEc21sCB3TB6FvMZhoV_zevxUdsQ@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48kQwD3GC2zF08G
+ for <linux-erofs@lists.ozlabs.org>; Sat, 21 Mar 2020 01:22:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+ MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+ Content-ID:Content-Description:In-Reply-To:References;
+ bh=jq1xqEfh1zKPMWFc0eKFngWbKFqaSlCjUUM4SK88mAo=; b=cPnzWaQhpjH/0rLywMuKzc+RbH
+ aeY46Kzgy6QRMVohOJqzMvB+j+3J4LDg4xNuOYFk/LcomQ15i8hybfxyzK14oCu2msCaLwR0hhuwD
+ I+aUQjt/TJmoBBkHHRaMPcitmlyA47zIjsNTn+J2mJ/c4qc7hcN6Lz22IDsHLxXYPOiGHXertPrer
+ 7f5RofKfrqQrOEzYrc22wXm1RZfS8vNa23M2U17KUQiqOJIl5vBOOTxAsv1fQJHMqfApp9wsA5N67
+ 52dh6pRc8M8qn1i0c/QDVA8UW0+fbROD2J8w+emiTxQvyMmVRo99f8dgYjSzKlP5QIxYch0UqvDB6
+ 6SW5nsZA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1jFIXg-0000gx-VY; Fri, 20 Mar 2020 14:22:32 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v9 00/25] Change readahead API
+Date: Fri, 20 Mar 2020 07:22:06 -0700
+Message-Id: <20200320142231.2402-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmfoRm8mfUdup7yPotvG7HEc21sCB3TB6FvMZhoV_zevxUdsQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15471 hermes Apache-HttpAsyncClient/4.1.4
- (Java/1.8.0_241)
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -94,328 +57,194 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Matthew Wilcox \(Oracle\)" <willy@infradead.org>,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Saumya,
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-On Fri, Mar 20, 2020 at 01:30:39PM +0530, Saumya Panda wrote:
-> Hi Gao,
->   I am trying to evaluate Erofs on my device. Right now SquashFS is used
-> for system files. Hence I am trying to compare Erofs with SquashFs. On my
-> device with the below environment I am seeing Erofs is 3 times faster than
-> SquashFS 128k (I used enwik8 (100MB) as testing file)) while doing Seq
-> Read. Your test result shows it is near to SquasFs 128k. How Erofs is so
-> fast for Seq Read?  I also tested  it on Suse VM with low memory(free
-> memory 425MB) and I am seeing Erofs is pretty fast.
-> 
-> Also Can you tell me how to run FIO on directory instead of files ?
->  fio -filename=$i -rw=read -bs=4k -name=seqbench
+This series adds a readahead address_space operation to replace the
+readpages operation.  The key difference is that pages are added to the
+page cache as they are allocated (and then looked up by the filesystem)
+instead of passing them on a list to the readpages operation and having
+the filesystem add them to the page cache.  It's a net reduction in
+code for each implementation, more efficient than walking a list, and
+solves the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-Thanks for your detailed words.
+The only unconverted filesystems are those which use fscache.  Their
+conversion is pending Dave Howells' rewrite which will make the conversion
+substantially easier.  This should be completed by the end of the year.
 
-Firstly, I cannot think out some way to run FIO on directory directly.
-And maybe some numbers below are still strange in my opinion.
+I want to thank the reviewers/testers; Dave Chinner, John Hubbard,
+Eric Biggers, Johannes Thumshirn, Dave Sterba, Zi Yan and Christoph
+Hellwig have done a marvellous job of providing constructive criticism.
 
-OK, Actually, I don't want to leave a lot of (maybe aggressive) comments
-publicly to compare one filesystem with other filesystems, such as EROFS
-vs squashfs (or ext4 vs f2fs). But there are actually some exist materials
-which did this before, if you have some extra time, you could read through
-the following reference materials about EROFS (although some parts are outdated):
+These patches pass an xfstests run on ext4, xfs & btrfs with no
+regressions that I can tell (some of the tests seem a little flaky before
+and remain flaky afterwards).
 
-[1] https://static.sched.com/hosted_files/kccncosschn19chi/ce/EROFS%20file%20system_OSS2019_Final.pdf
-[2] https://www.usenix.org/system/files/atc19-gao.pdf
+This series can also be found at
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v9
 
-The reason why I think in this way is that (Objectively, I think) people
-have their own judgement / insistance on every stuffs. But okay, there are
-some hints why EROFS behaves well in this email (compared with Squashfs, but
-I really want to avoid such aggressive topics):
+v9: No code changes.  Fixed a changelog and added some reviewed-by tags.
 
- o EROFS has carefully designed critial paths, such as async decompression
-   path. that partly answers your question about sequential read behavior;
+v8:
+ - btrfs, ext4 and xfs all survive an xfstests run (thanks to Kent Overstreet
+   for providing the ktest framework)
+ - iomap restructuring dropped due to Christoph's opposition and the
+   redesign of readahead_page() meaning it wasn't needed any more.
+ - f2fs_mpage_readpages() made static again
+ - Made iomap_readahead() comment more useful
+ - Added kernel-doc for the entire readahead_control API
+ - Conditionally zero batch_count in readahead_page() (requested by John)
+ - Hold RCU read lock while iterating over the xarray in readahead_page_batch()
+ - Iterate over the correct pages in readahead_page_batch()
+ - Correct the return type of readahead_index() (spotted by Zi Yan)
+ - Added a 'skip_page' parameter to read_pages for better documentation
+   purposes and so we can reuse the readahead_control higher in the call
+   chain in future.
+ - Removed the use_list bool (requested by Christoph)
+ - Removed the explicit initialisation of _nr_pages to 0 (requested by
+   Christoph & John)
+ - Add comments explaining why nr_to_read is being capped (requested by John)
+ - Reshuffled some of the patches:
+   - Split out adding the readahead_control API from the three patches which
+     added it piecemeal
+   - Shift the final two mm patches to be with the other mm patches
+   - Split the f2fs "pass the inode" patch from the "convert to readahead"
+     patch, like ext4
 
- o EROFS has well-designed compression metadata (called EROFS compacted
-   index). Each logic compressed block only takes 2-byte metadata on average
-   (high information entropy, so no need to compress compacted indexes again)
-   and it supports random read without pervious meta dependence. In contrast,
-   the on-disk metadata of Squashfs doesn't support random read (and even
-   metadata itself could be compressed), which means you have to cached more
-   metadata in memory for random read, or you'll stand with its bad metadata
-   random access performance. some hint: see ondisk blocklist, index cache
-   and read_blocklist();
+v7:
+ - Now passes an xfstests run on ext4!
+ - Documentation improvements
+ - Move the readahead prototypes out of mm.h (new patch)
+ - readahead_for_each* iterators are gone; replaced with readahead_page()
+   and readahead_page_batch()
+ - page_cache_readahead_limit() renamed to page_cache_readahead_unbounded()
+   and arguments changed
+ - iomap_readahead_actor() restructured differently
+ - The readahead code no longer uses the word 'offset' to reduce ambiguity
+ - read_pages() now maintains the rac so we can just call it and continue
+   instead of mucking around with branches
+ - More assertions
+ - More readahead functions return void
 
- o EROFS firstly uses fixed-sized output compression in filesystem field.
-   By using fixed-sized output compression, EROFS can easily implement
-   in-place decompression (or at least in-place I/O), which means that it
-   doesn't allocate physical pages for most cases, therefore fewer memory
-   reclaim/compaction possibility and keeps useful file-backed page cache
-   as much as possible;
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
 
- o EROFS has designed on-disk directory format, it supports directory
-   random access compared with current Squashfs;
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
 
-In a word, I don't think the current on-disk squashfs is a well-designed
-stuff in the long term. In other words, EROFS is a completely different
-stuff either from its principle, the on-disk format  and runtime
-implementation...)
+Matthew Wilcox (Oracle) (25):
+  mm: Move readahead prototypes from mm.h
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Move readahead nr_pages check into read_pages
+  mm: Add new readahead_control API
+  mm: Use readahead_control to pass arguments
+  mm: Rename various 'offset' parameters to 'index'
+  mm: rename readahead loop variable to 'i'
+  mm: Remove 'page_offset' from readahead loop
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Move end_index check out of readahead loop
+  mm: Add page_cache_readahead_unbounded
+  mm: Document why we don't set PageReadahead
+  mm: Use memalloc_nofs_save in readahead path
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  ext4: Pass the inode to ext4_mpage_readpages
+  f2fs: Convert from readpages to readahead
+  f2fs: Pass the inode to f2fs_mpage_readpages
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
 
-By the way, the pervious link
-https://blog.csdn.net/scnutiger/article/details/102507596
-was _not_ written by me. I just noticed it by chance, I think
-it was written by some Chinese kernel developer from some other
-Android vendor.
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  15 ++
+ block/blk-core.c                      |   1 +
+ drivers/staging/exfat/exfat_super.c   |   7 +-
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  46 ++---
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +-
+ fs/erofs/data.c                       |  39 ++--
+ fs/erofs/zdata.c                      |  29 +--
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   5 +-
+ fs/ext4/inode.c                       |  21 +-
+ fs/ext4/readpage.c                    |  25 +--
+ fs/ext4/verity.c                      |  35 +---
+ fs/f2fs/data.c                        |  50 ++---
+ fs/f2fs/f2fs.h                        |   3 -
+ fs/f2fs/verity.c                      |  35 +---
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  46 ++---
+ fs/gfs2/aops.c                        |  23 +--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                |  92 +++------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 +---
+ fs/nilfs2/inode.c                     |  15 +-
+ fs/ocfs2/aops.c                       |  34 ++--
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mm.h                    |  19 --
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               | 151 ++++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/fadvise.c                          |   6 +-
+ mm/internal.h                         |  12 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 278 ++++++++++++++++----------
+ 46 files changed, 580 insertions(+), 589 deletions(-)
 
-And FIO cannot benchmark all cases, heavy memory workload
-doesn't completely equal to low memory as well.
-
-However, there is my FIO test script to benchmark different fses:
-
-https://github.com/erofs/erofs-openbenchmark/blob/master/fio-benchmark.sh
-
-for reference. Personally, I think it's reasonable.
-
-It makes more sense to use designed dynamic model. Huawei interally uses
-several well-designed light/heavy workloads to benchmark the whole system.
-
-In addition, I noticed many complaints about Squashfs, e.g:
-
-https://forum.snapcraft.io/t/squashfs-is-a-terrible-storage-format/9466
-
-I don't want to comment the whole content itself. But for such runtime
-workloads, I'd suggest using EROFS instead and see if it performs better
-(compared with any configuration of squashfs+lz4).
-
-There are many ongoing stuffs to do, but I'm really busy recently. After
-implementing LZMA and larger compress cluster, I think EROFS will be more
-useful, but it needs to be carefully designed first in order to avoid
-further complexity of the whole solution. 
-
-Sorry about my English, hope it of some help..
-
-Thanks,
-Gao Xiang
-
-
-> 
->              Test on Embedded Device:
-> 
-> Total Memory 5.5 GB:
-> 
->  Free Memory 1515
-> 
->  No Swap
-> 
-> 
-> $: /fio/erofs_test]$ free -m
-> 
->               total        used        free      shared  buff/cache
-> available
-> 
-> Mem:           5384        2315        1515        1378        1553
-> 1592
-> 
-> Swap:             0           0           0
-> 
-> 
-> 
-> 
-> 
-> Seq Read
-> 
-> 
-> 
-> Rand Read
-> 
-> 
-> 
-> 
-> 
-> squashFS 4k
-> 
-> 
-> 
-> 51.8MB/s
-> 
-> 1931msec
-> 
-> 45.7MB/s
-> 
-> 2187msec
-> 
-> 
-> 
-> SquashFS 128k
-> 
-> 
-> 
-> 116MB/s
-> 
-> 861msec
-> 
-> 14MB/s
-> 
-> 877msec
-> 
-> 
-> 
-> SquashFS 1M
-> 
-> 
-> 
-> 124MB/s-124MB/s
-> 
-> 805msec
-> 
-> 119MB/s
-> 
-> 837msec
-> 
-> 
-> 
-> 
-> 
-> Erofs 4k
-> 
-> 
-> 
-> 658MB/s-658MB/s
-> 
-> 152msec
-> 
-> 
-> 
-> 103MB
-> 
-> 974msec
-> 
-> 
-> 
-> 
-> 
-> 
-> 
->  Test on Suse VM:
-> 
-> 
-> Total Memory 1.5 GB:
-> 
->  Free Memory 425
-> 
->  No Swap
-> 
-> localhost:/home/saumya/Documents/erofs_test # free -m
->               total        used        free      shared  buff/cache
-> available
-> Mem:           1436         817         425           5         192
-> 444
-> Swap:             0           0           0
-> 
-> 
-> 
-> 
-> 
-> 
-> Seq Read
-> 
-> 
-> 
-> Rand Read
-> 
-> 
-> 
-> 
-> 
-> squashFS 4k
-> 
-> 
-> 
-> 30.7MB/s
-> 
-> 3216msec
-> 
-> 9333kB/s
-> 
-> 10715msec
-> 
-> 
-> 
-> SquashFS 128k
-> 
-> 
-> 
-> 318MB/s
-> 
-> 314msec
-> 
-> 5946kB/s
-> 
-> 16819msec
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> Erofs 4k
-> 
-> 
-> 
-> 469MB/s
-> 
-> 213msec
-> 
-> 
-> 
-> 11.9MB/s
-> 
-> 8414msec
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> On Wed, Jan 29, 2020 at 10:30 AM Gao Xiang <hsiangkao@aol.com> wrote:
-> 
-> > On Wed, Jan 29, 2020 at 09:43:37AM +0530, Saumya Panda wrote:
-> > >
-> > > localhost:~> fio --name=randread --ioengine=libaio --iodepth=16
-> > > --rw=randread --bs=4k --direct=0 --size=512M --numjobs=4 --runtime=240
-> > > --group_reporting --filename=/mnt/enwik9_erofs/enwik9
-> > >
-> > > randread: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T)
-> > > 4096B-4096B, ioengine=libaio, iodepth=16
-> >
-> > And I don't think such configuration is useful to calculate read
-> > ampfication
-> > since you read 100% finally, use multi-thread without memory limitation
-> > (all
-> > compressed data will be cached, so the total read is compressed size).
-> >
-> > I have no idea what you want to get via doing comparsion between EROFS and
-> > Squashfs. Larger block size much like readahead in bulk. If you benchmark
-> > uncompressed file systems, you will notice such filesystems cannot get such
-> > high 100% randread number.
-> >
-> > Thank,
-> > Gao Xiang
-> >
-> >
-> 
-> -- 
-> Thanks,
-> Saumya Prakash Panda
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+-- 
+2.25.1
