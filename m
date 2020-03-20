@@ -2,70 +2,87 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 098A818C869
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 09:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3695B18CC86
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 12:17:09 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48kGS43yVtzDrRY
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 19:01:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48kLpB2WMYzDrRV
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 22:17:06 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1584703026;
+	bh=xI9JOlIkvqphrHO0tsL+Oeusi+Ms5zmidRXuYkrWQZY=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=kLMQxjff5WQayuc9aL0C4e6VIce3ViXI6E5yvWVtvi8CgPTx6kpJj0VS7nyD3YWxm
+	 Ug1kNZVg8RboJsm60o4Dc0JZ97qhwrilb6lcbGyOAHKo5SJ/0Y0eVpX2DB+Drncr67
+	 JbiuMtX698qnvr3G19I5ZneMrElhtjff27W9TssYG8Mc/fXVW7eBwyZY9zIhPtJCEL
+	 ABgIQdoB2EclLiWumkhwDyCLIFJyR+UdJNO6Cv1HfIYeW3BHbgQSkQ/M/HpthAzDbF
+	 Dz4EqqcgiZhogHiN8f3YEpl6HN7ZH9Z689JVUA0uUXojt+7AXng7/akarF5lfywlXQ
+	 Fw0BX4LtSu/4Q==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::230;
- helo=mail-lj1-x230.google.com; envelope-from=saumya.iisc@gmail.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=66.163.189.82; helo=sonic306-20.consmr.mail.ne1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=cL3Sh57D; dkim-atps=neutral
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com
- [IPv6:2a00:1450:4864:20::230])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=oAHfaqzd; dkim-atps=neutral
+Received: from sonic306-20.consmr.mail.ne1.yahoo.com
+ (sonic306-20.consmr.mail.ne1.yahoo.com [66.163.189.82])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48kGRw2snPzDrRM
- for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2020 19:00:56 +1100 (AEDT)
-Received: by mail-lj1-x230.google.com with SMTP id a2so5413113ljk.6
- for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2020 01:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=WlqTsU1LH0SFT701GywuIVxi08/XIi9opLynsugRwL0=;
- b=cL3Sh57D80e2i+Cc3uTYf1lfkUE777a0Uy8FvsdagrjU3DtdoRzIh+wuuQcz7UjHXA
- Ve/MPxTDX9PKEMWT+7P8Dd7cI64wzFRiAi738RXBCy+vgACJpavdTw7CHk2Lk6wBvcf2
- FZMIwyvk/cPwXDdCRufs9x49HPb71BsDvXEoos6VFhNyxDVgkGsZvrmTSAqWSTae6NKI
- 6rLpp5Ni9mHAtkjS4xUrBo/LphpDVI6GNUUt63rBFesDegJLKPWuQCP38bsez8pvFC/I
- F2p3K3wOjmertzM7XEVH2PXuUBkOKiohgRDUD96FItKTdv4hwym1RKKBw8ukgDzffInP
- kiVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=WlqTsU1LH0SFT701GywuIVxi08/XIi9opLynsugRwL0=;
- b=BdhkpAj/uqbIH6gcY4m8d9jAi0iAYa3PClUSxkosrrwlmMNJh8G7YuRjJxDHPDtTlC
- DNn3nULuTLozrWPzoVc55IEn3UVo3GZsiCfR3bv4GLjjs914DbO9hg2aZC3aiGmSrmi7
- NWL9jYOFaH2fk+MxXJhR2Ec2sCgQ1BsruHF/xampwDqN82AYYf9Bx95F02WylV3O3snT
- +PqLcYSQi7lrvdPfLs6DfT8Omk10eMYFG2XdlD1yxkDOJXI6CPL8cibljwqYnXBbvgSu
- CdRXu1XeLUzFPTr+k/KZoqXwWu28Syv1I26T7hVObOwZriaCMwQrySQARL3+R7MtV21z
- jYuQ==
-X-Gm-Message-State: ANhLgQ0MiVu2KmSNmJ5ENf9Ajml0xwz5p8f//i+PE0qGZrz0YEpRli9j
- YGFGYGTNd+OGGILKJAHilj41Ni71+7Sk6YpkzCw=
-X-Google-Smtp-Source: ADFU+vs4ftp5G3W4ZOrjh/xrUAc7YexjqUPj1JloRIgwOVJHERMn+G+TBaYaEz8a2ui6vB3pB+tGskcV4oZ6vTYFyNM=
-X-Received: by 2002:a2e:7a0c:: with SMTP id v12mr4527493ljc.274.1584691251746; 
- Fri, 20 Mar 2020 01:00:51 -0700 (PDT)
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48kLp32QhxzDrRB
+ for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2020 22:16:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1584703013; bh=GgRqSlR8p3ZIc3duRogOha8GLvrwIP6DKJ9rs3iGdRc=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
+ b=oAHfaqzdn6g/8bGRktAW9U0n4gLkcdvIURGX1D4hbb9Qk+BezKci0fd4Duu38rXxpbMF1i/uxvK3ZpewYqLxvn+BLUuBZ3u8EmZZb9AgafamUU3rbbQNyoXmuqp6MGz21kazmf+qDvWTsVI+rK4Y7hVfJw3dXDGEe3vNT9jlLx5gGtti8txzSLeQNqQRDH88D2cyEI7t2H73RuiKUPUciC56Bh3+8D7pC92WmuGn5l7n18AoHo3Jd3QQ5uIE/ucGeGbqFLExoAqTNtfAnJQnvahGqZFVjqns8OesIV/Gar3xD6YKkbRS+0a1mjk3d4AitWbm5+n2gVU8E7PLI4w0OA==
+X-YMail-OSG: c_.v5F8VM1kXvQBV.CYVRB9.tS_gT1WG6isyceFAr8SVJHtmyxJ4lU4NeMfDmQi
+ qNH.5z9gEe7scNE5sAbhl4OJm8SCwN5eemH.ndIBWmeUvAOTQXuBr_6aJeDoe5P4BRwetIzz3Fg8
+ FfWBLKiuzyixRuvHvzL.naPBamGuhuDfEWn7bGQ9NF6IE.5iW2zGNAClcuTiCoadZfg_lbaienHg
+ 6zxuApikk2O_v6KHNhLIiTNqxbF7RD9kPMtrGNnzw0j0_cPOPec.0wS2btITgvakarUx_pZBCG1u
+ G_AXFQQ5eeqcPNmB.nP6x764.7By7dXuWrgUXzqoYy_ANn6Aqdc1fx2eaVFHPo9RXtifM8_7qd4d
+ d0C4.tmGXuLXz2nlD.nX6RiQch7TU4Pgj6_VXbv5Vzwo9HLhTF7j_XN8Q7riA7.bwUVv1cArUzzh
+ r5c8HCj13Fst1Ngx2M3zS0Z8ze9viYBvv0cyTznkplng79brnHjIkMGxYiQ46D1xwdNoQWKXkNsz
+ FhbjiI_yiRsjfRzqO1JLyc2Pt17xyxgxjcb9IguxULaBi7oNJaAUcmDQtxyes6phOcXm.KguIBmr
+ BWpHcYrVkDgQrY_H_8lbE9Gmcx28mPbfdpHPeaIUZk4lSrwgOFKQQiESqRIDUKmH583UWyozkvIZ
+ fFScqgt4RCedyzQksdVKrTzJGQ2nKZcu4c9IJEshLTZHdkm3XLfEda_m1tSl9EzUGDN3ADj4.uq3
+ dmYE_5pM5VlziE5W6JqAArf48MFCm1SKpdA1qEOiB2ejzYRGl8n_2DgeqapQuaIdecE44c5W4BPi
+ 3tjCR8Yc6UhjOq6uBTStf4eGOUdejfu8ueV1etdhw7sfMZUbfrZf90jBEFdXB_7deinSWV19Bj4Z
+ ozIxV24pxTNLeNwNs6q8YYRs2YCfJLbzaRpIszXYEmhIWLZ9TR7fBjAYFe73WHwLuWfxR9odggNY
+ .TrWxznKnn9n71_f8vyqqtQkyuCAg1foowEOKYGLYrP1zWFB453W8b.GY3G_AX1a.iVPoNc618ah
+ qwg5p0.hwFq6XHMm8jldQq8fJusCTqA32uu.91CYxhc0X9HTPR.w5kRAKGq4x3nrxB7ZUOLiRWzc
+ Eo1aI0ylChIrxXajxsKgLYDkwmO0EPDREep_b2Of7WAXnSa0IMN8Hj3WoX6YHqWa8wtcW.vk7ClY
+ 8k8ffciK.N6gNLv_XRPy_65Ir4Ih7Nr8n74GAoRI_4Pjw.icFcmqOrnRYjHumfTFLXwGZUUIybkY
+ NPLmMYGNCY4mqTQOz8PDn.FBFZ9kiQ_kjLI_4U1eDLF_8QgigX_GNkoKbRkLYK.qy7VVRDR4BiPK
+ LbGJ8mgap58s2rCoSvdeAMeGPi5Or.vuWElG0wNezAHagE4egV3D8P3FBAjNulpRcLcqKF_r95vM
+ MN_Do
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic306.consmr.mail.ne1.yahoo.com with HTTP; Fri, 20 Mar 2020 11:16:53 +0000
+Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 19e0db855f7413596b0d48e05aeb0339; 
+ Fri, 20 Mar 2020 11:16:47 +0000 (UTC)
+Date: Fri, 20 Mar 2020 19:16:36 +0800
+To: Saumya Panda <saumya.iisc@gmail.com>
+Subject: Re: Problem in EROFS: Not able to read the files after mount
+Message-ID: <20200320111625.GA1794@hsiangkao-HP-ZHAN-66-Pro-G1>
 References: <CAHmfoRm7xUwuXfTZ2kr-x9fs59x7b707t183ggbLEtEyO_wznA@mail.gmail.com>
  <20200120073859.GA32421@hsiangkao-HP-ZHAN-66-Pro-G1>
  <CAHmfoRn+YjEwxmZLTeDVN9Oja=7QTi14oEtpD5x7URT_X9dJ5w@mail.gmail.com>
  <20200122043655.GB6542@hsiangkao-HP-ZHAN-66-Pro-G1>
  <CAHmfoRmXxEXqxJwakbQZmMz62_7DNai3KVzGu=U_yNEgYQvG=w@mail.gmail.com>
  <20200129045942.GB7472@hsiangkao-HP-ZHAN-66-Pro-G1>
-In-Reply-To: <20200129045942.GB7472@hsiangkao-HP-ZHAN-66-Pro-G1>
-From: Saumya Panda <saumya.iisc@gmail.com>
-Date: Fri, 20 Mar 2020 13:30:39 +0530
-Message-ID: <CAHmfoRm8mfUdup7yPotvG7HEc21sCB3TB6FvMZhoV_zevxUdsQ@mail.gmail.com>
-Subject: Re: Problem in EROFS: Not able to read the files after mount
-To: Gao Xiang <hsiangkao@aol.com>
-Content-Type: multipart/alternative; boundary="00000000000023b10e05a144afc3"
+ <CAHmfoRm8mfUdup7yPotvG7HEc21sCB3TB6FvMZhoV_zevxUdsQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHmfoRm8mfUdup7yPotvG7HEc21sCB3TB6FvMZhoV_zevxUdsQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.15471 hermes Apache-HttpAsyncClient/4.1.4
+ (Java/1.8.0_241)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,699 +94,328 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---00000000000023b10e05a144afc3
-Content-Type: text/plain; charset="UTF-8"
+Hi Saumya,
+
+On Fri, Mar 20, 2020 at 01:30:39PM +0530, Saumya Panda wrote:
+> Hi Gao,
+>   I am trying to evaluate Erofs on my device. Right now SquashFS is used
+> for system files. Hence I am trying to compare Erofs with SquashFs. On my
+> device with the below environment I am seeing Erofs is 3 times faster than
+> SquashFS 128k (I used enwik8 (100MB) as testing file)) while doing Seq
+> Read. Your test result shows it is near to SquasFs 128k. How Erofs is so
+> fast for Seq Read?  I also tested  it on Suse VM with low memory(free
+> memory 425MB) and I am seeing Erofs is pretty fast.
+> 
+> Also Can you tell me how to run FIO on directory instead of files ?
+>  fio -filename=$i -rw=read -bs=4k -name=seqbench
+
+Thanks for your detailed words.
+
+Firstly, I cannot think out some way to run FIO on directory directly.
+And maybe some numbers below are still strange in my opinion.
+
+OK, Actually, I don't want to leave a lot of (maybe aggressive) comments
+publicly to compare one filesystem with other filesystems, such as EROFS
+vs squashfs (or ext4 vs f2fs). But there are actually some exist materials
+which did this before, if you have some extra time, you could read through
+the following reference materials about EROFS (although some parts are outdated):
+
+[1] https://static.sched.com/hosted_files/kccncosschn19chi/ce/EROFS%20file%20system_OSS2019_Final.pdf
+[2] https://www.usenix.org/system/files/atc19-gao.pdf
+
+The reason why I think in this way is that (Objectively, I think) people
+have their own judgement / insistance on every stuffs. But okay, there are
+some hints why EROFS behaves well in this email (compared with Squashfs, but
+I really want to avoid such aggressive topics):
+
+ o EROFS has carefully designed critial paths, such as async decompression
+   path. that partly answers your question about sequential read behavior;
+
+ o EROFS has well-designed compression metadata (called EROFS compacted
+   index). Each logic compressed block only takes 2-byte metadata on average
+   (high information entropy, so no need to compress compacted indexes again)
+   and it supports random read without pervious meta dependence. In contrast,
+   the on-disk metadata of Squashfs doesn't support random read (and even
+   metadata itself could be compressed), which means you have to cached more
+   metadata in memory for random read, or you'll stand with its bad metadata
+   random access performance. some hint: see ondisk blocklist, index cache
+   and read_blocklist();
+
+ o EROFS firstly uses fixed-sized output compression in filesystem field.
+   By using fixed-sized output compression, EROFS can easily implement
+   in-place decompression (or at least in-place I/O), which means that it
+   doesn't allocate physical pages for most cases, therefore fewer memory
+   reclaim/compaction possibility and keeps useful file-backed page cache
+   as much as possible;
+
+ o EROFS has designed on-disk directory format, it supports directory
+   random access compared with current Squashfs;
+
+In a word, I don't think the current on-disk squashfs is a well-designed
+stuff in the long term. In other words, EROFS is a completely different
+stuff either from its principle, the on-disk format  and runtime
+implementation...)
+
+By the way, the pervious link
+https://blog.csdn.net/scnutiger/article/details/102507596
+was _not_ written by me. I just noticed it by chance, I think
+it was written by some Chinese kernel developer from some other
+Android vendor.
+
+And FIO cannot benchmark all cases, heavy memory workload
+doesn't completely equal to low memory as well.
+
+However, there is my FIO test script to benchmark different fses:
+
+https://github.com/erofs/erofs-openbenchmark/blob/master/fio-benchmark.sh
+
+for reference. Personally, I think it's reasonable.
+
+It makes more sense to use designed dynamic model. Huawei interally uses
+several well-designed light/heavy workloads to benchmark the whole system.
+
+In addition, I noticed many complaints about Squashfs, e.g:
+
+https://forum.snapcraft.io/t/squashfs-is-a-terrible-storage-format/9466
+
+I don't want to comment the whole content itself. But for such runtime
+workloads, I'd suggest using EROFS instead and see if it performs better
+(compared with any configuration of squashfs+lz4).
+
+There are many ongoing stuffs to do, but I'm really busy recently. After
+implementing LZMA and larger compress cluster, I think EROFS will be more
+useful, but it needs to be carefully designed first in order to avoid
+further complexity of the whole solution. 
+
+Sorry about my English, hope it of some help..
 
-Hi Gao,
-  I am trying to evaluate Erofs on my device. Right now SquashFS is used
-for system files. Hence I am trying to compare Erofs with SquashFs. On my
-device with the below environment I am seeing Erofs is 3 times faster than
-SquashFS 128k (I used enwik8 (100MB) as testing file)) while doing Seq
-Read. Your test result shows it is near to SquasFs 128k. How Erofs is so
-fast for Seq Read?  I also tested  it on Suse VM with low memory(free
-memory 425MB) and I am seeing Erofs is pretty fast.
-
-Also Can you tell me how to run FIO on directory instead of files ?
- fio -filename=$i -rw=read -bs=4k -name=seqbench
-
-             Test on Embedded Device:
-
-Total Memory 5.5 GB:
-
- Free Memory 1515
-
- No Swap
-
-
-$: /fio/erofs_test]$ free -m
-
-              total        used        free      shared  buff/cache
-available
-
-Mem:           5384        2315        1515        1378        1553
-1592
-
-Swap:             0           0           0
-
-
-
-
-
-Seq Read
-
-
-
-Rand Read
-
-
-
-
-
-squashFS 4k
-
-
-
-51.8MB/s
-
-1931msec
-
-45.7MB/s
-
-2187msec
-
-
-
-SquashFS 128k
-
-
-
-116MB/s
-
-861msec
-
-14MB/s
-
-877msec
-
-
-
-SquashFS 1M
-
-
-
-124MB/s-124MB/s
-
-805msec
-
-119MB/s
-
-837msec
-
-
-
-
-
-Erofs 4k
-
-
-
-658MB/s-658MB/s
-
-152msec
-
-
-
-103MB
-
-974msec
-
-
-
-
-
-
-
- Test on Suse VM:
-
-
-Total Memory 1.5 GB:
-
- Free Memory 425
-
- No Swap
-
-localhost:/home/saumya/Documents/erofs_test # free -m
-              total        used        free      shared  buff/cache
-available
-Mem:           1436         817         425           5         192
-444
-Swap:             0           0           0
-
-
-
-
-
-
-Seq Read
-
-
-
-Rand Read
-
-
-
-
-
-squashFS 4k
-
-
-
-30.7MB/s
-
-3216msec
-
-9333kB/s
-
-10715msec
-
-
-
-SquashFS 128k
-
-
-
-318MB/s
-
-314msec
-
-5946kB/s
-
-16819msec
-
-
-
-
-
-
-
-
-
-
-
-Erofs 4k
-
-
-
-469MB/s
-
-213msec
-
-
-
-11.9MB/s
-
-8414msec
-
-
-
-
-
-
-
-
-
-
-
-On Wed, Jan 29, 2020 at 10:30 AM Gao Xiang <hsiangkao@aol.com> wrote:
-
-> On Wed, Jan 29, 2020 at 09:43:37AM +0530, Saumya Panda wrote:
-> >
-> > localhost:~> fio --name=randread --ioengine=libaio --iodepth=16
-> > --rw=randread --bs=4k --direct=0 --size=512M --numjobs=4 --runtime=240
-> > --group_reporting --filename=/mnt/enwik9_erofs/enwik9
-> >
-> > randread: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T)
-> > 4096B-4096B, ioengine=libaio, iodepth=16
->
-> And I don't think such configuration is useful to calculate read
-> ampfication
-> since you read 100% finally, use multi-thread without memory limitation
-> (all
-> compressed data will be cached, so the total read is compressed size).
->
-> I have no idea what you want to get via doing comparsion between EROFS and
-> Squashfs. Larger block size much like readahead in bulk. If you benchmark
-> uncompressed file systems, you will notice such filesystems cannot get such
-> high 100% randread number.
->
-> Thank,
-> Gao Xiang
->
->
-
--- 
 Thanks,
-Saumya Prakash Panda
+Gao Xiang
 
---00000000000023b10e05a144afc3
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Hi Gao,</div><div>=C2=A0 I am trying to evaluate Erof=
-s on my device. Right now SquashFS is used for system files. Hence I am try=
-ing to compare Erofs with SquashFs. On my device with the below environment=
- I am seeing Erofs is 3 times faster than SquashFS 128k (I used enwik8 (100=
-MB) as testing file)) while doing Seq Read. Your test result shows it is ne=
-ar to SquasFs 128k. How Erofs is so fast for Seq Read?=C2=A0 I also tested=
-=C2=A0 it on Suse VM with low memory(free memory 425MB) and I am seeing Ero=
-fs is pretty fast.</div><div><br></div><div>Also Can you tell me how to run=
- FIO on directory instead of files ? <br></div><div>=C2=A0fio -filename=3D<=
-span class=3D"gmail-pl-smi">$i</span> -rw=3Dread -bs=3D4k -name=3Dseqbench<=
-/div><div><br></div><div><font size=3D"2">=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0<span style=3D"color:rgb(255,153,0)"=
-> Test on Embedded Device: </span></font><br></div><div><p class=3D"MsoNorm=
-al" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibr=
-i,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-caps:normal;fo=
-nt-weight:normal;letter-spacing:normal;text-align:start;text-indent:0px;tex=
-t-transform:none;white-space:normal;word-spacing:0px;text-decoration:none">=
-<span lang=3D"EN-US">Total Memory 5.5 GB:</span><span></span></p><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-cap=
-s:normal;font-weight:normal;letter-spacing:normal;text-align:start;text-ind=
-ent:0px;text-transform:none;white-space:normal;word-spacing:0px;text-decora=
-tion:none"><span lang=3D"EN-US">=C2=A0Free Memory 1515</span></p><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-cap=
-s:normal;font-weight:normal;letter-spacing:normal;text-align:start;text-ind=
-ent:0px;text-transform:none;white-space:normal;word-spacing:0px;text-decora=
-tion:none">=C2=A0No Swap</p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm =
-0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,0,0=
-);font-style:normal;font-variant-caps:normal;font-weight:normal;letter-spac=
-ing:normal;text-align:start;text-indent:0px;text-transform:none;white-space=
-:normal;word-spacing:0px;text-decoration:none"><br></p><p class=3D"MsoNorma=
-l" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri=
-,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-caps:normal;fon=
-t-weight:normal;letter-spacing:normal;text-align:start;text-indent:0px;text=
--transform:none;white-space:normal;word-spacing:0px;text-decoration:none"><=
-span lang=3D"EN-US"></span><span></span></p><p class=3D"MsoNormal" style=3D=
-"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif=
-;color:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-weight:no=
-rmal;letter-spacing:normal;text-align:start;text-indent:0px;text-transform:=
-none;white-space:normal;word-spacing:0px;text-decoration:none"><span lang=
-=3D"EN-US">$: /fio/erofs_test]$ free -m</span><span></span></p><p class=3D"=
-MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family=
-:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-caps:no=
-rmal;font-weight:normal;letter-spacing:normal;text-align:start;text-indent:=
-0px;text-transform:none;white-space:normal;word-spacing:0px;text-decoration=
-:none"><span lang=3D"EN-US">=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 total=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 used=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0<span class=3D"gmail-A=
-pple-converted-space">=C2=A0</span><span style=3D"color:red">free=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0<span class=3D"gmail-Apple-converted-space">=C2=A0</sp=
-an></span>shared=C2=A0 buff/cache=C2=A0=C2=A0 available</span><span></span>=
-</p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:=
-11pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font=
--variant-caps:normal;font-weight:normal;letter-spacing:normal;text-align:st=
-art;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px=
-;text-decoration:none"><span lang=3D"EN-US">Mem:=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5384=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 2315=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0<span class=3D"gmail-A=
-pple-converted-space">=C2=A0</span><span style=3D"color:red">1515=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0<span class=3D"gmail-Apple-converted-space=
-">=C2=A0</span></span>1378=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1553=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1592</span><span></span></p><p c=
-lass=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;fon=
-t-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant=
--caps:normal;font-weight:normal;letter-spacing:normal;text-align:start;text=
--indent:0px;text-transform:none;white-space:normal;word-spacing:0px;text-de=
-coration:none"><span lang=3D"EN-US">Swap:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0</span><span></span></p><p class=3D"MsoNormal" style=3D"ma=
-rgin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;co=
-lor:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-weight:norma=
-l;letter-spacing:normal;text-align:start;text-indent:0px;text-transform:non=
-e;white-space:normal;word-spacing:0px;text-decoration:none">=C2=A0<span></s=
-pan></p><table class=3D"gmail-MsoNormalTable" style=3D"font-family:-webkit-=
-standard;letter-spacing:normal;text-indent:0px;text-transform:none;word-spa=
-cing:0px;text-decoration:none;margin-left:36pt;border-collapse:collapse" ce=
-llspacing=3D"0" cellpadding=3D"0" border=3D"0"><tbody><tr><td style=3D"widt=
-h:108.3pt;border:1pt solid windowtext;padding:0cm 5.4pt" width=3D"144" vali=
-gn=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-siz=
-e:11pt;font-family:Calibri,sans-serif;text-align:justify"><span>=C2=A0</spa=
-n><span></span></p></td><td style=3D"width:108.6pt;border-top:1pt solid win=
-dowtext;border-right:1pt solid windowtext;border-bottom:1pt solid windowtex=
-t;border-style:solid solid solid none;padding:0cm 5.4pt" width=3D"145" vali=
-gn=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-siz=
-e:11pt;font-family:Calibri,sans-serif"><span>Seq Read</span><span></span></=
-p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;fo=
-nt-family:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span><=
-/span></p></td><td style=3D"width:108.65pt;border-top:1pt solid windowtext;=
-border-right:1pt solid windowtext;border-bottom:1pt solid windowtext;border=
--style:solid solid solid none;padding:0cm 5.4pt" width=3D"145" valign=3D"to=
-p"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;f=
-ont-family:Calibri,sans-serif"><span>Rand Read</span><span></span></p><p cl=
-ass=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fami=
-ly:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span><=
-/p></td><td style=3D"width:105.45pt;border-top:1pt solid windowtext;border-=
-right:1pt solid windowtext;border-bottom:1pt solid windowtext;border-style:=
-solid solid solid none;padding:0cm 5.4pt" width=3D"141" valign=3D"top"><p c=
-lass=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fam=
-ily:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span>=
-</p></td></tr><tr><td style=3D"width:108.3pt;border-right:1pt solid windowt=
-ext;border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;bor=
-der-style:none solid solid;padding:0cm 5.4pt" width=3D"144" valign=3D"top">=
-<p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font=
--family:Calibri,sans-serif"><span>squashFS 4k</span><span></span></p><p cla=
-ss=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-famil=
-y:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></=
-p></td><td style=3D"width:108.6pt;border-style:none solid solid none;border=
--bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0cm =
-5.4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:=
-0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-align:j=
-ustify"><span lang=3D"EN-US">51.8MB/s</span><span></span></p><p class=3D"Ms=
-oNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibr=
-i,sans-serif;text-align:justify"><span lang=3D"EN-US">1931msec</span><span>=
-</span></p></td><td style=3D"width:108.65pt;border-style:none solid solid n=
-one;border-bottom:1pt solid windowtext;border-right:1pt solid windowtext;pa=
-dding:0cm 5.4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=
-=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;t=
-ext-align:justify"><span lang=3D"EN-US">45.7MB/s</span><span></span></p><p =
-class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif;text-align:justify"><span lang=3D"EN-US">2187msec</=
-span><span></span></p></td><td style=3D"width:105.45pt;border-style:none so=
-lid solid none;border-bottom:1pt solid windowtext;border-right:1pt solid wi=
-ndowtext;padding:0cm 5.4pt" width=3D"141" valign=3D"top"><p class=3D"MsoNor=
-mal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sa=
-ns-serif;text-align:justify"><span>=C2=A0</span><span></span></p></td></tr>=
-<tr><td style=3D"width:108.3pt;border-right:1pt solid windowtext;border-bot=
-tom:1pt solid windowtext;border-left:1pt solid windowtext;border-style:none=
- solid solid;padding:0cm 5.4pt" width=3D"144" valign=3D"top"><p class=3D"Ms=
-oNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibr=
-i,sans-serif"><span>SquashFS 128k</span><span></span></p><p class=3D"MsoNor=
-mal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sa=
-ns-serif;text-align:justify"><span>=C2=A0</span><span></span></p></td><td s=
-tyle=3D"width:108.6pt;border-style:none solid solid none;border-bottom:1pt =
-solid windowtext;border-right:1pt solid windowtext;padding:0cm 5.4pt" width=
-=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.00=
-01pt;font-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">11=
-6MB/s</span><span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm=
- 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-U=
-S">861msec</span><span></span></p></td><td style=3D"width:108.65pt;border-s=
-tyle:none solid solid none;border-bottom:1pt solid windowtext;border-right:=
-1pt solid windowtext;padding:0cm 5.4pt" width=3D"145" valign=3D"top"><p cla=
-ss=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-famil=
-y:Calibri,sans-serif;text-align:justify"><span lang=3D"EN-US">14MB/s</span>=
-<span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;fo=
-nt-size:11pt;font-family:Calibri,sans-serif;text-align:justify"><span lang=
-=3D"EN-US">877msec</span><span></span></p></td><td style=3D"width:105.45pt;=
-border-style:none solid solid none;border-bottom:1pt solid windowtext;borde=
-r-right:1pt solid windowtext;padding:0cm 5.4pt" width=3D"141" valign=3D"top=
-"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;fo=
-nt-family:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span><=
-/span></p></td></tr><tr><td style=3D"width:108.3pt;border-right:1pt solid w=
-indowtext;border-bottom:1pt solid windowtext;border-left:1pt solid windowte=
-xt;border-style:none solid solid;padding:0cm 5.4pt" width=3D"144" valign=3D=
-"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11p=
-t;font-family:Calibri,sans-serif"><span>SquashFS 1M</span><span></span></p>=
-<p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font=
--family:Calibri,sans-serif"><span>=C2=A0</span><span></span></p></td><td st=
-yle=3D"width:108.6pt;border-style:none solid solid none;border-bottom:1pt s=
-olid windowtext;border-right:1pt solid windowtext;padding:0cm 5.4pt" width=
-=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.00=
-01pt;font-size:11pt;font-family:Calibri,sans-serif;text-align:justify"><spa=
-n lang=3D"EN-US">124MB/s-124MB/s</span><span></span></p><p class=3D"MsoNorm=
-al" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,san=
-s-serif;text-align:justify"><span lang=3D"EN-US">805msec</span><span></span=
-></p></td><td style=3D"width:108.65pt;border-style:none solid solid none;bo=
-rder-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:=
-0cm 5.4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"mar=
-gin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-ali=
-gn:justify"><span lang=3D"EN-US">119MB/s</span><span></span></p><p class=3D=
-"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Cal=
-ibri,sans-serif"><span lang=3D"EN-US">837msec</span><span></span></p><p cla=
-ss=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-famil=
-y:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></=
-p></td><td style=3D"width:105.45pt;border-style:none solid solid none;borde=
-r-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0cm=
- 5.4pt" width=3D"141" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin=
-:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-align:=
-justify"><span>=C2=A0</span><span></span></p></td></tr><tr style=3D"height:=
-29.7pt"><td style=3D"width:108.3pt;border-right:1pt solid windowtext;border=
--bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-style:=
-none solid solid;padding:0cm 5.4pt;height:29.7pt" width=3D"144" valign=3D"t=
-op"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;=
-font-family:Calibri,sans-serif"><span>Erofs 4k</span><span></span></p><p cl=
-ass=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fami=
-ly:Calibri,sans-serif"><span>=C2=A0</span><span></span></p></td><td style=
-=3D"width:108.6pt;border-style:none solid solid none;border-bottom:1pt soli=
-d windowtext;border-right:1pt solid windowtext;padding:0cm 5.4pt;height:29.=
-7pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0c=
-m 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif"><span lang=3D=
-"EN-US">658MB/s-658MB/s</span><span></span></p><p class=3D"MsoNormal" style=
-=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif">=
-<span lang=3D"EN-US">152msec</span><span></span></p><p class=3D"MsoNormal" =
-style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-se=
-rif"><span>=C2=A0</span><span></span></p></td><td style=3D"width:108.65pt;b=
-order-style:none solid solid none;border-bottom:1pt solid windowtext;border=
--right:1pt solid windowtext;padding:0cm 5.4pt;height:29.7pt" width=3D"145" =
-valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font=
--size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">103MB</span=
-><span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;f=
-ont-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">974msec<=
-/span><span></span></p></td><td style=3D"width:105.45pt;border-style:none s=
-olid solid none;border-bottom:1pt solid windowtext;border-right:1pt solid w=
-indowtext;padding:0cm 5.4pt;height:29.7pt" width=3D"141" valign=3D"top"><p =
-class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span=
-></p></td></tr></tbody></table><p class=3D"MsoNormal" style=3D"margin:0cm 0=
-cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,=
-0,0);font-style:normal;font-variant-caps:normal;font-weight:normal;letter-s=
-pacing:normal;text-indent:0px;text-transform:none;white-space:normal;word-s=
-pacing:0px;text-decoration:none;text-align:justify"><span style=3D"font-siz=
-e:12pt;color:white">=C2=A0</span><span></span></p><p class=3D"MsoNormal" st=
-yle=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans=
--serif;color:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-wei=
-ght:normal;letter-spacing:normal;text-align:start;text-indent:0px;text-tran=
-sform:none;white-space:normal;word-spacing:0px;text-decoration:none">=C2=A0=
-<span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36=
-pt;font-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-styl=
-e:normal;font-variant-caps:normal;font-weight:normal;letter-spacing:normal;=
-text-align:start;text-indent:0px;text-transform:none;white-space:normal;wor=
-d-spacing:0px;text-decoration:none"><span style=3D"color:rgb(255,153,0)">=
-=C2=A0Test on Suse VM: </span><br></p><p class=3D"MsoNormal" style=3D"margi=
-n:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color=
-:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-weight:normal;l=
-etter-spacing:normal;text-align:start;text-indent:0px;text-transform:none;w=
-hite-space:normal;word-spacing:0px;text-decoration:none"><br></p><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-variant-cap=
-s:normal;font-weight:normal;letter-spacing:normal;text-align:start;text-ind=
-ent:0px;text-transform:none;white-space:normal;word-spacing:0px;text-decora=
-tion:none"><span lang=3D"EN-US">Total Memory 1.5 GB:</span><span></span></p=
-><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11p=
-t;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-va=
-riant-caps:normal;font-weight:normal;letter-spacing:normal;text-align:start=
-;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;te=
-xt-decoration:none"><span lang=3D"EN-US">=C2=A0Free Memory 425<br></span></=
-p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11=
-pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-v=
-ariant-caps:normal;font-weight:normal;letter-spacing:normal;text-align:star=
-t;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;t=
-ext-decoration:none">=C2=A0No Swap</p><p class=3D"MsoNormal" style=3D"margi=
-n:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color=
-:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-weight:normal;l=
-etter-spacing:normal;text-align:start;text-indent:0px;text-transform:none;w=
-hite-space:normal;word-spacing:0px;text-decoration:none">localhost:/home/sa=
-umya/Documents/erofs_test # free -m<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 total =C2=A0 =C2=A0 =C2=A0 =C2=A0used =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0free =C2=A0 =C2=A0 =C2=A0shared =C2=A0buff/cache =C2=A0 available<br>=
-Mem: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 1436 =C2=A0 =C2=A0 =C2=A0 =C2=A0 81=
-7 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <span style=3D"color:rgb(255,0,0)">425</span>=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 5 =C2=A0 =C2=A0 =C2=A0 =C2=A0 192 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 444<br>Swap: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 0</p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;fo=
-nt-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:nor=
-mal;font-variant-caps:normal;font-weight:normal;letter-spacing:normal;text-=
-align:start;text-indent:0px;text-transform:none;white-space:normal;word-spa=
-cing:0px;text-decoration:none"><br></p><p class=3D"MsoNormal" style=3D"marg=
-in:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;colo=
-r:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-weight:normal;=
-letter-spacing:normal;text-align:start;text-indent:0px;text-transform:none;=
-white-space:normal;word-spacing:0px;text-decoration:none">=C2=A0<span></spa=
-n></p><table class=3D"gmail-MsoNormalTable" style=3D"font-family:-webkit-st=
-andard;letter-spacing:normal;text-indent:0px;text-transform:none;word-spaci=
-ng:0px;text-decoration:none;margin-left:36pt;border-collapse:collapse" cell=
-spacing=3D"0" cellpadding=3D"0" border=3D"0"><tbody><tr><td style=3D"width:=
-108.3pt;border:1pt solid windowtext;padding:0cm 5.4pt" width=3D"144" valign=
-=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:=
-11pt;font-family:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span>=
-<span></span></p></td><td style=3D"width:108.6pt;border-top:1pt solid windo=
-wtext;border-right:1pt solid windowtext;border-bottom:1pt solid windowtext;=
-border-style:solid solid solid none;padding:0cm 5.4pt" width=3D"145" valign=
-=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:=
-11pt;font-family:Calibri,sans-serif"><span>Seq Read</span><span></span></p>=
-<p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font=
--family:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></s=
-pan></p></td><td style=3D"width:108.65pt;border-top:1pt solid windowtext;bo=
-rder-right:1pt solid windowtext;border-bottom:1pt solid windowtext;border-s=
-tyle:solid solid solid none;padding:0cm 5.4pt" width=3D"145" valign=3D"top"=
-><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;fon=
-t-family:Calibri,sans-serif"><span>Rand Read</span><span></span></p><p clas=
-s=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family=
-:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></p=
-></td><td style=3D"width:105.45pt;border-top:1pt solid windowtext;border-ri=
-ght:1pt solid windowtext;border-bottom:1pt solid windowtext;border-style:so=
-lid solid solid none;padding:0cm 5.4pt" width=3D"141" valign=3D"top"><p cla=
-ss=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-famil=
-y:Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></=
-p></td></tr><tr><td style=3D"width:108.3pt;border-right:1pt solid windowtex=
-t;border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;borde=
-r-style:none solid solid;padding:0cm 5.4pt" width=3D"144" valign=3D"top"><p=
- class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-f=
-amily:Calibri,sans-serif"><span>squashFS 4k</span><span></span></p><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:=
-Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></p>=
-</td><td style=3D"width:108.6pt;border-style:none solid solid none;border-b=
-ottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0cm 5.=
-4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0c=
-m 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-align:jus=
-tify"><span lang=3D"EN-US">30.7MB/s</span><span></span></p><p class=3D"MsoN=
-ormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,=
-sans-serif;text-align:justify"><span lang=3D"EN-US">3216msec</span><span></=
-span></p></td><td style=3D"width:108.65pt;border-style:none solid solid non=
-e;border-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padd=
-ing:0cm 5.4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D=
-"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text=
--align:justify"><span lang=3D"EN-US">9333kB/s</span><span></span></p><p cla=
-ss=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-famil=
-y:Calibri,sans-serif;text-align:justify"><span lang=3D"EN-US">10715msec</sp=
-an></p></td><td style=3D"width:105.45pt;border-style:none solid solid none;=
-border-bottom:1pt solid windowtext;border-right:1pt solid windowtext;paddin=
-g:0cm 5.4pt" width=3D"141" valign=3D"top"><p class=3D"MsoNormal" style=3D"m=
-argin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-a=
-lign:justify"><span>=C2=A0</span><span></span></p></td></tr><tr><td style=
-=3D"width:108.3pt;border-right:1pt solid windowtext;border-bottom:1pt solid=
- windowtext;border-left:1pt solid windowtext;border-style:none solid solid;=
-padding:0cm 5.4pt" width=3D"144" valign=3D"top"><p class=3D"MsoNormal" styl=
-e=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif"=
-><span>SquashFS 128k</span><span></span></p><p class=3D"MsoNormal" style=3D=
-"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text=
--align:justify"><span>=C2=A0</span><span></span></p></td><td style=3D"width=
-:108.6pt;border-style:none solid solid none;border-bottom:1pt solid windowt=
-ext;border-right:1pt solid windowtext;padding:0cm 5.4pt" width=3D"145" vali=
-gn=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-siz=
-e:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">318MB/s</span><=
-span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;fon=
-t-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">314msec</s=
-pan><span></span></p></td><td style=3D"width:108.65pt;border-style:none sol=
-id solid none;border-bottom:1pt solid windowtext;border-right:1pt solid win=
-dowtext;padding:0cm 5.4pt" width=3D"145" valign=3D"top"><p class=3D"MsoNorm=
-al" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,san=
-s-serif;text-align:justify"><span lang=3D"EN-US">5946kB/s</span><span></spa=
-n></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11p=
-t;font-family:Calibri,sans-serif;text-align:justify"><span lang=3D"EN-US">1=
-6819msec</span><span></span></p></td><td style=3D"width:105.45pt;border-sty=
-le:none solid solid none;border-bottom:1pt solid windowtext;border-right:1p=
-t solid windowtext;padding:0cm 5.4pt" width=3D"141" valign=3D"top"><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:=
-Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></p>=
-</td></tr><tr><td style=3D"width:108.3pt;border-right:1pt solid windowtext;=
-border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-=
-style:none solid solid;padding:0cm 5.4pt" width=3D"144" valign=3D"top"><p c=
-lass=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fam=
-ily:Calibri,sans-serif"><span><br></span><span></span></p><p class=3D"MsoNo=
-rmal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,s=
-ans-serif"><span>=C2=A0</span><span></span></p></td><td style=3D"width:108.=
-6pt;border-style:none solid solid none;border-bottom:1pt solid windowtext;b=
-order-right:1pt solid windowtext;padding:0cm 5.4pt" width=3D"145" valign=3D=
-"top"><br><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size=
-:11pt;font-family:Calibri,sans-serif;text-align:justify"><span lang=3D"EN-U=
-S"></span><span></span></p></td><td style=3D"width:108.65pt;border-style:no=
-ne solid solid none;border-bottom:1pt solid windowtext;border-right:1pt sol=
-id windowtext;padding:0cm 5.4pt" width=3D"145" valign=3D"top"><br><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:=
-Calibri,sans-serif"><span lang=3D"EN-US"></span><span></span></p><p class=
-=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:=
-Calibri,sans-serif;text-align:justify"><span>=C2=A0</span><span></span></p>=
-</td><td style=3D"width:105.45pt;border-style:none solid solid none;border-=
-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0cm 5=
-.4pt" width=3D"141" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0=
-cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text-align:ju=
-stify"><span>=C2=A0</span><span></span></p></td></tr><tr style=3D"height:29=
-.7pt"><td style=3D"width:108.3pt;border-right:1pt solid windowtext;border-b=
-ottom:1pt solid windowtext;border-left:1pt solid windowtext;border-style:no=
-ne solid solid;padding:0cm 5.4pt;height:29.7pt" width=3D"144" valign=3D"top=
-"><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;fo=
-nt-family:Calibri,sans-serif"><span>Erofs 4k</span><span></span></p><p clas=
-s=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family=
-:Calibri,sans-serif"><span>=C2=A0</span><span></span></p></td><td style=3D"=
-width:108.6pt;border-style:none solid solid none;border-bottom:1pt solid wi=
-ndowtext;border-right:1pt solid windowtext;padding:0cm 5.4pt;height:29.7pt"=
- width=3D"145" valign=3D"top"><p class=3D"MsoNormal" style=3D"margin:0cm 0c=
-m 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-=
-US">469MB/s</span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001=
-pt;font-size:11pt;font-family:Calibri,sans-serif"><span lang=3D"EN-US">213m=
-sec<br><br></span><span></span></p><p class=3D"MsoNormal" style=3D"margin:0=
-cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif"><span>=C2=A0=
-</span><span></span></p></td><td style=3D"width:108.65pt;border-style:none =
-solid solid none;border-bottom:1pt solid windowtext;border-right:1pt solid =
-windowtext;padding:0cm 5.4pt;height:29.7pt" width=3D"145" valign=3D"top"><p=
- class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-f=
-amily:Calibri,sans-serif"><span lang=3D"EN-US">11.9MB/s</span><span></span>=
-</p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;=
-font-family:Calibri,sans-serif"><span lang=3D"EN-US">8414msec</span></p><p =
-class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt;font-size:11pt;font-fa=
-mily:Calibri,sans-serif"><span lang=3D"EN-US"></span><span></span></p></td>=
-<td style=3D"width:105.45pt;border-style:none solid solid none;border-botto=
-m:1pt solid windowtext;border-right:1pt solid windowtext;padding:0cm 5.4pt;=
-height:29.7pt" width=3D"141" valign=3D"top"><p class=3D"MsoNormal" style=3D=
-"margin:0cm 0cm 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif;text=
--align:justify"><span>=C2=A0</span><span></span></p></td></tr></tbody></tab=
-le><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:1=
-1pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-=
-variant-caps:normal;font-weight:normal;letter-spacing:normal;text-indent:0p=
-x;text-transform:none;white-space:normal;word-spacing:0px;text-decoration:n=
-one;text-align:justify"><span style=3D"font-size:12pt;color:white">=C2=A0</=
-span><span></span></p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001=
-pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font=
--style:normal;font-variant-caps:normal;font-weight:normal;letter-spacing:no=
-rmal;text-align:start;text-indent:0px;text-transform:none;white-space:norma=
-l;word-spacing:0px;text-decoration:none">=C2=A0</p><p class=3D"MsoNormal" s=
-tyle=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:11pt;font-family:Calibri,san=
-s-serif;color:rgb(0,0,0);font-style:normal;font-variant-caps:normal;font-we=
-ight:normal;letter-spacing:normal;text-align:start;text-indent:0px;text-tra=
-nsform:none;white-space:normal;word-spacing:0px;text-decoration:none"><br><=
-/p><p class=3D"MsoNormal" style=3D"margin:0cm 0cm 0.0001pt 36pt;font-size:1=
-1pt;font-family:Calibri,sans-serif;color:rgb(0,0,0);font-style:normal;font-=
-variant-caps:normal;font-weight:normal;letter-spacing:normal;text-align:sta=
-rt;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;=
-text-decoration:none"><br></p><p class=3D"MsoNormal" style=3D"margin:0cm 0c=
-m 0.0001pt 36pt;font-size:11pt;font-family:Calibri,sans-serif;color:rgb(0,0=
-,0);font-style:normal;font-variant-caps:normal;font-weight:normal;letter-sp=
-acing:normal;text-align:start;text-indent:0px;text-transform:none;white-spa=
-ce:normal;word-spacing:0px;text-decoration:none"><br></p></div></div><br><d=
-iv class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Jan =
-29, 2020 at 10:30 AM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@aol.com">hsi=
-angkao@aol.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex">On Wed, Jan 29, 2020 at 09:43:37AM +0530, Saumya Panda wrote:=
-<br>
-&gt; <br>
-&gt; localhost:~&gt; fio --name=3Drandread --ioengine=3Dlibaio --iodepth=3D=
-16<br>
-&gt; --rw=3Drandread --bs=3D4k --direct=3D0 --size=3D512M --numjobs=3D4 --r=
-untime=3D240<br>
-&gt; --group_reporting --filename=3D/mnt/enwik9_erofs/enwik9<br>
-&gt; <br>
-&gt; randread: (g=3D0): rw=3Drandread, bs=3D(R) 4096B-4096B, (W) 4096B-4096=
-B, (T)<br>
-&gt; 4096B-4096B, ioengine=3Dlibaio, iodepth=3D16<br>
-<br>
-And I don&#39;t think such configuration is useful to calculate read ampfic=
-ation<br>
-since you read 100% finally, use multi-thread without memory limitation (al=
-l<br>
-compressed data will be cached, so the total read is compressed size).<br>
-<br>
-I have no idea what you want to get via doing comparsion between EROFS and<=
-br>
-Squashfs. Larger block size much like readahead in bulk. If you benchmark<b=
-r>
-uncompressed file systems, you will notice such filesystems cannot get such=
-<br>
-high 100% randread number.<br>
-<br>
-Thank,<br>
-Gao Xiang<br>
-<br>
-</blockquote></div><br clear=3D"all"><br>-- <br><div dir=3D"ltr" class=3D"g=
-mail_signature">Thanks,<br>Saumya Prakash Panda<br><br></div>
-
---00000000000023b10e05a144afc3--
+> 
+>              Test on Embedded Device:
+> 
+> Total Memory 5.5 GB:
+> 
+>  Free Memory 1515
+> 
+>  No Swap
+> 
+> 
+> $: /fio/erofs_test]$ free -m
+> 
+>               total        used        free      shared  buff/cache
+> available
+> 
+> Mem:           5384        2315        1515        1378        1553
+> 1592
+> 
+> Swap:             0           0           0
+> 
+> 
+> 
+> 
+> 
+> Seq Read
+> 
+> 
+> 
+> Rand Read
+> 
+> 
+> 
+> 
+> 
+> squashFS 4k
+> 
+> 
+> 
+> 51.8MB/s
+> 
+> 1931msec
+> 
+> 45.7MB/s
+> 
+> 2187msec
+> 
+> 
+> 
+> SquashFS 128k
+> 
+> 
+> 
+> 116MB/s
+> 
+> 861msec
+> 
+> 14MB/s
+> 
+> 877msec
+> 
+> 
+> 
+> SquashFS 1M
+> 
+> 
+> 
+> 124MB/s-124MB/s
+> 
+> 805msec
+> 
+> 119MB/s
+> 
+> 837msec
+> 
+> 
+> 
+> 
+> 
+> Erofs 4k
+> 
+> 
+> 
+> 658MB/s-658MB/s
+> 
+> 152msec
+> 
+> 
+> 
+> 103MB
+> 
+> 974msec
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+>  Test on Suse VM:
+> 
+> 
+> Total Memory 1.5 GB:
+> 
+>  Free Memory 425
+> 
+>  No Swap
+> 
+> localhost:/home/saumya/Documents/erofs_test # free -m
+>               total        used        free      shared  buff/cache
+> available
+> Mem:           1436         817         425           5         192
+> 444
+> Swap:             0           0           0
+> 
+> 
+> 
+> 
+> 
+> 
+> Seq Read
+> 
+> 
+> 
+> Rand Read
+> 
+> 
+> 
+> 
+> 
+> squashFS 4k
+> 
+> 
+> 
+> 30.7MB/s
+> 
+> 3216msec
+> 
+> 9333kB/s
+> 
+> 10715msec
+> 
+> 
+> 
+> SquashFS 128k
+> 
+> 
+> 
+> 318MB/s
+> 
+> 314msec
+> 
+> 5946kB/s
+> 
+> 16819msec
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> Erofs 4k
+> 
+> 
+> 
+> 469MB/s
+> 
+> 213msec
+> 
+> 
+> 
+> 11.9MB/s
+> 
+> 8414msec
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> On Wed, Jan 29, 2020 at 10:30 AM Gao Xiang <hsiangkao@aol.com> wrote:
+> 
+> > On Wed, Jan 29, 2020 at 09:43:37AM +0530, Saumya Panda wrote:
+> > >
+> > > localhost:~> fio --name=randread --ioengine=libaio --iodepth=16
+> > > --rw=randread --bs=4k --direct=0 --size=512M --numjobs=4 --runtime=240
+> > > --group_reporting --filename=/mnt/enwik9_erofs/enwik9
+> > >
+> > > randread: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T)
+> > > 4096B-4096B, ioengine=libaio, iodepth=16
+> >
+> > And I don't think such configuration is useful to calculate read
+> > ampfication
+> > since you read 100% finally, use multi-thread without memory limitation
+> > (all
+> > compressed data will be cached, so the total read is compressed size).
+> >
+> > I have no idea what you want to get via doing comparsion between EROFS and
+> > Squashfs. Larger block size much like readahead in bulk. If you benchmark
+> > uncompressed file systems, you will notice such filesystems cannot get such
+> > high 100% randread number.
+> >
+> > Thank,
+> > Gao Xiang
+> >
+> >
+> 
+> -- 
+> Thanks,
+> Saumya Prakash Panda
