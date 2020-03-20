@@ -2,54 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DEB318D5D9
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 18:31:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E28D718D5EB
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Mar 2020 18:37:46 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48kW5j1ClCzDwbP
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2020 04:31:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48kWFM5JlQzF06S
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2020 04:37:43 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=ebiggers@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=EGKIuDKu; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=default header.b=avAm79Pa; dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48kW5V3ZN3zDvP7
- for <linux-erofs@lists.ozlabs.org>; Sat, 21 Mar 2020 04:30:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
- :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=UGITiyVmaO8X73R6wVMfMGWLW2W7neAq/9meuj1VHqo=; b=EGKIuDKu0tjZuVECGtavPDxi0D
- O6qg1HxEZ5HTL6SQ+HnHGiXg3uMjLMXJy/QxU+RUtVkogm3OV1OoYySDKdd0TNCl75RNBRD/yIw4o
- r5B74nN9dCjwBJMpXdmIQPMo0Dtd++oHnpRNcQiIMtN+2/YTHKBLp/Yz4yXCj69SdRRm0YxhO6rSh
- QXAUKzLbScpAtIooOgBnixq+3fxkEPx9tp3sn8jy4Vs+FM4MKzh0fM6tnnEsYlBa1E1lxlobx/VwW
- F43ky5cdb9YLYKc01lCcZou/2CPPrIQSZW4GwTB3CgHdAptXVKYA1oettmTxaZQrltP3u3grDMdAI
- dACn5xZg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1jFLTk-0003g5-Sd; Fri, 20 Mar 2020 17:30:40 +0000
-Date: Fri, 20 Mar 2020 10:30:40 -0700
-From: Matthew Wilcox <willy@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [PATCH v9 12/25] mm: Move end_index check out of readahead loop
-Message-ID: <20200320173040.GB4971@bombadil.infradead.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48kWFH1tfzzDvrG
+ for <linux-erofs@lists.ozlabs.org>; Sat, 21 Mar 2020 04:37:38 +1100 (AEDT)
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net
+ [107.3.166.239])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 4B72C20722;
+ Fri, 20 Mar 2020 17:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1584725856;
+ bh=G2+3MpD3WslFGLdp5NjeBbtVtx2oUkFUbLAe3FrGwo4=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=avAm79PauNq7Mi8lepE1M+q8L6UcKnW/aDKz8d+iWcwGM0xSpN0CPodVkw5n7hjxI
+ bmniaSQH/oDhJBhhL3LaO1e96w9j3KKiHwDmuCEMBhf2iB3BNRVYn0F6PNaJNIKpU0
+ QA85GNq47i8AcHSpCY4OouI56lflivWj/ICnBfM4=
+Date: Fri, 20 Mar 2020 10:37:34 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v9 20/25] ext4: Convert from readpages to readahead
+Message-ID: <20200320173734.GD851@sol.localdomain>
 References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-13-willy@infradead.org>
- <20200320165828.GB851@sol.localdomain>
+ <20200320142231.2402-21-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320165828.GB851@sol.localdomain>
+In-Reply-To: <20200320142231.2402-21-willy@infradead.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,8 +57,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: cluster-devel@redhat.com, linux-mm@kvack.org,
- John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org,
+Cc: cluster-devel@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
  William Kucharski <william.kucharski@oracle.com>, linux-btrfs@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -72,49 +67,32 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Mar 20, 2020 at 09:58:28AM -0700, Eric Biggers wrote:
-> On Fri, Mar 20, 2020 at 07:22:18AM -0700, Matthew Wilcox wrote:
-> > +	/* Avoid wrapping to the beginning of the file */
-> > +	if (index + nr_to_read < index)
-> > +		nr_to_read = ULONG_MAX - index + 1;
-> > +	/* Don't read past the page containing the last byte of the file */
-> > +	if (index + nr_to_read >= end_index)
-> > +		nr_to_read = end_index - index + 1;
+On Fri, Mar 20, 2020 at 07:22:26AM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> There seem to be a couple off-by-one errors here.  Shouldn't it be:
+> Use the new readahead operation in ext4
 > 
-> 	/* Avoid wrapping to the beginning of the file */
-> 	if (index + nr_to_read < index)
-> 		nr_to_read = ULONG_MAX - index;
-
-I think it's right.  Imagine that index is ULONG_MAX.  We should read one
-page (the one at ULONG_MAX).  That would be ULONG_MAX - ULONG_MAX + 1.
-
-> 	/* Don't read past the page containing the last byte of the file */
-> 	if (index + nr_to_read > end_index)
-> 		nr_to_read = end_index - index + 1;
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> ---
+>  fs/ext4/ext4.h     |  3 +--
+>  fs/ext4/inode.c    | 21 +++++++++------------
+>  fs/ext4/readpage.c | 22 ++++++++--------------
+>  3 files changed, 18 insertions(+), 28 deletions(-)
 > 
-> I.e., 'ULONG_MAX - index' rather than 'ULONG_MAX - index + 1', so that
-> 'index + nr_to_read' is then ULONG_MAX rather than overflowed to 0.
-> 
-> Then 'index + nr_to_read > end_index' rather 'index + nr_to_read >= end_index',
-> since otherwise nr_to_read can be increased by 1 rather than decreased or stay
-> the same as expected.
 
-Ooh, I missed the overflow case here.  It should be:
+Reviewed-by: Eric Biggers <ebiggers@google.com>
 
-+	if (index + nr_to_read - 1 > end_index)
-+		nr_to_read = end_index - index + 1;
+> +		if (rac) {
+> +			page = readahead_page(rac);
+>  			prefetchw(&page->flags);
+> -			list_del(&page->lru);
+> -			if (add_to_page_cache_lru(page, mapping, page->index,
+> -				  readahead_gfp_mask(mapping)))
+> -				goto next_page;
+>  		}
 
-Let's say index comes in at ULONG_MAX - 2, end_index is ULONG_MAX - 1
-and nr_to_read is 8.  The first condition triggers and nr_to_read is
-reduced to 3.  But then the second condition wouldn't trigger because
-ULONG_MAX - 2 + 3 is 0.
+Maybe the prefetchw(&page->flags) should be included in readahead_page()?
+Most of the callers do it.
 
-With the rewrite I have in this message, ULONG_MAX - 2 + 3 - 1 is ULONG_MAX,
-which is > ULONG_MAX - 1.  So the condition triggers and nr_to_read becomes
-(ULONG_MAX - 1) - (ULONG_MAX - 2) + 1.  Which is -1 + 2 + 1, which is 2.
-Which is the right answer because we want to read two pages; the one
-at ULONG_MAX - 2 and the one at ULONG_MAX - 1.
-
-Thank you!
+- Eric
