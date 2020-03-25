@@ -2,66 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CCFC192B63
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2020 15:43:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88388192C97
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2020 16:32:43 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48nW7x2PcFzDqft
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2020 01:43:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48nXDn0NkgzDqdx
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2020 02:32:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=szeredi.hu (client-ip=2607:f8b0:4864:20::d42;
- helo=mail-io1-xd42.google.com; envelope-from=miklos@szeredi.hu;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=szeredi.hu
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dkim=fail reason="key not found in DNS" header.d=szeredi.hu
- header.i=@szeredi.hu header.a=rsa-sha256 header.s=google header.b=YUccMzib; 
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=nwr8fvcC; 
  dkim-atps=neutral
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com
- [IPv6:2607:f8b0:4864:20::d42])
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48nW7p6FV1zDqdp
- for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2020 01:43:15 +1100 (AEDT)
-Received: by mail-io1-xd42.google.com with SMTP id d15so2476106iog.3
- for <linux-erofs@lists.ozlabs.org>; Wed, 25 Mar 2020 07:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=szeredi.hu; s=google;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=BYoi0GgKGrZ5Iy05aE5oc1zP5UUaQTjapju/izAR4hI=;
- b=YUccMzib2IwajwEuyLBHygiEi2x+yWevlxfsequqpaIt/Mza/TxUmFkitS3U4FkfKx
- P1XwXxBJ8Cx5HEmhYoBLdWFHhmr6xou5YR2utppkELKcqyaDd4EOavtJNBW3boLnPkzx
- WgZmdQ9YRsyheNZWEZrba/miSYKYdDAaziYyc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=BYoi0GgKGrZ5Iy05aE5oc1zP5UUaQTjapju/izAR4hI=;
- b=AifaeMG3DI3GBjOtiD1JygCr3IXcbS+IJfakO3t7eLmi/eS1KUbHTLCYRZyEnsDkx3
- 8pv3YeQVQ2BwNeFWOWRow7R0eL1RbZTLIgrJnex3tE79Q+r1w1LJRez2cWRw9UYXYygw
- wBFFru50f31EYF8nszkN3L07/4Yo8L02v0LY8PHrq9w9ri4JtZCtq1xucI2iIRDdIwZT
- 5dR3dkO5A67Tl6IKKTrL+y8GE9drYO+yjmDnEWZQ+qZrBMvDJfrd+TcnG/fOP4b1lGfN
- dBt5dYfNdqcVPE+VBcjB/5wF5PS7XIK7ukDB7o1rL9LgTDpRTHL8sPF4uwB9UBYu/UJe
- 4DLA==
-X-Gm-Message-State: ANhLgQ2i3tJ3WscdCukpwtd8JcvYDykqDR/Kq474GRn/2IecEwmeTRrN
- zTboec5e6qmAKUkHxzyeQ7C7cxUFV4Jm5V0u5+DrYQ==
-X-Google-Smtp-Source: ADFU+vsgMMqodCZqPGFNfCT+HdNRTtLLlUdy5AMnDcVBoatxWj+vZY48emoAVNd+HvHliFjTkg/kdF6pmkOGcZxuC6s=
-X-Received: by 2002:a6b:3a07:: with SMTP id h7mr3235359ioa.191.1585147393572; 
- Wed, 25 Mar 2020 07:43:13 -0700 (PDT)
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48nXDc3r83zDqYJ
+ for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2020 02:32:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=L8UzQwxATOZdjWZ+3tNM04b2mH/5tj4IRSDfIFAnCq4=; b=nwr8fvcCAKrcOHuwe8r/p16lMc
+ bZh3DEdAU9aGBWN3F5ynv1Ne93Ij03ZhftdP2p/j/SwKFdDbTLj5/ZaltpVeKwhDVOtZpmt6dBgOM
+ Y5kNAkTDyJM9LmxIOgZivD4BtHVK41PC4z2UtEwA8qUzMYjVHQwzjfESuvsJdyTL91AdLqA/lHmDm
+ b4ONx8n6tUgKbzMesC9PHNx/tJe345Szba01BQVbNkeQ4aBKyS9/rqkTgJMFlzt5JsbGeTzjBPG19
+ tW79XBGQHh8i08Okr8byBxVFG1QH7u5q9rAcay5PaTaRDoWupoIchhUNkRzhk4f/AQVLTP2rNvR7K
+ 5pnTChzQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1jH816-0004oZ-U3; Wed, 25 Mar 2020 15:32:28 +0000
+Date: Wed, 25 Mar 2020 08:32:28 -0700
+From: Matthew Wilcox <willy@infradead.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
+Message-ID: <20200325153228.GB22483@bombadil.infradead.org>
 References: <20200323202259.13363-1-willy@infradead.org>
  <20200323202259.13363-25-willy@infradead.org>
  <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com>
  <20200325120254.GA22483@bombadil.infradead.org>
-In-Reply-To: <20200325120254.GA22483@bombadil.infradead.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 25 Mar 2020 15:43:02 +0100
-Message-ID: <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
-Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
-To: Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+ <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,36 +74,64 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Mar 25, 2020 at 1:02 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Wed, Mar 25, 2020 at 10:42:56AM +0100, Miklos Szeredi wrote:
-> > > +       while ((page = readahead_page(rac))) {
-> > > +               if (fuse_readpages_fill(&data, page) != 0)
+On Wed, Mar 25, 2020 at 03:43:02PM +0100, Miklos Szeredi wrote:
 > >
-> > Shouldn't this unlock + put page on error?
->
-> We're certainly inconsistent between the two error exits from
-> fuse_readpages_fill().  But I think we can simplify the whole thing
-> ... how does this look to you?
+> > -       while ((page = readahead_page(rac))) {
+> > -               if (fuse_readpages_fill(&data, page) != 0)
+> > +               nr_pages = min(readahead_count(rac), fc->max_pages);
+> 
+> Missing fc->max_read clamp.
 
-Nice, overall.
+Yeah, I realised that.  I ended up doing ...
 
->
-> -       while ((page = readahead_page(rac))) {
-> -               if (fuse_readpages_fill(&data, page) != 0)
-> +               nr_pages = min(readahead_count(rac), fc->max_pages);
++       unsigned int i, max_pages, nr_pages = 0;
+...
++       max_pages = min(fc->max_pages, fc->max_read / PAGE_SIZE);
 
-Missing fc->max_read clamp.
+> > +               ia = fuse_io_alloc(NULL, nr_pages);
+> > +               if (!ia)
+> >                         return;
+> > +               ap = &ia->ap;
+> > +               __readahead_batch(rac, ap->pages, nr_pages);
+> 
+> nr_pages = __readahead_batch(...)?
 
-> +               ia = fuse_io_alloc(NULL, nr_pages);
-> +               if (!ia)
->                         return;
-> +               ap = &ia->ap;
-> +               __readahead_batch(rac, ap->pages, nr_pages);
+That's the other bug ... this was designed for btrfs which has a fixed-size
+buffer.  But you want to dynamically allocate fuse_io_args(), so we need to
+figure out the number of pages beforehand, which is a little awkward.  I've
+settled on this for the moment:
 
-nr_pages = __readahead_batch(...)?
+        for (;;) {
+               struct fuse_io_args *ia;
+                struct fuse_args_pages *ap;
 
-This will give consecutive pages, right?
+                nr_pages = readahead_count(rac) - nr_pages;
+                if (nr_pages > max_pages)
+                        nr_pages = max_pages;
+                if (nr_pages == 0)
+                        break;
+                ia = fuse_io_alloc(NULL, nr_pages);
+                if (!ia)
+                        return;
+                ap = &ia->ap;
+                __readahead_batch(rac, ap->pages, nr_pages);
+                for (i = 0; i < nr_pages; i++) {
+                        fuse_wait_on_page_writeback(inode,
+                                                    readahead_index(rac) + i);
+                        ap->descs[i].length = PAGE_SIZE;
+                }
+                ap->num_pages = nr_pages;
+                fuse_send_readpages(ia, rac->file);
+        }
 
-Thanks,
-Miklos
+but I'm not entirely happy with that either.  Pondering better options.
+
+> This will give consecutive pages, right?
+
+readpages() was already being called with consecutive pages.  Several
+filesystems had code to cope with the pages being non-consecutive, but
+that wasn't how the core code worked; if there was a discontiguity it
+would send off the pages that were consecutive and start a new batch.
+
+__readahead_batch() can't return fewer than nr_pages, so you don't need
+to check for that.
