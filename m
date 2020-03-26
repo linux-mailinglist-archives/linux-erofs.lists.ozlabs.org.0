@@ -2,65 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F09A194437
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2020 17:26:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B054194438
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2020 17:26:50 +0100 (CET)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48p9Nd5K1yzDr0T
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2020 03:26:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48p9Nl4Lf0zDqtK
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2020 03:26:47 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1585240001;
-	bh=YhuxVBlwFzru6EPg1urYQVdkjhXz1P4LOHc2l1NQtko=;
+	s=201707; t=1585240007;
+	bh=ziNYcHMNAneungNuSMGHfw3AWzr5NyPViP6hzTAFxQw=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=O1Nnsxen7WsO8EFM+WrwdCgVfIsR2iIVSLwXY5GOZ2YZ+8HM9MGRNAlj1Sc2yt6J3
-	 vR3ORPUpAk+N9iuQ+AVAY/1Cb6Haw3Oq6bkukZhbFitWl7gyxzDckG5d+jKAPaXuqG
-	 UZS9zhpC0bY13f6HpFNCV1qwzfhjprVZ28YrQ+t6xD5gMOemiE29+F9A3dGCNoXg6L
-	 Dk31UeDB6Gikv3uScR0m1YkU+izFr3AirbTRbfmkILuxRs+S84LJcnH8LTmX8UKchv
-	 8919OyRI0sg8fWCtgZIWV/pub9k3IQC466ZgrcndXgzwUwOPu3rPdotNcsrJxmzeIU
-	 8pYqx9lbbrrkw==
+	b=lS757uOT6NP2iT7//kI/CkuJhA/KHfySE4Bfsmmzl8eFME2IzuAO6xugKUszeXLp1
+	 ZwsOOp59Upufj4//liz05DrZ24FPlWY2YP767pa7sw542+WepxhjBT2oZYSfTZcoZc
+	 B3c2UsZNrrRAtGUN4QpXWvwNH35jhbe7gdbsINDpo9Qlyzq783xXlSs8c5adw2YYIu
+	 uyQQRXVOtPdeHcbxcVxpdFPg3QmbYmG964AwQFT7lmq0bcrXPqqjdQ8KHtOCmmPIFv
+	 0mTJbIXYJDb5u0NTZIzhQrgldb2Co3o8CS7aU6uyGi2O2ohxNWaFsU3TgsqEeIJSQs
+	 VGbqFPMXhcL9Q==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.4;
- helo=out30-4.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.50;
+ helo=out30-50.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
  header.from=aliyun.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=uUXt0rlW; dkim-atps=neutral
-X-Greylist: delayed 322 seconds by postgrey-1.36 at bilbo;
- Fri, 27 Mar 2020 03:24:34 AEDT
-Received: from out30-4.freemail.mail.aliyun.com
- (out30-4.freemail.mail.aliyun.com [115.124.30.4])
+ header.s=s1024 header.b=DvQjm2Ro; dkim-atps=neutral
+Received: from out30-50.freemail.mail.aliyun.com
+ (out30-50.freemail.mail.aliyun.com [115.124.30.50])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48p9LB3wgTzDr0T
- for <linux-erofs@lists.ozlabs.org>; Fri, 27 Mar 2020 03:24:33 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48p9LN4BXZzDr0R
+ for <linux-erofs@lists.ozlabs.org>; Fri, 27 Mar 2020 03:24:44 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1585239860; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=biHrB8A8Rw9A5AR6fzDfHIFTLK3cBuhAUO3mBtPJpHM=;
- b=uUXt0rlW0eF85J2OOuM2GGpOGA78TCN85d26qu1rPyRh5Ni06jOUxbN/CDePRMt/ddT7wmxB4k3v5aJd8AgorK5y1H5MvMNCquJWlPXMmS+C/3MwZsaza5AzgHiYMaQy2JBPJYgKjSekvi12SMDJhaw6s1P+Wg2pGhdLo/fjaMw=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1001406|-1; CH=green; DM=|CONTINUE|false|;
- DS=CONTINUE|ham_enroll_verification|0.0201725-0.00113074-0.978697;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01f04428; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=4; RT=4; SR=0; TI=SMTPD_---0TthwCuT_1585239534; 
+ t=1585239878; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
+ bh=RhO40v75ALkzTgvcslMU6xUxTIf2nWNVpeDl9IEZPds=;
+ b=DvQjm2RodO3PmWXr2/kFfqlcK4sf44wtkPC54D6bRNOjQ8Fb3iAATQNmLs3sCNV/S8eRsBD6dvkW8kpvK+LmKyIt+/mBYcsJDc/rnhrMk89o4Zr2oEyOe7iFG2yWzYo0U9UFHS8zGIKDBafHjGj9bAubTqq6fnhfYIn55r0xIiQ=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08249795|-1; CH=green;
+ DM=|CONTINUE|false|; DS=CONTINUE|ham_social|0.0105198-0.000360991-0.989119;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e01358; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=3; RT=3; SR=0; TI=SMTPD_---0Tthk7Ci_1585239558; 
 Received: from 192.168.0.103(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0TthwCuT_1585239534) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 27 Mar 2020 00:18:54 +0800
-Subject: Re: [PATCH] erofs-utils: avoid _LARGEFILE64_SOURCE and _GNU_SOURCE
- redefinition
+ fp:SMTPD_---0Tthk7Ci_1585239558) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 27 Mar 2020 00:19:18 +0800
+Subject: Re: [PATCH] erofs-utils: avoid using old compatibility type uint
 To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org,
  Li Guifu <bluce.liguifu@huawei.com>
-References: <20200314105256.20142-1-hsiangkao.ref@aol.com>
- <20200314105256.20142-1-hsiangkao@aol.com>
-Message-ID: <aaa73704-ead0-551d-4a11-fb95b88b6002@aliyun.com>
-Date: Fri, 27 Mar 2020 00:18:53 +0800
+References: <20200324081949.26355-1-hsiangkao.ref@aol.com>
+ <20200324081949.26355-1-hsiangkao@aol.com>
+Message-ID: <ef5f4cde-f26c-e399-5371-ab87a4d55111@aliyun.com>
+Date: Fri, 27 Mar 2020 00:19:18 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200314105256.20142-1-hsiangkao@aol.com>
+In-Reply-To: <20200324081949.26355-1-hsiangkao@aol.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -82,22 +79,27 @@ Sender: "Linux-erofs"
 
 
 
-On 2020/3/14 18:52, Gao Xiang wrote:
-> From: Gao Xiang <gaoxiang25@huawei.com>
+On 2020/3/24 16:19, Gao Xiang wrote:
+> This should fix the following buildroot autobuild issues
+> with some configration on ARM platform [1]:
 > 
-> This patch can be used to resolve the following build errors:
+> compress.c: In function 'vle_compress_one':
+> compress.c:209:10: error: unknown type name 'uint'
+>     const uint qh_aligned = round_down(ctx->head, EROFS_BLKSIZ);
+>           ^~~~
+> compress.c:210:10: error: unknown type name 'uint'
+>     const uint qh_after = ctx->head - qh_aligned;
+>           ^~~~
+> compress.c: In function 'z_erofs_convert_to_compacted_format':
+> compress.c:313:8: error: unknown type name 'uint'
+>   const uint headerpos = Z_EROFS_VLE_EXTENT_ALIGN(inode->inode_isize +
+>         ^~~~
+> compress.c:316:8: error: unknown type name 'uint'
+>   const uint totalidx = (legacymetasize -
+>         ^~~~
 > 
-> compress.c:10: error: "_LARGEFILE64_SOURCE" redefined [-Werror]
->  #define _LARGEFILE64_SOURCE
-> 
-> <command-line>: note: this is the location of the previous definition
-> 
-> io.c:9: error: "_LARGEFILE64_SOURCE" redefined [-Werror]
->  #define _LARGEFILE64_SOURCE
-> 
-> <command-line>: note: this is the location of the previous definition
-> 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> [1] http://autobuild.buildroot.net/results/842a3c6416416d7badf4db9f38e3b231093a786a
+> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 
 It looks good
 Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
