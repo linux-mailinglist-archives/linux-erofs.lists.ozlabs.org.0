@@ -1,50 +1,80 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B99B197299
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2020 04:39:22 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4FC1196A33
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2020 01:16:48 +0100 (CET)
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 48qbk3738czDqgx
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2020 11:16:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 48rGr73w7lzDqLd
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2020 13:39:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1585535959;
+	bh=VJrZVTAbvW++YLVdua1XwHjl1sWEymPpBgvh4sU6uDw=;
+	h=Date:To:Subject:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=l/BQs1SZWSw04gUfEhkzEg7sAGhqNDpiOaKf8ddXdYyZk7w+XpMkwdJh+tgxeGXmk
+	 Td3nih7Yf2j6Ymt5F0PnGwWtBZFdSqGPcgQZWXVuXET1HCfeMbYvSbnnGasJwyiBbc
+	 87k4TeEiLaIRMeLmDAh8UlDZ9TIsrQ23o0erAlcWbjXJI6kkgix4cRkGvMF9F1FmQ/
+	 sfKxy36KZg5Z5uApda9SBROxdDFgLwwAypw6o4m+jTGc41uL7PUL+iNLi84jGxn7zA
+	 SyrMThdtafBz7dqNfuCSUlCICZXvRLcrAcEAj3gvRtQSFFs1+jl9q/beQTUQq/Tlnu
+	 Q9AFTdXYNmQjg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=66.163.185.33; helo=sonic313-10.consmr.mail.ne1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=BDgnOAJJ; dkim-atps=neutral
+Received: from sonic313-10.consmr.mail.ne1.yahoo.com
+ (sonic313-10.consmr.mail.ne1.yahoo.com [66.163.185.33])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 48qbjs1gHyzDqX2
- for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2020 11:16:25 +1100 (AEDT)
-IronPort-SDR: wi7Z3TpMM9ZZytGMjzH/JHuA4uGfbD0ferpA5KYfw7J6e3BU/zHv8x8RQ8nF/iIIhpgcjuiSf2
- sAPU8metR2NA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
- by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 28 Mar 2020 17:16:20 -0700
-IronPort-SDR: j96yk62cPrMg2TwPd/LjTDpA6UaqVqJtuNvmNzoiAXVGDgblnszgp9gpoxG+ehkRNLSRxykU1e
- a+Hjb1Ee9K+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,318,1580803200"; d="scan'208";a="251508243"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
- by orsmga006.jf.intel.com with ESMTP; 28 Mar 2020 17:16:19 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
- (envelope-from <lkp@intel.com>)
- id 1jILcg-0005Kx-AZ; Sun, 29 Mar 2020 08:16:18 +0800
-Date: Sun, 29 Mar 2020 08:15:30 +0800
-From: kbuild test robot <lkp@intel.com>
-To: Gao Xiang <gaoxiang25@huawei.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 20741a6e146cab59745c7f25abf49d891a83f8e9
-Message-ID: <5e7fe8a2.CjyjLM6dq2g5m1fd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 48rGqp0rhhzDqC9
+ for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2020 13:38:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1585535936; bh=VD70aeVEGZzqHFz6t1O4xsHegNnmsjzLe99VqM0PnYI=;
+ h=Date:From:To:Cc:Subject:References:From:Subject;
+ b=BDgnOAJJyyQN7W8Xtn6o2PGR2Cg3SdTScuhUnYY0WCmRW34yj8rNvJHL5GuA0hBXjJPkq97yaHmaUX6wEp1kthAKjJAST/QwiRXDFnSKrKaFscScaJZbS38utwyLC7+Km/ywHT3vnsAehFOYNvoo7tMuIYBNatN/k3/4Ly2sKLEGgIOrdUXI2OO6DdBbSKg6/D69B9vqbtfpyNxQj27u/MwYkdQLCVZtZEaQagiNWruA6TCG2gT4s0AEEE0pAGoODAH53zxje0JDJnY41payd04igsNHDEDzsLZHTfvqGY4XyerVzLJFIpGaiF+jzb7yJVqDCke3ZWUJaYzhIY5uIQ==
+X-YMail-OSG: xTFBxcYVM1mbjayfIp4dm6zffI88jjoYlXxO_oLCjEPmgAYfjgh93gq6FdR9Ay7
+ 3a1vldahmOpihGMhB8iQmnQxwf6Jws5Y9MFDvLizxjTEyIt.DhZlzJr03LG_Aqdt.bY9LB_rGRYy
+ kT30W.CMgKtgs8mspVPTunTTIc8YEuIqTQ3QfWH3gdU093vWrlGIK26lkNX65eebwcycAJAs4Eu_
+ CLwC6gVLcqYP0YhjeBzsR.XCGnb6JsEUTQTzxc4g8yCCjohSz0U0fVh7jVmJN7C4EaTy7uiI3yJs
+ w8wHOd7cG94bd1J2mif1fv6zRcmbf0E2CYHKACjNSf7KdrtVlQ41s90ynMHohzkQ4_qMx6Xngc5p
+ HeqfwSuFvqIbA6.HZaYX4HIjVY1qEQCE3gbiv6AvMFgkfVLy.0kUsc_scv6oYnsBEl.vKnuTBwlB
+ 20dboLrgGRjLcNOe1FYEtXAbjxaeFtuERhs6zn2wiiAq8wzU1Dh15Wslv9UDNKGpR7z9vQCBRmJD
+ TVpZ3EqOjdHyT..t8_y8782G7C18ykbxUH0FLfy1Q0.Vhq7c_RSsyU_mDPEceXePTmJ0iBfjojsu
+ 6wl9EPHbcHUENqzGeK0y6xm13gAtR92GQ.C1h9NJdZyqjajHrkH0Odb0MnLuVnEBX8bhl0z7uanY
+ b.F.Xx4BtyxeK9n6LUqWIIJxJnlJ28SLsI.OoJD9765zGse8ClzA5vV9BJd5FXguQwPrjipzhdKo
+ tzZnQzfydLdnr5JcZCtN.j8L_5wzaKMmmGNFbYWO0vvuNfaS6.7Os9SqWwWUw3fUHx3sHhdgGno2
+ TQRtMzDxdWQSI5g4vD3kzBHmMzA5mQZ3fgueZmMczw3g.OP8WtVvoeMWDVYUpDJz7a0zJSJmqpRi
+ QDTlZsh0KbaJ7ez.YN3nKTlC7tiLLKOYMnzRgopw.ljvXQuGcYDh02xbbIBp.7mJUSV.mGYmxWEQ
+ 4.9CH45rieqwHfoFOItsMGRUe4QYhmycbzG8Y4AZv0hFv_elUTcdgPrsbenZ1_FFjJJhafpeWF7J
+ I2RKxiMqg5GQ9Hr.Ifpd1NoFXAv13JxP1GJVHh5Z0VHclcPBmg6VJBrjhE6WlsgZGeycPf3eIA.t
+ pOSZL.J77wGARq8Z9Q2L5wv7lyBicWcEv_LIUdvz45N01MQjWE1GmMt.8Qjca.vC9o.G56kbXSg7
+ KeX_wgZDOm4G7m6p6bAro0WiRMKczNjTH4WZXx7pIFT6UYGfc8JWTfljCIOtDgeFUV.8uGkn.zZ0
+ WPPkcRfiXFq6ft36aGY4jAd6rXjyzh3zsexw3h6aXD6SJ9C4WfUvCxc.62lJUUjx7uZXFSG6GWpI
+ 9WCWOLh.zogHV8fahiNXPAlzdh.gFy7Ixjv7v1h9YFXCnEFJrONSjBbT6tDizNubevEDvLMH3.T0
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic313.consmr.mail.ne1.yahoo.com with HTTP; Mon, 30 Mar 2020 02:38:56 +0000
+Received: by smtp423.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA
+ ID 0ff86b82b40f8556fdf33f02e5fb3ea4; 
+ Mon, 30 Mar 2020 02:38:51 +0000 (UTC)
+Date: Mon, 30 Mar 2020 10:38:40 +0800
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs updates for 5.7-rc1
+Message-ID: <20200330023830.GA5112@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200330023830.GA5112.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Mailer: WebService/1.1.15555 hermes Apache-HttpAsyncClient/4.1.4
+ (Java/1.8.0_242)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,222 +86,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
-branch HEAD: 20741a6e146cab59745c7f25abf49d891a83f8e9  MAINTAINERS: erofs: update my email address
+Hi Linus,
 
-elapsed time: 1004m
+Could you consider this pull request for 5.7-rc1?
 
-configs tested: 199
-configs skipped: 0
+Another maintaining updates with a XArray adaptation, several fixes
+for shrinker and corrupted images are ready for this cycle.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+All commits have been stress tested with no noticeable smoke out and
+have been in linux-next as well. This merges cleanly with master.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-sparc                            allyesconfig
-parisc                generic-64bit_defconfig
-arm                          exynos_defconfig
-nios2                         10m50_defconfig
-ia64                             alldefconfig
-microblaze                      mmu_defconfig
-parisc                generic-32bit_defconfig
-ia64                                defconfig
-m68k                          multi_defconfig
-riscv                            allmodconfig
-sparc                               defconfig
-m68k                           sun3_defconfig
-sh                                allnoconfig
-s390                             alldefconfig
-sparc64                           allnoconfig
-i386                                defconfig
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-xtensa                          iss_defconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         3c120_defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                       m5475evb_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                    nommu_defconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200327
-x86_64               randconfig-a002-20200327
-x86_64               randconfig-a003-20200327
-i386                 randconfig-a001-20200327
-i386                 randconfig-a002-20200327
-i386                 randconfig-a003-20200327
-alpha                randconfig-a001-20200329
-m68k                 randconfig-a001-20200329
-mips                 randconfig-a001-20200329
-nds32                randconfig-a001-20200329
-parisc               randconfig-a001-20200329
-riscv                randconfig-a001-20200329
-c6x                  randconfig-a001-20200327
-h8300                randconfig-a001-20200327
-microblaze           randconfig-a001-20200327
-nios2                randconfig-a001-20200327
-sparc64              randconfig-a001-20200327
-c6x                  randconfig-a001-20200329
-h8300                randconfig-a001-20200329
-microblaze           randconfig-a001-20200329
-nios2                randconfig-a001-20200329
-sparc64              randconfig-a001-20200329
-x86_64               randconfig-b001-20200327
-x86_64               randconfig-b002-20200327
-x86_64               randconfig-b003-20200327
-i386                 randconfig-b001-20200327
-i386                 randconfig-b002-20200327
-i386                 randconfig-b003-20200327
-x86_64               randconfig-c001-20200329
-x86_64               randconfig-c002-20200329
-x86_64               randconfig-c003-20200329
-i386                 randconfig-c001-20200329
-i386                 randconfig-c002-20200329
-i386                 randconfig-c003-20200329
-x86_64               randconfig-c003-20200327
-x86_64               randconfig-c001-20200327
-i386                 randconfig-c002-20200327
-x86_64               randconfig-c002-20200327
-i386                 randconfig-c001-20200327
-i386                 randconfig-c003-20200327
-x86_64               randconfig-d001-20200327
-x86_64               randconfig-d002-20200327
-x86_64               randconfig-d003-20200327
-i386                 randconfig-d001-20200327
-i386                 randconfig-d002-20200327
-i386                 randconfig-d003-20200327
-x86_64               randconfig-d001-20200329
-x86_64               randconfig-d002-20200329
-x86_64               randconfig-d003-20200329
-i386                 randconfig-d001-20200329
-i386                 randconfig-d002-20200329
-i386                 randconfig-d003-20200329
-x86_64               randconfig-e001-20200328
-x86_64               randconfig-e002-20200328
-x86_64               randconfig-e003-20200328
-i386                 randconfig-e001-20200328
-i386                 randconfig-e002-20200328
-i386                 randconfig-e003-20200328
-x86_64               randconfig-e001-20200329
-x86_64               randconfig-e002-20200329
-x86_64               randconfig-e003-20200329
-i386                 randconfig-e001-20200329
-i386                 randconfig-e002-20200329
-i386                 randconfig-e003-20200329
-x86_64               randconfig-e001-20200327
-x86_64               randconfig-e003-20200327
-i386                 randconfig-e002-20200327
-i386                 randconfig-e003-20200327
-i386                 randconfig-e001-20200327
-x86_64               randconfig-e002-20200327
-x86_64               randconfig-f001-20200327
-x86_64               randconfig-f002-20200327
-x86_64               randconfig-f003-20200327
-i386                 randconfig-f001-20200327
-i386                 randconfig-f002-20200327
-i386                 randconfig-f003-20200327
-x86_64               randconfig-g001-20200327
-x86_64               randconfig-g002-20200327
-x86_64               randconfig-g003-20200327
-i386                 randconfig-g001-20200327
-i386                 randconfig-g002-20200327
-i386                 randconfig-g003-20200327
-x86_64               randconfig-g001-20200328
-x86_64               randconfig-g002-20200328
-x86_64               randconfig-g003-20200328
-i386                 randconfig-g001-20200328
-i386                 randconfig-g002-20200328
-i386                 randconfig-g003-20200328
-x86_64               randconfig-h001-20200327
-x86_64               randconfig-h002-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-i386                 randconfig-h003-20200327
-x86_64               randconfig-h001-20200329
-x86_64               randconfig-h002-20200329
-x86_64               randconfig-h003-20200329
-i386                 randconfig-h001-20200329
-i386                 randconfig-h002-20200329
-i386                 randconfig-h003-20200329
-sparc                randconfig-a001-20200327
-arm                  randconfig-a001-20200327
-powerpc              randconfig-a001-20200327
-ia64                 randconfig-a001-20200327
-arc                  randconfig-a001-20200327
-arm64                randconfig-a001-20200327
-arc                  randconfig-a001-20200329
-arm                  randconfig-a001-20200329
-arm64                randconfig-a001-20200329
-ia64                 randconfig-a001-20200329
-powerpc              randconfig-a001-20200329
-sparc                randconfig-a001-20200329
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-i386                             allyesconfig
-sparc64                             defconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-i386                             alldefconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+Thanks,
+Gao Xiang
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.7-rc1
+
+for you to fetch changes up to 20741a6e146cab59745c7f25abf49d891a83f8e9:
+
+  MAINTAINERS: erofs: update my email address (2020-03-28 14:12:33 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Convert radix tree usage to XArray;
+
+ - Fix shrink scan count on multiple filesystem instances;
+
+ - Better handling for specific corrupted images;
+
+ - Update my email address in MAINTAINERS.
+
+----------------------------------------------------------------
+Gao Xiang (5):
+      erofs: convert workstn to XArray
+      erofs: correct the remaining shrink objects
+      erofs: use LZ4_decompress_safe() for full decoding
+      erofs: handle corrupted images whose decompressed size less than it'd be
+      MAINTAINERS: erofs: update my email address
+
+ MAINTAINERS             |  2 +-
+ fs/erofs/decompressor.c | 22 ++++++++----
+ fs/erofs/internal.h     |  8 ++---
+ fs/erofs/super.c        |  2 +-
+ fs/erofs/utils.c        | 90 ++++++++++++++++++-------------------------------
+ fs/erofs/zdata.c        | 76 +++++++++++++++++++++--------------------
+ 6 files changed, 94 insertions(+), 106 deletions(-)
+
