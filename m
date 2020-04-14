@@ -1,78 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C1881A8585
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2020 18:45:49 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 491rvt1kLzzDqsp
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2020 02:45:46 +1000 (AEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 117321A8587
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2020 18:46:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 491rwY1KPBzDqt3
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2020 02:46:21 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1586882746;
-	bh=123U/2OtvUmIyDaP9LsxVUjmj49eaceIq9s3HYCVQeY=;
+	s=201707; t=1586882781;
+	bh=CC9sPx5kuYI+4obK+mzZ1xRtjL5x6J0vtulyoT0943Y=;
 	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
 	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=XAetzWCm7rbi+YiZu3LnRPK5PMQQryuFqAL9gOtkMT6qbJXty4WoF8H7bJfzOXybd
-	 TOHXB+96LEir5oDFCD5bigCIG5Pdh38alMJ4TgZ65X0SJc94yf2cVOk3aI0dtm/ZBF
-	 q5WDjJHB6GsOS3fzJyBMzzRhn4xu3AJ+9as4sXVW8bmfQi/+fNDOZzzD0Ry0sZWrjq
-	 vVPVsm3oCCfLelzZxhgs1S3krp+scHXwF/v83TR9ttTpQHfV3x/JLiV3K0UmAshJfd
-	 IVoQ2QHAPrjezh6yAlGqibrZflos+C3IooS71OYh3PQ3AjBKPP6vx322gpZSEbQFCU
-	 O4azaSnZE1P9A==
+	b=QWhPTmPnZa0/+HVDjyhsgGHWWXcKoB+FGBpab0sIqDkilM0ryA5+B1PEA7BxAvpWQ
+	 tjh1feVVjNVh8rU+iuKT5MAIjHYpmY54QNP1GdhB/DeeHqg5pEOod4xA9yuOFGQRft
+	 KrAcw/7DO+VRsOwZIcozgOhnudiueJPNrcUpBZf6BswWu+QdJjFTqVYIjLZ3L6xids
+	 Y8X6hsUqCTyqvr71O0/YHz41WyqsCZn29saasJt+2aSbN4LsjsZyHp4VxPaWwYC7BV
+	 n5InQ6wlM5CLhfmTT+jGm60akmKIvzcWPAsddIuF9t7o4sBjrAT81zq37W9lgKHnRL
+	 2BcG4SUeepH4A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=66.163.188.232; helo=sonic311-51.consmr.mail.ne1.yahoo.com;
+ (client-ip=66.163.184.240; helo=sonic301-7.consmr.mail.ne1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=MgpgB8Fv; dkim-atps=neutral
-Received: from sonic311-51.consmr.mail.ne1.yahoo.com
- (sonic311-51.consmr.mail.ne1.yahoo.com [66.163.188.232])
+ header.s=a2048 header.b=oDWILhSM; dkim-atps=neutral
+Received: from sonic301-7.consmr.mail.ne1.yahoo.com
+ (sonic301-7.consmr.mail.ne1.yahoo.com [66.163.184.240])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 491qRL6VdRzDqkK
- for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2020 01:39:25 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 491qSz1r43zDqkB
+ for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2020 01:40:50 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1586878760; bh=vkB/clz6YmS8RFZV7y01FLVNhgwTckfRLpoP/PFDv7E=;
+ t=1586878846; bh=Kzk/B2k8gvh56nCGUpeglOwucVUleHp5shUd46bUrvY=;
  h=From:To:Cc:Subject:Date:References:From:Subject;
- b=MgpgB8FvNs47shVCiWXXxTRhFh/dtZZrhmqouGN49gc2R1Hn3NdxngCoSHxXyUlT7Rf72oCsZWFs3RBZkGwUsRDerTjSLp7ObdOVQYOTaEEgqWrqmecLihWFK7bbo8OmmIoB9HPvtFrhsHOdFDd4T+MHonioBykLTqzuXWLHR7WPPEjLAd5WUEzdBkIOHAAqR7NtM6jCf43k4ui+S22ZiglTFbyFLlKlZ6lFDs4cBkWfnM9rhAr11pFRydSYaMPbGbbZXAfd+aU95vvsHiEfTpeCzDZg8HfSPWtYSlquYGsFy1l2ROXktcN6VpdPJJ9Rumh/483wNThaz/7tQpoPbQ==
-X-YMail-OSG: gHkvCXAVM1kCZvdzvSiKCpNrU_3g5Uv.MuKB_Y0jW4kvT87rIpskPkLVxw_9KUF
- oqAUnzwC25V5rUOT6oxifMwXYO8OLaz0MciOGno9l5sppY5JpprLRI.8B5w4LKFvlEdwvdUJUoup
- BdJpGnnnEV7Ksr32hYqgn4JR_608qOLmAyESQTrYqKOT3nWF_Pzpp0XYCpwbKm_bbYiS2o58xRux
- AxN50dbjLYMpC7lCwkYthAMtheTEjhu.0WESN_uJcDWJrHtm8aEaPvEYoYEQR0Cmo.MNijQSG53o
- 7UXPmK1UsmNg_uUn3Lnpo6ap2RZurAK2ubc_tGcs5TezaRj.KGtTKnezNR22fUkSkv2PLdbrHXzt
- Sh8xKgI78YuduMphIUGKafb2wrfJNfgQ15CXyGu7qxIVZtqDInuuycaiC0VPcO3nNY_0yZ79d0zo
- XCngaPKg8I1oTAnZXomrb.SNkq6ibz4ODsBMsRS1gVppsDgrupy6QNJo4ZJ9UcKc5JQLBnFQXGAS
- ZEgxpfiiVgzsQvW0szpwb2vs1ELSxzOPniwDvpb9YR4vm23QTRbtY283q_2S4R8HnTE612SrHK9b
- J0xic_awjHdGcyyDqF29k59t8F6ILaJbgr6D6TkpEUVXAaNmAuJSjHfjNxtUPOpndOwwx01gRkC_
- IL96zLhK07XFEZeT9t_K_xxc2V_HO78w.tx6AUp0IDY3r2JGeVsK.BofX7KzJHCRieUYFinNGs3l
- cfXZJ4bKoq4z8lI83nHrcIpTeLGvJKHNG_HMAf.Wh1y_O6p_8rGny28YSDAnxTp85jxVYvxECuXd
- 7hhosr7Km1Ya95n.iqDUIJjiJEAQscXU3.0PlXYL5hxfFCaDenxFpr6N85I0SY1aqVYyvH7SBRmk
- jKSCG.KF5cPHaNmk9aCyVU.iONdza3yDTC6xu2KkxrcxnOvZpTc6ibQsBsDLq_mJppU5kgad.pG9
- 5cMBfpXOnJpVxJ1fDyL9VNs.GxgK1Z1cOABGkpE9hmXahyqPap9NiGKJH66oNpkkTlAkfAtad3V8
- rlLWSQFrHURZj6ij_KB9myowrj0IyUX1faQupLN6pNJ9.68nyGCS95EE5NWd8Of3dqpmv_WN0mFL
- 9ItkXJjOA5QMJgmExpAtidFKWxq9AVB9gpENuEI_5vegc7QaRqhUNgIUXANVeJE9emR8_zOi0fzx
- iZOimT4ROMQ3K6eyltU_KUU_q5SamZ1h8I1rcL3Y3PMaZkDQyNRlLog4ncnPszLcrbD0mRsiKPDl
- g7oiGzTMPv9baEDAtYwLkK3.xsTZcm_87xD_DgyVxXkG6E4WvpY3zwlxeCpm.wVBUd9DxxQg65Py
- qIwWLhwZlsFVeJHIrx6PPCM5X5Z7IezFpQVHgJCLpfKZrY6oEctJIIuANxmJTT3Ne_8amA0.b2s0
- 7GId1Shbti9Y58pefAhZMfDex.AzlZZ3CxENxrupypSh1fcRxFKmEt.Inyj6SIdRX.Q6hWVBW_.W
- ORwM-
+ b=oDWILhSMH/Rki8Ogg+4JRognt3AvtOd48K93bpcGWe5H8J6ngkT6UTTzmbVvHk2/6JlC28gEVOLl+wjx3XhJijrYNGUHE1Mq/Sja0iDdXYdVTkgJEGhGXEaUGt7PRIIokE5GepJhaomVtDnpBJmZObnP+gEPUSn5PdXLNJkb2T6E2oLTubq8m4qJ+WpjpMk79K2epspdyrg7wcC3zRMFu87xNl/LuZG7qM7Y2BUyDQ3DcNGiWS/Ct0Abqh0kca+2w+pUfxEx9WMVLB5iNLxXkc7/p96j36AEC8f66XpC10DuwodZWvJQkdzFOHGG8FfZ6Oh7xPlhw8qhgHq0YE//aQ==
+X-YMail-OSG: mPRSk1sVM1nBbV6WJyJzUCVqvN7XgC6YooBJcMAbl2Tv1mzFqMRt5uQjH_YEWoL
+ RLNyvVMMqUtrWf.LygeY7.UUvgyrdgEwccJpW7ENJ6bprxRghXdtGjxt0x0mRShazxdB8ISKvrug
+ HDLFRg.JH_E6SWIx_WmvseitS7eUqPbO8SngzdI_g.pYoBexczmenklC.o.21oubqrc9b6xaKNx1
+ 3eBBqW9CgjaCixeJ21JmJbwhCp7i9ScQFbIk.tTGtQ9DX0pkfxehCg3svxlF3pUmHQOsjL9Z88Cn
+ Z5UE3GdWzvKiDwP7H0lmWkbAHPAq6AUjdYe8IBq7UgIcYITZ_u89Rab9ufVXk3W9ox9glFaLZ64M
+ O2ZBqcZoUR6OfZldLqPtA0UJ7RScteWvvQ7pFAVEn.0gZMvYUsLIKfO7YmIB1zhXBsjMD0P3fmCY
+ grV9lbkeBG0TxwtkA9PfMfHZkHOEH4376HJmAW8xmwPujqO4DtM7jNhsS4w6Zfcf96GWFvOwsM5H
+ VCIM6jl6MQLddi0VPfyu2Ph5nltpKZM_nYRhC2I5mKlQvfyWLSiOvSWnvBSWDJ72stLK4s9eVT.8
+ 8ps0DRU9riy778sMh9d_2nomhW_7aiupkazHxovUIGNEDJgOYVnMYLmV32Ul1pBCdbPuOFHgZ4K9
+ Gb5PNC6vsKUskPkLnsjjv6II.O4gjERx3j.Pgse05PGUMLv59u4JkwbzCCD9Jb4q5DH7JU5EKhGf
+ dpEl7OCojMTxWYr3MbIauipcR4wvD2C2vwXcYUAtoCmtkjDnDEPQvc5nsproWThGESilNbnl5ZY6
+ CEgbzmFyROxSFR.KUgbxsRSBpacL2q1FlvdStpt.Pm5BRgsaJv.tKM2UiXQfnRr7LrkmO7IkrRUW
+ EhQTkoI2lRze8NeW4SKKSrArJtBx8.7JXxzTooF30cRYl9KWepHCEhJVUxNDyoOxzwO7DbhlyEg2
+ FPvoP8WDblzwpZxf9VX0nd6rcCwaY6x3KMMDp3vH6K2S2M1JxEQ9eqBrBhhV1uTjAg0Y7sffNz9r
+ 2ncrprypmC8nE6TE3yhpXMcnfsMy0mLPFtfO4VRrdACkMb3g9T73HgM7FX4D5Q04A3TMAfYfWrwt
+ C26OHMID8B8MdYivavbdE91Ix.c5N._RvKHPI8caGsPSLFFAfIH8y7tF6EZbSBt_Lvf.BcUi10mP
+ EtTHHP1e5QiWSPL06di5eslPaDqlD4L_q395YtAdNvM8fMNZkhTNPYJTfESXVNsIKUK7j.5okr9c
+ GELie2gLCnQLTnNVGKavr9MgE_xMhzwHYv0eLTh9nftXWzRSWZq0vxzm8wpUiQ8x6Bj_Bk3SLKzC
+ TntIbfraRiosksOuzu3O_9Xq.o9V3Qv.Pr_ldKlAm64ShYsM22jxj4_dX_dirmSUC3BAj4j004BX
+ 5Ycb_0_FmwQ0TGzxUa.bxU9O2NdFrFPdxMddJLy8uXnVb_qO1QqZ3AOD_RaEYTA24u82uzAgG3NL
+ kNovGaw--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic311.consmr.mail.ne1.yahoo.com with HTTP; Tue, 14 Apr 2020 15:39:20 +0000
-Received: by smtp420.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID a901f02470a3884c85e3d3dd55f951e5; 
- Tue, 14 Apr 2020 15:37:18 +0000 (UTC)
+ sonic301.consmr.mail.ne1.yahoo.com with HTTP; Tue, 14 Apr 2020 15:40:46 +0000
+Received: by smtp404.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 833075de5be8af0018533abaf51d3ac9; 
+ Tue, 14 Apr 2020 15:38:44 +0000 (UTC)
 To: stable@vger.kernel.org
-Subject: [PATCH 5.4.y] erofs: correct the remaining shrink objects
-Date: Tue, 14 Apr 2020 23:37:00 +0800
-Message-Id: <20200414153700.28802-1-hsiangkao@aol.com>
+Subject: [PATCH 4.19.y] erofs: correct the remaining shrink objects
+Date: Tue, 14 Apr 2020 23:38:20 +0800
+Message-Id: <20200414153820.29012-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20200414153700.28802-1-hsiangkao.ref@aol.com>
+References: <20200414153820.29012-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -108,22 +108,22 @@ Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
 trivial adaption, build verified.
 
- fs/erofs/utils.c | 2 +-
+ drivers/staging/erofs/utils.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index d92b3e753a6f..3e28fd082df0 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -294,7 +294,7 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
- 		spin_unlock(&erofs_sb_list_lock);
+diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
+index 2d96820da62e..4de9c39535eb 100644
+--- a/drivers/staging/erofs/utils.c
++++ b/drivers/staging/erofs/utils.c
+@@ -309,7 +309,7 @@ unsigned long erofs_shrink_scan(struct shrinker *shrink,
  		sbi->shrinker_run_no = run_no;
  
+ #ifdef CONFIG_EROFS_FS_ZIP
 -		freed += erofs_shrink_workstation(sbi, nr, false);
 +		freed += erofs_shrink_workstation(sbi, nr - freed, false);
+ #endif
  
  		spin_lock(&erofs_sb_list_lock);
- 		/* Get the next list element before we move this one */
 -- 
 2.24.0
 
