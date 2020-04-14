@@ -2,80 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CFF21A6A36
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Apr 2020 18:49:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A5AE1A824A
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2020 17:22:05 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 491F27452RzDqMv
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2020 02:49:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1586796543;
-	bh=kFg+wHDUHmAuDWOSsun71hpT3WgTNsI866dvfPGK13A=;
-	h=Date:To:Subject:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=g2LZasiVn4QZ0ekP6MzlgyRJtTBbgf6WXwNpwwW6oJLKMPbQyS2Gl3FCoXysfT6sH
-	 BZucMPXSlsie24GnAhdlv78KwuOE7yj+yqNWJrVfkju6ypvSx7dmYod5TZ1S+Dsfhq
-	 0JBl8MwoPeKpmUhPFwuhzw7faAqGRcakectO3PbBNMr4mwfKrXRkyLxt7Cnni6W33+
-	 nkfi/T03bL7XWvRC2qnyOKGFFOft/Sg8mReXA8oBYjIMP3PXbWYCQvtWR1FtQBU121
-	 IN+JUYwgRg8A/nDCEYQy551qUiPmpn0coCAGfJiVuvPgzIpTX3q3sdWmgsIduTAlQB
-	 PhjbbYggbOsrQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 491q3G0h7XzDqpB
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2020 01:22:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=66.163.187.59; helo=sonic308-36.consmr.mail.ne1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=G6N26eb/; dkim-atps=neutral
-Received: from sonic308-36.consmr.mail.ne1.yahoo.com
- (sonic308-36.consmr.mail.ne1.yahoo.com [66.163.187.59])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=WLGUec2Q; 
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 491F1q2gSgzDqLf
- for <linux-erofs@lists.ozlabs.org>; Tue, 14 Apr 2020 02:48:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1586796520; bh=bElmMGeGrTv4UdyeT/oxmt1v3extMJthOFW7mXr0BPk=;
- h=Date:From:To:Cc:Subject:References:From:Subject;
- b=G6N26eb/yIVXiQw0qE6W8f1AUrYzP2Vnj639Wh1dRrPcss2DmnvhpM6jv3pahSdqrFPJylW7ww6buFHDad/XWvsA0ORW2x4Pqk2m7Rl3wB//SK75W/34y8J46ioDHOwyfgZuoNAirliNbZMXd2ssFqHczVm6uwjizaz8w4+roui8RAImkHC1G8HM0eLi+lIN+UpXYFFzsHxk0/fpUN7p1G+a08pwx9Q5aXfZHZH6JmyFThQVGq3uLKmzFlPLEIMb4NFQpKquxYjJdjfNPnsB8XJgTLhVI0idEPo/POaX9oGrUXioupjEW8jrcagzTy6jliHX7oUMzGd4K7n/idELdQ==
-X-YMail-OSG: LNqYr_cVM1k37p0BEArws0j2SMpuYOmfY_EMhqarqChYwpxuxB8KFGB5vV9fJsz
- iIhnJb3jaXvCGfE2aSt4doan7aJ6dnzbyn89vnjq_SV8cDsINa2Fqtq5gc4ss64xsowGwGkY0CFL
- bkDlKb.TBuK5i6h5kMoSuaco4ej32E_P1gf2QALa7eJ4GjX3kPp1EPZiOY7t91D7aYL8_D_qdt3H
- vO3CrC3b3OzsJM2iIxCQTrZhgw_xhCgXknUXKldyXSCljK.xwsr6ptXFP0ShFiClnDhnnzQSeb8U
- 8moIDJ0FYYVSUa5fkj9bVqabZrzyVLc1F11Q19S1nCLBWPK3XhvJyJYWLAXyfcB.b.GvP2KFnYxd
- .622OG1af5W_BeM9zU.B0c_zanoiWMHY5iDCE4YL7hr0Z9_vvXrbkIdlZzinFy1cDN.jqFa6Audw
- gINBZnjZwlUDG_kWvj7oLaD6DBTOlN5FSKkY3TqJCvii_60QSyGPbhVDbzMpyoK9WrDLrc9Qdcxv
- vplOG2bPeK6hS1GT4th80ccQjURFsuAX4URg1Ud7Pg.Rgy5_m3ChN8gh_gPG6s6yro2abNq1zTVk
- 5MiCxH5yW6Um1DLHst.PQPVBq0jsOJJINwuE52hU5csMNA1iS878f2XIdgfuJ80uGTw9C0Suq7MV
- jUQPvf7Jn.r0CPz6wIduG5MdgGa5MUc6EaQ9Uk2BgNfahC6Cjhlm1NdcNMBrpoQKcFCw2MeCoqOX
- XtKpIYf0Cwkg3P_imu2PoQSeZEBtLzT7fk1O2mdzN7Add.8_6nITJWcVQ9tLbKVk5cO0HzcmEX7G
- Wk3y05Z.DkCwSpSMcv1Pt2tu2Jm5sCTeBqMvJeRrc0sWL2q8Z_Hv.ZmxNrFPZ7yIhNm3tp7M33Oi
- YUy0yCJ2V8JL71R14dSZ9slsRCO26FHABrYpmPfindFDov.JMXs7_zdnKFTDtVehI.Pf1xUAh8WP
- eGk0o2xRK12vs3jQejL8E3_HS7MSqPRXf9.2YkjO9Mbn3MXzicXwMk00MgoB8EV_tGnMZCtZIwYw
- foZddko11qm3tQQONrDFvdKb9qax0V2OWdPkraYbNgpukrtllXThKRQhV2u34MzH3hmr3_urqUQs
- ClkLC64opRM.mNzxEj.VxatPE83c0L5SREGkqlyOHuHTA9bofUTDAb02wx7mVSNIOH8CIyvO8GS_
- 71HVoS2qnZAM_.wmbp1Lyyow_1hO6MGdI42Gg8O2AH5E5faSJVUDvjfsVcv2SiaiCKIOZvlOKCxX
- v9jYAeL6UkGR0Yy3ugJ6EPuNc1WvWQi9gkbZ6aNb7RshbfeE_dscpY1d691.OuEZa2dVD.of3eIn
- DqS2tCYzshoHXS.Hq5wHrwSAUsFwh12D8q0VPrMoQ3E0aTchM7X7hCVNafw95qXWfliTAppfKhiM
- EUiz_SVqm8in1o_lrVJUImDS0i2fBFlWRye6G2WZC.oU45UJJqcfnqc5_0WiZN8Ktf.JESTnVovd
- BytjHtcq9zOOXZcUjJ_3yQ73uipcIyH3TcxKvspLA2cqw95M.gQwTZc76yQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.ne1.yahoo.com with HTTP; Mon, 13 Apr 2020 16:48:40 +0000
-Received: by smtp424.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 700b38ef91bca85d70b21427f6befc3c; 
- Mon, 13 Apr 2020 16:46:38 +0000 (UTC)
-Date: Tue, 14 Apr 2020 00:46:08 +0800
-To: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [ANNOUNCE] erofs-utils: release 1.1
-Message-ID: <20200413164544.GA5578@hsiangkao-HP-ZHAN-66-Pro-G1>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 491pcz43ZYzDqTX
+ for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2020 01:02:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+ MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+ Content-ID:Content-Description:In-Reply-To:References;
+ bh=TRNBJXFfo71Y8egqdaT6VpTGk5rcBXea9Hgvx2jAnI8=; b=WLGUec2QeLxr5jFhRZK/AMUpHh
+ 3GpjbxQMvq2bnfVy4jK+RwHmQuccOcS6DUgL5mzXpkaJV5rahz/w7eILVYUIu25E8aNjojZI6B2Pc
+ bm0lc6tqQdE1fyOli0vcKhdp3eEPpL/Os5xbkveRq8kymHDWEUCJblWO1mhgCOz7TmLroyNsL89JI
+ Zt4z0NBrbN+qX/LAo4LQnIqCpPZSSWHbysjHZfQ2woi8QkrTvDTLI3loFL0++3wlvO4y/1XKTrdN/
+ ZcWnbHTYDysml5KCCduPDPMSyGr3qJtl1wqf8mg1K/pWcAdIIUag5Ko3r7OuINpGDRTLjXm4G6IYz
+ GE5uUzpQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1jON58-0006Np-QT; Tue, 14 Apr 2020 15:02:35 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v11 00/25] Change readahead API
+Date: Tue, 14 Apr 2020 08:02:08 -0700
+Message-Id: <20200414150233.24495-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-References: <20200413164544.GA5578.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.15620 hermes_aol Apache-HttpAsyncClient/4.1.4
- (Java/11.0.6)
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,44 +57,205 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Lasse Collin <lasse.collin@tukaani.org>,
- LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Matthew Wilcox \(Oracle\)" <willy@infradead.org>,
+ linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+ linux-mm@kvack.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-A new version erofs-utils 1.1 is available at:
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git tags/v1.1
+This series adds a readahead address_space operation to replace the
+readpages operation.  The key difference is that pages are added to the
+page cache as they are allocated (and then looked up by the filesystem)
+instead of passing them on a list to the readpages operation and having
+the filesystem add them to the page cache.  It's a net reduction in
+code for each implementation, more efficient than walking a list, and
+solves the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-It's actually a maintenance release including the following updates:
-  - (mkfs.erofs) add a manual for mkfs.erofs;
-  - (mkfs.erofs) add superblock checksum support;
-  - (mkfs.erofs) add filesystem UUID support;
-  - (mkfs.erofs) add exclude files support;
-  - (mkfs.erofs) fix compiling issues under some specific conditions,
-                 mainly reported by various buildbots;
-  - (mkfs.erofs) minor code cleanups;
+The only unconverted filesystems are those which use fscache.  Their
+conversion is pending Dave Howells' rewrite which will make the conversion
+substantially easier.  This should be completed by the end of the year.
 
-EROFS LZMA support is still ongoing, and the previous preliminary
-progress is available at
- https://lore.kernel.org/r/20200229045017.12424-1-hsiangkao@aol.com
-and
- https://lore.kernel.org/r/20200306020252.9041-1-hsiangkao@aol.com
-some minor updates I'd like to send out with the next WIP version.
+I want to thank the reviewers/testers; Dave Chinner, John Hubbard,
+Eric Biggers, Johannes Thumshirn, Dave Sterba, Zi Yan, Christoph Hellwig
+and Miklos Szeredi have done a marvellous job of providing constructive
+criticism.
 
-In addition, as discussed with Lasse before, XZ Utils liblzma would
-probably support fixed-sized output compression officially later
-as well. But it may need some more time then.
+These patches pass an xfstests run on ext4, xfs & btrfs with no
+regressions that I can tell (some of the tests seem a little flaky before
+and remain flaky afterwards).
 
-Recently I have little time for features due to struggling with my
-upcoming English test which has been greatly impacted (delayed) by
-corona. While I'm still keeping up with community by email and
-available for all potential issues and/or responses if any.
+This series can also be found at
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v11
 
-Thanks,
-Gao Xiang
+v11: Rebased on v5.7-rc1
+ - Rewrote the fuse conversion to use __readahead_batch() and fix some bugs.
 
+v10: Rebased on linux-next 20200323
+ - Collected some more reviewed-by tags
+ - Simplify nr_to_read limits (Eric Biggers)
+ - Convert fs/exfat instead of drivers/staging/exfat (Namjae Jeon)
+ - Explicitly convert a pointer to a boolean in f2fs (Eric Biggers)
+
+v9: No code changes.  Fixed a changelog and added some reviewed-by tags.
+
+v8:
+ - btrfs, ext4 and xfs all survive an xfstests run (thanks to Kent Overstreet
+   for providing the ktest framework)
+ - iomap restructuring dropped due to Christoph's opposition and the
+   redesign of readahead_page() meaning it wasn't needed any more.
+ - f2fs_mpage_readpages() made static again
+ - Made iomap_readahead() comment more useful
+ - Added kernel-doc for the entire readahead_control API
+ - Conditionally zero batch_count in readahead_page() (requested by John)
+ - Hold RCU read lock while iterating over the xarray in readahead_page_batch()
+ - Iterate over the correct pages in readahead_page_batch()
+ - Correct the return type of readahead_index() (spotted by Zi Yan)
+ - Added a 'skip_page' parameter to read_pages for better documentation
+   purposes and so we can reuse the readahead_control higher in the call
+   chain in future.
+ - Removed the use_list bool (requested by Christoph)
+ - Removed the explicit initialisation of _nr_pages to 0 (requested by
+   Christoph & John)
+ - Add comments explaining why nr_to_read is being capped (requested by John)
+ - Reshuffled some of the patches:
+   - Split out adding the readahead_control API from the three patches which
+     added it piecemeal
+   - Shift the final two mm patches to be with the other mm patches
+   - Split the f2fs "pass the inode" patch from the "convert to readahead"
+     patch, like ext4
+
+v7:
+ - Now passes an xfstests run on ext4!
+ - Documentation improvements
+ - Move the readahead prototypes out of mm.h (new patch)
+ - readahead_for_each* iterators are gone; replaced with readahead_page()
+   and readahead_page_batch()
+ - page_cache_readahead_limit() renamed to page_cache_readahead_unbounded()
+   and arguments changed
+ - iomap_readahead_actor() restructured differently
+ - The readahead code no longer uses the word 'offset' to reduce ambiguity
+ - read_pages() now maintains the rac so we can just call it and continue
+   instead of mucking around with branches
+ - More assertions
+ - More readahead functions return void
+
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
+
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
+
+Matthew Wilcox (Oracle) (25):
+  mm: Move readahead prototypes from mm.h
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Move readahead nr_pages check into read_pages
+  mm: Add new readahead_control API
+  mm: Use readahead_control to pass arguments
+  mm: Rename various 'offset' parameters to 'index'
+  mm: rename readahead loop variable to 'i'
+  mm: Remove 'page_offset' from readahead loop
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Move end_index check out of readahead loop
+  mm: Add page_cache_readahead_unbounded
+  mm: Document why we don't set PageReadahead
+  mm: Use memalloc_nofs_save in readahead path
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  ext4: Pass the inode to ext4_mpage_readpages
+  f2fs: Convert from readpages to readahead
+  f2fs: Pass the inode to f2fs_mpage_readpages
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
+
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  15 ++
+ block/blk-core.c                      |   1 +
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  43 ++--
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +-
+ fs/erofs/data.c                       |  39 ++--
+ fs/erofs/zdata.c                      |  29 +--
+ fs/exfat/inode.c                      |   7 +-
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   5 +-
+ fs/ext4/inode.c                       |  21 +-
+ fs/ext4/readpage.c                    |  25 +--
+ fs/ext4/verity.c                      |  35 +---
+ fs/f2fs/data.c                        |  50 ++---
+ fs/f2fs/f2fs.h                        |   3 -
+ fs/f2fs/verity.c                      |  35 +---
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  99 +++-------
+ fs/gfs2/aops.c                        |  23 +--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                |  92 +++------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 ++--
+ fs/nilfs2/inode.c                     |  15 +-
+ fs/ocfs2/aops.c                       |  34 ++--
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mm.h                    |  19 --
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               | 151 ++++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/fadvise.c                          |   6 +-
+ mm/internal.h                         |  12 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 275 ++++++++++++++++----------
+ 46 files changed, 583 insertions(+), 633 deletions(-)
+
+
+base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
+-- 
+2.25.1
