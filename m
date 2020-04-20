@@ -2,65 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 933531B0720
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2020 13:14:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C0ED1B07CE
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2020 13:43:22 +0200 (CEST)
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 495PH35WyvzDqdp
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2020 21:14:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 495Pw74s7mzDqjN
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2020 21:43:19 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=szeredi.hu (client-ip=2a00:1450:4864:20::641;
- helo=mail-ej1-x641.google.com; envelope-from=miklos@szeredi.hu;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=szeredi.hu
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dkim=fail reason="key not found in DNS" header.d=szeredi.hu
- header.i=@szeredi.hu header.a=rsa-sha256 header.s=google header.b=IDveWlOS; 
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=g7JEJ58U; 
  dkim-atps=neutral
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com
- [IPv6:2a00:1450:4864:20::641])
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 495PGz4mcTzDqdZ
- for <linux-erofs@lists.ozlabs.org>; Mon, 20 Apr 2020 21:14:32 +1000 (AEST)
-Received: by mail-ej1-x641.google.com with SMTP id s3so7582884eji.6
- for <linux-erofs@lists.ozlabs.org>; Mon, 20 Apr 2020 04:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=szeredi.hu; s=google;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
- b=IDveWlOS7Tzhrdb36+hZpTST6wjOAPrAj2jj5uib3vbWbabqwzW9IWuAtw8h4eTBNA
- 9a9lkdgEJOm6Eb3fwCtOVTxrVmphaH2PGWy9bhlS9QBo4VsFK/CUgj6vV9uyCovU0arA
- 5Kj1tMT4D5sNr37XYcPWFQo9UnIzxN1guBg1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
- b=bcics6QPPoFsskz5pcvP0/HrbTqI9EKR6RHwB1qk5Rmgugnstc8RElHkgk91Sjp7pl
- dnMNLVz5p9YzePmDqNJu7x7Zx02SQISlf3i7abGfefLDxuJUmvEkimQ8zJ2jfNsa/KOH
- uwDx9FE9gQeXXodhRDah0NqWqxO2qtTmjp71kU02/pUXdW5pNsuEkZkxdwzU90+a1bon
- VO6XHEWPKaUzWEaXTv6OmzWOup8a9SDpVw2irzgLKI2LrZ76ZmIPF0Fa0V5Zzw/CGVmJ
- kq8wNPGWTuytgnJjGfeYkxTO7D4Dn7jKR70DRIXn/GW53tb2+nE48ywzwoFRTw3jV8+v
- Y0gw==
-X-Gm-Message-State: AGi0PuY78UH1GRocWwZDv6f16dA4gQTQ82D/IOqqHmSpT3n82cOio5+o
- 7XAZUKdvkXYMzIgY7uZrROF13MfASujzZ/qPp02bHQ==
-X-Google-Smtp-Source: APiQypIVhtjPPYqBEymAM1SkD4SYcU1V6bmTKvyt+63wSYT0tOjvuXxym8edoJZS6GcpMs4Nq+7PF2DextVY/K9Ax1g=
-X-Received: by 2002:a17:906:841a:: with SMTP id
- n26mr16038100ejx.43.1587381268754; 
- Mon, 20 Apr 2020 04:14:28 -0700 (PDT)
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 495Pvs6GPyzDqDm
+ for <linux-erofs@lists.ozlabs.org>; Mon, 20 Apr 2020 21:43:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=y3v9H7gulitO+Y85OVNVzldz0TRWO8cQsHtyyEuI5ig=; b=g7JEJ58UfwyeWV04dJy7haqXcR
+ FkY7TCFjfydjy7CUKLk2sKTRTGMeWlNvIH6QaFdDcJ6LNamrUKqVtRcrYX13W0QaBjHoZgQRwTrWr
+ pFMw6Zh2CU0LWD4TLAEVKbFuQrrB+5ujPnG45zzsqeSt+qZFmCfJvo+ZWZer92aHWA9AX6zXTHxmR
+ SZTQ0uswpYDxkQli+e+cy4XXvjLfdwzNe85/eZjU4D+5T9gllu2ggGK4e+wrNS8ioWTjEeUaLiDp9
+ BBpgydRU02eR0+H8csye5k3wOpZi5BcrTH2LP3QdS1jLAlgaTQNjvb0utJkJEpp5gVZ/qj8/l1oQZ
+ Kc/2zb2Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1jQUpI-0006Jo-4N; Mon, 20 Apr 2020 11:43:00 +0000
+Date: Mon, 20 Apr 2020 04:43:00 -0700
+From: Matthew Wilcox <willy@infradead.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
+Message-ID: <20200420114300.GB5820@bombadil.infradead.org>
 References: <20200414150233.24495-1-willy@infradead.org>
  <20200414150233.24495-25-willy@infradead.org>
-In-Reply-To: <20200414150233.24495-25-willy@infradead.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 20 Apr 2020 13:14:17 +0200
-Message-ID: <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
-Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
-To: Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+ <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,135 +72,56 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Apr 14, 2020 at 5:08 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Implement the new readahead operation in fuse by using __readahead_batch()
-> to fill the array of pages in fuse_args_pages directly.  This lets us
-> inline fuse_readpages_fill() into fuse_readahead().
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> ---
->  fs/fuse/file.c | 99 ++++++++++++++------------------------------------
->  1 file changed, 27 insertions(+), 72 deletions(-)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 9d67b830fb7a..db82fb29dd39 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -915,84 +915,39 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
->         fuse_readpages_end(fc, &ap->args, err);
->  }
->
-> -struct fuse_fill_data {
-> -       struct fuse_io_args *ia;
-> -       struct file *file;
-> -       struct inode *inode;
-> -       unsigned int nr_pages;
-> -       unsigned int max_pages;
-> -};
-> -
-> -static int fuse_readpages_fill(void *_data, struct page *page)
-> +static void fuse_readahead(struct readahead_control *rac)
->  {
-> -       struct fuse_fill_data *data = _data;
-> -       struct fuse_io_args *ia = data->ia;
-> -       struct fuse_args_pages *ap = &ia->ap;
-> -       struct inode *inode = data->inode;
-> +       struct inode *inode = rac->mapping->host;
->         struct fuse_conn *fc = get_fuse_conn(inode);
-> +       unsigned int i, max_pages, nr_pages = 0;
->
-> -       fuse_wait_on_page_writeback(inode, page->index);
-> -
-> -       if (ap->num_pages &&
-> -           (ap->num_pages == fc->max_pages ||
-> -            (ap->num_pages + 1) * PAGE_SIZE > fc->max_read ||
-> -            ap->pages[ap->num_pages - 1]->index + 1 != page->index)) {
-> -               data->max_pages = min_t(unsigned int, data->nr_pages,
-> -                                       fc->max_pages);
-> -               fuse_send_readpages(ia, data->file);
-> -               data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
-> -               if (!ia) {
-> -                       unlock_page(page);
-> -                       return -ENOMEM;
-> -               }
-> -               ap = &ia->ap;
-> -       }
-> -
-> -       if (WARN_ON(ap->num_pages >= data->max_pages)) {
-> -               unlock_page(page);
-> -               fuse_io_free(ia);
-> -               return -EIO;
-> -       }
-> -
-> -       get_page(page);
-> -       ap->pages[ap->num_pages] = page;
-> -       ap->descs[ap->num_pages].length = PAGE_SIZE;
-> -       ap->num_pages++;
-> -       data->nr_pages--;
-> -       return 0;
-> -}
-> -
-> -static int fuse_readpages(struct file *file, struct address_space *mapping,
-> -                         struct list_head *pages, unsigned nr_pages)
-> -{
-> -       struct inode *inode = mapping->host;
-> -       struct fuse_conn *fc = get_fuse_conn(inode);
-> -       struct fuse_fill_data data;
-> -       int err;
-> -
-> -       err = -EIO;
->         if (is_bad_inode(inode))
-> -               goto out;
-> +               return;
->
-> -       data.file = file;
-> -       data.inode = inode;
-> -       data.nr_pages = nr_pages;
-> -       data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
-> -;
-> -       data.ia = fuse_io_alloc(NULL, data.max_pages);
-> -       err = -ENOMEM;
-> -       if (!data.ia)
-> -               goto out;
-> +       max_pages = min(fc->max_pages, fc->max_read / PAGE_SIZE);
->
-> -       err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
-> -       if (!err) {
-> -               if (data.ia->ap.num_pages)
-> -                       fuse_send_readpages(data.ia, file);
-> -               else
-> -                       fuse_io_free(data.ia);
-> +       for (;;) {
-> +               struct fuse_io_args *ia;
-> +               struct fuse_args_pages *ap;
-> +
-> +               nr_pages = readahead_count(rac) - nr_pages;
+On Mon, Apr 20, 2020 at 01:14:17PM +0200, Miklos Szeredi wrote:
+> > +       for (;;) {
+> > +               struct fuse_io_args *ia;
+> > +               struct fuse_args_pages *ap;
+> > +
+> > +               nr_pages = readahead_count(rac) - nr_pages;
+> 
+> Hmm.  I see what's going on here, but it's confusing.   Why is
+> __readahead_batch() decrementing the readahead count at the start,
+> rather than at the end?
+> 
+> At the very least it needs a comment about why nr_pages is calculated this way.
 
-Hmm.  I see what's going on here, but it's confusing.   Why is
-__readahead_batch() decrementing the readahead count at the start,
-rather than at the end?
+Because usually that's what we want.  See, for example, fs/mpage.c:
 
-At the very least it needs a comment about why nr_pages is calculated this way.
+        while ((page = readahead_page(rac))) {
+                prefetchw(&page->flags);
+                args.page = page;
+                args.nr_pages = readahead_count(rac);
+                args.bio = do_mpage_readpage(&args);
+                put_page(page);
+        }
 
-> +               if (nr_pages > max_pages)
-> +                       nr_pages = max_pages;
-> +               if (nr_pages == 0)
-> +                       break;
-> +               ia = fuse_io_alloc(NULL, nr_pages);
-> +               if (!ia)
-> +                       return;
-> +               ap = &ia->ap;
-> +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
-> +               for (i = 0; i < nr_pages; i++) {
-> +                       fuse_wait_on_page_writeback(inode,
-> +                                                   readahead_index(rac) + i);
+fuse is different because it's trying to allocate for the next batch,
+not for the batch we're currently on.
 
-What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
+I'm a little annoyed because I posted almost this exact loop here:
 
-Thanks,
-Miklos
+https://lore.kernel.org/linux-fsdevel/CAJfpegtrhGamoSqD-3Svfj3-iTdAbfD8TP44H_o+HE+g+CAnCA@mail.gmail.com/
+
+and you said "I think that's fine", modified only by your concern
+for it not being obvious that nr_pages couldn't be decremented by
+__readahead_batch(), so I modified the loop slightly to assign to
+nr_pages.  The part you're now complaining about is unchanged.
+
+> > +               if (nr_pages > max_pages)
+> > +                       nr_pages = max_pages;
+> > +               if (nr_pages == 0)
+> > +                       break;
+> > +               ia = fuse_io_alloc(NULL, nr_pages);
+> > +               if (!ia)
+> > +                       return;
+> > +               ap = &ia->ap;
+> > +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
+> > +               for (i = 0; i < nr_pages; i++) {
+> > +                       fuse_wait_on_page_writeback(inode,
+> > +                                                   readahead_index(rac) + i);
+> 
+> What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
+
+It saves reading from a cacheline?  I wouldn't be surprised if the
+compiler hoisted the read from rac->_index to outside the loop and just
+iterated from rac->_index to rac->_index + nr_pages.
