@@ -2,62 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81C241BC106
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Apr 2020 16:19:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B35541C2694
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 May 2020 17:36:24 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49BP0S527RzDqkR
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2020 00:19:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1588083560;
-	bh=0zKlqYVnb4HjkHOQ7fVtPQdB0wEHmIh7af+8tEHe7KE=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=kVMcRBI+shULf1TMiK/qMb5rUav0NLkAtVgPWA+3A0kU/rNybAM3S2TCzJ1isKB8m
-	 +hlQwvcJuskfF+GlluFMboiEZ03DVI4NZPY91w6uJsMyOC1n48zL67kh0rPxZNgKGd
-	 mAenTnanIPTdNmLgIA5abtegPHPi6EDkA52e3qdJRuLZ8ZGCjOuY4lYYqiydx93QQs
-	 zrsbqt5kpB9I1uOqpnFf7/Upk12P1wQZT9f7ICOeGfal43LpxN00FeJjIMn9l31c4a
-	 H26/lGyj+Ow0rnK6j+VVgZiFVwp0oy7Nplu1e0ondh6mbEf1N37Wm+E8O73BLbh19m
-	 ca/b/pOQ/CoYw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 49DtWT3pqBzDrPZ
+	for <lists+linux-erofs@lfdr.de>; Sun,  3 May 2020 01:36:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=k008.k008jp7657.info (client-ip=133.167.78.227;
+ helo=k008.k008jp7657.info; envelope-from=m020b309@k008.k008jp7657.info;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none)
+ header.from=k008.k008jp7657.info
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=66.163.185.58; helo=sonic313-35.consmr.mail.ne1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=GYtPIC7G; dkim-atps=neutral
-Received: from sonic313-35.consmr.mail.ne1.yahoo.com
- (sonic313-35.consmr.mail.ne1.yahoo.com [66.163.185.58])
+ dkim=fail reason="signature verification failed" (1024-bit key;
+ unprotected) header.d=k008.k008jp7657.info header.i=@k008.k008jp7657.info
+ header.a=rsa-sha256 header.s=default header.b=ugU28Xte; 
+ dkim-atps=neutral
+X-Greylist: delayed 4540 seconds by postgrey-1.36 at bilbo;
+ Sun, 03 May 2020 01:36:14 AEST
+Received: from k008.k008jp7657.info (os3-369-17723.vs.sakura.ne.jp
+ [133.167.78.227])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49BNk54ct9zDqTm
- for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2020 00:06:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1588082802; bh=leyLJqsl1DPwvyskQqABV9Df6q0s8n8/lcamhL+w77o=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=GYtPIC7GWYNFq6nGhQvtSUsw+77l+r+yfc7GwFQif66KsVz1t7jmpM9MxTb8B+mDlwCJU/DE7Y9SRnXzp/wqeuAZKi8pvbzNNS/YFQkJEAmBYqltAYy7USq6GS4ur30IRrWx3SVxIhbqlJXturGGPmW+1JYzkYvgfOF5vMG/4jlQuzKYihPZxW1gMF3hZHYd+DwKbOIPx/sPC9a0Xb+06Nt3yG70WJ9CQ6o/Q+iD4jXMmg7xukxhjqfOJBAdRuPCEYChIkfv3AWi341TzLy8D/H4FA68U29l9+KiJlRhtuHhgpR3goBhYloBUGb2DZ3dWqU5Fk8p/ydazgp30jrhjQ==
-X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.ne1.yahoo.com with HTTP; Tue, 28 Apr 2020 14:06:42 +0000
-Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 7e782058b52218a1f068e45d867aac95; 
- Tue, 28 Apr 2020 14:04:39 +0000 (UTC)
-Date: Tue, 28 Apr 2020 22:04:23 +0800
-To: Shung Wang <waterbird0806@gmail.com>
-Subject: Re: [mkfs.erofs]Do you have plan to support selinux file_context
-Message-ID: <20200428140415.GA3785@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CAKkk4bLEWNpY+AZ0-mQ9eU9gjwWD8nhi3kCsf01Nh7hZWRsPQA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKkk4bLEWNpY+AZ0-mQ9eU9gjwWD8nhi3kCsf01Nh7hZWRsPQA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15756 hermes Apache-HttpAsyncClient/4.1.4
- (Java/11.0.6)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49DtWL1FTKzDqVx
+ for <linux-erofs@lists.ozlabs.org>; Sun,  3 May 2020 01:36:13 +1000 (AEST)
+Received: by k008.k008jp7657.info (Postfix, from userid 1029)
+ id C932B158B78; Sat,  2 May 2020 23:20:32 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=k008.k008jp7657.info;
+ s=default; t=1588429232;
+ bh=qrIXAAPu1T5dZPxqScLUB3bS73LGnyGrCe5lniwtpCg=;
+ h=To:Subject:From:Reply-To:Date;
+ b=ugU28Xte+PQyuAG9YAVrq5TW/o2B79z2EaCx6PWi4VUQqRpS90RDzddUhujVjmLK3
+ liDvKQhwl1voG1GYxcJ6nCiNvnK1qQgRtFvGVo/G/ZYiQALpgQcF1+LzMT7qweM5iT
+ 89Sje2LTDFqAM1nhmSgLo3e2hFKgDme1GIm3Mtlg=
+To: linux-erofs@lists.ozlabs.org
+Subject: =?UTF-8?B?UGFydG5lcnNoaXA=?=
+From: =?UTF-8?B?QWxpc3RhaXIgQ3Vycmll?= <no-reply@k008.k008jp7657.info>
+MIME-Version: 1.0;
+Content-type: multipart/mixed; boundary="--pgrdvfMkL3"
+Message-Id: <20200502142032.C932B158B78@k008.k008jp7657.info>
+Date: Sat,  2 May 2020 23:20:32 +0900 (JST)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,34 +55,18 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: gaoxiang25@huawei.com, miaoxie@huawei.com, linux-erofs@lists.ozlabs.org,
- Li GuiFu <bluce.lee@aliyun.com>
+Reply-To: alistaircurrie01@gmail.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Shung,
+----pgrdvfMkL3
+Content-type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 28, 2020 at 03:20:45PM +0800, Shung Wang wrote:
-> Dear developers,
-> Current mkfs.erofs doesn't support read sepolicy from file_context .
-> Do you have plan to support that?
+<div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">Attn: Dear</span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;"><br></span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">I have a high net worth investor that has expressed interest in establishing</span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">a strategic partnership Business Alliance with you.</span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;"><br></span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size
+ : medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">Kindly respond back for more details</span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;"><br></span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">Warm Regards,</span></font></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium;"><font face="Arial, Verdana"><span style="font-size: 13.3333px;">Alistair Currie</span></font></div>
+----pgrdvfMkL3
 
-Yes, definitely. Actually, that is not a real technical blocking.
-For me, partially due to my personal hardware limitation, I'm not able
-to fetch/compile/test Android system on my personal computer.
 
-If you are an Android software developer, could you kindly help implement
-it (and Android.bp if possible) and send a patch to community? that may
-be not a complex stuff in my opinion but would be of great help to all
-of us. :)
-
-Thanks a lot!
-Gao Xiang
-
-> 
-> thanks
-> best regards,
-> Xiong
+----pgrdvfMkL3--
