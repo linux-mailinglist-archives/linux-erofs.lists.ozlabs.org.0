@@ -1,100 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 590B11E35BE
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 May 2020 04:35:54 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A58491E4BC5
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 May 2020 19:22:49 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49Ww1L2ljbzDqNd
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 May 2020 12:35:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49XHhk10hjzDqSM
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 May 2020 03:22:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1590600166;
+	bh=0qZaL49/wQG4KQJUYLoBgXsiv1+uQdTgYXJgUR3yfKA=;
+	h=Subject:To:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=UfFXDFGEbh+BjeybtR1+QuUjTm43oE9daWIihbNkAyKocMA7BC2qb9ySo6NLV7qRn
+	 hY2AOe1KmDtD9/5Y+yyuSo6lhoSywCqthn84V090cRVt9OnBYqOBco/vAI8DD2g0vs
+	 Y5y105sshNHb8GfuhPWX9O+9qs2wXjQ18reB9dvG+rjgehYFSq3xX5D3zNnyzdXNtV
+	 9+UHnJQ6d4Sq4L0QweC9W4CAWDPF1N+oTDnmaNutcXZqA4J461VVkN9qQuZjziDTVv
+	 kBmVBixbtFgSC7U9Q7s5QAWBWT3vbZybg4tW3cg9hnT67MXXXeEuQPFgasm64Qs8Nh
+	 uuU2wf8BoUUbw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=205.139.110.120;
- helo=us-smtp-1.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ smtp.mailfrom=us-west-2.amazonses.com (client-ip=54.240.27.104;
+ helo=a27-104.smtp-out.us-west-2.amazonses.com;
+ envelope-from=0101017257219cc1-d536fa61-99a2-4a75-bd7a-372f7a6a9034-000000@us-west-2.amazonses.com;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
+ header.from=konnectglobalmarketing.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=aKmCoWGw; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=aKmCoWGw; 
- dkim-atps=neutral
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=konnectglobalmarketing.com
+ header.i=@konnectglobalmarketing.com header.a=rsa-sha256
+ header.s=sknkt525wmvsd5qrslvt4aisaznnhvir header.b=SZnAWzTk; 
+ dkim=pass (1024-bit key;
+ unprotected) header.d=amazonses.com header.i=@amazonses.com
+ header.a=rsa-sha256 header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv
+ header.b=W+kX32M3; dkim-atps=neutral
+X-Greylist: delayed 435 seconds by postgrey-1.36 at bilbo;
+ Thu, 28 May 2020 03:22:39 AEST
+Received: from a27-104.smtp-out.us-west-2.amazonses.com
+ (a27-104.smtp-out.us-west-2.amazonses.com [54.240.27.104])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49Ww171W6TzDqMg
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 May 2020 12:35:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1590546933;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=qXIbFlcligOocUhwVZfBnNqTVwWd7DDDybv21J6rdig=;
- b=aKmCoWGwPTmxfIEB0dpekMsffr6eNcpMVS2VD8DcqSClRIzY/tE8mDoSbPy4gFiiOoQC4P
- kE5d6CrcZlFd0jHQJYrNzdkJGxrrKw58m6KuqASesJvApGk1Xj4rHjN3zqrLqKOvtf8jXw
- i6hYrfCAdFWIgSKS97nO7QeoGUJomtk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1590546933;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=qXIbFlcligOocUhwVZfBnNqTVwWd7DDDybv21J6rdig=;
- b=aKmCoWGwPTmxfIEB0dpekMsffr6eNcpMVS2VD8DcqSClRIzY/tE8mDoSbPy4gFiiOoQC4P
- kE5d6CrcZlFd0jHQJYrNzdkJGxrrKw58m6KuqASesJvApGk1Xj4rHjN3zqrLqKOvtf8jXw
- i6hYrfCAdFWIgSKS97nO7QeoGUJomtk=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-r9CpvnsqMSypTjfFuPAfwA-1; Tue, 26 May 2020 22:35:30 -0400
-X-MC-Unique: r9CpvnsqMSypTjfFuPAfwA-1
-Received: by mail-pj1-f72.google.com with SMTP id mt16so1315093pjb.5
- for <linux-erofs@lists.ozlabs.org>; Tue, 26 May 2020 19:35:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=qXIbFlcligOocUhwVZfBnNqTVwWd7DDDybv21J6rdig=;
- b=T6Inf8rIy2LwLR2jOm8CbMXhjZG30HR6WpfZgDO0a/ZA8YJKVaMeNttmkG/WjcbKxD
- 0Zey6kc9IVoK3LYOFkaESxkuF2blmSUclIF0p6EnCsHCtN1DF6XXcAGSNaamJ0q1oXwi
- 1WroAjkZ0WZqp6wXq4w60hd1vZoLniUgG+hLCsjkNiQTJFcemGZhl3TlQpoEtpcRzUw7
- WQPxkkqDl8wQ9XFb7EdA/5rnLeytoGI/yVwA18IsGWvjJeiInnZsLG2H3QPZG6qqFOQ4
- wWcWF9z7Lad/aB37BtbJPu2Wbi91DBFWRnkuqF2NB7xb90sqz4FXgt9neCh1SaT0+9z3
- udVg==
-X-Gm-Message-State: AOAM533Xx/QKu0KzXKiU4XDXkvPyK45M+peg0QnwbceoLrQBrEwBC9NE
- HYoyq61/7uzF41z7nV6s1TpKyq96dcHSjTwaJOiZJukOPaQqFDImN7sFmHH2LrGO47swXIB5iGz
- Ublqjx56XSI8jesqYN0JvqTdQ
-X-Received: by 2002:a17:902:7786:: with SMTP id
- o6mr3913771pll.279.1590546929762; 
- Tue, 26 May 2020 19:35:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJymRxkk426BfgrsK0Ae+wgOrxu7uS4g7bJ4osQeiZwD9VTiTTmYXLaOrFqqtHFgohwSafWavg==
-X-Received: by 2002:a17:902:7786:: with SMTP id
- o6mr3913752pll.279.1590546929446; 
- Tue, 26 May 2020 19:35:29 -0700 (PDT)
-Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id s75sm763147pgc.13.2020.05.26.19.35.27
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Tue, 26 May 2020 19:35:29 -0700 (PDT)
-Date: Wed, 27 May 2020 10:35:19 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: cgxu <cgxu519@mykernel.net>
-Subject: Re: [PATCH] erofs: code cleanup by removing ifdef macro surrounding
-Message-ID: <20200527023519.GB10771@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200526090343.22794-1-cgxu519@mykernel.net>
- <20200526094939.GB8107@hsiangkao-HP-ZHAN-66-Pro-G1>
- <4c4a7f7d-c3b7-9093-ae76-32ad258e29a6@mykernel.net>
- <20200526103522.GC8107@hsiangkao-HP-ZHAN-66-Pro-G1>
- <451e6933-0465-6863-7972-999bd1cdf61f@huawei.com>
- <20200527021628.GA10771@hsiangkao-HP-ZHAN-66-Pro-G1>
- <5d650808-e326-142c-048b-2c574741cd96@mykernel.net>
-MIME-Version: 1.0
-In-Reply-To: <5d650808-e326-142c-048b-2c574741cd96@mykernel.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49XHhb0GltzDqH5
+ for <linux-erofs@lists.ozlabs.org>; Thu, 28 May 2020 03:22:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+ s=sknkt525wmvsd5qrslvt4aisaznnhvir; d=konnectglobalmarketing.com;
+ t=1590599720;
+ h=Subject:From:To:Date:Mime-Version:Content-Type:References:Message-Id;
+ bh=0qZaL49/wQG4KQJUYLoBgXsiv1+uQdTgYXJgUR3yfKA=;
+ b=SZnAWzTkCsc6+YZh3RCUF9VkMrnnjTE9H77dfqeLYuiy11/LY9b9vaIFnn18K4Gh
+ Ed0zD158La+FOwsJSWIBxbMXUhpE5uX8A/+YngTa0wQSXdawrWcWl/8wPu9fXESJKWj
+ 3p9G4jpHeJyRnJkS9061TbLLHAeoEzC6bbpOCpBc=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+ s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1590599720;
+ h=Subject:From:To:Date:Mime-Version:Content-Type:References:Message-Id:Feedback-ID;
+ bh=0qZaL49/wQG4KQJUYLoBgXsiv1+uQdTgYXJgUR3yfKA=;
+ b=W+kX32M37qtWCVUk/m6ZIt8JRecyPKq5BVdeJtGS2FEUttgxfa2VREQdmXAczunN
+ d+xLeEjWRtYPgXALagD7XFpIHu5rUm0LrF/xZLdND/J5NSIjEyDO82kYrsiMYPm/lWV
+ 1rtTDUdHxIAR8SYfgpIu5ZBLbUjeaQyGr33SsrsQ=
+Subject: Proposal
+To: =?UTF-8?Q?linux-erofs=40lists=2Eozlabs=2Eorg?=
+ <linux-erofs@lists.ozlabs.org>
+Date: Wed, 27 May 2020 17:15:20 +0000
+Mime-Version: 1.0
+Content-Type: multipart/alternative; 
+ boundary="=_D0GPaX1t6+lAG0I9Clw4aK68743thaIfnSXl1i0oE4XNpAXf"
+References: <mail.adaf45a7-a3c5-4638-b8f5-7a8fca14d603@storage.wm.amazon.com> 
+ <mail.adaf45a7-a3c5-4638-b8f5-7a8fca14d603@storage.wm.amazon.com>
+X-Priority: 3 (Normal)
+X-Mailer: Amazon WorkMail
+Thread-Index: AdY0R0jKLta4JZ8sS9ewbPwvIKjF8A==
+Thread-Topic: Proposal
+Message-ID: <0101017257219cc1-d536fa61-99a2-4a75-bd7a-372f7a6a9034-000000@us-west-2.amazonses.com>
+X-SES-Outgoing: 2020.05.27-54.240.27.104
+Feedback-ID: 1.us-west-2.An468LAV0jCjQDrDLvlZjeAthld7qrhZr+vow8irkvU=:AmazonSES
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -106,63 +85,175 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Hailey Jones via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: =?UTF-8?Q?Hailey_Jones?= <hailey@konnectglobalmarketing.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, May 27, 2020 at 10:24:14AM +0800, cgxu wrote:
-> On 5/27/20 10:16 AM, Gao Xiang wrote:
-> > On Wed, May 27, 2020 at 09:55:17AM +0800, Chao Yu wrote:
-> > 
-> > ...
-> > 
-> > > > > 
-> > > > > Originally, we set erofs_listxattr to ->listxattr only
-> > > > > when the config macro CONFIG_EROFS_FS_XATTR is enabled,
-> > > > > it means that erofs_listxattr() never returns -EOPNOTSUPP
-> > > > > in any case, so actually there is no logic change here,
-> > > > > right?
-> > > > 
-> > > > Yeah, I agree there is no logic change, so I'm fine with the patch.
-> > > > But I'm little worry about if return 0 is actually wrong here...
-> > > > 
-> > > > see the return value at:
-> > > > http://man7.org/linux/man-pages/man2/listxattr.2.html
-> > > 
-> > > Yeah, I guess vfs should check that whether lower filesystem has set .listxattr
-> > > callback function to decide to return that value, something like:
-> > > 
-> > > static ssize_t
-> > > ecryptfs_listxattr(struct dentry *dentry, char *list, size_t size)
-> > > {
-> > > ...
-> > > 	if (!d_inode(lower_dentry)->i_op->listxattr) {
-> > > 		rc = -EOPNOTSUPP;
-> > > 		goto out;
-> > > 	}
-> > > ...
-> > > 	rc = d_inode(lower_dentry)->i_op->listxattr(lower_dentry, list, size);
-> > > ...
-> > > }
-> > 
-> > This approach seems better. ;) Let me recheck all of this.
-> > Maybe we could submit a patch to fsdevel for some further advice...
-> > 
-> 
-> I agree that doing the check in vfs layer looks tidy and unified.
-> However, we should be aware this change may break user space tools.
+This is a multi-part message in MIME format. Your mail reader does not
+understand MIME message format.
+--=_D0GPaX1t6+lAG0I9Clw4aK68743thaIfnSXl1i0oE4XNpAXf
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I think I already sorted out the reason, it actually seems a
-regression due to multiple commits, let me try to submit a patch
-for some advice...
+Hi,
 
+=C2=A0
+Would you like to connect with key decision makers from the below sectors=
+;
+
+=C2=A0
+Manufacturing, Construction, Education, Retail, Healthcare, Energy, Utili=
+ties & Waste Treatment, Transportation, Banking & Finance, Media & Intern=
+et, Hospitality, etc.=20
+
+=C2=A0
+You can contact them via direct=C2=A0business emails or phone numbers=C2=A0=
+for your sales and marketing initiatives.=20
+
+=C2=A0
+We can also provide you contacts from companies currently using Altium
+
+Software.
+
+=C2=A0
+Kindly let me know the Sectors, Job Titles & Geography that you wish to t=
+arget, so that I can get back with the samples, counts and more details f=
+or your review.=20
+
+=C2=A0
+Looking forward to your response.
+
+=C2=A0
 Thanks,
-Gao Xiang
 
-> 
-> 
-> Thanks,
-> cgxu
-> 
+Hailey Jones - Marketing Executive
 
+=C2=A0
+Stay safe.
+
+Reply back =E2=80=9CPass=E2=80=9D for no further emails.
+
+=C2=A0
+
+--=_D0GPaX1t6+lAG0I9Clw4aK68743thaIfnSXl1i0oE4XNpAXf
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-mi=
+crosoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:wo=
+rd" xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D=
+"http://www.w3.org/TR/REC-html40"><head><META HTTP-EQUIV=3D"Content-Type"=
+ CONTENT=3D"text/html; charset=3Dus-ascii"><meta name=3DGenerator content=
+=3D"Microsoft Word 15 (filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+=09{font-family:"Cambria Math";
+=09panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+=09{font-family:Calibri;
+=09panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+=09{margin:0in;
+=09margin-bottom:.0001pt;
+=09font-size:11.0pt;
+=09font-family:"Calibri",sans-serif;}
+p.MsoNoSpacing, li.MsoNoSpacing, div.MsoNoSpacing
+=09{mso-style-priority:1;
+=09margin:0in;
+=09margin-bottom:.0001pt;
+=09font-size:11.0pt;
+=09font-family:"Calibri",sans-serif;}
+p.xmsonormal, li.xmsonormal, div.xmsonormal
+=09{mso-style-name:x_msonormal;
+=09margin:0in;
+=09margin-bottom:.0001pt;
+=09font-size:12.0pt;
+=09font-family:"Times New Roman",serif;}
+=2EMsoChpDefault
+=09{mso-style-type:export-only;}
+=2EMsoPapDefault
+=09{mso-style-type:export-only;
+=09margin-bottom:8.0pt;
+=09line-height:107%;}
+@page WordSection1
+=09{size:8.5in 11.0in;
+=09margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+=09{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US><div class=3D=
+WordSection1><p class=3DMsoNormal style=3D'background:white'><span style=3D=
+'font-size:12.0pt;color:black'>Hi,</span><span lang=3DIT><o:p></o:p></spa=
+n></p><p class=3DMsoNormal style=3D'background:white'><span lang=3DIT><o:=
+p>&nbsp;</o:p></span></p><p class=3DMsoNormal style=3D'background:white'>=
+<span style=3D'font-size:12.0pt;color:black'>Would you like to connect wi=
+th key decision makers from<b> </b>the below sectors<b>;<o:p></o:p></b></=
+span></p><p class=3DMsoNormal style=3D'background:white'><b><span style=3D=
+'font-size:12.0pt;color:black'><o:p>&nbsp;</o:p></span></b></p><p class=3D=
+MsoNormal style=3D'background:white'><b><span lang=3DEN-IN style=3D'font-=
+size:12.0pt;color:black;background:white'>Manufacturing, </span></b><b><s=
+pan style=3D'font-size:12.0pt;color:black;background:white'>Construction<=
+/span></b><b><span lang=3DEN-IN style=3D'font-size:12.0pt;color:black;bac=
+kground:white'>, </span></b><b><span style=3D'font-size:12.0pt;color:blac=
+k;background:white'>Education</span></b><b><span lang=3DEN-IN style=3D'fo=
+nt-size:12.0pt;color:black;background:white'>, </span></b><b><span style=3D=
+'font-size:12.0pt;color:black;background:white'>Retail</span></b><b><span=
+ lang=3DEN-IN style=3D'font-size:12.0pt;color:black;background:white'>, <=
+/span></b><b><span style=3D'font-size:12.0pt;color:black;background:white=
+'>Healthcare, Energy, Utilities &amp; Waste Treatment, Transportation, Ba=
+nking &amp; Finance,</span></b><span style=3D'font-size:10.5pt;font-famil=
+y:"Arial",sans-serif;color:#797D86;background:white'> </span><b><span sty=
+le=3D'font-size:12.0pt;color:black;background:white'>Media &amp; Internet=
+, Hospitality, </span></b><b><span lang=3DEN-IN style=3D'font-size:12.0pt=
+;color:black;background:white'>etc. <o:p></o:p></span></b></p><p class=3D=
+MsoNormal style=3D'background:white'><span style=3D'font-size:12.0pt;colo=
+r:black'>&nbsp;</span><span lang=3DIT><o:p></o:p></span></p><p class=3DMs=
+oNormal style=3D'background:white'><span style=3D'font-size:12.0pt;color:=
+black'>You can contact them via direct&nbsp;<u>business emails or phone n=
+umbers</u>&nbsp;for your sales and marketing initiatives. <o:p></o:p></sp=
+an></p><p class=3DMsoNormal style=3D'background:white'><span style=3D'fon=
+t-size:12.0pt;color:black'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNorm=
+al style=3D'background:white'><span style=3D'font-size:12.0pt;color:black=
+'>We can also provide you contacts </span><span style=3D'font-size:12.0pt=
+;color:black;background:white;mso-fareast-language:EN-IN'>from companies =
+currently using <b>Altium</b></span><b><span lang=3DEN-IN style=3D'font-s=
+ize:12.0pt;color:black;background:white;mso-fareast-language:EN-IN'><o:p>=
+</o:p></span></b></p><p class=3DMsoNormal style=3D'background:white'><b><=
+span style=3D'font-size:12.0pt;color:black;background:white;mso-fareast-l=
+anguage:EN-IN'>Software.</span></b><b><span lang=3DEN-IN style=3D'font-si=
+ze:12.0pt;color:black;background:white;mso-fareast-language:EN-IN'><o:p><=
+/o:p></span></b></p><p class=3DMsoNormal style=3D'background:white'><span=
+ lang=3DIT><o:p>&nbsp;</o:p></span></p><p class=3DMsoNoSpacing><span lang=
+=3DEN-IN style=3D'font-size:12.0pt;color:black;background:white;mso-farea=
+st-language:EN-IN'>Kindly let me know the <b>Sectors,</b> <b>Job Titles &=
+amp; Geography</b> that you wish to target, so that I can get back with t=
+he <u>samples, counts </u>and more details for your review. <o:p></o:p></=
+span></p><p class=3DMsoNormal style=3D'background:white'><span lang=3DIT>=
+<o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal style=3D'background:whit=
+e'><span style=3D'font-size:12.0pt'>Looking forward to your response.<o:p=
+></o:p></span></p><p class=3DMsoNormal><span lang=3DEN-IN style=3D'font-s=
+ize:12.0pt;mso-fareast-language:EN-IN'><o:p>&nbsp;</o:p></span></p><p cla=
+ss=3DMsoNormal><b><i><span lang=3DEN-IN style=3D'font-size:12.0pt;color:b=
+lack;background:white;mso-fareast-language:EN-IN'>Thanks,</span></i></b><=
+i><span lang=3DEN-IN><o:p></o:p></span></i></p><p class=3DMsoNormal><b><i=
+><span lang=3DEN-IN style=3D'font-size:12.0pt;color:black'>Hailey Jones -=
+ Marketing Executive</span></i></b><i><span lang=3DEN-IN><o:p></o:p></spa=
+n></i></p><p class=3Dxmsonormal><b><i><span lang=3DEN-IN style=3D'font-fa=
+mily:"Calibri",sans-serif;color:black'>&nbsp;</span></i></b><span style=3D=
+'font-size:11.0pt;font-family:"Calibri",sans-serif'><o:p></o:p></span></p=
+><p class=3Dxmsonormal><b><span lang=3DEN-IN style=3D'font-family:"Calibr=
+i",sans-serif;color:#A6A6A6'>Stay safe.</span></b><span style=3D'font-siz=
+e:11.0pt;font-family:"Calibri",sans-serif'><o:p></o:p></span></p><p class=
+=3Dxmsonormal><span lang=3DEN-IN style=3D'font-size:8.0pt;font-family:"Ca=
+libri",sans-serif;color:gray'>Reply back &#8220;Pass&#8221; for no furthe=
+r emails.</span><span style=3D'font-size:11.0pt;font-family:"Calibri",san=
+s-serif'><o:p></o:p></span></p><p class=3DMsoNormal><o:p>&nbsp;</o:p></p>=
+</div></body></html>
+--=_D0GPaX1t6+lAG0I9Clw4aK68743thaIfnSXl1i0oE4XNpAXf--
