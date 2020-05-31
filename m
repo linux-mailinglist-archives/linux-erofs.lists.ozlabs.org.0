@@ -2,84 +2,76 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E18CE1E9285
-	for <lists+linux-erofs@lfdr.de>; Sat, 30 May 2020 18:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 419971E951D
+	for <lists+linux-erofs@lfdr.de>; Sun, 31 May 2020 05:47:04 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49Z60X55gCzDqWG
-	for <lists+linux-erofs@lfdr.de>; Sun, 31 May 2020 02:12:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49ZPPc5ljTzDqnF
+	for <lists+linux-erofs@lfdr.de>; Sun, 31 May 2020 13:47:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1590896820;
+	bh=zRq39ZBGZ3+tzWkVTaWefLlHjocuimLRH+CjbGzbTQY=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=IYKg39CEM5hIusgN7WlrXX84yeYak+XDwwzhTTptLTomcoEsZ9+ZOENsh+/MjXSNx
+	 rkBKOmbJ1a30hEThip0ISFlC7g/0e3qRr8vP+SHp09Ba9sb7z9zx8937GTPr776aG0
+	 +Wh4BfWsfyoh8FVJTpu85e6iTF9EBOmJKLu03lZJNZpPdt4OYK3cUS077AnlUPRuh0
+	 4OI9I2UR/4NkrDztPWJbNSXUxtj4XflgiC4ek2Q3euOCVSV1sW/snznyP3csOjyJjV
+	 gXhbMhBGYehNlEF/9wuGUfCtMJdSoI1n1aJtbrvotLQpa5Z1cdUVOmFu9xVpDeDP+j
+	 ZubOZSel114rQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=207.211.31.120;
- helo=us-smtp-1.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=TawwtZhY; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=TawwtZhY; 
- dkim-atps=neutral
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.65.32; helo=sonic315-8.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=Rvh5lMmp; dkim-atps=neutral
+Received: from sonic315-8.consmr.mail.gq1.yahoo.com
+ (sonic315-8.consmr.mail.gq1.yahoo.com [98.137.65.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49Z60M3DcwzDqZq
- for <linux-erofs@lists.ozlabs.org>; Sun, 31 May 2020 02:12:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1590855148;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type;
- bh=1oD5iU/onAMxXpv/Rz+Yeb4Y/ORFriBHgI7PUE+k5yg=;
- b=TawwtZhYUxPAVgxcZrpTPPAio64+gi6HAWFbVISNuHO50bMVvt/8WlM40/luqg2FhCU0DB
- xytCCcWeSHAPefXW8fLzjgb4Us5A0sDKjWep0SXDaHC91XQzEVkknkoMuWPb2tOhnBJuZI
- fQgQeiyz+rW3+nVCsti3/BfAIiRoE2Y=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1590855148;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type;
- bh=1oD5iU/onAMxXpv/Rz+Yeb4Y/ORFriBHgI7PUE+k5yg=;
- b=TawwtZhYUxPAVgxcZrpTPPAio64+gi6HAWFbVISNuHO50bMVvt/8WlM40/luqg2FhCU0DB
- xytCCcWeSHAPefXW8fLzjgb4Us5A0sDKjWep0SXDaHC91XQzEVkknkoMuWPb2tOhnBJuZI
- fQgQeiyz+rW3+nVCsti3/BfAIiRoE2Y=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-EGX7FKWXN2GCgBoD2jGPeQ-1; Sat, 30 May 2020 12:12:11 -0400
-X-MC-Unique: EGX7FKWXN2GCgBoD2jGPeQ-1
-Received: by mail-pg1-f200.google.com with SMTP id q5so1985719pgt.16
- for <linux-erofs@lists.ozlabs.org>; Sat, 30 May 2020 09:12:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id;
- bh=1oD5iU/onAMxXpv/Rz+Yeb4Y/ORFriBHgI7PUE+k5yg=;
- b=DjjNG7Sl4VJEaqFEh857QUZsIDIPTrwW5iqWzbB4lrOLxSEh/Awt9S2u9mbE0O6gRn
- w4bxIn7up51Ql5NuHHwTpS/y4TGOHBAf1bRvckx559+COMI0FhNUXKLTqXcyoNrrBbs7
- LoMVQr/4JN6rnSggbgK1N/gu7tcI7GLZx2JboCQYLaTt9n1uBOnXQ15liZEdcO0rKTvc
- tAzYyDrbUgpSWSCZGOFI8PVl+SQ/pvQGpG7T9vJcVfediCXDiVpBBtznfRlQS1O//Ckc
- JlxN3d7joob3u10KAdFXrwjZqLFyGIcCeJVy1E8jLCyX1wN2yUoC1xWjVLd9MEkK1zVY
- zhdQ==
-X-Gm-Message-State: AOAM532NskH3hNZbJHf+N4DliWkLzZudZaVzEZ+41C08bdDuXB+uYKug
- gB2TlbUl6pTB5zmRVaTfPNWZ9YW7lrhRRWrfGuPb5RsstB9NCheyDQqY8yKvG0vVoSrtZNPK+jE
- pLjlL6jvdKN72ct06RRxLIBNo
-X-Received: by 2002:a62:dd03:: with SMTP id w3mr13242304pff.76.1590855130499; 
- Sat, 30 May 2020 09:12:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhUuRJufX+9U9Z3D1UOhPxAuM7mLiTyWMs6lo13pgRWAXUAfvhCu2DHnHPg9DXYvl2qHtVzQ==
-X-Received: by 2002:a62:dd03:: with SMTP id w3mr13242275pff.76.1590855130102; 
- Sat, 30 May 2020 09:12:10 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id h35sm2576498pje.29.2020.05.30.09.12.06
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 30 May 2020 09:12:09 -0700 (PDT)
-From: Gao Xiang <hsiangkao@redhat.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49ZPPK101BzDqll
+ for <linux-erofs@lists.ozlabs.org>; Sun, 31 May 2020 13:46:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1590896790; bh=xdFQm7rd/nhil61+7Rio+EQwcxwC4Zi/mGglVzz3gx8=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=Rvh5lMmpUaD8uAWUyFKki/mW4vBHX1k814EhDGHaHyc/ymj4fuI4fpcdacIgZCNaezA2PsEr0g75CdfSOCPnIJ85wpMGzUn3kPNExft/H4wpdbwumM0bn6GLU8SBFzBxDPAarnlgWdQf20EeSSmyV8s0YSDM85NShCEIFR+bDUZ07sTjpxxVtWKaRpuNia+sii5GzjtIRsQV9tS4SIyjwLo6r6P63Jtvh8r3IlnUSiniEiXgbtS4bwYnJu7Bza71kTPMZeHPUCL9JUpsVzkMXJDd3xj4u0eCkoBdC2LBnuWOiSmpFmHBlLHQxVtWmatBeg0AOnurVpRHI/FjauFWWg==
+X-YMail-OSG: ujFmgdAVM1n91flBnJkCtl..Zg8O_Sq3JJB8gCP6y.b6uHo5TgKgiH1n5zne1Pi
+ DfLOFL.8LBaojYJfIOy7yURSjKDZcsNdMWZaYFOOVfTvlQVEFLkVxXy0ynmMOhVrQd3ZALss_YvR
+ RQ0mbnB6FMi03hkG3G2lL2xNw4mrIb9DGyt1hhtCg0p.pDig8hj6Z6owT0XUx2kzmhUAlpL3dCxw
+ GXl583xCSZdyeT3_qoSh25xn8W5yfISsFtXbRXFkucS8u5zeDab.qNpqiXoc73BhTzr05YxGwRmB
+ QT.7QH4rERO4_gwARjvYJZAPjk97xfZr80tZQZmyt1KHnQhO_Do3HGTI_isbEZzta5l8ARB7_6aw
+ _MQc6Skh8Be.tpghsPDdg2CjGTt1QuKI8y2VA5CD9GH6jp1UTIVGAHVI2b80d7sw2Q9nIr4APg9v
+ voL0w.no6enFeGVI2sIuXk63daEG7dlfb.idKO9kXGb0L1kSD68_89k0pDiF2tLLTfET3XuuGUF6
+ 23EO7hBr46Iyw.kxw4qb5et3s_4A1ts.fsvIsf6WIIUjO54Q3nYifP8D47Q1ZVmPdZOEhLJRMA5X
+ 7jytpslXcpCCiAa2rQOeye_rTDFUmwGsoQlAbwxJ59pwF4RCV16qpD2FxYDkubjfTHaX0MI.Czc0
+ yj5WX8YNVMW.Csmp2VGgXHItOG7tVxAvGD8al96F87CwAADt8i6PGBlwGySzmWHILYr6.fgZqyLO
+ mdEysZNZqYiCcWvjUgisL8JhqCWlSUfvgv0SiPh1.kMYewvDaWTqEGDYohSKAi6Uj6iJfu8iNx0.
+ uXUiCFdNQQ07cwLPpEsvXCqiyA0c8SGPcJOWf_tg9FXSQwkD2aWEdiSgRNrD3HgKs.i8A8eN5BjU
+ 0.umXEFy6AMoPxi7eoX.RvpNg_Gz3GklaDHhDD8FEWycJBRZ8NbB459kMrEQL.cRcAQ8Cbk.IwlR
+ K0rMhcBM8du5N4I_oAOeLwHnWQGCE2g9NHcnzl5M7x3_tT4ubrLbMFrTDfp9vemWdH7F8xTA0BW1
+ kFb_t2cmoh2xcK1LghlO1OXznco6tzMOx8oJhHqckfjuegeqjn30tFrH9XHiEa2TWr56fJ_0B5YG
+ wHdnTiJY04LK1yoEaE7_X7wnbFNQVzFHDbFTaD9AV3jdY3v4pvH5t1Mu.6CXcd7kj7ChzBktVLNd
+ 9wVLkFJgiFx_IkLQqFY4dfr93zCBYygduMDe5fPbaKYMDf3KbvMJWOSiHFjRMOkZM4L0LuadSvtL
+ uTOvy6In9W8vJjkT25.CW7f6geJqHd6fKLTod8.vJgKpN5GjmSvdpup6VaF18gdOmsUAEUR2YcjY
+ spwBnHZ6p3xrx2eJXTIGQX0YJDZS9o0POi1DZzSmLCNhIjmOwTHlC0_gwZ5IevM6iqBqohzZ8Ulw
+ 2Kv80f7Qe4LuAzQ3H1_e_om.XnJ4XxX4-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sun, 31 May 2020 03:46:30 +0000
+Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 42d72fc3fe221b04394a01fe05080935; 
+ Sun, 31 May 2020 03:46:27 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: support selinux file contexts
-Date: Sun, 31 May 2020 00:11:27 +0800
-Message-Id: <20200530161127.16750-1-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.18.1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+Subject: [PATCH] erofs-utils: enhance static linking for lz4 1.8.x
+Date: Sun, 31 May 2020 11:45:10 +0800
+Message-Id: <20200531034510.5019-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+References: <20200531034510.5019-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -91,483 +83,82 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Shung Wang <waterbird0806@gmail.com>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: hsiangkao@aol.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add --file-contexts flag that allows passing a selinux
-file_context file to setup file selabels.
+From: Gao Xiang <hsiangkao@redhat.com>
 
+Since LZ4_compress_HC_destSize is static linking only on lz4 < 1.9.0,
+but usually both lz4 static and dynamic library are available.
+
+Previously, -all-static is used in erofs-utils compilation for such
+lz4 versions, but it has conficts with libselinux linking. Use another
+workable way [1] I've found instead.
+
+[1] https://stackoverflow.com/questions/8045707/how-to-link-to-the-libabc-a-instead-of-libabc-so
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-prelimiary version.
-
- configure.ac           |  27 +++++++++
- include/erofs/config.h |  11 ++++
- include/erofs/xattr.h  |   3 +-
- lib/config.c           |  19 +++++++
- lib/exclude.c          |  12 +---
- lib/inode.c            |   3 +-
- lib/xattr.c            | 122 ++++++++++++++++++++++++++++++++---------
- man/mkfs.erofs.1       |   3 +
- mkfs/Makefile.am       |   4 +-
- mkfs/main.c            |  29 +++++++++-
- 10 files changed, 190 insertions(+), 43 deletions(-)
+ configure.ac     | 9 +++++----
+ mkfs/Makefile.am | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 870dfb9..5145971 100644
+index 5145971..0f40a84 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -67,6 +67,15 @@ AC_ARG_WITH(uuid,
-    [AS_HELP_STRING([--without-uuid],
-       [Ignore presence of libuuid and disable uuid support @<:@default=enabled@:>@])])
+@@ -188,7 +188,6 @@ test -z $LZ4_LIBS && LZ4_LIBS='-llz4'
  
-+AC_ARG_WITH(selinux,
-+   [AS_HELP_STRING([--with-selinux],
-+      [enable and build with selinux support @<:@default=no@:>@])],
-+   [case "$with_selinux" in
-+      yes|no) ;;
-+      *) AC_MSG_ERROR([invalid argument to --with-selinux])
-+      ;;
-+    esac], [with_selinux=no])
-+
- # Checks for libraries.
- # Use customized LZ4 library path when specified.
- AC_ARG_WITH(lz4-incdir,
-@@ -160,6 +169,20 @@ return 0;
-   LIBS="${saved_LIBS}"
-   CPPFLAGS="${saved_CPPFLAGS}"], [have_uuid="no"])
+ if test "x$enable_lz4" = "xyes"; then
+   test -z "${with_lz4_incdir}" || LZ4_CFLAGS="-I$with_lz4_incdir $LZ4_CFLAGS"
+-  test -z "${with_lz4_libdir}" || LZ4_LIBS="-L$with_lz4_libdir $LZ4_LIBS"
  
-+# Configure selinux
-+AS_IF([test "x$with_selinux" != "xno"], [
-+  PKG_CHECK_MODULES([libselinux], [libselinux])
-+  # Paranoia: don't trust the result reported by pkgconfig before trying out
-+  saved_LIBS="$LIBS"
-+  saved_CPPFLAGS=${CPPFLAGS}
-+  CPPFLAGS="${libselinux_CFLAGS} ${CPPFLAGS}"
-+  LIBS="${libselinux_LIBS} $LIBS"
-+  AC_CHECK_LIB(selinux, selabel_lookup, [
-+    have_selinux="yes" ], [
-+    AC_MSG_ERROR([libselinux doesn't work properly])])
-+  LIBS="${saved_LIBS}"
-+  CPPFLAGS="${saved_CPPFLAGS}"], [have_selinux="no"])
-+
- # Configure lz4
- test -z $LZ4_LIBS && LZ4_LIBS='-llz4'
+   saved_CPPFLAGS=${CPPFLAGS}
+   CPPFLAGS="${LZ4_CFLAGS} ${CPPFLAGS}"
+@@ -196,6 +195,7 @@ if test "x$enable_lz4" = "xyes"; then
+   AC_CHECK_HEADERS([lz4.h],[have_lz4h="yes"], [])
  
-@@ -199,6 +222,10 @@ if test "x$have_uuid" = "xyes"; then
-   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
+   if test "x${have_lz4h}" = "xyes" ; then
++    saved_LIBS="$LIBS"
+     saved_LDFLAGS=${LDFLAGS}
+     test -z "${with_lz4_libdir}" || LDFLAGS="-L$with_lz4_libdir ${LDFLAGS}"
+     AC_CHECK_LIB(lz4, LZ4_compress_destSize, [
+@@ -210,6 +210,7 @@ if test "x$enable_lz4" = "xyes"; then
+       ])
+     ], [AC_MSG_ERROR([Cannot find proper lz4 version (>= 1.8.0)])])
+     LDFLAGS=${saved_LDFLAGS}
++    LIBS="${saved_LIBS}"
+   fi
+   CPPFLAGS=${saved_CPPFLAGS}
+ fi
+@@ -234,11 +235,11 @@ if test "x${have_lz4}" = "xyes"; then
+   fi
+ 
+   if test "x${lz4_force_static}" = "xyes"; then
+-    LDFLAGS="-all-static ${LDFLAGS}"
++    LZ4_LIBS="-Wl,-Bstatic -Wl,-whole-archive -Xlinker ${LZ4_LIBS} -Wl,-no-whole-archive -Wl,-Bdynamic"
++    test -z "${with_lz4_libdir}" || LZ4_LIBS="-L${with_lz4_libdir} $LZ4_LIBS"
+   else
+-    test -z "${with_lz4_libdir}" || LZ4_LIBS="-R ${with_lz4_libdir} $LZ4_LIBS"
++    test -z "${with_lz4_libdir}" || LZ4_LIBS="-R${with_lz4_libdir} $LZ4_LIBS"
+   fi
+-  LIBS="$LZ4_LIBS $LIBS"
  fi
  
-+if test "x$have_selinux" = "xyes"; then
-+  AC_DEFINE([HAVE_LIBSELINUX], 1, [Define to 1 if libselinux is found])
-+fi
-+
- if test "x${have_lz4}" = "xyes"; then
-   AC_DEFINE([LZ4_ENABLED], [1], [Define to 1 if lz4 is enabled.])
- 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 2be05ee..825abaf 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -11,6 +11,11 @@
- 
- #include "defs.h"
- 
-+#ifdef HAVE_LIBSELINUX
-+#include <selinux/selinux.h>
-+#include <selinux/label.h>
-+#endif
-+
- enum {
- 	FORCE_INODE_COMPACT = 1,
- 	FORCE_INODE_EXTENDED,
-@@ -22,6 +27,9 @@ struct erofs_configure {
- 	bool c_dry_run;
- 	bool c_legacy_compress;
- 
-+#ifdef HAVE_LIBSELINUX
-+	struct selabel_handle *sehnd;
-+#endif
- 	/* related arguments for mkfs.erofs */
- 	char *c_img_path;
- 	char *c_src_path;
-@@ -39,5 +47,8 @@ void erofs_init_configure(void);
- void erofs_show_config(void);
- void erofs_exit_configure(void);
- 
-+void erofs_set_fs_root(const char *rootdir);
-+const char *erofs_fspath(const char *fullpath);
-+
- #endif
- 
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 3dff1ea..2e99669 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -42,7 +42,8 @@
- #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
- #endif
- 
--int erofs_prepare_xattr_ibody(const char *path, struct list_head *ixattrs);
-+int erofs_prepare_xattr_ibody(const char *path, mode_t mode,
-+			      struct list_head *ixattrs);
- char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
- int erofs_build_shared_xattrs_from_path(const char *path);
- 
-diff --git a/lib/config.c b/lib/config.c
-index cbbecce..ae21252 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -36,6 +36,25 @@ void erofs_show_config(void)
- 
- void erofs_exit_configure(void)
- {
-+#ifdef HAVE_LIBSELINUX
-+	if (cfg.sehnd)
-+		selabel_close(cfg.sehnd);
-+#endif
-+}
-+
-+static unsigned int fullpath_prefix;	/* root directory prefix length */
-+
-+void erofs_set_fs_root(const char *rootdir)
-+{
-+	fullpath_prefix = strlen(rootdir);
-+}
-+
-+const char *erofs_fspath(const char *fullpath)
-+{
-+	const char *s = fullpath + fullpath_prefix;
- 
-+	while (*s == '/')
-+		s++;
-+	return s;
- }
- 
-diff --git a/lib/exclude.c b/lib/exclude.c
-index 47b467d..73b3720 100644
---- a/lib/exclude.c
-+++ b/lib/exclude.c
-@@ -17,13 +17,6 @@
- static LIST_HEAD(exclude_head);
- static LIST_HEAD(regex_exclude_head);
- 
--static unsigned int rpathlen;		/* root directory prefix length */
--
--void erofs_exclude_set_root(const char *rootdir)
--{
--	rpathlen = strlen(rootdir);
--}
--
- static void dump_regerror(int errcode, const char *s, const regex_t *preg)
- {
- 	char str[512];
-@@ -120,10 +113,7 @@ struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
- 		s = buf;
- 	}
- 
--	s += rpathlen;
--	while (*s == '/')
--		s++;
--
-+	s = erofs_fspath(s);
- 	list_for_each_entry(r, &exclude_head, list) {
- 		if (!strcmp(r->pattern, s))
- 			return r;
-diff --git a/lib/inode.c b/lib/inode.c
-index 7114023..dff5f2c 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -827,7 +827,8 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 	struct dirent *dp;
- 	struct erofs_dentry *d;
- 
--	ret = erofs_prepare_xattr_ibody(dir->i_srcpath, &dir->i_xattrs);
-+	ret = erofs_prepare_xattr_ibody(dir->i_srcpath,
-+					dir->i_mode, &dir->i_xattrs);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 	dir->xattr_isize = ret;
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 1564016..698c237 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -186,6 +186,43 @@ static struct xattr_item *parse_one_xattr(const char *path, const char *key,
- 	return get_xattritem(prefix, kvbuf, len);
- }
- 
-+static struct xattr_item *erofs_get_selabel_xattr(const char *srcpath,
-+						  mode_t mode)
-+{
-+#ifdef HAVE_LIBSELINUX
-+	if (cfg.sehnd) {
-+		char *secontext;
-+		int ret;
-+		unsigned int len[2];
-+		char *kvbuf, *fspath;
-+
-+		ret = asprintf(&fspath, "/%s", erofs_fspath(srcpath));
-+		if (ret <= 0)
-+			return ERR_PTR(-ENOMEM);
-+
-+		ret = selabel_lookup(cfg.sehnd, &secontext, fspath, mode);
-+		free(fspath);
-+
-+		if (ret) {
-+			ret = -errno;
-+			erofs_err("cannot lookup selabel for %s", srcpath);
-+			/* secontext = strdup("u:object_r:unlabeled:s0"); */
-+			return ERR_PTR(ret);
-+		}
-+
-+		len[0] = sizeof("selinux") - 1;
-+		len[1] = strlen(secontext);
-+		kvbuf = malloc(len[0] + len[1] + 1);
-+		if (!kvbuf)
-+			return ERR_PTR(-ENOMEM);
-+
-+		sprintf(kvbuf, "selinux%s", secontext);
-+		return get_xattritem(EROFS_XATTR_INDEX_SECURITY, kvbuf, len);
-+	}
-+#endif
-+	return NULL;
-+}
-+
- static int inode_xattr_add(struct list_head *hlist, struct xattr_item *item)
- {
- 	struct inode_xattr_node *node = malloc(sizeof(*node));
-@@ -215,19 +252,48 @@ static int shared_xattr_add(struct xattr_item *item)
- 	return ++shared_xattrs_count;
- }
- 
--static int read_xattrs_from_file(const char *path, struct list_head *ixattrs)
-+static int erofs_xattr_add(struct list_head *ixattrs, struct xattr_item *item)
-+{
-+	if (ixattrs)
-+		return inode_xattr_add(ixattrs, item);
-+
-+	if (item->count == cfg.c_inline_xattr_tolerance + 1) {
-+		int ret = shared_xattr_add(item);
-+
-+		if (ret < 0)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static bool erofs_is_skipped_xattr(const char *key)
-+{
-+#ifdef HAVE_LIBSELINUX
-+	/* if sehnd is valid, selabels will be overridden */
-+	if (cfg.sehnd && !strcmp(key, XATTR_SECURITY_PREFIX "selinux"))
-+		return true;
-+#endif
-+	return false;
-+}
-+
-+static int read_xattrs_from_file(const char *path, mode_t mode,
-+				 struct list_head *ixattrs)
- {
--	int ret = 0;
--	char *keylst, *key;
- 	ssize_t kllen = llistxattr(path, NULL, 0);
-+	int ret;
-+	char *keylst, *key, *klend;
-+	unsigned int keylen;
-+	struct xattr_item *item;
- 
- 	if (kllen < 0 && errno != ENODATA) {
- 		erofs_err("llistxattr to get the size of names for %s failed",
- 			  path);
- 		return -errno;
- 	}
-+
-+	ret = 0;
- 	if (kllen <= 1)
--		return 0;
-+		goto out;
- 
- 	keylst = malloc(kllen);
- 	if (!keylst)
-@@ -246,36 +312,38 @@ static int read_xattrs_from_file(const char *path, struct list_head *ixattrs)
- 	 * attribute keys. Use the remaining buffer length to determine
- 	 * the end of the list.
- 	 */
--	key = keylst;
--	while (kllen > 0) {
--		unsigned int keylen = strlen(key);
--		struct xattr_item *item = parse_one_xattr(path, key, keylen);
-+	klend = keylst + kllen;
-+	ret = 0;
-+
-+	for (key = keylst; key != klend; key += keylen + 1) {
-+		keylen = strlen(key);
-+		if (erofs_is_skipped_xattr(key))
-+			continue;
- 
-+		item = parse_one_xattr(path, key, keylen);
- 		if (IS_ERR(item)) {
- 			ret = PTR_ERR(item);
- 			goto err;
- 		}
- 
--		if (ixattrs) {
--			ret = inode_xattr_add(ixattrs, item);
--			if (ret < 0)
--				goto err;
--		} else if (item->count == cfg.c_inline_xattr_tolerance + 1) {
--			ret = shared_xattr_add(item);
--			if (ret < 0)
--				goto err;
--			ret = 0;
--		}
--		kllen -= keylen + 1;
--		key += keylen + 1;
-+		ret = erofs_xattr_add(ixattrs, item);
-+		if (ret < 0)
-+			goto err;
- 	}
--err:
- 	free(keylst);
-+out:
-+	item = erofs_get_selabel_xattr(path, mode);
-+	if (item)
-+		ret = erofs_xattr_add(ixattrs, item);
- 	return ret;
- 
-+err:
-+	free(keylst);
-+	return ret;
- }
- 
--int erofs_prepare_xattr_ibody(const char *path, struct list_head *ixattrs)
-+int erofs_prepare_xattr_ibody(const char *path, mode_t mode,
-+			      struct list_head *ixattrs)
- {
- 	int ret;
- 	struct inode_xattr_node *node;
-@@ -284,7 +352,7 @@ int erofs_prepare_xattr_ibody(const char *path, struct list_head *ixattrs)
- 	if (cfg.c_inline_xattr_tolerance < 0)
- 		return 0;
- 
--	ret = read_xattrs_from_file(path, ixattrs);
-+	ret = read_xattrs_from_file(path, mode, ixattrs);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -345,16 +413,16 @@ static int erofs_count_all_xattrs_from_path(const char *path)
- 			goto fail;
- 		}
- 
--		ret = read_xattrs_from_file(buf, NULL);
--		if (ret)
--			goto fail;
--
- 		ret = lstat64(buf, &st);
- 		if (ret) {
- 			ret = -errno;
- 			goto fail;
- 		}
- 
-+		ret = read_xattrs_from_file(buf, st.st_mode, NULL);
-+		if (ret)
-+			goto fail;
-+
- 		if (!S_ISDIR(st.st_mode))
- 			continue;
- 
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index d47207a..891c5a8 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -60,6 +60,9 @@ You may give multiple `--exclude-path' options.
- Ignore files that match the given regular expression.
- You may give multiple `--exclude-regex` options.
- .TP
-+.BI "\-\-file-contexts=" file
-+Specify a \fIfile_contexts\fR file to setup / override selinux labels.
-+.TP
- .B \-\-help
- Display this help and exit.
- .SH AUTHOR
+ AC_CONFIG_FILES([Makefile
 diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index 9ce06d6..97ba148 100644
+index 97ba148..ecc468c 100644
 --- a/mkfs/Makefile.am
 +++ b/mkfs/Makefile.am
-@@ -3,8 +3,8 @@
- 
- AUTOMAKE_OPTIONS = foreign
- bin_PROGRAMS     = mkfs.erofs
--AM_CPPFLAGS = ${libuuid_CFLAGS}
-+AM_CPPFLAGS = ${libuuid_CFLAGS} ${libselinux_CFLAGS}
+@@ -6,5 +6,5 @@ bin_PROGRAMS     = mkfs.erofs
+ AM_CPPFLAGS = ${libuuid_CFLAGS} ${libselinux_CFLAGS}
  mkfs_erofs_SOURCES = main.c
  mkfs_erofs_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
--mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libuuid_LIBS}
-+mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libuuid_LIBS} ${libselinux_LIBS}
+-mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libuuid_LIBS} ${libselinux_LIBS}
++mkfs_erofs_LDADD = ${libuuid_LIBS} $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} ${LZ4_LIBS}
  
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 940d4e8..7de929f 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -33,6 +33,9 @@ static struct option long_options[] = {
- 	{"help", no_argument, 0, 1},
- 	{"exclude-path", required_argument, NULL, 2},
- 	{"exclude-regex", required_argument, NULL, 3},
-+#ifdef HAVE_LIBSELINUX
-+	{"file-contexts", required_argument, NULL, 4},
-+#endif
- 	{0, 0, 0, 0},
- };
- 
-@@ -60,6 +63,9 @@ static void usage(void)
- 	      " -T#               set a fixed UNIX timestamp # to all files\n"
- 	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
- 	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
-+#ifdef HAVE_LIBSELINUX
-+	      " --file-contexts=X specify a file contexts file to setup selinux labels\n"
-+#endif
- 	      " --help            display this help and exit\n"
- 	      "\nAvailable compressors are: ", stderr);
- 	print_available_compressors(stderr, ", ");
-@@ -198,6 +204,27 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return opt;
- 			}
- 			break;
-+
-+#ifdef HAVE_LIBSELINUX
-+		case 4: {
-+			struct selinux_opt seopts[] = {
-+				{ .type = SELABEL_OPT_PATH, .value = optarg }
-+			};
-+
-+			if (cfg.sehnd) {
-+				erofs_info("ignore duplicated file contexts \"%s\"",
-+					   optarg);
-+				break;
-+			}
-+			cfg.sehnd = selabel_open(SELABEL_CTX_FILE, seopts, 1);
-+			if (!cfg.sehnd) {
-+				erofs_err("failed to open file contexts \"%s\"",
-+					  optarg);
-+				return -EINVAL;
-+			}
-+			break;
-+		}
-+#endif
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -392,7 +419,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	erofs_show_config();
--	erofs_exclude_set_root(cfg.c_src_path);
-+	erofs_set_fs_root(cfg.c_src_path);
- 
- 	sb_bh = erofs_buffer_init();
- 	if (IS_ERR(sb_bh)) {
 -- 
-2.18.1
+2.24.0
 
