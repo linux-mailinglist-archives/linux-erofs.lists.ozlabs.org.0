@@ -1,77 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC61A1F18D8
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jun 2020 14:35:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id D52421F19B0
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jun 2020 15:09:43 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49gXlD4VfJzDqSZ
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jun 2020 22:35:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49gYW86mMkzDqSZ
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jun 2020 23:09:40 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1591619704;
-	bh=QwUV49BdVat/vIjCrZRafVEK6byBUHFK7Inc/rUoHsU=;
+	s=201707; t=1591621780;
+	bh=3eeTwaM44d3U7hDoFyb7tn5MS7M8G6fxU+9ytatOfIU=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Wrp7sA8Lj/Q6/VkWVKrj1CFM+JZis1yglh7098/eFWyCtLdsw65X++pdjjMP0JSkM
-	 UM0Ae9wwr6RyDIhCCaHY+qFATLTn92grGGPZp+lQR1KflmXGpoLWLT3hM0G1rRc7Uq
-	 KmhsZ46J+9FCLVHO1EIFbXGLXhrg/zne01oACJkjog8fp42kQFjiz8FLeI1ByZLUkS
-	 mMi32XpBDBDXjAnDO7pPlTCNiNcXJlvKSVPBsKDLCbgSICCufVWabepATOwUzNBwxD
-	 3riU1m4uaAlIqy+0mrNhBoyNu4CZvGn52QMsP/XOjHsE6t5b5y83eB71GGo6whReM0
-	 0SK1Jmz+MkD7Q==
+	b=ib3lW7BP7UU683gT5wJaZOHnX4S7yJ7V67lkdezyUEGNOM8lUqh6hVisxyPll7Xfj
+	 n7yVsYrL0vZr4LTAPnzOmmJrgZnw4ObvsSN0czzvKmROnqz4j6h7QvunoAcg/jkTP5
+	 /lq+AEluu8UCuH1Eek4Gt35C5GJdXyZ8iN/nWJ1C6vfuGGOePbV5sxLScViFx4T4P7
+	 pk99sqOUKrzQ4mJy2zViEYUIudi4XKEtqpekQ67bdJotwCCM38zStIodDXF8iOEMUt
+	 vBHgDF0MnawnoUaW0s4N21UZ7R22u8x7g8tnm1jJkfulgsbSVdKPOy6wT+hZ4AB2r8
+	 LQXcpLTSNdaZQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.146; helo=sonic309-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.30; helo=sonic316-54.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=TVit5wXo; dkim-atps=neutral
-Received: from sonic309-20.consmr.mail.gq1.yahoo.com
- (sonic309-20.consmr.mail.gq1.yahoo.com [98.137.65.146])
+ header.s=a2048 header.b=hPnhVFph; dkim-atps=neutral
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com
+ (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49gXkv0RyfzDqLF
- for <linux-erofs@lists.ozlabs.org>; Mon,  8 Jun 2020 22:34:37 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49gYVm5JwTzDqQr
+ for <linux-erofs@lists.ozlabs.org>; Mon,  8 Jun 2020 23:09:17 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1591619668; bh=z0VIplKWJXByiJYjfCchhh4yHI1ioCnTj5vn5S4PkA8=;
+ t=1591621749; bh=9kz0yLmoR18jKPPr8McFb/GZ/19y2taFJuUY1P25cpU=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=TVit5wXolhvxgZd05dVILw+iP8eet5ocAKih58MZbmuNIsPHJUanHIkXgIelKpWmMjAm3PBMKjO6lhBq+v7rLlcBb1+CmolvtIYtfUmk2ME+LbOOrMmoLWokmQvNOhJjlEjeNyYbD5TMTMwuMlNvbI6ic4A7yz3iSFRgdM+xHgIV13PAX3CkG0lgAGeJmoIh3Ymp0tb2F/O4h9o8av7rWPY4uRJYLkCzTNk8CJQpc8zWwxF92iij7hViWTmQIoGnxbh/oqi3zNWtZf0m06f29AtxMOnOcDo3EI8O9blg0kpMp954nEWnutouV3ebHB1rQFuoRDk7AxB3EtSNQ+Aimg==
-X-YMail-OSG: MhCzv7AVM1kCDMFKPE8NNtJCknhuXQi7fyjt41aMLUm8qQ8MnJ3JHuJ61AJO_rP
- wGr39l8t6FWMqHZ7yDZPtjgMZYfop3KR9mOqdRymlSu7LMNM9KiG7k1aXaCpQHvvEQtEhPl1PrxX
- K.ON2N.dGKTFDRZRC518dg62RDvaEe5_q1VUkqn55Jwfno4wSeRTovgh9PDZeh22lOIXw96G2aJO
- 8pkaRefZJn2dJdZ27yv_s_ImCBTsB4IGLXD50glm_XZBNgnKsSk0H9._.mM5a0sthFqro6Pcrs4M
- 9eCDVgRRJEsQDiCC2UMplDZFQrNWzCA0_PSFSutrB9YmARcoSs9HBJCSfXtaGnbvUAR1HVE18Vew
- iQ8nO8D3c3ad41DuuNCvJKvuJ6XezJCeLwSh1nJ7d90GiCeeTShC4UuVc.62X2sVRSNrBSL_uf3T
- MeUcavXoH0fAvEwVVZyfKT9yzbEAVoRE.rme3OiLKGUvCnzDEauNtisJarXmtdVLkjWUVPN6V0bs
- KL9s87BpTyuKbyxgjZD4lLjnsMBNyHCwjEVEv009Dbgz7TM6CdzyTFl.YoPnnivQuvaxujmHy1rn
- tEtrd30K5fhUop5fZ84aQmwQm.z09D8wyNgLKuqTF4rWef_aWxIQlteEC2NuxT6p1C1Ev10xuNtb
- S625siUcA.1QbH5rM0jZiE9ajvu15V9zjTd5m4m2r4m71g6VNKHgEJ70Ds2ouHOJQWGtmemIsrZY
- LQ_PX9t3_2sIQnTWKSvZKAoTk10VyDagMZ6fTEnfj3U75gmfy6nNU9Y7norHPGRTwiq_MKMoIynD
- XLmL1vk4QlbGIiYBhUEpZoWuOnySOUpR7CV7_.e0zHifAR.1vzW.HSSn5jtqen6Rq7KIC.ufrQt9
- 5VF8sS5jdeSB_0DZ02ad6n5yZHouOKhKxf5d12tMKkxJ4myJ0MNIjZzENYNdzs0N3VsfMuO5Sf1v
- iiKjjfvQO47XyreIBHsx_YDt78kqDL3RWHEKTqaBGyeYWAnZ696nAoLYPMKQ5YIUIfP38J5YQUPX
- 1QMBJUk.THzg6mrOkpqh4Ex0RuWjhVt3s37Zryh3eUpMBE1SJ9oY6JRp1hBDYz8WoHhC6LMzoOF5
- dV0_JKOGWa.q3ePwd5uAkwb7czfN21rbK4hV7ZL1fDcMUO9.BhUqgHem2T.oCZWUg7EmE477PPZJ
- L5k2tjuuZLS35Eyk0kOprIcs4bSgWH2vgMq99ultRchtsu6f3Rfv8mbKBsSxEaUSX4lEJktLHuw1
- b80Z1EVIaAF50VIkLr1mEnS5FkLytdBf4V0oy7NAHoAxXG..D4webvjtiLBJGC.8BqTy1ZdiGU4s
- EBmytjDnRnXB28_QFLH4LajSXzPIniJrkhdxJbzMUO0j0JXEjkBR9rxGzH59rq3PRP4m1Y3AVrbf
- pF2vu5RvSvlSurFBty3GghJj7ww--
+ b=hPnhVFphNnwt5UaEIj1zw1jqlBTJNZzo+oumBUWf3NxXDEx6Ftp3CiOMkJaCSBHB+Fljrwtv50fTLvg4b6g3VTvfYRJVnVuWimn/6aPM2MBjXneyATNkoyITl38jzth8pZFae62HGO5yZrIieTobVXpVHGASwxVvcqSzWWPxHYE1xECiij6vCq8oRpQhrH7k7xUGOlbyTu1tqb7p5ey5+VmJfQxisqnuDaVeqr4fhHavjO2eBt2sIag4CFy9laJOhcT5bTSfcrpZQ9a6akVNEttsouKvxy05V8NONeZ7ZUySTKCyc2I/+D0DVn/dy/ekqY2l5iQ657stKCdb54X/+A==
+X-YMail-OSG: SA5PxMsVM1nyCJFNJ1BtpnnQO351i.RObRt1JXOLDtm40UqjeZKbofTxWmYbhQa
+ mKvZzPQsfngA4aG0805cvMwfodUwYMmcofnfpKW54zUSxqw.5Nq_O8tZlEnS3IxZmtwceZQq4_Fw
+ 9cFW8gUkS5vuUwroACsqv3a8zp1HXVr__cZSNGHvm8AGZz81VzYN37xbV6arWb_4po05LYStLrCL
+ vXmQ_1k1IC5XEL48hwLjQloUedEyAV.zGZeffxIosJT_lSuiqeACbobGvdiBh_8hw4VYcHqJFCPl
+ qvmCTidbIyOO_rOdQH7C0lIGA7qTzgsoAACUYCpyemdZRkW7dXau_ZKo24w6O5uicQtqxUxfjM_z
+ ajvzkphlvW2qnLNFaHa9x1vVaPzvymGjB0GPq063DlKmccMy8IuS_2oW2l57L56Gra_yUoVt2JEH
+ eOLmRIwXMwx6TsSNebE7QV_8DoggDclYfVXk.eUtMfTOZZqxIMt4nKgCcyTAxAK2rE4aUdQaVR.w
+ q31FXPb_iLfsvF63zywhfw_Shzgyx7N0ug_lsSvFmaRVx6CRQxVBuWppdxxeP9hGicv_yHWabPdO
+ nfOxH.z6y.1WUK1d.19Bg2OxOIZDmvEUmdUsp3ePsCMVpB9qx9qBwOmjQN5X0qZCBbHZTv7Ydva1
+ V3l7qsXhdkvqEkd6eYaPMKyZzeGzzw1hwfAHZbwjT0HGO.iYgyv.HwTkIoLQXWBmFp0bxak.qZAU
+ aIY6UuAssiUWm8dgxhBtt1.2idbGJo4TtfxR4RrTm8DZlS_fY97nkkASPGsb8eKIiqcGKHZRZhXZ
+ KVQJv7eWyEFyKcozZdOz7gmRUTZuh7ccOZHWh4Eqg62DWoOcQmL0a.Rl.A8QQzc.r4iciX4xINDf
+ XeRHbYSdizMbmNiWLOnhoe5Xz4tDjf6XmI1VSLJ08ZUXDTwzIKIKRNHxL6YwqEpy9GO7vBKFA_F3
+ XZ_J0KNbO_cV5SW3zwNyaAkq4oSpJ_kLZT2k73LihbBrItwt7QO.G.b8pPH1G_SQbHD7EVPVE7we
+ .kcTHoZxLya.baR0.hpp9vgpLdyQx2svLa6Qu7SMVf3piz3agF3s2Hi2rZ.wBKmUZJPvSaT9584O
+ mhbf.gxuoPBDoZCb38pe_NFPLhSTG99Wm7zjJcYs.bzfKbwBQlHWM7yHmSe8FqM4p4cvkD5y9G_3
+ snIHxsEnZnAYU4tdDcp4aT3L.1ruBe5h37mR4jtgxB80EFZkK4iKB7joeg6XosTdVCgIlYjpmzhT
+ b3TY7gdKwC8WiJ6WjGl1_muDXUbRVmLzisdQibK49r0PYIjpEzWdDh.7.1ZrMUQ3ZdC5V5W0SD_G
+ vsfJ47OwPtT2GC_Ssf5XeIKMwAiT8eSQ9DLVbFiewaEmpq0hb9.AwNy3ZlorBQA2I.sX0.x02N8V
+ kY_99I7MTEq5yxSETJLQPT2RZqMjjRgeMtro-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Mon, 8 Jun 2020 12:34:28 +0000
-Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID d565ec533e9d335b9d38e5c07e052fbd; 
- Mon, 08 Jun 2020 12:34:27 +0000 (UTC)
+ sonic316.consmr.mail.gq1.yahoo.com with HTTP; Mon, 8 Jun 2020 13:09:09 +0000
+Received: by smtp420.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID d16a2fe4c7a7f9ab2a43b7c4181db109; 
+ Mon, 08 Jun 2020 13:09:06 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3] erofs-utils: support selinux file contexts
-Date: Mon,  8 Jun 2020 20:34:14 +0800
-Message-Id: <20200608123414.12572-1-hsiangkao@aol.com>
+Subject: [PATCH v4] erofs-utils: support selinux file contexts
+Date: Mon,  8 Jun 2020 21:08:54 +0800
+Message-Id: <20200608130854.16953-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200606081752.27848-1-hsiangkao@redhat.com>
-References: <20200606081752.27848-1-hsiangkao@redhat.com>
+In-Reply-To: <20200608123414.12572-1-hsiangkao@aol.com>
+References: <20200608123414.12572-1-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -100,8 +100,8 @@ file_context file to setup file selabels.
 Reviewed-and-tested-by: Li Guifu <bluce.lee@aliyun.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-changes since v2:
- - fix variable "secontext" memory leak in erofs_get_selabel_xattr.
+v4: freecon() should be used instead of free(). (although
+    they're equivalent, but that is what manpage prefers...)
 
  configure.ac           |  27 +++++++++
  include/erofs/config.h |  21 +++++++
@@ -324,7 +324,7 @@ index 7114023..dff5f2c 100644
  		return ERR_PTR(ret);
  	dir->xattr_isize = ret;
 diff --git a/lib/xattr.c b/lib/xattr.c
-index 1564016..543ed71 100644
+index 1564016..aa614f6 100644
 --- a/lib/xattr.c
 +++ b/lib/xattr.c
 @@ -186,6 +186,49 @@ static struct xattr_item *parse_one_xattr(const char *path, const char *key,
@@ -363,11 +363,11 @@ index 1564016..543ed71 100644
 +		len[1] = strlen(secontext);
 +		kvbuf = malloc(len[0] + len[1] + 1);
 +		if (!kvbuf) {
-+			free(secontext);
++			freecon(secontext);
 +			return ERR_PTR(-ENOMEM);
 +		}
 +		sprintf(kvbuf, "selinux%s", secontext);
-+		free(secontext);
++		freecon(secontext);
 +		return get_xattritem(EROFS_XATTR_INDEX_SECURITY, kvbuf, len);
 +	}
 +#endif
