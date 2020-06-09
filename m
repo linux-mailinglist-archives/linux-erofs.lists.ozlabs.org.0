@@ -2,63 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEDD31F1C68
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jun 2020 17:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 131771F3F2B
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Jun 2020 17:23:39 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49gd5l19JtzDqQC
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Jun 2020 01:51:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49hDRD39QfzDqZw
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2020 01:23:36 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1591631483;
-	bh=t74BqlJEphsa6PgNnT+foL3uaPmz3htvhZ33JzMlFGw=;
-	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=J7l2/VJe7XyircxYgrHv5Q6/KaQfNMRnJHd/7odOePhqKTWJe739p56uMXeX9Br6C
-	 N066/3XTPz5HSwSnDw5dLT6ZKnHI3MlHIn5qmxNzzQn2nTANJ/wFlQ2LRnJSs2V9C2
-	 HhdHvVUbMeE2P7gjgiYN/CcV92vIojErl/t5xDVtawg+9AGsk92uupEHh7ayNbk5s5
-	 WC1A36Wn1VK7yR0bXUfKmqycicKbkh/NUBDKy/K5KNx6cCfrjU4JQouxzXe38mcEx9
-	 bFlN+357jjHzNYh0vlHhTM5VqTQZV2OeG05nrg9SqEOhU+6kagYilrJ8GqCRab+40x
-	 oT23seAdej0yw==
+	s=201707; t=1591716216;
+	bh=tHAyYRsZnwHpziX5HOydpaoroRXmqLftMDS8OnhZ1W4=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=KgwL2JIJVDc1aFQfvsGKFS9iENQ2ndVqAAiHGbXb+KkNJeC4ZJM5oytqMU30LS0f1
+	 nNG7yrTOt4lMMiuA2EcWp7cE3goupepv5GoNvCKKyyGbxvt/SB/DSxpLIj9RrGwzNW
+	 Q6uOAYfNw/AOuHSw/YVYjU7daqx2mZ0KmH/E4EmfI86o8LRJttIhzFXlEqFW9ZsHr0
+	 P4+u0hVePJ/pLZKBNMh4GQ0dOpI/M+BmFVzcnlPAMt8KlXQvb5TlHRmI9PXHEJmCUJ
+	 oZighC9AA1k0DcTSsSM+N1fq+wF9qFVkytfXYTW2IGzQIZZvFdpjbw2AZIj8PMkolo
+	 1lwOXeYb8ykPA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.15;
- helo=out30-15.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.16;
+ helo=out30-16.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
  header.from=aliyun.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=XmxX6NdU; dkim-atps=neutral
-Received: from out30-15.freemail.mail.aliyun.com
- (out30-15.freemail.mail.aliyun.com [115.124.30.15])
+ header.s=s1024 header.b=RZRHj+WP; dkim-atps=neutral
+Received: from out30-16.freemail.mail.aliyun.com
+ (out30-16.freemail.mail.aliyun.com [115.124.30.16])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49gd5d0BzNzDqQ3
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Jun 2020 01:51:16 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49hDR214DwzDqSH
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jun 2020 01:23:25 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1591631461; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=V7pGDZZNWfmh4/bT4QOGS3xGxv0BXfS0Lztp9yNOqi4=;
- b=XmxX6NdUCyzmrD8/TXGfI69L8Ji28C6o6BjGcsK1KwDlbSivC6sP6qeIfApmCdkyNgwJdJ4a4P2cIj29LRFX43ABSDViccxDYDSAKdOra8tkWD9W0b7KVNIgfsPd1IgSLcJvmkFds6bRn2Bv4V3ARfqLb5eP3LtpOr1m03vJmA8=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1456455|-1; CH=green; DM=|CONTINUE|false|;
- DS=CONTINUE|ham_regular_dialog|0.00767264-0.00150987-0.990817;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e04357; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=6; RT=6; SR=0; TI=SMTPD_---0U.02M1C_1591631460; 
-Received: from 192.168.3.5(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0U.02M1C_1591631460) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 08 Jun 2020 23:51:01 +0800
-Subject: Re: [PATCH v4] erofs-utils: support selinux file contexts
-To: hsiangkao@aol.com, linux-erofs@lists.ozlabs.org
-References: <20200608123414.12572-1-hsiangkao@aol.com>
- <20200608130854.16953-1-hsiangkao@aol.com>
-Message-ID: <9034e0a9-776a-4ca8-aac0-10b18dd5afa5@aliyun.com>
-Date: Mon, 8 Jun 2020 23:51:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200608130854.16953-1-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+ t=1591716198; h=From:To:Subject:Date:Message-Id;
+ bh=FYfUO5xzIXLR8MXFKCsJ8WsDzhKfb/E7wuzuJT5IOzE=;
+ b=RZRHj+WPX4USpi0qIo5dXxPEmc4FzRrb7bL2PcFg1JrdG074dyQY7kn3QuobtTt4VpX1vYAeMGpYKS6y1T2zVnSd1Qjucr6kwiTsJwodcSumeCl9Y56nPh3pqooLqHRJSzTh50RgXMB0MFI6h4CkVXDrf+S+gbvzNG3tk8r5PoM=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.07357813|-1; CH=green;
+ DM=|CONTINUE|false|; DS=CONTINUE|ham_alarm|0.175732-0.000525378-0.823743;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e04394; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=3; RT=3; SR=0; TI=SMTPD_---0U.6LfUt_1591716194; 
+Received: from localhost(mailfrom:bluce.lee@aliyun.com
+ fp:SMTPD_---0U.6LfUt_1591716194) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 09 Jun 2020 23:23:15 +0800
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: add a compress limit to source input stream
+Date: Tue,  9 Jun 2020 23:22:57 +0800
+Message-Id: <20200609152257.4305-1-bluce.lee@aliyun.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,25 +62,94 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li GuiFu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li GuiFu <bluce.lee@aliyun.com>
+From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Li Guifu <bluce.lee@aliyun.com>
+Cc: Li Guifu <bluce.lee@aliyun.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+It cause a differential amplification when create binary diff
+image for upgrade. Give a limits to cut compress, so the amplification
+will be limit in the given size.
 
-On 2020/6/8 21:08, hsiangkao@aol.com wrote:
-> From: Gao Xiang <hsiangkao@redhat.com>
-> 
-> Add --file-contexts flag that allows passing a selinux
-> file_context file to setup file selabels.
-> 
-> Reviewed-and-tested-by: Li Guifu <bluce.lee@aliyun.com>
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> ---
-> v4: freecon() should be used instead of free(). (although
->     they're equivalent, but that is what manpage prefers...)
-> 
-It looks good
-Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
-Tested-by: Li Guifu <bluce.lee@aliyun.com>
+Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
+---
+ include/erofs/internal.h |  1 +
+ lib/compress.c           | 15 ++++++++++++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 41da189..367c0b0 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -41,6 +41,7 @@ typedef unsigned short umode_t;
+ 
+ #define EROFS_ISLOTBITS		5
+ #define EROFS_SLOTSIZE		(1U << EROFS_ISLOTBITS)
++#define EROFS_COMPR_LIMITS	(1024U * EROFS_BLKSIZ)
+ 
+ typedef u64 erofs_off_t;
+ typedef u64 erofs_nid_t;
+diff --git a/lib/compress.c b/lib/compress.c
+index 6cc68ed..9fe1428 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -150,7 +150,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+ {
+ 	struct erofs_compress *const h = &compresshandle;
+ 	unsigned int len = ctx->tail - ctx->head;
+-	unsigned int count;
++	unsigned int count = 0;
+ 	int ret;
+ 	static char dstbuf[EROFS_BLKSIZ * 2];
+ 	char *const dst = dstbuf + EROFS_BLKSIZ;
+@@ -159,7 +159,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 		bool raw;
+ 
+ 		if (len <= EROFS_BLKSIZ) {
+-			if (final)
++			if (!count || final)
+ 				goto nocompression;
+ 			break;
+ 		}
+@@ -392,7 +392,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ {
+ 	struct erofs_buffer_head *bh;
+ 	struct z_erofs_vle_compress_ctx ctx;
+-	erofs_off_t remaining;
++	erofs_off_t remaining, comprlimits;
+ 	erofs_blk_t blkaddr, compressed_blocks;
+ 	unsigned int legacymetasize;
+ 	int ret, fd;
+@@ -422,6 +422,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	ctx.head = ctx.tail = 0;
+ 	ctx.clusterofs = 0;
+ 	remaining = inode->i_size;
++	comprlimits = EROFS_COMPR_LIMITS;
+ 
+ 	while (remaining) {
+ 		const u64 readcount = min_t(u64, remaining,
+@@ -434,11 +435,19 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 		}
+ 		remaining -= readcount;
+ 		ctx.tail += readcount;
++		comprlimits -= readcount;
+ 
++compr_continue:
+ 		/* do one compress round */
+ 		ret = vle_compress_one(inode, &ctx, false);
+ 		if (ret)
+ 			goto err_bdrop;
++		if (!comprlimits) {
++			if (ctx.head != ctx.tail)
++				goto compr_continue;
++			ctx.clusterofs = 0;
++			comprlimits = EROFS_COMPR_LIMITS;
++		}
+ 	}
+ 
+ 	/* do the final round */
+-- 
+2.17.1
+
