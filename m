@@ -1,58 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9943C1F5A02
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2020 19:17:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id C460E1F8CCB
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2020 06:01:20 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49htwY4dgvzDqlV
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Jun 2020 03:17:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1591809469;
-	bh=wyBe8SWYiQXrM+Pfciz6JIxBK4q1b1+aEsgW4YtWsgg=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=CZn+Lc0LDAD7/A4qnY9dS61nE+dYEhQETb0vpfbZki/YxhwmG+Vc566TdqMgTV3XX
-	 vuwfPvKL4teflWICPPabf7Ul9ggFqcaxOECN4Zt6W/oV4fd1ZCddRdqvsZ6TovXk+p
-	 h2zw/1zpkg4ELCyhqwfYHWJ/m8IG+ikpJVTN9uhUjHV4NkX2m72lnh97TPQB2tXOnh
-	 gv41nseek6jv61dfWpo0Gt+VBQNdnQ9/GcexlcnmmJlZ9ut3fC2l3Az17aFnd+JBnN
-	 eypbVJ+rzifFBuIm0Zr6sDFvHkfvSZMjRJBN3iJRR4xCTw3tfhY+W1j2ukM0SQ8u1g
-	 7WZ0MGslHTKww==
+	by lists.ozlabs.org (Postfix) with ESMTP id 49ld194Qw3zDqRt
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2020 14:01:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.5;
- helo=out30-5.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
- header.from=aliyun.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=bBbQnwrM; dkim-atps=neutral
-Received: from out30-5.freemail.mail.aliyun.com
- (out30-5.freemail.mail.aliyun.com [115.124.30.5])
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=huawei.com;
+ envelope-from=yanaijie@huawei.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga06-in.huawei.com [45.249.212.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49htwM212QzDqjW
- for <linux-erofs@lists.ozlabs.org>; Thu, 11 Jun 2020 03:17:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1591809452; h=From:To:Subject:Date:Message-Id;
- bh=Biy5C8CKWXJhiFJq1K4bmwKkrKTvxSVxWKs3+E8lbp8=;
- b=bBbQnwrMcknUNNfvMhr7kk3YpSKWyBGajBT+DZxAqK/CoVA/XJFExugxpP+INAv7tQI8Cez1Y7HHncT3xZARAf4wOLmluPM9Z9nF5fqwDGjcP3neTf0qG2HkDNSVJW3OZCd+FkgtGUaXe2EDVwASv4hCbpbkFFUBnklYaC9QJ6s=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.07357959|-1; CH=green;
- DM=|CONTINUE|false|;
- DS=CONTINUE|ham_system_inform|0.0305189-0.00170529-0.967776;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e04407; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=3; RT=3; SR=0; TI=SMTPD_---0U.CCo97_1591809451; 
-Received: from localhost(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0U.CCo97_1591809451) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 11 Jun 2020 01:17:31 +0800
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3] erofs-utils: introduce segment size to limit the max input
- stream
-Date: Thu, 11 Jun 2020 01:17:28 +0800
-Message-Id: <20200610171728.7303-1-bluce.lee@aliyun.com>
-X-Mailer: git-send-email 2.17.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49ld111CZgzDqQY
+ for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2020 14:01:08 +1000 (AEST)
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id BDD5E5499FB0A399A876;
+ Mon, 15 Jun 2020 12:00:36 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
+ 12:00:28 +0800
+From: Jason Yan <yanaijie@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] erofs: Eliminate usage of uninitialized_var() macro
+Date: Mon, 15 Jun 2020 12:01:41 +0800
+Message-ID: <20200615040141.3627746-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,92 +48,73 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li Guifu <bluce.lee@aliyun.com>
-Cc: Li Guifu <bluce.lee@aliyun.com>
+Cc: Jason Yan <yanaijie@huawei.com>, Kees Cook <keescook@chromium.org>,
+ kernel-hardening@lists.openwall.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Limit the max input stream size by adding segment compression
-(e.g. 4M segment size), it will benefits:
- - more friendly to block diff (and more details about this);
- - it can also be used for parallel compression in the same file.
+This is an effort to eliminate the uninitialized_var() macro[1].
 
-Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
+The use of this macro is the wrong solution because it forces off ANY
+analysis by the compiler for a given variable. It even masks "unused
+variable" warnings.
+
+Quoted from Linus[2]:
+
+"It's a horrible thing to use, in that it adds extra cruft to the
+source code, and then shuts up a compiler warning (even the _reliable_
+warnings from gcc)."
+
+The gcc option "-Wmaybe-uninitialized" has been disabled and this change
+will not produce any warnnings even with "make W=1".
+
+[1] https://github.com/KSPP/linux/issues/81
+[2] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- include/erofs/config.h |  1 +
- lib/compress.c         | 11 +++++++++++
- lib/config.c           |  1 +
- 3 files changed, 13 insertions(+)
+ fs/erofs/data.c  | 4 ++--
+ fs/erofs/zdata.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 2f09749..9125c1e 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -36,6 +36,7 @@ struct erofs_configure {
- 	char *c_src_path;
- 	char *c_compr_alg_master;
- 	int c_compr_level_master;
-+	unsigned int c_compr_seg_size;	/* max segment compress size */
- 	int c_force_inodeversion;
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
- 	int c_inline_xattr_tolerance;
-diff --git a/lib/compress.c b/lib/compress.c
-index 6cc68ed..8fdbfb2 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -32,6 +32,8 @@ struct z_erofs_vle_compress_ctx {
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 64b56c7df023..d0542151e8c4 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -265,7 +265,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+  */
+ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+ {
+-	erofs_off_t uninitialized_var(last_block);
++	erofs_off_t last_block;
+ 	struct bio *bio;
  
- 	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
- 	u16 clusterofs;
-+	unsigned int comprlimits;
-+	unsigned int comr_seg_size;
- };
+ 	trace_erofs_readpage(page, true);
+@@ -282,7 +282,7 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
  
- #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
-@@ -158,6 +160,12 @@ static int vle_compress_one(struct erofs_inode *inode,
- 	while (len) {
- 		bool raw;
+ static void erofs_raw_access_readahead(struct readahead_control *rac)
+ {
+-	erofs_off_t uninitialized_var(last_block);
++	erofs_off_t last_block;
+ 	struct bio *bio = NULL;
+ 	struct page *page;
  
-+		if (ctx->comprlimits >= ctx->comr_seg_size ||
-+			ctx->comprlimits + EROFS_BLKSIZ >= ctx->comr_seg_size) {
-+			ctx->comprlimits = 0;
-+			goto nocompression;
-+		}
-+
- 		if (len <= EROFS_BLKSIZ) {
- 			if (final)
- 				goto nocompression;
-@@ -202,6 +210,7 @@ nocompression:
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index be50a4d9d273..24a26aaf847f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1161,7 +1161,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
+ 	void *bi_private;
+ 	/* since bio will be NULL, no need to initialize last_index */
+-	pgoff_t uninitialized_var(last_index);
++	pgoff_t last_index;
+ 	unsigned int nr_bios = 0;
+ 	struct bio *bio = NULL;
  
- 		++ctx->blkaddr;
- 		len -= count;
-+		ctx->comprlimits += count;
- 
- 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
- 			const unsigned int qh_aligned =
-@@ -422,6 +431,8 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	ctx.head = ctx.tail = 0;
- 	ctx.clusterofs = 0;
- 	remaining = inode->i_size;
-+	ctx.comprlimits = 0;
-+	ctx.comr_seg_size = cfg.c_compr_seg_size;
- 
- 	while (remaining) {
- 		const u64 readcount = min_t(u64, remaining,
-diff --git a/lib/config.c b/lib/config.c
-index da0c260..1c39403 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -23,6 +23,7 @@ void erofs_init_configure(void)
- 	cfg.c_force_inodeversion = 0;
- 	cfg.c_inline_xattr_tolerance = 2;
- 	cfg.c_unix_timestamp = -1;
-+	cfg.c_compr_seg_size = 1024U * EROFS_BLKSIZ;
- }
- 
- void erofs_show_config(void)
 -- 
-2.17.1
+2.25.4
 
