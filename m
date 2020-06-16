@@ -1,80 +1,88 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CCCE1F9AC2
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2020 16:48:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E68E21FC1BE
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 00:36:55 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49lvN76rCMzDqMw
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2020 00:48:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1592232519;
-	bh=Z99ThWGgJ7MkNwlFRhMPokoe1wLdEvHRMhKurY49Yl8=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=Grz3UbHkMuIViH2y3dBAiH9sGQ1XeDqSDGQXcSo/Gm88MLz+GgRnTPa4gZNT8eQ7y
-	 5XIWOwI6r+i/rceJfdMpDd1CJ6HOVZWKWCabaDLCQX9s9sdj4WKfbKJhX7Dc6IGR9j
-	 zrAP+JDwZGKBI4V6pMYbFwlePr7s7JWowLe8hiuyqAUhdEi2YlZv7JSYO87hyF2N/V
-	 adzFtKGUWCPRI2Rl7GLNXV/glYYCXfQ314YvfGhsR3HUPuWYAPpVOBpCXDSp+p7v0Y
-	 COCQ2iPwHOJa0t3A1b8svozuUKBHotglyGkQc+C/3lFrN24P8IaR0R58pjgBEAUqwU
-	 SMv5KCLtd2gZw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 49mjjv549xzDqwn
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 08:36:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=redhat.com (client-ip=205.139.110.61;
+ helo=us-smtp-delivery-1.mimecast.com; envelope-from=agruenba@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.66.146; helo=sonic317-20.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Received: from sonic317-20.consmr.mail.gq1.yahoo.com
- (sonic317-20.consmr.mail.gq1.yahoo.com [98.137.66.146])
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=cGmxIWLF; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=cGmxIWLF; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-1.mimecast.com (us-smtp-1.mimecast.com
+ [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49lvGs2bn6zDqYP
- for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2020 00:43:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1592232226; bh=9vLRB01bOItG254PL9Ughn8oiOkNFLiMPoFOQSIRr9A=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=McdAXOI0SK91Vz0xX74PhfL5P2TgLcwngFFnlV7049RKJjowhaOF4J+m2IsxoFyGXAscZe10LkddHFfTvk1j6G81InXAXiwrvEyyqNdioplLebeqZ7/RhADAJv8lJNnAc3wmAcPOWjR0daP7kqux9/5v7AEOQT0QeRdJfaFyKurVjK2hCb3yfE3y0PMgzofHeOKxlxesBiqKeo5Z4ZyvDMgIyCtYxb1TLnCTdJHjoR7/bRLWCo4HROFP1Rx5r8QELEftwlC8u4vhWlBp+fwQgOmllCSPwHuSAQ06y6hKFekXQe4S2Utxk2EmRG+QU4QLn2YjwJONPrR00epIG7ANZQ==
-X-YMail-OSG: RbY9pOEVM1nNTxMzGhZTKJimI3Sr.bLHfJ5dF_fEIk2.Ogbli8iKLeyj4Js6LiU
- qnKKBWpOm7Mn5hNYrHZEaPps2D_NlRBviwOoPMuNK86a8JLG8ul5HOCjbpHFt6YdEU4x9ix91r83
- .kldqMPZigrMJflQQJBqx5Lu6XtjnzBCLILnxp2TjEvCRpRQcwr8PilmdgIpEdre4RoJT0T8HvmL
- d0NkOyihYnIO49DQ1LvKWbtdon.MIMt.c4QrWS6BXnjGgcUt8nMhFnU663UiQakqff12xzLaVZi1
- pnOTv15XfmNNCXj8ARmy9_9jGSKfguUJ8D85p8ShUDMM1AFLbtPLnwW03lvnNGpg.6H1rJpGkeDe
- aFuFGcGAjGcX.Bwue.qDTTIiBAdbvev_aKTzVtNe0CGO9BdeO1L4rccSZ7VZg3BKlPkVJ.ZttJAy
- 0f4m9SvA9BqF1GlPvtRIu5gMTm4ACb7gI1aIt_MFuCJ_KhijbOGlER3njjzfjflAfPNkCViqa1Yo
- o8HqgrySbt.H6oZsJ8.884MG1HdKjYmMkFkSF04sPIxtDFM.5uljeiyBun7UVmZrI8emlFOe7Xp7
- .ly4FKGO59GWJa_6j9G71KyvuKSqIn5VqKmQDFgDWhyuofromUNne.SDIskxxOT0xdhsm2puBFdm
- PtmqeRgc6fX3FAzi1ho2NiMi03ltL3QpWBOosxVWSzJTsl0lk6dIKPIufeayl2Z0utGGGsIRVeg5
- G0mb0C.w7shlGKfV9QNv1h82miygDpOYa9zwCHJKyS8EOLWusts0TCv9.rc7MopOEwyS0SdUfTgM
- 52oFvqvIM.5y.iu6yhUXdaEk4A8l2GDGpM8SXCWk6UI_YFLOj_YjmIX9hrp.keF27X7EOfntNCgd
- rRtcZhXXAdxYy5KAFRjcsaH_j5lINcbyvItpZgY8ler4rx6qf.NZYtq4wMpnMLUQO7HIgWigdH8O
- h.2BYrIeJ26kLZPt4aKAYmO8KRD.l9ob1fK9YkBG5dZV6iBvY4uCw5taKzzkQ.EbF5O31_hPKZcp
- MQBWkd7YYQ23GpIH41COY0Y4R4ipV1yY9KqP83SeN7dS5OlwYW3osFQ_ddS9N4igKHl41YhuyrG3
- nDZRsPhZp0QilpOn8aQ94mAlhT6VuV49.kHbqVUAWUu6XuIQ44owrczxHeOzXo9NGu6XCX3t8epl
- 8pe.lZVwVm3r6qwJV5N0eun8xTj05cLT3_RNmzBpgZ0A0FHL.15W5ot8lXf.mrkAvjRxdy74uK_R
- 9NMf95q0AIukORSljkt8idNNHoGUpzYA9eblYXYvVI7lp8to4LdePSPfeCsp3t4YMyDU8Ny9oOQZ
- Grz08Hu9cf6Fi1OH3d.0uaAMCZ4KQfJ1KsLHUoiTEYO_.WFnfkg.vMOEVSxqmj8xUsV_zrzLVf9W
- B
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic317.consmr.mail.gq1.yahoo.com with HTTP; Mon, 15 Jun 2020 14:43:46 +0000
-Received: by smtp423.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID b174da9218f63a9312af64204256e53c; 
- Mon, 15 Jun 2020 14:43:41 +0000 (UTC)
-Date: Mon, 15 Jun 2020 22:43:30 +0800
-To: Li Guifu <bluce.lee@aliyun.com>
-Subject: Re: [PATCH v3] erofs-utils: introduce segment size to limit the max
- input stream
-Message-ID: <20200615144323.GA16511@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200610171728.7303-1-bluce.lee@aliyun.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49mjjb46SQzDqvh
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2020 08:36:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1592346987;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
+ b=cGmxIWLFerDvmbXx9wGIMeV5qMwmY3+Vdf3tc8EjWZawWwMkXzWRwUX2wIM+hUs+ubjH9r
+ JbpnGLG9iGe8fL6LRrD9HPxPCIXKXVSMkNvTKSv3KYw+hKuxH565kv4Omy8lEWJn7ZZHyl
+ Rk2uAlwgeRwCQ2AYEdLUaShoAbHpLig=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1592346987;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
+ b=cGmxIWLFerDvmbXx9wGIMeV5qMwmY3+Vdf3tc8EjWZawWwMkXzWRwUX2wIM+hUs+ubjH9r
+ JbpnGLG9iGe8fL6LRrD9HPxPCIXKXVSMkNvTKSv3KYw+hKuxH565kv4Omy8lEWJn7ZZHyl
+ Rk2uAlwgeRwCQ2AYEdLUaShoAbHpLig=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-XKuEGf01PEaByeLBR_zrIQ-1; Tue, 16 Jun 2020 18:36:25 -0400
+X-MC-Unique: XKuEGf01PEaByeLBR_zrIQ-1
+Received: by mail-oo1-f72.google.com with SMTP id g13so23634oou.11
+ for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2020 15:36:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
+ b=SMN17zWNWMtGv8MU/ERkKEoo7z5fcFUs+5FkUkB6sn+FtViZLBssDWlo6mrS8ucHhs
+ nd+pdDRuu4pLLZd6ieA0Mn8ZsJ1ZrU0DoKvlns09JItQuLzsSSG44kqy6JA535q09ZTw
+ gHeTBs9n0u5JRwqBbIfC2USzUoWLNk/3eDTh3WtWRNVwC+jP4bBMmQ5fX46Lvsg8vDpC
+ 6mqrxuHMVw1BCM7mq1+6s5d+1CB0jXS32yRsfHNpbDF4lb91QshzLiIyMvSltisyBdQD
+ vGRKlpv5yXcG8R/4QcuFn5WUidXukKNOOSckUKBEA/1Y+ycWTC2oYXDDSWM0OvrfbMsN
+ ekng==
+X-Gm-Message-State: AOAM533rGNyIYTuexSOa5ugvfT+jQscozXVv0zM8Hxwxh5to4QJieQv5
+ uJsbLOXCODH3ts0kkTMGQQzYlRf5Jk0FGBICjNn0xwYsl7F9xcvBRKypUtxIqQaBvpzVAQy/2zN
+ xUaIbn7drvY+ZgCfM9Q6mAplErldLTQKzJgKkRQYx
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427249otr.58.1592346984856; 
+ Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyoYNEk859HKJnIJ4XSJZ0fYGYB8IyuHx9XmftKrB9TO1HP0sg3cpUFv1zd47ilgV+zJ3II6JUZaM7vtE9AC3A=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427227otr.58.1592346984642; 
+ Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610171728.7303-1-bluce.lee@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16119 hermes_aol Apache-HttpAsyncClient/4.1.4
- (Java/11.0.6)
+References: <20200414150233.24495-1-willy@infradead.org>
+ <20200414150233.24495-17-willy@infradead.org>
+In-Reply-To: <20200414150233.24495-17-willy@infradead.org>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Wed, 17 Jun 2020 00:36:13 +0200
+Message-ID: <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to
+ mpage_readahead
+To: Matthew Wilcox <willy@infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -86,66 +94,44 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: cluster-devel <cluster-devel@redhat.com>,
+ linux-ext4 <linux-ext4@vger.kernel.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, John Hubbard <jhubbard@nvidia.com>,
+ Steven Whitehouse <swhiteho@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Junxiao Bi <junxiao.bi@oracle.com>, linux-xfs@vger.kernel.org,
+ William Kucharski <william.kucharski@oracle.com>,
+ Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-f2fs-devel@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
+ Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
+ Bob Peterson <rpeterso@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Guifu,
+Am Mi., 15. Apr. 2020 um 23:39 Uhr schrieb Matthew Wilcox <willy@infradead.org>:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Implement the new readahead aop and convert all callers (block_dev,
+> exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
+> reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
 
-On Thu, Jun 11, 2020 at 01:17:28AM +0800, Li Guifu via Linux-erofs wrote:
-> Limit the max input stream size by adding segment compression
-> (e.g. 4M segment size), it will benefits:
->  - more friendly to block diff (and more details about this);
->  - it can also be used for parallel compression in the same file.
+This patch leads to an ABBA deadlock in xfstest generic/095 on gfs2.
 
-Subject: erofs-utils: introduce segment compression
+Our lock hierarchy is such that the inode cluster lock ("inode glock")
+for an inode needs to be taken before any page locks in that inode's
+address space. However, the readahead address space operation is
+called with the pages already locked. When we try to grab the inode
+glock inside gfs2_readahead, we'll deadlock with processes that are
+holding that inode glock and trying to lock one of those same pages.
 
-Support segment compression which seperates files in several logic
-units (segments) and each segment is compressed independently.
+One possible solution is to use a trylock on the glock in
+gfs2_readahead, and to give up the readahead in case of a locking
+conflict. I have no idea how this is going to affect performance.
 
-Advantages:
- - more friendly for data differencing;
- - it can also be used for parallel compression in the same file later.
-
-> 
-> Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
-> ---
->  include/erofs/config.h |  1 +
->  lib/compress.c         | 11 +++++++++++
->  lib/config.c           |  1 +
->  3 files changed, 13 insertions(+)
-> 
-> diff --git a/include/erofs/config.h b/include/erofs/config.h
-> index 2f09749..9125c1e 100644
-> --- a/include/erofs/config.h
-> +++ b/include/erofs/config.h
-> @@ -36,6 +36,7 @@ struct erofs_configure {
->  	char *c_src_path;
->  	char *c_compr_alg_master;
->  	int c_compr_level_master;
-> +	unsigned int c_compr_seg_size;	/* max segment compress size */
-
-Add a command line argument "-S segment size" for this, and
-update the manpage as well.
-
->  	int c_force_inodeversion;
->  	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
->  	int c_inline_xattr_tolerance;
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 6cc68ed..8fdbfb2 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -32,6 +32,8 @@ struct z_erofs_vle_compress_ctx {
->  
->  	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
->  	u16 clusterofs;
-> +	unsigned int comprlimits;
-> +	unsigned int comr_seg_size;
-
-Let's update the whole logic as what we discussed on phone just now.
+Any other ideas?
 
 Thanks,
-Gao Xiang
+Andreas
+
