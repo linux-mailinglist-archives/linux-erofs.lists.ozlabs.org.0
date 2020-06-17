@@ -1,88 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E68E21FC1BE
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 00:36:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C6571FC2BF
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 02:32:55 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49mjjv549xzDqwn
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 08:36:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49mmHm1SRxzDqsp
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2020 10:32:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=205.139.110.61;
- helo=us-smtp-delivery-1.mimecast.com; envelope-from=agruenba@redhat.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=cGmxIWLF; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=cGmxIWLF; 
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=CSK/ewZv; 
  dkim-atps=neutral
-Received: from us-smtp-delivery-1.mimecast.com (us-smtp-1.mimecast.com
- [205.139.110.61])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49mjjb46SQzDqvh
- for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2020 08:36:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1592346987;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
- b=cGmxIWLFerDvmbXx9wGIMeV5qMwmY3+Vdf3tc8EjWZawWwMkXzWRwUX2wIM+hUs+ubjH9r
- JbpnGLG9iGe8fL6LRrD9HPxPCIXKXVSMkNvTKSv3KYw+hKuxH565kv4Omy8lEWJn7ZZHyl
- Rk2uAlwgeRwCQ2AYEdLUaShoAbHpLig=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1592346987;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
- b=cGmxIWLFerDvmbXx9wGIMeV5qMwmY3+Vdf3tc8EjWZawWwMkXzWRwUX2wIM+hUs+ubjH9r
- JbpnGLG9iGe8fL6LRrD9HPxPCIXKXVSMkNvTKSv3KYw+hKuxH565kv4Omy8lEWJn7ZZHyl
- Rk2uAlwgeRwCQ2AYEdLUaShoAbHpLig=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-XKuEGf01PEaByeLBR_zrIQ-1; Tue, 16 Jun 2020 18:36:25 -0400
-X-MC-Unique: XKuEGf01PEaByeLBR_zrIQ-1
-Received: by mail-oo1-f72.google.com with SMTP id g13so23634oou.11
- for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2020 15:36:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
- b=SMN17zWNWMtGv8MU/ERkKEoo7z5fcFUs+5FkUkB6sn+FtViZLBssDWlo6mrS8ucHhs
- nd+pdDRuu4pLLZd6ieA0Mn8ZsJ1ZrU0DoKvlns09JItQuLzsSSG44kqy6JA535q09ZTw
- gHeTBs9n0u5JRwqBbIfC2USzUoWLNk/3eDTh3WtWRNVwC+jP4bBMmQ5fX46Lvsg8vDpC
- 6mqrxuHMVw1BCM7mq1+6s5d+1CB0jXS32yRsfHNpbDF4lb91QshzLiIyMvSltisyBdQD
- vGRKlpv5yXcG8R/4QcuFn5WUidXukKNOOSckUKBEA/1Y+ycWTC2oYXDDSWM0OvrfbMsN
- ekng==
-X-Gm-Message-State: AOAM533rGNyIYTuexSOa5ugvfT+jQscozXVv0zM8Hxwxh5to4QJieQv5
- uJsbLOXCODH3ts0kkTMGQQzYlRf5Jk0FGBICjNn0xwYsl7F9xcvBRKypUtxIqQaBvpzVAQy/2zN
- xUaIbn7drvY+ZgCfM9Q6mAplErldLTQKzJgKkRQYx
-X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427249otr.58.1592346984856; 
- Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyoYNEk859HKJnIJ4XSJZ0fYGYB8IyuHx9XmftKrB9TO1HP0sg3cpUFv1zd47ilgV+zJ3II6JUZaM7vtE9AC3A=
-X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427227otr.58.1592346984642; 
- Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-17-willy@infradead.org>
-In-Reply-To: <20200414150233.24495-17-willy@infradead.org>
-From: Andreas Gruenbacher <agruenba@redhat.com>
-Date: Wed, 17 Jun 2020 00:36:13 +0200
-Message-ID: <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49mmHZ0McLzDqsQ
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2020 10:32:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+ :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+ Content-Transfer-Encoding:Content-ID:Content-Description;
+ bh=Ul7ITLaJhl7BsoMKtdcDyvgigCHM96XtVRL3WZUxjm4=; b=CSK/ewZv8HSv35avMFwiF1ehwB
+ cD9mARby3Jnsxd2q3NU3WJbfxBPOO30ro5qSxuYd1xuUmacXibygc00a8IbXIFvF7taoDFPnbpYuD
+ DspL7NDCqcdY9m8XhgG2DT+PlJcmnkpmPylMCkguzGzZ65Dyubhcoa3OtmmWBSATkM9jl1AHXL+4t
+ 4LA1dKT87umE7qVTpcf9AA7jo/byH2G5bi260qB7PIgEqpqUHOWSlQ/hjwPtFV4VscOSErmfVg2bp
+ 2WpES85a2aN+/K7Swg7SVGaQfGxlW1Z8c1tR65W+NyTJdrLuyMHceQujiU5Bncj2oO0nUpIXtJDmZ
+ 6tMkn0Mw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
+ Hat Linux)) id 1jlM00-0001Vc-Jp; Wed, 17 Jun 2020 00:32:16 +0000
+Date: Tue, 16 Jun 2020 17:32:16 -0700
+From: Matthew Wilcox <willy@infradead.org>
+To: Andreas Gruenbacher <agruenba@redhat.com>
 Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to
  mpage_readahead
-To: Matthew Wilcox <willy@infradead.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20200617003216.GC8681@bombadil.infradead.org>
+References: <20200414150233.24495-1-willy@infradead.org>
+ <20200414150233.24495-17-willy@infradead.org>
+ <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -110,28 +78,40 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Am Mi., 15. Apr. 2020 um 23:39 Uhr schrieb Matthew Wilcox <willy@infradead.org>:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Implement the new readahead aop and convert all callers (block_dev,
-> exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
-> reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
+On Wed, Jun 17, 2020 at 12:36:13AM +0200, Andreas Gruenbacher wrote:
+> Am Mi., 15. Apr. 2020 um 23:39 Uhr schrieb Matthew Wilcox <willy@infradead.org>:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> >
+> > Implement the new readahead aop and convert all callers (block_dev,
+> > exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
+> > reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
+> 
+> This patch leads to an ABBA deadlock in xfstest generic/095 on gfs2.
+> 
+> Our lock hierarchy is such that the inode cluster lock ("inode glock")
+> for an inode needs to be taken before any page locks in that inode's
+> address space.
 
-This patch leads to an ABBA deadlock in xfstest generic/095 on gfs2.
+How does that work for ...
 
-Our lock hierarchy is such that the inode cluster lock ("inode glock")
-for an inode needs to be taken before any page locks in that inode's
-address space. However, the readahead address space operation is
-called with the pages already locked. When we try to grab the inode
-glock inside gfs2_readahead, we'll deadlock with processes that are
-holding that inode glock and trying to lock one of those same pages.
+writepage:              yes, unlocks (see below)
+readpage:               yes, unlocks
+invalidatepage:         yes
+releasepage:            yes
+freepage:               yes
+isolate_page:           yes
+migratepage:            yes (both)
+putback_page:           yes
+launder_page:           yes
+is_partially_uptodate:  yes
+error_remove_page:      yes
 
-One possible solution is to use a trylock on the glock in
-gfs2_readahead, and to give up the readahead in case of a locking
-conflict. I have no idea how this is going to affect performance.
+Is there a reason that you don't take the glock in the higher level
+ops which are called before readhead gets called?  I'm looking at XFS,
+and it takes the xfs_ilock SHARED in xfs_file_buffered_aio_read()
+(called from xfs_file_read_iter).
 
-Any other ideas?
-
-Thanks,
-Andreas
-
+Not that after -rc1 is a great time to be upending the locking model in
+a filesystem ... but then, this has been baking in -mm for ten weeks and
+the GFS2 mailing list has been on the cc for the patches for five months,
+so I don't have a lot of sympathy for this.
