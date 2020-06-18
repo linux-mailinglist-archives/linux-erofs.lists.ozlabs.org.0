@@ -2,76 +2,80 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id C26C71FFE74
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 01:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8CAC1FFEDB
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 01:44:31 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49nyG76kgdzDrND
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 09:05:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49nz705HgbzDrN8
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 09:44:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1592523868;
+	bh=6yDMfWv9i+zZQZGDtJwu1LqyRzLs+a1LvxCqhIx5USw=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=XdJnBXuMgZABDxSFwdCBM8C5gqghQ5dXD2rl9VMjcl70u/M3+W6TLeFRBQ+1Oz1Fz
+	 kvGIklzkgtkp0GyFBWKqmEj6O5lwj6r5WRIPSqoASrPpFsxnQ/XE4+cB/yYqmZ8ifm
+	 BserIEvnIoe5T5GAXuHAKcJ2qSskBHXnAMXbI73/57F1LKZfyvXEMAtUpIWKfRQ4h4
+	 q7PsvsnDhap1Es8LeWrmFhz6O7QRqDk9k24SkcvhO/H78lGIxCUIQz3WgYZJ2qEHi2
+	 USZBnvDQc2EoCKKzF3FRx1EKDQFGuZrtMvbwjpu3bBVi3jZi/nphmsrKX+En9vqm7T
+	 rJ16btZU99Gyg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=gmx.com
- (client-ip=82.165.159.41; helo=mout-xforward.gmx.net;
- envelope-from=hsiangkao@gmx.com; receiver=<UNKNOWN>)
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.65.31; helo=sonic315-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=gmx.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- secure) header.d=gmx.net header.i=@gmx.net header.a=rsa-sha256
- header.s=badeba3b8450 header.b=gLrTTGuy; 
- dkim-atps=neutral
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.41])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
- SHA256) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49nyFy2XjXzDrMS
- for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 09:05:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=badeba3b8450; t=1592521513;
- bh=X5N6U415u96j72FFniSZuWYSy1q8ts77UBmuir8ERkM=;
- h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=gLrTTGuyVamJZJp3/7671QxutJ5Ax/mWQVgYkzeTjNmImIgVRRlA6mw+kjgzTTges
- 5ND15XHQmJz9mC1jzFncHJC7+otrnsrtqL/DYGWqjzFe3RzBgKZu1amprMt5Vpidt2
- CuDIKuVx1a8fPezRhac2q1tmaDiYtyBccGvNJPnw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([36.63.211.116]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MNbox-1jVkjT1eaB-00P47J; Fri, 19 Jun 2020 01:05:13 +0200
-Date: Fri, 19 Jun 2020 07:05:06 +0800
-From: Gao Xiang <hsiangkao@gmx.com>
-To: Li Guifu <bluce.lee@aliyun.com>
-Subject: Re: [PATCH v4] erofs-utils: introduce segment compression
-Message-ID: <20200618230505.GA15482@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200618162657.3136-1-bluce.lee@aliyun.com>
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=srQl0r5z; dkim-atps=neutral
+Received: from sonic315-55.consmr.mail.gq1.yahoo.com
+ (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49nz6l2M0gzDrMb
+ for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 09:44:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1592523844; bh=Asfu5Z94gNQ7XaBROjojNrJwo7jut1Y+OrjYRXVMET0=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
+ b=srQl0r5zFsbvovsydZAvPTnpNHBid90kLOrvipT+G4JOHT7xyss9yq/OGWsLZHH3V+en8ziRtU4Jgp8jr5JE+yj/tn0otaQ1ASsK2x07JCbTMqrfcg/tNrjBp4NHdVgKcYvQmEdpCvw3msv62bkryEFKiRNqvHYgvMOG6L/2sweyJsTUHuphfD0Q6SwQit+hqy7eQERz8RqtcCkrZ5L9zop/lw0PUVHNngf5Q42p7/i552YzI7p/rOmW8hjBOA58qRQYldWTxzEKk22er/xovfRDsh/UrfykROEJOvqIXsa4Xbp9DJWS24lB2exyazxrNtx2B3akos/ixRaGqB8Uqg==
+X-YMail-OSG: xSrhU.cVM1kUcfO5gY9kaoFHyQgqMiRLrSfI43yWnRiOQ84HFNbvqWDF97fSYc6
+ J0b9moHnopLgeZqs10Gj9apJlSZ8PME8dk4y_4DEzI0u3h5TbRXLXPCBsTGySxOj9VX.2bijtAcG
+ Etxzk6UVXRZxla6mnU0tLic1Z2EdVwsmPdmv2BhAKUCTNG_FbzwUzd_eXtOBzE627deivbH2EBu7
+ MknW9WsFn86JXrT18crQ2ZKDO5ulpmSp1QDhe2rBaZijH9fvGKg2.4AVn8OESeMaHjA7XzRvvT3x
+ wZKrCemArwEZizKcPaROXH8_Lyw4_z51Liw_W4keitkIAAeOE9XKdBe_XGeAOAi12jDRjS8A1Mx4
+ le01xyRQlnFNwNLruU3ibw4gOSb5ipPxK6CZbrsnc9zuMVilP5D2c45_uYImg9rMvHDy75VsJcUj
+ owigH5ficrVcSz7EBhtNNDUFPNcta10hFqN4FBm431nUrCkEvRKceMXNVyhnSr12UKam_mGZDldP
+ EwkMympLIwMpTK2YR0w5qvVtm1XzKYe0BPmsuHdpFxqG62kqkECX5f257A7qW17G9WaaovnJoDTs
+ EhVtVjkAzazvcMcQTDCTaHwMFjF0m3R10DyDsLUER9mFdGu.ehlPRHou4mExSFJb8CuoN6qiwvsH
+ t7GB6AwKm99sO7Gldr6tmreKwkICXv9USLfxNsOWIAJOhdaZoPxuIpVoMqW77AJK05ofwZAjHyQX
+ g86udCo5C5v.UsImQdCAb5G5622jr1VVyBRlRf7Yxq440ZF0Gj7MqbGbx8VsuNOF8Om3R1EWlNya
+ 5Ep0B6Tg5RN6rFnrokSKCerl60NVBPFv1I5Agm_9A0gfzHhL_DlqSXz1z1MlTPQFiTBUFBO60xau
+ ddp9WSy7rhLqteqVA9pmPJb5jlyriXw024VUzYiYSEuA..wX2sXDjbHyW51nR5cb9jQjhn804ogw
+ K6nggt1vFkKvJMsRN22oIMw6SRqEAOl2YBhnwXwIORgigq9Nh._P98kLFDxsEzTEfvfb6ekLJlSg
+ Me7eovZdHPKQC.AGufahuruA1WX_6jH22yqJ2_k_ZA__Qw8Z_CqJZpJAfzuwqbe61xasnQzrhWZM
+ 0gLDr3Zpt_T2g0XSAtNQ4TccIihInWLxcXn.VGgweJaJ_SRW2_mJBRYIc7VaVS0aHrHKeaOYyb7U
+ 9LKxbyAikoJj1b7uqf3O9mm3MlEB6uo.esGagHbVStjT_c.qFZoV82V6O1lO8Jtc8NRb2WAjTTXD
+ 6bz5hd4shQxwToxgBVHEerPNABVSha6ud4MTk15UKmLrqEEm5Zx1WusyWfphH7rkR1C6SZqS9sLG
+ 7sK25m0pldGL7P5oIAkCyxydCHC4KKDlxZi3Cx.LqlQqAzzHBvbePG_PTrdgsQZC.wPVHUT3grAE
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 18 Jun 2020 23:44:04 +0000
+Received: by smtp415.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID d13ff620e5f9d81f37a1475971f3080d; 
+ Thu, 18 Jun 2020 23:44:01 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Date: Fri, 19 Jun 2020 07:43:49 +0800
+Message-Id: <20200618234349.22553-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200618111936.19845-1-hsiangkao@aol.com>
+References: <20200618111936.19845-1-hsiangkao@aol.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618162657.3136-1-bluce.lee@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:VEhBdKYlxan0bKFwdlwZA4AnXbn1J5trYUC9MZyKfeGR3Yv+Zhm
- PqcFHUOLsTqf7wYE2jWXrcXQPpju8fgLVEflihleoiL+/cirLeh93zRfukVcrwXfyNVDwnw
- u3ZLPNXAx4Mblfwdrc2HpWC+G0IxjkTnjq50/nhgbCA7gOEQpKre/dUvO0b1I+SFfaWXtV5
- FSXcUaYwn0vTbQgV3zZGg==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:b5FsBC9dIMY=:Rj4Vjxk5hERrRQIDE/1Dg1WT
- j2GmvYx49Vw9JmCRS/F1lTEh8QqalbI6lb9qE5QgGHkSOqBGoO5ZD5EbFYg7InfxfhtnRO+Qu
- 9dXezFrRGkBFLtsYESJBaqK8+mByYgviu5HAAQRSNIlT615hTNt5ByE+wep+Uk84Fap5umwRM
- Y75fZfkIJFn1UAFI1UNTZFsuE8aqXIn1yaOlq0VMjmn0DzKo5IfIGRqX8sAy9PDpVqghb25VS
- s7S58z3HD96qHaJPM31aY/kzWQghk2CU2q8MRIIesMTmu3OegN/z3lBKbGNH61w9oQWTdrG20
- a+8NcmuSISATdu6HEzM+dqKMf7x51rzSlivstgojL1ltPkF5X1V7s/avHGpSJphuRQCd+V55F
- KjHWc3fwyuUX/cCU2hXFzWDISOW0NttBRybDOwECyXPgbwBtpG/GqgIl6/5jD4W+mn/+3cE4Y
- 2q1ZEZRR1ELVvlokDqcp59Oi/sGVXHonUTUFjJiUvuHSIhA9qYoxJ6KDfbcEDuuxVZGgpRoXC
- Y8XuHCLa/DAbqwrEsUwCp2OTqKp+aP5Ha7xbq3CZ+XgcCdbMfTfJA35b3mCkDbPiyZPQRauES
- Lio5y+N/fzwOD2HUVlMjIMYvQSJlJ+q9DxYzh4tOY3BXs3GTrGunbS6CNnO+azUAQsdR3pjto
- /HU3o3dg+nnHWAi4CC0Nc2cpeU/ngBvfiEKKkKzLW+f/yq++5OIbg3e6jlt8RSyQKRrgasVQP
- nep4jwG8ItL78DcZk1HN4/YwpmhH0eGMYtTQLcgFcAeZwX3TOD2nUhf0FkOJ5PNHtYlk43MiV
- A8EkE6WR4vnhgD62ZSa8EfMMLJGYirecEyo1YyXsAPiEixLg2X50jlo8uiV9/PN485VuVJhnc
- XE1as9qo/QhFq9FjSvl0vkqi7lgrs8+RNoZhGSvvI84EqBESXCL74ayWtVrXlvSMgYo1rjND3
- 21Vb96st4dplrmvYARf4MaE3wpQZSm4PPkhZoTiJLco8yIpja80MaqxZzFHVeCzI8G9yF81wh
- nqjIcqCbRRi4llxDWBgsm2HvE6d+4GeqxLubmYKiD57v2PxY/3E0wt0ANtCIiSyHuOGqbv0db
- dSEsQ2TB3b3Ryk42i7TJq1jmkhOFKqck7qXnqg+rRazRF6ouWR9JT8uAYjAXRdG/dGyT70HIp
- 21LGR04uCEuc81Yg/d+mgY6elfqtH2/9KI6qWgciLTMgjRvWZ+NgHmG6dsVNalGQd8J4C2SMv
- qB8cp0r/8EURB5kIBNuJrc6QiebYhg+BMcbCw==
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,173 +87,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hongyu Jin <hongyu.jin@unisoc.com>,
+ stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Guifu,
+From: Gao Xiang <hsiangkao@redhat.com>
 
-On Fri, Jun 19, 2020 at 12:26:57AM +0800, Li Guifu via Linux-erofs wrote:
-> Support segment compression which seperates files in several logic
-> units (segments) and each segment is compressed independently.
->
-> Advantages:
->  - more friendly for data differencing;
->  - it can also be used for parallel compression in the same file later.
->
-> Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
-> ---
-> Changes since v3 suggest by Gao Xiang<hsiangkao@gmx.com>:
->  - add 'S#' parameter to custome compression segment size
->  - move limit logic to size decrease
->
->  include/erofs/config.h |  1 +
->  lib/compress.c         |  8 ++++++--
->  lib/config.c           |  1 +
->  mkfs/main.c            | 16 +++++++++++++++-
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
 
-Just do a quick response for this, and will test it later.
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
 
-First, You might need to update the manpage as well.
+Let's fix it now.
 
->  4 files changed, 23 insertions(+), 3 deletions(-)
->
-> diff --git a/include/erofs/config.h b/include/erofs/config.h
-> index 2f09749..9125c1e 100644
-> --- a/include/erofs/config.h
-> +++ b/include/erofs/config.h
-> @@ -36,6 +36,7 @@ struct erofs_configure {
->  	char *c_src_path;
->  	char *c_compr_alg_master;
->  	int c_compr_level_master;
+Reported-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+change since v1:
+ move .v assignment out since it doesn't need for every loop;
 
-u64 c_compr_segsize;
+ fs/erofs/zdata.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> +	unsigned int c_compr_seg_size;	/* max segment compress size */
->  	int c_force_inodeversion;
->  	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
->  	int c_inline_xattr_tolerance;
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 6cc68ed..eb024aa 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -32,6 +32,7 @@ struct z_erofs_vle_compress_ctx {
->
->  	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
->  	u16 clusterofs;
-> +	unsigned int comprlimits;
-
-How about the name "segavail"; ?
-
-u64 segavail;
-
-
->  };
->
->  #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
-> @@ -163,8 +164,7 @@ static int vle_compress_one(struct erofs_inode *inod=
-e,
->  				goto nocompression;
->  			break;
->  		}
-
-I think we might add "if (segavail < EROFS_BLKSIZE) goto nocompression;"
-since it seems better.
-
-> -
-> -		count =3D len;
-> +		count =3D min(len, ctx->comprlimits);
->  		ret =3D erofs_compress_destsize(h, compressionlevel,
->  					      ctx->queue + ctx->head,
->  					      &count, dst, EROFS_BLKSIZ);
-> @@ -202,6 +202,9 @@ nocompression:
->
->  		++ctx->blkaddr;
->  		len -=3D count;
-> +		ctx->comprlimits -=3D count;
-> +		if (!ctx->comprlimits)
-> +			ctx->comprlimits =3D cfg.c_compr_seg_size;
->
->  		if (!final && ctx->head >=3D EROFS_CONFIG_COMPR_MAX_SZ) {
->  			const unsigned int qh_aligned =3D
-> @@ -422,6 +425,7 @@ int erofs_write_compressed_file(struct erofs_inode *=
-inode)
->  	ctx.head =3D ctx.tail =3D 0;
->  	ctx.clusterofs =3D 0;
->  	remaining =3D inode->i_size;
-> +	ctx.comprlimits =3D cfg.c_compr_seg_size;
->
->  	while (remaining) {
->  		const u64 readcount =3D min_t(u64, remaining,
-> diff --git a/lib/config.c b/lib/config.c
-> index da0c260..1c39403 100644
-> --- a/lib/config.c
-> +++ b/lib/config.c
-> @@ -23,6 +23,7 @@ void erofs_init_configure(void)
->  	cfg.c_force_inodeversion =3D 0;
->  	cfg.c_inline_xattr_tolerance =3D 2;
->  	cfg.c_unix_timestamp =3D -1;
-> +	cfg.c_compr_seg_size =3D 1024U * EROFS_BLKSIZ;
-
-We don't need that limit by default, so
-cfg.c_compr_segsize =3D -1ULL;
-
->  }
->
->  void erofs_show_config(void)
-> diff --git a/mkfs/main.c b/mkfs/main.c
-> index 94bf1e6..036d818 100644
-> --- a/mkfs/main.c
-> +++ b/mkfs/main.c
-> @@ -61,6 +61,7 @@ static void usage(void)
->  	      " -x#               set xattr tolerance to # (< 0, disable xattr=
-s; default 2)\n"
->  	      " -EX[,...]         X=3Dextended options\n"
->  	      " -T#               set a fixed UNIX timestamp # to all files\n"
-> +	      " -S#               set the max input stream size # to one compr=
-ess\n"
->  	      " --exclude-path=3DX  avoid including file X (X =3D exact litera=
-l path)\n"
->  	      " --exclude-regex=3DX avoid including files that match X (X =3D =
-regular expression)\n"
->  #ifdef HAVE_LIBSELINUX
-> @@ -138,7 +139,7 @@ static int mkfs_parse_options_cfg(int argc, char *ar=
-gv[])
->  	char *endptr;
->  	int opt, i;
->
-> -	while((opt =3D getopt_long(argc, argv, "d:x:z:E:T:",
-> +	while((opt =3D getopt_long(argc, argv, "d:x:z:E:T:S:",
->  				 long_options, NULL)) !=3D -1) {
->  		switch (opt) {
->  		case 'z':
-> @@ -188,6 +189,19 @@ static int mkfs_parse_options_cfg(int argc, char *a=
-rgv[])
->  				return -EINVAL;
->  			}
->  			break;
-> +		case 'S':
-> +			cfg.c_compr_seg_size =3D strtol(optarg, &endptr, 0);
-> +			if (*endptr !=3D '\0') {
-> +				erofs_err("invalid compress segment size %s",
-> +					  optarg);
-> +				return -EINVAL;
-> +			}
-> +			if (cfg.c_compr_seg_size % EROFS_BLKSIZ !=3D 0) {
-> +				erofs_err("segment size:%u should be align to %u",
-> +					  cfg.c_compr_seg_size, EROFS_BLKSIZ);
-> +				return -EINVAL;
-> +			}
-
-if (!cfg.c_compr_segsize)
-	cfg.c_compr_segsize =3D -1ULL;
-else if (cfg.c_compr_segsize % EROFS_BLKSIZ) {
-	erofs_err("segmentsize %u should be aligned with blocksize %u",
-		  cfg.c_compr_seg_size, EROFS_BLKSIZ);
-	return -EINVAL;
-}
-
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index 7824f5563a55..9b66c28b3ae9 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
+ {
+-	unsigned long *p, o, v, id;
+-repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
++	int orig, orig_index, val;
+ 
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++repeat:
++	orig = atomic_read(u.o);
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
+ 
+-		DBG_BUGON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
+ 
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
+ }
+ 
+-- 
+2.24.0
 
