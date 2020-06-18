@@ -1,61 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3BEA1FF681
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 17:23:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4070D1FF936
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 18:27:37 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49nm0b480zzDrMH
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 01:23:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49nnQt3LjLzDqRj
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 02:27:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1592497654;
+	bh=k+2p2TZ1URyT4x0BkoJoP2LR13SruCUbCV1p4pNLtEI=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=guplDckPgaRHrQ2LFpfm74puCPdCPm6rWa8l7Y55AQa3aCOX1W30uGV5xjMvSP4pf
+	 SnzOljtpXjbVx8P88/JPo2+QrSbZwQxqFn9M3VDSn/6koaX7fR4HicCv18tVcwLKiM
+	 wLyAH186rF5IJTEFi/rvjR2rqVRcXsHGtBMqcU2P3sntM1Zo+zXUSTSJBgHTiyup8X
+	 9oTSZHFtIWq/1UEHlywi4RJES5LCwDnWsqnwTaQQwdpGpXRIxC96uoe+Ydnxa1awjf
+	 4MW5/9WWkHxoI0ONgudU0R6PWEFn4fYHKz15cvta1zbu4ae93XD631YJoDGzvOqNKU
+	 D64sOCB5gH8/w==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=infradead.org header.i=@infradead.org
- header.a=rsa-sha256 header.s=bombadil.20170209 header.b=EuLHMlaV; 
- dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org
- [IPv6:2607:7c80:54:e::133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.28;
+ helo=out30-28.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
+ header.from=aliyun.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
+ header.s=s1024 header.b=QXQtUygZ; dkim-atps=neutral
+Received: from out30-28.freemail.mail.aliyun.com
+ (out30-28.freemail.mail.aliyun.com [115.124.30.28])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49nlZ80LmTzDrJq
- for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 01:03:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
- :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
- Sender:Reply-To:Content-ID:Content-Description;
- bh=UL+8ApV4cJJsaL9i1XR4k0qibz3XspT8vONGVk524kc=; b=EuLHMlaVNrGT+gpgg4ZOy214Lf
- /NetdKt4msEGn/SdU6wS7Vb3Nicec9n/1E16Pv5CLgJpT25JAXyLZqTClcv5dthiCzHK32BiNFyNn
- 2Vtkj1cmYSbWiXKfh18xDTiF4w22UEYWsdQ5WG/abzsVteDtOAX8vWZ3bKmb0ydVHdoW/dmfLoAdv
- rcWXcFdBrgdT+0Rnct9YP5xWZ5E6pNPsBKwkf9wU8u6uAxjlRbX/tFeF4hooENdTFNAX/QSEm8LMc
- hZs29nl0IRtyQgR2KBWEayJ7IYD2dzdJAKDyw0r1yoEP6TVl666nT/5G8UpJw9LpuF0WelqGPXar4
- ortJ5rhQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1jlw4L-0003On-LK; Thu, 18 Jun 2020 15:03:09 +0000
-Date: Thu, 18 Jun 2020 08:03:09 -0700
-From: Matthew Wilcox <willy@infradead.org>
-To: Andreas Gruenbacher <agruenba@redhat.com>
-Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to
- mpage_readahead
-Message-ID: <20200618150309.GP8681@bombadil.infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-17-willy@infradead.org>
- <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
- <20200617003216.GC8681@bombadil.infradead.org>
- <CAHpGcMK6Yu0p-FO8CciiySqh+qcWLG-t3hEaUg-rqJnS=2uhqg@mail.gmail.com>
- <20200617022157.GF8681@bombadil.infradead.org>
- <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49nnQb02gtzDqPb
+ for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 02:27:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
+ t=1592497622; h=From:To:Subject:Date:Message-Id;
+ bh=Kt5Frv0jOzZbpbK4FNke2dgzy9cQ8TkUI/CgC1ujoGI=;
+ b=QXQtUygZP7Ix0WHhtAr0l/hKrDckkpVOZsuAqwgNKtbZ282xjNsBRElikaR+L/2Ul0yi7dayfIPEq6Seh8og4fYsrBpHxWDl9P3C9WAFjcH21osxW2ij/y79Ji+2IijsQ8/QS+hfaYajwt00GC6O8P5rjohBpWvKiSTZhYc/2v4=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.06357799|-1; CH=green;
+ DM=|CONTINUE|false|; DS=CONTINUE|ham_alarm|0.00214097-9.87176e-05-0.99776;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e01355; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=3; RT=3; SR=0; TI=SMTPD_---0U.zYEUO_1592497620; 
+Received: from localhost(mailfrom:bluce.lee@aliyun.com
+ fp:SMTPD_---0U.zYEUO_1592497620) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 19 Jun 2020 00:27:00 +0800
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v4] erofs-utils: introduce segment compression
+Date: Fri, 19 Jun 2020 00:26:57 +0800
+Message-Id: <20200618162657.3136-1-bluce.lee@aliyun.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,66 +62,137 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: cluster-devel <cluster-devel@redhat.com>,
- linux-ext4 <linux-ext4@vger.kernel.org>,
- Steven Whitehouse <swhiteho@redhat.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, John Hubbard <jhubbard@nvidia.com>,
- Andreas =?iso-8859-1?Q?Gr=FCnbacher?= <andreas.gruenbacher@gmail.com>,
- LKML <linux-kernel@vger.kernel.org>, Junxiao Bi <junxiao.bi@oracle.com>,
- linux-xfs <linux-xfs@vger.kernel.org>,
- William Kucharski <william.kucharski@oracle.com>,
- Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- linux-f2fs-devel@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
- Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
- Bob Peterson <rpeterso@redhat.com>
+From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Li Guifu <bluce.lee@aliyun.com>
+Cc: Li Guifu <bluce.lee@aliyun.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Jun 18, 2020 at 02:46:03PM +0200, Andreas Gruenbacher wrote:
-> On Wed, Jun 17, 2020 at 4:22 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > On Wed, Jun 17, 2020 at 02:57:14AM +0200, Andreas Grünbacher wrote:
-> > > Right, the approach from the following thread might fix this:
-> > >
-> > > https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/T/#t
-> >
-> > In general, I think this is a sound approach.
-> >
-> > Specifically, I think FAULT_FLAG_CACHED can go away.  map_pages()
-> > will bring in the pages which are in the page cache, so when we get to
-> > gfs2_fault(), we know there's a reason to acquire the glock.
-> 
-> We'd still be grabbing a glock while holding a dependent page lock.
-> Another process could be holding the glock and could try to grab the
-> same page lock (i.e., a concurrent writer), leading to the same kind
-> of deadlock.
+Support segment compression which seperates files in several logic
+units (segments) and each segment is compressed independently.
 
-What I'm saying is that gfs2_fault should just be:
+Advantages:
+ - more friendly for data differencing;
+ - it can also be used for parallel compression in the same file later.
 
-+static vm_fault_t gfs2_fault(struct vm_fault *vmf)
-+{
-+	struct inode *inode = file_inode(vmf->vma->vm_file);
-+	struct gfs2_inode *ip = GFS2_I(inode);
-+	struct gfs2_holder gh;
-+	vm_fault_t ret;
-+	int err;
-+
-+	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+	err = gfs2_glock_nq(&gh);
-+	if (err) {
-+		ret = block_page_mkwrite_return(err);
-+		goto out_uninit;
-+	}
-+	ret = filemap_fault(vmf);
-+	gfs2_glock_dq(&gh);
-+out_uninit:
-+	gfs2_holder_uninit(&gh);
-+	return ret;
-+}
+Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
+---
+Changes since v3 suggest by Gao Xiang<hsiangkao@gmx.com>:
+ - add 'S#' parameter to custome compression segment size
+ - move limit logic to size decrease
 
-because by the time gfs2_fault() is called, map_pages() has already been
-called and has failed to insert the necessary page, so we should just
-acquire the glock now instead of trying again to look for the page in
-the page cache.
+ include/erofs/config.h |  1 +
+ lib/compress.c         |  8 ++++++--
+ lib/config.c           |  1 +
+ mkfs/main.c            | 16 +++++++++++++++-
+ 4 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 2f09749..9125c1e 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -36,6 +36,7 @@ struct erofs_configure {
+ 	char *c_src_path;
+ 	char *c_compr_alg_master;
+ 	int c_compr_level_master;
++	unsigned int c_compr_seg_size;	/* max segment compress size */
+ 	int c_force_inodeversion;
+ 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
+ 	int c_inline_xattr_tolerance;
+diff --git a/lib/compress.c b/lib/compress.c
+index 6cc68ed..eb024aa 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -32,6 +32,7 @@ struct z_erofs_vle_compress_ctx {
+ 
+ 	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
+ 	u16 clusterofs;
++	unsigned int comprlimits;
+ };
+ 
+ #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
+@@ -163,8 +164,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 				goto nocompression;
+ 			break;
+ 		}
+-
+-		count = len;
++		count = min(len, ctx->comprlimits);
+ 		ret = erofs_compress_destsize(h, compressionlevel,
+ 					      ctx->queue + ctx->head,
+ 					      &count, dst, EROFS_BLKSIZ);
+@@ -202,6 +202,9 @@ nocompression:
+ 
+ 		++ctx->blkaddr;
+ 		len -= count;
++		ctx->comprlimits -= count;
++		if (!ctx->comprlimits)
++			ctx->comprlimits = cfg.c_compr_seg_size;
+ 
+ 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
+ 			const unsigned int qh_aligned =
+@@ -422,6 +425,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	ctx.head = ctx.tail = 0;
+ 	ctx.clusterofs = 0;
+ 	remaining = inode->i_size;
++	ctx.comprlimits = cfg.c_compr_seg_size;
+ 
+ 	while (remaining) {
+ 		const u64 readcount = min_t(u64, remaining,
+diff --git a/lib/config.c b/lib/config.c
+index da0c260..1c39403 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -23,6 +23,7 @@ void erofs_init_configure(void)
+ 	cfg.c_force_inodeversion = 0;
+ 	cfg.c_inline_xattr_tolerance = 2;
+ 	cfg.c_unix_timestamp = -1;
++	cfg.c_compr_seg_size = 1024U * EROFS_BLKSIZ;
+ }
+ 
+ void erofs_show_config(void)
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 94bf1e6..036d818 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -61,6 +61,7 @@ static void usage(void)
+ 	      " -x#               set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+ 	      " -EX[,...]         X=extended options\n"
+ 	      " -T#               set a fixed UNIX timestamp # to all files\n"
++	      " -S#               set the max input stream size # to one compress\n"
+ 	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
+ 	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
+ #ifdef HAVE_LIBSELINUX
+@@ -138,7 +139,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	char *endptr;
+ 	int opt, i;
+ 
+-	while((opt = getopt_long(argc, argv, "d:x:z:E:T:",
++	while((opt = getopt_long(argc, argv, "d:x:z:E:T:S:",
+ 				 long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'z':
+@@ -188,6 +189,19 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 'S':
++			cfg.c_compr_seg_size = strtol(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid compress segment size %s",
++					  optarg);
++				return -EINVAL;
++			}
++			if (cfg.c_compr_seg_size % EROFS_BLKSIZ != 0) {
++				erofs_err("segment size:%u should be align to %u",
++					  cfg.c_compr_seg_size, EROFS_BLKSIZ);
++				return -EINVAL;
++			}
++			break;
+ 		case 2:
+ 			opt = erofs_parse_exclude_path(optarg, false);
+ 			if (opt) {
+-- 
+2.17.1
+
