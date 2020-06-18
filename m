@@ -1,79 +1,97 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46EB71FF06B
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 13:20:28 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFCA91FF274
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 14:53:19 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49nfcT3xgSzDrF0
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 21:20:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1592479225;
-	bh=nmGWLYIoTiOR389ymmuTw4JzsF3C/iv+eBNRQulMoIQ=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=cNxHuuz8s79H5NfkTYUCAhgmNSw+ukDEkRqjkunkFF1zEXmd6LnHFF8evgDtEXolh
-	 dempmV056x9AG6FgyTXXADXT+9+bdCMFL1rvojU9U9PpJJ5bW05oJrr87Ktk7rOAmF
-	 u3p8+cC0VQOY6Y5Rn6UVSZs6TmHDLnHcBVLmsILE7F526zB2pZFb4ao0DCWCxsjiV5
-	 ROl9Zq8I1AYEj70/SVB+CdDSnOklCqCtPQYZdB7tzRGZvBiKaQzGTMV+JNSXiVnC3d
-	 WzvT1EtF+xLKsCHNv/bIYJC9a1CKC2cel5tsLVImb8BAi/ScqWtF0yL5g5XypszBEy
-	 xjUmkMl/8HlfQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 49nhgc5RFlzDrJ7
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2020 22:53:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=redhat.com (client-ip=205.139.110.61;
+ helo=us-smtp-delivery-1.mimecast.com; envelope-from=agruenba@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.32; helo=sonic316-8.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=IdjASJHx; dkim-atps=neutral
-Received: from sonic316-8.consmr.mail.gq1.yahoo.com
- (sonic316-8.consmr.mail.gq1.yahoo.com [98.137.69.32])
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=h7Ftdw1W; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=h7Ftdw1W; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-1.mimecast.com (us-smtp-1.mimecast.com
+ [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49nfcL0KpDzDrB0
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jun 2020 21:20:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1592479203; bh=dxLr5Sac0lejPsIBqUUe96IPZz24J89p+FcMiUYdm/s=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=IdjASJHxuiD+tymW+DPVdxsWgbi1J+uj+R5xOg+aU3JxynB/ukTsVvnGq7fS2cXF+jHlic8ZgBxFwsm4H3CEooTFyAzO+rN5gc0td0Wol0JDZKSRYprje1yXoCqYwSk2Fcrwt7wXG5envMuRS49yvtY8SKB/rKcLqLzx7G0UKMY/TpACRpSCYkGZAJMSa+eIKU3tNhSjlfN3EQlCvKA5tBroNUCg6zeLVZcF0gofL6u4h788UeFndVAJwRon1uQuRcrRkd01iRVrlCRV/lEjiGMnSXNnIODAJ3BIQMXmc+KhSOXMmW8p3zsTbJspZiZGpKSfEeOf4e0mSi0A6JCZ+w==
-X-YMail-OSG: B22.dV4VM1kVZzmBsXXUQgjdYN358GoSAxGLH_QYMWwz_W0kwgJe1fpVoD1On37
- NUPN84WnwyO_peJQbJ4l.f8xHladpKR76K.GgSb7fSeZKoDewHuPCebf3Z_2mS1oekR.HbaVFrVz
- 5S62sP2lrLQUV32hMb_CMGf5LgxLBydZCr1_LC_s4rvjtIDUTvw7bxwh.t6qYghuSldy88Y2BIe3
- TfYbbmaTqEztLRENPoK26sLYlILdvBn6qWJDODoP_4QHmVdZQ8SMSM2E22q_hQX9pNkOY9FYl69P
- Mj.HJQG7YAgxydLXDd9VxhLYWkrJ433fgaQx8dnftPVYtZHMwrpj1Oaq480lWvgUTUNHfx34Kl8L
- 5oeWjRFiv3ZhNKfSoT5CpjzPF4RtODvC0moYOO2z9gkdFunuR.liqknL3bdmwPJELOhqlbfjguFZ
- my7ENcBXQmD8VdtLJfBhOCvyeMfD5lwZD1dNeaWNxiMTAsnIc96gWeTbEWGhsnT0XcKk68wR5tQM
- PDofUkv90IQYlx.E0moQCt7TEJ.P66vuGLCNJU.fk570vq2MMC61NbIKQMd4BKtEGVgPP.kwvXlV
- ONecITZhZYreKuwafqQnzIY38Q2NmVVFahTfgCXttiUf.ykOTFAMgmGQ5f40_bfQkeLTKk8DJPwK
- i8b8jqWuFI34R45wfeDSGwNFgpwaFQBr3yTkrAe9wP3wZPz2L94gZFZW81IfEDMqmmWpAb9FC.Kh
- vGE0bGAY69giUGQNEj1wtsR9k3PIh.CLtnTHM_1hP6dSewAUwFpMxGllNTXU1s7FZSrXIc160anO
- uR89DT6hLLOG.4RRuAmiA.SDLKqw0oIJKwuXrzCzgCFHNAzl_YCPlOLQNgEOrWBOGkHqDBC5vt_S
- 7BwYfw.M7wjhvjfORXsS.ibeSTVNRM_BDL62U.gao7Nhw4HGKQNP4jWQ2xXnXf.RkVh59V77kXVa
- xJO_VSl6wrmLhxrPwRS59vFSCeYD5wQjKEacsFhNYB7WoJEVp4jQaWFDxi5OSU17t7ibvsEkm5YK
- 0o8mwe2TJUUKGYvnHIBbdtg.clpFi6tJFp6Xf_dxkaB_lyx.dSbSRYZWD54Usba19RlCU_zTJrZl
- 82f01LA7zkFae8p.MxLzjIDZtMyffycGmFaQPzNoaZmaqaAGc3LaDgQWMgEElzyrtXV5zYhwYeGV
- RwIqVvrWmlYNXykFoC4lwoiF49V6Aguoy.hdBh23ECjIGdzNypbe.ldq3hkoWeh7VqZo0JcjJuJr
- mfYlsUAKl7rAz6as0jOb3rI46rK3VVsGgO_WZWjX.WyE9I599Q1gQsSN.ZM8T2vWBN0LFdw7rJH.
- Is2HPYM9WTtu8PuiikhPaB_dq_S70ulOxgUiOsLxBF2BnBBtCb0o75nw0lx8X580tm3Oz8OT3U2p
- QlVg6esQqKR5sFRozNt60f4FUWouCa7I.
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic316.consmr.mail.gq1.yahoo.com with HTTP; Thu, 18 Jun 2020 11:20:03 +0000
-Received: by smtp416.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID be5fb830dad37ee084f7e0af79317143; 
- Thu, 18 Jun 2020 11:20:01 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] erofs: fix partially uninitialized misuse in
- z_erofs_onlinepage_fixup
-Date: Thu, 18 Jun 2020 19:19:36 +0800
-Message-Id: <20200618111936.19845-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49nhWd1s36zDrGw
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jun 2020 22:46:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1592484377;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=Jx2chy+DXXXPslp3yfr/ExQZEB8p36U9cp+dBBsmha4=;
+ b=h7Ftdw1WTmPytI2eIit/SWPmSzK6eAJPPK5WnFzNeImRDPOgmU4UbF07fZMqn28Lgn/Isn
+ f1tAGW+XUov5PUGD9D5FdA5ppKS3t8F5l4neaqCFjA5VCGCdQbWQcCOi4OdZYxKX9WIuBg
+ 7IQc4CeH4+El7k8T/bQC/sUyYwm2eN0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1592484377;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=Jx2chy+DXXXPslp3yfr/ExQZEB8p36U9cp+dBBsmha4=;
+ b=h7Ftdw1WTmPytI2eIit/SWPmSzK6eAJPPK5WnFzNeImRDPOgmU4UbF07fZMqn28Lgn/Isn
+ f1tAGW+XUov5PUGD9D5FdA5ppKS3t8F5l4neaqCFjA5VCGCdQbWQcCOi4OdZYxKX9WIuBg
+ 7IQc4CeH4+El7k8T/bQC/sUyYwm2eN0=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-vH2BVQy_MKCHqIZjegPqmA-1; Thu, 18 Jun 2020 08:46:15 -0400
+X-MC-Unique: vH2BVQy_MKCHqIZjegPqmA-1
+Received: by mail-ot1-f71.google.com with SMTP id w20so2539506oth.20
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jun 2020 05:46:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc:content-transfer-encoding;
+ bh=Jx2chy+DXXXPslp3yfr/ExQZEB8p36U9cp+dBBsmha4=;
+ b=QhRcPorEkhphsVcGHDbwDaogEBn1LrrH1E8UWUhLn3kAoo2K4FJKm6Eu5miv4ceZ8g
+ Xmkz8QjISIQpSCyc84Znb2jhKjbanJ2Ghr/q8tqJ9yxKTxloYOUo/dnjayGipOwoULKQ
+ 8qSVWcENdAA1a1ZJgg9g720SFTqZglZzDbZzvSDN3r1vlop9JNRzOdgoJla7npAVWrx0
+ BC/jt4TJ7LBjxigu2NzgFJT3Dx7aYdMIbY1anUnFp0SfiTeQ4LvuQFXKSbo1PHGbr54q
+ VIr30myODSvCsj7P+ZaR6/bxu+Gy+8tr5b8WTngF1sgeBCLECrhVS24ewkKHg+K8oPSK
+ 4wQQ==
+X-Gm-Message-State: AOAM530N/qOt67uQMhGiSr90kDK9L4/GsiXUwaWzh1eBoI5+NbiYBHQv
+ KH3Zdxz3Xgh9O5h89em25p117WYmoYajuzgIaZaTSri4Zd2+kzoDfeRvSG1k9L0srLDESGKLthA
+ +5188cn9SepKDy8MHxMEmoQKT9QtDNSfb4o8OBh2H
+X-Received: by 2002:a05:6830:10c8:: with SMTP id
+ z8mr3014466oto.95.1592484374677; 
+ Thu, 18 Jun 2020 05:46:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOwYhxZwvrmXCEEJ4lNIcITT1uhrr+sNqXkjoRh5QLgqAWYsSVfGAkiWuBNYfSRh2ekFx49DQ8VN9O2a7lFfU=
+X-Received: by 2002:a05:6830:10c8:: with SMTP id
+ z8mr3014426oto.95.1592484374383; 
+ Thu, 18 Jun 2020 05:46:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20200618111936.19845-1-hsiangkao.ref@aol.com>
+References: <20200414150233.24495-1-willy@infradead.org>
+ <20200414150233.24495-17-willy@infradead.org>
+ <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+ <20200617003216.GC8681@bombadil.infradead.org>
+ <CAHpGcMK6Yu0p-FO8CciiySqh+qcWLG-t3hEaUg-rqJnS=2uhqg@mail.gmail.com>
+ <20200617022157.GF8681@bombadil.infradead.org>
+In-Reply-To: <20200617022157.GF8681@bombadil.infradead.org>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Thu, 18 Jun 2020 14:46:03 +0200
+Message-ID: <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to
+ mpage_readahead
+To: Matthew Wilcox <willy@infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,74 +103,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hongyu Jin <hongyu.jin@unisoc.com>,
- stable@vger.kernel.org
+Cc: cluster-devel <cluster-devel@redhat.com>,
+ linux-ext4 <linux-ext4@vger.kernel.org>,
+ Steven Whitehouse <swhiteho@redhat.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, John Hubbard <jhubbard@nvidia.com>,
+ =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+ LKML <linux-kernel@vger.kernel.org>, Junxiao Bi <junxiao.bi@oracle.com>,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ William Kucharski <william.kucharski@oracle.com>,
+ Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-f2fs-devel@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
+ Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
+ Bob Peterson <rpeterso@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
+On Wed, Jun 17, 2020 at 4:22 AM Matthew Wilcox <willy@infradead.org> wrote:
+> On Wed, Jun 17, 2020 at 02:57:14AM +0200, Andreas Gr=C3=BCnbacher wrote:
+> > Am Mi., 17. Juni 2020 um 02:33 Uhr schrieb Matthew Wilcox <willy@infrad=
+ead.org>:
+> > >
+> > > On Wed, Jun 17, 2020 at 12:36:13AM +0200, Andreas Gruenbacher wrote:
+> > > > Am Mi., 15. Apr. 2020 um 23:39 Uhr schrieb Matthew Wilcox <willy@in=
+fradead.org>:
+> > > > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > > >
+> > > > > Implement the new readahead aop and convert all callers (block_de=
+v,
+> > > > > exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qn=
+x6,
+> > > > > reiserfs & udf).  The callers are all trivial except for GFS2 & O=
+CFS2.
+> > > >
+> > > > This patch leads to an ABBA deadlock in xfstest generic/095 on gfs2=
+.
+> > > >
+> > > > Our lock hierarchy is such that the inode cluster lock ("inode gloc=
+k")
+> > > > for an inode needs to be taken before any page locks in that inode'=
+s
+> > > > address space.
+> > >
+> > > How does that work for ...
+> > >
+> > > writepage:              yes, unlocks (see below)
+> > > readpage:               yes, unlocks
+> > > invalidatepage:         yes
+> > > releasepage:            yes
+> > > freepage:               yes
+> > > isolate_page:           yes
+> > > migratepage:            yes (both)
+> > > putback_page:           yes
+> > > launder_page:           yes
+> > > is_partially_uptodate:  yes
+> > > error_remove_page:      yes
+> > >
+> > > Is there a reason that you don't take the glock in the higher level
+> > > ops which are called before readhead gets called?  I'm looking at XFS=
+,
+> > > and it takes the xfs_ilock SHARED in xfs_file_buffered_aio_read()
+> > > (called from xfs_file_read_iter).
+> >
+> > Right, the approach from the following thread might fix this:
+> >
+> > https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@r=
+edhat.com/T/#t
+>
+> In general, I think this is a sound approach.
+>
+> Specifically, I think FAULT_FLAG_CACHED can go away.  map_pages()
+> will bring in the pages which are in the page cache, so when we get to
+> gfs2_fault(), we know there's a reason to acquire the glock.
 
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
+We'd still be grabbing a glock while holding a dependent page lock.
+Another process could be holding the glock and could try to grab the
+same page lock (i.e., a concurrent writer), leading to the same kind
+of deadlock.
 
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
-
-Let's fix it now.
-
-Reported-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/erofs/zdata.h | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 7824f5563a55..92fbc0f0ba85 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -144,22 +144,24 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
-+	union z_erofs_onlinepage_converter u;
-+	int orig, orig_index, val;
-+
- repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	u.v = &page_private(page);
-+	orig = atomic_read(u.o);
- 
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
- 
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
- 
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
- }
- 
--- 
-2.24.0
+Andreas
 
