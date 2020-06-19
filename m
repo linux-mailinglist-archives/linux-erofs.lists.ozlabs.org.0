@@ -2,80 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8CAC1FFEDB
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 01:44:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D90F12004C0
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 11:14:39 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49nz705HgbzDrN8
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 09:44:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1592523868;
-	bh=6yDMfWv9i+zZQZGDtJwu1LqyRzLs+a1LvxCqhIx5USw=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=XdJnBXuMgZABDxSFwdCBM8C5gqghQ5dXD2rl9VMjcl70u/M3+W6TLeFRBQ+1Oz1Fz
-	 kvGIklzkgtkp0GyFBWKqmEj6O5lwj6r5WRIPSqoASrPpFsxnQ/XE4+cB/yYqmZ8ifm
-	 BserIEvnIoe5T5GAXuHAKcJ2qSskBHXnAMXbI73/57F1LKZfyvXEMAtUpIWKfRQ4h4
-	 q7PsvsnDhap1Es8LeWrmFhz6O7QRqDk9k24SkcvhO/H78lGIxCUIQz3WgYZJ2qEHi2
-	 USZBnvDQc2EoCKKzF3FRx1EKDQFGuZrtMvbwjpu3bBVi3jZi/nphmsrKX+En9vqm7T
-	 rJ16btZU99Gyg==
+	by lists.ozlabs.org (Postfix) with ESMTP id 49pCms2fq5zDrNm
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2020 19:14:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=unisoc.com (client-ip=222.66.158.135;
+ helo=shsqr01.spreadtrum.com; envelope-from=hongyu.jin@unisoc.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.31; helo=sonic315-55.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=srQl0r5z; dkim-atps=neutral
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com
- (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
+ dmarc=none (p=none dis=none) header.from=unisoc.com
+X-Greylist: delayed 772 seconds by postgrey-1.36 at bilbo;
+ Fri, 19 Jun 2020 19:14:32 AEST
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49nz6l2M0gzDrMb
- for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 09:44:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1592523844; bh=Asfu5Z94gNQ7XaBROjojNrJwo7jut1Y+OrjYRXVMET0=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=srQl0r5zFsbvovsydZAvPTnpNHBid90kLOrvipT+G4JOHT7xyss9yq/OGWsLZHH3V+en8ziRtU4Jgp8jr5JE+yj/tn0otaQ1ASsK2x07JCbTMqrfcg/tNrjBp4NHdVgKcYvQmEdpCvw3msv62bkryEFKiRNqvHYgvMOG6L/2sweyJsTUHuphfD0Q6SwQit+hqy7eQERz8RqtcCkrZ5L9zop/lw0PUVHNngf5Q42p7/i552YzI7p/rOmW8hjBOA58qRQYldWTxzEKk22er/xovfRDsh/UrfykROEJOvqIXsa4Xbp9DJWS24lB2exyazxrNtx2B3akos/ixRaGqB8Uqg==
-X-YMail-OSG: xSrhU.cVM1kUcfO5gY9kaoFHyQgqMiRLrSfI43yWnRiOQ84HFNbvqWDF97fSYc6
- J0b9moHnopLgeZqs10Gj9apJlSZ8PME8dk4y_4DEzI0u3h5TbRXLXPCBsTGySxOj9VX.2bijtAcG
- Etxzk6UVXRZxla6mnU0tLic1Z2EdVwsmPdmv2BhAKUCTNG_FbzwUzd_eXtOBzE627deivbH2EBu7
- MknW9WsFn86JXrT18crQ2ZKDO5ulpmSp1QDhe2rBaZijH9fvGKg2.4AVn8OESeMaHjA7XzRvvT3x
- wZKrCemArwEZizKcPaROXH8_Lyw4_z51Liw_W4keitkIAAeOE9XKdBe_XGeAOAi12jDRjS8A1Mx4
- le01xyRQlnFNwNLruU3ibw4gOSb5ipPxK6CZbrsnc9zuMVilP5D2c45_uYImg9rMvHDy75VsJcUj
- owigH5ficrVcSz7EBhtNNDUFPNcta10hFqN4FBm431nUrCkEvRKceMXNVyhnSr12UKam_mGZDldP
- EwkMympLIwMpTK2YR0w5qvVtm1XzKYe0BPmsuHdpFxqG62kqkECX5f257A7qW17G9WaaovnJoDTs
- EhVtVjkAzazvcMcQTDCTaHwMFjF0m3R10DyDsLUER9mFdGu.ehlPRHou4mExSFJb8CuoN6qiwvsH
- t7GB6AwKm99sO7Gldr6tmreKwkICXv9USLfxNsOWIAJOhdaZoPxuIpVoMqW77AJK05ofwZAjHyQX
- g86udCo5C5v.UsImQdCAb5G5622jr1VVyBRlRf7Yxq440ZF0Gj7MqbGbx8VsuNOF8Om3R1EWlNya
- 5Ep0B6Tg5RN6rFnrokSKCerl60NVBPFv1I5Agm_9A0gfzHhL_DlqSXz1z1MlTPQFiTBUFBO60xau
- ddp9WSy7rhLqteqVA9pmPJb5jlyriXw024VUzYiYSEuA..wX2sXDjbHyW51nR5cb9jQjhn804ogw
- K6nggt1vFkKvJMsRN22oIMw6SRqEAOl2YBhnwXwIORgigq9Nh._P98kLFDxsEzTEfvfb6ekLJlSg
- Me7eovZdHPKQC.AGufahuruA1WX_6jH22yqJ2_k_ZA__Qw8Z_CqJZpJAfzuwqbe61xasnQzrhWZM
- 0gLDr3Zpt_T2g0XSAtNQ4TccIihInWLxcXn.VGgweJaJ_SRW2_mJBRYIc7VaVS0aHrHKeaOYyb7U
- 9LKxbyAikoJj1b7uqf3O9mm3MlEB6uo.esGagHbVStjT_c.qFZoV82V6O1lO8Jtc8NRb2WAjTTXD
- 6bz5hd4shQxwToxgBVHEerPNABVSha6ud4MTk15UKmLrqEEm5Zx1WusyWfphH7rkR1C6SZqS9sLG
- 7sK25m0pldGL7P5oIAkCyxydCHC4KKDlxZi3Cx.LqlQqAzzHBvbePG_PTrdgsQZC.wPVHUT3grAE
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 18 Jun 2020 23:44:04 +0000
-Received: by smtp415.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID d13ff620e5f9d81f37a1475971f3080d; 
- Thu, 18 Jun 2020 23:44:01 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] erofs: fix partially uninitialized misuse in
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49pCmm3x4czDrJ7
+ for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2020 19:14:26 +1000 (AEST)
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+ by SHSQR01.spreadtrum.com with ESMTPS id 05J9Dcfx045854
+ (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+ Fri, 19 Jun 2020 17:13:39 +0800 (CST)
+ (envelope-from hongyu.jin@unisoc.com)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX01.spreadtrum.com
+ (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 19 Jun 2020
+ 17:13:21 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.0847.030; Fri, 19 Jun 2020 17:13:08 +0800
+From: =?gb2312?B?vfC67NPuIChIb25neXUgSmluKQ==?= <hongyu.jin@unisoc.com>
+To: Gao Xiang <hsiangkao@aol.com>, "linux-erofs@lists.ozlabs.org"
+ <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>
+Subject: RE: [PATCH v2] erofs: fix partially uninitialized misuse in
  z_erofs_onlinepage_fixup
-Date: Fri, 19 Jun 2020 07:43:49 +0800
-Message-Id: <20200618234349.22553-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200618111936.19845-1-hsiangkao@aol.com>
+Thread-Topic: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Thread-Index: AQHWRcphTFCNsOawuk2LQqgGLvVLoajfp6hw
+Date: Fri, 19 Jun 2020 09:13:08 +0000
+Message-ID: <206e5c58a4df4136b488eb4bd2958cab@BJMBX01.spreadtrum.com>
 References: <20200618111936.19845-1-hsiangkao@aol.com>
+ <20200618234349.22553-1-hsiangkao@aol.com>
+In-Reply-To: <20200618234349.22553-1-hsiangkao@aol.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.126.169]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MAIL: SHSQR01.spreadtrum.com 05J9Dcfx045854
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,76 +66,88 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hongyu Jin <hongyu.jin@unisoc.com>,
- stable@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
-
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
-
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
-
-Let's fix it now.
-
-Reported-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
-change since v1:
- move .v assignment out since it doesn't need for every loop;
-
- fs/erofs/zdata.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 7824f5563a55..9b66c28b3ae9 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
--repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
-+	int orig, orig_index, val;
- 
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+repeat:
-+	orig = atomic_read(u.o);
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
- 
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
- 
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
- }
- 
--- 
-2.24.0
-
+SGkgeGlhbmc6DQoNCkhvbmd5dSByZXBvcnRlZCAiaWQgIT0gaW5kZXgiIGluIHpfZXJvZnNfb25s
+aW5lcGFnZV9maXh1cCgpIHdpdGggc3BlY2lmaWMgYWFyY2g2NCBlbnZpcm9ubWVudCBlYXNpbHks
+IHdoaWNoIHdhc24ndCBzaG93biBiZWZvcmUuDQoNCkFmdGVyIGRpZ2dpbmcgaW50byB0aGF0LCBJ
+IGZvdW5kIHRoYXQgaGlnaCAzMiBiaXRzIG9mIHBhZ2UtPnByaXZhdGUgd2FzIHNldCB0byAweGFh
+YWFhYWFhIHJhdGhlciB0aGFuIDAgKGR1ZSB0byB6X2Vyb2ZzX29ubGluZXBhZ2VfaW5pdCBiZWhh
+dmlvciB3aXRoIHNwZWNpZmljIGNvbXBpbGVyIG9wdGlvbnMpLiBBY3R1YWxseSB3ZSBvbmx5IHVz
+ZSBsb3cNCjMyIGJpdHMgdG8ga2VlcCB0aGUgcGFnZSBpbmZvcm1hdGlvbiBzaW5jZSBwYWdlLT5w
+cml2YXRlIGlzIG9ubHkgNCBieXRlcyBvbiBtb3N0IDMyLWJpdCBwbGF0Zm9ybXMuIEhvd2V2ZXIg
+el9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwKCkgdXNlcyB0aGUgdXBwZXIgMzIgYml0cyBieSBtaXN0
+YWtlLg0KDQpUZXN0ZWQtYnk6IGhvbmd5dS5qaW5AdW5pc29jLmNvbQ0KDQpJdCdzIG9rLg0KDQot
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogR2FvIFhpYW5nIFttYWlsdG86aHNpYW5n
+a2FvQGFvbC5jb21dDQpTZW50OiBGcmlkYXksIEp1bmUgMTksIDIwMjAgNzo0NCBBTQ0KVG86IGxp
+bnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc7IENoYW8gWXUgPHl1Y2hhbzBAaHVhd2VpLmNvbT4N
+CkNjOiBDaGFvIFl1IDxjaGFvQGtlcm5lbC5vcmc+OyBMaSBHdWlmdSA8Ymx1Y2UubGlndWlmdUBo
+dWF3ZWkuY29tPjsgRmFuZyBXZWkgPGZhbmd3ZWkxQGh1YXdlaS5jb20+OyBMS01MIDxsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgR2FvIFhpYW5nIDxoc2lhbmdrYW9AcmVkaGF0LmNvbT47
+IL3wuuzT7iAoSG9uZ3l1IEppbikgPGhvbmd5dS5qaW5AdW5pc29jLmNvbT47IHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmcNClN1YmplY3Q6IFtQQVRDSCB2Ml0gZXJvZnM6IGZpeCBwYXJ0aWFsbHkgdW5p
+bml0aWFsaXplZCBtaXN1c2UgaW4gel9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwDQoNCkZyb206IEdh
+byBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+DQoNCkhvbmd5dSByZXBvcnRlZCAiaWQgIT0g
+aW5kZXgiIGluIHpfZXJvZnNfb25saW5lcGFnZV9maXh1cCgpIHdpdGggc3BlY2lmaWMgYWFyY2g2
+NCBlbnZpcm9ubWVudCBlYXNpbHksIHdoaWNoIHdhc24ndCBzaG93biBiZWZvcmUuDQoNCkFmdGVy
+IGRpZ2dpbmcgaW50byB0aGF0LCBJIGZvdW5kIHRoYXQgaGlnaCAzMiBiaXRzIG9mIHBhZ2UtPnBy
+aXZhdGUgd2FzIHNldCB0byAweGFhYWFhYWFhIHJhdGhlciB0aGFuIDAgKGR1ZSB0byB6X2Vyb2Zz
+X29ubGluZXBhZ2VfaW5pdCBiZWhhdmlvciB3aXRoIHNwZWNpZmljIGNvbXBpbGVyIG9wdGlvbnMp
+LiBBY3R1YWxseSB3ZSBvbmx5IHVzZSBsb3cNCjMyIGJpdHMgdG8ga2VlcCB0aGUgcGFnZSBpbmZv
+cm1hdGlvbiBzaW5jZSBwYWdlLT5wcml2YXRlIGlzIG9ubHkgNCBieXRlcyBvbiBtb3N0IDMyLWJp
+dCBwbGF0Zm9ybXMuIEhvd2V2ZXIgel9lcm9mc19vbmxpbmVwYWdlX2ZpeHVwKCkgdXNlcyB0aGUg
+dXBwZXIgMzIgYml0cyBieSBtaXN0YWtlLg0KDQpMZXQncyBmaXggaXQgbm93Lg0KDQpSZXBvcnRl
+ZC1ieTogSG9uZ3l1IEppbiA8aG9uZ3l1LmppbkB1bmlzb2MuY29tPg0KRml4ZXM6IDM4ODNhNzlh
+YmQwMiAoInN0YWdpbmc6IGVyb2ZzOiBpbnRyb2R1Y2UgVkxFIGRlY29tcHJlc3Npb24gc3VwcG9y
+dCIpDQpDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNC4xOSsNClNpZ25lZC1vZmYtYnk6
+IEdhbyBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+DQotLS0NCmNoYW5nZSBzaW5jZSB2MToN
+CiBtb3ZlIC52IGFzc2lnbm1lbnQgb3V0IHNpbmNlIGl0IGRvZXNuJ3QgbmVlZCBmb3IgZXZlcnkg
+bG9vcDsNCg0KIGZzL2Vyb2ZzL3pkYXRhLmggfCAyMCArKysrKysrKysrLS0tLS0tLS0tLQ0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL2ZzL2Vyb2ZzL3pkYXRhLmggYi9mcy9lcm9mcy96ZGF0YS5oIGluZGV4IDc4MjRmNTU2
+M2E1NS4uOWI2NmMyOGIzYWU5IDEwMDY0NA0KLS0tIGEvZnMvZXJvZnMvemRhdGEuaA0KKysrIGIv
+ZnMvZXJvZnMvemRhdGEuaA0KQEAgLTE0NCwyMiArMTQ0LDIyIEBAIHN0YXRpYyBpbmxpbmUgdm9p
+ZCB6X2Vyb2ZzX29ubGluZXBhZ2VfaW5pdChzdHJ1Y3QgcGFnZSAqcGFnZSkgIHN0YXRpYyBpbmxp
+bmUgdm9pZCB6X2Vyb2ZzX29ubGluZXBhZ2VfZml4dXAoc3RydWN0IHBhZ2UgKnBhZ2UsDQogdWlu
+dHB0cl90IGluZGV4LCBib29sIGRvd24pDQogew0KLXVuc2lnbmVkIGxvbmcgKnAsIG8sIHYsIGlk
+Ow0KLXJlcGVhdDoNCi1wID0gJnBhZ2VfcHJpdmF0ZShwYWdlKTsNCi1vID0gUkVBRF9PTkNFKCpw
+KTsNCit1bmlvbiB6X2Vyb2ZzX29ubGluZXBhZ2VfY29udmVydGVyIHUgPSB7IC52ID0gJnBhZ2Vf
+cHJpdmF0ZShwYWdlKSB9Ow0KK2ludCBvcmlnLCBvcmlnX2luZGV4LCB2YWw7DQoNCi1pZCA9IG8g
+Pj4gWl9FUk9GU19PTkxJTkVQQUdFX0lOREVYX1NISUZUOw0KLWlmIChpZCkgew0KK3JlcGVhdDoN
+CitvcmlnID0gYXRvbWljX3JlYWQodS5vKTsNCitvcmlnX2luZGV4ID0gb3JpZyA+PiBaX0VST0ZT
+X09OTElORVBBR0VfSU5ERVhfU0hJRlQ7DQoraWYgKG9yaWdfaW5kZXgpIHsNCiBpZiAoIWluZGV4
+KQ0KIHJldHVybjsNCg0KLURCR19CVUdPTihpZCAhPSBpbmRleCk7DQorREJHX0JVR09OKG9yaWdf
+aW5kZXggIT0gaW5kZXgpOw0KIH0NCg0KLXYgPSAoaW5kZXggPDwgWl9FUk9GU19PTkxJTkVQQUdF
+X0lOREVYX1NISUZUKSB8DQotKChvICYgWl9FUk9GU19PTkxJTkVQQUdFX0NPVU5UX01BU0spICsg
+KHVuc2lnbmVkIGludClkb3duKTsNCi1pZiAoY21weGNoZyhwLCBvLCB2KSAhPSBvKQ0KK3ZhbCA9
+IChpbmRleCA8PCBaX0VST0ZTX09OTElORVBBR0VfSU5ERVhfU0hJRlQpIHwNCisoKG9yaWcgJiBa
+X0VST0ZTX09OTElORVBBR0VfQ09VTlRfTUFTSykgKyAodW5zaWduZWQgaW50KWRvd24pOw0KK2lm
+IChhdG9taWNfY21weGNoZyh1Lm8sIG9yaWcsIHZhbCkgIT0gb3JpZykNCiBnb3RvIHJlcGVhdDsN
+CiB9DQoNCi0tDQoyLjI0LjANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCiBU
+aGlzIGVtYWlsIChpbmNsdWRpbmcgaXRzIGF0dGFjaG1lbnRzKSBpcyBpbnRlbmRlZCBvbmx5IGZv
+ciB0aGUgcGVyc29uIG9yIGVudGl0eSB0byB3aGljaCBpdCBpcyBhZGRyZXNzZWQgYW5kIG1heSBj
+b250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMgcHJpdmlsZWdlZCwgY29uZmlkZW50aWFsIG9yIG90
+aGVyd2lzZSBwcm90ZWN0ZWQgZnJvbSBkaXNjbG9zdXJlLiBVbmF1dGhvcml6ZWQgdXNlLCBkaXNz
+ZW1pbmF0aW9uLCBkaXN0cmlidXRpb24gb3IgY29weWluZyBvZiB0aGlzIGVtYWlsIG9yIHRoZSBp
+bmZvcm1hdGlvbiBoZXJlaW4gb3IgdGFraW5nIGFueSBhY3Rpb24gaW4gcmVsaWFuY2Ugb24gdGhl
+IGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgb3IgdGhlIGluZm9ybWF0aW9uIGhlcmVpbiwgYnkgYW55
+b25lIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lwaWVudCwgb3IgYW4gZW1wbG95ZWUgb3Ig
+YWdlbnQgcmVzcG9uc2libGUgZm9yIGRlbGl2ZXJpbmcgdGhlIG1lc3NhZ2UgdG8gdGhlIGludGVu
+ZGVkIHJlY2lwaWVudCwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhl
+IGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIGRvIG5vdCByZWFkLCBjb3B5LCB1c2Ugb3IgZGlz
+Y2xvc2UgYW55IHBhcnQgb2YgdGhpcyBlLW1haWwgdG8gb3RoZXJzLiBQbGVhc2Ugbm90aWZ5IHRo
+ZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIHBlcm1hbmVudGx5IGRlbGV0ZSB0aGlzIGUtbWFpbCBh
+bmQgYW55IGF0dGFjaG1lbnRzIGlmIHlvdSByZWNlaXZlZCBpdCBpbiBlcnJvci4gSW50ZXJuZXQg
+Y29tbXVuaWNhdGlvbnMgY2Fubm90IGJlIGd1YXJhbnRlZWQgdG8gYmUgdGltZWx5LCBzZWN1cmUs
+IGVycm9yLWZyZWUgb3IgdmlydXMtZnJlZS4gVGhlIHNlbmRlciBkb2VzIG5vdCBhY2NlcHQgbGlh
+YmlsaXR5IGZvciBhbnkgZXJyb3JzIG9yIG9taXNzaW9ucy4NCrG+08q8/rywxuS4vbz+vt/T0LGj
+w9zQ1NbKo6zK3Leowsmxo7uksru1w9C5wrajrL32t6LLzbj4sb7Tyrz+y/nWuMzYtqjK1bz+yMuh
+o9HPvfu3x76tytrIqMq508OhotD7tKuhoreisry78ri01saxvtPKvP678sbkxNrI3aGjyPS3x7jD
+zNi2qMrVvP7Iy6Osx+vO8NTEtsGhori01sahoiDKudPDu/LF+8K2sb7Tyrz+tcTIzrrOxNrI3aGj
+yPTO88rVsb7Tyrz+o6zH67TTz7XNs9bQ08C+w9DUyb6z/bG+08q8/rywy/nT0Li9vP6jrLKi0tS7
+2Li008q8/rXEt73Kvby0v8y45taqt6K8/sjLoaPO3reosaPWpLulwarN+M2o0MW8sMqxoaKwssir
+oaLO3s7zu/K3wLa+oaO3orz+yMu21MjOus607cKpvvmyu7PQtaPU8MjOoaMNCg==
