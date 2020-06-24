@@ -2,51 +2,89 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E1E2077AB
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2020 17:38:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0861207EB3
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2020 23:36:42 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49sS2w03kRzDqcw
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 01:38:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49sc0m0yWzzDqkq
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 07:36:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=207.211.31.81;
+ helo=us-smtp-delivery-1.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=YBQvROBa; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=YBQvROBa; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-1.mimecast.com (us-smtp-2.mimecast.com
+ [207.211.31.81])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49sS2p2Rn4zDqBg
- for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2020 01:37:46 +1000 (AEST)
-IronPort-SDR: wt5zMGt025+472sMg4n1aLlqb/S1+cXFdRe7r+vYXq40Vn1U2WwA9yFHPH4X9Axi3uNRiIv+r0
- /SxOfGw8XDdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146013111"
-X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; d="scan'208";a="146013111"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
- by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 24 Jun 2020 08:37:23 -0700
-IronPort-SDR: RUoyAirJ6kJePYmPuTr8U6dWxKSO+cL6RHx5l1Q4K7i1EJ3ABsHMcHWPRiAxm1q7JTYUeUkjkB
- CF3OZvj5hw8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; d="scan'208";a="311681363"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
- by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 08:37:21 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1jo7Sj-00010O-5z; Wed, 24 Jun 2020 15:37:21 +0000
-Date: Wed, 24 Jun 2020 23:36:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- 3c597282887fd55181578996dca52ce697d985a5
-Message-ID: <5ef37315.2NY6O/2tUakUQY4i%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49sbP46tSzzDqZB
+ for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2020 07:09:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1593032950;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+ bh=2pN8y8R4hyWs50K8WtCaXoEyYKs6iO9bl9vkpzCFH6Q=;
+ b=YBQvROBaBd/50XvK91a/gnNzlirlMr6wq2zNmgeCsJx0ZbDxpb71PJGe8Z4HDg8WAg1F1j
+ EEARgAZtROMN7AaDgKhz9OKGZG/5tSYYbBLM+rFK7TeTePLCPF04GTFtSWfL9yrGM85+E2
+ BLmobFzEpqozDwmR0GhloCSIR5iqN5Q=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1593032950;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+ bh=2pN8y8R4hyWs50K8WtCaXoEyYKs6iO9bl9vkpzCFH6Q=;
+ b=YBQvROBaBd/50XvK91a/gnNzlirlMr6wq2zNmgeCsJx0ZbDxpb71PJGe8Z4HDg8WAg1F1j
+ EEARgAZtROMN7AaDgKhz9OKGZG/5tSYYbBLM+rFK7TeTePLCPF04GTFtSWfL9yrGM85+E2
+ BLmobFzEpqozDwmR0GhloCSIR5iqN5Q=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-5FRZvebVM86yIA97rX_zXQ-1; Wed, 24 Jun 2020 17:09:07 -0400
+X-MC-Unique: 5FRZvebVM86yIA97rX_zXQ-1
+Received: by mail-pj1-f70.google.com with SMTP id t12so1343968pju.8
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jun 2020 14:09:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+ :content-disposition:user-agent;
+ bh=2pN8y8R4hyWs50K8WtCaXoEyYKs6iO9bl9vkpzCFH6Q=;
+ b=DQU9pMkSyHSjuZvNEtakGJvJ2Xo5h512tK6xluZE3zYrS22Af14Xu2dZFgGn8WX5P5
+ W7xB/Wv+cQDAo8UbPb7kJbkZPLm52GZwTjcK0WwGSh12/Oi/hsXD2gzvDWkPw9j7deJ6
+ 58rTxZJajArl9yojWxQR4x7MpzP1BnUk7P+428LRg77CqoLpTxS4X/0vWzfptwIL8+Az
+ NWIyr0htHYBm2dvZZYoOFNclAl6vnTBxA8jGr9psIqlfVl6um+b0SHRoeuOW4uA/pe5J
+ XdizYiLcxHPRCNaiqle4qpJE41e+6Raw6AipOSr+dVJWPGWWx0vvnHnw88e6O6jZlAED
+ t8Iw==
+X-Gm-Message-State: AOAM530u7Gw0zH7Yx1C2ya2EjEAk19O/J+bc4uWIDFTDheTz7hTDYkQQ
+ 5/e/bRPkdbsxWbZSIXWPOtbg2NjwrFiFuW1XWTn9j9jDsDr/tzYkWkhfH5+L7v9j1HoZlS/S3FD
+ 1XSyQjlARiuoLsDuI/gSyvcD9
+X-Received: by 2002:a63:d10a:: with SMTP id k10mr5986030pgg.382.1593032946571; 
+ Wed, 24 Jun 2020 14:09:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwgphoFym365/PDSVJrFVtTszek0PwA+6CWAQZQWOuLi3upr+pG1TtMXtwnMnzAZq6bTP4C2Q==
+X-Received: by 2002:a63:d10a:: with SMTP id k10mr5985995pgg.382.1593032946284; 
+ Wed, 24 Jun 2020 14:09:06 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id a12sm21038739pfr.44.2020.06.24.14.09.01
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 24 Jun 2020 14:09:05 -0700 (PDT)
+Date: Thu, 25 Jun 2020 05:08:53 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 5.8-rc3
+Message-ID: <20200624210853.GA6242@xiangao.remote.csb>
 MIME-Version: 1.0
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,155 +96,52 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  fixes
-branch HEAD: 3c597282887fd55181578996dca52ce697d985a5  erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Hi Linus,
 
-elapsed time: 721m
+Could you consider this pull request for 5.8-rc3?
 
-configs tested: 132
-configs skipped: 4
+1 bugfix patch addresses regression recently reported by
+a vendor with specific compiler options. Need to fix it
+in this cycle.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This commit has been in -next (since next-20200621) and
+tested without strange happening.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-mips                malta_kvm_guest_defconfig
-sh                          rsk7203_defconfig
-arc                         haps_hs_defconfig
-xtensa                          iss_defconfig
-arm                          lpd270_defconfig
-arm                            lart_defconfig
-s390                              allnoconfig
-sparc64                             defconfig
-m68k                            mac_defconfig
-xtensa                       common_defconfig
-sh                          lboxre2_defconfig
-arm                           corgi_defconfig
-powerpc                      ppc6xx_defconfig
-arm                        mini2440_defconfig
-m68k                          multi_defconfig
-ia64                                defconfig
-m68k                        mvme147_defconfig
-mips                  decstation_64_defconfig
-arm                      tct_hammer_defconfig
-m68k                            q40_defconfig
-arm                       aspeed_g5_defconfig
-arm                         lubbock_defconfig
-arm                           tegra_defconfig
-h8300                    h8300h-sim_defconfig
-i386                              allnoconfig
-arm                          gemini_defconfig
-powerpc                 mpc8272_ads_defconfig
-riscv                          rv32_defconfig
-mips                        omega2p_defconfig
-arm                      footbridge_defconfig
-arm                          pxa910_defconfig
-mips                 decstation_r4k_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200624
-i386                 randconfig-a006-20200624
-i386                 randconfig-a003-20200624
-i386                 randconfig-a001-20200624
-i386                 randconfig-a005-20200624
-i386                 randconfig-a004-20200624
-x86_64               randconfig-a004-20200624
-x86_64               randconfig-a002-20200624
-x86_64               randconfig-a003-20200624
-x86_64               randconfig-a005-20200624
-x86_64               randconfig-a001-20200624
-x86_64               randconfig-a006-20200624
-i386                 randconfig-a013-20200624
-i386                 randconfig-a016-20200624
-i386                 randconfig-a012-20200624
-i386                 randconfig-a014-20200624
-i386                 randconfig-a011-20200624
-i386                 randconfig-a015-20200624
-i386                 randconfig-a013-20200623
-i386                 randconfig-a016-20200623
-i386                 randconfig-a012-20200623
-i386                 randconfig-a014-20200623
-i386                 randconfig-a015-20200623
-i386                 randconfig-a011-20200623
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+Thanks,
+Gao Xiang
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.8-rc3-fixes
+
+for you to fetch changes up to 3c597282887fd55181578996dca52ce697d985a5:
+
+  erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup (2020-06-24 09:47:44 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+Fix a regression which uses potential uninitialized
+high 32-bit value unexpectedly recently observed with
+specific compiler options.
+
+----------------------------------------------------------------
+Gao Xiang (1):
+      erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+
+ fs/erofs/zdata.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
