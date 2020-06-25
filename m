@@ -1,79 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A5A4209960
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 07:22:27 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 795B420997B
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 07:26:53 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49spL82k7LzDqjb
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 15:22:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49spRG3kXnzDqjb
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 15:26:50 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1593062544;
-	bh=IqCdKyDz4PLDzmfpnv/MfScK9aUO22kmZZIcAHAixR8=;
+	s=201707; t=1593062810;
+	bh=mIUWCHo0Dk4ZqEX3jZySRHiG+x64jbzUoBWINYYMar0=;
 	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
 	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=KDB73N+p/lAzOsC6rZNCnV69IypB/ITtGNsA2glqlMt+17pqX8lyXEZApX4Ulbj1R
-	 mi4nQD5XQ1gPTqWkPtOTdd547jtbPgnfFgbu5f5J1IlvRwR982D0sBGk/mvcMtr2mL
-	 Nk6ZlLXOsH8kZXPGMH95kes1nEYzoiDlrzUqOcRi5lUk7wt0lRoz5kj82Q8HfBTFNu
-	 NexeH6IcjgEEQJ+8LTbZT8cr6MMwAHXBHXDgElSSLkVVZ+BrPCTjfg/V1ns8E7iD/e
-	 3xPrKKl/Ha6VN+dE2ARikf03eVtIXpf9YZLGJKIUmmoxutryNimDkA7oMk5EzZoPw4
-	 AcHEj4f00DLrA==
+	b=RIjqyXHZlHW6hMrhiNVyjyRMxVjlXJajGVlcuNPvLXf/liCJyeKuUEflBDu7oT88k
+	 qnUjnXIu9FDLfwIJZ6AIPezbWLb+rEM9WoLyjdW6aKepTY4KDG3Z2qggtd7JAYNh1H
+	 S+wbUUu+1l4qC/hKX1ULQiNiXGzJYqFiiiF6p1hTi/A0J2jaXw5IYmSyT+hWVaS3Pm
+	 F3ux//a09pQj2lkx6OCkTcQXkFei3LegXMCpB7udMxHjCM8Ymk+RC0nsChWoVX5MmE
+	 iVzEd7GwRatTG3KPko+2INQL0vHJsI7QpyKh0zWoj4DIWx8XCX8cPqegnktEIQAAQl
+	 9MlJOHO9b8L6g==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.148; helo=sonic309-22.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=Bb4C8ESy; dkim-atps=neutral
-Received: from sonic309-22.consmr.mail.gq1.yahoo.com
- (sonic309-22.consmr.mail.gq1.yahoo.com [98.137.65.148])
+ header.s=a2048 header.b=q+FLrgcN; dkim-atps=neutral
+Received: from sonic308-8.consmr.mail.gq1.yahoo.com
+ (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49spL15XGlzDqgb
- for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2020 15:22:17 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49spR61CjBzDqgb
+ for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2020 15:26:41 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1593062531; bh=eWxg5wDTW3X7hg6BDoLBlNfZPh+/wNMxRAVo+gKvGyo=;
+ t=1593062794; bh=UI3MnVRcoC7IXe6/MF3z2voS16XTSftvJq41/v0i0mQ=;
  h=From:To:Cc:Subject:Date:References:From:Subject;
- b=Bb4C8ESyArnddsERuFBM9T8/uJncGv+C8biW+DjuBO9M1Knocei1uzf+E3G70lKsAwh4T98iIEk9jK1kwUr4JJhqGO82f1tsTX6ZTevmanDdxaFf24dcWNuPoMvRO8LcZ6qsPPaQ/rLcCvxrD1Rdhp8TjEJoztush/YA3ndcdSl1J1JG66ydOatjASt34HlpsofF3CbPsVR9hZVV2U7O43io6hCIguC3wrEtsuJTfhHZonY0qb+xzHfjgBL/bdYBSGp/CPuhrzB7nC20vkmOBhPqA1iuVQJvKYbWgJXs6Eaow9B5oCH7wLJT8y6qPka5NKfftAPMC2pGV/cFsyc1Vg==
-X-YMail-OSG: Sh.jItEVM1mIwdlDSVPWTqZOrD55TsNpghxm_hDOi2rn6Fb9ZRAFvpxsSxyR5pz
- cWn95piVIUneRb5iLTnH2OBLt9i8xgKqIS5vgzJzfKI8okLIZl.lyjpv9CqBhrUY_YqroDqvEhpo
- k27TDolHRqoyGI3hWFa2LtqmlSluu15mI.Kt.0OIgXEjkLUEBHWjsbk4AMb2KDVGDLTixd2enoFa
- SUgoAzo4AvyzMZweQNejdGqECS1HbgUQOuBQZwS9arJErorkow31JuN7drL_FtVNhVSh8QxXYSOY
- XCTvGh62OMHqwDyJQif7lXbGHjUsJBhYZOA8hP4R57qODUbAphcIvrLpzNBDysaL5IeBuDNJA.P6
- l9Ur22284sZWV3qe4HwgQUT6Cq64uRYCtyctUCxgUSAnPWgVE7QWLQlbGHkmScmnP.lQOPlYxEWt
- R0GSAMIf3xq.KerL5jAJCCqx528s3xQrATFAoXnNeOi6nxuRDXlKCYamksi4.lFWKLdOBWRu5V1H
- UjfMdzZ5q3G1L0Gg2S6LBtvA4YHa1NF8_QCb_yWLMWrw8IekFkJjAmOmigD3jSGMeFSiobXeTRcB
- YbMxkCNsugtFf7bMtY.wRN9T2mQWtfgFSq6yvGx2knVTLq84xWipLXpQsZXCLICVe8Ra6nO4QKmw
- kFZRialJWi8RdxroQGZtsi739muV_MxGRnmZI.XyST9ZR_Ih8C5HldR.B8NyqCUU3ydNwRzUqBn3
- f4lY8_g1PQXzoflWBLifgB1J4x4I.oAz3Qwc7ZbcXtcUpORA0lY1V38638._WDG3gPC8Dr1T7T1P
- wWAM11.CQmB0kvx9548r2QJnFPNbSAI1_SrIkM0Egr_JkSnFDLLwdxlCnvNG8xlogEwIRgxXWKsC
- oYINRq6hnPE4RqApHEYoUoPEURN4NvHMJs.0svy_xkzEiL0834gf9_H_jfpzJRIqpVl1yQdIzXlr
- jxXrLQM1MmM3uHU.gYEh_dWo2.hKV7_7wMcVo0OZaxcVJJ.5rA181PoHEWzkKGQVS0pA2PZk7Z68
- jQUTQ9OJF9GYFl2ChTeVmorsdkrFaTjStwA9P14Bsdjve.MpvmTKBj0BAtGV5QA4YHtrlnaE0t8L
- u2HdC7MwYnhb66VIcyWkPBMuuQNAmd1F2d2sjvr5KuUXVsWXgcwGawDo.vX4oanfTSoM4xLv3q_K
- QIjGdrBHauf5_5stOn3LW9Ck2qZk9.2Od3ryHq4rvGp_0yKQNTuW6JpEzAgbZymHGzGYHLkFNkP3
- dfRhLORnYFnGtg9qaxBfGtO0_widFvhzSWHK7HXkqtRj2Nb.QpuNKA.2WX7W105EyzWApNwQUo_I
- D9gxwsuAGKk.os3gblDhA6R1v4_ZaoeBdo864uJi0.XqvMIPvs7U_LOAyBW0CsOhMYO8qfD1ULA-
- -
+ b=q+FLrgcNq9vG8GAxW9nvdywce0SSUTQus1YoFMCEPcxjO6ebYukowjfltl7oQomoc5Q7LiaIOiDNd2MbVxtmY6r2Vftgmt1bvLeTlw2aguYVrBdDFUHF8fQ9kig6+MNcu82R9zTlLeEZz+COaVqx+9NO+8NclLcOR+wVu8cPDeS8KNhsZTkpnzxkujL2P/yz+CaWHvC9wj9lpE0XM/rWY8vw6b+csDmYBg34U8pxPnIgWwJYtyMSsQO45LBj5DVayy8OAJmJEDxOZvVWjGkWiRXK9Ye6xDN5n018oJfbxnnTXn0mw64rBVDLbtqVGkxWc+g1/bY4kC7bkxtl6VDSMg==
+X-YMail-OSG: bsdlrlgVM1mkmtWAtBgP9cd7AhcmSERQIEcd2YkdBf.6gO4emVzjvB2dLmUFp8r
+ cjny56dghxTfkipUFC6.qaE301sz9IPqjVuRndFGBZ8mBVdcD2Iqf3SWeqdGxbpwl.I77lAhGc_B
+ LQ9naH_UKJYbWqZLqrDXMK3tYqfwT43G4iqxmVkOGkEGPUfL4I2JSj3hpZgNo07Ec2QrgPLRpM2A
+ NRcxZ5811BcyCae3uFFyxKjyt3SvNkbY0pH6KiFo_RbwfchbeABwU0mIZ46SToRQnduLM5ZcXD3I
+ GFEi0uAMe5KZ52pCUi7E0zOTexz4nP6WLcie1bGmJqb1YmmnOw8uUiy4xihO6M3lpF3_.K8_vnhw
+ 1UFrUBXJ0Bwv_b8CQG_RMhWC99KIkNr6NZ2z2vjf5qKl6noXFuf54c2afLbxQHzO4V_QS9jKobKr
+ MV2qd4fbaMeoEkMYFhCTc1p7wHPgXVFiKUYLtziXnelQb1itno0u6Ii0Z7xrAFEw.expXc5ZNi1j
+ TdMksTyzUP9rfh9i_MzUUN8aLbhHZc2Je.qHbkffDuEapCJ0BiwT.JFr.PU7bNkxCoeFOoU0d9k3
+ M7L4OPaxK4FwcOygWJdMLcKyv5j1l7Od.Et9Q9R6B1iv9CclUE5pbh._nh4rVzy.Y_ANVNFVK6Wh
+ 1L9DjEgUJ_rAOmcH2VAa44xD_Vci73YuFCJcHjOwGxgJweYQbG0wg.7IPfScGCz3IF6OYWBa0YIL
+ LMRItIqaov8NPZEAIkSSZBqwvLdYEi4xSsT5VilBlsZ6yNjfZPC5nIaLcBntjvfRlB3fFFi2i8Cx
+ HJ4geP6EqOrqjX3GMHxGZnK2q9TOu28fRU9TH8GGE.ReLgDSI_wHSEyHRxGHXnlqpzpy.9OZ1Uet
+ 6UuSECRy2lYpxLL3Cepusfs0cz4SRvX_GcDAKiVdMFlGJX01UAVXyRnI5oN.P.INUfY6EKN34mFA
+ fJeg6t6hhwLJp3N5zoiKAFm5Vv2_BBnTAwXIRfhIaqXztduINazwS_D9R4sT5QRmq1NVmQMjLh1L
+ LzM4DoSqWXtpw4kbwO1XsCY9E15J5AhLhbdri3lnEZ2BOJ57ofyx6O4NUd2vwRpYfje91YX9U8xq
+ 1MgcmW3WMb1kDSx10794rWiETZLyPf7xBTuoGqp35K8HVcnZ.SUqUfrk4sqZWnTQXyVtxYvCxbXW
+ d7jfkloEzhFR3cOggEviexMQjQYnE2O.OgIPVPX2CmWwo0.ZSdlCNnO8OPXZ7uRuByHRmuQGAT9l
+ cooqJzFXJ0BR9WX1PDHS.5u1fq1ICoOKLoNrqdKSudbsJOhdSvvaDCHm0FfhD_6AgraWuh4TuLK2
+ SS8wuamo5utNLN448QDdvff7CpYuPykX5dQXpL7EDDdMr0_OEjvsCUbR1F2TwF6xlLimOkxwOnNt
+ _pQbABiWGWC1j245qO6II2T1BWsUKsltFFaA-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:22:11 +0000
-Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID c5f9560e0b507acc2701276e664e6e1e; 
- Thu, 25 Jun 2020 05:22:10 +0000 (UTC)
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:26:34 +0000
+Received: by smtp413.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 834819637f2457c34ebb73ab79a37a10; 
+ Thu, 25 Jun 2020 05:26:31 +0000 (UTC)
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4.y] erofs: fix partially uninitialized misuse in
+Subject: [PATCH 5.7.y] erofs: fix partially uninitialized misuse in
  z_erofs_onlinepage_fixup
-Date: Thu, 25 Jun 2020 13:21:57 +0800
-Message-Id: <20200625052157.1197-1-hsiangkao@aol.com>
+Date: Thu, 25 Jun 2020 13:26:18 +0800
+Message-Id: <20200625052618.2316-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20200625052157.1197-1-hsiangkao.ref@aol.com>
+References: <20200625052618.2316-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -116,18 +116,16 @@ Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-This fix has been merged into Linus's tree just now.
-The 5.4 backport can be trivially applied, though I sent out
-together with 4.19...
+The same as 5.4.y.
 
  fs/erofs/zdata.h | 20 ++++++++++----------
  1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index faf950189bd7..568d5a493876 100644
+index 7824f5563a55..9b66c28b3ae9 100644
 --- a/fs/erofs/zdata.h
 +++ b/fs/erofs/zdata.h
-@@ -148,22 +148,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
  static inline void z_erofs_onlinepage_fixup(struct page *page,
  	uintptr_t index, bool down)
  {
