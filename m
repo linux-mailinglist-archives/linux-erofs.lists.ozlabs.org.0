@@ -2,78 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 795B420997B
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 07:26:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37F4D20FA8C
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jun 2020 19:28:29 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49spRG3kXnzDqjb
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jun 2020 15:26:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 49xBCX29RFzDqc2
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Jul 2020 03:28:24 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1593062810;
-	bh=mIUWCHo0Dk4ZqEX3jZySRHiG+x64jbzUoBWINYYMar0=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=RIjqyXHZlHW6hMrhiNVyjyRMxVjlXJajGVlcuNPvLXf/liCJyeKuUEflBDu7oT88k
-	 qnUjnXIu9FDLfwIJZ6AIPezbWLb+rEM9WoLyjdW6aKepTY4KDG3Z2qggtd7JAYNh1H
-	 S+wbUUu+1l4qC/hKX1ULQiNiXGzJYqFiiiF6p1hTi/A0J2jaXw5IYmSyT+hWVaS3Pm
-	 F3ux//a09pQj2lkx6OCkTcQXkFei3LegXMCpB7udMxHjCM8Ymk+RC0nsChWoVX5MmE
-	 iVzEd7GwRatTG3KPko+2INQL0vHJsI7QpyKh0zWoj4DIWx8XCX8cPqegnktEIQAAQl
-	 9MlJOHO9b8L6g==
+	s=201707; t=1593538104;
+	bh=OtKxRnDoBqQgLAKzYyVlhISW+kOZx55YTkuE/fntDcg=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=HVm/tcF1WOWDoFncj5+H3oUFHXgB0d615f8EJ0C4qkDpd1/x2XLMg4n9WdPCGRV7c
+	 y0eKtKzRJhzzuIf7smhvcRcPNcB2MHthO+CnC90YpuCmI2fI29c7P+6I+QuBKuzUNo
+	 D3P4p1okBX4EnDPeYFIup5T+Bp8HlAXQgvNWgSnLh18VxKzVmI7Gr4yGU5jhpcleOX
+	 ndMfqHV3MvKckJmJ6i5qHandz0d97g6B3mKX/dt7hagndLL78017GDzTJ2C5kG6QE2
+	 ZOdQXwAZ/axuGmAOkgbsd2S9UeBS4FMdQgVahS1R35vPS0i6dPV6AqhGZH0Ccn2ON6
+	 XVilTE9LRR4OQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=q+FLrgcN; dkim-atps=neutral
-Received: from sonic308-8.consmr.mail.gq1.yahoo.com
- (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.40;
+ helo=out30-40.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
+ header.from=aliyun.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
+ header.s=s1024 header.b=r3pIElQD; dkim-atps=neutral
+Received: from out30-40.freemail.mail.aliyun.com
+ (out30-40.freemail.mail.aliyun.com [115.124.30.40])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49spR61CjBzDqgb
- for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2020 15:26:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1593062794; bh=UI3MnVRcoC7IXe6/MF3z2voS16XTSftvJq41/v0i0mQ=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=q+FLrgcNq9vG8GAxW9nvdywce0SSUTQus1YoFMCEPcxjO6ebYukowjfltl7oQomoc5Q7LiaIOiDNd2MbVxtmY6r2Vftgmt1bvLeTlw2aguYVrBdDFUHF8fQ9kig6+MNcu82R9zTlLeEZz+COaVqx+9NO+8NclLcOR+wVu8cPDeS8KNhsZTkpnzxkujL2P/yz+CaWHvC9wj9lpE0XM/rWY8vw6b+csDmYBg34U8pxPnIgWwJYtyMSsQO45LBj5DVayy8OAJmJEDxOZvVWjGkWiRXK9Ye6xDN5n018oJfbxnnTXn0mw64rBVDLbtqVGkxWc+g1/bY4kC7bkxtl6VDSMg==
-X-YMail-OSG: bsdlrlgVM1mkmtWAtBgP9cd7AhcmSERQIEcd2YkdBf.6gO4emVzjvB2dLmUFp8r
- cjny56dghxTfkipUFC6.qaE301sz9IPqjVuRndFGBZ8mBVdcD2Iqf3SWeqdGxbpwl.I77lAhGc_B
- LQ9naH_UKJYbWqZLqrDXMK3tYqfwT43G4iqxmVkOGkEGPUfL4I2JSj3hpZgNo07Ec2QrgPLRpM2A
- NRcxZ5811BcyCae3uFFyxKjyt3SvNkbY0pH6KiFo_RbwfchbeABwU0mIZ46SToRQnduLM5ZcXD3I
- GFEi0uAMe5KZ52pCUi7E0zOTexz4nP6WLcie1bGmJqb1YmmnOw8uUiy4xihO6M3lpF3_.K8_vnhw
- 1UFrUBXJ0Bwv_b8CQG_RMhWC99KIkNr6NZ2z2vjf5qKl6noXFuf54c2afLbxQHzO4V_QS9jKobKr
- MV2qd4fbaMeoEkMYFhCTc1p7wHPgXVFiKUYLtziXnelQb1itno0u6Ii0Z7xrAFEw.expXc5ZNi1j
- TdMksTyzUP9rfh9i_MzUUN8aLbhHZc2Je.qHbkffDuEapCJ0BiwT.JFr.PU7bNkxCoeFOoU0d9k3
- M7L4OPaxK4FwcOygWJdMLcKyv5j1l7Od.Et9Q9R6B1iv9CclUE5pbh._nh4rVzy.Y_ANVNFVK6Wh
- 1L9DjEgUJ_rAOmcH2VAa44xD_Vci73YuFCJcHjOwGxgJweYQbG0wg.7IPfScGCz3IF6OYWBa0YIL
- LMRItIqaov8NPZEAIkSSZBqwvLdYEi4xSsT5VilBlsZ6yNjfZPC5nIaLcBntjvfRlB3fFFi2i8Cx
- HJ4geP6EqOrqjX3GMHxGZnK2q9TOu28fRU9TH8GGE.ReLgDSI_wHSEyHRxGHXnlqpzpy.9OZ1Uet
- 6UuSECRy2lYpxLL3Cepusfs0cz4SRvX_GcDAKiVdMFlGJX01UAVXyRnI5oN.P.INUfY6EKN34mFA
- fJeg6t6hhwLJp3N5zoiKAFm5Vv2_BBnTAwXIRfhIaqXztduINazwS_D9R4sT5QRmq1NVmQMjLh1L
- LzM4DoSqWXtpw4kbwO1XsCY9E15J5AhLhbdri3lnEZ2BOJ57ofyx6O4NUd2vwRpYfje91YX9U8xq
- 1MgcmW3WMb1kDSx10794rWiETZLyPf7xBTuoGqp35K8HVcnZ.SUqUfrk4sqZWnTQXyVtxYvCxbXW
- d7jfkloEzhFR3cOggEviexMQjQYnE2O.OgIPVPX2CmWwo0.ZSdlCNnO8OPXZ7uRuByHRmuQGAT9l
- cooqJzFXJ0BR9WX1PDHS.5u1fq1ICoOKLoNrqdKSudbsJOhdSvvaDCHm0FfhD_6AgraWuh4TuLK2
- SS8wuamo5utNLN448QDdvff7CpYuPykX5dQXpL7EDDdMr0_OEjvsCUbR1F2TwF6xlLimOkxwOnNt
- _pQbABiWGWC1j245qO6II2T1BWsUKsltFFaA-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:26:34 +0000
-Received: by smtp413.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 834819637f2457c34ebb73ab79a37a10; 
- Thu, 25 Jun 2020 05:26:31 +0000 (UTC)
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7.y] erofs: fix partially uninitialized misuse in
- z_erofs_onlinepage_fixup
-Date: Thu, 25 Jun 2020 13:26:18 +0800
-Message-Id: <20200625052618.2316-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20200625052618.2316-1-hsiangkao.ref@aol.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 49xBCP1Pc2zDqPT
+ for <linux-erofs@lists.ozlabs.org>; Wed,  1 Jul 2020 03:28:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
+ t=1593538086; h=From:To:Subject:Date:Message-Id;
+ bh=pbtC2huLa55ZHd9wlGlfNR9c/seYgoGyytCqjDmLlpY=;
+ b=r3pIElQDuzhT8hiaX/StogLO7v1FTf57vcHqwhl/eJApJEmFg3D+5WGwFF6YOvgGFa1Oe4hXDbmABCKtYislFSzIEXegnq/H564LcF/BZOwGbLRxOpnL34EDpLi9ElZFeLy++z3JbhbOUZve37ZexQr6EYtaUMNY2XWbGJz5UUU=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.06357798|-1; CH=green;
+ DM=|CONTINUE|false|; DS=CONTINUE|ham_alarm|0.0020056-8.76702e-05-0.997907;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e07425; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=3; RT=3; SR=0; TI=SMTPD_---0U1CRvln_1593538083; 
+Received: from localhost(mailfrom:bluce.lee@aliyun.com
+ fp:SMTPD_---0U1CRvln_1593538083) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 01 Jul 2020 01:28:03 +0800
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v10] erofs-utils: introduce segment compression
+Date: Wed,  1 Jul 2020 01:27:58 +0800
+Message-Id: <20200630172758.6533-1-bluce.lee@aliyun.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200621143711.GA27245@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200621143711.GA27245@hsiangkao-HP-ZHAN-66-Pro-G1>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,79 +65,203 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Hongyu Jin <hongyu.jin@unisoc.com>, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>
+From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Li Guifu <bluce.lee@aliyun.com>
+Cc: Li Guifu <bluce.lee@aliyun.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
+Support segment compression which seperates files in several logic
+units (segments) and each segment is compressed independently.
 
-commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
+Advantages:
+ - more friendly for data differencing;
+ - it can also be used for parallel compression in the same file later.
 
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
-
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
-
-Let's fix it now.
-
-Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
 ---
-The same as 5.4.y.
+ include/erofs/config.h |  1 +
+ lib/compress.c         | 29 +++++++++++++++++++++++------
+ lib/config.c           |  1 +
+ man/mkfs.erofs.1       |  4 ++++
+ mkfs/main.c            | 16 +++++++++++++++-
+ 5 files changed, 44 insertions(+), 7 deletions(-)
 
- fs/erofs/zdata.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 7824f5563a55..9b66c28b3ae9 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
--repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
-+	int orig, orig_index, val;
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 2f09749..e5f1bfb 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -35,6 +35,7 @@ struct erofs_configure {
+ 	char *c_img_path;
+ 	char *c_src_path;
+ 	char *c_compr_alg_master;
++	u64 c_compr_seg_size;
+ 	int c_compr_level_master;
+ 	int c_force_inodeversion;
+ 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
+diff --git a/lib/compress.c b/lib/compress.c
+index 6cc68ed..2ea5809 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -32,6 +32,7 @@ struct z_erofs_vle_compress_ctx {
  
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+repeat:
-+	orig = atomic_read(u.o);
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
+ 	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
+ 	u16 clusterofs;
++	u64 segavail;
+ };
  
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
- 
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
+ #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
+@@ -116,7 +117,7 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
  }
  
+ static int write_uncompressed_block(struct z_erofs_vle_compress_ctx *ctx,
+-				    unsigned int *len,
++				    unsigned int *len, unsigned int *ucomproft,
+ 				    char *dst)
+ {
+ 	int ret;
+@@ -125,14 +126,19 @@ static int write_uncompressed_block(struct z_erofs_vle_compress_ctx *ctx,
+ 	/* reset clusterofs to 0 if permitted */
+ 	if (!erofs_sb_has_lz4_0padding() &&
+ 	    ctx->head >= ctx->clusterofs) {
++		*ucomproft = ctx->clusterofs;
+ 		ctx->head -= ctx->clusterofs;
+ 		*len += ctx->clusterofs;
+ 		ctx->clusterofs = 0;
++		count = min(EROFS_BLKSIZ, *len);
++	} else {
++		*ucomproft = 0;
++		count = min_t(u64, ctx->segavail, *len);
++		if (count > EROFS_BLKSIZ)
++			count = EROFS_BLKSIZ;
+ 	}
+ 
+ 	/* write uncompressed data */
+-	count = min(EROFS_BLKSIZ, *len);
+-
+ 	memcpy(dst, ctx->queue + ctx->head, count);
+ 	memset(dst + count, 0, EROFS_BLKSIZ - count);
+ 
+@@ -157,14 +163,21 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 
+ 	while (len) {
+ 		bool raw;
++		unsigned int ucomproft = 0;
++
++		if (ctx->segavail <= EROFS_BLKSIZ) {
++			if (len < ctx->segavail && !final)
++				break;
++
++			goto nocompression;
++		}
+ 
+ 		if (len <= EROFS_BLKSIZ) {
+ 			if (final)
+ 				goto nocompression;
+ 			break;
+ 		}
+-
+-		count = len;
++		count = min_t(u64, len, ctx->segavail);
+ 		ret = erofs_compress_destsize(h, compressionlevel,
+ 					      ctx->queue + ctx->head,
+ 					      &count, dst, EROFS_BLKSIZ);
+@@ -175,7 +188,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 					  erofs_strerror(ret));
+ 			}
+ nocompression:
+-			ret = write_uncompressed_block(ctx, &len, dst);
++			ret = write_uncompressed_block(ctx, &len, &ucomproft, dst);
+ 			if (ret < 0)
+ 				return ret;
+ 			count = ret;
+@@ -202,6 +215,9 @@ nocompression:
+ 
+ 		++ctx->blkaddr;
+ 		len -= count;
++		ctx->segavail -= count - ucomproft;
++		if (!ctx->segavail)
++			ctx->segavail = cfg.c_compr_seg_size;
+ 
+ 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
+ 			const unsigned int qh_aligned =
+@@ -422,6 +438,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	ctx.head = ctx.tail = 0;
+ 	ctx.clusterofs = 0;
+ 	remaining = inode->i_size;
++	ctx.segavail = cfg.c_compr_seg_size;
+ 
+ 	while (remaining) {
+ 		const u64 readcount = min_t(u64, remaining,
+diff --git a/lib/config.c b/lib/config.c
+index da0c260..721ff61 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -23,6 +23,7 @@ void erofs_init_configure(void)
+ 	cfg.c_force_inodeversion = 0;
+ 	cfg.c_inline_xattr_tolerance = 2;
+ 	cfg.c_unix_timestamp = -1;
++	cfg.c_compr_seg_size = -1;
+ }
+ 
+ void erofs_show_config(void)
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 891c5a8..2a4ef71 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -52,6 +52,10 @@ Forcely generate extended inodes (64-byte inodes) to output.
+ Set all files to the given UNIX timestamp. Reproducible builds requires setting
+ all to a specific one.
+ .TP
++.BI "\-S " #
++Set max input stream size for each individual segment (disabled if 0).
++The default value is 0. It has be aligned with blocksize.
++.TP
+ .BI "\-\-exclude-path=" path
+ Ignore file that matches the exact literal path.
+ You may give multiple `--exclude-path' options.
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 94bf1e6..cded973 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -61,6 +61,7 @@ static void usage(void)
+ 	      " -x#               set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+ 	      " -EX[,...]         X=extended options\n"
+ 	      " -T#               set a fixed UNIX timestamp # to all files\n"
++	      " -S#               Set max input stream size # for each individual segment\n"
+ 	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
+ 	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
+ #ifdef HAVE_LIBSELINUX
+@@ -138,7 +139,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	char *endptr;
+ 	int opt, i;
+ 
+-	while((opt = getopt_long(argc, argv, "d:x:z:E:T:",
++	while((opt = getopt_long(argc, argv, "d:x:z:E:T:S:",
+ 				 long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'z':
+@@ -188,6 +189,19 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 'S':
++			i = strtoll(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid compress segment size %s",
++					  optarg);
++				return -EINVAL;
++			}
++			if (!i) {
++				cfg.c_compr_seg_size = -1;
++			} else {
++				cfg.c_compr_seg_size = i * EROFS_BLKSIZ;
++			}
++			break;
+ 		case 2:
+ 			opt = erofs_parse_exclude_path(optarg, false);
+ 			if (opt) {
 -- 
-2.24.0
+2.17.1
 
