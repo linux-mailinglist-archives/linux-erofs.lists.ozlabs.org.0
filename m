@@ -2,58 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37F4D20FA8C
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jun 2020 19:28:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99AE3214B2F
+	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 10:34:05 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 49xBCX29RFzDqc2
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Jul 2020 03:28:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4B026g0qSpzDqd9
+	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 18:34:03 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1593538104;
-	bh=OtKxRnDoBqQgLAKzYyVlhISW+kOZx55YTkuE/fntDcg=;
+	s=201707; t=1593938043;
+	bh=ui3LPshqk2lz+aUuuWjF1HXGKCwjnhZ24z/eKV83hQE=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=HVm/tcF1WOWDoFncj5+H3oUFHXgB0d615f8EJ0C4qkDpd1/x2XLMg4n9WdPCGRV7c
-	 y0eKtKzRJhzzuIf7smhvcRcPNcB2MHthO+CnC90YpuCmI2fI29c7P+6I+QuBKuzUNo
-	 D3P4p1okBX4EnDPeYFIup5T+Bp8HlAXQgvNWgSnLh18VxKzVmI7Gr4yGU5jhpcleOX
-	 ndMfqHV3MvKckJmJ6i5qHandz0d97g6B3mKX/dt7hagndLL78017GDzTJ2C5kG6QE2
-	 ZOdQXwAZ/axuGmAOkgbsd2S9UeBS4FMdQgVahS1R35vPS0i6dPV6AqhGZH0Ccn2ON6
-	 XVilTE9LRR4OQ==
+	b=B3ZJnKbvlZgmTvPTvzWuk25qVE8aLNYRpiKR12vPTPdzzBAtaWLNEPdc8/UUPbfcB
+	 4+8s+FBdfqeXxJQRVi6/H+63zb5AM43bvX5lzUSxZy/gqG9a48xX6om1WlApCrevQq
+	 93BasAjN2j2iLvpz1CMWGv4ZWWmngvLd9EtNPxrCZxlwKU0SAn3/lMk6yMEHVLquDm
+	 ZCsb8kRU0sa8MiZ4ccbfVHtKfg5R8FUJxzqDDRQBrBoObxyRTDJ4kBm1STEGM+DXJA
+	 uNHvjIlXUmHHPh3mI5BCl0GiSaHSJPT/kMC74yEAagaQBkb6atneYPgLzXMUPFwSnO
+	 oaMob+W5JEsyg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.40;
- helo=out30-40.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.26;
+ helo=out30-26.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
  header.from=aliyun.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=r3pIElQD; dkim-atps=neutral
-Received: from out30-40.freemail.mail.aliyun.com
- (out30-40.freemail.mail.aliyun.com [115.124.30.40])
+ header.s=s1024 header.b=p8bKPSbK; dkim-atps=neutral
+Received: from out30-26.freemail.mail.aliyun.com
+ (out30-26.freemail.mail.aliyun.com [115.124.30.26])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 49xBCP1Pc2zDqPT
- for <linux-erofs@lists.ozlabs.org>; Wed,  1 Jul 2020 03:28:16 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4B026W1MXlzDqNN
+ for <linux-erofs@lists.ozlabs.org>; Sun,  5 Jul 2020 18:33:53 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1593538086; h=From:To:Subject:Date:Message-Id;
- bh=pbtC2huLa55ZHd9wlGlfNR9c/seYgoGyytCqjDmLlpY=;
- b=r3pIElQDuzhT8hiaX/StogLO7v1FTf57vcHqwhl/eJApJEmFg3D+5WGwFF6YOvgGFa1Oe4hXDbmABCKtYislFSzIEXegnq/H564LcF/BZOwGbLRxOpnL34EDpLi9ElZFeLy++z3JbhbOUZve37ZexQr6EYtaUMNY2XWbGJz5UUU=
+ t=1593938025; h=From:To:Subject:Date:Message-Id;
+ bh=9Qd88Nqeo3mopScz+DloPw/zCwLTDM/bxRFDkPHOtUE=;
+ b=p8bKPSbKpFNF78+svouIGEFeHfEO/7nnJFKUEwWVmIvQh0RJKINbHlIqPbq86X1XcEyBn5SqpRklCPzLqtmNF2/tW1rfcjO1bS+L3XgKsW0z6NpcWTL8Sjs7aZRm+61KdF5g/1VayFAfOcCkwiPRcFjG9HrZQrXUZYw4WD1KHJs=
 X-Alimail-AntiSpam: AC=CONTINUE; BC=0.06357798|-1; CH=green;
  DM=|CONTINUE|false|; DS=CONTINUE|ham_alarm|0.0020056-8.76702e-05-0.997907;
  FP=0|0|0|0|0|-1|-1|-1; HT=e01e07425; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=3; RT=3; SR=0; TI=SMTPD_---0U1CRvln_1593538083; 
+ RN=3; RT=3; SR=0; TI=SMTPD_---0U1irIlZ_1593938023; 
 Received: from localhost(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0U1CRvln_1593538083) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 01 Jul 2020 01:28:03 +0800
+ fp:SMTPD_---0U1irIlZ_1593938023) by smtp.aliyun-inc.com(127.0.0.1);
+ Sun, 05 Jul 2020 16:33:43 +0800
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v10] erofs-utils: introduce segment compression
-Date: Wed,  1 Jul 2020 01:27:58 +0800
-Message-Id: <20200630172758.6533-1-bluce.lee@aliyun.com>
+Subject: [PATCH v11] erofs-utils: introduce segment compression
+Date: Sun,  5 Jul 2020 16:32:30 +0800
+Message-Id: <20200705083230.5027-1-bluce.lee@aliyun.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200621143711.GA27245@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200621143711.GA27245@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20200630172758.6533-1-bluce.lee@aliyun.com>
+References: <20200630172758.6533-1-bluce.lee@aliyun.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,12 +81,16 @@ Advantages:
 
 Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
 ---
+Changes from v10
+- chang variable uncomprofs to clusterofs which only used
+  when write uncompress block
+
  include/erofs/config.h |  1 +
- lib/compress.c         | 29 +++++++++++++++++++++++------
+ lib/compress.c         | 30 ++++++++++++++++++++++++------
  lib/config.c           |  1 +
  man/mkfs.erofs.1       |  4 ++++
  mkfs/main.c            | 16 +++++++++++++++-
- 5 files changed, 44 insertions(+), 7 deletions(-)
+ 5 files changed, 45 insertions(+), 7 deletions(-)
 
 diff --git a/include/erofs/config.h b/include/erofs/config.h
 index 2f09749..e5f1bfb 100644
@@ -101,7 +105,7 @@ index 2f09749..e5f1bfb 100644
  	int c_force_inodeversion;
  	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
 diff --git a/lib/compress.c b/lib/compress.c
-index 6cc68ed..2ea5809 100644
+index 6cc68ed..a2a278c 100644
 --- a/lib/compress.c
 +++ b/lib/compress.c
 @@ -32,6 +32,7 @@ struct z_erofs_vle_compress_ctx {
@@ -117,7 +121,7 @@ index 6cc68ed..2ea5809 100644
  
  static int write_uncompressed_block(struct z_erofs_vle_compress_ctx *ctx,
 -				    unsigned int *len,
-+				    unsigned int *len, unsigned int *ucomproft,
++				    unsigned int *len, unsigned int *clusterofs,
  				    char *dst)
  {
  	int ret;
@@ -125,13 +129,13 @@ index 6cc68ed..2ea5809 100644
  	/* reset clusterofs to 0 if permitted */
  	if (!erofs_sb_has_lz4_0padding() &&
  	    ctx->head >= ctx->clusterofs) {
-+		*ucomproft = ctx->clusterofs;
++		*clusterofs = ctx->clusterofs;
  		ctx->head -= ctx->clusterofs;
  		*len += ctx->clusterofs;
  		ctx->clusterofs = 0;
 +		count = min(EROFS_BLKSIZ, *len);
 +	} else {
-+		*ucomproft = 0;
++		*clusterofs = 0;
 +		count = min_t(u64, ctx->segavail, *len);
 +		if (count > EROFS_BLKSIZ)
 +			count = EROFS_BLKSIZ;
@@ -147,7 +151,7 @@ index 6cc68ed..2ea5809 100644
  
  	while (len) {
  		bool raw;
-+		unsigned int ucomproft = 0;
++		unsigned int clusterofs;
 +
 +		if (ctx->segavail <= EROFS_BLKSIZ) {
 +			if (len < ctx->segavail && !final)
@@ -167,26 +171,38 @@ index 6cc68ed..2ea5809 100644
  		ret = erofs_compress_destsize(h, compressionlevel,
  					      ctx->queue + ctx->head,
  					      &count, dst, EROFS_BLKSIZ);
-@@ -175,7 +188,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+@@ -175,11 +188,12 @@ static int vle_compress_one(struct erofs_inode *inode,
  					  erofs_strerror(ret));
  			}
  nocompression:
 -			ret = write_uncompressed_block(ctx, &len, dst);
-+			ret = write_uncompressed_block(ctx, &len, &ucomproft, dst);
++			ret = write_uncompressed_block(ctx, &len, &clusterofs, dst);
  			if (ret < 0)
  				return ret;
  			count = ret;
-@@ -202,6 +215,9 @@ nocompression:
+ 			raw = true;
++			ctx->segavail -= count - clusterofs;
+ 		} else {
+ 			/* write compressed data */
+ 			erofs_dbg("Writing %u compressed data to block %u",
+@@ -194,6 +208,7 @@ nocompression:
+ 			if (ret)
+ 				return ret;
+ 			raw = false;
++			ctx->segavail -= count;
+ 		}
+ 
+ 		ctx->head += count;
+@@ -202,6 +217,8 @@ nocompression:
  
  		++ctx->blkaddr;
  		len -= count;
-+		ctx->segavail -= count - ucomproft;
 +		if (!ctx->segavail)
 +			ctx->segavail = cfg.c_compr_seg_size;
  
  		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
  			const unsigned int qh_aligned =
-@@ -422,6 +438,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+@@ -422,6 +439,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
  	ctx.head = ctx.tail = 0;
  	ctx.clusterofs = 0;
  	remaining = inode->i_size;
