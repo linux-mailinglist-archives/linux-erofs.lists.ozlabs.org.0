@@ -1,59 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99AE3214B2F
-	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 10:34:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DA16214B41
+	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 11:06:56 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4B026g0qSpzDqd9
-	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 18:34:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1593938043;
-	bh=ui3LPshqk2lz+aUuuWjF1HXGKCwjnhZ24z/eKV83hQE=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=B3ZJnKbvlZgmTvPTvzWuk25qVE8aLNYRpiKR12vPTPdzzBAtaWLNEPdc8/UUPbfcB
-	 4+8s+FBdfqeXxJQRVi6/H+63zb5AM43bvX5lzUSxZy/gqG9a48xX6om1WlApCrevQq
-	 93BasAjN2j2iLvpz1CMWGv4ZWWmngvLd9EtNPxrCZxlwKU0SAn3/lMk6yMEHVLquDm
-	 ZCsb8kRU0sa8MiZ4ccbfVHtKfg5R8FUJxzqDDRQBrBoObxyRTDJ4kBm1STEGM+DXJA
-	 uNHvjIlXUmHHPh3mI5BCl0GiSaHSJPT/kMC74yEAagaQBkb6atneYPgLzXMUPFwSnO
-	 oaMob+W5JEsyg==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4B02rY3sTVzDqSd
+	for <lists+linux-erofs@lfdr.de>; Sun,  5 Jul 2020 19:06:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.26;
- helo=out30-26.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=em5045.urutrade.com (client-ip=149.72.84.20;
+ helo=wrqvrqkq.outbound-mail.sendgrid.net;
+ envelope-from=bounces+17336747-741e-linux-erofs=lists.ozlabs.org@em5045.urutrade.com;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
- header.from=aliyun.com
+Authentication-Results: lists.ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=urutrade.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=p8bKPSbK; dkim-atps=neutral
-Received: from out30-26.freemail.mail.aliyun.com
- (out30-26.freemail.mail.aliyun.com [115.124.30.26])
+ unprotected) header.d=urutrade.com header.i=@urutrade.com header.a=rsa-sha256
+ header.s=s1 header.b=D2wD5KAn; dkim-atps=neutral
+Received: from wrqvrqkq.outbound-mail.sendgrid.net
+ (wrqvrqkq.outbound-mail.sendgrid.net [149.72.84.20])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4B026W1MXlzDqNN
- for <linux-erofs@lists.ozlabs.org>; Sun,  5 Jul 2020 18:33:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1593938025; h=From:To:Subject:Date:Message-Id;
- bh=9Qd88Nqeo3mopScz+DloPw/zCwLTDM/bxRFDkPHOtUE=;
- b=p8bKPSbKpFNF78+svouIGEFeHfEO/7nnJFKUEwWVmIvQh0RJKINbHlIqPbq86X1XcEyBn5SqpRklCPzLqtmNF2/tW1rfcjO1bS+L3XgKsW0z6NpcWTL8Sjs7aZRm+61KdF5g/1VayFAfOcCkwiPRcFjG9HrZQrXUZYw4WD1KHJs=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.06357798|-1; CH=green;
- DM=|CONTINUE|false|; DS=CONTINUE|ham_alarm|0.0020056-8.76702e-05-0.997907;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e07425; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=3; RT=3; SR=0; TI=SMTPD_---0U1irIlZ_1593938023; 
-Received: from localhost(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0U1irIlZ_1593938023) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 05 Jul 2020 16:33:43 +0800
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v11] erofs-utils: introduce segment compression
-Date: Sun,  5 Jul 2020 16:32:30 +0800
-Message-Id: <20200705083230.5027-1-bluce.lee@aliyun.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200630172758.6533-1-bluce.lee@aliyun.com>
-References: <20200630172758.6533-1-bluce.lee@aliyun.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4B02rH3VZ4zDqMk
+ for <linux-erofs@lists.ozlabs.org>; Sun,  5 Jul 2020 19:06:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=urutrade.com; 
+ h=from:to:subject:mime-version:content-type; s=s1; 
+ bh=2qH4y/lcr6X74HYrA6c7PRfUPzNa5jNXkHK3NfwLO/c=; b=D2wD5KAnQXMhq
+ F10GtXJa+Th951NTq/FYOCcK1eCVxSg2RVtAog9lSETFZDo0VYAdF6/39Zb2VDn5
+ 7vnHg7VKaKwEySa4sIg6U/YozRBsp+jpyLd49uRV8gDRdGJyUGfzWe/NXZ3xiF3k
+ 9IjIVsyjNDRGORPmZLyxEjIMzXRQAE=
+Received: by filter0924p1iad2.sendgrid.net with SMTP id
+ filter0924p1iad2-20783-5F019818-17
+ 2020-07-05 09:06:32.807124634 +0000 UTC m=+3022.503190820
+Received: from c (unknown)
+ by ismtpd0038p1las1.sendgrid.net (SG) with ESMTP id Ou343Q5jRgePo6VElpLwdw
+ for <linux-erofs@lists.ozlabs.org>; Sun, 05 Jul 2020 09:06:32.345 +0000 (UTC)
+From: Amazon.co.jp <Amazon@urutrade.com>
+To: linux-erofs <linux-erofs@lists.ozlabs.org>
+Subject: =?iso-2022-jp?B?GyRCJCo7WUonJCRKfUshJE4+cEpzJHI5OT83GyhC?=
+Date: Sun, 05 Jul 2020 09:06:32 +0000 (UTC)
+Message-ID: <004bcc9c8674$b9ae159e$c7f4d571$@c>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="----=_NextPart_000_0140_01A2A6BC.189566E0"
+X-Mailer: Microsoft Outlook 16.0
+X-SG-EID: D/WhaQyL81n52MRUxySh/FGW0Tvj3TKiZPeU+9+BRFZtXc03iyHqu3gur2YLgaxT1qCLSN8v1azuLX
+ i5z7uEn3FB95VlrGkkI8q+hs0fya7czMRKKDSEDhzd3UGIfBD86c4zms1x4soQyNRGdqPvPSdEpSVp
+ VOpZyWb1ki0LyFHotbG8YNZ69IVZsrMEQfvlwCrRkzG/LQM5SXLHSOnGybFtffUBaLyg39ZnLoWhfd
+ Y=
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,219 +61,306 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li Guifu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li Guifu <bluce.lee@aliyun.com>
-Cc: Li Guifu <bluce.lee@aliyun.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Support segment compression which seperates files in several logic
-units (segments) and each segment is compressed independently.
+This is a multi-part message in MIME format.
+------=_NextPart_000_0140_01A2A6BC.189566E0
+Content-Type: text/plain;
+	charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
 
-Advantages:
- - more friendly for data differencing;
- - it can also be used for parallel compression in the same file later.
+GyRCJCo7WUonJCRKfUshJE4+cEpzJHI5OT83JDckRiQvJEAkNSQkISMbKEJVcGRhdGUgZGVmYXVs
+dCBjYXJkIGZvciB5b3VyIG1lbWJlcnNoaXAuDQoNCiANCiAbJEIlXiUkJTklSCUiGyhCPyAbJEIl
+PyUkJWAlOyE8JWsbKEI/IBskQiUuJVUlSDd0GyhCIA0KDQogDQoNCg0KQW1hem9uGyRCJVclaSUk
+JWAkciQ0TXhNUUQ6JC0kIiRqJCwkSCQmJDQkNiQkJF4kOSEjJCo1Uk1NJE4bKEJBbWF6b24bJEIl
+VyVpJSQlYDJxMHc7cTNKJE8hIhsoQjIwMjAvMDYvMDkbJEIkSzk5PzckcjdeJCgkXiQ5ISMkKkQ0
+JFkkNyQ/JEgkMyRtISIycUhxJE4kKjtZSickJCRLO0hNUSRHJC0ka00tOHokSiUvJWwlOCVDJUgl
+KyE8JUkkLCUiJSslJiVzJUgkS0VQTz8kNSRsJEYkJCReJDskcyEjJS8lbCU4JUMlSCUrITwlST5w
+SnMkTjk5PzchIj83JDckJCUvJWwlOCVDJUglKyE8JUkkTkRJMkMkSyREJCQkRiRPMEoyPCROPGo9
+ZyRyJDQzTkcnJC8kQCQ1JCQhIxsoQg0KDQoNCg0KMS4gGyRCJSIlKyUmJXMlSCU1ITwlUyU5JCsk
+aRsoQkFtYXpvbhskQiVXJWklJCVgMnEwdz5wSnMkcjRJTX0kOSRrJEslIiUvJTslOSQ3JF4kOSEj
+GyhCDQoNCg0KMi4gQW1hem9uGyRCJVclaSUkJWAkS0VQTz8kNyQ/GyhCQW1hem9uLmNvLmpwGyRC
+JE4lIiUrJSYlcyVIJHI7SE1RJDckRiU1JSQlcyUkJXMkNyReJDkhIxsoQg0KDQoNCjMuIBskQjo4
+QiYkS0k9PCgkNSRsJEYkJCRrIVY4PTpfJE47WUonSn1LISFXJE4yPCRLJCIkayFWO1lKJ0p9SyEk
+ckpROTkkOSRrIVckTiVqJXMlLyRyJS8laiVDJS8kNyReJDkhIxsoQg0KDQoNCjQuIBskQk0tOHo0
+fDhCJE45OT83JF4kPyRPPzckNyQkJS8lbCU4JUMlSCUrITwlST5wSnMkckZ+Tk8kNyRGJC8kQCQ1
+JCQhIxsoQg0KDQoNCg0KQW1hem9uGyRCJVclaSUkJWAkcjdRQjMkNyRGJDRNeE1RJCQkPyRAJC8k
+PyRhJEshIjJxSHEkTiQqO1lKJyQkJEskNDtYRGokJCQ/JEAkJCQ/JS8lbCU4JUMlSCUrITwlSSQs
+O0hNUSRHJC0kSiQkPmw5ZyRPISIlIiUrJSYlcyVIJEtFUE8/JDUkbCRGJCQka0pMGyhCIBskQiRO
+JS8lbCU4JUMlSCUrITwlSSRLMnFIcSRyQEE1YSQ1JDskRkQ6JC0kXiQ5ISMycUhxJE5AQTVhJCw9
+UE1oJEokJD5sOWckTyEiJCo1Uk1NJE4bKEJBbWF6b24bJEIlVyVpJSQlYDJxMHc7cTNKJE88Ojh6
+JDchIkZDRTUkciQ0TXhNUSRHJC0kSiQvJEokaiReJDkhIxsoQg0KDQoNCkFtYXpvbi5jby5qcBsk
+QiUrJTklPyVeITwlNSE8JVMlORsoQiANCg0KDQoNCg0KIA0KGyRCO1lKJ0p9SyEkTj5wSnMkcjk5
+PzckOSRrGyhCIA0KDQoNCg0KIA0KDQo=
 
-Signed-off-by: Li Guifu <bluce.lee@aliyun.com>
----
-Changes from v10
-- chang variable uncomprofs to clusterofs which only used
-  when write uncompress block
+------=_NextPart_000_0140_01A2A6BC.189566E0
+Content-Type: text/html;
+	charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
 
- include/erofs/config.h |  1 +
- lib/compress.c         | 30 ++++++++++++++++++++++++------
- lib/config.c           |  1 +
- man/mkfs.erofs.1       |  4 ++++
- mkfs/main.c            | 16 +++++++++++++++-
- 5 files changed, 45 insertions(+), 7 deletions(-)
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PWlz
+by0yMDIyLWpwIiBodHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxNRVRBIG5hbWU9R0VORVJBVE9S
+IGNvbnRlbnQ9Ik1TSFRNTCAxMS4wMC45NjAwLjE5Njk5Ij48L0hFQUQ+DQo8Qk9EWT4NCjxESVY+
+DQo8RElWPg0KPERJVj48U1BBTj48L1NQQU4+DQo8VEFCTEUgDQpzdHlsZT0iRk9OVC1GQU1JTFk6
+ICdNaWNyb3NvZnQgWWFIZWknOyBDT0xPUjogcmdiKDAsMCwwKTsgT1JQSEFOUzogMjsgV0lET1dT
+OiAyOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWwiIA0KY2VsbFNwYWNpbmc9MCBjZWxs
+UGFkZGluZz0wIHdpZHRoPSIxMDAlIiBhbGlnbj1jZW50ZXIgYmdDb2xvcj0jZjJmMmYyIA0KICBi
+b3JkZXI9MD48VEJPRFk+DQogIDxUUj4NCiAgICA8VEQgYWxpZ249Y2VudGVyPg0KICAgICAgPFRB
+QkxFIGNlbGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCB3aWR0aD03MDAgYWxpZ249Y2VudGVyIGJn
+Q29sb3I9I2ZmZmZmZiANCiAgICAgIGJvcmRlcj0wIGRhdGEtYmdjb2xvcj0iVmlldyBCcm93c2Vy
+IEJHIj4NCiAgICAgICAgPFRCT0RZPg0KICAgICAgICA8VFI+DQogICAgICAgICAgPFREPg0KICAg
+ICAgICAgICAgPFRBQkxFIA0KICAgICAgICAgICAgc3R5bGU9ImJhY2tncm91bmQtc2l6ZTogaW5p
+dGlhbDsgYmFja2dyb3VuZC1vcmlnaW46IGluaXRpYWw7IGJhY2tncm91bmQtY2xpcDogaW5pdGlh
+bCIgDQogICAgICAgICAgICBjZWxsU3BhY2luZz0wIGNlbGxQYWRkaW5nPTAgd2lkdGg9NjQwIGFs
+aWduPWNlbnRlciBib3JkZXI9MD4NCiAgICAgICAgICAgICAgPFRCT0RZPg0KICAgICAgICAgICAg
+ICA8VFI+DQogICAgICAgICAgICAgICAgPFREPg0KICAgICAgICAgICAgICAgICAgPFRBQkxFIA0K
+ICAgICAgICAgICAgICAgICAgc3R5bGU9IkZPTlQtU0laRTogMTRweDsgRk9OVC1GQU1JTFk6IEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IENPTE9SOiByZ2IoMTAyLDEwMiwxMDIpOyBMSU5F
+LUhFSUdIVDogMjRweDsgYmFja2dyb3VuZC1zaXplOiBpbml0aWFsOyBiYWNrZ3JvdW5kLW9yaWdp
+bjogaW5pdGlhbDsgYmFja2dyb3VuZC1jbGlwOiBpbml0aWFsIiANCiAgICAgICAgICAgICAgICAg
+IGNlbGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCB3aWR0aD02NDAgYm9yZGVyPTA+DQogICAgICAg
+ICAgICAgICAgICAgIDxUQk9EWT4NCiAgICAgICAgICAgICAgICAgICAgPFRSPg0KICAgICAgICAg
+ICAgICAgICAgICAgIDxURCBiZ0NvbG9yPSNmZmZmZmYgY29sU3Bhbj03PjxBIA0KICAgICAgICAg
+ICAgICAgICAgICAgICAgc3R5bGU9IkNPTE9SOiByZ2IoNTEsNTEsNTEpOyBMSU5FLUhFSUdIVDog
+MzBweDsgYmFja2dyb3VuZC1zaXplOiBpbml0aWFsOyBiYWNrZ3JvdW5kLW9yaWdpbjogaW5pdGlh
+bDsgYmFja2dyb3VuZC1jbGlwOiBpbml0aWFsIiANCiAgICAgICAgICAgICAgICAgICAgICAgIGhy
+ZWY9Imh0dHA6Ly91MTczMzY3NDcuY3Quc2VuZGdyaWQubmV0L2xzL2NsaWNrP3Vwbj1LN0xwWG5a
+OGVjbHhNU0h0MEdLVFoxMU5iLTJCLTJCeWY3M1J6SGJ0N3FCQXVuVk1vU24wQldJd014VWtWbWxu
+QXlJdVVULTJCaXQwa0tva0YtMkJBdk5TSWlWOVVObGdrWTdhLTJCWFJkdzdHZmwyUWlEdzRiMFA0
+QTFNLTJGR3U4bG5SRWFZbHJJWEVJT1Zuek1rMUdnbFdjUm0wWkZTWEE1d3diMXNLeHY1bHNYTHJP
+LTJCTmU4STlVWHdhNnNsNlNYczNsOEkzQ05jV1dvUVdNallnU043MVJLMHBZYUFDMGtBTFBtM3FE
+SUpWU2x3ZENBWDhlLTJCN09ZdWtWbFFIbkMxNVUzejczM2Zqa0dwSk5jUHZiQ0FnQmpLTHF0ZkRB
+VUpWWnp0THVrZ241dDNNMVJMaC0yQldzYlRCMUZXdURKZ0NwT2M5WlB4aGY5Y1NJc3FWWWFESjl0
+THpxQXZ2M3R4TnlweXViSDhpY1JUZ04yaVRqRlF6SUQtMkJEUXZSWURQSVZXei0yQnpId3JjOUtw
+VmlvTndMekRSc3BVbEpUeklSREFxeHdwdWNjNmMzOXBsc0NDb3BuaW5qS1BIdzRXdm5RQ01lUmVB
+RmFOc3RqR1lPQzdUOFpjMlllT0w5UjRzV2JFYWNBZ0REaHgwTXBWdXVhU2RrVGpqLTJCa29DY09v
+M0RoQXBuMVg1S1lkaFZMUkxSLTJCLTJCbC0yQllVLTJGd1IxUnFELTJGRzI5V3VyTWRiRHpaZjk3
+NzVNLTJGUkFTMEh3U0c4cS0yQmQxakktMkI2SXktMkJnR0lQMm94bDNRck5KYVJ1RlhNM0pKd0JG
+Nlc2MVpsQmlMaXhRVmpBdHhOYWlZQ1ZIaWRrLTNEeVFMc182cHdLSEo4UGgxWFR5djdPTlpsT0JD
+QXlrNUVBOUM2TEpHZENFS1lUUUQtMkYwdEFtZnlWLTJGTnpYbTdldEFLY1pELTJGMTZVM1lPWlIt
+MkZiVUVOajJZUUs5OUkzd09hWG9Hajd1dzFYV2Zzc0tNblUtMkZNdW5ZQ25nUXVuZkpuZ1Rmcmtq
+OGNNTHBEWC0yRmY1cGJHV1hGcDFtVTBLbTRMbmpLcncxZVJJRzEzZ0JpSVktMkZjeXp4MVFCd1Zp
+RUVkdGpHdktrM0ctMkJGeWxyTkRENlhLMUpGZUtuQVRSNHEyZTN0Z0luYmk1bEZYcG8zUm5RWlBF
+MC0zRCI+GyRCJCo7WUonJCRKfUshJE4+cEpzJHI5OT83JDckRiQvJEAkNSQkISMbKEJVcGRhdGUg
+DQogICAgICAgICAgICAgICAgICAgICAgICBkZWZhdWx0IGNhcmQgZm9yIHlvdXIgbWVtYmVyc2hp
+cC48L0E+PC9URD48L1RSPg0KICAgICAgICAgICAgICAgICAgICA8VFI+DQogICAgICAgICAgICAg
+ICAgICAgICAgPFREIHN0eWxlPSJCT1JERVItQk9UVE9NOiByZ2IoMjU1LDE1MywwKSA1cHggc29s
+aWQiIA0KICAgICAgICAgICAgICAgICAgICAgIGJnQ29sb3I9I2ZmZmZmZiBjb2xTcGFuPTc+PC9U
+RD48L1RSPg0KICAgICAgICAgICAgICAgICAgICA8VFI+DQogICAgICAgICAgICAgICAgICAgICAg
+PFREIGJnQ29sb3I9I2ZmZmZmZiBjb2xTcGFuPTc+Jm5ic3A7PC9URD48L1RSPg0KICAgICAgICAg
+ICAgICAgICAgICA8VFI+DQogICAgICAgICAgICAgICAgICAgICAgPFREIHdpZHRoPTIwMD48QSAN
+CiAgICAgICAgICAgICAgICAgICAgICAgIGhyZWY9Imh0dHA6Ly91MTczMzY3NDcuY3Quc2VuZGdy
+aWQubmV0L2xzL2NsaWNrP3Vwbj1LN0xwWG5aOGVjbHhNU0h0MEdLVFotMkJUVEwwOWJMWHJBTWtO
+ajFOazdIb0kwV0ZDOFpnMjhBSXpPaDN2WklnbG5FYUpCTTYwR1h4b09HRngtMkJONUFFLTJGTjJp
+dU1yS2pqQVJVREVtZnNBbURVTUZNbEdJbHE2b2ZtTXFRaHRiQUZKLTJCc1kwV0kxa1lUSnRmSTR6
+anpzQW5sei0yRkJ2MGFpeXYybGJQT1hjLTJCTHVscnpjaFhxMUZxZnpIcS0yRmdlNHFWd0FiRkl6
+RDkxVU8zTGpuT2NZLTJCSHhFVW9sbVRqYzVod1FLLTJGb3dLVEJIWTJ5YW1TMGVnTmR2TTl1akl4
+TEwzTFRTbWstMkJtNWdrbkx1R3Zla3VsSm1CSlNaa1l0Rzc1SzJUdFh5MXh6cDFudGt1ZUJLM2V5
+c28xNDQxNXg2M0dEVGwxZkc5OHNFSjFtOGkzdUNiSUV6cTdJRnFvTVBLUEVIRVdVM1EtMkJobUZ5
+LTJCNHVYR1hhZFYtMkZqOUV4MFFHTXl4RllKaFo3V2RESWdEZS0yQllVaGRVTkh3NThRWkR1Umlt
+MTluNGZtYXJhT05FSzE3bFFDQ0NmdXk0WFFwR0d2SThvQi0yRmllWnBqRXZRLTJGQ2lXWGVlaHls
+VnpmZ2dLTk9KMnAxVUJLRzlCZHh6YUkwYlNuaG1zLTNEczdaSF82cHdLSEo4UGgxWFR5djdPTlps
+T0JDQXlrNUVBOUM2TEpHZENFS1lUUUQtMkYwdEFtZnlWLTJGTnpYbTdldEFLY1pELTJGMTZVM1lP
+WlItMkZiVUVOajJZUUs5OUkyQ2Z3VUVGY04tMkYzcG1TWkpiSi0yRkxzbVJLVTl5LTJGV1ZnRmZh
+NEUzZzVZMS0yQjd6U3lEcnhMRjdjSFNteFVoZEZKTnNQeE9qcC0yQnk3LTJGTGVJNS0yQkJnQ2F1
+UHg5cUZqZzZjV0tIOUV3Vi0yQlQzS0wyRWt4TFJualhYOFZ1MXNEUmM3Y0xzQzJ1ZUNIaUNraks3
+TTNVNTNZRWJncG1jLTNEIj48SU1HIA0KICAgICAgICAgICAgICAgICAgICAgICAgc3JjPSJodHRw
+czovL2kucG9zdGltZy5jYy96WFQ3MnpCay9RUS0yMDE5MTEyNDIxMzMzMS5qcGciPjwvQT4gDQog
+ICAgICAgICAgICAgICAgICAgICAgPC9URD4NCiAgICAgICAgICAgICAgICAgICAgICA8VEQgd2lk
+dGg9MTAwPjwvVEQ+DQogICAgICAgICAgICAgICAgICAgICAgPFREIHdpZHRoPTEwMCBhbGlnbj1j
+ZW50ZXI+PEEgDQogICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0iVEVYVC1ERUNPUkFUSU9O
+OiBub25lOyBDT0xPUjogcmdiKDEwMiwxMDIsMTAyKSIgDQogICAgICAgICAgICAgICAgICAgICAg
+ICBocmVmPSJodHRwOi8vdTE3MzM2NzQ3LmN0LnNlbmRncmlkLm5ldC9scy9jbGljaz91cG49SzdM
+cFhuWjhlY2x4TVNIdDBHS1RaMTFOYi0yQi0yQnlmNzNSekhidDdxQkF1blZNb1NuMEJXSXdNeFVr
+Vm1sbkF5SXVVVC0yQml0MGtLb2tGLTJCQXZOU0lpVjlVTmxna1k3YS0yQlhSZHc3R2ZsMlFpRHc0
+YjBQNEExTS0yRkd1OGxuUkVhWWxySVhFSU9WbnpNazFHZ2xXY1JtMFpGU1hBNXd3YjFzS3h2NWxz
+WExyTy0yQk5lOEk5VVh3YTZzbDZTWHMzbDhJM0NOY1dXb1FXTWpZZ1NONzFSSzBwWWFBQzBrQUxQ
+bTNxRElKVlNsd2RDQVg4ZS0yQjdPWXVrVmxRSG5DMTVVM3o3MzNmamtHcEpOY1B2YkNBZ0JqS0xx
+dGZEQVVKVlp6dEx1a2duNXQzTTFSTGgtMkJXc2JUQjFGV3VESmdDcE9jOVpQeGhmOWNTSXNxVllh
+REo5dEx6cUF2djN0eE55cHl1Ykg4aWNSVGdOMmlUakZReklELTJCRFF2UllEUElWV3otMkJ6SHdy
+YzlLcFZpb053THpEUnNwVWxKVHpJUkRBcXh3cHVjYzZjMzlwbHNDQ29wbmluaktQSHc0V3ZuUUNN
+ZVJlQUZhTnN0akdZT0M3VDhaYzJZZU9MOVI0c1diRWFjQWdERGh4ME1wVnV1YVNka1Rqai0yQmtv
+Q2NPbzNEaEFwbjFYNUtZZGhWTFJMUi0yQi0yQmwtMkJZVS0yRndSMVJxRC0yRkcyOVd1ck1kYkR6
+WmY5Nzc1TS0yRlJBUzBId1NHOHEtMkJkMWpJLTJCNkl5LTJCZ0dJUDJveGwzUXJOSmFSdUZYTTNK
+SndCRjZXNjFabEJpTGl4UVZqQXR4TmFpWUNWSGlkay0zREVrNXBfNnB3S0hKOFBoMVhUeXY3T05a
+bE9CQ0F5azVFQTlDNkxKR2RDRUtZVFFELTJGMHRBbWZ5Vi0yRk56WG03ZXRBS2NaRC0yRjE2VTNZ
+T1pSLTJGYlVFTmoyWVFLOTlJMFlUUVIxbkgzbS0yQnk3MEkwcHh2eHcwcEVjdG11cm83cmMyamZ1
+cFAwamxaM04zTURKTHdTak9xdEN1WTVVNjhQR25ES1I1cnczNXJYaTBib2ZCOWd5ZEw0eG9FUUhx
+SHFBTXpKNUpZN3hYMElQeVdRTWx6akxabllMVjlIUXl1MmlsNG91NUt4ZTd5QlBmTmhhT0JlQjgt
+M0QiPhskQiVeJSQlOSVIJSIbKEI/PC9BPiANCiAgICAgICAgICAgICAgICAgICAgICA8L1REPg0K
+ICAgICAgICAgICAgICAgICAgICAgIDxURD58PC9URD4NCiAgICAgICAgICAgICAgICAgICAgICA8
+VEQgd2lkdGg9MTIwIGFsaWduPWNlbnRlcj48QSANCiAgICAgICAgICAgICAgICAgICAgICAgIHN0
+eWxlPSJURVhULURFQ09SQVRJT046IG5vbmU7IENPTE9SOiByZ2IoMTAyLDEwMiwxMDIpIiANCiAg
+ICAgICAgICAgICAgICAgICAgICAgIGhyZWY9Imh0dHA6Ly91MTczMzY3NDcuY3Quc2VuZGdyaWQu
+bmV0L2xzL2NsaWNrP3Vwbj1LN0xwWG5aOGVjbHhNU0h0MEdLVFoxMU5iLTJCLTJCeWY3M1J6SGJ0
+N3FCQXVuVk1vU24wQldJd014VWtWbWxuQXlJdVVULTJCaXQwa0tva0YtMkJBdk5TSWlWOVVObGdr
+WTdhLTJCWFJkdzdHZmwyUWlEdzRiMFA0QTFNLTJGR3U4bG5SRWFZbHJJWEVJT1Zuek1rMUdnbFdj
+Um0wWkZTWEE1d3diMXNLeHY1bHNYTHJPLTJCTmU4STlVWHdhNnNsNlNYczNsOEkzQ05jV1dvUVdN
+allnU043MVJLMHBZYUFDMGtBTFBtM3FESUpWU2x3ZENBWDhlLTJCN09ZdWtWbFFIbkMxNVUzejcz
+M2Zqa0dwSk5jUHZiQ0FnQmpLTHF0ZkRBVUpWWnp0THVrZ241dDNNMVJMaC0yQldzYlRCMUZXdURK
+Z0NwT2M5WlB4aGY5Y1NJc3FWWWFESjl0THpxQXZ2M3R4TnlweXViSDhpY1JUZ04yaVRqRlF6SUQt
+MkJEUXZSWURQSVZXei0yQnpId3JjOUtwVmlvTndMekRSc3BVbEpUeklSREFxeHdwdWNjNmMzOXBs
+c0NDb3BuaW5qS1BIdzRXdm5RQ01lUmVBRmFOc3RqR1lPQzdUOFpjMlllT0w5UjRzV2JFYWNBZ0RE
+aHgwTXBWdXVhU2RrVGpqLTJCa29DY09vM0RoQXBuMVg1S1lkaFZMUkxSLTJCLTJCbC0yQllVLTJG
+d1IxUnFELTJGRzI5V3VyTWRiRHpaZjk3NzVNLTJGUkFTMEh3U0c4cS0yQmQxakktMkI2SXktMkJn
+R0lQMm94bDNRck5KYVJ1RlhNM0pKd0JGNlc2MVpsQmlMaXhRVmpBdHhOYWlZQ1ZIaWRrLTNEYTg4
+WV82cHdLSEo4UGgxWFR5djdPTlpsT0JDQXlrNUVBOUM2TEpHZENFS1lUUUQtMkYwdEFtZnlWLTJG
+TnpYbTdldEFLY1pELTJGMTZVM1lPWlItMkZiVUVOajJZUUs5OUk5SW44WVI5Vkp6VEtDVFU2RnBI
+TlJxVmdTRVFLSVRhSHJzcDY3c3luazNHUy0yRkxZUm9vM3lkZGVDT09RS1NzRmcyWU9NemV6QS0y
+RmZnMGdxMmpzZHd6S3BKLTJGamFxWE5UTi0yQllHTkFYNU5MTDFnMUNiOFVUREZ3Q2daQ1NvLTJG
+NVdvNVJaaXBsYU1MNFZ6VzRsQlVtTmZXdnVnLTNEIj4bJEIlPyUkJWAlOyE8JWsbKEI/PC9BPiAN
+CiAgICAgICAgICAgICAgICAgICAgICA8L1REPg0KICAgICAgICAgICAgICAgICAgICAgIDxURD58
+PC9URD4NCiAgICAgICAgICAgICAgICAgICAgICA8VEQgd2lkdGg9MTAwIGFsaWduPWNlbnRlcj48
+QSANCiAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJURVhULURFQ09SQVRJT046IG5vbmU7
+IENPTE9SOiByZ2IoMTAyLDEwMiwxMDIpIiANCiAgICAgICAgICAgICAgICAgICAgICAgIGhyZWY9
+Imh0dHA6Ly91MTczMzY3NDcuY3Quc2VuZGdyaWQubmV0L2xzL2NsaWNrP3Vwbj1LN0xwWG5aOGVj
+bHhNU0h0MEdLVFoxMU5iLTJCLTJCeWY3M1J6SGJ0N3FCQXVuVk1vU24wQldJd014VWtWbWxuQXlJ
+dVVULTJCaXQwa0tva0YtMkJBdk5TSWlWOVVObGdrWTdhLTJCWFJkdzdHZmwyUWlEdzRiMFA0QTFN
+LTJGR3U4bG5SRWFZbHJJWEVJT1Zuek1rMUdnbFdjUm0wWkZTWEE1d3diMXNLeHY1bHNYTHJPLTJC
+TmU4STlVWHdhNnNsNlNYczNsOEkzQ05jV1dvUVdNallnU043MVJLMHBZYUFDMGtBTFBtM3FESUpW
+U2x3ZENBWDhlLTJCN09ZdWtWbFFIbkMxNVUzejczM2Zqa0dwSk5jUHZiQ0FnQmpLTHF0ZkRBVUpW
+Wnp0THVrZ241dDNNMVJMaC0yQldzYlRCMUZXdURKZ0NwT2M5WlB4aGY5Y1NJc3FWWWFESjl0THpx
+QXZ2M3R4TnlweXViSDhpY1JUZ04yaVRqRlF6SUQtMkJEUXZSWURQSVZXei0yQnpId3JjOUtwVmlv
+TndMekRSc3BVbEpUeklSREFxeHdwdWNjNmMzOXBsc0NDb3BuaW5qS1BIdzRXdm5RQ01lUmVBRmFO
+c3RqR1lPQzdUOFpjMlllT0w5UjRzV2JFYWNBZ0REaHgwTXBWdXVhU2RrVGpqLTJCa29DY09vM0Ro
+QXBuMVg1S1lkaFZMUkxSLTJCLTJCbC0yQllVLTJGd1IxUnFELTJGRzI5V3VyTWRiRHpaZjk3NzVN
+LTJGUkFTMEh3U0c4cS0yQmQxakktMkI2SXktMkJnR0lQMm94bDNRck5KYVJ1RlhNM0pKd0JGNlc2
+MVpsQmlMaXhRVmpBdHhOYWlZQ1ZIaWRrLTNEV0h1bl82cHdLSEo4UGgxWFR5djdPTlpsT0JDQXlr
+NUVBOUM2TEpHZENFS1lUUUQtMkYwdEFtZnlWLTJGTnpYbTdldEFLY1pELTJGMTZVM1lPWlItMkZi
+VUVOajJZUUs5OUl5cmlEZ2FlcGRBTTRrYmRHNUdBWEczLTJCbC0yRmluRFhTLTJCek5NOTdFeHl1
+RUhVM2tmOE9RakNhM1A0V3ZPZEFqUTZNb0VPVmZ4VzVxRGhNTHBiT1ZLcXJNaTRMUllQZWktMkJN
+bXNoZmVkbVJoLTJGdlhZRE02RTRENFVtdjY4ZFJVbUtLZi0yQngtMkZ3U3lDTzJ5OXVid1ZnMGVW
+R3NwZy0zRCI+GyRCJS4lVSVIN3QbKEI8L0E+IA0KICAgICAgICAgICAgICAgICAgICAgIDwvVEQ+
+PC9UUj48L1RCT0RZPjwvVEFCTEU+PC9URD48L1RSPg0KICAgICAgICAgICAgICA8VFI+DQogICAg
+ICAgICAgICAgICAgPFREIGJnQ29sb3I9I2ZmZmZmZj4mbmJzcDs8L1REPjwvVFI+DQogICAgICAg
+ICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICA8VEQgDQogICAgICAgICAgICAgICAgc3R5bGU9
+IkJPUkRFUi1CT1RUT006IHJnYigxMDIsMTAyLDEwMikgMXB4IHNvbGlkOyBNQVJHSU4tVE9QOiAy
+MHB4Ij48L1REPjwvVFI+DQogICAgICAgICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICA8VEQ+
+DQogICAgICAgICAgICAgICAgICA8VEFCTEUgDQogICAgICAgICAgICAgICAgICBzdHlsZT0iYmFj
+a2dyb3VuZC1zaXplOiBpbml0aWFsOyBiYWNrZ3JvdW5kLW9yaWdpbjogaW5pdGlhbDsgYmFja2dy
+b3VuZC1jbGlwOiBpbml0aWFsIiANCiAgICAgICAgICAgICAgICAgIGNlbGxTcGFjaW5nPTAgY2Vs
+bFBhZGRpbmc9MCB3aWR0aD02NDAgYWxpZ249Y2VudGVyIGJvcmRlcj0wPg0KICAgICAgICAgICAg
+ICAgICAgICA8VEJPRFk+DQogICAgICAgICAgICAgICAgICAgIDxUUj4NCiAgICAgICAgICAgICAg
+ICAgICAgICA8VEQgDQogICAgICAgICAgICAgICAgICAgICAgc3R5bGU9IkZPTlQtU0laRTogMTRw
+eDsgRk9OVC1GQU1JTFk6IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IENPTE9SOiByZ2Io
+NTEsNTEsNTEpOyBMSU5FLUhFSUdIVDogMzBweDsgYmFja2dyb3VuZC1zaXplOiBpbml0aWFsOyBi
+YWNrZ3JvdW5kLW9yaWdpbjogaW5pdGlhbDsgYmFja2dyb3VuZC1jbGlwOiBpbml0aWFsIiANCiAg
+ICAgICAgICAgICAgICAgICAgICB3aWR0aD02NDA+DQogICAgICAgICAgICAgICAgICAgICAgICA8
+UCANCiAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJQQURESU5HLUJPVFRPTTogMHB4OyBQ
+QURESU5HLVRPUDogMHB4OyBQQURESU5HLUxFRlQ6IDBweDsgTUFSR0lOOiAwcHg7IFBBRERJTkct
+UklHSFQ6IDBweCI+QW1hem9uGyRCJVclaSUkJWAkciQ0TXhNUUQ6JC0kIiRqJCwkSCQmJDQkNiQk
+JF4kOSEjJCo1Uk1NJE4bKEJBbWF6b24bJEIlVyVpJSQlYDJxMHc7cTNKJE8hIhsoQjIwMjAvMDYv
+MDkbJEIkSzk5PzckcjdeJCgkXiQ5ISMkKkQ0JFkkNyQ/JEgkMyRtISIycUhxJE4kKjtZSickJCRL
+O0hNUSRHJC0ka00tOHokSiUvJWwlOCVDJUglKyE8JUkkLCUiJSslJiVzJUgkS0VQTz8kNSRsJEYk
+JCReJDskcyEjJS8lbCU4JUMlSCUrITwlST5wSnMkTjk5PzchIj83JDckJCUvJWwlOCVDJUglKyE8
+JUkkTkRJMkMkSyREJCQkRiRPMEoyPCROPGo9ZyRyJDQzTkcnJC8kQCQ1JCQhIxsoQjxCUj48QlI+
+PC9QPg0KICAgICAgICAgICAgICAgICAgICAgICAgPFAgDQogICAgICAgICAgICAgICAgICAgICAg
+ICBzdHlsZT0iUEFERElORy1CT1RUT006IDBweDsgUEFERElORy1UT1A6IDBweDsgUEFERElORy1M
+RUZUOiAwcHg7IE1BUkdJTjogMHB4OyBQQURESU5HLVJJR0hUOiAwcHg7IFRFWFQtSU5ERU5UOiAz
+NXB4Ij4xLiANCiAgICAgICAgICAgICAgICAgICAgICAgIBskQiUiJSslJiVzJUglNSE8JVMlOSQr
+JGkbKEJBbWF6b24bJEIlVyVpJSQlYDJxMHc+cEpzJHI0SU19JDkkayRLJSIlLyU7JTkkNyReJDkh
+IxsoQjxCUj48L1A+DQogICAgICAgICAgICAgICAgICAgICAgICA8UCANCiAgICAgICAgICAgICAg
+ICAgICAgICAgIHN0eWxlPSJQQURESU5HLUJPVFRPTTogMHB4OyBQQURESU5HLVRPUDogMHB4OyBQ
+QURESU5HLUxFRlQ6IDBweDsgTUFSR0lOOiAwcHg7IFBBRERJTkctUklHSFQ6IDBweDsgVEVYVC1J
+TkRFTlQ6IDM1cHgiPjIuIA0KICAgICAgICAgICAgICAgICAgICAgICAgQW1hem9uGyRCJVclaSUk
+JWAkS0VQTz8kNyQ/GyhCQW1hem9uLmNvLmpwGyRCJE4lIiUrJSYlcyVIJHI7SE1RJDckRiU1JSQl
+cyUkJXMkNyReJDkhIxsoQjxCUj48L1A+DQogICAgICAgICAgICAgICAgICAgICAgICA8UCANCiAg
+ICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJQQURESU5HLUJPVFRPTTogMHB4OyBQQURESU5H
+LVRPUDogMHB4OyBQQURESU5HLUxFRlQ6IDBweDsgTUFSR0lOOiAwcHg7IFBBRERJTkctUklHSFQ6
+IDBweDsgVEVYVC1JTkRFTlQ6IDM1cHgiPjMuIA0KICAgICAgICAgICAgICAgICAgICAgICAgGyRC
+OjhCJiRLST08KCQ1JGwkRiQkJGshVjg9Ol8kTjtZSidKfUshIVckTjI8JEskIiRrIVY7WUonSn1L
+ISRySlE5OSQ5JGshVyROJWolcyUvJHIlLyVqJUMlLyQ3JF4kOSEjGyhCPEJSPjwvUD4NCiAgICAg
+ICAgICAgICAgICAgICAgICAgIDxQIA0KICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9IlBB
+RERJTkctQk9UVE9NOiAwcHg7IFBBRERJTkctVE9QOiAwcHg7IFBBRERJTkctTEVGVDogMHB4OyBN
+QVJHSU46IDBweDsgUEFERElORy1SSUdIVDogMHB4OyBURVhULUlOREVOVDogMzVweCI+NC4gDQog
+ICAgICAgICAgICAgICAgICAgICAgICAbJEJNLTh6NHw4QiROOTk/NyReJD8kTz83JDckJCUvJWwl
+OCVDJUglKyE8JUk+cEpzJHJGfk5PJDckRiQvJEAkNSQkISMbKEI8QlI+PEJSPjwvUD4NCiAgICAg
+ICAgICAgICAgICAgICAgICAgIDxQIA0KICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9IlBB
+RERJTkctQk9UVE9NOiAwcHg7IFBBRERJTkctVE9QOiAwcHg7IFBBRERJTkctTEVGVDogMHB4OyBN
+QVJHSU46IDBweDsgUEFERElORy1SSUdIVDogMHB4Ij5BbWF6b24bJEIlVyVpJSQlYCRyN1FCMyQ3
+JEYkNE14TVEkJCQ/JEAkLyQ/JGEkSyEiMnFIcSROJCo7WUonJCQkSyQ0O1hEaiQkJD8kQCQkJD8l
+LyVsJTglQyVIJSshPCVJJCw7SE1RJEckLSRKJCQ+bDlnJE8hIiUiJSslJiVzJUgkS0VQTz8kNSRs
+JEYkJCRrSkwbKEIgDQogICAgICAgICAgICAgICAgICAgICAgICAbJEIkTiUvJWwlOCVDJUglKyE8
+JUkkSzJxSHEkckBBNWEkNSQ7JEZEOiQtJF4kOSEjMnFIcSROQEE1YSQsPVBNaCRKJCQ+bDlnJE8h
+IiQqNVJNTSROGyhCQW1hem9uGyRCJVclaSUkJWAycTB3O3EzSiRPPDo4eiQ3ISJGQ0U1JHIkNE14
+TVEkRyQtJEokLyRKJGokXiQ5ISMbKEI8L1A+PEJSPg0KICAgICAgICAgICAgICAgICAgICAgICAg
+PFAgDQogICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0iUEFERElORy1CT1RUT006IDBweDsg
+UEFERElORy1UT1A6IDBweDsgUEFERElORy1MRUZUOiAwcHg7IE1BUkdJTjogMHB4OyBQQURESU5H
+LVJJR0hUOiAwcHgiPjxBIA0KICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9IkNPTE9SOiBy
+Z2IoNTEsNTEsNTEpIiANCiAgICAgICAgICAgICAgICAgICAgICAgIGhyZWY9Imh0dHA6Ly91MTcz
+MzY3NDcuY3Quc2VuZGdyaWQubmV0L2xzL2NsaWNrP3Vwbj1LN0xwWG5aOGVjbHhNU0h0MEdLVFox
+MU5iLTJCLTJCeWY3M1J6SGJ0N3FCQXVuVk1vU24wQldJd014VWtWbWxuQXlJdVVULTJCaXQwa0tv
+a0YtMkJBdk5TSWlWOVVObGdrWTdhLTJCWFJkdzdHZmwyUWlEdzRiMFA0QTFNLTJGR3U4bG5SRWFZ
+bHJJWEVJT1Zuek1rMUdnbFdjUm0wWkZTWEE1d3diMXNLeHY1bHNYTHJPLTJCTmU4STlVWHdhNnNs
+NlNYczNsOEkzQ05jV1dvUVdNallnU043MVJLMHBZYUFDMGtBTFBtM3FESUpWU2x3ZENBWDhlLTJC
+N09ZdWtWbFFIbkMxNVUzejczM2Zqa0dwSk5jUHZiQ0FnQmpLTHF0ZkRBVUpWWnp0THVrZ241dDNN
+MVJMaC0yQldzYlRCMUZXdURKZ0NwT2M5WlB4aGY5Y1NJc3FWWWFESjl0THpxQXZ2M3R4TnlweXVi
+SDhpY1JUZ04yaVRqRlF6SUQtMkJEUXZSWURQSVZXei0yQnpId3JjOUtwVmlvTndMekRSc3BVbEpU
+eklSREFxeHdwdWNjNmMzOXBsc0NDb3BuaW5qS1BIdzRXdm5RQ01lUmVBRmFOc3RqR1lPQzdUOFpj
+MlllT0w5UjRzV2JFYWNBZ0REaHgwTXBWdXVhU2RrVGpqLTJCa29DY09vM0RoQXBuMVg1S1lkaFZM
+UkxSLTJCLTJCbC0yQllVLTJGd1IxUnFELTJGRzI5V3VyTWRiRHpaZjk3NzVNLTJGUkFTMEh3U0c4
+cS0yQmQxakktMkI2SXktMkJnR0lQMm94bDNRck5KYVJ1RlhNM0pKd0JGNlc2MVpsQmlMaXhRVmpB
+dHhOYWlZQ1ZIaWRrLTNEeER2el82cHdLSEo4UGgxWFR5djdPTlpsT0JDQXlrNUVBOUM2TEpHZENF
+S1lUUUQtMkYwdEFtZnlWLTJGTnpYbTdldEFLY1pELTJGMTZVM1lPWlItMkZiVUVOajJZUUs5OUkt
+MkZMU1RDRU5uQ2wzYkRMRnJEYm9KQ3pxMmNsN09pSWFrb3AtMkJpLTJGdWlrMVA5a3laRy0yRm95
+VmQydXZsaTktMkJmU1ExLTJGbUJib0E2MlkySm9RRGhzaVNLeTd4d3VnYVBpT01JQkw4T0pVZ25Y
+bGhIcFdHNjFnR2RPNUZhaGZFVU1oUk9OSDFGazMyUG13eDBVblZ4ZzRRWndxQkktM0QiPkFtYXpv
+bi5jby5qcDwvQT4bJEIlKyU5JT8lXiE8JTUhPCVTJTkbKEIgDQogICAgICAgICAgICAgICAgICAg
+ICAgICA8L1A+DQogICAgICAgICAgICAgICAgICAgICAgICA8UCANCiAgICAgICAgICAgICAgICAg
+ICAgICAgIHN0eWxlPSJQQURESU5HLUJPVFRPTTogMHB4OyBQQURESU5HLVRPUDogMHB4OyBQQURE
+SU5HLUxFRlQ6IDBweDsgTUFSR0lOOiAwcHg7IFBBRERJTkctUklHSFQ6IDBweCI+PEJSPjwvUD48
+L1REPjwvVFI+DQogICAgICAgICAgICAgICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICAgICAg
+ICA8VEQ+Jm5ic3A7PC9URD48L1RSPg0KICAgICAgICAgICAgICAgICAgICA8VFI+DQogICAgICAg
+ICAgICAgICAgICAgICAgPFREIGNvbFNwYW49MiBhbGlnbj1jZW50ZXI+PEEgDQogICAgICAgICAg
+ICAgICAgICAgICAgICBzdHlsZT0iVEVYVC1ERUNPUkFUSU9OOiBub25lOyBIRUlHSFQ6IDcwcHg7
+IFdJRFRIOiAxNTBweDsgQkFDS0dST1VORDogcmdiKDI1NSwxNTMsMCk7IENPTE9SOiByZ2IoMjU1
+LDI1NSwyNTUpOyBQQURESU5HLUJPVFRPTTogMTBweDsgUEFERElORy1UT1A6IDEwcHg7IFBBRERJ
+TkctTEVGVDogMjBweDsgTElORS1IRUlHSFQ6IDcwcHg7IFBBRERJTkctUklHSFQ6IDIwcHgiIA0K
+ICAgICAgICAgICAgICAgICAgICAgICAgaHJlZj0iaHR0cDovL3UxNzMzNjc0Ny5jdC5zZW5kZ3Jp
+ZC5uZXQvbHMvY2xpY2s/dXBuPUs3THBYblo4ZWNseE1TSHQwR0tUWjExTmItMkItMkJ5ZjczUnpI
+YnQ3cUJBdW5WTW9TbjBCV0l3TXhVa1ZtbG5BeUl1VVQtMkJpdDBrS29rRi0yQkF2TlNJaVY5VU5s
+Z2tZN2EtMkJYUmR3N0dmbDJRaUR3NGIwUDRBMU0tMkZHdThsblJFYVlscklYRUlPVm56TWsxR2ds
+V2NSbTBaRlNYQTV3d2Ixc0t4djVsc1hMck8tMkJOZThJOVVYd2E2c2w2U1hzM2w4STNDTmNXV29R
+V01qWWdTTjcxUkswcFlhQUMwa0FMUG0zcURJSlZTbHdkQ0FYOGUtMkI3T1l1a1ZsUUhuQzE1VTN6
+NzMzZmprR3BKTmNQdmJDQWdCaktMcXRmREFVSlZaenRMdWtnbjV0M00xUkxoLTJCV3NiVEIxRld1
+REpnQ3BPYzlaUHhoZjljU0lzcVZZYURKOXRMenFBdnYzdHhOeXB5dWJIOGljUlRnTjJpVGpGUXpJ
+RC0yQkRRdlJZRFBJVld6LTJCekh3cmM5S3BWaW9Od0x6RFJzcFVsSlR6SVJEQXF4d3B1Y2M2YzM5
+cGxzQ0NvcG5pbmpLUEh3NFd2blFDTWVSZUFGYU5zdGpHWU9DN1Q4WmMyWWVPTDlSNHNXYkVhY0Fn
+RERoeDBNcFZ1dWFTZGtUamotMkJrb0NjT28zRGhBcG4xWDVLWWRoVkxSTFItMkItMkJsLTJCWVUt
+MkZ3UjFScUQtMkZHMjlXdXJNZGJEelpmOTc3NU0tMkZSQVMwSHdTRzhxLTJCZDFqSS0yQjZJeS0y
+QmdHSVAyb3hsM1FyTkphUnVGWE0zSkp3QkY2VzYxWmxCaUxpeFFWakF0eE5haVlDVkhpZGstM0Rn
+Zy1GXzZwd0tISjhQaDFYVHl2N09OWmxPQkNBeWs1RUE5QzZMSkdkQ0VLWVRRRC0yRjB0QW1meVYt
+MkZOelhtN2V0QUtjWkQtMkYxNlUzWU9aUi0yRmJVRU5qMllRSzk5STJiaU9SYXN3SHQzQS0yRjVi
+M3dmb0JPZUV6LTJGV05TWmF3RVhWbFBPUjNnT2ZUYkJTOWR4LTJCQXNZd1JUbndCcVUzeDlZZkho
+WGFIZjlTMnVHbThoeWFyOExHTnYwcDJvWWgyb01vSEc4Q0pSWnVrc1kwTzdJekczblhyYlVlQlZm
+NDJFbFBPTkNkSGlmRkFSOFhtOTBVVDNBTS0zRCI+GyRCO1lKJ0p9SyEkTj5wSnMkcjk5PzckOSRr
+GyhCPC9BPiANCiAgICAgICAgICAgICAgICAgICAgICA8L1REPjwvVFI+DQogICAgICAgICAgICAg
+ICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICAgICAgICA8VEQgDQogICAgICAgICAgICAgICAg
+ICAgICAgc3R5bGU9IkZPTlQtU0laRTogMThweDsgRk9OVC1GQU1JTFk6IEFyaWFsLCBIZWx2ZXRp
+Y2EsIHNhbnMtc2VyaWY7IEZPTlQtV0VJR0hUOiA3MDA7IENPTE9SOiByZ2IoNTEsNTEsNTEpOyBQ
+QURESU5HLUJPVFRPTTogMHB4OyBURVhULUFMSUdOOiBjZW50ZXI7IFBBRERJTkctVE9QOiAwcHg7
+IFBBRERJTkctTEVGVDogMHB4OyBMSU5FLUhFSUdIVDogMzBweDsgUEFERElORy1SSUdIVDogMHB4
+OyBiYWNrZ3JvdW5kLXNpemU6IGluaXRpYWw7IGJhY2tncm91bmQtb3JpZ2luOiBpbml0aWFsOyBi
+YWNrZ3JvdW5kLWNsaXA6IGluaXRpYWwiIA0KICAgICAgICAgICAgICAgICAgICAgIGJnQ29sb3I9
+I2ZmZmZmZiBoZWlnaHQ9MjAgDQogICAgICAgICAgICAgICAgY29sU3Bhbj0yPjwvVEQ+PC9UUj48
+L1RCT0RZPjwvVEFCTEU+PC9URD48L1RSPjwvVEJPRFk+PC9UQUJMRT48L1REPjwvVFI+DQogICAg
+ICAgIDxUUj4NCiAgICAgICAgICA8VEQgDQpiZ0NvbG9yPSNmMmYyZjI+Jm5ic3A7PC9URD48L1RS
+PjwvVEJPRFk+PC9UQUJMRT48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjwvRElWPjwvRElWPjwv
+RElWPgo8aW1nIHNyYz0iaHR0cHM6Ly91MTczMzY3NDcuY3Quc2VuZGdyaWQubmV0L3dmL29wZW4/
+dXBuPW9EYjZueTUxbVVCNkZFeFluM3JRaG5Fc1J6TUxaQjJYTWVxNWxlUzM3bEJEdzl0RGFTdFJM
+ZmJLc25FQXp0QlA5cGZISWR4SzVxYnRwQzZjdWZRV1VOTkJsdS0yQkNsLTJGb0NCVWZZcWNkMzVq
+eElpblMyYjFlTlRqSG9PZTd5YUVjeEJoWGx3ZUt3V24tMkZENDRmREo4dmdaSmlPSnptck42OG5F
+aG5ZaXlDeDFqUzRlbUF1RW8xblFXOWUxVzBIRmZqa0h5S3pZTlotMkY2NzNLRjVGdzk2eThWZ3U2
+dXZYbWZEMklmLTJCNnlGaGI4a3Y4LTNEIiBhbHQ9IiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgYm9y
+ZGVyPSIwIiBzdHlsZT0iaGVpZ2h0OjFweCAhaW1wb3J0YW50O3dpZHRoOjFweCAhaW1wb3J0YW50
+O2JvcmRlci13aWR0aDowICFpbXBvcnRhbnQ7bWFyZ2luLXRvcDowICFpbXBvcnRhbnQ7bWFyZ2lu
+LWJvdHRvbTowICFpbXBvcnRhbnQ7bWFyZ2luLXJpZ2h0OjAgIWltcG9ydGFudDttYXJnaW4tbGVm
+dDowICFpbXBvcnRhbnQ7cGFkZGluZy10b3A6MCAhaW1wb3J0YW50O3BhZGRpbmctYm90dG9tOjAg
+IWltcG9ydGFudDtwYWRkaW5nLXJpZ2h0OjAgIWltcG9ydGFudDtwYWRkaW5nLWxlZnQ6MCAhaW1w
+b3J0YW50OyIvPgo8L0JPRFk+PC9IVE1MPg0KCg==
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 2f09749..e5f1bfb 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -35,6 +35,7 @@ struct erofs_configure {
- 	char *c_img_path;
- 	char *c_src_path;
- 	char *c_compr_alg_master;
-+	u64 c_compr_seg_size;
- 	int c_compr_level_master;
- 	int c_force_inodeversion;
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
-diff --git a/lib/compress.c b/lib/compress.c
-index 6cc68ed..a2a278c 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -32,6 +32,7 @@ struct z_erofs_vle_compress_ctx {
- 
- 	erofs_blk_t blkaddr;	/* pointing to the next blkaddr */
- 	u16 clusterofs;
-+	u64 segavail;
- };
- 
- #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
-@@ -116,7 +117,7 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
- }
- 
- static int write_uncompressed_block(struct z_erofs_vle_compress_ctx *ctx,
--				    unsigned int *len,
-+				    unsigned int *len, unsigned int *clusterofs,
- 				    char *dst)
- {
- 	int ret;
-@@ -125,14 +126,19 @@ static int write_uncompressed_block(struct z_erofs_vle_compress_ctx *ctx,
- 	/* reset clusterofs to 0 if permitted */
- 	if (!erofs_sb_has_lz4_0padding() &&
- 	    ctx->head >= ctx->clusterofs) {
-+		*clusterofs = ctx->clusterofs;
- 		ctx->head -= ctx->clusterofs;
- 		*len += ctx->clusterofs;
- 		ctx->clusterofs = 0;
-+		count = min(EROFS_BLKSIZ, *len);
-+	} else {
-+		*clusterofs = 0;
-+		count = min_t(u64, ctx->segavail, *len);
-+		if (count > EROFS_BLKSIZ)
-+			count = EROFS_BLKSIZ;
- 	}
- 
- 	/* write uncompressed data */
--	count = min(EROFS_BLKSIZ, *len);
--
- 	memcpy(dst, ctx->queue + ctx->head, count);
- 	memset(dst + count, 0, EROFS_BLKSIZ - count);
- 
-@@ -157,14 +163,21 @@ static int vle_compress_one(struct erofs_inode *inode,
- 
- 	while (len) {
- 		bool raw;
-+		unsigned int clusterofs;
-+
-+		if (ctx->segavail <= EROFS_BLKSIZ) {
-+			if (len < ctx->segavail && !final)
-+				break;
-+
-+			goto nocompression;
-+		}
- 
- 		if (len <= EROFS_BLKSIZ) {
- 			if (final)
- 				goto nocompression;
- 			break;
- 		}
--
--		count = len;
-+		count = min_t(u64, len, ctx->segavail);
- 		ret = erofs_compress_destsize(h, compressionlevel,
- 					      ctx->queue + ctx->head,
- 					      &count, dst, EROFS_BLKSIZ);
-@@ -175,11 +188,12 @@ static int vle_compress_one(struct erofs_inode *inode,
- 					  erofs_strerror(ret));
- 			}
- nocompression:
--			ret = write_uncompressed_block(ctx, &len, dst);
-+			ret = write_uncompressed_block(ctx, &len, &clusterofs, dst);
- 			if (ret < 0)
- 				return ret;
- 			count = ret;
- 			raw = true;
-+			ctx->segavail -= count - clusterofs;
- 		} else {
- 			/* write compressed data */
- 			erofs_dbg("Writing %u compressed data to block %u",
-@@ -194,6 +208,7 @@ nocompression:
- 			if (ret)
- 				return ret;
- 			raw = false;
-+			ctx->segavail -= count;
- 		}
- 
- 		ctx->head += count;
-@@ -202,6 +217,8 @@ nocompression:
- 
- 		++ctx->blkaddr;
- 		len -= count;
-+		if (!ctx->segavail)
-+			ctx->segavail = cfg.c_compr_seg_size;
- 
- 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
- 			const unsigned int qh_aligned =
-@@ -422,6 +439,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	ctx.head = ctx.tail = 0;
- 	ctx.clusterofs = 0;
- 	remaining = inode->i_size;
-+	ctx.segavail = cfg.c_compr_seg_size;
- 
- 	while (remaining) {
- 		const u64 readcount = min_t(u64, remaining,
-diff --git a/lib/config.c b/lib/config.c
-index da0c260..721ff61 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -23,6 +23,7 @@ void erofs_init_configure(void)
- 	cfg.c_force_inodeversion = 0;
- 	cfg.c_inline_xattr_tolerance = 2;
- 	cfg.c_unix_timestamp = -1;
-+	cfg.c_compr_seg_size = -1;
- }
- 
- void erofs_show_config(void)
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index 891c5a8..2a4ef71 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -52,6 +52,10 @@ Forcely generate extended inodes (64-byte inodes) to output.
- Set all files to the given UNIX timestamp. Reproducible builds requires setting
- all to a specific one.
- .TP
-+.BI "\-S " #
-+Set max input stream size for each individual segment (disabled if 0).
-+The default value is 0. It has be aligned with blocksize.
-+.TP
- .BI "\-\-exclude-path=" path
- Ignore file that matches the exact literal path.
- You may give multiple `--exclude-path' options.
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 94bf1e6..cded973 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -61,6 +61,7 @@ static void usage(void)
- 	      " -x#               set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
- 	      " -EX[,...]         X=extended options\n"
- 	      " -T#               set a fixed UNIX timestamp # to all files\n"
-+	      " -S#               Set max input stream size # for each individual segment\n"
- 	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
- 	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
- #ifdef HAVE_LIBSELINUX
-@@ -138,7 +139,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 	char *endptr;
- 	int opt, i;
- 
--	while((opt = getopt_long(argc, argv, "d:x:z:E:T:",
-+	while((opt = getopt_long(argc, argv, "d:x:z:E:T:S:",
- 				 long_options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'z':
-@@ -188,6 +189,19 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return -EINVAL;
- 			}
- 			break;
-+		case 'S':
-+			i = strtoll(optarg, &endptr, 0);
-+			if (*endptr != '\0') {
-+				erofs_err("invalid compress segment size %s",
-+					  optarg);
-+				return -EINVAL;
-+			}
-+			if (!i) {
-+				cfg.c_compr_seg_size = -1;
-+			} else {
-+				cfg.c_compr_seg_size = i * EROFS_BLKSIZ;
-+			}
-+			break;
- 		case 2:
- 			opt = erofs_parse_exclude_path(optarg, false);
- 			if (opt) {
--- 
-2.17.1
+------=_NextPart_000_0140_01A2A6BC.189566E0--
 
