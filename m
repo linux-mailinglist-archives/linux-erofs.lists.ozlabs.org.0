@@ -2,48 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E9D323E5EC
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Aug 2020 04:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD1B923F71B
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Aug 2020 11:35:12 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4BN8hR4xp9zDqvV
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Aug 2020 12:39:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4BNxsT73MCzDqGx
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Aug 2020 19:35:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=huawei.com;
+ envelope-from=linmiaohe@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=kernel.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=default header.b=1sUWz7jF; dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from huawei.com (szxga07-in.huawei.com [45.249.212.35])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4BN8hL5q86zDqNR
- for <linux-erofs@lists.ozlabs.org>; Fri,  7 Aug 2020 12:39:30 +1000 (AEST)
-Subject: Re: [GIT PULL] erofs fixes for 5.9-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=default; t=1596767968;
- bh=klkVfP88rtLpfevFfFMGfw20TED7XGDbc1+skecj4Ck=;
- h=From:In-Reply-To:References:Date:To:Cc:From;
- b=1sUWz7jFwLfI2MK7tPWs87D5q5W9gCbMXwuZHjK1BRXMk+9VEfUYr8FNGlhRHer4e
- I+7EZvBYop6pKuqDiwr71XNQVwzizO43v873a6qmwMFy2Vqpk70Ig0zqkeUS+KdHSj
- 1U9P0xNquHaOitF1CyqFp14tbN/hP4/xaP7rWQkY=
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20200806032017.GA4442@xiangao.remote.csb>
-References: <20200806032017.GA4442@xiangao.remote.csb>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200806032017.GA4442@xiangao.remote.csb>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.9-rc1
-X-PR-Tracked-Commit-Id: 0e62ea33ac12ebde876b67eca113630805191a66
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 019c407c1dfb81c37036323597e18cce73c84122
-Message-Id: <159676796820.23087.18283400571453619730.pr-tracker-bot@kernel.org>
-Date: Fri, 07 Aug 2020 02:39:28 +0000
-To: Gao Xiang <hsiangkao@redhat.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4BNxsN17ZWzDqDN
+ for <linux-erofs@lists.ozlabs.org>; Sat,  8 Aug 2020 19:35:00 +1000 (AEST)
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+ by Forcepoint Email with ESMTP id C8169DEA7AD9721ED9F6;
+ Sat,  8 Aug 2020 17:19:07 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sat, 8 Aug 2020
+ 17:18:58 +0800
+From: linmiaohe <linmiaohe@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+Subject: [PATCH] erofs: Convert to use the fallthrough macro
+Date: Sat, 8 Aug 2020 17:21:26 +0800
+Message-ID: <1596878486-23499-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,24 +46,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linus Torvalds <torvalds@linux-foundation.org>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
+Cc: linmiaohe@huawei.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Thu, 6 Aug 2020 11:20:17 +0800:
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.9-rc1
+Convert the uses of fallthrough comments to fallthrough macro.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/019c407c1dfb81c37036323597e18cce73c84122
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ fs/erofs/zmap.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thank you!
-
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 7d40d78ea864..ae325541884e 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -359,7 +359,7 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 		return z_erofs_extent_lookback(m, m->delta[0]);
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+ 		map->m_flags &= ~EROFS_MAP_ZIPPED;
+-		/* fallthrough */
++		fallthrough;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
+ 		map->m_la = (lcn << lclusterbits) | m->clusterofs;
+ 		break;
+@@ -416,7 +416,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+ 		if (endoff >= m.clusterofs)
+ 			map->m_flags &= ~EROFS_MAP_ZIPPED;
+-		/* fallthrough */
++		fallthrough;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
+ 		if (endoff >= m.clusterofs) {
+ 			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
+@@ -433,7 +433,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 		end = (m.lcn << lclusterbits) | m.clusterofs;
+ 		map->m_flags |= EROFS_MAP_FULL_MAPPED;
+ 		m.delta[0] = 1;
+-		/* fallthrough */
++		fallthrough;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
+ 		/* get the correspoinding first chunk */
+ 		err = z_erofs_extent_lookback(&m, m.delta[0]);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.19.1
+
