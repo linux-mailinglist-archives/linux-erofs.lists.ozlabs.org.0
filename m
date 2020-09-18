@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09B9726D10F
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Sep 2020 04:21:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0251A26FF5C
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Sep 2020 15:59:19 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4BsLLt49SSzDqQN
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Sep 2020 12:21:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4BtFnJ3Dr1zDqtd
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Sep 2020 23:59:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -17,80 +17,74 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=ibVGEe9X; 
+ header.s=mimecast20190719 header.b=ejl6Idm1; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=ibVGEe9X; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=ejl6Idm1; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
  (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4BsLLh6y0nzDqGN
- for <linux-erofs@lists.ozlabs.org>; Thu, 17 Sep 2020 12:21:29 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4BtFhj4kbrzDqbC
+ for <linux-erofs@lists.ozlabs.org>; Fri, 18 Sep 2020 23:55:15 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1600309286;
+ s=mimecast20190719; t=1600437312;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=N4dsBjdtcU4ASBhl61wjASbXtJpfQbVEgyM+D/rYJHU=;
- b=ibVGEe9XPpT25cy0iAo07NdxnCbS6CtG+Sl6Dovr4qrbDCuKa6HpJFwkkhh8DO1Tlh9GX5
- 2XGl/HVz4/dGF7tPVum4FD2r7QXo07QQ1KxBxf3PtMCGJFon6Eho+q3TiJ9wwnJhjZcDLU
- bcQajraSQfnLElXy0xqFsCC57MCh3/w=
+ to:to:cc:cc:content-type:content-type;
+ bh=Fob8e2a9nGW8sR1cLDiz2AvMl4FxYk2sgoIACLAIhco=;
+ b=ejl6Idm1odkieYl3Rl4NY+qrrFOAKxtXvxuG/yj4PtBXlMXYvj95mWe9YO4Bx66msposfy
+ Tgea1CmE0A5boT6FKhPyzLlXaVWVXgRD+weahfxte5Pntt4yzajHHCL18ng2jKHqSdeBeZ
+ l4RijinrUPTzkaJfuruUzr0av+d9Xc4=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1600309286;
+ s=mimecast20190719; t=1600437312;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=N4dsBjdtcU4ASBhl61wjASbXtJpfQbVEgyM+D/rYJHU=;
- b=ibVGEe9XPpT25cy0iAo07NdxnCbS6CtG+Sl6Dovr4qrbDCuKa6HpJFwkkhh8DO1Tlh9GX5
- 2XGl/HVz4/dGF7tPVum4FD2r7QXo07QQ1KxBxf3PtMCGJFon6Eho+q3TiJ9wwnJhjZcDLU
- bcQajraSQfnLElXy0xqFsCC57MCh3/w=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-EPdrZzreNUqwmHGS-q-bWQ-1; Wed, 16 Sep 2020 22:21:22 -0400
-X-MC-Unique: EPdrZzreNUqwmHGS-q-bWQ-1
-Received: by mail-pg1-f199.google.com with SMTP id a184so490483pgc.16
- for <linux-erofs@lists.ozlabs.org>; Wed, 16 Sep 2020 19:21:21 -0700 (PDT)
+ to:to:cc:cc:content-type:content-type;
+ bh=Fob8e2a9nGW8sR1cLDiz2AvMl4FxYk2sgoIACLAIhco=;
+ b=ejl6Idm1odkieYl3Rl4NY+qrrFOAKxtXvxuG/yj4PtBXlMXYvj95mWe9YO4Bx66msposfy
+ Tgea1CmE0A5boT6FKhPyzLlXaVWVXgRD+weahfxte5Pntt4yzajHHCL18ng2jKHqSdeBeZ
+ l4RijinrUPTzkaJfuruUzr0av+d9Xc4=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-iM37etyYO9itxF76dJt9wA-1; Fri, 18 Sep 2020 09:55:10 -0400
+X-MC-Unique: iM37etyYO9itxF76dJt9wA-1
+Received: by mail-pg1-f200.google.com with SMTP id r22so3523424pgk.14
+ for <linux-erofs@lists.ozlabs.org>; Fri, 18 Sep 2020 06:55:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=N4dsBjdtcU4ASBhl61wjASbXtJpfQbVEgyM+D/rYJHU=;
- b=q65jkYV5v4z86CLbSPOZ2AIzLlxOJ0+LNupcYI8d+jzdMyCa67s6zzgyStykFFWeou
- qY+QN53D6gU4XPIOLIPTeXVYl/f2D9/yAXl4NcuYmI+ImqUi4ZCev4E81BUtXFUU52qT
- 9A7BCkEpSyezmDzOjqhtehqiBGQ8Gi66F6UF9lDS92X11EpRoYpMZO6tNZIS5QamEjb8
- WfkBhe2qagGYPk4YbLVmRipuZCLzCMajr52s1HxS0SmYCfOU6Wuis+oLBb0nF8S9Vj37
- fsa1TFF++u6LNaV4rDdGK/HWwy7fO51dbCjShuewuntZ6lCADfVBxl4OIOxnBefc3Div
- b/Fw==
-X-Gm-Message-State: AOAM530u8BM6BOx2rPYo83DwcTt1YIgsSZuCm6+wXDSkUV8lAgaPm3lL
- Zg/tZw7CDYN2M3fktiVQg/av9gLOkpguG6g0J/LzCbpgGDqBvq8fVEuSWRhLMDKSoJU9qRw175w
- uTU4GUAIqJrCSC13dbhl60tHq
-X-Received: by 2002:aa7:9a90:0:b029:142:2501:39e7 with SMTP id
- w16-20020aa79a900000b0290142250139e7mr9108785pfi.54.1600309281153; 
- Wed, 16 Sep 2020 19:21:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyeaJVz11MtazIIwXq4sTHziPNu0GZHEoeqcQaC+iA9ZRm+rBmogCojJtJL/NsMAtaxH6rGbA==
-X-Received: by 2002:aa7:9a90:0:b029:142:2501:39e7 with SMTP id
- w16-20020aa79a900000b0290142250139e7mr9108776pfi.54.1600309280942; 
- Wed, 16 Sep 2020 19:21:20 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id i17sm18191887pfa.2.2020.09.16.19.21.18
+ h=x-gm-message-state:from:to:cc:subject:date:message-id;
+ bh=Fob8e2a9nGW8sR1cLDiz2AvMl4FxYk2sgoIACLAIhco=;
+ b=KSoMHmjKc/dKLGXC16uyoZ3Hfi+tL5oO1BdlCDLJuj83EsVJNOSvPxkpKNLaMXtZ/o
+ aezb1Yr078lqwmx6rYub+7cU62vNFlQvrpIusNbDtokTEv32Sgyhq4Znqtij7hsTqzfs
+ rK6Mec6sU6Ee8E7FunndJsfubQahVOhVpAdBY9PV/+hMOpGDRsx0zzGZYrm2nyP77Wat
+ NleVhnh014qqVcdzo8lDN/ovqjsZai0cgq5hpvp+9QyAnmRd5pWN6iIQF8AtPIXseQbe
+ eGsw6tCqriWCpc6Q7aTbidPSGXwKwF7/iYQjVXZnFmHVMPm21/c62Mk8nCWlnoMAp3vt
+ i5qg==
+X-Gm-Message-State: AOAM532Oc5S9IgCM6Lua+/ZkITV/5ylURGEPgFYzFRyv5HAveeGeqB9l
+ 369MCCY6DPpLAiLpcho7TLcmeViXvxTFiS992Gjtw7xOuYivmjs8UADgYUwhFrew8M+L7Jj4MMU
+ k2/vkbvWg3tvYfDzvWp6nWsPo
+X-Received: by 2002:a17:902:9006:b029:d2:341:6520 with SMTP id
+ a6-20020a1709029006b02900d203416520mr5516703plp.37.1600437308859; 
+ Fri, 18 Sep 2020 06:55:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJytckQsFmDdTGAEynQGk/nocBz8UclubNVkwkGFO1F2FUPlpGYRyvYg1rCXDtWbmXiv3T63Ww==
+X-Received: by 2002:a17:902:9006:b029:d2:341:6520 with SMTP id
+ a6-20020a1709029006b02900d203416520mr5516683plp.37.1600437308626; 
+ Fri, 18 Sep 2020 06:55:08 -0700 (PDT)
+Received: from xiangao.com ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id j19sm3642016pfe.108.2020.09.18.06.55.05
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Wed, 16 Sep 2020 19:21:20 -0700 (PDT)
-Date: Thu, 17 Sep 2020 10:21:10 +0800
+ Fri, 18 Sep 2020 06:55:08 -0700 (PDT)
 From: Gao Xiang <hsiangkao@redhat.com>
-To: Chao Yu <yuchao0@huawei.com>
-Subject: Re: [PATCH v2] erofs: remove unneeded parameter
-Message-ID: <20200917022110.GA18734@xiangao.remote.csb>
-References: <20200917011821.22767-1-yuchao0@huawei.com>
-MIME-Version: 1.0
-In-Reply-To: <20200917011821.22767-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 1/4] erofs: avoid unnecessary variable `err'
+Date: Fri, 18 Sep 2020 21:54:33 +0800
+Message-Id: <20200918135436.17689-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Authentication-Results: relay.mimecast.com;
  auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -102,29 +96,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Sep 17, 2020 at 09:18:21AM +0800, Chao Yu wrote:
-> After commit 0615090c5044 ("erofs: convert compressed files from
-> readpages to readahead"), add_to_page_cache_lru() was moved to mm
-> code, so that in below call path, no page will be cached into
-> @pagepool list or grabbed from @pagepool list:
-> - z_erofs_readpage
->  - z_erofs_do_read_page
->   - preload_compressed_pages
->   - erofs_allocpage
-> 
-> Let's get rid of this unneeded @pagepool parameter.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+variable `err' in z_erofs_submit_queue() isn't useful
+here, remove it instead.
 
-Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/erofs/zdata.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Will apply it later :)
-
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 6c939def00f9..df6fa691097f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1193,7 +1193,6 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 
+ 		do {
+ 			struct page *page;
+-			int err;
+ 
+ 			page = pickup_page_for_submission(pcl, i++, pagepool,
+ 							  MNGD_MAPPING(sbi),
+@@ -1219,8 +1218,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 				++nr_bios;
+ 			}
+ 
+-			err = bio_add_page(bio, page, PAGE_SIZE, 0);
+-			if (err < PAGE_SIZE)
++			if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
+ 				goto submit_bio_retry;
+ 
+ 			last_index = cur;
+-- 
+2.18.1
 
