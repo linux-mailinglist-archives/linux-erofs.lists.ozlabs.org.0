@@ -2,92 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D490E270B70
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 09:28:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B428270FCC
+	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 19:29:57 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Btj4C0wZdzDqtr
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 17:28:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4BtyPt6CldzDr0X
+	for <lists+linux-erofs@lfdr.de>; Sun, 20 Sep 2020 03:29:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=HyIkM/XN; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=W9yiLhbU; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Btj3y3vfFzDqty
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Sep 2020 17:28:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1600500507;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
- references:references; bh=s5QBdWf0Be/EzSaYQm1AD046Zbo4g6mUJcMIOSDZ87c=;
- b=HyIkM/XNIxF8oQ+vfWcZGTvMH5/vErf4q2RNkWEiP3dt9b8OZE7+5eSlarEEmSPQ63/otB
- Kn5nXy5hN98Qe/EksV+8PeYRIwK3DtQpQjS40xy5LKbgtW43XzvfznvYhejx0gd0SW8gho
- isfdSGxft8XCT1qTJhXVW+UNIKmSIWo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1600500508;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
- references:references; bh=s5QBdWf0Be/EzSaYQm1AD046Zbo4g6mUJcMIOSDZ87c=;
- b=W9yiLhbUbfJQJqK29fWlHJC5W0ilfkDUExoC0/tpl0jlsjKloAIXfcoM0a4K3VgubIlu8r
- Ny+55eyp39uW0wrZCK+I+MRWEIrjeHvo+N8ddj+ug5JBDLZoSQHpmZACoOIz5axGqbIfxH
- D8KJvIru/swTki2H74Om0tPrU3HYGDk=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-uO-4o40RNCS2gY8r_5p1lg-1; Sat, 19 Sep 2020 03:28:26 -0400
-X-MC-Unique: uO-4o40RNCS2gY8r_5p1lg-1
-Received: by mail-pf1-f200.google.com with SMTP id q16so5060814pfj.7
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Sep 2020 00:28:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
- :references;
- bh=s5QBdWf0Be/EzSaYQm1AD046Zbo4g6mUJcMIOSDZ87c=;
- b=tY2oZnCwELn4rpMObWQch5C0to7ngqmmOXxfoddUnvphcHbTnDGR6NamwBBs0/7LQM
- XHlHjJ92J30ta6Q60NYbukwb4T/Q7ZoZ3Y6M1XWwlATNvwh4ZHHUImOH61YTLorit3A5
- LQWRe6JjHTw5a7Wi9Zt3mPdQh4l0SVXTtme1R6pr2ju+5AY2Ot1FcEa/jhYCu5vUfB2L
- 55Fpzf4d0aMCKirtMaQHABu0W7FsFv+aMrzz+8Ru8W/f/E/MNxieUO5MUY+cksszsbq5
- wB0EU0Y4EhYxKmT2K0njC7dPwnoulRtcxDdx4O/Ty6/iun5OPruEV5BnaHMEreQUC3/U
- Iy8A==
-X-Gm-Message-State: AOAM533JysZUmpa8mhiEyxirQdTmACAkLJYwn8tUk7mwmX0LvS+K+4dg
- XfmsSnnXnQx6UogXwNmd+deDAlW72hB9PnfHPwAeBVI6Ewg8k66MPIep+w1yNPqwKQvC0KyFKQu
- 5SnyO0Iik2RDYs8tDj22CrY8h
-X-Received: by 2002:a17:902:b586:b029:d1:bb0f:2644 with SMTP id
- a6-20020a170902b586b02900d1bb0f2644mr32502958pls.34.1600500504785; 
- Sat, 19 Sep 2020 00:28:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxZYnm3xckGHKZChvOgswDfMVTG0fk8MOC46B/+w0qe2CXhzMvyQVAnykW4gqBnbQZw+2FQCQ==
-X-Received: by 2002:a17:902:b586:b029:d1:bb0f:2644 with SMTP id
- a6-20020a170902b586b02900d1bb0f2644mr32502940pls.34.1600500504523; 
- Sat, 19 Sep 2020 00:28:24 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id s3sm5407381pfe.116.2020.09.19.00.28.21
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 19 Sep 2020 00:28:24 -0700 (PDT)
-From: Gao Xiang <hsiangkao@redhat.com>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2 3/3] erofs: add REQ_RAHEAD flag to readahead requests
-Date: Sat, 19 Sep 2020 15:27:30 +0800
-Message-Id: <20200919072730.24989-3-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200919072730.24989-1-hsiangkao@redhat.com>
-References: <20200919072730.24989-1-hsiangkao@redhat.com>
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4BtyN75SdBzDqty
+ for <linux-erofs@lists.ozlabs.org>; Sun, 20 Sep 2020 03:28:21 +1000 (AEST)
+IronPort-SDR: 6nnpJXLZHlz5bW+onxMnjVF+Q1wHOt9w6d6I7LJ6zUg+HTV0fRHAk3zS7wNSSVCTOOzajTAgRH
+ Wez6mwaUImWQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9749"; a="157541401"
+X-IronPort-AV: E=Sophos;i="5.77,279,1596524400"; d="scan'208";a="157541401"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+ by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 19 Sep 2020 10:28:19 -0700
+IronPort-SDR: sArSPiIQJNocUVqLLvMlEKOg7TYmF1pCAsNvOOLyngX2HWk1/CR4Kqnv5I4shjVtpuK+jylsGS
+ 7fl20MylVHhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,279,1596524400"; d="scan'208";a="303807037"
+Received: from lkp-server01.sh.intel.com (HELO a05db971c861) ([10.239.97.150])
+ by orsmga003.jf.intel.com with ESMTP; 19 Sep 2020 10:28:17 -0700
+Received: from kbuild by a05db971c861 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1kJgen-00017I-1G; Sat, 19 Sep 2020 17:28:17 +0000
+Date: Sun, 20 Sep 2020 01:27:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@redhat.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ e3f78d5e7e6b0825f4e646f74b0e469b023e5df4
+Message-ID: <5f663f9f.rHYxa8KkkK61rBmM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -99,120 +58,174 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Let's add REQ_RAHEAD flag so it'd be easier to identify
-readahead I/O requests in blktrace.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
+branch HEAD: e3f78d5e7e6b0825f4e646f74b0e469b023e5df4  erofs: remove unneeded parameter
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+elapsed time: 725m
+
+configs tested: 148
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+m68k                          amiga_defconfig
+powerpc                 mpc832x_mds_defconfig
+ia64                             alldefconfig
+riscv                    nommu_k210_defconfig
+riscv                          rv32_defconfig
+arm                       imx_v6_v7_defconfig
+arm                             rpc_defconfig
+c6x                              allyesconfig
+arm                            u300_defconfig
+arm                           efm32_defconfig
+arm                          prima2_defconfig
+sparc                       sparc64_defconfig
+arm                             ezx_defconfig
+sh                           se7750_defconfig
+xtensa                         virt_defconfig
+arm                           corgi_defconfig
+sparc                               defconfig
+powerpc                 mpc8272_ads_defconfig
+m68k                         apollo_defconfig
+mips                           jazz_defconfig
+arm                         s5pv210_defconfig
+sparc64                          alldefconfig
+mips                           ip28_defconfig
+m68k                       m5208evb_defconfig
+powerpc                      arches_defconfig
+xtensa                              defconfig
+arm                        spear3xx_defconfig
+arm                             mxs_defconfig
+sh                   secureedge5410_defconfig
+mips                      pistachio_defconfig
+mips                            e55_defconfig
+powerpc                     ppa8548_defconfig
+nios2                         3c120_defconfig
+powerpc                      pcm030_defconfig
+sh                        sh7763rdp_defconfig
+c6x                                 defconfig
+xtensa                    smp_lx200_defconfig
+mips                           rs90_defconfig
+powerpc                      ppc40x_defconfig
+arm                  colibri_pxa300_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                         microdev_defconfig
+alpha                               defconfig
+riscv                             allnoconfig
+arm                    vt8500_v6_v7_defconfig
+arm                         mv78xx0_defconfig
+arm                          badge4_defconfig
+mips                      loongson3_defconfig
+m68k                        stmark2_defconfig
+sh                           se7780_defconfig
+sparc                            allyesconfig
+powerpc                    mvme5100_defconfig
+arm                            xcep_defconfig
+sh                     sh7710voipgw_defconfig
+mips                        bcm63xx_defconfig
+mips                        omega2p_defconfig
+arm                       versatile_defconfig
+arm                            mps2_defconfig
+powerpc                        icon_defconfig
+arm                       omap2plus_defconfig
+mips                        jmr3927_defconfig
+mips                       rbtx49xx_defconfig
+mips                        nlm_xlp_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20200917
+i386                 randconfig-a006-20200917
+i386                 randconfig-a003-20200917
+i386                 randconfig-a001-20200917
+i386                 randconfig-a002-20200917
+i386                 randconfig-a005-20200917
+x86_64               randconfig-a014-20200917
+x86_64               randconfig-a011-20200917
+x86_64               randconfig-a016-20200917
+x86_64               randconfig-a012-20200917
+x86_64               randconfig-a015-20200917
+x86_64               randconfig-a013-20200917
+x86_64               randconfig-a014-20200919
+x86_64               randconfig-a011-20200919
+x86_64               randconfig-a012-20200919
+x86_64               randconfig-a016-20200919
+x86_64               randconfig-a015-20200919
+x86_64               randconfig-a013-20200919
+x86_64               randconfig-a004-20200918
+x86_64               randconfig-a006-20200918
+x86_64               randconfig-a003-20200918
+x86_64               randconfig-a002-20200918
+x86_64               randconfig-a005-20200918
+x86_64               randconfig-a001-20200918
+i386                 randconfig-a015-20200917
+i386                 randconfig-a014-20200917
+i386                 randconfig-a011-20200917
+i386                 randconfig-a013-20200917
+i386                 randconfig-a016-20200917
+i386                 randconfig-a012-20200917
+i386                 randconfig-a015-20200918
+i386                 randconfig-a011-20200918
+i386                 randconfig-a014-20200918
+i386                 randconfig-a013-20200918
+i386                 randconfig-a012-20200918
+i386                 randconfig-a016-20200918
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a006-20200917
+x86_64               randconfig-a004-20200917
+x86_64               randconfig-a003-20200917
+x86_64               randconfig-a002-20200917
+x86_64               randconfig-a001-20200917
+x86_64               randconfig-a005-20200917
+
 ---
-change since v1:
- since "erofs: add REQ_RAHEAD flag to readahead requests" is dropped,
- lifting up related code to this patch and rebase for now.
-
- fs/erofs/data.c  |  2 +-
- fs/erofs/zdata.c | 17 +++++++++++------
- 2 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 459ecb42cbd3..347be146884c 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -224,7 +224,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 		bio_set_dev(bio, sb->s_bdev);
- 		bio->bi_iter.bi_sector = (sector_t)blknr <<
- 			LOG_SECTORS_PER_BLOCK;
--		bio->bi_opf = REQ_OP_READ;
-+		bio->bi_opf = REQ_OP_READ | (ra ? REQ_RAHEAD : 0);
- 	}
- 
- 	err = bio_add_page(bio, page, PAGE_SIZE, 0);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index bee6ce783c64..50912a5420b4 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -135,6 +135,7 @@ struct z_erofs_decompress_frontend {
- 	struct z_erofs_collector clt;
- 	struct erofs_map_blocks map;
- 
-+	bool readahead;
- 	/* used for applying cache strategy on the fly */
- 	bool backmost;
- 	erofs_off_t headoffset;
-@@ -1148,7 +1149,7 @@ static void move_to_bypass_jobqueue(struct z_erofs_pcluster *pcl,
- }
- 
- static void z_erofs_submit_queue(struct super_block *sb,
--				 z_erofs_next_pcluster_t owned_head,
-+				 struct z_erofs_decompress_frontend *f,
- 				 struct list_head *pagepool,
- 				 struct z_erofs_decompressqueue *fgq,
- 				 bool *force_fg)
-@@ -1157,6 +1158,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
- 	z_erofs_next_pcluster_t qtail[NR_JOBQUEUES];
- 	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
- 	void *bi_private;
-+	z_erofs_next_pcluster_t owned_head = f->clt.owned_head;
- 	/* since bio will be NULL, no need to initialize last_index */
- 	pgoff_t last_index;
- 	unsigned int nr_bios = 0;
-@@ -1212,6 +1214,8 @@ static void z_erofs_submit_queue(struct super_block *sb,
- 					LOG_SECTORS_PER_BLOCK;
- 				bio->bi_private = bi_private;
- 				bio->bi_opf = REQ_OP_READ;
-+				if (f->readahead)
-+					bio->bi_opf |= REQ_RAHEAD;
- 				++nr_bios;
- 			}
- 
-@@ -1243,14 +1247,14 @@ static void z_erofs_submit_queue(struct super_block *sb,
- }
- 
- static void z_erofs_runqueue(struct super_block *sb,
--			     struct z_erofs_collector *clt,
-+			     struct z_erofs_decompress_frontend *f,
- 			     struct list_head *pagepool, bool force_fg)
- {
- 	struct z_erofs_decompressqueue io[NR_JOBQUEUES];
- 
--	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
-+	if (f->clt.owned_head == Z_EROFS_PCLUSTER_TAIL)
- 		return;
--	z_erofs_submit_queue(sb, clt->owned_head, pagepool, io, &force_fg);
-+	z_erofs_submit_queue(sb, f, pagepool, io, &force_fg);
- 
- 	/* handle bypass queue (no i/o pclusters) immediately */
- 	z_erofs_decompress_queue(&io[JQ_BYPASS], pagepool);
-@@ -1281,7 +1285,7 @@ static int z_erofs_readpage(struct file *file, struct page *page)
- 	(void)z_erofs_collector_end(&f.clt);
- 
- 	/* if some compressed cluster ready, need submit them anyway */
--	z_erofs_runqueue(inode->i_sb, &f.clt, &pagepool, true);
-+	z_erofs_runqueue(inode->i_sb, &f, &pagepool, true);
- 
- 	if (err)
- 		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
-@@ -1307,6 +1311,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 
- 	trace_erofs_readpages(inode, readahead_index(rac), nr_pages, false);
- 
-+	f.readahead = true;
- 	f.headoffset = readahead_pos(rac);
- 
- 	while ((page = readahead_page(rac))) {
-@@ -1340,7 +1345,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 
- 	(void)z_erofs_collector_end(&f.clt);
- 
--	z_erofs_runqueue(inode->i_sb, &f.clt, &pagepool, sync);
-+	z_erofs_runqueue(inode->i_sb, &f, &pagepool, sync);
- 
- 	if (f.map.mpage)
- 		put_page(f.map.mpage);
--- 
-2.18.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
