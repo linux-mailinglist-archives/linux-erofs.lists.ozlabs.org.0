@@ -2,51 +2,94 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEB4E270A67
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 05:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DD55270AC2
+	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 06:51:03 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Btbkv1Hf4zDqvZ
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 13:28:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4BtdZD5Y1LzDqjj
+	for <lists+linux-erofs@lfdr.de>; Sat, 19 Sep 2020 14:51:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=KUBRpPOI; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=KUBRpPOI; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Btbhw35YmzDqg1
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Sep 2020 13:26:39 +1000 (AEST)
-IronPort-SDR: 0VEWuc82n6QH0ZSU+WI5rUzQzrv3NCRzPEJgwwb/5go5IgSoO2tftv5iX/PPkwSeH52wpwgxUG
- dNchdslHFXrQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9748"; a="160135490"
-X-IronPort-AV: E=Sophos;i="5.77,277,1596524400"; d="scan'208";a="160135490"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
- by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 18 Sep 2020 20:26:30 -0700
-IronPort-SDR: 030NVna1KhJnz8B8oW7gamr+DpHaEHPZI4BEbfgC4uOgGpdajE7pnJLjshJPLaFriYx6rFFwI/
- PKs5V3i0Nc/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,277,1596524400"; d="scan'208";a="289654724"
-Received: from lkp-server01.sh.intel.com (HELO a05db971c861) ([10.239.97.150])
- by fmsmga008.fm.intel.com with ESMTP; 18 Sep 2020 20:26:27 -0700
-Received: from kbuild by a05db971c861 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1kJTW7-0000ql-8U; Sat, 19 Sep 2020 03:26:27 +0000
-Date: Sat, 19 Sep 2020 11:26:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 00e13ea8ebca7387afe7d85ffb957aafc0d0ad90
-Message-ID: <5f657a59.ZREcaA+xEsi//Eyf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4BtdZ25VJjzDqV8
+ for <linux-erofs@lists.ozlabs.org>; Sat, 19 Sep 2020 14:50:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1600491045;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=V/GtNqeAhxmnaYHKbHI9s+9A7kWQV4YD44WjAsjMMwM=;
+ b=KUBRpPOIEVeoQhtimD41JCXyJKfzgW8CpwzCESrq0MplN8ww08wsEbW5EG1TS6MbzU8/9a
+ bSCKsmEHlO0TMuiWxzpZs50eR/LQjR1kMSxY3GE5TKrLM+O/Y1rpaRTPJXiX9NNzYSrJ6j
+ CyGsv41AWERgEYbQ9ve+q2mgSonEbl8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1600491045;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=V/GtNqeAhxmnaYHKbHI9s+9A7kWQV4YD44WjAsjMMwM=;
+ b=KUBRpPOIEVeoQhtimD41JCXyJKfzgW8CpwzCESrq0MplN8ww08wsEbW5EG1TS6MbzU8/9a
+ bSCKsmEHlO0TMuiWxzpZs50eR/LQjR1kMSxY3GE5TKrLM+O/Y1rpaRTPJXiX9NNzYSrJ6j
+ CyGsv41AWERgEYbQ9ve+q2mgSonEbl8=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-515-62jpglboPXWzd7R0-qx80Q-1; Sat, 19 Sep 2020 00:50:41 -0400
+X-MC-Unique: 62jpglboPXWzd7R0-qx80Q-1
+Received: by mail-pf1-f197.google.com with SMTP id c197so4908303pfb.23
+ for <linux-erofs@lists.ozlabs.org>; Fri, 18 Sep 2020 21:50:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=V/GtNqeAhxmnaYHKbHI9s+9A7kWQV4YD44WjAsjMMwM=;
+ b=mS+F9XCsrnYNq2A3TGVeDCOmd1g7Iy6S8ODhOyB1dfun0rmzOAlAkF58YFfY8o3S9f
+ cMlxz/gXINs1NZatcSJFDvA64aR/FDhgf5PFJ4e/muhHLzKFZERsF8vkafMnwnutJpyp
+ CH57c/2qtk3sZP0C0tN5U4kYRauT6q6xegGSlGMCwquzWNLAsBCHt9pJOLYbCN083kiH
+ sdb97sD8Awr5ymBtKYNmYIiVkRa21PsMfPlS5EX5CSJ2gbslH+MksGiOZnxk/FfElY3w
+ kZZN8n9zx6o+PExu5oZZZ0hAhc50W58QFhdI0OasW1khdCLhC5SzC3w2z/7Noo4SgWXI
+ e3JA==
+X-Gm-Message-State: AOAM5309W7RhLZnw3j6KGAccJkgwwViO10+RlFIzXUNec4ywP+hzcNVW
+ pHsPoIck3txDfOBV9wsT31wSmKG7Ggahp9us/dPNLXAKP9LHt6w1V34SsT6sAMXxT+ge+VtNh/s
+ pqzHEjhSW3HOI1ehs3FbG7VAt
+X-Received: by 2002:a63:fa45:: with SMTP id g5mr28532852pgk.448.1600491040376; 
+ Fri, 18 Sep 2020 21:50:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyvVI0r49m3wB0RYWnXgFPLiK9pU7OtGbcH6Hw1jnUOf70rw5kEO1Odeu56Qv8mcOKhwwSI1Q==
+X-Received: by 2002:a63:fa45:: with SMTP id g5mr28532835pgk.448.1600491040079; 
+ Fri, 18 Sep 2020 21:50:40 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id l188sm4898305pfl.200.2020.09.18.21.50.37
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 18 Sep 2020 21:50:39 -0700 (PDT)
+Date: Sat, 19 Sep 2020 12:50:29 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH 3/4] erofs: specify accurate nr_iovecs for compressed bios
+Message-ID: <20200919045029.GA18633@xiangao.remote.csb>
+References: <20200918135436.17689-1-hsiangkao@redhat.com>
+ <20200918135436.17689-3-hsiangkao@redhat.com>
 MIME-Version: 1.0
+In-Reply-To: <20200918135436.17689-3-hsiangkao@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,140 +101,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
-branch HEAD: 00e13ea8ebca7387afe7d85ffb957aafc0d0ad90  erofs: add REQ_RAHEAD flag to readahead requests
+On Fri, Sep 18, 2020 at 09:54:35PM +0800, Gao Xiang wrote:
+> Use more accurate compressed page count
+> instead of BIO_MAX_PAGES unconditionally.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 
-elapsed time: 721m
+Found by ro_fsstress, the submission chain could be extended
+by other threads, so this patch wouldn't work with the tail
+merging strategy. Please ignore this and I will drop it and
+send the next version instead.
 
-configs tested: 114
-configs skipped: 2
+Thanks,
+Gao Xiang
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-m68k                          amiga_defconfig
-powerpc                 mpc832x_mds_defconfig
-ia64                             alldefconfig
-arm                       imx_v6_v7_defconfig
-arm                             rpc_defconfig
-c6x                              allyesconfig
-arm                            u300_defconfig
-sh                           se7750_defconfig
-xtensa                         virt_defconfig
-arm                           corgi_defconfig
-sparc                               defconfig
-arm                    vt8500_v6_v7_defconfig
-arm                         mv78xx0_defconfig
-arm                          badge4_defconfig
-mips                      loongson3_defconfig
-m68k                        stmark2_defconfig
-sh                           se7780_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                    klondike_defconfig
-arc                         haps_hs_defconfig
-arm                          lpd270_defconfig
-arm                          simpad_defconfig
-mips                           ci20_defconfig
-sh                      rts7751r2d1_defconfig
-m68k                          hp300_defconfig
-arm                             pxa_defconfig
-m68k                             alldefconfig
-arm                         at91_dt_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20200917
-i386                 randconfig-a006-20200917
-i386                 randconfig-a003-20200917
-i386                 randconfig-a001-20200917
-i386                 randconfig-a002-20200917
-i386                 randconfig-a005-20200917
-i386                 randconfig-a004-20200918
-i386                 randconfig-a001-20200918
-i386                 randconfig-a003-20200918
-i386                 randconfig-a006-20200918
-i386                 randconfig-a002-20200918
-i386                 randconfig-a005-20200918
-x86_64               randconfig-a014-20200917
-x86_64               randconfig-a011-20200917
-x86_64               randconfig-a016-20200917
-x86_64               randconfig-a012-20200917
-x86_64               randconfig-a015-20200917
-x86_64               randconfig-a013-20200917
-x86_64               randconfig-a011-20200919
-x86_64               randconfig-a012-20200919
-i386                 randconfig-a015-20200917
-i386                 randconfig-a014-20200917
-i386                 randconfig-a011-20200917
-i386                 randconfig-a013-20200917
-i386                 randconfig-a016-20200917
-i386                 randconfig-a012-20200917
-i386                 randconfig-a015-20200918
-i386                 randconfig-a011-20200918
-i386                 randconfig-a014-20200918
-i386                 randconfig-a013-20200918
-i386                 randconfig-a012-20200918
-i386                 randconfig-a016-20200918
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a006-20200917
-x86_64               randconfig-a004-20200917
-x86_64               randconfig-a003-20200917
-x86_64               randconfig-a002-20200917
-x86_64               randconfig-a001-20200917
-x86_64               randconfig-a005-20200917
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
