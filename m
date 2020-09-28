@@ -1,45 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F06727B67F
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Sep 2020 22:41:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B06F27B670
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Sep 2020 22:38:15 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C0ZFJ5cTvzDqHK
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Sep 2020 06:41:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C0Z9050KyzDqHg
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Sep 2020 06:38:12 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1601325716;
+	s=201707; t=1601325492;
 	bh=Mas9p/r0hRQAt6cOrzfhv0xStHJXFzsSg3H+T9tPeVw=;
 	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=cHcbegs/bR5BVHYHjPeQnTqe0EjBU93xGPeLG4zu7r4OgqZUfzb0jfEnCGhKJFsM9
-	 H2+XPvHAlCFrBBE39O0IYqVBEs9dLwlRRq2/lxOeWXRyQsMOkLa8pMpj/64EL65q3Z
-	 Twvrn+DX9Cx1UpdzWfLUVW87XXxYy9Oq7JK0k/eYDhN1vrWIV+/J6YS+ZSMgQZENHI
-	 omtnnU+P07aEUSnM1d9HFB9z8aaD1j/Gc/up+dn2FpPCq1Nvxxu+YcP+i1a2TO8QWa
-	 XdN89meeHVtBD3D+0ULkUJ3WyqflZg4iBH0/JKvXbAQKOiAMTOrL7OOOo0S2ZH9mxp
-	 fdYYKb13326uw==
+	b=juQIXFEQbClnlqLm6ixOd6G0fEB/tnsTDIuNpp93Q1NIeNkIWK+LtcWOzJE/Bl2+6
+	 +Pk7CaiABnPwTHZx8fzfLSjbrds7HdZqopwAEBOFRVXZSYL99vToUUJLinxvuNg8Du
+	 LL2psuzRrTQf96/lykaD+/+c4YicLLHLSwuIRvCX+njS8ScgWHdnfd5/elrtJT5S+B
+	 1fWjJlxfhBnTWsYaToUesWKUCv9UF3ev3a5OmhOFY+839axzkwhvLB4ymQ+c/9PbYb
+	 d0UydwcGsJsywxff73lzK4faedCRgy9Y8o/6Nom6QikKMsae6CRScyL7JWlfuT/Z8/
+	 ace1AmZ4SLCLA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.205; helo=sonic312-24.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.148; helo=sonic302-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=PlBX3QPU; dkim-atps=neutral
-Received: from sonic312-24.consmr.mail.gq1.yahoo.com
- (sonic312-24.consmr.mail.gq1.yahoo.com [98.137.69.205])
+ header.s=a2048 header.b=ZVJJJ+yQ; dkim-atps=neutral
+Received: from sonic302-22.consmr.mail.gq1.yahoo.com
+ (sonic302-22.consmr.mail.gq1.yahoo.com [98.137.68.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C0ZFD03K5zDqCc
- for <linux-erofs@lists.ozlabs.org>; Tue, 29 Sep 2020 06:41:51 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C0Z8s6HcxzDqCc
+ for <linux-erofs@lists.ozlabs.org>; Tue, 29 Sep 2020 06:38:05 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1601325707; bh=GZprWnTl+eBHSNmQV5uJKps1Zts7hTFzMj6gKmT4ZWQ=;
+ t=1601325482; bh=GZprWnTl+eBHSNmQV5uJKps1Zts7hTFzMj6gKmT4ZWQ=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=PlBX3QPUzUQfpiIItdW1H/Vj0b1/tBN0s7F0N3CWpPPkB5ghZSdwqpQtTXKZzTzMiX/KhuuzV4Pib2t4G5nFC2/SeM82fcei9o7uKoOmqskGmdE3mTibWxe0lSmfL48SIpswdrLKWjpcaDng/Rl1kKkzHD40A2wk5yOqUVczJxMip9Qp0xEEmFOKhR5xssSGV71MAHCYhQSlL7Hyhtq4gSnG0nR0XEEl2i13a9umSyv2MMyTxpoX3AJGaLlnG/AjLyqB1vFcwr6gSQ6OFfHBFey6mBywDuBw/q8s2gX/0r/3fbKJVkiKCbjgj252Sl0GgC4HecKjHHK5gtts6MLLFQ==
+ b=ZVJJJ+yQ+KR3dNBuJ/amrwqCHhf19H0Ii5HVplUqPqKAXNipeT60DiYPge54rA14LJMoXGV2ymt90/2QFbLatR4Aiye+ng7kZEaalkNVeIfvokX7+J7v0yN4rVNTIMl1/YzQ7tAtUQxOf9DuntvMbwsM7qh+vOnl1E14+6M45aXxEBu+05qYaJfUKEm508rs/ElDjxZOsRhl+EN+Ix95GB9LjFEkjI2dZPRdzRKvRHLqnLkCqn554i3B0GJcOktDtdxhcBhQqcWuQz56q8PylIIwdq2xmp0TuzvKWfrahkKKupDbLFCVFjSETeWYTixW+1gg3mUBUMeWdpD1M/yzjg==
 X-YMail-OSG: qxLJVzQVM1lQSqYJ6MoZ3aW5WK957rVzm2ddGQEjg2ehiZR.ERUCkUBB.xK7sZ_
  aW2eDUJjsm7iLn.O1kaR2F2VNLlEWyBYNMs7XjZWS.CmuyZVSCAADky5dr4Po.yuNNklMNKoMqjp
  DkdZV2ujaWNXrGDYrd7pT6noQNS2ZAW70lt_0kEKbEMHe6SgWX3NIC3fDbo.KT7FYHsSpEwlZnI3
@@ -62,7 +62,7 @@ X-YMail-OSG: qxLJVzQVM1lQSqYJ6MoZ3aW5WK957rVzm2ddGQEjg2ehiZR.ERUCkUBB.xK7sZ_
  XtLCnfMftb45kcnRDZUtBDeTQauBa9KUMgLgg5W1pFAh8w6mpnObAej1lHMdELP7Yel73cKqs_V0
  MUBxL4IG2Pq9P1tyc7E8Kpor0i_3VChL8hOEumjCPgcXD
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic312.consmr.mail.gq1.yahoo.com with HTTP; Mon, 28 Sep 2020 20:41:47 +0000
+ sonic302.consmr.mail.gq1.yahoo.com with HTTP; Mon, 28 Sep 2020 20:38:02 +0000
 Received: by smtp419.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 1dcce5b8f69c9421ae96c4d2986bd734; 
  Mon, 28 Sep 2020 20:36:39 +0000 (UTC)
