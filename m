@@ -1,87 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22B6E288066
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Oct 2020 04:32:38 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D721288F97
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Oct 2020 19:10:32 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C6sYH1Wl9zDqW5
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Oct 2020 13:32:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1602210755;
-	bh=pmRRyRv70S7g+dNIrE2/1Gww4NgLpbh8PcyHyYWwCqE=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=GTXDotaXp7vUh3/OTC7ZCPANSv8sclOmZEnQRRgcvT3UMslmUjzSD1pTJs4ujYFDk
-	 74ZECOG8trsyvUFqT0zY9Yi7e7HTD7uE5679ZXRcAxlVN0S2v8ByaMIMlV0jD9EwRS
-	 dQYU7d2YBepQ3z5YUUtH8xdIvX2KdZHE5MERovzEIGvA6+F8MvTQGqmqB5abvP+GeM
-	 ghywAKjiHWYG1izKOO3BwgDtpanLcN9w8qdOnuGDsBinrx4YsqhCUOThMAI5cXNOCU
-	 xGNeuUhFhtBTihhrGJQaOea1iqfFBmYH30varOGuDsBQuN6ih7Z2J6Vy0BY6DvhlyW
-	 jDSR0Al6ZpYfA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C7F2D5PgCzDqbm
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Oct 2020 04:10:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.84; helo=sonic314-21.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=sAjSB8vq; dkim-atps=neutral
-Received: from sonic314-21.consmr.mail.gq1.yahoo.com
- (sonic314-21.consmr.mail.gq1.yahoo.com [98.137.69.84])
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C6sY52GYFzDqQ8
- for <linux-erofs@lists.ozlabs.org>; Fri,  9 Oct 2020 13:32:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1602210737; bh=JrYjtV8ku/EDDXe5Mi85vszK0SX025BY5ZIWrV1c45Q=;
- h=Date:From:To:Subject:References:In-Reply-To:From:Subject;
- b=sAjSB8vqPQ59o4fyCOSk4V2SA/vKerb/1ZnRyPtMpY64zUT+d/3TuDJoU8z8UctlCGsy+JBkMoRvpIL3f6yBdAhiY9DuBzaQK2jA9OQB4iUMJ1W1pq/aN4rFDQCXP20llap331mW3ei7DRH/ionwrn9mQ6KdkEv5o2QUynE0m/eYpmtPFXDc8udb6C4wej+euQwZTiveKVgKu/KPQlogntcMBD6sl5/9VLMs3tPnRQdiCbRbDtGB3oCm+PLcmvSohxyqXJGkIlydDGVlxe5i5tgwbmGeU4V6D0z+m8z7EzNaiY2OKlg3GAHWtPPnlTeXX0TLOr41bcyLMqc09cRRAA==
-X-YMail-OSG: CtrlBIMVM1lvrxMPT0ryU7hd_uYwxnM0UQtEqmmXX.siIwXhjV.tm9i3XIpVvxK
- 4gR9wH1n1iILMMmv.pHw4CHqeOvuwOUeceMDufYKCDW9J7v8_ZXVpxsQ.hkv6RlAgn5W30P9KsFj
- f1Mm3MOCvk2tb8kVgX2APrPOH5HAVH.BXIHO0hPwYdqSg7kFsqU0seeLeLG5BK.KDxEtmKlKQVfJ
- 52tu7qJ3YARaR8y14GieZL63r9FB4JkJ_SjYpDnVNVlXD0u.JHWMgzxr_mjwlVMfZchGs_WlgwcR
- 8RezqM5OWe0wJZltqTDiCA6xD2PNrFKscb1oDm5h_WeiK9PPzih1NBBlS8GN8It2DRjhB9Vu.mGz
- t__hizEFtPIORhLC1TSMA8dQS3l0SP_95W2OEahRgejLucifYmm_VatzaRbBHqlzRPZrHJrcICwE
- zBP6qafiSNpo83Er.YsO7fSvwS4L8VDSNmQpWMwevUOIDQ1Y4Wx9cddAQR0Mfjnmv8ZksdMByiu_
- yRRHVDVdwpvBmYH6BJ5Sqi2oupqGIKTUrrNtJZtocnDipa5knucJ0Ar7RrrMFRHVgitbNJ4aJOfS
- nIf8JArDaO6.QrF82YB4yNCiGm_KlmgXW1qhZV8h9GBlVlL9cYyOXkM.t1V8PNliEzKpmC8SDC5O
- O9lN6vgd4D2bXYHcmpI3bH.iv2Ml9usH7RgIcIGBV5D.TDBNAwkVvAxlmNAPoTLLthgOz_Rchg9l
- x7QfiSdmYlJFWDt08_pO4EziStVk7blDZAsxZnTcNa7nQiHDSrGPmPgqcNZntqzmGxZjDKpaHxof
- pKeF1nnKiFZdfeu8XDRQC60WhBPZmL5BMlP_v5PTWMBylK2BVGVH08ROqgO14HEb9OygcKz7mpQJ
- uXnA8THBWw7mdSCVqsBx_FYUy1iJnK_dlGYclnaNLYyn3N0KX__i6LvQWwD5cKsLb8E4rVLChE6S
- Qz9p2LcHeos.B.nIlHFO6cspe5aa40ezpj9Y7eiVN.w.dq5nDp7CmKV9cvmOQX_YB_gWX_ZwXYAf
- f8HZfZbguop9KWqOBa_WBaydk0xTmHJ4spz4TizaqXRSX853rK2NyxqW3_dpZj6Bel6FQZt9Mc6p
- tJD7OpAQRR_rbAqHPD.sJ7K2MDjUWeQr32ZBlimXXdOizHtkfjXlUZ6n3PBVHz355OQkQePjlLKP
- WTBJsWI9RgygPqf.kjONhGZACt4qvsQMuq_isg2AbJZd07Uid258RDVffM9QnxfwgfeYfaozyvM.
- iOW8VAfMBOmwV7eAkvSAUw3iluxIbkWye9BuuYuef760u8pEJ5XuekbF1Hzpi7ywTXOybDRkWs5P
- 8uEJxLqNrJxVKfivAGPVZRrvnPYyQ66a7AxXUKQ5dEe9LQimjuPlhZihDq8A5PqftCNyyMgGZXqx
- seMTmccAw6ebXwGHBfrpklqJeRIYmzE0r3espqMk01i6tFYzXcr4T8BvDqcPvX0abkdySVEcutCq
- M12Dw7XAqSCxE53qvZdkYdf2w44.y5NzJ.8ZKNpOqzbiABQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic314.consmr.mail.gq1.yahoo.com with HTTP; Fri, 9 Oct 2020 02:32:17 +0000
-Received: by smtp415.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 9dda53905ddd5c3249f23a887588986d; 
- Fri, 09 Oct 2020 02:32:13 +0000 (UTC)
-Date: Fri, 9 Oct 2020 10:32:02 +0800
-To: Li Guifu <bluce.lee@aliyun.com>, Li Guifu <bluce.liguifu@huawei.com>,
- linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v2] AOSP: erofs-utils: add fs_config support
-Message-ID: <20201009023048.GA16011@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200928213549.17580-1-hsiangkao@aol.com>
- <20200929051302.3324-1-hsiangkao@aol.com>
- <20201007150215.GA30128@hsiangkao-HP-ZHAN-66-Pro-G1>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C7F2725h3zDqZj
+ for <linux-erofs@lists.ozlabs.org>; Sat, 10 Oct 2020 04:10:17 +1100 (AEDT)
+IronPort-SDR: xHpKOp+Nikq0mEkN5f2n9KTVZ/Jqa4uYSFI2oq0rB9vheXuCYqnb6Q1prTOF3CapCoLBcu08tY
+ JWQsIaLU5vQg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9769"; a="165625918"
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; d="scan'208";a="165625918"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+ by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 09 Oct 2020 10:10:12 -0700
+IronPort-SDR: F3hW4BdyuzPBL7SHccR4Vmv+P1RFdTrDkb20n8taJi0J6Sk/OEnSMNUTdxc2f1zTe9RUubEQQ4
+ vxSvYPttZcYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; d="scan'208";a="345108978"
+Received: from lkp-server02.sh.intel.com (HELO 80eb06af76cf) ([10.239.97.151])
+ by orsmga008.jf.intel.com with ESMTP; 09 Oct 2020 10:10:10 -0700
+Received: from kbuild by 80eb06af76cf with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1kQvuE-0000dt-5J; Fri, 09 Oct 2020 17:10:10 +0000
+Date: Sat, 10 Oct 2020 01:09:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@redhat.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 915f4c9358db6f96f08934dd683ae297aaa0fb91
+Message-ID: <5f809956.TSwLjQTmUi9VoAAS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201007150215.GA30128@hsiangkao-HP-ZHAN-66-Pro-G1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16804
- mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
- Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,32 +58,211 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 07, 2020 at 11:02:18PM +0800, Gao Xiang via Linux-erofs wrote:
-> On Tue, Sep 29, 2020 at 01:13:02PM +0800, Gao Xiang wrote:
-> > So that mkfs can directly generate images with fs_config.
-> > All code for AOSP is wraped up with WITH_ANDROID macro.
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> > ---
-> > changes since v1:
-> >  - fix compile issues on Android / Linux build;
-> >  - tested with Android system booting;
-> 
-> Guifu, some feedback on this?
-> I'd like to merge it for AOSP preparation.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
+branch HEAD: 915f4c9358db6f96f08934dd683ae297aaa0fb91  erofs: remove unnecessary enum entries
 
-I will merge this if still no response at the end of this
-week. Since this main logic has already been used by other
-Android vendors for months and I do need to go forward on
-AOSP stuff.
+elapsed time: 721m
 
-Thanks,
-Gao Xiang
+configs tested: 185
+configs skipped: 3
 
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+riscv                    nommu_virt_defconfig
+powerpc                      katmai_defconfig
+mips                      loongson3_defconfig
+s390                                defconfig
+arm                            lart_defconfig
+m68k                          atari_defconfig
+powerpc                     pseries_defconfig
+mips                       rbtx49xx_defconfig
+arc                     nsimosci_hs_defconfig
+sh                        sh7757lcr_defconfig
+powerpc                     akebono_defconfig
+s390                          debug_defconfig
+arm                           corgi_defconfig
+sh                          rsk7264_defconfig
+mips                     decstation_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                        mvebu_v5_defconfig
+arm                           omap1_defconfig
+mips                   sb1250_swarm_defconfig
+m68k                          hp300_defconfig
+arc                    vdk_hs38_smp_defconfig
+sparc64                          alldefconfig
+arm                     am200epdkit_defconfig
+arm                        magician_defconfig
+powerpc                      ppc44x_defconfig
+arc                          axs101_defconfig
+powerpc                 mpc8540_ads_defconfig
+mips                         bigsur_defconfig
+arm                       imx_v6_v7_defconfig
+i386                             allyesconfig
+arc                      axs103_smp_defconfig
+arm                         s3c6400_defconfig
+arm                           efm32_defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                             rpc_defconfig
+m68k                          sun3x_defconfig
+mips                      pistachio_defconfig
+arm                  colibri_pxa300_defconfig
+arm                          moxart_defconfig
+arm                            u300_defconfig
+mips                      maltasmvp_defconfig
+arm                          simpad_defconfig
+powerpc                   motionpro_defconfig
+sparc64                             defconfig
+arc                        nsim_700_defconfig
+arm                        multi_v7_defconfig
+powerpc                          allyesconfig
+sh                           se7724_defconfig
+arm                       aspeed_g5_defconfig
+sh                           sh2007_defconfig
+sh                        sh7785lcr_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                         cm_x300_defconfig
+powerpc                      walnut_defconfig
+mips                     loongson1b_defconfig
+sh                             shx3_defconfig
+arm                       spear13xx_defconfig
+mips                 decstation_r4k_defconfig
+powerpc                      obs600_defconfig
+riscv                               defconfig
+mips                           gcw0_defconfig
+nios2                         3c120_defconfig
+sh                          rsk7203_defconfig
+sh                        dreamcast_defconfig
+xtensa                              defconfig
+arm                       mainstone_defconfig
+powerpc                     tqm5200_defconfig
+um                             i386_defconfig
+openrisc                 simple_smp_defconfig
+sh                        edosk7705_defconfig
+sh                   secureedge5410_defconfig
+arm                         mv78xx0_defconfig
+arm                         assabet_defconfig
+mips                          ath25_defconfig
+powerpc                      pcm030_defconfig
+xtensa                    xip_kc705_defconfig
+arm                          pcm027_defconfig
+sh                         microdev_defconfig
+arm                            xcep_defconfig
+parisc                generic-32bit_defconfig
+microblaze                    nommu_defconfig
+openrisc                            defconfig
+powerpc                      cm5200_defconfig
+powerpc                       eiger_defconfig
+arm                          imote2_defconfig
+powerpc                   currituck_defconfig
+arm                           tegra_defconfig
+mips                            gpr_defconfig
+arm                          collie_defconfig
+arm                         nhk8815_defconfig
+arm                         lpc18xx_defconfig
+openrisc                         alldefconfig
+mips                      pic32mzda_defconfig
+arm                          pxa168_defconfig
+arc                        vdk_hs38_defconfig
+arm                        trizeps4_defconfig
+mips                           ip28_defconfig
+powerpc                     powernv_defconfig
+m68k                         apollo_defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                        qi_lb60_defconfig
+c6x                        evmc6472_defconfig
+sh                     sh7710voipgw_defconfig
+m68k                          multi_defconfig
+sh                 kfr2r09-romimage_defconfig
+ia64                             alldefconfig
+arm                        oxnas_v6_defconfig
+h8300                     edosk2674_defconfig
+sh                             espt_defconfig
+arm                   milbeaut_m10v_defconfig
+mips                    maltaup_xpa_defconfig
+arm                     davinci_all_defconfig
+sh                      rts7751r2d1_defconfig
+sparc                            allyesconfig
+powerpc                 mpc8313_rdb_defconfig
+powerpc                 mpc837x_mds_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201009
+i386                 randconfig-a005-20201009
+i386                 randconfig-a001-20201009
+i386                 randconfig-a004-20201009
+i386                 randconfig-a002-20201009
+i386                 randconfig-a003-20201009
+x86_64               randconfig-a012-20201009
+x86_64               randconfig-a015-20201009
+x86_64               randconfig-a013-20201009
+x86_64               randconfig-a014-20201009
+x86_64               randconfig-a011-20201009
+x86_64               randconfig-a016-20201009
+i386                 randconfig-a015-20201009
+i386                 randconfig-a013-20201009
+i386                 randconfig-a014-20201009
+i386                 randconfig-a016-20201009
+i386                 randconfig-a011-20201009
+i386                 randconfig-a012-20201009
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20201009
+x86_64               randconfig-a003-20201009
+x86_64               randconfig-a005-20201009
+x86_64               randconfig-a001-20201009
+x86_64               randconfig-a002-20201009
+x86_64               randconfig-a006-20201009
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
