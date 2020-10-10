@@ -1,55 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 070D8289CC2
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Oct 2020 02:41:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D506D289D14
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Oct 2020 03:31:24 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C7R2M5cytzDqsW
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Oct 2020 11:41:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C7S895YjDzDqhY
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Oct 2020 12:31:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=ebiggers@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=F41ki3gR; 
- dkim-atps=neutral
-Received: from casper.infradead.org (casper.infradead.org
- [IPv6:2001:8b0:10b:1236::1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=default header.b=kwaFsg+F; dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C7R285nHCzDqpJ;
- Sat, 10 Oct 2020 11:40:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
- References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=wylOEgAZGPAkxCdlobMzyIfu/ZrVv1Os6TQldUFLziM=; b=F41ki3gR7FBgwnVausn+Ym7HP1
- XlPOrKIoC49hpvUE9/aWBoH68sW9nzN+roolJxog6JtW0hinw+GJGJQweM2tJ1u8x4huOElOun4HX
- OLG5RHoBoAf3CSIzFNHpVgsRU+TgTIZh4srysDUduyMdIIxPlPK5JA/amN/knuZnCqa9Zv6UObB0o
- hZnMFz1K/YCtH1pW7cz6Th6CIA0I8ero69lmDRA42tDkhymN2BfqXsEeqYlbw/xTqpsZhH92AuKGR
- +ciamleDZuZCDFfE/FcJg9XsXU418hEml49KDOM/rl5J3rO0lFNTAWXDAV5Z24k3Ay+VgEnmqYlhx
- rI3nBVLQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red
- Hat Linux)) id 1kR2vS-0004My-FJ; Sat, 10 Oct 2020 00:39:54 +0000
-Date: Sat, 10 Oct 2020 01:39:54 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C7S7R1nk1zDqs6;
+ Sat, 10 Oct 2020 12:30:43 +1100 (AEDT)
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net
+ [172.10.235.113])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 4E006206D9;
+ Sat, 10 Oct 2020 01:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1602293439;
+ bh=sHFyDh52gnsvc+uI8yhUC5uDYbYkQCvra+rDiRMmAvs=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=kwaFsg+FwkcbT1hA6vX2rbzC7SEHg0ckV7q6+TfKUuTYp7lijGzsxhx1D9MfT9qZg
+ puzd9VwNUhNC7pSZTswv9TmxeVvsyOKe33XMZMPqVG5rfdvIuh+YhVfWI5Z4mrkh0S
+ V8+sp7izCEY2Jms4cmTCzh86mPIYz7uaZ6k3dzLQ=
+Date: Fri, 9 Oct 2020 18:30:36 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
 Subject: Re: [PATCH RFC PKS/PMEM 22/58] fs/f2fs: Utilize new kmap_thread()
-Message-ID: <20201010003954.GW20115@casper.infradead.org>
+Message-ID: <20201010013036.GD1122@sol.localdomain>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
  <20201009195033.3208459-23-ira.weiny@intel.com>
  <20201009213434.GA839@sol.localdomain>
+ <20201010003954.GW20115@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201009213434.GA839@sol.localdomain>
+In-Reply-To: <20201010003954.GW20115@casper.infradead.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -92,31 +90,44 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Oct 09, 2020 at 02:34:34PM -0700, Eric Biggers wrote:
-> On Fri, Oct 09, 2020 at 12:49:57PM -0700, ira.weiny@intel.com wrote:
-> > The kmap() calls in this FS are localized to a single thread.  To avoid
-> > the over head of global PKRS updates use the new kmap_thread() call.
-> >
-> > @@ -2410,12 +2410,12 @@ static inline struct page *f2fs_pagecache_get_page(
-> >  
-> >  static inline void f2fs_copy_page(struct page *src, struct page *dst)
-> >  {
-> > -	char *src_kaddr = kmap(src);
-> > -	char *dst_kaddr = kmap(dst);
-> > +	char *src_kaddr = kmap_thread(src);
-> > +	char *dst_kaddr = kmap_thread(dst);
-> >  
-> >  	memcpy(dst_kaddr, src_kaddr, PAGE_SIZE);
-> > -	kunmap(dst);
-> > -	kunmap(src);
-> > +	kunmap_thread(dst);
-> > +	kunmap_thread(src);
-> >  }
+On Sat, Oct 10, 2020 at 01:39:54AM +0100, Matthew Wilcox wrote:
+> On Fri, Oct 09, 2020 at 02:34:34PM -0700, Eric Biggers wrote:
+> > On Fri, Oct 09, 2020 at 12:49:57PM -0700, ira.weiny@intel.com wrote:
+> > > The kmap() calls in this FS are localized to a single thread.  To avoid
+> > > the over head of global PKRS updates use the new kmap_thread() call.
+> > >
+> > > @@ -2410,12 +2410,12 @@ static inline struct page *f2fs_pagecache_get_page(
+> > >  
+> > >  static inline void f2fs_copy_page(struct page *src, struct page *dst)
+> > >  {
+> > > -	char *src_kaddr = kmap(src);
+> > > -	char *dst_kaddr = kmap(dst);
+> > > +	char *src_kaddr = kmap_thread(src);
+> > > +	char *dst_kaddr = kmap_thread(dst);
+> > >  
+> > >  	memcpy(dst_kaddr, src_kaddr, PAGE_SIZE);
+> > > -	kunmap(dst);
+> > > -	kunmap(src);
+> > > +	kunmap_thread(dst);
+> > > +	kunmap_thread(src);
+> > >  }
+> > 
+> > Wouldn't it make more sense to switch cases like this to kmap_atomic()?
+> > The pages are only mapped to do a memcpy(), then they're immediately unmapped.
 > 
-> Wouldn't it make more sense to switch cases like this to kmap_atomic()?
-> The pages are only mapped to do a memcpy(), then they're immediately unmapped.
+> Maybe you missed the earlier thread from Thomas trying to do something
+> similar for rather different reasons ...
+> 
+> https://lore.kernel.org/lkml/20200919091751.011116649@linutronix.de/
 
-Maybe you missed the earlier thread from Thomas trying to do something
-similar for rather different reasons ...
+I did miss it.  I'm not subscribed to any of the mailing lists it was sent to.
 
-https://lore.kernel.org/lkml/20200919091751.011116649@linutronix.de/
+Anyway, it shouldn't matter.  Patchsets should be standalone, and not require
+reading random prior threads on linux-kernel to understand.
+
+And I still don't really understand.  After this patchset, there is still code
+nearly identical to the above (doing a temporary mapping just for a memcpy) that
+would still be using kmap_atomic().  Is the idea that later, such code will be
+converted to use kmap_thread() instead?  If not, why use one over the other?
+
+- Eric
