@@ -1,88 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2B528AB1A
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 01:49:08 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D3F328AB36
+	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 02:23:01 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C8dnD4D5XzDqrW
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 10:49:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C8fXL6PgKzDqrN
+	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 11:22:58 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1602460144;
-	bh=cZ+5bLqyAO43Nz9zRHG8dK9YFtjc1vDgZkv758TEpS0=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=kToqwDEsrzKXHBHJi8bef73bzqe4PSshu1s3uH0OEf9qKMkoo3el0Tmdt4yCi7ETh
-	 epKjKlxy3sONEPmkuZLhK1wEweqE1sd3ND0dItDXOiEn+Q1hskPotNy0oNO2bPp08I
-	 KMaQwmm6pUB+SHhN8s8tFhypnW16jfQiz7k4/01QOZ/9wcv5MW1ksxXbTU2NxH3yC0
-	 WDmt/XbhMrWbMrqynViNTORLXoFKo6burjBxqns/4VgLk9avV0XAKPa6eYPrfzS62u
-	 Za4xF7mCSEITMj2GSFt0My9W0Q80DiNz2e+Ky65le+tdu8yZGxkN9q/i3unWj94urG
-	 lSg3I/XXUCMBA==
+	s=201707; t=1602462178;
+	bh=9JI5Vzbyw82X04Levchs85hzWeAeeTPq/1fSq4ZNFiI=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=kpA4KqJyFfIpGx4/Y4/49hNHk0dPz7fNpCQUkeAAs24qktDpX72mvUjWfvnhgD+0f
+	 FJB6ffMQuNjt+syrrWV1er3Gai1oX+KtXbLpkXh4WsCmFDPm6Bme7lH911QnHfeJ2u
+	 KqU0AjAraM/x9End8meCt/pWpDjtmHnjomGFLkk8cOPxlfJXTlxdQ4OIVCPwRtmcWG
+	 fpcSQC584XPoMAmX/i8a1bZ+iJmuMdTHUVlYeYLtKnatoex3P7wYWNJ2u6Qv4Gx+rH
+	 m0qiZcIKBtvR1Ho/LzkQIcgRHf31OxbooX/nNSdIwWgG0oqU+jNXUCve85S1A200R5
+	 Rig8oXD5ijRGA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.83; helo=sonic313-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.83; helo=sonic314-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=Pw4E0z4V; dkim-atps=neutral
-Received: from sonic313-20.consmr.mail.gq1.yahoo.com
- (sonic313-20.consmr.mail.gq1.yahoo.com [98.137.65.83])
+ header.s=a2048 header.b=A3hyUOIQ; dkim-atps=neutral
+Received: from sonic314-20.consmr.mail.gq1.yahoo.com
+ (sonic314-20.consmr.mail.gq1.yahoo.com [98.137.69.83])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C8dn23JB2zDqqD
- for <linux-erofs@lists.ozlabs.org>; Mon, 12 Oct 2020 10:48:50 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C8fXB5yqTzDqqD
+ for <linux-erofs@lists.ozlabs.org>; Mon, 12 Oct 2020 11:22:48 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1602460126; bh=tuos+LOxwqu9pbYehTZRSd3JkdEr+dAj5yJ1Dyed1C0=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=Pw4E0z4VIacqIsOlIX7s0/FQlXx9nbaAkdu/oKjSn3T6wyPMyTwL7K8KZcbP3gD8CTGO9BalU/wMekbphYtdXMJRg+2PpzBwk4NSlfbqYaffB46uXfogaE+ngg5YEGI0EJkxofFYLtKUXcNlrWDIGZLunKnrOhXy32Ov7Rxaf38oasLvOsaQNNR19F1qPkCErw2h8dmhxSSs3OEzNsm5GTk15iISMkjEGmg2+cE3HYlp76on0fnIBrIuMyuFNV8941tgVeZS2i62OOSmW4otyL37CHDvMNkDG+rYYnfltNHu9YZdicQZhsBVrUTPTwXtELQEAt9CCLD6u2ZT55hHdQ==
-X-YMail-OSG: US4YbiYVM1l496yUxf7x6HIdp2FsMa1MGPmly.ltiELmkbqgw1WherTtuUa7Iq9
- sWX6T_Nkmpl4mbdeyVNpq.9nFvSNv.._5T9_uAwji4.XbJWIendEh22XDyRg_FkY9f.k3VRdyVmS
- FkRvD5TxZYqZx_50XjviowPCRW1R2p8zdt12kAHB2PLHp4CEAw8E377t28L9p0QX_48lsKcFVEY9
- qe9HywiLV7iZ2lA2dkpHKgC1YETcDnAxxPnABITHANGXI0kIlEkDx3sS9srJk4eRFjuRarhV5rvL
- m4plPEnMo1pzO7_LCAIqzXH3FPxBkhpqKKMYYDt7BbQWFa76vE6YPfN6YtbVQFIpVSV8xy3fNLCG
- MhxvErEbvywatEOyyAIhukhwRYyWcekCR3Mror8G.CHgOzyXbXTBqQ3oVYD9lsvHLUHNg0LFabkM
- tQzsLX5KYYRAA.Sug8yuMlyXatL5voJ_QgNpwsO_zGRjuQLHavS7bxxOjFOTBKprgtu5PhH5SW.r
- dhRzW2wcagWRVeDOKZkVBfBOxlbKG3Iy6gK_OqpSosRHaKUa9Z7vSTDT6XAzvDY6rNdFcisrevp1
- 003Ai9BeOOCnWmMnSc_f92RW2G76R78iZvD75OneW4gn3JxxHRY4LF6Rx07Tn2RtlEraUYjY0m2O
- 5RNKQ1WpNUeNA8jVAvKP.y2JijR9Vw_J2h9mBjfrHlvUALbMxOsCC_zZW2d_EXi320Ha2E_UAkOX
- 15BHeDAVjYm5heCTeiUirKKu.vf60xX_XUu57k_N7vUWcGbftU1GcXha23V0TW7S7N6iU3Jy087p
- 1OVoRACctp.c1ApkQPGnZgHM32Xq581OUKa.t4CZQxeIZoWMiBkuKao65rhJhwW6ULVy_F4C2SS8
- S.b5N.oPfmWvd74pn7uKvmhfMa4937Zh4MOL2W8z.y_451Re6nzzcf7HiH8gIcl7NaAj.TyRxaK.
- 3K4kbeybfRHZMMrBUJv3gtT1QUOCQrwSeXagCfeh.3qaXOesnXDEG8n4wp9OwtgHjKiFP2ajICge
- sOgo6oz67eRGCeiFEvTU3c0A7VVTQLzHBnE32LHKtqUOfvYidYhxDnwmwo5mZ8UiHfOjHGWPlxde
- Ur5BL6GQkKxgKBumsAmcekqVA7wFPLF34lChWl5E_ZXgM2Guh1HdepeNv9eoPe3mnZYOhf2zNr23
- BxsLCvuQSHrMfW0vRSa4nHA4dJg.YFGO2SvZx4i7lU3bchzq3pes4LOVcjSA3rmoikZw7iFhAliA
- qFKvBKceVq.5cdUvtuAYPvvFrFqYwBxe7RSelK4eJPqQTN9LCQK2ulNiy3d9skXLg4kgtC3gMGnS
- cLHVEZmxTRSjSMC0XOfbZFrILgLIkIXOU8rVNP.ncFZxbuDU3l_WUtRZCE9XrlvsMKo_KQ11g_9o
- UaMZuFe11qbtBc9UZlgBdRNmax8.TunujXeDxKwhh5KtDHiBP0SUXkNPa8dbRXVqDXibLGEveum_
- vXZvkJBdzX9AQ835IVbHY4LFtb.F1TT8EFB.Gysd5BaIqaoGRogl0
+ t=1602462164; bh=Ye/6Go7GuhNU7DvscsGE3NEtwCP4/51Rogf6dNHfAcw=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=A3hyUOIQmfq+/gebvITini4TPSeXm4/Uv58DOMhsA5r41uK5EzLQohAETaaZnHACrJTlpzsPOhI8ZDE3fkLMebHfxOszmG3EcFw04kGWqxN6Oz+6wk67AfS8TizbBTjrqC7AIUOjXmKy4q6LNB+FUo3iuPrhNInTN9CzJ0tFIEHoeVUw2atK4jYBPHv+hYHDvqL7286EZdLNa069Xsq7uxX7fMhhzHA/hUmt9WiqzYlQXPGAw4AMuCBxiAVoE4Hc48DIzCtiGC0pRqLNbXMBxb9jT9XDx2/ikwZYvEv6FYGZ4tef7cQBvVNxleycXYuNBwyhwqOiYegqPH6GOJscFA==
+X-YMail-OSG: .JQ9ngwVM1m5I0Rwk84lCao76P77pmawi8prulVAiAeA.cKjIQSOEcJVXwfpCBb
+ k4RDTD2gusqdbLTpm92Wg5R9o6fDJTImDVcpBM2mTYy9W5cTgO7QgZti72r8Mm2Wxc3zLEfr.qjk
+ FqELUIDnNQZb2uo2oqbrx4EWCWp96U8tqDgfWsddSRg8j5GiOlPVLySmcCMGZhhcCBTGiNJohCk_
+ qO7Qfew8U2yZdMjSfw19SwqeG129e34o84pfDfNPa7j72tZzfSAmEiiDSk2GxNwrmrTICQKrohcE
+ IlSG9wqmEHEC.4wF583jj14tuEoh8RSz1j4C0ke8sJ4jVpiQhPVVZhb_oHK44oH9GzrwGoWhG.3l
+ HBMVOGg6aL8TVsl7n1r7jeZdY_nCbL7rvFIrXypnta9BXxLfO7aXfGKsSnb3kwWdQYecvm_V6P5z
+ IDrUgaSNE2H8Gi9QxcFnPvqwByQASawaqdugnsRySMYp6FdFDy7hP1pPUOWa33B8cDgvKizaoien
+ 1.xbo_qNFpSW3fQh7JSG7ljBJ0oUrAvma.ItkusXdfXYcVPJmxqwmvllUANAMnN7mFUL6rgn7wJv
+ uVsF1HHm_wJ89ILhL_1t8GmQrlf8lr1Bwu7i25dEFji5U_urYsS1RMKAZhjdKs89HdLtlPHPs5Jo
+ fyssP7RwOM8FIV3_Onl40zq_artxXfl8L8RKPh2MQ6MzArX.u1otq7vxB2a6fOs.R0n7aftWGfMM
+ 8PozYB2W5RroxwHZkDjlg0Jlg02F_BliDqkxl5mnSilI7B9_AI9K2yVD3N5JXnN6Y_iV8niV_Vjn
+ QdHuGKjq2iGQi9yr2qScQJP_NuISjX6GZTTF.jhjk9vbaa6Ud33C90Ll7BitqFh.uLV9_tyoZk8D
+ QsuwJ8awZDeT5ug.9LAqW63qa_7S0a.RWcm4iwMjSKsAPjFc_ij.Mu1L6s_X1kiBl4iGDF81Z4iD
+ q94TIHbMwaYMaY3YkHaSGZd1Qqexha1xDFk8e2tl7EbWmI933oo8fVGPnFFH_YpgQMCfHh6u2zXZ
+ GgKPqIt275A8_qIiVvgQo3wltdXKhh5.ZAcS08fCYtsbTvCzRk8nya7hfLhowARFKd.jF_k51ngJ
+ IMFCtmOPiPHXtVYI.UUE.7P6etzhWUcswXt1WsbOAUN1zGGhY8G8xKiRDlIg_9xifuBue4GuDCQF
+ dV.3BW8Z6BStZSQQOiWuwKhEP_TMO5oMqKWVpubTViZSUOhwfg2W4K0tKZUFQvaUJuaE8vhDEa6A
+ al9MuvizIgofZLO_3ERSXv1jHuGV2gAZrHYb6oA5XNqnBHB9inHVT5gUhIpNtYV1UOWVZ1FjpyUk
+ iUWJl6hzxDTPBlI_3rpiFLlognK2QNWSYHZKxxTTFo._6YMb7GT_pI71PhSOx_1NMOSKgP9Fkbko
+ 0o_S0N_2_vdC3.Y7Z_V3au3n3hXS5TPiKO0nLlNb_ROvxFgyy3CaA3VlW5bvGb3ouB2bqgIoDvZz
+ AMG4mTLOxb4UhCEKEze6ImCNZRk02WPu4HGVHg0zKxeHl9picrJhl_u9nV2iD9GWUcuC_z6sfzA0
+ dMY_T8lAX1Q--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Sun, 11 Oct 2020 23:48:46 +0000
-Received: by smtp408.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID ae9f6a7169eccc205df40197c5759b99; 
- Sun, 11 Oct 2020 23:48:43 +0000 (UTC)
-Date: Mon, 12 Oct 2020 07:48:36 +0800
-To: Li GuiFu <bluce.lee@aliyun.com>
-Subject: Re: [PATCH v2] AOSP: erofs-utils: add fs_config support
-Message-ID: <20201011234221.GA26867@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200928213549.17580-1-hsiangkao@aol.com>
- <20200929051302.3324-1-hsiangkao@aol.com>
- <7e4490c0-0a3d-0ceb-98ca-73d5eb69932d@aliyun.com>
- <a4b4d4a8-46bc-87d2-eb8a-d1d010f9d76d@aliyun.com>
+ sonic314.consmr.mail.gq1.yahoo.com with HTTP; Mon, 12 Oct 2020 00:22:44 +0000
+Received: by smtp401.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 86645acc1ffdeaabdf705b76912c56b5; 
+ Mon, 12 Oct 2020 00:22:39 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] AOSP: erofs-utils: update usage due to fs_config
+Date: Mon, 12 Oct 2020 08:22:27 +0800
+Message-Id: <20201012002227.1882-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4b4d4a8-46bc-87d2-eb8a-d1d010f9d76d@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16795
- mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
- Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+References: <20201012002227.1882-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -96,40 +87,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Oct 11, 2020 at 04:53:24PM +0800, Li GuiFu wrote:
-> 
-> 
-> �� 2020/10/10 0:33, Li GuiFu д��:
-> > 
-> > 
-> > �� 2020/9/29 13:13, Gao Xiang д��:
-> >> So that mkfs can directly generate images with fs_config.
-> >> All code for AOSP is wraped up with WITH_ANDROID macro.
-> >>
-> >> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> >> ---
-> >> changes since v1:
-> >>  - fix compile issues on Android / Linux build;
-> >>  - tested with Android system booting;
-> >>
-> >>  include/erofs/config.h   | 12 ++++++++++
-> >>  include/erofs/internal.h |  3 +++
-> >>  lib/inode.c              | 49 +++++++++++++++++++++++++++++++++++++
-> >>  lib/xattr.c              | 52 ++++++++++++++++++++++++++++++++++++++++
-> >>  mkfs/main.c              | 29 +++++++++++++++++++++-
-> >>  5 files changed, 144 insertions(+), 1 deletion(-)
-> >>
-> Please update the usage about mount-point
+After fs_config support is added, usage() is also needed
+to be updated as well.
 
-Ok, make sense. since it has been merged, will add another
-patch to handle that.
+Fixes: 8a9e8046f170 ("AOSP: erofs-utils: add fs_config support")
+Cc: Li Guifu <bluce.lee@aliyun.com>
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+---
+ mkfs/main.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 191003409b2f..6dda9e399ad5 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -61,17 +61,23 @@ static void usage(void)
+ {
+ 	fputs("usage: [options] FILE DIRECTORY\n\n"
+ 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
+-	      " -zX[,Y]           X=compressor (Y=compression level, optional)\n"
+-	      " -d#               set output message level to # (maximum 9)\n"
+-	      " -x#               set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+-	      " -EX[,...]         X=extended options\n"
+-	      " -T#               set a fixed UNIX timestamp # to all files\n"
+-	      " --exclude-path=X  avoid including file X (X = exact literal path)\n"
+-	      " --exclude-regex=X avoid including files that match X (X = regular expression)\n"
++	      " -zX[,Y]            X=compressor (Y=compression level, optional)\n"
++	      " -d#                set output message level to # (maximum 9)\n"
++	      " -x#                set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
++	      " -EX[,...]          X=extended options\n"
++	      " -T#                set a fixed UNIX timestamp # to all files\n"
++	      " --exclude-path=X   avoid including file X (X = exact literal path)\n"
++	      " --exclude-regex=X  avoid including files that match X (X = regular expression)\n"
+ #ifdef HAVE_LIBSELINUX
+-	      " --file-contexts=X specify a file contexts file to setup selinux labels\n"
++	      " --file-contexts=X  specify a file contexts file to setup selinux labels\n"
++#endif
++	      " --help             display this help and exit\n"
++#ifdef WITH_ANDROID
++	      "\nwith following android-specific options:\n"
++	      " --mount-point=X    X=prefix of target fs path (default: /)\n"
++	      " --product-out=X    X=product_out directory\n"
++	      " --fs-config-file=X X=fs_config file\n"
+ #endif
+-	      " --help            display this help and exit\n"
+ 	      "\nAvailable compressors are: ", stderr);
+ 	print_available_compressors(stderr, ", ");
+ }
+-- 
+2.24.0
 
-> 
