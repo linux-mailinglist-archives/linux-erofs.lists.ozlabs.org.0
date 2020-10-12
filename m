@@ -2,64 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0201328BBB6
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 17:21:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EC0528BD7C
+	for <lists+linux-erofs@lfdr.de>; Mon, 12 Oct 2020 18:20:06 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C92TW4lkYzDqkK
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 02:21:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1602516111;
-	bh=JKhTAO4e3CgZcFHsY6AATvcjmc7diWxcRa4xJpfobeY=;
-	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=g2bYZmidnrtS9Y7sGAY5f6QYnkkJMkRveqYs08pLanYJ/P08X+fHSS/hsyz2+PhpB
-	 lO+VPcAgqMB/HfE0for2WmNupRuSz99qrjb7ezG4ICg91Xeiqz5XpoF19jzJZ8/s5A
-	 g4JxNwAq+iRBCfZ2J5v2PIt2Gwkk+PhnGrH4/i2DRux3twb8EyWu2oAIHvsiW7SSv/
-	 A9q4AsbfZK2ACUc3MqrjMbANu92MvoQDK7u/d9EMY4H0PyJLu3c1SC4Wu15TryIH/k
-	 DIBajRNRBGMPHb70EpQmmw+DluxawPk53N9T9DkhHPCV5RRCkYmY80pYpTQVGo48tP
-	 fh1vYe0qtCGyw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C93mg1ktqzDqhD
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 03:20:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.29;
- helo=out30-29.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
- header.from=aliyun.com
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=ebiggers@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=ov6RbNLF; dkim-atps=neutral
-Received: from out30-29.freemail.mail.aliyun.com
- (out30-29.freemail.mail.aliyun.com [115.124.30.29])
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=default header.b=V7DSrccL; dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C92TN1hP9zDqjn
- for <linux-erofs@lists.ozlabs.org>; Tue, 13 Oct 2020 02:21:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1602516090; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=qdEtJmaF1vr8K5kj+WVpy1YJMg40lfnkL48ua0ftM7Y=;
- b=ov6RbNLFgHoi/yGaN1zjxlq9U9B1y0K/3/iJcaTxRGPDzDJYyie1hFe29eUKqDCFbJ784PVtLvNDauBpxlH3iMVy4dRBJPU5t2i02mtz+Y6eAyWzERAjMnC7qd4Efxd/yUl5k3aUq1nMITDcw2tFzXz2k6a4MT4X4MnUqkeyJBY=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1426594|-1; CH=green; DM=|CONTINUE|false|;
- DS=CONTINUE|ham_regular_dialog|0.0202992-0.00336022-0.976341;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e04420; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=3; RT=3; SR=0; TI=SMTPD_---0UBrEMdz_1602516089; 
-Received: from 192.168.3.5(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0UBrEMdz_1602516089) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 12 Oct 2020 23:21:29 +0800
-Subject: Re: [PATCH] erofs-utils: README: update known-issue status of lz4hc
-To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
-References: <20201012073446.18103-1-hsiangkao.ref@aol.com>
- <20201012073446.18103-1-hsiangkao@aol.com>
-Message-ID: <fefc27c6-ba56-4134-dc8d-5e12a01a783f@aliyun.com>
-Date: Mon, 12 Oct 2020 23:21:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C93mS34NlzDqd1;
+ Tue, 13 Oct 2020 03:19:52 +1100 (AEDT)
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net
+ [172.10.235.113])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 22B302080A;
+ Mon, 12 Oct 2020 16:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1602519589;
+ bh=FXrMfe87r7In01hy1fZxNUDLVXbtP/5TJ3+XTzWq1o4=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=V7DSrccLr5b4UIwMLihtwG0wHPpEpEeCdL4DEsryZDNbDbBe/031RRLLs/mkasjte
+ GkozOXCGlriE75ewyNE/y/+1/YN0mvEXF3Fx+zkSk5bqABC19TCsH57zxXZt4yoDfc
+ Gd/Q7Kn6Oc4wJMc886CZx9bFLur2svNEjPDcQyvk=
+Date: Mon, 12 Oct 2020 09:19:46 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH RFC PKS/PMEM 22/58] fs/f2fs: Utilize new kmap_thread()
+Message-ID: <20201012161946.GA858@sol.localdomain>
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-23-ira.weiny@intel.com>
+ <20201009213434.GA839@sol.localdomain>
+ <20201010003954.GW20115@casper.infradead.org>
+ <20201010013036.GD1122@sol.localdomain>
+ <20201012065635.GB2046448@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20201012073446.18103-1-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201012065635.GB2046448@iweiny-DESK2.sc.intel.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,21 +61,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li GuiFu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li GuiFu <bluce.lee@aliyun.com>
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ target-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
+ amd-gfx@lists.freedesktop.org, linux-kselftest@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, drbd-dev@lists.linbit.com,
+ devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+ linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org,
+ Matthew Wilcox <willy@infradead.org>, linux-afs@lists.infradead.org,
+ cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>,
+ intel-wired-lan@lists.osuosl.org, kexec@lists.infradead.org,
+ xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org,
+ bpf@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+ Fenghua Yu <fenghua.yu@intel.com>, intel-gfx@lists.freedesktop.org,
+ ecryptfs@vger.kernel.org, linux-um@lists.infradead.org,
+ reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+ Andy Lutomirski <luto@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ ceph-devel@vger.kernel.org, io-uring@vger.kernel.org, linux-cachefs@redhat.com,
+ linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+ netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2020/10/12 15:34, Gao Xiang wrote:
-> Known issue of LZ4_compress_HC_destSize() mentioned in README
-> was targeted by lz4 upstream days ago.
+On Sun, Oct 11, 2020 at 11:56:35PM -0700, Ira Weiny wrote:
+> > 
+> > And I still don't really understand.  After this patchset, there is still code
+> > nearly identical to the above (doing a temporary mapping just for a memcpy) that
+> > would still be using kmap_atomic().
 > 
-> Update README so all users can be noticed.
+> I don't understand.  You mean there would be other call sites calling:
 > 
-> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+> kmap_atomic()
+> memcpy()
+> kunmap_atomic()
 
-It looks good thanks
-Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
+Yes, there are tons of places that do this.  Try 'git grep -A6 kmap_atomic'
+and look for memcpy().
+
+Hence why I'm asking what will be the "recommended" way to do this...
+kunmap_thread() or kmap_atomic()?
+
+> And since I don't know the call site details if there are kmap_thread() calls
+> which are better off as kmap_atomic() calls I think it is worth converting
+> them.  But I made the assumption that kmap users would already be calling
+> kmap_atomic() if they could (because it is more efficient).
+
+Not necessarily.  In cases where either one is correct, people might not have
+put much thought into which of kmap() and kmap_atomic() they are using.
+
+- Eric
