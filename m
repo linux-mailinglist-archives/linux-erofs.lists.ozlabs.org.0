@@ -2,56 +2,91 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F0A28CC8A
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 13:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB52628CE54
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 14:29:16 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4C9YCf3wt5zDqcY
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 22:26:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4C9Zbt28CTzDqY7
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Oct 2020 23:29:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=casper.srs.infradead.org (client-ip=2001:8b0:10b:1236::1;
- helo=casper.infradead.org;
- envelope-from=batv+347c3dad313745b9998d+6260+infradead.org+hch@casper.srs.infradead.org;
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=a/Sp1GZZ; 
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=DOuWIowR; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=DOuWIowR; 
  dkim-atps=neutral
-Received: from casper.infradead.org (casper.infradead.org
- [IPv6:2001:8b0:10b:1236::1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4C9YCN0NsmzDqbt;
- Tue, 13 Oct 2020 22:26:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
- References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=ap+vugPRXoOSJhloW5EJc9FGxy9ZwiLwbnG+7+pEMhA=; b=a/Sp1GZZiVtkIrsbDZFKKgQTkQ
- FS+JHTt9pp+5vCrBdk0ac5b7U8ZgZGFScrKiULCJv4PZD4wWqOSzzq06ZoGh/8vFLI33VuvYYBdii
- wZ4VlXJvl5fnmlD+q4pIJJmvrTs/0jX/FIDmEAYUX2+Mt6vIwB3sAbRYRgWIA8hB4i4EWyZuWPFOQ
- rIaV+GwSaVBgBLKvO/SsFSj7I46VHFxg38PLmJQ+Oh1DkRIQcIx5NIWLGcWnDXshQ14JMdlpURiF2
- LxyBxRGv+1Wkfh31jf6dzRr+U4xHgvz3PsshAxeZoaF0OQPY6Fl5VA2XZOxLonra6CTBCfgsfUBp/
- 6eTYHzgA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat
- Linux)) id 1kSIR6-0001VK-7P; Tue, 13 Oct 2020 11:25:44 +0000
-Date: Tue, 13 Oct 2020 12:25:44 +0100
-From: Christoph Hellwig <hch@infradead.org>
-To: ira.weiny@intel.com
-Subject: Re: [PATCH RFC PKS/PMEM 24/58] fs/freevxfs: Utilize new kmap_thread()
-Message-ID: <20201013112544.GA5249@infradead.org>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
- <20201009195033.3208459-25-ira.weiny@intel.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4C9Zbj6phwzDqW7
+ for <linux-erofs@lists.ozlabs.org>; Tue, 13 Oct 2020 23:29:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1602592142;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+ bh=WGXCaU67FieVgGooevqAzXyML/TMiyX7cvaxSfDQ0OM=;
+ b=DOuWIowRX01wVa4DuX/rtBam++pUJohq1NVDCh1QZevrqYCTmIZRwI4JmdCRCOHjFLnLVN
+ LwkRqIWlIjpYjl4hUCQKhK4+9oRJF+JIvJ4YkPShZ+mTWSMUA4RwCG0OT3NoWLDf9Ro9Sh
+ flUs0ptwqsvNAy2yJwWhNW4NMumnnys=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1602592142;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+ bh=WGXCaU67FieVgGooevqAzXyML/TMiyX7cvaxSfDQ0OM=;
+ b=DOuWIowRX01wVa4DuX/rtBam++pUJohq1NVDCh1QZevrqYCTmIZRwI4JmdCRCOHjFLnLVN
+ LwkRqIWlIjpYjl4hUCQKhK4+9oRJF+JIvJ4YkPShZ+mTWSMUA4RwCG0OT3NoWLDf9Ro9Sh
+ flUs0ptwqsvNAy2yJwWhNW4NMumnnys=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-584--2CfDyBsOLmZqS7l_UQRaA-1; Tue, 13 Oct 2020 08:29:00 -0400
+X-MC-Unique: -2CfDyBsOLmZqS7l_UQRaA-1
+Received: by mail-pj1-f71.google.com with SMTP id p4so472143pjm.1
+ for <linux-erofs@lists.ozlabs.org>; Tue, 13 Oct 2020 05:29:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+ :content-disposition:user-agent;
+ bh=WGXCaU67FieVgGooevqAzXyML/TMiyX7cvaxSfDQ0OM=;
+ b=D8t7EgHhDurdpmOOMgkvvvY7G8+kfAbs28SaDo3YKJLujnyjked2A/eGCPXW/Xyrgp
+ RH/YORSddgg4wjq4OieZdxhEGeTchQEJ6DQYgVYiQec65RaQEWseX4VCcUbItCDthgnH
+ HWM2478+79k/EopPTBI0xvICrc704L+p3/RwEfACQ06sfYByysup97K3pLmuhzfe/t4H
+ ySZSt6PtCmcS7h4gq+t5NB5UonG58NDV4Loq5GYoJs4LJr8H4WQS8Sst1xBaZcRpoW4k
+ uZSQjIkm0WR0piaJhaCqF8+fwZ3EYd5XUJ4+UIF9i8MxdXyI/qNbU9UewyNxbdBxBhfO
+ Pjnw==
+X-Gm-Message-State: AOAM532YbVNJey9pgV5JqyjL2prZxfbrmOiKdiZ/hHqxFcFG2bc65FH8
+ kt0eW99vjcCViFZ/muekUgydtaTfI1HTTk6lURzVVNQuWCYgRrrVGawAvBZqM6XorsEN7EgAy/z
+ K/tJ+R1EQchwDMOlWo7vRlWRK
+X-Received: by 2002:a17:902:8b86:b029:d4:c98b:c314 with SMTP id
+ ay6-20020a1709028b86b02900d4c98bc314mr15646394plb.48.1602592139267; 
+ Tue, 13 Oct 2020 05:28:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUcl6wtJ7HnOp/yr+4xV7u2SG+7tIFyYatx49CXeVv7QLxSDU47ZqAF6powlDSDzvZ4PjcpA==
+X-Received: by 2002:a17:902:8b86:b029:d4:c98b:c314 with SMTP id
+ ay6-20020a1709028b86b02900d4c98bc314mr15646365plb.48.1602592138943; 
+ Tue, 13 Oct 2020 05:28:58 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id 17sm17568228pgv.58.2020.10.13.05.28.53
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 13 Oct 2020 05:28:58 -0700 (PDT)
+Date: Tue, 13 Oct 2020 20:28:46 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs update for 5.10-rc1
+Message-ID: <20201013122846.GA12025@xiangao.remote.csb>
 MIME-Version: 1.0
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201009195033.3208459-25-ira.weiny@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
- casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,48 +98,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- target-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org,
- Thomas Gleixner <tglx@linutronix.de>, drbd-dev@lists.linbit.com,
- devel@driverdev.osuosl.org, cluster-devel@redhat.com,
- linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org,
- ceph-devel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- io-uring@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org,
- xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org,
- Fenghua Yu <fenghua.yu@intel.com>, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-um@lists.infradead.org,
- intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
- Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com,
- linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
- netdev@vger.kernel.org, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> -	kaddr = kmap(pp);
-> +	kaddr = kmap_thread(pp);
->  	memcpy(kaddr, vip->vii_immed.vi_immed + offset, PAGE_SIZE);
-> -	kunmap(pp);
-> +	kunmap_thread(pp);
+Hi Linus,
 
-You only Cced me on this particular patch, which means I have absolutely
-no idea what kmap_thread and kunmap_thread actually do, and thus can't
-provide an informed review.
+Could you consider this pull request for 5.10-rc1?
 
-That being said I think your life would be a lot easier if you add
-helpers for the above code sequence and its counterpart that copies
-to a potential hughmem page first, as that hides the implementation
-details from most users.
+This cycle addresses a reported permission issue with overlay
+due to a duplicated permission check for "trusted." xattrs.
+Also, a REQ_RAHEAD flag is added now to all readahead requests
+in order to trace readahead I/Os. The others are random cleanups.
+
+All commits have been tested and have been in linux-next as well.
+This merges cleanly with master.
+
+Thanks,
+Gao Xiang
+
+The following changes since commit 856deb866d16e29bd65952e0289066f6078af773:
+
+  Linux 5.9-rc5 (2020-09-13 16:06:00 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.10-rc1
+
+for you to fetch changes up to 915f4c9358db6f96f08934dd683ae297aaa0fb91:
+
+  erofs: remove unnecessary enum entries (2020-10-09 10:37:42 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - fix an issue which can cause overlay permission problem
+   due to duplicated permission check for "trusted." xattrs;
+
+ - add REQ_RAHEAD flag to readahead requests for blktrace;
+
+ - several random cleanup.
+
+----------------------------------------------------------------
+Chao Yu (1):
+      erofs: remove unneeded parameter
+
+Chengguang Xu (1):
+      erofs: remove unnecessary enum entries
+
+Gao Xiang (4):
+      erofs: avoid duplicated permission check for "trusted." xattrs
+      erofs: avoid unnecessary variable `err'
+      erofs: fold in should_decompress_synchronously()
+      erofs: add REQ_RAHEAD flag to readahead requests
+
+ fs/erofs/data.c  |  2 +-
+ fs/erofs/super.c |  2 --
+ fs/erofs/xattr.c |  2 --
+ fs/erofs/zdata.c | 48 +++++++++++++++++++++---------------------------
+ 4 files changed, 22 insertions(+), 32 deletions(-)
+
