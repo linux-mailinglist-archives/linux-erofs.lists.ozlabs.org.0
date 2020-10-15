@@ -2,100 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84EEA28F36B
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Oct 2020 15:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1152028F381
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Oct 2020 15:40:50 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CBr3541rGzDqQd
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Oct 2020 00:38:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CBr5V6FftzDqQv
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Oct 2020 00:40:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oppo.com (client-ip=40.107.132.50;
- helo=apc01-pu1-obe.outbound.protection.outlook.com;
- envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1043;
+ helo=mail-pj1-x1043.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=oppo.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=oppoglobal.onmicrosoft.com
- header.i=@oppoglobal.onmicrosoft.com header.a=rsa-sha256
- header.s=selector1-oppoglobal-onmicrosoft-com header.b=RGObRT08; 
- dkim-atps=neutral
-Received: from APC01-PU1-obe.outbound.protection.outlook.com
- (mail-eopbgr1320050.outbound.protection.outlook.com [40.107.132.50])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=C5QiyAUI; dkim-atps=neutral
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com
+ [IPv6:2607:f8b0:4864:20::1043])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CBr2s6sYdzDqMm
- for <linux-erofs@lists.ozlabs.org>; Fri, 16 Oct 2020 00:38:24 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EM9s5y21Q8Mz8byqkgVep/wK3UNWeGSqCuHedZJgOYl9ijE9o0x0+GzsAW8LpoNOODv6N874ktyEIZ0wm5RyDB1roBZbwR0vTGNpTJHdUJPaalPzxjE+xU5J99/NsVvauQNg5busDsc0Ui+15GxoxTRiZ9CFfzGcBpjuvk2+SCZv1wIgdUA69Lo8/KQFDEoEBNqRAqF1tRWk43DwNPRe1GpgGqtJZufOS+ZmeaBVvrv71pNuS143X5lc+EshsxXpg2j59cFP13d4svnS3u+V6cYBg89oRRzHaBRtL+BNNLS7AoyTpuoF9nelH5fk7kTg7Mkb4n3q6itp0AoUwP5oow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HQFrMnr1TAc+rvtBwp0CzOx1M8XxfHgXZTWoaQr1C2s=;
- b=Jz1XUt4bBkQgLXgKBlVweYhf8bZkcgyLF1IHDo90pYLj/6fRqrRR52o0x/vT9v6NaIMsQrBqEI7piHVXx6NDO2f8xp10D4D+VmpchtJGiR4gNT925v2M4IMvTaAjZhcoMKnwqH3jmTLkcfLM39qYbTLQtpa/26MpOH8OPTDd444DojEEEcE2F+hfsTv3TVr1X9w37KkgsKtIufY7VteigrHsdqVAQ7RIyCM/Obm9OvzudSaNzr8RHogcFgegtyG/xIQk8ygm1jzDZEEEbXlcI02GD2M/kV2qSdoweUVjWJ8JKOqMFOB5bliEMG+SME8CyTMWUOb+EIFk09JLPvqKig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HQFrMnr1TAc+rvtBwp0CzOx1M8XxfHgXZTWoaQr1C2s=;
- b=RGObRT08xzv74aVLxEULvoaR8CA+seRvfoGgundyOtMdrSCkhgcSvDVp1qzkQ6ExMSM1xYo8ucR/UavKYr2+voBiOn/+L3bFJ6keq6HLW2H751BpZVPwziH0Qbgqni8dMcKcFPISBfHPNnHzABW/4xiOVcFrT4zmInfeX00fwCQ=
-Authentication-Results: lists.ozlabs.org; dkim=none (message not signed)
- header.d=none;lists.ozlabs.org; dmarc=none action=none header.from=oppo.com;
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
- SG2PR02MB2383.apcprd02.prod.outlook.com (2603:1096:3:1b::15) with
- Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3455.22; Thu, 15 Oct 2020 13:38:06 +0000
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::21c8:750e:8135:b142]) by SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::21c8:750e:8135:b142%5]) with mapi id 15.20.3477.022; Thu, 15 Oct 2020
- 13:38:06 +0000
-From: Huang Jianan <huangjianan@oppo.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CBr500TWszDqLK
+ for <linux-erofs@lists.ozlabs.org>; Fri, 16 Oct 2020 00:40:16 +1100 (AEDT)
+Received: by mail-pj1-x1043.google.com with SMTP id j8so2072946pjy.5
+ for <linux-erofs@lists.ozlabs.org>; Thu, 15 Oct 2020 06:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=snVDJlr5muvehAJbMd5bPbJtmPH7BkOBy/67p/b2N7g=;
+ b=C5QiyAUIPhGFXxjS053Z1cP2gBMNRqfD+rMqf7Ravg7v8RO6MWFKVan51sU6KVjf7D
+ AbF+CTwgfjO/bqj9vxcTW8/Q/MqSelc1j1w3+SG+faPYAOdUDYeFOGQJK6ugg9oF+QjJ
+ CMWmNQTxyDtiuc/32Iv2ZYiG0Qc2yAZKzC8LUAoJITXBYETZ9VCIZkvvjMVObwri1x6w
+ M4atu1Lwok209rQxj0gGrAMzzHWKjjNk6QCvhm7kmx0dnL9vJY+jjxMtPLRUqyRy3oI9
+ 3I29JKuaNCKtB+DV2DVpfJt93dvkE8tk5gsBmg0HsV4Lu94cU77AOMg8xnei3nHvboxh
+ V48Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=snVDJlr5muvehAJbMd5bPbJtmPH7BkOBy/67p/b2N7g=;
+ b=aEjfUzU98Vh8sxyf7SPSbyU/TQ11jsIgATZ4eBwRpjcWxvAQCzqYqoyPnOw3RWnTux
+ h5kZEAr9oPt1tmTWpe/riY/2A3aUl/S4k3LhtfPK7/1803sdyl5QFOTqBkEyMPw++MJy
+ DMfgNPC1Deg5i7B/sSkpgsYYPvJ1c3oLuQ87Grsza557Cpf04sT5pg4nQ9Ivl5eZQOLn
+ XN9f70DJyJ/h8U/8tJv4xQk9OfWibPKet9AE7xeaQsDDyIscL3tXWKoPl1oCg/RqWVgx
+ L7CuzqLbnTpHY9G7xKhRmuWZnkn7iB6ctz+qohmoSJ8+viYb6onxUvrAd0Sgkk6bH3ay
+ WVXA==
+X-Gm-Message-State: AOAM5317vVwq3FLUGa2vInXnCpN82y28escvy9XDcak08vtP84eN0+Cw
+ IGA6em5ynscd6tfQyGVUdXHQqDO1GMOlUGGr
+X-Google-Smtp-Source: ABdhPJyrb5mpWowGvR0Cmd+ZC7PWtD8lfuRol3N0xwwyxNSmNSVEzgH1EEE+hqDWkOyCByB/FXoDhA==
+X-Received: by 2002:a17:90a:1050:: with SMTP id
+ y16mr4648305pjd.164.1602769214051; 
+ Thu, 15 Oct 2020 06:40:14 -0700 (PDT)
+Received: from localhost.localdomain (69-172-89-151.static.imsbiz.com.
+ [69.172.89.151])
+ by smtp.gmail.com with ESMTPSA id a19sm3426058pjq.29.2020.10.15.06.40.11
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 15 Oct 2020 06:40:13 -0700 (PDT)
+From: Huang Jianan <jnhuang95@gmail.com>
+X-Google-Original-From: Huang Jianan <huangjianan@oppo.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 0/5] erofs-utils: support read special file and compressed
- file for fuse framework
-Date: Thu, 15 Oct 2020 21:37:41 +0800
-Message-Id: <20201015133741.60943-1-huangjianan@oppo.com>
+Subject: [PATCH 1/5] erofs-utils: fix the conflict with the master branch
+Date: Thu, 15 Oct 2020 21:39:55 +0800
+Message-Id: <20201015133959.61007-1-huangjianan@oppo.com>
 X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Originating-IP: [58.255.79.104]
-X-ClientProxiedBy: HK0PR01CA0049.apcprd01.prod.exchangelabs.com
- (2603:1096:203:a6::13) To SG2PR02MB4108.apcprd02.prod.outlook.com
- (2603:1096:4:96::19)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (58.255.79.104) by
- HK0PR01CA0049.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21 via Frontend
- Transport; Thu, 15 Oct 2020 13:38:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4acec429-9621-471f-32ff-08d8710f8c28
-X-MS-TrafficTypeDiagnostic: SG2PR02MB2383:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SG2PR02MB23836F79A5FF83CE2CD1CBE7C3020@SG2PR02MB2383.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zVUd36ebjmRVMtaErNp6slGNoBZHq0o8vJW41of6zehdNZQfqrwaWSxqPlL3B08tQvzjr4ON0H65jko4O5dSk98MRyPc9QLN/QuxjGZlbXZs9frF+0O08eZObwYYqO716Bfjuj+wxuddY2lhT89eP/SYqrRoygDRgoR8YOQY8mDzcjXMPb600wOBZFAOaQq5hVU72FE9SrvtXpwywZoktLsXaEvrnIJ59AD73+IYnmt9415kPE1deT7f3v2yLP0baj4jzBbkHb1qUeEWQzYtFEc6TSSurCurnfCZLeT88WBTc6zXMS7Ev7WvX972QPq9sBhYeRkblsnRgLtuhhBnGPXvat9ARl72VE8PqayjvXusDvTQzRS2UpR2gJuEYdD6aoSHSGZ8SGPm9KecX8iJXQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
- IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(478600001)(86362001)(83380400001)(34490700002)(26005)(186003)(16526019)(36756003)(6512007)(4326008)(6506007)(6916009)(5660300002)(316002)(1076003)(52116002)(8676002)(6486002)(2906002)(8936002)(66476007)(6666004)(66946007)(66556008)(956004)(107886003)(2616005)(11606004);
- DIR:OUT; SFP:1101; 
-X-MS-Exchange-AntiSpam-MessageData: nVu7QeFARKtApwNirYuHBictxy3GCTm9TtjT3eib+B+R4rVKmHvLxrx2M+Li1wYwaanwPrYqvkBU7byuspvtEbx6ds6fActbGSx21qbZqH60J632KJKSeqCnqCVE2AQ8rFuB0iaPwp0wnEqn4BYB7ROPPKkpE2TCHsHgxOnN84dY9twV6fGrwu+BnVGFYgSYU0rm0MIXQODljiI+WHmBaCRVI+XaMPGsNmO40veZNowSXxwS+2DmexVSHJLV1i72ajiINZD+lUH432JNf3rE61wVYhfD0BTYMwrFB/cH71Eo0tRWoRMLxMgnSoAhBF1PvCGMlqGuE/tk7j8yfWBQaSoU/etBp8fcqF0LhxR0OEnxOkfF9LdOK7+pmjhvSnSDvAUWBubqGYAk1b4LMqYrjmAxwKdzOXuerTS4Fwn1u9GqBPczkaRW79aquBlbnr12k8v7vUTE7msLOXEqkm8ddtR/pO7AqymPzxI/0jL4y3tJnRpOhIVxjKrB1s1OZfvPbSnXX/rxhyUQQSaxlQJJJkRkHGv0Sr0t4nai4dNLkdFvGsT7EKA5+8JfvpGK/8jls72yzajPGRJHlmLemutkNNI7Lo/xxdVgVWKvdt1rwShLdtX2RczMzvkpa6+omr2A3UUuu+V1dw0i84kUhjEIEA==
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4acec429-9621-471f-32ff-08d8710f8c28
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2020 13:38:06.5016 (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n54JFVeqybD3rz0MUjpgpbPWQGxJFoNfdx6yszmwYRwrt5crCBerjGAWgDSy2o2GJvZwk72TaD0JGnko+fehJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2383
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -112,60 +84,155 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix some bugs in directory tree parsing.
-Support read special file and compressed file now.
+The current fuse branch is quite different from the master branch.
+So fix the conflict with the master branch to support the upcoming patch.
 
-Huang Jianan (5):
-  erofs-utils: fix the conflict with the master branch
-  erofs-utils: fix the wrong name length of tail file in the directory
-  erofs-utils: fix the wrong address of inline dir content.
-  erofs-utils: support read special file
-  erofs-utils: support read compressed file
+Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+Signed-off-by: Guo Weichao <guoweichao@oppo.com>
+---
+ fuse/init.c              |  4 ++--
+ fuse/namei.c             | 16 ++++++++--------
+ fuse/read.c              |  6 +++---
+ fuse/readir.c            |  4 ++--
+ include/erofs/internal.h |  6 +++---
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
- fuse/Makefile.am         |   7 +-
- fuse/decompress.c        |  86 ++++++++
- fuse/decompress.h        |  38 ++++
- fuse/dentry.h            |   5 +-
- fuse/getattr.c           |   1 +
- fuse/init.c              |  26 ++-
- fuse/init.h              |   2 +
- fuse/main.c              |   1 +
- fuse/namei.c             |  50 +++--
- fuse/read.c              | 103 +++++++++-
- fuse/read.h              |   1 +
- fuse/readir.c            |  18 +-
- fuse/zmap.c              | 416 +++++++++++++++++++++++++++++++++++++++
- include/erofs/defs.h     |  13 ++
- include/erofs/internal.h |  50 ++++-
- include/erofs_fs.h       |   4 +
- 16 files changed, 781 insertions(+), 40 deletions(-)
- create mode 100644 fuse/decompress.c
- create mode 100644 fuse/decompress.h
- create mode 100644 fuse/zmap.c
-
---
+diff --git a/fuse/init.c b/fuse/init.c
+index 885705f..8198fa7 100644
+--- a/fuse/init.c
++++ b/fuse/init.c
+@@ -41,7 +41,7 @@ int erofs_init_super(void)
+ 	}
+ 
+ 	sbk->checksum = le32_to_cpu(sb->checksum);
+-	sbk->features = le32_to_cpu(sb->features);
++	sbk->feature_compat = le32_to_cpu(sb->feature_compat);
+ 	sbk->blkszbits = sb->blkszbits;
+ 	ASSERT(sbk->blkszbits != 32);
+ 
+@@ -56,7 +56,7 @@ int erofs_init_super(void)
+ 	sbk->root_nid = le16_to_cpu(sb->root_nid);
+ 
+ 	logp("%-15s:0x%X", STR(magic), SUPER_MEM(magic));
+-	logp("%-15s:0x%X", STR(features), SUPER_MEM(features));
++	logp("%-15s:0x%X", STR(feature_compat), SUPER_MEM(feature_compat));
+ 	logp("%-15s:%u",   STR(blkszbits), SUPER_MEM(blkszbits));
+ 	logp("%-15s:%u",   STR(root_nid), SUPER_MEM(root_nid));
+ 	logp("%-15s:%ul",  STR(inos), SUPER_MEM(inos));
+diff --git a/fuse/namei.c b/fuse/namei.c
+index ab497e8..ded9207 100644
+--- a/fuse/namei.c
++++ b/fuse/namei.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*
+- * erofs-fuse\inode.c
++ * erofs-fuse\namei.c
+  * Created by Li Guifu <blucerlee@gmail.com>
+  */
+ 
+@@ -43,7 +43,7 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
+ {
+ 	int ret;
+ 	char buf[EROFS_BLKSIZ];
+-	struct erofs_inode_v1 *v1;
++	struct erofs_inode_compact *v1;
+ 	const erofs_off_t addr = nid2addr(nid);
+ 	const size_t size = EROFS_BLKSIZ - erofs_blkoff(addr);
+ 
+@@ -51,10 +51,10 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
+ 	if (ret != (int)size)
+ 		return -EIO;
+ 
+-	v1 = (struct erofs_inode_v1 *)buf;
+-	vi->data_mapping_mode = __inode_data_mapping(le16_to_cpu(v1->i_advise));
+-	vi->inode_isize = sizeof(struct erofs_inode_v1);
+-	vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
++	v1 = (struct erofs_inode_compact *)buf;
++	vi->datalayout = __inode_data_mapping(le16_to_cpu(v1->i_format));
++	vi->inode_isize = sizeof(struct erofs_inode_compact);
++	vi->xattr_isize = erofs_xattr_ibody_size(v1->i_xattr_icount);
+ 	vi->i_size = le32_to_cpu(v1->i_size);
+ 	vi->i_mode = le16_to_cpu(v1->i_mode);
+ 	vi->i_uid = le16_to_cpu(v1->i_uid);
+@@ -153,10 +153,10 @@ struct dcache_entry *disk_lookup(struct dcache_entry *parent, const char *name,
+ 		++nr_cnt;
+ 	}
+ 
+-	if (v.data_mapping_mode == EROFS_INODE_FLAT_INLINE) {
++	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
+ 		uint32_t dir_off = erofs_blkoff(dirsize);
+ 		off_t dir_addr = nid2addr(dcache_get_nid(parent))
+-			+ sizeof(struct erofs_inode_v1);
++			+ sizeof(struct erofs_inode_compact);
+ 
+ 		memset(buf, 0, sizeof(buf));
+ 		ret = dev_read(buf, dir_off, dir_addr);
+diff --git a/fuse/read.c b/fuse/read.c
+index b2bfbd3..ffe976e 100644
+--- a/fuse/read.c
++++ b/fuse/read.c
+@@ -64,7 +64,7 @@ size_t erofs_read_data_inline(struct erofs_vnode *vnode, char *buffer,
+ 	if (!suminline)
+ 		goto finished;
+ 
+-	addr = nid2addr(vnode->nid) + sizeof(struct erofs_inode_v1)
++	addr = nid2addr(vnode->nid) + sizeof(struct erofs_inode_compact)
+ 		+ vnode->xattr_isize;
+ 	ret = dev_read(buffer + rdsz, suminline, addr);
+ 	if (ret < 0 || (size_t)ret != suminline)
+@@ -97,8 +97,8 @@ int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+ 	if (ret)
+ 		return ret;
+ 
+-	logi("path:%s nid=%llu mode=%u", path, nid, v.data_mapping_mode);
+-	switch (v.data_mapping_mode) {
++	logi("path:%s nid=%llu mode=%u", path, nid, v.datalayout);
++	switch (v.datalayout) {
+ 	case EROFS_INODE_FLAT_PLAIN:
+ 		return erofs_read_data(&v, buffer, size, offset);
+ 
+diff --git a/fuse/readir.c b/fuse/readir.c
+index 7fc69f4..367f935 100644
+--- a/fuse/readir.c
++++ b/fuse/readir.c
+@@ -103,10 +103,10 @@ int erofs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+ 		++nr_cnt;
+ 	}
+ 
+-	if (v.data_mapping_mode == EROFS_INODE_FLAT_INLINE) {
++	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
+ 		off_t addr;
+ 
+-		addr = nid2addr(nid) + sizeof(struct erofs_inode_v1)
++		addr = nid2addr(nid) + sizeof(struct erofs_inode_compact)
+ 			+ v.xattr_isize;
+ 
+ 		memset(dirsbuf, 0, sizeof(dirsbuf));
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 2316d01..cba3ce4 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -135,7 +135,7 @@ struct erofs_inode {
+ };
+ 
+ struct erofs_vnode {
+-	uint8_t data_mapping_mode;
++	uint8_t datalayout;
+ 
+ 	uint32_t i_size;
+ 	/* inline size in bytes */
+@@ -171,8 +171,8 @@ static inline bool is_inode_layout_compression(struct erofs_inode *inode)
+ 			EROFS_I_VERSION_BITS)
+ 
+ #define __inode_data_mapping(advise)	\
+-	__inode_advise(advise, EROFS_I_DATA_MAPPING_BIT,\
+-		EROFS_I_DATA_MAPPING_BITS)
++	__inode_advise(advise, EROFS_I_DATALAYOUT_BIT,\
++		EROFS_I_DATALAYOUT_BITS)
+ 
+ #define IS_ROOT(x)	((x) == (x)->i_parent)
+ 
+-- 
 2.25.1
 
-________________________________
-OPPO
-
-=E6=9C=AC=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=E4=
-=BB=B6=E5=90=AB=E6=9C=89OPPO=E5=85=AC=E5=8F=B8=E7=9A=84=E4=BF=9D=E5=AF=86=
-=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E9=99=90=E4=BA=8E=E9=82=AE=E4=BB=B6=E6=
-=8C=87=E6=98=8E=E7=9A=84=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=EF=BC=
-=88=E5=8C=85=E5=90=AB=E4=B8=AA=E4=BA=BA=E5=8F=8A=E7=BE=A4=E7=BB=84=EF=BC=89=
-=E3=80=82=E7=A6=81=E6=AD=A2=E4=BB=BB=E4=BD=95=E4=BA=BA=E5=9C=A8=E6=9C=AA=E7=
-=BB=8F=E6=8E=88=E6=9D=83=E7=9A=84=E6=83=85=E5=86=B5=E4=B8=8B=E4=BB=A5=E4=BB=
-=BB=E4=BD=95=E5=BD=A2=E5=BC=8F=E4=BD=BF=E7=94=A8=E3=80=82=E5=A6=82=E6=9E=9C=
-=E6=82=A8=E9=94=99=E6=94=B6=E4=BA=86=E6=9C=AC=E9=82=AE=E4=BB=B6=EF=BC=8C=E8=
-=AF=B7=E7=AB=8B=E5=8D=B3=E4=BB=A5=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E9=80=
-=9A=E7=9F=A5=E5=8F=91=E4=BB=B6=E4=BA=BA=E5=B9=B6=E5=88=A0=E9=99=A4=E6=9C=AC=
-=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=E4=BB=B6=E3=80=82
-
-This e-mail and its attachments contain confidential information from OPPO,=
- which is intended only for the person or entity whose address is listed ab=
-ove. Any use of the information contained herein in any way (including, but=
- not limited to, total or partial disclosure, reproduction, or disseminatio=
-n) by persons other than the intended recipient(s) is prohibited. If you re=
-ceive this e-mail in error, please notify the sender by phone or email imme=
-diately and delete it!
