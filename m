@@ -1,76 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15BAD290F0B
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 07:18:47 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45554290F0C
+	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 07:18:59 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CCrsJ1np6zDr0p
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 16:18:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CCrsX5BhnzDr09
+	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 16:18:56 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1602911924;
-	bh=epi/kbeAE7wC1SvrLtAqwqUpA4/luQFXSe0KmUGa6h0=;
+	s=201707; t=1602911936;
+	bh=pdrkd9SvL6QL1K7UERsxSvrotCGshfCG3A/0T7ZWvyg=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Lfx8q5bpp8CyL5wNOqv2DVNb5yVJptJREYz7mitfBGO0UCsmK1pOi/Y/9NTKIhBYD
-	 nnilVp+PtEDDs7gwDZU01ZKfH1G2BNLS9Rzlyd8KpOnZH2riuP0QurWIyGgsuaP17Z
-	 93NOASy7vO6nEFSEC/yQzLRtlTM3E1joRWaqvKaROTxSpkteyIFMJx/qsrFtp37r57
-	 rRZ23EdJSy3uqz7kW0svv8wyNSESb7d+dkD6LG4koMQqF1GW14WwjtjGCNyI5a0jY7
-	 tggGSdYViEIoDBwQCocW18PbHA3eMrpphsZv8LcKp3H+2Cky9LEqTwI9uT92VnQ6io
-	 p5H7WCMRBGKfQ==
+	b=eNI6nR/jZd4HdvAxfV9AE21RFBGNfP1XWHdaLlJvjk6/oMMj4xbDfFCXb9w5wi5Eu
+	 2XPhdWOazG+Ot+32rWnJQ/7pGgdAVxz+7XyQIdhl1quSKF6zpTSbD/QFrCNMRrW5zh
+	 +bQ4naZ6qsmJdh7o42U9MZt0kksV8miAvOtZP7xrnsTu/Hs/JBlUbZl0H5PC5AA/OG
+	 G9x+JP03qXFPi7huYsCEk1o6EXPR9YJr/JRSuq1WSs9MVh7onROBNCu6mGylvAMgw4
+	 11VvB81Qlfeos51+xLkF6t2Lrm+7Eh5vtXyNBpb6ZlnBJllVve5eDlyU6x+SGFp9Nd
+	 Ynrl0nZd5M7HQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.64.82; helo=sonic305-19.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=gRDr6875; dkim-atps=neutral
-Received: from sonic308-8.consmr.mail.gq1.yahoo.com
- (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
+ header.s=a2048 header.b=NQG7og/z; dkim-atps=neutral
+Received: from sonic305-19.consmr.mail.gq1.yahoo.com
+ (sonic305-19.consmr.mail.gq1.yahoo.com [98.137.64.82])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CCrsC0ymBzDqGM
- for <linux-erofs@lists.ozlabs.org>; Sat, 17 Oct 2020 16:18:38 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CCrsS0cgXzDqHj
+ for <linux-erofs@lists.ozlabs.org>; Sat, 17 Oct 2020 16:18:50 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1602911915; bh=mRSVNYArdJEo/EYuUfYvpeq0t3j5upKXsb13FiIRe5U=;
+ t=1602911928; bh=A5W/4rIKBXbMDY1tVPetcvuNFVYvSMDcMbuQFs/LO4A=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=gRDr6875VbsmAKCBHeHSIRE6t7ebvBR/lBr97cOHKQ15p4KCeooxQ5v4Ry/gp0n1e8OcQRG2AccLd2DxDGHlI5VQhL6U/u05Fd6FIpE+FuxUb5F1zSiI3jlfHmTL30PaE8tNiVObngbFT3GsuZyy1+eZdgkHbkllSXH2thH5MtfrsMr+2TkPa0to3k5Bf4tuPcMeutnhKyIX41iMPP2JATjErTmyHvfan6g+go9Ydj28MRErGpYbSk9wwBZv4ERl7O9f+pbgttVL4AUR9gKFUbVJ5EFr2BBBsvFEdKqaHCuKowS9uxjEIyrKV5dJw3SHSmRl1rjchbfgvDnHIELGUw==
-X-YMail-OSG: wJEyq4AVM1mjbgnMzlyIs6dzKvRZtLj3c.FR4H4NlGObECi_IlAnSNi1xUKSfIp
- D31pSgeUmI3gz..rBp4Q1f4oYxRufGHOxpfxTWlaeHb6GzJ9fwDHEgTJDcR7iYV5CKU2Bp2k9gxw
- 1uYzPz0Uut_anjSW_R99ozsk1L2tbL_KHrWYbDcTzDC1OoG2Bkd.1kmLzzeAAdwAVr5eKl0XDPqm
- htkq1aAXszkG1WbFzcbbWrKltqsyXdOMOUQKh5HSGulky.iQo2Jcwwz2Vlhc8qbusFR4xkbvLdWa
- WdjFhgQsS2sEJJpCxTNXlHhyMLHfiC6CiHCcq7QGEnHjYcNprbmQpi9lrDq3kiimmNGs3a.X5Rbl
- Hx2AHJP7gS.VqYkfOPhuMryjR6xCtHW3RI_95hGSVLfCxaNR2wYF9bCTzo90sX4ZpjlaRNnw_a5e
- Yf_02KyMHZfYoPsm8CemFt3p..fsNaImIMXwjxSGaufZ0EmO3D5uqQwbB_me..mxV6TB5RV3IiqA
- ZBU6wKm6USlfCrZMp.n05oCBH0BDg19fLnSTy2rvkxsh9m3lJst3iY64odmdyigsQ7K1tkLFdvv5
- trWpgWEnvvqWLI7pN4imCJaR51wUSkrxWqBnCe1d8R702jF0gFi5qb66EvzUVvn4yvg2WllymHoa
- QEA8VhLFDHScZxgkX4fgPppzS6cUrkfr6Gn54kktoiMDYTSOPJ4cPBpqL84voyfZqF2UM3CXkJ9_
- nkU__xHEPd3Bku_GQ_QE5gOJId.ZChl.mpSwBpyegqkmqBRHJtug9VEOsPMVjuipVGVmHV7YHNwB
- 2a1D3Qd59a3l8vtm5fNpKGtv59gq6kr_yDIVuWqZu9WmGikZMjp3wG_acBe5ZQc_3aWshpNK7Lxy
- vOMB_iJTka1VKi1NAPVyXQu0vXPpybYwi6SvHa.I7wuNmfLqwiN17xua8EHD_4BMzG1dmQSIpyfe
- sywM4AkMq5oUaby3sibm5l3TsUSc68GP7NQESykcEqA2b7K9rnJYuf6Ngo3pylYgt9Zj1v8IwgYk
- YqEBpbvP7Ls2r3DngYtdo.V5r95qhNti.ZFTvP_8M9eUsbef08i5_H4VqBsd3o_ZiFP.gUTl8GLs
- F7s.s1H..PgJgHyomDzAhfjfjJvBlqJUI2EUWJctwqPPnCSSAEfJEhv0d2ryIPSwJn7BIq4VwcH1
- Zp_xE2lgLWw_6I.ulmTD4mTXs40377KLZna5f86oWPoo63IckIU0uex1fDPceeYjPBGWDDJTMwSb
- U5yDcp7yGqYZ937CDNP8J7qZ42gFvebQudPlObfJfTRgHTzYWNw1F8T0qMZp4MDHX4uy7ZbYCfz8
- H44fdyPaXGBZmQ56NLx5jaRJLaf7lbXsQBYsZ8qESdYdb2Uw1Kj8Y75g00WrQEcRecPFLmaqzb_4
- HoILBsZec_6hoOu70BK3mid.mRXtOsH7makJW4kaJxNfKYzzSj4fBQvRXkTTsKhLlUJX0Xpc..he
- BlloZooAxg2HzcFle4WJ0.906ZCB2tzYDg82MZ0f2cfH1HPafZjknvQ--
+ b=NQG7og/zFldYRk8l9m4HnRMtoUryZjyskRY2hBRyOngKj8Lr912vvDAv+D7S83vvNVAFR0E79Aek7ztiWJIfp4W9UopC+Tbo+nNRdxEi3WpjV1t/AD376BLlIGIMermtIalz/mgJKg2D4rXG+VN8l6+YjVHhsTOtQKjzB+iTZ3rtNGYVoXlMxiKfBi9DpH/chycSVKgs7HZsCnGLdTMtnjPUOPGWWUwk2F03pIhTgl1AanF4aDBs3jnbYZUPv/zIDSxfVxTjGZluvYoTplxfp+5hNir6sHCuInqezZQPWHTFFxyQbN/DLopN8gMBDG3kI2ZC/dBKIh5phYhZs/Ad0A==
+X-YMail-OSG: Dl.hRCgVM1lQnK.dxwWeyz_1I03zSeicZgGpkSFZQ18muAUbHZPRdir1ya6lnUY
+ mB1PG5iyB2._WBY9YAnMDO8sZsQqiiHBz5twNfO1YoDuFmBEhW3Qbrf63VQ__a4_CJphozjd4W8f
+ FN9FRkt8ULmwZET5PaA6m9txvnFzn7vu2OJ_q_pqV.eDRsuPP.gupgDz2dCwe8BZtDPy38QLFuWE
+ x7bZWYXRk9nPLbwTjuWN9hHaA_Uqp.IAuYbXjvBwr.mVj_amzDPFUYedY_Jlh5A0VjT8yhsGmoQD
+ r3.psYzrC36nBf._y4f4I06FDRqXJ42bV4ved6HPu6oCvGM7Ms6Zzh2pqbV88uqvazNgNiGYRwIL
+ xW_MQjaz3sHI6AH.FhSwiyjnv1otsRhasNI.dt.r9b1JcbbY0nydBQ6J8Mj9_mmbQICmmMtghe3X
+ W_K3SCGkbl36HtrCrbQBrmBMTblrYMXA2UN4tdGBqzKsgXhtnpUCnOjqkfleG.uUbW7UryLz4GBH
+ rt1FiECO8UVLF8qBsm229JD8LYMiG6VDZMD07rWKoL0rcrsB6alVWNj8bvZZNbO2oSNG9Ofs80QT
+ hNMkMrgIobEeviUdMZCv_F.xV.UnMbT5YXL3gErj2cp7WLb5rtUoAYeKgfGOS0BvyF8KXCLuCHCt
+ ebwe.u4gBV4xvf3uuOHZzZiM1x_ql4Hy5lruADNzKmSxKFyTF04FUbhq_U3qXAnmWpOShKNd8R2p
+ c8jFGJcc9lYp6ODzNrhJhRTq7MNyxCcSLa9Atdiuw2r2Gi9QVa1J0BfC7hL.gNLNTD9OmozUBiTx
+ mWycL8lY6OUHN3zCaV5AMh56rh.5DOq2qfdQuHD26oZpiDR9eXtGMpCamxipoN2j.R4Fh7IRtUce
+ OqCEjcnGcQFdzHkPbyGQBpyA1dTQhXRD19uz5P3kzwIUykP.23Oh47DSy9KGg0Xk5wmrLMHzxkzY
+ CjVQYdrlMETbBkO4knAqLhkk.Rx1JjnHqh9Iu8sgTE5XCEGNoCP9K8iB3SKdzJv0fuQb5TdNDnVn
+ mvNjHPghe_W3eJEYnMwxyyLX9LRk4l39mzocrlyK4.CPujJySaHJdmMJTPX8KoMovlEAuW0fH.mw
+ EoJyckvwAo6to.8maHaNxIQkB5kfc.8EwTZYHHaik6qiFv0DdK_xoLCv.Wa3R6nmxhsaeutf4DKZ
+ eGGu78Mnfgfb1DI2wPBJzO0BvfQkLoaC9VKJbmV4bQ6gLDHhJ9Vr8XqguPSgwYeLzcdJuvcZVmWJ
+ yZFBayAiiVuGBg_TesyM4xMEUC.M9Fr3TnQL6CO1iRuTsyF790nGWRtQxRdjsnu4SnF454xj5ZPM
+ rLsWq.WencIzDEHqsg8ooVqs5e6Pxzba0LYkfpBHaWFQz7e8ss2m6w5w7LW.agLTNmm5cI_vZnQ2
+ YABMsvqOaCJlB3HDAOoJm6Jrg9yL.EPXQKs4Eily_DHJZEiqV7Tx_bmGhWqRigxBT2rclJ0gQSS_
+ Yc2u2n6gJtu5DgGK0GpY_XtlWjeK22C5sVF8kHU7rjKpnqYhGCrqhYeYopA--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Oct 2020 05:18:35 +0000
+ sonic305.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Oct 2020 05:18:48 +0000
 Received: by smtp424.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 9d3dc137a63e5241cc606f3cba181f35; 
- Sat, 17 Oct 2020 05:18:30 +0000 (UTC)
+ Sat, 17 Oct 2020 05:18:41 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH 10/12] erofs-utils: fuse: cleanup
- erofs_read_data_compression()
-Date: Sat, 17 Oct 2020 13:16:19 +0800
-Message-Id: <20201017051621.7810-11-hsiangkao@aol.com>
+Subject: [WIP] [PATCH 11/12] erofs-utils: fuse: move up mpage in struct
+ erofs_map_blocks
+Date: Sat, 17 Oct 2020 13:16:20 +0800
+Message-Id: <20201017051621.7810-12-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201017051621.7810-1-hsiangkao@aol.com>
 References: <20201017051621.7810-1-hsiangkao@aol.com>
@@ -97,86 +97,28 @@ Sender: "Linux-erofs"
 [ let's fold in to the original patch. ]
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fuse/read.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ include/erofs/internal.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fuse/read.c b/fuse/read.c
-index 46be5cc64a90..f3aa628945e3 100644
---- a/fuse/read.c
-+++ b/fuse/read.c
-@@ -80,10 +80,10 @@ finished:
- }
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 5807b67637c8..1637b6749411 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -232,12 +232,12 @@ enum {
+ #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
  
- size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
--		       size_t size, off_t offset)
-+				   erofs_off_t size, erofs_off_t offset)
- {
- 	int ret;
--	size_t end, count, ofs, sum = size;
-+	erofs_off_t end, length, skip;
- 	struct erofs_map_blocks map = {
- 		.index = UINT_MAX,
- 	};
-@@ -91,8 +91,8 @@ size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
- 	unsigned int algorithmformat;
- 	char raw[EROFS_BLKSIZ];
+ struct erofs_map_blocks {
++	char mpage[EROFS_BLKSIZ];
++
+ 	erofs_off_t m_pa, m_la;
+ 	u64 m_plen, m_llen;
  
--	while (sum) {
--		end = offset + sum;
-+	end = offset + size;
-+	while (end > offset) {
- 		map.m_la = end - 1;
+ 	unsigned int m_flags;
+-
+-	char mpage[EROFS_BLKSIZ];
+ 	erofs_blk_t index;
+ };
  
- 		ret = z_erofs_map_blocks_iter(vnode, &map);
-@@ -100,7 +100,7 @@ size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
- 			return ret;
- 
- 		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
--			sum -= map.m_llen;
-+			end = map.m_la;
- 			continue;
- 		}
- 
-@@ -117,28 +117,28 @@ size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
- 		 * larger than requested, and set up partial flag as well.
- 		 */
- 		if (end < map.m_la + map.m_llen) {
--			count = end - map.m_la;
-+			length = end - map.m_la;
- 			partial = true;
- 		} else {
- 			ASSERT(end == map.m_la + map_m_llen);
--			count = map.m_llen;
-+			length = map.m_llen;
- 			partial = !(map.m_flags & EROFS_MAP_FULL_MAPPED);
- 		}
- 
--		if ((off_t)map.m_la < offset) {
--			ofs = offset - map.m_la;
--			sum = 0;
-+		if (map.m_la < offset) {
-+			skip = offset - map.m_la;
-+			end = offset;
- 		} else {
--			ofs = 0;
--			sum -= count;
-+			skip = 0;
-+			end = map.m_la;
- 		}
- 
- 		ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
- 					.in = raw,
--					.out = buffer + sum,
--					.decodedskip = ofs,
--					.inputsize = EROFS_BLKSIZ,
--					.decodedlength = count,
-+					.out = buffer + end - offset,
-+					.decodedskip = skip,
-+					.inputsize = map.m_plen,
-+					.decodedlength = length,
- 					.alg = algorithmformat,
- 					.partial_decoding = partial
- 					 });
 -- 
 2.24.0
 
