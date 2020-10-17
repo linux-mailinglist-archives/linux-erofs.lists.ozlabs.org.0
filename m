@@ -1,81 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2F8C290F0D
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 07:19:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3175529101A
+	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 08:24:26 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CCrsh0dNWzDr0T
-	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 16:19:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1602911944;
-	bh=rkr5vzUgX2HKZtMbUWShwQskP55t09+6p5wWPtvTMUE=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=VbBLFTQRLCYwx+iuyAc3jF5e9JVYRbRFXunx3knkoGRYL+5yu3IgZmeJvS+dcC5EL
-	 BtA/G4A3iYPF/L6Z7X/sDXdW7S8HAGLaORg2hxJUL97tTRle0B87TUh/qwwurTEuBP
-	 OTe4E0saYYDhexVlLa+VGug8oj9GgpNUCdXFhIMwP8vyRHJlg1I5MhnOTyBdvUwt4O
-	 rzSlqaxYPToDVu4Ld5Q90dzpPamsPqf4fIgIKshZmowPG4KdLOA1JcjI4AbmYec6YU
-	 GIPSr7K4s3g8roHfdfUj+j4hNUoc9sOlJnBLpz+WwUjJgyHmu8m5A606HzCrBVGrOz
-	 64HZq+U00s3Sg==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CCtK321dlzDqyk
+	for <lists+linux-erofs@lfdr.de>; Sat, 17 Oct 2020 17:24:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::642;
+ helo=mail-pl1-x642.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.66.148; helo=sonic317-22.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=N9zuijNZ; dkim-atps=neutral
-Received: from sonic317-22.consmr.mail.gq1.yahoo.com
- (sonic317-22.consmr.mail.gq1.yahoo.com [98.137.66.148])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=FoB7aXXh; dkim-atps=neutral
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com
+ [IPv6:2607:f8b0:4864:20::642])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CCrsc0ndLzDr0T
- for <linux-erofs@lists.ozlabs.org>; Sat, 17 Oct 2020 16:18:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1602911938; bh=2ESiGQLJ6Slfa8P+8LP6pkjKbUCPir8tsGM1LOBiriE=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=N9zuijNZp4e6O4I2tgO2rdk9Jlmlo58eWMhUtu/13O64UvkrKB6wukbpki1MxxotxmkzJOjY6ct3X8biDkcTubf6M71odlO5hNcgWIl4YjeVa0yKGgFZJmOUSkUod8Szt0UlZFkTlFsE4eObXNRmRGF1BxGqt3+rk3gQlE0RcELHe5i8MQZKr0Ri21PjbZAzabskJFv6DVxwpvRiC18Y9QvKB1e+boZ7cBiK/M6wS+iDDxN7UmFzOYHPQgon/hL0rOY77bvgbhlASKrVtEOao2sAqT1XoWXOkwV1MlYPJiXSNI9YnUkpZ+kyDm5FYXvNRC4ke0QskmtyS3InvQhRBQ==
-X-YMail-OSG: GkVN2V8VM1kyr1tMIlN0Fb2h81B3he9.5KdG_EcjpRr5q.lA3cWtXtstbDMbeCe
- eHv72d476TTpsLvnnuW7IoYkZxXkVVN0_IIr4xBjQRepShoPEB0GEW1WsfeKVCFbWsctb4MhVLvq
- MomUEFBBKO2K1Lh8gUIxyu3kDxhpRxEknUdvytyml5feC5S3ZaUe47FQmAw.8QMlz5tb5v07XwXg
- z6vIdL1OGvUEeDWFD1xsJO5s4rQ8pgV5sbNdp5KSAYFg6TMp_a4EG40IOB_1dXEuKx46xxyp.Frz
- h5SJswQ_pX4g0yxEpJiJhVp4EQ_3._TdPNy3VIDLznAip3Ls1JPM4khkV07hGE6xJbrIr6zwJy5V
- BKM_va88iCgxCp6RO2MKuRpPfDS8LYNZ3QvM6neRpLS0FtMQ2Ihx6q0ERgsRZOAq.11M1fNQCH.N
- 0pgyA7Ox6BjSPUBymBl1Eje.nsBtYSp_teXBi3XSOwt7VfTtDWjn_WgE7UN.FpwpM0aKwBPqKWWa
- wlqoq3ghXD1KVvF.caUfoW8jDuun44F6u2GZjLczdaHOZCMNGC1KsHIkY0uYzsBKwvKe9MoLQxrU
- pDzZQEDGH94oZMJhkAd_yC4XHwHz9vc01lmDkOUyzlXTdky1WuSwZAtiyYNCsJ4F3Lar2GQJHq5h
- OvDQB2a5_UOdsbIgHHH6_ZfeZIH7JdMpFq5x8lMvluytUB9zXV39ADgsuFMVpfeAHlAsFgoFc8VQ
- GaeOnNaU2QmjhwPxvb4dTowLYqKQxm.RFWpIE6xoaPDllM2PMezqu6n_QqG4o2rFuGpTi.9r2T5u
- mDwyYhl66nZrH4z8AjNmGV0E0lDsrSJA3G1qjlk2P2d0wALMJEvpZh2n7poTZ6Ve1OIQKDuTG6nQ
- bv2g26yUu7tCdrEZ603ypt4q6kXDes.vz6X5biLt7imroh7eOJ5HKtVcBRsoyhzbyYW8j1NKpB0b
- RgzfrF0cE_PZ2lD_n8O9sMXUl0KoIQc8Sla7wWsRaSvAJ6S8QI_VxvDKdbB.X2.Wlc.a1xnW54LN
- JEtlwMtJjygrGy8YQyWGvVfv2NFFK.QOfbJpPpDACCP0uBwuO9ntxOBAMjBvcZQNvoGbXvDo2iMb
- FqCb3w.ML9d232pWFUfNWdzDRRu.uPyyjzhv3tmoDmMpkE0irWMhghm_rBK8_qsMDgFkOFhmvu2w
- 5u2Gu3_5139_U2Scrax2ZJLQG32SyZ21ZXW2gfFiVuhNsbFfqtYuhyPn.UMI6w2McFghpfoUYTEd
- tgC_mkXqkA2Nm40jaiF9kRsMqarbZI4UXfX9S3Bm5.jcOopqilakHpAJ7x5mKMVn1pbW1HvcII2Y
- xsdgKzCTZCM9pHcHHZ35sx2t1APBRVwAvFBLSGjkwO_yAwaEOQAJpNazUr8.Me5Ypwpt4trIEuDG
- TFQYuzjBXUZmfs..gZi_Ckf5HKKxQuu.9NH7uTD.5wI9.PTKQZ0_uxWuSB9F7Aq2wpixywuh9_C.
- dgHsjNAATuwiNla.AO5vlj9fDQdsc9LX3GYHjqyhjreSpJaGET6nOBXP9vEaOrYxqvZZahrAL47u
- _Ao1HBgMaiG1g_2RXu9k-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic317.consmr.mail.gq1.yahoo.com with HTTP; Sat, 17 Oct 2020 05:18:58 +0000
-Received: by smtp424.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 9d3dc137a63e5241cc606f3cba181f35; 
- Sat, 17 Oct 2020 05:18:54 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH 12/12] erofs-utils: fuse: fix up source headers
-Date: Sat, 17 Oct 2020 13:16:21 +0800
-Message-Id: <20201017051621.7810-13-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20201017051621.7810-1-hsiangkao@aol.com>
-References: <20201017051621.7810-1-hsiangkao@aol.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CCtJw22tLzDqxg
+ for <linux-erofs@lists.ozlabs.org>; Sat, 17 Oct 2020 17:24:15 +1100 (AEDT)
+Received: by mail-pl1-x642.google.com with SMTP id o9so2376995plx.10
+ for <linux-erofs@lists.ozlabs.org>; Fri, 16 Oct 2020 23:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=date:from:to:cc:subject:references:mime-version:message-id;
+ bh=Ygwz0XIU3Ix39yXlqPSzjzYdzIyzlyPTcxnRClpICHE=;
+ b=FoB7aXXhJL7F9EiFUbeZa3Zc5y9eSlb6PeBuTNU4JtBzUBfZWIGRinU9EqXhFapppg
+ mRyt4kTAA8ZJEvBBk/xTbCsM3LArEwciWJ3n01XCkTmeiUC6tdNEWcOGRezyFFs4drWz
+ lB55mhxwJkdulO+Sw0P92LpTiDNYPbsB7fL2QXOwVByYD9OfEfLtguf3e2G+sGGvL0BK
+ 033867SoRWSOpzqqG2QndaVPaCEtA9dCI2Wd7N1prJbI3b9FPDBFHpGYTz6GB1BTdlSa
+ b1yzBGBCD2Pi0nX8xEZwTW+6SneMQtIyspPnaVp2q558v8Zl9aF/D+EJBrWTB+u/xWbu
+ GAjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:references:mime-version
+ :message-id;
+ bh=Ygwz0XIU3Ix39yXlqPSzjzYdzIyzlyPTcxnRClpICHE=;
+ b=ss7rcdJyPR+qWyKKOcK3rNVPyNX9wG4//LKRlINb5wCJoA5yXAzRQ1WYUrr8TEwZU3
+ EMVe4ns0dR4u1Pqjy2WKN4BgKS1wie49trr5kPsE0S/PUedXRnM3Kq52ak0skrki4gDn
+ Uv4AoW8JOpHYfrxGQMQDFY9wzEwgHGVDek5bxl7x0aUYGInk9ADvNxavn6xiGHsxABQA
+ mjyROrvbaleXS8RjDuRiKAcFqk/J1s4jDBwYnztFz3x2se9aB0cPsL0CHg3PXdL2OOgv
+ btfU0XFz27jXs4M3+RBhnpJeCzY9rIuya0xe2ax0LOIqb8GcFxbWBBmqCu5u2PCpxnQN
+ tBzQ==
+X-Gm-Message-State: AOAM531ATSmLMCGlUZhmV/TW0J8RWJtWkSH/rgs5yhbhKw/i2a6UlgJ+
+ hTO1FAaDvOnsNhMSmKApJ7k=
+X-Google-Smtp-Source: ABdhPJwAjv2FLWp9E/X/FrxEs01F/btecoDCEJGPn5O5+6nWgc46ObBGCWiLjqyrVLd5N3BdVQlwHw==
+X-Received: by 2002:a17:90b:b12:: with SMTP id
+ bf18mr7394902pjb.5.1602915851824; 
+ Fri, 16 Oct 2020 23:24:11 -0700 (PDT)
+Received: from hjn-xps15 (li1080-207.members.linode.com. [45.33.61.207])
+ by smtp.gmail.com with ESMTPSA id e11sm4587614pfl.58.2020.10.16.23.24.08
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Fri, 16 Oct 2020 23:24:11 -0700 (PDT)
+Date: Sat, 17 Oct 2020 14:24:13 +0800
+From: "jnhuang95@gmail.com" <jnhuang95@gmail.com>
+To: "Gao Xiang" <hsiangkao@aol.com>
+Subject: Re: Re: [PATCH 5/5] erofs-utils: support read compressed file
+References: <20201015133959.61007-1-huangjianan@oppo.com>, 
+ <20201015133959.61007-5-huangjianan@oppo.com>, 
+ <20201016161736.GC32727@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Priority: 3
+X-GUID: AAB3D394-D707-45F5-8427-3C0CEBD781F2
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.18.111[cn]
+Mime-Version: 1.0
+Message-ID: <2020101714241160424912@gmail.com>
+Content-Type: multipart/alternative;
+ boundary="----=_001_NextPart538660834367_=----"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,402 +83,1072 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Zhang Shiming <zhangshiming@oppo.com>, Guo Weichao <guoweichao@oppo.com>
+Cc: zhangshiming <zhangshiming@oppo.com>,
+ linux-erofs <linux-erofs@lists.ozlabs.org>, guoweichao <guoweichao@oppo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-fix up weird paths and relicense zmap.c
+This is a multi-part message in MIME format.
 
-[ let's fold in to the original patch. ]
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
- fuse/decompress.c | 5 +++--
- fuse/decompress.h | 3 ++-
- fuse/dentry.c     | 4 ++--
- fuse/dentry.h     | 4 ++--
- fuse/disk_io.c    | 4 ++--
- fuse/disk_io.h    | 4 ++--
- fuse/getattr.c    | 4 ++--
- fuse/getattr.h    | 4 ++--
- fuse/init.c       | 4 ++--
- fuse/init.h       | 4 ++--
- fuse/logging.c    | 4 ++--
- fuse/logging.h    | 4 ++--
- fuse/main.c       | 4 ++--
- fuse/namei.c      | 4 ++--
- fuse/namei.h      | 4 ++--
- fuse/open.c       | 4 ++--
- fuse/open.h       | 4 ++--
- fuse/read.c       | 5 +++--
- fuse/read.h       | 4 ++--
- fuse/readir.c     | 4 ++--
- fuse/readir.h     | 4 ++--
- fuse/zmap.c       | 7 ++++---
- 22 files changed, 48 insertions(+), 44 deletions(-)
+------=_001_NextPart538660834367_=----
+Content-Type: text/plain;
+	charset="ISO-8859-1"
+Content-Transfer-Encoding: base64
 
-diff --git a/fuse/decompress.c b/fuse/decompress.c
-index fc12852ac6b7..f2aa84146946 100644
---- a/fuse/decompress.c
-+++ b/fuse/decompress.c
-@@ -1,9 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-+ * erofs-utils/fuse/decompress.c
-+ *
-  * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
-  * Created by Huang Jianan <huangjianan@oppo.com>
-  */
--
- #include <stdlib.h>
- #include <lz4.h>
- 
-diff --git a/fuse/decompress.h b/fuse/decompress.h
-index 7d436f18da86..508aabab1664 100644
---- a/fuse/decompress.h
-+++ b/fuse/decompress.h
-@@ -1,9 +1,10 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-+ * erofs-utils/fuse/decompress.h
-+ *
-  * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
-  * Created by Huang Jianan <huangjianan@oppo.com>
-  */
--
- #ifndef __EROFS_DECOMPRESS_H
- #define __EROFS_DECOMPRESS_H
- 
-diff --git a/fuse/dentry.c b/fuse/dentry.c
-index 27192ecfd32e..1ae37e3abc86 100644
---- a/fuse/dentry.c
-+++ b/fuse/dentry.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\dentry.c
-+ * erofs-utils/fuse/dentry.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "dentry.h"
- #include "erofs/internal.h"
- #include "logging.h"
-diff --git a/fuse/dentry.h b/fuse/dentry.h
-index f89c50646fb5..12f4cf6bafd9 100644
---- a/fuse/dentry.h
-+++ b/fuse/dentry.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\dentry.h
-+ * erofs-utils/fuse/dentry.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef _EROFS_DENTRY_H
- #define _EROFS_DENTRY_H
- 
-diff --git a/fuse/disk_io.c b/fuse/disk_io.c
-index 72d351b17806..3fc087699dc9 100644
---- a/fuse/disk_io.c
-+++ b/fuse/disk_io.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\disk_io.c
-+ * erofs-utils/fuse/disk_io.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #define _XOPEN_SOURCE 500
- #include "disk_io.h"
- 
-diff --git a/fuse/disk_io.h b/fuse/disk_io.h
-index 6b4bd3cce085..d2c3dd598bc0 100644
---- a/fuse/disk_io.h
-+++ b/fuse/disk_io.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\disk_io.h
-+ * erofs-utils/fuse/disk_io.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __DISK_IO_H
- #define __DISK_IO_H
- 
-diff --git a/fuse/getattr.c b/fuse/getattr.c
-index d2134f486e19..e5200ebeef1a 100644
---- a/fuse/getattr.c
-+++ b/fuse/getattr.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\getattr.c
-+ * erofs-utils/fuse/getattr.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "getattr.h"
- 
- #include <sys/types.h>
-diff --git a/fuse/getattr.h b/fuse/getattr.h
-index dbcff7c1a6e1..735529a91d5b 100644
---- a/fuse/getattr.h
-+++ b/fuse/getattr.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\getattr.h
-+ * erofs-utils/fuse/getattr.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __EROFS_GETATTR_H
- #define __EROFS_GETATTR_H
- 
-diff --git a/fuse/init.c b/fuse/init.c
-index e9cc9f81d4c7..48125c5791fa 100644
---- a/fuse/init.c
-+++ b/fuse/init.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\init.c
-+ * erofs-utils/fuse/init.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "init.h"
- #include <string.h>
- #include <asm-generic/errno-base.h>
-diff --git a/fuse/init.h b/fuse/init.h
-index 3fc4eb548dda..405a92913b4a 100644
---- a/fuse/init.h
-+++ b/fuse/init.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\init.h
-+ * erofs-utils/fuse/init.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __EROFS_INIT_H
- #define __EROFS_INIT_H
- 
-diff --git a/fuse/logging.c b/fuse/logging.c
-index 2d1f1c77c2a4..192f546b94ec 100644
---- a/fuse/logging.c
-+++ b/fuse/logging.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\logging.c
-+ * erofs-utils/fuse/logging.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "logging.h"
- 
- #include <stdio.h>
-diff --git a/fuse/logging.h b/fuse/logging.h
-index 7aa2eda405db..3aa77ab08107 100644
---- a/fuse/logging.h
-+++ b/fuse/logging.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\logging.h
-+ * erofs-utils/fuse/logging.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __LOGGING_H
- #define __LOGGING_H
- 
-diff --git a/fuse/main.c b/fuse/main.c
-index 884101374bcf..9c8169725fa7 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\main.c
-+ * erofs-utils/fuse/main.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/fuse/namei.c b/fuse/namei.c
-index 0b71072027ce..c33af4b04b45 100644
---- a/fuse/namei.c
-+++ b/fuse/namei.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\namei.c
-+ * erofs-utils/fuse/namei.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "namei.h"
- #include <linux/kdev_t.h>
- #include <sys/types.h>
-diff --git a/fuse/namei.h b/fuse/namei.h
-index 80e84d7220aa..1803a673daaf 100644
---- a/fuse/namei.h
-+++ b/fuse/namei.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\inode.h
-+ * erofs-utils/fuse/inode.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __INODE_H
- #define __INODE_H
- 
-diff --git a/fuse/open.c b/fuse/open.c
-index 9d2edca54d23..c219d3870000 100644
---- a/fuse/open.c
-+++ b/fuse/open.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\open.c
-+ * erofs-utils/fuse/open.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "open.h"
- #include <asm-generic/errno-base.h>
- #include <fuse.h>
-diff --git a/fuse/open.h b/fuse/open.h
-index d02c1f752204..dfc8b3cdd515 100644
---- a/fuse/open.h
-+++ b/fuse/open.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\open.h
-+ * erofs-utils/fuse/open.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __EROFS_OPEN_H
- #define __EROFS_OPEN_H
- 
-diff --git a/fuse/read.c b/fuse/read.c
-index f3aa628945e3..621f7d6ce6ea 100644
---- a/fuse/read.c
-+++ b/fuse/read.c
-@@ -1,9 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\read.c
-+ * erofs-utils/fuse/read.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-+ * Compression support by Huang Jianan <huangjianan@oppo.com>
-  */
--
- #include "read.h"
- #include <errno.h>
- #include <linux/fs.h>
-diff --git a/fuse/read.h b/fuse/read.h
-index 89d4b4cd600c..e901c607dc91 100644
---- a/fuse/read.h
-+++ b/fuse/read.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\read.h
-+ * erofs-utils/fuse/read.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __EROFS_READ_H
- #define __EROFS_READ_H
- 
-diff --git a/fuse/readir.c b/fuse/readir.c
-index 46ceb1d90a7f..f3dd0c42c6e2 100644
---- a/fuse/readir.c
-+++ b/fuse/readir.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-fuse\readir.c
-+ * erofs-utils/fuse/readir.c
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #include "readir.h"
- #include <errno.h>
- #include <linux/fs.h>
-diff --git a/fuse/readir.h b/fuse/readir.h
-index 21ab7a4e4e0b..ee2ab8bdd0f0 100644
---- a/fuse/readir.h
-+++ b/fuse/readir.h
-@@ -1,9 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs-fuse\readir.h
-+ * erofs-utils/fuse/readir.h
-+ *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--
- #ifndef __EROFS_READDIR_H
- #define __EROFS_READDIR_H
- 
-diff --git a/fuse/zmap.c b/fuse/zmap.c
-index 022ca1b9e437..8ec0a7707fd6 100644
---- a/fuse/zmap.c
-+++ b/fuse/zmap.c
-@@ -1,13 +1,14 @@
--// SPDX-License-Identifier: GPL-2.0-only
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-- * Many parts of codes are copied from Linux kernel/fs/erofs.
-+ * erofs-utils/fuse/zmap.c
-+ *
-+ * (a large amount of code was adapted from Linux kernel. )
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  * Modified by Huang Jianan <huangjianan@oppo.com>
-  */
--
- #include "init.h"
- #include "disk_io.h"
- #include "logging.h"
--- 
-2.24.0
+SGkgR2FveGlhbmcsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcgYW5kIHN1Z2dlc3Rpb25zLiBJ
+dCdzIGdyZWF0IHRvIGNvbW11bmljYXRlIHdpdGggb3V0c3RhbmRpbmcgY29tbXVuaXR5IGRldmVs
+b3BlcnMuIEkgaGF2ZSBsZWFybmVkIGEgbG90IGFuZCBsb29rIGZvcndhcmQgdG8gY29udHJpYnV0
+ZSBtb3JlIHBhdGNoZXMgaW4gdGhlIGZ1dHVyZS4NCg0KUmVnYXJkcywNCkppYW5hbg0KDQoNCiAN
+CkZyb206IEdhbyBYaWFuZw0KRGF0ZTogMjAyMC0xMC0xNyAwMDoxNw0KVG86IEh1YW5nIEppYW5h
+bg0KQ0M6IGxpbnV4LWVyb2ZzOyBndW93ZWljaGFvOyB6aGFuZ3NoaW1pbmc7IGh1YW5namlhbmFu
+DQpTdWJqZWN0OiBSZTogW1BBVENIIDUvNV0gZXJvZnMtdXRpbHM6IHN1cHBvcnQgcmVhZCBjb21w
+cmVzc2VkIGZpbGUNCkhpIEppYW5hbiwNCiANCk9uIFRodSwgT2N0IDE1LCAyMDIwIGF0IDA5OjM5
+OjU5UE0gKzA4MDAsIEh1YW5nIEppYW5hbiB3cm90ZToNCj4gU2lnbmVkLW9mZi1ieTogSHVhbmcg
+SmlhbmFuIDxodWFuZ2ppYW5hbkBvcHBvLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR3VvIFdlaWNo
+YW8gPGd1b3dlaWNoYW9Ab3Bwby5jb20+DQogDQpJIHJlYWQgdGhlIGxvZ2ljIGJlbG93LCBhbmQg
+Z2VuZXJhbGx5IGl0IGxvb2tzIGdvb2QhIDx0aHVtYj4NCiANCkknbSBub3cgaGFuZGxpbmcgc29t
+ZSBtaW5vciB0aGluZyBhYm91dCB0aGlzIGFuZCBJIHdpbGwNCnVwZGF0ZSBhcyB0aGUgZm9sbG93
+aW5nIHBhdGNoIHRvIHNwZWVkIHVwIHRoZSBkZXZlbG9wbWVudC4NCiANCj4gLS0tDQogDQouLi4N
+CiANCj4gZGlmZiAtLWdpdCBhL2Z1c2UvZGVjb21wcmVzcy5jIGIvZnVzZS9kZWNvbXByZXNzLmMN
+Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uZTJkZjNjZQ0KPiAtLS0g
+L2Rldi9udWxsDQo+ICsrKyBiL2Z1c2UvZGVjb21wcmVzcy5jDQogDQp3ZSBtaWdodCBuZWVkIHRv
+IG1vdmUgdGhpcyBmaWxlIHRvIGxpYi9kZWNvbXByZXNzLmMNCiANCj4gQEAgLTAsMCArMSw4NiBA
+QA0KPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArICovDQo+ICsvKg0KPiAr
+ICogQ29weXJpZ2h0IChDKSwgMjAwOC0yMDIwLCBPUFBPIE1vYmlsZSBDb21tIENvcnAuLCBMdGQu
+DQo+ICsgKiBDcmVhdGVkIGJ5IEh1YW5nIEppYW5hbiA8aHVhbmdqaWFuYW5Ab3Bwby5jb20+DQo+
+ICsgKi8NCj4gKw0KPiArI2luY2x1ZGUgPHN0ZGxpYi5oPg0KPiArI2luY2x1ZGUgPGx6NC5oPg0K
+PiArDQo+ICsjaW5jbHVkZSAiZXJvZnMvaW50ZXJuYWwuaCINCj4gKyNpbmNsdWRlICJlcm9mcy9l
+cnIuaCINCj4gKyNpbmNsdWRlICJkZWNvbXByZXNzLmgiDQo+ICsjaW5jbHVkZSAibG9nZ2luZy5o
+Ig0KPiArI2luY2x1ZGUgImluaXQuaCINCj4gKw0KPiArc3RhdGljIGludCB6X2Vyb2ZzX3NoaWZ0
+ZWRfdHJhbnNmb3JtKHN0cnVjdCB6X2Vyb2ZzX2RlY29tcHJlc3NfcmVxICpycSkNCj4gK3sNCj4g
+KyBjaGFyICpkZXN0ID0gcnEtPm91dCArIHJxLT5vZnNfb3V0Ow0KIA0KSSB0aGluayBvZnNfb3V0
+IGNhbiBiZSBvbWl0ZWQsIHNpbmNlIHdlIG9ubHkgY2FyZSBhYm91dCB0aGUgZGVzdCBidWZmZXIg
+aGVyZS4NCnNvIChuZXcpIHJxLT5vdXQgPT0gKG9sZClycS0+b3V0ICsgcnEtPm9mc19vdXQuDQog
+DQo+ICsgY2hhciAqc3JjID0gcnEtPmluICsgcnEtPm9mc19oZWFkOw0KIA0KbmVlZCB0byBqdWRn
+ZSBpZiB0aGUgb3V0cHV0c2l6ZSBpcyBsYXJnZXIgdGhhbiBFUk9GU19CTEtTSVosIHNpbmNlIGl0
+J3MNCnVuZGVmaW5lZCBvbi1kaXNrIGJlaGF2aW9yLCBhbmQgY2FuIGJlIGltcGxlbWVudGVkIGlu
+IHRoZSBmdXR1cmUNCm9uLWRpc2sgdXBkYXRlLg0KIA0KPiArDQo+ICsgbWVtY3B5KGRlc3QsIHNy
+YywgcnEtPm91dHB1dHNpemUgLSBycS0+b2ZzX2hlYWQpOw0KPiArDQo+ICsgcmV0dXJuIDA7DQo+
+ICt9DQogDQpBbmQgdGhpcyBmdW5jdGlvbiBjYW4gYmUgZm9sZGVkIGludG8gel9lcm9mc19kZWNv
+bXByZXNzKCksIGJlY2F1c2UgdGhlDQppbXBsZW1lbnRhdGlvbiBoZXJlIGlzIG11Y2ggc2ltcGxl
+IGVub3VnaC4NCiANCj4gKw0KPiArc3RhdGljIGludCB6X2Vyb2ZzX2RlY29tcHJlc3NfZ2VuZXJp
+YyhzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX3JlcSAqcnEpDQogDQppdCBtaWdodCBiZSByZW5h
+bWVkIGludG8gel9lcm9mc19kZWNvbXByZXNzX2x6NC4NCiANCj4gK3sNCj4gKyBpbnQgcmV0ID0g
+MDsNCj4gKyBjaGFyICpkZXN0ID0gcnEtPm91dCArIHJxLT5vZnNfb3V0Ow0KPiArIGNoYXIgKnNy
+YyA9IHJxLT5pbjsNCj4gKyBjaGFyICpidWZmID0gTlVMTDsNCj4gKyBib29sIHN1cHBvcnRfMHBh
+ZGRpbmcgPSBmYWxzZTsNCj4gKyB1bnNpZ25lZCBpbnQgaW5wdXRtYXJnaW4gPSAwOw0KPiArDQo+
+ICsgaWYgKHNiay0+ZmVhdHVyZV9pbmNvbXBhdCAmIEVST0ZTX0ZFQVRVUkVfSU5DT01QQVRfTFo0
+XzBQQURESU5HKSB7DQo+ICsgc3VwcG9ydF8wcGFkZGluZyA9IHRydWU7DQo+ICsNCj4gKyB3aGls
+ZSAoIXNyY1tpbnB1dG1hcmdpbiAmIH5QQUdFX01BU0tdKQ0KPiArIGlmICghKCsraW5wdXRtYXJn
+aW4gJiB+UEFHRV9NQVNLKSkNCj4gKyBicmVhazsNCj4gKw0KPiArIGlmIChpbnB1dG1hcmdpbiA+
+PSBycS0+aW5wdXRzaXplKQ0KPiArIHJldHVybiAtRUlPOw0KPiArIH0NCj4gKw0KPiArIGlmIChy
+cS0+b2ZzX2hlYWQpIHsNCiANCndlIG1pZ2h0IG5lZWQgdG8gcmV0aGluayBhYm91dCB0aGUgbmFt
+ZSBvZiBvZnNfaGVhZC4NCiANCj4gKyBidWZmID0gbWFsbG9jKHJxLT5vdXRwdXRzaXplKTsNCj4g
+KyBpZiAoIWJ1ZmYpDQo+ICsgcmV0dXJuIC1FTk9NRU07DQo+ICsgZGVzdCA9IGJ1ZmY7DQogDQpu
+ZWVkIHNvbWUgY2xlYW51cCwgYW5kIGRlc3QgdmFyaWFibGUgaXMgYXNzaWduZWQgZm9yIHNldmVy
+YWwgdGltZXMsDQpidXQgd2l0aG91dCBtYWtpbmcgdGhlIGxvZ2ljIHNpbXBsZXIuDQogDQo+ICsg
+fQ0KPiArDQo+ICsgaWYgKHJxLT5wYXJ0aWFsX2RlY29kaW5nIHx8ICFzdXBwb3J0XzBwYWRkaW5n
+KQ0KPiArIHJldCA9IExaNF9kZWNvbXByZXNzX3NhZmVfcGFydGlhbChzcmMgKyBpbnB1dG1hcmdp
+biwgZGVzdCwNCj4gKyAgIHJxLT5pbnB1dHNpemUgLSBpbnB1dG1hcmdpbiwNCj4gKyAgIHJxLT5v
+dXRwdXRzaXplLCBycS0+b3V0cHV0c2l6ZSk7DQo+ICsgZWxzZQ0KPiArIHJldCA9IExaNF9kZWNv
+bXByZXNzX3NhZmUoc3JjICsgaW5wdXRtYXJnaW4sIGRlc3QsDQo+ICsgICBycS0+aW5wdXRzaXpl
+IC0gaW5wdXRtYXJnaW4sDQo+ICsgICBycS0+b3V0cHV0c2l6ZSk7DQo+ICsNCj4gKyBpZiAocmV0
+ICE9IChpbnQpcnEtPm91dHB1dHNpemUpIHsNCj4gKyByZXQgPSAtRUlPOw0KPiArIGdvdG8gb3V0
+Ow0KPiArIH0NCj4gKw0KPiArIGlmIChycS0+b2ZzX2hlYWQpIHsNCj4gKyBzcmMgPSBkZXN0ICsg
+cnEtPm9mc19oZWFkOw0KPiArIGRlc3QgPSBycS0+b3V0ICsgcnEtPm9mc19vdXQ7DQo+ICsgbWVt
+Y3B5KGRlc3QsIHNyYywgcnEtPm91dHB1dHNpemUgLSBycS0+b2ZzX2hlYWQpOw0KPiArIH0NCj4g
+Kw0KPiArb3V0Og0KPiArIGlmIChidWZmKQ0KPiArIGZyZWUoYnVmZik7DQo+ICsNCj4gKyByZXR1
+cm4gcmV0Ow0KPiArfQ0KPiArDQo+ICtpbnQgel9lcm9mc19kZWNvbXByZXNzKHN0cnVjdCB6X2Vy
+b2ZzX2RlY29tcHJlc3NfcmVxICpycSkNCj4gK3sNCj4gKyBpZiAocnEtPmFsZyA9PSBaX0VST0ZT
+X0NPTVBSRVNTSU9OX1NISUZURUQpDQo+ICsgcmV0dXJuIHpfZXJvZnNfc2hpZnRlZF90cmFuc2Zv
+cm0ocnEpOw0KPiArDQo+ICsgcmV0dXJuIHpfZXJvZnNfZGVjb21wcmVzc19nZW5lcmljKHJxKTsN
+Cj4gK30NCj4gZGlmZiAtLWdpdCBhL2Z1c2UvZGVjb21wcmVzcy5oIGIvZnVzZS9kZWNvbXByZXNz
+LmgNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uY2QzOTVjMw0KPiAt
+LS0gL2Rldi9udWxsDQo+ICsrKyBiL2Z1c2UvZGVjb21wcmVzcy5oDQogDQptb3ZlIHRoaXMgZmls
+ZSB0byBpbmNsdWRlL2Vyb2ZzL2RlY29tcHJlc3MuaA0KIA0KPiBAQCAtMCwwICsxLDM3IEBADQo+
+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsgKi8NCj4gKy8qDQo+ICsgKiBD
+b3B5cmlnaHQgKEMpLCAyMDA4LTIwMjAsIE9QUE8gTW9iaWxlIENvbW0gQ29ycC4sIEx0ZC4NCj4g
+KyAqIENyZWF0ZWQgYnkgSHVhbmcgSmlhbmFuIDxodWFuZ2ppYW5hbkBvcHBvLmNvbT4NCj4gKyAq
+Lw0KPiArDQo+ICsjaWZuZGVmIF9fRVJPRlNfREVDT01QUkVTU19IDQo+ICsjZGVmaW5lIF9fRVJP
+RlNfREVDT01QUkVTU19IDQo+ICsNCj4gKyNpbmNsdWRlICJlcm9mcy9pbnRlcm5hbC5oIg0KPiAr
+DQo+ICtlbnVtIHsNCj4gKyBaX0VST0ZTX0NPTVBSRVNTSU9OX1NISUZURUQgPSBaX0VST0ZTX0NP
+TVBSRVNTSU9OX01BWCwNCj4gKyBaX0VST0ZTX0NPTVBSRVNTSU9OX1JVTlRJTUVfTUFYDQo+ICt9
+Ow0KPiArDQo+ICtzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX3JlcSB7DQo+ICsgY2hhciAqaW4s
+ICpvdXQ7DQo+ICsNCj4gKyBzaXplX3Qgb2ZzX291dCwgb2ZzX2hlYWQ7DQo+ICsgdW5zaWduZWQg
+aW50IGlucHV0c2l6ZSwgb3V0cHV0c2l6ZTsNCj4gKw0KPiArIC8qIGluZGljYXRlIHRoZSBhbGdv
+cml0aG0gd2lsbCBiZSB1c2VkIGZvciBkZWNvbXByZXNzaW9uICovDQo+ICsgdW5zaWduZWQgaW50
+IGFsZzsNCj4gKyBib29sIHBhcnRpYWxfZGVjb2Rpbmc7DQo+ICt9Ow0KPiArDQo+ICsjaWZkZWYg
+TFo0X0VOQUJMRUQNCj4gK2ludCB6X2Vyb2ZzX2RlY29tcHJlc3Moc3RydWN0IHpfZXJvZnNfZGVj
+b21wcmVzc19yZXEgKnJxKTsNCj4gKyNlbHNlDQo+ICtpbnQgel9lcm9mc19kZWNvbXByZXNzKHN0
+cnVjdCB6X2Vyb2ZzX2RlY29tcHJlc3NfcmVxICpycSkNCj4gK3sNCj4gKyByZXR1cm4gLUVPUE5P
+VFNVUFA7DQo+ICt9DQo+ICsjZW5kaWYNCj4gKw0KPiArI2VuZGlmDQo+IGRpZmYgLS1naXQgYS9m
+dXNlL2RlbnRyeS5oIGIvZnVzZS9kZW50cnkuaA0KPiBpbmRleCBlZTIxNDRkLi5mODljNTA2IDEw
+MDY0NA0KPiAtLS0gYS9mdXNlL2RlbnRyeS5oDQo+ICsrKyBiL2Z1c2UvZGVudHJ5LmgNCj4gQEAg
+LTEwLDEwICsxMCwxMSBAQA0KPiAgI2luY2x1ZGUgPHN0ZGludC5oPg0KPiAgI2luY2x1ZGUgImVy
+b2ZzL2ludGVybmFsLmgiDQo+ICANCj4gKy8qIGZpeG1lOiBEZWFsIHdpdGggbmFtZXMgdGhhdCBl
+eGNlZWQgdGhlIGFsbG9jYXRlZCBzaXplICovDQo+ICAjaWZkZWYgX182NEJJVFMNCj4gLSNkZWZp
+bmUgRENBQ0hFX0VOVFJZX05BTUVfTEVOICAgICAgIDQwDQo+ICsjZGVmaW5lIERDQUNIRV9FTlRS
+WV9OQU1FX0xFTiAgICAgICBFUk9GU19OQU1FX0xFTg0KPiAgI2Vsc2UNCj4gLSNkZWZpbmUgRENB
+Q0hFX0VOVFJZX05BTUVfTEVOICAgICAgIDQ4DQo+ICsjZGVmaW5lIERDQUNIRV9FTlRSWV9OQU1F
+X0xFTiAgICAgICBFUk9GU19OQU1FX0xFTg0KPiAgI2VuZGlmDQogDQpub3QgcmVsYXRlZCB0byB0
+aGlzIHBhdGNoLCBkb2VzIGl0IHJlbGF0ZSB0byBhbm90aGVyIHByZWV4aXN0DQpidWcgYWJvdXQg
+ZXJvZnNmdXNlIGNvZGViYXNlPw0KIA0KPiAgDQo+ICAvKiBUaGlzIHN0cnVjdCBkZWNsYXJlcyBh
+IG5vZGUgb2YgYSBrLXRyZWUuICBFdmVyeSBub2RlIGhhcyBhIHBvaW50ZXIgdG8gb25lIG9mDQo+
+IGRpZmYgLS1naXQgYS9mdXNlL2luaXQuYyBiL2Z1c2UvaW5pdC5jDQo+IGluZGV4IDgxOThmYTcu
+LmU5Y2M5ZjggMTAwNjQ0DQo+IC0tLSBhL2Z1c2UvaW5pdC5jDQo+ICsrKyBiL2Z1c2UvaW5pdC5j
+DQo+IEBAIC0xNyw3ICsxNywyMyBAQA0KPiAgDQo+ICANCj4gIHN0cnVjdCBlcm9mc19zdXBlcl9i
+bG9jayBzdXBlcjsNCj4gLXN0YXRpYyBzdHJ1Y3QgZXJvZnNfc3VwZXJfYmxvY2sgKnNiayA9ICZz
+dXBlcjsNCj4gK3N0cnVjdCBlcm9mc19zdXBlcl9ibG9jayAqc2JrID0gJnN1cGVyOw0KPiArDQo+
+ICtzdGF0aWMgYm9vbCBjaGVja19sYXlvdXRfY29tcGF0aWJpbGl0eShzdHJ1Y3QgZXJvZnNfc3Vw
+ZXJfYmxvY2sgKnNiLA0KPiArICAgICAgICBzdHJ1Y3QgZXJvZnNfc3VwZXJfYmxvY2sgKmRzYikN
+Cj4gK3sNCj4gKyBjb25zdCB1bnNpZ25lZCBpbnQgZmVhdHVyZSA9IGxlMzJfdG9fY3B1KGRzYi0+
+ZmVhdHVyZV9pbmNvbXBhdCk7DQo+ICsNCj4gKyBzYi0+ZmVhdHVyZV9pbmNvbXBhdCA9IGZlYXR1
+cmU7DQo+ICsNCj4gKyAvKiBjaGVjayBpZiBjdXJyZW50IGtlcm5lbCBtZWV0cyBhbGwgbWFuZGF0
+b3J5IHJlcXVpcmVtZW50cyAqLw0KPiArIGlmIChmZWF0dXJlICYgKH5FUk9GU19BTExfRkVBVFVS
+RV9JTkNPTVBBVCkpIHsNCj4gKyBsb2dlKCJ1bmlkZW50aWZpZWQgaW5jb21wYXRpYmxlIGZlYXR1
+cmUgJXgsIHBsZWFzZSB1cGdyYWRlIGtlcm5lbCB2ZXJzaW9uIiwNCj4gKyAgICAgIGZlYXR1cmUg
+JiB+RVJPRlNfQUxMX0ZFQVRVUkVfSU5DT01QQVQpOw0KPiArIHJldHVybiBmYWxzZTsNCj4gKyB9
+DQo+ICsgcmV0dXJuIHRydWU7DQo+ICt9DQo+ICANCj4gIGludCBlcm9mc19pbml0X3N1cGVyKHZv
+aWQpDQo+ICB7DQo+IEBAIC00MCw2ICs1Niw5IEBAIGludCBlcm9mc19pbml0X3N1cGVyKHZvaWQp
+DQo+ICByZXR1cm4gLUVJTlZBTDsNCj4gIH0NCj4gIA0KPiArIGlmICghY2hlY2tfbGF5b3V0X2Nv
+bXBhdGliaWxpdHkoc2JrLCBzYikpDQo+ICsgcmV0dXJuIC1FSU5WQUw7DQo+ICsNCj4gIHNiay0+
+Y2hlY2tzdW0gPSBsZTMyX3RvX2NwdShzYi0+Y2hlY2tzdW0pOw0KPiAgc2JrLT5mZWF0dXJlX2Nv
+bXBhdCA9IGxlMzJfdG9fY3B1KHNiLT5mZWF0dXJlX2NvbXBhdCk7DQo+ICBzYmstPmJsa3N6Yml0
+cyA9IHNiLT5ibGtzemJpdHM7DQo+IEBAIC01Niw2ICs3NSw3IEBAIGludCBlcm9mc19pbml0X3N1
+cGVyKHZvaWQpDQo+ICBzYmstPnJvb3RfbmlkID0gbGUxNl90b19jcHUoc2ItPnJvb3RfbmlkKTsN
+Cj4gIA0KPiAgbG9ncCgiJS0xNXM6MHglWCIsIFNUUihtYWdpYyksIFNVUEVSX01FTShtYWdpYykp
+Ow0KPiArIGxvZ3AoIiUtMTVzOjB4JVgiLCBTVFIoZmVhdHVyZV9pbmNvbXBhdCksIFNVUEVSX01F
+TShmZWF0dXJlX2luY29tcGF0KSk7DQo+ICBsb2dwKCIlLTE1czoweCVYIiwgU1RSKGZlYXR1cmVf
+Y29tcGF0KSwgU1VQRVJfTUVNKGZlYXR1cmVfY29tcGF0KSk7DQo+ICBsb2dwKCIlLTE1czoldSIs
+ICAgU1RSKGJsa3N6Yml0cyksIFNVUEVSX01FTShibGtzemJpdHMpKTsNCj4gIGxvZ3AoIiUtMTVz
+OiV1IiwgICBTVFIocm9vdF9uaWQpLCBTVVBFUl9NRU0ocm9vdF9uaWQpKTsNCj4gZGlmZiAtLWdp
+dCBhL2Z1c2UvaW5pdC5oIGIvZnVzZS9pbml0LmgNCj4gaW5kZXggZDdhOTdiNS4uM2ZjNGViNSAx
+MDA2NDQNCj4gLS0tIGEvZnVzZS9pbml0LmgNCj4gKysrIGIvZnVzZS9pbml0LmgNCj4gQEAgLTEz
+LDYgKzEzLDggQEANCj4gIA0KPiAgI2RlZmluZSBCT09UX1NFQ1RPUl9TSVpFIDB4NDAwDQo+ICAN
+Cj4gK2V4dGVybiBzdHJ1Y3QgZXJvZnNfc3VwZXJfYmxvY2sgKnNiazsNCj4gKw0KPiAgaW50IGVy
+b2ZzX2luaXRfc3VwZXIodm9pZCk7DQo+ICBlcm9mc19uaWRfdCBlcm9mc19nZXRfcm9vdF9uaWQo
+dm9pZCk7DQo+ICBlcm9mc19vZmZfdCBuaWQyYWRkcihlcm9mc19uaWRfdCBuaWQpOw0KPiBkaWZm
+IC0tZ2l0IGEvZnVzZS9uYW1laS5jIGIvZnVzZS9uYW1laS5jDQo+IGluZGV4IDdlZDExNjguLjUx
+MGZjZmQgMTAwNjQ0DQo+IC0tLSBhL2Z1c2UvbmFtZWkuYw0KPiArKysgYi9mdXNlL25hbWVpLmMN
+Cj4gQEAgLTQ5LDcgKzQ5LDcgQEAgc3RhdGljIGlubGluZSBkZXZfdCBuZXdfZGVjb2RlX2Rldih1
+MzIgZGV2KQ0KPiAgDQo+ICBpbnQgZXJvZnNfaWdldF9ieV9uaWQoZXJvZnNfbmlkX3QgbmlkLCBz
+dHJ1Y3QgZXJvZnNfdm5vZGUgKnZpKQ0KPiAgew0KPiAtIGludCByZXQ7DQo+ICsgaW50IHJldCwg
+aWZtdDsNCj4gIGNoYXIgYnVmW0VST0ZTX0JMS1NJWl07DQo+ICBzdHJ1Y3QgZXJvZnNfaW5vZGVf
+Y29tcGFjdCAqdjE7DQo+ICBjb25zdCBlcm9mc19vZmZfdCBhZGRyID0gbmlkMmFkZHIobmlkKTsN
+Cj4gQEAgLTYwLDYgKzYwLDExIEBAIGludCBlcm9mc19pZ2V0X2J5X25pZChlcm9mc19uaWRfdCBu
+aWQsIHN0cnVjdCBlcm9mc192bm9kZSAqdmkpDQo+ICByZXR1cm4gLUVJTzsNCj4gIA0KPiAgdjEg
+PSAoc3RydWN0IGVyb2ZzX2lub2RlX2NvbXBhY3QgKilidWY7DQo+ICsgLyogZml4bWU6IHN1cHBv
+cnQgZXh0ZW5kZWQgaW5vZGUgKi8NCj4gKyBpZm10ID0gbGUxNl90b19jcHUodjEtPmlfZm9ybWF0
+KTsNCj4gKyBpZiAoX19pbm9kZV92ZXJzaW9uKGlmbXQpICE9IEVST0ZTX0lOT0RFX0xBWU9VVF9D
+T01QQUNUKQ0KPiArIHJldHVybiAtRU9QTk9UU1VQUDsNCj4gKw0KPiAgdmktPmRhdGFsYXlvdXQg
+PSBfX2lub2RlX2RhdGFfbWFwcGluZyhsZTE2X3RvX2NwdSh2MS0+aV9mb3JtYXQpKTsNCj4gIHZp
+LT5pbm9kZV9pc2l6ZSA9IHNpemVvZihzdHJ1Y3QgZXJvZnNfaW5vZGVfY29tcGFjdCk7DQo+ICB2
+aS0+eGF0dHJfaXNpemUgPSBlcm9mc194YXR0cl9pYm9keV9zaXplKHYxLT5pX3hhdHRyX2ljb3Vu
+dCk7DQo+IEBAIC04OCw2ICs5MywxMCBAQCBpbnQgZXJvZnNfaWdldF9ieV9uaWQoZXJvZnNfbmlk
+X3QgbmlkLCBzdHJ1Y3QgZXJvZnNfdm5vZGUgKnZpKQ0KPiAgcmV0dXJuIC1FSU87DQo+ICB9DQo+
+ICANCj4gKyB2aS0+el9pbml0ZWQgPSBmYWxzZTsNCj4gKyBpZiAoZXJvZnNfaW5vZGVfaXNfZGF0
+YV9jb21wcmVzc2VkKHZpLT5kYXRhbGF5b3V0KSkNCj4gKyB6X2Vyb2ZzX2ZpbGxfaW5vZGUodmkp
+Ow0KPiArDQo+ICByZXR1cm4gMDsNCj4gIH0NCj4gIA0KPiBkaWZmIC0tZ2l0IGEvZnVzZS9yZWFk
+LmMgYi9mdXNlL3JlYWQuYw0KPiBpbmRleCAzY2U1YzRmLi5jYzA3ODFmIDEwMDY0NA0KPiAtLS0g
+YS9mdXNlL3JlYWQuYw0KPiArKysgYi9mdXNlL3JlYWQuYw0KPiBAQCAtMTYsNiArMTYsNyBAQA0K
+PiAgI2luY2x1ZGUgIm5hbWVpLmgiDQo+ICAjaW5jbHVkZSAiZGlza19pby5oIg0KPiAgI2luY2x1
+ZGUgImluaXQuaCINCj4gKyNpbmNsdWRlICJkZWNvbXByZXNzLmgiDQo+ICANCj4gIHNpemVfdCBl
+cm9mc19yZWFkX2RhdGEoc3RydWN0IGVyb2ZzX3Zub2RlICp2bm9kZSwgY2hhciAqYnVmZmVyLA0K
+PiAgICAgICAgIHNpemVfdCBzaXplLCBvZmZfdCBvZmZzZXQpDQo+IEBAIC03OCw2ICs3OSw3MyBA
+QCBmaW5pc2hlZDoNCj4gIA0KPiAgfQ0KPiAgDQo+ICtzaXplX3QgZXJvZnNfcmVhZF9kYXRhX2Nv
+bXByZXNzaW9uKHN0cnVjdCBlcm9mc192bm9kZSAqdm5vZGUsIGNoYXIgKmJ1ZmZlciwNCj4gKyAg
+ICAgICAgc2l6ZV90IHNpemUsIG9mZl90IG9mZnNldCkNCj4gK3sNCj4gKyBpbnQgcmV0Ow0KPiAr
+IHNpemVfdCBlbmQsIGNvdW50LCBvZnMsIHN1bSA9IHNpemU7DQo+ICsgc3RydWN0IGVyb2ZzX21h
+cF9ibG9ja3MgbWFwID0gew0KPiArIC5pbmRleCA9IFVJTlRfTUFYLA0KPiArIH07DQo+ICsgYm9v
+bCBwYXJ0aWFsOw0KPiArIHVuc2lnbmVkIGludCBhbGdvcml0aG1mb3JtYXQ7DQo+ICsgY2hhciBy
+YXdbRVJPRlNfQkxLU0laXTsNCj4gKw0KPiArIHdoaWxlIChzdW0pIHsNCj4gKyBlbmQgPSBvZmZz
+ZXQgKyBzdW07DQo+ICsgbWFwLm1fbGEgPSBlbmQgLSAxOw0KPiArDQo+ICsgcmV0ID0gel9lcm9m
+c19tYXBfYmxvY2tzX2l0ZXIodm5vZGUsICZtYXApOw0KPiArIGlmIChyZXQpDQo+ICsgcmV0dXJu
+IHJldDsNCj4gKw0KPiArIGlmICghKG1hcC5tX2ZsYWdzICYgRVJPRlNfTUFQX01BUFBFRCkpIHsN
+Cj4gKyBzdW0gLT0gbWFwLm1fbGxlbjsNCj4gKyBjb250aW51ZTsNCj4gKyB9DQo+ICsNCj4gKyBy
+ZXQgPSBkZXZfcmVhZChyYXcsIEVST0ZTX0JMS1NJWiwgbWFwLm1fcGEpOw0KPiArIGlmIChyZXQg
+PCAwIHx8IChzaXplX3QpcmV0ICE9IEVST0ZTX0JMS1NJWikNCj4gKyByZXR1cm4gLUVJTzsNCj4g
+Kw0KPiArIGFsZ29yaXRobWZvcm1hdCA9IG1hcC5tX2ZsYWdzICYgRVJPRlNfTUFQX1pJUFBFRCA/
+DQo+ICsgWl9FUk9GU19DT01QUkVTU0lPTl9MWjQgOg0KPiArIFpfRVJPRlNfQ09NUFJFU1NJT05f
+U0hJRlRFRDsNCj4gKw0KPiArIGlmIChlbmQgPj0gbWFwLm1fbGEgKyBtYXAubV9sbGVuKSB7DQo+
+ICsgY291bnQgPSBtYXAubV9sbGVuOw0KPiArIHBhcnRpYWwgPSAhKG1hcC5tX2ZsYWdzICYgRVJP
+RlNfTUFQX0ZVTExfTUFQUEVEKTsNCj4gKyB9IGVsc2Ugew0KPiArIGNvdW50ID0gZW5kIC0gbWFw
+Lm1fbGE7DQo+ICsgcGFydGlhbCA9IHRydWU7DQo+ICsgfQ0KIA0KaXQgd291bGQgYmUgYmV0dGVy
+IHRvIG1ha2UgdGhlIGxvZ2ljIG1vcmUgZXhwbGljaXRseSwgbGlrZToNCiANCi0gICAgICAgICAg
+ICAgICBpZiAoZW5kID49IG1hcC5tX2xhICsgbWFwLm1fbGxlbikgew0KLSAgICAgICAgICAgICAg
+ICAgICAgICAgY291bnQgPSBtYXAubV9sbGVuOw0KLSAgICAgICAgICAgICAgICAgICAgICAgcGFy
+dGlhbCA9ICEobWFwLm1fZmxhZ3MgJiBFUk9GU19NQVBfRlVMTF9NQVBQRUQpOw0KLSAgICAgICAg
+ICAgICAgIH0gZWxzZSB7DQorICAgICAgICAgICAgICAgLyoNCisgICAgICAgICAgICAgICAgKiB0
+cmltIHRvIHRoZSBuZWVkZWQgc2l6ZSBpZiB0aGUgcmV0dXJuZWQgZXh0ZW50IGlzIHF1aXRlDQor
+ICAgICAgICAgICAgICAgICogbGFyZ2VyIHRoYW4gcmVxdWVzdGVkLCBhbmQgc2V0IHVwIHBhcnRp
+YWwgZmxhZyBhcyB3ZWxsLg0KKyAgICAgICAgICAgICAgICAqLw0KKyAgICAgICAgICAgICAgIGlm
+IChlbmQgPCBtYXAubV9sYSArIG1hcC5tX2xsZW4pIHsNCiAgICAgICAgICAgICAgICAgICAgICAg
+IGNvdW50ID0gZW5kIC0gbWFwLm1fbGE7DQogICAgICAgICAgICAgICAgICAgICAgICBwYXJ0aWFs
+ID0gdHJ1ZTsNCisgICAgICAgICAgICAgICB9IGVsc2Ugew0KKyAgICAgICAgICAgICAgICAgICAg
+ICAgQVNTRVJUKGVuZCA9PSBtYXAubV9sYSArIG1hcF9tX2xsZW4pOw0KKyAgICAgICAgICAgICAg
+ICAgICAgICAgY291bnQgPSBtYXAubV9sbGVuOw0KKyAgICAgICAgICAgICAgICAgICAgICAgcGFy
+dGlhbCA9ICEobWFwLm1fZmxhZ3MgJiBFUk9GU19NQVBfRlVMTF9NQVBQRUQpOw0KICAgICAgICAg
+ICAgICAgIH0NCiANCj4gKw0KPiArIGlmICgob2ZmX3QpbWFwLm1fbGEgPCBvZmZzZXQpIHsNCj4g
+KyBvZnMgPSBvZmZzZXQgLSBtYXAubV9sYTsNCj4gKyBzdW0gPSAwOw0KPiArIH0gZWxzZSB7DQo+
+ICsgb2ZzID0gMDsNCj4gKyBzdW0gLT0gY291bnQ7DQo+ICsgfQ0KIA0KYSBiaXQgd2VpcmQgaGVy
+ZSwgYW55d2F5LCBsZXQgbWUgY2xlYW4gdXAgaGVyZSBhcyB3ZWxsLg0KIA0KPiArDQo+ICsgcmV0
+ID0gel9lcm9mc19kZWNvbXByZXNzKCYoc3RydWN0IHpfZXJvZnNfZGVjb21wcmVzc19yZXEpIHsN
+Cj4gKyAuaW4gPSByYXcsDQo+ICsgLm91dCA9IGJ1ZmZlciwNCj4gKyAub2ZzX291dCA9IHN1bSwN
+Cj4gKyAub2ZzX2hlYWQgPSBvZnMsDQo+ICsgLmlucHV0c2l6ZSA9IEVST0ZTX0JMS1NJWiwNCj4g
+KyAub3V0cHV0c2l6ZSA9IGNvdW50LA0KPiArIC5hbGcgPSBhbGdvcml0aG1mb3JtYXQsDQo+ICsg
+LnBhcnRpYWxfZGVjb2RpbmcgPSBwYXJ0aWFsDQo+ICsgfSk7DQo+ICsgaWYgKHJldCA8IDApDQo+
+ICsgcmV0dXJuIHJldDsNCj4gKyB9DQo+ICsNCj4gKyBsb2dpKCJuaWQ6JXUgc2l6ZT0lemQgb2Zm
+c2V0PSVsbHUgZG9uZSIsDQo+ICsgICAgICB2bm9kZS0+bmlkLCBzaXplLCAobG9uZyBsb25nKW9m
+ZnNldCk7DQo+ICsgcmV0dXJuIHNpemU7DQo+ICt9DQo+ICANCj4gIGludCBlcm9mc19yZWFkKGNv
+bnN0IGNoYXIgKnBhdGgsIGNoYXIgKmJ1ZmZlciwgc2l6ZV90IHNpemUsIG9mZl90IG9mZnNldCwN
+Cj4gICAgICAgICBzdHJ1Y3QgZnVzZV9maWxlX2luZm8gKmZpKQ0KPiBAQCAtMTA3LDcgKzE3NSw4
+IEBAIGludCBlcm9mc19yZWFkKGNvbnN0IGNoYXIgKnBhdGgsIGNoYXIgKmJ1ZmZlciwgc2l6ZV90
+IHNpemUsIG9mZl90IG9mZnNldCwNCj4gIA0KPiAgY2FzZSBFUk9GU19JTk9ERV9GTEFUX0NPTVBS
+RVNTSU9OX0xFR0FDWToNCj4gIGNhc2UgRVJPRlNfSU5PREVfRkxBVF9DT01QUkVTU0lPTjoNCj4g
+LSAvKiBGaXhtZTogKi8NCj4gKyByZXR1cm4gZXJvZnNfcmVhZF9kYXRhX2NvbXByZXNzaW9uKCZ2
+LCBidWZmZXIsIHNpemUsIG9mZnNldCk7DQo+ICsNCj4gIGRlZmF1bHQ6DQo+ICByZXR1cm4gLUVJ
+TlZBTDsNCj4gIH0NCj4gZGlmZiAtLWdpdCBhL2Z1c2Uvem1hcC5jIGIvZnVzZS96bWFwLmMNCj4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uMDIyY2ExYg0KPiAtLS0gL2Rl
+di9udWxsDQo+ICsrKyBiL2Z1c2Uvem1hcC5jDQogDQpsZXQncyBtb3ZlIHRoaXMgZmlsZSB0byBs
+aWIvIGFzIHdlbGwuDQogDQo+IEBAIC0wLDAgKzEsNDE2IEBADQo+ICsvLyBTUERYLUxpY2Vuc2Ut
+SWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQogDQpMZXQncyByZWxpY2Vuc2UgdGhpcyBmaWxlIHRv
+IEdQTC0yLjArIGZvciBlcm9mcy11dGlscw0KKHNpbmNlIEknbSB0aGUgb3JpZ2luYWwgYXV0aG9y
+LCBhbmQgYXNzdW1lIHlvdSBhZ3JlZSBvbiB0aGlzIGFzIHdlbGwuLikNCiANCj4gKy8qDQo+ICsg
+KiBNYW55IHBhcnRzIG9mIGNvZGVzIGFyZSBjb3BpZWQgZnJvbSBMaW51eCBrZXJuZWwvZnMvZXJv
+ZnMuDQo+ICsgKg0KPiArICogQ29weXJpZ2h0IChDKSAyMDE4LTIwMTkgSFVBV0VJLCBJbmMuDQo+
+ICsgKiAgICAgICAgICAgICBodHRwczovL3d3dy5odWF3ZWkuY29tLw0KPiArICogQ3JlYXRlZCBi
+eSBHYW8gWGlhbmcgPGdhb3hpYW5nMjVAaHVhd2VpLmNvbT4NCj4gKyAqIE1vZGlmaWVkIGJ5IEh1
+YW5nIEppYW5hbiA8aHVhbmdqaWFuYW5Ab3Bwby5jb20+DQo+ICsgKi8NCj4gKw0KPiArI2luY2x1
+ZGUgImluaXQuaCINCj4gKyNpbmNsdWRlICJkaXNrX2lvLmgiDQo+ICsjaW5jbHVkZSAibG9nZ2lu
+Zy5oIg0KPiArDQo+ICtpbnQgel9lcm9mc19maWxsX2lub2RlKHN0cnVjdCBlcm9mc192bm9kZSAq
+dmkpDQo+ICt7DQo+ICsgaWYgKHZpLT5kYXRhbGF5b3V0ID09IEVST0ZTX0lOT0RFX0ZMQVRfQ09N
+UFJFU1NJT05fTEVHQUNZKSB7DQo+ICsgdmktPnpfYWR2aXNlID0gMDsNCj4gKyB2aS0+el9hbGdv
+cml0aG10eXBlWzBdID0gMDsNCj4gKyB2aS0+el9hbGdvcml0aG10eXBlWzFdID0gMDsNCj4gKyB2
+aS0+el9sb2dpY2FsX2NsdXN0ZXJiaXRzID0gTE9HX0JMT0NLX1NJWkU7DQo+ICsgdmktPnpfcGh5
+c2ljYWxfY2x1c3RlcmJpdHNbMF0gPSB2aS0+el9sb2dpY2FsX2NsdXN0ZXJiaXRzOw0KPiArIHZp
+LT56X3BoeXNpY2FsX2NsdXN0ZXJiaXRzWzFdID0gdmktPnpfbG9naWNhbF9jbHVzdGVyYml0czsN
+Cj4gKyB2aS0+el9pbml0ZWQgPSB0cnVlOw0KPiArIH0NCj4gKw0KPiArIHJldHVybiAwOw0KPiAr
+fQ0KPiArDQo+ICtzdGF0aWMgaW50IHpfZXJvZnNfZmlsbF9pbm9kZV9sYXp5KHN0cnVjdCBlcm9m
+c192bm9kZSAqdmkpDQo+ICt7DQo+ICsgaW50IHJldDsNCj4gKyBlcm9mc19vZmZfdCBwb3M7DQo+
+ICsgc3RydWN0IHpfZXJvZnNfbWFwX2hlYWRlciAqaDsNCj4gKyBjaGFyIGJ1Zls4XTsNCj4gKw0K
+PiArIGlmICh2aS0+el9pbml0ZWQpDQo+ICsgcmV0dXJuIDA7DQo+ICsNCj4gKyBEQkdfQlVHT04o
+dmktPmRhdGFsYXlvdXQgPT0gRVJPRlNfSU5PREVfRkxBVF9DT01QUkVTU0lPTl9MRUdBQ1kpOw0K
+PiArDQo+ICsgcG9zID0gcm91bmRfdXAobmlkMmFkZHIodmktPm5pZCkgKyB2aS0+aW5vZGVfaXNp
+emUgKyB2aS0+eGF0dHJfaXNpemUsIDgpOw0KPiArDQo+ICsgcmV0ID0gZGV2X3JlYWQoYnVmLCA4
+LCBwb3MpOw0KPiArIGlmIChyZXQgPCAwICYmICh1aW50MzJfdClyZXQgIT0gOCkNCj4gKyByZXR1
+cm4gLUVJTzsNCj4gKw0KPiArIGggPSAoc3RydWN0IHpfZXJvZnNfbWFwX2hlYWRlciAqKWJ1ZjsN
+Cj4gKyB2aS0+el9hZHZpc2UgPSBsZTE2X3RvX2NwdShoLT5oX2FkdmlzZSk7DQo+ICsgdmktPnpf
+YWxnb3JpdGhtdHlwZVswXSA9IGgtPmhfYWxnb3JpdGhtdHlwZSAmIDE1Ow0KPiArIHZpLT56X2Fs
+Z29yaXRobXR5cGVbMV0gPSBoLT5oX2FsZ29yaXRobXR5cGUgPj4gNDsNCj4gKw0KPiArIGlmICh2
+aS0+el9hbGdvcml0aG10eXBlWzBdID49IFpfRVJPRlNfQ09NUFJFU1NJT05fTUFYKSB7DQo+ICsg
+bG9nZSgidW5rbm93biBjb21wcmVzc2lvbiBmb3JtYXQgJXUgZm9yIG5pZCAlbGx1IiwNCj4gKyAg
+ICAgIHZpLT56X2FsZ29yaXRobXR5cGVbMF0sIHZpLT5uaWQpOw0KPiArIHJldHVybiAtRU9QTk9U
+U1VQUDsNCj4gKyB9DQo+ICsNCj4gKyB2aS0+el9sb2dpY2FsX2NsdXN0ZXJiaXRzID0gTE9HX0JM
+T0NLX1NJWkUgKyAoaC0+aF9jbHVzdGVyYml0cyAmIDcpOw0KPiArIHZpLT56X3BoeXNpY2FsX2Ns
+dXN0ZXJiaXRzWzBdID0gdmktPnpfbG9naWNhbF9jbHVzdGVyYml0cyArDQo+ICsgKChoLT5oX2Ns
+dXN0ZXJiaXRzID4+IDMpICYgMyk7DQo+ICsNCj4gKyBpZiAodmktPnpfcGh5c2ljYWxfY2x1c3Rl
+cmJpdHNbMF0gIT0gTE9HX0JMT0NLX1NJWkUpIHsNCj4gKyBsb2dlKCJ1bnN1cHBvcnRlZCBwaHlz
+aWNhbCBjbHVzdGVyYml0cyAldSBmb3IgbmlkICVsbHUiLA0KPiArICAgICAgdmktPnpfcGh5c2lj
+YWxfY2x1c3RlcmJpdHNbMF0sIHZpLT5uaWQpOw0KPiArIHJldHVybiAtRU9QTk9UU1VQUDsNCj4g
+KyB9DQo+ICsNCj4gKyB2aS0+el9waHlzaWNhbF9jbHVzdGVyYml0c1sxXSA9IHZpLT56X2xvZ2lj
+YWxfY2x1c3RlcmJpdHMgKw0KPiArICgoaC0+aF9jbHVzdGVyYml0cyA+PiA1KSAmIDcpOw0KPiAr
+IHZpLT56X2luaXRlZCA9IHRydWU7DQo+ICsNCj4gKyByZXR1cm4gMDsNCj4gK30NCj4gKw0KPiAr
+c3RydWN0IHpfZXJvZnNfbWFwcmVjb3JkZXIgew0KPiArIHN0cnVjdCBlcm9mc192bm9kZSAqdm5v
+ZGU7DQo+ICsgc3RydWN0IGVyb2ZzX21hcF9ibG9ja3MgKm1hcDsNCj4gKyB2b2lkICprYWRkcjsN
+Cj4gKw0KPiArIHVuc2lnbmVkIGxvbmcgbGNuOw0KPiArIC8qIGNvbXByZXNzaW9uIGV4dGVudCBp
+bmZvcm1hdGlvbiBnYXRoZXJlZCAqLw0KPiArIHU4ICB0eXBlOw0KPiArIHUxNiBjbHVzdGVyb2Zz
+Ow0KPiArIHUxNiBkZWx0YVsyXTsNCj4gKyBlcm9mc19ibGtfdCBwYmxrOw0KPiArfTsNCj4gKw0K
+PiArc3RhdGljIGludCB6X2Vyb2ZzX3JlbG9hZF9pbmRleGVzKHN0cnVjdCB6X2Vyb2ZzX21hcHJl
+Y29yZGVyICptLA0KPiArICAgZXJvZnNfYmxrX3QgZWJsaykNCj4gK3sNCj4gKyBpbnQgcmV0Ow0K
+PiArIHN0cnVjdCBlcm9mc19tYXBfYmxvY2tzICpjb25zdCBtYXAgPSBtLT5tYXA7DQo+ICsgY2hh
+ciAqbXBhZ2UgPSBtYXAtPm1wYWdlOw0KPiArDQo+ICsgaWYgKG1hcC0+aW5kZXggPT0gZWJsaykN
+Cj4gKyByZXR1cm4gMDsNCj4gKw0KPiArIHJldCA9IGRldl9yZWFkKG1wYWdlLCBFUk9GU19CTEtT
+SVosIGJsa25yX3RvX2FkZHIoZWJsaykpOw0KPiArIGlmIChyZXQgPCAwICYmICh1aW50MzJfdCly
+ZXQgIT0gRVJPRlNfQkxLU0laKQ0KPiArIHJldHVybiAtRUlPOw0KPiArDQo+ICsgbWFwLT5pbmRl
+eCA9IGVibGs7DQo+ICsNCj4gKyByZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBs
+ZWdhY3lfbG9hZF9jbHVzdGVyX2Zyb21fZGlzayhzdHJ1Y3Qgel9lcm9mc19tYXByZWNvcmRlciAq
+bSwNCj4gKyB1bnNpZ25lZCBsb25nIGxjbikNCj4gK3sNCj4gKyBzdHJ1Y3QgZXJvZnNfdm5vZGUg
+KmNvbnN0IHZpID0gbS0+dm5vZGU7DQo+ICsgY29uc3QgZXJvZnNfb2ZmX3QgaWJhc2UgPSBuaWQy
+YWRkcih2aS0+bmlkKTsNCj4gKyBjb25zdCBlcm9mc19vZmZfdCBwb3MgPQ0KPiArIFpfRVJPRlNf
+VkxFX0xFR0FDWV9JTkRFWF9BTElHTihpYmFzZSArIHZpLT5pbm9kZV9pc2l6ZSArDQo+ICsgICAg
+ICAgIHZpLT54YXR0cl9pc2l6ZSkgKw0KPiArIGxjbiAqIHNpemVvZihzdHJ1Y3Qgel9lcm9mc192
+bGVfZGVjb21wcmVzc2VkX2luZGV4KTsNCj4gKyBzdHJ1Y3Qgel9lcm9mc192bGVfZGVjb21wcmVz
+c2VkX2luZGV4ICpkaTsNCj4gKyB1bnNpZ25lZCBpbnQgYWR2aXNlLCB0eXBlOw0KPiArIGludCBl
+cnI7DQo+ICsNCj4gKyBlcnIgPSB6X2Vyb2ZzX3JlbG9hZF9pbmRleGVzKG0sIGVyb2ZzX2Jsa25y
+KHBvcykpOw0KPiArIGlmIChlcnIpDQo+ICsgcmV0dXJuIGVycjsNCj4gKw0KPiArIG0tPmxjbiA9
+IGxjbjsNCj4gKyBkaSA9IG0tPmthZGRyICsgZXJvZnNfYmxrb2ZmKHBvcyk7DQo+ICsNCj4gKyBh
+ZHZpc2UgPSBsZTE2X3RvX2NwdShkaS0+ZGlfYWR2aXNlKTsNCj4gKyB0eXBlID0gKGFkdmlzZSA+
+PiBaX0VST0ZTX1ZMRV9ESV9DTFVTVEVSX1RZUEVfQklUKSAmDQo+ICsgKCgxIDw8IFpfRVJPRlNf
+VkxFX0RJX0NMVVNURVJfVFlQRV9CSVRTKSAtIDEpOw0KPiArIHN3aXRjaCAodHlwZSkgew0KPiAr
+IGNhc2UgWl9FUk9GU19WTEVfQ0xVU1RFUl9UWVBFX05PTkhFQUQ6DQo+ICsgbS0+Y2x1c3Rlcm9m
+cyA9IDEgPDwgdmktPnpfbG9naWNhbF9jbHVzdGVyYml0czsNCj4gKyBtLT5kZWx0YVswXSA9IGxl
+MTZfdG9fY3B1KGRpLT5kaV91LmRlbHRhWzBdKTsNCj4gKyBtLT5kZWx0YVsxXSA9IGxlMTZfdG9f
+Y3B1KGRpLT5kaV91LmRlbHRhWzFdKTsNCj4gKyBicmVhazsNCj4gKyBjYXNlIFpfRVJPRlNfVkxF
+X0NMVVNURVJfVFlQRV9QTEFJTjoNCj4gKyBjYXNlIFpfRVJPRlNfVkxFX0NMVVNURVJfVFlQRV9I
+RUFEOg0KPiArIG0tPmNsdXN0ZXJvZnMgPSBsZTE2X3RvX2NwdShkaS0+ZGlfY2x1c3Rlcm9mcyk7
+DQo+ICsgbS0+cGJsayA9IGxlMzJfdG9fY3B1KGRpLT5kaV91LmJsa2FkZHIpOw0KPiArIGJyZWFr
+Ow0KPiArIGRlZmF1bHQ6DQo+ICsgREJHX0JVR09OKDEpOw0KPiArIHJldHVybiAtRU9QTk9UU1VQ
+UDsNCj4gKyB9DQo+ICsgbS0+dHlwZSA9IHR5cGU7DQo+ICsgcmV0dXJuIDA7DQo+ICt9DQo+ICsN
+Cj4gK3N0YXRpYyB1bnNpZ25lZCBpbnQgZGVjb2RlX2NvbXBhY3RlZGJpdHModW5zaWduZWQgaW50
+IGxvYml0cywNCj4gKyB1bnNpZ25lZCBpbnQgbG9tYXNrLA0KPiArIHU4ICppbiwgdW5zaWduZWQg
+aW50IHBvcywgdTggKnR5cGUpDQo+ICt7DQo+ICsgY29uc3QgdW5zaWduZWQgaW50IHYgPSBnZXRf
+dW5hbGlnbmVkX2xlMzIoaW4gKyBwb3MgLyA4KSA+PiAocG9zICYgNyk7DQo+ICsgY29uc3QgdW5z
+aWduZWQgaW50IGxvID0gdiAmIGxvbWFzazsNCj4gKw0KPiArICp0eXBlID0gKHYgPj4gbG9iaXRz
+KSAmIDM7DQo+ICsgcmV0dXJuIGxvOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IHVucGFja19j
+b21wYWN0ZWRfaW5kZXgoc3RydWN0IHpfZXJvZnNfbWFwcmVjb3JkZXIgKm0sDQo+ICsgICB1bnNp
+Z25lZCBpbnQgYW1vcnRpemVkc2hpZnQsDQo+ICsgICB1bnNpZ25lZCBpbnQgZW9mcykNCj4gK3sN
+Cj4gKyBzdHJ1Y3QgZXJvZnNfdm5vZGUgKmNvbnN0IHZpID0gbS0+dm5vZGU7DQo+ICsgY29uc3Qg
+dW5zaWduZWQgaW50IGxjbHVzdGVyYml0cyA9IHZpLT56X2xvZ2ljYWxfY2x1c3RlcmJpdHM7DQo+
+ICsgY29uc3QgdW5zaWduZWQgaW50IGxvbWFzayA9ICgxIDw8IGxjbHVzdGVyYml0cykgLSAxOw0K
+PiArIHVuc2lnbmVkIGludCB2Y250LCBiYXNlLCBsbywgZW5jb2RlYml0cywgbmJsazsNCj4gKyBp
+bnQgaTsNCj4gKyB1OCAqaW4sIHR5cGU7DQo+ICsNCj4gKyBpZiAoMSA8PCBhbW9ydGl6ZWRzaGlm
+dCA9PSA0KQ0KPiArIHZjbnQgPSAyOw0KPiArIGVsc2UgaWYgKDEgPDwgYW1vcnRpemVkc2hpZnQg
+PT0gMiAmJiBsY2x1c3RlcmJpdHMgPT0gMTIpDQo+ICsgdmNudCA9IDE2Ow0KPiArIGVsc2UNCj4g
+KyByZXR1cm4gLUVPUE5PVFNVUFA7DQo+ICsNCj4gKyBlbmNvZGViaXRzID0gKCh2Y250IDw8IGFt
+b3J0aXplZHNoaWZ0KSAtIHNpemVvZihfX2xlMzIpKSAqIDggLyB2Y250Ow0KPiArIGJhc2UgPSBy
+b3VuZF9kb3duKGVvZnMsIHZjbnQgPDwgYW1vcnRpemVkc2hpZnQpOw0KPiArIGluID0gbS0+a2Fk
+ZHIgKyBiYXNlOw0KPiArDQo+ICsgaSA9IChlb2ZzIC0gYmFzZSkgPj4gYW1vcnRpemVkc2hpZnQ7
+DQo+ICsNCj4gKyBsbyA9IGRlY29kZV9jb21wYWN0ZWRiaXRzKGxjbHVzdGVyYml0cywgbG9tYXNr
+LA0KPiArICAgaW4sIGVuY29kZWJpdHMgKiBpLCAmdHlwZSk7DQo+ICsgbS0+dHlwZSA9IHR5cGU7
+DQo+ICsgaWYgKHR5cGUgPT0gWl9FUk9GU19WTEVfQ0xVU1RFUl9UWVBFX05PTkhFQUQpIHsNCj4g
+KyBtLT5jbHVzdGVyb2ZzID0gMSA8PCBsY2x1c3RlcmJpdHM7DQo+ICsgaWYgKGkgKyAxICE9IChp
+bnQpdmNudCkgew0KPiArIG0tPmRlbHRhWzBdID0gbG87DQo+ICsgcmV0dXJuIDA7DQo+ICsgfQ0K
+PiArIC8qDQo+ICsgKiBzaW5jZSB0aGUgbGFzdCBsY2x1c3RlciBpbiB0aGUgcGFjayBpcyBzcGVj
+aWFsLA0KPiArICogb2Ygd2hpY2ggbG8gc2F2ZXMgZGVsdGFbMV0gcmF0aGVyIHRoYW4gZGVsdGFb
+MF0uDQo+ICsgKiBIZW5jZSwgZ2V0IGRlbHRhWzBdIGJ5IHRoZSBwcmV2aW91cyBsY2x1c3RlciBp
+bmRpcmVjdGx5Lg0KPiArICovDQo+ICsgbG8gPSBkZWNvZGVfY29tcGFjdGVkYml0cyhsY2x1c3Rl
+cmJpdHMsIGxvbWFzaywNCj4gKyAgIGluLCBlbmNvZGViaXRzICogKGkgLSAxKSwgJnR5cGUpOw0K
+PiArIGlmICh0eXBlICE9IFpfRVJPRlNfVkxFX0NMVVNURVJfVFlQRV9OT05IRUFEKQ0KPiArIGxv
+ID0gMDsNCj4gKyBtLT5kZWx0YVswXSA9IGxvICsgMTsNCj4gKyByZXR1cm4gMDsNCj4gKyB9DQo+
+ICsgbS0+Y2x1c3Rlcm9mcyA9IGxvOw0KPiArIG0tPmRlbHRhWzBdID0gMDsNCj4gKyAvKiBmaWdv
+dXQgb3V0IGJsa2FkZHIgKHBibGspIGZvciBIRUFEIGxjbHVzdGVycyAqLw0KPiArIG5ibGsgPSAx
+Ow0KPiArIHdoaWxlIChpID4gMCkgew0KPiArIC0taTsNCj4gKyBsbyA9IGRlY29kZV9jb21wYWN0
+ZWRiaXRzKGxjbHVzdGVyYml0cywgbG9tYXNrLA0KPiArICAgaW4sIGVuY29kZWJpdHMgKiBpLCAm
+dHlwZSk7DQo+ICsgaWYgKHR5cGUgPT0gWl9FUk9GU19WTEVfQ0xVU1RFUl9UWVBFX05PTkhFQUQp
+DQo+ICsgaSAtPSBsbzsNCj4gKw0KPiArIGlmIChpID49IDApDQo+ICsgKytuYmxrOw0KPiArIH0N
+Cj4gKyBpbiArPSAodmNudCA8PCBhbW9ydGl6ZWRzaGlmdCkgLSBzaXplb2YoX19sZTMyKTsNCj4g
+KyBtLT5wYmxrID0gbGUzMl90b19jcHUoKihfX2xlMzIgKilpbikgKyBuYmxrOw0KPiArIHJldHVy
+biAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IGNvbXBhY3RlZF9sb2FkX2NsdXN0ZXJfZnJv
+bV9kaXNrKHN0cnVjdCB6X2Vyb2ZzX21hcHJlY29yZGVyICptLA0KPiArICAgICB1bnNpZ25lZCBs
+b25nIGxjbikNCj4gK3sNCj4gKyBzdHJ1Y3QgZXJvZnNfdm5vZGUgKmNvbnN0IHZpID0gbS0+dm5v
+ZGU7DQo+ICsgY29uc3QgdW5zaWduZWQgaW50IGxjbHVzdGVyYml0cyA9IHZpLT56X2xvZ2ljYWxf
+Y2x1c3RlcmJpdHM7DQo+ICsgY29uc3QgZXJvZnNfb2ZmX3QgZWJhc2UgPSByb3VuZF91cChuaWQy
+YWRkcih2aS0+bmlkKSArIHZpLT5pbm9kZV9pc2l6ZSArDQo+ICsgICAgdmktPnhhdHRyX2lzaXpl
+LCA4KSArDQo+ICsgc2l6ZW9mKHN0cnVjdCB6X2Vyb2ZzX21hcF9oZWFkZXIpOw0KPiArIGNvbnN0
+IHVuc2lnbmVkIGludCB0b3RhbGlkeCA9IERJVl9ST1VORF9VUCh2aS0+aV9zaXplLCBFUk9GU19C
+TEtTSVopOw0KPiArIHVuc2lnbmVkIGludCBjb21wYWN0ZWRfNGJfaW5pdGlhbCwgY29tcGFjdGVk
+XzJiOw0KPiArIHVuc2lnbmVkIGludCBhbW9ydGl6ZWRzaGlmdDsNCj4gKyBlcm9mc19vZmZfdCBw
+b3M7DQo+ICsgaW50IGVycjsNCj4gKw0KPiArIGlmIChsY2x1c3RlcmJpdHMgIT0gMTIpDQo+ICsg
+cmV0dXJuIC1FT1BOT1RTVVBQOw0KPiArDQo+ICsgaWYgKGxjbiA+PSB0b3RhbGlkeCkNCj4gKyBy
+ZXR1cm4gLUVJTlZBTDsNCj4gKw0KPiArIG0tPmxjbiA9IGxjbjsNCj4gKyAvKiB1c2VkIHRvIGFs
+aWduIHRvIDMyLWJ5dGUgKGNvbXBhY3RlZF8yYikgYWxpZ25tZW50ICovDQo+ICsgY29tcGFjdGVk
+XzRiX2luaXRpYWwgPSAoMzIgLSBlYmFzZSAlIDMyKSAvIDQ7DQo+ICsgaWYgKGNvbXBhY3RlZF80
+Yl9pbml0aWFsID09IDMyIC8gNCkNCj4gKyBjb21wYWN0ZWRfNGJfaW5pdGlhbCA9IDA7DQo+ICsN
+Cj4gKyBpZiAodmktPnpfYWR2aXNlICYgWl9FUk9GU19BRFZJU0VfQ09NUEFDVEVEXzJCKQ0KPiAr
+IGNvbXBhY3RlZF8yYiA9IHJvdW5kZG93bih0b3RhbGlkeCAtIGNvbXBhY3RlZF80Yl9pbml0aWFs
+LCAxNik7DQo+ICsgZWxzZQ0KPiArIGNvbXBhY3RlZF8yYiA9IDA7DQo+ICsNCj4gKyBwb3MgPSBl
+YmFzZTsNCj4gKyBpZiAobGNuIDwgY29tcGFjdGVkXzRiX2luaXRpYWwpIHsNCj4gKyBhbW9ydGl6
+ZWRzaGlmdCA9IDI7DQo+ICsgZ290byBvdXQ7DQo+ICsgfQ0KPiArIHBvcyArPSBjb21wYWN0ZWRf
+NGJfaW5pdGlhbCAqIDQ7DQo+ICsgbGNuIC09IGNvbXBhY3RlZF80Yl9pbml0aWFsOw0KPiArDQo+
+ICsgaWYgKGxjbiA8IGNvbXBhY3RlZF8yYikgew0KPiArIGFtb3J0aXplZHNoaWZ0ID0gMTsNCj4g
+KyBnb3RvIG91dDsNCj4gKyB9DQo+ICsgcG9zICs9IGNvbXBhY3RlZF8yYiAqIDI7DQo+ICsgbGNu
+IC09IGNvbXBhY3RlZF8yYjsNCj4gKyBhbW9ydGl6ZWRzaGlmdCA9IDI7DQo+ICtvdXQ6DQo+ICsg
+cG9zICs9IGxjbiAqICgxIDw8IGFtb3J0aXplZHNoaWZ0KTsNCj4gKyBlcnIgPSB6X2Vyb2ZzX3Jl
+bG9hZF9pbmRleGVzKG0sIGVyb2ZzX2Jsa25yKHBvcykpOw0KPiArIGlmIChlcnIpDQo+ICsgcmV0
+dXJuIGVycjsNCj4gKyByZXR1cm4gdW5wYWNrX2NvbXBhY3RlZF9pbmRleChtLCBhbW9ydGl6ZWRz
+aGlmdCwgZXJvZnNfYmxrb2ZmKHBvcykpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IHpfZXJv
+ZnNfbG9hZF9jbHVzdGVyX2Zyb21fZGlzayhzdHJ1Y3Qgel9lcm9mc19tYXByZWNvcmRlciAqbSwN
+Cj4gKyAgIHVuc2lnbmVkIGludCBsY24pDQo+ICt7DQo+ICsgY29uc3QgdW5zaWduZWQgaW50IGRh
+dGFtb2RlID0gbS0+dm5vZGUtPmRhdGFsYXlvdXQ7DQo+ICsNCj4gKyBpZiAoZGF0YW1vZGUgPT0g
+RVJPRlNfSU5PREVfRkxBVF9DT01QUkVTU0lPTl9MRUdBQ1kpDQo+ICsgcmV0dXJuIGxlZ2FjeV9s
+b2FkX2NsdXN0ZXJfZnJvbV9kaXNrKG0sIGxjbik7DQo+ICsNCj4gKyBpZiAoZGF0YW1vZGUgPT0g
+RVJPRlNfSU5PREVfRkxBVF9DT01QUkVTU0lPTikNCj4gKyByZXR1cm4gY29tcGFjdGVkX2xvYWRf
+Y2x1c3Rlcl9mcm9tX2Rpc2sobSwgbGNuKTsNCj4gKw0KPiArIHJldHVybiAtRUlOVkFMOw0KPiAr
+fQ0KPiArDQo+ICtzdGF0aWMgaW50IHpfZXJvZnNfZXh0ZW50X2xvb2tiYWNrKHN0cnVjdCB6X2Vy
+b2ZzX21hcHJlY29yZGVyICptLA0KPiArICAgIHVuc2lnbmVkIGludCBsb29rYmFja19kaXN0YW5j
+ZSkNCj4gK3sNCj4gKyBzdHJ1Y3QgZXJvZnNfdm5vZGUgKmNvbnN0IHZpID0gbS0+dm5vZGU7DQo+
+ICsgc3RydWN0IGVyb2ZzX21hcF9ibG9ja3MgKmNvbnN0IG1hcCA9IG0tPm1hcDsNCj4gKyBjb25z
+dCB1bnNpZ25lZCBpbnQgbGNsdXN0ZXJiaXRzID0gdmktPnpfbG9naWNhbF9jbHVzdGVyYml0czsN
+Cj4gKyB1bnNpZ25lZCBsb25nIGxjbiA9IG0tPmxjbjsNCj4gKyBpbnQgZXJyOw0KPiArDQo+ICsg
+aWYgKGxjbiA8IGxvb2tiYWNrX2Rpc3RhbmNlKSB7DQo+ICsgbG9nZSgiYm9ndXMgbG9va2JhY2sg
+ZGlzdGFuY2UgQCBuaWQgJWxsdSIsIHZpLT5uaWQpOw0KPiArIERCR19CVUdPTigxKTsNCj4gKyBy
+ZXR1cm4gLUVGU0NPUlJVUFRFRDsNCj4gKyB9DQo+ICsNCj4gKyAvKiBsb2FkIGV4dGVudCBoZWFk
+IGxvZ2ljYWwgY2x1c3RlciBpZiBuZWVkZWQgKi8NCj4gKyBsY24gLT0gbG9va2JhY2tfZGlzdGFu
+Y2U7DQo+ICsgZXJyID0gel9lcm9mc19sb2FkX2NsdXN0ZXJfZnJvbV9kaXNrKG0sIGxjbik7DQo+
+ICsgaWYgKGVycikNCj4gKyByZXR1cm4gZXJyOw0KPiArDQo+ICsgc3dpdGNoIChtLT50eXBlKSB7
+DQo+ICsgY2FzZSBaX0VST0ZTX1ZMRV9DTFVTVEVSX1RZUEVfTk9OSEVBRDoNCj4gKyBpZiAoIW0t
+PmRlbHRhWzBdKSB7DQo+ICsgbG9nZSgiaW52YWxpZCBsb29rYmFjayBkaXN0YW5jZSAwIEAgbmlk
+ICVsbHUiLA0KPiArICAgdmktPm5pZCk7DQo+ICsgREJHX0JVR09OKDEpOw0KPiArIHJldHVybiAt
+RUZTQ09SUlVQVEVEOw0KPiArIH0NCj4gKyByZXR1cm4gel9lcm9mc19leHRlbnRfbG9va2JhY2so
+bSwgbS0+ZGVsdGFbMF0pOw0KPiArIGNhc2UgWl9FUk9GU19WTEVfQ0xVU1RFUl9UWVBFX1BMQUlO
+Og0KPiArIG1hcC0+bV9mbGFncyAmPSB+RVJPRlNfTUFQX1pJUFBFRDsNCj4gKyBjYXNlIFpfRVJP
+RlNfVkxFX0NMVVNURVJfVFlQRV9IRUFEOg0KPiArIG1hcC0+bV9sYSA9IChsY24gPDwgbGNsdXN0
+ZXJiaXRzKSB8IG0tPmNsdXN0ZXJvZnM7DQo+ICsgYnJlYWs7DQo+ICsgZGVmYXVsdDoNCj4gKyBs
+b2dlKCJ1bmtub3duIHR5cGUgJXUgQCBsY24gJWx1IG9mIG5pZCAlbGx1IiwNCj4gKyAgICAgIG0t
+PnR5cGUsIGxjbiwgdmktPm5pZCk7DQo+ICsgREJHX0JVR09OKDEpOw0KPiArIHJldHVybiAtRU9Q
+Tk9UU1VQUDsNCj4gKyB9DQo+ICsgcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK2ludCB6X2Vyb2Zz
+X21hcF9ibG9ja3NfaXRlcihzdHJ1Y3QgZXJvZnNfdm5vZGUgKnZpLA0KPiArICAgICBzdHJ1Y3Qg
+ZXJvZnNfbWFwX2Jsb2NrcyAqbWFwKQ0KPiArew0KPiArIHN0cnVjdCB6X2Vyb2ZzX21hcHJlY29y
+ZGVyIG0gPSB7DQo+ICsgLnZub2RlID0gdmksDQo+ICsgLm1hcCA9IG1hcCwNCj4gKyAua2FkZHIg
+PSBtYXAtPm1wYWdlLA0KPiArIH07DQo+ICsgaW50IGVyciA9IDA7DQo+ICsgdW5zaWduZWQgaW50
+IGxjbHVzdGVyYml0cywgZW5kb2ZmOw0KPiArIHVuc2lnbmVkIGxvbmcgbG9uZyBvZnMsIGVuZDsN
+Cj4gKw0KPiArIC8qIHdoZW4gdHJ5aW5nIHRvIHJlYWQgYmV5b25kIEVPRiwgbGVhdmUgaXQgdW5t
+YXBwZWQgKi8NCj4gKyBpZiAobWFwLT5tX2xhID49IHZpLT5pX3NpemUpIHsNCj4gKyBtYXAtPm1f
+bGxlbiA9IG1hcC0+bV9sYSArIDEgLSB2aS0+aV9zaXplOw0KPiArIG1hcC0+bV9sYSA9IHZpLT5p
+X3NpemU7DQo+ICsgbWFwLT5tX2ZsYWdzID0gMDsNCj4gKyBnb3RvIG91dDsNCj4gKyB9DQo+ICsN
+Cj4gKyBlcnIgPSB6X2Vyb2ZzX2ZpbGxfaW5vZGVfbGF6eSh2aSk7DQo+ICsgaWYgKGVycikNCj4g
+KyBnb3RvIG91dDsNCj4gKw0KPiArIGxjbHVzdGVyYml0cyA9IHZpLT56X2xvZ2ljYWxfY2x1c3Rl
+cmJpdHM7DQo+ICsgb2ZzID0gbWFwLT5tX2xhOw0KPiArIG0ubGNuID0gb2ZzID4+IGxjbHVzdGVy
+Yml0czsNCj4gKyBlbmRvZmYgPSBvZnMgJiAoKDEgPDwgbGNsdXN0ZXJiaXRzKSAtIDEpOw0KPiAr
+DQo+ICsgZXJyID0gel9lcm9mc19sb2FkX2NsdXN0ZXJfZnJvbV9kaXNrKCZtLCBtLmxjbik7DQo+
+ICsgaWYgKGVycikNCj4gKyBnb3RvIG91dDsNCj4gKw0KPiArIG1hcC0+bV9mbGFncyA9IEVST0ZT
+X01BUF9aSVBQRUQ7IC8qIGJ5IGRlZmF1bHQsIGNvbXByZXNzZWQgKi8NCj4gKyBlbmQgPSAobS5s
+Y24gKyAxVUxMKSA8PCBsY2x1c3RlcmJpdHM7DQo+ICsgc3dpdGNoIChtLnR5cGUpIHsNCj4gKyBj
+YXNlIFpfRVJPRlNfVkxFX0NMVVNURVJfVFlQRV9QTEFJTjoNCj4gKyBpZiAoZW5kb2ZmID49IG0u
+Y2x1c3Rlcm9mcykNCj4gKyBtYXAtPm1fZmxhZ3MgJj0gfkVST0ZTX01BUF9aSVBQRUQ7DQo+ICsg
+Y2FzZSBaX0VST0ZTX1ZMRV9DTFVTVEVSX1RZUEVfSEVBRDoNCj4gKyBpZiAoZW5kb2ZmID49IG0u
+Y2x1c3Rlcm9mcykgew0KPiArIG1hcC0+bV9sYSA9IChtLmxjbiA8PCBsY2x1c3RlcmJpdHMpIHwg
+bS5jbHVzdGVyb2ZzOw0KPiArIGJyZWFrOw0KPiArIH0NCj4gKyAvKiBtLmxjbiBzaG91bGQgYmUg
+Pj0gMSBpZiBlbmRvZmYgPCBtLmNsdXN0ZXJvZnMgKi8NCj4gKyBpZiAoIW0ubGNuKSB7DQo+ICsg
+bG9nZSgiaW52YWxpZCBsb2dpY2FsIGNsdXN0ZXIgMCBhdCBuaWQgJWxsdSIsDQo+ICsgICAgICB2
+aS0+bmlkKTsNCj4gKyBlcnIgPSAtRUZTQ09SUlVQVEVEOw0KPiArIGdvdG8gb3V0Ow0KPiArIH0N
+Cj4gKyBlbmQgPSAobS5sY24gPDwgbGNsdXN0ZXJiaXRzKSB8IG0uY2x1c3Rlcm9mczsNCj4gKyBt
+YXAtPm1fZmxhZ3MgfD0gRVJPRlNfTUFQX0ZVTExfTUFQUEVEOw0KPiArIG0uZGVsdGFbMF0gPSAx
+Ow0KPiArIGNhc2UgWl9FUk9GU19WTEVfQ0xVU1RFUl9UWVBFX05PTkhFQUQ6DQo+ICsgLyogZ2V0
+IHRoZSBjb3JyZXNwb2luZGluZyBmaXJzdCBjaHVuayAqLw0KPiArIGVyciA9IHpfZXJvZnNfZXh0
+ZW50X2xvb2tiYWNrKCZtLCBtLmRlbHRhWzBdKTsNCj4gKyBpZiAoZXJyKQ0KPiArIGdvdG8gb3V0
+Ow0KPiArIGJyZWFrOw0KPiArIGRlZmF1bHQ6DQo+ICsgbG9nZSgidW5rbm93biB0eXBlICV1IEAg
+b2Zmc2V0ICVsbHUgb2YgbmlkICVsbHUiLA0KPiArICAgICAgbS50eXBlLCBvZnMsIHZpLT5uaWQp
+Ow0KPiArIGVyciA9IC1FT1BOT1RTVVBQOw0KPiArIGdvdG8gb3V0Ow0KPiArIH0NCj4gKw0KPiAr
+IG1hcC0+bV9sbGVuID0gZW5kIC0gbWFwLT5tX2xhOw0KPiArIG1hcC0+bV9wbGVuID0gMSA8PCBs
+Y2x1c3RlcmJpdHM7DQo+ICsgbWFwLT5tX3BhID0gYmxrbnJfdG9fYWRkcihtLnBibGspOw0KPiAr
+IG1hcC0+bV9mbGFncyB8PSBFUk9GU19NQVBfTUFQUEVEOw0KPiArDQo+ICtvdXQ6DQo+ICsgbG9n
+ZCgibV9sYSAlbGx1IG1fcGEgJWxsdSBtX2xsZW4gJWxsdSBtX3BsZW4gJWxsdSBtX2ZsYWdzIDAl
+byIsDQo+ICsgICAgICBtYXAtPm1fbGEsIG1hcC0+bV9wYSwNCj4gKyAgICAgIG1hcC0+bV9sbGVu
+LCBtYXAtPm1fcGxlbiwgbWFwLT5tX2ZsYWdzKTsNCj4gKw0KPiArIERCR19CVUdPTihlcnIgPCAw
+ICYmIGVyciAhPSAtRU5PTUVNKTsNCj4gKyByZXR1cm4gZXJyOw0KPiArfQ0KPiBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9lcm9mcy9kZWZzLmggYi9pbmNsdWRlL2Vyb2ZzL2RlZnMuaA0KPiBpbmRleCBh
+OWM3NjllLi4wNmQyOWE5IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2Vyb2ZzL2RlZnMuaA0KPiAr
+KysgYi9pbmNsdWRlL2Vyb2ZzL2RlZnMuaA0KPiBAQCAtMTczLDUgKzE3MywxOCBAQCB0eXBlZGVm
+IGludDY0X3QgICAgICAgICBzNjQ7DQo+ICAjZGVmaW5lIF9fbWF5YmVfdW51c2VkICAgICAgX19h
+dHRyaWJ1dGVfXygoX191bnVzZWRfXykpDQo+ICAjZW5kaWYNCj4gIA0KPiArc3RydWN0IF9fdW5h
+X3UzMiB7IHUzMiB4OyB9IF9fcGFja2VkOw0KPiArDQo+ICtzdGF0aWMgaW5saW5lIHUzMiBfX2dl
+dF91bmFsaWduZWRfY3B1MzIoY29uc3Qgdm9pZCAqcCkNCj4gK3sNCj4gKyBjb25zdCBzdHJ1Y3Qg
+X191bmFfdTMyICpwdHIgPSAoY29uc3Qgc3RydWN0IF9fdW5hX3UzMiAqKXA7DQo+ICsgcmV0dXJu
+IHB0ci0+eDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGlubGluZSB1MzIgZ2V0X3VuYWxpZ25lZF9s
+ZTMyKGNvbnN0IHZvaWQgKnApDQo+ICt7DQo+ICsgcmV0dXJuIF9fZ2V0X3VuYWxpZ25lZF9jcHUz
+MigoY29uc3QgdTggKilwKTsNCj4gK30NCiANCm5lZWQgdG8gaGFuZGxlIGJpZy1lbmRpYW4sIGFu
+eXdheSwgbWlub3IgZm9yIG5vdy4NCiANClRoYW5rcywNCkdhbyBYaWFuZw0KIA0K
+
+------=_001_NextPart538660834367_=----
+Content-Type: text/html;
+	charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
+t=3DISO-8859-1"><style>body { line-height: 1.5; }blockquote { margin-top: =
+0px; margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 14px; font=
+-family: 'Microsoft YaHei UI'; color: rgb(0, 0, 0); line-height: 1.5; }</s=
+tyle></head><body>=0A<div><span></span>Hi Gaoxiang,</div><div><span style=
+=3D"background-color: transparent;"><br></span></div><div><span style=3D"b=
+ackground-color: transparent;">Thanks for your review and suggestions. It'=
+s great to communicate with outstanding community developers. I have learn=
+ed a lot and look forward to contribute more patches in the future.</span>=
+</div>=0A<div><br></div><div><span style=3D"color: rgb(18, 18, 18); font-f=
+amily: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',=
+ 'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC', 'WenQuanYi M=
+icro Hei', sans-serif; font-size: 15px; font-variant-ligatures: normal; or=
+phans: 2; widows: 2;">Regards,</span></div><div><span style=3D"color: rgb(=
+18, 18, 18); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Ne=
+ue', 'PingFang SC', 'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJ=
+K SC', 'WenQuanYi Micro Hei', sans-serif; font-size: 15px; font-variant-li=
+gatures: normal; orphans: 2; widows: 2;">Jianan</span></div><hr style=3D"w=
+idth: 210px; height: 1px; display: none;" color=3D"#b5c4df" size=3D"1" ali=
+gn=3D"left">=0A<div><span></span></div>=0A<blockquote style=3D"margin-Top:=
+ 0px; margin-Bottom: 0px; margin-Left: 0.5em; margin-Right: inherit"><div>=
+&nbsp;</div><div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;paddi=
+ng:3.0pt 0cm 0cm 0cm"><div style=3D"PADDING-RIGHT: 8px; PADDING-LEFT: 8px;=
+ FONT-SIZE: 12px;FONT-FAMILY:tahoma;COLOR:#000000; BACKGROUND: #efefef; PA=
+DDING-BOTTOM: 8px; PADDING-TOP: 8px"><div><b>From:</b>&nbsp;<a href=3D"mai=
+lto:hsiangkao@aol.com">Gao Xiang</a></div><div><b>Date:</b>&nbsp;2020-10-1=
+7&nbsp;00:17</div><div><b>To:</b>&nbsp;<a href=3D"mailto:jnhuang95@gmail.c=
+om">Huang Jianan</a></div><div><b>CC:</b>&nbsp;<a href=3D"mailto:linux-ero=
+fs@lists.ozlabs.org">linux-erofs</a>; <a href=3D"mailto:guoweichao@oppo.co=
+m">guoweichao</a>; <a href=3D"mailto:zhangshiming@oppo.com">zhangshiming</=
+a>; <a href=3D"mailto:huangjianan@oppo.com">huangjianan</a></div><div><b>S=
+ubject:</b>&nbsp;Re: [PATCH 5/5] erofs-utils: support read compressed file=
+</div></div></div><div><div>Hi Jianan,</div>=0A<div>&nbsp;</div>=0A<div>On=
+ Thu, Oct 15, 2020 at 09:39:59PM +0800, Huang Jianan wrote:</div>=0A<div>&=
+gt; Signed-off-by: Huang Jianan &lt;huangjianan@oppo.com&gt;</div>=0A<div>=
+&gt; Signed-off-by: Guo Weichao &lt;guoweichao@oppo.com&gt;</div>=0A<div>&=
+nbsp;</div>=0A<div>I read the logic below, and generally it looks good! &l=
+t;thumb&gt;</div>=0A<div>&nbsp;</div>=0A<div>I'm now handling some minor t=
+hing about this and I will</div>=0A<div>update as the following patch to s=
+peed up the development.</div>=0A<div>&nbsp;</div>=0A<div>&gt; ---</div>=
+=0A<div>&nbsp;</div>=0A<div>...</div>=0A<div>&nbsp;</div>=0A<div>&gt; diff=
+ --git a/fuse/decompress.c b/fuse/decompress.c</div>=0A<div>&gt; new file =
+mode 100644</div>=0A<div>&gt; index 0000000..e2df3ce</div>=0A<div>&gt; ---=
+ /dev/null</div>=0A<div>&gt; +++ b/fuse/decompress.c</div>=0A<div>&nbsp;</=
+div>=0A<div>we might need to move this file to lib/decompress.c</div>=0A<d=
+iv>&nbsp;</div>=0A<div>&gt; @@ -0,0 +1,86 @@</div>=0A<div>&gt; +/* SPDX-Li=
+cense-Identifier: GPL-2.0+ */</div>=0A<div>&gt; +/*</div>=0A<div>&gt; + * =
+Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.</div>=0A<div>&gt; +=
+ * Created by Huang Jianan &lt;huangjianan@oppo.com&gt;</div>=0A<div>&gt; =
++ */</div>=0A<div>&gt; +</div>=0A<div>&gt; +#include &lt;stdlib.h&gt;</div=
+>=0A<div>&gt; +#include &lt;lz4.h&gt;</div>=0A<div>&gt; +</div>=0A<div>&gt=
+; +#include "erofs/internal.h"</div>=0A<div>&gt; +#include "erofs/err.h"</=
+div>=0A<div>&gt; +#include "decompress.h"</div>=0A<div>&gt; +#include "log=
+ging.h"</div>=0A<div>&gt; +#include "init.h"</div>=0A<div>&gt; +</div>=0A<=
+div>&gt; +static int z_erofs_shifted_transform(struct z_erofs_decompress_r=
+eq *rq)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	char *dest =3D rq-&gt;out=
+ + rq-&gt;ofs_out;</div>=0A<div>&nbsp;</div>=0A<div>I think ofs_out can be=
+ omited, since we only care about the dest buffer here.</div>=0A<div>so (n=
+ew) rq-&gt;out =3D=3D (old)rq-&gt;out + rq-&gt;ofs_out.</div>=0A<div>&nbsp=
+;</div>=0A<div>&gt; +	char *src =3D rq-&gt;in + rq-&gt;ofs_head;</div>=0A<=
+div>&nbsp;</div>=0A<div>need to judge if the outputsize is larger than ERO=
+FS_BLKSIZ, since it's</div>=0A<div>undefined on-disk behavior, and can be =
+implemented in the future</div>=0A<div>on-disk update.</div>=0A<div>&nbsp;=
+</div>=0A<div>&gt; +</div>=0A<div>&gt; +	memcpy(dest, src, rq-&gt;outputsi=
+ze - rq-&gt;ofs_head);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	return 0;</=
+div>=0A<div>&gt; +}</div>=0A<div>&nbsp;</div>=0A<div>And this function can=
+ be folded into z_erofs_decompress(), because the</div>=0A<div>implementat=
+ion here is much simple enough.</div>=0A<div>&nbsp;</div>=0A<div>&gt; +</d=
+iv>=0A<div>&gt; +static int z_erofs_decompress_generic(struct z_erofs_deco=
+mpress_req *rq)</div>=0A<div>&nbsp;</div>=0A<div>it might be renamed into =
+z_erofs_decompress_lz4.</div>=0A<div>&nbsp;</div>=0A<div>&gt; +{</div>=0A<=
+div>&gt; +	int ret =3D 0;</div>=0A<div>&gt; +	char *dest =3D rq-&gt;out + =
+rq-&gt;ofs_out;</div>=0A<div>&gt; +	char *src =3D rq-&gt;in;</div>=0A<div>=
+&gt; +	char *buff =3D NULL;</div>=0A<div>&gt; +	bool support_0padding =3D =
+false;</div>=0A<div>&gt; +	unsigned int inputmargin =3D 0;</div>=0A<div>&g=
+t; +</div>=0A<div>&gt; +	if (sbk-&gt;feature_incompat &amp; EROFS_FEATURE_=
+INCOMPAT_LZ4_0PADDING) {</div>=0A<div>&gt; +		support_0padding =3D true;</=
+div>=0A<div>&gt; +</div>=0A<div>&gt; +		while (!src[inputmargin &amp; ~PAG=
+E_MASK])</div>=0A<div>&gt; +			if (!(++inputmargin &amp; ~PAGE_MASK))</div=
+>=0A<div>&gt; +				break;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		if (inp=
+utmargin &gt;=3D rq-&gt;inputsize)</div>=0A<div>&gt; +			return -EIO;</div=
+>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (rq-&gt;ofs_h=
+ead) {</div>=0A<div>&nbsp;</div>=0A<div>we might need to rethink about the=
+ name of ofs_head.</div>=0A<div>&nbsp;</div>=0A<div>&gt; +		buff =3D mallo=
+c(rq-&gt;outputsize);</div>=0A<div>&gt; +		if (!buff)</div>=0A<div>&gt; +	=
+		return -ENOMEM;</div>=0A<div>&gt; +		dest =3D buff;</div>=0A<div>&nbsp;<=
+/div>=0A<div>need some cleanup, and dest variable is assigned for several =
+times,</div>=0A<div>but without making the logic simpler.</div>=0A<div>&nb=
+sp;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (rq-&=
+gt;partial_decoding || !support_0padding)</div>=0A<div>&gt; +		ret =3D LZ4=
+_decompress_safe_partial(src + inputmargin, dest,</div>=0A<div>&gt; +					=
+	&nbsp; rq-&gt;inputsize - inputmargin,</div>=0A<div>&gt; +						&nbsp; rq=
+-&gt;outputsize, rq-&gt;outputsize);</div>=0A<div>&gt; +	else</div>=0A<div=
+>&gt; +		ret =3D LZ4_decompress_safe(src + inputmargin, dest,</div>=0A<div=
+>&gt; +					&nbsp; rq-&gt;inputsize - inputmargin,</div>=0A<div>&gt; +				=
+	&nbsp; rq-&gt;outputsize);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (re=
+t !=3D (int)rq-&gt;outputsize) {</div>=0A<div>&gt; +		ret =3D -EIO;</div>=
+=0A<div>&gt; +		goto out;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +	if (rq-&gt;ofs_head) {</div>=0A<div>&gt; +		src =3D dest + =
+rq-&gt;ofs_head;</div>=0A<div>&gt; +		dest =3D rq-&gt;out + rq-&gt;ofs_out=
+;</div>=0A<div>&gt; +		memcpy(dest, src, rq-&gt;outputsize - rq-&gt;ofs_he=
+ad);</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt; +out:</di=
+v>=0A<div>&gt; +	if (buff)</div>=0A<div>&gt; +		free(buff);</div>=0A<div>&=
+gt; +</div>=0A<div>&gt; +	return ret;</div>=0A<div>&gt; +}</div>=0A<div>&g=
+t; +</div>=0A<div>&gt; +int z_erofs_decompress(struct z_erofs_decompress_r=
+eq *rq)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	if (rq-&gt;alg =3D=3D Z_E=
+ROFS_COMPRESSION_SHIFTED)</div>=0A<div>&gt; +		return z_erofs_shifted_tran=
+sform(rq);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	return z_erofs_decompre=
+ss_generic(rq);</div>=0A<div>&gt; +}</div>=0A<div>&gt; diff --git a/fuse/d=
+ecompress.h b/fuse/decompress.h</div>=0A<div>&gt; new file mode 100644</di=
+v>=0A<div>&gt; index 0000000..cd395c3</div>=0A<div>&gt; --- /dev/null</div=
+>=0A<div>&gt; +++ b/fuse/decompress.h</div>=0A<div>&nbsp;</div>=0A<div>mov=
+e this file to include/erofs/decompress.h</div>=0A<div>&nbsp;</div>=0A<div=
+>&gt; @@ -0,0 +1,37 @@</div>=0A<div>&gt; +/* SPDX-License-Identifier: GPL-=
+2.0+ */</div>=0A<div>&gt; +/*</div>=0A<div>&gt; + * Copyright (C), 2008-20=
+20, OPPO Mobile Comm Corp., Ltd.</div>=0A<div>&gt; + * Created by Huang Ji=
+anan &lt;huangjianan@oppo.com&gt;</div>=0A<div>&gt; + */</div>=0A<div>&gt;=
+ +</div>=0A<div>&gt; +#ifndef __EROFS_DECOMPRESS_H</div>=0A<div>&gt; +#def=
+ine __EROFS_DECOMPRESS_H</div>=0A<div>&gt; +</div>=0A<div>&gt; +#include "=
+erofs/internal.h"</div>=0A<div>&gt; +</div>=0A<div>&gt; +enum {</div>=0A<d=
+iv>&gt; +	Z_EROFS_COMPRESSION_SHIFTED =3D Z_EROFS_COMPRESSION_MAX,</div>=
+=0A<div>&gt; +	Z_EROFS_COMPRESSION_RUNTIME_MAX</div>=0A<div>&gt; +};</div>=
+=0A<div>&gt; +</div>=0A<div>&gt; +struct z_erofs_decompress_req {</div>=0A=
+<div>&gt; +	char *in, *out;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	size_t=
+ ofs_out, ofs_head;</div>=0A<div>&gt; +	unsigned int inputsize, outputsize=
+;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	/* indicate the algorithm will b=
+e used for decompression */</div>=0A<div>&gt; +	unsigned int alg;</div>=0A=
+<div>&gt; +	bool partial_decoding;</div>=0A<div>&gt; +};</div>=0A<div>&gt;=
+ +</div>=0A<div>&gt; +#ifdef LZ4_ENABLED</div>=0A<div>&gt; +int z_erofs_de=
+compress(struct z_erofs_decompress_req *rq);</div>=0A<div>&gt; +#else</div=
+>=0A<div>&gt; +int z_erofs_decompress(struct z_erofs_decompress_req *rq)</=
+div>=0A<div>&gt; +{</div>=0A<div>&gt; +	return -EOPNOTSUPP;</div>=0A<div>&=
+gt; +}</div>=0A<div>&gt; +#endif</div>=0A<div>&gt; +</div>=0A<div>&gt; +#e=
+ndif</div>=0A<div>&gt; diff --git a/fuse/dentry.h b/fuse/dentry.h</div>=0A=
+<div>&gt; index ee2144d..f89c506 100644</div>=0A<div>&gt; --- a/fuse/dentr=
+y.h</div>=0A<div>&gt; +++ b/fuse/dentry.h</div>=0A<div>&gt; @@ -10,10 +10,=
+11 @@</div>=0A<div>&gt;&nbsp; #include &lt;stdint.h&gt;</div>=0A<div>&gt;&=
+nbsp; #include "erofs/internal.h"</div>=0A<div>&gt;&nbsp; </div>=0A<div>&g=
+t; +/* fixme: Deal with names that exceed the allocated size */</div>=0A<d=
+iv>&gt;&nbsp; #ifdef __64BITS</div>=0A<div>&gt; -#define DCACHE_ENTRY_NAME=
+_LEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</div>=0A<div>&gt; +#define DCA=
+CHE_ENTRY_NAME_LEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EROFS_NAME_LEN</div=
+>=0A<div>&gt;&nbsp; #else</div>=0A<div>&gt; -#define DCACHE_ENTRY_NAME_LEN=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 48</div>=0A<div>&gt; +#define DCACHE_=
+ENTRY_NAME_LEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EROFS_NAME_LEN</div>=0A=
+<div>&gt;&nbsp; #endif</div>=0A<div>&nbsp;</div>=0A<div>not related to thi=
+s patch, does it relate to another preexist</div>=0A<div>bug about erofsfu=
+se codebase?</div>=0A<div>&nbsp;</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt=
+;&nbsp; /* This struct declares a node of a k-tree.&nbsp; Every node has a=
+ pointer to one of</div>=0A<div>&gt; diff --git a/fuse/init.c b/fuse/init.=
+c</div>=0A<div>&gt; index 8198fa7..e9cc9f8 100644</div>=0A<div>&gt; --- a/=
+fuse/init.c</div>=0A<div>&gt; +++ b/fuse/init.c</div>=0A<div>&gt; @@ -17,7=
+ +17,23 @@</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; </div>=0A<div>=
+&gt;&nbsp; struct erofs_super_block super;</div>=0A<div>&gt; -static struc=
+t erofs_super_block *sbk =3D &amp;super;</div>=0A<div>&gt; +struct erofs_s=
+uper_block *sbk =3D &amp;super;</div>=0A<div>&gt; +</div>=0A<div>&gt; +sta=
+tic bool check_layout_compatibility(struct erofs_super_block *sb,</div>=0A=
+<div>&gt; +				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct erofs_super_blo=
+ck *dsb)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	const unsigned int featu=
+re =3D le32_to_cpu(dsb-&gt;feature_incompat);</div>=0A<div>&gt; +</div>=0A=
+<div>&gt; +	sb-&gt;feature_incompat =3D feature;</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +	/* check if current kernel meets all mandatory requirements=
+ */</div>=0A<div>&gt; +	if (feature &amp; (~EROFS_ALL_FEATURE_INCOMPAT)) {=
+</div>=0A<div>&gt; +		loge("unidentified incompatible feature %x, please u=
+pgrade kernel version",</div>=0A<div>&gt; +		&nbsp;&nbsp;&nbsp;&nbsp; feat=
+ure &amp; ~EROFS_ALL_FEATURE_INCOMPAT);</div>=0A<div>&gt; +		return false;=
+</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +	return true;</div>=0A<div>&gt; =
++}</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; int erofs_init_super(v=
+oid)</div>=0A<div>&gt;&nbsp; {</div>=0A<div>&gt; @@ -40,6 +56,9 @@ int ero=
+fs_init_super(void)</div>=0A<div>&gt;&nbsp; 		return -EINVAL;</div>=0A<div=
+>&gt;&nbsp; 	}</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt; +	if (!check_lay=
+out_compatibility(sbk, sb))</div>=0A<div>&gt; +		return -EINVAL;</div>=0A<=
+div>&gt; +</div>=0A<div>&gt;&nbsp; 	sbk-&gt;checksum =3D le32_to_cpu(sb-&g=
+t;checksum);</div>=0A<div>&gt;&nbsp; 	sbk-&gt;feature_compat =3D le32_to_c=
+pu(sb-&gt;feature_compat);</div>=0A<div>&gt;&nbsp; 	sbk-&gt;blkszbits =3D =
+sb-&gt;blkszbits;</div>=0A<div>&gt; @@ -56,6 +75,7 @@ int erofs_init_super=
+(void)</div>=0A<div>&gt;&nbsp; 	sbk-&gt;root_nid =3D le16_to_cpu(sb-&gt;ro=
+ot_nid);</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; 	logp("%-15s:0x%=
+X", STR(magic), SUPER_MEM(magic));</div>=0A<div>&gt; +	logp("%-15s:0x%X", =
+STR(feature_incompat), SUPER_MEM(feature_incompat));</div>=0A<div>&gt;&nbs=
+p; 	logp("%-15s:0x%X", STR(feature_compat), SUPER_MEM(feature_compat));</d=
+iv>=0A<div>&gt;&nbsp; 	logp("%-15s:%u",&nbsp;&nbsp; STR(blkszbits), SUPER_=
+MEM(blkszbits));</div>=0A<div>&gt;&nbsp; 	logp("%-15s:%u",&nbsp;&nbsp; STR=
+(root_nid), SUPER_MEM(root_nid));</div>=0A<div>&gt; diff --git a/fuse/init=
+.h b/fuse/init.h</div>=0A<div>&gt; index d7a97b5..3fc4eb5 100644</div>=0A<=
+div>&gt; --- a/fuse/init.h</div>=0A<div>&gt; +++ b/fuse/init.h</div>=0A<di=
+v>&gt; @@ -13,6 +13,8 @@</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; =
+#define BOOT_SECTOR_SIZE	0x400</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt; =
++extern struct erofs_super_block *sbk;</div>=0A<div>&gt; +</div>=0A<div>&g=
+t;&nbsp; int erofs_init_super(void);</div>=0A<div>&gt;&nbsp; erofs_nid_t e=
+rofs_get_root_nid(void);</div>=0A<div>&gt;&nbsp; erofs_off_t nid2addr(erof=
+s_nid_t nid);</div>=0A<div>&gt; diff --git a/fuse/namei.c b/fuse/namei.c</=
+div>=0A<div>&gt; index 7ed1168..510fcfd 100644</div>=0A<div>&gt; --- a/fus=
+e/namei.c</div>=0A<div>&gt; +++ b/fuse/namei.c</div>=0A<div>&gt; @@ -49,7 =
++49,7 @@ static inline dev_t new_decode_dev(u32 dev)</div>=0A<div>&gt;&nbs=
+p; </div>=0A<div>&gt;&nbsp; int erofs_iget_by_nid(erofs_nid_t nid, struct =
+erofs_vnode *vi)</div>=0A<div>&gt;&nbsp; {</div>=0A<div>&gt; -	int ret;</d=
+iv>=0A<div>&gt; +	int ret, ifmt;</div>=0A<div>&gt;&nbsp; 	char buf[EROFS_B=
+LKSIZ];</div>=0A<div>&gt;&nbsp; 	struct erofs_inode_compact *v1;</div>=0A<=
+div>&gt;&nbsp; 	const erofs_off_t addr =3D nid2addr(nid);</div>=0A<div>&gt=
+; @@ -60,6 +60,11 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_v=
+node *vi)</div>=0A<div>&gt;&nbsp; 		return -EIO;</div>=0A<div>&gt;&nbsp; <=
+/div>=0A<div>&gt;&nbsp; 	v1 =3D (struct erofs_inode_compact *)buf;</div>=
+=0A<div>&gt; +	/* fixme: support extended inode */</div>=0A<div>&gt; +	ifm=
+t =3D le16_to_cpu(v1-&gt;i_format);</div>=0A<div>&gt; +	if (__inode_versio=
+n(ifmt) !=3D EROFS_INODE_LAYOUT_COMPACT)</div>=0A<div>&gt; +		return -EOPN=
+OTSUPP;</div>=0A<div>&gt; +</div>=0A<div>&gt;&nbsp; 	vi-&gt;datalayout =3D=
+ __inode_data_mapping(le16_to_cpu(v1-&gt;i_format));</div>=0A<div>&gt;&nbs=
+p; 	vi-&gt;inode_isize =3D sizeof(struct erofs_inode_compact);</div>=0A<di=
+v>&gt;&nbsp; 	vi-&gt;xattr_isize =3D erofs_xattr_ibody_size(v1-&gt;i_xattr=
+_icount);</div>=0A<div>&gt; @@ -88,6 +93,10 @@ int erofs_iget_by_nid(erofs=
+_nid_t nid, struct erofs_vnode *vi)</div>=0A<div>&gt;&nbsp; 		return -EIO;=
+</div>=0A<div>&gt;&nbsp; 	}</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt; +	v=
+i-&gt;z_inited =3D false;</div>=0A<div>&gt; +	if (erofs_inode_is_data_comp=
+ressed(vi-&gt;datalayout))</div>=0A<div>&gt; +		z_erofs_fill_inode(vi);</d=
+iv>=0A<div>&gt; +</div>=0A<div>&gt;&nbsp; 	return 0;</div>=0A<div>&gt;&nbs=
+p; }</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt; diff --git a/fuse/read.c b=
+/fuse/read.c</div>=0A<div>&gt; index 3ce5c4f..cc0781f 100644</div>=0A<div>=
+&gt; --- a/fuse/read.c</div>=0A<div>&gt; +++ b/fuse/read.c</div>=0A<div>&g=
+t; @@ -16,6 +16,7 @@</div>=0A<div>&gt;&nbsp; #include "namei.h"</div>=0A<d=
+iv>&gt;&nbsp; #include "disk_io.h"</div>=0A<div>&gt;&nbsp; #include "init.=
+h"</div>=0A<div>&gt; +#include "decompress.h"</div>=0A<div>&gt;&nbsp; </di=
+v>=0A<div>&gt;&nbsp; size_t erofs_read_data(struct erofs_vnode *vnode, cha=
+r *buffer,</div>=0A<div>&gt;&nbsp; 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+size_t size, off_t offset)</div>=0A<div>&gt; @@ -78,6 +79,73 @@ finished:<=
+/div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; }</div>=0A<div>&gt;&nbsp;=
+ </div>=0A<div>&gt; +size_t erofs_read_data_compression(struct erofs_vnode=
+ *vnode, char *buffer,</div>=0A<div>&gt; +		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp; size_t size, off_t offset)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +=
+	int ret;</div>=0A<div>&gt; +	size_t end, count, ofs, sum =3D size;</div>=
+=0A<div>&gt; +	struct erofs_map_blocks map =3D {</div>=0A<div>&gt; +		.ind=
+ex =3D UINT_MAX,</div>=0A<div>&gt; +	};</div>=0A<div>&gt; +	bool partial;<=
+/div>=0A<div>&gt; +	unsigned int algorithmformat;</div>=0A<div>&gt; +	char=
+ raw[EROFS_BLKSIZ];</div>=0A<div>&gt; +</div>=0A<div>&gt; +	while (sum) {<=
+/div>=0A<div>&gt; +		end =3D offset + sum;</div>=0A<div>&gt; +		map.m_la =
+=3D end - 1;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		ret =3D z_erofs_map_=
+blocks_iter(vnode, &amp;map);</div>=0A<div>&gt; +		if (ret)</div>=0A<div>&=
+gt; +			return ret;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		if (!(map.m_f=
+lags &amp; EROFS_MAP_MAPPED)) {</div>=0A<div>&gt; +			sum -=3D map.m_llen;=
+</div>=0A<div>&gt; +			continue;</div>=0A<div>&gt; +		}</div>=0A<div>&gt; =
++</div>=0A<div>&gt; +		ret =3D dev_read(raw, EROFS_BLKSIZ, map.m_pa);</div=
+>=0A<div>&gt; +		if (ret &lt; 0 || (size_t)ret !=3D EROFS_BLKSIZ)</div>=0A=
+<div>&gt; +			return -EIO;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		algori=
+thmformat =3D map.m_flags &amp; EROFS_MAP_ZIPPED ?</div>=0A<div>&gt; +				=
+		Z_EROFS_COMPRESSION_LZ4 :</div>=0A<div>&gt; +						Z_EROFS_COMPRESSION_S=
+HIFTED;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		if (end &gt;=3D map.m_la =
++ map.m_llen) {</div>=0A<div>&gt; +			count =3D map.m_llen;</div>=0A<div>&=
+gt; +			partial =3D !(map.m_flags &amp; EROFS_MAP_FULL_MAPPED);</div>=0A<d=
+iv>&gt; +		} else {</div>=0A<div>&gt; +			count =3D end - map.m_la;</div>=
+=0A<div>&gt; +			partial =3D true;</div>=0A<div>&gt; +		}</div>=0A<div>&nb=
+sp;</div>=0A<div>it would be better to make the logic more explicitly, lik=
+e:</div>=0A<div>&nbsp;</div>=0A<div>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (end &gt;=3D map.m_la +=
+ map.m_llen) {</div>=0A<div>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp; count =3D map.m_llen;</div>=0A<div>-&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; partial =3D !(map.m_flags &amp; EROFS_M=
+AP_FULL_MAPPED);</div>=0A<div>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {</div>=0A<div>+&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+; /*</div>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * trim to the needed size if the retur=
+ned extent is quite</div>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * larger than requested=
+, and set up partial flag as well.</div>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</div>=
+=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp; if (end &lt; map.m_la + map.m_llen) {</div>=0A<div>&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; count =3D en=
+d - map.m_la;</div>=0A<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp; partial =3D true;</div>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {</div=
+>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ASSER=
+T(end =3D=3D map.m_la + map_m_llen);</div>=0A<div>+&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; count =3D map.m_llen;</div>=0A<div>+&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; partial =3D !(map=
+.m_flags &amp; EROFS_MAP_FULL_MAPPED);</div>=0A<div>&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</di=
+v>=0A<div>&nbsp;</div>=0A<div>&gt; +</div>=0A<div>&gt; +		if ((off_t)map.m=
+_la &lt; offset) {</div>=0A<div>&gt; +			ofs =3D offset - map.m_la;</div>=
+=0A<div>&gt; +			sum =3D 0;</div>=0A<div>&gt; +		} else {</div>=0A<div>&gt=
+; +			ofs =3D 0;</div>=0A<div>&gt; +			sum -=3D count;</div>=0A<div>&gt; +=
+		}</div>=0A<div>&nbsp;</div>=0A<div>a bit weird here, anyway, let me clea=
+n up here as well.</div>=0A<div>&nbsp;</div>=0A<div>&gt; +</div>=0A<div>&g=
+t; +		ret =3D z_erofs_decompress(&amp;(struct z_erofs_decompress_req) {</d=
+iv>=0A<div>&gt; +					.in =3D raw,</div>=0A<div>&gt; +					.out =3D buffer=
+,</div>=0A<div>&gt; +					.ofs_out =3D sum,</div>=0A<div>&gt; +					.ofs_h=
+ead =3D ofs,</div>=0A<div>&gt; +					.inputsize =3D EROFS_BLKSIZ,</div>=0A=
+<div>&gt; +					.outputsize =3D count,</div>=0A<div>&gt; +					.alg =3D al=
+gorithmformat,</div>=0A<div>&gt; +					.partial_decoding =3D partial</div>=
+=0A<div>&gt; +					 });</div>=0A<div>&gt; +		if (ret &lt; 0)</div>=0A<div>=
+&gt; +			return ret;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<di=
+v>&gt; +	logi("nid:%u size=3D%zd offset=3D%llu done",</div>=0A<div>&gt; +	=
+&nbsp;&nbsp;&nbsp;&nbsp; vnode-&gt;nid, size, (long long)offset);</div>=0A=
+<div>&gt; +	return size;</div>=0A<div>&gt; +}</div>=0A<div>&gt;&nbsp; </di=
+v>=0A<div>&gt;&nbsp; int erofs_read(const char *path, char *buffer, size_t=
+ size, off_t offset,</div>=0A<div>&gt;&nbsp; 	&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp; struct fuse_file_info *fi)</div>=0A<div>&gt; @@ -107,7 +175,8 @@ =
+int erofs_read(const char *path, char *buffer, size_t size, off_t offset,<=
+/div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt;&nbsp; 	case EROFS_INODE_FLAT_CO=
+MPRESSION_LEGACY:</div>=0A<div>&gt;&nbsp; 	case EROFS_INODE_FLAT_COMPRESSI=
+ON:</div>=0A<div>&gt; -		/* Fixme: */</div>=0A<div>&gt; +		return erofs_re=
+ad_data_compression(&amp;v, buffer, size, offset);</div>=0A<div>&gt; +</di=
+v>=0A<div>&gt;&nbsp; 	default:</div>=0A<div>&gt;&nbsp; 		return -EINVAL;</=
+div>=0A<div>&gt;&nbsp; 	}</div>=0A<div>&gt; diff --git a/fuse/zmap.c b/fus=
+e/zmap.c</div>=0A<div>&gt; new file mode 100644</div>=0A<div>&gt; index 00=
+00000..022ca1b</div>=0A<div>&gt; --- /dev/null</div>=0A<div>&gt; +++ b/fus=
+e/zmap.c</div>=0A<div>&nbsp;</div>=0A<div>let's move this file to lib/ as =
+well.</div>=0A<div>&nbsp;</div>=0A<div>&gt; @@ -0,0 +1,416 @@</div>=0A<div=
+>&gt; +// SPDX-License-Identifier: GPL-2.0-only</div>=0A<div>&nbsp;</div>=
+=0A<div>Let's relicense this file to GPL-2.0+ for erofs-utils</div>=0A<div=
+>(since I'm the original author, and assume you agree on this as well..)</=
+div>=0A<div>&nbsp;</div>=0A<div>&gt; +/*</div>=0A<div>&gt; + * Many parts =
+of codes are copied from Linux kernel/fs/erofs.</div>=0A<div>&gt; + *</div=
+>=0A<div>&gt; + * Copyright (C) 2018-2019 HUAWEI, Inc.</div>=0A<div>&gt; +=
+ *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+ https://www.huawei.com/</div>=0A<div>&gt; + * Created by Gao Xiang &lt;ga=
+oxiang25@huawei.com&gt;</div>=0A<div>&gt; + * Modified by Huang Jianan &lt=
+;huangjianan@oppo.com&gt;</div>=0A<div>&gt; + */</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +#include "init.h"</div>=0A<div>&gt; +#include "disk_io.h"</d=
+iv>=0A<div>&gt; +#include "logging.h"</div>=0A<div>&gt; +</div>=0A<div>&gt=
+; +int z_erofs_fill_inode(struct erofs_vnode *vi)</div>=0A<div>&gt; +{</di=
+v>=0A<div>&gt; +	if (vi-&gt;datalayout =3D=3D EROFS_INODE_FLAT_COMPRESSION=
+_LEGACY) {</div>=0A<div>&gt; +		vi-&gt;z_advise =3D 0;</div>=0A<div>&gt; +=
+		vi-&gt;z_algorithmtype[0] =3D 0;</div>=0A<div>&gt; +		vi-&gt;z_algorithm=
+type[1] =3D 0;</div>=0A<div>&gt; +		vi-&gt;z_logical_clusterbits =3D LOG_B=
+LOCK_SIZE;</div>=0A<div>&gt; +		vi-&gt;z_physical_clusterbits[0] =3D vi-&g=
+t;z_logical_clusterbits;</div>=0A<div>&gt; +		vi-&gt;z_physical_clusterbit=
+s[1] =3D vi-&gt;z_logical_clusterbits;</div>=0A<div>&gt; +		vi-&gt;z_inite=
+d =3D true;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt; +	=
+return 0;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</div>=0A<div>&gt; +stat=
+ic int z_erofs_fill_inode_lazy(struct erofs_vnode *vi)</div>=0A<div>&gt; +=
+{</div>=0A<div>&gt; +	int ret;</div>=0A<div>&gt; +	erofs_off_t pos;</div>=
+=0A<div>&gt; +	struct z_erofs_map_header *h;</div>=0A<div>&gt; +	char buf[=
+8];</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (vi-&gt;z_inited)</div>=0A<=
+div>&gt; +		return 0;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	DBG_BUGON(vi=
+-&gt;datalayout =3D=3D EROFS_INODE_FLAT_COMPRESSION_LEGACY);</div>=0A<div>=
+&gt; +</div>=0A<div>&gt; +	pos =3D round_up(nid2addr(vi-&gt;nid) + vi-&gt;=
+inode_isize + vi-&gt;xattr_isize, 8);</div>=0A<div>&gt; +</div>=0A<div>&gt=
+; +	ret =3D dev_read(buf, 8, pos);</div>=0A<div>&gt; +	if (ret &lt; 0 &amp=
+;&amp; (uint32_t)ret !=3D 8)</div>=0A<div>&gt; +		return -EIO;</div>=0A<di=
+v>&gt; +</div>=0A<div>&gt; +	h =3D (struct z_erofs_map_header *)buf;</div>=
+=0A<div>&gt; +	vi-&gt;z_advise =3D le16_to_cpu(h-&gt;h_advise);</div>=0A<d=
+iv>&gt; +	vi-&gt;z_algorithmtype[0] =3D h-&gt;h_algorithmtype &amp; 15;</d=
+iv>=0A<div>&gt; +	vi-&gt;z_algorithmtype[1] =3D h-&gt;h_algorithmtype &gt;=
+&gt; 4;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (vi-&gt;z_algorithmtype=
+[0] &gt;=3D Z_EROFS_COMPRESSION_MAX) {</div>=0A<div>&gt; +		loge("unknown =
+compression format %u for nid %llu",</div>=0A<div>&gt; +		&nbsp;&nbsp;&nbs=
+p;&nbsp; vi-&gt;z_algorithmtype[0], vi-&gt;nid);</div>=0A<div>&gt; +		retu=
+rn -EOPNOTSUPP;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt=
+; +	vi-&gt;z_logical_clusterbits =3D LOG_BLOCK_SIZE + (h-&gt;h_clusterbits=
+ &amp; 7);</div>=0A<div>&gt; +	vi-&gt;z_physical_clusterbits[0] =3D vi-&gt=
+;z_logical_clusterbits +</div>=0A<div>&gt; +					((h-&gt;h_clusterbits &gt=
+;&gt; 3) &amp; 3);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (vi-&gt;z_ph=
+ysical_clusterbits[0] !=3D LOG_BLOCK_SIZE) {</div>=0A<div>&gt; +		loge("un=
+supported physical clusterbits %u for nid %llu",</div>=0A<div>&gt; +		&nbs=
+p;&nbsp;&nbsp;&nbsp; vi-&gt;z_physical_clusterbits[0], vi-&gt;nid);</div>=
+=0A<div>&gt; +		return -EOPNOTSUPP;</div>=0A<div>&gt; +	}</div>=0A<div>&gt=
+; +</div>=0A<div>&gt; +	vi-&gt;z_physical_clusterbits[1] =3D vi-&gt;z_logi=
+cal_clusterbits +</div>=0A<div>&gt; +					((h-&gt;h_clusterbits &gt;&gt; 5=
+) &amp; 7);</div>=0A<div>&gt; +	vi-&gt;z_inited =3D true;</div>=0A<div>&gt=
+; +</div>=0A<div>&gt; +	return 0;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +=
+</div>=0A<div>&gt; +struct z_erofs_maprecorder {</div>=0A<div>&gt; +	struc=
+t erofs_vnode *vnode;</div>=0A<div>&gt; +	struct erofs_map_blocks *map;</d=
+iv>=0A<div>&gt; +	void *kaddr;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	uns=
+igned long lcn;</div>=0A<div>&gt; +	/* compression extent information gath=
+ered */</div>=0A<div>&gt; +	u8&nbsp; type;</div>=0A<div>&gt; +	u16 cluster=
+ofs;</div>=0A<div>&gt; +	u16 delta[2];</div>=0A<div>&gt; +	erofs_blk_t pbl=
+k;</div>=0A<div>&gt; +};</div>=0A<div>&gt; +</div>=0A<div>&gt; +static int=
+ z_erofs_reload_indexes(struct z_erofs_maprecorder *m,</div>=0A<div>&gt; +=
+				&nbsp; erofs_blk_t eblk)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	int =
+ret;</div>=0A<div>&gt; +	struct erofs_map_blocks *const map =3D m-&gt;map;=
+</div>=0A<div>&gt; +	char *mpage =3D map-&gt;mpage;</div>=0A<div>&gt; +</d=
+iv>=0A<div>&gt; +	if (map-&gt;index =3D=3D eblk)</div>=0A<div>&gt; +		retu=
+rn 0;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	ret =3D dev_read(mpage, EROF=
+S_BLKSIZ, blknr_to_addr(eblk));</div>=0A<div>&gt; +	if (ret &lt; 0 &amp;&a=
+mp; (uint32_t)ret !=3D EROFS_BLKSIZ)</div>=0A<div>&gt; +		return -EIO;</di=
+v>=0A<div>&gt; +</div>=0A<div>&gt; +	map-&gt;index =3D eblk;</div>=0A<div>=
+&gt; +</div>=0A<div>&gt; +	return 0;</div>=0A<div>&gt; +}</div>=0A<div>&gt=
+; +</div>=0A<div>&gt; +static int legacy_load_cluster_from_disk(struct z_e=
+rofs_maprecorder *m,</div>=0A<div>&gt; +					 unsigned long lcn)</div>=0A<=
+div>&gt; +{</div>=0A<div>&gt; +	struct erofs_vnode *const vi =3D m-&gt;vno=
+de;</div>=0A<div>&gt; +	const erofs_off_t ibase =3D nid2addr(vi-&gt;nid);<=
+/div>=0A<div>&gt; +	const erofs_off_t pos =3D</div>=0A<div>&gt; +		Z_EROFS=
+_VLE_LEGACY_INDEX_ALIGN(ibase + vi-&gt;inode_isize +</div>=0A<div>&gt; +		=
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vi-&gt;xattr_isize) +</div>=0A<div=
+>&gt; +		lcn * sizeof(struct z_erofs_vle_decompressed_index);</div>=0A<div=
+>&gt; +	struct z_erofs_vle_decompressed_index *di;</div>=0A<div>&gt; +	uns=
+igned int advise, type;</div>=0A<div>&gt; +	int err;</div>=0A<div>&gt; +</=
+div>=0A<div>&gt; +	err =3D z_erofs_reload_indexes(m, erofs_blknr(pos));</d=
+iv>=0A<div>&gt; +	if (err)</div>=0A<div>&gt; +		return err;</div>=0A<div>&=
+gt; +</div>=0A<div>&gt; +	m-&gt;lcn =3D lcn;</div>=0A<div>&gt; +	di =3D m-=
+&gt;kaddr + erofs_blkoff(pos);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	adv=
+ise =3D le16_to_cpu(di-&gt;di_advise);</div>=0A<div>&gt; +	type =3D (advis=
+e &gt;&gt; Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT) &amp;</div>=0A<div>&gt; +		((1=
+ &lt;&lt; Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) - 1);</div>=0A<div>&gt; +	swit=
+ch (type) {</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:</di=
+v>=0A<div>&gt; +		m-&gt;clusterofs =3D 1 &lt;&lt; vi-&gt;z_logical_cluster=
+bits;</div>=0A<div>&gt; +		m-&gt;delta[0] =3D le16_to_cpu(di-&gt;di_u.delt=
+a[0]);</div>=0A<div>&gt; +		m-&gt;delta[1] =3D le16_to_cpu(di-&gt;di_u.del=
+ta[1]);</div>=0A<div>&gt; +		break;</div>=0A<div>&gt; +	case Z_EROFS_VLE_C=
+LUSTER_TYPE_PLAIN:</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:=
+</div>=0A<div>&gt; +		m-&gt;clusterofs =3D le16_to_cpu(di-&gt;di_clusterof=
+s);</div>=0A<div>&gt; +		m-&gt;pblk =3D le32_to_cpu(di-&gt;di_u.blkaddr);<=
+/div>=0A<div>&gt; +		break;</div>=0A<div>&gt; +	default:</div>=0A<div>&gt;=
+ +		DBG_BUGON(1);</div>=0A<div>&gt; +		return -EOPNOTSUPP;</div>=0A<div>&g=
+t; +	}</div>=0A<div>&gt; +	m-&gt;type =3D type;</div>=0A<div>&gt; +	return=
+ 0;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</div>=0A<div>&gt; +static uns=
+igned int decode_compactedbits(unsigned int lobits,</div>=0A<div>&gt; +			=
+		 unsigned int lomask,</div>=0A<div>&gt; +					 u8 *in, unsigned int pos,=
+ u8 *type)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	const unsigned int v =
+=3D get_unaligned_le32(in + pos / 8) &gt;&gt; (pos &amp; 7);</div>=0A<div>=
+&gt; +	const unsigned int lo =3D v &amp; lomask;</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +	*type =3D (v &gt;&gt; lobits) &amp; 3;</div>=0A<div>&gt; +	=
+return lo;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</div>=0A<div>&gt; +sta=
+tic int unpack_compacted_index(struct z_erofs_maprecorder *m,</div>=0A<div=
+>&gt; +				&nbsp; unsigned int amortizedshift,</div>=0A<div>&gt; +				&nbs=
+p; unsigned int eofs)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	struct erof=
+s_vnode *const vi =3D m-&gt;vnode;</div>=0A<div>&gt; +	const unsigned int =
+lclusterbits =3D vi-&gt;z_logical_clusterbits;</div>=0A<div>&gt; +	const u=
+nsigned int lomask =3D (1 &lt;&lt; lclusterbits) - 1;</div>=0A<div>&gt; +	=
+unsigned int vcnt, base, lo, encodebits, nblk;</div>=0A<div>&gt; +	int i;<=
+/div>=0A<div>&gt; +	u8 *in, type;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	=
+if (1 &lt;&lt; amortizedshift =3D=3D 4)</div>=0A<div>&gt; +		vcnt =3D 2;</=
+div>=0A<div>&gt; +	else if (1 &lt;&lt; amortizedshift =3D=3D 2 &amp;&amp; =
+lclusterbits =3D=3D 12)</div>=0A<div>&gt; +		vcnt =3D 16;</div>=0A<div>&gt=
+; +	else</div>=0A<div>&gt; +		return -EOPNOTSUPP;</div>=0A<div>&gt; +</div=
+>=0A<div>&gt; +	encodebits =3D ((vcnt &lt;&lt; amortizedshift) - sizeof(__=
+le32)) * 8 / vcnt;</div>=0A<div>&gt; +	base =3D round_down(eofs, vcnt &lt;=
+&lt; amortizedshift);</div>=0A<div>&gt; +	in =3D m-&gt;kaddr + base;</div>=
+=0A<div>&gt; +</div>=0A<div>&gt; +	i =3D (eofs - base) &gt;&gt; amortizeds=
+hift;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	lo =3D decode_compactedbits(=
+lclusterbits, lomask,</div>=0A<div>&gt; +				&nbsp; in, encodebits * i, &a=
+mp;type);</div>=0A<div>&gt; +	m-&gt;type =3D type;</div>=0A<div>&gt; +	if =
+(type =3D=3D Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {</div>=0A<div>&gt; +		m-&g=
+t;clusterofs =3D 1 &lt;&lt; lclusterbits;</div>=0A<div>&gt; +		if (i + 1 !=
+=3D (int)vcnt) {</div>=0A<div>&gt; +			m-&gt;delta[0] =3D lo;</div>=0A<div=
+>&gt; +			return 0;</div>=0A<div>&gt; +		}</div>=0A<div>&gt; +		/*</div>=
+=0A<div>&gt; +		 * since the last lcluster in the pack is special,</div>=
+=0A<div>&gt; +		 * of which lo saves delta[1] rather than delta[0].</div>=
+=0A<div>&gt; +		 * Hence, get delta[0] by the previous lcluster indirectly=
+.</div>=0A<div>&gt; +		 */</div>=0A<div>&gt; +		lo =3D decode_compactedbit=
+s(lclusterbits, lomask,</div>=0A<div>&gt; +					&nbsp; in, encodebits * (i=
+ - 1), &amp;type);</div>=0A<div>&gt; +		if (type !=3D Z_EROFS_VLE_CLUSTER_=
+TYPE_NONHEAD)</div>=0A<div>&gt; +			lo =3D 0;</div>=0A<div>&gt; +		m-&gt;d=
+elta[0] =3D lo + 1;</div>=0A<div>&gt; +		return 0;</div>=0A<div>&gt; +	}</=
+div>=0A<div>&gt; +	m-&gt;clusterofs =3D lo;</div>=0A<div>&gt; +	m-&gt;delt=
+a[0] =3D 0;</div>=0A<div>&gt; +	/* figout out blkaddr (pblk) for HEAD lclu=
+sters */</div>=0A<div>&gt; +	nblk =3D 1;</div>=0A<div>&gt; +	while (i &gt;=
+ 0) {</div>=0A<div>&gt; +		--i;</div>=0A<div>&gt; +		lo =3D decode_compact=
+edbits(lclusterbits, lomask,</div>=0A<div>&gt; +					&nbsp; in, encodebits=
+ * i, &amp;type);</div>=0A<div>&gt; +		if (type =3D=3D Z_EROFS_VLE_CLUSTER=
+_TYPE_NONHEAD)</div>=0A<div>&gt; +			i -=3D lo;</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +		if (i &gt;=3D 0)</div>=0A<div>&gt; +			++nblk;</div>=0A<di=
+v>&gt; +	}</div>=0A<div>&gt; +	in +=3D (vcnt &lt;&lt; amortizedshift) - si=
+zeof(__le32);</div>=0A<div>&gt; +	m-&gt;pblk =3D le32_to_cpu(*(__le32 *)in=
+) + nblk;</div>=0A<div>&gt; +	return 0;</div>=0A<div>&gt; +}</div>=0A<div>=
+&gt; +</div>=0A<div>&gt; +static int compacted_load_cluster_from_disk(stru=
+ct z_erofs_maprecorder *m,</div>=0A<div>&gt; +					&nbsp;&nbsp;&nbsp; unsi=
+gned long lcn)</div>=0A<div>&gt; +{</div>=0A<div>&gt; +	struct erofs_vnode=
+ *const vi =3D m-&gt;vnode;</div>=0A<div>&gt; +	const unsigned int lcluste=
+rbits =3D vi-&gt;z_logical_clusterbits;</div>=0A<div>&gt; +	const erofs_of=
+f_t ebase =3D round_up(nid2addr(vi-&gt;nid) + vi-&gt;inode_isize +</div>=
+=0A<div>&gt; +					&nbsp;&nbsp; vi-&gt;xattr_isize, 8) +</div>=0A<div>&gt;=
+ +		sizeof(struct z_erofs_map_header);</div>=0A<div>&gt; +	const unsigned =
+int totalidx =3D DIV_ROUND_UP(vi-&gt;i_size, EROFS_BLKSIZ);</div>=0A<div>&=
+gt; +	unsigned int compacted_4b_initial, compacted_2b;</div>=0A<div>&gt; +=
+	unsigned int amortizedshift;</div>=0A<div>&gt; +	erofs_off_t pos;</div>=
+=0A<div>&gt; +	int err;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (lclust=
+erbits !=3D 12)</div>=0A<div>&gt; +		return -EOPNOTSUPP;</div>=0A<div>&gt;=
+ +</div>=0A<div>&gt; +	if (lcn &gt;=3D totalidx)</div>=0A<div>&gt; +		retu=
+rn -EINVAL;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	m-&gt;lcn =3D lcn;</di=
+v>=0A<div>&gt; +	/* used to align to 32-byte (compacted_2b) alignment */</=
+div>=0A<div>&gt; +	compacted_4b_initial =3D (32 - ebase % 32) / 4;</div>=
+=0A<div>&gt; +	if (compacted_4b_initial =3D=3D 32 / 4)</div>=0A<div>&gt; +=
+		compacted_4b_initial =3D 0;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (=
+vi-&gt;z_advise &amp; Z_EROFS_ADVISE_COMPACTED_2B)</div>=0A<div>&gt; +		co=
+mpacted_2b =3D rounddown(totalidx - compacted_4b_initial, 16);</div>=0A<di=
+v>&gt; +	else</div>=0A<div>&gt; +		compacted_2b =3D 0;</div>=0A<div>&gt; +=
+</div>=0A<div>&gt; +	pos =3D ebase;</div>=0A<div>&gt; +	if (lcn &lt; compa=
+cted_4b_initial) {</div>=0A<div>&gt; +		amortizedshift =3D 2;</div>=0A<div=
+>&gt; +		goto out;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +	pos +=3D comp=
+acted_4b_initial * 4;</div>=0A<div>&gt; +	lcn -=3D compacted_4b_initial;</=
+div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (lcn &lt; compacted_2b) {</div>=
+=0A<div>&gt; +		amortizedshift =3D 1;</div>=0A<div>&gt; +		goto out;</div>=
+=0A<div>&gt; +	}</div>=0A<div>&gt; +	pos +=3D compacted_2b * 2;</div>=0A<d=
+iv>&gt; +	lcn -=3D compacted_2b;</div>=0A<div>&gt; +	amortizedshift =3D 2;=
+</div>=0A<div>&gt; +out:</div>=0A<div>&gt; +	pos +=3D lcn * (1 &lt;&lt; am=
+ortizedshift);</div>=0A<div>&gt; +	err =3D z_erofs_reload_indexes(m, erofs=
+_blknr(pos));</div>=0A<div>&gt; +	if (err)</div>=0A<div>&gt; +		return err=
+;</div>=0A<div>&gt; +	return unpack_compacted_index(m, amortizedshift, ero=
+fs_blkoff(pos));</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</div>=0A<div>&gt=
+; +static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m=
+,</div>=0A<div>&gt; +					&nbsp; unsigned int lcn)</div>=0A<div>&gt; +{</d=
+iv>=0A<div>&gt; +	const unsigned int datamode =3D m-&gt;vnode-&gt;datalayo=
+ut;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (datamode =3D=3D EROFS_INOD=
+E_FLAT_COMPRESSION_LEGACY)</div>=0A<div>&gt; +		return legacy_load_cluster=
+_from_disk(m, lcn);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (datamode =
+=3D=3D EROFS_INODE_FLAT_COMPRESSION)</div>=0A<div>&gt; +		return compacted=
+_load_cluster_from_disk(m, lcn);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	r=
+eturn -EINVAL;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</div>=0A<div>&gt; =
++static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,</div>=
+=0A<div>&gt; +				&nbsp;&nbsp; unsigned int lookback_distance)</div>=0A<di=
+v>&gt; +{</div>=0A<div>&gt; +	struct erofs_vnode *const vi =3D m-&gt;vnode=
+;</div>=0A<div>&gt; +	struct erofs_map_blocks *const map =3D m-&gt;map;</d=
+iv>=0A<div>&gt; +	const unsigned int lclusterbits =3D vi-&gt;z_logical_clu=
+sterbits;</div>=0A<div>&gt; +	unsigned long lcn =3D m-&gt;lcn;</div>=0A<di=
+v>&gt; +	int err;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	if (lcn &lt; loo=
+kback_distance) {</div>=0A<div>&gt; +		loge("bogus lookback distance @ nid=
+ %llu", vi-&gt;nid);</div>=0A<div>&gt; +		DBG_BUGON(1);</div>=0A<div>&gt; =
++		return -EFSCORRUPTED;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +	/* load extent head logical cluster if needed */</div>=0A<d=
+iv>&gt; +	lcn -=3D lookback_distance;</div>=0A<div>&gt; +	err =3D z_erofs_=
+load_cluster_from_disk(m, lcn);</div>=0A<div>&gt; +	if (err)</div>=0A<div>=
+&gt; +		return err;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	switch (m-&gt;=
+type) {</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:</div>=
+=0A<div>&gt; +		if (!m-&gt;delta[0]) {</div>=0A<div>&gt; +			loge("invalid=
+ lookback distance 0 @ nid %llu",</div>=0A<div>&gt; +				&nbsp; vi-&gt;nid=
+);</div>=0A<div>&gt; +			DBG_BUGON(1);</div>=0A<div>&gt; +			return -EFSCO=
+RRUPTED;</div>=0A<div>&gt; +		}</div>=0A<div>&gt; +		return z_erofs_extent=
+_lookback(m, m-&gt;delta[0]);</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER=
+_TYPE_PLAIN:</div>=0A<div>&gt; +		map-&gt;m_flags &amp;=3D ~EROFS_MAP_ZIPP=
+ED;</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:</div>=0A<div>&=
+gt; +		map-&gt;m_la =3D (lcn &lt;&lt; lclusterbits) | m-&gt;clusterofs;</d=
+iv>=0A<div>&gt; +		break;</div>=0A<div>&gt; +	default:</div>=0A<div>&gt; +=
+		loge("unknown type %u @ lcn %lu of nid %llu",</div>=0A<div>&gt; +		&nbsp=
+;&nbsp;&nbsp;&nbsp; m-&gt;type, lcn, vi-&gt;nid);</div>=0A<div>&gt; +		DBG=
+_BUGON(1);</div>=0A<div>&gt; +		return -EOPNOTSUPP;</div>=0A<div>&gt; +	}<=
+/div>=0A<div>&gt; +	return 0;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +</di=
+v>=0A<div>&gt; +int z_erofs_map_blocks_iter(struct erofs_vnode *vi,</div>=
+=0A<div>&gt; +			&nbsp;&nbsp;&nbsp; struct erofs_map_blocks *map)</div>=0A=
+<div>&gt; +{</div>=0A<div>&gt; +	struct z_erofs_maprecorder m =3D {</div>=
+=0A<div>&gt; +		.vnode =3D vi,</div>=0A<div>&gt; +		.map =3D map,</div>=0A=
+<div>&gt; +		.kaddr =3D map-&gt;mpage,</div>=0A<div>&gt; +	};</div>=0A<div=
+>&gt; +	int err =3D 0;</div>=0A<div>&gt; +	unsigned int lclusterbits, endo=
+ff;</div>=0A<div>&gt; +	unsigned long long ofs, end;</div>=0A<div>&gt; +</=
+div>=0A<div>&gt; +	/* when trying to read beyond EOF, leave it unmapped */=
+</div>=0A<div>&gt; +	if (map-&gt;m_la &gt;=3D vi-&gt;i_size) {</div>=0A<di=
+v>&gt; +		map-&gt;m_llen =3D map-&gt;m_la + 1 - vi-&gt;i_size;</div>=0A<di=
+v>&gt; +		map-&gt;m_la =3D vi-&gt;i_size;</div>=0A<div>&gt; +		map-&gt;m_f=
+lags =3D 0;</div>=0A<div>&gt; +		goto out;</div>=0A<div>&gt; +	}</div>=0A<=
+div>&gt; +</div>=0A<div>&gt; +	err =3D z_erofs_fill_inode_lazy(vi);</div>=
+=0A<div>&gt; +	if (err)</div>=0A<div>&gt; +		goto out;</div>=0A<div>&gt; +=
+</div>=0A<div>&gt; +	lclusterbits =3D vi-&gt;z_logical_clusterbits;</div>=
+=0A<div>&gt; +	ofs =3D map-&gt;m_la;</div>=0A<div>&gt; +	m.lcn =3D ofs &gt=
+;&gt; lclusterbits;</div>=0A<div>&gt; +	endoff =3D ofs &amp; ((1 &lt;&lt; =
+lclusterbits) - 1);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	err =3D z_erof=
+s_load_cluster_from_disk(&amp;m, m.lcn);</div>=0A<div>&gt; +	if (err)</div=
+>=0A<div>&gt; +		goto out;</div>=0A<div>&gt; +</div>=0A<div>&gt; +	map-&gt=
+;m_flags =3D EROFS_MAP_ZIPPED;	/* by default, compressed */</div>=0A<div>&=
+gt; +	end =3D (m.lcn + 1ULL) &lt;&lt; lclusterbits;</div>=0A<div>&gt; +	sw=
+itch (m.type) {</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:</=
+div>=0A<div>&gt; +		if (endoff &gt;=3D m.clusterofs)</div>=0A<div>&gt; +		=
+	map-&gt;m_flags &amp;=3D ~EROFS_MAP_ZIPPED;</div>=0A<div>&gt; +	case Z_ER=
+OFS_VLE_CLUSTER_TYPE_HEAD:</div>=0A<div>&gt; +		if (endoff &gt;=3D m.clust=
+erofs) {</div>=0A<div>&gt; +			map-&gt;m_la =3D (m.lcn &lt;&lt; lclusterbi=
+ts) | m.clusterofs;</div>=0A<div>&gt; +			break;</div>=0A<div>&gt; +		}</d=
+iv>=0A<div>&gt; +		/* m.lcn should be &gt;=3D 1 if endoff &lt; m.clusterof=
+s */</div>=0A<div>&gt; +		if (!m.lcn) {</div>=0A<div>&gt; +			loge("invali=
+d logical cluster 0 at nid %llu",</div>=0A<div>&gt; +			&nbsp;&nbsp;&nbsp;=
+&nbsp; vi-&gt;nid);</div>=0A<div>&gt; +			err =3D -EFSCORRUPTED;</div>=0A<=
+div>&gt; +			goto out;</div>=0A<div>&gt; +		}</div>=0A<div>&gt; +		end =3D=
+ (m.lcn &lt;&lt; lclusterbits) | m.clusterofs;</div>=0A<div>&gt; +		map-&g=
+t;m_flags |=3D EROFS_MAP_FULL_MAPPED;</div>=0A<div>&gt; +		m.delta[0] =3D =
+1;</div>=0A<div>&gt; +	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:</div>=0A<div=
+>&gt; +		/* get the correspoinding first chunk */</div>=0A<div>&gt; +		err=
+ =3D z_erofs_extent_lookback(&amp;m, m.delta[0]);</div>=0A<div>&gt; +		if =
+(err)</div>=0A<div>&gt; +			goto out;</div>=0A<div>&gt; +		break;</div>=0A=
+<div>&gt; +	default:</div>=0A<div>&gt; +		loge("unknown type %u @ offset %=
+llu of nid %llu",</div>=0A<div>&gt; +		&nbsp;&nbsp;&nbsp;&nbsp; m.type, of=
+s, vi-&gt;nid);</div>=0A<div>&gt; +		err =3D -EOPNOTSUPP;</div>=0A<div>&gt=
+; +		goto out;</div>=0A<div>&gt; +	}</div>=0A<div>&gt; +</div>=0A<div>&gt;=
+ +	map-&gt;m_llen =3D end - map-&gt;m_la;</div>=0A<div>&gt; +	map-&gt;m_pl=
+en =3D 1 &lt;&lt; lclusterbits;</div>=0A<div>&gt; +	map-&gt;m_pa =3D blknr=
+_to_addr(m.pblk);</div>=0A<div>&gt; +	map-&gt;m_flags |=3D EROFS_MAP_MAPPE=
+D;</div>=0A<div>&gt; +</div>=0A<div>&gt; +out:</div>=0A<div>&gt; +	logd("m=
+_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",</div>=0A<div>&gt;=
+ +	&nbsp;&nbsp;&nbsp;&nbsp; map-&gt;m_la, map-&gt;m_pa,</div>=0A<div>&gt; =
++	&nbsp;&nbsp;&nbsp;&nbsp; map-&gt;m_llen, map-&gt;m_plen, map-&gt;m_flags=
+);</div>=0A<div>&gt; +</div>=0A<div>&gt; +	DBG_BUGON(err &lt; 0 &amp;&amp;=
+ err !=3D -ENOMEM);</div>=0A<div>&gt; +	return err;</div>=0A<div>&gt; +}</=
+div>=0A<div>&gt; diff --git a/include/erofs/defs.h b/include/erofs/defs.h<=
+/div>=0A<div>&gt; index a9c769e..06d29a9 100644</div>=0A<div>&gt; --- a/in=
+clude/erofs/defs.h</div>=0A<div>&gt; +++ b/include/erofs/defs.h</div>=0A<d=
+iv>&gt; @@ -173,5 +173,18 @@ typedef int64_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp; s64;</div>=0A<div>&gt;&nbsp; #define __maybe_unused&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp; __attribute__((__unused__))</div>=0A<div>&gt;&n=
+bsp; #endif</div>=0A<div>&gt;&nbsp; </div>=0A<div>&gt; +struct __una_u32 {=
+ u32 x; } __packed;</div>=0A<div>&gt; +</div>=0A<div>&gt; +static inline u=
+32 __get_unaligned_cpu32(const void *p)</div>=0A<div>&gt; +{</div>=0A<div>=
+&gt; +	const struct __una_u32 *ptr =3D (const struct __una_u32 *)p;</div>=
+=0A<div>&gt; +	return ptr-&gt;x;</div>=0A<div>&gt; +}</div>=0A<div>&gt; +<=
+/div>=0A<div>&gt; +static inline u32 get_unaligned_le32(const void *p)</di=
+v>=0A<div>&gt; +{</div>=0A<div>&gt; +	return __get_unaligned_cpu32((const =
+u8 *)p);</div>=0A<div>&gt; +}</div>=0A<div>&nbsp;</div>=0A<div>need to han=
+dle big-endian, anyway, minor for now.</div>=0A<div>&nbsp;</div>=0A<div>Th=
+anks,</div>=0A<div>Gao Xiang</div>=0A<div>&nbsp;</div>=0A</div></blockquot=
+e>=0A</body></html>
+------=_001_NextPart538660834367_=------
 
