@@ -1,84 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id A304A2922A8
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Oct 2020 08:53:41 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E0B293E71
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Oct 2020 16:17:18 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CF6st5pXjzDqbr
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Oct 2020 17:53:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1603090418;
-	bh=LRkzZHN17hATmjXLAfMAsXW0TbdmVf2KNYjICeqqrqE=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=EKltSUxwl3ikKkT7AtT5h9s6BqMqWbCEdF/HWo1nndsSc5yP2GlNAyFTps9Geg+go
-	 AeBKJiKRhSfsUwj3ESnsuQWxC0HhTBcJLNpWsj57T3CTC38lAQpbEXlbvdb4ki/ZPH
-	 Q5MFVRoKMQhz4jSFTHfYMi/OySrPcuiqsrRxogSbcyFlcLU29FC/bkXF6/o50f+XpJ
-	 wO2BxIlVdjpa+lw0/08tMGfEU+u6l6JrVkQT1zCsvNaijI/L+BVZXDbeKrHq+71jM+
-	 Mo949xFwk80NqKs8mYzrFlJT8+OUYF+xD0JoAyk31PGuSmBow7LtR8BTI7kNV6v2cW
-	 Cgyg18BQQA60g==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CFwgG6kc1zDqjX
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Oct 2020 01:17:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=trix.bounces.google.com (client-ip=2607:f8b0:4864:20::746;
+ helo=mail-qk1-x746.google.com;
+ envelope-from=3u_goxxijahqxstawffw.lsyjgustyyesad.uge@trix.bounces.google.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.84; helo=sonic314-21.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=CgyalStd; dkim-atps=neutral
-Received: from sonic314-21.consmr.mail.gq1.yahoo.com
- (sonic314-21.consmr.mail.gq1.yahoo.com [98.137.69.84])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=mLVXiVmo; dkim-atps=neutral
+Received: from mail-qk1-x746.google.com (mail-qk1-x746.google.com
+ [IPv6:2607:f8b0:4864:20::746])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CF6sf4mvzzDqGQ
- for <linux-erofs@lists.ozlabs.org>; Mon, 19 Oct 2020 17:53:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1603090396; bh=CKj+XWC68kL1d4GQCIH7hOI148gOq6xTL2bLNkizx8U=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject;
- b=CgyalStdO2crt2CB2tJ7ijN3T/DHvEX5acefGcejG4l9I0cFy/OLVXtsp8VOw2NJjghtwohXjxcM76/salDntdzuhNdhudgh1kLHi070al2yDUhLfSCegkyDTgUsFN7WD9lSBWElKVzaNG+vrqGlSZFQpmdrJaFOyyxv96nF2f6lj92mTVZxNPNhRixl1lWDOVB0by8lHogxxgukazHZ9Xj9irX7QSbBIf6Dxz/X/U68D088AeS11V9zgzefQCtbUGYCU7G0jsxwzFjfjDDs/aMEQ82TcTkvA0VodwlFQR3WMAucmZ4ZSiA9EwSh6lJWTNmHhD07X8Zi2kB1Z2dhkQ==
-X-YMail-OSG: h5vzRrAVM1kbCgnFoFcoRthVfG_Y0n0rCC80IXGFoOB71Dna84EDpp5A6.jY4Td
- kqivUT7K5zzABueH_H2ZD0DXPhITKJBIawn6ORRnsjNnBQBtY5Zqbtctnzqs5IA9WH0LUliS3Ptm
- VE4a1g31SVAX1wGFeBWylFtoMCaw8Rc0l8wxkRJ4XPXDAS8z.4ei5A.Q_QC.ynct9jMVKsp7Sqsp
- 3LuEgJoCuyKQ7vgif1SNnIhpuoUI_UReLhtGmyD06IUiO0f4A.1pbu.oAGUQmpC_tT73gW23jXPI
- 1H1087os5LUx8roH5oOxZCmMxkANbzqywQb.uFt198QTTtQw0YhPjhwF5nOQugfGDtxB2Bwhtf5w
- qOIDcVFJuzi613FLD0u7F8KEf2V5XpCkiU7uNuwekKcPsP4fJVnz7RPE6LdPM.7Eze356KfqPd_L
- H.aT5UX489BS_.OSsKWnGF1VexXgNC9WQ1gsrCmIF9vDW8R8z7KvX8kC5xWS_O4cBGezwMnA_I_Q
- NpsYyShrt6QC4foRYwEra9EcvS8sDLSe70pcwo4ni5ePUkezMhJNy3MCH2UniZkjBUeUjm.yd01E
- LnDBtBOUJzYwd5HY9AQsCgHl8k_DJJMCtOMSwHwK2gK_JEglr1Gj9aOP4KCQQSiP4nx8N47bZVMb
- U5ah3tqF9kxVp3w6qisMReE8jL45vihN5pabUVMZZVIVqUvdVyVKehkG2X58IxsT7pDvfI8cwyPC
- 27B1uOhoT23MbROe0ifOpGfUy.pN8l8cVZESYHd43ff8Q4PZbebIEAJj7.cpbAI5z5w0aR.e_FGh
- FUh_RQkXmgUrCHFPuoxBnzFSSutofuYcKkKwj7bUqHXcnwESwqZB2Ql4tjC4EqGo1X8q7olr5PJL
- 4j7iXV_YuD4WC30jyV48rcVtMJIc6dK._bBLjDYSHdeRU8r76IcjE3bUvRFLrAP5EshJvqhBriQx
- u3xLdJ80tf56zWWPVL3o4DFpKEb7c1U_y_ps3pPTd3iQTobZjTw9PaUt2Grh5sms5w7bZoyyyM_E
- bOdqOhPLDWYp9gpxh8Ust0njTwfs_Hx2hDTP5X3Amtr_JCCd80goxK5vKBLxWhwcnqJ3Dyq7mgGB
- KLabBHJoT93xjqfwf0tZ5mS5IQsobtNXhULEXT6jaSxtQpkSdqrRRkeg3VkLtiXXOBOXJ196R_cM
- CfRYbrKKbeiYBA_q9APGEygvBquW6IHyI6hqwyeYaOr9TaPx0xdo6Dn6yamx8TBMaH_QJnsogGs6
- rO_xCpHCuA89BmYBEmw7VgRFi0ol3JvpnuGxM4kRxAPlarowjBeFtHEh2_.S6w0Sqml0MaVX6oQm
- DJkon6dr1jT8d1Qf02ztUWnCE3bWl3JCQb_LtxsJ5X4DISQ7ESeiBSyL4zfIwkeSO6zz8wUcii0Q
- 8NBx9.ZuXZAtCkWf5HFHlemj60YBUza86cTgGd0.iuoP.jv5Q4d2iy9TA0Sj3wtzPDVrhRrNp22h
- dUtsYa1up2F7PTerJPz_hdHJU11WH0lpGRaJkF..f_JAUxDNpCII-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic314.consmr.mail.gq1.yahoo.com with HTTP; Mon, 19 Oct 2020 06:53:16 +0000
-Received: by smtp404.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 7215aa1fac895b568ea789aed290417e; 
- Mon, 19 Oct 2020 06:53:14 +0000 (UTC)
-Date: Mon, 19 Oct 2020 14:53:08 +0800
-To: Huang Jianan <jnhuang95@gmail.com>
-Subject: Re: [PATCH] erofs-utils: fuse: fix the clerical error in ASSERT
-Message-ID: <20201019065302.GA23392@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20201019044921.124654-1-huangjianan@oppo.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CFwg22pDTzDqYS
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Oct 2020 01:16:54 +1100 (AEDT)
+Received: by mail-qk1-x746.google.com with SMTP id d5so1850869qkg.16
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Oct 2020 07:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:reply-to:message-id:date:subject:from:to;
+ bh=cuBTdI68D8XuG8iqlnoJ5YX57tVh0JcK9hSz+lVfVfI=;
+ b=mLVXiVmoSoFQ50ovJiooYM3oYWqtYgU2Ois6vjKrlHL8W5aDM9J0/IaJC8jgXd5OqJ
+ UbPcbMJWc1crNQyEE88ur8AhoAKmkyE4Y8GTxjk5TDlNJRNY6cgWdvr6brdPS9gyawYR
+ dLe9n0030mkhSAomhkidxP+iobhH4g6w0Jo6xA89fV2X9Hedb37TgdbSUb4mUzR1D/j7
+ wEN8FcSvuEQ7EiCqx8GMdJ1ShH/Ueb3jgWSy4a4JpSb/V3SC0kUPh9zgM5vi0VnMwrhO
+ gWtvLHHnSaTP7fP7fll5yaGkCFsKdtWffRP759h3fDMDGIEWE/Hi9gykCY7GW4nn0eHJ
+ lG1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:reply-to:message-id:date:subject
+ :from:to;
+ bh=cuBTdI68D8XuG8iqlnoJ5YX57tVh0JcK9hSz+lVfVfI=;
+ b=WxPaHwMyhGC8fwjY6YtqGd0JgybGAK1jIFaqQ5L7IQHwRDNfYr3S6R2ClLn6rFzpgW
+ Lz4+CaUhNdzZ6E3vgTgomwItv4th+fc59dqYP8Z3wChldwCNyatMX4CDmLuJNk0NWyfC
+ vNof6CVF6ekFVfb1ilZoVs7GmD5VGYnIfiGaErpsX/uPGY14zDyl0KIxMULQt3UAf4Kr
+ 1ZQwVoEBr1RTKTbiePvv9w0prXr0Rmh3tnMv03u72LsqwZVYaqPRtW+jdhaOeOeYkeoz
+ ILACoxKiqMVf3n4MR9XUclXhF0Jis4d5SUYPZ8GMvpdYYVt+CWIPyCWZnH7DjXGxiBOP
+ bODA==
+X-Gm-Message-State: AOAM531BHtu3QuEP/LrM4lkRZ4ju/Jt3xAeBHufw0fpvJEMG2gBnZMH7
+ G64YnVMrbtNhIlUOAQDNUJaVjOVxHqG3iYyditoC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201019044921.124654-1-huangjianan@oppo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16868
- mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
- Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+X-Received: by 2002:a05:622a:1c4:: with SMTP id
+ t4mt3177835qtw.147.1603203411022; 
+ Tue, 20 Oct 2020 07:16:51 -0700 (PDT)
+X-No-Auto-Attachment: 1
+Message-ID: <000000000000d11c9205b21ae113@google.com>
+Date: Tue, 20 Oct 2020 14:16:51 +0000
+Subject: From Miss Nidal Aoussa.
+From: fabienne.tagro2016@gmail.com
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000d4815d05b21ae1d6"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,49 +72,103 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: guoweichao@oppo.com, linux-erofs@lists.ozlabs.org, zhangshiming@oppo.com
+Reply-To: fabienne.tagro2016@gmail.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Oct 19, 2020 at 12:49:21PM +0800, Huang Jianan wrote:
-> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-> ---
->  fuse/read.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fuse/read.c b/fuse/read.c
-> index fd70a2a..e2f967a 100644
-> --- a/fuse/read.c
-> +++ b/fuse/read.c
-> @@ -120,7 +120,7 @@ size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
->  			length = end - map.m_la;
->  			partial = true;
->  		} else {
-> -			ASSERT(end == map.m_la + map_m_llen);
-> +			ASSERT(end == map.m_la + map.m_llen);
->  			length = map.m_llen;
->  			partial = !(map.m_flags & EROFS_MAP_FULL_MAPPED);
->  		}
-> -- 
-> 2.25.1
-> 
+--000000000000d4815d05b21ae1d6
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Reviewed-by: Gao Xiang <hsiangkao@aol.com>
+I've invited you to fill out the following form:
+Untitled form
 
-Thanks, I will fold this in to the original patch.
+To fill it out, visit:
+https://docs.google.com/forms/d/e/1FAIpQLSeQIj2QpMXgQbMEcEv3RJXvlfCdBYxn9Y22RoTGN5DS88sjBw/viewform?vc=0&amp;c=0&amp;w=1&amp;flr=0&amp;usp=mail_form_link
 
-btw, if we merge the erofsfuse codebase to the master branch
-eventually, the following matters should be be done in advance
-(if you have some extra time or interest):
- - get rid of customized error reporting, use erofs_xxx instead;
- - get rid of erofs_vnode, ..., use erofs_inode instead;
- - further clean up.
+Hello Dear,
 
-and I will keep working on this as well.
+I am very sorry that my letter may come as a surprise to you since we have  
+never met each other before. I am Miss Nidal Aoussa. I am the only daughter  
+of Cheikh Ag Aoussa, the President of (HCUA) in Mali who was assasinated on  
+the octobre 2016.
 
-Thanks,
-Gao Xiang
+https://www.jeuneafrique.com/365432/politique/mali-sait-on-mort-de-cheikh-ag-aoussa/
+https://fr.wikipedia.org/wiki/Cheikh_Ag_Aoussa
 
+I have a business transaction which i solicit your help. It is all about a  
+fund to be transferred in your country for urgent investment on important  
+projects. I want you to guide me and invest this money in your country.  
+This fund amount to Eleven Millions Five Hundred Thousand United States  
+dollars which i inherited from my late dad.. If you are capable of handling  
+or participate in this transaction, kindly respond quickly through my  
+private emails to enable me give you more details about this fund and how  
+this project shall be carried out. I will accord you 20% of the total fund  
+for your kind assistance. Respond through this my private emails addresses  
+below.
+
+Miss Nidal Aoussa
+Email: ( nidal.kong2020@gmail.com )
+
+Google Forms: Create and analyze surveys.
+
+--000000000000d4815d05b21ae1d6
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><body style=3D"font-family: Roboto,Helvetica,Arial,sans-serif; margin=
+: 0; padding: 0; height: 100%; width: 100%;"><table border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" style=3D"background-color:rgb(103,58,183);" width=
+=3D"100%" role=3D"presentation"><tbody><tr height=3D"64px"><td style=3D"pad=
+ding: 0 24px;"><img alt=3D"Google Forms" height=3D"26px" style=3D"display: =
+inline-block; margin: 0; vertical-align: middle;" width=3D"143px" src=3D"ht=
+tps://www.gstatic.com/docs/forms/google_forms_logo_lockup_white_2x.png"></t=
+d></tr></tbody></table><div style=3D"padding: 24px; background-color:rgb(23=
+7,231,246)"><div align=3D"center" style=3D"background-color: #fff; border-b=
+ottom: 1px solid #e0e0e0;margin: 0 auto; max-width: 624px; min-width: 154px=
+;padding: 0 24px;"><table align=3D"center" cellpadding=3D"0" cellspacing=3D=
+"0" style=3D"background-color: #fff;" width=3D"100%" role=3D"presentation">=
+<tbody><tr height=3D"24px"><td></td></tr><tr><td><span style=3D"display: ta=
+ble-cell; vertical-align: top; font-size: 13px; line-height: 18px; color: #=
+424242;" dir=3D"auto">Hello Dear,<br><br>I am very sorry that my letter may=
+ come as a surprise to you since we have never met each other before. I am =
+Miss Nidal Aoussa. I am the only daughter of Cheikh Ag Aoussa, the Presiden=
+t of (HCUA) in Mali who was assasinated on the octobre 2016.<br><br>https:/=
+/www.jeuneafrique.com/365432/politique/mali-sait-on-mort-de-cheikh-ag-aouss=
+a/<br>https://fr.wikipedia.org/wiki/Cheikh_Ag_Aoussa<br><br>I have a busine=
+ss transaction which i solicit your help. It is all about a fund to be tran=
+sferred in your country for urgent investment on important projects. I want=
+ you to guide me and invest this money in your country. This fund amount to=
+ Eleven Millions Five Hundred Thousand United States dollars which i inheri=
+ted from my late dad.. If you are capable of handling or participate in thi=
+s transaction, kindly respond quickly through my private emails to enable m=
+e give you more details about this fund and how this project shall be carri=
+ed out. I will accord you 20% of the total fund for your kind assistance. R=
+espond through this my private emails addresses below.<br><br>Miss Nidal Ao=
+ussa<br>Email: ( nidal.kong2020@gmail.com )</span></td></tr><tr height=3D"2=
+0px"><td></tr><tr style=3D"font-size: 20px; line-height: 24px;"><td dir=3D"=
+auto"><a href=3D"https://docs.google.com/forms/d/e/1FAIpQLSeQIj2QpMXgQbMEcE=
+v3RJXvlfCdBYxn9Y22RoTGN5DS88sjBw/viewform?vc=3D0&amp;c=3D0&amp;w=3D1&amp;fl=
+r=3D0&amp;usp=3Dmail_form_link" style=3D"color: rgb(103,58,183); text-decor=
+ation: none; vertical-align: middle; font-weight: 500">Untitled form</a><di=
+v itemprop=3D"action" itemscope itemtype=3D"http://schema.org/ViewAction"><=
+meta itemprop=3D"url" content=3D"https://docs.google.com/forms/d/e/1FAIpQLS=
+eQIj2QpMXgQbMEcEv3RJXvlfCdBYxn9Y22RoTGN5DS88sjBw/viewform?vc=3D0&amp;c=3D0&=
+amp;w=3D1&amp;flr=3D0&amp;usp=3Dmail_goto_form"><meta itemprop=3D"name" con=
+tent=3D"Fill out form"></div></td></tr><tr height=3D"24px"></tr><tr><td><ta=
+ble border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tbody>=
+<tr><td><a href=3D"https://docs.google.com/forms/d/e/1FAIpQLSeQIj2QpMXgQbME=
+cEv3RJXvlfCdBYxn9Y22RoTGN5DS88sjBw/viewform?vc=3D0&amp;c=3D0&amp;w=3D1&amp;=
+flr=3D0&amp;usp=3Dmail_form_link" style=3D"border-radius: 3px; box-sizing: =
+border-box; display: inline-block; font-size: 13px; font-weight: 700; heigh=
+t: 40px; line-height: 40px; padding: 0 24px; text-align: center; text-decor=
+ation: none; text-transform: uppercase; vertical-align: middle; color: #fff=
+; background-color: rgb(103,58,183);" target=3D"_blank" rel=3D"noopener">Fi=
+ll out form</a></td></tr></tbody></table></td></tr><tr height=3D"24px"></tr=
+></tbody></table></div><table align=3D"center" cellpadding=3D"0" cellspacin=
+g=3D"0" style=3D"max-width: 672px; min-width: 154px;" width=3D"100%" role=
+=3D"presentation"><tbody><tr height=3D"24px"><td></td></tr><tr><td><a href=
+=3D"https://docs.google.com/forms?usp=3Dmail_form_link" style=3D"color: #42=
+4242; font-size: 13px;">Create your own Google Form</a></td></tr></tbody></=
+table></div></body></html>
+--000000000000d4815d05b21ae1d6--
