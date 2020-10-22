@@ -2,79 +2,79 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D2AD296165
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Oct 2020 17:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 318CB296166
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Oct 2020 17:03:39 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CH9bb5JYjzDqSg
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Oct 2020 02:03:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CH9bq3k0FzDqsZ
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Oct 2020 02:03:35 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1603379003;
-	bh=74m1SXVChq39Jv7vC46EuZvV1qHlLHfzCqbakQ8cVdc=;
+	s=201707; t=1603379015;
+	bh=1fdH+Xck+SETHcOoBdioQNOei1R5NcOf0LfqOF0FrR0=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=N6M1B+hJ/aKE9O3TUf92TNdwb6zgrDrbPPaMEaj8zdPYL4/M84niUjf+jMnEdgeIq
-	 MJUyUYEJ9ZDotsMb9LZ3EzS4aZkSJILdPfcNW7RCkW1Jpw7kNml5l9PKvXONIWi/hZ
-	 EfJtST2lFFkH84UxRVgOmt80qMtrgfmZLRgNe1yusQxuTFZRu1amXNlkpzlEAeXSIZ
-	 ILTpe7hgTeRd6z3ScsBb9U1p3tkvK9fp17LyuPlYRAdubuIXejZo9KZ/mEHwbYZGec
-	 uNdH0DJQC5CcJBZZY1cwYy4R8ROrWVF8VLgetu4HcRGudLJyDra6evxrhXtCE+q3zN
-	 Kob1ewoGBOCvg==
+	b=kjSylz/SM7gMCnIPYFu9gCGTG02aQ2YGql0xxVJblFf+f666Rj++TYSgg1S08zgbP
+	 ++9tMyGy7A2aXyukop7kPG2HO+VNLdMkPqxFpKUNfAyDxJpiPGlx40OVcEXtPM4m/4
+	 NGbFqs4MhZNVjAmPBwzYrdwnTKmSnbY8AYvupLjjvuEOKnfH+QVt9oAV4jIv/qrpwT
+	 OoVYHMlhGWLP31A4EUWNn99O8jzug/cbn9ddwMP9dlRtkDl8CyUJrxK+pMmue7pJoO
+	 5PvDpMA7/e9/ahZcCRIuG4AWQHDNOrQAVDL7BzUMQE2x0D7JDUrCYmScz0a+YXlBG6
+	 qOoZMl172z7aA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.147; helo=sonic310-21.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.30; helo=sonic308-54.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=m0JLl2xE; dkim-atps=neutral
-Received: from sonic310-21.consmr.mail.gq1.yahoo.com
- (sonic310-21.consmr.mail.gq1.yahoo.com [98.137.69.147])
+ header.s=a2048 header.b=W2zSDzkS; dkim-atps=neutral
+Received: from sonic308-54.consmr.mail.gq1.yahoo.com
+ (sonic308-54.consmr.mail.gq1.yahoo.com [98.137.68.30])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CH9TP1lFhzDqnv
- for <linux-erofs@lists.ozlabs.org>; Fri, 23 Oct 2020 01:58:01 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CH9Tf6KXbzDqSF
+ for <linux-erofs@lists.ozlabs.org>; Fri, 23 Oct 2020 01:58:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1603378679; bh=guRsd5n/uh5BC8bHESLKo5zEBYWuxI19CPiguQJ+aXY=;
+ t=1603378689; bh=m+KvnfBf8xuQNeIuRRe0vdHUkvX140+IsRUPrl0yksw=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=m0JLl2xEZPyNp1sIPEPPcy1bxFPljMo8wHzTd9L5ca+MxzzWCiN26qY9MjpCQ+fk8nsWvbV0TOwnSDmhrNrTpSVCVEnAnWjImhp6zVd8h9WoHbPuYyD3Zy3wfUC8wfbmLEUrvQTp9M/bkJtFFS07xTYyLFaQB/RXMrXalePi0CEwTbLoM5vs0DOORKqM9I8rdJHDp5xyKZYhY0m6gAn7tKtkZCFe3ILbcv7qIuSfluCt+PqSnvhYdH8X7g0cHh723DUE5vhAANBC/Wfjeau6TuLkCxv6pX9vYgUg74UFzqZwG1+kQ9jxPkCm3abJ9DXqFiQd/1ZkVq0DnHJiG9kWsQ==
+ b=W2zSDzkS2yZELWeNGpxmBEQe8QOUf10AUcdWI4i8jlL/CAOLqigJUCb5wpKcfBnZLPnXUiRNDaQF3liCy02v+l5Sgh3CMv9DdRE4aRZs/a/M/bl8JtI1y6JlvbkiNvvtGM9aSDbBXujl8BKdnbjeNgt3xVjgX5j3IZftFGaTGb3wLGizz3Lz8L504KTskUErOdGhVSznqnRzBjzDLAE60GSH6ZlZjkYTf0WcglUbT0THJ1C4iOqH2LyIifABDQmWvQI0yAp91rRhk1qkqd2bUzAXDfr1rvscj/kgjK3q2Q+rdoSieHnY0HBf+V+s94oyRW4BnUjXxioCaWiX0+5g5g==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1603378679; bh=Sm/EasK/eFvF5q87T3xAXRupUhCHqTiBEfWLKHkj6cg=;
+ t=1603378689; bh=kosD+O5ufdoCVlRY26HZ7wF1pOalxn9VMwsyXn7yteB=;
  h=From:To:Subject:Date;
- b=qXe462w0vd+Mz9u+WrBWdt/m5aWXJYm81EQJ2hzai43lEW5FrCYS+flWwmaTgvnNYrN+e74vlPiR62RadOob8lXgfV+ALaIlEgHzn3LXQkUGhCLY+bW0qHh8X/j2946mmNy3OlY3T81r1Wo6A608DsTu8mBfyIeXKG53PaG2R95jpebQPwDbQ4Lu4q/vXNT11y1ZlEHy/c5iBnvVQkZ1zQutd9VOCYbQwuRyGWx2z2uubnskR1C0V4SUnu58/hhUg9adI4ME1gV6iaaTJgSk/EE+OzBwVFHq2vDyyRSHEkyqqD+yjE7ZYNgRMdHgcJMBEaS1kNEA2S+apVIPhijeXA==
-X-YMail-OSG: C.qA0sUVM1kSPpncm9G13h0Pq8rudPIXe7_TdhL4gyxBxObWdU3FVO8O4QuV4Sk
- UiNse8_s62Yc2WqU2AWc_KwaGgmyJMMUGiJN1kfqiLnXpIwQqNG7cuUAQXYDmCMSptsg0w0TGsvo
- c_iyZn97zWrWAUtl62G6a17TYkaHooIEvQZb6EMAc67zGoc.Ok1jtps7vsld0b6hDuZBg53g2hKZ
- NlUjCk.vhqDvqXIsnymZD0xB8Hq5WAU._8hFcnfKqneEtmL4qPDaTLikQNse2V90VJDOPLt33v5L
- dfcO.xcMzoo49S3kwRBLy_Y0MG6d.U55ujUTeomjQSzTG6OPgoNy4w5qadrjXLJg5owLdzIyGzpc
- APxu.J2JIyuGoMpfTjlzePK2icFXt7pac5n3yPWJAfaxRapQe5dNO8D.IhZt6ITljcRwDwmSCKHm
- zF41d3M9Zq.5IQ.fml9vHudBcst5Cz5hH_HeViauI00Q5DtnSkUSPysHvBmVICQs6KkJ4wOx_fvH
- wXmd7yGsnEqBKqUJb7cw8wERiNIKKD95XWNK0USAyZXlxha89rf7YJ8CJbgbTk.bkbjZxU9uzArC
- u7L8CqmL52g0xuZV00MyvPk6xVhZ0G07lHTtbil7zr0bGNCDJJkA9GryuVUtaVJbzRJsgHn4it0.
- WKw0CvKrpmH3_q3e4mExO2cXP.9a0sJ_ziurrAFlA_gwT5NJAwHL94ho4UW9tfbSVNOarijlz4eS
- hzgTF2KNuqmLW503jQK8QmrAr9wFzU2jaM7HM7DtNBNmXBBbKSmykD0C8zDYK7bg5TyHiBnET11_
- uw7b8GKQVQ97Yye7cgvNFmfeIH7TsmizllAbnkl34ovcJzgWhQJTfdi4JKImmtf1SEzYaQr.tCdT
- pZgUkaypLsbR3uBqTWbawjhRlylsTFecZcMf8gutQtjwZWwpFEGQEbSEwxH7am.f8PXGyAO4cyjy
- cOLHLM70rOxEXxfouHyPq0PXFND04kkRoeDeWCCe9fK8mdCYNZzT0TqSt6UsHB2ZM6izDujbsPJz
- SB67KucA3XFT0OLTb2BjDWZhw92KU.iPzejK2NGtzLHC_eT5Z8J9KRkyM9q.rHkoZ3FUACARdMj3
- ccgOZk_guQ8.JU_yjcEJ9XDoWAukFO.XOXL4w0urPntzS8oIzrzsXfxCgx6hZWt4hsvYrpKIbDSB
- 6yB.HCIT6uy.b8_I2_YEAxLlEZOcUy6Y2f5YrILRIzX89rAvx8AcBMGwEQFCHZmn8EmK6V5KarN8
- EHPPfEENfGPRIeBL0amUTycUWeaN_KbBSPEIfM1Ht7BkBnP37iU2vyV7Iy1KCmSXGhG7ezPjlrQj
- MrA_YNdCqKvz0zO3WvlsQfVe4cQKaiVBAgoYQlglTUauktTzH8G_xazKlenIelyX64WAGtjHijpN
- YkUTyMOshzjKhA3mnK8JKaCgF7w789tQJbz0XW3xdubHIHkvV1aTeqMem3m6Y27fSpCAZPxfQ2Z2
- l5ctIPl1hU7uNh1ElcHV6aDXrqgVNntLLxqNB3Kl3_grtXxdQTTPYBIdCcTlggiLnu3AA.g.EFut
- .ZJYhdmoLRzM-
+ b=BQoZqIOsmra4FjJxzJXd9udL+J1CLm/Fp6VURdNRVXck+FihISj2J8M+D/4Uh33r5izrh2qmJmnQvTXD5Bg1Uf0DwcXChhBOFTy4BEH6ImfVJek0gS/MECUwtlQrrXCX94ZMM5PP++tP5kcElDzwqvLVtwglqpeP8HilCzhOAZ1XPdyZgX2ZUjgCauE29LW0RJb10oik10/G6wN5eGJBcFWLN6h/vzA7hCTW3ZS+P0NWsu8XTwk2zXzYpntVQ63iLBOqwGOJuua8TK8gq0NOa6p5l8WrpMUFqexZpKctgdJFSSdZydePwIYrpJyCC/pGnOFa8b+hXfI1jE76H47Zvg==
+X-YMail-OSG: O0wFiQ4VM1leO0SpVBH547w9k6UpYj5UfSXwP9zdV7tAWZVe2QKVhdpse9Yfw8c
+ DI.7.o1hrV8G5b0YVB.8_h4M5hCLcuOnax0yDF4xYlomc4SnJX06wDnH0mOcBX897VULzoidBSrb
+ 2Nx4SYFz4xfChplPyM0GlNbChK_4S1_6HtSzfLTWEU_PQkm5CvCSBbDRH0ztm08.K3wz4otcGJMD
+ 7Y2y75pE5iPaXYvzq7NW0CuQ.5vkgjXWOv7ngjf8QH.DwOFMJwIoKJTyb9WxYghxgkEA0HPB0mhB
+ FeJ3Lqyoxop9Tj4v8GdXeEo3_fAvHsiZRL7ohYhCG0_eylegReeyetlqfkdSfVAkrjNJ4Sb1fm93
+ 2p0T1504M1BL3xz_xQ6p9kcAEeUQpcjaYUI4lxrLeHOk5H4OIjgOtR4.mvZySLENZUqYgHH.HQiC
+ sn01b7TGw2N7SMHk9XDJmdKoouHHbn0eYfiic2cqcV1J4LrGwhUwXF2z9PE9sF2jI8_NCJ_8M_FA
+ R.e430wJrrCTmmt2UkcGYozULYWDI.Biit4fFqiv3kaOXXHJimmmE8wripbeXCIlT.2uU1ldJUXQ
+ F6in9M2Is8fMclJyGIC2OtrvmoiGTv5ow8I_37MY6gh64zWTCu.bTFDovUnM19ETnD.bve42wUot
+ dspiHcwK82X8D4lAPp5g5zmnmvpRdkCWQodJYAvHr9ndVYd8RaAPHrqFQPl3DUhNFZ75oR7zzAQz
+ WtjPYqZbWUVB61vavK0peti82MVQUzbEq1KNJltVb40ABIuYiCxlWxTyecVta6ZlN0hYaiwCoX0l
+ tJxafxNhmHKVD2eKJ0K1qj2KMnW1vOTsHvz71Li0x4tE2zERYd7fRH4Fly_F9viFbt8IggR9MAf5
+ PwqOLXBL0U_KfHawXUOcxFncijfYFckK8m0zjAXRdKFyJ2IWvQdTHd8VLkwgNFeHqQtiiesdDKh4
+ 7QTHIPtkp8X0MO9A7I41bAPi1Y.L.onKK28kGEy1qwB5dLRr.Vg4qDbs5pmH9BbdzbtaGxpFvPtT
+ YoDuAp.QkZwFUY2oKrTBs_rAmTY34kqDraIUd5AaczKNViz8ZsUqP0OyWsCL6Wl7qxOxVOanyk5B
+ qhvnwGXOjMOSbjnIxwR34IML5_RAbqH1wFFq29SCJ4UtWgtYg.UosH2utwvrR_ag9Y4_WwM.6XnX
+ MNvvARHG_mPC1KA4mESB3FZZ09PTb_HwxszWculmEZfmHE3Kv6ECt8TDB79TjXj_c4AQWDxnDKHy
+ ALA4MISnYxMxau4JaU5uL1gO_gd30ztYOOvoOO2josT1wHrKlBo__pkOUoU3x1olqKD37e0Wr570
+ IAyR4KFAP0aST0GdFcS5DUV8sPWJm0Sy.Omrp6NA2nlOBeWo852gvIuFUobE8UjFsmmRdKjCFslS
+ d3kAnqE1arF7N..1c3_w7GHvAJITPfwTBkzfKDoBHy7XC_qh2ziarjl2ky4FqFmKywurRR_5dY29
+ VIzLaGjPdHylW548mKuvhDdWb_yXhz005IPfIMY6775uxvF3pIVOqMhaF0Jsjv9p6Zs.6J9XnKbP
+ wlPVPM5YF.w--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic310.consmr.mail.gq1.yahoo.com with HTTP; Thu, 22 Oct 2020 14:57:59 +0000
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 22 Oct 2020 14:58:09 +0000
 Received: by smtp401.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 354b2034a70b817070abfec37b60849b; 
- Thu, 22 Oct 2020 14:57:56 +0000 (UTC)
+ Thu, 22 Oct 2020 14:58:03 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/4] erofs: insert to managed cache after adding to pcl
-Date: Thu, 22 Oct 2020 22:57:23 +0800
-Message-Id: <20201022145724.27284-3-hsiangkao@aol.com>
+Subject: [PATCH 4/4] erofs: complete a missing case for inplace I/O
+Date: Thu, 22 Oct 2020 22:57:24 +0800
+Message-Id: <20201022145724.27284-4-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201022145724.27284-1-hsiangkao@aol.com>
 References: <20201022145724.27284-1-hsiangkao@aol.com>
@@ -100,58 +100,77 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Previously, it could be some concern to call add_to_page_cache_lru()
-with page->mapping == Z_EROFS_MAPPING_STAGING (!= NULL).
+Add a missing case which could cause unnecessary page allocation
+but not directly use inplace I/O instead, which increases runtime
+extra memory footprint.
 
-In contrast, page->private is used instead now, so partially revert
-commit 5ddcee1f3a1c ("erofs: get rid of __stagingpage_alloc helper")
-with some adaption for simplicity.
+The detail is, considering a file-backed page, the right half of
+the page is chosen to be cached (e.g. the end page) and some of
+its data doesn't exist in managed cache, so the pcluster will be
+kept in the submission chain. (In other words, it cannot be
+decompressed in advance, for example, due to the bypass chain).
+
+Currently, the pcluster for this case is downgraded as NOINPLACE,
+and stop the left half of the page from doing inplace I/O (so an
+extra page allocation is needed then.)
+
+Let's avoid such unnecessary downgrade instead.
 
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/zdata.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ fs/erofs/zdata.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index afeadf413c2c..edd7325570e1 100644
+index edd7325570e1..ef12275f7fcc 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -1071,28 +1071,19 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
- 	put_page(page);
- out_allocpage:
- 	page = erofs_allocpage(pagepool, gfp | __GFP_NOFAIL);
--	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
--		/* turn into temporary page if fails */
--		set_page_private(page, Z_EROFS_SHORTLIVED_PAGE);
--		tocache = false;
--	}
--
- 	if (oldpage != cmpxchg(&pcl->compressed_pages[nr], oldpage, page)) {
--		if (tocache) {
--			/* since it added to managed cache successfully */
--			unlock_page(page);
--			put_page(page);
--		} else {
--			list_add(&page->lru, pagepool);
--		}
-+		list_add(&page->lru, pagepool);
- 		cond_resched();
- 		goto repeat;
+@@ -160,7 +160,8 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+ 	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 	struct page **pages = clt->compressedpages;
+ 	pgoff_t index = pcl->obj.index + (pages - pcl->compressed_pages);
+-	bool standalone = true;
++	bool io_cant_bypass = false;
++	bool updated = false;
+ 
+ 	if (clt->mode < COLLECT_PRIMARY_FOLLOWED)
+ 		return;
+@@ -180,20 +181,31 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+ 		} else if (type == DELAYEDALLOC) {
+ 			t = tagptr_init(compressed_page_t, PAGE_UNALLOCATED);
+ 		} else {	/* DONTALLOC */
+-			if (standalone)
++			/* update to first inplace I/O page */
++			if (!updated) {
+ 				clt->compressedpages = pages;
+-			standalone = false;
++				updated = true;
++			}
++			io_cant_bypass = true;
+ 			continue;
+ 		}
+ 
+-		if (!cmpxchg_relaxed(pages, NULL, tagptr_cast_ptr(t)))
++		if (!cmpxchg_relaxed(pages, NULL, tagptr_cast_ptr(t))) {
++			if (type == DELAYEDALLOC)
++				io_cant_bypass = true;
+ 			continue;
++		}
+ 
+ 		if (page)
+ 			put_page(page);
  	}
  
--	if (tocache) {
--		set_page_private(page, (unsigned long)pcl);
--		SetPagePrivate(page);
-+	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
-+		/* turn into temporary page if fails */
-+		set_page_private(page, Z_EROFS_SHORTLIVED_PAGE);
-+		goto out;
- 	}
-+	set_page_private(page, (unsigned long)pcl);
-+	SetPagePrivate(page);
- out:	/* the only exit (for tracing and debugging) */
- 	return page;
+-	if (standalone)		/* downgrade to PRIMARY_FOLLOWED_NOINPLACE */
++	/*
++	 * for COLLECT_PRIMARY_FOLLOWED pcluster, if all managed pages have
++	 * been found (which means it can be handled without submittng I/O)
++	 * it's unsafe to do inplace I/O. let's downgrade to NOINPLACE instead.
++	 */
++	if (!io_cant_bypass)
+ 		clt->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
  }
+ 
 -- 
 2.24.0
 
