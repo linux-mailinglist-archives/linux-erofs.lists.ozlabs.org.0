@@ -2,96 +2,99 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0C14297BC5
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Oct 2020 12:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3BB8297C88
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Oct 2020 15:10:54 +0200 (CEST)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CJGw85yGLzDqwn
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Oct 2020 21:06:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CJM0q299gzDqwC
+	for <lists+linux-erofs@lfdr.de>; Sun, 25 Oct 2020 00:10:51 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1603533992;
-	bh=uwFfXzAvBVgmIlnJVfciTiq+HTlFe1oxhzOQ5DYQ9VY=;
+	s=201707; t=1603545051;
+	bh=2cXfK0G9b4+grMN25SoZdciLsNKaV42EUn1cr0jJyC0=;
 	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
-	b=Lx848gBMlMtvbDzvMsqsfg9QZ+6o4jLMyIW3PFKmtfxnQ2QTWlmOL3DLb9ooYeS3i
-	 DhhSlfoFKZguu01dJN4y8cBPz6XgyniFZA0fxCu+eri0PudSq5FG+QDnUA259RTyjT
-	 T0cKd/pYknrHId55lFSzC8aqXtGL9k/VuaPa/FpbD7u5MfE8+p880h6cLSXaCQWnw3
-	 WTjUIRJiPF92Teipeq9oGPuLA/R1fQx7yH88CS8+YlVHTUUb5i7OfF4f+SkVXKIzzu
-	 7FetXPVDNtZwAlCwUlZCsHCRZJSTlf3/rz8pPGp3g1LvWG1BnqMa2T+xyJL6K+7q6q
-	 5Hh3dqL9i97Lw==
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=Ohh8Iy+OtwKAmuBO6l7UT0mnVVknvlMRmeaORJj9u0tFgvvdeGr28jsM1mYzxpEqG
+	 1elvZGAmUgXJD/oIUy0HM4kA/zM0NyNPUlETBW33YWoozVWGz6cITwRfCSUhwxVkr1
+	 nZpgV3l4uDr+iYVqZC0El7PEuw0H9nR0CiwX3ZSAE+7U0UECklGg9RZ9lwoLlT1qxV
+	 aO3hg7fGVhy4zy41ynRMyaDGHLmiB21dwcvqJFcEkvCdMPOkMpiTMnNMltN0YeoD9C
+	 Es84VXLCCyVZorsfxxfi4tk8v5llU37XEnAqYQIjvAvGdku7RG1zF+SoUJ7Uvxwuen
+	 +hP9qcYjdnKeA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.146; helo=sonic309-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.205; helo=sonic304-24.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=XzTWsvNA; dkim-atps=neutral
-Received: from sonic309-20.consmr.mail.gq1.yahoo.com
- (sonic309-20.consmr.mail.gq1.yahoo.com [98.137.65.146])
+ header.s=a2048 header.b=QxS11w1m; dkim-atps=neutral
+Received: from sonic304-24.consmr.mail.gq1.yahoo.com
+ (sonic304-24.consmr.mail.gq1.yahoo.com [98.137.68.205])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CJGvx6bgKzDqsx
- for <linux-erofs@lists.ozlabs.org>; Sat, 24 Oct 2020 21:06:20 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CJM0M5YvJzDqNd
+ for <linux-erofs@lists.ozlabs.org>; Sun, 25 Oct 2020 00:10:24 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1603533975; bh=hXnYzd6/6lDbJlG7I9QxvzmIuLDKPn7BSCaz60XG+Iw=;
+ t=1603545019; bh=nl7QCDFKb3awoIZ+AfatdwJJ/+1EO8mKxTGVnKyx+PY=;
  h=From:To:Cc:Subject:Date:References:From:Subject;
- b=XzTWsvNAukyKgm313GTK+/uGHcgbu3zNKx9NClu1P7VWPvKzlO6lZr9L1XYNvd+ynRvrL9J7P/45RGywOpGfI92CCruPcGXTzguBtPD+7rT8gzMo3VuddhS09qw3KhUGtfyatZu8mpswSv/pRSMumYA1FFbkVzF2C+pjZGSSs/popKIlJ8Lv/VYXaVPLiIECcUtPaz/4FF9Px1hbzJYDPb3AmYU+/PPXNUvRmpZL9vcRoY5wxIUbWXoRxu7UzrGhsDijtMsqadZFX2y7rhczK5r0Xz7+7OC4gW4KDBu95E4Kc7u4dU0Iiu1Znr5W1Lu5pi5zfvkPhRQtDpShZ69DfA==
+ b=QxS11w1mg8hV3g19mTs00qRotOQfRhqm5ZhFYmm8Xly3nikzpWAGf2l5/Lvm/chothhTafGsxJx4ki8tG6ynwC27I98xgpnKVLudBlAtRHlA5aq5EcX8MCf4oi8v36nL3ltduR53Cbimd0/y7n77RmZJmXPHgNaBMiK9uXxt3axejhB/ERmeNm6Ejfc9e1YEDa4IA+kcbVv7abfSmuPpSZIEgZwH81wJI+XnmSaxDMQCg42NUpVRwJHw3pTDK0L8DhDQksCGepM7HmvCVTVG9ZyisbQIDvJuHKzhvBZqdyLE6/JzR9YYiQBIhdaJwN33pqt5HbvOWIUBGUCpewf89A==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1603533975; bh=k8tho9oMuwzlZrIXD9JY4WMJYweFDhX7Ia43DYNttj+=;
+ t=1603545019; bh=92BX/WrNb9c/rrEkKtRPSSUZPQKZcaQ8EV0droLCdlJ=;
  h=From:To:Subject:Date;
- b=FIzbH+7Ku1OCWu0lEIFq1RbSYd8j+XJIEDIxWD5rISYxADFvTaFTV7X/7c44PHx/mjVoyixe5lq620qRmCoPdcaCfU/8Uzkf6ssSZGzo6ydxX8c3YdT1/Rmr464IL2oI+22JFFxnGZw8cEkixOpn46BVgpJVQj59Jk2aoVNdHijRPE1rBjCre2oZqjyV6/1ROnbwaqrc/iFAeOkkKDELd9dFFOIhn0ziI22v0pvSuWOSBQQ3AQuE85TQira+DXmXkAaEfF1Faaxn5SggevrXa4kcbeoJaD/B/gJu7gataIXQBwp7UCHlyQ06FUCwMVNH1NvmPaiV8ohsqvd7GPWKLg==
-X-YMail-OSG: y1M.8b4VM1mFlebfbxKNtcSQ7cVVUGEYKr8Pr7l1dpgjbiD.yxjYQ5Bvfh1TF4m
- 9_ed6KBgTFvcJ2X_rHkCUM0ga1KPoMFYH6AJ8kVJHYESOtroZyVUYaDfN8HHLjDUZ5e5WAa1eiCd
- 0BIo6P6bi.8znZyzvNJCl9Jxv_0gsyyV8.ee4sHvBYjL.Fa87E0fdTcMyo6Bvjx0rHretIITh2qR
- n8ra.kPlXGTkquDgNFHXYdzQH5JbYJpct2cLm4wcg_o2M5Kzzc1uq6i5zRsIwWdrF8C4e76Q6g4S
- K7MF1DFFlRDbyaE.toJ7Zq4u5Xm5bMX8P4SEcFNTbzsCfEnX_xQNVC.lUXNVt1sNki0ggz_RhUcw
- nXPGsB9ZTCy2w6nCcMfU5hymyyH44.jQQcmsNcIpnOJKe4qTm1UYQ0x6y1.Vgy3j_QiVBS.Trysf
- hnnqylaQr7DwI.py1yVzd_UG7qhtvo_aIcXcD4Yzp9GqmwUG.fW7lHcM06BqxAPCoL5IxC3KI1tI
- 7xTSxSo46pRnUdz4SMU4QAh6vH9NIKqNCWpUFaskXygqhIF5wjg5j7rnie2lPuk5DLsiNSSUZZ7r
- kYxO1gDfXvq9ENNUL.9RSbJz37sCctk7g1xdp.Z0t.ffcKUrPRaMaWx61_CzSplsPcTXmUv7ynOS
- isKrCylEsGka29cEGOxKdglQV3DEJO99dinQCH.WkFKp7ZIGMFJfBnMkvDYSTiLx6cTSALdYFLLh
- 5gFEFb07CQ6w6iWcH7.cyJTv4aisaNMHwyr1b2U5BU4yMFuDGIPb3gWeweXrcPAV_12VLnrRKTgo
- Elccj62n51xOr7HrEEKXq2ag9P2rW8Gs_Pa3DUJkvVmoDEp5wRT0HcYtNlkce18qTG8c6whUelZX
- TkU4.v5E4bxINwWhIW5IS7HQT6aLEymstgF_vxZSWcNWfQ78WDRd_fxDs4vzabq2zMAPMJMMH5I1
- f8Pp4OJHWJHpS7QNYbLwBpeWOnGkVxB3hfoMY8fO4SUIegYFQ4HAnql9VdEeoYlhk47OVi2AhemY
- QMEt_p.hwv5KapO4nAJCdhLlxkm59gaJZFHjQCZab4Pu_.Ul9IFzaSSIEJrYZJhb6lNYVu7tGT0L
- 6FuiyvN8D6Z811QPbLWza2L8SeK7_offuQO3CnczQw9JkJr_1NLBvkTguW91FKjeBQFnLr4_c5yT
- 5AFp3hIHsf1n3etoLOwB1UvVpD5znHF285S1VaopQ4bX9rQEE0nGds26dyG_0Aq9H2KsN3mkJK9X
- WzwvdNz9xcKCxfSAD4A5AuDmHBWI9ka0iBhDUo26LHmYK_.Bz6AEUZ_EiOz9JGfUGzteoxkfi19F
- fFrgqyDiScp8Mk4kFeSISICQ1JEVfHIC3yU7RvKQTlAO4vsK3ThpajhEGjrRcxz9gDRauBGoDkNK
- uXi1gYR_lHgootijfLcb.xvKzD2svAdbKoHOXED4MtJF8vLpGbaTyB6zi2upFCDhK60b07eFrdbS
- hsWizmLh3zrxJl5Hc0cJAqDOAtvZe.coJnXU6gMqrdzCyR7jRFw9KXl_PEtUfhe2.khO99nlRbFk
- IU._RQmu2kWwUdycv0HjQwyVhf4wd_sQ2loDiQPI9kfC1XGe7EHioPQCR5bYbop.bcDXABOdiwoG
- 1b64rYFVf4KVbLJEgkZQkSL2JqSwKkcNsE_IQitJPEo4iXljBekysof0Gx7lz_4XXA_iDXFmHUtw
- TxFopk9CY0h2ktlNAfWlJoDhClIPTr4Cn2EGpLdCnx9XZoCV7Z7N.Go5tR8pP4Ju136wLBngcvuq
- Jqd9_nK3GRJ1tUOWh7VX9y19ZLUmayWP3_3dLGoCJ297BWwiK_1G8FgoVbuH_C8lrIhGmUJ8zC00
- O1BjG3k2rjQ6AP4DKinC9wSns6DM.jIZVAZUUDziPthdeGRSiAgMdPdI_azYdrw4W7b6IE_ly7GG
- 9dLPk0nU7OmwU0UdH3KDxhJdz3Gr6Caph3ce8Lo.WAZNBS8i0jMsEYNV1wimR4f2HsI6gMiv.SIn
- V76XC0IZWj8LySKIqTSMO6e4MzHhROOXZLEPJVY5SyORdjl1lsJRpjrBcFQz4sp15d9HmlobTZrj
- WEWkNNqHgb2gn0XVRW5kcknxlmaogNjL3rw9pbQcRGpO2vFuj49NnmnZfNUbovMnAwEyOAm7geY3
- oNoJDzDDxMzReXny2mBUr14kiTfzlfxFbAA7Ab3eLEiBzbNqhx99iaKzNdAz98YOnxGULLPahRnV
- l5d7YQJ2VvVZx8yaALjaMBTFJWfPSyvvp9sdwsqeeaUEmvvMlW58AujjUmbo72u.db0kkZxJ9XAC
- 1ijQfR7P53Z7c_0QFSbtdqEEtiadr6srIcWVUikN2LELKhu_P8ykzrYo3.nsYHs2yKAu02USY_Ww
- Ch_fNqaqyeVsFhvCNXPb.vp8vke8WvE_42Y16X408DMipXbFxKkxdmskNFUns1eO7Wl5fAjEqn1H
- y2Kb0iQnjcyAdGirRKAKBi_OUULUZP6Do0Fq5XaQvbhsAvtI0H2iGw8JmvE7qfwBKBs51fBxAMbf
- gBxfmWO60jJ57ZWigQooEjU_EwnW6qVtVLdlzfiLTvbQJ7WLTp86jHD5D9ONR.VG8vKYUdA7R6pC
- 0mNBJpNZOaK41CBv.LkGdzgPEeSPytAlc1JsjI_g_BCKDSrSzFYbMpbD0FvE7PFKwWEXf
+ b=LuDWkMLSm0edYPkHbtGeFTUpAo9YfTKWQh5PfQ+x/zdrtWDKdjGgYWbkHKGYswuoTTMGhokaguNjf5sW9HGlV19sTpcwjRuiIwg0+XabkXwo/2cmTwp73pZLcLTC/Ka9xoUQj9tjiOKIcX/jXuzyiilBK02JYTA6w/OOIP+BDaFaLy7wa7s3VLPei5hsYXwWx8b8+Oi4liJ9P9+zeABGUvdsEzUBx87wdVa5Q7TaP2zz1NW7C2NM5brCZ+HQnVTjNDU2c0YBLNqgr2bBju3PNuHx5JBohaqWHveK+zoueMnKC+mFOwZ+5KBes8RlkPs+2wWO7uOQqeCNehcDIVCy+A==
+X-YMail-OSG: k72u_vsVM1nmT4PmxzGbU6kfd8mMST8iEW4SIm4cKxY0RXmYaBt1RU12lR2pAKV
+ qC3Qop1VoHMM4_hM1v9NFCOQygXq6XESia9c.Sg4hq0Mb29JnjBJynk4tezS7s0VQ2Bcr7p4cJ28
+ zqXpsB83ifzfxZiVp2EtdInQNI7Hptim3mnmm6v067HlcLmu8A.7cuSMVevpXME5nkhQR7OA5QLK
+ 4_wOfTvnSCZ0H9Kf_AekVSDSjNg4DVjQQ1R0vV0xj4IDwg2IQhx1N8sI94UOr14SYbmCs1NyEmOo
+ Pjj5azom.wWnayLZgeeoE6PZH2FVlsrhJlBzA1zILlzqoiGMppwdDa7hcLNoRUE_4unRUrq2ZaFf
+ 4D3hafHUYCSUkM78YWTHzeK71bAwJY3pLIMtXR5RO9sdZh_hz.WaSZNJDfusqOG7CvGsKc6moZoi
+ GEaB_CKNajpPaXCQwQmNWVUjdNOaLoUFV.6dfPn1zoXMrMFAO17gxQZrmy.vucvxHI_r5K73fFYe
+ T0izepPrpZbphf4_yUT7mtr0vXzyzEoURBBHtAeMRKcMn67ChbnPssWnaYsLRXhCmDOM8QtgH2U9
+ A_B3LCbuPYEtQ4gAB215tdGX3dh.6GzawUiMrJQBjF0F8SOH.qa8K_h9Hxl5aXkYkoCoTBzQawEN
+ o7lckfjo0Ao1tonZPGPFKV0T6psul2RycJPimvOk7HH8IT_bpu7rxbBMXPQrDZA.j6er.TDic1jK
+ 9of0hF1P0TcF9ue9d0VjF60A2pCXjbUiknJxVHJw3D79HwePYbi8Do5FHHhyfXRQzMIXv0KRTdKc
+ audV.F9mMEVnqZrd_UQYjc_n0QRTBH3AAFlLuQDQLI46cQhgLOKg3O7sODx4OaiHN9gTACn1vz7m
+ EpZzklQiT3nthUddzG2F7xxHC3_0tUSUmgsPNuIBjwZPXkw0f6GJJGoug8McYczoXR8Z9FOdfRPf
+ Im8XpK1tHGO6A8HLQq9K6_CaZEuGB6382yUtHgBEq6DyIwVlToTzXhmrA623R1AinyLCjGBHVc7J
+ uasKFmr3aw_NrK.qqMhYkdrti4e4s1s3uMn53xaAABbaldl9CZBrHw94CVPUsQcej3cOsNgft5BC
+ tChqtJ5aPUmxpi.x1vgu5_nMWpd4erYOFynJnM3WihvFhcc6qgyfWlMFdTKIl47DeaE8tb36xdiK
+ Whkx2KGFSzo56WTrh8vqyXLyCxhHRJJE8jvkvCsgh3c0EyHP6Z6SmZG47gKC4vxP40p2ebnwZwKP
+ K6LvF.BoIs6Zz7ntw6eymK3o3kASspK9TYB36U5g1UFs_wnF9S6DcgjeifOQ5xIQCYON3ikdS9bM
+ W0ZyeYmAlv0u2LiqpbYWhxbCOIaL9qYiQEGpwBZHxRFLcdetTPD8AQw2NwOgPFCf1PyIKQBdL_eo
+ UcaJ.XAtaN3sXY_W_u6RWx79BmneINTe8RF8LK0qT_RDVx2DoBjObYMnajnrATWsjLEAW5a0XTez
+ yqgEPu8dJP4c_vtajT8cP3eHeUBNKdxoC7nBMHpHn4GvctKlt5Y25lQl8u41l6i.sI7Wjr_cv.RZ
+ Kk.Nl3Cm7hRBS59UNdelabgoyW_seaB8nVrxc_8r7KFBka84n9NrY.syliiCubnK6bzYQNSbgQT2
+ TW2tIAvAY9.NAmK6CJmC3Zzddjr7f8BKDgxJSvD28TKzXze0GWGxOMkPBYydu_wPKQFSRpUoPq5m
+ _uc.kW3cyHGa9fcKG_X_Z9xAhK4hw.wCs6ykhlHJUO3x44M8TziG4_Qgk71fU.hitIXq6ynLArEC
+ QP396KgoUyA8SMuzvusMgj.i5SjnQjFTzn7iYO_CWDElyaoawEMuXClRO4iu9hVPEoPds1ZS9p4E
+ MifYFYwu8E90yVTCAaVOB6uyBEKrpXz1gEPEikZa6Bczh6tomEBdaKqan46b7W6f4ai..9TvZZ96
+ aa8uUd3Pl99XsHjWLCBJhrk1WUcgBQpoUEjuYji5UEdnx7tu2nthvBPpWrvsATxdnr10mSFrttiS
+ ll3EkdQKSFC_qJVpA.n.dCAzWCiK9muGgctlYXGjHTtoKJuyWoUmOEMbHA6CJs1XmLXnICTgmuSd
+ PaIGrF17qlUqjlZUxln3DNp4oos.sKW3E3Cx5qGAMhWq9L0bxVi1cRZOvn1P9.jjW6_yFn4tM9VW
+ aJfv7T5N1SWs2j1Mo0JpjFtv1OnLYGxuXYmh2mliXoCApjFmW4FjXIUFomQ.I1.RUHX8Emtmao2u
+ 9Op7chHB3CM50xb3_lpSjmsFG.vcNu.mIVIR.1nBk1.F135l7Uy5neNnjFy42bdjl1_09hqbGZ.a
+ SRRP_gqrhS.ZRjmgnbv.CzkwLUD7ydzQrS1srXgpecA2U_2zd70HNKsmwjJ1YH88W1H6spmRD4eA
+ LQiK8WwVKnj7FiM6HmkkRYQjydK3qHpMf79wPSuw32FknLo101HrSym8qMex5xEk7Njd5CCuTykd
+ 4mEOsMgyFreJbBRFBIutq_RcvMRu3zq_vvX6H3vUcFKYO3pReIhrTygdITkWEbn.4etnq..GoO9S
+ 2zSx2Qm8xVyZ9A_euJKiFI_AkrBJkLSTXyzwwtSgP4_xst2AbwMZWEZwSAaMv_dNS0M22ws1aoaE
+ .COqlYcjCwUH1E9nt7ZHKXCDyuxK3sxKxbGDZSoGZG5n_0a4Ur3Fe0GM2K0Q._oTFBrOHhl3H25s
+ sKSQzFuFhQ4pGAS5LfC4rc7NwgROfhLFY73GKOZcL5uQR02i9nfwOFI1jPzNFODwKWeprANQ3W5q
+ FS7Olc5vtbAKhjgph1iPCQNL5JVnuQfojRHygz_n207MsH6W_w4BeqsUcgNklT5W1jT0WLQqPYcP
+ K7jq4g4EKOdPNllgKwUSczxs3PtJH7W4DHg0jWtAv6xLVLJ23ifIauLi8w.kC4rImm589sZY-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Sat, 24 Oct 2020 10:06:15 +0000
-Received: by smtp416.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID f0ca22cff856a34105d744ba957afd65; 
- Sat, 24 Oct 2020 10:06:12 +0000 (UTC)
+ sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sat, 24 Oct 2020 13:10:19 +0000
+Received: by smtp419.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID afd45167a3858f59b7d63d6cfac9db14; 
+ Sat, 24 Oct 2020 13:10:15 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: fix the project prefix to "erofs-utils"
-Date: Sat, 24 Oct 2020 18:05:16 +0800
-Message-Id: <20201024100516.14759-1-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v2 0/5] erofs-utils: introduce fuse implementation
+Date: Sat, 24 Oct 2020 21:09:54 +0800
+Message-Id: <20201024130959.23720-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20201024100516.14759-1-hsiangkao.ref@aol.com>
+References: <20201024130959.23720-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -105,263 +108,88 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Zhang Shiming <zhangshiming@oppo.com>, Guo Weichao <guoweichao@oppo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Some of them were "erofs_utils" in source headers by mistake.
+background & v1:
+https://lore.kernel.org/r/20201017051621.7810-1-hsiangkao@aol.com
 
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
- include/erofs/cache.h     | 2 +-
- include/erofs/compress.h  | 2 +-
- include/erofs/config.h    | 2 +-
- include/erofs/defs.h      | 2 +-
- include/erofs/err.h       | 2 +-
- include/erofs/hashtable.h | 2 +-
- include/erofs/inode.h     | 2 +-
- include/erofs/internal.h  | 2 +-
- include/erofs/io.h        | 2 +-
- include/erofs/list.h      | 2 +-
- include/erofs/print.h     | 2 +-
- include/erofs/xattr.h     | 2 +-
- include/erofs_fs.h        | 2 +-
- lib/cache.c               | 2 +-
- lib/compress.c            | 2 +-
- lib/config.c              | 2 +-
- lib/inode.c               | 2 +-
- lib/io.c                  | 2 +-
- lib/xattr.c               | 2 +-
- 19 files changed, 19 insertions(+), 19 deletions(-)
+changes since v1:
+ - fold in incremental patches in v1;
+ - get rid of "-Wextra" to adapt common erofs-utils code;
+ - get rid of duplicated logging code since fprintf is MT-safe for POSIX;
 
-diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index 10a6aace26ba..8c171f5a130e 100644
---- a/include/erofs/cache.h
-+++ b/include/erofs/cache.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/cache.h
-+ * erofs-utils/include/erofs/cache.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-index fa918732b532..952f2870a180 100644
---- a/include/erofs/compress.h
-+++ b/include/erofs/compress.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/compress.h
-+ * erofs-utils/include/erofs/compress.h
-  *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 9902a089ab46..e425ce212ce2 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/config.h
-+ * erofs-utils/include/erofs/config.h
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/defs.h b/include/erofs/defs.h
-index 33320dbe8e3c..8dee661ab9f0 100644
---- a/include/erofs/defs.h
-+++ b/include/erofs/defs.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/defs.h
-+ * erofs-utils/include/erofs/defs.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/err.h b/include/erofs/err.h
-index fd4c8739209e..da3b68168714 100644
---- a/include/erofs/err.h
-+++ b/include/erofs/err.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/err.h
-+ * erofs-utils/include/erofs/err.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/hashtable.h b/include/erofs/hashtable.h
-index ab57b56829fc..7e47189d8a29 100644
---- a/include/erofs/hashtable.h
-+++ b/include/erofs/hashtable.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * erofs_utils/include/erofs/hashtable.h
-+ * erofs-utils/include/erofs/hashtable.h
-  *
-  * Original code taken from 'linux/include/linux/hash{,table}.h'
-  */
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index 43aee939c5d2..5a7f5f1a9534 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/inode.h
-+ * erofs-utils/include/erofs/inode.h
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index bc77c43719e8..cabb2faa0072 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/internal.h
-+ * erofs-utils/include/erofs/internal.h
-  *
-  * Copyright (C) 2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/io.h b/include/erofs/io.h
-index e0ca8d949130..a23de64541c6 100644
---- a/include/erofs/io.h
-+++ b/include/erofs/io.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/io.h
-+ * erofs-utils/include/erofs/io.h
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/list.h b/include/erofs/list.h
-index e29084345bfe..3572726f2e0b 100644
---- a/include/erofs/list.h
-+++ b/include/erofs/list.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/list.h
-+ * erofs-utils/include/erofs/list.h
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/print.h b/include/erofs/print.h
-index e29fc1d6f1e8..6b790746a9d7 100644
---- a/include/erofs/print.h
-+++ b/include/erofs/print.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * erofs_utils/include/erofs/print.h
-+ * erofs-utils/include/erofs/print.h
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 9e2e1ea1789f..197fe25830e9 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/include/erofs/xattr.h
-+ * erofs-utils/include/erofs/xattr.h
-  *
-  * Originally contributed by an anonymous person,
-  * heavily changed by Li Guifu <blucerlee@gmail.com>
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index bcc4f0c630ad..4cd79f01d820 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
- /*
-- * erofs_utils/include/erofs_fs.h
-+ * erofs-utils/include/erofs_fs.h
-  * EROFS (Enhanced ROM File System) on-disk format definition
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-diff --git a/lib/cache.c b/lib/cache.c
-index e61b20120b13..0d5c4a5d48de 100644
---- a/lib/cache.c
-+++ b/lib/cache.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/cache.c
-+ * erofs-utils/lib/cache.c
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/lib/compress.c b/lib/compress.c
-index 6cc68edcb745..86db940b6edd 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/compress.c
-+ * erofs-utils/lib/compress.c
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/lib/config.c b/lib/config.c
-index da0c260a94a0..315511284871 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/config.c
-+ * erofs-utils/lib/config.c
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/lib/inode.c b/lib/inode.c
-index 43c807f621cd..5695bbc52910 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/inode.c
-+ * erofs-utils/lib/inode.c
-  *
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/lib/io.c b/lib/io.c
-index 5b998d847e2f..4f5d9a6edaa4 100644
---- a/lib/io.c
-+++ b/lib/io.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/io.c
-+ * erofs-utils/lib/io.c
-  *
-  * Copyright (C) 2018 HUAWEI, Inc.
-  *             http://www.huawei.com/
-diff --git a/lib/xattr.c b/lib/xattr.c
-index b9ac223cc746..1ce3fb3f44b8 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs_utils/lib/xattr.c
-+ * erofs-utils/lib/xattr.c
-  *
-  * Originally contributed by an anonymous person,
-  * heavily changed by Li Guifu <blucerlee@gmail.com>
+TODO:
+ - move fuse common code to liberofs;
+ - make fuse code MT-safe;
+ - minor cleanup.
+
+Thanks,
+Gao Xiang
+
+Gao Xiang (2):
+  erofs-utils: fuse: drop "-Wextra" and "-Wno-implicit-fallthrough"
+  erofs-utils: fuse: get rid of duplicated logging code
+
+Huang Jianan (2):
+  erofs-utils: fuse: add special file support
+  erofs-utils: fuse: add compressed file support
+
+Li Guifu (1):
+  erofs-utils: introduce fuse implementation
+
+ Makefile.am              |   2 +-
+ README                   |  28 ++-
+ configure.ac             |   3 +-
+ fuse/Makefile.am         |  17 ++
+ fuse/decompress.c        |  83 ++++++++
+ fuse/decompress.h        |  42 ++++
+ fuse/dentry.c            | 130 ++++++++++++
+ fuse/dentry.h            |  43 ++++
+ fuse/disk_io.c           |  72 +++++++
+ fuse/disk_io.h           |  21 ++
+ fuse/getattr.c           |  65 ++++++
+ fuse/getattr.h           |  15 ++
+ fuse/init.c              | 117 +++++++++++
+ fuse/init.h              |  24 +++
+ fuse/main.c              | 167 ++++++++++++++++
+ fuse/namei.c             | 242 +++++++++++++++++++++++
+ fuse/namei.h             |  22 +++
+ fuse/open.c              |  22 +++
+ fuse/open.h              |  15 ++
+ fuse/read.c              | 213 ++++++++++++++++++++
+ fuse/read.h              |  17 ++
+ fuse/readir.c            | 122 ++++++++++++
+ fuse/readir.h            |  17 ++
+ fuse/zmap.c              | 418 +++++++++++++++++++++++++++++++++++++++
+ include/erofs/defs.h     |  16 ++
+ include/erofs/internal.h |  79 ++++++++
+ include/erofs_fs.h       |   4 +
+ 27 files changed, 2013 insertions(+), 3 deletions(-)
+ create mode 100644 fuse/Makefile.am
+ create mode 100644 fuse/decompress.c
+ create mode 100644 fuse/decompress.h
+ create mode 100644 fuse/dentry.c
+ create mode 100644 fuse/dentry.h
+ create mode 100644 fuse/disk_io.c
+ create mode 100644 fuse/disk_io.h
+ create mode 100644 fuse/getattr.c
+ create mode 100644 fuse/getattr.h
+ create mode 100644 fuse/init.c
+ create mode 100644 fuse/init.h
+ create mode 100644 fuse/main.c
+ create mode 100644 fuse/namei.c
+ create mode 100644 fuse/namei.h
+ create mode 100644 fuse/open.c
+ create mode 100644 fuse/open.h
+ create mode 100644 fuse/read.c
+ create mode 100644 fuse/read.h
+ create mode 100644 fuse/readir.c
+ create mode 100644 fuse/readir.h
+ create mode 100644 fuse/zmap.c
+
 -- 
 2.24.0
 
