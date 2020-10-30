@@ -1,52 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 396F52990F3
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Oct 2020 16:25:37 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE482A0558
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Oct 2020 13:29:07 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CKdvL0thPzDqPC
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Oct 2020 02:25:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CN1nq3LdSzDqgx
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Oct 2020 23:29:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=tuxera.com (client-ip=82.197.21.90; helo=mgw-01.mpynet.fi;
+ envelope-from=vladimir@tuxera.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+ dmarc=none (p=none dis=none) header.from=tuxera.com
+X-Greylist: delayed 476 seconds by postgrey-1.36 at bilbo;
+ Fri, 30 Oct 2020 23:28:53 AEDT
+Received: from mgw-01.mpynet.fi (mgw-01.mpynet.fi [82.197.21.90])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CKdvC469hzDqNt
- for <linux-erofs@lists.ozlabs.org>; Tue, 27 Oct 2020 02:25:21 +1100 (AEDT)
-IronPort-SDR: cY0q95i2j/sNXs3P/REyBTM3PBfzP9OfFuztvpdfgfNUYbro8lGr6lPfvuVpYByQs+kWq1ANpy
- /0c5D1b56+dg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9785"; a="147224800"
-X-IronPort-AV: E=Sophos;i="5.77,420,1596524400"; d="scan'208";a="147224800"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
- by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 26 Oct 2020 08:25:17 -0700
-IronPort-SDR: W2o421AhoZPS0lwB6tX8q9nLn7WxQyemX/HK4OPBBXhsNAtkPk7CgpszDiDFTa7QTR3CDGjCb+
- 6vg/psH0V9wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,420,1596524400"; d="scan'208";a="535397365"
-Received: from lkp-server01.sh.intel.com (HELO 394efc4116ff) ([10.239.97.150])
- by orsmga005.jf.intel.com with ESMTP; 26 Oct 2020 08:25:15 -0700
-Received: from kbuild by 394efc4116ff with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1kX4N1-0000Bv-9V; Mon, 26 Oct 2020 15:25:15 +0000
-Date: Mon, 26 Oct 2020 23:24:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 6fec9eb0f0c15222b7a1fc4da238b7abf3b70208
-Message-ID: <5f96ea39.hpuKrdNinT+70H8I%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CN1nd19VGzDqbl
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Oct 2020 23:28:52 +1100 (AEDT)
+Received: from pps.filterd (mgw-01.mpynet.fi [127.0.0.1])
+ by mgw-01.mpynet.fi (8.16.0.42/8.16.0.42) with SMTP id 09UCPIrN082023;
+ Fri, 30 Oct 2020 14:28:46 +0200
+Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
+ by mgw-01.mpynet.fi with ESMTP id 34g4hx0uu5-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+ Fri, 30 Oct 2020 14:28:46 +0200
+Received: from localhost (194.100.106.190) by tuxera-exch.ad.tuxera.com
+ (10.20.48.11) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 30 Oct
+ 2020 14:28:45 +0200
+From: Vladimir Zapolskiy <vladimir@tuxera.com>
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: remove a void EROFS_VERSION macro set in Makefile
+Date: Fri, 30 Oct 2020 14:28:39 +0200
+Message-ID: <20201030122839.25431-1-vladimir@tuxera.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [194.100.106.190]
+X-ClientProxiedBy: tuxera-exch.ad.tuxera.com (10.20.48.11) To
+ tuxera-exch.ad.tuxera.com (10.20.48.11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312, 18.0.737
+ definitions=2020-10-30_04:2020-10-30,
+ 2020-10-30 signatures=0
+X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 spamscore=0
+ malwarescore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010300096
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,155 +62,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
-branch HEAD: 6fec9eb0f0c15222b7a1fc4da238b7abf3b70208  erofs: complete a missing case for inplace I/O
+Since commit 4f761fa253b4 ("erofs: rename errln/infoln/debugln to
+erofs_{err, info, dbg}") the defined macro EROFS_VERSION has no affect,
+therefore removing it from the Makefile is a non-functional change.
 
-elapsed time: 722m
-
-configs tested: 129
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                           se7705_defconfig
-arm                        spear6xx_defconfig
-arm                              zx_defconfig
-mips                          malta_defconfig
-alpha                               defconfig
-arm                         mv78xx0_defconfig
-m68k                             alldefconfig
-mips                         db1xxx_defconfig
-arm                            mmp2_defconfig
-powerpc                       ppc64_defconfig
-powerpc                     ppa8548_defconfig
-powerpc                  iss476-smp_defconfig
-mips                         tb0287_defconfig
-mips                        workpad_defconfig
-ia64                                defconfig
-m68k                         amcore_defconfig
-arm                          badge4_defconfig
-powerpc                     stx_gp3_defconfig
-sh                           se7750_defconfig
-powerpc                    mvme5100_defconfig
-mips                         tb0226_defconfig
-arm                  colibri_pxa270_defconfig
-arm                       spear13xx_defconfig
-c6x                        evmc6474_defconfig
-arm                         axm55xx_defconfig
-openrisc                         alldefconfig
-powerpc               mpc834x_itxgp_defconfig
-sh                ecovec24-romimage_defconfig
-arm                            dove_defconfig
-arm                         socfpga_defconfig
-sh                        sh7763rdp_defconfig
-arm                        mini2440_defconfig
-arm                           spitz_defconfig
-m68k                          multi_defconfig
-arm                      jornada720_defconfig
-powerpc                       maple_defconfig
-openrisc                            defconfig
-powerpc                      arches_defconfig
-mips                        maltaup_defconfig
-xtensa                           alldefconfig
-powerpc                     kilauea_defconfig
-arm                         cm_x300_defconfig
-riscv                            alldefconfig
-powerpc                     rainier_defconfig
-powerpc                     pseries_defconfig
-mips                       bmips_be_defconfig
-powerpc                    sam440ep_defconfig
-powerpc                  mpc866_ads_defconfig
-sh                          kfr2r09_defconfig
-s390                             alldefconfig
-powerpc                        cell_defconfig
-sh                        sh7785lcr_defconfig
-powerpc                     sbc8548_defconfig
-arm                         s3c2410_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                          lpd270_defconfig
-sh                   rts7751r2dplus_defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20201026
-i386                 randconfig-a003-20201026
-i386                 randconfig-a005-20201026
-i386                 randconfig-a001-20201026
-i386                 randconfig-a006-20201026
-i386                 randconfig-a004-20201026
-x86_64               randconfig-a011-20201026
-x86_64               randconfig-a013-20201026
-x86_64               randconfig-a016-20201026
-x86_64               randconfig-a015-20201026
-x86_64               randconfig-a012-20201026
-x86_64               randconfig-a014-20201026
-i386                 randconfig-a016-20201026
-i386                 randconfig-a015-20201026
-i386                 randconfig-a014-20201026
-i386                 randconfig-a012-20201026
-i386                 randconfig-a013-20201026
-i386                 randconfig-a011-20201026
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a001-20201026
-x86_64               randconfig-a003-20201026
-x86_64               randconfig-a002-20201026
-x86_64               randconfig-a006-20201026
-x86_64               randconfig-a004-20201026
-x86_64               randconfig-a005-20201026
-
+Signed-off-by: Vladimir Zapolskiy <vladimir@tuxera.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ fs/erofs/Makefile | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 46f2aa4ba46c..af159539fc1b 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -1,11 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-EROFS_VERSION = "1.0"
+-
+-ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+-
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+ erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
+-
+-- 
+2.25.1
+
