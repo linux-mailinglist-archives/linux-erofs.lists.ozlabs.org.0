@@ -1,100 +1,105 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 538AE2A0785
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Oct 2020 15:11:36 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B6B32A1336
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 04:01:08 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CN4426bfDzDqpR
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 01:11:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CNP81079KzDqwT
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 14:01:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1604113265;
+	bh=S0qv74tlE7jgVRvFV7SCSKX82y/CPhfI7mK+i89b4CE=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=PquTq3eCuqTMSFao0DIfD7s1qMW7XVdAtt88RlDn3QRZ8xH5prBppYYqiiPcNpELX
+	 2NEHT07n1YNI/uDdmRl5rcpASlY/acBeOXHuS/09G7Fn6vULGPeuL/IwWSjwaoCoO2
+	 CwzQSoQgErp6xiQAxIBlrr0lXf3/Xwna5pQgSlGXGFhGsIxlT6Zm62MLIZidUrVGG/
+	 njYqzTdevv2ogKFwlq34Pme/8HE6QZ9wOVl4kmT99VNuf+6Q3TQaAXO7n1zkpUpqCz
+	 PAHMy6dKkCe9ZyGGOcUkGTyyiVuL+/coe45Xfm9Xqeza2kSE4qjqTTYezvaoyAFNO3
+	 QXcgbT7dIPPew==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=OorXOklm; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=KqYbpE1W; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.69.84; helo=sonic314-21.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=T3B733Un; dkim-atps=neutral
+Received: from sonic314-21.consmr.mail.gq1.yahoo.com
+ (sonic314-21.consmr.mail.gq1.yahoo.com [98.137.69.84])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CN4305NDWzDqkf
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Oct 2020 01:10:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1604067029;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=oE7zJnELOj3JSr2Ymb2+NJIOFKcpsBSnN86Rkhl8axs=;
- b=OorXOklm+xoyx3z3G6aTPyW6vywT119EPPvga/WPSnOeEqFi/5qMYTBguD0AXXUNoUOkMf
- 0QVlGsJlTRxk8eE+uq6Y6rRa+JHH0w7Qx9Zs4wirUFNttgRm1pB90IkuTn+M1vOjQBuMvE
- HnKSseRyyU+zDbDgXBj+wwGN5LP7u3g=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1604067030;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=oE7zJnELOj3JSr2Ymb2+NJIOFKcpsBSnN86Rkhl8axs=;
- b=KqYbpE1WsuFBEaQ7EYs1oVX7k/3FCUJntSKJ1OItBTzXdQ+fCZfsqT9PMSd6Gs2leAsIHE
- X/D4deaoO0Eh/YCJ+VTX1uD+QPYKASismptZjQwG1DE/2Z0xwnqusAhqJ6YyXMz1zxXNBN
- eTziQYqYDnn2Fqtvt0Ughs27y3H6DIE=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-baLIL7XSNTC6eDpB-1bnkg-1; Fri, 30 Oct 2020 10:10:28 -0400
-X-MC-Unique: baLIL7XSNTC6eDpB-1bnkg-1
-Received: by mail-pg1-f199.google.com with SMTP id 19so4710154pgq.18
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Oct 2020 07:10:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=oE7zJnELOj3JSr2Ymb2+NJIOFKcpsBSnN86Rkhl8axs=;
- b=nXBIsKUiaPhW6AR3TAJ/tfOMphVbUull5mtfh0jyPwDGXl48OYhi0zopPwZH8qwBaF
- n5K6GxqK0LxlR3ygiAWhOJVbjte3Gkb8kFAXGx6rp6A5NSvZn3K4MaIHQjuuxjK0iCOe
- 6nhV6bP8aO6kerwZWGAvRbt+rNuWowKUoCxlOyRN1wLnaTH1BrQQr61Ge20lJQGSluAt
- KK9IL3Pxm5TlKH2xIhDG5abV9sqL9JJUOlq+iC1S7pTvK1jsnGGIxDSVQShzIr6Uufn3
- +QDd8NBcyRce58MqgjE8ODykSF/o6IiNl6B1xiBqEliUrrDpujboFDVRbzQlwY51HGTQ
- rYUw==
-X-Gm-Message-State: AOAM5338hdf+gd0kiYS+cUZC9Eqxp3xR+NrrZWBuaNdvnE2YoE6ONtgS
- 3UiDpH74ysdoHyN30+rVqL4dLr6xvCSUmTCsYWuO8BQKi357JgkI/+keiDU+csp/czuMvfTGQvQ
- 9Xn6KkzQkj/R0G+JrSgj3sjRl
-X-Received: by 2002:a17:902:6b84:b029:d5:ef85:1a79 with SMTP id
- p4-20020a1709026b84b02900d5ef851a79mr9345445plk.32.1604067026849; 
- Fri, 30 Oct 2020 07:10:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw/z761PmX0cKUlUg1KK66JGCtUiz7/Ov5sHMUFfjPd16VSFCbQsCyxL7bzJDnjhvp8e02ulw==
-X-Received: by 2002:a17:902:6b84:b029:d5:ef85:1a79 with SMTP id
- p4-20020a1709026b84b02900d5ef851a79mr9345377plk.32.1604067025973; 
- Fri, 30 Oct 2020 07:10:25 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id mz23sm3376896pjb.3.2020.10.30.07.10.23
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Fri, 30 Oct 2020 07:10:25 -0700 (PDT)
-Date: Fri, 30 Oct 2020 22:10:15 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Vladimir Zapolskiy <vladimir@tuxera.com>
-Subject: Re: [PATCH 1/4] erofs: fix setting up pcluster for temporary pages
-Message-ID: <20201030141015.GC133455@xiangao.remote.csb>
-References: <20201022145724.27284-1-hsiangkao.ref@aol.com>
- <20201022145724.27284-1-hsiangkao@aol.com>
- <ba952daf-c55d-c251-9dfc-3bf199a2d4ff@tuxera.com>
- <20201030124745.GB133455@xiangao.remote.csb>
- <02427b81-7854-1d97-662f-ab2d2b868514@tuxera.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CNP7n1SnSzDqvV
+ for <linux-erofs@lists.ozlabs.org>; Sat, 31 Oct 2020 14:00:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1604113245; bh=oWKfhRZ3KbL7jvWL4nMK3yuX+COyNstAmZAUTY6mFWM=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=T3B733UnSycUrYXOKRsDIq8KNx0ZCVHxSe2eJHf5q4UJBQIkwk+tb1FGO1tZ2h3EaSwvOc7gg24EIB5NyiBNEZWhIw3SH/M79V5UmZ+e3bCvlLvibQMPVJFBvQfdACJFAd0H1YmRUZnKw7C9kuLaZKqu8FkGzFjJBT7Ds11phU03zh/bwUCPpayPqhv8z/ovK4Mmk7XyexzVE8BETmZ+sf/EyCdAtoXNtSaa0I63RRJ0m/eN5PNTUdqLEmOXU87Z+6WF+myOtkjmc+WANTRfneuN54YyuJ0GCs+JAdru2VudiRwdNFx8RmgCZhxk4DwegYIxbr0sOITg7+cR5UFvmw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1604113245; bh=iIFp5/xM7b1xFkw9V5nkSXL6HshpOgZ+YC9SKSlXxFo=;
+ h=From:To:Subject:Date;
+ b=YzhQ0O8fLipUtLE6joDw1ccsMoGmQAVQoOupEbuZWnYuvC6vrRtc5VdzygNSrlSoBqqGQYXES5E0+F5lS6GurnwgZrIDOkma3xoVEci0+VFTaNKQP7oskviyaJ4xkD4YF2c30en7EG99ZAJFbv4oolcPnILD7z3ZWQwBe5Gl/MkBYZsvtvI7w1nNeMODOUjBzybtXMVZB5DDDStOKMLrYpgI0W/AIt+GWtkK9+opaWHh+vMM2SdTGlw3oBXJD+vSF3R/noPY+H2pgkvHg29OOSirpg/z2LndrPFWxF2TXBJRcNZS1dZ+Sct2ZiYcHComW632ZNLcw9iKhtjzP9/KFA==
+X-YMail-OSG: 5G3_4LIVM1neueXD0R352rkFCB9wcOiKlpOb46qEU.X1t6IdV3G7Rk9KY7tYPc2
+ rPnUGctoMTuV3H_v_H5LtAyT6PgET0YLqz1PWBqjXb02eABDgZor.XwmVWl2w6yHTItFO5cfFIK8
+ ert72I3D7pTQEjG3S0JBFjZFfy1LOBbVAGELyzdKwbPZiYXTWxoQxdcXhHe1JjKDnaO4kCgtGDXy
+ cdqgREVIXqjifE8iNfaPTn6.4wZqggW0JQr7YrfO.eaZqcjV0AJNba9S_KZjyKLEBB4.XC8vGgyr
+ ipAFaVyEgoyS703NVfybeRRaEzEcgjeMm_Q9FSWeFuJMsm9pFOiCe1mIy.rO85QhVC0UMW6gA7Zv
+ AcCIFeykIaltkoUoDjGV6AvMZlfLB90JNdIXAsJFR65VvYWcBwcdt8HA86Ps_Exq7Ps.xXEsXWlw
+ FWEOrUTWlLfQ1JbpEGaUBysxgFVqQ6SF8slHX7m5U_TSPtrYq3n4UjuLspwMcmzb5SZOE5xFDt6M
+ nkP4d1Xv.45bbNDpYS9xL.ttFIsK5ulecX.Me05Oc8O5LAia0mEIQF_I9bPu9QCoyileFQ9neSqk
+ udBrGFQYfLI8OtXZXy36NYkAFBoekoLUu8Jav34C.HB0UW7eTJ7bXb9OEAwcHN5dueXr0NRL_jIl
+ B7md8Mq6McqIYRXK8z0DQ2rybbCqtmckgb.zk_RSU6rmc7g1SK_w1_uRZ1TqfDyNFgfixU.6dX10
+ GnYMBmtxDXUUFbxEmwyNjSV_sNLLl0_UmkFqCYW8iCoPyoUgg8T6fe3fGVtocooa3NiAcs0zwGtQ
+ MliBuMuhRkvalLUNe6nDqjOUPDP1wn5FZTrzRad4tBser2t3vwpXelXqvyXIylin7urBPwkGMBsi
+ PTi93er7tLgRLUyLP2uDRtGiS9foFgc9xhs_OEaScXk17RqvwNMWPjmAsKSNC7nxsOrS8H2L6qZF
+ 0dS8Mf6GgnQtZbfwOynaNMAyuLidPvPrfm3fLZJ8A_R5NzbzDyGTjjRBiotr3m0jSaJcQ71IMmqy
+ 7N95fD3gnqKEwXQsN_Vfh1ALtiGq0tmI90Feo2Ij4MWcFmH59YEa9EvM5e7eNE0b6M.CcKoiroEk
+ G6EYPOQpeUZb5LVp9wlOZSgDo29M4YoXcxmUySLEtXgUrFpBepmqtS42Ovet9hgqvQn0tScIghfm
+ ytjHcPt90LoFkeWt80xzVWrLJUo5DrAANvxuGZFbbf.OjdsciAoNjZkSeEzKPVtiUZ7PsGgeWgrB
+ KWEfkw_m7MQycwY0luITlVlhSdMe6nzhtPAXPe2k82WFcrVCt1MrNH8BLPu8P6vNtvQy7iyo.FIs
+ JuSrYl9EhDTlV9vnflOLP4V88THpvVlTh2oJCERDsQ3ytgYIKl3KuC0eGF_p.M.WqY8rvpDPSbUw
+ BeSrtEn12gSDADdm_w3Gv7wxEtRyh9wMaDdqx4CyfEShKfiuq81OehiOil9lInzUzPPkZI.uGVGr
+ CYtbvCCNaw.ihJSNqaYwpRMDtBqrQzP4iiMij8uyP5yx6VUdVtFPDcbzCqsbgHIGuRTxfZJqQMPD
+ JDX85P5.JG1m7DD_STdSQSw2DVruei8ETumFcoz3w4YvOTKqNOhwSuiF91eW7vwY3LioUn96FpJi
+ 1Z7yMN8fXFJcuvYNR1bVvM50Lf0NXOzshjLHZc7RGwlYwbupmlmtux_AiJVh4lUo2K9oL_xTq_lO
+ IGRcDCIp4OhKk5g5vFj9IgSQSSei.62hy.tsH6IMZlH1j5kUO.BlQMxf54Yd6gGGe8zYDyDLeODJ
+ 7tpy2KvtZ910RBBf8PWbZZpeD19wAXFlqjXBt9QzFWuaQYhOEQN6pFJAt4fNqN3TQ5ETg9pkKwem
+ rROirPe64DV7eXbFXnowLHBL9xGkXkPsa5kSexV7RIz.ScOqskNAbjlpX4RhKauhNZvb2Sop4mPO
+ 6GmPnygjFtSuG1oo4lAbNU.u.9Ed2bA83YCK7YTg7Ya6mEnurf7AmLo.kNati9l5JNOw4rAsjVUS
+ k7tFkUvFiSVeza2ClX6iXDTYaiVbHi7vEo1o7oikK6by5uk3Mj92TntsoLisiwWK7hxDmpaqDYK4
+ d7xU5Nk3SlIjcUKszUPoX5d.Jrn_QLwIDsfYad1_jY4rRvOJ6pfAfyYS48qFi3n7sJN4tlOr0308
+ Glt7Mj83GQfLiZjSlkZGIp6bdLBG8kwGKkVdx9yWiHDhCw9rFDPuf3.kDSkukBym2PsqRS0rmUoe
+ mTT.WjdCDkWa0tPFahwvjzXNKlWsaSDSVreBqJdAN3wzn.MDvH8oHh3BtKFUGpa1Z9C.21ZUudK2
+ LrODBo0sga8UUD5OE_XvxYBNHIxOsUp0CFJbaGtD1wqobuKr69allSyY_D.W05CxvTHJ.QJtzS7q
+ S_OQatrwIaaqbfjA2q05RG.iAyqbWIm3AdCjU5Fn1PaXLzxG0aFIWaMd_PRK7Mgbaa1601MS0Ylx
+ JDoTCp0AWQ9t8sJ.Vgp.8Rgf7bp_dtg5Pv.tVdDGg4h7sLmJfDhwvjIeh_TMqKq_73dJA2fL8i2z
+ ESxW4XLd.m7.4MZisTFyAp7mYNnuuDlJuwhE3q.0tPKhSqSqiBJ3Boijxx7hNyVwP8eppaD_kFHd
+ F8IoTVj59_nB9RauPi6ItdfKsMN3LQQXTp6hAeV8L64_1qtUcqmFXy131k70rVPh966fhFhMKJpc
+ EKR06Zt3XhB4lpEW9TTG5I6ETSSHo.dgrNe1zlvOgdGhstEkvZEtn3fefVUlddcdkA1oD0irUCwl
+ IBUqWmpe2YCXIpb5qBoi.g1TfIWSe7h6E3qE2PKt2UWRQ9NnQ_Co0QGuCv2Z41TV3EZLO.Dt5qVY
+ WGqtM_1fFfpR7ZUTZjPGMTegCWOwm9S4sFeBinsgPql8Cq_3JgbkIbhrEWJTwE9JujMNzZ5uSql5
+ nO06LDh326Zpc5Q6o3p2z3I8DQuCiwbfnd61.5izku54hxnyZRuhf3EWr9FEOU7Eus5bc32Ze6jE
+ A2lBvqMSqMZylLpMSZ5.SPdRFfCWuc30CMNyqTpOkwpzD301.548Bb6Q207b56cBu4F1U0Nq_uE3
+ iq1J5K6A-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic314.consmr.mail.gq1.yahoo.com with HTTP; Sat, 31 Oct 2020 03:00:45 +0000
+Received: by smtp423.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID dfd422814a7ab1b56d64b85b4cd385e6; 
+ Sat, 31 Oct 2020 03:00:38 +0000 (UTC)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 5.4.y] erofs: avoid duplicated permission check for "trusted."
+ xattrs
+Date: Sat, 31 Oct 2020 11:00:18 +0800
+Message-Id: <20201031030018.645-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <02427b81-7854-1d97-662f-ab2d2b868514@tuxera.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+References: <20201031030018.645-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -106,107 +111,48 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: Hongyu Jin <hongyu.jin@unisoc.com>, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Oct 30, 2020 at 03:32:55PM +0200, Vladimir Zapolskiy wrote:
-> Hi Gao Xiang,
-> 
-> On 10/30/20 2:47 PM, Gao Xiang wrote:
-> > Hi Vladimir,
-> > 
-> > On Fri, Oct 30, 2020 at 02:20:31PM +0200, Vladimir Zapolskiy wrote:
-> > > Hello Gao Xiang,
-> > > 
-> > > On 10/22/20 5:57 PM, Gao Xiang via Linux-erofs wrote:
-> > > > From: Gao Xiang <hsiangkao@redhat.com>
-> > > > 
-> > > > pcluster should be only set up for all managed pages instead of
-> > > > temporary pages. Since it currently uses page->mapping to identify,
-> > > > the impact is minor for now.
-> > > > 
-> > > > Fixes: 5ddcee1f3a1c ("erofs: get rid of __stagingpage_alloc helper")
-> > > > Cc: <stable@vger.kernel.org> # 5.5+
-> > > > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> > > 
-> > > I was looking exactly at this problem recently, my change is one-to-one
-> > > to your fix, thus I can provide a tag:
-> > > 
-> > > Tested-by: Vladimir Zapolskiy <vladimir@tuxera.com>
-> > 
-> > Many thanks for confirming this!
-> > I found this when I was killing magical stagingpage page->mapping,
-> > it's somewhat late :-)
-> > 
-> 
-> sure, for me it was an exciting immersion into the filesystem code :)
+From: Gao Xiang <hsiangkao@redhat.com>
 
-Thanks for your effort on this!
+commit d578b46db69d125a654f509bdc9091d84e924dc8 upstream.
 
-You could also post related kernel message in advance and
-I will definitly look into that as well. :)
+Don't recheck it since xattr_permission() already
+checks CAP_SYS_ADMIN capability.
 
-> 
-> > > 
-> > > 
-> > > The fixed problem is minor, but the kernel log becomes polluted, if
-> > > a page allocation debug option is enabled:
-> > > 
-> > >      % md5sum ~/erofs/testfile
-> > >      BUG: Bad page state in process kworker/u9:0  pfn:687de
-> > >      page:0000000057b8bcb4 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x687de
-> > >      flags: 0x4000000000002000(private)
-> > >      raw: 4000000000002000 dead000000000100 dead000000000122 0000000000000000
-> > >      raw: 0000000000000000 ffff888066758690 00000000ffffffff 0000000000000000
-> > >      page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-> > >      Modules linked in:
-> > >      CPU: 1 PID: 602 Comm: kworker/u9:0 Not tainted 5.9.1 #2
-> > >      Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > >      Workqueue: erofs_unzipd z_erofs_decompressqueue_work
-> > >      Call Trace:
-> > >       dump_stack+0x84/0xba
-> > >       bad_page.cold+0xac/0xb1
-> > >       check_free_page_bad+0xb0/0xc0
-> > >       free_pcp_prepare+0x2c8/0x2d0
-> > >       free_unref_page+0x18/0xf0
-> > >       put_pages_list+0x11a/0x120
-> > >       z_erofs_decompressqueue_work+0xc9/0x110
-> > >       ? z_erofs_decompress_pcluster.isra.0+0xf10/0xf10
-> > >       ? read_word_at_a_time+0x12/0x20
-> > >       ? strscpy+0xc7/0x1a0
-> > >       process_one_work+0x30c/0x730
-> > >       worker_thread+0x91/0x640
-> > >       ? __kasan_check_read+0x11/0x20
-> > >       ? rescuer_thread+0x8a0/0x8a0
-> > >       kthread+0x1dd/0x200
-> > >       ? kthread_unpark+0xa0/0xa0
-> > >       ret_from_fork+0x1f/0x30
-> > >      Disabling lock debugging due to kernel taint
-> > 
-> > Yeah, I can make a pull-request to Linus if you need this to be in master
-> > now, or I can post it for v5.11-rc1 since 5.4 LTS isn't effected (and it
-> > would be only a print problem with debugging option.)
-> > 
-> 
-> As for myself I don't utterly need this fix on the master branch ASAP, however
-> it might be reasonable to get it included right into the next v5.10 release,
-> because I believe it'll be an LTS. Eventually it's up to you to make a decision,
-> from my side I won't urge you, the fixed issue is obviously a non-critical one.
-> 
-> Thank you for the original fix and taking my opinion into consideration :)
+Just follow 5d3ce4f70172 ("f2fs: avoid duplicated permission check for "trusted." xattrs")
 
-Yeah, v5.10 is a LTS version, and you are right, I will try to make a
-pull-request after I get Chao's RVB.
+Reported-by: Hongyu Jin <hongyu.jin@unisoc.com>
+[ Gao Xiang: since it could cause some complex Android overlay
+  permission issue as well on android-5.4+, it'd be better to
+  backport to 5.4+ rather than pure cleanup on mainline. ]
+Cc: <stable@vger.kernel.org> # 5.4+
+Link: https://lore.kernel.org/r/20200811070020.6339-1-hsiangkao@redhat.com
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/erofs/xattr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks,
-Gao Xiang
-
-> 
-> --
-> Best wishes,
-> Vladimir
-> 
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index b766c3ee5fa8..503bea20cde2 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -473,8 +473,6 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+ 			return -EOPNOTSUPP;
+ 		break;
+ 	case EROFS_XATTR_INDEX_TRUSTED:
+-		if (!capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+ 		break;
+ 	case EROFS_XATTR_INDEX_SECURITY:
+ 		break;
+-- 
+2.24.0
 
