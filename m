@@ -1,52 +1,99 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id B35E02A13EA
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 08:13:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49FB12A1A50
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 20:51:54 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CNVlC2W8qzDqwT
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Oct 2020 18:13:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CNqZC6bH7zDqsG
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Nov 2020 06:51:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1604173907;
+	bh=JgDQJXRdBk8n3Cb7swF+09qSNpwGODL9tzs4GxWiDIM=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ByFTsn9NUI9/mdDelwHYVRTH2isFFHjXe7rnV3wYG6yOoNMDmRh5O/D1gHZJb7dzX
+	 im0v00H60z/gajSAb7+NKnKbhjsKYe6jHb+3tD5N+AEGp7MOGZRCo/xw6IZqH/w9mV
+	 iNFI5aNvz2kl/E5cIybDdI2rIPRs5V0vXvGRNPEzYY55x7HAx7mw6ZuIfwqzumh+lW
+	 BKSKAnV/+vqNLgEqQ64xhvrBH6XMAutTmFsash/QJjcC8+1qf2Ei+Ff8VT9PWok6vs
+	 rpWW2CfOzW9/AsdorQSghRdIzLxldzrCj5ynjLDMcwQJRwYGHUmnCdrN2wG7Vdr4la
+	 zvzQSbxWAaOgQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.64.206; helo=sonic303-25.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Received: from sonic303-25.consmr.mail.gq1.yahoo.com
+ (sonic303-25.consmr.mail.gq1.yahoo.com [98.137.64.206])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CNVl14nr9zDqvY
- for <linux-erofs@lists.ozlabs.org>; Sat, 31 Oct 2020 18:13:11 +1100 (AEDT)
-IronPort-SDR: CdMHtnBC8FU4sai66P9f4ofzejIdPMS/34dNh7Flg2qjoHeZKxggfhuofOYqC4LK9Iv9HT59oW
- A5fC+7dqPVKQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="147990658"
-X-IronPort-AV: E=Sophos;i="5.77,436,1596524400"; d="scan'208";a="147990658"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
- by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 31 Oct 2020 00:13:07 -0700
-IronPort-SDR: aPZ8lkQ2rasTsNg0CxkVWpfr33QWlwFPPfE8ng525+yqxgZh81EmpdHJd0tK9DEgU3p74wB085
- +lYw2JWp4Qsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,436,1596524400"; d="scan'208";a="526123422"
-Received: from lkp-server02.sh.intel.com (HELO fcc9f8859912) ([10.239.97.151])
- by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2020 00:13:06 -0700
-Received: from kbuild by fcc9f8859912 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1kYl4U-0000Sv-28; Sat, 31 Oct 2020 07:13:06 +0000
-Date: Sat, 31 Oct 2020 15:12:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- f2f0ef499175782eb235bff229b4742fd7a91bfa
-Message-ID: <5f9d0e48.ZmfZGFyPN/FNo/xz%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CNqYs06vPzDqgl
+ for <linux-erofs@lists.ozlabs.org>; Sun,  1 Nov 2020 06:51:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1604173880; bh=Y3+Vr/7VfjoQve6rX9Ou7rfg3kCgfxLd0wjV4hIjteU=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=WK9FE9kMmxwDjyvub1HmPSXZ5ayOYWE+W8OVc1S0lQqd1DnLegCRdfbOKkEwzB5aS4gE5Z3X/1TPj2OpdhkCL8Jan35aQJUVGg2Asgl/aMs27Wbi2FZqxibb82oDl1/Xk6zhFvv7/rDL5R1UoyXAy2fa89oKOdsFL7dmEAzlsiCN2W3nTnLybt+ejETUNqgDrgeT8bAtwIPFFRwECyrma6f7++CSvhNZ24s9bSBGdYVRAX6VJpHIa1KltCQsSoOrmjeWeNiPCFI6iOP9M9suZFkPoxGvSth1Lth6i1f/VrsLnIERbrm13mDEDvntlxXBwIH/q6i0BUpey6fN6YCmNQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1604173880; bh=xRHW7MtCvNUC1k2z3iMUjR1ahI55MbvrPqNxwQCr9ot=;
+ h=From:To:Subject:Date;
+ b=MgzmM2N7m+QYvzeNFQv6Wx3g6/67pxgTNwgmQ2PQjDv7B5lmF8VyMOyXx8px89TqCKB+OmbS2ACpNk+0ivVrzlx+QBqmTfyRYZERDpOrXooOCyM6cS5d0j2+rULLESNieH1yzOhBECNVMc/hSiXOiQx9mQo7MvWtJM7/sfVPF6a7nwbn/rksOYVVSADYAH/UlwVqlirQQP1P8L1nO4uSt8kx3JbngzQ9c6bMi3ZMi0t/tw7m9Da9NKNJ9agfHH2O521nM7QoMfdAK0PQBQd9Rpjo9ehbSN+KegYcwQE+Q4CYjNHxCWdkuem1C5vlacfbvweeo5knDc1I+10ztFLB3w==
+X-YMail-OSG: t63H_IgVM1lrkxT3BjOR9jzV.zlO3BhHr4NL8F7Ou5JvQf9xnEH5wvBBTyF3Liu
+ pzwmSYHfUHs_NrpW0VPNvIcmtn8usIBGr7p8YS2vOzVZqQeuPafwoFUqsyJPABJcvHPk1MdRLctX
+ zYLgzAdiplc9puuWJYU3Qafol.gacyLX5GEHlzW1NJCcrRLoK2jqcQZluLnuJ8NhrBGWBDXe8tPA
+ c_yDOcYn3tWwD9OSK0l8vsohQ9HIEJ35GAh1byviIxpd5C5CIUffXisyNSsVtwufVFI6hkItfsKS
+ CzBj1YjOLd7EWnQ2E5bih09ADr9FjrCcBC7v4Q1jfufYDFouBghQWR3Qeid2pe8C6Nc4TAhxMbzh
+ MNRfy3mDnNbu8Mx3OIULV55DQ0U3arvGp82P8YB7p9lvjQcRR99a9HIHy9fbXO4tJG56Je5tzC1s
+ iJcgHLqmu6K4AiD7AjBVTdQJ4KFVrI6nN7FyEDkA2rWY5sO18tjhPjWXzIgYhAbVuOABApBz9zZS
+ uflqG0olwfYyUK4EUfgfNV.9WyhVfmyoZs9yEfLFLMOjM_IlP_hRrounlaNmUw9K8JNWZwwVGdAV
+ RMW7FvClNOdLUYK.sdLR7J9deYn0p6acAaSlqdPkupzzycMLy5.VGm3RYcv5DU5Yi3Ll0eu1odIj
+ piwoEyXGo7yivljEXnC1lMhdQYw46a597DvYQuN4O1bw4tAa3_vFPZvRp0uP18zSGrXJy8X04WyH
+ 6Ns6gDjRLAAlvXC6IZmW4nMher5iHxTYEKyYhljgu94AMBi7Si7xpUmtkhooWTgnaQX11TBwH.nx
+ wPqmneGwnWSjrS1JcUqbj_wP9iybtjUUn4G.4A1607yCxYPmfsBkWJ15dWGSL8Gl82hGVElhiH.q
+ FUv72v9FOoq0jCfa4URVXUfGxzISA2EwasyMGMUrmcHVaaWRF4TQIfNaEpRVhWZDTehglM2cz0ED
+ xDCsM_APB0vropDmhI_DyOUvDlIQRoeeQF0v3z1ykisAUUKCv4JRgC9ii647cuHPaUZWKGYVT6mY
+ 8KQQH6EPY3QckWKPK3pDHse313OP7s4y91AMPJkgNioZkWtr2djEQo9CR6G1LxqiplAfdTVK0loh
+ gtXf_hHeKbpE0ncHuJxI75qs87UJKhKfXnyhuAO2Ynp2ITaFhKm0EVKKdQ6pIDULItwXxNSi0HG.
+ qlSNEzU78Z_2JVCT_Zt9WDwoVAIxfnbbUnF1FNwX5gPwedSh3GvNwssW9JD75W_BSCXxS.SHD66I
+ CnK2udMezSz8hquRFSiqUCb.cHnWEptYWgNMo0KrFxXKyHBeMLj8v5tcQs7gAwKobAzvNBFIUwE0
+ RMPtjSUqYYrzYGjDM44GA9r0jofnUmhFZBEe8LpJ0z43XG06kuhXjW_0duGUYEKCC49cey7I_FlT
+ D6covBgrLcJn.I57UGvQtYd3fL3KYT3Vv2eyv6ew.pUz55jZ7WLt46FneiCgjpM4yVaOIzn_jDAk
+ 6B3hwoIqrlP8Og1W1I41RltZC7qteB_Ta2KVcV4biDKzkrXRwq_RFl.DjYiDmbGOTrsTUoCg_oCo
+ su2z_fPRK8SgbH_x67Zu7.CcKmsGzeeFCrOSY_gzRLt.u8trk94mAf7lD9mg6stfeMm5dkSyob_j
+ Bmww2Z__nVOMU21PPyRqRtkwAqMFSZZ0GHJmcq6x7StxTb.dWWjkmmCaZSktEryAIl1tl9B7yw4O
+ Y4kHduepx9B6u0MIAdl5jChHqqehkugii.VbI9wYazKzyVzPz9nRcUBmV8q3iXHJlmC7aiKb.RcQ
+ l7tQKz3uTDfXwSO5uRN.mIB3Fajj_M_FsMsAFl2wo4WswkvbfmvYZThLbRq8xiVStXz7FWnfD6X1
+ h.Yos6UEZvP.eYs__ssZs3RlckUjmALPLpq9lgYKuZtPn1sjzeTTiARSOcrh22KtgFl.qj_3K.8v
+ fvVw0or6BzE0a2dTbDXtq7IIdSUicvixXC4dcVUqFK4_tFCJszQ.nv6DVQv6EA6EC0aIY3WjGzc6
+ 2XJm_qQXw4Tw8ADYXLvnnHnYiuITmT97K.JX7VBqaCqo6rxuiDSTg_uCNFZaJ7oQkMq339x4.JlO
+ 35XakCptqdWMfATuR09axc7XUb2kag2dGTyrgYbrQWwyFNxII1Q.7mgq6iE.QoZR.eajX7TIj8ea
+ rEVMQvEzq_tnYYDzBuB4prXGglgi8Ad3pi0cmxR6fZbogp77DSVBB91n52bdSLhbARjD.lL7P8HY
+ _8uKxfV0mtAh7cLt0vrgafi0KB5F6xUMv19fZclKjuDTrmwBdsnsXDEAF7di62LPjuzVSEyQTa9J
+ Km482dhiWxk_plPrpP.dft4hG.F4UT62q4IquJ31SF0NPxMXzm8NSaECOeRk6aJ.37gaduoG8Woj
+ nEKDiBblckKEJ1Ex_zFOHZD1ASDo1rXwg3HLBdlHhEKVxgAJa7oG.jSTj1tMi1TeidyhLoTkbvGx
+ UzBQ0fDOkmOgh1dyBuztlqOq0DYz4kcbY.6PWHUInVAKX.GCjHcrxRllfPK00wwRTVn5pxsESD9U
+ UfwF9rGUwp.no1BlKKK9CkmfYYu4qzpNXxWwDNKraHH8qsKSwEJebvQr6fcyiOqpOogs3YIumTzs
+ 8Lv_ZmgkH23LXeW5SwtFQx5rJ_j6EBAScH7VdT1FOFAdvaqlGAN8ajFqaHSJvFdkqLIu904V7KM8
+ qH94HP03m3dgYxtccFsLdCrxaPP13bXJh_WqVwJenN7mYa26t9DUmkPgsQQNrG.cGR6m4SRrMAkw
+ 5wsDsGxI3j.2vIIm.A9WtucGe3xSssylo0oL9jxouaG8vB41c5hGFhEfOx0zhK8rERGswO_mneAx
+ M6mJu.sAEf0pxXFmyF73mIchpBtCky1bEEJcgfmODG6CqSf1FcM4AQFF3I64UaecBwrN_GE24AJZ
+ aQewVKCjcBOUdfDW6casg9Ie0R2rbMNTC0iCh5BaUfMknsUIOzY5r6hQL3DSdOXwGTQA-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic303.consmr.mail.gq1.yahoo.com with HTTP; Sat, 31 Oct 2020 19:51:20 +0000
+Received: by smtp401.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 96f200b13834f92880e94edd3139f03c; 
+ Sat, 31 Oct 2020 19:51:15 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+ Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: derive atime instead of leaving it empty
+Date: Sun,  1 Nov 2020 03:51:02 +0800
+Message-Id: <20201031195102.21221-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+References: <20201031195102.21221-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,179 +105,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: nl6720 <nl6720@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ stable <stable@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
-branch HEAD: f2f0ef499175782eb235bff229b4742fd7a91bfa  erofs: complete a missing case for inplace I/O
+From: Gao Xiang <hsiangkao@redhat.com>
 
-elapsed time: 725m
+EROFS has _only one_ ondisk timestamp (ctime is currently
+documented and recorded, we might also record mtime instead
+with a new compat feature if needed) for each extended inode
+since EROFS isn't mainly for archival purposes so no need to
+keep all timestamps on disk especially for Android scenarios
+due to security concerns. Also, romfs/cramfs don't have their
+own on-disk timestamp, and squashfs only records mtime instead.
 
-configs tested: 153
-configs skipped: 2
+Let's also derive access time from ondisk timestamp rather than
+leaving it empty, and if mtime/atime for each file are really
+needed for specific scenarios as well, we can also use xattrs
+to record them then.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          rsk7203_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                     taishan_defconfig
-arm                        magician_defconfig
-microblaze                          defconfig
-arm                          pxa910_defconfig
-i386                             alldefconfig
-sh                           se7722_defconfig
-powerpc                 mpc834x_itx_defconfig
-mips                      maltasmvp_defconfig
-m68k                        mvme16x_defconfig
-sh                             shx3_defconfig
-mips                      loongson3_defconfig
-arc                     nsimosci_hs_defconfig
-powerpc                   motionpro_defconfig
-arm                     eseries_pxa_defconfig
-sh                          r7780mp_defconfig
-arm                           omap1_defconfig
-powerpc                     kilauea_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                   milbeaut_m10v_defconfig
-sparc                       sparc32_defconfig
-powerpc                     skiroot_defconfig
-arc                        vdk_hs38_defconfig
-arm                          exynos_defconfig
-c6x                        evmc6457_defconfig
-powerpc                      ep88xc_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                     am200epdkit_defconfig
-mips                       lemote2f_defconfig
-s390                          debug_defconfig
-arm                            pleb_defconfig
-ia64                          tiger_defconfig
-powerpc                 mpc834x_mds_defconfig
-xtensa                  nommu_kc705_defconfig
-mips                malta_kvm_guest_defconfig
-arm                        keystone_defconfig
-h8300                    h8300h-sim_defconfig
-arm                          ixp4xx_defconfig
-riscv                            alldefconfig
-sh                          sdk7786_defconfig
-arm                        cerfcube_defconfig
-sh                            hp6xx_defconfig
-powerpc                      chrp32_defconfig
-mips                     loongson1c_defconfig
-powerpc                     kmeter1_defconfig
-arm                        multi_v7_defconfig
-powerpc                 mpc8540_ads_defconfig
-mips                           mtx1_defconfig
-mips                          rm200_defconfig
-arc                         haps_hs_defconfig
-arm                        multi_v5_defconfig
-alpha                            alldefconfig
-powerpc                       ebony_defconfig
-sh                        apsh4ad0a_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                         ps3_defconfig
-arm                         socfpga_defconfig
-powerpc                 mpc8560_ads_defconfig
-m68k                       bvme6000_defconfig
-arm                           efm32_defconfig
-sh                      rts7751r2d1_defconfig
-powerpc                        fsp2_defconfig
-arc                        nsim_700_defconfig
-microblaze                      mmu_defconfig
-arc                     haps_hs_smp_defconfig
-um                             i386_defconfig
-mips                          ath79_defconfig
-openrisc                         alldefconfig
-arm                        shmobile_defconfig
-sh                ecovec24-romimage_defconfig
-ia64                      gensparse_defconfig
-sh                           se7721_defconfig
-mips                        workpad_defconfig
-arm                         s3c6400_defconfig
-arm                            lart_defconfig
-powerpc                  iss476-smp_defconfig
-mips                     loongson1b_defconfig
-sparc                            allyesconfig
-riscv                               defconfig
-arm                       multi_v4t_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20201030
-x86_64               randconfig-a001-20201030
-x86_64               randconfig-a002-20201030
-x86_64               randconfig-a003-20201030
-x86_64               randconfig-a006-20201030
-x86_64               randconfig-a004-20201030
-i386                 randconfig-a005-20201030
-i386                 randconfig-a003-20201030
-i386                 randconfig-a002-20201030
-i386                 randconfig-a001-20201030
-i386                 randconfig-a006-20201030
-i386                 randconfig-a004-20201030
-i386                 randconfig-a011-20201030
-i386                 randconfig-a014-20201030
-i386                 randconfig-a015-20201030
-i386                 randconfig-a012-20201030
-i386                 randconfig-a013-20201030
-i386                 randconfig-a016-20201030
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a013-20201030
-x86_64               randconfig-a014-20201030
-x86_64               randconfig-a015-20201030
-x86_64               randconfig-a016-20201030
-x86_64               randconfig-a011-20201030
-x86_64               randconfig-a012-20201030
-
+Reported-by: nl6720 <nl6720@gmail.com>
+[ Gao Xiang: It'd be better to backport for user-friendly concern. ]
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+Cc: stable <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ fs/erofs/inode.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 139d0bed42f8..3e21c0e8adae 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -107,11 +107,9 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		i_gid_write(inode, le32_to_cpu(die->i_gid));
+ 		set_nlink(inode, le32_to_cpu(die->i_nlink));
+ 
+-		/* ns timestamp */
+-		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
+-			le64_to_cpu(die->i_ctime);
+-		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
+-			le32_to_cpu(die->i_ctime_nsec);
++		/* extended inode has its own timestamp */
++		inode->i_ctime.tv_sec = le64_to_cpu(die->i_ctime);
++		inode->i_ctime.tv_nsec = le32_to_cpu(die->i_ctime_nsec);
+ 
+ 		inode->i_size = le64_to_cpu(die->i_size);
+ 
+@@ -149,11 +147,9 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		i_gid_write(inode, le16_to_cpu(dic->i_gid));
+ 		set_nlink(inode, le16_to_cpu(dic->i_nlink));
+ 
+-		/* use build time to derive all file time */
+-		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
+-			sbi->build_time;
+-		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
+-			sbi->build_time_nsec;
++		/* use build time for compact inodes */
++		inode->i_ctime.tv_sec = sbi->build_time;
++		inode->i_ctime.tv_nsec = sbi->build_time_nsec;
+ 
+ 		inode->i_size = le32_to_cpu(dic->i_size);
+ 		if (erofs_inode_is_data_compressed(vi->datalayout))
+@@ -167,6 +163,11 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		goto err_out;
+ 	}
+ 
++	inode->i_mtime.tv_sec = inode->i_ctime.tv_sec;
++	inode->i_atime.tv_sec = inode->i_ctime.tv_sec;
++	inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec;
++	inode->i_atime.tv_nsec = inode->i_ctime.tv_nsec;
++
+ 	if (!nblks)
+ 		/* measure inode.i_blocks as generic filesystems */
+ 		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
+-- 
+2.24.0
+
