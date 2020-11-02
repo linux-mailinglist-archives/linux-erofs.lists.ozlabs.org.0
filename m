@@ -1,24 +1,24 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id D745F2A2ECC
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 16:57:41 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 889E42A2ECD
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 16:57:49 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyH70jtNzDqTR
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 02:57:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyHG5BXQzDqRh
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 02:57:46 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1604332659;
-	bh=4q0ZtP79jU1mW5Glsl/HPxYdXLiZ0joaKMRoRGnvQBs=;
+	s=201707; t=1604332666;
+	bh=gaRSG4m8wXe5jhEdbESMsOanngEAldhIzVI5iGnOrzY=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=WKTzoUf1F8U/D3KIvx25AEXYjQkrdj/YlUbMvoAmnrYnUA0RYomaIG9bVSwbvnD6t
-	 xcgQUu5sxeRPkW+vwMyKS8QYjrsf3Me+76150dc7/8urN2P1YkSmW9GR/NSa+w0igG
-	 yCOTlLK8ZeYl5gRarloSt4tWwZ5a0md7iiuJ5rVQ54UuxPdfNt7LRXrSv59jYZruL8
-	 13ORb5b3Yz48dJXmeSqBUGsXJ0HLm9BXoQk/MvxHXZekly8yFR4EYLiYoW8OIcZZX0
-	 TnVfKdckdpl7mHskOcAfL7ENaBUbE95EfIR0SB8YMJiOhmMmYJNZbAOCbv5u13XnII
-	 7VvJXZjGavUdA==
+	b=bkyluX7PRTfZmlZ1+/5NHXXTv6cpl7dEShXA5rB7icx7ciknuMfldPQF1kkwG65nY
+	 uLmTagE+WGFw9XSQb5OYOXAjxfCcgaJgzfUugfgdxNG6iwUoUn1maY/tbLUdU2jeUM
+	 9lrHnAFGQweLuthS3nkrVWlBDqm24esycpJJTEG0+Fw8Hv+8TCVS5rRHPkAeIR7jor
+	 hTs1Xl7i8yYvh59ksM72bJL/PwUbhW2rjBBPngZfLfU8oe4/4ipS8jzOltTwlhcz5R
+	 cN1nGi3WAQgH7FQBGclGKCPmHja+dyC9cIfFmnYojIU7UphjwLiDNapeCLRX03I0wM
+	 mlwUKjeHnsWdw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -29,67 +29,67 @@ Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=pqL7yqKm; dkim-atps=neutral
+ header.s=a2048 header.b=Axpghm4C; dkim-atps=neutral
 Received: from sonic307-55.consmr.mail.gq1.yahoo.com
  (sonic307-55.consmr.mail.gq1.yahoo.com [98.137.64.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyGR5YFLzDqST
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 02:57:03 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyGd2hzHzDqRw
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 02:57:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1604332620; bh=0j09uCoopdU6pOEx+gSd2p8R1rejBuZJTg/ykIpNc/E=;
+ t=1604332630; bh=XgDtYR8gBj2E/UIDsiDlqj+5gzhTOznGeMsXLoJmZoY=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=pqL7yqKm1hL6FKozgrpXAAIaqr0PvNQYd6dt3dXeoZJoC/Td7J4mlE2l4odG2RwnsGt+skiJJXxL/jEe0c0/hwC0YKWkbJUDm6aX+1akhLBPMh4ZaWDk5w5hpMMfwToex0hrgAIuhWIZGnj//PAVg7slP/Ed27jTM9AssafS2zpdY36lfvpP6j2Kelda6niHe3GUDDZm9M/5figShDgwbL/Jj7D7x+F92c3Q+g143pqkLYBtpHFaTLEDk3nR1IjLOfsajUj8P7P/rgU+5bw/Nr2WtYwahMyfIs0Br8CXMXZrfGSS/Pe9laQz412C8rQGqIiELTtk0+meMQJHfEPJfA==
+ b=Axpghm4CxiBWRKo7TjYkQ2DTVX+W7cST+knFbYnmV4cqwcLQRF0r4wzP7Gh7z3YYvzJYP7jNlgp4TI8IoqADSDUBEuhtwEi6uWCsHC9bkn+dcBFnyB8c4/GRjxHqX407CVkENAY2T97T+ffDR83DeOkzagIwoIR0YOqKw6LdGiwY/++xRMJRngiPEGJ4ZVPkqUxWOkAAR1jVVVscxO+M9NKJEnUhEg7kPYlUIRbwhSoXWIvFA8rp6Cf/crufgEW6gyJpFCht5Tup/RZw5zn8FNZr31rAsnzU7lVEyv52TDh7KdyNqFrDGJs3wqjgukDltNbO6p93h7s2JHT4z24ioA==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1604332620; bh=PD83kuZIWuJMFog5zrlaM6ud9w7J7SR3Ks0EPVY2N97=;
+ t=1604332630; bh=/62vegw4U47wepyznbZrvRjaOtI/FWscHLqECOexy7p=;
  h=From:To:Subject:Date;
- b=HTje8wt1s0nymP20uvN2PR06fJ2zhpe02v0HjII5ku2bXe9dkBJFM8JB3t8v7cjr0GYyaYqVeEyN3BtFuIhyHeXhee5m/GLgrrqsqf3gq6VSiPpzFVbwxz8A4o/PwKvAHpwXjBdlTT4bkMBMpPbvWiEnuNxSo4gltm2lxI8CjmtXIrrr5autrLROwPXss8R/9lJP6fnYSMUPe4kaRfDb/R12zTQZ4j4YBbHsmVORRz8DGMPNdjs1a7Qgd5kehzaKAqH3ofYrjEJprVm7QUKYRdjbDunn52ell2LsOkopcBI2TVQtA9YDtmdQraCExg4Aa8NNpuISZiq+Fvjj92P6cA==
-X-YMail-OSG: VHKEK3cVM1lPx0cV7UkuKkwsF8m1oR25zxUJ6PyjvBZ5FV.phTXMohb6aQWm3Pp
- ChWfwRIsXGZqTSa.LTh0aOgIvtO2B_wNTxynNq0RTxKu8tjR77UDs9uzgTm1KeIskswm4Yh7oWOr
- QN1lxsjuz48VhXuoWvgSbvGYukpwMjKnuU_zf9inJscNsX85T.OExvlzp7Ln5E2AjRuFu8Ywipbc
- _aW9gV244sKU7W1kp2TsCtgSR37LtZa4NForjTOoB84eSJvu3AkiUKpHJVHXDoNTF4o_qzYgZqZL
- Np1KJz2EO3cwq3llU60.BhQfU5YmHBBCis7mcyID4sDjPMTDHL3GalxIXbcHKdegs3K9wVvYbC.v
- QkHQNSTzPdC12TAxYjgTyleC8aMlBeoOTF7lx6CqkKDFj1ocEAHBbCYmK.locGH2qpNieEAettIu
- hZJON1Jn3YgQfhR6RlCy90a4dwsxQyXZvDvA86.uDNn0fd1WJiKwJJzdEaGcj9SU6.GYNRA0jLl8
- _79k5Q6owxHIAwsd5MFyXDkbSql5ZuUm77VHZFwdC.DiwMm1CTLDkG3WJPWE5sijLsSFkNW27s3E
- 42z5FvC79jb7ZoO58VsKpjlMU.P4WpbYJezgrDvIHvRV4Uv.i0qKN3ys2Rf1rxCSDJKbaWfEc8PB
- nBBLMj1Mp6YnZvoi85wOFzylZ_BrbqpLjgy1xQEY0ONRxz1IXrNOvtTvVhVI8HB_CWH9aOeHBdTI
- JYYMqdMEe1Yc3HKrrp6wwVeitEAtDMzdgDg6TmoGB5TqMNRhLntsj827uZrUvWubnS4H96Z0Ouk9
- kYYCEDESAPsHRXchqzogYFDS22otYDzcL6V_qjuRZhOkBi6.iNG0J6ALzMuO7yzD89UD.tkWr5Us
- ohA6R210JpXVj9LDAHbi_RY13a9TPCijNH8EqEYRZeOpkVvKQhzTI6Sx1Xk33cGkqLh2JVBYtouB
- 2F2y7XrhIij2nvPGv_cQJPEk5MrP1U7yxmaQcuZhU0a3VFU2AJLJxhc6SMWhARiAi66lNuZWy8Gz
- acqgkbeTnQw_Wh9TkfSAfGIGT8fvQlWsVAeu.FDpUJi0TRa0Dhnr.38xNLDrnZ7gMVSnsjLdoVmo
- UtwqjikJ1sOqGJnb_d1Q6NH.ShThmZjSaak3xRqg3plTCmCy8c8R2fd3oaFuDN4FyOstjoPDMk7s
- NKkvjcPlQ6L6PeW5Yi5aXxJhabgPZhIsmpzsxmUt39r6qxgg_T8pKbUh5L5dzs7eUQf9DCv2CUyg
- oQx92VDXraYZhiRrcQXK9fUHgN_P0i37FKSVJ4O48VGOcOqyKtiblHE6LTKJuyaJltZPccOoVilY
- K7bBG9VWY.c18DVeWPIg7SlXJER2JtP4qUs0cAoeyNBD4lcIjilnHqPRQLDvDDpfyCSGleItltKp
- LtWWZPaFgn8FPXWzWmzpQYqUIJqYR08M7JGBulR2t.8WWoSjuo1taa7qDO9vNfSPvhlcUs0DeEeV
- PysmL507.ZlqWmYUr5n34V_MyqDBz.pXyVCZVehOMXkmREvd23.NAaq7_qUUM4bjdt2u2JsPrw8i
- tg.DspH.jyTqfOoBg2EEbeGtajZBKyUUudj5t3Kct0vYyGDBjZ7540.RJsWpTjDCqf_gP8hthuYX
- LaFZ.iaRKcSHgch0RS55exzjIuVws3Yz1JWQHo85vwoa7TQgTJXceZ7ASHkGq_5Ode.E5F1CBSTw
- C9Coxh.ZhoP3HLL5DVIBYory.n6GkjNjRwvxeJbtRcmSJElgZjl7aFGV93OlZ999P0dsbTocqG8N
- P0Y2a.vqjVFuYt.znI04dKn_kG_JmsJrWBq66QsB7t89.nv3Gd5ntzzGGiCPCPXXlZ5txEk3n0bg
- P2Yn8IiYhKEIHQsTDKiIvGQWKwENYDcHl9P5.PfXwGz1xi4zFN7odc8qWYmUlOnv8GXyCfD770Ds
- iEvgXFKlSQBBQnYVhFGqYr6iqxcJSWWpU1PccOifGDZPGMyUJ7eI.MOAjNgFKavVRLaw_mYcnPT1
- rJGkR78HptdKBYZ9Wth_t5nD0QBK7TV0KnZxLzgG7eswvBLjh_XH3CVE70bMaQZxqrk9u9M6A3Xj
- 5PdpIcMjf1t5HzvMP2EkrUFdzS6yOC0DTNT4tlzmG32XHIkU_HT_hNZmcNEU1hTxE46Pj5_n0fUt
- D8UF2xMPXFmkVsJZsLPha7CHvvAWpXmNifYkXD8fjhq7kviiyj477Hyu6Nh6VS3IduGXVYtuPPSd
- .yAcLVNgpnM1HKhio5IV09D8qzwZupDdcylseXRWcsIXUsDMCsd5Yj.mgmDxGNTbcDvhpZV7tWv9
- cahPf0XE1lVJWj.lpIigqbPOn1rfzJ_cESrdPlPnyR5bgd2luoGY0jSujg1YaPYuP2w42jxvTXd6
- _OHmOiY0pctTLag_siTscRJZ9huU4uoSdTiXEB_3uuBgDZIekfkCvMcafR3MAwAg2xEEoJgKuDoS
- EGdUxPkmcRcUACQLcJ9nleja5L3wwlv2_2llID1g0PkLdDHqj19vM.2NwaVx1gb6l1RF6n787_ru
- QYyQve0r3dS7DEWCRtQIpJlmHqFBxZaffzMGaAkyf4s2zHD5uaxvP8XQqpVhDRQGS2bdjdSSRdSA
- B4fjhqfT5UH0170lRyk7WriAqcNHnl6wp.LPY0D970LIP9PrA8FMMpPfQ.OxbmLDAHgqET9Yx0LU
- HWxSu89HhXXMG23eUnwZHK7s40h0MYnViENszdKZGzPN4
+ b=AlcBJH9XaQKuuXcHGBS8AvNNUh/acJn0xMxa4kBXLj28SYmdyXh+lFE3knhtDb5oXU4muRIgbDH3t796T0PGfKYFYqr63y6KDRYwqkTBAfcf16D5k1X1dWVsU6ZVxl9tdXHSXrpQ4r8xoYwABU5WJ+PKySUAyRHJJtFLGmJrgMPWqJnQJMHCxegFTNWHGPmQ8Yu8N8F0/zfAnQq7Obg5XDCFY7VvdwNjHupEFxctd6/JDDUSl6FAJeKnVRoG2RGfClnJtoDgj1u8CJah+35OmzQnvTaYC69Q6BnaEL3IhpCZ4hn5O24q4vHPu1N4CN3+FTcuxldBLyA8lJUV8RxjEA==
+X-YMail-OSG: q.rLvJUVM1kPtlvDl3xGxWNS4Tkq4Hnd.RcTuMGECGmUoUZcXnvevrtCbKV1t6Q
+ 6wXn.Y1b5POVrsF2OyIVytvU4aNgcK.aVtKoAyT1rmE1664aRqliCmrcx7i7x3gdjprXZtrkMnOx
+ K8ynQrZofsYJnTiAFkp47VtQ4y1WUWU.lWqALeqzM4_0KJqO7ZfGEKbPoYR79e1N7VMtXfOyivVY
+ gDumsnCGRL.9X_Ha_V8G_G.JiCWUoGq0paNQkNABnBwat3J7vkhbHXDNsjGFAbunML6E7r2DNYhH
+ DlL13RJyMsfkfLqXF9yDvRU1Sj0ClomqivGHiy0O_BKdppvNumk5A8TUrX7wtmFtQ7VC6uK5lkTR
+ SAGfAcZ9sR_MjYNsAziExCl0PKI6lsaGmkANBn6KThPDf4e6vQmKeccWauY1jnVsE4mQ2_sz3MbN
+ azGyT9VQ93jc2gGNm97shDDCgqq3xC22IvY8K4MOYuuPAgseA5DHMKf8kW3TgJqwDQ72ZtU70GDR
+ Ayqs6E_CjRJqBcvHMaGta.imXG1vs5Nc76aDx_ePguG42suFKgWPZPS6CAtplM6cmpmtMGKmjl6u
+ 6VAs4hMiYBlkxsyg7p8s6CND8xAuV7J6Aa5nquzvgJFF0rcTz2CzPRNpJ5CebRvzUhGKtOex_Jz7
+ NTBN4UVby8AD69o6d9hSiZFkNLXkvSJ_W.JRkPWO5acmd0uOriSRTgdten3hZp77U1v68wZ9tKng
+ E89yfa_XUB10uON98yNv.wpDd74w9mTdYPm9x1MTZ8U_4P1qiwI4FvejyQQuZiuCMe8kUolGWaUD
+ R2yrhCXzNpBqTkzZ4uXQOXU3mqLhWB21MqfFSp.EbFNUU1AvOfXM.uHG5aWHdHgLMHFhfiwr1HM0
+ iBu63DgZ2dR58zYfQxHew_5MVZX92xp3zQGs1rEMfJEv0IO4fqKOzUCVmn3CPqG.k3mWDkSOdAKh
+ 5XT3HVtWVMGP7r0rVCsyzQez3ZmT1kT4Mj4fnJEeXOmFBY61YEX19.Oecv5x.Mm4SYPGD1SD1RxS
+ e7tML_xSr0u7.AIs4n4uiv6m0bahhONpAgLkCR8h4oN7irL94rWXdACtrTVkVRsYpGaXpeKGpKoC
+ 74kp8AfrWds7D.fb0zS3EXugMftQpkZvfGvYz7AL07ZIxw9q0JjJv5jfbqVRveoQGifiR5olhsMF
+ CRdrOsel2ZA0Go5AGuModhogf30DBQE8MmfAz8FRs_L_UO9OTv5HPHzd7_9Kt8FM_F6Kk8y8pEug
+ GyVAVdsBCqSamZKn87c3bBH3TR7za3mq.yACU5w4bR8tJHtRhGL_0XzDVtNF5hV.KCCcs6SrV4J5
+ DAIR9ATDvWjUjkiVqSXY6ORuPuFiv0Y9L8_F2y2azsZLfuBx7xXNzB5lAQzGC55pDB..e8vsFxPT
+ znPI0vYi4FmYoGh5VKPSiTBY.IHYNAv8WFLAIx1x9BZ4fWYPzGy7LLDdmcSQ9GRoXyaHVmYnytHT
+ _A9Vd_4wImkbT01EybQcLrGmTHpV7iTEcKiHzyFfSZQetwFUVOB7aH4Gyfp06um2hXl_SaSiNm5U
+ a1HVJ.DW76CIcNKZJIlrM8ekyd1fJrPnX1NC9eARWlJpweP2uDjysR9.0sF9YTkBdyyJm6aV6PSV
+ DOD5LVhdCrFWAM4sEeykwAQ.RakdS7Ss_GaUvCIUxFHn8JbV5omZCqEPdCWJv5RDnM8Rtdk8me6v
+ IxrVp4VBhAMzcO3KMtMc_y5ph9dg7Wm2jORJivPockV.v9CildAhhpot8iKHun1mx0xye777SSJV
+ 8N7NW3yxSlmWzxgTHV7trcHWApN3ays9SCGK3pAzQeC9JRgfBjfmqHLcjsxJH8FpcEnCrbg28BAS
+ pfFJpbTPC4YKV_iR6DEk.8AKI6isd.6x50eEe.NQSgFODgCoTriKPwdHqD04_02VqAo8wxhdPHgR
+ nPTS5iZKgpPvDrH_YYeYC2r1nz7tF4PRPTqvVZF_QuVim3vo.tYTuwuVygBqB9BPcuqKQPuicswp
+ nblMxldM4cTdqfxVWcLFuMqRPFnhIVo2KVa8lq8XCgtkmIQBEWAgjKOQ3VXkgh1Wx1pSO99.BL9J
+ ovqzi7lfCsIIpEVViXEy_NGge3_5qg8CGn8VcZIlzx2WsOgaab82MuesiEgAIUCuvwOq8bhosz.7
+ hsoP3qFk8PbR9yMCR8ll3lSI4n8Ouzlqm3cKIq1u5gQyLzVFheq1ThwCvBSzuujJ2SLpZ_Jt3b3Y
+ N85r5Dp_1TsGiaSNcGIs6WGcm7nNDb8tE05HZW7NrG8AUkExyFs_f5Tk9VFv6g44g1_SpHn7JZpA
+ ZQUg0aaAi6oMiPqRFUmKpP2QFeE30gELrjpW9fOhm.yBAQtpNuXYPnxPrnca6XyMNCiLeFZjzUvZ
+ CW8RsuOlq3qpZXVULvFymcECMSlVl0C4IrinoWL_qWxPAESRDtEinALNfbZmVSI_D2Xv2WRwLaIQ
+ BU937O_epxhaqPqRCUsL_ootpNM6TWOcU040QFwXWfLG2W_s.sp92fWgC9GCAplsbct2DhnEqOZT
+ SkqNiZIDuCvcN6f479BDaRp7dMMbUwYOW_2f.WgAk7.N7Wg5U5BLDY.VUMsZoyUm0AHes721Zk3Q
+ m4WlLHR8ZvcheGfBKxzO.tca6PG_F0x7EV5e4YxbjNjuzkb5rkXRsBh9ZwloQuM0ZzZO_t.sTTTl
+ RySYzPOph32dEnljO2V7FmmXRhL.v8N7ddAZVKRbVXKkyT4Oh7g--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic307.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 15:57:00 +0000
+ sonic307.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 15:57:10 +0000
 Received: by smtp404.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 0de93bd81f6e7581799539af1246db07; 
- Mon, 02 Nov 2020 15:56:56 +0000 (UTC)
+ Mon, 02 Nov 2020 15:57:06 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v3 06/12] erofs-utils: fuse: kill nid2addr, addr2nid
-Date: Mon,  2 Nov 2020 23:55:52 +0800
-Message-Id: <20201102155558.1995-7-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v3 07/12] erofs-utils: fuse: kill erofs_get_root_nid()
+Date: Mon,  2 Nov 2020 23:55:53 +0800
+Message-Id: <20201102155558.1995-8-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201102155558.1995-1-hsiangkao@aol.com>
 References: <20201102155558.1995-1-hsiangkao@aol.com>
@@ -116,118 +116,44 @@ Sender: "Linux-erofs"
 
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fuse/init.c   | 15 ---------------
- fuse/init.h   |  2 --
- fuse/namei.c  |  4 ++--
- fuse/readir.c |  2 +-
- fuse/zmap.c   |  6 +++---
- 5 files changed, 6 insertions(+), 23 deletions(-)
+ fuse/init.c | 7 +------
+ fuse/init.h | 1 -
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/fuse/init.c b/fuse/init.c
-index f3f7f9750468..b4089a204409 100644
+index b4089a204409..d67c7f0dd298 100644
 --- a/fuse/init.c
 +++ b/fuse/init.c
-@@ -88,21 +88,6 @@ erofs_nid_t erofs_get_root_nid(void)
- 	return sbi.root_nid;
+@@ -83,16 +83,11 @@ int erofs_read_superblock(void)
+ 	return 0;
  }
  
--erofs_nid_t addr2nid(erofs_off_t addr)
+-erofs_nid_t erofs_get_root_nid(void)
 -{
--	erofs_nid_t offset = (erofs_nid_t)sbi.meta_blkaddr * EROFS_BLKSIZ;
--
--	DBG_BUGON(!IS_SLOT_ALIGN(addr));
--	return (addr - offset) >> EROFS_ISLOTBITS;
--}
--
--erofs_off_t nid2addr(erofs_nid_t nid)
--{
--	erofs_off_t offset = (erofs_off_t)sbi.meta_blkaddr * EROFS_BLKSIZ;
--
--	return (nid <<  EROFS_ISLOTBITS) + offset;
+-	return sbi.root_nid;
 -}
 -
  void *erofs_init(struct fuse_conn_info *info)
  {
  	erofs_info("Using FUSE protocol %d.%d", info->proto_major, info->proto_minor);
+ 
+-	if (inode_init(erofs_get_root_nid()) != 0) {
++	if (inode_init(sbi.root_nid) != 0) {
+ 		erofs_err("inode initialization failed");
+ 		abort();
+ 	}
 diff --git a/fuse/init.h b/fuse/init.h
-index 062cd69f6e4d..4bd48d18b003 100644
+index 4bd48d18b003..f0211707b5ff 100644
 --- a/fuse/init.h
 +++ b/fuse/init.h
-@@ -15,8 +15,6 @@
+@@ -14,7 +14,6 @@
+ #define BOOT_SECTOR_SIZE	0x400
  
  int erofs_read_superblock(void);
- erofs_nid_t erofs_get_root_nid(void);
--erofs_off_t nid2addr(erofs_nid_t nid);
--erofs_nid_t addr2nid(erofs_off_t addr);
+-erofs_nid_t erofs_get_root_nid(void);
  void *erofs_init(struct fuse_conn_info *info);
  
  #endif
-diff --git a/fuse/namei.c b/fuse/namei.c
-index 79273f89be1b..c3766f9a9f02 100644
---- a/fuse/namei.c
-+++ b/fuse/namei.c
-@@ -52,7 +52,7 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
- 	int ret, ifmt;
- 	char buf[EROFS_BLKSIZ];
- 	struct erofs_inode_compact *v1;
--	const erofs_off_t addr = nid2addr(nid);
-+	const erofs_off_t addr = iloc(nid);
- 	const size_t size = EROFS_BLKSIZ - erofs_blkoff(addr);
- 
- 	ret = dev_read(buf, addr, size);
-@@ -173,7 +173,7 @@ struct dcache_entry *disk_lookup(struct dcache_entry *parent, const char *name,
- 
- 	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
- 		uint32_t dir_off = erofs_blkoff(dirsize);
--		off_t dir_addr = nid2addr(dcache_get_nid(parent)) +
-+		off_t dir_addr = iloc(dcache_get_nid(parent)) +
- 			v.inode_isize + v.xattr_isize;
- 
- 		memset(buf, 0, sizeof(buf));
-diff --git a/fuse/readir.c b/fuse/readir.c
-index 8111047803df..496f4e73a9c2 100644
---- a/fuse/readir.c
-+++ b/fuse/readir.c
-@@ -108,7 +108,7 @@ int erofs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
- 	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
- 		off_t addr;
- 
--		addr = nid2addr(nid) + v.inode_isize + v.xattr_isize;
-+		addr = iloc(nid) + v.inode_isize + v.xattr_isize;
- 
- 		memset(dirsbuf, 0, sizeof(dirsbuf));
- 		ret = dev_read(dirsbuf, addr, dir_off);
-diff --git a/fuse/zmap.c b/fuse/zmap.c
-index 9860b770362c..cb667da4e0c8 100644
---- a/fuse/zmap.c
-+++ b/fuse/zmap.c
-@@ -40,7 +40,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_vnode *vi)
- 
- 	DBG_BUGON(vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
- 
--	pos = round_up(nid2addr(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
-+	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
- 
- 	ret = dev_read(buf, pos, 8);
- 	if (ret < 0)
-@@ -110,7 +110,7 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 					 unsigned long lcn)
- {
- 	struct erofs_vnode *const vi = m->vnode;
--	const erofs_off_t ibase = nid2addr(vi->nid);
-+	const erofs_off_t ibase = iloc(vi->nid);
- 	const erofs_off_t pos =
- 		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
- 					       vi->xattr_isize) +
-@@ -228,7 +228,7 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- {
- 	struct erofs_vnode *const vi = m->vnode;
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	const erofs_off_t ebase = round_up(nid2addr(vi->nid) + vi->inode_isize +
-+	const erofs_off_t ebase = round_up(iloc(vi->nid) + vi->inode_isize +
- 					   vi->xattr_isize, 8) +
- 		sizeof(struct z_erofs_map_header);
- 	const unsigned int totalidx = DIV_ROUND_UP(vi->i_size, EROFS_BLKSIZ);
 -- 
 2.24.0
 
