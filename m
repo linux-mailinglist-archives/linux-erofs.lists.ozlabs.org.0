@@ -2,94 +2,94 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC9542A2ECA
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 16:57:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B91FD2A2ECB
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 16:57:35 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyGq1vwGzDqT4
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 02:57:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyH1298nzDqS0
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 02:57:33 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1604332643;
-	bh=hSmesUpwMhz+/5a2ta5OsPot/4EVcBb02MVNYHsisTs=;
+	s=201707; t=1604332653;
+	bh=vNRjq2rI/L2m5Z0oaVP31mrEII2GeZzOsuPMKRWOt94=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=aqAOMeU4YYEkla5Ppxs7QwuWYBTmwHduMWbolvKQQrB0y0hx2fmsC7GbWZp6UHNfL
-	 oEPLIPh56Ckjzlqp30q6IZW9hco1VoEBKk02CxQv1bf64qWihEdLl768RFtByKgjDc
-	 Ra/cDvEIT7hUEO5Kv11kTgmzZVy7X3fsfUOGbOtTydCEfHBcv1TGn0heXNj8nMb2Oj
-	 tDFhdCznhoZr1zz6VGpg3WTmVGL1YBZKsmB5gAMwGfMeHgGaKNSWDq3CQIUHYIRZV9
-	 g2Cj4MO7cxMMUezp22BgJyyOyVMjdfu1ErqhCOkXjVDlo7p7yX4pL9GyGDIpR0Pvsw
-	 PCts2DZlVloeg==
+	b=a1sx/Bq/HGtsLJuV3wGnuQG070C9CUi+phSHFfkngp9CHf7gvH5uoH93HiWljXxv7
+	 FPnTG5qPs0EmQl36+z530yhHFtbXeCYwiwZI4Jp7lUTjAD7pUMDHZ5P2i8SsaFsBMS
+	 pvzGi43HSu39iV5d6k3LQvt8t5Gl4W37S/aKKemcBDF/LKgZ9hQhw8XMze3KHXjBGv
+	 k67FNy2vJOOBxjZbBkWTQHqD8WgJRSgwVn5kNSslY1U4in+dS+Yo+2YP7QZ5kQ+v1n
+	 9tkg9zivTKkOvgKzQn4wJrHeFhSuBrqDCLh6xGjku/fmw1OKAU3RI4ko+AoiCAASwi
+	 Ii9YVu7uukRGw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.30; helo=sonic316-54.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.64.83; helo=sonic305-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=Y5+iUmbo; dkim-atps=neutral
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com
- (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
+ header.s=a2048 header.b=FVyTYRdq; dkim-atps=neutral
+Received: from sonic305-20.consmr.mail.gq1.yahoo.com
+ (sonic305-20.consmr.mail.gq1.yahoo.com [98.137.64.83])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyGD3nPLzDqS5
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 02:56:51 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyGQ1dpMzDqSc
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 02:57:01 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1604332608; bh=i9FK/htK8oiMi9mlARIyFEIAcNpBsbStDGAwQW4ScOI=;
+ t=1604332615; bh=CHeTvECpZ1ZRAlwAHvHD+5wXOZU7MpdL7s4xBDCNNPY=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=Y5+iUmbojGBjAOmTpe0OM1XmWt7kWwPOXSbpumR4wnHoVgZoINqdJOYf6QV0ObimBSurQOpOLVQRYGF6pGv4EzJ8ysR8wtOfgqteohcXbAveznGvMtIyMKzNqcJvCFt2SBHZqaEe9UBvL4zFuHLEb7y6V/5qouT/QEiqiXOfD8FHaqprD/fsQ5MWfXN1UvktHUK75kPIDz0L8b0sXMYCSpfCCYO/v1xOkhUz0S0UOIQs65jvPXjSrlEiSu8MqixAAGyDoBYHR6H2HeifKDV897/obttB/AgEH4OVvDi3ALwKSzQjs8sOsP8/iOS0TCfpj4xTAdrfin621c9zwnc7RA==
+ b=FVyTYRdq+eJue99Cn82qWmrEikfCrtPKBCM4SbE7rx8WAMTarrYcjIIQOsApBmB4Uk5rVs8h4Wj7r4DlLNN0dcfIZ68MF6N2r0G9dMIRWvfCO5UktTgQNeR0jIfp9Xafe65tsLH19XYTj66doJv7vDg4D0jy9Rsx6uXQo2PWTeolXOMoygZQZmtD62d8JK+Nv1rAdMJcbz1OKAlXwv3l6n7NSlGM2q+7pNZV5D82JIs131DX6LSLSjCxvX7m9OKMcjlUOeqL5el+nxXo958sPPNjLFNos0IPzCMZu0tNStO3D/10b4cdg3xfDefTFYOj00GsKvT4qB732JVZkly9xA==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1604332608; bh=jPu/Qbyd3z/nbwcHD7eEH/rhLjzsPzpEBMV1LUzNenF=;
+ t=1604332615; bh=cjVY9C1x14p7eiSjKMUCqLExguCdxohJrJa5sq10hZI=;
  h=From:To:Subject:Date;
- b=G+KoYGSIN2LvRE8vvKXnmYCORkG7/Zpqcc2XF47KqyWWavtSTtI4L9saiv20eXVZCo/Nb30Sn0xdcOkBrYv9LBqunHDEcmQhiOqgzOSCYh/NhsdEvFTD5YrKoLGWZnH9+a5X0gPysstQY/wC4sv3qBWKJG+i5xsef400620lK4USj3SV9oOZJd1PxiwKS027QvfJlvTw+WyDazOm3H5/2v/KGBLkZ1cx/MjEL1knpnSzIhJQ956N3GKzZVi33eu4au88Ytc/bTzAyqEd2N2Ck8J4oMejUp5Dh8OpgkSq6RLDkHWDPIdbtrnHmmPMrg6e1oLV32RJHJjNsQ0ZkjjzkQ==
-X-YMail-OSG: UkE7HkYVM1lrHuDOygD.76K4DXd4ZN8aZVkSYz6Cb9X4lBNPt7JNWWC1lRTrxKZ
- UB9G2KEwAu55PDa_I4w8fU37MzeeI_e5PuEkYLojlkJ3vvyHWuojY5786q9NKD9AP8hOFyD5qiuG
- qIb85LatSkrvaBQ1mpWkfPPWRVipO3vTpfPUOif6HlyKiyo6Ww9xC18m452ujlnTSt7g3eAab2DE
- hHc1Oof5as3fDm4sCIEHc901r1y6ZMy2E5Q.4BhxDaFs0gRICguCHGxLxMojhMNgdtefewnKjm6E
- u1ltGZKu9mWSeJqA_p6JK2mlql8gwmOmwi14Vco2CTT4aqxxuK99uNHTPFzBFp6j0UwZ6yvbMhtg
- Gihna18yfxeZHgGiE85Ap5ATYd2G5JmaxtiQ.KhLzCMAwMz8GQtkP5uNg2ENJ.yLk97uxTffgDcw
- WK5Q9gH_PKQA7rPPFB.1U2e_5_flyfXOCXoyoMUlhh7I2pqcKYyfdS0bqt9gOAKwV0dcKZL_ITd1
- QcWEHPUHG0wgCHmtCTYynITME9XcIAMk.oUNv6Sb6LjJ5BYXgO0nS4zyZC3dmJahB2ix0bLTRirP
- cpDQrEa0ukP3oBn00bW6HPH15e9Iwphbo1O_oXlp52yo2.vAtCVaxbokbtxE8U2cv7bF7e18uGyi
- p3ilGotRnd97Vj3h6IRuMtNdkrdn8EVO4usLli7dr2XM6_o9Gdbo4egq2jvmSNYLzvNNoEiLRnGt
- hwDVryNUpH_jgoh3Tmz3gnYqkCTEATzcX.rYvB5MjrzRBOgurpmUX76_NEmSXsPDyyMbLLZToBTn
- G2KUe12VlM9RQImsWLGanE76WuQ_geZdb1x.g_pBtpj3sKFUiok1CVSqXtIAie8Gyhxtf2xBnLYD
- PYr.dFhLAVbgdloHhfCwJCox0iBLbs6Yk03h03KxesXx4qTRudIg8dQVOM4qneUbuba4.R_lCh.X
- 7A.XHrAoKpZn9TxsCkEQS.uCqB9iMNNRSTsBo6FEiiShfcn.2Zr.lLJlU4Txi__kCX8s_ZMozzLv
- 1XEK7USUD_7.dfeITPTpw78NwfZUYpRIo2gWymscIZF6_YJD8pJo6__IqHdibFODlGHLFH9prg7H
- b0eoSEFJduW6SwJ_6JAn4RIX5NO3LhPnuCAcc.IKKZKRg5vqX.eO0CfhY0anRTAec8T7IQIt9w4S
- 86cA2hAaEL6s4FCK7UqzmGFD9FkEmufurKoOz.OlaAvpGHvO1jdALNqrpSiti.9h.CuLoGwkw1fO
- PbI3rhMTmDtX52YvLyXNS1NSrJ119seGIZP8gieOINdI3RGJSNnRg6n9G8gRSj5Gccm7KuED7pwO
- WzSWXo05mjQa6q12tDJtf6N9l7SFX6IBzSeeN0xP9Qn4PX9gX9u0JRIBq_l8sVLuab40F38Keiul
- nHMO5pokeynWZkKXpk76eTAn56yAm59mshhgNLmFleMHD2xvfkl7BOEZ23g64AAX.syGZQHe9GVJ
- f8LStbTlGawxX3FtH9NBZqXCimZk0i6Rx5dhwKgqi8vJnWnCLJKTwSoRmD7DBNwHyZw.UU_2S5i0
- gtSYlLCBmbxttHqTEMuBt8SABpiMQ_rTFendTfQCCTPH1BQEZi9Q4d9th2A82oz65eG9_aBjfYWr
- gMkdvB_Ss4fXEJicQ.x_Q13u4k12qlUMP4HMEiSijO7.idvP32woczSPmBx1luu2o5rqseO98fyB
- GsZQVqKmPv7pdN4mHeQh3.IyIVoFqgtSVjcGrVA_dlk1Fuf5LuLaCVUaWoG_m12TrUskqirgLel0
- xu4inK.10rmUdIW44KABH4DYjeNrrRI7y68s7Bs291eXiy3hudiiL5m3Ow87kvIH4e_JW4.X4PgS
- Nzz6hiKm75F55Lraa9M_EDoATFSuaQ8GgDGyCO._623K55fBnV7FEkncA_C9j4GBeYS6Y6GR805g
- 23Z2rqswqHaX4fAnLPij7LmVNgDgh4hSpAir7YiFT9_DpZCIvX5lWg14lLSjo5p.L6E97l44agw2
- AjLcLHjX73Wlq10NHV6aoW7kPt0DBh55kxkUDkYHjkwgogkM8bmd_FUmC5earKFpjO0CIHPV3aA_
- _KyM_E.vklR1se93r4euuZxT.QkOBk8fhgcdSdwnPJuy53zOfKM3.Y1qQU9gm1dwyPRM1JWHWdgk
- A8in7iP26dKrCGvhFgDq7KjmGQ.GkuCEGVQXLXvp3HbD.9BwGTVB8g2cs85JGW37d7rVBcTGeiPX
- wXJESn_Q5yr2MNrUMwe3_URiqGtIY8K4.gEx3WGE1CE0PaS3MTB9.0ZRMeCLzP3EdEjDN2UTUJ80
- JFAswlJCOGUre5_0lVuyiasccnvhaqv4QvLwlB0p3hAAeWWYRAVE5xP._nIQB4fwdYNaWeUBaN43
- Y_AjRPcWnjlsCYT11A3dMxwfL3w02m1WgtGkCmvT8TQpfwrM7vpF70YC7ONtVTuu1pOV1jq66Q8w
- wsSfv.QTZ6dv8KH4ViKQ92PHiXi8xPaCWGe_ucHFNIxVna49Zut4zdyIxiKOKDllxF8mIOCz90Om
- TsGJPSGdNrWBMfuCRd5njFRT67bGKtXOVhIxsXancU7qR_Vtj6wHdHI_gvE0y98hp0HBAMQL77f8
- .tOJwFn9Kv1E0GLJLWBBJ9fSxtcTFFwuWg89g5SJoCXHm9pyeiurCuHZgFdgy7_szCtd8W3GtWX4
- ebqpkNkyVACcT6v4-
+ b=ACOjflrZGEVdZJtFd6oqs3LTq/639vPb0uznkMm01uWxAzwEvQHPoPqn4/VRGkFmhgqt4xsljGPVuxYLX5mIgqjrXGCItfoy/Kds9SEK0ivjV/E+vb6w32C+49c3PVEAFIR/hHBTMa3iAPBO2zJ/9pa/spy4pjvDKhN65JDqEAva/95bWS9PVhYPA9hydmyldbGE565fUNHCTxIeiCV3R+moi/YSBY8dyf2C6nEjwhl+96+4S/gu7uxCBNdlIzRenP/N1Dhv+dzIJmbvJ7DJMtGP4DfU+Cef5ocyT99xEScRpPEgj7oqOQyOo0xviyPe6IGThWHzkvzgfdIpKX+Hcg==
+X-YMail-OSG: Q11Zbl8VM1l1hriQZR5ocCn.Erv8mUUWa2akTRBxVKkTJEwhHe4WZutlXh3DqFr
+ 6._fK3mQi68kVJ.1o54dF5A_JIpkX1ZiXfWg0s6Jokc4wEyxKvDWGdepj3e64UujJPL7z7U.J_N5
+ OX7nmTlnhzP0vLmnU03Imyq1gJB0Or4M7.EjrUSamduaMzsRcmhFIU7R8sz4VdczlkcfrPKYqi0a
+ dQbQWX5mz4XbHQQo1qu4i6AVaIkkUMO99_MHT0GA6j3jlzIEyqZ8C9M0E8sXu5fRIembSSr.Dj1j
+ LA6B0pwksuBO_atT6XlQclqYruWiBrLIO8sMJVWZ8bSv7uqASOv7hX4hvkSN3umOdMymVjffqt.j
+ oJmsyUDC5xhlY2NLKsfri_OSLxUme7yLWGVETSYoPt_rx7xK9SvpVhwjVVPUHYIyrNC.BIArHI7b
+ TkBPhf78I4P6L67A9cO5VyzTj9x.iVtDrwte7XT6E6HEfHP0dEHioybtWOZ8fU.1RKavZMlcrL_Q
+ phBlxI7Nph6XB2JK2AdMhiDUDKkI1pZTfvwicCXa6bL9v40AMstumoP3Fm.2wn6xJU7Q15YlCKoR
+ dvENZCZfgEE4CF9TkL2n1OPG1nmckCe_uHY2lHSPNObdwSYMI7PmvVt9GKagu6OtrMXYelD0I6Gx
+ nLMe.88wuzG0iPOsCQE9hUomUJZSa6qWC8gsX2wyAup4RCTJdHHFc9jS8fCRR4mga2r7Rm2Cy8_G
+ TVCgMQ2Op9tXmCNPtyOLbN3a_QoZqkjKI_ELlQOpmv6Z0XZxI8jNhWYrZX2DmZP5MbsiprELTRB6
+ ICly4MOXwcK8xHNA6ZbPiQo4EfTkUtCjaNj._YN4wSF7Alpk.WvTk6TeNx0gQHALaVzv8qzX1Yqj
+ mwC1xYf3a7OoV2Q5N_fIxIAD94w.INuchqP543y0hwzHKzx_kk8IwnodDHpV9KUdL23drZrfnUR_
+ SzBirmklsyGsG9veR9_IkyBtKj7twtPKnFBXj1Z8aKc6ZCvPeZ5h58L1TEaV8uT93NiHtR8cehu8
+ RQoYFO_EzMURWVQpirf63U0cV6kJWfpqrtVlL56RbVBCLMH99t2s_eR_KEjB2hzzrGzjxr4aMmoO
+ CUBm6E7pQgThdc73yHnoCqL9YU2lell5qKejQ_NkaCxYCdmhR03.1Ay97NTSOA0f4gnNAZ1lSmjs
+ DTyPSkfVBKlE7mnft0KHKyoBLT4U6MIvGOYWTcCkhPxdMPXng9T2Mt4mTblNyO8p7a7ISbzheelQ
+ oGcpRsdkwreuj.F2kdza6unfwDQpIP8Q_ujmpeWoKgdxtQIIvCBKtiBUdpOiwj2gpKuRyIkYjuzp
+ 77zwKMu5AuzXNfxT7ysuV07J7yufWcMAewDn3W0B_31WxcIe_OxwGnFtxbpLIUZ6QyJgzWG_H2KS
+ dgFwIcPJUWoEoSqTQzKSLH7fa4T9WdS1JnqKvYWDWaWqmkOq1ix0_MMqeSRYdXIJB9ems.SAdFFS
+ XuPyX0JeLx0bFoRZUYYAbPK0gAc.0X8ZTAI525vLBnEUpHwq2xFBiYdoJCgwSvpzIo69SQQRvTK.
+ a2HdlBkpTSdie2TeF7PZTX.8RpEJ1FI76sqxr_ZxuCrn6UyGl8fSvHuFnzcytzsngmBmxhx1_cc3
+ TfEHx.uSlOiFg5bx_rnBJ3VJFat2IoeGbq1u8r84I1tHd4yj78.sCP6Ntxr6LjiIMFN6ltp2TTtv
+ 1sA5roSjms06WqETCu5GdsBhc91qVcQsAj78k8tzmMRsgBTxD.r0a6JAihNoDiloNYgDl1Nh2.R6
+ nsUVj8zkiZkhCseE_ZkaDphYsjx8fbkMoBynVOgjJo6CR4TCA88uYYmjhXbX6LiffkijIKC951wc
+ lyhQu9Zt22r20z3Jv2fbfcifMPBJEqaAbrj4NlSXNf6nzk86Kw5vRBFjiIjJ4TLd.F36fu2rtaG0
+ vV2e5js3erbMh93hnZp7ZPJ5tSrd_hm_lxgW4YCp2.comLBn1aDMCuICZ_nQATk6cdRv.xrgu9td
+ w28ZNWEtEg20eKvNfDm.nqks.Z.sfNv51x9rUf.IE4mCv9_id6be4xcMNRdjWJvyVVs_Gwi_iM4l
+ 7RCq350mAWi.PVGfh3F81gSmPCvlJKXueJb.tDQx3zVcP6HoAmQzf.JQ80Tas0nUFtHmhf8FOx3l
+ UvWEatcW.ZhTWkllB8mXnmwOogxbLv8IX85bGiDplKuCYCsX7YJROlmWR0zEBAdxYPwtAZ9vsw5Y
+ y5eKkMmDCl42LgVu7mltGwk8mQXJ.ehQ5hgMhLNZ.N1mKl6OZ04qWJlgyeQVWISewNu3MG_J4lL0
+ x8gSeJOPxJNiRWL407_rbH83d1O_HjKOoe.4aSinaTAgwS8hKw4JkI2pWwvS5s2bP5UNjQoFCn_g
+ bufQz3LACgH5r_LMHeHxsQdU.WA6EQa4dG_ta6GUXfAQnbTZYWl0ryMiltuVVGAgGHYL3b3rTpaG
+ UZrKYMWqv7hzoMG6ZP8dyvs0HkDqaaZb6yNnUk3_9ly..5WICxe804OyjSPsVxxs7UmKFn2h48vT
+ 1vUYM8DoEvmXMh0ubGUOw60G20R.u9SSmc1X2JwjxIz25mGDxcotSV6SLGWtFs9Tkf.6OXQcVDA8
+ 3t8e99r_XF9EqXV1uoebgECWgt6a01a7t0OcJvdmbC4PI9Hs6NgxRZh_dZIfgDoyD.tMUmlDjn6U
+ xC5GagpmtQfOl8b2UWTWehVMe.Yw-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic316.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 15:56:48 +0000
+ sonic305.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 15:56:55 +0000
 Received: by smtp404.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 0de93bd81f6e7581799539af1246db07; 
- Mon, 02 Nov 2020 15:56:45 +0000 (UTC)
+ Mon, 02 Nov 2020 15:56:51 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v3 04/12] erofs-utils: fuse: refactor raw data logic
-Date: Mon,  2 Nov 2020 23:55:50 +0800
-Message-Id: <20201102155558.1995-5-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v3 05/12] erofs-utils: fuse: kill sbk
+Date: Mon,  2 Nov 2020 23:55:51 +0800
+Message-Id: <20201102155558.1995-6-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201102155558.1995-1-hsiangkao@aol.com>
 References: <20201102155558.1995-1-hsiangkao@aol.com>
@@ -112,322 +112,190 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As a common logic and move into lib/
-( will fold in to the original patch. )
+(will fold into the original patch.)
 
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fuse/init.c              |   2 +
- fuse/read.c              |  76 ++++++-------------------
- include/erofs/internal.h |  19 ++++++-
- lib/Makefile.am          |   2 +-
- lib/data.c               | 117 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 155 insertions(+), 61 deletions(-)
- create mode 100644 lib/data.c
+ fuse/init.c              | 78 +++++++++++++++++++---------------------
+ fuse/init.h              |  2 +-
+ fuse/main.c              |  2 +-
+ include/erofs/internal.h |  7 ++++
+ 4 files changed, 45 insertions(+), 44 deletions(-)
 
 diff --git a/fuse/init.c b/fuse/init.c
-index c6a3af697532..09e7b1210006 100644
+index 09e7b1210006..f3f7f9750468 100644
 --- a/fuse/init.c
 +++ b/fuse/init.c
-@@ -71,7 +71,9 @@ int erofs_init_super(void)
- 	sbk->build_time_nsec = le32_to_cpu(sb->build_time_nsec);
- 	sbk->blocks = le32_to_cpu(sb->blocks);
- 	sbk->meta_blkaddr = le32_to_cpu(sb->meta_blkaddr);
-+	sbi.meta_blkaddr = sbk->meta_blkaddr;
- 	sbk->xattr_blkaddr = le32_to_cpu(sb->xattr_blkaddr);
-+	sbi.islotbits = EROFS_ISLOTBITS;
- 	memcpy(sbk->uuid, sb->uuid, 16);
- 	memcpy(sbk->volume_name, sb->volume_name, 16);
- 	sbk->root_nid = le16_to_cpu(sb->root_nid);
-diff --git a/fuse/read.c b/fuse/read.c
-index 11f7e6161f8f..dc88b24eaae3 100644
---- a/fuse/read.c
-+++ b/fuse/read.c
-@@ -19,64 +19,26 @@
- #include "init.h"
- #include "erofs/decompress.h"
+@@ -18,8 +18,6 @@
  
--size_t erofs_read_data(struct erofs_vnode *vnode, char *buffer,
--		       size_t size, off_t offset)
-+size_t erofs_read_data_wrapper(struct erofs_vnode *vnode, char *buffer,
-+			       size_t size, off_t offset)
- {
--	int ret;
--	size_t sum, rdsz = 0;
--	uint32_t addr = blknr_to_addr(vnode->raw_blkaddr) + offset;
--
--	sum = (offset + size) > vnode->i_size ?
--		(size_t)(vnode->i_size - offset) : size;
--	while (rdsz < sum) {
--		size_t count = min(EROFS_BLKSIZ, (uint32_t)(sum - rdsz));
--
--		ret = dev_read(buffer + rdsz, addr + rdsz, count);
--		if (ret < 0)
--			return -EIO;
--		rdsz += count;
--	}
--
--	erofs_info("nid:%llu size=%zd offset=%llu realsize=%zd done",
--	     (unsigned long long)vnode->nid, size, (long long)offset, rdsz);
--	return rdsz;
--
--}
--
--size_t erofs_read_data_inline(struct erofs_vnode *vnode, char *buffer,
--			      size_t size, off_t offset)
--{
--	int ret;
--	size_t sum, suminline, rdsz = 0;
--	uint32_t addr = blknr_to_addr(vnode->raw_blkaddr) + offset;
--	uint32_t szblk = vnode->i_size - erofs_blkoff(vnode->i_size);
--
--	sum = (offset + size) > szblk ? (size_t)(szblk - offset) : size;
--	suminline = size - sum;
--
--	while (rdsz < sum) {
--		size_t count = min(EROFS_BLKSIZ, (uint32_t)(sum - rdsz));
--
--		ret = dev_read(buffer + rdsz, addr + rdsz, count);
--		if (ret < 0)
--			return -EIO;
--		rdsz += count;
--	}
--
--	if (!suminline)
--		goto finished;
--
--	addr = nid2addr(vnode->nid) + vnode->inode_isize + vnode->xattr_isize;
--	ret = dev_read(buffer + rdsz, addr, suminline);
--	if (ret < 0)
--		return -EIO;
--	rdsz += suminline;
-+	struct erofs_inode tmp = {
-+		.u = {
-+			.i_blkaddr = vnode->raw_blkaddr,
-+		},
-+		.nid = vnode->nid,
-+		.i_size = vnode->i_size,
-+		.datalayout = vnode->datalayout,
-+		.inode_isize = vnode->inode_isize,
-+		.xattr_isize = vnode->xattr_isize,
-+	};
  
--finished:
--	erofs_info("nid:%llu size=%zd suminline=%u offset=%llu realsize=%zd done",
--	     (unsigned long long)vnode->nid, size, (unsigned)suminline, (long long)offset, rdsz);
--	return rdsz;
-+	int ret = erofs_read_raw_data(&tmp, buffer, offset, size);
-+	if (ret)
-+		return ret;
+ struct erofs_super_block super;
+-/* XXX: sbk needs to be replaced with sbi */
+-static struct erofs_super_block *sbk = &super;
+ struct erofs_sb_info sbi;
  
-+	erofs_info("nid:%llu size=%zd done", (unsigned long long)vnode->nid, size);
-+	return size;
+ static bool check_layout_compatibility(struct erofs_sb_info *sbi,
+@@ -38,65 +36,61 @@ static bool check_layout_compatibility(struct erofs_sb_info *sbi,
+ 	return true;
  }
  
- size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
-@@ -172,10 +134,8 @@ int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
- 	erofs_info("path:%s nid=%llu mode=%u", path, (unsigned long long)nid, v.datalayout);
- 	switch (v.datalayout) {
- 	case EROFS_INODE_FLAT_PLAIN:
--		return erofs_read_data(&v, buffer, size, offset);
--
- 	case EROFS_INODE_FLAT_INLINE:
--		return erofs_read_data_inline(&v, buffer, size, offset);
-+		return erofs_read_data_wrapper(&v, buffer, size, offset);
+-int erofs_init_super(void)
++int erofs_read_superblock(void)
+ {
++	char data[EROFS_BLKSIZ];
++	struct erofs_super_block *dsb;
++	unsigned int blkszbits;
+ 	int ret;
+-	char buf[EROFS_BLKSIZ];
+-	struct erofs_super_block *sb;
  
- 	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
- 	case EROFS_INODE_FLAT_COMPRESSION:
+-	memset(buf, 0, sizeof(buf));
+-	ret = blk_read(buf, 0, 1);
++	ret = blk_read(data, 0, 1);
+ 	if (ret < 0) {
+-		erofs_err("Failed to read super block ret=%d", ret);
+-		return -EINVAL;
++		erofs_err("cannot read erofs superblock: %d", ret);
++		return -EIO;
+ 	}
++	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 
+-	sb = (struct erofs_super_block *) (buf + BOOT_SECTOR_SIZE);
+-	sbk->magic = le32_to_cpu(sb->magic);
+-	if (sbk->magic != EROFS_SUPER_MAGIC_V1) {
+-		erofs_err("EROFS magic[0x%X] NOT matched to [0x%X] ",
+-			  super.magic, EROFS_SUPER_MAGIC_V1);
+-		return -EINVAL;
++	ret = -EINVAL;
++	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
++		erofs_err("cannot find valid erofs superblock");
++		return ret;
+ 	}
+ 
+-	if (!check_layout_compatibility(&sbi, sb))
+-		return -EINVAL;
++	sbi.feature_compat = le32_to_cpu(dsb->feature_compat);
+ 
+-	sbk->checksum = le32_to_cpu(sb->checksum);
+-	sbk->feature_compat = le32_to_cpu(sb->feature_compat);
+-	sbk->blkszbits = sb->blkszbits;
++	blkszbits = dsb->blkszbits;
++	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
++	if (blkszbits != LOG_BLOCK_SIZE) {
++		erofs_err("blksize %u isn't supported on this platform",
++			  1 << blkszbits);
++		return ret;
++	}
++
++	if (!check_layout_compatibility(&sbi, dsb))
++		return ret;
+ 
+-	sbk->inos = le64_to_cpu(sb->inos);
+-	sbk->build_time = le64_to_cpu(sb->build_time);
+-	sbk->build_time_nsec = le32_to_cpu(sb->build_time_nsec);
+-	sbk->blocks = le32_to_cpu(sb->blocks);
+-	sbk->meta_blkaddr = le32_to_cpu(sb->meta_blkaddr);
+-	sbi.meta_blkaddr = sbk->meta_blkaddr;
+-	sbk->xattr_blkaddr = le32_to_cpu(sb->xattr_blkaddr);
++	sbi.blocks = le32_to_cpu(dsb->blocks);
++	sbi.meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
++	sbi.xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
+ 	sbi.islotbits = EROFS_ISLOTBITS;
+-	memcpy(sbk->uuid, sb->uuid, 16);
+-	memcpy(sbk->volume_name, sb->volume_name, 16);
+-	sbk->root_nid = le16_to_cpu(sb->root_nid);
+-
+-	erofs_dump("%-15s:0x%X\n", STR(magic), SUPER_MEM(magic));
+-	erofs_dump("%-15s:0x%X\n", STR(feature_incompat), sbi.feature_incompat);
+-	erofs_dump("%-15s:0x%X\n", STR(feature_compat), SUPER_MEM(feature_compat));
+-	erofs_dump("%-15s:%u\n",   STR(blkszbits), SUPER_MEM(blkszbits));
+-	erofs_dump("%-15s:%u\n",   STR(root_nid), SUPER_MEM(root_nid));
+-	erofs_dump("%-15s:%llu\n",  STR(inos), (unsigned long long)SUPER_MEM(inos));
+-	erofs_dump("%-15s:%d\n",   STR(meta_blkaddr), SUPER_MEM(meta_blkaddr));
+-	erofs_dump("%-15s:%d\n",   STR(xattr_blkaddr), SUPER_MEM(xattr_blkaddr));
++	sbi.root_nid = le16_to_cpu(dsb->root_nid);
++	sbi.inos = le64_to_cpu(dsb->inos);
++
++	sbi.build_time = le64_to_cpu(dsb->build_time);
++	sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
++
++	memcpy(&sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
+ 	return 0;
+ }
+ 
+ erofs_nid_t erofs_get_root_nid(void)
+ {
+-	return sbk->root_nid;
++	return sbi.root_nid;
+ }
+ 
+ erofs_nid_t addr2nid(erofs_off_t addr)
+ {
+-	erofs_nid_t offset = (erofs_nid_t)sbk->meta_blkaddr * EROFS_BLKSIZ;
++	erofs_nid_t offset = (erofs_nid_t)sbi.meta_blkaddr * EROFS_BLKSIZ;
+ 
+ 	DBG_BUGON(!IS_SLOT_ALIGN(addr));
+ 	return (addr - offset) >> EROFS_ISLOTBITS;
+@@ -104,7 +98,7 @@ erofs_nid_t addr2nid(erofs_off_t addr)
+ 
+ erofs_off_t nid2addr(erofs_nid_t nid)
+ {
+-	erofs_off_t offset = (erofs_off_t)sbk->meta_blkaddr * EROFS_BLKSIZ;
++	erofs_off_t offset = (erofs_off_t)sbi.meta_blkaddr * EROFS_BLKSIZ;
+ 
+ 	return (nid <<  EROFS_ISLOTBITS) + offset;
+ }
+diff --git a/fuse/init.h b/fuse/init.h
+index 34085f2b548d..062cd69f6e4d 100644
+--- a/fuse/init.h
++++ b/fuse/init.h
+@@ -13,7 +13,7 @@
+ 
+ #define BOOT_SECTOR_SIZE	0x400
+ 
+-int erofs_init_super(void);
++int erofs_read_superblock(void);
+ erofs_nid_t erofs_get_root_nid(void);
+ erofs_off_t nid2addr(erofs_nid_t nid);
+ erofs_nid_t addr2nid(erofs_off_t addr);
+diff --git a/fuse/main.c b/fuse/main.c
+index 26f49f6fc299..fed4488081d8 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
+ 		goto exit;
+ 	}
+ 
+-	if (erofs_init_super()) {
++	if (erofs_read_superblock()) {
+ 		fprintf(stderr, "Failed to read erofs super block\n");
+ 		goto exit_dev;
+ 	}
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 6c5fbd3c5d3c..54038071bf84 100644
+index 54038071bf84..306005dea2a7 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -70,12 +70,20 @@ struct erofs_sb_info {
- 	u32 feature_incompat;
- 	u64 build_time;
- 	u32 build_time_nsec;
+@@ -63,6 +63,8 @@ typedef u32 erofs_blk_t;
+ struct erofs_buffer_head;
+ 
+ struct erofs_sb_info {
++	u64 blocks;
 +
-+	unsigned char islotbits;
+ 	erofs_blk_t meta_blkaddr;
+ 	erofs_blk_t xattr_blkaddr;
+ 
+@@ -73,6 +75,11 @@ struct erofs_sb_info {
+ 
+ 	unsigned char islotbits;
+ 
++	/* what we really care is nid, rather than ino.. */
++	erofs_nid_t root_nid;
++	/* used for statfs, f_files - f_favail */
++	u64 inos;
 +
  	u8 uuid[16];
  };
  
- /* global sbi */
- extern struct erofs_sb_info sbi;
- 
-+static inline erofs_off_t iloc(erofs_nid_t nid)
-+{
-+	return blknr_to_addr(sbi.meta_blkaddr) + (nid << sbi.islotbits);
-+}
-+
- #define EROFS_FEATURE_FUNCS(name, compat, feature) \
- static inline bool erofs_sb_has_##name(void) \
- { \
-@@ -219,13 +227,16 @@ static inline const char *erofs_strerror(int err)
- }
- 
- enum {
--	BH_Mapped ,
--	BH_Zipped ,
-+	BH_Meta,
-+	BH_Mapped,
-+	BH_Zipped,
- 	BH_FullMapped,
- };
- 
- /* Has a disk mapping */
- #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
-+/* Located in metadata (could be copied from bd_inode) */
-+#define EROFS_MAP_META		(1 << BH_Meta)
- /* The extent has been compressed */
- #define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
- /* The length of extent is full */
-@@ -241,6 +252,10 @@ struct erofs_map_blocks {
- 	erofs_blk_t index;
- };
- 
-+/* data.h */
-+int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
-+			erofs_off_t offset, erofs_off_t size);
-+
- /* zmap.c */
- int z_erofs_fill_inode(struct erofs_vnode *vi);
- int z_erofs_map_blocks_iter(struct erofs_vnode *vi,
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index c921a62a8b23..54c43897aa49 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
- 
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c inode.c xattr.c exclude.c \
--		      compress.c compressor.c decompress.c
-+		      data.c compress.c compressor.c decompress.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/data.c b/lib/data.c
-new file mode 100644
-index 000000000000..56b208513980
---- /dev/null
-+++ b/lib/data.c
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/lib/data.c
-+ *
-+ * Copyright (C) 2020 Gao Xiang <hsiangkao@aol.com>
-+ */
-+#include "erofs/print.h"
-+#include "erofs/internal.h"
-+#include "erofs/io.h"
-+#include "erofs/trace.h"
-+
-+static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
-+				     struct erofs_map_blocks *map,
-+				     int flags)
-+{
-+	int err = 0;
-+	erofs_blk_t nblocks, lastblk;
-+	u64 offset = map->m_la;
-+	struct erofs_inode *vi = inode;
-+	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
-+
-+	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
-+
-+	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	lastblk = nblocks - tailendpacking;
-+
-+	if (offset >= inode->i_size) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		goto out;
-+	}
-+
-+	/* there is no hole in flatmode */
-+	map->m_flags = EROFS_MAP_MAPPED;
-+
-+	if (offset < blknr_to_addr(lastblk)) {
-+		map->m_pa = blknr_to_addr(vi->u.i_blkaddr) + map->m_la;
-+		map->m_plen = blknr_to_addr(lastblk) - offset;
-+	} else if (tailendpacking) {
-+		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
-+		map->m_pa = iloc(vi->nid) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_plen = inode->i_size - offset;
-+
-+		/* inline data should be located in one meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			erofs_err("inline data cross block boundary @ nid %" PRIu64,
-+				  vi->nid);
-+			DBG_BUGON(1);
-+			err = -EFSCORRUPTED;
-+			goto err_out;
-+		}
-+
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		erofs_err("internal error @ nid: %" PRIu64 " (size %llu), m_la 0x%" PRIx64,
-+			  vi->nid, (unsigned long long)inode->i_size, map->m_la);
-+		DBG_BUGON(1);
-+		err = -EIO;
-+		goto err_out;
-+	}
-+
-+out:
-+	map->m_llen = map->m_plen;
-+
-+err_out:
-+	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
-+	return err;
-+}
-+
-+int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
-+			erofs_off_t offset, erofs_off_t size)
-+{
-+	struct erofs_map_blocks map = {
-+		.index = UINT_MAX,
-+	};
-+	int ret;
-+	erofs_off_t ptr = offset;
-+
-+	while (ptr < offset + size) {
-+		erofs_off_t eend;
-+
-+		map.m_la = ptr;
-+		ret = erofs_map_blocks_flatmode(inode, &map, 0);
-+		if (ret)
-+			return ret;
-+
-+		DBG_BUGON(map.m_plen != map.m_llen);
-+
-+		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+			if (!map.m_llen) {
-+				ptr = offset + size;
-+				continue;
-+			}
-+			ptr = map.m_la + map.m_llen;
-+			continue;
-+		}
-+
-+		/* trim extent */
-+		eend = min(offset + size, map.m_la + map.m_llen);
-+		DBG_BUGON(ptr < map.m_la);
-+
-+		if (ptr > map.m_la) {
-+			map.m_pa += ptr - map.m_la;
-+			map.m_la = ptr;
-+		}
-+
-+		ret = dev_read(buffer + ptr - offset,
-+			       map.m_pa, eend - map.m_la);
-+		if (ret < 0)
-+			return -EIO;
-+
-+		ptr = eend;
-+	}
-+	return 0;
-+}
-+
 -- 
 2.24.0
 
