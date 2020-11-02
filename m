@@ -2,99 +2,99 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 666F72A2EE2
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 17:00:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 81D6A2A2EE3
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 17:00:47 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyLW27xTzDqNn
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 03:00:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyLh4SjbzDqNZ
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 03:00:44 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1604332835;
-	bh=0okYWQw3HesT4p2UAGoJpVLdy45AceUJb7BTNT7kZFs=;
+	s=201707; t=1604332844;
+	bh=enIFgzv/eKCvfCJfV6qP+xTJyk15uUNDJCgZrSm9opQ=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=GJv7zAIRbQEEvdcHHGeCjxLFnUjo25ehSdjB3AunYq3gcACuRK7M2EPu9h1usQhHv
-	 DXxtc0je7NR63C3CFXuec4T972VMdF5/aCu5TO7jObcL4QKjFA1Zj1GrGNUXRaGYJw
-	 8aMbt0tGf6+3qSq6Kp9JgsEH/CDEqPJwbErxe7vFgN55hh6FHBOWYJ0MgtkduKv/Gl
-	 csFal8y8vbXyh/HbEeDfEDG+Is9Qa0nIAjdl2+o3hrZUBnQE5xFPjW8KV7roFG9LnW
-	 1K0TNlueI4w657zNLMBwjfltGD8zpHZj2OHx+7QmxCcrxBjclRLkYo3o8ebeyurfPn
-	 5/dmqO7TiDeQg==
+	b=irEIYjLvbQ7UguO1uaZXV4I6iTie0DkDGNzKXEM3AFV0UKGZV2kXbFgVjNzjYVyec
+	 B46TPiziKY4ro2/+EUeuKYF76ibuuKsqGDhyysLFVOUo5LzfX2Y+w7KjC5JswUx9uO
+	 p0UMd6OSfhj+gYB2JBbkPR2d/NMgm2l1+pvNXmizQFvzdZ2QYHgXh7jjAq8gJk2yRS
+	 CsByoJop3Kre1/CAiaP+LyCpreompxuL3Nen4Hj0WyIlCQYN7E8YeLUAw/fauFVnCO
+	 V1oGzHQi1mTsq5bXQLVK0RHi5nl6VlGn+h+VQxZ5Lx01jjcJkhU3zgxg91YW+olVBl
+	 S+3QJn9Gz+fnQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.31; helo=sonic307-55.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.82; helo=sonic313-19.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=fUhDKgL9; dkim-atps=neutral
-Received: from sonic307-55.consmr.mail.gq1.yahoo.com
- (sonic307-55.consmr.mail.gq1.yahoo.com [98.137.64.31])
+ header.s=a2048 header.b=K3GMyuBY; dkim-atps=neutral
+Received: from sonic313-19.consmr.mail.gq1.yahoo.com
+ (sonic313-19.consmr.mail.gq1.yahoo.com [98.137.65.82])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyLP5QbgzDqKW
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 03:00:29 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyLW51WLzDqP2
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 03:00:35 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1604332827; bh=6j+4mngv87uNbk6/atmOawqYsIpAmHWSzmSvO0yoqvM=;
+ t=1604332833; bh=861rQtDuHCxoFDaW5GY+oGZXTvndA94yyDIaiRAxOps=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=fUhDKgL9Jqi2axhn6meCLw+Yv5MjhvVXxalM/+bTLVHBllpA04W1XJKhPK+S4OQ2B6dptzBPe5cGvVxweO6qxxI9vEj30sZEHIE/yaxlKUU+DIjfi/ttIP07M0mG8ylsdx5xq7ei0/ACvJuthpqkq3kz9B/jCmoFPVrJ7386plbgLhM5q2kiQE+xnb0OFjrQxeAQcY7w6Nra+CsFQhJC7AO9/4ULecxIQSxbDGhq6l53GowlkKsJL0wi8jrVl1iYF8dmSlYIm7cKuJOhU+DOjynr3GeloI1cVURMWjAz33o9FiwcB6ysQjzB50LB9w2Z65L9dlrJtO+nFKTgB7bSyA==
+ b=K3GMyuBYMnY9/QySmuvPOxJI3nlCg7slF/vpSMTC2hKkJYXORkjPx+9HcwM9Z19sVz1ivAj07w6E7IjVRPF4gVxchKQF8/AdGS6hXjxbhGlyYk/faZNrOZQKaxnY52O1SrM7lRPJa+7/S5oSUhcCE2Wz/5vu1/Us5x+TRpBxzS0irxZS1N51uLhVoWg36dk+ZdkTEKW+IbZuXLPXU/SUnXabIAOu6mVnnhY/0aDPC7/llyVVy/bRqYH9pHmaRVeuO0cpIOcIPL+bTeOgiKplThOWd42MZvdvyzTP38Hoa49AzQuAwPgJC+b3yWTPMzBRKfvpZkls9aZTTpb20+N5rg==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1604332827; bh=hvEWG8Z3Y0LcBnjTZ/VbgRrYyTCh7bPln66qFs8F/vM=;
+ t=1604332833; bh=lPnDZI0PPy61ZCLq48MKFJSiqzAOd4Gmn1NOLZhwSUx=;
  h=From:To:Subject:Date;
- b=LMpRB6P1KH94SXotEVgmAMogOqsjEk87cIa0LripE/30trkiwR5BSky8GrDj7cc9oH6BgVQXi9A1Z8W3aYWr2ruDekY2HmrvugTv2Oj7bXGlbjR5sGw3mF6YqnSk5zZft5Kf3xmuT8gM5utE9mXrvqrpbNyzqF/3SuCb6Xz0MPvapydTwrWHSRS8nuIcR2QtYu18hNU2kBvY1XnMFuNWLEqyXRClHAi3GM7pxCE66ej9LZubPw6gNkTpbZCs6xZ21CCmIwUAG47DuR1ggVeeGdl9S+Uqq8eQRaZ0uwfb09l68F3Zf51etdgBVZTaaNeCjWpGrUacE8/14hlVtBe4Ag==
-X-YMail-OSG: ABN7c4UVM1kF9x0WrlTOaCzLV_hIhLYJ19tm3agBeAaxkBvUKFxjYUKc7BcPZWi
- Yz9I2ONY4Pu9RC.5Jfm5Yoqt6ZlsUaf9s_Rb9IYTEPp0SXkZK.nZgwsjn6GrPeVpTN3BSKWv4ikk
- OZExMySPXosprkMijkoqsVD6Sd.COBfFPa9HCOfWD2vLsvzmm4vOFchvIdn8sXj1.8t3iVm8xtFE
- YNBGo.JcZtkj4ckdjVKgg4__FtXqqEKfNpj4J9JHscu6TJZh08nQUI4lBR3RCUciRcM4D8kCm06Q
- oFp8zVajjI2u3_yu2koKhZyVxqAzdxoq0e5zLKSfsBGyq2QsnHxt.2lY8dE745TnghFudBIdH4.j
- dsMTNc05EHY0180cjHLLq6AkC40wcvZy0PPs_e3naHstotVHE5RH59iwQb9tz3PAUMNUBAujsUiP
- krV.JkL4sRSd0N_eHwiPs67mjizmubYq3Z7nytxbMcHimPLZU76tXqbvC97.aNN_zw0XdNhTcWZZ
- 7DY76UTMB0Y3dfq.Qrk.qmwPVVUJgAYzO1IapWmMEdGktR4CDONgNW9tqRYfpVXaIMRmKhAUfgFw
- De.cYwmk0FfoubmxtWVAdRafFUtQr1djwCDpXEQ149DIthO6pw9z4iWarHEz2416AQd4jzX_GoME
- MvSOKfaWddzaYvjDcbhlCiU2yl3juArRi1B85HifUErsa80COVVFFSLQW_p9rGoZhkTPuXOatKwQ
- P_XeXAICza1_5CrAEatNeLDvCHtyBxd8xK_VR5H74OaeGJQAZ55Z5_ZUZiZOJdppM1i9.JvG8goQ
- 3eKAsBPAMB1zvWFA9l9PHLZqYQ_OUdVIFCaextp9pngJdHBOP1jt2bQ2FIpPUqFSk816CIOXCqc8
- CamzC7PaafylDv9WhIZUTs8S5Fbf.rsVT0MmhXs16HRiYTDo9SsWpwzmGPIxmGkbuH0oWz0qVHSs
- pgGUtQTTfFu1nAQSt3ELPUbixFzAQJVn6Lnhw.Xp3osW0.L.NusGd6O_MNbVyrGpiHL8YxCykbUc
- 2Iu4dJTZ7TEg8BJGPhxOxQOEhq4JU1CVErSG76iFVjl86GruZL8w.x_L6qNiIxw9BJS8g9AZhOmo
- 8RcQkQ4qx74UOrueDaXH.EG94NbEEXkzXCF5csKASR_SI.hXkZTEkdml4wqsV9fRPtAfP4RxTsdn
- TVoXj5fB_gxTx8K_UWIG53YU.2pdJd8gyoBb6WTfsx70ivn4wk6E7OhVCKHPx6.kbP95tDrZrm4E
- P23m1QOOoxLEQfLR1L_sCqs_vzrdv.RVu5cNz20U_Aun6pfVnx3rEK5XTKSHODxNL4hfygOCjhmx
- O0bUkSzeGHAQi3cQHmdMBckCu6VFPga7s7Bot86q34OiN5YEZESADpYEWkcMtVMS1culvHyeTvvI
- Y9DuZzetrNNG9IyFgVV298af1dUpLoP8qJL1_DhekNc_azxMg1EHXRowwEZ4CYg9hXdspZxRrFK1
- sRIqk68Oc2cOc_SPknsKTZLG_yUN8oGS4Gd0z._wGkYl_oK8rQToCktnomeL9ntwp7znLbavMtb.
- AIBaCdi.CqUXEn35UpMabXJoYT_wO3hd1rp8BvNjGmGwD0JWVpcjmvRdETZNwXF6MNmDdxNJLGT_
- CM2ZzYX4wvnK_4ATpXIV2A2u3s7r5KcvfPpETXhxz_r5WzVt_ltjjUBRhuo_o2FRHujaL3mrnFm.
- li1wFH2DwTw.DjyKAmLjqPqozWLN_rDftt26a_dYPEbfSd_Ym3pK2ccYYU4zxDpF4f96jPZ7kqww
- yeMBJLs0iD8BPcIDtol9zDvtNzaH8EfnbN8gc0tw6Ba_uPRDwGc0Tda3eg77_7rIVvw4I7XFwyXd
- gWrz9sVZSipq7F7BGi1htkWlaLClGlBVTASd7FlviLqXr.oMvPWyPjztR8XZyo1HfqsiE8gvYjLF
- LeRSC_4c3jr3DFWneRqnR8F1I2PX.lTacihpRpZCAv.rq9I178dN2KVhEm6s_EUn7funSFDrN_bE
- MIKTj1HwJo4dr_ACJxquklDC0HjG0J2QTLHlXFO9.fP6CD.a6lW5b4YXVGRuo4lWNVRDPfjy3X50
- Tes2B6iTZPI.7zt2DClaA1O4khymgVXbPd1M1ARZEieiHRmD9oT_TnQPGziZOE6OKz22Gw.UzP_a
- 6wL6pShIgBbhXyRukdCVXgGeP0q9.7gGIwUxUV_iK.CAjtmC_sMU5kQxwtd1iZF4BD70AR4et5zx
- WDY2gxXqkRb0KG_f0jqKwqQxPM.CU2THfqYKisx2T2dcZgO23KUZPBjMI_rnKucM70yScZzZ6M2h
- z.7.p2DWRRAWuA7l1CHFzwbVtadiwk6QgxHZiCqZkYfJJ6Si2oIZyGBSRufBgHHhfcbSuF69W83x
- 2Kp9LInqGlrT5ETYSmt6uDh8NpGYWMR3XAgrAaufyBG2veZiOYkUGwd7bYoTefxV861Hb27Hfr33
- YNjeRnk43pysQjo9BsurDyCTMIEcOgvOP1aGtQnAyW.itveuCGyuGaqn6DXcQXXV3iInPzlK6di.
- OQw9sIpg5e6TB9fbxQFWcpZyZguUC1roSS4QNdSrKRkKFp8qiFjhqYDlULAIBd5Gh01C5FK4AbmX
- 2keJEOZAtPCWD4nfI.G0SZupyI_l6BBTGwL4L45XsJ.ClsxNKdB2mODO.ybNiFp7WgQiNg1Qpalf
- CsRDRao39KgUGCQdOIcCT1aBSHvJKQozi7IdsyY7zecpCcAI-
+ b=cY+MmR041um6XOtpkkFusGaOFR7CLkxuF3D8ZNDAsBDBanfBdDjMJdYx6ot4v8l4QyxU8p6S9H5QOVVOZUXinKOWrpmbp/NUd+vflSf0VIu18YjTJeUvw7tfxRkIRHHf2KVgBwGsy4L91dkPKmyfs1h7GCj4cN5UrypaOGkVtnzxGC/VArm5waD4SCC3bFs4CrdcHrClCleIIygHInci8zd+ANjLNVRGO16bu6K/rjfPuVxYQ7XrZQwaTQApBf6FI3SuJ03bgkMy9GV7xD/42xqVeYSvMQy7zYbpZx6IHeZcN4KgmF6wMJnCVo7jXqz8cn2FzOxV5SjMgbZNGDa+GA==
+X-YMail-OSG: RMGH204VM1mccaGt_8CT7EOeZUxIvq8F9EtlDKxMe6Dft3lE5so41uWp6lh7418
+ Uzz9Vii093_aiPNhyMtY0fAKguF7BzPZtdNMc7EwMhaxw6j9RC1WjlC3w6xEITx0bCQuiS8PTM9.
+ qwIQkY5oq3fsxnT4HsgZukGtoEnzy1Pfmu_u6LWEblrxu11Gz6Ds4KtZY5j5272bv_CdFYeRdLND
+ tfkCYBSWblJC3qdghc1xrIp2J5vUtrOwf37z22TuybHhRNM2fbF8MH1wspRgVXXyhnrkpooIDLSg
+ k.IQdLaPt6HWS.jDRdPmwLr59UPumbZ1waBoSmODwntrvg6x8nAvuXwy1.ObyMK3nh5_JLStnn.g
+ qK59u_PlRkU3NhU9ImnJ2vnJULvtwjSdn3x6htmphNB2Zo5jMmAD6kYoPxNLxw5HC4hRcSyBqUjY
+ 9whdWXvgseBnnu7kGDN8KuQePTofwuv7lhOr3hQiAvSSyf2RZ6H51_F.se.vJ.SjX5UoAfP38vLz
+ Vr7_zfBFFNEyKgnyuBXHH1zEZ0o2TGaI9y1uGrE74nb7xF9crlwybfiVkSmWKSzD7LI_fTkyblyX
+ wV6RCISfQgTOCXLskloU1v__GxT7zLdsSkjVjQ23g0rOZV2uz1cF8q4Ti2WVi7eGyhuDBz9.y1q5
+ nC53mT3jA4Rbcsx4g5ACl2p3jvN67.1WLtblaClf1Piu3.yq8MInYCxn2kfuVdAxTF3IiyVXsqtK
+ CrYP9h5bC2FjHUx2Yr_4bYaueAHSem2U07wvxt99Y0ulGlml4KV.UGFq4ZIuu6ck8z10DFwlimr_
+ ZP.So1Fs7HGi._EjwODOfNtupBPfBmIVW53YwzvI.I12rP9CHoV13cPduKhQT8x2bEa6hBvMuAm4
+ zqDHwqF.dcdjHY5jYzg2zJyIq.tdpwb8K8l8oMHQpqFo4iE7ovUOvLs2PO9hOPUTUST2ocwLUJ9L
+ 2UrCkNEUfGKnEOtwv_Fmsts4ZoYE7e_y8Nb73tqkNw5.8TZrqJ7flKHpRY5OasYUaSEc9R3wbMtM
+ zlwy5wAZliNp5NIFunZE.e2461e6fULBskUfDL2OytTYOH9bicyb6jN9BGov1G1I9MXi0xenTUx2
+ CBJKSD_9xuN_ZZXe3DPGMeYDUZoeVEpEyK6Naj7JkYH4QjnN8ARbhAZgbSl9JuHU23CtnzF2_iak
+ Z33Ly3HWtrRlNhU5lT4UP61zlgN0YRZ9MuBJaVgaOO4gfCWrlMAAtafVeg9YBocNXsGVoKnujwO3
+ jJDTA2Jjq1wgdQHovZH6qD3RC1r0JkBsceQme_LU0e4uEdFC2cumHfYl7fOsAcZTiZSXwMoYfDUd
+ AD.6Gf9FTO3LfyLYlfo39Vw0CbfuYc3NsFPpESZ4Yjhu.tglGNsExJWSo5brNhDWiH.Qd4kiohFg
+ F1KLpjHk2INj9pAYkFg3obMPmHgSKHs0ckHfYZKwsXPP3a6NgFY7jt3z2t03RPC9rKwDVwf9Gmns
+ U3G16NUFrEto8MhndkEcR2DX2NihAfshKvIr0WCoqtxoraiU1b3eTnFe7hbC6cay0gJKzlg.2a8v
+ WmpCYmypzRiRCY2wXsxTp8bqKoRilmYeIdXUC2br2RFB_0JPcmr4Q0byFha8IhzXS4U5lPCVWA8S
+ d_BS6z4ZQFc.yYOPvU.YFT77gLB..p5yEaHQiF68dhiyjgS61UCxGr1P1QjtEJw1fxG0k8E8otF3
+ aQ.KmIRZ3N9szcAFHm1Tv1vUQRwR3UHoUyOIr4V38jeObHOcp3CnAiqfCJtQG6M.JmWZKJ5fQ1nk
+ Qlcyh2YBi19g80BpwWcZSIvARBU_JNVo1iN4p0aCAn31OBiAlPWPeekx3Q4eq_5KjWvMHfCEJMOK
+ tTN7Q8PyE6Ts7njaA3J4AKueMS1Vp8inliAoWEzbGifQnasfNZC3Ek5pzYPkJoPnq.mX6Hz5Pm6H
+ zELYg4ig6Rccln.recwdNa9bX_C92eqL2yTnzdpIQSqb4PyrqEH2PF3fnU2tVn6MSRRl9nuuO7zu
+ PLtOXkc50hrEkBfL6TH3d5q8a2RCzEshXHcDYnurwDNjdZUBR8kWb0fFDVDBv5ZgBLb6yB6x4iXF
+ lT_9jAKfEFfLwlf1FERmBXq93kVPAbsYnjrFjcaTNF9vi.dpz_6Egad.HpjNl13prPM1PnjpR6uY
+ pihcauASnRgrF05jd7s8mQ9P.f9bsyMVLsoJrDtxtxPL4e6MhAg.JfakQc82TIvqFy5sYmv.sqwE
+ m.8lccAo2sMpTY89ZHzxqPgKR0MKsLNbJ_ohWVIkJvn6KZ2Xwq6wC8TNHAdo8MhJGZjMXlh435UM
+ noqUURULjOvHq5l1leY0O5LV5nCfj1Mnw9kRVzvvrZeszvzGy2mQ68jc9i8mkWXxa2PGpDTRVHbz
+ VPB2FSU7iZk5C8znn32auvfIot4Tu1F0ClOBaq8AcTUOP12LbXekVdZCIpaOGprfgEQcBu3aq.GJ
+ XYmypL2AeCuv8XHt0Aq1HvZRqBicfV68Xsc32ravteB_vmbr8ypGIHdx12ECionR2yZTyIo1sHa9
+ .F_zYU6BVQtFMxK.yYErzJiuUog1URZ5JlDr96XvmthZnJM2LZBOgAKL5.52MiQ5HYZRHnoB4cet
+ hb29X_0hbp3Eyq2oKMBr9AZo0M77JAt0lWayiRA3jNXGtrIIhj04tOY0dfEOXz3mJz1DjEOIx2Uc
+ XjsLN4jxwYl_Yte5RiMobVxvBU7xEn8ed_29YdA--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic307.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 16:00:27 +0000
+ sonic313.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 16:00:33 +0000
 Received: by smtp420.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID aa129971a4deab6e98284c88780a2fc2; 
- Mon, 02 Nov 2020 16:00:23 +0000 (UTC)
+ Mon, 02 Nov 2020 16:00:31 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v3 10/12] erofs-utils: fuse: kill getattr.c
-Date: Mon,  2 Nov 2020 23:59:36 +0800
-Message-Id: <20201102155938.2679-1-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v3 11/12] erofs-utils: fuse: kill open.c
+Date: Mon,  2 Nov 2020 23:59:37 +0800
+Message-Id: <20201102155938.2679-2-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20201102155558.1995-10-hsiangkao@aol.com>
+In-Reply-To: <20201102155938.2679-1-hsiangkao@aol.com>
 References: <20201102155558.1995-10-hsiangkao@aol.com>
+ <20201102155938.2679-1-hsiangkao@aol.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -118,161 +118,104 @@ Sender: "Linux-erofs"
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
  fuse/Makefile.am |  2 +-
- fuse/getattr.c   | 65 ------------------------------------------------
- fuse/getattr.h   | 15 -----------
- fuse/main.c      | 25 ++++++++++++++++++-
- 4 files changed, 25 insertions(+), 82 deletions(-)
- delete mode 100644 fuse/getattr.c
- delete mode 100644 fuse/getattr.h
+ fuse/main.c      | 11 ++++++++++-
+ fuse/open.c      | 22 ----------------------
+ fuse/open.h      | 15 ---------------
+ 4 files changed, 11 insertions(+), 39 deletions(-)
+ delete mode 100644 fuse/open.c
+ delete mode 100644 fuse/open.h
 
 diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index f54def7a1526..6e639f33f664 100644
+index 6e639f33f664..5ff0b4d0e6ab 100644
 --- a/fuse/Makefile.am
 +++ b/fuse/Makefile.am
 @@ -3,7 +3,7 @@
  
  AUTOMAKE_OPTIONS = foreign
  bin_PROGRAMS     = erofsfuse
--erofsfuse_SOURCES = main.c dentry.c getattr.c namei.c read.c open.c readir.c zmap.c
-+erofsfuse_SOURCES = main.c dentry.c namei.c read.c open.c readir.c zmap.c
+-erofsfuse_SOURCES = main.c dentry.c namei.c read.c open.c readir.c zmap.c
++erofsfuse_SOURCES = main.c dentry.c namei.c read.c readir.c zmap.c
  erofsfuse_CFLAGS = -Wall -Werror \
                     -I$(top_srcdir)/include \
                     $(shell pkg-config fuse --cflags) \
-diff --git a/fuse/getattr.c b/fuse/getattr.c
-deleted file mode 100644
-index 4c5991e7e487..000000000000
---- a/fuse/getattr.c
-+++ /dev/null
-@@ -1,65 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- * erofs-utils/fuse/getattr.c
-- *
-- * Created by Li Guifu <blucerlee@gmail.com>
-- */
--#include "getattr.h"
--
--#include <sys/types.h>
--#include <sys/stat.h>
--#include <unistd.h>
--#include <errno.h>
--
--#include "erofs/defs.h"
--#include "erofs/internal.h"
--#include "erofs_fs.h"
--#include "erofs/print.h"
--
--#include "namei.h"
--
--extern struct erofs_super_block super;
--
--/* GNU's definitions of the attributes
-- * (http://www.gnu.org/software/libc/manual/html_node/Attribute-Meanings.html):
-- * st_uid: The user ID of the file鈥檚 owner.
-- * st_gid: The group ID of the file.
-- * st_atime: This is the last access time for the file.
-- * st_mtime: This is the time of the last modification to the contents of the
-- *           file.
-- * st_mode: Specifies the mode of the file. This includes file type information
-- *          (see Testing File Type) and the file permission bits (see Permission
-- *          Bits).
-- * st_nlink: The number of hard links to the file.This count keeps track of how
-- *           many directories have entries for this file. If the count is ever
-- *           decremented to zero, then the file itself is discarded as soon as
-- *           no process still holds it open. Symbolic links are not counted in
-- *           the total.
-- * st_size: This specifies the size of a regular file in bytes. For files that
-- *         are really devices this field isn鈥檛 usually meaningful.For symbolic
-- *         links this specifies the length of the file name the link refers to.
-- */
--int erofs_getattr(const char *path, struct stat *stbuf)
--{
--	struct erofs_vnode v;
--	int ret;
--
--	erofs_dbg("getattr(%s)", path);
--	memset(&v, 0, sizeof(v));
--	ret = erofs_iget_by_path(path, &v);
--	if (ret)
--		return -ENOENT;
--
--	stbuf->st_mode  = le16_to_cpu(v.i_mode);
--	stbuf->st_nlink = le16_to_cpu(v.i_nlink);
--	stbuf->st_size  = le32_to_cpu(v.i_size);
--	stbuf->st_blocks = stbuf->st_size / EROFS_BLKSIZ;
--	stbuf->st_uid = le16_to_cpu(v.i_uid);
--	stbuf->st_gid = le16_to_cpu(v.i_gid);
--	stbuf->st_rdev = le32_to_cpu(v.i_rdev);
--	stbuf->st_atime = super.build_time;
--	stbuf->st_mtime = super.build_time;
--	stbuf->st_ctime = super.build_time;
--
--	return 0;
--}
-diff --git a/fuse/getattr.h b/fuse/getattr.h
-deleted file mode 100644
-index 735529a91d5b..000000000000
---- a/fuse/getattr.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * erofs-utils/fuse/getattr.h
-- *
-- * Created by Li Guifu <blucerlee@gmail.com>
-- */
--#ifndef __EROFS_GETATTR_H
--#define __EROFS_GETATTR_H
--
--#include <fuse.h>
--#include <fuse_opt.h>
--
--int erofs_getattr(const char *path, struct stat *st);
--
--#endif
 diff --git a/fuse/main.c b/fuse/main.c
-index 21f8b0451732..3842fedce8c1 100644
+index 3842fedce8c1..e423312d9e1a 100644
 --- a/fuse/main.c
 +++ b/fuse/main.c
 @@ -14,7 +14,6 @@
  #include "erofs/print.h"
  #include "namei.h"
  #include "read.h"
--#include "getattr.h"
- #include "open.h"
+-#include "open.h"
  #include "readir.h"
  #include "erofs/io.h"
-@@ -126,6 +125,30 @@ void *erofs_init(struct fuse_conn_info *info)
+ 
+@@ -125,6 +124,16 @@ void *erofs_init(struct fuse_conn_info *info)
  	return NULL;
  }
  
-+int erofs_getattr(const char *path, struct stat *stbuf)
++int erofs_open(const char *path, struct fuse_file_info *fi)
 +{
-+	struct erofs_vnode v;
-+	int ret;
++	erofs_info("open path=%s", path);
 +
-+	erofs_dbg("getattr(%s)", path);
-+	memset(&v, 0, sizeof(v));
-+	ret = erofs_iget_by_path(path, &v);
-+	if (ret)
-+		return -ENOENT;
++	if ((fi->flags & O_ACCMODE) != O_RDONLY)
++		return -EACCES;
 +
-+	stbuf->st_mode  = v.i_mode;
-+	stbuf->st_nlink = v.i_nlink;
-+	stbuf->st_size  = v.i_size;
-+	stbuf->st_blocks = stbuf->st_size / EROFS_BLKSIZ;
-+	stbuf->st_uid = v.i_uid;
-+	stbuf->st_gid = v.i_gid;
-+	stbuf->st_rdev = v.i_rdev;
-+	stbuf->st_atime = sbi.build_time;
-+	stbuf->st_mtime = sbi.build_time;
-+	stbuf->st_ctime = sbi.build_time;
 +	return 0;
 +}
 +
- static struct fuse_operations erofs_ops = {
- 	.readlink = erofs_readlink,
- 	.getattr = erofs_getattr,
+ int erofs_getattr(const char *path, struct stat *stbuf)
+ {
+ 	struct erofs_vnode v;
+diff --git a/fuse/open.c b/fuse/open.c
+deleted file mode 100644
+index beb9a8615512..000000000000
+--- a/fuse/open.c
++++ /dev/null
+@@ -1,22 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * erofs-utils/fuse/open.c
+- *
+- * Created by Li Guifu <blucerlee@gmail.com>
+- */
+-#include "open.h"
+-#include <asm-generic/errno-base.h>
+-#include <fuse.h>
+-#include <fuse_opt.h>
+-#include "erofs/print.h"
+-
+-int erofs_open(const char *path, struct fuse_file_info *fi)
+-{
+-	erofs_info("open path=%s", path);
+-
+-	if ((fi->flags & O_ACCMODE) != O_RDONLY)
+-		return -EACCES;
+-
+-	return 0;
+-}
+-
+diff --git a/fuse/open.h b/fuse/open.h
+deleted file mode 100644
+index dfc8b3cdd515..000000000000
+--- a/fuse/open.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * erofs-utils/fuse/open.h
+- *
+- * Created by Li Guifu <blucerlee@gmail.com>
+- */
+-#ifndef __EROFS_OPEN_H
+-#define __EROFS_OPEN_H
+-
+-#include <fuse.h>
+-#include <fuse_opt.h>
+-
+-int erofs_open(const char *path, struct fuse_file_info *fi);
+-
+-#endif
 -- 
 2.24.0
 
