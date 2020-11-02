@@ -2,99 +2,100 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81D6A2A2EE3
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 17:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 229382A2EE4
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Nov 2020 17:00:59 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyLh4SjbzDqNZ
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 03:00:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CPyLw1ZwdzDqSq
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Nov 2020 03:00:56 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1604332844;
-	bh=enIFgzv/eKCvfCJfV6qP+xTJyk15uUNDJCgZrSm9opQ=;
+	s=201707; t=1604332856;
+	bh=sV9UzvQ4JSbzzKdVNJW7A1GLFaPm/YiFf/eaBMWSKL0=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=irEIYjLvbQ7UguO1uaZXV4I6iTie0DkDGNzKXEM3AFV0UKGZV2kXbFgVjNzjYVyec
-	 B46TPiziKY4ro2/+EUeuKYF76ibuuKsqGDhyysLFVOUo5LzfX2Y+w7KjC5JswUx9uO
-	 p0UMd6OSfhj+gYB2JBbkPR2d/NMgm2l1+pvNXmizQFvzdZ2QYHgXh7jjAq8gJk2yRS
-	 CsByoJop3Kre1/CAiaP+LyCpreompxuL3Nen4Hj0WyIlCQYN7E8YeLUAw/fauFVnCO
-	 V1oGzHQi1mTsq5bXQLVK0RHi5nl6VlGn+h+VQxZ5Lx01jjcJkhU3zgxg91YW+olVBl
-	 S+3QJn9Gz+fnQ==
+	b=lrcB+HVnI0ALcgqLeVKJbOMl8XBSLvmDUBZ2YYWZqanY51Tilfv2WNRkXWWzjxcDL
+	 qIoBU5Z6CFGL3GBk9lBNdbAwXyE5ZYJZCi4/Q5jQTaponydtC7yE3YJx82a4ifUFRd
+	 Y5aLsu1OW2qRM368boVlHWK7iuXZZvh0TTErohoBn97AIB5gSwYUnVoX1OcZquASvU
+	 ARibnPiutz7zfg0G9ieRFBFwHw16za+/k0Wi6R13zpW+Kei80JNJ3h3DDNVFCAdCQ4
+	 4P7jPXR1sjIfaRLjgnxRlA9mhsAC9EpF0h+BsXX7zi5rKbV5hyXxQ59aWFiVw2aPbB
+	 3XTu+d21uKlbg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.82; helo=sonic313-19.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.82; helo=sonic314-19.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=K3GMyuBY; dkim-atps=neutral
-Received: from sonic313-19.consmr.mail.gq1.yahoo.com
- (sonic313-19.consmr.mail.gq1.yahoo.com [98.137.65.82])
+ header.s=a2048 header.b=V33dxa1m; dkim-atps=neutral
+Received: from sonic314-19.consmr.mail.gq1.yahoo.com
+ (sonic314-19.consmr.mail.gq1.yahoo.com [98.137.69.82])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyLW51WLzDqP2
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 03:00:35 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CPyLk0NMszDqRW
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Nov 2020 03:00:45 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1604332833; bh=861rQtDuHCxoFDaW5GY+oGZXTvndA94yyDIaiRAxOps=;
+ t=1604332842; bh=FM+w1PCF2dukMGbwyyTbljrCQa0jHZAF7KwVDXySMWc=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=K3GMyuBYMnY9/QySmuvPOxJI3nlCg7slF/vpSMTC2hKkJYXORkjPx+9HcwM9Z19sVz1ivAj07w6E7IjVRPF4gVxchKQF8/AdGS6hXjxbhGlyYk/faZNrOZQKaxnY52O1SrM7lRPJa+7/S5oSUhcCE2Wz/5vu1/Us5x+TRpBxzS0irxZS1N51uLhVoWg36dk+ZdkTEKW+IbZuXLPXU/SUnXabIAOu6mVnnhY/0aDPC7/llyVVy/bRqYH9pHmaRVeuO0cpIOcIPL+bTeOgiKplThOWd42MZvdvyzTP38Hoa49AzQuAwPgJC+b3yWTPMzBRKfvpZkls9aZTTpb20+N5rg==
+ b=V33dxa1mIZJEfi/S7AYxCH8ftxPyutVgY8btlC/mTa4NNWuJqmZZIo10Bc3DbMwb3RH5vonIo6pJRVIsw9B3Ikoj2Ye5UHX1wsjijK++dFmLW0peb83fr20fEN9hb3oKe80DEjTtau58zQb6uoQ0sUeMURJpY4EqC8RvRGZ1c6qmXY/pvy2tybzgNAtFi0scRtKDoJ20cXKDnizi8cGdB/FXX8bmggcfr+XvaMa4c8kro7cy4s2JZ9wUpViSJYpYkv0N3P7TIm9ZOdBbWICp4YpgHh9S9OaU3Fira+yt6zAsYtffgpOs/4ksPfU/1Q7IZaEZb4NRtFykdj0eD3R7Sw==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1604332833; bh=lPnDZI0PPy61ZCLq48MKFJSiqzAOd4Gmn1NOLZhwSUx=;
+ t=1604332842; bh=HNVp4X0yZ//GWXH5GueQiiAVvMxhdXRr8P3UhIRYhWg=;
  h=From:To:Subject:Date;
- b=cY+MmR041um6XOtpkkFusGaOFR7CLkxuF3D8ZNDAsBDBanfBdDjMJdYx6ot4v8l4QyxU8p6S9H5QOVVOZUXinKOWrpmbp/NUd+vflSf0VIu18YjTJeUvw7tfxRkIRHHf2KVgBwGsy4L91dkPKmyfs1h7GCj4cN5UrypaOGkVtnzxGC/VArm5waD4SCC3bFs4CrdcHrClCleIIygHInci8zd+ANjLNVRGO16bu6K/rjfPuVxYQ7XrZQwaTQApBf6FI3SuJ03bgkMy9GV7xD/42xqVeYSvMQy7zYbpZx6IHeZcN4KgmF6wMJnCVo7jXqz8cn2FzOxV5SjMgbZNGDa+GA==
-X-YMail-OSG: RMGH204VM1mccaGt_8CT7EOeZUxIvq8F9EtlDKxMe6Dft3lE5so41uWp6lh7418
- Uzz9Vii093_aiPNhyMtY0fAKguF7BzPZtdNMc7EwMhaxw6j9RC1WjlC3w6xEITx0bCQuiS8PTM9.
- qwIQkY5oq3fsxnT4HsgZukGtoEnzy1Pfmu_u6LWEblrxu11Gz6Ds4KtZY5j5272bv_CdFYeRdLND
- tfkCYBSWblJC3qdghc1xrIp2J5vUtrOwf37z22TuybHhRNM2fbF8MH1wspRgVXXyhnrkpooIDLSg
- k.IQdLaPt6HWS.jDRdPmwLr59UPumbZ1waBoSmODwntrvg6x8nAvuXwy1.ObyMK3nh5_JLStnn.g
- qK59u_PlRkU3NhU9ImnJ2vnJULvtwjSdn3x6htmphNB2Zo5jMmAD6kYoPxNLxw5HC4hRcSyBqUjY
- 9whdWXvgseBnnu7kGDN8KuQePTofwuv7lhOr3hQiAvSSyf2RZ6H51_F.se.vJ.SjX5UoAfP38vLz
- Vr7_zfBFFNEyKgnyuBXHH1zEZ0o2TGaI9y1uGrE74nb7xF9crlwybfiVkSmWKSzD7LI_fTkyblyX
- wV6RCISfQgTOCXLskloU1v__GxT7zLdsSkjVjQ23g0rOZV2uz1cF8q4Ti2WVi7eGyhuDBz9.y1q5
- nC53mT3jA4Rbcsx4g5ACl2p3jvN67.1WLtblaClf1Piu3.yq8MInYCxn2kfuVdAxTF3IiyVXsqtK
- CrYP9h5bC2FjHUx2Yr_4bYaueAHSem2U07wvxt99Y0ulGlml4KV.UGFq4ZIuu6ck8z10DFwlimr_
- ZP.So1Fs7HGi._EjwODOfNtupBPfBmIVW53YwzvI.I12rP9CHoV13cPduKhQT8x2bEa6hBvMuAm4
- zqDHwqF.dcdjHY5jYzg2zJyIq.tdpwb8K8l8oMHQpqFo4iE7ovUOvLs2PO9hOPUTUST2ocwLUJ9L
- 2UrCkNEUfGKnEOtwv_Fmsts4ZoYE7e_y8Nb73tqkNw5.8TZrqJ7flKHpRY5OasYUaSEc9R3wbMtM
- zlwy5wAZliNp5NIFunZE.e2461e6fULBskUfDL2OytTYOH9bicyb6jN9BGov1G1I9MXi0xenTUx2
- CBJKSD_9xuN_ZZXe3DPGMeYDUZoeVEpEyK6Naj7JkYH4QjnN8ARbhAZgbSl9JuHU23CtnzF2_iak
- Z33Ly3HWtrRlNhU5lT4UP61zlgN0YRZ9MuBJaVgaOO4gfCWrlMAAtafVeg9YBocNXsGVoKnujwO3
- jJDTA2Jjq1wgdQHovZH6qD3RC1r0JkBsceQme_LU0e4uEdFC2cumHfYl7fOsAcZTiZSXwMoYfDUd
- AD.6Gf9FTO3LfyLYlfo39Vw0CbfuYc3NsFPpESZ4Yjhu.tglGNsExJWSo5brNhDWiH.Qd4kiohFg
- F1KLpjHk2INj9pAYkFg3obMPmHgSKHs0ckHfYZKwsXPP3a6NgFY7jt3z2t03RPC9rKwDVwf9Gmns
- U3G16NUFrEto8MhndkEcR2DX2NihAfshKvIr0WCoqtxoraiU1b3eTnFe7hbC6cay0gJKzlg.2a8v
- WmpCYmypzRiRCY2wXsxTp8bqKoRilmYeIdXUC2br2RFB_0JPcmr4Q0byFha8IhzXS4U5lPCVWA8S
- d_BS6z4ZQFc.yYOPvU.YFT77gLB..p5yEaHQiF68dhiyjgS61UCxGr1P1QjtEJw1fxG0k8E8otF3
- aQ.KmIRZ3N9szcAFHm1Tv1vUQRwR3UHoUyOIr4V38jeObHOcp3CnAiqfCJtQG6M.JmWZKJ5fQ1nk
- Qlcyh2YBi19g80BpwWcZSIvARBU_JNVo1iN4p0aCAn31OBiAlPWPeekx3Q4eq_5KjWvMHfCEJMOK
- tTN7Q8PyE6Ts7njaA3J4AKueMS1Vp8inliAoWEzbGifQnasfNZC3Ek5pzYPkJoPnq.mX6Hz5Pm6H
- zELYg4ig6Rccln.recwdNa9bX_C92eqL2yTnzdpIQSqb4PyrqEH2PF3fnU2tVn6MSRRl9nuuO7zu
- PLtOXkc50hrEkBfL6TH3d5q8a2RCzEshXHcDYnurwDNjdZUBR8kWb0fFDVDBv5ZgBLb6yB6x4iXF
- lT_9jAKfEFfLwlf1FERmBXq93kVPAbsYnjrFjcaTNF9vi.dpz_6Egad.HpjNl13prPM1PnjpR6uY
- pihcauASnRgrF05jd7s8mQ9P.f9bsyMVLsoJrDtxtxPL4e6MhAg.JfakQc82TIvqFy5sYmv.sqwE
- m.8lccAo2sMpTY89ZHzxqPgKR0MKsLNbJ_ohWVIkJvn6KZ2Xwq6wC8TNHAdo8MhJGZjMXlh435UM
- noqUURULjOvHq5l1leY0O5LV5nCfj1Mnw9kRVzvvrZeszvzGy2mQ68jc9i8mkWXxa2PGpDTRVHbz
- VPB2FSU7iZk5C8znn32auvfIot4Tu1F0ClOBaq8AcTUOP12LbXekVdZCIpaOGprfgEQcBu3aq.GJ
- XYmypL2AeCuv8XHt0Aq1HvZRqBicfV68Xsc32ravteB_vmbr8ypGIHdx12ECionR2yZTyIo1sHa9
- .F_zYU6BVQtFMxK.yYErzJiuUog1URZ5JlDr96XvmthZnJM2LZBOgAKL5.52MiQ5HYZRHnoB4cet
- hb29X_0hbp3Eyq2oKMBr9AZo0M77JAt0lWayiRA3jNXGtrIIhj04tOY0dfEOXz3mJz1DjEOIx2Uc
- XjsLN4jxwYl_Yte5RiMobVxvBU7xEn8ed_29YdA--
+ b=LHZroY3/W6daWm8+lDYbkv//JXsYC2a2qAv8ThxrXJGZ/jJsz8IHdrnEzk4Z8/c6IcSyW97RNpwDd7rv/ki2TOT6Flw5dod9QSXvaUY8rvrmg3DoxSlm348/U75rvSmYyzj6fC68vsPTSNklLf0y3CSiRHNHaRBslktXVUkZNKFfzu9XHDbSMWEl0vyPsw9S6rxejSx9vJR8TVXf4TGbbRKEE3b9QxB7lEqg+vET2IjQVzLMk2zA2pbQD7tfYR7j9Ah9kDr8445OBkkyhYD9fDe9sZRRrbCfUyxjf3itmE0MLn5emZ8rn/p+zysGzqk8loWHrtqUrwb4DqZGrPko+Q==
+X-YMail-OSG: p20qeQIVM1kqA3Fx97.DweelJ7ps4P7UvnjsX9cvX2ERPV.aN.xBlVb9vxrfiMH
+ O9FEErTDRpovWQSo8lYSRMuU6IxW7lEha9o0OBRSNTinYc0v5oKobOroxpkVM2PCEpBQ2024RBtI
+ LMh99dJ.A8tGpV0Ov81PASNoFCr.dHjBKyEbloc4tJxHRZIK59qmUXsJNEMaV6JJ.jQfklTDP4Xe
+ Gx5.ftyNJUrWEWaItcRf1f.8Jg1r06ujt2impwpW2xxnB.KLS_ReNV9JAapJ78yBCCSR1Hhhsz9m
+ ZcryB5b_IQIrygbsZM4gFLyblVphRNrIh4MVISTnCOsYn4wTdYAMrdI8cH9XelCXqt8xFNhngxIx
+ gzdrdmvKABwaD1s8UrG3pXpTzG1EeMvKgoH4VEEPZa8uH5mLk3MDnaVfSGs8b6Eel2eXjkHx6i8u
+ ATGhR7nZMsK0m3we_uvh1vdUhkmUeWBji1IVx1JInMyNVtJkJSNfrmhDZfaJ0eacOUY1iEm_0srO
+ FwIehG2h.0ou2L.F465nQElZ7EprqzG7s2hW1AjLCBH32nqM_caMHeDlfITQI7hrEDRB7QaH4dvT
+ bzbKTvqq_vLmg1m5tH3fyAHNLVmKAmvAkpBB3cWN.9nvbmC0WdQ3DbKO39fN.JK9B6j0QDKdQ2_I
+ AW2Ibu4.ZSxiZY.XwE2qcLlzYQ6v9wX4lhRLJkkzKdODggDQvsmbXmioja8CPNH.J.Vfylhr9fQb
+ OwTqaOcoKjY9EgkSr34yXGCne4DY4tTGVJzZVBhiGrPSVV.BTvOz3eigwd1Bpv80UGf3EmpHRdi8
+ NzV54fVDio_I7NKP78OWquCy9LxF2Wgn7xoqh._ByilWqK_YcKQv4gog5ZYl8WGgEVz7vkaKSyYo
+ BhMsdMPfJF68LoqaL0P9IbKREFADSQ0p82AWC1RXImSXB06Ft2B3ACQuiO45bPXfk19pxnPlVNa8
+ N0lLo1yXL3IpIy1fFAaKDCJkXeXRFv3zBRPMWGNCvZd4ygvq_nUocrHsSh24GjFoX8akaI4LRl.i
+ 41M1iC3h76ooGprtAOiErxGbq78UkiogbfXOFtv6ZFP5C6t93erPz3B_xb6XTYCjGH82L0cYk55d
+ tMV5nYlF01hMAl7orfDr5yAigLRF30wjjA2nH2azqL1u0eu74meRAIP2Lug9uqyGqMlfvpji5U8z
+ JALySCh3w1NvsaFePprUU8hm.3zrt.Hv5NmvrhfN1JeuejiCfF5Ibuo36n.EZRc97qN36XNZXHoU
+ yfO0wv0UWbme9Cc2VJVgm7mvWJakE_bxy97.RS1_a9G4brn71EG2RAhLJHxSwET4EHaP7a.Colc6
+ 9rU7J_reZ_ZATFlMqc7RzhVRStC7f7.4mbDFk85Y2XwtNuiTKtGhoaazTsSFYWuBnAzQJMid1Wvk
+ 0BjJVeZD1l6YynoJB7e0VIucClToEdbH6hYmygQim_zvEzvCbptYtrnTNrLVGQprSNZL6.5dfUB_
+ Dy7J1pm1zeZYDQepHZN6oTgBlu2Ok8wQn9f7ZFJK_BHY8Ytp9n.fBgVtX4fO8RuxzYpz7TJbePJh
+ NQFoj5v73u6G0S5wD21vjNbkQ4ByVRa64daow0v2tVgW_jBGVrqrpdQnKG_uC.eNMsz1eslrhYvQ
+ A.3STHCYTYHMWu4h3z8HIqasIbWr5zcl4sf16Q5tGiFJLnRo_EsbwudlFpmHUJnihyJN6wQBZNSG
+ r5rnXTNbAJwBGFzCsVsG47YlIiYcEsr1C9XHVHok0CxN5sVqCkuQSQfyrxPCMV7sASt_BwzJygcR
+ gZ4.c5.QshD9RBpbFjZfJDbAX2kxdqRndmlQRfZa1nc3k8gApUxAr6d7FPl_uvJrCHVees9EnJ5_
+ 7ngBxAP1sLgRKp0BIBV99jIrKpL7newdSvnCtXKv0n_SV6nFk9m5WXRkDwapYtorc3GU3sK3ZK3r
+ .l3AXFWhAVXUwUwsoAClo_KhdA6Jor3udtGTamakDdJ2gLkxU_S6_mSeahxQeVcOZjHPPKDSQCfy
+ rW5DV8.Q7R47gdq9ApNm3MJc9LmwsWeNFMTD_G32bsCcsgL2tgqzh66EeXTgsy_kOQ.bSQ7V01BA
+ Ae1.ePV41IO_JyQVcVLT1xK3gPS9_AOb8SUPjtohoDIXnKCjhXTPBXRPD_QcX0Y3CzGDUTCiJ.E7
+ .UXbvGmUnt2CWfCeDc6nLkWm5.qIl3jmwROCotEjIaOq_PlI9pqwTD4oDF5l_hSsWS1tMWwroUVh
+ ro_J0wATJakWibEquPT3AAeMMZXRFdXitvcL72qghS4FdLsotPWjetQrDDX_OuCHimbV8QqVusUj
+ qnvbd9XxrE5sBz7ArzPcKdtLNjPe7DAhUN8ojV65ELSXONbSUiCEbjRw1l.UvBBQUDq5SfsIYMg8
+ S6xgfIy5CQm1YGv.4HTQ7KD9Ev9REPfihJFq_dQ0hIhNMVuNiEfchN_5.hIWzeBggkW8zmwmIiNF
+ iA_XHO7eQfRo5FGDaor2bg3DX4OPZ41m.oVwyx5KwQa90gweaIB8APcIqhZu5AP3DsVzPkZqZyeb
+ RMTyxmEirTga5DBmI3a5xNvdFjZF_u0wVmcRy7d9jaJD6LNm1zvPLgmREt05rYw5km_7s2bcd3.A
+ aLd7zZyOCFMp196Sy9n4s_dIBHxgfkJ67DEES31AccPrAyczTlFYQVylw1gEeO0qFqSEiCBc7FVr
+ iB8GUbzqM8xrelWT0sxxK_4eYl1glOy2ZEGZfeascYskNdz.gXg--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 16:00:33 +0000
+ sonic314.consmr.mail.gq1.yahoo.com with HTTP; Mon, 2 Nov 2020 16:00:42 +0000
 Received: by smtp420.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID aa129971a4deab6e98284c88780a2fc2; 
- Mon, 02 Nov 2020 16:00:31 +0000 (UTC)
+ Mon, 02 Nov 2020 16:00:37 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v3 11/12] erofs-utils: fuse: kill open.c
-Date: Mon,  2 Nov 2020 23:59:37 +0800
-Message-Id: <20201102155938.2679-2-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v3 12/12] erofs-utils: fuse: kill incomplate dcache
+Date: Mon,  2 Nov 2020 23:59:38 +0800
+Message-Id: <20201102155938.2679-3-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201102155938.2679-1-hsiangkao@aol.com>
 References: <20201102155558.1995-10-hsiangkao@aol.com>
  <20201102155938.2679-1-hsiangkao@aol.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -113,109 +114,491 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+useless at all, use simplist bare disk lookup way for now
+(also libfuse has an internal dcache, we can use it as well.
+ plus no need to introduce dcache for unpack tool.)
+
 (will fold into the original patch.)
 
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fuse/Makefile.am |  2 +-
- fuse/main.c      | 11 ++++++++++-
- fuse/open.c      | 22 ----------------------
- fuse/open.h      | 15 ---------------
- 4 files changed, 11 insertions(+), 39 deletions(-)
- delete mode 100644 fuse/open.c
- delete mode 100644 fuse/open.h
+ fuse/Makefile.am |   2 +-
+ fuse/dentry.c    | 130 ----------------------------------
+ fuse/dentry.h    |  43 ------------
+ fuse/main.c      |   5 --
+ fuse/namei.c     | 179 +++++++++++++++++++++++------------------------
+ fuse/namei.h     |   5 --
+ 6 files changed, 88 insertions(+), 276 deletions(-)
+ delete mode 100644 fuse/dentry.c
+ delete mode 100644 fuse/dentry.h
 
 diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index 6e639f33f664..5ff0b4d0e6ab 100644
+index 5ff0b4d0e6ab..84e5f834d6a4 100644
 --- a/fuse/Makefile.am
 +++ b/fuse/Makefile.am
 @@ -3,7 +3,7 @@
  
  AUTOMAKE_OPTIONS = foreign
  bin_PROGRAMS     = erofsfuse
--erofsfuse_SOURCES = main.c dentry.c namei.c read.c open.c readir.c zmap.c
-+erofsfuse_SOURCES = main.c dentry.c namei.c read.c readir.c zmap.c
+-erofsfuse_SOURCES = main.c dentry.c namei.c read.c readir.c zmap.c
++erofsfuse_SOURCES = main.c namei.c read.c readir.c zmap.c
  erofsfuse_CFLAGS = -Wall -Werror \
                     -I$(top_srcdir)/include \
                     $(shell pkg-config fuse --cflags) \
-diff --git a/fuse/main.c b/fuse/main.c
-index 3842fedce8c1..e423312d9e1a 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -14,7 +14,6 @@
- #include "erofs/print.h"
- #include "namei.h"
- #include "read.h"
--#include "open.h"
- #include "readir.h"
- #include "erofs/io.h"
- 
-@@ -125,6 +124,16 @@ void *erofs_init(struct fuse_conn_info *info)
- 	return NULL;
- }
- 
-+int erofs_open(const char *path, struct fuse_file_info *fi)
-+{
-+	erofs_info("open path=%s", path);
-+
-+	if ((fi->flags & O_ACCMODE) != O_RDONLY)
-+		return -EACCES;
-+
-+	return 0;
-+}
-+
- int erofs_getattr(const char *path, struct stat *stbuf)
- {
- 	struct erofs_vnode v;
-diff --git a/fuse/open.c b/fuse/open.c
+diff --git a/fuse/dentry.c b/fuse/dentry.c
 deleted file mode 100644
-index beb9a8615512..000000000000
---- a/fuse/open.c
+index 0f722294d530..000000000000
+--- a/fuse/dentry.c
 +++ /dev/null
-@@ -1,22 +0,0 @@
+@@ -1,130 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0+
 -/*
-- * erofs-utils/fuse/open.c
+- * erofs-utils/fuse/dentry.c
 - *
 - * Created by Li Guifu <blucerlee@gmail.com>
 - */
--#include "open.h"
--#include <asm-generic/errno-base.h>
--#include <fuse.h>
--#include <fuse_opt.h>
+-#include <stdlib.h>
+-#include "dentry.h"
+-#include "erofs/internal.h"
 -#include "erofs/print.h"
 -
--int erofs_open(const char *path, struct fuse_file_info *fi)
--{
--	erofs_info("open path=%s", path);
+-#define DCACHE_ENTRY_CALLOC()   calloc(1, sizeof(struct dcache_entry))
+-#define DCACHE_ENTRY_LIFE       8
 -
--	if ((fi->flags & O_ACCMODE) != O_RDONLY)
--		return -EACCES;
+-struct dcache_entry root_entry;
+-
+-int dcache_init_root(uint32_t nid)
+-{
+-	if (root_entry.nid)
+-		return -1;
+-
+-	/* Root entry doesn't need most of the fields. Namely, it only uses the
+-	 * nid field and the subdirs pointer.
+-	 */
+-	erofs_info("Initializing root_entry dcache entry");
+-	root_entry.nid = nid;
+-	root_entry.subdirs = NULL;
+-	root_entry.siblings = NULL;
 -
 -	return 0;
 -}
 -
-diff --git a/fuse/open.h b/fuse/open.h
+-/* Inserts a node as a subdirs of a given parent. The parent is updated to
+- * point the newly inserted subdirs as the first subdirs. We return the new
+- * entry so that further entries can be inserted.
+- *
+- *      [0]                  [0]
+- *       /        ==>          \
+- *      /         ==>           \
+- * .->[1]->[2]-.       .->[1]->[3]->[2]-.
+- * `-----------麓       `----------------麓
+- */
+-struct dcache_entry *dcache_insert(struct dcache_entry *parent,
+-				   const char *name, int namelen, uint32_t nid)
+-{
+-	struct dcache_entry *new_entry;
+-
+-	erofs_dbg("Inserting %s,%d to dcache", name, namelen);
+-
+-	/* TODO: Deal with names that exceed the allocated size */
+-	if (namelen + 1 > DCACHE_ENTRY_NAME_LEN)
+-		return NULL;
+-
+-	if (parent == NULL)
+-		parent = &root_entry;
+-
+-	new_entry = DCACHE_ENTRY_CALLOC();
+-	if (!new_entry)
+-		return NULL;
+-
+-	strncpy(new_entry->name, name, namelen);
+-	new_entry->name[namelen] = 0;
+-	new_entry->nid = nid;
+-
+-	if (!parent->subdirs) {
+-		new_entry->siblings = new_entry;
+-		parent->subdirs = new_entry;
+-	} else {
+-		new_entry->siblings = parent->subdirs->siblings;
+-		parent->subdirs->siblings = new_entry;
+-		parent->subdirs = new_entry;
+-	}
+-
+-	return new_entry;
+-}
+-
+-/* Lookup a cache entry for a given file name.  Return value is a struct pointer
+- * that can be used to both obtain the nid number and insert further child
+- * entries.
+- * TODO: Prune entries by using the LRU counter
+- */
+-struct dcache_entry *dcache_lookup(struct dcache_entry *parent,
+-				   const char *name, int namelen)
+-{
+-	struct dcache_entry *iter;
+-
+-	if (parent == NULL)
+-		parent = &root_entry;
+-
+-	if (!parent->subdirs)
+-		return NULL;
+-
+-	/* Iterate the list of siblings to see if there is any match */
+-	iter = parent->subdirs;
+-
+-	do {
+-		if (strncmp(iter->name, name, namelen) == 0 &&
+-		    iter->name[namelen] == 0) {
+-			parent->subdirs = iter;
+-
+-			return iter;
+-		}
+-
+-		iter = iter->siblings;
+-	} while (iter != parent->subdirs);
+-
+-	return NULL;
+-}
+-
+-struct dcache_entry *dcache_try_insert(struct dcache_entry *parent,
+-				   const char *name, int namelen, uint32_t nid)
+-{
+-	struct dcache_entry *d = dcache_lookup(parent, name, namelen);
+-
+-	if (d)
+-		return d;
+-
+-	return dcache_insert(parent, name, namelen, nid);
+-
+-}
+-erofs_nid_t dcache_get_nid(struct dcache_entry *entry)
+-{
+-	return entry ? entry->nid : root_entry.nid;
+-}
+-
+-struct dcache_entry *dcache_root(void)
+-{
+-	return &root_entry;
+-}
+-
+diff --git a/fuse/dentry.h b/fuse/dentry.h
 deleted file mode 100644
-index dfc8b3cdd515..000000000000
---- a/fuse/open.h
+index 12f4cf6bafd9..000000000000
+--- a/fuse/dentry.h
 +++ /dev/null
-@@ -1,15 +0,0 @@
+@@ -1,43 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0+ */
 -/*
-- * erofs-utils/fuse/open.h
+- * erofs-utils/fuse/dentry.h
 - *
 - * Created by Li Guifu <blucerlee@gmail.com>
 - */
--#ifndef __EROFS_OPEN_H
--#define __EROFS_OPEN_H
+-#ifndef _EROFS_DENTRY_H
+-#define _EROFS_DENTRY_H
 -
--#include <fuse.h>
--#include <fuse_opt.h>
+-#include <stdint.h>
+-#include "erofs/internal.h"
 -
--int erofs_open(const char *path, struct fuse_file_info *fi);
--
+-/* fixme: Deal with names that exceed the allocated size */
+-#ifdef __64BITS
+-#define DCACHE_ENTRY_NAME_LEN       EROFS_NAME_LEN
+-#else
+-#define DCACHE_ENTRY_NAME_LEN       EROFS_NAME_LEN
 -#endif
+-
+-/* This struct declares a node of a k-tree.  Every node has a pointer to one of
+- * the subdirs and a pointer (in a circular list fashion) to its siblings.
+- */
+-
+-struct dcache_entry {
+-	struct dcache_entry *subdirs;
+-	struct dcache_entry *siblings;
+-	uint32_t nid;
+-	uint16_t lru_count;
+-	uint8_t user_count;
+-	char name[DCACHE_ENTRY_NAME_LEN];
+-};
+-
+-struct dcache_entry *dcache_insert(struct dcache_entry *parent,
+-				   const char *name, int namelen, uint32_t n);
+-struct dcache_entry *dcache_lookup(struct dcache_entry *parent,
+-				   const char *name, int namelen);
+-struct dcache_entry *dcache_try_insert(struct dcache_entry *parent,
+-				       const char *name, int namelen,
+-				       uint32_t nid);
+-
+-erofs_nid_t dcache_get_nid(struct dcache_entry *entry);
+-int dcache_init_root(uint32_t n);
+-#endif
+diff --git a/fuse/main.c b/fuse/main.c
+index e423312d9e1a..563b2c378952 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -116,11 +116,6 @@ static void signal_handle_sigsegv(int signal)
+ void *erofs_init(struct fuse_conn_info *info)
+ {
+ 	erofs_info("Using FUSE protocol %d.%d", info->proto_major, info->proto_minor);
+-
+-	if (inode_init(sbi.root_nid) != 0) {
+-		erofs_err("inode initialization failed");
+-		abort();
+-	}
+ 	return NULL;
+ }
+ 
+diff --git a/fuse/namei.c b/fuse/namei.c
+index 4c428dbc59f6..5ee3f8d2a4b6 100644
+--- a/fuse/namei.c
++++ b/fuse/namei.c
+@@ -16,7 +16,6 @@
+ #include "erofs/defs.h"
+ #include "erofs/print.h"
+ #include "erofs/io.h"
+-#include "dentry.h"
+ 
+ #define IS_PATH_SEPARATOR(__c)      ((__c) == '/')
+ #define MINORBITS	20
+@@ -99,124 +98,127 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
+ 	return 0;
+ }
+ 
+-/* dirent + name string */
+-struct dcache_entry *list_name(const char *buf, struct dcache_entry *parent,
+-				const char *name, unsigned int len,
+-				uint32_t dirend)
++
++struct erofs_dirent *find_target_dirent(erofs_nid_t pnid,
++					void *dentry_blk,
++					const char *name, unsigned int len,
++					unsigned int nameoff,
++					unsigned int maxsize)
+ {
+-	struct dcache_entry *entry = NULL;
+-	struct erofs_dirent *ds, *de;
+-
+-	ds = (struct erofs_dirent *)buf;
+-	de = (struct erofs_dirent *)(buf + le16_to_cpu(ds->nameoff));
+-
+-	while (ds < de) {
+-		erofs_nid_t nid = le64_to_cpu(ds->nid);
+-		uint16_t nameoff = le16_to_cpu(ds->nameoff);
+-		char *d_name = (char *)(buf + nameoff);
+-		uint16_t name_len = (ds + 1 >= de) ?
+-			(uint16_t)strnlen(d_name, dirend - nameoff) :
+-			le16_to_cpu(ds[1].nameoff) - nameoff;
+-
+-		#if defined(EROFS_DEBUG_ENTRY)
+-		{
+-			char debug[EROFS_BLKSIZ];
+-
+-			memcpy(debug, d_name, name_len);
+-			debug[name_len] = '\0';
+-			erofs_info("list entry: %s nid=%u", debug, nid);
++	struct erofs_dirent *de = dentry_blk;
++	const struct erofs_dirent *end = dentry_blk + nameoff;
++
++	while (de < end) {
++		const char *de_name;
++		unsigned int de_namelen;
++
++		nameoff = le16_to_cpu(de->nameoff);
++		de_name = (char *)dentry_blk + nameoff;
++
++		/* the last dirent in the block? */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
++
++		/* a corrupted entry is found */
++		if (nameoff + de_namelen > maxsize ||
++		    de_namelen > EROFS_NAME_LEN) {
++			erofs_err("bogus dirent @ nid %llu", pnid | 0ULL);
++			DBG_BUGON(1);
++			return ERR_PTR(-EFSCORRUPTED);
+ 		}
+-		#endif
+-
+-		entry = dcache_try_insert(parent, d_name, name_len, nid);
+-		if (len == name_len && !memcmp(name, d_name, name_len))
+-			return entry;
+ 
+-		entry = NULL;
+-		++ds;
++		if (len == de_namelen && !memcmp(de_name, name, de_namelen))
++			return de;
++		++de;
+ 	}
+-
+-	return entry;
++	return NULL;
+ }
+ 
+-struct dcache_entry *disk_lookup(struct dcache_entry *parent, const char *name,
+-		unsigned int name_len)
++int erofs_namei(erofs_nid_t *nid,
++		const char *name, unsigned int len)
+ {
+ 	int ret;
+ 	char buf[EROFS_BLKSIZ];
+-	struct dcache_entry *entry = NULL;
+ 	struct erofs_vnode v;
+-	uint32_t nr_cnt, dir_nr, dirsize, blkno;
+ 
+-	ret = erofs_iget_by_nid(parent->nid, &v);
++	ret = erofs_iget_by_nid(*nid, &v);
+ 	if (ret)
+-		return NULL;
+-
+-	/* to check whether dirent is in the inline dirs */
+-	blkno = v.raw_blkaddr;
+-	dirsize = v.i_size;
+-	dir_nr = erofs_blknr(dirsize);
+-
+-	nr_cnt = 0;
+-	while (nr_cnt < dir_nr) {
+-		ret = blk_read(buf, blkno + nr_cnt, 1);
+-		if (ret < 0)
+-			return NULL;
+-
+-		entry = list_name(buf, parent, name, name_len, EROFS_BLKSIZ);
+-		if (entry)
+-			goto next;
+-
+-		++nr_cnt;
+-	}
+-
+-	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
+-		uint32_t dir_off = erofs_blkoff(dirsize);
+-		off_t dir_addr = iloc(dcache_get_nid(parent)) +
+-			v.inode_isize + v.xattr_isize;
+-
+-		memset(buf, 0, sizeof(buf));
+-		ret = dev_read(buf, dir_addr, dir_off);
+-		if (ret < 0)
+-			return NULL;
++		return ret;
+ 
+-		entry = list_name(buf, parent, name, name_len, dir_off);
++	{
++		unsigned int offset = 0;
++
++		struct erofs_inode tmp = {
++			.u = {
++				.i_blkaddr = v.raw_blkaddr,
++			},
++			.nid = v.nid,
++			.i_size = v.i_size,
++			.datalayout = v.datalayout,
++			.inode_isize = v.inode_isize,
++			.xattr_isize = v.xattr_isize,
++		};
++
++		while (offset < v.i_size) {
++			int maxsize = min(v.i_size - offset, EROFS_BLKSIZ);
++			struct erofs_dirent *de = (void *)buf;
++			unsigned int nameoff;
++
++			ret = erofs_read_raw_data(&tmp, buf, offset, maxsize);
++			if (ret)
++				return ret;
++
++			nameoff = le16_to_cpu(de->nameoff);
++
++			if (nameoff < sizeof(struct erofs_dirent) ||
++			    nameoff >= PAGE_SIZE) {
++				erofs_err("invalid de[0].nameoff %u @ nid %llu",
++					  nameoff, *nid | 0ULL);
++				return -EFSCORRUPTED;
++			}
++
++			de = find_target_dirent(*nid, buf, name, len,
++						nameoff, maxsize);
++			if (IS_ERR(de))
++				return PTR_ERR(de);
++
++			if (de) {
++				*nid = le64_to_cpu(de->nid);
++				return 0;
++			}
++			offset += maxsize;
++		}
+ 	}
+-next:
+-	return entry;
++	return -ENOENT;
+ }
+ 
+ extern struct dcache_entry root_entry;
+ int walk_path(const char *_path, erofs_nid_t *out_nid)
+ {
+-	struct dcache_entry *next, *ret;
++	int ret;
++	erofs_nid_t nid = sbi.root_nid;
+ 	const char *path = _path;
+ 
+-	ret = next = &root_entry;
+ 	for (;;) {
+ 		uint8_t path_len;
+ 
+ 		path = skip_trailing_backslash(path);
+ 		path_len = get_path_token_len(path);
+-		ret = next;
+ 		if (path_len == 0)
+ 			break;
+ 
+-		next = dcache_lookup(ret, path, path_len);
+-		if (!next) {
+-			next = disk_lookup(ret, path, path_len);
+-			if (!next)
+-				return -ENOENT;
+-		}
++		ret = erofs_namei(&nid, path, path_len);
++		if (ret)
++			return ret;
+ 
+ 		path += path_len;
+ 	}
+ 
+-	if (!ret)
+-		return -ENOENT;
+-	erofs_dbg("find path = %s nid=%u", _path, ret->nid);
++	erofs_dbg("find path = %s nid=%llu", _path, nid | 0ULL);
+ 
+-	*out_nid = ret->nid;
++	*out_nid = nid;
+ 	return 0;
+ 
+ }
+@@ -233,10 +235,3 @@ int erofs_iget_by_path(const char *path, struct erofs_vnode *v)
+ 	return erofs_iget_by_nid(nid, v);
+ }
+ 
+-int inode_init(erofs_nid_t root)
+-{
+-	dcache_init_root(root);
+-
+-	return 0;
+-}
+-
+diff --git a/fuse/namei.h b/fuse/namei.h
+index 1803a673daaf..2625ec58d434 100644
+--- a/fuse/namei.h
++++ b/fuse/namei.h
+@@ -10,13 +10,8 @@
+ #include "erofs/internal.h"
+ #include "erofs_fs.h"
+ 
+-int inode_init(erofs_nid_t root);
+-struct dcache_entry *get_cached_dentry(struct dcache_entry **parent,
+-				       const char **path);
+ int erofs_iget_by_path(const char *path, struct erofs_vnode *v);
+ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *v);
+-struct dcache_entry *disk_lookup(struct dcache_entry *parent, const char *name,
+-		unsigned int name_len);
+ int walk_path(const char *path, erofs_nid_t *out_nid);
+ 
+ #endif
 -- 
 2.24.0
 
