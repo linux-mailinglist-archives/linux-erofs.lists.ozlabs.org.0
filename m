@@ -1,64 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id F30A92ACA42
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Nov 2020 02:16:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BAFD2ACEC8
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Nov 2020 06:00:23 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CVVLd57fHzDqfN
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Nov 2020 12:16:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CVbK03LbrzDqdt
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Nov 2020 16:00:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linutronix.de (client-ip=2a0a:51c0:0:12e:550::1;
- helo=galois.linutronix.de; envelope-from=tglx@linutronix.de;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com;
+ envelope-from=ira.weiny@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256
- header.s=2020 header.b=DRjXCHfa; 
- dkim=pass header.d=linutronix.de header.i=@linutronix.de
- header.a=ed25519-sha256 header.s=2020e header.b=acv/dHWH; 
- dkim-atps=neutral
-Received: from galois.linutronix.de (Galois.linutronix.de
- [IPv6:2a0a:51c0:0:12e:550::1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CVVJH5WCQzDqSt
- for <linux-erofs@lists.ozlabs.org>; Tue, 10 Nov 2020 12:14:23 +1100 (AEDT)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
- s=2020; t=1604970836;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=UkwosGD4CNwpr5O4mn7FToWEjHCGounmVIqa5vjwzhQ=;
- b=DRjXCHfaWTV+37wSriT1BjBgrVPE6jdQ5QSgYOIapfxJkFIwaFOAyxB9axkmnF7jwFoYyj
- IwVALzvZ0PuA7RxNph9leDCS6B9rTa4rL3nKcIBy/Am24PTMh01e/A2SQWp6LTkOQfBaj6
- TPNYDFf29DCqNiv3sgD8nE6enYeIlsYkCGyKDzwB1FGN01/Y3vKoJQtpchwkYWrvNb9W70
- 4PCnBA8S0oYM/XwkwwZotKzR9vmT9oC6FdGvh5lMI1bLUaS0qdB+ZPTGprUeJSBjnvH0Xv
- xyRk7zOTS6b0OUuDBNt+X1xYcMB1KSB7gGowiPoSA5hPR5omsqQ5g20Kt4+uKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
- s=2020e; t=1604970836;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=UkwosGD4CNwpr5O4mn7FToWEjHCGounmVIqa5vjwzhQ=;
- b=acv/dHWHYYmtT1/z0brDNSAmBtlvEk8c07ItXmS/RUDap25yEm8biO9jTMWItRsTlNRTeF
- x/KI3sqvslL8SkDg==
-To: ira.weiny@intel.com, Andrew Morton <akpm@linux-foundation.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CVbJq4LmnzDqcl;
+ Tue, 10 Nov 2020 15:59:59 +1100 (AEDT)
+IronPort-SDR: GWoLmSF+VlX82RYElAKLc6x3Sja1FEMP6CfOEQTXwwtzcayeP6Plt3+kRnrUclQuoAeNgE9AC8
+ x397xXzKgfVw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="170029640"
+X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; d="scan'208";a="170029640"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+ by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 09 Nov 2020 20:59:55 -0800
+IronPort-SDR: hhtGbVHiYEduO62f/jUORNlQE29+PA61IlKuvPXTtZvvOlHxHT75TW+y4i0J9B1O2lrgZ7K2Sp
+ gskiAxl5TCew==
+X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; d="scan'208";a="531063331"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+ by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 09 Nov 2020 20:59:54 -0800
+Date: Mon, 9 Nov 2020 20:59:54 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH RFC PKS/PMEM 05/58] kmap: Introduce k[un]map_thread
-In-Reply-To: <20201009195033.3208459-6-ira.weiny@intel.com>
+Message-ID: <20201110045954.GL3976735@iweiny-DESK2.sc.intel.com>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
  <20201009195033.3208459-6-ira.weiny@intel.com>
-Date: Tue, 10 Nov 2020 02:13:56 +0100
-Message-ID: <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
+ <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,102 +59,134 @@ List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, target-devel@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org,
- samba-technical@lists.samba.org, Ira Weiny <ira.weiny@intel.com>,
+ linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ target-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org,
  ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
  devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
  linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org,
  linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org,
- amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org,
- cluster-devel@redhat.com, linux-cachefs@redhat.com,
+ amd-gfx@lists.freedesktop.org, io-uring@vger.kernel.org,
+ cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>,
  intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org,
  linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
- linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org,
- ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
- io-uring@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+ linux-afs@lists.infradead.org, linux-um@lists.infradead.org,
+ intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com,
+ linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+ netdev@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+ bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Ira,
+On Tue, Nov 10, 2020 at 02:13:56AM +0100, Thomas Gleixner wrote:
+> Ira,
+> 
+> On Fri, Oct 09 2020 at 12:49, ira weiny wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > To correctly support the semantics of kmap() with Kernel protection keys
+> > (PKS), kmap() may be required to set the protections on multiple
+> > processors (globally).  Enabling PKS globally can be very expensive
+> > depending on the requested operation.  Furthermore, enabling a domain
+> > globally reduces the protection afforded by PKS.
+> >
+> > Most kmap() (Aprox 209 of 229) callers use the map within a single thread and
+> > have no need for the protection domain to be enabled globally.  However, the
+> > remaining callers do not follow this pattern and, as best I can tell, expect
+> > the mapping to be 'global' and available to any thread who may access the
+> > mapping.[1]
+> >
+> > We don't anticipate global mappings to pmem, however in general there is a
+> > danger in changing the semantics of kmap().  Effectively, this would cause an
+> > unresolved page fault with little to no information about why the failure
+> > occurred.
+> >
+> > To resolve this a number of options were considered.
+> >
+> > 1) Attempt to change all the thread local kmap() calls to kmap_atomic()[2]
+> > 2) Introduce a flags parameter to kmap() to indicate if the mapping should be
+> >    global or not
+> > 3) Change ~20 call sites to 'kmap_global()' to indicate that they require a
+> >    global enablement of the pages.
+> > 4) Change ~209 call sites to 'kmap_thread()' to indicate that the mapping is to
+> >    be used within that thread of execution only
+> >
+> > Option 1 is simply not feasible.  Option 2 would require all of the call sites
+> > of kmap() to change.  Option 3 seems like a good minimal change but there is a
+> > danger that new code may miss the semantic change of kmap() and not get the
+> > behavior the developer intended.  Therefore, #4 was chosen.
+> 
+> There is Option #5:
 
-On Fri, Oct 09 2020 at 12:49, ira weiny wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> To correctly support the semantics of kmap() with Kernel protection keys
-> (PKS), kmap() may be required to set the protections on multiple
-> processors (globally).  Enabling PKS globally can be very expensive
-> depending on the requested operation.  Furthermore, enabling a domain
-> globally reduces the protection afforded by PKS.
->
-> Most kmap() (Aprox 209 of 229) callers use the map within a single thread and
-> have no need for the protection domain to be enabled globally.  However, the
-> remaining callers do not follow this pattern and, as best I can tell, expect
-> the mapping to be 'global' and available to any thread who may access the
-> mapping.[1]
->
-> We don't anticipate global mappings to pmem, however in general there is a
-> danger in changing the semantics of kmap().  Effectively, this would cause an
-> unresolved page fault with little to no information about why the failure
-> occurred.
->
-> To resolve this a number of options were considered.
->
-> 1) Attempt to change all the thread local kmap() calls to kmap_atomic()[2]
-> 2) Introduce a flags parameter to kmap() to indicate if the mapping should be
->    global or not
-> 3) Change ~20 call sites to 'kmap_global()' to indicate that they require a
->    global enablement of the pages.
-> 4) Change ~209 call sites to 'kmap_thread()' to indicate that the mapping is to
->    be used within that thread of execution only
->
-> Option 1 is simply not feasible.  Option 2 would require all of the call sites
-> of kmap() to change.  Option 3 seems like a good minimal change but there is a
-> danger that new code may miss the semantic change of kmap() and not get the
-> behavior the developer intended.  Therefore, #4 was chosen.
+There is now yes.  :-D
 
-There is Option #5:
+> 
+> Convert the thread local kmap() invocations to the proposed kmap_local()
+> interface which is coming along [1].
 
-Convert the thread local kmap() invocations to the proposed kmap_local()
-interface which is coming along [1].
+I've been trying to follow that thread.
 
-That solves a couple of issues:
+> 
+> That solves a couple of issues:
+> 
+>  1) It relieves the current kmap_atomic() usage sites from the implict
+>     pagefault/preempt disable semantics which apply even when
+>     CONFIG_HIGHMEM is disabled. kmap_local() still can be invoked from
+>     atomic context.
+> 
+>  2) Due to #1 it allows to replace the conditional usage of kmap() and
+>     kmap_atomic() for purely thread local mappings.
+> 
+>  3) It puts the burden on the HIGHMEM inflicted systems
+> 
+>  4) It is actually more efficient for most of the pure thread local use
+>     cases on HIGHMEM inflicted systems because it avoids the overhead of
+>     the global lock and the potential kmap slot exhaustion. A potential
+>     preemption will be more expensive, but that's not really the case we
+>     want to optimize for.
+> 
+>  5) It solves the RT issue vs. kmap_atomic()
+> 
+> So instead of creating yet another variety of kmap() which is just
+> scratching the particular PKRS itch, can we please consolidate all of
+> that on the wider reaching kmap_local() approach?
 
- 1) It relieves the current kmap_atomic() usage sites from the implict
-    pagefault/preempt disable semantics which apply even when
-    CONFIG_HIGHMEM is disabled. kmap_local() still can be invoked from
-    atomic context.
+Yes I agree.  We absolutely don't want more kmap*() calls and I was hoping to
+dovetail into your kmap_local() work.[2]
 
- 2) Due to #1 it allows to replace the conditional usage of kmap() and
-    kmap_atomic() for purely thread local mappings.
+I've pivoted away from this work a bit to clean up all the
+kmap()/memcpy*()/kunmaps() as discussed elsewhere in the thread first.[3]  I
+was hoping your work would land and then I could s/kmap_thread()/kmap_local()/
+on all of these patches.
 
- 3) It puts the burden on the HIGHMEM inflicted systems
+Also, we can convert the new memcpy_*_page() calls to kmap_local() as well.
+[For now my patch just uses kmap_atomic().]
 
- 4) It is actually more efficient for most of the pure thread local use
-    cases on HIGHMEM inflicted systems because it avoids the overhead of
-    the global lock and the potential kmap slot exhaustion. A potential
-    preemption will be more expensive, but that's not really the case we
-    want to optimize for.
+I've not looked at all of the patches in your latest version.  Have you
+included converting any of the kmap() call sites?  I thought you were more
+focused on converting the kmap_atomic() to kmap_local()?
 
- 5) It solves the RT issue vs. kmap_atomic()
+Ira
 
-So instead of creating yet another variety of kmap() which is just
-scratching the particular PKRS itch, can we please consolidate all of
-that on the wider reaching kmap_local() approach?
+> 
+> Thanks,
+> 
+>         tglx
+>      
+> [1] https://lore.kernel.org/lkml/20201103092712.714480842@linutronix.de/
 
-Thanks,
-
-        tglx
-     
-[1] https://lore.kernel.org/lkml/20201103092712.714480842@linutronix.de/
+[2] https://lore.kernel.org/lkml/20201012195354.GC2046448@iweiny-DESK2.sc.intel.com/
+[3] https://lore.kernel.org/lkml/20201009213434.GA839@sol.localdomain/
+    https://lore.kernel.org/lkml/20201013200149.GI3576660@ZenIV.linux.org.uk/
 
