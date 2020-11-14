@@ -1,97 +1,95 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8C182B2FA8
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Nov 2020 19:26:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E9842B2FA9
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Nov 2020 19:26:38 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CYP1K0N5GzDqRr
-	for <lists+linux-erofs@lfdr.de>; Sun, 15 Nov 2020 05:26:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CYP1R3GmDzDqS5
+	for <lists+linux-erofs@lfdr.de>; Sun, 15 Nov 2020 05:26:35 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1605378389;
-	bh=twCqZTMU06SK6xJeAIit4kjiJvvuv8rPfMw4M9sjtQc=;
+	s=201707; t=1605378395;
+	bh=GyUgcDY/o8AuQnGECdRmwD48oLRNjEB00Saar/OrlYI=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=KupQYGJrH0GwRxHJFPULDJH/Lm8ktVx3QJL11UU6zSYmcmpwha+SUcEQAWvXrYAap
-	 /9a/HpkkaqafO+f0sTkKHrrlkelhPkQ5yiCsiSq51XJmpio2JLQomAoIyPhOwHzIn4
-	 H2BgNXw1YZVDQhCvsI3UoDWeMOLcCQzPDbQ8h+tJ6xoelvVMUUj17ORsPy52mc1XeZ
-	 poxMM09PvEwwzs8KjJLfhkmEja6yXp9DXFlifPbBoT3oy5Dkh9zlvBMj8Ci9kdwEmo
-	 l+vjP0Pj+HYwYeTresiMbYWdxCVIzdGgUEoqiiz3SKtfPDbGLZZ4claXE2aEoqYVj6
-	 I+fuheP7Ry3tw==
+	b=E3emfgHuw/8ukT4SuMtibQ8XyZlB8npbYU3SVRNRYqqITadR7sp9RuTn6va7ttgPV
+	 m5G37gLirzuQFNAVuVbKN91u+Lj4xq4TOd7YIud/azZSK83RhKnkPgvaUh7dEOPzqf
+	 hVcevqn1UEdZVLMwHT7F6vRshlg8+yd5N/wbW6S2Gmp71mRrqOdDgQ5aqy8709MLZG
+	 JPyCTsbgXQjheqtuZVJAWVRvuXE2YBoie0C7MBMZQ7p7Crs+UYkbSg91HEEKb+Ucgd
+	 pc4whHpz+7VFFdfASLWx3tFPam7Iol0RjPpCcWQDGS72p/ENPqXlhjkRwDbQW4Ro1c
+	 PG+z/hbvJ09CQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.205; helo=sonic312-24.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.83; helo=sonic306-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=g+qIPFrE; dkim-atps=neutral
-Received: from sonic312-24.consmr.mail.gq1.yahoo.com
- (sonic312-24.consmr.mail.gq1.yahoo.com [98.137.69.205])
+ header.s=a2048 header.b=fJ60+ZiG; dkim-atps=neutral
+Received: from sonic306-20.consmr.mail.gq1.yahoo.com
+ (sonic306-20.consmr.mail.gq1.yahoo.com [98.137.68.83])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CYP0q0wZSzDqRr
- for <linux-erofs@lists.ozlabs.org>; Sun, 15 Nov 2020 05:26:02 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CYP0x3v1fzDqS1
+ for <linux-erofs@lists.ozlabs.org>; Sun, 15 Nov 2020 05:26:08 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1605378358; bh=ql+jaAtcT9x3YaspErDvkw+hl3UtnHEsIuyU2sW4I2w=;
+ t=1605378364; bh=MFLFu4s+bEM1glnE/wVKUMsN4CqAgyR/fqVSeWVMA3I=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=g+qIPFrE9I6pEaAS4IY6wYSCKXoxUsdhPamRQVFdpYMcJBWcGIq6On7hugGWjOu9BACwuICCmMd4dePQfnZDqNYsuOZ4wmWbSkspHVP311uZu3xIM/dJPMxYCwSY7A/Sw8gP1USEXciyFV0iyuIBRSUmf6Kfu3wgSvrJccLkjpkJMZD6a7J0xhHqPAuVWmH3UzYXna0+mJS9VLMEdK39/UQAq/tGHAHWOIk6ziBvLhsFa0M6uTTK3MARRk3O04uNqo3HlKcExNPCsjc5cP28Kj1tJWbT+UNG2rAn6pylHVh71VoQCnuPPxNYEyH8uAy7feFOInuTf4k0/J36zB2wxg==
+ b=fJ60+ZiGQn68X8KZs14z45rOJupPbhP3z7QqfLa/B0DJKQRSDpAjluGQCMEHMjBSu27xMtDwIn4sBFmEbbtC1gPd/AbQqJAKMp9XOljUJtxFqkFMlOapEhLEVSjcNq9vQL2KygYhPBCyVOby/b3l7F4DvkkL3eSb1NBY0ymdwH+SpG1jnCVGyuNyLvmZwVk7clzA2FrYERcYA0XpvBB/j9AFf3gQRJGwEHyUuD2S++/cANgb7/EtdgxHKNBcbVFnPMIdN9nfkKMlco3TMfRx/zraWkcH+l2Q17qjQdIMG2jdoz+fPk+r4o+/tQI45ovPyencXjRKyq1PFPtRNzq58g==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1605378358; bh=0KB/K8qlGzQITj41PmRSPk1wDcSCnd0GZqyUvSNe3bv=;
+ t=1605378364; bh=KnvOXWm3Hn6t4nDhrpvRfbFmmcyk41ZYB06NN7zv0/E=;
  h=From:To:Subject:Date:From:Subject;
- b=I+/VUrHQJy2XX/yKQMjZ25H62E0FkKmE8+bR1P2LI7JxZ3vEzB2xYf/KQ2TBEWDFvQRX7Ai/qXfYM0iCj2nyORtamFBxobMoX8ULwK55MduQPkWR39SqwaIkJ1NJiurTVWUseXFfsGWm+KZjYUQ2deUDOSqeyZhtonZCmoD2wq8IsalJJ4OvSe2xaTprU3sj8euEm5TK3nf2OJWtzExZW+kChRyDmVXcnYFU/a7ZUqo4s4ndNN8F3NATwZeWrBanh2fuLLhptV/nSB44DS6+nY0OojtWUer9EKUvgCM3PvKzDS4teBsk97YNmV0zyzl7WECsB8VLcyDqtKHbjQ2vhA==
-X-YMail-OSG: NCZ1T9sVM1kcsHwqVZ45mjGJqs317m9NM3zQ3.5otgJyOOLnopHOGPwYFwjAAU8
- PqOcwT6YtEPv.DBwdkb1CklXMyF21swwoU8_MVQKUdDvVS4Kb8IO8DqGT4C_8BJaL3nQ9Cs_Bh4Q
- PGSJxBN_wHLj7QrelrsYTMRwqJW3Q327aYeoMydVOggEgPNuxbRCDIH83U_7u4WPa307jdvmPlkt
- v8RO4uVfLDew2j5OnOxONYzljctiWiJa6FLdWXjXBGmu0bzmcp5PR6D_B.hqCdnJZu.gF0yYAjA0
- UcYFNHpPR2moInlG.sT3HICYb5ZWJiUQFPKKHZ1gY9iJxefzy0nNpv_B6ANZlaO0DJstTlhQEExP
- sjAMkNBnX30Pa35dklcrcQS02YRKYi5GUlK6f.2LseM7cIrupwqpAs2e.MjSgTx7HebymcUWN.5w
- 0IsE0Hooo1w1xA1dKrmZxxrxk4bJgw9E0dw7bYw9PtEVXW81nKIjTaQcQJZnOatAjy5o17Rz0bid
- .zb9s1CJQhNIC0OyfpdSMmKd5xx6CJp22sFmYS_lCBN0Djb_uV3PeB1XEEi9QV3EVZv9x_y1moOx
- 3tgOzV0IxWNRsx.iZ4q8AQIOnrELcCM7Vcr1MNTjSBhIzbSFvpE4rAfex516TD4wCVLKyfX.WndF
- hWaCqCKLqvW8dT7KZuCgq0qHjxrAXgNV.fjw7qIQIS31ZJYtYe3iih1rdB1VNuqyFlCffiCzIDAy
- ivQoKK6LSLRV9oTMHUNbXxyBoUMVscUG9aOqA_hpT850TPKWXd.xIVyWPkXR3JWFJZQ9rlocvfD0
- HbjZEsbkfHHpHjJjIqkvUHexOXotdz8r8d5kqujRVaJgsGHITexqZedZb0oQ12EWum6d9mgJVOxI
- hYjGlS.0Au1qkqAytjGVLlgERV_MLMVDZsyriEL02a8oQu53fpIhulmDapU6PNzougT30_1ls0cX
- bfyN00vBYUPCfC5J2jXVi8M1dhH968EH0Rd5Bm33gMhTMHMASCt3E7FNQqxeGAcy3.EQwrPxtkQs
- x2BzhQwH2WnhsSysEJEh16mOViwgt04uh2abqnNyh5ZvKf_AJowq2Z55QOkppMdycRHGV.HCZgp4
- 68sc4Pqrc10s1qThYY8D7i4lIjrjdd_JV3W3UOudw9r_okEMFOsfv9mKjWss1DJrI_y_C12ZQ6Wf
- O4w7vTP6T10lHFG20ec6bf0f8nkxAeD7VIFvhZfRysEz1hNtButEdfMoP3CHXecWuDPx6HZbCq4C
- Y8soxrCu2J1GjhisB1fS7OwHTQhvfSlGk91dhdr.DG2EeaA468nwZIt0QTDlTPid9IgfGOsTCwy_
- M2iVLmCejW_Yki6fNImmY3WcP8HK7s6gE7e9aiKvxgZ9d3effrkud_RLw9OPpDrL971FiBYNeVur
- pIHHxGHzCAFJ4NrRkxRoawt48cElVj7fgfNZKoPqRCPGbj8d3MocAOZqVeZrLWjozoqf2WJRO2iu
- WQhnI.u5.5XWv8kZSvJjAnoRy9Mbg7v5Yh.8emrBd5whkpwySm.LK7aLjqKNU0_EIDhZLIah0Qar
- .VwoChX2EU1q4Qpyd3paiuxNxTX5QJ8ve4WGzBGV7iYCoa2jBQedJDv3um3I6YgOEvdNeo15.1JO
- 3oYHhNKmxR7Dp3bp9.pT0Rzr7VpsR7BZ2qEYD9N7L0l395NshRwpXHgVZ5u7DrpY5mXree13eNjD
- 1Ed2_ZN.f_VDrpDsQJzJ_Ux0V9ROpk5Moxftcj0wpxwk8X3dZu8.gj.QF4jvWpguTMcGOevd7W5s
- ZLVG6K4hiW4oa9y0F3GHxkYqM_2eRnLpHZh64ul58lrjZDSEkjQ_Nz_rpnc6qr7kv.Ck0MxAAnph
- 0ijSfGiE.Csq8kOy7mfj2QH1GTegMyRxrcUj920r9OAGfhQStsEXAUwJ6h8rqYVpSUdroAvGzIvD
- r2U82tCykZqo5n6bGBJ2hP1mKQ5pLtH6xm6l2ezo5GQNDpjGWNYktcGdTtWLepSmGkt9RVjIk_fF
- Dsn2_5Bi11BNnmXGmAdj.2a2WwFgQ_Vs4MFbkaAQ5vQWdl0mFlqYspijFLwxh_kkdXlciMQli6Ii
- Z4bn2dIqgoEC23U8WTCH0SLA_EbkylCk2ocnEyrlZ7NuOfH.lIdGvkW9rQD35NtHwo5S_Oqlv98O
- LgpOw02rXsRT88kjCzF41ibNpn1edttw5qzKry0zqhuZxiaRoeZ39xMfWa1Of2RBB9gKSdVCX_jD
- F0kzTOYuI75zkMNWFQFe5kJt76oSJjozBp9DJPdBIzXbJ52aYoo_rKRZ3GfzglPOlCieM.chsryP
- Lv_ESbgUd4ylNoCQclI6FmPhYDkCPC2bR3HHoARn.kIbVv1N69O_sdr_.y1IWoXY7a4UIof8yKNH
- H7vvnRNMLi2Su4IDrnoQfwjNoVAbLxB4YDVDxLAAZYxDObWghkGoFZrnWsh8Q8vyCmHYdM._n74d
- t77w1_HFIy6mGwL5QeNWlasiCTbqLPhXX552abqLTUgStUOnoOtuOhqct4tq..02ipE1SLFFlF5H
- yGl4pr.0SLBRgu._jpfc09NQqQuAVNHqumkZnUHTFrDX5x0WVIgpcP6ELuSjGZktxJrILdsbAHC6
- UhPDI.MLLVVE02h6eCufD7IvR4rt1dsm18HHfLGTnhrqd1YHtNpMoT0_i09LFvWk_3uwhVlVLNfH
- JUD.PTtUVK.SABggwSexb0rxFkf9scVbOxp3lbaCmijLxM7gafH0hqgyIldCZh4El9BYYquNOqax
- fANEa2uCtf8Jjegprgeh3OwJiORlH.v3EC4Jvnb2gSWrz9f6a92kW1VoN2EqekbZC.sA.EE7s5Gg
- aeShrkAT0vxJob7wU8jNzHOb9SVTl6BXEHxoy68WgY3hQ4VoR6Tg-
+ b=J9ARO/Rvwp7ImNjER2EjCfK6+It0P8u/q+G0rgB+shrChme37T0+mRaaI4g59jWKnfRaO5ThYvaieR0fWuKXZDst0J3WGXqvh5Pdp6gX5AZdfUgeRbJ/UNmUjhnlmJ/55IlI1xSuPWf3EWJp0tGUwCEMPsJKKqLtVGHaNggGR4XFjpP/mXvA88sgyMvlWNdIC3Ef22iO7w9PmPXED5wO7bzTVe5+GirG6Ni/0bAU32fXJMDdBYFGzOP2ANu/yruDSXj98jtLzAA1s5A5O+FzC6BLi1ZsEviKgOaYXJqJ6opt+Ri9IQfW4pKwQCJHTlXKxqvx2KSMy2zv3IIp8In3dg==
+X-YMail-OSG: zhTalYsVM1mcmP7Y6acJ_NQU6xSY7YvNtJbDXjf68h_.Eyj2Y8t9BFgFNRcDUH4
+ 9DfNLUuIdD.qfz7DBoxxKV4CZ55R3iWgJxzSSjBgXUWakI35HO1h8T9aH4Qt0hYf77eoTSr9Xgmi
+ EEqLe6zV7LDp7iCHP9mtOwlA6IexdXc.AasJAiHYZEBPsKgurtbdYWg93wknyWMgc.HtcIcysmGG
+ tj7uxsVhHmPafQCDcF_XbfdOGEB0y81H4GONqpz5TKOxzF.HH7x6a83HyurUY9c3kqocFUXAYJXk
+ x.GhqyWuve37pcLdkP40UsHUNT_wCLWqK8QApWE5mwNR4PYcyY8ZsdFGhcrLDWWv4TGTly2NQdoK
+ DIcIVI81ho6RrVhzZ_1g9UMlHnU91yTjPZwDACsJtLSNUFJBiHevIvtmX9YzNtrjD9n_BsbzJ.aJ
+ hESz6xem4WymsZnwFUhKtzpe9Bh0BVUnKZU7k_NrDpbvtQE0rIEKEycI4jdecuS8TVgPUHsXIMlT
+ kaBGNqs6FyRXnZJLwXfzve2iEQPNxamFKWr2iyrVKstFhXjCf8nyso8_030MZVFolPoOHpuUEhsI
+ yOAXjIXGNJ7ecaM.uI2iCIJb4vXglbvnk3Xi0KJ21l9m8kBnI1V1bxAPGwEF7275uCGzE85ACwP7
+ B1hRR6GgZTIKHLtwVPjzpUpMxHkk5FvaYuKg9gUu.rnghXOQ9xABdby9Sl.ifq21S1YTB9La46hQ
+ 4l1QFv2Bi7btfPSjcWKdC_KZFkxe23bBdsEVxJ5XrOWTwLVsj3lTNCHVtLewS8HDl1Tba1od1ycQ
+ s6viY_Q2r3XyPQ2t.Vx1zvjCDt9Kwew3V_NY4laAcirwSJRoo0yA.Iu7k6RFqb6PhwYSDDXjwjGb
+ EKIjBVfsyahYigjTZIFOo6Wbm7NtQ6xATF99_hJVqM84TKXChFcDC9MuaGyc1eAm94ya498fgdKW
+ 0V3zT8Sk6SZadhGbqw3dK3zOqLJWHfJ7kCz3DpD49kQwoORgaqrqj277Q4UqyYGZ7xLVdElUqrej
+ G5OsqAlON7LoQjpkuZ4N0I1ePHmc9ZGdaEnXs6ztaKrA6rgxHkqUUDciPpmUlTJOcUqui1hUcArD
+ mz3zFjP6kkGl2XPgXrAXlSiRU6L.QiJri5M_wUya1kMr_KVLL2K_5LdZ63U9IccH44I_MqW8OhK5
+ sRKRh54bf5_MlWcRV4frH_pPq0W9BGgUCrzOdPxdn3R0V7QVTO87PlCqEB39zu.U9CkeOUypV_pi
+ 8ENymjxARpt83SjZpVzAHF5Utx1Kp77Wr0McUgtGMYZFw4HNZf_V0eqM64ucgxgcqGrDYi_6s2zf
+ .WjrdRslp1ZfXs_X7AkY3oBnHs0gADswKkGwhT0iK5lBJ5d1TQ9eijR0MZ3XbINO9iYX_xiqspni
+ vmzndbPCD8vPg6GC1d2.gePq7hY67.vwz5TnFoKtD4MwEeZclncqPMMFeJ_FWaY6G7IRXj9pil0X
+ gSg89dYPG3sdEHarezMXA8CPdofdZs4XifGBJj8ivSdfL5Kuy7IjCZkJUH76CMpgYwyiMLRuf3zM
+ 21bwsx0wpCXzOW.pYCY2Bp7m7JhgFscHyW0uoCHNgZ2zUZDkcLyZHqInMYgRcdT29m6TvGoXP0Je
+ Q8auvCmKyQuAVsxzqqz91rMI4nawiKyu9g3Zx8F0rvmXcEyhDL_TXDbPajVOlIQ4yWPeEgmyLvbq
+ hlSZM2Yio_e.z4eriKVCu1vjllr.KE7aqqJcjfFbYK3HarjC.UPjHiAYfpRS3OiFJxv7fybbR6JU
+ K9DLDyGGbR2EEn549mSApjz651pZg65Wzsncye3y4.rLqvVbdrDu12KLLH0e3mxozXcHqdayvy56
+ aMjTT2UEa8ag8p..6Z3LRe8QcXYqekKzJtvHpI1MDhH1Ej1FFcRmwncChI6CGwe_kiTJ1r2g8CeG
+ FENUlmdRgBzLQU_atcXH2jCEq6kYoIZSon7K1a6_OvLUgfxF6ZxUF1CzEToA4z3Hfa.yNI1Aco2c
+ U4qlXVcC6kfM5IBKdRvHYtVpznOSPXd6BuageuBUtYuSTxLYvgR25ql7HBTvNu1paq0d8E.LbJZz
+ dPqmm.y4FVWc8peg.FZ0DgsvUbuae18yHHmn6_rw2pXaCsEHM38Ehbz.rHQz2bC8EVc2VuAelP4z
+ d2kGS_GI5ZPCwG7wk6JVMUkYAunAkFqSRQP_vyQU.f6d5O9Rg6ioz_dgfqcCt3PCm1.A9uctM8UK
+ VRth2LaqGWOerUnAxG7H4l7KtEBeoeXh_OWxoY0BZ66srOCZwhZ6h4.HK3RqFrJI3Jto2CqSlRk6
+ ne.K9p6ihJwRd_ger6xn9uvdPMMduwH3E_I3c2hDBUvkT.0Ls3FfrUri1Dgbwo50PCwGoEvsDI4Q
+ rwUv1h3x3bLSYKDOiJ5w5F2ZfHt8FqkKw6DPkkgqd5b70uK.NHfNl2eytzfx3DNwoRj7SFcX.fou
+ iyQ0A_yfBvLsZlwuyRvPF_VWYqmO4dZx2Hu5PKq3VipUwK9gwDr.cnpkelVKakivOYKYG._gMk6C
+ DfJcjGc7tdThMlBouw0gczpv8vhqU5q6qPT_hoyrfQ3F_TxaqqiZF5apkxUEKbS8rAwM7uaJ_xAk
+ nSiPLu2oBy6SnbeCUrAiB8fFaaTeHGIZ9BjNFvypNB3Ekq_u7MJ8U96Gtnh_1PhHBlbCDm11nF7p
+ MYLbKalFS40PvBU642jpd63TLzhWbU448AvLDCg--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic312.consmr.mail.gq1.yahoo.com with HTTP; Sat, 14 Nov 2020 18:25:58 +0000
+ sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sat, 14 Nov 2020 18:26:04 +0000
 Received: by smtp417.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 85968d25ae8d25f4ff6dfa3538a98c18; 
- Sat, 14 Nov 2020 18:25:50 +0000 (UTC)
+ Sat, 14 Nov 2020 18:25:57 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v4 03/12] erofs-utils: fuse: add compressed file support
-Date: Sun, 15 Nov 2020 02:25:08 +0800
-Message-Id: <20201114182517.9738-4-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v4 04/12] erofs-utils: fuse: clean up path walking
+Date: Sun, 15 Nov 2020 02:25:09 +0800
+Message-Id: <20201114182517.9738-5-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201114182517.9738-1-hsiangkao@aol.com>
 References: <20201114182517.9738-1-hsiangkao@aol.com>
@@ -110,865 +108,272 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Guo Weichao <guoweichao@oppo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Huang Jianan <huangjianan@oppo.com>
-
-Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-Signed-off-by: Guo Weichao <guoweichao@oppo.com>
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fuse/Makefile.am           |   4 +-
- fuse/namei.c               |  11 +-
- fuse/read.c                |  77 ++++++-
- fuse/zmap.c                | 417 +++++++++++++++++++++++++++++++++++++
- include/erofs/decompress.h |  35 ++++
- include/erofs/defs.h       |  13 ++
- include/erofs/internal.h   |  22 +-
- include/erofs_fs.h         |   4 +
- lib/Makefile.am            |   2 +-
- lib/decompress.c           |  87 ++++++++
- 10 files changed, 666 insertions(+), 6 deletions(-)
- create mode 100644 fuse/zmap.c
- create mode 100644 include/erofs/decompress.h
- create mode 100644 lib/decompress.c
+ fuse/namei.c  | 82 +++++++++++++++++++++------------------------------
+ fuse/namei.h  |  2 --
+ fuse/read.c   | 16 ++--------
+ fuse/readir.c | 10 ++-----
+ 4 files changed, 39 insertions(+), 71 deletions(-)
 
-diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index 0c1a24763f59..84e5f834d6a4 100644
---- a/fuse/Makefile.am
-+++ b/fuse/Makefile.am
-@@ -3,12 +3,12 @@
- 
- AUTOMAKE_OPTIONS = foreign
- bin_PROGRAMS     = erofsfuse
--erofsfuse_SOURCES = main.c namei.c read.c readir.c
-+erofsfuse_SOURCES = main.c namei.c read.c readir.c zmap.c
- erofsfuse_CFLAGS = -Wall -Werror \
-                    -I$(top_srcdir)/include \
-                    $(shell pkg-config fuse --cflags) \
-                    -DFUSE_USE_VERSION=26 \
-                    -std=gnu99
- LDFLAGS += $(shell pkg-config fuse --libs)
--erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la -ldl
-+erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la -ldl ${LZ4_LIBS}
- 
 diff --git a/fuse/namei.c b/fuse/namei.c
-index e79e77d1e3c9..5ee3f8d2a4b6 100644
+index 5ee3f8d2a4b6..37cf549cd2a6 100644
 --- a/fuse/namei.c
 +++ b/fuse/namei.c
-@@ -47,7 +47,7 @@ static inline dev_t new_decode_dev(u32 dev)
+@@ -17,27 +17,6 @@
+ #include "erofs/print.h"
+ #include "erofs/io.h"
  
- int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
+-#define IS_PATH_SEPARATOR(__c)      ((__c) == '/')
+-#define MINORBITS	20
+-#define MINORMASK	((1U << MINORBITS) - 1)
+-#define DT_UNKNOWN	0
+-
+-static const char *skip_trailing_backslash(const char *path)
+-{
+-	while (IS_PATH_SEPARATOR(*path))
+-		path++;
+-	return path;
+-}
+-
+-static uint8_t get_path_token_len(const char *path)
+-{
+-	uint8_t len = 0;
+-
+-	while (path[len] != '/' && path[len])
+-		len++;
+-	return len;
+-}
+-
+ static inline dev_t new_decode_dev(u32 dev)
+ {
+ 	unsigned major = (dev & 0xfff00) >> 8;
+@@ -45,7 +24,7 @@ static inline dev_t new_decode_dev(u32 dev)
+ 	return makedev(major, minor);
+ }
+ 
+-int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
++static int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
+ {
+ 	int ret, ifmt;
+ 	char buf[EROFS_BLKSIZ];
+@@ -136,14 +115,20 @@ struct erofs_dirent *find_target_dirent(erofs_nid_t pnid,
+ 	return NULL;
+ }
+ 
+-int erofs_namei(erofs_nid_t *nid,
++struct nameidata {
++	erofs_nid_t	nid;
++	unsigned int	ftype;
++};
++
++int erofs_namei(struct nameidata *nd,
+ 		const char *name, unsigned int len)
+ {
++	erofs_nid_t nid = nd->nid;
+ 	int ret;
+ 	char buf[EROFS_BLKSIZ];
+ 	struct erofs_vnode v;
+ 
+-	ret = erofs_iget_by_nid(*nid, &v);
++	ret = erofs_iget_by_nid(nid, &v);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -154,7 +139,7 @@ int erofs_namei(erofs_nid_t *nid,
+ 			.u = {
+ 				.i_blkaddr = v.raw_blkaddr,
+ 			},
+-			.nid = v.nid,
++			.nid = nid,
+ 			.i_size = v.i_size,
+ 			.datalayout = v.datalayout,
+ 			.inode_isize = v.inode_isize,
+@@ -175,17 +160,17 @@ int erofs_namei(erofs_nid_t *nid,
+ 			if (nameoff < sizeof(struct erofs_dirent) ||
+ 			    nameoff >= PAGE_SIZE) {
+ 				erofs_err("invalid de[0].nameoff %u @ nid %llu",
+-					  nameoff, *nid | 0ULL);
++					  nameoff, nid | 0ULL);
+ 				return -EFSCORRUPTED;
+ 			}
+ 
+-			de = find_target_dirent(*nid, buf, name, len,
++			de = find_target_dirent(nid, buf, name, len,
+ 						nameoff, maxsize);
+ 			if (IS_ERR(de))
+ 				return PTR_ERR(de);
+ 
+ 			if (de) {
+-				*nid = le64_to_cpu(de->nid);
++				nd->nid = le64_to_cpu(de->nid);
+ 				return 0;
+ 			}
+ 			offset += maxsize;
+@@ -194,44 +179,43 @@ int erofs_namei(erofs_nid_t *nid,
+ 	return -ENOENT;
+ }
+ 
+-extern struct dcache_entry root_entry;
+-int walk_path(const char *_path, erofs_nid_t *out_nid)
++static int link_path_walk(const char *name, struct nameidata *nd)
  {
 -	int ret;
-+	int ret, ifmt;
- 	char buf[EROFS_BLKSIZ];
- 	struct erofs_inode_compact *v1;
- 	const erofs_off_t addr = iloc(nid);
-@@ -58,6 +58,11 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
- 		return -EIO;
- 
- 	v1 = (struct erofs_inode_compact *)buf;
-+	/* fixme: support extended inode */
-+	ifmt = le16_to_cpu(v1->i_format);
-+	if (__inode_version(ifmt) != EROFS_INODE_LAYOUT_COMPACT)
-+		return -EOPNOTSUPP;
+-	erofs_nid_t nid = sbi.root_nid;
+-	const char *path = _path;
++	nd->nid = sbi.root_nid;
 +
- 	vi->datalayout = __inode_data_mapping(le16_to_cpu(v1->i_format));
- 	vi->inode_isize = sizeof(struct erofs_inode_compact);
- 	vi->xattr_isize = erofs_xattr_ibody_size(v1->i_xattr_icount);
-@@ -86,6 +91,10 @@ int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *vi)
- 		return -EIO;
++	while (*name == '/')
++		name++;
+ 
+-	for (;;) {
+-		uint8_t path_len;
++	/* At this point we know we have a real path component. */
++	while (*name != '\0') {
++		const char *p = name;
++		int ret;
+ 
+-		path = skip_trailing_backslash(path);
+-		path_len = get_path_token_len(path);
+-		if (path_len == 0)
+-			break;
++		do {
++			++p;
++		} while (*p != '\0' && *p != '/');
+ 
+-		ret = erofs_namei(&nid, path, path_len);
++		DBG_BUGON(p <= name);
++		ret = erofs_namei(nd, name, p - name);
+ 		if (ret)
+ 			return ret;
+ 
+-		path += path_len;
++		name = p;
++		/* Skip until no more slashes. */
++		for (name = p; *name == '/'; ++name);
  	}
- 
-+	vi->z_inited = false;
-+	if (erofs_inode_is_data_compressed(vi->datalayout))
-+		z_erofs_fill_inode(vi);
-+
+-
+-	erofs_dbg("find path = %s nid=%llu", _path, nid | 0ULL);
+-
+-	*out_nid = nid;
  	return 0;
+-
  }
  
+ int erofs_iget_by_path(const char *path, struct erofs_vnode *v)
+ {
+ 	int ret;
+-	erofs_nid_t nid;
++	struct nameidata nd;
+ 
+-	ret = walk_path(path, &nid);
++	ret = link_path_walk(path, &nd);
+ 	if (ret)
+ 		return ret;
+ 
+-	return erofs_iget_by_nid(nid, v);
++	return erofs_iget_by_nid(nd.nid, v);
+ }
+ 
+diff --git a/fuse/namei.h b/fuse/namei.h
+index 2625ec58d434..bd5adfda2969 100644
+--- a/fuse/namei.h
++++ b/fuse/namei.h
+@@ -11,7 +11,5 @@
+ #include "erofs_fs.h"
+ 
+ int erofs_iget_by_path(const char *path, struct erofs_vnode *v);
+-int erofs_iget_by_nid(erofs_nid_t nid, struct erofs_vnode *v);
+-int walk_path(const char *path, erofs_nid_t *out_nid);
+ 
+ #endif
 diff --git a/fuse/read.c b/fuse/read.c
-index a55c0f2f78cd..10a26d84c37c 100644
+index 10a26d84c37c..aa5221a60d4e 100644
 --- a/fuse/read.c
 +++ b/fuse/read.c
-@@ -3,6 +3,7 @@
-  * erofs-utils/fuse/read.c
-  *
-  * Created by Li Guifu <blucerlee@gmail.com>
-+ * Compression support by Huang Jianan <huangjianan@oppo.com>
-  */
- #include "read.h"
- #include <errno.h>
-@@ -15,6 +16,7 @@
- #include "erofs/print.h"
- #include "namei.h"
- #include "erofs/io.h"
-+#include "erofs/decompress.h"
- 
- size_t erofs_read_data_wrapper(struct erofs_vnode *vnode, char *buffer,
- 			       size_t size, off_t offset)
-@@ -38,6 +40,78 @@ size_t erofs_read_data_wrapper(struct erofs_vnode *vnode, char *buffer,
- 	return size;
- }
- 
-+size_t erofs_read_data_compression(struct erofs_vnode *vnode, char *buffer,
-+				   erofs_off_t size, erofs_off_t offset)
-+{
-+	int ret;
-+	erofs_off_t end, length, skip;
-+	struct erofs_map_blocks map = {
-+		.index = UINT_MAX,
-+	};
-+	bool partial;
-+	unsigned int algorithmformat;
-+	char raw[EROFS_BLKSIZ];
-+
-+	end = offset + size;
-+	while (end > offset) {
-+		map.m_la = end - 1;
-+
-+		ret = z_erofs_map_blocks_iter(vnode, &map);
-+		if (ret)
-+			return ret;
-+
-+		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+			end = map.m_la;
-+			continue;
-+		}
-+
-+		ret = dev_read(raw, map.m_pa, EROFS_BLKSIZ);
-+		if (ret < 0)
-+			return -EIO;
-+
-+		algorithmformat = map.m_flags & EROFS_MAP_ZIPPED ?
-+						Z_EROFS_COMPRESSION_LZ4 :
-+						Z_EROFS_COMPRESSION_SHIFTED;
-+
-+		/*
-+		 * trim to the needed size if the returned extent is quite
-+		 * larger than requested, and set up partial flag as well.
-+		 */
-+		if (end < map.m_la + map.m_llen) {
-+			length = end - map.m_la;
-+			partial = true;
-+		} else {
-+			DBG_BUGON(end != map.m_la + map.m_llen);
-+			length = map.m_llen;
-+			partial = !(map.m_flags & EROFS_MAP_FULL_MAPPED);
-+		}
-+
-+		if (map.m_la < offset) {
-+			skip = offset - map.m_la;
-+			end = offset;
-+		} else {
-+			skip = 0;
-+			end = map.m_la;
-+		}
-+
-+		ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
-+					.in = raw,
-+					.out = buffer + end - offset,
-+					.decodedskip = skip,
-+					.inputsize = map.m_plen,
-+					.decodedlength = length,
-+					.alg = algorithmformat,
-+					.partial_decoding = partial
-+					 });
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	erofs_info("nid:%llu size=%zd offset=%llu done",
-+	     (unsigned long long)vnode->nid, size, (long long)offset);
-+	return size;
-+}
-+
- int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+@@ -116,21 +116,16 @@ int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
  	       struct fuse_file_info *fi)
  {
-@@ -64,7 +138,8 @@ int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+ 	int ret;
+-	erofs_nid_t nid;
+ 	struct erofs_vnode v;
  
- 	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
- 	case EROFS_INODE_FLAT_COMPRESSION:
--		/* Fixme: */
-+		return erofs_read_data_compression(&v, buffer, size, offset);
-+
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/fuse/zmap.c b/fuse/zmap.c
-new file mode 100644
-index 000000000000..ba5c457278a8
---- /dev/null
-+++ b/fuse/zmap.c
-@@ -0,0 +1,417 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/fuse/zmap.c
-+ *
-+ * (a large amount of code was adapted from Linux kernel. )
-+ *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
-+ *             https://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ * Modified by Huang Jianan <huangjianan@oppo.com>
-+ */
-+#include "erofs/io.h"
-+#include "erofs/print.h"
-+
-+int z_erofs_fill_inode(struct erofs_vnode *vi)
-+{
-+	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
-+		vi->z_advise = 0;
-+		vi->z_algorithmtype[0] = 0;
-+		vi->z_algorithmtype[1] = 0;
-+		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
-+		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
-+		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
-+		vi->z_inited = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int z_erofs_fill_inode_lazy(struct erofs_vnode *vi)
-+{
-+	int ret;
-+	erofs_off_t pos;
-+	struct z_erofs_map_header *h;
-+	char buf[8];
-+
-+	if (vi->z_inited)
-+		return 0;
-+
-+	DBG_BUGON(vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
-+
-+	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
-+
-+	ret = dev_read(buf, pos, 8);
-+	if (ret < 0)
-+		return -EIO;
-+
-+	h = (struct z_erofs_map_header *)buf;
-+	vi->z_advise = le16_to_cpu(h->h_advise);
-+	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
-+	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
-+
-+	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
-+		erofs_err("unknown compression format %u for nid %llu",
-+			  vi->z_algorithmtype[0], (unsigned long long)vi->nid);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 3) & 3);
-+
-+	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
-+		erofs_err("unsupported physical clusterbits %u for nid %llu",
-+			  vi->z_physical_clusterbits[0], (unsigned long long)vi->nid);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 5) & 7);
-+	vi->z_inited = true;
-+
-+	return 0;
-+}
-+
-+struct z_erofs_maprecorder {
-+	struct erofs_vnode *vnode;
-+	struct erofs_map_blocks *map;
-+	void *kaddr;
-+
-+	unsigned long lcn;
-+	/* compression extent information gathered */
-+	u8  type;
-+	u16 clusterofs;
-+	u16 delta[2];
-+	erofs_blk_t pblk;
-+};
-+
-+static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
-+				  erofs_blk_t eblk)
-+{
-+	int ret;
-+	struct erofs_map_blocks *const map = m->map;
-+	char *mpage = map->mpage;
-+
-+	if (map->index == eblk)
-+		return 0;
-+
-+	ret = blk_read(mpage, eblk, 1);
-+	if (ret < 0)
-+		return -EIO;
-+
-+	map->index = eblk;
-+
-+	return 0;
-+}
-+
-+static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					 unsigned long lcn)
-+{
-+	struct erofs_vnode *const vi = m->vnode;
-+	const erofs_off_t ibase = iloc(vi->nid);
-+	const erofs_off_t pos =
-+		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
-+					       vi->xattr_isize) +
-+		lcn * sizeof(struct z_erofs_vle_decompressed_index);
-+	struct z_erofs_vle_decompressed_index *di;
-+	unsigned int advise, type;
-+	int err;
-+
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+
-+	m->lcn = lcn;
-+	di = m->kaddr + erofs_blkoff(pos);
-+
-+	advise = le16_to_cpu(di->di_advise);
-+	type = (advise >> Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT) &
-+		((1 << Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) - 1);
-+	switch (type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		m->clusterofs = 1 << vi->z_logical_clusterbits;
-+		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
-+		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
-+		break;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		m->clusterofs = le16_to_cpu(di->di_clusterofs);
-+		m->pblk = le32_to_cpu(di->di_u.blkaddr);
-+		break;
-+	default:
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
-+	}
-+	m->type = type;
-+	return 0;
-+}
-+
-+static unsigned int decode_compactedbits(unsigned int lobits,
-+					 unsigned int lomask,
-+					 u8 *in, unsigned int pos, u8 *type)
-+{
-+	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
-+	const unsigned int lo = v & lomask;
-+
-+	*type = (v >> lobits) & 3;
-+	return lo;
-+}
-+
-+static int unpack_compacted_index(struct z_erofs_maprecorder *m,
-+				  unsigned int amortizedshift,
-+				  unsigned int eofs)
-+{
-+	struct erofs_vnode *const vi = m->vnode;
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const unsigned int lomask = (1 << lclusterbits) - 1;
-+	unsigned int vcnt, base, lo, encodebits, nblk;
-+	int i;
-+	u8 *in, type;
-+
-+	if (1 << amortizedshift == 4)
-+		vcnt = 2;
-+	else if (1 << amortizedshift == 2 && lclusterbits == 12)
-+		vcnt = 16;
-+	else
-+		return -EOPNOTSUPP;
-+
-+	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
-+	base = round_down(eofs, vcnt << amortizedshift);
-+	in = m->kaddr + base;
-+
-+	i = (eofs - base) >> amortizedshift;
-+
-+	lo = decode_compactedbits(lclusterbits, lomask,
-+				  in, encodebits * i, &type);
-+	m->type = type;
-+	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+		m->clusterofs = 1 << lclusterbits;
-+		if (i + 1 != (int)vcnt) {
-+			m->delta[0] = lo;
-+			return 0;
-+		}
-+		/*
-+		 * since the last lcluster in the pack is special,
-+		 * of which lo saves delta[1] rather than delta[0].
-+		 * Hence, get delta[0] by the previous lcluster indirectly.
-+		 */
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * (i - 1), &type);
-+		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			lo = 0;
-+		m->delta[0] = lo + 1;
-+		return 0;
-+	}
-+	m->clusterofs = lo;
-+	m->delta[0] = 0;
-+	/* figout out blkaddr (pblk) for HEAD lclusters */
-+	nblk = 1;
-+	while (i > 0) {
-+		--i;
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * i, &type);
-+		if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			i -= lo;
-+
-+		if (i >= 0)
-+			++nblk;
-+	}
-+	in += (vcnt << amortizedshift) - sizeof(__le32);
-+	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
-+	return 0;
-+}
-+
-+static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					    unsigned long lcn)
-+{
-+	struct erofs_vnode *const vi = m->vnode;
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const erofs_off_t ebase = round_up(iloc(vi->nid) + vi->inode_isize +
-+					   vi->xattr_isize, 8) +
-+		sizeof(struct z_erofs_map_header);
-+	const unsigned int totalidx = DIV_ROUND_UP(vi->i_size, EROFS_BLKSIZ);
-+	unsigned int compacted_4b_initial, compacted_2b;
-+	unsigned int amortizedshift;
-+	erofs_off_t pos;
-+	int err;
-+
-+	if (lclusterbits != 12)
-+		return -EOPNOTSUPP;
-+
-+	if (lcn >= totalidx)
-+		return -EINVAL;
-+
-+	m->lcn = lcn;
-+	/* used to align to 32-byte (compacted_2b) alignment */
-+	compacted_4b_initial = (32 - ebase % 32) / 4;
-+	if (compacted_4b_initial == 32 / 4)
-+		compacted_4b_initial = 0;
-+
-+	if (vi->z_advise & Z_EROFS_ADVISE_COMPACTED_2B)
-+		compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
-+	else
-+		compacted_2b = 0;
-+
-+	pos = ebase;
-+	if (lcn < compacted_4b_initial) {
-+		amortizedshift = 2;
-+		goto out;
-+	}
-+	pos += compacted_4b_initial * 4;
-+	lcn -= compacted_4b_initial;
-+
-+	if (lcn < compacted_2b) {
-+		amortizedshift = 1;
-+		goto out;
-+	}
-+	pos += compacted_2b * 2;
-+	lcn -= compacted_2b;
-+	amortizedshift = 2;
-+out:
-+	pos += lcn * (1 << amortizedshift);
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
-+}
-+
-+static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					  unsigned int lcn)
-+{
-+	const unsigned int datamode = m->vnode->datalayout;
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
-+		return legacy_load_cluster_from_disk(m, lcn);
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-+		return compacted_load_cluster_from_disk(m, lcn);
-+
-+	return -EINVAL;
-+}
-+
-+static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
-+				   unsigned int lookback_distance)
-+{
-+	struct erofs_vnode *const vi = m->vnode;
-+	struct erofs_map_blocks *const map = m->map;
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	unsigned long lcn = m->lcn;
-+	int err;
-+
-+	if (lcn < lookback_distance) {
-+		erofs_err("bogus lookback distance @ nid %llu",
-+			  (unsigned long long)vi->nid);
-+		DBG_BUGON(1);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	/* load extent head logical cluster if needed */
-+	lcn -= lookback_distance;
-+	err = z_erofs_load_cluster_from_disk(m, lcn);
-+	if (err)
-+		return err;
-+
-+	switch (m->type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		if (!m->delta[0]) {
-+			erofs_err("invalid lookback distance 0 @ nid %llu",
-+				  (unsigned long long)vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		return z_erofs_extent_lookback(m, m->delta[0]);
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		map->m_flags &= ~EROFS_MAP_ZIPPED;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		map->m_la = (lcn << lclusterbits) | m->clusterofs;
-+		break;
-+	default:
-+		erofs_err("unknown type %u @ lcn %lu of nid %llu",
-+			  m->type, lcn, (unsigned long long)vi->nid);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
-+}
-+
-+int z_erofs_map_blocks_iter(struct erofs_vnode *vi,
-+			    struct erofs_map_blocks *map)
-+{
-+	struct z_erofs_maprecorder m = {
-+		.vnode = vi,
-+		.map = map,
-+		.kaddr = map->mpage,
-+	};
-+	int err = 0;
-+	unsigned int lclusterbits, endoff;
-+	unsigned long long ofs, end;
-+
-+	/* when trying to read beyond EOF, leave it unmapped */
-+	if (map->m_la >= vi->i_size) {
-+		map->m_llen = map->m_la + 1 - vi->i_size;
-+		map->m_la = vi->i_size;
-+		map->m_flags = 0;
-+		goto out;
-+	}
-+
-+	err = z_erofs_fill_inode_lazy(vi);
-+	if (err)
-+		goto out;
-+
-+	lclusterbits = vi->z_logical_clusterbits;
-+	ofs = map->m_la;
-+	m.lcn = ofs >> lclusterbits;
-+	endoff = ofs & ((1 << lclusterbits) - 1);
-+
-+	err = z_erofs_load_cluster_from_disk(&m, m.lcn);
-+	if (err)
-+		goto out;
-+
-+	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
-+	end = (m.lcn + 1ULL) << lclusterbits;
-+	switch (m.type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		if (endoff >= m.clusterofs)
-+			map->m_flags &= ~EROFS_MAP_ZIPPED;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		if (endoff >= m.clusterofs) {
-+			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
-+			break;
-+		}
-+		/* m.lcn should be >= 1 if endoff < m.clusterofs */
-+		if (!m.lcn) {
-+			erofs_err("invalid logical cluster 0 at nid %llu",
-+				  (unsigned long long)vi->nid);
-+			err = -EFSCORRUPTED;
-+			goto out;
-+		}
-+		end = (m.lcn << lclusterbits) | m.clusterofs;
-+		map->m_flags |= EROFS_MAP_FULL_MAPPED;
-+		m.delta[0] = 1;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		/* get the correspoinding first chunk */
-+		err = z_erofs_extent_lookback(&m, m.delta[0]);
-+		if (err)
-+			goto out;
-+		break;
-+	default:
-+		erofs_err("unknown type %u @ offset %llu of nid %llu",
-+			  m.type, ofs, (unsigned long long)vi->nid);
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+
-+	map->m_llen = end - map->m_la;
-+	map->m_plen = 1 << lclusterbits;
-+	map->m_pa = blknr_to_addr(m.pblk);
-+	map->m_flags |= EROFS_MAP_MAPPED;
-+
-+out:
-+	erofs_dbg("m_la %" PRIu64 " m_pa %" PRIu64 " m_llen %" PRIu64 " m_plen %" PRIu64 " m_flags 0%o",
-+		  map->m_la, map->m_pa,
-+		  map->m_llen, map->m_plen, map->m_flags);
-+
-+	DBG_BUGON(err < 0 && err != -ENOMEM);
-+	return err;
-+}
-diff --git a/include/erofs/decompress.h b/include/erofs/decompress.h
-new file mode 100644
-index 000000000000..beaac359b21f
---- /dev/null
-+++ b/include/erofs/decompress.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * erofs-utils/include/erofs/decompress.h
-+ *
-+ * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
-+ * Created by Huang Jianan <huangjianan@oppo.com>
-+ */
-+#ifndef __EROFS_DECOMPRESS_H
-+#define __EROFS_DECOMPRESS_H
-+
-+#include "internal.h"
-+
-+enum {
-+	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-+	Z_EROFS_COMPRESSION_RUNTIME_MAX
-+};
-+
-+struct z_erofs_decompress_req {
-+	char *in, *out;
-+
-+	/*
-+	 * initial decompressed bytes that need to be skipped
-+	 * when finally copying to output buffer
-+	 */
-+	unsigned int decodedskip;
-+	unsigned int inputsize, decodedlength;
-+
-+	/* indicate the algorithm will be used for decompression */
-+	unsigned int alg;
-+	bool partial_decoding;
-+};
-+
-+int z_erofs_decompress(struct z_erofs_decompress_req *rq);
-+
-+#endif
-diff --git a/include/erofs/defs.h b/include/erofs/defs.h
-index e97de36aa04b..c42ca401a8ee 100644
---- a/include/erofs/defs.h
-+++ b/include/erofs/defs.h
-@@ -173,5 +173,18 @@ typedef int64_t         s64;
- #define __maybe_unused      __attribute__((__unused__))
- #endif
+ 	UNUSED(fi);
+ 	erofs_info("path:%s size=%zd offset=%llu", path, size, (long long)offset);
  
-+struct __una_u32 { u32 x; } __packed;
-+
-+static inline u32 __get_unaligned_cpu32(const void *p)
-+{
-+	const struct __una_u32 *ptr = (const struct __una_u32 *)p;
-+	return ptr->x;
-+}
-+
-+static inline u32 get_unaligned_le32(const void *p)
-+{
-+	return __get_unaligned_cpu32((const u8 *)p);
-+}
-+
- #endif
+-	ret = walk_path(path, &nid);
++	ret = erofs_iget_by_path(path, &v);
+ 	if (ret)
+ 		return ret;
  
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 77fa8d82c746..fc28d82490a1 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -36,6 +36,8 @@ typedef unsigned short umode_t;
- #error incompatible PAGE_SIZE is already defined
- #endif
+-	ret = erofs_iget_by_nid(nid, &v);
+-	if (ret)
+-		return ret;
+-
+-	erofs_info("path:%s nid=%llu mode=%u", path, (unsigned long long)nid, v.datalayout);
++	erofs_info("path:%s nid=%llu mode=%u", path, v.nid | 0ULL, v.datalayout);
+ 	switch (v.datalayout) {
+ 	case EROFS_INODE_FLAT_PLAIN:
+ 	case EROFS_INODE_FLAT_INLINE:
+@@ -148,15 +143,10 @@ int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+ int erofs_readlink(const char *path, char *buffer, size_t size)
+ {
+ 	int ret;
+-	erofs_nid_t nid;
+ 	size_t lnksz;
+ 	struct erofs_vnode v;
  
-+#define PAGE_MASK		(~(PAGE_SIZE-1))
-+
- #define LOG_BLOCK_SIZE          (12)
- #define EROFS_BLKSIZ            (1U << LOG_BLOCK_SIZE)
+-	ret = walk_path(path, &nid);
+-	if (ret)
+-		return ret;
+-
+-	ret = erofs_iget_by_nid(nid, &v);
++	ret = erofs_iget_by_path(path, &v);
+ 	if (ret)
+ 		return ret;
  
-@@ -160,7 +162,15 @@ struct erofs_vnode {
- 	uint16_t xattr_shared_count;
- 	char *xattr_shared_xattrs;
+diff --git a/fuse/readir.c b/fuse/readir.c
+index 5281c8b80e59..1d28016a8900 100644
+--- a/fuse/readir.c
++++ b/fuse/readir.c
+@@ -66,7 +66,6 @@ int erofs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+ 		  off_t offset, struct fuse_file_info *fi)
+ {
+ 	int ret;
+-	erofs_nid_t nid;
+ 	struct erofs_vnode v;
+ 	char dirsbuf[EROFS_BLKSIZ];
+ 	uint32_t dir_nr, dir_off, nr_cnt;
+@@ -74,14 +73,11 @@ int erofs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+ 	erofs_dbg("readdir:%s offset=%llu", path, (long long)offset);
+ 	UNUSED(fi);
  
--	erofs_blk_t raw_blkaddr;
-+	union {
-+		erofs_blk_t raw_blkaddr;
-+		struct {
-+			uint16_t z_advise;
-+			uint8_t  z_algorithmtype[2];
-+			uint8_t  z_logical_clusterbits;
-+			uint8_t  z_physical_clusterbits[2];
-+		};
-+	};
- 	erofs_nid_t nid;
- 	uint32_t i_ino;
+-	ret = walk_path(path, &nid);
++	ret = erofs_iget_by_path(path, &v);
+ 	if (ret)
+ 		return ret;
  
-@@ -170,6 +180,7 @@ struct erofs_vnode {
- 	uint16_t i_nlink;
- 	uint32_t i_rdev;
+-	erofs_dbg("path=%s nid = %llu", path, (unsigned long long)nid);
+-	ret = erofs_iget_by_nid(nid, &v);
+-	if (ret)
+-		return ret;
++	erofs_dbg("path=%s nid = %llu", path, v.nid | 0ULL);
  
-+	bool z_inited;
- 	/* if file is inline read inline data witch inode */
- 	char *idata;
- };
-@@ -233,6 +244,10 @@ enum {
- #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
- /* Located in metadata (could be copied from bd_inode) */
- #define EROFS_MAP_META		(1 << BH_Meta)
-+/* The extent has been compressed */
-+#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The length of extent is full */
-+#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
+ 	if (!S_ISDIR(v.i_mode))
+ 		return -ENOTDIR;
+@@ -107,7 +103,7 @@ int erofs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+ 	if (v.datalayout == EROFS_INODE_FLAT_INLINE) {
+ 		off_t addr;
  
- struct erofs_map_blocks {
- 	char mpage[EROFS_BLKSIZ];
-@@ -251,6 +266,11 @@ int erofs_read_superblock(void);
- int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
- 			erofs_off_t offset, erofs_off_t size);
+-		addr = iloc(nid) + v.inode_isize + v.xattr_isize;
++		addr = iloc(v.nid) + v.inode_isize + v.xattr_isize;
  
-+/* zmap.c */
-+int z_erofs_fill_inode(struct erofs_vnode *vi);
-+int z_erofs_map_blocks_iter(struct erofs_vnode *vi,
-+			    struct erofs_map_blocks *map);
-+
- #define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
- 
- #endif
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 4cd79f01d820..a69f179a51a5 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -279,6 +279,10 @@ struct z_erofs_vle_decompressed_index {
- 	} di_u;
- };
- 
-+#define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
-+	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
-+	 sizeof(struct z_erofs_map_header) + Z_EROFS_VLE_LEGACY_HEADER_PADDING)
-+
- #define Z_EROFS_VLE_EXTENT_ALIGN(size) round_up(size, \
- 	sizeof(struct z_erofs_vle_decompressed_index))
- 
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 22bd73255d04..487c4944479d 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
- 
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
--		      data.c compress.c compressor.c
-+		      data.c compress.c compressor.c decompress.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/decompress.c b/lib/decompress.c
-new file mode 100644
-index 000000000000..870b85430dd1
---- /dev/null
-+++ b/lib/decompress.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/lib/decompress.c
-+ *
-+ * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
-+ * Created by Huang Jianan <huangjianan@oppo.com>
-+ */
-+#include <stdlib.h>
-+#include <lz4.h>
-+
-+#include "erofs/decompress.h"
-+#include "erofs/err.h"
-+
-+#ifdef LZ4_ENABLED
-+static int z_erofs_decompress_lz4(struct z_erofs_decompress_req *rq)
-+{
-+	int ret = 0;
-+	char *dest = rq->out;
-+	char *src = rq->in;
-+	char *buff = NULL;
-+	bool support_0padding = false;
-+	unsigned int inputmargin = 0;
-+
-+	if (erofs_sb_has_lz4_0padding()) {
-+		support_0padding = true;
-+
-+		while (!src[inputmargin & ~PAGE_MASK])
-+			if (!(++inputmargin & ~PAGE_MASK))
-+				break;
-+
-+		if (inputmargin >= rq->inputsize)
-+			return -EIO;
-+	}
-+
-+	if (rq->decodedskip) {
-+		buff = malloc(rq->decodedlength);
-+		if (!buff)
-+			return -ENOMEM;
-+		dest = buff;
-+	}
-+
-+	if (rq->partial_decoding || !support_0padding)
-+		ret = LZ4_decompress_safe_partial(src + inputmargin, dest,
-+				rq->inputsize - inputmargin,
-+				rq->decodedlength, rq->decodedlength);
-+	else
-+		ret = LZ4_decompress_safe(src + inputmargin, dest,
-+					  rq->inputsize - inputmargin,
-+					  rq->decodedlength);
-+
-+	if (ret != (int)rq->decodedlength) {
-+		ret = -EIO;
-+		goto out;
-+	}
-+
-+	if (rq->decodedskip)
-+		memcpy(rq->out, dest + rq->decodedskip,
-+		       rq->decodedlength - rq->decodedskip);
-+
-+out:
-+	if (buff)
-+		free(buff);
-+
-+	return ret;
-+}
-+#endif
-+
-+int z_erofs_decompress(struct z_erofs_decompress_req *rq)
-+{
-+	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
-+		if (rq->inputsize != EROFS_BLKSIZ)
-+			return -EFSCORRUPTED;
-+
-+		DBG_BUGON(rq->decodedlength > EROFS_BLKSIZ);
-+		DBG_BUGON(rq->decodedlength < rq->decodedskip);
-+
-+		memcpy(rq->out, rq->in + rq->decodedskip,
-+		       rq->decodedlength - rq->decodedskip);
-+		return 0;
-+	}
-+
-+#ifdef LZ4_ENABLED
-+	if (rq->alg == Z_EROFS_COMPRESSION_LZ4)
-+		return z_erofs_decompress_lz4(rq);
-+#endif
-+	return -EOPNOTSUPP;
-+}
+ 		memset(dirsbuf, 0, sizeof(dirsbuf));
+ 		ret = dev_read(dirsbuf, addr, dir_off);
 -- 
 2.24.0
 
