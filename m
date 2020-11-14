@@ -1,95 +1,94 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F3872B2FAC
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Nov 2020 19:26:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C5F22B2FAD
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Nov 2020 19:27:04 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CYP1r45f3zDqSN
-	for <lists+linux-erofs@lfdr.de>; Sun, 15 Nov 2020 05:26:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CYP1x4S0TzDqSR
+	for <lists+linux-erofs@lfdr.de>; Sun, 15 Nov 2020 05:27:01 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1605378416;
-	bh=//dTJf4I2A2XKC5FKyCbx9s1scQJfgAUMTD1L87SAm8=;
+	s=201707; t=1605378421;
+	bh=6Gcrp8nuA651ewMU95u4TVUipsqUqNir4HR8zi0Nki0=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=ikuUG1oRQEBhBuZezcRRe8yyPu5jMYTbYhnpspx/H4PW6nRYtxaivxXPgClDHL76H
-	 D2fBi2zipJKhg2cM7wPM4wpMRIXz6XdphBqsFMl1AUR2nfNRufqKhnfE21OERycwdP
-	 iSWqN+zN+cEJjjF4zL08qp8oeKIXxLDPGksGOWkTx5AqEsU7vzYzUJDTn1A0QV1KjN
-	 ceVU1fNEN14aoYmPQ9/Z36ghFkcndaO4CPi/oaYft8ajf1QUAQIhikHvTE6UZCFjrT
-	 JDE/oQxK/GcV2+p57x7V8DbkzY8QeAaXisoMVdq3nN6hZ1A3raa8Z5Ngr3ms/5I0Fl
-	 BdxOUwcrcC/9Q==
+	b=PGeQm0IQX/aTea6a4Awkt16tYuJ7Jr5FNIlbIIWzInGTjnVtnOpcCwGv4qhc23lnE
+	 te4FNJDbUG3CRy9uFWV5mLbOuNS8+shs9DjOw6MGti48o/Sfkz5d33OUcPKzIKWWyg
+	 9Cz5snF4+RvHSM4Fn9LWMDGwh22hsq4AT5bPx8YMw+J293Y89VXGDxjJ85ESDcZYaz
+	 NGAXb6Wkfp0z3R6T06rYrNaPcqTPxab2VSU7yzX4OTGVstWmjjDJv4Pkd0XpLPW0kn
+	 naVjWM5Bwr+oLeBtR/nKo57yRcecLcmLgLLnKdbAjNLYNPk0Q8o5LFJtaDd1070dBr
+	 /A4uPoZm8wJHQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.30; helo=sonic315-54.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.83; helo=sonic306-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=DIyvARdZ; dkim-atps=neutral
-Received: from sonic315-54.consmr.mail.gq1.yahoo.com
- (sonic315-54.consmr.mail.gq1.yahoo.com [98.137.65.30])
+ header.s=a2048 header.b=RepVJVHY; dkim-atps=neutral
+Received: from sonic306-20.consmr.mail.gq1.yahoo.com
+ (sonic306-20.consmr.mail.gq1.yahoo.com [98.137.68.83])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CYP1D0Yc4zDqS8
- for <linux-erofs@lists.ozlabs.org>; Sun, 15 Nov 2020 05:26:23 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CYP1J0nWLzDqSK
+ for <linux-erofs@lists.ozlabs.org>; Sun, 15 Nov 2020 05:26:27 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1605378381; bh=GgN7jEnFZEGeD+ESpOW2nMNJ8GPd9MSG6JaOiAojUjI=;
+ t=1605378384; bh=5/HJce7Q0NfWQi3OWD6zJ5Ez8ZouEpbTcfYi0yXnC7E=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=DIyvARdZSnbgaOxN32Ub/aV5dM4HJX72c/eYM2kDO6D4KcTndrzwQnwhzA1qbQPewkDAXG+b6WwWcfonEU+jT83E4a6OmUIIadG54cbJxGYjRqaatFDRx7CMiaOnfgdubsJEqpyKeneanTT7NZXJ4z2mB+wNVi1GE7kZDzQ3+7Y0K3d4/Krb+ZX0lbqAGSayWjYv3Gqa8sIPLB4eNLsMm7z3QSLEom4fl+veEJuXVz8sQ6+VKNosE8liqTTVV1G655To9LlWm6sroYVVnLE3KI3gZM4SV6YvJYx83HKpPUvrN+KQ5j8C1mt6BI034OQOm9Hy0/XNOnwDHADHraGCxw==
+ b=RepVJVHYPAujoaYmZCkPsJjGFd37qnH157StblVSDzS9rYTsRuTtize8FMdjSiZEPMy+Q4nUtEUVx4m21R9p1F5kENma1bnT561eWb2ZQt8AI0Ln1+iHxGUxTEDnjLGBh/yUat5y1q5e3HGBFXY6LlGlbEtDcvy03mu2sTxrWE7lV6Et9DwjLz8Zw43/YWFX/a/Yk3VfKG9wClxUX+HR4QmXpR2rqKgNMjoJ8vVU+jPNK4Nlq2IFxPwnA9Oa+1nudqF4XkR3tIw+5mr/o4lU6a2j9w6mqCOIdAPluiePihcfg3liu3TkSZOPTxgx1ycRNR9TPERCrLlh07X/J7PJKQ==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1605378381; bh=Uas4ci1vsUW2wUBklkGzuKjwV1zo2gqpN4Mjrko0rkH=;
+ t=1605378384; bh=4ZRRLZghOJb77y6rDJtzu5e2b9uXkjsq4WAx8a02akQ=;
  h=From:To:Subject:Date:From:Subject;
- b=CHuNwPe9qmCzzmYb64oNdXFoInqqnrtY2aZMMnnXBdrvou7AU1AtSTcVOIHkukI6dk/ynto2Nr4UUL4dYq7/lKo5J9+CRMc2CiWias5J3TNljhLyT9T0N0FepGMBSGZM8nDJb0anbimOd2eDCx5eXeYkQaj0CYy6Wqn9EiZOeXoJlARoAMw2YTFEJ1bWQRjGN8sUsTleWsgQuVhZC7lV0ZQBXACMI23SWPPcJp0cBUxkKFkShv+6xYeQRcBSpLJ48skKrAyeW5q9fWrgOvgy0IWpqJ8CdehlVl3qe0WpJ4F24KLGZGR0Dk5rfp65/Ypz2VO6q71hAmy1fG6hMsr2rA==
-X-YMail-OSG: zHQ0YH4VM1ljEVpLXlpSSwBMH3BR3TrZzydNQhruK6zsV.9Y4om8GgkGqnKffxz
- 0QfSCbu520yCTxjp1xfzZsgpAHL_ep6k2WNped4UVlCkY.N4bua4vy4L6H763SRHXRRiRSJKqpyA
- hI_OyqUAmA55WcQ9oHtDP8Kt2MkNHDX.DKX.jgr_a7pQLx0KgbfyzUl9TfSFe7fKuGrCnqSJQ6r8
- mZQBP.Q_Q_vJqEERifcuMIJZbYIBrihjq.08UHwEReiWgzXnXm5wPq__6QnHhkqrBE5D5hZAubsI
- doR8t7tiZWJTmKYbYx_U5_lASwdNd7qH8bwrSJp_814N2MFMDDd99JlGWzq9Mq6N6vc2rvv7_E58
- Be27TOOa2mhmGmDilX4ps1GYHNM5xzbhW776A4A58nnBoamPohA4AnEVAr6wZBa.6H8x0A.Tb1GC
- .n3LrT9U4cqEtzojbPBh4I4y39LQmQBYksCg2eHuxsOT0rJwVNiA5ISFO6r0_4qH3m7SE4CUcLHO
- cOEqFhsz3n7zOZfPG5VpJF9FujpkKyHcYdNl65qzBadAhio8MyckVQ3dKE.e.oRU9Qv9Kc8j1eO6
- K1gyiR0O4t3rahkF4gw_GSplP6xXSiFrR122UxzR4C0cuh6Ow4q6yCOKNif2uvrXYcjSJze8AR7m
- ypf.pOCZz5MoU_slFrXP0aEl1UuVh0N8hkuwLlEIFXPbu4tnPUAL1MZY_QwGJ4w0YSAW5t6SGICx
- CaZWXlaSWge.fzNQ5HM2thtqv70HtoHBd1pfe4mcXIXzq.1Ac_bSXtbyKnyyuqyA0dTMDrIDwhzw
- iScLzei0VcDA_lEOxTicIpVC5X2Kcbm768A.OT_OZkCHuQYm2qRq3jKVpbyTt5K8c0IWYjz0veAF
- .nDkVi0cmsDImUHOFzNuJRdODSCP5y0Bul7fxCDLBAKnZXaIPhr.6S4psHHfd5xGq8oBbfNMp6R5
- nffi1BQ.55JI5GQ8_TO18OuxOmrBZ1_qH2G7o27x40YLvXe0SUGAXc2CfvnV6b90seVuJSe_XA.t
- _A_9AgWHEfXleMoEIgrMOwunAOaCCqOwRve0PZNoiLuwzZGe4KR.cXsFez5Y.0N9NT02VT5gHSNN
- VHw9GckJY4_nde3seAHh78amDUXz0DoqLlxsjV5wgGBRGgRp0i..eCbk.IQPMRBZgSgLOBg2MJvQ
- Tr2fHl_T9W6qeyr5M0He8r.qU0ggFCbNyZ7rSITQFNu9j3KWrM8b2tMNatXmm4IT2NVIwx1oMRWa
- 3zoeofXJ8DLjLIXMYReApGCPIjQOLkF8wgmZEY4uNXy74noNeI6LAaogcSnqIyVdE2z.tC6JCIYf
- fItLfTMSqcfZQnqd3xWzG78OLT7D78QOOAA0Gd18sOLB_PxU8IcsgLdEqA2fiyjGlqEtePxxZo8q
- pCOZfBzSZ7qZqy15YXGmBdJDq9RzAWKkuDnUMQ6_X6gy35FMZEM2z204IOoYr1BtJFVN9usauqCD
- h.K9IR4XEMVLAvo4SBI1EVG1SzAdvRIXWPteqC0R7naqK6mi.lY.Q6Ni8ooE7CJWgbIeSnwJ59Ty
- .q88gtbl.niGCw9DR35TWsi8qNeQWqGPfqqfPkK4YJbUHtKf6sWjrLIneb51zxxCgL7fTBtuMvh2
- vosr4ZCLVt1iEsDw4SnIUQHXk29GnSA6t2U4KscrDhDwr9iEDeqQaLz.4ay4ueLaXjh4AWfHxWyd
- ZuYJiCk1nuvsJZsL4Z9B9LLKQehUhj1C6yztRIQ2q0o1u9fCJqf_Cnm4ZEIP81eTBH2D3KhYciVi
- mQRs8qjX9MvsR1HFj4zifkUxi3HuVXqiUOYHqOFbGX94lKrsw0bXKrdpionX8q8LfV1RFALr5cJw
- aglQXZj6iyPavfD_6LSXTH2MQpkylPogerfLd13lCFxaOHOUtUdOjUN_Cw9fyIRuWzVG2MPSxrSv
- IRMf9uZyebaeLfi9YKeIZYStVkMZR7WwYFu2UpwmzZSO6.aNdLWe_7Z0a.cT.oGSTZr3i3cH.IIp
- NxQKUA4plDNVWLKEnLwUBsqt3AdBdjljDPcjStFQaGQhfV3frMz2wcGXsuo9AdQgTQo3ogfu0ufc
- HSGEw5gqO.3EkbfqDbEtzHK3ldWHK9XEkR9r6tTXC_lMCS_PietSR0m4dVNpMRtdCdgtfWvYCtXA
- etfHNnAFPcACKaMRVIZg39e4FXtgFdtXe6seJ_mQmX3kYrFOCqeaf4.Qrr9PtnEchn7v3CpvHsfM
- mg9_apbMMkDNG.udlUd0f.DI0S9KyWORo22O4KaLN_rN8gC3ZwzO3S.c4laCz69iZ_kk9KA9kP_p
- h998wcsA3iS3.zRaQ9tQ4L9s0VBIQauqvYkVajvhBZVZD95niUUmR_22IoNF2MaOiPf92enc26lw
- DJzIdSQ1ommrXoQ8yAy75FTp2.Fsw2VgQCJzsPbzJsEilxQMb9eiwefUBdyNXE_5JYzNalMyUA_B
- BwVfwsd8uFiF8YJDJpSAtFyYVb9bK_.rnh8NsDQFhr2I.YduHygOVwmc1Qb.w8_MeS35C23yKQdU
- 20GLGLR9gc48AUoEAuXUAvon5lXIc_JGcCF_i.tfriRfFVATgzXXGIQqnjUQugrP44qCeqtE.NjG
- jUMfNLwM65GJVvCy.NIDMQ3ZiVwUxcA2RVcDD5HqC_UlNtYq4gVWflRYm85u80jL61XB79ASVt1u
- UQWrnLg--
+ b=K89cLVEAQlQDpk0KsR5y2zzIon7tsLjwHjUqunBTmADFxac1CmO/0EHf13ZqMgp5I2R81JnM8Clgs/cqKWxrD/WChsroj6ctNgduMuILSoekHPaJAQnIT7eKdvADY9+GMhaBiebxFYhTyl+GUhcTjud4h79zKmmgFIrnyBu2HqiHDXta6u+OblOxda5fDQsyI67KwV1+OIvQFYVtEaiC0jcO6wG4TNK1uITnhrhikm6RaJY1T2/jdYsYD9PJJ9C41j9jLIbNxVp0EPZAoNW4HAZJLrXoc7Luasscqb3224jdjWcM6vN+fF5hu2rEWERJJzamhNWSojQbpbq3eN5+RA==
+X-YMail-OSG: zlketLwVM1mOJARpvlF1dts9AI2X0WEURMi7w3lygsMpy46A3dkwjOyLobYoNA9
+ INP8P6SsRoImkof87rXELFyWXscd0hkSBDvm9TEOyoQsGWQ6zRiDXEXuKS3PMwBasSP_mGRJYVIW
+ 7zLOV9Y0LKiOs07aklP2rkcsRiAZ_U4vxnZzPeOPybzA_jaxCsvRP6ymp7RCEUirsTohSLNdVtni
+ 5FBCbDHyUOtqhCE0AmTZmRTIyO.pCWH.wthOY7z10dQLeLGdv4bEN_9hnkwg.flc4GeglvE2z.on
+ rDRgCv_CWDiH2lBg2Zde90dGxOs3TsPA63AXXF1IwUUgAEAKYK8hZQQMq.NKaXgpOW2y7GftUpjz
+ ruw5VEyjd7vdQTXWj_EKEDcQsFc5hZ66nsUndK0ugB.RPg5FE43MnLCSE0SIQ6PSbn2O66Z.Fhvj
+ SmGHCex6jB7LEAXVfITCysoF4KVqoe3wxJEb51KxBjmrvpeBvOp1iIGG4re8WRSTN2LpH2ZJSCTR
+ dFkenG4HCV2us0BRKFJYr0svp1EuBDeC9aempvttzKGToG9hFxM3u5G46Ispi0LLqRo7gGNPyxuc
+ AjHsCYYUC49gNXo6oHbiJNjWu3foyIphX7AAYsMc4NEu3NxjDjoTqL7sZ4XN35qpIEHUGDGdh4s.
+ .yhiU35eELCFepKuKevERmYQpFKVawqI2cNDHVJU6oLEpnARlLFT_C_ZvUTjzRSQ2Y.fUu7U9DoC
+ aIz1BPtvW6TXtszyXGhm6EiMjufQTmDsUjTNWKtUaAKhRMc07sLhjrFa711rG3H3Or3ggKfd...R
+ MB3FHTgRnZIpTjJaObtCTGThTCyONVHuOXPel6k8jxj1efupWcVh5BuQbOTyAmK0CjZNWze48Fmm
+ INc1SsjTBFPtvoIQtt.ifFhucogOIC2rmyQgQSKUbu5xi2F_K_qWeoNuQ4lHl74A8PRzPBHlkh7r
+ ZOx_Mf5CxVyZPldiUNIdGDyoZzBpwBn7GIuSE.kfCtvvyRHA3X5QSUn_eDNNvEKf3wDlS.jYuKNd
+ c57Fhx2QYYKmxZaFJBLaVdoEaniOdBCpxkGFizIhVBDa68PkZStpeafWosjEal1Se7Nn2Wh9dnXQ
+ oD9mgd7pA_TeActVb33RD7vBkIiM2Mw.74QwEieaae8D7aBImnD7JHzVWYp2NxRoImeHM4QhfO6D
+ 5U8WOkb8EsObdYPK7CzyDs8l8VKHcYYPVe0_9JeozZyd2norE.Jz9ZBOXoKWdUHZx69EBP4B8lNV
+ LtCQDfMTvV9TUPqpAW9mvAlLJJZlRBbIuWVHZuumcaw3BEUU1Sira4YdDZS3TlCuFj.TqB.hc6qi
+ sDPAOVSzcLCCKlECc9rFGM_ow8Gi3NTIhxSsLjRaGJW9hLmlID0GbDlq_JHRP2Zxtxn9b4okIL76
+ ZO_aJefO7t_CKXcDCpow6.O6ErUw8aAxUFBl8YFcnBPMNKrjJv_gekSrrzyilGY_FNhVw7taFCWV
+ Z4nNINAXwUMKLYgN6JAipocVAAzEmYF02YG5n_PD9UuQCew6bHYhfUoz7OAHcDPSl6neeRMrzHZJ
+ AFC08NfD6pqO0FrVq7JMsLNQKD7e8BfUEXxBV9b6k_Rs.QadYr6Ei4aQLQ4yLUTc2QiHn4_LlqCI
+ 8nTKNo1qMrcbIAr.h4bWOkYgdXmbi_6DwB3Z_S2fWmOSapfLB4UsNlCCr_0SGb1xbu3lH99NwnkJ
+ 08mI_V5brNut6uDVL7JYmLuwDDw2Rf_Bwsxpsgq9un3qZhCf19Owqt_hJ_Hm_zlaeXFHUkAIBlw9
+ esYh9gdGjL0NPn05agtIcsxDBRmbpep_wlcUhd68_Ak1d3Dd_vFfk6c1D8JVBCsgARbj1QRrnjah
+ JN30PADzEZ9sj.L27Nn2adbpu41R98._bKI67TeE4ddmZ4_MCnx7uccwvT1OYVR_O8pRq3pFwDM7
+ 8IeRlAqLYiWS71GVDG4ebFzaqWpR2WqNad6YzDhzpwJD_LB1QGwLRi_mhr4xizYslAVrwQZYuvgd
+ 3ZtKX5huwgZtQIlyn2x2aB2NRWzzeRL6EkLpIOQdtVuNDMqpQQk0P4scknfdLIEJqn55L2BKmBro
+ 7GFCKh_1YvlExNBg4Z6uI9LFtSsgJLOcyPtjuzC_4GPPTVY36ro8CpSDROEnqyu5HYnNF2Aoa_Qp
+ bc4D7S0O_EIWeG1Az4fJG1RONDPCB0J7DeG1Ufx8HETQd5v1j.XO3XPiykqH4S9DF0Nn6RR_J.XJ
+ DFp99COkOFr1Vnm2MmFaxWDNxHjJ7E5LfiDhg6RXdbQmoOz.aJg5w2m_nmu8erf5jVYHt6BfgW6y
+ qYn_dMGAW8zU9XNEdRrlHHFxpjYNO42Skp5JFJIm5C34an6auOEMleYErYvqUSV05yisXeem.i6h
+ EQHINPhg5jeFEkLpXK3ZQHavcazvf4O0Z0ObwcTd8qcGUZp0jVafdXcaaw8dJEPDYgGNZF9x.vU8
+ Cd3Jihk5g7CT5wBH6W9L.MlZJ51g.H9RBxaEw_kExi4WHoNbXUTUSfkB_t9nSY_8BBZkOu7_tF9r
+ ZyK51BUwStnvMQSD8JiG46kVH__B8Ih0QD16KU5XiLhWYG_RyIGaMTMRgLapWlVN.kxZkPOS5Lgm
+ ehBqEAI5cwmUeBqEN7Fvd4zU3zKdVTVp2wWRmuUYcn9oD9LUtUciFezM.uKnqW5g2eyM8mA--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sat, 14 Nov 2020 18:26:21 +0000
+ sonic306.consmr.mail.gq1.yahoo.com with HTTP; Sat, 14 Nov 2020 18:26:24 +0000
 Received: by smtp417.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 85968d25ae8d25f4ff6dfa3538a98c18; 
- Sat, 14 Nov 2020 18:26:15 +0000 (UTC)
+ Sat, 14 Nov 2020 18:26:20 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [WIP] [PATCH v4 07/12] erofs-utils: fuse: move namei.c to lib/
-Date: Sun, 15 Nov 2020 02:25:12 +0800
-Message-Id: <20201114182517.9738-8-hsiangkao@aol.com>
+Subject: [WIP] [PATCH v4 08/12] erofs-utils: fuse: kill read.c
+Date: Sun, 15 Nov 2020 02:25:13 +0800
+Message-Id: <20201114182517.9738-9-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20201114182517.9738-1-hsiangkao@aol.com>
 References: <20201114182517.9738-1-hsiangkao@aol.com>
@@ -115,132 +114,249 @@ Sender: "Linux-erofs"
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
  fuse/Makefile.am         |  2 +-
- fuse/main.c              |  1 -
- fuse/namei.h             | 14 --------------
- fuse/read.c              |  1 -
- fuse/readir.c            |  1 -
- include/erofs/internal.h |  3 +++
- lib/Makefile.am          |  2 +-
- {fuse => lib}/namei.c    |  3 +--
- 8 files changed, 6 insertions(+), 21 deletions(-)
- delete mode 100644 fuse/namei.h
- rename {fuse => lib}/namei.c (98%)
+ fuse/main.c              | 34 +++++++++++++++++++++--
+ fuse/read.c              | 59 ----------------------------------------
+ fuse/read.h              | 17 ------------
+ include/erofs/internal.h |  6 ++--
+ lib/data.c               | 24 +++++++++++++---
+ lib/namei.c              |  2 +-
+ 7 files changed, 55 insertions(+), 89 deletions(-)
+ delete mode 100644 fuse/read.c
+ delete mode 100644 fuse/read.h
 
 diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index d6e6d60cbfdc..f37069ff7f12 100644
+index f37069ff7f12..21a1ee975141 100644
 --- a/fuse/Makefile.am
 +++ b/fuse/Makefile.am
 @@ -3,7 +3,7 @@
  
  AUTOMAKE_OPTIONS = foreign
  bin_PROGRAMS     = erofsfuse
--erofsfuse_SOURCES = main.c namei.c read.c readir.c
-+erofsfuse_SOURCES = main.c read.c readir.c
+-erofsfuse_SOURCES = main.c read.c readir.c
++erofsfuse_SOURCES = main.c readir.c
  erofsfuse_CFLAGS = -Wall -Werror \
                     -I$(top_srcdir)/include \
                     $(shell pkg-config fuse --cflags) \
 diff --git a/fuse/main.c b/fuse/main.c
-index 6176e836c2f1..fee90154a251 100644
+index fee90154a251..9ac8149c88d9 100644
 --- a/fuse/main.c
 +++ b/fuse/main.c
 @@ -12,7 +12,6 @@
  #include <stddef.h>
  
  #include "erofs/print.h"
--#include "namei.h"
- #include "read.h"
+-#include "read.h"
  #include "readir.h"
  #include "erofs/io.h"
-diff --git a/fuse/namei.h b/fuse/namei.h
+ 
+@@ -151,12 +150,41 @@ int erofs_getattr(const char *path, struct stat *stbuf)
+ 	return 0;
+ }
+ 
++static int erofsfuse_read(const char *path, char *buffer,
++			  size_t size, off_t offset,
++			  struct fuse_file_info *fi)
++{
++	int ret;
++	struct erofs_inode vi;
++
++	UNUSED(fi);
++	erofs_info("path:%s size=%zd offset=%llu", path, size, (long long)offset);
++
++	ret = erofs_ilookup(path, &vi);
++	if (ret)
++		return ret;
++
++	ret = erofs_pread(&vi, buffer, size, offset);
++	if (ret)
++		return ret;
++	return size;
++}
++
++static int erofsfuse_readlink(const char *path, char *buffer, size_t size)
++{
++	int ret = erofsfuse_read(path, buffer, size, 0, NULL);
++
++	if (ret < 0)
++		return ret;
++	return 0;
++}
++
+ static struct fuse_operations erofs_ops = {
+-	.readlink = erofs_readlink,
++	.readlink = erofsfuse_readlink,
+ 	.getattr = erofs_getattr,
+ 	.readdir = erofs_readdir,
+ 	.open = erofs_open,
+-	.read = erofs_read,
++	.read = erofsfuse_read,
+ 	.init = erofs_init,
+ };
+ 
+diff --git a/fuse/read.c b/fuse/read.c
 deleted file mode 100644
-index 730caf0085f7..000000000000
---- a/fuse/namei.h
+index 2ef979ddba63..000000000000
+--- a/fuse/read.c
 +++ /dev/null
-@@ -1,14 +0,0 @@
+@@ -1,59 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * erofs-utils/fuse/read.c
+- *
+- * Created by Li Guifu <blucerlee@gmail.com>
+- * Compression support by Huang Jianan <huangjianan@oppo.com>
+- */
+-#include "read.h"
+-#include <errno.h>
+-#include <linux/fs.h>
+-#include <sys/stat.h>
+-#include <string.h>
+-
+-#include "erofs/defs.h"
+-#include "erofs/internal.h"
+-#include "erofs/print.h"
+-#include "erofs/io.h"
+-#include "erofs/decompress.h"
+-
+-int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+-	       struct fuse_file_info *fi)
+-{
+-	int ret;
+-	struct erofs_inode vi;
+-
+-	UNUSED(fi);
+-	erofs_info("path:%s size=%zd offset=%llu", path, size, (long long)offset);
+-
+-	ret = erofs_ilookup(path, &vi);
+-	if (ret)
+-		return ret;
+-
+-	erofs_info("path:%s nid=%llu mode=%u", path, vi.nid | 0ULL, vi.datalayout);
+-	switch (vi.datalayout) {
+-	case EROFS_INODE_FLAT_PLAIN:
+-	case EROFS_INODE_FLAT_INLINE:
+-		ret = erofs_read_raw_data(&vi, buffer, offset, size);
+-		break;
+-	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
+-	case EROFS_INODE_FLAT_COMPRESSION:
+-		ret = z_erofs_read_data(&vi, buffer, offset, size);
+-		break;
+-
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	return ret ? ret : size;
+-}
+-
+-int erofs_readlink(const char *path, char *buffer, size_t size)
+-{
+-	int ret = erofs_read(path, buffer, size, 0, NULL);
+-
+-	if (ret < 0)
+-		return ret;
+-	return 0;
+-}
+-
+diff --git a/fuse/read.h b/fuse/read.h
+deleted file mode 100644
+index e901c607dc91..000000000000
+--- a/fuse/read.h
++++ /dev/null
+@@ -1,17 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0+ */
 -/*
-- * erofs-utils/fuse/inode.h
+- * erofs-utils/fuse/read.h
 - *
 - * Created by Li Guifu <blucerlee@gmail.com>
 - */
--#ifndef __INODE_H
--#define __INODE_H
+-#ifndef __EROFS_READ_H
+-#define __EROFS_READ_H
 -
--#include "erofs/internal.h"
+-#include <fuse.h>
+-#include <fuse_opt.h>
 -
--int erofs_ilookup(const char *path, struct erofs_inode *vi);
+-int erofs_read(const char *path, char *buffer, size_t size, off_t offset,
+-	    struct fuse_file_info *fi);
+-int erofs_readlink(const char *path, char *buffer, size_t size);
 -
 -#endif
-diff --git a/fuse/read.c b/fuse/read.c
-index 4e0058c01e81..2ef979ddba63 100644
---- a/fuse/read.c
-+++ b/fuse/read.c
-@@ -14,7 +14,6 @@
- #include "erofs/defs.h"
- #include "erofs/internal.h"
- #include "erofs/print.h"
--#include "namei.h"
- #include "erofs/io.h"
- #include "erofs/decompress.h"
- 
-diff --git a/fuse/readir.c b/fuse/readir.c
-index 510aa7ebaf11..a405dd702d84 100644
---- a/fuse/readir.c
-+++ b/fuse/readir.c
-@@ -12,7 +12,6 @@
- #include "erofs/defs.h"
- #include "erofs/internal.h"
- #include "erofs_fs.h"
--#include "namei.h"
- #include "erofs/io.h"
- #include "erofs/print.h"
- 
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 573ebfc298b5..7357ed75e3f8 100644
+index 7357ed75e3f8..13420a8e7733 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -241,6 +241,9 @@ struct erofs_map_blocks {
- /* super.c */
- int erofs_read_superblock(void);
+@@ -245,10 +245,8 @@ int erofs_read_superblock(void);
+ int erofs_ilookup(const char *path, struct erofs_inode *vi);
  
-+/* namei.c */
-+int erofs_ilookup(const char *path, struct erofs_inode *vi);
-+
  /* data.c */
- int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
- 			erofs_off_t offset, erofs_off_t size);
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 7d9446b3cbcf..f21dc35eda51 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -3,7 +3,7 @@
+-int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+-			erofs_off_t offset, erofs_off_t size);
+-int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+-		      erofs_off_t size, erofs_off_t offset);
++int erofs_pread(struct erofs_inode *inode, char *buf,
++		erofs_off_t count, erofs_off_t offset);
+ /* zmap.c */
+ int z_erofs_fill_inode(struct erofs_inode *vi);
+ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+diff --git a/lib/data.c b/lib/data.c
+index 62fd057185ee..34811e49512f 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -70,8 +70,8 @@ err_out:
+ 	return err;
+ }
  
- noinst_LTLIBRARIES = liberofs.la
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
--		      data.c compress.c compressor.c zmap.c decompress.c
-+		      namei.c data.c compress.c compressor.c zmap.c decompress.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/fuse/namei.c b/lib/namei.c
-similarity index 98%
-rename from fuse/namei.c
-rename to lib/namei.c
-index 326ea85809bb..2e024d88d93e 100644
---- a/fuse/namei.c
+-int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+-			erofs_off_t offset, erofs_off_t size)
++static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
++			       erofs_off_t size, erofs_off_t offset)
+ {
+ 	struct erofs_map_blocks map = {
+ 		.index = UINT_MAX,
+@@ -117,8 +117,8 @@ int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+ 	return 0;
+ }
+ 
+-int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+-		      erofs_off_t offset, erofs_off_t size)
++static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
++			     erofs_off_t size, erofs_off_t offset)
+ {
+ 	int ret;
+ 	erofs_off_t end, length, skip;
+@@ -188,3 +188,19 @@ int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 	return 0;
+ }
+ 
++int erofs_pread(struct erofs_inode *inode, char *buf,
++		erofs_off_t count, erofs_off_t offset)
++{
++	switch (inode->datalayout) {
++	case EROFS_INODE_FLAT_PLAIN:
++	case EROFS_INODE_FLAT_INLINE:
++		return erofs_read_raw_data(inode, buf, count, offset);
++	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
++	case EROFS_INODE_FLAT_COMPRESSION:
++		return z_erofs_read_data(inode, buf, count, offset);
++	default:
++		break;
++	}
++	return -EINVAL;
++}
++
+diff --git a/lib/namei.c b/lib/namei.c
+index 2e024d88d93e..4e6aceb90df1 100644
+--- a/lib/namei.c
 +++ b/lib/namei.c
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * erofs-utils/fuse/namei.c
-+ * erofs-utils/lib/namei.c
-  *
-  * Created by Li Guifu <blucerlee@gmail.com>
-  */
--#include "namei.h"
- #include <linux/kdev_t.h>
- #include <sys/types.h>
- #include <unistd.h>
+@@ -136,7 +136,7 @@ int erofs_namei(struct nameidata *nd,
+ 		struct erofs_dirent *de = (void *)buf;
+ 		unsigned int nameoff;
+ 
+-		ret = erofs_read_raw_data(&vi, buf, offset, maxsize);
++		ret = erofs_pread(&vi, buf, maxsize, offset);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
 2.24.0
 
