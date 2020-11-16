@@ -1,98 +1,102 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C8F72B4664
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Nov 2020 15:52:45 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 222822B4BA0
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Nov 2020 17:48:30 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CZX9j5R4JzDqLd
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 01:52:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CZZlG5s39zDqJc
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 03:48:26 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1605538361;
-	bh=ahtf3wR9zAQZLD3wn2vYb5BqFVnQ4zCmkHok7iz4BBY=;
+	s=201707; t=1605545306;
+	bh=aFa3AbmripzfPc4zOhydc5jnYmIwZPRqlPY5GfUpLq8=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=VoNkxpnAyp+/Heg+xV9fKl+EAiHCSZzTFfiyEK5fuiPUjoGaxzp7gd31x7FbP6kHK
-	 cylaF9UGyuJEAa60JCftCvc3iMtMW6kOuUMVPxT9Gnrb8m9oyBzND5zXz6lYuABPHg
-	 kNZmjlmaq0HiQUYI+KXfvDIcQZUEouunFBL3ZAn1aBcCtUWNd5YWVWESPIi8+OctK+
-	 q9MgMUB/LHNlTHnOoBS7bIjecGgk074xCX0ynswQkFX4ZcdrFHkrmJKVnH/s4oUXYt
-	 avEyH0sZ8cSCab5K0rcIfvlpDWSLszJ5kwm0DBMOvJ/hRIgoNjLWsFYNbQ84eTYhTC
-	 Gic7uhnkupOxw==
+	b=MmXfTS0x1Zn1nTKQCMjbPzMYsuDXplbkCA6fMfr/2Q86fFZn+kzQdLc9Kf5XGkBVH
+	 VMbMi4Dclei+q+xlkivryDJwmKgO0OoOEi/9mztmloYhwK6efiSReudYM3QNvhBnyb
+	 s3RQmXu9L574A87/+dcLuuHraEGvc87CPe/77vnMYpUGdwDxLxqIte/U/4LpRngAy0
+	 WENF8514O7vvbBfYPl0+MTF5fnrz+KJtBa2dsuCfUmbxUnArafZTjbp/GAiQvPryr5
+	 1CL8r6C0Vqb8o+Q5Ozyq6hTPckNn5KbbuDKXfPqGb0IWuqQeTGhI+efjvcbLav5eVY
+	 6WblP7+d+fXtQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.146; helo=sonic309-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.147; helo=sonic302-21.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=KvBnc76w; dkim-atps=neutral
-Received: from sonic309-20.consmr.mail.gq1.yahoo.com
- (sonic309-20.consmr.mail.gq1.yahoo.com [98.137.65.146])
+ header.s=a2048 header.b=tyA3MH/w; dkim-atps=neutral
+Received: from sonic302-21.consmr.mail.gq1.yahoo.com
+ (sonic302-21.consmr.mail.gq1.yahoo.com [98.137.68.147])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CZX9T07lfzDqKP
- for <linux-erofs@lists.ozlabs.org>; Tue, 17 Nov 2020 01:52:26 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CZZky6VD4zDqDh
+ for <linux-erofs@lists.ozlabs.org>; Tue, 17 Nov 2020 03:48:08 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1605538343; bh=4ELPHoV+c93PVu1KpVyRb7QXQYE5D4RAcUDewN/dr1s=;
+ t=1605545284; bh=im9O2EujS8yRd+BPSL8jAkxeyxnuDCxaoKWiPUvS8rk=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=KvBnc76wwt5TK4Q93iFjLeDtmDdMPi73Bq4W5EsOAmtHI8vOPNa2rBlfqvQ6H3TboS5lUsUaJs+LHDxrvdgN7rVzL7Zf9bY35EKIA/axMRVg2TrLGKlZBnA1AQC+UoRM7wwS+QPA8ZyGPfueYZHzvUet5+D2+sVlvzwwEZ3bKKO5Fc3TWpFTRCxezPuB3l8Mxyg5H5ui68qvDWIJU7hZRtjPQlnZ8RFnPgiPhIeLd2lsSdbifRH3dV+7L0wm5YbCe3FHb+JQ4MgmG8sO4ZqOSaBwWZk3sDmoY/blKUQkaDmbmJLbdatZ6wpvjk/ozzrHcSnBy53jdE6caVOBcCYEvg==
+ b=tyA3MH/wl6rI+ZE9Pf0SfiBEro2ocoJJfdSA+OOjXHUrmK8qsF8MJZtTnyyxBsIWOqz49FfJgkEtNg5rrOPI3gFMwn9WOBFApsbyS/JXUKidThqhzJCZFL+UegaVDugA4WeCNFtJ2sc948OlYifXKh6APIVDQXetAMFEtRehFqgiJYdpYXtvcBiVuJ23Cga4XxiQMGpRnZpcKgwXH/sKHfm6dIoyR06sOP1G16k5350O2zMw9tMRm5HSiFIyukcP9pQryE7Ewj7U3W6cmHOOfMSP8K+Su3xeiGyfcUQujvdrakSCUlo3XysFfuS+/qFoU6sPRjQVLIL708uaePvXsA==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1605538343; bh=4KZRLdmrq6c1arDy0lB5d5mKyeL9l7PtBErakgc8GU6=;
+ t=1605545284; bh=xJM/zw/JEhq7mfLl9iPbzlVDOgc2sGeZhJPEWvQj19P=;
  h=From:To:Subject:Date:From:Subject;
- b=oU1t5cOdmbLCDbj13SNXekG4/fIUNa0k94+NC0AhBvV2tvAe6kzed+LA0zO7BxSW2YWypP+o8WQsjn/aSwjXGOVM+ngTJeQktd9q3i5aTUpTASN7S5HOQRH8abMI8aaQkFPslLQVo5Fk7pgRuCINLt41GA+v1BGMmUGdGHo7RHb6TbDL0nnAUhetqd0jzIryTNJTjJkpvdsj5YBwSaIGx8qgWKcXOLSxZobfwBYEMUj8gBEjQHaQiRWlyeHy0bxV5Ejhpb8XkI08KP/Rc5QX1sC9BgHu7sIpc7JAMEjfGF8MTouZxQfHYgI9rurqXtyZdEZp+tCPpUjJTfjCy6q+qQ==
-X-YMail-OSG: eIQtXR0VM1mAaK798R3Fw_VcSZ5uhmbF4kvWy1Nuu_y8x36aMjCRAm_FKfMo.dK
- .ccz9mR41ZU833qkuPn4F4NeEqzRGByGing37LdcYd6kLAawTMP._pQcpp3kFP3tjTvXR.GtTqRA
- 1aZcAU2jcdhunOeUU0e.lb8r5RRhsSGfixA8WOePML9kkjKaYOV4JkygMdVRurhQ6uqhmmOwkJ4K
- aDdhTn38A.oOcNNOzS1ZzKqhbH1DJPmFWOpOa2Mvh8qOPbgIVTQ_mv5jTXIfoo5TVqkPry7ofw1N
- qk7Ejda6z7jcdfJRk7nglOmZhvDSaCX_vq5iQP2cpDevTgVIFvp5SMiXM8ADiT9fpWSqqDrtpIrO
- U_RnI2fbRiWwfxqs5C9KF__mz3ZGr1Q0aWN5etoMb2_DHX6291MY7VYXqqtIHrSRotCPQ.QsTXAr
- Vu6HaQ9K1CEndpy9djyufEQVXmC43RRLBjCbQi0yDMY3a7.DNmER8AjROQ7kTOyWRIdp.XqNNail
- aYqJXiRv2411uvT4AGeZlFMz0bD7ooeq3BtPdy_XTLFr_x4qsRxaWiFXPJWBv4N27ZXWF_stAQuU
- .ljD9MNkqvIZ3yQSagKdPcIZz5Zog0NfbxKnvXkx9J0tsqEq7E2dh0O.8Dpd9Mt.xJgdzsZMZxQa
- Croy8fbFT56lMYdBcFOSRsdP92dlV_BQWuSWtuHQuDZnaLfIlesmSmV9h0nboQ_evy0XMsI7VJTB
- U8SdO4yCH2vyeAADH0Y_YOfBnD_x6Ky6DJ6gU9yTQ4EpqQOaNEc6YrGINE2yAtvjmldlULZmhpZQ
- vQpEleJa5PlyATf2_TSb1jAoCqB93s3YbR8guSzcpoHJCLeM9pv4j4bpESDRJ3RfJwMXwmbDQGHw
- LjQQ_O8w8R1sMYV8Y5qOXmVF6dg41978F8addduVd7vZOO5NWa7kpAkiiM_3IFVwBSmNFxUZJr_p
- Mn_1C6EhAchjOeB6XbVDYNRG9UoK43W24G9_NnJLRPyAwrXDElV6_QoCSAeB6fslX3maT0YAI34b
- BC5zjKUqrRis1.xkHHMk7gxVASWPezi1.rsRTB2WT9Wl.GsTwnKp1n4Tqslae9xx0wjrnc1R2duc
- DqLpmmbYQOjgz9TWaXOz_7aq8iEAZ7S319KjTrVwMJgC4TpFhvi.1TzcQ1fpyQATdVyUoi.VYFv.
- kcYxMzkC_1UrhEzUXturrtUfgdQaexEoNw5JlyJzAFMulOpq73zvve9UUNIwiCAYTfAD9vbTcdNi
- rHfa1QhNKG0JL.3G8k5B5vbD9u79KUlsMw7BWaPxg_a3pbKXiyjXKmP4.QOCI9NcbuN3vXj0dz3H
- U7iK6kkrLCkWfKPNGaatRa6gej25OQ7wIjGRH0d10ftr5A.qfiXjxO3yQhRwdCZxdQQ87190LFRd
- vuriAQAwhFbnsC0bIloh.Ij5rUsYj6LHpYfAR71Ven3ViMf3cs17DqSdmK7d9aCWXvpr_3FLCv48
- 4WyJfYY_Xob.KSQlA74CPgV..svpX55FP_3R4jlxhEBLwyezyIXhV80TE4JpQSfDSdAxANk2Q4Wd
- j6Fjpw_ZkkMBJaJ6IaC.te3rxRMhT2TVMu5.Crh7NBD6HZbzTzINexbfXVjs2AhyJak1OgjCCgDp
- 6v678Z8imOgulgy564U8mlokwhBx2F6Jll5Idq0Joz4hDrPd9hAOj8VIXB294EdmCGRxmcnrNK0_
- 829DTecugtkhuyV2O6umvR3x4qiC_tfLFODXr140_wN5Q8mmX96UOnnJiepgD8cHl1YeH_DDffvA
- GnzawsV4flQOI6tFu_c.DvV8lLTK_EajjOrMlpe0pNRMd1G4gr5SEg2f3rH.FEXuOXdOOSn_FwJC
- IA7XBNgI0fWXgO8EQ0xKvC9jyNgiJt97X1.rkp3_lR8svzv.VGjZA.td8gVbUQjanDXu2sDYi3XT
- NrCabq3VzHU1L4hylJ8SRgTHBNQhKtBoznPQAqWtPiJ53R4DnCgS0CrX7TMTPW0ukuIt79wpgQpe
- vV.JbJ4f6LkkcyaogCGIxCvBvxQPnObqxzcABp6oc11LNmzwf1oobTEKtArlh7Vvu7wIOgrOi79b
- g3sP0sc5X6A6xgbV0eky9g4lQWnBBo5KhbhN0DLGs8TUE_QEP8OW.4smNOka52yYJ6n8lal2sAot
- zu9tDCE8GLiWgR5W6QmZKv.VbjnKRODpW5MWppIzfCsyit72k10SXjBwXdREhd45BxNX6ujMKmq6
- yPQ0d3oBv.dZMA6PjNHjEAKh2j2Pd6Pn4sPICzL6TwXeev5QFLqyDxPOMktLVua5gnHT5MPlMn1K
- Q6eAOAW8MEUjVPpogaD6toXMV..9uvUbPlDCMvMaMoz5ZM1P00JJ6NXwDTUTPJJUUphUpRMB71LW
- SRlPo.RpK71Fg.v1zIxniw6QTgXNQBkQPQYONw.esrvGqCOLMpXwvRBZLfBxLAMAqUMJ3hEzubjL
- FbVNV33NMl4yKRZuXyMxU_NXzrYb1JHNB6SsP4diOhJGs4_NIBG4jSBlVMMPxEpQvIDW9JpXEK0C
- IWEihFPKw05NTuFDb1gprUGcqyhQeaDg5NmccmwDFMdRPVhjCZjG2BruyfylNi4Gq6Ezs7ufcFye
- _NGUl4P96aAyRZx9mUpXTKjEqnTQhIeRCb_mCKJPlGBWJ9SM8SWgPfmAj1yjr.3C06uneUx4BDfd
- XNuVAxVxreCdfDqN0Y0Z62P4ZWVs80k.4UQ--
+ b=o5hXhLKDKeSu0XtGuoK2fDmRvDvgmrCCUCP3kcmkOaz/kIt0FwLn8kllLN9Uk33htLEGpRcFU3Yte+/IBoCZPnoq1CKXjs2vPpHr8GQHsszN4yNbNCNslGv4U0GHtsOs1xXJd3+z8xz0O1cscNJbV8RulUYJeBVKvR+dbLXiRg8njnIJnjZWYVzesudyk8m/Ns6Dn4AxQszS1MA62/Ssy8lumMijB+lYvYvmiIG+o3A9rVbLIjdPtvpzjS0SiXp4PlVmbpliFp9Uk5A0FBlyxyUFfn2RB/Pvmh3RhiV2iDdWd5TlfugxL6lnCof3rsrmgZ5/o9Mz3Sgd76riJDuynQ==
+X-YMail-OSG: NAD2ZbEVM1nVA2zOVPXNoSK4SwzejfDTFH68VQ5rog6rUoBOaC48L4RsLsNP22x
+ G9j.XdVo8_Wekf5Gv5afiRIW1cFjHLlA7M9PE8aOkvhlQSkoECtr4cdIcoXMrqxHw0TPhL5aFKIq
+ BbtGPmxAOQ6iwuJ739Bh0fCS5qPB9XalC5x3G.55cauyI1cmiRHXxGM9UDBsA_p3vY7OE8A_OMqN
+ 5RU.eNsv3DiSOinckfJg1zvx0DGr9l448t8ocMegGwChifYL81gUgBsyre_QQDVholqV7oCgadnv
+ bULsiz33Yph1OcsNFUw2PyBuiBGdoCEEbBF86qWoZNK_RFzJcJ5WCTTmals_DMg71Nagirvm5qgV
+ FaYZHCISladkwb2caNZc20JURCx.27_Mt2EbE5mW1sXM8aumgYjpGOhEe7fjqw3xwR_PAaxUBt4q
+ qhXG0yFZBU61T5S4qHR29DHsf.SBarlzbZ3hqJkwMmZoZR11qhHJM7pe4LoOviERBpWcbE.ZNtx4
+ ItlNb9eR6XHt3_JLusLCXzTMvXhmx6b5RYKIu6miX6obgu_vYLOsDTMnAhY3.DstrgAYlVltRx5W
+ Xb4FvudPgkwD4N.g7.wdfxjGEagdfN5Ke.oEAVN7SK7903VYQ_l7uNiSqNoBzcl48_zr66Qa4O5b
+ .34Yy_q178zvQBMILEdfZFxlcLdZMxNGI2fhlm.zj3Fi2GPYKAQ8Q1shsnvx0Q.0rn4q_37nD.ZU
+ N8sFwrafal4sp.bpDmZjvmlPu8B1kk0J3LnEHZBz_dl9d2GDTrkUPtiT6BMC2p.5rHF1.hWe4A0E
+ T91KMCkb2wlVgszkOus6iCbDIduCGRvKTsPfc6ofcbzZn7w9uoH9Z7G1_ukRSPU8WXhGydXj2hmE
+ oHcetjotUGuQ7aFWq0YDt9zuY2c1JqbTNFTrrfaAvABGURMogRW9XEJG5N2X_5aFrXWcOmIlDeXZ
+ EicG7ZMWYBVNBEBOkDuUa9fUfxRshuCz1KO7y93VyEhtR3lG5X3q.6MQwFNX9VuUj_IZgmuBZyE4
+ CzA15FPrT1wtuTqw0o8qSfzrNzboi069xo8nvHNrelv7uMNIlJ4pdyAv.lHKOq4WJZtQR1tGOhqr
+ bKDlUtWvqhf99s8hPC.8XGWzbiS5d_ajVrtRbnzzvyOLXy9jSgRSwnGZRyDiUlpaOxUwlgYSMnqP
+ _gC6NVxLoZ0QxyPbjCcbOjidV1DY3qeeBtqhYjpduizG1G9buAT_rzjenw0flYH9InA.LWF_sMLF
+ cm7mBz2ma1JO21SDKa22BOaU9qym0PyjFfPjIz89yqiMWXHLrwJArN2uDkasijjwlfpwwRwRQgRd
+ 364o9XOxX77OzagziUo9nRPIXZUfwD8NhZ0gTvjRQMCWCqhfLwWXYC03HYrcDXUueFSwbefI8JVt
+ gzYjI2ytYGoI6NfabPMnxj99nG6MfRTZHftKok2KrtGBS7wimIvnKRnC4I3TXqMDqlFPss1Uz64o
+ ZLig_G3owgz.ZAHOXhjJF7cwAWfcQpEOypPOpt8_gWUPeUA8nnkle.NEdPhpkpoe1pwSRDfdnyoy
+ qXXGprNUZ8PRi86QdogXuVaWVc1pT7sUlgzs9gyi9PpmW9qqVrz69ngy0rvfcVhlhB7XGgjjMtiM
+ H9A2Xf6krkxmOvRXTuXr.jFahmlR0JY13sYC79Nm9yThXAUWoVt5wsMhURamCawcxGfjCzxRyGAL
+ LPSuQXn3NSGfLraMmi59s09o_oYo9qKc15509zZAKdicE4mAjyZklmBJyO2WgP9Bifb0Em5Q72Dr
+ uX2QzbULIgVE5Ue7XfJNDiZeL1lrqIZY.cqnjZoKCs4dNbRZTY81E1cH9et_nhsBkl07wNGlD4nO
+ yzNCaWJocu5b0jcKf9uQvXjlfgmRawQluJd1RrDhCJX5vT.QhwdWUUUNZXhEJR67N56ngERkTAwe
+ HPNAoMvlknlOTZA7PEQXl645jfniOe_jPLCcrEU1h4ZuE5It5tvpZ4lILzsajCl8GwfibBT1QLgH
+ 79x83DvLpE5HvRPrTzxOOSe8gQoUG8UcVrMaPjAV5bLBYlI.QP_pRNZALO2V5zWJ4jRuNQ03CSIi
+ rE0CGDyhLoCWEsO3wldvgxGuevR82Z5_0CdWEYxLURO6NL010NNXXpWULZ8okIH9qBmpFWQ6Wi0J
+ 5F0uoAnB9vPoocpTDQn1.m.kUQmdCtUTTP8b2kXCpYYmcGXA4E2XbgJSfwVxlBZk682Mog98zq1l
+ _enM1Kdtf2UEO8hxtzpWJpBkkLdsR2B_5rLiAEBiqtthuvWUgXXFQTTuhCNpQukCuCuYGk7I6E2I
+ iwcUG67X4qMuMCdCta4zFgOKFo3okkUJjgGD1XX0E1krvHIyuQ99Vc3xTqkCIdLNDsxW3163tS35
+ IMPT_9CfNTunjMcWugTRyDNEJjO29sS5aodfloa89SjBG7FlM8WuGBH.YedBRnGtub2rGXQ1DYFu
+ WEMVU_3y_IFLEpARm2f5aUCkQQGmw_0N6.0VopjqMb_fyfPXT0WLUm1e1gAHjJPLmE8XbAjrDEXL
+ XohOLKRo83WlHQOdMjinbsR4aSaNj_soTKAiu9FIbC3DujzOCvXNBSB0xOOjeIlNsX50eAxbX4zM
+ qp_n5llK0UCZvRrBZ_0nC3iTJ8XseC0qbVtz33KVqjWZhXdnrzi.HkFGjFt035UIF6NEzCcPu_LM
+ UgpE6q4qQstM6jDtPgEpQ5zo4MyzyYKFA8HFIyUAe_zk3a8CafaWHIjLqHF1Z7api3whfZXHwScJ
+ VUxU_BIdNfSEa.B_prZb.sZ6zQbA7REMN2LztgCNOpGeIb.vggCaqpGdcITfpn0psJ3VjuCpsEzI
+ Fvg274ICMmD..khmuHJo1qCVcanJ90slf3M_f0dxNQ6mKaJuWHQaYBSfu32MGhCY9MDdK.H4kyPG
+ bDPSV
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic309.consmr.mail.gq1.yahoo.com with HTTP; Mon, 16 Nov 2020 14:52:23 +0000
-Received: by smtp425.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID e2a85983a6c055d9c82ef00b649b05f9; 
- Mon, 16 Nov 2020 14:52:19 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 2/2] erofs-utils: update README
-Date: Mon, 16 Nov 2020 22:51:54 +0800
-Message-Id: <20201116145154.9279-1-hsiangkao@aol.com>
+ sonic302.consmr.mail.gq1.yahoo.com with HTTP; Mon, 16 Nov 2020 16:48:04 +0000
+Received: by smtp411.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID f765e9696e0a00a38a33ee4c6ca64884; 
+ Mon, 16 Nov 2020 16:47:57 +0000 (UTC)
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH 4.19.y] erofs: derive atime instead of leaving it empty
+Date: Tue, 17 Nov 2020 00:47:37 +0800
+Message-Id: <20201116164737.4184-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20201116125527.3644-2-hsiangkao@aol.com>
-References: <20201116125527.3644-2-hsiangkao@aol.com>
+In-Reply-To: <160554164363107@kroah.com>
+References: <160554164363107@kroah.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -108,169 +112,86 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: nl6720 <nl6720@gmail.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Make it easier to understand...
+From: Gao Xiang <hsiangkao@redhat.com>
 
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+commit d3938ee23e97bfcac2e0eb6b356875da73d700df upstream.
+
+EROFS has _only one_ ondisk timestamp (ctime is currently
+documented and recorded, we might also record mtime instead
+with a new compat feature if needed) for each extended inode
+since EROFS isn't mainly for archival purposes so no need to
+keep all timestamps on disk especially for Android scenarios
+due to security concerns. Also, romfs/cramfs don't have their
+own on-disk timestamp, and squashfs only records mtime instead.
+
+Let's also derive access time from ondisk timestamp rather than
+leaving it empty, and if mtime/atime for each file are really
+needed for specific scenarios as well, we can also use xattrs
+to record them then.
+
+Link: https://lore.kernel.org/r/20201031195102.21221-1-hsiangkao@aol.com
+[ Gao Xiang: It'd be better to backport for user-friendly concern. ]
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+Cc: stable <stable@vger.kernel.org> # 4.19+
+Reported-by: nl6720 <nl6720@gmail.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+[ Gao Xiang: Manually backport to 4.19.y due to trivial conflicts. ]
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-changes since v1:
- - fix more typos and descriptions.
+ drivers/staging/erofs/inode.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
- README | 70 +++++++++++++++++++++++++++++++---------------------------
- 1 file changed, 37 insertions(+), 33 deletions(-)
-
-diff --git a/README b/README
-index 7a7ac5d5cb6f..88c45a25ace9 100644
---- a/README
-+++ b/README
-@@ -1,30 +1,32 @@
- erofs-utils
- ===========
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 7448744cc515..12a5be95457f 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -53,11 +53,9 @@ static int read_inode(struct inode *inode, void *data)
+ 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
+ 		set_nlink(inode, le32_to_cpu(v2->i_nlink));
  
--erofs-utils includes user-space tools for erofs filesystem images.
-+erofs-utils includes user-space tools for erofs filesystem.
- Currently only mkfs.erofs is available.
+-		/* ns timestamp */
+-		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
+-			le64_to_cpu(v2->i_ctime);
+-		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
+-			le32_to_cpu(v2->i_ctime_nsec);
++		/* extended inode has its own timestamp */
++		inode->i_ctime.tv_sec = le64_to_cpu(v2->i_ctime);
++		inode->i_ctime.tv_nsec = le32_to_cpu(v2->i_ctime_nsec);
  
- mkfs.erofs
- ----------
+ 		inode->i_size = le64_to_cpu(v2->i_size);
+ 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
+@@ -83,11 +81,9 @@ static int read_inode(struct inode *inode, void *data)
+ 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
+ 		set_nlink(inode, le16_to_cpu(v1->i_nlink));
  
--It can create 2 primary kinds of erofs images: (un)compressed.
-+It can generate 2 primary kinds of erofs images: (un)compressed.
+-		/* use build time to derive all file time */
+-		inode->i_mtime.tv_sec = inode->i_ctime.tv_sec =
+-			sbi->build_time;
+-		inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec =
+-			sbi->build_time_nsec;
++		/* use build time for compact inodes */
++		inode->i_ctime.tv_sec = sbi->build_time;
++		inode->i_ctime.tv_nsec = sbi->build_time_nsec;
  
-- - For compressed images, it's able to use several compression
--   algorithms, but lz4(hc) are only supported due to the current
--   linux kernel implementation.
-+ - For uncompressed images, there will be none of compression
-+   files in these images. However, it can decide whether the tail
-+   block of a file should be inlined or not properly [1].
+ 		inode->i_size = le32_to_cpu(v1->i_size);
+ 	} else {
+@@ -97,6 +93,11 @@ static int read_inode(struct inode *inode, void *data)
+ 		return -EIO;
+ 	}
  
-- - For uncompressed images, it can decide whether the last page of
--   a file should be inlined or not properly [1].
-+ - For compressed images, it will try to use lz4(hc) algorithm
-+   first for each regular file and see if storage space can be
-+   saved with compression. If not, fallback to an uncompressed
-+   file.
- 
- Dependencies
- ~~~~~~~~~~~~
- 
-- lz4-1.8.0+ for lz4 enabled [2], lz4-1.9.3+ recommended [4].
-+ lz4-1.8.0+ for lz4 enabled [2], lz4-1.9.3+ highly recommended [4].
- 
- How to build for lz4-1.9.0 or above
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--To build you can run the following commands in order:
-+To build, you can run the following commands in order:
- 
- ::
- 
-@@ -32,23 +34,26 @@ To build you can run the following commands in order:
- 	$ ./configure
- 	$ make
- 
--mkfs.erofs binary will be generated under mkfs folder. There are still
--some issues which affect the stability of LZ4_compress_destSize()
--* they have impacts on lz4 only rather than lz4HC * [3].
-+mkfs.erofs binary will be generated under mkfs folder.
++	inode->i_mtime.tv_sec = inode->i_ctime.tv_sec;
++	inode->i_atime.tv_sec = inode->i_ctime.tv_sec;
++	inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec;
++	inode->i_atime.tv_nsec = inode->i_ctime.tv_nsec;
 +
-+* For lz4 < 1.9.2, there are some stability issues about
-+  LZ4_compress_destSize(). (lz4hc isn't impacted) [3].
- 
- How to build for lz4-1.8.0~1.8.3
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--For these old lz4 versions, lz4hc algorithm cannot be supported without
--lz4 static libary due to LZ4_compress_HC_destSize unstable api usage,
--which means only lz4 algrithm is available if lz4 static library isn't found.
-+For these old lz4 versions, lz4hc algorithm cannot be supported
-+without lz4-static installed due to LZ4_compress_HC_destSize()
-+unstable api usage, which means only lz4 algrithm will be available
-+if lz4-static isn't found.
- 
--On Fedora, static lz4 can be installed using:
-+On Fedora, lz4-static can be installed by using:
- 
- 	yum install lz4-static.x86_64
- 
--However, it's not recommended to use those versions since there were bugs
--in these compressors, see [2] [3] [4] as well.
-+However, it's still not recommended to use those versions directly
-+since there are serious bugs in these compressors, see [2] [3] [4]
-+as well.
- 
- How to generate erofs images
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@@ -56,17 +61,17 @@ How to generate erofs images
- Currently lz4 and lz4hc are available for compression, e.g.
-  $ mkfs.erofs -zlz4hc foo.erofs.img foo/
- 
--Or leave all files uncompressed as a option:
-+Or leave all files uncompressed as an option:
-  $ mkfs.erofs foo.erofs.img foo/
- 
- How to generate legacy erofs images
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- Decompression inplace and compacted indexes have been introduced in
--linux-5.3, which are not backward-compatible with older kernels.
-+linux-5.3, which are not forward-compatible with older kernels.
- 
- In order to generate _legacy_ erofs images for old kernels,
--add "-E legacy-compress" to the command line, e.g.
-+consider adding "-E legacy-compress" to the command line, e.g.
- 
-  $ mkfs.erofs -E legacy-compress -zlz4hc foo.erofs.img foo/
- 
-@@ -78,14 +83,12 @@ which was replaced by the new erofs-utils implementation.
- 
- git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted_mkfs
- 
--It may still be useful since new erofs-utils has not been widely used in
--commercial products. However, if that happens, please report bug to us
--as well.
-+PLEASE NOTE: This version is highly _NOT recommended_ now.
- 
- Contribution
- ------------
- 
--erofs-utils is a GPLv2+ project as a part of erofs file system,
-+erofs-utils is under GPLv2+ as a part of erofs project,
- feel free to send patches or feedback to us.
- 
- To:
-@@ -101,19 +104,20 @@ Cc:
- Comments
- --------
- 
--[1] According to the erofs on-disk format, the last page of files could
--    be inlined aggressively with its metadata in order to reduce the I/O
--    overhead and save the storage space.
-+[1] According to the erofs on-disk format, the tail block of files
-+    could be inlined aggressively with its metadata in order to reduce
-+    the I/O overhead and save the storage space (called tail-packing).
- 
--[2] There was a bug until lz4-1.8.3, which can crash erofs-utils randomly.
--    Fortunately bugfix by our colleague Qiuyang Sun was merged in lz4-1.9.0.
-+[2] There was a bug until lz4-1.8.3, which can crash erofs-utils
-+    randomly. Fortunately bugfix by our colleague Qiuyang Sun was
-+    merged in lz4-1.9.0.
- 
-     For more details, please refer to
-     https://github.com/lz4/lz4/commit/660d21272e4c8a0f49db5fc1e6853f08713dff82
- 
--[3] There are many crash fixes merged to lz4 1.9.2 for LZ4_compress_destSize(),
--    and I once ran into some crashs due to those issues.
--    * Again lz4HC is not effected for this section. *
-+[3] There were many bugfixes merged into lz4-1.9.2 for
-+    LZ4_compress_destSize(), and I once ran into some crashs due to
-+    those issues. * Again lz4hc is not affected. *
- 
-     [LZ4_compress_destSize] Allow 2 more bytes of match length
-     https://github.com/lz4/lz4/commit/690009e2c2f9e5dcb0d40e7c0c40610ce6006eda
+ 	/* measure inode.i_blocks as the generic filesystem */
+ 	inode->i_blocks = ((inode->i_size - 1) >> 9) + 1;
+ 	return 0;
 -- 
 2.24.0
 
