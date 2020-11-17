@@ -1,48 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDF042B588B
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 04:55:14 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1BB12B588C
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 04:55:19 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CZsXb4csDzDqQZ
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 14:55:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CZsXj2mk5zDqSL
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Nov 2020 14:55:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mga17.intel.com;
+ smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com;
  envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CZsXN5p62zDqPj
- for <linux-erofs@lists.ozlabs.org>; Tue, 17 Nov 2020 14:54:56 +1100 (AEDT)
-IronPort-SDR: q7Qmy+eLFG/BGfExIr3zkFV/bAH7U5kXlh+AMWvUN/tKm0eBlJM7h6dfxLVYzayfacdvAnboDc
- g850SrloWSDw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9807"; a="150707880"
-X-IronPort-AV: E=Sophos;i="5.77,484,1596524400"; d="scan'208";a="150707880"
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CZsXP0p6JzDqPk
+ for <linux-erofs@lists.ozlabs.org>; Tue, 17 Nov 2020 14:54:57 +1100 (AEDT)
+IronPort-SDR: v8r2J6BHsAbTSg42TVJH/Xyu7dC2saKhgvReRc0xRTixtwzZNDiMnXewxTpbzRveu6yBRkNcrD
+ je3W51ygRDDQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9807"; a="158632546"
+X-IronPort-AV: E=Sophos;i="5.77,484,1596524400"; d="scan'208";a="158632546"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
- by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+ by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
  16 Nov 2020 19:54:53 -0800
-IronPort-SDR: +QsnLjKseDRXH9GJmK9BY47Vz8ZhXyAbQ/mIrxocMCenodOTCVuLOxSKx145jiGaratwKyY84A
- MS4VaaAPYkpQ==
+IronPort-SDR: Hsf9fdsZH0hxyqzZL5bYV2aaN46x5uyRiGz2vFWgVjQgeg5lcncL//golQKQxtGFH57iLXQ+7T
+ kDIr3gxhI1Fw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,484,1596524400"; d="scan'208";a="310088612"
+X-IronPort-AV: E=Sophos;i="5.77,484,1596524400"; d="scan'208";a="310604490"
 Received: from lkp-server01.sh.intel.com (HELO e054c07c2134) ([10.239.97.150])
- by fmsmga008.fm.intel.com with ESMTP; 16 Nov 2020 19:54:51 -0800
+ by fmsmga007.fm.intel.com with ESMTP; 16 Nov 2020 19:54:51 -0800
 Received: from kbuild by e054c07c2134 with local (Exim 4.92)
  (envelope-from <lkp@intel.com>)
- id 1kes4w-00000Y-UZ; Tue, 17 Nov 2020 03:54:50 +0000
-Date: Tue, 17 Nov 2020 11:54:11 +0800
+ id 1kes4w-00000V-Su; Tue, 17 Nov 2020 03:54:50 +0000
+Date: Tue, 17 Nov 2020 11:54:15 +0800
 From: kernel test robot <lkp@intel.com>
 To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 1b2b66d55670675a96b533cf1076fc38fa8646c2
-Message-ID: <5fb34963.Tg8M/enuLTHQetQ9%lkp@intel.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ f1e19bfbb15cad74ff9246248585e14802540112
+Message-ID: <5fb34967.2+4dmVeYZBBpd0eM%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -63,12 +63,12 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
-branch HEAD: 1b2b66d55670675a96b533cf1076fc38fa8646c2  erofs: remove a void EROFS_VERSION macro set in Makefile
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
+branch HEAD: f1e19bfbb15cad74ff9246248585e14802540112  erofs: complete a missing case for inplace I/O
 
 elapsed time: 720m
 
-configs tested: 173
+configs tested: 176
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -130,6 +130,9 @@ mips                       lemote2f_defconfig
 mips                 decstation_r4k_defconfig
 sh                     magicpanelr2_defconfig
 powerpc                     ppa8548_defconfig
+arc                          axs101_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                     sbc8548_defconfig
 arm                            zeus_defconfig
 arm                           omap1_defconfig
 arm                        neponset_defconfig
@@ -195,10 +198,10 @@ powerpc                          allyesconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
 x86_64               randconfig-a003-20201116
-x86_64               randconfig-a005-20201116
 x86_64               randconfig-a004-20201116
 x86_64               randconfig-a002-20201116
 x86_64               randconfig-a001-20201116
+x86_64               randconfig-a005-20201116
 x86_64               randconfig-a006-20201116
 i386                 randconfig-a006-20201115
 i386                 randconfig-a005-20201115
