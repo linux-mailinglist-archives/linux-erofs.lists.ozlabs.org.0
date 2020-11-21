@@ -1,62 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 636272BBD87
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Nov 2020 07:35:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D883C2BBD88
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Nov 2020 07:35:20 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CdNvC5lZLzDr0f
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Nov 2020 17:35:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CdNvT468GzDr0f
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Nov 2020 17:35:17 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1605940503;
-	bh=oBgrlymSOCzlvROu+QsrxRWEsoqXos40Bb/0f/LT8dY=;
+	s=201707; t=1605940517;
+	bh=AHsZOMZkXBhIH7JZ8jNgZkK95qJ/WNnLDa9m2+P4bnQ=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=WkBj7o1CYQlPWJ0ZXjeWoewDtOc2ocGA26vZKBLSgX220Yh5OokCEcvDLePsEd3hV
-	 n04wzaW/Xa18FthxZ9CpccXhH+NGyrk06JqNnPr+u+zGNTwQTbtnTEPSzRYc+x6zR2
-	 sR+MHCmMcdt9pLgeVpffOPK2NyN2h4voVBYgqJRxcctvQT7U7FnHSZl5NtYD9R5/Ro
-	 qz7fPc5I4zUjSL4vDiWW++P+GO5/924m10Aj0RXs0Erl5EValAz7XIctrXyi3OsV9Y
-	 671b1eYAy6ZaqwxazHnfn3THIo+8EmkqnpHEpPmEs6tWsFQjmTvjputiLR4n992ZU/
-	 ov9Y41eErTZvg==
+	b=c0ijRPxT5FBj1zyYYkV+CtCHMhEqBh3OqcxeHc57J7hGoNvKQ01KPETCOu2T21kVn
+	 GvTkH39oANdAv9KVaE7bz5bSWC8XUGaAF8XCc9YQrfpO2wstbHXA8yZtNQWCQXOhoi
+	 ulRMDyX3B+UPbwU8w3OICU26opoF48+hPoTjSAJqZP79vJJFwaj9j4d7xsD/e/TIfJ
+	 9kc6NeI/rd2xLWvHOjDmLM0/RyXi6KzFJ3qOI4nfsd7KMq1ypd50Jn23Xk+qf1c71e
+	 oL4qjsBKmzGERt7mqPbX9ApsO6VPn1OgVE3XiKQpfwT/DiHFdCH7w5do5IuR8sWWdn
+	 DVeoFiwDu5zZw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.14;
- helo=out30-14.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.4;
+ helo=out30-4.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none)
  header.from=aliyun.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=o5pWleQc; dkim-atps=neutral
-Received: from out30-14.freemail.mail.aliyun.com
- (out30-14.freemail.mail.aliyun.com [115.124.30.14])
+ header.s=s1024 header.b=Jvz0Pym/; dkim-atps=neutral
+Received: from out30-4.freemail.mail.aliyun.com
+ (out30-4.freemail.mail.aliyun.com [115.124.30.4])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CdNv557dzzDqwm
- for <linux-erofs@lists.ozlabs.org>; Sat, 21 Nov 2020 17:34:57 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CdNvM65qRzDqwm
+ for <linux-erofs@lists.ozlabs.org>; Sat, 21 Nov 2020 17:35:11 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1605940477; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=QBXcVWMq23cZaLm0sZaKqjqcKWfN0RZQZbfv3J9UHd4=;
- b=o5pWleQcpF9aQ0FPqZd3VWOc9yfoPoLP4wwooEXqyN0EzwJu0hKFr+E52A+AFWyr1Jt9KACDby8w6/KYJx01MaOs/pnK9PyTjJ11aDYl9c3W+BQk/XJ7syMOBy6YDtU4iLtnFJa3R3Bt4Qq5eA0wQGpHsyMSbM+s1P1t7NpBFJs=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08884881|-1; CH=green;
- DM=|CONTINUE|false|; DS=CONTINUE|ham_social|0.00361831-0.000529974-0.995852;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e04423; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=2; RT=2; SR=0; TI=SMTPD_---0UG1Qswv_1605940476; 
+ t=1605940498; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
+ bh=LZj1EK6QUSpMSTzmc7xVvHm18jS2kb2Mihajo95bfQw=;
+ b=Jvz0Pym//YYFAkfTDT+H3Fs6KintCnC1XdXr4Bfk9eU4/0WIjDutBaOcwXzJg1m/0v9Znl32tSNZCdMrJ0b0PoSEoIYXyDOaQDlTP33qbgn4OOni+ckpgS56sfURCszYHV6lxCppGqmpTTL12YpVnyyz2hWOe0jhZQABnVeIbhw=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1964222|-1; CH=green; DM=|CONTINUE|false|;
+ DS=CONTINUE|ham_enroll_verification|0.00474909-0.000776753-0.994474;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e04420; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=2; RT=2; SR=0; TI=SMTPD_---0UG1TWol_1605940498; 
 Received: from 192.168.3.30(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0UG1Qswv_1605940476) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 21 Nov 2020 14:34:37 +0800
-Subject: Re: [PATCH v2 1/2] erofs-utils: drop known issue in README
+ fp:SMTPD_---0UG1TWol_1605940498) by smtp.aliyun-inc.com(127.0.0.1);
+ Sat, 21 Nov 2020 14:34:58 +0800
+Subject: Re: [PATCH v3 2/2] erofs-utils: update README
 To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
-References: <20201121022623.3882-1-hsiangkao.ref@aol.com>
- <20201121022623.3882-1-hsiangkao@aol.com>
-Message-ID: <4c8e89df-6d72-abcc-722d-23cd3e9444aa@aliyun.com>
-Date: Sat, 21 Nov 2020 14:34:37 +0800
+References: <20201121022623.3882-1-hsiangkao@aol.com>
+ <20201121022623.3882-2-hsiangkao@aol.com>
+Message-ID: <794ee690-5fe2-6078-d09d-351d603973e6@aliyun.com>
+Date: Sat, 21 Nov 2020 14:34:58 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.3
 MIME-Version: 1.0
-In-Reply-To: <20201121022623.3882-1-hsiangkao@aol.com>
+In-Reply-To: <20201121022623.3882-2-hsiangkao@aol.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,15 +82,9 @@ Sender: "Linux-erofs"
 On 2020/11/21 10:26, Gao Xiang via Linux-erofs wrote:
 > From: Gao Xiang <hsiangkao@aol.com>
 > 
-> Since lz4-1.9.3 has been released,
-> https://github.com/lz4/lz4/releases/tag/v1.9.3
-> 
-> Move this lz4hc issue (lz4 <= 1.9.2) to "Comments" instead.
+> Make it easier to understand...
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> ---
-> v2: fix "lz4 <= 1.8.2" to "lz4 <= 1.9.2" typo.
-
 It looks good
 Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
 Thanks,
