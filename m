@@ -2,96 +2,75 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 917AD2CB9BA
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Dec 2020 10:54:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D23812CB9E7
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Dec 2020 10:59:43 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CmDp60TDCzDr3Z
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Dec 2020 20:54:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1606902862;
-	bh=VTUrV/ZBaVn6GRZ4HcezvrwzTI/lefnzdlwENvxpjL8=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
-	b=A/CgNqPY47jAQlT64h+fGEsKPKJb1sX4x5mJ5MasjoPdgnGuXShwU8ERC4KA+Uf+9
-	 U5gPais7lg8UwLWF8s0+DqCkm3gUuUJPZrjMSA+LTdYe3UJ2lqS4pEAaseBOcO9QvG
-	 gJI4DxgDJvjCJlXr1GeA9f1M2WV/HHwVTLcLAc+wtiWDLT9y/riYGHyKoV252BXstN
-	 9tR+owhw/qRx7x84ZxYRgpq3Yso8WZMRUCIp6u0m03pfN4Lpar4G4ZA0F//3T8couC
-	 5R8Otgsv9CVbVBVynjZSaIf2FkEjmnNaLnEPIk9E16iyXphad1YmrmAUavqu/V+dUQ
-	 4fKkbYd43mtag==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CmDwF0VzWzDr3Y
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Dec 2020 20:59:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::532;
+ helo=mail-pg1-x532.google.com; envelope-from=zbestahu@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.32; helo=sonic315-8.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
+ dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=eYxexSg/; dkim-atps=neutral
-Received: from sonic315-8.consmr.mail.gq1.yahoo.com
- (sonic315-8.consmr.mail.gq1.yahoo.com [98.137.65.32])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=YvFQOzpx; dkim-atps=neutral
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com
+ [IPv6:2607:f8b0:4864:20::532])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CmDnv0BXMzDr2r
- for <linux-erofs@lists.ozlabs.org>; Wed,  2 Dec 2020 20:54:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1606902838; bh=D6kDA5aV1kzTixQSU9AIZHA/BVmUziTpSXosSScfkKo=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=eYxexSg/pCqNj4eZ7uD7mribLrBIztO99IQElAj9RZETvoIYxAXMlXJ5H7IYY8boZXcvh98crzcwYz+OCEPMK6pKwN6g+XrJF2A35YT4rtGRxv5o1oN+R5J1lfppUbm276WgCJ9vV57+ZWo0gglvgc5YQF24VTGE0VweMYuD+JzaULlNQQQ5jMJZKBVOeBwuQi7EIqp1lkPfBi2WBIlUhRS2yev7psDK44wQJI+kp4eG9D9XKSQQdvmTuLWBYLxuYeVjANMpZjkasRQGJFae0HRkaLtwbAWx381rOHIm/2olOACi7d4R9+eeNfvHVnrLxyBeFR5RRDtJDmMroURViA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1606902838; bh=KFbrvSUr4NMC8Lm2Roc8lN2/nv8gq7MQVqxUx4dDcfv=;
- h=From:To:Subject:Date:From:Subject;
- b=MVh34x+YoQItHJbQi8QD993RtlFHwTDFtRbBhxAdVyimus642E5ZFX4ryHdJB6r7SB+TfhK4DSycESS6g4q+6s9WHVydQxQwnIduncTdzcFdE3GgWdupGip0I17qhIAg+nArBrU08hIckVEZB3Sf4GGvPPKbUJqiQPNy/5C6km+azGvYWTEPzDwVefmGBSSEcjYosg9xyX9TV10UlPO8nFrGIrqLSeBm5mzTGk1B/xU7QkV51OQhgCRGJintJ4naEIj/UMc6gUdNE/Nw8/CZRhQiJ6S/CBN9B+yF+dWW5G5T839kZJc57kLXxXVB+bPiYoeTHudXyT+6ljMJujaaGw==
-X-YMail-OSG: NaKjEDgVM1mlvUhYup12ncGYCk72BUYKULFVT0fl1pjV4nPdTc_Cm8U8DCcXNZt
- 2GY0xeTZYp.HUKwjHPIbusoO1FbjkqQOLCQs6mxgXQ80OsgZm2RbLDh_e0qOnNyGlluqpsgx1ai8
- vCV8CkH2N3Dw3_nGeGlunqHytgNmDpliLk8pAr8S9RyBGlsY320XlR8T2SPg_L9BYuVYidx7QUqg
- oES_x.klmNOTfFVU7LtAnFttRkiFs_k2x5WkyIy7UuWFRUsOzFTOVE0DYj3d1L4kY3ibquCmfQrN
- bVXc4I3YQo95T5eOkhfg_8gMXVdvhQn.wpfvWPsUozhXJNiWh8RH2r9Q.m_funyzenIkXmlya4FL
- A1EFfKQt_NyljIEs9orDT8Cjj67.DWvw8tAH6K.oUKRJzUSJrGVgl.OhNx3VwVtvs94Msq.h7y4j
- ilf6gs71zQRNv.G6spXfVRyv34_rw1Cmt9nufXwP_aA4UwSCENGrj2neiIq1n2uXDZsPJ6hmxxAP
- 9daq_Eeyy0pTcVhj76x8mlGnSnlymEWLA7hiz0DT8YXveSzVqs4rSwavdFYT2X21ok2VsSRS7Dxr
- Rj1yOT_GKxm.3BxEF0A.N27AFq2yz94gSlWDQAY_Rad_AX5wPh4By3jNTsnFvmnQxgZRuL_7xvOb
- YTRYYfCHe2xeHrcLLI2ENztBT35x0288iNwwwWvQz0BMADAWIVRlzBKUQyYzGlCu4d36svFLhvf9
- AeaVYapfIDW8t2.SVXvmiHfAcx9HGF_O5xaVpLL3XyFUq1TSN7ohS5DPdkFi.mFq2jmHgmRdaUgf
- PM5EXAhU3_ucBBnBl9vjW60rxGBkTNjdFCjOf_EaXmHbwkAnHw.6qebbXyO5yVfH9NrDliBH5Zd8
- fxIvX58wuJNkB0Vds5wL280wMSPlGS6yQLq724yuhvkFw2i44C2gH3J878VXPMSaPUHtkE9WoOAU
- UxF8OmSY6N3w99r.wMTYVN6oVqoHfLzEbenfRMyojtw_rKYezPSIDIbPj5G5gDu8Ne5dZI5OfFeg
- oFpW_AFA1kh_3JVoYxuzqftNk3o446zUV8TSdBKJiczsVey3BLmgR3c_Q9lgydVrXfWDlkm49eBV
- Wsn6SJ7GaD6HAI85boesO51MSI7XxQ0BeEJwIMBcYgJEr57I8IjSRwzscY_2SswkXVXFT1Cn1qzX
- Jkh4T8d2IP.6rLY6YewBpZFGNmfAG7DlRuYTO7DxyjEtzouQbpEZ_y55m2l0ikWOnj8gbD8wj6Za
- kK0YhbZ1ceIxVMGGbvS6GnQ.SGo9Hc2gZNG3JBgsHLNZsUw4kDP..EHdcWeQgIBiR6wkc8ODvk8l
- YeEBMN1_OMt2o8ptk_Eh6ergOi6wuIZolm6sZrlGYHADM1UHZ1nuZKZWimGkyo8EGpQeL4YXHeIG
- Ct6bMpAWF4OhPdmgqGucW.P7QomAd4B8ZAqr_xy59_vVpFoXXcc8xOCPJidGAGx.jquy6DXedLdm
- WJ9gJvqkwoak2XbfD8ZrXgbXn_H2l4Lg59iXZT2lLXG8TuKWkwwIyyYuKxy2_hz4gmnyhbotM3JJ
- wsexD0VYaJjIUStyp4eHL5xWvOkQ5gOiGEmu7vc.iDaRwBlfsLR2XM_9SVDfvNfZmjLh4RkuazYv
- .8WXkbv.IAwpDm8jcdOq_4Ia1w6_1qzTY837c3c5Aplu2M9uTjTgOe2IR9JFw4iGCNXyaKrXsLIe
- WjyfAglv2LjybDy83Au0CaV_u8gx5OlXiZM6yxFJ6XWW74Jg8.RLwOK6P5mZwqkfj8JVidsa0a5i
- yv0v4udQFp4wrx67xWy1oNOGujx1mg95EGRdWf2Wl5qN8.sn1aDZ7Z4nezQpr0sE9EY07NPOEmjL
- ZKOTrg.OI1LMZ3K6_hYsocbXaeK4_BmOA_RBOVNntF8QabGypGTxSv_Zv3.shUfnkKvVioMzotlm
- u2rrsVzkRm2xUFSOFDPXJtpYYXjk_b6Dwk3.jWLvj3vlbDXhyS.I12B9fThlwPJa0b5hlZBMvzef
- 8qBMOA9DZ60nSewc0ZhV_EpsEMWKuhY.3qJCvsFzNYWAL4su7D6hMg8qhc58hs5dKiYhe.ArfpvV
- ah.tfTXufCW66ixNfwHGPKFriKQ.Sg0i3a_N7jcn5d27H.E74WKs3EN83BvCV3BRMAmed07E9Jgz
- 6aiRLwY3vXP7haA2QeiuxSaHLkC1F9fHJykzCnHILGbAnX1RK_l3ZWH3OVFqDcNT..5Yr55bAqta
- dUCIKxKnwPRY2Q6eSgs2Dos9jBCZuN2zLPC7SVCegz.qmSV0Oxeq4q6yFsJIVgMRqYhmO_Z.X2_c
- T9CO7pgS5l2a9UpBL1w.HA.yG2gy1iH.CJAjc9bkz8RL4XIyp_Gf37vcPO.3n9_XtfSVKPDRg6rY
- mWQbYylqSr033ZGbt3tcrPR087afOFNx2RndBfmiz.cJXuez.lfuLdW470NvxXDsembXG12tF.m.
- zDe27PiyNWYKjAgHhVrk1ax0u3C2BiDwGucBjjKYmEM6YGd73wmhq.7jSPcrjt_E8C76kPJfh5u2
- DIZ0TwvLSnVJUFclv9Wk7xp5EvI1qc.LUoSY6HBkbZ4isFPsDT3tZYlG.7JS5S0GhhqgJ.77n1Z2
- IX8goa_75f4LpzP6q69PazeP0oTJObbFE
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Wed, 2 Dec 2020 09:53:58 +0000
-Received: by smtp409.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 093915b198cd35a57b68a434f9458e55; 
- Wed, 02 Dec 2020 09:53:54 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: update .gitignore
-Date: Wed,  2 Dec 2020 17:53:45 +0800
-Message-Id: <20201202095345.10485-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CmDw61CxhzDr0K
+ for <linux-erofs@lists.ozlabs.org>; Wed,  2 Dec 2020 20:59:33 +1100 (AEDT)
+Received: by mail-pg1-x532.google.com with SMTP id i38so721464pgb.5
+ for <linux-erofs@lists.ozlabs.org>; Wed, 02 Dec 2020 01:59:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=date:from:to:cc:subject:message-id:in-reply-to:references
+ :mime-version:content-transfer-encoding;
+ bh=C8+ubTkFDb8J1f0gr5a+Bm4u1/nU6r2BzxnDBb9Es8o=;
+ b=YvFQOzpx5ZkaiAzl7cssNZQnfgfYizL3yEwuoef1WEPT77NwdLjBPMckBQDw5nVAPY
+ oFNxVSA6a3GtIk2jlAgeMVLpXDPZtqSaFw0y2E5Q3UD/0VsGKOwD9NQnOwoDP8mE5Cmt
+ C8bm7a9cDi1KYxn6lGLY7UU7m8T9Lx83ONOavTldV78ApQidJOSuaVGESIZXt3VCsFSQ
+ lgL3uleyw8jSeT7/fHREpwz2ZAM8Qq8QlM9GYEz8qDpSJflk5dkT+Wt/n9oc+5qEpngs
+ 19d/u9a6ol7HyiCDJVNLJla9XkW0gBnYwLtilh5rBHqzRv6fTGntKizqkhrHl5X6HjGy
+ L1tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+ :references:mime-version:content-transfer-encoding;
+ bh=C8+ubTkFDb8J1f0gr5a+Bm4u1/nU6r2BzxnDBb9Es8o=;
+ b=XCx7EJXBYb+aRuqzvU1zLSm0/elmpX+nW1j0mJ/oUc2EVCmXiATYQYAXm9GygnOlW6
+ q+hTYCntiiW5F5p9uH8QwXP2DSpExgNOYobiuc6MuB5YDfmXGgvof4ZCthpHRCVwcFFZ
+ AsYx2nN6pv/OXnffad+De93bzpIUkrREmmLepMuURlP3by7La40BM7aH5Sn3RDK5SxS2
+ 3nDz2DhFIappwH+825qcI7VEACqmbjZrr134Vr225nsNIOP+rA20JkO0nim8BHloiwBk
+ s9pg5lxnR4EDFqvZmLyvd7RfcRj60tMK3/XTqW3uu0sCi+4s5sG5L/XhQU2LSebHmGQx
+ nwCA==
+X-Gm-Message-State: AOAM533iumoKYX02xe1R2IsXStwmq4b75O9PDtTFKbTiXd2Ewnnx6yVV
+ 74XVTqnzhSry9Q+A33FrXgI=
+X-Google-Smtp-Source: ABdhPJwYIrcDISA77EQrdq94p5wiJUoxP7QP+M8sPPtW82gkRe46hxODw9nt3B7PCuRYJ5ZRWhaLsQ==
+X-Received: by 2002:a63:484d:: with SMTP id x13mr1944847pgk.301.1606903169459; 
+ Wed, 02 Dec 2020 01:59:29 -0800 (PST)
+Received: from localhost ([103.220.76.197])
+ by smtp.gmail.com with ESMTPSA id e18sm1597708pgr.71.2020.12.02.01.59.27
+ (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+ Wed, 02 Dec 2020 01:59:29 -0800 (PST)
+Date: Wed, 2 Dec 2020 17:59:29 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <hsiangkao@redhat.com>
+Subject: Re: About Segmentation fault of mkfs.erofs in AOSP
+Message-ID: <20201202175929.0000666a.zbestahu@gmail.com>
+In-Reply-To: <20201201115158.GA1325175@xiangao.remote.csb>
+References: <20201201192309.00007531.zbestahu@gmail.com>
+ <20201201114253.GA1323470@xiangao.remote.csb>
+ <20201201194843.000068c5.zbestahu@gmail.com>
+ <20201201115158.GA1325175@xiangao.remote.csb>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20201202095345.10485-1-hsiangkao.ref@aol.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,42 +82,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: huyue2@yulong.com, linux-erofs <linux-erofs@lists.ozlabs.org>,
+ zhangwen@yulong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add more extensions to .gitignore.
+On Tue, 1 Dec 2020 19:51:58 +0800
+Gao Xiang <hsiangkao@redhat.com> wrote:
 
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
- .gitignore | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+> On Tue, Dec 01, 2020 at 07:48:43PM +0800, Yue Hu wrote:
+> > On Tue, 1 Dec 2020 19:42:53 +0800
+> > Gao Xiang <hsiangkao@redhat.com> wrote:
+> >   
+> > > Hi Yue,
+> > > 
+> > > On Tue, Dec 01, 2020 at 07:23:09PM +0800, Yue Hu wrote:  
+> > > > hi guys,
+> > > > 
+> > > > I'm trying using erofs for super.img(dynamic partition) under Android 10. But i have met an issue below when building images:
+> > > > 
+> > > > ```log
+> > > > EROFS: write_uncompressed_block() Line[140] Writing 3517 uncompressed data to block 63950
+> > > > EROFS: erofs_mkfs_build_tree() Line[1011] add file /tmp/merge_target_files_jnIVhM/output/VENDOR/etc/xtwifi.conf (nid 8185600, type 1)
+> > > > EROFS: erofs_mkfs_build_tree() Line[1011] add file /tmp/merge_target_files_jnIVhM/output/VENDOR/etc (nid 1790208, type 2)
+> > > > out/host/linux-x86/bin/mkerofsimage.sh: line 79: 188014 Segmentation fault      (core dumped) $MAKE_EROFS_CMD
+> > > > ```
+> > > > 
+> > > > Have you met this kind of issue? I'm trying to debug the problem, looks like memory related.
+> > > > 
+> > > > BTW: i'm using latest erofs-utils in AOSP master branch (https://android.googlesource.com/platform/external/erofs-utils/).    
+> > > 
+> > > Which lz4 version is used? it would be better to use lz4 1.9.3
+> > > (or 1.9.2 with some unexpected CR issues.)  
+> > 
+> > Hi Xiang,
+> > 
+> > ok, let me check.  
+> 
+> At least, lz4 1.8.3 ~ 1.9.1 are buggy, for more details, see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/README?h=dev#n107
+> 
 
-diff --git a/.gitignore b/.gitignore
-index 3a39a1e82e55..8bdd50518074 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -1,11 +1,16 @@
- .*
- *~
-+*.[ao]
- *.diff
--*.o
- *.la
--*.a
-+*.lo
-+*.mod.c
-+*.orig
- *.patch
- *.rej
-+*.so
-+*.so.dbg
-+*.tar.*
- 
- #
- # Generated files
--- 
-2.24.0
+wow, working fine when i upgrade lz4 version from 1.8.3 to 1.9.3 bypass vndk error.
+
+And seems canned fs config processing has minor issue. I will double check and submit patch if possible.
+
+Thank you!
+
+> >   
+> > > For more details, please see README.
+> > > 
+> > > If the expected lz4 version is used, could you kindly leave gdb
+> > > backtrace message here as well?   
+> > 
+> > Trying to get the bt for the case.  
+> 
+> Yeah, bt will fall into lz4 internal functions if the lz4
+> version is too low.
+> 
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > Thx.
+> >   
+> > > 
+> > > Thanks,
+> > > Gao Xiang
+> > >   
+> > > > 
+> > > > Thx.
+> > > >     
+> > >   
+> >   
+> 
 
