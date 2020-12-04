@@ -1,96 +1,94 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D3A52CF305
-	for <lists+linux-erofs@lfdr.de>; Fri,  4 Dec 2020 18:21:32 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72DBB2CF36C
+	for <lists+linux-erofs@lfdr.de>; Fri,  4 Dec 2020 18:57:16 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cnfd534RBzDrdK
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 04:21:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CngQK2CZYzDrS7
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 04:57:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1607102489;
-	bh=r2hUiqeeVN/0DzlTnttN4Uhlwi+5YUksyBJwHTXf/QU=;
+	s=201707; t=1607104633;
+	bh=pUGqOwHjzD2Tpnt8+mwlDmkuSamYZClWBcqz2tM7NJo=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=P8A/DnMUYrIMi1zeb2ompjI4UiJsYM5xqj2sYuZr3SUEZZlBGIbhNkE9BU0/ua0yM
-	 2JgMmtkHO2ZxPpIVLq/GbRbaqGfHE7oWYKVeglD0haqU24fEX9+vQK7mIdcq8H72Oh
-	 kj2hz+oiJRvW6b7E/ViRBK6v4vJD5vMNb5GSaftNpB4wU7we6rKITEEUAEWgLyqJ2E
-	 G5N9xZcaesCKKjlilF8oKt87m1RRsJIXWyKdNrUjNey89W6aQgIDDzr24sD8EZq0wv
-	 uHH3dhPVnXTZo9cOgabLxh+y5XVA5WvLRhhjV/6s1ojbc6H2ysw617UVaIOVwnKF9G
-	 fHU69aPN0/9hQ==
+	b=ZW0xdLQT8Triebl/XFBr3yymM3FIx8XvOqR5/+cjAY1Ri0vGx5roafoUmjbwo/NpT
+	 tPcPYvRIjsezCb+gCt2qrzxaW5ytlsR9KJYbwWNWMTWX+l4oBpvfpfe+OySUAy0Q1f
+	 p0HoION2vVFbPiV0hMIUPEBaaqXieXlNuuoXGCO9AjQhbNoLw0x//2AVc0CsCA153n
+	 0UsWs7ePLDN3NYU0jtmGIYEyOlchTMaMC/6Pwp/FgRU0luVJ+eyxlSMGaS3awywwBd
+	 uJwfbRHFuAse5RYl7SXgFgG3MzqmNuaTDw8VEgX02QeXdYydgGl9bcRWX2dOC4KP37
+	 FSATZcK7YJINw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.83; helo=sonic313-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.64.83; helo=sonic305-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=hZEF3e2k; dkim-atps=neutral
-Received: from sonic313-20.consmr.mail.gq1.yahoo.com
- (sonic313-20.consmr.mail.gq1.yahoo.com [98.137.65.83])
+ header.s=a2048 header.b=CpKMYXzA; dkim-atps=neutral
+Received: from sonic305-20.consmr.mail.gq1.yahoo.com
+ (sonic305-20.consmr.mail.gq1.yahoo.com [98.137.64.83])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cnfcv0ctGzDrcN
- for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 04:21:18 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CngQC0D0CzDrDX
+ for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 04:57:03 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1607102474; bh=PnPmhkUjsnLKuXsyFZiM4dUXK2cWo8nDn13Y8WIUi2Y=;
+ t=1607104620; bh=7vPJ3lZnqV+N96N19iorxPnjzeD1++MeZq5guvWHnfY=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=hZEF3e2kEAEpuPsLcSLf3tjJiWzpWEHfSj+uP6XU+5yKjtjeyM7rkPknfMZlm+j0uWh8Dq+9nohRKSAv3GSyG3YanVNSaKbECvnNRZPGv2vQQQwu/NGnr2JcVR6QicrCA7T7rpFgR61cYQwPip7rAcicBUHXU7/8TL5FhpWORv2U9jgHZqvIZEhGfXk6f4Cprv3NX/lOij0mqAVi+WdMh9d+p02jyI+5MuR/2gFND/ZoqWgEbxzrubWIbuI0IDREpeBuO0Q8KKvRsqq8WlXOHjCf6FS9+B8a23i+MsTvjToEy1fvlqBwV7qz1WWSVZeMS/e+hhrqC0YTFt/c/CuyYw==
+ b=CpKMYXzAUuWwSr4lzrqVnHorq4mhSus63K6XD8eRuqGZSgjiPp+ZFpBdw89A5LaFxmzRTyNtrnrDo2J1doPG5XKNerunFVhba3ExZnIQt/tZyGwSH+BlnLgXug4MspkKmob864kbzN0ROCXdhb8IyqtBFbyA8ncJA4W9SohvvmTlWlRg9VmXB/ff8ek0Etqo5E4gmLV83WryA1QXVfCVoIZ78bnx7cb0YJJYmfMXN3vtzyknpXVU29sb1+QW1bl1TJ9/CE1Vru20i7kDpkCzWdREa36M/CZyhA3hzkn0s5jKvueYsIpQMCcu7GFREe56RYOUGFBQhmOy/1DLbJGLWA==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1607102474; bh=oi8hhJ+TfGSi3hjdyR3soGza4JcHgrjz8O5DDRTSFxF=;
+ t=1607104620; bh=Rt5m/RAcnwjdl4F9epuAw55IdyjzaHS5qZSAQ3/7UeR=;
  h=From:To:Subject:Date:From:Subject;
- b=CqD3I8o8XfP5DozOgF1fgun0ZZHL5vLXvNM3/kn6RcQG1qOjHA0Vz3SgpahjhPLDJGbTNcmXgjw8ELYARGyRhtqNBomPbqz4hTx+H4YV7L8vHhZE15kXHAvh2rbf50UgVwAPAd7vdudae6Jf+H+nKtA6fZtWy2EKpo5ZFnPAYUwn534tUZAMPOdSGn1UENkjtn3cvnNZONOFgpL4cG7hy81SuMWQkpuCIMJZrYa5JjdZRxnbPWye7Vq2xk4bXT1kYs9/IWQX3BSkpD5CE4aXaLRKs6tb8J27ncEev3NPthopPTUaMFYRypFOMlXycAuU4ncUFzgZ7doUP1zn0aDVow==
-X-YMail-OSG: 8R3ewqUVM1n9kOMC_OCAWgIGoWgAEQo.Fc.I7Igd91dAK_0uw0ZOPCJdPwoCI0.
- xY2qOR1kLvr4i9GvXnItAaleiO_hZo.bjPdPyNyhd2jzk2RGt0eFFQqfijb2y8KKWQVSUitf0H1s
- eITZNVNqeuLLigXjUPN4nV54YWzZBjS87jRd9cmCuP8ycnUmphPq.55Z3LfSLO3YRXMNVcVyrPVP
- F_R6iHjb_a2HEhiMLUziYzh.iUVlOCbWmTYin5Pqt855CBrhvZTPZv.5MbylpE2LG5ZUVjdnC7E2
- T8G5cin95uBgL7XS9ZdQORN43KiyYffhcNfzUcAaz2PW_d7VvKmAhPisDhXohGXRcU9N09Pqeb8K
- Bcxasut6JSINLRbx3cP3LKVoyC2SzM1EH7tglVe.WTAwxNHrQnEc_4sCMtRULyHy2zq67bMlIgbf
- uNlywDR7o.1H2ypJGsxDcC53FNgJLNzhIwKOd0TY.zdisdq3JVBeNztLUQqkRDrOb90pE6zlSerW
- IVVd6BfUOqkdzSlA.2tK7c1s1rmiDwlfX3qeSE0JOAjTKL0RGr40FBJVkVPTdM1Wo5uCeQWbzFr9
- sf93ct4GLuK2ocKPfd9_32Nuint6i5gLcMtJ4AqfcA9ASL6QeUKBlITfeMTdi6ofWcuochyX4kgb
- Ccx0YniXBt78IAUFFNXHs7KZvhmpdwkn8bEjrcIQe3tao0hvXUV2Ofse_6JtP7WGmAfAE1vUccQA
- rUW8U4_9GCcRFrYj9h3s4dD7xv.xGf.lWVcMO.pDjWVA6v4MkypjYCsy2BS.fnRnesZhDVHCZ2PJ
- tk5pO_Tn7KGyoZXStzYCZ_SPbagpu7aVogtjaHDeSLqQvTRqfZ.3dFdzt18j6YxAdt5ifyuVcGyH
- 3fbWJUNUoAppcdzlVHL89SjiEBN0XnmSj.NLrwG86508Td5J.8mNT39Fyd.1c6.oqKT1sBCYhvRe
- jwBPPwDkYLfk2iyiND1YhZ4LCKNf3LdHHLIEPVV.x9923Hr5brOSLkOifXkSjYVQITI_JoE7hm5I
- w1aNhapf2_5fklixn8xBcAqVPdtkBaMnKtBmz594cVo4ohk.z5p.8bDM_UgeaSdoHRgf7TK81hYg
- GP97Fjoi160dM3_RFUDXJ6_KMR8pof2sDGeZ55bj6bGrG4HkG46Y67kTZtEaHjKOs7vAQiqlLdJn
- pqVa2b0xl_iOGA7fghcXAVp6rzjf7m7KlCGo18A5PrvHMF_0D1ljF2qiQObUcFGKSyvo99a7gn_o
- kou0nl8FOl2Pk2MoGremQx_DXPyQQISupsL150lDnRsKF7h2yyOO3..4KTUaAjpt_J0ciPYz1VaB
- hnYJDP3RwCnpowxQJJhPv74h67_upmfdG6wiS15PNbVG_0GIdWbWaEqSyAMm1YOT_l_NH.Z09lcu
- 3d6SrcR_84.MJdP5598MYBQtDtB5UY7x2HSLRcdOmRbcnZl_d4IUI.hSSSxUzCHvTpEqU2Foyy7d
- .SvhR6S56YlZkwvhMwJCLWutPBnENJs.CYCX5KffgAUtAr1XLbn3LUTFQ_7j8_FhX7N0Ie6X5YQU
- ITysBEUd0dHNQCM6nBVSkbacnOyy7im4Ldx3xtRaiHaoYr3vTlHuHBoL6sTkyEVGbkda_ZqQIfaD
- LRKqfXlokg2NG7IUGP.PeeZly6gOqm7s1pov652mIYol9y.OVJlUF3oA7Kec148eCqXIPVj.vSmN
- DZLuWPe6G6WGYAtA.M.SfRR8DAPyZq_fXCIu8a8Puf6M0ik7GEKQHSHO8YOwER7btzH4KNpRQM.v
- XAPUB7MuzOrTYHaXmYCc_KWmvmjM1dak9LPgArRNvC4wCFsR81.PFoxIMVojT9bnkxt69CETCcU5
- gdJqv61x2VXVVq87r1sCnMxAeAg04OzzWS6rRkIwsvx.5QRQGkVjn3gm9dPC7i2BbDqHG3vuxK_X
- R8MfnampOl.XvKBXg6NvUS7mA_Y5Sth99THTMeUbMGlkKzyPPbwAlJLtyx2lHnDN_dqzeoDz.3uD
- PQp8MrYU1XHvQGauJyFecMX3rkPEwD_8UrNJQHyUIqMEs4CruyUBn0RJ1pOu.dJLQv2d_Togflpi
- ..YQM3CXg.AlNWhXYuVUwsfuMIV_7JEPnHgT1x5CxSuSFkx9PpECHSLpMelNeJov0cA996O3YYrW
- W45s2eDmp0SAXj22_0_kuGDthXzALqytvuw_WNCy6dTVPpGVFtI5oN5kXRshaXjtM1lcwzyd349l
- .NdQ1AwcrL4Z9CP4GCh3wfaYeHElcVTE5XLDUUzlrlf6YBeHwx58bqkXKhb9ccgvtfs3TL1VuRD2
- uwnHItfw4iJIczieO0Z3goQ4C0DD8yjeFadTbX8y81WJBMKYTNlj49jW7oCcketsO8IdfK1vLa.4
- USEzo1w9_zHgge_5wKPeDAJQcTIEzjcImOkHM6bfAcFPoQX4av5FkzfDCS2ce.l_IZBgwJoEtLf7
- YFM1Ghfx8nfwIVOTNbKAepAzua6SYB6a9AIPqfwREXdHRH.TxzzWAJGbos3TZ6KrvuAZ.uxvrJyg
- y7SY.3LvTz9s2Jvgh62N3zR8-
+ b=b79iCV1zeNKGy41gx2WlchrmaH8FmD4rZu0RhklA4UtXh+jWPXhk6WJ37wcj/299zJ69dIVuDJwqdtwbGgBWERT/VOTSyBFsvZpLyqCsoTUj6Z21DX7tym6+yJoH7E/dmcNhps2jsTAyg1VxpMiCAum2OmGrQjnEC3dCuT/gEgnP7/4/R5HKGIpNjR12FlEp1kzJBiqSQ7MsUmw0kCQXO+siE6d0nvMSMmb23TkVaKfxWdfgEKKB6PrvVOJb6JlTxYDhTFYCyPyMiuSSugMpl6yOR9qjbwWgEC1DxmYo6nIHjw1Dlw1Cj/oTTf3rBLmGRUqF2r5FV/eGnfUOUWimQg==
+X-YMail-OSG: 9ttOO5wVM1ndo_OiqFeLAgCT3rUJiL9kMy21Rvgh0n3x7CcY8c5scuYIaD2lJfq
+ oGgdp0zrqAgjveFGWn0zFfOPGrE7N9Yt.tdqnBAz.87kafxRi63kn5rSrFT7eF7vTQUXn9nBI2hE
+ W077JfcVS0fIvWrSWZTNNLkcAlSdZQehvOYOjnwp_zXiDRKz8LMyP.xYZBb0gbpiA2rD8fF_9Ixs
+ qCZvjxLI_EPJntUMaZBGUHqZE1sCh4dgJkRv3yd23PLTh_utkMO549P42QDOGd.xIgfaLoNVD61n
+ MqJAR9O2XLo.YxYDhyyaKrvmiGW56Xb7oY4gH4T2hgsn_qaaWwXOu6_npuwsAB.XZFDbaxKJ1V79
+ xiz1ZCIy1f.mbRFFI8BqiH1Ym4qiruiaxUkn1ps9xNNGdtP5zm_Hov4t.mPAGMOBIEGjahXWc3xq
+ GCJunD6NHNK4IbWG2rgZJmjkpqjwNQOTi.bYEkVM9vsPD3t1uqsDReyXiBaUu1VRtPEOa_4hktuj
+ QDKwjIeiY_3W1OnPcekHPAVHZ4XO76V9zfwDZ_dAMCg_fMl2yxdlmlzW_26O4XdYwboVegCoZCoa
+ DMY9CXJH7szvRG97WNmLRb9k9jv..3I.PAkVby6HqcNuf3HKnl6RLGUJPeZW0fV08FnYEWTZunGW
+ IsCcOSSAaciq44AqhJ1Tnjar97vLsq7geqvoNSXUVJrH0gloYRA.FJPTxrdQ2m2JRLkRoozabdHP
+ pGPtrt5i21oHErbyZvSNh9QWz3wjbGKVpEmc1WhwslBObQRqyEftPfc1h8RwKrcOozaLCV6BaeK5
+ voMMTD1eS0jZAkMWHawRGKeV06zMhebiJ.Nzg3OxIXu1O5etsHVj0ug.E3sJGQ29FRZXdyD7O_IO
+ UnUr3S..uCrJNv1gKvZLj2uygtUqCaWUXv0J37ZxxycbyBJXVSF_C58JyzETmV0M2T2LSMvD0kH9
+ ZekODx6d6rjYUe1TyAImSNxZSUzKS6va9Bj84wOsdPbcAxL5Ym6Bs5wbQT_7SiOzyoIW3GvioETX
+ djr46gzd8aTf1QCZwiouShJNPI5pqCrIk4ee66NF1Dw5dSfRAQ3bkGoWrX7t39iimW2ehEvzLDhV
+ _L2QmIxyOu_di7UEmDkdAWiIE.OISdnObPMXHRsWFoOJNxT.D4iHA3SPm01TGL2Zc2qDbKkO0FRL
+ hu5W1yClXK2rWKKjRqdb_XVCNT4on3fVnv3x8RNwv6X2V3_ZCSqynYReF2tggv4qb_ke3XKufDPl
+ TDhp6n4leijjSIxvsqk2cxb6JFfIhXzTkKR9yZOnmF3cRXvGw2yqGSR0Y8yImK9lXmFzag7azbwk
+ 01XRDn3whSVtfMB1gbFzWxWmLGpoIIOgMx3xAKRSi7TqCwCtHXe9WfAqDXsQTcjUeBG8zhSPgJme
+ CO7QxPuRoLLWeSGbWMZQTCsp8IOwGvg5i.0lOK5kOu.z9RXUaj6IBO_Vl_GumRSSyg1ZrTepHhva
+ QwbDShrhlXa9C8QhtpTfanqeTchfapWypEH2Qs0Gn0OjHlOpmjHFK80jaOphp5vrWmOEo98WSgv2
+ vwqrXRbjI8HLC_0mGe8IHpQkJGlraHge8agG01wGwomPSJDpCMigU2DaTqYsZDVWdUFXUD6u6Wn4
+ zeMLU4UkjZUQ8tBiGRYK0fKOk8AD7iEmcNMKRrbKvGNzc7LXl97N28sWlLUPQsMQkdgcAwdH3EEA
+ vZWuPTFYf0PQAUF7QcG6yVhq_B.JMOvjeX2Rt0zpC.8Vxy8jIMqOkjCJUMWVVIXm_r1SZpub_dYm
+ DYGpRkXW72v8CdG1QJjJRPWy.Mtq23UxCeczt0T11EJ0eATRt7vmNsHsa1cROJBL5nqxOuEFy_cK
+ Krx6G9A0I0RADOy06k8Bs92hBQssIkpTiNOnFujw40Ltj0tZzYGHaMnpLCSK23.vFOYvdMuZg.7F
+ 0nbfRwB3r52Kiw6eEg9IEFycnrXjVmCdfSOilttKOz4oUernKPYhyovX2eGXqecKnoYYC9duSGh5
+ uOyeNsgTs.j7cEnnYzJ1DHvFtKSNlj4RCPJtFmfwucKlhwJ_Xwf07In5xHUEwI_PzgFGQ1gC9Iop
+ 844fRvhlBhao84kEpThRNdntXP0ti.PMh8MtKxAV_PDUtCiaYa4u1gjJdI29Ua4IasAqYs._enqL
+ b5vS0jRus7Gkw_9TCGdRYJ280sTX_bkyCYuOW4oSOHD0mfNzD2mzK05myhtuAlYXH0onxKiTuL.R
+ kcwTt.tVObsMueJuw8_jBXl4j5uMcopgDmG9c9CuI7qzghlzMt68dTbZdlHpJvurKLMuUcIHdMF_
+ vi55jdKNefbRBBwH59DHsfPsOwcMnpDiQdBvnviSQ9AA75h6VkdJrPfKkFWIjrpyaBRPcIqe6eLf
+ S0XZL7GfAWv9SormKdvBIPzdw93hmq0nNmoWlSKy5bAbMaDiaIkt.
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Fri, 4 Dec 2020 17:21:14 +0000
-Received: by smtp423.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 08fdc92c5476471ec5c1d3f3f35296c7; 
- Fri, 04 Dec 2020 17:21:10 +0000 (UTC)
+ sonic305.consmr.mail.gq1.yahoo.com with HTTP; Fri, 4 Dec 2020 17:57:00 +0000
+Received: by smtp414.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID a3d4890ee4470c265d95966fea2b66bd; 
+ Fri, 04 Dec 2020 17:56:55 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils: fix cross-device sub-mounts
-Date: Sat,  5 Dec 2020 01:20:42 +0800
-Message-Id: <20201204172042.24180-2-hsiangkao@aol.com>
+Subject: [PATCH v2 2/2] erofs-utils: fix cross-device submounts
+Date: Sat,  5 Dec 2020 01:56:42 +0800
+Message-Id: <20201204175642.3231-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20201204172042.24180-1-hsiangkao@aol.com>
-References: <20201204172042.24180-1-hsiangkao@aol.com>
+In-Reply-To: <20201204172042.24180-2-hsiangkao@aol.com>
+References: <20201204172042.24180-2-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -110,8 +108,6 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
-
 From: Gao Xiang <hsiangkao@aol.com>
 
 Use device ID and inode number to identify hardlinks
@@ -120,9 +116,12 @@ rather than inode number only.
 Fixes: a17497f0844a ("erofs-utils: introduce inode operations")
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
+changes since v1:
+ - fix improper inline comment update;
+
  include/erofs/internal.h |  7 ++++++-
- lib/inode.c              | 18 ++++++++++--------
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ lib/inode.c              | 14 ++++++++------
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
 index bf13c166ba16..ac5b270329e2 100644
@@ -143,7 +142,7 @@ index bf13c166ba16..ac5b270329e2 100644
  	struct erofs_inode *i_parent;
  
 diff --git a/lib/inode.c b/lib/inode.c
-index 1cf813daa396..cad94270e6bc 100644
+index 1cf813daa396..618eb284550f 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
 @@ -35,7 +35,7 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
@@ -191,14 +190,7 @@ index 1cf813daa396..cad94270e6bc 100644
  	return 0;
  }
  
-@@ -824,12 +826,12 @@ struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
- 		return ERR_PTR(-errno);
- 
- 	/*
--	 * lookup in hash table first, if it already exists we have a
--	 * hard-link, just return it. Also don't lookup for directories
-+	 * lookup in hash table first, if it already exists we have
-+	 * a hard-link, just return it. Don't lookup for directories
+@@ -829,7 +831,7 @@ struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
  	 * since hard-link directory isn't allowed.
  	 */
  	if (!S_ISDIR(st.st_mode)) {
