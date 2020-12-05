@@ -1,91 +1,97 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 231B32CFBAB
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 16:16:40 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7CA52CFBEE
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 17:21:31 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CpCpX5y7GzDqjg
-	for <lists+linux-erofs@lfdr.de>; Sun,  6 Dec 2020 02:16:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CpFFN2nvQzDqpK
+	for <lists+linux-erofs@lfdr.de>; Sun,  6 Dec 2020 03:21:28 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1607181396;
-	bh=e+BhMUiqJppTZiAEr8By926z5ZFBpe5FrOTzHUXtdLg=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
-	b=dFes2hhjOKx4L+lsSuXJZ5Y+yCtwO/DQ4f01Rdj6i0qAsL6OfSTn/TpQNjK28EbLd
-	 IwP83YuGE19hkUezmx5C4Eq2zD0KMTVBCpPLOdi/bqmQfkHuD5kyG3HxN66CdMddwX
-	 9dK092s07EA6RtZSlDtaM+Q4OdKN9vZ/5CHnR3/YN+btEjjzkPky5a7TBHx5Mc5wKK
-	 5TRYYA14tE4ovah+gGKcjDowTycThkt0npJC8A6/CGog2cmHVuzDDaHHu51EcZ2ZAz
-	 zl01BGvCnqZ+E107KETyx2OTTq0X8tby1AtDOF0PYny8euVeA+LwDNN9svR000zjDV
-	 XM0XranERh7BA==
+	s=201707; t=1607185288;
+	bh=pIH6iD/Q5cybHDnviW6H76bVSRc0GSJwxY+QVB5qfLE=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=idMq90EAUv3p0HR0nkIBTjCdAgeQCNyPHnDOs6F1SU1yztIicBgG5Ac4AeKfZfzd+
+	 Fs/xjucTnL++q9a0KghcyFijOCoi+5oyjysXadDQg8pmlw1WsXFR1vBofvSWZsIeBt
+	 7luMbbD6J9HmJVga+fU6kY01ycWOrW5UieUoQO6nUQ9NVG1vMIJyyTk/1HpLAQXclk
+	 7IkYpHgU565KAzcDC0xKbzbTYgCSAWvSEYjcWCkATGXuZy/Sc20CFqJkVZy8f0S24w
+	 dLosqfgByFZeS+dmv2MwU9rrXlliN506FBxZCit//Z/m3Gi0rnGQzPlP4vR3b9Gh6m
+	 lOa029jEZpC6A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.147; helo=sonic302-21.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.205; helo=sonic311-24.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
-Received: from sonic302-21.consmr.mail.gq1.yahoo.com
- (sonic302-21.consmr.mail.gq1.yahoo.com [98.137.68.147])
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=oY6GpKeU; dkim-atps=neutral
+Received: from sonic311-24.consmr.mail.gq1.yahoo.com
+ (sonic311-24.consmr.mail.gq1.yahoo.com [98.137.65.205])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CpCp02Vm2zDqgl
- for <linux-erofs@lists.ozlabs.org>; Sun,  6 Dec 2020 02:16:03 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CpDN16b3HzDqBv
+ for <linux-erofs@lists.ozlabs.org>; Sun,  6 Dec 2020 02:42:08 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1607181357; bh=zHhejYq5ffF241B2duOJV+4XdN2bm0j9SB7cvhohtxA=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=L/P3M+GNnU6zwyM14lHuRyikhDwetpCbDRlP7O5gxVKTLs2Ir8iit+1cmiUB+LrYjkiwY9AAGVV8t925VqlIg/vBRnxrUo55N8IBRzN1zoBGTK5MlXSb26NkseH7JigV08ksR0/RbaOPY0cup/ad6DMndlt6uYDd/X6xSejAYxXhLo+LdSr3XmOL5njCbSslpPxnp0VmBKs4kqet2XlcRj2PzoG4c70iE4d3eKqeN8IB6mr0xVzJm6rEqKOV6QuouaNMvjXw6CEcmJxdmXRGDcunos52sIm0oR6TZwaDPTsG4Vwg5+q0mzGy9SZRb2pf2RRBORAHMg9isOxbMUFREg==
+ t=1607182923; bh=Cbl4nC5K8iGXe0WzdRDODtR5OOeVy2S5V/z+2b7imhU=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
+ b=oY6GpKeU5nNXS2MwYHAME/KpxVJBg9FQ31cUu/vvn+POD8WhBPv9C9Tkanklh2LHkZfAWG1xBad2eieRNd0xftA2HMegCuHHgfzJXO6WK+hTaSm99OsrExnlMel+YL/nawD5443oh/15yLsjgnlcucnCz+WDfniYy0wCRQJXCkXFXixl6HVDFuQMKJJwJSYv1FXGlo0biCJMkNMhBZW2gGaT+Cp/ewfXFwEf/z9W7T5T+zcydBsyyuQPkHt87eLFazgvtCkCQd0jDag02LsQaVLkxjCKeMnGZ+axfCpFE4pWp9eYbi0SBKZZEsVfdR4peDmlIsvaCcRSqA5emkh3sw==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1607181357; bh=lC771+qRLeve245ASSJfY995fTfkxQncR/utP6AUJG1=;
+ t=1607182923; bh=+yxexMOfbhfXac5BwRRxSMRsACsnSLByMpTEWr8ettE=;
  h=From:To:Subject:Date:From:Subject;
- b=kplwjOIvLbck8x6m+Wa/BeFbMdyakAbqcV40xRgGjtlGmDQG5madOSTcN/+ndnsafaLt7lcwPo4bGNP8FqHLxECNfnTip7u7hezx6MZoGkzCAhmIgTZTUssqwgZsas3ROpxg+XUDRIshXTje6wXX8PLlaDpKv41r7qd0R+MTicOKicKCDqZRRJIWUWzrMdbbSlmxEhDerH4SW3olLE07Z+/ELLBrc3P7qfGC496k82vGzurV54Gp8c9PuHvS89vg9vJ+7fx3rwD05wBdB8FHDI52BbDhBPMvgQLEabsdP2AFqjqm163Fyxq1H5Vw1GLru9Z0vC2QMuAVKzOLIC1+Tg==
-X-YMail-OSG: VcHgERwVM1k0Sqk.XV2O_jJuRLv6COXeU3YKv2Ef.uwQSUGM0FvNSlIAUVuD1An
- fff8_8u8ZPLBxN_Jb7u7WAnBsY1MQ0NV.YF0mAmU4jnSrFKjhKGhLkfRo4kBemgQ6xzGjOKbg0EL
- LjQuDEQCX6C2VlwezipaCI.3QLd5GRTdg2KyIGqR0llo8gEJ7z.AO3fzcdslKEuWEG4AxzAlGPFE
- eeKjYNgNOWU.6wivXNQJnDyeFXWW7LRnIgdrUs0dGi3dyYCyxO_7Tx6M3hZYSZ8ZlTjZUHcpL0pk
- 7PYIkeHvzzrZc6AjLwljdCuul8RrmeqKmsC1zaNjhHn.kmOcP7sl7PXDP9v8p8CNIx4sbkTfpLyb
- 8tL5urNkBzFlGsy9W9rZKU62wa1LrzUp1PYkiAGbBiOcBdw0Wsc30isENDCFKIQEJF4U9dZekKxq
- hbtMTa3L733_v4kqlX0n7jobzJfIrFffTYuLq3chJ3Ruje6TPsxe6IfPKt7MoIyFWtuMLzekj2ys
- _7j3i9glxdm8XAqGQ0Um.63936xNstdjc1GT.cJ9Ad3v66br88yWWzXtIM.pZf1d2nOxkwTWDbvH
- VamLEOsHRZ.RIoRJ0k2MSgmLEe6z9So.CzEp7J0wMqLkK9JKXUqnTdVd6PbdtmzRmg7kxuacVgEW
- jjUe8gdEOYccj8AIC5inx3CT4XpMyjOyx6WXzVtmaexYJ1IIJobMfZ0r4vo3BfJMbu5E8GGniQ2b
- tFcIMgY00BMkh8vD.jkfiGwqbOWRvqLhCrhWSWwqwdOQPQwMUG6kSRwQf.hoCs4CAUwUkXdXXhsk
- 708eyMqZnSsIi4TycdqBYW1mbm51LKZh2R0KFl_xKSFBvPf_saiDhsNQjbd6cmfDupVxkzdN677z
- y4DOdXvMHRHaoa3vctJqPxBaq_QcdfOOA7FHAG7N2aOQwwx7XZvnjtEACmo8vsfk5SXMdIVZLFsw
- vF.ZUhbx9wDPQbB.wZFACJ332xyg_E1YjOjggzMgiA85VeBF.ZXxto9M8qvZtOBZg4zS9dk05QgY
- 71xhp12YTCyRcJXrP3KPoHqZayfD_kWZgAHJGyMtVy6kesCsH8zvOxG2mjpRh58BbwKJhQF9DcdQ
- 8lrUZceWpuCMIgrJPaetn0ZG2HjQ05MDnwD3LHMHW61kgJ0BRmtZWUizYiTrHbdJMVysZTVvTQsM
- 2SUYwyUBWyysHkhsq8usHcbzUaSllTFbEJrOxXG8vVBS0H5zrA87k24IJshlxYMFK2uvIpdCOa65
- yteqfKEuumRanbZsnybO_rtqYuAASYFeHEq5ji4UlZNc2mC59zbqstA0ehboL1Q0GKgsBO7IdlQ6
- rzq1iDdOFCAwmBS.m51pKimF5RueGg2BAzeuKGgOfkyu0oNsgR6npc.J6ijdD5hKYeTJ9spcVcCy
- iIUDEGKj4gM0PuJgOBJhK1Y.LcTpfFZ8bC4npWoU1BXQuuKufgdSWQ2BgI7yd0wVPRBDXCiZKeSv
- ahBmhk5q7.4myL0_QQ61G5ZSo2dfsCh2naEkoZDklKXl3FrlGUsY9_AC_Nlf0NdCDvNFju1yHYC1
- YEMQ4qUUzJGLbhi0jL6niSp6bIH2qa5qyWObDdahWiIhp8xy4nuvNzvpFT5Yre6pfBTKa9hWwo9h
- hyrjoZWc0zh5xYgnqv72gX600ru4_DobPNwNQ8x.25ZU3DSmS1oKK8GnZkvnvmOfsYgSg_CjisKc
- AnArwXP3FNj0wu1m3qS1cmBQ7WlSZIMnj6hwWBrKlX8gIZ_zgxVsX3CACM.GapJpS.G7I2Cfh6lU
- qbAzyNz_o1FfkuGS8si343Z4jp4C2lwsqrgk3RmOAFIgw5jkGZbKQH5p_mwyawUQo_tl6YDnaP9j
- 0bEO_hsktxMcVds.EPykjtFhHJFM1Opq5N.S9eSUMegC5YSoxTNicBBv.TTLSUKgEXmpNLeImnWP
- naLsSUs6JM_MsCDW.vq8sQ3nZHXhw8Mw3B3H44cnGYSHjEDUUvoR2e7Zgoit_3Lu24GyJw3G2soR
- S6yk.ZkCqrPXe1bNCfCs5aNsq9JzgKqeQbxQtcYwSosaNC8mpcVWGtIBRlQhS5yOo1jIZl1eKWZQ
- 4t4bq.mXAo9dUhiPBHfQ9AhH1BWottfnosOPGyacADc3J0CMr1bQTbulxStIbwDDlYniG_J5Tzxl
- AEUtlCSU5Q6Ljbmn3dT6l0kmYvrn1bmq.G.7NYKbyaBQy6nQ07AmnTD0enYdVTKk_5QBW9RUklUa
- D8.CA3sLJwohrxHk5NwJBgtJWiMds3M8JAHPbof3UtXx.510miCTWWUETYuRTeMN5JYbvFeDSZP9
- Gg_BEMSRP5v.4Hjp_HRVDaTTJFtWZ_nuvy0ZzmxR5sctcN1ZDs9Ma1pWhNDGAcN_lkbMQqm.zvnZ
- u4TIyd6jliR3WQhuWLkp.GimrHEMYsPMZrOX992RlrmPp0HA-
+ b=PFLcyC4CDOS+SwKOZnA0X2GylLeV+F+sVRk5IrdVok3376rV5aRmdzW4KrBLW+OI3/sOcdnqhJzCjpyKjsXMcDMxM+Hl7JivhrxhlVF9rahgcofszTe7WUXTar099EuPhixsaM1UYelZ7xyH+xkS+zq9dvliDa+ojd0kY9MsQhwVRtyHRo6wync4uwVDufaKd+zA91eJ0YBmIfyWcVo9uzPhJg9mg3vHEdJUV8C7Z1Rcwshs9ZBoWdB72CJOIHOYtVDh8cs6MkF5O1ml2kXyI6WOU7jcNmvQh1+MheCrtCv5Gq+FSKTx3M4vqiS3ySrD9wYUOQ6ou8iRhQP7g4aRRg==
+X-YMail-OSG: w5KuO0YVM1lCrWfj7UzKkvJO0dj8_045lYtLQgaE_v.ghAtzpbDmjtrIgeyIpTT
+ Hq7eyK9vQ5WjLbE6kHap21Pf7UItYpDCxVvVsyvi8YnI1834inVTxhbjPp5AV1LE8HbbJ_vyM_Xh
+ ZmX5w4FZP4G9lvfNinlzp4U2EFRTtPoodaoFMRBmyRC.ZspPGVfS5.GD2QWCg..qOwL5m7cyyMpg
+ e1q_P8nEUGfW4B19BrY3OLyiNKxKzjDj6fA5ktW4LodpPAjQMr1lNbMUSBQS1e144HxDI.O47Rpc
+ C4ZTo9MpVMHh9mISIg7072HHjdRHn2ob9eclWHZqoiC8bUjc4G5RcAdQs2IG8Ntpa5UHuReinIB5
+ uRQaaaokyq1Z9Hv8GXkX3dixkbxkeAb_WwnrOp2uE90Iqdg05d.NBwv6emBOc.d_j2lgCeuEEdnX
+ L9H6o2omgVVTAvLD52R1riJIskzo2TT5qiFk3wrl9hWIAFrpts6tB2I07.m0sYsWHAdb0CTeZPQ1
+ xAdjrAcUo9NnkSsb5wGrCa0cl1k5noAsbS8sGtY_PpuGAIK5.7wFafemRz.zi9UVN9ntgB.jPta1
+ KIyS70GTdARV_2T17O.bxvZ8yEzjY5FDmYoKg.e64h6_V0IO.FRWIyxuQJIYHtVndoL37cjG207L
+ 9e0glBVlOtDFcgisR80.azkNt7DyXhrSjdbcmJX3hwZHROFNyqlBGgmbGLo57AH9k.XzZWtl.RSl
+ 1.6.UA..E.Gr_6yfl2RUM2J50VCpE7PtvAM_tEJSjmwkYkM8tas18H0VgSpQqL0wDnxikpinpdfr
+ DqAk.058NqJ6xYs.z2S4zyt1LNMGKc5y5eDAkRcFyL.KkGGdgVWkzZULX8EVtjDNpHfs1w.SdDKa
+ LJcy5vD8DbvFlE9dUSDJJzcI013R9nmKlAC4Etd_4rvIaBY5mfhHuSEESG9zJuNZPqcIs0XwNPMh
+ On6pm8qQJl5gqAF3OHS_MDzy9UomQXiQQfSGG7xMW00v93cjzvihtDECyjHG9mxsF3sKPWoVSER_
+ dey9BFfDwplEAl8Z0PxKcqRjvFGiGAzZf4IuzBHI2T.HlaxqISRyfRBAmcDwGZjx_ktCfMPwibal
+ VxJaDreOrW7VT_Q1jsidCRILV_ZsEXUWLeVH6Dbh8y6y6oWQiL8XHWABfYOylsb.XImfywTxhGmt
+ UdnOM2uLVV_fn2F2T1K_K9uCOKfHLfOll31e_qYh130Bft1YkEpyj_0tDUwJ6sDzJjoVU3gnzLQ6
+ wIb4uuXNY7A9A.i7q_bO_85Z42iDQWy7LS1NCjD8.VldFNtyxPF_appEpYI6CbqlnAQCkSqeALRo
+ QMlSh5nay.ttSF8nApsdFVA4l1Tb9XcwuF9frtpAnRiX4WVzBrBjfN4TRiijjfgixNMDkbFFsATg
+ lkaFFn.yKABu7BXlFcbKQq8qlXSiiNUQiywq8P7eX2OOqqrvf2DA8wjbJvZYitkoIw5w4.gmbQb6
+ ZXU6dmUg..czllll9z.XLbsUKehPTOZx8sLY4lsCOLyKxXgXJLXGqKoKevdwJodvV5fO5pmIGHJj
+ 993SlzEFTHtSqAaPArSZ9Mk_ZKH2YJc_WpR6uRjYS_bNUMpsMIyfJ7w38rroX.fzQNUJFKCK6_Pr
+ _sfPrgKNhjTSr4RNf0kBat1tdMCp9jnymX_.B.j2or6JfYianEOgY2yg1jTzhOL1_2KhpzJA1Tr3
+ o.cvGN8KDvwvWyAe6cOFDoZzRq.Bsdfk0pqGBOUspx4vcQ61LSSM1cnQZFMER2Ccke0s8XLZg3jU
+ gnLN7XSo3iYIBEag5cy_XJ9TpI2iFaMAfA2P7T9Qi5PtRa.hYzz2rFwLQJBJtIl03QNf9r0SvZYy
+ JeW0ZHCNtBxLMU1lzKzFO1TdjGpk23O23dM6jjzEoQbpNf1KDpsYVzRmKxEcumxej_tQ84z546Lg
+ yzRTveYlKR_1xSYsv4QYL5yF8HHanpJkFQ7BLOpyXl.seJ49BotauSzZ45FJWir.zkAgTolk37wQ
+ SuCBPYXCGBc2_CeYyymYlAtNqQkDI1TJ5jdGr7sXARRx90FF1lv0qwvudz.CsN4t8Oy99fIzvtu.
+ VYY4hJImOCXNMdCw0QCX2tMsHZhIYoHPM.S7ztbiU7tuQSO6h4dnKUUXkuNiWtB0nC7DymZ1dw5V
+ kyd_c23wxBfIRTfdgB4ZRslfrIrjBUQOjvz3uk0Qy1Qhh_1H_euPlZwK.VLlADPxahvFMtAQRbpy
+ 1nxbEILPZOITUt64n4SGQcagkqMYBVn8jovUy.LcUcXdhwGMEJQixbRPsMYBU49wYGtX1uXpGC_o
+ WMke7XBUcFZQoJcAjSCEkw2LtDPzMrf8glssFN9FtVTa3WZlRME4iP06O8izqfO7j.jY3DldTF3m
+ SjkW2nT.ytjWHm8OV5mFL5iMsGe0zosvb1anItRnczkfnHFeoCcfvAQnMsxC6G7uVuhygaBAMyCo
+ Lu_Cz_B3fX_LLnO.zhkokMF3EmC5oRNM-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic302.consmr.mail.gq1.yahoo.com with HTTP; Sat, 5 Dec 2020 15:15:57 +0000
-Received: by smtp404.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 87ec5af4550f725afb36b1d024a1477f; 
- Sat, 05 Dec 2020 15:15:56 +0000 (UTC)
+ sonic311.consmr.mail.gq1.yahoo.com with HTTP; Sat, 5 Dec 2020 15:42:03 +0000
+Received: by smtp423.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID ad7da56780a5b2c758e0b6bf27f59a7f; 
+ Sat, 05 Dec 2020 15:41:58 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: document erofsfuse in README
-Date: Sat,  5 Dec 2020 23:15:45 +0800
-Message-Id: <20201205151545.10935-1-hsiangkao@aol.com>
+Subject: [PATCH v2] erofs-utils: document erofsfuse in README
+Date: Sat,  5 Dec 2020 23:41:41 +0800
+Message-Id: <20201205154141.14588-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20201205151545.10935-1-hsiangkao@aol.com>
+References: <20201205151545.10935-1-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20201205151545.10935-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -110,14 +116,18 @@ to README about erofsfuse itself.
 
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- README | 79 +++++++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 61 insertions(+), 18 deletions(-)
+changes since v1:
+ - fix some typos;
+ - add libfuse dependency and "How to build erofsfuse" section.
+
+ README | 90 +++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 73 insertions(+), 17 deletions(-)
 
 diff --git a/README b/README
-index 980f1d02cb19..8e4335449b6d 100644
+index 980f1d02cb19..0001a67fc37c 100644
 --- a/README
 +++ b/README
-@@ -2,26 +2,12 @@ erofs-utils
+@@ -2,26 +2,14 @@ erofs-utils
  ===========
  
  erofs-utils includes user-space tools for erofs filesystem.
@@ -137,18 +147,19 @@ index 980f1d02cb19..8e4335449b6d 100644
 -   first for each regular file and see if storage space can be
 -   saved with compression. If not, fallback to an uncompressed
 -   file.
--
--Dependencies
--~~~~~~~~~~~~
 +Dependencies & build
 +--------------------
  
+-Dependencies
+-~~~~~~~~~~~~
++ lz4 1.8.0+ for lz4 enabled [2], lz4 1.9.3+ highly recommended [4][5].
+ 
 - lz4-1.8.0+ for lz4 enabled [2], lz4-1.9.3+ highly recommended [4].
-+ lz4-1.8.0+ for lz4 enabled [2], lz4-1.9.3+ highly recommended [4][5].
++ libfuse 2.6+ for erofsfuse enabled as a plus.
  
  How to build for lz4-1.9.0 or above
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@@ -39,6 +25,10 @@ mkfs.erofs binary will be generated under mkfs folder.
+@@ -39,6 +27,10 @@ mkfs.erofs binary will be generated under mkfs folder.
  * For lz4 < 1.9.2, there are some stability issues about
    LZ4_compress_destSize(). (lz4hc isn't impacted) [3].
  
@@ -159,7 +170,7 @@ index 980f1d02cb19..8e4335449b6d 100644
  How to build for lz4-1.8.0~1.8.3
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-@@ -55,6 +45,20 @@ However, it's still not recommended using those versions directly
+@@ -55,6 +47,20 @@ However, it's still not recommended using those versions directly
  since there are serious bugs in these compressors, see [2] [3] [4]
  as well.
  
@@ -180,7 +191,7 @@ index 980f1d02cb19..8e4335449b6d 100644
  How to generate erofs images
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-@@ -85,6 +89,40 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
+@@ -85,6 +91,51 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
  
  PLEASE NOTE: This version is highly _NOT recommended_ now.
  
@@ -192,7 +203,7 @@ index 980f1d02cb19..8e4335449b6d 100644
 +It can also be used as an unpacking tool for unprivileged users.
 +
 +It supports fixed-sized output decompression *without* any in-place
-+I/O or in-place decompression optimization, Also like the other FUSE
++I/O or in-place decompression optimization. Also like the other FUSE
 +implementations, it suffers from most common performance issues (e.g.
 +significant I/O overhead, double caching, etc.)
 +
@@ -202,8 +213,19 @@ index 980f1d02cb19..8e4335449b6d 100644
 +use-case vs limited time. If you have some interest, contribution is,
 +as always, welcome.
 +
-+How to mount a erofs image with erofsfuse
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++How to build erofsfuse
++~~~~~~~~~~~~~~~~~~~~~~
++
++It's disabled by default as an experimental feature for now, to enable
++and build it manually:
++
++	$ ./configure --enable-fuse
++	$ make
++
++erofsfuse binary will be generated under fuse folder.
++
++How to mount an erofs image with erofsfuse
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 +
 +As the other FUSE implementations, it's quite simple to mount with
 +erofsfuse, e.g.:
@@ -221,7 +243,7 @@ index 980f1d02cb19..8e4335449b6d 100644
  Contribution
  ------------
  
-@@ -150,3 +188,8 @@ Comments
+@@ -150,3 +201,8 @@ Comments
      and already included in lz4-1.9.3, see:
      https://github.com/lz4/lz4/releases/tag/v1.9.3
  
