@@ -1,90 +1,91 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 540802CFAAB
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 09:45:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3BBB2CFAB2
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 09:54:46 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cp36j41QYzDqlf
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 19:45:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Cp3Kv72J9zDqkG
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 19:54:43 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
  helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=J9lMP7rI; 
+ header.s=mimecast20190719 header.b=GxxKj/Gx; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=J9lMP7rI; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=K4z5fvN/; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cp34n5pdZzDqWH
- for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 19:43:21 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Cp3Kq0Zk1zDqc8
+ for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 19:54:37 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607157797;
+ s=mimecast20190719; t=1607158474;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=zThnsonge8elQ0IV+cmf9KpNa/WKsbfnSqqsfSXwvQg=;
- b=J9lMP7rIHrQjA47SgTbL7ltu/MhMnr6D5K0UZTXEL4mWKjzRA4nCcwGzU+qXk/RafUWv1E
- ZpcLBWIsbLf2sW4Bg920q4K/NklRQCEcTmI+ycw8iwoVPpq2jkTwc7bNMwC8y9aL0nbart
- QauVVlUy1amGM8BnHcHkrB6NFC0LP2U=
+ bh=8SGAnxeUT9O+kwxWqPy3ZarCop9vx3+4Q8GbTneG62U=;
+ b=GxxKj/Gx+oGo8Ip/AjJrYv1Di+Ygx/dvbNsEN3fAFRlX6c4oOjBhvkViPP7cQpw8UcszJP
+ JX+RbJV9ts2KDzsGeaT1+9A6xrr3R7Z8nKNfUuITad8XCJKrZ5eb9SOPVZwI8x/jcOmSIq
+ iE4iVQHd14YwTCG4n/VcAc++jm66HGs=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607157797;
+ s=mimecast20190719; t=1607158475;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=zThnsonge8elQ0IV+cmf9KpNa/WKsbfnSqqsfSXwvQg=;
- b=J9lMP7rIHrQjA47SgTbL7ltu/MhMnr6D5K0UZTXEL4mWKjzRA4nCcwGzU+qXk/RafUWv1E
- ZpcLBWIsbLf2sW4Bg920q4K/NklRQCEcTmI+ycw8iwoVPpq2jkTwc7bNMwC8y9aL0nbart
- QauVVlUy1amGM8BnHcHkrB6NFC0LP2U=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-sioDJufZNPS6Chs3LB_J0A-1; Sat, 05 Dec 2020 03:43:14 -0500
-X-MC-Unique: sioDJufZNPS6Chs3LB_J0A-1
-Received: by mail-pj1-f70.google.com with SMTP id h2so4531418pjs.5
- for <linux-erofs@lists.ozlabs.org>; Sat, 05 Dec 2020 00:43:14 -0800 (PST)
+ bh=8SGAnxeUT9O+kwxWqPy3ZarCop9vx3+4Q8GbTneG62U=;
+ b=K4z5fvN/I/6YS9W46UCal0Zx4t8bJ/Ifb3raOLvXdypTvoYGzk3ZB4VHWsSNibO0u67We0
+ tFDMQLralJuzMFzXW1TwGzbpoIqBLKPZ9yfI9n9GArmoeysEWsccAhOI30jmxUxY8V+7iQ
+ nyxo3fFsXqjCYe3LpaW+j4VMxfExpSk=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-CqGbbW3bMTyPUuhy45e0zA-1; Sat, 05 Dec 2020 03:54:30 -0500
+X-MC-Unique: CqGbbW3bMTyPUuhy45e0zA-1
+Received: by mail-pf1-f197.google.com with SMTP id n8so4847368pfa.8
+ for <linux-erofs@lists.ozlabs.org>; Sat, 05 Dec 2020 00:54:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:date:from:to:cc:subject:message-id:references
  :mime-version:content-disposition:in-reply-to:user-agent;
- bh=zThnsonge8elQ0IV+cmf9KpNa/WKsbfnSqqsfSXwvQg=;
- b=cG9A5poy6gDq04OztSu6P/E7x2JzbkAHuIe5vilSjNcFUkbtaKbYe4e5q0cAdZqE52
- 1we+Nk/zEZvTX9gpbh2dr5WyRIM5NY3LV2jO8agva7tO2Qzf3fS/heXR76A5Dv6Uo4yd
- rTO37z0HbadBGgGvUtqcMRdsV8aSmswswP3tvEDvVzUe4lPs+iGTdT5fy+J9GKthPM52
- 2uS3DFncm+A4bBmWZidVhMiVHPPpm+Ze1j3jypV8VbMU8rPd40D5Bt1fyiTeGqpT6gP7
- /2514ZVRn99FOdEW0RgImvYv2/ebMXykYI2HXUubKoABB5Lsa4CyTbYVxIY26NKYyQ1j
- o5Fg==
-X-Gm-Message-State: AOAM531nWzvfzolf2JmveNVm76q7esZ71ixR66SAgkO6upFbLCL9+km5
- AWqNCoHuy61vpBssb2vKuQG/Y5SrEZer0+zEPcbe61prVgFek46Fs99Fv+m3uUeC+fUElNH6sEF
- c8fkxSFlDEAxHnf2RTeK+8fNg
-X-Received: by 2002:a63:943:: with SMTP id 64mr11003206pgj.80.1607157793855;
- Sat, 05 Dec 2020 00:43:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxdsnqTZKmMWv7kBtkQdaTgIuVDmAHVWq8EcSKdVUH7bTDFLEpiHFGnA4WEdzYjao5/6vRKyQ==
-X-Received: by 2002:a63:943:: with SMTP id 64mr11003195pgj.80.1607157793639;
- Sat, 05 Dec 2020 00:43:13 -0800 (PST)
+ bh=8SGAnxeUT9O+kwxWqPy3ZarCop9vx3+4Q8GbTneG62U=;
+ b=g4Gt+KA7Q0LYA1P3t6tVrpsdNIdiSRyT/3kXZAhmqX4faZAL3e+Fyc0Rgbx5pKawmF
+ 3PaZL83YzBhIzG2sV+hgFfVggy30fvOSOKBY/PIiRUsAVVhp7AsG3I4So17Za4IaFbyc
+ k67TwRGakVOIov8eCn/YdnjFWjQpg1l9obrMXnhfmtpXfpfbLAuxzEZYBy6EJ+yx2dQ2
+ NPXqblmKTSnW74n4Opl0Rb902m6r3H2FIQ1tz+SKD9jqlCPQrLcGrRc9IRdaOWUyQiEX
+ JeI1LB0ZIAmiGUIVbNYSiPzmjPq1E5qijdDopeYwWQwW5KvxnGCOee2Rl0/hPBCzp+j3
+ E2nA==
+X-Gm-Message-State: AOAM530vXKt+oZI/GwUZXB2dO5LAfZcIbFHfJghGetXxLXsElR6Jes6T
+ emYvmwut3KV0hAFbH+7FMZF0wExoteVvS65egXquWVy8MwHz+bJJzzHSCY+kABmSkKJD1SKLSsf
+ ZQKC7sPGTDQIHZRrUwFtYNYpq
+X-Received: by 2002:a17:90a:4b8d:: with SMTP id
+ i13mr8084991pjh.86.1607158469801; 
+ Sat, 05 Dec 2020 00:54:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx2XjSBvFY5qr2EuabB0kOKgbOplqPyNrReVAkAsPv8+ukH7QsXBWi4N0OjvYdwC//98lyl5g==
+X-Received: by 2002:a17:90a:4b8d:: with SMTP id
+ i13mr8084975pjh.86.1607158469481; 
+ Sat, 05 Dec 2020 00:54:29 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id w11sm7484538pfj.212.2020.12.05.00.43.11
+ by smtp.gmail.com with ESMTPSA id i10sm7515063pfk.206.2020.12.05.00.54.27
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 05 Dec 2020 00:43:13 -0800 (PST)
-Date: Sat, 5 Dec 2020 16:43:03 +0800
+ Sat, 05 Dec 2020 00:54:28 -0800 (PST)
+Date: Sat, 5 Dec 2020 16:54:19 +0800
 From: Gao Xiang <hsiangkao@redhat.com>
 To: Li GuiFu <bluce.lee@aliyun.com>
-Subject: Re: [PATCH] erofs-utils: update i_nlink stat for directories
-Message-ID: <20201205084303.GB2333547@xiangao.remote.csb>
-References: <20201205055732.14276-1-hsiangkao.ref@aol.com>
- <20201205055732.14276-1-hsiangkao@aol.com>
- <ed88d60a-77a9-f189-3586-a6d6aef510d9@aliyun.com>
- <20201205083837.GA2333547@xiangao.remote.csb>
+Subject: Re: [PATCH v3 2/3] erofs-utils: fuse: support symlink & special inode
+Message-ID: <20201205085419.GC2333547@xiangao.remote.csb>
+References: <20201127114617.13055-1-hsiangkao@aol.com>
+ <20201127114617.13055-3-hsiangkao@aol.com>
+ <5367c0d3-b303-6430-3e4b-99e2af4bdcbd@aliyun.com>
 MIME-Version: 1.0
-In-Reply-To: <20201205083837.GA2333547@xiangao.remote.csb>
+In-Reply-To: <5367c0d3-b303-6430-3e4b-99e2af4bdcbd@aliyun.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Authentication-Results: relay.mimecast.com;
  auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
@@ -103,54 +104,56 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, Guo Weichao <guoweichao@oppo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Dec 05, 2020 at 04:38:37PM +0800, Gao Xiang wrote:
-> On Sat, Dec 05, 2020 at 04:32:44PM +0800, Li GuiFu via Linux-erofs wrote:
-> 
-> ...
-> 
-> > 
-> > > @@ -957,6 +974,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
-> > >  			ret = PTR_ERR(d);
-> > >  			goto err_closedir;
-> > >  		}
-> > > +
-> > > +		/* to count i_nlink for directories */
-> > > +		d->type = (dp->d_type == DT_DIR ?
-> > > +			EROFS_FT_DIR : EROFS_FT_UNKNOWN);
-> > >  	}
-> > >  
-> > It's confused that d->type was set to EROFS_FT_UNKNOWN when not a dir
-> > It's not clearness whether the program goes wrong or get the wrong data
-> > Actually it's a correct procedure
-> 
-> It's just set temporarily, since only dirs are useful when counting subdirs, so
-> only needs to differ dirs and non-dirs here. (Previously d->type is unused
-> at this time.)
+Hi Guifu,
 
-btw, I once tried to set up d->type via dp->d_type here, but it increases a
-lot of code and seems unnecessary (since deriving from i_mode is enough).
-So again, here we only cares about dir and non-dirs (we don't care much about
-the specific kind of non-dirs here).
+On Sat, Dec 05, 2020 at 04:42:04PM +0800, Li GuiFu via Linux-erofs wrote:
+> 
+> 
+> On 2020/11/27 19:46, Gao Xiang via Linux-erofs wrote:
+> > From: Huang Jianan <huangjianan@oppo.com>
+> > 
+> > This patch adds symlink and special inode (e.g. block dev, char,
+> > socket, pipe inode) support.
+> > 
+> > Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> > Signed-off-by: Guo Weichao <guoweichao@oppo.com>
+> > Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+> > ---
+> >  fuse/main.c | 10 ++++++++++
+> >  lib/namei.c | 22 ++++++++++++++++++----
+> >  2 files changed, 28 insertions(+), 4 deletions(-)
+> > 
+> 
+> It looks good
+> Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
+> Tested-by: Li Guifu <bluce.lee@aliyun.com>
+
+My tendency is that once a patch is merged to dev branch from
+experimental. There is no chance to apply more tags since we need to
+stablize the commit ID for dev/master branch (git commit --amend will
+modify the original commit ID). So I have to ignore these RVB tags
+for the reason above.
+
+And the merging route is "experimental" (can rebase) -> "dev" (cannot
+rebase) -> "master".
+
+Also, it's actually hard to carefully review erofsfuse code here with
+limited time if your bandwidth is limited as well, so I applied directly
+as what I said in
+https://lore.kernel.org/r/20201127131630.GA654423@xiangao.remote.csb/
+
+But yeah, more testing is always welcome, and thanks for the testing :)
+
+Finally, my suggestion is that it's better to use erofsfuse rather than
+customized ".ko" for older linux x86 versions at HUAWEI as well, since
+the old internal ".ko" versions are quite hacky and messy (at least due
+to many kernel API changes).
 
 Thanks,
 Gao Xiang
-
-> 
-> ...
-> 
-> > > -		d->type = erofs_type_by_mode[d->inode->i_mode >> S_SHIFT];
-> > > +		ftype = erofs_mode_to_ftype(d->inode->i_mode);
-> > > +		DBG_BUGON(d->type != EROFS_FT_UNKNOWN && d->type != ftype);
-> > > +		d->type = ftype;
-> 
-> The real on-disk d->type will be set here rather than the above.
-> 
-> Thanks,
-> Gao Xiang
-> 
 
