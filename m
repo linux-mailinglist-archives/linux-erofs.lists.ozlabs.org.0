@@ -2,95 +2,94 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72DBB2CF36C
-	for <lists+linux-erofs@lfdr.de>; Fri,  4 Dec 2020 18:57:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4AA62CF9EB
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 06:58:05 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CngQK2CZYzDrS7
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 04:57:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CnzQ32c6tzDqgx
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Dec 2020 16:58:03 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1607104633;
-	bh=pUGqOwHjzD2Tpnt8+mwlDmkuSamYZClWBcqz2tM7NJo=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=ZW0xdLQT8Triebl/XFBr3yymM3FIx8XvOqR5/+cjAY1Ri0vGx5roafoUmjbwo/NpT
-	 tPcPYvRIjsezCb+gCt2qrzxaW5ytlsR9KJYbwWNWMTWX+l4oBpvfpfe+OySUAy0Q1f
-	 p0HoION2vVFbPiV0hMIUPEBaaqXieXlNuuoXGCO9AjQhbNoLw0x//2AVc0CsCA153n
-	 0UsWs7ePLDN3NYU0jtmGIYEyOlchTMaMC/6Pwp/FgRU0luVJ+eyxlSMGaS3awywwBd
-	 uJwfbRHFuAse5RYl7SXgFgG3MzqmNuaTDw8VEgX02QeXdYydgGl9bcRWX2dOC4KP37
-	 FSATZcK7YJINw==
+	s=201707; t=1607147883;
+	bh=5R+E8S3XAhxyvDJ0cfbA3WcadtgA677sqTXzfwHPExg=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=AfAnFDbcdAe5/rWhQGHb/8DwGudQjOY6zFSVktn6c/1idpIzorOkkznuTwADg32ne
+	 s+blx1sl+aQrBQAzW3SYdx7QGW7xtsoOhFkYEv+RlPC4VUMoVVkb3DrwjRNdEAZsm6
+	 8k3bB5a1za9fWpAOp4yIgu1qo3m7KpzgtEjfrZpbwiBhj0Sy+JdvyJZW3SoD8xsEXx
+	 eJY9P0cg4f+9UHCeK780g16tD96StCtuu5GC5W54FTvHXnIQY6D9lkDZqA0KiJ0oiZ
+	 4ApxlqUv69vgnKi9jKGlAstZl8St7qOHX54h+uzzezv6v+PBLTHg/0q2s6hZejZ80S
+	 7bOH9EwrIbEvA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.83; helo=sonic305-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.206; helo=sonic312-25.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=reject dis=none) header.from=aol.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=CpKMYXzA; dkim-atps=neutral
-Received: from sonic305-20.consmr.mail.gq1.yahoo.com
- (sonic305-20.consmr.mail.gq1.yahoo.com [98.137.64.83])
+ header.s=a2048 header.b=gbq6Jioa; dkim-atps=neutral
+Received: from sonic312-25.consmr.mail.gq1.yahoo.com
+ (sonic312-25.consmr.mail.gq1.yahoo.com [98.137.69.206])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CngQC0D0CzDrDX
- for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 04:57:03 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CnzPq0mRlzDqfW
+ for <linux-erofs@lists.ozlabs.org>; Sat,  5 Dec 2020 16:57:49 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1607104620; bh=7vPJ3lZnqV+N96N19iorxPnjzeD1++MeZq5guvWHnfY=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject;
- b=CpKMYXzAUuWwSr4lzrqVnHorq4mhSus63K6XD8eRuqGZSgjiPp+ZFpBdw89A5LaFxmzRTyNtrnrDo2J1doPG5XKNerunFVhba3ExZnIQt/tZyGwSH+BlnLgXug4MspkKmob864kbzN0ROCXdhb8IyqtBFbyA8ncJA4W9SohvvmTlWlRg9VmXB/ff8ek0Etqo5E4gmLV83WryA1QXVfCVoIZ78bnx7cb0YJJYmfMXN3vtzyknpXVU29sb1+QW1bl1TJ9/CE1Vru20i7kDpkCzWdREa36M/CZyhA3hzkn0s5jKvueYsIpQMCcu7GFREe56RYOUGFBQhmOy/1DLbJGLWA==
+ t=1607147864; bh=LQmBJHDb84anTzmkVtvWHBYbY8KUi6nmURHfbbOoWjI=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=gbq6JioaqrfVfCmLY/ygbv3+j7r3S2JkpbDMAAYoWR8huudw05WI/wZwE8d8DM92eMCugAk941UlgYgRLgnnk4rCJkfhmQRbfJKvrwmzwvEZw6YcuVj8F8SCKKZhzosDlNzPgLUHoTJBiE245On30NyiGxngmRSNj+K9WVtK7ZfTWGEtqxtrjfsyze8ab0Nyl4/e43c4hT6o1liB69rymNwRsO+5O8/iNS4a0a3ftOIvGQh4VBugaufcp5OZ0gBWKnCGmNzuDw9TPGmk/VWr/IvV7eKImTfUR4gds09aGHtbroo71apbRLQ0nFhCcZuajKkxahQ7mXy39QhwlyCYvg==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1607104620; bh=Rt5m/RAcnwjdl4F9epuAw55IdyjzaHS5qZSAQ3/7UeR=;
+ t=1607147864; bh=pQ5xXDynLy4pUjaehuAR8JqRlKjBk5Ex8dicjRv5bbp=;
  h=From:To:Subject:Date:From:Subject;
- b=b79iCV1zeNKGy41gx2WlchrmaH8FmD4rZu0RhklA4UtXh+jWPXhk6WJ37wcj/299zJ69dIVuDJwqdtwbGgBWERT/VOTSyBFsvZpLyqCsoTUj6Z21DX7tym6+yJoH7E/dmcNhps2jsTAyg1VxpMiCAum2OmGrQjnEC3dCuT/gEgnP7/4/R5HKGIpNjR12FlEp1kzJBiqSQ7MsUmw0kCQXO+siE6d0nvMSMmb23TkVaKfxWdfgEKKB6PrvVOJb6JlTxYDhTFYCyPyMiuSSugMpl6yOR9qjbwWgEC1DxmYo6nIHjw1Dlw1Cj/oTTf3rBLmGRUqF2r5FV/eGnfUOUWimQg==
-X-YMail-OSG: 9ttOO5wVM1ndo_OiqFeLAgCT3rUJiL9kMy21Rvgh0n3x7CcY8c5scuYIaD2lJfq
- oGgdp0zrqAgjveFGWn0zFfOPGrE7N9Yt.tdqnBAz.87kafxRi63kn5rSrFT7eF7vTQUXn9nBI2hE
- W077JfcVS0fIvWrSWZTNNLkcAlSdZQehvOYOjnwp_zXiDRKz8LMyP.xYZBb0gbpiA2rD8fF_9Ixs
- qCZvjxLI_EPJntUMaZBGUHqZE1sCh4dgJkRv3yd23PLTh_utkMO549P42QDOGd.xIgfaLoNVD61n
- MqJAR9O2XLo.YxYDhyyaKrvmiGW56Xb7oY4gH4T2hgsn_qaaWwXOu6_npuwsAB.XZFDbaxKJ1V79
- xiz1ZCIy1f.mbRFFI8BqiH1Ym4qiruiaxUkn1ps9xNNGdtP5zm_Hov4t.mPAGMOBIEGjahXWc3xq
- GCJunD6NHNK4IbWG2rgZJmjkpqjwNQOTi.bYEkVM9vsPD3t1uqsDReyXiBaUu1VRtPEOa_4hktuj
- QDKwjIeiY_3W1OnPcekHPAVHZ4XO76V9zfwDZ_dAMCg_fMl2yxdlmlzW_26O4XdYwboVegCoZCoa
- DMY9CXJH7szvRG97WNmLRb9k9jv..3I.PAkVby6HqcNuf3HKnl6RLGUJPeZW0fV08FnYEWTZunGW
- IsCcOSSAaciq44AqhJ1Tnjar97vLsq7geqvoNSXUVJrH0gloYRA.FJPTxrdQ2m2JRLkRoozabdHP
- pGPtrt5i21oHErbyZvSNh9QWz3wjbGKVpEmc1WhwslBObQRqyEftPfc1h8RwKrcOozaLCV6BaeK5
- voMMTD1eS0jZAkMWHawRGKeV06zMhebiJ.Nzg3OxIXu1O5etsHVj0ug.E3sJGQ29FRZXdyD7O_IO
- UnUr3S..uCrJNv1gKvZLj2uygtUqCaWUXv0J37ZxxycbyBJXVSF_C58JyzETmV0M2T2LSMvD0kH9
- ZekODx6d6rjYUe1TyAImSNxZSUzKS6va9Bj84wOsdPbcAxL5Ym6Bs5wbQT_7SiOzyoIW3GvioETX
- djr46gzd8aTf1QCZwiouShJNPI5pqCrIk4ee66NF1Dw5dSfRAQ3bkGoWrX7t39iimW2ehEvzLDhV
- _L2QmIxyOu_di7UEmDkdAWiIE.OISdnObPMXHRsWFoOJNxT.D4iHA3SPm01TGL2Zc2qDbKkO0FRL
- hu5W1yClXK2rWKKjRqdb_XVCNT4on3fVnv3x8RNwv6X2V3_ZCSqynYReF2tggv4qb_ke3XKufDPl
- TDhp6n4leijjSIxvsqk2cxb6JFfIhXzTkKR9yZOnmF3cRXvGw2yqGSR0Y8yImK9lXmFzag7azbwk
- 01XRDn3whSVtfMB1gbFzWxWmLGpoIIOgMx3xAKRSi7TqCwCtHXe9WfAqDXsQTcjUeBG8zhSPgJme
- CO7QxPuRoLLWeSGbWMZQTCsp8IOwGvg5i.0lOK5kOu.z9RXUaj6IBO_Vl_GumRSSyg1ZrTepHhva
- QwbDShrhlXa9C8QhtpTfanqeTchfapWypEH2Qs0Gn0OjHlOpmjHFK80jaOphp5vrWmOEo98WSgv2
- vwqrXRbjI8HLC_0mGe8IHpQkJGlraHge8agG01wGwomPSJDpCMigU2DaTqYsZDVWdUFXUD6u6Wn4
- zeMLU4UkjZUQ8tBiGRYK0fKOk8AD7iEmcNMKRrbKvGNzc7LXl97N28sWlLUPQsMQkdgcAwdH3EEA
- vZWuPTFYf0PQAUF7QcG6yVhq_B.JMOvjeX2Rt0zpC.8Vxy8jIMqOkjCJUMWVVIXm_r1SZpub_dYm
- DYGpRkXW72v8CdG1QJjJRPWy.Mtq23UxCeczt0T11EJ0eATRt7vmNsHsa1cROJBL5nqxOuEFy_cK
- Krx6G9A0I0RADOy06k8Bs92hBQssIkpTiNOnFujw40Ltj0tZzYGHaMnpLCSK23.vFOYvdMuZg.7F
- 0nbfRwB3r52Kiw6eEg9IEFycnrXjVmCdfSOilttKOz4oUernKPYhyovX2eGXqecKnoYYC9duSGh5
- uOyeNsgTs.j7cEnnYzJ1DHvFtKSNlj4RCPJtFmfwucKlhwJ_Xwf07In5xHUEwI_PzgFGQ1gC9Iop
- 844fRvhlBhao84kEpThRNdntXP0ti.PMh8MtKxAV_PDUtCiaYa4u1gjJdI29Ua4IasAqYs._enqL
- b5vS0jRus7Gkw_9TCGdRYJ280sTX_bkyCYuOW4oSOHD0mfNzD2mzK05myhtuAlYXH0onxKiTuL.R
- kcwTt.tVObsMueJuw8_jBXl4j5uMcopgDmG9c9CuI7qzghlzMt68dTbZdlHpJvurKLMuUcIHdMF_
- vi55jdKNefbRBBwH59DHsfPsOwcMnpDiQdBvnviSQ9AA75h6VkdJrPfKkFWIjrpyaBRPcIqe6eLf
- S0XZL7GfAWv9SormKdvBIPzdw93hmq0nNmoWlSKy5bAbMaDiaIkt.
+ b=fQH5fT+6j0PzNwml7VGaVyIS2I/Lem4keQ+ZcoTnK1JvVCfkQDi0BBeKI6NE1+euomOh61XR+vweoSYXySRvynPaavSVV8AMh7JWHUt4aqqD/slTGScyjD9k9JrS74LZkZS+TQqReB9713++MYxTLyChetjxaLZLZso0qJOvjb3nih6wLm3vMkhr66tXiM2GQHfpMkhpaAgoBNkrjUPD96jCL8IkwYOO8VIhl1Qn15NyRC4z4ME+4wTAAHjBQBtQ+WDeyKK6RVfT/EhDjxOuUbzn9Xc6eloFDCa1yP6Mr7TRLP2dZo9iwqzthLy9X6nsVlr7MjHrDepZ7TSO8+mcuw==
+X-YMail-OSG: FnKIaYkVM1kp_wI1YHO015whC25bG5GXaxL.ickczSRXhHHye5EnnP0XaMkQyQI
+ npEtzh3yDi7I0YdKV1.KqlRYBeuChkrG4psAi4h7QaeZw.P6GYzUSFQF_KcCJQYIz7Z7kYX_Vu2R
+ fhwhQ0MqA_TYissJ4GSrCsE4q.zD.EipfZoAZDahYa64IZSy0Ydx0SyvQW_e52nuyLQheZIDqdxa
+ 7Qz2Po8W8oc8w9IR6c2i1nIeenGPH6pxRIUPuTL46AdHb8SEA.DlKcQ9pF.pWLHlz5ERyRlnvr11
+ 4t6.e3URxBzzK8PVJJkzITQMm01pA4hV3gw9eyKooUXwuBM69C5GsR8xHbygQpW1S89m0KUcOnRE
+ 0BnabdQCJb0S0Bb.jRdhun66hnW1HnoRlx5xh5DOTaqHJHYdPibV1dVtGGzqcn62OX76dtZp8kMh
+ kAyhFwalHy4fZi3.XQ0iIGRlB1aNXQ3kut_kXNx52Dm09NO.Vqw3Fo_34sWz_GR7UX.BrHUuxTUy
+ pCrB23yXoolNfrp9CU05XWVI2tK1XcTzr.0PodyPLtCa2PBaiXOmNhHP9rTt66wlB6JgaTsCGX3s
+ b.5n05NnmU4VARBQymW8ZlJVZbWPPUf1NJnxDhyi74lQK4GdtNDmpW6.RUyH873ynK7UuKReg0dE
+ VExLY8ERr9U3qNnim_RDnqvP7yEZcn0oWKoA27G7H_cmjstiX57DVP42C3HT5eCYGzauPpqgWZKI
+ sHgByd32gb32mL4gZwklzV9z2H482ip0h.2mQ8DnrgumTkUf_t0aF3omyqIhtQiXm30Qvh2ecuMa
+ xXd7icTN_JJGW6qKr9NjcsJJ8G0PHtsFnqyKHOTtVayrZFbXVGwpXEImexc7KFFmIPHJF4pT1rUq
+ ByIKz5mcwoh_0b7wO5qxLLKoQmgFOFHuERjoml1rYndqk4QrQP_RGKtbD9bA0gN1qqkZ1kuJDZtM
+ GfjbuOSDtIsuUfpjly_oUqPh7znPwapBfjW4GXmIrdHIMfb1CoK7ehDgqmCRqoKVswbo7AtEwMRN
+ 68XvH2UHjVcqCHk8swz_Ja8Z20kGqn9LoxC9kfHCKA9hcR62WhNGVyx0KoZtpzDnVhXDoW8fPiw3
+ lMa7nZ3XVDUBBhgutNs7l5urdqEOQ1Zmb.PC_sVmjrqH.88R2gKlfOEEAVqu.Q_jvfhOCMVLaOG9
+ p6evAIzNL7ABNUSsT7eJ3PStCxI4flXjvXPLsL4vX1DvyMXqbob6Thnpawxk7ecXdbfIVl_tLsuV
+ pyNqQfmlZPWn6g7xI0OCeH2e6dWOIiFDLo8MVa7wSIG6P6JxI_uI1M5BYR933xRb4FStFZpytOwJ
+ bahuwuf45pngbZOC5qaAh.1NZx.BlrYhzIWUsfK4_jGoa1VBkKBtIZC2fGhkiPLrXkfQ6eJZJ21X
+ 1GpphmeTdxGgxMwrW7pa.Vah9QGUMSp_77DAx5LARhwE5.UYzQf67lWBhDDRlpL4BPm4zDdUFehe
+ S9RCKlWG.tNsWJUEBufwpk8uMUxbzUnE1PF1qtNIKbmhqdo_DWxDgpxYjkTbegUkSQKMn5XApH29
+ UoGNBI1ovOfxJqbvGoaRXwTApCuH81VmZkUN_e5AUn9y3i2IczolcuZyApJXCBCPVAZ1Rjw8ib6C
+ GT3C9pG6fcYyi5H_zFIZTw56ZSdqfgWlyoSGUKUqAO91Q8sFmIFs8mCgf7fDBIVfox7_ZFBSWFOm
+ fa8A1dC6IfHNUiZPrWw2U1Z5ekdsIMUts2v8yvs3mby5b2I96qkm0pswG_S68OiuYpqKvnldMqlv
+ 645EceJKrY__9L78kgZ1f.R_ds2571KeZihSnHSq48AbXK5nP3OeBoG8xxRZKAjiSwgI0Jwry3Ft
+ uw81byDdYgst5ukHnf7xoXcgB6INSyBLNTrSsp5gLKFK44H97qNcpANT7MoLFG5jDm3x7BAl3EzX
+ DjafafU9wu2Uc95XQkSRwXiYfQ5DpRP.hTXAk4eJiZUwYrsvNc..wgfW6UCIaIwKhD7y.XDB9AR9
+ 85Hg6K4.pk7G4Zu5CsTQTJtaWkkNm96X5pMgVCNlXDVtBMOHy_TfVcKHyNGkzuNIrPbp3mybXTU8
+ GfGV6JrR1W6l.4TcFVGJNs00L3psDgv2JwplUbSd.v_NP9lN12l1ueER33HuFQman.YPnh2S.1EH
+ .ERyNbAoBQRFS9Bv0lejsCK_rT4kZxJZy9haGVswV.yr_yHpDc_2KHSE4QH1KAoTlGwIToPevFgG
+ 1yznBI_3O6cVzrZT9bh4PUpiPmUJI0N8G.PhpIfapy_EnIPulSmmf4ARc13u_uP5VrJXH.D8he0S
+ PCIokG2UsvdllO1S2QdnUW0IOFE4F4TWB5cgf1MUIQ1A1iIAg2eLLT0yRzG_KhDFvbmPU5Hrn4qj
+ ZsfSkoNVoTEkIu9BqKi1shaveuY2OMeQ7AkkTigWsgD5aSFrTkvgkIjADsK98L8HoVUyAf06RKlz
+ xZ81ZNm7mYTH8I8.9_mw1Cclewn5SnAtHlA--
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic305.consmr.mail.gq1.yahoo.com with HTTP; Fri, 4 Dec 2020 17:57:00 +0000
-Received: by smtp414.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID a3d4890ee4470c265d95966fea2b66bd; 
- Fri, 04 Dec 2020 17:56:55 +0000 (UTC)
+ sonic312.consmr.mail.gq1.yahoo.com with HTTP; Sat, 5 Dec 2020 05:57:44 +0000
+Received: by smtp405.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 79ee4771f967474ebbbdb5c1a23e0637; 
+ Sat, 05 Dec 2020 05:57:39 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 2/2] erofs-utils: fix cross-device submounts
-Date: Sat,  5 Dec 2020 01:56:42 +0800
-Message-Id: <20201204175642.3231-1-hsiangkao@aol.com>
+Subject: [PATCH] erofs-utils: update i_nlink stat for directories
+Date: Sat,  5 Dec 2020 13:57:32 +0800
+Message-Id: <20201205055732.14276-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20201204172042.24180-2-hsiangkao@aol.com>
-References: <20201204172042.24180-2-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+References: <20201205055732.14276-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -110,95 +109,120 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@aol.com>
 
-Use device ID and inode number to identify hardlinks
-rather than inode number only.
+Previously, nlink of directories is treated as 1 for simplicity.
 
-Fixes: a17497f0844a ("erofs-utils: introduce inode operations")
+Since st_nlink for dirs is actualy not well defined, nlink=1 seems
+to pacify `find' (even without -noleaf option) and other utilities.
+AFAICT, isofs, romfs and cramfs always set it to 1, Overlayfs sets
+it to 1 conditionally, btrfs[1], ceph[2] and FUSE client historically
+set it to 1.
+
+The convention under unix is that it's # of subdirs including "."
+and "..". This patch tries to follow such convention if possible to
+optimize `find' performance since it's not quite hard for local fs.
+
+[1] https://lore.kernel.org/r/20100124003336.GP23006@think
+[2] https://lore.kernel.org/r/20180521092729.17470-1-lhenriques@suse.com
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
-changes since v1:
- - fix improper inline comment update;
+ lib/inode.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
- include/erofs/internal.h |  7 ++++++-
- lib/inode.c              | 14 ++++++++------
- 2 files changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index bf13c166ba16..ac5b270329e2 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -112,7 +112,12 @@ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- struct erofs_inode {
- 	struct list_head i_hash, i_subdirs, i_xattrs;
- 
--	unsigned int flags;
-+	union {
-+		/* (erofsfuse) runtime flags */
-+		unsigned int flags;
-+		/* (mkfs.erofs) device ID containing source file */
-+		u32 dev;
-+	};
- 	unsigned int i_count;
- 	struct erofs_inode *i_parent;
- 
 diff --git a/lib/inode.c b/lib/inode.c
-index 1cf813daa396..618eb284550f 100644
+index 618eb284550f..357ac480154a 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -35,7 +35,7 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
+@@ -25,7 +25,7 @@
+ struct erofs_sb_info sbi;
+ 
+ #define S_SHIFT                 12
+-static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
++static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
+ 	[S_IFREG >> S_SHIFT]  = EROFS_FT_REG_FILE,
+ 	[S_IFDIR >> S_SHIFT]  = EROFS_FT_DIR,
+ 	[S_IFCHR >> S_SHIFT]  = EROFS_FT_CHRDEV,
+@@ -35,6 +35,11 @@ static unsigned char erofs_type_by_mode[S_IFMT >> S_SHIFT] = {
  	[S_IFLNK >> S_SHIFT]  = EROFS_FT_SYMLINK,
  };
  
--#define NR_INODE_HASHTABLE	64
-+#define NR_INODE_HASHTABLE	16384
++static unsigned char erofs_mode_to_ftype(umode_t mode)
++{
++	return erofs_ftype_by_mode[(mode & S_IFMT) >> S_SHIFT];
++}
++
+ #define NR_INODE_HASHTABLE	16384
  
  struct list_head inode_hashtable[NR_INODE_HASHTABLE];
- 
-@@ -54,14 +54,14 @@ static struct erofs_inode *erofs_igrab(struct erofs_inode *inode)
- }
- 
- /* get the inode from the (source) inode # */
--struct erofs_inode *erofs_iget(ino_t ino)
-+struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
+@@ -156,7 +161,7 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
+ int erofs_prepare_dir_file(struct erofs_inode *dir)
  {
- 	struct list_head *head =
--		&inode_hashtable[ino % NR_INODE_HASHTABLE];
-+		&inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE];
- 	struct erofs_inode *inode;
+ 	struct erofs_dentry *d;
+-	unsigned int d_size;
++	unsigned int d_size, i_nlink;
+ 	int ret;
  
- 	list_for_each_entry(inode, head, i_hash)
--		if (inode->i_ino[1] == ino)
-+		if (inode->i_ino[1] == ino && inode->dev == dev)
- 			return erofs_igrab(inode);
- 	return NULL;
- }
-@@ -764,6 +764,7 @@ int erofs_fill_inode(struct erofs_inode *inode,
- 	strncpy(inode->i_srcpath, path, sizeof(inode->i_srcpath) - 1);
- 	inode->i_srcpath[sizeof(inode->i_srcpath) - 1] = '\0';
+ 	/* dot is pointed to the current dir inode */
+@@ -169,16 +174,28 @@ int erofs_prepare_dir_file(struct erofs_inode *dir)
+ 	d->inode = erofs_igrab(dir->i_parent);
+ 	d->type = EROFS_FT_DIR;
  
-+	inode->dev = st->st_dev;
- 	inode->i_ino[1] = st->st_ino;
+-	/* let's calculate dir size */
++	/* let's calculate dir size and update i_nlink */
+ 	d_size = 0;
++	i_nlink = 0;
+ 	list_for_each_entry(d, &dir->i_subdirs, d_child) {
+ 		int len = strlen(d->name) + sizeof(struct erofs_dirent);
  
- 	if (erofs_should_use_inode_extended(inode)) {
-@@ -778,7 +779,8 @@ int erofs_fill_inode(struct erofs_inode *inode,
+ 		if (d_size % EROFS_BLKSIZ + len > EROFS_BLKSIZ)
+ 			d_size = round_up(d_size, EROFS_BLKSIZ);
+ 		d_size += len;
++
++		i_nlink += (d->type == EROFS_FT_DIR);
+ 	}
+ 	dir->i_size = d_size;
++	/*
++	 * if there're too many subdirs as compact form, set nlink=1
++	 * rather than upgrade to use extented form instead.
++	 */
++	if (i_nlink > USHRT_MAX &&
++	    dir->inode_isize == sizeof(struct erofs_inode_compact))
++		dir->i_nlink = 1;
++	else
++		dir->i_nlink = i_nlink;
+ 
+ 	/* no compression for all dirs */
+ 	dir->datalayout = EROFS_INODE_FLAT_INLINE;
+@@ -957,6 +974,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 			ret = PTR_ERR(d);
+ 			goto err_closedir;
+ 		}
++
++		/* to count i_nlink for directories */
++		d->type = (dp->d_type == DT_DIR ?
++			EROFS_FT_DIR : EROFS_FT_UNKNOWN);
  	}
  
- 	list_add(&inode->i_hash,
--		 &inode_hashtable[st->st_ino % NR_INODE_HASHTABLE]);
-+		 &inode_hashtable[(st->st_ino ^ st->st_dev) %
-+				  NR_INODE_HASHTABLE]);
- 	return 0;
- }
+ 	if (errno) {
+@@ -978,6 +999,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
  
-@@ -829,7 +831,7 @@ struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
- 	 * since hard-link directory isn't allowed.
- 	 */
- 	if (!S_ISDIR(st.st_mode)) {
--		inode = erofs_iget(st.st_ino);
-+		inode = erofs_iget(st.st_dev, st.st_ino);
- 		if (inode)
- 			return inode;
- 	}
+ 	list_for_each_entry(d, &dir->i_subdirs, d_child) {
+ 		char buf[PATH_MAX];
++		unsigned char ftype;
+ 
+ 		if (is_dot_dotdot(d->name)) {
+ 			erofs_d_invalidate(d);
+@@ -1000,7 +1022,10 @@ fail:
+ 			goto err;
+ 		}
+ 
+-		d->type = erofs_type_by_mode[d->inode->i_mode >> S_SHIFT];
++		ftype = erofs_mode_to_ftype(d->inode->i_mode);
++		DBG_BUGON(d->type != EROFS_FT_UNKNOWN && d->type != ftype);
++		d->type = ftype;
++
+ 		erofs_d_invalidate(d);
+ 		erofs_info("add file %s/%s (nid %llu, type %d)",
+ 			   dir->i_srcpath, d->name, (unsigned long long)d->nid,
 -- 
 2.24.0
 
