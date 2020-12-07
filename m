@@ -1,93 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id A07792D08D6
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Dec 2020 02:25:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FF222D13EA
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Dec 2020 15:44:43 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cq5G76Fl3zDqcW
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Dec 2020 12:25:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CqR0m6LP8zDqWM
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 01:44:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=NE/YLJ6N; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=NE/YLJ6N; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ dmarc=pass (p=none dis=none) header.from=intel.com
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cq5G00G5mzDqZP
- for <linux-erofs@lists.ozlabs.org>; Mon,  7 Dec 2020 12:24:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607304293;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
- references:references; bh=sPZMkWPyWVaaTUTdVItsmybqSHRLMaGJkADfcXrdhD0=;
- b=NE/YLJ6Nb8ORKyLXqUlTAKKLwG7xMPl3aVAo4+374a1RPqBme6xtC94aAXYxs02rrVosxn
- V9O9tJ6zXd00X2Px8pHNcwHKrWFfu7UDG59xp85i4jV6lKUkGXI6jyoLsMaf2K0Mep8h2g
- gQplrjyInVfYChzayDrxag7T3dqfANg=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607304293;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
- references:references; bh=sPZMkWPyWVaaTUTdVItsmybqSHRLMaGJkADfcXrdhD0=;
- b=NE/YLJ6Nb8ORKyLXqUlTAKKLwG7xMPl3aVAo4+374a1RPqBme6xtC94aAXYxs02rrVosxn
- V9O9tJ6zXd00X2Px8pHNcwHKrWFfu7UDG59xp85i4jV6lKUkGXI6jyoLsMaf2K0Mep8h2g
- gQplrjyInVfYChzayDrxag7T3dqfANg=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-596-vJ5ul1MLOVqdPAjW9pEGJg-1; Sun, 06 Dec 2020 20:24:52 -0500
-X-MC-Unique: vJ5ul1MLOVqdPAjW9pEGJg-1
-Received: by mail-pj1-f69.google.com with SMTP id p20so6697781pjz.0
- for <linux-erofs@lists.ozlabs.org>; Sun, 06 Dec 2020 17:24:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
- :references;
- bh=sPZMkWPyWVaaTUTdVItsmybqSHRLMaGJkADfcXrdhD0=;
- b=Rr4dKsFcsiH/JvqhuNq5dogNi/YSK3j66X/1TaCAbFsqN6lCnAURU/uidjyN5Roslq
- sp27WQQiYKXf1o3if35pzBmvwQiukFfPzeuNSQ1UQ2C9Gi98IxKW9fAIf5wHBJaSrboA
- LHF59lZu31rP3QXqratIgqW1etgEpZIcZEjqiZ9M51ylwbof9YdXuGdIicmzSRJOre7H
- LEeyChE3Hv6+ZcjbyZeFUMCvGIJOqOaolSdraBhCsGf8+s3+vdvQ9wF6Nz07+4jP/OnK
- 8iFd40ShhcMSDjJxgtvLvI+sUxc3dIYJxNFVxMuFol6UASzgrGTTzHckTggzerfxSWpM
- kV9Q==
-X-Gm-Message-State: AOAM530Ai83ZBm47IqkjK/8GRl4JFxdrckZ4L4NySLkhi+Kz5zflAlxp
- xfPBtO6d0pj7cFdIuhGhhDcrZBpGq1kZr2TtbDSOCQ+Sseo0dwMmEVlOHpwG+AWZM4f7AuYqMOp
- 0KA0kRJj8rhuSC5nb/i19duFMOt4Y7IVjydYcPpX9jXyFly0ZRLh5n5hzkjBJ3G1Z40kYNcnKRe
- dp6w==
-X-Received: by 2002:aa7:8ac1:0:b029:19d:beff:4e0f with SMTP id
- b1-20020aa78ac10000b029019dbeff4e0fmr12861636pfd.0.1607304290561; 
- Sun, 06 Dec 2020 17:24:50 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy76aU9QSvKxeU7JwVnF91LA80bFL4tQFJSdIYpiOIleO/vCRSKgFZj3awZ33K3hPz8OuLQzQ==
-X-Received: by 2002:aa7:8ac1:0:b029:19d:beff:4e0f with SMTP id
- b1-20020aa78ac10000b029019dbeff4e0fmr12861617pfd.0.1607304290238; 
- Sun, 06 Dec 2020 17:24:50 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id z13sm8600202pjt.45.2020.12.06.17.24.47
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sun, 06 Dec 2020 17:24:49 -0800 (PST)
-From: Gao Xiang <hsiangkao@redhat.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 3/3] erofs: simplify try_to_claim_pcluster()
-Date: Mon,  7 Dec 2020 09:23:46 +0800
-Message-Id: <20201207012346.2713857-3-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20201207012346.2713857-1-hsiangkao@redhat.com>
-References: <20201207012346.2713857-1-hsiangkao@redhat.com>
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="US-ASCII"
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CqR0h3fSZzDqT1
+ for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 01:44:30 +1100 (AEDT)
+IronPort-SDR: B1l/7lk1q1+cUem5UEpvSpXB82Hwmvv9IrwdGC0gl4GX/vfv0WF5pG+IOB9+7WjBZO+emU7sCn
+ 6D6rPLOI9sVw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9827"; a="161477178"
+X-IronPort-AV: E=Sophos;i="5.78,399,1599548400"; d="scan'208";a="161477178"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+ by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 07 Dec 2020 06:44:09 -0800
+IronPort-SDR: HSb1x7ZPHnmYDwV7x/KNQ7lgKAxtajQQVRoecUkREI71S7YVIkmDdVGPVjW0LqQlZD5CCMYBXp
+ Ocp8rMFK+Erg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,399,1599548400"; d="scan'208";a="436772585"
+Received: from lkp-server01.sh.intel.com (HELO f1d34cfde454) ([10.239.97.150])
+ by fmsmga001.fm.intel.com with ESMTP; 07 Dec 2020 06:44:07 -0800
+Received: from kbuild by f1d34cfde454 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1kmHkE-00005F-Ue; Mon, 07 Dec 2020 14:44:07 +0000
+Date: Mon, 07 Dec 2020 22:43:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@redhat.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ c8390cfaa07cb9e9ccaa946a1919b69dfb34bad1
+Message-ID: <5fce3f87.KOiFMgiXzbmn0pNJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -99,94 +56,122 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-simplify try_to_claim_pcluster() by directly using cmpxchg() here
-(the retry loop caused more overhead.) Also, move the chain loop
-detection in and rename it to z_erofs_try_to_claim_pcluster().
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
+branch HEAD: c8390cfaa07cb9e9ccaa946a1919b69dfb34bad1  erofs: remove a void EROFS_VERSION macro set in Makefile
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+elapsed time: 723m
+
+configs tested: 96
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                       imx_v6_v7_defconfig
+arm                          tango4_defconfig
+microblaze                      mmu_defconfig
+arm                        trizeps4_defconfig
+xtensa                generic_kc705_defconfig
+m68k                        mvme16x_defconfig
+m68k                          amiga_defconfig
+mips                      pistachio_defconfig
+arm                            zeus_defconfig
+arm                     eseries_pxa_defconfig
+sh                          r7780mp_defconfig
+powerpc64                           defconfig
+arm                          ixp4xx_defconfig
+sh                          rsk7203_defconfig
+powerpc                     pseries_defconfig
+mips                  decstation_64_defconfig
+arm                          pxa168_defconfig
+mips                           ci20_defconfig
+powerpc                     ep8248e_defconfig
+mips                       rbtx49xx_defconfig
+arm                            dove_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20201207
+i386                 randconfig-a004-20201207
+i386                 randconfig-a001-20201207
+i386                 randconfig-a002-20201207
+i386                 randconfig-a006-20201207
+i386                 randconfig-a003-20201207
+x86_64               randconfig-a016-20201207
+x86_64               randconfig-a012-20201207
+x86_64               randconfig-a014-20201207
+x86_64               randconfig-a013-20201207
+x86_64               randconfig-a015-20201207
+x86_64               randconfig-a011-20201207
+i386                 randconfig-a014-20201207
+i386                 randconfig-a013-20201207
+i386                 randconfig-a011-20201207
+i386                 randconfig-a015-20201207
+i386                 randconfig-a012-20201207
+i386                 randconfig-a016-20201207
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20201207
+x86_64               randconfig-a006-20201207
+x86_64               randconfig-a002-20201207
+x86_64               randconfig-a001-20201207
+x86_64               randconfig-a005-20201207
+x86_64               randconfig-a003-20201207
+
 ---
- fs/erofs/zdata.c | 51 +++++++++++++++++++++++-------------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index edd7325570e1..b1b6cd03046f 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -298,34 +298,33 @@ static int z_erofs_attach_page(struct z_erofs_collector *clt,
- 	return ret ? 0 : -EAGAIN;
- }
- 
--static enum z_erofs_collectmode
--try_to_claim_pcluster(struct z_erofs_pcluster *pcl,
--		      z_erofs_next_pcluster_t *owned_head)
-+static void z_erofs_try_to_claim_pcluster(struct z_erofs_collector *clt)
- {
--	/* let's claim these following types of pclusters */
--retry:
--	if (pcl->next == Z_EROFS_PCLUSTER_NIL) {
--		/* type 1, nil pcluster */
--		if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_NIL,
--			    *owned_head) != Z_EROFS_PCLUSTER_NIL)
--			goto retry;
-+	struct z_erofs_pcluster *pcl = clt->pcl;
-+	z_erofs_next_pcluster_t *owned_head = &clt->owned_head;
- 
-+	/* type 1, nil pcluster (this pcluster doesn't belong to any chain.) */
-+	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_NIL,
-+		    *owned_head) == Z_EROFS_PCLUSTER_NIL) {
- 		*owned_head = &pcl->next;
--		/* lucky, I am the followee :) */
--		return COLLECT_PRIMARY_FOLLOWED;
--	} else if (pcl->next == Z_EROFS_PCLUSTER_TAIL) {
--		/*
--		 * type 2, link to the end of a existing open chain,
--		 * be careful that its submission itself is governed
--		 * by the original owned chain.
--		 */
--		if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
--			    *owned_head) != Z_EROFS_PCLUSTER_TAIL)
--			goto retry;
-+		/* so we can attach this pcluster to our submission chain. */
-+		clt->mode = COLLECT_PRIMARY_FOLLOWED;
-+		return;
-+	}
-+
-+	/*
-+	 * type 2, link to the end of an existing open chain, be careful
-+	 * that its submission is controlled by the original attached chain.
-+	 */
-+	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
-+		    *owned_head) == Z_EROFS_PCLUSTER_TAIL) {
- 		*owned_head = Z_EROFS_PCLUSTER_TAIL;
--		return COLLECT_PRIMARY_HOOKED;
-+		clt->mode = COLLECT_PRIMARY_HOOKED;
-+		clt->tailpcl = NULL;
-+		return;
- 	}
--	return COLLECT_PRIMARY;	/* :( better luck next time */
-+	/* type 3, it belongs to a chain, but it isn't the end of the chain */
-+	clt->mode = COLLECT_PRIMARY;
- }
- 
- static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
-@@ -370,10 +369,8 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
- 	/* used to check tail merging loop due to corrupted images */
- 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
- 		clt->tailpcl = pcl;
--	clt->mode = try_to_claim_pcluster(pcl, &clt->owned_head);
--	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
--	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
--		clt->tailpcl = NULL;
-+
-+	z_erofs_try_to_claim_pcluster(clt);
- 	clt->cl = cl;
- 	return 0;
- }
--- 
-2.18.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
