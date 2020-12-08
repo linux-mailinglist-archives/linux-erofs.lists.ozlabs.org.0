@@ -1,96 +1,96 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDD762D2933
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 11:49:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 908E92D2955
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 11:58:27 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cqxks4q39zDqXt
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 21:49:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CqxxF01qRzDqVb
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 21:58:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1607425105;
+	bh=O5YLBZ1OMn/oLFNcFa7hdg0VoZy6oETqYoLdA+cZT88=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=edbB/rstSfsx987QGfTiFFgsTvZofPA2z716HimH4WE7pU1wbIm4KPiws407d1PH8
+	 84Glx65qFvKPZErYfB8Olw1+bbt8uFqDYemIt4Y53oN/lr8jQEzERBjosJgLnLk/qD
+	 LUrn3KuOZpYaDvGdwJCr28H0tGg3S7cqIzXb9oENXynj/UKMX8RTHA0upixi+RPJ6j
+	 tFLKKv2TGcz7Yd5H3RPei7cjuiNhbvu5mAvvzvf1LtzqFVp2eKb12r9RHLSDnjGg5X
+	 nLGFYGjV7ChLiBHqVNs/jufvmlgkS7Zpx0opV29UwWt4n6Nk7npPGPuYJiQvlANduu
+	 80tRBhLVr7Q2A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=Rdgz+Fkm; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=Rdgz+Fkm; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.82; helo=sonic306-19.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=Ei5UY2LD; dkim-atps=neutral
+Received: from sonic306-19.consmr.mail.gq1.yahoo.com
+ (sonic306-19.consmr.mail.gq1.yahoo.com [98.137.68.82])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cqxgk5r7QzDqS4
- for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 21:46:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607424399;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=6J7yIt7zqDSkwMsxNQ0gl/rypHTz6CfNQjqIdgk+jqw=;
- b=Rdgz+Fkmx4/t6V8CGzMhGqKCXSD7ykE/KCj+l5i+oVwLIQFk92MkkE/9piwvj0c4wyoLC1
- YsTRpwm4i1qlN+bcnMmxZIbW9/zVhL2dOhU/8ejsBxC4g74HeWI/jeARaDLOvnhWcKKtdp
- BFA4FevLA0d5weyhklD4aKPB7V4lDsQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607424399;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=6J7yIt7zqDSkwMsxNQ0gl/rypHTz6CfNQjqIdgk+jqw=;
- b=Rdgz+Fkmx4/t6V8CGzMhGqKCXSD7ykE/KCj+l5i+oVwLIQFk92MkkE/9piwvj0c4wyoLC1
- YsTRpwm4i1qlN+bcnMmxZIbW9/zVhL2dOhU/8ejsBxC4g74HeWI/jeARaDLOvnhWcKKtdp
- BFA4FevLA0d5weyhklD4aKPB7V4lDsQ=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-Swachz9lOCisMwoGjCqUqA-1; Tue, 08 Dec 2020 05:46:37 -0500
-X-MC-Unique: Swachz9lOCisMwoGjCqUqA-1
-Received: by mail-pg1-f197.google.com with SMTP id q4so733197pgn.0
- for <linux-erofs@lists.ozlabs.org>; Tue, 08 Dec 2020 02:46:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=6J7yIt7zqDSkwMsxNQ0gl/rypHTz6CfNQjqIdgk+jqw=;
- b=PCoBmim6gAZgXgrAqn5TXY1K1l/wf/S2c04wPh15Isvpu053AKNyFiIiu46sZDmHRR
- 9WIEa6YRgp3+wkJucad7j9f50Ogp1uZjDA7girtg11EyMiX6OxebLNN4lmk8ciM1BjAg
- zNe5CqMv2NOmRYSlYCkOTjNsc9HZBLHKsqwSVlEPGmhwD/m9IntFOqJ2Y2Cp1GXQOsqS
- tCpw4+YaACLrD9g1l5NDnxwlfhB2Q/fhmmSm9avecMnBvRayPoWkiZmYY3726NESxJY1
- A8R0wQGqHTtMOlh4NpFHyrJcAnDwCDZQHeVPXu6v112YociKMVnvdvSI37P/iacclugY
- /Aqg==
-X-Gm-Message-State: AOAM532sZ46sCHreW1M+GnPF0EQrnSiUEoyrW6dK24f+o7aA9s46uiFx
- duJjV6WmWFN0GYCBli/6ytxvOSv0GNEE0xZ5xHZQmivBKVniJ/8HmeT1Hjq6GyN54QdR+E7/gIv
- NkyhK8U8KTqItdWD5oi1asLI7
-X-Received: by 2002:a17:90a:4bc3:: with SMTP id
- u3mr3811438pjl.56.1607424396412; 
- Tue, 08 Dec 2020 02:46:36 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyVoFLWmyxlNZ3rUBYkDhl5XskptEnMXkPhEeVuLOKQuUPkfcUJTENTfIM4P+UeoldLXkZtTw==
-X-Received: by 2002:a17:90a:4bc3:: with SMTP id
- u3mr3811421pjl.56.1607424396227; 
- Tue, 08 Dec 2020 02:46:36 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id cl23sm2727416pjb.23.2020.12.08.02.46.34
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Tue, 08 Dec 2020 02:46:35 -0800 (PST)
-Date: Tue, 8 Dec 2020 18:46:26 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: nl6720 <nl6720@gmail.com>
-Subject: Re: Cannot build erofs-utils 1.2: multiple definition of `sbi'
-Message-ID: <20201208104626.GA3140556@xiangao.remote.csb>
-References: <10789285.Na0ui7I3VY@walnut>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Cqxwy6M4bzDqVb
+ for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 21:58:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1607425083; bh=VNqMr3jKoS+DukRnzjU0CCkuLupVCxwfirNXOR3+NV0=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=Ei5UY2LDLbOnx9THdrx7r+XyRgjvNHig2kck8eEmkkvhXfGhF71XyJClsmEr/fjneVUTN+39SYigeYqbC5Ix4OkpZNDBeaQbUiKBsEDaXos8QW8fYyPG2jJo1eep4AH0YVQekwOkCTWIXRE+GUOSpSmDly00HBTJq4SmK5UUz40780bEzTe3qRlOFdtrjZLsHRuMKVTlvPLukfFAQ6prDHgZE21UQ8aI0RvISfN/Jvkhiu7kl0H706ivM3KyzaEGw/d8FjYNwbdw70XYxLWDvec9CruJy9paU+UnH1v0rM/SpQnb9BYzWqhMwF7XGbSBHIV/R/eD15k5CSVDOzY+yg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1607425083; bh=23lp2ba+UAcL8NBFq/RIZjFuASIFY9ySNSULyhwiQdj=;
+ h=From:To:Subject:Date:From:Subject;
+ b=ZtzGPPIcq6Fj5kYUNIjGY4EU5dwgo0wN3uDlwIB0rwpPs1GJZ+lJV1YyHTvfKe41pjjo/0q4/M8SlcRX8S0+lFqKVduo3RHGrlQV9M6DGquC6qlwxHkFrer4bnzPEtx2PZh/5jPmaeSm/grGkzQUZRQ4QhjAHqbtER7BvsJTxmr+KiXTz4jJqg7ZedGVNIl1VjIW4Sr+5Sa4ckM0wh2kwOd/tqdqdcMuLmrqGubkKQaK/rNiQvpdwImLonFf2k2Zn0p2fLh4sUfPwiMEAB4Y0hqGdIKexHTNJv0T2BvS/q7aLXfIWI/NihIZJE4d6XLsyniibxpd+nYW9upiuLYo3Q==
+X-YMail-OSG: cEyVkAwVM1kn0fMfiu74tvIZ1eksOU59fmv.3fCNQEMd2ZC7sMj0MOlQK5Xj.df
+ iqcBOGA5Di4_2IXbjr4qvysfFxTm_M37ibD7mlV7F7kkXR8LOuz9RlHfE3t2g5ekM.L65yMHlGcn
+ QtP_GDkEMR986mzU2zzlmAHdbBtZYR_YNmrL6NPY0pxgzzXcRpiASZfSZjrUdxMoOBqRu1GpMCHL
+ oKpbqk0quOnSjXkbDf4H1N_24BkGkBbhrA3gQ2w1o5WM9Ztym51v8mu4s6YasMvS2Tdw7xhyrFgX
+ GkptNtWpNwcN7SshqfXQdF9NqV6RNGlBbuuuAtOgmaVTvp18Av0i0YT6XM9OxIRy8OUhkgK2gUN9
+ BX7Y4bfm4oO6jRPldqV4SByz.ayowbkMwh9PXlu8IaEiTxPDvrL3_W.pLSBM.NAqlzCEkE.F0QoV
+ 5jy7casMm42ZMnesE5sgxuFUvKGfrUiqOORCqtKvb2LjAaMNNtvTHX7899PpfcFuU1w6NGnL4cSr
+ lGAWQjlDA0.1xuJVpR.mRna6roVLuDoz7twg_.Chh.9jDmqXJxhF2DO43BZVUdLsn.K1XAYf8Vad
+ L.cFcxFs3HisljKtGkBU5GHTHtCm6LuWLgAsFm2lInj4hu3qKqhDz_qvZZKaY7ZwqFEkDcu9Y2Qa
+ Ry7_MRAU7YtaA7Gla9AgzlleUHswP2dacdDiF5Rb510lgM8oaID4JjhGzvb0qC_cJPq6K5nt49EQ
+ XOZdbrZBJHpCfnxq4RPBgpttXmlIIWyjfbJYOJgGcOwnThVEKxybiGwv5vNMWiZbapTX18wXyfsx
+ MvnqzTY5NtIFk903g9EDo7lbdFIcW3IeAUgyrEINqp.MqJCglX2BdQFg3sunRQ4o1fTqNogxcr.o
+ W_WR4yBVLcGyEvDpW1p7tbyA24ilVRi1ltYLdDBlR_of57fc7cGfH5f.OfyfG_5iMX6sTg1T2J0F
+ Y_5L8C17uelGbaWw2TktFa3QhFLrucHYdk1xLYIzH8I8f77ZP3k8uy.x5Wc6kiByBoy9NVY1aRIs
+ fzIqbmwXe.iOGMWCa5cPLlMgmnRKD0JrS7uzvvgheQVI28fjCoe0qpYNPOfupDRUsTwMI5bkaK7h
+ PMYL0x_H9pGv15Wm3eqyX9qy8iE0bEToyvtul6TF27SGnZf4I.pck8aKr6rmJOx8BMUpOmY_92xu
+ XWMqUn_JXc15sd2Qjli0mwzA_rgU3ha9hqw.fG2poEq9CHQvugwUMjlZZSqXfsmAARUtitWsToLE
+ LaXXEdlclPGSVXtaGsIH5ycL8yLWLS14aYvAEpJOrcorRwngGaDB4mPI3GcHS6GCxH9.qqKTZnxC
+ peu9muyNpYkbGmgHlVOiqc2I7qkPL70v19DsQE2USPAkmpYoh80Hr89pykFKuvYIZazKx3N833Bo
+ jvYU8MNzE66lJfqMNBHiY0MFWB_UKyRPgaYYFKN1024dkmrTdtWRqRtSasH8PVjsFGPGrZLJ.PyG
+ I.EftMASrQSJW47X6YnnTlTXpuCSM4gexbwj0MjSzoPtSmrmyCP038x0FM7zjf3fyMMz7B4SCopa
+ 8KBVg0BY_zmFziYNcEo_0VGQ7vnYLPlfmp_dZZNSObvcvhUYYDeiaXr6.8JNCpsDxSMVpMPqeMk5
+ 7HMfpWbDq3mmGBnVb1kIq9QXAAjxgu6mH61eECScmSXAAy2zw6C16UsDOG0ExXuxq4hCCWl.yneS
+ 1uGeFU6XIoabUni9r_OOl6oUgaiX3OlQs081wdKfI9alITusGHdtPF6EdxpuDCUHKklKWvmuFFoH
+ ToUgWnIIHt.EDauLqkeXUI3EbX6s4y4ooa42oX2gebstnpXiCZDnuxG4P542u3mwFmPnKehp9YFW
+ P8TnACjZPYfHcdByI8h60g4DDoPGFKLExX4fj18Mhi54W4Zr9Cbus2ake4MvEQ8YuHfaR9RDoux9
+ qnPFTyomyr1LPeYdg29c0c_7qHlGdKlRI5MhWxU9SGQmQa9udROqDvEqx5p7zTswHrlJf2KTFCCs
+ oZopp0GgKYn3knZn7fL7isYHLDnpM4pg1MZC34uxj43nMNHuJvptdWbWKyGVZ00EGsXwiKAGC..T
+ NsiLUQXsJJPS3tOf9hkMjzCNG9fGlzW3mtEddrsWw1Zj8xo1A2euq_nX1rJuFoAKO.NGu6gEIXbd
+ e8MJ83Q2nBFifBtrv.b2zPPHLae2QTPDDJLnkTsMd4BJQg1DDD6B6PJQRjRkQ_8BbzuspsltzfDe
+ BkFV3JQb5Kj61F0mC_Yij7obpDrWNh7XUC_FO4_db_zQpO3qrDZ5ig9xTTrDuuXLC.M8nk2qoHpn
+ iR6erafNEH8nop0a35LUYU3WQtqMAPIKXsmMNEi6.dQDbbFsXLm.mIsuNUij3pIuY6FQ7BvRtv.2
+ RsAw7UzToWRTDlDiP.43xm5pG4WWee6NfB4TmAhGqGs8_IXjYGp2HtT4_Z27tdPqfZa9WqLpM1bQ
+ oYQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic306.consmr.mail.gq1.yahoo.com with HTTP; Tue, 8 Dec 2020 10:58:03 +0000
+Received: by smtp409.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 035c98433a10899da22310b8761a126c; 
+ Tue, 08 Dec 2020 10:57:55 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org,
+	nl6720 <nl6720@gmail.com>
+Subject: [PATCH] erofs-utils: fix multiple definition of `sbi'
+Date: Tue,  8 Dec 2020 18:57:41 +0800
+Message-Id: <20201208105741.9614-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <10789285.Na0ui7I3VY@walnut>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+References: <20201208105741.9614-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -102,33 +102,68 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+As nl6720 reported [1], lib/inode.o (mkfs) and lib/super.o (erofsfuse)
+could be compiled together by some options. Fix it now.
+
+[1] https://lore.kernel.org/r/10789285.Na0ui7I3VY@walnut
+Reported-by: nl6720 <nl6720@gmail.com>
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+---
 Hi nl6720,
-
-On Tue, Dec 08, 2020 at 12:35:42PM +0200, nl6720 wrote:
-> Hi,
-> 
-> I'm having trouble building erofs-utils 1.2. It fails in "Making all in mkfs":
-> 
-> /bin/sh ../libtool  --tag=CC   --mode=link gcc -Wall -Werror -I../include -march=x86-64 -mtune=generic -O2 -pipe -fno-plt  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -o mkfs.erofs mkfs_erofs-main.o -luuid  ../lib/liberofs.la  -R/usr/lib -llz4 
-> libtool: link: gcc -Wall -Werror -I../include -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z -Wl,relro -Wl,-z -Wl,now -o mkfs.erofs mkfs_erofs-main.o  -luuid ../lib/.libs/liberofs.a -llz4 -Wl,-rpath -Wl,/usr/lib
-> /usr/bin/ld: ../lib/.libs/liberofs.a(liberofs_la-inode.o):(.bss+0x40000): multiple definition of `sbi'; ../lib/.libs/liberofs.a(liberofs_la-super.o):(.bss+0x0): first defined here
-> 
-> This is on Arch Linux with:
-> binutils 2.35.1-1
-> gcc 10.2.0-4
-> libtool 2.4.6+42+gb88cebd5-14
-
-Thanks for the quick feedback! since inode.o is for just mkfs, and super.o is for just erofsfuse,
-so I didn't observe such issue before with my configuration... I think it may need a
-temporary fix for packaging (if erofsfuse is unneeded, since lz4-1.9.3 is needed safely,
-is just get rid of the one in lib/super.c, or move these two into lib/config.c....)
-I will submit a formal submission later....
+could you verify this patch? Thanks in advance!
 
 Thanks,
 Gao Xiang
+
+ lib/config.c | 1 +
+ lib/inode.c  | 2 --
+ lib/super.c  | 2 --
+ 3 files changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/lib/config.c b/lib/config.c
+index 315511284871..3ecd48140cfd 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -11,6 +11,7 @@
+ #include "erofs/internal.h"
+ 
+ struct erofs_configure cfg;
++struct erofs_sb_info sbi;
+ 
+ void erofs_init_configure(void)
+ {
+diff --git a/lib/inode.c b/lib/inode.c
+index 3d634fc92852..0c4839dc7152 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -22,8 +22,6 @@
+ #include "erofs/xattr.h"
+ #include "erofs/exclude.h"
+ 
+-struct erofs_sb_info sbi;
+-
+ #define S_SHIFT                 12
+ static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
+ 	[S_IFREG >> S_SHIFT]  = EROFS_FT_REG_FILE,
+diff --git a/lib/super.c b/lib/super.c
+index 2d366928e12b..025cefee3aac 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -11,8 +11,6 @@
+ #include "erofs/io.h"
+ #include "erofs/print.h"
+ 
+-struct erofs_sb_info sbi;
+-
+ static bool check_layout_compatibility(struct erofs_sb_info *sbi,
+ 				       struct erofs_super_block *dsb)
+ {
+-- 
+2.24.0
 
