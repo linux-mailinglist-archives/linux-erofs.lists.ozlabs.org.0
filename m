@@ -2,114 +2,98 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E2BE2D268A
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 09:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 168B22D268B
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 09:49:28 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cqv3P4DwtzDqWT
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 19:48:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Cqv4P263TzDqTv
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 19:49:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oppo.com (client-ip=40.107.131.75;
- helo=apc01-sg2-obe.outbound.protection.outlook.com;
- envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=oppo.com
+ dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=oppoglobal.onmicrosoft.com
- header.i=@oppoglobal.onmicrosoft.com header.a=rsa-sha256
- header.s=selector1-oppoglobal-onmicrosoft-com header.b=AJmjQ/w/; 
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=ZrixKqqL; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZrixKqqL; 
  dkim-atps=neutral
-Received: from APC01-SG2-obe.outbound.protection.outlook.com
- (mail-eopbgr1310075.outbound.protection.outlook.com [40.107.131.75])
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cqv3G5lCtzDqBK
- for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 19:48:25 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NeofkVAaPwwLRl0/zcqc/ptUEprFzP/epsHGudAHYkwRjEQkYH04QNdQh6LBKekXgMs6mnU3mldvcdmEKT/yy087gPX17T4vuOct57kOSwUegtZKnJqDRUZjAH+7HlanBrdwyVOoayR0fOVaaX3rQ0GKebYEogcHch0ZmfsjNUb+zCwgShr6ceF1NCST9lD33hRyIXrVmMWkT+kOqDN+R++vwLIh26V6cdimO8fq/4xjUfjvJu5w6SuZN5Sx3RSaMqJjuQ5q5DgAWh4rnwxDAOm7+qNLD2NaKJj0V8loEKHnwZf1Uc6gxaWSeSk5CrcO02n/2yNQsRA+npiSvG4a3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PSDIaCRWrr7+9O1amqJe/tKvjfAUmManVpRfJ/4fvgY=;
- b=H7UGf9wTWsjbU/S1etGKHOfWjXCeo/S3CkvKe89iv5/VWi1NXMZm58MnhRiFnfeF7rLeoWWB6WFvBBdZG1/Jo4jG36RtegcX8wAIVR6Z0J2g+lDxJPA1E+ojoIDLY7F4RRtt6sl5UogULIZqaemulwf5lTw5QhmKXPEmLuHI13BLr+qUBG3H5c55/7auBq/9lYctuXtQKDtAPAuAMbZMm7Qs8AyF7f7YwDO7A20ZiD3/Km2BSQHIc/KSiD8F9w732ztPSzdbQOoY8QeKSTk3+Jz2iz1TeIUx+twSHcOvTrSVUA/Ja5cFD1RhQcl1FND3yuKUO9cWEQQl881u9JBanA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PSDIaCRWrr7+9O1amqJe/tKvjfAUmManVpRfJ/4fvgY=;
- b=AJmjQ/w/zWML0B9nGTURvjcgwVJMdze4wVU+Gf9fpq1JL0Csl/dMh0C/6ZO90rH1FQNsiZ9Izv8vZlF4HOXmtd/Ho4O1VJiRQcjn685Q7EiwOdnBqVBJovsWpx92YbEzn78BKkmMlE3ZOHqeQax/1Tq/cePbQkHwRas40lUcAlE=
-Authentication-Results: lists.ozlabs.org; dkim=none (message not signed)
- header.d=none;lists.ozlabs.org; dmarc=none action=none header.from=oppo.com;
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
- SG2PR02MB2988.apcprd02.prod.outlook.com (2603:1096:4:5f::16) with
- Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3632.21; Tue, 8 Dec 2020 08:48:20 +0000
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::dcd:13c1:2191:feb7]) by SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::dcd:13c1:2191:feb7%7]) with mapi id 15.20.3632.021; Tue, 8 Dec 2020
- 08:48:19 +0000
-From: Huang Jianan <huangjianan@oppo.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix wrong address in erofs_get_block
-Date: Tue,  8 Dec 2020 16:47:50 +0800
-Message-Id: <20201208084750.5469-1-huangjianan@oppo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [58.252.5.72]
-X-ClientProxiedBy: HK2PR06CA0016.apcprd06.prod.outlook.com
- (2603:1096:202:2e::28) To SG2PR02MB4108.apcprd02.prod.outlook.com
- (2603:1096:4:96::19)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Cqv4K0kR7zDqBK
+ for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 19:49:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607417358;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=FVKEmPz+hR1MOnlGTe8fbrRzGCLUHNQb/QoMNYY2V2c=;
+ b=ZrixKqqLsd9VN32XjHatbYfxQQJAQaDTQvOA++m2Pa0qBDif5mxnyTLkYi6dJNXCDOJs0+
+ jVslkoCoqa/R+1Dvw8l8RB6XjC3tgEHD6vBjIvCQr6nHsUzBJZv/BufojmRMnC9EaVqsya
+ cxnkYf/qN8fYhM2G9M7g9tBCSgol38I=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607417358;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=FVKEmPz+hR1MOnlGTe8fbrRzGCLUHNQb/QoMNYY2V2c=;
+ b=ZrixKqqLsd9VN32XjHatbYfxQQJAQaDTQvOA++m2Pa0qBDif5mxnyTLkYi6dJNXCDOJs0+
+ jVslkoCoqa/R+1Dvw8l8RB6XjC3tgEHD6vBjIvCQr6nHsUzBJZv/BufojmRMnC9EaVqsya
+ cxnkYf/qN8fYhM2G9M7g9tBCSgol38I=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-MCeeG_j1Pi6c_SUV-Y-FMA-1; Tue, 08 Dec 2020 03:49:16 -0500
+X-MC-Unique: MCeeG_j1Pi6c_SUV-Y-FMA-1
+Received: by mail-pl1-f197.google.com with SMTP id u14so889794plx.23
+ for <linux-erofs@lists.ozlabs.org>; Tue, 08 Dec 2020 00:49:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=FVKEmPz+hR1MOnlGTe8fbrRzGCLUHNQb/QoMNYY2V2c=;
+ b=Au4PNS2SjXbyAQnG0dCe0kOdGZt7jPzMXVDIz/UwU/n7bJWd7ZTYuscOqbI8H+43eF
+ DGosmhXRCH76TKLHpu0IEgvBwLGDPfAtw6zW11J/9sddYOPIbEFpnCZQ44RnrLZN30Dq
+ gwjIMmD1Et+oLD9pUNK3wXCfabPAEq13nOrR8efnOx3jDOMV2pYKbkLXat4v2JNUtehL
+ 77wY0fejjfnJnNAuFV9hdGzF1ISd+jpoEVPChTcmDTttNIku8JxaZTBnutNACCs8HVjb
+ M8OCkR/lDxZk+MtdHdxKOBqRvSJueLVGsvMhKbF6zhWy595rQFtXqEf5MATEAclobczI
+ uhBQ==
+X-Gm-Message-State: AOAM530rXfqtRD2bGIwiJMAZtFWJHIn8GzcTXKtPMwxiz+7l+XLBzsaL
+ ZF4QxBZ57ZfkDSwzkam6F++Yn/BMNNhukn/WLO/tBdnSEC3d+CQqzYZEJ5zhTZIH868eA9Yxrt4
+ WLMuwxIYRzMUERNEfpXtnYh5g
+X-Received: by 2002:a17:90b:14d3:: with SMTP id
+ jz19mr3328899pjb.196.1607417355192; 
+ Tue, 08 Dec 2020 00:49:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzVVwLl/tb5ygU0mRdNtU1CDi3sGfGi/JjDj/VNYM/43xNAydkYfbdc6OZgWcOAuFtBetv1xg==
+X-Received: by 2002:a17:90b:14d3:: with SMTP id
+ jz19mr3328880pjb.196.1607417354921; 
+ Tue, 08 Dec 2020 00:49:14 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id b8sm14983646pgk.7.2020.12.08.00.49.12
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 08 Dec 2020 00:49:14 -0800 (PST)
+Date: Tue, 8 Dec 2020 16:49:04 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH v2 1/3] erofs: get rid of magical Z_EROFS_MAPPING_STAGING
+Message-ID: <20201208084904.GA3060163@xiangao.remote.csb>
+References: <20201207012346.2713857-1-hsiangkao@redhat.com>
+ <0fc43d3f-9c79-c7a1-6e41-b5b6932fe571@huawei.com>
+ <20201208082319.GB3006985@xiangao.remote.csb>
+ <7da6fe17-1257-67e7-379c-99a0ebbe6ba4@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (58.252.5.72) by
- HK2PR06CA0016.apcprd06.prod.outlook.com (2603:1096:202:2e::28) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3632.17 via Frontend Transport; Tue, 8 Dec 2020 08:48:18 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 96bc9664-2c39-41e4-48b5-08d89b5602d4
-X-MS-TrafficTypeDiagnostic: SG2PR02MB2988:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SG2PR02MB2988E0245B95C212DEC91068C3CD0@SG2PR02MB2988.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:580;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BRFFujqqSCrjXQVvcOC7sqj9XRQUxXhr44J5h2odvCLE/gwETe5VSiVL1CSEiBhVUIqsbOd/6Tmfn1AlBWp5ASs5xVD06Gf/YZIB7FR7iigQuDXfphPrMuDb+COqC1wDZ0CAqM3EoLpCg2Qy3FIaTaJtz6pnaSUbOjwPpKP3HIHhB/lG+3gX+gEqR6MXQuIr1PPw+q38TC60R5CT+IiDIyMfHOYYURKK9bLgK6jDSS0ZElvueZY2xL/awhWH9zWfOxsO4InxmMSv/L9b+gCFbM596P/7inwlZpuSTfgP9DsxWfKHhVBLSXNTFRRM0AjT2Eznovw7xLcpqhSMY2bECWCd2ofNXwsiK9pGfugV5hFVvHFMBBhNFKahdA0/gKzfi91WmFul1I/9bbAB8ccbonaAJvzbmtzji5hVZPUWQcQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
- IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(36756003)(956004)(5660300002)(4326008)(478600001)(83380400001)(107886003)(8676002)(1076003)(69590400008)(2906002)(6506007)(316002)(66476007)(6512007)(66556008)(6486002)(6916009)(16526019)(26005)(2616005)(8936002)(86362001)(66946007)(6666004)(186003)(52116002)(11606006);
- DIR:OUT; SFP:1101; 
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?U17aWF56goNtGBlEjIU1iyDcUz8CW+Q2e/3aaBFU01guQHnfztTrm3pOVbeq?=
- =?us-ascii?Q?ya72xh0UYmVjqk8ye2mE7kK/JOlKX5nzRHH+7838h1ki993DZb0u6+AS3CV+?=
- =?us-ascii?Q?OeQBfuQZ26DhxWVxmwiFGd8YQZyw4Tdkac6n/DhKOmVZbePBM9rKFec0lCyP?=
- =?us-ascii?Q?98Do46TwodlRezfTYcftJ19bjc3V/rmk+xLnsTsv7HoeQR5w6WNo8w1EFAHz?=
- =?us-ascii?Q?kkn9c7vMTvfH0qFknra1D47TmbZz5/qfeHsRXu+Ub65x7TQou+473cxjh8JU?=
- =?us-ascii?Q?uYVvNecA/lJuFe3y1I8pd30koWd/60/YoewKYACVlU+PmDBM8ljSENgkKIsH?=
- =?us-ascii?Q?KqrD1+bcltF5o34jjoaAohTM2Y1RqH/QQtSAEXOj1GuDveNzzHDoZeYEIIZw?=
- =?us-ascii?Q?qt5NHXhEeiN0XSJRre7rKN/sQiN6HxD62lmUayU7WLyeJv5EiGkEda52adZj?=
- =?us-ascii?Q?L+qbcg70kDf+6KEFMVwHSsdFlYoZzPNLOmFJcsNWAc5RUExfPv+iX0WJxw49?=
- =?us-ascii?Q?y84B0qzE/jLdTH2Fql7vJK9L6TmnyaDwwfQ7cZwSXPulBVRmTYHhKnE7C+d4?=
- =?us-ascii?Q?LPyQVo5DDkLz89IbYBQACdjbF3lnM9mUNyA8YlgW05wYd/dj51eNu45ExP0v?=
- =?us-ascii?Q?DVE+M1dbmP13IOWs1PAnVGeE5j8sKwI7FVt1t76FnFHdkHmdKfk5IeL8SsOW?=
- =?us-ascii?Q?HUBA0FnH4IE0Jab0e137FCgugxeglKx0v4baafLT1IXyQb76iw56GsKKaOKP?=
- =?us-ascii?Q?ixkk4Ug/2Ya9nPObT1adPml3sh3LjVC3TbKO+Tsnh6bpP429FI2YdRqt27Z4?=
- =?us-ascii?Q?5Kx6QIUdF4x/N1Cdkx9+Yd8aofIZ/jKhGhxfKm9FkBZqgbMiWA/TiDeBM21o?=
- =?us-ascii?Q?zYKL4dETrYWHZUxUO5rIiBYCiVYNQ0VfzfV6Sv9CRXjaLAi2UXDes8kpQxhF?=
- =?us-ascii?Q?sxC+XY/AulxxnlN4exdCrL5Fk9loVfUf7wE6ntIzwx4=3D?=
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96bc9664-2c39-41e4-48b5-08d89b5602d4
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2020 08:48:19.2423 (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VF1F3O+XQrft1YyRmOXos6R19ApaZV3XSEFss2Qn5VpcrFISEtMv4D9o+dvVRkA/1F6MFaLVYrUmVE4Jc0xTmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2988
+In-Reply-To: <7da6fe17-1257-67e7-379c-99a0ebbe6ba4@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -121,46 +105,172 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: guoweichao@oppo.com, zhangshiming@oppo.com
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-iblock indicates the number of i_blkbits-sized blocks rather than
-sectors, fix it.
+On Tue, Dec 08, 2020 at 04:44:12PM +0800, Chao Yu wrote:
+> Hi Xiang,
 
-If the data has a disk mapping, map_bh should be used to read the
-correct data from the device.
+...
 
-Fixes: 9da681e017a3 ("staging: erofs: support bmap")
-Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-Signed-off-by: Guo Weichao <guoweichao@oppo.com>
----
- fs/erofs/data.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > I discussed this case in the original thread,
+> > https://lore.kernel.org/r/20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1
+> > 
+> > The previous conclusion is that for EROFS case (see Matthew's reply) this
+> > pair won't have too much usage. since EROFS pattern saves extra page
+> > reference count (- and +) by cases.
+> 
+> Alright, I see.
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 347be146884c..1415fee10180 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -316,7 +316,7 @@ static int erofs_get_block(struct inode *inode, sector_t iblock,
- 			   struct buffer_head *bh, int create)
- {
- 	struct erofs_map_blocks map = {
--		.m_la = iblock << 9,
-+		.m_la = iblock << blknr_to_addr(iblock),
- 	};
- 	int err;
- 
-@@ -325,7 +325,7 @@ static int erofs_get_block(struct inode *inode, sector_t iblock,
- 		return err;
- 
- 	if (map.m_flags & EROFS_MAP_MAPPED)
--		bh->b_blocknr = erofs_blknr(map.m_pa);
-+		map_bh(bh, inode->i_sb, erofs_blknr(map.m_pa));
- 
- 	return err;
- }
--- 
-2.25.1
+Yeah, yet in order for further confusion (or questions from others), let me
+update to use this pair as much as possible in the next version :( (If someone
+breaks in the future, I may need to remind him in time though...)
+
+> 
+
+...
+
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks for the review!
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> 
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> > > 
+> > > Thanks,
+> > > 
+> > > >    		}
+> > > > @@ -648,12 +649,12 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+> > > >    retry:
+> > > >    	err = z_erofs_attach_page(clt, page, page_type);
+> > > > -	/* should allocate an additional staging page for pagevec */
+> > > > +	/* should allocate an additional short-lived page for pagevec */
+> > > >    	if (err == -EAGAIN) {
+> > > >    		struct page *const newpage =
+> > > >    				alloc_page(GFP_NOFS | __GFP_NOFAIL);
+> > > > -		newpage->mapping = Z_EROFS_MAPPING_STAGING;
+> > > > +		set_page_private(newpage, Z_EROFS_SHORTLIVED_PAGE);
+> > > >    		err = z_erofs_attach_page(clt, newpage,
+> > > >    					  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
+> > > >    		if (!err)
+> > > > @@ -710,6 +711,11 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+> > > >    		queue_work(z_erofs_workqueue, &io->u.work);
+> > > >    }
+> > > > +static bool z_erofs_page_is_invalidated(struct page *page)
+> > > > +{
+> > > > +	return !page->mapping && !z_erofs_is_shortlived_page(page);
+> > > > +}
+> > > > +
+> > > >    static void z_erofs_decompressqueue_endio(struct bio *bio)
+> > > >    {
+> > > >    	tagptr1_t t = tagptr_init(tagptr1_t, bio->bi_private);
+> > > > @@ -722,7 +728,7 @@ static void z_erofs_decompressqueue_endio(struct bio *bio)
+> > > >    		struct page *page = bvec->bv_page;
+> > > >    		DBG_BUGON(PageUptodate(page));
+> > > > -		DBG_BUGON(!page->mapping);
+> > > > +		DBG_BUGON(z_erofs_page_is_invalidated(page));
+> > > >    		if (err)
+> > > >    			SetPageError(page);
+> > > > @@ -795,9 +801,9 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> > > >    		/* all pages in pagevec ought to be valid */
+> > > >    		DBG_BUGON(!page);
+> > > > -		DBG_BUGON(!page->mapping);
+> > > > +		DBG_BUGON(z_erofs_page_is_invalidated(page));
+> > > > -		if (z_erofs_put_stagingpage(pagepool, page))
+> > > > +		if (z_erofs_put_shortlivedpage(pagepool, page))
+> > > >    			continue;
+> > > >    		if (page_type == Z_EROFS_VLE_PAGE_TYPE_HEAD)
+> > > > @@ -831,9 +837,9 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> > > >    		/* all compressed pages ought to be valid */
+> > > >    		DBG_BUGON(!page);
+> > > > -		DBG_BUGON(!page->mapping);
+> > > > +		DBG_BUGON(z_erofs_page_is_invalidated(page));
+> > > > -		if (!z_erofs_page_is_staging(page)) {
+> > > > +		if (!z_erofs_is_shortlived_page(page)) {
+> > > >    			if (erofs_page_is_managed(sbi, page)) {
+> > > >    				if (!PageUptodate(page))
+> > > >    					err = -EIO;
+> > > > @@ -858,7 +864,7 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> > > >    			overlapped = true;
+> > > >    		}
+> > > > -		/* PG_error needs checking for inplaced and staging pages */
+> > > > +		/* PG_error needs checking for all non-managed pages */
+> > > >    		if (PageError(page)) {
+> > > >    			DBG_BUGON(PageUptodate(page));
+> > > >    			err = -EIO;
+> > > > @@ -897,8 +903,8 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> > > >    		if (erofs_page_is_managed(sbi, page))
+> > > >    			continue;
+> > > > -		/* recycle all individual staging pages */
+> > > > -		(void)z_erofs_put_stagingpage(pagepool, page);
+> > > > +		/* recycle all individual short-lived pages */
+> > > > +		(void)z_erofs_put_shortlivedpage(pagepool, page);
+> > > >    		WRITE_ONCE(compressed_pages[i], NULL);
+> > > >    	}
+> > > > @@ -908,10 +914,10 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> > > >    		if (!page)
+> > > >    			continue;
+> > > > -		DBG_BUGON(!page->mapping);
+> > > > +		DBG_BUGON(z_erofs_page_is_invalidated(page));
+> > > > -		/* recycle all individual staging pages */
+> > > > -		if (z_erofs_put_stagingpage(pagepool, page))
+> > > > +		/* recycle all individual short-lived pages */
+> > > > +		if (z_erofs_put_shortlivedpage(pagepool, page))
+> > > >    			continue;
+> > > >    		if (err < 0)
+> > > > @@ -1011,13 +1017,17 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
+> > > >    	mapping = READ_ONCE(page->mapping);
+> > > >    	/*
+> > > > -	 * unmanaged (file) pages are all locked solidly,
+> > > > +	 * file-backed online pages in plcuster are all locked steady,
+> > > >    	 * therefore it is impossible for `mapping' to be NULL.
+> > > >    	 */
+> > > >    	if (mapping && mapping != mc)
+> > > >    		/* ought to be unmanaged pages */
+> > > >    		goto out;
+> > > > +	/* directly return for shortlived page as well */
+> > > > +	if (z_erofs_is_shortlived_page(page))
+> > > > +		goto out;
+> > > > +
+> > > >    	lock_page(page);
+> > > >    	/* only true if page reclaim goes wrong, should never happen */
+> > > > @@ -1062,8 +1072,8 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
+> > > >    out_allocpage:
+> > > >    	page = erofs_allocpage(pagepool, gfp | __GFP_NOFAIL);
+> > > >    	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
+> > > > -		/* non-LRU / non-movable temporary page is needed */
+> > > > -		page->mapping = Z_EROFS_MAPPING_STAGING;
+> > > > +		/* turn into temporary page if fails */
+> > > > +		set_page_private(page, Z_EROFS_SHORTLIVED_PAGE);
+> > > >    		tocache = false;
+> > > >    	}
+> > > > diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+> > > > index 68c9b29fc0ca..b503b353d4ab 100644
+> > > > --- a/fs/erofs/zdata.h
+> > > > +++ b/fs/erofs/zdata.h
+> > > > @@ -173,6 +173,7 @@ static inline void z_erofs_onlinepage_endio(struct page *page)
+> > > >    	v = atomic_dec_return(u.o);
+> > > >    	if (!(v & Z_EROFS_ONLINEPAGE_COUNT_MASK)) {
+> > > > +		set_page_private(page, 0);
+> > > >    		ClearPagePrivate(page);
+> > > >    		if (!PageError(page))
+> > > >    			SetPageUptodate(page);
+> > > > 
+> > > 
+> > 
+> > .
+> > 
+> 
 
