@@ -1,46 +1,94 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA0A62D2699
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 09:51:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 990542D26D6
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 10:04:37 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Cqv6c72BwzDqTv
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 19:51:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CqvPt4mkgzDqWT
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Dec 2020 20:04:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com;
- envelope-from=yuchao0@huawei.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=none (p=none dis=none) header.from=huawei.com
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Cqv6S1PBkzDqBK
- for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 19:51:11 +1100 (AEDT)
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
- by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cqv5h6TwtzhpPc;
- Tue,  8 Dec 2020 16:50:32 +0800 (CST)
-Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 8 Dec 2020
- 16:51:02 +0800
-Subject: Re: [PATCH v2 2/3] erofs: insert to managed cache after adding to pcl
-To: Gao Xiang <hsiangkao@redhat.com>, <linux-erofs@lists.ozlabs.org>
-References: <20201207012346.2713857-1-hsiangkao@redhat.com>
- <20201207012346.2713857-2-hsiangkao@redhat.com>
-From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <cfdb46b5-0c66-4560-9069-5a4c21ad9768@huawei.com>
-Date: Tue, 8 Dec 2020 16:51:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=Cfs76im6; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cfs76im6; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CqvNW46BkzDqZ2
+ for <linux-erofs@lists.ozlabs.org>; Tue,  8 Dec 2020 20:03:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607418199;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=C+FXiid657VRgk+GfcDrWpQTBHVBt+A+sNz2LADUxiI=;
+ b=Cfs76im60du9IkSrsXbpuJfHUcCeX+NCT88DIX9tXV3R3357xxk6kp/cRi+NkuueDII4pc
+ xgkIuWSkJuS/T6vvLz+ZSVSOShYhfmZHXkLU21rvtU3MHjaNQKA57lnS2kl9LDUxXsA4Bw
+ 5pGEEbi96pmr/R10xp1idKTDZqiw2qM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607418199;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=C+FXiid657VRgk+GfcDrWpQTBHVBt+A+sNz2LADUxiI=;
+ b=Cfs76im60du9IkSrsXbpuJfHUcCeX+NCT88DIX9tXV3R3357xxk6kp/cRi+NkuueDII4pc
+ xgkIuWSkJuS/T6vvLz+ZSVSOShYhfmZHXkLU21rvtU3MHjaNQKA57lnS2kl9LDUxXsA4Bw
+ 5pGEEbi96pmr/R10xp1idKTDZqiw2qM=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-VvYR9nVFMGmPUgSKCLFO7A-1; Tue, 08 Dec 2020 04:03:15 -0500
+X-MC-Unique: VvYR9nVFMGmPUgSKCLFO7A-1
+Received: by mail-pg1-f197.google.com with SMTP id j30so11400543pgj.17
+ for <linux-erofs@lists.ozlabs.org>; Tue, 08 Dec 2020 01:03:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=C+FXiid657VRgk+GfcDrWpQTBHVBt+A+sNz2LADUxiI=;
+ b=PeOF34P4IJcyn7tridpmoVZYAsZAdf4avoL3mA4NHyzAzKTSF+YlE6bxz+JuS6/0o1
+ Qt7/nXEVtpEOlX92GZxtv/CvQYlwKa35QC+HvcKULcoHxOgO3QT4BoY5q8tu2roLuaZy
+ rdy9ESvGAAct7YNM5MW2KpEODQ3uikZQsnlEXxmi60NxN3D/CQ5wBKpDqiKuQ9Fp+bTW
+ BI56UIkPwS6P2nydrhgVX9iVBrHo7j4RqZKCedf7RLnZbvf6EPNP8ksj6I8HvIHMtFIx
+ q6i1NbxP3iLTHoKy+o1Xh4CpvwI1sP9UmVfAtdqZrXrGWtaAwUH48V9kpdTneHtMrNv3
+ kxOA==
+X-Gm-Message-State: AOAM5307CuUTYbt3W8SlCkIJp2Rpu1JkeSONt/RIWm4UXP1LNX1DHAWc
+ LMqNfMYoDpKuCUXYlhFVKXTYngESL6dOiL50svh8Oe84cKvPLj3LKotUbSjijxDFag8boXVd9BN
+ GJnZZIRxIDy8+I9x2k+B1JTJW
+X-Received: by 2002:a63:100e:: with SMTP id f14mr22253725pgl.8.1607418194173; 
+ Tue, 08 Dec 2020 01:03:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxj3zuFP6ZKE0YZVlHxAWsjtD8aWQKCQyE6pvzeacJKyWmhvE60rqBlB0jfGwG4ezmPWPz6Rw==
+X-Received: by 2002:a63:100e:: with SMTP id f14mr22253700pgl.8.1607418193870; 
+ Tue, 08 Dec 2020 01:03:13 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id k16sm7430620pfi.131.2020.12.08.01.03.11
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 08 Dec 2020 01:03:13 -0800 (PST)
+Date: Tue, 8 Dec 2020 17:03:03 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Huang Jianan <huangjianan@oppo.com>
+Subject: Re: [PATCH] erofs: fix wrong address in erofs_get_block
+Message-ID: <20201208090303.GA3062064@xiangao.remote.csb>
+References: <20201208084750.5469-1-huangjianan@oppo.com>
 MIME-Version: 1.0
-In-Reply-To: <20201207012346.2713857-2-hsiangkao@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.136.114.67]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20201208084750.5469-1-huangjianan@oppo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,21 +100,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: guoweichao@oppo.com, linux-erofs@lists.ozlabs.org, zhangshiming@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2020/12/7 9:23, Gao Xiang wrote:
-> Previously, it could be some concern to call add_to_page_cache_lru()
-> with page->mapping == Z_EROFS_MAPPING_STAGING (!= NULL).
-> 
-> In contrast, page->private is used instead now, so partially revert
-> commit 5ddcee1f3a1c ("erofs: get rid of __stagingpage_alloc helper")
-> with some adaption for simplicity.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Hi Jianan,
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+On Tue, Dec 08, 2020 at 04:47:50PM +0800, Huang Jianan wrote:
+> iblock indicates the number of i_blkbits-sized blocks rather than
+> sectors, fix it.
+> 
+> If the data has a disk mapping, map_bh should be used to read the
+> correct data from the device.
+> 
+> Fixes: 9da681e017a3 ("staging: erofs: support bmap")
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> Signed-off-by: Guo Weichao <guoweichao@oppo.com>
+> ---
+>  fs/erofs/data.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 347be146884c..1415fee10180 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -316,7 +316,7 @@ static int erofs_get_block(struct inode *inode, sector_t iblock,
+>  			   struct buffer_head *bh, int create)
+>  {
+>  	struct erofs_map_blocks map = {
+> -		.m_la = iblock << 9,
+> +		.m_la = iblock << blknr_to_addr(iblock),
+
+Sorry I don't get the point although I think the problem may exist....
+I mean is that correct? since it equals to iblocks << (iblock * EROFS_BLKSIZE) ....
 
 Thanks,
+Gao Xiang
+
+
+>  	};
+>  	int err;
+>  
+> @@ -325,7 +325,7 @@ static int erofs_get_block(struct inode *inode, sector_t iblock,
+>  		return err;
+>  
+>  	if (map.m_flags & EROFS_MAP_MAPPED)
+> -		bh->b_blocknr = erofs_blknr(map.m_pa);
+> +		map_bh(bh, inode->i_sb, erofs_blknr(map.m_pa));
+>  
+>  	return err;
+>  }
+> -- 
+> 2.25.1
+> 
+
