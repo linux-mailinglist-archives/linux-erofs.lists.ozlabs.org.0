@@ -1,46 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A77272D3957
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 04:55:00 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DC02D3958
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 04:55:04 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CrNV8732yzDqkg
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 14:54:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CrNVF3MBFzDqjb
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 14:55:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com;
+ smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com;
  envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CrNTz34yNzDqh3
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 14:54:43 +1100 (AEDT)
-IronPort-SDR: e9RYEgBuPts9KTiUozeIIwL7PCHFmylvwUTTXsNjbJprvkO8agYfu9gpqirHHNg+7viM2TJRee
- CyEVfoj2OXoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="258722700"
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="258722700"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
- by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CrNTz4lhXzDqhC
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 14:54:42 +1100 (AEDT)
+IronPort-SDR: 1vvIA1DDst96kYZVDQ6sswWbtuTsRftyzX+0ZR2d/PbD0tR0iavD4XWYj1HBHymxCP7+hHWzUl
+ p6tS7K8CXXlA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="235613611"
+X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="235613611"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+ by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
  08 Dec 2020 19:54:38 -0800
-IronPort-SDR: XYlYj01GhR6bcFdWZHN+hZCfSovzwtgkrYusX9OjBAJiJpDqAoie6HThgax0ZymbhHgdUfpx+7
- m1grTW6nAPAg==
+IronPort-SDR: Zz9LfwAkmFy26wbwO6gXxsAAjuYcYa/ptT7aLgOZ6bymr9kpw8q3cW4QAEySyksrm4mvZMOM4I
+ BG5h8pzwj2oQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="407899831"
+X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="370657832"
 Received: from lkp-server01.sh.intel.com (HELO 4e633a5ce5ea) ([10.239.97.150])
- by orsmga001.jf.intel.com with ESMTP; 08 Dec 2020 19:54:36 -0800
+ by fmsmga002.fm.intel.com with ESMTP; 08 Dec 2020 19:54:36 -0800
 Received: from kbuild by 4e633a5ce5ea with local (Exim 4.92)
  (envelope-from <lkp@intel.com>)
- id 1kmqYm-000072-2Z; Wed, 09 Dec 2020 03:54:36 +0000
-Date: Wed, 09 Dec 2020 11:53:48 +0800
+ id 1kmqYm-000075-9C; Wed, 09 Dec 2020 03:54:36 +0000
+Date: Wed, 09 Dec 2020 11:53:49 +0800
 From: kernel test robot <lkp@intel.com>
 To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 473e15b0c0f7cf63a48f776937a02cb9dfcab252
-Message-ID: <5fd04a4c.f4RrHMqe4V9L8lj+%lkp@intel.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 6890dbdfddf9dc50ca7f09dfa1022f0e92a613c8
+Message-ID: <5fd04a4d.WFJuYeseSp2BUK6a%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,42 +61,43 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev
-branch HEAD: 473e15b0c0f7cf63a48f776937a02cb9dfcab252  erofs: simplify try_to_claim_pcluster()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
+branch HEAD: 6890dbdfddf9dc50ca7f09dfa1022f0e92a613c8  erofs: force inplace I/O under low memory scenario
 
-elapsed time: 724m
+elapsed time: 725m
 
-configs tested: 94
+configs tested: 95
 configs skipped: 2
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
 
 gcc tested configs:
+arm64                               defconfig
 arm                                 defconfig
 arm64                            allyesconfig
-arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
 powerpc64                           defconfig
 powerpc                     pseries_defconfig
 powerpc                 canyonlands_defconfig
 powerpc                 mpc834x_mds_defconfig
-um                           x86_64_defconfig
-m68k                       m5249evb_defconfig
-sh                            titan_defconfig
-ia64                      gensparse_defconfig
-arm                           viper_defconfig
-powerpc                      mgcoge_defconfig
-arc                            hsdk_defconfig
-xtensa                              defconfig
-powerpc                      pmac32_defconfig
-sh                           se7721_defconfig
-arm                     davinci_all_defconfig
+sh                          rsk7264_defconfig
+arc                     haps_hs_smp_defconfig
 sh                           se7724_defconfig
-arm                        spear6xx_defconfig
-arm                   milbeaut_m10v_defconfig
-sh                     magicpanelr2_defconfig
+powerpc                     ep8248e_defconfig
+arm                         assabet_defconfig
+sh                           se7721_defconfig
+arm                       omap2plus_defconfig
+m68k                       m5475evb_defconfig
+arm                             mxs_defconfig
+powerpc                   currituck_defconfig
+mips                         rt305x_defconfig
+powerpc                     tqm8541_defconfig
+c6x                        evmc6678_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                      acadia_defconfig
+arc                        nsimosci_defconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
