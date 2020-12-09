@@ -1,50 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67DC02D3958
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 04:55:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A33552D3F84
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 11:07:41 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CrNVF3MBFzDqjb
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 14:55:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CrXmB1SS4zDqpk
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 21:07:38 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com;
+ envelope-from=yuchao0@huawei.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CrNTz4lhXzDqhC
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 14:54:42 +1100 (AEDT)
-IronPort-SDR: 1vvIA1DDst96kYZVDQ6sswWbtuTsRftyzX+0ZR2d/PbD0tR0iavD4XWYj1HBHymxCP7+hHWzUl
- p6tS7K8CXXlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="235613611"
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="235613611"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
- by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 08 Dec 2020 19:54:38 -0800
-IronPort-SDR: Zz9LfwAkmFy26wbwO6gXxsAAjuYcYa/ptT7aLgOZ6bymr9kpw8q3cW4QAEySyksrm4mvZMOM4I
- BG5h8pzwj2oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; d="scan'208";a="370657832"
-Received: from lkp-server01.sh.intel.com (HELO 4e633a5ce5ea) ([10.239.97.150])
- by fmsmga002.fm.intel.com with ESMTP; 08 Dec 2020 19:54:36 -0800
-Received: from kbuild by 4e633a5ce5ea with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1kmqYm-000075-9C; Wed, 09 Dec 2020 03:54:36 +0000
-Date: Wed, 09 Dec 2020 11:53:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 6890dbdfddf9dc50ca7f09dfa1022f0e92a613c8
-Message-ID: <5fd04a4d.WFJuYeseSp2BUK6a%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ dmarc=none (p=none dis=none) header.from=huawei.com
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CrXlz53GnzDqn4
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 21:07:21 +1100 (AEDT)
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+ by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4CrXl40Bz5zhnGq;
+ Wed,  9 Dec 2020 18:06:40 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 9 Dec 2020
+ 18:07:09 +0800
+Subject: Re: [PATCH] erofs: force inplace I/O under low memory scenario
+To: Gao Xiang <hsiangkao@aol.com>, <linux-erofs@lists.ozlabs.org>
+References: <20201208054600.16302-1-hsiangkao.ref@aol.com>
+ <20201208054600.16302-1-hsiangkao@aol.com>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <85f41db3-8d64-240a-7876-9f3b3dea29cb@huawei.com>
+Date: Wed, 9 Dec 2020 18:07:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20201208054600.16302-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,121 +52,200 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
-branch HEAD: 6890dbdfddf9dc50ca7f09dfa1022f0e92a613c8  erofs: force inplace I/O under low memory scenario
+On 2020/12/8 13:46, Gao Xiang wrote:
+> From: Gao Xiang <hsiangkao@redhat.com>
+> 
+> Try to forcely switch to inplace I/O under low memory scenario in
+> order to avoid direct memory reclaim due to cached page allocation.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> ---
+> This was commercially used internally for years, but due to customized
+> page->mapping before, it cannot cleanly upstream till now. Since magical
+> page->mapping is now gone, adapt this to the latest dev branch for
+> better low-memory performance (fully use inplace I/O instead.)
+> 
+>   fs/erofs/compress.h |  3 +++
+>   fs/erofs/zdata.c    | 49 +++++++++++++++++++++++++++++++++++++--------
+>   2 files changed, 44 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+> index 2bbf47f353ef..c51a741a1232 100644
+> --- a/fs/erofs/compress.h
+> +++ b/fs/erofs/compress.h
+> @@ -27,11 +27,13 @@ struct z_erofs_decompress_req {
+>   };
+>   
+>   #define Z_EROFS_SHORTLIVED_PAGE		(-1UL << 2)
+> +#define Z_EROFS_PREALLOCATED_PAGE	(-2UL << 2)
+>   
+>   /*
+>    * For all pages in a pcluster, page->private should be one of
+>    * Type                         Last 2bits      page->private
+>    * short-lived page             00              Z_EROFS_SHORTLIVED_PAGE
+> + * preallocated page (tryalloc) 00              Z_EROFS_PREALLOCATED_PAGE
+>    * cached/managed page          00              pointer to z_erofs_pcluster
+>    * online page (file-backed,    01/10/11        sub-index << 2 | count
+>    *              some pages can be used for inplace I/O)
+> @@ -39,6 +41,7 @@ struct z_erofs_decompress_req {
+>    * page->mapping should be one of
+>    * Type                 page->mapping
+>    * short-lived page     NULL
+> + * preallocated page    NULL
+>    * cached/managed page  non-NULL or NULL (invalidated/truncated page)
+>    * online page          non-NULL
+>    *
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index b1b6cd03046f..b84e6a2fb00c 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -20,6 +20,11 @@
+>   enum z_erofs_cache_alloctype {
+>   	DONTALLOC,	/* don't allocate any cached pages */
+>   	DELAYEDALLOC,	/* delayed allocation (at the time of submitting io) */
+> +	/*
+> +	 * try to use cached I/O if page allocation succeeds or fallback
+> +	 * to in-place I/O instead to avoid any direct reclaim.
+> +	 */
+> +	TRYALLOC,
+>   };
+>   
+>   /*
+> @@ -154,13 +159,15 @@ static DEFINE_MUTEX(z_pagemap_global_lock);
+>   
+>   static void preload_compressed_pages(struct z_erofs_collector *clt,
+>   				     struct address_space *mc,
+> -				     enum z_erofs_cache_alloctype type)
+> +				     enum z_erofs_cache_alloctype type,
+> +				     struct list_head *pagepool)
+>   {
+>   	const struct z_erofs_pcluster *pcl = clt->pcl;
+>   	const unsigned int clusterpages = BIT(pcl->clusterbits);
+>   	struct page **pages = clt->compressedpages;
+>   	pgoff_t index = pcl->obj.index + (pages - pcl->compressed_pages);
+>   	bool standalone = true;
+> +	gfp_t gfp = mapping_gfp_constraint(mc, GFP_KERNEL) & ~__GFP_DIRECT_RECLAIM;
 
-elapsed time: 725m
+Could be local as there is only one place uses it.
 
-configs tested: 95
-configs skipped: 2
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
 
-gcc tested configs:
-arm64                               defconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc64                           defconfig
-powerpc                     pseries_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                          rsk7264_defconfig
-arc                     haps_hs_smp_defconfig
-sh                           se7724_defconfig
-powerpc                     ep8248e_defconfig
-arm                         assabet_defconfig
-sh                           se7721_defconfig
-arm                       omap2plus_defconfig
-m68k                       m5475evb_defconfig
-arm                             mxs_defconfig
-powerpc                   currituck_defconfig
-mips                         rt305x_defconfig
-powerpc                     tqm8541_defconfig
-c6x                        evmc6678_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                      acadia_defconfig
-arc                        nsimosci_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20201208
-x86_64               randconfig-a006-20201208
-x86_64               randconfig-a005-20201208
-x86_64               randconfig-a001-20201208
-x86_64               randconfig-a002-20201208
-x86_64               randconfig-a003-20201208
-i386                 randconfig-a004-20201208
-i386                 randconfig-a005-20201208
-i386                 randconfig-a001-20201208
-i386                 randconfig-a002-20201208
-i386                 randconfig-a006-20201208
-i386                 randconfig-a003-20201208
-i386                 randconfig-a013-20201208
-i386                 randconfig-a014-20201208
-i386                 randconfig-a011-20201208
-i386                 randconfig-a015-20201208
-i386                 randconfig-a012-20201208
-i386                 randconfig-a016-20201208
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a016-20201208
-x86_64               randconfig-a012-20201208
-x86_64               randconfig-a013-20201208
-x86_64               randconfig-a014-20201208
-x86_64               randconfig-a015-20201208
-x86_64               randconfig-a011-20201208
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>   
+>   	if (clt->mode < COLLECT_PRIMARY_FOLLOWED)
+>   		return;
+> @@ -168,6 +175,7 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+>   	for (; pages < pcl->compressed_pages + clusterpages; ++pages) {
+>   		struct page *page;
+>   		compressed_page_t t;
+> +		struct page *newpage = NULL;
+>   
+>   		/* the compressed page was loaded before */
+>   		if (READ_ONCE(*pages))
+> @@ -179,7 +187,17 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+>   			t = tag_compressed_page_justfound(page);
+>   		} else if (type == DELAYEDALLOC) {
+>   			t = tagptr_init(compressed_page_t, PAGE_UNALLOCATED);
+> +		} else if (type == TRYALLOC) {
+> +			gfp |= __GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN;
+> +
+> +			newpage = erofs_allocpage(pagepool, gfp);
+> +			if (!newpage)
+> +				goto dontalloc;
+> +
+> +			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
+> +			t = tag_compressed_page_justfound(newpage);
+>   		} else {	/* DONTALLOC */
+> +dontalloc:
+>   			if (standalone)
+>   				clt->compressedpages = pages;
+>   			standalone = false;
+> @@ -189,8 +207,12 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+>   		if (!cmpxchg_relaxed(pages, NULL, tagptr_cast_ptr(t)))
+>   			continue;
+>   
+> -		if (page)
+> +		if (page) {
+>   			put_page(page);
+> +		} else if (newpage) {
+> +			set_page_private(newpage, 0);
+> +			list_add(&newpage->lru, pagepool);
+> +		}
+>   	}
+>   
+>   	if (standalone)		/* downgrade to PRIMARY_FOLLOWED_NOINPLACE */
+> @@ -560,7 +582,7 @@ static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
+>   }
+>   
+>   static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+> -				struct page *page)
+> +				struct page *page, struct list_head *pagepool)
+>   {
+>   	struct inode *const inode = fe->inode;
+>   	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+> @@ -613,11 +635,12 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+>   
+>   	/* preload all compressed pages (maybe downgrade role if necessary) */
+>   	if (should_alloc_managed_pages(fe, sbi->ctx.cache_strategy, map->m_la))
+> -		cache_strategy = DELAYEDALLOC;
+> +		cache_strategy = TRYALLOC;
+>   	else
+>   		cache_strategy = DONTALLOC;
+>   
+> -	preload_compressed_pages(clt, MNGD_MAPPING(sbi), cache_strategy);
+> +	preload_compressed_pages(clt, MNGD_MAPPING(sbi),
+> +				 cache_strategy, pagepool);
+>   
+>   hitted:
+>   	/*
+> @@ -1011,6 +1034,16 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
+>   	justfound = tagptr_unfold_tags(t);
+>   	page = tagptr_unfold_ptr(t);
+>   
+> +	/*
+> +	 * preallocated cached pages, which is used to avoid direct reclaim
+> +	 * otherwise, it will go inplace I/O path instead.
+> +	 */
+> +	if (page->private == Z_EROFS_PREALLOCATED_PAGE) {
+> +		WRITE_ONCE(pcl->compressed_pages[nr], page);
+> +		set_page_private(page, 0);
+> +		tocache = true;
+> +		goto out_tocache;
+> +	}
+>   	mapping = READ_ONCE(page->mapping);
+>   
+>   	/*
+> @@ -1073,7 +1106,7 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
+>   		cond_resched();
+>   		goto repeat;
+>   	}
+> -
+> +out_tocache:
+>   	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
+>   		/* turn into temporary page if fails */
+>   		set_page_private(page, Z_EROFS_SHORTLIVED_PAGE);
+> @@ -1282,7 +1315,7 @@ static int z_erofs_readpage(struct file *file, struct page *page)
+>   
+>   	f.headoffset = (erofs_off_t)page->index << PAGE_SHIFT;
+>   
+> -	err = z_erofs_do_read_page(&f, page);
+> +	err = z_erofs_do_read_page(&f, page, &pagepool);
+>   	(void)z_erofs_collector_end(&f.clt);
+>   
+>   	/* if some compressed cluster ready, need submit them anyway */
+> @@ -1336,7 +1369,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+>   		/* traversal in reverse order */
+>   		head = (void *)page_private(page);
+>   
+> -		err = z_erofs_do_read_page(&f, page);
+> +		err = z_erofs_do_read_page(&f, page, &pagepool);
+>   		if (err)
+>   			erofs_err(inode->i_sb,
+>   				  "readahead error at page %lu @ nid %llu",
+> 
