@@ -1,97 +1,126 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FD162D413E
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 12:40:25 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1ED42D418A
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 12:59:16 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CrZq75ZszzDqmF
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 22:40:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CrbDx5pv8zDqKr
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 22:59:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=oppo.com (client-ip=40.107.130.51;
+ helo=apc01-hk2-obe.outbound.protection.outlook.com;
+ envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
+ dmarc=pass (p=none dis=none) header.from=oppo.com
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=hYvMtFrj; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=hYvMtFrj; 
+ unprotected) header.d=oppoglobal.onmicrosoft.com
+ header.i=@oppoglobal.onmicrosoft.com header.a=rsa-sha256
+ header.s=selector1-oppoglobal-onmicrosoft-com header.b=ibQ7U5Tw; 
  dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+Received: from APC01-HK2-obe.outbound.protection.outlook.com
+ (mail-eopbgr1300051.outbound.protection.outlook.com [40.107.130.51])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CrZpp4QrPzDqkb
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 22:40:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607513999;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=LQQtBr/xncf1OOMfe6ZF4U94fqdAGaQDE6cOcjJoC+4=;
- b=hYvMtFrjCU3SzgWpDJMRpFZ0/d03MDuVotGVsJU/rKQqmY7f+L3t1zChxMBHwGpVhm8BEN
- IA/+aR7rOErFwT0rfrtcuOjDdBD043TjY2AEpuXwUDoAG4SrMgXGwVBRCsDPi8fwyi29A1
- BOk5LA57l6cv49LUMbCkIxa0rCCWPDM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1607513999;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=LQQtBr/xncf1OOMfe6ZF4U94fqdAGaQDE6cOcjJoC+4=;
- b=hYvMtFrjCU3SzgWpDJMRpFZ0/d03MDuVotGVsJU/rKQqmY7f+L3t1zChxMBHwGpVhm8BEN
- IA/+aR7rOErFwT0rfrtcuOjDdBD043TjY2AEpuXwUDoAG4SrMgXGwVBRCsDPi8fwyi29A1
- BOk5LA57l6cv49LUMbCkIxa0rCCWPDM=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-F33wMEUjPIm1I0idySfB2Q-1; Wed, 09 Dec 2020 06:39:57 -0500
-X-MC-Unique: F33wMEUjPIm1I0idySfB2Q-1
-Received: by mail-pj1-f72.google.com with SMTP id o13so808862pjp.1
- for <linux-erofs@lists.ozlabs.org>; Wed, 09 Dec 2020 03:39:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=LQQtBr/xncf1OOMfe6ZF4U94fqdAGaQDE6cOcjJoC+4=;
- b=lj4zjGf+CLK0s+repJ1o6ZDB+yPBuuccrRyFa5bt3aj0ueUE1MrfUwLb2V8sbvHP6D
- 4Mi0gV/zozdLXzoefL1bbrt4MDUSEajecY3qtjQbgw6hVGWtnhycCVuJ2w5W9+afPqrw
- lFUEEqadT/qDZCbfOKd5mvGbxu6Pmv/D+ZwyMwJ+wTCq75N+JZV2VSHihFJ9R1WpWzwN
- +xOCA1xhKLufNZAP0Y8upRE5322P0ebDZD32d4G5PZDJ6OBvlKM9yCuM9Y2k67CAHvsc
- 66VIIFwLLpOAW2xUk2O+hft+43aTUwQgGfIotOY3gktxcRGywXa1E0mlzj0P3Mc/SRfZ
- 1LfQ==
-X-Gm-Message-State: AOAM533vsVeed6rHaJbuJsDJBnfzNaY1C/FUN082YYscAHrfVOCWAK1R
- OyXZwPZ2RSqGH4gXB9NIlYubMTsxkU0FCWYknPH/+6DG/U2wwTG0HY2vnfhDVJHNH/8lOnINslo
- OFVIgOjJDdrpiiMJSoAawcNYx
-X-Received: by 2002:a17:90a:a393:: with SMTP id
- x19mr1885228pjp.8.1607513993353; 
- Wed, 09 Dec 2020 03:39:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwu1ZInadIHVy+SdexMutvdjrIhjmSkYMi9geOWjK6ltOjroPKdDiaQxAFCYJyTpFkUIg4+dg==
-X-Received: by 2002:a17:90a:a393:: with SMTP id
- x19mr1885211pjp.8.1607513993162; 
- Wed, 09 Dec 2020 03:39:53 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id ci2sm1843192pjb.40.2020.12.09.03.39.50
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Wed, 09 Dec 2020 03:39:52 -0800 (PST)
-Date: Wed, 9 Dec 2020 19:39:41 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Huang Jianan <huangjianan@oppo.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Crb7V6bkrzDqnp
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 22:54:27 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dqrmApDU5onsrWsJ2JsarTNNZNqDQk82gzsVDkjcY6CW9t7klwe8G8SBGS0mfSL0qce6KfhuczUD1aNNDd5WaJhw41ZjNIkTiEQMt7UJPsOSpe/zKqjBsKzH3aJEbDpcVf/SdzcaCAr/8Ejr0dRqcoBUCO2AygvSvy21iatossOVLuzctISLreHZrRY2O7/zjRFC/piPE7qiLrWPyTnuTrWjeSzcVS1rk8I0AeYOg9BfsMuGGX+/19luvKY4+1TkigGv/QmKR52eWqLWZSCnZI9L72PqmBkWtVn/q5KMXk4KlMQlyGU7bIJfg3lvpsWMT6hfJZbmIWgwbXXZdrFcYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o97pzVBlTB7Cx/WOvQLiv64xtY8R28bhlc8fvJ1zT34=;
+ b=YmlTwznZ8twuiv9gOsb+2950ZNpZF4xdFpUiWri+NHiDERANM2df2Ad7XGyxZ395SjEWCDAbLUyrkvZj5Z3rMy9ywzKXEd2sO9/Yz/FVs7u6L5XifD49FCwGvBVTdrR6zkParRSBog/f48sOq12XDZROtFyy7BYzlFA8ktA6ZOpmUc6Bg/sxxTpJFMywEPpzB/slyLyUd+z7fkIGIbBI7rrCElmpUEUqYbcparLvMajRW4u3/uEGqTyMrlf6snjtZsvQxBPPvGUR0QG7Kx/gSR5geHIqEUQdMYjvFi8g0Lm3Zzkj3mlLUxGQfC3VkC/R+lAgay4BnB4Ir8X4jCBW5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o97pzVBlTB7Cx/WOvQLiv64xtY8R28bhlc8fvJ1zT34=;
+ b=ibQ7U5TwkdPTLJ7qG+jJ5+6fNw3WQXsI7dxvqBpkLP91Fm3BjJvRjq2/5v9Ynmv0tTeUihvaImNVeqkJyymajWNPIBCL6SyMkBD6PMKtAf66DiUKhJnqQVoLNGjAHeMbbKq9yoXaIiy86r3Aj2oQMh68lTbnhiiIJ2MNZfHyQ0M=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oppo.com;
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
+ SG2PR02MB2778.apcprd02.prod.outlook.com (2603:1096:4:59::14) with
+ Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3654.12; Wed, 9 Dec 2020 11:54:15 +0000
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::dcd:13c1:2191:feb7]) by SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::dcd:13c1:2191:feb7%7]) with mapi id 15.20.3654.012; Wed, 9 Dec 2020
+ 11:54:15 +0000
 Subject: Re: [PATCH v4] erofs: avoid using generic_block_bmap
-Message-ID: <20201209113941.GB105731@xiangao.remote.csb>
+To: Gao Xiang <hsiangkao@redhat.com>, Chao Yu <yuchao0@huawei.com>
 References: <20201209023930.15554-1-huangjianan@oppo.com>
  <23527fc2-811b-321e-10f1-cb5b50affdbb@huawei.com>
+ <20201209113941.GB105731@xiangao.remote.csb>
+From: Huang Jianan <huangjianan@oppo.com>
+Message-ID: <140a1614-bd76-6196-c63f-cec8e287b4d0@oppo.com>
+Date: Wed, 9 Dec 2020 19:54:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+In-Reply-To: <20201209113941.GB105731@xiangao.remote.csb>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [58.255.79.104]
+X-ClientProxiedBy: HK2PR0302CA0012.apcprd03.prod.outlook.com
+ (2603:1096:202::22) To SG2PR02MB4108.apcprd02.prod.outlook.com
+ (2603:1096:4:96::19)
 MIME-Version: 1.0
-In-Reply-To: <23527fc2-811b-321e-10f1-cb5b50affdbb@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.118.0.32] (58.255.79.104) by
+ HK2PR0302CA0012.apcprd03.prod.outlook.com (2603:1096:202::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3654.7 via Frontend Transport; Wed, 9 Dec 2020 11:54:14 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 31bc16fe-b715-48a8-9e77-08d89c392711
+X-MS-TrafficTypeDiagnostic: SG2PR02MB2778:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SG2PR02MB2778106683FC3292CD0D9F8AC3CC0@SG2PR02MB2778.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KZtj5h9kTdydQmczzG6+dCTvDnbDTWeZNu+ak5cyg6Utayy4N7TI5gRoWSr3kfTelB3X9Kyslj99hxJ8dXeinYnfJ9ld0BOnusykFDD6T6+tYr1u9K7De7T8R6iAzw3oW80ZxgZph9Gjd44Z3PF58lm2+XogkI2OtZPn6YMQSg7FwqtbYvzcOjqSbp0N42msnfP1Lq1lbncPmO4wN+m0HlWXbpZ1m832v1iNGTufxIlUbWK01EOO8u0gFXHPnPhvuQntud4/edAknNOvuEivbsSg8XqoVe6PRbUezTeCF2WnKjVa9YqyEf59jLxtxqA0DpG3ZwjZrSqB+CKQotbNnOGYWHTCX9owZx5XOe8lbZ0ygcgJjFczCfAdSDweSGY/uSMZYSifOuGsG94K3n/YSGyFuyPXrX/nDmRrd3jY/6JWkcSruC1lirg1P+MS/r1RgCneukTu/CcBpENrk63t9A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(4636009)(376002)(366004)(396003)(346002)(136003)(39860400002)(186003)(26005)(2906002)(4326008)(16526019)(52116002)(53546011)(8936002)(36756003)(6486002)(6666004)(5660300002)(83380400001)(31686004)(86362001)(2616005)(956004)(8676002)(316002)(66946007)(66556008)(16576012)(478600001)(66476007)(31696002)(110136005)(41533002)(11606006)(45980500001)(43740500002);
+ DIR:OUT; SFP:1101; 
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?ZWk4UWxkbkhmcnZseHpYMFBmNnRQMnB6R2RzTGNIZVJiK0ZkQXkxc1BDOU9s?=
+ =?utf-8?B?MC9oeWVvdEE3cEYydWlNNkY0S1Z6TUdkQ1hhNnRFRE0yNzVJM3VSOWoyWGRL?=
+ =?utf-8?B?ekFYWXlXaGxJbzlLcms0eVVtUURqU0tBMitRZE1pK3BQdlJ6VWNzbE5nb0k5?=
+ =?utf-8?B?NEdoc0tUVVRzSVd4OFhNNEQ2YkVrdWZkRjgvM0JXQnV6WktSV0xLZkl0a0Iz?=
+ =?utf-8?B?ZTNDaGJEY09VN0c5ZHp1bzlQVEhHQmVDaHJ2aVlaaEkzczFMNkZid08yYzZ3?=
+ =?utf-8?B?VTEwTEJTeURkVWhuQlpXcGYzL0hxSFByUjlVb1JINzE1WnFpUW1BdHZQaW14?=
+ =?utf-8?B?MFVKT29rMmlMN0hxVTlUMzhDcHQwQnVCT2t5WGRyd01QRXZySWtzVkFvejVR?=
+ =?utf-8?B?dnA4bUE4NmorOGZBUEJzSmh2dEpJRFRaMk9TaEZMMVdJWFNpb3JWd1d5WVF4?=
+ =?utf-8?B?TDNGRGxYT1l3T3pRMnNkbzM3RmJuc3hkT0FmSE9SeFVvME8rcmpSMndJdTNG?=
+ =?utf-8?B?bnJJNDI2dlFsbzhCbVRmUm5vaCtRSzlRZEUwbjVmd2VHNFM2bXU2RlNQbXR5?=
+ =?utf-8?B?SG9RTFFId1A1T3pKNGxabnQ1N1c3dlRaaFV2ZXFxVDhBU214K24wUjBFNjEx?=
+ =?utf-8?B?VlhYQ2dHQ0R4Smt2eU83ZGVlei8rdGJCVWFGTE5tQStMeUNidmxIZWkwTGJn?=
+ =?utf-8?B?UDQwemg1VE8zRXdVK1o3MEhlY0Z2c3d2Ui80TzZlaXhaTjZETWVTSU1MRkpx?=
+ =?utf-8?B?VTQ2em40M2N5RityQXlpaWRxTkJkemg5cmxFamxHbnRkS1czRmkwTm8xMXNX?=
+ =?utf-8?B?c1BYMC9jUk1UUHozQ2QxcE1kaEJ1c0Iva0VUNVo3VURDZjUvcG9XVmx3MU9r?=
+ =?utf-8?B?ejN5OVRnMThrYnM1RTJMeUQ1YjVnYUs4RXY0Q3BNdWd4ODBTanRqQ0kxbVQr?=
+ =?utf-8?B?bXFOc25ib3hVRE9TYmdXZE1SaDUrK1BkL0ZnakwyZkluNUdjTlNWNG9Iajc0?=
+ =?utf-8?B?NWN2ZXBsYTFsY2Zpajg3elFIY09GSGszY1V3aDRscHArUWg2SGRhUlU0SGdE?=
+ =?utf-8?B?MUdIUDdRWE0vdTV6TDNtaWJxSWJXRHR3ME1kWS9xYWFNVEFDNE5oMGlWVXFB?=
+ =?utf-8?B?UjkrVDBCc1g5NXZ2Wk5OZCtLQU0vTUhUdEpNMjhZUTFMWlk4STdaSDAyNUdp?=
+ =?utf-8?B?YUNlWkFkOWVJcDk1am5uSkoyQTJEeEkwU2JjVHZ1SHhrbGV4VS93azFqaGpZ?=
+ =?utf-8?B?T3hlVm5hY3JRbjk0eDRQWVMyaHB1WENJazdoN2ZZZEVwVzJQL3dBSWhUaU53?=
+ =?utf-8?Q?2Zsoe8sh30z5KrzV7UuFMXChyQdVodnoIN?=
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2020 11:54:15.4300 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31bc16fe-b715-48a8-9e77-08d89c392711
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pz8UWE7s/Lo6ap38o5f8fQtGm/e8PisU69AMAu0tnpqOOng1h404fG2RDixfZScQwC6nsCJeIzQfjlSpgmk/aw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2778
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,100 +132,96 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: guoweichao@oppo.com, linux-erofs@lists.ozlabs.org, zhangshiming@oppo.com,
+Cc: zhangshiming@oppo.com, linux-erofs@lists.ozlabs.org, guoweichao@oppo.com,
  linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jianan,
+Thanks for review, i will update it soon.
 
-On Wed, Dec 09, 2020 at 06:08:41PM +0800, Chao Yu wrote:
-> On 2020/12/9 10:39, Huang Jianan wrote:
-> > iblock indicates the number of i_blkbits-sized blocks rather than
-> > sectors.
-> > 
-> > In addition, considering buffer_head limits mapped size to 32-bits,
-> > should avoid using generic_block_bmap.
-> > 
-> > Fixes: 9da681e017a3 ("staging: erofs: support bmap")
-> > Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-> > Signed-off-by: Guo Weichao <guoweichao@oppo.com>
-
-Could you send out an updated version? I might get a point to freeze
-dev branch since it needs some time on linux-next....
-
-Thanks,
-Gao Xiang
-
-> > ---
-> >   fs/erofs/data.c | 30 ++++++++++--------------------
-> >   1 file changed, 10 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> > index 347be146884c..d6ea0a216b57 100644
-> > --- a/fs/erofs/data.c
-> > +++ b/fs/erofs/data.c
-> > @@ -312,36 +312,26 @@ static void erofs_raw_access_readahead(struct readahead_control *rac)
-> >   		submit_bio(bio);
-> >   }
-> > -static int erofs_get_block(struct inode *inode, sector_t iblock,
-> > -			   struct buffer_head *bh, int create)
-> > -{
-> > -	struct erofs_map_blocks map = {
-> > -		.m_la = iblock << 9,
-> > -	};
-> > -	int err;
-> > -
-> > -	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-> > -	if (err)
-> > -		return err;
-> > -
-> > -	if (map.m_flags & EROFS_MAP_MAPPED)
-> > -		bh->b_blocknr = erofs_blknr(map.m_pa);
-> > -
-> > -	return err;
-> > -}
-> > -
-> >   static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-> >   {
-> >   	struct inode *inode = mapping->host;
-> > +	struct erofs_map_blocks map = {
-> > +		.m_la = blknr_to_addr(block),
-> > +	};
-> > +	sector_t blknr = 0;
-> 
-> It could be removed?
-> 
-> >   	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE) {
-> >   		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-> >   		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-> > -			return 0;
-> 
-> return 0;
-> 
-> > +			goto out;
-> >   	}
-> > -	return generic_block_bmap(mapping, block, erofs_get_block);
-> > +	if (!erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW))
-> > +		blknr = erofs_blknr(map.m_pa);
-> 
-> return erofs_blknr(map.m_pa);
-> 
-> > +
-> > +out:
-> > +	return blknr;
-> 
-> return 0;
-> 
-> Anyway, LGTM.
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
+在 2020/12/9 19:39, Gao Xiang 写道:
+> Hi Jianan,
+>
+> On Wed, Dec 09, 2020 at 06:08:41PM +0800, Chao Yu wrote:
+>> On 2020/12/9 10:39, Huang Jianan wrote:
+>>> iblock indicates the number of i_blkbits-sized blocks rather than
+>>> sectors.
+>>>
+>>> In addition, considering buffer_head limits mapped size to 32-bits,
+>>> should avoid using generic_block_bmap.
+>>>
+>>> Fixes: 9da681e017a3 ("staging: erofs: support bmap")
+>>> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+>>> Signed-off-by: Guo Weichao <guoweichao@oppo.com>
+> Could you send out an updated version? I might get a point to freeze
+> dev branch since it needs some time on linux-next....
+>
 > Thanks,
-> 
-> >   }
-> >   /* for uncompressed (aligned) files and raw access for other files */
-> > 
-> 
-
+> Gao Xiang
+>
+>>> ---
+>>>    fs/erofs/data.c | 30 ++++++++++--------------------
+>>>    1 file changed, 10 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+>>> index 347be146884c..d6ea0a216b57 100644
+>>> --- a/fs/erofs/data.c
+>>> +++ b/fs/erofs/data.c
+>>> @@ -312,36 +312,26 @@ static void erofs_raw_access_readahead(struct readahead_control *rac)
+>>>    		submit_bio(bio);
+>>>    }
+>>> -static int erofs_get_block(struct inode *inode, sector_t iblock,
+>>> -			   struct buffer_head *bh, int create)
+>>> -{
+>>> -	struct erofs_map_blocks map = {
+>>> -		.m_la = iblock << 9,
+>>> -	};
+>>> -	int err;
+>>> -
+>>> -	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+>>> -	if (err)
+>>> -		return err;
+>>> -
+>>> -	if (map.m_flags & EROFS_MAP_MAPPED)
+>>> -		bh->b_blocknr = erofs_blknr(map.m_pa);
+>>> -
+>>> -	return err;
+>>> -}
+>>> -
+>>>    static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>>>    {
+>>>    	struct inode *inode = mapping->host;
+>>> +	struct erofs_map_blocks map = {
+>>> +		.m_la = blknr_to_addr(block),
+>>> +	};
+>>> +	sector_t blknr = 0;
+>> It could be removed?
+>>
+>>>    	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE) {
+>>>    		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
+>>>    		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
+>>> -			return 0;
+>> return 0;
+>>
+>>> +			goto out;
+>>>    	}
+>>> -	return generic_block_bmap(mapping, block, erofs_get_block);
+>>> +	if (!erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW))
+>>> +		blknr = erofs_blknr(map.m_pa);
+>> return erofs_blknr(map.m_pa);
+>>
+>>> +
+>>> +out:
+>>> +	return blknr;
+>> return 0;
+>>
+>> Anyway, LGTM.
+>>
+>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>
+>> Thanks,
+>>
+>>>    }
+>>>    /* for uncompressed (aligned) files and raw access for other files */
+>>>
