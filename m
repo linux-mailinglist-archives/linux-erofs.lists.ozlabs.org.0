@@ -1,92 +1,126 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EFE2D37F7
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 01:50:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 337AB2D38DB
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 03:35:22 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CrJP20jhGzDqjk
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 11:50:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1607475014;
-	bh=GZtue01dfqibLT4PGv87X3H0oMJgGPvH8+nACYVsxds=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=RtY4qqA5IkOKo1v+W8TU6usD2Ea0SV0aerPnxJk8fbKDmpsPVK/0xO3BMOII49huv
-	 AarYnpaopEtGzDu9ISpPWzIpQsuiyvitTBgeqz/bKEBLUOde/a2HI2LKBa6zmiqZD3
-	 Jxz0Zbx/xSbahvHrZVTl9bNbFNIORMF5gB4KAOjFNgs9s8RPMirJlzemxdvYLwVwWl
-	 ehh/P0Xa6UcZGo+/13G9AHLulW8erqIcG38ZV7NHGuvaIio1WX91rIO/D1v1f4L1di
-	 z2dZk2AcsUpA8KvJUZXex188GX+5PQRsHvjaR83qVDyvL92EDDFy0sDBtKH2t14d3P
-	 amQAtXkf5R0DA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CrLkH1sjVzDql5
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Dec 2020 13:35:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=oppo.com (client-ip=40.107.131.82;
+ helo=apc01-sg2-obe.outbound.protection.outlook.com;
+ envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.206; helo=sonic311-25.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+ dmarc=pass (p=none dis=none) header.from=oppo.com
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=reject dis=none) header.from=aol.com
-Received: from sonic311-25.consmr.mail.gq1.yahoo.com
- (sonic311-25.consmr.mail.gq1.yahoo.com [98.137.65.206])
+ dkim=fail reason="signature verification failed" (1024-bit key;
+ unprotected) header.d=oppoglobal.onmicrosoft.com
+ header.i=@oppoglobal.onmicrosoft.com header.a=rsa-sha256
+ header.s=selector1-oppoglobal-onmicrosoft-com header.b=SO/32DPo; 
+ dkim-atps=neutral
+Received: from APC01-SG2-obe.outbound.protection.outlook.com
+ (mail-eopbgr1310082.outbound.protection.outlook.com [40.107.131.82])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4CrJNp4T8HzDqhD
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 11:49:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1607474992; bh=TOdef/xYGsRtFA2qwr5/eWMMHiOMyN50TTtc8sYdMF0=;
- h=From:To:Cc:Subject:Date:References:From:Subject;
- b=YTm9aW0V9tseKj4yd4gvBrQ9EZCZ2u9YTG6aKmgjl2M9JgC/mfseW+Ol15beAL2darvB8UZQFqvrhnrNaZ1iRNtUUPezzA7o88SnlwetYHqdjonTavUbghiBRT0inJwpK+Elgec0z9eZGi3MMK8V99G2kbJ5zPA54Ly/vI6GuEvIlWK4qK4PyOpwYe7qx8eyI7Hmpn+vtzxDC6x5vzXL30r52tM7G53R2E7vRNfsZ1IovHFw85jLG6FcJj+qEd4XX+q9TCyv/jdvXjaUYh/DIKEjgEzVxLvWz5J8zi65de95WESETKXED8UWD97H2b49uDsGMMOxPb0B1Hez41jfTA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1607474992; bh=R6IM6wrm4J9JtiY4hMjJUIi65YenudKOmAGgdcuIRt0=;
- h=From:To:Subject:Date:From:Subject;
- b=enjuFuP6ltr8pi/C/vecilF40NyPpStpQINXp9LE1rfR/0Z4VFx21APUya+pzRZkjKTJIkWXbCbxYbN71JVlKCF/jt+cxaDPwLTtmnKX/24A/c/UAH+TYMeJ5S2ZU/SMcBala3YfZrSpcDa9kv8OIhUeZtKe45imA6ntTB5jS4IcoP4aqSaplJxoFv6cbEp5RcAWoc/enpOzQdtQOmON2+vWdRHWgo9lGSlgGYlOX7m7ObYRnMJChyzWYM4sIxrhYBGSpSMVzLTIn1VRRzOOPfRO+ytGsgiAmsg9zfWKpJOG/ZosrH1veSkrJjzEfE0xSDpE+UpCdQhAM00UWhTitw==
-X-YMail-OSG: z6hU0KMVM1mSfaMkUSbz46iY27lW80YeVlAErEKj3NGaD4lXADUUArHpU6ktDww
- dOw7jnQOzdCMW93FBCNCHoIgmn94KQcV4DhNsmqseREhZ81Oo4nU26i7GahXmtgVcB8BqHCkDWCa
- oWc6NfRptmO.N_pdUHUtL6wqSGEF5rLCkTHxudataArfnWGDlEpWMUomZOZhC2myvL_YyEFzFdNl
- xKz0g30uxKMxJB8JbkVAQNY1r8mq3qhZ83H1rkr.JBPMyuz3N7abUCas3hPJADyY2x1Z2xHyqX3q
- oqZzA9R_SUHTglqRDWg77yGcqI36NZuOXQXo9.H_ooaPlaqy9usbxvXz.4I1YX_t5T6pcv6gWCs_
- JwiDGZUFOauAcN5f7My1njL_TqHOjKEfERR_P8VqWhu8oYmGsjQbZFILZPv5vsvoLw16KWUIQIdy
- enUI04qqCsEGdsKU70bK0_9Y5AxrRoUb10.C_mxmcOj8L1xTM5sP.LNNN6cgcazyOL4eTD.zZp0p
- pm86cq38kgpgl1UCqP8PDTSzc42u1ZCFwOtgogerpN6ubG1951qrZnbETT6lc0PGqB56cVYVLme8
- 7iQlaBGgl84NWOYQyqUF3JNv_FgeDtx3V.8s7Oe.lIb0VaQHpbWyKGJq519dvYoojU.8LI8KO4tN
- Ol.OHeOS9q9ZmJQ_EmnVVxcRubnXhOvKszmBiSdGlVxGvmru.Y32wV2ZirzEcVQCMpfZCHK1IZ2X
- w1aSPnZj6..SUv4iEwT9R44KRrcL2NZn1gEPjAEXuB8UXFwoMIzx7CJYVwkQDDFTWaibKYo0C_xr
- mvZ2_yFsoj_cR2cl5rfnqOOVRSJ41_qXbC7m319FKSFb_turYP67OV8rgyv9Jrzr6NqFxAnULaud
- 6xUXXvYfFGTZzAS7PG7.OKc3tHhuJXmpC6gZgJSUE_ShdgA48Le7X9ySX6wW4hwckeyoOMwEX9pp
- MJHVjhGc7FViv5Gv3TOr0NnW2xwGENzk5eswp9BhylXsZ9pCAlsEG3l6YCfTNlWexpHDzp4U7tK3
- 31CaEzRaXxsDpfpCRp4r7xQSoJpFJV5MqURsVNXEVBGY3NFEt6N31RY5g6_PWaLApvBU.gaelG5u
- IrUjD4AIt9TlY4m9yUs7tRCJEjVyv_QGhIsytvzQQkhRDDSRQR5igIEakW088H9m8sASg8jgi.wO
- sCXvjWwgPU5o9PIiP9qw267hg1PspQev6gpCQyX_4JWWV5sQ3PO41pHBQ_hVofex_KAWk7kRIzmn
- 0RMNaRCB9NVUItGCOyGSAwbumXp6B0zw108GidBH4QFs6lyC3wZwwRxWcA7EO7nc5qdMvO_6ohbS
- 0YZfkRNtdseuqrD_wDPRE6hbrnv8dJ.VqI5ynZZxoiZfmZm8O5eyVoq2M99d5q_whX2vVGlz2U0o
- ca5x.F6UGAQ4Oj0pM0I4bQRLTPsEwFe2vuEFsUbSWGPx04DE6zBhW_EJRIf6jdgp8GkOPnmh8fVI
- 7cCYDJ8btX24AagiWbxcH0BwhztDTG3vGYoEVhuTVSDWKHs93dUuzzU9zOF0.AUtQCnZtaQhLGPh
- ARG3FTKMUx4OoB_9S58iXVaaDMCRk6UkBEgCVK3gER4j97zYKJPG_zOdDYRY_KRhdJ8ICzagsP_K
- H8UPfOYQqqjcSutgbM5vwD.AX42t2fSaNAxwYt.93sS.nikjQdQxcpqP8Ka2cq02DfvsAvywOd9n
- pR.G1MD_Px0.jPw6dwDYoA3zUj6XQZpSDan.Q4DASbhoX7V6.D_OFppKj2.X4glS3C8sl1CkpItt
- Rk18mT7_voNaKX56hp9ui2Ese4rAK2lBzj9rd3ZvnJpyd0hp5sFpAexawN0rL1cBtbfrR.sTI55g
- 0xLloyLkK_H1zAgNcjMioVGU.pMQeCMEayiCK9KhHbZNmGMi3.wzkPdY2JgbJFDhunx7Pchf8Ymk
- 78UFep1Xw8PraP4X07opS4LfnsFOyvIBIuozMlY1jB1xhQ99i_hJH5i3.RlTtL7DoRf2RxYR6NS4
- 2YDUPzlCm0p2E_w3P8JI82tP3DUPrU3WhGdH.3_fGoKmtIcTyzQof9P7jKhr5oTgocCs2KtX23z9
- R.OFcSb3u2PKNsayrsQVFS1uIZNv8uV_0kiVsxlTeX0QztHTDsFTYwcH5N4yu1J.avmV0Uo8gn7F
- Z4skgfx.BozJoUGZtLWaq7CAaY5zPPk4UfSGEwMRKuKQEYKaoHIlp2HWkjrrgAzxGQAQ2ynWqXBA
- 5IMxf.Qq2MgV0iJTH8NWq8mfny0r2S7MLPlKWYObdxv81lWjhU0rVCYCqsJrmQ1dWgLa.dujOmkN
- _EbjcaQ5lD2BMpghwLekMZ2ggoQqslcf4mtjna1Kh5zl5WWn1mFe8nWV1DXpG8FB15_WwcWkOrfy
- Wrajzz338VGo3uhf2we8YYJqV8vfNRPRYpxMlPcAhBq77yyCbpWhYDITvYjmP2nSZ40yKpRkNr9m
- xJTpCys5nb72hen3rGDQc5ys-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic311.consmr.mail.gq1.yahoo.com with HTTP; Wed, 9 Dec 2020 00:49:52 +0000
-Received: by smtp402.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID c7554aaac129a93eff9fbc0231785c22; 
- Wed, 09 Dec 2020 00:49:46 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CrLk84Rh2zDqhD
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Dec 2020 13:35:09 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fpw2SUStijrOs/aASmqb3N4bH42Fg9F9iWzJP8MKtTbQVzAIybfPHlijNs46CyPgXDA0RXZEMQPGnYWyvp2UuQiGXNK4FNbP+/nPipGCMHNqGXX+AHsXt+Kj1IeEZL2XT+1bLRZZRjenDsBDU6w234th3r6ljIGg1lvYmYIG8oniAhGaknRRdckaHQCt3SayjcA2tbctWneQGFLDy0XpfW3M76Z5thfuIkoaxc1z6Nw7WiZkOS5HN73S8Z6fHKsc1ma9r6f1ExUDghgwqAJx8Ixr2iagHAGVG/V0Iq7Ek52PTKevzQGBBXAWZ/wEtd8j7GgfwQDycYVEj2uCKJzBaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=koacWKx/N90K7oNTyjdtbKSjv4Du0iM/R/koPS01ELg=;
+ b=g8L8T9kWOp3ls+/j6Jh+TyFvnlEFKQF2F4yGPfkVADh3wKopRRSpGV9J5JeHWEyOtb4zV9qCpdGYV43phQCzPU2xeT02OJeY/JIWVEPYNXOXGQXKIIS0BUIwEGPRnYW5uc+UsuhVVeacNhILHtb+BBg49bty7z//I9YG/YlBZR5Sr+wRJbGp9P57Uoy/Rnip2BbUnAbEYBV9B58wjX4PK3UGQCOqhWDdtyH60HtC8ecTMB4SWmhI34SSw1962wKtm5U4eJ6bbt7RivZSBiekGAtpT/LY6qhOyKc2z7oRZcH0wfEQDewhUQJVlG9hUYo/2O/t6eZWsL5/UZIeWamr9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=koacWKx/N90K7oNTyjdtbKSjv4Du0iM/R/koPS01ELg=;
+ b=SO/32DPohl8j062FCXgPxbj0/q6UYG3Ri6FcH/OX182+7lKcVS21+bd92r40uuFAihH8iWHmTt6KbPoLdccz8N69DnSEvWrsfXlo0DHusPgut4Uk17lo5w9Nf1yMO9Ui2c4NpvoS+wNPvhuXTiq9LWQmzflOuWiFuy1HGwIRAQU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oppo.com;
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
+ SG2PR02MB3276.apcprd02.prod.outlook.com (2603:1096:4:45::21) with
+ Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3654.12; Wed, 9 Dec 2020 02:35:04 +0000
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::dcd:13c1:2191:feb7]) by SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::dcd:13c1:2191:feb7%7]) with mapi id 15.20.3654.012; Wed, 9 Dec 2020
+ 02:35:04 +0000
+Subject: Re: [PATCH v3] erofs: avoiding using generic_block_bmap
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: fix uuid.h location
-Date: Wed,  9 Dec 2020 08:49:37 +0800
-Message-Id: <20201209004937.1672-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+References: <20201208131108.7607-1-huangjianan@oppo.com>
+From: Huang Jianan <huangjianan@oppo.com>
+Message-ID: <c71fe6a9-06ba-3871-6e0b-104f58df1df7@oppo.com>
+Date: Wed, 9 Dec 2020 10:34:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.3
+In-Reply-To: <20201208131108.7607-1-huangjianan@oppo.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-References: <20201209004937.1672-1-hsiangkao.ref@aol.com>
+X-Originating-IP: [58.252.5.72]
+X-ClientProxiedBy: HK0PR01CA0054.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::18) To SG2PR02MB4108.apcprd02.prod.outlook.com
+ (2603:1096:4:96::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.118.0.32] (58.252.5.72) by
+ HK0PR01CA0054.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.12 via Frontend
+ Transport; Wed, 9 Dec 2020 02:35:03 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f14f2c60-99f1-445e-a10b-08d89beb0901
+X-MS-TrafficTypeDiagnostic: SG2PR02MB3276:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SG2PR02MB3276BE0A348EE7B7E81CFC38C3CC0@SG2PR02MB3276.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:619;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1uN3yNn3TiRwTvxf34HRDTk+W1bl+ViNjXflaoN6J2AQfIx0TPIhUu5z6QsJa7j5HKu+HjG9IFtSFvI/H6ER+7AO9LyKaOae7Gg7XGhLE8Y4Phi1+gVVlQmf0QZ1uBPRkCiuVJy68QkS4t6X+rqJTpWE89oU/scXhnemaGx8GcsSzBpQhmtX+LbT+Pp1n52LIoxjEK7Sn0BndjcTg3tr36AoYUC5XvM8AUE+99GUpIAxuJH8Au/Z/5Sv5ubF8Rq95xZ0nXMqfuWdxi6gG6vh3caOOdBPQ2O5G06uwdJuc+HAFyWQg6Fn1WTMfhIBkUUP4fYaVMNpOIHvGfjSlZA1b+4rCAs8fshUuy6QO3u76Yi57bNza2yfrej2i7kTjY0/fRdINb+OBeKXESiqITmv3d+UiljTTpEXKPVTPYyGY45/GxrvJMi92AsErEp48V+kFuvf4TDZv+711JiJruT4kg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(4636009)(366004)(376002)(346002)(136003)(508600001)(6916009)(26005)(36756003)(8936002)(8676002)(52116002)(2906002)(186003)(34490700003)(16526019)(31696002)(4326008)(6666004)(16576012)(66556008)(31686004)(5660300002)(66476007)(6486002)(83380400001)(86362001)(66946007)(956004)(2616005)(11606006)(41533002)(43740500002);
+ DIR:OUT; SFP:1101; 
+X-MS-Exchange-AntiSpam-MessageData: =?gb2312?B?amd5RzlrRjZaV1BOUk1Nc3ZIb0R5L0RyMmFHR0hQVGtsZGwxUTZ5eW1UanZt?=
+ =?gb2312?B?RmdwY0lLSGppWjRaN3c2cWpWcjVDMEdpVThJVnN6Q085ZUJBWExJMVNhS1NK?=
+ =?gb2312?B?ZHRqT29mNkNLc1pOR3MyaVhTU0hFaEZqMnFJSWJUT1A0RDQxbEk1K2ZpTXJ6?=
+ =?gb2312?B?SEVYRHVpQWtoUjJ6MDlHRjFMRGQzOENYY21VYnA0bWtOemN2Tko4U2FzT3pV?=
+ =?gb2312?B?TlFxbU5qSUNtSGVSeXBrQS9tVGZPYnZzUWx0d3V2aG5tU01lN29iQUZPMHBq?=
+ =?gb2312?B?SSt6SmxTNVNiREZwR1kyaTE2Mkt6Q2RKUENtQzU4MGJFMnZKM1hBektld3JZ?=
+ =?gb2312?B?aEx4bitOQkxFS0p5cmF0YStVM1Bkd2dqNVhIaGNobFJzdDBXWFoycmc2dFZv?=
+ =?gb2312?B?WmVCbFVVekdNNFlzQkJ1Z21kQXU5a1VSbzFNN2svNHNGRVdQMlFtR0U5NlF1?=
+ =?gb2312?B?MGhYQlY0SDZuWlNSNnNGeFlnWTRBV2Y3RURzRFdWK0RUMDd4c3dTSUNnZjR3?=
+ =?gb2312?B?WDBweDNlalhnQnZHelZqTi9mdlNvcjNLMVZHK0JSeTNjOG16UEJhQWcwczAz?=
+ =?gb2312?B?WlV0Y2YrY2g5c2FSR2xzYmR5UGNNd2J4eitaSEdoemdYS2N4SmZGQXA2NzNv?=
+ =?gb2312?B?ZVI1bmJUL3BmcnRjdVI5cWR3bTBQd2w5NjNoa3JUV245YnBBM05LOS91MGFS?=
+ =?gb2312?B?ZnUwTmNYeDYxTUs0VHgzRmdhcER5VGZ0QzU5T0NLUWFuTUIrSXN0bThNSWpV?=
+ =?gb2312?B?aFQvN0x0TG80Tm5qc0JJWlFsVmR1VzBDYmFTVmxJWGN2VC90bURkV1JncmNV?=
+ =?gb2312?B?WDBZQzFaTDJwMExxREErVE9zVXdWQmQwSmd0TGlLcjV5a2c2VkNyL3VOT0Qz?=
+ =?gb2312?B?b3hObDFUUDMwTzk3NHVZU2czRzVBM2txT1YyUTBqM0YrSFF6YUhjTVZiQVZM?=
+ =?gb2312?B?UzQ1V2JtNnRIcUl2SGs4ZWlGZE5Pellvbkhob1d4Wjk2SVlpdnMwR2MxWHdn?=
+ =?gb2312?B?RUhhNVc5VUZhQ0Q2VitnOStIUEFNUlQ4RllVQVFjRFNmaHowQno2WE81VldB?=
+ =?gb2312?B?VkE3cEFwNkxDYzFLUGZQcERBd3AxZng0eGg0dkd0MkdqMWh4NlV6eE9DK0NR?=
+ =?gb2312?B?bmxxYmRza0tMN1B0MkJDaHBXQ0NPNFExRHJHWVlHaDRxNG12QTNOWVU1TTNH?=
+ =?gb2312?B?dGoxQkxPYW9EN2hscDFXWnZGZmpGNFB0QjFtYXluMk9iaUh6cHZDK2U5RVIv?=
+ =?gb2312?B?UWxzUUw1Wk5TcENBOENhdk9NQ0FmckEwa0sxeW1FOHV2cGNjZ2ptZHkyREo2?=
+ =?gb2312?Q?ww5rIBuNw6QTs=3D?=
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2020 02:35:04.1088 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-Network-Message-Id: f14f2c60-99f1-445e-a10b-08d89beb0901
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0hlhG5yzr7Bh7ssLPbIUzyyZNfvlH3MQtuQbNdD0y/t6EYD1j/Q9BWBdCsQJnmoIzZHTPwbaF7gx4gn9jmhLQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3276
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -98,51 +132,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: Karel Zak <kzak@redhat.com>
+Cc: guoweichao@oppo.com, zhangshiming@oppo.com, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@aol.com>
 
-As Karel reported [1], "The subdirectory in
-    #include <uuid/uuid.h>
+ÔÚ 2020/12/8 21:11, Huang Jianan Ð´µÀ:
+> iblock indicates the number of i_blkbits-sized blocks rather than
+> sectors.
+>
+> In addition, considering buffer_head limits mapped size to 32-bits,
+> should avoid using generic_block_bmap.
+>
+> Fixes: 9da681e017a3 ("staging: erofs: support bmap")
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> Signed-off-by: Guo Weichao <guoweichao@oppo.com>
+> ---
+>   fs/erofs/data.c | 30 ++++++++++--------------------
+>   1 file changed, 10 insertions(+), 20 deletions(-)
+>
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 347be146884c..399ffd857c50 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -312,36 +312,26 @@ static void erofs_raw_access_readahead(struct readahead_control *rac)
+>   		submit_bio(bio);
+>   }
+>   
+> -static int erofs_get_block(struct inode *inode, sector_t iblock,
+> -			   struct buffer_head *bh, int create)
+> -{
+> -	struct erofs_map_blocks map = {
+> -		.m_la = iblock << 9,
+> -	};
+> -	int err;
+> -
+> -	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+> -	if (err)
+> -		return err;
+> -
+> -	if (map.m_flags & EROFS_MAP_MAPPED)
+> -		bh->b_blocknr = erofs_blknr(map.m_pa);
+> -
+> -	return err;
+> -}
+> -
+>   static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>   {
+>   	struct inode *inode = mapping->host;
+> +	struct erofs_map_blocks map = {
+> +		.m_la = blknr_to_addr(iblock),
 
-is unnecessary (or wrong), if you use
-    PKG_CHECK_MODULES([libuuid], [uuid])
+Sorry for my mistake, it should be:
 
-than it returns the subdirectory as -I, see
+.m_la = blknr_to_addr(block),
 
-    $ pkg-config --cflags uuid
-    -I/usr/include/uuid
-
-so the correct way is
-     #include <uuid.h>". Let's fix it now!
-
-[1] https://lore.kernel.org/r/20201208100910.dqqh5cqihewkyetc@ws.net.home
-
-Reported-by: Karel Zak <kzak@redhat.com>
-Fixes: e023d47593ff ("erofs-utils: support 128-bit filesystem UUID")
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
- mkfs/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mkfs/main.c b/mkfs/main.c
-index c63b27491a3f..abd48be0fa4f 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -24,7 +24,7 @@
- #include "erofs/exclude.h"
- 
- #ifdef HAVE_LIBUUID
--#include <uuid/uuid.h>
-+#include <uuid.h>
- #endif
- 
- #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
--- 
-2.24.0
-
+> +	};
+> +	sector_t blknr = 0;
+>   
+>   	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE) {
+>   		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
+>   
+>   		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
+> -			return 0;
+> +			goto out;
+>   	}
+>   
+> -	return generic_block_bmap(mapping, block, erofs_get_block);
+> +	if (!erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW))
+> +		blknr = erofs_blknr(map.m_pa);
+> +
+> +out:
+> +	return blknr;
+>   }
+>   
+>   /* for uncompressed (aligned) files and raw access for other files */
