@@ -2,49 +2,95 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 930072D5001
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Dec 2020 02:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B62132D50E5
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Dec 2020 03:36:41 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Crwcn2h9XzDqRw
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Dec 2020 12:02:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CryjL5n5wzDqv4
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Dec 2020 13:36:38 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=intel.com
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=eByh87gO; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=eByh87gO; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Crwch1YkBzDq8t
- for <linux-erofs@lists.ozlabs.org>; Thu, 10 Dec 2020 12:02:27 +1100 (AEDT)
-IronPort-SDR: LyecPqif8f7Z/IvdF09pWqkiqI/qDXFK5dXBrzNp0Z0BvGhH5FB7fi+zvqffJLZKWDJU0QCMqM
- I25kmyYsVkOg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9830"; a="238280960"
-X-IronPort-AV: E=Sophos;i="5.78,407,1599548400"; d="scan'208";a="238280960"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
- by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 09 Dec 2020 17:02:25 -0800
-IronPort-SDR: iLxTXV+anUKJ1rXzTAXxeluQm4Cd59ccEGLCs+WmD4ihsrBsjWDmCoQdmab9tiIC+FNAGdYfjt
- IYAXfmpFoaHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,407,1599548400"; d="scan'208";a="318967943"
-Received: from lkp-server01.sh.intel.com (HELO 2bbb63443648) ([10.239.97.150])
- by fmsmga007.fm.intel.com with ESMTP; 09 Dec 2020 17:02:23 -0800
-Received: from kbuild by 2bbb63443648 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1knALe-0000YT-RN; Thu, 10 Dec 2020 01:02:22 +0000
-Date: Thu, 10 Dec 2020 09:02:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 1825c8d7ce93c4725cb04ad09627fc2829de32ca
-Message-ID: <5fd17393.V/4kca/yGWYzTitm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4CryjF1ZzqzDqnK
+ for <linux-erofs@lists.ozlabs.org>; Thu, 10 Dec 2020 13:36:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607567786;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=kCGLXGuRmo1k3B8nyMMdd3CDg7kUrDixLDWQgjMK8Gk=;
+ b=eByh87gOa5DiIya0+jfDbAmxv24gUb3dz3oql4OQmVj4phWPgaFmU4L8Q28n2+Ldi8Fyhk
+ QbVG9YXPHpgEs3OnvtB9/cAplJ8/zPra4AdYA42w7P/+RdLayATIqyQdHyLPK4q30MNdfh
+ lakri1UQghkQAMyf/ZMxmLoSXyWmVbg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1607567786;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=kCGLXGuRmo1k3B8nyMMdd3CDg7kUrDixLDWQgjMK8Gk=;
+ b=eByh87gOa5DiIya0+jfDbAmxv24gUb3dz3oql4OQmVj4phWPgaFmU4L8Q28n2+Ldi8Fyhk
+ QbVG9YXPHpgEs3OnvtB9/cAplJ8/zPra4AdYA42w7P/+RdLayATIqyQdHyLPK4q30MNdfh
+ lakri1UQghkQAMyf/ZMxmLoSXyWmVbg=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-579-TPZuFHweOMaVeSWDdX2X8Q-1; Wed, 09 Dec 2020 21:36:24 -0500
+X-MC-Unique: TPZuFHweOMaVeSWDdX2X8Q-1
+Received: by mail-pf1-f200.google.com with SMTP id n8so2499413pfa.8
+ for <linux-erofs@lists.ozlabs.org>; Wed, 09 Dec 2020 18:36:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=kCGLXGuRmo1k3B8nyMMdd3CDg7kUrDixLDWQgjMK8Gk=;
+ b=JJuSCC9k4FvSGxNmbFgrEN3/NL+O3T4ykgWySuB0HeCmTzN9xcm8vyCGPwslCEDy8Q
+ K4szLa8ROsHNo1kM4FQohKWS0T7SIE50ivxIZSIvkfZuouJi6kvj3I/fVj4wrIhZedoi
+ gIOZvKCFoRcd/7wk/AP2Zgn+r41jKgHfUeEDZH33LVdqvU1508T6obMkuY77XXDlp04y
+ wm50dffFjwP14aWGO90JE8Bv1xr2gyNkHs3F3Uk7q4KTv/WSHmdyZF6EUtg4N+1JfRfH
+ InS5n0Onp7W9oFSg7bH9Z2qgruJT3+wgq9SFq6xxzP/x42QrQ7eBU9wH8KjwydQz+Pb6
+ mDPw==
+X-Gm-Message-State: AOAM530GP18/VHcMxL/wVV4DFAjO6CjNP6TiIQEHjt9G1X5t+vC4LblY
+ kQldP15Ea6MDItQgmVaH4C8rIFFCcDmB8KEpRVH7OpYQPtnIfPczX/v3QfVhF6f+PCjzb5ra/C2
+ dL91Nbjvo3akBGzpBZbxpngnj
+X-Received: by 2002:a17:90a:df0d:: with SMTP id
+ gp13mr4979748pjb.151.1607567783196; 
+ Wed, 09 Dec 2020 18:36:23 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxsTdKo7r6boXwGgpspnOJOqeh3ErWQfa94wNzATv66ZGi8zSeoIYH5d4SSDROzjJ4qZ3Itew==
+X-Received: by 2002:a17:90a:df0d:: with SMTP id
+ gp13mr4979727pjb.151.1607567782923; 
+ Wed, 09 Dec 2020 18:36:22 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id x10sm4067133pfc.157.2020.12.09.18.36.20
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 09 Dec 2020 18:36:22 -0800 (PST)
+Date: Thu, 10 Dec 2020 10:36:12 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Huang Jianan <huangjianan@oppo.com>
+Subject: Re: [PATCH v5] erofs: avoid using generic_block_bmap
+Message-ID: <20201210023612.GA247374@xiangao.remote.csb>
+References: <20201209115740.18802-1-huangjianan@oppo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20201209115740.18802-1-huangjianan@oppo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,150 +102,88 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: zhangshiming@oppo.com, guoweichao@oppo.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git  dev-test
-branch HEAD: 1825c8d7ce93c4725cb04ad09627fc2829de32ca  erofs: force inplace I/O under low memory scenario
+Hi Jianan,
 
-elapsed time: 724m
+On Wed, Dec 09, 2020 at 07:57:40PM +0800, Huang Jianan wrote:
+> iblock indicates the number of i_blkbits-sized blocks rather than
+> sectors.
+> 
+> In addition, considering buffer_head limits mapped size to 32-bits,
+> should avoid using generic_block_bmap.
+> 
+> Fixes: 9da681e017a3 ("staging: erofs: support bmap")
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> Signed-off-by: Guo Weichao <guoweichao@oppo.com>
 
-configs tested: 124
-configs skipped: 2
+Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Also, I think Chao has sent his Reviewed-by in the previous reply ---
+so unless some major modification happens, it needs to be attached with
+all new versions as a common practice...
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-m68k                        mvme16x_defconfig
-mips                        omega2p_defconfig
-ia64                        generic_defconfig
-um                             i386_defconfig
-mips                           gcw0_defconfig
-sh                          kfr2r09_defconfig
-sh                           se7724_defconfig
-arm                    vt8500_v6_v7_defconfig
-sh                        edosk7760_defconfig
-arm                       imx_v6_v7_defconfig
-powerpc                 mpc85xx_cds_defconfig
-mips                         tb0219_defconfig
-mips                  maltasmvp_eva_defconfig
-mips                     cu1000-neo_defconfig
-powerpc                     rainier_defconfig
-arm                           viper_defconfig
-m68k                         apollo_defconfig
-arm                          pcm027_defconfig
-mips                          ath25_defconfig
-powerpc                 mpc834x_mds_defconfig
-arm                        oxnas_v6_defconfig
-s390                                defconfig
-sh                                  defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                            mmp2_defconfig
-alpha                            allyesconfig
-mips                      pistachio_defconfig
-sh                           se7751_defconfig
-powerpc                       holly_defconfig
-arm                           h5000_defconfig
-sh                            migor_defconfig
-mips                        bcm63xx_defconfig
-powerpc                     tqm8541_defconfig
-m68k                             alldefconfig
-arm                          ep93xx_defconfig
-arm                        cerfcube_defconfig
-arm                       multi_v4t_defconfig
-mips                         bigsur_defconfig
-arm                        vexpress_defconfig
-arm                          pxa168_defconfig
-riscv                    nommu_k210_defconfig
-powerpc                 mpc8540_ads_defconfig
-arm                           tegra_defconfig
-sh                             shx3_defconfig
-powerpc                      pmac32_defconfig
-mips                          ath79_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20201209
-i386                 randconfig-a005-20201209
-i386                 randconfig-a001-20201209
-i386                 randconfig-a002-20201209
-i386                 randconfig-a006-20201209
-i386                 randconfig-a003-20201209
-x86_64               randconfig-a016-20201209
-x86_64               randconfig-a012-20201209
-x86_64               randconfig-a013-20201209
-x86_64               randconfig-a014-20201209
-x86_64               randconfig-a015-20201209
-x86_64               randconfig-a011-20201209
-i386                 randconfig-a013-20201209
-i386                 randconfig-a014-20201209
-i386                 randconfig-a011-20201209
-i386                 randconfig-a015-20201209
-i386                 randconfig-a012-20201209
-i386                 randconfig-a016-20201209
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+I will apply it later to for-next, thanks for your patch!
 
-clang tested configs:
-x86_64               randconfig-a004-20201209
-x86_64               randconfig-a006-20201209
-x86_64               randconfig-a005-20201209
-x86_64               randconfig-a001-20201209
-x86_64               randconfig-a002-20201209
-x86_64               randconfig-a003-20201209
-x86_64               randconfig-a003-20201210
-x86_64               randconfig-a006-20201210
-x86_64               randconfig-a002-20201210
-x86_64               randconfig-a005-20201210
-x86_64               randconfig-a004-20201210
-x86_64               randconfig-a001-20201210
+Thanks,
+Gao Xiang
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> ---
+>  fs/erofs/data.c | 26 +++++++-------------------
+>  1 file changed, 7 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 347be146884c..ea4f693bee22 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -312,27 +312,12 @@ static void erofs_raw_access_readahead(struct readahead_control *rac)
+>  		submit_bio(bio);
+>  }
+>  
+> -static int erofs_get_block(struct inode *inode, sector_t iblock,
+> -			   struct buffer_head *bh, int create)
+> -{
+> -	struct erofs_map_blocks map = {
+> -		.m_la = iblock << 9,
+> -	};
+> -	int err;
+> -
+> -	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+> -	if (err)
+> -		return err;
+> -
+> -	if (map.m_flags & EROFS_MAP_MAPPED)
+> -		bh->b_blocknr = erofs_blknr(map.m_pa);
+> -
+> -	return err;
+> -}
+> -
+>  static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>  {
+>  	struct inode *inode = mapping->host;
+> +	struct erofs_map_blocks map = {
+> +		.m_la = blknr_to_addr(block),
+> +	};
+>  
+>  	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE) {
+>  		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
+> @@ -341,7 +326,10 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>  			return 0;
+>  	}
+>  
+> -	return generic_block_bmap(mapping, block, erofs_get_block);
+> +	if (!erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW))
+> +		return erofs_blknr(map.m_pa);
+> +
+> +	return 0;
+>  }
+>  
+>  /* for uncompressed (aligned) files and raw access for other files */
+> -- 
+> 2.25.1
+> 
+
