@@ -2,39 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36CCA2DE7C2
-	for <lists+linux-erofs@lfdr.de>; Fri, 18 Dec 2020 18:00:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17EE12DE78B
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Dec 2020 17:41:46 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4CyFVV3sPtzDqjp
-	for <lists+linux-erofs@lfdr.de>; Sat, 19 Dec 2020 04:00:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4CyF4k3ZskzDqZT
+	for <lists+linux-erofs@lfdr.de>; Sat, 19 Dec 2020 03:41:42 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1608310834;
+	s=201707; t=1608309702;
 	bh=TXqmxDsVSo06FjF0CAL5Izt7cZMwC9yE7334+tnhvSk=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=XH1wPr25tvDm/vwlVCXFTFpBhHnbH2n30XwFNSmsqiOEnkkPyEvXuSwYPhhuo6Fnv
-	 XvfoIM0rc6fTiDE9/v03jOt2cPUDN02qu9tiZn2bmitFPatcd5v7F+/5zNavjx/VBK
-	 +AygcaDRlAT75gys+fxeTJuUFFUQorIaN3kxZvmlrlU6fsmyDylpYuCY4BFbkQjkDU
-	 qJfGxE95FoRJyA/1KgpkioyPU3XvFyNdOfEurFcYJgMEqMdXJ2mVnqLGPam5jkH76M
-	 4DfDqr3a4eGRUt2tnm7Cx+SZU6eRWUUO3be8nxwxWY7dyiN8tEoHR5iMWkcAY110wR
-	 IpZniWSHZtKEQ==
+	b=a3fmiQ10YHowFM4R0sLr+Pkr12wkomL4nDr3gXwPoEa68p1a5ByUHCvJ0h0+FYCkW
+	 1SOV2rr7qMmsNOPnIuxW9spLIEvHhCzkLWwWVfZO8ZTJPKn9tgeanR/XaaX3mwUUDJ
+	 FywwoFaEA+ktOSInZf/tKEA8scdNHxOc48rp7Ghz0Hq0TKdBukQDb3K8xhug0ioJdH
+	 ltadAcuL0TNe7wAfKnFVJK1651qZCMFWMs2y3KBacyE7jiJ3ks+5+41bo+p92a7rXn
+	 JzAyNDg5KqNqENM4QOx+O89JAiA3EbSDl+jzHHi9+EEEceY/93FU8eKBxTRuEpS2Yr
+	 Bv+zXRzcVRKUQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
  smtp.mailfrom=verizon.net (client-ip=89.37.101.58; helo=benefitof.net;
- envelope-from=ptemseyalenod@verizon.net; receiver=<UNKNOWN>)
+ envelope-from=ptemeyfalenod@verizon.net; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
  dmarc=fail (p=reject dis=none) header.from=verizon.net
-X-Greylist: delayed 10420 seconds by postgrey-1.36 at bilbo;
- Sat, 19 Dec 2020 04:00:21 AEDT
+X-Greylist: delayed 3660 seconds by postgrey-1.36 at bilbo;
+ Sat, 19 Dec 2020 03:41:35 AEDT
 Received: from benefitof.net (unknown [89.37.101.58])
- by lists.ozlabs.org (Postfix) with ESMTP id 4CyFVF5cVbzDqkC
- for <linux-erofs@lists.ozlabs.org>; Sat, 19 Dec 2020 04:00:21 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4CyF4b5m3LzDqZB
+ for <linux-erofs@lists.ozlabs.org>; Sat, 19 Dec 2020 03:41:35 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: drone with battery: 11.1V 2350mAh
-Message-ID: <ced80a0c0cd87af226a94f2d956629bb@wilton.com>
-Date: Fri, 18 Dec 2020 13:12:14 +0100
+Subject: drone flight distance 1km
+Message-ID: <0f55ffae35505030f53ade3411339159@wilton.com>
+Date: Fri, 18 Dec 2020 13:14:01 +0100
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
