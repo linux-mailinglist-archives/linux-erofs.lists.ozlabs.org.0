@@ -1,79 +1,100 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42DAA2E0711
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Dec 2020 09:11:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94C102E07C5
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Dec 2020 10:14:05 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4D0TZ52mzlzDqQh
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Dec 2020 19:11:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4D0VyL0kDrzDqQg
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Dec 2020 20:14:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62a;
- helo=mail-pl1-x62a.google.com; envelope-from=zbestahu@gmail.com;
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=HfMWoHG0; dkim-atps=neutral
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com
- [IPv6:2607:f8b0:4864:20::62a])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=H63EQ2GY; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=H63EQ2GY; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4D0TYx0ltqzDqQS
- for <linux-erofs@lists.ozlabs.org>; Tue, 22 Dec 2020 19:11:14 +1100 (AEDT)
-Received: by mail-pl1-x62a.google.com with SMTP id r4so7019602pls.11
- for <linux-erofs@lists.ozlabs.org>; Tue, 22 Dec 2020 00:11:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=date:from:to:cc:subject:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=FIZr8REIKcdh25/ig1dxr/9jUdUT51ksELvWPS3GJVg=;
- b=HfMWoHG0WZz2wO7W6mu+DtqZAAItpOf4o3KjTV8KEL9iRWjjKM5UmRdkU1Glf2Xx+I
- nhiEfNxtbi9i/h5R/upiqglBVBi0Hi97Pyd/onFadn9/9CyrJMzAFHpMDrOX8sIyA51N
- kR3jvNbQRNYT839E6R7Ch2oINiJhDWL1/ddn3+m1B39l/wJG5J1LheTR9TJuK66CUwoj
- esg3YYpJoR/i5/ojqRtyLIDJB+9TToayY9km/ckjsPEugVPcxtc9sDO7uELQIqXQhIC4
- 9duxA08hhI8SE13RxE/Og2PQcsBio0zHC8SzGtUQ5o8klIgdvn44oRb2vQRlsiVNb8Kj
- glsw==
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4D0VyG2DrQzDqP2
+ for <linux-erofs@lists.ozlabs.org>; Tue, 22 Dec 2020 20:13:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1608628435;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=yc2sUVyvSooLKoUI5gehB2N0+wPQWgeq3PmT72HKe8s=;
+ b=H63EQ2GYs0v6DMqsGUryYcEpUxy0F3oMEy32edcDg7z/dzKvP1ucQeLEMAFi08y1Yfxkym
+ B34+hMipPW45cg1NnXoQAGQAdpxBCKd1UHUudkXiGWemXIUl2BE8wwe69BXh5glz/FdyuP
+ F/9TKkMCvRY6ycUqpG3EoHCyZ5suTeY=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1608628435;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=yc2sUVyvSooLKoUI5gehB2N0+wPQWgeq3PmT72HKe8s=;
+ b=H63EQ2GYs0v6DMqsGUryYcEpUxy0F3oMEy32edcDg7z/dzKvP1ucQeLEMAFi08y1Yfxkym
+ B34+hMipPW45cg1NnXoQAGQAdpxBCKd1UHUudkXiGWemXIUl2BE8wwe69BXh5glz/FdyuP
+ F/9TKkMCvRY6ycUqpG3EoHCyZ5suTeY=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-QBFSMPbuMDigWGYNyIt9uQ-1; Tue, 22 Dec 2020 04:13:52 -0500
+X-MC-Unique: QBFSMPbuMDigWGYNyIt9uQ-1
+Received: by mail-pg1-f199.google.com with SMTP id v5so5307680pgq.15
+ for <linux-erofs@lists.ozlabs.org>; Tue, 22 Dec 2020 01:13:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=FIZr8REIKcdh25/ig1dxr/9jUdUT51ksELvWPS3GJVg=;
- b=hjTTBU3w8bJUBCJ1IPcQ2qJMIed434QU0j4HzUZCL2oZmqiqIn9GOmjrbKZFDSspEU
- NORd9CHNicdApqFree4d/JCAyQ6xnuFV9vscwHEL6JyUTUFWvPIAG4f7V2LN2s77JyJp
- LAicG/PDba+sbYhMFeBTcMQgSWwCM5ES4pb76FgHkp0ukmXhJF57lNLZNx/tqJE0XQ4e
- 92mVURJX3QbyiPzjZvYGUmXZpV+qMSRZNEtqcxselCwjmRMMaoT5sDK5WhyNfKbDp+d3
- j5UBn0t3yXBq0Dn4H9BT1CnO5RtOU9ME40fjUpF5wzn1j77EzarN6MAahoNHDyVw/Dqw
- QGyA==
-X-Gm-Message-State: AOAM532aTsIZqVNe6kJoe3FxZsBt6OAO/DjKJ4dNEb5noehEyIhr2tAD
- nxcFcspCo7j9SQ3S7oJRjpY=
-X-Google-Smtp-Source: ABdhPJwADFOhSud0vLmvpIYKKcUPlWU5iTNSIQzvjS5VBgyDArE69VK8OjMmTJKRyLQOXVK3NwV+5A==
-X-Received: by 2002:a17:902:521:b029:dc:2836:ec17 with SMTP id
- 30-20020a1709020521b02900dc2836ec17mr19970981plf.47.1608624670754; 
- Tue, 22 Dec 2020 00:11:10 -0800 (PST)
-Received: from localhost ([103.220.76.197])
- by smtp.gmail.com with ESMTPSA id 5sm18888559pff.125.2020.12.22.00.11.06
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Tue, 22 Dec 2020 00:11:10 -0800 (PST)
-Date: Tue, 22 Dec 2020 16:10:58 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@redhat.com>
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=yc2sUVyvSooLKoUI5gehB2N0+wPQWgeq3PmT72HKe8s=;
+ b=J9Aqq3gSTSXf6nx2KPL2GzXS6RQ0RI0zbKzFb2Lkc9KGlwT1AaJk8Lwpywd8Vw3cRu
+ ondjYXPxod1esAPchBT4oKRo/3tz6+BSNNaXq1bgiw3BM7oeJj7xxuHEGzHvcLv6cR9U
+ vIkl0dffsX19PNcpTaFXkTpAFRlf9xlvHtQvU43U0dH8QLMLQDH2T0AHi0weSBlQYZQK
+ +5Bc53EOJ5yTEKxqSj/3Z5pHzjLj4qwn4OoICZNlnKW3WjInwMLCo/3DKfMhJYTKdzoP
+ X5nmRBzMKS+yR12fW3in4sRMJy3+2ysVfYLSNwF8/2aaG5yAxUCKZJtF+BSpAiCnZF1Z
+ CZVQ==
+X-Gm-Message-State: AOAM533aHtL2JRHAzrmOr3AawGaki+Jzbsw5wOgIuz8Sr+MYQYqIbS/j
+ tQs3IbARDPm0E4PyM1q47GjT/ZfAofigCV5i8J+Upr7uexCKKysVoEufHS7JNdP7laxsoDZM9QE
+ JahotFYSEEJfYhgW5D5dQN/+t
+X-Received: by 2002:a63:5f12:: with SMTP id t18mr19095016pgb.308.1608628431593; 
+ Tue, 22 Dec 2020 01:13:51 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwysTc2r6F8XnihEWbUW8VcmSxo9MaweCh+wEIPXk2Jhd274DSKAxkijnfHuJn2MSPRECmYzw==
+X-Received: by 2002:a63:5f12:: with SMTP id t18mr19095003pgb.308.1608628431284; 
+ Tue, 22 Dec 2020 01:13:51 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id h8sm22159817pjc.2.2020.12.22.01.13.47
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 22 Dec 2020 01:13:50 -0800 (PST)
+Date: Tue, 22 Dec 2020 17:13:40 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Yue Hu <zbestahu@gmail.com>
 Subject: Re: [PATCH] AOSP: erofs-utils: fix sub directory prefix path in
  canned fs_config
-Message-ID: <20201222160935.000061c3.zbestahu@gmail.com>
-In-Reply-To: <20201222070458.GA1803221@xiangao.remote.csb>
+Message-ID: <20201222091340.GA1819755@xiangao.remote.csb>
 References: <20201222020430.12512-1-zbestahu@gmail.com>
  <20201222034455.GA1775594@xiangao.remote.csb>
  <20201222124733.000000fe.zbestahu@gmail.com>
  <20201222063112.GB1775594@xiangao.remote.csb>
  <20201222070458.GA1803221@xiangao.remote.csb>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+ <20201222160935.000061c3.zbestahu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20201222160935.000061c3.zbestahu@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,125 +111,146 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 22 Dec 2020 15:04:58 +0800
-Gao Xiang <hsiangkao@redhat.com> wrote:
-
-> Hi Yue,
+On Tue, Dec 22, 2020 at 04:10:58PM +0800, Yue Hu wrote:
+> On Tue, 22 Dec 2020 15:04:58 +0800
+> Gao Xiang <hsiangkao@redhat.com> wrote:
 > 
-> On Tue, Dec 22, 2020 at 02:31:12PM +0800, Gao Xiang wrote:
-> 
-> ...
-> 
+> > Hi Yue,
 > > 
-> > Ok, I will try to find some clue to verify later.
-> >   
+> > On Tue, Dec 22, 2020 at 02:31:12PM +0800, Gao Xiang wrote:
+> > 
+> > ...
+> > 
+> > > 
+> > > Ok, I will try to find some clue to verify later.
 > > >   
 > > > >   
-> > > > > Moreover, we should not add the mount point to fspath on root inode for
-> > > > > fs_config() branch.    
+> > > > >   
+> > > > > > Moreover, we should not add the mount point to fspath on root inode for
+> > > > > > fs_config() branch.    
+> > > > > 
+> > > > > Is there some descriptive words or reference for this? To be honest,
+> > > > > I'm quite unsure about this kind of Android-specific things... :(  
 > > > > 
-> > > > Is there some descriptive words or reference for this? To be honest,
-> > > > I'm quite unsure about this kind of Android-specific things... :(  
+> > > > Refer to change: mksquashfs: Run android_fs_config() on the root inode
+> > > > 
+> > > > I think erofs of AOSP has this issue also. Am i right?  
 > > > 
-> > > Refer to change: mksquashfs: Run android_fs_config() on the root inode
+> > > Not quite sure if it effects non-canned fs_config after
+> > > reading the commit message...
+> > > https://android.googlesource.com/platform/external/squashfs-tools/+/85a6bc1e52bb911f195c5dc0890717913938c2d1%5E%21/#F0
 > > > 
-> > > I think erofs of AOSP has this issue also. Am i right?  
+> > > And no permission to access Bug 72745016, so...
+> > > maybe we need to limit this to non-canned fs_config only?
+> > > (at least confirming the original case would be better)
+> > > 
+> > > BTW, Also, from its testcase command line in the commit message:
+> > > "mksquashfs path system.raw.img -fs-config-file fs_config -android-fs-config"
+> > > 
+> > > I'm not sure if "--mount-point" is passed in so I think for
+> > > such case no need to use such "goto" as well? 
+> > > 
+> > > Thanks,
+> > > Gao Xiang  
 > > 
-> > Not quite sure if it effects non-canned fs_config after
-> > reading the commit message...
-> > https://android.googlesource.com/platform/external/squashfs-tools/+/85a6bc1e52bb911f195c5dc0890717913938c2d1%5E%21/#F0
+> > Could you verify the following patch if possible? (without compilation,
+> > I don't have test environment now since AOSP code is on my PC)
 > > 
-> > And no permission to access Bug 72745016, so...
-> > maybe we need to limit this to non-canned fs_config only?
-> > (at least confirming the original case would be better)
+> > From: Yue Hu <huyue2@yulong.com>
+> > Date: Tue, 22 Dec 2020 14:52:22 +0800
+> > Subject: [PATCH] AOSP: erofs-utils: fix sub-directory prefix for canned
+> >  fs_config
 > > 
-> > BTW, Also, from its testcase command line in the commit message:
-> > "mksquashfs path system.raw.img -fs-config-file fs_config -android-fs-config"
+> > "failed to find [%s] in canned fs_config" is observed by using
+> > "--fs-config-file" option under Android 10.
 > > 
-> > I'm not sure if "--mount-point" is passed in so I think for
-> > such case no need to use such "goto" as well? 
+> > Notice that canned fs_config has a prefix to sub-directory if
+> > "--mount-point" presents. However, such prefix cannot be added by
+> > just using erofs_fspath().
 > > 
-> > Thanks,
-> > Gao Xiang  
+> > Fixes: 8a9e8046f170 ("AOSP: erofs-utils: add fs_config support")
+> > Signed-off-by: Yue Hu <huyue2@yulong.com>
+> > Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+> > ---
+> >  lib/inode.c | 18 +++++++++++-------
+> >  1 file changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/lib/inode.c b/lib/inode.c
+> > index 3d634fc..9469074 100644
+> > --- a/lib/inode.c
+> > +++ b/lib/inode.c
+> > @@ -701,21 +701,25 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
+> >  	char *fspath;
+> >  
+> >  	inode->capabilities = 0;
+> > +	if (!cfg.mount_point)
+> > +		fspath = erofs_fspath(path);
 > 
-> Could you verify the following patch if possible? (without compilation,
-> I don't have test environment now since AOSP code is on my PC)
+> lib/inode.c:688:10: error: assigning to 'char *' from 'const char *' discards...
+>                 fspath = erofs_fspath(path);
+>                        ^ ~~~~~~~~~~~~~~~~~~
 > 
-> From: Yue Hu <huyue2@yulong.com>
-> Date: Tue, 22 Dec 2020 14:52:22 +0800
-> Subject: [PATCH] AOSP: erofs-utils: fix sub-directory prefix for canned
->  fs_config
+> -           fspath = erofs_fspath(path);
+> +         fspath = (char *)erofs_fspath(path);
+
+oops, I think it can be modified as a temporary workaround, will submit a formal
+patch after verification.
+
 > 
-> "failed to find [%s] in canned fs_config" is observed by using
-> "--fs-config-file" option under Android 10.
 > 
-> Notice that canned fs_config has a prefix to sub-directory if
-> "--mount-point" presents. However, such prefix cannot be added by
-> just using erofs_fspath().
+> > +	else if (asprintf(&fspath, "%s/%s", cfg.mount_point,
+> > +			  erofs_fspath(path)) <= 0)
 > 
-> Fixes: 8a9e8046f170 ("AOSP: erofs-utils: add fs_config support")
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
-> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> ---
->  lib/inode.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+> The argument of path will be root directory. And canned fs_config for root directory as
+> below:
 > 
-> diff --git a/lib/inode.c b/lib/inode.c
-> index 3d634fc..9469074 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -701,21 +701,25 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
->  	char *fspath;
->  
->  	inode->capabilities = 0;
-> +	if (!cfg.mount_point)
-> +		fspath = erofs_fspath(path);
+> 0 0 755 selabel=u:object_r:rootfs:s0 capabilities=0x0
+> 
+> So, cannot add mount point to root directory for canned fs_config. And what about non-canned
+> fs_config?
 
-lib/inode.c:688:10: error: assigning to 'char *' from 'const char *' discards...
-                fspath = erofs_fspath(path);
-                       ^ ~~~~~~~~~~~~~~~~~~
+Not quite sure what you mean. For non-canned fs_config, we didn't observed any strange
+before (I ported to cuttlefish and hikey960 with boot success, also as I mentioned before
+some other vendors already use it.)
 
--           fspath = erofs_fspath(path);
-+         fspath = (char *)erofs_fspath(path);
+I think the following commit is only useful for squashfs since its (non)root inode
+workflows are different, so need to add in two difference place. But mkfs.erofs is not.
+https://android.googlesource.com/platform/external/squashfs-tools/+/85a6bc1e52bb911f195c5dc0890717913938c2d1%5E%21/#F0
 
+For root inode is erofs, I think erofs_fspath(path) would return "", so that case
+is included as well.... Am I missing something?
 
-> +	else if (asprintf(&fspath, "%s/%s", cfg.mount_point,
-> +			  erofs_fspath(path)) <= 0)
+Thanks,
+Gao Xiang
 
-The argument of path will be root directory. And canned fs_config for root directory as
-below:
-
-0 0 755 selabel=u:object_r:rootfs:s0 capabilities=0x0
-
-So, cannot add mount point to root directory for canned fs_config. And what about non-canned
-fs_config?
-
-Thx.
-
-
-> +		return -ENOMEM;
-> +
-> +
->  	if (cfg.fs_config_file)
-> -		canned_fs_config(erofs_fspath(path),
-> +		canned_fs_config(fspath,
->  				 S_ISDIR(st->st_mode),
->  				 cfg.target_out_path,
->  				 &uid, &gid, &mode, &inode->capabilities);
-> -	else if (cfg.mount_point) {
-> -		if (asprintf(&fspath, "%s/%s", cfg.mount_point,
-> -			     erofs_fspath(path)) <= 0)
-> -			return -ENOMEM;
-> -
-> +	else
->  		fs_config(fspath, S_ISDIR(st->st_mode),
->  			  cfg.target_out_path,
->  			  &uid, &gid, &mode, &inode->capabilities);
-> +
-> +	if (cfg.mount_point)
->  		free(fspath);
-> -	}
->  	st->st_uid = uid;
->  	st->st_gid = gid;
->  	st->st_mode = mode | stat_file_type_mask;
+> 
+> Thx.
+> 
+> 
+> > +		return -ENOMEM;
+> > +
+> > +
+> >  	if (cfg.fs_config_file)
+> > -		canned_fs_config(erofs_fspath(path),
+> > +		canned_fs_config(fspath,
+> >  				 S_ISDIR(st->st_mode),
+> >  				 cfg.target_out_path,
+> >  				 &uid, &gid, &mode, &inode->capabilities);
+> > -	else if (cfg.mount_point) {
+> > -		if (asprintf(&fspath, "%s/%s", cfg.mount_point,
+> > -			     erofs_fspath(path)) <= 0)
+> > -			return -ENOMEM;
+> > -
+> > +	else
+> >  		fs_config(fspath, S_ISDIR(st->st_mode),
+> >  			  cfg.target_out_path,
+> >  			  &uid, &gid, &mode, &inode->capabilities);
+> > +
+> > +	if (cfg.mount_point)
+> >  		free(fspath);
+> > -	}
+> >  	st->st_uid = uid;
+> >  	st->st_gid = gid;
+> >  	st->st_mode = mode | stat_file_type_mask;
+> 
 
