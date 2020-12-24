@@ -2,72 +2,85 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 739852E2419
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Dec 2020 04:46:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CE142E242A
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Dec 2020 05:20:18 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4D1bb26n74zDqMt
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Dec 2020 14:46:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4D1cLQ294gzDqLB
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Dec 2020 15:20:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::434;
- helo=mail-pf1-x434.google.com; envelope-from=zbestahu@gmail.com;
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=QcmE1LE4; dkim-atps=neutral
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com
- [IPv6:2607:f8b0:4864:20::434])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=eEjP37TF; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=eEjP37TF; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4D1bZz2XnZzDqJh
- for <linux-erofs@lists.ozlabs.org>; Thu, 24 Dec 2020 14:45:59 +1100 (AEDT)
-Received: by mail-pf1-x434.google.com with SMTP id m6so576423pfm.6
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Dec 2020 19:45:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=date:from:to:cc:subject:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=cK5EjWpAV1CsL7GmokK9m3lLkXi8ebPuIywUAHfrOy8=;
- b=QcmE1LE4WCV0d6iUqFt47AtVdYqrPC6RbnlZ7dnpNuadyYAetYuelIDziY3W48q5le
- dNLTcv0MOa2GGmmbsH5+YJQMPOvQSSes/V4BMSqVfGPpHJgCpSNyvyfQYFt/nw2QehYb
- yg73kiVIntHvdlEMxV5wpifhm+pY2nlKTxkrRnuhv/ztETsWVyCutt6HR4Gnp7QPyqxR
- qI6cldyXHdKsKbgN7Absuivxc0PD3La48uKrwsNF5/AQhCYd2abFozAgw66TbjJSiHae
- InosybnGB2g3GBC58wtna8gMTnpCytdNwTKnRrxMDcxO3UKoO2Tv3kOVCGnKPl4L0//H
- dFUw==
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4D1cLM6G8XzDqGm
+ for <linux-erofs@lists.ozlabs.org>; Thu, 24 Dec 2020 15:20:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1608783607;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=RzlJTlJgzBELU8ClDUNMI4TFHAn5DSdM2cVPgaLmtgw=;
+ b=eEjP37TFJ5HcbtObbVGWitxYADoE2qoxrz1ujwTTp0QLYAsiu7Zwpk3n42a/v++O0DR4LL
+ by73hfP3U6DuI+uRWKtgyMVdDVpliMlHIIeeBvyN4jMGMbRaykfP5ZT9tEO6dNlttSqrRl
+ r9PLFdtVfZV4zF1XTucC4bl+f+9iAMM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1608783607;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=RzlJTlJgzBELU8ClDUNMI4TFHAn5DSdM2cVPgaLmtgw=;
+ b=eEjP37TFJ5HcbtObbVGWitxYADoE2qoxrz1ujwTTp0QLYAsiu7Zwpk3n42a/v++O0DR4LL
+ by73hfP3U6DuI+uRWKtgyMVdDVpliMlHIIeeBvyN4jMGMbRaykfP5ZT9tEO6dNlttSqrRl
+ r9PLFdtVfZV4zF1XTucC4bl+f+9iAMM=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-0Z25V7dJPb6wrOVcN3jn0A-1; Wed, 23 Dec 2020 23:20:05 -0500
+X-MC-Unique: 0Z25V7dJPb6wrOVcN3jn0A-1
+Received: by mail-pf1-f199.google.com with SMTP id y187so731306pfc.7
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Dec 2020 20:20:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=cK5EjWpAV1CsL7GmokK9m3lLkXi8ebPuIywUAHfrOy8=;
- b=WkOhj2WSgBsKejJ8gmITOw3eboeHdaouR05EO4KADJLUUAGFreo+p7t5OOQZLNt6Xh
- JT/deQ36/xCvOqjpeQj5odRgAVA5qI+AjSPD4QzQj12cXPZTvhDuSlO8hEHKQPS0C0IK
- VCZuzwE98lfy8BZkAYF/7JjrJzRv36AXKug8oZKl89ssgph9NH6eoDkJYRJmwxe2mmRg
- FCszX1k7Svi5PH5j6p6fA6V7R/fAlFB3GoGfjkyXTncy3Qzdj+abXJ1rA/LlpX37sJdM
- xpOeRchwSuJyYi7gTI8i9GYxYy/QNr+nGzYR7TgDIvOr7n/NT0X7zU8P6Q8i6UAdAH2u
- e36g==
-X-Gm-Message-State: AOAM53156nr0n7k0dMyY7oJ4C2v8ezrmU4hu0azUCdd6xPZfzVKqQaDQ
- J6UmxdJWg5l8YlDZtuteAU0=
-X-Google-Smtp-Source: ABdhPJzKP6R6JH8Kl6Tl2bT1lZlXhFRP1BE/YE0lIDM5t9hMYCdrKAsCjOGyq2PiOAaMKKhtLLqqsg==
-X-Received: by 2002:aa7:8641:0:b029:1a1:e2f5:23de with SMTP id
- a1-20020aa786410000b02901a1e2f523demr25441180pfo.35.1608781556106; 
- Wed, 23 Dec 2020 19:45:56 -0800 (PST)
-Received: from localhost ([103.220.76.197])
- by smtp.gmail.com with ESMTPSA id y23sm26365163pfc.178.2020.12.23.19.45.51
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Wed, 23 Dec 2020 19:45:55 -0800 (PST)
-Date: Thu, 24 Dec 2020 11:45:42 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@redhat.com>
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=RzlJTlJgzBELU8ClDUNMI4TFHAn5DSdM2cVPgaLmtgw=;
+ b=beYtO6E2zrpmqbUDfieMvV0LYa0y6/tbybCyHi2Oc8BsgMhQB5+HHRUdO2y3p8ZKq8
+ O5YzEp8Hf+VRw2gHFvSeezfZyxzJXcf9mixhplpYGtugn5zuaMt4/Qk0/gDppkVufuSJ
+ npvvKoKpYK/0XwvDlrq8aEs6AIlArAS2d+JeECCu4osf32ek2P/dv+GoJrKLCsXKbMlI
+ EMvKAoCfI+PIBUf8g6/NH+ndEeyyBloxs1dhge2niNlybKlUj7VVk0oePrhE74ueSl9Z
+ u/idjXSYrMkC2YqJ/43Y92k2UiJ2odqYNKz7GzCwI9KgfidRFabomwG4vqRcGIVYV1Rd
+ wY5w==
+X-Gm-Message-State: AOAM530xdzpm9j4kjH6oBaDm11C8xuuXrSpup+OzIcSx2dRUQcU917pJ
+ ETVNn6RAgzl1Pq9xqLA8QvTb7K2Hhvea3OS7WUlL/zfHeVdTRw0xIssrLRvZ2/ipYaEClo0t6XL
+ bRZzJij/2D2atfJY8/qfqz3C/
+X-Received: by 2002:a63:e41:: with SMTP id 1mr27224344pgo.195.1608783604273;
+ Wed, 23 Dec 2020 20:20:04 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzgyAjZknI++J8hY2pFCuzaFUfFQeK7A/PbpKG3bfA0VubJ8y/k830HmcIiFzww5L48F16Rsg==
+X-Received: by 2002:a63:e41:: with SMTP id 1mr27224321pgo.195.1608783603869;
+ Wed, 23 Dec 2020 20:20:03 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id b129sm23269347pgc.52.2020.12.23.20.20.00
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 23 Dec 2020 20:20:03 -0800 (PST)
+Date: Thu, 24 Dec 2020 12:19:51 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Yue Hu <zbestahu@gmail.com>
 Subject: Re: [PATCH] AOSP: erofs-utils: fix sub directory prefix path in
  canned fs_config
-Message-ID: <20201224114542.0000461f.zbestahu@gmail.com>
-In-Reply-To: <20201222104700.GB1831635@xiangao.remote.csb>
-References: <20201222020430.12512-1-zbestahu@gmail.com>
- <20201222034455.GA1775594@xiangao.remote.csb>
- <20201222124733.000000fe.zbestahu@gmail.com>
+Message-ID: <20201224041951.GA2140248@xiangao.remote.csb>
+References: <20201222124733.000000fe.zbestahu@gmail.com>
  <20201222063112.GB1775594@xiangao.remote.csb>
  <20201222070458.GA1803221@xiangao.remote.csb>
  <20201222160935.000061c3.zbestahu@gmail.com>
@@ -76,10 +89,16 @@ References: <20201222020430.12512-1-zbestahu@gmail.com>
  <20201222093952.GC1819755@xiangao.remote.csb>
  <20201222183411.00004854.zbestahu@gmail.com>
  <20201222104700.GB1831635@xiangao.remote.csb>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+ <20201224114542.0000461f.zbestahu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20201224114542.0000461f.zbestahu@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -97,69 +116,44 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 22 Dec 2020 18:47:00 +0800
-Gao Xiang <hsiangkao@redhat.com> wrote:
+Hi Yue,
 
-> On Tue, Dec 22, 2020 at 06:34:11PM +0800, Yue Hu wrote:
+On Thu, Dec 24, 2020 at 11:45:42AM +0800, Yue Hu wrote:
+> On Tue, 22 Dec 2020 18:47:00 +0800
+> Gao Xiang <hsiangkao@redhat.com> wrote:
 > 
-> ...
-> 
-> > > 
-> > > Hmmm... such design is quite strange for me....
-> > > Could you try the following diff?
-> > > 
-> > > diff --git a/lib/inode.c b/lib/inode.c
-> > > index 9469074..9af6179 100644
-> > > --- a/lib/inode.c
-> > > +++ b/lib/inode.c
-> > > @@ -698,11 +698,14 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
-> > >  	/* filesystem_config does not preserve file type bits */
-> > >  	mode_t stat_file_type_mask = st->st_mode & S_IFMT;
-> > >  	unsigned int uid = 0, gid = 0, mode = 0;
-> > > +	bool alloced;
-> > >  	char *fspath;
-> > >  
-> > >  	inode->capabilities = 0;
-> > > -	if (!cfg.mount_point)
-> > > -		fspath = erofs_fspath(path);
-> > > +
-> > > +	alloced = (cfg.mount_point && erofs_fspath(path)[0] != '\0');
-> > > +	if (!alloced)
-> > > +		fspath = (char *)erofs_fspath(path);
-> > >  	else if (asprintf(&fspath, "%s/%s", cfg.mount_point,
-> > >  			  erofs_fspath(path)) <= 0)
-> > >  		return -ENOMEM;
-> > > @@ -718,7 +721,7 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
-> > >  			  cfg.target_out_path,
-> > >  			  &uid, &gid, &mode, &inode->capabilities);
-> > >  
-> > > -	if (cfg.mount_point)
-> > > +	if (alloced)
-> > >  		free(fspath);
-> > >  	st->st_uid = uid;
-> > >  	st->st_gid = gid;
-> > > 
-> > > if it works, will redo a formal patch then....  
+
+...
+
+> > > Works for me for canned fs_config.  
 > > 
-> > Works for me for canned fs_config.  
+> > Ok, if it also works fine for non-canned fs_config on your side,
+> > I will redo a formal patch later... sigh :(
 > 
-> Ok, if it also works fine for non-canned fs_config on your side,
-> I will redo a formal patch later... sigh :(
+> Hi Xiang,
+> 
+> I just remove the "--fs-config-file" in my test enviroment, after that,
+> build and boot are all working fine. 
+> 
+> If canned fs_config never used by others before, i think it's a bug. 
 
-Hi Xiang,
+Thanks for your report. I agree with your conclusion. Let me seek some
+extra free time later to form a formal patch and test on my PC then.
 
-I just remove the "--fs-config-file" in my test enviroment, after that,
-build and boot are all working fine. 
+I'll finish this this week, don't worry :)
 
-If canned fs_config never used by others before, i think it's a bug. 
-
-Thx.
+Thanks,
+Gao Xiang
 
 > 
-> Thanks,
-> Gao Xiang
+> Thx.
 > 
 > > 
-> > Thx.  
+> > Thanks,
+> > Gao Xiang
+> > 
+> > > 
+> > > Thx.  
+> > 
 > 
 
