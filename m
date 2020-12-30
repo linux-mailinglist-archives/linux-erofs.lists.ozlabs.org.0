@@ -2,98 +2,91 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F3C02E3729
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Dec 2020 13:44:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E12412E772D
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Dec 2020 09:48:14 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4D4HLT1VW6zDqC5
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Dec 2020 23:44:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4D5Q0q6CG5zDqHK
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Dec 2020 19:48:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1609318091;
+	bh=yF78GraHE2cpb4git7+AksRuUbVmr0ScX384xX0IHD8=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=QNws5PYEbhLhbjPFRJF+HTYXvoEYwmxFzU0vZ15tkBXh41zMswfVe4/HyYgUGRIj7
+	 mYAJ92vPNpsjR9t5eNNqCVD1c19xkL2rg1Ot37GJkdOhz8vWqSTIFzAK26YmJNgoeB
+	 tC2cGtblrIe1+ye3QoNbGUe+XCOsF89/EEywome3UoKGIt3YyPXFXPnNtft3SFv0pF
+	 wueH0Ud35hx68MePr+Csb8cuI/gIdTB4ICtk+WS224UxzYmpoKLtCbdR2PrWk0dQ6x
+	 EI5ltObk1cDb7WjhtSsx8EZdmIy5eUNuLsR5rQhp4lnoAE4P0qTA4L05/CCxwzVsny
+	 wDXuIOPyIvf+A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=YOeK9t3r; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=YOeK9t3r; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.65.204; helo=sonic311-23.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dmarc=pass (p=reject dis=none) header.from=aol.com
+Received: from sonic311-23.consmr.mail.gq1.yahoo.com
+ (sonic311-23.consmr.mail.gq1.yahoo.com [98.137.65.204])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4D4HLC6d3PzDqBm
- for <linux-erofs@lists.ozlabs.org>; Mon, 28 Dec 2020 23:44:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1609159454;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=eNXNZbTb3NZzXN009Xt98WU8NUriNWM/XUV786DSoZY=;
- b=YOeK9t3rlMNKO2dP/62INZkG+0w/2cLDsD/cCjRMJNcUcIoh4NDf8hrJIC29kde7z/Hd7d
- zRN7vn2gp5E+IG7WnUNzXaVMSKbBdt/rCgpmflEDaVjd+OBYLAnTZ/jT+vmoVBFfQbiL79
- s/mbO8PwFHG92LPMldtLrEVncXdZajs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1609159454;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=eNXNZbTb3NZzXN009Xt98WU8NUriNWM/XUV786DSoZY=;
- b=YOeK9t3rlMNKO2dP/62INZkG+0w/2cLDsD/cCjRMJNcUcIoh4NDf8hrJIC29kde7z/Hd7d
- zRN7vn2gp5E+IG7WnUNzXaVMSKbBdt/rCgpmflEDaVjd+OBYLAnTZ/jT+vmoVBFfQbiL79
- s/mbO8PwFHG92LPMldtLrEVncXdZajs=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-8ql-9O1EOIaN9kSssQoG_A-1; Mon, 28 Dec 2020 07:44:11 -0500
-X-MC-Unique: 8ql-9O1EOIaN9kSssQoG_A-1
-Received: by mail-pg1-f200.google.com with SMTP id 139so8089748pgd.11
- for <linux-erofs@lists.ozlabs.org>; Mon, 28 Dec 2020 04:44:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=eNXNZbTb3NZzXN009Xt98WU8NUriNWM/XUV786DSoZY=;
- b=BSLMDGWcz6tUvunNhYi/jLu3CmlKcfiem2tCiMieX4oO6O3vgFqvWYswxchtuG/I4b
- 0N+h8BlOC+sz8cphlsyNVuOIBANUawn3km3IsnsNiI4UhUPymd2Zczb6Ol5BRS5VcHXY
- U2uzE0fzXD2+/Fkmy4IehcF/viRaiBCvQt3H4UjAFrWIul0/PV7dKHk8xMo/MGMRNC+t
- AKTrYk044nLfdOhkDT9FSqn76VBz5XszKIpFYptbY5vSW6ykOhKVpMO+nnU/V0oCKKNL
- kTeOZGzoET7WZ1V+S3eW4QRqz2oN6+MbtBsOvJ3MiU1e++Ia17yyYXpbeRiKz66OYfr2
- Tv+Q==
-X-Gm-Message-State: AOAM531ZTb24r0OzYY+Us5ICFlKGEGeCa4oPP3JcE6Qh96nZzI9sN8SM
- DRQCBgLzGnSGYM+LFWYKalIJEd7NXrBl47OgdxIouSkSXYWsHpC+kkasNWLh5QfAzlAqNpV3MaV
- Tlm1GJUdsFxiaVO3abv6IQBDL
-X-Received: by 2002:a17:902:ee83:b029:da:3483:3957 with SMTP id
- a3-20020a170902ee83b02900da34833957mr20435831pld.38.1609159450460; 
- Mon, 28 Dec 2020 04:44:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwOv6s2tpvnwx47x8qapyUX1c7891HtsfwuMjFzFhHc5k5cSgIZZgcwzPxSDQe1BU/yiDkXJg==
-X-Received: by 2002:a17:902:ee83:b029:da:3483:3957 with SMTP id
- a3-20020a170902ee83b02900da34833957mr20435820pld.38.1609159450279; 
- Mon, 28 Dec 2020 04:44:10 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id s23sm20706554pgj.29.2020.12.28.04.44.06
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Mon, 28 Dec 2020 04:44:09 -0800 (PST)
-Date: Mon, 28 Dec 2020 20:43:58 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Yue Hu <zbestahu@gmail.com>, Huang Jianan <huangjianan@oppo.com>
-Subject: Re: [PATCH v2] AOSP: erofs-utils: fix sub-directory prefix for
- canned fs_config
-Message-ID: <20201228124358.GB2944077@xiangao.remote.csb>
-References: <20201226062736.29920-1-hsiangkao@aol.com>
- <20201228105146.2939914-1-hsiangkao@redhat.com>
- <20201228194656.000059dc.zbestahu@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4D5Q0X5zJmzDqGk
+ for <linux-erofs@lists.ozlabs.org>; Wed, 30 Dec 2020 19:47:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1609318065; bh=Fd05eXgMGkfjQwLgn+8Hc3vSUI4Bxk/uGbu0E05ZC7A=;
+ h=From:To:Cc:Subject:Date:References:From:Subject;
+ b=Lgf2H7v1dgdwO2wpO1RoOYL7wHc/lypy6UkCrnMxC+8kHUtuZdV8/vjvSjhCVJ/cOxoQB/rmlBBIZXcg1DhizBfQTYX1NWhDcPl10noSLoyvcvEOBJ2NUaPSs8u41t9cijkxxN5cVlJqMGKq0FscMexHiIhwawfMrdi0WImpDbatKZxVm8InogY2FHLOBxWhBwjrzgDWhM+LMGT7G4Ks/HBV7DB8UgypFRd9NZ7F+PKOa3/dT6QvfUsDv28Ty1EyCJIsMNZOQTQurj8+F3MkORGXvIJ9qciUVZA54KI2lzUL22aY5CzfYYhtf1xTmCgl47Exadh808O/g1AuXcDvbA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1609318065; bh=6X6CU2FvxwFpZubla/ahqkXR0RqWaCunWBZvXBv2Blo=;
+ h=From:To:Subject:Date:From:Subject;
+ b=e9gu54FJVPA/5ksEF52LJYV90kDDvjHglgRN8XhzKfz37bYbf5w11BLMbpVzUCijvBDWcHlEDb7yJ4PGAzjCLd+dGApiKulELGX8TwPxqz2ZT5t9geUL4vhFAFFXhIq3gBHsgB57lFjch6gdUYPfBoLRAtS/wOCSm3goieQ2PtS3WH5w8gRpqFdFNFxlWyw81t2N1QNFJSCYrdfeiXUonWDtvm1/sAsRqKyh9AtUFL0D21hiNQiObmJZd7rSO9c62CRhA5z5ZlcCCN7OBntR+g4SHNVrkRsDs8eME86AF33wD7Qn2WJqz2d5ZJS3yA8mRHTrBE6Zx3FHtXgvlsdV3g==
+X-YMail-OSG: omzIFgMVM1mSHH_kBPzjwWh.XNpp5PGqBShzmF.hRLcjgaNnqNo6Fr5Vsb1beZv
+ D_EAMs4dNyMLtN3jHk_NdFkyZ0.MClnDlXSEXfRxUWeGPwpf_aBJflr6xnIElrntYPGil4FAeV.v
+ GVnpGlmrA3Q36vBhA2Pu6PPBp73nKhIHVJFRjbxnnv._kBmd6fcCFpX6aMxXCft1ABSXY.iINZ1H
+ SFl3xI4j6pjVrtT9wYT255c5iwmqXNC210FEmfdF2UdjZQcn_hY_weMk3LK2SH40TH6V3EWhknK_
+ .UV_QHngSr_gz4PzX7atQoYMiwcZfZ6raClv_.p6eGzxDUWBjd5qub7PkoAvfJ0Yl067km6rduz7
+ AW_Tt.V2NIOsWIPoJe96.Z7TGf5oHFZSS.YYSrhvs7djzY8Gfw.LEPz6SPsAdMYjQRWGcZW_BGku
+ x4aeh97jhGxZc9MKRNaubOWkEfwB5eylXzlQZGHLkZGAbk1RXJ3OC.f89No.gHxoKm46nheVDBRh
+ kPpBP.4aQ47gAQwiTgK1Uxejbr9iXknnWIdQJpWbwVY_wer0rYZNZ9boREakKpK3w5iIzdLgsNcs
+ vIYF6cgpgIqTM5SjU69YRLzQkY5Zl_c0BtFT7f5bFhCxff4SmwE9lH728tj7qlOoRFTLSJAbsayF
+ yQnaou6H2UU9kjbzl6vJLgj41YUrfMQJPKkutwQP8nxo949haOUL08aYpQbfvSSnLLmBtWImPLhd
+ mfDBPulCYdb4K.1NAdQfP5pCjYcP3nQJNd2A3eAQ9dyeZsVxP_TWvw25ALPK539vG5PqE8Xc5UzO
+ mV4rFJfbd08pryZBNtgcyGjj1bAbFmft2xEay2nBAV9SMZ6y3NfCsnR3tvZKRbOHYoErPGzkL.k0
+ 9dq4Iu_4FVrjjxa43Hu7pxD5Lovr2dQ6WV5cCQ2qUz7rpz_UaIHJt7AQ7eqWuFZA8tG.8p4eK4OD
+ 4uf522CyfiSwFAEJznVYZWveJP1E72twMF2Gw9AS.SwircMzR_Qv0MV0EQ5HAz_tHT70cyNp9.h5
+ v4msUh3d25PY_TsZGhcA7u.jFNYxiM_WFseKMOqyDGdiiZ9r02TR.nOa_dkqpKSvCNbZNoFx8gzk
+ FZSMahpA2prMN8DZTONvkNFk2ZMHWZbJrBS2dCvEmzTC97GAp.dW8a1B47ssI28MbCsug6rVZq_a
+ LbUI92o582_bAuorsxQm29qKNCotUP0zFcU..H0Vqim3OyVNy1O4fFWmwqpZOzoqMKFdaEOlVBbm
+ Djsa3IbvjtFJW9THoWfjV1o6s_TKZVgO4CEx1RKgCfZKF2sydZAhGTe8VXF1HtO0HG_t5tZ82pR7
+ QpKY6lzXzfX3YhOSIwj1kjDoluyEFi_HbSdOWGAG5zXNLyhtalwJRmG4AZIvvG5WyQdrBUyA2wYJ
+ KOUIyrdQggHXZL78COaYmYNvkrRum1lyjLY8nY9s1QxnT747NF913_Tz1pA9dsD8HjfVJR5fk9rw
+ K8LokGBv7DyY5xBSxq0z2OJWF.TzYl5b3D6s3nANVmCeVH8YgSFM9SvOchgQGxNUNSI2U_YoH3e9
+ px98hfvIG04Lx8FxGUmTBPpCcQ42O6SRC28Wz4Bsk4Mi8wa7etVSWocEzDPhgcDKX.RIdSnpFfL1
+ wirw.TgudEN2pYgoEDc1tmGWMWO2hdTd4UFAdsGETYj_yo4qT3YsVkIMI4CkR3Mqo6pkvCK8xN0j
+ wjtaPq.8tEteDM7fwjmS4ShZiAr4_NMGvH009NVquGzNtefhkAlvtftiy0WX9O.fHJ4JePrqJFW9
+ NsYCDIQD7NxxJU26WrTNrmRqI32CJ7bhEnI4Ta7SNgD__5GtYR62N2Vq5Zy7qUGHro.lJPq8y7fv
+ dDql.iV9G8xWFYvc0ldHzldUOGYhYi4R5Ef.ghiLv_hGAggpkzepaTUiNYr5HQtIQtzdqYswqN.t
+ gsxzw85QTDeSBwzLkooPVduFPoHo1cNPjLX5owa_h.1pyDaWsf74aFfTWipeVfrCEuntdphLZ32o
+ cIIro4Z1s9kcgYFHcPf0QHRcAElg.Zr2Vpxp3TRfk6_6MtLkFtsGCUV618RdfcKAmt8OR0sKtCZL
+ YogK21I0qHXSNsdrqNv01qoPBdPu289jZ1k_oiCZcCTRIZ3_L0NBEVsUIGuBQbyadifq20XCKlaF
+ uEkckMDwmCFZog6OFJMwLlwS7Ho6pR9sE7nCDT08PrKWRqrxz2OsV0A40Bp0kySC7w3sgaQMPHSS
+ gP6tKsuFIq7IlckrssaKF4tD7M8SHACGn4A1MWGuln_H2sm9S4gyTxick1OEBSgJheuXVAmPmQtQ
+ reTPcyc5qBlaLlXwyMuee._ahSfQRkHdXcJ_DXQRJTIXw2fnOHPh3ilTbRSzVNfWoxEHvympnUy0
+ FYRuLYN7LvqFwGHVV2NjLYL5aifNHcC.c83HeDyW_VZCFdRj_CkNY_G2p2RZF9qaYJ51ZvoOvMQ6
+ B2upWr1dX.Jr3Vm.n4PC.uMuIXg--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic311.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Dec 2020 08:47:45 +0000
+Received: by smtp416.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 68e206c49d6e76b1b6872a88eb7f98ec; 
+ Wed, 30 Dec 2020 08:47:40 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [RFC PATCH v0 0/3] erofs-utils: support multiple block compression
+Date: Wed, 30 Dec 2020 16:47:25 +0800
+Message-Id: <20201230084728.813-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20201228194656.000059dc.zbestahu@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+References: <20201230084728.813-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -105,28 +98,63 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@yulong.com>, linux-erofs@lists.ozlabs.org,
- zhangwen@yulong.com
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Dec 28, 2020 at 07:46:56PM +0800, Yue Hu wrote:
-> Hi Xiang,
-> 
-> Works fine to me for canned/non-canned fs_config.
-> 
-> Tested-by: Yue Hu <huyue2@yulong.com>
-> 
+From: Gao Xiang <hsiangkao@aol.com>
 
-Okay, got it. thanks you all for this :) 
+Hi folks,
 
-(also another link for indirect call: https://lwn.net/Articles/774743/
- , so as long as some switch table, I'd like to avoid such usage...)
+This is the first RFC patch of multiple block compression (including
+erofsfuse) after I carefully think over the on-disk design to support
+multiblock in-place decompression.
+
+Compression ratio results (POC, lz4hc, lz4-1.9.3, not final result):
+	1000000000		enwik9
+		621211648	enwik9_4k.squashfs.img
+	 557858816      	enwik9_4k.erofs.img
+		556191744	enwik9_8k.squashfs.img
+		502661120	enwik9_16k.squashfs.img
+	 500723712		enwik9_8k.erofs.img
+		458784768	enwik9_32k.squashfs.img
+	 453971968		enwik9_16k.erofs.img
+		422318080	enwik9_64k.squashfs.img
+	 416686080		enwik9_32k.erofs.img
+		398204928	enwik9_128k.squashfs.img
+	 395276288		enwik9_64k.erofs.img
+
+TODO:
+	- support compact indexes for multiple block compression **;
+	- support multithread compression (keep compressed data in memory);
+	- carefully design kernel optimized paths to maximize runtime performance;
+	- widely testing.
+
+If you think that'd be useful for your products and you also have interest
+in development, feel free to follow that as well since I don't have abundant
+free time so the progress might be somewhat slow (I tend to finish them all before
+the next LTS).
 
 Thanks,
 Gao Xiang
 
-> Thx.
+Gao Xiang (3):
+  erofs-utils: add -C# for the maximum size of pclusters
+  erofs-utils: mkfs: support multiple block compression
+  erofs-utils: fuse: support multiple block compression
 
+ include/erofs/config.h   |  2 ++
+ include/erofs/internal.h |  1 +
+ include/erofs_fs.h       | 19 ++++++++---
+ lib/compress.c           | 70 ++++++++++++++++++++++++--------------
+ lib/config.c             |  1 +
+ lib/data.c               |  4 +--
+ lib/zmap.c               | 72 ++++++++++++++++++++++++++++++++++++----
+ mkfs/main.c              | 14 +++++++-
+ 8 files changed, 146 insertions(+), 37 deletions(-)
+
+-- 
+2.24.0
 
