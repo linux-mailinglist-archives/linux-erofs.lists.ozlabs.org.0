@@ -1,93 +1,103 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E018E2E864D
-	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 06:21:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB63D2E8685
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 07:00:29 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4D79HP5cjJzDr6f
-	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 16:21:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4D7B7v1WYmzDr6t
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 17:00:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
+ smtp.mailfrom=outlook.com (client-ip=40.92.254.43;
+ helo=apc01-pu1-obe.outbound.protection.outlook.com;
+ envelope-from=huww98@outlook.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=M8vZN5gT; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=M8vZN5gT; 
+ dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256
+ header.s=selector1 header.b=o7ipMlm8; 
  dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+Received: from APC01-PU1-obe.outbound.protection.outlook.com
+ (mail-oln040092254043.outbound.protection.outlook.com [40.92.254.43])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4D79HK54rDzDqC0
- for <linux-erofs@lists.ozlabs.org>; Sat,  2 Jan 2021 16:21:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1609564905;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding;
- bh=MqIZXJJTMDt5auTDJ8GBTyEquYp6hwq9+ues8Ab+anQ=;
- b=M8vZN5gT7psaEtmLt4IBRauegD490vYTf69rhRrAg4Oc8xSX/thdAg319JOarJMzI3V1KN
- r0cMQQUFzlTXkzYcCQp2vN6jRQJYp4fKV+AYo27/yCZ7DBZmq3mqa039NH00n16RFB9I7z
- 4wIdvB0Y77BX/xklx4IHdqa67plHWUQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1609564905;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding;
- bh=MqIZXJJTMDt5auTDJ8GBTyEquYp6hwq9+ues8Ab+anQ=;
- b=M8vZN5gT7psaEtmLt4IBRauegD490vYTf69rhRrAg4Oc8xSX/thdAg319JOarJMzI3V1KN
- r0cMQQUFzlTXkzYcCQp2vN6jRQJYp4fKV+AYo27/yCZ7DBZmq3mqa039NH00n16RFB9I7z
- 4wIdvB0Y77BX/xklx4IHdqa67plHWUQ=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-584-pYpMNcK8NHWLUwFCP5DHYg-1; Sat, 02 Jan 2021 00:21:43 -0500
-X-MC-Unique: pYpMNcK8NHWLUwFCP5DHYg-1
-Received: by mail-pg1-f197.google.com with SMTP id l22so5409918pgc.15
- for <linux-erofs@lists.ozlabs.org>; Fri, 01 Jan 2021 21:21:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
- :content-transfer-encoding;
- bh=MqIZXJJTMDt5auTDJ8GBTyEquYp6hwq9+ues8Ab+anQ=;
- b=dFuoTlTVOarJ2mlsSbK5R3SFcdM/sYYQFHps9G8Jj1CgHaQIIhDgOru/hIh4pZnwCm
- ffMwMUBWMtaWfFvc7vXUWINckmqjouM7nELdlMpUFcEo/G5kPoFyTc6cs7bRE+iHMHyQ
- t3LqqJ2dDZOfpVG6aIiU7SiUi0ax0kHBzl72zlNS2VH8QaJ1+z8gA04t6gT/mxcidNBY
- gn7wu1mF/b440vN14mDyDrsjgZIJZkd+rZ+81b7OuWspv4Ka7CUsLR2Q/RceBr3rKn4V
- fB7epDef9uBdYet8ZhG6XqkTsE41qVJUQdSs2pOrFtlicdtNje1Z2JJrlmA9Ka9tI64K
- yizA==
-X-Gm-Message-State: AOAM533IXSxJqP+Mvt1xHtskTYlvmNypNz6V4xog9EeJVBYiVfsvArZI
- pIBTCe8m244B4VjAanSqqs5ay+3kknGbknSm6c+NEB3AXOcESDMfJf4wc1KXOKVoIYJ6vm7luyK
- zmDTU7Yb2MrRCHpZYhLKnK7CVeB7Xs4mt3hGqevsYupeJ27OkJcQl2g5KzIQQcq2vYzW4tGNuUJ
- ALwQ==
-X-Received: by 2002:a63:fe05:: with SMTP id p5mr40204027pgh.161.1609564902143; 
- Fri, 01 Jan 2021 21:21:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyfe9qsVcnGiBr2x1QmyOSQtEye6uK+os6MNd+INQYSbC2/wgGKQIb3r29w9n6IsZirohMW9A==
-X-Received: by 2002:a63:fe05:: with SMTP id p5mr40204012pgh.161.1609564901880; 
- Fri, 01 Jan 2021 21:21:41 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id h15sm46355933pfo.71.2021.01.01.21.21.39
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Fri, 01 Jan 2021 21:21:41 -0800 (PST)
-From: Gao Xiang <hsiangkao@redhat.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: update my email address in README/AUTHORS
-Date: Sat,  2 Jan 2021 13:20:55 +0800
-Message-Id: <20210102052055.3734591-1-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.27.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4D7B7n6yy7zDqJg
+ for <linux-erofs@lists.ozlabs.org>; Sat,  2 Jan 2021 17:00:18 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OI94rUaYhONsJ7OG0pY8D3mEBBAUPnzNfqvWztjNmWz8oIqgsYQCLyGiHEZMzbTbPaPCJ5WhFKirBVo+Cc0W07vSHXlzTIvIzc9Ylyj90aXy7sHqDGeS8n0dKrxvhoAsNw2CInb7h55Sqq6NAGfazpI0l6+64PedI/WEa/5ae0wZHXY5o2ewFSitl/rbtdl87qhJsK/vDWzQc2g1/ku8M3BHDvm2Ur+uQKu1r68RSHcM5d2UYwTDkSJv8fLcvJya26QEBrArPzoK2SyIhrJKiPTJcj0le/yh6eNnQOC9Hijm72hMfdv/lj9oE7K44yBqpXytBnmB9maMqN/WrEDGpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yu3KGrwSg/QLjcfTExHBzyW3ndI6Cyv67ouHg1aOBwQ=;
+ b=CAtBd+SRGPPrWSJsJe0bRJlhfoaKfDOyxIuY3Q6AAgy/kj45vg+AHvGjmk/f4Qu7xR7KRSLat8MCoG+MawEDgpDU3xutYxAKz+n28AEBdavU5sP7Bn6btpA3YsuUbQEOJjbT/e8+KyW0bKjg4bn62Bm3zg7HLDYKkfW/0W+2ftSVR5lXRpRGFE6oaN0/57rRGVDgKR1gKoL2NBPy585WgmI7pLF5IKDbvJYI+TnTMpTRIB4tSso1FCQWkK2cGF3CvmWpdeyPPA3U+jXjzakQYBdvSjWtL3RXCD8udCTrWZhS79Cly/zzkwXC4WMj/GkguW/FthSdLKiAmuaBX4NR3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yu3KGrwSg/QLjcfTExHBzyW3ndI6Cyv67ouHg1aOBwQ=;
+ b=o7ipMlm8eGCJTxc+CE/PxzbW7MGsicfeRZAglu5TTq0R7GSSBhzHzV6cbUv2Byt1F1PJ+lMna0KDLCmGppYBCVSTFXyT6d0yLcW/Nut7O/7eW5YlGU5Tu0p6MOMoTH3B5dkzmXZkk2LJ6J7YiF6Z2H5AgjA96RR9cNygYhaSvYPl0WHGkHvAMVHerrxTMl/RIiUadRiIdDADjmDs3QsOZh3dXyl8Rc+4+hhDWAyMjxppI00oSY8ok1JGszmIV0+8HPx4plrY2lslRFekrOi7bFnAXh1ehcmmBdD6W043jSq4tru5wjr1pPxGDKlDCqa2T9QvqHYvSYDayyyMlSzRzg==
+Received: from PU1APC01FT113.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::43) by
+ PU1APC01HT186.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::424)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20; Sat, 2 Jan
+ 2021 06:00:06 +0000
+Received: from ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM (2a01:111:e400:7ebe::45)
+ by PU1APC01FT113.mail.protection.outlook.com
+ (2a01:111:e400:7ebe::231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20 via Frontend
+ Transport; Sat, 2 Jan 2021 06:00:06 +0000
+Received: from ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::20b2:7b23:9b1e:df3e]) by ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::20b2:7b23:9b1e:df3e%7]) with mapi id 15.20.3721.023; Sat, 2 Jan 2021
+ 06:00:06 +0000
+From: =?utf-8?B?6IOhIOeOruaWhw==?= <huww98@outlook.com>
+To: Gao Xiang <hsiangkao@redhat.com>
+Subject: Re: [PATCH 2/2] erofs-utils: refactor: remove end argument from
+ erofs_mapbh
+Thread-Topic: [PATCH 2/2] erofs-utils: refactor: remove end argument from
+ erofs_mapbh
+Thread-Index: AQHW4B7foSgLmjX1vEm431Te3aDXpKoTzDCAgAAMmxw=
+Date: Sat, 2 Jan 2021 06:00:06 +0000
+Message-ID: <ME3P282MB193853B54A77E4698E4869BEC0D40@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>
+References: <20210101091158.13896-1-huww98@outlook.com>
+ <ME3P282MB19387A6D70997B82DE981954C0D50@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>,
+ <20210102051459.GB3732199@xiangao.remote.csb>
+In-Reply-To: <20210102051459.GB3732199@xiangao.remote.csb>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-incomingtopheadermarker: OriginalChecksum:8A615EA56ED55B2935B8C6BB64C4D0B7EBDA7E9ED07E3058290CF5B7B1974A48;
+ UpperCasedChecksum:C7918C910D70EC64CA45DE4E3E378259D23FFF67186665AA47CD043498E8D3C5;
+ SizeAsReceived:7074; Count:45
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [FNe6HlkIi8cpI48U9lVnQS5q9Iyr5oW4jol8yoZnP4k=]
+x-ms-publictraffictype: Email
+x-incomingheadercount: 45
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 92c85fbc-c301-43b5-c22e-08d8aee3a770
+x-ms-traffictypediagnostic: PU1APC01HT186:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WMTNdEfzmAnw7lGVp2VbEqQQsG11jXeXNYCjBuMyjlfE/Z7xz7xN4M3McVlf1bBvxczjEm71mKBeBZAVRgQ7oElWVbhouXFOWi91J3nxr83lg2YzGRNwqpLYDnI8CEiaLApWZFM3XuuOmSD+akK9nkdObvS2AYZvrQbns4zbUkauJQa2zO67MO5MQwsssg/0mneexaLrVXa5lKUlCbyKHoEMMqYyXmcKfM5B4zP8TsOz9J/AXb0rvWn/wr8mhXWl
+x-ms-exchange-antispam-messagedata: OO9FQZ8RgPj+/H68je4fcNsluLag05pcFaPCPK702NejhFYWxw8UQlTb/AVvYDypuAWU05Gtq6OVGXkb5k2r5tuQUYknUCembzB/DnVoisJSoaV50mjbYnyoyQCuaO3LjPEFlHcPGXp9nVOu/AxZ6Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-AuthSource: PU1APC01FT113.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92c85fbc-c301-43b5-c22e-08d8aee3a770
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2021 06:00:06.1664 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT186
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -99,47 +109,109 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@aol.com>
-
-My previous email address was no longer valid. Fix it.
-
-Reported-by: Hu Weiwen <huww98@outlook.com>
-Signed-off-by: Gao Xiang <hsiangkao@aol.com>
----
- AUTHORS | 2 +-
- README  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/AUTHORS b/AUTHORS
-index 121cf6a..3487d44 100644
---- a/AUTHORS
-+++ b/AUTHORS
-@@ -2,7 +2,7 @@ EROFS USERSPACE UTILITIES
- M: Li Guifu <bluce.liguifu@huawei.com>
- M: Miao Xie <miaoxie@huawei.com>
- M: Fang Wei <fangwei1@huawei.com>
--R: Gao Xiang <gaoxiang25@huawei.com>
-+R: Gao Xiang <xiang@kernel.org>
- R: Chao Yu <yuchao0@huawei.com>
- S: Maintained
- L: linux-erofs@lists.ozlabs.org
-diff --git a/README b/README
-index 0001a67..b57550b 100644
---- a/README
-+++ b/README
-@@ -149,7 +149,7 @@ To:
-   Fang Wei                   <fangwei1@huawei.com>
- 
- Cc:
--  Gao Xiang                  <gaoxiang25@huawei.com>
-+  Gao Xiang                  <xiang@kernel.org>
-   Chao Yu                    <yuchao0@huawei.com>
- 
- Comments
--- 
-2.27.0
-
+SGkgWGlhbmcsDQoNCklmIEkgdW5kZXJzdGFuZCBpdCBjb3JyZWN0bHksIHdoZW4g4oCYZW5kID09
+IGZhbHNl4oCZLCB0aGUgbGFzdCBidWZmZXIgYmxvY2sgd2lsbCBub3QgZ2V0IGl0cyDigJhibGth
+ZGRy4oCZLiBJIGNhbuKAmXQgc2VlIHdoeSB3ZSBuZWVkIHRoaXMsIGJ1dCBJIG1pZ2h0IGJlIG1p
+c3Npbmcgc29tZXRoaW5nLiBBbmQgZXZlcnkgaW52b2NhdGlvbiBvZiB0aGlzIGZ1bmN0aW9uIGp1
+c3QgcGFzcyDigJh0cnVl4oCZIHRvIHRoaXMgYXJndW1lbnQuIEnigJltIGludGVuZGVkIHRvIHJl
+bW92ZSBzb21lIGRlYWQgY29kZSB3aGljaCBpcyBuZXZlciBpbnZva2VkLg0KDQo+IOWcqCAyMDIx
+5bm0MeaciDLml6XvvIwxMzoxNe+8jEdhbyBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+IOWG
+memBk++8mg0KPiANCj4g77u/SGkgV2Vpd2VuLA0KPiANCj4+IE9uIEZyaSwgSmFuIDAxLCAyMDIx
+IGF0IDA1OjExOjU4UE0gKzA4MDAsIOiDoeeOruaWhyB3cm90ZToNCj4+IFNpZ25lZC1vZmYtYnk6
+IEh1IFdlaXdlbiA8aHV3dzk4QG91dGxvb2suY29tPg0KPiANCj4gSXQgc2VlbXMgdGhhdCBpdCBk
+cm9wcyB0aGUgbmVlZGVkIGFyZ3VtZW50IGBlbmQnLg0KPiANCj4gVGhlIG9yaWdpbmFsIHB1cnBv
+c2Ugb2YgdGhhdCBpcyB0byBnZXQgdGhlIGJlZ2lubmluZy9lbmQgYmxrYWRkciBvZiBhIGJ1ZmZl
+ciBibG9jaw0KPiBpbiBwcmVwYXJhdGlvbiBmb3IgbGF0ZXIgdXNlLCBzb21lIHNwZWNpZmljIHJl
+YXNvbnMgdG8gZ2V0IHJpZCBvZiBpdD8NCj4gKGFsc28gaXQgb25seSBkcm9wcyBvbmUgZXh0cmEg
+bGluZSBjb25zaWRlcmluZyB0aGUgZGlmZnN0YXQuLi4uKQ0KDQpUaGF04oCZcyBiZWNhdXNlIEkg
+YWxyZWFkeSBhc3N1bWVkIOKAmGVuZCA9PSB0cnVl4oCZIGFuZCByZXdyaXR0ZW4gdGhpcyBmdW5j
+dGlvbiBpbiBbUEFUQ0ggMS8yXQ0KDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkuDQoNCkh1IFdlaXdl
+bg0KDQo+IA0KPiBUaGFua3MsDQo+IEdhbyBYaWFuZw0KPiANCj4+IC0tLQ0KPj4gaW5jbHVkZS9l
+cm9mcy9jYWNoZS5oIHwgIDIgKy0NCj4+IGxpYi9jYWNoZS5jICAgICAgICAgICB8ICAzICstLQ0K
+Pj4gbGliL2NvbXByZXNzLmMgICAgICAgIHwgIDIgKy0NCj4+IGxpYi9pbm9kZS5jICAgICAgICAg
+ICB8IDEwICsrKysrLS0tLS0NCj4+IGxpYi94YXR0ci5jICAgICAgICAgICB8ICAyICstDQo+PiBt
+a2ZzL21haW4uYyAgICAgICAgICAgfCAgMiArLQ0KPj4gNiBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNl
+cnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
+ZXJvZnMvY2FjaGUuaCBiL2luY2x1ZGUvZXJvZnMvY2FjaGUuaA0KPj4gaW5kZXggOGMxNzFmNS4u
+ZjhkZmY2NyAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvZXJvZnMvY2FjaGUuaA0KPj4gKysrIGIv
+aW5jbHVkZS9lcm9mcy9jYWNoZS5oDQo+PiBAQCAtOTUsNyArOTUsNyBAQCBzdHJ1Y3QgZXJvZnNf
+YnVmZmVyX2hlYWQgKmVyb2ZzX2JhbGxvYyhpbnQgdHlwZSwgZXJvZnNfb2ZmX3Qgc2l6ZSwNCj4+
+IHN0cnVjdCBlcm9mc19idWZmZXJfaGVhZCAqZXJvZnNfYmF0dGFjaChzdHJ1Y3QgZXJvZnNfYnVm
+ZmVyX2hlYWQgKmJoLA0KPj4gICAgICAgICAgICAgICAgICAgIGludCB0eXBlLCB1bnNpZ25lZCBp
+bnQgc2l6ZSk7DQo+PiANCj4+IC1lcm9mc19ibGtfdCBlcm9mc19tYXBiaChzdHJ1Y3QgZXJvZnNf
+YnVmZmVyX2Jsb2NrICpiYiwgYm9vbCBlbmQpOw0KPj4gK2Vyb2ZzX2Jsa190IGVyb2ZzX21hcGJo
+KHN0cnVjdCBlcm9mc19idWZmZXJfYmxvY2sgKmJiKTsNCj4+IGJvb2wgZXJvZnNfYmZsdXNoKHN0
+cnVjdCBlcm9mc19idWZmZXJfYmxvY2sgKmJiKTsNCj4+IA0KPj4gdm9pZCBlcm9mc19iZHJvcChz
+dHJ1Y3QgZXJvZnNfYnVmZmVyX2hlYWQgKmJoLCBib29sIHRyeXJldm9rZSk7DQo+PiBkaWZmIC0t
+Z2l0IGEvbGliL2NhY2hlLmMgYi9saWIvY2FjaGUuYw0KPj4gaW5kZXggMzQxMmEwYi4uOTc2NWNm
+ZCAxMDA2NDQNCj4+IC0tLSBhL2xpYi9jYWNoZS5jDQo+PiArKysgYi9saWIvY2FjaGUuYw0KPj4g
+QEAgLTMyOSw5ICszMjksOCBAQCBzdGF0aWMgZXJvZnNfYmxrX3QgX19lcm9mc19tYXBiaChzdHJ1
+Y3QgZXJvZnNfYnVmZmVyX2Jsb2NrICpiYikNCj4+ICAgIHJldHVybiBibGthZGRyOw0KPj4gfQ0K
+Pj4gDQo+PiAtZXJvZnNfYmxrX3QgZXJvZnNfbWFwYmgoc3RydWN0IGVyb2ZzX2J1ZmZlcl9ibG9j
+ayAqYmIsIGJvb2wgZW5kKQ0KPj4gK2Vyb2ZzX2Jsa190IGVyb2ZzX21hcGJoKHN0cnVjdCBlcm9m
+c19idWZmZXJfYmxvY2sgKmJiKQ0KPj4gew0KPj4gLSAgICBEQkdfQlVHT04oIWVuZCk7DQo+PiAg
+ICBzdHJ1Y3QgZXJvZnNfYnVmZmVyX2Jsb2NrICp0ID0gbGFzdF9tYXBwZWRfYmxvY2s7DQo+PiAg
+ICB3aGlsZSAoMSkgew0KPj4gICAgICAgIHQgPSBsaXN0X25leHRfZW50cnkodCwgbGlzdCk7DQo+
+PiBkaWZmIC0tZ2l0IGEvbGliL2NvbXByZXNzLmMgYi9saWIvY29tcHJlc3MuYw0KPj4gaW5kZXgg
+ODZkYjk0MC4uMmIxZjkzYyAxMDA2NDQNCj4+IC0tLSBhL2xpYi9jb21wcmVzcy5jDQo+PiArKysg
+Yi9saWIvY29tcHJlc3MuYw0KPj4gQEAgLTQxNiw3ICs0MTYsNyBAQCBpbnQgZXJvZnNfd3JpdGVf
+Y29tcHJlc3NlZF9maWxlKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUpDQo+PiANCj4+ICAgIG1l
+bXNldChjb21wcmVzc21ldGEsIDAsIFpfRVJPRlNfTEVHQUNZX01BUF9IRUFERVJfU0laRSk7DQo+
+PiANCj4+IC0gICAgYmxrYWRkciA9IGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1ZSk7ICAgIC8q
+IHN0YXJ0X2Jsa2FkZHIgKi8NCj4+ICsgICAgYmxrYWRkciA9IGVyb2ZzX21hcGJoKGJoLT5ibG9j
+ayk7ICAgIC8qIHN0YXJ0X2Jsa2FkZHIgKi8NCj4+ICAgIGN0eC5ibGthZGRyID0gYmxrYWRkcjsN
+Cj4+ICAgIGN0eC5tZXRhY3VyID0gY29tcHJlc3NtZXRhICsgWl9FUk9GU19MRUdBQ1lfTUFQX0hF
+QURFUl9TSVpFOw0KPj4gICAgY3R4LmhlYWQgPSBjdHgudGFpbCA9IDA7DQo+PiBkaWZmIC0tZ2l0
+IGEvbGliL2lub2RlLmMgYi9saWIvaW5vZGUuYw0KPj4gaW5kZXggM2Q2MzRmYy4uNjA2NjZiYiAx
+MDA2NDQNCj4+IC0tLSBhL2xpYi9pbm9kZS5jDQo+PiArKysgYi9saWIvaW5vZGUuYw0KPj4gQEAg
+LTE1MCw3ICsxNTAsNyBAQCBzdGF0aWMgaW50IF9fYWxsb2NhdGVfaW5vZGVfYmhfZGF0YShzdHJ1
+Y3QgZXJvZnNfaW5vZGUgKmlub2RlLA0KPj4gICAgaW5vZGUtPmJoX2RhdGEgPSBiaDsNCj4+IA0K
+Pj4gICAgLyogZ2V0IGJsa2FkZHIgb2YgdGhlIGJoICovDQo+PiAtICAgIHJldCA9IGVyb2ZzX21h
+cGJoKGJoLT5ibG9jaywgdHJ1ZSk7DQo+PiArICAgIHJldCA9IGVyb2ZzX21hcGJoKGJoLT5ibG9j
+ayk7DQo+PiAgICBEQkdfQlVHT04ocmV0IDwgMCk7DQo+PiANCj4+ICAgIC8qIHdyaXRlIGJsb2Nr
+cyBleGNlcHQgZm9yIHRoZSB0YWlsLWVuZCBibG9jayAqLw0KPj4gQEAgLTUyNCw3ICs1MjQsNyBA
+QCBpbnQgZXJvZnNfcHJlcGFyZV90YWlsX2Jsb2NrKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUp
+DQo+PiAgICAgICAgYmgtPm9wID0gJmVyb2ZzX3NraXBfd3JpdGVfYmhvcHM7DQo+PiANCj4+ICAg
+ICAgICAvKiBnZXQgYmxrYWRkciBvZiBiaCAqLw0KPj4gLSAgICAgICAgcmV0ID0gZXJvZnNfbWFw
+YmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgICAgIHJldCA9IGVyb2ZzX21hcGJoKGJoLT5i
+bG9jayk7DQo+PiAgICAgICAgREJHX0JVR09OKHJldCA8IDApOw0KPj4gICAgICAgIGlub2RlLT51
+LmlfYmxrYWRkciA9IGJoLT5ibG9jay0+YmxrYWRkcjsNCj4+IA0KPj4gQEAgLTYzNCw3ICs2MzQs
+NyBAQCBpbnQgZXJvZnNfd3JpdGVfdGFpbF9lbmQoc3RydWN0IGVyb2ZzX2lub2RlICppbm9kZSkN
+Cj4+ICAgICAgICBpbnQgcmV0Ow0KPj4gICAgICAgIGVyb2ZzX29mZl90IHBvczsNCj4+IA0KPj4g
+LSAgICAgICAgZXJvZnNfbWFwYmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgICAgIGVyb2Zz
+X21hcGJoKGJoLT5ibG9jayk7DQo+PiAgICAgICAgcG9zID0gZXJvZnNfYnRlbGwoYmgsIHRydWUp
+IC0gRVJPRlNfQkxLU0laOw0KPj4gICAgICAgIHJldCA9IGRldl93cml0ZShpbm9kZS0+aWRhdGEs
+IHBvcywgaW5vZGUtPmlkYXRhX3NpemUpOw0KPj4gICAgICAgIGlmIChyZXQpDQo+PiBAQCAtODcx
+LDcgKzg3MSw3IEBAIHZvaWQgZXJvZnNfZml4dXBfbWV0YV9ibGthZGRyKHN0cnVjdCBlcm9mc19p
+bm9kZSAqcm9vdGRpcikNCj4+ICAgIHN0cnVjdCBlcm9mc19idWZmZXJfaGVhZCAqY29uc3QgYmgg
+PSByb290ZGlyLT5iaDsNCj4+ICAgIGVyb2ZzX29mZl90IG9mZiwgbWV0YV9vZmZzZXQ7DQo+PiAN
+Cj4+IC0gICAgZXJvZnNfbWFwYmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgZXJvZnNfbWFw
+YmgoYmgtPmJsb2NrKTsNCj4+ICAgIG9mZiA9IGVyb2ZzX2J0ZWxsKGJoLCBmYWxzZSk7DQo+PiAN
+Cj4+ICAgIGlmIChvZmYgPiByb290bmlkX21heG9mZnNldCkNCj4+IEBAIC04OTAsNyArODkwLDcg
+QEAgZXJvZnNfbmlkX3QgZXJvZnNfbG9va3VwbmlkKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUp
+DQo+PiAgICBpZiAoIWJoKQ0KPj4gICAgICAgIHJldHVybiBpbm9kZS0+bmlkOw0KPj4gDQo+PiAt
+ICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1ZSk7DQo+PiArICAgIGVyb2ZzX21hcGJoKGJo
+LT5ibG9jayk7DQo+PiAgICBvZmYgPSBlcm9mc19idGVsbChiaCwgZmFsc2UpOw0KPj4gDQo+PiAg
+ICBtZXRhX29mZnNldCA9IGJsa25yX3RvX2FkZHIoc2JpLm1ldGFfYmxrYWRkcik7DQo+PiBkaWZm
+IC0tZ2l0IGEvbGliL3hhdHRyLmMgYi9saWIveGF0dHIuYw0KPj4gaW5kZXggNDllYmI5Yy4uOGI3
+YmNiMSAxMDA2NDQNCj4+IC0tLSBhL2xpYi94YXR0ci5jDQo+PiArKysgYi9saWIveGF0dHIuYw0K
+Pj4gQEAgLTU3NSw3ICs1NzUsNyBAQCBpbnQgZXJvZnNfYnVpbGRfc2hhcmVkX3hhdHRyc19mcm9t
+X3BhdGgoY29uc3QgY2hhciAqcGF0aCkNCj4+ICAgIH0NCj4+ICAgIGJoLT5vcCA9ICZlcm9mc19z
+a2lwX3dyaXRlX2Job3BzOw0KPj4gDQo+PiAtICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1
+ZSk7DQo+PiArICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jayk7DQo+PiAgICBvZmYgPSBlcm9mc19i
+dGVsbChiaCwgZmFsc2UpOw0KPj4gDQo+PiAgICBzYmkueGF0dHJfYmxrYWRkciA9IG9mZiAvIEVS
+T0ZTX0JMS1NJWjsNCj4+IGRpZmYgLS1naXQgYS9ta2ZzL21haW4uYyBiL21rZnMvbWFpbi5jDQo+
+PiBpbmRleCBjNjNiMjc0Li4xYzIzNTYwIDEwMDY0NA0KPj4gLS0tIGEvbWtmcy9tYWluLmMNCj4+
+ICsrKyBiL21rZnMvbWFpbi5jDQo+PiBAQCAtMzA0LDcgKzMwNCw3IEBAIGludCBlcm9mc19ta2Zz
+X3VwZGF0ZV9zdXBlcl9ibG9jayhzdHJ1Y3QgZXJvZnNfYnVmZmVyX2hlYWQgKmJoLA0KPj4gICAg
+ICAgIHJvdW5kX3VwKEVST0ZTX1NVUEVSX0VORCwgRVJPRlNfQkxLU0laKTsNCj4+ICAgIGNoYXIg
+KmJ1ZjsNCj4+IA0KPj4gLSAgICAqYmxvY2tzICAgICAgICAgPSBlcm9mc19tYXBiaChOVUxMLCB0
+cnVlKTsNCj4+ICsgICAgKmJsb2NrcyAgICAgICAgID0gZXJvZnNfbWFwYmgoTlVMTCk7DQo+PiAg
+ICBzYi5ibG9ja3MgICAgICAgPSBjcHVfdG9fbGUzMigqYmxvY2tzKTsNCj4+ICAgIHNiLnJvb3Rf
+bmlkICAgICA9IGNwdV90b19sZTE2KHJvb3RfbmlkKTsNCj4+ICAgIG1lbWNweShzYi51dWlkLCBz
+YmkudXVpZCwgc2l6ZW9mKHNiLnV1aWQpKTsNCj4+IC0tIA0KPj4gMi4zMC4wDQo+PiANCj4gDQo=
