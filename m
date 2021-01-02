@@ -1,103 +1,104 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB63D2E8685
-	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 07:00:29 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86462E86DD
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 10:28:24 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4D7B7v1WYmzDr6t
-	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 17:00:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4D7Glm1Pg4zDqpg
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Jan 2021 20:28:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=outlook.com (client-ip=40.92.254.43;
- helo=apc01-pu1-obe.outbound.protection.outlook.com;
- envelope-from=huww98@outlook.com; receiver=<UNKNOWN>)
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
- dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256
- header.s=selector1 header.b=o7ipMlm8; 
+ dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=d/GEzmWy; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=d/GEzmWy; 
  dkim-atps=neutral
-Received: from APC01-PU1-obe.outbound.protection.outlook.com
- (mail-oln040092254043.outbound.protection.outlook.com [40.92.254.43])
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4D7B7n6yy7zDqJg
- for <linux-erofs@lists.ozlabs.org>; Sat,  2 Jan 2021 17:00:18 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OI94rUaYhONsJ7OG0pY8D3mEBBAUPnzNfqvWztjNmWz8oIqgsYQCLyGiHEZMzbTbPaPCJ5WhFKirBVo+Cc0W07vSHXlzTIvIzc9Ylyj90aXy7sHqDGeS8n0dKrxvhoAsNw2CInb7h55Sqq6NAGfazpI0l6+64PedI/WEa/5ae0wZHXY5o2ewFSitl/rbtdl87qhJsK/vDWzQc2g1/ku8M3BHDvm2Ur+uQKu1r68RSHcM5d2UYwTDkSJv8fLcvJya26QEBrArPzoK2SyIhrJKiPTJcj0le/yh6eNnQOC9Hijm72hMfdv/lj9oE7K44yBqpXytBnmB9maMqN/WrEDGpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yu3KGrwSg/QLjcfTExHBzyW3ndI6Cyv67ouHg1aOBwQ=;
- b=CAtBd+SRGPPrWSJsJe0bRJlhfoaKfDOyxIuY3Q6AAgy/kj45vg+AHvGjmk/f4Qu7xR7KRSLat8MCoG+MawEDgpDU3xutYxAKz+n28AEBdavU5sP7Bn6btpA3YsuUbQEOJjbT/e8+KyW0bKjg4bn62Bm3zg7HLDYKkfW/0W+2ftSVR5lXRpRGFE6oaN0/57rRGVDgKR1gKoL2NBPy585WgmI7pLF5IKDbvJYI+TnTMpTRIB4tSso1FCQWkK2cGF3CvmWpdeyPPA3U+jXjzakQYBdvSjWtL3RXCD8udCTrWZhS79Cly/zzkwXC4WMj/GkguW/FthSdLKiAmuaBX4NR3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yu3KGrwSg/QLjcfTExHBzyW3ndI6Cyv67ouHg1aOBwQ=;
- b=o7ipMlm8eGCJTxc+CE/PxzbW7MGsicfeRZAglu5TTq0R7GSSBhzHzV6cbUv2Byt1F1PJ+lMna0KDLCmGppYBCVSTFXyT6d0yLcW/Nut7O/7eW5YlGU5Tu0p6MOMoTH3B5dkzmXZkk2LJ6J7YiF6Z2H5AgjA96RR9cNygYhaSvYPl0WHGkHvAMVHerrxTMl/RIiUadRiIdDADjmDs3QsOZh3dXyl8Rc+4+hhDWAyMjxppI00oSY8ok1JGszmIV0+8HPx4plrY2lslRFekrOi7bFnAXh1ehcmmBdD6W043jSq4tru5wjr1pPxGDKlDCqa2T9QvqHYvSYDayyyMlSzRzg==
-Received: from PU1APC01FT113.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebe::43) by
- PU1APC01HT186.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::424)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20; Sat, 2 Jan
- 2021 06:00:06 +0000
-Received: from ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM (2a01:111:e400:7ebe::45)
- by PU1APC01FT113.mail.protection.outlook.com
- (2a01:111:e400:7ebe::231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20 via Frontend
- Transport; Sat, 2 Jan 2021 06:00:06 +0000
-Received: from ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM
- ([fe80::20b2:7b23:9b1e:df3e]) by ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM
- ([fe80::20b2:7b23:9b1e:df3e%7]) with mapi id 15.20.3721.023; Sat, 2 Jan 2021
- 06:00:06 +0000
-From: =?utf-8?B?6IOhIOeOruaWhw==?= <huww98@outlook.com>
-To: Gao Xiang <hsiangkao@redhat.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4D7GlZ6XZtzDqBM
+ for <linux-erofs@lists.ozlabs.org>; Sat,  2 Jan 2021 20:28:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1609579684;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=tAIK3htBzM6Hy4xN2BeAGJOKtR3EGo2aPGUETqwS5Ew=;
+ b=d/GEzmWyKC74gcZ7mcJKu/Tqx73YbeHkoo0+ja9I3aSCmG30pFJVEnsGI8FJgDuB35HcLe
+ pAPIyExPNXO0xo0ZqEcymrhl/CzxqtN2Ecl/QJ1Mj6gztjSE3R1LOJlis33kfQ+2nvfHrn
+ gtnZRoORMcjrYJneSU4aW0jyo86XEgg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1609579684;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=tAIK3htBzM6Hy4xN2BeAGJOKtR3EGo2aPGUETqwS5Ew=;
+ b=d/GEzmWyKC74gcZ7mcJKu/Tqx73YbeHkoo0+ja9I3aSCmG30pFJVEnsGI8FJgDuB35HcLe
+ pAPIyExPNXO0xo0ZqEcymrhl/CzxqtN2Ecl/QJ1Mj6gztjSE3R1LOJlis33kfQ+2nvfHrn
+ gtnZRoORMcjrYJneSU4aW0jyo86XEgg=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-33-thMvEw89Ni6adEIa_wnc_Q-1; Sat, 02 Jan 2021 04:28:02 -0500
+X-MC-Unique: thMvEw89Ni6adEIa_wnc_Q-1
+Received: by mail-pg1-f198.google.com with SMTP id 1so17253156pgu.17
+ for <linux-erofs@lists.ozlabs.org>; Sat, 02 Jan 2021 01:28:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:content-transfer-encoding
+ :in-reply-to:user-agent;
+ bh=tAIK3htBzM6Hy4xN2BeAGJOKtR3EGo2aPGUETqwS5Ew=;
+ b=MKng5EVtBQsnawcH+KajDq8+30HWb4s8dCxMrQnF1Wa3Crg9imOEKsPiHZpFnW1AWU
+ ju7OpLXYk/sOZsIsf0nmuUCVsAEaXIFWmPXhUhCD0wnUNUzsf6inZ/iw2egCNug7deB5
+ JnMd+8fA/ttoseipPyfe1CtXET1ba99exT3oROUQlAHJ6EtlFilFWl0clJ+X5khBOfUc
+ MByZIvWrYEUCjbJFclkXZHxSwNYOWUUBQ0McDsuAz8eKiMP6iM8f4XHpDkqfLDx2/yD8
+ exjKqbSMTWtKqhoTe4i7VlPLlWTbbeXqlSTD3cJecExpaOZHLfPW6XO7/zVijFU6Fv5N
+ cstQ==
+X-Gm-Message-State: AOAM533MAIjpnEPrKv+i3TNNTfZzpYWSq1PelAG12ksr8MY421OVtOsM
+ f7oQpYxBmp+eli0ggzY7ZgzQ48naCeTO+tQQC2D2BEvfu1gs1mMkpx59vbGzFLpWo171upyJ6OX
+ igMBs1bSpvQhbh1U9RGOtxYgj
+X-Received: by 2002:a62:dd94:0:b029:19e:92ec:722a with SMTP id
+ w142-20020a62dd940000b029019e92ec722amr59408432pff.50.1609579681150; 
+ Sat, 02 Jan 2021 01:28:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkv6R577NWFOw/usjBkUjVWktw9Od1p9UfKNpuEBQZi9miBMul91YpslkjbPxOfrBkDehGLQ==
+X-Received: by 2002:a62:dd94:0:b029:19e:92ec:722a with SMTP id
+ w142-20020a62dd940000b029019e92ec722amr59408421pff.50.1609579680876; 
+ Sat, 02 Jan 2021 01:28:00 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id u189sm49494558pfb.51.2021.01.02.01.27.58
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sat, 02 Jan 2021 01:28:00 -0800 (PST)
+Date: Sat, 2 Jan 2021 17:27:50 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: =?utf-8?B?6IOhIOeOruaWhw==?= <huww98@outlook.com>
 Subject: Re: [PATCH 2/2] erofs-utils: refactor: remove end argument from
  erofs_mapbh
-Thread-Topic: [PATCH 2/2] erofs-utils: refactor: remove end argument from
- erofs_mapbh
-Thread-Index: AQHW4B7foSgLmjX1vEm431Te3aDXpKoTzDCAgAAMmxw=
-Date: Sat, 2 Jan 2021 06:00:06 +0000
-Message-ID: <ME3P282MB193853B54A77E4698E4869BEC0D40@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>
+Message-ID: <20210102092750.GC3732199@xiangao.remote.csb>
 References: <20210101091158.13896-1-huww98@outlook.com>
- <ME3P282MB19387A6D70997B82DE981954C0D50@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>,
+ <ME3P282MB19387A6D70997B82DE981954C0D50@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>
  <20210102051459.GB3732199@xiangao.remote.csb>
-In-Reply-To: <20210102051459.GB3732199@xiangao.remote.csb>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:8A615EA56ED55B2935B8C6BB64C4D0B7EBDA7E9ED07E3058290CF5B7B1974A48;
- UpperCasedChecksum:C7918C910D70EC64CA45DE4E3E378259D23FFF67186665AA47CD043498E8D3C5;
- SizeAsReceived:7074; Count:45
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [FNe6HlkIi8cpI48U9lVnQS5q9Iyr5oW4jol8yoZnP4k=]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 45
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 92c85fbc-c301-43b5-c22e-08d8aee3a770
-x-ms-traffictypediagnostic: PU1APC01HT186:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WMTNdEfzmAnw7lGVp2VbEqQQsG11jXeXNYCjBuMyjlfE/Z7xz7xN4M3McVlf1bBvxczjEm71mKBeBZAVRgQ7oElWVbhouXFOWi91J3nxr83lg2YzGRNwqpLYDnI8CEiaLApWZFM3XuuOmSD+akK9nkdObvS2AYZvrQbns4zbUkauJQa2zO67MO5MQwsssg/0mneexaLrVXa5lKUlCbyKHoEMMqYyXmcKfM5B4zP8TsOz9J/AXb0rvWn/wr8mhXWl
-x-ms-exchange-antispam-messagedata: OO9FQZ8RgPj+/H68je4fcNsluLag05pcFaPCPK702NejhFYWxw8UQlTb/AVvYDypuAWU05Gtq6OVGXkb5k2r5tuQUYknUCembzB/DnVoisJSoaV50mjbYnyoyQCuaO3LjPEFlHcPGXp9nVOu/AxZ6Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <ME3P282MB193853B54A77E4698E4869BEC0D40@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-AuthSource: PU1APC01FT113.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92c85fbc-c301-43b5-c22e-08d8aee3a770
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2021 06:00:06.1664 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT186
+In-Reply-To: <ME3P282MB193853B54A77E4698E4869BEC0D40@ME3P282MB1938.AUSP282.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -114,104 +115,46 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-SGkgWGlhbmcsDQoNCklmIEkgdW5kZXJzdGFuZCBpdCBjb3JyZWN0bHksIHdoZW4g4oCYZW5kID09
-IGZhbHNl4oCZLCB0aGUgbGFzdCBidWZmZXIgYmxvY2sgd2lsbCBub3QgZ2V0IGl0cyDigJhibGth
-ZGRy4oCZLiBJIGNhbuKAmXQgc2VlIHdoeSB3ZSBuZWVkIHRoaXMsIGJ1dCBJIG1pZ2h0IGJlIG1p
-c3Npbmcgc29tZXRoaW5nLiBBbmQgZXZlcnkgaW52b2NhdGlvbiBvZiB0aGlzIGZ1bmN0aW9uIGp1
-c3QgcGFzcyDigJh0cnVl4oCZIHRvIHRoaXMgYXJndW1lbnQuIEnigJltIGludGVuZGVkIHRvIHJl
-bW92ZSBzb21lIGRlYWQgY29kZSB3aGljaCBpcyBuZXZlciBpbnZva2VkLg0KDQo+IOWcqCAyMDIx
-5bm0MeaciDLml6XvvIwxMzoxNe+8jEdhbyBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+IOWG
-memBk++8mg0KPiANCj4g77u/SGkgV2Vpd2VuLA0KPiANCj4+IE9uIEZyaSwgSmFuIDAxLCAyMDIx
-IGF0IDA1OjExOjU4UE0gKzA4MDAsIOiDoeeOruaWhyB3cm90ZToNCj4+IFNpZ25lZC1vZmYtYnk6
-IEh1IFdlaXdlbiA8aHV3dzk4QG91dGxvb2suY29tPg0KPiANCj4gSXQgc2VlbXMgdGhhdCBpdCBk
-cm9wcyB0aGUgbmVlZGVkIGFyZ3VtZW50IGBlbmQnLg0KPiANCj4gVGhlIG9yaWdpbmFsIHB1cnBv
-c2Ugb2YgdGhhdCBpcyB0byBnZXQgdGhlIGJlZ2lubmluZy9lbmQgYmxrYWRkciBvZiBhIGJ1ZmZl
-ciBibG9jaw0KPiBpbiBwcmVwYXJhdGlvbiBmb3IgbGF0ZXIgdXNlLCBzb21lIHNwZWNpZmljIHJl
-YXNvbnMgdG8gZ2V0IHJpZCBvZiBpdD8NCj4gKGFsc28gaXQgb25seSBkcm9wcyBvbmUgZXh0cmEg
-bGluZSBjb25zaWRlcmluZyB0aGUgZGlmZnN0YXQuLi4uKQ0KDQpUaGF04oCZcyBiZWNhdXNlIEkg
-YWxyZWFkeSBhc3N1bWVkIOKAmGVuZCA9PSB0cnVl4oCZIGFuZCByZXdyaXR0ZW4gdGhpcyBmdW5j
-dGlvbiBpbiBbUEFUQ0ggMS8yXQ0KDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkuDQoNCkh1IFdlaXdl
-bg0KDQo+IA0KPiBUaGFua3MsDQo+IEdhbyBYaWFuZw0KPiANCj4+IC0tLQ0KPj4gaW5jbHVkZS9l
-cm9mcy9jYWNoZS5oIHwgIDIgKy0NCj4+IGxpYi9jYWNoZS5jICAgICAgICAgICB8ICAzICstLQ0K
-Pj4gbGliL2NvbXByZXNzLmMgICAgICAgIHwgIDIgKy0NCj4+IGxpYi9pbm9kZS5jICAgICAgICAg
-ICB8IDEwICsrKysrLS0tLS0NCj4+IGxpYi94YXR0ci5jICAgICAgICAgICB8ICAyICstDQo+PiBt
-a2ZzL21haW4uYyAgICAgICAgICAgfCAgMiArLQ0KPj4gNiBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNl
-cnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-ZXJvZnMvY2FjaGUuaCBiL2luY2x1ZGUvZXJvZnMvY2FjaGUuaA0KPj4gaW5kZXggOGMxNzFmNS4u
-ZjhkZmY2NyAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvZXJvZnMvY2FjaGUuaA0KPj4gKysrIGIv
-aW5jbHVkZS9lcm9mcy9jYWNoZS5oDQo+PiBAQCAtOTUsNyArOTUsNyBAQCBzdHJ1Y3QgZXJvZnNf
-YnVmZmVyX2hlYWQgKmVyb2ZzX2JhbGxvYyhpbnQgdHlwZSwgZXJvZnNfb2ZmX3Qgc2l6ZSwNCj4+
-IHN0cnVjdCBlcm9mc19idWZmZXJfaGVhZCAqZXJvZnNfYmF0dGFjaChzdHJ1Y3QgZXJvZnNfYnVm
-ZmVyX2hlYWQgKmJoLA0KPj4gICAgICAgICAgICAgICAgICAgIGludCB0eXBlLCB1bnNpZ25lZCBp
-bnQgc2l6ZSk7DQo+PiANCj4+IC1lcm9mc19ibGtfdCBlcm9mc19tYXBiaChzdHJ1Y3QgZXJvZnNf
-YnVmZmVyX2Jsb2NrICpiYiwgYm9vbCBlbmQpOw0KPj4gK2Vyb2ZzX2Jsa190IGVyb2ZzX21hcGJo
-KHN0cnVjdCBlcm9mc19idWZmZXJfYmxvY2sgKmJiKTsNCj4+IGJvb2wgZXJvZnNfYmZsdXNoKHN0
-cnVjdCBlcm9mc19idWZmZXJfYmxvY2sgKmJiKTsNCj4+IA0KPj4gdm9pZCBlcm9mc19iZHJvcChz
-dHJ1Y3QgZXJvZnNfYnVmZmVyX2hlYWQgKmJoLCBib29sIHRyeXJldm9rZSk7DQo+PiBkaWZmIC0t
-Z2l0IGEvbGliL2NhY2hlLmMgYi9saWIvY2FjaGUuYw0KPj4gaW5kZXggMzQxMmEwYi4uOTc2NWNm
-ZCAxMDA2NDQNCj4+IC0tLSBhL2xpYi9jYWNoZS5jDQo+PiArKysgYi9saWIvY2FjaGUuYw0KPj4g
-QEAgLTMyOSw5ICszMjksOCBAQCBzdGF0aWMgZXJvZnNfYmxrX3QgX19lcm9mc19tYXBiaChzdHJ1
-Y3QgZXJvZnNfYnVmZmVyX2Jsb2NrICpiYikNCj4+ICAgIHJldHVybiBibGthZGRyOw0KPj4gfQ0K
-Pj4gDQo+PiAtZXJvZnNfYmxrX3QgZXJvZnNfbWFwYmgoc3RydWN0IGVyb2ZzX2J1ZmZlcl9ibG9j
-ayAqYmIsIGJvb2wgZW5kKQ0KPj4gK2Vyb2ZzX2Jsa190IGVyb2ZzX21hcGJoKHN0cnVjdCBlcm9m
-c19idWZmZXJfYmxvY2sgKmJiKQ0KPj4gew0KPj4gLSAgICBEQkdfQlVHT04oIWVuZCk7DQo+PiAg
-ICBzdHJ1Y3QgZXJvZnNfYnVmZmVyX2Jsb2NrICp0ID0gbGFzdF9tYXBwZWRfYmxvY2s7DQo+PiAg
-ICB3aGlsZSAoMSkgew0KPj4gICAgICAgIHQgPSBsaXN0X25leHRfZW50cnkodCwgbGlzdCk7DQo+
-PiBkaWZmIC0tZ2l0IGEvbGliL2NvbXByZXNzLmMgYi9saWIvY29tcHJlc3MuYw0KPj4gaW5kZXgg
-ODZkYjk0MC4uMmIxZjkzYyAxMDA2NDQNCj4+IC0tLSBhL2xpYi9jb21wcmVzcy5jDQo+PiArKysg
-Yi9saWIvY29tcHJlc3MuYw0KPj4gQEAgLTQxNiw3ICs0MTYsNyBAQCBpbnQgZXJvZnNfd3JpdGVf
-Y29tcHJlc3NlZF9maWxlKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUpDQo+PiANCj4+ICAgIG1l
-bXNldChjb21wcmVzc21ldGEsIDAsIFpfRVJPRlNfTEVHQUNZX01BUF9IRUFERVJfU0laRSk7DQo+
-PiANCj4+IC0gICAgYmxrYWRkciA9IGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1ZSk7ICAgIC8q
-IHN0YXJ0X2Jsa2FkZHIgKi8NCj4+ICsgICAgYmxrYWRkciA9IGVyb2ZzX21hcGJoKGJoLT5ibG9j
-ayk7ICAgIC8qIHN0YXJ0X2Jsa2FkZHIgKi8NCj4+ICAgIGN0eC5ibGthZGRyID0gYmxrYWRkcjsN
-Cj4+ICAgIGN0eC5tZXRhY3VyID0gY29tcHJlc3NtZXRhICsgWl9FUk9GU19MRUdBQ1lfTUFQX0hF
-QURFUl9TSVpFOw0KPj4gICAgY3R4LmhlYWQgPSBjdHgudGFpbCA9IDA7DQo+PiBkaWZmIC0tZ2l0
-IGEvbGliL2lub2RlLmMgYi9saWIvaW5vZGUuYw0KPj4gaW5kZXggM2Q2MzRmYy4uNjA2NjZiYiAx
-MDA2NDQNCj4+IC0tLSBhL2xpYi9pbm9kZS5jDQo+PiArKysgYi9saWIvaW5vZGUuYw0KPj4gQEAg
-LTE1MCw3ICsxNTAsNyBAQCBzdGF0aWMgaW50IF9fYWxsb2NhdGVfaW5vZGVfYmhfZGF0YShzdHJ1
-Y3QgZXJvZnNfaW5vZGUgKmlub2RlLA0KPj4gICAgaW5vZGUtPmJoX2RhdGEgPSBiaDsNCj4+IA0K
-Pj4gICAgLyogZ2V0IGJsa2FkZHIgb2YgdGhlIGJoICovDQo+PiAtICAgIHJldCA9IGVyb2ZzX21h
-cGJoKGJoLT5ibG9jaywgdHJ1ZSk7DQo+PiArICAgIHJldCA9IGVyb2ZzX21hcGJoKGJoLT5ibG9j
-ayk7DQo+PiAgICBEQkdfQlVHT04ocmV0IDwgMCk7DQo+PiANCj4+ICAgIC8qIHdyaXRlIGJsb2Nr
-cyBleGNlcHQgZm9yIHRoZSB0YWlsLWVuZCBibG9jayAqLw0KPj4gQEAgLTUyNCw3ICs1MjQsNyBA
-QCBpbnQgZXJvZnNfcHJlcGFyZV90YWlsX2Jsb2NrKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUp
-DQo+PiAgICAgICAgYmgtPm9wID0gJmVyb2ZzX3NraXBfd3JpdGVfYmhvcHM7DQo+PiANCj4+ICAg
-ICAgICAvKiBnZXQgYmxrYWRkciBvZiBiaCAqLw0KPj4gLSAgICAgICAgcmV0ID0gZXJvZnNfbWFw
-YmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgICAgIHJldCA9IGVyb2ZzX21hcGJoKGJoLT5i
-bG9jayk7DQo+PiAgICAgICAgREJHX0JVR09OKHJldCA8IDApOw0KPj4gICAgICAgIGlub2RlLT51
-LmlfYmxrYWRkciA9IGJoLT5ibG9jay0+YmxrYWRkcjsNCj4+IA0KPj4gQEAgLTYzNCw3ICs2MzQs
-NyBAQCBpbnQgZXJvZnNfd3JpdGVfdGFpbF9lbmQoc3RydWN0IGVyb2ZzX2lub2RlICppbm9kZSkN
-Cj4+ICAgICAgICBpbnQgcmV0Ow0KPj4gICAgICAgIGVyb2ZzX29mZl90IHBvczsNCj4+IA0KPj4g
-LSAgICAgICAgZXJvZnNfbWFwYmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgICAgIGVyb2Zz
-X21hcGJoKGJoLT5ibG9jayk7DQo+PiAgICAgICAgcG9zID0gZXJvZnNfYnRlbGwoYmgsIHRydWUp
-IC0gRVJPRlNfQkxLU0laOw0KPj4gICAgICAgIHJldCA9IGRldl93cml0ZShpbm9kZS0+aWRhdGEs
-IHBvcywgaW5vZGUtPmlkYXRhX3NpemUpOw0KPj4gICAgICAgIGlmIChyZXQpDQo+PiBAQCAtODcx
-LDcgKzg3MSw3IEBAIHZvaWQgZXJvZnNfZml4dXBfbWV0YV9ibGthZGRyKHN0cnVjdCBlcm9mc19p
-bm9kZSAqcm9vdGRpcikNCj4+ICAgIHN0cnVjdCBlcm9mc19idWZmZXJfaGVhZCAqY29uc3QgYmgg
-PSByb290ZGlyLT5iaDsNCj4+ICAgIGVyb2ZzX29mZl90IG9mZiwgbWV0YV9vZmZzZXQ7DQo+PiAN
-Cj4+IC0gICAgZXJvZnNfbWFwYmgoYmgtPmJsb2NrLCB0cnVlKTsNCj4+ICsgICAgZXJvZnNfbWFw
-YmgoYmgtPmJsb2NrKTsNCj4+ICAgIG9mZiA9IGVyb2ZzX2J0ZWxsKGJoLCBmYWxzZSk7DQo+PiAN
-Cj4+ICAgIGlmIChvZmYgPiByb290bmlkX21heG9mZnNldCkNCj4+IEBAIC04OTAsNyArODkwLDcg
-QEAgZXJvZnNfbmlkX3QgZXJvZnNfbG9va3VwbmlkKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUp
-DQo+PiAgICBpZiAoIWJoKQ0KPj4gICAgICAgIHJldHVybiBpbm9kZS0+bmlkOw0KPj4gDQo+PiAt
-ICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1ZSk7DQo+PiArICAgIGVyb2ZzX21hcGJoKGJo
-LT5ibG9jayk7DQo+PiAgICBvZmYgPSBlcm9mc19idGVsbChiaCwgZmFsc2UpOw0KPj4gDQo+PiAg
-ICBtZXRhX29mZnNldCA9IGJsa25yX3RvX2FkZHIoc2JpLm1ldGFfYmxrYWRkcik7DQo+PiBkaWZm
-IC0tZ2l0IGEvbGliL3hhdHRyLmMgYi9saWIveGF0dHIuYw0KPj4gaW5kZXggNDllYmI5Yy4uOGI3
-YmNiMSAxMDA2NDQNCj4+IC0tLSBhL2xpYi94YXR0ci5jDQo+PiArKysgYi9saWIveGF0dHIuYw0K
-Pj4gQEAgLTU3NSw3ICs1NzUsNyBAQCBpbnQgZXJvZnNfYnVpbGRfc2hhcmVkX3hhdHRyc19mcm9t
-X3BhdGgoY29uc3QgY2hhciAqcGF0aCkNCj4+ICAgIH0NCj4+ICAgIGJoLT5vcCA9ICZlcm9mc19z
-a2lwX3dyaXRlX2Job3BzOw0KPj4gDQo+PiAtICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jaywgdHJ1
-ZSk7DQo+PiArICAgIGVyb2ZzX21hcGJoKGJoLT5ibG9jayk7DQo+PiAgICBvZmYgPSBlcm9mc19i
-dGVsbChiaCwgZmFsc2UpOw0KPj4gDQo+PiAgICBzYmkueGF0dHJfYmxrYWRkciA9IG9mZiAvIEVS
-T0ZTX0JMS1NJWjsNCj4+IGRpZmYgLS1naXQgYS9ta2ZzL21haW4uYyBiL21rZnMvbWFpbi5jDQo+
-PiBpbmRleCBjNjNiMjc0Li4xYzIzNTYwIDEwMDY0NA0KPj4gLS0tIGEvbWtmcy9tYWluLmMNCj4+
-ICsrKyBiL21rZnMvbWFpbi5jDQo+PiBAQCAtMzA0LDcgKzMwNCw3IEBAIGludCBlcm9mc19ta2Zz
-X3VwZGF0ZV9zdXBlcl9ibG9jayhzdHJ1Y3QgZXJvZnNfYnVmZmVyX2hlYWQgKmJoLA0KPj4gICAg
-ICAgIHJvdW5kX3VwKEVST0ZTX1NVUEVSX0VORCwgRVJPRlNfQkxLU0laKTsNCj4+ICAgIGNoYXIg
-KmJ1ZjsNCj4+IA0KPj4gLSAgICAqYmxvY2tzICAgICAgICAgPSBlcm9mc19tYXBiaChOVUxMLCB0
-cnVlKTsNCj4+ICsgICAgKmJsb2NrcyAgICAgICAgID0gZXJvZnNfbWFwYmgoTlVMTCk7DQo+PiAg
-ICBzYi5ibG9ja3MgICAgICAgPSBjcHVfdG9fbGUzMigqYmxvY2tzKTsNCj4+ICAgIHNiLnJvb3Rf
-bmlkICAgICA9IGNwdV90b19sZTE2KHJvb3RfbmlkKTsNCj4+ICAgIG1lbWNweShzYi51dWlkLCBz
-YmkudXVpZCwgc2l6ZW9mKHNiLnV1aWQpKTsNCj4+IC0tIA0KPj4gMi4zMC4wDQo+PiANCj4gDQo=
+On Sat, Jan 02, 2021 at 06:00:06AM +0000, 胡 玮文 wrote:
+> Hi Xiang,
+> 
+> If I understand it correctly, when ‘end == false’, the last buffer block will not get its ‘blkaddr’. I can’t see why we need this, but I might be missing something. And every invocation of this function just pass ‘true’ to this argument. I’m intended to remove some dead code which is never invoked.
+
+Yeah, your understanding is correct. The original purpose when 'end == false' was to
+return the start blkaddr of a buffer block in case of (or reserve for) later use (e.g.
+get the blkaddr of a inode or some data block that will need). and 'end == true' was
+to return the tail blkaddr.... But, I think the behavior of 'end == false' was
+completely broken at some time...
+
+> 
+> > 在 2021年1月2日，13:15，Gao Xiang <hsiangkao@redhat.com> 写道：
+> > 
+> > ﻿Hi Weiwen,
+> > 
+> >> On Fri, Jan 01, 2021 at 05:11:58PM +0800, 胡玮文 wrote:
+> >> Signed-off-by: Hu Weiwen <huww98@outlook.com>
+> > 
+> > It seems that it drops the needed argument `end'.
+> > 
+> > The original purpose of that is to get the beginning/end blkaddr of a buffer block
+> > in preparation for later use, some specific reasons to get rid of it?
+> > (also it only drops one extra line considering the diffstat....)
+> 
+> That’s because I already assumed ‘end == true’ and rewritten this function in [PATCH 1/2]
+> 
+
+Ok, let me seek some time read into it :) the complexity issue of buffer allocation
+is a known issue and can be optimized by some caching (Although Android don't have
+too many files) :)
+
+Thanks,
+Gao Xiang
+
+> Thanks for your reply.
+> 
+> Hu Weiwen
+> 
+> > 
+> > Thanks,
+> > Gao Xiang
+
