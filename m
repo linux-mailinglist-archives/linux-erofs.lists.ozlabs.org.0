@@ -1,91 +1,91 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FB222F9441
-	for <lists+linux-erofs@lfdr.de>; Sun, 17 Jan 2021 18:47:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A63542F9442
+	for <lists+linux-erofs@lfdr.de>; Sun, 17 Jan 2021 18:47:19 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DJj6M4ttBzDr6L
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 Jan 2021 04:47:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DJj6X6WHlzDrcV
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 Jan 2021 04:47:16 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1610905627;
-	bh=T8zJ3BkQWH+oFIA7ouzoNK2rklCSbjqvEtqkYnGP6Cw=;
+	s=201707; t=1610905636;
+	bh=rABAsJL3OQtodozVGPTBRT78gCHlsERFR5+BlS9/vuw=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=F2m3XzYYnpm0Cor341lU313zeklc/okcusVXAP3nc2IpY0fhyjsVuI0TDz3jZkQXm
-	 MjkOg/mayI8BZvDxkTGY3AsQJoQ4oMrSFqdPeB2lOeqCdnweLFZNzQBTGdT7PVFrfi
-	 sThLSIaX2EJ4MHi+BmB1d9Oeeuzit4UwZ5RuMLtFJYD0Ax4bvkTNPs6W+bQvIr6Xs2
-	 Ngh8PsJ2NFyzwziHFjICK1e30vuP0sZLjbJJAQbFxbhwk0evVp7hDtPfPdNsxRRVqf
-	 nbBKeT6GKliPylBGF1MsrYKFTG6WwkzkTBYLULel93sS1miT04jpQDzk7hzE3jDn+h
-	 /ke10vp6Ddzxw==
+	b=asG+iRZ/412xF16TleSnyle67afynJmyFGkox+YYvJRIJI9rUQEpZ8KNx4TO73hdq
+	 7molY2UhnDnFbp3exfY17e6Ddhljb45ocsigHvs7Hf/WCYw0DiexEFAUxS0PQvP7wB
+	 hDbBuF25sTeb8ZCYnAh/dgvs1thJ++EFqK4JXq8cRbGZYMuIFgqpFZVtP0+EmvlzCc
+	 1PRjH+SMlY3ZPHxEI9M2phpngL4Gq1AOdr+2vL2rg34G29D4J+dcjUrjo7+TzQWcTJ
+	 DKT4QiYaLwwx95RFlzsxcx9JdbQTLpuRqU1C1Ej4T/8yxFJ73Q2kJUK9JZF3mzDjfc
+	 8fRNfmzJemwhg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.83; helo=sonic305-20.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.68.205; helo=sonic304-24.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=EeX6Yhpp; dkim-atps=neutral
-Received: from sonic305-20.consmr.mail.gq1.yahoo.com
- (sonic305-20.consmr.mail.gq1.yahoo.com [98.137.64.83])
+ header.s=a2048 header.b=WwfznBfx; dkim-atps=neutral
+Received: from sonic304-24.consmr.mail.gq1.yahoo.com
+ (sonic304-24.consmr.mail.gq1.yahoo.com [98.137.68.205])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DJj5r1JVczDqts
- for <linux-erofs@lists.ozlabs.org>; Mon, 18 Jan 2021 04:46:39 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DJj5w50jzzDrR9
+ for <linux-erofs@lists.ozlabs.org>; Mon, 18 Jan 2021 04:46:44 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1610905594; bh=MxRLphjYMWOsxa1A7xgPq2RrHQWfucI8dAS5pOVezLc=;
+ t=1610905600; bh=+npJkTWGjvbeUHo2Q96l+L4N/aou/IkFXPF9DWPkRPQ=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To;
- b=EeX6YhppqNBYfRWdfrPdT976+17w0XZ8g+p8Gnnybmm5nCXtthaR2cJyTVVeW0ulf8zHXTmuAwZ2Duu0NZsC4x2ek2Es4X6WreFjj1t4BuKvIA+sPgfWGImPrj8R2/Vq8O8yNz6QKMwyV99UeVmPJT2PS3btWqgP/757U4L9ukAhWmtuDnQ5BJ/g43l9+mfaBblnD9TEwTemJ6tH6hwx9wO3vGZdLqy3eLJugQP6o1p/i9SKpzvB5QHXxQChwB9Zsd3lvLukflNfDdpnfIp2bKVYfK+mk1/UeXw/Ps4U51dUFbEC19bQtwPouTqnk1iio1Xm3GdRzy6iY0egbvXkew==
+ b=WwfznBfx+8CY3/Lf9MdgM4BuoJc7kKd+xfMh2VBZkXf4RYLRGEhgIcwj/hmOhOYFldeIuOeC6PSgNX+3dzfrm1fmYk2DoqBQUiHJb5X2iqSzmsynsbpfVH+HE05D+5I1c4sm6a6qTq9PZx3H6wu4nWtbCsFC7XHYp8RXflRJJphayg2gUjGT7EDWa17AbgdzKf77yS9o6hz6kOp2vFAD4o1Qq8T0S5kQxJILSIK4AlIfL3m/pWOPXAC8cPYcOH8AblSNvAlvM8jyXA3stQ5a7u8ejGETeRK7EmejYR8J9GBPuXAzfNLR4BOFHvLGAQJHtqLuSmaIeOPJw5Z60UlKZw==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1610905594; bh=20CzquGn4FdjcGnsIqt185S/5NqGGTw0likikz5MPat=;
+ t=1610905600; bh=Dl+0UU4d74QIpWg1Psg3PlMRk8y0QsiK7xBO5nAyHKY=;
  h=From:To:Subject:Date:From:Subject:Reply-To;
- b=LarIsF3KZCVFiXCtKdSi+XOC3qOlw7brcTsNlOmTNWSLe8nzU8Pg20ibFVnnsjgXnmMl4kWveVN031PNO0OujAF9J+IYFFtM6h6DAJMIqf5OBNvo5lShkCAuxRnE7gxQ1n52Zw5Md1vJH6bc65sh3iheA7cbqbPaOVC+1mP8hwelvVQnYRRJXiTtqUqhfQitHgjd7u2Tp4mY8yNRG32YKosop+znBmp/3PbZBJb1o9u9KeIu8JHjwov7sVTmyC7cruktOEPmlIQ+/4OQSKhYHPSf1bJGdbBipIJIo0d2gb6fSRXV/Zbr46rGn5yqtXXsKTIDYKbMOhI3ubK+Wbw51w==
-X-YMail-OSG: nyuUSXgVM1nYfgBPEdM8poFLnTw0c.wZtqEZyf8W5B9VVyFqmLJa3MFlGTlLaNF
- Yi8PrGBQiDp3usvj2a6exZtDHOtr_ZZ0Vx4o68z1s0bSxfB9ueapoqp5rNj09grP.gCENinuifHT
- 1xrv3ROSMRBDe2Hb5w1TkPYxVis0WwU4.MyxTtTZSjeAvnJw_W3PmsfsU0AeOCLybrzIBK5Qalrz
- xL9SCBsp67TwEpnQ2bTM5q2Rvy95JNj8ZzfDWVj3On.6YXp1kwr7nWuDDrnzEuitWQAx728cVOPd
- OH5HO6M.tKySKEUO5bzu1rj9OWGKgE5_BlTZhlGZOPJEWPsyLkgt7An4twAgfn2EreCW6vfMBi3T
- ZiTm8_9jdcsyvg3bQV5Qap3bSsx3w7oHsss22b.VtgfyPUIlUj1uZO0ZvJrvpUP0ZvE63XHnZ8Tn
- hzK4uHttYrZlv4jxTbwfeqE8j8KQbxAP67..3Rzk5VmAx8lNlxT0C_CGZmkeUtcpqUNuPLsf0W6V
- J9TvebbChzrXV5IahoTAOB1rlFOxdo_Yju15HHTlskKLxJCNnD2Wh.wQrixobpnyLG3MtI4oAmlR
- OKWd3b9wB7.JXvWARYqxKL6DA4dn4sX_6OfmjUreTUfdlGdAdVWcDfk90Io_.M_dxHSC16pesQZk
- MSdgpn1TremPnEs7QJQdGM8Is6MyPET9ceCbeyYKBpT_43JbiZ.YTGPgTXpAPbYfQUwx5hOOVoH9
- oRsUkpmkCGujzMjaR3pxku2eJAAlipMru1FlgIy9vdP0flKRZgPoFo5ABbewznj5SbH7zHWGTBUm
- cqwo9Cx30EkvbfitYIH.jIanayZX1OJ2Lo_3DNI2BLFls5is_Q5J2YXTEPyLkvnV3HDNSJ6ci5ds
- 2biLdU75FH7aVYdIc2OFfaNngWIaL15IY8HOVlxIMGLg4jSECXCxBSy_rieE3YoNEwUwazKRDah2
- ANnDte6MSDTslIltQV5PUjJh4105xuMufM21O03DvzSITfLRoMSUwoa1sycH6iW1sqyGRHs0EG5y
- EbjBAeLcEL5_rbGcI1088isw.rldyt7xe26Yu3ptfEp63HuBEBg9R_HnwkjnGwTCV.8zVvPVf7IM
- ZafXw07nnsh1e.7ZZpAFeCmHBiqOmdswbb0YU6qy7f8M5sNjiPJEojFb8PKSDcrp39Sp215JG3M6
- 150aYdhTTWEztWgJEp7V4ZFt.5AFcRftRxpyz3JBWrBTZ5d1WLv3PmL3JW5Q6NJ_i1zBNjOsdEB9
- gVJvJdNUzQfKxQrYIPBJiY_a0xXPUQ7LP3LecKzEpG98rvDCaH_tPMETAISMx43Bxprx5qHDl2Jj
- 2flG4nns0l_fe3UFhIlb0qinfhQ9S6OQMcU6IJI8k1wfErT0.SiZz1JapJhOJV1igVo2LxZf5nAB
- QgTpZzgDZfpafSVHG1AT8.b0Hvw4QaYZRBHEmw9nnvk4dVUj6AqAGF1sIhJCYqhsA8b_sbOgotgQ
- XHo1z5uGq.YWJSw._GujCxU5xomf6BjBLi_WdNTWhzgp1THtSKmDmVQzoXhpdIbMN.MBiMY0e8iN
- EeT597AGi.RMaGRI22sLX6NG5HkpN1cKHRTMDXifsvUzcndWX7kJdLWaotYR__R_EztfNJm5nXhG
- ehBTSk3bcIkQVxMcaA0y4SSPVSVVUJb3vNgt6Ty9yROHI1waHRFDjm91UpPEjtrPW_ONp103QVZs
- QVR.tokIyIvSRP70Iqh04sSRoepkNUII1d1pcEA0s8gVNka5B5bbS4I.RQmF1xevLlhAF5Jz2V9r
- TgOJ7xnwOdiFyNJ7q95hpFhecmq9zH6ukw3dD9j0u50T2syXzxw6laaH2HyqoRqE2KhN5_RcsuTF
- mBMpryswameqyQ4nGY7wtTdU9LPtNKrLPLTWME_ZsaLO7ww7ZX81_uOcO9ChVlGfv_wqtWFZZa1A
- jW8j3TgRpaYsfOpuXLXzKVaMx0TydRrKyhvEQeEwKqwh5rujnjOT.uR4mVmOt2C_O0B4hTZNfXoG
- _8Rig_EEZymjcX6Hw9CWQbD4Tt.ly8HZ4Chg7rxbvl3FVCol0d7S3jVfnxOEHJSD1s6gS7i1ye3T
- KqnABa.VfbquxQDoPNL7GEUrc1ZY9nYuQkIdqxxTYnN76qzXtIsQkrIzc3Ez0OEWa6G9SXKDVzwg
- quI5I3BvscbHtZ1_KEKa2ouhcEa4UXm9iXKqjKYFyBB.YMCyOFCI31afe2FAyfhZb12ODFLuVEnW
- OBefmPJmUAjo.QEceLDOdrdXRX6lsv2U7ky.eNBN.ZFg_l3di.H6Rzv30ZmX5FyHU0QvRCIu.y.p
- gX2KBQ2p5CzBmKO04kLw.P3IL5401Pu8OHSOh_R4ZtN.T134Wz812OUcFRpcuAgb.m0pXu3o37oV
- lnG.3lAMFVDXkielaTeZhXSND6GzSA_TnXtLHBJ8pVZx9SsJA04OGoCmruZ09HAAgeqMOpZxk3DO
- XQgeVQEawBeyjjewrg_ruFjXrfXjbwHl0B.l.BNxsjuHDfywJTrID9xjUqx8WhZn6AMp7o.axIpo
- -
+ b=ensEAfpaDLF5Ra9T/7BMkwf9rEpaD6SAqE2rMOBr07DLJDz8T6Nonh6m4ncXymkXe8pjGx24xcaIPHPlInkkUvZkh6KRiLsu7nLJWmMisRol13n/HHiu0P9qQLtGkTOrotUHpiRXS22RV6XP77B//QyyLf3UOULqbhXB274i0npL166HAn/JXnHYXChOs9QmLbK6JKIaJ6p5BKwmzcjX6XtVoPH7GAoieACSjxqSgB8fS3K+5cOm3fJUtZ1bNWfOnkz1BJFdwHXqRgy7eHhEuyXpSNswUBa+L0Q/SayerDrKUfN7w+KsF1bGMPXKRE2olw+gGJdjTgoqCbEW6/RuHA==
+X-YMail-OSG: sg1jxm8VM1mujI1UyAnIFVkwQCImcwyx15CHK5ukGHwQlc9egmOoLzo63JkubEx
+ IOvKwZvFbgchVb1wwWgJ4sCL.iaoa8oR0XyPWi8l0gsn7m7.xVeiyBugWEfMh2nTPTquPTJpIWIO
+ 9gKxRKulhrfKVbI1rNoPrGnUfpyYEYkciaY_t1bjvTfV6ZS5Msm2RAkXvuThIUo8bG92.JiFf5CZ
+ ueRMDz8qnmVhwHIsO7NBY.z.GDRosgJbaq8eMKnAV0R4a2wIRU98iwUJNVXrQTuMRKqwE0fjJXZR
+ kzGVki.KHmhHgjTlO894jODEqi1fFFoPdDpLNUuGP2mxfP7Au06PlMSLAHGmZOqmBJt1MgfOYZ1Y
+ K7MHB6c9_xNaIVGW8p1EEXXGBF640UEuvG03g.JZp4d6Zkkngh492hTQ0OS3KupYX7sf99AFRYTd
+ CBrRvhb6n_WClNBNUiBrh_MK70V77CycFNbzGV.YEIY7xUMA4YEFqXAm5.OKRw41jlw3myioXaIX
+ 4NnoYzeB1ovdysaep002ktM5SMi6RE4YLxoWcyMduuAKPVmP6EacHMurIzEusScaP8Yt_4GS2t6F
+ zpNjxvWQydNIG4pvaJmAVrbzCuDnEOyBY2T9S1slLWKyCN8tbkW19RrP7fdOZ.IqyrGLS4cz4k4T
+ JZQYJD6Db3Yi6TtSw91idw4Zl_TsQBK4P7zThz_gEQJ3qngLKMlcAWjJe6AV5phzWgiF__OhKcad
+ WEu2mCVJ6v9bxjMkRhQ4ijF20eyE_KwEjPe.BQRQmINJXuORyJ0rKSXr4nT1Z1L6UT5WfqnydQu4
+ hSV30BKLsPV3v.T.HYV3DlnnwYLYHIu6fDHCvekJCXgW8U.V1Mp73KuHqKnot5T3caANjW9tlEJo
+ gFIsdqteCs3o43_hRnqaVIGIfx2IDb36H_NgfA7bVDeaz1FH_pnlZigC3R5.P4WPzXgKKb.PX4Zo
+ 3QGGh1Dw9NJYR99bExDST1N1zXs2XIHns2vtVRp8qpvuXgXEbDHRS33Iq6YVkFOV2paF4w00bzDD
+ GHHr7V0dLfNG76DDdj.D23o3ms8R61etF8Xrxygw5kk.C7ptBhoIbc7xBHEYnIpH1jgcajl8ah_E
+ NItiJi0prkma.H3_.1koO8mxHowYzYTxSmxFmCauUPNTeUvrbk954ltUKoeixiAKcq5GPHku1wrJ
+ Xd1goQqOIkhfKQ64XhfsAUO.pxBCbNcIsImpRhVw8tBxPb.P6Tbmi8NytDb9GiPQRY9fXtL4f7_N
+ EalW8DbA44S49TEH3kinvsRLIZmOIiIhTc2I0MY.xkVpI_bAM1sabxitiwKUIV8wka9m97vYAlfY
+ C9hqRg4Cqs62Gm4.1NDJDfHTQZ5p68wswGEwA3A8hGdiu_2cJxiOMBX8V__O58mZUcJCHuwfsVLH
+ 8p9SOS4Bl4HpSR.ckc2dxTonuklEUXIrIxJAGPh7DCIKfGEwo3n0rsvYVSm.9oXANFbn1NNLnGxM
+ CPFXTVUs0nZuoMjSYHJBs_3PT2wCFeuQeqEiVSTyW_4hRva4hXxYYOrUIuOli4LLd9Bpj8WfsfIT
+ nfhEGhYUlBTWAb9qpia52uGTmj9ri9rLcLiUgn.e8U_mv4fSf0QnfK1ruIOg8mrkV0WvLWptslvd
+ OJvotE0PYRVQgxqhDpELWRfOpkhRBIysm24gp7YAUbPNM9m2ib6dDCKGeSWMaUwyLceCSmI2VMIv
+ XONHscVvzycX0prKs3B32SdIn8ArKyyhOVkx3Yxr7Oc1HzkFKeUVddzh6p7JXKcUrjFFHCMI68ED
+ ReiZp8ZszhPdHDRlebyCfDu9sdbNHNsVLfeS01vnt6Z4feGAUBoTC.JJEZoXExJHNTbJJXri4Cpp
+ Ekp2kPxr4sTEhDFsrnlVqnrLwr4lRn5vMHy_8otaaPTUn8H06Ujg9_Lw4MPb1UqyEMHTxwapqZaF
+ wFi8n5Uf7P6zgyiH.qLV8_Pt5mhS4g50PV69zxUBVy9S84xtpMpIEHpfSIP_QSZklq2JZVZuIlx.
+ Ir22esRinpVLfhMjaDFT8SFP.IS8YFx5zu0fgEV72vryYkGEl7DuIcKgrBW9lZCr5ZPCjKqOzmDG
+ ZIK3OKjci6fhDXbqw51z86HkvHtIGmo.bu7UmESUlca.U.zYE6DmsoS10vqekDXnzWvDzLtZj.iS
+ YKcwdR9ESKJFNq45kGCdcfrsqtfKxWnb4uGu0hh34BU4qH3bfkRX8MiaBHF90Tc6GRmreSFOiaTx
+ qMXp3iwy8J4wZpRW4EcTNhaX6.HVB3nvFO4sa59Qgp2HthAFKC8Gs6jeT25.5ox.frw2PBOrGK_E
+ Uii8rtkE0tezZ3nY_mzEGpZeFNzlAVKnCVHQFDakqnDdTZLiN9mxqwdc14yXN50cGIXIwqzxGJfB
+ 0iOMUievCcyG3a7OA63DC2LMKPCp.KaPTnXrc88QV9SJZ1a07CvsqkK9UmKDtguXTeG1aK38O8jp
+ EVyvF7AzT8APmQVNTDNie4Z9JOM0QvyFXjtFw6qPN.vXHoGl03zljdJe4UhTsMZYtrQggZViAZnQ
+ 1ASUX
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic305.consmr.mail.gq1.yahoo.com with HTTP; Sun, 17 Jan 2021 17:46:34 +0000
+ sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sun, 17 Jan 2021 17:46:40 +0000
 Received: by smtp401.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 84aafc302758bb6691fa0c94699b2296; 
- Sun, 17 Jan 2021 17:46:29 +0000 (UTC)
+ Sun, 17 Jan 2021 17:46:34 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH v0 3/4] erofs-utils: mkfs: add LZMA algorithm support
-Date: Mon, 18 Jan 2021 01:46:02 +0800
-Message-Id: <20210117174603.17943-4-hsiangkao@aol.com>
+Subject: [RFC PATCH v0 4/4] erofs-utils: fuse: add LZMA algorithm support
+Date: Mon, 18 Jan 2021 01:46:03 +0800
+Message-Id: <20210117174603.17943-5-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20210117174603.17943-1-hsiangkao@aol.com>
 References: <20210117174603.17943-1-hsiangkao@aol.com>
@@ -111,190 +111,113 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@aol.com>
 
-This patch adds LZMA compression algorithms to erofs-utils
-compression framework by using upstream liblzma.
+This patch adds LZMA compression algorithms to erofsfuse to test
+if LZMA fixed-sized output algorithm works as expected.
 
 Cc: Lasse Collin <lasse.collin@tukaani.org>
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- include/erofs_fs.h       |  3 +-
- lib/Makefile.am          |  1 +
- lib/compress.c           |  5 ++-
- lib/compressor.c         |  1 +
- lib/compressor.h         |  1 +
- lib/compressor_liblzma.c | 93 ++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 102 insertions(+), 2 deletions(-)
- create mode 100644 lib/compressor_liblzma.c
+ lib/data.c       |  7 +++---
+ lib/decompress.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 3 deletions(-)
 
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index a69f179a51a5..24772043cb8b 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -193,7 +193,8 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
+diff --git a/lib/data.c b/lib/data.c
+index 3781846743aa..4247dd3a33aa 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -146,9 +146,10 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 		if (ret < 0)
+ 			return -EIO;
  
- /* available compression algorithm types (for h_algorithmtype) */
- enum {
--	Z_EROFS_COMPRESSION_LZ4	= 0,
-+	Z_EROFS_COMPRESSION_LZ4		= 0,
-+	Z_EROFS_COMPRESSION_LZMA	= 1,
- 	Z_EROFS_COMPRESSION_MAX
- };
+-		algorithmformat = map.m_flags & EROFS_MAP_ZIPPED ?
+-						Z_EROFS_COMPRESSION_LZ4 :
+-						Z_EROFS_COMPRESSION_SHIFTED;
++		if (map.m_flags & EROFS_MAP_ZIPPED)
++			algorithmformat = inode->z_algorithmtype[0];
++		else
++			algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
  
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index e048a16d73f2..e9b3255a2653 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -14,3 +14,4 @@ endif
- endif
+ 		/*
+ 		 * trim to the needed size if the returned extent is quite
+diff --git a/lib/decompress.c b/lib/decompress.c
+index 490c4bc771da..fd9f24bcbeb6 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -10,6 +10,66 @@
+ #include "erofs/decompress.h"
+ #include "erofs/err.h"
  
- liberofs_la_CFLAGS += -I/tmp/xz-test/include
-+liberofs_la_SOURCES += compressor_liblzma.c
-diff --git a/lib/compress.c b/lib/compress.c
-index 2e8deaf81907..d77998fb6857 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -493,6 +493,8 @@ static int erofs_get_compress_algorithm_id(const char *name)
- {
- 	if (!strcmp(name, "lz4") || !strcmp(name, "lz4hc"))
- 		return Z_EROFS_COMPRESSION_LZ4;
-+	if (!strcmp(name, "lzma"))
-+		return Z_EROFS_COMPRESSION_LZMA;
- 	return -ENOTSUP;
- }
- 
-@@ -511,7 +513,8 @@ int z_erofs_compress_init(void)
- 	 * clear LZ4_0PADDING feature for old kernel compatibility.
- 	 */
- 	if (!cfg.c_compr_alg_master ||
--	    strncmp(cfg.c_compr_alg_master, "lz4", 3))
-+	    (strncmp(cfg.c_compr_alg_master, "lz4", 3) &&
-+	     strcmp(cfg.c_compr_alg_master, "lzma")))
- 		erofs_sb_clear_lz4_0padding();
- 
- 	if (!cfg.c_compr_alg_master)
-diff --git a/lib/compressor.c b/lib/compressor.c
-index e28aa8f934c0..cc39fc7a685a 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -19,6 +19,7 @@ static struct erofs_compressor *compressors[] = {
- #endif
- 		&erofs_compressor_lz4,
- #endif
-+		&erofs_compressor_lzma,
- };
- 
- int erofs_compress_destsize(struct erofs_compress *c,
-diff --git a/lib/compressor.h b/lib/compressor.h
-index 8c4e72cfa8b9..e783ca1de509 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -45,6 +45,7 @@ struct erofs_compress {
- /* list of compression algorithms */
- extern struct erofs_compressor erofs_compressor_lz4;
- extern struct erofs_compressor erofs_compressor_lz4hc;
-+extern struct erofs_compressor erofs_compressor_lzma;
- 
- int erofs_compress_destsize(struct erofs_compress *c,
- 			    void *src, unsigned int *srcsize,
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-new file mode 100644
-index 000000000000..af135c2cd32b
---- /dev/null
-+++ b/lib/compressor_liblzma.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/lib/compressor_liblzma.c
-+ *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include <stdlib.h>
 +#include <lzma.h>
-+#include "erofs/internal.h"
-+#include "compressor.h"
 +
-+struct erofs_liblzma_context {
-+	lzma_options_lzma opt;
++/* FIXME! need to record it into superblock */
++#define DICT_SIZE	(64U << 10)
++
++static int z_erofs_decompress_lzma(struct z_erofs_decompress_req *rq)
++{
++	int ret = 0;
++	u8 *dest = (u8 *)rq->out;
++	u8 *src = (u8 *)rq->in;
++	u8 *buff = NULL;
++	unsigned int inputmargin = 0;
 +	lzma_stream strm;
-+};
++	lzma_ret ret2;
 +
-+static int erofs_liblzma_compress_destsize(struct erofs_compress *c,
-+					   void *src, unsigned int *srcsize,
-+					   void *dst, unsigned int dstsize)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+	lzma_stream *strm = &ctx->strm;
++	if (!erofs_sb_has_lz4_0padding())
++		return -EFSCORRUPTED;
 +
-+	lzma_ret ret = lzma_erofs_encoder(strm, &ctx->opt);
-+	if (ret != LZMA_OK)
-+		return -EFAULT;
++	while (!src[inputmargin & ~PAGE_MASK])
++		if (!(++inputmargin & ~PAGE_MASK))
++			break;
 +
-+	strm->next_in = src;
-+	strm->avail_in = *srcsize;
-+	strm->next_out = dst;
-+	strm->avail_out = dstsize;
++	if (inputmargin >= rq->inputsize)
++		return -EFSCORRUPTED;
 +
-+	ret = lzma_code(strm, LZMA_FINISH);
-+	if (ret != LZMA_STREAM_END)
-+		return -EBADMSG;
++	if (rq->decodedskip) {
++		buff = malloc(rq->decodedlength);
++		if (!buff)
++			return -ENOMEM;
++		dest = buff;
++	}
 +
-+	*srcsize = strm->total_in;
-+	return strm->total_out;
++	strm = (lzma_stream)LZMA_STREAM_INIT;
++	strm.next_in = src + inputmargin;
++	strm.avail_in = rq->inputsize - inputmargin;
++	strm.next_out = dest;
++	strm.avail_out = rq->decodedlength;
++
++	ret2 = lzma_erofs_decoder(&strm, strm.avail_in, rq->decodedlength,
++				  !rq->partial_decoding, DICT_SIZE);
++	if (ret2 != LZMA_OK) {
++		ret = -EFAULT;
++		goto out;
++	}
++
++	ret2 = lzma_code(&strm, LZMA_FINISH);
++	if (ret2 != LZMA_STREAM_END) {
++		ret = -EFSCORRUPTED;
++		goto out;
++	}
++
++	if (rq->decodedskip)
++		memcpy(rq->out, dest + rq->decodedskip,
++		       rq->decodedlength - rq->decodedskip);
++out:
++	if (buff)
++		free(buff);
++	return ret;
 +}
 +
-+static int erofs_compressor_liblzma_exit(struct erofs_compress *c)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	lzma_end(&ctx->strm);
-+	free(ctx);
-+	return 0;
-+}
-+
-+static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
-+					     int compression_level)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+
-+	if (compression_level < 0)
-+		compression_level = LZMA_PRESET_DEFAULT;
-+
-+	if (lzma_lzma_preset(&ctx->opt, compression_level))
-+		return -EINVAL;
-+
-+	ctx->opt.dict_size = 64U << 10;
-+	c->compression_level = compression_level;
-+	return 0;
-+}
-+
-+static int erofs_compressor_liblzma_init(struct erofs_compress *c)
-+{
-+	struct erofs_liblzma_context *ctx;
-+
-+	c->alg = &erofs_compressor_lzma;
-+	ctx = malloc(sizeof(*ctx));
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->strm = (lzma_stream)LZMA_STREAM_INIT;
-+	c->private_data = ctx;
-+	return 0;
-+}
-+
-+struct erofs_compressor erofs_compressor_lzma = {
-+	.name = "lzma",
-+	.default_level = LZMA_PRESET_DEFAULT,
-+	.best_level = LZMA_PRESET_EXTREME,
-+	.init = erofs_compressor_liblzma_init,
-+	.exit = erofs_compressor_liblzma_exit,
-+	.setlevel = erofs_compressor_liblzma_setlevel,
-+	.compress_destsize = erofs_liblzma_compress_destsize,
-+};
-+
+ #ifdef LZ4_ENABLED
+ #include <lz4.h>
+ 
+@@ -84,5 +144,7 @@ int z_erofs_decompress(struct z_erofs_decompress_req *rq)
+ 	if (rq->alg == Z_EROFS_COMPRESSION_LZ4)
+ 		return z_erofs_decompress_lz4(rq);
+ #endif
++	if (rq->alg == Z_EROFS_COMPRESSION_LZMA)
++		return z_erofs_decompress_lzma(rq);
+ 	return -EOPNOTSUPP;
+ }
 -- 
 2.24.0
 
