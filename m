@@ -1,97 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 019F62FC6D1
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 02:30:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB8022FCA27
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 05:58:26 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DL7JY1w51zDqlw
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 12:30:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1611106253;
-	bh=tgV/h1YGy5r2ccHvxZklhljGMIVLcDolxMHWr2OZue8=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=ikZApgD40fEBelr19XGdHZAkcjTjRlbd+GTpjqANjGTResjiCair/CNN29iQwfLcw
-	 7xrpuQ/wT+q4TBfZmDUXp01qck89WeZsA9g2V8s1PC7omBKx/cYdxJcikS9wRXhW30
-	 vNDAKFu/ptdy2H/yd6KVyUDJZ5CsgZfUne2mLBDW8GfTSg2dBc7YXKhWph4V5y7tmg
-	 OREIKshOpuhuZaJcaFVagSPQ3WMc2loS9bj4e5CTIKcfIxiZmm2a99qIaDo2Q/UBts
-	 2s/X42rGns16D3+aR9piA6gJdyTmzSERuR4gjzvlCs9BBZp+jWUuigYU49Kf48M1pr
-	 9IJaDZ7rxAZmQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DLCw00jwJzDqYP
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 15:58:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.206; helo=sonic303-25.consmr.mail.gq1.yahoo.com;
- envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=MjZ4X4M+; dkim-atps=neutral
-Received: from sonic303-25.consmr.mail.gq1.yahoo.com
- (sonic303-25.consmr.mail.gq1.yahoo.com [98.137.64.206])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DL7JH1nyqzDqbk
- for <linux-erofs@lists.ozlabs.org>; Wed, 20 Jan 2021 12:30:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1611106231; bh=1r3dKINWGBdHXjMJC1pX7V+OOo+PzIVrin3K6Ha1Jh4=;
- h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To;
- b=MjZ4X4M+hAAdSJrooEMjWiu4d2rqipY0jHYmz+yIcK8EPnsP3kADx8TRVNEU0wr2RDW/7vblTjldHHaB21n2srmH31na0Gj1X7DV8rJesUQZEBdS6Zhr7eLZXgL81XqIy004bTHXKOp7/1GkDYEm0coSLTa97MYYOJDaQTO2i1vmPUuZRwKXKDXefbFnmPqLHXo6BKtksa2/BDy28t6u2iFMWby6AxakOzzrsig8sk+N7etPQDw3prbhMbZZaEoCXu5TiiHKxFkOd9O0Cz92eDANS1UksIb5itJ/aCTMaY7vNWgjvRYfDhI5prv96lI0KrCNNo6LOJ2Es0O3zxwlug==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1611106231; bh=d5jpnRbJVDDf7Yp5j1dV7v6CuALsI1NmlKOiPGhQ6tK=;
- h=From:To:Subject:Date:From:Subject:Reply-To;
- b=t58EtamcG++CecN+E/Um9dbCCY9wKwKDCFbYUAPJkyY42QomyUExPnkcD6ZkYVygYMb0/WFA/3qv0apPFZcHY7/AgDXZWWb0i3ZjAtUtVBF9DsPUY+gPox8xd1RGf8tsagxHZGn7EsCcNpK7t9FupSGfDG10NmWdorsVv7M6GTLVDRrgH2LyOVUpCe069iVcYYRzbyixah4cEZmPf7RezgHvlLp+ssDXgQpgWdmBJkDuDiliv5ryxv6zdNaRduuODJxml5EXoXbuQMO7eYwnEbsWzjddpUFbjZW4C37bgWGCTXIgpFiJZynXYKVGv9IGjEcNoGHeWZjY4gvd7BaUmQ==
-X-YMail-OSG: sKJOEZgVM1lAyTFEzCn_PceVGDrRNe6YHKgn2xwF.do4s3dzfXOt._Xe.VboZVI
- OSqXFtq6m3xDh1clCvSyH15l0lZZFGWLgTR.PtQxW9NL8r1jThVAfTRRSf_pd1Mtz3gMzyWeRKhy
- .gJJiIlPJduuSQNJuaSGwDnoHsUc7THCaibnSHaNku6I6xy2GjItRmOO55NaXq.yrbif0v6_Ir44
- OuciNWyAEgX_tH5390.rQzNJNMcX8HgjRo.uqIIw49eGAfZS77KozGzgYsXnV3hFZaX8c24do9M.
- cB2tE9SuauQOOmOLa4ti4SmGe5mEYQLo3RXlyKVlzdrSKkDpnlJUho8DLFTEdtEm9DuQLGa7i6o0
- FGJ7F4PihU22PjJuxp6ywCM2dZjiucXZKCElDDPjw1yax593xVMrlPhh.Eelg1mD088YtViG0aca
- g.OzzH0CKPy6_Zbv08pd8vYk5Pj6QpcWIKiBS89BqmnyAz3sSryYHNVZBnWVy56m2xv5r.QBXUuZ
- UNtgPTck4waSdRAshDjyKTuoakdxPFT0bNJEm7X4Idgdmaoyq7YLNlUoxmaK5m1qU7UbOeCc9Qbp
- H3fns.yQaCjJIS4tFLfMNV8m2_Pe7bW5lxvfp8oWwPxvKJrQeVghPZxOZb_l_xt3g1eZuSDvrCrQ
- 6MqYvNOVgss4jWXRAEZPOSlCoDp341_nSiQMNv922niplCtvBRjnzPM7WYp0sYIAOJF5ooB7xgX_
- 6ymMExJMdv_fyYG82pfspNDjUoGLGsYDr02Nh9QPE3OFu0uowp98Zwx5RxKIT2nMzeN4wXJpdfWX
- FmOaGwTu5TnEkjbZZpwII7BhC.yyQkk3thMBwUQN4H4QiK9cR8wJAOrtEZqkCt.Zkrcujo_d8HXV
- 01ulWjGGQGWFq3pHA0DdEptafpUfYazmqaTbt_9rEloKekCChGPhXj0uW8YEL49Q3.baiXixYfaP
- tATfBNycu15JQSFuWhWK_wrIcmpEvRvCsaBYPTwDqnZaT4m4O5.OEgN9YhADfZx7ElQafPUi4.Hv
- VQCaeN5HzrF13z.0swDv8v7aAZZRx8JUdqZOStFDGCDLsYkf34iw5VeOXwjo60mKlItbbCA518d1
- saJ96SepWbEhUWpo09ay_XGIB1ocsv0I370QEASJp5uEVjUhXH4QqtqM_Ys3QA2EEnRhbzFBw5mQ
- Itb1WdsoDCJtLLOzxeiTF8rWqpOeTGT5RxiQCRm4HM9A9SSzzyeICi5Ws6lEvPnNJOXuxIHn5xBL
- oPKktdT01tqh7.4ms5gmv.1AVtCWQuhsTTPtATSJUCUURf7A7gsZ2AYo5kGJ1qow1Zfec.Ul6dlc
- ZrDbOXOjCxieB7W9evK2p4KB8Y0vSWM0cenNQSwVnEGGE5OMji9ySjlLg7saAzLRyhZfvKAIN2Xx
- OtAkXdQVwbaq0q2VFr_lIe6GfnekFtKGhuc9ZMtxtpNK_qJPHZfKftc.4QWMxOqDNKjSEy4fOUCt
- S1velAKolpDKgXiKvZeNcd53k0Zx0V69.ko8Jhsx0VJKVdJp8YR7xa.VDmLOLJB8kmFuehGhwjJq
- tC9AM5v6EiLz5GwWy3VTp.LPeXoJ5gP1G.Gmaygx5cZ5ML1n8rWrPI6Xh5m4Oqibn_VWzsSo2Rs.
- EEXzZjymu8wN4wBHMCt0ex5X228sWlvnpJg4TqyWbIh_3DLRsKin495ZLaf9BCVHTTDas7KFcpp3
- ntvNw26FFjMxUkumksgDZ2KEyTdeYr.YQkrYrpW0UH9Rsu3fnWMdRpI9ZsAT7gliFs6VaazT0Onk
- BRgTgFBujBVtDEfTJnRzn8v5WShM2V1uMlTgkr88la2hLv8iusbgOKI2Vj6EFfPwlS6O10UBG0lD
- 0EHi1I6O.KBGLxU_xlXMJsDRU_eCch9ydigIrbXsllajimNtZ2ATUsvFvocEORn5mbUZD0jWX4qa
- CJcndGxeU6EOPy4fhYH6EfUN9WCYsJpmYucw4PGol6v9e0qBOfb3Sk20bxct4ZEPOnNMwIaAtpDs
- LIcg0oOZSO9YiCxaFzK044J4Nu4PUDaF4LrtOhSz.qrymWyolPnUoR0Vk6tVLgUrvqbJO5NVQtct
- NV7lY7piIwDxiYkhDXe_UPofGODlFItvY5AABedUQ6sYoKQ9KeeySX.bPz7VJBB3vRNfLlG3SxBy
- .EGa8163mZpMLbugeus9cU5jEOmiv6mTRugQvEuHakXwBLqx9DY7jn0PDtAjG653sa7bgB2rOFhu
- Lq722CQTldGpa4MgnP5B6BKeFEnK14v7H1kb4m.8686ESAETGLawgQp3lDBLatae2sGsO0pnyOx_
- g6p.14IDtSTTSB4PDJM2jac3WfUWdl9CYy_Jzpf5bmMVtZ7spXdJFix.s21sjBjKavLY_Jqx29Q1
- qoOSakQDnrP7Vrj9E2KFUPaEsqqxh9rZwxQ1VkOgtuIYLhTItXh9cxeeTPG_8z9UMjrK_7I4L2Wq
- eyXHci_X6ATfYDDk4xOpocGjLx1fel94WhamuW6WMy992uyEdfsbkaeol9.h0vUe51ZEVcr9BMVh
- .A37WCmZmiPIVcyHDXLo7gMBkDlADElhc3LNoeyG1AYmVhFGW69qdmOHLSrDAyILXoYYtMefeEPm
- SlxyS8nMllEtFu.6IdVPGRNqFDUWy_tO8HzfR0Jc3VEsar9eRcHHtExOWj_RWwCKizmghnrHZ.XA
- S60NGB2dwVEhT_1wrcf31chfeGi9LpZq1QMVymHLsO5CafQHZvXR6egL0cRqIcixAcV.vK8Y324.
- LhRwULBVBxiyqdu0KVw1tEgyN3HTYOV75ap9jT5smOR4Xg0GD7YlTW8Y-
-Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic303.consmr.mail.gq1.yahoo.com with HTTP; Wed, 20 Jan 2021 01:30:31 +0000
-Received: by smtp402.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 167f1fbdd5ea7ffcc74dbd0fe3b1581e; 
- Wed, 20 Jan 2021 01:30:28 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix shift-out-of-bounds of blkszbits
-Date: Wed, 20 Jan 2021 09:30:16 +0800
-Message-Id: <20210120013016.14071-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20210120013016.14071-1-hsiangkao.ref@aol.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
+ envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
+Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DLCvn6pBFzDqG0
+ for <linux-erofs@lists.ozlabs.org>; Wed, 20 Jan 2021 15:58:09 +1100 (AEDT)
+Received: from [192.168.43.20] (unknown [113.115.40.34])
+ by front (Coremail) with SMTP id AWSowAAnLQU1uAdgw_rTAQ--.61228S2;
+ Wed, 20 Jan 2021 12:57:27 +0800 (CST)
+Content-Type: multipart/alternative;
+ boundary=Apple-Mail-5FE531C4-B5B1-4CAB-823C-0947073B8D9A
+Content-Transfer-Encoding: 7bit
+From: =?utf-8?B?6IOh546u5paH?= <sehuww@mail.scut.edu.cn>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] erofs-utils: fix battach on full buffer block
+Date: Wed, 20 Jan 2021 12:57:39 +0800
+Message-Id: <32A61DA5-EED5-4268-B6C5-CAAB94527F91@mail.scut.edu.cn>
+References: <20210119154335.GB2601261@xiangao.remote.csb>
+In-Reply-To: <20210119154335.GB2601261@xiangao.remote.csb>
+To: Gao Xiang <hsiangkao@redhat.com>
+X-Mailer: iPad Mail (18C66)
+X-CM-TRANSID: AWSowAAnLQU1uAdgw_rTAQ--.61228S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7trWkKF4kGF1rWF1kAry7ZFb_yoW8ZF4rp3
+ 9rK3WkKrWktF1vyr1xJw12v34Iy3s5Gr93Kry5uryvvrZxXFy8CryIkr4j93srX397AFWj
+ va18uwn5Jay5Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+ 9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+ 0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+ A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+ jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+ C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21lYx0E2Ix0
+ cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+ ACjcxG0xvY0x0EwIxGrwCjr7xvwVCIw2I0I7xG6c02F41l42xK82IYc2Ij64vIr41l4I8I
+ 3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUGVWUWwC20s026x8GjcxK67AKxV
+ WUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+ wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+ k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+ Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wYFtUUUUU==
+X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQAFBlepTBDbiwAVsl
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,42 +58,133 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: syzkaller-bugs@googlegroups.com, LKML <linux-kernel@vger.kernel.org>,
- syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
 
-syzbot generated a crafted bitszbits which can be shifted
-out-of-bounds[1]. So directly print unsupported blkszbits
-instead of blksize.
+--Apple-Mail-5FE531C4-B5B1-4CAB-823C-0947073B8D9A
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://lore.kernel.org/r/000000000000c72ddd05b9444d2f@google.com
-Reported-by: syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/erofs/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index be10b16ea66e..d5a6b9b888a5 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -158,8 +158,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 	blkszbits = dsb->blkszbits;
- 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
- 	if (blkszbits != LOG_BLOCK_SIZE) {
--		erofs_err(sb, "blksize %u isn't supported on this platform",
--			  1 << blkszbits);
-+		erofs_err(sb, "blkszbits %u isn't supported on this platform",
-+			  blkszbits);
- 		goto out;
- 	}
- 
--- 
-2.24.0
+> =E5=9C=A8 2021=E5=B9=B41=E6=9C=8819=E6=97=A5=EF=BC=8C23:43=EF=BC=8CGao Xia=
+ng <hsiangkao@redhat.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> =EF=BB=BFHi Weiwen,
+>=20
+>> On Tue, Jan 19, 2021 at 02:02:56PM +0800, =E8=83=A1=E7=8E=AE=E6=96=87 wro=
+te:
+>> Hi Xiang,
+>>=20
+>> After further investgate, this bug will not reveal in any released versio=
+n of
+>> mkfs.erofs. Previous patch v5 [1] will map all allocated bb when erofs_ma=
+pbh()
+>> is called on an already mapped bb, which triggers this bug. before that p=
+atch,
+>> under the same condition, __erofs_battach() will only be called on bb whi=
+ch is
+>> not mapped, thus no need to update `tail_blkaddr'.
+>=20
+> Good to know this, thanks! I haven't looked into that (I will test it this=
+
+> weekend.) IMO, although this is not a regression, yet it seems it's potent=
+ial
+> harmful if we didn't notice this... So I think a proper testcase is still
+> useful to look after this... If you have extra time, could you help on it?=
+
+
+Hi Xiang,
+
+I=E2=80=99m working on this. I have written a test case for this. And I=E2=80=
+=99m also working on setting up GitHub actions to run tests automatically. S=
+o far, I=E2=80=99ve got uncompressed tests works, but when lz4 is enable, al=
+l test (except 001) fail. I have not found out why. You may see my progress a=
+t https://github.com/huww98/erofs-utils/tree/experimental-tests. I will send=
+ patches once everything is sorted out.
+
+> Also, without the detail of this, I think the fix might be folded into
+> the original patchset (could you resend it?). In addition, I think after
+
+You mean add a new commit [PATCH v6 3/3], or merge it into [PATCH v7 2/2]? I=
+ send it as a separate patch set because it may be merged independent of the=
+ cache.c optimization.
+
+> last_mapped_block is introduced, we might not need tail_blkaddr anymore,
+> not sure. But I'm very cautious about this in case of introducing any
+> new regression...
+
+I think we still need it, because already mapped bb may be dropped, last_map=
+_block does not always reflect tail_blkaddr.
+
+Hu Weiwen
+
+> Thanks,
+> Gao Xiang
+>=20
+>>=20
+>> [1]: https://lore.kernel.org/linux-erofs/20210118123431.22533-1-sehuww@ma=
+il.scut.edu.cn/
+>>=20
+>> Hu Weiwen
+>>=20
+
+--Apple-Mail-5FE531C4-B5B1-4CAB-823C-0947073B8D9A
+Content-Type: text/html;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=3D=
+utf-8"></head><body dir=3D"auto"><br><div dir=3D"ltr"><blockquote type=3D"ci=
+te">=E5=9C=A8 2021=E5=B9=B41=E6=9C=8819=E6=97=A5=EF=BC=8C23:43=EF=BC=8CGao X=
+iang &lt;hsiangkao@redhat.com&gt; =E5=86=99=E9=81=93=EF=BC=9A<br><br></block=
+quote></div><blockquote type=3D"cite"><div dir=3D"ltr">=EF=BB=BF<span>Hi Wei=
+wen,</span><br><span></span><br><span>On Tue, Jan 19, 2021 at 02:02:56PM +08=
+00, =E8=83=A1=E7=8E=AE=E6=96=87 wrote:</span><br><blockquote type=3D"cite"><=
+span>Hi Xiang,</span><br></blockquote><blockquote type=3D"cite"><span></span=
+><br></blockquote><blockquote type=3D"cite"><span>After further investgate, t=
+his bug will not reveal in any released version of</span><br></blockquote><b=
+lockquote type=3D"cite"><span>mkfs.erofs. Previous patch v5 [1] will map all=
+ allocated bb when erofs_mapbh()</span><br></blockquote><blockquote type=3D"=
+cite"><span>is called on an already mapped bb, which triggers this bug. befo=
+re that patch,</span><br></blockquote><blockquote type=3D"cite"><span>under t=
+he same condition, __erofs_battach() will only be called on bb which is</spa=
+n><br></blockquote><blockquote type=3D"cite"><span>not mapped, thus no need t=
+o update `tail_blkaddr'.</span><br></blockquote><span></span><br><span>Good t=
+o know this, thanks! I haven't looked into that (I will test it this</span><=
+br><span>weekend.) IMO, although this is not a regression, yet it seems it's=
+ potential</span><br><span>harmful if we didn't notice this... So I think a p=
+roper testcase is still</span><br><span>useful to look after this... If you h=
+ave extra time, could you help on it?</span><br></div></blockquote><div><br>=
+</div><div>Hi Xiang,</div><div><br></div><div>I=E2=80=99m working on this. I=
+ have written a test case for this. And I=E2=80=99m also working on setting u=
+p GitHub actions to run tests automatically. So far, I=E2=80=99ve got uncomp=
+ressed tests works, but when lz4 is enable, all test (except 001) fail. I ha=
+ve not found out why. You may see my progress at&nbsp;<a href=3D"https://git=
+hub.com/huww98/erofs-utils/tree/experimental-tests">https://github.com/huww9=
+8/erofs-utils/tree/experimental-tests</a>. I will send patches once everythi=
+ng is sorted out.</div><br><blockquote type=3D"cite"><div dir=3D"ltr"><span>=
+Also, without the detail of this, I think the fix might be folded into</span=
+><br><span>the original patchset (could you resend it?). In addition, I thin=
+k after</span><br></div></blockquote><div><br></div><div>You mean add a new c=
+ommit [PATCH v6 3/3], or merge it into [PATCH v7 2/2]? I send it as a separa=
+te patch set because it may be merged independent of the cache.c optimizatio=
+n.</div><br><blockquote type=3D"cite"><div dir=3D"ltr"><span>last_mapped_blo=
+ck is introduced, we might not need tail_blkaddr anymore,</span><br><span>no=
+t sure. But I'm very cautious about this in case of introducing any</span><b=
+r><span>new regression...</span><br></div></blockquote><div><br></div>I thin=
+k we still need it, because already mapped bb may be dropped, last_map_block=
+ does not always reflect tail_blkaddr.<div><br></div><div>Hu Weiwen<br><br><=
+blockquote type=3D"cite"><div dir=3D"ltr"><span>Thanks,</span><br><span>Gao X=
+iang</span><br><span></span><br><blockquote type=3D"cite"><span></span><br><=
+/blockquote><blockquote type=3D"cite"><span>[1]: https://lore.kernel.org/lin=
+ux-erofs/20210118123431.22533-1-sehuww@mail.scut.edu.cn/</span><br></blockqu=
+ote><blockquote type=3D"cite"><span></span><br></blockquote><blockquote type=
+=3D"cite"><span>Hu Weiwen</span><br></blockquote><blockquote type=3D"cite"><=
+span></span><br></blockquote></div></blockquote></div></body></html>=
+
+--Apple-Mail-5FE531C4-B5B1-4CAB-823C-0947073B8D9A--
 
