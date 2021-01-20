@@ -2,53 +2,96 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD98F2FBDD3
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Jan 2021 18:38:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 019F62FC6D1
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 02:30:56 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DKwqZ2MJ4zDr30
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 04:38:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DL7JY1w51zDqlw
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jan 2021 12:30:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1611106253;
+	bh=tgV/h1YGy5r2ccHvxZklhljGMIVLcDolxMHWr2OZue8=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ikZApgD40fEBelr19XGdHZAkcjTjRlbd+GTpjqANjGTResjiCair/CNN29iQwfLcw
+	 7xrpuQ/wT+q4TBfZmDUXp01qck89WeZsA9g2V8s1PC7omBKx/cYdxJcikS9wRXhW30
+	 vNDAKFu/ptdy2H/yd6KVyUDJZ5CsgZfUne2mLBDW8GfTSg2dBc7YXKhWph4V5y7tmg
+	 OREIKshOpuhuZaJcaFVagSPQ3WMc2loS9bj4e5CTIKcfIxiZmm2a99qIaDo2Q/UBts
+	 2s/X42rGns16D3+aR9piA6gJdyTmzSERuR4gjzvlCs9BBZp+jWUuigYU49Kf48M1pr
+	 9IJaDZ7rxAZmQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
- (client-ip=209.85.166.71; helo=mail-io1-f71.google.com;
- envelope-from=3crkhyakbaf4ouvg6hhan6lle9.ckkchaqoan8kjpajp.8ki@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com;
- receiver=<UNKNOWN>)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.64.206; helo=sonic303-25.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=MjZ4X4M+; dkim-atps=neutral
+Received: from sonic303-25.consmr.mail.gq1.yahoo.com
+ (sonic303-25.consmr.mail.gq1.yahoo.com [98.137.64.206])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DKwqR3KrCzDqrN
- for <linux-erofs@lists.ozlabs.org>; Wed, 20 Jan 2021 04:38:20 +1100 (AEDT)
-Received: by mail-io1-f71.google.com with SMTP id l18so36920948iok.7
- for <linux-erofs@lists.ozlabs.org>; Tue, 19 Jan 2021 09:38:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
- bh=40gJjNkwJtrlm4insO0rPudC8qItU3LszLGVCfoZwTM=;
- b=cDqLBQ0gOWJHBk/OkS4pbeP4SEutJZP5hJNsP75q7Cfy5zJTGu4SsEopzvgzaXjFDW
- R9SBnUtStGYJmySpeWx7pSJfOdCh1Z7aXXTLVw8R11ovtOz2QzzOUxUwXVx8km92KVwI
- M6nWJdKFY46dAr6wgd1ybYdACUZ0su+yCXAc8P6ZIvbC2qeg4owfOzdLxNd1sXNhhzef
- 7ZD6Qj18qNJywGCviaSlGbMnN2U6M/jyAoojlI95UiHqnHkAYxVRknTl5p0Law4DU51V
- FEu0kxUlz6nQ4/QtNyXRwB/87o1JF4i5ctzrrISx0MtR9NWvExXUmG342sVm+qrb0BPw
- PdfA==
-X-Gm-Message-State: AOAM530TtcbXkPMJhhQ+tOXz7hT8Y+qNhhM54NZe4wwH7UnQrifLuqG1
- /IGNNHtLHCZdmiGKkLtx/gM9x1b5cH0cJiSnWLp/om6NXYL7
-X-Google-Smtp-Source: ABdhPJxyjXk5JbNLx/UUaby10LaGPXZY3MGKluQT3eHA5u+3VXPu8XJuDmy46ovk01N0F3Ee7p0VdBMOw+2iigKYTG6jD7h336eF
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DL7JH1nyqzDqbk
+ for <linux-erofs@lists.ozlabs.org>; Wed, 20 Jan 2021 12:30:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1611106231; bh=1r3dKINWGBdHXjMJC1pX7V+OOo+PzIVrin3K6Ha1Jh4=;
+ h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To;
+ b=MjZ4X4M+hAAdSJrooEMjWiu4d2rqipY0jHYmz+yIcK8EPnsP3kADx8TRVNEU0wr2RDW/7vblTjldHHaB21n2srmH31na0Gj1X7DV8rJesUQZEBdS6Zhr7eLZXgL81XqIy004bTHXKOp7/1GkDYEm0coSLTa97MYYOJDaQTO2i1vmPUuZRwKXKDXefbFnmPqLHXo6BKtksa2/BDy28t6u2iFMWby6AxakOzzrsig8sk+N7etPQDw3prbhMbZZaEoCXu5TiiHKxFkOd9O0Cz92eDANS1UksIb5itJ/aCTMaY7vNWgjvRYfDhI5prv96lI0KrCNNo6LOJ2Es0O3zxwlug==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1611106231; bh=d5jpnRbJVDDf7Yp5j1dV7v6CuALsI1NmlKOiPGhQ6tK=;
+ h=From:To:Subject:Date:From:Subject:Reply-To;
+ b=t58EtamcG++CecN+E/Um9dbCCY9wKwKDCFbYUAPJkyY42QomyUExPnkcD6ZkYVygYMb0/WFA/3qv0apPFZcHY7/AgDXZWWb0i3ZjAtUtVBF9DsPUY+gPox8xd1RGf8tsagxHZGn7EsCcNpK7t9FupSGfDG10NmWdorsVv7M6GTLVDRrgH2LyOVUpCe069iVcYYRzbyixah4cEZmPf7RezgHvlLp+ssDXgQpgWdmBJkDuDiliv5ryxv6zdNaRduuODJxml5EXoXbuQMO7eYwnEbsWzjddpUFbjZW4C37bgWGCTXIgpFiJZynXYKVGv9IGjEcNoGHeWZjY4gvd7BaUmQ==
+X-YMail-OSG: sKJOEZgVM1lAyTFEzCn_PceVGDrRNe6YHKgn2xwF.do4s3dzfXOt._Xe.VboZVI
+ OSqXFtq6m3xDh1clCvSyH15l0lZZFGWLgTR.PtQxW9NL8r1jThVAfTRRSf_pd1Mtz3gMzyWeRKhy
+ .gJJiIlPJduuSQNJuaSGwDnoHsUc7THCaibnSHaNku6I6xy2GjItRmOO55NaXq.yrbif0v6_Ir44
+ OuciNWyAEgX_tH5390.rQzNJNMcX8HgjRo.uqIIw49eGAfZS77KozGzgYsXnV3hFZaX8c24do9M.
+ cB2tE9SuauQOOmOLa4ti4SmGe5mEYQLo3RXlyKVlzdrSKkDpnlJUho8DLFTEdtEm9DuQLGa7i6o0
+ FGJ7F4PihU22PjJuxp6ywCM2dZjiucXZKCElDDPjw1yax593xVMrlPhh.Eelg1mD088YtViG0aca
+ g.OzzH0CKPy6_Zbv08pd8vYk5Pj6QpcWIKiBS89BqmnyAz3sSryYHNVZBnWVy56m2xv5r.QBXUuZ
+ UNtgPTck4waSdRAshDjyKTuoakdxPFT0bNJEm7X4Idgdmaoyq7YLNlUoxmaK5m1qU7UbOeCc9Qbp
+ H3fns.yQaCjJIS4tFLfMNV8m2_Pe7bW5lxvfp8oWwPxvKJrQeVghPZxOZb_l_xt3g1eZuSDvrCrQ
+ 6MqYvNOVgss4jWXRAEZPOSlCoDp341_nSiQMNv922niplCtvBRjnzPM7WYp0sYIAOJF5ooB7xgX_
+ 6ymMExJMdv_fyYG82pfspNDjUoGLGsYDr02Nh9QPE3OFu0uowp98Zwx5RxKIT2nMzeN4wXJpdfWX
+ FmOaGwTu5TnEkjbZZpwII7BhC.yyQkk3thMBwUQN4H4QiK9cR8wJAOrtEZqkCt.Zkrcujo_d8HXV
+ 01ulWjGGQGWFq3pHA0DdEptafpUfYazmqaTbt_9rEloKekCChGPhXj0uW8YEL49Q3.baiXixYfaP
+ tATfBNycu15JQSFuWhWK_wrIcmpEvRvCsaBYPTwDqnZaT4m4O5.OEgN9YhADfZx7ElQafPUi4.Hv
+ VQCaeN5HzrF13z.0swDv8v7aAZZRx8JUdqZOStFDGCDLsYkf34iw5VeOXwjo60mKlItbbCA518d1
+ saJ96SepWbEhUWpo09ay_XGIB1ocsv0I370QEASJp5uEVjUhXH4QqtqM_Ys3QA2EEnRhbzFBw5mQ
+ Itb1WdsoDCJtLLOzxeiTF8rWqpOeTGT5RxiQCRm4HM9A9SSzzyeICi5Ws6lEvPnNJOXuxIHn5xBL
+ oPKktdT01tqh7.4ms5gmv.1AVtCWQuhsTTPtATSJUCUURf7A7gsZ2AYo5kGJ1qow1Zfec.Ul6dlc
+ ZrDbOXOjCxieB7W9evK2p4KB8Y0vSWM0cenNQSwVnEGGE5OMji9ySjlLg7saAzLRyhZfvKAIN2Xx
+ OtAkXdQVwbaq0q2VFr_lIe6GfnekFtKGhuc9ZMtxtpNK_qJPHZfKftc.4QWMxOqDNKjSEy4fOUCt
+ S1velAKolpDKgXiKvZeNcd53k0Zx0V69.ko8Jhsx0VJKVdJp8YR7xa.VDmLOLJB8kmFuehGhwjJq
+ tC9AM5v6EiLz5GwWy3VTp.LPeXoJ5gP1G.Gmaygx5cZ5ML1n8rWrPI6Xh5m4Oqibn_VWzsSo2Rs.
+ EEXzZjymu8wN4wBHMCt0ex5X228sWlvnpJg4TqyWbIh_3DLRsKin495ZLaf9BCVHTTDas7KFcpp3
+ ntvNw26FFjMxUkumksgDZ2KEyTdeYr.YQkrYrpW0UH9Rsu3fnWMdRpI9ZsAT7gliFs6VaazT0Onk
+ BRgTgFBujBVtDEfTJnRzn8v5WShM2V1uMlTgkr88la2hLv8iusbgOKI2Vj6EFfPwlS6O10UBG0lD
+ 0EHi1I6O.KBGLxU_xlXMJsDRU_eCch9ydigIrbXsllajimNtZ2ATUsvFvocEORn5mbUZD0jWX4qa
+ CJcndGxeU6EOPy4fhYH6EfUN9WCYsJpmYucw4PGol6v9e0qBOfb3Sk20bxct4ZEPOnNMwIaAtpDs
+ LIcg0oOZSO9YiCxaFzK044J4Nu4PUDaF4LrtOhSz.qrymWyolPnUoR0Vk6tVLgUrvqbJO5NVQtct
+ NV7lY7piIwDxiYkhDXe_UPofGODlFItvY5AABedUQ6sYoKQ9KeeySX.bPz7VJBB3vRNfLlG3SxBy
+ .EGa8163mZpMLbugeus9cU5jEOmiv6mTRugQvEuHakXwBLqx9DY7jn0PDtAjG653sa7bgB2rOFhu
+ Lq722CQTldGpa4MgnP5B6BKeFEnK14v7H1kb4m.8686ESAETGLawgQp3lDBLatae2sGsO0pnyOx_
+ g6p.14IDtSTTSB4PDJM2jac3WfUWdl9CYy_Jzpf5bmMVtZ7spXdJFix.s21sjBjKavLY_Jqx29Q1
+ qoOSakQDnrP7Vrj9E2KFUPaEsqqxh9rZwxQ1VkOgtuIYLhTItXh9cxeeTPG_8z9UMjrK_7I4L2Wq
+ eyXHci_X6ATfYDDk4xOpocGjLx1fel94WhamuW6WMy992uyEdfsbkaeol9.h0vUe51ZEVcr9BMVh
+ .A37WCmZmiPIVcyHDXLo7gMBkDlADElhc3LNoeyG1AYmVhFGW69qdmOHLSrDAyILXoYYtMefeEPm
+ SlxyS8nMllEtFu.6IdVPGRNqFDUWy_tO8HzfR0Jc3VEsar9eRcHHtExOWj_RWwCKizmghnrHZ.XA
+ S60NGB2dwVEhT_1wrcf31chfeGi9LpZq1QMVymHLsO5CafQHZvXR6egL0cRqIcixAcV.vK8Y324.
+ LhRwULBVBxiyqdu0KVw1tEgyN3HTYOV75ap9jT5smOR4Xg0GD7YlTW8Y-
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic303.consmr.mail.gq1.yahoo.com with HTTP; Wed, 20 Jan 2021 01:30:31 +0000
+Received: by smtp402.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 167f1fbdd5ea7ffcc74dbd0fe3b1581e; 
+ Wed, 20 Jan 2021 01:30:28 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix shift-out-of-bounds of blkszbits
+Date: Wed, 20 Jan 2021 09:30:16 +0800
+Message-Id: <20210120013016.14071-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:634b:: with SMTP id j72mr4366118jac.106.1611077897365; 
- Tue, 19 Jan 2021 09:38:17 -0800 (PST)
-Date: Tue, 19 Jan 2021 09:38:17 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c72ddd05b9444d2f@google.com>
-Subject: UBSAN: shift-out-of-bounds in erofs_fc_fill_super
-From: syzbot <syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com>
-To: chao@kernel.org, linux-erofs@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
- xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+References: <20210120013016.14071-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,66 +103,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: syzkaller-bugs@googlegroups.com, LKML <linux-kernel@vger.kernel.org>,
+ syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+From: Gao Xiang <hsiangkao@redhat.com>
 
-syzbot found the following issue on:
+syzbot generated a crafted bitszbits which can be shifted
+out-of-bounds[1]. So directly print unsupported blkszbits
+instead of blksize.
 
-HEAD commit:    b3a3cbde Add linux-next specific files for 20210115
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1060b83b500000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6ea08dae6aab586f
-dashboard link: https://syzkaller.appspot.com/bug?extid=c68f467cd7c45860e8d4
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fd46af500000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e2a858d00000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
+[1] https://lore.kernel.org/r/000000000000c72ddd05b9444d2f@google.com
 Reported-by: syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 4 to 0
-================================================================================
-UBSAN: shift-out-of-bounds in fs/erofs/super.c:161:3
-shift exponent 59 is too large for 32-bit type 'int'
-CPU: 1 PID: 8462 Comm: syz-executor591 Not tainted 5.11.0-rc3-next-20210115-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:79 [inline]
- dump_stack+0x107/0x163 lib/dump_stack.c:120
- ubsan_epilogue+0xb/0x5a lib/ubsan.c:148
- __ubsan_handle_shift_out_of_bounds.cold+0xb1/0x181 lib/ubsan.c:395
- erofs_read_superblock fs/erofs/super.c:161 [inline]
- erofs_fc_fill_super.cold+0x6c/0x35c fs/erofs/super.c:357
- get_tree_bdev+0x440/0x760 fs/super.c:1291
- vfs_get_tree+0x89/0x2f0 fs/super.c:1496
- do_new_mount fs/namespace.c:2889 [inline]
- path_mount+0x12ae/0x1e70 fs/namespace.c:3220
- do_mount fs/namespace.c:3233 [inline]
- __do_sys_mount fs/namespace.c:3441 [inline]
- __se_sys_mount fs/namespace.c:3418 [inline]
- __x64_sys_mount+0x27f/0x300 fs/namespace.c:3418
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446d1a
-Code: b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 fd ad fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 da ad fb ff c3 66 0f 1f 84 00 00 00 00 00
-RSP: 002b:00007fff68419868 EFLAGS: 00000297 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fff684198c0 RCX: 0000000000446d1a
-RDX: 0000000020000000 RSI: 0000000020000100 RDI: 00007fff68419880
-RBP: 00007fff68419880 R08: 00007fff684198c0 R09: 00007fff00000015
-R10: 0000000000000000 R11: 0000000000000297 R12: 0000000000000001
-R13: 0000000000000004 R14: 0000000000000003 R15: 0000000000000003
-================================================================================
-
-
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/erofs/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index be10b16ea66e..d5a6b9b888a5 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -158,8 +158,8 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+-		erofs_err(sb, "blksize %u isn't supported on this platform",
+-			  1 << blkszbits);
++		erofs_err(sb, "blkszbits %u isn't supported on this platform",
++			  blkszbits);
+ 		goto out;
+ 	}
+ 
+-- 
+2.24.0
+
