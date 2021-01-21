@@ -1,101 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B6D02FE642
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jan 2021 10:23:27 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 312F72FE743
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jan 2021 11:14:22 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DLxlH5Kq8zDrBJ
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jan 2021 20:23:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DLyt31gWQzDqX1
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jan 2021 21:14:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=PE/GlfsJ; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=PE/GlfsJ; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DLxl42Vl7zDr88
- for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 20:23:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611220988;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding:
- in-reply-to:in-reply-to:references:references;
- bh=IxTp0qJS2vuecc8jau3OGxxutWJCeFtDfPDwv+vRlZo=;
- b=PE/GlfsJGRlpWtgLwP1N/SKVjBEYLwdjrrY44vSDMBnZdfm3kYQK/g05Q4tHGqtIBVaWE1
- 6yQMLIoyR+TXkCpP0TEvzLp3WTGh9sQb9izNtDu2dTgjcXSdVhsjKHAWRDRYjfbJvttMLb
- IWywg4MFIM9qJLESxfeF82U0BzUZdhE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611220988;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding:
- in-reply-to:in-reply-to:references:references;
- bh=IxTp0qJS2vuecc8jau3OGxxutWJCeFtDfPDwv+vRlZo=;
- b=PE/GlfsJGRlpWtgLwP1N/SKVjBEYLwdjrrY44vSDMBnZdfm3kYQK/g05Q4tHGqtIBVaWE1
- 6yQMLIoyR+TXkCpP0TEvzLp3WTGh9sQb9izNtDu2dTgjcXSdVhsjKHAWRDRYjfbJvttMLb
- IWywg4MFIM9qJLESxfeF82U0BzUZdhE=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-gqczSF5OPAKKWujZ1fRRvg-1; Thu, 21 Jan 2021 04:23:05 -0500
-X-MC-Unique: gqczSF5OPAKKWujZ1fRRvg-1
-Received: by mail-pj1-f71.google.com with SMTP id lr5so5981322pjb.1
- for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 01:23:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:content-transfer-encoding
- :in-reply-to:user-agent;
- bh=IxTp0qJS2vuecc8jau3OGxxutWJCeFtDfPDwv+vRlZo=;
- b=cQeitniyFgLscE7Nt/mXl+rQXq98IvfnW9/opi2JsY2Xss80ERbD9hP0N5EelU7VCh
- +qEYVU/iTmUGb1+EaPRWSehtYXzN1WSAPAx4tCw1y/6g4Kq2BL/HppmaZ0no0hyA+DE5
- lXin9zbIxnV2fYy9JyB56xyJnCgZhDr8dkQcu2v9r+BVcelDRItOhWm0ZdXtMjbwjAaY
- SheVzRHkLJaZzdgEFbXJZz4RgfWPBVXu8ehq3qm4CKlvTQX0uYJcza86EOUTv5Hd3sr0
- kARWpTXvoBoaxOdwVd99TDlo6K4SH/tC7tmFCuLPKwJpFen4JrGuRlUlMF7zSX564SS7
- gOAA==
-X-Gm-Message-State: AOAM530TY23ZBJOjQ3KR+JgV+URQVi86Y1BcPZTfg3fg6hsmBcO7j+8L
- GUOJuxZPekgqTxgsRDf4sLb03rB1j1WN+ipYx6wQGmkBfc3PGOcq+Y0M9E4Zc6EQabRWdALEmxV
- Bo8wtIy5+hb4hUqbqLG1Kp5ay
-X-Received: by 2002:a17:902:bc41:b029:de:1ec2:dac1 with SMTP id
- t1-20020a170902bc41b02900de1ec2dac1mr14225792plz.9.1611220984585; 
- Thu, 21 Jan 2021 01:23:04 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxywcpWSXklrmK/LsEl9Hq5KF0IC9pnz/272XQmTh9+pR+lBU6aFk0+1a1B7zxo9NeVEPgvTQ==
-X-Received: by 2002:a17:902:bc41:b029:de:1ec2:dac1 with SMTP id
- t1-20020a170902bc41b02900de1ec2dac1mr14225774plz.9.1611220984302; 
- Thu, 21 Jan 2021 01:23:04 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id c8sm3855681pfo.148.2021.01.21.01.23.02
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Thu, 21 Jan 2021 01:23:03 -0800 (PST)
-Date: Thu, 21 Jan 2021 17:22:54 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: =?utf-8?B?6IOh546u5paH?= <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH] erofs-utils: fix battach on full buffer block
-Message-ID: <20210121092254.GA2902889@xiangao.remote.csb>
-References: <20210119154335.GB2601261@xiangao.remote.csb>
- <32A61DA5-EED5-4268-B6C5-CAAB94527F91@mail.scut.edu.cn>
- <20210120051216.GA2688693@xiangao.remote.csb>
- <20210121060738.GA6680@DESKTOP-N4CECTO.huww98.cn>
+ smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
+ envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
+Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DLyrV59gkzDrNS
+ for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 21:12:54 +1100 (AEDT)
+Received: from DESKTOP-N4CECTO.huww98.cn (unknown [59.53.40.31])
+ by front (Coremail) with SMTP id AWSowACnrweBUwlg6OjZAQ--.65394S3;
+ Thu, 21 Jan 2021 18:12:20 +0800 (CST)
+Date: Thu, 21 Jan 2021 18:12:33 +0800
+From: =?utf-8?B?6IOh546u5paH?= <sehuww@mail.scut.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: fuse returns ENOENT to openat() for symlink probabilistically
+Message-ID: <20210121101233.GC6680@DESKTOP-N4CECTO.huww98.cn>
 MIME-Version: 1.0
-In-Reply-To: <20210121060738.GA6680@DESKTOP-N4CECTO.huww98.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AWSowACnrweBUwlg6OjZAQ--.65394S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF15Xw4kZFW8Ar15CF4fAFb_yoWkKrb_ur
+ 18Ga98JFsIkw47Ka1a9rsIvF4vqFsFk348Z34Iq3y2gry8X3W8ZayDG3Z5uFyavFsxC3ZI
+ kan3Zry7Aw45ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+ 9fnUUIcSsGvfJTRUUUbFxYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+ 6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+ 8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0
+ cI8IcVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+ 8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+ 0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+ 1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s02
+ 6xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+ I_JrWlx4CE17CEb7AF67AKxVWUJVWUXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+ 6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj4
+ 0_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j
+ 6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bOoGdUUUUU=
+X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQAHBlepTBDfZQAJsR
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -107,36 +54,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Jan 21, 2021 at 02:07:38PM +0800, 胡玮文 wrote:
+Hi all,
 
-...
+I'm working on setting up CI service to run tests automatically. Now I have got
+tests with kernel mount succeeded. But some tests with fuse fails
+probabilistically. Here are my discoveries:
 
-> 
-> I've downloaded "tests/results/" and it's test 007 (check for bad lz4 versions)
-> that fails with output "test LZ4_compress_HC_destSize(1048576) error (4098 <
-> 4116)". And it's the same error on my PC. Investigating.
-> 
-> BTW, why not use a more meaningful name for each test rather than a sequence
-> number?
+* if I run fssum in tests/src from experimental-tests branch multiple times, it
+returns different checksums for the same image and same erofsfuse process.
 
-I'm not good at English naming (but such cases need stable names),
-also see xfstests:
-https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/tree/tests/xfs
-the meaningful description can be written down at tests/Makefile.am... 
+* if I run "diff -r" on the source and the mounted directories, all file
+content matches. but sometimes, diff reports "diff:
+test-mount/lib/.libs/liberofs.la: No such file or directory". This file is a
+symlink to "../liberofs.la". Then I use strace to confirm that openat() system
+call to this path returned ENOENT incorrectly. strace outputs:
 
-Yet they have no interest in integrating such testcases (also generic/
-cases are not useful for EROFS either), and EROFS has many specific
-optimized paths so I decided to make a light-weight regression
-testcases in erofs-utils to look after it and kernel EROFS...
+openat(AT_FDCWD, "test-mount/lib/.libs/liberofs.la", O_RDONLY) = -1 ENOENT (No such file or directory)
+
+* However, If I just do "cat test-mount/lib/.libs/liberofs.la" several hundreds
+of times, I cannot trigger this issue.
+
+* I can reproduce this on both compressed and uncompressed images.
+
+There seems a race condition, but I cannot figure it out. I'm not familiar with
+fuse. But I would like to debug further if someone can provide me any advice or
+guidance.
 
 Thanks,
-Gao Xiang
-
-> 
-> Hu Weiwen
+Hu Weiwen
 
