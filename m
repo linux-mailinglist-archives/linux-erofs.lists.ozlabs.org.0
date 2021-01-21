@@ -1,50 +1,93 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id B07132FF0B4
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jan 2021 17:43:01 +0100 (CET)
-Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DM7VV3tQ2zDrQX
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 03:42:58 +1100 (AEDT)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B7832FF90A
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 00:45:57 +0100 (CET)
+Received: from bilbo.ozlabs.org (unknown [IPv6:2401:3900:2:1::3])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DMJtV3VmXzDrRF
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 10:45:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
- envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
-Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DM7VG6pfPzDqV4
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 03:42:42 +1100 (AEDT)
-Received: from DESKTOP-N4CECTO.huww98.cn (unknown [59.53.40.31])
- by front (Coremail) with SMTP id AWSowAC3WADtrglgk7nbAQ--.12161S4;
- Fri, 22 Jan 2021 00:42:22 +0800 (CST)
-From: Hu Weiwen <sehuww@mail.scut.edu.cn>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 7/7] erofs-utils: tests: enable GitHub Actions
-Date: Fri, 22 Jan 2021 00:42:28 +0800
-Message-Id: <20210121164228.11939-1-sehuww@mail.scut.edu.cn>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210121163715.10660-1-sehuww@mail.scut.edu.cn>
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=O3gZgSum; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=O3gZgSum; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DMJt92WShzDqWL
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 10:45:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1611272732;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=onD0PKUyj/M70afAaW1Ju56pIt386YsOq3syY15imCA=;
+ b=O3gZgSumMmboy3TuybHlB/PiXpTpRvujDhjjs+SzsmTRC6UTTY12BlexxAaCwKYYJ6Dbb/
+ +ZqWPdPEndZ0IqxqMQmt//tFdDEEBMRZBue9Vz60Dj+YnmMacoYvabOpez0sX9dTb/yw4B
+ DmAD9ZUsC13XffHnusao+XfZANwtGus=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1611272732;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=onD0PKUyj/M70afAaW1Ju56pIt386YsOq3syY15imCA=;
+ b=O3gZgSumMmboy3TuybHlB/PiXpTpRvujDhjjs+SzsmTRC6UTTY12BlexxAaCwKYYJ6Dbb/
+ +ZqWPdPEndZ0IqxqMQmt//tFdDEEBMRZBue9Vz60Dj+YnmMacoYvabOpez0sX9dTb/yw4B
+ DmAD9ZUsC13XffHnusao+XfZANwtGus=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-xgc2y_VyPPySFNFZ3o-EKg-1; Thu, 21 Jan 2021 18:45:25 -0500
+X-MC-Unique: xgc2y_VyPPySFNFZ3o-EKg-1
+Received: by mail-pj1-f71.google.com with SMTP id ep24so2294652pjb.5
+ for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 15:45:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to:user-agent;
+ bh=onD0PKUyj/M70afAaW1Ju56pIt386YsOq3syY15imCA=;
+ b=cu9T6QYolCEoi3yuHpTl4KsnENWjuM9Tug48ygk3dk2j84DeDPUCwhcUs+zpbve1Od
+ GG9JaJA7PcRrM1DXUqkYvQvZbG1Fdq1oPDAxIKFHbd2BfrK1zGToq+JcHhQHdMnrA5aq
+ fOycTgfsUPs9BGn+QfcD0hAhk5YFEGYoqUKZuplgFmAa0O/+zPJ0j6MaJpwned0mCoQW
+ SP/tPbQgjr//AmAPWd3quhQoGrsnIvZJSyXNmk6lWiUYqyDGzu5ZZKDTwVSIJ9q+QkDx
+ Y2CllX5cVKhWLlvITghgOwSpKyxIXOY1veKmjYCsNFqB5VmgN91hfFGgvkhxKoqhM2B3
+ 1KRA==
+X-Gm-Message-State: AOAM532B+Q0ra9/I5TPQyZFBDGUOmEOJh7lxMVjhS5OZoxkdkZcy8qA0
+ aky4xkHsxx98FaXp4c4ZyYL4z9xgP8xAvymN+OrN9nBwACoN/SnMFa/BVvf46pDh8F49mCCpKSt
+ 9ESDZD2/DZc0/H21AqX3ggVQ9
+X-Received: by 2002:a63:4e63:: with SMTP id o35mr1741392pgl.291.1611272724037; 
+ Thu, 21 Jan 2021 15:45:24 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzOJDsa94XOYoSNas4mzIVWftMQOKtakPb4EwvT2i7xqze3+eR/qeK6gjNh2vJMxI4X54s07w==
+X-Received: by 2002:a63:4e63:: with SMTP id o35mr1741359pgl.291.1611272723574; 
+ Thu, 21 Jan 2021 15:45:23 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+ by smtp.gmail.com with ESMTPSA id b65sm7087650pga.54.2021.01.21.15.45.21
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Thu, 21 Jan 2021 15:45:23 -0800 (PST)
+Date: Fri, 22 Jan 2021 07:45:13 +0800
+From: Gao Xiang <hsiangkao@redhat.com>
+To: Hu Weiwen <sehuww@mail.scut.edu.cn>
+Subject: Re: [PATCH 3/7] erofs-utils: tests: fix memory leakage in fssum
+Message-ID: <20210121234513.GB2996701@xiangao.remote.csb>
 References: <20210121163715.10660-1-sehuww@mail.scut.edu.cn>
+ <20210121163715.10660-4-sehuww@mail.scut.edu.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AWSowAC3WADtrglgk7nbAQ--.12161S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4fXr4xKr1UGw4ruF1Utrb_yoW8AF1rp3
- s5G34YyF47Kr9Iy3WSgFWrW3W5Jrs7CryUC3WxXw47A34DXan0kr1YgFyrAF4xJrn3ZrWf
- ZFW0vrnFgr4fXF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
- 9KBjDU0xBIdaVrnRJUUUka14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
- rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
- 1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
- 6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
- 4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
- I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
- 4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_JwCF
- 04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
- 18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vI
- r41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr
- 1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvE
- x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUjYLkUUUUU=
-X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQAHBlepTBDfZQAhs5
+In-Reply-To: <20210121163715.10660-4-sehuww@mail.scut.edu.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+ auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,90 +99,141 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use GitHub Actions to run tests automatically.
+Hi Weiwen,
 
-for two configuration: no lz4, with lz4 v1.8.3
+On Fri, Jan 22, 2021 at 12:37:11AM +0800, Hu Weiwen wrote:
+> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
 
-run tests: make check; FSTYPE=fuse make check; sudo make check; make distcheck
+It just synced up with fstests, if you'd like to fix memory leakage of
+this program. How about sending out it to fstests community directly?
+fstests <fstests@vger.kernel.org>
+and
+https://lore.kernel.org/fstests/
 
-Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
----
- .github/workflows/c.yml | 49 +++++++++++++++++++++++++++++++++++++++++
- .gitignore              |  1 +
- 2 files changed, 50 insertions(+)
- create mode 100644 .github/workflows/c.yml
+So newer fssum here can be synced up again... (Also, kindly reminder,
+before you submit it to fstests community, it'd be better leave some
+commit message rather than leave it empty, since empty commit messge
+(I mean only SOB) is somewhat uncommon for linux community...)
 
-diff --git a/.github/workflows/c.yml b/.github/workflows/c.yml
-new file mode 100644
-index 0000000..1d55feb
---- /dev/null
-+++ b/.github/workflows/c.yml
-@@ -0,0 +1,49 @@
-+name: C CI
-+
-+on:
-+  push:
-+  pull_request:
-+    branches: [ dev ]
-+
-+jobs:
-+  build:
-+
-+    runs-on: ubuntu-20.04
-+    strategy:
-+      matrix:
-+        lz4: [no, v1.9.3]
-+
-+    steps:
-+    - name: check kernel version
-+      run: uname -a
-+    - uses: actions/checkout@v2
-+    - name: install dependencies
-+      run: sudo apt-get install uuid-dev libfuse-dev
-+    - name: install lz4
-+      if: ${{ matrix.lz4 != 'no' }}
-+      run: |
-+        cd
-+        git clone --depth=1 --branch=${{ matrix.lz4 }} https://github.com/lz4/lz4.git
-+        cd lz4
-+        make
-+        sudo make install
-+        sudo ldconfig
-+    - name: autogen
-+      run: ./autogen.sh
-+    - name: configure
-+      run: ./configure --enable-fuse
-+    - name: make
-+      run: make
-+    - name: make check
-+      run: make check
-+    - name: make check (fuse)
-+      run: FSTYP=erofsfuse make check
-+    - name: make check (root)
-+      run: sudo make check
-+    - uses: actions/upload-artifact@v2
-+      if: ${{ !cancelled() }}
-+      with:
-+        name: test-results-lz4-${{ matrix.lz4 }}
-+        path: tests/results
-+    - name: make distcheck
-+      run: make distcheck
-diff --git a/.gitignore b/.gitignore
-index e4349dd..0feae62 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -11,6 +11,7 @@
- *.so
- *.so.dbg
- *.tar.*
-+!.github
- 
- #
- # Generated files
--- 
-2.30.0
+Thanks,
+Gao Xiang
+
+> ---
+>  tests/src/fssum.c | 31 +++++++++++++++++--------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tests/src/fssum.c b/tests/src/fssum.c
+> index 10d6275..0f40452 100644
+> --- a/tests/src/fssum.c
+> +++ b/tests/src/fssum.c
+> @@ -31,6 +31,7 @@
+>  #include <endian.h>
+>  
+>  #define CS_SIZE 16
+> +#define CS_STR_SIZE (CS_SIZE * 2 + 1)
+>  #define CHUNKS	128
+>  
+>  #ifdef __linux__
+> @@ -209,16 +210,13 @@ sum_add_time(sum_t *dst, time_t t)
+>  	sum_add_u64(dst, t);
+>  }
+>  
+> -char *
+> -sum_to_string(sum_t *dst)
+> +void
+> +sum_to_string(sum_t *dst, char *s)
+>  {
+>  	int i;
+> -	char *s = alloc(CS_SIZE * 2 + 1);
+>  
+>  	for (i = 0; i < CS_SIZE; ++i)
+>  		sprintf(s + i * 2, "%02x", dst->out[i]);
+> -
+> -	return s;
+>  }
+>  
+>  int
+> @@ -523,7 +521,7 @@ sum(int dirfd, int level, sum_t *dircs, char *path_prefix, char *path_in)
+>  		exit(-1);
+>  	}
+>  
+> -	d = fdopendir(dirfd);
+> +	d = fdopendir(dup(dirfd));
+>  	if (!d) {
+>  		perror("opendir");
+>  		exit(-1);
+> @@ -547,6 +545,7 @@ sum(int dirfd, int level, sum_t *dircs, char *path_prefix, char *path_in)
+>  		}
+>  		++entries;
+>  	}
+> +	closedir(d);
+>  	qsort(namelist, entries, sizeof(*namelist), namecmp);
+>  	for (i = 0; i < entries; ++i) {
+>  		struct stat64 st;
+> @@ -674,21 +673,19 @@ sum(int dirfd, int level, sum_t *dircs, char *path_prefix, char *path_in)
+>  		sum_fini(&meta);
+>  		if (gen_manifest || in_manifest) {
+>  			char *fn;
+> -			char *m;
+> -			char *c;
+> +			char m[CS_STR_SIZE];
+> +			char c[CS_STR_SIZE];
+>  
+>  			if (S_ISDIR(st.st_mode))
+>  				strcat(path, "/");
+>  			fn = escape(path);
+> -			m = sum_to_string(&meta);
+> -			c = sum_to_string(&cs);
+> +			sum_to_string(&meta, m);
+> +			sum_to_string(&cs, c);
+>  
+>  			if (gen_manifest)
+>  				fprintf(out_fp, "%s %s %s\n", fn, m, c);
+>  			if (in_manifest)
+>  				check_manifest(fn, m, c, 0);
+> -			free(c);
+> -			free(m);
+>  			free(fn);
+>  		}
+>  		sum_add_sum(dircs, &cs);
+> @@ -696,6 +693,9 @@ sum(int dirfd, int level, sum_t *dircs, char *path_prefix, char *path_in)
+>  next:
+>  		free(path);
+>  	}
+> +	for (i = 0; i < entries; ++i)
+> +		free(namelist[i]);
+> +	free(namelist);
+>  }
+>  
+>  int
+> @@ -713,6 +713,7 @@ main(int argc, char *argv[])
+>  	int elen;
+>  	int n_flags = 0;
+>  	const char *allopts = "heEfuUgGoOaAmMcCdDtTsSnNw:r:vx:";
+> +	char sum_string[CS_STR_SIZE];
+>  
+>  	out_fp = stdout;
+>  	while ((c = getopt(argc, argv, allopts)) != EOF) {
+> @@ -871,9 +872,11 @@ main(int argc, char *argv[])
+>  		if (!gen_manifest)
+>  			fprintf(out_fp, "%s:", flagstring);
+>  
+> -		fprintf(out_fp, "%s\n", sum_to_string(&cs));
+> +		sum_to_string(&cs, sum_string);
+> +		fprintf(out_fp, "%s\n", sum_string);
+>  	} else {
+> -		if (strcmp(checksum, sum_to_string(&cs)) == 0) {
+> +		sum_to_string(&cs, sum_string);
+> +		if (strcmp(checksum, sum_string) == 0) {
+>  			printf("OK\n");
+>  			exit(0);
+>  		} else {
+> -- 
+> 2.30.0
+> 
 
