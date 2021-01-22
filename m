@@ -1,84 +1,84 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2614E2FFA61
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 03:32:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3702A300369
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 13:44:20 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DMNZW5D1vzDrZD
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 13:32:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DMf8d4BNTzDrRc
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 23:44:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
+ smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
  helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=CHmA1ryW; 
+ header.s=mimecast20190719 header.b=ZyRT6udZ; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=CHmA1ryW; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=aF7a32Dj; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+ (us-smtp-delivery-124.mimecast.com [216.205.24.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DMNZS0XkCzDrTf
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 13:32:15 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DMf8V0zFrzDqNW
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 23:44:09 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611282731;
+ s=mimecast20190719; t=1611319446;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=P7rWxr5llL78YEZM6S8QzoKIXdUc09rvD7w9i7hbUco=;
- b=CHmA1ryWQX9xexv8PQ+iu7GyGFnNVhnya0wJsB2JjOKuyg2J5wZECyKA4PTqorAhXyNgRH
- 2rVE7bpZo6PLa4iGjKKHmhS5cujPgYC4HVPE3wuE+13185r4q7Yz3rMEin+gq90sV+4CLk
- J2Exk5J3qqICnu0q9FZS6SnMM4eiMo4=
+ bh=cC9/ct5iMZo1UcSRMXNc61jAMmh7Jff3VgaV7tsP5lc=;
+ b=ZyRT6udZiFmDFoWzUjnbNPtKmtWOTgG4wzi+1kxGJm+p81h4KspNG5YhDyAQyRFnbXMhBw
+ GOZ+sVs7ajRBvm6IV+QkysQfXbWPK23h0bHbT2kcf1YW2jxyba/Tj0v4HDfyR1ecbQwbtC
+ fKKLsamo2kbR3DLvceethxFJZysm99s=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611282731;
+ s=mimecast20190719; t=1611319447;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=P7rWxr5llL78YEZM6S8QzoKIXdUc09rvD7w9i7hbUco=;
- b=CHmA1ryWQX9xexv8PQ+iu7GyGFnNVhnya0wJsB2JjOKuyg2J5wZECyKA4PTqorAhXyNgRH
- 2rVE7bpZo6PLa4iGjKKHmhS5cujPgYC4HVPE3wuE+13185r4q7Yz3rMEin+gq90sV+4CLk
- J2Exk5J3qqICnu0q9FZS6SnMM4eiMo4=
+ bh=cC9/ct5iMZo1UcSRMXNc61jAMmh7Jff3VgaV7tsP5lc=;
+ b=aF7a32Djx+AYlwbSQzFC4jgq9Ch7fH0VD1ojb1U4bsHitf95EROUF0ZxMTsWBi/DYjAgIM
+ qj5JxByEKw1F+WQa7dZfymZj8l4sTjXNGUORzSPUzoZI8msKULhG/z7ezTk1mQ//CsZlFi
+ KO8nPkhE/Y65Ej+L91U4QmfIUBsvdF0=
 Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
  [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-La6xV0PDPc-95tIt3jdBiw-1; Thu, 21 Jan 2021 21:32:09 -0500
-X-MC-Unique: La6xV0PDPc-95tIt3jdBiw-1
-Received: by mail-pj1-f72.google.com with SMTP id o3so2978359pju.6
- for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 18:32:09 -0800 (PST)
+ us-mta-449-Po3G8l5RMYWKJ9nnjJk4sg-1; Fri, 22 Jan 2021 07:44:04 -0500
+X-MC-Unique: Po3G8l5RMYWKJ9nnjJk4sg-1
+Received: by mail-pj1-f72.google.com with SMTP id e10so3537791pjj.8
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 04:44:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:date:from:to:cc:subject:message-id:references
  :mime-version:content-disposition:in-reply-to:user-agent;
- bh=P7rWxr5llL78YEZM6S8QzoKIXdUc09rvD7w9i7hbUco=;
- b=o1JANtFg3Icx9UuXzQ4DGH5ONVkKO68H0lr34G+lE8qLvUy81rtUPYjr9+MLwzjOsw
- 75dBSCQnI9OXEyiL8g6Qk3hEdw78NSfXNvnySjjGw16a/GXeKt2v8HvqV3CtmSc6pDTf
- gqUXwqbvDb5Q+1KqH5vI9wBOAVc7k77cWl4YpXiNgVoognDJ/toLX3Bd4+rZ9EmH8Z5P
- t6OkfaoAfFfthRxjcfhxPOc4tbLeNmgGe+oXrahKNSpFlPof+gCKmfmc/OHEYBcTwnuS
- mVk137rVBxMMatOjSUS4kZ230J10PA5SWzOKapJpbuZdLRXIwzmU/C8MbX/fjUIJM9KK
- T4dw==
-X-Gm-Message-State: AOAM530issP3tYf3uTGV8K5YpXBpp9KbiFUmz9mKRC3nemMbsczMsx6m
- TT1bIijz5PqNlNrl8llzKiHa4rmZaqxbBMvUapdGp4iRvkK9QgftkEtAvusLFPwJe16Kr4vwTaW
- F6v4ieVE7jnGJkwONpg47Qsnw
-X-Received: by 2002:a17:90a:4803:: with SMTP id
- a3mr2835171pjh.122.1611282728112; 
- Thu, 21 Jan 2021 18:32:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxIZ2hWIszOmAGrUqNAXh3u1WA1OlEHv7lsvSbPx1d6Thplr/ekzTznwLWzk3klJ5Myeh1K9g==
-X-Received: by 2002:a17:90a:4803:: with SMTP id
- a3mr2835155pjh.122.1611282727795; 
- Thu, 21 Jan 2021 18:32:07 -0800 (PST)
+ bh=cC9/ct5iMZo1UcSRMXNc61jAMmh7Jff3VgaV7tsP5lc=;
+ b=OOcYDcnj+qpvdKiI2Koj8JShjbp0laWm1xAJX97LMPX0TuIjLxYmTebUBH4aHvDeJE
+ 4k7Uh+G23p30GnN4ReZRaEA4ht9zoO3nPf59ALTuaGWt1iaLiuKhVMsu4E6AkVjF+y+O
+ Q76QM9dyNhIJyDlhq0/bR9hCVaSKxUPL8iZia3iL4zjwiR3Ps7zDWQiZSexnEPGBR9sF
+ jHZ8CXrIvyu5zoNJ6r0ZddK8kak+M84fPUS71Y161MmIW8z8RTs6j6jOLwV6St5kAkR8
+ lRMFCAMoJZbkfHIhMpnRBodeXRTxQ/k1vNRQ4gvaQRo/29YdKo7xT9L7qSd0LJUdZmXh
+ +pOg==
+X-Gm-Message-State: AOAM533k5TmsYrOTX8CfJbGJS+EqX/RZCtOqVz8LGBErdDI9w8Arsk0c
+ NMHZj/kTvIH2Lqx78+1y1CMq23QPy1Kue0SuPBFysK7yKD19sG8eCutKkdhKMV+jTkWls9TQH24
+ LuWIrcHqZrDMo5gEORzk+33Wx
+X-Received: by 2002:a17:90a:5889:: with SMTP id
+ j9mr5114192pji.195.1611319443705; 
+ Fri, 22 Jan 2021 04:44:03 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy62+PmjHsfg8ehBa7rURaGZhT5w634Mh2HKS2hQp/PHbPjEQS3rVmyUmJmyu/hboFEqgKCzg==
+X-Received: by 2002:a17:90a:5889:: with SMTP id
+ j9mr5114179pji.195.1611319443498; 
+ Fri, 22 Jan 2021 04:44:03 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id y10sm6816172pff.197.2021.01.21.18.32.05
+ by smtp.gmail.com with ESMTPSA id c23sm9225903pgc.72.2021.01.22.04.44.01
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Thu, 21 Jan 2021 18:32:07 -0800 (PST)
-Date: Fri, 22 Jan 2021 10:31:57 +0800
+ Fri, 22 Jan 2021 04:44:02 -0800 (PST)
+Date: Fri, 22 Jan 2021 20:43:52 +0800
 From: Gao Xiang <hsiangkao@redhat.com>
 To: Hu Weiwen <sehuww@mail.scut.edu.cn>
 Subject: Re: [PATCH v2] erofs-utils: fix battach on full buffer block
-Message-ID: <20210122023157.GG2996701@xiangao.remote.csb>
+Message-ID: <20210122124352.GA3105292@xiangao.remote.csb>
 References: <20210120051216.GA2688693@xiangao.remote.csb>
  <20210121162606.8168-1-sehuww@mail.scut.edu.cn>
 MIME-Version: 1.0
@@ -138,14 +138,20 @@ On Fri, Jan 22, 2021 at 12:26:06AM +0800, Hu Weiwen wrote:
 > to that optimization.
 > 
 > Compared with v1, this version fixes an error when compression is enabled.
+> 
 
-I cannot tell too much of it for now (since it's not an obvious update,
-I need to investagate). I will leave it this weekend.
+I have to say I still don't get the point of the whole description
+above and the patch itself honestly. even if (bb->buffers.off %
+EROFS_BLKSIZ == 0), the whole block can be used for tail-packing
+inline + inode. Assume that you testcase above is the case you
+addressed, could you elaborate them in detail?
+
+If the original behavior is no user-visiable, I'm not sure what
+issue you'd like to resolve...
 
 Thanks,
 Gao Xiang
 
-> 
 > Thanks,
 > Hu Weiwen
 
