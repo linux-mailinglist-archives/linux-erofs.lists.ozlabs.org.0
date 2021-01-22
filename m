@@ -2,91 +2,89 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20DAE30095A
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 18:12:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 774FA30095B
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 18:12:58 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DMm6V285nzDsMM
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Jan 2021 04:12:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DMm6b5Jx0zDrph
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Jan 2021 04:12:55 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1611335570;
-	bh=bJSwehG8Ea5Bcr4hhX2h1qtfNwcllj7jrewd+wAGcoo=;
+	s=201707; t=1611335575;
+	bh=/hsMVykSfG+JdD++NYU3F7+GUxTEj3QRJ+4TJOOiQE8=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=W9ioW/DhKDtRYzKg4Aq0nqjrVBeSeagUbW3fVr0U9nqGkrNE+NL2luKMjyFWXypUL
-	 fpOzlcV+mRNVEegqv37H1R+XfAoGBCPM6kjEg48TIkQEcwnLkw5GpmWVhZ4n0LSrQK
-	 7+50vcvDj48+p5jVOxyKwfSpVZJmHmsGw7f7yoLerMZ/MZ7D64eoMuvDNJtlNnzQMJ
-	 pq/wR768H1c6LqngtBJTzgygzKoGP4gUz0E1k4x4LIX6sZHY9DAtU+duoai1Qav0HF
-	 N0EqdC2pLUq9I6TKTe1snrqvRgZgqavNLqHrNM9z+4Pwz2wRA5lqVAFKFM58YRxwUN
-	 nvGNNeunQAULw==
+	b=KADBAOoKiNaGACC9F3OpXGIDQJQnmxl+Q40sDyzjwfsVZjEQb7vpi82E2LEOcCAg0
+	 fynRarZlLhOeAgEPD4on74YUsFjm7Jtxb5rmCJDFY7XS/EPE6ETQBIBetebWTk8h/0
+	 t3MN/sw+P3ja2jRPOZvNheNKxGAAwfEDXUx8KLAxiRnz1cfyHbtqqU/RrOyg6b9IsG
+	 0SRJ1jo1mN7tzonqVvGIWfeyqpnoHOocgBORFvsmz+9wDEzZaGfW0f/v8yeBzxNiJ9
+	 IXzw9EAsHowsDIz6iztbw9P1VnbZo6A4Yk74hG5+lg2yJDmaf4t+7r+kRXsMZpyHul
+	 Fi5hOQoqaCGfw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.64.148; helo=sonic301-22.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.66.146; helo=sonic317-20.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=NwPV2dyn; dkim-atps=neutral
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com
- (sonic301-22.consmr.mail.gq1.yahoo.com [98.137.64.148])
+ header.s=a2048 header.b=dA+wp7pq; dkim-atps=neutral
+Received: from sonic317-20.consmr.mail.gq1.yahoo.com
+ (sonic317-20.consmr.mail.gq1.yahoo.com [98.137.66.146])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DMm610FhhzDrnp
- for <linux-erofs@lists.ozlabs.org>; Sat, 23 Jan 2021 04:12:22 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DMm660QJqzDrnp
+ for <linux-erofs@lists.ozlabs.org>; Sat, 23 Jan 2021 04:12:28 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1611335538; bh=T6IRk9KzVcVcpj4NGj4t6gyNXkvXreEmxUsQ+Smviwg=;
+ t=1611335543; bh=YOmZR1kLxPBA8Jsxx0RKVmHIfJ06yEoV1SzEPRobr/M=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To;
- b=NwPV2dynvRGGH/3J/yGMsja5I0ArA0bzGBsZHtf/BhM9Fomuh/6cjdJ5QCLocYQWg/4h9bJ4nHSGLKkARcx4hWGrxQ42tIiILJphSpbir5G3ZbTJhcmPqRhr9b61qMINvTAyZii3gh6Wsvfnd0/LTLOSVJnCwQKkHDEU+9PqHKA5Y0vkyiWPe5jq8k2mXlQwFO1oHmwwGJD18Q/MzS5hJB2Y/EDINRPjqPBzDtUrHH00iOn1k8Ejz63hCE4XynC3dYwHhbPYcLQsKWD1/2vTTPeH8L/Q34Arb6BoW8c0CdFQHkrIycc3VBukcDNvPMKKkPgpy/3VOpWU42WNHx/Kqg==
+ b=dA+wp7pqu5RZ3gbGBe2FUdyOFefeSxO40rUY0xRC6yQry+fuoT3yiL/TeQFRjj5jP+XJla/w9ypvjaGDsNcgHIh6+InWCYbtTDwXLErqqktbBtw5XZ4wlgpyMQz7/4+zfJnkSnaqvzQ2XFmkrTVmrV21Q2O3HzWd/koJ5jIrbhBXYHjlxLZ7C+CNhuPpz2ZkceCutBOsESGa/Wd/RgLu+vKnNjNiSkRqDCrFmGFMB8mJ70MwhbLkfRX6+oAhfbQ7iqMRBzlOOQpnmRmpWVPwJRQktYurBgomLO3jzvS+/ndz3rWeJ9XjTPfx+Dgkt9Y8lfBpI9nz9UJx297nuWNxxQ==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1611335538; bh=kS3F/0IZwrF7xQdget0fE3G7syRF5YddrWYhHMHW41j=;
+ t=1611335543; bh=sF+AGWc6Fy/yZTzp2cs4UFf67BefSqqaKcKwMxEkLT9=;
  h=From:To:Subject:Date:From:Subject:Reply-To;
- b=U6Oav/jEnCz7+EwsYPlE3moWMN3MEXFCJRBwsx+wBYR4429xWsTfWpB3ZYb78nIGP4/hBWiGoctY03Gub0KN3P1F3u4XA27kxxVZfSTakeRSIeGR/ruTEorW4Pr2a9gi3z4meIBap2UPuQEU8waNJ7AAu9nxLN+aCeISqxKBPgi77H9GnKysoro+LlRH8ivTHiVyH5oSgzgvK+Jn+bE31BNnj8Wkds2AYL789W3DeRr40xe+lHeeAkBzCugIG5x18Rk+yqPhDal1A68CxfD+Djrk2lCfIeC4t6n9fSMh1h7BJbETiq1H2Jco96HPCCiyRoIz8HV6M3zGsSJRwIxy0Q==
-X-YMail-OSG: mifDiQ0VM1meSzFORiTTHnpBibDEqUzBHwWOEscw0LtsusMilxaAgUJ3tHHVe6.
- 7iRvwOW0Gd6eaH16j9eIK2hmBCjI4OkhbCdZvi9Xiqt3AJqSAEVNs5rmHxLpevyTuTraN7bfyHRS
- W_dnjg3fyg0yOJvjPBEMi8gRWw3qWcOFCRI3oHnzOsytq4adAH2CG6NtiBb2bYr27h.7HxNXDH8U
- RsC7CncygY7yGeQFFTrJSp..wOdGFcmNMiMWon.VIbHSBYvLhWOPRa3gv7zM3Cu8irVSDx84h0Cu
- QS6T6b994Lx67AoLg01A4NfhFA7ihiGocvkMyxm.B1_OTRfvb._UKcpOyHwEiyqxS1wU36WMgBIB
- WcF01NRKTlRjM2ezxTNrDMdsRtFLxcd4qV5RfuWeF.UMEM9A3ZdZ1SJCZdIqf8DTKe81AjKLBtvt
- SYYgXxDDoGhbWZ8PhmZ2SXwHkwnpCJ1LOonTp1wOkoR4bh2jRmV2k6GptQ7wVZxAa5EcGvN.afAv
- g9N5zqK1we4tEtbSfbvFtv2hKdohtP.OvSDSzJnqS3RDcf.njkdD9Qwc4FPrXj0L_FZa0gaV3Dv0
- .6WDNCF35Un1SlNDPrEo5621nvgXUai1aaE5toj.JsJbxAx.pu3mXzxKuX9BKHw3QRVuWumGgxu.
- iL_cx_fVetwQC91kWP10kfs1aIimI1WH5tWgcv1m5OUjRKi4gLyUG8rpCh1Bnvl1IAcyFfmdZhDg
- w7d7G7YvdcIZkY7GX_Ofij2pZoc4oqf7ARlbPPRrzdIokGa1EHHv.ehINm3pT3CT9d0goGG2am9g
- 4PMCKWGywNpJ8dwAUkp7BH5mJ07XilyolL19aSAWCS.rFriZvPjaNmrfj0EjaJdJLQr4bzxstzNF
- _3P0zK3e5_oRyYGO3YrOXqMHbor9yW8U8Uhn5e3qZc_bxGJtuSCaTpf9MuJU7ohINiwOYzVmKFJR
- tNvEzfVRVI.bbgNyRZ6zHjNV3wfoW2_5PyrhbH3V8e92KExFS2AYolQep7cBSwPQw_Z88.2Xc97F
- olK8rXP2Pqgjy1tzdWMCb43EaqyzKK64Zi6KxTUMxReVKBPWAdKMDkq4KGy7YSs_TN2TyjDFuHB1
- pYZ3oi12.8qcZwI6rO9hdtDsUum3BSNR9BDCQcwxA7oSwUfThX1E_8vUtfC_dJUvDuLtbLe76mIA
- .LwpMqRFq1OkXIzoAftcI1ZbOpfbWcXyGnVf375deScAQSReuaKqL5PZRMBn5F_wce8XrC9YG5KJ
- K5SMnj7KxJz2PsKz2FH6aPtolh37KF0dGn1VgFmK.WNfa5HPBUu8WG_uZkBtPUC7I7AYU7J8sVct
- P11ClwBpD6GFQH6ZZWNDutpAo3P0GtYn8Jmv0OADhOqeFaPPWsS5wQJ2jFe4ozg1YaOm0Zlk_pJd
- aHdDhI51MNAn.S9gtxEjpkehKQLQq4015m6FONz0MIHytL1e7D5WpyvNEXW7HKDeyP6o5yzMz4E3
- oeiV21OE58YzkjPS8n1xoHYerHnaXhv6Il1ZWYF4lx1_0a7CyTVA..aKyaVxW.ljzTo1PRQ5m8QJ
- 3fu15Nd6QLHy6DkpJ8yMrKs1v8RNs446acmdX60jJUHwJ5ElnvCoL_Rpw4kkd2nA1jQA1jX_bjB7
- 78yIx3M9niZoyBDSWVC6H7nCCuUBB3.EjC71aoA.eab12uSiZNalJ9qiRCx.suAR0RDpYppR2UOY
- x73m6WpihdeU5NDMlJqgYdWtSItuQdBJJWqy9TZmjapHn844G8X0Jp1lNAopwVURrfJOuy3R7pSR
- EJJrgEZPT.hvORGwdauETDE4Knd8l9DbHVtKoLyg1QZR83iyhUjiBvzum4uodjnlIfvxzBOVKwxP
- myHmgSV8wpub3DFg5KPS8qeE6ZwpZDvil7Z1YT2Mvwkz3lXoXsqTouaaa.e1Z.0ccOgCrxx2WjPU
- 2PO6lr8rXig2mEsK1NTyjh1dKuA_KMax7AznsMdKJVi2XGsJ2cf7s9m7r7bnlUoAru9kYqLvn8Tf
- Q0CjANb0sM1vz8LizP5VWNV7ODBvS.ma5PRXIaraU31xEUvDbj4FHTtRRRRCVjx4N_j.gI07FfQf
- 3glnMPxNslIVsmYoUKnc_6FKISEMa_5jkou2E_T7rd9HaQprE2FIjSVh._E63yo_WOj.l_TB74Ih
- BGZqD2VWxFWpTEQcj0Urv56dQY4FuMWTk06PbppHOB6vIpTmYCE.f6VhUvvuAl6g0yuC1G.rsZUQ
- XSYEQtE2_B6n0VOso1n3SLp3Ip1Z9erLxy.8kbQDWDlAU0LEHG7RtOsgFia4q5FhlkF5wUsc5SMe
- OCxhDFeaCgoyzyT2jGIAwbKZMurAsXvOp1CfdiTTTc.Ha8nPgS_jJCvxjimKUn9jpCE9qCAVnppG
- c5mleABgCAms_P3IuanZun4rvEpU2EqmzBkCrNTV5COrGzKo2y8485XXZ9V.J0WywvqWn14K4dRd
- rvHeCQXXe5sDqCIz6p.SWMOWdYBe9yUDwP3NJakU8x7ftWYDqm59gzjhvke9mZfLkeDGIHhj.Hvd
- Y2g--
+ b=EkfFhlmEfKzlzgmsv2hftuR+jYLLH/dA+qVqSk7JyPi7NUYVOCWHml91go62lk343GS9Xjizdv6SO+4GaVnP1kwDk+wEEltMor0gpTWzKLYsOKvcnA0AHCdf2OfoaygChgBQAeLT03HDUSGNu0G1lWv0RWruVRh4u2eN3nFOcuwRwyvtUf7vl7R2jo3zybcCJnbqutOZ/pYm4XNfiCHM55mFGCZs/OvRW/+AKdnWLsNbVNYUPDF/+iBK5POUKjp5bwUw2lZqWaA15JaFa+CQ05pxCAtEWwLnZHQSUG6zXR+TXfURK2/GoPqsBnL2PvlmdBzWwOpB2viGkGxt1iQ6Lg==
+X-YMail-OSG: 89YNmuMVM1nkd9X9PmfvCwwbvwLaHhjj3_7B.oVnUd4OkffuDMTriAFxGFZ3L9J
+ KqgbfurpvBmL9XdQ5IkBJRbW_gf9M77h01l0B7oBJTUk6lGVbA9y6yLXA6VBfUM0eiwOX776Hu5y
+ .qzkjCKLVs2sU1g2B_1ehVOK8G7aX87vs6ASH7NdU9jq4eEIooPExVlf8D3VjgF5rBw44W.FDFft
+ nAyGHtR8LwrRgg6PgL.FwO60eI1l7AbKfaB8CL6SEPlIqhDnXki07jiNZcBa97Fm_IatrOrluL5g
+ d_p6F5BOQ95856DQBYv1L4he3lwtlQdz6_l6XZUmxgJfdVD14o7T4v62rEKORlWW9Ovt7Y5LiN3X
+ icABUoBSpFRe6qZCExWetbblayLFhGpXnaw5GbxNS61URo7YaWAlIzDZIv_G4dQT7DcGKMiQLnWc
+ K8wikO7wtU.oxVM2Fu2rfVxU06UpuBzD0zZqjaM4xme4vmDZcyYuC0qgMJP7epOYB_uYYe5Wweox
+ uNuCH2ijjZjyt1aS6O6Xj3YCNZX.BbdNnEtZuVW97HvXa_aRRo0pJHFH2vLpZdPFiIhesfv7651O
+ 2gRQUCzFnoxZqPCwSlvyD_MU5FG.sbB_OYkudgJwA5ImivQuQ1Icl7dZhbKZuHhLHwPpOjq.oNYv
+ jwqwZidcXoThwYmjYorFeTq0m9fA4aIIKIu8rAnmWLkdjFUN3iC95QTfmCNK9fcEyPPm3Cu5Tjbx
+ GkC.M3n_txuvzMI71z.a2R4wW4sLCAqOM7cqBBqkPtCqZ1.hI7r_j58zuDET4LBpb9XM3PaODRef
+ pdEFI6HypZJ4HbdjO3Xj8aonHH43bKMQbKIX_1tf..jq99E10Qost4xMed_YyqfCvNHNM6oYIVxZ
+ LLrdty.8sZ0xhy69lAbr1sAdSK43pdlYluRb4_CG9rHuxIS7rR0utDX91wRRYMIR81F3BjlXkFxg
+ GYoKpUx7fte48lAoK945.vgGajNdyr6Mkg3SofDA6.XHDxqni3dgedlHkV27bfKf15AGShBu_xxw
+ QHAbzkwSFbU9VR1XpAGXljGao6jQuvUxP0ROqaeYS6U8FVP__VugC6nFzc3WPkGAxajcoIFqNedj
+ FtBkboB917iL0n.o40U2RwaupQNbguiGUEq1UGByIcgGx6BvCXWtpVzauFIQFNm7qI9f7NLqEUY1
+ CWsntXbpS3dx3EXzZOejNpBkWBYtIC6tSwp51HbyypHRnHweQTT.z3aAEmwOIMBZW1u.20aE0UNl
+ a.K8UrVkpSpxQKV5Lb9SGumvOkdydwu13jfVVu2HUpzvh53HxfQDWuenNPoDjHnc2Fk210GZen97
+ j89qfPLxkGGKaFfgw0jcXV6tuB8C9Rd4kkLLYJnLlCtyZNe5IRTKGdTJjWinz2aCkj6RRgVBsbK6
+ 653qRCIe9BLNYMZ_osVcAB4MiDiJXpH0NI0EDusDeAbTJ349QKg.DflFIAQ_1hS1fqR.vtmRPrHs
+ ZM66951hcgF6lMy18Bwv51jfJ9HouYGXKixL73Uw40Bxuw2DwCEMoUYD.wR5OCyL3ev2wcYPphoA
+ 7YMDbuSH8Xq1CN6YyzuV4xOdmnKx9mTSOcqKbRx7CkzvKpWaHBVyWXexnVw4ondGoj_H6GEosH2a
+ jx7nntvVbspFZwO6lCYHe7r9MtAKyshoFuLEx8RfV.pZIHWU6_1aehTq6Bv2ddGmi5oPALVoEQJU
+ zADw3e_eSH3cIiJdkWRsn5.xfitzzXRefPMflbVG4O2rHbk9AX6O_uXm8XIU2c_mqDMHuG_YqwHL
+ 7VhJuUMOlkzEQBF7MaBFNAVKhstWHj4w6PjgizLfHSgEflra_ZGbo85Q4zl4XUXgB08VHodJpTya
+ p_deuErR_spf9ss6ZxIRY9S_3T41YXNIoX16ltV.kB9bQzypIIrrmWMAb5zibZJNVpt9feDpnsFZ
+ gjqMr.HLpavp.u8dkr5Sty6WJgoC_kj8MaOwmMqkuHFIgeStILPwRmesyxymEYiSeM5cPpIZIk2t
+ GPn.kH.jgaTTMJyijEMowezn8Sz46HvC7Qg716O0QZo9VZFJmO8NvA48PIqO5KaL0Uj.3Qu7pIUJ
+ EMf.O8gFszSO8LsRPIVuRGeFPP923.dRKBNjN9wsCdSRpjdjmgKodpYiw.LSDak9jdqyzGGCJOvZ
+ PjCZ7iMuOF.HqupjQEH5XH8CPu4p2.g45Vp5GDlL.guXYoA76GslSe0mY83cim_InU0MD8sy9tyq
+ JtW1pa8LcpZPEekJuKLKRTYXe74o6iVu0AtBdi8mSCw50YyDXsvQ110OLkEGo7Utiv.t_R.c1ytB
+ 0kLEFrIR.ykUJ7Y7uTsayhc2E2C4yfwVy5AghCfJ1eMZwDruNfA_nbL9WAvp0pSE3fUKLfTrZq95
+ ya_iYq0JM8pLd3C.AOCbzu9kdedfwjcqRv31M8vLPaew4v33SreDiGysoZ0Vwg1x9AogpS9g5X2_
+ OL3OTq_vQOv5wK.Z1t7acdutU.orSXEAfbfntdM4d1uTsnRNxDfa7y__e_liOVpM-
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic301.consmr.mail.gq1.yahoo.com with HTTP; Fri, 22 Jan 2021 17:12:18 +0000
+ sonic317.consmr.mail.gq1.yahoo.com with HTTP; Fri, 22 Jan 2021 17:12:23 +0000
 Received: by smtp414.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
  ID 421cb1d2e6456159bc18db7d03d7fd0e; 
- Fri, 22 Jan 2021 17:12:12 +0000 (UTC)
+ Fri, 22 Jan 2021 17:12:17 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 1/3] erofs-utils: get rid of `end' argument from
- erofs_mapbh()
-Date: Sat, 23 Jan 2021 01:11:51 +0800
-Message-Id: <20210122171153.27404-2-hsiangkao@aol.com>
+Subject: [PATCH v7 2/3] erofs-utils: introduce erofs_bfind_for_attach()
+Date: Sat, 23 Jan 2021 01:11:52 +0800
+Message-Id: <20210122171153.27404-3-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20210122171153.27404-1-hsiangkao@aol.com>
 References: <20210122171153.27404-1-hsiangkao@aol.com>
@@ -109,146 +107,131 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Hu Weiwen <sehuww@mail.scut.edu.cn>
+From: Gao Xiang <hsiangkao@aol.com>
 
-`end` arguement is completely broken now. Also, it could
-be reintroduced later if needed.
+Seperate erofs_balloc() to make the logic more clearer.
 
-Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
+Cc: Hu Weiwen <sehuww@mail.scut.edu.cn>
 Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- include/erofs/cache.h |  2 +-
- lib/cache.c           |  6 ++----
- lib/compress.c        |  2 +-
- lib/inode.c           | 10 +++++-----
- lib/xattr.c           |  2 +-
- mkfs/main.c           |  2 +-
- 6 files changed, 11 insertions(+), 13 deletions(-)
+ lib/cache.c | 81 +++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 50 insertions(+), 31 deletions(-)
 
-diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index 8c171f5a130e..f8dff67b9736 100644
---- a/include/erofs/cache.h
-+++ b/include/erofs/cache.h
-@@ -95,7 +95,7 @@ struct erofs_buffer_head *erofs_balloc(int type, erofs_off_t size,
- struct erofs_buffer_head *erofs_battach(struct erofs_buffer_head *bh,
- 					int type, unsigned int size);
- 
--erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb, bool end);
-+erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb);
- bool erofs_bflush(struct erofs_buffer_block *bb);
- 
- void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke);
 diff --git a/lib/cache.c b/lib/cache.c
-index 0d5c4a5d48de..32a58311f563 100644
+index 32a58311f563..f02413d0f887 100644
 --- a/lib/cache.c
 +++ b/lib/cache.c
-@@ -257,16 +257,14 @@ static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
- 	return blkaddr;
+@@ -125,25 +125,25 @@ int erofs_bh_balloon(struct erofs_buffer_head *bh, erofs_off_t incr)
+ 	return __erofs_battach(bb, NULL, incr, 1, 0, false);
  }
  
--erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb, bool end)
-+erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb)
+-struct erofs_buffer_head *erofs_balloc(int type, erofs_off_t size,
+-				       unsigned int required_ext,
+-				       unsigned int inline_ext)
++static int erofs_bfind_for_attach(int type, erofs_off_t size,
++				  unsigned int required_ext,
++				  unsigned int inline_ext,
++				  unsigned int alignsize,
++				  struct erofs_buffer_block **bbp)
  {
- 	struct erofs_buffer_block *t, *nt;
+ 	struct erofs_buffer_block *cur, *bb;
+-	struct erofs_buffer_head *bh;
+-	unsigned int alignsize, used0, usedmax;
+-
+-	int ret = get_alignsize(type, &type);
+-
+-	if (ret < 0)
+-		return ERR_PTR(ret);
+-	alignsize = ret;
++	unsigned int used0, usedmax;
  
- 	if (!bb || bb->blkaddr == NULL_ADDR) {
- 		list_for_each_entry_safe(t, nt, &blkh.list, list) {
--			if (!end && (t == bb || nt == &blkh))
--				break;
- 			(void)__erofs_mapbh(t);
--			if (end && t == bb)
-+			if (t == bb)
- 				break;
+ 	used0 = (size + required_ext) % EROFS_BLKSIZ + inline_ext;
++	/* inline data should be in the same fs block */
++	if (used0 > EROFS_BLKSIZ)
++		return -ENOSPC;
++
+ 	usedmax = 0;
+ 	bb = NULL;
+ 
+ 	list_for_each_entry(cur, &blkh.list, list) {
++		int ret;
+ 		unsigned int used_before, used;
+ 
+ 		used_before = cur->buffers.off % EROFS_BLKSIZ;
+@@ -179,34 +179,53 @@ struct erofs_buffer_head *erofs_balloc(int type, erofs_off_t size,
+ 			usedmax = used;
  		}
  	}
-diff --git a/lib/compress.c b/lib/compress.c
-index 86db940b6edd..2b1f93c389ff 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -416,7 +416,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
++	*bbp = bb;
++	return 0;
++}
++
++struct erofs_buffer_head *erofs_balloc(int type, erofs_off_t size,
++				       unsigned int required_ext,
++				       unsigned int inline_ext)
++{
++	struct erofs_buffer_block *bb;
++	struct erofs_buffer_head *bh;
++	unsigned int alignsize;
++
++	int ret = get_alignsize(type, &type);
++
++	if (ret < 0)
++		return ERR_PTR(ret);
++	alignsize = ret;
++
++	/* try to find if we could reuse an allocated buffer block */
++	ret = erofs_bfind_for_attach(type, size, required_ext, inline_ext,
++				     alignsize, &bb);
++	if (ret)
++		return ERR_PTR(ret);
  
- 	memset(compressmeta, 0, Z_EROFS_LEGACY_MAP_HEADER_SIZE);
+ 	if (bb) {
+ 		bh = malloc(sizeof(struct erofs_buffer_head));
+ 		if (!bh)
+ 			return ERR_PTR(-ENOMEM);
+-		goto found;
+-	}
+-
+-	/* allocate a new buffer block */
+-	if (used0 > EROFS_BLKSIZ)
+-		return ERR_PTR(-ENOSPC);
+-
+-	bb = malloc(sizeof(struct erofs_buffer_block));
+-	if (!bb)
+-		return ERR_PTR(-ENOMEM);
++	} else {
++		/* get a new buffer block instead */
++		bb = malloc(sizeof(struct erofs_buffer_block));
++		if (!bb)
++			return ERR_PTR(-ENOMEM);
  
--	blkaddr = erofs_mapbh(bh->block, true);	/* start_blkaddr */
-+	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
- 	ctx.blkaddr = blkaddr;
- 	ctx.metacur = compressmeta + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
- 	ctx.head = ctx.tail = 0;
-diff --git a/lib/inode.c b/lib/inode.c
-index 640068f4147c..ee0afacd4b40 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -148,7 +148,7 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
- 	inode->bh_data = bh;
+-	bb->type = type;
+-	bb->blkaddr = NULL_ADDR;
+-	bb->buffers.off = 0;
+-	init_list_head(&bb->buffers.list);
+-	list_add_tail(&bb->list, &blkh.list);
++		bb->type = type;
++		bb->blkaddr = NULL_ADDR;
++		bb->buffers.off = 0;
++		init_list_head(&bb->buffers.list);
++		list_add_tail(&bb->list, &blkh.list);
  
- 	/* get blkaddr of the bh */
--	ret = erofs_mapbh(bh->block, true);
-+	ret = erofs_mapbh(bh->block);
- 	DBG_BUGON(ret < 0);
- 
- 	/* write blocks except for the tail-end block */
-@@ -522,7 +522,7 @@ int erofs_prepare_tail_block(struct erofs_inode *inode)
- 		bh->op = &erofs_skip_write_bhops;
- 
- 		/* get blkaddr of bh */
--		ret = erofs_mapbh(bh->block, true);
-+		ret = erofs_mapbh(bh->block);
- 		DBG_BUGON(ret < 0);
- 		inode->u.i_blkaddr = bh->block->blkaddr;
- 
-@@ -632,7 +632,7 @@ int erofs_write_tail_end(struct erofs_inode *inode)
- 		int ret;
- 		erofs_off_t pos;
- 
--		erofs_mapbh(bh->block, true);
-+		erofs_mapbh(bh->block);
- 		pos = erofs_btell(bh, true) - EROFS_BLKSIZ;
- 		ret = dev_write(inode->idata, pos, inode->idata_size);
- 		if (ret)
-@@ -881,7 +881,7 @@ void erofs_fixup_meta_blkaddr(struct erofs_inode *rootdir)
- 	struct erofs_buffer_head *const bh = rootdir->bh;
- 	erofs_off_t off, meta_offset;
- 
--	erofs_mapbh(bh->block, true);
-+	erofs_mapbh(bh->block);
- 	off = erofs_btell(bh, false);
- 
- 	if (off > rootnid_maxoffset)
-@@ -900,7 +900,7 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
- 	if (!bh)
- 		return inode->nid;
- 
--	erofs_mapbh(bh->block, true);
-+	erofs_mapbh(bh->block);
- 	off = erofs_btell(bh, false);
- 
- 	meta_offset = blknr_to_addr(sbi.meta_blkaddr);
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 49ebb9c2f539..8b7bcb126fe9 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -575,7 +575,7 @@ int erofs_build_shared_xattrs_from_path(const char *path)
+-	bh = malloc(sizeof(struct erofs_buffer_head));
+-	if (!bh) {
+-		free(bb);
+-		return ERR_PTR(-ENOMEM);
++		bh = malloc(sizeof(struct erofs_buffer_head));
++		if (!bh) {
++			free(bb);
++			return ERR_PTR(-ENOMEM);
++		}
  	}
- 	bh->op = &erofs_skip_write_bhops;
- 
--	erofs_mapbh(bh->block, true);
-+	erofs_mapbh(bh->block);
- 	off = erofs_btell(bh, false);
- 
- 	sbi.xattr_blkaddr = off / EROFS_BLKSIZ;
-diff --git a/mkfs/main.c b/mkfs/main.c
-index abd48be0fa4f..d9c4c7fff5c1 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -304,7 +304,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
- 	char *buf;
- 
--	*blocks         = erofs_mapbh(NULL, true);
-+	*blocks         = erofs_mapbh(NULL);
- 	sb.blocks       = cpu_to_le32(*blocks);
- 	sb.root_nid     = cpu_to_le16(root_nid);
- 	memcpy(sb.uuid, sbi.uuid, sizeof(sb.uuid));
+-found:
++
+ 	ret = __erofs_battach(bb, bh, size, alignsize,
+ 			      required_ext + inline_ext, false);
+ 	if (ret < 0)
 -- 
 2.24.0
 
