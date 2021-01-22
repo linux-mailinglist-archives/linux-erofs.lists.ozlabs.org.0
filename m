@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B4FB2FF95C
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 01:22:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB18F2FF981
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 01:35:07 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DMKhC28zszDrWR
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 11:22:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DMKzF0BgJzDrTg
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 11:35:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -15,72 +15,74 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=E2O+/PCi; 
+ header.s=mimecast20190719 header.b=G9T6jZ5I; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=gxNyz3IU; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=FdtYEAIe; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
  (us-smtp-delivery-124.mimecast.com [63.128.21.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DMKh55DgTzDrTC
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 11:21:56 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DMKyd18k4zDrWX
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 11:34:32 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611274913;
+ s=mimecast20190719; t=1611275669;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=xArGlEBATC4FBMfxUc7lH33aCqS4k4uJUVX7nlXoC/0=;
- b=E2O+/PCixV3D8527WkW/M7Oci3nMmd4/Q0oZQG2vusDe+l5b9K7XqoTi7B+lng5e6jCSFJ
- rczk3pu5waNJOUnu0RD+n0Y6ZkSHbbRnr4jrju/zs//nqqlqX3fB9cUZsoYLD42stZ0cJK
- T/KYkZ4dUmZCdrlUGhu7d4QTx7/FbBc=
+ bh=2k3iQwjsurF66zeEFVvUYiy0lFruuI+K2UHgisCinDI=;
+ b=G9T6jZ5Iat+RCUmxglF7quIWRpXkd/OoQYuURv6MEYhbo/2/I1M03g2DC2KZFQXcyDjuWK
+ vH1oWaPuWaCQxb5FvI7KuOShPSXDjncKPpDEydWpYF2dzSvnBoosqvkxix3l2DjBMq5VqR
+ sYWsp7K+yn+4/KBCJKoGhRjFyvUi/NA=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611274914;
+ s=mimecast20190719; t=1611275670;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=xArGlEBATC4FBMfxUc7lH33aCqS4k4uJUVX7nlXoC/0=;
- b=gxNyz3IUEihz7gHHuOuAB1olnFBOBVxR9ZOQMb9Kpl6XbSzcwO7cGvvkkDR/mRqOHhDfrt
- 5TZqbCUPYOsXiB3KVXWTnmwi8ZJxGm+UYd0g8WDJDUSoFj5zyx9CazEmr1NvOjnJttJU7y
- e/GpuR5lCinYqr3WiP9MCb0C7zb8/0c=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-4eQR8UDINfap1RM-gkCtNA-1; Thu, 21 Jan 2021 19:21:51 -0500
-X-MC-Unique: 4eQR8UDINfap1RM-gkCtNA-1
-Received: by mail-pl1-f200.google.com with SMTP id c18so2081585pls.8
- for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 16:21:51 -0800 (PST)
+ bh=2k3iQwjsurF66zeEFVvUYiy0lFruuI+K2UHgisCinDI=;
+ b=FdtYEAIe9RwbP4k2xyJID0J7jKL6YahIbNC/ShdwFf6hdAo+6ulLu1g04XY7GkXvjPNhbo
+ Gbx8mqk9WUeolsqdz7N1BlD7x81dELmJgwSxsC9hyD2DsTltabolw8ktAeJCyInN7InZl8
+ yJ4IH48OlTa2SBxUvLEsgFT64sxH7tc=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-LzsGHrhBNtOf-d3d-_Fd-A-1; Thu, 21 Jan 2021 19:34:28 -0500
+X-MC-Unique: LzsGHrhBNtOf-d3d-_Fd-A-1
+Received: by mail-pj1-f72.google.com with SMTP id hg20so2550129pjb.3
+ for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jan 2021 16:34:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:date:from:to:cc:subject:message-id:references
  :mime-version:content-disposition:in-reply-to:user-agent;
- bh=xArGlEBATC4FBMfxUc7lH33aCqS4k4uJUVX7nlXoC/0=;
- b=lOCNWLRt5xJuCy7QLsywh60B14fHONwa6kMmm2hxCV7fug5h0IYqA4nnJ8Ovhawgam
- dQCuL50CMu+/PcLBduWI25ORzSmv01KSyka7/aVA4bSqfA2nOpi/cb1ylvJ1tiZ0nG8b
- r1BenJZd6ztyRCB7xtIqn3V7EcAdmyBMalAOXnub53j00Tr6+zP1WQzoOd5a0Ac+nvbM
- n9Dk4eO+cVlCz1Rrho9Kn8ptIN67Qmx8J8lXJBfQ3SLrnWueMThMpxaKWQ6p+JX6qUCG
- 4747QJMMqkJeFW5BHZS/Ht7TBB0KJaPiyQeefVN8JIzMbwpVYein1WVCs7ucFRrfEmOm
- tsEg==
-X-Gm-Message-State: AOAM530zrzl6kEg/OmQre5YgO/+pszjIMqJqOGMqk7iVuHma5i3H1iL/
- 2dHWCdeBNGG1jX+W36DY83Sd1DgplwU4U478R6vxaa4Qo276NvFoxs846tdsP2HGohcGhEoGbYT
- a7FfSlCcadzi90WQCmS5bFE/B
-X-Received: by 2002:a63:d418:: with SMTP id a24mr1881965pgh.73.1611274909689; 
- Thu, 21 Jan 2021 16:21:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwRlHutC3RcJijmd4nWigQkpmxC+yiUEmnOSRRE+w5i+MXVbDRglQ848mGWVDPd6WdLAXajRg==
-X-Received: by 2002:a63:d418:: with SMTP id a24mr1881955pgh.73.1611274909520; 
- Thu, 21 Jan 2021 16:21:49 -0800 (PST)
+ bh=2k3iQwjsurF66zeEFVvUYiy0lFruuI+K2UHgisCinDI=;
+ b=AGJJCeIAFMLlykB4s2wDHo0g6mhL/5Wx22uibucpohWdLdFdxoqn8/DsMsNYjvPgXg
+ 7gjUIeTUQbWbuWIo5mRqi8lDgrj/lo+dq80/F+/krAjgj+I+1/ZTgnmKclky+6kWmZiH
+ 3/XDGyhgIGgzg/DSrmHSe0feWSAX2y97y8rRC7wu2ULEpZnoknxcR7n1jsee7J6BuaKt
+ qSdb53niWhFyyb75T5E3A+/CrbtB2c0sCwy8D9yd5jZ8jXNVKtJBI8/WQzoR+IzXdoRe
+ TCBsMB8AnkBc6AcsTSQSBrwGGUFzaflxmcULW8FvagYB+akBfFP5+vOqvmu33inQ3HFX
+ wv+Q==
+X-Gm-Message-State: AOAM530+cPHnNVXHXj703tm8lM8geG8nDvdiSNcmdtucRL2+n+Bo5sgR
+ 5tUaSX/fMVWBqOpyMmoY5JaXo5zsfRdaSMpittMa7egfUhisAqmdtp1i4JFv5h5vOzwqt2TWffE
+ oW6OjsP0HLJEoSA367UpVVIKt
+X-Received: by 2002:aa7:9707:0:b029:19d:c5a8:155e with SMTP id
+ a7-20020aa797070000b029019dc5a8155emr2025008pfg.62.1611275666908; 
+ Thu, 21 Jan 2021 16:34:26 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwvs8oh8HzJVZinYSVTZfjUeAo4axs22f1501JZ81ALhfoTgx2I8BiDNlX51FgJZrvrl/zCdA==
+X-Received: by 2002:aa7:9707:0:b029:19d:c5a8:155e with SMTP id
+ a7-20020aa797070000b029019dc5a8155emr2024983pfg.62.1611275666502; 
+ Thu, 21 Jan 2021 16:34:26 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id l2sm5298144pga.65.2021.01.21.16.21.47
+ by smtp.gmail.com with ESMTPSA id m8sm7232175pjr.39.2021.01.21.16.34.24
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Thu, 21 Jan 2021 16:21:49 -0800 (PST)
-Date: Fri, 22 Jan 2021 08:21:39 +0800
+ Thu, 21 Jan 2021 16:34:26 -0800 (PST)
+Date: Fri, 22 Jan 2021 08:34:16 +0800
 From: Gao Xiang <hsiangkao@redhat.com>
 To: Hu Weiwen <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH 1/7] erofs-utils: tests: fix when lz4 is not enabled
-Message-ID: <20210122002139.GE2996701@xiangao.remote.csb>
-References: <20210121163715.10660-1-sehuww@mail.scut.edu.cn>
- <20210121163715.10660-2-sehuww@mail.scut.edu.cn>
+Subject: Re: [PATCH] erofs-utils: fuse: fix random readlink error
+Message-ID: <20210122003416.GF2996701@xiangao.remote.csb>
+References: <20210121112702.GA2918836@xiangao.remote.csb>
+ <20210121163143.9481-1-sehuww@mail.scut.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <20210121163715.10660-2-sehuww@mail.scut.edu.cn>
+In-Reply-To: <20210121163143.9481-1-sehuww@mail.scut.edu.cn>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Authentication-Results: relay.mimecast.com;
  auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
@@ -104,39 +106,65 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Jan 22, 2021 at 12:37:09AM +0800, Hu Weiwen wrote:
+Hi Weiwen,
+
+On Fri, Jan 22, 2021 at 12:31:43AM +0800, Hu Weiwen wrote:
+> readlink should fill a **null terminated** string in buffer.
+> 
+> Also, read should return number of bytes remaining on EOF.
+> 
+> Link: https://lore.kernel.org/linux-erofs/20210121101233.GC6680@DESKTOP-N4CECTO.huww98.cn/
 > Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
 
-Generally it can be directly fixed to check_PROGRAMS =...
+Thanks for catching this!
 
-Otherwise, it looks good to me,
-Reviewed-by: Gao Xiang <hsiangkao@aol.com>
+> ---
+>  fuse/main.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fuse/main.c b/fuse/main.c
+> index c162912..bc1e496 100644
+> --- a/fuse/main.c
+> +++ b/fuse/main.c
+> @@ -71,6 +71,12 @@ static int erofsfuse_read(const char *path, char *buffer,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (offset >= vi.i_size)
+> +		return 0;
+> +
+> +	if (offset + size > vi.i_size)
+> +		size = vi.i_size - offset;
+> +
+
+It would be better to call erofs_pread() with the original offset
+and size (also I think there is some missing memset(0) for
+!EROFS_MAP_MAPPED), and fix up the return value to the needed value.
 
 Thanks,
 Gao Xiang
 
-> ---
->  tests/src/Makefile.am | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tests/src/Makefile.am b/tests/src/Makefile.am
-> index 4959592..ad272d6 100644
-> --- a/tests/src/Makefile.am
-> +++ b/tests/src/Makefile.am
-> @@ -2,11 +2,12 @@
->  # Makefile.am
+>  	ret = erofs_pread(&vi, buffer, size, offset);
+>  	if (ret)
+>  		return ret;
+> @@ -79,10 +85,16 @@ static int erofsfuse_read(const char *path, char *buffer,
 >  
->  AUTOMAKE_OPTIONS	= foreign
-> -noinst_PROGRAMS		= fssum badlz4
-> +noinst_PROGRAMS		= fssum
+>  static int erofsfuse_readlink(const char *path, char *buffer, size_t size)
+>  {
+> -	int ret = erofsfuse_read(path, buffer, size, 0, NULL);
+> +	int ret;
+> +	size_t path_len;
+> +
+> +	erofs_dbg("path:%s size=%zd", path, size);
+> +	ret = erofsfuse_read(path, buffer, size, 0, NULL);
 >  
->  fssum_SOURCES = md5.c fssum.c
+>  	if (ret < 0)
+>  		return ret;
+> +	path_len = min(size - 1, (size_t)ret);
+> +	buffer[path_len] = '\0';
+>  	return 0;
+>  }
 >  
->  if ENABLE_LZ4
-> +noinst_PROGRAMS += badlz4
->  badlz4_SOURCES = badlz4.c
->  badlz4_LDADD = ${liblz4_LIBS}
->  endif
 > -- 
 > 2.30.0
 > 
