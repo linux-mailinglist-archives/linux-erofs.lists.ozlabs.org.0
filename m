@@ -2,74 +2,91 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BF863007FB
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 16:58:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D270300959
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jan 2021 18:12:44 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DMkS75xPfzDr68
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Jan 2021 02:57:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DMm6K34xjzDrq8
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Jan 2021 04:12:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
+	s=201707; t=1611335561;
+	bh=gtFaGnWhVtW+MZT/tG0VddjTF6Fig3frthNtXkK++gM=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=LOPlDi11n6x5ko3aoktP0Te/QvBi31ET9Y5KtGfViu/rXu2MwI/SlL8pZTHoFqNJU
+	 FlCdL6k6DxNnZEHnjnIwB13RhfWcP2wPW0+HdPsrtJ4fL63SIt7xZ+cSdGFKFGOwVr
+	 AvnqkSMBk04AAPTZ0I8DiaFaIaeWgZ1cnc/vHUrIasTe7YkAJWc3SLYfGf7oaGsz4t
+	 xSJ+IVasea74orfOBV/C+nq99KjGqAy/aQl/G9Kk3knBxMqPEKd4v48uklDdQzmKa6
+	 K8A1CuxE4y2p9MvlUm0fu9H0JnS5BjxnqR46nfgJjaGvf9f+eztFaxmpCmu7cfcm0l
+	 4CumYcjiNxbgA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::531;
- helo=mail-pg1-x531.google.com; envelope-from=jnhuang95@gmail.com;
- receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.64.31; helo=sonic307-55.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=kx0C4dcg; dkim-atps=neutral
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com
- [IPv6:2607:f8b0:4864:20::531])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=JXdW1J9X; dkim-atps=neutral
+Received: from sonic307-55.consmr.mail.gq1.yahoo.com
+ (sonic307-55.consmr.mail.gq1.yahoo.com [98.137.64.31])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DMkRv2Zy9zDqyJ
- for <linux-erofs@lists.ozlabs.org>; Sat, 23 Jan 2021 02:57:42 +1100 (AEDT)
-Received: by mail-pg1-x531.google.com with SMTP id z21so3989654pgj.4
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jan 2021 07:57:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
- h=subject:to:cc:references:from:message-id:date:user-agent
- :mime-version:in-reply-to;
- bh=x83Ig9OK8iFjtbOGkFRLQvta1yarBpJPGNFd61nzoYU=;
- b=kx0C4dcgLx+dasU1uj0hefznj5AqHexhVZTwxVVqPKqkyngey1fKNYwjPRFDhpyYK0
- RRy7ooyyU2ytVPl3dTX2YBencnXQUdBR4hSfzob/lFg22drnK07STlzIL3GGu6f8b78C
- i2FuA/D7uMMTvdY0fnPPEMNUWgffNDYMy7g0Kwnk+DbYC6hCqnD+zW/cQNZwi5759lKh
- U8dg7dyVnYgjM+S9rtXX5PbKrk8Ew6+EG2lHP7AsOJNnLjXP00rF8JFZ+WEszSPv4vPJ
- dx98rQEL6/ngzrAWY7LAsIL/WEt42Y5fob4xgk+NaHbbuN/sDB+J0MyyhRTtt42UjBrd
- fe+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:subject:to:cc:references:from:message-id:date
- :user-agent:mime-version:in-reply-to;
- bh=x83Ig9OK8iFjtbOGkFRLQvta1yarBpJPGNFd61nzoYU=;
- b=kRsvCmvAPPed6Oq5EPwflfxtU1lQxfRnmJJbgXm6FC9WTTKKLJnhZ1FQOqMO1Nchfa
- WMwwNgRnJUdNRxWoE6V55B+nI/4+T3bvDkqPjgNRRIGjoFFtGGeeWDf6L9OcGICRCNyX
- b2n6zGq4QkGJbMWsiP2ekF7VrYl5zl8DVcoLBi9qOC+5FWFPh6yQtk3dxdwmQ6+d9ckR
- bFwPthzpDo3GTYfn4Ph/T7jEWvpgi7vs0DHu/4Sk/kqqybF7SzyZUeFxhb7Qb1bCaotm
- y196fp4jR/O47TorEOQcR75OphOcV/9szWSD2k3zGBLsIIc09WsaF13JAACh1elC4QyT
- PYhg==
-X-Gm-Message-State: AOAM5300pP5prx0sujK1yLuSpCKO/ipvoC9Zt+ezV+67izB5hbh/0vpo
- +VL8DzE014k/LMJS/pdmu8I=
-X-Google-Smtp-Source: ABdhPJwP9QA+rfsph3UMXty5mc0YGVJCmSMztSTXPVsphcU4R2Bsz3xj9uu8Fd7X6D+2xYJoKwN/0g==
-X-Received: by 2002:a63:50a:: with SMTP id 10mr5138055pgf.273.1611331058447;
- Fri, 22 Jan 2021 07:57:38 -0800 (PST)
-Received: from [0.0.0.0] (li1080-207.members.linode.com. [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id m10sm9565953pjn.53.2021.01.22.07.57.26
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Fri, 22 Jan 2021 07:57:37 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] erofs-utils: optimize buffer allocation logic
-To: Gao Xiang <hsiangkao@redhat.com>, Hu Weiwen <sehuww@mail.scut.edu.cn>
-References: <20210116063106.5031-1-hsiangkao@aol.com>
- <20210119054951.7457-1-sehuww@mail.scut.edu.cn>
- <20210122131408.GB3105292@xiangao.remote.csb>
- <20210122132118.GC3105292@xiangao.remote.csb>
-From: Huang Jianan <jnhuang95@gmail.com>
-Message-ID: <c71b1475-2dc5-299c-b4ec-20d46fc71a25@gmail.com>
-Date: Fri, 22 Jan 2021 23:57:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DMm61188CzDrp4
+ for <linux-erofs@lists.ozlabs.org>; Sat, 23 Jan 2021 04:12:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1611335536; bh=YmuKOcdoI/QZbIwlWOe7CRGkvqwVh9W4g4UFciMvEVw=;
+ h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To;
+ b=JXdW1J9XTCEgCYd9xjnOg62pt/EXSj3HR9MIfEMzUKxfYRSa7U9W9zZuOE8wT2IXJzw3ovfduXfIbP9Ea7tLuMMIHW6TUupq2hOLIv79jdGAaifSU/ZOnaNdl1P+XHNf4m5jEFM8yyqo1ILQbcwmbsijO8aQ8hPJzW3tXdtvixEsEpRpiPJbgvPJ0/Da2GC+V7kIia0YqAE0+BAdlTXaKLzaAncQm0CsLhAu158eF+fgFm1oadTE2ESA+ifhi1Xk1vIeyJJyf/R0HniacB/zww22P6Sx5NrS6zbYd2sqHiy5rcfcNAyba4KujmGaQ2J+AYOGVchssbcGItkcQljBJg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1611335536; bh=FNv7D6Z2ICAj9b4Ss2esTpbc/B2oXiu7kW5jUKwCrxF=;
+ h=From:To:Subject:Date:From:Subject:Reply-To;
+ b=WwnPlzdbMh9wmSNwrvkiW252F/F5RouKbBAq6jgF8puwz5cJud3DWsx4ePnPOoSu9FonK0clLS7yMk9WeOZsYaNhRhW/2Hte/16olvtwNI/v3hwFJ2BUzi/HK4kc1tfn5hboCoCjs+IbXDnELNszXcsM5w1X8d5b0JKN/fpiBFrvqRsgGkwM8oRQ2Xg5GMH+fD2G41b+giSHORMENpQrGnsxRZ533R5swD/aoXYCZf0jPbLzhroBe1dlt+tFwWri79JDruHYG/FwnomtrLtOwUZxOpzgj6xFNA7RBiT1IrfllnxqfKVQcFoZLGstTtuBaMKD6Kethk2b/0XVlk/WMQ==
+X-YMail-OSG: G6.qK2EVM1l4vw1QkgMQ2XKJsrU.m9GCVoLEVLZ5NEN9IdOoC_alTXtIB8ln6Og
+ 6Rk0LojWr29bIevIkK3wPVDf5KReDmD56hPWeFaSezCRNJBi1u5r9ETMyrWtlvW6MXyw43L757DD
+ r8OhYHiePm2OW.i60ZXIP3RrrUTroPtDEvL8rZQq88Fg7_0rQML.ofyPGX0biZOKlvSQtuG.CPEg
+ 4hz3xlB_2K.no3lDWcGibqURWPzRMTjV.YC.2wfT0HQMIACPeGyaQhNPSVpIHrQBe13g4U1cCsvx
+ FPDhR6bKjFeIdijUAujyhDyctjqn5ATRWlmwvGqSl_iy1x1vVbQYELHS1rFoveH8lYeLdA90m22e
+ tSsxjK4MAT16pUfcj78_x6U9obuiQBIrsxEsyQAEDVZyPg2AgCpjHpsJlyrg8X3M7s.8N.dR9U7W
+ sOBGwLYDpOEldhU6ASVZ9r7etzJdQwzK0Fsx3xrfdjERpTj47QYWsJpfciz3t9Kr_O_qWO5it1NH
+ bwBMCTg9MU520caBOJf8OVOqSifgURJBj2SDO.Zma8M65dJI2Ej6Of5ulZLeGbCTzrj4mLssGEr4
+ ThYxCJacEl36.ivCREhzMAASbAcW58Ay5VDAKWJ4OJVB5WAsVDfwtwvf385j5y0_3WXUG6CAVBUk
+ pxwNXIXfzcTC6ZqItXPw8fCxTD7b0HsuOpvgjgL7p2Qa0iRlZAa_egUtxcLUf1.HfXXb9IQ3OgDU
+ scHGigV52tYobdjyVddGV3ex932goXg6cNMu.U7D6d6.D2NnS.SxBMmNs1msKWuotGxPNpq9PYVr
+ b7OwblKNI3Bb_VbEkH1FzoxIyp00bohkCwCexVYebvLGPcZq65OGSU5o4oIHOeOxge7EhvccWdPp
+ v8MC7UrU2cUrkX.s4VcbgTZbb_TMCbgO5YeW6z9byUG_EUejh67TwlCNXzF8.yiyEAaIkgLdmn5U
+ .i3MZ43yxxGvsRCJ0fAoDdwwvGJpp_rEX_yMAMe37OMAnuvhNOqThKMdoQCAEpKVoip9zhloqr6e
+ A3cBPRgB6U.UpJLpR2KZTgYcnuupv.I0uA3RlwWPEc4LHw9ZO2Ih0xO2ysQWP6hprtsBzlZ6SAhm
+ g1_9TjqaprOJW6U_.IpIpMj4RuL4qGXt8CXjX1nZaiTudCY2cojlT5rwTxSrAZIaoHAr1O2XGUme
+ UTAMzCVOo3UlcgVnEBVFzAxzgKlrbQQ0KcHls_VTGDIWk12Yd8WfqY_oKso8EWrLFLOtpQmUusYo
+ 9GRVyAP4vHTwTgwYL40GGcHLiI8bNQbElGtCkxxyU6JA5PCkJ0Wbfu_v2gPRt0aANZh1NWdZcmmY
+ 9mRtCE5x1kDq3ZJpbt_Lpb_kowK7KQAgAzyF938lpzHrOG2UPKOC8TTDoGAECWoONtYFpT5fVPCq
+ fkEYXZoL1uR1jAqCwed7RjiPGlKWymyRai7lZici4hbRixzxI9YSAaAdG3a.I_LXm8trG_wYHfj3
+ BQ1l4iH2.c8FeAgdOt65uGhslXhxWuGFPzkOR6.l3tjVwQsHF0YTpNTv6J7XL.jhvru67BXP2AFO
+ OgLVF_t.ptOSFLgS.HtJyCqOjsvyxWnqBAFqjqk_mbur5Wvtarapocqz4IUi.42SOyHVpU7ZwpCl
+ xwY6orC4tIxlemdYwZd5xH6GHn503XPf3UukT1320hAw9k4fkWpbN8SuMQRl2FE3pNmxYrv2doRb
+ peFtWDHjuVRM8QjKGrGyGOmxrwZleH2r5ZurS737ioeuXsePu9KN7JUluQWlmY90HF78_OA.v_ah
+ ncCNOHW35WlgpJnNVTHEWI3AuzLp_ENOSlkMEofr0.zkrbU5xiIPycS2oyHhvcaEwTKyfDN6LO6Q
+ CvWnH4tkTCYMkZjNGI6OIiJYFIlObfBYzy1cs0bsTWNmYOxrTC.Fc9mr2hni23V2XO2ptVIL.qA5
+ QBf1SsKXoS2domm4zs5jXLX8XzMWNFREARYxD4kl71._WqQxV3fEBrnpgmfnfCGLBy3mCtRX4fcR
+ TmqDIx1lmF_IBUEeVxhPF3jLxvaDexaGssyhjyK_tw1D_a2JWT2AOMuvZ2aOXnyhYOCAFVppLghQ
+ 2nCgZIviTUa7yhCbdgXq7Umh6NehW6SqfYfl787LbD3SU2R4AaawZIflH3.IWCjkXYSLz8HJ1b1z
+ eUIXq28QVsSis1DVq6fcBDBrH.EDrMFSa4.uiBehjG3z16yfLsPJjXvPfTrggkU5_Ig7FAB2BNrZ
+ aCHpEBbD2.sm42e09x9uCJvLcFHuWY1_UWh9bXMLTtlAG3jNKbZbNFJnjzlAtPJ_yC23RquqUPN6
+ cRJGutveo8NShc5rGsFc4Zw3SXroKlKVvOvik0aOldJXZeMfITgfw7H2Dg3yXTt89AaDVMsDNQcU
+ TJoRiJ9.5g43pz6hXN8Cr8K8fb01Q1droI2qlFIvgYvTJGT8tGA--
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic307.consmr.mail.gq1.yahoo.com with HTTP; Fri, 22 Jan 2021 17:12:16 +0000
+Received: by smtp414.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 421cb1d2e6456159bc18db7d03d7fd0e; 
+ Fri, 22 Jan 2021 17:12:07 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v7 0/3] erofs-utils: optimize buffer allocation logic
+Date: Sat, 23 Jan 2021 01:11:50 +0800
+Message-Id: <20210122171153.27404-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20210122132118.GC3105292@xiangao.remote.csb>
-Content-Type: multipart/alternative;
- boundary="------------4D09537C9D7F0F2C8970F95B"
+Content-Transfer-Encoding: 8bit
+References: <20210122171153.27404-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,307 +98,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: guoweichao@oppo.com, linux-erofs@lists.ozlabs.org, zhangshiming@oppo.com
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
---------------4D09537C9D7F0F2C8970F95B
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Hi all,
 
-Hi Weiwen, Xiang,
+This introduces bucket lists for mapped buffer block to boost up
+buffer allocation and buffer mapping. Thanks to Weiwen for
+contribution!
 
-在 2021/1/22 21:21, Gao Xiang 写道:
-> On Fri, Jan 22, 2021 at 09:14:08PM +0800, Gao Xiang wrote:
->> Hi Weiwen,
->>
->> On Tue, Jan 19, 2021 at 01:49:51PM +0800, Hu Weiwen wrote:
->>
->> ...
->>
->>>   	bb = NULL;
->>>
->>> -	list_for_each_entry(cur, &blkh.list, list) {
->>> -		unsigned int used_before, used;
->>> +	if (!used0 || alignsize == EROFS_BLKSIZ)
->>> +		goto alloc;
->>> +
->>> +	/* try to find a most-fit mapped buffer block first */
->>> +	used_before = EROFS_BLKSIZ -
->>> +		round_up(size + required_ext + inline_ext, alignsize);
->> Honestly, after seen above I feel I'm not good at math now
->> since I smell somewhat strange of this, apart from the pending
->> patch you raised [1], the algebra is
->>
->> /* since all buffers should be aligned with alignsize */
->> erofs_off_t alignedoffset = roundup(used_before, alignsize);
->>
->> and (alignedoffset + size + required_ext + inline_ext <= EROFS_BLKSIZ)
->>
->> and why it can be equal to
->> used_before = EROFS_BLKSIZ - round_up(size + required_ext + inline_ext, alignsize);
->>
->> Could you explain this in detail if possible? for example,
->> size = 3
->> inline_ext = 62
->> alignsize = 32
->>
->> so 4096 - roundup(3 + 62, 32) = 4096 - 96 = 4000
->> but, the real used_before can be even started at 4032, since
->> alignedoffset = roundup(4032, 32) = 4032
->> 4032 + 62 = 4094 <= EROFS_BLKSIZ.
->>
->> Am I stll missing something?
->>
-> Oh, the example itself is wrong, yet I still feel no good at
-> this formula, e.g I'm not sure if it works for alignsize which
-> cannot be divided by EROFS_BLKSIZ (although currently alignsize =
-> 4 or 32)
->
-> Thanks,
-> Gao Xiang
-
-
-We can divide several parts of data in EROFS_BLKSIZ  as follows:
-
-____________________________________________________________________________________
-
-|||||
-
-|  used_before |alignedoffset|   size + required_ext + inline_ext 
-|tail_data |
-
-|________________ 
-|_________________|_____________________________________|___________|
-
-Use alignsize to represent these data:
-
-1) alignsize * num_x = used_before + alignedoffset
-2) alignsize * num_y = size + required_ext + inline_ext + tail_data
-3) alignsize * num_z = EROFS_BLKSIZ
-
-So we can get,
-4) num_x + num_y = num_z
-
-If we use
-used_before = EROFS_BLKSIZ - round_up(size + required_ext + inline_ext, alignsize);
-here, num_y should be an integer.
-
-Consider the following two situations:
-
-1) If EROFS_BLKSIZ can be divisible by alignsize, num_z is an integer. so num_x is an integer.
-    The following formula can be satisfied:
-    erofs_off_t alignedoffset = roundup(used_before, alignsize);
-    
-2）If EROFS_BLKSIZ can't be divisible by alignsize, num_z isn't an integer and num_x won't be an integer.
-    The formula can't be satisfied.
-
-So I think it should be
-used_before = round_down(EROFS_BLKSIZ - size-required_ext - inline_ext , alignsize);
-here.
-
-Sorry for my poor english and figure. . .
-
+changes since v6:
+ - introduce erofs_bfind_for_attach to clean up erofs_balloc();
+ - use a new formula mentioned by Jianan to calculate used_before;
+ - only DBG_BUGON on debug version for __erofs_battach < 0.
 
 Thanks,
-Jianan
+Gao Xiang  
 
->> IMO, I don't want too hard on such math, I'd like to just use
->> used_before = EROFS_BLKSIZ - (size + required_ext + inline_ext);
->> and simply skip the bb if __erofs_battach is fail (as I said before,
->> the internal __erofs_battach can be changed, and I don't want to
->> imply that always succeed.)
->>
->> If you also agree that, I'll send out a revised version along
->> with a cleanup patch to clean up erofs_balloc() as well, which
->> is more complicated than before.
->>
->> [1] https://lore.kernel.org/r/20210121162606.8168-1-sehuww@mail.scut.edu.cn/
->>
->> Thanks,
->> Gao Xiang
->>
+Gao Xiang (1):
+  erofs-utils: introduce erofs_bfind_for_attach()
 
---------------4D09537C9D7F0F2C8970F95B
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Hu Weiwen (2):
+  erofs-utils: get rid of `end' argument from erofs_mapbh()
+  erofs-utils: optimize buffer allocation logic
 
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p>Hi Weiwen, Xiang,<br>
-    </p>
-    <div class="moz-cite-prefix">在 2021/1/22 21:21, Gao Xiang 写道:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20210122132118.GC3105292@xiangao.remote.csb">
-      <pre class="moz-quote-pre" wrap="">On Fri, Jan 22, 2021 at 09:14:08PM +0800, Gao Xiang wrote:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">Hi Weiwen,
+ include/erofs/cache.h |   3 +-
+ lib/cache.c           | 186 ++++++++++++++++++++++++++++++++----------
+ lib/compress.c        |   2 +-
+ lib/inode.c           |  10 +--
+ lib/xattr.c           |   2 +-
+ mkfs/main.c           |   2 +-
+ 6 files changed, 151 insertions(+), 54 deletions(-)
 
-On Tue, Jan 19, 2021 at 01:49:51PM +0800, Hu Weiwen wrote:
+-- 
+2.24.0
 
-...
-
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap=""> 	bb = NULL;
-
--	list_for_each_entry(cur, &amp;blkh.list, list) {
--		unsigned int used_before, used;
-+	if (!used0 || alignsize == EROFS_BLKSIZ)
-+		goto alloc;
-+
-+	/* try to find a most-fit mapped buffer block first */
-+	used_before = EROFS_BLKSIZ -
-+		round_up(size + required_ext + inline_ext, alignsize);
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-Honestly, after seen above I feel I'm not good at math now
-since I smell somewhat strange of this, apart from the pending
-patch you raised [1], the algebra is
-
-/* since all buffers should be aligned with alignsize */
-erofs_off_t alignedoffset = roundup(used_before, alignsize);
-
-and (alignedoffset + size + required_ext + inline_ext &lt;= EROFS_BLKSIZ)
-
-and why it can be equal to
-used_before = EROFS_BLKSIZ - round_up(size + required_ext + inline_ext, alignsize);
-
-Could you explain this in detail if possible? for example,
-size = 3
-inline_ext = 62
-alignsize = 32
-
-so 4096 - roundup(3 + 62, 32) = 4096 - 96 = 4000
-but, the real used_before can be even started at 4032, since
-alignedoffset = roundup(4032, 32) = 4032
-4032 + 62 = 4094 &lt;= EROFS_BLKSIZ.
-
-Am I stll missing something?
-
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Oh, the example itself is wrong, yet I still feel no good at
-this formula, e.g I'm not sure if it works for alignsize which
-cannot be divided by EROFS_BLKSIZ (although currently alignsize =
-4 or 32)
-
-Thanks,
-Gao Xiang
-</pre>
-    </blockquote>
-    <pre class="moz-quote-pre" wrap="">
-
-We can divide several parts of data in EROFS_BLKSIZ  as follows:
-</pre>
-    <p
-      style="margin:0in;margin-left:.375in;font-family:微软雅黑;font-size:11.0pt"><span
-        style="mso-spacerun:yes"> </span><span style="mso-spacerun:yes"> 
-      </span>____________________________________________________________________________________</p>
-    <p
-      style="margin:0in;margin-left:.375in;font-family:微软雅黑;font-size:11.0pt"><span
-        lang="zh-CN"><span style="mso-spacerun:yes"> </span> |<span
-          style="mso-spacerun:yes">      </span><span
-          style="mso-spacerun:yes">    </span></span><span lang="en-US"><span
-          style="mso-spacerun:yes">               </span></span><span
-        lang="zh-CN"><span style="mso-spacerun:yes"></span>|<span
-          style="mso-spacerun:yes">                          </span></span><span
-        lang="zh-CN"><span style="mso-spacerun:yes"></span>|</span><span
-        lang="zh-CN"><span style="mso-spacerun:yes">                   
-                                              </span></span><span
-        lang="zh-CN"><span style="mso-spacerun:yes"></span>|</span><span
-        lang="zh-CN"><span style="mso-spacerun:yes">                 </span></span><span
-        lang="zh-CN"><span style="mso-spacerun:yes"></span>|</span></p>
-    <p
-      style="margin:0in;margin-left:.375in;font-family:微软雅黑;font-size:11.0pt"><span
-        lang="zh-CN"><span style="mso-spacerun:yes"> </span> |<span
-          style="mso-spacerun:yes">  used_before </span></span><span
-        lang="en-US"><span style="mso-spacerun:yes"> </span></span><span
-        lang="zh-CN"><span style="mso-spacerun:yes"> </span>|<span
-          style="mso-spacerun:yes">   </span>alignedoffset</span><span
-        lang="en-US"><span style="mso-spacerun:yes">  </span></span><span
-        lang="zh-CN">|</span><span lang="en-US"><span
-          style="mso-spacerun:yes"></span></span><span lang="zh-CN"><span
-          style="mso-spacerun:yes">   size + required_ext + inline_ext 
-        </span></span><span lang="en-US"><span style="mso-spacerun:yes"></span></span><span
-        lang="zh-CN">|</span><span lang="en-US"><span
-          style="mso-spacerun:yes"></span></span><span lang="zh-CN"><span
-          style="mso-spacerun:yes">  </span>tail_data <span
-          style="mso-spacerun:yes"> </span></span><span lang="en-US"><span
-          style="mso-spacerun:yes"></span></span><span lang="zh-CN">|</span><span
-        lang="en-US"><span style="mso-spacerun:yes"></span></span><span
-        lang="zh-CN"></span></p>
-    <p
-      style="margin:0in;margin-left:.375in;font-family:微软雅黑;font-size:11.0pt"><span
-        style="mso-spacerun:yes"> </span>
-      |________________ |_________________|_____________________________________|___________|</p>
-    <pre class="moz-quote-pre" wrap="">Use alignsize to represent these data:
-
-1) alignsize * num_x = used_before + alignedoffset
-2) alignsize * num_y = size + required_ext + inline_ext + tail_data
-3) alignsize * num_z = EROFS_BLKSIZ
-
-So we can get,
-4) num_x + num_y = num_z
-
-If we use
-used_before = EROFS_BLKSIZ - round_up(size + required_ext + inline_ext, alignsize); 
-here, num_y should be an integer.
-
-Consider the following two situations: 
-</pre>
-    <pre class="moz-quote-pre" wrap="">1) If EROFS_BLKSIZ can be divisible by alignsize, num_z is an integer. so num_x is an integer.
-   The following formula can be satisfied:
-   erofs_off_t alignedoffset = roundup(used_before, alignsize);
-   
-2）If EROFS_BLKSIZ can't be divisible by alignsize, num_z isn't an integer and num_x won't be an integer.
-   The formula can't be satisfied.
-
-So I think it should be
-used_before = round_down(EROFS_BLKSIZ - size-required_ext - inline_ext , alignsize);
-here.
-
-Sorry for my poor english and figure. . .
-
-
-Thanks,
-Jianan
-</pre>
-    <blockquote type="cite"
-      cite="mid:20210122132118.GC3105292@xiangao.remote.csb">
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">IMO, I don't want too hard on such math, I'd like to just use
-used_before = EROFS_BLKSIZ - (size + required_ext + inline_ext);
-and simply skip the bb if __erofs_battach is fail (as I said before,
-the internal __erofs_battach can be changed, and I don't want to
-imply that always succeed.)
-
-If you also agree that, I'll send out a revised version along
-with a cleanup patch to clean up erofs_balloc() as well, which
-is more complicated than before.
-
-[1] <a class="moz-txt-link-freetext" href="https://lore.kernel.org/r/20210121162606.8168-1-sehuww@mail.scut.edu.cn/">https://lore.kernel.org/r/20210121162606.8168-1-sehuww@mail.scut.edu.cn/</a>
-
-Thanks,
-Gao Xiang
-
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-    </blockquote>
-  </body>
-</html>
-
---------------4D09537C9D7F0F2C8970F95B--
