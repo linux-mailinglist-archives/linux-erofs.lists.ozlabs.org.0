@@ -1,100 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC111301667
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Jan 2021 16:37:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C95B308C1E
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Jan 2021 19:09:05 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DNKxV5qqGzDrP0
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Jan 2021 02:37:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DS5251j9YzDsTD
+	for <lists+linux-erofs@lfdr.de>; Sat, 30 Jan 2021 05:09:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=Rv/cL4B8; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=LMC09dYe; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [216.205.24.124])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DNKxL221DzDqgw
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Jan 2021 02:36:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611416209;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding:
- in-reply-to:in-reply-to:references:references;
- bh=+1Pu8RMQn/CCMcU+Mpn3Vadz4JB3UfD5RvGMi08LGhs=;
- b=Rv/cL4B8qs2i8rA5t6LZMmv97RJniMT0DNm847HPOwVxsHUgmsLxI3S1Nl2dgNmUUwF6gN
- s5aAHpLa94Gkhb7bOBvIJdr/SomB4xGJGyOXsxchGmitJlbnUUqim5xRLd+P4441WanFli
- yJVFmNWMARS9E8gfGqktL3nouIlzE+I=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1611416210;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding:
- in-reply-to:in-reply-to:references:references;
- bh=+1Pu8RMQn/CCMcU+Mpn3Vadz4JB3UfD5RvGMi08LGhs=;
- b=LMC09dYe/GtTUYntZWNlsB5/URbeMSCfuDV05Mt21o9rFyQkdRaDAgMlNCx1ptyEM0n71O
- DI3XIIzQ9b8kF5c5ThOJ62zrgSzoVoOV11BuSJfy1RfbCFC+DED2lVxOIlHSdVpFvTv4ik
- WMDJDWs6gP4IzpXmZokfecIaueEBS0U=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-FXgStbgBMcuSHgPHi1DddA-1; Sat, 23 Jan 2021 10:36:48 -0500
-X-MC-Unique: FXgStbgBMcuSHgPHi1DddA-1
-Received: by mail-pg1-f200.google.com with SMTP id l15so4610954pgr.6
- for <linux-erofs@lists.ozlabs.org>; Sat, 23 Jan 2021 07:36:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:content-transfer-encoding
- :in-reply-to:user-agent;
- bh=+1Pu8RMQn/CCMcU+Mpn3Vadz4JB3UfD5RvGMi08LGhs=;
- b=J8NjNmIc3rtOyPnVXXzSzEpgVW9SCh0bsGlVllIwibeS7SqCGymGjk/SjdWGUyb/0a
- M4cZmQ3i3RhAgKz+eWXAS3zYg6AU/fRkJ24wy6cvcgXSMixY3negLQVokbf6fj9bpha4
- nDSuVmqltcx01c4v5C48vqnZos16Yi7ipXsOSXPFP0KnnLBMGGUHgQahtAaeEW3qlaiq
- oSHaYP/HvuOIHlBeC+922tVtCmV1JUu+wf04zkvTlBmDN58Cz5aZNWj+BxYg/Iio+rKw
- XZyS1RtOACGtD8YMaE1xvo0K2MOnYTWw5FiMe0PxENJ9oyWh+K8oXwxre5ywz8R0tcZi
- WDiA==
-X-Gm-Message-State: AOAM5301Icf2DWEyqkhjQxHr58b37vfdvjMZG0C0GcxPdihTdVvGIgrZ
- y9pGvyjpXJxLMH4OnKXWaI7yuDLJLqbOdft7X/uOiNEPkeyLgiF7MO/exFqLIgiDrpyEshYafju
- OrT4Jdm0s/C7pXKsh6C00TkFE
-X-Received: by 2002:a63:fc56:: with SMTP id r22mr5538900pgk.203.1611416206839; 
- Sat, 23 Jan 2021 07:36:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxNfOPK5+szBfF6lOZlQlW7j6f+2QxVfxqlMmwXYEbtebcK8ElTaBd+52Ci9DN04XCXxSaTbA==
-X-Received: by 2002:a63:fc56:: with SMTP id r22mr5538883pgk.203.1611416206598; 
- Sat, 23 Jan 2021 07:36:46 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id gv22sm12444392pjb.56.2021.01.23.07.36.44
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 23 Jan 2021 07:36:45 -0800 (PST)
-Date: Sat, 23 Jan 2021 23:36:36 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: =?utf-8?B?6IOh546u5paH?= <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH] erofs-utils: fuse: fix random readlink error
-Message-ID: <20210123153636.GC3167351@xiangao.remote.csb>
-References: <20210122003416.GF2996701@xiangao.remote.csb>
- <86D0E0EF-4F13-4410-80C1-19B829A4D61D@mail.scut.edu.cn>
- <20210122014901.GB2918836@xiangao.remote.csb>
- <20210123131830.GA16490@DESKTOP-N4CECTO.huww98.cn>
- <20210123152213.GB3167351@xiangao.remote.csb>
-MIME-Version: 1.0
+ smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
+ envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
+Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DS51v5FgYzDsDx
+ for <linux-erofs@lists.ozlabs.org>; Sat, 30 Jan 2021 05:08:42 +1100 (AEDT)
+Received: from localhost.localdomain (unknown [10.1.129.4])
+ by front (Coremail) with SMTP id AWSowAB3fOACTxRg6ZwhAg--.22951S4;
+ Sat, 30 Jan 2021 02:08:03 +0800 (CST)
+From: Hu Weiwen <sehuww@mail.scut.edu.cn>
+To: hsiangkao@redhat.com
+Subject: [PATCH v2] erofs-utils: fuse: fix random readlink error
+Date: Sat, 30 Jan 2021 02:07:47 +0800
+Message-Id: <20210129180747.67731-1-sehuww@mail.scut.edu.cn>
+X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210123152213.GB3167351@xiangao.remote.csb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20210123152213.GB3167351@xiangao.remote.csb>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AWSowAB3fOACTxRg6ZwhAg--.22951S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4DWrWxCr1fKF4furWkCrg_yoW8ZFW5pr
+ Wq9rZ5GF1ftry7Wr4ft3Z8Z3WYq3WkKF1UC3yrCw4fA3srJFn8Z3WrAF909w43Cr1kAF4Y
+ qanI9wn5urW7JrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+ 9KBjDU0xBIdaVrnRJUUUyG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+ rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+ 1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+ 6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+ 0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+ 2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+ W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+ r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+ xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+ cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+ AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+ xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrMaUUUUUU==
+X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQAJBlepTBDjTwAWsW
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -111,108 +61,80 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Jan 23, 2021 at 11:22:13PM +0800, Gao Xiang wrote:
-> On Sat, Jan 23, 2021 at 09:18:30PM +0800, 胡玮文 wrote:
-> > On Fri, Jan 22, 2021 at 09:49:01AM +0800, Gao Xiang wrote:
-> > > Hi Weiwen,
-> > > 
-> > > On Fri, Jan 22, 2021 at 09:00:44AM +0800, 胡玮文 wrote:
-> > > > Hi Xiang,
-> > > > 
-> > > > > 在 2021年1月22日，08:34，Gao Xiang <hsiangkao@redhat.com> 写道：
-> > > > > 
-> > > > > ﻿Hi Weiwen,
-> > > > > 
-> > > > >> On Fri, Jan 22, 2021 at 12:31:43AM +0800, Hu Weiwen wrote:
-> > > > >> readlink should fill a **null terminated** string in buffer.
-> > > > >> 
-> > > > >> Also, read should return number of bytes remaining on EOF.
-> > > > >> 
-> > > > >> Link: https://lore.kernel.org/linux-erofs/20210121101233.GC6680@DESKTOP-N4CECTO.huww98.cn/
-> > > > >> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> > > > > 
-> > > > > Thanks for catching this!
-> > > > > 
-> > > > >> ---
-> > > > >> fuse/main.c | 14 +++++++++++++-
-> > > > >> 1 file changed, 13 insertions(+), 1 deletion(-)
-> > > > >> 
-> > > > >> diff --git a/fuse/main.c b/fuse/main.c
-> > > > >> index c162912..bc1e496 100644
-> > > > >> --- a/fuse/main.c
-> > > > >> +++ b/fuse/main.c
-> > > > >> @@ -71,6 +71,12 @@ static int erofsfuse_read(const char *path, char *buffer,
-> > > > >>    if (ret)
-> > > > >>        return ret;
-> > > > >> 
-> > > > >> +    if (offset >= vi.i_size)
-> > > > >> +        return 0;
-> > > > >> +
-> > > > >> +    if (offset + size > vi.i_size)
-> > > > >> +        size = vi.i_size - offset;
-> > > > >> +
-> > > > > 
-> > > > > It would be better to call erofs_pread() with the original offset
-> > > > > and size (also I think there is some missing memset(0) for
-> > > > > !EROFS_MAP_MAPPED), and fix up the return value to the needed value.
-> > > > 
-> > > > Yes, that is what I have initially tried. But this way is harder than I thought. 
-> > > > EROFS_MAP_MAPPED flag seems to be designed to handle sparse file, and is reused to
-> > > > represent EOF. So maybe we need a new flag to represent EOF? 
-> > > 
-> > > Nope, I think we just need to handle return value of read, I mean
-> > > 
-> > > erofs_ilookup()
-> > > 
-> > > ret = erofs_pread()
-> > > if (ret)
-> > > 	return ret;
-> > > 
-> > > if (offset + size > vi.i_size)
-> > > 	return vi.i_size - offset;
-> > > 
-> > > return size;
-> > > 
-> > > Is that enough? Am I missing something?
-> > 
-> > This should work, except we should also add this branch
-> > 
-> > if (offset >= vi.i_size)
-> > 	return 0;
-> 
-> yeah, agreed. It'd also be added after erofs_pread().
-> 
-> >
-> > But how this is better than my original patch? I would say my patch should be
-> > more efficient.
-> > 
-> > By saying "what I have initially tried" in my last mail, I mean changing
-> > erofs_pread() to return the number of bytes read (just like pread system call,
-> > instead of always 0). I think this is easier to understand for others, but
-> > seems harder to implement. Do you think this is worthful?
-> > 
-> 
-> There are 2 reasons for me to do it at least:
-> 1) need to memset(0) for these unmapped buffers;
-> 2) introduce a hook to fs to read data regardless of i_size,
->    just as linux kernel page cache approach.
-> 
-> Don't be confused with ->i_size (this is only a EOF-marker) and
-> the real inode data, that are two different concepts for me, I'd
-> like to handle all data processing in erofs_pread() (even for
-> post-EOF case), but only deal with i_size in erofsfuse_read().
-> 
+readlink should fill a **null-terminated** string in the buffer.
 
-Also, no need to follow erofs_pread() as the pread() system call.
-It just used a similiar name. The core concept of this is to handle
-file data itself. There is nothing to do with eof-marker (but much
-related to inode extent/block mapping instead, although currently
-EROFS extent mapping format internally relies on i_size.)
+To achieve this:
+1) memset(0) for unmapped extents;
+2) make erofsfuse_read() properly returning the actual bytes read;
+3) insert a null character if the path is truncated.
 
-Thanks,
-Gao Xiang
+Link: https://lore.kernel.org/r/20210121101233.GC6680@DESKTOP-N4CECTO.huww98.cn
+Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
+---
+ fuse/main.c | 8 ++++++++
+ lib/data.c  | 6 ++++++
+ 2 files changed, 14 insertions(+)
 
-> Thanks,
-> Gao Xiang
-> 
+diff --git a/fuse/main.c b/fuse/main.c
+index c162912..70558b0 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -74,6 +74,10 @@ static int erofsfuse_read(const char *path, char *buffer,
+ 	ret = erofs_pread(&vi, buffer, size, offset);
+ 	if (ret)
+ 		return ret;
++	if (offset + size > vi.i_size)
++		return vi.i_size - offset;
++	if (offset >= vi.i_size)
++		return 0;
+ 	return size;
+ }
+ 
+@@ -83,6 +87,10 @@ static int erofsfuse_readlink(const char *path, char *buffer, size_t size)
+ 
+ 	if (ret < 0)
+ 		return ret;
++	DBG_BUGON(ret > size);
++	if (ret == size)
++		buffer[size - 1] = '\0';
++	erofs_dbg("readlink result %s", buffer);
+ 	return 0;
+ }
+ 
+diff --git a/lib/data.c b/lib/data.c
+index 3781846..3641536 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -29,6 +29,7 @@ static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
+ 	if (offset >= inode->i_size) {
+ 		/* leave out-of-bound access unmapped */
+ 		map->m_flags = 0;
++		map->m_plen = 0;
+ 		goto out;
+ 	}
+ 
+@@ -91,9 +92,13 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+ 
+ 		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+ 			if (!map.m_llen) {
++				/* reached EOF */
++				memset(buffer + ptr - offset, 0,
++				       offset + size - ptr);
+ 				ptr = offset + size;
+ 				continue;
+ 			}
++			memset(buffer + map.m_la - offset, 0, map.m_llen);
+ 			ptr = map.m_la + map.m_llen;
+ 			continue;
+ 		}
+@@ -138,6 +143,7 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 			return ret;
+ 
+ 		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
++			memset(buffer + map.m_la - offset, 0, map.m_llen);
+ 			end = map.m_la;
+ 			continue;
+ 		}
+-- 
+2.25.1
 
