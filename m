@@ -1,96 +1,96 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07674309B47
-	for <lists+linux-erofs@lfdr.de>; Sun, 31 Jan 2021 11:09:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03810309B52
+	for <lists+linux-erofs@lfdr.de>; Sun, 31 Jan 2021 11:34:50 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DT6JF5l1pzDrQs
-	for <lists+linux-erofs@lfdr.de>; Sun, 31 Jan 2021 21:09:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DT6s326fBzDrB4
+	for <lists+linux-erofs@lfdr.de>; Sun, 31 Jan 2021 21:34:47 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1612087789;
-	bh=8sIswEO0im/tkCPuhY73E2Wpbg0U0W3V0f19twBjkt8=;
+	s=201707; t=1612089287;
+	bh=+A1UI11bu9nqRWMWkyEQW/5hajVz+Mo6iWxUQXpT8Fo=;
 	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=O7YfroJ9UyQYjWe1gd/AMSDZZPF8UstlFgtJR6bT/HlEoqz6fZaRflvPpCJ0Lg+hY
-	 3W1Nf1S9M8NwM+15XlMnq0T9varjE9LcUyn7ObAb6pXW7BShEmCsinzc7Whh7gazjB
-	 JjRjljrWRYz0d5PJ1tH9LVta2kPil54KHbLsr+4M8ROZGGJg/4qRK4AmDxg1dg5WGU
-	 PvWOGXZ1eLpLlk2gehwFkU8dwldE9pKcgPwBxj2Wmhk7RYzxw5lFTODu3hs57bOlgR
-	 iE8uOLM14i+IGkrKCYwtEehe1IYwr/PCmTGMOEmC6mfCmY3ZexfAHgiaRWTGagrVtH
-	 kN9/LYcgrLEZA==
+	b=IEU9J8dWv//13MNcd/hhtUas2r3s7uQF47IYxEfZ8xHiTvMoeDGw/Ih4zje2Senwj
+	 1I2aT7JjcCMTOW1GLpYcW7HxAB6JiiHxCMCQbMsQ+ENVQkHA5ilucnRmaw7ewoz2du
+	 9d4HmRyrrzDWHGg4MBKCNzajj7sVSD4IcQV0jLxB4lLoZo7EKKHjBrHY9g7eXa/oBl
+	 nMZ//H+mRnAH6mFKD8ET4d5B/X0UQIHVrDFujDDaXMOTIQR1DXCb30kWI/pv8x6vEF
+	 YX3vUUIAdsaK3FkUZvf99CmsXkqfk2WlisllrXP+lO2uWU+y8NrrX30BD66ZkAm1zQ
+	 lhL93VJ2HZcxw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.32; helo=sonic315-8.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.204; helo=sonic311-23.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=IUHvbrpb; dkim-atps=neutral
-Received: from sonic315-8.consmr.mail.gq1.yahoo.com
- (sonic315-8.consmr.mail.gq1.yahoo.com [98.137.65.32])
+ header.s=a2048 header.b=ZEg2MW9g; dkim-atps=neutral
+Received: from sonic311-23.consmr.mail.gq1.yahoo.com
+ (sonic311-23.consmr.mail.gq1.yahoo.com [98.137.65.204])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DT6J26B2YzDr2d
- for <linux-erofs@lists.ozlabs.org>; Sun, 31 Jan 2021 21:09:35 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DT6rw4rtGzDq63
+ for <linux-erofs@lists.ozlabs.org>; Sun, 31 Jan 2021 21:34:39 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1612087767; bh=EAtuJhHutBDjQofr7mG7owbX8b0OAF13q05+uUO0lfY=;
+ t=1612089274; bh=orgixe4lvj26C+BLwH3/Azv/wfkboAJWIQ4wh015elQ=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject:Reply-To;
- b=IUHvbrpbTqpJX7JwQSo2G+eDuvKglkZNQU8NOLrNTvdiOsAiTlnIbJX0BOq/5NwCkUCyTvfJGZgUfSm8RMmbppd7riEGpn7LJpeY8qnn7vlDetsHJD5aruTsXD9dNkFODtwfcRetxiGOjAuT1xdiBsqo8W3YReCOBAdmoUHCFeQNnq+NcBvhqcjRk5x3tzFKLrlme3kR6XJsqSpyAvIUmrYm+8uIVdbLBiQnYJcEFx/ycd9+hutNRgIlGg1cO2vaQnlcet6rUQW/JHuipQ2dLbYlFcNa3mmxcbAofyYrCLkn1FRxOBjN1bL+nY/0tMxCcu8oPbp6iv1xMaiDBpvMSg==
+ b=ZEg2MW9gPvQ1/Pj1O7ES16CQLN0ACgiuHW93Qyi1eAfYnWCjdZj12FeyHASLsPsKpOwpuA13J6kzK9+KED3Py7blcJqIYGyPQuhZFIKp9dfeK+YqbalM/rYEOB/T+kOsGX6hf/KqUmxzZB+RduaiIWK6cXZEOF13uSDTLrRvuizyzjVolx7s+tx+VMG7nCRhhxTiYWQPXYiVXR1HpirIQv1hABDUWGvqbnUHE6ZE53iKpAlNEB+7fxJk20C9AA4VIJNxKO3TJnTylRAdlkxptWK0y1isQp0ZhqsIe3io86/+BYws2oYrJUUx29G198WxUoXK6U8MPR15nb6v4rfocw==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1612087767; bh=r1nkg1yJSEtezko15IFPGZjfUa933fbbFW2hz5X+io+=;
+ t=1612089274; bh=oOvGb63/JJ/5C4lpbLOFdtQwenuwz8g3ooCe9aCsUZA=;
  h=Date:From:To:Subject:From:Subject:Reply-To;
- b=gtbULXCmQFte4VNaDAequ2RjMJ5DeU4r+eIf7dAgr6u4/cTJfjp0kdMhw76yu9Wd4qznm/XMkBsOazr4e3fv7C1nqIahpeAvFMF9WHdD9x2P1QivbgO+J7y1iYgMZTY6cYjPPtfqqGAv0QlLAd8mJybb1AhX2YlOTd9ouwBSjx6ujpnhb6bjcFLedF5vMqvO833CIxizlcxekbC5/47uZAR4Xj+ly/tFuCWhD10YDEuPMvl00G+5g66llQ+G7QC5E0GN7LlEaOlFlajAQ0/2I9/tpxn2mfnHnI3BkHGJPfU1M/vWX8K/fjtNwvJL9uvoXpyleZiHG7e+zfvxtNgg/A==
-X-YMail-OSG: RX5eV6oVM1nBL6lqkMyyCAcspEo7AeWKb96utGTqLZiYy0x0QE0g7gzxTiPurZR
- QXRtSECmJ6ehL5YtmWpYKGfMrM4RqwlROQc9VV1tWBtHIhMJKjpDgh0faEJHJOH.IsmQnrEa14KM
- nYZkseE.ZxR3OY36IEW28rGz7gaNcI0bGwAV0Fcf8iZyHpP56h.ACjXIbdIEIJ_rLmy1x1qT033s
- wWMt1q6Wto3XKjguqqJw3xn22KJzJLMiIALRhrAgYJQaHfUTGQtA1_zOynw0uwvIasFZ3fkPhuvH
- 6uDHvuRasGuS7R3aP4zjw.vBMzkvkrUJjlr_ajxI7dhpdiA5Qzv1LaINW_j1txKCjopvUjPPUic5
- 5FSSZDFCk8FCe0xiEBmxGhZ1qL4xjHHMOBfWw9XRlLaabF6K6gUOMfBcABujbQAKCmK.Q24U2.op
- 0qOpnSSSAgstn4hpPgewRiMWciwjJI9X5HUwQyI6axoXqCoz2MvL6kunbfByA6vK0ktoYh7KM5uH
- C6LiIr_g4MBRDErmvZjlt1n_zVLS7HSM5OrCU6l_.hFXURsQwUOHrQVMsspz.ElxYjGEb4Gwimcd
- I3GX344EWrbN5.f96Cm_xlAso0cM0pjW4EpuYQdNVd2hPb__O.8dgrR2k_cGfC93PxnBc6SzSa25
- l4LlRetgiP0nUMWK5t6or2md.Tbwu9Gwvcju5HCbLv9oJnWXbFkpMTQmm1Uglu41pVllY_yZ1nf_
- jAo4.nJkvEdrL74NqYegQtAVce6u3uNsK1Gq4J.CE6FjbS.YWPtx8HSpTwFGpm_8NicO98zqI7MR
- N5Virh0P1FUHn3fxRehOhx4RQb4DxR1nclNKqzzZFfWmpCZaK3pFpN7Gw4QaVtv1llutmqNpUuq0
- MuuBh_XkpOqkiUH2WnEI1u.s6uUnSV0OlcmYcPesZPULgRL5l8KudIvrpNa06Ynh3_4VhMG2QhPs
- xAHJNLhyVvbGuRXFafLyi.k0pXGfv2APui3Nfqahzo8nCW2EltJ2s.Xj6MN0rJb6JdFTT6fOSQc3
- vrHi7N15UYJzxbTqj_Qso4s75dgQMGeHUnsmjfFhQ_q9kdo39JguNRWOdLVpjdSxPQ33Bn1ZhdLi
- 7m9I13EGAhD88zL0DYG1W3zZTSfI_UpzTYoSs32eBMwFHEirRRT7khwHoFdDzvdXBLI0F5Cv7voz
- cy3XpFLJcE.SO0qItPRHyUqAfaj8OL7KAERGw6cscRUKLz7wBSqkPS_EgHRmjE_iPqM84NP58jNF
- qtHRat0_gzyGLXpMnCCuhBU_Uz_xpmykKuE0WrHZcktB1Kn5daFNCj3HBgaIc0AZ2TiKiKI2NYGm
- 19Je98LVArNpXiMfSRnqWax6ZVH2VpXP1yBSUxfjbevlnf26VDe6GH5jUDpNaPj6HvBmn651ohxR
- kAOw0VYy.nRT_5LAkkzSy7sRjOCUapSVwEnrfgowit_nnSP0ZvP4CxeTTOS.y1ndAIaXlBzI6CF.
- cKOlMKyCvXd4vaw0agEQgBa.Yw8OLfsVGUKbCfWsCwceFKeTaAsz4TPHqMh9A7gNz6.qAfdGRzKn
- B5YMZsIcIpwrHX24ElH83FOVudFjlAbf29QVJKsYyySTRWLCSQWYGz9TR8dkiWa5.Y94kJFSKCqw
- SICKeMxFN.n9i4MuG.LY6vOmsJOAanCJIJqSXnyyl7Xkv2vRFcDC1XkPobGIHlHAemc1.YRgqLEK
- yEGMPnQNizxEU9N2zfScfcUUxBAmTFrI2_F1nd9KZnY0S2zww9Sk16_g6tg92pMKJDMFmiIt8Mhi
- LB9CUzSc.CmhlZrYU3ER4BHd6YyadrMaBcg6X_XuHD5i6DpumSupkbrfXKcSzNCu0V.gYVsUk2XS
- 81AkQFKdf5_wtGWuZKHXL1h9HRXtUuAozJPj5w51mx5wpChBZ.2lU8Qa6UqYAu26PPbeHbQrXMVB
- MwljJtbskUrpvD7apedaQznh3739nzvMCKBLA7AtThHCibKAHDX1tRbkcUi.Lx1ZF4aV8ApIo8SK
- AYqzS7ez2MkDLycVoPyahjfQbr07b3QRg_Jgzk5tddm8vadiCa878bBFA5ou8W.gAbtnX11W0Fz9
- mgPvp9q3mnbxwXvy0h.R.rcVMcW6DQc9vfQjfmeETeusPBVAgHSesGz8aOEK5PGWR6T3YqhZ5PAh
- En2daVkSUepygXS9Zhs.L39WWJSN46YCgkseq_wt2tw1Di4FiJfyVUR0Z9XM.xixhvwVP6p35Giu
- 1_QMq95igkmj0votgTR..PlI_DcAGSn2tMfQVN27LIUZEQOLG4qSwDLPLIP6e8IGZvo3ElWSDUHa
- f5FxiCMlbzE1me1b46RpLmq7nXfMmaEajF6beKq7n9BWz1UAd.ElCjGfAdtBicDVsPFz_x3GlvqR
- hpDVC2gu3wWgbJMdaFpMcMiu6ENuK93goIO3cqF03p9dfiTGZnwNZOiPayPAgs2pHdyIuXU2f.EE
- 66DuHWjrsEQ4CDlLykjdfZaWfbPclNv3XwmZn.UObszPx3hP7PsR5nM50oU68krzVxFK9AktdUlG
- PGpz1qMo_G9drUmVLfl9fvroD_Q--
+ b=Bg9v3dR3n6hrzK4TLneyhaFUtdzY0CbMUStsDWV8hNeMKILmSaMVG/yAbtIMmFI3cpMBqjse+io71OkMnrDQ7+HTr1UIxWXxG6ib7GyOXIEwymTWng9eTu8Oe/iGPFGSuc+fUrHGGYneJqedS2aucyIRDk5ByZ2/5507i3wvMDLd2cHpaDRb+v3c4SFg2B55EhRmfW1qwUedA/MIWZR0uiAOUxByvkUugD0dZUqAOtR+Eke8PKRYwHEGL/Famjhp1pYQ9VzQ8dOH4UuXd7oQT1UlVikxivJf5XrOU3w+S1dieBULF7WqS3zt4mP6hlfCDYTxWSt2RyaXb1KLWyNSPw==
+X-YMail-OSG: mCgASGIVM1nYyr_EVdNFVMTi8dBxInfLpODg2avFjtlvBcbzSIEer1NfdtberWz
+ ay2_2oXHYgO27lSSN8w560oeCpo8tyxtvVP68uTes4fNja4.QzwSMwzpvrG_rAZxmtBOLAd4bTKg
+ 6hZdip6logr3TZkylT_B6EdORSxH7Iw0iic_goVr5t8yaAkYFM5ouz64PqHPBh.f4Iq1jjPzHy5M
+ emfOWDltP6mSsiFAAukDAPtsRrC_0awpmvEv3YyMZcU_fkJ_z2yed8.RMyYPmskm8VBOoxWC4G3u
+ VkW3jhDY34yin1J7l_Mz1lcxfoIhMjY2D5U1K0gdK3vuOFNVNOPDQz2meN2B5pNBdrT5W0RBKtOG
+ M7gyjLnHQzmRSsdr7HdjxKmgwLG_7qCMMXl7kN_LcBm7Qu5JKCgceTv.W0oSGjsEz5I3GgIAbC_j
+ JFZW_Aogd2xtLCgLxojAz9tiNtRxttMCn384f6E1stBEDY2fSkB9l7ZZpynyHBQw.7LwLKWk.21W
+ vlsCCYBFxGtMSC0oYOt31Em4LT9ViiPNSvijptHZuhoXZFnQBCcX8ydoD_UcrHpjeEPUK9GCe.Va
+ bRwUCB313Ak7aT_FqTa0JMBOXTjuGy2neI42ZIj9IwL0kG4LCAunw41wO9zdr2dx94iU4lWVy6B7
+ gd4L64kmM8tB_CtPJrD1dJD4pdKcx9Go6iuxsxrb61RnLpmxQKpyyc6GUY3R8Tt7UEs1FJAgtI08
+ LtilPl8KQ1SUKDIIAAa7Y5uzWsXA_PlqWsRijWXhzRbnLYbOgp4s8n_qFAaEiVTOaIcvkyKyBm0n
+ EN_E_P65VzTg4Qt.UvPqyn4X0EFqnfxyALLapNO6hC2WzK2EdFMAbT0mnIsBPj0PDkXTSarkYXgn
+ 9COlPRRZNbiNCBBF5ACzE0BHCk7K0WqpStBO6TP3PEg5d9J7edJWN8KxFCzB8vO4yenkLgSWV3XE
+ h0PSh9TvJdjivLig10uLBiyCTKf91HDRTE9hGrkMEtfjlhdNBadCbnTo3PKjnLepTsZ32MhrmNBB
+ b1XYTFIVI.inX3nRu7t1RvgZyXu5KYTmlXl4yfozL5eUcP9JR2wYHlSanuvJp8B.JFG7HnJUIodU
+ 95Od4TxVd.jwvJUj0JF3mpa8Hq.QnalTEhz7FKUUYmUcl0ZI1W6T.A0ilIp5p0PGIOrGEYY_G5o9
+ NDOv7dGENWCV3_zCnK39p.2QzMtHO_CrOszOod1zrW2XZ7nKiVWm2J1VkNguA.ukK4mv9ulp1oxG
+ iySIr1lTWTD6LS635kKwHx96OPDCLtD9CG1EfOgtwGBVVIHW91Nh1x1B0hYPDVeoyAvCFhQkP13V
+ ZqEyRs1t4maNO1DVgaaMDlcEI4p5g.M3qbI5q_GDorjYRfXuvwQVgcW8CiMophoTacwOqgcuQJnE
+ Fs2abQGGiN2B8B6VwrDaLy6VvFKfEeopbVlIOrl2B2nr_81bV2OXUHNGyzfEh6JsMpD2CpU3BmVN
+ GyeZS9XKY1XUR2splt9gX0BA1JpYh9RHUhegoiKWgkGS.z54YtrlA13kWxCkf.30f1Odq32plUHY
+ Oo.5_qJPI2P_oB1sBSThXzeIS3qtkSs2ATd8VQC_LI.qHs6mxJClghdxXWZcXJUHwdrjW2I5vKSZ
+ .4MSIV5XW3GaTQ6SHpUKNHcuWh4Iu3SNBw.5WHfmA7BFW66j698AobC4sh.g25CEpY94P2JTwJRG
+ ynuyBQmAcVgC5GB9dXy8Y0XHcowTBzpJI4.8.NKSxfakV.5Nul7gfkEHLNj3E1cWwArp1kwGP494
+ EdFAz79vpiRL19NmL6uYTe.4kKrxxm.rJVxwtg4g4wSYewC3Sh3NrnJ0Dt4I5k4M4hj8sF.Iqdbt
+ rmUy0plSpWCMEL8itfmdjDyiQUu0P.cYALSFsaRwlPv.Hdoo9Af9_zQY9wQNx.Uix8zZa6HvCBT8
+ 4e2DsziK2oAutxvaX_DF4PSkWHw5WGaqNC13VXuEKuFIZ7P8pdmG2chQTWbsJ_xABvXPbfNuNj_i
+ Kn1LY4o4N188D9Ct7XF2bN9bCd7nWLkhgqEWAN6pz96dQKuJs3WYubrbx29Rd4__ufmkK5FnlcZG
+ lBcynDczjBJFk_yw96E6L_p4Cx.gqwFI3oQDNaFtavXVXBd0l2dpzl80b61u2U32uWBaH2ElcLP.
+ FGYGgW4GQ3b_6H2v8uenLJKIf2B.KbKNPzG87SfS7KWv5hcgad648QsEgitgK1ntZ5qg0mK2ZznQ
+ XxT9Q8XhuQdfIprT46BtB7vhSW9rlIBLk7S9.MdrGOpiQMqQl6kMtqYdbD_Sz0R7tmP5np.aBAvq
+ h2iualTYkqhttOLG9fLHnulUcnufdV8VnwLKs_B_opKqw.5tucImw70XedPIAJKQ2q41QaQlDSpc
+ KjWmJuJ.jdQ1q8YNtcgcUCWsGG9FyFzMu0Q5zCm3VwpltrO4n7xgcYAVPMbShrktIw5f2R4nzQiz
+ jbpQIKllopUjU22EP.KFfXdfQn5_aRZpxfGDGLSYxjnjYE.y8lH10N7feQPvN8gxUoSl67xURlEp
+ LSfg31B2ysWKxnsCUGENFeHP6yvk8IwT05UU7
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic315.consmr.mail.gq1.yahoo.com with HTTP; Sun, 31 Jan 2021 10:09:27 +0000
-Received: by smtp418.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 3dd7e2910dd3e93f9b7efd5c809802ae; 
- Sun, 31 Jan 2021 10:09:22 +0000 (UTC)
-Date: Sun, 31 Jan 2021 18:09:15 +0800
+ sonic311.consmr.mail.gq1.yahoo.com with HTTP; Sun, 31 Jan 2021 10:34:34 +0000
+Received: by smtp402.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 86fba71c5b616e35ff08c29c51cf0239; 
+ Sun, 31 Jan 2021 10:34:28 +0000 (UTC)
+Date: Sun, 31 Jan 2021 18:34:21 +0800
 To: Hu Weiwen <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH] erofs-utils: fix BUILD_BUG_ON
-Message-ID: <20210131100909.GA21719@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20210131094732.168784-1-sehuww@mail.scut.edu.cn>
+Subject: Re: [PATCH] erofs-utils: fix mkfs flush inode i_u
+Message-ID: <20210131103419.GB21719@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20210131094525.168251-1-sehuww@mail.scut.edu.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210131094732.168784-1-sehuww@mail.scut.edu.cn>
+In-Reply-To: <20210131094525.168251-1-sehuww@mail.scut.edu.cn>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Mailer: WebService/1.1.17648
  mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
@@ -113,8 +113,15 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Jan 31, 2021 at 05:47:32PM +0800, Hu Weiwen wrote:
+On Sun, Jan 31, 2021 at 05:45:25PM +0800, Hu Weiwen wrote:
+> When choosing which field of i_u to use, it should be `inode->i_mode & S_IFMT'
+> 
+> Previously, the default branch is always taken. Fortunately, all 3 field has
+> the same data type, and they are in the same union, so it happens to work.
+> 
 > Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
+
+Yeah, thanks for catching this!
 
 Reviewed-by: Gao Xiang <hsiangkao@aol.com>
 
@@ -122,22 +129,31 @@ Thanks,
 Gao Xiang
 
 > ---
->  include/erofs/defs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  lib/inode.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/erofs/defs.h b/include/erofs/defs.h
-> index b54cd9d..2e40944 100644
-> --- a/include/erofs/defs.h
-> +++ b/include/erofs/defs.h
-> @@ -87,7 +87,7 @@ typedef int64_t         s64;
->  #ifndef __OPTIMIZE__
->  #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2 * !!(condition)]))
->  #else
-> -#define BUILD_BUG_ON(condition) assert(condition)
-> +#define BUILD_BUG_ON(condition) assert(!(condition))
->  #endif
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 73a7e69..0ed4264 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -412,7 +412,7 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+>  		u.dic.i_uid = cpu_to_le16((u16)inode->i_uid);
+>  		u.dic.i_gid = cpu_to_le16((u16)inode->i_gid);
 >  
->  #define DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
+> -		switch ((inode->i_mode) >> S_SHIFT) {
+> +		switch (inode->i_mode & S_IFMT) {
+>  		case S_IFCHR:
+>  		case S_IFBLK:
+>  		case S_IFIFO:
+> @@ -445,7 +445,7 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+>  		u.die.i_ctime = cpu_to_le64(inode->i_ctime);
+>  		u.die.i_ctime_nsec = cpu_to_le32(inode->i_ctime_nsec);
+>  
+> -		switch ((inode->i_mode) >> S_SHIFT) {
+> +		switch (inode->i_mode & S_IFMT) {
+>  		case S_IFCHR:
+>  		case S_IFBLK:
+>  		case S_IFIFO:
 > -- 
 > 2.25.1
 > 
