@@ -1,60 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F02311E6D
-	for <lists+linux-erofs@lfdr.de>; Sat,  6 Feb 2021 16:29:47 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5201311E70
+	for <lists+linux-erofs@lfdr.de>; Sat,  6 Feb 2021 16:30:20 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DXx6c5rKyzDwjP
-	for <lists+linux-erofs@lfdr.de>; Sun,  7 Feb 2021 02:29:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DXx7F6T4CzDwlQ
+	for <lists+linux-erofs@lfdr.de>; Sun,  7 Feb 2021 02:30:17 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1612625384;
-	bh=hfMPaa345vJ3bt2EoJYhoILeEv4EX1t2pP7RuQp3i5w=;
+	s=201707; t=1612625417;
+	bh=yg1dV7vSEKAMvtNJJkgGEa4ha64J9Qj3xjU27/21hRM=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=F3POMRf+QYjjDWDtEWBYvJYynE/aPnR/Xz4zyp5P8sFL7KsfZEzO+YbBTnS+E1nfL
-	 MDi/kuWvLwpdpw6ElDksyN4pasLbSnWFjp89Dr6JSJxraKU2G4bcgpXX9OH8mEDKk8
-	 ntu0dW3Oor2zqY9JYjFPCL8tegPuLOY8IyI4GtumCW5KAL0CBctS8RC9a0uhY2eRJp
-	 IKL0gqMcxIxWceFxTNSJMb4AJFxCssGhGobaYQURlXsh/UIJvwT8uqRv+b+Zlv+gBJ
-	 z88N7mPNA+k5dE4GURjtq1HSmj41pdLeFkEVfU2+OWkRIKKtLczrnf00S4/xn9o9Cv
-	 RPaapnYUl6jQg==
+	b=Dm+5MfeoE/Kv0jQyRZiJdZmpoDGhBm+8vBs89NgN6xs5GDA88Cwn8+iGqQO2o/xpP
+	 W1P6N3TZ/SX42ZkMIXc3fxsXmo/H+nM1RdepztwM1zRjXo3dje4tU+r01JUq3lHpC0
+	 QUdul003+28kpyYRB6/6iXVp4NA7vxCV/DbP7TVMGs0PgqgJ8vh0J/AP4tLDaYliIj
+	 4yUfdfRy+I6ZDg8gh0ZKivlcCrwa0aDFGXfLqcl6ZN4qxT5HjTIUnDBGng3j2iCxE1
+	 UGE5i23TG9JDj6qsSovLFXWmb+I1wLubB+9MfZMaGCXruEjUJ7Ym/XquAEOjyCkY22
+	 M+LqQP/XU4DWQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.5;
- helo=out30-5.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.17;
+ helo=out30-17.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=fzkfbnj3; dkim-atps=neutral
-Received: from out30-5.freemail.mail.aliyun.com
- (out30-5.freemail.mail.aliyun.com [115.124.30.5])
+ header.s=s1024 header.b=a2JR2vpH; dkim-atps=neutral
+Received: from out30-17.freemail.mail.aliyun.com
+ (out30-17.freemail.mail.aliyun.com [115.124.30.17])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DXx6H4NRQzDwkk
- for <linux-erofs@lists.ozlabs.org>; Sun,  7 Feb 2021 02:29:27 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DXx702jgszDwjS
+ for <linux-erofs@lists.ozlabs.org>; Sun,  7 Feb 2021 02:30:03 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1612625361; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=b3VetzAb749+j8iqV2VZV2tUOoa/OOBSIKo5EmlC36s=;
- b=fzkfbnj3UBxk8h+84Y+XGSP7ptYNoAuZ/emKjTXSwcfBwHO2VaZezc3OzVa6GW+6K7OENk/KHyxrYJApEVRwibSvTasDt0IoUeVjGb7zvnTSnVdqqWIZvQW8vRu+IsF0287S5T7LII5prMJ+3bnGeML/Kd4Z+b6KpU+N/G8meRQ=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1582487|-1; CH=green; DM=|CONTINUE|false|;
- DS=CONTINUE|ham_social|0.00362215-0.000703358-0.995675; FP=0|0|0|0|0|-1|-1|-1;
- HT=alimailimapcm10staff010182156082; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=2; RT=2; SR=0; TI=SMTPD_---0UO0r6lI_1612625360; 
+ t=1612625383; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
+ bh=LroNBf1Bjy0E9vJha6Zm/rb4peQvkW5VG7hEmuGmTSc=;
+ b=a2JR2vpHJrGEhY9u0kxoPTu9apuGIlLFw4ksPjSpZT19yfd++/v1+2Xh1wELv2UOVe3VhHbdEugnayqXv2FTDGSFE7s0lrzth8L7fXyJk+j++Pxa6rEUJZSV86pX8srjfOjomT2MO9iBEGBlMRA1Ktm/6IVk67Hw3HsMNKaO9yY=
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08008137|-1; CH=green;
+ DM=|CONTINUE|false|;
+ DS=CONTINUE|ham_enroll_verification|0.00565184-0.00050276-0.993845;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e04423; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=2; RT=2; SR=0; TI=SMTPD_---0UO0KAK3_1612625380; 
 Received: from 192.168.3.32(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0UO0r6lI_1612625360) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 06 Feb 2021 23:29:20 +0800
-Subject: Re: [PATCH v7 2/3] erofs-utils: introduce erofs_bfind_for_attach()
+ fp:SMTPD_---0UO0KAK3_1612625380) by smtp.aliyun-inc.com(127.0.0.1);
+ Sat, 06 Feb 2021 23:29:40 +0800
+Subject: Re: [PATCH v7 3/3] erofs-utils: optimize buffer allocation logic
 To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
 References: <20210122171153.27404-1-hsiangkao@aol.com>
- <20210122171153.27404-3-hsiangkao@aol.com>
-Message-ID: <16ba323e-c488-d5a1-87a6-d618f364b5aa@aliyun.com>
-Date: Sat, 6 Feb 2021 23:29:20 +0800
+ <20210122171153.27404-4-hsiangkao@aol.com>
+Message-ID: <fc43d559-4067-8897-6c39-7c69b9748066@aliyun.com>
+Date: Sat, 6 Feb 2021 23:29:40 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210122171153.27404-3-hsiangkao@aol.com>
+In-Reply-To: <20210122171153.27404-4-hsiangkao@aol.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,15 +79,36 @@ Sender: "Linux-erofs"
 
 
 On 2021/1/23 1:11, Gao Xiang via Linux-erofs wrote:
-> From: Gao Xiang <hsiangkao@aol.com>
+> From: Hu Weiwen <sehuww@mail.scut.edu.cn>
 > 
-> Seperate erofs_balloc() to make the logic more clearer.
+> When using EROFS to pack our dataset which consists of millions of
+> files, mkfs.erofs is very slow compared with mksquashfs.
 > 
-> Cc: Hu Weiwen <sehuww@mail.scut.edu.cn>
+> The bottleneck is `erofs_balloc' and `erofs_mapbh' function, which
+> iterate over all previously allocated buffer blocks, making the
+> complexity of the algrithm O(N^2) where N is the number of files.
+> 
+> With this patch:
+> 
+> * global `last_mapped_block' is mantained to avoid full scan in
+> `erofs_mapbh` function.
+> 
+> * global `mapped_buckets' maintains a list of already mapped buffer
+> blocks for each type and for each possible used bytes in the last
+> EROFS_BLKSIZ. Then it is used to identify the most suitable blocks in
+> future `erofs_balloc', avoiding full scan. Note that not-mapped (and the
+> last mapped) blocks can be expended, so we deal with them separately.
+> 
+> When I test it with ImageNet dataset (1.33M files, 147GiB), it takes
+> about 4 hours. Most time is spent on IO.
+> 
+> Cc: Huang Jianan <jnhuang95@gmail.com>
+> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
 > Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 > ---
->  lib/cache.c | 81 +++++++++++++++++++++++++++++++++--------------------
->  1 file changed, 50 insertions(+), 31 deletions(-)
+>  include/erofs/cache.h |   1 +
+>  lib/cache.c           | 105 ++++++++++++++++++++++++++++++++++++------
+>  2 files changed, 93 insertions(+), 13 deletions(-)
 > 
 
 It looks good
