@@ -2,97 +2,93 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05C7D314FC6
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Feb 2021 14:07:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DCD8B31568F
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Feb 2021 20:13:57 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DZjpv0nKRzDsgd
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 00:07:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DZsxv2564zDspj
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 06:13:55 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1612876039;
-	bh=PQ++kuMNdBMpvVtU3HirjdFc39O5izpnnSVzF7KpY/4=;
+	s=201707; t=1612898035;
+	bh=ksydrLS8UwRLajoCB4fDkhKi8NVQtT8YW+8+KXKJgbc=;
 	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=iijZETNsfzcK8KCjTnXO/KN1p7nSfDOkNMHa/Rcyoa6S9Ba/eCsZ7A0fDscMKsO92
-	 DMiVsxlVUii7B8zdkJIzyQ3g2oqGp/IpVESSP1EtS6Wc644gl1bVQxgvD5HeOXqR4O
-	 vASY67V8V5N/DJFNe9wqeCrf2fFtdGfC05QsO4n5xEZTSJDWMHrSB9gPUUMqHBNW+a
-	 5karNnm9HEgGPGaZ81C2IHVcKnT/36WepIoWzsDNZY8rrtnbv708xp62WF1EGeyGXJ
-	 CnjrlpRqpH/OCevJ7vxCEZtcJXRLi84BM2pUR4xdNSU5wWZzqB3AKthWttbPU7Zcqj
-	 KKMBkhCfQvbDA==
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=T2BRBrWve/mZCyDaCieF2w7cknar1XC3fEcJOqNeb/Cd94+ER3eHd8p3jfrziyejV
+	 eF/pLd29kdaBwszWiWbU8hVbdMzxiHe/oLxnPfZ+qZX/gDXFivArJabMBU3iiUUzC/
+	 7avDbM4ppItKCrabfF1PDt2Lemyz4oog8vf3WzyjzEYy7guu7zD0qpdWmPGRIMxS2d
+	 sm0HMuH/KEcFZBLQ38zmowSFIqS+IS7To8YwVaeJdQDf+5UuWjP3zpmmChNhGdopPf
+	 a7cGsFbzxqxhbpXm+YUhCNpu4moLol10O/BCq90V7NJynMZekejViU7cEkEY4rX2PB
+	 MCvGLhrj/Of+A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.204; helo=sonic311-23.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.30; helo=sonic316-54.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=CUundgL6; dkim-atps=neutral
-Received: from sonic311-23.consmr.mail.gq1.yahoo.com
- (sonic311-23.consmr.mail.gq1.yahoo.com [98.137.65.204])
+ header.s=a2048 header.b=UI94Pi7p; dkim-atps=neutral
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com
+ (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DZjpX0smHzDqly
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 00:06:56 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DZsxb0vDKzDshL
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 06:13:36 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
- t=1612876010; bh=T/SFAyzoQajj7pmg3F6mRFmbgFjMMOgJpnlk5kQAz24=;
+ t=1612898012; bh=z6Axgwdyd+vTsyyrN2uR7txvmspDtWY2tOhfR+9I3ug=;
  h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To;
- b=CUundgL6ZLPtqEoL9i9w4Dc3MEP9HFeI8gOfIrZ6T2Rb8YgMDf/Cw9hQvxutuaNTTpLIeYXxEZenI2dKrafvuoBVbcp8v4W/gUqONLMndK4CxyhWf9TsVdXDLx9x5d+vKNBXdbuzS3EkIp43WSqL+go4apfNADQXg//5ZV+C6LXDI1wyt5oHGqUfyfR3HScndj8W4uaLhTrDqHq6cL5q/TRToc9DmBzBAZf9Yk1nMVdhP7HE8eBsfCCF/AQu9ww7SDayxqAny7iEPBqCIB/EIfx6g7OwIijZscPx/qcZxljGMLI3xhYhbbmxdU3TDDg0CeHMt4QoVTg/SZ0q0zm2FQ==
+ b=UI94Pi7pG0y2nbHklNo9hfZoP6HxMG781IFgPhOOjiCWlVvmNCx9kqUnRUlaTZ7zXORbjfCyoZ6x0h/lHUBrzI5nGmuQqMsNK2As4HTzKEV1W52HAqwIPNLbORuFLScueCgceiMbjNkHOQ5bCP8QG3P6LGAequGJnbc26H+s0iM0mBbd7Cac/Hdi4Qs3YhR660sRhw4Up6Mg7166SN8xiXGlkhxcy1nwzV9bNJ8u9r9ARtzPLasKJtwl+WswTTl+bXAdyrqodiu8Pn3HgKPSwD9Su458+P/lqpdC5c7N54idGoRnEMOwOi+DluwXys4PvETNReRilFNRY8f7r2HXzQ==
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1612876010; bh=u69q4lXNMHn7rpe4nC/X3pqpD1UHyZXHCG976ocyHJ0=;
+ t=1612898012; bh=lK971ZsYDmnWKan1JYeDffHIlr+QHNdGEjwrT5QWNQy=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=Ax+6AtmjdYhtnPet2zQ0p4PdmT8K3HDFvkTQh8ZRFBHs4ke+45vQhtExk1OKzM4RBlIMGtK7oZ/dsGniFvNkOXA5AV3EleeODFOucUJ+Z85+DkghKrkn1U2S/YgRThAFI58VfxQSeeL6GMEj4zyDKVlhQrrkgjZdyidaUgpJNwHGxz/amUnqA6r+e+pv3/bCcMDNPQs+FL8t9j1DSugjI9jBJ7GVGcH/vJxCMd66zjgvwRAGtqRF4+NuidXn5F82ogZz1mEaREiaJZ3wxqs2HH5o5Coi/YqtjRwOsuf8NcOBag0LzZkMaIkaA5RSXC5nnBZO5K8mcT+JLSioOHFa2A==
-X-YMail-OSG: ZAROcn4VM1nb.IwTrqwoFcL2MIUhCmvdVLA837m8WqghSwRxJKZ4TClJw7l1JyB
- 65YnixG5PVber2HhDtWpk1Qz7grfH02SKMNPoj5jkAfcm7muW47uZPiKT.vjODAn1PABu2sH_7k0
- bY1FiaY7cf0NZk1E9pZoQy48GigJbfOiENvaRcqYZZaL6T9iaWQZQaFYcWrCc5YdWTDn83rYPppt
- sCXzzhq5q71Xia5BORKdvJslqSQXWk8c6JwUJi0N0GN4AsvOVHX_ZhaVat6c1aZ0lHkmY2vnQUg0
- zsk3.exsYVirWtZ.BQDQEdK7HeJS_gN8c2UuWU1cdHYQ_vj3xRsl0dlHXt4EeoVulJuTCa0MAwRI
- uqeCDPu6nRrImNyZ06pGaJ1qSDOZri59J4p5OwNnvx.Mkf.9lUTWUBydhke6fibyeBsrNwqHDlN2
- Dw8kMBqKR0aU.KbnrvEzEiw87Dz6K6sSOcdqD1IQ4sspBwLnt.ko8_3Y2N56jeuXHHfWlA0wnbOA
- wrycaDumxRQmYASPn2FhWOuPtMsGvEG1Wzw4VliNPEehyHk7FPVWFw4axQIKNOS0pHlulOW0leAY
- O3s_dTj6ULI9xSL3_FB1h7DAxNuvkelG3.Wgvr_V_z9PjYcbraL7F0zkNy9JhW6knbBTfONNXfPd
- DcPF525hryycfgj7bMX39i5kJoclnEGAYV7nkJMqhmnXHSLe8vF6gNcanH59EO6TfoIAT741QKeN
- MzYmyKftNMy1WZdbodbVflZU6D8hwmLHJDrwrnJmLq9ICdyiL.s7aqIxjZpMgCiXljosXGRaZiC5
- JkfFjgi6DR6cvHFty9VRzByEmx1_9bAaCVGM0MxL5whKHMokzdHrKTQBbu7nHOC4kvFAIMvDMj9F
- xmD59s5.B7MxtlSzRbzzDig8EoZkqhMJ_pUbqk8muTcINDVf0479fPVCmv1dWR7AIEJwachr9oe8
- HgdnYiSzKhCwOVMsYnosIP5mru1tUhg0UGV74J2keloZJ8skd7HS20DKjsXOLZ5ikQJixc3Lxbts
- lf_mkkia.Z3ID835FpEKI6v.x3cg07t7frDKA2ZUjF206WxdHeShWgrDE5YENHJTCl8YCuOHwZCX
- 7hyProw9R7fgXKf1f9op00EfINYD_g_h0pR6qMWIJocAYM.s9SMQUL.odvh7fQB.bmKDQlk3ONCQ
- F8amTODwRniHTzd9daOY21FbGz42RH1.988hchlFNkEeFc2gPLiAlWK_IyrtCPZgw.bqX2MIBwsQ
- 6a.OvQCl_BMqaC5caAkzGXYaQ2Yf_AmEvMr0F4ojSm_vzM1LN5UPNDxCkqwAbyFNUJyFYhZigwed
- 4QdONAOz6bTJesmeNcNE_N3XftzZlf1Ryi.POI2avJGTXAZfAAtp_uHm1ni91ZdySsKoke6xkXqj
- XNusCxecYNrTcxZliiC6C81xPSV2LLeGnBsIjvNiL.DOeVXGaLLlbnqaIUCPYS8XpsLVlKUOcJ9C
- wFKZqHDb.GjGTUIFZ15aadE.2unuSMoWSFkiwDIGQJz4YQlP2oPx7JMYxygNdycWEIdHWgJgLICY
- Q.aYnwBf3Yr9O8PPP3rEFi373hFduWO7A2Rst3aDxMK.PA_ZWJnJvCcbOyfU9alnB3kvjyWgpgYb
- EiQ6V3vHfoBWUVkWvEyaj5AMh9tadkjUC2MIFadbBRcnM.BTbUTOUe37p23kbJf1o0f5JWRCqnCF
- kVXCbhBykTlgIUfTA1rdV4AzSLwPJpyKmhb8uOuo2GTz.0sRSSXhKYnEX1AFl52ttCix4HGBpNLJ
- mJZ06oIZtUDudYDoYmpPf4wknLLFr4qnPA8MnXRk3NFrSXVAKvdrZIEX5FTalMYflyx02lt26phS
- CE1sx2uxl0ZsVcYL9wkDCEAm4GIVGnkZ1vNuOuXl2Jae4ukhXmgnQ.hKEVgOayKptPNC0VfNPEiv
- kJxSWU1IEcIA4JzjqzPdPnihSliqy.NZg8ju8Olv8VAcg_dbaCFfqUmaYLrbWIkbMtzfLuNEjP3i
- lcPFi.GXcjIsfwEeTeMK_x4layLuDizg3hxrbd1t9ja408gHON_K2rT7s.4qrKWQOXmCiVKv66z7
- nC2qWlaVpHY3b7U2B5EVwXpp0OnyTPRoMJCRG8eHg_qM875bGeL4NPRe7QdrDTh80dJ_ChdMmFnC
- br8cS.XmH91Q2VANC6RRSTSr9QAhEcj2wPowKCkEafJZE4wW7NSFsaDZ7l872BmpMrC0Gbq7zE3m
- G.CC7lhVXprHEVaSJks0_ItAIp5AQ4oGfBt7nsXlpRiqsneyNkKwA9jM8HCIxPxGusq2yrtE_WkV
- qwrfsXfPKZkJ2P7uX_luRD7Uhhaw942MhmYyoH5_kSPAZ60L7FA9eJgQsaCLniiVa5UmWSqeE.JR
- mQZNDPWNevqLbMizX_rPFvhkJ33alJ8BT6Q6yUPgWjUYy9BFypzisjctX3W.NI8i.xvZWvGBiKyg
- ZRjlZV4aT0OfTE2BIGIC3gKP9cyDHU5hJK.At6wcMreORX8_EgSH17MvuUaYs8PrrFibyiV8yMGG
- EB6pXwBgMoDH_yfAT6cfc7_Bmo3f.JpR.W5pA_J6Jd8_vZCqdwxwIGURRcf.cV6ON7YlSDSj9Msz
- 16EqYhizp.ZQpROm5qPbFjppyVrzQCs7LnRhXSPsGoBmij9_MMBUTonVWo_h56DAXI1BF_p0bImY
- 1AUm4esbj_00MCr.sH_2CyUsW1Z8AyZa44LD4fjbxmdn1mUZqmeN6sa9L5nOmcsY8
+ b=JX0cjJXgO4QcPuRz7JoHYF00T6JxOuksC+vchuyyqCQ7A0TE0agn3N6Y7102YmnibyXk2FUQq/cwSGm+AEgczSRqkcCSyob2a1ZyMhkXeCNWeVdflO1nKapsTzHISadWlXt92GZAtFl3eiFqJ/LK7jNNNjiqua/mZmndDY2/yodBkxk5tsCJRaIpMRjKHy28EKhmMVn4XcHpV9GhP3LTxfYFrDEGf8gwf2SLEye27zZFyCVAzIzpo1b0kdKVLTMavdLfDwT/rQ8iisU3YjtJ1UfTrM4EpN3OUuYGOJBWWhIs8Y7XPDAv+GjQ9PJi1KUBA+5hYrCyNBqR/RQC96oFaA==
+X-YMail-OSG: npf.oxsVM1nyW8iyyZ99vi.sjMI9jlNsj4e2hie2FJnGMxRAMrpvmoh0sc4d92g
+ rEA9NrSey03xv.T.iLiyjBwxgZE4aYJqOrEBC5e5remanGxOVenPEkAWkmgmstxpQqhZsOwl6O5V
+ czCkz_j6Ly.ujKvHWKDvM6xa1N7bzcEy3kFGmfH5N17QUG9pgf9drdSTy1UZ8AEIwWakD64oc6fL
+ DsA99EMZLo.swixm9fs.w8th2VZ5SlaPVxXsE4yUKgTPwMwfCwX4S8smS_XAZj7A8bgTSG0Y2rU6
+ kCME4Dc_RGMDIMY2knK50kipH8NEwv7XK4Ml2OeGCKJu8UZwBeP383R66lyJYcj6q.tqGWHGwiTF
+ 6IRvGH5nPRDQAO4kbIooEplzchPZecAWqbW2Lsa6DerN6_mTV4WnTV2o72.EAIpFEBIQVjOkbyho
+ 4pEbINSVFqT6Pd0.EhT3eLVJ4cok8nIeknpJBrceN4nTq0dFXM0TPVSi9391Vn5xcmi45rJZeDWP
+ IedsJXLvr4pL126D7XL9740rFErcvlSBOPjGs.w878k4TZGmwe2mfb4xKWXjgRGvY9b6hXRibVIb
+ SDXCxli1iwBUe1cg8GDA8eNUi0F7ImIqceNoPFdhcejtmKiMvCod63HggQvg8KNpT3hf5RewbKCN
+ VcMHCKWf90x.Pm8V00q7Ksk84iNTzk6OTOYBKwPXPTgUUz5OZREEO2UTZwXOoegUluBigzvwn1x9
+ 4pWnQDfPNIzuB74qyFJp_ibSdhXpVqZXwbMdwEXyB1j9gOVUCijNmZM_MnfwNOrYjeXonM5D9_O7
+ mhzqMgYdwiB0o6wI2TE_Q6FX8xt4rXJALpcbff4N3LbEsNUxk9pNHIU1qmz60c8rJQ69c.n_d9Ur
+ ZA1OvrkUaVhXXZqh9QVmmYZJ9AG2zr0AhTK62ovtZjpnxUvsE6D0BfFIItHBD4ijN9QQK4pWUZUU
+ v8bXuQO.QHUYhetzh44EBcKrhZjzHf6Nt7An4DD9zirEdUA8ET0zxKlkmbJEfzrrUGJryO4BisF8
+ A._bLou9GLY6D.zZZSLF4KqcxxQ5ztuk9w8ZCD4MdmPiz6eyb82pyBKRWvooNF_KZ_PJaosXAqg0
+ lzC82nhUshYpCaKeBa8YNEPS7kO8GubYsnpcpxV8Sun4hL_mF70J7PdFTev3IHxEtA52FOKU2W9M
+ bVh546XoMnRX_gNkqC2dx6kjnVKmYUdvzDJZPQZDOCTynD0uRczjKDOoT7MB7tu96gC59Ipnwk5J
+ TpYaN1Q8zxfxEdlGTTMnr6cfn5Gx7yxqgyxSsCQID6eZSDtPlLGdzY3Yo7OOMhgli9..rbakquBd
+ 8xYuTOF5jJjP2mD3NWu1rdZt4ALGKmYqrRcHetVs5zPpO6jq8cPYZe2snTkePd0_DzJAVLBQKY9O
+ k9jCwkkikGdeXITgg7s2Snze5u4blyP3yMsrdL6h0pGI97TCoP5CSRxwUPHAPAZHC04aRnQsBu5Z
+ NENdIbf3_UXSBE5VHXF29EFb4mvYkeNE85PwFlasoQ_zjqrmnOS0W_hinNtJ1qk05iK3fO8wgLAb
+ XEf79vhhN8E5mLqZxYnyTeCytfAZm7osZVfCPEYcdAkJucvror9cCuiUMzHnk6ACvaSX1ENOJoJP
+ NJp8rgEhyypLKCTNzuQAyVEjqIkt2KrVivJ2j4OgzfUukHO32FPqkpuPzKYh8hQgY1LbV4Jbt_iG
+ fy9qGDOni_KHwg6QkIn.J_7rvffS_LueHdLZL4yTRn0.YLwh1IP9mNhyHnFLO7iogO8afVmLFcwz
+ i4keJAU6ligqGMtFSMXGJQahbmUcfKrWbeQg9.jfDXxU6tTZHbOs8v552g_YetMJAIxL8g97P.pV
+ czC0tLguYEiiDA6MN6PeAbmvuLDOVa1dMsgCwboQxRD7QxhVMmz7EGBTkhaoNg1IpgvFG94q3e4v
+ Ak13fAdGBpM1U9jOfFZGEPyo3mATWNIFfmZbrN45DJ1HpIXXyfNzZQ2D8hmJwUu4I.qN0YgaCPn6
+ 2b6AGvvKBG4eEx5MWSz8gzj9XGHMk8mwI0DQ3qnd3ZY89gTD9g39om0wwg26s8CSQU1TGeKYmuTb
+ 6_6M2640MaloxlwQFDFrRpiRaZnzMo6NbhHFZuDdepZtH6P61fRxhdWlcJDYHMMuAuJiHvKHEf1y
+ 56me1bEGQCQMZM2NkXOtzQ8FF1zVsbxeRF.pO4fJ1zfTBCrwZ7WMOOWouks_Pa2xTtuQW4nUFIH1
+ 5HCXELENhgIy_fNiIAA0C6hWXNqTTQC6j_vmkrFwRySdUmrLbGpZpYRtqakP9GnbDmynE.JSjMUL
+ 7OOie0NHnCLcvjPB8OL1HtIt.Bzb4doejGY_nEXfxKTrVqUTLyBwovT5tUGNgmcxkqegJLVKzbZT
+ DSYV9dBwS7BQ8EaTOadwEawVOsfIw_9e6jsgyx5iZt9NBX5CnpiPzNC26S0sWhyVQTJr1BG4dS66
+ onQm5uk8yibnmA2DYD5Vv0BSwdEgrn15nvnhbDyfV
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic311.consmr.mail.gq1.yahoo.com with HTTP; Tue, 9 Feb 2021 13:06:50 +0000
-Received: by smtp408.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID 5ddfd49f5fe95523731af90341f94f5d; 
- Tue, 09 Feb 2021 13:06:45 +0000 (UTC)
+ sonic316.consmr.mail.gq1.yahoo.com with HTTP; Tue, 9 Feb 2021 19:13:32 +0000
+Received: by smtp417.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 012b4af943bcffd954757582ae3c0073; 
+ Tue, 09 Feb 2021 19:13:31 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: initialized fields can only be observed after bit is
- set
-Date: Tue,  9 Feb 2021 21:06:18 +0800
-Message-Id: <20210209130618.15838-1-hsiangkao@aol.com>
+Subject: [PATCH 1/2] erofs-utils: don't reuse full mapped buffer blocks
+Date: Wed, 10 Feb 2021 03:13:21 +0800
+Message-Id: <20210209191322.8902-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20210209130618.15838-1-hsiangkao.ref@aol.com>
+References: <20210209191322.8902-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -106,87 +102,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@redhat.com>
+From: Gao Xiang <hsiangkao@aol.com>
 
-Currently, although set_bit() & test_bit() pairs are used as a fast-
-path for initialized configurations. However, these atomic ops are
-actually relaxed forms. Instead, load-acquire & store-release form is
-needed to make sure uninitialized fields won't be observed in advance
-here (yet no such corresponding bitops so use full barriers instead.)
+Otherwise it could cause data corruption since erofs_battach()
+doesn't support full buffer blocks (and oob would be misjudged.)
 
-Fixes: 62dc45979f3f ("staging: erofs: fix race of initializing xattrs of a inode at the same time")
-Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
-Cc: <stable@vger.kernel.org> # 5.3+
-Reported-by: Huang Jianan <huangjianan@oppo.com>
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Fixes: 185b0bcdef4b ("erofs-utils: optimize buffer allocation logic")
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
 ---
- fs/erofs/xattr.c | 10 +++++++++-
- fs/erofs/zmap.c  | 10 +++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ lib/cache.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 5bde77d70852..47314a26767a 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -48,8 +48,14 @@ static int init_inode_xattrs(struct inode *inode)
- 	int ret = 0;
+diff --git a/lib/cache.c b/lib/cache.c
+index 40d3b1f3f4d5..e8840ac5dd31 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -155,8 +155,8 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 				  struct erofs_buffer_block **bbp)
+ {
+ 	struct erofs_buffer_block *cur, *bb;
+-	unsigned int used0, usedmax, used;
+-	int used_before, ret;
++	unsigned int used0, used_before, usedmax, used;
++	int ret;
  
- 	/* the most case is that xattrs of this inode are initialized. */
--	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags))
-+	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags)) {
-+		/*
-+		 * paired with smp_mb() at the end of the function to ensure
-+		 * fields will only be observed after the bit is set.
-+		 */
-+		smp_mb();
- 		return 0;
+ 	used0 = (size + required_ext) % EROFS_BLKSIZ + inline_ext;
+ 	/* inline data should be in the same fs block */
+@@ -177,7 +177,7 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 
+ 	used_before = rounddown(EROFS_BLKSIZ -
+ 				(size + required_ext + inline_ext), alignsize);
+-	do {
++	for (; used_before; --used_before) {
+ 		struct list_head *bt = mapped_buckets[type] + used_before;
+ 
+ 		if (list_empty(bt))
+@@ -203,7 +203,7 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 		bb = cur;
+ 		usedmax = used;
+ 		break;
+-	} while (--used_before > 0);
 +	}
  
- 	if (wait_on_bit_lock(&vi->flags, EROFS_I_BL_XATTR_BIT, TASK_KILLABLE))
- 		return -ERESTARTSYS;
-@@ -137,6 +143,8 @@ static int init_inode_xattrs(struct inode *inode)
- 	}
- 	xattr_iter_end(&it, atomic_map);
- 
-+	/* paired with smp_mb() at the beginning of the function. */
-+	smp_mb();
- 	set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
- 
- out_unlock:
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index ae325541884e..14d2de35110c 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -36,8 +36,14 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	void *kaddr;
- 	struct z_erofs_map_header *h;
- 
--	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags))
-+	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags)) {
-+		/*
-+		 * paired with smp_mb() at the end of the function to ensure
-+		 * fields will only be observed after the bit is set.
-+		 */
-+		smp_mb();
- 		return 0;
-+	}
- 
- 	if (wait_on_bit_lock(&vi->flags, EROFS_I_BL_Z_BIT, TASK_KILLABLE))
- 		return -ERESTARTSYS;
-@@ -83,6 +89,8 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 
- 	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
- 					((h->h_clusterbits >> 5) & 7);
-+	/* paired with smp_mb() at the beginning of the function */
-+	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
- unmap_done:
- 	kunmap_atomic(kaddr);
+ skip_mapped:
+ 	/* try to start from the last mapped one, which can be expended */
 -- 
 2.24.0
 
