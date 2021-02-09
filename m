@@ -2,63 +2,97 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5201311E70
-	for <lists+linux-erofs@lfdr.de>; Sat,  6 Feb 2021 16:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05C7D314FC6
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Feb 2021 14:07:24 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DXx7F6T4CzDwlQ
-	for <lists+linux-erofs@lfdr.de>; Sun,  7 Feb 2021 02:30:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DZjpv0nKRzDsgd
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 00:07:19 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lists.ozlabs.org;
-	s=201707; t=1612625417;
-	bh=yg1dV7vSEKAMvtNJJkgGEa4ha64J9Qj3xjU27/21hRM=;
-	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=Dm+5MfeoE/Kv0jQyRZiJdZmpoDGhBm+8vBs89NgN6xs5GDA88Cwn8+iGqQO2o/xpP
-	 W1P6N3TZ/SX42ZkMIXc3fxsXmo/H+nM1RdepztwM1zRjXo3dje4tU+r01JUq3lHpC0
-	 QUdul003+28kpyYRB6/6iXVp4NA7vxCV/DbP7TVMGs0PgqgJ8vh0J/AP4tLDaYliIj
-	 4yUfdfRy+I6ZDg8gh0ZKivlcCrwa0aDFGXfLqcl6ZN4qxT5HjTIUnDBGng3j2iCxE1
-	 UGE5i23TG9JDj6qsSovLFXWmb+I1wLubB+9MfZMaGCXruEjUJ7Ym/XquAEOjyCkY22
-	 M+LqQP/XU4DWQ==
+	s=201707; t=1612876039;
+	bh=PQ++kuMNdBMpvVtU3HirjdFc39O5izpnnSVzF7KpY/4=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=iijZETNsfzcK8KCjTnXO/KN1p7nSfDOkNMHa/Rcyoa6S9Ba/eCsZ7A0fDscMKsO92
+	 DMiVsxlVUii7B8zdkJIzyQ3g2oqGp/IpVESSP1EtS6Wc644gl1bVQxgvD5HeOXqR4O
+	 vASY67V8V5N/DJFNe9wqeCrf2fFtdGfC05QsO4n5xEZTSJDWMHrSB9gPUUMqHBNW+a
+	 5karNnm9HEgGPGaZ81C2IHVcKnT/36WepIoWzsDNZY8rrtnbv708xp62WF1EGeyGXJ
+	 CnjrlpRqpH/OCevJ7vxCEZtcJXRLi84BM2pUR4xdNSU5wWZzqB3AKthWttbPU7Zcqj
+	 KKMBkhCfQvbDA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=aliyun.com (client-ip=115.124.30.17;
- helo=out30-17.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=a2JR2vpH; dkim-atps=neutral
-Received: from out30-17.freemail.mail.aliyun.com
- (out30-17.freemail.mail.aliyun.com [115.124.30.17])
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.65.204; helo=sonic311-23.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=CUundgL6; dkim-atps=neutral
+Received: from sonic311-23.consmr.mail.gq1.yahoo.com
+ (sonic311-23.consmr.mail.gq1.yahoo.com [98.137.65.204])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DXx702jgszDwjS
- for <linux-erofs@lists.ozlabs.org>; Sun,  7 Feb 2021 02:30:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliyun.com; s=s1024;
- t=1612625383; h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type;
- bh=LroNBf1Bjy0E9vJha6Zm/rb4peQvkW5VG7hEmuGmTSc=;
- b=a2JR2vpHJrGEhY9u0kxoPTu9apuGIlLFw4ksPjSpZT19yfd++/v1+2Xh1wELv2UOVe3VhHbdEugnayqXv2FTDGSFE7s0lrzth8L7fXyJk+j++Pxa6rEUJZSV86pX8srjfOjomT2MO9iBEGBlMRA1Ktm/6IVk67Hw3HsMNKaO9yY=
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08008137|-1; CH=green;
- DM=|CONTINUE|false|;
- DS=CONTINUE|ham_enroll_verification|0.00565184-0.00050276-0.993845;
- FP=0|0|0|0|0|-1|-1|-1; HT=e01e04423; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
- RN=2; RT=2; SR=0; TI=SMTPD_---0UO0KAK3_1612625380; 
-Received: from 192.168.3.32(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0UO0KAK3_1612625380) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 06 Feb 2021 23:29:40 +0800
-Subject: Re: [PATCH v7 3/3] erofs-utils: optimize buffer allocation logic
-To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
-References: <20210122171153.27404-1-hsiangkao@aol.com>
- <20210122171153.27404-4-hsiangkao@aol.com>
-Message-ID: <fc43d559-4067-8897-6c39-7c69b9748066@aliyun.com>
-Date: Sat, 6 Feb 2021 23:29:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DZjpX0smHzDqly
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 00:06:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048;
+ t=1612876010; bh=T/SFAyzoQajj7pmg3F6mRFmbgFjMMOgJpnlk5kQAz24=;
+ h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To;
+ b=CUundgL6ZLPtqEoL9i9w4Dc3MEP9HFeI8gOfIrZ6T2Rb8YgMDf/Cw9hQvxutuaNTTpLIeYXxEZenI2dKrafvuoBVbcp8v4W/gUqONLMndK4CxyhWf9TsVdXDLx9x5d+vKNBXdbuzS3EkIp43WSqL+go4apfNADQXg//5ZV+C6LXDI1wyt5oHGqUfyfR3HScndj8W4uaLhTrDqHq6cL5q/TRToc9DmBzBAZf9Yk1nMVdhP7HE8eBsfCCF/AQu9ww7SDayxqAny7iEPBqCIB/EIfx6g7OwIijZscPx/qcZxljGMLI3xhYhbbmxdU3TDDg0CeHMt4QoVTg/SZ0q0zm2FQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1612876010; bh=u69q4lXNMHn7rpe4nC/X3pqpD1UHyZXHCG976ocyHJ0=;
+ h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
+ b=Ax+6AtmjdYhtnPet2zQ0p4PdmT8K3HDFvkTQh8ZRFBHs4ke+45vQhtExk1OKzM4RBlIMGtK7oZ/dsGniFvNkOXA5AV3EleeODFOucUJ+Z85+DkghKrkn1U2S/YgRThAFI58VfxQSeeL6GMEj4zyDKVlhQrrkgjZdyidaUgpJNwHGxz/amUnqA6r+e+pv3/bCcMDNPQs+FL8t9j1DSugjI9jBJ7GVGcH/vJxCMd66zjgvwRAGtqRF4+NuidXn5F82ogZz1mEaREiaJZ3wxqs2HH5o5Coi/YqtjRwOsuf8NcOBag0LzZkMaIkaA5RSXC5nnBZO5K8mcT+JLSioOHFa2A==
+X-YMail-OSG: ZAROcn4VM1nb.IwTrqwoFcL2MIUhCmvdVLA837m8WqghSwRxJKZ4TClJw7l1JyB
+ 65YnixG5PVber2HhDtWpk1Qz7grfH02SKMNPoj5jkAfcm7muW47uZPiKT.vjODAn1PABu2sH_7k0
+ bY1FiaY7cf0NZk1E9pZoQy48GigJbfOiENvaRcqYZZaL6T9iaWQZQaFYcWrCc5YdWTDn83rYPppt
+ sCXzzhq5q71Xia5BORKdvJslqSQXWk8c6JwUJi0N0GN4AsvOVHX_ZhaVat6c1aZ0lHkmY2vnQUg0
+ zsk3.exsYVirWtZ.BQDQEdK7HeJS_gN8c2UuWU1cdHYQ_vj3xRsl0dlHXt4EeoVulJuTCa0MAwRI
+ uqeCDPu6nRrImNyZ06pGaJ1qSDOZri59J4p5OwNnvx.Mkf.9lUTWUBydhke6fibyeBsrNwqHDlN2
+ Dw8kMBqKR0aU.KbnrvEzEiw87Dz6K6sSOcdqD1IQ4sspBwLnt.ko8_3Y2N56jeuXHHfWlA0wnbOA
+ wrycaDumxRQmYASPn2FhWOuPtMsGvEG1Wzw4VliNPEehyHk7FPVWFw4axQIKNOS0pHlulOW0leAY
+ O3s_dTj6ULI9xSL3_FB1h7DAxNuvkelG3.Wgvr_V_z9PjYcbraL7F0zkNy9JhW6knbBTfONNXfPd
+ DcPF525hryycfgj7bMX39i5kJoclnEGAYV7nkJMqhmnXHSLe8vF6gNcanH59EO6TfoIAT741QKeN
+ MzYmyKftNMy1WZdbodbVflZU6D8hwmLHJDrwrnJmLq9ICdyiL.s7aqIxjZpMgCiXljosXGRaZiC5
+ JkfFjgi6DR6cvHFty9VRzByEmx1_9bAaCVGM0MxL5whKHMokzdHrKTQBbu7nHOC4kvFAIMvDMj9F
+ xmD59s5.B7MxtlSzRbzzDig8EoZkqhMJ_pUbqk8muTcINDVf0479fPVCmv1dWR7AIEJwachr9oe8
+ HgdnYiSzKhCwOVMsYnosIP5mru1tUhg0UGV74J2keloZJ8skd7HS20DKjsXOLZ5ikQJixc3Lxbts
+ lf_mkkia.Z3ID835FpEKI6v.x3cg07t7frDKA2ZUjF206WxdHeShWgrDE5YENHJTCl8YCuOHwZCX
+ 7hyProw9R7fgXKf1f9op00EfINYD_g_h0pR6qMWIJocAYM.s9SMQUL.odvh7fQB.bmKDQlk3ONCQ
+ F8amTODwRniHTzd9daOY21FbGz42RH1.988hchlFNkEeFc2gPLiAlWK_IyrtCPZgw.bqX2MIBwsQ
+ 6a.OvQCl_BMqaC5caAkzGXYaQ2Yf_AmEvMr0F4ojSm_vzM1LN5UPNDxCkqwAbyFNUJyFYhZigwed
+ 4QdONAOz6bTJesmeNcNE_N3XftzZlf1Ryi.POI2avJGTXAZfAAtp_uHm1ni91ZdySsKoke6xkXqj
+ XNusCxecYNrTcxZliiC6C81xPSV2LLeGnBsIjvNiL.DOeVXGaLLlbnqaIUCPYS8XpsLVlKUOcJ9C
+ wFKZqHDb.GjGTUIFZ15aadE.2unuSMoWSFkiwDIGQJz4YQlP2oPx7JMYxygNdycWEIdHWgJgLICY
+ Q.aYnwBf3Yr9O8PPP3rEFi373hFduWO7A2Rst3aDxMK.PA_ZWJnJvCcbOyfU9alnB3kvjyWgpgYb
+ EiQ6V3vHfoBWUVkWvEyaj5AMh9tadkjUC2MIFadbBRcnM.BTbUTOUe37p23kbJf1o0f5JWRCqnCF
+ kVXCbhBykTlgIUfTA1rdV4AzSLwPJpyKmhb8uOuo2GTz.0sRSSXhKYnEX1AFl52ttCix4HGBpNLJ
+ mJZ06oIZtUDudYDoYmpPf4wknLLFr4qnPA8MnXRk3NFrSXVAKvdrZIEX5FTalMYflyx02lt26phS
+ CE1sx2uxl0ZsVcYL9wkDCEAm4GIVGnkZ1vNuOuXl2Jae4ukhXmgnQ.hKEVgOayKptPNC0VfNPEiv
+ kJxSWU1IEcIA4JzjqzPdPnihSliqy.NZg8ju8Olv8VAcg_dbaCFfqUmaYLrbWIkbMtzfLuNEjP3i
+ lcPFi.GXcjIsfwEeTeMK_x4layLuDizg3hxrbd1t9ja408gHON_K2rT7s.4qrKWQOXmCiVKv66z7
+ nC2qWlaVpHY3b7U2B5EVwXpp0OnyTPRoMJCRG8eHg_qM875bGeL4NPRe7QdrDTh80dJ_ChdMmFnC
+ br8cS.XmH91Q2VANC6RRSTSr9QAhEcj2wPowKCkEafJZE4wW7NSFsaDZ7l872BmpMrC0Gbq7zE3m
+ G.CC7lhVXprHEVaSJks0_ItAIp5AQ4oGfBt7nsXlpRiqsneyNkKwA9jM8HCIxPxGusq2yrtE_WkV
+ qwrfsXfPKZkJ2P7uX_luRD7Uhhaw942MhmYyoH5_kSPAZ60L7FA9eJgQsaCLniiVa5UmWSqeE.JR
+ mQZNDPWNevqLbMizX_rPFvhkJ33alJ8BT6Q6yUPgWjUYy9BFypzisjctX3W.NI8i.xvZWvGBiKyg
+ ZRjlZV4aT0OfTE2BIGIC3gKP9cyDHU5hJK.At6wcMreORX8_EgSH17MvuUaYs8PrrFibyiV8yMGG
+ EB6pXwBgMoDH_yfAT6cfc7_Bmo3f.JpR.W5pA_J6Jd8_vZCqdwxwIGURRcf.cV6ON7YlSDSj9Msz
+ 16EqYhizp.ZQpROm5qPbFjppyVrzQCs7LnRhXSPsGoBmij9_MMBUTonVWo_h56DAXI1BF_p0bImY
+ 1AUm4esbj_00MCr.sH_2CyUsW1Z8AyZa44LD4fjbxmdn1mUZqmeN6sa9L5nOmcsY8
+X-Sonic-MF: <hsiangkao@aol.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic311.consmr.mail.gq1.yahoo.com with HTTP; Tue, 9 Feb 2021 13:06:50 +0000
+Received: by smtp408.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 5ddfd49f5fe95523731af90341f94f5d; 
+ Tue, 09 Feb 2021 13:06:45 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: initialized fields can only be observed after bit is
+ set
+Date: Tue,  9 Feb 2021 21:06:18 +0800
+Message-Id: <20210209130618.15838-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20210122171153.27404-4-hsiangkao@aol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+References: <20210209130618.15838-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,48 +104,89 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Li GuiFu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Li GuiFu <bluce.lee@aliyun.com>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Gao Xiang <hsiangkao@redhat.com>
 
+Currently, although set_bit() & test_bit() pairs are used as a fast-
+path for initialized configurations. However, these atomic ops are
+actually relaxed forms. Instead, load-acquire & store-release form is
+needed to make sure uninitialized fields won't be observed in advance
+here (yet no such corresponding bitops so use full barriers instead.)
 
-On 2021/1/23 1:11, Gao Xiang via Linux-erofs wrote:
-> From: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> 
-> When using EROFS to pack our dataset which consists of millions of
-> files, mkfs.erofs is very slow compared with mksquashfs.
-> 
-> The bottleneck is `erofs_balloc' and `erofs_mapbh' function, which
-> iterate over all previously allocated buffer blocks, making the
-> complexity of the algrithm O(N^2) where N is the number of files.
-> 
-> With this patch:
-> 
-> * global `last_mapped_block' is mantained to avoid full scan in
-> `erofs_mapbh` function.
-> 
-> * global `mapped_buckets' maintains a list of already mapped buffer
-> blocks for each type and for each possible used bytes in the last
-> EROFS_BLKSIZ. Then it is used to identify the most suitable blocks in
-> future `erofs_balloc', avoiding full scan. Note that not-mapped (and the
-> last mapped) blocks can be expended, so we deal with them separately.
-> 
-> When I test it with ImageNet dataset (1.33M files, 147GiB), it takes
-> about 4 hours. Most time is spent on IO.
-> 
-> Cc: Huang Jianan <jnhuang95@gmail.com>
-> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
-> ---
->  include/erofs/cache.h |   1 +
->  lib/cache.c           | 105 ++++++++++++++++++++++++++++++++++++------
->  2 files changed, 93 insertions(+), 13 deletions(-)
-> 
+Fixes: 62dc45979f3f ("staging: erofs: fix race of initializing xattrs of a inode at the same time")
+Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
+Cc: <stable@vger.kernel.org> # 5.3+
+Reported-by: Huang Jianan <huangjianan@oppo.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/erofs/xattr.c | 10 +++++++++-
+ fs/erofs/zmap.c  | 10 +++++++++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-It looks good
-Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index 5bde77d70852..47314a26767a 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -48,8 +48,14 @@ static int init_inode_xattrs(struct inode *inode)
+ 	int ret = 0;
+ 
+ 	/* the most case is that xattrs of this inode are initialized. */
+-	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags))
++	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags)) {
++		/*
++		 * paired with smp_mb() at the end of the function to ensure
++		 * fields will only be observed after the bit is set.
++		 */
++		smp_mb();
+ 		return 0;
++	}
+ 
+ 	if (wait_on_bit_lock(&vi->flags, EROFS_I_BL_XATTR_BIT, TASK_KILLABLE))
+ 		return -ERESTARTSYS;
+@@ -137,6 +143,8 @@ static int init_inode_xattrs(struct inode *inode)
+ 	}
+ 	xattr_iter_end(&it, atomic_map);
+ 
++	/* paired with smp_mb() at the beginning of the function. */
++	smp_mb();
+ 	set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
+ 
+ out_unlock:
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index ae325541884e..14d2de35110c 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -36,8 +36,14 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	void *kaddr;
+ 	struct z_erofs_map_header *h;
+ 
+-	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags))
++	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags)) {
++		/*
++		 * paired with smp_mb() at the end of the function to ensure
++		 * fields will only be observed after the bit is set.
++		 */
++		smp_mb();
+ 		return 0;
++	}
+ 
+ 	if (wait_on_bit_lock(&vi->flags, EROFS_I_BL_Z_BIT, TASK_KILLABLE))
+ 		return -ERESTARTSYS;
+@@ -83,6 +89,8 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 
+ 	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
+ 					((h->h_clusterbits >> 5) & 7);
++	/* paired with smp_mb() at the beginning of the function */
++	smp_mb();
+ 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+ unmap_done:
+ 	kunmap_atomic(kaddr);
+-- 
+2.24.0
 
-Thanks,
