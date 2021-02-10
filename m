@@ -1,88 +1,88 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A076B3166E4
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 13:39:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79F22316988
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 15:57:02 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DbK7p5ZfnzDvZ3
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 23:39:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DbNBz3K4GzDshV
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Feb 2021 01:56:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
+ smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
  helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=JFysrwLj; 
+ header.s=mimecast20190719 header.b=AUCyyHzI; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=JFysrwLj; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=LjB6okmx; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+ (us-smtp-delivery-124.mimecast.com [63.128.21.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DbK7j5VlkzDsjV
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 23:38:57 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DbKkh1tnbzDvbm
+ for <linux-erofs@lists.ozlabs.org>; Thu, 11 Feb 2021 00:05:46 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1612960735;
+ s=mimecast20190719; t=1612962341;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=t5zocG/6DEMNV7g0FDh+4/QEFEu/SF/aSAR03DpAP2M=;
- b=JFysrwLjI0h1oB4Nwx3XDT+B2vNwFRaRmC1BhxJLJ/EfK2gcDmz98DOy3B6rslBur2fgm/
- 7X/vyh9eTY9GsiEDP9/2+dT8QC89A9PaB6B321ZzaSUToth9Nj2NKGjL0PIya+G/enWo/z
- MmzV5FbHJBQlAI95+WtWbdfmg4Yqs9I=
+ bh=x01ruuxA0cfwcbVBCUqqYJWqKZiSU+Bm+OyEXVm7xtY=;
+ b=AUCyyHzINBQ9W4L+dDLw4lrfuDPuaIjIsAuSZ0ozsOGxQfmP0iZXbj+/1wXq/YtWdQ5oRy
+ TRO/ACARgd4jczxZP1aDXLm7Nyo1jpWc0HwxR7504E8JM6X0KPKVaNw1ksv5LFV5XXBmKl
+ 4W30T64cgdeFmeF5N8nsLtROi6isyFI=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1612960735;
+ s=mimecast20190719; t=1612962342;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=t5zocG/6DEMNV7g0FDh+4/QEFEu/SF/aSAR03DpAP2M=;
- b=JFysrwLjI0h1oB4Nwx3XDT+B2vNwFRaRmC1BhxJLJ/EfK2gcDmz98DOy3B6rslBur2fgm/
- 7X/vyh9eTY9GsiEDP9/2+dT8QC89A9PaB6B321ZzaSUToth9Nj2NKGjL0PIya+G/enWo/z
- MmzV5FbHJBQlAI95+WtWbdfmg4Yqs9I=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-sfXdQOprNM-VdcfAyn2WxA-1; Wed, 10 Feb 2021 07:38:53 -0500
-X-MC-Unique: sfXdQOprNM-VdcfAyn2WxA-1
-Received: by mail-pg1-f198.google.com with SMTP id l2so1530643pgi.5
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 04:38:53 -0800 (PST)
+ bh=x01ruuxA0cfwcbVBCUqqYJWqKZiSU+Bm+OyEXVm7xtY=;
+ b=LjB6okmxUCxx3tKYr39AD+549acMG4fuNOUxZv9kbVzc4WpLxTbC8mFgp+tjV1YuRQRq9l
+ pLkX7uQgBos18f6EF9mIT/k1lJ3LpavGoaExQyhYsvL1WLZrH+jLDe9iyfWAkKaRtEvG8O
+ 1rXX7Kp8CkMLC4Q2tcX978G3apCJe8Y=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-sU5VjNtwOsO8BT4jJOAXHg-1; Wed, 10 Feb 2021 08:05:38 -0500
+X-MC-Unique: sU5VjNtwOsO8BT4jJOAXHg-1
+Received: by mail-pl1-f199.google.com with SMTP id w22so1645884pll.6
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 05:05:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:date:from:to:cc:subject:message-id:references
  :mime-version:content-disposition:in-reply-to:user-agent;
- bh=t5zocG/6DEMNV7g0FDh+4/QEFEu/SF/aSAR03DpAP2M=;
- b=Xq0t5Ce63tKRnmL0j9lkY4AozM1PbvBcB4bTDA4hhM8wjhiz+8wQIOXocEVbS/tMlQ
- uFpQb1VnD4EaXsgneFpfOohuYVQi988zZLeYdl6t+bCUHD9GZpmf/SyVVRDkbmVGSD4w
- IwM+ySUO98TtwHnioHzG1oQU8B447FPUteUOLwkQKpF4KZUOCpXZytes6oTnqnDgn6j2
- aOFRbmSDU+gy3YqlUuYLmY2adU2l/SquHh4hnDCw0jqoQ98U264gim0MR39FpyVno7No
- /lMyFKjR1JsvPGQB52AnUaRssp0HMOM//Fvj7lXgMGFl0CZb9tS/0zCAw8bUmegRg1Kq
- xxOw==
-X-Gm-Message-State: AOAM532iUk0JmoPV87JI7S8WNzSeFBtJZLD59hiWP7xCLefxp3alJzgU
- xECVnzLNmV9SCEon6VXXtuCFF+Y6xtF39xnCF2cY61a2yIQrQLlHr0RPOpGNz0GGKhBgUWnDSlO
- v4CAl4yBPtMwcsDdXMQqBBio/
-X-Received: by 2002:a65:5c48:: with SMTP id v8mr2952657pgr.400.1612960732031; 
- Wed, 10 Feb 2021 04:38:52 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxLt2kDrIhO+iH4UMX39/RYiTwzC3trgZ7NS26DneSpm1fk6cOe9PlqjltEGKMVJyzyRSj5Og==
-X-Received: by 2002:a65:5c48:: with SMTP id v8mr2952637pgr.400.1612960731730; 
- Wed, 10 Feb 2021 04:38:51 -0800 (PST)
+ bh=x01ruuxA0cfwcbVBCUqqYJWqKZiSU+Bm+OyEXVm7xtY=;
+ b=CazdYHFmqDuYPS+zo03XudixWExqQn0JeXpXEfeOHWIr7Lc4gzMF9eKJqr96TNPqjX
+ GTxObl8a9f3XSwIqD3pUG5JW2B2qFvwXOA4SDdbz2zpTMboAxjjxS60Jq92mehx5KYHa
+ uHxVL8y7oh4pfUAkXKuWiig3FKBNNlT9Y+/TWLGMYd1ZN+kk29qeGHDf6JWqtYMRlzcB
+ k97Y2RIo1fwfmctvi+CFrK2bTdgfPtX4Qjb5nxcx16o4tczf10jXr7F33oLUbrs+JZCB
+ emLPJiuMSop2CvTkxXnZ2hwaSGYXjdUvymttP9bDeonwJ9gEp84qJf90/ohCQGbLQRu3
+ VmoA==
+X-Gm-Message-State: AOAM532h/ZDcGtk2oQRqxxmRWEZN3SspDnjZziy1PF5jz6fqhDGp7lTy
+ R5yXLdj/cat4k4iXORBmjG3kmRSP1Wf/nURbFJVTinZASU6b/lJA3FWz2sC2saNjj5+piGeu004
+ Y3wlXVO/d5UWEK7YR/sID7QJd
+X-Received: by 2002:a17:90a:9912:: with SMTP id
+ b18mr3066425pjp.120.1612962336875; 
+ Wed, 10 Feb 2021 05:05:36 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxdnKAhSt6eJBEp/ZLzVhLX2BIuwzX2ua4xi+0pCTvmPOXEWG9GP4YnGf6EeZ8KNgbnoje4fw==
+X-Received: by 2002:a17:90a:9912:: with SMTP id
+ b18mr3066406pjp.120.1612962336608; 
+ Wed, 10 Feb 2021 05:05:36 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id j9sm2222324pfh.52.2021.02.10.04.38.48
+ by smtp.gmail.com with ESMTPSA id 124sm2367866pfd.59.2021.02.10.05.05.33
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Wed, 10 Feb 2021 04:38:51 -0800 (PST)
-Date: Wed, 10 Feb 2021 20:38:40 +0800
+ Wed, 10 Feb 2021 05:05:35 -0800 (PST)
+Date: Wed, 10 Feb 2021 21:05:25 +0800
 From: Gao Xiang <hsiangkao@redhat.com>
-To: Chao Yu <chao@kernel.org>
-Subject: Re: [PATCH] erofs: initialized fields can only be observed after bit
- is set
-Message-ID: <20210210123840.GA1173803@xiangao.remote.csb>
-References: <20210209130618.15838-1-hsiangkao.ref@aol.com>
- <20210209130618.15838-1-hsiangkao@aol.com>
- <ac5abccb-70ad-441b-a5b0-b8808ff37c00@kernel.org>
+To: Chao Yu <chao@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH] erofs: fix shift-out-of-bounds of blkszbits
+Message-ID: <20210210130525.GB1173803@xiangao.remote.csb>
+References: <20210120013016.14071-1-hsiangkao.ref@aol.com>
+ <20210120013016.14071-1-hsiangkao@aol.com>
 MIME-Version: 1.0
-In-Reply-To: <ac5abccb-70ad-441b-a5b0-b8808ff37c00@kernel.org>
+In-Reply-To: <20210120013016.14071-1-hsiangkao@aol.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Authentication-Results: relay.mimecast.com;
  auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
@@ -101,79 +101,57 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org
+Cc: syzkaller-bugs@googlegroups.com, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 Hi Chao,
 
-On Wed, Feb 10, 2021 at 08:09:22PM +0800, Chao Yu wrote:
-> Hi Xiang,
+On Wed, Jan 20, 2021 at 09:30:16AM +0800, Gao Xiang wrote:
+> From: Gao Xiang <hsiangkao@redhat.com>
 > 
-> On 2021/2/9 21:06, Gao Xiang via Linux-erofs wrote:
-> > From: Gao Xiang <hsiangkao@redhat.com>
-> > 
-> > Currently, although set_bit() & test_bit() pairs are used as a fast-
-> > path for initialized configurations. However, these atomic ops are
-> > actually relaxed forms. Instead, load-acquire & store-release form is
-> > needed to make sure uninitialized fields won't be observed in advance
-> > here (yet no such corresponding bitops so use full barriers instead.)
-> > 
-> > Fixes: 62dc45979f3f ("staging: erofs: fix race of initializing xattrs of a inode at the same time")
-> > Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
-> > Cc: <stable@vger.kernel.org> # 5.3+
-> > Reported-by: Huang Jianan <huangjianan@oppo.com>
-> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> > ---
-> >   fs/erofs/xattr.c | 10 +++++++++-
-> >   fs/erofs/zmap.c  | 10 +++++++++-
-> >   2 files changed, 18 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-> > index 5bde77d70852..47314a26767a 100644
-> > --- a/fs/erofs/xattr.c
-> > +++ b/fs/erofs/xattr.c
-> > @@ -48,8 +48,14 @@ static int init_inode_xattrs(struct inode *inode)
-> >   	int ret = 0;
-> >   	/* the most case is that xattrs of this inode are initialized. */
-> > -	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags))
-> > +	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags)) {
-> > +		/*
-> > +		 * paired with smp_mb() at the end of the function to ensure
-> > +		 * fields will only be observed after the bit is set.
-> > +		 */
-> > +		smp_mb();
+> syzbot generated a crafted bitszbits which can be shifted
+> out-of-bounds[1]. So directly print unsupported blkszbits
+> instead of blksize.
 > 
-> I can understand below usage, since w/o smp_mb(), xattr initialization
-> could be done after set_bit(EROFS_I_EA_INITED_BIT), then other apps could
-> see out-of-update xattr info after that bit check.
-> 
-> So what out-of-order execution do we need to avoid by adding above barrier?
-> 
+> [1] https://lore.kernel.org/r/000000000000c72ddd05b9444d2f@google.com
+> Reported-by: syzbot+c68f467cd7c45860e8d4@syzkaller.appspotmail.com
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 
-These is one-shot lazy initialization to delay read/parse xattr/compress
-indexes to the first read since many workloads don't need such information
-at all.
-
-Without such memory barrier pairs, if two (or more) initializations runs
-nearly simultaneously, the paralleled process could observe uninitialized
-values (zeroed values). That is OPPO colleagues found on their products. 
-
-Yeah, this could be somewhat kind of out-of-order, yet more specifically
-called memory reordering. Xattr/compress indexes initialization could be
-lazily observed by the CPU after it observed that EROFS_I_EA_INITED_BIT/
-EROFS_I_Z_INITED_BIT is set. So we need memory barrier pairs to guarantee
-such data ordering.
+Could you kindly review this trivial syzaller patch as well? Since
+"erofs: initialized fields can only be observed after bit is set"
+is somewhat serious on some weak-memory-order designed platforms
+(no idea why our hisilison ARM64 platform didn't observe it before.)
+I intended to prepare this for 5.13 cycle directly with ongoing
+multi pcluster / LZMA in-kernel decompresion. But that regression
+seems a bit important to upstream for the next 5.12 cycle....
 
 Thanks,
 Gao Xiang
 
-> Thanks,
+> ---
+>  fs/erofs/super.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> > +	/* paired with smp_mb() at the beginning of the function. */
-> > +	smp_mb();
-> >   	set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index be10b16ea66e..d5a6b9b888a5 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -158,8 +158,8 @@ static int erofs_read_superblock(struct super_block *sb)
+>  	blkszbits = dsb->blkszbits;
+>  	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+>  	if (blkszbits != LOG_BLOCK_SIZE) {
+> -		erofs_err(sb, "blksize %u isn't supported on this platform",
+> -			  1 << blkszbits);
+> +		erofs_err(sb, "blkszbits %u isn't supported on this platform",
+> +			  blkszbits);
+>  		goto out;
+>  	}
+>  
+> -- 
+> 2.24.0
 > 
 
