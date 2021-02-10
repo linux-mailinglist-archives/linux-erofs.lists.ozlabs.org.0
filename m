@@ -1,47 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [203.11.71.2])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4368A315C44
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 02:31:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C635316616
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 13:09:45 +0100 (CET)
 Received: from bilbo.ozlabs.org (lists.ozlabs.org [IPv6:2401:3900:2:1::3])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Db2Kx6M29zDvY7
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 12:31:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DbJTw3hPMzDvYH
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Feb 2021 23:09:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=JxtImahq; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Db2Hk6vr9zDspc
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 12:29:52 +1100 (AEDT)
-IronPort-SDR: Fw2tpulss/LrmMPoIR7+EIZcXy2iIbkNxj4hoAH/C7KJ6+LMOnRIC5S/y9w7lERZ+jpLwUrD1h
- oWaf2BTb0FQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="169119044"
-X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; d="scan'208";a="169119044"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
- by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 09 Feb 2021 17:29:47 -0800
-IronPort-SDR: T2/qt6Va5Rgr+6RVV/rKYmLhVOpEMyBGZpejgn5rYzes9AFhCpTXFj829B7YhqECEnWrLwjeTW
- oIgUGCrPXCag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; d="scan'208";a="488352730"
-Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
- by fmsmga001.fm.intel.com with ESMTP; 09 Feb 2021 17:29:44 -0800
-Received: from kbuild by cd560a204411 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1l9eK7-0002WM-SF; Wed, 10 Feb 2021 01:29:43 +0000
-Date: Wed, 10 Feb 2021 09:29:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 0e9a3c4fae5498e86dd11985143c4858a8300705
-Message-ID: <602336f5.EqX8Bk5Dr7tOwqwV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DbJTj0VqZzDsk5
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Feb 2021 23:09:28 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F2F264E31;
+ Wed, 10 Feb 2021 12:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1612958966;
+ bh=kqqb49qXsasdkSstetjMzcEMKwXctHVPfjOZKYUSEQ8=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+ b=JxtImahqfsyEYtMz027sJyToIJwi0xLfP+wZBfojfVJrVrf2FV6/SvU5fzG2RSk5Y
+ AMCwFdgS0MQxsrM9el7SkeziYHT9YKMUCcEmsY/yI0t83orL82gMT8pitm3tj+YClM
+ QPQh9u3xGHlM97kgEtq5WtajDfusMAjDO2/sY25UWr/pcowkSwzWYGP0azR6CWX3iX
+ QK8f+h5vYoun5WlHcwlPbqjUM7/bKaGUaxxJVTtcPrsfGQfSeEcUpWrhi4jShu1FUo
+ 95j4lYugp3n+fhW064Chhym7tipTMizLPqf2DVNk4o0ggBM2hx7mCY3zwv0jYkIJkS
+ /LhAwhybrYcaw==
+Subject: Re: [PATCH] erofs: initialized fields can only be observed after bit
+ is set
+To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
+References: <20210209130618.15838-1-hsiangkao.ref@aol.com>
+ <20210209130618.15838-1-hsiangkao@aol.com>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <ac5abccb-70ad-441b-a5b0-b8808ff37c00@kernel.org>
+Date: Wed, 10 Feb 2021 20:09:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20210209130618.15838-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -54,181 +59,56 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 0e9a3c4fae5498e86dd11985143c4858a8300705  erofs: initialized fields can only be observed after bit is set
+Hi Xiang,
 
-elapsed time: 720m
+On 2021/2/9 21:06, Gao Xiang via Linux-erofs wrote:
+> From: Gao Xiang <hsiangkao@redhat.com>
+> 
+> Currently, although set_bit() & test_bit() pairs are used as a fast-
+> path for initialized configurations. However, these atomic ops are
+> actually relaxed forms. Instead, load-acquire & store-release form is
+> needed to make sure uninitialized fields won't be observed in advance
+> here (yet no such corresponding bitops so use full barriers instead.)
+> 
+> Fixes: 62dc45979f3f ("staging: erofs: fix race of initializing xattrs of a inode at the same time")
+> Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
+> Cc: <stable@vger.kernel.org> # 5.3+
+> Reported-by: Huang Jianan <huangjianan@oppo.com>
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> ---
+>   fs/erofs/xattr.c | 10 +++++++++-
+>   fs/erofs/zmap.c  | 10 +++++++++-
+>   2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+> index 5bde77d70852..47314a26767a 100644
+> --- a/fs/erofs/xattr.c
+> +++ b/fs/erofs/xattr.c
+> @@ -48,8 +48,14 @@ static int init_inode_xattrs(struct inode *inode)
+>   	int ret = 0;
+>   
+>   	/* the most case is that xattrs of this inode are initialized. */
+> -	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags))
+> +	if (test_bit(EROFS_I_EA_INITED_BIT, &vi->flags)) {
+> +		/*
+> +		 * paired with smp_mb() at the end of the function to ensure
+> +		 * fields will only be observed after the bit is set.
+> +		 */
+> +		smp_mb();
 
-configs tested: 155
-configs skipped: 4
+I can understand below usage, since w/o smp_mb(), xattr initialization
+could be done after set_bit(EROFS_I_EA_INITED_BIT), then other apps could
+see out-of-update xattr info after that bit check.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So what out-of-order execution do we need to avoid by adding above barrier?
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                               defconfig
-powerpc                      ep88xc_defconfig
-x86_64                           alldefconfig
-mips                          rb532_defconfig
-powerpc                 mpc836x_mds_defconfig
-m68k                       m5249evb_defconfig
-sh                   sh7770_generic_defconfig
-c6x                        evmc6472_defconfig
-mips                         cobalt_defconfig
-arc                        nsimosci_defconfig
-sh                      rts7751r2d1_defconfig
-powerpc                    klondike_defconfig
-arm                           sunxi_defconfig
-xtensa                         virt_defconfig
-microblaze                          defconfig
-powerpc                     ksi8560_defconfig
-powerpc                     pseries_defconfig
-arm                       spear13xx_defconfig
-powerpc                     kmeter1_defconfig
-mips                       lemote2f_defconfig
-s390                       zfcpdump_defconfig
-powerpc                 mpc836x_rdk_defconfig
-arm                  colibri_pxa270_defconfig
-sh                            migor_defconfig
-mips                     cu1830-neo_defconfig
-arm                        mini2440_defconfig
-arm                          ep93xx_defconfig
-powerpc                      makalu_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                 mpc8560_ads_defconfig
-mips                           rs90_defconfig
-arm                         s5pv210_defconfig
-arc                              allyesconfig
-arm                       versatile_defconfig
-powerpc                     stx_gp3_defconfig
-sh                        sh7785lcr_defconfig
-arm                           sama5_defconfig
-sh                        sh7763rdp_defconfig
-mips                        bcm47xx_defconfig
-openrisc                    or1ksim_defconfig
-powerpc                      pasemi_defconfig
-arm                             mxs_defconfig
-arc                              alldefconfig
-mips                          ath79_defconfig
-c6x                        evmc6474_defconfig
-m68k                            q40_defconfig
-um                             i386_defconfig
-alpha                               defconfig
-xtensa                  audio_kc705_defconfig
-sh                               allmodconfig
-arc                        vdk_hs38_defconfig
-powerpc                     sequoia_defconfig
-powerpc                     taishan_defconfig
-mips                      maltaaprp_defconfig
-powerpc                     rainier_defconfig
-arc                    vdk_hs38_smp_defconfig
-sh                           se7343_defconfig
-arm                          badge4_defconfig
-powerpc                     kilauea_defconfig
-sh                           se7780_defconfig
-arm                         hackkit_defconfig
-nds32                               defconfig
-m68k                       m5475evb_defconfig
-arm                           stm32_defconfig
-sh                          rsk7201_defconfig
-m68k                             allyesconfig
-arm                       imx_v4_v5_defconfig
-arm                     am200epdkit_defconfig
-powerpc                        cell_defconfig
-microblaze                      mmu_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                       ppc64_defconfig
-arm                         orion5x_defconfig
-m68k                        stmark2_defconfig
-h8300                     edosk2674_defconfig
-powerpc                    socrates_defconfig
-powerpc                 mpc832x_rdb_defconfig
-powerpc                 mpc8313_rdb_defconfig
-powerpc                      ppc40x_defconfig
-m68k                          multi_defconfig
-arm                         socfpga_defconfig
-um                           x86_64_defconfig
-arm                            lart_defconfig
-riscv                            allyesconfig
-arm                        keystone_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210209
-x86_64               randconfig-a001-20210209
-x86_64               randconfig-a005-20210209
-x86_64               randconfig-a004-20210209
-x86_64               randconfig-a002-20210209
-x86_64               randconfig-a003-20210209
-i386                 randconfig-a001-20210209
-i386                 randconfig-a005-20210209
-i386                 randconfig-a003-20210209
-i386                 randconfig-a002-20210209
-i386                 randconfig-a006-20210209
-i386                 randconfig-a004-20210209
-i386                 randconfig-a016-20210209
-i386                 randconfig-a013-20210209
-i386                 randconfig-a012-20210209
-i386                 randconfig-a014-20210209
-i386                 randconfig-a011-20210209
-i386                 randconfig-a015-20210209
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Thanks,
 
-clang tested configs:
-x86_64               randconfig-a013-20210209
-x86_64               randconfig-a014-20210209
-x86_64               randconfig-a015-20210209
-x86_64               randconfig-a012-20210209
-x86_64               randconfig-a016-20210209
-x86_64               randconfig-a011-20210209
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +	/* paired with smp_mb() at the beginning of the function. */
+> +	smp_mb();
+>   	set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
