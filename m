@@ -2,96 +2,89 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ADB531B0EE
-	for <lists+linux-erofs@lfdr.de>; Sun, 14 Feb 2021 16:22:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 070B031B0F5
+	for <lists+linux-erofs@lfdr.de>; Sun, 14 Feb 2021 16:36:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DdrZl3lCzz30Gq
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Feb 2021 02:22:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ddrtq6XFsz30Gb
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Feb 2021 02:36:35 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1613316159;
-	bh=1o4tD7/vbQrfp7EtTi5HAawZb5YthZ+Vk907CfdaW/w=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=QUI/ungk3vrinzZmu5NyFC2oGndcF+o9rmot6Yt2f4tTwbs3ivNfKQIu1i+QAC1Vh
-	 kT9pzU1ikwJygKlhlKFF2yA5q67wPEwIz/TeFQRAM86SHh/PVnBUj7uir50Z6iqPTY
-	 AuTJZBWvHOU/tL3sUlQ2qWL33XGXLyQ6HubDNFgtkbWh3xs+ldyxt0OZTx9xO8lJ21
-	 QGNjgR1Za2uCusXAZWDdKXWAsV9Mq1tfLyWKQGgJVniG3pyCfg5azjjbZqh6alQJXx
-	 Zi64OB2mS1zPKWLAF3t+qq123xMSBlpM53PE6pSvSmg2GvXUTlq6Dxk+avpxz7f8tD
-	 HbhORMG2xbxEg==
+	s=201707; t=1613316995;
+	bh=iGUWSVjtCeE0aFF1poN7M/2Gm5jK0qVU0NilAjAXGO8=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:From;
+	b=CjCLHXHzftkdfI6pBCi+9ZiR1HFeAeQpoM2EjiS5vXkiA4MQ01nFERs8Yfi/L0Xpm
+	 gcKYEbnPn8TojjF+/B7C0qieDCyVgBot8t0yAZbPviiLaifI2ZZl+Y8lSxIczb2DAb
+	 3cXJR5OeStLcxstc5xOTKwhFzz4KiQONw4/riVhPlIroqUxHPc4lS1iJoBfq7Ac3tq
+	 zqV+sR8YlAMQpuTXJgPJ8UoZhukoKEHb6bAKyGZ4JaLidj3H/wNWdSqP3wKGIg5aB6
+	 dFNrQ2Akcrr8LFfZnmQTMtOZbnOuZlxhoZqZZbvQBVk8wPe8u3UetS/2tO25/wzZHG
+	 1Zns/c5q/5MoQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.205; helo=sonic304-24.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.64.205; helo=sonic303-24.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=D4r2Etq8; dkim-atps=neutral
-Received: from sonic304-24.consmr.mail.gq1.yahoo.com
- (sonic304-24.consmr.mail.gq1.yahoo.com [98.137.68.205])
+ header.s=a2048 header.b=GuhjQEHO; dkim-atps=neutral
+Received: from sonic303-24.consmr.mail.gq1.yahoo.com
+ (sonic303-24.consmr.mail.gq1.yahoo.com [98.137.64.205])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DdrZh3BYWz2yRg
- for <linux-erofs@lists.ozlabs.org>; Mon, 15 Feb 2021 02:22:32 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Ddrtp00YXz2yRy
+ for <linux-erofs@lists.ozlabs.org>; Mon, 15 Feb 2021 02:36:33 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1613316147; bh=TAaUx+T3H4RSKyLL/C+Qxiqa4AK6C+moknH+H9Dr+Oz=;
- h=X-Sonic-MF:Date:From:To:Subject:From:Subject;
- b=MyQIztfpPeRnJSFd7Aurz6tn6x0nfyrT/FAs+j9sbRb6i8uDhtHAHRJAxiExHH8S9wN5cBnu4vwfI5KIfzX0b2pWcm1zLK3XcfEHYANcKtcp00za2WY2V3o6jinbaF8aj3IriTwd6kGWqiSdnNcVIA8Qq4sZZ7/U5j2WVVukjzE2cnUEft/aG86iEWL7GG6SZNkADbxguXqI/eFfq4cdpU2X5h3MOtXN9B3NHNFWdQFsPMswM4iub8vd+WtZz0vw6NeT7cwgglOUQfqA+3F8ksdad/s3s/LY8aMWEwPJkuVkQ/1oOnr3dnDb8PmVk3lBBxG0PlwZWhhPqZ182sekvA==
-X-YMail-OSG: BJsKlIkVM1lVjC_lrCy11ruikcYQbhYQw4tVc1I3zc6sN1ctgoNzmO4b3JdyOBs
- cXdOTjxt84ar32iKOtpuuqo9oHYm_fpYDD_ObVVb5_gWLh22aM5MW9OBaR5L_YEVHZl9ZiRi4UmX
- sUSJy_dZvVcR7mTDOPXbBKExg9mooKJGj3pbMFvIrSv4CtWCDr5C3lOu2S2tmnyG3g72de.hnr0J
- 24AfXl71ALbeutuScP0WWHYxcO1HPmHEpAO.kh_tqxPb3P4gy4zZOYs5iO1YVg_xChLeKFU_j0gD
- iQ1iHr96_v4cBpBN2UPYhwKjCNlWv4gUbn3kan86pJ1CbwISC9IpwcbXZj9LtiDVzc2gSvfAREIb
- xP7sCMRwcDcHnfQVhAVKX60MgasphpOPgPkHqNRVDKUG.9m2PQxVDlKthaJU4VC5TMxhFoL8cWCW
- auiyGYKcNa4XIXEPx08aI0ze671sVgMfuatO16_CGdc9yywTJtZasThfDbAAfbxgjYLVDULQnd7j
- GcTERH1S3OzO_l6ssWLDxeS4.G4iJJe4rk3oboc8icZ6FObRMqPOzlvKDqRk5uDgBTOQJvhfRyx6
- wRrG7LdTZu7SaWTpa6joziX.1jMI0i0lh7KWB3dOVmPYZuVfdoFefy27D3g369ggR8fZkBzJ7XKg
- DMuib9a_PUWKUWWUhere7lW.1QVq5FrhkOnEKtvhiT0ujOzRH7E6iIpgFq5IG.p.Pjw_u22nynkO
- KE0Q7AIQ3_USE3pwcDqNC7knZeUPJet1DChAbmEkTw.vnbCKaq_MF70Y7QG0Fp14eVDa_PMaqeE0
- rCZTmwHue_pbJXftRjtn.OKU_BR5FdjcRWQ83Vf6G657bRwXFjHGhqM.rE1OntnloeRmglBdRull
- qvmNQYxLXJ8Qa9mhT6IbP0fhoa0Iyzy1Br_kEI5hh8g8NjJE4G8uDhLYjGGNQtpn0wg_jfXC45g4
- 9lY7ZXTY1hn8r8Xl4p.52O6bH1WtO3zGyb.uyRzDAw5CDYjaMoVqFoMfOI_pA8eqjHa6a2r5ZGzR
- egjVedsdtgVcjrwdB3uzuceUdofhpq29Mnf8To.UmX7y9jqaSwcwO5G0OW1ihzPbwIDW0gWLi5RH
- taTk14AYVJeox_ArPFise.4FeDjj0mLdFpoQy5VIN82Un6m3PVbzinFFoyyEHs7Clsh6.KX_UPsq
- ST1sbHeno0cEKQMiKcUdKGkwV4emJDkeLci5pILUGL0g5ygNsv72A7sV.KTqyBmP9u3yBiD22VBW
- ig4qlkV1PQatqtU2FWCl1J.L.muidtpwCUUPAtUjgeYDt.6p1H3p9Fd_w90r3nSoiPyDg6WtYiQ6
- k3Z4s6PjtSyhsW3Gz5Ry9BT.p1n.pIifMrNvBtXkb608GJ6Rl7BVd5ueoCnBOCOdrCrAviiypJO4
- tcvYPcdWDfpS6QcRamN.SKzzTO5CdRwGhRtBoJwVKVtCii61WEfFDhbRV8J6Iias48jvdz8It4li
- 4yxKWKYZwuMz620nYk3epVNYXBL8GoUapRdZxmwCgkpOeOqq.qf1OAX86nwm6.aUW7VqBTMx9sHt
- ZUUvHIs0qIGeYhNQK0E5NS8idC0uMM4dlZYSyyDp_bHSVleJ.4HidrnZwwnkVO_8vdBui6n6.J.f
- krYXz7Zj9CTkTduDgCM4rRvA4cs4o9wKxN2DXIR0ZSTKoZ5RJO4tR_4g0B1UjWffWkk2hXewypDW
- JUh.fFl537LrOJt18Ey0zpU0KAQjFczLriBVhOLM8eZoDrM71GIZjTsCI8RiHmpFWEyrXDAMYSWi
- DVlPqaukoxB0GH1WZKJdWyi97RzIxrMHlMu8qfckt1tcKfVbPiSyTkG2e0ghtOT1T1t4C4dLxl25
- rEuPB4l5iX5NQHnVR.IfAx2Z9v975BE3dW_xsU2c6zffp6fHLMrUtV08LpnznzaZyPjk2gQrN8pc
- r.2Examd3GkbZvcDCiS8P6BCTVg8s4lVwfPqkJ6plec4hZ_6j9rZJnS1CUK3tDoR1qOo_VK5euJN
- ViYlUx8vIxv536furqglDu29Kv73hEmupdfvMV_jMmPX02IR.1sVFF5o1mSwj5RVBRsDC9RoLjMX
- sYnyWWatMu_.stKtmwG0HZMBwtr6QDRTShBjEJOv3bEnWWDAZuQa_eaQqms50cnlFaiLXnbedXNq
- MSFwqCD_YmnjlFo5mY4ShXwCkDJrliTxPE6K3yanspwHXF40SzjYRyTWRg0aLM4OSBYPrjQzkDpC
- zqfmJT_sLM87kI4N9CQGMWhv9YP4x.W..rce9r.JmTdOJzLVKItzEPow_eLxBma9XZaHxsVPa1Av
- tZ7604Cs5wWrRN_7cLUqwlljr8keO3PLwHvaEpitX2W5.764ZKTq6mciEKlrcmATTI9KDiZWhu_4
- XNI1uZ3.iDUkNZhvyBhQViWL2C6WY9eIifsal1k6UCWlEiGNlOWZ3q3td0LfNcpg_LPtWfqDLoL7
- OltlUYg_gs.mxdAq2hVKLf4.0HMv3.G8hYlpgVx45yDPpdRM7vA--
+ t=1613316988; bh=N7ZvrBpcLYWk+f+F3CblanhPU268g1L4BQ/7y3gMkHL=;
+ h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
+ b=PZ9euCuCQZmDEs8bvxCvKO724Vrqiw9zmcDHt4YLKy7Hfk1s+6BosW9kClwfhnjiT/sP/aaHC5L7d3cL0KChXOm93rGZ64bZ9qmNfdhYmLB55aNkSgKpTBIRjJqcl8ERdGwmPkF095f8T1QVNK1PZZ27F2CprQEt3bs2Kb2PdS5vX8I/BiJM6zH6x9yM2vaXUBQivSWWPEScoIVzrHWS3KoDfdB0/62FFU+cWkgE++WpP0eU05w3MpAKzqjqRIq3QzfKjag1/BOdNFy1IuTUQceBsGgJR3QlY1CenPdMxBAITemVqhheoD4zokpzzSsAiOeuKIY2J6r/hTa4/L4NTg==
+X-YMail-OSG: mJK_dksVM1mgJM9D11E1Axr.g6ELuX4KCYLwP0y03ylF_kn4yL_OuRxlj8qA3Y_
+ SWrvT3tzH3GYlC1rmww.Gm00m9hejO.WstYlpx9MneZN8So9OowjU0ovHfMgr9hbc3tU8tS.YkG3
+ QrWfm3JIAPNaUZXdufLy5ZQzlSKnRyFYFJfpAlAnKpjB3dyRCPlRiuOdLH8VIVdIfnSY51xrTPwq
+ Xkc3Bnftp8_y8JSY4CmeKVyXj4m7J_C1XugM4uRBVRG0Gtyk.znX1dtHumUwMepX3yRyId2lJGCL
+ XuVGW2E_GAARDJ7DztFn80g1bXHv3zbW0HJsOwx6cFF3dy9pih7tfLAWbPk8fv7qP_YQo3T6ag1A
+ TqLRjhNec7q6V7WLqog5kExxgLbzggpN6OxuaAHhAiputqqMGyeB96NWpuSU6zpoStD1p5VdtwqN
+ 9C1XuPmi7ro2rVMSQ417fBQX.hAY..KYREjYb2jhGe0NSkO4BCDRlQWJfLNeLb9McmgFMSj9nqoT
+ YCxyp2oZLo4PALAgcEACVe_13sLMdRjc.OTcHDsDjzH4Bxmtmd2oixt62cSzEtOGaHl2zfVYHknp
+ CWZQWiC8hbrW2YMYB0WJKOqdwpYXEFvCK8ROmP2jsxjrb.5JeQ.FNJLKgDP2i0cfDwMu8WaxRhbA
+ c16kES01E20FUIt6wix81873hFf3pYXTFL5VKxMXTuV1zsVf2VGo8yKU23at38nOaTlD9Iu1rP7d
+ KfLE1lD_Dmq93tYsMIcP0vV6N8dXhQ7LjS2gvkXjOoGs5v7Z5tPkzTNv1nkHI7GkrKWzbyHyip3z
+ TItXHCWNWGaZgiVW6dDsmKTvRD1G5..p1Zmc5w2EWba2uyanirJDNbDCeD3.Mi2awQVmOYYyPYN6
+ 8UKulkoq9eLmsovxfn_6J5cCdOy5QxyXflw.KGBfPVYO1Dq8e8jPNQ0y33r7jFXsgkZjlDzkGSr8
+ fG7BX8YcP.WAlcr_wa9_KOZe_tzXiepPqHF6jSqFGMfcLigWxyVVlOqBYYStQV7n6Z8wUKxpV2Bo
+ .YJY8tgd6kJbdZNFL.s_gImUksqqnHDQAcihKjhKjx6xPK.XL49SO3Yg5A3pc3NwlDi6jBKXZKO8
+ l.TzFkOAOTzRcBItD8R5V5ukzi1mQiYkdncXGkaS6ZH424I0SDX2_NbHeTyBJfgk9ScMUGAkkq4n
+ Ri166j6raJUscY8YuNMOS.UgGnSh_DTjvbB3.WSxV3AKi6lbLTGutT_2s0sa_.s4bDovj_J3THOM
+ n1MRuPs0yLsxy70ZA3LF85HqahZBeLIkdBBnEK4e9PYUgarrr3A0aPWWfVvzuEFHrIhdGYM2iBNS
+ azoCA6E2PgLbE6N2w0TkowZIIoVITW8UmxBv2cEQdTUp6wtkabMJIupFzpxf4XfYXRNfIBlgLHuA
+ XTWgcFyRw2kOApUrcy.1Os48tWuraGAqmaU9OndVmNU0B6JSaxKKjONvvRjryIOxAa7Nw61WSprb
+ 0ny1ZoA6EbnWPyKLQQP0tlSZ5aKSyYF.toZdg6WWX6FexZ7jRjtV_w1lR1WJK9z6c2R8dL586u4y
+ wrLS7AFCLmx8lzfuUkel3Eb38x2KAYhOFmPneo81qPn2ktGdSrkJvngvwlUS2iF4omCTnO4eYCYZ
+ HKFDGjNSZGpBaLNhxF61AxsYUkEacqVvWsttpQ8RxkB3lx94hnLaOUi1MGyG.6xmfuenPEN7vmni
+ PA_L0VYm13zKT1GDU.rBjsopZGlaTatyeouCWMTdiiNU7CBNuHzC1vbEy2voTxMV..6lMTXgcr9r
+ 4S.MJSpryU06OBJ9R2Bi3yiiC2C11L4FKgYb_BygBFgAwZt2ONVTF2OvazvPq5mEvXim2JBxY0sl
+ oiqjgakr7iPx1TKi4yBfV7A1STDwYsPk35W4eXIq4O72yNMPKEQ8vFuD4l4R.Hb4NokJvKnimsdw
+ 9GGJTwnCwZ.qt8eLqdhfowM83NVo6jN4ebxzWNpTVjUWxHgCTb0HLkv_EBXsqN1FJMa00x04UTu.
+ a2TUSLBZWVPMC1KEhVCSgGyy3BxhIY.GhfdTD0J_gvrpRZE9XGLZWLbZSezfSjFoWYum33X1YjHW
+ jPH7IYQH0ZXHtpiyRcE9wUL8lGFGYRbcAVr0lcK3XH8JvNANJ7Lb60d.VEtypeYGsmNVxaEUgI3X
+ 26bZn_Ivo5qgSYVNBMGyOLO8DNwE5kgvVmOFSTmJqg9JMydmU7q3v.17WX6XXHjT2mffDLor1Yjx
+ BxHIQm4heZ7lgFmZmv1l6CML22bGWSuzE3TwfkBvwqtvQRtBUW8BLSqGxnP4o1AmJs80_Z_u2e3z
+ WTblPr42aKZR_dlYSfjv0CJ2_m6NxoJo43Dv9rhQkRH3umXYLECY8.3hYlfmuYfVXueqXgyKAzKF
+ nGB.YbphW.65zsxRuXNbAqWeEGDdNQnzUdYyUDsgRgg62qbDAMueNJiWbUZLensNEtxPGZNNETTH
+ Y5zZvtg.8WlxnnO4OwUXmJ4obWQL9gHkqOJ87Mu3ZWCec
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic304.consmr.mail.gq1.yahoo.com with HTTP; Sun, 14 Feb 2021 15:22:27 +0000
-Received: by smtp424.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
- ID f44844d2a2b523938aa04bf428a617e8; 
- Sun, 14 Feb 2021 15:22:22 +0000 (UTC)
-Date: Sun, 14 Feb 2021 23:22:07 +0800
-To: Hu Weiwen <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH v2] erofs-utils: fix battach on full buffer block
-Message-ID: <20210214152201.GA29988@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20210120051216.GA2688693@xiangao.remote.csb>
- <20210121162606.8168-1-sehuww@mail.scut.edu.cn>
+ sonic303.consmr.mail.gq1.yahoo.com with HTTP; Sun, 14 Feb 2021 15:36:28 +0000
+Received: by smtp405.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA
+ ID 07898efad2b17f635251aa7d04958857; 
+ Sun, 14 Feb 2021 15:36:22 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 1/2] erofs-utils: don't reuse full mapped buffer blocks
+Date: Sun, 14 Feb 2021 23:35:48 +0800
+Message-Id: <20210214153549.2454-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210121162606.8168-1-sehuww@mail.scut.edu.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.17712
- mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
- Apache-HttpAsyncClient/4.1.4 (Java/11.0.9.1)
+Content-Transfer-Encoding: 8bit
+References: <20210214153549.2454-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -105,63 +98,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Gao Xiang <hsiangkao@aol.com>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Weiwen,
+From: Gao Xiang <hsiangkao@aol.com>
 
-On Fri, Jan 22, 2021 at 12:26:06AM +0800, Hu Weiwen wrote:
-> When __erofs_battach() is called on an buffer block of which
-> (bb->buffers.off % EROFS_BLKSIZ == 0), `tail_blkaddr' will not be
-> updated correctly. This bug can be reproduced by:
-> 
-> mkdir bug-repo
-> head -c 4032 /dev/urandom > bug-repo/1
-> head -c 4095 /dev/urandom > bug-repo/2
-> head -c 12345 /dev/urandom > bug-repo/3  # arbitrary size
-> mkfs.erofs -Eforce-inode-compact bug-repo.erofs.img bug-repo
-> 
-> Then mount this image and see that file `3' in the image is different
-> from `bug-repo/3'.
-> 
-> This patch fix this by:
-> 
-> * Don't inline tail-end data in this case, since the tail-end data will
-> be in a different block from inode.
-> * Correctly handle `battach' in this case.
-> 
-> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> ---
+Full mapped buffer blocks aren't the targets for reusing.
 
-Now I get what you mentioned to, and I think this is a valid case and might
-influence old versions (even I have no idea how to reproduce it effectively.)
-So I tend to apply this patch right now, and thanks for your patch!
+Fixes: 185b0bcdef4b ("erofs-utils: optimize buffer allocation logic")
+Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+---
+changes since v1:
+ - update commit message since "erofs-utils: fix battach on full buffer blocks"
+   has been considered in advance.
 
-Reviewed-by: Gao Xiang <hsiangkao@aol.com>
+ lib/cache.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-With updated commit message below:
-
-When the subsequent erofs_battach() is called on an buffer block of
-which (bb->buffers.off % EROFS_BLKSIZ == 0), `tail_blkaddr' won't be
-updated correctly. This bug can be reproduced by:
-
-mkdir bug-repo
-head -c 4032 /dev/urandom > bug-repo/1
-head -c 4095 /dev/urandom > bug-repo/2
-head -c 12345 /dev/urandom > bug-repo/3  # arbitrary size
-mkfs.erofs -Eforce-inode-compact bug-repo.erofs.img bug-repo
-Then mount this image and see that file `3' in the image is different
-from `bug-repo/3'.
-
-This patch fix this by:
- * Handle `oob' and `tail_blkaddr' for the case above properly;
- * Don't inline tail-packing data for such case, since the tail-packing
-   data is actually in a different block from inode itself even kernel
-   can handle such cases properly.
-
-
-Thanks,
-Gao Xiang
+diff --git a/lib/cache.c b/lib/cache.c
+index e3327c3f1586..6ae2b202e67b 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -155,8 +155,8 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 				  struct erofs_buffer_block **bbp)
+ {
+ 	struct erofs_buffer_block *cur, *bb;
+-	unsigned int used0, usedmax, used;
+-	int used_before, ret;
++	unsigned int used0, used_before, usedmax, used;
++	int ret;
+ 
+ 	used0 = (size + required_ext) % EROFS_BLKSIZ + inline_ext;
+ 	/* inline data should be in the same fs block */
+@@ -177,7 +177,7 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 
+ 	used_before = rounddown(EROFS_BLKSIZ -
+ 				(size + required_ext + inline_ext), alignsize);
+-	do {
++	for (; used_before; --used_before) {
+ 		struct list_head *bt = mapped_buckets[type] + used_before;
+ 
+ 		if (list_empty(bt))
+@@ -203,7 +203,7 @@ static int erofs_bfind_for_attach(int type, erofs_off_t size,
+ 		bb = cur;
+ 		usedmax = used;
+ 		break;
+-	} while (--used_before > 0);
++	}
+ 
+ skip_mapped:
+ 	/* try to start from the last mapped one, which can be expended */
+-- 
+2.24.0
 
