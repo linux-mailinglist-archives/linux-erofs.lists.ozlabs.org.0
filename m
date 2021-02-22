@@ -2,45 +2,61 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 330F33219F1
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Feb 2021 15:14:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A54321BAF
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Feb 2021 16:39:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Dkkhp1l2zz3cG0
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Feb 2021 01:14:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DkmZl56S0z30RC
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Feb 2021 02:39:43 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1614003290;
-	bh=29phq03JbaTXf6u8ApipDfHL2BWZMZe3Qh4TVsbTFNA=;
-	h=Subject:To:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=oJlfU/Oq+b4E1GvSeMinAjHXDmTl1D6R8hGDn0enRxBvAaxEC2Y3XD/ubG1cPU8JA
-	 Hk+fm1R2XW1SuiebOqsG4XFu5FEDzwCNXV0K48y/FQhBmp1qS6rfr8AKAWme7qBVUK
-	 TxeFACoWtjZMGskAMBKwO5ft86RDTtjgHXguNu/8R6aZxyfYaxISnKa5/pgV+XXu3/
-	 +1Ue7DKXUB/hH72erFBPweT/WptkhFHSBnB5N976PVlf+Iq1Mq+aL6Waa+4iKW664S
-	 UMsqi/sDMd/DpU+F9NAMJU0TUOzuiaTGXZ82ojW9Neo99qFDTUxyOdm8QhR3KzHUUP
-	 eKrQxFiVtsL1A==
+	s=201707; t=1614008383;
+	bh=dU8V4zG8/YYWsglVazpIShdGZ/9pItYmNZE3c/PbOzc=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=PKCKeUY/d29ZlwAZkwy7MhXMSil854e27sBBphtfulFAeLazsZqq4x63RO9QEX+Vg
+	 ZJZlfRXJM0X+Qs1+oT5Y3ge50o7US4WX9NUbco8T4uUPjcmhrbMf7AVCwDBx/c1791
+	 4XL3GeGCyNZPJX0y+BNwfbkyG/iN9Zpql6bzKFzNjYPZQavqBTy1WfmLRuwh1IkCtH
+	 d143wvCjXZY9+PzsyguGojRryOQfBG5+zU+C1SQNX01gA4Vd7FLVMYpZmsJAwXiRnV
+	 0Xh6zG6M8e/xNFweLRzEKlBLSjT9aWPI3ofFAScD3QweAX/LZBSMc7dwWG6spr6AX9
+	 +Q99eXbBOJILA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=namakaran-alu.com (client-ip=139.59.75.255;
- helo=mail.shezartech.in; envelope-from=acc@namakaran-alu.com;
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=aliyun.com (client-ip=115.124.30.14;
+ helo=out30-14.freemail.mail.aliyun.com; envelope-from=bluce.lee@aliyun.com;
  receiver=<UNKNOWN>)
-Received: from mail.shezartech.in (mail.shezartech.in [139.59.75.255])
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
+ header.s=s1024 header.b=TJkjwvq7; dkim-atps=neutral
+X-Greylist: delayed 305 seconds by postgrey-1.36 at boromir;
+ Tue, 23 Feb 2021 02:39:40 AEDT
+Received: from out30-14.freemail.mail.aliyun.com
+ (out30-14.freemail.mail.aliyun.com [115.124.30.14])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Dkkhm1rgqz30MB
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Feb 2021 01:14:46 +1100 (AEDT)
-Received: from [103.99.1.174] (unknown [103.99.1.174])
- (Authenticated sender: bitdefender@shezartech.in)
- by mail.shezartech.in (Postfix) with ESMTPA id C5C4D3FEAB6
- for <linux-erofs@lists.ozlabs.org>; Wed, 17 Feb 2021 21:56:51 +0530 (IST)
-Content-Type: text/plain; charset="iso-8859-1"
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4DkmZh41Gdz30HW
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Feb 2021 02:39:39 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08770521|-1; CH=green;
+ DM=|CONTINUE|false|;
+ DS=CONTINUE|ham_system_inform|0.00384754-0.000747931-0.995404;
+ FP=0|0|0|0|0|-1|-1|-1; HT=e01e04400; MF=bluce.lee@aliyun.com; NM=1; PH=DS;
+ RN=2; RT=2; SR=0; TI=SMTPD_---0UPHtzVK_1614008065; 
+Received: from 192.168.3.32(mailfrom:bluce.lee@aliyun.com
+ fp:SMTPD_---0UPHtzVK_1614008065) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 22 Feb 2021 23:34:26 +0800
+Subject: Re: [PATCH v3] erofs-utils: fix battach on full buffer blocks
+To: Gao Xiang <hsiangkao@aol.com>, linux-erofs@lists.ozlabs.org
+References: <20210121162606.8168-1-sehuww@mail.scut.edu.cn>
+ <20210214160004.6075-1-hsiangkao@aol.com>
+Message-ID: <a347332c-9936-f9f5-f4b2-fcc8025973c6@aliyun.com>
+Date: Mon, 22 Feb 2021 23:34:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Congratulation: You're a winner!
-To: linux-erofs@lists.ozlabs.org
-Date: Wed, 17 Feb 2021 08:26:49 -0800
+In-Reply-To: <20210214160004.6075-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,51 +68,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Euro Millions via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: ste68ven@gmail.com
-Cc: Euro Millions <acc@namakaran-alu.com>
+From: Li GuiFu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Li GuiFu <bluce.lee@aliyun.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
-Message-Id: <4Dkkhp1l2zz3cG0@lists.ozlabs.org>
 
-CONGRATULATION!!!
- =
 
-With reference to the 1,377th EuroMillions draw which took place on Tuesday=
- 1st December 2020 at 21:00 CEST (20:00 BST) and the winning numbers drawn =
-were:
- =
 
-Lucky numbers 14-20-29-47-49 Star Number 4-12 Millionaire Maker: MNHF52876 =
-serial number ZWWD49193 Prize credited to file EURO/86169/2021
- =
+On 2021/2/15 0:00, Gao Xiang via Linux-erofs wrote:
+> From: Hu Weiwen <sehuww@mail.scut.edu.cn>
+> 
+> When the subsequent erofs_battach() is called on an buffer block of
+> which (bb->buffers.off % EROFS_BLKSIZ == 0), `tail_blkaddr' won't be
+> updated correctly. This bug can be reproduced by:
+> 
+> mkdir bug-repo
+> head -c 4032 /dev/urandom > bug-repo/1
+> head -c 4095 /dev/urandom > bug-repo/2
+> head -c 12345 /dev/urandom > bug-repo/3  # arbitrary size
+> mkfs.erofs -Eforce-inode-compact bug-repo.erofs.img bug-repo
+> Then mount this image and see that file `3' in the image is different
+> from `bug-repo/3'.
+> 
+> This patch fix this by:
+>  * Handle `oob' and `tail_blkaddr' for the case above properly;
+>  * Don't inline tail-packing data for such case, since the tail-packing
+>    data is actually in a different block from inode itself even kernel
+>    can handle such cases properly.
+> 
+> Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
+> Reviewed-by: Gao Xiang <hsiangkao@aol.com>
+> Signed-off-by: Gao Xiang <hsiangkao@aol.com>
+> ---
 
-An official letter was sent to your address. Your email address has been aw=
-arded the sum of 2,713,908.40 GB pounds. Kindly, confirm receipt of this no=
-tification by contacting your claims officer Mr. Kennith William for more d=
-etails.
- =
+It looks good
+Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
 
-visit the link https://www.euro-millions.com/results/01-12-2020 to view you=
-r winning details as published on the Euro-Millions site.
- =
-
-Euro-Millions prizes must be claimed within 180 days of the draw date. This=
- is a confidential mail sent to ONLY winners of this draws.
- =
-
-If you have any questions, please contact our customer support.
- =
-
- =
-
-Kind regards,
-Peter Jones
-Customer Support
-EURO-MILLIONS
-Customer Service
-UK Regional Office
-Acorns Oakwood Park Business Center
-Fountains Road Bishop Thornton, Harrogate
-HG3 3BF, UK.
+Thanks,
