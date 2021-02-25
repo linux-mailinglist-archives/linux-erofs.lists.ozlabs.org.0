@@ -2,27 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A78324E8C
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Feb 2021 11:51:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28A1C32505A
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Feb 2021 14:28:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DmV2b4hDcz3cJW
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Feb 2021 21:51:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DmYXC0n0rz3cRd
+	for <lists+linux-erofs@lfdr.de>; Fri, 26 Feb 2021 00:28:43 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=militarygearhq.com (client-ip=188.72.187.214; helo=minimeis.com;
- envelope-from=bermseyalenop@militarygearhq.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 3669 seconds by postgrey-1.36 at boromir;
- Thu, 25 Feb 2021 21:51:17 AEDT
+ smtp.mailfrom=millania.com (client-ip=188.72.187.214; helo=minimeis.com;
+ envelope-from=bermedyalenop@millania.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 24112 seconds by postgrey-1.36 at boromir;
+ Fri, 26 Feb 2021 00:28:40 AEDT
 Received: from minimeis.com (unknown [188.72.187.214])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DmV2Y0dtBz2yTs
- for <linux-erofs@lists.ozlabs.org>; Thu, 25 Feb 2021 21:51:17 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DmYX85TBQz3cHL
+ for <linux-erofs@lists.ozlabs.org>; Fri, 26 Feb 2021 00:28:36 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: Follow me, Orbit and Waypoint
-Message-ID: <c8c44a06466609cf428b7e3035e8916f@bettycrocker.com>
-Date: Thu, 25 Feb 2021 05:27:44 +0100
-From: "Jeremy Parker" <bermseyalenop@militarygearhq.com>
+Subject: Auxiliar bottom LED light
+Message-ID: <1cb9181f34a0ed1b85e75fc0a7d46aa1@bettycrocker.com>
+Date: Thu, 25 Feb 2021 05:32:35 +0100
+From: "Jeremy Parker" <bermseyalenop@millania.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
@@ -55,7 +55,7 @@ left;"><span style="display: block; text-align: left;"><span
 style="display: block; text-align: left;"><span style="text-align:
 left;"><br />Features:<br />2KM flight range;<br />28 minutes of flight
 time.<br />Double GPS positioning<br />Level-7 wind resistance<br
-/>Failsafe Return to Home<br />Follow me, Orbit and Waypoint<br />Auxiliar
+/>Failsafe Return to Home<br />Follow me, Orbit and Waypoint)<br />Auxiliar
 bottom LED light<br />Dual-camera system (6K frontal and 1080P belly)<br
 /><br />Prices:</span></span><span style="display: block; text-align:
 left;"><span style="text-align: left;">289.00 each (1-20 units)<br />279.00
