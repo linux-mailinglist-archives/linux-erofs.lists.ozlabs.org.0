@@ -2,27 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E652F3264BB
-	for <lists+linux-erofs@lfdr.de>; Fri, 26 Feb 2021 16:31:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FA323266FE
+	for <lists+linux-erofs@lfdr.de>; Fri, 26 Feb 2021 19:37:24 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DnDCH6HBZz3cZG
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Feb 2021 02:31:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DnJKt3FXpz3cbv
+	for <lists+linux-erofs@lfdr.de>; Sat, 27 Feb 2021 05:37:22 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=mitmagazin.com (client-ip=173.254.228.69; helo=mmawarfare.com;
- envelope-from=hsameaysonmoi@mitmagazin.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 776 seconds by postgrey-1.36 at boromir;
- Sat, 27 Feb 2021 02:31:22 AEDT
+ smtp.mailfrom=mmafightland.com (client-ip=173.254.228.69; helo=mmawarfare.com;
+ envelope-from=hsameaysonmoi@mmafightland.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 4016 seconds by postgrey-1.36 at boromir;
+ Sat, 27 Feb 2021 05:37:20 AEDT
 Received: from mmawarfare.com (unknown [173.254.228.69])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DnDCG0MWjz30Nc
- for <linux-erofs@lists.ozlabs.org>; Sat, 27 Feb 2021 02:31:22 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DnJKr1BG8z30JS
+ for <linux-erofs@lists.ozlabs.org>; Sat, 27 Feb 2021 05:37:20 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: Remote control distance: about 1000m
-Message-ID: <b95330b4c6fec638d16b89c781bae48d@dronesgator.com>
-Date: Fri, 26 Feb 2021 16:02:44 +0100
-From: "Jan Wilson" <hsameyfsonmoi@mitmagazin.com>
+Subject: check again this smart drone
+Message-ID: <eed282f838ef30d1c7fe32cd12255e32@dronesgator.com>
+Date: Fri, 26 Feb 2021 16:31:27 +0100
+From: "Jan Wilson" <hsameyfsonmoi@mmafightland.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/plain; format=flowed; charset="UTF-8"
