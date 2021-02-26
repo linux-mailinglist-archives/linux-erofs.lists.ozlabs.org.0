@@ -2,27 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 334E63259AF
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Feb 2021 23:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E652F3264BB
+	for <lists+linux-erofs@lfdr.de>; Fri, 26 Feb 2021 16:31:25 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DmnZz0XKBz3d4F
-	for <lists+linux-erofs@lfdr.de>; Fri, 26 Feb 2021 09:31:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DnDCH6HBZz3cZG
+	for <lists+linux-erofs@lfdr.de>; Sat, 27 Feb 2021 02:31:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=mindysmusikids.com (client-ip=188.72.187.219; helo=minif56.com;
- envelope-from=yuimedyleniox@mindysmusikids.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 3641 seconds by postgrey-1.36 at boromir;
- Fri, 26 Feb 2021 09:31:52 AEDT
-Received: from minif56.com (unknown [188.72.187.219])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DmnZw5fMMz3ckf
- for <linux-erofs@lists.ozlabs.org>; Fri, 26 Feb 2021 09:31:49 +1100 (AEDT)
+ smtp.mailfrom=mitmagazin.com (client-ip=173.254.228.69; helo=mmawarfare.com;
+ envelope-from=hsameaysonmoi@mitmagazin.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 776 seconds by postgrey-1.36 at boromir;
+ Sat, 27 Feb 2021 02:31:22 AEDT
+Received: from mmawarfare.com (unknown [173.254.228.69])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DnDCG0MWjz30Nc
+ for <linux-erofs@lists.ozlabs.org>; Sat, 27 Feb 2021 02:31:22 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: photo shooting for your products
-Message-ID: <9a3aaa7debbaecba706e6947bed8fed9@rentmyphotobooth.com>
-Date: Thu, 25 Feb 2021 11:26:52 +0100
-From: "Jason" <yuimseyleniox@mindysmusikids.com>
+Subject: Remote control distance: about 1000m
+Message-ID: <b95330b4c6fec638d16b89c781bae48d@dronesgator.com>
+Date: Fri, 26 Feb 2021 16:02:44 +0100
+From: "Jan Wilson" <hsameyfsonmoi@mitmagazin.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/plain; format=flowed; charset="UTF-8"
@@ -38,7 +38,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: wouredichedep@aliyun.com
+Reply-To: jindongshper@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -46,36 +46,38 @@ Sender: "Linux-erofs"
 Hi,
 
 Hope all is well.
-I am reaching you to check if you have photo shooting needs for your
-products.
+I am reaching you about our drone product I had sent about a week ago.
 
-Our product photography studio is specially designed and outfitted with
-professional cameras, lighting, reflectors, diffusers, soft boxes, props,
-and all the tools needed to allow our team to take the product photos.
+In our stock we have this smart drone right now, ready to ship.
 
-When our ecommerce photography studio is combined with the experience and
-passion
-of our product photographers, and post production team we have everything
-needed to make your product looks good.
+Frequency: 5G
+FPV image transmission: 5G WiFi, 1000m
+Stable two-axis mechanical universal joint
+4K 110° wide-angle adjustable camera. ESC camera
+Channel: 6CH
+Battery: 11.1V 2350mAh lithium ion battery (included)
+Transmitter battery: AA*3
+Flight time: 30 minutes
+Remote control distance: about 1000m
+Colour: Black
+Field of view: 110° wide angle
+4K pixels:
+Picture: 5700*4275
+Video: 3840 * 1080
+Quadrilateral size:
+Product folding size (CM): 17*11.5*6.7CM
+Product development size (CM): 26*26*6.7CM
 
-Our studio utilizes the latest in photographic and digital technology.
-Our fully streamlined process allows us to produce a high quality product
-in a streamlined process, which in turn allows us to pass on the savings to
-you.
-Our post production editing process is state of the art.
+Prices: (shipping included)
+289.50 each (1-20 units)
+279.50 each (21-50 units)
+269.50 each (51-100 units)
+in u s d
 
-We use professional-grade displays and calibrate our monitors regularly
-using
-the very latest in advanced color calibration tools. Our photo studio is
-setup to provide highly accurate color reproduction which is essential for
-creating the product pictures.
-
-Our product shoot photographers have extensive experience with all types of
-products, to deliver
-high quality product photos.
-
-Looking forward to start cooperation with your company.
+If you want to order it today, reply our email with your shipping address
+details, we will make the shipment for you.
+We do worldwide shipping, 10-15 days.
 
 Thanks and Regards,
-Jason Miller
+Jan Wilson
 
