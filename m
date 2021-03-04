@@ -1,28 +1,28 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCEFF32D468
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Mar 2021 14:44:52 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F7232DDFA
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Mar 2021 00:47:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DrsYZ4s1bz3cJK
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 Mar 2021 00:44:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ds6wX1LY9z3ckQ
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Mar 2021 10:47:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=montagut.com (client-ip=188.72.187.12; helo=modes4u.com;
- envelope-from=aolmeyfhtyioz@montagut.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 85 seconds by postgrey-1.36 at boromir;
- Fri, 05 Mar 2021 00:44:48 AEDT
-Received: from modes4u.com (unknown [188.72.187.12])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DrsYX25s0z3cGY
- for <linux-erofs@lists.ozlabs.org>; Fri,  5 Mar 2021 00:44:48 +1100 (AEDT)
+ smtp.mailfrom=momsandcrafters.com (client-ip=188.72.187.221; helo=modes4u.com;
+ envelope-from=aolmeyfhtyioz@momsandcrafters.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 36729 seconds by postgrey-1.36 at boromir;
+ Fri, 05 Mar 2021 10:47:05 AEDT
+Received: from modes4u.com (unknown [188.72.187.221])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4Ds6wT4svSz3cZt
+ for <linux-erofs@lists.ozlabs.org>; Fri,  5 Mar 2021 10:47:05 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: robot vacuum cleaner 120 minutes long endurance
-Message-ID: <4001f707c0fbecb7ebd7c0029e7cf74f@sharkclean.com>
-Date: Thu, 04 Mar 2021 13:08:20 +0100
-From: "Jenson Tayler" <aolmseyhtyioz@montagut.com>
+Subject: robot vacuum cleaner for your office
+Message-ID: <634b4940c6b3f1ce83305e47a5ee357a@sharkclean.com>
+Date: Thu, 04 Mar 2021 12:58:17 +0100
+From: "Jenson Tayler" <aolmeayhtyioz@momsandcrafters.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
