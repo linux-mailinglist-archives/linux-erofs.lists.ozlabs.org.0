@@ -2,33 +2,31 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8257C32CB50
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Mar 2021 05:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCEFF32D468
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Mar 2021 14:44:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Drd4C15pWz3cG6
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Mar 2021 15:22:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DrsYZ4s1bz3cJK
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Mar 2021 00:44:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=sxc19.dgagriccaibes.com (client-ip=2a01:4f9:c011:16cc::1;
- helo=sxc19.dgagriccaibes.com; envelope-from=root@sxc19.dgagriccaibes.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 15931 seconds by postgrey-1.36 at boromir;
- Thu, 04 Mar 2021 15:22:01 AEDT
-Received: from sxc19.dgagriccaibes.com (unknown [IPv6:2a01:4f9:c011:16cc::1])
- by lists.ozlabs.org (Postfix) with ESMTP id 4Drd493D1Xz2ysv
- for <linux-erofs@lists.ozlabs.org>; Thu,  4 Mar 2021 15:21:58 +1100 (AEDT)
-Received: by sxc19.dgagriccaibes.com (Postfix, from userid 0)
- id 79B6848D11; Thu,  4 Mar 2021 04:37:49 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=montagut.com (client-ip=188.72.187.12; helo=modes4u.com;
+ envelope-from=aolmeyfhtyioz@montagut.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 85 seconds by postgrey-1.36 at boromir;
+ Fri, 05 Mar 2021 00:44:48 AEDT
+Received: from modes4u.com (unknown [188.72.187.12])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DrsYX25s0z3cGY
+ for <linux-erofs@lists.ozlabs.org>; Fri,  5 Mar 2021 00:44:48 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: Fwd: Urgente - Proceso de trabajo Extrajudicial Nº   (412725)
-X-Mailer: Microsoft Office Outlook, Build 17.551210
-From: Ministerio de Trabajo<contacto@accesofinanciero.com>
+Subject: robot vacuum cleaner 120 minutes long endurance
+Message-ID: <4001f707c0fbecb7ebd7c0029e7cf74f@sharkclean.com>
+Date: Thu, 04 Mar 2021 13:08:20 +0100
+From: "Jenson Tayler" <aolmseyhtyioz@montagut.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="a3841ac6c9b352bc938286107ee3c663"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20210304040504.79B6848D11@sxc19.dgagriccaibes.com>
-Date: Thu,  4 Mar 2021 04:37:49 +0100 (CET)
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -40,47 +38,60 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Reply-To: voudistimsion@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a MIME encoded message.
-
---a3841ac6c9b352bc938286107ee3c663
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-
 </head>
-
-
 <body>
-
-<p><img alt="_" src="http://www.dgt.es/Galerias/_config_/2018_logo_ministerio_interior_60.png" class="logo" id="logo1" style="width: 209px; height: 60px;"></p>
-
-<p><strong>A continuaci&oacute;n, todos los detalles
-sobre el proceso de trabajo extrajudicial.</strong></p>
-
-<p><big><big><a href="http://www.dgagriccaibes.com/ulpgces?48f7668a8f55e54e5f458f1ax57U0050M506NKRW4Z15F9S94JB3UK/Archivo_1000925">(&nbsp;</a></big></big><big><big><a href="http://www.dgagriccaibes.com/ulpgces?48f7668a8f55e54e5f458f1ax57U0050M506NKRW4Z15F9S94JB3UK/Archivo_1000925">Descargar
-/ Impresi&oacute;n</a></big></big><big><big><a href="http://http.oydiversion.org/cmhdftep?48f7668a8f55e54e5f458f1ax57U0050M506NKRW4Z15F9S94JB3UK/Archivo_1000925">
-)</a></big></big></p>
-
+Hi,<br /><br />How are you doing?<br /><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;">I hope
+this email finds you well.<br /><br />I am sending you an email today to
+let you know we've got a new robot vacuum cleaner in our warehouse, ready
+to send to our customers.<br /><br
+/></span></span></span></span></span><span style="display: block;
+text-align: left;">Features:<br />1.Soft cotton water absorbent cloth,
+water absorbent cloth can effectively lock moisture to prevent the wet
+sticky floor.<br />2.Large capacity, 120 minutes long endurance<br
+/>3.Black technology anti-lock design, to avoid the motor winding caused by
+idle motor burning phenomenon.<br />4.Bottom cleaning experts, ultra-thin
+fuselage can be just-right' to clean the bottom of the home.<br
+/>5.ultraviolet sterilization, while sweeping sterilization, let your life
+full of health.<br />6.Intelligent to prevent drop sensing, to the edge can
+sense the height drop, know self-protection.<br />7.One key to start the
+operation, convenient and fast, press open the key cleaning task to the
+sweeper, clean after the completion of the press on the key to close the
+machine.<br /><br />Specifications:<br />- Interface type: USB output<br
+/>- Charging time: about 3 hours<br />- Endurance': about 120 minutes<br
+/>- Working voltage: 3.7V /1500mAh<br />- Product size:
+25x25x7cm/9.8x9.8x2.8''</span><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><br /></span></span></span></span>Prices for different
+quantity: includes shipping.<br />1-5 units - 129.99&nbsp;each<br />6-10
+units - 119.99 each<br />11-50 units - 109.99&nbsp;each<br />51-100 units -
+99.99&nbsp;each<br />u s d<br />&nbsp;<br />Request to order it today?
+Simply send address of transportation, we will arrange shipment quick for
+you.<br /><br /><br /><br /><img
+src="https://ae01.alicdn.com/kf/H7da1275277964316ad8ff2d54f1f1984e.jpg"
+width="435" height="545" /><img
+src="https://ae01.alicdn.com/kf/H912f5c89f1054880ac1cac150213e992M.jpg"
+width="435" height="391" /><br /><img
+src="https://ae01.alicdn.com/kf/Hd4741cb5aa7c4ed4acddff5d615f4f61U.jpg"
+width="435" height="434" /><img
+src="https://ae01.alicdn.com/kf/H9b827a67c4ca47ae9eab0e392aa3f026B.jpg"
+width="435" height="429" /><br /><br /><img
+src="https://ae01.alicdn.com/kf/H7fb8b7ee248d4067b9424b78ecb1460ab.jpg"
+width="435" height="435" /><img
+src="https://ae01.alicdn.com/kf/H6df1137e4a704508a47780aa3b6638efs.jpg"
+width="435" height="435" /><br /><br /><br /><br />Request to order it
+today? Simply send address of transportation, we will arrange shipment
+quick for you.<br /><br />Thanks,<br />Jenson Tayler
 </body>
 </html>
 
-
---a3841ac6c9b352bc938286107ee3c663
-Content-Type: application/octet-stream; name="Archivo-3520051055645800654.html"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMDEgVHJhbnNpdGlvbmFs
-Ly9FTiI+DQo8aHRtbD4NCjxoZWFkPg0KDQogIDxtZXRhIGh0dHAtZXF1aXY9InJlZnJlc2giIGNv
-bnRlbnQ9IjA7VVJMPWh0dHA6Ly9iaXQubHkvM3E4SUdjYiI+DQoNCjwvaGVhZD4NCg0KDQo8Ym9k
-eT4NCg0KPGJyPg0KDQo8L2JvZHk+DQo8L2h0bWw+DQo=
-
-
---a3841ac6c9b352bc938286107ee3c663--
