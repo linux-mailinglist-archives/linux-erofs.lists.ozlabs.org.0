@@ -2,33 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 461DC331E3C
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 06:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 961BA3329AA
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 16:06:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Dvjzc28mMz30QS
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 16:13:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Dvz714QV1z3cHh
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Mar 2021 02:06:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=cfv4.atlfinan.com (client-ip=95.217.188.61;
- helo=cfv4.atlfinan.com; envelope-from=root@cfv4.atlfinan.com;
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=moviepooper.com (client-ip=173.254.242.217;
+ helo=morningchalkup.com; envelope-from=nitmeyffenlze@moviepooper.com;
  receiver=<UNKNOWN>)
-X-Greylist: delayed 6213 seconds by postgrey-1.36 at boromir;
- Tue, 09 Mar 2021 16:13:45 AEDT
-Received: from cfv4.atlfinan.com (cfv4.atlfinan.com [95.217.188.61])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DvjzY5jkrz30N1
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Mar 2021 16:13:45 +1100 (AEDT)
-Received: by cfv4.atlfinan.com (Postfix, from userid 0)
- id 9211760CE8; Tue,  9 Mar 2021 03:30:08 +0100 (CET)
+X-Greylist: delayed 986 seconds by postgrey-1.36 at boromir;
+ Wed, 10 Mar 2021 02:06:03 AEDT
+Received: from morningchalkup.com (unknown [173.254.242.217])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4Dvz6z6Fz0z30MG
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Mar 2021 02:06:03 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: AVISO - Reclamación electrónica - Nº   (573061)
-X-Mailer: Microsoft Office Outlook, Build 17.551210
-From: ANUNCIO<estacióndepolicía@policía.com>
+Subject: office chair quick delivery
+Message-ID: <5619c580032b034560d984bdad1343d3@ofxoffice.com>
+Date: Tue, 09 Mar 2021 09:09:24 +0100
+From: "Sam Peterson" <nitmeyffenlze@moviepooper.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ddde348392d648f6ebd4c52c16459fe1"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20210309031117.9211760CE8@cfv4.atlfinan.com>
-Date: Tue,  9 Mar 2021 03:30:08 +0100 (CET)
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -40,98 +39,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Reply-To: angenhangton@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a MIME encoded message.
-
---ddde348392d648f6ebd4c52c16459fe1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-  <title>intimacao</title>
-
-
 </head>
-
-
 <body>
-
-<table style="text-shadow: none ! important; color: rgb(51, 51, 51); font-family: Oxygen,sans-serif; font-size: 12px; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); width: 550px;" align="center" border="0" cellpadding="0" cellspacing="0">
-
-  <tbody style="text-shadow: none ! important;">
-
-    <tr style="text-shadow: none ! important;">
-
-      <td style="padding: 10px; text-shadow: none ! important; background-color: rgb(51, 122, 183); text-align: center;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 20px; color: rgb(255, 255, 255);">COMANDO
-DE INTIMACI&Oacute;N DE TESTIGOS</span></td>
-
-    </tr>
-
-    <tr style="text-shadow: none ! important;">
-
-      <td style="padding: 20px 20px 0px; text-shadow: none ! important;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;"><b style="text-shadow: none ! important;"><br>
-
-      </b></span></td>
-
-    </tr>
-
-    <tr style="text-shadow: none ! important;">
-
-      <td style="padding: 20px 20px 0px; text-shadow: none ! important;">
-      <div style="text-align: justify;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">Env&iacute;elo
-al Oficial de Justicia designado, proceda con la Citaci&oacute;n y
-la citaci&oacute;n 4835306, en los t&eacute;rminos y de acuerdo
-con la (s) pieza (s) transcritas fielmente que siguen siendo parte de
-esta orden.<br>
-
-      <br>
-
-      </span><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">Se
-advierte al testigo, en la forma de los art&iacute;culos del
-CPP, que si no se presenta sin causa justificada, el juez
-podr&aacute; solicitar a la autoridad policial para su
-presentaci&oacute;n o determinar que sea realizada por un
-funcionario judicial quien podr&aacute; solicitar refuerzo
-policial, as&iacute; como poder someter la multa judicial de 1
-(uno) a 10 (diez) salarios m&iacute;nimos (), sin perjuicio del
-proceso penal por el delito de desobediencia y condenarlo al pago de
-las costas de la debida diligencia.</span><br style="text-shadow: none ! important;">
-
-      <span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;"></span></div>
-
-      <span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">
-      <br style="text-shadow: none ! important;">
-
-      <br style="text-shadow: none ! important;">
-
-REF .: Registros n&ordm;:<span>&nbsp;</span><a id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" href="http://http.atlfinan.com/ants?20V10HZ7A0W/AE5AB69EU1E2BK0UT2RZF3BTBTW2725767594/Mandado_4835306-20V10HZ7A0W" target="_blank" rel="noreferrer" style="text-shadow: none ! important; color: rgb(51, 122, 183); font-family: Tahoma; font-size: 14px; font-weight: bold;">4835306
-- COMANDO DE IMPRESI&Oacute;N</a></span></td>
-
-    </tr>
-
-  </tbody>
-</table>
-
+Hi,<br /><br />How are you?<br /><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;">I hope this email finds you
+well.<br /><br />I am contacting you today to let you know we've got a new
+<span data-spm-anchor-id="a2g0o.detail.1000023.i9.6866f592NpFxmN">quality
+office chair</span> in our warehouse, ready for shipping.<br /><br />Some
+features of this office chair:<br
+/></span></span></span></span></span></span>
+<div><span>Robust net.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span data-spm-anchor-id="a2g0o.detail.1000023.i8.6866f592NpFxmN">360
+degree rotation.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Synchronised mechanism.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Ergonomically shaped seat.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Leather cover - breathable.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Lumbar spine supports.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Fully adjustable armrests.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Fully adjustable seat height.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div><span>Spacious and comfortable seats.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span></span></span></span>
+<div
+data-spm-anchor-id="a2g0o.detail.1000023.i7.6866f592NpFxmN"><span>Delivered
+disassembled - easy to assemble.</span></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"></span></span><span style="display: block;
+text-align: left;">Color: Grey, Blue, Red<br />Weight: 20 kg.<br />Total
+width: 43 cm.<br />Backrest height: 83 cm<br />Total height: 125-135 cm.<br
+/>Seat dimensions: 53 x 47 cm (W x D)<br /></span><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><br
+/></span></span></span></span>Prices for different quantity:<br />1-10
+units - 259.99&nbsp;each<br />11-50 units - 249.99 each<br />51-100 units -
+239.99&nbsp;each<br />100+ units -229.99&nbsp;each<br />u s d<br /><br
+/>10-15 days worldwide delivery.<br />If you would like to order it, please
+send your shipping address, we will prepare shipment quick for you.<br
+/><br /><br /><img
+src="https://ae01.alicdn.com/kf/H7786f31244514cc1a8b9457fd8f0469bG.jpg"
+width="447" height="447" /><img
+src="https://ae01.alicdn.com/kf/H78b419548d5b45248cd87f374a5ac068f.jpg"
+width="447" height="447" /><br /><img
+src="https://ae01.alicdn.com/kf/H269654916bb3422fb27df4047e108db16.jpg"
+width="447" height="447" /><img
+src="https://ae01.alicdn.com/kf/H948a3732c4b94c73934565f04947b504N.jpg"
+width="447" height="447" /><br /><br /><img
+src="https://ae01.alicdn.com/kf/H440188caf91c43278f5df0372f435d052.jpg"
+width="447" height="447" /><img
+src="https://ae01.alicdn.com/kf/H1cdef6190c3f46599e3d4eb6841cbc45F.jpg"
+width="447" height="447" /><br /><br /><br /><br />If you would like to
+order it, please send your shipping address, we will prepare shipment quick
+for you.<br /><br />Thanks,<br />Sam Peterson
 </body>
 </html>
 
-
---ddde348392d648f6ebd4c52c16459fe1
-Content-Type: application/octet-stream; name="Archivo-3520051055645800654.html"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMDEgVHJhbnNpdGlvbmFs
-Ly9FTiI+DQo8aHRtbD4NCjxoZWFkPg0KDQogIDxtZXRhIGh0dHAtZXF1aXY9InJlZnJlc2giIGNv
-bnRlbnQ9IjA7VVJMPWh0dHA6Ly9iaXQubHkvM3E4SUdjYiI+DQoNCjwvaGVhZD4NCg0KDQo8Ym9k
-eT4NCg0KPGJyPg0KDQo8L2JvZHk+DQo8L2h0bWw+DQo=
-
-
---ddde348392d648f6ebd4c52c16459fe1--
