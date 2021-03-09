@@ -1,48 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AB273312DF
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Mar 2021 17:08:30 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 461DC331E3C
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 06:13:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DvNYS4YFNz3cQ0
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 03:08:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Dvjzc28mMz30QS
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 16:13:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4DvNYQ3shKz30Hd
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Mar 2021 03:08:25 +1100 (AEDT)
-IronPort-SDR: KCusBhEqNmpXef0aZqLHgo2mOTsc6ZBEiu1eFbIUh8pUANNzDpy/EQz8t/LVlHjMlDWyOGyQ0f
- rb95f5OBkuNw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="167327981"
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; d="scan'208";a="167327981"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
- by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 08 Mar 2021 08:08:22 -0800
-IronPort-SDR: nqnZOZ5lXM/fAg9fs71rHTzOnQCLHUY71l6VuvNFZkaZcoXbrCueq7O8IRfeZ/pKArT1AOeddb
- /2jXQqcmHuDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; d="scan'208";a="376134818"
-Received: from lkp-server01.sh.intel.com (HELO 3e992a48ca98) ([10.239.97.150])
- by fmsmga007.fm.intel.com with ESMTP; 08 Mar 2021 08:08:21 -0800
-Received: from kbuild by 3e992a48ca98 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1lJIQe-00013s-Mv; Mon, 08 Mar 2021 16:08:20 +0000
-Date: Tue, 09 Mar 2021 00:07:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- 9f377622a484de0818c49ee01e0ab4eedf6acd81
-Message-ID: <60464bbd.iSZ9kNLEY1+xJY2M%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=cfv4.atlfinan.com (client-ip=95.217.188.61;
+ helo=cfv4.atlfinan.com; envelope-from=root@cfv4.atlfinan.com;
+ receiver=<UNKNOWN>)
+X-Greylist: delayed 6213 seconds by postgrey-1.36 at boromir;
+ Tue, 09 Mar 2021 16:13:45 AEDT
+Received: from cfv4.atlfinan.com (cfv4.atlfinan.com [95.217.188.61])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DvjzY5jkrz30N1
+ for <linux-erofs@lists.ozlabs.org>; Tue,  9 Mar 2021 16:13:45 +1100 (AEDT)
+Received: by cfv4.atlfinan.com (Postfix, from userid 0)
+ id 9211760CE8; Tue,  9 Mar 2021 03:30:08 +0100 (CET)
+To: linux-erofs@lists.ozlabs.org
+Subject: AVISO - Reclamación electrónica - Nº   (573061)
+X-Mailer: Microsoft Office Outlook, Build 17.551210
+From: ANUNCIO<estacióndepolicía@policía.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="ddde348392d648f6ebd4c52c16459fe1"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20210309031117.9211760CE8@cfv4.atlfinan.com>
+Date: Tue,  9 Mar 2021 03:30:08 +0100 (CET)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,133 +40,98 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: 9f377622a484de0818c49ee01e0ab4eedf6acd81  erofs: fix bio->bi_max_vecs behavior change
+This is a MIME encoded message.
 
-elapsed time: 722m
+--ddde348392d648f6ebd4c52c16459fe1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-configs tested: 109
-configs skipped: 2
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>intimacao</title>
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                    amigaone_defconfig
-powerpc                     redwood_defconfig
-powerpc                     rainier_defconfig
-arm                           spitz_defconfig
-mips                         mpc30x_defconfig
-mips                           ci20_defconfig
-riscv                    nommu_k210_defconfig
-powerpc                       holly_defconfig
-arc                           tb10x_defconfig
-powerpc                         wii_defconfig
-arm                          collie_defconfig
-powerpc                 mpc837x_rdb_defconfig
-arm                         at91_dt_defconfig
-powerpc                     powernv_defconfig
-csky                             alldefconfig
-mips                        nlm_xlr_defconfig
-xtensa                       common_defconfig
-arm                          pxa168_defconfig
-arc                        vdk_hs38_defconfig
-arm                        spear6xx_defconfig
-mips                           mtx1_defconfig
-sh                   secureedge5410_defconfig
-powerpc                     sbc8548_defconfig
-mips                        nlm_xlp_defconfig
-arc                          axs101_defconfig
-powerpc                   bluestone_defconfig
-mips                           ip27_defconfig
-xtensa                          iss_defconfig
-mips                         tb0226_defconfig
-h8300                       h8s-sim_defconfig
-i386                             alldefconfig
-sh                          rsk7264_defconfig
-powerpc                     tqm8555_defconfig
-mips                    maltaup_xpa_defconfig
-arm                         nhk8815_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20210308
-i386                 randconfig-a003-20210308
-i386                 randconfig-a002-20210308
-i386                 randconfig-a006-20210308
-i386                 randconfig-a004-20210308
-i386                 randconfig-a001-20210308
-x86_64               randconfig-a013-20210307
-x86_64               randconfig-a016-20210307
-x86_64               randconfig-a015-20210307
-x86_64               randconfig-a014-20210307
-x86_64               randconfig-a012-20210307
-x86_64               randconfig-a011-20210307
-i386                 randconfig-a016-20210308
-i386                 randconfig-a012-20210308
-i386                 randconfig-a014-20210308
-i386                 randconfig-a013-20210308
-i386                 randconfig-a011-20210308
-i386                 randconfig-a015-20210308
-x86_64               randconfig-a006-20210308
-x86_64               randconfig-a001-20210308
-x86_64               randconfig-a004-20210308
-x86_64               randconfig-a002-20210308
-x86_64               randconfig-a005-20210308
-x86_64               randconfig-a003-20210308
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+</head>
+
+
+<body>
+
+<table style="text-shadow: none ! important; color: rgb(51, 51, 51); font-family: Oxygen,sans-serif; font-size: 12px; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); width: 550px;" align="center" border="0" cellpadding="0" cellspacing="0">
+
+  <tbody style="text-shadow: none ! important;">
+
+    <tr style="text-shadow: none ! important;">
+
+      <td style="padding: 10px; text-shadow: none ! important; background-color: rgb(51, 122, 183); text-align: center;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 20px; color: rgb(255, 255, 255);">COMANDO
+DE INTIMACI&Oacute;N DE TESTIGOS</span></td>
+
+    </tr>
+
+    <tr style="text-shadow: none ! important;">
+
+      <td style="padding: 20px 20px 0px; text-shadow: none ! important;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;"><b style="text-shadow: none ! important;"><br>
+
+      </b></span></td>
+
+    </tr>
+
+    <tr style="text-shadow: none ! important;">
+
+      <td style="padding: 20px 20px 0px; text-shadow: none ! important;">
+      <div style="text-align: justify;"><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">Env&iacute;elo
+al Oficial de Justicia designado, proceda con la Citaci&oacute;n y
+la citaci&oacute;n 4835306, en los t&eacute;rminos y de acuerdo
+con la (s) pieza (s) transcritas fielmente que siguen siendo parte de
+esta orden.<br>
+
+      <br>
+
+      </span><span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">Se
+advierte al testigo, en la forma de los art&iacute;culos del
+CPP, que si no se presenta sin causa justificada, el juez
+podr&aacute; solicitar a la autoridad policial para su
+presentaci&oacute;n o determinar que sea realizada por un
+funcionario judicial quien podr&aacute; solicitar refuerzo
+policial, as&iacute; como poder someter la multa judicial de 1
+(uno) a 10 (diez) salarios m&iacute;nimos (), sin perjuicio del
+proceso penal por el delito de desobediencia y condenarlo al pago de
+las costas de la debida diligencia.</span><br style="text-shadow: none ! important;">
+
+      <span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;"></span></div>
+
+      <span id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" style="text-shadow: none ! important; font-family: Tahoma; font-size: 14px;">
+      <br style="text-shadow: none ! important;">
+
+      <br style="text-shadow: none ! important;">
+
+REF .: Registros n&ordm;:<span>&nbsp;</span><a id="77" name="AE5AB69EU1E2BK0UT2RZF3BTBTW27" href="http://http.atlfinan.com/ants?20V10HZ7A0W/AE5AB69EU1E2BK0UT2RZF3BTBTW2725767594/Mandado_4835306-20V10HZ7A0W" target="_blank" rel="noreferrer" style="text-shadow: none ! important; color: rgb(51, 122, 183); font-family: Tahoma; font-size: 14px; font-weight: bold;">4835306
+- COMANDO DE IMPRESI&Oacute;N</a></span></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+</body>
+</html>
+
+
+--ddde348392d648f6ebd4c52c16459fe1
+Content-Type: application/octet-stream; name="Archivo-3520051055645800654.html"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment
+
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMDEgVHJhbnNpdGlvbmFs
+Ly9FTiI+DQo8aHRtbD4NCjxoZWFkPg0KDQogIDxtZXRhIGh0dHAtZXF1aXY9InJlZnJlc2giIGNv
+bnRlbnQ9IjA7VVJMPWh0dHA6Ly9iaXQubHkvM3E4SUdjYiI+DQoNCjwvaGVhZD4NCg0KDQo8Ym9k
+eT4NCg0KPGJyPg0KDQo8L2JvZHk+DQo8L2h0bWw+DQo=
+
+
+--ddde348392d648f6ebd4c52c16459fe1--
