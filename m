@@ -1,28 +1,28 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1576E3396CA
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Mar 2021 19:42:37 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CED18339716
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Mar 2021 20:07:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DxvnQ5Gx2z3cGn
-	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 05:42:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4DxwKh61Bwz3d5c
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 06:07:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=mydearestdesire.com (client-ip=173.254.242.218; helo=mycarpe.com;
- envelope-from=pcomseyjugekt@mydearestdesire.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 111 seconds by postgrey-1.36 at boromir;
- Sat, 13 Mar 2021 05:42:33 AEDT
+ smtp.mailfrom=mydesignchic.com (client-ip=173.254.242.218; helo=mycarpe.com;
+ envelope-from=chlmedyjugekt@mydesignchic.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 166 seconds by postgrey-1.36 at boromir;
+ Sat, 13 Mar 2021 06:07:03 AEDT
 Received: from mycarpe.com (unknown [173.254.242.218])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DxvnP1PDmz30MG
- for <linux-erofs@lists.ozlabs.org>; Sat, 13 Mar 2021 05:42:33 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4DxwKg3C2qz3cGg
+ for <linux-erofs@lists.ozlabs.org>; Sat, 13 Mar 2021 06:07:03 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: the new arrival quadcopter
-Message-ID: <dfa2f98c556d4c92c3b6bff7f504f679@dronerafts.com>
-Date: Fri, 12 Mar 2021 14:34:34 +0100
-From: "Jimmy Nelson" <pcomeayjugekt@mydearestdesire.com>
+Subject: check this quadcopter
+Message-ID: <e152ad0bb3414e6c93133c6526deafca@dronerafts.com>
+Date: Fri, 12 Mar 2021 15:19:26 +0100
+From: "Jimmy Nelson" <chlmeayjugekt@mydesignchic.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
