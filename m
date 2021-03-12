@@ -2,27 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CED18339716
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Mar 2021 20:07:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8365F339AC0
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 02:16:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4DxwKh61Bwz3d5c
-	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 06:07:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Dy4WV2LfKz3d4C
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 12:16:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=mydesignchic.com (client-ip=173.254.242.218; helo=mycarpe.com;
- envelope-from=chlmedyjugekt@mydesignchic.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 166 seconds by postgrey-1.36 at boromir;
- Sat, 13 Mar 2021 06:07:03 AEDT
-Received: from mycarpe.com (unknown [173.254.242.218])
- by lists.ozlabs.org (Postfix) with ESMTP id 4DxwKg3C2qz3cGg
- for <linux-erofs@lists.ozlabs.org>; Sat, 13 Mar 2021 06:07:03 +1100 (AEDT)
+ smtp.mailfrom=msparker.com (client-ip=188.72.187.227; helo=myhondafitev.com;
+ envelope-from=dzamedyvkieqo@msparker.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 7444 seconds by postgrey-1.36 at boromir;
+ Sat, 13 Mar 2021 12:16:03 AEDT
+Received: from myhondafitev.com (unknown [188.72.187.227])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4Dy4WR2Yntz3cms
+ for <linux-erofs@lists.ozlabs.org>; Sat, 13 Mar 2021 12:16:03 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: check this quadcopter
-Message-ID: <e152ad0bb3414e6c93133c6526deafca@dronerafts.com>
-Date: Fri, 12 Mar 2021 15:19:26 +0100
-From: "Jimmy Nelson" <chlmeayjugekt@mydesignchic.com>
+Subject: this is useful for home and office
+Message-ID: <ed9fd33b0e2ee28d15e85c80733c7964@constructiongear.com>
+Date: Fri, 12 Mar 2021 10:03:02 +0100
+From: "Scott Walker" <dzamedyvkieqo@msparker.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
@@ -38,7 +38,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: dewtonysenio@aliyun.com
+Reply-To: lerbdeonarde@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -48,43 +48,43 @@ Sender: "Linux-erofs"
 </head>
 <body>
 <span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;">Hi,<br /><br />Hope you are doing good today. <br
-/>We would like to tell you that we have got one new quadcopter drone in
-our warehouse.<br /><br /><span>It can fly for 30 minutes continuously and
-shoot amazing HD videos at 25fps. <br />The quadcopter also boasts an
-excellent video resolution of 2048&times;1080 and picture resolution of
-4096&times;3072.<br /><span>Fix a point and then set the radial distance
-with the joystick and watch the drone take videos encircling the selected
-object.<br /><br /></span></span></span></span><span style="display: block;
-text-align: left;">Remote control distance: about 3000m<br />Remote control
-height: about 120m<br />Gesture recognition shooting: 1-3m<br /><span>Wifi
-frequency: 5G Camera resolution: 4096 * 3072 (APP) <br />Video resolution:
-2048 * 1080 (APP) <br />Transmission frame rate: 25fps</span></span><span
+block; text-align: left;">Hi,<br /><br />Hope you have a good day. <br />We
+would like to let you know that we have got one new robot vacuum cleaner in
+our warehouse.<br />Ready for shipping.<br /><br /></span></span><span
 style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><br /></span></span><span style="display: block;
-text-align: left;">Pricing details:<br />1-5 units 229.00 each<br />6-50
-units 219.00 each<br />51 -100 units 189.00 each<br />u s d<br /><br />If
-you would like to order this drone, you can just reply to our email and
-send us your address for shipping, we will prepare the shipment fast for
-you.</span>
+text-align: left;">Features:<br /></span></span><span style="display:
+block; text-align: left;">1.Soft cotton water absorbent cloth, water
+absorbent cloth can effectively lock moisture to prevent the wet sticky
+floor.<br />2.Large capacity, 120 minutes long endurance<br />3.Black
+technology anti-lock design, to avoid the motor winding caused by idle
+motor burning phenomenon.<br />4.Bottom cleaning experts, ultra-thin
+fuselage can be just-right' to clean the bottom of the home.<br />5.Super'
+ultraviolet sterilization, while sweeping sterilization, let your life full
+of health.<br />6.Extra-long hexagon edge brush, extend the cleaning
+range<br />7.Intelligent to prevent drop sensing, to the edge can sense the
+height drop, know self-protection.<br />8.One key to start the operation,
+convenient and fast.<br /></span><span style="display: block; text-align:
+left;"><br />Pricing for different quantity:<br />1-5 pieces 129.00 each<br
+/>6-50 pieces 119.00 each<br />50-100 pieces 109.90 each<br />u s d<br
+/><br />If you like to order it, please reply our email and send us your
+delivery address, we will ready the shipment fast.</span>
 <pre></pre>
 <img
-src="https://ae04.alicdn.com/kf/H77af5d148df5490a9611408a1f00a070B.jpg"
-width="457" height="704" /><img
-src="https://ae04.alicdn.com/kf/Hc2f5f0a619f3423cb3bfc5b6bd7b672al.jpg"
-width="457" height="702" /><br /><img
-src="https://ae04.alicdn.com/kf/Hfc8f3403e61844cba908c7c334917ab6x.jpg"
-width="457" height="700" /><img
-src="https://ae04.alicdn.com/kf/H49cceca0489b454abc933362cbbf272ap.jpg"
-width="457" height="655" /><br /><br /><img
-src="https://ae01.alicdn.com/kf/H62c5fba2256b48c299824abe6fbb5b82T.jpg"
-width="457" height="876" /><img
-src="https://ae04.alicdn.com/kf/H8027181b0dfd48c0805392b7ccbacfbaz.jpg"
-width="457" height="861" /><br /><br /><br /><span style="display: block;
-text-align: left;"><span>If you would like to order this drone, you can
-just reply to our email and send us your address for shipping, we will
-prepare the shipment fast for you.<br /></span><br />Thanks,<br />Jimmy
-Nelson</span>
+src="https://ae01.alicdn.com/kf/H266c38dbb7c941909488eeb86dd120a0A.jpg?width=960&amp;height=1202&amp;hash=2162"
+width="455" height="570" /><img
+src="https://ae01.alicdn.com/kf/H4945a38800874d69be6ae6cb795f5126i.jpg?width=960&amp;height=958&amp;hash=1918"
+width="455" height="454" /><br /><img
+src="https://ae01.alicdn.com/kf/Ha2e58c08400948e0a142952d1aa746217.jpg?width=960&amp;height=946&amp;hash=1906"
+width="455" height="448" /><img
+src="https://ae01.alicdn.com/kf/Hd86b33af021c4d1493186bcf831251cbg.jpg?width=960&amp;height=961&amp;hash=1921"
+width="455" height="455" /><br /><br /><img
+src="https://ae01.alicdn.com/kf/H93517f05404b48d8be580c801d0457a6D.jpg?width=1000&amp;height=1000&amp;hash=2000"
+width="455" height="455" /><img
+src="https://ae01.alicdn.com/kf/H486a243e63fb4e11b5f664def00c0f6cZ.jpg?width=960&amp;height=761&amp;hash=1721"
+width="455" height="361" /><br /><br /><br /><span style="display: block;
+text-align: left;"><span>If you like to order it, please reply our email
+and send us your delivery address, we will ready the shipment fast.<br
+/></span><br />Thanks,<br />Scott Walker</span>
 </body>
 </html>
 
