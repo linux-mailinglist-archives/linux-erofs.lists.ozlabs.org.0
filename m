@@ -2,28 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 961BA3329AA
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Mar 2021 16:06:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DEFFB338E97
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Mar 2021 14:18:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Dvz714QV1z3cHh
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Mar 2021 02:06:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Dxmb76fFmz3dKh
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Mar 2021 00:18:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=moviepooper.com (client-ip=173.254.242.217;
- helo=morningchalkup.com; envelope-from=nitmeyffenlze@moviepooper.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 986 seconds by postgrey-1.36 at boromir;
- Wed, 10 Mar 2021 02:06:03 AEDT
-Received: from morningchalkup.com (unknown [173.254.242.217])
- by lists.ozlabs.org (Postfix) with ESMTP id 4Dvz6z6Fz0z30MG
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Mar 2021 02:06:03 +1100 (AEDT)
+ smtp.mailfrom=mtndewkid.com (client-ip=188.72.187.20; helo=myhondafitev.com;
+ envelope-from=ligmeyfvkieqo@mtndewkid.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 8635 seconds by postgrey-1.36 at boromir;
+ Sat, 13 Mar 2021 00:18:10 AEDT
+Received: from myhondafitev.com (unknown [188.72.187.20])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4Dxmb60mFzz30HQ
+ for <linux-erofs@lists.ozlabs.org>; Sat, 13 Mar 2021 00:18:10 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: office chair quick delivery
-Message-ID: <5619c580032b034560d984bdad1343d3@ofxoffice.com>
-Date: Tue, 09 Mar 2021 09:09:24 +0100
-From: "Sam Peterson" <nitmeyffenlze@moviepooper.com>
+Subject: smart cleaner for home and office
+Message-ID: <3e245176ecbcc5868ecad837526ac002@constructiongear.com>
+Date: Fri, 12 Mar 2021 09:03:19 +0100
+From: "Scott Walker" <ligmedyvkieqo@mtndewkid.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
@@ -39,7 +38,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: angenhangton@aliyun.com
+Reply-To: lerbdeonarde@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -48,102 +47,44 @@ Sender: "Linux-erofs"
 <head>
 </head>
 <body>
-Hi,<br /><br />How are you?<br /><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;">I hope this email finds you
-well.<br /><br />I am contacting you today to let you know we've got a new
-<span data-spm-anchor-id="a2g0o.detail.1000023.i9.6866f592NpFxmN">quality
-office chair</span> in our warehouse, ready for shipping.<br /><br />Some
-features of this office chair:<br
-/></span></span></span></span></span></span>
-<div><span>Robust net.</span></div>
 <span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
+block; text-align: left;">Hi,<br /><br />Hope you have a good day. <br />We
+would like to let you know that we have got one new robot vacuum cleaner in
+our warehouse.<br />Ready for shipping.<br /><br /></span></span><span
 style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span data-spm-anchor-id="a2g0o.detail.1000023.i8.6866f592NpFxmN">360
-degree rotation.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Synchronised mechanism.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Ergonomically shaped seat.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Leather cover - breathable.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Lumbar spine supports.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Fully adjustable armrests.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Fully adjustable seat height.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div><span>Spacious and comfortable seats.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span></span></span></span></span>
-<div
-data-spm-anchor-id="a2g0o.detail.1000023.i7.6866f592NpFxmN"><span>Delivered
-disassembled - easy to assemble.</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span><span style="display: block;
-text-align: left;">Color: Grey, Blue, Red<br />Weight: 20 kg.<br />Total
-width: 43 cm.<br />Backrest height: 83 cm<br />Total height: 125-135 cm.<br
-/>Seat dimensions: 53 x 47 cm (W x D)<br /></span><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><br
-/></span></span></span></span>Prices for different quantity:<br />1-10
-units - 259.99&nbsp;each<br />11-50 units - 249.99 each<br />51-100 units -
-239.99&nbsp;each<br />100+ units -229.99&nbsp;each<br />u s d<br /><br
-/>10-15 days worldwide delivery.<br />If you would like to order it, please
-send your shipping address, we will prepare shipment quick for you.<br
-/><br /><br /><img
-src="https://ae01.alicdn.com/kf/H7786f31244514cc1a8b9457fd8f0469bG.jpg"
-width="447" height="447" /><img
-src="https://ae01.alicdn.com/kf/H78b419548d5b45248cd87f374a5ac068f.jpg"
-width="447" height="447" /><br /><img
-src="https://ae01.alicdn.com/kf/H269654916bb3422fb27df4047e108db16.jpg"
-width="447" height="447" /><img
-src="https://ae01.alicdn.com/kf/H948a3732c4b94c73934565f04947b504N.jpg"
-width="447" height="447" /><br /><br /><img
-src="https://ae01.alicdn.com/kf/H440188caf91c43278f5df0372f435d052.jpg"
-width="447" height="447" /><img
-src="https://ae01.alicdn.com/kf/H1cdef6190c3f46599e3d4eb6841cbc45F.jpg"
-width="447" height="447" /><br /><br /><br /><br />If you would like to
-order it, please send your shipping address, we will prepare shipment quick
-for you.<br /><br />Thanks,<br />Sam Peterson
+text-align: left;">Features:<br /></span></span><span style="display:
+block; text-align: left;">1.Soft cotton water absorbent cloth, water
+absorbent cloth can effectively lock moisture to prevent the wet sticky
+floor.<br />2.Large capacity, 120 minutes long endurance<br />3.Black
+technology anti-lock design, to avoid the motor winding caused by idle
+motor burning phenomenon.<br />4.Bottom cleaning experts, ultra-thin
+fuselage can be just-right' to clean the bottom of the home.<br />5.Super'
+ultraviolet sterilization, while sweeping sterilization, let your life full
+of health.<br />6.Extra-long hexagon edge brush, extend the cleaning
+range<br />7.Intelligent to prevent drop sensing, to the edge can sense the
+height drop, know self-protection.<br />8.One key to start the operation,
+convenient and fast.<br /></span><span style="display: block; text-align:
+left;"><br />Pricing for different quantity:<br />1-5 pieces 129.00 each<br
+/>6-50 pieces 119.00 each<br />50-100 pieces 109.90 each<br />u s d<br
+/><br />If you like to order it, please reply our email and send us your
+delivery address, we will ready the shipment fast.</span>
+<pre></pre>
+<img
+src="https://ae01.alicdn.com/kf/H266c38dbb7c941909488eeb86dd120a0A.jpg?width=960&amp;height=1202&amp;hash=2162"
+width="455" height="570" /><img
+src="https://ae01.alicdn.com/kf/H4945a38800874d69be6ae6cb795f5126i.jpg?width=960&amp;height=958&amp;hash=1918"
+width="455" height="454" /><br /><img
+src="https://ae01.alicdn.com/kf/Ha2e58c08400948e0a142952d1aa746217.jpg?width=960&amp;height=946&amp;hash=1906"
+width="455" height="448" /><img
+src="https://ae01.alicdn.com/kf/Hd86b33af021c4d1493186bcf831251cbg.jpg?width=960&amp;height=961&amp;hash=1921"
+width="455" height="455" /><br /><br /><img
+src="https://ae01.alicdn.com/kf/H93517f05404b48d8be580c801d0457a6D.jpg?width=1000&amp;height=1000&amp;hash=2000"
+width="455" height="455" /><img
+src="https://ae01.alicdn.com/kf/H486a243e63fb4e11b5f664def00c0f6cZ.jpg?width=960&amp;height=761&amp;hash=1721"
+width="455" height="361" /><br /><br /><br /><span style="display: block;
+text-align: left;"><span>If you like to order it, please reply our email
+and send us your delivery address, we will ready the shipment fast.<br
+/></span><br />Thanks,<br />Scott Walker</span>
 </body>
 </html>
 
