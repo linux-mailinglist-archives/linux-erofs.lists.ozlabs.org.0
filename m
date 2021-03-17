@@ -1,44 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FE6933EA0A
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 07:46:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4796D33F3EA
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 16:18:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F0gfL18RVz30L2
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 17:46:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F0v1N23Q7z30HR
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Mar 2021 02:18:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=szxga06-in.huawei.com;
- envelope-from=yuchao0@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F0gfJ3Vqwz2yQw
- for <linux-erofs@lists.ozlabs.org>; Wed, 17 Mar 2021 17:46:00 +1100 (AEDT)
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
- by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4F0gcS6v2fzkb8C;
- Wed, 17 Mar 2021 14:44:24 +0800 (CST)
-Received: from [10.136.110.154] (10.136.110.154) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.498.0; Wed, 17 Mar
- 2021 14:45:53 +0800
-Subject: Re: [PATCH 2/2] erofs: use sync decompression for atomic contexts only
-To: Huang Jianan <huangjianan@oppo.com>, <linux-erofs@lists.ozlabs.org>
-References: <20210317035448.13921-1-huangjianan@oppo.com>
- <20210317035448.13921-3-huangjianan@oppo.com>
-From: Chao Yu <yuchao0@huawei.com>
-Message-ID: <62153424-198c-807e-cced-33dd90279174@huawei.com>
-Date: Wed, 17 Mar 2021 14:45:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=namebrandwigs.com (client-ip=5.253.84.113;
+ helo=mysuburbankitchen.com; envelope-from=dsumseyfenkoa@namebrandwigs.com;
+ receiver=<UNKNOWN>)
+X-Greylist: delayed 63 seconds by postgrey-1.36 at boromir;
+ Thu, 18 Mar 2021 02:18:13 AEDT
+Received: from mysuburbankitchen.com (unknown [5.253.84.113])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4F0v1K4l2tz309n
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Mar 2021 02:18:13 +1100 (AEDT)
+To: linux-erofs@lists.ozlabs.org
+Subject: drone with new features
+Message-ID: <9b4ac3bab0749ba50afe918264115915@sweetwater.com>
+Date: Wed, 17 Mar 2021 08:59:28 +0100
+From: "Jake Allen" <dsumeyffenkoa@namebrandwigs.com>
 MIME-Version: 1.0
-In-Reply-To: <20210317035448.13921-3-huangjianan@oppo.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.136.110.154]
-X-CFilter-Loop: Reflected
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,21 +39,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: zhangshiming@oppo.com, guoweichao@oppo.com, linux-kernel@vger.kernel.org
+Reply-To: teogingsilklo@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2021/3/17 11:54, Huang Jianan via Linux-erofs wrote:
-> Sync decompression was introduced to get rid of additional kworker
-> scheduling overhead. But there is no such overhead in non-atomic
-> contexts. Therefore, it should be better to turn off sync decompression
-> to avoid the current thread waiting in z_erofs_runqueue.
-> 
-> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-> Signed-off-by: Guo Weichao <guoweichao@oppo.com>
-> Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+<html>
+<head>
+</head>
+<body>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;">Hi,<br /><br /><span>Hope all is well.</span><br
+/>We are contacting you today to let you know that we have got the
+following new drone, ready to ship to worldwide customers.<span><span><br
+/><br /></span></span></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"></span></span><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span></span><span style="display: block;
+text-align: left;">Explore new places and amp up your videography skills
+with the our F9 4K HD camera drone. <br />It can fly for 30 minutes
+continuously and shoot HD videos at 25fps. <br />The quadcopter also boasts
+an video resolution of 2048&times;1080 and picture resolution of
+4096&times;3072.<br /><br />Shoot videos of athletes or follow a flying
+bird high above. <br />Flight time: 30 mins</span><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;">Remote control distance: about 3000m<br />Transmission distance:
+about 1500m<br />Remote control height: about 120m<br />Aerial image
+parameters:</span></span><span style="display: block; text-align:
+left;">Wifi frequency: 5G<br />Camera resolution: 4096 * 3072<br />Video
+resolution: 2048 * 1080<br />Transmission frame rate: 25fps</span><span
+style="display: block; text-align: left;"><br /></span><span
+style="display: block; text-align: left;">Pricing details:<br />1-5 units
+229.50 each<br />6-20 units 199.50 each<br />21 -100 units 189.50 each<br
+/>u s d<br /><br />You can order this drone today, just reply our email and
+send your address for shipping, we will arrange the shipment quickly.<br
+/><br /><img
+src="https://ae01.alicdn.com/kf/H25fa38ee1e274043984724a585b4284ag.jpg"
+width="451" height="695" /><img
+src="https://ae04.alicdn.com/kf/Hda8c9e6507f646a1928ad1ab1a42a5fbq.jpg"
+width="451" height="691" /></span><img
+src="https://ae01.alicdn.com/kf/Hde6907e067e04a339f47e5f74b1e1600V.jpg"
+width="451" height="693" />&nbsp;<img
+src="https://ae04.alicdn.com/kf/H901869909b744b80a423777042dcd308B.jpg"
+width="451" height="682" /><br /><br /><img
+src="https://ae04.alicdn.com/kf/H30bcf609bc7148dca8d1fba0c3340362q.jpg"
+width="451" height="647" /><img
+src="https://ae04.alicdn.com/kf/H3b7dccb2bbce408dbd035433b09dc173e.jpg"
+width="451" height="774" /><br /><img
+src="https://ae04.alicdn.com/kf/H3420b633d87b4b4a8a8552d45ef715f9K.jpg"
+width="451" height="647" /><img
+src="https://ae04.alicdn.com/kf/H0dd9f17218c54934bd7e50273d1e14370.jpg"
+width="451" height="558" /><br /><span style="display: block; text-align:
+left;">You can order this drone today, just reply our email and send your
+address for shipping, we will arrange the shipment quickly.<br /><br
+/>Thanks,<br />Jake Allen</span>
+</body>
+</html>
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
