@@ -1,24 +1,24 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C0D033E7E7
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 04:55:20 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 892B433E7E8
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 04:55:21 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F0bsK6wRyz303T
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 14:55:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F0bsM3hkLz30NV
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Mar 2021 14:55:19 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1615953318;
-	bh=7O3X0mfB8+9z6WVHVDx1MQcNvPr5AnOSfe+SnbMsMG8=;
+	s=201707; t=1615953319;
+	bh=vgR/SNgoCVI4uiSk0fG2H7beQ2gDIzpatprs0478WG8=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=P5ZPXATYPY2Sc+wcrT7WsbiOFZbbkU4mJ56j8Udo83+S1wHkRpR8MMLurNKPT+6rg
-	 csT5fAWIsJVJUOjfxtGQ9tFMW+N281YBpYG/a5DXXNMziLa/y+hmxjk1Pn5slImXyg
-	 0OV+/XPIAC+DD3WgaYdwWmzndy2yjnphyTMUldeZDC1OK5SH3pOhXYTZp0h+cW4UVr
-	 V+n6Bek1YlOHib3jC0YWDWu+qKsuSmFYXnqBqVe5UeVnwQ/BArZ4NEuDHPJHOtGZgi
-	 H7rCLBxiakbldObQNx6NpNaWbWhygLn37iiMh7wurClVfI5ll2jwpG/JGAkU6fTNWf
-	 rhM4f3EDJqchQ==
+	b=Wq+ZM6o7uFeHEop6lWQdtwvt+VDk0iR9MgZFVgty998rSXFKKFiCTSOXfT4B7h4UP
+	 Y7DuTpvNChA/ldroFXOWEV2SZS03eLTLhDqQaSIdAab6ZIT9TWXPECOiykOIoZffZb
+	 mlHQnu8LZHmjfObwt3n3q3Vly8PpXs2rrtIu3/Iz+eCTHbVyUviv43OzWSQV3ATF9w
+	 OZ8iDgkX3uwVISvyvD9T5biE0YKaDk2DOueI69y2lPUB61ylWdLs6P9kc0ZMOIyuKG
+	 qV8bvgUhbe4sAdjCxqaDk787tUtmJ9gvrlxkRbwdS4nQupeU653sHRJL3wL9RszfRQ
+	 IgQyBBQceuqIQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -27,21 +27,21 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=hU6Z5GVT; 
+ header.s=selector1 header.b=IrTeQ8gK; 
  dkim-atps=neutral
 Received: from APC01-SG2-obe.outbound.protection.outlook.com
  (mail-eopbgr1310054.outbound.protection.outlook.com [40.107.131.54])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F0bsG0kZgz2xZv
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F0bsG2Ph1z2xZv
  for <linux-erofs@lists.ozlabs.org>; Wed, 17 Mar 2021 14:55:14 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TmDVoLYXcbd5YiU+k74N1xeQ6W+mKWUUI9LAA2qq2uteMoJLiQUYp0oSd3+GpQacwroWFk6dSdNwIEumQ+cacCGAZsHmaptoUF1+lbbgyeu++I7M/H72PzUdUqTPdosFYEtMl3y2wJIOoo9b+WWmdpYuIVnFEQMCD8nh5DwT/GR4GewKTmUozB3yR+E38sveSiHFBsm4PDCuyIKUt1M1D4gAglr08oxWcywW7ff8pPmyJSYieVtUUAs6jeeQ8dQ4HHC6KTT58lo5fnC3NjjcgGIk/gNCo7m44G4axq/Pa8GoVSMAyN4NLLUqvTbcQtZdVz1k7m3CcLOD+4qQRXInPw==
+ b=mjyJV4nAs4Y4MUBUfcjC2vpvSyq75J0hAz+1sI0vXP2PqicRJ1zADlOa7WR7/pw7SxN8meZusqhzWIx7xD/342hJvd4aCrHakLxZ0W3o1DCAbxNibYTKF33J1M00wnhtzFI2G+fa0zZllxkqw4JF0MT0a02HE/1Bg8n0NrN7Sf9sy1pWAgEBhG/oWDxrci6e4aqMYtbpcOcA1luDs/vesoHupaEoOOdGYyspY4oHbEnYXyMq4fPixYsfhjy9QgnnQ5TnKGS3e6WVa1hIlc5h3D/4UJEQTGE+6/EPH4EXGOQs2aHYOrTU8MnysHK1yqgKSIQkkb2H3wzrpyJ5eLRWfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7O3X0mfB8+9z6WVHVDx1MQcNvPr5AnOSfe+SnbMsMG8=;
- b=AbfKQyzwSyuu0oBzZ9d80eOhJ6TBg/0YTWk0y+MWwTS1hAkdCT/gzRvys5HsNMh4kbELSWNTUAmePMh1OEynRPWjNXZeNbafYElWdKFsihraWEwpk1Mdow/J+lfXZZ+B7HfFXa1NxZFcv3RH36pU+LSJJjkAOnA4ufGFEzZBenAQG7BlyAShB+df+EdfoCd8N81RFdQaXY076LtWcWEm7u81zICi9GdYgRYMm0lMnWzsvF6W7nstNpBV+ajvkN3nyjS9U6+0i/vVkb4eUpA++LYA6CSathteVP6Pg6+tOdGlnT6EB2bYdXjtt4Qd9Q6p5MLej1obG+2tmS2hmk/PPw==
+ bh=vgR/SNgoCVI4uiSk0fG2H7beQ2gDIzpatprs0478WG8=;
+ b=TVOCOr4pWp3yv0nsBbbrSLXGfBn/67zltaNtVy8Nyv38T/GlfLqRfIw8hObgL6cwp/E5TlyynsnzAYBrnOwqkFctK234fq6L6NzghoOQNjHKclTlw9bGrWaLI/EwnI5XVY61wbPg66WEJtatpC5dgtUX2Y4oJKU07UNjDUo9eOlOa/z0e9au6HasIVildNrjZfM16us1/ut+GUiN8TIr1uW1aRXk4sjVf5wULZ1CMBLh/36+2h+e/mVktMDnjrJVz78HQL2U0qOqTOylvjQ8xHd8JkI7ymCaHkVpgWKwR23bNTCXQb/EJCLcltrpxI0l4WrNYZrqODzCKK/JYELdAA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
@@ -51,16 +51,15 @@ Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
  SG2PR02MB2986.apcprd02.prod.outlook.com (2603:1096:4:5e::14) with
  Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3933.31; Wed, 17 Mar 2021 03:55:02 +0000
+ 15.20.3933.31; Wed, 17 Mar 2021 03:55:07 +0000
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::1143:a7b7:6bd4:83b3]) by SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::1143:a7b7:6bd4:83b3%7]) with mapi id 15.20.3933.032; Wed, 17 Mar 2021
- 03:55:02 +0000
+ 03:55:07 +0000
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs: use workqueue decompression for atomic contexts
- only
-Date: Wed, 17 Mar 2021 11:54:47 +0800
-Message-Id: <20210317035448.13921-2-huangjianan@oppo.com>
+Subject: [PATCH 2/2] erofs: use sync decompression for atomic contexts only
+Date: Wed, 17 Mar 2021 11:54:48 +0800
+Message-Id: <20210317035448.13921-3-huangjianan@oppo.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210317035448.13921-1-huangjianan@oppo.com>
 References: <20210317035448.13921-1-huangjianan@oppo.com>
@@ -75,52 +74,52 @@ X-MS-Exchange-MessageSentRepresentingType: 1
 Received: from localhost.localdomain (58.255.79.104) by
  HK2PR02CA0132.apcprd02.prod.outlook.com (2603:1096:202:16::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3955.18 via Frontend Transport; Wed, 17 Mar 2021 03:55:01 +0000
+ 15.20.3955.18 via Frontend Transport; Wed, 17 Mar 2021 03:55:06 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6a0b0cef-ace7-4c83-8881-08d8e8f87156
+X-MS-Office365-Filtering-Correlation-Id: 95ab3bf6-3a24-4ac4-a9cd-08d8e8f87409
 X-MS-TrafficTypeDiagnostic: SG2PR02MB2986:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SG2PR02MB298620034D833E7CC016C5A4C36A9@SG2PR02MB2986.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Microsoft-Antispam-PRVS: <SG2PR02MB2986278C651C6A86A40E5AADC36A9@SG2PR02MB2986.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Xj9lqPyQRyJ61oLaQBa/ezvjITwN6HbfBrYgYXrgRrBulj9+5s2qrM4bLkrl9PZIsNTIouhdsN0F+hd6HvjARO8hl08USjbU+YrLwqfNd12AGjq1Bws3xn851TzwmsvbAseyvK1J+gEiSnPQQ6z4HcTUuQsulq6ocnaa3nb3bjucd3rlns+YPLh4nn2PdSI+q81DGugupbhIGmX+tZBvX7oLNpS1ZKcX1z0CFpKZYN24B8050EH1Ls03GX1fSMOW+plhbhNl0iZijIArpDBfe3v6SfxoKWFRCGcD/yXZNnLUl0ugZ3TtskqPlMRaqx7szalfca64FT1coFejueYYmyh59/nsVrjLtyXxcokbYYfIk7Er6L1mZmzR/TNNIocMrpVgT/OgCEcIOKHGuPeJX4B0vqbOSHv7xJ3P9ED14J+3HU4Xax9uQAsS1Jb+cyVfQFowfavprKuDtiz0F4E5TSBTBgh02E27rnNcVMRDltI5nRHzyDnnFTJAzQ+4rfDzLEGVO2wvCcOeaQ0dTt1Y3SteoX+9Vq3ugSPPuWvbewE6lKnqHv2y7KwtnjD2MidA26cvQXL9OwXIAAyrPEGVmX+v6M8TxW7/bvprFcUnvoQKsnT+X+WR6bp3BW8+g1P8MYYTAzex58NsJVsTamMkUQ==
+X-Microsoft-Antispam-Message-Info: Gelq+seq1b7jvG2bKXKvR2NbaVHB5sqq4tG5a5D5q6V6n6uNV2CHE+4wdiSeQj13oZhg/zWhlhvpnXnBJp5zebAkVEWGd4tRbQbbtfsb+NfBeKUomJeBsBpk+cE0gxGidRRxXS0Xf/y3fyanqq/bK5Mp26VTt00d1wE9aLjMiI0xz3DrkvyRwsi1ZRBMIZsq2ubJsF8+7JOpi+AZYGyEOv7xXOES7JVkCVRT1mL3r4pWJfl9eCxGVGndlHpZFe52568by2mRewTX/wysV2XtEXkPMYIDUBmG4fz3VzxC+fOuxzAH2gawSLsbF5Rz9BG2kLw+zl4OQkctjW0Fu4eTCFViscsbdMn9UDupl3snEJ1HTJSo7V9hdiMcaAM438aIUaP/5PpwENtWmvAOvVx/XqDOjXnl1MTDId8rtei5zg0CthYa3EbFrX3AKEJm62l4gGcm07D5y7iFUymXRI8rc3l58VN6egu5+stazETDVj4V3bpSZtriKthPMmDXHIHe78qAS63ql16kIXetAfkfCMJ0MsVEJcQkpDV8arS0jVj0PcBTRZjTW/8TjkPPaE5OnHwATl8kw4cFiFguYT1uMI/07ZKwiOsX0vN6AfpspyPgGmnFr+uDf+jC0dVUjEUPsF3sIgeoFmOk/jW95i8Z3g==
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
  SFS:(4636009)(376002)(136003)(39860400002)(346002)(366004)(396003)(478600001)(6506007)(186003)(6512007)(2906002)(6666004)(26005)(956004)(6486002)(83380400001)(8936002)(4326008)(16526019)(1076003)(316002)(66946007)(66476007)(6916009)(69590400012)(36756003)(66556008)(86362001)(5660300002)(8676002)(52116002)(2616005)(11606007);
  DIR:OUT; SFP:1101; 
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Ecy69OESSoJHcfRmGrCzf5TgOWYcHCuPr36c0dnj180UlMUj1arNY8e5OIL2?=
- =?us-ascii?Q?XkXz1YrrBDRkJMvBVeIx03vSZCLOQhhKjf5I0Mrsh3DMMY3wu8eoOlxoXjcB?=
- =?us-ascii?Q?qxecq2jzRRf4pTjjdtMIOeKgnT8tEUzSKetf+V+nB5yRoYAg7Bwiof5Ggtmk?=
- =?us-ascii?Q?vL5ucwOblP1UC1lAK7/0Dfy+mE5Dt/702ZzxMz0c5957GnjrrvOR1Aw861tM?=
- =?us-ascii?Q?mEcIJo/ynV4c9GntfLugwIPUdQeKnXiUeJBUT5YDRAvHVRFleWxIUdUfCMEW?=
- =?us-ascii?Q?SKplB8TcunMyfstekadXLTEFJEFPWIubIr/OjYqJmv5rlc/5wBWtk7AD/RGa?=
- =?us-ascii?Q?7+eXpkNHHE7jlSLquDPe9ccSqBHx1LDT3a46WE2n0023gyOFy4gGscn8jTnr?=
- =?us-ascii?Q?raUc0L1wmWSAavpouVLEbjr9ivpM6WBMa54uvXIyQIau4duI5Msvd3A7sQ6z?=
- =?us-ascii?Q?nsju/u8TxyIke7xD7hTISZaZX0w/OmPpITfyqYPoHUzRnQu9ugtDFIdgKnQf?=
- =?us-ascii?Q?+GHPbO8qtKx8JGn4Evt+KqD0qOBdcZiWpyOUzIKFPISehL4UBFySiQietMa5?=
- =?us-ascii?Q?Beg5PN7WZeKYJXD3as60kdDgYnqyfswSsoDsQExNmcvfex6/97MPE5hNIvqN?=
- =?us-ascii?Q?iUW113WplZ3rGNdeKqlkWsFJo2ncQob1eKyzqB6VA93CqZmVwQiewWXEg5ht?=
- =?us-ascii?Q?bqBnQptmtP0xPiXbPe1YNwwoMIKXKUSO8oPfFpruXT/GCkJJCitUNG2RLNev?=
- =?us-ascii?Q?cNLEm5SdoZmDKmnoEBMDMArmPJetu4CTFhqYORTITfb8P4n3ghmGhhefWjcN?=
- =?us-ascii?Q?i7GkVKqsJNJS2Ypib/ZFkQkvxd0XYc945Gp7jgmgintPLmCeUR/h9iNUE/dv?=
- =?us-ascii?Q?D/IYAhxbzrNbRnnPf4hEj01jK3sN5HsJFVMOPoZ6ZwjqK+RskPL0dbVlb+cx?=
- =?us-ascii?Q?lfVdSGGaRS/sasenE5ySskK415GCmuLQhq1QjdscsZU4XRfdQUdmq/kzCVZa?=
- =?us-ascii?Q?ca76YFzNTeIIQJdNczPzgPSpm007fdTzauvq4qH0zQLEEdtcqxC/FXlepmzY?=
- =?us-ascii?Q?os+Tjl9oFgiB1f6YWyBybzrBAMtECJI8Z6kgfPfHd2MUTshC0LDQdg6ccher?=
- =?us-ascii?Q?aCdw1j/m9q5f1Qp6nY1/KnH51T8IRf5ojg1+qpPq6urZxmd8rUuIrHBybFKV?=
- =?us-ascii?Q?eGv/9sIVgmFvXM3invk0wd8znO0uoP0BC8cznphCALIIqTEh5DXtE6Uc6eP9?=
- =?us-ascii?Q?Uwvpp3bF3vNkPeeHX+d64cEPKSMukShhWoyd/u7vU2kpDpZTK+TrLj48wuYC?=
- =?us-ascii?Q?1AfTYvoKLKeIHYx8WYexyyLK?=
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?4WB27bMa2YGjsfzElBvaQ/FXgGDlb9Q1d1VmHpIPH+ZL+unokpC54i9KxRuC?=
+ =?us-ascii?Q?k69wxP4UT+oHxR4J4DqnJXFCwWJh5Xji/M4PuvveO/2W8di1Eq7asvGg5ak5?=
+ =?us-ascii?Q?GKjvfsyyEWq+Hfq+c2odZnRI24lWaTfrKFC9csz30kagTgD6pzpwKRpk0tdM?=
+ =?us-ascii?Q?AI/GgS5rhrOGcDRd2vRQ27R5fvS+4PkoKzmYA/SY7vEAeb8HRKgtmm/qrQu+?=
+ =?us-ascii?Q?jOJKOOURZ601uBky0c9UEj/wUr4zrNzkqlp0NF4dva/sd+ZnVk17yqnQas5E?=
+ =?us-ascii?Q?OVbfhkCOuEC9GV6pynIMTq5CDv7RjGElZpeDk17Q6s0DjoHqJ6Bq6CmigzVs?=
+ =?us-ascii?Q?FcltHK2H5D4Ew3FWlsU8HdYbhiU6pYlHBoTnRQqteUrshLu9C8wHoAlTz2Tf?=
+ =?us-ascii?Q?XdbsB7XaKjJ0apgCp0TcqsPljYeMDvpN4KDFJMViWK4zqRgmdnJOlnl0jVpp?=
+ =?us-ascii?Q?M1AhK+236Lcox9n1U2VMKjiwalaPAQhNT2PuLrIOU0dQo7fu15asbHyXfBik?=
+ =?us-ascii?Q?5VGCeInJouVQF1bOSdQ8KWRS1OUiOwXzaFXA3kQhAnAiaV0QxncwuilU5CT/?=
+ =?us-ascii?Q?xu7O0029xVjYoH5hDNlU9Jlnv7EQGxRVi3Ve2ETvsOUNvIxYyH4UhDU4ma+z?=
+ =?us-ascii?Q?CymATSCu42VkpNigaRyjnv2F59tcXax1iGDKz9X3+sezF2HkiCUIVFQJjOqu?=
+ =?us-ascii?Q?KBGdn9KgJfAcTpQeG7vidpwIlTeIPD5/0o7z3WHkvYEUm5j6KSTgyaEZUGed?=
+ =?us-ascii?Q?5RXME2kZt01cRp6SxpYjPq3bWpRpfoaYmcjiZVI3JlVuzLwU3BbAIV+44KNC?=
+ =?us-ascii?Q?UCbrI9jGRxK6oYoDT4a9D+lS2xANkhbk9JE0AMyALiOtkAhyzNv1zxHY1soD?=
+ =?us-ascii?Q?InOe0nmmMcfTaLoHAhYpXesem2UnXRH5k5nwRbhUFhNmxlwd0yZmaJG/g+Lg?=
+ =?us-ascii?Q?HkUlqo7IZeooGuv7zaSSUnHtagt0DTiWa7BP6hJhQ9Vcptb+ofYPLhCKPkcD?=
+ =?us-ascii?Q?HuUJmkhyNcE5HK5TIzPhONl7gBwHa7hsOcTVnucb+C0QoVm01yCsVEURY3Vl?=
+ =?us-ascii?Q?IvLGPsreWfjpRKxR0QB66gb6DQ9Nmlzw6FxBT0gFj3udNGVDXrFD6uHcuQjC?=
+ =?us-ascii?Q?s15EA8p4FjSUQ1jkVgGp3Q+AixVKLsmbaEXywZc7adhoNBotSlEb7udIrAvo?=
+ =?us-ascii?Q?cYhP6pzXXLbVdxC5/nSIbC3lLXNzFuXd37uQH+z7PhO9cV0sL2iuoO0QPi4N?=
+ =?us-ascii?Q?uLABMnEMXdx9O3GzcoJWgjcGDKlMHrAMSo5PI6JGuMZnoKqlBsNEe0bBu0OA?=
+ =?us-ascii?Q?lgpzYhz6U2hx6Qb2IgyOOmvP?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0b0cef-ace7-4c83-8881-08d8e8f87156
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95ab3bf6-3a24-4ac4-a9cd-08d8e8f87409
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 03:55:02.5644 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 03:55:07.0788 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dpU6nsaWTIdjxl4Iw86SUbtT+2CdLw/s5giTOYHGkY71pbp+QjbnO2wf69OarpUsyte7fnIqcocBbvcaD+WuDg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: FyVegYaCrLC1GxRKKsIAwoGnFEukOgS+gr7MadTWEcrp2aJ08/QZBdIFaH/Jps68FcNLbjNr0X1nHz5venmprg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2986
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -140,46 +139,80 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-z_erofs_decompressqueue_endio may not be executed in the atomic
-context, for example, when dm-verity is turned on. In this scenario,
-data can be decompressed directly to get rid of additional kworker
-scheduling overhead.
+Sync decompression was introduced to get rid of additional kworker
+scheduling overhead. But there is no such overhead in non-atomic
+contexts. Therefore, it should be better to turn off sync decompression
+to avoid the current thread waiting in z_erofs_runqueue.
 
 Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 Signed-off-by: Guo Weichao <guoweichao@oppo.com>
 Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/zdata.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/erofs/internal.h | 2 ++
+ fs/erofs/super.c    | 1 +
+ fs/erofs/zdata.c    | 8 ++++++--
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 67a7ec945686..fbc4040715be 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -50,6 +50,8 @@ struct erofs_fs_context {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	/* current strategy of how to use managed cache */
+ 	unsigned char cache_strategy;
++	/* strategy of sync decompression (false - auto, true - force on) */
++	bool readahead_sync_decompress;
+ 
+ 	/* threshold for decompression synchronously */
+ 	unsigned int max_sync_decompress_pages;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index d5a6b9b888a5..0445d09b6331 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -200,6 +200,7 @@ static void erofs_default_options(struct erofs_fs_context *ctx)
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ctx->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+ 	ctx->max_sync_decompress_pages = 3;
++	ctx->readahead_sync_decompress = false;
+ #endif
+ #ifdef CONFIG_EROFS_FS_XATTR
+ 	set_opt(ctx, XATTR_USER);
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 6cb356c4217b..cf2d28582c14 100644
+index cf2d28582c14..25a0c4890d0a 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -706,6 +706,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 	goto out;
- }
- 
-+static void z_erofs_decompressqueue_work(struct work_struct *work);
+@@ -710,6 +710,8 @@ static void z_erofs_decompressqueue_work(struct work_struct *work);
  static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
  				       bool sync, int bios)
  {
-@@ -720,8 +721,14 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
++	struct erofs_sb_info *const sbi = EROFS_SB(io->sb);
++
+ 	/* wake up the caller thread for sync decompression */
+ 	if (sync) {
+ 		unsigned long flags;
+@@ -723,9 +725,10 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+ 
+ 	if (atomic_add_return(bios, &io->pending_bios))
+ 		return;
+-	/* Use workqueue decompression for atomic contexts only */
++	/* Use workqueue and sync decompression for atomic contexts only */
+ 	if (in_atomic() || irqs_disabled()) {
+ 		queue_work(z_erofs_workqueue, &io->u.work);
++		sbi->ctx.readahead_sync_decompress = true;
  		return;
  	}
+ 	z_erofs_decompressqueue_work(&io->u.work);
+@@ -1340,7 +1343,8 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
  
--	if (!atomic_add_return(bios, &io->pending_bios))
-+	if (atomic_add_return(bios, &io->pending_bios))
-+		return;
-+	/* Use workqueue decompression for atomic contexts only */
-+	if (in_atomic() || irqs_disabled()) {
- 		queue_work(z_erofs_workqueue, &io->u.work);
-+		return;
-+	}
-+	z_erofs_decompressqueue_work(&io->u.work);
- }
- 
- static bool z_erofs_page_is_invalidated(struct page *page)
+ 	unsigned int nr_pages = readahead_count(rac);
+-	bool sync = (nr_pages <= sbi->ctx.max_sync_decompress_pages);
++	bool sync = (sbi->ctx.readahead_sync_decompress &&
++			nr_pages <= sbi->ctx.max_sync_decompress_pages);
+ 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+ 	struct page *page, *head = NULL;
+ 	LIST_HEAD(pagepool);
 -- 
 2.25.1
 
