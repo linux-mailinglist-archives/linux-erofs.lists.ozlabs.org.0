@@ -2,28 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 853E63422B9
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Mar 2021 18:01:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C07FE34231D
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Mar 2021 18:23:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F29CG3n1lz3bvw
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 Mar 2021 04:01:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F29j85m8cz3bwX
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 Mar 2021 04:23:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=musicgeargirl.com (client-ip=185.203.41.94;
- helo=mommypoppins.com; envelope-from=ghtmeayvkieto@musicgeargirl.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 73 seconds by postgrey-1.36 at boromir;
- Sat, 20 Mar 2021 04:01:13 AEDT
+ smtp.mailfrom=myautofocus.com (client-ip=185.203.41.94; helo=mommypoppins.com;
+ envelope-from=ghtmedyvkieto@myautofocus.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 3640 seconds by postgrey-1.36 at boromir;
+ Sat, 20 Mar 2021 04:23:38 AEDT
 Received: from mommypoppins.com (unknown [185.203.41.94])
- by lists.ozlabs.org (Postfix) with ESMTP id 4F29CF1Sf0z2yxF
- for <linux-erofs@lists.ozlabs.org>; Sat, 20 Mar 2021 04:01:13 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4F29j6331zz3brW
+ for <linux-erofs@lists.ozlabs.org>; Sat, 20 Mar 2021 04:23:36 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: use this robot to clean your window
-Message-ID: <6ea19bb63814a5ecf262be848fa18502@bcleanwindows.com>
-Date: Fri, 19 Mar 2021 15:00:24 +0100
-From: "Jerry" <ghtmeyfvkieto@musicgeargirl.com>
+Subject: window cleaner for home and office
+Message-ID: <949cb1954e108282fc524eaf3359cb8b@bcleanwindows.com>
+Date: Fri, 19 Mar 2021 15:00:26 +0100
+From: "Jerry" <ghtmedyvkieto@myautofocus.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
