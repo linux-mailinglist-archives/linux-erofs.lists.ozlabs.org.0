@@ -1,29 +1,28 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B021D34679C
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Mar 2021 19:28:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C84EA3486D7
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Mar 2021 03:12:16 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F4fy253Vmz30JP
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Mar 2021 05:28:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F5TBk1vD2z30HC
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Mar 2021 13:12:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=forkliftaction.com (client-ip=188.72.187.42;
- helo=fruittonesstudio.com; envelope-from=plamedyvasiqo@forkliftaction.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 3667 seconds by postgrey-1.36 at boromir;
- Wed, 24 Mar 2021 05:28:24 AEDT
-Received: from fruittonesstudio.com (unknown [188.72.187.42])
- by lists.ozlabs.org (Postfix) with ESMTP id 4F4fy06168z2yRg
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Mar 2021 05:28:24 +1100 (AEDT)
+ smtp.mailfrom=furinkan.com (client-ip=188.72.187.40; helo=gamesht.com;
+ envelope-from=cetmedydmerhb@furinkan.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 3613 seconds by postgrey-1.36 at boromir;
+ Thu, 25 Mar 2021 13:12:11 AEDT
+Received: from gamesht.com (unknown [188.72.187.40])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4F5TBg0qNTz2xZW
+ for <linux-erofs@lists.ozlabs.org>; Thu, 25 Mar 2021 13:12:11 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
-Subject: ship this robot
-Message-ID: <6a5b3ce122e3f9268372f4bfb7ec1954@foxracing.com>
-Date: Tue, 23 Mar 2021 15:01:48 +0100
-From: "Jeff Dike" <plamseyvasiqo@forkliftaction.com>
+Subject: quick clean
+Message-ID: <e492ea389ecfb4410e151e181c9f534a@francescopellizzi.com>
+Date: Wed, 24 Mar 2021 14:05:15 +0100
+From: "Terry Young" <cetmseydmerhb@furinkan.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
@@ -39,7 +38,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: lismokjankou@aliyun.com
+Reply-To: alistairrestl@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -48,52 +47,49 @@ Sender: "Linux-erofs"
 <head>
 </head>
 <body>
-<span style="display: block; text-align: left;"><span style="text-align:
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
 left;"><span style="text-align: left;"><span style="text-align:
-left;"></span></span></span><span style="text-align: left;"><span
-style="text-align: left;">Hi,<br /><br />I hope you all is well.<br />I am
-contacting you today to introduce you our new product in warehouse: robot
-window cleaner.<br /><br /></span></span><span style="text-align:
-left;"><span style="text-align: left;">Features:<br
-/></span></span>Color:White</span><span style="display: block; text-align:
-left;">For any thickness glass.</span><span style="display: block;
-text-align: left;">Cleaning speed: 4 minutes/meter^2.</span><span
-style="display: block; text-align: left;">3 kinds of automatic operation
-modes for cleaning entire window.</span><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"></span></span></span><span style="display: block;
-text-align: left;">An anti-fall system together with high tensile-strength
-cord prevents this device from falling down even when in power loss or
-suction failure.<br />Gravity sensing: support G-sensor.<br />Built-in
-sensor: support for MEMS automatic detection, automatic stop after finish
-cleaning.<br />Remote control: support infrared remote control (inside and
-outside).<br />Power failure protection: support UPS, built-in
-uninterruptible power system, continuous 30 minutes of power, anti-drop
-control algorithm, automatic return to the starting position.<br />Safety
-rope: high-strength safety rope (tensile strength 150kgf) with buckle,
-cleaning speed: 4 minutes per square meter.</span><span style="display:
-block; text-align: left;"><span style="text-align: left;"><br
-/></span><span style="text-align: left;">Pricing details:<br />1-20 units
-259.90 each<br />21-50 units 229.90 each<br />51-100 units 209.90 each<br
-/>u&nbsp; s&nbsp; d<br /><br />If you like to order this robot, just reply
-to ouremail and send us your address for delivery, we will arrange the
-shipment.<br /><br /></span><span style="text-align: left;"><img
-src="https://imgaz.staticbg.com/images/oaupload/banggood/images/C7/8D/bdb06b20-43a3-4694-937b-ca2a6d36252c.jpg.webp"
-width="455" height="455" /><img
-src="https://i.ebayimg.com/images/g/NfkAAOSwWENgN~~x/s-l1600.jpg"
-width="455" height="455" /></span><img
-src="https://i.ebayimg.com/images/g/CpIAAOSwUdFgN~~z/s-l1600.jpg"
-width="453" height="453" />&nbsp;<img
-src="https://i.ebayimg.com/images/g/UqwAAOSw7GpgOAB7/s-l1600.jpg"
-width="453" height="340" /></span><img
-src="https://i.ebayimg.com/images/g/2SIAAOSw0~pgOACd/s-l500.jpg"
-width="375" height="500" /><img
-src="https://i.ebayimg.com/images/g/5G0AAOSwuQpgOAC5/s-l500.jpg"
-width="375" height="500" /><br /><span style="display: block; text-align:
+left;"><span style="text-align: left;"></span></span></span><span
+style="text-align: left;"><span style="text-align: left;">Hi,<br /><br
+/>How are you doing?<br />I am reaching out because I want to let you know
+our vacuum cleaner for home and office now is ready to ship.<br /><br
+/></span></span><span style="text-align: left;"><span style="text-align:
+left;"></span></span></span></span></span><span style="display: block;
+text-align: left;">Feature:<br />Automatically move and clean the floor<br
+/>Automatically change direction when meet walls and obstacles<br
+/>Flexible move, with large dust garbage room<br />Edge cleaning mode focus
+on corner / wall side cleaning<br />Powered by 1800mAh lithium-ion
+battery</span><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><br /></span></span>Pricing
+details:<span style="display: block; text-align: left;">1 unit 129.90
+each</span><span style="display: block; text-align: left;">2-5 units 109.90
+each</span><span style="display: block; text-align: left;">5+ units 99.90
+each</span><span style="display: block; text-align: left;">10+ units 89.90
+each</span>u&nbsp; &nbsp;s&nbsp; &nbsp;d<br /><br />Would you like to order
+this? Just respond to our email with your delivery address, we will ready
+the shipment.&nbsp;<br /><br /><span style="display: block; text-align:
+left;"><span style="text-align: left;"><img
+src="https://i.ebayimg.com/images/g/uvgAAOSwQtdfNfJ4/s-l1600.jpg"
+width="450" height="450" /><img
+src="https://i.ebayimg.com/images/g/XUwAAOSwJGRfNfJ5/s-l1600.jpg"
+width="450" height="450" /><br /><br /><img
+src="https://i.ebayimg.com/images/g/IhYAAOSwJoZfNfJ0/s-l1600.jpg"
+width="450" height="450" /><img
+src="https://i.ebayimg.com/images/g/WWYAAOSwxA5fNfJ0/s-l1600.jpg"
+width="450" height="450" /><br /></span></span><img
+src="https://i.ebayimg.com/images/g/HE4AAOSweyVfNfJ0/s-l1600.jpg"
+width="450" height="450" /><img
+src="https://i.ebayimg.com/images/g/EhQAAOSw-wJfNfJ0/s-l1600.jpg"
+width="450" height="450" /><br /><span style="display: block; text-align:
 left;"><span style="display: block; text-align: left;"></span></span><span
-style="display: block; text-align: left;"><br />If you like to order this
-robot, just reply to ouremail and send us your address for delivery, we
-will arrange the shipment.<br /><br />Thanks,<br />Jeff Dike</span>
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><br
+/>Would you like to order this? Just respond to our email with your
+delivery address, we will ready the shipment.&nbsp;<br /><br />Thanks,<br
+/>Terry Young<br /></span></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"></span></span>
 </body>
 </html>
 
