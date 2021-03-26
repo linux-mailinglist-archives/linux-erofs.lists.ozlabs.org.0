@@ -2,27 +2,25 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6BA334AFE8
-	for <lists+linux-erofs@lfdr.de>; Fri, 26 Mar 2021 21:11:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5DDC34B3BD
+	for <lists+linux-erofs@lfdr.de>; Sat, 27 Mar 2021 03:23:56 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F6Y5m697Fz3bxc
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Mar 2021 07:11:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F6jMG6DWwz3c0x
+	for <lists+linux-erofs@lfdr.de>; Sat, 27 Mar 2021 13:23:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=gamersyde.com (client-ip=188.72.187.47; helo=freckbeauty.com;
- envelope-from=nsumedykeotmi@gamersyde.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 3658 seconds by postgrey-1.36 at boromir;
- Sat, 27 Mar 2021 07:11:36 AEDT
-Received: from freckbeauty.com (unknown [188.72.187.47])
- by lists.ozlabs.org (Postfix) with ESMTP id 4F6Y5h3SkLz302K
- for <linux-erofs@lists.ozlabs.org>; Sat, 27 Mar 2021 07:11:36 +1100 (AEDT)
+ smtp.mailfrom=gasbike.net (client-ip=188.72.187.12; helo=freckbeauty.com;
+ envelope-from=nsumseykeotmi@gasbike.net; receiver=<UNKNOWN>)
+Received: from freckbeauty.com (unknown [188.72.187.12])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4F6jMC6V5Rz2y0K
+ for <linux-erofs@lists.ozlabs.org>; Sat, 27 Mar 2021 13:23:51 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
 Subject: shipping door to door
-Message-ID: <6e3eb1124a60ad676a952f6c3bddce36@ncboats.com>
-Date: Fri, 26 Mar 2021 16:49:22 +0100
-From: "Roy Young" <nsumedykeotmi@gamersyde.com>
+Message-ID: <cd0b914768a4760387a9efaa9ae97491@ncboats.com>
+Date: Fri, 26 Mar 2021 16:50:01 +0100
+From: "Roy Young" <nsumeaykeotmi@gasbike.net>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
