@@ -1,33 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D3DF34D679
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 20:00:56 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ECBE34D80C
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 21:24:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F8L3V314Gz302c
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 05:00:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F8MvW4PGCz303C
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 06:24:07 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=womp-perrov.com header.i=postmaster@womp-perrov.com header.a=rsa-sha1 header.s=dkim header.b=zpwN3hRx;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=getlifeyoudesire.com (client-ip=188.72.187.46;
- helo=glamfitbikinis.com; envelope-from=gtmeayziyuka@getlifeyoudesire.com;
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=womp-perrov.com (client-ip=185.121.120.145;
+ helo=slot0.womp-perrov.com; envelope-from=postmaster@womp-perrov.com;
  receiver=<UNKNOWN>)
-X-Greylist: delayed 80 seconds by postgrey-1.36 at boromir;
- Tue, 30 Mar 2021 05:00:52 AEDT
-Received: from glamfitbikinis.com (unknown [188.72.187.46])
- by lists.ozlabs.org (Postfix) with ESMTP id 4F8L3S3RKBz2yRJ
- for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 05:00:52 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=womp-perrov.com header.i=postmaster@womp-perrov.com
+ header.a=rsa-sha1 header.s=dkim header.b=zpwN3hRx; 
+ dkim-atps=neutral
+X-Greylist: delayed 649 seconds by postgrey-1.36 at boromir;
+ Tue, 30 Mar 2021 06:24:05 AEDT
+Received: from slot0.womp-perrov.com (slot0.womp-perrov.com [185.121.120.145])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F8MvT2BpHz2yRS
+ for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 06:24:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=womp-perrov.com; 
+ h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ i=postmaster@womp-perrov.com; bh=t2i4apdfDf+lIw8vfhoni2nH2cs=;
+ b=zpwN3hRx+h+cw14IUNJycPz/Hzlt5/XxfQeyCKtjoXMOxyQddRrUlewtpzFYvOwArM2FEFUeNYY4
+ tM17rOycImzaphwRj1Tuxv/J3hKUxNfJiWJoM61dDSYgCHQ2rlWB2+kbVmVInTMRDGcRGAiyMc9x
+ X96FVTWGL1NmG3y9iryJXMMz9/A8vzZ22KCc/GlhW75PfLhRWnxVeNMytzTbN6jC+AR6tq21SV7A
+ bVCyZksMm2Nczc/1MvhjH7YOGpED4UMK8qjcEazQAeFIEBB2M80KAmux/4c/VrdPnMaxCAqbX4NA
+ 9ORYt3E08BVelxqoWEtZ6AUdD3zk4XDRymTZ9g==
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=womp-perrov.com;
+ b=dhNTxMLQzmDWbhyDC+C3TUbRxcWeKTUoAMqq1eOTdkTiSNVRZuwmpMVWoRpvOzE5ZwnP/R3MQ4HC
+ HD3lYJYY7gYAjrHOcPpsCLcORGiawC29YfsNX0Ibx9j6dGOZZJCRMksoQYBzIDc5GZV0SQldvxHa
+ 4S7ILwyhJCueX1crTJx6DvEXEG3ZopZlNTuHeFBk9UXsmxINym3DnLj+DrZ2rlbkc0eDpFqNNVKw
+ ACwNpPNiIcEmEmsCMd+86zudD0FokjQ2dw9OZHfXoFscgd/Ddw8b+Q6ACoPfY0swpjGi6JMmyeUl
+ Tb58nLiFYSrYNEjeOO+aI4vDENh4qZOxYFNcvA==;
+From: IT-lists.ozlabs.org<postmaster@womp-perrov.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: tablet PC is here
-Message-ID: <d38dba2841340e8fc34560c182a123f3@travellinggears.com>
-Date: Mon, 29 Mar 2021 17:42:48 +0200
-From: "Peter Young" <gtmseyziyuka@getlifeyoudesire.com>
+Subject: ACCOUNT lists.ozlabs.org DE-ACTIVATION
+Date: 29 Mar 2021 11:43:20 -0700
+Message-ID: <20210329114320.BB631D3C97BF461B@womp-perrov.com>
 MIME-Version: 1.0
-X-Mailer-Sent-By: 1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,74 +60,368 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: sunnyrestinl@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align: left;"><span
-style="text-align: left;"></span></span></span><span style="text-align:
-left;"><span style="text-align: left;">Hi,<br /><br />How are you doing? I
-hope this email finds you well.<br />I'm sending you an email today to let
-you know that&nbsp;we have the following tablet PC&nbsp;</span></span>ready
-for shipping.<br /><br />Main features:</span></span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align:
-left;"></span></span></span></span></span><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"></span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"></span></span><span
-style="display: block; text-align: left;">8.0-inch Full HD IPS screen has
-better display brightness and clarity<br />Atom X5-Z8300 CPU is equipped
-with 4GB running memory, running office software smoothly.<br />Up to 10
-hours of battery life<br />Processor: for Atom X5-Z8300 quad-core
-processor<br />Operating memory: 4GB RAM<br />Storage capacity: 64 GB ROM
-(support expansion)<br />image: for HD image integrated image<br />Camera:
-front 1.2 million pixels, rear 2 million pixels<br />Main frequency:
-1.44-1.84GHz<br />Battery capacity: 4000mah<br />Resolution: 1280 x 800<br
-/>Battery life: official test (about 5 hours watching TV)<br />Screen:
-8-inch IPS capacitive screen<br />Ports: 1x Micro-USB port; 1x Micro-HDMI
-port; 1x Micro-SD card slot, 1x3.5mm headphone jack<br />Wireless
-technology: Wi-Fi: 802.1.1 b/g/n/ac; Bluetooth: Bluetooth 4.0<br />System:
-Windows 10 (64-bit operating system)<br />Product size: 207x124x8mm<br
-/></span><span style="display: block; text-align: left;"><br /></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;">Pricing details for different quantity:<br />1-10 unit
-259.50&nbsp; each<br />11-50 units 239.50 each<br />51-100 units
-219.50&nbsp; each<br />u&nbsp; &nbsp; s&nbsp; &nbsp; d<br /><br
-/></span></span><span style="display: block; text-align: left;">If you
-would like to place an order, please send us your mailing address we will
-get the package ready for you.&nbsp;<br /><br /></span><span
-style="display: block; text-align: left;"><span style="text-align:
-left;"><img
-src="https://ae01.alicdn.com/kf/H7e40716a107b4164984da3f958218cefT.jpg"
-width="450" height="450" /><img
-src="https://ae01.alicdn.com/kf/H537d47abec914ecfbdbf267e37c17ba99.jpg"
-width="450" height="450" /><br /><br /><img
-src="https://ae01.alicdn.com/kf/H05eef7ffffb44158a216d06502b07e3cZ.jpg"
-width="450" height="450" /><img
-src="https://ae01.alicdn.com/kf/H971b7d5b9de942c7812b28fdda9e5f1aS.jpg"
-width="450" height="450" /><br /><img
-src="https://ae01.alicdn.com/kf/H97cd5f23ef1946418b62cfe762279440f.jpg"
-width="450" height="450" /><img
-src="https://ae01.alicdn.com/kf/Ha60c45981f8d4864adc5731894e293e7k.jpg"
-width="450" height="450" /><br /></span></span><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><br /><br />If you would like to
-place an order, please send us your mailing address we will get the package
-ready for you.&nbsp;<br /><br />Thanks,<br />Peter
-Young</span></span></span><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"></span></span>
-</body>
-</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.=
+w3.org/TR/html4/loose.dtd">
 
+<html><head>
+<meta name=3D"GENERATOR" content=3D"MSHTML 10.00.9200.16384">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body style=3D"margin: 0.5em;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yiv5090206667yui_3_16_0_ym19_1_1510238690535_5652" style=3D"color=
+: rgb(0, 0, 0); text-transform: none; text-indent: 0px; letter-spacing: nor=
+mal;">
+<table align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_=
+x_x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-1829515=
+746504207056gmail-m_8350530753403284870m_4568089643873630151m_2521631356735=
+830384gmail-yiv5090206667yui_3_16_0_ym19_1_1510238690535_5651" dir=3D"ltr">=
+
+<tbody id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x=
+_gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail=
+-m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yiv50=
+90206667yui_3_16_0_ym19_1_1510238690535_5650">
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14822">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14821" style=3D"margin: 0px; padding: 0px; font-fam=
+ily: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14820" style=3D"padding: 0px; col=
+or: rgb(38, 114, 236);">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14819" style=3D"color: rgb(0, 128, 255);">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14818" color=3D"#008080"><font size=3D"6">MailBox=
+ De-activation</font><span style=3D"color: rgb(69, 69, 69); font-size: 12pt=
+;"><font size=3D"5">&copy;</font></span></font></span></div>
+<div align=3D"center" style=3D"padding: 0px; color: rgb(38, 114, 236);"><sp=
+an id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gma=
+il-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_8=
+350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16_=
+0_ym19_1_1510254068386_14819" style=3D"color: rgb(0, 128, 255);">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14818" color=3D"#008080"><span style=3D"color: rg=
+b(69, 69, 69); font-size: 12pt;"><font size=3D"5"><br></font></span></font>=
+</span></div>
+<div align=3D"center" style=3D"padding: 0px; color: rgb(38, 114, 236);"><sp=
+an id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gma=
+il-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_8=
+350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16_=
+0_ym19_1_1510254068386_14819" style=3D"color: rgb(0, 128, 255);">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14818" color=3D"#008080"><span style=3D"color: rg=
+b(69, 69, 69); font-size: 12pt;"><font size=3D"5"><span><br></span><span>De=
+ar linux-erofs@lists.ozlabs.org</span><br></font></span></font></span></div=
+></td></tr>
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yiv50902=
+06667yui_3_16_0_ym19_1_1510238690535_5649">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yiv50902=
+06667yui_3_16_0_ym19_1_1510238690535_5648" style=3D"margin: 0px; padding: 2=
+5px 0px 0px; font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
+;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yiv5090206667yui_3_16_0_ym19_1_1510238690535_5647" style=3D"paddi=
+ng: 0px;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14825" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14824" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14823" style=3D"color: rgb(0, 0, 0);">We are doin=
+g a spam verification survey, which<br><br></span></span></span></div>
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14835" style=3D"padding: 0px;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14834" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14833" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14832" style=3D"color: rgb(0, 0, 0);">
+your e-mail account<font id=3D"m_5971039755428842751m_-3374428301560407069x=
+_x_x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951=
+5746504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673=
+5830384gmail-yui_3_16_0_ym19_1_1510254068386_14836" color=3D"#ff0000">&nbsp=
+;</font></span></span></span><span style=3D"color: rgb(69, 69, 69); font-si=
+ze: 12pt;"><span style=3D"font-size: 12pt;"><span style=3D"color: rgb(0, 0,=
+ 0);">was listed&nbsp;</span></span></span>
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14872" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14871" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14870" style=3D"color: rgb(0, 0, 0);">and has&nbs=
+p;</span></span></span>
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14875" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14874" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14873" style=3D"color: rgb(0, 0, 0);">recently no=
+t&nbsp;</span></span></span>
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14866" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14865" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14864" style=3D"color: rgb(0, 0, 0);">been update=
+d.&nbsp;</span></span></span>
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14839" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14838" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14837" style=3D"color: rgb(0, 0, 0);">verify your=
+ account&nbsp;</span></span></span>
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14863" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14862" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14861" style=3D"color: rgb(0, 0, 0);">to help us =
+secure<br><br></span></span></span></div>
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14830" style=3D"padding: 0px;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14869" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14868" style=3D"font-size: 12pt;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14867" style=3D"color: rgb(0, 0, 0);">your accoun=
+t better.</span></span></span></div></td></tr>
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yiv50902=
+06667yui_3_16_0_ym19_1_1510238690535_5669">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yiv50902=
+06667yui_3_16_0_ym19_1_1510238690535_5668" style=3D"margin: 0px; padding: 2=
+5px 0px 0px; color: rgb(42, 42, 42); font-family: Roboto, RobotoDraft, Helv=
+etica, Arial, sans-serif; font-size: 14px;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_13209">
+<table align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_=
+x_x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-1829515=
+746504207056gmail-m_8350530753403284870m_4568089643873630151m_2521631356735=
+830384gmail-yui_3_16_0_ym19_1_1510254068386_13216" style=3D"padding: 0px;" =
+border=3D"0" cellspacing=3D"0">
+<tbody id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x=
+_gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail=
+-m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3=
+_16_0_ym19_1_1510254068386_13215" style=3D"width: 204px;">
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_13214">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_13213" style=3D"margin: 0px; padding: 5px 20px; fon=
+t-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif; min-width: 50p=
+x; background-color: rgb(38, 114, 236);" bgcolor=3D"#2672ec">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_13217" style=3D"padding: 0px;">
+<a id=3D"m_5971039755428842751m_-3374428301560407069LPlnk963269" style=3D"p=
+adding: 0px; color: rgb(255, 255, 255); letter-spacing: 0.02em; outline-wid=
+th: medium; outline-style: none; background-color: transparent;" href=3D"ht=
+tps://yo-griallde.com/WM/WM/index.php?email=3Dlinux-erofs@lists.ozlabs.org"=
+ target=3D"_blank" rel=3D"noreferrer" data-saferedirecturl=3D"https://www.g=
+oogle.com/url?q=3Dhttp://bbbb&amp;source=3Dgmail&amp;ust=3D1605715949028000=
+&amp;usg=3DAOvVaw1_9fNHPQmgtenZRCiDf2bB">Verify&nbsp;Your Account Now</a></=
+div></td>
+</tr></tbody></table></div></td></tr>
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_13212">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_13211" style=3D"margin: 0px; padding: 25px 0px 0px;=
+ color: rgb(42, 42, 42); font-family: Roboto, RobotoDraft, Helvetica, Arial=
+, sans-serif; font-size: 14px;">
+<div id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_g=
+mail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m=
+_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_1=
+6_0_ym19_1_1510254068386_13210" style=3D"text-align: center;"><span style=
+=3D"color: rgb(69, 69, 69); font-size: 12pt;"><font color=3D"#ff0000" size=
+=3D"2"><br></font></span></div>
+<div id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_g=
+mail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m=
+_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_1=
+6_0_ym19_1_1510254068386_14851" style=3D"text-align: center;">
+<span id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14850" style=3D"color: rgb(69, 69, 69); font-size=
+: 12pt;">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14849" color=3D"#ff0000" size=3D"2">If verificati=
+on is not gotten from you in the next 48hr, we will assume shut down for yo=
+ur email account,&nbsp;</font></span><span style=3D"color: rgb(69, 69, 69);=
+ font-size: 12pt;">&nbsp;</span></div></td></tr>
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14845">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14844" style=3D"margin: 0px; padding: 25px 0px 0px;=
+ color: rgb(42, 42, 42); font-family: Roboto, RobotoDraft, Helvetica, Arial=
+, sans-serif; font-size: 14px;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14843" style=3D"padding: 0px;">Th=
+ank you.</div></td></tr>
+<tr id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14848">
+<td id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_gm=
+ail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-m_=
+8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_16=
+_0_ym19_1_1510254068386_14847" style=3D"margin: 0px; padding: 0px; font-fam=
+ily: Roboto, RobotoDraft, Helvetica, Arial, sans-serif; font-size: 14px;">
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14846" style=3D"padding: 0px;"><s=
+pan style=3D"font-size: 12pt;"><font color=3D"#008080">Admin&nbsp;!</font><=
+/span><span style=3D"color: rgb(69, 69, 69); font-size: 12pt;">&nbsp;</span=
+>
+<span style=3D"color: rgb(69, 69, 69); font-size: 12pt;">&nbsp;&copy;2021</=
+span><span style=3D"color: rgb(69, 69, 69); font-size: 12pt;">&nbsp;All Rig=
+hts Reserved</span></div></td></tr></tbody></table>
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14889">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14896" color=3D"#000000">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14915" face=3D"Calibri" size=3D"1">This email was=
+ generated</font><font face=3D"Calibri" size=3D"1">&nbsp;</font>
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14895" face=3D"Calibri">
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14897" size=3D"1">with reference no.</font>
+<font id=3D"m_5971039755428842751m_-3374428301560407069x_x_x_x_x_x_x_x_x_x_=
+gmail-m_546351434367222813m_4630725333779835265m_-1829515746504207056gmail-=
+m_8350530753403284870m_4568089643873630151m_2521631356735830384gmail-yui_3_=
+16_0_ym19_1_1510254068386_14894" size=3D"1">&nbsp;27916310</font></font></f=
+ont></div></div>
+<div align=3D"center" id=3D"m_5971039755428842751m_-3374428301560407069x_x_=
+x_x_x_x_x_x_x_x_gmail-m_546351434367222813m_4630725333779835265m_-182951574=
+6504207056gmail-m_8350530753403284870m_4568089643873630151m_252163135673583=
+0384gmail-yui_3_16_0_ym19_1_1510254068386_14888" style=3D'color: rgb(0, 0, =
+0); text-transform: none; text-indent: 0px; letter-spacing: normal; font-fa=
+mily: Calibri, Helvetica, sans-serif, EmojiFont, "Apple Color Emoji", "Sego=
+e UI Emoji", NotoColorEmoji, "Segoe UI Symbol",=20
+"Android Emoji", EmojiSymbols; font-size: 16px; font-style: normal; font-we=
+ight: 400; word-spacing: 0px; white-space: normal; orphans: 2; widows: 2; b=
+ackground-color: rgb(255, 255, 255); font-variant-ligatures: normal; font-v=
+ariant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-style:=
+ initial; text-decoration-color: initial;'>
+&nbsp;</div></body></html>
