@@ -2,99 +2,93 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B71C234B612
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Mar 2021 11:22:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6605E34C091
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 02:36:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F6vz15FpLz30Bk
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Mar 2021 21:22:05 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KX45BgEi;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KX45BgEi;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F7ttb2cyXz3013
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 11:36:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1616978199;
+	bh=cFVITCi760b3vdpAiRHDmVCqgoE6EjHSWwTgj7R1KL0=;
+	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=EVHnkr5bl422+Qnmm/kMTaWFnTj75HaF45Ovt/WTURRHg9+dJS2mgCtnJLsc48V+s
+	 2Fn6qESJScItWgtFourCAWQmlOpXtnOvmur2Sl8kZJFCjkCZEMT35hNTHv0fo5/oVN
+	 XYbfixUFoDJvsGMqBFuyxvH+1YCPWBY1SFmi1ihM6Bwl0ZfARdY2HIhk9lh9NtFEQF
+	 oBrgGVOZjAhSadUKjZXM6TCJco56YBZ4o4IHuds9VgEKLcT7n51H88puEKR6YGEpq6
+	 k6MJSskXi0bxcva5OdQafHVSRctifoT2FL6TjBOQc5pyKYiF+Dja+bhaEm/1oS5xQB
+	 8GhWMoZGAQjBg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=63.128.21.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=KX45BgEi; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=KX45BgEi; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
+ (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
+ envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
+ header.s=a2048 header.b=QfbeUPIf; dkim-atps=neutral
+Received: from sonic308-8.consmr.mail.gq1.yahoo.com
+ (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F6vz012c5z309j
- for <linux-erofs@lists.ozlabs.org>; Sat, 27 Mar 2021 21:22:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1616840520;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=Iohr6m49kXpruLbyu6Jjrq1tJB8EijNtO1XFnYRAYkA=;
- b=KX45BgEiV5MxQjVsB0/9J4B7MD8or9wq/NDBISlqcfLuTWN7VL8jb2cPdQxhZEo/pEghYn
- 9/X6O3XPrjIMA+orovvomn3UHiC7HFR1d8Y8Pxf38NbisvOjL6Qu15+iL1xQbQneshtVxO
- 0O16QxtF5AJZoQZwiPTWzHDkG9p9wv8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1616840520;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=Iohr6m49kXpruLbyu6Jjrq1tJB8EijNtO1XFnYRAYkA=;
- b=KX45BgEiV5MxQjVsB0/9J4B7MD8or9wq/NDBISlqcfLuTWN7VL8jb2cPdQxhZEo/pEghYn
- 9/X6O3XPrjIMA+orovvomn3UHiC7HFR1d8Y8Pxf38NbisvOjL6Qu15+iL1xQbQneshtVxO
- 0O16QxtF5AJZoQZwiPTWzHDkG9p9wv8=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-9iZDYcxCODiLtnC1ss_qnA-1; Sat, 27 Mar 2021 06:20:47 -0400
-X-MC-Unique: 9iZDYcxCODiLtnC1ss_qnA-1
-Received: by mail-pl1-f198.google.com with SMTP id w11so2481092plg.20
- for <linux-erofs@lists.ozlabs.org>; Sat, 27 Mar 2021 03:20:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=Iohr6m49kXpruLbyu6Jjrq1tJB8EijNtO1XFnYRAYkA=;
- b=rz2+Ct5qxd2I8RKA31X5fZyopRKosaJsag2TVxD+Ke6+2HEVvjSo77XSXmj3nTtbST
- 2qtVk/KuZlSO4naodiLbSDRTZloKB0aNH8S4QMyFJ2e0cB3u/MD3LfGYBXtRJdhXn0/v
- 4kl2U2XIfnFoF3072NoJqP8rsxdfJHgCFEe8Bsc7OZjboyMn5XEK7DODkIrtIKZmd6nm
- hDfdvtXtwVJfxTuUP7UNSEwBIEVaKsOgHDvY6wqchDAvqk06hZ7LguQBqfqRoPm0ggoq
- Y+Pg/4G35r7LF/0R/kcWaneYJvdj9P3uWu8yWkg9TOtN1V1xyIqQEktD131FiDzbs4WQ
- KRyw==
-X-Gm-Message-State: AOAM532avk2NwT8rWEygAVfhW6BFJeDNLwYfv9FGThXJOyjPGbNsjogy
- d9JQHVU8qC0qwyxBosU3oV1hm2yN4Ue/LgPtppknurW/52CdzUQr//hEyADl5nnD72/K1Qg1b3Z
- 088O+ZhR0D1dH5url43Gpf1h7
-X-Received: by 2002:a17:90a:5d10:: with SMTP id
- s16mr17940384pji.126.1616840446513; 
- Sat, 27 Mar 2021 03:20:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJylMuo26yauvlRzltRPYVWiF63PKE/EzgtsMieWbTzfxUNaiOYW3vspNONHDCz0l5pdB9TZ9Q==
-X-Received: by 2002:a17:90a:5d10:: with SMTP id
- s16mr17940369pji.126.1616840446262; 
- Sat, 27 Mar 2021 03:20:46 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id z1sm11802846pfn.127.2021.03.27.03.20.43
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 27 Mar 2021 03:20:46 -0700 (PDT)
-Date: Sat, 27 Mar 2021 18:20:35 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Chao Yu <yuchao0@huawei.com>
-Subject: Re: [PATCH 4/4] erofs: add on-disk compression configurations
-Message-ID: <20210327102035.GC2995728@xiangao.remote.csb>
-References: <20210327034936.12537-1-hsiangkao@aol.com>
- <20210327034936.12537-5-hsiangkao@aol.com>
- <7a2b76ff-f86f-79ce-d6e9-f8c359f90ae4@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F7ttW6Fjsz2yxC
+ for <linux-erofs@lists.ozlabs.org>; Mon, 29 Mar 2021 11:36:33 +1100 (AEDT)
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1616978186; bh=GT82rZsw5zlM9dBFtcIA61u962gf+rpaRxQ6IB8M5wZ=;
+ h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
+ b=umgReBCfruKk29qboe+SXRF6yQOLvJXbHQyGLmXu4Xxo7eogWIUrh0f1SVjk5pKOvjxc92xqYpOWUIgr7H/L0XCQvuiNAMUKBgUCPGmSo3nS0REAurjNUTuXufw/VTpVT/O8CFC+hBkDweunA2I2qHt9qTHvBRNSIE0kJejUjrQuYsO0AtTRRn9uhy2Jq/9p3i/YbmqH7NzStyiFi1LNZPTlXK5vFCUo+tVYZSyOpn/V2VXgrwK435H5nzPy6RGdHnL97VWS3LyT9NVgALPq68gRUU3Q+pIQYiTkp7FmmtjnWfmXKbPQI35p3OCIeM5u1fcZzistObJpo3Q03hmjLQ==
+X-YMail-OSG: 2xwLyRcVM1muPCCHdU6z8groXzHPxSoPpK6pH7CFLYTvZCQ_Z5cg4LAqQTb3rrE
+ gi312Dn1SUHDrIyILJWsQxPaDhtdxXATJvnZmXwKmBSsC7AwgLJW8KRVYLJPV3zNQ0lGUqSlJw7k
+ G8SMOzNCL1NNAJeCHDdtLVb4U0oik69A7oXuW0fJUNmvBcjHW0prgO5_uCLzZnnMARF7SNt8ogHf
+ xHsKA_.EQq_Cds7q9lcBawMIQT0n5eEMykA1l8hnUovBOHniTzb0mC.y5VGHMGvVbLLwLf0_38IL
+ DkJW7eYRjvxTLjYUgyhp5dyFfAdFdW6apZgQOM3nv4sJgPdGfm.1AaEIReTDTdyeyEa09xu_Obwm
+ D2Q0gKS0zRLisjEbjACoHPPYm95Po3c0AmSGeWXvU3pHf6LuULWhFiVTfz9LxDVQNCLvpvcWz5Ux
+ EOJhNzVQEadtBFWHow43c2pmkDBGCR41sMbjFKLtu63aOUL8_iDN5GmoV30O9R3qFklJZTlYmgNE
+ MKlXucM.eodnwa5S4v0kQ69BSqyqtLEhH181259w3AhDVLB4wHOzvF61ZyDJLhkZ1lDfaqD6E8tV
+ h9z1iF3X8IVjqtOVlZFWzDMPZ20.5bj.3jYelvD2MwhGen86Tw7co1GIHLjigD3aDmm1CSUl9BXE
+ J7BSJjd4gKGb6l4BJ_DB.mYeA1s8UDUGzXp7SBr9A8oz0jI6avlDRI2IGplx95oaY5_tvWcoh0NE
+ em5LXXx5DFBBWbn3730qpKYqJZTpZQT4j42TIt83TIQcTk6nT3N3DJpik7cMCzNTaKwSqRJxyYMv
+ YufewQh9u90jXDYg3RT.GR9ruff4a32dXpjnQpglUZJY1nS8CvMsgbGJ7F1n0Sm2AqfXpX0bpeYr
+ LiInjHMwYlc040azgMa37BVhVVTZ4IyLu1_6jQLE9ErKHKzyoZl9hZPf4FgM_zEq0eiN4K_nHjiY
+ IVz0m5SXcSaPRq4m.Xwh78VnR.P1DqK9SnGKAx6Qg4Uyv0G6rAhI32_VN8HM6Xn4t6C2aA8GVFYr
+ 9In7MyRNH9FO7Z3I.okiz3_uu586sI8i_HRdcw22syNeSMnSiPTI5X_Yfbh_Pdg2qgEXbjIGrure
+ z._ytN4GLn2AdQQoN5Du2KKLFBDQEVhVU501T1Febu50tQYUKPgr96QP8uZ49GIBDNDP4EfoAJ_n
+ JXCv62V0wWrUC.5yYUZtC_WruYWzmwa2pSyHNrHONl0_NFKHi5ZonwEwjzbWOpy91KucOpytFVmE
+ sDZK2T9g2BMIYznysF4QQQ1ZAnqGQ42cISRdVBk.pjpetIlhMJT0ygzUeG5NOquHL1SgoKFzwgbY
+ eTOgu1BArtLxQSBHJyrwd87ux5iEi1NnEd2hvCtBG2COEeABY7pS5ecYbXWEgAC_gyoW_n2_bl0s
+ 6s3WYnx6.PwMjB77pzlX.9IVdoLyjJMH.gRS8_1ir8FJG78q3AQ9clG3lE7PVR8hqE6mIOVdtAPR
+ X7wqI2o8Rt72nVSmp_JJQFW5QK5BcXij2vEjH_eLMuYcgpL2M53LnOWJRshignZGuhKYh3p9_QZA
+ DcRxWm5Ba0LLDV61q5tA2Q71lPzCDbx_DbQ051j5EFby2qwYgC7gOshB9jd5oGoadDE9vzhL_ePY
+ rxSElEFxNNjoAO.LTDLwBynQjNzyfmyqrggHA8iuSrwnxBB.UaeZxgtbSlVDc.HZ9TqLPAjMIqt9
+ QmgsZLSsUv72JuDYC8M05e3eVQaT5HaUEIygzHkjIQNwrLMXU7kJwgoq7Cq3T4aVkYyoFXvqVe8N
+ OtFqERiQ9vj4Y4XUcMu6IE8nBa_y_pdQ50RKQ5LyYAxYplUE0h11_elywdvlrWE8gueHDuB8Lzpy
+ RJJT0DHhf.jY.3AFFpW65XvJgC9B58.KeyNjgy9ZPvPFj_QVUXhJbowO6Qj1OuWj8xAiGKHhIaWN
+ 3lVZ_ccqk1.tiB5pW6x9zakNJSOc_j4x1dehW677Shi4tV7rYaaINljT8Y.u9iWAOxwxQH6UAslT
+ 0PDt7bdDkEQb.aqW0Ry1J74Z_3wEyvHIcUXkW2uK.DbFEsy0Cp3J2x3VHNfH7Y46B9GKLbuanRvG
+ 6DUrSXGZgwD3bqzSUZ1pWFSDGHpa_4.vJYBIUsN_8VdT066ma3_5_vhPIkC5MErnA2AAdLqvQ6g5
+ v8GsmB8bHLf4woVNa6P.V1UWxxc3lK.E8MyMcwble7HsL6ovNNWK7yeGndeZ7nTodw1LrNikBsNe
+ Gz7x14lpR8y6EU8QfkdqjsFzG4PUpkpubYsvzCrXlymPZtfDAg2oKqmt283NC_qrhdcHXbAZyKi6
+ 3pQmvv8bIADJ4rbvu8Wky4g8Cq0H4XSlBULgmFfITyYemfj6heVpnOwwuA6I8nl73vVCeFp.n0EB
+ 7vxp7dL5o7bojymZsRBxstjoT0iq.1HfIKkzMqdSio_jAkxRUooune_5HGz1LyahDlPpLEtLQ47h
+ B1uB11re9wl6rcz_JsnQC2ItTqbZ0MnxMSG_QNHgk8cItnaGPhITU3iFAWf5MtiOSJH7Qs2IarxP
+ BHDl8cvVuR.jVTpKpWYTpIhk0EbfWi1jjeI64abFtgegApAZTPH6sENybqZJHK4_j4yGt0YEidHe
+ ZnMXTBxvt2S.G1YIxJF9XACnPb9aT5aFFtQ4QE2h499Y7WdB65I0JTGe29pJeltL1iR4CcJvoSv7
+ .jbvWo3cyvaXOLrd3
+X-Sonic-MF: <hsiangkao@aol.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by
+ sonic308.consmr.mail.gq1.yahoo.com with HTTP; Mon, 29 Mar 2021 00:36:26 +0000
+Received: by kubenode530.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
+ Server) with ESMTPA ID 3c706409ff0cbcfb3fea207c1cb57b01; 
+ Mon, 29 Mar 2021 00:36:22 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+ Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: add unsupported inode i_format check
+Date: Mon, 29 Mar 2021 08:36:14 +0800
+Message-Id: <20210329003614.6583-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <7a2b76ff-f86f-79ce-d6e9-f8c359f90ae4@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+References: <20210329003614.6583-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -106,170 +100,64 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@aol.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Chao,
+From: Gao Xiang <hsiangkao@redhat.com>
 
-On Sat, Mar 27, 2021 at 05:46:44PM +0800, Chao Yu wrote:
-> On 2021/3/27 11:49, Gao Xiang wrote:
-> > From: Gao Xiang <hsiangkao@redhat.com>
-> > 
-> > Add a bitmap for available compression algorithms and a variable-sized
-> > on-disk table for compression options in preparation for upcoming big
-> > pcluster and LZMA algorithm, which follows the end of super block.
-> > 
-> > To parse the compression options, the bitmap is scanned one by one.
-> > For each available algorithm, there is data followed by 2-byte `length'
-> > correspondingly (it's enough for most cases, or entire fs blocks should
-> > be used.)
-> > 
-> > With such available algorithm bitmap, kernel itself can also refuse to
-> > mount such filesystem if any unsupported compression algorithm exists.
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> > ---
-> >   fs/erofs/decompressor.c |   2 +-
-> >   fs/erofs/erofs_fs.h     |  16 +++--
-> >   fs/erofs/internal.h     |   5 +-
-> >   fs/erofs/super.c        | 145 +++++++++++++++++++++++++++++++++++++++-
-> >   4 files changed, 161 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> > index 97538ff24a19..27aa6a99b371 100644
-> > --- a/fs/erofs/decompressor.c
-> > +++ b/fs/erofs/decompressor.c
-> > @@ -41,7 +41,7 @@ int z_erofs_load_lz4_config(struct super_block *sb,
-> >   		}
-> >   		distance = le16_to_cpu(lz4->max_distance);
-> >   	} else {
-> > -		distance = le16_to_cpu(dsb->lz4_max_distance);
-> > +		distance = le16_to_cpu(dsb->u1.lz4_max_distance);
-> >   	}
-> >   	EROFS_SB(sb)->lz4.max_distance_pages = distance ?
-> > diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> > index 1322ae63944b..ef3f8a99aa5f 100644
-> > --- a/fs/erofs/erofs_fs.h
-> > +++ b/fs/erofs/erofs_fs.h
-> > @@ -18,15 +18,18 @@
-> >    * be incompatible with this kernel version.
-> >    */
-> >   #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
-> > -#define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
-> > +#define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
-> > +#define EROFS_ALL_FEATURE_INCOMPAT		\
-> > +	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
-> > +	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS)
-> > -/* 128-byte erofs on-disk super block */
-> > +/* erofs on-disk super block (currently 128 bytes) */
-> >   struct erofs_super_block {
-> >   	__le32 magic;           /* file system magic number */
-> >   	__le32 checksum;        /* crc32c(super_block) */
-> >   	__le32 feature_compat;
-> >   	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-> > -	__u8 reserved;
-> > +	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
-> >   	__le16 root_nid;	/* nid of root directory */
-> >   	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
-> > @@ -39,7 +42,11 @@ struct erofs_super_block {
-> >   	__u8 uuid[16];          /* 128-bit uuid for volume */
-> >   	__u8 volume_name[16];   /* volume name */
-> >   	__le32 feature_incompat;
-> > -	__le16 lz4_max_distance;
-> > +	union {
-> > +		/* bitmap for available compression algorithms */
-> > +		__le16 available_compr_algs;
-> > +		__le16 lz4_max_distance;
-> > +	} __packed u1;
-> >   	__u8 reserved2[42];
-> >   };
-> > @@ -195,6 +202,7 @@ enum {
-> >   	Z_EROFS_COMPRESSION_LZ4	= 0,
-> >   	Z_EROFS_COMPRESSION_MAX
-> >   };
-> > +#define Z_EROFS_ALL_COMPR_ALGS		(1 << (Z_EROFS_COMPRESSION_MAX - 1))
-> >   /* 14 bytes (+ length field = 16 bytes) */
-> >   struct z_erofs_lz4_cfgs {
-> > diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> > index 46b977f348eb..f3fa895d809f 100644
-> > --- a/fs/erofs/internal.h
-> > +++ b/fs/erofs/internal.h
-> > @@ -75,6 +75,7 @@ struct erofs_sb_info {
-> >   	struct xarray managed_pslots;
-> >   	unsigned int shrinker_run_no;
-> > +	u16 available_compr_algs;
-> >   	/* pseudo inode to manage cached pages */
-> >   	struct inode *managed_cache;
-> > @@ -90,6 +91,7 @@ struct erofs_sb_info {
-> >   	/* inode slot unit size in bit shift */
-> >   	unsigned char islotbits;
-> > +	u32 sb_size;			/* total superblock size */
-> >   	u32 build_time_nsec;
-> >   	u64 build_time;
-> > @@ -233,6 +235,7 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
-> >   }
-> >   EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
-> > +EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
-> >   EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
-> >   /* atomic flag definitions */
-> > @@ -454,7 +457,7 @@ static inline int z_erofs_load_lz4_config(struct super_block *sb,
-> >   				  struct erofs_super_block *dsb,
-> >   				  struct z_erofs_lz4_cfgs *lz4, int len)
-> >   {
-> > -	if (lz4 || dsb->lz4_max_distance) {
-> > +	if (lz4 || dsb->u1.lz4_max_distance) {
-> >   		erofs_err(sb, "lz4 algorithm isn't enabled");
-> >   		return -EINVAL;
-> >   	}
-> > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> > index 1ca8da3f2125..c5e3039f51bf 100644
-> > --- a/fs/erofs/super.c
-> > +++ b/fs/erofs/super.c
-> > @@ -122,6 +122,138 @@ static bool check_layout_compatibility(struct super_block *sb,
-> >   	return true;
-> >   }
-> > +#ifdef CONFIG_EROFS_FS_ZIP
-> > +/* read variable-sized metadata, offset will be aligned by 4-byte */
-> > +static void *erofs_read_metadata(struct super_block *sb, struct page **pagep,
-> > +				 erofs_off_t *offset, int *lengthp)
-> > +{
-> > +	struct page *page = *pagep;
-> > +	u8 *buffer, *ptr;
-> > +	int len, i, cnt;
-> > +	erofs_blk_t blk;
-> > +
-> > +	*offset = round_up(*offset, 4);
-> > +	blk = erofs_blknr(*offset);
-> > +
-> > +	if (!page || page->index != blk) {
-> > +		if (page) {
-> > +			unlock_page(page);
-> > +			put_page(page);
-> > +		}
-> > +		page = erofs_get_meta_page(sb, blk);
-> > +		if (IS_ERR(page))
-> > +			goto err_nullpage;
-> > +	}
-> > +
-> > +	ptr = kmap(page);
-> > +	len = le16_to_cpu(*(__le16 *)&ptr[erofs_blkoff(*offset)]);
-> > +	if (!len)
-> > +		len = U16_MAX + 1;
-> > +	buffer = kmalloc(len, GFP_KERNEL);
-> > +	if (!buffer) {
-> > +		buffer = ERR_PTR(-ENOMEM);
-> 
-> Caller expects valid page w/o kmapped or a NULL page, right? it needs
-> to call kunmap() here? or out label can be relocated above kunmap()?
+If any unknown i_format fields are set (may be of some new incompat
+inode features), mark such inode as unsupported.
 
-Yeah, I misplaced it by mistake, thanks for pointing out!
+Just in case of any new incompat i_format fields added in the future.
 
-Thanks,
-Gao Xiang
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+new potential inode features can also be covered by COMPR_CFGS & BIG_PCLUSTER
+in the next cycle at least, and possibly need its new sb incompat feature as
+well so it's not quite vital.
 
-> 
-> Thanks,
->
+ fs/erofs/erofs_fs.h | 3 +++
+ fs/erofs/inode.c    | 7 +++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 9ad1615f4474..e8d04d808fa6 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -75,6 +75,9 @@ static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
+ #define EROFS_I_VERSION_BIT             0
+ #define EROFS_I_DATALAYOUT_BIT          1
+ 
++#define EROFS_I_ALL	\
++	((1 << (EROFS_I_DATALAYOUT_BIT + EROFS_I_DATALAYOUT_BITS)) - 1)
++
+ /* 32-byte reduced form of an ondisk inode */
+ struct erofs_inode_compact {
+ 	__le16 i_format;	/* inode format hints */
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 119fdce1b520..7ed2d7391692 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -44,6 +44,13 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 	dic = page_address(page) + *ofs;
+ 	ifmt = le16_to_cpu(dic->i_format);
+ 
++	if (ifmt & ~EROFS_I_ALL) {
++		erofs_err(inode->i_sb, "unsupported i_format %u of nid %llu",
++			  ifmt, vi->nid);
++		err = -EOPNOTSUPP;
++		goto err_out;
++	}
++
+ 	vi->datalayout = erofs_inode_datalayout(ifmt);
+ 	if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
+ 		erofs_err(inode->i_sb, "unsupported datalayout %u of nid %llu",
+-- 
+2.20.1
 
