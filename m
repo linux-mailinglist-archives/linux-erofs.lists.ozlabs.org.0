@@ -1,93 +1,96 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E24C34C107
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 03:23:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5D8534C104
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 03:23:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F7vwj1rzqz301P
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 12:23:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F7vwf4v2cz301F
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 12:23:30 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1616981013;
-	bh=eqjbd9XPVN9T1S8YUn7KgLJFn/FuoUGCgnWER5Xp9f8=;
-	h=To:Subject:Date:References:List-Id:List-Unsubscribe:List-Archive:
-	 List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=WPzNKENb0yr0+SsuhpWj1E/fMqctK5wS9JvZOKqE5i8r5BzY2pYf6Mlx1b9o5WX1w
-	 ln8OaPPZdYnzxGfev2+/ptGnZRDYmzu1JDpRHxfw/sdrMV7E2s7HA3gF7YJQJ5+JQu
-	 WsmZvF/2xL66Yk1G3fuhRrCqxfsP1RMjo2cB2htjhgB+tcuR/JBhaWM6hyaOe4Esm7
-	 ita4G6LDzChEcky4MGd78cfzJSksHoEBoQbxhjPgXUNPVw1TPgPKnYO4qdkinolVJw
-	 AEH+8BXJvBSiv38m2jOJc17gSoaFbcupfm7qF7akp5GC6rzpqraliladS20Tq5pKZr
-	 Y5y9Qs4f6NxSA==
+	s=201707; t=1616981010;
+	bh=lbdPCd1M7K4gCTK9b66cSm+R762Vik52PQj05uWhct0=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=SRE6rPd9PO6o58cufYFBCItuf05NC2oamwKdzL0g70mgbDcnfcBQOPkE4HcDSoHzV
+	 hbFwAgElsqSfusR02HA+CShGD/g/UdtTSwqbHlYeRW0Qt9OHoMUSgsi35RJlAlqa4s
+	 cNgvoLHjvCeEfzKKcjpLLAl9MEmWyv3gDiETmxJjcEfCzTYmgUmM4Db2ecNawfFFiv
+	 e156OeuYryYz7JdRIpM6XTxdzMQgwg7vpoIGTCpMJ5PN2zmhSyIl3Kwnkq6bFCsBO1
+	 9zfMlRvC88CP6+ij+fWAttBUAhrdIwgFQ/os0hchXRngMGeGuM62dGJ0HJewXadreR
+	 0qtLsxgEVCsrw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.65.206; helo=sonic311-25.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.66.147; helo=sonic317-21.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=OIM0FmFb; dkim-atps=neutral
-Received: from sonic311-25.consmr.mail.gq1.yahoo.com
- (sonic311-25.consmr.mail.gq1.yahoo.com [98.137.65.206])
+ header.s=a2048 header.b=jEmpxTLy; dkim-atps=neutral
+Received: from sonic317-21.consmr.mail.gq1.yahoo.com
+ (sonic317-21.consmr.mail.gq1.yahoo.com [98.137.66.147])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F7vwc1jtZz2yyl
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F7vwc14NQz2yyk
  for <linux-erofs@lists.ozlabs.org>; Mon, 29 Mar 2021 12:23:26 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1616981001; bh=FleFYLBVxh+knR0Xrnpl+o2628vwHspYRAYB9/hA3gI=;
+ t=1616981002; bh=SnNF7gcUk5Chy54qmwZjHB+GeTr+H0G5EsPcePFYf3C=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=hHuBcsURN0XDJLApm7KfqA6ioVUQFo7N/Dh7pRupl6mzQVHs2MWpJgq18mQVPN+/BCXVSJiGQyoCfG8nGfPmFRQ2wJDOelTvTUT9OGJiX3X+Z9BZ9S0b18yvuenn5QThWBe+3nqxpEVjhQsKXyO3GmAHboo2gYLcXbDBcl4RGKaha1UQ9K3XWVSMNo0p14MoCTOHxfK1yjnIPniYK9MvQvSgyb9VtmKBOxSivvsC70Z+4+0e96iRrnbKUHeXmWk57sWbXrCpkffH4ZdTOZyNsE6bo4RBLuTzKBicuXeQTyhevGk/TIftMjUlg4sIISQvrewWA1YHI+W6qeVWNf2qXA==
-X-YMail-OSG: 30bfElMVM1nPtLbpxwA6z1HfY061Fy2tXgB3M0I.lKaOt7kk3FfJ.UzTKN8GhSu
- nqtWsa.MgfwUWrqd5LvRiQgmht1qTdF5tFa9Yyca8Yv08E_2vWi8snFGqVGeF6OU3WNXoWTW.7XO
- aQwkCn82viWu5FsXLrtBjTZzxSrl04eN9_5u9Mbxwkp2bvdjnf9VhQ6emZlrUDNLLujt9qqqWxND
- MyaFiBvmJb4XdfBeOB_Yk_ygsYkfSE61aWzsWO7PBQ.C8MXBevjRsGKoKmXRbvYDMPRoeHAZS2v2
- 6PFr_PdVHg9ZGxfYcyEO8KLz9wDY4dEek.driTLer2Yi58MT45NeLcEX3wuSYppCL7k1i_dTi2kC
- ZKVCtkFlyVsf13_CXRWXLUaIwZrl_whEJO9VhANtvH3CmURo67OBuz8myeuWcMuebkfo_KTihF24
- R6RbVeddxT3D.FtquatMaCJzsJ2.UBKp3gj9AFx1U2ZPTNysgplTAFJgBGBfDZekzUSrcWEXjlzu
- m8nwSuJ0CCp1_R9TPCcchAGW03dZ0g.G99uk3HnLdrfcMz9NCuWwb439PoNqkF.nAds4EAeOzpCU
- JkCajsNQJcTlhWUf5zPCLiOCBNWfVnBZNBsu6WNnZnVYn5PaXe9EpTC7RCVi8ifQb2pOTnsNG3cu
- bJysS_YPoPtKr_AhqhL7aEAQPpXI55vgSZKCfnxpNGPZ.SONYWF.zvo1IiVt4eeF0CyNh56kw99c
- jzWBGWhKwzfwSwS4IXbZHFlB7OaOQI05VoJb8JvkEDUVU3RU.qDsOKp2UozNS3k7yLdlN_g1wKj2
- UCFpho5VbpQLx0FMKO3ouBmnYihDFG8ddEp5X5gaL1znytgAWwsw5J1eAL7PRhJ5tFlT0l5gI6xL
- KnMO9eprhlNXKIlzc0Ge3dUAJcPVf2RHKcdiFkH0R9zgPmg5pcoe1UFJNYmd.07cAQthnI2v6myx
- YNRmT_r19o5fIp8neMgjuXmnHvl.YvUkZeP7Q3MotoJxdn_.f.B2V3qkfjeo5BC7brHTSQ4cEvsv
- hA_7N6IESKhTo66yIKnzG3s54CIlECXVVldbpaomS_eGE6qqS0x0Kz2IcfeDESdd9Lc74cETIPTE
- u1OtC87.dwYrPb.qPbMJ9iTeoTj3SHjDQzkPNTIrElsEsws_zhbsSOVj0.G8jRBgeMTEjNv0bJQs
- e1.BmSskvBx9nBtHTaQOxDnf.EsWSLLrFnYn4wiO8ypndCEbyyezjprAawqtrmGPvp6OKuQkPAZZ
- oa91aGlxdBi8Yo_7yY85NyEzrvHrYY434E1udnryUzeamwm2BXCPGyALPsfp1fnecaB.REszoHux
- v5S9qWKoepAr0yTg6sMpW.yTiJcVEhbQ6KiYpTOBiiugTQvz3vFghnUHWLMy4TDiesRJtdJo0Q81
- tShEJZ5BQiK.05eF3lDZmaozXqjBX0zauuW55vpQUTM6LXL2uxox88aZG269_VmRXoHRbuT0XjPs
- zhcn2IhnTXLFdQGZc0TJSXNMfm7Lz_rY7rHv0CO2MXJctvqEHrpserS9p66fSHTm7MSQ8T_HoIG2
- x9OqO19D7IAEP_35K2FBelLbo8k_R2lE1CtkIx3i62dLdqy91zSGN.ZABYbjzZx6QEP0AzyILrqs
- t04MF2rZSf3M90As82JbYn8nGMLLRLcSyr80dCf1mYLzdovQEREZ5TWn2QrsH.qVwfYETx7aQqQI
- PaVH8XeWaw.blA06MJKah_us0KE1b8h662JgTIlAnLiQ0QbmEWy9fULPbZMSqxm87EiYTBsAAgbr
- UtVhUrq5B64QtPx47d.ZpWYjf7oJhsfJCbjYVzYetINqD2jUDqhfHdRGWZlgPDd4Vv3xG9o77nCB
- J.zWoSdYelBFPNA5lS0RrO4iXJbnmhRs8ChGu4CON_ZJ7NhUU9LkGtmQXuqjOgT6_jVOWZdPjA8_
- yEqsSB5eNUHPxwPy8Og.fDNFKXi.w10eIz6OLPwcD_Mw5wC2TSZfdHbllRiqjbB5N2Coa6MU4SIV
- WhMufeudIhtnBjAMhdk8TtP2_KNyQWvG2_ilIegc9AvrlVGOjqWa1m4CRuCvXob1VsyTWcHru2oW
- Hcal30gDPHyVktjmKb8fl_xRAJ3gjG9lfHpFn_7Pu6fWeYziwniAUXRhDWoill0pYfW0C6pSGRuf
- aI82sE5CQOGvRVa5cuQwH00e0U87T3DvtsrPVmAfzPycXTZnBipLIqkSV19O84luuYwn34AqWEOF
- FEclDOC5MjskWowXV0MSO5yad7F4LgYCcPRZaUBAz1PHiyffaQsrHfjxixqbN10Nca5e7tFh5npF
- GEETp9eVahK9J46NUy3OSpcMgWUF6aHLcbyS.JFJQqBjEfDSIhwZyAqe8sxqrZVxVM1mFfg89xgj
- LpYVV7YurvBUhNg.HCEzZKQDCkim2rdkTi3MpwghPsdR9sKhA4KOYdGn_puGOI8S4rBJ4CKmp61_
- PZQIoQXUX8py6N.dnffznd2Cik17Lr0Zbje3yjG1DhSMizcraVGsOsf5QVWeduQpV9OzAM9DJHQS
- QaNpiXnRDFlicPwV.k71yq46EMroVtEwmlffCdfO6v.CMjh06CxWp6HVX7UjEG45tK1UUs9i20ih
- 2i3jrJ6qtTc4uDyZj7L2mSnoUQ1t3IVW0ay9J35Mnefu.rA--
+ b=YSFjXFq4w1XuQA9zPZViNh1lC/xHhRFZHwTnX1HhSsvRB0Rxqt2TjQtbBtpbZ+6/PgMCG1iae3SHD7pYblZ3Ouw67MtAHPiIv2ShJxmMOfzveqVbdiW1GR8HJyYxEqOrjV+uBmpN2fAPRrNpof2ufKg2PTsf0PbBIWWf19QkX3MOhUzdXl1RZKj742XlWsap3je//MI+jjPxcSvZOo09l6rTUiZy/2EwamorNr1wt3/fhsssimWHUMkuuplLC1R3MPMXxUD2uA+ygavZM2W4DwS+E+x8YpaIrsJ9vxCjIjGxN+hYHZbSERkvHeGr8lFHlI8APr9wkPdBHlFQsdWNoQ==
+X-YMail-OSG: 61mBMcgVM1nWyj.5k5Q3kdOAMtWvaqVJF.S3ihvYQHWrqZvC1dSr5q8CzqGhHx6
+ c37rsaUJv9eDROuujfCtclGxF4Yj1T94PK1ToINonOe_tLqroyfnkHOsyGfR8KdF09cQpZJ9nEHW
+ UyOxRhLFzyR2nTrK3C2LYFYk0RdZnZMdQbYsWGMGYQK0zSFJDo8B7dUjN_Vk4udkA9wb6xXnGgSw
+ 7vizCmznFbDq_wDGF4S8iVuH6N5cFSRbFgHnN1Abo.T0xWUNPu7B4ps06jSt_QrS2TdzT2pL6O5i
+ yZsQKj5lRFhyOgYnUphQFqjcy1o21QKMXZqjC5sbWZ5Cc8VL4jy0iVoou8mrtyDm2Ds_R6bPa6.u
+ VbxjgPTlIUlHVT.ZOgR59KZsIut_PLkH.Jz0c1bhisf8WpNT.amPT_ArDgEVXvUIE5hVPpcfUPjh
+ 0aX1crP9.WQvzMHBmKSwbdY0FW82XhROp4GGPoutc8O04XDb9sJxOhF0AtjYBNXgMOrMNG5x4VT8
+ IdUoVLMnXXAz4983t3cqypLWdwF0_H5AZi9NX4nAIujROJ.b9epgfaE0q27GpYKrPJpZ_kXgDY_M
+ hOFCSo6dwKznOc1SPvxTCWy3rL1ZfTHo8HJ3jQvA9x6RGrBPJKPViqZ2ADA0q6DLe4klSf43YS0z
+ cF6IaM98UMW_t16kCUVMycxuiXjtz6A6xYVxeQwIwkrnWP0qJ_C2tFZMj9v98SRaNMgp9uvMT5Nn
+ Pw_w3VVZvp5R15jiZw8U51NP4DAJv0UvOFPuJYpHAb75BE5ww5pVMa_rvrt5TpjlvELvmHfy1yvb
+ ZNF0LegodSkIHjwhdj2ktYsH1Sq6oOqbios93CuSFlN6zh5RwTtPj8Hy9DehDINBXz188v842U4.
+ vc2KNHLNNTDMzXtGKAzZQ1H15WeRNj0n6zsmc6zn16moyKj30IUIMzc2Okv0BYzTQmJ..Tq37Q4l
+ umrIcHOm6wCSEu3U4cFn9aHyZ9y4goHAswKnSCpG_Uod8MQ1RjvbTVp477BB2n2.e64HfPopDJbr
+ N8L2RAVtNzIo0QvPp0dQt2zMSZkfkVrIwT2.26z7GAVgJ2hZPxVvb6SB.U.SDyz98Vb7qYPc6xwq
+ nTYgNUEh.I.5zcfIQu.bKX7omMr8yRZ7iG4Guh6MT.DyPeYHsk.MFDWtmZfvuoSfNZuCVVb_xDQM
+ GTPJOr.gqVZYpCMWNT6tn.KhJnhxt07K4zQ88xSt75fJjTg2kqOJmgQriASMg9Q4j6nBfIpkbU6z
+ 96L_I2ysrNcPqQaUmIJJTosowWUOzhCQTA8h69UZBm248ZSkhz1etQJRba5hgqbuqTkLF5pQMFW6
+ euyofpBuYtxFozPbwn64ONGX_rR0BFnLM255E2grgoXqZyKMIMhMhzLr1N67kT4MD9AUrWmyKxxh
+ OaagX8jmNCXDPbU6o8LtZJlPhLxGoNe6w1W7_53S96DhCcqmZR8R5WgfQkLqhXVn3EUFEteTtnNw
+ 3sIuoS16TwECAQq4AbB3N2Ycy45NU4UXf4KHE3YHaChUS6ppDANU_H8KZ7IkVgHk7Yyqm_adeYvQ
+ q5RonTiVSVtLS_RJpoUowxd4cPM7vCGNb0Ln2FyBtC96jdhV0gUNqxiBKEUHfL9KtL.ngOKgkEEh
+ X0dufgo.nrO0tqruNCb15sUErJ5IsKj5QqRqxwNMrjVwlAHNe8M22hMpbrPv1e9gI5v_OZXfBcAi
+ XnrtKZhuqoyOgDURzWuGIO_pBjDgHN0NoehFJ7cYYl48zFt.WL3nnty9Qa.yUbRjo4mko.2s7mjZ
+ sDnzZmisiSTJQWKURSeb79NYj7w8Z6eCKMJwEWVm0MTYmBOUxtJ3csKTCyjykyZwAJQLmvlS3kkJ
+ K0mChj9wzoNv8AS9E.5Au7zQ9mWskIPYf9qkah627i.idV9lWbMZUmzQslvlGINtalrs8k6Ya6Vn
+ whd7zWiSFbna9LBRUAumVSmqWg.u.CZIfnIoqItdbTh2DpJeW3iWRKnroIXAT6ZnXCp1YSLVIqm.
+ 0GR.4aacFKEDkw6quNGxUwTawWGDuXHUHTQZp2FAf9F.NhhbV1viy3y_TDzPb76sU0irPrSvAQ5C
+ 6Kx9eOFkQXfQHcn190uo0f64M5eTndahyFtXFTgH6Xm2os9b37_sEX5_MXVj5AwpxXnGkqowq5py
+ J4KYMoNF9Cdq.U8QPlois5i7KUhyWhkrDR3QfQr4_6.f86LxNyDuFz7GLxSw8jfVsAplHCP7PNm.
+ YX6u0epj8EIOnQRIqOXUa7LPLqpyYaZnFbZyN8chZW38r0j0jvn.GthQM08KOWSMGhElImILFukJ
+ M7ZDLbWf6Mn8Sq4se7D8whCjdDwSJk.XC35eP.z6GyiI4UZXFZI3YsIhajR5OohmxhGAWDzY_3yW
+ aM5qRo9v5NpAVsY8w54oPZqeBuCKqeXf.YOwuGiiYRATPCjGacrpcpJlMhOL6FpoVzSn5rrg.Mpx
+ _WCpfU9Ey4dMCdhg_Ntnm2WRO8km7jphr_uf.Gm.I69JVf_c9nQ2pfV5WRNiC.qpzjjsPnCk4Mgk
+ 1.w0K15IBqk7kokS7pKU7qMIIThq2iMtvOINv0P41mzBcMrEzMmVKw06y22WnDJukjTyo.guAnZL
+ jqO51OUjf8kuotueCxQGam26PYIE7iXJaigjPmyKY2X7vfVl3Nz5BCddGhVAS2Cr3f4qevkeDrl7
+ WsyFb.5UASLVsca1hVA--
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic311.consmr.mail.gq1.yahoo.com with HTTP; Mon, 29 Mar 2021 01:23:21 +0000
+ sonic317.consmr.mail.gq1.yahoo.com with HTTP; Mon, 29 Mar 2021 01:23:22 +0000
 Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
  Server) with ESMTPA ID 3d9d64f8790c67205a0f6cb47abdabe6; 
- Mon, 29 Mar 2021 01:23:17 +0000 (UTC)
+ Mon, 29 Mar 2021 01:23:20 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH v2 0/4] erofs: introduce on-disk compression configurations
-Date: Mon, 29 Mar 2021 09:23:04 +0800
-Message-Id: <20210329012308.28743-1-hsiangkao@aol.com>
+Subject: [PATCH v2 1/4] erofs: introduce erofs_sb_has_xxx() helpers
+Date: Mon, 29 Mar 2021 09:23:05 +0800
+Message-Id: <20210329012308.28743-2-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210329012308.28743-1-hsiangkao@aol.com>
+References: <20210329012308.28743-1-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20210329012308.28743-1-hsiangkao.ref@aol.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -108,54 +111,64 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Hi folks,
+Introduce erofs_sb_has_xxx() to make long checks short, especially
+for later big pcluster & LZMA features.
 
-When we provides support for different algorithms or big pcluster, it'd
-be necessary to record some configuration in the per-fs basis.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/erofs/decompressor.c | 3 +--
+ fs/erofs/internal.h     | 9 +++++++++
+ fs/erofs/super.c        | 2 +-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-For example, when big pcluster feature for lz4 is enabled, we need to
-know the largest pclustersize in the whole fs instance to adjust per-CPU
-buffers in advance, which will be used to handle in-place decompression
-failure for inplace IO then. And we also need to record global arguments
-(e.g. dict_size) for the upcoming LZMA algorithm support.
-
-Therefore, this patchset introduces a new INCOMPAT feature called
-COMPR_CFGS, which provides an available algorithm bitmap in the sb
-and a variable array list to store corresponding arguments for each
-available algorithms.
-
-Since such a INCOMPAT sb feature will be introduced, it'd be better to
-reuse such bit for BIGPCLUSTER feature as well since BIGPCLUSTER feature
-depends on COMPR_CFGS and will be released together with COMPR_CFGS.
-
-If COMPR_CFGS is disabled, the field of available algorithm bitmap would
-become a lz4_max_distance (which is now reserved as 0), and max_distance
-can be safely ignored for old kernels since 64k lz4 dictionary is always
-enough even new images could reduce the sliding window.
-
-Thanks,
-Gao Xiang
-
-Changes since v1:
- - [2/4] add a comment on lz4_max_distance (Chao);
- - [4/4] fix a misplaced label (Chao);
- - [4/4] enable COMPR_CFGS with BIG_PCLUSTER later since they share
-         the same bit.
-
-Gao Xiang (3):
-  erofs: introduce erofs_sb_has_xxx() helpers
-  erofs: introduce on-disk lz4 fs configurations
-  erofs: add on-disk compression configurations
-
-Huang Jianan (1):
-  erofs: support adjust lz4 history window size
-
- fs/erofs/decompressor.c |  35 ++++++++--
- fs/erofs/erofs_fs.h     |  20 +++++-
- fs/erofs/internal.h     |  33 +++++++++
- fs/erofs/super.c        | 147 +++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 224 insertions(+), 11 deletions(-)
-
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 34e73ff76f89..80e8871aef71 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -124,8 +124,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	support_0padding = false;
+ 
+ 	/* decompression inplace is only safe when 0padding is enabled */
+-	if (EROFS_SB(rq->sb)->feature_incompat &
+-	    EROFS_FEATURE_INCOMPAT_LZ4_0PADDING) {
++	if (erofs_sb_has_lz4_0padding(EROFS_SB(rq->sb))) {
+ 		support_0padding = true;
+ 
+ 		while (!src[inputmargin & ~PAGE_MASK])
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 30e63b73a675..d29fc0c56032 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -218,6 +218,15 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
+ 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
+ }
+ 
++#define EROFS_FEATURE_FUNCS(name, compat, feature) \
++static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
++{ \
++	return sbi->feature_##compat & EROFS_FEATURE_##feature; \
++}
++
++EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
++EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
++
+ /* atomic flag definitions */
+ #define EROFS_I_EA_INITED_BIT	0
+ #define EROFS_I_Z_INITED_BIT	1
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0445d09b6331..991b99eaf22a 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -149,7 +149,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	}
+ 
+ 	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
+-	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
++	if (erofs_sb_has_sb_chksum(sbi)) {
+ 		ret = erofs_superblock_csum_verify(sb, data);
+ 		if (ret)
+ 			goto out;
 -- 
 2.20.1
 
