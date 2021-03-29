@@ -1,24 +1,24 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB23234C109
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 03:23:38 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5A0B34C10A
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 03:23:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F7vwm6Y65z304V
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 12:23:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F7vwp6Q9Zz309Y
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Mar 2021 12:23:38 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1616981016;
-	bh=t/+ISJ5HXrAlKiul3xBwkVe65r9B8sYHMwSlqDyWszE=;
+	s=201707; t=1616981018;
+	bh=+QGIxuTVDaE4kP9FGvt0H0qV4YwkRrrFaOWKTa/Wmns=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=RucECNdgF9VMPzJnrDfxW0ml0tqyVil3CAxR+E8Gz/5dX7+nW2mAyBofCSEfoHiz8
-	 v0/hI3D8XKdUqmwbXl1GAS9AgU/IdlUptWaA7TG34q4+/TLH/6OmVKAF6K+qT19cIu
-	 t9zlnfihsRVaVemGo9hE5XnHW909vVW8K4B0jNFg26+JVLJAgOsVGUTWXLg/m2aUj7
-	 r1iql2ieqsUnBLYFSuTI2Cf0jeDKUewJutdcP0rP0Zt6neW0aqeLcIHzPnMXXlcfGh
-	 /1eT+N3j/Uon/a1IiXPRz7v6XEMxOOGFb++dmsEwc1dRELND/L5H0CaNTeQgi+MAGI
-	 PzUoWMRvJm/yA==
+	b=HzQQI7n3E+UOoxZ26arpPVWJ8A31EvT1KwkrgFnQyEHX/ZhBPa92LO/RQs9QFomqv
+	 u++DFq9ihFjZ0hPjsN8MJDM7o+fOKe58lqVVSxfXYTWkB92S0B1S0xEaOUdiCGkpJt
+	 7Dqlc1RvFXCZ4Ym8SMUfwBFhJeS2Tr8WwggxytW20n+gLY9W8H+ErOT6C7FNJOVPnJ
+	 WYzQfyxm2CPkhUYQltiqEQxwbV/0/9DDSyEy+GpIBaS0hohw3queOXyuwXmd76mBEZ
+	 AusRzxOottEs09kYL5zvRRP1Fw6gSWeFSZ+8uU0Trnm8LzFdIgMKfVjb/wNOWW2iFd
+	 h8nvWOLqWLRnw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -27,65 +27,64 @@ Authentication-Results: lists.ozlabs.org;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=c0pCPJol; dkim-atps=neutral
+ header.s=a2048 header.b=T2D9zkZT; dkim-atps=neutral
 Received: from sonic313-21.consmr.mail.gq1.yahoo.com
  (sonic313-21.consmr.mail.gq1.yahoo.com [98.137.65.84])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F7vwg62nYz302C
- for <linux-erofs@lists.ozlabs.org>; Mon, 29 Mar 2021 12:23:31 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F7vwk60ZPz303t
+ for <linux-erofs@lists.ozlabs.org>; Mon, 29 Mar 2021 12:23:34 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1616981008; bh=/I/6RPssPwK9kvIcYTQVylBSMn2DILL9DVGytGfKZ7x=;
+ t=1616981013; bh=ksldMW+XtLRpIQGaYvS95k/fgDuK+rLBKC4x0MAaMDb=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=X4gcHHqfTlWZefB+s1xvhoI9C4RxcjYtg0053o1k/+Fjs/PPsDUPzba8iEyVAkyrEI9H5rbFT54RjbJLaDhZxSpecmVOaIMjGSO2TQfd5aanhaieqaMlDv9g+cfbGbDq9NXPrPyy5HZGjtPtgC6YAJxw0m1jqv2NFByNbuMeIu3TpIAaPFkVFtxohk2B4EPkUhtxZOwmJDtDQNgi4y3k1WLkfAAf9DUOqj9+3AUN42v/0p+SMY67GIcX+d3cstkGOH/ZXIO/aOpOa9UaFM/d75RrhetWwW5v7yWSRdBl9Y5JI80eEQhvabm7+Vvx9ns7brqH2OeSEpsZggJ1KMxv5g==
-X-YMail-OSG: mn2SRiwVM1m3IIvxGE4awjm3jmVC9P5H6N_yYu7Q9ZOVSE9IhRm_2h1TLJPX11O
- Cw.hB0GKXZ3BnJYsojKM9PJR5k4FBHzhb2_OZ8J_4xIWO_5oo_91_6JcjXhf1jYyQEi5ZQzKW7u0
- PIFpodwcjEtE1FZQslhb_04RT8I3B_UZD5kWRcp0R9ZEsTE2KVqdCTIzStB_dU4vyLm7muGbERrH
- Di2NEax6XX.nRTI..F5B93qx6DVr7NMlKSgKhjbn2tut09_NCAkr4VOPCq2QwmMczQtJDJoHA8mw
- 8ndUJnYArA7OhEErI5mQUizfWOyZOb.iJ_WK7EncyL1enAF9kfccP9yrLh8rtVz2JJHcKvcRy31W
- 5OMlMvm2tVQ0Pl92JinB8Ex2C6fNLT3IKIq0a6qtznR14iUL95bx5fg_iAQWvRFPPmQtclCr5GF1
- vWHHd.nCTyon_XL3MqDZPFKrNB67CYlms9MR.ijTmvNCqkqu25Ll4NjJy4f.ybxLr60lzRhFXAao
- dT.QXXxenEwxRqT2s9P1RvFx6UYdbBnPWgXkpLiVEzNomkJBdiSM5lmSI6HBiZVcHmNPFQiuxx2V
- 6bwjDwhXJl2Dbc7phSAnNHySq4Wy7qQhITRrEiXTr.5SanL6xfqzQNLCAE9Dx0roADrryidS.Thm
- v1IVtEBdgnEs0lkWbCvX3AXIZWbPYJsXhmCNsQSB5A6KFvjrntCAwHmQA8nfHvHd5zw52J4vU05Z
- NBcOnh1NsuHZNerHVQ8.6mNksXLbFCpeimazJ.1CBNNLW.ZhdpI9oULA57DZQJENjM.ptoJE5j3e
- JT9aFiADQ8FkKMpqDoP5TgwODTgz_f1yvQ.RxI2o4.z3SrH2phWZChTK9qKjgNg8dfXb9EkQUuZ3
- HAoSp9.W6zuSlLuLH.xreZoS68zuyu6YZ_n320ajnrfHaMm1fm2ee3zRzSKtNoGqbns.2advodYe
- z2jL8TnvRoLE8bMOGYCvy5f.8T6MbiAAXcM725OQQtO6Gn7Qel.i7EOD_nsIhpDQJ4_yeP13Y2bH
- QoLSwsPi42ZC_bUrw283tsMcQnLY62LRVia4QpZypdQUwacwdc7nM4cpMGuA2c7_1xbjZLsKVpIs
- HJk1mwWt4WDx5htXTwgI_ENWIzx78Qwv1svd3D3Exelc8Om6sLNby3Bbwb6wiP_ObpCZVC5CZA3O
- K_HPceicUzNIrapD140hQHbnqhxq07wOScR2TGNspkFDXz3FMuIJoFogYoHQiNhhaMpg2j0_L_4i
- VNAEYxgjAexN_Zld_l.A3xB6w2gv5YbYXNDPpOAT.KuRnwezCMhpNUEft.5NGQdIQn.0QvbGxRF_
- 6YpuW5JMxn26tN5nt84oaHU6RlFi2WiLWtRfwA45VDIUzzMadBlh5fNKRvUOYlOb2J_8NCIIoZIY
- 5jH06_VV4tkTi31DhxyOCD1ve8NNkmeGsesialSicJdPjEpXopqAWKHJBNvsCiRe6CU.9eVaMGRh
- slVoi6ySq7cs9Jbmhbz7k7NzEnIgJg2HMjWWxp0QE.PELFwNQwL7E_jt4jL_V0Hc9gLYu_tL8dGL
- 37ftPTJ60uZWM5oiSPoR48IWfFjyfnWaydhHplo1turnv2Pitx9ywyTJo_ho0B6fiGRtW99cbudg
- PotBRNrjIRrIIF5xWQRiW2KkMYYF8TSx2RdXTGQ5mfcdfzV1UfPs5Fyfsv_aQ3A4lVt_M1Bz4p93
- Abp7Qpjz_uOYOlKRmReiCodxSI_r.n26V2VGZu1qmGlQ8CfEFgliRiH8mC965TYgr8eTRMc31nAH
- 4tlkv6JsaIbW5omI7h9pQLRbe0g2yChMYf1QDXl0mKJvSzsAALSm50OwsnCOyXrkOLy.ljeMnFB6
- SUxYKX6ITZ2gf7TfhqxYIlTiBrLUhi2CweNs14ukKRistGHsctLVSBVGFWLBTdhXSYM4gimsSwwU
- Pu1IjN3MJNpwyhWhsZ3bP.AicBeoCAwnS3rCBp0KYwLa7W_C3MygIJ1PKP8SDG.Bdv0KwlQYwiui
- ljLARn0jsuAQXLP5N9NWtnMfXC9JLxSKjYkA6xacXsIWywWZnoLJvh3bBlWwIiaBp.oNmw0uJkJu
- aFmkJ10MbZYsLylQ7fZ.5wynPPR98BDgWcd3VKoLkVCgvcrZilVDQOL.Bnxl42q6JRapJ5ml9OmX
- RhbjKZQ6BXLt14PoCvp4KdSJppJe35YYFZ4RpH42YlJjKUhP6kEqvRMaTiC_cWqm81x7TMhCVmee
- 7PSKYVqg0wkgie_h39z5hffVh5BubJBsKxZh56ozkxiAfpd.kwlneIA.w7uebi7nLaPPUwmzioR9
- a28QODDj0sl1TDmr7gi_10exTOZxu1GkUKqhgsQETTcxHISNeN5bwbeNhSaQLUcb_8tuTqhdDaCP
- 2bt4hqk7RcHbdhrD.7yhgI74BBL9HpPgqEmB2kIBLL3SdGRyr6geJSvS4YXrP3QgLGMuKRxASnei
- Nl2iwfWlSXTFTeOmcO4R1DOSta72me8lOsgQUS5jcdNIBYRszun69wV7QqWGiCserhavQ2ERCzE_
- jGHv4FBZJbDyngn9xGF.xFWmY5gEA7qI_d1IlZ3uM9UYJRNgY8SBVQTMxyBfRLKBeWMYgBikchw9
- bh8e_pksrElPmiUSv_Up_GBV.QLSRDWl.oa90CwaqM4gr.wAU2Ru0dbNVGoX7S47D6f7fayP7XD7
- 5BDGmILxffXTYe.WrU1S0OYE-
+ b=ajLVbtCZKeB4uMM2izM8c7ny7YHoRfRdLZjZuQZ0Ganop3oOWpWmm0HT/8d8WjvQwdQBxcZcjgvfz3JDaG/TMPYcQ4gEep9bD3QPoA0GpfDZv+bhoKQ4oDSXP0+vthfOSYqZvTbyndO3rcQcM3xlRplRxg3o+PU7Kik2JkH/DnuF+JjZYz5oWTVQhxM0EX85BP+2bJ/qiC0u3DO11relCQtvisDR1GcqJxDxzYE46ZxR93lYDFWnr7yBsjaa0yrOWih/olrZ5o4Nbacn78GBYKpzmgnkZ6mYgd9mzkrs3Vqqd5UViRfyJ0Eu71VKLwAXpXheVJinmQ0rtv4+yERxwg==
+X-YMail-OSG: QJqzrjEVM1l6PHQmj5RKlyIiS.VFOjpiixO1eNbwjTxLVuDrGwbB9eVGLhJZDvj
+ 1sOOULzPo83amkcSsdM1HKD4GoEbTlpBibXFbtTTjzsO4dIXjaoBwgrITN5PDRX3b4NpOiueOQ38
+ jp0CLd5O3JB4tdsT3PgT9UOO9yn52HsYr0Nw0GTmTXsUWpdZJFfY0V2rJUJdz.APyOk2tjD1e8fn
+ WU79jH9ztkaS0Oa.jWZw3WyrCiR9fHH5tQMtKdXe8KwXejBQu5ABa1l_cZkWlop90qI24EIQkmrI
+ QFCuKV0QFv6TIpKK_sJ89mNEk6O0IqNEezUYj5Yspr.gvlMFJTk05JcQS1BCQrfa7q6I7GKKk1Vn
+ WJu4m0jSYROHfIv.BXClSAWcuKyaEybQ_WIVirYiLA41MuNV6QX2kB6PldWQEp6rp.vC.7RJIIOo
+ 745EKfy0zGT8EGcFxpoQ87JcJbtIPt5_FCcQ0Phe5ut1vswfDDrFgmxaKDZJIRk5c8HHfB5mMu9.
+ oFNQB64xHlwEEAD4p6VnjpvKQikWPxenoQrw76slwYEqm0ZZeKDtReAoau9yvueqFrs6frc7wOcz
+ ZgSGtJlcKby6Uzql2j05l4G.2RQd47.CBevQPM9FYBbKkzU3lK4R95PROp7tTSlHR9zo0lq8mkEf
+ pmWbPAw1loLvlqJJnpIeGLHAELnACe.tFtQHupSkeqRmNVr8lEmHrHRfu8UfxfTzKZ09s9HsJQFO
+ Z0so43tLX4CZ2hibUkEEPHuamZaGmnsHsBPF9axxHr6t9qQkNDSzz7V7o80c49ejK3mfjWEv4Dgd
+ ScWJNiQ4jHem4oVJSGnZIrYR880_W_EZSnbJsTCJhTQBmTMRiXWuZdxd6GekwBz83dKmCI7mwtFB
+ uySHZImENt399dXZNpsrVnd.caAFy4R6MZ.C18701jkZ4GY0rVkKavsKjuN_D4DlF36S5Mbo5YNC
+ ag8HZp1b9VfunhXsMv21FnPo_pH3u3qV2heenSUwoDRqe_0c.bizu.TOvCIrNk8BMmTaKPEYu9v4
+ RidKuThfUDfARbKHlHq1rMTerNKz_0zP3LtEAuUWqhrVTb_87ozwz5ILVKSrom30yWsqmO.YNIZn
+ PC2FNFoLOB7K.x35cv6pmwECVXlvX3SEC9khiqc0IvNrgYF5Uos4tx6dAEZ3gTPH0FW3bRPC7DbY
+ nouCCw0i.V.i8ab8A2pzRq652kSQVaqDDY0OS6rggMm_Bk6L8A.xHCuUmH2XCychOyBmoNb4xeYY
+ KRsIR0nbWSouQMDa2J3hURTj34pxgfa2qLdopBiuEGLXIeJTCbqo6cPMl3q8ajaNhHrO1stdvFaW
+ YMyzxOvlxPX_76G1k858EEVyoB13sH2EbveURJFH9eVvBI5ne.Qpyd9ZJtK4p9T11fl1x4OsI8wm
+ I2s0xl4JzyMHQYQ58RjebjWKzFa5xfNRN4LoEJhIaPvJnMAD4Wet4A81KDiltZo83hRUnJTE5IP0
+ je5cTygrpcKC10Xcw7GxRXIwUg5q54oKVoLohZCDTG9drL9jsjlgTCc93zeUurO.eCQqoiT1AXDk
+ VAKWNon37bGNdBBe5UG6jk3UZoMTYQ_UglSkj3u6jFAw1LIwi3fUFabcD0wVl.dJMkil_emwhZUm
+ KZmnLSveQESu9HdKiIkEfPcNk_.VXd1iFcdsCufVtXp_hG7thde4EgsRbx73iIXI88_dvKukuGWd
+ TGSgoLkGcfY56ljer_t_G8kkJlPDws5DmnpQBQzuRkeaTkVQtaaj3kV0iZwT2xgpzCda6w1QP2Uj
+ u.pzAKYWXVwQq4rkGc0e4TuJi21eG6C7o49sp5UwhWDVTa8T6IRkIm8YB5fUe8B_wLkCFYeZjMCW
+ 3lwKk3VJXh4ut6wlxdf.u47hZnXV_FkOluBYNJH32NwmCpjrm4Lj8hWeQfuCNNWVEWtuo8rbsGlb
+ QNPFDxL16deyGCia2ys4_m4.i2KIkz3Jbm2d1D8XFSt89gnX43v8Jxe907Rf92ObSx5o1MzMJvvR
+ BNTzYWT4roMwkegDUMqHP_ytrLJ98riHFftE2TXQki1MEz2VFHUG0nnQOJmZOqBAt.zxejWLi91Z
+ ToCMZba92cBsa6nAI7jKAlHbcVMIQOtGBXy.IP_X6ACbRAJs8UMmDzR1vyODZo0IpgIGn4dFJl6u
+ DQWjtts88_RzCaF8Hy6eQvpQt5.lhvn8tl03upqN6ahYqCaJD71.D8AMeLFsUXVprpCu94NUEb2I
+ 8ZKmGTuDVJqqC6gKqUUK84v2L8O2RfpjvozqktOANViw6JXbhTaLSrvDCMbj667PVnzA4.GvA9dH
+ V8tr0d6lEPpqR6TlbUfugxP_rgZVh8Bu1MKoY3AIaTjc1HJgTBpxwovnWnVP1SF0gIkp9fDz04Rr
+ 4sjMze6XuBNcQ2t92w_74ob.J9CjBFpMu6FIb8isB.exL9mP5OWRIha4BP3WpvMBNurd8OHTeshR
+ sZPFJH0t6jPG_cl1zMn2ZiKqRb.9BsLXLcsOZPFvdAUE8MZSDkU6XPOdTPI0CjG_.yA9D6g33UYc
+ 4hZDt25rKhqqohcIOwCGhY5B7ndLmJwPV20Ke.z1e.Omn8LXgLHnvt6RvzQ5oHTJqbjKb0no5V4q
+ aeDD0GbSAHwtDvJJzT1M2hlkzlQcaRKwUfaoEB0Wln3Ct
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic313.consmr.mail.gq1.yahoo.com with HTTP; Mon, 29 Mar 2021 01:23:28 +0000
+ sonic313.consmr.mail.gq1.yahoo.com with HTTP; Mon, 29 Mar 2021 01:23:33 +0000
 Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
  Server) with ESMTPA ID 3d9d64f8790c67205a0f6cb47abdabe6; 
- Mon, 29 Mar 2021 01:23:26 +0000 (UTC)
+ Mon, 29 Mar 2021 01:23:29 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH v2 3/4] erofs: introduce on-disk lz4 fs configurations
-Date: Mon, 29 Mar 2021 09:23:07 +0800
-Message-Id: <20210329012308.28743-4-hsiangkao@aol.com>
+Subject: [PATCH v2 4/4] erofs: add on-disk compression configurations
+Date: Mon, 29 Mar 2021 09:23:08 +0800
+Message-Id: <20210329012308.28743-5-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210329012308.28743-1-hsiangkao@aol.com>
 References: <20210329012308.28743-1-hsiangkao@aol.com>
@@ -111,100 +110,289 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Introduce z_erofs_lz4_cfgs to store all lz4 configurations.
-Currently it's only max_distance, but will be used for new
-features later.
+Add a bitmap for available compression algorithms and a variable-sized
+on-disk table for compression options in preparation for upcoming big
+pcluster and LZMA algorithm, which follows the end of super block.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+To parse the compression options, the bitmap is scanned one by one.
+For each available algorithm, there is data followed by 2-byte `length'
+correspondingly (it's enough for most cases, or entire fs blocks should
+be used.)
+
+With such available algorithm bitmap, kernel itself can also refuse to
+mount such filesystem if any unsupported compression algorithm exists.
+
+Note that COMPR_CFGS feature will be enabled with BIG_PCLUSTER.
+
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/decompressor.c | 15 +++++++++++++--
- fs/erofs/erofs_fs.h     |  6 ++++++
- fs/erofs/internal.h     |  8 +++++---
- fs/erofs/super.c        |  2 +-
- 4 files changed, 25 insertions(+), 6 deletions(-)
+ fs/erofs/decompressor.c |   2 +-
+ fs/erofs/erofs_fs.h     |  14 ++--
+ fs/erofs/internal.h     |   5 +-
+ fs/erofs/super.c        | 143 +++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 157 insertions(+), 7 deletions(-)
 
 diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 93411e9df9b6..97538ff24a19 100644
+index 97538ff24a19..27aa6a99b371 100644
 --- a/fs/erofs/decompressor.c
 +++ b/fs/erofs/decompressor.c
-@@ -29,9 +29,20 @@ struct z_erofs_decompressor {
- };
- 
- int z_erofs_load_lz4_config(struct super_block *sb,
--			    struct erofs_super_block *dsb)
-+			    struct erofs_super_block *dsb,
-+			    struct z_erofs_lz4_cfgs *lz4, int size)
- {
--	u16 distance = le16_to_cpu(dsb->lz4_max_distance);
-+	u16 distance;
-+
-+	if (lz4) {
-+		if (size < sizeof(struct z_erofs_lz4_cfgs)) {
-+			erofs_err(sb, "invalid lz4 cfgs, size=%u", size);
-+			return -EINVAL;
-+		}
-+		distance = le16_to_cpu(lz4->max_distance);
-+	} else {
-+		distance = le16_to_cpu(dsb->lz4_max_distance);
-+	}
+@@ -41,7 +41,7 @@ int z_erofs_load_lz4_config(struct super_block *sb,
+ 		}
+ 		distance = le16_to_cpu(lz4->max_distance);
+ 	} else {
+-		distance = le16_to_cpu(dsb->lz4_max_distance);
++		distance = le16_to_cpu(dsb->u1.lz4_max_distance);
+ 	}
  
  	EROFS_SB(sb)->lz4.max_distance_pages = distance ?
- 					DIV_ROUND_UP(distance, PAGE_SIZE) + 1 :
 diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 43467624ae3b..e0f3c0db1f82 100644
+index e0f3c0db1f82..5a126493d4d9 100644
 --- a/fs/erofs/erofs_fs.h
 +++ b/fs/erofs/erofs_fs.h
-@@ -197,6 +197,12 @@ enum {
- 	Z_EROFS_COMPRESSION_MAX
+@@ -18,15 +18,16 @@
+  * be incompatible with this kernel version.
+  */
+ #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
++#define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+ #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
+ 
+-/* 128-byte erofs on-disk super block */
++/* erofs on-disk super block (currently 128 bytes) */
+ struct erofs_super_block {
+ 	__le32 magic;           /* file system magic number */
+ 	__le32 checksum;        /* crc32c(super_block) */
+ 	__le32 feature_compat;
+ 	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+-	__u8 reserved;
++	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
+ 
+ 	__le16 root_nid;	/* nid of root directory */
+ 	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
+@@ -39,8 +40,12 @@ struct erofs_super_block {
+ 	__u8 uuid[16];          /* 128-bit uuid for volume */
+ 	__u8 volume_name[16];   /* volume name */
+ 	__le32 feature_incompat;
+-	/* customized lz4 sliding window size instead of 64k by default */
+-	__le16 lz4_max_distance;
++	union {
++		/* bitmap for available compression algorithms */
++		__le16 available_compr_algs;
++		/* customized sliding window size instead of 64k by default */
++		__le16 lz4_max_distance;
++	} __packed u1;
+ 	__u8 reserved2[42];
  };
  
-+/* 14 bytes (+ length field = 16 bytes) */
-+struct z_erofs_lz4_cfgs {
-+	__le16 max_distance;
-+	u8 reserved[12];
-+} __packed;
-+
- /*
-  * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-  *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
+@@ -196,6 +201,7 @@ enum {
+ 	Z_EROFS_COMPRESSION_LZ4	= 0,
+ 	Z_EROFS_COMPRESSION_MAX
+ };
++#define Z_EROFS_ALL_COMPR_ALGS		(1 << (Z_EROFS_COMPRESSION_MAX - 1))
+ 
+ /* 14 bytes (+ length field = 16 bytes) */
+ struct z_erofs_lz4_cfgs {
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 1de60992c3dd..46b977f348eb 100644
+index 46b977f348eb..f3fa895d809f 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -441,7 +441,8 @@ int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
- int erofs_try_to_free_cached_page(struct address_space *mapping,
- 				  struct page *page);
- int z_erofs_load_lz4_config(struct super_block *sb,
--			    struct erofs_super_block *dsb);
-+			    struct erofs_super_block *dsb,
-+			    struct z_erofs_lz4_cfgs *lz4, int len);
- #else
- static inline void erofs_shrinker_register(struct super_block *sb) {}
- static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-@@ -450,9 +451,10 @@ static inline void erofs_exit_shrinker(void) {}
- static inline int z_erofs_init_zip_subsystem(void) { return 0; }
- static inline void z_erofs_exit_zip_subsystem(void) {}
- static inline int z_erofs_load_lz4_config(struct super_block *sb,
--				struct erofs_super_block *dsb)
-+				  struct erofs_super_block *dsb,
-+				  struct z_erofs_lz4_cfgs *lz4, int len)
+@@ -75,6 +75,7 @@ struct erofs_sb_info {
+ 	struct xarray managed_pslots;
+ 
+ 	unsigned int shrinker_run_no;
++	u16 available_compr_algs;
+ 
+ 	/* pseudo inode to manage cached pages */
+ 	struct inode *managed_cache;
+@@ -90,6 +91,7 @@ struct erofs_sb_info {
+ 	/* inode slot unit size in bit shift */
+ 	unsigned char islotbits;
+ 
++	u32 sb_size;			/* total superblock size */
+ 	u32 build_time_nsec;
+ 	u64 build_time;
+ 
+@@ -233,6 +235,7 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
+ }
+ 
+ EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
++EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ 
+ /* atomic flag definitions */
+@@ -454,7 +457,7 @@ static inline int z_erofs_load_lz4_config(struct super_block *sb,
+ 				  struct erofs_super_block *dsb,
+ 				  struct z_erofs_lz4_cfgs *lz4, int len)
  {
--	if (dsb->lz4_max_distance) {
-+	if (lz4 || dsb->lz4_max_distance) {
+-	if (lz4 || dsb->lz4_max_distance) {
++	if (lz4 || dsb->u1.lz4_max_distance) {
  		erofs_err(sb, "lz4 algorithm isn't enabled");
  		return -EINVAL;
  	}
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3212e4f73f85..1ca8da3f2125 100644
+index 1ca8da3f2125..628c751634fe 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -189,7 +189,7 @@ static int erofs_read_superblock(struct super_block *sb)
+@@ -122,6 +122,138 @@ static bool check_layout_compatibility(struct super_block *sb,
+ 	return true;
+ }
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++/* read variable-sized metadata, offset will be aligned by 4-byte */
++static void *erofs_read_metadata(struct super_block *sb, struct page **pagep,
++				 erofs_off_t *offset, int *lengthp)
++{
++	struct page *page = *pagep;
++	u8 *buffer, *ptr;
++	int len, i, cnt;
++	erofs_blk_t blk;
++
++	*offset = round_up(*offset, 4);
++	blk = erofs_blknr(*offset);
++
++	if (!page || page->index != blk) {
++		if (page) {
++			unlock_page(page);
++			put_page(page);
++		}
++		page = erofs_get_meta_page(sb, blk);
++		if (IS_ERR(page))
++			goto err_nullpage;
++	}
++
++	ptr = kmap(page);
++	len = le16_to_cpu(*(__le16 *)&ptr[erofs_blkoff(*offset)]);
++	if (!len)
++		len = U16_MAX + 1;
++	buffer = kmalloc(len, GFP_KERNEL);
++	if (!buffer) {
++		buffer = ERR_PTR(-ENOMEM);
++		goto out;
++	}
++	*offset += sizeof(__le16);
++	*lengthp = len;
++
++	for (i = 0; i < len; i += cnt) {
++		cnt = min(EROFS_BLKSIZ - (int)erofs_blkoff(*offset), len - i);
++		blk = erofs_blknr(*offset);
++
++		if (!page || page->index != blk) {
++			if (page) {
++				kunmap(page);
++				unlock_page(page);
++				put_page(page);
++			}
++			page = erofs_get_meta_page(sb, blk);
++			if (IS_ERR(page)) {
++				kfree(buffer);
++				goto err_nullpage;
++			}
++			ptr = kmap(page);
++		}
++		memcpy(buffer + i, ptr + erofs_blkoff(*offset), cnt);
++		*offset += cnt;
++	}
++out:
++	kunmap(page);
++	*pagep = page;
++	return buffer;
++err_nullpage:
++	*pagep = NULL;
++	return page;
++}
++
++static int erofs_load_compr_cfgs(struct super_block *sb,
++				 struct erofs_super_block *dsb)
++{
++	struct erofs_sb_info *sbi;
++	struct page *page;
++	unsigned int algs, alg;
++	erofs_off_t offset;
++	int size, ret;
++
++	sbi = EROFS_SB(sb);
++	sbi->available_compr_algs = le16_to_cpu(dsb->u1.available_compr_algs);
++
++	if (sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS) {
++		erofs_err(sb,
++"try to load compressed image with unsupported algorithms %x",
++			  sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS);
++		return -EINVAL;
++	}
++
++	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
++	page = NULL;
++	alg = 0;
++	ret = 0;
++
++	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
++		void *data;
++
++		if (!(algs & 1))
++			continue;
++
++		data = erofs_read_metadata(sb, &page, &offset, &size);
++		if (IS_ERR(data)) {
++			ret = PTR_ERR(data);
++			goto err;
++		}
++
++		switch (alg) {
++		case Z_EROFS_COMPRESSION_LZ4:
++			ret = z_erofs_load_lz4_config(sb, dsb, data, size);
++			break;
++		default:
++			DBG_BUGON(1);
++			ret = -EFAULT;
++		}
++		kfree(data);
++		if (ret)
++			goto err;
++	}
++err:
++	if (page) {
++		unlock_page(page);
++		put_page(page);
++	}
++	return ret;
++}
++#else
++static int erofs_load_compr_cfgs(struct super_block *sb,
++				 struct erofs_super_block *dsb)
++{
++	if (dsb->u1.available_compr_algs) {
++		erofs_err(sb,
++"try to load compressed image when compression is disabled");
++		return -EINVAL;
++	}
++	return 0;
++}
++#endif
++
+ static int erofs_read_superblock(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+@@ -166,6 +298,12 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	if (!check_layout_compatibility(sb, dsb))
+ 		goto out;
+ 
++	sbi->sb_size = 128 + dsb->sb_extslots * 16;
++	if (sbi->sb_size > EROFS_BLKSIZ) {
++		erofs_err(sb, "invalid sb_extslots %u (more than a fs block)",
++			  sbi->sb_size);
++		goto out;
++	}
+ 	sbi->blocks = le32_to_cpu(dsb->blocks);
+ 	sbi->meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
+ #ifdef CONFIG_EROFS_FS_XATTR
+@@ -189,7 +327,10 @@ static int erofs_read_superblock(struct super_block *sb)
  	}
  
  	/* parse on-disk compression configurations */
--	ret = z_erofs_load_lz4_config(sb, dsb);
-+	ret = z_erofs_load_lz4_config(sb, dsb, NULL, 0);
+-	ret = z_erofs_load_lz4_config(sb, dsb, NULL, 0);
++	if (erofs_sb_has_compr_cfgs(sbi))
++		ret = erofs_load_compr_cfgs(sb, dsb);
++	else
++		ret = z_erofs_load_lz4_config(sb, dsb, NULL, 0);
  out:
  	kunmap(page);
  	put_page(page);
