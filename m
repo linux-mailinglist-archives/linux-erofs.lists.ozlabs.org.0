@@ -2,96 +2,98 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E729F34DD18
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:39:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D462D34DD19
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:39:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F8Vvs6R5Dz301N
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:39:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F8Vvx5wgrz3029
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:39:57 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1617064793;
-	bh=iuJBVPpQ5ElO59vCLfLHjpWmk89MW1gH4S5F1FEmjs4=;
+	s=201707; t=1617064797;
+	bh=3R1xhPrnPHD3kS4ZMACrkPZh2W/KwmHNvT4VFLspK4k=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=jWz/eFZDcrvFtBGbyc5Sv/XKFrEmxCcfihTLUCGz9uFMp6Lnbkmlr/OaKjS66PUqW
-	 tmHYcDXWKomBg0Dd55doYskCi8GGAPnn04mtZFtdJrbkDbCTxbO8tO6GQ1p4J1vUWX
-	 OvzujFrYtaLI9rMZqgqKIeGkIxBFFjVhDJC78ZuzKe7koP5EMPb9xfkegq9+qNoDP9
-	 k0VSh8xfdOWpe2MLevP2nzPrMCCuTUXJq26lCqMaRzCWcDPYm7/Z5a8rdroP28rzRm
-	 K2rJ7bA1iyMbmbPB59wPXJnWbO4T4ZpSFasKDEVZOwx0wP+01x8xY14oSQGCzfyCQ1
-	 Yh61Q69JC0S7w==
+	b=OtqRXkYRFquyTyMYDqfbGpHLPpNscBr9mf8FCss1iA6qzbuRK3RfpLFjk79BPQsII
+	 DZlmhgpmtuM5zOpcd4a5372ohRnWa61x4wBhbL5HgRw9hbbB0nihgDybfCmXCO4MQi
+	 MJ7zbj2agBZTUQSyqTmPJfawRi3hhMHEIoFDRtrVLYuvCsltUWZuM0qyZxebxc7i/j
+	 m/qyAh2WY+vFa69fiKx6Sm23UIzqAnKIzw6vlrfw9ZQDBi8a9w8nNt4hrTan27rYwt
+	 Fntq0u5xalAl95wufKRzdKYCrwjeTbm1lI9yqimwuDgiRvBvYTy1CTbTqJ2ZevUUos
+	 q34ElIgPuCsOw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.206; helo=sonic304-25.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.69.148; helo=sonic310-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=l1fCi3Wa; dkim-atps=neutral
-Received: from sonic304-25.consmr.mail.gq1.yahoo.com
- (sonic304-25.consmr.mail.gq1.yahoo.com [98.137.68.206])
+ header.s=a2048 header.b=gYrX5c6u; dkim-atps=neutral
+Received: from sonic310-22.consmr.mail.gq1.yahoo.com
+ (sonic310-22.consmr.mail.gq1.yahoo.com [98.137.69.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F8Vvq10jgz2yRK
- for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:39:50 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F8Vvv30Xlz2ydG
+ for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:39:55 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1617064788; bh=ubXOObk6gZyRygVpgbqBCjf/A8tD5zaVHvEMzLvLETE=;
+ t=1617064792; bh=3OcgE8oVPPcEIrAeH2TCS/x5nFNlkKcs4inGHunbW6Y=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=EDh7USgHR4J+PdVzrwawSVtMC38ihycUXEx/Cxngy8RLFzOeGxcx1xw4kBpFqkAgHktovB7+hOBdxG9hp1R8STJtz3HztB/8OOytnouXv+EF74vjecZ2/CI5LX8QBI7EFX207AYAqNsBb1SrPWp9teYqDZ6yWF/yuGzrTYm78j6nt4Z91lxi3zevfdGwKNf/5IeU766MBB5yNS1PV5qEsUFqkzWAn2RTjICEGXqkfkjsjbr+2bxHiEaV/dnPI4sCkjFZ0fUt5c6jIoHhR9RdxePxGTH5QnrTaMSBAhg73ew2xMqhPxKTse78g5wBCQD2f4wMSNppodxsxMnpkaJYjw==
-X-YMail-OSG: csn7918VM1lJXOSklyWkUnDb74qUTbvYM_haal5JMdrQIjdbGGRL4CRT4lhFJFm
- HYPPOdFw3AUkTzhixti2N8Gfmbe5b6Cr7WxmTR6zdNYIqlUhEn.pS50Gtl_ue_fFIFcfprR449jx
- s32lE2KkxXK.rQHOCCqjTCOPmTjm2mdNYIJx.gg1RFQhZHGx3Nla9UqO5EjaNhp2nSnJw85eQ0SQ
- zNIxg3xUCuxJ7Y5jwid9MDXSmax7fifRCMvcGBPUpLEhxUKjx64fYoS..7l5XFo6dFJ.KGiTgIS2
- O0P0tHPX92s0KtDsQo7rhqctD7M6Hi8SZQuMwNaR90s17KgqaElg44gIzak1J8CXcfne7p3rDmbK
- g.k_1Wdmw.gFXYtUAcg8fh.muXSW0hPtaDgefrwlC8i6bFh1wAnE9hG15eDUzCd2JV2.XrTtmOOs
- zyF.pfyapbj2hw2zaVEoZ_4cnd1kTphKo__5ainObBikcO0lz_zODUIa1VKpYU_9wlRf0IBnLYER
- pUULWIqQlnu0QJPU68dWPmUKJ99GC_KIxZ4VjpSQFRlb7x5lnG3KDLDf2_.9lGmGs8bepcuFn79e
- f9B0sNiAcaszGdyNkj4ZnNzKQHuME.GgTDCb.B8A1PqD9tA1FmDDs5NM0JnP4zRM_9jEz7yqnGpO
- Y2AnrqQhQu5ToLxWlQgCw4dmJpvSNSnwudRzpdgo.rcwyeE.wtTCf1TvrKgnmSSL9iyOnXuYv1cd
- SUpuDgDRlThZh.64HTrksRyHeQZnpjXpNxDVnS5IyiibafUVkawvkEIL98vrQyRqe9ij3GF5tSSd
- zWd7FpPB.1CCuvL9AZAYFphQEB7DtcbbjuejmrRXQ0FhY0GbYugc_Ib2VYwQZGxcNilr7QVQbUNS
- XZH3p5e6RjVCk9vkitHH.PD7T72DQFsFf2.LI1BGhza98vwJxs4Tjr692DlJV5LuEqnWpGfkn_1R
- G0PXHvbLtFjBgL8Yz66HQw_EVr7EbjUKsyD2jisc0xvHkVLemQ2QjccJfnE9H75KjuYv7IIgl5vG
- a.m9OYv9tPw.epFi5GldZcf5ch2v0_0Tfq0nmHkvJGawc5SuvlEUiCCia5E5JXjncbKRMi_5N77C
- KGwH2qHyMnKcqym417bqqIkZfhKE37Cs1hTToM9hwRX06u_OU2PDaKWebMxt5eUOAsmexXtt.yFd
- j0TbfhXnUv_4uaSxuypTIbwBlGW.hcyTv8vyWul94eke578NVu6TVXK8pFOeSa7jyd2luzzIWlip
- axSz62I3HSURgR0L8kZkDjdl7gMk8yQ3.ZwUJpLzb7CvjFW5HNpDacrlMYdO1ISaQKDI0vIsRhJI
- BPMyD6l5paWgGKzXoChWXydiGxSNG3ULv9LHVnFFyet.lNUs6.X3xJCrCGB6sZjpLJRxU84RJPPo
- G44Iy4GQY5ptv4yufdxGRRj6uXm1f4YkktI.7EPgSpxFz6aIVsr2Rgv_ln8JdvWFfqDf8mbv6Ttw
- P68JzXZDMlBNq6ykXNFd6dHs0l4zqUGDd7Ud46v3.3XepqgUqvTLDBuEco2TrPDlNTjachMktRhk
- RifM9UCB2i191JM5.uLeAcFmIwuIjeWSZCxvWAJYywLdQughXUz5MWZ3Xfep4M_QjLp2nCMpQmf2
- fYbp1qOOuqQR_uxRCzs5O.H7bBMIF5m00jmKUliPrD2rFIMyN34YqG3zRJokwUbO5tSrHL2hZQJB
- x3AvDThI3p4Y24KnLYBwoOtIwYHuHENZb4wedSnWFYV60irCwDXAKl2f.N88r1TzxBrUl1mUzLKO
- 3mX2Q1ZXg6UoHISCWzIUrOwJ13l9PEDOz0.LIH6O3_c7IZ221GI8_AZrYRfi_zzkhqFV3mxfld_K
- VYgb8jNCDWjipuNvUwOQR4nWUWx7oj__OR8V8lkYIhsU_zSlYDSW8rTndDjTjdqZUuZG73Xuegrs
- aIx94Dz9PSpoE_3UlLs9w_F2JQ.hygyRJ7cti9p0Wys7JEF8MndZwnfsXQgu9teWx1Axw6P3.Cv4
- VfHP9s4jdnDn0v3ozOU3qVbb4wEisSPd1fuqe_qp4VC48vo2O5UuXZrxmwLPWqIZKYsgYU9SOyA8
- pRrxenSYjfddY1wWFgmQqhpOEltS7uth6zd2HyPwFtjKW_2VpEMGcqdpyYGeomv884bOqzi.prET
- R.8UBBTwfsXhjHfh.7EixlBpBMpNEkveeHBIBWmY3JIOUxYkKypQldj62IurSlUwMwEiOtQJmUli
- i._b4xCSBbJJpGSHf.xQI8xmXmolKiZhsPC1W7L5EIFxta9UnCttpfKc81lCoR3tTsU58Ctmmrk3
- wTWGF.1UtBYnzT0eFIMu9kISrQaFl5gvqTtI0.deEmCUPVjc0wS4UpKdCTYSDtXIsmi9qdqBmdtg
- .wvIC9QLBqa4JrChEP8XrbbmVfD2nJOpAW3a0d5GgsI9L._lkC206ge5pyMxdEqTdSJmjS1hCfyz
- psixd5nG0P9eHZMgUBA4GMIActyyQ.xxpUwzSvS4rl2u6kRntUWWfu2izeSLd.k7b39CqJ9UMoSK
- TxZ5GO4nil5wdUirIt16ROGJBrK9jMfLKD5ja9VRC0fjqca8.ReiZITiU9J2mtE2dOJ.quHhFSnG
- kMuyeKUhMXKPPhM3bQyrAknwVGfYf8Y39Npze_9Nh9rnBzL6ehcGzobB5CeaQoXq4GWbDSf25Tub
- IL3h8NyQci8jG3hGoM7EW5j8oBepicWT7azP0i0wTegIYIEVqDAfOk8xO.FajnPouS93Rag.XoEU
- OFqIQSFOoogNSEKmbxXaBJ41p1L826j_dES8VKlxnZ5uzhsGnQaFAHWw5wpy71TI5x53whygIOf9
- U138OVAqe5BwbHdRNrLguNOyYfU8Q0ez6u_jJ5J0Ww5F1_16xavf33.fB34vCsW2oDX47c1WDq3K
- 1T1JVBDAl.72dLs.wCTMSSxcwa.lFZZvpqynJEiM6aO9sbXw1zPXXLQh_2QcXeS0nR7Zn0o3e9Y7
- OV9Ts1x3zL810DrXvd71Ch0fR7vzkNZkGkvK1L56WImw0PPUT1HGQ6qHeKVS96JenpWR_XchbBVP
- bruZANmkYcY5b8q23pzI1jQ3if6s4X6TnuDBpyeS1BrJgvz10eWI1aUKSVwTnSl1UbstfVo9wE55
- hmyPJv5pikd7qTBPHve5Gg0mqk0BVDRr306RswqboRgi0XX2QrxKLvkM.mDhZx9I_rbn363Y-
+ b=NOCQjPCxEtfEpCY1l2oqsJ0ET2R6GI5LH01KLmkuwVznKkcI/P1Rd3r6+FQawWk/EuwvpzaR49PsUih4Ph0dJulVEDUlE66KyJfCXwqx1GrscCkAKIhJcm9BnA7QPvUrTgbWgX+007RD8YHNPYFpyAvMC/7mvDUSz795nna+0tp5Tkmjjizompila5KAwAZLXkPh9/5RB5p6P0R7fPs/59xJobvb/KWDp/zzaNCF2zXv0H29EBcqm1+3EK4+jOzKIIe87ZjpHF/CXyQfpGSeihJ35p3VDRcqMiJPDka6Mpd+64lLhx+/lOicDJo0bh7JNOrz/JSCBT5wx/kQVD6R6Q==
+X-YMail-OSG: BX1DYJgVM1nG7w_RURHCxJyrq9pk40t4u220yTIjbFYcBChVfVv.rfstCix_NfR
+ g5kCiacpJR9isY76x_VVZF33xPk2OXDz4oqL2dGvybgdJJPKz4nJ9WFgUUfks.DFsw2q7aX9A3YW
+ kxucS6m4pYPkkhvh_345VWpoIbIoaAUwRtgBEU3lSPkRQ3D_suYAI5NYoUcbJ.vY4E4QytoRPb58
+ MIO6wPtnDHZElt3WUfoxyv2S.hogG_VhUi.2ZFyzFDmhl1jhSh7tqZcloaIkeeYQPqmQGagqD05T
+ F51m7GYzB1C.6qWBiTp3uKdw1BT33pGotGU4fJeVhZub9CWkfslRdfCY22pQUrU6wLKMU2TAhGHL
+ J8zNVi9ezOthRdYzkOEVBsa2pRlT.ljN4pA8eH6U8SigqbW1oBYfjaEMJkZkaupEIKiqOJw3cGzq
+ BdcouxxBme6TSH_QeJgGTIujROISTVfhXr2roBwZXuW.RXlnPJWCTD5wRNPUBKV_G.OzDAbeix1c
+ nGNzo6pbwSF7xbJWjThQdt9wYL0.lAhEXq2fWit4pNt0ehAtoLj89GY7xVK1o.e5utX4MFGxMrms
+ 1rWUQkNdhGlMKXULslNTGtQxO0CPL5TFgi5mGt.tnQRXRfBLiC5rjabYB9WKVpAqhWYir1i7izXx
+ BFqvkblXpicbXa06FzdhIhLfBakLvZ8i4pGLmC4k3_GGkFQL4Sane9a2lULa78OLvomtXC3dsdlw
+ 1_jvS9apRRYRZ2DpproVk1quTRXYfRgX8I3X8cw4EhxWGIJEevT.yYDHMla8XpNI7lK0kJEzwwZX
+ vamJ4L.Jhv9GoFJ2IzNXOtv06D2BxszXlfhsYBkiqW6yaniVDNY7q77GSlN5MGQQ6kxWdsJREeW3
+ 08N_2lLxLn_CDfnM2dxr8_yrweVItUeDiQ8TBJNeStIlomQ9p4j8LKfh.Chih6_1VM0DQOnbqUJb
+ lVgmaGKDA8T4qqT8rwgRLcxfxrPy_DGOObMZZOkvFAVOk2OE8V5ciIOsjE6zs1Q_ETtiTMfWMuZg
+ Ssglq0RNv0z5lrkjJ2dZ1nDYi7bxdgcvVhupN82o.f5XvTIJOuneAdFncVa1Izo16yd53ggrxhxj
+ tzmzTniATiGi3h2M9HSKjcyjMxIW25_EaJb_vaMm15uy.NbFqr6TR6U27p8X92gc8VM76WP7Rw6h
+ 1hSJGZ8brRhPBlU8_wJHGp2dz580GlOkXzhbYgMJilxsgj9Ff8hRLbh0ha.6243ToEevvqP5w5ju
+ CdcVkbHeGixUb2hadaSt.dSOa8snmWVyT.f2YwlQnHWXoULvCUqI7wk1RH8RnxY3vwYFPhfYM5xo
+ OGhK8JpfojV0xm5_8tm.mLKyvwskteaKQs.fKregAzHkW.O_RcGPBPKSRnfoIunmUKxlbryiScVb
+ sigHYRudpBke66CyYX8veXIu5Ldfi1Nig76FPxcFoWLnUSXl5KGwzRkPtkVUHJ6XrVS6b2bXNTUS
+ AbH3NBKuTH.fp.HTEU6onHXl_0peQuI7WvKYPNV5HAM9efJYMaUgDprPCYYAUGIqZd1NcAynf1uM
+ ej_7BKnYhA7fb7Qtqtr7zD4F8_ZyO_bdsuJNAgCvr2hhIi4Ii4wycut4sIvZH9p2m6ly1V_kSDtr
+ DD5AHLb4Fc3p97OCeacLCMmP6sEZnvZkGTFV3JxPVOlaH2dIwTXkFJ7_XkC2DN9g.mryj_pHVyNd
+ RnoitxLj4wYPrJGA9r7.JYjeRzqkeJ5pS_xQ4iK6_o7ZAVxK4g7IdloxG5w0Wsphd6hvSMveBPxD
+ .Kw.pxIspmpOt_QwXT10DoQo4p3DgthHiltp7lBQ9dhpFiuIXur2TbSZbg04Kj9q1Mi5pESnN0eo
+ .JkpFQFXNVwDl24414PI1tZ39UsFpBa3WJEi9HXeRDkghIYi3QorBrZrUWOUzHhR_5P8qKuWMuOt
+ hg7S50vER4NpbrSRn25kRZTh.PAnvLiDRUygk3KK._LSaJvH4DrBi2x2oHG5iueIymgh601o1_AK
+ Zhn7kQdI3lWZauCxtcMO44qbZjupAzmITlKy5z65I1TEgnEte69AX1rwjiLeK3X3pwDb2K62_e6h
+ YyUzkSWpgVwQa5ZQEqj.TL6MRUPyocDf4w88_y7IvtwsHbSwhqhTjRQv2YrvbUz0h.WanQtcKzjq
+ rtP0l_Rlm_KxR9RubT_8QM75QXXpzpuZhC3gZK3JIhOpddlKtj6l_3K4FHAyferCUYao3nckJRxy
+ hSGxiFXqOpcdwoFXP0GohYlNP2qVF4oqs6SFjrdN8w7Qi9mRaCQ_3NhGEzQU3rD7fWOG.KBwxgxs
+ vZGFSgkL2dx6uYQou8X7Rn_T64vGpCgJcUjSONCQsUbqmHyNf08EsVrd2iC8mLWrTh9R_gpd6GOa
+ Gmlku.OQY26vcyYjd7kRUvQG3gqZX__O.I.FtIcPa.DKASiMFdxRFV4WyCQW6uxki1qazVxB27Gm
+ UCgUcpXdL0baFC3bnmbTUcARphMckMVsy4S3MakqdLsYrzM7p7w8w0GS3kYcloCL_91o.4sizxP7
+ B8L0VaOod_wK0Lby56a1sv7uI2RflntM1JWXisEIpGi9NmHREMfqNWOyCe_F6N3F8BG_H.g5w6Pq
+ QYmEhiJF987RCb5pI53GuWUKtuDWlraLr3ihZA7loWZtMWi_UUVJmY5qMUb4b7sKl9dUAhoeJyrF
+ rZEWAsO2oDk1wAOwdBHgDiXfd9i6tE0D9C8BEjQLjNL7rpxTapTdy7H1v5jeGNQAR5vAsYGd0iKq
+ GmrPopFsJKmkVu_SDm5kWmZnVO3b3x_ustkwxOQVThG0ziQ9vyI46PHfWrjA3chSvu99vW1ITEW5
+ dZrWAFnB0L5cUaSrBw80v9iifG5M_dQAl._GtPGGcNCONvBQK9ZSNswMoo7nn5AnLFQ5RNoU4Mlm
+ ASAzLM9d5cHiumf8haGJOgYdpnuRHslr7y_mV3NwEaJO_wOIIpSYwJeVW825sfcv.HdmxWUsEXuI
+ gJl43QVwW3ja4qwuWqmeXNvHxd0TwJ2k6qdU0cFankb41DBj4JHfF_HFmxdZwvzNQYLAt3SOYGxP
+ 9oXuo9FtJhJ74a.qB3tkXVJgikIB6nKujaZp_UTv8CgZwl08GjN_c2fJ9Qss_4JRiiB.rVEolOhr
+ lUon0iZ3f4O.n9tOKpW228oN.tdZoJ_L3Pb00mAT6RuqHzqgx0ReyzMeSmXGnCLabrINCBMP4AFz
+ 5XXX6DI7HMVRarzwKF_Y-
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic304.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:39:48 +0000
+ sonic310.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:39:52 +0000
 Received: by kubenode579.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
  Server) with ESMTPA ID 27cc0a93ae52fff3a17931d8aba7bccb; 
- Tue, 30 Mar 2021 00:39:43 +0000 (UTC)
+ Tue, 30 Mar 2021 00:39:48 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH 05/10] erofs: add big physical cluster definition
-Date: Tue, 30 Mar 2021 08:39:03 +0800
-Message-Id: <20210330003908.22842-6-hsiangkao@aol.com>
+Subject: [PATCH 06/10] erofs: adjust per-CPU buffers according to
+ max_pclusterblks
+Date: Tue, 30 Mar 2021 08:39:04 +0800
+Message-Id: <20210330003908.22842-7-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330003908.22842-1-hsiangkao@aol.com>
 References: <20210330003908.22842-1-hsiangkao@aol.com>
@@ -119,87 +121,69 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Big pcluster indicates the size of compressed data for each physical
-pcluster is no longer fixed as block size, but could be more than 1
-block (more accurately, 1 logical pcluster)
-
-When big pcluster feature is enabled for head0/1, delta0 of the 1st
-non-head lcluster index will keep block count of this pcluster in
-lcluster size instead of 1. Or, the compressed size of pcluster
-should be 1 lcluster if pcluster has no non-head lcluster index.
-
-Also note that BIG_PCLUSTER feature reuses COMPR_CFGS feature since
-it depends on COMPR_CFGS and will be released together.
+Adjust per-CPU buffers on demand since big pcluster definition is
+available. Also, bail out unsupported pcluster size according to
+Z_EROFS_PCLUSTER_MAX_SIZE.
 
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/erofs_fs.h | 19 +++++++++++++++----
- fs/erofs/internal.h |  1 +
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ fs/erofs/decompressor.c | 16 ++++++++++++----
+ fs/erofs/internal.h     |  2 ++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 76777673eb63..ecc3a0ea0bc4 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -19,6 +19,7 @@
-  */
- #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
- #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
-+#define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
- #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index fb4838c0f0df..5d9f9dbd3681 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -32,6 +32,7 @@ int z_erofs_load_lz4_config(struct super_block *sb,
+ 			    struct erofs_super_block *dsb,
+ 			    struct z_erofs_lz4_cfgs *lz4, int size)
+ {
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	u16 distance;
  
- #define EROFS_SB_EXTSLOT_SIZE	16
-@@ -214,17 +215,20 @@ enum {
- /* 14 bytes (+ length field = 16 bytes) */
- struct z_erofs_lz4_cfgs {
- 	__le16 max_distance;
--	u8 reserved[12];
-+	__le16 max_pclusterblks;
-+	u8 reserved[10];
- } __packed;
- 
- /*
-  * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-  *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
-  *                                  (4B) + 2B + (4B) if compacted 2B is on.
-+ * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
-+ * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-  */
--#define Z_EROFS_ADVISE_COMPACTED_2B_BIT         0
--
--#define Z_EROFS_ADVISE_COMPACTED_2B     (1 << Z_EROFS_ADVISE_COMPACTED_2B_BIT)
-+#define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
-+#define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
-+#define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
- 
- struct z_erofs_map_header {
- 	__le32	h_reserved1;
-@@ -279,6 +283,13 @@ enum {
- #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
- #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
- 
-+/*
-+ * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
-+ * compressed block count of a compressed extent (in logical clusters, aka.
-+ * block count of a pcluster).
-+ */
-+#define Z_EROFS_VLE_DI_D0_CBLKCNT		(1 << 11)
+ 	if (lz4) {
+@@ -40,16 +41,23 @@ int z_erofs_load_lz4_config(struct super_block *sb,
+ 			return -EINVAL;
+ 		}
+ 		distance = le16_to_cpu(lz4->max_distance);
 +
- struct z_erofs_vle_decompressed_index {
- 	__le16 di_advise;
- 	/* where to decompress in the head cluster */
++		sbi->lz4.max_pclusterblks = le16_to_cpu(lz4->max_pclusterblks);
++		if (sbi->lz4.max_pclusterblks >
++		    Z_EROFS_PCLUSTER_MAX_SIZE / EROFS_BLKSIZ) {
++			erofs_err(sb, "too large lz4 pcluster blocks %u",
++				  sbi->lz4.max_pclusterblks);
++			return -EINVAL;
++		}
+ 	} else {
+ 		distance = le16_to_cpu(dsb->u1.lz4_max_distance);
++		sbi->lz4.max_pclusterblks = 1;
+ 	}
+ 
+-	EROFS_SB(sb)->lz4.max_distance_pages = distance ?
++	sbi->lz4.max_distance_pages = distance ?
+ 					DIV_ROUND_UP(distance, PAGE_SIZE) + 1 :
+ 					LZ4_MAX_DISTANCE_PAGES;
+-
+-	/* TODO: use max pclusterblks after bigpcluster is enabled */
+-	return erofs_pcpubuf_growsize(1);
++	return erofs_pcpubuf_growsize(sbi->lz4.max_pclusterblks);
+ }
+ 
+ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 06c294929069..c4b3938a7e56 100644
+index c4b3938a7e56..f1305af50f67 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -230,6 +230,7 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
+@@ -63,6 +63,8 @@ struct erofs_fs_context {
+ struct erofs_sb_lz4_info {
+ 	/* # of pages needed for EROFS lz4 rolling decompression */
+ 	u16 max_distance_pages;
++	/* maximum possible blocks for pclusters in the filesystem */
++	u16 max_pclusterblks;
+ };
  
- EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
- EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
-+EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- 
- /* atomic flag definitions */
+ struct erofs_sb_info {
 -- 
 2.20.1
 
