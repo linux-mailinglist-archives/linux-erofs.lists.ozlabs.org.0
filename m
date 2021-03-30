@@ -1,97 +1,98 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CEED34DD15
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:39:39 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16B2634DD16
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:39:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F8VvY1WPLz30BM
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:39:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F8Vvd0hn7z303J
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:39:41 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1617064777;
-	bh=66ULpPqRoXviiDRkPy0ik2xdEXssx0yJg3xrJXJm+Zc=;
+	s=201707; t=1617064781;
+	bh=5Qm0t4ZtUUmqyQI7zUHTrnaVLmUiKMMdOP4qIEazr0o=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=JtImkuUVdSf6Y+IFYArOgAeN9GnWXU+Y1EYMzgclbC1c4i3fYxEh7o+SawLJw1+VO
-	 9+X/y/ePxfP/3FR1oy+p2dPv3wp3WFMXwAaX6T4c7f9bxNe8DKJ24qYPa6mD2hFhbj
-	 YjEMvWdsZmgAyMrVcwUfzmv/MOjgJRwrqSD1fxkTeQeP6TzfGfcdG0qsZBas72Bjlg
-	 OGZjIiqH8zwXUJ5w6ObaMIP6X9UWON7onB1ny0n8CfGEGU3dCJFgPQqN6+sAtna5br
-	 ffeQHly8KLKYZfvk7QrCbaiDJZayBqxu7uPB+cmpi2wRxhEPBf9dAnd1Boqb9gDuD/
-	 vNOvq1Q4nbzJA==
+	b=KAitVHg7Vz21OloMc31Gxxu5DhLmdJLQiYr7ACU/k17Gi8oo/AyvZWFpCyKqlmbDU
+	 HrxblWblqq4QsJNIwVgYOo8L9wFQyxSGEwiUtPQtbJBpv265HZ/wrZLZvtigOVGoZB
+	 DA1+5o4tPTenLs1DNjBH0hSeDDFZEUv3JIRkNShmscMYBP8JXxoVv9OmhdwvGb9RKt
+	 voNOdbDkYK0b+I5RehZ/SmTwRL2wpHtL6I6yqCZfIMjh1m5RvtI9ZmmXABXocrF6+q
+	 /ZzUzfdX0Y7CPjZqEk5ktbC4HchOfxHUSpV6286HNMIF402a7U/oH+ZUoJbaZ+Zw9b
+	 azsSnOCjjVsqg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.69.31; helo=sonic316-55.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.148; helo=sonic309-22.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=HtR3vaWN; dkim-atps=neutral
-Received: from sonic316-55.consmr.mail.gq1.yahoo.com
- (sonic316-55.consmr.mail.gq1.yahoo.com [98.137.69.31])
+ header.s=a2048 header.b=Sv2Z89yQ; dkim-atps=neutral
+Received: from sonic309-22.consmr.mail.gq1.yahoo.com
+ (sonic309-22.consmr.mail.gq1.yahoo.com [98.137.65.148])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F8VvV1KShz302v
- for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:39:33 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F8VvZ4GFvz3000
+ for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:39:38 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1617064770; bh=QEylsRZEpQAkVKqmgHtILHgcP3E/UDb7RL28KlHT/Eg=;
+ t=1617064775; bh=+V3gJWXsrkVUTLEVJJBzJxrFbdKZ5EjoXl6GZSEoAoA=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=bwTxzXrZVfeu7NZpNvl4w7Ny0bks3tgdtvo7iUnideZxxIUTsGwGjcKlARrOzKl1/jG418SM5J4jCnyCXuUVqepdJWR3uLG7WITXThDxVJW2QtXWbrxW6tIYLKO1xEPpx/lYOXaoJRhfKOAJv9oRXU05bs70yGczwNy28+nwUL6qEKsc0LpDB8TrPo8KRgBZ5EiK/xmVHBy/MuGC8Hs/cO7OwRiSxdobcMnm31ao3ZBHOjmm8SnB+qJV1E8f99V/JVVL3ybyJ1ID9eh0UhDQm4jKUvgTG6KSHuV+2VCtbRbfOFluKD6W5/el6FuPo/Svd4l+Bea+d2cjV1BOYSdCCQ==
-X-YMail-OSG: 5nX0Ow8VM1m3b0e0kKzC_Dt_4Tf.udKEr3QkL1VXxs271DM60cUxrJhxEt02V0l
- bkItPbHUFdsOujSXc05NDfIiFxoAYjTLrfxUs6bFp6C5PA3RmsKtUmgdi7SSOZyndl5xT9tASC7o
- MXBs5zWlTi2ocT9Zcy4HdWAa9C4Xa6Ox9Y1Ogpecj745Z6_IXSakDb2C0M87jC3PUJQA11cA_ykk
- zkBg_tNzQJB1iNdvQCMQhSa7xv6Fm1dViynFxiBfei4u888TBT_0PnjHZyhwlCCLqPpLPeEcXQA_
- BFmofXEZmp.2oDwOApnnyMfP1Qpw7Xk3guI1OkQrX7IcoNw6q6QpE6dWK.xEUo3Pp7r.acFPJ8gc
- urtyuevLIqqcND9CieNLlL17Qdm96DaNiKiATbSUU7VsD2nOziVx.XzvLdXtKvgxOwb5WPUOpuIc
- SXWufTZbWJny9p_N7.V5.w9OLVZzp6te4c_axNiHXMsSdXOKLYLzf3j6cyvHtl0OakgKcE.K07eE
- 32mEl5v7ToX5orOjUs3ttM40KlIijVkJx_.aaZd4Oe7R_lHaAf7JfKC.hSIaPf9LGu_hfjjqY3Od
- Wy1_QNKMLyMB1.K0VBhj5MT9PWDwp3IN.hN2YxP4ELuMIUGpLe0bfJbKd.ifimbz5GtNVYTe1hOy
- X80xQZ5sOKyWcQ_XzwwdCdC5brhueicROiyK2vRAPPwjM1zXazRiaVldPxUrI3ePyG9.qcm3nVpp
- ZjSailKLQFD.ddFTcXKkxrjLH3ZpSUHP5GmQFp9hMk_w6Cec8IUdr4MtOm.4gs3WTFPvwdXv3tQX
- o7Y5xNhEPCwFfLFvdP.xOvF05xBdx7OGINQBCuXQX9dF6mG.nWRSQMu_DlImPMvArhdpfo8xjSU3
- MO5L50cbX1q20nnSu5ZRDlOeBwi5CaPuHDo1CQ_R5uN7BL4w67ODJGd7foJZ9R_vpYEn_2ssWYSF
- LzQlhEEcX5W.5vfNeIwd9cXkIffx5CbZ42ayqryfsV3rLnJOMqa38W_dG8JBogzvooV7rBmkF0ek
- tgwNlBG5tCZuf3X0SnuAbRn4cfaW.KjwCcX.zJ8xQGIs_SzBEY5S.iBZ2JbAl9LhFMojFkH_S42B
- J7o0vz3RmxKABEKW1A8Oy9GQfdFDPbs2_NVdgmg_sClBF74pHQwd2f0F2wRg3JSWpGlX_wfMeVLK
- My7FEL8gc7PeWfOCjUt6WAT61oMEmGhantJJ624WEJ57TeeD9NnpVS7l_r2KBoZaX4vEpyT_lwrt
- 4sv9W.jwYlHLhhYT5HILNKzil0tHjGdxI3zOLtdRakt4g5mNlO4qECQD_TRTr3FRJ9YdefL6.058
- y6nQklCBRZF0DjDVMrRK9.nlnBcYkmb37Ya5joZjcR18MlZUV9nXcYJezO8V1yfXIQxD6k1R98TU
- U4Ny4b3qAW10.nrBZjAkHXo91ITjeEDdqoUJfea2dqKNSutNFkPfrF8bB3eZaJ.QF4nMITbc.R7P
- hYuBzLLUggfdlXmdXIzLHtZ.slGLlEI_YhxCiZCqnGyb7x3N5LnktFVT5tWkvnFEmkaC1zCZcKg4
- AUc86YdRSsmWBnGNg9fnQpxa.5LXu5Adhh1JwpiDz6IBOY3PRfI1i.SygqP0fKx5TSbTB4bRdFi4
- hZHazib6xNlLV8y3xk1aEloKSm6xkWtw_u9DOmCOyLSCcd69SyV6c8Btsq2WNu9AijzYFN1UImiy
- ZkDhFtAQzwsv2tJ2iBh3EzZB8oR29iACN876cCKhPsaBMLWA0o.1o1lwtVptCf.fg7Xg6exhTOQa
- U0nkypPLnsryAG.adrWXfVOBuOI9s2eYlTPye8u5P3JvZxqvZU7tWylvyJ2fokEc4vBUa.xClaBz
- O2bR92_uxoN7wC7bmxSBUIIHlH7qgzoVAh37RdeM1096B6miqR.WDbFk8Qx8VV5SLJbytqFiQyjA
- S0FXwhooGkmZEuIJZc_C.Gifr1J.m0rwUifcTYAYNcnMWFz0mcLcf1bu.TNAxGE3EDqsGR3W6tWd
- l.HDGEK86Oy4_YBv..gmpqY4N_.LqOgsx4X1kS_31h98bqF1xtN7y8_PvADZyU6wUaQ_Tt2fUuEx
- LTPIkmtTQY1213x6Qn5BY2uvvYmCqg6DBJvoI301sApHS1F_5UBjUtXvN44d1D3jWh2zLszHybiQ
- 8R8uhZRVQjhMNj31vd4vWdorAW36sBpjReVoN2gIUv9aj_J_FlU6xzJ8wjcdg4VksfG17zP2EqVn
- Mhc1ljPVbLx8i9F9tFNdBIXwxP9VkpGlrfagoMBbmfqqPNYtTXsRIdOfpP6FbFACC.R50H9.Dp4r
- MfsyxM7DqfoFjvXsHBny0ovyIIfItU88OeTaK66C7tfxH5UurMTYQfvnHx0KMZzMtjwwMrwwGeFX
- 1EoHq1pGsTbNHEkZgAa94VmfypWZ6Xryvo0J6qZvO4dVTGiKU9Rzy3oa0R0AGi17c8_BnD5D0j6W
- 1iUEsBnqg8X5kqG29RaAtg6Ytg_ZoPB9cRUqnDdLNpizkUgL81bKrQ9aBRP4.4Hr1Whej7kUN95.
- I9cBZdOgjZeIN8OJJPr2r2T15vYxQMSbEFvwyl_2FcfrKec.8MuyY_LFMz1wAaPjSUnOxMFgHbSq
- OJcVk.jodd6ZakxY0kT1xWFxR4smZbeYOCj0OzALuXvvuCElXGYhMkGjAdxBR8WtlexnCnCydzrK
- 4ShdgftiDdJgu6311xAEB.uWx9Rjug1Z.M_ealqXIDdar9e.aW_2.0767aTEtT64VNgdhUBt1u6Y
- VD62qk5R2PuAx1Ef588_AxwauQccbTkkGJuPeAlXex2qS1b_c0oCF4OZLyqKjn8mx8uLQboiHI8v
- f9LR2_kzjHTbPLNJ1l2YzYaK61IkzdUS7rPxv6YwCvCPC6wTfl4vSnNVcFkhqTMzhvjgeX486Moq
- K_lfJRYWQTwuqjdo1_JZo0jXAqQXK11ijWjXzzK0vFPOguAZ3KKEiVhQd2MVsxA.8PCz3LzdH4.v
- x6feNAMvgKIweNCWGZMvUF88.RG6DlJzsShpqCFEQ6EOYIL2eJOIV03Ra5SkdRJNqE3UoZP1oGEF
- qQfmwG6KrQ98CjjEGAAmReEP1KygIunGDvC7Vl33bcZQk_5DgAIw_dU41R3gYgEPOxZ.6pqBaYoK
- ddav2TVOLDRCUjJdSrU8-
+ b=dews7Vhes5ZNRaCXxgmGkgtADciSfYqrPhyqd9NV8UYdu7fooYcRSncFeF+mrT0R7PVYttngDy/AC9+F1WD/zjISf4YRB2PCeGmMvGslIajNs9C0xn4z1byMYmhRh+6haVnno0ZxC/sk0EdA1esvhmdhxKtoMoPiv24GbrYN/imLx68jAEuFOkdB5F/+gjzjDvDpcrWMPAvKQhmhY/gJChViVc2n8lkIQDDcxmwyRoleNStZQSq+kJg35dG/Pw9xa82hGy3VQILvgS8ZiQ193TmiXR7omY975zxZ44QSh2iJSDyKMmwNXssh06R522dKrX9V7TnZjDoY8HfvX2ym1Q==
+X-YMail-OSG: d15pnz8VM1npTuXGC_RshJ9uv.Tt2e26T9tqHdaWDi3vGsDqyAQ_fR6Hc2XZu2z
+ aVloSVbUZ9UTFToKXr82k4MhD4y1Lt2pger1UKZ84PR9darZaCQ3vgh8Tradka6eTXHFf932vFO3
+ qRVrub2G.I9wPyRNzmSkPUKTNTjKFlILJW1sc0NJOYZ7z4y7lApdG00vnfubSX3kmjMX_vbsgb2g
+ qt6xScc2wUAKAHqJnrnQNwv0Iv8RFpdMfCeVvxdz7gZMIEqmfZffTBxwpUN.4lxe15rQf6JBwDOy
+ 7BB_OrzH55JyEJSTpjO8y07gy9weK1mFT.sqz_uapfhl_PveBwfYUD1NfGFxVqk1TK0m763zluf2
+ 0u4weFadTRj7.EnyUUotAG5rk_QB7GvDuJ.HdshFAtRwbnMoSWW_TWB6ioEbJTrNsFpEi_eyttfb
+ 6XhYU3_2qBLOXWy3764BngEcyzMcj4YcP0XEnU7EPnQlro6KaKpgtFu0C9xO4ZTCkA7zdm9WEpOq
+ FXVbMS9cV6XIEpQ_KmZYtZggJFp__aOn1DnttKjjSoO5wcjyLcWR0zaUw2p9vB4aUMMrT4Lfzj_2
+ 2tPSPl7OElhH.rPOZVe2PbbnheO4h7mdXP.YB0k1XmlvRE7ttPOdg5_xeGwx9Rwb_e3xPtfHYuFN
+ 30gWFS.l.zNo9kbO48HfX9mAC5skh0K4C32hZvbLjzku29nao0zS0bykuaef8kaHnPYN83kGwri0
+ u8LAbszukF0cJFdHe6opU2aPs8MRktpOv76er59E23ShkWT.5MyFtVtDQYG8UK4_jQoN6mLEheou
+ Ba3uCILbtlclHmBV_YEeLVUnga9okaysicitlffV9L83V6Ej_NnocIiWreAw0xojo6S.f0QToL7_
+ XPS8QK5oQrDAhmfOU3Q.IWewybolme.1oLOaYV4eIjiFhPnFbyTxhgjiR_iFd_ogRoFt_pP27FdT
+ e_LkoahwbpF_AuKeAPNRrFZ5iPyoWCeDYQ8XxyJKla.6ozkf7gvTbJ4ypGtP8C0iXx5EHhax1BhG
+ NsvDAOXCGzwXlSFVMOsdV7y1TkOzYZ4P7V1IIsdO09JVJLYBEnk6_KWiLV4lTfAwDRR2IGfjouu5
+ AAOCLbRqW2eCv0oExEw575uAQ84I5XqF2vS7wz19mAzL22TyBP1gFVuCyqyn1a3hhUErIVdPVbE2
+ wxgKa0c92qjWMr0iNsTDTi6u13XeXOiPWzYcqnDjB7DJj.eW5lVkIziqgY83t.ozwW9po4Zd8nKW
+ d.XvavNcKFLG.NNdjDBSAQDus.f76bGSMKXKsAaHhLhX_RnY.1QT8A7i7yF8j9C4LKbnZmcPDEgc
+ 8Xg8uWKH80.TtP7aaEUzQuSrpqDmskotNw0DGpXQo3xV.Jzh7Ac1U4Wrmq2M561Bww3Xp_B_TJyf
+ xEgGUcNROSHBxhE4NnoeykQZ8eO0Im1hFolilg8F7TOPMx4f7h1gXE886z1n0BSfKjdGVbQ0Mb1O
+ lwDOrYNNuU35.oRBVXPf_qjaw9YEF4y0yTbJEfvFZ4tpGOWSxXi1i7wXn57D0HvZYF6f4hfLbnxs
+ YRxEZusscUDHvIUYxaFIregbME6T6LDYx989NB1TZO5WYOek.eu5tUr3_9rNhVXitiAuI2raHhxa
+ FDDEQEH8c0gwLlCCxTqgw5V6vOaDZR_aXGeOcfmdo.kb6COQ9J9p4DIMW8IB9MJ6if4o9BDj4D6x
+ 682TchMtjYS5UKIU4WIpzF61ZNQEoNgelX6SO.ToQoIlEYPwgfw_HNfyejtoNU9EowJx6eRCP.3V
+ L.9phuUiLNNb8eWbpSYokqqoG8MxgGbHjF0Tf5t4lx0uUPvcraL7Hv8ZTb32P2rIEhsHDD6OkjSX
+ 1etSqSAZKtclORF4UR5Y81i6lWBkyzsITUv9_xU4Q1qi0leL7NRBUfyHWAWu8h1Fu2XQ93c.yzTb
+ Kx8jmpNz.Cc0BE.bStgNCkshhHMmUZeoDZd43YbkrDZljj9etJcr3zL63U.gFLLvmA4k0l6AdqRo
+ E0RDO5cSf9wSwZ5FiCg.kJPa7aJJR0lV6NpK1PK1PuuPKYnyT3CFCbLhjTSunxbXF.0naO65v5Zg
+ gNnPeDevvhGZQVjF5xAjFyHHA1OYzP304DlVrqYX96QErr3R1.eC0hWZeqnpCU94fMKQ7_cPkcIf
+ pCaSq1rro0HeIxoi4ydiEvJ8MrDHV58BjjmMyaz_lU23vcAdUvqgGDkVbZeRUPb5u2pSHJhV6n2e
+ 11xIgfMuNWCgYGQb91BpyXOiudkmo7mZ2Ff5sAhxP2QEutVKjwLnv0rBueBR6RVNobYP1XwlOiY_
+ BXEEXwRTbnq42r72BWTVp.3ldsIIg3ik_z6HG_xxWzMMKgErb3X803MEuVtm7qbU.E_AtUUKV0Kj
+ aeRixw.BO6k81XwPdDbN7D9oA_IyFf1SuTEgfLZHp5jFpyPe9sUwFIR5Oxni7zfKkZqJCEui1U7j
+ IaZqCKalnUgot5jzUeEKZg26mkTcTlupuNU6f7yJGf6a9stguW1T.Bw.TOoRKqh6SDAqqCkFD4EV
+ aZIByURZesi0vwb3DjNut60hV1tPuTu9tjhuF79qJn4Tg09wDK0t4xhT66CIjfwrFxYlUpX6g8CP
+ IrTmDzmuNiy1Qmo7un2RcOn1z.xmEwasTpOHoZnojpGzmGcZoaoDwHkzBFwcGvPyh6dNSqH75m8K
+ 0XxVE7xSFxBf_WrePIDJ8l4mdSH0EVb2fkhFgCPPyFWEo3qgZD9n0HE826eGkV9Nr42QRXB7dsx7
+ 5atrC5U2MReNN5QPLLmIc0i4YRKWj1lVM9I8BNRMLWbbLP7K9FrTAI1z_tjr86wKqEMsPY153jGS
+ Sfe_4GX0CBqegEgEccYboU2AkaS7BWwFAFxUCvbIo7aMtUuzWrEzuSKGu7ju89T3dSm_.rejRqrp
+ gjvADbI7iBjswYW4C6O.UjgcZ8CPJ8GO2jq_AQbakKqS_u.auI8vdlCeaM50JBNOQQQIm7V0ndJ2
+ gibIY6Ycz5swLsSrVaeu1Z2mdFebPWkdOF6JyxffwGyML2pyHOXSr0xQ.SmpEkNkyHSMLc2E1_yJ
+ 4TFkpPM12ZTTy2_s9ODtVPlDOowupVZgW8rzypqi2n5doAHsXG4rIiera3L2_sshMvJW0womUKak
+ P.TQX7HAKPvsYLN4buCBH4Xzb.hrgLB_brr11SLt_OKdHzcDe9j65UNWi409M26UjTdmmgHAPxfU
+ -
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic316.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:39:30 +0000
+ sonic309.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:39:35 +0000
 Received: by kubenode579.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
  Server) with ESMTPA ID 27cc0a93ae52fff3a17931d8aba7bccb; 
- Tue, 30 Mar 2021 00:39:27 +0000 (UTC)
+ Tue, 30 Mar 2021 00:39:31 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH 02/10] erofs: introduce multipage per-CPU buffers
-Date: Tue, 30 Mar 2021 08:39:00 +0800
-Message-Id: <20210330003908.22842-3-hsiangkao@aol.com>
+Subject: [PATCH 03/10] erofs: introduce physical cluster slab pools
+Date: Tue, 30 Mar 2021 08:39:01 +0800
+Message-Id: <20210330003908.22842-4-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330003908.22842-1-hsiangkao@aol.com>
 References: <20210330003908.22842-1-hsiangkao@aol.com>
@@ -119,292 +120,454 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-To deal the with the cases which inplace decompression is infeasible
-for some inplace I/O. Per-CPU buffers was introduced to get rid of page
-allocation latency and thrash for low-latency decompression algorithms
-such as lz4.
+Since multiple pcluster sizes could be used at once, the number of
+compressed pages will become a variable factor. It's necessary to
+introduce slab pools rather than a single slab cache now.
 
-For the big pcluster feature, introduce multipage per-CPU buffers to
-keep such inplace I/O pclusters temporarily as well but note that
-per-CPU pages are just consecutive virtually.
-
-When a new big pcluster fs is mounted, its max pclustersize will be
-read and per-CPU buffers can be growed if needed. Shrinking adjustable
-per-CPU buffers is more complex (because we don't know if such size
-is still be used), so currently just release them all when unloading.
+This limits the pclustersize to 1M (Z_EROFS_PCLUSTER_MAX_SIZE), and
+get rid of the obsolete EROFS_FS_CLUSTER_PAGE_LIMIT, which has no
+use now.
 
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/Makefile       |   2 +-
- fs/erofs/decompressor.c |   8 ++-
- fs/erofs/internal.h     |  24 ++------
- fs/erofs/pcpubuf.c      | 130 ++++++++++++++++++++++++++++++++++++++++
- fs/erofs/super.c        |   1 +
- fs/erofs/utils.c        |  12 ----
- 6 files changed, 143 insertions(+), 34 deletions(-)
- create mode 100644 fs/erofs/pcpubuf.c
+ fs/erofs/Kconfig    |  14 ----
+ fs/erofs/erofs_fs.h |   3 +
+ fs/erofs/internal.h |   3 -
+ fs/erofs/zdata.c    | 172 +++++++++++++++++++++++++++++---------------
+ fs/erofs/zdata.h    |  14 ++--
+ 5 files changed, 126 insertions(+), 80 deletions(-)
 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index af159539fc1b..1f9aced49070 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 74b0aaa7114c..858b3339f381 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -76,17 +76,3 @@ config EROFS_FS_ZIP
  
- obj-$(CONFIG_EROFS_FS) += erofs.o
--erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o utils.o pcpubuf.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 27aa6a99b371..fb4838c0f0df 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -47,7 +47,9 @@ int z_erofs_load_lz4_config(struct super_block *sb,
- 	EROFS_SB(sb)->lz4.max_distance_pages = distance ?
- 					DIV_ROUND_UP(distance, PAGE_SIZE) + 1 :
- 					LZ4_MAX_DISTANCE_PAGES;
--	return 0;
-+
-+	/* TODO: use max pclusterblks after bigpcluster is enabled */
-+	return erofs_pcpubuf_growsize(1);
+ 	  If you don't want to enable compression feature, say N.
+ 
+-config EROFS_FS_CLUSTER_PAGE_LIMIT
+-	int "EROFS Cluster Pages Hard Limit"
+-	depends on EROFS_FS_ZIP
+-	range 1 256
+-	default "1"
+-	help
+-	  Indicates maximum # of pages of a compressed
+-	  physical cluster.
+-
+-	  For example, if files in a image were compressed
+-	  into 8k-unit, hard limit should not be configured
+-	  less than 2. Otherwise, the image will be refused
+-	  to mount on this kernel.
+-
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 626b7d3e9ab7..76777673eb63 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -201,6 +201,9 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
+ 				 e->e_name_len + le16_to_cpu(e->e_value_size));
  }
  
- static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
-@@ -114,7 +116,7 @@ static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
- 	 * pages should be copied in order to avoid being overlapped.
- 	 */
- 	struct page **in = rq->in;
--	u8 *const tmp = erofs_get_pcpubuf(0);
-+	u8 *const tmp = erofs_get_pcpubuf(1);
- 	u8 *tmpp = tmp;
- 	unsigned int inlen = rq->inputsize - pageofs_in;
- 	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
-@@ -271,7 +273,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
- 	 * compressed data is preferred.
- 	 */
- 	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
--		dst = erofs_get_pcpubuf(0);
-+		dst = erofs_get_pcpubuf(1);
- 		if (IS_ERR(dst))
- 			return PTR_ERR(dst);
- 
++/* maximum supported size of a physical compression cluster */
++#define Z_EROFS_PCLUSTER_MAX_SIZE	(1024 * 1024)
++
+ /* available compression algorithm types (for h_algorithmtype) */
+ enum {
+ 	Z_EROFS_COMPRESSION_LZ4	= 0,
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 05b02f99324c..f707d28a46d9 100644
+index f707d28a46d9..06c294929069 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -197,9 +197,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- 
- /* hard limit of pages per compressed cluster */
- #define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
--#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
--#else
--#define EROFS_PCPUBUF_NR_PAGES          0
+@@ -194,9 +194,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
+ 	return v;
+ }
+ #endif	/* !CONFIG_SMP */
+-
+-/* hard limit of pages per compressed cluster */
+-#define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
  #endif	/* !CONFIG_EROFS_FS_ZIP */
  
  /* we strictly follow PAGE_SIZE and no buffer head yet */
-@@ -405,24 +402,15 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- /* dir.c */
- extern const struct file_operations erofs_dir_fops;
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index eabfd8873e12..7f572086b4e3 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -10,6 +10,93 @@
  
-+/* pcpubuf.c */
-+void *erofs_get_pcpubuf(unsigned int requiredpages);
-+void erofs_put_pcpubuf(void *ptr);
-+int erofs_pcpubuf_growsize(unsigned int nrpages);
-+void erofs_pcpubuf_exit(void);
-+
- /* utils.c / zdata.c */
- struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
+ #include <trace/events/erofs.h>
  
--#if (EROFS_PCPUBUF_NR_PAGES > 0)
--void *erofs_get_pcpubuf(unsigned int pagenr);
--#define erofs_put_pcpubuf(buf) do { \
--	(void)&(buf);	\
--	preempt_enable();	\
--} while (0)
--#else
--static inline void *erofs_get_pcpubuf(unsigned int pagenr)
--{
--	return ERR_PTR(-EOPNOTSUPP);
--}
--
--#define erofs_put_pcpubuf(buf) do {} while (0)
--#endif
--
- #ifdef CONFIG_EROFS_FS_ZIP
- int erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
-diff --git a/fs/erofs/pcpubuf.c b/fs/erofs/pcpubuf.c
-new file mode 100644
-index 000000000000..3b606e299b1d
---- /dev/null
-+++ b/fs/erofs/pcpubuf.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (C) 2020-2021 Gao Xiang <xiang@kernel.org>
-+ *
-+ * For low-latency decompression algorithms (e.g. lz4), reserve continuous
-+ * per-CPU virtual memory (in pages) in advance to store such inplace I/O
-+ * data if inplace decompression is failed (due to unmet inplace margin for
-+ * example).
++ * since pclustersize is variable for big pcluster feature, introduce slab
++ * pools implementation for different pcluster sizes.
 + */
-+#include "internal.h"
-+
-+struct erofs_pcpubuf {
-+	raw_spinlock_t lock;
-+	void *ptr;
-+	struct page **pages;
-+	unsigned int nrpages;
++struct z_erofs_pcluster_slab {
++	struct kmem_cache *slab;
++	unsigned int maxpages;
++	char name[48];
 +};
 +
-+static DEFINE_PER_CPU(struct erofs_pcpubuf, erofs_pcb);
++#define _PCLP(n) { .maxpages = n }
 +
-+void *erofs_get_pcpubuf(unsigned int requiredpages)
++static struct z_erofs_pcluster_slab pcluster_pool[] __read_mostly = {
++	_PCLP(1), _PCLP(4), _PCLP(16), _PCLP(64), _PCLP(128),
++	_PCLP(Z_EROFS_PCLUSTER_MAX_PAGES)
++};
++
++static void z_erofs_destroy_pcluster_pool(void)
 +{
-+	struct erofs_pcpubuf *pcb = &get_cpu_var(erofs_pcb);
++	int i;
 +
-+	raw_spin_lock(&pcb->lock);
-+	if (requiredpages > pcb->nrpages) {
-+		raw_spin_unlock(&pcb->lock);
-+		put_cpu_var(erofs_pcb);
-+		return NULL;
-+	}
-+	return pcb->ptr;
-+}
-+
-+void erofs_put_pcpubuf(void *ptr)
-+{
-+	struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, smp_processor_id());
-+
-+	DBG_BUGON(pcb->ptr != ptr);
-+	raw_spin_unlock(&pcb->lock);
-+	put_cpu_var(erofs_pcb);
-+}
-+
-+/* the next step: support per-CPU page buffers hotplug */
-+int erofs_pcpubuf_growsize(unsigned int nrpages)
-+{
-+	static DEFINE_MUTEX(pcb_resize_mutex);
-+	static unsigned int pcb_nrpages;
-+	LIST_HEAD(pagepool);
-+	int delta, cpu, ret, i;
-+
-+	mutex_lock(&pcb_resize_mutex);
-+	delta = nrpages - pcb_nrpages;
-+	ret = 0;
-+	/* avoid shrinking pcpubuf, since no idea how many fses rely on */
-+	if (delta <= 0)
-+		goto out;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, cpu);
-+		struct page **pages, **oldpages;
-+		void *ptr, *old_ptr;
-+
-+		pages = kmalloc_array(nrpages, sizeof(*pages), GFP_KERNEL);
-+		if (!pages) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		for (i = 0; i < nrpages; ++i) {
-+			pages[i] = erofs_allocpage(&pagepool, GFP_KERNEL);
-+			if (!pages[i]) {
-+				ret = -ENOMEM;
-+				oldpages = pages;
-+				goto free_pagearray;
-+			}
-+		}
-+		ptr = vmap(pages, nrpages, VM_MAP, PAGE_KERNEL);
-+		if (!ptr) {
-+			ret = -ENOMEM;
-+			oldpages = pages;
-+			goto free_pagearray;
-+		}
-+		raw_spin_lock(&pcb->lock);
-+		old_ptr = pcb->ptr;
-+		pcb->ptr = ptr;
-+		oldpages = pcb->pages;
-+		pcb->pages = pages;
-+		i = pcb->nrpages;
-+		pcb->nrpages = nrpages;
-+		raw_spin_unlock(&pcb->lock);
-+
-+		if (!oldpages) {
-+			DBG_BUGON(old_ptr);
++	for (i = 0; i < ARRAY_SIZE(pcluster_pool); ++i) {
++		if (!pcluster_pool[i].slab)
 +			continue;
-+		}
-+
-+		if (old_ptr)
-+			vunmap(old_ptr);
-+free_pagearray:
-+		while (i)
-+			list_add(&oldpages[--i]->lru, &pagepool);
-+		kfree(oldpages);
-+		if (ret)
-+			break;
++		kmem_cache_destroy(pcluster_pool[i].slab);
++		pcluster_pool[i].slab = NULL;
 +	}
-+	pcb_nrpages = nrpages;
-+	put_pages_list(&pagepool);
-+out:
-+	mutex_unlock(&pcb_resize_mutex);
-+	return ret;
 +}
 +
-+void erofs_pcpubuf_exit(void)
++static int z_erofs_create_pcluster_pool(void)
 +{
-+	int cpu, i;
++	struct z_erofs_pcluster_slab *pcs;
++	struct z_erofs_pcluster *a;
++	unsigned int size;
 +
-+	for_each_possible_cpu(cpu) {
-+		struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, cpu);
++	for (pcs = pcluster_pool;
++	     pcs < pcluster_pool + ARRAY_SIZE(pcluster_pool); ++pcs) {
++		size = struct_size(a, compressed_pages, pcs->maxpages);
 +
-+		if (!pcb->pages)
++		sprintf(pcs->name, "erofs_pcluster-%u", pcs->maxpages);
++		pcs->slab = kmem_cache_create(pcs->name, size, 0,
++					      SLAB_RECLAIM_ACCOUNT, NULL);
++		if (pcs->slab)
 +			continue;
 +
-+		for (i = 0; i < pcb->nrpages; ++i)
-+			if (pcb->pages[i])
-+				put_page(pcb->pages[i]);
-+		kfree(pcb->pages);
-+		pcb->pages = NULL;
++		z_erofs_destroy_pcluster_pool();
++		return -ENOMEM;
 +	}
++	return 0;
 +}
 +
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index b641658e772f..41fbfee4990c 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -684,6 +684,7 @@ static void __exit erofs_module_exit(void)
- 	/* Ensure all RCU free inodes are safe before cache is destroyed. */
- 	rcu_barrier();
- 	kmem_cache_destroy(erofs_inode_cachep);
-+	erofs_pcpubuf_exit();
++static struct z_erofs_pcluster *z_erofs_alloc_pcluster(unsigned int nrpages)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(pcluster_pool); ++i) {
++		struct z_erofs_pcluster_slab *pcs = pcluster_pool + i;
++		struct z_erofs_pcluster *pcl;
++
++		if (nrpages > pcs->maxpages)
++			continue;
++
++		pcl = kmem_cache_zalloc(pcs->slab, GFP_NOFS);
++		if (!pcl)
++			return ERR_PTR(-ENOMEM);
++		pcl->pclusterpages = nrpages;
++		return pcl;
++	}
++	return ERR_PTR(-EINVAL);
++}
++
++static void z_erofs_free_pcluster(struct z_erofs_pcluster *pcl)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(pcluster_pool); ++i) {
++		struct z_erofs_pcluster_slab *pcs = pcluster_pool + i;
++
++		if (pcl->pclusterpages > pcs->maxpages)
++			continue;
++
++		kmem_cache_free(pcs->slab, pcl);
++		return;
++	}
++	DBG_BUGON(1);
++}
++
+ /*
+  * a compressed_pages[] placeholder in order to avoid
+  * being filled with file pages for in-place decompression.
+@@ -37,12 +124,11 @@ typedef tagptr1_t compressed_page_t;
+ 	tagptr_fold(compressed_page_t, page, 1)
+ 
+ static struct workqueue_struct *z_erofs_workqueue __read_mostly;
+-static struct kmem_cache *pcluster_cachep __read_mostly;
+ 
+ void z_erofs_exit_zip_subsystem(void)
+ {
+ 	destroy_workqueue(z_erofs_workqueue);
+-	kmem_cache_destroy(pcluster_cachep);
++	z_erofs_destroy_pcluster_pool();
  }
  
- /* get filesystem statistics */
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index de9986d2f82f..6758c5b19f7c 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -21,18 +21,6 @@ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
- 	return page;
+ static inline int z_erofs_init_workqueue(void)
+@@ -59,32 +145,16 @@ static inline int z_erofs_init_workqueue(void)
+ 	return z_erofs_workqueue ? 0 : -ENOMEM;
  }
  
--#if (EROFS_PCPUBUF_NR_PAGES > 0)
--static struct {
--	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
--} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
--
--void *erofs_get_pcpubuf(unsigned int pagenr)
+-static void z_erofs_pcluster_init_once(void *ptr)
 -{
--	preempt_disable();
--	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
--}
--#endif
+-	struct z_erofs_pcluster *pcl = ptr;
+-	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
+-	unsigned int i;
 -
- #ifdef CONFIG_EROFS_FS_ZIP
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
+-	mutex_init(&cl->lock);
+-	cl->nr_pages = 0;
+-	cl->vcnt = 0;
+-	for (i = 0; i < Z_EROFS_CLUSTER_MAX_PAGES; ++i)
+-		pcl->compressed_pages[i] = NULL;
+-}
+-
+ int __init z_erofs_init_zip_subsystem(void)
+ {
+-	pcluster_cachep = kmem_cache_create("erofs_compress",
+-					    Z_EROFS_WORKGROUP_SIZE, 0,
+-					    SLAB_RECLAIM_ACCOUNT,
+-					    z_erofs_pcluster_init_once);
+-	if (pcluster_cachep) {
+-		if (!z_erofs_init_workqueue())
+-			return 0;
+-
+-		kmem_cache_destroy(pcluster_cachep);
+-	}
+-	return -ENOMEM;
++	int err = z_erofs_create_pcluster_pool();
++
++	if (err)
++		return err;
++	err = z_erofs_init_workqueue();
++	if (err)
++		z_erofs_destroy_pcluster_pool();
++	return err;
+ }
+ 
+ enum z_erofs_collectmode {
+@@ -169,7 +239,6 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+ 				     struct list_head *pagepool)
+ {
+ 	const struct z_erofs_pcluster *pcl = clt->pcl;
+-	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 	struct page **pages = clt->compressedpages;
+ 	pgoff_t index = pcl->obj.index + (pages - pcl->compressed_pages);
+ 	bool standalone = true;
+@@ -179,7 +248,7 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
+ 	if (clt->mode < COLLECT_PRIMARY_FOLLOWED)
+ 		return;
+ 
+-	for (; pages < pcl->compressed_pages + clusterpages; ++pages) {
++	for (; pages < pcl->compressed_pages + pcl->pclusterpages; ++pages) {
+ 		struct page *page;
+ 		compressed_page_t t;
+ 		struct page *newpage = NULL;
+@@ -239,14 +308,13 @@ int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
+ 	struct z_erofs_pcluster *const pcl =
+ 		container_of(grp, struct z_erofs_pcluster, obj);
+ 	struct address_space *const mapping = MNGD_MAPPING(sbi);
+-	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 	int i;
+ 
+ 	/*
+ 	 * refcount of workgroup is now freezed as 1,
+ 	 * therefore no need to worry about available decompression users.
+ 	 */
+-	for (i = 0; i < clusterpages; ++i) {
++	for (i = 0; i < pcl->pclusterpages; ++i) {
+ 		struct page *page = pcl->compressed_pages[i];
+ 
+ 		if (!page)
+@@ -271,13 +339,12 @@ int erofs_try_to_free_cached_page(struct address_space *mapping,
+ 				  struct page *page)
+ {
+ 	struct z_erofs_pcluster *const pcl = (void *)page_private(page);
+-	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 	int ret = 0;	/* 0 - busy */
+ 
+ 	if (erofs_workgroup_try_to_freeze(&pcl->obj, 1)) {
+ 		unsigned int i;
+ 
+-		for (i = 0; i < clusterpages; ++i) {
++		for (i = 0; i < pcl->pclusterpages; ++i) {
+ 			if (pcl->compressed_pages[i] == page) {
+ 				WRITE_ONCE(pcl->compressed_pages[i], NULL);
+ 				ret = 1;
+@@ -297,9 +364,9 @@ static inline bool z_erofs_try_inplace_io(struct z_erofs_collector *clt,
+ 					  struct page *page)
+ {
+ 	struct z_erofs_pcluster *const pcl = clt->pcl;
+-	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 
+-	while (clt->compressedpages < pcl->compressed_pages + clusterpages) {
++	while (clt->compressedpages <
++	       pcl->compressed_pages + pcl->pclusterpages) {
+ 		if (!cmpxchg(clt->compressedpages++, NULL, page))
+ 			return true;
+ 	}
+@@ -413,10 +480,10 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	struct erofs_workgroup *grp;
+ 	int err;
+ 
+-	/* no available workgroup, let's allocate one */
+-	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
+-	if (!pcl)
+-		return -ENOMEM;
++	/* no available pcluster, let's allocate one */
++	pcl = z_erofs_alloc_pcluster(map->m_plen >> PAGE_SHIFT);
++	if (IS_ERR(pcl))
++		return PTR_ERR(pcl);
+ 
+ 	atomic_set(&pcl->obj.refcount, 1);
+ 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+@@ -430,24 +497,18 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	else
+ 		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+ 
+-	pcl->clusterbits = 0;
+-
+ 	/* new pclusters should be claimed as type 1, primary and followed */
+ 	pcl->next = clt->owned_head;
+ 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
+ 
+ 	cl = z_erofs_primarycollection(pcl);
+-
+-	/* must be cleaned before freeing to slab */
+-	DBG_BUGON(cl->nr_pages);
+-	DBG_BUGON(cl->vcnt);
+-
+ 	cl->pageofs = map->m_la & ~PAGE_MASK;
+ 
+ 	/*
+ 	 * lock all primary followed works before visible to others
+ 	 * and mutex_trylock *never* fails for a new pcluster.
+ 	 */
++	mutex_init(&cl->lock);
+ 	DBG_BUGON(!mutex_trylock(&cl->lock));
+ 
+ 	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
+@@ -471,7 +532,7 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 
+ err_out:
+ 	mutex_unlock(&cl->lock);
+-	kmem_cache_free(pcluster_cachep, pcl);
++	z_erofs_free_pcluster(pcl);
+ 	return err;
+ }
+ 
+@@ -517,7 +578,7 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 
+ 	clt->compressedpages = clt->pcl->compressed_pages;
+ 	if (clt->mode <= COLLECT_PRIMARY) /* cannot do in-place I/O */
+-		clt->compressedpages += Z_EROFS_CLUSTER_MAX_PAGES;
++		clt->compressedpages += clt->pcl->pclusterpages;
+ 	return 0;
+ }
+ 
+@@ -530,9 +591,8 @@ static void z_erofs_rcu_callback(struct rcu_head *head)
+ 	struct z_erofs_collection *const cl =
+ 		container_of(head, struct z_erofs_collection, rcu);
+ 
+-	kmem_cache_free(pcluster_cachep,
+-			container_of(cl, struct z_erofs_pcluster,
+-				     primary_collection));
++	z_erofs_free_pcluster(container_of(cl, struct z_erofs_pcluster,
++					   primary_collection));
+ }
+ 
+ void erofs_workgroup_free_rcu(struct erofs_workgroup *grp)
+@@ -784,9 +844,8 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 				       struct list_head *pagepool)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+-	const unsigned int clusterpages = BIT(pcl->clusterbits);
+ 	struct z_erofs_pagevec_ctor ctor;
+-	unsigned int i, outputsize, llen, nr_pages;
++	unsigned int i, inputsize, outputsize, llen, nr_pages;
+ 	struct page *pages_onstack[Z_EROFS_VMAP_ONSTACK_PAGES];
+ 	struct page **pages, **compressed_pages, *page;
+ 
+@@ -866,7 +925,7 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 	overlapped = false;
+ 	compressed_pages = pcl->compressed_pages;
+ 
+-	for (i = 0; i < clusterpages; ++i) {
++	for (i = 0; i < pcl->pclusterpages; ++i) {
+ 		unsigned int pagenr;
+ 
+ 		page = compressed_pages[i];
+@@ -919,12 +978,13 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 		partial = true;
+ 	}
+ 
++	inputsize = pcl->pclusterpages * PAGE_SIZE;
+ 	err = z_erofs_decompress(&(struct z_erofs_decompress_req) {
+ 					.sb = sb,
+ 					.in = compressed_pages,
+ 					.out = pages,
+ 					.pageofs_out = cl->pageofs,
+-					.inputsize = PAGE_SIZE,
++					.inputsize = inputsize,
+ 					.outputsize = outputsize,
+ 					.alg = pcl->algorithmformat,
+ 					.inplace_io = overlapped,
+@@ -933,7 +993,7 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 
+ out:
+ 	/* must handle all compressed pages before endding pages */
+-	for (i = 0; i < clusterpages; ++i) {
++	for (i = 0; i < pcl->pclusterpages; ++i) {
+ 		page = compressed_pages[i];
+ 
+ 		if (erofs_page_is_managed(sbi, page))
+@@ -1236,7 +1296,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 		pcl = container_of(owned_head, struct z_erofs_pcluster, next);
+ 
+ 		cur = pcl->obj.index;
+-		end = cur + BIT(pcl->clusterbits);
++		end = cur + pcl->pclusterpages;
+ 
+ 		/* close the main owned chain at first */
+ 		owned_head = cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index b503b353d4ab..942ee69dff6a 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -10,6 +10,7 @@
+ #include "internal.h"
+ #include "zpvec.h"
+ 
++#define Z_EROFS_PCLUSTER_MAX_PAGES	(Z_EROFS_PCLUSTER_MAX_SIZE / PAGE_SIZE)
+ #define Z_EROFS_NR_INLINE_PAGEVECS      3
+ 
+ /*
+@@ -59,16 +60,17 @@ struct z_erofs_pcluster {
+ 	/* A: point to next chained pcluster or TAILs */
+ 	z_erofs_next_pcluster_t next;
+ 
+-	/* A: compressed pages (including multi-usage pages) */
+-	struct page *compressed_pages[Z_EROFS_CLUSTER_MAX_PAGES];
+-
+ 	/* A: lower limit of decompressed length and if full length or not */
+ 	unsigned int length;
+ 
++	/* I: physical cluster size in pages */
++	unsigned short pclusterpages;
++
+ 	/* I: compression algorithm format */
+ 	unsigned char algorithmformat;
+-	/* I: bit shift of physical cluster size */
+-	unsigned char clusterbits;
++
++	/* A: compressed pages (can be cached or inplaced pages) */
++	struct page *compressed_pages[];
+ };
+ 
+ #define z_erofs_primarycollection(pcluster) (&(pcluster)->primary_collection)
+@@ -82,8 +84,6 @@ struct z_erofs_pcluster {
+ 
+ #define Z_EROFS_PCLUSTER_NIL            (NULL)
+ 
+-#define Z_EROFS_WORKGROUP_SIZE  sizeof(struct z_erofs_pcluster)
+-
+ struct z_erofs_decompressqueue {
+ 	struct super_block *sb;
+ 	atomic_t pending_bios;
 -- 
 2.20.1
 
