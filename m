@@ -2,97 +2,97 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C3A34DD1C
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D9334DD1D
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 02:40:18 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F8VwF08ssz3016
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:40:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F8VwJ0RRGz2yRK
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Mar 2021 11:40:16 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1617064813;
-	bh=qiTfNqdFHlGJEG4movMfodOwEGyD5ToQ7ohERgIOeT4=;
+	s=201707; t=1617064816;
+	bh=ZoUtl34DQ5AX85R9xNUqq64te7dcd9foFuy2vWRE7aA=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=HCj9aWPZ+F9+PedPDE2ZVyc6vipJTiyqhUMCLwVFeAmvZcuBSSGZ0XTfYAIlA3Ax3
-	 yAgU6colI0gBcbAxVgklp0ZS3jUT6L1sjmNDmj68VsrkAdQ4nUOFvzI49BPSwUWKCg
-	 wXiUWCUavgPgfh6Yi7kZFMSsFzzVQzp6JjxlFHJ03H6SOnF2BSTGl1yAcG9VWXNkvm
-	 BIhR1lr94plgEMimY/Ot54qAbdn6mDcmhIzzbbNcR+oueJJ7qts914BDHJE7+IN0k1
-	 XG4HG4AatmVBFs5xy0894o8bpXeZXhJyFPSmOz0TGxdFrhxvzgVh7Zzoju7DJsntRS
-	 kRz9r+s//hFbQ==
+	b=Dc821XmOntQ2D9o1Oie0GIBdJngM2Qm6iAmQ8s5IrzrzOyKUwJTQltM95c8aneWJF
+	 zxlswYxr2+6OxqRLsJQ9++lbX1uqsslsX2nXmGwf+kYJtWnATAN1UL+lbC5BomBEGW
+	 MBUjnFmNr2ntW/T7/3fGdxm3WamGJYqn03EEMZanqUGrvPEF+SYZfTVuqAFbgN4Wb4
+	 G72k73xW1gJtDDDe5Tg7xzlXd6GhUGg1cClghHyt46yE6BIQ36/QPbb+sCjQlQqTFq
+	 x0s7bEO7vW1eByXXtGTmf3l3Gc2lwPmi+nv3Y8shliNhzKe4gcgU8jM/hCaI5qFdef
+	 YmN/yvXAB2jcQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=pass (sender SPF authorized) smtp.mailfrom=aol.com
- (client-ip=98.137.68.32; helo=sonic308-8.consmr.mail.gq1.yahoo.com;
+ (client-ip=98.137.65.31; helo=sonic315-55.consmr.mail.gq1.yahoo.com;
  envelope-from=hsiangkao@aol.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=aol.com header.i=@aol.com header.a=rsa-sha256
- header.s=a2048 header.b=oMpxX56B; dkim-atps=neutral
-Received: from sonic308-8.consmr.mail.gq1.yahoo.com
- (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
+ header.s=a2048 header.b=oklsSbxC; dkim-atps=neutral
+Received: from sonic315-55.consmr.mail.gq1.yahoo.com
+ (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F8VwB6P4kz2yRK
- for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:40:10 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F8VwF59Hjz302n
+ for <linux-erofs@lists.ozlabs.org>; Tue, 30 Mar 2021 11:40:13 +1100 (AEDT)
 X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
- t=1617064806; bh=043hFLznkXC16Fsym8qQwt5jZvMNyF5ajEliT9MQ7v1=;
+ t=1617064811; bh=U1EetIHGLRHV26dXcPnpnsTSql62T5euMfsiv2UHvUM=;
  h=X-Sonic-MF:From:To:Subject:Date:From:Subject;
- b=CpAjsoLDugcgknPzkTVwMm4KST0DKLTEL2JL4KdTvPfFffWX77+LQ8yFHXfOY3wI3J9NfdurbnC89o0VSO/TdBs31tqBgmFSW2FWSkY2s1mLQUdP6WLiU5og7lHpBIIXGyUH6a8HBI++imKjIY21uwSI2eAyV/RAMlQPKrPe8Uvp1WudcawYB/0aIeh1bTLlfE74xnOiRGjR7QG94vAFcUknBzVtj7NAfPZg4XflR4wBwWsJKN6uiKoE2v06EqOY9nJQHIDjBDoB8QbO7H1MzdfacCK2SetLb7om8zNQErm257KbN6+/H2Kdr3vTKMbil3OX6JkVTeivoV/LqfvMag==
-X-YMail-OSG: xVke46oVM1mOii5n5emxpQnwW5KbxMd5NtS4bLxYyljrew4ROOzHvEvTgnquAhL
- kzkzYsLMALA1wFTGDz4tNfafqqEn1efwGrrY6m7xrVKht.7PW1qmlalXeFobDDFUMiWIEaDPDEgg
- PPS_ON1mVSmd0RsX8Tw0bVoSLQfkBrjwf390WiEu_3EdauBKSJ7bTzrMAnwGAEUzJFiDJqZc_PY7
- beD4WpjXjt_.DOtrbmNu6ioyEiJMVm4eg6ILN3ueBshWZwZJ2KqNz34YixT08z70IcxAX21SepTC
- LQdgOslc4p5zHt_lCrcgOSeRYtpzyrvKdUZAM0wI2XSfn23Cpydjb2dTk_Kpy2vQjkljUhjjX0QG
- mvYSoL9reDKYQBfPY6n75WXX0tPqtoUcYQ7VrTXfMMb1xlmT1zUc0LJKo79OeoztFz9I1KxiAMLq
- ABDUBTB_alH1n8iUw4WXnJfRnW7oZq4dIZV8WFFy5j7KEwPpJ96vOLUPMo7vmovkcElZEFrqrtZc
- 5nkDDslhlMLelyue8YppsHmVHE652Uby2MabLgLOVY64FSYwuJl.YPL4RuxdJi6WPdOb1A6yssCI
- wfOZq4YeLRWYrVSrOSkN2pk8oZ3Xvg6LsSv39R2_lRE5qvXdBdBg1C0hOa_MTzWhrbWCbscFg4kK
- JCBeR_CGs7sGM1t0URt_avxpmiKXGthmwvsU_o0fYi_UkbfGrDK5PasSYkjduGgRTXZXxarn4_Yk
- 7clQCZ0f3jd1Qg5PSE.0gjE5_D2uM7i69qWYXGRAbkjTWgWyJcnPq10q7vzcr9gtdKcpQp.BjT2V
- gzYEqyzTfo07lyqHMVXhMPO1tGKdjPPRY4UnfqWdjhAjGQfM.Vdg8cnGm3afl9TmrKZTSqr_IA0J
- dPo3DiPamjJIq0vqXKcfr0IJfaP33yiwA02qBeDdu9juzWMPJywaSOVkdeDtwiRETJJut5XiLSgz
- YPa2ZCdcDyPuucP6rOp9XMJL1BTNvFe_uDl0AerpmzF3E1OhV_zxKvfimgBvq1NfqpNiTm99rOYL
- O2X7tc_95LWmV9sMMZrIQ0iVkwYYUSCrOijVFZEFHJCH8.tfcRaanDGx0d4io5gLJmVbQazcOkHX
- cNrYbpP0zob5liYxE_MvAZlHBP6UrhoKk448G7R7Sy4KH32ODI6qdveQQ2ETseMkZiiQqaBxp1k1
- 3m0B3WafQ7Q6pwcet9IAa2PvvrDkGjmJHUQhlMrgc1yRK0hLBZasbPgAx4tGQflgIeBlY5e5QCDZ
- QJzYkNbmTpdO020yL3z2cOO8ZGJqhE3v8GFMqlLlZAqp7OUnlCELKXgwt.234n.1t8biVJm79gIJ
- APdQrHWdVDwI9SiY6tJz3nF.wP7XSwrITyC1xj6gtRZ50IzMgmHxp0EJuptrHYBvEVc1QzQq0ep.
- .lu5dwteiC6ehGS271afKtkQjiv41ehw7s8Ps.XxsdKExNxKF6wuJ07g1Y4Tq1estAf2uXI0MuLJ
- 59hA5l2PLszwcgwyaV6.3bcFBQMCOVAEd5mPwy7yTeSSOTRZrD9VhP9CvbQ3zO5phaUHBHno6nRd
- Zp3UL6EpPs0107uvd5xksXbPRq.nWyZUXSnLiZCYI7QnP6k4yppQDa807c85KZ1WBh.Ru0VHOdQC
- f0bbG6lfEHm8xDsb3pb7.EkuolEEvGLhJ6Ay5xCYfYZqoblARnCiOitddnZCj6st3B06yPYC_OPO
- vQbjw2Ok_t1X.rh_iR7u_azcL38.hBf4urT3UDNDqJ4XAGsKDEUhECr9hlOObv_bFOTwP1OUi54n
- bxXhKAsWpxmdWD4lwFBKzUcjhUHX7FgipeNaAaEyt72Ha0PHhUC.WK0MqNfZZEFdVVWU_qDEByjz
- 8NUxVWEr_XGj9_wEpoBk3yZVcFuApcPce6_T7wlNTfM.GO2dKHaPa62MPLCfa_oiHRoxsUWWeeja
- kcd.zBH9sMBaIBvUmP8ISXZQtRNWB49IUPh4PmLdMlVG9yBBsehAlIQCtU.G4EKVJooo7opJVqA6
- uDYVS_hcf8ECxz4Thz2tyd0TFbxQDrIJ0ZLKcYeR5QSA5oSUvphg9eIK7b3BQ.GBfTg_5VEgugn7
- Dn.6ReQgkmI6WkzJDqPknTpL1S7qD.e3mV5FkHHnmGi2E1MVwd0bhPd2uUqLTVZjAlcGTmFbJQHx
- pKuL8.MeB7a9HuMRE7z918XOHHxP1ykZChl7hcashbbZhDE3S1RT3FNt.80GRKGBcizUn3yB.41P
- goO6xbv2UhKYix_Du_2gbYlYhytbywtZxKB5fM71GQSKM7v5g1sy.M.kZVhWDiOqnH.Fz0pn6.yg
- K0j7OcgFnpkI4B_vNGZdAhU58C6oAlFCmmUEJbfu_6RXre2RHPhsAXjkEQEAiFklnq8y59JDM2EP
- 8FF7aRbBX.vXfG5feWtzU_zGrTT6ki7pHLggyPIVi9mkjpsjGdbeEGVUWDC1yf18tsiI1o3SypHC
- TYRQDQmkpPkw_jJlZEXy7X8p_yDsajq0sFNMS7bSuO5VN_jovgrwJ8j8zh1eDspDHgdQGzFV9NqP
- P39VoQtur3ZCqpsQLx.TQsZiKFZM_tVgEltSs0a6hkn6X4V8z4l6XiPysvHzSO458_dLmOCFFAi2
- mGMCT2SHa0KdQOcJWLRRz7ONpfg.JB2PM83a9Cc0wrcVXVvOzUG.j._iL3puJVJWmmU6a.biSWtR
- iNEcEqeoMKyUgFBL_kZXYm17bcg9NiPLx7yZ61mPn9FcFS18ZQTEDbKhzXqI81OjuhlLC4F_bkNz
- zFPiUiVcxoOdrYoTPi2Fr1unYdCvz8plbU99kiXmhJi19XDs6jxl5NaXk9dA5NNKO7U_Fr4Q1dF0
- dDUPYFGyfknJeqv4xwH7ZlgqO7_JuF4h4wMYXU9hv2X0xXHHTgkoLe9A8wfOnzRP0PzubGBebIw0
- slz_yJVVEM_gokJSRrJ5rrY2gl8EE2el9tWTvSMYftN6puZf12szImP_ACnfjyvYJONLSXfDUDG8
- JuPyKbxkqCfqaDKRzi7tXD5DhDTToHKOdBe9TMc3Dt.Huw.VBOP0jPL0578SZ63hkmB7xUgRjbq.
- tPEAt4qqp2C6XI6TS_qKQYBYTGvJik6ShpmRcqtHPjvyTkUkswPlury_moXykWkyx4jmMPIHsf9h
- gNbItAdSImx4BbS0XrNw4f568zpzUuA3l03ooxMFCQmXXgW8gIc_iPABjETy3RSNmnfoiTxzkK74
- 5daa3xqR5
+ b=SBqMc1ofJ5AP0EZTlWZEykLspEgbna3scbkttQmGU+aze/gSIbMMVcLu2K40wE8N88vjLd+15gXRhjdlhMPnHZ+9CRuPUDzTEIiCECa4eLwzRITCGJCnLOhQNb4Dm6a70E+05ULrqUGRqD3mEt892qv/ClRrLBzlgXdj4Fb1z9h+bo5ilXLjJEVlTUZ/vmEt360qSEY1pg5yr3yitUKIxwui8MM41K3otCPpUeU5zWhODwPGyEcmAZL77R4I7T573ijfmfmK+Pa49KYlnpxD79EG+ncuKAr5OHg5JNTCCb+w2hkn/j+rFW98VUduXvzea3WS+ehX5zT14gGSRlIAEw==
+X-YMail-OSG: URrF1z4VM1nnL6rXos5uWcuFX5Po1UjU8Ztmer0K5ytVbQSdMiYJw0YItF6KLrr
+ 2r1R6uBQjLtkfujvsJ4TfxQ1KyPBRYi2wfjv7E3s.6MOl4N.O2DidYiTxORSCtI.AEUIj7zrsI8q
+ 0gLxtfdpRQa6w2ULgO2Mv73BM5dgeUMUXlGCe2FsLl2G0ZNiQty5KBHGlH4Ie9Euz.47EScLuPc.
+ sJw7qNLffuesTNIBqzla6Fhtdi8IUiftJdbfBNaGYJcbvK6dYMz6_6MiDFwgXR8.aIGs84HWWsgj
+ xJHBNX1prGR76jIbg5NXSJBCTu24F4nzS1sUcdRaZU1Xpy3uL8.mKxz3QWupITaN304paqpw3n8M
+ roousn20z6dblY0vs4COu_InrnpiPhy9mxXsRG3e6Din.WukNuRR_F8ObBRb4GP7mbR_kvUeevyh
+ MYd5FruBbI7ozJUBmtepmKrl_sxtoPtS5S3Sc_v0gNmECYwZJ163tux7XcFnOgiz_skmq3KuYFq7
+ dm.Eqb_kgAMMQciTMdOGRJe0jP.ESbrBYVEuohLujFbbjJGtVcmBM_.JEOdZvH6jxOkEsnSTN9IR
+ qsfLwE6GTcLhP5efztRNk9uKtdKSUEaxh8mQzrrlvD36STxN6ruzJcqFD3mnAE0eXKI1gp8jQ4hp
+ ijyZOBKUrzkRXpylDIO17V6CNiT6oQt7D_cuN0h2Fl.ULgzB6wZ64CMrZGnFbZUDQYfCeJdj7LXT
+ pdpADLGffYxmq1fhK_H2noMDfh5eBrjtZus2GjN5Xmb5ZH2b0iv4GuFY0N0_OsfR.QJu8oTVXiR1
+ exd.uuaeEf_rnf25aHomhdbxxSM4QYRp62swrPhOZjYPdI25sxN6itkzVQrSTTzCTCpv0R0aGFUA
+ J_I8_FWrGjY.eZRYAExcHZP1sTi1AZMeghuIHsqkiMZ3CnTZH9gTNt.tY9vhTs577muG.Te4Y31B
+ 368JALGeS3v1kjCb3icKcJDWxJDyunBQuXQJLGq7eo4NABNqfuY.mBUU4WhXk1AM56wIhRzv5Opn
+ KvN6c1OXDcBwI4XZ5Pnq7U5ZorkjcOcLEuwqJz2v9D1Mw2DIxbHOxjt19bHjoGLtp7GG0TlPqLMp
+ n4HBSVFu_cTbWpcvPZ_GXqRO54SLJOB.qYWbzLaQSFAnF1s9BNRhaBxuHbrHvEpvwQQ0GPgcE710
+ TEd.y1NMIr_cnhcDplYJN8hJaB8GD7BKuhTMOS2hPTIOk3qTzuLDGI.vBKEoq2NVO.Muxe5gq3Vg
+ RKrmrsxpwaxcPjDQYKCE8Tje68f37JOBMIOskLS2wNPnQHW05iZ5PPXDHJoVgMwvGAaJZr86IuPr
+ bpoEpqpUyrp8vaZ43gozgmXWqZuZp.OYKTCDBaR8LAL6mbA5y3qVUW4T4PXclqQx8lTeT61QtUVL
+ gV_zTqhgoPMWqO9egYbjL_7CtJ13Rs8kQKKY2M.DwwThFuQAfF74vmHL8OsNDWdwMoOo17sFWl3b
+ EKJKfzs97bQ1fsfTvJVqV_CVLseT.Wr5AVR9nQsHefOqWcySbygh0HY73vHuCoPWQ_W1ZxczOwOJ
+ l6py_NWeYJtPWYQvawbzZC8bXXvrZHkZVYQiFZ_VWxHB_wsZPRKy4L3Ydb2iE9_Ew79WLi2pDmpW
+ l6syBr4qCbCahk1CnRSzf5MCdpE2tm5C_x_fOkCHaKWPeKd4rmp9VqJ3hLc4Z2l2wOV_XJb6EkCK
+ LR0S33vYNmEtOPsVoPsSH43OLcO9pGhdnqzZ4V7XT5rPceBxSdDO_hq0MYjIEpWupperOuib2Knn
+ JxHYAFpjLJyc5izIgGb_yv3GFqR2lamgXCA7nhXAUxWZsv7oZK3sj2uqQ_ej6Bjd2JGI_hd1t2LS
+ 7udZbdHD_048ueYwU04HH.EAKcjXrI7YWNYmwP8P0QuFM7iSQ7befn1mDdZaR8_2ug0bel2990_i
+ 7oEw.uAdrquFfJyGKOP0KT4NJ2Sx6kBpv6Mm2gWkcmIGQiQqL9LWXfsAR3HCtBbKwiD2wJ7Cjbuz
+ rF9Gx2uYuIJdMcTuXcxqfLH5TyaidhWPBxGoqvLp5esyq6Vt0o3aYYa.QeAq6ceiS2UHcZfKoiAg
+ uGgqveVmGXYJSXWvj4lG9wgCM7tOLkkXM.9kOrw0oKzBgU7lmTfZy00782qK4lcbnUS1thtDY89Z
+ afhocvvpTa4x5XU69gqO1FNVkt9Wc63gGXNYNCuxnJOXvV1gxIUrcvzGh4oIppiQHHrIkId60K8_
+ 6Fyj5N9kRw1ZAt4Px8MUanDAoOO5KtIKz_wJp8msFTDfi9XP0cDbSdGC1Ojezf2t3eA9prO0KnPw
+ 9xwHeZgBysj7gNcfL7V7xCRmkH1W_sFFRkIfvw5XKxLzKa59twhtueWzU2yT58t4s7_OqkLHFdv1
+ pzy2nCM12KGn.46VVN4CH5eR4YYMhsjNs6WqKnMES53mfrnfGGc6CsGz_TI1S4mrf5480sQh9ec0
+ 4tZQ56NnbKoa.8bPW5cGo5zJzfYFpzZ4GE95DEbEK3eGJppojpi3ACrbX4_YWqwa.vpo3rcL4f6M
+ Qg0dCAntuWvwPD9QqdJ4vFUJeJE6DvNWNxB_ATu9pv_GLASQo.DFF17QTZyCk45An2yW0aPTs_lP
+ 8XHC7dv2c98VM6oxst0VkIMIl7seaW14DTKIeutryH5xPlQFWsGN2uiHbMHhh2cJ53NcOTRwVi67
+ PYV0Hc41P2WjhHm_5XYJJh07x2na1_w88xU.f6aR8SQ0U7n0zoKboyN0LO7.7Vrs2FNGvhAfa758
+ IQ1d4oIUCbHthL9idzYYm1Pf8S1Ph37oWd0DLj0HlFLyUCm3Yjiy3218XbZUUxQc6qtDzdnOQz2N
+ mP55lDvnbvzFNxlB16TG462tGGvP.9ojLMjZdjPyZJ3ZhyoElbCoSP4qUVTmmm_cg8H43.5hFGdo
+ SGlv3x44TOse_G.7_GrSDpkoBlWbgzQ5WH36.sc8cBoW6_tdeYLI6R13K2qFZujIwc5Y_W4.3THU
+ .WgPjAnVbwd5vJa8mcKShlxL7Wr69sOIry9.d1o0m1yC0a.5WIE44VZoDM5Py9HmFYE4wVhyxoXC
+ HLs1Zfrtpdc6a_2TmjWQCjVav4ipf1984xIVvrC2OMaWqVqxO3x5yZLer8oktcFBLFltBJIxB8Zc
+ lKNNl3bElIWopzgL7C5loWLGmJrn_BzlthTau_GE4ArEWjR6ype.RYSXLJT5XX84Rn6wYiWtIE6m
+ deF0d_dou3r14dIb_Pig-
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by
- sonic308.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:40:06 +0000
+ sonic315.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 00:40:11 +0000
 Received: by kubenode579.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP
  Server) with ESMTPA ID 27cc0a93ae52fff3a17931d8aba7bccb; 
- Tue, 30 Mar 2021 00:40:02 +0000 (UTC)
+ Tue, 30 Mar 2021 00:40:07 +0000 (UTC)
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH 08/10] erofs: support parsing big pcluster compact indexes
-Date: Tue, 30 Mar 2021 08:39:06 +0800
-Message-Id: <20210330003908.22842-9-hsiangkao@aol.com>
+Subject: [PATCH 09/10] erofs: support decompress big pcluster for lz4 backend
+Date: Tue, 30 Mar 2021 08:39:07 +0800
+Message-Id: <20210330003908.22842-10-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330003908.22842-1-hsiangkao@aol.com>
 References: <20210330003908.22842-1-hsiangkao@aol.com>
@@ -120,159 +120,303 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Different from non-compact indexes, several lclusters are packed
-as the compact form at once and an unique base blkaddr is stored for
-each pack, so each lcluster index would take less space on avarage
-(e.g. 2 bytes for COMPACT_2B.) btw, that is also why BIG_PCLUSTER
-switch should be consistent for compact head0/1.
+Prior to big pcluster, there is only one compressed page so it'd
+easy to map this. However, when big pcluster is enabled, more work
+needs to be done to handle multiple compressed pages. In detail,
 
-Prior to big pcluster, the size of all pclusters is 1 lcluster.
-Therefore, when a new HEAD lcluster was scanned, blkaddr would be
-bumped by 1 lcluster. However, that way doesn't work anymore for
-big pcluster since we actually don't know the compressed size of
-pclusters in advance (before reading CBLKCNT).
+ - (maptype 0) if there is only one compressed page + no need
+   to copy inplace I/O, just map it directly what we did before;
 
-So, instead, let blkaddr of each pack be the first pcluster blkaddr
-with a valid CBLKCNT, in detail,
+ - (maptype 1) if there are more compressed pages + no need to
+   copy inplace I/O, vmap such compressed pages instead;
 
- 1) if CBLKCNT starts at the pack, this first valid pcluster is
-    itself, e.g.
-  _____________________________________________________________
- |_CBLKCNT0_|_NONHEAD_| .. |_HEAD_|_CBLKCNT1_| ... |_HEAD_| ...
- ^ = blkaddr base          ^ += CBLKCNT0           ^ += CBLKCNT1
+ - (maptype 2) if inplace I/O needs to be copied, use per-CPU
+   buffers for decompression then.
 
- 2) if CBLKCNT doesn't start at the pack, the first valid pcluster
-    is the next pcluster, e.g.
-  _________________________________________________________
- | NONHEAD_| .. |_HEAD_|_CBLKCNT0_| ... |_HEAD_|_HEAD_| ...
-                ^ = blkaddr base        ^ += CBLKCNT0
-                                               ^ += 1
+Another thing is how to detect inplace decompression is feasable or
+not (it's still quite easy for non big pclusters), apart from the
+inplace margin calculation, inplace I/O page reusing order is also
+needed to be considered for each compressed page. Currently, if the
+compressed page is the xth page, it shouldn't be reused as [0 ...
+nrpages_out - nrpages_in + x], otherwise a full copy will be triggered.
 
-When a CBLKCNT is found, blkaddr will be increased by CBLKCNT
-lclusters, or a new HEAD is found immediately, bump blkaddr by 1
-instead (see the picture above.)
-
-Also noted if CBLKCNT is the end of the pack, instead of storing
-delta1 (distance of the next HEAD lcluster) as normal NONHEADs,
-it still stores the compressed block count (delta0) since delta1
-can be calculated indirectly but the block count can't.
-
-Adjust decoding logic to fit big pcluster compact indexes as well.
+Although there are some extra optimization ideas for this, I'd like
+to make big pcluster work correctly first and obviously it can be
+further optimized later since it has nothing with the on-disk format
+at all.
 
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/zmap.c | 63 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 53 insertions(+), 10 deletions(-)
+ fs/erofs/decompressor.c | 202 ++++++++++++++++++++++++----------------
+ 1 file changed, 122 insertions(+), 80 deletions(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index d34ff810cc15..480197721061 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -77,6 +77,13 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	}
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 5d9f9dbd3681..c7b1d3fe8184 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -116,44 +116,87 @@ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+ 	return kaddr ? 1 : 0;
+ }
  
- 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
-+	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
-+	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
-+		erofs_err(sb, "big pcluster head1/2 of compact indexes should be consistent for nid %llu",
-+			  vi->nid);
-+		return -EFSCORRUPTED;
-+	}
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
-@@ -207,6 +214,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	unsigned int vcnt, base, lo, encodebits, nblk;
- 	int i;
- 	u8 *in, type;
-+	bool big_pcluster;
- 
- 	if (1 << amortizedshift == 4)
- 		vcnt = 2;
-@@ -215,6 +223,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	else
- 		return -EOPNOTSUPP;
- 
-+	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
- 	base = round_down(eofs, vcnt << amortizedshift);
- 	in = m->kaddr + base;
-@@ -226,7 +235,15 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	m->type = type;
- 	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << lclusterbits;
--		if (i + 1 != vcnt) {
-+		if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
-+			if (!big_pcluster) {
-+				DBG_BUGON(1);
-+				return -EFSCORRUPTED;
-+			}
-+			m->compressedlcs = lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
-+			m->delta[0] = 1;
-+			return 0;
-+		} else if (i + 1 != (int)vcnt) {
- 			m->delta[0] = lo;
- 			return 0;
- 		}
-@@ -239,22 +256,48 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 					  in, encodebits * (i - 1), &type);
- 		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
- 			lo = 0;
-+		else if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT)
-+			lo = 1;
- 		m->delta[0] = lo + 1;
- 		return 0;
- 	}
- 	m->clusterofs = lo;
- 	m->delta[0] = 0;
- 	/* figout out blkaddr (pblk) for HEAD lclusters */
--	nblk = 1;
--	while (i > 0) {
--		--i;
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * i, &type);
--		if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
--			i -= lo;
+-static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
+-				       u8 *src, unsigned int pageofs_in)
++static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
++			void *inpage, unsigned int *inputmargin, int *maptype,
++			bool support_0padding)
+ {
+-	/*
+-	 * if in-place decompression is ongoing, those decompressed
+-	 * pages should be copied in order to avoid being overlapped.
+-	 */
+-	struct page **in = rq->in;
+-	u8 *const tmp = erofs_get_pcpubuf(1);
+-	u8 *tmpp = tmp;
+-	unsigned int inlen = rq->inputsize - pageofs_in;
+-	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
 -
--		if (i >= 0)
-+	if (!big_pcluster) {
-+		nblk = 1;
-+		while (i > 0) {
-+			--i;
-+			lo = decode_compactedbits(lclusterbits, lomask,
-+						  in, encodebits * i, &type);
-+			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+				i -= lo;
+-	while (tmpp < tmp + inlen) {
+-		if (!src)
+-			src = kmap_atomic(*in);
+-		memcpy(tmpp, src + pageofs_in, count);
+-		kunmap_atomic(src);
+-		src = NULL;
+-		tmpp += count;
+-		pageofs_in = 0;
+-		count = PAGE_SIZE;
++	unsigned int nrpages_in, nrpages_out;
++	unsigned int ofull, oend, inputsize, total, i, j;
++	struct page **in;
++	void *src, *tmp;
 +
-+			if (i >= 0)
-+				++nblk;
++	inputsize = rq->inputsize;
++	nrpages_in = PAGE_ALIGN(inputsize) >> PAGE_SHIFT;
++	oend = rq->pageofs_out + rq->outputsize;
++	ofull = PAGE_ALIGN(oend);
++	nrpages_out = ofull >> PAGE_SHIFT;
++
++	if (rq->inplace_io) {
++		if (rq->partial_decoding || !support_0padding ||
++		    ofull - oend < LZ4_DECOMPRESS_INPLACE_MARGIN(inputsize))
++			goto docopy;
++
++		for (i = 0; i < nrpages_in; ++i) {
++			DBG_BUGON(rq->in[i] == NULL);
++			for (j = 0; j < nrpages_out - nrpages_in + i; ++j)
++				if (rq->out[j] == rq->in[i])
++					goto docopy;
 +		}
++	}
++
++	if (nrpages_in <= 1) {
++		*maptype = 0;
++		return inpage;
++	}
++	kunmap_atomic(inpage);
++	might_sleep();
++	while (1) {
++		src = vm_map_ram(rq->in, nrpages_in, -1);
++		/* retry two more times (totally 3 times) */
++		if (src || ++i >= 3)
++			break;
++		vm_unmap_aliases();
++	}
++	*maptype = 1;
++	return src;
++docopy:
++	/* Or copy compressed data which can be overlapped to per-CPU buffer */
++	in = rq->in;
++	src = erofs_get_pcpubuf(nrpages_in);
++	if (!src) {
++		DBG_BUGON(1);
++		return ERR_PTR(-EFAULT);
++	}
++
++	tmp = src;
++	total = rq->inputsize;
++	while (total) {
++		unsigned int page_copycnt =
++			min_t(unsigned int, total, PAGE_SIZE - *inputmargin);
++
++		if (!inpage)
++			inpage = kmap_atomic(*in);
++		memcpy(tmp, inpage + *inputmargin, page_copycnt);
++		kunmap_atomic(inpage);
++		inpage = NULL;
++		tmp += page_copycnt;
++		total -= page_copycnt;
+ 		++in;
++		*inputmargin = 0;
+ 	}
+-	return tmp;
++	*maptype = 2;
++	return src;
+ }
+ 
+ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ {
+-	unsigned int inputmargin, inlen;
+-	u8 *src;
+-	bool copied, support_0padding;
+-	int ret;
++	unsigned int inputmargin;
++	u8 *headpage, *src;
++	bool support_0padding;
++	int ret, maptype;
+ 
+-	if (rq->inputsize > PAGE_SIZE)
+-		return -EOPNOTSUPP;
+-
+-	src = kmap_atomic(*rq->in);
++	DBG_BUGON(*rq->in == NULL);
++	headpage = kmap_atomic(*rq->in);
+ 	inputmargin = 0;
+ 	support_0padding = false;
+ 
+@@ -161,50 +204,39 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	if (erofs_sb_has_lz4_0padding(EROFS_SB(rq->sb))) {
+ 		support_0padding = true;
+ 
+-		while (!src[inputmargin & ~PAGE_MASK])
++		while (!headpage[inputmargin & ~PAGE_MASK])
+ 			if (!(++inputmargin & ~PAGE_MASK))
+ 				break;
+ 
+ 		if (inputmargin >= rq->inputsize) {
+-			kunmap_atomic(src);
++			kunmap_atomic(headpage);
+ 			return -EIO;
+ 		}
+ 	}
+ 
+-	copied = false;
+-	inlen = rq->inputsize - inputmargin;
+-	if (rq->inplace_io) {
+-		const uint oend = (rq->pageofs_out +
+-				   rq->outputsize) & ~PAGE_MASK;
+-		const uint nr = PAGE_ALIGN(rq->pageofs_out +
+-					   rq->outputsize) >> PAGE_SHIFT;
+-
+-		if (rq->partial_decoding || !support_0padding ||
+-		    rq->out[nr - 1] != rq->in[0] ||
+-		    rq->inputsize - oend <
+-		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
+-			src = generic_copy_inplace_data(rq, src, inputmargin);
+-			inputmargin = 0;
+-			copied = true;
+-		}
++	rq->inputsize -= inputmargin;
++	src = z_erofs_handle_inplace_io(rq, headpage, &inputmargin, &maptype,
++					support_0padding);
++	if (IS_ERR(src)) {
++		kunmap_atomic(headpage);
++		return PTR_ERR(src);
+ 	}
+ 
+ 	/* legacy format could compress extra data in a pcluster. */
+ 	if (rq->partial_decoding || !support_0padding)
+ 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+-						  inlen, rq->outputsize,
+-						  rq->outputsize);
++				rq->inputsize, rq->outputsize, rq->outputsize);
+ 	else
+ 		ret = LZ4_decompress_safe(src + inputmargin, out,
+-					  inlen, rq->outputsize);
++					  rq->inputsize, rq->outputsize);
+ 
+ 	if (ret != rq->outputsize) {
+ 		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
+-			  ret, inlen, inputmargin, rq->outputsize);
++			  ret, rq->inputsize, inputmargin, rq->outputsize);
+ 
+ 		WARN_ON(1);
+ 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
+-			       16, 1, src + inputmargin, inlen, true);
++			       16, 1, src + inputmargin, rq->inputsize, true);
+ 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
+ 			       16, 1, out, rq->outputsize, true);
+ 
+@@ -213,10 +245,16 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 		ret = -EIO;
+ 	}
+ 
+-	if (copied)
+-		erofs_put_pcpubuf(src);
+-	else
++	if (maptype == 0) {
+ 		kunmap_atomic(src);
++	} else if (maptype == 1) {
++		vm_unmap_ram(src, PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT);
++	} else if (maptype == 2) {
++		erofs_put_pcpubuf(src);
 +	} else {
-+		nblk = 0;
-+		while (i > 0) {
-+			--i;
-+			lo = decode_compactedbits(lclusterbits, lomask,
-+						  in, encodebits * i, &type);
-+			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+				if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
-+					--i;
-+					nblk += lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
-+					continue;
-+				}
-+				/* big cluster shouldn't have plain d0 == 1 */
-+				if (lo <= 1) {
-+					DBG_BUGON(1);
-+					return -EFSCORRUPTED;
-+				}
-+				i -= lo - 2;
-+				continue;
-+			}
- 			++nblk;
++		DBG_BUGON(1);
++		return -EFAULT;
++	}
+ 	return ret;
+ }
+ 
+@@ -268,33 +306,37 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	void *dst;
+ 	int ret, i;
+ 
+-	if (nrpages_out == 1 && !rq->inplace_io) {
+-		DBG_BUGON(!*rq->out);
+-		dst = kmap_atomic(*rq->out);
+-		dst_maptype = 0;
+-		goto dstmap_out;
+-	}
++	/* two optimized fast paths only for non bigpcluster cases yet */
++	if (rq->inputsize <= PAGE_SIZE) {
++		if (nrpages_out == 1 && !rq->inplace_io) {
++			DBG_BUGON(!*rq->out);
++			dst = kmap_atomic(*rq->out);
++			dst_maptype = 0;
++			goto dstmap_out;
++		}
+ 
+-	/*
+-	 * For the case of small output size (especially much less
+-	 * than PAGE_SIZE), memcpy the decompressed data rather than
+-	 * compressed data is preferred.
+-	 */
+-	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
+-		dst = erofs_get_pcpubuf(1);
+-		if (IS_ERR(dst))
+-			return PTR_ERR(dst);
+-
+-		rq->inplace_io = false;
+-		ret = alg->decompress(rq, dst);
+-		if (!ret)
+-			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
+-					  rq->outputsize);
+-
+-		erofs_put_pcpubuf(dst);
+-		return ret;
++		/*
++		 * For the case of small output size (especially much less
++		 * than PAGE_SIZE), memcpy the decompressed data rather than
++		 * compressed data is preferred.
++		 */
++		if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
++			dst = erofs_get_pcpubuf(1);
++			if (IS_ERR(dst))
++				return PTR_ERR(dst);
++
++			rq->inplace_io = false;
++			ret = alg->decompress(rq, dst);
++			if (!ret)
++				copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
++						  rq->outputsize);
++
++			erofs_put_pcpubuf(dst);
++			return ret;
 +		}
  	}
- 	in += (vcnt << amortizedshift) - sizeof(__le32);
- 	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
+ 
++	/* general decoding path which can be used for all cases */
+ 	ret = alg->prepare_destpages(rq, pagepool);
+ 	if (ret < 0) {
+ 		return ret;
 -- 
 2.20.1
 
