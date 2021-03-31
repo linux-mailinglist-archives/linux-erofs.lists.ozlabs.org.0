@@ -2,37 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC99E34FCA3
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 Mar 2021 11:25:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 79A6435040C
+	for <lists+linux-erofs@lfdr.de>; Wed, 31 Mar 2021 18:03:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F9LWs6Khjz3bmw
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 Mar 2021 20:25:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F9WM23nysz300c
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Apr 2021 03:03:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=szxga04-in.huawei.com;
- envelope-from=gongruiqi1@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F9LWq1F9Qz2yYn
- for <linux-erofs@lists.ozlabs.org>; Wed, 31 Mar 2021 20:25:26 +1100 (AEDT)
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
- by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4F9LTB6xRBz1BFhW;
- Wed, 31 Mar 2021 17:23:10 +0800 (CST)
-Received: from ubuntu.huawei.com (10.67.174.117) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 31 Mar 2021 17:25:08 +0800
-From: Ruiqi Gong <gongruiqi1@huawei.com>
-To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
-Subject: [PATCH -next] erofs: Clean up spelling mistakes found in fs/erofs
-Date: Wed, 31 Mar 2021 05:39:20 -0400
-Message-ID: <20210331093920.31923-1-gongruiqi1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=gialliance.com (client-ip=188.72.187.74;
+ helo=gotflagfootball.com; envelope-from=gsimeyflakomu@gialliance.com;
+ receiver=<UNKNOWN>)
+X-Greylist: delayed 117 seconds by postgrey-1.36 at boromir;
+ Thu, 01 Apr 2021 03:03:22 AEDT
+Received: from gotflagfootball.com (tamuja.coltrate.com [188.72.187.74])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4F9WLy58lFz2yTR
+ for <linux-erofs@lists.ozlabs.org>; Thu,  1 Apr 2021 03:03:22 +1100 (AEDT)
+To: linux-erofs@lists.ozlabs.org
+Subject: globally shipping
+Message-ID: <d35d583409e1e7d9cca55519566a3387@globalgrowgear.com>
+Date: Wed, 31 Mar 2021 17:39:43 +0200
+From: "Layne Serrano" <gsimeyflakomu@gialliance.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.117]
-X-CFilter-Loop: Reflected
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,48 +39,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Wang Weiyang <wangweiyang2@huawei.com>, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
+Reply-To: clarencebosc@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-zmap.c:  s/correspoinding/corresponding
-zdata.c: s/endding/ending
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ruiqi Gong <gongruiqi1@huawei.com>
----
- fs/erofs/zdata.c | 2 +-
- fs/erofs/zmap.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index cd9b76216925..4226f4115981 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -933,7 +933,7 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
- 				 }, pagepool);
- 
- out:
--	/* must handle all compressed pages before endding pages */
-+	/* must handle all compressed pages before ending pages */
- 	for (i = 0; i < clusterpages; ++i) {
- 		page = compressed_pages[i];
- 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 14d2de35110c..b384f546d368 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -443,7 +443,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 		m.delta[0] = 1;
- 		fallthrough;
- 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
--		/* get the correspoinding first chunk */
-+		/* get the corresponding first chunk */
- 		err = z_erofs_extent_lookback(&m, m.delta[0]);
- 		if (err)
- 			goto unmap_out;
--- 
-2.17.1
+<html>
+<head>
+</head>
+<body>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="text-align:
+left;"><span style="text-align: left;"><span style="text-align:
+left;"></span></span></span><span style="text-align: left;"><span
+style="text-align: left;">Hi,<br /><br />How are you doing today?<br />I am
+willing to telll you that we have got the following drone here, it is ready
+to ship&nbsp;globally.<br /></span></span><br />Product
+features:</span></span></span></span></span><span style="display: block;
+text-align: left;">GPS positioning mode can provide more accurate flight.
+<br />With 5g / 2.4G WiFi function, it can transmit images in real time
+through mobile phone camera<br />The 2.4G WiFi HD camera can provide a
+variety of HD images and videos. <br />The orbital motion will make the
+aircraft fly in a circle, providing a colder shooting angle. <br />Waypoint
+flight mode, just draw a route on the screen, and use the helicopter as a
+given path. <br />The flight up to 25 minutes. <br />In headless mode,
+there is no need to adjust the aircraft position before flight. <br />One
+click return function, you can easily find the way home. <br />One click
+take off / land. The UAV will take off or return to the take-off position
+after one button take-off or automatic landing. <br />With low power
+protection and over-current protection.<br />It has three flight speed
+switch levels to make flying more interesting.<br /><br /> </span><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;">Pricing details:<br />1-10 pieces 189.50&nbsp; each<br
+/>11-30 pieces 179.50 each<br />30+ pieces 159.50&nbsp; each<br />u&nbsp;
+&nbsp;s&nbsp; &nbsp;d<br /><br /></span></span><span style="display: block;
+text-align: left;">If you are willing to order this drone, please send us
+your delivery address. We will get the package ready for you soon.<br /><br
+/><img src="https://i.ebayimg.com/images/g/7bMAAOSwSqRgYaQ-/s-l1600.jpg"
+width="470" height="744" /><img
+src="https://i.ebayimg.com/images/g/Aa4AAOSwIZpgYaRB/s-l1600.jpg"
+width="540" height="746" />&nbsp; &nbsp; &nbsp;&nbsp;<br /><img
+src="https://i.ebayimg.com/images/g/lVsAAOSw9CdgYaRD/s-l1600.jpg"
+width="470" height="678" /><img
+src="https://i.ebayimg.com/images/g/g5IAAOSwad1gYaRH/s-l1600.jpg"
+width="470" height="870" /></span><span style="display: block; text-align:
+left;"><span style="text-align: left;"><br /><img
+src="https://i.ebayimg.com/images/g/Op8AAOSwHY9gYaRM/s-l1600.jpg"
+width="470" height="685" /><img
+src="https://i.ebayimg.com/images/g/qzkAAOSwAHRgYaRP/s-l1600.jpg"
+width="470" height="629" /><br /><img
+src="https://i.ebayimg.com/images/g/9U0AAOSwgQVgYaRa/s-l1600.jpg"
+width="470" height="692" /><img
+src="https://i.ebayimg.com/images/g/u24AAOSwQrVgYaRV/s-l1600.jpg"
+width="470" height="693" /><br /></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><br /><br />If you are willing to
+order this drone, please send us your delivery address. We will get the
+package ready for you soon.<br /><br />Thanks,<br />Layne Serrano<br
+/></span></span></span><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"></span></span>
+</body>
+</html>
 
