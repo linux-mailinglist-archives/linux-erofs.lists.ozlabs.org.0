@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2B4A350D16
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Apr 2021 05:30:26 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74FF3350D17
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Apr 2021 05:30:30 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4F9pbh62Kkz30Bk
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Apr 2021 14:30:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4F9pbm32FRz30D8
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Apr 2021 14:30:28 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BcnnrZQ+;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=lroptYsJ;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,31 +17,32 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=BcnnrZQ+; 
+ header.s=k20201202 header.b=lroptYsJ; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4F9pbf4J2cz3bdF
- for <linux-erofs@lists.ozlabs.org>; Thu,  1 Apr 2021 14:30:22 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E839610CE;
- Thu,  1 Apr 2021 03:30:19 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4F9pbj3wDtz303j
+ for <linux-erofs@lists.ozlabs.org>; Thu,  1 Apr 2021 14:30:25 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C6B6610E7;
+ Thu,  1 Apr 2021 03:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1617247821;
- bh=VuzJfsLKCu3ztTmmJNTWgwcNnTy0COao5kL8OfuxNVY=;
+ s=k20201202; t=1617247823;
+ bh=uGWjJH85wbX6CbvuAjpt3Dm/EjLddOSVub+7avAm6o0=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=BcnnrZQ+OA+rtJLFxJA5V9XvQPT9h5969mLZAWcn4dHGaXIZwKdAAADlkp7YF3s8M
- o+3SlhFptvi+OpQiUI95ZSa3MPYccyj0VXDfxrG2Sd9AURhEGMXcw5nCjkzw5zanev
- lEVG7G4vLNgQdE2kLGzQh53dSaQaJxYyV247gQCzHbXKliVGQ0+HJwQe03ZWOTi28G
- sxIzvLiER2XJ/pBmC3UJiMgPZBusAXjhDb5HIcu07wTIYg2HHBXqJID2i63uAIJ7Kw
- 8qq8kgvZxnlEky9S5PnnMzRD5x7S+lwQgqE+7vNYTRPaj2HgYjafnVuWEJ3cwR05L8
- kla/qTkqsuR2Q==
+ b=lroptYsJl6XmASMDGntb9Y3SX92ep55i8QD39zXZMjBCJ4m7JbsqPQlzI5ni5B8Ka
+ J5/HX6c2XYOCYRzqKfH2mJq1Qh/IyIKQtJHsVRsCOFc4IcQ7hqu5eW7myypuoWACza
+ PVVZkCKQ4TsCogCfjxtCnnWDo4zp7DxTKMFWzCLiLVHvCfWaLM8DyFuMU83u0/+leE
+ BtQ6i+ARrGkTqSF+5ndHtFt7wAFfmeXPIp/T9y8O/eY56TH1sxAXe92Tj06dJh3uAh
+ 0vC+uBKuAhZSYgA2uXLLOaUF8o2wV4HlaY21CswMD8MwOKvIzmPqRZhQcRVRKcFdEQ
+ jLStQbF5v0N2w==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH v2 08/10] erofs: support parsing big pcluster compact indexes
-Date: Thu,  1 Apr 2021 11:29:52 +0800
-Message-Id: <20210401032954.20555-9-xiang@kernel.org>
+Subject: [PATCH v2 09/10] erofs: support decompress big pcluster for lz4
+ backend
+Date: Thu,  1 Apr 2021 11:29:53 +0800
+Message-Id: <20210401032954.20555-10-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210401032954.20555-1-xiang@kernel.org>
 References: <20210401032954.20555-1-xiang@kernel.org>
@@ -65,159 +66,303 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Different from non-compact indexes, several lclusters are packed
-as the compact form at once and an unique base blkaddr is stored for
-each pack, so each lcluster index would take less space on avarage
-(e.g. 2 bytes for COMPACT_2B.) btw, that is also why BIG_PCLUSTER
-switch should be consistent for compact head0/1.
+Prior to big pcluster, there was only one compressed page so it'd
+easy to map this. However, when big pcluster is enabled, more work
+needs to be done to handle multiple compressed pages. In detail,
 
-Prior to big pcluster, the size of all pclusters is 1 lcluster.
-Therefore, when a new HEAD lcluster was scanned, blkaddr would be
-bumped by 1 lcluster. However, that way doesn't work anymore for
-big pcluster since we actually don't know the compressed size of
-pclusters in advance (before reading CBLKCNT).
+ - (maptype 0) if there is only one compressed page + no need
+   to copy inplace I/O, just map it directly what we did before;
 
-So, instead, let blkaddr of each pack be the first pcluster blkaddr
-with a valid CBLKCNT, in detail,
+ - (maptype 1) if there are more compressed pages + no need to
+   copy inplace I/O, vmap such compressed pages instead;
 
- 1) if CBLKCNT starts at the pack, this first valid pcluster is
-    itself, e.g.
-  _____________________________________________________________
- |_CBLKCNT0_|_NONHEAD_| .. |_HEAD_|_CBLKCNT1_| ... |_HEAD_| ...
- ^ = blkaddr base          ^ += CBLKCNT0           ^ += CBLKCNT1
+ - (maptype 2) if inplace I/O needs to be copied, use per-CPU
+   buffers for decompression then.
 
- 2) if CBLKCNT doesn't start at the pack, the first valid pcluster
-    is the next pcluster, e.g.
-  _________________________________________________________
- | NONHEAD_| .. |_HEAD_|_CBLKCNT0_| ... |_HEAD_|_HEAD_| ...
-                ^ = blkaddr base        ^ += CBLKCNT0
-                                               ^ += 1
+Another thing is how to detect inplace decompression is feasable or
+not (it's still quite easy for non big pclusters), apart from the
+inplace margin calculation, inplace I/O page reusing order is also
+needed to be considered for each compressed page. Currently, if the
+compressed page is the xth page, it shouldn't be reused as [0 ...
+nrpages_out - nrpages_in + x], otherwise a full copy will be triggered.
 
-When a CBLKCNT is found, blkaddr will be increased by CBLKCNT
-lclusters, or a new HEAD is found immediately, bump blkaddr by 1
-instead (see the picture above.)
-
-Also noted if CBLKCNT is the end of the pack, instead of storing
-delta1 (distance of the next HEAD lcluster) as normal NONHEADs,
-it still stores the compressed block count (delta0) since delta1
-can be calculated indirectly but the block count can't.
-
-Adjust decoding logic to fit big pcluster compact indexes as well.
+Although there are some extra optimization ideas for this, I'd like
+to make big pcluster work correctly first and obviously it can be
+further optimized later since it has nothing with the on-disk format
+at all.
 
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/zmap.c | 63 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 53 insertions(+), 10 deletions(-)
+ fs/erofs/decompressor.c | 202 ++++++++++++++++++++++++----------------
+ 1 file changed, 122 insertions(+), 80 deletions(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index d34ff810cc15..545cd5989e6a 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -77,6 +77,13 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	}
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 5d9f9dbd3681..c7b1d3fe8184 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -116,44 +116,87 @@ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+ 	return kaddr ? 1 : 0;
+ }
  
- 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
-+	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
-+	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
-+		erofs_err(sb, "big pcluster head1/2 of compact indexes should be consistent for nid %llu",
-+			  vi->nid);
-+		return -EFSCORRUPTED;
-+	}
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
-@@ -207,6 +214,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	unsigned int vcnt, base, lo, encodebits, nblk;
- 	int i;
- 	u8 *in, type;
-+	bool big_pcluster;
- 
- 	if (1 << amortizedshift == 4)
- 		vcnt = 2;
-@@ -215,6 +223,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	else
- 		return -EOPNOTSUPP;
- 
-+	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
- 	base = round_down(eofs, vcnt << amortizedshift);
- 	in = m->kaddr + base;
-@@ -226,7 +235,15 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	m->type = type;
- 	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << lclusterbits;
--		if (i + 1 != vcnt) {
-+		if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
-+			if (!big_pcluster) {
-+				DBG_BUGON(1);
-+				return -EFSCORRUPTED;
-+			}
-+			m->compressedlcs = lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
-+			m->delta[0] = 1;
-+			return 0;
-+		} else if (i + 1 != (int)vcnt) {
- 			m->delta[0] = lo;
- 			return 0;
- 		}
-@@ -239,22 +256,48 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 					  in, encodebits * (i - 1), &type);
- 		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
- 			lo = 0;
-+		else if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT)
-+			lo = 1;
- 		m->delta[0] = lo + 1;
- 		return 0;
- 	}
- 	m->clusterofs = lo;
- 	m->delta[0] = 0;
- 	/* figout out blkaddr (pblk) for HEAD lclusters */
--	nblk = 1;
--	while (i > 0) {
--		--i;
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * i, &type);
--		if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
--			i -= lo;
+-static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
+-				       u8 *src, unsigned int pageofs_in)
++static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
++			void *inpage, unsigned int *inputmargin, int *maptype,
++			bool support_0padding)
+ {
+-	/*
+-	 * if in-place decompression is ongoing, those decompressed
+-	 * pages should be copied in order to avoid being overlapped.
+-	 */
+-	struct page **in = rq->in;
+-	u8 *const tmp = erofs_get_pcpubuf(1);
+-	u8 *tmpp = tmp;
+-	unsigned int inlen = rq->inputsize - pageofs_in;
+-	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
 -
--		if (i >= 0)
-+	if (!big_pcluster) {
-+		nblk = 1;
-+		while (i > 0) {
-+			--i;
-+			lo = decode_compactedbits(lclusterbits, lomask,
-+						  in, encodebits * i, &type);
-+			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+				i -= lo;
+-	while (tmpp < tmp + inlen) {
+-		if (!src)
+-			src = kmap_atomic(*in);
+-		memcpy(tmpp, src + pageofs_in, count);
+-		kunmap_atomic(src);
+-		src = NULL;
+-		tmpp += count;
+-		pageofs_in = 0;
+-		count = PAGE_SIZE;
++	unsigned int nrpages_in, nrpages_out;
++	unsigned int ofull, oend, inputsize, total, i, j;
++	struct page **in;
++	void *src, *tmp;
 +
-+			if (i >= 0)
-+				++nblk;
++	inputsize = rq->inputsize;
++	nrpages_in = PAGE_ALIGN(inputsize) >> PAGE_SHIFT;
++	oend = rq->pageofs_out + rq->outputsize;
++	ofull = PAGE_ALIGN(oend);
++	nrpages_out = ofull >> PAGE_SHIFT;
++
++	if (rq->inplace_io) {
++		if (rq->partial_decoding || !support_0padding ||
++		    ofull - oend < LZ4_DECOMPRESS_INPLACE_MARGIN(inputsize))
++			goto docopy;
++
++		for (i = 0; i < nrpages_in; ++i) {
++			DBG_BUGON(rq->in[i] == NULL);
++			for (j = 0; j < nrpages_out - nrpages_in + i; ++j)
++				if (rq->out[j] == rq->in[i])
++					goto docopy;
 +		}
++	}
++
++	if (nrpages_in <= 1) {
++		*maptype = 0;
++		return inpage;
++	}
++	kunmap_atomic(inpage);
++	might_sleep();
++	while (1) {
++		src = vm_map_ram(rq->in, nrpages_in, -1);
++		/* retry two more times (totally 3 times) */
++		if (src || ++i >= 3)
++			break;
++		vm_unmap_aliases();
++	}
++	*maptype = 1;
++	return src;
++docopy:
++	/* Or copy compressed data which can be overlapped to per-CPU buffer */
++	in = rq->in;
++	src = erofs_get_pcpubuf(nrpages_in);
++	if (!src) {
++		DBG_BUGON(1);
++		return ERR_PTR(-EFAULT);
++	}
++
++	tmp = src;
++	total = rq->inputsize;
++	while (total) {
++		unsigned int page_copycnt =
++			min_t(unsigned int, total, PAGE_SIZE - *inputmargin);
++
++		if (!inpage)
++			inpage = kmap_atomic(*in);
++		memcpy(tmp, inpage + *inputmargin, page_copycnt);
++		kunmap_atomic(inpage);
++		inpage = NULL;
++		tmp += page_copycnt;
++		total -= page_copycnt;
+ 		++in;
++		*inputmargin = 0;
+ 	}
+-	return tmp;
++	*maptype = 2;
++	return src;
+ }
+ 
+ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ {
+-	unsigned int inputmargin, inlen;
+-	u8 *src;
+-	bool copied, support_0padding;
+-	int ret;
++	unsigned int inputmargin;
++	u8 *headpage, *src;
++	bool support_0padding;
++	int ret, maptype;
+ 
+-	if (rq->inputsize > PAGE_SIZE)
+-		return -EOPNOTSUPP;
+-
+-	src = kmap_atomic(*rq->in);
++	DBG_BUGON(*rq->in == NULL);
++	headpage = kmap_atomic(*rq->in);
+ 	inputmargin = 0;
+ 	support_0padding = false;
+ 
+@@ -161,50 +204,39 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	if (erofs_sb_has_lz4_0padding(EROFS_SB(rq->sb))) {
+ 		support_0padding = true;
+ 
+-		while (!src[inputmargin & ~PAGE_MASK])
++		while (!headpage[inputmargin & ~PAGE_MASK])
+ 			if (!(++inputmargin & ~PAGE_MASK))
+ 				break;
+ 
+ 		if (inputmargin >= rq->inputsize) {
+-			kunmap_atomic(src);
++			kunmap_atomic(headpage);
+ 			return -EIO;
+ 		}
+ 	}
+ 
+-	copied = false;
+-	inlen = rq->inputsize - inputmargin;
+-	if (rq->inplace_io) {
+-		const uint oend = (rq->pageofs_out +
+-				   rq->outputsize) & ~PAGE_MASK;
+-		const uint nr = PAGE_ALIGN(rq->pageofs_out +
+-					   rq->outputsize) >> PAGE_SHIFT;
+-
+-		if (rq->partial_decoding || !support_0padding ||
+-		    rq->out[nr - 1] != rq->in[0] ||
+-		    rq->inputsize - oend <
+-		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
+-			src = generic_copy_inplace_data(rq, src, inputmargin);
+-			inputmargin = 0;
+-			copied = true;
+-		}
++	rq->inputsize -= inputmargin;
++	src = z_erofs_handle_inplace_io(rq, headpage, &inputmargin, &maptype,
++					support_0padding);
++	if (IS_ERR(src)) {
++		kunmap_atomic(headpage);
++		return PTR_ERR(src);
+ 	}
+ 
+ 	/* legacy format could compress extra data in a pcluster. */
+ 	if (rq->partial_decoding || !support_0padding)
+ 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+-						  inlen, rq->outputsize,
+-						  rq->outputsize);
++				rq->inputsize, rq->outputsize, rq->outputsize);
+ 	else
+ 		ret = LZ4_decompress_safe(src + inputmargin, out,
+-					  inlen, rq->outputsize);
++					  rq->inputsize, rq->outputsize);
+ 
+ 	if (ret != rq->outputsize) {
+ 		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
+-			  ret, inlen, inputmargin, rq->outputsize);
++			  ret, rq->inputsize, inputmargin, rq->outputsize);
+ 
+ 		WARN_ON(1);
+ 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
+-			       16, 1, src + inputmargin, inlen, true);
++			       16, 1, src + inputmargin, rq->inputsize, true);
+ 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
+ 			       16, 1, out, rq->outputsize, true);
+ 
+@@ -213,10 +245,16 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 		ret = -EIO;
+ 	}
+ 
+-	if (copied)
+-		erofs_put_pcpubuf(src);
+-	else
++	if (maptype == 0) {
+ 		kunmap_atomic(src);
++	} else if (maptype == 1) {
++		vm_unmap_ram(src, PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT);
++	} else if (maptype == 2) {
++		erofs_put_pcpubuf(src);
 +	} else {
-+		nblk = 0;
-+		while (i > 0) {
-+			--i;
-+			lo = decode_compactedbits(lclusterbits, lomask,
-+						  in, encodebits * i, &type);
-+			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+				if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
-+					--i;
-+					nblk += lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
-+					continue;
-+				}
-+				/* bigpcluster shouldn't have plain d0 == 1 */
-+				if (lo <= 1) {
-+					DBG_BUGON(1);
-+					return -EFSCORRUPTED;
-+				}
-+				i -= lo - 2;
-+				continue;
-+			}
- 			++nblk;
++		DBG_BUGON(1);
++		return -EFAULT;
++	}
+ 	return ret;
+ }
+ 
+@@ -268,33 +306,37 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	void *dst;
+ 	int ret, i;
+ 
+-	if (nrpages_out == 1 && !rq->inplace_io) {
+-		DBG_BUGON(!*rq->out);
+-		dst = kmap_atomic(*rq->out);
+-		dst_maptype = 0;
+-		goto dstmap_out;
+-	}
++	/* two optimized fast paths only for non bigpcluster cases yet */
++	if (rq->inputsize <= PAGE_SIZE) {
++		if (nrpages_out == 1 && !rq->inplace_io) {
++			DBG_BUGON(!*rq->out);
++			dst = kmap_atomic(*rq->out);
++			dst_maptype = 0;
++			goto dstmap_out;
++		}
+ 
+-	/*
+-	 * For the case of small output size (especially much less
+-	 * than PAGE_SIZE), memcpy the decompressed data rather than
+-	 * compressed data is preferred.
+-	 */
+-	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
+-		dst = erofs_get_pcpubuf(1);
+-		if (IS_ERR(dst))
+-			return PTR_ERR(dst);
+-
+-		rq->inplace_io = false;
+-		ret = alg->decompress(rq, dst);
+-		if (!ret)
+-			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
+-					  rq->outputsize);
+-
+-		erofs_put_pcpubuf(dst);
+-		return ret;
++		/*
++		 * For the case of small output size (especially much less
++		 * than PAGE_SIZE), memcpy the decompressed data rather than
++		 * compressed data is preferred.
++		 */
++		if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
++			dst = erofs_get_pcpubuf(1);
++			if (IS_ERR(dst))
++				return PTR_ERR(dst);
++
++			rq->inplace_io = false;
++			ret = alg->decompress(rq, dst);
++			if (!ret)
++				copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
++						  rq->outputsize);
++
++			erofs_put_pcpubuf(dst);
++			return ret;
 +		}
  	}
- 	in += (vcnt << amortizedshift) - sizeof(__le32);
- 	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
+ 
++	/* general decoding path which can be used for all cases */
+ 	ret = alg->prepare_destpages(rq, pagepool);
+ 	if (ret < 0) {
+ 		return ret;
 -- 
 2.20.1
 
