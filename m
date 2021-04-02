@@ -1,97 +1,32 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A24035255A
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Apr 2021 04:18:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA1E335290A
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Apr 2021 11:48:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FBNxg3xDDz3btn
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Apr 2021 13:17:59 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JEcttR69;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JEcttR69;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FBZxw24Q7z3btg
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Apr 2021 20:48:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=170.10.133.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=JEcttR69; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=JEcttR69; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [170.10.133.124])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FBNxd3hL2z2yRX
- for <linux-erofs@lists.ozlabs.org>; Fri,  2 Apr 2021 13:17:56 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1617329874;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=Zx3aULVDJraeYjCJxieoxBhScn2V2VESwLcYZMChRnE=;
- b=JEcttR69ypgcEpS3vES71JLK2JD84vYE6euthWJOIvL+xN4iJEGBgPMFsGn95+rNe+2hfH
- Ln8xEEwvK3L/Ils0cEF/e63ULv6aFvFCllb3nh+16TTqn+ohUxLMGWa/Ej26nOX/oBwOpW
- 2ZqFQ2nbhAniPz3iyUWEtPSKmTgT8AA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1617329874;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=Zx3aULVDJraeYjCJxieoxBhScn2V2VESwLcYZMChRnE=;
- b=JEcttR69ypgcEpS3vES71JLK2JD84vYE6euthWJOIvL+xN4iJEGBgPMFsGn95+rNe+2hfH
- Ln8xEEwvK3L/Ils0cEF/e63ULv6aFvFCllb3nh+16TTqn+ohUxLMGWa/Ej26nOX/oBwOpW
- 2ZqFQ2nbhAniPz3iyUWEtPSKmTgT8AA=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-4T-8_yR_OAu-XEUz9KQ5XQ-1; Thu, 01 Apr 2021 22:17:52 -0400
-X-MC-Unique: 4T-8_yR_OAu-XEUz9KQ5XQ-1
-Received: by mail-pl1-f199.google.com with SMTP id k9so3859187pls.13
- for <linux-erofs@lists.ozlabs.org>; Thu, 01 Apr 2021 19:17:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=Zx3aULVDJraeYjCJxieoxBhScn2V2VESwLcYZMChRnE=;
- b=cxfWzlGvjRUNzlcvalEvV90CG/enp7so7vfY+PnVbgHmtk5IW1SMqA6Vl4VzgTREVU
- 39GXIqc0Ax03c9W+lSuhJO5XrEa3N43r/BnrUOiG74ix9pmydmFiFWb13thujr0IT9BE
- z/w9F8SEsbgScI5RS2YPJixMGPfIA+sUMQdQVGzpms2m/htlIf4g/po+rGoIoMeH+0vP
- YWZahykjGZMZWYkBUGM3OuUO3XgRArbnzfKEXXN5o+8aW5zJhyMHcqfafkFiHRNV7xtQ
- NzUdkXKCczZJRySWhfTasJkge9nbY/CsIqLgwuQ8BHSUvh2ZyHyrIrlbeGgbKi0Y1PA1
- MChg==
-X-Gm-Message-State: AOAM533HBPZjgs0UBL/hfBPkhaETyWm4Bqr1PZH6cVMl2uhIcKGlxASQ
- ZCVLGsj+kdwhLOauHcRU4AxaIyb86r8VbKbZ1Lm+m6eHANtJCBQmw6Kny3d9OwmYBp8aTCuTH4Y
- 8TofU4lgHJoN5xTBbWUi2RUF0
-X-Received: by 2002:a63:e746:: with SMTP id j6mr9908609pgk.91.1617329871567;
- Thu, 01 Apr 2021 19:17:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx26axO0VIYfx0bYeMNOeVjTQF7C0uIMabXXyjFrjskuajeK0s8BJIfvb5BV5zHqqjhvEkIyQ==
-X-Received: by 2002:a63:e746:: with SMTP id j6mr9908597pgk.91.1617329871309;
- Thu, 01 Apr 2021 19:17:51 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id n16sm6556712pff.119.2021.04.01.19.17.49
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Thu, 01 Apr 2021 19:17:50 -0700 (PDT)
-Date: Fri, 2 Apr 2021 10:17:41 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Hu Weiwen <sehuww@mail.scut.edu.cn>
-Subject: Re: [PATCH] erofs-utils: use qsort() to sort dir->i_subdirs
-Message-ID: <20210402021741.GB4011659@xiangao.remote.csb>
-References: <20210401135251.59785-1-sehuww@mail.scut.edu.cn>
- <20210402021250.GA4011659@xiangao.remote.csb>
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=goodsbmx.com (client-ip=160.202.164.171; helo=getzcope.com;
+ envelope-from=ukzkjpukt@goodsbmx.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 2995 seconds by postgrey-1.36 at boromir;
+ Fri, 02 Apr 2021 20:48:49 AEDT
+Received: from getzcope.com (unknown [160.202.164.171])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FBZxs6n4lz3brv
+ for <linux-erofs@lists.ozlabs.org>; Fri,  2 Apr 2021 20:48:49 +1100 (AEDT)
+To: linux-erofs@lists.ozlabs.org
+Subject: quick reminder
+Message-ID: <56e4bc6c3941ee1b396a25b107829741@neatorobotics.com>
+Date: Fri, 02 Apr 2021 09:08:04 +0200
+From: "Jason Patel" <ukedopqukt@goodsbmx.com>
 MIME-Version: 1.0
-In-Reply-To: <20210402021250.GA4011659@xiangao.remote.csb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,136 +38,81 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Reply-To: loscaosmissge@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Apr 02, 2021 at 10:12:50AM +0800, Gao Xiang wrote:
-> Hi Weiwen,
-> 
-> On Thu, Apr 01, 2021 at 09:52:51PM +0800, Hu Weiwen wrote:
-> > Original implementation use insertion sort, and its time complexity is
-> > O(n^2). This patch use qsort instead. When I create a directory with
-> > 100k entries, this reduces the user space time from around 3 mins to
-> > 0.5s.
-> > 
-> > Create such a large directory for benchmark with:
-> > mkdir large; cd large; touch $(seq 100000);
-> > 
-> > Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> 
-> Thanks for your work. Yeah, it's another path that needs to be
-> optimized for huge dirs.
-> 
-> The overall looks good to me, some nits below...
-> 
-> > ---
-> >  lib/inode.c | 53 +++++++++++++++++++++++++++++++++--------------------
-> >  1 file changed, 33 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/lib/inode.c b/lib/inode.c
-> > index d52facf..9217127 100644
-> > --- a/lib/inode.c
-> > +++ b/lib/inode.c
-> > @@ -96,21 +96,6 @@ unsigned int erofs_iput(struct erofs_inode *inode)
-> >  	return 0;
-> >  }
-> >  
-> > -static int dentry_add_sorted(struct erofs_dentry *d, struct list_head *head)
-> > -{
-> > -	struct list_head *pos;
-> > -
-> > -	list_for_each(pos, head) {
-> > -		struct erofs_dentry *d2 =
-> > -			container_of(pos, struct erofs_dentry, d_child);
-> > -
-> > -		if (strcmp(d->name, d2->name) < 0)
-> > -			break;
-> > -	}
-> > -	list_add_tail(&d->d_child, pos);
-> > -	return 0;
-> > -}
-> > -
-> >  struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
-> >  				   const char *name)
-> >  {
-> > @@ -122,7 +107,7 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
-> >  	strncpy(d->name, name, EROFS_NAME_LEN - 1);
-> >  	d->name[EROFS_NAME_LEN - 1] = '\0';
-> >  
-> > -	dentry_add_sorted(d, &parent->i_subdirs);
-> > +	list_add_tail(&d->d_child, &parent->i_subdirs);
-> >  	return d;
-> >  }
-> >  
-> > @@ -156,10 +141,19 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
-> >  	return 0;
-> >  }
-> >  
-> > +static int comp_subdir(const void *a, const void *b)
-> > +{
-> > +	const struct erofs_dentry *d_a, *d_b;
-> > +
-> > +	d_a = *((const struct erofs_dentry **)a);
-> > +	d_b = *((const struct erofs_dentry **)b);
-> > +	return strcmp(d_a->name, d_b->name);
-> > +}
-> 
-> How about just use `da' and `db' for size?
-
-... for these...
-
-> 
-> > +
-> > -int erofs_prepare_dir_file(struct erofs_inode *dir)
-> > +int erofs_prepare_dir_file(struct erofs_inode *dir, unsigned int nr_subdirs)
-> >  {
-> > -	struct erofs_dentry *d;
-> > -	unsigned int d_size, i_nlink;
-> > +	struct erofs_dentry *d, **all_d;
-> > +	unsigned int d_size, i_nlink, i;
-> >  	int ret;
-> >  
-> >  	/* dot is pointed to the current dir inode */
-> > @@ -172,6 +166,22 @@ int erofs_prepare_dir_file(struct erofs_inode *dir)
-> >  	d->inode = erofs_igrab(dir->i_parent);
-> >  	d->type = EROFS_FT_DIR;
-> >  
-> > +	/* sort subdirs */
-> > +	nr_subdirs += 2;
-> > +	all_d = malloc(nr_subdirs * sizeof(d));
-> 
-> maybe just use `sorted' name here?
-> 
-> > +	if (!all_d)
-> > +		return -ENOMEM;
-> > +	i = 0;
-> > +	list_for_each_entry(d, &dir->i_subdirs, d_child)
-> 
-> I think we could list_del here, and use list_for_each_entry
-
-Ah, I meant list_for_each_entry_safe. The reply was somewhat
-buggy as well..
-
-> 
-> > +		all_d[i++] = d;
-> > +	DBG_BUGON(i != nr_subdirs);
-> > +	qsort(all_d, nr_subdirs, sizeof(d), comp_subdir);
-> > +	init_list_head(&dir->i_subdirs);
-> 
-> After list_del, no need to init_list_head again.
-> The another reason is that some list_add_tail implementation
-> could check elements isn't in a list first.
-> 
-> > +	for (i = 0; i < nr_subdirs; i++)
-> > +		list_add_tail(&all_d[i]->d_child, &dir->i_subdirs);
-> > +	free(all_d);
-> > +	all_d = NULL;
-> 
-> no need to NULLify it..
-> 
-> Thanks,
-> Gao Xiang
-> 
+<html>
+<head>
+</head>
+<body>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="text-align: left;"><span style="text-align: left;"><span
+style="text-align: left;"></span></span></span><span style="text-align:
+left;"><span style="text-align: left;">Hi,<br /><br
+/></span></span></span></span></span></span></span></span></span><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span>
+<div>How&nbsp;is&nbsp;everything&nbsp;going?<br />Simply need to check with
+you whether you got our email from a week ago?</div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="text-align:
+left;"><span style="text-align: left;">Let me know if you are interested to
+order our new arrived mini&nbsp;Wifi camera.<br /><br />USB mini camera
+Wifi IP Camera full HD 1080P P2P with SD card cloud storage.<br /> Smart
+surveillance AI human detection V380 APP.<br
+/></span></span></span></span></span></span></span></span></span></span><span
+style="display: block; text-align: left;">Description :<br />Product: U21
+Surveillance camera<br />Power supply : Portable power bank/USB power
+socket<br />Dimensions : 6.3x1x0.6 In<br />Weight : 23.8g</span><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"><span></span></span></span></span></span></span></span></span></span></span><span
+style="display: block; text-align: left;">Al Humanoid Recognition<br />Al
+Humanoid Recognition is based on neural networks which can accurately
+recognize<br />Compared with motion detection which is alarm is base on the
+change of motions<br />Greatly reduce false alarm made by the wind, plants
+or animal movement.<br /><br /></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;">Costs
+details: shipping included<br />89.00 each (1-2 unit)<br />79.00 each (3-5
+units)<br />69.00 each (6-10 units)<br />u&nbsp; &nbsp;s&nbsp; &nbsp;d<br
+/><br /></span></span><span style="display: block; text-align: left;">Reply
+to our email if you would like to order this camera and send your address
+for delivery, we will get the shipment ready for you quickly.<br /><br
+/><img
+src="https://ae04.alicdn.com/kf/H48ed76abe1c243bd8bc1bd1dfb5e26cbr.jpg"
+width="455" height="453" /><img
+src="https://ae01.alicdn.com/kf/Hd877417ae16e4fad9dae3d4ee3c0d74fu.jpg"
+width="455" height="455" /><br /><img
+src="https://ae01.alicdn.com/kf/H3edb7fc902e44f488a6c749f1960853at.jpg"
+width="455" height="455" /><img
+src="https://ae04.alicdn.com/kf/Hecd2b695cdc9447197078e2240bf0160s.jpg"
+width="455" height="455" /><br /></span><span style="display: block;
+text-align: left;"><span style="text-align: left;"><br /><br /><img
+src="https://ae01.alicdn.com/kf/H9c3c239fbb9d4dc8b41dc5cda642eb95l.jpg"
+width="455" height="455" /><img
+src="https://ae01.alicdn.com/kf/Ha1ec37ba7e614e1dabe21867a5b3199bo.jpg"
+width="455" height="455" /><br /></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><br /><br />Reply to our email if
+you would like to order this camera and send your address for delivery, we
+will get the shipment ready for you quickly.<br /><br />Thanks,<br
+/>Jason&nbsp;Patel</span></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"></span></span>
+</body>
+</html>
 
