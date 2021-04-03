@@ -2,52 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7911A353233
-	for <lists+linux-erofs@lfdr.de>; Sat,  3 Apr 2021 05:18:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 331A335323E
+	for <lists+linux-erofs@lfdr.de>; Sat,  3 Apr 2021 05:52:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FC2Dt602Pz30GV
-	for <lists+linux-erofs@lfdr.de>; Sat,  3 Apr 2021 14:18:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FC2zy17Vkz3bsQ
+	for <lists+linux-erofs@lfdr.de>; Sat,  3 Apr 2021 14:52:14 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=nXcYB4RX;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dm/C09gZ;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=nXcYB4RX; 
+ header.s=k20201202 header.b=dm/C09gZ; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FC2Dr4gRpz2xg5
- for <linux-erofs@lists.ozlabs.org>; Sat,  3 Apr 2021 14:18:20 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EE0CE61056;
- Sat,  3 Apr 2021 03:18:15 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FC2zw3zxzz2yjS
+ for <linux-erofs@lists.ozlabs.org>; Sat,  3 Apr 2021 14:52:12 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3EF4D61177;
+ Sat,  3 Apr 2021 03:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1617419897;
- bh=SU/+5GRt1QvsCB8iKE15u0xmXZLEH/faeLHknrAWTPI=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=nXcYB4RXJWnp8ypJkqHVacJuMfuEvfb5Icg3yhDxsnWBBwgyN2x2bDCle5uDxvtVy
- 6zv26MXVdOXYJpm7x8TER7f0/AAaZkWQb2rX3TcsBToM/j79u+wbQYfPDRFTmih3hK
- +Z7x5danC5B1HtoOEhpfjPGLbv9lb3p74tYPmAckBitkgTABbLWb9VidwsWNo3ADqb
- rmKVSj+ABQjpW3Hf3G3h++ItffWrWpvG9vXwQx5o1R08GfZAwSbAHWtKaQLc4b+SK0
- xgWEjL6A+ffpIegKeFCZYi5nj/0oon1LkcTkh/FwKZENQh0pX+nIch4MS1qg09eGrY
- WUogihs023JKQ==
-Date: Sat, 3 Apr 2021 11:17:56 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
- Chao Yu <chao@kernel.org>
+ s=k20201202; t=1617421930;
+ bh=Gcbhjp2hTrSu3AA+Ysg1cwzwUzf7hrlEJ66hTxf6VcQ=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+ b=dm/C09gZ05/a1nINUpO4C66J3RMOupdbfSmnHcjNbuvHkUUGDZvWrsHjksPNbMniU
+ TDoeuCFCR/kTB25ES/nYitGEQkPsoath3YU8zrk/SZoMJqoTr18mTBcF0iCqXn3GDA
+ SOc9LmfLvfAvA40okb0xrJv6HQJEXc7BCVXkbgP2pfV0wqV5XNxX3BCEFdaV+L3D1R
+ G9kzRfvEKF6y9jMZ0U0EYNljaAh5Ue5CGV8z92q/nKpO68vuK8YZ1s3yAoxp8kzHP6
+ wmiXJTSs4ofF2dARheR4xHhRMdydwZn4njkUrlccUq1bNdCL9So0GYvCqMLe2r9bwL
+ Dd9kKTKWlfwdw==
 Subject: Re: [PATCH v2 00/10] erofs: add big pcluster compression support
-Message-ID: <20210403031755.GA16255@hsiangkao-HP-ZHAN-66-Pro-G1>
+To: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
+ Chao Yu <yuchao0@huawei.com>
 References: <20210401032954.20555-1-xiang@kernel.org>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <18509211-374c-be19-bae7-f2ce852bfb15@kernel.org>
+Date: Sat, 3 Apr 2021 11:52:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 In-Reply-To: <20210401032954.20555-1-xiang@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,7 +66,7 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
+On 2021/4/1 11:29, Gao Xiang wrote:
 > Hi folks,
 > 
 > This is the formal version of EROFS big pcluster support, which means
@@ -81,30 +83,30 @@ On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
 > Different from previous thoughts, which had fixed-sized pclusterblks
 > recorded in the on-disk compress index header, our on-disk design allows
 > variable-sized pclusterblks now. The main reasons are
->  - user data varies in compression ratio locally, so fixed-sized
->    clustersize approach is space-wasting and causes extra read
->    amplificationfor high CR cases;
+>   - user data varies in compression ratio locally, so fixed-sized
+>     clustersize approach is space-wasting and causes extra read
+>     amplificationfor high CR cases;
 > 
->  - inplace decompression needs zero padding to guarantee its safe margin,
->    but we don't want to pad more than 1 fs block for big pcluster;
+>   - inplace decompression needs zero padding to guarantee its safe margin,
+>     but we don't want to pad more than 1 fs block for big pcluster;
 > 
->  - end users can now customize the pcluster size according to data type
->    since various pclustersize can exist in a file, for example, using
->    different pcluster size for executable code and one-shot data. such
->    design should be more flexible than many other public compression fses
->    (Btw, each file in EROFS can have maximum 2 algorithms at the same time
->    by using HEAD1/2, which will be formally added with LZMA support.)
+>   - end users can now customize the pcluster size according to data type
+>     since various pclustersize can exist in a file, for example, using
+>     different pcluster size for executable code and one-shot data. such
+>     design should be more flexible than many other public compression fses
+>     (Btw, each file in EROFS can have maximum 2 algorithms at the same time
+>     by using HEAD1/2, which will be formally added with LZMA support.)
 > 
 > In brief, EROFS can now compress from variable-sized input to
 > variable-sized pcluster blocks, as illustrated below:
 > 
->   |<-_lcluster_->|________________________|<-_lcluster_->|
->   |____._________|_________ .. ___________|_______.______|
->         .                                        .
->          .                                     .
->           .__________________________________.
->           |______________| .. |______________|
->           |<-          pcluster            ->|
+>    |<-_lcluster_->|________________________|<-_lcluster_->|
+>    |____._________|_________ .. ___________|_______.______|
+>          .                                        .
+>           .                                     .
+>            .__________________________________.
+>            |______________| .. |______________|
+>            |<-          pcluster            ->|
 > 
 > The next step would be how to record the compressed block count in
 > lclusters. In compress indexes, there are 2 concepts called HEAD and
@@ -117,10 +119,10 @@ On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
 > compress index store the compressed block count with a special flag as a
 > new called CBLKCNT compress index. It's also easy to know its delta0 is
 > constantly 1, as illustrated below:
->   ________________________________________________________
->  |_HEAD_|_CBLKCNT_|_NONHEAD_|_..._|_NONHEAD_|_HEAD | HEAD |
->     |<------ a pcluster with CBLKCNT --------->|<-- -->|
->                                                    ^ a pcluster with 1
+>    ________________________________________________________
+>   |_HEAD_|_CBLKCNT_|_NONHEAD_|_..._|_NONHEAD_|_HEAD | HEAD |
+>      |<------ a pcluster with CBLKCNT --------->|<-- -->|
+>                                                     ^ a pcluster with 1
 > 
 > If another HEAD follows a HEAD lcluster, there is no room to record
 > CBLKCNT, but it's easy to know the size of pcluster will be 1.
@@ -129,7 +131,7 @@ On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
 > commit message.
 > 
 > On the runtime performance side, the current EROFS test results are:
->  ________________________________________________________________
+>   ________________________________________________________________
 > |  file system  |   size    | seq read | rand read | rand9m read |
 > |_______________|___________|_ MiB/s __|__ MiB/s __|___ MiB/s ___|
 > |___erofs_4k____|_556879872_|_ 781.4 __|__ 55.3 ___|___ 25.3  ___|
@@ -144,12 +146,12 @@ On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
 > 
 > 
 > * Squashfs grabs more page cache to keep all decompressed data with
->   grab_cache_page_nowait() than the normal requested readahead (see
->   squashfs_copy_cache and squashfs_readpage_block).
->   In principle, EROFS can also cache such all decompressed data
->   if necessary, yet it's low priority for now and has little use
->   (rand9m is actually a better rand read workload, since the amount
->    of I/O is 9m rather than full-sized 1000m).
+>    grab_cache_page_nowait() than the normal requested readahead (see
+>    squashfs_copy_cache and squashfs_readpage_block).
+>    In principle, EROFS can also cache such all decompressed data
+>    if necessary, yet it's low priority for now and has little use
+>    (rand9m is actually a better rand read workload, since the amount
+>     of I/O is 9m rather than full-sized 1000m).
 > 
 > More details are in
 > https://lore.kernel.org/r/20210329053654.GA3281654@xiangao.remote.csb
@@ -166,69 +168,47 @@ On Thu, Apr 01, 2021 at 11:29:44AM +0800, Gao Xiang wrote:
 > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b experimental-bigpcluster-compact
 > 
 > Thanks for your time on reading this!
+
+Nice job!
+
+Acked-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
+
 > 
 > Thanks,
 > Gao Xiang
 > 
 > changes since v1:
->  - add a missing vunmap in erofs_pcpubuf_exit();
->  - refine comments and commit messages.
+>   - add a missing vunmap in erofs_pcpubuf_exit();
+>   - refine comments and commit messages.
 > 
->  (btw, I'll apply this patchset for -next first for further integration
->   test, which will be aimed to 5.13-rc1.)
->
-
-As a quick update, I've applied the following update to the next version
-(some minor fix):
-
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index c7b1d3fe8184..fe46a9c34923 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -43,11 +43,15 @@ int z_erofs_load_lz4_config(struct super_block *sb,
- 		distance = le16_to_cpu(lz4->max_distance);
- 
- 		sbi->lz4.max_pclusterblks = le16_to_cpu(lz4->max_pclusterblks);
--		if (sbi->lz4.max_pclusterblks >
--		    Z_EROFS_PCLUSTER_MAX_SIZE / EROFS_BLKSIZ) {
--			erofs_err(sb, "too large lz4 pcluster blocks %u",
-+		if (!sbi->lz4.max_pclusterblks) {
-+			sbi->lz4.max_pclusterblks = 1;	/* reserved case */
-+		} else if (sbi->lz4.max_pclusterblks >
-+			   Z_EROFS_PCLUSTER_MAX_SIZE / EROFS_BLKSIZ) {
-+			erofs_err(sb, "too large lz4 pclusterblks %u",
- 				  sbi->lz4.max_pclusterblks);
- 			return -EINVAL;
-+		} else if (sbi->lz4.max_pclusterblks >= 2) {
-+			erofs_info(sb, "EXPERIMENTAL big pcluster feature in use. Use at your own risk!");
- 		}
- 	} else {
- 		distance = le16_to_cpu(dsb->u1.lz4_max_distance);
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 545cd5989e6a..6fc8e7fdaef8 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -77,12 +77,21 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	}
- 
- 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
-+	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
-+			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
-+		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
-+			  vi->nid);
-+		err = -EFSCORRUPTED;
-+		goto unmap_done;
-+	}
- 	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
- 		erofs_err(sb, "big pcluster head1/2 of compact indexes should be consistent for nid %llu",
- 			  vi->nid);
--		return -EFSCORRUPTED;
-+		err = -EFSCORRUPTED;
-+		goto unmap_done;
- 	}
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
-
+>   (btw, I'll apply this patchset for -next first for further integration
+>    test, which will be aimed to 5.13-rc1.)
+> 
+> Gao Xiang (10):
+>    erofs: reserve physical_clusterbits[]
+>    erofs: introduce multipage per-CPU buffers
+>    erofs: introduce physical cluster slab pools
+>    erofs: fix up inplace I/O pointer for big pcluster
+>    erofs: add big physical cluster definition
+>    erofs: adjust per-CPU buffers according to max_pclusterblks
+>    erofs: support parsing big pcluster compress indexes
+>    erofs: support parsing big pcluster compact indexes
+>    erofs: support decompress big pcluster for lz4 backend
+>    erofs: enable big pcluster feature
+> 
+>   fs/erofs/Kconfig        |  14 ---
+>   fs/erofs/Makefile       |   2 +-
+>   fs/erofs/decompressor.c | 216 +++++++++++++++++++++++++---------------
+>   fs/erofs/erofs_fs.h     |  31 ++++--
+>   fs/erofs/internal.h     |  31 ++----
+>   fs/erofs/pcpubuf.c      | 134 +++++++++++++++++++++++++
+>   fs/erofs/super.c        |   1 +
+>   fs/erofs/utils.c        |  12 ---
+>   fs/erofs/zdata.c        | 193 ++++++++++++++++++++++-------------
+>   fs/erofs/zdata.h        |  14 +--
+>   fs/erofs/zmap.c         | 155 ++++++++++++++++++++++------
+>   11 files changed, 560 insertions(+), 243 deletions(-)
+>   create mode 100644 fs/erofs/pcpubuf.c
+> 
