@@ -2,50 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A102E353D59
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 11:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DCC21353D5C
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 11:50:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FDQb64L0Kz30CF
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 19:38:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FDQrH68fwz30D6
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 19:50:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
  envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
 Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FDQb35tc8z30BF
- for <linux-erofs@lists.ozlabs.org>; Mon,  5 Apr 2021 19:38:54 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FDQrD259Gz303S
+ for <linux-erofs@lists.ozlabs.org>; Mon,  5 Apr 2021 19:50:18 +1000 (AEST)
 Received: from laptop.huww98.cn (unknown [125.216.246.30])
- by front (Coremail) with SMTP id AWSowADHztaS2mpgJtMZAA--.11274S4;
- Mon, 05 Apr 2021 17:38:27 +0800 (CST)
+ by front (Coremail) with SMTP id AWSowAD3_tZC3WpgZNkZAA--.11032S4;
+ Mon, 05 Apr 2021 17:49:55 +0800 (CST)
 From: Hu Weiwen <sehuww@mail.scut.edu.cn>
 To: hsiangkao@redhat.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: use qsort() to sort dir->i_subdirs
-Date: Mon,  5 Apr 2021 17:38:16 +0800
-Message-Id: <20210405093816.149621-1-sehuww@mail.scut.edu.cn>
+Subject: [PATCH] erofs-utils: get rid of inode->i_srcpath
+Date: Mon,  5 Apr 2021 17:49:50 +0800
+Message-Id: <20210405094950.150983-1-sehuww@mail.scut.edu.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210402021741.GB4011659@xiangao.remote.csb>
-References: <20210402021741.GB4011659@xiangao.remote.csb>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AWSowADHztaS2mpgJtMZAA--.11274S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF1xGryDKryUtFWkWw1xZrb_yoWrJr4DpF
- 4YyryxJ3ykXF97urn3tr4DZayFqF4xta18C3yxWa4rtw15Ar1IqF4xJr1DCrW3GrWkCrWa
- qF4q9w1UGr47KF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
- 9KBjDU0xBIdaVrnRJUUUyC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: AWSowAD3_tZC3WpgZNkZAA--.11032S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3JryDAF4DWFW5Zw4xJry7ZFb_yoWfXr4UpF
+ Wjkry8J3ykXryUCr4ktr4qv3W3KF4xtr47u34xXwn5Z3W3Jr1IqF40kr95JF45GrWkX39I
+ vF429w1Uur13tw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+ 9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
  rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
- 1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
- 6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
- 0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
- 6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
- 0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAK
- I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
- xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xII
- jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
- 0EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
- 7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUywZ7UUUUU=
-X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQASBlepTBMIEQAZs0
+ 1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+ 6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+ 1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+ 7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+ 1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
+ GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+ WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI
+ 7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+ 1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8
+ JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JU6rWrUUU
+ UU=
+X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQASBlepTBMIEQAbs2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,133 +60,298 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Original implementation use insertion sort, and its time complexity is
-O(n^2). This patch use qsort instead. When I create a directory with
-100k entries, this reduces the user space time from around 3 mins to
-0.5s.
-
-Create such a large directory for benchmark with:
-mkdir large; cd large; touch $(seq 100000);
+This cut the memory usage by half.
 
 Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
 ---
- lib/inode.c | 53 +++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ include/erofs/compress.h |  2 +-
+ include/erofs/internal.h |  2 --
+ include/erofs/xattr.h    |  2 +-
+ lib/compress.c           | 24 +++++++--------------
+ lib/inode.c              | 45 ++++++++++++++++++++--------------------
+ lib/xattr.c              |  4 ++--
+ 6 files changed, 33 insertions(+), 46 deletions(-)
 
+diff --git a/include/erofs/compress.h b/include/erofs/compress.h
+index 952f287..a1dd55f 100644
+--- a/include/erofs/compress.h
++++ b/include/erofs/compress.h
+@@ -16,7 +16,7 @@
+ #define EROFS_CONFIG_COMPR_MAX_SZ           (900  * 1024)
+ #define EROFS_CONFIG_COMPR_MIN_SZ           (32   * 1024)
+ 
+-int erofs_write_compressed_file(struct erofs_inode *inode);
++int erofs_write_compressed_file(struct erofs_inode *inode, int fd);
+ 
+ int z_erofs_compress_init(void);
+ int z_erofs_compress_exit(void);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index ac5b270..d99d4ac 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -137,8 +137,6 @@ struct erofs_inode {
+ 		u32 i_rdev;
+ 	} u;
+ 
+-	char i_srcpath[PATH_MAX + 1];
+-
+ 	unsigned char datalayout;
+ 	unsigned char inode_isize;
+ 	/* inline tail-end packing size */
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 197fe25..e22342d 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -42,7 +42,7 @@
+ #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
+ #endif
+ 
+-int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
++int erofs_prepare_xattr_ibody(struct erofs_inode *inode, const char *path);
+ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
+ int erofs_build_shared_xattrs_from_path(const char *path);
+ 
+diff --git a/lib/compress.c b/lib/compress.c
+index 4b685cd..ea2310e 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -170,8 +170,7 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 					      &count, dst, EROFS_BLKSIZ);
+ 		if (ret <= 0) {
+ 			if (ret != -EAGAIN) {
+-				erofs_err("failed to compress %s: %s",
+-					  inode->i_srcpath,
++				erofs_err("failed to compress: %s",
+ 					  erofs_strerror(ret));
+ 			}
+ nocompression:
+@@ -388,30 +387,24 @@ int z_erofs_convert_to_compacted_format(struct erofs_inode *inode,
+ 	return 0;
+ }
+ 
+-int erofs_write_compressed_file(struct erofs_inode *inode)
++int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+ {
+ 	struct erofs_buffer_head *bh;
+ 	struct z_erofs_vle_compress_ctx ctx;
+ 	erofs_off_t remaining;
+ 	erofs_blk_t blkaddr, compressed_blocks;
+ 	unsigned int legacymetasize;
+-	int ret, fd;
++	int ret;
+ 
+ 	u8 *compressmeta = malloc(vle_compressmeta_capacity(inode->i_size));
+ 	if (!compressmeta)
+ 		return -ENOMEM;
+ 
+-	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+-	if (fd < 0) {
+-		ret = -errno;
+-		goto err_free;
+-	}
+-
+ 	/* allocate main data buffer */
+ 	bh = erofs_balloc(DATA, 0, 0, 0);
+ 	if (IS_ERR(bh)) {
+ 		ret = PTR_ERR(bh);
+-		goto err_close;
++		goto err;
+ 	}
+ 
+ 	memset(compressmeta, 0, Z_EROFS_LEGACY_MAP_HEADER_SIZE);
+@@ -455,13 +448,12 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 
+ 	vle_write_indexes_final(&ctx);
+ 
+-	close(fd);
+ 	DBG_BUGON(!compressed_blocks);
+ 	ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
+ 	DBG_BUGON(ret != EROFS_BLKSIZ);
+ 
+-	erofs_info("compressed %s (%llu bytes) into %u blocks",
+-		   inode->i_srcpath, (unsigned long long)inode->i_size,
++	erofs_info("compressed %llu bytes into %u blocks",
++		   (unsigned long long)inode->i_size,
+ 		   compressed_blocks);
+ 
+ 	/*
+@@ -486,9 +478,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 
+ err_bdrop:
+ 	erofs_bdrop(bh, true);	/* revoke buffer */
+-err_close:
+-	close(fd);
+-err_free:
++err:
+ 	free(compressmeta);
+ 	return ret;
+ }
 diff --git a/lib/inode.c b/lib/inode.c
-index d52facf..ef55e88 100644
+index d52facf..44ed6f6 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -96,21 +96,6 @@ unsigned int erofs_iput(struct erofs_inode *inode)
+@@ -362,9 +362,9 @@ static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
  	return 0;
  }
-
--static int dentry_add_sorted(struct erofs_dentry *d, struct list_head *head)
--{
--	struct list_head *pos;
--
--	list_for_each(pos, head) {
--		struct erofs_dentry *d2 =
--			container_of(pos, struct erofs_dentry, d_child);
--
--		if (strcmp(d->name, d2->name) < 0)
--			break;
--	}
--	list_add_tail(&d->d_child, pos);
--	return 0;
--}
--
- struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- 				   const char *name)
+ 
+-int erofs_write_file(struct erofs_inode *inode)
++int erofs_write_file(struct erofs_inode *inode, int fd)
  {
-@@ -122,7 +107,7 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- 	strncpy(d->name, name, EROFS_NAME_LEN - 1);
- 	d->name[EROFS_NAME_LEN - 1] = '\0';
-
--	dentry_add_sorted(d, &parent->i_subdirs);
-+	list_add_tail(&d->d_child, &parent->i_subdirs);
- 	return d;
+-	int ret, fd;
++	int ret;
+ 
+ 	if (!inode->i_size) {
+ 		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+@@ -372,17 +372,15 @@ int erofs_write_file(struct erofs_inode *inode)
+ 	}
+ 
+ 	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
+-		ret = erofs_write_compressed_file(inode);
++		ret = erofs_write_compressed_file(inode, fd);
+ 
+-		if (!ret || ret != -ENOSPC)
++		if (!ret || ret != -ENOSPC) {
++			close(fd);
+ 			return ret;
++		}
+ 	}
+ 
+ 	/* fallback to all data uncompressed */
+-	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+-	if (fd < 0)
+-		return -errno;
+-
+ 	ret = write_uncompressed_file_from_fd(inode, fd);
+ 	close(fd);
+ 	return ret;
+@@ -786,16 +784,12 @@ int erofs_fill_inode(struct erofs_inode *inode,
+ 		return -EINVAL;
+ 	}
+ 
+-	strncpy(inode->i_srcpath, path, sizeof(inode->i_srcpath) - 1);
+-	inode->i_srcpath[sizeof(inode->i_srcpath) - 1] = '\0';
+-
+ 	inode->dev = st->st_dev;
+ 	inode->i_ino[1] = st->st_ino;
+ 
+ 	if (erofs_should_use_inode_extended(inode)) {
+ 		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
+-			erofs_err("file %s cannot be in compact form",
+-				  inode->i_srcpath);
++			erofs_err("file %s cannot be in compact form", path);
+ 			return -EINVAL;
+ 		}
+ 		inode->inode_isize = sizeof(struct erofs_inode_extended);
+@@ -916,14 +910,15 @@ void erofs_d_invalidate(struct erofs_dentry *d)
+ 	erofs_iput(inode);
  }
-
-@@ -156,10 +141,19 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
- 	return 0;
- }
-
-+static int comp_subdir(const void *a, const void *b)
-+{
-+	const struct erofs_dentry *da, *db;
-+
-+	da = *((const struct erofs_dentry **)a);
-+	db = *((const struct erofs_dentry **)b);
-+	return strcmp(da->name, db->name);
-+}
-+
--int erofs_prepare_dir_file(struct erofs_inode *dir)
-+int erofs_prepare_dir_file(struct erofs_inode *dir, unsigned int nr_subdirs)
+ 
+-struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
++struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir,
++		const char *src_path)
  {
--	struct erofs_dentry *d;
--	unsigned int d_size, i_nlink;
-+	struct erofs_dentry *d, *n, **sorted_d;
-+	unsigned int d_size, i_nlink, i;
  	int ret;
-
- 	/* dot is pointed to the current dir inode */
-@@ -172,6 +166,22 @@ int erofs_prepare_dir_file(struct erofs_inode *dir)
- 	d->inode = erofs_igrab(dir->i_parent);
- 	d->type = EROFS_FT_DIR;
-
-+	/* sort subdirs */
-+	nr_subdirs += 2;
-+	sorted_d = malloc(nr_subdirs * sizeof(d));
-+	if (!sorted_d)
-+		return -ENOMEM;
-+	i = 0;
-+	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
-+		list_del(&d->d_child);
-+		sorted_d[i++] = d;
-+	}
-+	DBG_BUGON(i != nr_subdirs);
-+	qsort(sorted_d, nr_subdirs, sizeof(d), comp_subdir);
-+	for (i = 0; i < nr_subdirs; i++)
-+		list_add_tail(&sorted_d[i]->d_child, &dir->i_subdirs);
-+	free(sorted_d);
-+
- 	/* let's calculate dir size and update i_nlink */
- 	d_size = 0;
- 	i_nlink = 0;
-@@ -922,6 +932,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
  	DIR *_dir;
  	struct dirent *dp;
  	struct erofs_dentry *d;
-+	unsigned int nr_subdirs;
-
- 	ret = erofs_prepare_xattr_ibody(dir);
+ 
+-	ret = erofs_prepare_xattr_ibody(dir);
++	ret = erofs_prepare_xattr_ibody(dir, src_path);
  	if (ret < 0)
-@@ -961,6 +972,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		return ERR_PTR(ret);
+ 
+@@ -933,7 +928,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 
+ 			if (!symlink)
+ 				return ERR_PTR(-ENOMEM);
+-			ret = readlink(dir->i_srcpath, symlink, dir->i_size);
++			ret = readlink(src_path, symlink, dir->i_size);
+ 			if (ret < 0) {
+ 				free(symlink);
+ 				return ERR_PTR(-errno);
+@@ -944,7 +939,11 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 			if (ret)
+ 				return ERR_PTR(ret);
+ 		} else {
+-			ret = erofs_write_file(dir);
++			int fd = open(src_path, O_RDONLY | O_BINARY);
++
++			if (fd < 0)
++				return ERR_PTR(-errno);
++			ret = erofs_write_file(dir, fd);
+ 			if (ret)
+ 				return ERR_PTR(ret);
+ 		}
+@@ -954,10 +953,10 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 		return dir;
+ 	}
+ 
+-	_dir = opendir(dir->i_srcpath);
++	_dir = opendir(src_path);
+ 	if (!_dir) {
+ 		erofs_err("%s, failed to opendir at %s: %s",
+-			  __func__, dir->i_srcpath, erofs_strerror(errno));
++			  __func__, src_path, erofs_strerror(errno));
  		return ERR_PTR(-errno);
  	}
-
-+	nr_subdirs = 0;
- 	while (1) {
- 		/*
- 		 * set errno to 0 before calling readdir() in order to
-@@ -984,6 +996,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
- 			ret = PTR_ERR(d);
- 			goto err_closedir;
+ 
+@@ -976,7 +975,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 			continue;
+ 
+ 		/* skip if it's a exclude file */
+-		if (erofs_is_exclude_path(dir->i_srcpath, dp->d_name))
++		if (erofs_is_exclude_path(src_path, dp->d_name))
+ 			continue;
+ 
+ 		d = erofs_d_alloc(dir, dp->d_name);
+@@ -1017,7 +1016,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
  		}
-+		nr_subdirs++;
-
- 		/* to count i_nlink for directories */
- 		d->type = (dp->d_type == DT_DIR ?
-@@ -996,7 +1009,7 @@ struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 
+ 		ret = snprintf(buf, PATH_MAX, "%s/%s",
+-			       dir->i_srcpath, d->name);
++			       src_path, d->name);
+ 		if (ret < 0 || ret >= PATH_MAX) {
+ 			/* ignore the too long path */
+ 			goto fail;
+@@ -1038,7 +1037,7 @@ fail:
+ 
+ 		erofs_d_invalidate(d);
+ 		erofs_info("add file %s/%s (nid %llu, type %d)",
+-			   dir->i_srcpath, d->name, (unsigned long long)d->nid,
++			   src_path, d->name, (unsigned long long)d->nid,
+ 			   d->type);
  	}
- 	closedir(_dir);
-
--	ret = erofs_prepare_dir_file(dir);
-+	ret = erofs_prepare_dir_file(dir, nr_subdirs);
- 	if (ret)
- 		goto err;
-
---
+ 	erofs_write_dir_file(dir);
+@@ -1071,6 +1070,6 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
+ 	else
+ 		inode->i_parent = inode;	/* rootdir mark */
+ 
+-	return erofs_mkfs_build_tree(inode);
++	return erofs_mkfs_build_tree(inode, path);
+ }
+ 
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 8b7bcb1..e128f3d 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -401,7 +401,7 @@ static int erofs_droid_xattr_set_caps(struct erofs_inode *inode)
+ }
+ #endif
+ 
+-int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
++int erofs_prepare_xattr_ibody(struct erofs_inode *inode, const char *path)
+ {
+ 	int ret;
+ 	struct inode_xattr_node *node;
+@@ -411,7 +411,7 @@ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ 	if (cfg.c_inline_xattr_tolerance < 0)
+ 		return 0;
+ 
+-	ret = read_xattrs_from_file(inode->i_srcpath, inode->i_mode, ixattrs);
++	ret = read_xattrs_from_file(path, inode->i_mode, ixattrs);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
 2.25.1
 
