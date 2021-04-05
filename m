@@ -1,51 +1,32 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F7AE3541F7
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 14:11:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0C203549C8
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Apr 2021 02:48:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FDTzV3WXqz304T
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Apr 2021 22:11:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FDpmB5YRbz30Jb
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Apr 2021 10:48:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=mail.scut.edu.cn (client-ip=202.38.213.20; helo=mail.scut.edu.cn;
- envelope-from=sehuww@mail.scut.edu.cn; receiver=<UNKNOWN>)
-Received: from mail.scut.edu.cn (stumail1.scut.edu.cn [202.38.213.20])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FDTzR0ywdz2yyj
- for <linux-erofs@lists.ozlabs.org>; Mon,  5 Apr 2021 22:11:45 +1000 (AEST)
-Received: from laptop (unknown [125.216.246.30])
- by front (Coremail) with SMTP id AWSowABHT9dj_mpgcCUaAA--.12552S3;
- Mon, 05 Apr 2021 20:11:20 +0800 (CST)
-Date: Mon, 5 Apr 2021 20:11:35 +0800
-From: =?utf-8?B?6IOh546u5paH?= <sehuww@mail.scut.edu.cn>
-To: Gao Xiang <hsiangkao@redhat.com>
-Subject: Re: [PATCH] erofs-utils: get rid of inode->i_srcpath
-Message-ID: <20210405121135.GA159690@laptop>
-References: <20210405094950.150983-1-sehuww@mail.scut.edu.cn>
- <20210405113525.GB378859@xiangao.remote.csb>
+Authentication-Results: lists.ozlabs.org;
+ spf=neutral (access neither permitted nor denied)
+ smtp.mailfrom=gloomth.com (client-ip=188.72.187.80; helo=globemobiles.com;
+ envelope-from=gbayfjphut@gloomth.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 3639 seconds by postgrey-1.36 at boromir;
+ Tue, 06 Apr 2021 10:48:08 AEST
+Received: from globemobiles.com (englios.com [188.72.187.80])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FDpm81V9xz2yYt
+ for <linux-erofs@lists.ozlabs.org>; Tue,  6 Apr 2021 10:48:08 +1000 (AEST)
+To: linux-erofs@lists.ozlabs.org
+Subject: following up on my last email
+Message-ID: <c7975a07d78319245d81ab5d0c91386b@outdoorlife.com>
+Date: Mon, 05 Apr 2021 15:50:47 +0200
+From: "Lucas Hawkins" <ukzkjphut@gloomth.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210405113525.GB378859@xiangao.remote.csb>
-X-CM-TRANSID: AWSowABHT9dj_mpgcCUaAA--.12552S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ur17uFWkXry5Jr4xKryUZFb_yoW8GFyfpr
- 4xCFyfK3W5t3srWr1Iyw1UXr93K393Jr98Ga4Fvr4kuFsxWFyvvryftasF9ryDury0yay0
- va1jvry5W3yDAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
- 9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
- 0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
- A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
- jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
- C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
- Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
- W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I
- 3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
- WUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
- wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
- k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
- Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8pnQUUUUUU==
-X-CM-SenderInfo: qsqrljqqwxllyrt6zt1loo2ulxwovvfxof0/1tbiAQASBlepTBMIEQAfsy
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,49 +38,72 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Reply-To: queuezhangjop@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Apr 05, 2021 at 07:35:25PM +0800, Gao Xiang wrote:
-> Hi Weiwen,
-> 
-> On Mon, Apr 05, 2021 at 05:49:50PM +0800, Hu Weiwen wrote:
-> > This cut the memory usage by half.
-> > 
-> > Signed-off-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-> > ---
-> 
-> I have to hold on this patch for now, 3 main reasons here:
->  1) I'd like to apply big pcluster first, which is a main new feature
->     for erofs-utils 1.3;
-
-OK
-
->  2) even though it saves memory usage (and not sure how much memory
->     you need to save), I think srcpath is more useful for debugging
->     and file tracing; Also, I think we could flush inode in advance to
->     save memory usage (e.g. by using bflush()) as well.
-
-I think flush in advance is a good idea. But it needs more investigation.
-Ideally, I want to make the space complexity O(1), so that we can pack an
-arbitrarily large number of files. It's better not to save every seen inode
-structure in memory.
-
-If I remember it correctly, when packing a dataset consisting of ~5m files,
-mkfs.erofs takes 30-40GiB memory. I think this can hinder some use cases.
-
-As for debugging, maybe we can create a routine that travels up the directory
-tree to rebuild the path when needed? (Just like `pwd'.) Or, for mkfs, we can
-just pass around a pointer to the current working path.
-
-Thanks,
-Hu Weiwen
-
->  3) if src_path is too large, how about malloc() it as the first step,
->     even that, I'd like to apply it after erofs-utils 1.3 is out...
-> 
-> Thanks,
-> Gao Xiang
+<html>
+<head>
+</head>
+<body>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="text-align: left;"><span style="text-align: left;"><span
+style="text-align: left;"></span></span></span><span style="text-align:
+left;"><span style="text-align: left;">Hi,<br /><br
+/></span></span></span></span></span></span></span></span></span><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"></span></span>
+<div>How are you doing today? Hope this email finds you well.<br />I am
+contacting you to let you know that the following drone just arrived here,
+and it is now ready to ship for worldwide customers.<br /><br /></div>
+<span style="display: block; text-align: left;"><span style="display:
+block; text-align: left;"><span style="display: block; text-align:
+left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="text-align: left;"><span style="text-align:
+left;"></span></span></span></span></span></span></span></span></span></span></span></span><span
+style="display: block; text-align: left;">Basic Information: <br /> Product
+size: 45x40x12cm (before folding) 21x11x9cm (after folding)<br />
+Positioning system: GPS dual-mode positioning<br /> Remote control
+distance: 2000m<br /> Remote control height:120m<br /> It can fly for 30
+minutes.<br /> parameters: Wifi frequency: 5G Camera<br /> resolution: 4096
+x 3072p<br /> Video resolution: 2048 x 1080p<br /> Transmission frame rate:
+25fps<br /> One click take off, land and return from a distance
+automaticly.<br /> Fixed-point surround<br /><br /></span><span
+style="display: block; text-align: left;"><span style="display: block;
+text-align: left;">Costs: u s d<br />229.50 each (1-20 units)<br />209.50
+each (21-50 units)<br />199.50 each (51-100 units)<br /><br
+/></span></span><span style="display: block; text-align: left;">Please send
+your shipping address if you would like to order our drone today, we will
+get the package ready for you soon.<br /><br /><img
+src="http://sc04.alicdn.com/kf/Hdc924abb7ba7428880c0df663af092b8R/206237902/Hdc924abb7ba7428880c0df663af092b8R.jpg"
+width="500" height="1184" /><img
+src="http://sc04.alicdn.com/kf/H7eaa3994743d4a2288779c8e3fef22fam/206237902/H7eaa3994743d4a2288779c8e3fef22fam.jpg"
+width="500" height="958" /><br /></span><span style="display: block;
+text-align: left;"><span style="text-align: left;"><br /><br /><img
+src="http://sc04.alicdn.com/kf/Hf213a219e4cf46b18e1a0c2a94f074c6R/206237902/Hf213a219e4cf46b18e1a0c2a94f074c6R.jpg"
+width="500" height="770" /><img
+src="http://sc04.alicdn.com/kf/H499ef401953c43109a0aaeb19ebaab4dy/206237902/H499ef401953c43109a0aaeb19ebaab4dy.jpg"
+width="500" height="766" /><br /><img
+src="http://sc04.alicdn.com/kf/H648f21d86f984c129cdbe7761ef80ed5p/206237902/H648f21d86f984c129cdbe7761ef80ed5p.jpg"
+width="500" height="756" /><img
+src="http://sc04.alicdn.com/kf/H33861689ec4f40f893ca1716293abbedn/206237902/H33861689ec4f40f893ca1716293abbedn.jpg"
+width="500" height="716" /><br /></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><span
+style="display: block; text-align: left;"><br />Please send your shipping
+address if you would like to order our drone today, we will get the package
+ready for you soon.<br /><br />Thanks,<br
+/>Lucas&nbsp;Hawkins</span></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"></span></span>
+</body>
+</html>
 
