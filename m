@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FD1A356291
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 06:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 004CA356292
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 06:39:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FFWrq3CNBz309y
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 14:39:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FFWrt6v4pz303g
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 14:39:42 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OJbr5wrs;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AK9VPtoI;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,31 +17,31 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=OJbr5wrs; 
+ header.s=k20201202 header.b=AK9VPtoI; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FFWrm722Jz2yZ3
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 14:39:36 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CE665613C2;
- Wed,  7 Apr 2021 04:39:33 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FFWrr2GM0z302b
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 14:39:40 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ADBF761246;
+ Wed,  7 Apr 2021 04:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1617770375;
- bh=YrRCGXJu60FHZKCdIPVUIJLofjXfL30/Oc+uXMU8P/w=;
+ s=k20201202; t=1617770378;
+ bh=BFEwYXQqTiz8BiUjwe4DGG6NKCACEvsDWNEqUEqX4fA=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=OJbr5wrsjYnAW8cHz5BnfqySdMLhtS2fqYPJogZUcCVMx4TbD6xoIhCzBIiexv9Eu
- hQzfvoalqkN2uheviDOy8VJzhbFlRDl2O4xdrJfHPTnQzkJl+0+fJlWz47oOULU5nl
- gICo3NC710KmRFSfvDysp4TDMUNkbV9J3kwdP2owztKT3kQjaJrNVtgQpNUkGGtVeE
- Tq/ZNLwiiZd7NksgAc+Egod1O8IaMkDA65L6VrPwODo6log/iidFVVDCnuwbXKj1kJ
- Zd6b5XxkXGsJO7k7FVyITWqoLHovOkYHDmTtVroxhfAOwV/dvWWRX+e17ZL+4Zbkkb
- MUrjbgMtcCd7w==
+ b=AK9VPtoIBdORHhY3a9wjZs4erLJTXxMXE8JleqShwdz8YLitczc/zTtnSd2/JHdau
+ hB6cZZFb58F5tnqEx9T0w/BjUp4nfEHEaJfMIshq5t+ljJikKmSA+KZ4kPYHRt1um5
+ J4Ix9CyRmsyatiGI6wf5WCgDxvmEbSjqfYjWqdDQdR5ohMpv5REGf64hQX7/X9NVOP
+ /0vYnb1AWeBaEhohmUopzBCTGO90Y8E8EENOslgGHwh1AOJDfA3dB6kcvaRm/sWl9F
+ qrRfTlfqPA1SqJ5cGP0//HUrJI14pkW3l3ZJEyCjKp9/k7W+nmejp2XgU+VAdCpckt
+ BYK9ek5TbWTzg==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH v3 01/10] erofs: reserve physical_clusterbits[]
-Date: Wed,  7 Apr 2021 12:39:18 +0800
-Message-Id: <20210407043927.10623-2-xiang@kernel.org>
+Subject: [PATCH v3 02/10] erofs: introduce multipage per-CPU buffers
+Date: Wed,  7 Apr 2021 12:39:19 +0800
+Message-Id: <20210407043927.10623-3-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210407043927.10623-1-xiang@kernel.org>
 References: <20210407043927.10623-1-xiang@kernel.org>
@@ -65,103 +65,297 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@redhat.com>
 
-Formal big pcluster design is actually more powerful / flexable than
-the previous thought whose pclustersize was fixed as power-of-2 blocks,
-which was obviously inefficient and space-wasting. Instead, pclustersize
-can now be set independently for each pcluster, so various pcluster
-sizes can also be used together in one file if mkfs wants (for example,
-according to data type and/or compression ratio).
+To deal the with the cases which inplace decompression is infeasible
+for some inplace I/O. Per-CPU buffers was introduced to get rid of page
+allocation latency and thrash for low-latency decompression algorithms
+such as lz4.
 
-Let's get rid of previous physical_clusterbits[] setting (also notice
-that corresponding on-disk fields are still 0 for now). Therefore,
-head1/2 can be used for at most 2 different algorithms in one file and
-again pclustersize is now independent of these.
+For the big pcluster feature, introduce multipage per-CPU buffers to
+keep such inplace I/O pclusters temporarily as well but note that
+per-CPU pages are just consecutive virtually.
+
+When a new big pcluster fs is mounted, its max pclustersize will be
+read and per-CPU buffers can be growed if needed. Shrinking adjustable
+per-CPU buffers is more complex (because we don't know if such size
+is still be used), so currently just release them all when unloading.
 
 Acked-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/erofs/erofs_fs.h |  4 +---
- fs/erofs/internal.h |  1 -
- fs/erofs/zdata.c    |  3 +--
- fs/erofs/zmap.c     | 15 ---------------
- 4 files changed, 2 insertions(+), 21 deletions(-)
+ fs/erofs/Makefile       |   2 +-
+ fs/erofs/decompressor.c |   8 ++-
+ fs/erofs/internal.h     |  24 ++-----
+ fs/erofs/pcpubuf.c      | 134 ++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/super.c        |   1 +
+ fs/erofs/utils.c        |  12 ----
+ 6 files changed, 147 insertions(+), 34 deletions(-)
+ create mode 100644 fs/erofs/pcpubuf.c
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 17bc0b5f117d..626b7d3e9ab7 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -233,9 +233,7 @@ struct z_erofs_map_header {
- 	__u8	h_algorithmtype;
- 	/*
- 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
--	 * bit 3-4 : (physical - logical) cluster bits of head 1:
--	 *       For example, if logical clustersize = 4096, 1 for 8192.
--	 * bit 5-7 : (physical - logical) cluster bits of head 2.
-+	 * bit 3-7 : reserved.
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index af159539fc1b..1f9aced49070 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+-erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
++erofs-objs := super.o inode.o data.o namei.o dir.o utils.o pcpubuf.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 27aa6a99b371..fb4838c0f0df 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -47,7 +47,9 @@ int z_erofs_load_lz4_config(struct super_block *sb,
+ 	EROFS_SB(sb)->lz4.max_distance_pages = distance ?
+ 					DIV_ROUND_UP(distance, PAGE_SIZE) + 1 :
+ 					LZ4_MAX_DISTANCE_PAGES;
+-	return 0;
++
++	/* TODO: use max pclusterblks after bigpcluster is enabled */
++	return erofs_pcpubuf_growsize(1);
+ }
+ 
+ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+@@ -114,7 +116,7 @@ static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
+ 	 * pages should be copied in order to avoid being overlapped.
  	 */
- 	__u8	h_clusterbits;
- };
+ 	struct page **in = rq->in;
+-	u8 *const tmp = erofs_get_pcpubuf(0);
++	u8 *const tmp = erofs_get_pcpubuf(1);
+ 	u8 *tmpp = tmp;
+ 	unsigned int inlen = rq->inputsize - pageofs_in;
+ 	unsigned int count = min_t(uint, inlen, PAGE_SIZE - pageofs_in);
+@@ -271,7 +273,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	 * compressed data is preferred.
+ 	 */
+ 	if (rq->outputsize <= PAGE_SIZE * 7 / 8) {
+-		dst = erofs_get_pcpubuf(0);
++		dst = erofs_get_pcpubuf(1);
+ 		if (IS_ERR(dst))
+ 			return PTR_ERR(dst);
+ 
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 60063bbbb91a..05b02f99324c 100644
+index 05b02f99324c..f707d28a46d9 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -266,7 +266,6 @@ struct erofs_inode {
- 			unsigned short z_advise;
- 			unsigned char  z_algorithmtype[2];
- 			unsigned char  z_logical_clusterbits;
--			unsigned char  z_physical_clusterbits[2];
- 		};
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	};
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 4226f4115981..e3f0100d82d1 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -430,8 +430,7 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
- 	else
- 		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+@@ -197,9 +197,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
  
--	pcl->clusterbits = EROFS_I(inode)->z_physical_clusterbits[0];
--	pcl->clusterbits -= PAGE_SHIFT;
-+	pcl->clusterbits = 0;
+ /* hard limit of pages per compressed cluster */
+ #define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
+-#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
+-#else
+-#define EROFS_PCPUBUF_NR_PAGES          0
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
  
- 	/* new pclusters should be claimed as type 1, primary and followed */
- 	pcl->next = clt->owned_head;
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index b384f546d368..7fd6bd843471 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -17,11 +17,8 @@ int z_erofs_fill_inode(struct inode *inode)
- 		vi->z_algorithmtype[0] = 0;
- 		vi->z_algorithmtype[1] = 0;
- 		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
--		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
--		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
- 		set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
- 	}
+ /* we strictly follow PAGE_SIZE and no buffer head yet */
+@@ -405,24 +402,15 @@ int erofs_namei(struct inode *dir, struct qstr *name,
+ /* dir.c */
+ extern const struct file_operations erofs_dir_fops;
+ 
++/* pcpubuf.c */
++void *erofs_get_pcpubuf(unsigned int requiredpages);
++void erofs_put_pcpubuf(void *ptr);
++int erofs_pcpubuf_growsize(unsigned int nrpages);
++void erofs_pcpubuf_exit(void);
++
+ /* utils.c / zdata.c */
+ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
+ 
+-#if (EROFS_PCPUBUF_NR_PAGES > 0)
+-void *erofs_get_pcpubuf(unsigned int pagenr);
+-#define erofs_put_pcpubuf(buf) do { \
+-	(void)&(buf);	\
+-	preempt_enable();	\
+-} while (0)
+-#else
+-static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+-{
+-	return ERR_PTR(-EOPNOTSUPP);
+-}
 -
- 	inode->i_mapping->a_ops = &z_erofs_aops;
- 	return 0;
+-#define erofs_put_pcpubuf(buf) do {} while (0)
+-#endif
+-
+ #ifdef CONFIG_EROFS_FS_ZIP
+ int erofs_workgroup_put(struct erofs_workgroup *grp);
+ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+diff --git a/fs/erofs/pcpubuf.c b/fs/erofs/pcpubuf.c
+new file mode 100644
+index 000000000000..b4b10ea8babf
+--- /dev/null
++++ b/fs/erofs/pcpubuf.c
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) Gao Xiang <xiang@kernel.org>
++ *
++ * For low-latency decompression algorithms (e.g. lz4), reserve consecutive
++ * per-CPU virtual memory (in pages) in advance to store such inplace I/O
++ * data if inplace decompression is failed (due to unmet inplace margin for
++ * example).
++ */
++#include "internal.h"
++
++struct erofs_pcpubuf {
++	raw_spinlock_t lock;
++	void *ptr;
++	struct page **pages;
++	unsigned int nrpages;
++};
++
++static DEFINE_PER_CPU(struct erofs_pcpubuf, erofs_pcb);
++
++void *erofs_get_pcpubuf(unsigned int requiredpages)
++{
++	struct erofs_pcpubuf *pcb = &get_cpu_var(erofs_pcb);
++
++	raw_spin_lock(&pcb->lock);
++	if (requiredpages > pcb->nrpages) {
++		raw_spin_unlock(&pcb->lock);
++		put_cpu_var(erofs_pcb);
++		return NULL;
++	}
++	return pcb->ptr;
++}
++
++void erofs_put_pcpubuf(void *ptr)
++{
++	struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, smp_processor_id());
++
++	DBG_BUGON(pcb->ptr != ptr);
++	raw_spin_unlock(&pcb->lock);
++	put_cpu_var(erofs_pcb);
++}
++
++/* the next step: support per-CPU page buffers hotplug */
++int erofs_pcpubuf_growsize(unsigned int nrpages)
++{
++	static DEFINE_MUTEX(pcb_resize_mutex);
++	static unsigned int pcb_nrpages;
++	LIST_HEAD(pagepool);
++	int delta, cpu, ret, i;
++
++	mutex_lock(&pcb_resize_mutex);
++	delta = nrpages - pcb_nrpages;
++	ret = 0;
++	/* avoid shrinking pcpubuf, since no idea how many fses rely on */
++	if (delta <= 0)
++		goto out;
++
++	for_each_possible_cpu(cpu) {
++		struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, cpu);
++		struct page **pages, **oldpages;
++		void *ptr, *old_ptr;
++
++		pages = kmalloc_array(nrpages, sizeof(*pages), GFP_KERNEL);
++		if (!pages) {
++			ret = -ENOMEM;
++			break;
++		}
++
++		for (i = 0; i < nrpages; ++i) {
++			pages[i] = erofs_allocpage(&pagepool, GFP_KERNEL);
++			if (!pages[i]) {
++				ret = -ENOMEM;
++				oldpages = pages;
++				goto free_pagearray;
++			}
++		}
++		ptr = vmap(pages, nrpages, VM_MAP, PAGE_KERNEL);
++		if (!ptr) {
++			ret = -ENOMEM;
++			oldpages = pages;
++			goto free_pagearray;
++		}
++		raw_spin_lock(&pcb->lock);
++		old_ptr = pcb->ptr;
++		pcb->ptr = ptr;
++		oldpages = pcb->pages;
++		pcb->pages = pages;
++		i = pcb->nrpages;
++		pcb->nrpages = nrpages;
++		raw_spin_unlock(&pcb->lock);
++
++		if (!oldpages) {
++			DBG_BUGON(old_ptr);
++			continue;
++		}
++
++		if (old_ptr)
++			vunmap(old_ptr);
++free_pagearray:
++		while (i)
++			list_add(&oldpages[--i]->lru, &pagepool);
++		kfree(oldpages);
++		if (ret)
++			break;
++	}
++	pcb_nrpages = nrpages;
++	put_pages_list(&pagepool);
++out:
++	mutex_unlock(&pcb_resize_mutex);
++	return ret;
++}
++
++void erofs_pcpubuf_exit(void)
++{
++	int cpu, i;
++
++	for_each_possible_cpu(cpu) {
++		struct erofs_pcpubuf *pcb = &per_cpu(erofs_pcb, cpu);
++
++		if (pcb->ptr) {
++			vunmap(pcb->ptr);
++			pcb->ptr = NULL;
++		}
++		if (!pcb->pages)
++			continue;
++
++		for (i = 0; i < pcb->nrpages; ++i)
++			if (pcb->pages[i])
++				put_page(pcb->pages[i]);
++		kfree(pcb->pages);
++		pcb->pages = NULL;
++	}
++}
++
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index b641658e772f..41fbfee4990c 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -684,6 +684,7 @@ static void __exit erofs_module_exit(void)
+ 	/* Ensure all RCU free inodes are safe before cache is destroyed. */
+ 	rcu_barrier();
+ 	kmem_cache_destroy(erofs_inode_cachep);
++	erofs_pcpubuf_exit();
  }
-@@ -77,18 +74,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	}
  
- 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
--	vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits +
--					((h->h_clusterbits >> 3) & 3);
+ /* get filesystem statistics */
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index de9986d2f82f..6758c5b19f7c 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -21,18 +21,6 @@ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
+ 	return page;
+ }
+ 
+-#if (EROFS_PCPUBUF_NR_PAGES > 0)
+-static struct {
+-	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
+-} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
 -
--	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
--		erofs_err(sb, "unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
--			  vi->z_physical_clusterbits[0], vi->nid);
--		err = -EOPNOTSUPP;
--		goto unmap_done;
--	}
+-void *erofs_get_pcpubuf(unsigned int pagenr)
+-{
+-	preempt_disable();
+-	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
+-}
+-#endif
 -
--	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
--					((h->h_clusterbits >> 5) & 7);
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+ #ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
 -- 
 2.20.1
 
