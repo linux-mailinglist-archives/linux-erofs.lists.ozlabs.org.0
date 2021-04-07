@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DAB7356290
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 06:39:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FD1A356291
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 06:39:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FFWrn6BRfz302p
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 14:39:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FFWrq3CNBz309y
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 14:39:39 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=b8Js7aP2;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OJbr5wrs;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,32 +17,34 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=b8Js7aP2; 
+ header.s=k20201202 header.b=OJbr5wrs; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FFWrl2PhYz2yZ9
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 14:39:35 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F5F461246;
- Wed,  7 Apr 2021 04:39:30 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FFWrm722Jz2yZ3
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 14:39:36 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CE665613C2;
+ Wed,  7 Apr 2021 04:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1617770372;
- bh=6fBSo2g8LJPRNQVGvyh6Oupj1AwkOv6hAm2GhaCYCLQ=;
- h=From:To:Cc:Subject:Date:From;
- b=b8Js7aP2hCpokqeIFA9nNGI25yltRLB3tSU1jf0fulyBeDhUTq0HuYCSHlDg3R66j
- 8sQvBJWYsvfvY78uuDBBKiCthKh45ZrcHJIekMOMdjIuGK7xj7CoXNGb8Mtqz+f14l
- 1AU+LkDffri7heWbN6mw8du9QLZoO/qxqIpjoxvyl+5/bfKk1D0W0op1VUKSvuNTRl
- NLP4HjN9v2+qI4QSj5zhtgU/ZRqCzoNr4OWPqLsxd3qSJA6nFS7HGkcWjHV93Ac4HN
- xohjv4h3f4PF0OMViL5xIBjbpBhFwNboCQrx4sU94S3IVUXRrDxT8Awf5cEzk4+OYt
- oO5Y0Uc/+cf3Q==
+ s=k20201202; t=1617770375;
+ bh=YrRCGXJu60FHZKCdIPVUIJLofjXfL30/Oc+uXMU8P/w=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=OJbr5wrsjYnAW8cHz5BnfqySdMLhtS2fqYPJogZUcCVMx4TbD6xoIhCzBIiexv9Eu
+ hQzfvoalqkN2uheviDOy8VJzhbFlRDl2O4xdrJfHPTnQzkJl+0+fJlWz47oOULU5nl
+ gICo3NC710KmRFSfvDysp4TDMUNkbV9J3kwdP2owztKT3kQjaJrNVtgQpNUkGGtVeE
+ Tq/ZNLwiiZd7NksgAc+Egod1O8IaMkDA65L6VrPwODo6log/iidFVVDCnuwbXKj1kJ
+ Zd6b5XxkXGsJO7k7FVyITWqoLHovOkYHDmTtVroxhfAOwV/dvWWRX+e17ZL+4Zbkkb
+ MUrjbgMtcCd7w==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
  Chao Yu <chao@kernel.org>
-Subject: [PATCH v3 00/10] erofs: add big pcluster compression support
-Date: Wed,  7 Apr 2021 12:39:17 +0800
-Message-Id: <20210407043927.10623-1-xiang@kernel.org>
+Subject: [PATCH v3 01/10] erofs: reserve physical_clusterbits[]
+Date: Wed,  7 Apr 2021 12:39:18 +0800
+Message-Id: <20210407043927.10623-2-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210407043927.10623-1-xiang@kernel.org>
+References: <20210407043927.10623-1-xiang@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -56,152 +58,110 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <xiang@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+From: Gao Xiang <hsiangkao@redhat.com>
 
-This is the formal version of EROFS big pcluster support, which means
-EROFS can compress data into more than 1 fs block after this patchset.
+Formal big pcluster design is actually more powerful / flexable than
+the previous thought whose pclustersize was fixed as power-of-2 blocks,
+which was obviously inefficient and space-wasting. Instead, pclustersize
+can now be set independently for each pcluster, so various pcluster
+sizes can also be used together in one file if mkfs wants (for example,
+according to data type and/or compression ratio).
 
-{l,p}cluster are EROFS-specific concepts, standing for `logical cluster'
-and `physical cluster' correspondingly. Logical cluster is the basic unit
-of compress indexes in file logical mapping, e.g. it can build compress
-indexes in 2 blocks rather than 1 block (currently only 1 block lcluster
-is supported). Physical cluster is a container of physical compressed
-blocks which contains compressed data, the size of which is the multiple
-of lclustersize.
+Let's get rid of previous physical_clusterbits[] setting (also notice
+that corresponding on-disk fields are still 0 for now). Therefore,
+head1/2 can be used for at most 2 different algorithms in one file and
+again pclustersize is now independent of these.
 
-Different from previous thoughts, which had fixed-sized pclusterblks
-recorded in the on-disk compress index header, our on-disk design allows
-variable-sized pclusterblks now. The main reasons are
- - user data varies in compression ratio locally, so fixed-sized
-   clustersize approach is space-wasting and causes extra read
-   amplification for high CR cases;
+Acked-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/erofs/erofs_fs.h |  4 +---
+ fs/erofs/internal.h |  1 -
+ fs/erofs/zdata.c    |  3 +--
+ fs/erofs/zmap.c     | 15 ---------------
+ 4 files changed, 2 insertions(+), 21 deletions(-)
 
- - inplace decompression needs zero padding to guarantee its safe margin,
-   but we don't want to pad more than 1 fs block for big pcluster;
-
- - end users can now customize the pcluster size according to data type
-   since various pclustersize can exist in a file, for example, using
-   different pcluster size for executable code and one-shot data. such
-   design should be more flexible than many other public compression fses
-   (Btw, each file in EROFS can have maximum 2 algorithms at the same time
-   by using HEAD1/2, which will be formally added with LZMA support.)
-
-In brief, EROFS can now compress from variable-sized input to
-variable-sized pcluster blocks, as illustrated below:
-
-  |<-_lcluster_->|________________________|<-_lcluster_->|
-  |____._________|_________ .. ___________|_______.______|
-        .                                        .
-         .                                     .
-          .__________________________________.
-          |______________| .. |______________|
-          |<-          pcluster            ->|
-
-The next step would be how to record the compressed block count in
-lclusters. In compress indexes, there are 2 concepts called HEAD and
-NONHEAD lclusters. The difference is that HEAD lcluster starts a new
-pcluster in the lcluster, but NONHEAD not. It's easy to understand
-that big pclusters at least have 2 pclusters, thus at least 2 lclusters
-as well.
-
-Therefore, let the delta0 (distance to its HEAD lcluster) of first NONHEAD
-compress index store the compressed block count with a special flag as a
-new called CBLKCNT compress index. It's also easy to know its delta0 is
-constantly 1, as illustrated below:
-  ________________________________________________________
- |_HEAD_|_CBLKCNT_|_NONHEAD_|_..._|_NONHEAD_|_HEAD | HEAD |
-    |<------ a pcluster with CBLKCNT --------->|<-- -->|
-                                                   ^ a pcluster with 1
-
-If another HEAD follows a HEAD lcluster, there is no room to record
-CBLKCNT, but it's easy to know the size of pcluster will be 1.
-
-More implementation details about this and compact indexes are in the
-commit message.
-
-On the runtime performance side, the current EROFS test results are:
- ________________________________________________________________
-|  file system  |   size    | seq read | rand read | rand9m read |
-|_______________|___________|_ MiB/s __|__ MiB/s __|___ MiB/s ___|
-|___erofs_4k____|_556879872_|_ 781.4 __|__ 55.3 ___|___ 25.3  ___|
-|___erofs_16k___|_452509696_|_ 864.8 __|_ 123.2 ___|___ 20.8  ___|
-|___erofs_32k___|_415223808_|_ 899.8 __|_ 105.8 _*_|___ 16.8 ____|
-|___erofs_64k___|_393814016_|_ 906.6 __|__ 66.6 _*_|___ 11.8 ____|
-|__squashfs_8k__|_556191744_|_  64.9 __|__ 19.3 ___|____ 9.1 ____|
-|__squashfs_16k_|_502661120_|_  98.9 __|__ 38.0 ___|____ 9.8 ____|
-|__squashfs_32k_|_458784768_|_ 115.4 __|__ 71.6 _*_|___ 10.0 ____|
-|_squashfs_128k_|_398204928_|_ 257.2 __|_ 253.8 _*_|___ 10.9 ____|
-|____ext4_4k____|____()_____|_ 786.6 __|__ 28.6 ___|___ 27.8 ____|
-
-
-* Squashfs grabs more page cache to keep all decompressed data with
-  grab_cache_page_nowait() than the normal requested readahead (see
-  squashfs_copy_cache and squashfs_readpage_block).
-  In principle, EROFS can also cache such all decompressed data
-  if necessary, yet it's low priority for now and has little use
-  (rand9m is actually a better rand read workload, since the amount
-   of I/O is 9m rather than full-sized 1000m).
-
-More details are in
-https://lore.kernel.org/r/20210329053654.GA3281654@xiangao.remote.csb
-
-Also it's easy to know EROFS is not a fixed pcluster design, so users
-can make several optimized strategy according to data type when mkfs.
-And there is still room to optimize runtime performance for big pcluster
-even further.
-
-Finally, it passes ro_fsstress and can also successfully boot buildroot
-& Android system with android-mainline repo.
-
-current mkfs repo for big pcluster:
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b experimental-bigpcluster-compact
-
-Thanks for your time on reading this!
-
-Thanks,
-Gao Xiang
-
-changes since v2:
- - introduce a new erofs_vm_ram_map() helper to reduce duplicated logic
-   and fix uninitialized variable pointed out by Colin & Joe;
- - add a new EXPERIMENTAL warning for new big pcluster feature to end
-   users.
-
-changes since v1:
- - add a missing vunmap in erofs_pcpubuf_exit();
- - refine comments and commit messages.
-
-Gao Xiang (10):
-  erofs: reserve physical_clusterbits[]
-  erofs: introduce multipage per-CPU buffers
-  erofs: introduce physical cluster slab pools
-  erofs: fix up inplace I/O pointer for big pcluster
-  erofs: add big physical cluster definition
-  erofs: adjust per-CPU buffers according to max_pclusterblks
-  erofs: support parsing big pcluster compress indexes
-  erofs: support parsing big pcluster compact indexes
-  erofs: support decompress big pcluster for lz4 backend
-  erofs: enable big pcluster feature
-
- fs/erofs/Kconfig        |  14 ---
- fs/erofs/Makefile       |   2 +-
- fs/erofs/decompressor.c | 235 ++++++++++++++++++++++++----------------
- fs/erofs/erofs_fs.h     |  31 ++++--
- fs/erofs/internal.h     |  44 ++++----
- fs/erofs/pcpubuf.c      | 134 +++++++++++++++++++++++
- fs/erofs/super.c        |   1 +
- fs/erofs/utils.c        |  12 --
- fs/erofs/zdata.c        | 193 +++++++++++++++++++++------------
- fs/erofs/zdata.h        |  14 +--
- fs/erofs/zmap.c         | 162 ++++++++++++++++++++++-----
- 11 files changed, 587 insertions(+), 255 deletions(-)
- create mode 100644 fs/erofs/pcpubuf.c
-
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 17bc0b5f117d..626b7d3e9ab7 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -233,9 +233,7 @@ struct z_erofs_map_header {
+ 	__u8	h_algorithmtype;
+ 	/*
+ 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
+-	 * bit 3-4 : (physical - logical) cluster bits of head 1:
+-	 *       For example, if logical clustersize = 4096, 1 for 8192.
+-	 * bit 5-7 : (physical - logical) cluster bits of head 2.
++	 * bit 3-7 : reserved.
+ 	 */
+ 	__u8	h_clusterbits;
+ };
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 60063bbbb91a..05b02f99324c 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -266,7 +266,6 @@ struct erofs_inode {
+ 			unsigned short z_advise;
+ 			unsigned char  z_algorithmtype[2];
+ 			unsigned char  z_logical_clusterbits;
+-			unsigned char  z_physical_clusterbits[2];
+ 		};
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	};
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 4226f4115981..e3f0100d82d1 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -430,8 +430,7 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	else
+ 		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+ 
+-	pcl->clusterbits = EROFS_I(inode)->z_physical_clusterbits[0];
+-	pcl->clusterbits -= PAGE_SHIFT;
++	pcl->clusterbits = 0;
+ 
+ 	/* new pclusters should be claimed as type 1, primary and followed */
+ 	pcl->next = clt->owned_head;
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index b384f546d368..7fd6bd843471 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -17,11 +17,8 @@ int z_erofs_fill_inode(struct inode *inode)
+ 		vi->z_algorithmtype[0] = 0;
+ 		vi->z_algorithmtype[1] = 0;
+ 		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
+-		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
+-		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
+ 		set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+ 	}
+-
+ 	inode->i_mapping->a_ops = &z_erofs_aops;
+ 	return 0;
+ }
+@@ -77,18 +74,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	}
+ 
+ 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
+-	vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits +
+-					((h->h_clusterbits >> 3) & 3);
+-
+-	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
+-		erofs_err(sb, "unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
+-			  vi->z_physical_clusterbits[0], vi->nid);
+-		err = -EOPNOTSUPP;
+-		goto unmap_done;
+-	}
+-
+-	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
+-					((h->h_clusterbits >> 5) & 7);
+ 	/* paired with smp_mb() at the beginning of the function */
+ 	smp_mb();
+ 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
 -- 
 2.20.1
 
