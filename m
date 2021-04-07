@@ -1,99 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93763356236
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 05:51:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DAB7356290
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 06:39:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FFVnF1hNPz302m
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 13:51:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FFWrn6BRfz302p
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 14:39:37 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iO1Hdxzw;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ic8CU+zX;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=b8Js7aP2;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=216.205.24.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=hsiangkao@redhat.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=iO1Hdxzw; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=ic8CU+zX; 
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=b8Js7aP2; 
  dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FFVnC4mNpz2y81
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 13:51:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1617767482;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=dQPBNK6da0W8o7+qyhfpn2E8sGg/rV6yzaqbg8AGzeU=;
- b=iO1Hdxzwv1t5ofjQ9cn80EoSao9W0QKgrGzRESHygVjwAQbpOQ8dQZ1AMokq7mf1D4/pHB
- P2niDrD/bHxxXp/w5ManhYy+zLA1h0/anRtDEjXiRyVfohc3vQ0b9JE//tJNyRwTbsPVVE
- 1yTgIdYlRfnU/H4cXNznNOvPg3XvmKg=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1617767483;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=dQPBNK6da0W8o7+qyhfpn2E8sGg/rV6yzaqbg8AGzeU=;
- b=ic8CU+zXMEWy00178nMKgA6o7vS3Rkm3cZryFm3lprb98gIFQLnbQrIx6XC1Vqk4vMbC3h
- ozDAryPZNRaCPuNO9u84/AaUM4VFZ0xQgcnfi277LGfRNxhV9IkJolNlullxLkL6Ai8huL
- n4lrPsjbcuDVNYuWOF0szxE1C2iy+D8=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-603-wZ1KKALGP_eI0DUUp4JIog-1; Tue, 06 Apr 2021 23:51:20 -0400
-X-MC-Unique: wZ1KKALGP_eI0DUUp4JIog-1
-Received: by mail-pg1-f197.google.com with SMTP id p64so11979929pga.10
- for <linux-erofs@lists.ozlabs.org>; Tue, 06 Apr 2021 20:51:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=dQPBNK6da0W8o7+qyhfpn2E8sGg/rV6yzaqbg8AGzeU=;
- b=TC+wBc2MH7OyIwFZyDAyiob8NS0/ve64QVSILHWUz1yKDNnt+DSAwR9rHW1g364iDj
- qZCieNa7CD1CKuNHGXvBsuUtEcAFPjLZI5yLVoqxko2gLfQT4aSH52RfJLaiRKLHE2kj
- rVrJnhs8cayScKwUSUQD3kn++clnRZxW8ajkAT8THU5CPcC+KSrYoRu5VBnENHhZkBwy
- Ybn2SA00fI5fEteNf3nLPpqmzMijLrndNcrzU5VwLfJHmwWWnwaVGqcaaeBu7k70KwXU
- 75aSrPOvNPNHxdynsrBljhM5GEfzZypQYtacB1RbKt4DeV0g2BAoT7CQMlp4z3axKlW4
- Id+w==
-X-Gm-Message-State: AOAM533szz/FaU8he7RZ67tCiCYBq4xxoShN/QubEMAIfToSZkWiSjG+
- prRJYECfJiQ7OCt7pb9AVW9TpEFUHzu6IRoda2wYOiGKWayinTHqvzPGGUNLo+OtlluCHgAx0go
- 5OHz0U1ve7AObpNuO73bNhYUO
-X-Received: by 2002:a65:5bca:: with SMTP id o10mr1411729pgr.248.1617767479155; 
- Tue, 06 Apr 2021 20:51:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxFb0fes/+Orgn9Ga+gUHJeR50ztaEz9kmi0J99mHcpoWtP5bM501fDxtSxuJi0rBF2OwzkfA==
-X-Received: by 2002:a65:5bca:: with SMTP id o10mr1411711pgr.248.1617767478926; 
- Tue, 06 Apr 2021 20:51:18 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
- by smtp.gmail.com with ESMTPSA id q13sm3234459pfc.86.2021.04.06.20.51.15
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Tue, 06 Apr 2021 20:51:18 -0700 (PDT)
-Date: Wed, 7 Apr 2021 11:51:07 +0800
-From: Gao Xiang <hsiangkao@redhat.com>
-To: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH][next] erofs: fix uninitialized variable i used in a
- while-loop
-Message-ID: <20210407035107.GA239118@xiangao.remote.csb>
-References: <20210406162718.429852-1-colin.king@canonical.com>
- <20210406235401.GA210667@xiangao.remote.csb>
- <b56a44542a338583279893870ec819d4b1b4e23b.camel@perches.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FFWrl2PhYz2yZ9
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 14:39:35 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F5F461246;
+ Wed,  7 Apr 2021 04:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1617770372;
+ bh=6fBSo2g8LJPRNQVGvyh6Oupj1AwkOv6hAm2GhaCYCLQ=;
+ h=From:To:Cc:Subject:Date:From;
+ b=b8Js7aP2hCpokqeIFA9nNGI25yltRLB3tSU1jf0fulyBeDhUTq0HuYCSHlDg3R66j
+ 8sQvBJWYsvfvY78uuDBBKiCthKh45ZrcHJIekMOMdjIuGK7xj7CoXNGb8Mtqz+f14l
+ 1AU+LkDffri7heWbN6mw8du9QLZoO/qxqIpjoxvyl+5/bfKk1D0W0op1VUKSvuNTRl
+ NLP4HjN9v2+qI4QSj5zhtgU/ZRqCzoNr4OWPqLsxd3qSJA6nFS7HGkcWjHV93Ac4HN
+ xohjv4h3f4PF0OMViL5xIBjbpBhFwNboCQrx4sU94S3IVUXRrDxT8Awf5cEzk4+OYt
+ oO5Y0Uc/+cf3Q==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+ Chao Yu <chao@kernel.org>
+Subject: [PATCH v3 00/10] erofs: add big pcluster compression support
+Date: Wed,  7 Apr 2021 12:39:17 +0800
+Message-Id: <20210407043927.10623-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <b56a44542a338583279893870ec819d4b1b4e23b.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Authentication-Results: relay.mimecast.com;
- auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hsiangkao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -105,113 +56,152 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- Colin King <colin.king@canonical.com>, Gao Xiang <xiang@kernel.org>,
- linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <xiang@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Joe,
+Hi folks,
 
-On Tue, Apr 06, 2021 at 08:38:44PM -0700, Joe Perches wrote:
-> On Wed, 2021-04-07 at 07:54 +0800, Gao Xiang wrote:
-> > Hi Colin,
-> > 
-> > On Tue, Apr 06, 2021 at 05:27:18PM +0100, Colin King wrote:
-> > > From: Colin Ian King <colin.king@canonical.com>
-> > > 
-> > > The while-loop iterates until src is non-null or i is 3, however, the
-> > > loop counter i is not intinitialied to zero, causing incorrect iteration
-> > > counts.  Fix this by initializing it to zero.
-> > > 
-> > > Addresses-Coverity: ("Uninitialized scalar variable")
-> > > Fixes: 1aa5f2e2feed ("erofs: support decompress big pcluster for lz4 backend")
-> > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > 
-> > Thank you very much for catching this! It looks good to me,
-> > Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
-> > 
-> > (btw, may I fold this into the original patchset? since such big pcluster
-> >  patchset is just applied to for-next for further integration testing, and
-> >  the commit id is not stable yet..)
-> > 
-> > Thanks,
-> > Gao Xiang
-> 
-> I think this code is odd and would be more intelligible using
-> a for loop like:
+This is the formal version of EROFS big pcluster support, which means
+EROFS can compress data into more than 1 fs block after this patchset.
 
-Thanks for your reply/suggestion.
+{l,p}cluster are EROFS-specific concepts, standing for `logical cluster'
+and `physical cluster' correspondingly. Logical cluster is the basic unit
+of compress indexes in file logical mapping, e.g. it can build compress
+indexes in 2 blocks rather than 1 block (currently only 1 block lcluster
+is supported). Physical cluster is a container of physical compressed
+blocks which contains compressed data, the size of which is the multiple
+of lclustersize.
 
-> ---
->  fs/erofs/decompressor.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index 27aa6a99b371..5a64f4649414 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -286,28 +286,24 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
->  	}
->  
->  	ret = alg->prepare_destpages(rq, pagepool);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		return ret;
-> -	} else if (ret) {
-> +	if (ret) {
->  		dst = page_address(*rq->out);
->  		dst_maptype = 1;
->  		goto dstmap_out;
->  	}
+Different from previous thoughts, which had fixed-sized pclusterblks
+recorded in the on-disk compress index header, our on-disk design allows
+variable-sized pclusterblks now. The main reasons are
+ - user data varies in compression ratio locally, so fixed-sized
+   clustersize approach is space-wasting and causes extra read
+   amplification for high CR cases;
 
-I agree with the modification here, thanks!
+ - inplace decompression needs zero padding to guarantee its safe margin,
+   but we don't want to pad more than 1 fs block for big pcluster;
 
->  
-> -	i = 0;
-> -	while (1) {
-> +	for (i = 0; i < 3; i++) {
->  		dst = vm_map_ram(rq->out, nrpages_out, -1);
-> -
-> +		if (dst) {
-> +			dst_maptype = 2;
-> +			goto dstmap_out;
-> +		}
->  		/* retry two more times (totally 3 times) */
-> -		if (dst || ++i >= 3)
-> -			break;
->  		vm_unmap_aliases();
+ - end users can now customize the pcluster size according to data type
+   since various pclustersize can exist in a file, for example, using
+   different pcluster size for executable code and one-shot data. such
+   design should be more flexible than many other public compression fses
+   (Btw, each file in EROFS can have maximum 2 algorithms at the same time
+   by using HEAD1/2, which will be formally added with LZMA support.)
 
-That is not quite equivalent, since after trying more than 3 times,
-(I think) no need to do the final vm_unmap_aliases(), since it's
-only used for the next vm_map_ram(). Similar logic also see:
-fs/xfs/xfs_buf.c: _xfs_buf_map_pages():
+In brief, EROFS can now compress from variable-sized input to
+variable-sized pcluster blocks, as illustrated below:
 
-		/*
-		 * vm_map_ram() will allocate auxiliary structures (e.g.
-		 * pagetables) with GFP_KERNEL, yet we are likely to be under
-		 * GFP_NOFS context here. Hence we need to tell memory reclaim
-		 * that we are in such a context via PF_MEMALLOC_NOFS to prevent
-		 * memory reclaim re-entering the filesystem here and
-		 * potentially deadlocking.
-		 */
-		nofs_flag = memalloc_nofs_save();
-		do {
-			bp->b_addr = vm_map_ram(bp->b_pages, bp->b_page_count,
-						-1);
-			if (bp->b_addr)
-				break;
-			vm_unmap_aliases();
-		} while (retried++ <= 1);
-		memalloc_nofs_restore(nofs_flag);
+  |<-_lcluster_->|________________________|<-_lcluster_->|
+  |____._________|_________ .. ___________|_______.______|
+        .                                        .
+         .                                     .
+          .__________________________________.
+          |______________| .. |______________|
+          |<-          pcluster            ->|
 
-		if (!bp->b_addr)
-			return -ENOMEM;
+The next step would be how to record the compressed block count in
+lclusters. In compress indexes, there are 2 concepts called HEAD and
+NONHEAD lclusters. The difference is that HEAD lcluster starts a new
+pcluster in the lcluster, but NONHEAD not. It's easy to understand
+that big pclusters at least have 2 pclusters, thus at least 2 lclusters
+as well.
 
-but yeah with some modification (and extra vm_unmap_aliases() here
-as well...)
+Therefore, let the delta0 (distance to its HEAD lcluster) of first NONHEAD
+compress index store the compressed block count with a special flag as a
+new called CBLKCNT compress index. It's also easy to know its delta0 is
+constantly 1, as illustrated below:
+  ________________________________________________________
+ |_HEAD_|_CBLKCNT_|_NONHEAD_|_..._|_NONHEAD_|_HEAD | HEAD |
+    |<------ a pcluster with CBLKCNT --------->|<-- -->|
+                                                   ^ a pcluster with 1
+
+If another HEAD follows a HEAD lcluster, there is no room to record
+CBLKCNT, but it's easy to know the size of pcluster will be 1.
+
+More implementation details about this and compact indexes are in the
+commit message.
+
+On the runtime performance side, the current EROFS test results are:
+ ________________________________________________________________
+|  file system  |   size    | seq read | rand read | rand9m read |
+|_______________|___________|_ MiB/s __|__ MiB/s __|___ MiB/s ___|
+|___erofs_4k____|_556879872_|_ 781.4 __|__ 55.3 ___|___ 25.3  ___|
+|___erofs_16k___|_452509696_|_ 864.8 __|_ 123.2 ___|___ 20.8  ___|
+|___erofs_32k___|_415223808_|_ 899.8 __|_ 105.8 _*_|___ 16.8 ____|
+|___erofs_64k___|_393814016_|_ 906.6 __|__ 66.6 _*_|___ 11.8 ____|
+|__squashfs_8k__|_556191744_|_  64.9 __|__ 19.3 ___|____ 9.1 ____|
+|__squashfs_16k_|_502661120_|_  98.9 __|__ 38.0 ___|____ 9.8 ____|
+|__squashfs_32k_|_458784768_|_ 115.4 __|__ 71.6 _*_|___ 10.0 ____|
+|_squashfs_128k_|_398204928_|_ 257.2 __|_ 253.8 _*_|___ 10.9 ____|
+|____ext4_4k____|____()_____|_ 786.6 __|__ 28.6 ___|___ 27.8 ____|
+
+
+* Squashfs grabs more page cache to keep all decompressed data with
+  grab_cache_page_nowait() than the normal requested readahead (see
+  squashfs_copy_cache and squashfs_readpage_block).
+  In principle, EROFS can also cache such all decompressed data
+  if necessary, yet it's low priority for now and has little use
+  (rand9m is actually a better rand read workload, since the amount
+   of I/O is 9m rather than full-sized 1000m).
+
+More details are in
+https://lore.kernel.org/r/20210329053654.GA3281654@xiangao.remote.csb
+
+Also it's easy to know EROFS is not a fixed pcluster design, so users
+can make several optimized strategy according to data type when mkfs.
+And there is still room to optimize runtime performance for big pcluster
+even further.
+
+Finally, it passes ro_fsstress and can also successfully boot buildroot
+& Android system with android-mainline repo.
+
+current mkfs repo for big pcluster:
+https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b experimental-bigpcluster-compact
+
+Thanks for your time on reading this!
 
 Thanks,
 Gao Xiang
+
+changes since v2:
+ - introduce a new erofs_vm_ram_map() helper to reduce duplicated logic
+   and fix uninitialized variable pointed out by Colin & Joe;
+ - add a new EXPERIMENTAL warning for new big pcluster feature to end
+   users.
+
+changes since v1:
+ - add a missing vunmap in erofs_pcpubuf_exit();
+ - refine comments and commit messages.
+
+Gao Xiang (10):
+  erofs: reserve physical_clusterbits[]
+  erofs: introduce multipage per-CPU buffers
+  erofs: introduce physical cluster slab pools
+  erofs: fix up inplace I/O pointer for big pcluster
+  erofs: add big physical cluster definition
+  erofs: adjust per-CPU buffers according to max_pclusterblks
+  erofs: support parsing big pcluster compress indexes
+  erofs: support parsing big pcluster compact indexes
+  erofs: support decompress big pcluster for lz4 backend
+  erofs: enable big pcluster feature
+
+ fs/erofs/Kconfig        |  14 ---
+ fs/erofs/Makefile       |   2 +-
+ fs/erofs/decompressor.c | 235 ++++++++++++++++++++++++----------------
+ fs/erofs/erofs_fs.h     |  31 ++++--
+ fs/erofs/internal.h     |  44 ++++----
+ fs/erofs/pcpubuf.c      | 134 +++++++++++++++++++++++
+ fs/erofs/super.c        |   1 +
+ fs/erofs/utils.c        |  12 --
+ fs/erofs/zdata.c        | 193 +++++++++++++++++++++------------
+ fs/erofs/zdata.h        |  14 +--
+ fs/erofs/zmap.c         | 162 ++++++++++++++++++++++-----
+ 11 files changed, 587 insertions(+), 255 deletions(-)
+ create mode 100644 fs/erofs/pcpubuf.c
+
+-- 
+2.20.1
 
