@@ -1,33 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D49AC356174
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 04:43:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 548B5356216
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 05:46:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FFTHB5MgRz302l
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 12:43:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FFVg328yFz302b
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Apr 2021 13:46:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=golfclubsadvisor.com (client-ip=188.72.187.40;
- helo=gasstationtoytrucks.com; envelope-from=inbmeayfkorti@golfclubsadvisor.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 3648 seconds by postgrey-1.36 at boromir;
- Wed, 07 Apr 2021 12:43:47 AEST
-Received: from gasstationtoytrucks.com (unknown [188.72.187.40])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FFTH76Y4Sz2yZK
- for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 12:43:47 +1000 (AEST)
-To: linux-erofs@lists.ozlabs.org
-Subject: Re: following up
-Message-ID: <21d39b74701a9df13c9f0efb10498e5e@geocaching.com>
-Date: Tue, 06 Apr 2021 17:51:12 +0200
-From: "Ernest Logan" <inbmeyffkorti@golfclubsadvisor.com>
+ spf=none (no SPF record) smtp.mailfrom=perches.com
+ (client-ip=216.40.44.79; helo=smtprelay.hostedemail.com;
+ envelope-from=joe@perches.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 430 seconds by postgrey-1.36 at boromir;
+ Wed, 07 Apr 2021 13:46:04 AEST
+Received: from smtprelay.hostedemail.com (smtprelay0079.hostedemail.com
+ [216.40.44.79])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FFVg04Mpjz2yRK
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 13:46:03 +1000 (AEST)
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com
+ [10.5.19.251])
+ by smtpgrave02.hostedemail.com (Postfix) with ESMTP id A59091802CCBA
+ for <linux-erofs@lists.ozlabs.org>; Wed,  7 Apr 2021 03:38:54 +0000 (UTC)
+Received: from omf15.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+ by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8704E181D337B;
+ Wed,  7 Apr 2021 03:38:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by
+ omf15.hostedemail.com (Postfix) with ESMTPA id 6CCE6C4182; 
+ Wed,  7 Apr 2021 03:38:47 +0000 (UTC)
+Message-ID: <b56a44542a338583279893870ec819d4b1b4e23b.camel@perches.com>
+Subject: Re: [PATCH][next] erofs: fix uninitialized variable i used in a
+ while-loop
+From: Joe Perches <joe@perches.com>
+To: Gao Xiang <hsiangkao@redhat.com>, Colin King <colin.king@canonical.com>
+Date: Tue, 06 Apr 2021 20:38:44 -0700
+In-Reply-To: <20210406235401.GA210667@xiangao.remote.csb>
+References: <20210406162718.429852-1-colin.king@canonical.com>
+ <20210406235401.GA210667@xiangao.remote.csb>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
-X-Mailer-Sent-By: 1
-Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.10
+X-Stat-Signature: ofx9em7xwsozzieswcpenrt3r3r95cat
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 6CCE6C4182
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19GKTF9FPXA2XYpIjjRK9qyadDR5X8MmkM=
+X-HE-Tag: 1617766727-223981
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,78 +63,81 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: jingnaoticdl@aliyun.com
+Cc: kernel-janitors@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align: left;"><span
-style="text-align: left;"></span></span></span><span style="text-align:
-left;"><span style="text-align: left;">Hi,<br /><br
-/></span></span></span></span></span></span></span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span>
-<div>Hope this email finds you well.<br />I am reaching out to let you know
-that the following office chair now available in our stock, ready to
-ship.<br /><br /></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align:
-left;"></span></span></span></span></span></span></span></span></span></span></span></span><span
-style="display: block; text-align: left;">Basic Information:<br
-/><span>Classic Design-Ergonomically designed gaming chair with classic
-appearance and suitable size, is widely used for home relaxing or working
-for long hours.</span> <br />Colors:&nbsp;<span>Black&amp;Red,
-Black&amp;Blue, Black&amp;Purple, Black&amp; White<br /><span>Package
-Includes:</span><br /><span>1 x Office Chair</span><br /><span>1 x Assembly
-Tool</span><br /><span>(You need to assemble it by yourself)<br
-/><span>Specification:</span><br /><span>Material: PVCï¼ˆpolyvinyl
-chlorideï¼‰Leather + Elastic Fabric + Steel</span><br /><span>Max. Load
-Bearing: 150kg</span><br /><span>Whole Size: 64x120cm /
-25.19''x47.24''</span><br /><span>Sitting Size: 37x46cm /
-14.56''x18.11''</span><br /><span>Applicable Height:
-155cm-190cm</span></span></span><br /><br /></span><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;">Costs details: u&nbsp; s&nbsp; d&nbsp; &nbsp;freight included<br
-/>189.50 each (1 unit)<br />179.50 each (2-10 units)<br />169.50 each
-(11-20 units)<br /><br /></span></span><span style="display: block;
-text-align: left;">You would like to order this chair? Just answer our mail
-along with your address, we'll get the shipment ready.<br />Please confirm
-how many chairs you would like to order and what colors you choose.<br
-/><br /><img
-src="https://ae01.alicdn.com/kf/H5a447b143b0745b9b4301e0a71b1e117a.jpeg"
-width="500" height="500" /><img
-src="https://ae01.alicdn.com/kf/Ha5f25485d5494a6ebbfe57d7a2f93269A.jpg"
-width="500" height="500" /><br /></span><span style="display: block;
-text-align: left;"><span style="text-align: left;"><br /><br /><img
-src="https://ae01.alicdn.com/kf/H240649d1820c41bd94992a21f55b755b5.jpg"
-width="500" height="500" /><img
-src="https://ae01.alicdn.com/kf/Hdadc4b50378c477e9986e5dae733c999W.jpeg"
-width="500" height="500" /><br /><img
-src="https://ae01.alicdn.com/kf/Hf02883af973c43c2884bbbfa9909d9bbi.jpeg"
-width="500" height="500" /><img
-src="https://ae01.alicdn.com/kf/H0b711a9627e94e7cb26d1d30b41827d9q.jpeg"
-width="500" height="500" /><br /></span></span><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><br />You would like to order
-this chair? Just answer our mail along with your address, we'll get the
-shipment ready.<br /><br />Thanks,<br />Ernest
-Logan</span></span></span><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"></span></span>
-</body>
-</html>
+On Wed, 2021-04-07 at 07:54 +0800, Gao Xiang wrote:
+> Hi Colin,
+> 
+> On Tue, Apr 06, 2021 at 05:27:18PM +0100, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > The while-loop iterates until src is non-null or i is 3, however, the
+> > loop counter i is not intinitialied to zero, causing incorrect iteration
+> > counts.  Fix this by initializing it to zero.
+> > 
+> > Addresses-Coverity: ("Uninitialized scalar variable")
+> > Fixes: 1aa5f2e2feed ("erofs: support decompress big pcluster for lz4 backend")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 
+> Thank you very much for catching this! It looks good to me,
+> Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+> 
+> (btw, may I fold this into the original patchset? since such big pcluster
+>  patchset is just applied to for-next for further integration testing, and
+>  the commit id is not stable yet..)
+> 
+> Thanks,
+> Gao Xiang
+
+I think this code is odd and would be more intelligible using
+a for loop like:
+---
+ fs/erofs/decompressor.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 27aa6a99b371..5a64f4649414 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -286,28 +286,24 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	}
+ 
+ 	ret = alg->prepare_destpages(rq, pagepool);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		return ret;
+-	} else if (ret) {
++	if (ret) {
+ 		dst = page_address(*rq->out);
+ 		dst_maptype = 1;
+ 		goto dstmap_out;
+ 	}
+ 
+-	i = 0;
+-	while (1) {
++	for (i = 0; i < 3; i++) {
+ 		dst = vm_map_ram(rq->out, nrpages_out, -1);
+-
++		if (dst) {
++			dst_maptype = 2;
++			goto dstmap_out;
++		}
+ 		/* retry two more times (totally 3 times) */
+-		if (dst || ++i >= 3)
+-			break;
+ 		vm_unmap_aliases();
+ 	}
+-
+-	if (!dst)
+-		return -ENOMEM;
+-
+-	dst_maptype = 2;
++	return -ENOMEM;
+ 
+ dstmap_out:
+ 	ret = alg->decompress(rq, dst + rq->pageofs_out);
 
