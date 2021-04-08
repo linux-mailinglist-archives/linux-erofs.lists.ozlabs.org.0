@@ -2,30 +2,35 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 845CA357A85
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Apr 2021 04:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 337D435878D
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Apr 2021 16:54:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FG5Jj2w9Xz309c
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Apr 2021 12:47:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FGPRd0WNnz30HC
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Apr 2021 00:54:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=greerchicago.com (client-ip=188.72.187.17;
- helo=futurevanitynovelty.com; envelope-from=rjamedyverioe@greerchicago.com;
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=tslinternational-cn.com (client-ip=160.16.139.140;
+ helo=mail.aiseki-data.com; envelope-from=tonyxu@tslinternational-cn.com;
  receiver=<UNKNOWN>)
-Received: from futurevanitynovelty.com (unknown [188.72.187.17])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FG5Jf6JTJz2yxP
- for <linux-erofs@lists.ozlabs.org>; Thu,  8 Apr 2021 12:47:14 +1000 (AEST)
+X-Greylist: delayed 11007 seconds by postgrey-1.36 at boromir;
+ Fri, 09 Apr 2021 00:54:18 AEST
+Received: from mail.aiseki-data.com (tk2-405-43886.vs.sakura.ne.jp
+ [160.16.139.140])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FGPRZ4DBkz30BX
+ for <linux-erofs@lists.ozlabs.org>; Fri,  9 Apr 2021 00:54:17 +1000 (AEST)
+Received: from tslinternational-cn.com (unknown [104.237.219.180])
+ by mail.aiseki-data.com (Postfix) with ESMTPA id DCE175C2FA
+ for <linux-erofs@lists.ozlabs.org>; Thu,  8 Apr 2021 17:00:47 +0900 (JST)
+From: Purchasing specialist <tonyxu@tslinternational-cn.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: Re: follow up
-Message-ID: <2f99c90c100627b08731ec05d40bbc58@nashvillescene.com>
-Date: Wed, 07 Apr 2021 18:34:31 +0200
-From: "Logan Rogers" <rjameayverioe@greerchicago.com>
+Subject: REQUEST FOR PRICE/CATALOGUE
+Date: 08 Apr 2021 01:00:53 -0700
+Message-ID: <20210408010052.D8FF32F2F98650AE@tslinternational-cn.com>
 MIME-Version: 1.0
-X-Mailer-Sent-By: 1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -37,97 +42,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: merowallgason@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align: left;"><span
-style="text-align: left;"></span></span></span><span style="text-align:
-left;"><span style="text-align: left;">Hi,<br /><br
-/></span></span></span></span></span></span></span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span>
-<div>How are you doing? Hope this email finds you well.<br />I am
-contacting you to tell you that the following drone now available in our
-warehouse, and it is ready to ship worldwide.<br /><br /></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="text-align: left;"><span style="text-align:
-left;"></span></span></span></span></span></span></span></span></span></span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;">Basic Information:<br /><span
-data-spm-anchor-id="a2700.details.0.i35.2265307eKdeKTg">Frequency:
-5G</span></span></span>
-<div><span>FPV Image transmission: 5G WiFi, 2000m</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>Stabilize two-axis mechanical gimbal</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>6K wide-angle 120 degree adjustable camera. ESC
-camera</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>Channel: 6CH</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>Battery: 11.4V 2850mAh battery</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>Flight time: 28 minutes</span></div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div>Remote control distance: about 2000m&nbsp;</div>
-<span style="display: block; text-align: left;"><span style="display:
-block; text-align: left;"></span></span>
-<div><span>Follow me: The plane will control the phone fixedly and follow
-the direction of movement of the operator.</span></div>
-<div data-spm-anchor-id="a2700.details.0.i36.2265307eKdeKTg"></div>
-<span style="display: block; text-align: left;"><span>Waypoint flight mode,
-just draw a route on the screen and use the helicopter as a given
-path.</span><br /><span>With auto return function. When the aircraft loses
-the controller signal, the aircraft will return to the takeoff point
-according to the GPS trajectory.<br /></span><br /></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;">Costs:&nbsp; u&nbsp; s&nbsp; d&nbsp;<br />279.50 each
-(1-5 units)<br />269.50 each (6-20 units)<br />259.50 each (21-50 units)<br
-/><br /></span></span><span style="display: block; text-align: left;">Send
-us your delivery address if you want to place an order and we will ready
-the shipment for you soon.<br /><br /><br /><img
-src="https://sc02.alicdn.com/kf/Had3b9e84b5734dd483306514ade3c89ak/239012152/Had3b9e84b5734dd483306514ade3c89ak.jpg"
-width="550" height="951" /><img
-src="https://sc01.alicdn.com/kf/H9ce244de886b4cb685c72c783c84ceb2H/239012152/H9ce244de886b4cb685c72c783c84ceb2H.jpg"
-width="500" height="1051" /><br /></span><span style="display: block;
-text-align: left;"><span style="text-align: left;"><br /><br /><img
-src="https://sc01.alicdn.com/kf/H44031a905337423d9b250544af9c2802b/239012152/H44031a905337423d9b250544af9c2802b.jpg"
-width="500" height="930" /><img
-src="https://sc02.alicdn.com/kf/H6da814f192d14731851b374d8bc21d2dA/239012152/H6da814f192d14731851b374d8bc21d2dA.jpg"
-width="500" height="748" /><br /><img
-src="https://sc01.alicdn.com/kf/Hec2fe3ca3c57440f83c10792e30b9aa8Y/239012152/Hec2fe3ca3c57440f83c10792e30b9aa8Y.jpg"
-width="500" height="657" /><img
-src="https://sc01.alicdn.com/kf/H15c67621ed784f8ab1a512d59234fb96K/239012152/H15c67621ed784f8ab1a512d59234fb96K.jpg"
-width="500" height="594" /><br /></span></span><span style="display: block;
-text-align: left;"><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;"><br />Send us your delivery
-address if you want to place an order and we will ready the shipment for
-you soon.<br /><br />Thanks,<br />Logan Rogers</span></span></span><span
-style="display: block; text-align: left;"><span style="display: block;
-text-align: left;"></span></span>
-</body>
-</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.=
+w3.org/TR/html4/loose.dtd">
 
+<HTML><HEAD>
+<META content=3D"MSHTML 6.00.6001.18000" name=3DGENERATOR></HEAD>
+<body style=3D"MARGIN: 0.5em">
+<P>Greetings from Shenzhen TSL International Trade Co., Ltd.</P>
+<P>Please send US a copy of your product catalogue showing your 2021 curren=
+t price list of your products with FOB Prices,as we need to make new order.=
+</P>
+<P>I am considering visiting your company after the Pandemic certainty whic=
+h affected your company we heard ,so please let me know if I see this demon=
+stration accepted .</P>
+<P>Awaiting for your earliest reply...</P>
+<P>Thanks &amp; Best Regards,<BR>TONY XU</P>
+<P>Tel: 0086 0775 3722 8390<BR>Email: <A href=3D"mailto:tonyxu@tslinternati=
+onal-cn.com">tonyxu@tslinternational-cn.com</A><BR>&#28145;&#22323;&#24066;=
+&#19990;&#20025;&#21033;&#22269;&#38469;&#21830;&#36152;&#26377;&#38480;&#2=
+0844;&#21496;<BR>Office Add: 16E-1, Block A, First World Plaza, No.7002 Hon=
+gli west road, Jinghua Community, Lianhua Street, Futian District,Shenzhen,=
+ GD, China<BR>
+&#21150;&#20844;&#22320;&#22336;&#65306;&#28145;&#22323;&#24066;&#31119;&#3=
+0000;&#21306;&#33714;&#33457;&#34903;&#36947;&#26223;&#21326;&#31038;&#2130=
+6;&#32418;&#33620;&#35199;&#36335;7002&#21495;&#31532;&#19968;&#19990;&#300=
+28;&#24191;&#22330;A&#24231;16E-1,518000</P></BODY></HTML>
