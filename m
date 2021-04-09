@@ -2,28 +2,27 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 338ED35AA4A
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Apr 2021 04:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5AEE35AA4F
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Apr 2021 04:23:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FHJXn0dyqz302T
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Apr 2021 12:16:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FHJgm49SWz30JQ
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Apr 2021 12:23:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=geekygamingstuff.com (client-ip=188.72.187.42;
- helo=gotothailand.com; envelope-from=ekzkjpuoe@geekygamingstuff.com;
- receiver=<UNKNOWN>)
-X-Greylist: delayed 3116 seconds by postgrey-1.36 at boromir;
- Sat, 10 Apr 2021 12:16:54 AEST
+ smtp.mailfrom=fujiuser.com (client-ip=188.72.187.42; helo=gotothailand.com;
+ envelope-from=ekedrekuoe@fujiuser.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 3705 seconds by postgrey-1.36 at boromir;
+ Sat, 10 Apr 2021 12:22:57 AEST
 Received: from gotothailand.com (unknown [188.72.187.42])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FHJXk43Myz2xYc
- for <linux-erofs@lists.ozlabs.org>; Sat, 10 Apr 2021 12:16:54 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FHJgj2RF0z2yRy
+ for <linux-erofs@lists.ozlabs.org>; Sat, 10 Apr 2021 12:22:57 +1000 (AEST)
 To: linux-erofs@lists.ozlabs.org
 Subject: Re: follow up on our email from yesterday
-Message-ID: <fa3443d213aa12237278c353ef4ebdb4@bedbathandbeyond.com>
-Date: Fri, 09 Apr 2021 18:24:23 +0200
-From: "Addyson Barry" <ekzkjpuoe@geekygamingstuff.com>
+Message-ID: <3e5f42f35ff7e7d218881dd367a6a6be@bedbathandbeyond.com>
+Date: Fri, 09 Apr 2021 18:27:14 +0200
+From: "Addyson Barry" <ekearekuoe@fujiuser.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
