@@ -2,28 +2,28 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1C4235C997
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Apr 2021 17:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 646BF35CF3B
+	for <lists+linux-erofs@lfdr.de>; Mon, 12 Apr 2021 19:07:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FJspN4gkWz30Dy
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Apr 2021 01:19:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FJwCm2Vqbz30H1
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Apr 2021 03:07:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=forestnet.com (client-ip=188.72.187.91;
- helo=gatherhereonline.com; envelope-from=snamseykginli@forestnet.com;
+ smtp.mailfrom=freshpatch.com (client-ip=188.72.187.91;
+ helo=gatherhereonline.com; envelope-from=zcimeaykginli@freshpatch.com;
  receiver=<UNKNOWN>)
-X-Greylist: delayed 1256 seconds by postgrey-1.36 at boromir;
- Tue, 13 Apr 2021 01:19:06 AEST
+X-Greylist: delayed 4553 seconds by postgrey-1.36 at boromir;
+ Tue, 13 Apr 2021 03:07:46 AEST
 Received: from gatherhereonline.com (unknown [188.72.187.91])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FJspL40sxz2xfy
- for <linux-erofs@lists.ozlabs.org>; Tue, 13 Apr 2021 01:19:06 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FJwCk3JKZz302D
+ for <linux-erofs@lists.ozlabs.org>; Tue, 13 Apr 2021 03:07:45 +1000 (AEST)
 To: linux-erofs@lists.ozlabs.org
 Subject: Re: quick following up on my email from last week
-Message-ID: <92ed9fe4304da4c3b5611d290d9cf605@travelawaits.com>
-Date: Mon, 12 Apr 2021 13:59:48 +0200
-From: "Rodolfo Levy" <snamedykginli@forestnet.com>
+Message-ID: <eb1273a0da6dbcf78a7e58df3e3df81a@travelawaits.com>
+Date: Mon, 12 Apr 2021 12:24:37 +0200
+From: "Rodolfo Levy" <zcimeyfkginli@freshpatch.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
