@@ -1,29 +1,29 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 646BF35CF3B
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Apr 2021 19:07:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7919635FA59
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Apr 2021 20:20:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FJwCm2Vqbz30H1
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Apr 2021 03:07:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FL9kv7383z30HD
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Apr 2021 04:20:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=neutral (access neither permitted nor denied)
- smtp.mailfrom=freshpatch.com (client-ip=188.72.187.91;
- helo=gatherhereonline.com; envelope-from=zcimeaykginli@freshpatch.com;
+ smtp.mailfrom=myitchychild.com (client-ip=68.183.15.88;
+ helo=gofreshwaterfishing.com; envelope-from=nskmseylijusq@myitchychild.com;
  receiver=<UNKNOWN>)
-X-Greylist: delayed 4553 seconds by postgrey-1.36 at boromir;
- Tue, 13 Apr 2021 03:07:46 AEST
-Received: from gatherhereonline.com (unknown [188.72.187.91])
- by lists.ozlabs.org (Postfix) with ESMTP id 4FJwCk3JKZz302D
- for <linux-erofs@lists.ozlabs.org>; Tue, 13 Apr 2021 03:07:45 +1000 (AEST)
+X-Greylist: delayed 3609 seconds by postgrey-1.36 at boromir;
+ Thu, 15 Apr 2021 04:20:38 AEST
+Received: from gofreshwaterfishing.com (unknown [68.183.15.88])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FL9kt5Yxbz30C1
+ for <linux-erofs@lists.ozlabs.org>; Thu, 15 Apr 2021 04:20:38 +1000 (AEST)
 To: linux-erofs@lists.ozlabs.org
-Subject: Re: quick following up on my email from last week
-Message-ID: <eb1273a0da6dbcf78a7e58df3e3df81a@travelawaits.com>
-Date: Mon, 12 Apr 2021 12:24:37 +0200
-From: "Rodolfo Levy" <zcimeyfkginli@freshpatch.com>
+Subject: coral fleece bathrobes manufacture
+Message-ID: <869ba8f34d1ddb3a5705b06ec364d108@travelawaits.com>
+Date: Wed, 14 Apr 2021 17:07:54 +0200
+From: "Frank" <nskmeyflijusq@myitchychild.com>
 MIME-Version: 1.0
 X-Mailer-Sent-By: 1
 Content-Type: text/html; charset="UTF-8"
@@ -39,7 +39,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: abrahamtheri@hotmail.com
+Reply-To: qiansankkex@aliyun.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -59,9 +59,28 @@ left;"><span style="text-align: left;">Hi,<br /><br
 /></span></span></span></span></span></span></span></span></span><span
 style="display: block; text-align: left;"><span style="display: block;
 text-align: left;"></span></span>
-<div>I hope this email finds you well.<br />I am reaching out to let you
-know that we have got the following drone available&nbsp;&nbsp;in our
-warehouse, ready to send to global customers.<br /><br /></div>
+<div>
+<div>&nbsp;I&nbsp;hope&nbsp;you&nbsp;are&nbsp;healthy&nbsp;and&nbsp;doing&nbsp;well.&nbsp;<br
+/><br /><span>We are China located manufacture for fleece bathrobes,
+blankets. in beautiful city of Suzhou, Jiangsu Province, China, the
+convenient transportation, can take the high-speed rail and flight to
+arrive. <br />We producing all kinds bathrobes for home, hotel linen,
+outside, for adults and children series. <br />With 100 workers and 35
+machines, especially the 12 air-jet looms, which are imported from Japan
+and German, famous as the world's most advanced machine. <br />So all we
+producing are high quality towel products. We use environmentally friendly
+reactive printing and dyeing technology to ensure product quality and user
+safety. <br /><br />Our products meet the standards required by Chinese
+textiles GB / T19001-2016 / ISO9001: 2015, and comply with European and
+American standards REACH, GOTS, OEKO. <br />Our products widely export to
+USA, Europe, Australia,Oceania,Mid East and Africa, for fleece&nbsp;
+bathrobe, flannel bathrobe, waffle bathrobes, bath skirts, sauna clothes,
+beach towel, flannel blankets, baby blankets, travel blanket, bedding
+sheet, pillow cases, quilt covers etc. <br /><br />With many year producing
+experiences and export experiences, we always got good feedback from
+client. <br />Warmly welcome you to visit our factory and
+cooperation.</span></div>
+</div>
 <span style="display: block; text-align: left;"><span style="display:
 block; text-align: left;"><span style="display: block; text-align:
 left;"><span style="display: block; text-align: left;"><span
@@ -74,48 +93,28 @@ left;"></span></span></span></span></span></span></span></span></span></span></s
 style="display: block; text-align: left;"><span style="display: block;
 text-align: left;"><span style="display: block; text-align:
 left;"><span></span></span></span></span><span style="display: block;
-text-align: left;"><span style="display: block; text-align:
-left;">Specification:</span></span><span style="display: block; text-align:
-left;">Motor: Brushless motor<br />Product Size<br />Battery capacity: 7.4V
-2500mAh<br />Product weight: 1KG<br />Flight time: 30 minutes<br
-/>Intelligent positioning: GPS dual positioning<br />Remote control
-distance: 2000M<br />Remote control height: 500M<br />wifi image
-transmission distance: 500-800M<br />Camera resolution: 4096 x 3072
-(APP)<br />Video resolution: 2048 x 1080 (APP)<br />Gesture recognition
-shooting: 1-3m<br />Transmission frame rate: 25fps<br /></span><span
-style="display: block; text-align: left;"><br />Feature:<br /><span>GPS one
-key return to take-off point, low power return, no signal return.</span><br
-/><span>Gesture shooting recognition: within 1-5m from the aircraft, make a
-photo gesture / camera gesture in front of the camera.</span><br
-/><span>Route multi-point planning flight: the aircraft flies independently
-according to the preset route, and the players focus on shooting.</span><br
-/><span>Fixed point orbit: find the orbit center point, and then move the
-desired orbit radius through the rocker.</span><span><br /></span><br
-/></span><span style="display: block; text-align: left;"><span
-style="display: block; text-align: left;">Costs details:&nbsp; u&nbsp;
-s&nbsp; d<br />229.90 each (1-2 units)<br />199.90 each (3-10 units)<br
-/>179.90 each (11-50 units)<br /><br /></span></span><span style="display:
-block; text-align: left;">Send us your mailing address if you want to place
-an order, we will&nbsp;get the package ready for you.&nbsp;<br /><br /><img
-src="https://ae01.alicdn.com/kf/H2684be4b48624b2d92398a68dacd7701M.jpg"
-width="550" height="847" /><img
-src="https://ae01.alicdn.com/kf/H238da61b13464ec6a0eb22c14d737b043.jpg"
-width="500" height="942" /><br /></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align: left;"><br
+/></span></span><span style="display: block; text-align: left;"><br /><img
+src="https://i.ebayimg.com/images/g/oi0AAOSw9BBfxRkI/s-l1600.jpg"
+width="500" height="500" /><img
+src="https://i.ebayimg.com/images/g/HukAAOSwxsNfxRmJ/s-l1600.jpg"
+width="500" height="500" /><br /></span><span style="display: block;
 text-align: left;"><span style="text-align: left;"><br /><br /><img
-src="https://ae01.alicdn.com/kf/Hfac88b26c9b9459e8c610d23cf0cfabab.jpg"
-width="500" height="1184" /><img
-src="https://ae01.alicdn.com/kf/H9fed4d5e08f44f94bf5137d8119b29faJ.jpg"
-width="550" height="1054" /><br /><img
-src="https://ae01.alicdn.com/kf/H5cbe415d870e44fa935c96c53824c245M.jpg"
-width="500" height="766" /><img
-src="https://ae01.alicdn.com/kf/H0ed3aced092e4337b11d71506623aad46.jpg"
-width="500" height="768" /><br /><br /></span></span><span style="display:
+src="https://i.ebayimg.com/images/g/5a0AAOSwRiJdzsR~/s-l1600.jpg"
+width="500" height="500" /><img
+src="https://i.ebayimg.com/images/g/jEsAAOSw7qlfhJAI/s-l500.jpg"
+width="500" height="500" /><br /><img
+src="https://sc04.alicdn.com/kf/Habcefcd24dbd4b878cc87b29d5bfd2802.jpg"
+width="350" height="197" /><img
+src="https://sc04.alicdn.com/kf/Ha35b2236150c4d1a8039f6ce674c0a95w.jpg"
+width="350" height="197" /><img
+src="https://sc04.alicdn.com/kf/H5ffaaefb46be421f8f234997d6f16341e.jpg"
+width="350" height="197" /><br /><br /></span></span><span style="display:
 block; text-align: left;"><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"><br />Send us your
-mailing address if you want to place an order, we will&nbsp;get the package
-ready for you.&nbsp;<br /><br />Thanks,<br />Rodolfo
-Levy</span></span></span><span style="display: block; text-align:
-left;"><span style="display: block; text-align: left;"></span></span>
+left;"><span style="display: block; text-align: left;"><br /><br
+/>Thanks,<br />Frank Zhang</span></span></span><span style="display: block;
+text-align: left;"><span style="display: block; text-align:
+left;"></span></span>
 </body>
 </html>
 
