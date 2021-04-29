@@ -1,52 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C218E36D10B
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Apr 2021 06:04:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D36D436E67C
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Apr 2021 10:05:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FVQ434wzxz2yjP
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Apr 2021 14:04:03 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QBB777RV;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FW7MZ62kgz2yxN
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Apr 2021 18:04:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=QBB777RV; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FVQ4001myz302B
- for <linux-erofs@lists.ozlabs.org>; Wed, 28 Apr 2021 14:03:59 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C72C6140B;
- Wed, 28 Apr 2021 04:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1619582637;
- bh=H8mgb1DnwAxCW49sTNCp4fxCn6yzcQzu1iqc2tKfnOc=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=QBB777RVctHQYj8vsvqpsGB7hbitSS0rn0Lh4JW07IRRzu1MfdaA36tm2qVcaGs1x
- KkbiRBf/W4MdJZO/fpNEzybhjtxwcbHEwU1a8GfSZodkNg8F+lPTYsHqjRBcro8SXj
- PjYRlL51BoSFPEZsucEj4Dy8ufNfY946d7p+pi842sfqoqfwKDEtT+rqCLyWZayhRx
- MImbnTy4IeAB5NQFSArePq75ZSzzmJIJTN4HTmdqKHIyvB4T/ED6qiJmtmpc7M61zV
- o2wYH/T4epL7wmCC/CFcj2sP7n2T08056XOGxEihWqHTxDly1QZfNw6ToYOxsjjD+I
- R+1JHfFOn120g==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org,
-	Li Guifu <bluce.liguifu@huawei.com>
-Subject: [PATCH v3 5/5] erofs-uils: manpage: add manual for erofsfuse
-Date: Wed, 28 Apr 2021 12:03:45 +0800
-Message-Id: <20210428040345.4047-5-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210428040345.4047-1-xiang@kernel.org>
-References: <20210428040345.4047-1-xiang@kernel.org>
+Authentication-Results: lists.ozlabs.org;
+ spf=permerror (SPF Permanent Error: Unknown mechanism
+ found: ip:micky-14.top~all) smtp.mailfrom=micky-14.top
+ (client-ip=117.50.101.136; helo=info.micky-14.top;
+ envelope-from=info4@micky-14.top; receiver=<UNKNOWN>)
+X-Greylist: delayed 608 seconds by postgrey-1.36 at boromir;
+ Thu, 29 Apr 2021 18:04:51 AEST
+Received: from info.micky-14.top (unknown [117.50.101.136])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4FW7MR09q2z2xgP
+ for <linux-erofs@lists.ozlabs.org>; Thu, 29 Apr 2021 18:04:47 +1000 (AEST)
+Received: from DESKTOP-A589L2L (119.128.223.64) by info.micky-14.top id
+ hh9ka60e97ct for <linux-erofs@lists.ozlabs.org>;
+ Thu, 29 Apr 2021 15:54:24 +0800 (envelope-from <info4@micky-14.top>)
+From: "Cindy" <sales@rhladyshoes.com>
+Subject: Re:new fashion women shoes
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/html; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
+Date: Thu, 29 Apr 2021 15:54:24 +0800
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.3790.4913
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,69 +44,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <xiang@kernel.org>
+Reply-To: sales@rhladyshoes.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Message-Id: <4FW7MZ62kgz2yxN@lists.ozlabs.org>
 
-This patch adds missing erofsfuse manpage.
-
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
- man/erofsfuse.1 | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 man/erofsfuse.1
-
-diff --git a/man/erofsfuse.1 b/man/erofsfuse.1
-new file mode 100644
-index 000000000000..6bd48b0460bd
---- /dev/null
-+++ b/man/erofsfuse.1
-@@ -0,0 +1,44 @@
-+.\" Copyright (c) 2021 Gao Xiang <xiang@kernel.org>
-+.\"
-+.TH EROFSFUSE 1
-+.SH NAME
-+erofsfuse \- FUSE file system client for erofs file system
-+.SH SYNOPSIS
-+\fBerofsfuse\fR [\fIOPTIONS\fR] \fIDEVICE\fR \fIMOUNTPOINT\fR
-+.SH DESCRIPTION
-+.B erofsfuse
-+is a FUSE file system client that supports reading from devices or image files
-+containing erofs file system.
-+.SH OPTIONS
-+.SS "general options:"
-+.TP
-+\fB\-o\fR opt,[opt...]
-+mount options
-+.TP
-+\fB\-h\fR   \fB\-\-help\fR
-+display help and exit
-+.SS "erofsfuse options:"
-+.TP
-+.BI "\-\-dbglevel=" #
-+Specify the level of debugging messages. The default is 2, which shows basic
-+warning messages.
-+.SS "FUSE options:"
-+.TP
-+\fB-d -o\fR debug
-+enable debug output (implies -f)
-+.TP
-+\fB-f\fR
-+foreground operation
-+.TP
-+\fB-s\fR
-+disable multi-threaded operation
-+.P
-+For other FUSE options please see
-+.BR mount.fuse (8)
-+or see the output of
-+.I erofsfuse \-\-help
-+.SH AVAILABILITY
-+\fBerofsfuse\fR is part of erofs-utils package and is available from
-+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git.
-+.SH SEE ALSO
-+.BR mount.fuse (8)
--- 
-2.20.1
-
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgbmFtZT1HRU5FUkFUT1IgY29udGVudD0iTVNIVE1M
+IDExLjAwLjEwNTcwLjEwMDEiPjwvSEVBRD4NCjxCT0RZPg0KPFAgc3R5bGU9IldISVRFLVNQQUNF
+OiBub3JtYWw7IFdPUkQtU1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsgQ09MT1I6
+IHJnYig0OSw1Myw1OSk7IEZPTlQ6IDE0cHgvMjJweCBWZXJkYW5hLCAnTWljcm9zb2Z0IFlhaGVp
+JywgU2ltU3VuLCBzYW5zLXNlcmlmOyBXSURPV1M6IDE7IE1BUkdJTjogMHB4OyBMRVRURVItU1BB
+Q0lORzogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRo
+OiAwcHgiPkdvb2QgZGF5IFNpciw8L1A+DQo8UCBzdHlsZT0iV0hJVEUtU1BBQ0U6IG5vcm1hbDsg
+V09SRC1TUEFDSU5HOiAwcHg7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBDT0xPUjogcmdiKDQ5LDUz
+LDU5KTsgRk9OVDogMTRweC8yMnB4IFZlcmRhbmEsICdNaWNyb3NvZnQgWWFoZWknLCBTaW1TdW4s
+IHNhbnMtc2VyaWY7IFdJRE9XUzogMTsgTUFSR0lOOiAwcHg7IExFVFRFUi1TUEFDSU5HOiBub3Jt
+YWw7IFRFWFQtSU5ERU5UOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweCI+SG9w
+ZSBldmVyeXRoaW5nIGdvZXMgd2VsbCBpbiB0aGVyZSAuPC9QPg0KPFAgc3R5bGU9IldISVRFLVNQ
+QUNFOiBub3JtYWw7IFdPUkQtU1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsgQ09M
+T1I6IHJnYig0OSw1Myw1OSk7IEZPTlQ6IDE0cHgvMjJweCBWZXJkYW5hLCAnTWljcm9zb2Z0IFlh
+aGVpJywgU2ltU3VuLCBzYW5zLXNlcmlmOyBXSURPV1M6IDE7IE1BUkdJTjogMHB4OyBMRVRURVIt
+U1BBQ0lORzogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdp
+ZHRoOiAwcHgiPlRoaXMgaXMgQ2luZHkgZnJvbSBSdWloYW8gU2hvZXMgLHdlIGFyZSB0aGUgbWFu
+dWZhdHVlciZuYnNwO2ZvciBhbGwmbmJzcDtraW5kcyBvZiZuYnNwO2xhZGllcyBzaG9lczwvUD4N
+CjxQIHN0eWxlPSJXSElURS1TUEFDRTogbm9ybWFsOyBXT1JELVNQQUNJTkc6IDBweDsgVEVYVC1U
+UkFOU0ZPUk06IG5vbmU7IENPTE9SOiByZ2IoNDksNTMsNTkpOyBGT05UOiAxNHB4LzIycHggVmVy
+ZGFuYSwgJ01pY3Jvc29mdCBZYWhlaScsIFNpbVN1biwgc2Fucy1zZXJpZjsgV0lET1dTOiAxOyBN
+QVJHSU46IDBweDsgTEVUVEVSLVNQQUNJTkc6IG5vcm1hbDsgVEVYVC1JTkRFTlQ6IDBweDsgLXdl
+YmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4Ij5Nb3JlIHRoYW4gMTAgeWVhcnMgb2YgbGFkaWVz
+IHNob2VzIHByb2R1Y3RzPC9QPg0KPFAgc3R5bGU9IldISVRFLVNQQUNFOiBub3JtYWw7IFdPUkQt
+U1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsgQ09MT1I6IHJnYig0OSw1Myw1OSk7
+IEZPTlQ6IDE0cHgvMjJweCBWZXJkYW5hLCAnTWljcm9zb2Z0IFlhaGVpJywgU2ltU3VuLCBzYW5z
+LXNlcmlmOyBXSURPV1M6IDE7IE1BUkdJTjogMHB4OyBMRVRURVItU1BBQ0lORzogbm9ybWFsOyBU
+RVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHgiPjgwIHdvcmtl
+cnMgLDIgcHJvZGN0dWlvbiBsaW5lPC9QPg0KPFAgc3R5bGU9IldISVRFLVNQQUNFOiBub3JtYWw7
+IFdPUkQtU1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsgQ09MT1I6IHJnYig0OSw1
+Myw1OSk7IEZPTlQ6IDE0cHgvMjJweCBWZXJkYW5hLCAnTWljcm9zb2Z0IFlhaGVpJywgU2ltU3Vu
+LCBzYW5zLXNlcmlmOyBXSURPV1M6IDE7IE1BUkdJTjogMHB4OyBMRVRURVItU1BBQ0lORzogbm9y
+bWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHgiPkEg
+cmljaCBleHBlcmllbmNlIHNhbXBsZXMgd29ya2luZyB0ZXJtIHRvIGhlbHAgY3VzdG9tZXIgZGV2
+ZWxvcGluZyBuZXcgc3R5bGUgLHdlIGFyZSB2ZXJ5IGNsb3NlZCB0byB0aGUgbWF0ZXJpYWwgbWFy
+a2V0ICx3ZSBjYW4gZmluZCB0aGUgbWF0ZXJpYWwgaW4gdmVyeSBzaG9ydCB0aW1lLjwvUD4NCjxQ
+IHN0eWxlPSJXSElURS1TUEFDRTogbm9ybWFsOyBXT1JELVNQQUNJTkc6IDBweDsgVEVYVC1UUkFO
+U0ZPUk06IG5vbmU7IENPTE9SOiByZ2IoNDksNTMsNTkpOyBGT05UOiAxNHB4LzIycHggVmVyZGFu
+YSwgJ01pY3Jvc29mdCBZYWhlaScsIFNpbVN1biwgc2Fucy1zZXJpZjsgV0lET1dTOiAxOyBNQVJH
+SU46IDBweDsgTEVUVEVSLVNQQUNJTkc6IG5vcm1hbDsgVEVYVC1JTkRFTlQ6IDBweDsgLXdlYmtp
+dC10ZXh0LXN0cm9rZS13aWR0aDogMHB4Ij5GcmVlIGZlZWwgY29udGFjdCB1cyBpZiB5b3UgYXJl
+IGluc3RlcmVzdGVkIGluIG91ciBwcm9kdWNlICx3ZSB3aWxsIHNlbmQgc29tZSBwaWN0dXJlIGFu
+ZCBwcmljZSB0byB5b3UgcmVmLjwvUD4NCjxQIHN0eWxlPSJXSElURS1TUEFDRTogbm9ybWFsOyBX
+T1JELVNQQUNJTkc6IDBweDsgVEVYVC1UUkFOU0ZPUk06IG5vbmU7IENPTE9SOiByZ2IoNDksNTMs
+NTkpOyBGT05UOiAxNHB4LzIycHggVmVyZGFuYSwgJ01pY3Jvc29mdCBZYWhlaScsIFNpbVN1biwg
+c2Fucy1zZXJpZjsgV0lET1dTOiAxOyBNQVJHSU46IDBweDsgTEVUVEVSLVNQQUNJTkc6IG5vcm1h
+bDsgVEVYVC1JTkRFTlQ6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4Ij5CZXN0
+IFJlZ2FyZHM8L1A+DQo8UCBzdHlsZT0iV0hJVEUtU1BBQ0U6IG5vcm1hbDsgV09SRC1TUEFDSU5H
+OiAwcHg7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBDT0xPUjogcmdiKDQ5LDUzLDU5KTsgRk9OVDog
+MTRweC8yMnB4IFZlcmRhbmEsICdNaWNyb3NvZnQgWWFoZWknLCBTaW1TdW4sIHNhbnMtc2VyaWY7
+IFdJRE9XUzogMTsgTUFSR0lOOiAwcHg7IExFVFRFUi1TUEFDSU5HOiBub3JtYWw7IFRFWFQtSU5E
+RU5UOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweCI+Q2luZHk8L1A+DQo8UCBz
+dHlsZT0iV0hJVEUtU1BBQ0U6IG5vcm1hbDsgV09SRC1TUEFDSU5HOiAwcHg7IFRFWFQtVFJBTlNG
+T1JNOiBub25lOyBDT0xPUjogcmdiKDQ5LDUzLDU5KTsgRk9OVDogMTRweC8yMnB4IFZlcmRhbmEs
+ICdNaWNyb3NvZnQgWWFoZWknLCBTaW1TdW4sIHNhbnMtc2VyaWY7IFdJRE9XUzogMTsgTUFSR0lO
+OiAwcHg7IExFVFRFUi1TUEFDSU5HOiBub3JtYWw7IFRFWFQtSU5ERU5UOiAwcHg7IC13ZWJraXQt
+dGV4dC1zdHJva2Utd2lkdGg6IDBweCI+UnVpaGFvIFNob2VzPC9QPg0KPFAgc3R5bGU9IldISVRF
+LVNQQUNFOiBub3JtYWw7IFdPUkQtU1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsg
+Q09MT1I6IHJnYig0OSw1Myw1OSk7IEZPTlQ6IDE0cHgvMjJweCBWZXJkYW5hLCAnTWljcm9zb2Z0
+IFlhaGVpJywgU2ltU3VuLCBzYW5zLXNlcmlmOyBXSURPV1M6IDE7IE1BUkdJTjogMHB4OyBMRVRU
+RVItU1BBQ0lORzogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tl
+LXdpZHRoOiAwcHgiPlBpbmdzaGFuIEluZHVzdHJ5IFpvbmUsUGluZ3poYW4gVG93bixIdWlkb25n
+IERpcy4gSHVpemhvdSBDaXR5ICxHdWFuZ2RvbmcsQ2hpbmE8L1A+DQo8UCBzdHlsZT0iV0hJVEUt
+U1BBQ0U6IG5vcm1hbDsgV09SRC1TUEFDSU5HOiAwcHg7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBD
+T0xPUjogcmdiKDQ5LDUzLDU5KTsgRk9OVDogMTRweC8yMnB4IFZlcmRhbmEsICdNaWNyb3NvZnQg
+WWFoZWknLCBTaW1TdW4sIHNhbnMtc2VyaWY7IFdJRE9XUzogMTsgTUFSR0lOOiAwcHg7IExFVFRF
+Ui1TUEFDSU5HOiBub3JtYWw7IFRFWFQtSU5ERU5UOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Ut
+d2lkdGg6IDBweCI+PEEgaHJlZj0iaHR0cDovL3d3dy5yaGxhZHlzaG9lcy5jb20vIj53d3cucmhs
+YWR5c2hvZXMuY29tPC9BPjwvUD4NCjxQIHN0eWxlPSJXSElURS1TUEFDRTogbm9ybWFsOyBXT1JE
+LVNQQUNJTkc6IDBweDsgVEVYVC1UUkFOU0ZPUk06IG5vbmU7IENPTE9SOiByZ2IoNDksNTMsNTkp
+OyBGT05UOiAxNHB4LzIycHggVmVyZGFuYSwgJ01pY3Jvc29mdCBZYWhlaScsIFNpbVN1biwgc2Fu
+cy1zZXJpZjsgV0lET1dTOiAxOyBNQVJHSU46IDBweDsgTEVUVEVSLVNQQUNJTkc6IG5vcm1hbDsg
+VEVYVC1JTkRFTlQ6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4Ij48QT5FbWFp
+bDxGT05UIGNvbG9yPSMwMDAwMDA+77yaPC9GT05UPnNhbGVzQHJobGFkeXNob2VzLmNvbTwvQT48
+L1A+PC9CT0RZPjwvSFRNTD4NCg==
