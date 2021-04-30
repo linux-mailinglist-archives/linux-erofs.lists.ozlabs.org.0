@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A11D36F4C3
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 06:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 057FE36F4C4
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 06:04:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FWdz617clz3018
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 14:04:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FWdz76jmkz302c
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 14:04:03 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jgfzCPXm;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=IDiwiPEQ;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,32 +17,31 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=jgfzCPXm; 
+ header.s=k20201202 header.b=IDiwiPEQ; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FWdz4107Tz302L
- for <linux-erofs@lists.ozlabs.org>; Fri, 30 Apr 2021 14:04:00 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7428561423;
- Fri, 30 Apr 2021 04:03:56 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FWdz61GFFz2yyj
+ for <linux-erofs@lists.ozlabs.org>; Fri, 30 Apr 2021 14:04:01 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E4DBF61441;
+ Fri, 30 Apr 2021 04:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1619755437;
- bh=tvvPm0pRh9NtWMjZ+pz/HWek43RqwSsSGaGzLS0CzPg=;
+ s=k20201202; t=1619755440;
+ bh=H8mgb1DnwAxCW49sTNCp4fxCn6yzcQzu1iqc2tKfnOc=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=jgfzCPXm1Zgr2f2I4QDVmn1Aww3HuXf1fQKPVQiEC8Or0GAs7HEMDrCWWApwsaZEc
- cBYYmzOjBdBOuJR/42c13H/fhT/fAFs5pzBwVnZC9Go2hKlwhqhLGr2QZpleq1fGWr
- 9MaNP6+ennRM8aq7jALa18Y8UbHZa6ss00okjrzABZMGQVydAarOXWjp0rGfTXD64K
- 38ph1fotAzWdfcgc2Ib47UP8hpAGCmuCclStke7VXyBGoBuDLfwFajRIT66fBqFPz1
- cNBfzEWpRIggI8yNNWi6Ij712jKJeBSUAgobLL+3db2KwE8544t3/vVz1F5KwkSxqz
- y4lYuz2G6mHQw==
+ b=IDiwiPEQUjh5wN11i1aX3PKK7fL26VILxWzaEN+RNpTewWe2sF6/y0qAklPStOW1w
+ HYaNnXgzKPbQjo0dx/hQTPgS5jwRPTRa2X3M7RcAgwk1PS50p/DWNYNKRaKH2xjHQB
+ z2TXE1/yaHLYga8LA7fpwVibmR4XRAMPG9MkJpMXd9TEViw11HKS+oz38KX0R5zsms
+ i+AX6gJ4R57WQoCJxSIXMb6JEN9KQeGufeA0iiMCTdiZ92JLT/EdAyWnIaL/nx2os+
+ /lZzGyCfI2M0VIpaxybGQ9LlRzO+Rla4BkuufEb0zsTsoct6FMO9lD+iDFCIM+LQ+J
+ Sk0/SgacdAGNw==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org,
 	Li Guifu <bluce.liguifu@huawei.com>
-Subject: [PATCH v4 4/5] erofs-utils: zero out garbage trailing data for
- non-0padding cases
-Date: Fri, 30 Apr 2021 12:03:44 +0800
-Message-Id: <20210430040345.17120-4-xiang@kernel.org>
+Subject: [PATCH v4 5/5] erofs-utils: manpage: add manual for erofsfuse
+Date: Fri, 30 Apr 2021 12:03:45 +0800
+Message-Id: <20210430040345.17120-5-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210430040345.17120-1-xiang@kernel.org>
 References: <20210430040345.17120-1-xiang@kernel.org>
@@ -64,60 +63,64 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When "-E legacy-compress" is used, lz4 0padding feature will be
-disabled by default in order to support old kernels (< Linux v5.3).
+This patch adds missing erofsfuse manpage.
 
-In that case, the current mkfs leaves previous garbage data after
-valid compressed data if the length becomes shorter. This doesn't
-matter for kernels >= v5.0 since LZ4_decompress_safe_partial() is used.
-
-However, for staging erofs v4.19, it used an in-house customized
-lz4 implemention due to LZ4_decompress_safe_partial() didn't work
-as expected at that time, yet it doesn't allow trailing random
-data in practice or decompression failure could happen.
-
-I don't think it really matters since "obsoleted_mkfs" works perfectly
-for such old staging versions (v4.19). Anyway, trailing garbage data
-sounds unreasonable, so let's zero out it now.
-
-Fixes: 66653ef10a7f ("erofs-utils: introduce compression for regular files")
 Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
- lib/compress.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ man/erofsfuse.1 | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 man/erofsfuse.1
 
-diff --git a/lib/compress.c b/lib/compress.c
-index b8bb89e7ae9d..deef6a2c8ae3 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -189,18 +189,22 @@ nocompression:
- 			ctx->compressedblks = 1;
- 			raw = true;
- 		} else {
--			const unsigned int used = ret & (EROFS_BLKSIZ - 1);
--			const unsigned int margin =
--				erofs_sb_has_lz4_0padding() && used ?
--					EROFS_BLKSIZ - used : 0;
-+			const unsigned int tailused = ret & (EROFS_BLKSIZ - 1);
-+			const unsigned int padding =
-+				erofs_sb_has_lz4_0padding() && tailused ?
-+					EROFS_BLKSIZ - tailused : 0;
- 
- 			ctx->compressedblks = DIV_ROUND_UP(ret, EROFS_BLKSIZ);
-+			/* zero out garbage trailing data for non-0padding */
-+			if (!erofs_sb_has_lz4_0padding())
-+				memset(dst + ret, 0,
-+				       roundup(ret, EROFS_BLKSIZ) - ret);
- 
- 			/* write compressed data */
- 			erofs_dbg("Writing %u compressed data to %u of %u blocks",
- 				  count, ctx->blkaddr, ctx->compressedblks);
- 
--			ret = blk_write(dst - margin, ctx->blkaddr,
-+			ret = blk_write(dst - padding, ctx->blkaddr,
- 					ctx->compressedblks);
- 			if (ret)
- 				return ret;
+diff --git a/man/erofsfuse.1 b/man/erofsfuse.1
+new file mode 100644
+index 000000000000..6bd48b0460bd
+--- /dev/null
++++ b/man/erofsfuse.1
+@@ -0,0 +1,44 @@
++.\" Copyright (c) 2021 Gao Xiang <xiang@kernel.org>
++.\"
++.TH EROFSFUSE 1
++.SH NAME
++erofsfuse \- FUSE file system client for erofs file system
++.SH SYNOPSIS
++\fBerofsfuse\fR [\fIOPTIONS\fR] \fIDEVICE\fR \fIMOUNTPOINT\fR
++.SH DESCRIPTION
++.B erofsfuse
++is a FUSE file system client that supports reading from devices or image files
++containing erofs file system.
++.SH OPTIONS
++.SS "general options:"
++.TP
++\fB\-o\fR opt,[opt...]
++mount options
++.TP
++\fB\-h\fR   \fB\-\-help\fR
++display help and exit
++.SS "erofsfuse options:"
++.TP
++.BI "\-\-dbglevel=" #
++Specify the level of debugging messages. The default is 2, which shows basic
++warning messages.
++.SS "FUSE options:"
++.TP
++\fB-d -o\fR debug
++enable debug output (implies -f)
++.TP
++\fB-f\fR
++foreground operation
++.TP
++\fB-s\fR
++disable multi-threaded operation
++.P
++For other FUSE options please see
++.BR mount.fuse (8)
++or see the output of
++.I erofsfuse \-\-help
++.SH AVAILABILITY
++\fBerofsfuse\fR is part of erofs-utils package and is available from
++git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git.
++.SH SEE ALSO
++.BR mount.fuse (8)
 -- 
 2.20.1
 
