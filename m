@@ -1,24 +1,24 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3699C36FE59
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 18:17:09 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822E736FE5C
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Apr 2021 18:17:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FWyDz0J1Rz2yy4
-	for <lists+linux-erofs@lfdr.de>; Sat,  1 May 2021 02:17:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FWyFg3nQmz2yyC
+	for <lists+linux-erofs@lfdr.de>; Sat,  1 May 2021 02:17:43 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1619799427;
-	bh=1av70SqJ8TRTwkjgUH1DTcaHezUYSTwhFt95PLWV/Gc=;
+	s=201707; t=1619799463;
+	bh=oYeSDdRSuaE1ok1zRjYzp5riR0a3AythaYU3H3IUsz0=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=RjexVlEGat3EcWnvVxOpdqZaX3YlV+CXAjXUMVywsH6kJDCm+YPiub2bdUvdqJyfp
-	 UyKYGmcwH8rx2VIAnL4f6mgeiwXP1VgumHCjCrsaWUkbuAcpPMCBoBUv7uPsdxSNTA
-	 WUyOEhpr1tLuo+sQAxF+AZdF/QXhpz4flRbkV0kww79M7s66fzfLVZ2erzFbnju4s1
-	 XbgytQ8okBp0bww2iL9QfWGdeXowVVdVcyc+Y/xT/9OOWmB/RGCkN+Z/1e1fBG+76o
-	 3o9YPWsyORRBAVjtRRFNU2ikwoy9l7GfvlgKE78b+9qjdi3hF3KPd7HX8N218Umqhu
-	 3KljQb63HrEdg==
+	b=cn3yT4+F2+y+lXm64ZK2xHJnfqtBSzHCr0iH5iK4ZucsoFU5m1ZqTp+b3p8rowYhg
+	 hAvDCn+SJDCC0U3KtvIokMYgkHn0X2Uqia2vKV6R8X/aaV4i0YcUBfLfiHIdDpi90l
+	 lQuRhI6MOEkwBUBKQbwehlBdNu8cdQ0Ho+/nQksx2dpatz4VNGyTOChKEJAbuorxM3
+	 WJWVbCGhPuqdrnAOsSdyr+ipglZt42Osv5JCWIZ6rzgfQOCyoXty+oCgFmvjuKWOaj
+	 sm4RuZSJcA64/yXQ0YmsX0ZTzLl7Bwx5msY/kBU6co2VtGfgusTJ4XRd97E+c9Pv3S
+	 z15EtLifRypCw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -27,34 +27,35 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=aliyun.com header.i=@aliyun.com header.a=rsa-sha256
- header.s=s1024 header.b=mImjgfeU; dkim-atps=neutral
+ header.s=s1024 header.b=Kz5VOSVI; dkim-atps=neutral
 Received: from out30-53.freemail.mail.aliyun.com
  (out30-53.freemail.mail.aliyun.com [115.124.30.53])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FWyDw0gv3z2xfk
- for <linux-erofs@lists.ozlabs.org>; Sat,  1 May 2021 02:17:03 +1000 (AEST)
-X-Alimail-AntiSpam: AC=CONTINUE; BC=0.1982603|-1; CH=green; DM=|CONTINUE|false|;
- DS=CONTINUE|ham_enroll_verification|0.0243805-0.0018705-0.973749;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FWyFc5YcLz2xZG
+ for <linux-erofs@lists.ozlabs.org>; Sat,  1 May 2021 02:17:40 +1000 (AEST)
+X-Alimail-AntiSpam: AC=CONTINUE; BC=0.08431681|-1; CH=green;
+ DM=|CONTINUE|false|;
+ DS=CONTINUE|ham_regular_dialog|0.072268-0.00309946-0.924633;
  FP=0|0|0|0|0|-1|-1|-1; HT=alimailimapcm10staff010182156082;
  MF=bluce.lee@aliyun.com; NM=1; PH=DS; RN=3; RT=3; SR=0;
- TI=SMTPD_---0UXHjxXv_1619799418; 
+ TI=SMTPD_---0UXHr6or_1619799444; 
 Received: from 192.168.3.32(mailfrom:bluce.lee@aliyun.com
- fp:SMTPD_---0UXHjxXv_1619799418) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 01 May 2021 00:16:58 +0800
-Subject: Re: [PATCH v4 3/5] erofs-utils: manpage: add missing -C option for
- big pcluster
+ fp:SMTPD_---0UXHr6or_1619799444) by smtp.aliyun-inc.com(127.0.0.1);
+ Sat, 01 May 2021 00:17:24 +0800
+Subject: Re: [PATCH v4 4/5] erofs-utils: zero out garbage trailing data for
+ non-0padding cases
 To: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
  Li Guifu <bluce.liguifu@huawei.com>
 References: <20210430040345.17120-1-xiang@kernel.org>
- <20210430040345.17120-3-xiang@kernel.org>
-Message-ID: <57518166-05a4-ccee-27f8-e02539eaafdd@aliyun.com>
-Date: Sat, 1 May 2021 00:16:58 +0800
+ <20210430040345.17120-4-xiang@kernel.org>
+Message-ID: <ea990fb8-1aae-b697-b766-aab8592f46d2@aliyun.com>
+Date: Sat, 1 May 2021 00:17:24 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210430040345.17120-3-xiang@kernel.org>
+In-Reply-To: <20210430040345.17120-4-xiang@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,11 +79,29 @@ Sender: "Linux-erofs"
 
 
 On 2021/4/30 12:03, Gao Xiang wrote:
-> Update the manpage as well.
+> When "-E legacy-compress" is used, lz4 0padding feature will be
+> disabled by default in order to support old kernels (< Linux v5.3).
 > 
+> In that case, the current mkfs leaves previous garbage data after
+> valid compressed data if the length becomes shorter. This doesn't
+> matter for kernels >= v5.0 since LZ4_decompress_safe_partial() is used.
+> 
+> However, for staging erofs v4.19, it used an in-house customized
+> lz4 implemention due to LZ4_decompress_safe_partial() didn't work
+> as expected at that time, yet it doesn't allow trailing random
+> data in practice or decompression failure could happen.
+> 
+> I don't think it really matters since "obsoleted_mkfs" works perfectly
+> for such old staging versions (v4.19). Anyway, trailing garbage data
+> sounds unreasonable, so let's zero out it now.
+> 
+> Fixes: 66653ef10a7f ("erofs-utils: introduce compression for regular files")
 > Signed-off-by: Gao Xiang <xiang@kernel.org>
+> ---
+>  lib/compress.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
 It looks good
 Reviewed-by: Li Guifu <bluce.lee@aliyun.com>
 
 Thanks,
-
