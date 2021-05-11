@@ -2,49 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D387C379F94
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 May 2021 08:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CAA337A267
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 May 2021 10:44:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FfSM76WjPz2xxq
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 May 2021 16:14:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FfWgb3SkKz2yZ2
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 May 2021 18:44:27 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZJ0nTuRx;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 64 seconds by postgrey-1.36 at boromir;
- Tue, 11 May 2021 16:14:53 AEST
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=ZJ0nTuRx; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FfSM15spCz2xxq
- for <linux-erofs@lists.ozlabs.org>; Tue, 11 May 2021 16:14:53 +1000 (AEST)
-IronPort-SDR: HGjYKNhMr1Tgu4HWEGBIGPaXF1k6/qYqaxrqT5AvwYa896s0LepD0ZyFUYO8Y60g0VWNQMXBMj
- OcLHOpNxE32Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9980"; a="186809189"
-X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; d="scan'208";a="186809189"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
- by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 10 May 2021 23:13:45 -0700
-IronPort-SDR: 3ZFk7obPYB2j8s3ZOqGh4bcZUFTIBJVzZNxO6+1j3uxj6su3gXocIQttZIZBlEvRoWZDs5ol+R
- cmVyC78ROUEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; d="scan'208";a="392183595"
-Received: from lkp-server01.sh.intel.com (HELO f375d57c4ed4) ([10.239.97.150])
- by orsmga006.jf.intel.com with ESMTP; 10 May 2021 23:13:44 -0700
-Received: from kbuild by f375d57c4ed4 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1lgLeI-0000aA-Rc; Tue, 11 May 2021 06:13:42 +0000
-Date: Tue, 11 May 2021 14:12:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <xiang@kernel.org>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 6a41300aff0d136a536bbd9ad2d515c72da132ec
-Message-ID: <609a205b.vDVRpHqnXJbaxjm1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FfWgW6lLJz2yZ2
+ for <linux-erofs@lists.ozlabs.org>; Tue, 11 May 2021 18:44:23 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5E82A616EC;
+ Tue, 11 May 2021 08:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1620722661;
+ bh=xEiioIKEggYsi6Ybd6NdEUUdijVlS/WSIIQ209kfXF0=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=ZJ0nTuRxzGyV+6Zb3RLmMJc0n+Ps4MHUHPvGK52o8Exo0zEE5t0PQJdqwZCaiNLE4
+ a57gwxndPMOs7NstJh3fjhEW21XN781008/r+EyF1s/beIgztLNHvbeMbyrpdik4Yd
+ 19Wh41kIXs3Ofka3Xig+//LsFas9XKvur6rkuoSLtiLSH7WzyJIytlt53g+EnMauzF
+ 4X3Ky8zMFydC/vzEJ9r67g/J/JJrTW1zzYfKxbZqWbFY3VM7bqLVgsHhXUr6Yx9eD4
+ ViItM4gcgtQcuBKMKh5+7Ai96dDUldrxJ3KGfvkrVn9QauDpcZQIuxdzNwdmbjFZTG
+ BgGAHjRmeGfew==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v1.1 2/2] erofs: update documentation about data compression
+Date: Tue, 11 May 2021 16:44:14 +0800
+Message-Id: <20210511084414.21305-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210510162506.28637-2-xiang@kernel.org>
+References: <20210510162506.28637-2-xiang@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,170 +58,116 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <xiang@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 6a41300aff0d136a536bbd9ad2d515c72da132ec  erofs: update documentation about data compression
+Add more description about (NON)HEAD lclusters, and the new big
+pcluster feature.
 
-elapsed time: 722m
-
-configs tested: 144
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-i386                                defconfig
-ia64                      gensparse_defconfig
-arm                        neponset_defconfig
-arc                                 defconfig
-riscv                            alldefconfig
-arm                         lpc32xx_defconfig
-mips                      maltaaprp_defconfig
-sh                     magicpanelr2_defconfig
-arm                             mxs_defconfig
-parisc                generic-64bit_defconfig
-ia64                             allyesconfig
-arm                          simpad_defconfig
-sh                          polaris_defconfig
-sparc                            allyesconfig
-mips                     loongson1c_defconfig
-mips                       capcella_defconfig
-arm                           sunxi_defconfig
-arm                          pxa3xx_defconfig
-powerpc                 mpc834x_itx_defconfig
-mips                     decstation_defconfig
-arm                        magician_defconfig
-powerpc                 mpc85xx_cds_defconfig
-arc                          axs101_defconfig
-sh                      rts7751r2d1_defconfig
-sh                   secureedge5410_defconfig
-powerpc                 mpc837x_mds_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                          g5_defconfig
-arm                      footbridge_defconfig
-arm                       multi_v4t_defconfig
-sh                        sh7757lcr_defconfig
-mips                        nlm_xlp_defconfig
-sh                          kfr2r09_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                          rb532_defconfig
-mips                           ci20_defconfig
-arc                     nsimosci_hs_defconfig
-sparc                               defconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                 canyonlands_defconfig
-sh                           se7619_defconfig
-sh                     sh7710voipgw_defconfig
-sh                          rsk7201_defconfig
-powerpc                     rainier_defconfig
-xtensa                       common_defconfig
-m68k                        stmark2_defconfig
-mips                           gcw0_defconfig
-m68k                            q40_defconfig
-sh                        edosk7760_defconfig
-mips                      pistachio_defconfig
-mips                  decstation_64_defconfig
-arm                      jornada720_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20210510
-x86_64               randconfig-a004-20210510
-x86_64               randconfig-a001-20210510
-x86_64               randconfig-a005-20210510
-x86_64               randconfig-a002-20210510
-x86_64               randconfig-a006-20210510
-i386                 randconfig-a003-20210510
-i386                 randconfig-a001-20210510
-i386                 randconfig-a005-20210510
-i386                 randconfig-a004-20210510
-i386                 randconfig-a002-20210510
-i386                 randconfig-a006-20210510
-i386                 randconfig-a003-20210511
-i386                 randconfig-a001-20210511
-i386                 randconfig-a005-20210511
-i386                 randconfig-a004-20210511
-i386                 randconfig-a002-20210511
-i386                 randconfig-a006-20210511
-x86_64               randconfig-a012-20210511
-x86_64               randconfig-a015-20210511
-x86_64               randconfig-a011-20210511
-x86_64               randconfig-a013-20210511
-x86_64               randconfig-a016-20210511
-x86_64               randconfig-a014-20210511
-i386                 randconfig-a016-20210510
-i386                 randconfig-a014-20210510
-i386                 randconfig-a011-20210510
-i386                 randconfig-a015-20210510
-i386                 randconfig-a012-20210510
-i386                 randconfig-a013-20210510
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a015-20210510
-x86_64               randconfig-a012-20210510
-x86_64               randconfig-a011-20210510
-x86_64               randconfig-a013-20210510
-x86_64               randconfig-a016-20210510
-x86_64               randconfig-a014-20210510
-x86_64               randconfig-a003-20210511
-x86_64               randconfig-a004-20210511
-x86_64               randconfig-a001-20210511
-x86_64               randconfig-a005-20210511
-x86_64               randconfig-a002-20210511
-x86_64               randconfig-a006-20210511
-
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+changes since v1:
+ - update "a pcluster with 1" to "a lcluster-sized pcluster
+   (without CBLKCNT)"
+
+ Documentation/filesystems/erofs.rst | 68 +++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+index 869b183ff215..43550c5d0fc6 100644
+--- a/Documentation/filesystems/erofs.rst
++++ b/Documentation/filesystems/erofs.rst
+@@ -50,8 +50,8 @@ Here is the main features of EROFS:
+ 
+  - Support POSIX.1e ACLs by using xattrs;
+ 
+- - Support transparent file compression as an option:
+-   LZ4 algorithm with 4 KB fixed-sized output compression for high performance.
++ - Support transparent data compression as an option:
++   LZ4 algorithm with the fixed-sized output compression for high performance.
+ 
+ The following git tree provides the file system user-space tools under
+ development (ex, formatting tool mkfs.erofs):
+@@ -210,10 +210,21 @@ Note that apart from the offset of the first filename, nameoff0 also indicates
+ the total number of directory entries in this block since it is no need to
+ introduce another on-disk field at all.
+ 
+-Compression
+------------
+-Currently, EROFS supports 4KB fixed-sized output transparent file compression,
+-as illustrated below::
++Data compression
++----------------
++EROFS implements LZ4 fixed-sized output compression which generates fixed-sized
++compressed data blocks from variable-sized input in contrast to other existing
++fixed-sized input solutions. Relatively higher compression ratios can be gotten
++by using fixed-sized output compression since nowadays popular data compression
++algorithms are mostly LZ77-based and such fixed-sized output approach can be
++benefited from the historical dictionary (aka. sliding window).
++
++In details, original (uncompressed) data is turned into several variable-sized
++extents and in the meanwhile, compressed into physical clusters (pclusters).
++In order to record each variable-sized extent, logical clusters (lclusters) are
++introduced as the basic unit of compress indexes to indicate whether a new
++extent is generated within the range (HEAD) or not (NONHEAD). Lclusters are now
++fixed in block size, as illustrated below::
+ 
+           |<-    variable-sized extent    ->|<-       VLE         ->|
+         clusterofs                        clusterofs              clusterofs
+@@ -222,18 +233,37 @@ as illustrated below::
+  ... |    .         |              |        .     |              |  .   ...
+  ____|____._________|______________|________.___ _|______________|__.________
+      |-> lcluster <-|-> lcluster <-|-> lcluster <-|-> lcluster <-|
+-          size           size           size           size   .             .
+-           .                            .                .              .
+-            .                       .               .               .
+-             .                   .              .               .
+-       _______.______________.______________.______________._________________
++          (HEAD)        (NONHEAD)       (HEAD)        (NONHEAD)    .
++           .             CBLKCNT            .                    .
++            .                               .                  .
++             .                              .                .
++       _______._____________________________.______________._________________
+           ... |              |              |              | ...
+        _______|______________|______________|______________|_________________
+-              |-> pcluster <-|-> pcluster <-|-> pcluster <-|
+-                    size           size           size
+-
+-Currently each on-disk physical cluster can contain 4KB (un)compressed data
+-at most. For each logical cluster, there is a corresponding on-disk index to
+-describe its cluster type, physical cluster address, etc.
+-
+-See "struct z_erofs_vle_decompressed_index" in erofs_fs.h for more details.
++              |->      big pcluster       <-|-> pcluster <-|
++
++A physical cluster can be seen as a container of physical compressed blocks
++which contains compressed data. Previously, only lcluster-sized (4KB) pclusters
++were supported. After big pcluster feature is introduced (available since
++Linux v5.13), pcluster can be a multiple of lcluster size.
++
++For each HEAD lcluster, clusterofs is recorded to indicate where a new extent
++starts and blkaddr is used to seek the compressed data. For each NONHEAD
++lcluster, delta0 and delta1 are available instead of blkaddr to indicate the
++distance to its HEAD lcluster and the next HEAD lcluster. A PLAIN lcluster is
++also a HEAD lcluster except that its data is uncompressed. See the comments
++around "struct z_erofs_vle_decompressed_index" in erofs_fs.h for more details.
++
++If big pcluster is enabled, pcluster size in lclusters needs to be recorded as
++well. Let the delta0 of the first NONHEAD lcluster store the compressed block
++count with a special flag as a new called CBLKCNT NONHEAD lcluster. It's easy
++to understand its delta0 is constantly 1, as illustrated below::
++
++   __________________________________________________________
++  | HEAD |  NONHEAD  | NONHEAD | ... | NONHEAD | HEAD | HEAD |
++  |__:___|_(CBLKCNT)_|_________|_____|_________|__:___|____:_|
++     |<----- a big pcluster (with CBLKCNT) ------>|<--  -->|
++           a lcluster-sized pcluster (without CBLKCNT) ^
++
++If another HEAD follows a HEAD lcluster, there is no room to record CBLKCNT,
++but it's easy to know the size of such pcluster is 1 lcluster as well.
+-- 
+2.20.1
+
