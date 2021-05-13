@@ -1,48 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5210737B88E
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 May 2021 10:50:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1E9A37F1DB
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 06:13:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Fg7mY2Rr7z2yXd
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 May 2021 18:50:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FgdYx0Cb8z2ywx
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 14:13:25 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QrPKcx0p;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=QrPKcx0p; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Fg7mT3zCxz2xvN
- for <linux-erofs@lists.ozlabs.org>; Wed, 12 May 2021 18:50:42 +1000 (AEST)
-IronPort-SDR: J6YrALfBTnJPlZdLBsZq+YPsP53RvVQGHPXxLNo8KL+RZQUL98ivm7o82u8ma22qwumkv4hfwq
- EwjpYiNefHOQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9981"; a="263582177"
-X-IronPort-AV: E=Sophos;i="5.82,293,1613462400"; d="scan'208";a="263582177"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
- by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 12 May 2021 01:50:36 -0700
-IronPort-SDR: WrzOk78yuzHaVpksydzynV/JfWtM5pnEheC5uiPiE+DCGfRr3dIpECl0R7bpLg00VdZ2VmnD8b
- Mitau9CWxMMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,293,1613462400"; d="scan'208";a="435107147"
-Received: from lkp-server01.sh.intel.com (HELO 1e931876798f) ([10.239.97.150])
- by fmsmga008.fm.intel.com with ESMTP; 12 May 2021 01:50:33 -0700
-Received: from kbuild by 1e931876798f with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1lgkZd-0000D6-79; Wed, 12 May 2021 08:50:33 +0000
-Date: Wed, 12 May 2021 16:49:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <xiang@kernel.org>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- 46f2e04484aee056c97f79162da83ac7d2d621bb
-Message-ID: <609b96b4.nE9gpCenKr4R3yDg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FgdYt0ZsKz2y8F
+ for <linux-erofs@lists.ozlabs.org>; Thu, 13 May 2021 14:13:21 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C64D0613A9;
+ Thu, 13 May 2021 04:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1620879198;
+ bh=dwsrV8f/vPgjLFREw37D7qiFei3l3e/9xrCbtYUVMZc=;
+ h=From:To:Cc:Subject:Date:From;
+ b=QrPKcx0p9QQ/0hUGErkQ4MnsMFiTQFRbcF//1AiItNQscE3T0M/qF3mn0FCFCVQWb
+ 3zjgtJb0/IeLwDujde/jN9n0eZgOe1sIOEfmv7elNvFQoqsjfKM61jU+VsZBbpuFuG
+ B515cKX9Jh7hxJ3mp1zQGCUJl2KpvlRsMuKWHhF7qJyf+suzGMVl6h16z9O5u2lYfc
+ k9LthZtHuT7NhPKb/XXHQtgBMYYNJRc0Di11PJqm7qxRVl0TVuKnnwNzS6dQRxvI7m
+ iqVQELVIf/fegduLTn0Nw36aw+Zv3ZE5o+DGIFGbLhDaKKd821kf+7H/eITDK/+zvN
+ E0RZzi3YirVdw==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org,
+	Li Guifu <bluce.liguifu@huawei.com>
+Subject: [PATCH] erofs-utils: fix distcheck target
+Date: Thu, 13 May 2021 12:13:11 +0800
+Message-Id: <20210513041311.22480-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,178 +56,50 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <xiang@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: 46f2e04484aee056c97f79162da83ac7d2d621bb  erofs: update documentation about data compression
+Fix the broken distcheck target [1], and it needs to be
+resolved independently first.
 
-elapsed time: 1426m
-
-configs tested: 152
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-powerpc                    amigaone_defconfig
-mips                      malta_kvm_defconfig
-arm                           u8500_defconfig
-sh                            hp6xx_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                     tqm8541_defconfig
-powerpc                 mpc834x_itx_defconfig
-powerpc                     rainier_defconfig
-powerpc                      ppc64e_defconfig
-arm                         s3c2410_defconfig
-arm                           viper_defconfig
-openrisc                  or1klitex_defconfig
-m68k                          amiga_defconfig
-mips                           xway_defconfig
-sh                           se7712_defconfig
-arm                          collie_defconfig
-powerpc                     ppa8548_defconfig
-mips                     decstation_defconfig
-m68k                        m5407c3_defconfig
-arm                            xcep_defconfig
-powerpc                   currituck_defconfig
-mips                         tb0226_defconfig
-arm                        clps711x_defconfig
-powerpc                  storcenter_defconfig
-powerpc                     stx_gp3_defconfig
-xtensa                  cadence_csp_defconfig
-sh                           se7721_defconfig
-sh                          polaris_defconfig
-mips                           ip27_defconfig
-sh                           se7751_defconfig
-arm                            pleb_defconfig
-powerpc                     pseries_defconfig
-xtensa                generic_kc705_defconfig
-arc                                 defconfig
-arm                             mxs_defconfig
-arm                           tegra_defconfig
-ia64                             alldefconfig
-mips                       lemote2f_defconfig
-arm                        spear3xx_defconfig
-arm                              alldefconfig
-sh                          lboxre2_defconfig
-powerpc                       maple_defconfig
-xtensa                         virt_defconfig
-arc                 nsimosci_hs_smp_defconfig
-sh                        edosk7760_defconfig
-mips                       capcella_defconfig
-openrisc                            defconfig
-sparc64                             defconfig
-arm                        neponset_defconfig
-powerpc                  mpc866_ads_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                      bamboo_defconfig
-riscv                             allnoconfig
-s390                                defconfig
-nios2                         3c120_defconfig
-xtensa                    xip_kc705_defconfig
-powerpc                    socrates_defconfig
-powerpc                    mvme5100_defconfig
-mips                            e55_defconfig
-arm                         axm55xx_defconfig
-powerpc                 xes_mpc85xx_defconfig
-mips                        jmr3927_defconfig
-sh                        dreamcast_defconfig
-mips                        workpad_defconfig
-powerpc                     pq2fads_defconfig
-arm                           sama5_defconfig
-powerpc                   lite5200b_defconfig
-mips                     loongson1c_defconfig
-mips                          malta_defconfig
-m68k                          sun3x_defconfig
-powerpc64                        alldefconfig
-s390                          debug_defconfig
-m68k                        m5307c3_defconfig
-powerpc                 linkstation_defconfig
-arm                       netwinder_defconfig
-sh                           sh2007_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a003-20210511
-i386                 randconfig-a001-20210511
-i386                 randconfig-a005-20210511
-i386                 randconfig-a004-20210511
-i386                 randconfig-a002-20210511
-i386                 randconfig-a006-20210511
-x86_64               randconfig-a012-20210511
-x86_64               randconfig-a015-20210511
-x86_64               randconfig-a011-20210511
-x86_64               randconfig-a013-20210511
-x86_64               randconfig-a016-20210511
-x86_64               randconfig-a014-20210511
-i386                 randconfig-a016-20210511
-i386                 randconfig-a014-20210511
-i386                 randconfig-a011-20210511
-i386                 randconfig-a015-20210511
-i386                 randconfig-a012-20210511
-i386                 randconfig-a013-20210511
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a003-20210511
-x86_64               randconfig-a004-20210511
-x86_64               randconfig-a001-20210511
-x86_64               randconfig-a005-20210511
-x86_64               randconfig-a002-20210511
-x86_64               randconfig-a006-20210511
-
+[1] https://lore.kernel.org/r/20210121163715.10660-5-sehuww@mail.scut.edu.cn
+Reported-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
+Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ lib/Makefile.am | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index f21dc35eda51..b12e2c18cc33 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -2,6 +2,24 @@
+ # Makefile.am
+ 
+ noinst_LTLIBRARIES = liberofs.la
++noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
++      $(top_srcdir)/include/erofs/cache.h \
++      $(top_srcdir)/include/erofs/compress.h \
++      $(top_srcdir)/include/erofs/config.h \
++      $(top_srcdir)/include/erofs/decompress.h \
++      $(top_srcdir)/include/erofs/defs.h \
++      $(top_srcdir)/include/erofs/err.h \
++      $(top_srcdir)/include/erofs/exclude.h \
++      $(top_srcdir)/include/erofs/hashtable.h \
++      $(top_srcdir)/include/erofs/inode.h \
++      $(top_srcdir)/include/erofs/internal.h \
++      $(top_srcdir)/include/erofs/io.h \
++      $(top_srcdir)/include/erofs/list.h \
++      $(top_srcdir)/include/erofs/print.h \
++      $(top_srcdir)/include/erofs/trace.h \
++      $(top_srcdir)/include/erofs/xattr.h
++
++noinst_HEADERS += compressor.h
+ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+-- 
+2.20.1
+
