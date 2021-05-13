@@ -2,49 +2,47 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1E9A37F1DB
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 06:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0A8937F372
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 09:14:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FgdYx0Cb8z2ywx
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 14:13:25 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QrPKcx0p;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FgjZj4MSJz2yy3
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 May 2021 17:14:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=QrPKcx0p; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FgdYt0ZsKz2y8F
- for <linux-erofs@lists.ozlabs.org>; Thu, 13 May 2021 14:13:21 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C64D0613A9;
- Thu, 13 May 2021 04:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1620879198;
- bh=dwsrV8f/vPgjLFREw37D7qiFei3l3e/9xrCbtYUVMZc=;
- h=From:To:Cc:Subject:Date:From;
- b=QrPKcx0p9QQ/0hUGErkQ4MnsMFiTQFRbcF//1AiItNQscE3T0M/qF3mn0FCFCVQWb
- 3zjgtJb0/IeLwDujde/jN9n0eZgOe1sIOEfmv7elNvFQoqsjfKM61jU+VsZBbpuFuG
- B515cKX9Jh7hxJ3mp1zQGCUJl2KpvlRsMuKWHhF7qJyf+suzGMVl6h16z9O5u2lYfc
- k9LthZtHuT7NhPKb/XXHQtgBMYYNJRc0Di11PJqm7qxRVl0TVuKnnwNzS6dQRxvI7m
- iqVQELVIf/fegduLTn0Nw36aw+Zv3ZE5o+DGIFGbLhDaKKd821kf+7H/eITDK/+zvN
- E0RZzi3YirVdw==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org,
-	Li Guifu <bluce.liguifu@huawei.com>
-Subject: [PATCH] erofs-utils: fix distcheck target
-Date: Thu, 13 May 2021 12:13:11 +0800
-Message-Id: <20210513041311.22480-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com;
+ envelope-from=yuchao0@huawei.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 1183 seconds by postgrey-1.36 at boromir;
+ Thu, 13 May 2021 17:14:18 AEST
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FgjZf187wz2ym7
+ for <linux-erofs@lists.ozlabs.org>; Thu, 13 May 2021 17:14:14 +1000 (AEST)
+Received: from dggemx753-chm.china.huawei.com (unknown [172.30.72.53])
+ by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Fgj2p6QW9z19HC1;
+ Thu, 13 May 2021 14:50:10 +0800 (CST)
+Received: from [10.136.110.154] (10.136.110.154) by
+ dggemx753-chm.china.huawei.com (10.0.44.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 13 May 2021 14:54:27 +0800
+Subject: Re: [PATCH] erofs: fix 1 lcluster-sized pcluster for big pcluster
+To: Gao Xiang <xiang@kernel.org>, <linux-erofs@lists.ozlabs.org>
+References: <20210510064715.29123-1-xiang@kernel.org>
+From: Chao Yu <yuchao0@huawei.com>
+Message-ID: <06a646a0-8436-2fd7-4c1b-1d5ea86c600e@huawei.com>
+Date: Thu, 13 May 2021 14:54:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210510064715.29123-1-xiang@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.110.154]
+X-ClientProxiedBy: dggemx704-chm.china.huawei.com (10.1.199.51) To
+ dggemx753-chm.china.huawei.com (10.0.44.37)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,50 +54,34 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <xiang@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix the broken distcheck target [1], and it needs to be
-resolved independently first.
+On 2021/5/10 14:47, Gao Xiang wrote:
+> If the 1st NONHEAD lcluster of a pcluster isn't CBLKCNT lcluster type
+> rather than a HEAD or PLAIN type instead, which means its pclustersize
+> _must_ be 1 lcluster (since its uncompressed size < 2 lclusters),
+> as illustrated below:
+> 
+>         HEAD     HEAD / PLAIN    lcluster type
+>     ____________ ____________
+>    |_:__________|_________:__|   file data (uncompressed)
+>     .                .
+>    .____________.
+>    |____________|                pcluster data (compressed)
+> 
+> Such on-disk case was explained before [1] but missed to be handled
+> properly in the runtime implementation.
+> 
+> It can be observed if manually generating 1 lcluster-sized pcluster
+> with 2 lclusters (thus CBLKCNT doesn't exist.) Let's fix it now.
+> 
+> [1] https://lore.kernel.org/r/20210407043927.10623-1-xiang@kernel.org
+> Fixes: cec6e93beadf ("erofs: support parsing big pcluster compress indexes")
+> Signed-off-by: Gao Xiang <xiang@kernel.org>
 
-[1] https://lore.kernel.org/r/20210121163715.10660-5-sehuww@mail.scut.edu.cn
-Reported-by: Hu Weiwen <sehuww@mail.scut.edu.cn>
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
- lib/Makefile.am | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index f21dc35eda51..b12e2c18cc33 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -2,6 +2,24 @@
- # Makefile.am
- 
- noinst_LTLIBRARIES = liberofs.la
-+noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-+      $(top_srcdir)/include/erofs/cache.h \
-+      $(top_srcdir)/include/erofs/compress.h \
-+      $(top_srcdir)/include/erofs/config.h \
-+      $(top_srcdir)/include/erofs/decompress.h \
-+      $(top_srcdir)/include/erofs/defs.h \
-+      $(top_srcdir)/include/erofs/err.h \
-+      $(top_srcdir)/include/erofs/exclude.h \
-+      $(top_srcdir)/include/erofs/hashtable.h \
-+      $(top_srcdir)/include/erofs/inode.h \
-+      $(top_srcdir)/include/erofs/internal.h \
-+      $(top_srcdir)/include/erofs/io.h \
-+      $(top_srcdir)/include/erofs/list.h \
-+      $(top_srcdir)/include/erofs/print.h \
-+      $(top_srcdir)/include/erofs/trace.h \
-+      $(top_srcdir)/include/erofs/xattr.h
-+
-+noinst_HEADERS += compressor.h
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c
- liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
--- 
-2.20.1
-
+Thanks,
