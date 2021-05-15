@@ -2,49 +2,60 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9E3638151A
-	for <lists+linux-erofs@lfdr.de>; Sat, 15 May 2021 04:07:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 35CD63819D0
+	for <lists+linux-erofs@lfdr.de>; Sat, 15 May 2021 18:29:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Fhpgz4sRYz2yxY
-	for <lists+linux-erofs@lfdr.de>; Sat, 15 May 2021 12:07:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Fj9nn6tWTz2yjc
+	for <lists+linux-erofs@lfdr.de>; Sun, 16 May 2021 02:29:01 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gRwqUPJR;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BRNVqj10;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=gRwqUPJR; 
+ header.s=k20201202 header.b=BRNVqj10; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Fhpgw0KLYz2xvJ
- for <linux-erofs@lists.ozlabs.org>; Sat, 15 May 2021 12:07:39 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5E4976143D;
- Sat, 15 May 2021 02:07:35 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Fj9nk0GZbz2xfx
+ for <linux-erofs@lists.ozlabs.org>; Sun, 16 May 2021 02:28:58 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 5C891613C1;
+ Sat, 15 May 2021 16:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1621044457;
- bh=xzx313oiI5ZBAazqsSbEjejycJJakg+FeekP29dmYGI=;
- h=Date:From:To:Cc:Subject:From;
- b=gRwqUPJRNXBv/PKCYjChc5LRSCzwIFRW0aT7QjfYX6i3Ao1KOZUF8ZG5wzhtxn47V
- Aaxn0OE4lT6UBqiisPWouobqC6aeq7TgZAKj7ukF7hf2vZh6mgsUF7RkPitRyYZeo9
- UBkcRmZeGJRWNI7iYha3kkGzNKIPFS4HYTYtR5AcJxpC5ku+E+MfWM2h+jXs+0I7ix
- nj7H7ywItRaiOYcMNEtbJi8aNF6iu+56c53Ue7plPqhCsp70XyYqMDhEvkR9WD6Qgs
- Ce83iRpn4KmyI3Uwn5Rb6rD/lXQxJoTllO9j5Iyf5MM+WcB3WBLoWPNI8bcHwvzjIS
- 7MAKQEfbvDwJw==
-Date: Sat, 15 May 2021 10:07:31 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs fixes for 5.13-rc2
-Message-ID: <20210515020731.GA2382@hsiangkao-HP-ZHAN-66-Pro-G1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ s=k20201202; t=1621096135;
+ bh=1aAjMb/PMKY8MpaIcSW7Q3Y+qQrQc14gOdA0O0yknbQ=;
+ h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+ b=BRNVqj10Io1ifiqgZKM2mU7KS6b7lBEo/GMkbcqH9XcC52xsIlwMGt9m7WXKBumJg
+ S16ufRzKaGaDfznPXCvwXMjHjkDteIVBi1YuYACqhilKVWYFNle5HjGi9Q7tGwycaf
+ rX3elxqasOXua4Zecbu1xU6oH0X4qn9IJFCg464s1dy0Kuo6btoSTTwSwQVAEjqo4z
+ n38oamFDnLNM3Iwc24GqCvHu2q4HErlPftQ+iT1+RnaHKFyDgGFtU5XQhqtTVHMBjc
+ UiVHWsiNj/8ipK22oFUhr1U8Dg0uZXZcrYS8uO/zciM0YVYwNGZDjhJeYRN30IZ4yk
+ /kj/Z3UDMZErw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain
+ [127.0.0.1])
+ by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4A1BE60727;
+ Sat, 15 May 2021 16:28:55 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 5.13-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20210515020731.GA2382@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20210515020731.GA2382@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-PR-Tracked-List-Id: Development of Linux EROFS file system
+ <linux-erofs.lists.ozlabs.org>
+X-PR-Tracked-Message-Id: <20210515020731.GA2382@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
+ tags/erofs-for-5.13-rc2-fixes
+X-PR-Tracked-Commit-Id: 0852b6ca941ef3ff75076e85738877bd3271e1cd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 41f035c0626521fb2fdd694803c3397dbaddc9f3
+Message-Id: <162109613523.13678.12019869520982105265.pr-tracker-bot@kernel.org>
+Date: Sat, 15 May 2021 16:28:55 +0000
+To: Gao Xiang <xiang@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,55 +67,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Miao Xie <miaoxie@huawei.com>
+Cc: linux-erofs@lists.ozlabs.org, Miao Xie <miaoxie@huawei.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+The pull request you sent on Sat, 15 May 2021 10:07:31 +0800:
 
-Could you consider this pull request for 5.13-rc2?
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.13-rc2-fixes
 
-This mainly fixes 1 lcluster-sized pclusters for the big pcluster
-feature, which can be forcely generated by mkfs as a specific on-disk
-case for per-(sub)file compression strategies but missed to handle in
-runtime properly. Also, documentation updates are included to fix
-the broken illustration due to the ReST conversion by accident and
-complete the big pcluster introduction.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/41f035c0626521fb2fdd694803c3397dbaddc9f3
 
-All commits have been tested and have been in linux-next. This merges
-cleanly with master.
+Thank you!
 
-Thanks,
-Gao Xiang
-
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
-
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.13-rc2-fixes
-
-for you to fetch changes up to 0852b6ca941ef3ff75076e85738877bd3271e1cd:
-
-  erofs: fix 1 lcluster-sized pcluster for big pcluster (2021-05-13 15:58:46 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
- - update documentation to fix the broken illustration due to ReST
-   conversion by accident at that time and complete the big pcluster
-   introduction;
-
- - fix 1 lcluster-sized pclusters for the big pcluster feature.
-
-----------------------------------------------------------------
-Gao Xiang (3):
-      erofs: fix broken illustration in documentation
-      erofs: update documentation about data compression
-      erofs: fix 1 lcluster-sized pcluster for big pcluster
-
- Documentation/filesystems/erofs.rst | 175 +++++++++++++++++++++---------------
- fs/erofs/zmap.c                     |  21 ++++-
- 2 files changed, 121 insertions(+), 75 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
