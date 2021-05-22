@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C69EF38D38E
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 May 2021 06:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6FE338D3D7
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 May 2021 07:51:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Fn9dQ5pzNz30Bw
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 May 2021 14:35:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4FnCJj6RrQz307x
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 May 2021 15:51:17 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=e2/1Heut;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qR0DFLaH;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,34 +17,31 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=e2/1Heut; 
+ header.s=k20201202 header.b=qR0DFLaH; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Fn9dM0YH4z3092
- for <linux-erofs@lists.ozlabs.org>; Sat, 22 May 2021 14:35:35 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 534AE6135A;
- Sat, 22 May 2021 04:35:30 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4FnCJb3P8rz2yyM
+ for <linux-erofs@lists.ozlabs.org>; Sat, 22 May 2021 15:51:11 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EE5936138C;
+ Sat, 22 May 2021 05:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1621658133;
- bh=B1BX5/qa2/rXh6xtG12TvS5xPlx4NgAqLBiASeDCMUI=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=e2/1HeutM9+RWhYbJp7KDar8EBHrO9ynnedLISPjtPc8kwWTnA9B/B3/SRAMGur0E
- BKPuAcdzDUw+mhsePsVK6S7LvesprZcneFZNjnGC2DsEXJ54UkVgrWteb0XQ0Y6+wX
- NE0rsva+wikSQ5Wgh7za/RRUIsQt4a2eCsk8z7XdR0uXb7QXi9/jlqqSLbFAuHk2y2
- n07eV17bjWWs23mdrHRM6MPj3fC0/xlWD2deS3ntlKJbJHemaq6ppq1BhqOWEvlX57
- zuk2y/bpmFEzFBTEL7+7zV4gh2sF7YuUqzUmdYrNFOngga4CIBUyhQhX4CrBSvhd7a
- ir6DtLiGSPCBw==
+ s=k20201202; t=1621662668;
+ bh=ouQQ9hJPutbd0gGZnRj6/AHdG3qP/l/FD9+HSFTY12Q=;
+ h=From:To:Cc:Subject:Date:From;
+ b=qR0DFLaHziy7tT89XlNRjfzRmZo7YMRhMq/UkdA0+dkWY6h9W2WN8RGl5QGjqdlV5
+ WxQshuOiA2VwIulb3QY5A1Wkr005aNOs5ZzrJI3CT4uHwQpJ7wLj9P1JMeXGh73gVb
+ Wqh8MupiVt3Vpf4jwKmS+IDWIL0GnDYJNyjMT3tHaQw5ihOxZUiQJSOuS9rTMz4U35
+ f2WnYLBH+UoISzfROgZ8D7AKf3f62dBwYcHoLkkqUO2imHpmSObfUuDk6mtuI47i7V
+ Fhf06jKO/GAn6mT8YvhrouUURZoZirkpt6KKZvHZfCJ/IqYDD2uQW4685xiQ5XblGB
+ doDa20FI6KmmQ==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 3/3] erofs-utils: support randomizing pclusterblks in
- debugging mode
-Date: Sat, 22 May 2021 12:35:02 +0800
-Message-Id: <20210522043502.11975-4-xiang@kernel.org>
+Subject: [PATCH 1/2] erofs-utils: README: trivial updates
+Date: Sat, 22 May 2021 13:50:56 +0800
+Message-Id: <20210522055057.25004-1-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210522043502.11975-1-xiang@kernel.org>
-References: <20210522043502.11975-1-xiang@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -63,132 +60,112 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It's used for big pcluster selftest.
+- update erofs naming to EROFS;
+- add some words about compression levels;
+- add more description about legacy EROFS images.
 
 Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
- include/erofs/config.h |  3 +++
- lib/compress.c         |  4 ++++
- mkfs/main.c            | 50 +++++++++++++++++++++++++++---------------
- 3 files changed, 39 insertions(+), 18 deletions(-)
+ README | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index e2f6541f1d1f..21bd25e886e6 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -40,6 +40,9 @@ struct erofs_configure {
- 	int c_dbg_lvl;
- 	bool c_dry_run;
- 	bool c_legacy_compress;
-+#ifndef NDEBUG
-+	bool c_random_pclusterblks;
-+#endif
- 	char c_timeinherit;
+diff --git a/README b/README
+index b57550b2a09e..bcf30e11aa52 100644
+--- a/README
++++ b/README
+@@ -1,7 +1,7 @@
+ erofs-utils
+ ===========
  
- #ifdef HAVE_LIBSELINUX
-diff --git a/lib/compress.c b/lib/compress.c
-index 2f83198202ba..1b847ce27c2f 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -152,6 +152,10 @@ static int write_uncompressed_extent(struct z_erofs_vle_compress_ctx *ctx,
- /* TODO: apply per-(sub)file strategies here */
- static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
- {
-+#ifndef NDEBUG
-+	if (cfg.c_random_pclusterblks)
-+		return 1 + rand() % cfg.c_physical_clusterblks;
-+#endif
- 	return cfg.c_physical_clusterblks;
- }
+-erofs-utils includes user-space tools for erofs filesystem.
++erofs-utils includes user-space tools for EROFS filesystem.
+ Currently mkfs.erofs and erofsfuse (experimental) are available.
  
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 3e0f64eb2d31..b2a4cba1d2f5 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -39,6 +39,9 @@ static struct option long_options[] = {
- 	{"force-uid", required_argument, NULL, 5},
- 	{"force-gid", required_argument, NULL, 6},
- 	{"all-root", no_argument, NULL, 7},
-+#ifndef NDEBUG
-+	{"random-pclusterblks", no_argument, NULL, 8},
-+#endif
- #ifdef WITH_ANDROID
- 	{"mount-point", required_argument, NULL, 10},
- 	{"product-out", required_argument, NULL, 11},
-@@ -64,29 +67,32 @@ static void usage(void)
- {
- 	fputs("usage: [options] FILE DIRECTORY\n\n"
- 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
--	      " -zX[,Y]            X=compressor (Y=compression level, optional)\n"
--	      " -C#                specify the size of compress physical cluster in bytes\n"
--	      " -d#                set output message level to # (maximum 9)\n"
--	      " -x#                set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
--	      " -EX[,...]          X=extended options\n"
--	      " -T#                set a fixed UNIX timestamp # to all files\n"
-+	      " -zX[,Y]               X=compressor (Y=compression level, optional)\n"
-+	      " -C#                   specify the size of compress physical cluster in bytes\n"
-+	      " -d#                   set output message level to # (maximum 9)\n"
-+	      " -x#                   set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
-+	      " -EX[,...]             X=extended options\n"
-+	      " -T#                   set a fixed UNIX timestamp # to all files\n"
- #ifdef HAVE_LIBUUID
--	      " -UX                use a given filesystem UUID\n"
-+	      " -UX                   use a given filesystem UUID\n"
- #endif
--	      " --exclude-path=X   avoid including file X (X = exact literal path)\n"
--	      " --exclude-regex=X  avoid including files that match X (X = regular expression)\n"
-+	      " --exclude-path=X      avoid including file X (X = exact literal path)\n"
-+	      " --exclude-regex=X     avoid including files that match X (X = regular expression)\n"
- #ifdef HAVE_LIBSELINUX
--	      " --file-contexts=X  specify a file contexts file to setup selinux labels\n"
-+	      " --file-contexts=X     specify a file contexts file to setup selinux labels\n"
-+#endif
-+	      " --force-uid=#         set all file uids to # (# = UID)\n"
-+	      " --force-gid=#         set all file gids to # (# = GID)\n"
-+	      " --all-root            make all files owned by root\n"
-+	      " --help                display this help and exit\n"
-+#ifndef NDEBUG
-+	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
- #endif
--	      " --force-uid=#      set all file uids to # (# = UID)\n"
--	      " --force-gid=#      set all file gids to # (# = GID)\n"
--	      " --all-root         make all files owned by root\n"
--	      " --help             display this help and exit\n"
- #ifdef WITH_ANDROID
- 	      "\nwith following android-specific options:\n"
--	      " --mount-point=X    X=prefix of target fs path (default: /)\n"
--	      " --product-out=X    X=product_out directory\n"
--	      " --fs-config-file=X X=fs_config file\n"
-+	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
-+	      " --product-out=X       X=product_out directory\n"
-+	      " --fs-config-file=X    X=fs_config file\n"
- #endif
- 	      "\nAvailable compressors are: ", stderr);
- 	print_available_compressors(stderr, ", ");
-@@ -257,6 +263,11 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 7:
- 			cfg.c_uid = cfg.c_gid = 0;
- 			break;
-+#ifndef NDEBUG
-+		case 8:
-+			cfg.c_random_pclusterblks = true;
-+			break;
-+#endif
- #ifdef WITH_ANDROID
- 		case 10:
- 			cfg.mount_point = optarg;
-@@ -523,7 +534,10 @@ int main(int argc, char **argv)
+ Dependencies & build
+@@ -50,7 +50,7 @@ as well.
+ mkfs.erofs
+ ----------
  
- 	erofs_show_config();
- 	erofs_set_fs_root(cfg.c_src_path);
--
-+#ifndef NDEBUG
-+	if (cfg.c_random_pclusterblks)
-+		srand(time(NULL));
-+#endif
- 	sb_bh = erofs_buffer_init();
- 	if (IS_ERR(sb_bh)) {
- 		err = PTR_ERR(sb_bh);
+-two main kinds of erofs images can be generated: (un)compressed.
++two main kinds of EROFS images can be generated: (un)compressed.
+ 
+  - For uncompressed images, there will be none of compression
+    files in these images. However, it can decide whether the tail
+@@ -61,8 +61,8 @@ two main kinds of erofs images can be generated: (un)compressed.
+    saved with compression. If not, fallback to an uncompressed
+    file.
+ 
+-How to generate erofs images
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++How to generate EROFS images (Linux 5.3+)
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ Currently lz4 and lz4hc are available for compression, e.g.
+  $ mkfs.erofs -zlz4hc foo.erofs.img foo/
+@@ -70,17 +70,24 @@ Currently lz4 and lz4hc are available for compression, e.g.
+ Or leave all files uncompressed as an option:
+  $ mkfs.erofs foo.erofs.img foo/
+ 
+-How to generate legacy erofs images
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++In addition, you could specify a higher compression level to get a
++(slightly) better compression ratio than the default level, e.g.
++ $ mkfs.erofs -zlz4hc,12 foo.erofs.img foo/
++
++How to generate legacy EROFS images (Linux 4.19+)
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ Decompression inplace and compacted indexes have been introduced in
+ linux-5.3, which are not forward-compatible with older kernels.
+ 
+-In order to generate _legacy_ erofs images for old kernels,
++In order to generate _legacy_ EROFS images for old kernels,
+ consider adding "-E legacy-compress" to the command line, e.g.
+ 
+  $ mkfs.erofs -E legacy-compress -zlz4hc foo.erofs.img foo/
+ 
++For Linux kernel >= 5.3, legacy EROFS images are _NOT recommended_
++due to runtime performance loss compared with non-legacy images.
++
+ Obsoleted erofs.mkfs
+ ~~~~~~~~~~~~~~~~~~~~
+ 
+@@ -94,7 +101,7 @@ PLEASE NOTE: This version is highly _NOT recommended_ now.
+ erofsfuse (experimental, unstable)
+ ----------------------------------
+ 
+-erofsfuse is introduced to support erofs format for various platforms
++erofsfuse is introduced to support EROFS format for various platforms
+ (including older linux kernels) and new on-disk features iteration.
+ It can also be used as an unpacking tool for unprivileged users.
+ 
+@@ -120,7 +127,7 @@ and build it manually:
+ 
+ erofsfuse binary will be generated under fuse folder.
+ 
+-How to mount an erofs image with erofsfuse
++How to mount an EROFS image with erofsfuse
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ As the other FUSE implementations, it's quite simple to mount with
+@@ -139,7 +146,7 @@ To unmount an erofsfuse mountpoint as a non-root user:
+ Contribution
+ ------------
+ 
+-erofs-utils is under GPLv2+ as a part of erofs project,
++erofs-utils is under GPLv2+ as a part of EROFS filesystem project,
+ feel free to send patches or feedback to us.
+ 
+ To:
+@@ -155,7 +162,7 @@ Cc:
+ Comments
+ --------
+ 
+-[1] According to the erofs on-disk format, the tail block of files
++[1] According to the EROFS on-disk format, the tail block of files
+     could be inlined aggressively with its metadata in order to reduce
+     the I/O overhead and save the storage space (called tail-packing).
+ 
 -- 
 2.20.1
 
