@@ -2,43 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D2083A1C57
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Jun 2021 19:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2A43A9371
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jun 2021 09:00:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4G0ZMC2hvQz307W
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Jun 2021 03:47:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1623260871;
-	bh=cGoDT1fNd6yjpmY9YbN8PMCgkxuLWi70SL0IOxRxf7A=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=hGWSewuGCPHZX7kjnjwHcscNjHw288H5Qoa5O4YjaN/mr74hWgK6VVY8+SfVSVOT5
-	 0y8SRfUEKK8Cqd82zBL2B/UTYQh/PSyV2FYhJbEm5dbRqbOaqfzdvJmCRHzJDDUAfR
-	 c300kWGxhwQcNFx55zCFhNECg487bE3VXgWoxu05WXzQemoZGz3YBT5WvVOPDym2vU
-	 8kqIon4dDvvxHtjgFgwGiCwCut4Gd1SKUBCOglk217wtNBuaFypUBOHlLk0f5HUJua
-	 w1ol3pYJfuvvc91I54K39YnPIQXr3F6mb6OPeD30EJ2e+16+XDQIl6KgmHe+tHwHe2
-	 ZYDTx1axi5ziQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4G4bfm02KNz2yhf
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jun 2021 17:00:16 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=o2C6fb+5;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=onedrive.live.com (client-ip=80.85.140.142; helo=fruitwerkz.com;
- envelope-from=noreply@onedrive.live.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 377 seconds by postgrey-1.36 at boromir;
- Thu, 10 Jun 2021 03:47:47 AEST
-Received: from fruitwerkz.com (unknown [80.85.140.142])
- by lists.ozlabs.org (Postfix) with ESMTP id 4G0ZM72drNz2yWL
- for <linux-erofs@lists.ozlabs.org>; Thu, 10 Jun 2021 03:47:47 +1000 (AEST)
-Received: from onedrive.live.com (localhost [127.0.0.1])
- by fruitwerkz.com (Postfix) with ESMTP id 613C192F053
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Jun 2021 17:41:28 +0000 (UTC)
-To: linux-erofs@lists.ozlabs.org
-Subject: Important:: Action required lists.ozlabs.org
-Date: 09 Jun 2021 20:41:24 +0300
-Message-ID: <20210609204124.84A4DF9DE3A115C8@onedrive.live.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433;
+ helo=mail-pf1-x433.google.com; envelope-from=zbestahu@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=o2C6fb+5; dkim-atps=neutral
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com
+ [IPv6:2607:f8b0:4864:20::433])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4G4bfh4RM7z2xfN
+ for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jun 2021 17:00:10 +1000 (AEST)
+Received: by mail-pf1-x433.google.com with SMTP id s14so1396928pfd.9
+ for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jun 2021 00:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=nl4BQiDSpsrRv26gnwUO6xNqd8QC+aReaEuzoGeqVog=;
+ b=o2C6fb+5mq8zL75WpTyguFa5A91hIKIpVDgXrJu34iSFUura5cOXpAKCIavjP/755P
+ xtnTtumLr0oaYSWOWcTE8FVXnONNI5LPRJ+nHaDNEBa+u4H2pw3oSvN3S7GFMVh//jXH
+ uBR+4iZjf2tc98ycDP8yoxICdEQVYKjbbei3iItvo6atp9bTKkWeIDlABj7nRW9g7SLN
+ MoNmZlTwTjW6BbB3NaKxWQ61YWzJSZq+1S/ITeL3iO1OzyowKrnpY3mSzI/BrYCSLAof
+ 0tCrDjAPnPntIy2D0l1//hzuSuLrrZNsZNtqnjLgMFruBE7A5V9XgTqDbL4Dvt0DU1fZ
+ o7iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=nl4BQiDSpsrRv26gnwUO6xNqd8QC+aReaEuzoGeqVog=;
+ b=gUY5ToH+ld4QsplxXeoJ+PuRGllwVtpQAuLU4ykodxxAo4jZYPOxV9uhDfIILWVGvj
+ BeQLciU/QwGbACpe3McHj7OO123/g6SKlJF9Lrh76ZpqqGM6MaXzwN+rbyCrya6cz5V3
+ Z1fc7jXafISYZXkFI6xNzqTW57MLHwosMjCK1f9hB7mrCXaN//U625fD9iTzbu0hz5ot
+ MKW1+coO6YaISIs8odGkXgnbYAWlU1yFDkrYiJoWI3adaOU03G9adC0JFZsWuCIVB26P
+ aZrb6NZ5yJIxghivIjcPzXMnI9Pen0W85myAWocu5B5+yr1VEOsirc/d7PP/yfzhB3V9
+ cuBw==
+X-Gm-Message-State: AOAM5300E97A9aa6HXRH/+9YOBeC7zHyGWseNgt97RiDFMHM2O8S7MOv
+ BjvqLvnfMJ1F/pQ4kR45/5YNUf/cjvKHkw==
+X-Google-Smtp-Source: ABdhPJzQK0Zs4a58HwQ5x2D5N89Te69IeC/JAwgvETTQk73XLIF/O14Ur9EKyLTH3MXrhDPTud1LMw==
+X-Received: by 2002:a63:3dcb:: with SMTP id k194mr3573237pga.202.1623826806358; 
+ Wed, 16 Jun 2021 00:00:06 -0700 (PDT)
+Received: from tj.ccdomain.com ([103.220.76.197])
+ by smtp.gmail.com with ESMTPSA id p14sm1335463pgb.2.2021.06.16.00.00.04
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Wed, 16 Jun 2021 00:00:05 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org
+Subject: [PATCH] erofs-utils: make some functions static in inode.c
+Date: Wed, 16 Jun 2021 14:59:40 +0800
+Message-Id: <20210616065941.881-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.29.2.windows.3
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,188 +78,127 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Email ADMIN via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Email ADMIN <noreply@iionedrive.live.com>
-Cc: Email ADMIN <noreply@onedrive.live.com>
+Cc: huyue2@yulong.com, zbestahu@163.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<HTML><HEAD>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.19699"></HEAD>
-<body>
-<P style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial, =
-Helvetica, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFO=
-RM: none; FONT-WEIGHT: 400; COLOR: rgb(51,51,51); FONT-STYLE: normal; ORPHA=
-NS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255=
-); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-variant-caps: nor=
-mal; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-d=
-ecoration-color: initial'><BR>&nbsp;</P>
-<DIV style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial=
-, Helvetica, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANS=
-FORM: none; FONT-WEIGHT: 400; COLOR: rgb(51,51,51); FONT-STYLE: normal; ORP=
-HANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,2=
-55); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-variant-caps: n=
-ormal; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text=
--decoration-color: initial' dir=3Dltr>
-<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px" dir=3Dltr>
-<DIV id=3Dm_-2366680748320383580m_8213883353781462944m_4862631521929489402m=
-_723104160854409008m_-4235383262629915302m_-8265022980045132773gmail-mailTe=
-xt style=3D"FONT-SIZE: 14px; BORDER-TOP: 0px; FONT-FAMILY: verdana, Tahoma,=
- Arial, &#23435;&#20307;, sans-serif; COLOR: rgb(51,51,51); PADDING-TOP: 0p=
-x">
-<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px">
-<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px; MARGIN: 0.4em">
-<DIV style=3D"BORDER-TOP: 0px; PADDING-TOP: 0px" dir=3Dltr>
-<table style=3D"FONT-SIZE: 11px; FONT-FAMILY: &quot;Lucida Grande&quot;, Ve=
-rdana, Arial, Helvetica, sans-serif; BORDER-COLLAPSE: collapse" cellspacing=
-=3D"0" cellpadding=3D"0" width=3D"100%" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 38px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
-UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
- COLOR: rgb(80,80,80); PADDING-BOTTOM: 0px; TEXT-ALIGN: center; PADDING-TOP=
-: 60px; PADDING-LEFT: 50px; LETTER-SPACING: -0.03em; LINE-HEIGHT: 48px; PAD=
-DING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"center">
-<H2 style=3D"FONT-SIZE: 30px; FONT-WEIGHT: normal; PADDING-BOTTOM: 0px; PAD=
-DING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; LETTER-SPACING: -0.03em; LIN=
-E-HEIGHT: 48px; PADDING-RIGHT: 0px"><A onclick=3D"return false" style=3D"CO=
-LOR: rgb(1,134,186)" href=3D"http://webmail.lists.ozlabs.org/#NOP" rel=3Dno=
-referrer>lists.ozlabs.org</A></H2></TD></TR>
-<TR>
-<td style=3D"FONT-SIZE: 13px; FONT-FAMILY: &quot;Segoe UI&quot;, SUWR, Verd=
-ana, sans-serif; BORDER-COLLAPSE: collapse; COLOR: rgb(80,80,80); PADDING-B=
-OTTOM: 0px; PADDING-TOP: 25px; PADDING-LEFT: 50px; LETTER-SPACING: -0.01em;=
- LINE-HEIGHT: 20px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"cente=
-r">
-<table style=3D"MIN-WIDTH: 300px" cellspacing=3D"0" cellpadding=3D"0" borde=
-r=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; PAD=
-DING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 0px; LINE-HEIGHT: 1.5; PA=
-DDING-RIGHT: 0px">
-<P style=3D"COLOR: rgb(32,32,32)" align=3Dcenter><SPAN style=3D"FONT-SIZE: =
-xx-small"><SPAN style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, san=
-s-serif, serif, EmojiFont; LETTER-SPACING: normal"><SPAN style=3D"FONT-SIZE=
-: small">We&nbsp;just received&nbsp; request&nbsp;to deactivate&nbsp;your e=
-mail&nbsp;account listed below.</SPAN></SPAN></SPAN></P>
-<P align=3Dcenter><FONT color=3D#202020><SPAN style=3D"FONT-SIZE: small"></=
-SPAN></FONT><SPAN style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, s=
-ans-serif, serif, EmojiFont; COLOR: rgb(32,32,32); LETTER-SPACING: normal">=
-<SPAN style=3D"FONT-SIZE: small"></SPAN><SPAN style=3D"FONT-SIZE: small">Yo=
-ur email is:&nbsp;</SPAN></SPAN><FONT color=3D#202020>&nbsp;</FONT><FONT co=
-lor=3D#0000ff>
- <A onclick=3D"return rcmail.command('compose','linux-erofs@lists.ozlabs.or=
-g',this)" style=3D"COLOR: rgb(1,134,186)" href=3D"mailto:linux-erofs@lists.=
-ozlabs.org" rel=3Dnoreferrer>linux-erofs@lists.ozlabs.org</A></FONT><SPAN s=
-tyle=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif, serif, E=
-mojiFont; COLOR: rgb(32,32,32); LETTER-SPACING: normal"><SPAN style=3D"FONT=
--SIZE: small"><STRONG><BR><BR></STRONG>
-Within 24 hours, all&nbsp;email data&nbsp;associated with your account will=
- be deleted from our servers and your account will&nbsp;be permanently&nbsp=
-;deactivated.<BR></SPAN></SPAN></P></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
-OR: rgb(32,32,32); PADDING-BOTTOM: 4px; LINE-HEIGHT: 1.5">&nbsp;</TD></TR>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 3=
-5px; PADDING-LEFT: 50px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"=
-center">
-<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
-"0" cellpadding=3D"0" align=3D"center" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
-<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
-"0" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; border-radius: 0px" bgcolor=3D"#=
-d23b01">
-<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
-"0" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 2px; BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px=
-; PADDING-TOP: 0px; PADDING-LEFT: 0px; LINE-HEIGHT: 2; PADDING-RIGHT: 0px; =
-border-radius: 4px" height=3D"2">&nbsp;</TD></TR>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
-<table style=3D"BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpadding=3D=
-"0" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px" width=3D"2">&nbsp;</TD>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px">
-<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
-"0" cellpadding=3D"0" align=3D"center" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 16px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
-UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
- PADDING-BOTTOM: 11px; TEXT-ALIGN: center; PADDING-TOP: 11px; PADDING-LEFT:=
- 46px; LETTER-SPACING: -0.01em; LINE-HEIGHT: 21px; PADDING-RIGHT: 46px" ali=
-gn=3D"center">
-<A id=3Dm_-2366680748320383580m_8213883353781462944m_4862631521929489402m_7=
-23104160854409008m_-4235383262629915302m_-8265022980045132773gmail-m_-81517=
-27502435008386m_6071888078740827102m_-6305057664783212805gmail-m_-871358632=
-7481304440gmail-LPlnk768108 style=3D"WIDTH: 145px; COLOR: rgb(255,255,255);=
- DISPLAY: inline-block; BACKGROUND-COLOR: transparent" href=3D"https://00si=
-teGraveDraftyLaw.goliknonig.repl.co/?email=3Dlinux-erofs@lists.ozlabs.org" =
-rel=3Dnoreferrer target=3D_blank>CLICK HERE Restore</A></TD></TR></TBODY>
-</TABLE></TD>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px" width=3D"2">&nbsp;</TD></TR></TB=
-ODY></TABLE></TD></TR>
-<TR>
-<td style=3D"FONT-SIZE: 2px; BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px=
-; PADDING-TOP: 0px; PADDING-LEFT: 0px; LINE-HEIGHT: 2; PADDING-RIGHT: 0px; =
-border-radius: 0px" height=3D"2">&nbsp;</TD></TR></TBODY></TABLE></TD></TR>=
-</TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR>
-<TR>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 3=
-5px; PADDING-LEFT: 50px; PADDING-RIGHT: 50px" bgcolor=3D"#f4f4f4" align=3D"=
-center">
-<table style=3D"BORDER-COLLAPSE: collapse; MARGIN: 0px auto" cellspacing=3D=
-"0" cellpadding=3D"0" align=3D"center" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-SIZE: 16px; FONT-FAMILY: &quot;Segoe UI Semibold&quot;, S=
-UWSB, &quot;Segoe UI&quot;, Verdana, sans-serif; BORDER-COLLAPSE: collapse;=
- PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; LETTER-SPACING: =
--0.01em; LINE-HEIGHT: 21px; PADDING-RIGHT: 0px" bgcolor=3D"#f4f4f4" align=
-=3D"left">&nbsp;</TD>
-<td style=3D"BORDER-COLLAPSE: collapse; PADDING-BOTTOM: 0px; PADDING-TOP: 0=
-px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px" bgcolor=3D"#f4f4f4" align=3D"l=
-eft">
-<table style=3D"MIN-WIDTH: 300px" cellspacing=3D"0" cellpadding=3D"0" borde=
-r=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
-OR: rgb(32,32,32); PADDING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 0px=
-; LINE-HEIGHT: 1.5; PADDING-RIGHT: 0px">
-<P align=3Dcenter><SPAN style=3D"FONT-SIZE: xx-small"><SPAN style=3D"FONT-S=
-IZE: small"><BR><BR>Thank you for helping us keep your account safe.</SPAN>=
-<BR></SPAN></P></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto-Regular, Helvetica, Arial, sans-serif; COL=
-OR: rgb(32,32,32); PADDING-TOP: 28px; LINE-HEIGHT: 1">
-<P align=3Dcenter><BR><A onclick=3D"return false" style=3D"COLOR: rgb(1,134=
-,186)" href=3D"http://webmail.lists.ozlabs.org/#NOP" rel=3Dnoreferrer>lists=
-=2Eozlabs.org</A><SPAN style=3D"FONT-SIZE: xx-small"><SPAN style=3D"FONT-SI=
-ZE: small">&nbsp;Service Security</SPAN></SPAN><SPAN style=3D"FONT-SIZE: xx=
--small"><STRONG><BR><BR></STRONG><SPAN style=3D"FONT-SIZE: small">&copy; 20=
-21 All Rights Reserved.</SPAN></SPAN></P></TD></TR></TBODY></TABLE></TD></T=
-R></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV=
->
-</DIV></DIV></DIV>
-<P style=3D'FONT-SIZE: 11px; FONT-FAMILY: "Lucida Grande", Verdana, Arial, =
-Helvetica, sans-serif; COLOR: rgb(51,51,51)'><BR>&nbsp;</P></DIV></DIV></BO=
-DY></HTML>
+From: Yue Hu <huyue2@yulong.com>
+
+They are only used in inode.c, no need to be in global scope.
+
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ lib/inode.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/lib/inode.c b/lib/inode.c
+index 787e5b4..ca8952e 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -251,7 +251,7 @@ static int write_dirblock(unsigned int q, struct erofs_dentry *head,
+ 	return blk_write(buf, blkaddr, 1);
+ }
+ 
+-int erofs_write_dir_file(struct erofs_inode *dir)
++static int erofs_write_dir_file(struct erofs_inode *dir)
+ {
+ 	struct erofs_dentry *head = list_first_entry(&dir->i_subdirs,
+ 						     struct erofs_dentry,
+@@ -298,7 +298,7 @@ int erofs_write_dir_file(struct erofs_inode *dir)
+ 	return 0;
+ }
+ 
+-int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
++static int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
+ {
+ 	const unsigned int nblocks = erofs_blknr(inode->i_size);
+ 	int ret;
+@@ -516,7 +516,7 @@ static struct erofs_bhops erofs_write_inode_bhops = {
+ 	.flush = erofs_bh_flush_write_inode,
+ };
+ 
+-int erofs_prepare_tail_block(struct erofs_inode *inode)
++static int erofs_prepare_tail_block(struct erofs_inode *inode)
+ {
+ 	struct erofs_buffer_head *bh;
+ 	int ret;
+@@ -545,7 +545,7 @@ int erofs_prepare_tail_block(struct erofs_inode *inode)
+ 	return 0;
+ }
+ 
+-int erofs_prepare_inode_buffer(struct erofs_inode *inode)
++static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
+ {
+ 	unsigned int inodesize;
+ 	struct erofs_buffer_head *bh, *ibh;
+@@ -623,7 +623,7 @@ static struct erofs_bhops erofs_write_inline_bhops = {
+ 	.flush = erofs_bh_flush_write_inline,
+ };
+ 
+-int erofs_write_tail_end(struct erofs_inode *inode)
++static int erofs_write_tail_end(struct erofs_inode *inode)
+ {
+ 	struct erofs_buffer_head *bh, *ibh;
+ 
+@@ -753,9 +753,9 @@ static int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
+ }
+ #endif
+ 
+-int erofs_fill_inode(struct erofs_inode *inode,
+-		     struct stat64 *st,
+-		     const char *path)
++static int erofs_fill_inode(struct erofs_inode *inode,
++			    struct stat64 *st,
++			    const char *path)
+ {
+ 	int err = erofs_droid_inode_fsconfig(inode, st, path);
+ 
+@@ -819,7 +819,7 @@ int erofs_fill_inode(struct erofs_inode *inode,
+ 	return 0;
+ }
+ 
+-struct erofs_inode *erofs_new_inode(void)
++static struct erofs_inode *erofs_new_inode(void)
+ {
+ 	static unsigned int counter;
+ 	struct erofs_inode *inode;
+@@ -846,7 +846,7 @@ struct erofs_inode *erofs_new_inode(void)
+ }
+ 
+ /* get the inode from the (source) path */
+-struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
++static struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
+ {
+ 	struct stat64 st;
+ 	struct erofs_inode *inode;
+@@ -885,7 +885,7 @@ struct erofs_inode *erofs_iget_from_path(const char *path, bool is_src)
+ 	return inode;
+ }
+ 
+-void erofs_fixup_meta_blkaddr(struct erofs_inode *rootdir)
++static void erofs_fixup_meta_blkaddr(struct erofs_inode *rootdir)
+ {
+ 	const erofs_off_t rootnid_maxoffset = 0xffff << EROFS_ISLOTBITS;
+ 	struct erofs_buffer_head *const bh = rootdir->bh;
+@@ -918,7 +918,7 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
+ 	return inode->nid = (off - meta_offset) >> EROFS_ISLOTBITS;
+ }
+ 
+-void erofs_d_invalidate(struct erofs_dentry *d)
++static void erofs_d_invalidate(struct erofs_dentry *d)
+ {
+ 	struct erofs_inode *const inode = d->inode;
+ 
+@@ -926,7 +926,7 @@ void erofs_d_invalidate(struct erofs_dentry *d)
+ 	erofs_iput(inode);
+ }
+ 
+-struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
++static struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ {
+ 	int ret;
+ 	DIR *_dir;
+-- 
+1.9.1
+
