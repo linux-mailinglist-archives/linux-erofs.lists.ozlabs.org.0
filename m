@@ -1,55 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CA553B8C6C
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jul 2021 04:49:48 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 788643B9A9D
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jul 2021 03:55:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GFjNp286bz2ysm
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jul 2021 12:49:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GGJ870kC9z3027
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jul 2021 11:55:51 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature-key hash mismatch" header.d=postlinkhk.com header.i=@postlinkhk.com header.a=rsa-sha256 header.s=dkim header.b=gXItldxc;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com;
- envelope-from=cy.fan@huawei.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 969 seconds by postgrey-1.36 at boromir;
- Thu, 01 Jul 2021 12:49:42 AEST
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GFjNk0CjCz2yMV
- for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jul 2021 12:49:41 +1000 (AEST)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
- by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GFhzK10bQzZlKP;
- Thu,  1 Jul 2021 10:31:09 +0800 (CST)
-Received: from dggpemm500021.china.huawei.com (7.185.36.109) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 1 Jul 2021 10:34:16 +0800
-Received: from [10.174.177.223] (10.174.177.223) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Thu, 1 Jul 2021 10:34:15 +0800
-Subject: Re: [PATCH] lz4: fixs use-after-free Read in
- LZ4_decompress_safe_partial
-To: Nick Terrell <terrelln@fb.com>, Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <20210630032358.949122-1-cy.fan@huawei.com>
- <YNxYqXhw5g7Nl3JP@B-P7TQMD6M-0146.local>
- <CC666AE8-4CA4-4951-B6FB-A2EFDE3AC03B@fb.com>
-From: Chengyang Fan <cy.fan@huawei.com>
-Message-ID: <d4f67763-2211-bc91-2939-6c5062a3cbfa@huawei.com>
-Date: Thu, 1 Jul 2021 10:34:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+ smtp.mailfrom=postlinkhk.com (client-ip=202.181.141.137;
+ helo=gw1.euyansang.hlhk.net;
+ envelope-from=mail_60de707f278fd6.89578701@postlinkhk.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dkim=fail reason="signature-key hash mismatch" header.d=postlinkhk.com
+ header.i=@postlinkhk.com header.a=rsa-sha256 header.s=dkim header.b=gXItldxc; 
+ dkim-atps=neutral
+X-Greylist: delayed 409 seconds by postgrey-1.36 at boromir;
+ Fri, 02 Jul 2021 11:55:43 AEST
+Received: from gw1.euyansang.hlhk.net (unknown [202.181.141.137])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4GGJ7z3D0rz2yxT
+ for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jul 2021 11:55:43 +1000 (AEST)
+Received: from vm.sms.e-post.com.hk (unknown [117.18.98.182])
+ by gw1.euyansang.hlhk.net (Postfix) with ESMTPA id 67E6B5F12B
+ for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jul 2021 09:48:43 +0800 (HKT)
+Date: Fri, 2 Jul 2021 09:48:47 +0800
+To: linux-erofs <linux-erofs@lists.ozlabs.org>
+From: recycletungsing <recycletungsing@yeah.net>
+Subject: =?UTF-8?B?6Zu75a2Q5Zue5pS2ICAgRWxlY3Ryb25pY3MgcmVjeWNsZQ==?=
+Message-ID: <YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4@vm.sms.e-post.com.hk>
+X-Mailer: PHPMailer 6.1.7 (https://github.com/PHPMailer/PHPMailer)
+X-SMTP: gw1.euyansang.hlhk.net
 MIME-Version: 1.0
-In-Reply-To: <CC666AE8-4CA4-4951-B6FB-A2EFDE3AC03B@fb.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: multipart/alternative;
+ boundary="b1_YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.174.177.223]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggpemm500021.china.huawei.com (7.185.36.109)
-X-CFilter-Loop: Reflected
+DKIM-Signature: v=1; d=postlinkhk.com; s=dkim;
+ a=rsa-sha256; q=dns/txt; t=1625190527; c=relaxed/simple;
+ h=Date:To:From:Subject:Message-ID:X-Mailer:MIME-Version:Content-Type;
+ z=Date:Fri,=202=20Jul=202021=2009:48:47=20+0800
+ |To:linux-erofs=20<linux-erofs@lists.ozlabs.org>
+ |From:recycletungsing=20<recycletungsing@yeah.net>
+ |Subject:=3D?UTF-8?B?6Zu75a2Q5Zue5pS2ICAgRWxlY3Ryb25pY3MgcmVjeWNsZQ=3D=3D?
+ =3D
+ |Message-ID:<YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4@vm.sms.e-post.com
+ .hk>
+ |X-Mailer:PHPMailer=206.1.7=20(https://github.com/PHPMailer/PHPMailer)
+ |MIME-Version:1.0
+ |Content-Type:multipart/alternative=3B=20boundary=3D"b1_YzoTUrGG5SC1e0VFtd
+ lvY6lnsjFMVb82KJ1j3QnRkO4";
+ bh=SkbQ/bi9FAS35E0St19LQPJwnzzF8vYoAUH0OWAEdGI=;
+ b=gXItldxc4LeVNNA33HBUvk9g68is9asPMpYNM6Oq8gN/rUARmBRMItCjTDmMORDAfkhMENgXn
+ yvItF0E+T7SHj2alELQBoz+TLbX/ZLCe2zrD4m6AtqhORmv5qBG+0A5Omif8jEjKefVYdHlge
+ QEXpWUm4VbfM06phFxAj+z7h0=
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,154 +68,109 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- LKML <linux-kernel@vger.kernel.org>, Yann Collet <yann.collet.73@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
- Rajat Asthana <thisisrast7@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format.
 
-On 2021/7/1 1:49, Nick Terrell wrote:
->
->> On Jun 30, 2021, at 4:42 AM, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->> (also +cc Yann as well as Nick..)
->>
->> Hi Chengyang,
->>
->> If I understand correctly, is this a manually produced fuzzed
->> EROFS compressed data? If it's just a normal image, could you
->> also share the original image?
->>
->> On Wed, Jun 30, 2021 at 11:23:58AM +0800, Chengyang Fan wrote:
->>> ==================================================================
->>> BUG: KASAN: use-after-free in get_unaligned_le16 include/linux/unaligned/access_ok.h:10 [inline]
->>> BUG: KASAN: use-after-free in LZ4_readLE16 lib/lz4/lz4defs.h:132 [inline]
->>> BUG: KASAN: use-after-free in LZ4_decompress_generic lib/lz4/lz4_decompress.c:281 [inline]
->>> BUG: KASAN: use-after-free in LZ4_decompress_safe_partial+0xf50/0x1480 lib/lz4/lz4_decompress.c:465
->>> Read of size 2 at addr ffff888017851000 by task kworker/u12:0/2056
->>>
->>> CPU: 0 PID: 2056 Comm: kworker/u12:0 Not tainted 5.10.40 #2
->>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
->>> Workqueue: erofs_unzipd z_erofs_decompressqueue_work
->>> Call Trace:
->>> __dump_stack lib/dump_stack.c:77 [inline]
->>> dump_stack+0x137/0x1be lib/dump_stack.c:118
->>> print_address_description+0x6c/0x640 mm/kasan/report.c:385
->>> __kasan_report mm/kasan/report.c:545 [inline]
->>> kasan_report+0x13d/0x1e0 mm/kasan/report.c:562
->>> get_unaligned_le16 include/linux/unaligned/access_ok.h:10 [inline]
->>> LZ4_readLE16 lib/lz4/lz4defs.h:132 [inline]
->>> LZ4_decompress_generic lib/lz4/lz4_decompress.c:281 [inline]
->>> LZ4_decompress_safe_partial+0xf50/0x1480 lib/lz4/lz4_decompress.c:465
->>> z_erofs_lz4_decompress+0x839/0xc90 fs/erofs/decompressor.c:162
->>> z_erofs_decompress_generic fs/erofs/decompressor.c:291 [inline]
->>> z_erofs_decompress+0x57e/0xe10 fs/erofs/decompressor.c:344
->>> z_erofs_decompress_pcluster+0x13d1/0x2310 fs/erofs/zdata.c:880
->>> z_erofs_decompress_queue fs/erofs/zdata.c:958 [inline]
->>> z_erofs_decompressqueue_work+0xde/0x140 fs/erofs/zdata.c:969
->>> process_one_work+0x780/0xfc0 kernel/workqueue.c:2269
->>> worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
->>> kthread+0x39a/0x3c0 kernel/kthread.c:292
->>> ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:296
->>>
->>> The buggy address belongs to the page:
->>> page:00000000a79b76f1 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x17851
->>> flags: 0xfff00000000000()
->>> raw: 00fff00000000000 ffffea000081b9c8 ffffea00006ac6c8 0000000000000000
->>> raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
->>> page dumped because: kasan: bad access detected
->>>
->>> Memory state around the buggy address:
->>> ffff888017850f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>> ffff888017850f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>>> ffff888017851000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->>>                    ^
->>> ffff888017851080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->>> ffff888017851100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->>> ==================================================================
->>> erofs: (device loop0): z_erofs_lz4_decompress: failed to decompress -4099 in[4096, 0] out[9000]
->>>
->>> Off-by-one error causes the above issue. In LZ4_decompress_generic(),
->>> `iend = src + srcSize`. It means the valid address range should be
->>> [src, iend - 1]. Therefore, when checking whether the reading is
->>> out-of-bounds, it should be  `>= iend` rather than `> iend`.
-> This isn’t correct. The bounds check is correct for the following memcpy().
-> The problem is the LZ4_readLE16() on line 285 [1].
-Yeah, it's my fault. This fix is incorrect.
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Chengyang Fan <cy.fan@huawei.com>
->>> ---
->>> lib/lz4/lz4_decompress.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/lib/lz4/lz4_decompress.c b/lib/lz4/lz4_decompress.c
->>> index 926f4823d5ea..ec51837cd31f 100644
->>> --- a/lib/lz4/lz4_decompress.c
->>> +++ b/lib/lz4/lz4_decompress.c
->>> @@ -234,7 +234,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->>> 					length = oend - op;
->>> 				}
->>> 				if ((endOnInput)
->>> -					&& (ip + length > iend)) {
->>> +					&& (ip + length >= iend)) {
->> I'm not sure it should be fixed as this.
-> Yeah, this is not the correct fix. `ip + length > iend` is correct for the
-> memcpy(). You would instead need to add another check after the
-> memcpy(). E.g. something like this, taken from upstream [2].
->
-> ```
->
-> 			LZ4_memmove(op, ip, length);
-> 			ip += length;
-> 			op += length;
->
-> 			/* Necessarily EOF, due to parsing restrictions */
-> -			if (!partialDecoding || (cpy == oend))
-> +			if (!partialDecoding || (cpy == oend) || (ip >= (iend-2)))
-> 				break;
-> ```
->
-> This should be enough to fix the out of bounds read you reported.
-> However, I can’t guarantee that this will fix all the issues that have been
-> fixed upstream since v1.8.3.
->
-> The safest and most robust course of action would be to update the version
-> of LZ4 in the kernel to the latest upstream, which is continuously fuzzed, and
-> doesn't have this issue.
->
-> Best,
-> Nick Terrell
+--b1_YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thanks for pointing this out. I ignored the modifications of LZ4 
-upstream before. So I'll
+如閣下未能閱讀此郵件，請按此。
+ If you can’t see the image below, please click here
+ 
+ 
+ 本公司專業回收各類庫存新舊成品及配件，包括電子、鐘錶、五金廢料、貨辦及貨尾等存貨. 
+ 
+ 專人報價、現金交收、歡迎查詢。95137408 / 62363887  (陳生)
+ 
+ Our Company specializes in recycling all kinds of electronic inventory & finished products, Including electronics component, watches, metal scrap, electronic samples and unsold inventory, 
+ 
+ Free valet quote, please contact us at :
+ 可深圳或香港交貨, We accept goods on ShenZhen,
+ 
+ Contact / 聯系人：Mr. Chan 陳生
+ 
+ 郵箱/email : recycletungsing@yeah.net
+ 
+ Mobile |電話 / Whatsapp / Signal : (香港) 95137408 / 62363887
+ 
+     (國内) 86-15546950150
+ 
+ 東 昇 回 收 Tung sing Recycling
+ 
+ Room E, 5/F Winner Factory Bldg., 55 Hung To Road, Kwun Tong, Kowloon, Hong Kong.
+ 
+ 九龍觀塘鴻圖道55號幸運工業大廈5/F E室
+ 
+  
+ 
+ 如要取消訂閱，請到此處。
+ If you don’t wish to receive our Newsletter, please click here.
 
-recheck them and find the right way to fix this error.
+--b1_YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div><p id=3D"_header" style=3D"text-align: center;">=E5=A6=82=E9=96=A3=
+=E4=B8=8B=E6=9C=AA=E8=83=BD=E9=96=B1=E8=AE=80=E6=AD=A4=E9=83=B5=E4=BB=B6=
+=EF=BC=8C=E8=AB=8B<a href=3D"http://letter.postlinkhk.com/v1/Delivery/previ=
+ew?uuid=3Dmail_60de707f278fd6.89578701">=E6=8C=89=E6=AD=A4</a>=E3=80=82<br>=
+&#13; If you can=E2=80=99t see the image below, please click <a href=3D"htt=
+p://letter.postlinkhk.com/v1/Delivery/preview?uuid=3Dmail_60de707f278fd6.89=
+578701">here</a></p>&#13; </div><div><p style=3D"text-align: center;"><img =
+alt=3D"" src=3D"http://letter.postlinkhk.com/data/personal/katrickwong/Scre=
+enHunter_02_Jul_17_08.45.jpg" style=3D"width: 312px; height: 131px;"></p>&#=
+13; &#13; <p align=3D"center"><span style=3D"font-size:14px;"><strong>=
+=E6=9C=AC=E5=85=AC=E5=8F=B8=E5=B0=88=E6=A5=AD=E5=9B=9E=E6=94=B6=E5=90=84=
+=E9=A1=9E=E5=BA=AB=E5=AD=98=E6=96=B0=E8=88=8A=E6=88=90=E5=93=81=E5=8F=8A=
+=E9=85=8D=E4=BB=B6=EF=BC=8C=E5=8C=85=E6=8B=AC=E9=9B=BB=E5=AD=90=E3=80=81=
+=E9=90=98=E9=8C=B6=E3=80=81=E4=BA=94=E9=87=91=E5=BB=A2=E6=96=99=E3=80=81=
+=E8=B2=A8=E8=BE=A6=E5=8F=8A=E8=B2=A8=E5=B0=BE=E7=AD=89=E5=AD=98=E8=B2=A8. <=
+/strong></span></p>&#13; &#13; <p align=3D"center"><span style=3D"font-size=
+:14px;"><strong>=E5=B0=88=E4=BA=BA=E5=A0=B1=E5=83=B9=E3=80=81=E7=8F=BE=
+=E9=87=91=E4=BA=A4=E6=94=B6=E3=80=81=E6=AD=A1=E8=BF=8E=E6=9F=A5=E8=A9=A2=
+=E3=80=82</strong><strong>95137408 / 62363887=C2=A0 (</strong><strong>=
+=E9=99=B3=E7=94=9F</strong><strong>)</strong></span></p>&#13; &#13; <p alig=
+n=3D"center"><span style=3D"font-size:14px;"><strong>Our Company specialize=
+s in recycling all kinds of electronic inventory &amp; finished products, I=
+ncluding electronics component, watches, metal scrap, electronic samples an=
+d unsold inventory, </strong></span></p>&#13; &#13; <p align=3D"center"><sp=
+an style=3D"font-size:14px;"><strong>Free valet quote, please contact us at=
+ :</strong><br>&#13; <strong>=E5=8F=AF=E6=B7=B1=E5=9C=B3=E6=88=96=E9=A6=
+=99=E6=B8=AF=E4=BA=A4=E8=B2=A8</strong><strong>, We accept goods on ShenZhe=
+n,</strong></span></p>&#13; &#13; <p align=3D"center"><span style=3D"font-s=
+ize:14px;"><strong>Contact / </strong><strong>=E8=81=AF=E7=B3=BB=E4=BA=
+=BA=EF=BC=9A</strong><strong>Mr. Chan </strong><strong>=E9=99=B3=E7=94=
+=9F</strong></span></p>&#13; &#13; <p align=3D"center"><span style=3D"font-=
+size:14px;"><strong>=E9=83=B5=E7=AE=B1</strong><strong>/e</strong><strong>m=
+ail : </strong><a href=3D"mailto:recycletungsing@yeah.net"><strong>recyclet=
+ungsing@yeah.net</strong></a></span></p>&#13; &#13; <p align=3D"center"><sp=
+an style=3D"font-size:14px;"><strong>Mobile |</strong><strong>=E9=9B=BB=
+=E8=A9=B1</strong><strong> / Whatsapp / Signal :=C2=A0(</strong><strong>=
+=E9=A6=99=E6=B8=AF</strong><strong>) </strong><strong>95137408 / 62363887</=
+strong></span></p>&#13; &#13; <p align=3D"center"><span style=3D"font-size:=
+14px;"><strong>=C2=A0 =C2=A0=C2=A0(</strong><strong>=E5=9C=8B=E5=86=85</str=
+ong><strong>) </strong><strong>86-15546950150</strong></span></p>&#13; &#13=
+; <p align=3D"center"><strong>=E6=9D=B1=C2=A0</strong><strong>=E6=98=87=
+=C2=A0</strong><strong>=E5=9B=9E=C2=A0</strong><strong>=E6=94=B6</strong><s=
+trong> Tung sing Recycling</strong></p>&#13; &#13; <p align=3D"center"><str=
+ong>Room E, 5/F Winner Factory Bldg.,=C2=A055=C2=A0Hung To Road, Kwun Tong,=
+ Kowloon, Hong Kong.</strong></p>&#13; &#13; <p align=3D"center"><strong>=
+=E4=B9=9D=E9=BE=8D=E8=A7=80=E5=A1=98=E9=B4=BB=E5=9C=96=E9=81=9355</strong><=
+strong>=E8=99=9F=E5=B9=B8=E9=81=8B=E5=B7=A5=E6=A5=AD=E5=A4=A7=E5=BB=885/F E=
+</strong><strong>=E5=AE=A4</strong></p>&#13; &#13; <p>=C2=A0</p>&#13; </div=
+><div><p id=3D"_footer" style=3D"text-align: center;">&#13; =E5=A6=82=
+=E8=A6=81=E5=8F=96=E6=B6=88=E8=A8=82=E9=96=B1=EF=BC=8C=E8=AB=8B=E5=88=B0<a =
+href=3D"http://letter.postlinkhk.com/v1/Delivery/unsubscribe?uuid=3Dmail_60=
+de707f278fd6.89578701">=E6=AD=A4=E8=99=95</a>=E3=80=82<br>&#13; If you don=
+=E2=80=99t wish to receive our Newsletter, please click <a href=3D"http://l=
+etter.postlinkhk.com/v1/Delivery/unsubscribe?uuid=3Dmail_60de707f278fd6.895=
+78701">here</a>.&#13; </p></div><div><img alt=3D"image" src=3D"http://lette=
+r.postlinkhk.com/v1/Delivery/img?uuid=3Dmail_60de707f278fd6.89578701" style=
+=3D"display:none"></div>
 
-Thanks,
+--b1_YzoTUrGG5SC1e0VFtdlvY6lnsjFMVb82KJ1j3QnRkO4--
 
-Chengyang Fan
-
->> The current lz4 decompression code was from lz4 1.8.3, and I saw
->> several following up fixes for incomplete input partial decoding
->> in recent LZ4 upstream, you could check them out together. However,
->> EROFS should never pass incomplete lz4 compressed data to the LZ4
->> side unless it's somewhat a corrupted image on purpose.
->> https://github.com/lz4/lz4/blame/dev/lib/lz4.c
->>
->> Thanks,
->> Gao Xiang
->>
->>> 					/*
->>> 					 * Error :
->>> 					 * read attempt beyond
->>> -- 
->>> 2.18.0.huawei.25
-> [1] https://github.com/torvalds/linux/blob/007b350a58754a93ca9fe50c498cc27780171153/lib/lz4/lz4_decompress.c#L285
-> [2] https://github.com/lz4/lz4/blob/11efc95c3f02b76ab40e7fbd605677ad6eb141d3/lib/lz4.c#L2059
->
->
