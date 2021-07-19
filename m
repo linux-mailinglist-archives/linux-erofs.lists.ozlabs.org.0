@@ -1,54 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 619683CD8A4
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jul 2021 17:05:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B8D3CDB3E
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jul 2021 17:23:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GT4rw0zZfz30D9
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 01:05:04 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=BYSV7Ndo;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GT5Fp0Lxkz30Fs
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 01:23:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=none (no SPF record) smtp.mailfrom=infradead.org
- (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org;
- envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=BYSV7Ndo; 
- dkim-atps=neutral
-Received: from casper.infradead.org (casper.infradead.org
- [IPv6:2001:8b0:10b:1236::1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ spf=none (no SPF record) smtp.mailfrom=lst.de
+ (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de;
+ receiver=<UNKNOWN>)
+X-Greylist: delayed 583 seconds by postgrey-1.36 at boromir;
+ Tue, 20 Jul 2021 01:23:04 AEST
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GT4rm1KSZz2ylk
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 01:04:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
- References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
- Content-Transfer-Encoding:Content-ID:Content-Description;
- bh=ELJ0z2aDXla8iuVKhbEh0uG66iZXIkBu/r64UbziHV8=; b=BYSV7NdoWNUqr1E4SGKE2LA2nX
- CMURjH+NbrSvI1kKwda4DItB17PJEdXwbrPXPvprFW8SzUZGMzOlHzBUqwK3R0soimpYF/pW6cphG
- 3oKs7+0EEnmN16KZ4oa6KJdUmnP2H7XHwC2WUShMu7fQjID2ijfkME8tnBkSY57Z7zKAKD3G8ATUC
- L8xNsVlPCmHPmd8CrIjvbcQpOSWppIN0B6xgCupALXjo/IqXTj1ohVQKamJSB0AqztiO/aULV+UN5
- dZxf8CWXMZcPwWHYiI1Jf+e6bp/fJOFpXUaWLs9zIr0CIcZqCUo+LGXk3yOoMJqWQmWIA+tHf+0jE
- pamPMvPw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red
- Hat Linux)) id 1m5Ums-006xWQ-IK; Mon, 19 Jul 2021 15:03:10 +0000
-Date: Mon, 19 Jul 2021 16:02:30 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GT5Fh0Jr1z2xKP
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 01:23:03 +1000 (AEST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+ id 1206568BFE; Mon, 19 Jul 2021 17:13:12 +0200 (CEST)
+Date: Mon, 19 Jul 2021 17:13:10 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Matthew Wilcox <willy@infradead.org>
 Subject: Re: [PATCH v3] iomap: support tail packing inline read
-Message-ID: <YPWUBhxhoaEp8Frn@casper.infradead.org>
+Message-ID: <20210719151310.GA22355@lst.de>
 References: <20210719144747.189634-1-hsiangkao@linux.alibaba.com>
+ <YPWUBhxhoaEp8Frn@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210719144747.189634-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <YPWUBhxhoaEp8Frn@casper.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,41 +53,26 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Jul 19, 2021 at 10:47:47PM +0800, Gao Xiang wrote:
-> @@ -246,18 +245,19 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  	unsigned poff, plen;
->  	sector_t sector;
->  
-> -	if (iomap->type == IOMAP_INLINE) {
-> -		WARN_ON_ONCE(pos);
-> -		iomap_read_inline_data(inode, page, iomap);
-> -		return PAGE_SIZE;
-> -	}
-> -
-> -	/* zero post-eof blocks as the page may be mapped */
->  	iop = iomap_page_create(inode, page);
-> +	/* needs to skip some leading uptodated blocks */
->  	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
->  	if (plen == 0)
->  		goto done;
->  
-> +	if (iomap->type == IOMAP_INLINE) {
-> +		iomap_read_inline_data(inode, page, iomap, pos);
-> +		plen = PAGE_SIZE - poff;
-> +		goto done;
-> +	}
+On Mon, Jul 19, 2021 at 04:02:30PM +0100, Matthew Wilcox wrote:
+> > +	if (iomap->type == IOMAP_INLINE) {
+> > +		iomap_read_inline_data(inode, page, iomap, pos);
+> > +		plen = PAGE_SIZE - poff;
+> > +		goto done;
+> > +	}
+> 
+> This is going to break Andreas' case that he just patched to work.
+> GFS2 needs for there to _not_ be an iop for inline data.  That's
+> why I said we need to sort out when to create an iop before moving
+> the IOMAP_INLINE case below the creation of the iop.
+> 
+> If we're not going to do that first, then I recommend leaving the
+> IOMAP_INLINE case where it is and changing it to ...
+> 
+> 	if (iomap->type == IOMAP_INLINE)
+> 		return iomap_read_inline_data(inode, page, iomap, pos);
+> 
+> ... and have iomap_read_inline_data() return the number of bytes that
+> it copied + zeroed (ie PAGE_SIZE - poff).
 
-This is going to break Andreas' case that he just patched to work.
-GFS2 needs for there to _not_ be an iop for inline data.  That's
-why I said we need to sort out when to create an iop before moving
-the IOMAP_INLINE case below the creation of the iop.
-
-If we're not going to do that first, then I recommend leaving the
-IOMAP_INLINE case where it is and changing it to ...
-
-	if (iomap->type == IOMAP_INLINE)
-		return iomap_read_inline_data(inode, page, iomap, pos);
-
-... and have iomap_read_inline_data() return the number of bytes that
-it copied + zeroed (ie PAGE_SIZE - poff).
-
+Returning the bytes is much cleaner anyway.  But we still need to deal
+with the sub-page uptodate status in one form or another.
