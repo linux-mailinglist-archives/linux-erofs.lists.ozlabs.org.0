@@ -2,64 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09ADB3CF8C2
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 13:24:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FF4B3CF8E1
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 13:35:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GTbvN4S52z30Ft
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 21:24:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GTc8T1fs7z30HQ
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jul 2021 21:35:21 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=HhpzAjl0;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=cJOAjNNO;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::132;
- helo=mail-il1-x132.google.com; envelope-from=andreas.gruenbacher@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::d36;
+ helo=mail-io1-xd36.google.com; envelope-from=andreas.gruenbacher@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=HhpzAjl0; dkim-atps=neutral
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com
- [IPv6:2607:f8b0:4864:20::132])
+ header.s=20161025 header.b=cJOAjNNO; dkim-atps=neutral
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com
+ [IPv6:2607:f8b0:4864:20::d36])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GTbvK0GZYz2xZ3
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 21:23:56 +1000 (AEST)
-Received: by mail-il1-x132.google.com with SMTP id p3so18801302ilg.8
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 04:23:56 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GTc8L0L01z2yLl
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 21:35:13 +1000 (AEST)
+Received: by mail-io1-xd36.google.com with SMTP id z17so16941473iog.12
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 04:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=dVnkGAPBzNUrDjo/vYV+V2SBEEyGsdjuUedWnsOzsis=;
- b=HhpzAjl09BeOsEUIHpVHWdklJxETeRFiANMBco0ll1FiBP/oqIp82Rp0IOuN4qVKf/
- qQnawPRP13Mt3ys+cZH7IYKZctRhluI109OvPpL4CRWr6teTA70+/oNb8BsdxyU63WHT
- hrG0rGLPRP2Jw46212Qk9eKPUTmtXFuZZ4SAmmSOfhJNiT38qdLD2BYccDeS8kZLk/I7
- XGrNwkZYwR4sP84muKsPDF6xLTxQ7OdUNrbC0O3LDULWEYeC2bq54/6iTi8y86jmCK6g
- kaII1t+FF7+XEDeZ8dFoloGAxGDqZxcTXvquESb2qtIbnU94CVRLN5/j5ulZPZU7FwXm
- DP4A==
+ :cc; bh=W00f0ANz3WrZGqMdQysCloQ6vLp/tHXNWmmPd6zJe0U=;
+ b=cJOAjNNO+m9zN0XNbTz3X4fk8STUtDi//3Yu/zRLr6C8sZVhauDsSAR/7Ub4rvyg8e
+ jhy4l34MkfMVpefHVgeR4mHMHFxMvPJlCW7q/1pzodeUkYNKtIujj4pr6GikeQJ7QBI2
+ 8MeT0Oqtz/0BN3dYjuN29zqGAELS+8P4IrRdMvM0d9Lcoa3R1OOfl3sdP99sCaU304Y4
+ JGVuwd0xjrgK5P3IfbAabKZJ2TxD/WC0uyBm2l+ZMZ95T0dI2aYDYujgZfyWOhe/Pzso
+ tcr/XsaBtDcFojAElBHKW5au/54i3gxQVC/ulVrhgs/rtT/ss7xeb4EyoYjE6RZYKZTz
+ VfFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
  :message-id:subject:to:cc;
- bh=dVnkGAPBzNUrDjo/vYV+V2SBEEyGsdjuUedWnsOzsis=;
- b=eN6Mj8//Pchm5Ey2JIiVY0E97yS7x6FrbZknf85S93AgOTRJwl5W0kcU/PEZE38xmZ
- EXBSViMg4FJq+DjTGIM8q2LHjXRg5Zwqg4CqawNSliZMjCWam09qRKcug8sImWh17bQW
- P8Ex32ng2PUlUzyk7Uc8t/CnlkpSNQx+jPZSsSehBMO/b5XG2o0aOSCRs9s2ESd8UmMW
- DPT6x92neetEXwPW0jR1SD5j7JZWRS/8J/DEJlOagUv+vENQ1zrYDipUaAdExAoxz3mK
- oqSVjq44cnv+aQAy3XAcYVITIXFBAZbwWqN2gSddU0qwP9Lh5WzhOpOIqL4SXr0tcgk6
- qPeQ==
-X-Gm-Message-State: AOAM530HaRBcXG5YUP7nOilui97hvFP4lgTVhhak2EThpo7uVy2+Y1vX
- VP2b4Smt4jv4o+DrqR9l+UD7C4OBbCSze/5KQdM=
-X-Google-Smtp-Source: ABdhPJwvarTz9JB1YULDF9dibEw4xDmSKLba/T9RKxu2zqIT7IO1azlWgD4aPruTDh16Glzxq3MtzUk2SIEVDAghRYo=
-X-Received: by 2002:a05:6e02:c73:: with SMTP id
- f19mr19729417ilj.291.1626780232988; 
- Tue, 20 Jul 2021 04:23:52 -0700 (PDT)
+ bh=W00f0ANz3WrZGqMdQysCloQ6vLp/tHXNWmmPd6zJe0U=;
+ b=azs91RewUke+pVpAsnawhCZQLHcYkS7uG+VsU0i2/uv0gN7lTA3LszbRJZpnZGAcVz
+ Vybi4lAJf349Nse468m0vQjV8jcP3d9U+eYhMQwgz7l+TJrBZLnJVLlch0j57Jgz5+nH
+ p0NVmyQf1qVHf+aNjk+b/ZRjM9SHN/VfmpE/AckHWNe65yoTcs9Epkd+7VWRD3k15Bwd
+ K0b8owg/yMovjofI38k2Y60VINOJicIQ2ElW1VfTDXqMx7wE9y/qa6qn7C6KZlxvjfSJ
+ osKltu8OBhlAFGmPQYqHDsqrYbB2Lssz8BWXTCx45GFXICCC8wSWHaWV7RCNsyMzckwP
+ mjvw==
+X-Gm-Message-State: AOAM5332ZP3MQHOvO6L8UtXyDXTH37ZoePJLXk2ZYOsWgtvts2cVhr6y
+ juRWiLgsFi388uxxTgab624m4g0mt/+e5ry9Rlk=
+X-Google-Smtp-Source: ABdhPJwqGEyizwyBwYlBCgp4IlLEfgl+nKlAQzLRY50FX2HkLOEGDEiHWz3+a06/FBfxpHmmcgrQwpjlNja0E3zaDQ8=
+X-Received: by 2002:a02:85a5:: with SMTP id d34mr25763258jai.132.1626780909646; 
+ Tue, 20 Jul 2021 04:35:09 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210719144747.189634-1-hsiangkao@linux.alibaba.com>
 In-Reply-To: <20210719144747.189634-1-hsiangkao@linux.alibaba.com>
 From: =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date: Tue, 20 Jul 2021 13:23:41 +0200
-Message-ID: <CAHpGcMJ4T6byxqmO6zZF78wuw01twaEvSW5N6s90qWm0q_jCXQ@mail.gmail.com>
+Date: Tue, 20 Jul 2021 13:34:58 +0200
+Message-ID: <CAHpGcM+qhur4C2fLyR-dQx7CvumXVvMAM5NBCCXnL5ve-2qE8w@mail.gmail.com>
 Subject: Re: [PATCH v3] iomap: support tail packing inline read
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -139,10 +138,7 @@ Am Mo., 19. Juli 2021 um 16:48 Uhr schrieb Gao Xiang
 > +       /* handle tail-packing blocks cross the current page into the next */
 > +       size = min_t(unsigned int, iomap->length + pos - iomap->offset,
 > +                    PAGE_SIZE - poff);
-
-Hmm, so EROFS really does multi-page tail packing? This contradicts
-the comment and code in iomap_dio_inline_actor.
-
+>
 >         addr = kmap_atomic(page);
 > -       memcpy(addr, iomap->inline_data, size);
 > -       memset(addr + size, 0, PAGE_SIZE - size);
@@ -152,11 +148,7 @@ the comment and code in iomap_dio_inline_actor.
 > -       SetPageUptodate(page);
 > +       iomap_set_range_uptodate(page, poff, PAGE_SIZE - poff);
 >  }
-
-It's been said before, but iomap_read_inline_data should return
-PAGE_SIZE - poff, and no (void) casting when the return value is
-ignored.
-
+>
 >  static inline bool iomap_block_needs_zeroing(struct inode *inode,
 > @@ -246,18 +245,19 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
 >         unsigned poff, plen;
@@ -170,10 +162,10 @@ ignored.
 > -
 > -       /* zero post-eof blocks as the page may be mapped */
 >         iop = iomap_page_create(inode, page);
+
+We can skip creating the iop when reading the entire page.
+
 > +       /* needs to skip some leading uptodated blocks */
-
-"needs to skip some leading uptodate blocks"
-
 >         iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
 >         if (plen == 0)
 >                 goto done;
@@ -197,21 +189,10 @@ ignored.
 > +{
 > +       /* needs more work for the tailpacking case, disable for now */
 > +       if (WARN_ON_ONCE(pos != 0))
-
-This should be a WARN_ON_ONCE(srcmap->offset != 0). Otherwise, something like:
-
-  xfs_io -ft -c 'pwrite 1 2'
-
-will fail because pos will be 1.
-
 > +               return -EIO;
 > +       if (PageUptodate(page))
 > +               return 0;
 > +       iomap_read_inline_data(inode, page, srcmap, pos);
-
-The above means that passing pos to iomap_read_inline_data here won't
-do the right thing, either.
-
 > +       return 0;
 > +}
 > +
