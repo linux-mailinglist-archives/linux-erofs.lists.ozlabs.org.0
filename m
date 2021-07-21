@@ -1,68 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC7AF3D08F3
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jul 2021 08:33:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F116E3D091A
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jul 2021 08:43:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GV5QF4PCsz308Q
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jul 2021 16:33:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GV5d86YVRz307g
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jul 2021 16:43:24 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=tQ8qIzLK;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=ecOTEGbN;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::22b;
- helo=mail-lj1-x22b.google.com; envelope-from=andreas.gruenbacher@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::131;
+ helo=mail-lf1-x131.google.com; envelope-from=andreas.gruenbacher@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=tQ8qIzLK; dkim-atps=neutral
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com
- [IPv6:2a00:1450:4864:20::22b])
+ header.s=20161025 header.b=ecOTEGbN; dkim-atps=neutral
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com
+ [IPv6:2a00:1450:4864:20::131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GV5Q72gFpz2xb8
- for <linux-erofs@lists.ozlabs.org>; Wed, 21 Jul 2021 16:33:50 +1000 (AEST)
-Received: by mail-lj1-x22b.google.com with SMTP id b16so322515ljq.9
- for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 23:33:50 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GV5d25HLzz2yP1
+ for <linux-erofs@lists.ozlabs.org>; Wed, 21 Jul 2021 16:43:17 +1000 (AEST)
+Received: by mail-lf1-x131.google.com with SMTP id v6so1598502lfp.6
+ for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jul 2021 23:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=vgZ3yjomTzlMCFEBY2QOLzdcWRgyC4eVhW9WC+FWjOI=;
- b=tQ8qIzLK6bqfVALG6GEQIfaZ1m2r/Tt4OX9AAorqyfmfoAwESt4rRHHYH0nAgWXreX
- E2KEoOx7x+Rhh2FpIqFlWiShWxY4PF6BxxXHhR9FWt5NADi5LtM0j7RSYef6HUAWrQ0A
- yAUdS0e4zRfrVDi97stCd4s35iRLaQriRr4i6hBE3DRw0TTgVFYLqnitHUsAIgjpJo6d
- aYobLw59ffWcESJoaSaBgyc7RfHLWj11PRqyhEXU/trsyv9lY2wSEzmPraBWS65tsnAR
- V9L+Ayhxlw/BOSY1QCg5YVU4EQKvYx8vtXYW0PiySFH21XLCgRlI/6hDVYtOS1uB8NyO
- KktA==
+ :content-transfer-encoding;
+ bh=yScSiVlrT7uuBYr0A0fKZlvdo+1Nk40dqOsnX8Hctkk=;
+ b=ecOTEGbNLLFz2y6GiZbCEf2DsTpcUuOEqjf8x29vCj2OsZlQAc1WwbFFneJ7vKksXy
+ IMRgblsvaK0KF0Z6z8WChNYTN9gxlcrd8VmLrp89b/cUvpzKvGn7juD/0wmg9OpVDmLf
+ z1BFq0cDr1ARrHD1MbasOq0rDBDV31vRq8ciW5TDYTVNxI39qehx/mHzLpjHjGWq5quL
+ 5HEUuD5OPVRPJJZxPCn+JmuNkrXEuZ0cDqQ0kbfRTlX+Y+mwFkO/E5diy+HQ6z2VuqOF
+ TyNK4OWt+dYSiwCuJb8Fht5ddpe2BfIb/kJV1pcT1Udg4NFJbdSTvf8oD9ruS8KGucyP
+ o+9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=vgZ3yjomTzlMCFEBY2QOLzdcWRgyC4eVhW9WC+FWjOI=;
- b=FIBE9Bb/shoGxIhhDotNJmb579ph3DM3vmebHlBhtNsi05ix2ogAu6TOairvWgGB5+
- FTB8s2zDT74AP21IEeeO+emGUbgYYaa1DeBG6sWkT6FHsxOni8JVyGtOJw14i1zFleNA
- 845f0Atv5ECbdW89IcwxQ51DwQEmuzfCIUWhotKeKPvyyLh6ovOk4c8Y5WKbU/XLJKeq
- wEy4tGtvInZ/NyqWO3pVgRIj/qzKRVy2HDEIow7xs0DVxx9Qy5xeHnuJGFgqbKIOyctN
- +CsSQL92ntlkMReuCsVi0OIklVCo5ygRp6r6QRmCklwaVaxY+jFLz+9DIhloDKFOJ0nQ
- HNTQ==
-X-Gm-Message-State: AOAM531QKHx1BEJPdMVnzs36O3zM+XaK+BjTJD+FeF0x6+CUrWQvJWLe
- kOMcA6o4F+qJ4oB5bVO5/SltHUyOztlaOamdaMs=
-X-Google-Smtp-Source: ABdhPJy8FqL1N/64ODDDPq+8rZqX7KUcnsar0gsoAGKviKNVxsjmkj4HPXdXyveyZFbgQ4idXyq8IYk94UXyBJ7iC28=
-X-Received: by 2002:a2e:a5c6:: with SMTP id n6mr29681111ljp.204.1626849222792; 
- Tue, 20 Jul 2021 23:33:42 -0700 (PDT)
+ :message-id:subject:to:content-transfer-encoding;
+ bh=yScSiVlrT7uuBYr0A0fKZlvdo+1Nk40dqOsnX8Hctkk=;
+ b=FXT2IotlgpOfgoUZeSAWcKQ7G3M1wGLX8+iDgeBbntpq3VqUW+nySDccJWCqyJVnSa
+ 0AZW0R6e/bNOJFMThMy3oG7J9TO58aOub0CPz8QQCp/g3RCCWiVZ382nFqupHAkHz94N
+ bymkZefe7y6UhwPP9PAPk2hBV9gk3nz6pjR7KXwpG8XR7EyK8SDEf64J6XYL7LrO6+m1
+ V4CNkNWPXwPGq6NhCneIlJgzHgubK7ZuqJRrie8T1yNJdceLVIOyhnPk3HgxVJNviVwJ
+ djSmzadfXyjUrYXf7lECk58QUjH10i9fi1RCKJjfnwLSyBgEUmuzJ3eqhWelWkgtICcK
+ tBkQ==
+X-Gm-Message-State: AOAM5302gdFDXO5REiyt0pjUFS65dJBhSHnYFC33NYQdLdDC0mXmjdrQ
+ rmN58UaAv27gu7Ez7W9ZOVnzFyqrVZdUpNNrGDE=
+X-Google-Smtp-Source: ABdhPJxxZrS1hLgC5AylmXUMWG461QjehxNs5N9XXF+wghnstGUAe7F/ABISs12JRz+m0SwCOKgJWWh3BXeCuJkJH1U=
+X-Received: by 2002:ac2:5482:: with SMTP id t2mr24806101lfk.135.1626849793424; 
+ Tue, 20 Jul 2021 23:43:13 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210720133554.44058-1-hsiangkao@linux.alibaba.com>
  <20210720204224.GK23236@magnolia> <YPc9viRAKm6cf2Ey@casper.infradead.org>
-In-Reply-To: <YPc9viRAKm6cf2Ey@casper.infradead.org>
+ <YPdkYFSjFHDOU4AV@B-P7TQMD6M-0146.local> <20210721001720.GS22357@magnolia>
+ <YPdrSN6Vso98bLzB@B-P7TQMD6M-0146.local>
+ <CAHpGcM+8cp81=bkzFf3sZfKREM9VbXfePpXrswNJOLVcwEnK7A@mail.gmail.com>
+ <YPeMRsJwELjoWLFs@B-P7TQMD6M-0146.local>
+In-Reply-To: <YPeMRsJwELjoWLFs@B-P7TQMD6M-0146.local>
 From: =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date: Wed, 21 Jul 2021 08:33:30 +0200
-Message-ID: <CAHpGcMJ-E5LYz1E7Qf9=LQES=jB0V-Pjq1rSg=7GxXwJ1mh2Gw@mail.gmail.com>
+Date: Wed, 21 Jul 2021 08:43:00 +0200
+Message-ID: <CAHpGcMJg5TOhexLdN8HgGoFhB8kbn1FdAD8Z2XEK9C7oHptFwA@mail.gmail.com>
 Subject: Re: [PATCH v4] iomap: support tail packing inline read
-To: Matthew Wilcox <willy@infradead.org>
+To: =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ linux-erofs@lists.ozlabs.org, 
+ Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,58 +84,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
- linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Am Di., 20. Juli 2021 um 23:19 Uhr schrieb Matthew Wilcox <willy@infradead.org>:
-> On Tue, Jul 20, 2021 at 01:42:24PM -0700, Darrick J. Wong wrote:
-> > > -   BUG_ON(page_has_private(page));
-> > > -   BUG_ON(page->index);
-> > > -   BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
-> > > +   /* inline source data must be inside a single page */
-> > > +   BUG_ON(iomap->length > PAGE_SIZE - offset_in_page(iomap->inline_data));
-> >
-> > Can we reduce the strength of these checks to a warning and an -EIO
-> > return?
-
-Yes, we could do that.
-
-> I'm not entirely sure that we need this check, tbh.
-
-I wanted to make sure the memcpy / memset won't corrupt random kernel
-memory when the filesystem gets the iomap_begin wrong.
-
-> > > +   /* handle tail-packing blocks cross the current page into the next */
-> > > +   size = min_t(unsigned int, iomap->length + pos - iomap->offset,
-> > > +                PAGE_SIZE - poff);
+Am Mi., 21. Juli 2021 um 04:54 Uhr schrieb Gao Xiang
+<hsiangkao@linux.alibaba.com>:
+> Hi Andreas,
+>
+> On Wed, Jul 21, 2021 at 04:26:47AM +0200, Andreas Gr=C3=BCnbacher wrote:
+> > Am Mi., 21. Juli 2021 um 02:33 Uhr schrieb Gao Xiang
+> > <hsiangkao@linux.alibaba.com>:
+> > > > And since you can only kmap one page at a time, an inline read grab=
+s the
+> > > > first part of the data in "page one" and then we have to call
+> > > > iomap_begin a second time get a new address so that we can read the=
+ rest
+> > > > from "page two"?
 > > >
-> > >     addr = kmap_atomic(page);
-> > > -   memcpy(addr, iomap->inline_data, size);
-> > > -   memset(addr + size, 0, PAGE_SIZE - size);
-> > > +   memcpy(addr + poff, iomap->inline_data - iomap->offset + pos, size);
-> > > +   memset(addr + poff + size, 0, PAGE_SIZE - poff - size);
+> > > Nope, currently EROFS inline data won't cross page like this.
+> > >
+> > > But in principle, yes, I don't want to limit it to the current
+> > > EROFS or gfs2 usage. I think we could make this iomap function
+> > > more generally (I mean, I'd like to make the INLINE extent
+> > > functionity as general as possible,
 > >
-> > Hmm, so I guess the point of this is to support reading data from a
-> > tail-packing block, where each file gets some arbitrary byte range
-> > within the tp-block, and the range isn't aligned to an fs block?  Hence
-> > you have to use the inline data code to read the relevant bytes and copy
-> > them into the pagecache?
+> > Nono. Can we please limit this patch what we actually need right now,
+> > and worry about extending it later?
 >
-> I think there are two distinct cases for IOMAP_INLINE.  One is
-> where the tail of the file is literally embedded into the inode.
-> Like ext4 fast symbolic links.  Taking the ext4 i_blocks layout
-> as an example, you could have a 4kB block stored in i_block[0]
-> and then store bytes 4096-4151 in i_block[1-14] (although reading
-> https://www.kernel.org/doc/html/latest/filesystems/ext4/dynamic.html
-> makes me think that ext4 only supports storing 0-59 in the i_blocks;
-> it doesn't support 0-4095 in i_block[0] and then 4096-4151 in i_blocks)
+> Can you elaborate what it will benefit us if we only support one tail
+> block for iomap_read_inline_data()? (I mean it has similar LOC changes,
+> similar implementation / complexity.) The only concern I think is if
+> it causes gfs2 regression, so that is what I'd like to confirm.
+
+iomap_read_inline_data supports one inline page now (i.e., from the
+beginning of the file). It seems that you don't need more than one
+tail page in EROFS, right?
+
+You were speculating about inline data in the middle of a file. That
+sounds like a really, really bad idea to me, and I don't think we
+should waste any time on it.
+
+> In contrast, I'd like to avoid iomap_write_begin() tail-packing because
+> it's complex and no fs user interests in it for now. So I leave it
+> untouched for now.
+
+I have no idea what you mean by that.
+
+> Another concern I really like to convert EROFS to iomap is I'd like to
+> support sub-page blocksize for EROFS after converting. I don't want to
+> touch iomap inline code again like this since it interacts 2 directories
+> thus cause too much coupling.
 >
-> The other is what I think erofs is doing where, for example, you'd
-> specify in i_block[1] the block which contains the tail and then in
-> i_block[2] what offset of the block the tail starts at.
+> Thanks,
+> Gao Xiang
+>
+> >
+> > > my v1 original approach
+> > > in principle can support any inline extent in the middle of
+> > > file rather than just tail blocks, but zeroing out post-EOF
+> > > needs another iteration) and I don't see it add more code and
+> > > complexity.
+> >
+> > Thanks,
+> > Andreas
 
 Andreas
