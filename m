@@ -2,84 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 052F33D7B6F
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jul 2021 18:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 909613D9C29
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jul 2021 05:25:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GZ2xS5vgLz30BD
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jul 2021 02:56:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GZwrl2HGYz2yyL
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jul 2021 13:25:11 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=l9VZZdmX;
-	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=tZv5ZZHU;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=CmQJQH43;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz
- (client-ip=195.135.220.28; helo=smtp-out1.suse.de;
- envelope-from=dsterba@suse.cz; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256
- header.s=susede2_rsa header.b=l9VZZdmX; 
- dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256
- header.s=susede2_ed25519 header.b=tZv5ZZHU; 
+ spf=none (no SPF record) smtp.mailfrom=infradead.org
+ (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org;
+ envelope-from=willy@infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
+ header.s=casper.20170209 header.b=CmQJQH43; 
  dkim-atps=neutral
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from casper.infradead.org (casper.infradead.org
+ [IPv6:2001:8b0:10b:1236::1])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GZ2xL0ccWz2xZp
- for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jul 2021 02:56:05 +1000 (AEST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
- by smtp-out1.suse.de (Postfix) with ESMTP id 0F3F7221EC;
- Tue, 27 Jul 2021 16:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
- t=1627404962;
- h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
- cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=I6xqCcuCxJ3dCYSStp64lbp+Ddy6J/xCqtuiJjo0KTU=;
- b=l9VZZdmXPaqiSYtXX46V49UfixDqIhSkECPLTwTkbtGHLK/AuoKm06q7J3PS373yKVmts2
- O1lrA2stloOZxxU5jN7bq00RpFLddcX2uIIN2fAnKqONgUg6hYoAmUfTEaUA9iBQ+j2HGk
- owdkUrtd1KN7PW2qSLuwBHp7oGC/vIE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
- s=susede2_ed25519; t=1627404962;
- h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
- cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=I6xqCcuCxJ3dCYSStp64lbp+Ddy6J/xCqtuiJjo0KTU=;
- b=tZv5ZZHUElMD+oEJaRkN3pa6JgcLy1DGjYM+xi/S88Md/OALdTnSju1j/wKZw93J67fkLj
- H4rY+l0mcJfK1wBw==
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
- by relay2.suse.de (Postfix) with ESMTP id 81D68A3B81;
- Tue, 27 Jul 2021 16:56:01 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
- id EBA30DA8D6; Tue, 27 Jul 2021 18:53:16 +0200 (CEST)
-Date: Tue, 27 Jul 2021 18:53:16 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v7] iomap: make inline data support more flexible
-Message-ID: <20210727165315.GU5047@suse.cz>
-Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
- Christoph Hellwig <hch@lst.de>,
- Andreas Gruenbacher <agruenba@redhat.com>,
- Gao Xiang <hsiangkao@linux.alibaba.com>,
- "Darrick J . Wong" <djwong@kernel.org>,
- Huang Jianan <huangjianan@oppo.com>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andreas Gruenbacher <andreas.gruenbacher@gmail.com>
-References: <CAHpGcMKZP8b3TbRv3D-pcrE_iDU5TKUFHst9emuQmRPntFSArA@mail.gmail.com>
- <CAHpGcMJBhWcwteLDSBU3hgwq1tk_+LqogM1ZM=Fv8U0VtY5hMg@mail.gmail.com>
- <20210723174131.180813-1-hsiangkao@linux.alibaba.com>
- <20210725221639.426565-1-agruenba@redhat.com>
- <YP4zUvnBCAb86Mny@B-P7TQMD6M-0146.local>
- <20210726110611.459173-1-agruenba@redhat.com>
- <20210726121702.GA528@lst.de> <20210727082042.GI5047@twin.jikos.cz>
- <YQALsvt0UWGW+iMw@casper.infradead.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GZwrc63MJz2yLd
+ for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jul 2021 13:25:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+ Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+ Content-Description:In-Reply-To:References;
+ bh=Zx24Tdms2CAcVL+Y0xOOs/yG6aW6xTMzubnm9RhAPcs=; b=CmQJQH43AEoXaW6IJUt9izAtX1
+ nkDtCr++9IelU/oLypXAuC4T4bx4cGCi9ychlZmYlTz5n3DMVxN5w7aQdahPJA4R+eggkUzB8PF+1
+ UlsPalGGzI0z8qrMs66jk2fASWKfU8cdnOJULDzBMGKHA+oQn1J/Ddag8hGwY+LO9g7vgUtiuxVg0
+ J06bxwWImi5fyAnx5TpHOgTnKSt+3g4e553AEsxoMwFIRkfLDbXys3Ht/ENgNyh80l05luVzjIStH
+ Zbc6ZbAqhDPTOZkssqqzYxOqpSiV7/WdLM85limjNXxnqoBC6WHFZYYnTeWtCJjA349EqIKx/tqTN
+ CAQKsHEg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red
+ Hat Linux)) id 1m8weA-00GgCH-Gr; Thu, 29 Jul 2021 03:24:08 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Subject: [PATCH v2] iomap: Support inline data with block size < page size
+Date: Thu, 29 Jul 2021 04:23:44 +0100
+Message-Id: <20210729032344.3975412-1-willy@infradead.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQALsvt0UWGW+iMw@casper.infradead.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -91,46 +59,98 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: dsterba@suse.cz
-Cc: Andreas Gruenbacher <agruenba@redhat.com>,
- "Darrick J . Wong" <djwong@kernel.org>,
- Andreas Gruenbacher <andreas.gruenbacher@gmail.com>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>
+Cc: agruenba@redhat.com, hch@lst.de,
+ "Matthew Wilcox \(Oracle\)" <willy@infradead.org>, djwong@kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Jul 27, 2021 at 02:35:46PM +0100, Matthew Wilcox wrote:
-> On Tue, Jul 27, 2021 at 10:20:42AM +0200, David Sterba wrote:
-> > On Mon, Jul 26, 2021 at 02:17:02PM +0200, Christoph Hellwig wrote:
-> > > > Subject: iomap: Support tail packing
-> > > 
-> > > I can't say I like this "tail packing" language here when we have the
-> > > perfectly fine inline wording.  Same for various comments in the actual
-> > > code.
-> > 
-> > Yes please, don't call it tail-packing when it's an inline extent, we'll
-> > use that for btrfs eventually and conflating the two terms has been
-> > cofusing users. Except reiserfs, no linux filesystem does tail-packing.
-> 
-> Hmm ... I see what reiserfs does as packing tails of multiple files into
-> one block.  What gfs2 (and ext4) do is inline data.  Erofs packs the
-> tail of a single file into the same block as the inode.  If I understand
-> what btrfs does correctly, it stores data in the btree.  But (like
-> gfs2/ext4), it's only for the entire-file-is-small case, not for
-> its-just-ten-bytes-into-the-last-block case.
-> 
-> So what would you call what erofs is doing if not tail-packing?
+Remove the restriction that inline data must start on a page boundary
+in a file.  This allows, for example, the first 2KiB to be stored out
+of line and the trailing 30 bytes to be stored inline.
 
-That indeed sounds like tail-packing and I was not aware of that, the
-docs I found were not clear what exactly was going on with the data
-stored inline.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+v2:
+ - Rebase on top of iomap: Support file tail packing v9
 
-> Wikipedia calls it https://en.wikipedia.org/wiki/Block_suballocation
-> which doesn't quite fit.  We need a phrase which means "this isn't
-> just for small files but for small tails of large files".
+ fs/iomap/buffered-io.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-So that's more generic than what we now have as inline files, so in the
-interface everybody sets 0 as start of the range while erofs can also
-set start of the last partial block.
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 66b733537c46..50f18985ed13 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -209,28 +209,26 @@ static int iomap_read_inline_data(struct inode *inode, struct page *page,
+ 		struct iomap *iomap)
+ {
+ 	size_t size = i_size_read(inode) - iomap->offset;
++	size_t poff = offset_in_page(iomap->offset);
+ 	void *addr;
+ 
+ 	if (PageUptodate(page))
+-		return 0;
++		return PAGE_SIZE - poff;
+ 
+-	/* inline data must start page aligned in the file */
+-	if (WARN_ON_ONCE(offset_in_page(iomap->offset)))
+-		return -EIO;
+ 	if (WARN_ON_ONCE(size > PAGE_SIZE -
+ 			 offset_in_page(iomap->inline_data)))
+ 		return -EIO;
+ 	if (WARN_ON_ONCE(size > iomap->length))
+ 		return -EIO;
+-	if (WARN_ON_ONCE(page_has_private(page)))
+-		return -EIO;
++	if (poff > 0)
++		iomap_page_create(inode, page);
+ 
+-	addr = kmap_atomic(page);
++	addr = kmap_atomic(page) + poff;
+ 	memcpy(addr, iomap->inline_data, size);
+-	memset(addr + size, 0, PAGE_SIZE - size);
++	memset(addr + size, 0, PAGE_SIZE - poff - size);
+ 	kunmap_atomic(addr);
+-	SetPageUptodate(page);
+-	return 0;
++	iomap_set_range_uptodate(page, poff, PAGE_SIZE - poff);
++	return PAGE_SIZE - poff;
+ }
+ 
+ static inline bool iomap_block_needs_zeroing(struct inode *inode,
+@@ -252,13 +250,8 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	unsigned poff, plen;
+ 	sector_t sector;
+ 
+-	if (iomap->type == IOMAP_INLINE) {
+-		int ret = iomap_read_inline_data(inode, page, iomap);
+-
+-		if (ret)
+-			return ret;
+-		return PAGE_SIZE;
+-	}
++	if (iomap->type == IOMAP_INLINE)
++		return iomap_read_inline_data(inode, page, iomap);
+ 
+ 	/* zero post-eof blocks as the page may be mapped */
+ 	iop = iomap_page_create(inode, page);
+@@ -593,10 +586,15 @@ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, int flags,
+ static int iomap_write_begin_inline(struct inode *inode,
+ 		struct page *page, struct iomap *srcmap)
+ {
++	int ret;
++
+ 	/* needs more work for the tailpacking case, disable for now */
+ 	if (WARN_ON_ONCE(srcmap->offset != 0))
+ 		return -EIO;
+-	return iomap_read_inline_data(inode, page, srcmap);
++	ret = iomap_read_inline_data(inode, page, srcmap);
++	if (ret < 0)
++		return ret;
++	return 0;
+ }
+ 
+ static int
+-- 
+2.30.2
+
