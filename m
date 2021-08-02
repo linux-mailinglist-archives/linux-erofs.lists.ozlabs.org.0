@@ -2,51 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C9723DD57A
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Aug 2021 14:16:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55CC53DE20A
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Aug 2021 23:58:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GdcRW2wWlz3098
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Aug 2021 22:16:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GdsMp298sz30FS
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Aug 2021 07:58:46 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AFRt+vw9;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=djwong@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=AFRt+vw9; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GdcRM5c0Xz305v
- for <linux-erofs@lists.ozlabs.org>; Mon,  2 Aug 2021 22:15:58 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R571e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=9; SR=0; TI=SMTPD_---0UhmnTvb_1627906541; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UhmnTvb_1627906541) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 02 Aug 2021 20:15:42 +0800
-Date: Mon, 2 Aug 2021 20:15:41 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Andreas Gruenbacher <agruenba@redhat.com>,
- "Darrick J . Wong" <djwong@kernel.org>
-Subject: Re: [PATCH v9] iomap: Support file tail packing
-Message-ID: <YQfh7V0lvLNx0QlR@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Andreas Gruenbacher <agruenba@redhat.com>,
- "Darrick J . Wong" <djwong@kernel.org>,
- linux-erofs@lists.ozlabs.org,
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GdsMg562Bz302X
+ for <linux-erofs@lists.ozlabs.org>; Tue,  3 Aug 2021 07:58:39 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 733E060187;
+ Mon,  2 Aug 2021 21:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1627941516;
+ bh=ye825ek9Rk2e9Kpzz3357+dFQOwXo4tWlZEWNqkhf4s=;
+ h=Date:From:To:Subject:References:In-Reply-To:From;
+ b=AFRt+vw9zLztnxMO0okmOkfiiXMyjvw9WQE0xxNvclPk6MQedy3Hou4oHA8AovSlu
+ vQNr1B7Qh2/mR3LDhG74zoCnqH7Uaacugp1hUdJunrlZq1iB7FJG9D5TGmgtdmcCX+
+ EtiZ+u7kq4qnYaOMcWyd9WXPNWem11sTSZt+mkvkQ+gPJo5JOO9UxitggNR5TMSZXP
+ zP/SyfnnO0HaAUS7xO9X8sc5eAiOk3uwxpCcq3W2OxPHPOfZy7g5SMCRJC4Bkyfip3
+ S4peeD/VqSeKQztPX5E3fK1bZwBwc1MnRsTssYs3z0sebPbJ19AlG87JSN78j8PC7Y
+ M4ZSqN1iRX/5A==
+Date: Mon, 2 Aug 2021 14:58:36 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andreas Gruenbacher <agruenba@redhat.com>, linux-erofs@lists.ozlabs.org,
  linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Huang Jianan <huangjianan@oppo.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- Christoph Hellwig <hch@lst.de>,
+ LKML <linux-kernel@vger.kernel.org>, Huang Jianan <huangjianan@oppo.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Christoph Hellwig <hch@lst.de>,
  Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v9] iomap: Support file tail packing
+Message-ID: <20210802215836.GB3601405@magnolia>
 References: <20210727025956.80684-1-hsiangkao@linux.alibaba.com>
  <CAHc6FU5x3XOTyu8vooReSZ-hacfTdo3cu7wFJRcQrfTH8NkVeg@mail.gmail.com>
+ <YQfh7V0lvLNx0QlR@B-P7TQMD6M-0146.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHc6FU5x3XOTyu8vooReSZ-hacfTdo3cu7wFJRcQrfTH8NkVeg@mail.gmail.com>
+In-Reply-To: <YQfh7V0lvLNx0QlR@B-P7TQMD6M-0146.local>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,40 +63,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- Christoph Hellwig <hch@lst.de>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Andreas,
-
-On Sun, Aug 01, 2021 at 02:03:33PM +0200, Andreas Gruenbacher wrote:
-> On Tue, Jul 27, 2021 at 5:00 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-
-...
-
-> > +static int iomap_write_begin_inline(struct inode *inode,
-> > +               struct page *page, struct iomap *srcmap)
-> > +{
-> > +       /* needs more work for the tailpacking case, disable for now */
+On Mon, Aug 02, 2021 at 08:15:41PM +0800, Gao Xiang wrote:
+> Hi Andreas,
 > 
-> Nit: the comma should be a semicolon or period here.
+> On Sun, Aug 01, 2021 at 02:03:33PM +0200, Andreas Gruenbacher wrote:
+> > On Tue, Jul 27, 2021 at 5:00 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+> 
+> ...
+> 
+> > > +static int iomap_write_begin_inline(struct inode *inode,
+> > > +               struct page *page, struct iomap *srcmap)
+> > > +{
+> > > +       /* needs more work for the tailpacking case, disable for now */
+> > 
+> > Nit: the comma should be a semicolon or period here.
+> 
+> Sorry for some delay (busy in other things...)
+> 
+> Yeah, that's fine to me, in English contexts it'd be better like that
+> (there is some punctuation rule difference between languages.)
+> 
+> 
+> Hi Darrick,
+> Should I resend v10 for this punctuation change or could you kindly
+> help revise this?
+> 
+> (btw, would you mind set up a for-next iomap branch so I could rebase
+>  other EROFS patches on iomap for-next, thank you very much!)
 
-Sorry for some delay (busy in other things...)
+Er... I'll send a group email shortly.  Assembling the branch hasn't
+been as straightforward as it usually is...
 
-Yeah, that's fine to me, in English contexts it'd be better like that
-(there is some punctuation rule difference between languages.)
+--D
 
-
-Hi Darrick,
-Should I resend v10 for this punctuation change or could you kindly
-help revise this?
-
-(btw, would you mind set up a for-next iomap branch so I could rebase
- other EROFS patches on iomap for-next, thank you very much!)
-
-Thanks,
-Gao Xiang
+> Thanks,
+> Gao Xiang
