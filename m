@@ -2,32 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E794F3DE3A4
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Aug 2021 02:39:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E30323DF9D5
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Aug 2021 04:57:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Gdwwn42Srz3061
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Aug 2021 10:39:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gfbxs69C1z3bT9
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Aug 2021 12:57:21 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Kf9s4nnB;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=firebasestorage.googleapis.com (client-ip=46.183.222.62;
- helo=firebasestorage.googleapis.com;
- envelope-from=noreply@firebasestorage.googleapis.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 43037 seconds by postgrey-1.36 at boromir;
- Tue, 03 Aug 2021 10:38:59 AEST
-Received: from firebasestorage.googleapis.com (unknown [46.183.222.62])
- by lists.ozlabs.org (Postfix) with ESMTP id 4Gdwwg4gzrz2ydS
- for <linux-erofs@lists.ozlabs.org>; Tue,  3 Aug 2021 10:38:58 +1000 (AEST)
-From: Email ADMIN  <noreply@firebasestorage.googleapis.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: linux-erofs@lists.ozlabs.org NOTIFICATION - Storage Full you (03)
- have message pending!!
-Date: 03 Aug 2021 03:38:36 +0300
-Message-ID: <20210803033836.9DD891C807CEC05F@firebasestorage.googleapis.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=Kf9s4nnB; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gfbxl69Kyz2y6F
+ for <linux-erofs@lists.ozlabs.org>; Wed,  4 Aug 2021 12:57:15 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6A95560F46;
+ Wed,  4 Aug 2021 02:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1628045833;
+ bh=lnQilC4UM17zCwYD5b03vi9DCTZzWAKF25Z2CjkYw6M=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+ b=Kf9s4nnBfuAQVMf+v2osuwky4bc4uG/GLyJY6JwIE4eSjfIrtdq1MU/pcaFxJY83S
+ cLrdRMhn6PjbsPwvpb3+GXqcNtIUU48YpoyQ+ujK9bGZJMpWkNRyJBXaaVtTfw4V5G
+ vx/sPx5mml23je2qzALAFQFUWzXy+1Pn8B7s4FdfDxhvBPO6682wD68rm800vMhgjX
+ Ij3O/kg40zwacJ3KtXo6Dd+w9V5b2Dx/SD/7Zggz4Dd9LZUn59T2F4/mifNIeXaoC6
+ zykD73AXRBIkVDNQm0nU02BdTm66L1xKI9rvBNaEkGsn8juee3/Havvo1xkykGJjXB
+ esl/qu9Op/Mjw==
+Subject: Re: [PATCH v2 1/3] erofs: iomap support for non-tailpacking DIO
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20210730194625.93856-1-hsiangkao@linux.alibaba.com>
+ <20210730194625.93856-2-hsiangkao@linux.alibaba.com>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <e79e3261-e582-e848-b550-c0c3163d9af4@kernel.org>
+Date: Wed, 4 Aug 2021 10:57:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210730194625.93856-2-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,101 +61,219 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: Email ADMIN <noreply@fiiirebasestorage.googleapis.com>
+Cc: nvdimm@lists.linux.dev, "Darrick J. Wong" <djwong@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Liu Bo <bo.liu@linux.alibaba.com>, Tao Ma <boyu.mt@taobao.com>,
+ linux-fsdevel@vger.kernel.org, Liu Jiang <gerry@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<HTML><HEAD>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.10240.17443"></HEAD>
-<body>
-<table style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif=
-; WHITE-SPACE: normal; WORD-SPACING: 0px; TABLE-LAYOUT: fixed; TEXT-TRANSFO=
-RM: none; FONT-WEIGHT: 400; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHA=
-NS: 2; WIDOWS: 2; LETTER-SPACING: normal; TEXT-INDENT: 0px; -webkit-text-st=
-roke-width: 0px; text-decoration-thickness: initial; text-decoration-style:=
- initial; text-decoration-color: initial" cellspacing=3D"0" cellpadding=3D"=
-0" width=3D"85%" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-TOP: 30px; MARGIN: 0px; LINE-HEIGHT: 1.666" valign=3D"top" align=
-=3D"center"><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL=
--ALIGN: inherit"><B><FONT color=3D#0000ff><SPAN>
-<SPAN=20
-id=3D"m_257833035162904760m_7777128660219847919m_-6514434049224158164m_7676=
-354534904008595m_-4320879403584798368m_-6697633465231609152m_-8775003054586=
-034746m_1617012299758431492m_-5851041699911791263gmail-m_-62080022300370387=
-51m_7018228659268345444m_2831255577780934786m_-6537409506077447637gmail-m_-=
-3436514418094555780gmail-m_-4648452595337678500gmail-m_-5766246397160191759=
-gmail-m_228193166201232922m_6415790280298659745m_-4178292454896535753m_5079=
-111673814535642m_-1402602051295492284m_8535478265097
-&#10;894093m_-5815252135043677266m_1862278098978896018m_2316343404261910022=
-m_1702612747990809432m_6147666803747922185m_-8379900188845706798m_-56032409=
-99807438485m_826116171293113895gmail-m_8642346008625064580m_-73198066123176=
-33425m_7680618434787984869m_4405228902502529209gmail-m_125874640229982473m_=
--2727862626684452250m_-5074852961191362009gmail-m_-36" style=3D"COLOR: rgb(=
-0,128,255)"><FONT size=3D4><SPAN style=3D"FONT-FAMILY: Corbel, sans-serif; =
-COLOR: black">
-<SPAN style=3D"FONT-SIZE: 16px; TEXT-DECORATION: none; FONT-FAMILY: Corbel,=
- sans-serif; FONT-VARIANT: normal; WHITE-SPACE: normal; WORD-SPACING: 0px; =
-TEXT-TRANSFORM: none; FLOAT: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,0); FON=
-T-STYLE: normal; TEXT-ALIGN: left; DISPLAY: inline; LETTER-SPACING: normal;=
- BACKGROUND-COLOR: transparent; TEXT-INDENT: 0px"><FONT size=3D4><SPAN styl=
-e=3D'FONT-FAMILY: garamond, "times new roman", serif'><B><FONT color=3D#000=
-000>
-<A style=3D"TEXT-DECORATION: underline; COLOR: rgb(0,0,255)" href=3D"mailto=
-:https://blassflustered.com/abj/yhang/Wp-images/?i=3Di&amp;0=3Dlinux-erofs@=
-lists.ozlabs.org" target=3D_blank>linux-erofs@lists.ozlabs.org</A></FONT></=
-B></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN><SPAN>&nbsp;</SPAN>&nbsp=
-;</FONT></B><BR>&nbsp; &nbsp;Your email account is currently undergoing an =
-annual upgrade</FONT></FONT></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-BOTTOM: 20px; PADDING-TOP: 20px; MARGIN: 0px; LINE-HEIGHT: 1.666"=
- valign=3D"top" align=3D"center"><FONT style=3D"VERTICAL-ALIGN: inherit"><F=
-ONT style=3D"VERTICAL-ALIGN: inherit">To avoid account shut down Please ver=
-ify your email below to complete this upgrade</FONT></FONT></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-BOTTOM: 20px; MARGIN: 0px; LINE-HEIGHT: 1.666" align=3D"center">
-<A style=3D"BORDER-LEFT-WIDTH: 0px; FONT-SIZE: 13px; FONT-FAMILY: inherit; =
-BORDER-RIGHT-WIDTH: 0px; VERTICAL-ALIGN: baseline; BACKGROUND: rgb(16,173,2=
-28); BORDER-BOTTOM-WIDTH: 0px; TEXT-TRANSFORM: uppercase; COLOR: rgb(255,25=
-5,255); PADDING-BOTTOM: 10px; PADDING-TOP: 10px; PADDING-LEFT: 30px; MARGIN=
-: 0px 10px 0px 0px; DISPLAY: inline-block; PADDING-RIGHT: 30px; BORDER-TOP-=
-WIDTH: 0px; font-stretch: inherit"=20
-href=3D"https://SmugImaginativeRar.kolipooo.repl.co?email=3Dlinux-erofs@lis=
-ts.ozlabs.org" target=3D_blank><FONT style=3D"VERTICAL-ALIGN: inherit"><FON=
-T style=3D"VERTICAL-ALIGN: inherit">RE-ACTIVATE ACCOUNT HERE&nbsp;</FONT></=
-FONT></A><BR><BR><FONT size=3D2>This service is free of charge</FONT>&nbsp;=
-<BR><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: =
-inherit"><B><FONT color=3D#0000ff><SPAN>
-<SPAN=20
-id=3D"m_257833035162904760m_7777128660219847919m_-6514434049224158164m_7676=
-354534904008595m_-4320879403584798368m_-6697633465231609152m_-8775003054586=
-034746m_1617012299758431492m_-5851041699911791263gmail-m_-62080022300370387=
-51m_7018228659268345444m_2831255577780934786gmail-m_-6537409506077447637gma=
-il-m_-3436514418094555780gmail-m_-4648452595337678500gmail-m_-5766246397160=
-191759gmail-m_228193166201232922m_6415790280298659745m_-4178292454896535753=
-m_5079111673814535642m_-1402602051295492284m_8535478
-&#10;265097894093m_-5815252135043677266m_1862278098978896018m_2316343404261=
-910022m_1702612747990809432m_6147666803747922185m_-8379900188845706798m_-56=
-03240999807438485m_826116171293113895gmail-m_8642346008625064580m_-73198066=
-12317633425m_7680618434787984869m_4405228902502529209gmail-m_12587464022998=
-2473m_-2727862626684452250m_-5074852961191362009gmail-m_-36" style=3D"COLOR=
-: rgb(0,128,255)"><FONT size=3D4><SPAN style=3D"FONT-FAMILY: Corbel, sans-s=
-erif; COLOR: black">
-<SPAN style=3D"FONT-SIZE: 16px; TEXT-DECORATION: none; FONT-FAMILY: Corbel,=
- sans-serif; FONT-VARIANT: normal; WHITE-SPACE: normal; WORD-SPACING: 0px; =
-TEXT-TRANSFORM: none; FLOAT: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,0); FON=
-T-STYLE: normal; TEXT-ALIGN: left; DISPLAY: inline; LETTER-SPACING: normal;=
- BACKGROUND-COLOR: transparent; TEXT-INDENT: 0px"><FONT size=3D4><SPAN styl=
-e=3D'FONT-FAMILY: garamond, "times new roman", serif'><B><FONT color=3D#000=
-000>
-<A style=3D"TEXT-DECORATION: underline; COLOR: rgb(0,0,255)" href=3D"mailto=
-:ajb202011@gmail.com" target=3D_blank>linux-erofs@lists.ozlabs.org</A></FON=
-T></B></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN><SPAN>&nbsp;</SPAN><=
-/FONT></B></FONT></FONT>&nbsp; for &copy; 2021 All rights reserved<BR>Admin=
--linux-erofs@lists.ozlabs.org</TD></TR></TBODY></TABLE><BR class=3DApple-in=
-terchange-newline></BODY></HTML>
+On 2021/7/31 3:46, Gao Xiang wrote:
+> From: Huang Jianan <huangjianan@oppo.com>
+> 
+> Add iomap support for non-tailpacking uncompressed data in order to
+> support DIO and DAX.
+> 
+> Direct I/O is useful in certain scenarios for uncompressed files.
+> For example, double pagecache can be avoid by direct I/O when
+> loop device is used for uncompressed files containing upper layer
+> compressed filesystem.
+> 
+> This adds iomap DIO support for non-tailpacking cases first and
+> tail-packing inline files are handled in the follow-up patch.
+> 
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>   fs/erofs/Kconfig    |   1 +
+>   fs/erofs/data.c     | 102 ++++++++++++++++++++++++++++++++++++++++++++
+>   fs/erofs/inode.c    |   5 ++-
+>   fs/erofs/internal.h |   1 +
+>   4 files changed, 108 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 906af0c1998c..14b747026742 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -3,6 +3,7 @@
+>   config EROFS_FS
+>   	tristate "EROFS filesystem support"
+>   	depends on BLOCK
+> +	select FS_IOMAP
+>   	select LIBCRC32C
+>   	help
+>   	  EROFS (Enhanced Read-Only File System) is a lightweight
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 3787a5fb0a42..1f97151a9f90 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -5,6 +5,7 @@
+>    */
+>   #include "internal.h"
+>   #include <linux/prefetch.h>
+> +#include <linux/iomap.h>
+>   
+>   #include <trace/events/erofs.h>
+>   
+> @@ -308,9 +309,110 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>   	return 0;
+>   }
+>   
+> +static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+> +		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
+> +{
+> +	int ret;
+> +	struct erofs_map_blocks map;
+> +
+> +	map.m_la = offset;
+> +	map.m_llen = length;
+> +
+> +	ret = erofs_map_blocks_flatmode(inode, &map, EROFS_GET_BLOCKS_RAW);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	iomap->bdev = inode->i_sb->s_bdev;
+> +	iomap->offset = map.m_la;
+> +	iomap->length = map.m_llen;
+> +	iomap->flags = 0;
+> +
+> +	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+> +		iomap->type = IOMAP_HOLE;
+> +		iomap->addr = IOMAP_NULL_ADDR;
+> +		if (!iomap->length)
+> +			iomap->length = length;
+
+This only happens for the case offset exceeds isize?
+
+> +		return 0;
+> +	}
+> +
+> +	/* that shouldn't happen for now */
+> +	if (map.m_flags & EROFS_MAP_META) {
+> +		DBG_BUGON(1);
+> +		return -ENOTBLK;
+> +	}
+> +	iomap->type = IOMAP_MAPPED;
+> +	iomap->addr = map.m_pa;
+> +	return 0;
+> +}
+> +
+> +const struct iomap_ops erofs_iomap_ops = {
+> +	.iomap_begin = erofs_iomap_begin,
+> +};
+> +
+> +static int erofs_prepare_dio(struct kiocb *iocb, struct iov_iter *to)
+> +{
+> +	struct inode *inode = file_inode(iocb->ki_filp);
+> +	loff_t align = iocb->ki_pos | iov_iter_count(to) |
+> +		iov_iter_alignment(to);
+> +	struct block_device *bdev = inode->i_sb->s_bdev;
+> +	unsigned int blksize_mask;
+> +
+> +	if (bdev)
+> +		blksize_mask = (1 << ilog2(bdev_logical_block_size(bdev))) - 1;
+> +	else
+> +		blksize_mask = (1 << inode->i_blkbits) - 1;
+> +
+> +	if (align & blksize_mask)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Temporarily fall back tail-packing inline to buffered I/O instead
+> +	 * since tail-packing inline support relies on an iomap core update.
+> +	 */
+> +	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE &&
+> +	    iocb->ki_pos + iov_iter_count(to) >
+> +			rounddown(inode->i_size, EROFS_BLKSIZ))
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> +{
+> +	/* no need taking (shared) inode lock since it's a ro filesystem */
+> +	if (!iov_iter_count(to))
+> +		return 0;
+> +
+> +	if (iocb->ki_flags & IOCB_DIRECT) {
+> +		int err = erofs_prepare_dio(iocb, to);
+> +
+> +		if (!err)
+> +			return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
+> +					    NULL, 0);
+> +		if (err < 0)
+> +			return err;
+> +		/*
+> +		 * Fallback to buffered I/O if the operation being performed on
+> +		 * the inode is not supported by direct I/O. The IOCB_DIRECT
+> +		 * flag needs to be cleared here in order to ensure that the
+> +		 * direct I/O path within generic_file_read_iter() is not
+> +		 * taken.
+> +		 */
+> +		iocb->ki_flags &= ~IOCB_DIRECT;
+> +	}
+> +	return generic_file_read_iter(iocb, to);
+
+It looks it's fine to call filemap_read() directly since above codes have
+covered DIO case, then we don't need to change iocb->ki_flags flag, it's
+minor though.
+
+> +}
+> +
+>   /* for uncompressed (aligned) files and raw access for other files */
+>   const struct address_space_operations erofs_raw_access_aops = {
+>   	.readpage = erofs_raw_access_readpage,
+>   	.readahead = erofs_raw_access_readahead,
+>   	.bmap = erofs_bmap,
+> +	.direct_IO = noop_direct_IO,
+> +};
+> +
+> +const struct file_operations erofs_file_fops = {
+> +	.llseek		= generic_file_llseek,
+> +	.read_iter	= erofs_file_read_iter,
+> +	.mmap		= generic_file_readonly_mmap,
+> +	.splice_read	= generic_file_splice_read,
+>   };
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index aa8a0d770ba3..00edb7562fea 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -247,7 +247,10 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
+>   	switch (inode->i_mode & S_IFMT) {
+>   	case S_IFREG:
+>   		inode->i_op = &erofs_generic_iops;
+> -		inode->i_fop = &generic_ro_fops;
+> +		if (!erofs_inode_is_data_compressed(vi->datalayout))
+> +			inode->i_fop = &erofs_file_fops;
+> +		else
+> +			inode->i_fop = &generic_ro_fops;
+
+if (erofs_inode_is_data_compressed(vi->datalayout))
+	inode->i_fop = &generic_ro_fops;
+else
+	inode->i_fop = &erofs_file_fops;
+
+Otherwise, it looks good to me.
+
+Reviewed-by: Chao Yu <chao@kernel.org>
+
+Thanks
+
+>   		break;
+>   	case S_IFDIR:
+>   		inode->i_op = &erofs_dir_iops;
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 543c2ff97d30..2669c785d548 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -371,6 +371,7 @@ static inline int z_erofs_map_blocks_iter(struct inode *inode,
+>   #endif	/* !CONFIG_EROFS_FS_ZIP */
+>   
+>   /* data.c */
+> +extern const struct file_operations erofs_file_fops;
+>   struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr);
+>   
+>   /* inode.c */
+> 
