@@ -2,50 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6EED3E001B
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Aug 2021 13:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E934A3E0B4E
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Aug 2021 02:36:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Gfq9M4pRdz3bXc
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Aug 2021 21:23:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gg8n15Qgtz3bXH
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Aug 2021 10:36:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Gfq9K0Yf1z30MC
- for <linux-erofs@lists.ozlabs.org>; Wed,  4 Aug 2021 21:23:00 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R241e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=11; SR=0; TI=SMTPD_---0UhyTT5j_1628076164; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UhyTT5j_1628076164) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 04 Aug 2021 19:22:45 +0800
-Date: Wed, 4 Aug 2021 19:22:44 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gg8mz38RZz30Mh
+ for <linux-erofs@lists.ozlabs.org>; Thu,  5 Aug 2021 10:36:33 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R101e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0Ui.Crlc_1628123764; 
+Received: from
+ e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0Ui.Crlc_1628123764) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 05 Aug 2021 08:36:15 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Chao Yu <chao@kernel.org>
-Subject: Re: [PATCH v2 3/3] erofs: convert all uncompressed cases to iomap
-Message-ID: <YQp4hH5URykk3Bbm@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- Liu Bo <bo.liu@linux.alibaba.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- Liu Jiang <gerry@linux.alibaba.com>,
- Huang Jianan <huangjianan@oppo.com>, Tao Ma <boyu.mt@taobao.com>
-References: <20210730194625.93856-1-hsiangkao@linux.alibaba.com>
- <20210730194625.93856-4-hsiangkao@linux.alibaba.com>
- <76f9241e-5e7b-1de4-6cef-c92aa1de7498@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3 0/3] erofs: iomap support for uncompressed cases
+Date: Thu,  5 Aug 2021 08:35:58 +0800
+Message-Id: <20210805003601.183063-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <76f9241e-5e7b-1de4-6cef-c92aa1de7498@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,367 +49,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Cc: nvdimm@lists.linux.dev, "Darrick J. Wong" <djwong@kernel.org>,
  LKML <linux-kernel@vger.kernel.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
  Liu Bo <bo.liu@linux.alibaba.com>, Tao Ma <boyu.mt@taobao.com>,
- linux-fsdevel@vger.kernel.org, Liu Jiang <gerry@linux.alibaba.com>,
- linux-erofs@lists.ozlabs.org
+ linux-fsdevel@vger.kernel.org, Liu Jiang <gerry@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 04, 2021 at 03:17:50PM +0800, Chao Yu wrote:
-> On 2021/7/31 3:46, Gao Xiang wrote:
-> > Since tail-packing inline has been supported by iomap now, let's
-> > convert all EROFS uncompressed data I/O to iomap, which is pretty
-> > straight-forward.
-> > 
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > ---
-> >   fs/erofs/data.c | 288 ++++++++----------------------------------------
-> >   1 file changed, 49 insertions(+), 239 deletions(-)
-> > 
-> > diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> > index 911521293b20..6b98156bb5ca 100644
-> > --- a/fs/erofs/data.c
-> > +++ b/fs/erofs/data.c
-> > @@ -9,29 +9,6 @@
-> >   #include <linux/dax.h>
-> >   #include <trace/events/erofs.h>
-> > -static void erofs_readendio(struct bio *bio)
-> > -{
-> > -	struct bio_vec *bvec;
-> > -	blk_status_t err = bio->bi_status;
-> > -	struct bvec_iter_all iter_all;
-> > -
-> > -	bio_for_each_segment_all(bvec, bio, iter_all) {
-> > -		struct page *page = bvec->bv_page;
-> > -
-> > -		/* page is already locked */
-> > -		DBG_BUGON(PageUptodate(page));
-> > -
-> > -		if (err)
-> > -			SetPageError(page);
-> > -		else
-> > -			SetPageUptodate(page);
-> > -
-> > -		unlock_page(page);
-> > -		/* page could be reclaimed now */
-> > -	}
-> > -	bio_put(bio);
-> > -}
-> > -
-> >   struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
-> >   {
-> >   	struct address_space *const mapping = sb->s_bdev->bd_inode->i_mapping;
-> > @@ -109,206 +86,6 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
-> >   	return err;
-> >   }
-> > -static inline struct bio *erofs_read_raw_page(struct bio *bio,
-> > -					      struct address_space *mapping,
-> > -					      struct page *page,
-> > -					      erofs_off_t *last_block,
-> > -					      unsigned int nblocks,
-> > -					      unsigned int *eblks,
-> > -					      bool ra)
-> > -{
-> > -	struct inode *const inode = mapping->host;
-> > -	struct super_block *const sb = inode->i_sb;
-> > -	erofs_off_t current_block = (erofs_off_t)page->index;
-> > -	int err;
-> > -
-> > -	DBG_BUGON(!nblocks);
-> > -
-> > -	if (PageUptodate(page)) {
-> > -		err = 0;
-> > -		goto has_updated;
-> > -	}
-> > -
-> > -	/* note that for readpage case, bio also equals to NULL */
-> > -	if (bio &&
-> > -	    (*last_block + 1 != current_block || !*eblks)) {
-> > -submit_bio_retry:
-> > -		submit_bio(bio);
-> > -		bio = NULL;
-> > -	}
-> > -
-> > -	if (!bio) {
-> > -		struct erofs_map_blocks map = {
-> > -			.m_la = blknr_to_addr(current_block),
-> > -		};
-> > -		erofs_blk_t blknr;
-> > -		unsigned int blkoff;
-> > -
-> > -		err = erofs_map_blocks_flatmode(inode, &map, EROFS_GET_BLOCKS_RAW);
-> > -		if (err)
-> > -			goto err_out;
-> > -
-> > -		/* zero out the holed page */
-> > -		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-> > -			zero_user_segment(page, 0, PAGE_SIZE);
-> > -			SetPageUptodate(page);
-> > -
-> > -			/* imply err = 0, see erofs_map_blocks */
-> > -			goto has_updated;
-> > -		}
-> > -
-> > -		/* for RAW access mode, m_plen must be equal to m_llen */
-> > -		DBG_BUGON(map.m_plen != map.m_llen);
-> > -
-> > -		blknr = erofs_blknr(map.m_pa);
-> > -		blkoff = erofs_blkoff(map.m_pa);
-> > -
-> > -		/* deal with inline page */
-> > -		if (map.m_flags & EROFS_MAP_META) {
-> > -			void *vsrc, *vto;
-> > -			struct page *ipage;
-> > -
-> > -			DBG_BUGON(map.m_plen > PAGE_SIZE);
-> > -
-> > -			ipage = erofs_get_meta_page(inode->i_sb, blknr);
-> > -
-> > -			if (IS_ERR(ipage)) {
-> > -				err = PTR_ERR(ipage);
-> > -				goto err_out;
-> > -			}
-> > -
-> > -			vsrc = kmap_atomic(ipage);
-> > -			vto = kmap_atomic(page);
-> > -			memcpy(vto, vsrc + blkoff, map.m_plen);
-> > -			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
-> > -			kunmap_atomic(vto);
-> > -			kunmap_atomic(vsrc);
-> > -			flush_dcache_page(page);
-> > -
-> > -			SetPageUptodate(page);
-> > -			/* TODO: could we unlock the page earlier? */
-> > -			unlock_page(ipage);
-> > -			put_page(ipage);
-> > -
-> > -			/* imply err = 0, see erofs_map_blocks */
-> > -			goto has_updated;
-> > -		}
-> > -
-> > -		/* pa must be block-aligned for raw reading */
-> > -		DBG_BUGON(erofs_blkoff(map.m_pa));
-> > -
-> > -		/* max # of continuous pages */
-> > -		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
-> > -			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
-> > -
-> > -		*eblks = bio_max_segs(nblocks);
-> > -		bio = bio_alloc(GFP_NOIO, *eblks);
-> > -
-> > -		bio->bi_end_io = erofs_readendio;
-> > -		bio_set_dev(bio, sb->s_bdev);
-> > -		bio->bi_iter.bi_sector = (sector_t)blknr <<
-> > -			LOG_SECTORS_PER_BLOCK;
-> > -		bio->bi_opf = REQ_OP_READ | (ra ? REQ_RAHEAD : 0);
-> > -	}
-> > -
-> > -	err = bio_add_page(bio, page, PAGE_SIZE, 0);
-> > -	/* out of the extent or bio is full */
-> > -	if (err < PAGE_SIZE)
-> > -		goto submit_bio_retry;
-> > -	--*eblks;
-> > -	*last_block = current_block;
-> > -	return bio;
-> > -
-> > -err_out:
-> > -	/* for sync reading, set page error immediately */
-> > -	if (!ra) {
-> > -		SetPageError(page);
-> > -		ClearPageUptodate(page);
-> > -	}
-> > -has_updated:
-> > -	unlock_page(page);
-> > -
-> > -	/* if updated manually, continuous pages has a gap */
-> > -	if (bio)
-> > -		submit_bio(bio);
-> > -	return err ? ERR_PTR(err) : NULL;
-> > -}
-> > -
-> > -/*
-> > - * since we dont have write or truncate flows, so no inode
-> > - * locking needs to be held at the moment.
-> > - */
-> > -static int erofs_raw_access_readpage(struct file *file, struct page *page)
-> > -{
-> > -	erofs_off_t last_block;
-> > -	unsigned int eblks;
-> > -	struct bio *bio;
-> > -
-> > -	trace_erofs_readpage(page, true);
-> > -
-> > -	bio = erofs_read_raw_page(NULL, page->mapping,
-> > -				  page, &last_block, 1, &eblks, false);
-> > -
-> > -	if (IS_ERR(bio))
-> > -		return PTR_ERR(bio);
-> > -
-> > -	if (bio)
-> > -		submit_bio(bio);
-> > -	return 0;
-> > -}
-> > -
-> > -static void erofs_raw_access_readahead(struct readahead_control *rac)
-> > -{
-> > -	erofs_off_t last_block;
-> > -	unsigned int eblks;
-> > -	struct bio *bio = NULL;
-> > -	struct page *page;
-> > -
-> > -	trace_erofs_readpages(rac->mapping->host, readahead_index(rac),
-> > -			readahead_count(rac), true);
-> > -
-> > -	while ((page = readahead_page(rac))) {
-> > -		prefetchw(&page->flags);
-> > -
-> > -		bio = erofs_read_raw_page(bio, rac->mapping, page, &last_block,
-> > -				readahead_count(rac), &eblks, true);
-> > -
-> > -		/* all the page errors are ignored when readahead */
-> > -		if (IS_ERR(bio)) {
-> > -			pr_err("%s, readahead error at page %lu of nid %llu\n",
-> > -			       __func__, page->index,
-> > -			       EROFS_I(rac->mapping->host)->nid);
-> > -
-> > -			bio = NULL;
-> > -		}
-> > -
-> > -		put_page(page);
-> > -	}
-> > -
-> > -	if (bio)
-> > -		submit_bio(bio);
-> > -}
-> > -
-> > -static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-> > -{
-> > -	struct inode *inode = mapping->host;
-> > -	struct erofs_map_blocks map = {
-> > -		.m_la = blknr_to_addr(block),
-> > -	};
-> > -
-> > -	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE) {
-> > -		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-> > -
-> > -		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-> > -			return 0;
-> > -	}
-> > -
-> > -	if (!erofs_map_blocks_flatmode(inode, &map, EROFS_GET_BLOCKS_RAW))
-> > -		return erofs_blknr(map.m_pa);
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >   static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
-> >   		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
-> >   {
-> > @@ -327,6 +104,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
-> >   	iomap->offset = map.m_la;
-> >   	iomap->length = map.m_llen;
-> >   	iomap->flags = 0;
-> > +	iomap->private = NULL;
-> >   	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-> >   		iomap->type = IOMAP_HOLE;
-> > @@ -336,20 +114,61 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
-> >   		return 0;
-> >   	}
-> > -	/* that shouldn't happen for now */
-> >   	if (map.m_flags & EROFS_MAP_META) {
-> > -		DBG_BUGON(1);
-> > -		return -ENOTBLK;
-> > +		struct page *ipage;
-> > +
-> > +		iomap->type = IOMAP_INLINE;
-> > +		ipage = erofs_get_meta_page(inode->i_sb,
-> > +					    erofs_blknr(map.m_pa));
-> 
-> Error handling for erofs_get_meta_page()?
+Hi folks,
 
-Yes, will update. Thanks for pointing out.
+This patchset mainly adds EROFS iomap support for uncompressed cases
+I've planed for the next merge window.
+
+The first 2 patches mainly deal with 2 new cases:
+1) Direct I/O is useful in certain scenarios for uncompressed files.
+For example, double pagecache can be avoid by direct I/O when loop
+device is used for uncompressed files containing upper layer
+compressed filesystem.
+
+2) DAX is quite useful for some container use cases in order to save
+guest memory extremely by using the minimal lightweight EROFS image.
+BTW, a bit more off this iomap topic, chunk-deduplicated regfile
+support is almost available (blob data support) for multi-layer
+container image use cases (aka. called RAFS v6, nydus [1] will support
+RAFS v6 (EROFS-compatible format) in the future and form a unified
+high-performance container image solution, which will be announced
+formally independently), which is also a small independent update.
+
+The last patch relies on the previous iomap core update in order to
+convert tail-packing inline files into iomap, thus all uncompressed
+cases are handled with iomap properly.
+
+Comments are welcome. Thanks for your time on reading this!
 
 Thanks,
 Gao Xiang
 
-> 
-> Thanks
-> 
-> > +		iomap->inline_data = page_address(ipage) +
-> > +					erofs_blkoff(map.m_pa);
-> > +		iomap->private = ipage;
-> > +	} else {
-> > +		iomap->type = IOMAP_MAPPED;
-> > +		iomap->addr = map.m_pa;
-> >   	}
-> > -	iomap->type = IOMAP_MAPPED;
-> > -	iomap->addr = map.m_pa;
-> >   	return 0;
-> >   }
-> > +static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
-> > +		ssize_t written, unsigned flags, struct iomap *iomap)
-> > +{
-> > +	struct page *ipage = iomap->private;
-> > +
-> > +	if (ipage) {
-> > +		DBG_BUGON(iomap->type != IOMAP_INLINE);
-> > +		unlock_page(ipage);
-> > +		put_page(ipage);
-> > +	} else {
-> > +		DBG_BUGON(iomap->type == IOMAP_INLINE);
-> > +	}
-> > +	return written;
-> > +}
-> > +
-> >   const struct iomap_ops erofs_iomap_ops = {
-> >   	.iomap_begin = erofs_iomap_begin,
-> > +	.iomap_end = erofs_iomap_end,
-> >   };
-> > +/*
-> > + * since we dont have write or truncate flows, so no inode
-> > + * locking needs to be held at the moment.
-> > + */
-> > +static int erofs_readpage(struct file *file, struct page *page)
-> > +{
-> > +	return iomap_readpage(page, &erofs_iomap_ops);
-> > +}
-> > +
-> > +static void erofs_readahead(struct readahead_control *rac)
-> > +{
-> > +	return iomap_readahead(rac, &erofs_iomap_ops);
-> > +}
-> > +
-> > +static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-> > +{
-> > +	return iomap_bmap(mapping, block, &erofs_iomap_ops);
-> > +}
-> > +
-> >   static int erofs_prepare_dio(struct kiocb *iocb, struct iov_iter *to)
-> >   {
-> >   	struct inode *inode = file_inode(iocb->ki_filp);
-> > @@ -365,15 +184,6 @@ static int erofs_prepare_dio(struct kiocb *iocb, struct iov_iter *to)
-> >   	if (align & blksize_mask)
-> >   		return -EINVAL;
-> > -
-> > -	/*
-> > -	 * Temporarily fall back tail-packing inline to buffered I/O instead
-> > -	 * since tail-packing inline support relies on an iomap core update.
-> > -	 */
-> > -	if (EROFS_I(inode)->datalayout == EROFS_INODE_FLAT_INLINE &&
-> > -	    iocb->ki_pos + iov_iter_count(to) >
-> > -			rounddown(inode->i_size, EROFS_BLKSIZ))
-> > -		return 1;
-> >   	return 0;
-> >   }
-> > @@ -409,8 +219,8 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> >   /* for uncompressed (aligned) files and raw access for other files */
-> >   const struct address_space_operations erofs_raw_access_aops = {
-> > -	.readpage = erofs_raw_access_readpage,
-> > -	.readahead = erofs_raw_access_readahead,
-> > +	.readpage = erofs_readpage,
-> > +	.readahead = erofs_readahead,
-> >   	.bmap = erofs_bmap,
-> >   	.direct_IO = noop_direct_IO,
-> >   };
-> > 
+[1] https://github.com/dragonflyoss/image-service
+
+changes since v2 (Chao):
+ - use filemap_read() instead;
+ - slightly adjust the order of a hunk in erofs_fill_inode();
+ - update brief documentation for dax option;
+ - use fs_put_dax() directly w/o NULL check;
+ - add a missing error handling for erofs_get_meta_page().
+
+Gao Xiang (2):
+  erofs: dax support for non-tailpacking regular file
+  erofs: convert all uncompressed cases to iomap
+
+Huang Jianan (1):
+  erofs: iomap support for non-tailpacking DIO
+
+ Documentation/filesystems/erofs.rst |   2 +
+ fs/erofs/Kconfig                    |   1 +
+ fs/erofs/data.c                     | 338 ++++++++++++----------------
+ fs/erofs/inode.c                    |   9 +-
+ fs/erofs/internal.h                 |   4 +
+ fs/erofs/super.c                    |  59 ++++-
+ 6 files changed, 213 insertions(+), 200 deletions(-)
+
+-- 
+2.24.4
+
