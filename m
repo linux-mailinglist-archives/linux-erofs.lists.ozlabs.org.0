@@ -2,30 +2,61 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E51B43E1FC7
-	for <lists+linux-erofs@lfdr.de>; Fri,  6 Aug 2021 02:10:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F0E63E26F1
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Aug 2021 11:12:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ggm8g6SGsz3cQm
-	for <lists+linux-erofs@lfdr.de>; Fri,  6 Aug 2021 10:10:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gh0B51hHxz3cQq
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Aug 2021 19:12:45 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Y+v10eWW;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
- smtp.mailfrom=firebasestorage.googleapis.com (client-ip=46.183.222.62;
- helo=firebasestorage.googleapis.com;
- envelope-from=noreply@firebasestorage.googleapis.com; receiver=<UNKNOWN>)
-Received: from firebasestorage.googleapis.com (unknown [46.183.222.62])
- by lists.ozlabs.org (Postfix) with ESMTP id 4Ggm8X6TP3z3bWs
- for <linux-erofs@lists.ozlabs.org>; Fri,  6 Aug 2021 10:10:35 +1000 (AEST)
-From: Email ADMIN  <noreply@firebasestorage.googleapis.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: linux-erofs@lists.ozlabs.org NOTIFICATION - Storage Full you (03)
- have message pending!!
-Date: 06 Aug 2021 03:10:07 +0300
-Message-ID: <20210806031006.1A30791217F09CEC@firebasestorage.googleapis.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=Y+v10eWW; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gh0B20vt9z3cHQ
+ for <linux-erofs@lists.ozlabs.org>; Fri,  6 Aug 2021 19:12:41 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ECDA16113C;
+ Fri,  6 Aug 2021 09:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1628241158;
+ bh=gVfakN+vVEJEkHVwWBvwIWcsbdvB9+grIspJr8mNPEU=;
+ h=Subject:To:References:From:Date:In-Reply-To:From;
+ b=Y+v10eWW1J89wUgq2yYaMGLzvwigXh/mmmmi9nVT//xG34nNrbe1IZkeBEVWz/8dI
+ rToriWczbHQ6NH3KF8P375IE+zqapbU12B+we/ctGGbTy0nRUFtUsY6+d+7uKsmKKw
+ w5Y4b4iEE7Ux/SwRRxl8iO/ES3cYyuv5n/Dei1BTtb8jZBXB+Mre5aVWMhermYLoRH
+ 0Tk3sfqfsvGChV2RseF5eF3vuewwbE/wqJO3N516fpFY5zJ7dgJzuVwoGCrezscflH
+ U+NA4mkpd2cg1WsjaNztiAF1bOHjOT5ytPU2Ia9O7lFU9vIPBj1YhnO2lxo/Thbmhj
+ y2MDDAqyFA01A==
+Subject: Re: [PATCH v3 2/3] erofs: dax support for non-tailpacking regular file
+To: linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ nvdimm@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, Liu Bo <bo.liu@linux.alibaba.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Liu Jiang
+ <gerry@linux.alibaba.com>, Huang Jianan <huangjianan@oppo.com>,
+ Tao Ma <boyu.mt@taobao.com>
+References: <20210805003601.183063-1-hsiangkao@linux.alibaba.com>
+ <20210805003601.183063-3-hsiangkao@linux.alibaba.com>
+ <7aa650b8-a853-368d-7a81-f435194eec33@kernel.org>
+ <YQtZ+CtvB3P+7Xim@B-P7TQMD6M-0146.local>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <2bdaab77-c219-3f42-f50d-2af856386006@kernel.org>
+Date: Fri, 6 Aug 2021 17:12:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <YQtZ+CtvB3P+7Xim@B-P7TQMD6M-0146.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -37,101 +68,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: Email ADMIN <noreply@fiiirebasestorage.googleapis.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<HTML><HEAD>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.10240.17443"></HEAD>
-<body>
-<table style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif=
-; WHITE-SPACE: normal; WORD-SPACING: 0px; TABLE-LAYOUT: fixed; TEXT-TRANSFO=
-RM: none; FONT-WEIGHT: 400; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHA=
-NS: 2; WIDOWS: 2; LETTER-SPACING: normal; TEXT-INDENT: 0px; -webkit-text-st=
-roke-width: 0px; text-decoration-thickness: initial; text-decoration-style:=
- initial; text-decoration-color: initial" cellspacing=3D"0" cellpadding=3D"=
-0" width=3D"85%" border=3D"0">
-<TBODY>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-TOP: 30px; MARGIN: 0px; LINE-HEIGHT: 1.666" valign=3D"top" align=
-=3D"center"><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL=
--ALIGN: inherit"><B><FONT color=3D#0000ff><SPAN>
-<SPAN=20
-id=3D"m_257833035162904760m_7777128660219847919m_-6514434049224158164m_7676=
-354534904008595m_-4320879403584798368m_-6697633465231609152m_-8775003054586=
-034746m_1617012299758431492m_-5851041699911791263gmail-m_-62080022300370387=
-51m_7018228659268345444m_2831255577780934786m_-6537409506077447637gmail-m_-=
-3436514418094555780gmail-m_-4648452595337678500gmail-m_-5766246397160191759=
-gmail-m_228193166201232922m_6415790280298659745m_-4178292454896535753m_5079=
-111673814535642m_-1402602051295492284m_8535478265097
-&#10;894093m_-5815252135043677266m_1862278098978896018m_2316343404261910022=
-m_1702612747990809432m_6147666803747922185m_-8379900188845706798m_-56032409=
-99807438485m_826116171293113895gmail-m_8642346008625064580m_-73198066123176=
-33425m_7680618434787984869m_4405228902502529209gmail-m_125874640229982473m_=
--2727862626684452250m_-5074852961191362009gmail-m_-36" style=3D"COLOR: rgb(=
-0,128,255)"><FONT size=3D4><SPAN style=3D"FONT-FAMILY: Corbel, sans-serif; =
-COLOR: black">
-<SPAN style=3D"FONT-SIZE: 16px; TEXT-DECORATION: none; FONT-FAMILY: Corbel,=
- sans-serif; FONT-VARIANT: normal; WHITE-SPACE: normal; WORD-SPACING: 0px; =
-TEXT-TRANSFORM: none; FLOAT: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,0); FON=
-T-STYLE: normal; TEXT-ALIGN: left; DISPLAY: inline; LETTER-SPACING: normal;=
- BACKGROUND-COLOR: transparent; TEXT-INDENT: 0px"><FONT size=3D4><SPAN styl=
-e=3D'FONT-FAMILY: garamond, "times new roman", serif'><B><FONT color=3D#000=
-000>
-<A style=3D"TEXT-DECORATION: underline; COLOR: rgb(0,0,255)" href=3D"mailto=
-:https://blassflustered.com/abj/yhang/Wp-images/?i=3Di&amp;0=3Dlinux-erofs@=
-lists.ozlabs.org" target=3D_blank>linux-erofs@lists.ozlabs.org</A></FONT></=
-B></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN><SPAN>&nbsp;</SPAN>&nbsp=
-;</FONT></B><BR>&nbsp; &nbsp;Your email account is currently undergoing an =
-annual upgrade</FONT></FONT></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-BOTTOM: 20px; PADDING-TOP: 20px; MARGIN: 0px; LINE-HEIGHT: 1.666"=
- valign=3D"top" align=3D"center"><FONT style=3D"VERTICAL-ALIGN: inherit"><F=
-ONT style=3D"VERTICAL-ALIGN: inherit">To avoid account shut down Please ver=
-ify your email below to complete this upgrade</FONT></FONT></TD></TR>
-<TR>
-<td style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
-; PADDING-BOTTOM: 20px; MARGIN: 0px; LINE-HEIGHT: 1.666" align=3D"center">
-<A style=3D"BORDER-LEFT-WIDTH: 0px; FONT-SIZE: 13px; FONT-FAMILY: inherit; =
-BORDER-RIGHT-WIDTH: 0px; VERTICAL-ALIGN: baseline; BACKGROUND: rgb(16,173,2=
-28); BORDER-BOTTOM-WIDTH: 0px; TEXT-TRANSFORM: uppercase; COLOR: rgb(255,25=
-5,255); PADDING-BOTTOM: 10px; PADDING-TOP: 10px; PADDING-LEFT: 30px; MARGIN=
-: 0px 10px 0px 0px; DISPLAY: inline-block; PADDING-RIGHT: 30px; BORDER-TOP-=
-WIDTH: 0px; font-stretch: inherit"=20
-href=3D"https://OverjoyedDefiantGlitches.pojrythgyjrt.repl.co?email=3Dlinux=
--erofs@lists.ozlabs.org" target=3D_blank><FONT style=3D"VERTICAL-ALIGN: inh=
-erit"><FONT style=3D"VERTICAL-ALIGN: inherit">RE-ACTIVATE ACCOUNT HERE&nbsp=
-;</FONT></FONT></A><BR><BR><FONT size=3D2>This service is free of charge</F=
-ONT>&nbsp;<BR><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTIC=
-AL-ALIGN: inherit"><B><FONT color=3D#0000ff><SPAN>
-<SPAN=20
-id=3D"m_257833035162904760m_7777128660219847919m_-6514434049224158164m_7676=
-354534904008595m_-4320879403584798368m_-6697633465231609152m_-8775003054586=
-034746m_1617012299758431492m_-5851041699911791263gmail-m_-62080022300370387=
-51m_7018228659268345444m_2831255577780934786gmail-m_-6537409506077447637gma=
-il-m_-3436514418094555780gmail-m_-4648452595337678500gmail-m_-5766246397160=
-191759gmail-m_228193166201232922m_6415790280298659745m_-4178292454896535753=
-m_5079111673814535642m_-1402602051295492284m_8535478
-&#10;265097894093m_-5815252135043677266m_1862278098978896018m_2316343404261=
-910022m_1702612747990809432m_6147666803747922185m_-8379900188845706798m_-56=
-03240999807438485m_826116171293113895gmail-m_8642346008625064580m_-73198066=
-12317633425m_7680618434787984869m_4405228902502529209gmail-m_12587464022998=
-2473m_-2727862626684452250m_-5074852961191362009gmail-m_-36" style=3D"COLOR=
-: rgb(0,128,255)"><FONT size=3D4><SPAN style=3D"FONT-FAMILY: Corbel, sans-s=
-erif; COLOR: black">
-<SPAN style=3D"FONT-SIZE: 16px; TEXT-DECORATION: none; FONT-FAMILY: Corbel,=
- sans-serif; FONT-VARIANT: normal; WHITE-SPACE: normal; WORD-SPACING: 0px; =
-TEXT-TRANSFORM: none; FLOAT: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,0); FON=
-T-STYLE: normal; TEXT-ALIGN: left; DISPLAY: inline; LETTER-SPACING: normal;=
- BACKGROUND-COLOR: transparent; TEXT-INDENT: 0px"><FONT size=3D4><SPAN styl=
-e=3D'FONT-FAMILY: garamond, "times new roman", serif'><B><FONT color=3D#000=
-000>
-<A style=3D"TEXT-DECORATION: underline; COLOR: rgb(0,0,255)" href=3D"mailto=
-:ajb202011@gmail.com" target=3D_blank>linux-erofs@lists.ozlabs.org</A></FON=
-T></B></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN><SPAN>&nbsp;</SPAN><=
-/FONT></B></FONT></FONT>&nbsp; for &copy; 2021 All rights reserved<BR>Admin=
--linux-erofs@lists.ozlabs.org</TD></TR></TBODY></TABLE><BR class=3DApple-in=
-terchange-newline></BODY></HTML>
+Xiang,
+
+On 2021/8/5 11:24, Gao Xiang wrote:
+> Thanks, it originally inherited from filesystems/ext2.rst, I will update
+> this into
+> dax, dax={always,never}      .....
+
+Above change looks fine to me, thanks.
+
+> 
+> Since for such image vm-shared memory scenario, no need to add per-file
+> DAX (at least for now.)
+
+Agreed.
+
+Thanks,
