@@ -2,40 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E389E3E3A61
-	for <lists+linux-erofs@lfdr.de>; Sun,  8 Aug 2021 15:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1116A3E3D44
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Aug 2021 01:57:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GjKYs0fhMz308L
-	for <lists+linux-erofs@lfdr.de>; Sun,  8 Aug 2021 23:19:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GjbjN5VRMz30CG
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Aug 2021 09:56:56 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=owPGImm1;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=owPGImm1; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GjKYj6z5Gz2xfx
- for <linux-erofs@lists.ozlabs.org>; Sun,  8 Aug 2021 23:19:18 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R331e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04420; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0UiIy9u2_1628428741; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UiIy9u2_1628428741) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 08 Aug 2021 21:19:03 +0800
-Date: Sun, 8 Aug 2021 21:19:01 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Wei Yongjun <weiyongjun1@huawei.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GjbjG2zn8z2yxX
+ for <linux-erofs@lists.ozlabs.org>; Mon,  9 Aug 2021 09:56:50 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4068C60F42;
+ Sun,  8 Aug 2021 23:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1628467005;
+ bh=BTc4DtYp5H2rXf9tQCGYzW//v9wT9ZrLk0Jk8h7+Sdo=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+ b=owPGImm1CC+yBVqAIvTZ58u5gOOBQH9bFiLIpZSOAH87GDkCFyvgz0J3RVrAiDbFS
+ V67MgaFc91xx2e+AMcQ/yoUFAU4vPBlyaYIkweD/GF5ZaAFgW72V5sfJM4ac/DsNxP
+ 48q9jHUlseAVnVwrOJABhIMH3nCAtMsNurljUe2y9LI3/H1cW43Mb4rR0DKVlendl6
+ WzxHB1G7ZA4KhnPavn50efw5vGhlj2NNTILIqbbXOFx04YJo/yFHYxKwqDSNFh/ZYF
+ B0QEyszhp2JoZg9hjW7Z57fQ51uwL8D3/qYYpxwN/JcvgMyYCb/yfT4DnGFdDvVd6R
+ 4ysXgLg7ZmUpA==
 Subject: Re: [PATCH -next] erofs: make symbol 'erofs_iomap_ops' static
-Message-ID: <YQ/ZxZkNCtWGO6X4@B-P7TQMD6M-0146.local>
+To: Wei Yongjun <weiyongjun1@huawei.com>,
+ Gao Xiang <hsiangkao@linux.alibaba.com>
 References: <20210808063343.255817-1-weiyongjun1@huawei.com>
+ <YQ/ZxZkNCtWGO6X4@B-P7TQMD6M-0146.local>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <4ddfb962-97fc-28b0-0006-197574a1ec00@kernel.org>
+Date: Mon, 9 Aug 2021 07:56:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210808063343.255817-1-weiyongjun1@huawei.com>
+In-Reply-To: <YQ/ZxZkNCtWGO6X4@B-P7TQMD6M-0146.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,20 +69,28 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Aug 08, 2021 at 06:33:43AM +0000, Wei Yongjun wrote:
-> The sparse tool complains as follows:
-> 
-> fs/erofs/data.c:150:24: warning:
->  symbol 'erofs_iomap_ops' was not declared. Should it be static?
-> 
-> This symbol is not used outside of data.c, so marks it static.
-> 
-> Fixes: 3e9ce908c114 ("erofs: iomap support for non-tailpacking DIO")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+On 2021/8/8 21:19, Gao Xiang wrote:
+> On Sun, Aug 08, 2021 at 06:33:43AM +0000, Wei Yongjun wrote:
+>> The sparse tool complains as follows:
+>>
+>> fs/erofs/data.c:150:24: warning:
+>>   symbol 'erofs_iomap_ops' was not declared. Should it be static?
+>>
+>> This symbol is not used outside of data.c, so marks it static.
+
+Thanks for the patch, I guess it will be better to fix in original patch
+if you don't mind.
 
 Thanks,
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Thanks,
-Gao Xiang
+>>
+>> Fixes: 3e9ce908c114 ("erofs: iomap support for non-tailpacking DIO")
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> 
+> Thanks,
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
+> Thanks,
+> Gao Xiang
+> 
