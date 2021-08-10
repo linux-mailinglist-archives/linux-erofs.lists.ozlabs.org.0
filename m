@@ -2,41 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D10B23E554D
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Aug 2021 10:32:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99D123E8685
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Aug 2021 01:30:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GkR5V35rwz30F6
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Aug 2021 18:32:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gkq1j3jvdz309K
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Aug 2021 09:30:17 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=pOsrZWHh;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=pOsrZWHh; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GkR5Q4r9Tz3061
- for <linux-erofs@lists.ozlabs.org>; Tue, 10 Aug 2021 18:32:10 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R361e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=7; SR=0; TI=SMTPD_---0UiZoa1k_1628584314; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UiZoa1k_1628584314) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 10 Aug 2021 16:31:56 +0800
-Date: Tue, 10 Aug 2021 16:31:54 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Yue Hu <zbestahu@gmail.com>
-Subject: Re: [PATCH] erofs: remove the mapping parameter from
- erofs_try_to_free_cached_page()
-Message-ID: <YRI5es3gTSbqEqq1@B-P7TQMD6M-0146.local>
-References: <20210810072416.1392-1-zbestahu@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gkq1d67nQz3015
+ for <linux-erofs@lists.ozlabs.org>; Wed, 11 Aug 2021 09:30:13 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 76C6960551;
+ Tue, 10 Aug 2021 23:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1628638209;
+ bh=y3cWTqqjb1WsGKSlACTRwaVwEb56Zhd6VF470hJIM1g=;
+ h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+ b=pOsrZWHhre2TlMiHrkNqOgf5vclnE2Lcm/rvVBWryKYABEy5H6DQx7jaV9ohDqT3o
+ gCM+tD/H9zwkwyL90PmNlf8EUMBnEqg8FKNyUHILaZFLWr+ECoDDVUwigYcsBCU85S
+ OioOUaGGinQCnOA9RSNp0VHzditH43qXlqMwTNYFx6qApkO82YeLzKPDY1Ds0FCO0H
+ bsFS3Eog2ww5boCV8iVaoPPwhBCpk3vA8HXmfxyyriIbTFEUkKT4SmdnLH+c6jlbqa
+ Tv/oGkuUdFdvWKLcKMuembmBxL+cfehyLknY8JwWjyWKgY6WYtuxJHDqvg1+Omv4zv
+ QJyPhgZQYUp8A==
+Subject: Re: [PATCH] erofs: directly use wrapper erofs_page_is_managed() when
+ shrinking
+To: Yue Hu <zbestahu@gmail.com>, xiang@kernel.org, linux-erofs@lists.ozlabs.org
+References: <20210810065450.1320-1-zbestahu@gmail.com>
+From: Chao Yu <chao@kernel.org>
+Message-ID: <5d83c8be-b7d1-d359-61e0-04a4aed2febf@kernel.org>
+Date: Wed, 11 Aug 2021 07:30:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210810072416.1392-1-zbestahu@gmail.com>
+In-Reply-To: <20210810065450.1320-1-zbestahu@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,20 +61,18 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, zbestahu@163.com, huyue2@yulong.com,
- xiang@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: huyue2@yulong.com, linux-kernel@vger.kernel.org, zbestahu@163.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 10, 2021 at 03:24:16PM +0800, Yue Hu wrote:
+On 2021/8/10 14:54, Yue Hu wrote:
 > From: Yue Hu <huyue2@yulong.com>
 > 
-> The mapping is not used at all, remove it and update related code.
+> We already have the wrapper function to identify managed page.
 > 
 > Signed-off-by: Yue Hu <huyue2@yulong.com>
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
