@@ -2,41 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33DBF3EAFA6
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Aug 2021 07:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 130293EC2FB
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Aug 2021 15:53:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GmBvk1FrPz3bTV
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Aug 2021 15:29:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gn22N6yRwz30J3
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Aug 2021 23:53:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
- helo=out30-54.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-54.freemail.mail.aliyun.com
- (out30-54.freemail.mail.aliyun.com [115.124.30.54])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GmBvZ6VLWz302N
- for <linux-erofs@lists.ozlabs.org>; Fri, 13 Aug 2021 15:29:45 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R321e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=7; SR=0; TI=SMTPD_---0UiqodgM_1628832571; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UiqodgM_1628832571) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 13 Aug 2021 13:29:39 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs: add fiemap support with iomap
-Date: Fri, 13 Aug 2021 13:29:31 +0800
-Message-Id: <20210813052931.203280-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20210813052931.203280-1-hsiangkao@linux.alibaba.com>
-References: <20210813052931.203280-1-hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gn22D6Cg4z309g
+ for <linux-erofs@lists.ozlabs.org>; Sat, 14 Aug 2021 23:53:19 +1000 (AEST)
+X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="301268456"
+X-IronPort-AV: E=Sophos;i="5.84,321,1620716400"; d="scan'208";a="301268456"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+ by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 14 Aug 2021 06:52:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,321,1620716400"; d="scan'208";a="678161765"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+ by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2021 06:52:09 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mEu53-000Orn-1U; Sat, 14 Aug 2021 13:52:09 +0000
+Date: Sat, 14 Aug 2021 21:51:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ d252ff3de786a28b1bedf4c03fb31d142d32219b
+Message-ID: <6117ca6b.JxVHEoXDdWPbww0N%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,155 +50,446 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nl6720 <nl6720@gmail.com>, Lasse Collin <lasse.collin@tukaani.org>,
- LKML <linux-kernel@vger.kernel.org>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This adds fiemap support for both uncompressed files and compressed
-files by using iomap infrastructure.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: d252ff3de786a28b1bedf4c03fb31d142d32219b  erofs: remove the mapping parameter from erofs_try_to_free_cached_page()
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+elapsed time: 4988m
+
+configs tested: 420
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210814
+i386                 randconfig-c001-20210812
+i386                 randconfig-c001-20210813
+arm                          pxa910_defconfig
+arm                        oxnas_v6_defconfig
+mips                           ci20_defconfig
+powerpc                 mpc85xx_cds_defconfig
+mips                           rs90_defconfig
+powerpc                     mpc5200_defconfig
+parisc                              defconfig
+powerpc                         wii_defconfig
+arm                      integrator_defconfig
+arm                        trizeps4_defconfig
+powerpc                 mpc8540_ads_defconfig
+ia64                                defconfig
+arm                       imx_v6_v7_defconfig
+parisc                generic-32bit_defconfig
+arm                     am200epdkit_defconfig
+sh                           se7724_defconfig
+sh                         microdev_defconfig
+sh                           se7712_defconfig
+sh                     sh7710voipgw_defconfig
+sh                          polaris_defconfig
+powerpc                      bamboo_defconfig
+powerpc                       holly_defconfig
+powerpc                mpc7448_hpc2_defconfig
+powerpc                        cell_defconfig
+powerpc                 mpc837x_rdb_defconfig
+parisc                           alldefconfig
+sh                ecovec24-romimage_defconfig
+powerpc                     mpc512x_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                     redwood_defconfig
+arm                         at91_dt_defconfig
+sh                   secureedge5410_defconfig
+powerpc                     pseries_defconfig
+powerpc                      makalu_defconfig
+arm                      jornada720_defconfig
+mips                        workpad_defconfig
+xtensa                  audio_kc705_defconfig
+arc                     nsimosci_hs_defconfig
+sh                        sh7757lcr_defconfig
+mips                        bcm63xx_defconfig
+openrisc                  or1klitex_defconfig
+m68k                        m5407c3_defconfig
+powerpc                    klondike_defconfig
+mips                     loongson1c_defconfig
+arm                          ep93xx_defconfig
+arm                          iop32x_defconfig
+powerpc                    ge_imp3a_defconfig
+arm                        spear6xx_defconfig
+mips                            ar7_defconfig
+arm                         palmz72_defconfig
+xtensa                              defconfig
+arm                       aspeed_g5_defconfig
+mips                        omega2p_defconfig
+powerpc                        warp_defconfig
+powerpc                     stx_gp3_defconfig
+xtensa                  nommu_kc705_defconfig
+ia64                             allmodconfig
+m68k                             alldefconfig
+sh                          rsk7264_defconfig
+sh                            titan_defconfig
+powerpc                     asp8347_defconfig
+powerpc                        icon_defconfig
+arc                          axs103_defconfig
+mips                      pic32mzda_defconfig
+nios2                            allyesconfig
+riscv                    nommu_virt_defconfig
+arm                      footbridge_defconfig
+arm                         assabet_defconfig
+arm                       aspeed_g4_defconfig
+mips                        qi_lb60_defconfig
+sh                              ul2_defconfig
+sh                           se7619_defconfig
+powerpc                      tqm8xx_defconfig
+arm                         lpc18xx_defconfig
+sh                        edosk7760_defconfig
+x86_64                            allnoconfig
+sh                             shx3_defconfig
+mips                  maltasmvp_eva_defconfig
+mips                         bigsur_defconfig
+powerpc64                           defconfig
+arm                     davinci_all_defconfig
+arm                       omap2plus_defconfig
+powerpc                     pq2fads_defconfig
+h8300                            alldefconfig
+arm                        mvebu_v5_defconfig
+xtensa                       common_defconfig
+sh                            hp6xx_defconfig
+powerpc                     tqm8560_defconfig
+sh                        sh7785lcr_defconfig
+i386                             alldefconfig
+mips                      fuloong2e_defconfig
+mips                           mtx1_defconfig
+arm                           u8500_defconfig
+nios2                         3c120_defconfig
+ia64                        generic_defconfig
+powerpc                     tqm8555_defconfig
+powerpc                      acadia_defconfig
+arm                          simpad_defconfig
+mips                     decstation_defconfig
+mips                malta_qemu_32r6_defconfig
+sh                          sdk7786_defconfig
+powerpc                          g5_defconfig
+riscv                             allnoconfig
+nios2                            alldefconfig
+arm                        vexpress_defconfig
+mips                            gpr_defconfig
+mips                  cavium_octeon_defconfig
+nds32                               defconfig
+arm                      tct_hammer_defconfig
+powerpc                      obs600_defconfig
+powerpc               mpc834x_itxgp_defconfig
+arm                  colibri_pxa270_defconfig
+arm                          imote2_defconfig
+arm                         shannon_defconfig
+arm                        clps711x_defconfig
+powerpc                      ppc64e_defconfig
+arm                         orion5x_defconfig
+xtensa                           allyesconfig
+arm                       imx_v4_v5_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                     rainier_defconfig
+sh                            shmin_defconfig
+h8300                               defconfig
+m68k                            q40_defconfig
+arm                            mmp2_defconfig
+csky                             alldefconfig
+mips                       bmips_be_defconfig
+powerpc                 canyonlands_defconfig
+mips                      loongson3_defconfig
+mips                        maltaup_defconfig
+mips                           ip22_defconfig
+sh                           se7721_defconfig
+sh                          rsk7269_defconfig
+ia64                          tiger_defconfig
+arm                             rpc_defconfig
+powerpc                      ppc40x_defconfig
+powerpc                    adder875_defconfig
+arm                            hisi_defconfig
+arm                         s3c2410_defconfig
+arm                       spear13xx_defconfig
+sh                   sh7724_generic_defconfig
+csky                                defconfig
+sh                  sh7785lcr_32bit_defconfig
+riscv                    nommu_k210_defconfig
+m68k                       m5208evb_defconfig
+x86_64                           alldefconfig
+mips                      maltaaprp_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                 mpc837x_mds_defconfig
+ia64                             alldefconfig
+sh                        edosk7705_defconfig
+sh                           se7750_defconfig
+powerpc                    socrates_defconfig
+powerpc                     ksi8560_defconfig
+mips                     loongson1b_defconfig
+x86_64                              defconfig
+arm                          badge4_defconfig
+mips                   sb1250_swarm_defconfig
+arm                         nhk8815_defconfig
+s390                          debug_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                           jazz_defconfig
+powerpc                           allnoconfig
+sh                          landisk_defconfig
+m68k                        m5307c3_defconfig
+sh                               j2_defconfig
+alpha                            allyesconfig
+powerpc                     tqm5200_defconfig
+powerpc                   lite5200b_defconfig
+arm                   milbeaut_m10v_defconfig
+mips                         cobalt_defconfig
+xtensa                generic_kc705_defconfig
+arm                           stm32_defconfig
+arm                           omap1_defconfig
+arc                           tb10x_defconfig
+arm                          exynos_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                           ip32_defconfig
+h8300                            allyesconfig
+h8300                       h8s-sim_defconfig
+mips                       lemote2f_defconfig
+sparc64                             defconfig
+powerpc                   currituck_defconfig
+sh                           se7780_defconfig
+mips                          rm200_defconfig
+powerpc                       ppc64_defconfig
+mips                          ath79_defconfig
+arc                     haps_hs_smp_defconfig
+powerpc                   microwatt_defconfig
+sh                          urquell_defconfig
+sh                          r7780mp_defconfig
+arm                       cns3420vb_defconfig
+mips                          ath25_defconfig
+m68k                             allyesconfig
+arm                             mxs_defconfig
+riscv                               defconfig
+powerpc                     ppa8548_defconfig
+arc                        nsimosci_defconfig
+powerpc                    amigaone_defconfig
+arm                         s5pv210_defconfig
+arm                           viper_defconfig
+sh                          lboxre2_defconfig
+arm                         socfpga_defconfig
+x86_64                           allyesconfig
+arm                             pxa_defconfig
+sh                 kfr2r09-romimage_defconfig
+mips                           xway_defconfig
+arc                            hsdk_defconfig
+arm                        magician_defconfig
+powerpc                     akebono_defconfig
+mips                     cu1830-neo_defconfig
+arm                            zeus_defconfig
+sh                            migor_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                        mini2440_defconfig
+powerpc                      pcm030_defconfig
+microblaze                      mmu_defconfig
+powerpc                     tqm8540_defconfig
+powerpc                     kmeter1_defconfig
+arm                        multi_v7_defconfig
+sh                         ap325rxa_defconfig
+arm                          gemini_defconfig
+sh                               alldefconfig
+sh                         apsh4a3a_defconfig
+powerpc                      cm5200_defconfig
+arc                        vdk_hs38_defconfig
+arm                      pxa255-idp_defconfig
+arm                  colibri_pxa300_defconfig
+arm                           h3600_defconfig
+powerpc                 mpc836x_mds_defconfig
+alpha                            alldefconfig
+powerpc                       ebony_defconfig
+mips                         tb0226_defconfig
+sh                             sh03_defconfig
+m68k                         apollo_defconfig
+riscv                            allyesconfig
+arm                            xcep_defconfig
+sparc                       sparc64_defconfig
+arm                            pleb_defconfig
+powerpc                        fsp2_defconfig
+arm                       multi_v4t_defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+alpha                               defconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a006-20210812
+x86_64               randconfig-a004-20210812
+x86_64               randconfig-a003-20210812
+x86_64               randconfig-a005-20210812
+x86_64               randconfig-a002-20210812
+x86_64               randconfig-a001-20210812
+x86_64               randconfig-a004-20210810
+x86_64               randconfig-a006-20210810
+x86_64               randconfig-a003-20210810
+x86_64               randconfig-a005-20210810
+x86_64               randconfig-a002-20210810
+x86_64               randconfig-a001-20210810
+x86_64               randconfig-a004-20210814
+x86_64               randconfig-a006-20210814
+x86_64               randconfig-a003-20210814
+x86_64               randconfig-a001-20210814
+x86_64               randconfig-a005-20210814
+x86_64               randconfig-a002-20210814
+i386                 randconfig-a004-20210812
+i386                 randconfig-a003-20210812
+i386                 randconfig-a002-20210812
+i386                 randconfig-a001-20210812
+i386                 randconfig-a006-20210812
+i386                 randconfig-a005-20210812
+i386                 randconfig-a004-20210814
+i386                 randconfig-a002-20210814
+i386                 randconfig-a001-20210814
+i386                 randconfig-a003-20210814
+i386                 randconfig-a006-20210814
+i386                 randconfig-a005-20210814
+i386                 randconfig-a004-20210810
+i386                 randconfig-a002-20210810
+i386                 randconfig-a001-20210810
+i386                 randconfig-a003-20210810
+i386                 randconfig-a006-20210810
+i386                 randconfig-a005-20210810
+i386                 randconfig-a004-20210813
+i386                 randconfig-a003-20210813
+i386                 randconfig-a001-20210813
+i386                 randconfig-a002-20210813
+i386                 randconfig-a006-20210813
+i386                 randconfig-a005-20210813
+i386                 randconfig-a004-20210811
+i386                 randconfig-a001-20210811
+i386                 randconfig-a002-20210811
+i386                 randconfig-a003-20210811
+i386                 randconfig-a006-20210811
+i386                 randconfig-a005-20210811
+x86_64               randconfig-a013-20210811
+x86_64               randconfig-a011-20210811
+x86_64               randconfig-a012-20210811
+x86_64               randconfig-a016-20210811
+x86_64               randconfig-a014-20210811
+x86_64               randconfig-a015-20210811
+x86_64               randconfig-a011-20210813
+x86_64               randconfig-a013-20210813
+x86_64               randconfig-a012-20210813
+x86_64               randconfig-a016-20210813
+x86_64               randconfig-a015-20210813
+x86_64               randconfig-a014-20210813
+x86_64               randconfig-a016-20210808
+x86_64               randconfig-a012-20210808
+x86_64               randconfig-a013-20210808
+x86_64               randconfig-a011-20210808
+x86_64               randconfig-a014-20210808
+x86_64               randconfig-a015-20210808
+i386                 randconfig-a011-20210812
+i386                 randconfig-a015-20210812
+i386                 randconfig-a013-20210812
+i386                 randconfig-a014-20210812
+i386                 randconfig-a016-20210812
+i386                 randconfig-a012-20210812
+i386                 randconfig-a011-20210814
+i386                 randconfig-a015-20210814
+i386                 randconfig-a013-20210814
+i386                 randconfig-a014-20210814
+i386                 randconfig-a016-20210814
+i386                 randconfig-a012-20210814
+i386                 randconfig-a011-20210811
+i386                 randconfig-a015-20210811
+i386                 randconfig-a014-20210811
+i386                 randconfig-a013-20210811
+i386                 randconfig-a016-20210811
+i386                 randconfig-a012-20210811
+i386                 randconfig-a011-20210810
+i386                 randconfig-a015-20210810
+i386                 randconfig-a013-20210810
+i386                 randconfig-a014-20210810
+i386                 randconfig-a016-20210810
+i386                 randconfig-a012-20210810
+i386                 randconfig-a011-20210813
+i386                 randconfig-a015-20210813
+i386                 randconfig-a014-20210813
+i386                 randconfig-a013-20210813
+i386                 randconfig-a016-20210813
+i386                 randconfig-a012-20210813
+i386                 randconfig-a012-20210809
+i386                 randconfig-a015-20210809
+i386                 randconfig-a011-20210809
+i386                 randconfig-a013-20210809
+i386                 randconfig-a014-20210809
+i386                 randconfig-a016-20210809
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-c001-20210811
+x86_64               randconfig-c001-20210812
+x86_64               randconfig-c001-20210813
+x86_64               randconfig-c001-20210810
+x86_64               randconfig-c001-20210814
+x86_64               randconfig-a006-20210813
+x86_64               randconfig-a004-20210813
+x86_64               randconfig-a003-20210813
+x86_64               randconfig-a002-20210813
+x86_64               randconfig-a005-20210813
+x86_64               randconfig-a001-20210813
+x86_64               randconfig-a011-20210812
+x86_64               randconfig-a013-20210812
+x86_64               randconfig-a012-20210812
+x86_64               randconfig-a016-20210812
+x86_64               randconfig-a015-20210812
+x86_64               randconfig-a014-20210812
+x86_64               randconfig-a013-20210814
+x86_64               randconfig-a011-20210814
+x86_64               randconfig-a016-20210814
+x86_64               randconfig-a012-20210814
+x86_64               randconfig-a014-20210814
+x86_64               randconfig-a015-20210814
+x86_64               randconfig-a013-20210810
+x86_64               randconfig-a011-20210810
+x86_64               randconfig-a012-20210810
+x86_64               randconfig-a016-20210810
+x86_64               randconfig-a014-20210810
+x86_64               randconfig-a015-20210810
+x86_64               randconfig-a016-20210809
+x86_64               randconfig-a012-20210809
+x86_64               randconfig-a013-20210809
+x86_64               randconfig-a011-20210809
+x86_64               randconfig-a014-20210809
+x86_64               randconfig-a015-20210809
+x86_64               randconfig-a004-20210811
+x86_64               randconfig-a006-20210811
+x86_64               randconfig-a003-20210811
+x86_64               randconfig-a002-20210811
+x86_64               randconfig-a005-20210811
+x86_64               randconfig-a001-20210811
+
 ---
- fs/erofs/data.c     | 15 ++++++++++++++-
- fs/erofs/inode.c    |  1 +
- fs/erofs/internal.h |  5 +++++
- fs/erofs/namei.c    |  1 +
- fs/erofs/zmap.c     | 38 ++++++++++++++++++++++++++++++++++++++
- 5 files changed, 59 insertions(+), 1 deletion(-)
-
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index b2a22aabc9bc..09c46fbdb9b2 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -5,7 +5,6 @@
-  */
- #include "internal.h"
- #include <linux/prefetch.h>
--#include <linux/iomap.h>
- #include <linux/dax.h>
- #include <trace/events/erofs.h>
- 
-@@ -152,6 +151,20 @@ static const struct iomap_ops erofs_iomap_ops = {
- 	.iomap_end = erofs_iomap_end,
- };
- 
-+int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-+		 u64 start, u64 len)
-+{
-+	if (erofs_inode_is_data_compressed(EROFS_I(inode)->datalayout)) {
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		return iomap_fiemap(inode, fieinfo, start, len,
-+				    &z_erofs_iomap_report_ops);
-+#else
-+		return -EOPNOTSUPP;
-+#endif
-+	}
-+	return iomap_fiemap(inode, fieinfo, start, len, &erofs_iomap_ops);
-+}
-+
- /*
-  * since we dont have write or truncate flows, so no inode
-  * locking needs to be held at the moment.
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 92728da1d206..d13e0709599c 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -365,6 +365,7 @@ const struct inode_operations erofs_generic_iops = {
- 	.getattr = erofs_getattr,
- 	.listxattr = erofs_listxattr,
- 	.get_acl = erofs_get_acl,
-+	.fiemap = erofs_fiemap,
- };
- 
- const struct inode_operations erofs_symlink_iops = {
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 2a05b09e1c06..ae33a28c8669 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -15,6 +15,7 @@
- #include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/iomap.h>
- #include "erofs_fs.h"
- 
- /* redefine pr_fmt "erofs: " */
-@@ -363,6 +364,8 @@ struct erofs_map_blocks {
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
- 
- /* zmap.c */
-+extern const struct iomap_ops z_erofs_iomap_report_ops;
-+
- #ifdef CONFIG_EROFS_FS_ZIP
- int z_erofs_fill_inode(struct inode *inode);
- int z_erofs_map_blocks_iter(struct inode *inode,
-@@ -381,6 +384,8 @@ static inline int z_erofs_map_blocks_iter(struct inode *inode,
- /* data.c */
- extern const struct file_operations erofs_file_fops;
- struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr);
-+int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-+		 u64 start, u64 len);
- 
- /* inode.c */
- static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index a8271ce5e13f..8629e616028c 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -245,4 +245,5 @@ const struct inode_operations erofs_dir_iops = {
- 	.getattr = erofs_getattr,
- 	.listxattr = erofs_listxattr,
- 	.get_acl = erofs_get_acl,
-+	.fiemap = erofs_fiemap,
- };
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 12256ef12819..6af31ef6f13f 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -673,3 +673,41 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 	DBG_BUGON(err < 0 && err != -ENOMEM);
- 	return err;
- }
-+
-+static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
-+				loff_t length, unsigned int flags,
-+				struct iomap *iomap, struct iomap *srcmap)
-+{
-+	int ret;
-+	struct erofs_map_blocks map = { .m_la = offset };
-+
-+	ret = z_erofs_map_blocks_iter(inode, &map, EROFS_GET_BLOCKS_FIEMAP);
-+	if (map.mpage)
-+		put_page(map.mpage);
-+	if (ret < 0)
-+		return ret;
-+
-+	iomap->bdev = inode->i_sb->s_bdev;
-+	iomap->offset = map.m_la;
-+	iomap->length = map.m_llen;
-+	if (map.m_flags & EROFS_MAP_MAPPED) {
-+		iomap->type = IOMAP_MAPPED;
-+		iomap->addr = map.m_pa;
-+	} else {
-+		iomap->type = IOMAP_HOLE;
-+		iomap->addr = IOMAP_NULL_ADDR;
-+		/*
-+		 * No strict rule how to describe extents for post EOF, yet
-+		 * we need do like below. Otherwise, iomap itself will get
-+		 * into an endless loop on post EOF.
-+		 */
-+		if (iomap->offset >= inode->i_size)
-+			iomap->length = length + map.m_la - offset;
-+	}
-+	iomap->flags = 0;
-+	return 0;
-+}
-+
-+const struct iomap_ops z_erofs_iomap_report_ops = {
-+	.iomap_begin = z_erofs_iomap_begin_report,
-+};
--- 
-2.24.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
