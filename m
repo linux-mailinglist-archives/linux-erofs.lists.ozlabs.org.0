@@ -1,55 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 910803F0995
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 18:49:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 107D93F0E30
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Aug 2021 00:33:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GqYlc1Sr9z3bZr
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Aug 2021 02:49:32 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XD1aW5YU;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GqjNp6Tqsz2yfk
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Aug 2021 08:33:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=XD1aW5YU; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
+ envelope-from=bo.liu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GqYlY0qHfz3bXj
- for <linux-erofs@lists.ozlabs.org>; Thu, 19 Aug 2021 02:49:29 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 257DD610CB;
- Wed, 18 Aug 2021 16:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1629305366;
- bh=1NesV0brpkZ534wUSWFYWP/tKPwYqxvUzjbHxDqOHZs=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=XD1aW5YUUbUMgfIZvb903CH4/695mofrtNeVkbLlgBGIHJfkYJWhKfD7sHTwHSEKA
- NmymoBFSNtmJ35D22hMeCueUA46D1edkEda5pmUo/zL5aTIQxBRsVsQoYVWcYLsNJu
- 3pRPsZQwtkJ08BFzfKvCOBzhYLHSXaUdBz2L9MRKkXOW5MiVImGXQrpKQMRTTYsy6n
- +asokcu7q21/iyG206XyTk/xJ2/hfx8peSrwitnN7UDYMxVNrIaOTG4cnwo++IMMmH
- TQXPqGm33U9Ack+7eplNDbeg0UNPd/PXpDNp5vymAmJZKzUZwBQZ9hXjLtOgn9mgW6
- ei0bGpvcIZiuQ==
-Date: Thu, 19 Aug 2021 00:49:01 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Huang Jianan <huangjianan@oppo.com>
-Subject: Re: [PATCH] erofs-utils: add mkfs.erofs and erofsfuse to .gitignore
-Message-ID: <20210818164855.GA4664@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: Huang Jianan <huangjianan@oppo.com>,
- linux-erofs@lists.ozlabs.org, yh@oppo.com, kevin.liw@oppo.com,
- guoweichao@oppo.com, guanyuewei@oppo.com
-References: <20210818043539.25417-1-huangjianan@oppo.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GqjNk46p0z2xZS
+ for <linux-erofs@lists.ozlabs.org>; Thu, 19 Aug 2021 08:33:41 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R261e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04420; MF=bo.liu@linux.alibaba.com;
+ NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0Ujs6Crv_1629325684; 
+Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com
+ fp:SMTPD_---0Ujs6Crv_1629325684) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 19 Aug 2021 06:28:10 +0800
+Date: Thu, 19 Aug 2021 06:28:04 +0800
+From: Liu Bo <bo.liu@linux.alibaba.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] erofs: introduce chunk-based file on-disk format
+Message-ID: <20210818222804.GA73193@rsjd01523.et2sqa>
+References: <20210818070713.4437-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210818043539.25417-1-huangjianan@oppo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210818070713.4437-1-hsiangkao@linux.alibaba.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,38 +48,186 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yh@oppo.com, kevin.liw@oppo.com, guoweichao@oppo.com,
- linux-erofs@lists.ozlabs.org, guanyuewei@oppo.com
+Reply-To: bo.liu@linux.alibaba.com
+Cc: LKML <linux-kernel@vger.kernel.org>, Peng Tao <tao.peng@linux.alibaba.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Eryu Guan <eguan@linux.alibaba.com>,
+ Liu Jiang <gerry@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 18, 2021 at 12:35:39PM +0800, Huang Jianan via Linux-erofs wrote:
+On Wed, Aug 18, 2021 at 03:07:12PM +0800, Gao Xiang wrote:
+> Currently, uncompressed data except for tail-packing inline is
+> consecutive on disk.
+> 
+> In order to support chunk-based data deduplication, add a new
+> corresponding inode data layout.
+> 
+> In the future, the data source of chunks can be either (un)compressed.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > ---
->  .gitignore | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/filesystems/erofs.rst | 16 ++++++++++--
+>  fs/erofs/erofs_fs.h                 | 40 +++++++++++++++++++++++++++--
+>  2 files changed, 52 insertions(+), 4 deletions(-)
 > 
-> diff --git a/.gitignore b/.gitignore
-> index 8bdd505..0e54836 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -27,4 +27,5 @@ configure.scan
->  libtool
->  stamp-h
->  stamp-h1
-> -
-> +mkfs.erofs
-> +erofsfuse
+> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+> index 868e3972227f..b46d0fc46eb6 100644
+> --- a/Documentation/filesystems/erofs.rst
+> +++ b/Documentation/filesystems/erofs.rst
+> @@ -156,13 +156,14 @@ may not. All metadatas can be now observed in two different spaces (views):
+>  
+>      Xattrs, extents, data inline are followed by the corresponding inode with
+>      proper alignment, and they could be optional for different data mappings.
+> -    _currently_ total 4 valid data mappings are supported:
+> +    _currently_ total 5 data layouts are supported:
+>  
+>      ==  ====================================================================
+>       0  flat file data without data inline (no extent);
+>       1  fixed-sized output data compression (with non-compacted indexes);
+>       2  flat file data with tail packing data inline (no extent);
+> -     3  fixed-sized output data compression (with compacted indexes, v5.3+).
+> +     3  fixed-sized output data compression (with compacted indexes, v5.3+);
+> +     4  chunk-based file (v5.15+).
+>      ==  ====================================================================
+>  
+>      The size of the optional xattrs is indicated by i_xattr_count in inode
+> @@ -213,6 +214,17 @@ Note that apart from the offset of the first filename, nameoff0 also indicates
+>  the total number of directory entries in this block since it is no need to
+>  introduce another on-disk field at all.
+>  
+> +Chunk-based file
+> +----------------
+> +In order to support chunk-based file deduplication, a new inode data layout has
+> +been supported since Linux v5.15: Files are split in equal-sized data chunks
+> +with ``extents`` area of the inode metadata indicating how to get the chunk
+> +data: these can be simply as a 4-byte block address array or in the 8-byte
+> +chunk index form (see struct erofs_inode_chunk_index in erofs_fs.h for more
+> +details.)
+> +
+> +By the way, chunk-based files are all uncompressed for now.
+> +
+>  Data compression
+>  ----------------
+>  EROFS implements LZ4 fixed-sized output compression which generates fixed-sized
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index 0f8da74570b4..6210fe434930 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2017-2018 HUAWEI, Inc.
+>   *             https://www.huawei.com/
+> + * Copyright (C) 2021, Alibaba Cloud
+>   */
+>  #ifndef __EROFS_FS_H
+>  #define __EROFS_FS_H
+> @@ -19,10 +20,12 @@
+>  #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
+>  #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+>  #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
+> +#define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
+>  #define EROFS_ALL_FEATURE_INCOMPAT		\
+>  	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
+>  	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+> -	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER)
+> +	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
+> +	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
+>  
+>  #define EROFS_SB_EXTSLOT_SIZE	16
+>  
+> @@ -64,13 +67,16 @@ struct erofs_super_block {
+>   * inode, [xattrs], last_inline_data, ... | ... | no-holed data
+>   * 3 - inode compression D:
+>   * inode, [xattrs], map_header, extents ... | ...
+> - * 4~7 - reserved
+> + * 4 - inode chunk-based E:
+> + * inode, [xattrs], chunk indexes ... | ...
+> + * 5~7 - reserved
+>   */
+>  enum {
+>  	EROFS_INODE_FLAT_PLAIN			= 0,
+>  	EROFS_INODE_FLAT_COMPRESSION_LEGACY	= 1,
+>  	EROFS_INODE_FLAT_INLINE			= 2,
+>  	EROFS_INODE_FLAT_COMPRESSION		= 3,
+> +	EROFS_INODE_CHUNK_BASED			= 4,
+>  	EROFS_INODE_DATALAYOUT_MAX
+>  };
+>  
+> @@ -90,6 +96,19 @@ static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
+>  #define EROFS_I_ALL	\
+>  	((1 << (EROFS_I_DATALAYOUT_BIT + EROFS_I_DATALAYOUT_BITS)) - 1)
+>  
+> +/* indicate chunk blkbits, thus `chunksize = blocksize << chunk blkbits' */
 
-Should it be written as
-/mkfs/mkfs.erofs
-/fuse/erofsfuse
+A typo in the quotation marks.  (`chunksize = ) should be ('chunksize =)
 
-?
+Otherwise it looks good.
 
-Thanks,
-Gao Xiang
+Reviewed-by: Liu Bo <bo.liu@linux.alibaba.com>
 
+thanks,
+liubo
+
+> +#define EROFS_CHUNK_FORMAT_BLKBITS_MASK		0x001F
+> +/* with chunk indexes or just a 4-byte blkaddr array */
+> +#define EROFS_CHUNK_FORMAT_INDEXES		0x0020
+> +
+> +#define EROFS_CHUNK_FORMAT_ALL	\
+> +	(EROFS_CHUNK_FORMAT_BLKBITS_MASK | EROFS_CHUNK_FORMAT_INDEXES)
+> +
+> +struct erofs_inode_chunk_info {
+> +	__le16 format;		/* chunk blkbits */
+> +	__le16 reserved;
+> +};
+> +
+>  /* 32-byte reduced form of an ondisk inode */
+>  struct erofs_inode_compact {
+>  	__le16 i_format;	/* inode format hints */
+> @@ -107,6 +126,9 @@ struct erofs_inode_compact {
+>  
+>  		/* for device files, used to indicate old/new device # */
+>  		__le32 rdev;
+> +
+> +		/* for chunk-based files, it contains the summary info */
+> +		struct erofs_inode_chunk_info c;
+>  	} i_u;
+>  	__le32 i_ino;           /* only used for 32-bit stat compatibility */
+>  	__le16 i_uid;
+> @@ -135,6 +157,9 @@ struct erofs_inode_extended {
+>  
+>  		/* for device files, used to indicate old/new device # */
+>  		__le32 rdev;
+> +
+> +		/* for chunk-based files, it contains the summary info */
+> +		struct erofs_inode_chunk_info c;
+>  	} i_u;
+>  
+>  	/* only used for 32-bit stat compatibility */
+> @@ -204,6 +229,15 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
+>  				 e->e_name_len + le16_to_cpu(e->e_value_size));
+>  }
+>  
+> +/* represent a zeroed chunk (hole) */
+> +#define EROFS_NULL_ADDR			-1
+> +
+> +struct erofs_inode_chunk_index {
+> +	__le32 blkaddr;
+> +	__le16 device_id;	/* back-end storage id, always 0 for now */
+> +	__le16 reserved;	/* reserved, don't care */
+> +};
+> +
+>  /* maximum supported size of a physical compression cluster */
+>  #define Z_EROFS_PCLUSTER_MAX_SIZE	(1024 * 1024)
+>  
+> @@ -338,6 +372,8 @@ static inline void erofs_check_ondisk_layout_definitions(void)
+>  	BUILD_BUG_ON(sizeof(struct erofs_inode_extended) != 64);
+>  	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
+>  	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
+> +	BUILD_BUG_ON(sizeof(struct erofs_inode_chunk_info) != 4);
+> +	BUILD_BUG_ON(sizeof(struct erofs_inode_chunk_index) != 8);
+>  	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
+>  	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
+>  	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
 > -- 
-> 2.25.1
-> 
+> 2.24.4
