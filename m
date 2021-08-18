@@ -1,39 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57C833EFD5E
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 09:07:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E90603EFD5D
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 09:07:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GqJr61T0Bz3bPG
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 17:07:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GqJr15jVwz30KN
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 17:07:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
+ helo=out30-130.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+Received: from out30-130.freemail.mail.aliyun.com
+ (out30-130.freemail.mail.aliyun.com [115.124.30.130])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GqJr3023jz2xtj
- for <linux-erofs@lists.ozlabs.org>; Wed, 18 Aug 2021 17:07:30 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R991e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GqJqx2njQz2xZ3
+ for <linux-erofs@lists.ozlabs.org>; Wed, 18 Aug 2021 17:07:24 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R681e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=9; SR=0; TI=SMTPD_---0UjfS-t9_1629270434; 
 Received: from
  e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0UjfS-t9_1629270434) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 18 Aug 2021 15:07:14 +0800
+ Wed, 18 Aug 2021 15:07:19 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
  Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH 1/2] erofs: introduce chunk-based file on-disk format
-Date: Wed, 18 Aug 2021 15:07:12 +0800
-Message-Id: <20210818070713.4437-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs: support reading chunk-based uncompressed files
+Date: Wed, 18 Aug 2021 15:07:13 +0800
+Message-Id: <20210818070713.4437-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20210818070713.4437-1-hsiangkao@linux.alibaba.com>
+References: <20210818070713.4437-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -54,168 +56,217 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, uncompressed data except for tail-packing inline is
-consecutive on disk.
-
-In order to support chunk-based data deduplication, add a new
-corresponding inode data layout.
-
-In the future, the data source of chunks can be either (un)compressed.
+Add runtime support for chunk-based uncompressed files
+described in the previous patch.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- Documentation/filesystems/erofs.rst | 16 ++++++++++--
- fs/erofs/erofs_fs.h                 | 40 +++++++++++++++++++++++++++--
- 2 files changed, 52 insertions(+), 4 deletions(-)
+ fs/erofs/data.c     | 90 ++++++++++++++++++++++++++++++++++++++++-----
+ fs/erofs/inode.c    | 18 ++++++++-
+ fs/erofs/internal.h |  5 +++
+ 3 files changed, 102 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-index 868e3972227f..b46d0fc46eb6 100644
---- a/Documentation/filesystems/erofs.rst
-+++ b/Documentation/filesystems/erofs.rst
-@@ -156,13 +156,14 @@ may not. All metadatas can be now observed in two different spaces (views):
- 
-     Xattrs, extents, data inline are followed by the corresponding inode with
-     proper alignment, and they could be optional for different data mappings.
--    _currently_ total 4 valid data mappings are supported:
-+    _currently_ total 5 data layouts are supported:
- 
-     ==  ====================================================================
-      0  flat file data without data inline (no extent);
-      1  fixed-sized output data compression (with non-compacted indexes);
-      2  flat file data with tail packing data inline (no extent);
--     3  fixed-sized output data compression (with compacted indexes, v5.3+).
-+     3  fixed-sized output data compression (with compacted indexes, v5.3+);
-+     4  chunk-based file (v5.15+).
-     ==  ====================================================================
- 
-     The size of the optional xattrs is indicated by i_xattr_count in inode
-@@ -213,6 +214,17 @@ Note that apart from the offset of the first filename, nameoff0 also indicates
- the total number of directory entries in this block since it is no need to
- introduce another on-disk field at all.
- 
-+Chunk-based file
-+----------------
-+In order to support chunk-based file deduplication, a new inode data layout has
-+been supported since Linux v5.15: Files are split in equal-sized data chunks
-+with ``extents`` area of the inode metadata indicating how to get the chunk
-+data: these can be simply as a 4-byte block address array or in the 8-byte
-+chunk index form (see struct erofs_inode_chunk_index in erofs_fs.h for more
-+details.)
-+
-+By the way, chunk-based files are all uncompressed for now.
-+
- Data compression
- ----------------
- EROFS implements LZ4 fixed-sized output compression which generates fixed-sized
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 0f8da74570b4..6210fe434930 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -4,6 +4,7 @@
-  *
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index b2a22aabc9bc..78d625709481 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -2,6 +2,7 @@
+ /*
   * Copyright (C) 2017-2018 HUAWEI, Inc.
   *             https://www.huawei.com/
 + * Copyright (C) 2021, Alibaba Cloud
   */
- #ifndef __EROFS_FS_H
- #define __EROFS_FS_H
-@@ -19,10 +20,12 @@
- #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
- #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
- #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
-+#define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
--	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER)
-+	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
-+	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
+ #include "internal.h"
+ #include <linux/prefetch.h>
+@@ -37,13 +38,6 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+ 	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
+ 	lastblk = nblocks - tailendpacking;
  
- #define EROFS_SB_EXTSLOT_SIZE	16
+-	if (offset >= inode->i_size) {
+-		/* leave out-of-bound access unmapped */
+-		map->m_flags = 0;
+-		map->m_plen = 0;
+-		goto out;
+-	}
+-
+ 	/* there is no hole in flatmode */
+ 	map->m_flags = EROFS_MAP_MAPPED;
  
-@@ -64,13 +67,16 @@ struct erofs_super_block {
-  * inode, [xattrs], last_inline_data, ... | ... | no-holed data
-  * 3 - inode compression D:
-  * inode, [xattrs], map_header, extents ... | ...
-- * 4~7 - reserved
-+ * 4 - inode chunk-based E:
-+ * inode, [xattrs], chunk indexes ... | ...
-+ * 5~7 - reserved
-  */
- enum {
- 	EROFS_INODE_FLAT_PLAIN			= 0,
- 	EROFS_INODE_FLAT_COMPRESSION_LEGACY	= 1,
- 	EROFS_INODE_FLAT_INLINE			= 2,
- 	EROFS_INODE_FLAT_COMPRESSION		= 3,
-+	EROFS_INODE_CHUNK_BASED			= 4,
- 	EROFS_INODE_DATALAYOUT_MAX
- };
+@@ -78,14 +72,90 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+ 		goto err_out;
+ 	}
  
-@@ -90,6 +96,19 @@ static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
- #define EROFS_I_ALL	\
- 	((1 << (EROFS_I_DATALAYOUT_BIT + EROFS_I_DATALAYOUT_BITS)) - 1)
- 
-+/* indicate chunk blkbits, thus `chunksize = blocksize << chunk blkbits' */
-+#define EROFS_CHUNK_FORMAT_BLKBITS_MASK		0x001F
-+/* with chunk indexes or just a 4-byte blkaddr array */
-+#define EROFS_CHUNK_FORMAT_INDEXES		0x0020
-+
-+#define EROFS_CHUNK_FORMAT_ALL	\
-+	(EROFS_CHUNK_FORMAT_BLKBITS_MASK | EROFS_CHUNK_FORMAT_INDEXES)
-+
-+struct erofs_inode_chunk_info {
-+	__le16 format;		/* chunk blkbits */
-+	__le16 reserved;
-+};
-+
- /* 32-byte reduced form of an ondisk inode */
- struct erofs_inode_compact {
- 	__le16 i_format;	/* inode format hints */
-@@ -107,6 +126,9 @@ struct erofs_inode_compact {
- 
- 		/* for device files, used to indicate old/new device # */
- 		__le32 rdev;
-+
-+		/* for chunk-based files, it contains the summary info */
-+		struct erofs_inode_chunk_info c;
- 	} i_u;
- 	__le32 i_ino;           /* only used for 32-bit stat compatibility */
- 	__le16 i_uid;
-@@ -135,6 +157,9 @@ struct erofs_inode_extended {
- 
- 		/* for device files, used to indicate old/new device # */
- 		__le32 rdev;
-+
-+		/* for chunk-based files, it contains the summary info */
-+		struct erofs_inode_chunk_info c;
- 	} i_u;
- 
- 	/* only used for 32-bit stat compatibility */
-@@ -204,6 +229,15 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
- 				 e->e_name_len + le16_to_cpu(e->e_value_size));
+-out:
+ 	map->m_llen = map->m_plen;
+-
+ err_out:
+ 	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
+ 	return err;
  }
  
-+/* represent a zeroed chunk (hole) */
-+#define EROFS_NULL_ADDR			-1
++static int erofs_map_blocks(struct inode *inode,
++			    struct erofs_map_blocks *map, int flags)
++{
++	struct super_block *sb = inode->i_sb;
++	struct erofs_inode *vi = EROFS_I(inode);
++	struct erofs_inode_chunk_index *idx;
++	struct page *page;
++	u64 chunknr;
++	unsigned int unit;
++	erofs_off_t pos;
++	int err = 0;
 +
-+struct erofs_inode_chunk_index {
-+	__le32 blkaddr;
-+	__le16 device_id;	/* back-end storage id, always 0 for now */
-+	__le16 reserved;	/* reserved, don't care */
-+};
++	if (map->m_la >= inode->i_size) {
++		/* leave out-of-bound access unmapped */
++		map->m_flags = 0;
++		map->m_plen = 0;
++		goto out;
++	}
 +
- /* maximum supported size of a physical compression cluster */
- #define Z_EROFS_PCLUSTER_MAX_SIZE	(1024 * 1024)
++	if (vi->datalayout != EROFS_INODE_CHUNK_BASED)
++		return erofs_map_blocks_flatmode(inode, map, flags);
++
++	if (vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
++		unit = sizeof(*idx);	/* chunk index */
++	else
++		unit = 4;		/* block map */
++
++	chunknr = map->m_la >> vi->chunkbits;
++	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
++		    vi->xattr_isize, unit) + unit * chunknr;
++
++	page = erofs_get_meta_page(inode->i_sb, erofs_blknr(pos));
++	if (IS_ERR(page))
++		return PTR_ERR(page);
++
++	map->m_la = chunknr << vi->chunkbits;
++	map->m_plen = min_t(erofs_off_t, 1UL << vi->chunkbits,
++			    roundup(inode->i_size - map->m_la, EROFS_BLKSIZ));
++
++	/* handle block map */
++	if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
++		__le32 *blkaddr = page_address(page) + erofs_blkoff(pos);
++
++		if (le32_to_cpu(*blkaddr) == EROFS_NULL_ADDR) {
++			map->m_flags = 0;
++		} else {
++			map->m_pa = blknr_to_addr(le32_to_cpu(*blkaddr));
++			map->m_flags = EROFS_MAP_MAPPED;
++		}
++		goto out_unlock;
++	}
++	/* parse chunk indexes */
++	idx = page_address(page) + erofs_blkoff(pos);
++	switch (le32_to_cpu(idx->blkaddr)) {
++	case EROFS_NULL_ADDR:
++		map->m_flags = 0;
++		break;
++	default:
++		/* only one device is supported for now */
++		if (idx->device_id) {
++			erofs_err(sb, "invalid device id %u @ %llu for nid %llu",
++				  le32_to_cpu(idx->device_id),
++				  chunknr, vi->nid);
++			err = -EFSCORRUPTED;
++			goto out_unlock;
++		}
++		map->m_pa = blknr_to_addr(le32_to_cpu(idx->blkaddr));
++		map->m_flags = EROFS_MAP_MAPPED;
++		break;
++	}
++out_unlock:
++	unlock_page(page);
++	put_page(page);
++out:
++	map->m_llen = map->m_plen;
++	return err;
++}
++
+ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
+ {
+@@ -95,7 +165,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 	map.m_la = offset;
+ 	map.m_llen = length;
  
-@@ -338,6 +372,8 @@ static inline void erofs_check_ondisk_layout_definitions(void)
- 	BUILD_BUG_ON(sizeof(struct erofs_inode_extended) != 64);
- 	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
- 	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
-+	BUILD_BUG_ON(sizeof(struct erofs_inode_chunk_info) != 4);
-+	BUILD_BUG_ON(sizeof(struct erofs_inode_chunk_index) != 8);
- 	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
- 	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
- 	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
+-	ret = erofs_map_blocks_flatmode(inode, &map, EROFS_GET_BLOCKS_RAW);
++	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 92728da1d206..036a6cc97d10 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             https://www.huawei.com/
++ * Copyright (C) 2021, Alibaba Cloud
+  */
+ #include "xattr.h"
+ 
+@@ -122,7 +123,9 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		/* total blocks for compressed files */
+ 		if (erofs_inode_is_data_compressed(vi->datalayout))
+ 			nblks = le32_to_cpu(die->i_u.compressed_blocks);
+-
++		else if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
++			/* fill chunked inode summary info */
++			vi->chunkformat = __le16_to_cpu(die->i_u.c.format);
+ 		kfree(copied);
+ 		break;
+ 	case EROFS_INODE_LAYOUT_COMPACT:
+@@ -160,6 +163,8 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		inode->i_size = le32_to_cpu(dic->i_size);
+ 		if (erofs_inode_is_data_compressed(vi->datalayout))
+ 			nblks = le32_to_cpu(dic->i_u.compressed_blocks);
++		else if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
++			vi->chunkformat = __le16_to_cpu(dic->i_u.c.format);
+ 		break;
+ 	default:
+ 		erofs_err(inode->i_sb,
+@@ -169,6 +174,17 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		goto err_out;
+ 	}
+ 
++	if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
++		if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_ALL)) {
++			erofs_err(inode->i_sb,
++				  "unsupported chunk format %x of nid %llu",
++				  vi->chunkformat, vi->nid);
++			err = -EOPNOTSUPP;
++			goto err_out;
++		}
++		vi->chunkbits = LOG_BLOCK_SIZE +
++			(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
++	}
+ 	inode->i_mtime.tv_sec = inode->i_ctime.tv_sec;
+ 	inode->i_atime.tv_sec = inode->i_ctime.tv_sec;
+ 	inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 25b094085ca6..0a46e149aadd 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+  *             https://www.huawei.com/
++ * Copyright (C) 2021, Alibaba Cloud
+  */
+ #ifndef __EROFS_INTERNAL_H
+ #define __EROFS_INTERNAL_H
+@@ -260,6 +261,10 @@ struct erofs_inode {
+ 
+ 	union {
+ 		erofs_blk_t raw_blkaddr;
++		struct {
++			unsigned short	chunkformat;
++			unsigned char	chunkbits;
++		};
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 		struct {
+ 			unsigned short z_advise;
 -- 
 2.24.4
 
