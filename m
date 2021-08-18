@@ -1,39 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5EA73EFD47
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 09:03:54 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13AB63EFD45
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 09:03:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GqJlr52Vjz2xZ3
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 17:03:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GqJlg00Gdz30Hh
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Aug 2021 17:03:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+ smtp.mailfrom=linux.alibaba.com (client-ip=47.88.44.36;
+ helo=out4436.biz.mail.alibaba.com; envelope-from=hsiangkao@linux.alibaba.com;
+ receiver=<UNKNOWN>)
+Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com
+ [47.88.44.36])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GqJlZ67FCz30BD
- for <linux-erofs@lists.ozlabs.org>; Wed, 18 Aug 2021 17:03:38 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R561e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GqJlW6YBGz2yR4
+ for <linux-erofs@lists.ozlabs.org>; Wed, 18 Aug 2021 17:03:32 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R911e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0UjgIOt5_1629270197; 
 Received: from
  e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0UjgIOt5_1629270197) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 18 Aug 2021 15:03:22 +0800
+ Wed, 18 Aug 2021 15:03:25 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
  Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH 1/4] erofs-utils: introduce hashmap from git source
-Date: Wed, 18 Aug 2021 15:03:13 +0800
-Message-Id: <20210818070316.1970-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/4] erofs-utils: introduce sha256
+Date: Wed, 18 Aug 2021 15:03:14 +0800
+Message-Id: <20210818070316.1970-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20210818070316.1970-1-hsiangkao@linux.alibaba.com>
+References: <20210818070316.1970-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -54,585 +56,282 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Copied from git source (it's already workable).
+A simple sha256 approach copied from e2fsprogs.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/flex-array.h | 147 +++++++++++++++++++
- include/erofs/hashmap.h    | 103 ++++++++++++++
- lib/Makefile.am            |   3 +-
- lib/hashmap.c              | 284 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 536 insertions(+), 1 deletion(-)
- create mode 100644 include/erofs/flex-array.h
- create mode 100644 include/erofs/hashmap.h
- create mode 100644 lib/hashmap.c
+ lib/Makefile.am |   2 +-
+ lib/sha256.c    | 248 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 249 insertions(+), 1 deletion(-)
+ create mode 100644 lib/sha256.c
 
-diff --git a/include/erofs/flex-array.h b/include/erofs/flex-array.h
-new file mode 100644
-index 000000000000..59168d05ee5a
---- /dev/null
-+++ b/include/erofs/flex-array.h
-@@ -0,0 +1,147 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __EROFS_FLEX_ARRAY_H
-+#define __EROFS_FLEX_ARRAY_H
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <limits.h>
-+#include <stdint.h>
-+
-+#include "defs.h"
-+#include "print.h"
-+
-+/*
-+ * flex-array.h
-+ *
-+ * Some notes to make sense of the code.
-+ *
-+ * Flex-arrays:
-+ *   - Flex-arrays became standard in C99 and are defined by "array[]" (at the
-+ *     end of a struct)
-+ *   - Pre-C99 flex-arrays can be accomplished by "array[1]"
-+ *   - There is a GNU extension where they are defined using "array[0]"
-+ *     Allegedly there is/was a bug in gcc whereby foo[1] generated incorrect
-+ *     code, so it's safest to use [0] (https://lkml.org/lkml/2015/2/18/407).
-+ *
-+ * For C89 and C90, __STDC__ is 1
-+ * For later standards, __STDC_VERSION__ is defined according to the standard.
-+ * For example: 199901L or 201112L
-+ *
-+ * Whilst we're on the subject, in version 5 of gcc, the default std was
-+ * changed from gnu89 to gnu11. In jgmenu, CFLAGS therefore contains -std=gnu89
-+ * You can check your default gcc std by doing:
-+ * gcc -dM -E - </dev/null | grep '__STDC_VERSION__\|__STDC__'
-+ *
-+ * The code below is copied from git's git-compat-util.h in support of
-+ * hashmap.c
-+ */
-+
-+#ifndef FLEX_ARRAY
-+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) && \
-+	(!defined(__SUNPRO_C) || (__SUNPRO_C > 0x580))
-+# define FLEX_ARRAY /* empty */
-+#elif defined(__GNUC__)
-+# if (__GNUC__ >= 3)
-+#  define FLEX_ARRAY /* empty */
-+# else
-+#  define FLEX_ARRAY 0 /* older GNU extension */
-+# endif
-+#endif
-+
-+/* Otherwise, default to safer but a bit wasteful traditional style */
-+#ifndef FLEX_ARRAY
-+# define FLEX_ARRAY 1
-+#endif
-+#endif
-+
-+#define bitsizeof(x) (CHAR_BIT * sizeof(x))
-+
-+#define maximum_signed_value_of_type(a) \
-+	(INTMAX_MAX >> (bitsizeof(intmax_t) - bitsizeof(a)))
-+
-+#define maximum_unsigned_value_of_type(a) \
-+	(UINTMAX_MAX >> (bitsizeof(uintmax_t) - bitsizeof(a)))
-+
-+/*
-+ * Signed integer overflow is undefined in C, so here's a helper macro
-+ * to detect if the sum of two integers will overflow.
-+ * Requires: a >= 0, typeof(a) equals typeof(b)
-+ */
-+#define signed_add_overflows(a, b) \
-+	((b) > maximum_signed_value_of_type(a) - (a))
-+
-+#define unsigned_add_overflows(a, b) \
-+	((b) > maximum_unsigned_value_of_type(a) - (a))
-+
-+static inline size_t st_add(size_t a, size_t b)
-+{
-+	if (unsigned_add_overflows(a, b)) {
-+		erofs_err("size_t overflow: %llu + %llu", a | 0ULL, b | 0ULL);
-+		BUG_ON(1);
-+		return -1;
-+	}
-+	return a + b;
-+}
-+
-+#define st_add3(a, b, c) st_add(st_add((a), (b)), (c))
-+#define st_add4(a, b, c, d) st_add(st_add3((a), (b), (c)), (d))
-+
-+/*
-+ * These functions help you allocate structs with flex arrays, and copy
-+ * the data directly into the array. For example, if you had:
-+ *
-+ *   struct foo {
-+ *     int bar;
-+ *     char name[FLEX_ARRAY];
-+ *   };
-+ *
-+ * you can do:
-+ *
-+ *   struct foo *f;
-+ *   FLEX_ALLOC_MEM(f, name, src, len);
-+ *
-+ * to allocate a "foo" with the contents of "src" in the "name" field.
-+ * The resulting struct is automatically zero'd, and the flex-array field
-+ * is NUL-terminated (whether the incoming src buffer was or not).
-+ *
-+ * The FLEXPTR_* variants operate on structs that don't use flex-arrays,
-+ * but do want to store a pointer to some extra data in the same allocated
-+ * block. For example, if you have:
-+ *
-+ *   struct foo {
-+ *     char *name;
-+ *     int bar;
-+ *   };
-+ *
-+ * you can do:
-+ *
-+ *   struct foo *f;
-+ *   FLEXPTR_ALLOC_STR(f, name, src);
-+ *
-+ * and "name" will point to a block of memory after the struct, which will be
-+ * freed along with the struct (but the pointer can be repointed anywhere).
-+ *
-+ * The *_STR variants accept a string parameter rather than a ptr/len
-+ * combination.
-+ *
-+ * Note that these macros will evaluate the first parameter multiple
-+ * times, and it must be assignable as an lvalue.
-+ */
-+#define FLEX_ALLOC_MEM(x, flexname, buf, len) do { \
-+	size_t flex_array_len_ = (len); \
-+	(x) = calloc(1, st_add3(sizeof(*(x)), flex_array_len_, 1)); \
-+	BUG_ON(!(x)); \
-+	memcpy((void *)(x)->flexname, (buf), flex_array_len_); \
-+} while (0)
-+#define FLEXPTR_ALLOC_MEM(x, ptrname, buf, len) do { \
-+	size_t flex_array_len_ = (len); \
-+	(x) = xcalloc(1, st_add3(sizeof(*(x)), flex_array_len_, 1)); \
-+	memcpy((x) + 1, (buf), flex_array_len_); \
-+	(x)->ptrname = (void *)((x) + 1); \
-+} while (0)
-+#define FLEX_ALLOC_STR(x, flexname, str) \
-+	FLEX_ALLOC_MEM((x), flexname, (str), strlen(str))
-+#define FLEXPTR_ALLOC_STR(x, ptrname, str) \
-+	FLEXPTR_ALLOC_MEM((x), ptrname, (str), strlen(str))
-+
-+#endif
-diff --git a/include/erofs/hashmap.h b/include/erofs/hashmap.h
-new file mode 100644
-index 000000000000..024a14e497d4
---- /dev/null
-+++ b/include/erofs/hashmap.h
-@@ -0,0 +1,103 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __EROFS_HASHMAP_H
-+#define __EROFS_HASHMAP_H
-+
-+/* Copied from https://github.com/git/git.git */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include "flex-array.h"
-+
-+/*
-+ * Generic implementation of hash-based key-value mappings.
-+ * See Documentation/technical/api-hashmap.txt.
-+ */
-+
-+/* FNV-1 functions */
-+unsigned int strhash(const char *str);
-+unsigned int strihash(const char *str);
-+unsigned int memhash(const void *buf, size_t len);
-+unsigned int memihash(const void *buf, size_t len);
-+
-+static inline unsigned int sha1hash(const unsigned char *sha1)
-+{
-+	/*
-+	 * Equivalent to 'return *(unsigned int *)sha1;', but safe on
-+	 * platforms that don't support unaligned reads.
-+	 */
-+	unsigned int hash;
-+
-+	memcpy(&hash, sha1, sizeof(hash));
-+	return hash;
-+}
-+
-+/* data structures */
-+struct hashmap_entry {
-+	struct hashmap_entry *next;
-+	unsigned int hash;
-+};
-+
-+typedef int (*hashmap_cmp_fn)(const void *entry, const void *entry_or_key,
-+		const void *keydata);
-+
-+struct hashmap {
-+	struct hashmap_entry **table;
-+	hashmap_cmp_fn cmpfn;
-+	unsigned int size, tablesize, grow_at, shrink_at;
-+};
-+
-+struct hashmap_iter {
-+	struct hashmap *map;
-+	struct hashmap_entry *next;
-+	unsigned int tablepos;
-+};
-+
-+/* hashmap functions */
-+void hashmap_init(struct hashmap *map, hashmap_cmp_fn equals_function,
-+		  size_t initial_size);
-+void hashmap_free(struct hashmap *map, int free_entries);
-+
-+/* hashmap_entry functions */
-+static inline void hashmap_entry_init(void *entry, unsigned int hash)
-+{
-+	struct hashmap_entry *e = entry;
-+
-+	e->hash = hash;
-+	e->next = NULL;
-+}
-+
-+void *hashmap_get(const struct hashmap *map, const void *key, const void *keydata);
-+void *hashmap_get_next(const struct hashmap *map, const void *entry);
-+void hashmap_add(struct hashmap *map, void *entry);
-+void *hashmap_put(struct hashmap *map, void *entry);
-+void *hashmap_remove(struct hashmap *map, const void *key, const void *keydata);
-+
-+static inline void *hashmap_get_from_hash(const struct hashmap *map,
-+					  unsigned int hash,
-+					  const void *keydata)
-+{
-+	struct hashmap_entry key;
-+
-+	hashmap_entry_init(&key, hash);
-+	return hashmap_get(map, &key, keydata);
-+}
-+
-+/* hashmap_iter functions */
-+void hashmap_iter_init(struct hashmap *map, struct hashmap_iter *iter);
-+void *hashmap_iter_next(struct hashmap_iter *iter);
-+static inline void *hashmap_iter_first(struct hashmap *map,
-+				       struct hashmap_iter *iter)
-+{
-+	hashmap_iter_init(map, iter);
-+	return hashmap_iter_next(iter);
-+}
-+
-+/* string interning */
-+const void *memintern(const void *data, size_t len);
-+static inline const char *strintern(const char *string)
-+{
-+	return memintern(string, strlen(string));
-+}
-+
-+#endif
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-index b12e2c18cc33..0768d6aa5871 100644
+index 0768d6aa5871..8e4ed37f9c70 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -21,7 +21,8 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
- 
+@@ -22,7 +22,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
  noinst_HEADERS += compressor.h
  liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
--		      namei.c data.c compress.c compressor.c zmap.c decompress.c
-+		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
-+		      hashmap.c
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+-		      hashmap.c
++		      hashmap.c sha256.c
  liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
  if ENABLE_LZ4
  liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/hashmap.c b/lib/hashmap.c
+diff --git a/lib/sha256.c b/lib/sha256.c
 new file mode 100644
-index 000000000000..e11bd8da94c1
+index 000000000000..68e039ab9c91
 --- /dev/null
-+++ b/lib/hashmap.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/lib/sha256.c
+@@ -0,0 +1,248 @@
 +/*
-+ * Copied from https://github.com/git/git.git
-+ * Generic implementation of hash-based key value mappings.
++ * sha256.c --- The sha256 algorithm
++ *
++ * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
++ * (copied from libtomcrypt and then relicensed under GPLv2)
++ *
++ * %Begin-Header%
++ * This file may be redistributed under the terms of the GNU Library
++ * General Public License, version 2.
++ * %End-Header%
 + */
-+#include "erofs/hashmap.h"
++#include "erofs/defs.h"
++#include <string.h>
 +
-+#define FNV32_BASE ((unsigned int)0x811c9dc5)
-+#define FNV32_PRIME ((unsigned int)0x01000193)
-+
-+unsigned int strhash(const char *str)
-+{
-+	unsigned int c, hash = FNV32_BASE;
-+
-+	while ((c = (unsigned char)*str++))
-+		hash = (hash * FNV32_PRIME) ^ c;
-+	return hash;
-+}
-+
-+unsigned int strihash(const char *str)
-+{
-+	unsigned int c, hash = FNV32_BASE;
-+
-+	while ((c = (unsigned char)*str++)) {
-+		if (c >= 'a' && c <= 'z')
-+			c -= 'a' - 'A';
-+		hash = (hash * FNV32_PRIME) ^ c;
-+	}
-+	return hash;
-+}
-+
-+unsigned int memhash(const void *buf, size_t len)
-+{
-+	unsigned int hash = FNV32_BASE;
-+	unsigned char *ucbuf = (unsigned char *)buf;
-+
-+	while (len--) {
-+		unsigned int c = *ucbuf++;
-+
-+		hash = (hash * FNV32_PRIME) ^ c;
-+	}
-+	return hash;
-+}
-+
-+unsigned int memihash(const void *buf, size_t len)
-+{
-+	unsigned int hash = FNV32_BASE;
-+	unsigned char *ucbuf = (unsigned char *)buf;
-+
-+	while (len--) {
-+		unsigned int c = *ucbuf++;
-+
-+		if (c >= 'a' && c <= 'z')
-+			c -= 'a' - 'A';
-+		hash = (hash * FNV32_PRIME) ^ c;
-+	}
-+	return hash;
-+}
-+
-+#define HASHMAP_INITIAL_SIZE 64
-+/* grow / shrink by 2^2 */
-+#define HASHMAP_RESIZE_BITS 2
-+/* load factor in percent */
-+#define HASHMAP_LOAD_FACTOR 80
-+
-+static void alloc_table(struct hashmap *map, unsigned int size)
-+{
-+	map->tablesize = size;
-+	map->table = calloc(size, sizeof(struct hashmap_entry *));
-+	BUG_ON(!map->table);
-+
-+	/* calculate resize thresholds for new size */
-+	map->grow_at = (unsigned int)((uint64_t)size * HASHMAP_LOAD_FACTOR / 100);
-+	if (size <= HASHMAP_INITIAL_SIZE)
-+		map->shrink_at = 0;
-+	else
-+		/*
-+		 * The shrink-threshold must be slightly smaller than
-+		 * (grow-threshold / resize-factor) to prevent erratic resizing,
-+		 * thus we divide by (resize-factor + 1).
-+		 */
-+		map->shrink_at = map->grow_at / ((1 << HASHMAP_RESIZE_BITS) + 1);
-+}
-+
-+static inline int entry_equals(const struct hashmap *map,
-+			       const struct hashmap_entry *e1,
-+			       const struct hashmap_entry *e2,
-+			       const void *keydata)
-+{
-+	return (e1 == e2) || (e1->hash == e2->hash && !map->cmpfn(e1, e2, keydata));
-+}
-+
-+static inline unsigned int bucket(const struct hashmap *map,
-+				  const struct hashmap_entry *key)
-+{
-+	return key->hash & (map->tablesize - 1);
-+}
-+
-+static void rehash(struct hashmap *map, unsigned int newsize)
-+{
-+	unsigned int i, oldsize = map->tablesize;
-+	struct hashmap_entry **oldtable = map->table;
-+
-+	alloc_table(map, newsize);
-+	for (i = 0; i < oldsize; i++) {
-+		struct hashmap_entry *e = oldtable[i];
-+
-+		while (e) {
-+			struct hashmap_entry *next = e->next;
-+			unsigned int b = bucket(map, e);
-+
-+			e->next = map->table[b];
-+			map->table[b] = e;
-+			e = next;
-+		}
-+	}
-+	free(oldtable);
-+}
-+
-+static inline struct hashmap_entry **find_entry_ptr(const struct hashmap *map,
-+						    const struct hashmap_entry *key,
-+						    const void *keydata)
-+{
-+	struct hashmap_entry **e = &map->table[bucket(map, key)];
-+
-+	while (*e && !entry_equals(map, *e, key, keydata))
-+		e = &(*e)->next;
-+	return e;
-+}
-+
-+static int always_equal(const void *unused1, const void *unused2, const void *unused3)
-+{
-+	return 0;
-+}
-+
-+void hashmap_init(struct hashmap *map, hashmap_cmp_fn equals_function,
-+		  size_t initial_size)
-+{
-+	unsigned int size = HASHMAP_INITIAL_SIZE;
-+
-+	map->size = 0;
-+	map->cmpfn = equals_function ? equals_function : always_equal;
-+
-+	/* calculate initial table size and allocate the table */
-+	initial_size = (unsigned int)((uint64_t)initial_size * 100
-+			/ HASHMAP_LOAD_FACTOR);
-+	while (initial_size > size)
-+		size <<= HASHMAP_RESIZE_BITS;
-+	alloc_table(map, size);
-+}
-+
-+void hashmap_free(struct hashmap *map, int free_entries)
-+{
-+	if (!map || !map->table)
-+		return;
-+	if (free_entries) {
-+		struct hashmap_iter iter;
-+		struct hashmap_entry *e;
-+
-+		hashmap_iter_init(map, &iter);
-+		while ((e = hashmap_iter_next(&iter)))
-+			free(e);
-+	}
-+	free(map->table);
-+	memset(map, 0, sizeof(*map));
-+}
-+
-+void *hashmap_get(const struct hashmap *map, const void *key, const void *keydata)
-+{
-+	return *find_entry_ptr(map, key, keydata);
-+}
-+
-+void *hashmap_get_next(const struct hashmap *map, const void *entry)
-+{
-+	struct hashmap_entry *e = ((struct hashmap_entry *)entry)->next;
-+
-+	for (; e; e = e->next)
-+		if (entry_equals(map, entry, e, NULL))
-+			return e;
-+	return NULL;
-+}
-+
-+void hashmap_add(struct hashmap *map, void *entry)
-+{
-+	unsigned int b = bucket(map, entry);
-+
-+	/* add entry */
-+	((struct hashmap_entry *)entry)->next = map->table[b];
-+	map->table[b] = entry;
-+
-+	/* fix size and rehash if appropriate */
-+	map->size++;
-+	if (map->size > map->grow_at)
-+		rehash(map, map->tablesize << HASHMAP_RESIZE_BITS);
-+}
-+
-+void *hashmap_remove(struct hashmap *map, const void *key, const void *keydata)
-+{
-+	struct hashmap_entry *old;
-+	struct hashmap_entry **e = find_entry_ptr(map, key, keydata);
-+
-+	if (!*e)
-+		return NULL;
-+
-+	/* remove existing entry */
-+	old = *e;
-+	*e = old->next;
-+	old->next = NULL;
-+
-+	/* fix size and rehash if appropriate */
-+	map->size--;
-+	if (map->size < map->shrink_at)
-+		rehash(map, map->tablesize >> HASHMAP_RESIZE_BITS);
-+	return old;
-+}
-+
-+void *hashmap_put(struct hashmap *map, void *entry)
-+{
-+	struct hashmap_entry *old = hashmap_remove(map, entry, NULL);
-+
-+	hashmap_add(map, entry);
-+	return old;
-+}
-+
-+void hashmap_iter_init(struct hashmap *map, struct hashmap_iter *iter)
-+{
-+	iter->map = map;
-+	iter->tablepos = 0;
-+	iter->next = NULL;
-+}
-+
-+void *hashmap_iter_next(struct hashmap_iter *iter)
-+{
-+	struct hashmap_entry *current = iter->next;
-+
-+	for (;;) {
-+		if (current) {
-+			iter->next = current->next;
-+			return current;
-+		}
-+
-+		if (iter->tablepos >= iter->map->tablesize)
-+			return NULL;
-+
-+		current = iter->map->table[iter->tablepos++];
-+	}
-+}
-+
-+struct pool_entry {
-+	struct hashmap_entry ent;
-+	size_t len;
-+	unsigned char data[FLEX_ARRAY];
++static const __u32 K[64] = {
++    0x428a2f98UL, 0x71374491UL, 0xb5c0fbcfUL, 0xe9b5dba5UL, 0x3956c25bUL,
++    0x59f111f1UL, 0x923f82a4UL, 0xab1c5ed5UL, 0xd807aa98UL, 0x12835b01UL,
++    0x243185beUL, 0x550c7dc3UL, 0x72be5d74UL, 0x80deb1feUL, 0x9bdc06a7UL,
++    0xc19bf174UL, 0xe49b69c1UL, 0xefbe4786UL, 0x0fc19dc6UL, 0x240ca1ccUL,
++    0x2de92c6fUL, 0x4a7484aaUL, 0x5cb0a9dcUL, 0x76f988daUL, 0x983e5152UL,
++    0xa831c66dUL, 0xb00327c8UL, 0xbf597fc7UL, 0xc6e00bf3UL, 0xd5a79147UL,
++    0x06ca6351UL, 0x14292967UL, 0x27b70a85UL, 0x2e1b2138UL, 0x4d2c6dfcUL,
++    0x53380d13UL, 0x650a7354UL, 0x766a0abbUL, 0x81c2c92eUL, 0x92722c85UL,
++    0xa2bfe8a1UL, 0xa81a664bUL, 0xc24b8b70UL, 0xc76c51a3UL, 0xd192e819UL,
++    0xd6990624UL, 0xf40e3585UL, 0x106aa070UL, 0x19a4c116UL, 0x1e376c08UL,
++    0x2748774cUL, 0x34b0bcb5UL, 0x391c0cb3UL, 0x4ed8aa4aUL, 0x5b9cca4fUL,
++    0x682e6ff3UL, 0x748f82eeUL, 0x78a5636fUL, 0x84c87814UL, 0x8cc70208UL,
++    0x90befffaUL, 0xa4506cebUL, 0xbef9a3f7UL, 0xc67178f2UL
 +};
 +
-+static int pool_entry_cmp(const struct pool_entry *e1,
-+			  const struct pool_entry *e2,
-+			  const unsigned char *keydata)
++/* Various logical functions */
++#define Ch(x,y,z)       (z ^ (x & (y ^ z)))
++#define Maj(x,y,z)      (((x | y) & z) | (x & y))
++#define S(x, n)         RORc((x),(n))
++#define R(x, n)         (((x)&0xFFFFFFFFUL)>>(n))
++#define Sigma0(x)       (S(x, 2) ^ S(x, 13) ^ S(x, 22))
++#define Sigma1(x)       (S(x, 6) ^ S(x, 11) ^ S(x, 25))
++#define Gamma0(x)       (S(x, 7) ^ S(x, 18) ^ R(x, 3))
++#define Gamma1(x)       (S(x, 17) ^ S(x, 19) ^ R(x, 10))
++#define RORc(x, y) ( ((((__u32)(x)&0xFFFFFFFFUL)>>(__u32)((y)&31)) | ((__u32)(x)<<(__u32)(32-((y)&31)))) & 0xFFFFFFFFUL)
++
++#define RND(a,b,c,d,e,f,g,h,i)                         \
++     t0 = h + Sigma1(e) + Ch(e, f, g) + K[i] + W[i];   \
++     t1 = Sigma0(a) + Maj(a, b, c);                    \
++     d += t0;                                          \
++     h  = t0 + t1;
++
++#define STORE64H(x, y) \
++	do { \
++		(y)[0] = (unsigned char)(((x)>>56)&255);\
++		(y)[1] = (unsigned char)(((x)>>48)&255);\
++		(y)[2] = (unsigned char)(((x)>>40)&255);\
++		(y)[3] = (unsigned char)(((x)>>32)&255);\
++		(y)[4] = (unsigned char)(((x)>>24)&255);\
++		(y)[5] = (unsigned char)(((x)>>16)&255);\
++		(y)[6] = (unsigned char)(((x)>>8)&255);\
++		(y)[7] = (unsigned char)((x)&255); } while(0)
++
++#define STORE32H(x, y)                                                                     \
++  do { (y)[0] = (unsigned char)(((x)>>24)&255); (y)[1] = (unsigned char)(((x)>>16)&255);   \
++       (y)[2] = (unsigned char)(((x)>>8)&255); (y)[3] = (unsigned char)((x)&255); } while(0)
++
++#define LOAD32H(x, y)                            \
++  do { x = ((__u32)((y)[0] & 255)<<24) | \
++           ((__u32)((y)[1] & 255)<<16) | \
++           ((__u32)((y)[2] & 255)<<8)  | \
++           ((__u32)((y)[3] & 255)); } while(0)
++
++struct sha256_state {
++    __u64 length;
++    __u32 state[8], curlen;
++    unsigned char buf[64];
++};
++
++/* This is a highly simplified version from libtomcrypt */
++struct hash_state {
++	struct sha256_state sha256;
++};
++
++static void sha256_compress(struct hash_state * md, const unsigned char *buf)
 +{
-+	return e1->data != keydata &&
-+	       (e1->len != e2->len || memcmp(e1->data, keydata, e1->len));
++    __u32 S[8], W[64], t0, t1;
++    __u32 t;
++    int i;
++
++    /* copy state into S */
++    for (i = 0; i < 8; i++) {
++        S[i] = md->sha256.state[i];
++    }
++
++    /* copy the state into 512-bits into W[0..15] */
++    for (i = 0; i < 16; i++) {
++        LOAD32H(W[i], buf + (4*i));
++    }
++
++    /* fill W[16..63] */
++    for (i = 16; i < 64; i++) {
++        W[i] = Gamma1(W[i - 2]) + W[i - 7] + Gamma0(W[i - 15]) + W[i - 16];
++    }
++
++    /* Compress */
++     for (i = 0; i < 64; ++i) {
++         RND(S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],i);
++         t = S[7]; S[7] = S[6]; S[6] = S[5]; S[5] = S[4];
++         S[4] = S[3]; S[3] = S[2]; S[2] = S[1]; S[1] = S[0]; S[0] = t;
++     }
++
++    /* feedback */
++    for (i = 0; i < 8; i++) {
++        md->sha256.state[i] = md->sha256.state[i] + S[i];
++    }
 +}
 +
-+const void *memintern(const void *data, size_t len)
++static void sha256_init(struct hash_state * md)
 +{
-+	static struct hashmap map;
-+	struct pool_entry key, *e;
++    md->sha256.curlen = 0;
++    md->sha256.length = 0;
++    md->sha256.state[0] = 0x6A09E667UL;
++    md->sha256.state[1] = 0xBB67AE85UL;
++    md->sha256.state[2] = 0x3C6EF372UL;
++    md->sha256.state[3] = 0xA54FF53AUL;
++    md->sha256.state[4] = 0x510E527FUL;
++    md->sha256.state[5] = 0x9B05688CUL;
++    md->sha256.state[6] = 0x1F83D9ABUL;
++    md->sha256.state[7] = 0x5BE0CD19UL;
++}
 +
-+	/* initialize string pool hashmap */
-+	if (!map.tablesize)
-+		hashmap_init(&map, (hashmap_cmp_fn)pool_entry_cmp, 0);
++#define MIN(x, y) ( ((x)<(y))?(x):(y) )
++#define SHA256_BLOCKSIZE 64
++static void sha256_process(struct hash_state * md, const unsigned char *in, unsigned long inlen)
++{
++    unsigned long n;
 +
-+	/* lookup interned string in pool */
-+	hashmap_entry_init(&key, memhash(data, len));
-+	key.len = len;
-+	e = hashmap_get(&map, &key, data);
-+	if (!e) {
-+		/* not found: create it */
-+		FLEX_ALLOC_MEM(e, data, data, len);
-+		hashmap_entry_init(e, key.ent.hash);
-+		e->len = len;
-+		hashmap_add(&map, e);
++    while (inlen > 0) {
++	    if (md->sha256.curlen == 0 && inlen >= SHA256_BLOCKSIZE) {
++		    sha256_compress(md, in);
++		    md->sha256.length += SHA256_BLOCKSIZE * 8;
++		    in += SHA256_BLOCKSIZE;
++		    inlen -= SHA256_BLOCKSIZE;
++	    } else {
++		    n = MIN(inlen, (SHA256_BLOCKSIZE - md->sha256.curlen));
++		    memcpy(md->sha256.buf + md->sha256.curlen, in, (size_t)n);
++		    md->sha256.curlen += n;
++		    in += n;
++		    inlen -= n;
++		    if (md->sha256.curlen == SHA256_BLOCKSIZE) {
++			    sha256_compress(md, md->sha256.buf);
++			    md->sha256.length += 8*SHA256_BLOCKSIZE;
++			    md->sha256.curlen = 0;
++		    }
++	    }
++    }
++}
++
++static void sha256_done(struct hash_state * md, unsigned char *out)
++{
++    int i;
++
++    /* increase the length of the message */
++    md->sha256.length += md->sha256.curlen * 8;
++
++    /* append the '1' bit */
++    md->sha256.buf[md->sha256.curlen++] = (unsigned char)0x80;
++
++    /* if the length is currently above 56 bytes we append zeros
++     * then compress.  Then we can fall back to padding zeros and length
++     * encoding like normal.
++     */
++    if (md->sha256.curlen > 56) {
++        while (md->sha256.curlen < 64) {
++            md->sha256.buf[md->sha256.curlen++] = (unsigned char)0;
++        }
++        sha256_compress(md, md->sha256.buf);
++        md->sha256.curlen = 0;
++    }
++
++    /* pad upto 56 bytes of zeroes */
++    while (md->sha256.curlen < 56) {
++        md->sha256.buf[md->sha256.curlen++] = (unsigned char)0;
++    }
++
++    /* store length */
++    STORE64H(md->sha256.length, md->sha256.buf+56);
++    sha256_compress(md, md->sha256.buf);
++
++    /* copy output */
++    for (i = 0; i < 8; i++) {
++        STORE32H(md->sha256.state[i], out+(4*i));
++    }
++}
++
++void erofs_sha256(const unsigned char *in, unsigned long in_size,
++		  unsigned char out[32])
++{
++	struct hash_state md;
++
++	sha256_init(&md);
++	sha256_process(&md, in, in_size);
++	sha256_done(&md, out);
++}
++
++#ifdef UNITTEST
++static const struct {
++	char *msg;
++	unsigned char hash[32];
++} tests[] = {
++	{ "",
++	  { 0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14,
++	    0x9a, 0xfb, 0xf4, 0xc8, 0x99, 0x6f, 0xb9, 0x24,
++	    0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
++	    0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55 }
++	},
++	{ "abc",
++	  { 0xba, 0x78, 0x16, 0xbf, 0x8f, 0x01, 0xcf, 0xea,
++	    0x41, 0x41, 0x40, 0xde, 0x5d, 0xae, 0x22, 0x23,
++	    0xb0, 0x03, 0x61, 0xa3, 0x96, 0x17, 0x7a, 0x9c,
++	    0xb4, 0x10, 0xff, 0x61, 0xf2, 0x00, 0x15, 0xad }
++	},
++	{ "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
++	  { 0x24, 0x8d, 0x6a, 0x61, 0xd2, 0x06, 0x38, 0xb8,
++	    0xe5, 0xc0, 0x26, 0x93, 0x0c, 0x3e, 0x60, 0x39,
++	    0xa3, 0x3c, 0xe4, 0x59, 0x64, 0xff, 0x21, 0x67,
++	    0xf6, 0xec, 0xed, 0xd4, 0x19, 0xdb, 0x06, 0xc1 }
++	},
++};
++
++int main(int argc, char **argv)
++{
++	int i;
++	int errors = 0;
++	unsigned char tmp[32];
++
++	for (i = 0; i < (int)(sizeof(tests) / sizeof(tests[0])); i++) {
++		unsigned char *msg = (unsigned char *) tests[i].msg;
++		int len = strlen(tests[i].msg);
++
++		ext2fs_sha256(msg, len, tmp);
++		printf("SHA256 test message %d: ", i);
++		if (memcmp(tmp, tests[i].hash, 32) != 0) {
++			printf("FAILED\n");
++			errors++;
++		} else
++			printf("OK\n");
 +	}
-+	return e->data;
++	return errors;
 +}
++
++#endif /* UNITTEST */
 -- 
 2.24.4
 
