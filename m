@@ -2,43 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F127B3F29B4
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Aug 2021 12:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9AA33F2C32
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Aug 2021 14:34:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GrcbB6J9Jz3cKh
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Aug 2021 20:00:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Grh0k6TfDz3d88
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Aug 2021 22:34:46 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=lutN4JU3;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::12c;
+ helo=mail-il1-x12c.google.com; envelope-from=igoreisberg@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=lutN4JU3; dkim-atps=neutral
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com
+ [IPv6:2607:f8b0:4864:20::12c])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Grcb61JHpz30JG
- for <linux-erofs@lists.ozlabs.org>; Fri, 20 Aug 2021 20:00:47 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R571e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=9; SR=0; TI=SMTPD_---0UkJjDtn_1629453621; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UkJjDtn_1629453621) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 20 Aug 2021 18:00:31 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
- Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH v3 2/2] erofs: support reading chunk-based uncompressed files
-Date: Fri, 20 Aug 2021 18:00:19 +0800
-Message-Id: <20210820100019.208490-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20210820100019.208490-1-hsiangkao@linux.alibaba.com>
-References: <20210819063310.177035-1-hsiangkao@linux.alibaba.com>
- <20210820100019.208490-1-hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Grh0B1VW9z3cLP
+ for <linux-erofs@lists.ozlabs.org>; Fri, 20 Aug 2021 22:34:17 +1000 (AEST)
+Received: by mail-il1-x12c.google.com with SMTP id u7so9374879ilk.7
+ for <linux-erofs@lists.ozlabs.org>; Fri, 20 Aug 2021 05:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=mime-version:from:date:message-id:subject:to;
+ bh=JWCUufuuwhNarbqsGFPFj/uqXOuC4DDjcyui5VTRZhU=;
+ b=lutN4JU3MlzsDojz3hHjI1LdCZ0Zx2i4KpDVcRDahTvPW3hx95WUj74gKzItp5mDCH
+ zIiOIVkVCFkqWIyUgTWzPYwfCPbRYaG7Ayb+q6E1hR+XUgYzhZL8CS050CvT2+daat5L
+ TfEXDvMP5Qr8kbfYC2KXPVQar52lLQAhZJDu65eMMHeeiGeRK8TTEFPeKQIXGACJixbp
+ C0wZouv0C88iNbG/NtyjCB6uPxYdE03P27UDdUPF0qBCfxRZzJQCf8MugSBctpyCXLo6
+ MR6wm5zbIBb+y3qa7+KwXJuhYwWEKaAAOcXGxtqx5TCoHkPixzDkseeHwgMGpuKq3wai
+ rmBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=JWCUufuuwhNarbqsGFPFj/uqXOuC4DDjcyui5VTRZhU=;
+ b=U/pYG9GD1emgED+LPC9qvyS19NRWJtal80OMJ+VKkHncQQVL9VxABKtiqCC9k3g+Hc
+ wo6vQEOo5B2A3Lur4AAwj6eyj0PnUtDYprPFB52Fdo6Exzul4W3EgrTcgZHEH1JuSqpF
+ vmxyRoUSTSqA1ONsW/mlg777Xzo60yhXNJyBm5vCiHFDT5aKyZEkaoXxWAMgBdmepNpN
+ 3xsnOmh54lc9xa3YT/m2yXZ4/lpgohlRNzTc/m5qr/tyiFj7JSPmHrh051yCZiE6jnqe
+ l+fjaAanvzShoFp0bxs91xK529UYW2gFsAjvWIt/s6kUl+NAKp9L9kYwwPRJXtEI5deh
+ KrCQ==
+X-Gm-Message-State: AOAM530AZ/Ox53nL0H3YG2svUz3KPxMGA8bw3Jnh0BuAHAnoZbjl4i3D
+ NXg41tpJ7kRnE1lIodARK2TCdBO9MKP1Mio5iBgMoJqiHII=
+X-Google-Smtp-Source: ABdhPJxIrn3EJJn5vWuYAdvi98s3XHjBggqaA+lc8qaxtyd+wyOMDOGPTqD77ZKt1wgo27jYOuAfeqN6dEOG1NtVEGY=
+X-Received: by 2002:a92:dd12:: with SMTP id n18mr13852155ilm.180.1629462853592; 
+ Fri, 20 Aug 2021 05:34:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Igor Eisberg <igoreisberg@gmail.com>
+Date: Fri, 20 Aug 2021 15:34:05 +0300
+Message-ID: <CABjEcnGniBcadC4DDV4xCio8UmZyhSGWt+_gi_ESbYwoOQ2E0w@mail.gmail.com>
+Subject: An issue with erofsfuse
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000902a0305c9fce2dc"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,229 +70,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peng Tao <tao.peng@linux.alibaba.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Eryu Guan <eguan@linux.alibaba.com>,
- Liu Jiang <gerry@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add runtime support for chunk-based uncompressed files
-described in the previous patch.
+--000000000000902a0305c9fce2dc
+Content-Type: text/plain; charset="UTF-8"
 
-Reviewed-by: Liu Bo <bo.liu@linux.alibaba.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v2:
- - use EROFS_BLOCK_MAP_ENTRY_SIZE instead of 4 suggested by Chao.
+Hey there, getting straight to the point.
+Our team is using Debian 10, in which erofs mounting is not supported and
+we have no option of updating the kernel, nor do we have sudo permissions
+on this server.
 
- fs/erofs/data.c     | 90 ++++++++++++++++++++++++++++++++++++++++-----
- fs/erofs/inode.c    | 18 ++++++++-
- fs/erofs/internal.h |  5 +++
- 3 files changed, 102 insertions(+), 11 deletions(-)
+Our only choice is to use erofsfuse to mount an Android image (compression
+was used on that image), for the sole purpose of extracting its contents to
+another folder for processing.
+Tried on Debian 10, pop_OS! and even the latest Kubuntu (where native
+mounting is supported), but on all of them I could not copy files which are
+compressed from the mounted image to another location (ext4 file system).
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 09c46fbdb9b2..9db829715652 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             https://www.huawei.com/
-+ * Copyright (C) 2021, Alibaba Cloud
-  */
- #include "internal.h"
- #include <linux/prefetch.h>
-@@ -36,13 +37,6 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
- 	lastblk = nblocks - tailendpacking;
- 
--	if (offset >= inode->i_size) {
--		/* leave out-of-bound access unmapped */
--		map->m_flags = 0;
--		map->m_plen = 0;
--		goto out;
--	}
--
- 	/* there is no hole in flatmode */
- 	map->m_flags = EROFS_MAP_MAPPED;
- 
-@@ -77,14 +71,90 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 		goto err_out;
- 	}
- 
--out:
- 	map->m_llen = map->m_plen;
--
- err_out:
- 	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
- 	return err;
- }
- 
-+static int erofs_map_blocks(struct inode *inode,
-+			    struct erofs_map_blocks *map, int flags)
-+{
-+	struct super_block *sb = inode->i_sb;
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct erofs_inode_chunk_index *idx;
-+	struct page *page;
-+	u64 chunknr;
-+	unsigned int unit;
-+	erofs_off_t pos;
-+	int err = 0;
-+
-+	if (map->m_la >= inode->i_size) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		map->m_plen = 0;
-+		goto out;
-+	}
-+
-+	if (vi->datalayout != EROFS_INODE_CHUNK_BASED)
-+		return erofs_map_blocks_flatmode(inode, map, flags);
-+
-+	if (vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
-+		unit = sizeof(*idx);			/* chunk index */
-+	else
-+		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;	/* block map */
-+
-+	chunknr = map->m_la >> vi->chunkbits;
-+	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
-+		    vi->xattr_isize, unit) + unit * chunknr;
-+
-+	page = erofs_get_meta_page(inode->i_sb, erofs_blknr(pos));
-+	if (IS_ERR(page))
-+		return PTR_ERR(page);
-+
-+	map->m_la = chunknr << vi->chunkbits;
-+	map->m_plen = min_t(erofs_off_t, 1UL << vi->chunkbits,
-+			    roundup(inode->i_size - map->m_la, EROFS_BLKSIZ));
-+
-+	/* handle block map */
-+	if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
-+		__le32 *blkaddr = page_address(page) + erofs_blkoff(pos);
-+
-+		if (le32_to_cpu(*blkaddr) == EROFS_NULL_ADDR) {
-+			map->m_flags = 0;
-+		} else {
-+			map->m_pa = blknr_to_addr(le32_to_cpu(*blkaddr));
-+			map->m_flags = EROFS_MAP_MAPPED;
-+		}
-+		goto out_unlock;
-+	}
-+	/* parse chunk indexes */
-+	idx = page_address(page) + erofs_blkoff(pos);
-+	switch (le32_to_cpu(idx->blkaddr)) {
-+	case EROFS_NULL_ADDR:
-+		map->m_flags = 0;
-+		break;
-+	default:
-+		/* only one device is supported for now */
-+		if (idx->device_id) {
-+			erofs_err(sb, "invalid device id %u @ %llu for nid %llu",
-+				  le16_to_cpu(idx->device_id),
-+				  chunknr, vi->nid);
-+			err = -EFSCORRUPTED;
-+			goto out_unlock;
-+		}
-+		map->m_pa = blknr_to_addr(le32_to_cpu(idx->blkaddr));
-+		map->m_flags = EROFS_MAP_MAPPED;
-+		break;
-+	}
-+out_unlock:
-+	unlock_page(page);
-+	put_page(page);
-+out:
-+	map->m_llen = map->m_plen;
-+	return err;
-+}
-+
- static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
- {
-@@ -94,7 +164,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	map.m_la = offset;
- 	map.m_llen = length;
- 
--	ret = erofs_map_blocks_flatmode(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index d13e0709599c..4408929bd6f5 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             https://www.huawei.com/
-+ * Copyright (C) 2021, Alibaba Cloud
-  */
- #include "xattr.h"
- 
-@@ -122,7 +123,9 @@ static struct page *erofs_read_inode(struct inode *inode,
- 		/* total blocks for compressed files */
- 		if (erofs_inode_is_data_compressed(vi->datalayout))
- 			nblks = le32_to_cpu(die->i_u.compressed_blocks);
--
-+		else if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
-+			/* fill chunked inode summary info */
-+			vi->chunkformat = le16_to_cpu(die->i_u.c.format);
- 		kfree(copied);
- 		break;
- 	case EROFS_INODE_LAYOUT_COMPACT:
-@@ -160,6 +163,8 @@ static struct page *erofs_read_inode(struct inode *inode,
- 		inode->i_size = le32_to_cpu(dic->i_size);
- 		if (erofs_inode_is_data_compressed(vi->datalayout))
- 			nblks = le32_to_cpu(dic->i_u.compressed_blocks);
-+		else if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
-+			vi->chunkformat = le16_to_cpu(dic->i_u.c.format);
- 		break;
- 	default:
- 		erofs_err(inode->i_sb,
-@@ -169,6 +174,17 @@ static struct page *erofs_read_inode(struct inode *inode,
- 		goto err_out;
- 	}
- 
-+	if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
-+		if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_ALL)) {
-+			erofs_err(inode->i_sb,
-+				  "unsupported chunk format %x of nid %llu",
-+				  vi->chunkformat, vi->nid);
-+			err = -EOPNOTSUPP;
-+			goto err_out;
-+		}
-+		vi->chunkbits = LOG_BLOCK_SIZE +
-+			(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
-+	}
- 	inode->i_mtime.tv_sec = inode->i_ctime.tv_sec;
- 	inode->i_atime.tv_sec = inode->i_ctime.tv_sec;
- 	inode->i_mtime.tv_nsec = inode->i_ctime.tv_nsec;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 91089ab8a816..9524e155b38f 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-  *             https://www.huawei.com/
-+ * Copyright (C) 2021, Alibaba Cloud
-  */
- #ifndef __EROFS_INTERNAL_H
- #define __EROFS_INTERNAL_H
-@@ -261,6 +262,10 @@ struct erofs_inode {
- 
- 	union {
- 		erofs_blk_t raw_blkaddr;
-+		struct {
-+			unsigned short	chunkformat;
-+			unsigned char	chunkbits;
-+		};
- #ifdef CONFIG_EROFS_FS_ZIP
- 		struct {
- 			unsigned short z_advise;
--- 
-2.24.4
+The error I'm getting is: "Operation not supported (95)"
 
+Notes:
+* Only extremely small (< 1 KB) files which are stored uncompressed are
+copied successfully.
+* Copying works perfectly when mounting the image with "sudo mount" on the
+latest Kubuntu, so it has to be something with erofsfuse.
+
+Anything you can do to help resolve this?
+
+Best,
+Igor.
+
+--000000000000902a0305c9fce2dc
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr">Hey there, getting straight to the point.=
+<div>Our team is using Debian 10, in which erofs mounting is not supported =
+and we have no option of updating the kernel, nor do we have sudo permissio=
+ns on this server.</div><div><br></div><div>Our only choice is to use erofs=
+fuse to mount an Android image (compression was used on that image), for th=
+e sole purpose of extracting its contents to another folder for processing.=
+</div><div>Tried on Debian 10, pop_OS! and even the latest Kubuntu (where n=
+ative mounting is supported), but on all of them I could not copy files whi=
+ch are compressed from the mounted image to another location (ext4 file sys=
+tem).</div><div><br></div><div>The error I&#39;m getting is: &quot;Operatio=
+n not supported (95)&quot;</div><div><br></div><div>Notes:</div><div>* Only=
+ extremely small (&lt; 1 KB) files which are stored uncompressed are copied=
+ successfully.</div><div>* Copying works perfectly when mounting the image =
+with &quot;sudo mount&quot; on the latest Kubuntu, so it has to be somethin=
+g with erofsfuse.</div><div><br></div><div>Anything=C2=A0you can do to help=
+ resolve this?</div><div><br></div><div>Best,</div><div>Igor.</div></div></=
+div>
+
+--000000000000902a0305c9fce2dc--
