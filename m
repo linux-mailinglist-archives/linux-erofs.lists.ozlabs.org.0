@@ -1,70 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C535D3F4AC1
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Aug 2021 14:37:09 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 826983F4AC2
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Aug 2021 14:37:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GtWw33khnz2xv8
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Aug 2021 22:37:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GtWw73KCgz2xt7
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Aug 2021 22:37:11 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=ls2mFJqJ;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=QtQGse+3;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433;
- helo=mail-pf1-x433.google.com; envelope-from=jnhuang95@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::432;
+ helo=mail-pf1-x432.google.com; envelope-from=jnhuang95@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20161025 header.b=ls2mFJqJ; dkim-atps=neutral
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com
- [IPv6:2607:f8b0:4864:20::433])
+ header.s=20161025 header.b=QtQGse+3; dkim-atps=neutral
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com
+ [IPv6:2607:f8b0:4864:20::432])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GtWvv2Nfcz2xrx
- for <linux-erofs@lists.ozlabs.org>; Mon, 23 Aug 2021 22:36:59 +1000 (AEST)
-Received: by mail-pf1-x433.google.com with SMTP id v123so535459pfb.11
- for <linux-erofs@lists.ozlabs.org>; Mon, 23 Aug 2021 05:36:59 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GtWvx4mLcz2xrx
+ for <linux-erofs@lists.ozlabs.org>; Mon, 23 Aug 2021 22:37:01 +1000 (AEST)
+Received: by mail-pf1-x432.google.com with SMTP id 7so15238995pfl.10
+ for <linux-erofs@lists.ozlabs.org>; Mon, 23 Aug 2021 05:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
  h=from:to:cc:subject:date:message-id:in-reply-to:references
  :mime-version:content-transfer-encoding;
- bh=h/1VJZ29u4XqurpeYm9kPyaHxVhp2hMYz8l0lY3Ggo0=;
- b=ls2mFJqJZA3tIwzpM+DFxnT3NmdqyePPGohyic0vvblSRxaYyWUqlSRKOm9ea7ZQNG
- xMO2W9p4XBfwhl+C9Pj0mnplSaG1wDFr80q1elP7FrkEXdAgOHktvJXpS0edSARtgxN9
- a05oF06geodXTBOqz4RHkuf4cxWaTLe5GJzol1l14C1Pgdz/qwTrwnq3vV6hIPq2yLPv
- 5HwDCqfpxIcgifIh/BY3Q9wPA8BJaeZnzwjXtqLfK6H3HS19R3SQjVkkHdPT8NjCnLHz
- SU57HefqALR5ohRuccSqm3pEFv+ZkqBwS8qSXp3oGyST+pYn5Do/bDulegDY+vIBtToO
- gqfw==
+ bh=GmYxmfKAXxmPJA9dDWfwtdacRVbl9bEb/IGJFD/EiQA=;
+ b=QtQGse+3pVHSwRVVU9Oe7bmeZMnutqV3VsT1N3qvrGQqxcG2eiSVMkdk3GjAvA7RjI
+ vWVZyrzHUgEfnfsZTklAP2p/iYLNu4L4n3/N6G80D8Jrd7gDsXgrUWcDdartrPlmixBN
+ 9ioT1bMM0ojMFDiK9ckMfbPTOAsr+pnJI6qwSmRtddjZMRL5EFaj9rB4CtkVeaFnYz7c
+ 5VNNU/K0jA7laFuRLSwVyYu0w5MhuSvQ/APFGTuUUQjYy34guBIsy/wlJ3O8DvoGfBh7
+ 3rx9rpWV7Oge1/V5a1sunuBWwkDmiCD2aT0wd4e3vgFWdKhdviCAmu0JI26wTmjxDCW9
+ mpaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20161025;
  h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
  :references:mime-version:content-transfer-encoding;
- bh=h/1VJZ29u4XqurpeYm9kPyaHxVhp2hMYz8l0lY3Ggo0=;
- b=UorvOF0wYniTE19gFmeU8a3HwESYgSHQnp9K9pVgFm0SwkS86yJILV9DFRoobSWFcq
- bm/TujcrinXm/OBkAZkQJCgORRkd9QgU7VpYm8JqGjdGvPFX/VS+iUW5BseFNYeX8cyo
- /zAS+oh8scejkUQI5AXcRT45BmacZqT8e7axl6yt3yyzk+0gK87AbetWSzHSU2vlwgv0
- /Vc28Gibbr7fprDY8uikheJb2reYWck/u+dwMfvGD1dGDV+f63ircnFMaKidEeztoOo3
- sNWmj2wVuozB3XuoN2SF0u3b4ZXQ2GlfICV4/szT8BeR0N3zqheO2+GWi1Y9HguLeIgc
- hEHQ==
-X-Gm-Message-State: AOAM531hvkxrP2AHHgm+Hochnpth0OwI2u/6XgcTTQBHnCsv1d43ypZc
- wdaw/FbNDD/gyDzUbrk1Kt0=
-X-Google-Smtp-Source: ABdhPJxz2Z7qeaRv352oMdSnoeESnAqyOJ3USftTEwhjQA6KQfK/rAe3lndsKkCyfEoTyKaqsbbHHQ==
-X-Received: by 2002:a62:d414:0:b0:3eb:13e2:eccd with SMTP id
- a20-20020a62d414000000b003eb13e2eccdmr10931052pfh.68.1629722216473; 
- Mon, 23 Aug 2021 05:36:56 -0700 (PDT)
+ bh=GmYxmfKAXxmPJA9dDWfwtdacRVbl9bEb/IGJFD/EiQA=;
+ b=YFgFPSfP1GvTBmz/gs8OlbXcva1tFZPnIXfWmQbkhL847qXvRxGqm7hZBEw2pvzWqA
+ 4gmaqa1O3uSdyPlvqtOrn+FM4IIouRWGqrdmWYA7cMMC3Ykyng3dyp3YZeKXe2YO31jv
+ Ljo40hEJ8vNCvEYG9cVXciXBUcWjMrKrej6yd+8VQjBHJltBHwj9JVHs+A2EgamOLoC8
+ 1QgrAk7ZXGwnlWuLUe9gyU4cYUrUdOzsfoFuIYGwa4PVAbkA5lqh8ceh+pTi2X7BBM3G
+ mbh4OJ6vi0Ao086zuDrXzl7e7qFuoLzJc92tUP3P477kcCU4ExflepYqFeqC32RzZ0Pm
+ VvcQ==
+X-Gm-Message-State: AOAM531AXVNoUhzIQsZmmkfwJ90BH3cPDjORgRaVQKy8J9vHoKR7U6KO
+ ffwECUIfzosbQ77avnwkSbGJu5fdTm923ZKr
+X-Google-Smtp-Source: ABdhPJwh1K6IhvS+3BBGbQfkpoCcHmhrZHV8tzqCMLOr9I3QaHvSkxwUZQ2Eg8M4Y0SbhHtX0RHvMQ==
+X-Received: by 2002:a65:494e:: with SMTP id q14mr31968275pgs.314.1629722219312; 
+ Mon, 23 Aug 2021 05:36:59 -0700 (PDT)
 Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
  [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id d15sm16376817pfd.115.2021.08.23.05.36.53
+ by smtp.gmail.com with ESMTPSA id d15sm16376817pfd.115.2021.08.23.05.36.56
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Mon, 23 Aug 2021 05:36:55 -0700 (PDT)
+ Mon, 23 Aug 2021 05:36:58 -0700 (PDT)
 From: Huang Jianan <jnhuang95@gmail.com>
 To: u-boot@lists.denx.de
-Subject: [PATCH v2 1/3] fs/erofs: add erofs filesystem support
-Date: Mon, 23 Aug 2021 20:36:44 +0800
-Message-Id: <20210823123646.9765-2-jnhuang95@gmail.com>
+Subject: [PATCH v2 2/3] fs/erofs: add lz4 1.8.3 decompressor
+Date: Mon, 23 Aug 2021 20:36:45 +0800
+Message-Id: <20210823123646.9765-3-jnhuang95@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210823123646.9765-1-jnhuang95@gmail.com>
 References: <20210822154843.10971-1-jnhuang95@gmail.com>
@@ -89,1444 +88,580 @@ Sender: "Linux-erofs"
 
 From: Huang Jianan <huangjianan@oppo.com>
 
-This patch mainly deals with uncompressed files.
+In order to use the newest LZ4_decompress_safe_partial() which can
+now decode exactly the nb of bytes requested.
 
 Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 ---
- fs/Kconfig          |   1 +
- fs/Makefile         |   1 +
- fs/erofs/Kconfig    |  12 ++
- fs/erofs/Makefile   |   7 +
- fs/erofs/data.c     | 124 ++++++++++++++
- fs/erofs/erofs_fs.h | 384 ++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/fs.c       | 231 ++++++++++++++++++++++++++
- fs/erofs/internal.h | 203 +++++++++++++++++++++++
- fs/erofs/namei.c    | 238 +++++++++++++++++++++++++++
- fs/erofs/super.c    |  65 ++++++++
- fs/fs.c             |  22 +++
- include/erofs.h     |  19 +++
- include/fs.h        |   1 +
- 13 files changed, 1308 insertions(+)
- create mode 100644 fs/erofs/Kconfig
- create mode 100644 fs/erofs/Makefile
- create mode 100644 fs/erofs/data.c
- create mode 100644 fs/erofs/erofs_fs.h
- create mode 100644 fs/erofs/fs.c
- create mode 100644 fs/erofs/internal.h
- create mode 100644 fs/erofs/namei.c
- create mode 100644 fs/erofs/super.c
- create mode 100644 include/erofs.h
+ fs/erofs/Makefile |   3 +-
+ fs/erofs/lz4.c    | 534 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/lz4.h    |   5 +
+ 3 files changed, 541 insertions(+), 1 deletion(-)
+ create mode 100644 fs/erofs/lz4.c
+ create mode 100644 fs/erofs/lz4.h
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 620af7f044..4d04c2c2ce 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -24,4 +24,5 @@ source "fs/yaffs2/Kconfig"
- 
- source "fs/squashfs/Kconfig"
- 
-+source "fs/erofs/Kconfig"
- endmenu
-diff --git a/fs/Makefile b/fs/Makefile
-index 937cbcf6e8..f05a21c9e6 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -25,5 +25,6 @@ obj-$(CONFIG_CMD_UBIFS) += ubifs/
- obj-$(CONFIG_YAFFS2) += yaffs2/
- obj-$(CONFIG_CMD_ZFS) += zfs/
- obj-$(CONFIG_FS_SQUASHFS) += squashfs/
-+obj-$(CONFIG_FS_EROFS) += erofs/
- endif
- obj-y += fs_internal.o
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-new file mode 100644
-index 0000000000..f4b2d51a23
---- /dev/null
-+++ b/fs/erofs/Kconfig
-@@ -0,0 +1,12 @@
-+config FS_EROFS
-+	bool "Enable EROFS filesystem support"
-+	help
-+	  This provides support for reading images from EROFS filesystem.
-+	  EROFS (Enhanced Read-Only File System) is a lightweight read-only
-+	  file system for scenarios which need high-performance read-only
-+	  requirements.
-+
-+	  It also provides fixed-sized output compression support, which
-+	  improves storage density, keeps relatively higher compression
-+	  ratios, which is more useful to achieve high performance for
-+	  embedded devices with limited memory.
 diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-new file mode 100644
-index 0000000000..7398ab7a36
---- /dev/null
+index 7398ab7a36..c4fc5b794e 100644
+--- a/fs/erofs/Makefile
 +++ b/fs/erofs/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+
-+obj-$(CONFIG_$(SPL_)FS_EROFS) = fs.o \
-+				super.o \
-+				namei.o \
-+				data.o
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+@@ -4,4 +4,5 @@
+ obj-$(CONFIG_$(SPL_)FS_EROFS) = fs.o \
+ 				super.o \
+ 				namei.o \
+-				data.o
++				data.o \
++				lz4.o
+diff --git a/fs/erofs/lz4.c b/fs/erofs/lz4.c
 new file mode 100644
-index 0000000000..a0f613264a
+index 0000000000..35f67c15eb
 --- /dev/null
-+++ b/fs/erofs/data.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include "internal.h"
++++ b/fs/erofs/lz4.c
+@@ -0,0 +1,534 @@
++// SPDX-License-Identifier: GPL 2.0+ OR BSD-2-Clause
++/*
++ * LZ4 - Fast LZ compression algorithm
++ * Copyright (C) 2011 - 2016, Yann Collet.
++ * BSD 2 - Clause License (http://www.opensource.org/licenses/bsd - license.php)
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are
++ * met:
++ *	* Redistributions of source code must retain the above copyright
++ *	  notice, this list of conditions and the following disclaimer.
++ *	* Redistributions in binary form must reproduce the above
++ * copyright notice, this list of conditions and the following disclaimer
++ * in the documentation and/or other materials provided with the
++ * distribution.
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * You can contact the author at :
++ *	- LZ4 homepage : http://www.lz4.org
++ *	- LZ4 source repository : https://github.com/lz4/lz4
++ */
++#include <common.h>
++#include <compiler.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/bug.h>
++#include <asm/unaligned.h>
 +
-+static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
-+				     struct erofs_map_blocks *map,
-+				     int flags)
++#define FORCE_INLINE inline __attribute__((always_inline))
++
++static FORCE_INLINE u16 LZ4_readLE16(const void *src)
 +{
-+	int err = 0;
-+	erofs_blk_t nblocks, lastblk;
-+	u64 offset = map->m_la;
-+	struct erofs_inode *vi = inode;
-+	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
-+
-+	nblocks = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
-+	lastblk = nblocks - tailendpacking;
-+
-+	if (offset >= inode->i_size) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		map->m_plen = 0;
-+		goto out;
-+	}
-+
-+	/* there is no hole in flatmode */
-+	map->m_flags = EROFS_MAP_MAPPED;
-+
-+	if (offset < blknr_to_addr(lastblk)) {
-+		map->m_pa = blknr_to_addr(vi->u.i_blkaddr) + map->m_la;
-+		map->m_plen = blknr_to_addr(lastblk) - offset;
-+	} else if (tailendpacking) {
-+		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
-+		map->m_pa = iloc(vi->nid) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_plen = inode->i_size - offset;
-+
-+		/* inline data should be located in one meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			erofs_err("inline data cross block boundary @ nid %" PRIu64,
-+				  vi->nid);
-+			DBG_BUGON(1);
-+			err = -EFSCORRUPTED;
-+			goto err_out;
-+		}
-+
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		erofs_err("internal error @ nid: %" PRIu64 " (size %llu), m_la 0x%" PRIx64,
-+			  vi->nid, (unsigned long long)inode->i_size, map->m_la);
-+		DBG_BUGON(1);
-+		err = -EIO;
-+		goto err_out;
-+	}
-+
-+out:
-+	map->m_llen = map->m_plen;
-+
-+err_out:
-+	return err;
++	return get_unaligned_le16(src);
 +}
 +
-+static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
-+			       erofs_off_t size, erofs_off_t offset)
++static FORCE_INLINE void LZ4_copy8(void *dst, const void *src)
 +{
-+	struct erofs_map_blocks map = {
-+		.index = UINT_MAX,
-+	};
-+	int ret;
-+	erofs_off_t ptr = offset;
++	put_unaligned(get_unaligned((const u64 *)src), (u64 *)dst);
++}
 +
-+	while (ptr < offset + size) {
-+		char *const estart = buffer + ptr - offset;
-+		erofs_off_t eend;
++typedef  uint8_t BYTE;
++typedef uint16_t U16;
++typedef uint32_t U32;
++typedef  int32_t S32;
++typedef uint64_t U64;
++typedef uintptr_t uptrval;
 +
-+		map.m_la = ptr;
-+		ret = erofs_map_blocks_flatmode(inode, &map, 0);
-+		if (ret)
-+			return ret;
++static FORCE_INLINE void LZ4_write32(void *memPtr, U32 value)
++{
++	put_unaligned(value, (U32 *)memPtr);
++}
 +
-+		DBG_BUGON(map.m_plen != map.m_llen);
++/**************************************
++*  Reading and writing into memory
++**************************************/
 +
-+		/* trim extent */
-+		eend = min(offset + size, map.m_la + map.m_llen);
-+		DBG_BUGON(ptr < map.m_la);
++/* customized version of memcpy, which may overwrite up to 7 bytes beyond dstEnd */
++static void LZ4_wildCopy(void* dstPtr, const void* srcPtr, void* dstEnd)
++{
++    BYTE* d = (BYTE*)dstPtr;
++    const BYTE* s = (const BYTE*)srcPtr;
++    BYTE* e = (BYTE*)dstEnd;
++    do { LZ4_copy8(d,s); d+=8; s+=8; } while (d<e);
++}
 +
-+		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+			if (!map.m_llen) {
-+				/* reached EOF */
-+				memset(estart, 0, offset + size - ptr);
-+				ptr = offset + size;
++
++/**************************************
++*  Common Constants
++**************************************/
++#define MINMATCH 4
++
++#define WILDCOPYLENGTH 8
++#define LASTLITERALS 5
++#define MFLIMIT (WILDCOPYLENGTH + MINMATCH)
++
++/*
++ * ensure it's possible to write 2 x wildcopyLength
++ * without overflowing output buffer
++ */
++#define MATCH_SAFEGUARD_DISTANCE  ((2 * WILDCOPYLENGTH) - MINMATCH)
++
++#define KB (1 <<10)
++
++#define MAXD_LOG 16
++#define MAX_DISTANCE ((1 << MAXD_LOG) - 1)
++
++#define ML_BITS  4
++#define ML_MASK  ((1U<<ML_BITS)-1)
++#define RUN_BITS (8-ML_BITS)
++#define RUN_MASK ((1U<<RUN_BITS)-1)
++
++#define LZ4_STATIC_ASSERT(c)	BUILD_BUG_ON(!(c))
++
++/**************************************
++*  Local Structures and types
++**************************************/
++typedef enum { noDict = 0, withPrefix64k, usingExtDict } dict_directive;
++typedef enum { endOnOutputSize = 0, endOnInputSize = 1 } endCondition_directive;
++typedef enum { decode_full_block = 0, partial_decode = 1 } earlyEnd_directive;
++
++#define DEBUGLOG(l, ...) {}	/* disabled */
++
++#ifndef assert
++#define assert(condition) ((void)0)
++#endif
++
++/*
++ * LZ4_decompress_generic() :
++ * This generic decompression function covers all use cases.
++ * It shall be instantiated several times, using different sets of directives.
++ * Note that it is important for performance that this function really get inlined,
++ * in order to remove useless branches during compilation optimization.
++ */
++static FORCE_INLINE int LZ4_decompress_generic(
++	 const char * const src,
++	 char * const dst,
++	 int srcSize,
++		/*
++		 * If endOnInput == endOnInputSize,
++		 * this value is `dstCapacity`
++		 */
++	 int outputSize,
++	 /* endOnOutputSize, endOnInputSize */
++	 endCondition_directive endOnInput,
++	 /* full, partial */
++	 earlyEnd_directive partialDecoding,
++	 /* noDict, withPrefix64k, usingExtDict */
++	 dict_directive dict,
++	 /* always <= dst, == dst when no prefix */
++	 const BYTE * const lowPrefix,
++	 /* only if dict == usingExtDict */
++	 const BYTE * const dictStart,
++	 /* note : = 0 if noDict */
++	 const size_t dictSize
++	 )
++{
++	const BYTE *ip = (const BYTE *) src;
++	const BYTE * const iend = ip + srcSize;
++
++	BYTE *op = (BYTE *) dst;
++	BYTE * const oend = op + outputSize;
++	BYTE *cpy;
++
++	const BYTE * const dictEnd = (const BYTE *)dictStart + dictSize;
++	static const unsigned int inc32table[8] = {0, 1, 2, 1, 0, 4, 4, 4};
++	static const int dec64table[8] = {0, 0, 0, -1, -4, 1, 2, 3};
++
++	const int safeDecode = (endOnInput == endOnInputSize);
++	const int checkOffset = ((safeDecode) && (dictSize < (int)(64 * KB)));
++
++	/* Set up the "end" pointers for the shortcut. */
++	const BYTE *const shortiend = iend -
++		(endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
++	const BYTE *const shortoend = oend -
++		(endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
++
++	DEBUGLOG(5, "%s (srcSize:%i, dstSize:%i)", __func__,
++		 srcSize, outputSize);
++
++	/* Special cases */
++	assert(lowPrefix <= op);
++	assert(src != NULL);
++
++	/* Empty output buffer */
++	if ((endOnInput) && (unlikely(outputSize == 0)))
++		return ((srcSize == 1) && (*ip == 0)) ? 0 : -1;
++
++	if ((!endOnInput) && (unlikely(outputSize == 0)))
++		return (*ip == 0 ? 1 : -1);
++
++	if ((endOnInput) && unlikely(srcSize == 0))
++		return -1;
++
++	/* Main Loop : decode sequences */
++	while (1) {
++		size_t length;
++		const BYTE *match;
++		size_t offset;
++
++		/* get literal length */
++		unsigned int const token = *ip++;
++		length = token>>ML_BITS;
++
++		/* ip < iend before the increment */
++		assert(!endOnInput || ip <= iend);
++
++		/*
++		 * A two-stage shortcut for the most common case:
++		 * 1) If the literal length is 0..14, and there is enough
++		 * space, enter the shortcut and copy 16 bytes on behalf
++		 * of the literals (in the fast mode, only 8 bytes can be
++		 * safely copied this way).
++		 * 2) Further if the match length is 4..18, copy 18 bytes
++		 * in a similar manner; but we ensure that there's enough
++		 * space in the output for those 18 bytes earlier, upon
++		 * entering the shortcut (in other words, there is a
++		 * combined check for both stages).
++		 *
++		 * The & in the likely() below is intentionally not && so that
++		 * some compilers can produce better parallelized runtime code
++		 */
++		if ((endOnInput ? length != RUN_MASK : length <= 8)
++		   /*
++		    * strictly "less than" on input, to re-enter
++		    * the loop with at least one byte
++		    */
++		   && likely((endOnInput ? ip < shortiend : 1) &
++			     (op <= shortoend))) {
++			/* Copy the literals */
++			memcpy(op, ip, endOnInput ? 16 : 8);
++			op += length; ip += length;
++
++			/*
++			 * The second stage:
++			 * prepare for match copying, decode full info.
++			 * If it doesn't work out, the info won't be wasted.
++			 */
++			length = token & ML_MASK; /* match length */
++			offset = LZ4_readLE16(ip);
++			ip += 2;
++			match = op - offset;
++			assert(match <= op); /* check overflow */
++
++			/* Do not deal with overlapping matches. */
++			if ((length != ML_MASK) &&
++			    (offset >= 8) &&
++			    (dict == withPrefix64k || match >= lowPrefix)) {
++				/* Copy the match. */
++				memcpy(op + 0, match + 0, 8);
++				memcpy(op + 8, match + 8, 8);
++				memcpy(op + 16, match + 16, 2);
++				op += length + MINMATCH;
++				/* Both stages worked, load the next token. */
 +				continue;
 +			}
-+			memset(estart, 0, eend - ptr);
-+			ptr = eend;
++
++			/*
++			 * The second stage didn't work out, but the info
++			 * is ready. Propel it right to the point of match
++			 * copying.
++			 */
++			goto _copy_match;
++		}
++
++		/* decode literal length */
++		if (length == RUN_MASK) {
++			unsigned int s;
++
++			if (unlikely(endOnInput ? ip >= iend - RUN_MASK : 0)) {
++				/* overflow detection */
++				goto _output_error;
++			}
++			do {
++				s = *ip++;
++				length += s;
++			} while (likely(endOnInput
++				? ip < iend - RUN_MASK
++				: 1) & (s == 255));
++
++			if ((safeDecode)
++			    && unlikely((uptrval)(op) +
++					length < (uptrval)(op))) {
++				/* overflow detection */
++				goto _output_error;
++			}
++			if ((safeDecode)
++			    && unlikely((uptrval)(ip) +
++					length < (uptrval)(ip))) {
++				/* overflow detection */
++				goto _output_error;
++			}
++		}
++
++		/* copy literals */
++		cpy = op + length;
++		LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
++
++		if (((endOnInput) && ((cpy > oend - MFLIMIT)
++			|| (ip + length > iend - (2 + 1 + LASTLITERALS))))
++			|| ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
++			if (partialDecoding) {
++				if (cpy > oend) {
++					/*
++					 * Partial decoding :
++					 * stop in the middle of literal segment
++					 */
++					cpy = oend;
++					length = oend - op;
++				}
++				if ((endOnInput)
++					&& (ip + length > iend)) {
++					/*
++					 * Error :
++					 * read attempt beyond
++					 * end of input buffer
++					 */
++					goto _output_error;
++				}
++			} else {
++				if ((!endOnInput)
++					&& (cpy != oend)) {
++					/*
++					 * Error :
++					 * block decoding must
++					 * stop exactly there
++					 */
++					goto _output_error;
++				}
++				if ((endOnInput)
++					&& ((ip + length != iend)
++					|| (cpy > oend))) {
++					/*
++					 * Error :
++					 * input must be consumed
++					 */
++					goto _output_error;
++				}
++			}
++
++			/*
++			 * supports overlapping memory regions; only matters
++			 * for in-place decompression scenarios
++			 */
++			memmove(op, ip, length);
++			ip += length;
++			op += length;
++
++			/* Necessarily EOF, due to parsing restrictions */
++			if (!partialDecoding || (cpy == oend))
++				break;
++		} else {
++			/* may overwrite up to WILDCOPYLENGTH beyond cpy */
++			LZ4_wildCopy(op, ip, cpy);
++			ip += length;
++			op = cpy;
++		}
++
++		/* get offset */
++		offset = LZ4_readLE16(ip);
++		ip += 2;
++		match = op - offset;
++
++		/* get matchlength */
++		length = token & ML_MASK;
++
++_copy_match:
++		if ((checkOffset) && (unlikely(match + dictSize < lowPrefix))) {
++			/* Error : offset outside buffers */
++			goto _output_error;
++		}
++
++		/* costs ~1%; silence an msan warning when offset == 0 */
++		/*
++		 * note : when partialDecoding, there is no guarantee that
++		 * at least 4 bytes remain available in output buffer
++		 */
++		if (!partialDecoding) {
++			assert(oend > op);
++			assert(oend - op >= 4);
++
++			LZ4_write32(op, (U32)offset);
++		}
++
++		if (length == ML_MASK) {
++			unsigned int s;
++
++			do {
++				s = *ip++;
++
++				if ((endOnInput) && (ip > iend - LASTLITERALS))
++					goto _output_error;
++
++				length += s;
++			} while (s == 255);
++
++			if ((safeDecode)
++				&& unlikely(
++					(uptrval)(op) + length < (uptrval)op)) {
++				/* overflow detection */
++				goto _output_error;
++			}
++		}
++
++		length += MINMATCH;
++
++		/* match starting within external dictionary */
++		if ((dict == usingExtDict) && (match < lowPrefix)) {
++			if (unlikely(op + length > oend - LASTLITERALS)) {
++				/* doesn't respect parsing restriction */
++				if (!partialDecoding)
++					goto _output_error;
++				length = min(length, (size_t)(oend - op));
++			}
++
++			if (length <= (size_t)(lowPrefix - match)) {
++				/*
++				 * match fits entirely within external
++				 * dictionary : just copy
++				 */
++				memmove(op, dictEnd - (lowPrefix - match),
++					length);
++				op += length;
++			} else {
++				/*
++				 * match stretches into both external
++				 * dictionary and current block
++				 */
++				size_t const copySize = (size_t)(lowPrefix - match);
++				size_t const restSize = length - copySize;
++
++				memcpy(op, dictEnd - copySize, copySize);
++				op += copySize;
++				if (restSize > (size_t)(op - lowPrefix)) {
++					/* overlap copy */
++					BYTE * const endOfMatch = op + restSize;
++					const BYTE *copyFrom = lowPrefix;
++
++					while (op < endOfMatch)
++						*op++ = *copyFrom++;
++				} else {
++					memcpy(op, lowPrefix, restSize);
++					op += restSize;
++				}
++			}
 +			continue;
 +		}
 +
-+		if (ptr > map.m_la) {
-+			map.m_pa += ptr - map.m_la;
-+			map.m_la = ptr;
-+		}
++		/* copy match within block */
++		cpy = op + length;
 +
-+		ret = erofs_dev_read(estart, map.m_pa, eend - map.m_la);
-+		if (ret < 0)
-+			return -EIO;
-+		ptr = eend;
-+	}
-+	return 0;
-+}
-+
-+int erofs_pread(struct erofs_inode *inode, char *buf,
-+		erofs_off_t count, erofs_off_t offset)
-+{
-+	switch (inode->datalayout) {
-+	case EROFS_INODE_FLAT_PLAIN:
-+	case EROFS_INODE_FLAT_INLINE:
-+		return erofs_read_raw_data(inode, buf, count, offset);
-+	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
-+	case EROFS_INODE_FLAT_COMPRESSION:
-+		return -EOPNOTSUPP;
-+	default:
-+		break;
-+	}
-+	return -EINVAL;
-+}
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-new file mode 100644
-index 0000000000..070087fa60
---- /dev/null
-+++ b/fs/erofs/erofs_fs.h
-@@ -0,0 +1,384 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * EROFS (Enhanced ROM File System) on-disk format definition
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ */
-+#ifndef __EROFS_FS_H
-+#define __EROFS_FS_H
-+
-+#include <asm/unaligned.h>
-+#include <fs.h>
-+#include <part.h>
-+#include <stdint.h>
-+
-+#define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
-+#define EROFS_SUPER_OFFSET      1024
-+
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
-+
-+/*
-+ * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
-+ * be incompatible with this kernel version.
-+ */
-+#define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
-+#define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
-+#define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
-+#define EROFS_ALL_FEATURE_INCOMPAT		\
-+	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
-+	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-+	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER)
-+
-+#define EROFS_SB_EXTSLOT_SIZE	16
-+
-+/* erofs on-disk super block (currently 128 bytes) */
-+struct erofs_super_block {
-+	__le32 magic;           /* file system magic number */
-+	__le32 checksum;        /* crc32c(super_block) */
-+	__le32 feature_compat;
-+	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-+	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
-+
-+	__le16 root_nid;	/* nid of root directory */
-+	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
-+
-+	__le64 build_time;      /* inode v1 time derivation */
-+	__le32 build_time_nsec;	/* inode v1 time derivation in nano scale */
-+	__le32 blocks;          /* used for statfs */
-+	__le32 meta_blkaddr;	/* start block address of metadata area */
-+	__le32 xattr_blkaddr;	/* start block address of shared xattr area */
-+	__u8 uuid[16];          /* 128-bit uuid for volume */
-+	__u8 volume_name[16];   /* volume name */
-+	__le32 feature_incompat;
-+	union {
-+		/* bitmap for available compression algorithms */
-+		__le16 available_compr_algs;
-+		/* customized sliding window size instead of 64k by default */
-+		__le16 lz4_max_distance;
-+	} __packed u1;
-+	__u8 reserved2[42];
-+};
-+
-+/*
-+ * erofs inode datalayout (i_format in on-disk inode):
-+ * 0 - inode plain without inline data A:
-+ * inode, [xattrs], ... | ... | no-holed data
-+ * 1 - inode VLE compression B (legacy):
-+ * inode, [xattrs], extents ... | ...
-+ * 2 - inode plain with inline data C:
-+ * inode, [xattrs], last_inline_data, ... | ... | no-holed data
-+ * 3 - inode compression D:
-+ * inode, [xattrs], map_header, extents ... | ...
-+ * 4 - inode chunk-based E:
-+ * inode, [xattrs], chunk indexes ... | ...
-+ * 5~7 - reserved
-+ */
-+enum {
-+	EROFS_INODE_FLAT_PLAIN			= 0,
-+	EROFS_INODE_FLAT_COMPRESSION_LEGACY	= 1,
-+	EROFS_INODE_FLAT_INLINE			= 2,
-+	EROFS_INODE_FLAT_COMPRESSION		= 3,
-+	EROFS_INODE_CHUNK_BASED			= 4,
-+	EROFS_INODE_DATALAYOUT_MAX
-+};
-+
-+static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
-+{
-+	return datamode == EROFS_INODE_FLAT_COMPRESSION ||
-+		datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-+}
-+
-+/* bit definitions of inode i_advise */
-+#define EROFS_I_VERSION_BITS            1
-+#define EROFS_I_DATALAYOUT_BITS         3
-+
-+#define EROFS_I_VERSION_BIT             0
-+#define EROFS_I_DATALAYOUT_BIT          1
-+
-+#define EROFS_I_ALL	\
-+	((1 << (EROFS_I_DATALAYOUT_BIT + EROFS_I_DATALAYOUT_BITS)) - 1)
-+
-+/* indicate chunk blkbits, thus 'chunksize = blocksize << chunk blkbits' */
-+#define EROFS_CHUNK_FORMAT_BLKBITS_MASK		0x001F
-+/* with chunk indexes or just a 4-byte blkaddr array */
-+#define EROFS_CHUNK_FORMAT_INDEXES		0x0020
-+
-+#define EROFS_CHUNK_FORMAT_ALL	\
-+	(EROFS_CHUNK_FORMAT_BLKBITS_MASK | EROFS_CHUNK_FORMAT_INDEXES)
-+
-+struct erofs_inode_chunk_info {
-+	__le16 format;		/* chunk blkbits, etc. */
-+	__le16 reserved;
-+};
-+
-+/* 32-byte reduced form of an ondisk inode */
-+struct erofs_inode_compact {
-+	__le16 i_format;	/* inode format hints */
-+
-+/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
-+	__le16 i_xattr_icount;
-+	__le16 i_mode;
-+	__le16 i_nlink;
-+	__le32 i_size;
-+	__le32 i_reserved;
-+	union {
-+		/* file total compressed blocks for data mapping 1 */
-+		__le32 compressed_blocks;
-+		__le32 raw_blkaddr;
-+
-+		/* for device files, used to indicate old/new device # */
-+		__le32 rdev;
-+
-+		/* for chunk-based files, it contains the summary info */
-+		struct erofs_inode_chunk_info c;
-+	} i_u;
-+	__le32 i_ino;           /* only used for 32-bit stat compatibility */
-+	__le16 i_uid;
-+	__le16 i_gid;
-+	__le32 i_reserved2;
-+};
-+
-+/* 32 bytes on-disk inode */
-+#define EROFS_INODE_LAYOUT_COMPACT	0
-+/* 64 bytes on-disk inode */
-+#define EROFS_INODE_LAYOUT_EXTENDED	1
-+
-+/* 64-byte complete form of an ondisk inode */
-+struct erofs_inode_extended {
-+	__le16 i_format;	/* inode format hints */
-+
-+/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
-+	__le16 i_xattr_icount;
-+	__le16 i_mode;
-+	__le16 i_reserved;
-+	__le64 i_size;
-+	union {
-+		/* file total compressed blocks for data mapping 1 */
-+		__le32 compressed_blocks;
-+		__le32 raw_blkaddr;
-+
-+		/* for device files, used to indicate old/new device # */
-+		__le32 rdev;
-+
-+		/* for chunk-based files, it contains the summary info */
-+		struct erofs_inode_chunk_info c;
-+	} i_u;
-+
-+	/* only used for 32-bit stat compatibility */
-+	__le32 i_ino;
-+
-+	__le32 i_uid;
-+	__le32 i_gid;
-+	__le64 i_ctime;
-+	__le32 i_ctime_nsec;
-+	__le32 i_nlink;
-+	__u8   i_reserved2[16];
-+};
-+
-+#define EROFS_MAX_SHARED_XATTRS         (128)
-+/* h_shared_count between 129 ... 255 are special # */
-+#define EROFS_SHARED_XATTR_EXTENT       (255)
-+
-+/*
-+ * inline xattrs (n == i_xattr_icount):
-+ * erofs_xattr_ibody_header(1) + (n - 1) * 4 bytes
-+ *          12 bytes           /                   \
-+ *                            /                     \
-+ *                           /-----------------------\
-+ *                           |  erofs_xattr_entries+ |
-+ *                           +-----------------------+
-+ * inline xattrs must starts in erofs_xattr_ibody_header,
-+ * for read-only fs, no need to introduce h_refcount
-+ */
-+struct erofs_xattr_ibody_header {
-+	__le32 h_reserved;
-+	__u8   h_shared_count;
-+	__u8   h_reserved2[7];
-+	__le32 h_shared_xattrs[0];      /* shared xattr id array */
-+};
-+
-+/* Name indexes */
-+#define EROFS_XATTR_INDEX_USER              1
-+#define EROFS_XATTR_INDEX_POSIX_ACL_ACCESS  2
-+#define EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT 3
-+#define EROFS_XATTR_INDEX_TRUSTED           4
-+#define EROFS_XATTR_INDEX_LUSTRE            5
-+#define EROFS_XATTR_INDEX_SECURITY          6
-+
-+/* xattr entry (for both inline & shared xattrs) */
-+struct erofs_xattr_entry {
-+	__u8   e_name_len;      /* length of name */
-+	__u8   e_name_index;    /* attribute name index */
-+	__le16 e_value_size;    /* size of attribute value */
-+	/* followed by e_name and e_value */
-+	char   e_name[0];       /* attribute name */
-+};
-+
-+static inline unsigned int erofs_xattr_ibody_size(__le16 i_xattr_icount)
-+{
-+	if (!i_xattr_icount)
-+		return 0;
-+
-+	return sizeof(struct erofs_xattr_ibody_header) +
-+		sizeof(__u32) * (le16_to_cpu(i_xattr_icount) - 1);
-+}
-+
-+#define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
-+
-+static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
-+{
-+	return EROFS_XATTR_ALIGN(sizeof(struct erofs_xattr_entry) +
-+				 e->e_name_len + le16_to_cpu(e->e_value_size));
-+}
-+
-+/* maximum supported size of a physical compression cluster */
-+#define Z_EROFS_PCLUSTER_MAX_SIZE	(1024 * 1024)
-+
-+/* available compression algorithm types (for h_algorithmtype) */
-+enum {
-+	Z_EROFS_COMPRESSION_LZ4	= 0,
-+	Z_EROFS_COMPRESSION_MAX
-+};
-+#define Z_EROFS_ALL_COMPR_ALGS		(1 << (Z_EROFS_COMPRESSION_MAX - 1))
-+
-+/* 14 bytes (+ length field = 16 bytes) */
-+struct z_erofs_lz4_cfgs {
-+	__le16 max_distance;
-+	__le16 max_pclusterblks;
-+	u8 reserved[10];
-+} __packed;
-+
-+/*
-+ * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-+ *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
-+ *                                  (4B) + 2B + (4B) if compacted 2B is on.
-+ * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
-+ * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-+ */
-+#define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
-+#define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
-+#define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
-+
-+struct z_erofs_map_header {
-+	__le32	h_reserved1;
-+	__le16	h_advise;
-+	/*
-+	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
-+	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
-+	 */
-+	__u8	h_algorithmtype;
-+	/*
-+	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
-+	 * bit 3-7 : reserved.
-+	 */
-+	__u8	h_clusterbits;
-+};
-+
-+#define Z_EROFS_VLE_LEGACY_HEADER_PADDING       8
-+
-+/*
-+ * Fixed-sized output compression ondisk Logical Extent cluster type:
-+ *    0 - literal (uncompressed) cluster
-+ *    1 - compressed cluster (for the head logical cluster)
-+ *    2 - compressed cluster (for the other logical clusters)
-+ *
-+ * In detail,
-+ *    0 - literal (uncompressed) cluster,
-+ *        di_advise = 0
-+ *        di_clusterofs = the literal data offset of the cluster
-+ *        di_blkaddr = the blkaddr of the literal cluster
-+ *
-+ *    1 - compressed cluster (for the head logical cluster)
-+ *        di_advise = 1
-+ *        di_clusterofs = the decompressed data offset of the cluster
-+ *        di_blkaddr = the blkaddr of the compressed cluster
-+ *
-+ *    2 - compressed cluster (for the other logical clusters)
-+ *        di_advise = 2
-+ *        di_clusterofs =
-+ *           the decompressed data offset in its own head cluster
-+ *        di_u.delta[0] = distance to its corresponding head cluster
-+ *        di_u.delta[1] = distance to its corresponding tail cluster
-+ *                (di_advise could be 0, 1 or 2)
-+ */
-+enum {
-+	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
-+	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
-+	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
-+	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
-+	Z_EROFS_VLE_CLUSTER_TYPE_MAX
-+};
-+
-+#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
-+#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
-+
-+/*
-+ * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
-+ * compressed block count of a compressed extent (in logical clusters, aka.
-+ * block count of a pcluster).
-+ */
-+#define Z_EROFS_VLE_DI_D0_CBLKCNT		(1 << 11)
-+
-+struct z_erofs_vle_decompressed_index {
-+	__le16 di_advise;
-+	/* where to decompress in the head cluster */
-+	__le16 di_clusterofs;
-+
-+	union {
-+		/* for the head cluster */
-+		__le32 blkaddr;
 +		/*
-+		 * for the rest clusters
-+		 * eg. for 4k page-sized cluster, maximum 4K*64k = 256M)
-+		 * [0] - pointing to the head cluster
-+		 * [1] - pointing to the tail cluster
++		 * partialDecoding :
++		 * may not respect endBlock parsing restrictions
 +		 */
-+		__le16 delta[2];
-+	} di_u;
-+};
++		assert(op <= oend);
++		if (partialDecoding &&
++		    (cpy > oend - MATCH_SAFEGUARD_DISTANCE)) {
++			size_t const mlen = min(length, (size_t)(oend - op));
++			const BYTE * const matchEnd = match + mlen;
++			BYTE * const copyEnd = op + mlen;
 +
-+#define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
-+	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
-+	 sizeof(struct z_erofs_map_header) + Z_EROFS_VLE_LEGACY_HEADER_PADDING)
-+
-+/* dirent sorts in alphabet order, thus we can do binary search */
-+struct erofs_dirent {
-+	__le64 nid;     /* node number */
-+	__le16 nameoff; /* start offset of file name */
-+	__u8 file_type; /* file type */
-+	__u8 reserved;  /* reserved */
-+} __packed;
-+
-+/* file types used in inode_info->flags */
-+enum {
-+	EROFS_FT_UNKNOWN,
-+	EROFS_FT_REG_FILE,
-+	EROFS_FT_DIR,
-+	EROFS_FT_CHRDEV,
-+	EROFS_FT_BLKDEV,
-+	EROFS_FT_FIFO,
-+	EROFS_FT_SOCK,
-+	EROFS_FT_SYMLINK,
-+	EROFS_FT_MAX
-+};
-+
-+#define EROFS_NAME_LEN      255
-+
-+/* check the EROFS on-disk layout strictly at compile time */
-+static inline void erofs_check_ondisk_layout_definitions(void)
-+{
-+	BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
-+	BUILD_BUG_ON(sizeof(struct erofs_inode_compact) != 32);
-+	BUILD_BUG_ON(sizeof(struct erofs_inode_extended) != 64);
-+	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
-+	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
-+	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
-+	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
-+	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
-+
-+	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
-+		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
-+}
-+
-+#endif
-diff --git a/fs/erofs/fs.c b/fs/erofs/fs.c
-new file mode 100644
-index 0000000000..0269492d8c
---- /dev/null
-+++ b/fs/erofs/fs.c
-@@ -0,0 +1,231 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include "internal.h"
-+#include <fs_internal.h>
-+
-+struct erofs_sb_info erofs_sbi;
-+
-+static struct erofs_ctxt {
-+	struct disk_partition cur_part_info;
-+	struct blk_desc *cur_dev;
-+} ctxt;
-+
-+int erofs_dev_read(void *buf, u64 offset, size_t len)
-+{
-+	lbaint_t sect = offset >> ctxt.cur_dev->log2blksz;
-+	int off = offset & (ctxt.cur_dev->blksz - 1);
-+
-+	if (!ctxt.cur_dev)
-+		return -EIO;
-+
-+	if (fs_devread(ctxt.cur_dev, &ctxt.cur_part_info, sect,
-+			 off, len, buf))
-+		return 0;
-+	return -EIO;
-+}
-+
-+int erofs_blk_read(void *buf, erofs_blk_t start, u32 nblocks)
-+{
-+	return erofs_dev_read(buf, blknr_to_addr(start),
-+			 blknr_to_addr(nblocks));
-+}
-+
-+int erofs_probe(struct blk_desc *fs_dev_desc,
-+		struct disk_partition *fs_partition)
-+{
-+	int ret;
-+
-+	ctxt.cur_dev = fs_dev_desc;
-+	ctxt.cur_part_info = *fs_partition;
-+
-+	ret = erofs_read_superblock();
-+	if (ret)
-+		goto error;
-+
-+	return 0;
-+error:
-+	ctxt.cur_dev = NULL;
-+	return ret;
-+}
-+
-+struct erofs_dir_stream {
-+	struct fs_dir_stream fs_dirs;
-+	struct fs_dirent dirent;
-+
-+	struct erofs_inode inode;
-+	char dblk[EROFS_BLKSIZ];
-+	unsigned int maxsize, de_end;
-+	erofs_off_t pos;
-+};
-+
-+int erofs_opendir(const char *filename, struct fs_dir_stream **dirsp)
-+{
-+	struct erofs_dir_stream *dirs;
-+	int err;
-+
-+	dirs = calloc(1, sizeof(*dirs));
-+	if (!dirs)
-+		return -ENOMEM;
-+
-+	err = erofs_ilookup(filename, &dirs->inode);
-+	if (err)
-+		goto err_out;
-+
-+	if (!S_ISDIR(dirs->inode.i_mode)) {
-+		err = -ENOTDIR;
-+		goto err_out;
-+	}
-+	*dirsp = (struct fs_dir_stream *)dirs;
-+	return 0;
-+err_out:
-+	free(dirs);
-+	return err;
-+}
-+
-+int erofs_readdir(struct fs_dir_stream *fs_dirs, struct fs_dirent **dentp)
-+{
-+	struct erofs_dir_stream *dirs = (struct erofs_dir_stream *)fs_dirs;
-+	struct fs_dirent *dent = &dirs->dirent;
-+	erofs_off_t pos = dirs->pos;
-+	unsigned int nameoff, de_namelen;
-+	struct erofs_dirent *de;
-+	char *de_name;
-+	int err;
-+
-+	if (pos >= dirs->inode.i_size)
-+		return 1;
-+
-+	if (!dirs->maxsize) {
-+		dirs->maxsize = min_t(unsigned int, EROFS_BLKSIZ,
-+				      dirs->inode.i_size - pos);
-+
-+		err = erofs_pread(&dirs->inode, dirs->dblk,
-+				  dirs->maxsize, pos);
-+		if (err)
-+			return err;
-+
-+		de = (struct erofs_dirent *)dirs->dblk;
-+		dirs->de_end = le16_to_cpu(de->nameoff);
-+		if (dirs->de_end < sizeof(struct erofs_dirent) ||
-+		    dirs->de_end >= EROFS_BLKSIZ) {
-+			erofs_err("invalid de[0].nameoff %u @ nid %llu",
-+				  nameoff, de->nid | 0ULL);
-+			return -EFSCORRUPTED;
++			if (matchEnd > op) {
++				/* overlap copy */
++				while (op < copyEnd)
++					*op++ = *match++;
++			} else {
++				memcpy(op, match, mlen);
++			}
++			op = copyEnd;
++			if (op == oend)
++				break;
++			continue;
 +		}
++
++		if (unlikely(offset < 8)) {
++			op[0] = match[0];
++			op[1] = match[1];
++			op[2] = match[2];
++			op[3] = match[3];
++			match += inc32table[offset];
++			memcpy(op + 4, match, 4);
++			match -= dec64table[offset];
++		} else {
++			LZ4_copy8(op, match);
++			match += 8;
++		}
++
++		op += 8;
++
++		if (unlikely(cpy > oend - MATCH_SAFEGUARD_DISTANCE)) {
++			BYTE * const oCopyLimit = oend - (WILDCOPYLENGTH - 1);
++
++			if (cpy > oend - LASTLITERALS) {
++				/*
++				 * Error : last LASTLITERALS bytes
++				 * must be literals (uncompressed)
++				 */
++				goto _output_error;
++			}
++
++			if (op < oCopyLimit) {
++				LZ4_wildCopy(op, match, oCopyLimit);
++				match += oCopyLimit - op;
++				op = oCopyLimit;
++			}
++			while (op < cpy)
++				*op++ = *match++;
++		} else {
++			LZ4_copy8(op, match);
++			if (length > 16)
++				LZ4_wildCopy(op + 8, match + 8, cpy);
++		}
++		op = cpy; /* wildcopy correction */
 +	}
 +
-+	de = (struct erofs_dirent *)(dirs->dblk + erofs_blkoff(pos));
-+	nameoff = le16_to_cpu(de->nameoff);
-+	de_name = (char *)dirs->dblk + nameoff;
-+
-+	/* the last dirent in the block? */
-+	if (de + 1 >= (struct erofs_dirent *)(dirs->dblk + dirs->de_end))
-+		de_namelen = strnlen(de_name, dirs->maxsize - nameoff);
-+	else
-+		de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
-+
-+	/* a corrupted entry is found */
-+	if (nameoff + de_namelen > dirs->maxsize ||
-+	    de_namelen > EROFS_NAME_LEN) {
-+		erofs_err("bogus dirent @ nid %llu", de->nid | 0ULL);
-+		DBG_BUGON(1);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	memcpy(dent->name, de_name, de_namelen);
-+	dent->name[de_namelen] = '\0';
-+
-+	if (de->file_type == EROFS_FT_DIR) {
-+		dent->type = FS_DT_DIR;
-+	} else if (de->file_type == EROFS_FT_SYMLINK) {
-+		dent->type = FS_DT_LNK;
++	/* end of decoding */
++	if (endOnInput) {
++		/* Nb of output bytes decoded */
++		return (int) (((char *)op) - dst);
 +	} else {
-+		struct erofs_inode vi;
-+
-+		dent->type = FS_DT_REG;
-+		vi.nid = de->nid;
-+
-+		err = erofs_read_inode_from_disk(&vi);
-+		if (err)
-+			return err;
-+		dent->size = vi.i_size;
-+	}
-+	*dentp = dent;
-+
-+	pos += sizeof(*de);
-+	if (erofs_blkoff(pos) >= dirs->de_end) {
-+		pos = blknr_to_addr(erofs_blknr(pos) + 1);
-+		dirs->maxsize = 0;
-+	}
-+	dirs->pos = pos;
-+	return 0;
-+}
-+
-+void erofs_closedir(struct fs_dir_stream *fs_dirs)
-+{
-+	free(fs_dirs);
-+}
-+
-+int erofs_exists(const char *filename)
-+{
-+	struct erofs_inode vi;
-+	int err;
-+
-+	err = erofs_ilookup(filename, &vi);
-+	return err == 0;
-+}
-+
-+int erofs_size(const char *filename, loff_t *size)
-+{
-+	struct erofs_inode vi;
-+	int err;
-+
-+	err = erofs_ilookup(filename, &vi);
-+	if (err)
-+		return err;
-+	*size = vi.i_size;
-+	return 0;
-+}
-+
-+int erofs_read(const char *filename, void *buf, loff_t offset, loff_t len,
-+	      loff_t *actread)
-+{
-+	struct erofs_inode vi;
-+	int err;
-+
-+	err = erofs_ilookup(filename, &vi);
-+	if (err)
-+		return err;
-+
-+	if (!len)
-+		len = vi.i_size;
-+
-+	err = erofs_pread(&vi, buf, len, offset);
-+	if (err) {
-+		*actread = 0;
-+		return err;
++		/* Nb of input bytes read */
++		return (int) (((const char *)ip) - src);
 +	}
 +
-+	if (offset >= vi.i_size)
-+		*actread = 0;
-+	else if (offset + len > vi.i_size)
-+		*actread = vi.i_size - offset;
-+	else
-+		*actread = len;
-+	return 0;
++	/* Overflow error detected */
++_output_error:
++	return (int) (-(((const char *)ip) - src)) - 1;
 +}
 +
-+void erofs_close(void)
++int LZ4_decompress_safe(const char *source, char *dest,
++	int compressedSize, int maxDecompressedSize)
 +{
-+	ctxt.cur_dev = NULL;
++	return LZ4_decompress_generic(source, dest,
++				      compressedSize, maxDecompressedSize,
++				      endOnInputSize, decode_full_block,
++				      noDict, (BYTE *)dest, NULL, 0);
 +}
 +
-+int erofs_uuid(char *uuid_str)
++int LZ4_decompress_safe_partial(const char *src, char *dst,
++	int compressedSize, int targetOutputSize, int dstCapacity)
 +{
-+#ifdef CONFIG_LIB_UUID
-+	if (ctxt.cur_dev)
-+		uuid_bin_to_str(erofs_sbi.uuid, uuid_str,
-+				UUID_STR_FORMAT_STD);
-+	return 0;
-+#endif
-+	return -ENOSYS;
++	dstCapacity = min(targetOutputSize, dstCapacity);
++	return LZ4_decompress_generic(src, dst, compressedSize, dstCapacity,
++				      endOnInputSize, partial_decode,
++				      noDict, (BYTE *)dst, NULL, 0);
 +}
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+diff --git a/fs/erofs/lz4.h b/fs/erofs/lz4.h
 new file mode 100644
-index 0000000000..02dfd7ead4
+index 0000000000..0467a348e1
 --- /dev/null
-+++ b/fs/erofs/internal.h
-@@ -0,0 +1,203 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+#ifndef __EROFS_INTERNAL_H
-+#define __EROFS_INTERNAL_H
-+
-+#define __packed __attribute__((__packed__))
-+
-+#include <linux/stat.h>
-+#include <linux/bug.h>
-+#include <linux/err.h>
-+#include <linux/printk.h>
-+#include <inttypes.h>
-+#include "erofs_fs.h"
-+
-+#define erofs_err(fmt, ...)	\
-+	pr_err(fmt "\n", ##__VA_ARGS__)
-+
-+#define erofs_info(fmt, ...)	\
-+	pr_info(fmt "\n", ##__VA_ARGS__)
-+
-+#define erofs_dbg(fmt, ...)	\
-+	pr_debug(fmt "\n", ##__VA_ARGS__)
-+
-+#define DBG_BUGON(condition)	BUG_ON(condition)
-+
-+/* no obvious reason to support explicit PAGE_SIZE != 4096 for now */
-+#if PAGE_SIZE != 4096
-+#error incompatible PAGE_SIZE is already defined
-+#endif
-+
-+#define PAGE_MASK		(~(PAGE_SIZE-1))
-+
-+#define LOG_BLOCK_SIZE          (12)
-+#define EROFS_BLKSIZ            (1U << LOG_BLOCK_SIZE)
-+
-+#define EROFS_ISLOTBITS		5
-+#define EROFS_SLOTSIZE		(1U << EROFS_ISLOTBITS)
-+
-+typedef u64 erofs_off_t;
-+typedef u64 erofs_nid_t;
-+/* data type for filesystem-wide blocks number */
-+typedef u32 erofs_blk_t;
-+
-+#define NULL_ADDR	((unsigned int)-1)
-+#define NULL_ADDR_UL	((unsigned long)-1)
-+
-+#define erofs_blknr(addr)       ((addr) / EROFS_BLKSIZ)
-+#define erofs_blkoff(addr)      ((addr) % EROFS_BLKSIZ)
-+#define blknr_to_addr(nr)       ((erofs_off_t)(nr) * EROFS_BLKSIZ)
-+
-+#define BLK_ROUND_UP(addr)	DIV_ROUND_UP(addr, EROFS_BLKSIZ)
-+
-+struct erofs_sb_info {
-+	u64 blocks;
-+
-+	erofs_blk_t meta_blkaddr;
-+	erofs_blk_t xattr_blkaddr;
-+
-+	u32 feature_compat;
-+	u32 feature_incompat;
-+	u64 build_time;
-+	u32 build_time_nsec;
-+
-+	unsigned char islotbits;
-+
-+	/* what we really care is nid, rather than ino.. */
-+	erofs_nid_t root_nid;
-+	/* used for statfs, f_files - f_favail */
-+	u64 inos;
-+
-+	u8 uuid[16];
-+
-+	u16 available_compr_algs;
-+	u16 lz4_max_distance;
-+};
-+
-+/* global sbi */
-+extern struct erofs_sb_info erofs_sbi;
-+
-+static inline erofs_off_t iloc(erofs_nid_t nid)
-+{
-+	return blknr_to_addr(erofs_sbi.meta_blkaddr) +
-+		(nid << erofs_sbi.islotbits);
-+}
-+
-+#define EROFS_FEATURE_FUNCS(name, compat, feature) \
-+static inline bool erofs_sb_has_##name(void) \
-+{ \
-+	return erofs_sbi.feature_##compat & EROFS_FEATURE_##feature; \
-+}
-+
-+EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
-+EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
-+EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
-+EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
-+
-+#define EROFS_I_EA_INITED	(1 << 0)
-+#define EROFS_I_Z_INITED	(1 << 1)
-+
-+struct erofs_inode {
-+	unsigned int flags;
-+	umode_t i_mode;
-+	erofs_off_t i_size;
-+
-+	u64 i_ino[2];
-+	u32 i_uid;
-+	u32 i_gid;
-+	u64 i_ctime;
-+	u32 i_ctime_nsec;
-+	u32 i_nlink;
-+
-+	union {
-+		u32 i_blkaddr;
-+		u32 i_blocks;
-+		u32 i_rdev;
-+	} u;
-+
-+	unsigned char datalayout;
-+	unsigned char inode_isize;
-+	unsigned int xattr_isize;
-+	unsigned int extent_isize;
-+
-+	erofs_nid_t nid;
-+
-+	struct {
-+		uint16_t z_advise;
-+		uint8_t  z_algorithmtype[2];
-+		uint8_t  z_logical_clusterbits;
-+	};
-+};
-+
-+static inline bool is_inode_layout_compression(struct erofs_inode *inode)
-+{
-+	return erofs_inode_is_data_compressed(inode->datalayout);
-+}
-+
-+static inline unsigned int erofs_bitrange(unsigned int value, unsigned int bit,
-+					  unsigned int bits)
-+{
-+	return (value >> bit) & ((1 << bits) - 1);
-+}
-+
-+static inline unsigned int erofs_inode_version(unsigned int value)
-+{
-+	return erofs_bitrange(value, EROFS_I_VERSION_BIT,
-+			      EROFS_I_VERSION_BITS);
-+}
-+
-+static inline unsigned int erofs_inode_datalayout(unsigned int value)
-+{
-+	return erofs_bitrange(value, EROFS_I_DATALAYOUT_BIT,
-+			      EROFS_I_DATALAYOUT_BITS);
-+}
-+
-+#define IS_ROOT(x)	((x) == (x)->i_parent)
-+
-+static inline bool is_dot_dotdot(const char *name)
-+{
-+	if (name[0] != '.')
-+		return false;
-+
-+	return name[1] == '\0' || (name[1] == '.' && name[2] == '\0');
-+}
-+
-+enum {
-+	BH_Meta,
-+	BH_Mapped,
-+	BH_Zipped,
-+	BH_FullMapped,
-+};
-+
-+/* Has a disk mapping */
-+#define EROFS_MAP_MAPPED	(1 << BH_Mapped)
-+/* Located in metadata (could be copied from bd_inode) */
-+#define EROFS_MAP_META		(1 << BH_Meta)
-+/* The extent has been compressed */
-+#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The length of extent is full */
-+#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
-+
-+struct erofs_map_blocks {
-+	char mpage[EROFS_BLKSIZ];
-+
-+	erofs_off_t m_pa, m_la;
-+	u64 m_plen, m_llen;
-+
-+	unsigned int m_flags;
-+	erofs_blk_t index;
-+};
-+
-+int erofs_blk_read(void *buf, erofs_blk_t start, u32 nblocks);
-+int erofs_dev_read(void *buf, u64 offset, size_t len);
-+
-+int erofs_read_superblock(void);
-+int erofs_read_inode_from_disk(struct erofs_inode *vi);
-+int erofs_ilookup(const char *path, struct erofs_inode *vi);
-+int erofs_pread(struct erofs_inode *inode, char *buf,
-+		erofs_off_t count, erofs_off_t offset);
-+int z_erofs_fill_inode(struct erofs_inode *vi);
-+int z_erofs_map_blocks_iter(struct erofs_inode *vi,
-+			    struct erofs_map_blocks *map);
-+
-+#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
-+#endif
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-new file mode 100644
-index 0000000000..4c5d614483
---- /dev/null
-+++ b/fs/erofs/namei.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include "internal.h"
-+
-+int erofs_read_inode_from_disk(struct erofs_inode *vi)
-+{
-+	int ret, ifmt;
-+	char buf[sizeof(struct erofs_inode_extended)];
-+	struct erofs_inode_compact *dic;
-+	struct erofs_inode_extended *die;
-+	const erofs_off_t inode_loc = iloc(vi->nid);
-+
-+	ret = erofs_dev_read(buf, inode_loc, sizeof(*dic));
-+	if (ret < 0)
-+		return -EIO;
-+
-+	dic = (struct erofs_inode_compact *)buf;
-+	ifmt = le16_to_cpu(dic->i_format);
-+
-+	vi->datalayout = erofs_inode_datalayout(ifmt);
-+	if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
-+		erofs_err("unsupported datalayout %u of nid %llu",
-+			  vi->datalayout, vi->nid | 0ULL);
-+		return -EOPNOTSUPP;
-+	}
-+	switch (erofs_inode_version(ifmt)) {
-+	case EROFS_INODE_LAYOUT_EXTENDED:
-+		vi->inode_isize = sizeof(struct erofs_inode_extended);
-+
-+		ret = erofs_dev_read(buf + sizeof(*dic), inode_loc + sizeof(*dic),
-+			       sizeof(*die) - sizeof(*dic));
-+		if (ret < 0)
-+			return -EIO;
-+
-+		die = (struct erofs_inode_extended *)buf;
-+		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
-+		vi->i_mode = le16_to_cpu(die->i_mode);
-+
-+		switch (vi->i_mode & S_IFMT) {
-+		case S_IFREG:
-+		case S_IFDIR:
-+		case S_IFLNK:
-+			vi->u.i_blkaddr = le32_to_cpu(die->i_u.raw_blkaddr);
-+			break;
-+		case S_IFCHR:
-+		case S_IFBLK:
-+			vi->u.i_rdev = 0;
-+			break;
-+		case S_IFIFO:
-+		case S_IFSOCK:
-+			vi->u.i_rdev = 0;
-+			break;
-+		default:
-+			goto bogusimode;
-+		}
-+
-+		vi->i_uid = le32_to_cpu(die->i_uid);
-+		vi->i_gid = le32_to_cpu(die->i_gid);
-+		vi->i_nlink = le32_to_cpu(die->i_nlink);
-+
-+		vi->i_ctime = le64_to_cpu(die->i_ctime);
-+		vi->i_ctime_nsec = le64_to_cpu(die->i_ctime_nsec);
-+		vi->i_size = le64_to_cpu(die->i_size);
-+		break;
-+	case EROFS_INODE_LAYOUT_COMPACT:
-+		vi->inode_isize = sizeof(struct erofs_inode_compact);
-+		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
-+		vi->i_mode = le16_to_cpu(dic->i_mode);
-+
-+		switch (vi->i_mode & S_IFMT) {
-+		case S_IFREG:
-+		case S_IFDIR:
-+		case S_IFLNK:
-+			vi->u.i_blkaddr = le32_to_cpu(dic->i_u.raw_blkaddr);
-+			break;
-+		case S_IFCHR:
-+		case S_IFBLK:
-+			vi->u.i_rdev = 0;
-+			break;
-+		case S_IFIFO:
-+		case S_IFSOCK:
-+			vi->u.i_rdev = 0;
-+			break;
-+		default:
-+			goto bogusimode;
-+		}
-+
-+		vi->i_uid = le16_to_cpu(dic->i_uid);
-+		vi->i_gid = le16_to_cpu(dic->i_gid);
-+		vi->i_nlink = le16_to_cpu(dic->i_nlink);
-+
-+		vi->i_ctime = erofs_sbi.build_time;
-+		vi->i_ctime_nsec = erofs_sbi.build_time_nsec;
-+
-+		vi->i_size = le32_to_cpu(dic->i_size);
-+		break;
-+	default:
-+		erofs_err("unsupported on-disk inode version %u of nid %llu",
-+			  erofs_inode_version(ifmt), vi->nid | 0ULL);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	vi->flags = 0;
-+	if (erofs_inode_is_data_compressed(vi->datalayout))
-+		return -EOPNOTSUPP;
-+	return 0;
-+bogusimode:
-+	erofs_err("bogus i_mode (%o) @ nid %llu", vi->i_mode, vi->nid | 0ULL);
-+	return -EFSCORRUPTED;
-+}
-+
-+struct erofs_dirent *find_target_dirent(erofs_nid_t pnid,
-+					void *dentry_blk,
-+					const char *name, unsigned int len,
-+					unsigned int nameoff,
-+					unsigned int maxsize)
-+{
-+	struct erofs_dirent *de = dentry_blk;
-+	const struct erofs_dirent *end = dentry_blk + nameoff;
-+
-+	while (de < end) {
-+		const char *de_name;
-+		unsigned int de_namelen;
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		de_name = (char *)dentry_blk + nameoff;
-+
-+		/* the last dirent in the block? */
-+		if (de + 1 >= end)
-+			de_namelen = strnlen(de_name, maxsize - nameoff);
-+		else
-+			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
-+
-+		/* a corrupted entry is found */
-+		if (nameoff + de_namelen > maxsize ||
-+		    de_namelen > EROFS_NAME_LEN) {
-+			erofs_err("bogus dirent @ nid %llu", pnid | 0ULL);
-+			DBG_BUGON(1);
-+			return ERR_PTR(-EFSCORRUPTED);
-+		}
-+
-+		if (len == de_namelen && !memcmp(de_name, name, de_namelen))
-+			return de;
-+		++de;
-+	}
-+	return NULL;
-+}
-+
-+struct nameidata {
-+	erofs_nid_t	nid;
-+	unsigned int	ftype;
-+};
-+
-+int erofs_namei(struct nameidata *nd,
-+		const char *name, unsigned int len)
-+{
-+	erofs_nid_t nid = nd->nid;
-+	int ret;
-+	char buf[EROFS_BLKSIZ];
-+	struct erofs_inode vi = { .nid = nid };
-+	erofs_off_t offset;
-+
-+	ret = erofs_read_inode_from_disk(&vi);
-+	if (ret)
-+		return ret;
-+
-+	offset = 0;
-+	while (offset < vi.i_size) {
-+		erofs_off_t maxsize = min_t(erofs_off_t,
-+					    vi.i_size - offset, EROFS_BLKSIZ);
-+		struct erofs_dirent *de = (void *)buf;
-+		unsigned int nameoff;
-+
-+		ret = erofs_pread(&vi, buf, maxsize, offset);
-+		if (ret)
-+			return ret;
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		if (nameoff < sizeof(struct erofs_dirent) ||
-+		    nameoff >= PAGE_SIZE) {
-+			erofs_err("invalid de[0].nameoff %u @ nid %llu",
-+				  nameoff, nid | 0ULL);
-+			return -EFSCORRUPTED;
-+		}
-+
-+		de = find_target_dirent(nid, buf, name, len,
-+					nameoff, maxsize);
-+		if (IS_ERR(de))
-+			return PTR_ERR(de);
-+
-+		if (de) {
-+			nd->nid = le64_to_cpu(de->nid);
-+			return 0;
-+		}
-+		offset += maxsize;
-+	}
-+	return -ENOENT;
-+}
-+
-+static int link_path_walk(const char *name, struct nameidata *nd)
-+{
-+	nd->nid = erofs_sbi.root_nid;
-+
-+	while (*name == '/')
-+		name++;
-+
-+	/* At this point we know we have a real path component. */
-+	while (*name != '\0') {
-+		const char *p = name;
-+		int ret;
-+
-+		do {
-+			++p;
-+		} while (*p != '\0' && *p != '/');
-+
-+		DBG_BUGON(p <= name);
-+		ret = erofs_namei(nd, name, p - name);
-+		if (ret)
-+			return ret;
-+
-+		name = p;
-+		/* Skip until no more slashes. */
-+		for (name = p; *name == '/'; ++name);
-+	}
-+	return 0;
-+}
-+
-+int erofs_ilookup(const char *path, struct erofs_inode *vi)
-+{
-+	int ret;
-+	struct nameidata nd;
-+
-+	ret = link_path_walk(path, &nd);
-+	if (ret)
-+		return ret;
-+
-+	vi->nid = nd.nid;
-+	return erofs_read_inode_from_disk(vi);
-+}
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-new file mode 100644
-index 0000000000..c58a826b4b
---- /dev/null
-+++ b/fs/erofs/super.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include "internal.h"
-+
-+static bool check_layout_compatibility(struct erofs_sb_info *sbi,
-+				       struct erofs_super_block *dsb)
-+{
-+	const unsigned int feature = le32_to_cpu(dsb->feature_incompat);
-+
-+	sbi->feature_incompat = feature;
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (feature & (~EROFS_ALL_FEATURE_INCOMPAT)) {
-+		erofs_err("unidentified incompatible feature %x, please upgrade kernel version",
-+			  feature & ~EROFS_ALL_FEATURE_INCOMPAT);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+int erofs_read_superblock(void)
-+{
-+	char data[EROFS_BLKSIZ];
-+	struct erofs_super_block *dsb;
-+	unsigned int blkszbits;
-+	int ret;
-+
-+	ret = erofs_blk_read(data, 0, 1);
-+	if (ret < 0) {
-+		erofs_err("cannot read erofs superblock: %d", ret);
-+		return -EIO;
-+	}
-+	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
-+
-+	ret = -EINVAL;
-+	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
-+		erofs_err("cannot find valid erofs superblock");
-+		return ret;
-+	}
-+
-+	erofs_sbi.feature_compat = le32_to_cpu(dsb->feature_compat);
-+
-+	blkszbits = dsb->blkszbits;
-+	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
-+	if (blkszbits != LOG_BLOCK_SIZE) {
-+		erofs_err("blksize %u isn't supported on this platform",
-+			  1 << blkszbits);
-+		return ret;
-+	}
-+
-+	if (!check_layout_compatibility(&erofs_sbi, dsb))
-+		return ret;
-+
-+	erofs_sbi.blocks = le32_to_cpu(dsb->blocks);
-+	erofs_sbi.meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
-+	erofs_sbi.xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
-+	erofs_sbi.islotbits = EROFS_ISLOTBITS;
-+	erofs_sbi.root_nid = le16_to_cpu(dsb->root_nid);
-+	erofs_sbi.inos = le64_to_cpu(dsb->inos);
-+
-+	erofs_sbi.build_time = le64_to_cpu(dsb->build_time);
-+	erofs_sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
-+
-+	memcpy(&erofs_sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
-+	return 0;
-+}
-diff --git a/fs/fs.c b/fs/fs.c
-index 7c682582c8..3c06b0252b 100644
---- a/fs/fs.c
-+++ b/fs/fs.c
-@@ -26,6 +26,7 @@
- #include <linux/math64.h>
- #include <efi_loader.h>
- #include <squashfs.h>
-+#include <erofs.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
- 
-@@ -304,6 +305,27 @@ static struct fstype_info fstypes[] = {
- 		.unlink = fs_unlink_unsupported,
- 		.mkdir = fs_mkdir_unsupported,
- 	},
-+#endif
-+#if IS_ENABLED(CONFIG_FS_EROFS)
-+	{
-+		.fstype = FS_TYPE_EROFS,
-+		.name = "erofs",
-+		.null_dev_desc_ok = false,
-+		.probe = erofs_probe,
-+		.opendir = erofs_opendir,
-+		.readdir = erofs_readdir,
-+		.ls = fs_ls_generic,
-+		.read = erofs_read,
-+		.size = erofs_size,
-+		.close = erofs_close,
-+		.closedir = erofs_closedir,
-+		.exists = erofs_exists,
-+		.uuid = fs_uuid_unsupported,
-+		.write = fs_write_unsupported,
-+		.ln = fs_ln_unsupported,
-+		.unlink = fs_unlink_unsupported,
-+		.mkdir = fs_mkdir_unsupported,
-+	},
- #endif
- 	{
- 		.fstype = FS_TYPE_ANY,
-diff --git a/include/erofs.h b/include/erofs.h
-new file mode 100644
-index 0000000000..79de78257f
---- /dev/null
-+++ b/include/erofs.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _EROFS_H_
-+#define _EROFS_H_
-+
-+struct disk_partition;
-+
-+int erofs_opendir(const char *filename, struct fs_dir_stream **dirsp);
-+int erofs_readdir(struct fs_dir_stream *dirs, struct fs_dirent **dentp);
-+int erofs_probe(struct blk_desc *fs_dev_desc,
-+	       struct disk_partition *fs_partition);
-+int erofs_read(const char *filename, void *buf, loff_t offset,
-+	      loff_t len, loff_t *actread);
-+int erofs_size(const char *filename, loff_t *size);
-+int erofs_exists(const char *filename);
-+void erofs_close(void);
-+void erofs_closedir(struct fs_dir_stream *dirs);
-+int erofs_uuid(char *uuid_str);
-+
-+#endif /* _EROFS_H  */
-diff --git a/include/fs.h b/include/fs.h
-index 1c79e299fd..f96afc4c89 100644
---- a/include/fs.h
-+++ b/include/fs.h
-@@ -17,6 +17,7 @@ struct cmd_tbl;
- #define FS_TYPE_UBIFS	4
- #define FS_TYPE_BTRFS	5
- #define FS_TYPE_SQUASHFS 6
-+#define FS_TYPE_EROFS   7
- 
- struct blk_desc;
- 
++++ b/fs/erofs/lz4.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL 2.0+ OR BSD-2-Clause */
++int LZ4_decompress_safe(const char *source, char *dest,
++	int compressedSize, int maxDecompressedSize);
++int LZ4_decompress_safe_partial(const char *src, char *dst,
++	int compressedSize, int targetOutputSize, int dstCapacity);
 -- 
 2.25.1
 
