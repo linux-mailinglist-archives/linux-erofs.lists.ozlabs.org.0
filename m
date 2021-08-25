@@ -2,41 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D28413F6D15
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Aug 2021 03:23:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 954793F6D19
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Aug 2021 03:28:15 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GvSsm4s3Nz2yK7
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Aug 2021 11:23:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GvSzK3GkRz2yKF
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Aug 2021 11:28:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
+ helo=out30-54.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-54.freemail.mail.aliyun.com
+ (out30-54.freemail.mail.aliyun.com [115.124.30.54])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GvSsj1BqMz2xlC
- for <linux-erofs@lists.ozlabs.org>; Wed, 25 Aug 2021 11:23:20 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R581e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04420; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0Ulfa9nB_1629854589; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GvSzD2Z0hz2xff
+ for <linux-erofs@lists.ozlabs.org>; Wed, 25 Aug 2021 11:28:07 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R121e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0UleTnsf_1629854866; 
 Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Ulfa9nB_1629854589) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 25 Aug 2021 09:23:11 +0800
-Date: Wed, 25 Aug 2021 09:23:08 +0800
+ fp:SMTPD_---0UleTnsf_1629854866) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 25 Aug 2021 09:27:48 +0800
+Date: Wed, 25 Aug 2021 09:27:41 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Huang Jianan <jnhuang95@gmail.com>
-Subject: Re: [PATCH v2 0/3] fs/erofs: new filesystem
-Message-ID: <YSWbfDiAbSNmZw1B@B-P7TQMD6M-0146.local>
-References: <20210822154843.10971-1-jnhuang95@gmail.com>
- <20210823123646.9765-1-jnhuang95@gmail.com>
+To: Huang Jianan <huangjianan@oppo.com>
+Subject: Re: [PATCH v2] erofs-utils: support per-inode compress pcluster
+Message-ID: <YSWcjYnrdUJowrLv@B-P7TQMD6M-0146.local>
+References: <20210816094043.43772-1-huangjianan@oppo.com>
+ <20210818042715.24416-1-huangjianan@oppo.com>
+ <YSWaMjYusTMt7Ccf@B-P7TQMD6M-0146.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210823123646.9765-1-jnhuang95@gmail.com>
+In-Reply-To: <YSWaMjYusTMt7Ccf@B-P7TQMD6M-0146.local>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,74 +49,191 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: u-boot@lists.denx.de, xiang@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: yh@oppo.com, kevin.liw@oppo.com, guoweichao@oppo.com,
+ linux-erofs@lists.ozlabs.org, guanyuwei@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi U-Boot folks, 
+On Wed, Aug 25, 2021 at 09:17:38AM +0800, Gao Xiang wrote:
+> On Wed, Aug 18, 2021 at 12:27:15PM +0800, Huang Jianan via Linux-erofs wrote:
+> > Add an option to configure per-inode compression strategy. Each line
+> > of the file should be in the following form:
+> > 
+> > <Regular-expression> <pcluster-in-bytes>
+> > 
+> > When pcluster is 0, it means that the file shouldn't be compressed.
+> > 
+> > Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> 
+> Sorry for the delay. Due to busy work, I will look into the details
+> this weekend. Some comments in advance.
+> 
+> > ---
+> > changes since v1:
+> >  - rename c_pclusterblks to c_physical_clusterblks and place it in union
+> >  - change cfg.c_physical_clusterblks > 1 to erofs_sb_has_big_pcluster()
+> >    since it's per-inode compression strategy
+> > 
+> >  include/erofs/compress_rule.h |  25 ++++++++
+> 
+> How about calling "compress_hints"? Does it sound better?
+> 
+> >  include/erofs/config.h        |   1 +
+> 
+> ...
+> 
+> > index 0000000..497d662
+> > --- /dev/null
+> > +++ b/lib/compress_rule.c
+> > @@ -0,0 +1,106 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * erofs-utils/lib/compress_rule.c
+> > + *
+> > + * Copyright (C), 2008-2021, OPPO Mobile Comm Corp., Ltd.
+> > + * Created by Huang Jianan <huangjianan@oppo.com>
+> > + */
+> > +#include <string.h>
+> > +#include <stdlib.h>
+> > +#include "erofs/err.h"
+> > +#include "erofs/list.h"
+> > +#include "erofs/print.h"
+> > +#include "erofs/compress_rule.h"
+> > +
+> > +static LIST_HEAD(compress_rule_head);
+> > +
+> > +static void dump_regerror(int errcode, const char *s, const regex_t *preg)
+> > +{
+> > +	char str[512];
+> > +
+> > +	regerror(errcode, preg, str, sizeof(str));
+> > +	erofs_err("invalid regex %s (%s)\n", s, str);
+> > +}
+> > +
+> > +static int erofs_insert_compress_rule(const char *s, unsigned int blks)
+> > +{
+> > +	struct erofs_compress_rule *r;
+> > +	int ret = 0;
+> > +
+> > +	r = malloc(sizeof(struct erofs_compress_rule));
+> > +	if (!r)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = regcomp(&r->reg, s, REG_EXTENDED|REG_NOSUB);
+> > +	if (ret) {
+> > +		dump_regerror(ret, s, &r->reg);
+> > +		goto err;
+> > +	}
+> > +	r->c_physical_clusterblks = blks;
+> > +
+> > +	list_add_tail(&r->list, &compress_rule_head);
+> > +	erofs_info("insert compress rule %s: %u", s, blks);
+> > +	return ret;
+> > +
+> > +err:
+> > +	free(r);
+> > +	return ret;
+> > +}
+> > +
+> > +unsigned int erofs_parse_pclusterblks(struct erofs_inode *inode)
+> > +{
+> > +	const char *s;
+> > +	struct erofs_compress_rule *r;
+> > +
+> > +	if (inode->c_physical_clusterblks)
+> > +		return inode->c_physical_clusterblks;
+> > +
+> > +	s = erofs_fspath(inode->i_srcpath);
+> > +
+> > +	list_for_each_entry(r, &compress_rule_head, list) {
+> > +		int ret = regexec(&r->reg, s, (size_t)0, NULL, 0);
+> > +
+> > +		if (!ret) {
+> > +			inode->c_physical_clusterblks = r->c_physical_clusterblks;
+> > +			return r->c_physical_clusterblks;
+> > +		}
+> > +		if (ret > REG_NOMATCH)
+> > +			dump_regerror(ret, s, &r->reg);
+> > +	}
+> > +
+> > +	inode->c_physical_clusterblks = cfg.c_physical_clusterblks;
+> > +	return cfg.c_physical_clusterblks;
+> > +}
+> > +
+> > +int erofs_load_compress_rule()
+> > +{
+> > +	char buf[PATH_MAX + 100];
+> > +	FILE* f;
+> > +	int ret = 0;
+> > +
+> > +	if (!cfg.compress_rule_file)
+> > +		return 0;
+> > +
+> > +	f = fopen(cfg.compress_rule_file, "r");
+> > +	if (f == NULL)
+> > +		return -errno;
+> > +
+> > +	while (fgets(buf, sizeof(buf), f)) {
+> > +		char* line = buf;
+> > +		char* s;
+> > +		unsigned int blks;
+> > +
+> > +		s = strtok(line, " ");
+> > +		blks = atoi(strtok(NULL, " "));
+> > +		if (blks % EROFS_BLKSIZ) {
+> 
+> We might need to guarantee these are power of 2.
 
-On Mon, Aug 23, 2021 at 08:36:43PM +0800, Huang Jianan wrote:
-> From: Huang Jianan <huangjianan@oppo.com>
-> 
-> Add erofs filesystem support.
-> 
-> The code is adapted from erofs-utils in order to reduce maintenance
-> burden and keep with the latest feature.
-> 
-> Changes since v1:
->  - fix the inconsistency between From and SoB (Bin Meng);
->  - add missing license header;
-> 
-> Huang Jianan (3):
->   fs/erofs: add erofs filesystem support
->   fs/erofs: add lz4 1.8.3 decompressor
->   fs/erofs: add lz4 decompression support
+Oh, never mind. It's not necessary to leave pcluster power of 2.
+(I need some wake-up coffee...)
 
-Could someone take some time looking into this? I think adding erofs
-support to U-Boot is useful for booting with erofs. And keep sync
-with erofsfuse code in erofs-utils is a good strategy for latest
-feature.
-
-Thanks in advance.
-
-Thanks,
-Gao Xiang
-
+> Also, how about just printing out warning message but using default "-C"
+> value instead?
 > 
->  fs/Kconfig            |   1 +
->  fs/Makefile           |   1 +
->  fs/erofs/Kconfig      |  12 +
->  fs/erofs/Makefile     |  10 +
->  fs/erofs/data.c       | 206 ++++++++++++++++
->  fs/erofs/decompress.c |  74 ++++++
->  fs/erofs/decompress.h |  29 +++
->  fs/erofs/erofs_fs.h   | 384 ++++++++++++++++++++++++++++++
->  fs/erofs/fs.c         | 231 ++++++++++++++++++
->  fs/erofs/internal.h   | 203 ++++++++++++++++
->  fs/erofs/lz4.c        | 534 ++++++++++++++++++++++++++++++++++++++++++
->  fs/erofs/lz4.h        |   5 +
->  fs/erofs/namei.c      | 238 +++++++++++++++++++
->  fs/erofs/super.c      |  65 +++++
->  fs/erofs/zmap.c       | 517 ++++++++++++++++++++++++++++++++++++++++
->  fs/fs.c               |  22 ++
->  include/erofs.h       |  19 ++
->  include/fs.h          |   1 +
->  18 files changed, 2552 insertions(+)
->  create mode 100644 fs/erofs/Kconfig
->  create mode 100644 fs/erofs/Makefile
->  create mode 100644 fs/erofs/data.c
->  create mode 100644 fs/erofs/decompress.c
->  create mode 100644 fs/erofs/decompress.h
->  create mode 100644 fs/erofs/erofs_fs.h
->  create mode 100644 fs/erofs/fs.c
->  create mode 100644 fs/erofs/internal.h
->  create mode 100644 fs/erofs/lz4.c
->  create mode 100644 fs/erofs/lz4.h
->  create mode 100644 fs/erofs/namei.c
->  create mode 100644 fs/erofs/super.c
->  create mode 100644 fs/erofs/zmap.c
->  create mode 100644 include/erofs.h
+> > +			erofs_err("invalid physical clustersize %u", blks);
+> > +			ret = -EINVAL;
+> > +			goto out;
+> > +		}
+> > +		erofs_insert_compress_rule(s, blks / EROFS_BLKSIZ);
+> > +	}
+> > +
+> > +out:
+> > +	fclose(f);
+> > +	return ret;
+> > +}
 > 
-> -- 
-> 2.25.1
+> ...
+> 
+> > diff --git a/mkfs/main.c b/mkfs/main.c
+> > index 10fe14d..467e875 100644
+> > --- a/mkfs/main.c
+> > +++ b/mkfs/main.c
+> > @@ -23,6 +23,7 @@
+> >  #include "erofs/xattr.h"
+> >  #include "erofs/exclude.h"
+> >  #include "erofs/block_list.h"
+> > +#include "erofs/compress_rule.h"
+> >  
+> >  #ifdef HAVE_LIBUUID
+> >  #include <uuid.h>
+> > @@ -44,11 +45,12 @@ static struct option long_options[] = {
+> >  	{"random-pclusterblks", no_argument, NULL, 8},
+> >  #endif
+> >  	{"max-extent-bytes", required_argument, NULL, 9},
+> > +	{"compress-rule", required_argument, NULL, 10},
+> >  #ifdef WITH_ANDROID
+> > -	{"mount-point", required_argument, NULL, 10},
+> > -	{"product-out", required_argument, NULL, 11},
+> > -	{"fs-config-file", required_argument, NULL, 12},
+> > -	{"block-list-file", required_argument, NULL, 13},
+> > +	{"mount-point", required_argument, NULL, 20},
+> > +	{"product-out", required_argument, NULL, 21},
+> > +	{"fs-config-file", required_argument, NULL, 22},
+> > +	{"block-list-file", required_argument, NULL, 23},
+> 
+> I think we might clean up these first with a separated patch.
+> Use >= 256 for all of them instead.
+> 
+> Thanks,
+> Gao Xiang
