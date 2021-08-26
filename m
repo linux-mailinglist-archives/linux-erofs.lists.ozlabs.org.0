@@ -2,75 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB96D3F7EBD
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Aug 2021 00:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C553E3F80DB
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Aug 2021 05:10:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Gw1Cn4YJfz2yJk
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Aug 2021 08:40:53 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=G9wSn7kY;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Gw7CP4Ynkz2yP5
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Aug 2021 13:10:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::82c;
- helo=mail-qt1-x82c.google.com; envelope-from=trini@konsulko.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256
- header.s=google header.b=G9wSn7kY; dkim-atps=neutral
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com
- [IPv6:2607:f8b0:4864:20::82c])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Gw1Ch1tDSz2xs0
- for <linux-erofs@lists.ozlabs.org>; Thu, 26 Aug 2021 08:40:48 +1000 (AEST)
-Received: by mail-qt1-x82c.google.com with SMTP id l24so867413qtj.4
- for <linux-erofs@lists.ozlabs.org>; Wed, 25 Aug 2021 15:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=konsulko.com; s=google;
- h=date:from:to:cc:subject:message-id:references:mime-version
- :content-disposition:in-reply-to:user-agent;
- bh=CkpB1l1wAzRtRKT3iGhsyNFyda3QBXQEUrJS2S98pGk=;
- b=G9wSn7kYZ1uwXNXOLjVEjxYdBzIYnO2GS0KoSOmqHOgQW5Wo6HkHdDQrU/mys6qcIj
- GMLEacKm9m7KZDQS5uFvfb/NaO6bK6Ba0hy2agSyI9ixSXR6eKtOb+UBoBP7Jbx5aQqr
- +HTJIoqDJ13qLdEJVqj+pjSB6mFmWX77vqSRk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to:user-agent;
- bh=CkpB1l1wAzRtRKT3iGhsyNFyda3QBXQEUrJS2S98pGk=;
- b=UkZgIOGD1eaRjiQ/XBKQl+89tFToYIVV4992Y5x6cHGiech0UDaU4ncfIrI6duE6qY
- quZc6os9l42Hw1QIgtskcf35unyrV71pGbitvI+hfeqITSwhUb4b060VsVBBG96e577s
- QLE3MBEmQuXQTrw1y/jv6Jnt0S9mOLRbUw4x34WKV8L/EHDGdzMOqDugAO5HAKf8lcbb
- jEvhJcMnVKTiV872a8fo4axcJEZvlp/nZD3P4HJ9hDTgtIvx92L0jjDofPBiaPds84g9
- 0bNqHHj3CgpWYKUOYIaoXrCVGFXgMjpGNe2GRrRtwGICMQYnCXtDyAJF3vEFQzDEiQfp
- vCGA==
-X-Gm-Message-State: AOAM530cPM0YQQ7WYuiQ1EU1xwghhAB0bduoN9nWywn1NPg8p/WSo+lJ
- 3aT9DT9dHDOIfn0vaxhXlK3cdA==
-X-Google-Smtp-Source: ABdhPJzOSiQKnY+uoSlxWPYbKzFK/5pV90EZdLs21NlDB1lp+wHoZlEeTVRINkC3Ov7e5Dvd3wMhAA==
-X-Received: by 2002:ac8:7b5b:: with SMTP id m27mr597770qtu.316.1629931245147; 
- Wed, 25 Aug 2021 15:40:45 -0700 (PDT)
-Received: from bill-the-cat
- (2603-6081-7b01-cbda-519a-4843-2801-9790.res6.spectrum.com.
- [2603:6081:7b01:cbda:519a:4843:2801:9790])
- by smtp.gmail.com with ESMTPSA id d26sm1100156qkl.6.2021.08.25.15.40.44
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Wed, 25 Aug 2021 15:40:44 -0700 (PDT)
-Date: Wed, 25 Aug 2021 18:40:42 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Huang Jianan <jnhuang95@gmail.com>
-Subject: Re: [PATCH v2 0/3] fs/erofs: new filesystem
-Message-ID: <20210825224042.GF858@bill-the-cat>
-References: <20210822154843.10971-1-jnhuang95@gmail.com>
- <20210823123646.9765-1-jnhuang95@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Gw7CG4jpQz2xKM
+ for <linux-erofs@lists.ozlabs.org>; Thu, 26 Aug 2021 13:10:44 +1000 (AEST)
+X-IronPort-AV: E=McAfee;i="6200,9189,10087"; a="215809450"
+X-IronPort-AV: E=Sophos;i="5.84,352,1620716400"; d="scan'208";a="215809450"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+ by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 25 Aug 2021 20:09:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,352,1620716400"; d="scan'208";a="456619814"
+Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
+ by fmsmga007.fm.intel.com with ESMTP; 25 Aug 2021 20:09:36 -0700
+Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mJ5ln-0000ht-VN; Thu, 26 Aug 2021 03:09:35 +0000
+Date: Thu, 26 Aug 2021 11:08:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 1266b4a7ecb679587dc4d098abe56ea53313d569
+Message-ID: <612705c8.mValrANKg3ZsuEwp%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature"; boundary="xmwyzkDopBxrzBoc"
-Content-Disposition: inline
-In-Reply-To: <20210823123646.9765-1-jnhuang95@gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,58 +50,176 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: u-boot@lists.denx.de, xiang@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 1266b4a7ecb679587dc4d098abe56ea53313d569  erofs: fix double free of 'copied'
 
---xmwyzkDopBxrzBoc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 721m
 
-On Mon, Aug 23, 2021 at 08:36:43PM +0800, Huang Jianan wrote:
+configs tested: 149
+configs skipped: 3
 
-> From: Huang Jianan <huangjianan@oppo.com>
->=20
-> Add erofs filesystem support.
->=20
-> The code is adapted from erofs-utils in order to reduce maintenance
-> burden and keep with the latest feature.
->=20
-> Changes since v1:
->  - fix the inconsistency between From and SoB (Bin Meng);
->  - add missing license header;
->=20
-> Huang Jianan (3):
->   fs/erofs: add erofs filesystem support
->   fs/erofs: add lz4 1.8.3 decompressor
->   fs/erofs: add lz4 decompression support
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Aside from what I've just now sent, can you please extend the existing
-py/tests/ to cover basic functionality here, ensure they run on sandbox
-and in CI?  Thanks.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210825
+sh                          rsk7269_defconfig
+powerpc                      cm5200_defconfig
+arm                           u8500_defconfig
+powerpc                     mpc512x_defconfig
+arm                       aspeed_g4_defconfig
+mips                      bmips_stb_defconfig
+arm                            xcep_defconfig
+arm                            mps2_defconfig
+powerpc                   microwatt_defconfig
+sh                           se7343_defconfig
+powerpc                 canyonlands_defconfig
+arm                         assabet_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                      ep88xc_defconfig
+alpha                            alldefconfig
+sh                          r7780mp_defconfig
+powerpc                     tqm5200_defconfig
+arm                           tegra_defconfig
+arm                         axm55xx_defconfig
+mips                         tb0219_defconfig
+arm                          moxart_defconfig
+mips                     decstation_defconfig
+powerpc                 mpc8560_ads_defconfig
+sh                            migor_defconfig
+h8300                     edosk2674_defconfig
+powerpc                 mpc8540_ads_defconfig
+arm                             mxs_defconfig
+arm                            pleb_defconfig
+sh                            shmin_defconfig
+sh                 kfr2r09-romimage_defconfig
+s390                             allmodconfig
+mips                           ci20_defconfig
+arm                        spear3xx_defconfig
+sh                               j2_defconfig
+powerpc                      arches_defconfig
+arc                            hsdk_defconfig
+mips                         tb0226_defconfig
+arm                        neponset_defconfig
+powerpc                      pcm030_defconfig
+mips                           rs90_defconfig
+powerpc                      ppc40x_defconfig
+arm                          ixp4xx_defconfig
+arm                       spear13xx_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                     ksi8560_defconfig
+riscv                          rv32_defconfig
+sh                            titan_defconfig
+arm                             rpc_defconfig
+sparc                       sparc64_defconfig
+m68k                          multi_defconfig
+sh                          lboxre2_defconfig
+arm                             pxa_defconfig
+powerpc                     tqm8540_defconfig
+microblaze                      mmu_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                     loongson2k_defconfig
+powerpc                     tqm8548_defconfig
+ia64                             allyesconfig
+powerpc                       ebony_defconfig
+arm                       netwinder_defconfig
+arm                          imote2_defconfig
+sh                      rts7751r2d1_defconfig
+powerpc                     tqm8541_defconfig
+sh                   sh7770_generic_defconfig
+arm                       imx_v4_v5_defconfig
+sh                          sdk7786_defconfig
+powerpc                        icon_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a014-20210825
+x86_64               randconfig-a015-20210825
+x86_64               randconfig-a016-20210825
+x86_64               randconfig-a013-20210825
+x86_64               randconfig-a012-20210825
+x86_64               randconfig-a011-20210825
+i386                 randconfig-a011-20210825
+i386                 randconfig-a016-20210825
+i386                 randconfig-a012-20210825
+i386                 randconfig-a014-20210825
+i386                 randconfig-a013-20210825
+i386                 randconfig-a015-20210825
+arc                  randconfig-r043-20210825
+riscv                randconfig-r042-20210825
+s390                 randconfig-r044-20210825
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
---=20
-Tom
+clang tested configs:
+s390                 randconfig-c005-20210825
+i386                 randconfig-c001-20210825
+arm                  randconfig-c002-20210825
+riscv                randconfig-c006-20210825
+powerpc              randconfig-c003-20210825
+x86_64               randconfig-c007-20210825
+x86_64               randconfig-a005-20210825
+x86_64               randconfig-a001-20210825
+x86_64               randconfig-a006-20210825
+x86_64               randconfig-a003-20210825
+x86_64               randconfig-a004-20210825
+x86_64               randconfig-a002-20210825
+i386                 randconfig-a006-20210825
+i386                 randconfig-a001-20210825
+i386                 randconfig-a002-20210825
+i386                 randconfig-a005-20210825
+i386                 randconfig-a004-20210825
+i386                 randconfig-a003-20210825
 
---xmwyzkDopBxrzBoc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmEmxuoACgkQFHw5/5Y0
-tyytiQv7BBIriB0prrfJHZb49UI5HZE20IlgstJjSTZ8/1st3nkfna+6HJ9RZX/s
-h22MCLVdWLMqnNDIjZ+j5HUvPimRVDNdJoXf8Gjrq3xZvJrttyk9Ok+62Ru2GQzU
-ajl7d90NJ/exEoDfpVybTTPjzdTyIQU24JysPdfSJGB055PzNG2RSKmRq6sJnnY8
-MNw+TQPd6hM7H9ByModuuQV1vcCzWYFYqyL8ISZODNw4h2TnqpbMdWSb/CcqccoD
-kmzPoFAk36OJ/q56u7TrKCborIJWBCAJNQghv0LxPIOXQMtSp8J12uozFrNCpFPS
-vFlj3Bl4Mjb/L996OKPdSyVNqREdSdblTeLegOUp9OYCLIygtUcrBO0XQ5OWxrN8
-Mue3wicYtkSnOntG5mT6Hh/mQQwh2JjQL37YB4g96uvf+HIqThgb50Idkp5vC/5D
-XByy+F0ErmB8JjDYrSfxOz8ixMpPySzYJlgksRmSv/i0CHemZHtAIy6ileuDkWP4
-klwWHjZJ
-=8JLT
------END PGP SIGNATURE-----
-
---xmwyzkDopBxrzBoc--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
