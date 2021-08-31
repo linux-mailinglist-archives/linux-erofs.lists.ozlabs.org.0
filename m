@@ -1,48 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B38A53FC6FE
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Aug 2021 14:20:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7947F3FCBD2
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Aug 2021 18:51:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4GzR9N3vkXz2yJx
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Aug 2021 22:20:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4GzY9y5bzBz2yLg
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Sep 2021 02:51:34 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20161025 header.b=nW+aImNK;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57;
- helo=out30-57.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-57.freemail.mail.aliyun.com
- (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102b;
+ helo=mail-pj1-x102b.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=nW+aImNK; dkim-atps=neutral
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com
+ [IPv6:2607:f8b0:4864:20::102b])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4GzR9H4yS5z2yHR
- for <linux-erofs@lists.ozlabs.org>; Tue, 31 Aug 2021 22:20:31 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R171e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0Uml5.AA_1630412411; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Uml5.AA_1630412411) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 31 Aug 2021 20:20:13 +0800
-Date: Tue, 31 Aug 2021 20:20:11 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Yue Hu <zbestahu@163.com>
-Subject: Re: [PATCH] erofs-utils: do not check ->idata_size for compressed
- files in erofs_prepare_inode_buffer()
-Message-ID: <YS4ee67530HlDjPp@B-P7TQMD6M-0146.local>
-References: <20210617082954.1001-1-zbestahu@gmail.com> <YMsQHU+iSKE+FRO5@bogon>
- <20210617171555.0000673e.zbestahu@gmail.com>
- <YMsVhf2JgQOm1fDE@bogon> <YMsWMhNg6yC+osEK@bogon>
- <20210617181350.000005e6.zbestahu@gmail.com>
- <20210831170029.000015a2.zbestahu@163.com>
- <YS4PZvVbdHGqurAD@B-P7TQMD6M-0146.local>
- <20210831195614.000036e6.zbestahu@163.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4GzY9p6vBRz2yHC
+ for <linux-erofs@lists.ozlabs.org>; Wed,  1 Sep 2021 02:51:25 +1000 (AEST)
+Received: by mail-pj1-x102b.google.com with SMTP id
+ j4-20020a17090a734400b0018f6dd1ec97so2912447pjs.3
+ for <linux-erofs@lists.ozlabs.org>; Tue, 31 Aug 2021 09:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=Y0s0MrYOmUNHe3h1PUAl9OSTO/q9GLMug83JTJSA3Lw=;
+ b=nW+aImNKWT6nPWzwnVz61Z5sRQcKlUKXHYZZ5qlb/4m0PytW1gTPxUPqFEH98wCJ5O
+ FBjVfNdKrwhI8I+/0Ya2WqZlCxIQPPdNinoJKoR84pzQQutfhNBf/cQUbAkZtGTPRk+l
+ SzCjkndmQf3EeIQ0zp/NZ+GSJY5fh86qscRhdEP/GtviLrHtKfGRFPPpRPcVl67WYfr3
+ zSEwWrzQ8hxgf7mKl3hZP1F4Km2YkJXeLu68LusXNQZrlbQInrTxnwEN1c9A0lsCkwoN
+ az5d0tR6/gujptDcW7trXoWeGTyNOla7EZDbtaUgZMSXfsiC2ACjej1ufUEL+b7yNjiB
+ cxhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=Y0s0MrYOmUNHe3h1PUAl9OSTO/q9GLMug83JTJSA3Lw=;
+ b=l26pHwt11FK+Utq0n+b4sE+5R4h7YXEbtqXcWK145Os4wMGpuOcV+R5onsHxKkFva0
+ UUTrAT/UEhmWwvNR/cRWig/fLb+wdpY5laWc3Qc6do2OYBR2UIndHJlTOc9UYYxGMhjt
+ EsxMv/IJeqJmurKawoQyTzDAxJqDSFxOXHIDRYzOaYsUc/5ZKUEoSOtK6QBDYDa19Hbc
+ bpXMW/s1F/6TrqN484xeoeKxu9ym0QqBDE/oaM4YF/txNDPcQ1fZCdLKp1GJC6o9+Tj0
+ /nlwbyn5ox0AmBau74qo67qT7xwt9lNKffhSH6cqV6mD+HvCBhdkTRDjuJIzw/ln7rry
+ 108A==
+X-Gm-Message-State: AOAM533D4tsBzdkg4otbIE37TImlud+eYopd24KBEkR6Y3qEowq46mU9
+ 7tiAwg+c6W7jCSR857vE3dccYUmlS13wow==
+X-Google-Smtp-Source: ABdhPJzK86zdBqv3mVR4Df01btu8f51UfkfK1uEuDLkv7GEgl77rUAUZ/3xw3oe5NIlEIogc6sQqEw==
+X-Received: by 2002:a17:90a:2dc7:: with SMTP id
+ q7mr6557053pjm.231.1630428683294; 
+ Tue, 31 Aug 2021 09:51:23 -0700 (PDT)
+Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
+ [45.33.61.207])
+ by smtp.gmail.com with ESMTPSA id u6sm20697487pgr.3.2021.08.31.09.51.21
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Tue, 31 Aug 2021 09:51:22 -0700 (PDT)
+From: Huang Jianan <jnhuang95@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 0/5] erofs-utils: fix checkpatch.pl complains
+Date: Wed,  1 Sep 2021 00:51:11 +0800
+Message-Id: <20210831165116.16575-1-jnhuang95@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210831195614.000036e6.zbestahu@163.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,106 +80,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: xiang@kernel.org, yuchao0@huawei.com, linux-erofs@lists.ozlabs.org,
- huyue2@yulong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 31, 2021 at 07:56:14PM +0800, Yue Hu wrote:
-> On Tue, 31 Aug 2021 19:15:50 +0800
-> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+From: Huang Jianan <huangjianan@oppo.com>
 
-...
+This patchset fix most of checkpatch.pl complains in erofs-utils, some
+problems that also exist in the kernel haven't been fixed.
 
-> > > > > > >       
-> > > > > > > > 
-> > > > > > > > BTW, if you have some interest, would you like to implement it? :)      
-> > > > > > > 
-> > > > > > > I don't know if i can finish it. But i would like to have a try :)      
-> > > > > > 
-> > > > > > My rough thought is to try to inline the last tail compresseed
-> > > > > > extent after the on-disk compressed extents, maybe we could let
-> > > > > > it work for non-compact (legacy) compress index format cases...      
-> > > > > 
-> > > > > I mean try to implement non-compact (legacy) compress index format cases
-> > > > > first.  
-> > > 
-> > > I'm trying to do it under 4.19 code (since i have no 5.x environment temporarily).
-> > > 
-> > > Now, i think mkfs should be done. But, kernel side seems not working fine(no crash,
-> > > no decompression warning/bug). Only some files are working, others not. I'm sure i
-> > > can catch the inline data correctly via file dump. And I'm trying debug the issue.
-> > > Maybe i need more time to read/understand more decompression code related.
-> > > 
-> > > BTW, now i understand no need to go z_erofs_vle_work_xxx for inline part(cur-end)
-> > > , just go next_part after mapping as below, am i right? 
-> > >   
-> > 
-> > You are right. For the common cases (except for fiemap or cases to get the exact
-> > decompressed length), we only need to calculate the start of the compression extent,
-> > so it's transversal in the reverse order.
-> > 
-> > But really... Again, I don't suggest using 4.19 staging code for real production
-> > or further development. The uncompressed part is considered as stable, but
-> > compression side may not (also it was disabled by default). Please also see,
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/staging/erofs/Kconfig?h=v4.19#n86
-> > 
-> > " config EROFS_FS_ZIP
-> >   bool "EROFS Data Compresssion Support"
-> >   depends on EROFS_FS
-> >   help
-> >     Currently we support VLE Compression only.
-> >     Play at your own risk.
-> > 
-> >     If you don't want to use compression feature, say N. "
-> > 
-> > Our original first real production codebase was between 5.2~5.3. Therefore,
-> > I suggest using >= 5.4 LTS codebase for production. You could also find
-> > some backport codebase on github, e.g.:
-> > https://github.com/nolange/erofs_kernel_4_19
-> > , which backports 5.6 erofs codebase to 4.19.
-> > 
-> > As for tail-packing inline extent feature, how about focusing on on-disk
-> > design and mkfs/erofsfuse implementation first as PoC?
-> > 
-> > I'm afraid that if you only focus on 4.19 codebase, the format of compact
-> > indexes will be ignored, but "compact indexes" is the default option for
-> > erofs now since it has less metadata overhead than non-compact indexes,
-> > so both the sequential / random read are better.
-> 
-> OK, let me develop it under 5.4. I need taking time to find it:)
+Huang Jianan (5):
+  erofs-utils: remove filename in the file
+  erofs-utils: fix SPDX comment style
+  erofs-utils: fix general style problem
+  erofs-utils: remove unnecessary codes and comments
+  erofs-utils: fix print style
 
-As the first step of kernel development, I think using x86 qemu should
-be better since it's easier to debug than on the embedded device.
+ Makefile.am                |  1 -
+ fuse/Makefile.am           |  1 -
+ fuse/dir.c                 |  2 --
+ fuse/macosx.h              |  1 +
+ fuse/main.c                |  7 +------
+ include/erofs/block_list.h |  8 +++-----
+ include/erofs/cache.h      |  2 --
+ include/erofs/compress.h   |  2 --
+ include/erofs/config.h     |  2 --
+ include/erofs/decompress.h |  2 --
+ include/erofs/defs.h       |  2 --
+ include/erofs/err.h        |  2 --
+ include/erofs/exclude.h    |  2 --
+ include/erofs/hashtable.h  |  2 --
+ include/erofs/inode.h      |  2 --
+ include/erofs/internal.h   |  2 --
+ include/erofs/io.h         |  2 --
+ include/erofs/list.h       |  2 --
+ include/erofs/print.h      |  2 --
+ include/erofs/trace.h      |  2 --
+ include/erofs/xattr.h      |  4 +---
+ include/erofs_fs.h         |  1 -
+ lib/Makefile.am            |  1 -
+ lib/block_list.c           |  7 +------
+ lib/cache.c                |  2 --
+ lib/compress.c             | 11 ++++-------
+ lib/compressor.c           |  4 +---
+ lib/compressor.h           |  2 --
+ lib/compressor_lz4.c       |  2 --
+ lib/compressor_lz4hc.c     |  2 --
+ lib/config.c               |  2 --
+ lib/data.c                 |  2 --
+ lib/decompress.c           |  2 --
+ lib/exclude.c              |  2 --
+ lib/inode.c                |  9 +--------
+ lib/io.c                   |  5 +----
+ lib/namei.c                |  5 ++---
+ lib/super.c                |  2 --
+ lib/xattr.c                |  4 +---
+ lib/zmap.c                 |  6 +-----
+ man/Makefile.am            |  1 -
+ mkfs/Makefile.am           |  1 -
+ mkfs/main.c                |  4 +---
+ 43 files changed, 19 insertions(+), 110 deletions(-)
 
-For this feature, I'm very glad to discuss some on-disk format first.
-Since it's not trivial for compact indexes since it's impossible to mark
-tailing-packing extent with some special blkaddr like non-compact
-indexes.
+-- 
+2.25.1
 
-My rough thought about this is "to add some new feature flag to "struct
-z_erofs_map_header" and trigger z_erofs_map_blocks(i_size - 1); at a
-proper time to get all information about the last tail-packing
-compression extent", and when submitting io, we erofs_get_meta_page()
-instead and fill the compressed pages.
-
-But anyway, I still think focusing on mkfs.erofs and erofsfuse is a good
-start for this.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks.
-> 
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > > Thanks.
-> > >     
-> > > > 
-> > > > Ok, let me try to implement it.
-> > > > 
-> > > > Thanks.  
