@@ -1,64 +1,88 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34DA53FF32C
-	for <lists+linux-erofs@lfdr.de>; Thu,  2 Sep 2021 20:21:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B9533FF3B0
+	for <lists+linux-erofs@lfdr.de>; Thu,  2 Sep 2021 20:58:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4H0q4s0hx2z2yLq
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Sep 2021 04:21:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4H0qvW2KPdz2yN4
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Sep 2021 04:58:31 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=KZO3g5S/;
+	dkim=pass (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=Ibpdc46z;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=KZO3g5S/; 
+ smtp.mailfrom=linuxfoundation.org (client-ip=2a00:1450:4864:20::229;
+ helo=mail-lj1-x229.google.com; envelope-from=torvalds@linuxfoundation.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org
+ header.a=rsa-sha256 header.s=google header.b=Ibpdc46z; 
  dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com
+ [IPv6:2a00:1450:4864:20::229])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4H0q4m4bnhz2xfP
- for <linux-erofs@lists.ozlabs.org>; Fri,  3 Sep 2021 04:21:28 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 99B5261041;
- Thu,  2 Sep 2021 18:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1630606886;
- bh=44DLHjL939OemOnIN1/VdzLyyxAZ2hVSWSI7E3ypWvU=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=KZO3g5S/N3lilzVtOABmurSqX4WR8b3Q2yohwgQbgd00ue248U0DSuWQaXgQsiKmU
- jSx0eo7eAHLYO1wLo2pO2snJwG0XrsyESDus912BITtP/+IdcmRcnNpLcqwbn75RUj
- m1D1wqSL9WYCOnTWvnvZaYQE4hBI0tLwmRxsC3KTRQ2gRITj+qY3Kz4GH6wx02z1KB
- VggxEueaCiiPuhueoexcH2BLCjh9x3MlFIcCn6nTeswTUiqqHjaY1Tb/GiEGAf5RmK
- edTE/CemVojmSou7B36A1cLXTHWU/tCiP7hlUWYm4Z2TP+3FZRRBfNfSOAaeQUOwoB
- Sckv4hMqwDQPg==
-Date: Fri, 3 Sep 2021 02:20:55 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] erofs updates for 5.15-rc1
-Message-ID: <20210902182053.GB26537@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-erofs@lists.ozlabs.org,
- Dan Williams <dan.j.williams@intel.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Huang Jianan <huangjianan@oppo.com>, Yue Hu <huyue2@yulong.com>,
- Miao Xie <miaoxie@huawei.com>, Liu Bo <bo.liu@linux.alibaba.com>,
- Peng Tao <tao.peng@linux.alibaba.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- Liu Jiang <gerry@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4H0qvN04ytz2xtQ
+ for <linux-erofs@lists.ozlabs.org>; Fri,  3 Sep 2021 04:58:21 +1000 (AEST)
+Received: by mail-lj1-x229.google.com with SMTP id i28so5437224ljm.7
+ for <linux-erofs@lists.ozlabs.org>; Thu, 02 Sep 2021 11:58:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=linux-foundation.org; s=google;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+ bh=nou0znqimsrLl6OB5c1aMp82GMEqusuNoyOJ20o6LFI=;
+ b=Ibpdc46zjQloZ+vX8Jc+8cZvxyZgkNzdSsEJA3RXMKA4Uv115klG8TP44ku0D70EYN
+ 2ZdHNkPCogYuUgXzzStalGmdzhm6x4HMAJyz6jwygSEzV1uGAEnpH4rb6ZQRdRgWqyQl
+ K8bZBGqrT9kuG/VjjS1yasgD0iTr8JY35ybDg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to;
+ bh=nou0znqimsrLl6OB5c1aMp82GMEqusuNoyOJ20o6LFI=;
+ b=G80Dft57anwrd24wzdVk/WOqMPSx6PBKwE11UcOxguoTxUJcihflDi9J5U+/OseUFy
+ fYlHEyH4siGjKQqPlwpH8fUKsItcR8xuzfvDzSrSTT8cLvoRd90r8bS4mnpt0JyCkpO2
+ C837Txdl2i9JLuc9FXCm5wHxYPSy6MqAeHfa0GRsU0r5xTnML2VtBYz0pw1+3zyqHWD3
+ 0qOeDtLiRsAPCgAgVvFU+aGX7weZyJ5ThCWEIsgdGVLz2fSChOR0u2dGwzHmDYQjSaLh
+ 7udKZHaLtiaCfy2jS0KkX1sl0I/vy5WhsqCl6j8yyXPpUfmUqGSFAkBb1dN79n1ua2oz
+ Qm5w==
+X-Gm-Message-State: AOAM533X60i7SDd5npQ0l8JPU3iaraKGZj3RURNMu/BDreZuiIBRt7vI
+ oIT1nITU+RTipwwYaOWP2Xsp9apY/q2hQYpPq7Y=
+X-Google-Smtp-Source: ABdhPJzDUhxgGZI2ddTn1sFskq1w3CjrpyIneEhcu0Ay0g//FU8z1nMSDUDeJfcjUSRcpsIZkcv70g==
+X-Received: by 2002:a2e:960c:: with SMTP id v12mr3740475ljh.300.1630609095250; 
+ Thu, 02 Sep 2021 11:58:15 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com.
+ [209.85.167.52])
+ by smtp.gmail.com with ESMTPSA id d40sm190966lfv.23.2021.09.02.11.58.14
+ for <linux-erofs@lists.ozlabs.org>
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Thu, 02 Sep 2021 11:58:14 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id bq28so6509429lfb.7
+ for <linux-erofs@lists.ozlabs.org>; Thu, 02 Sep 2021 11:58:14 -0700 (PDT)
+X-Received: by 2002:a05:6512:230b:: with SMTP id
+ o11mr3465517lfu.377.1630609094065; 
+ Thu, 02 Sep 2021 11:58:14 -0700 (PDT)
+MIME-Version: 1.0
 References: <20210831225935.GA26537@hsiangkao-HP-ZHAN-66-Pro-G1>
  <CAHk-=wi7gf_afYhx_PYCN-Sgghuw626dBNqxZ6aDQ-a+sg6wag@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi7gf_afYhx_PYCN-Sgghuw626dBNqxZ6aDQ-a+sg6wag@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ <20210902182053.GB26537@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20210902182053.GB26537@hsiangkao-HP-ZHAN-66-Pro-G1>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 2 Sep 2021 11:57:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgirqjdeuYX+PvL-09UUKtnBaRYTXQrRdjCYxGKirEpug@mail.gmail.com>
+Message-ID: <CAHk-=wgirqjdeuYX+PvL-09UUKtnBaRYTXQrRdjCYxGKirEpug@mail.gmail.com>
+Subject: Re: [GIT PULL] erofs updates for 5.15-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ LKML <linux-kernel@vger.kernel.org>, 
+ Chao Yu <chao@kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+ linux-erofs@lists.ozlabs.org, Dan Williams <dan.j.williams@intel.com>, 
+ Stephen Rothwell <sfr@canb.auug.org.au>, Huang Jianan <huangjianan@oppo.com>,
+ Yue Hu <huyue2@yulong.com>, 
+ Miao Xie <miaoxie@huawei.com>, Liu Bo <bo.liu@linux.alibaba.com>, 
+ Peng Tao <tao.peng@linux.alibaba.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Liu Jiang <gerry@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,38 +94,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- Peng Tao <tao.peng@linux.alibaba.com>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Yue Hu <huyue2@yulong.com>, Liu Bo <bo.liu@linux.alibaba.com>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>, Liu Jiang <gerry@linux.alibaba.com>,
- linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Sep 02, 2021 at 09:18:59AM -0700, Linus Torvalds wrote:
-> On Tue, Aug 31, 2021 at 4:00 PM Gao Xiang <xiang@kernel.org> wrote:
-> >
-> > All commits have been tested and have been in linux-next. Note that
-> > in order to support iomap tail-packing inline, I had to merge iomap
-> > core branch (I've created a merge commit with the reason) in advance
-> > to resolve such functional dependency, which is now merged into
-> > upstream. Hopefully I did the right thing...
-> 
-> It all looks fine to me. You have all the important parts: what you
-> are merging, and _why_ you are merging it.
-> 
-> So no complaints, and thanks for making it explicit in your pull
-> request too so that I'm not taken by surprise.
+On Thu, Sep 2, 2021 at 11:21 AM Gao Xiang <xiang@kernel.org> wrote:
+>
+> Yeah, thanks. That was my first time to merge another tree due to hard
+> dependency like this. I've gained some experience from this and will be
+> more confident on this if such things happen in the future. :)
 
-Yeah, thanks. That was my first time to merge another tree due to hard
-dependency like this. I've gained some experience from this and will be
-more confident on this if such things happen in the future. :)
+Well, being nervous about cross-tree merges is probably a good thing,
+and they *should* be fairly rare.
 
-Thanks,
-Gao Xiang
+So don't get over-confident and cocky ;^)
 
-> 
->          Linus
+                  Linus
