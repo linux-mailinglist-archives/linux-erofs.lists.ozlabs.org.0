@@ -2,22 +2,23 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02B5E4017B2
+	by mail.lfdr.de (Postfix) with ESMTPS id 00BF64017B1
 	for <lists+linux-erofs@lfdr.de>; Mon,  6 Sep 2021 10:15:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4H31RX6yQRz2yJS
-	for <lists+linux-erofs@lfdr.de>; Mon,  6 Sep 2021 18:15:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4H31Rb3RQNz2yJj
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Sep 2021 18:15:23 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1630916120;
-	bh=CMcyvhp5O53Vsx0IGYAv4K33PGVSERxLX/CAQWYiReQ=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=dy/Jddkf+gC+GVM7MGSGIUvQRvKKWirLjEcbI60MAvaZBrpkIl5sq6gvy+ed2LnlO
-	 EM/GjmCg6TcVpcGD/kpZLNnAO2uTkUJBLwYq9CUYidkH4ESGQpbVbPyDuFe1j+gloK
-	 dGpfaRyRhp4o104op+lxkbvjC42wdKsx9yzPgjyoE/Akusv6ZjW9ve1vOS5/agcYoh
-	 TZNWpj54oNylGx3bBDrsiw6kHdzHmdoDzsxx/Jsl2ge4zmZYzNbhwMHFO0mlsn+DMS
-	 8DjO2p7ojDIu9/Hk+JUXoMzUR5vDouEf47HljXj/7N6xvTuAE6YYmrAbj+V3tA1e35
-	 fC0B/86wuIiIg==
+	s=201707; t=1630916123;
+	bh=Xsd2U62na5o0Kckm146Pen2s1gjJ6HRb7Lnc3PqZkNY=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=e67TU6FZWddEQ5qVZfqJlFRl4OmOEHYIrDyMg2hQmUYOXPuGXmLOgDFoZGYUhiEv8
+	 6kculVk9Ull2UEFszHjKlQGrAcdgvb4d0LGAOZVPFGJfY3+F1M6ilfWTCwjQHYX3bM
+	 nqzFrP/wpmjjTP6Yl2N5WZuWXCI3br6BXnOwSCqlTX2UwW8jFQWFXhCd+duvo56tGS
+	 A7BJK3+Dp3zyjgJPG2YIL4+ch3GBtLc82/aegUojdcDPL+vFdTrBB4tdl6humwv3cA
+	 idqmbh3E5auLStujx2kKitUWchYk46ZWmjs2Yo+vKummLy0L0BGyQOjqHMrFtpeuG2
+	 LAJOuDpYdUXbg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -26,21 +27,21 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=AHryMtl9; 
+ header.s=selector1 header.b=gj4EKzxm; 
  dkim-atps=neutral
 Received: from APC01-SG2-obe.outbound.protection.outlook.com
  (mail-eopbgr1310049.outbound.protection.outlook.com [40.107.131.49])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4H31RM0DgJz2xrr
- for <linux-erofs@lists.ozlabs.org>; Mon,  6 Sep 2021 18:15:06 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4H31RN73J6z2xtd
+ for <linux-erofs@lists.ozlabs.org>; Mon,  6 Sep 2021 18:15:12 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OUecMZdLHa+KqH8MYYOnZtS67V6Cs8RgZxdltRydlRzFsEPvTGTVt3DhtRfDwANd0EFxlt3pgXLOWRbz9oIhZZRSXZXrcduR3+TlwwqlxuEzmF+jewMe1t6Xltk/TA6HrssIoeiBT/bfFcxHgOT43h34LDRX3wyYIH6ggLj2sc+SA2vjCyAI5hFCdEYHZwo0NqK51cvii4XoFmY3wicTjqTmOEFYC9pbVnu9EiHsoooMX9W8M1zCj7Y1h1KwdgVeMoKaXpBU+WzYzCQI79WPFsA9JW56PJV34zwR1fEwXsxtLgPKdBgHRjCkngV5x2FvneOzTbCqXqkF13IG+JoTmg==
+ b=LyGQKKaStV3zMYuDRrr4ERaRWK+eGPTpG4a+4l6CI1HGn3ffKq+/kdMzgdAqKe0m0+tA2LJLnllbkNHxxzezdmHwRVugJZpOMMe6FFbst8LOQV2+L8rT3CxAGyImfJgv+1OZuUrj2pKT84mwdVz58XT91MmVWJ+j3OS0XxzoJT0oGgtpkg9NIo8gT/3VW794HXYnkg7W81YoJ0FboHGrr3GPL+IMeKubM8tVYTc5tK7/16PhFtrxh9PAj91tn96QoTUAga8qOiE0pDmLijVGlgkUCjosRYOsB1wRqyax0WMmvuyDxzTJcMkVcoQeenrgSEFMD/vRnHhncznFbG0kfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version; 
- bh=CMcyvhp5O53Vsx0IGYAv4K33PGVSERxLX/CAQWYiReQ=;
- b=WHMTMJlBpqgGWKewcUpB+nodiKIR/cJh7q2m8Lx8RBN/1TZkTMLJyuLQmiGtD/CGQtwnLj+zyjVbFWy/l6mNzDSczTC2w4+0fvlbK6UDReF+8/MNmJ4R4x7bIg4KJVxKlrQANmX1uL9k5tH6PqNEjURKA5E/RAqlTp0n/jukD6jT6BeUHRBmZqAeV5gKkpvZgmPluFte09A05hz1vgQ99Vpw7RApJ932Lv7Sz5mBpttStkb0mhJkML6PwBZxO6uGRkbEgeyI4xhSXKHb9ar1zIp9jP3kPUvcDmheqNTrhLuKKEq9fzjYEd4oUbqRDwMx8P4XL+sgsURRtg6vDWF7hw==
+ bh=Xsd2U62na5o0Kckm146Pen2s1gjJ6HRb7Lnc3PqZkNY=;
+ b=VNkNvrTS8RSvE1dkN35xF9580l1WRWSkmAgbIjerc0mnyECY1FKf5VLQu1XbdsGZ7cjKgen0RYRm1k0vlqAEoUu/ekjgDV2iG81s13BwInlP3osFLmivs5aaYI4kb66Z6AFiKwgtzSuJfmoifNHeav05NfJhD0RzeNvYdCvcHjAL1gjeGhcKk+fCHUfEmpqy4s/yTJGjRYtLALtiMHCVDhY8iTflcVdslyd2MyACPgp6C5CKmPVYiUCHJX94Ik8Fb9dGXXu6WUc9gm3xVU2VUdDnLh0ArjXoIWSHFoWz2jeM9HiK5LciH1kS9O/2AQpoPEMZRVoWxx18mp9614o/3A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
@@ -50,16 +51,19 @@ Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
  SG2PR02MB2858.apcprd02.prod.outlook.com (2603:1096:4:5d::10) with
  Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4478.22; Mon, 6 Sep 2021 08:14:44 +0000
+ 15.20.4478.22; Mon, 6 Sep 2021 08:14:46 +0000
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::5919:768f:2950:9504]) by SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::5919:768f:2950:9504%4]) with mapi id 15.20.4478.025; Mon, 6 Sep 2021
- 08:14:44 +0000
+ 08:14:45 +0000
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: remove unnecessary "\n"
-Date: Mon,  6 Sep 2021 16:13:58 +0800
-Message-Id: <20210906081359.17440-1-huangjianan@oppo.com>
+Subject: [PATCH] uerofs-utils: fix random data for block-aligned uncompressed
+ file
+Date: Mon,  6 Sep 2021 16:13:59 +0800
+Message-Id: <20210906081359.17440-2-huangjianan@oppo.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210906081359.17440-1-huangjianan@oppo.com>
+References: <20210906081359.17440-1-huangjianan@oppo.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: HKAPR04CA0012.apcprd04.prod.outlook.com
@@ -70,55 +74,55 @@ X-MS-Exchange-MessageSentRepresentingType: 1
 Received: from PC80253450.adc.com (58.252.5.73) by
  HKAPR04CA0012.apcprd04.prod.outlook.com (2603:1096:203:d0::22) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4478.19 via Frontend Transport; Mon, 6 Sep 2021 08:14:43 +0000
+ 15.20.4478.19 via Frontend Transport; Mon, 6 Sep 2021 08:14:44 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e3f3b60c-8fa9-477e-a2eb-08d9710e6217
+X-MS-Office365-Filtering-Correlation-Id: 92afbfe9-7bed-4337-a259-08d9710e62d7
 X-MS-TrafficTypeDiagnostic: SG2PR02MB2858:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SG2PR02MB2858A2FC32FCCF82A671A07CC3D29@SG2PR02MB2858.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:78;
+X-Microsoft-Antispam-PRVS: <SG2PR02MB285839838FF14775C1A03BCFC3D29@SG2PR02MB2858.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hu7gfyswehZT3TrOrpSUiQI121cIXQmtpXe8oa3sZx26TLgLg25iCMG9mw8fPXw59WoH3ehyAaDs/1AeOiAjNRr0j4Z6dZ/XFbmGg/nc/WyKQToOgsy2IqIkCo4TSbj3YFe9hK1EHxOg3on7TlL48PCUhkfYiM0rhfB+61Tm9AvqqvDxA63iwa3fDxqzzuwfFLuFUerfSYphZ3Fl0lQf5r1aabN0UiS6g3Ak16z/NjhHrTKotyP/H3WTEOQm/1fv/q7rN42Jp7XIv83dLlo6S/UnP1eFdO2333OLryjpoYqGevQm1gFYFkr3F6ofUi6hTnXTM/x619ZOSuMuoqiVuMtE0Jsbla5A+fYWOo/r5ICSvvH4eRKV8Q2zsioMTcezFzNoouU7pfizcSaKMQFB2FSnPVs156A5JGeSDu1wvOsyBP9/GHBZoGaRC3Xa4K+tKI6gtIVDgmYsulCn6CHu+KOZJUizQlgcffQNeRQzbzCaVSLje4axfP9fJLA3P70V52POMqvu6ymRRCK0hF2kp9TaKZEbbX6/Fi2OLrfs+tlQ0X0Be2P2ptkyd82FG3AwFjj5f+sTKTkQ7Ncr1uyqZM3UoxqCa2vbpMpPmyvkl9lKLw1so8FGP7nT2y1G7DH/QeWJ4RYcr70pFFmHgV9t907D76WU1IqyuwvHoKso2WH8YbblYDnsiYPlOCB0A3Qask3JvPS+1SamhM4s4K810VyVxkv+q3AR37ZgcImzTgk=
+X-Microsoft-Antispam-Message-Info: DI69nrbM1xV6yilIukjjpfPoHe13wJob6x6GBTCG+urqGZjMWg3JJ0XaMGutVLu2h3EAUL7g9QO/+MYqse1KAo304HZ0jbUT6+oMGrk+n6tdzC7h0Oj5iHOSimBooFosef5uDqs0bg2XTCTfTJ4mhKfa0LvNf631eT6lyr6hWG4/pB48nc4uiy2yIncpuAB5StTlFcAF4TbidA3S17XZEYjssPanGqZMgb5TOMC63CM/0Hl20gunxvcDIMGTFbQtlBYrALz9R36DsJmaSHpCeBcsI9r98kvi202KQsSVOZOpkvkqdrFdvLEqjNVwpu77//NWjKbF3vUzuIL4hmgrVFZiPJwISHQpzSEHCe1zR6+X9VAnzugZDIKVsg7Okd0EFiaBviKjOea8zU8DAzkJ29HG+/wu6CfJfEMDmzykqNbZkPC+bCgF1nhtjZTxuj+WUUU88TT1EDYxxt2resKGFTm9bU7wzhpRwiz2IwoU6kdhZ5H77gahKldaomtp7QD8+CvkczDBpS+4E4akVwuik5l8Yh8BCAaa2aQl6GMDyPStuTyxBXJi/lAjv11vRgyKI2IF1yXyVEbI69pzda2/YwHrW8IDpAuVKqaAkBw2tiVQNlFrc3dqvwAuDov5a+QLWJMxZe5kbseHauDSAXvTttxPJSs316JE1ZqBTtKQUI46BEFVQDhZQ7gUiwLLe1IpHgz/HvQJYXOsX7cKzM+BQo4849R4Wzq4yq/mawBJoCQ=
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
  SFS:(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(86362001)(26005)(107886003)(8936002)(8676002)(6666004)(6486002)(1076003)(36756003)(316002)(4744005)(4326008)(478600001)(186003)(5660300002)(38100700002)(38350700002)(6512007)(6506007)(66946007)(2616005)(956004)(52116002)(6916009)(66476007)(66556008)(83380400001)(2906002)(11606007);
  DIR:OUT; SFP:1101; 
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m/Tocvhv4Eh5pLvaw6Y9FLE/gpcfW/6ZJqaE0GaG5x514XA+YmOxsHiw7mEB?=
- =?us-ascii?Q?SU2RyJGg85Ljr3UgmBt8iNlwmYW2zLWhPqSNX1PpcWaEpBux0N24fdB1cCsR?=
- =?us-ascii?Q?JfjsJPW/t9E6khKRLD6/HziD5maNb+kcUirRVxgVeRxls3uJ9gdjFTRlp7t0?=
- =?us-ascii?Q?lxmxNdjvh9zJZbmFrgT/gxKwqcxmfiJOqX+3zoMgSuG9esqqbY+m+kAGa4jg?=
- =?us-ascii?Q?NiKppoc5mC4ci/M5I7YPQyYcrN5yRlso7dPMneytypPJGyrgBWc6fi1ibweG?=
- =?us-ascii?Q?nBWLGzNaB1AyyKQq6ZztTKhv7uFQPgwfjBlVsJE+I3vdP1WtX9QD7wn5v1gi?=
- =?us-ascii?Q?64c37cudixTulfMMsvaw5dpHJBYZ9am7LjQ0nP/cMIx0aEszGi9tl4AXcj5X?=
- =?us-ascii?Q?ejIQrE+9JMAyl4nKEKT/LR7Lf8TiACIPBWqM+0tRW0vo4lKeDyxUA2l2N9md?=
- =?us-ascii?Q?KCNxbXdYJBP0nBWdh6sVzkkGsDsz39UoAtgW/Ru1fWmlTeV2KBT8l6nu/qSE?=
- =?us-ascii?Q?H7YqfFgH7q4JTfuhiO459q9E7RBkwIAS3K69MeBIFy55ctTIso9FAeio43OQ?=
- =?us-ascii?Q?xzfUqSzkRgWL7n9GGfQSFi5MS93BIdYAX/LhOE9KW/lnk9EBymryJPeVBvqV?=
- =?us-ascii?Q?bM8gsItb9m7YlNeeQq3ZqAGr7yKf/Jj7+xSUjQjH0X7xiswPtYgTN6r+tHuE?=
- =?us-ascii?Q?R4eGITcdXaz6WgW/tBFnkFNyxYHV2Sbu2emGBN5cZ/khGpdZ03BI4ulLfVFl?=
- =?us-ascii?Q?5EywfebgUxL/xQt3cuVLs818u9NYJpEwHRr2d7L0iHoW6NSGyIRivzUMxR1V?=
- =?us-ascii?Q?XY3obOqXMxKMCTZXx8h1obTeCLNcXSspKZJFPp1WBd7dIzJGYVsM7kWnLRR1?=
- =?us-ascii?Q?Vp+sCs9fNfZRDfxq3DkIg4xgLOnenL7Vyh2AXRGkIvEe7KzTEUR0VkdKkB5C?=
- =?us-ascii?Q?VVpT2dR6C5oSLaIUW7wumFjB6cD2EPeanJJap5yCQYQtpEekLl+y/Y/8iARA?=
- =?us-ascii?Q?+vBJjeXtN8Xn58xXMZ24LjLrjfqtAs5ZpMrvyNYJWg2tggyHmlVQh3SOpnFt?=
- =?us-ascii?Q?wS9IlckFRcDUm8kBqJy1YDb/VjkyvA/XlRzDhcdKA9XGvKuElsbisYc7oWjI?=
- =?us-ascii?Q?xQ7q3nMba2MLmgcpbHplS8/orwXuzAj53Q2c/wbf375hjIPjUghRng3dT5Ew?=
- =?us-ascii?Q?34eFDxRxPeACza7ELA1Vg2Jl2GGZODbhxepDzObg8IbjqpF1u46dGI562co8?=
- =?us-ascii?Q?mwOWCn+UN8n9FMQC598I7sejQrFZGRL64ROJpT8CHnhk2WrFUcn72jWnqkPT?=
- =?us-ascii?Q?OShhrubNAYmLJ+w9yiS3okxx?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TkFmj3HDerjxelu+uKslCLvm+wMpHNT3KYgFsPu+JO5rGGCckmSj1zNOBRRI?=
+ =?us-ascii?Q?0KqEZdVLuJ7ZkR9zkZsfSLGyqi21h83TTFF7S8SIoDVI5UB9F1HHi4XslpoN?=
+ =?us-ascii?Q?i9wqSw0W4szOZD+cpo7lCZul+F9fkQnUO/JaeFWGkMRaQhlE0x//X0fn7bir?=
+ =?us-ascii?Q?SmhN4PzlraF9Fk6YwH86ZBAdo9GBREQNwDEwmVFKnawaKFJBWZJNvKcBrQp1?=
+ =?us-ascii?Q?2HKHI3EBMZ2dszxIfETWEHW3oFfsRsQ2F8o/6yNrFIV7H6hwX0KdEEDZtD+b?=
+ =?us-ascii?Q?Uvoz4Rl27W1KtMBFUpuPQAuOZTTmM5jlOJ3fzCQXgFSOd4xtNfI6sLZDhsy3?=
+ =?us-ascii?Q?+6HBHulO0iv/gMZgr8kZ1BcVUCHr0F1rDb+iLmv22MZR6yrws1aqPexcjPn4?=
+ =?us-ascii?Q?dUpoLs9ZlSvLVwAyo/F5yidtIjt4DSZXUukhlsENxqIE3v1JLWCMglvFxmfi?=
+ =?us-ascii?Q?UoyOiL2UYlvGb+ZXQUUFgZUERM4TaXQKUgrWz4BqvtMK7zOARjOAE4Y3O2ec?=
+ =?us-ascii?Q?o4y+Icwab3STHTBQKDL5GqYbojiUIDdNkkseNmqnmMiR5wXChCChiz6gSXil?=
+ =?us-ascii?Q?TDfKzT0GrEEHhK9c3GqCeA3cFiCaKE3Zl5YAednziZaAic7+F0JigS3yQ6Nf?=
+ =?us-ascii?Q?KdVA5gRWKTJQQ77DzvB4FGA+//w+jhvI8/0zhf8nhL+pTpxGUe274+WRrR/G?=
+ =?us-ascii?Q?taffuvZwSVWZyNOU87vuO3HkyoC9Lc4i+421XA8vkzLrJDdr+cyl2BCHlKKf?=
+ =?us-ascii?Q?sGImrFz2fXERSBKyK+kJHeXZ5X8jwfJuPkOUVjmrPI6h3qSI0f1AgrEqD5yM?=
+ =?us-ascii?Q?88zQPCrJ+986VLi6WsdmapILUiDIZgFVsMc5TDlvcu5nCyutvuKcaWEY27Ce?=
+ =?us-ascii?Q?KCMpPBZnN3huBIH+RjrReXajafM2ONzU/3aFZs8Pie0+j8nJJ+TJX/0g4yc1?=
+ =?us-ascii?Q?u4x+r2AyvtmUOuyJXUwAlSthGSw0shzFCBkhCYpA9+6NIMlV0pAJXEkwty0o?=
+ =?us-ascii?Q?4vT5UfvlH/mZwvoJmORNvJ9imZK0Jewe2Lyv6N5n5jjFqi+yEnTVK9JREVV6?=
+ =?us-ascii?Q?g0afpW3R3V9/ezuk9pNqVdnEeBbRqBS9vK5qHDp5Kebc5bLi8jpcbes/RLhh?=
+ =?us-ascii?Q?EQaDYD2X8qqDOHv+GFBcJlw2mTNpBD3qInzrZFDqbhyxM/Z05pAClZvsr0C7?=
+ =?us-ascii?Q?Qwbd2nvgeLa8mub9r44iF+xglPGP0JyCTiAK4Xa522cfmfnNbKULi3pUsk1g?=
+ =?us-ascii?Q?0uBYoS6ArJmApxGBdOpHq9rEmYtfO53kSfyu/RYs/myzrt24KNqYz31M0syB?=
+ =?us-ascii?Q?Jb2iGMzAn691lsyeEbg8IETr?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3f3b60c-8fa9-477e-a2eb-08d9710e6217
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92afbfe9-7bed-4337-a259-08d9710e62d7
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2021 08:14:44.3240 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2021 08:14:45.4693 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zUfbOk/di/uh/67LBqWHblHFK6kRY+RjWOTOxXFO8zG+uaAnjgN8bxnBzDNJVehBwtDfKDHf0CA6tAPZyhzGjA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7/+FDhouc8FscKARh1M9p3mizHaR7KmU/oRME0HeuiByUYT9vaPWVqrVHX7KF8kDpKDcuIyQmx6zHMIwTSTRQg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2858
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -138,24 +142,29 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+If the file size is block-aligned for uncompressed files, i_u is
+meaningless for erofs_inode on disk, but it's not cleared when
+datalayout is seted in erofs_prepare_inode_buffer. Clear the entire
+erofs_inode to zero to fix this.
+
 Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 ---
  lib/inode.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/inode.c b/lib/inode.c
-index 5bad75e..0ad703d 100644
+index 0ad703d..1397cc5 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -744,7 +744,7 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
- 			  cfg.target_out_path,
- 			  &uid, &gid, &mode, &inode->capabilities);
+@@ -834,7 +834,7 @@ static struct erofs_inode *erofs_new_inode(void)
+ 	static unsigned int counter;
+ 	struct erofs_inode *inode;
  
--	erofs_dbg("/%s -> mode = 0x%x, uid = 0x%x, gid = 0x%x, capabilities = 0x%" PRIx64 "\n",
-+	erofs_dbg("/%s -> mode = 0x%x, uid = 0x%x, gid = 0x%x, capabilities = 0x%" PRIx64,
- 		  fspath, mode, uid, gid, inode->capabilities);
+-	inode = malloc(sizeof(struct erofs_inode));
++	inode = calloc(1, sizeof(struct erofs_inode));
+ 	if (!inode)
+ 		return ERR_PTR(-ENOMEM);
  
- 	if (decorated)
 -- 
 2.25.1
 
