@@ -2,38 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91B8C407863
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Sep 2021 15:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D90B407885
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Sep 2021 15:59:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4H6DPm2l42z2yMP
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Sep 2021 23:39:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4H6DrS25w3z2yLZ
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Sep 2021 23:59:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com;
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com;
  envelope-from=guoxuenan@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
  bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4H6DPd5vW5z2xv8
- for <linux-erofs@lists.ozlabs.org>; Sat, 11 Sep 2021 23:39:49 +1000 (AEST)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
- by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H6DJV0ZSFz8yGj;
- Sat, 11 Sep 2021 21:35:22 +0800 (CST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4H6DrK304Gz2yHw
+ for <linux-erofs@lists.ozlabs.org>; Sat, 11 Sep 2021 23:59:29 +1000 (AEST)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
+ by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4H6DJv47r0zbmG1;
+ Sat, 11 Sep 2021 21:35:43 +0800 (CST)
 Received: from kwepemm600004.china.huawei.com (7.193.23.242) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Sat, 11 Sep 2021 21:39:45 +0800
+ 15.1.2308.8; Sat, 11 Sep 2021 21:39:46 +0800
 Received: from huawei.com (10.175.101.6) by kwepemm600004.china.huawei.com
  (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Sat, 11 Sep
- 2021 21:39:44 +0800
+ 2021 21:39:45 +0800
 From: Guo Xuenan <guoxuenan@huawei.com>
 To: <xiang@kernel.org>, <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH v1 4/5] dump.erofs: add -i options to dump file information of
- specific inode number
-Date: Sat, 11 Sep 2021 21:46:34 +0800
-Message-ID: <20210911134635.1253426-4-guoxuenan@huawei.com>
+Subject: [PATCH v1 5/5] dump.erofs: add -I options to dump the layout of a
+ particular inode on disk
+Date: Sat, 11 Sep 2021 21:46:35 +0800
+Message-ID: <20210911134635.1253426-5-guoxuenan@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210911134635.1253426-1-guoxuenan@huawei.com>
 References: <20210911134635.1253426-1-guoxuenan@huawei.com>
@@ -65,257 +65,190 @@ From: mpiglet <mpiglet@outlook.com>
 Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
 Signed-off-by: mpiglet <mpiglet@outlook.com>
 ---
- dump/main.c | 202 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 200 insertions(+), 2 deletions(-)
+ dump/main.c | 108 +++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 91 insertions(+), 17 deletions(-)
 
 diff --git a/dump/main.c b/dump/main.c
-index b0acc0b..2389cef 100644
+index 2389cef..efce309 100644
 --- a/dump/main.c
 +++ b/dump/main.c
-@@ -19,8 +19,10 @@
- 
- struct dumpcfg {
+@@ -21,8 +21,10 @@ struct dumpcfg {
  	bool print_superblock;
-+	bool print_inode;
+ 	bool print_inode;
  	bool print_statistic;
++	bool print_inode_phy;
  	bool print_version;
-+	u64 ino;
+ 	u64 ino;
++	u64 ino_phy;
  };
  static struct dumpcfg dumpcfg;
  
-@@ -100,8 +102,9 @@ static void usage(void)
- {
- 	fputs("usage: [options] erofs-image \n\n"
- 		"Dump erofs layout from erofs-image, and [options] are:\n"
--		"-s          print information about superblock\n"
--		"-S      print statistic information of the erofs-image\n"
-+		"-s         print information about superblock\n"
-+		"-S         print statistic information of the erofs-image\n"
-+		"-i #       print target # inode info\n"
+@@ -105,6 +107,7 @@ static void usage(void)
+ 		"-s         print information about superblock\n"
+ 		"-S         print statistic information of the erofs-image\n"
+ 		"-i #       print target # inode info\n"
++		"-I #       print target # inode on-disk info\n"
  		"-v/-V      print dump.erofs version info\n"
  		"-h/--help  display this help and exit\n", stderr);
  }
-@@ -113,6 +116,7 @@ static void dumpfs_print_version(void)
- static int dumpfs_parse_options_cfg(int argc, char **argv)
- {
- 	int opt;
-+	u64 i;
- 
- 	while ((opt = getopt_long(argc, argv, "sSvVi:I:h",
- 					long_options, NULL)) != -1) {
-@@ -127,6 +131,11 @@ static int dumpfs_parse_options_cfg(int argc, char **argv)
- 		case 'V':
- 			dumpfs_print_version();
- 			exit(0);
-+		case 'i':
+@@ -136,6 +139,11 @@ static int dumpfs_parse_options_cfg(int argc, char **argv)
+ 			dumpcfg.print_inode = true;
+ 			dumpcfg.ino = i;
+ 			break;
++		case 'I':
 +			i = atoll(optarg);
-+			dumpcfg.print_inode = true;
-+			dumpcfg.ino = i;
++			dumpcfg.print_inode_phy = true;
++			dumpcfg.ino_phy = i;
 +			break;
  		case 'h':
  		case 1:
  		    usage();
-@@ -293,6 +302,193 @@ static void dumpfs_print_superblock(void)
+@@ -402,25 +410,25 @@ static void dumpfs_print_inode(void)
+ 	fprintf(stderr, "Inode %lu info:\n", dumpcfg.ino);
+ 	switch (inode.inode_isize) {
+ 	case 32:
+-		fprintf(stderr, "	File inode is compacted layout\n");
++		fprintf(stderr, "File inode is compacted layout\n");
+ 		break;
+ 	case 64:
+-		fprintf(stderr, "	File inode is extended layout\n");
++		fprintf(stderr, "File inode is extended layout\n");
+ 		break;
+ 	default:
+ 		erofs_err("unsupported inode layout\n");
+ 	}
+-	fprintf(stderr, "	File size:		%lu\n",
++	fprintf(stderr, "File size:		%lu\n",
+ 			inode.i_size);
+-	fprintf(stderr, "	File nid:		%lu\n",
++	fprintf(stderr, "File nid:		%lu\n",
+ 			inode.nid);
+-	fprintf(stderr, "	File extent size:	%u\n",
++	fprintf(stderr, "File extent size:	%u\n",
+ 			inode.extent_isize);
+-	fprintf(stderr, "	File xattr size:	%u\n",
++	fprintf(stderr, "File xattr size:	%u\n",
+ 			inode.xattr_isize);
+-	fprintf(stderr, "	File inode size:	%u\n",
++	fprintf(stderr, "File inode size:	%u\n",
+ 			inode.inode_isize);
+-	fprintf(stderr, "	File type:		");
++	fprintf(stderr, "File type:		");
+ 	switch (inode.i_mode & S_IFMT) {
+ 	case S_IFREG:
+ 		fprintf(stderr, "regular\n");
+@@ -453,13 +461,13 @@ static void dumpfs_print_inode(void)
+ 		return;
+ 	}
  
+-	fprintf(stderr, "	File original size:	%lu\n"
+-			"	File on-disk size:	%lu\n",
++	fprintf(stderr, "File original size:	%lu\n"
++			"File on-disk size:	%lu\n",
+ 			inode.i_size, size);
+-	fprintf(stderr, "	File compress rate:	%.2f%%\n",
++	fprintf(stderr, "File compress rate:	%.2f%%\n",
+ 			(double)(100 * size) / (double)(inode.i_size));
+ 
+-	fprintf(stderr, "	File datalayout:	");
++	fprintf(stderr, "File datalayout:	");
+ 	switch (inode.datalayout) {
+ 	case EROFS_INODE_FLAT_PLAIN:
+ 		fprintf(stderr, "EROFS_INODE_FLAT_PLAIN\n");
+@@ -477,18 +485,82 @@ static void dumpfs_print_inode(void)
+ 		break;
+ 	}
+ 
+-	fprintf(stderr, "	File create time:	%s", ctime(&t));
+-	fprintf(stderr, "	File uid:		%u\n", inode.i_uid);
+-	fprintf(stderr, "	File gid:		%u\n", inode.i_gid);
+-	fprintf(stderr, "	File hard-link count:	%u\n", inode.i_nlink);
++	fprintf(stderr, "File create time:	%s", ctime(&t));
++	fprintf(stderr, "File uid:		%u\n", inode.i_uid);
++	fprintf(stderr, "File gid:		%u\n", inode.i_gid);
++	fprintf(stderr, "File hard-link count:	%u\n", inode.i_nlink);
+ 
+ 	err = get_path_by_nid(sbi.root_nid, sbi.root_nid, nid, path, 0);
+ 	if (!err)
+-		fprintf(stderr, "	File path:		%s\n", path);
++		fprintf(stderr, "File path:		%s\n", path);
+ 	else
+ 		fprintf(stderr, "Path not found\n");
  }
  
-+static int get_path_by_nid(erofs_nid_t nid, erofs_nid_t parent_nid,
-+		erofs_nid_t target, char *path, unsigned int pos)
++static void dumpfs_print_inode_phy(void)
 +{
 +	int err;
-+	struct erofs_inode inode = {.nid = nid};
-+	erofs_off_t offset;
-+	char buf[EROFS_BLKSIZ];
-+
-+	path[pos++] = '/';
-+	if (target == sbi.root_nid)
-+		return 0;
-+
-+	err = erofs_read_inode_from_disk(&inode);
-+	if (err) {
-+		erofs_err("read inode %lu failed", nid);
-+		return err;
-+	}
-+
-+	offset = 0;
-+	while (offset < inode.i_size) {
-+		erofs_off_t maxsize = min_t(erofs_off_t,
-+					inode.i_size - offset, EROFS_BLKSIZ);
-+		struct erofs_dirent *de = (void *)buf;
-+		struct erofs_dirent *end;
-+		unsigned int nameoff;
-+
-+		err = erofs_pread(&inode, buf, maxsize, offset);
-+		if (err)
-+			return err;
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		if (nameoff < sizeof(struct erofs_dirent) ||
-+		    nameoff >= PAGE_SIZE) {
-+			erofs_err("invalid de[0].nameoff %u @ nid %llu",
-+				  nameoff, nid | 0ULL);
-+			return -EFSCORRUPTED;
-+		}
-+
-+		end = (void *)buf + nameoff;
-+		while (de < end) {
-+			const char *dname;
-+			unsigned int dname_len;
-+
-+			nameoff = le16_to_cpu(de->nameoff);
-+			dname = (char *)buf + nameoff;
-+			if (de + 1 >= end)
-+				dname_len = strnlen(dname, maxsize - nameoff);
-+			else
-+				dname_len = le16_to_cpu(de[1].nameoff)
-+					- nameoff;
-+
-+			/* a corrupted entry is found */
-+			if (nameoff + dname_len > maxsize ||
-+			    dname_len > EROFS_NAME_LEN) {
-+				erofs_err("bogus dirent @ nid %llu",
-+						le64_to_cpu(de->nid) | 0ULL);
-+				DBG_BUGON(1);
-+				return -EFSCORRUPTED;
-+			}
-+
-+			if (de->nid == target) {
-+				memcpy(path + pos, dname, dname_len);
-+				return 0;
-+			}
-+
-+			if (de->file_type == EROFS_FT_DIR &&
-+					de->nid != parent_nid &&
-+					de->nid != nid) {
-+				memcpy(path + pos, dname, dname_len);
-+				err = get_path_by_nid(de->nid, nid,
-+						target, path, pos + dname_len);
-+				if (!err)
-+					return 0;
-+				memset(path + pos, 0, dname_len);
-+			}
-+			++de;
-+		}
-+		offset += maxsize;
-+	}
-+	return -1;
-+}
-+
-+static void dumpfs_print_inode(void)
-+{
-+	int err;
-+	erofs_off_t size;
-+	erofs_nid_t nid = dumpcfg.ino;
++	erofs_nid_t nid = dumpcfg.ino_phy;
 +	struct erofs_inode inode = {.nid = nid};
 +	char path[PATH_MAX + 1] = {0};
-+	time_t t = inode.i_ctime;
 +
 +	err = erofs_read_inode_from_disk(&inode);
-+	if (err) {
++	if (err < 0) {
 +		erofs_err("read inode %lu from disk failed", nid);
 +		return;
 +	}
 +
-+	fprintf(stderr, "Inode %lu info:\n", dumpcfg.ino);
-+	switch (inode.inode_isize) {
-+	case 32:
-+		fprintf(stderr, "	File inode is compacted layout\n");
-+		break;
-+	case 64:
-+		fprintf(stderr, "	File inode is extended layout\n");
-+		break;
-+	default:
-+		erofs_err("unsupported inode layout\n");
-+	}
-+	fprintf(stderr, "	File size:		%lu\n",
-+			inode.i_size);
-+	fprintf(stderr, "	File nid:		%lu\n",
-+			inode.nid);
-+	fprintf(stderr, "	File extent size:	%u\n",
-+			inode.extent_isize);
-+	fprintf(stderr, "	File xattr size:	%u\n",
-+			inode.xattr_isize);
-+	fprintf(stderr, "	File inode size:	%u\n",
-+			inode.inode_isize);
-+	fprintf(stderr, "	File type:		");
-+	switch (inode.i_mode & S_IFMT) {
-+	case S_IFREG:
-+		fprintf(stderr, "regular\n");
-+		break;
-+	case S_IFDIR:
-+		fprintf(stderr, "directory\n");
-+		break;
-+	case S_IFLNK:
-+		fprintf(stderr, "link\n");
-+		break;
-+	case S_IFCHR:
-+		fprintf(stderr, "character device\n");
-+		break;
-+	case S_IFBLK:
-+		fprintf(stderr, "block device\n");
-+		break;
-+	case S_IFIFO:
-+		fprintf(stderr, "fifo\n");
-+		break;
-+	case S_IFSOCK:
-+		fprintf(stderr, "sock\n");
-+		break;
-+	default:
-+		break;
-+	}
++	const erofs_off_t ibase = iloc(inode.nid);
++	const erofs_off_t pos = Z_EROFS_VLE_LEGACY_INDEX_ALIGN(
++			ibase + inode.inode_isize + inode.xattr_isize);
++	erofs_blk_t blocks = inode.u.i_blocks;
++	erofs_blk_t start = 0;
++	erofs_blk_t end = 0;
++	struct erofs_map_blocks map = {
++		.index = UINT_MAX,
++		.m_la = 0,
++	};
 +
-+	err = get_file_compressed_size(&inode, &size);
-+	if (err) {
-+		erofs_err("get file size failed\n");
-+		return;
-+	}
-+
-+	fprintf(stderr, "	File original size:	%lu\n"
-+			"	File on-disk size:	%lu\n",
-+			inode.i_size, size);
-+	fprintf(stderr, "	File compress rate:	%.2f%%\n",
-+			(double)(100 * size) / (double)(inode.i_size));
-+
-+	fprintf(stderr, "	File datalayout:	");
++	fprintf(stderr, "Inode %lu on-disk info:\n", nid);
 +	switch (inode.datalayout) {
-+	case EROFS_INODE_FLAT_PLAIN:
-+		fprintf(stderr, "EROFS_INODE_FLAT_PLAIN\n");
-+		break;
-+	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
-+		fprintf(stderr, "EROFS_INODE_FLAT_COMPRESSION_LEGACY\n");
-+		break;
 +	case EROFS_INODE_FLAT_INLINE:
-+		fprintf(stderr, "EROFS_INODE_FLAT_INLINE\n");
++	case EROFS_INODE_FLAT_PLAIN:
++		if (inode.u.i_blkaddr == NULL_ADDR)
++			start = end = erofs_blknr(pos);
++		else {
++			start = inode.u.i_blkaddr;
++			end = start + BLK_ROUND_UP(inode.i_size) - 1;
++		}
++		fprintf(stderr, "File size:			%lu\n",
++				inode.i_size);
++		fprintf(stderr,
++				"	Plain Block Address:		%u - %u\n",
++				start, end);
 +		break;
++
++	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
 +	case EROFS_INODE_FLAT_COMPRESSION:
-+		fprintf(stderr, "EROFS_INODE_FLAT_COMPRESSION\n");
-+		break;
-+	default:
++		err = z_erofs_map_blocks_iter(&inode, &map);
++		if (err)
++			erofs_err("get file blocks range failed");
++
++		start = erofs_blknr(map.m_pa);
++		end = start - 1 + blocks;
++		fprintf(stderr,
++				"	Compressed Block Address:	%u - %u\n",
++				start, end);
 +		break;
 +	}
-+
-+	fprintf(stderr, "	File create time:	%s", ctime(&t));
-+	fprintf(stderr, "	File uid:		%u\n", inode.i_uid);
-+	fprintf(stderr, "	File gid:		%u\n", inode.i_gid);
-+	fprintf(stderr, "	File hard-link count:	%u\n", inode.i_nlink);
 +
 +	err = get_path_by_nid(sbi.root_nid, sbi.root_nid, nid, path, 0);
 +	if (!err)
-+		fprintf(stderr, "	File path:		%s\n", path);
++		fprintf(stderr, "File Path:			%s\n",
++				path);
 +	else
-+		fprintf(stderr, "Path not found\n");
++		erofs_err("path not found");
 +}
++
 +
  static int get_file_type(const char *filename)
  {
  	char *postfix = strrchr(filename, '.');
-@@ -611,6 +807,8 @@ int main(int argc, char **argv)
- 	if (dumpcfg.print_statistic)
- 		dumpfs_print_statistic();
+@@ -810,5 +882,7 @@ int main(int argc, char **argv)
+ 	if (dumpcfg.print_inode)
+ 		dumpfs_print_inode();
  
-+	if (dumpcfg.print_inode)
-+		dumpfs_print_inode();
- 
++	if (dumpcfg.print_inode_phy)
++		dumpfs_print_inode_phy();
  	return 0;
  }
 -- 
