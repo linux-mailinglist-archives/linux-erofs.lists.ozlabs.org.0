@@ -2,123 +2,136 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD57A40838C
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Sep 2021 06:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C51840838D
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Sep 2021 06:30:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4H7D474gXgz2yKW
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Sep 2021 14:28:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4H7D6v0hWtz2yLS
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Sep 2021 14:30:31 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1631507287;
-	bh=fQPCe/CKoiXmlyRaqRAdCDBiK/pjFyp2T266LoGTNtg=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=Kcv4Osg3i0g5Hmdd4L1lo0VPgrqL68f2Y/oQCbp3TgvmBOLAzDt6xlIdgo6Ha+WWo
-	 CdLteRx1sW1SjqA0OwXmbau6WEGDoC9kb2POr0IG08m0Y3ubxeGIS9zT3ELRl2vNlQ
-	 HIJQNImdfvXXZ91kLoYRrGt6658ILfBLXdmon4BtmxNQUGTrGRgktybRSfjjF0WKma
-	 cBFKHygfuELuSlFifX2WqtYk7+9gTvO/1DMrvNybNNmYv7C63kOvlcFH/lcC6y2nma
-	 fTeUwTNUXBC8DOvoS8SX4wEEWLFeTt5HXHOkvT0lpbKww2UVaPEAv4Ri8MK12q7ulA
-	 Sek3aP3MVWUVg==
+	s=201707; t=1631507431;
+	bh=z6FnjXJIanNHwpLWHw7sLykyu1q+5pgPeRn41FPjQuM=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Mbf/SfSddKDrWx5lObEkz6WiOmctpX2eH7Karv14X6u4A1Twy6hn+LdT3sHciy0IL
+	 h2LABzSbR0hhBICRYSoBf7Ny5vN2ULT0ccMztPHuzNpLq6dZOpibKLq/wu7YUnmtdU
+	 ncBdLksR1em+ZrxB0mpwm0BxWy6w9tU0Zg3j3z0Ww4V526cgx5OaiRugn0aWyZnRWF
+	 vCScoiXLPbNxO22JBSDcfou+dguEqddb5xJeMp7nY1zt5TnKMsyUECDL9E0ahxkm6m
+	 x8bwrKjuROoQQtgy04R7iZeZcNNWKun//Nu0Cr4TwDOQQSBlkuVeaiLI4rk68eWB1/
+	 bfPK9CadRAx2g==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oppo.com (client-ip=40.107.131.74;
- helo=apc01-sg2-obe.outbound.protection.outlook.com;
+ smtp.mailfrom=oppo.com (client-ip=40.107.130.42;
+ helo=apc01-hk2-obe.outbound.protection.outlook.com;
  envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=EXTdTk9+; 
+ header.s=selector1 header.b=sYw9Dapo; 
  dkim-atps=neutral
-Received: from APC01-SG2-obe.outbound.protection.outlook.com
- (mail-eopbgr1310074.outbound.protection.outlook.com [40.107.131.74])
+Received: from APC01-HK2-obe.outbound.protection.outlook.com
+ (mail-eopbgr1300042.outbound.protection.outlook.com [40.107.130.42])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4H7D3w6Rjkz2y0B
- for <linux-erofs@lists.ozlabs.org>; Mon, 13 Sep 2021 14:27:51 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4H7D6p4xVYz2xY6
+ for <linux-erofs@lists.ozlabs.org>; Mon, 13 Sep 2021 14:30:25 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JSLtn6CBeBNxRgzMCb12RGg/5swxv5oPurl1bDPfr3QeAGtIVFV9c4zZuhQfX6hszJNlyaAdTC/rQT3IZLYgQhhPECwLkFmK1YVKJFUVefs7/cO+RE5JrqE0s22Z1VRCTyHX0mEeXLH7b7FJghz1vFV++1ULtluyp5HXZLpJqMfEThon4oAnzn8LfAYS/6oDwpCu3mlgS125Z4uE28j2HMpTXjflwCLXL706bL2jbEAtAQNn1yMce5WbIgqICLWWZN1pQVpZJV759c6H5/TiFKKHRfSQbmV8jblACNSeeQLK+GlmC/uZYu5gn9jgzcZ510a8Byl1fvJE47Ec7qnjbQ==
+ b=F0yu6CGDnyuFWZ3zNJRjWZ6RFNoHb25JqwW7KEO7fFUO3mb5Uy6qbJ8CHNhUDx2wKge02S/2x22B8bXlngo1Q4GZiVfO/bGp51FK5hn78HoYQ7g1EbyDhngVBd7kEn8DptagM03Kyq1IkVP7fvftBd/ZkSrxnk/kQZR8qeYlIWi51zZLtxPg4N5TQqqi+ShTM9RZbZf737h4dJedhJSOe3Agc4ndVfbtoGaBo904amPTBG4EBM9vnJ3Mo91XChGS3B3PIwCb0y3ewTsJEtSCjYQfvmc7fX6oN9nMKCWUv6YxksEMjqoEy8WebiUer2m8WUFYgEcKIaH62H2CmWKc0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version; 
- bh=fQPCe/CKoiXmlyRaqRAdCDBiK/pjFyp2T266LoGTNtg=;
- b=hiPEWQGOwqvjAjHWYrV9D9sIB3ITj+QL2WTwkzqRO2OQA850wrSaebvOOAyznVPAAbdO59xdaM+QWF98v3ai54GKWEGex5+QRtZw5qTkV2Dxg8embBfCy7GipIJgS4r2rGWHiTQuHXm3cMc0k0s6kxq/qUo1c6nVDYQ0az4iCBuDoC+nOIy/qHGRICBQSYwG4BIna83+9yU9JxViw7hmWOomprFzisblgpogpkdxxrKpi1zYHft5UAeGl/jXnFcnoraAx+y87+mQTPWa1hw3cbHTklUbfxfRfF1PtcKo+b84lIJYfE6ixHM2ViMkzu4o0Cl9EqnTK1C14UxTuNI2pg==
+ bh=z6FnjXJIanNHwpLWHw7sLykyu1q+5pgPeRn41FPjQuM=;
+ b=fgwV3Vrq784TLGjSIznNFlFgjgTUNwNK/6Vdt6KS8a0NAQKGeXEk0osCkapX0K54rNOFSBp+A3iynebc4YZB9ISgWuJaSozi6c6nfII4A+BGI8TI7Bs3qARzU/1thhygqiDj90oNTEEUNHLAil8qQ3dQXP/O9MAZNYdrCA5QO5rMjx5jAmSjBGtKusTRyujC3Q+rPE/cGgfsWHsI2wemrSWxwWB5/zDTwIe44VHlEVMyQZwC+/nW3uN3993tguWCulTay7MNW3zddNeJ4J4t9xDLzy/7Yboxj8MZXduUEQxyllSD+SXg8e8JEv0cPghi04Zq154gjc/b7RP21MjODQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
-Authentication-Results: lists.ozlabs.org; dkim=none (message not signed)
- header.d=none;lists.ozlabs.org; dmarc=none action=none header.from=oppo.com;
+Authentication-Results: outlook.com; dkim=none (message not signed)
+ header.d=none;outlook.com; dmarc=none action=none header.from=oppo.com;
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
  SG2PR02MB3372.apcprd02.prod.outlook.com (2603:1096:4:48::14) with
  Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4500.18; Mon, 13 Sep 2021 04:27:25 +0000
+ 15.20.4500.18; Mon, 13 Sep 2021 04:30:06 +0000
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::5919:768f:2950:9504]) by SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::5919:768f:2950:9504%4]) with mapi id 15.20.4500.018; Mon, 13 Sep 2021
- 04:27:25 +0000
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: add support for the full decompressed length
-Date: Mon, 13 Sep 2021 12:27:16 +0800
-Message-Id: <20210913042716.17529-1-huangjianan@oppo.com>
-X-Mailer: git-send-email 2.25.1
+ 04:30:06 +0000
+Subject: Re: [PATCH v1 3/5] dump.erofs: add -S options for collecting
+ statistics of the whole filesystem
+To: xiang@kernel.org
+References: <20210911134635.1253426-1-guoxuenan@huawei.com>
+ <20210911134635.1253426-3-guoxuenan@huawei.com>
+ <20210911161305.GC3160@hsiangkao-HP-ZHAN-66-Pro-G1>
+Message-ID: <7790736c-0aeb-ca52-af44-cc72e168ed0f@oppo.com>
+Date: Mon, 13 Sep 2021 12:30:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <20210911161305.GC3160@hsiangkao-HP-ZHAN-66-Pro-G1>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0192.apcprd02.prod.outlook.com
- (2603:1096:201:21::28) To SG2PR02MB4108.apcprd02.prod.outlook.com
+X-ClientProxiedBy: HK2P15301CA0006.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::16) To SG2PR02MB4108.apcprd02.prod.outlook.com
  (2603:1096:4:96::19)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from PC80253450.adc.com (58.252.5.73) by
- HK2PR02CA0192.apcprd02.prod.outlook.com (2603:1096:201:21::28) with Microsoft
+Received: from [10.118.7.229] (58.255.79.105) by
+ HK2P15301CA0006.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4500.14 via Frontend Transport; Mon, 13 Sep 2021 04:27:23 +0000
+ 15.20.4544.0 via Frontend Transport; Mon, 13 Sep 2021 04:30:05 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 334d20c5-75e6-408f-906a-08d9766ec92e
+X-MS-Office365-Filtering-Correlation-Id: d78d24cf-a6b0-4c62-ecd8-08d9766f29cf
 X-MS-TrafficTypeDiagnostic: SG2PR02MB3372:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SG2PR02MB337234F5313F70F704DAE8ACC3D99@SG2PR02MB3372.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Microsoft-Antispam-PRVS: <SG2PR02MB3372649EF706FD4C1977B408C3D99@SG2PR02MB3372.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VAjCCOhKXu1QDvh0Bb6mlyfWCj+v/fZVMbqJ+ISnKcqSjZAu+341U8MJzXoo6LEhDFw5DKSYScgZtebVwrZlp1utzfev2vLFYtKRFmVBiHNrWpQ9gAlXPDKtu0rlN9GKzrVFjWOhZHtekigaetKpMmd2wPUfY0qy/s7/RSzs90/o37kd//5e0fsgMuWQRjdgG1fdVD1vsOG0q7z3npuINllnXybRZ/8EuWSsAzLhadFIjMUoTo719Owyk+GYteXI1F7CaXCM5vJqg0sZxKN/kWiuvPeyDtFyG/k2Fp5R6Q8jH41q49WmvEetOkac0FqG6F7YcGj38bkSfmLef7c1cbHNBzFutkh71yetYRuIv+LYqDLqc1oVZLv0B4Lms6D8JMNKgpwOSF+uPMiy7asOkHKkjw3bu1MRLH9VneKpP7T5cR2e2rdNclmsUjexhlpT5sHuTyP08ePPs4fEFwIJ5IySnBYLLgMza8h3jsOOQYxz7ZRbFD2aAeEKQAcr/XA0xVy93VrpKGzjvKOB5nGHG3vM7jwm3lxyl0AyjFdybbw5uJbUXIVWWDcZuckv/OpJDq7ZytKv4LhaIZ5orvFEYX40KI6wiz2uDeXhIKfjlehKh/Tx1OH4xbuyckqaWxykCAtM7H+TqTgJBb4MxfPJvw8sua98+evSO83829CzZd5lpW70642FiS6yt/4v3NoBLodtI2SvWhRZanX16lZAtZ4qgu7I9fDhp96SGZKvpaQ=
+X-Microsoft-Antispam-Message-Info: 9mJ9sw+9010CbMmgUPW+jSqSdAjCLTQyn0S9JRflsnhR5Ah0QH8NmyQ/LuGJdSUgndSRlCt7qqSgi7C1kRMcHX6H09jIAPUtRrnyLyAbAoCkanFIDzLi2Z8FeahLZFG+QtX+JdGtonD6qD3eB75femc7dx1QI/XW4X5i2+wZxL4hyvPJQA9+zfSsqK/l4Yx0ijsLslNFp70ahTAXEB8HOpi/iDQXooS3oRU8E548Yu3YdKqQi3QO787ZbMI/s867jmdZpxYe18iTdnlfQbVJolHT8Uo5JQp6ENgzf/MIopDwXbBLvD+3S/Nnoc5ejRaT2mfgrDLvurB3lAyNgGSTQc5QwonRkQZWr9I7ZNrNXzYdaxT2M7O/PSFednRcyuWhb2gf4JH1a3PS7KDxjJXd86PYo3vlSrLn/SdcdPisRmo+m6ygcg4tw1DHUA1XWNh7dnfkjZfu5jYdrF+8YxAIAhfZNDjtO8/IXW/iu2ANvL54Pbj0bO3BLm0RAz9M+Q3g0xFvyeyp9AvT7fKs1ysS+FexdA0CXF4fHwX8v1AYmdlAt3fYyDlHq9X85Cd4jvklQStDHgoD6RNSPW1bcUBM1eWZQiT915gQLY5vN1uv3w6nUJt5Ex7vXkYmxP3DaWQW6zP04ukFdrfESHo7Fr58h1grMltOPnQjTTkzVdtma/ZDWHF+bUhC6svlqp/9YhQ/E4O+Up49B13iuxJKNUY8vAifQCsbRmGD30s/1kPFCPc/7MHmkXzgvXYD4qrx2Qn1DEb3it4xdnTjapXi11ntKuR2s7g2Mh0r36tlewvZPFY=
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(4636009)(376002)(366004)(396003)(39860400002)(346002)(136003)(4326008)(6512007)(36756003)(6666004)(8676002)(66946007)(2616005)(956004)(38350700002)(86362001)(316002)(5660300002)(478600001)(83380400001)(26005)(107886003)(186003)(6916009)(38100700002)(8936002)(52116002)(6486002)(66556008)(66476007)(1076003)(2906002)(6506007)(11606007);
+ SFS:(4636009)(376002)(366004)(396003)(39860400002)(346002)(136003)(45080400002)(4326008)(31696002)(36756003)(8676002)(66946007)(2616005)(956004)(16576012)(38350700002)(86362001)(316002)(5660300002)(478600001)(30864003)(83380400001)(26005)(186003)(6916009)(38100700002)(31686004)(8936002)(52116002)(6486002)(66556008)(66476007)(2906002)(11606007)(43740500002)(45980500001);
  DIR:OUT; SFP:1101; 
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dPR+sFlN/7yB6Vw1pnu60tariHS3Tvenpd/bCyGE89sAiTPes734shXJJ9nO?=
- =?us-ascii?Q?2NbG4wAFSRllqtkNR/ZwxNANSxJOlXN6YcEYNjLvtYfNymR62JoxxXlGeZJH?=
- =?us-ascii?Q?IgwgGosEUtXpLpi4bCOWXg/SiEERt5zIRG5JDfFg2QtW4gK/XLxb59RI4PJU?=
- =?us-ascii?Q?NCtzveSo0Cc3sDRe9WKhpq02BYHP9lF8r87jEKLOY+HheyWTmSskJo7AsZP/?=
- =?us-ascii?Q?D8Xi/U0F9rClqJVysru3vzDrgNZs9ehLNZJKQHEOhBsMLd0XlH1WPwE/0x+4?=
- =?us-ascii?Q?CFt0GtQ0/MIyaIlYWdsxwgIh6Zx8WO6GuBS2vO7Hs/Ai+nNaoDeoBWPGjySz?=
- =?us-ascii?Q?Q+U7rOrJBXjefGgBWtNHUbXoEzzP9ywNJZr753w+6zV3CDU1jGlPbHfmzJ2i?=
- =?us-ascii?Q?h5Awz7bNRmbom/rTlDnCDhqAjuxl1a37NnoGd9YRIhmVGQ8J3kCZ1OsSMh3F?=
- =?us-ascii?Q?yLY1GtImZjsafXRXZNs4iA7HKbabzswye2z4g/7j3Boe8O8gvdejsPo9/iA3?=
- =?us-ascii?Q?ZFKtlr5xG0fIw4+DG842Uz/rXKjhfExahsqI36qAov0yIhCpr56dyHctqeNy?=
- =?us-ascii?Q?rYgaE49ZpjH5ZPzilPFF0Ta4OMEE1I8HjTp2Ca2unj8sQ0V2No+qpXZKcO3R?=
- =?us-ascii?Q?6ms4D+YHzb1/+9qEXBiR/1+SSxD3uCYSfr7osQGmpqiOnfPI7wzxrzWJU/hk?=
- =?us-ascii?Q?9OGFqhLSjYjBQ/y9wo7RDbBYmllEs1wogIxStC3hBQrjAesGzQC4RnFZ7vlT?=
- =?us-ascii?Q?QEzsoW94oIYF99ehkqiF28JJPHHCq+PHSNLS1WrWlfTFO21l9KO9UJgHwHMd?=
- =?us-ascii?Q?ljyy8HwOWF2GreyiF5czLKk0euqVloNWbBRb4W9nNptvBTJ6FsFPDgLIj4K/?=
- =?us-ascii?Q?KPm9DC+lQhghGp6c8xfpZ45f+BK9na2jtjGlR1RTMcY9U02lqspRKXytTJk9?=
- =?us-ascii?Q?lYTkA4dlC9j2qZICvvnCt/V+2yekLN6qr3BebG+ydAUVGwH4RviLW9KvmY1D?=
- =?us-ascii?Q?cix4gIs2HKySg0f1qN+PQY+k6+VBq1ZLd3lkzWdylbCMH9cjSIfNZJAJlUAm?=
- =?us-ascii?Q?4XC+fuZ0BWanZWSH1jX0ieOsR3s0XikdkzTQMTizgHA1EAnMqACshMCZKZw/?=
- =?us-ascii?Q?HTXiXOql77RCO1vUafilv0wjh8ILfNb4GoTamKo6NSRSKViYPbllQwZ2Ngvu?=
- =?us-ascii?Q?bq5CHZvKH/+/D2zhCu4YlxNn1tJ6LvbKz8+OHngMB/4kd9Rq5233q5rFHJ/h?=
- =?us-ascii?Q?NXUB8gmpxo6NuIVCAlhrGM3HGZe0KL3G49UbyOxGRHLHGatCnm1VBB+wSBAw?=
- =?us-ascii?Q?Prakhw+cr6OPjCy8X8MxlBRH?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bHFMNUlhVWMzbzhnaHowR1VJcGlFRkhQQzF0RG45Zi9jc2NqVmpTa1JTU2VE?=
+ =?utf-8?B?eGxOeXhCM2pSaE1Pc2s3Njh5cEExZnF5THZDRWQxam1XZ0djS1VtL0IrdFQ5?=
+ =?utf-8?B?cHRmWENJb0daY29Qbi9VNGJjVkNXYjU2V1RGeHJPVlYxMnBoL2dnNEorZm9s?=
+ =?utf-8?B?Z0k2S1dzS1VqWXJVUm9DaHpsaTR3M2ZiaklpZjZFRHhWWWZwZlVJMXZmckJD?=
+ =?utf-8?B?TC9IeUE5YmtlRWFuZno0QzYzd3RXWG5jbVcvYjhvN0dRbnZIamtxaW1UMTJI?=
+ =?utf-8?B?c25lejFIbkRqeURxekk1UTMzQ3U5ejlTY3czWFk1clZ5TnU1em1iVlVIdWhx?=
+ =?utf-8?B?NEJ6QlRpMWVQYmFXblM4bzl0c3pISDB2K3Q2TjcvWGJSU1lXZi9lT3MxV1RU?=
+ =?utf-8?B?RWJqSjlNZmN0N0d3UWtZcXloZlJXWEdyZ2E5cUJwYjFGVi9Nc2FwYWQ2UjNH?=
+ =?utf-8?B?Q1ZGTHpSNTVnZkJmcUFheTFmZjJ0Z201V3A2aldJcHFSdGRnYytVRGkzdHNm?=
+ =?utf-8?B?aVZsckFMdmVDRm9raFg5TmIwSW5DY09sYTc5RURIZDVKdlZCWm9zYms0bHQv?=
+ =?utf-8?B?OWdQZFJSdUQxbnV5bGFveTVHZjRzK1MrbGp0dDhCV0hSMTVGYnkxUFlnNzho?=
+ =?utf-8?B?WjBhb2N3WExsZENXQmU2bHR0aHZJUDQzUjVMaWs5UnFiUDJWUWtYZm9QeS9u?=
+ =?utf-8?B?dnlwQ3UvZXl3dUgvVUwweWRwL0dQT2E0VUlvU1RtQ0hnUkxmUG9DUFJ1K0d5?=
+ =?utf-8?B?bGdGNi9Mb1kyODBoTnlXUUREbW51eUhTYitYYXdyVWVQSlN1R3RiT01jUjY3?=
+ =?utf-8?B?dzVCeGdTZVQ2Zis4b0NkYldwY0paVVNIeGtuOVp6U3lPdHdkSDRPYytEaEhl?=
+ =?utf-8?B?Q0lacFN0K1NWdHMrbGlZOWVFMXdRdmhvbnBDUW5GcGo4U3NXYlhxS2lLSjYz?=
+ =?utf-8?B?TWRxa2FKd0hzTnRpVGx0N1R4UGN1VHFCZnIwVHFkR3FLS21vK3JxdXlkOGsx?=
+ =?utf-8?B?LzdsM1pMRnhHWmlpNFFDTHRITFl2ZC9UYWNMTFlpc0R3QUo0T3lkTGg2MDBj?=
+ =?utf-8?B?eWRtMFYzdktoMUNvOVFBbTJWSXluTDQxQ2wvNjJjaUdzSGhqZHhMYWZqcEFq?=
+ =?utf-8?B?bjgzQWYvbmJ3dkdObDV1ajZtdXJzVFhHYjQwTXdKRVBGK05Sa2JHWmg4dHRz?=
+ =?utf-8?B?VEtjZXJwN1BTSVM1VlFrVjB0cWlJN3FmNWE4ejM5WTBTV0hvVWpJMnZaZm9r?=
+ =?utf-8?B?T3ZBelIwMVpqYWcxdlk4R0FxclcyWCtsWktWRGMzWHVQeWZIL1lQRXBRcDhZ?=
+ =?utf-8?B?TWRwUnhKVG1Kd2VkeXpPd1VJOVpzblgwS3kzYnJCWklWcEpFUklqRWJ4Mzlv?=
+ =?utf-8?B?L3hvS0VFbThBUTBjakdmT0Jrb0xwNG5LQ3NLVEE3RlpBOHUzd3VXRThwaGZu?=
+ =?utf-8?B?V24ycUd2RDJPLzhlS09YZFlhSFR6aVArdi8vRWdTNVdHUnJpdXI4UmU4M3ph?=
+ =?utf-8?B?QkNlRHM4NGd6Q2RSOFY3SlJZQWl1VXlYbDdVbHpGcXpISHRYc092TjJRZEtP?=
+ =?utf-8?B?cTlHclA1ZEM0UjNrdnpWYUUzOWpwMWxKa2tWQ1lvM2JnWHZra1pzbTRzaW1i?=
+ =?utf-8?B?TVJxZ3BMRUpIY2tSR01iTXVwN29xOGpIQnZ2NXFjeTVsSXpWTHZxd2FsNE5r?=
+ =?utf-8?B?eE9vY0R5WFpQbVhGWE14bXFaODlINDNtOFJyQUNDbmRNUGdwSTZVU1VieXlD?=
+ =?utf-8?Q?7z8kJQx1C9178iExi3rkgRG8YfABc+/MswuLrLy?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 334d20c5-75e6-408f-906a-08d9766ec92e
+X-MS-Exchange-CrossTenant-Network-Message-Id: d78d24cf-a6b0-4c62-ecd8-08d9766f29cf
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2021 04:27:24.7455 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2021 04:30:06.5775 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +FwYIQlsCFcT9/mzsjPsUGO7QOPfkai/VbnFhfa22Dw3c74Wa0CsVP3okt9KxmdjFLmIUCME6k5jQpMwMLg10A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: HdWOIOu7q5zA7jR0wlKa9Z+HR5POlNICkZjAJ0CEU9ZXVAWILNgA1dsjOFYDInh8YAz/+FISlqOQpPY4d34f5w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3372
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -133,251 +146,589 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Huang Jianan <huangjianan@oppo.com>
-Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com
+Cc: linux-erofs@lists.ozlabs.org, mpiglet@outlook.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously, there is no need to get the full decompressed length since
-EROFS supports partial decompression. However for some other cases
-such as fiemap, the full decompressed length is necessary for iomap to
-make it work properly.
+在 2021/9/12 0:13, Gao Xiang 写道:
+> (+Cc Jianan.)
+>
+> On Sat, Sep 11, 2021 at 09:46:33PM +0800, Guo Xuenan wrote:
+>> From: mpiglet <mpiglet@outlook.com>
+>>
+>> Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+>> Signed-off-by: mpiglet <mpiglet@outlook.com>
+>> ---
+>>   dump/main.c | 474 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 474 insertions(+)
+>>
+>> diff --git a/dump/main.c b/dump/main.c
+>> index 25ac89f..b0acc0b 100644
+>> --- a/dump/main.c
+>> +++ b/dump/main.c
+>> @@ -19,10 +19,78 @@
+>>   
+>>   struct dumpcfg {
+>>   	bool print_superblock;
+>> +	bool print_statistic;
+>>   	bool print_version;
+>>   };
+>>   static struct dumpcfg dumpcfg;
+>>   
+>> +static const char chart_format[] = "%-16s	%-11d %8.2f%% |%-50s|\n";
+>> +static const char header_format[] = "%-16s %11s %16s |%-50s|\n";
+>> +static char *file_types[] = {
+>> +	".so",
+>> +	".png",
+>> +	".jpg",
+>> +	".xml",
+>> +	".html",
+>> +	".odex",
+>> +	".vdex",
+>> +	".apk",
+>> +	".ttf",
+>> +	".jar",
+>> +	".json",
+>> +	".ogg",
+>> +	".oat",
+>> +	".art",
+>> +	".rc",
+>> +	".otf",
+>> +	".txt",
+>> +	"others",
+>> +};
+>> +enum {
+>> +	SOFILETYPE = 0,
+>> +	PNGFILETYPE,
+>> +	JPEGFILETYPE,
+>> +	XMLFILETYPE,
+>> +	HTMLFILETYPE,
+>> +	ODEXFILETYPE,
+>> +	VDEXFILETYPE,
+>> +	APKFILETYPE,
+>> +	TTFFILETYPE,
+>> +	JARFILETYPE,
+>> +	JSONFILETYPE,
+>> +	OGGFILETYPE,
+>> +	OATFILETYPE,
+>> +	ARTFILETYPE,
+>> +	RCFILETYPE,
+>> +	OTFFILETYPE,
+>> +	TXTFILETYPE,
+>> +	OTHERFILETYPE,
+>> +};
+> Why we need enums here? Can these be resolved with some array index?
+>
+>> +
+>> +#define	FILE_SIZE_BITS	30
+>> +struct statistics {
+>> +	unsigned long blocks;
+>> +	unsigned long files;
+>> +	unsigned long files_total_size;
+>> +	unsigned long files_total_origin_size;
+>> +	double compress_rate;
+>> +	unsigned long compressed_files;
+>> +	unsigned long uncompressed_files;
+>> +
+>> +	unsigned long regular_files;
+>> +	unsigned long dir_files;
+>> +	unsigned long chardev_files;
+>> +	unsigned long blkdev_files;
+>> +	unsigned long fifo_files;
+>> +	unsigned long sock_files;
+>> +	unsigned long symlink_files;
+>> +
+>> +	unsigned int file_type_stat[OTHERFILETYPE + 1];
+>> +	unsigned int file_org_size[FILE_SIZE_BITS];
+> What do "FILE_SIZE_BITS" and "file_org_size" mean?
+>
+>> +	unsigned int file_comp_size[FILE_SIZE_BITS];
+>> +};
+>> +static struct statistics stats;
+>> +
+>>   static struct option long_options[] = {
+>>   	{"help", no_argument, 0, 1},
+>>   	{0, 0, 0, 0},
+>> @@ -33,6 +101,7 @@ static void usage(void)
+>>   	fputs("usage: [options] erofs-image \n\n"
+>>   		"Dump erofs layout from erofs-image, and [options] are:\n"
+>>   		"-s          print information about superblock\n"
+>> +		"-S      print statistic information of the erofs-image\n"
+>>   		"-v/-V      print dump.erofs version info\n"
+>>   		"-h/--help  display this help and exit\n", stderr);
+>>   }
+>> @@ -51,6 +120,9 @@ static int dumpfs_parse_options_cfg(int argc, char **argv)
+>>   		case 's':
+>>   			dumpcfg.print_superblock = true;
+>>   			break;
+>> +		case 'S':
+>> +			dumpcfg.print_statistic = true;
+>> +			break;
+>>   		case 'v':
+>>   		case 'V':
+>>   			dumpfs_print_version();
+>> @@ -78,6 +150,116 @@ static int dumpfs_parse_options_cfg(int argc, char **argv)
+>>   	return 0;
+>>   }
+>>   
+>> +static int z_erofs_get_last_cluster_size_from_disk(struct erofs_map_blocks *map,
+>> +		erofs_off_t last_cluster_size,
+>> +		erofs_off_t *last_cluster_compressed_size)
+> Hmmm... do we really need the exact compressed bytes?
+> or just compressed blocks is enough?
+>
+> "compressed blocks" can be gotten in erofs inode.
+>
+> Btw, although I think it's useful for fsck (check if an erofs is correct).
+>
+>> +{
+>> +	int ret;
+>> +	int decomp_len;
+>> +	int compressed_len = 0;
+>> +	char *decompress;
+>> +	char raw[Z_EROFS_PCLUSTER_MAX_SIZE] = {0};
+>> +
+>> +	ret = dev_read(raw, map->m_pa, map->m_plen);
+>> +	if (ret < 0)
+>> +		return -EIO;
+>> +
+>> +	if (erofs_sb_has_lz4_0padding()) {
+>> +		compressed_len = map->m_plen;
+>> +	} else {
+>> +		// lz4 maximum compression ratio is 255
+>> +		decompress = (char *)malloc(map->m_plen * 255);
+>> +		if (!decompress) {
+>> +			erofs_err("allocate memory for decompress space failed");
+>> +			return -1;
+>> +		}
+>> +		decomp_len = LZ4_decompress_safe_partial(raw, decompress,
+>> +				map->m_plen, last_cluster_size,
+>> +				map->m_plen * 10);
+>> +		if (decomp_len < 0) {
+>> +			erofs_err("decompress last cluster to get decompressed size failed");
+>> +			free(decompress);
+>> +			return -1;
+>> +		}
+>> +		compressed_len = LZ4_compress_destSize(decompress, raw,
+>> +				&decomp_len, Z_EROFS_PCLUSTER_MAX_SIZE);
+>> +		if (compressed_len < 0) {
+>> +			erofs_err("compress to get last extent size failed\n");
+>> +			free(decompress);
+>> +			return -1;
+>> +		}
+>> +		free(decompress);
+>> +		// dut to the use of lz4hc (can use different compress level),
+>> +		// our normal lz4 compress result may be bigger
+>> +		compressed_len = compressed_len < map->m_plen ?
+>> +			compressed_len : map->m_plen;
+>> +	}
+>> +
+>> +	*last_cluster_compressed_size = compressed_len;
+>> +	return 0;
+>> +}
+>> +
+>> +static int z_erofs_get_compressed_size(struct erofs_inode *inode,
+>> +		erofs_off_t *size)
+>> +{
+>> +	int err;
+>> +	erofs_blk_t compressedlcs;
+>> +	erofs_off_t last_cluster_size;
+>> +	erofs_off_t last_cluster_compressed_size;
+>> +	struct erofs_map_blocks map = {
+>> +		.index = UINT_MAX,
+>> +		.m_la = inode->i_size - 1,
+>> +	};
+>> +
+>> +	err = z_erofs_map_blocks_iter(inode, &map);
+> (add Jianan here.)
+>
+> Can we port the latest erofs kernel fiemap code to erofs-utils, and add
+> some functionality to get the file distribution as well when the fs isn't
+> mounted?
+Hi Xiang,
 
-This patch adds a way to get the full decompressed length. Note that
-it takes more metadata overhead and it'd be avoided if possible in the
-performance sensitive scenario.
+I have sent the patch and verified it with a similar function. Better to 
+use the
+new interface here.
 
-Signed-off-by: Huang Jianan <huangjianan@oppo.com>
----
- include/erofs/internal.h | 10 +++-
- lib/data.c               |  2 +-
- lib/zmap.c               | 99 ++++++++++++++++++++++++++++++++++++----
- 3 files changed, 99 insertions(+), 12 deletions(-)
-
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index f5eacea..72a7cb7 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -253,6 +253,14 @@ struct erofs_map_blocks {
- 	erofs_blk_t index;
- };
- 
-+/* Flags used by erofs_map_blocks_flatmode() */
-+#define EROFS_GET_BLOCKS_RAW    0x0001
-+/*
-+ * Used to get the exact decompressed length, e.g. fiemap (consider lookback
-+ * approach instead if possible since it's more metadata lightweight.)
-+ */
-+#define EROFS_GET_BLOCKS_FIEMAP	0x0002
-+
- /* super.c */
- int erofs_read_superblock(void);
- 
-@@ -265,7 +273,7 @@ int erofs_pread(struct erofs_inode *inode, char *buf,
- /* zmap.c */
- int z_erofs_fill_inode(struct erofs_inode *vi);
- int z_erofs_map_blocks_iter(struct erofs_inode *vi,
--			    struct erofs_map_blocks *map);
-+			    struct erofs_map_blocks *map, int flags);
- 
- #ifdef EUCLEAN
- #define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
-diff --git a/lib/data.c b/lib/data.c
-index 1a1005a..38627d7 100644
---- a/lib/data.c
-+++ b/lib/data.c
-@@ -136,7 +136,7 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
- 	while (end > offset) {
- 		map.m_la = end - 1;
- 
--		ret = z_erofs_map_blocks_iter(inode, &map);
-+		ret = z_erofs_map_blocks_iter(inode, &map, 0);
- 		if (ret)
- 			break;
- 
-diff --git a/lib/zmap.c b/lib/zmap.c
-index 458030b..f6a8ccf 100644
---- a/lib/zmap.c
-+++ b/lib/zmap.c
-@@ -159,9 +159,34 @@ static unsigned int decode_compactedbits(unsigned int lobits,
- 	return lo;
- }
- 
-+static int get_compacted_la_distance(unsigned int lclusterbits,
-+				     unsigned int encodebits,
-+				     unsigned int vcnt, u8 *in, int i)
-+{
-+	const unsigned int lomask = (1 << lclusterbits) - 1;
-+	unsigned int lo, d1 = 0;
-+	u8 type;
-+
-+	DBG_BUGON(i >= vcnt);
-+
-+	do {
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * i, &type);
-+
-+		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			return d1;
-+		++d1;
-+	} while (++i < vcnt);
-+
-+	/* vcnt - 1 (Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) item */
-+	if (!(lo & Z_EROFS_VLE_DI_D0_CBLKCNT))
-+		d1 += lo - 1;
-+	return d1;
-+}
-+
- static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 				  unsigned int amortizedshift,
--				  unsigned int eofs)
-+				  unsigned int eofs, bool lookahead)
- {
- 	struct erofs_inode *const vi = m->inode;
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-@@ -190,6 +215,11 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	m->type = type;
- 	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << lclusterbits;
-+
-+		/* figure out lookahead_distance: delta[1] if needed */
-+		if (lookahead)
-+			m->delta[1] = get_compacted_la_distance(lclusterbits,
-+						encodebits, vcnt, in, i);
- 		if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
- 			if (!big_pcluster) {
- 				DBG_BUGON(1);
-@@ -260,7 +290,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- }
- 
- static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
--					    unsigned long lcn)
-+					    unsigned long lcn, bool lookahead)
- {
- 	struct erofs_inode *const vi = m->inode;
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-@@ -310,11 +340,12 @@ out:
- 	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
- 	if (err)
- 		return err;
--	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
-+	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos),
-+				      lookahead);
- }
- 
- static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
--					  unsigned int lcn)
-+					  unsigned int lcn, bool lookahead)
- {
- 	const unsigned int datamode = m->inode->datalayout;
- 
-@@ -322,7 +353,7 @@ static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 		return legacy_load_cluster_from_disk(m, lcn);
- 
- 	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
--		return compacted_load_cluster_from_disk(m, lcn);
-+		return compacted_load_cluster_from_disk(m, lcn, lookahead);
- 
- 	return -EINVAL;
- }
-@@ -345,7 +376,7 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 
- 	/* load extent head logical cluster if needed */
- 	lcn -= lookback_distance;
--	err = z_erofs_load_cluster_from_disk(m, lcn);
-+	err = z_erofs_load_cluster_from_disk(m, lcn, false);
- 	if (err)
- 		return err;
- 
-@@ -394,7 +425,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	if (m->compressedlcs)
- 		goto out;
- 
--	err = z_erofs_load_cluster_from_disk(m, lcn);
-+	err = z_erofs_load_cluster_from_disk(m, lcn, false);
- 	if (err)
- 		return err;
- 
-@@ -440,8 +471,50 @@ err_bonus_cblkcnt:
- 	return -EFSCORRUPTED;
- }
- 
-+static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
-+{
-+	struct erofs_inode *const vi = m->inode;
-+	struct erofs_map_blocks *map = m->map;
-+	unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	u64 lcn = m->lcn, headlcn = map->m_la >> lclusterbits;
-+	int err;
-+
-+	do {
-+		/* handle the last EOF pcluster (no next HEAD lcluster) */
-+		if ((lcn << lclusterbits) >= vi->i_size) {
-+			map->m_llen = vi->i_size - map->m_la;
-+			return 0;
-+		}
-+
-+		err = z_erofs_load_cluster_from_disk(m, lcn, true);
-+		if (err)
-+			return err;
-+
-+		if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+			DBG_BUGON(!m->delta[1] &&
-+				  m->clusterofs != 1 << lclusterbits);
-+		} else if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
-+			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD) {
-+			/* go on until the next HEAD lcluster */
-+			if (lcn != headlcn)
-+				break;
-+			m->delta[1] = 1;
-+		} else {
-+			erofs_err("unknown type %u @ lcn %lu of nid %llu",
-+				  m->type, lcn, (unsigned long long)vi->nid);
-+			DBG_BUGON(1);
-+			return -EOPNOTSUPP;
-+		}
-+		lcn += m->delta[1];
-+	} while (m->delta[1]);
-+
-+	map->m_llen = (lcn << lclusterbits) + m->clusterofs - map->m_la;
-+	return 0;
-+}
-+
- int z_erofs_map_blocks_iter(struct erofs_inode *vi,
--			    struct erofs_map_blocks *map)
-+			    struct erofs_map_blocks *map,
-+			    int flags)
- {
- 	struct z_erofs_maprecorder m = {
- 		.inode = vi,
-@@ -470,7 +543,7 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	initial_lcn = ofs >> lclusterbits;
- 	endoff = ofs & ((1 << lclusterbits) - 1);
- 
--	err = z_erofs_load_cluster_from_disk(&m, initial_lcn);
-+	err = z_erofs_load_cluster_from_disk(&m, initial_lcn, false);
- 	if (err)
- 		goto out;
- 
-@@ -512,11 +585,17 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 
- 	map->m_llen = end - map->m_la;
- 	map->m_pa = blknr_to_addr(m.pblk);
-+	map->m_flags |= EROFS_MAP_MAPPED;
- 
- 	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
- 	if (err)
- 		goto out;
--	map->m_flags |= EROFS_MAP_MAPPED;
-+
-+	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
-+		err = z_erofs_get_extent_decompressedlen(&m);
-+		if (!err)
-+			map->m_flags |= EROFS_MAP_FULL_MAPPED;
-+	}
- 
- out:
- 	erofs_dbg("m_la %" PRIu64 " m_pa %" PRIu64 " m_llen %" PRIu64 " m_plen %" PRIu64 " m_flags 0%o",
--- 
-2.25.1
+Thanks,
+Jianan
+>
+>> +	if (err) {
+>> +		erofs_err("read nid %ld's last block failed\n", inode->nid);
+>> +		return err;
+>> +	}
+>> +	compressedlcs = map.m_plen >> inode->z_logical_clusterbits;
+>> +	*size = (inode->u.i_blocks - compressedlcs) * EROFS_BLKSIZ;
+>> +	last_cluster_size = inode->i_size - map.m_la;
+>> +
+>> +	if (!(map.m_flags & EROFS_MAP_ZIPPED)) {
+>> +		*size += last_cluster_size;
+>> +	} else {
+>> +		err = z_erofs_get_last_cluster_size_from_disk(&map,
+>> +				last_cluster_size,
+>> +				&last_cluster_compressed_size);
+>> +		if (err) {
+>> +			erofs_err("get nid %ld's last extent size failed",
+>> +					inode->nid);
+>> +			return err;
+>> +		}
+>> +		*size += last_cluster_compressed_size;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +static int get_file_compressed_size(struct erofs_inode *inode,
+>> +		erofs_off_t *size)
+> erofs_dump_get_file_occupied_blocks?
+>
+>> +{
+>> +	int err;
+>> +
+>> +	*size = 0;
+>> +	switch (inode->datalayout) {
+>> +	case EROFS_INODE_FLAT_INLINE:
+>> +	case EROFS_INODE_FLAT_PLAIN:
+>> +		stats.uncompressed_files++;
+>> +		*size = inode->i_size;
+>> +		break;
+>> +	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
+>> +	case EROFS_INODE_FLAT_COMPRESSION:
+>> +		stats.compressed_files++;
+>> +		err = z_erofs_get_compressed_size(inode, size);
+>> +		if (err) {
+>> +			erofs_err("get compressed file size failed\n");
+>> +			return err;
+>> +		}
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>>   static void dumpfs_print_superblock(void)
+>>   {
+>>   	time_t time = sbi.build_time;
+>> @@ -111,6 +293,294 @@ static void dumpfs_print_superblock(void)
+>>   
+>>   }
+>>   
+>> +static int get_file_type(const char *filename)
+>> +{
+>> +	char *postfix = strrchr(filename, '.');
+>> +	int type = SOFILETYPE;
+>> +
+>> +	if (postfix == NULL)
+>> +		return OTHERFILETYPE;
+>> +	while (type < OTHERFILETYPE) {
+>> +		if (strcmp(postfix, file_types[type]) == 0)
+>> +			break;
+>> +		type++;
+>> +	}
+>> +	return type;
+>> +}
+>> +
+>> +// file count、file size、file type
+> It'd be better to avoid C++ comments...
+>
+>> +static int read_dir(erofs_nid_t nid, erofs_nid_t parent_nid)
+>> +{
+>> +	struct erofs_inode vi = { .nid = nid};
+>> +	int err;
+>> +	char buf[EROFS_BLKSIZ];
+>> +	char filename[PATH_MAX + 1];
+>> +	erofs_off_t offset;
+>> +
+>> +	err = erofs_read_inode_from_disk(&vi);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	offset = 0;
+>> +	while (offset < vi.i_size) {
+>> +		erofs_off_t maxsize = min_t(erofs_off_t,
+>> +			vi.i_size - offset, EROFS_BLKSIZ);
+>> +		struct erofs_dirent *de = (void *)buf;
+>> +		struct erofs_dirent *end;
+>> +		unsigned int nameoff;
+>> +
+>> +		err = erofs_pread(&vi, buf, maxsize, offset);
+>> +		if (err)
+>> +			return err;
+>> +
+>> +		nameoff = le16_to_cpu(de->nameoff);
+>> +
+>> +		if (nameoff < sizeof(struct erofs_dirent) ||
+>> +		    nameoff >= PAGE_SIZE) {
+>> +			erofs_err("invalid de[0].nameoff %u @ nid %llu",
+>> +				  nameoff, nid | 0ULL);
+>> +			return -EFSCORRUPTED;
+>> +		}
+>> +		end = (void *)buf + nameoff;
+>> +		while (de < end) {
+>> +			const char *dname;
+>> +			unsigned int dname_len;
+>> +			struct erofs_inode inode = { .nid = de->nid };
+>> +			int actual_size_mark;
+>> +			int original_size_mark;
+>> +			erofs_off_t actual_size = 0;
+>> +			erofs_off_t original_size;
+>> +
+>> +			nameoff = le16_to_cpu(de->nameoff);
+>> +			dname = (char *)buf + nameoff;
+>> +
+>> +			if (de + 1 >= end)
+>> +				dname_len = strnlen(dname, maxsize - nameoff);
+>> +			else
+>> +				dname_len =
+>> +					le16_to_cpu(de[1].nameoff) - nameoff;
+>> +
+>> +			/* a corrupted entry is found */
+>> +			if (nameoff + dname_len > maxsize ||
+>> +				dname_len > EROFS_NAME_LEN) {
+>> +				erofs_err("bogus dirent @ nid %llu",
+>> +						le64_to_cpu(de->nid) | 0ULL);
+>> +				DBG_BUGON(1);
+>> +				return -EFSCORRUPTED;
+>> +			}
+>> +			if (de->nid != nid && de->nid != parent_nid)
+>> +				stats.files++;
+>> +
+>> +			memset(filename, 0, PATH_MAX + 1);
+>> +			memcpy(filename, dname, dname_len);
+>> +
+>> +			switch (de->file_type) {
+>> +			case EROFS_FT_UNKNOWN:
+>> +				break;
+>> +			case EROFS_FT_REG_FILE:
+>> +				err = erofs_read_inode_from_disk(&inode);
+>> +				if (err) {
+>> +					erofs_err("read file inode from disk failed!");
+>> +					return err;
+>> +				}
+>> +				original_size = inode.i_size;
+>> +				stats.files_total_origin_size += original_size;
+>> +				stats.regular_files++;
+>> +
+>> +				err = get_file_compressed_size(&inode,
+>> +						&actual_size);
+>> +				if (err) {
+>> +					erofs_err("get file size failed\n");
+>> +					return err;
+>> +				}
+>> +				stats.files_total_size += actual_size;
+>> +				stats.file_type_stat[get_file_type(filename)]++;
+>> +
+>> +				original_size_mark = 0;
+>> +				actual_size_mark = 0;
+>> +				actual_size >>= 10;
+>> +				original_size >>= 10;
+>> +
+>> +				while (actual_size || original_size) {
+>> +					if (actual_size) {
+>> +						actual_size >>= 1;
+>> +						actual_size_mark++;
+>> +					}
+>> +					if (original_size) {
+>> +						original_size >>= 1;
+>> +						original_size_mark++;
+>> +					}
+>> +				}
+>> +
+>> +				if (original_size_mark >= FILE_SIZE_BITS - 1)
+>> +					stats.file_org_size[FILE_SIZE_BITS - 1]++;
+>> +				else
+>> +					stats.file_org_size[original_size_mark]++;
+>> +				if (actual_size_mark >= FILE_SIZE_BITS - 1)
+>> +					stats.file_comp_size[FILE_SIZE_BITS - 1]++;
+>> +				else
+>> +					stats.file_comp_size[actual_size_mark]++;
+>> +				break;
+>> +
+>> +			case EROFS_FT_DIR:
+>> +				if (de->nid != nid && de->nid != parent_nid) {
+>
+>
+>> +					stats.dir_files++;
+>> +					stats.uncompressed_files++;
+>> +					err = read_dir(de->nid, nid);
+>> +					if (err) {
+>> +						fprintf(stderr,
+>> +								"parse dir nid %llu error occurred\n",
+>> +								de->nid);
+>> +						return err;
+>> +					}
+>> +				}
+>> +				break;
+>> +			case EROFS_FT_CHRDEV:
+>> +				stats.chardev_files++;
+>> +				stats.uncompressed_files++;
+> How about using an array instead?
+>
+>> +				break;
+>> +			case EROFS_FT_BLKDEV:
+>> +				stats.blkdev_files++;
+>> +				stats.uncompressed_files++;
+>> +				break;
+>> +			case EROFS_FT_FIFO:
+>> +				stats.fifo_files++;
+>> +				stats.uncompressed_files++;
+>> +				break;
+>> +			case EROFS_FT_SOCK:
+>> +				stats.sock_files++;
+>> +				stats.uncompressed_files++;
+>> +				break;
+>> +			case EROFS_FT_SYMLINK:
+>> +				stats.symlink_files++;
+>> +				stats.uncompressed_files++;
+>> +				break;
+>> +			}
+>> +			++de;
+>> +		}
+>> +		offset += maxsize;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +static void dumpfs_print_statistic_of_filetype(void)
+>> +{
+>> +	fprintf(stderr, "Filesystem total file count:         %lu\n",
+>> +			stats.files);
+>> +	fprintf(stderr, "Filesystem regular file count:       %lu\n",
+>> +			stats.regular_files);
+>> +	fprintf(stderr, "Filesystem directory count:          %lu\n",
+>> +			stats.dir_files);
+>> +	fprintf(stderr, "Filesystem symlink file count:       %lu\n",
+>> +			stats.symlink_files);
+>> +	fprintf(stderr, "Filesystem character device count:   %lu\n",
+>> +			stats.chardev_files);
+>> +	fprintf(stderr, "Filesystem block device count:       %lu\n",
+>> +			stats.blkdev_files);
+>> +	fprintf(stderr, "Filesystem FIFO file count:          %lu\n",
+>> +			stats.fifo_files);
+>> +	fprintf(stderr, "Filesystem SOCK file count:          %lu\n",
+>> +			stats.sock_files);
+> Also a loop can be used here.
+>
+>> +}
+>> +
+>> +static void dumpfs_print_chart_row(char *col1, unsigned int col2,
+>> +		double col3, char *col4)
+>> +{
+>> +	char row[500] = {0};
+>> +
+>> +	sprintf(row, chart_format, col1, col2, col3, col4);
+>> +	fprintf(stderr, row);
+>> +}
+>> +
+>> +static void dumpfs_print_chart_of_file(unsigned int *file_counts,
+>> +		unsigned int len)
+>> +{
+>> +	char col1[30];
+>> +	unsigned int col2;
+>> +	double col3;
+>> +	char col4[400];
+>> +	unsigned int lowerbound = 0;
+>> +	unsigned int upperbound = 1;
+>> +
+>> +	fprintf(stderr, header_format, ">=(KB) .. <(KB) ", "count",
+>> +			"ratio", "distribution");
+>> +	for (int i = 0; i < len; i++) {
+>> +		memset(col1, 0, 30);
+> 		memset(col1, 0, sizeof(col1));
+>
+>> +		memset(col4, 0, 400);
+> 		memset(col4, 0, sizeof(col4));
+>
+> Thanks,
+> Gao Xiang
+>
+>> +		if (i == len - 1)
+>> +			strcpy(col1, " others");
+>> +		else if (i <= 6)
+>> +			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
+>> +		else
+>> +
+>> +			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
+>> +		col2 = file_counts[i];
+>> +		col3 = (double)(100 * col2) / (double)stats.regular_files;
+>> +		memset(col4, '#', col3 / 2);
+>> +		dumpfs_print_chart_row(col1, col2, col3, col4);
+>> +		lowerbound = upperbound;
+>> +		upperbound <<= 1;
+>> +	}
+>> +}
+>> +
+>> +static void dumpfs_print_chart_of_file_type(char **file_types, unsigned int len)
+>> +{
+>> +	char col1[30];
+>> +	unsigned int col2;
+>> +	double col3;
+>> +	char col4[401];
+>> +
+>> +	fprintf(stderr, header_format, "type", "count", "ratio",
+>> +			"distribution");
+>> +	for (int i = 0; i < len; i++) {
+>> +		memset(col1, 0, 30);
+>> +		memset(col4, 0, 401);
+>> +		sprintf(col1, "%-17s", file_types[i]);
+>> +		col2 = stats.file_type_stat[i];
+>> +		col3 = (double)(100 * col2) / (double)stats.regular_files;
+>> +		memset(col4, '#', col3 / 2);
+>> +		dumpfs_print_chart_row(col1, col2, col3, col4);
+>> +	}
+>> +}
+>> +
+>> +static void dumpfs_print_statistic_of_compression(void)
+>> +{
+>> +	stats.compress_rate = (double)(100 * stats.files_total_size) /
+>> +		(double)(stats.files_total_origin_size);
+>> +	fprintf(stderr, "Filesystem compressed files:         %lu\n",
+>> +			stats.compressed_files);
+>> +	fprintf(stderr, "Filesystem uncompressed files:       %lu\n",
+>> +			stats.uncompressed_files);
+>> +	fprintf(stderr, "Filesystem total original file size: %lu Bytes\n",
+>> +			stats.files_total_origin_size);
+>> +	fprintf(stderr, "Filesystem total file size:          %lu Bytes\n",
+>> +			stats.files_total_size);
+>> +	fprintf(stderr, "Filesystem compress rate:            %.2f%%\n",
+>> +			stats.compress_rate);
+>> +}
+>> +
+>> +static void dumpfs_print_statistic(void)
+>> +{
+>> +	int err;
+>> +
+>> +	stats.blocks = sbi.blocks;
+>> +	err = read_dir(sbi.root_nid, sbi.root_nid);
+>> +	if (err) {
+>> +		erofs_err("read dir failed");
+>> +		return;
+>> +	}
+>> +
+>> +	dumpfs_print_statistic_of_filetype();
+>> +	dumpfs_print_statistic_of_compression();
+>> +
+>> +	fprintf(stderr, "\nOriginal file size distribution:\n");
+>> +	dumpfs_print_chart_of_file(stats.file_org_size, 17);
+>> +	fprintf(stderr, "\nOn-Disk file size distribution:\n");
+>> +	dumpfs_print_chart_of_file(stats.file_comp_size, 17);
+>> +	fprintf(stderr, "\nFile type distribution:\n");
+>> +	dumpfs_print_chart_of_file_type(file_types, OTHERFILETYPE + 1);
+>> +}
+>> +
+>>   int main(int argc, char **argv)
+>>   {
+>>   	int err = 0;
+>> @@ -138,5 +608,9 @@ int main(int argc, char **argv)
+>>   	if (dumpcfg.print_superblock)
+>>   		dumpfs_print_superblock();
+>>   
+>> +	if (dumpcfg.print_statistic)
+>> +		dumpfs_print_statistic();
+>> +
+>> +
+>>   	return 0;
+>>   }
+>> -- 
+>> 2.25.4
+>>
 
