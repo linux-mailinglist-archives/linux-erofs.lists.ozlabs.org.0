@@ -2,41 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 425E5413572
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Sep 2021 16:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFB12413F2F
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Sep 2021 04:00:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HDP9z1g61z2yPQ
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Sep 2021 00:36:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HDhMt3vfvz2yHH
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Sep 2021 12:00:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42;
- helo=out30-42.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-42.freemail.mail.aliyun.com
- (out30-42.freemail.mail.aliyun.com [115.124.30.42])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HDP9r2QBwz2xZL
- for <linux-erofs@lists.ozlabs.org>; Wed, 22 Sep 2021 00:35:56 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R461e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0Up8yjG5_1632234933; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Up8yjG5_1632234933) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 21 Sep 2021 22:35:47 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/2] erofs: clean up erofs_map_blocks tracepoints
-Date: Tue, 21 Sep 2021 22:35:31 +0800
-Message-Id: <20210921143531.81356-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20210921143531.81356-1-hsiangkao@linux.alibaba.com>
-References: <20210921143531.81356-1-hsiangkao@linux.alibaba.com>
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=139.com
+ (client-ip=120.232.169.112; helo=n169-112.mail.139.com;
+ envelope-from=cgxu519@139.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 197 seconds by postgrey-1.36 at boromir;
+ Wed, 22 Sep 2021 12:00:39 AEST
+Received: from n169-112.mail.139.com (n169-112.mail.139.com [120.232.169.112])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HDhMq2pRpz2xtP
+ for <linux-erofs@lists.ozlabs.org>; Wed, 22 Sep 2021 12:00:39 +1000 (AEST)
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM: 
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.255.10] (unknown[113.108.77.67])
+ by rmsmtp-lg-appmail-25-12028 (RichMail) with SMTP id 2efc614a8d6bb63-64fb6;
+ Wed, 22 Sep 2021 09:56:59 +0800 (CST)
+X-RM-TRANSID: 2efc614a8d6bb63-64fb6
+Message-ID: <3633c6e5-028c-fc77-3b8e-da9903f97ac5@139.com>
+Date: Wed, 22 Sep 2021 09:56:59 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.1
+Subject: Re: [PATCH] ovl: fix null pointer when filesystem doesn't support
+ direct IO
+To: Huang Jianan <huangjianan@oppo.com>, linux-unionfs@vger.kernel.org,
+ miklos@szeredi.hu, linux-erofs@lists.ozlabs.org, xiang@kernel.org,
+ chao@kernel.org
+References: <20210918121346.12084-1-huangjianan@oppo.com>
+From: Chengguang Xu <cgxu519@139.com>
+In-Reply-To: <20210918121346.12084-1-huangjianan@oppo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -49,150 +53,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
- LKML <linux-kernel@vger.kernel.org>
+Cc: zhangshiming@oppo.com, linux-kernel@vger.kernel.org, yh@oppo.com,
+ guanyuwei@oppo.com, guoweichao@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since the new type of chunk-based files is introduced, there is no
-need to leave flatmode tracepoints. Rename to erofs_map_blocks.
+在 2021/9/18 20:13, Huang Jianan 写道:
+> From: Huang Jianan <huangjianan@oppo.com>
+>
+> At present, overlayfs provides overlayfs inode to users. Overlayfs
+> inode provides ovl_aops with noop_direct_IO to avoid open failure
+> with O_DIRECT. But some compressed filesystems, such as erofs and
+> squashfs, don't support direct_IO.
+>
+> Users who use f_mapping->a_ops->direct_IO to check O_DIRECT support,
+> will read file through this way. This will cause overlayfs to access
+> a non-existent direct_IO function and cause panic due to null pointer:
+>
+> Kernel panic - not syncing: CFI failure (target: 0x0)
+> CPU: 6 PID: 247 Comm: loop0
+> Call Trace:
+>   panic+0x188/0x45c
+>   __cfi_slowpath+0x0/0x254
+>   __cfi_slowpath+0x200/0x254
+>   generic_file_read_iter+0x14c/0x150
+>   vfs_iocb_iter_read+0xac/0x164
+>   ovl_read_iter+0x13c/0x2fc
+>   lo_rw_aio+0x2bc/0x458
+>   loop_queue_work+0x4a4/0xbc0
+>   kthread_worker_fn+0xf8/0x1d0
+>   loop_kthread_worker_fn+0x24/0x38
+>   kthread+0x29c/0x310
+>   ret_from_fork+0x10/0x30
+>
+> The filesystem may only support direct_IO for some file types. For
+> example, erofs supports direct_IO for uncompressed files. So fall
+> back to buffered io only when the file doesn't support direct_IO to
+> fix this problem.
 
-Add the missing FIEMAP tracepoint map flag as well.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/data.c              | 31 ++++++++++++++-----------------
- include/trace/events/erofs.h |  7 ++++---
- 2 files changed, 18 insertions(+), 20 deletions(-)
+IMO, return error to user seems better option than fall back to
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 9db8297..020c3e0 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -26,14 +26,11 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 				     struct erofs_map_blocks *map,
- 				     int flags)
- {
--	int err = 0;
- 	erofs_blk_t nblocks, lastblk;
- 	u64 offset = map->m_la;
- 	struct erofs_inode *vi = EROFS_I(inode);
- 	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
- 
--	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
--
- 	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
- 	lastblk = nblocks - tailendpacking;
- 
-@@ -57,8 +54,7 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 				  "inline data cross block boundary @ nid %llu",
- 				  vi->nid);
- 			DBG_BUGON(1);
--			err = -EFSCORRUPTED;
--			goto err_out;
-+			return -EFSCORRUPTED;
- 		}
- 
- 		map->m_flags |= EROFS_MAP_META;
-@@ -67,14 +63,10 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 			  "internal error @ nid: %llu (size %llu), m_la 0x%llx",
- 			  vi->nid, inode->i_size, map->m_la);
- 		DBG_BUGON(1);
--		err = -EIO;
--		goto err_out;
-+		return -EIO;
- 	}
--
- 	map->m_llen = map->m_plen;
--err_out:
--	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
--	return err;
-+	return 0;
- }
- 
- static int erofs_map_blocks(struct inode *inode,
-@@ -89,6 +81,7 @@ static int erofs_map_blocks(struct inode *inode,
- 	erofs_off_t pos;
- 	int err = 0;
- 
-+	trace_erofs_map_blocks_enter(inode, map, flags);
- 	if (map->m_la >= inode->i_size) {
- 		/* leave out-of-bound access unmapped */
- 		map->m_flags = 0;
-@@ -96,8 +89,10 @@ static int erofs_map_blocks(struct inode *inode,
- 		goto out;
- 	}
- 
--	if (vi->datalayout != EROFS_INODE_CHUNK_BASED)
--		return erofs_map_blocks_flatmode(inode, map, flags);
-+	if (vi->datalayout != EROFS_INODE_CHUNK_BASED) {
-+		err = erofs_map_blocks_flatmode(inode, map, flags);
-+		goto out;
-+	}
- 
- 	if (vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
- 		unit = sizeof(*idx);			/* chunk index */
-@@ -109,9 +104,10 @@ static int erofs_map_blocks(struct inode *inode,
- 		    vi->xattr_isize, unit) + unit * chunknr;
- 
- 	page = erofs_get_meta_page(inode->i_sb, erofs_blknr(pos));
--	if (IS_ERR(page))
--		return PTR_ERR(page);
--
-+	if (IS_ERR(page)) {
-+		err = PTR_ERR(page);
-+		goto out;
-+	}
- 	map->m_la = chunknr << vi->chunkbits;
- 	map->m_plen = min_t(erofs_off_t, 1UL << vi->chunkbits,
- 			    roundup(inode->i_size - map->m_la, EROFS_BLKSIZ));
-@@ -147,11 +143,12 @@ static int erofs_map_blocks(struct inode *inode,
- 		map->m_flags = EROFS_MAP_MAPPED;
- 		break;
- 	}
-+	map->m_llen = map->m_plen;
- out_unlock:
- 	unlock_page(page);
- 	put_page(page);
- out:
--	map->m_llen = map->m_plen;
-+	trace_erofs_map_blocks_exit(inode, map, flags, 0);
- 	return err;
- }
- 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index db4f2ce..5c91edd 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -19,7 +19,8 @@
- 		{ 1,		"DIR" })
- 
- #define show_map_flags(flags) __print_flags(flags, "|",	\
--	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
-+	{ EROFS_GET_BLOCKS_RAW,	"RAW" },		\
-+	{ EROFS_GET_BLOCKS_FIEMAP, "FIEMAP" })
- 
- #define show_mflags(flags) __print_flags(flags, "",	\
- 	{ EROFS_MAP_MAPPED,	"M" },			\
-@@ -169,7 +170,7 @@
- 		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
- );
- 
--DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
-+DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_enter,
- 	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
- 		 unsigned flags),
- 
-@@ -221,7 +222,7 @@
- 		  show_mflags(__entry->mflags), __entry->ret)
- );
- 
--DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
-+DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_exit,
- 	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
- 		 unsigned flags, int ret),
- 
--- 
-1.8.3.1
+buffered io directly.
+
+
+Thanks,
+
+Chengguang
+
+
+>
+> Fixes: 5b910bd615ba ("ovl: fix GPF in swapfile_activate of file from overlayfs over xfs")
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+> ---
+>   fs/overlayfs/file.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+> index d081faa55e83..998c60770b81 100644
+> --- a/fs/overlayfs/file.c
+> +++ b/fs/overlayfs/file.c
+> @@ -296,6 +296,10 @@ static ssize_t ovl_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>   	if (ret)
+>   		return ret;
+>   
+> +	if ((iocb->ki_flags & IOCB_DIRECT) && (!real.file->f_mapping->a_ops ||
+> +		!real.file->f_mapping->a_ops->direct_IO))
+> +		iocb->ki_flags &= ~IOCB_DIRECT;
+> +
+>   	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+>   	if (is_sync_kiocb(iocb)) {
+>   		ret = vfs_iter_read(real.file, iter, &iocb->ki_pos,
 
