@@ -2,50 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A76041973F
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Sep 2021 17:06:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFC7041A3D7
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 01:35:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HJ5Yh1Rdrz2yP6
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 01:06:00 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BxgWcpr+;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HJJt44qBrz2yP9
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 09:35:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=BxgWcpr+; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HJ5Yd4hSLz2yHT
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 01:05:57 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CA73C60FF2;
- Mon, 27 Sep 2021 15:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1632755155;
- bh=hx1+VULmm1eomNuVscHO4OBOMjXe8+RUoTlQZqix6Ls=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=BxgWcpr+G0JCd2CxOq5tmbt1C+A+xOh9+2Bz7jeHPHeSx+0z6kZ5x8izxJIHkWiqj
- fDuRHbcekhP3UPO2DzVrcTwh5qqjDSw7cCGvXrQ1AV5hPDqes6NujHGBnxaP8NoOdB
- OFLRMmrW3Md69yQz49tFRHevbDytpJi3rfAMa8IynrzEP6+jhDqDIkLw09WU07lW+g
- xaOcQGcKPRXRjY0gLIGOD56RmnXYSVUdHUBWYiwAFBI6oyFGm9Bb1Tm5VkLnetMQmU
- JoHZ+qZPVHQNlZn93ugmEhHvdScRJaAm0i1gb3glqqQwPiVYa9FH3ktPw82GCikj1d
- kis+Oink0h+eQ==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: manpage: fix style
-Date: Mon, 27 Sep 2021 23:04:01 +0800
-Message-Id: <20210927150401.14305-3-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210927150401.14305-1-xiang@kernel.org>
-References: <20210927150401.14305-1-xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HJJsx3frKz2yLZ
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 09:35:43 +1000 (AEST)
+X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="224621558"
+X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; d="scan'208";a="224621558"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+ by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 27 Sep 2021 16:34:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; d="scan'208";a="478402871"
+Received: from lkp-server02.sh.intel.com (HELO f7acefbbae94) ([10.239.97.151])
+ by fmsmga007.fm.intel.com with ESMTP; 27 Sep 2021 16:34:35 -0700
+Received: from kbuild by f7acefbbae94 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mV08m-0000hV-Vb; Mon, 27 Sep 2021 23:34:32 +0000
+Date: Tue, 28 Sep 2021 07:34:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:fixes] BUILD SUCCESS
+ c40dd3ca2a45d5bd6e8b3f4ace5cb81493096263
+Message-ID: <61525503.kihenBdZL4YiYFm2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,75 +50,135 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix some style in mkfs.erofs.1
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+branch HEAD: c40dd3ca2a45d5bd6e8b3f4ace5cb81493096263  erofs: clear compacted_2b if compacted_4b_initial > totalidx
 
-Signed-off-by: Gao Xiang <xiang@kernel.org>
+elapsed time: 720m
+
+configs tested: 107
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                              allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+i386                 randconfig-c001-20210927
+mips                     cu1830-neo_defconfig
+m68k                       m5249evb_defconfig
+parisc                generic-64bit_defconfig
+arc                          axs103_defconfig
+sh                          r7780mp_defconfig
+mips                     decstation_defconfig
+arm                             rpc_defconfig
+arm                           sunxi_defconfig
+arm                         nhk8815_defconfig
+mips                           ip27_defconfig
+arc                              alldefconfig
+sh                           se7343_defconfig
+mips                        bcm63xx_defconfig
+nds32                            alldefconfig
+arc                        vdk_hs38_defconfig
+powerpc                      pasemi_defconfig
+sh                          kfr2r09_defconfig
+mips                           ci20_defconfig
+sh                           se7721_defconfig
+x86_64               randconfig-c001-20210927
+arm                  randconfig-c002-20210927
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                           allyesconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+nios2                               defconfig
+nds32                             allnoconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+arc                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210927
+x86_64               randconfig-a006-20210927
+x86_64               randconfig-a001-20210927
+x86_64               randconfig-a005-20210927
+x86_64               randconfig-a004-20210927
+x86_64               randconfig-a003-20210927
+i386                 randconfig-a001-20210927
+i386                 randconfig-a005-20210927
+i386                 randconfig-a006-20210927
+i386                 randconfig-a002-20210927
+i386                 randconfig-a003-20210927
+i386                 randconfig-a004-20210927
+arc                  randconfig-r043-20210927
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+powerpc              randconfig-c003-20210927
+x86_64               randconfig-c007-20210927
+mips                 randconfig-c004-20210927
+arm                  randconfig-c002-20210927
+riscv                randconfig-c006-20210927
+s390                 randconfig-c005-20210927
+i386                 randconfig-c001-20210927
+x86_64               randconfig-a014-20210927
+x86_64               randconfig-a011-20210927
+x86_64               randconfig-a013-20210927
+x86_64               randconfig-a016-20210927
+x86_64               randconfig-a015-20210927
+x86_64               randconfig-a012-20210927
+i386                 randconfig-a014-20210927
+i386                 randconfig-a013-20210927
+i386                 randconfig-a016-20210927
+i386                 randconfig-a012-20210927
+i386                 randconfig-a015-20210927
+i386                 randconfig-a011-20210927
+hexagon              randconfig-r045-20210927
+riscv                randconfig-r042-20210927
+hexagon              randconfig-r041-20210927
+s390                 randconfig-r044-20210927
+
 ---
- man/mkfs.erofs.1 | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index 3c250c118168..c7829c3f1c8f 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -63,6 +63,23 @@ Set the universally unique identifier (UUID) of the filesystem to
- The format of the UUID is a series of hex digits separated by hyphens,
- like this: "c1b9d5a2-f162-11cf-9ece-0020afc76f16".
- .TP
-+.B \-\-all-root
-+Make all files owned by root.
-+.TP
-+.BI "\-\-chunksize " #
-+Generate chunk-based files with #-byte chunks.
-+.TP
-+.BI "\-\-compress-hints " file
-+If the optional
-+.BI "\-\-compress-hints " file
-+argument is given,
-+.B mkfs.erofs
-+uses it to apply the per-file compression strategy. Each line is defined by
-+tokens separated by spaces in the following form:
-+.RS 1.2i
-+<pcluster-in-bytes> <match-pattern>
-+.RE
-+.TP
- .BI "\-\-exclude-path=" path
- Ignore file that matches the exact literal path.
- You may give multiple `--exclude-path' options.
-@@ -80,28 +97,11 @@ Set all file uids to \fIUID\fR.
- .BI "\-\-force-gid=" GID
- Set all file gids to \fIGID\fR.
- .TP
--.B \-\-all-root
--Make all files owned by root.
--.TP
--.BI "\-\-chunksize " #
--Generate chunk-based files with #-byte chunks.
--.TP
- .B \-\-help
- Display this help and exit.
- .TP
--.B \-\-max-extent-bytes #
-+.BI "\-\-max-extent-bytes " #
- Specify maximum decompressed extent size # in bytes.
--.TP
--.BI "\-\-compress-hints " file
--If the optional
--.BI "\-\-compress-hints " file
--argument is given,
--.B mkfs.erofs
--uses it to apply the per-file compression strategy. Each line is defined by
--tokens separated by spaces in the following form:
--.RS 1.2i
--<pcluster-in-bytes> <match-pattern>
--.RE
- .SH AUTHOR
- This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
- Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
