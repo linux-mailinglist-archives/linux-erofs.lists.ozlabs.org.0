@@ -2,96 +2,141 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BC1741A8DE
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 08:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 30A6B41A93C
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 09:01:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HJTxD0PVWz2yNr
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 16:24:16 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=TMbgQSpQ;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HJVmY0Zvhz2yPN
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 17:01:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1632812509;
+	bh=XU+A+7om2QKUJVAR09+7il6vpeV11S+x7oBkCoyN3JM=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=my7iaKasmPI7MRHbIt7VzBfbY3CTRKE58dHMXMlldedwSLSdD8dK4PZekaRKWGahY
+	 gGGeUmLhecLb+rcBgd1JMuaXqHfb2+/dP3scKeqMzpk4//WQdbOm/+Hj7jZhmDwneG
+	 KEWfWQjdBged1xGFO13NpRVAvKjWl2D0WxCZ2cbTSFYmkF649ctME3kiVNHK+AsW7X
+	 qJzU8pvV+DOBUyqeTF2Vl+xbZscdm5By9ANUruYJPfBV9WFlK3c49x7Ul+EMABGolm
+	 ch38TD/XfXnhzG5qesXb/MOwFk6vJP/akb8qFC74CMRW30z3R/Jvdc1z3/HUoGR8I6
+	 TKfFRYDtBrz1g==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=outlook.com (client-ip=2a01:111:f400:fe9c::800;
- helo=jpn01-os2-obe.outbound.protection.outlook.com;
- envelope-from=mpiglet@outlook.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256
- header.s=selector1 header.b=TMbgQSpQ; 
+ smtp.mailfrom=oppo.com (client-ip=40.107.130.75;
+ helo=apc01-hk2-obe.outbound.protection.outlook.com;
+ envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+ dkim=fail reason="signature verification failed" (1024-bit key;
+ unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
+ header.s=selector1 header.b=pOh3OhSs; 
  dkim-atps=neutral
-Received: from JPN01-OS2-obe.outbound.protection.outlook.com
- (mail-os2jpn01olkn0800.outbound.protection.outlook.com
- [IPv6:2a01:111:f400:fe9c::800])
+Received: from APC01-HK2-obe.outbound.protection.outlook.com
+ (mail-eopbgr1300075.outbound.protection.outlook.com [40.107.130.75])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HJTx459vcz2yHf
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 16:24:07 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HJVmM113jz2yNQ
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 17:01:37 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gd6ovRefM8TIXaRUApT6fNM+9BUo+hdoe8zJM6JZTKRr1wAz9YTidAgc1MyAkPAphdaOuDXtMzgNLAtV3Rf0Nw4QVkI9F+N9vP5aeKjm0Qhzwt7zpCxxUdHctFkM4I8fM1Y4IwImzKE314Lf/ODZET8J+mJ2SW8MS6Hp5iiEvxTCl5u3S8/73wXIGcUgezELjTFtO/XDAus0Rkg0bQe8glzKHoo2bxuDoGmJO5BlkPKEk4+80pSymfEBzthPbunuwws+JRPgpkcfM/ee3YCvcQtdsP0zhrmALwiXpD4RH5RqBOCHzPukcIJZ4YhX1a4eclGJacSpz674lSaItuxEaQ==
+ b=V2XAs9quCvm+zyMh/d96FEfcmqe3H/Uz/05Evp0DE0vMQ2UTy8ljgfxkrxsY6oVooDUvgqtv8PjukZdnQmrQPQEcon/zvt7TeIYtZ1OeTOLIno57+uQ7B3oNdx+ysI2AfS5R93Ejym2fXDqdxwI0USTH1x9cSg926tZleHnU8AviAtS1vUM6Dkzu1bh1m8hejFVcKYl6rmdg4mT16Yh9cpdxglnhgk6sZHrNCBcbKD+tVHGpARE5Pa3/lIauJeAcR1td3ccnFN7vqv1p9FlYvrq3b1xIURuLIEfsYrP7WrLjg1ah+zF1RaDd1lCSPMwhem4RoX7wH9hcmIbQ5E2pGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version; 
- bh=GFQ7Ca7aBKJSBj+eulzzyHfnv/n2fMpVTCFYkbElASw=;
- b=BJYoKOVo3P1TDgrMvLeDB4QY/ulJk80vaBTEawmzZpLoHdQ6Oi2Rmx0fyovABJHHLg9HfD4DpCiuwMhsGin5hOmtCVf1HXUUP2p7yqMOyu9Bi469ddM3zhkBHClbpm1/6AnxPY4r2Srw0f61gUGHW3oklifSbTOq9oVZsNEUY3BeJIFIuEFq4lgUSuoPnNQyMjWwOqJ204RUPNoFN03nnq1uYB108h0CbVUzeFM+Y6zfBFE4vaJKXC7PHpArUsXdCrZXFRL2Lp3a+LQo8zz1cyd+gW6s+ngfrP9umnGGGjLtFPAOI+XvT0RcgNMVqS75QULfWwy4Q7NliXXC3DbBIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFQ7Ca7aBKJSBj+eulzzyHfnv/n2fMpVTCFYkbElASw=;
- b=TMbgQSpQVtltJOxfx3Tuo6bvb9phFAihKwpki07a3sBdtLOsedEETee8105yxn7WTkzWOqOC34nocK8Jvs4Bc9iKtURzEnfCYAITuiU7K31LqYsdZM1O0s6zTvC+UJJYzibwPDglNUFWjW5hOTxnmtIGhXQXC9XZYRX2BBpkFTBDQz1POiSJCKp+mA1xr+jSji+lgd2TtdEaZLx9zfa9NsqN6yVgOcMnjUZZuMM01d58L5m9RAFyNmerWfdw16/IwFFVTSz6re/U0o0M6CtqTaAi4Z6kMrHPXYbp9ftkb+mHDRigIJhGW99hZhbfJOCnNMnr5mgroggw7k0ST6nBRg==
-Received: from OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:f7::12)
- by OS0P286MB0419.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:a4::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13; Tue, 28 Sep
- 2021 06:23:33 +0000
-Received: from OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM
- ([fe80::e1a3:2da2:e20b:d8aa]) by OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM
- ([fe80::e1a3:2da2:e20b:d8aa%6]) with mapi id 15.20.4544.022; Tue, 28 Sep 2021
- 06:23:33 +0000
-Content-Type: multipart/alternative;
- boundary="------------20Iz5t0rtLmR6i4WGt3WUvSF"
-Message-ID: <OSZP286MB07097AE45E9D391B0049F661B2A89@OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM>
-Date: Tue, 28 Sep 2021 14:23:30 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.1.1
-Subject: Re: [PATCH v3 1/5] erofs-utils: introduce dump.erofs
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, Guo Xuenan <guoxuenan@huawei.com>
-References: <20210915093537.2579575-1-guoxuenan@huawei.com>
- <YU/nRm9ug/kFXHBD@B-P7TQMD6M-0146.local>
- <YVJ/DVHlUG83A3Jk@B-P7TQMD6M-0146.local>
-From: Qi Wang <mpiglet@outlook.com>
-In-Reply-To: <YVJ/DVHlUG83A3Jk@B-P7TQMD6M-0146.local>
-X-TMN: [jOEGfbbJB6ck9uBYEbolx4bUcrQ52GKJaXLCcmhz3FKNUKSFyOnC4UCwn2yZ1124]
-X-ClientProxiedBy: HKAPR03CA0024.apcprd03.prod.outlook.com
- (2603:1096:203:c9::11) To OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:604:f7::12)
-X-Microsoft-Original-Message-ID: <6530b2b0-031e-98b0-4abf-2db92564bfac@outlook.com>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPV6:2400:dd01:1001:1028:a130:f4f:7752:390a]
- (2400:dd01:1001:1028:a130:f4f:7752:390a) by
- HKAPR03CA0024.apcprd03.prod.outlook.com (2603:1096:203:c9::11) with Microsoft
+ bh=fo9+W/P9KqMkN/aJ4PypOXEU2UPTkl/HU1srbMD1ZeY=;
+ b=mfFqP5kVRp6aI788KygjWYOthUCP5JbPgTx/J7NzaXKRxz5Jd81c/uavedOYWK4if8dlpcK9Y+mmmPFziF1VhUoOO0yGaL6jIN5+vfW0UiLBwbC1loiL93lVFPvYRVLytzQjtMykTPMEpfTGlhpPTXwcxUFah9UmVeNslnpN9W3Es8DffoPVAnEHuND6caStpqysqG0ATNnG/lqQ1fcVDTFEdhwd8WTJm4q2MTWkyA9PRb/N+SBMYZsO4Snidioaetx0iQ6EOj3C8XhGw+9jrNuETr/ye2wjZ++BzfeM0edHsQwkNSZHguMGB0ujU8lEMLvsGvn7BXtzXhfedPO1tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+Authentication-Results: mykernel.net; dkim=none (message not signed)
+ header.d=none;mykernel.net; dmarc=none action=none header.from=oppo.com;
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
+ SG2PR02MB4330.apcprd02.prod.outlook.com (2603:1096:0:3::16) with
+ Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4566.9 via Frontend Transport; Tue, 28 Sep 2021 06:23:32 +0000
+ 15.20.4544.14; Tue, 28 Sep 2021 07:01:18 +0000
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::5919:768f:2950:9504]) by SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::5919:768f:2950:9504%4]) with mapi id 15.20.4544.022; Tue, 28 Sep 2021
+ 07:01:18 +0000
+Subject: Re: [PATCH v3] ovl: fix null pointer when
+ filesystemdoesn'tsupportdirect IO
+To: Miklos Szeredi <miklos@szeredi.hu>
+References: <9ef909de-1854-b4be-d272-2b4cda52329f@oppo.com>
+ <20210922072326.3538-1-huangjianan@oppo.com>
+ <e42a183f-274c-425f-2012-3ff0003e1fcb@139.com>
+ <919e929d-6af7-b729-9fd2-954cd1e52999@oppo.com>
+ <314324e7-02d7-dc43-b270-fb8117953549@139.com>
+ <CAJfpegs_T5BQ+e79T=1fqTScjfaOyAftykmzK6=hdS=WhVvWsg@mail.gmail.com>
+ <YVGRMoRTH4oJpxWZ@miu.piliscsaba.redhat.com>
+Message-ID: <97977a2c-28d5-1324-fb1e-3e23ab4b1340@oppo.com>
+Date: Tue, 28 Sep 2021 15:01:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <YVGRMoRTH4oJpxWZ@miu.piliscsaba.redhat.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: HKAPR04CA0018.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::28) To SG2PR02MB4108.apcprd02.prod.outlook.com
+ (2603:1096:4:96::19)
+MIME-Version: 1.0
+Received: from [10.118.7.229] (58.252.5.73) by
+ HKAPR04CA0018.apcprd04.prod.outlook.com (2603:1096:203:d0::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4544.22 via Frontend Transport; Tue, 28 Sep 2021 07:01:16 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2c3267e-0749-44f4-67fc-08d982487f66
-X-MS-TrafficTypeDiagnostic: OS0P286MB0419:
+X-MS-Office365-Filtering-Correlation-Id: d6b56343-4aac-4e08-b53b-08d9824dc4ea
+X-MS-TrafficTypeDiagnostic: SG2PR02MB4330:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SG2PR02MB4330C4F10E985AE12D53CB80C3A89@SG2PR02MB4330.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zbmRvJscJLEbnIjkIGW4zIs9LbqVhzxg3u+31H9eSyvDF9Ms/QTH+sH/jGFttrp9E7XZEWqZ9DixSmF+82FsPVyT2t65QVjv1v/7QSohdU6LQJRlO2TnPigughW/oxDi2q7TXX56L+wAUCRVji7lDrdk3g2Wcu8TJILG7Y9urIFDqHG/E1SJZEU1p0NkkGqmjcru7+IABxzyJtC0DmuySNwBwffwCFQZ+30FcxJ+yqre8tQCCeTa77u/RzhkoiNOr3TGoXEJN3n9og1tCHbmpu+Y4UbcvIqNI2ePQQcCf3gv416R7g9R6e2QynvTGndHQtfLc8xU24F1HuBSoBkKa1io/5Sl9aI6yfOuRAhm4ZhR+JxkAYqZgVVjfJDfIlCkmDkv3tfA1TJP3sEjjcDmVSs+5vQ97T1CbzHKZgKoRXlIvUFwo1W2ZyyCoXnkWHCQobuDSJxGEg1du8PDzWxrp+sGgFCzAVKZFAPz11F2yk0=
+X-Microsoft-Antispam-Message-Info: Mu/BYRh2wQ5ZH6+8Z/fqdI+FUuMxmQ+BQwymfkamC+xT86ru8FVj9e0lWZmKqvqOrx3U+YLSwojX3VkJmCx7r5DxFXnWt/KHf4aDeihhQOmWEtMeM1J5ZcOna/r5eBFViGJVOKKO1HakBROZ1N20EQVcdsSUutvfc53jUYsTl3kyN0DMgm2GxcNINaTLme5FNxM3xq6EmYPQ5arnJqTDpiCWVuXley6OzGHsoM0vyVy+xfyfsWbO8UOw9Kd9WsXZ/yquNl27GZ0NUCHiH3LmahCXstom0hnYBgGv9uCSTjtY775EmNj3gRU30ixQROug4G6aG1ADkqF3hjyX9q2Uw95x7S744sT48RZ9vp8Ok8bn7vHUrPz+LokcG79cpZPeW1sgewfn+1tVA4r3tdRKtu/392UTAF8OBzd8MwHeRUIfEL6+sCzgZAN4gqPEqr6A1O8YP4nQ7+JuamJIP92V6lZ0gAh3h+v77QXcvgh88TMFxuaeJ7brZbe+kydUV2PdpNNBiRvUyhpz7LYbAifpaJ8pU4/kZ3EOEwGx4HI7h1xWxnQstoY8bDCFECFHOIv/87Lzd9nTZLKkbGbVLlXIuI3zdGNGQILSVKMvVVN91Qnz75i8vRpyW+mnG+1iJBnkvYKoznDMD0xlLuYRnffl7h6sCUEj4UODslsfGiwElVT7BZj5bI5fFtafr6l5t5lqdJ134TbVauNAovAuUDTDy8aQ6bLVAZeyaOxg5ixJkcvBodFEb0t/uaLOkYCuguTOAmmp+EPpN92U52X0hRZAY8VARNVkRPubM08EDp6coUvrVAt6kHW1RlgttjN7yNBx
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(4636009)(366004)(54906003)(7416002)(66556008)(38100700002)(86362001)(66476007)(4326008)(83380400001)(186003)(52116002)(31686004)(6916009)(38350700002)(66946007)(5660300002)(31696002)(316002)(2616005)(6486002)(8676002)(26005)(956004)(2906002)(8936002)(508600001)(16576012)(36756003)(151773002)(11606007)(45980500001)(43740500002);
+ DIR:OUT; SFP:1101; 
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: D/mITT3diUCQbT/zMkYkTJAm4PfLnu5eBCdREouU9A3+yTENrdrlj2VuS0l/Ka79PhUll8PX6FeT64AryNalzN75iBt7eDALtmzpoB+XM/MecrmBeoyWbnOXEcICxypReS50NC2sHYRGo2Sj5QeTA14Ec9nNQDyp/smimP743AKoelLzdC1lZoRxFKriQWj3UlPjJUr3sKXcrnZoL3hIew==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2c3267e-0749-44f4-67fc-08d982487f66
-X-MS-Exchange-CrossTenant-AuthSource: OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-AntiSpam-MessageData-0: =?gb2312?B?UkhHNFNFVTBsVUtac25ROTl2VXV1bGp1MUR0aXhPaHVtZnRSbSt0Y0xCcGcz?=
+ =?gb2312?B?WUFreUVTYWdBKzcwYzVEWG9ubE43ZnAxcDNWN0JSbmxBVVNXTkhwQlFZRGNu?=
+ =?gb2312?B?Z082eWtLREgrRFdFSkVId3BLT1JtVTZGTWNEL3UwVzdUMW1NQlk4ckZHS2RW?=
+ =?gb2312?B?RlBZaG8rQVM1dDZYU2dGZndRNDVwcG92SHdDYncrWm1ZYThwR2hBNmNhR1VX?=
+ =?gb2312?B?YXM1V1pOdXMxWlNhejlOdmltNE1Fak1id1Evayt6Q05FNzRWc0lMNFNwQ2xt?=
+ =?gb2312?B?VGRQa1FXOHZ5blJjeHcrelVuUDZxZHBHTUJHUE9pM2ROZnlVNmw4RE1peU13?=
+ =?gb2312?B?K05mTC9aQS96WFlwQVNNWnQ5ZXdNdit3bG9CMmdZNWU5QUVKeHl6cHhtSG92?=
+ =?gb2312?B?Z2IrZnI5SllCNElzY3A0ZmVaNzhRMUF4MEdpTThpYUVkd2N5THpTZlRBQk14?=
+ =?gb2312?B?MUlOYTdScWNoM2Rkc1huYWswRW1SWjZTTnNNMkN4K29GcVNadUYvbjFObWlQ?=
+ =?gb2312?B?cUd4cVE4MnRQeDU0Y3ZsTC9yM3NZWmNSNnlMVmVTWUgrRmF3MXU4TWtCOWdX?=
+ =?gb2312?B?OHRvTU5CNExtNW9senhuRlVvZTdSWUk3REhuN0g3UGd1a2s3Q0NUUGVXTGNW?=
+ =?gb2312?B?MUZpdFZKc3BFYm5qR0VlbmNwZnhLdGZ1WGo2ZWZFWDZQLzZtVHZQYXFxcTBV?=
+ =?gb2312?B?cHVsOE1hd2NwYitzNW8yanF3TUlVRVJKQSt6UWx4eTQyd2s3aXRtNWx5M1hJ?=
+ =?gb2312?B?ZnJJWUlobWlDRlRyNjlYS1hMYVFXR3R4MVBGQW9xZnZGTWgrUEdGWjR1WTE4?=
+ =?gb2312?B?TUdILzJ3RUZyazVQelVZRkQwM2Y2U0pPWVhpcWh4MGZBZmF4YS9kc2JWY0FJ?=
+ =?gb2312?B?REg0UytKbnF3ZCtPZmxHR2JDS3ZNbmE3WXpSRkhzcy9HYm5Pb2xDMnpUMEdL?=
+ =?gb2312?B?NGhnTXZLeWlTZ3RIQmNydDV3WmlMQnB6NGVZbEpSQW9UY25qUGdsQXdrMjlT?=
+ =?gb2312?B?dUU3R2VBV2JURGF5T2ozdDB2WW9FUTh2K3Z5MUwwS2RST2RSSTg2QVE5Wkdy?=
+ =?gb2312?B?ZWxKK1Rkcmt6SkJTTkVYenhLejgzQzg4WFNJS2Z4UzN6M0tVRCtYSmowZ21w?=
+ =?gb2312?B?WWwxOXhNOUJHenVoSHI1Y0wvcVJDbkVxakRrUTVnZjdiMlRJb1JaaXpyWkFl?=
+ =?gb2312?B?amVTWXc2c0NOdjFjWTdiZ2ZnWXZrT1ZjeEJYTnNWK0RGcmZuTTdTQ3ZpZ2hy?=
+ =?gb2312?B?dThSSTNWc3M3dDcwMUswVGEzZlcwQ2dYdFFzVkRSUzczNmw3d3k2SU1jdlBL?=
+ =?gb2312?B?NE13R29CQ2pMTWdLY05YK2Zwb2RUY2dpMXJVODRsYkZ0SUpRU2h6eE1aTVg2?=
+ =?gb2312?B?RFFIMzRMdnRMaFRwclF4dkpuWHRoYjllUkVRRGtkOG5mRjZSMlpiUkwyS3ht?=
+ =?gb2312?B?N1ExSyt4VWJLTklZcXBKYzFGOEJRS1Z3ZXNoRWsvMWhoWG5qa3NYRDJ5U3hU?=
+ =?gb2312?B?dlYxWFFQUTdLR1ozUTlqdGpqQ05zaUpzaGRhTlQ0VTVNYkJlK3JoUkVDV3A2?=
+ =?gb2312?B?bC9SM0NKYjlCMkxNV1Qzb3FoWE9jeXZ6blA3ZldIN2ZqT0tQRjEvYVNqMUR2?=
+ =?gb2312?B?MjVSV0JiUUJUSFJEK2d4ZGRHakk5WUIyZHdnNkNxbWxYY3RCQWFtb3BjdVFu?=
+ =?gb2312?B?dlhocXR5Z0Q5dGhwRnJ6MTdSZkkxYXdxUyt1NWsyV29oeVl0MXp1eGZvQ0hn?=
+ =?gb2312?Q?hAmPDy3qPy38cBBSbL/+91l44o+DKktpvnc9q3D?=
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6b56343-4aac-4e08-b53b-08d9824dc4ea
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2021 06:23:33.8778 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2021 07:01:18.0043 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0P286MB0419
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fTUILxZx99vgm6po2IFPn/JHGCq7VWk1g89ut/sS4hj7hskWKP+A9kb3azjNRbaSxwjHAlIW6EOo9LGgQJY/VQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB4330
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,134 +148,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@oppo.com>
+Cc: zhangshiming@oppo.com, linux-kernel@vger.kernel.org,
+ overlayfs <linux-unionfs@vger.kernel.org>,
+ Chengguang Xu <cgxu519@mykernel.net>, yh@oppo.com, guanyuwei@oppo.com,
+ linux-fsdevel@vger.kernel.org, guoweichao@oppo.com,
+ linux-erofs@lists.ozlabs.org, Chengguang Xu <cgxu519@139.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---------------20Iz5t0rtLmR6i4WGt3WUvSF
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+‘⁄ 2021/9/27 17:38, Miklos Szeredi –¥µ¿:
+> On Wed, Sep 22, 2021 at 04:00:47PM +0200, Miklos Szeredi wrote:
+>
+>> First let's fix the oops: ovl_read_iter()/ovl_write_iter() must check
+>> real file's ->direct_IO if IOCB_DIRECT is set in iocb->ki_flags and
+>> return -EINVAL if not.
+> And here's that fix.  Please test.
 
-Hi,
+This patch can fix the oops.
 
-On 2021/9/28 10:33 ‰∏äÂçà, Gao Xiang wrote:
-> Hi,
->
-> On Sun, Sep 26, 2021 at 11:21:42AM +0800, Gao Xiang wrote:
->> Hi Xuenan and Qi,
->>
->> On Wed, Sep 15, 2021 at 05:35:33PM +0800, Guo Xuenan wrote:
->>> From: Wang Qi<mpiglet@outlook.com>
->>>
->>> Add dump-tool for erofs to facilitate users directly
->>> analyzing the erofs image file.
->>>
->>> Signed-off-by: Guo Xuenan<guoxuenan@huawei.com>
->>> Signed-off-by: Wang Qi<mpiglet@outlook.com>
->> I'm almost fine with the series, and I will merge some of the patches
->> later.
->>
->> Due to busy work, my original plan was to fix some nits by myself and
->> apply. Anyway, I will reply some comments this evening...
-> I've merged the first 2 patches into dev branch with modification (so no
-> need to resend the first two patches).
->
-> The rest patches are still a bit messy, I've set up a new
-> experimental-dump branch, please check out:
-> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/?h=experimental-dump
->
-> There are some stuffs needing to be resolved in advance:
->   1) rename all "dumpfs_" prefix into "erofsdump_";
->   2) I feel still uncomfortable when reading get_path_by_nid() and
->      erofs_read_dir(). Could we refactor them by introducing
->      erofs_for_each_dir() or likewise?
->   3) file_category_types and the switch in dumpfs_print_inode() are
->      duplicated to me. I think one of them can be removed instead.
->   4) please help using "filefrag -v -b1" style when printing extent info
->      in erofsdump_show_inode_phy(), like below:
->
->   ext:     logical_offset:        physical_offset: length:   expected: flags:
->     0:        0..   20479: 21788270592..21788291071:  20480:             last,eof
->
+Tested-by: Huang Jianan <huangjianan@oppo.com>
+
+Thanks,
+Jianan
+
 > Thanks,
-> Gao Xiang
+> Miklos
 >
-Thanks for your reply! I will refactor the code according to your advice.
+> ---
+> From: Miklos Szeredi <mszeredi@redhat.com>
+> Subject: ovl: fix IOCB_DIRECT if underlying fs doesn't support direct IO
+>
+> Normally the check at open time suffices, but e.g loop device does set
+> IOCB_DIRECT after doing its own checks (which are not sufficent for
+> overlayfs).
+>
+> Make sure we don't call the underlying filesystem read/write method with
+> the IOCB_DIRECT if it's not supported.
+>
+> Reported-by: Huang Jianan <huangjianan@oppo.com>
+> Fixes: 16914e6fc7e1 ("ovl: add ovl_read_iter()")
+> Cc: <stable@vger.kernel.org> # v4.19
+> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+> ---
+>   fs/overlayfs/file.c |   15 ++++++++++++++-
+>   1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> --- a/fs/overlayfs/file.c
+> +++ b/fs/overlayfs/file.c
+> @@ -296,6 +296,12 @@ static ssize_t ovl_read_iter(struct kioc
+>   	if (ret)
+>   		return ret;
+>   
+> +	ret = -EINVAL;
+> +	if (iocb->ki_flags & IOCB_DIRECT &&
+> +	    (!real.file->f_mapping->a_ops ||
+> +	     !real.file->f_mapping->a_ops->direct_IO))
+> +		goto out_fdput;
+> +
+>   	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+>   	if (is_sync_kiocb(iocb)) {
+>   		ret = vfs_iter_read(real.file, iter, &iocb->ki_pos,
+> @@ -320,7 +326,7 @@ static ssize_t ovl_read_iter(struct kioc
+>   out:
+>   	revert_creds(old_cred);
+>   	ovl_file_accessed(file);
+> -
+> +out_fdput:
+>   	fdput(real);
+>   
+>   	return ret;
+> @@ -349,6 +355,12 @@ static ssize_t ovl_write_iter(struct kio
+>   	if (ret)
+>   		goto out_unlock;
+>   
+> +	ret = -EINVAL;
+> +	if (iocb->ki_flags & IOCB_DIRECT &&
+> +	    (!real.file->f_mapping->a_ops ||
+> +	     !real.file->f_mapping->a_ops->direct_IO))
+> +		goto out_fdput;
+> +
+>   	if (!ovl_should_sync(OVL_FS(inode->i_sb)))
+>   		ifl &= ~(IOCB_DSYNC | IOCB_SYNC);
+>   
+> @@ -384,6 +396,7 @@ static ssize_t ovl_write_iter(struct kio
+>   	}
+>   out:
+>   	revert_creds(old_cred);
+> +out_fdput:
+>   	fdput(real);
+>   
+>   out_unlock:
 
-Thanks,
-Wang Qi
-
---------------20Iz5t0rtLmR6i4WGt3WUvSF
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <pre>Hi,
-</pre>
-    <div class="moz-cite-prefix">On 2021/9/28 10:33 ‰∏äÂçà, Gao Xiang wrote:<br>
-    </div>
-    <blockquote type="cite" cite="mid:YVJ%2FDVHlUG83A3Jk@B-P7TQMD6M-0146.local">
-      <pre class="moz-quote-pre" wrap="">Hi,
-
-On Sun, Sep 26, 2021 at 11:21:42AM +0800, Gao Xiang wrote:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">Hi Xuenan and Qi,
-
-On Wed, Sep 15, 2021 at 05:35:33PM +0800, Guo Xuenan wrote:
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">From: Wang Qi <a class="moz-txt-link-rfc2396E" href="mailto:mpiglet@outlook.com">&lt;mpiglet@outlook.com&gt;</a>
-
-Add dump-tool for erofs to facilitate users directly
-analyzing the erofs image file.
-
-Signed-off-by: Guo Xuenan <a class="moz-txt-link-rfc2396E" href="mailto:guoxuenan@huawei.com">&lt;guoxuenan@huawei.com&gt;</a>
-Signed-off-by: Wang Qi <a class="moz-txt-link-rfc2396E" href="mailto:mpiglet@outlook.com">&lt;mpiglet@outlook.com&gt;</a>
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-I'm almost fine with the series, and I will merge some of the patches
-later.
-
-Due to busy work, my original plan was to fix some nits by myself and
-apply. Anyway, I will reply some comments this evening...
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-I've merged the first 2 patches into dev branch with modification (so no
-need to resend the first two patches).
-
-The rest patches are still a bit messy, I've set up a new
-experimental-dump branch, please check out:
-<a class="moz-txt-link-freetext" href="https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/?h=experimental-dump">https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/?h=experimental-dump</a>
-
-There are some stuffs needing to be resolved in advance:
- 1) rename all &quot;dumpfs_&quot; prefix into &quot;erofsdump_&quot;;
- 2) I feel still uncomfortable when reading get_path_by_nid() and
-    erofs_read_dir(). Could we refactor them by introducing
-    erofs_for_each_dir() or likewise?
- 3) file_category_types and the switch in dumpfs_print_inode() are
-    duplicated to me. I think one of them can be removed instead.
- 4) please help using &quot;filefrag -v -b1&quot; style when printing extent info
-    in erofsdump_show_inode_phy(), like below:
-
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..   20479: 21788270592..21788291071:  20480:             last,eof
-
-Thanks,
-Gao Xiang
-
-</pre>
-    </blockquote>
-    <pre>Thanks for your reply! I will refactor the code according to your advice.
-
-Thanks,
-Wang Qi</pre>
-  </body>
-</html>
---------------20Iz5t0rtLmR6i4WGt3WUvSF--
