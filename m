@@ -1,44 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFC7041A3D7
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 01:35:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EC8F41A4EF
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 03:44:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HJJt44qBrz2yP9
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 09:35:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HJMkS5b1kz2yK7
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 11:44:32 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=b4hMMfJg;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=b4hMMfJg; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HJJsx3frKz2yLZ
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 09:35:43 +1000 (AEST)
-X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="224621558"
-X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; d="scan'208";a="224621558"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
- by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 27 Sep 2021 16:34:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; d="scan'208";a="478402871"
-Received: from lkp-server02.sh.intel.com (HELO f7acefbbae94) ([10.239.97.151])
- by fmsmga007.fm.intel.com with ESMTP; 27 Sep 2021 16:34:35 -0700
-Received: from kbuild by f7acefbbae94 with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1mV08m-0000hV-Vb; Mon, 27 Sep 2021 23:34:32 +0000
-Date: Tue, 28 Sep 2021 07:34:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- c40dd3ca2a45d5bd6e8b3f4ace5cb81493096263
-Message-ID: <61525503.kihenBdZL4YiYFm2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HJMkQ23v7z2yK7
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 11:44:30 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DE8D6120F;
+ Tue, 28 Sep 2021 01:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1632793466;
+ bh=ZxL0s7aAvgRHmJu6oP5znjIcna3dJ9oHDuY6p6EGw44=;
+ h=From:To:Cc:Subject:Date:From;
+ b=b4hMMfJgPJ2lsx6MRLDI2xnOXzIxjmrsWFYXDw+XeJ1b8b8rjap9s2NF2h5BILoXD
+ cvN306y/VXYJ5vESag1iZDKz5LSof0R+pcrvwKBMRSUAqtfU6+ds14vL+zvXtSrD66
+ NjRJ3lRIi1g6B41wu181ii9AqYsUH246//exEWSkwS2GQns+nvWSeI7vmDdEJ4YQ70
+ IaQXrjT+7I5cf57gBElsj+HZzUFFxHbCv1fD1NuG8/9O4cEs0dxGsd/l/n/ASQoJy2
+ p8LNzkhEsZuWoMPF+PDt7yZiJiwyVdhKdC0Bo7D57UmCermQEazschn7zXYaDmMa1R
+ 5CoTQbkcHviEQ==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: fill filesystem inode count
+Date: Tue, 28 Sep 2021 09:41:08 +0800
+Message-Id: <20210928014108.30079-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,135 +55,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: c40dd3ca2a45d5bd6e8b3f4ace5cb81493096263  erofs: clear compacted_2b if compacted_4b_initial > totalidx
+Inode count was missing to fill when refactoring. Fix it.
 
-elapsed time: 720m
-
-configs tested: 107
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                              allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-i386                 randconfig-c001-20210927
-mips                     cu1830-neo_defconfig
-m68k                       m5249evb_defconfig
-parisc                generic-64bit_defconfig
-arc                          axs103_defconfig
-sh                          r7780mp_defconfig
-mips                     decstation_defconfig
-arm                             rpc_defconfig
-arm                           sunxi_defconfig
-arm                         nhk8815_defconfig
-mips                           ip27_defconfig
-arc                              alldefconfig
-sh                           se7343_defconfig
-mips                        bcm63xx_defconfig
-nds32                            alldefconfig
-arc                        vdk_hs38_defconfig
-powerpc                      pasemi_defconfig
-sh                          kfr2r09_defconfig
-mips                           ci20_defconfig
-sh                           se7721_defconfig
-x86_64               randconfig-c001-20210927
-arm                  randconfig-c002-20210927
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-nios2                               defconfig
-nds32                             allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-arc                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a002-20210927
-x86_64               randconfig-a006-20210927
-x86_64               randconfig-a001-20210927
-x86_64               randconfig-a005-20210927
-x86_64               randconfig-a004-20210927
-x86_64               randconfig-a003-20210927
-i386                 randconfig-a001-20210927
-i386                 randconfig-a005-20210927
-i386                 randconfig-a006-20210927
-i386                 randconfig-a002-20210927
-i386                 randconfig-a003-20210927
-i386                 randconfig-a004-20210927
-arc                  randconfig-r043-20210927
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-powerpc              randconfig-c003-20210927
-x86_64               randconfig-c007-20210927
-mips                 randconfig-c004-20210927
-arm                  randconfig-c002-20210927
-riscv                randconfig-c006-20210927
-s390                 randconfig-c005-20210927
-i386                 randconfig-c001-20210927
-x86_64               randconfig-a014-20210927
-x86_64               randconfig-a011-20210927
-x86_64               randconfig-a013-20210927
-x86_64               randconfig-a016-20210927
-x86_64               randconfig-a015-20210927
-x86_64               randconfig-a012-20210927
-i386                 randconfig-a014-20210927
-i386                 randconfig-a013-20210927
-i386                 randconfig-a016-20210927
-i386                 randconfig-a012-20210927
-i386                 randconfig-a015-20210927
-i386                 randconfig-a011-20210927
-hexagon              randconfig-r045-20210927
-riscv                randconfig-r042-20210927
-hexagon              randconfig-r041-20210927
-s390                 randconfig-r044-20210927
-
+Fixes: a17497f0844a ("erofs-utils: introduce inode operations")
+Fixes: 5e35b75ad499 ("erofs-utils: introduce fuse implementation")
+Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ lib/inode.c | 3 +--
+ mkfs/main.c | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/lib/inode.c b/lib/inode.c
+index 26ffa4b2bb38..1538673aa0c6 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -855,14 +855,13 @@ static int erofs_fill_inode(struct erofs_inode *inode,
+ 
+ static struct erofs_inode *erofs_new_inode(void)
+ {
+-	static unsigned int counter;
+ 	struct erofs_inode *inode;
+ 
+ 	inode = calloc(1, sizeof(struct erofs_inode));
+ 	if (!inode)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	inode->i_ino[0] = counter++;	/* inode serial number */
++	inode->i_ino[0] = sbi.inos++;	/* inode serial number */
+ 	inode->i_count = 1;
+ 
+ 	init_list_head(&inode->i_subdirs);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index beba6eb8b905..1c8dea55f0cd 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -387,7 +387,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	struct erofs_super_block sb = {
+ 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
+ 		.blkszbits = LOG_BLOCK_SIZE,
+-		.inos   = 0,
++		.inos   = cpu_to_le64(sbi.inos),
+ 		.build_time = cpu_to_le64(sbi.build_time),
+ 		.build_time_nsec = cpu_to_le32(sbi.build_time_nsec),
+ 		.blocks = 0,
+-- 
+2.20.1
+
