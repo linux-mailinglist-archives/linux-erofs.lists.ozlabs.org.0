@@ -1,49 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3548241A4F0
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 03:45:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8CA341A58F
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 04:34:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HJMl11LDxz2yNr
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 11:45:01 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qq7O1ipT;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HJNqm4Wjsz2yPD
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 12:34:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=qq7O1ipT; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HJMkz0P0sz2xr5
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 11:44:59 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C3E36120A;
- Tue, 28 Sep 2021 01:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1632793497;
- bh=ZxL0s7aAvgRHmJu6oP5znjIcna3dJ9oHDuY6p6EGw44=;
- h=From:To:Cc:Subject:Date:From;
- b=qq7O1ipT6hCmZxJDcg2vI2xgXwncp5Hob/LnzcwLUsBO+AY+8jU62f+BlL/V8Eld2
- JGSjzdXeXYCiBKfUsBgHbxLZG8H+iOjdVAlsZ39R2vADyrGYr3SqFR6kvtNkSlEajb
- PQzwpCTeDXx7FzV+vZjJ8YAkQDP+nFZ/O0JDJK5Vu6ZXwC8Nhd0IwUedhNSW/b6IP7
- bFuvORxHTPewH9nij4DyZpujgrvtN5R9ZI5zXvrBsHTqJm1nMZd8Gc+elli2yGSCGj
- 2Y63m/nIZha3IRUYtCwNBZO/n0EjJgNI/Ht0J9S7q8mga2CoVYJXiERjBe8dMjpKJv
- vK6OfKXYqNJdg==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: fill filesystem inode count
-Date: Tue, 28 Sep 2021 09:44:26 +0800
-Message-Id: <20210928014426.30174-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HJNqc25Hbz2xvL
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 12:33:59 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R241e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0UptZmol_1632796429; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0UptZmol_1632796429) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 28 Sep 2021 10:33:51 +0800
+Date: Tue, 28 Sep 2021 10:33:49 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Guo Xuenan <guoxuenan@huawei.com>, mpiglet@outlook.com
+Subject: Re: [PATCH v3 1/5] erofs-utils: introduce dump.erofs
+Message-ID: <YVJ/DVHlUG83A3Jk@B-P7TQMD6M-0146.local>
+References: <20210915093537.2579575-1-guoxuenan@huawei.com>
+ <YU/nRm9ug/kFXHBD@B-P7TQMD6M-0146.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <YU/nRm9ug/kFXHBD@B-P7TQMD6M-0146.local>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,53 +48,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Inode count was missing to fill when refactoring. Fix it.
+Hi,
 
-Fixes: a17497f0844a ("erofs-utils: introduce inode operations")
-Fixes: 5e35b75ad499 ("erofs-utils: introduce fuse implementation")
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
- lib/inode.c | 3 +--
- mkfs/main.c | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+On Sun, Sep 26, 2021 at 11:21:42AM +0800, Gao Xiang wrote:
+> Hi Xuenan and Qi,
+> 
+> On Wed, Sep 15, 2021 at 05:35:33PM +0800, Guo Xuenan wrote:
+> > From: Wang Qi <mpiglet@outlook.com>
+> > 
+> > Add dump-tool for erofs to facilitate users directly
+> > analyzing the erofs image file.
+> > 
+> > Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+> > Signed-off-by: Wang Qi <mpiglet@outlook.com>
+> 
+> I'm almost fine with the series, and I will merge some of the patches
+> later.
+> 
+> Due to busy work, my original plan was to fix some nits by myself and
+> apply. Anyway, I will reply some comments this evening...
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 26ffa4b2bb38..1538673aa0c6 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -855,14 +855,13 @@ static int erofs_fill_inode(struct erofs_inode *inode,
- 
- static struct erofs_inode *erofs_new_inode(void)
- {
--	static unsigned int counter;
- 	struct erofs_inode *inode;
- 
- 	inode = calloc(1, sizeof(struct erofs_inode));
- 	if (!inode)
- 		return ERR_PTR(-ENOMEM);
- 
--	inode->i_ino[0] = counter++;	/* inode serial number */
-+	inode->i_ino[0] = sbi.inos++;	/* inode serial number */
- 	inode->i_count = 1;
- 
- 	init_list_head(&inode->i_subdirs);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index beba6eb8b905..1c8dea55f0cd 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -387,7 +387,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 	struct erofs_super_block sb = {
- 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
- 		.blkszbits = LOG_BLOCK_SIZE,
--		.inos   = 0,
-+		.inos   = cpu_to_le64(sbi.inos),
- 		.build_time = cpu_to_le64(sbi.build_time),
- 		.build_time_nsec = cpu_to_le32(sbi.build_time_nsec),
- 		.blocks = 0,
--- 
-2.20.1
+I've merged the first 2 patches into dev branch with modification (so no
+need to resend the first two patches).
+
+The rest patches are still a bit messy, I've set up a new
+experimental-dump branch, please check out:
+https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/?h=experimental-dump
+
+There are some stuffs needing to be resolved in advance:
+ 1) rename all "dumpfs_" prefix into "erofsdump_";
+ 2) I feel still uncomfortable when reading get_path_by_nid() and
+    erofs_read_dir(). Could we refactor them by introducing
+    erofs_for_each_dir() or likewise?
+ 3) file_category_types and the switch in dumpfs_print_inode() are
+    duplicated to me. I think one of them can be removed instead.
+ 4) please help using "filefrag -v -b1" style when printing extent info
+    in erofsdump_show_inode_phy(), like below:
+
+ ext:     logical_offset:        physical_offset: length:   expected: flags:
+   0:        0..   20479: 21788270592..21788291071:  20480:             last,eof
+
+Thanks,
+Gao Xiang
 
