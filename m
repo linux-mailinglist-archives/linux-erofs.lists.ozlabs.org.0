@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EC8F41A4EF
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 03:44:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3548241A4F0
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 03:45:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HJMkS5b1kz2yK7
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 11:44:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HJMl11LDxz2yNr
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Sep 2021 11:45:01 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=b4hMMfJg;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qq7O1ipT;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,30 +17,30 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=b4hMMfJg; 
+ header.s=k20201202 header.b=qq7O1ipT; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HJMkQ23v7z2yK7
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 11:44:30 +1000 (AEST)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DE8D6120F;
- Tue, 28 Sep 2021 01:41:33 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HJMkz0P0sz2xr5
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Sep 2021 11:44:59 +1000 (AEST)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C3E36120A;
+ Tue, 28 Sep 2021 01:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1632793466;
+ s=k20201202; t=1632793497;
  bh=ZxL0s7aAvgRHmJu6oP5znjIcna3dJ9oHDuY6p6EGw44=;
  h=From:To:Cc:Subject:Date:From;
- b=b4hMMfJgPJ2lsx6MRLDI2xnOXzIxjmrsWFYXDw+XeJ1b8b8rjap9s2NF2h5BILoXD
- cvN306y/VXYJ5vESag1iZDKz5LSof0R+pcrvwKBMRSUAqtfU6+ds14vL+zvXtSrD66
- NjRJ3lRIi1g6B41wu181ii9AqYsUH246//exEWSkwS2GQns+nvWSeI7vmDdEJ4YQ70
- IaQXrjT+7I5cf57gBElsj+HZzUFFxHbCv1fD1NuG8/9O4cEs0dxGsd/l/n/ASQoJy2
- p8LNzkhEsZuWoMPF+PDt7yZiJiwyVdhKdC0Bo7D57UmCermQEazschn7zXYaDmMa1R
- 5CoTQbkcHviEQ==
+ b=qq7O1ipT6hCmZxJDcg2vI2xgXwncp5Hob/LnzcwLUsBO+AY+8jU62f+BlL/V8Eld2
+ JGSjzdXeXYCiBKfUsBgHbxLZG8H+iOjdVAlsZ39R2vADyrGYr3SqFR6kvtNkSlEajb
+ PQzwpCTeDXx7FzV+vZjJ8YAkQDP+nFZ/O0JDJK5Vu6ZXwC8Nhd0IwUedhNSW/b6IP7
+ bFuvORxHTPewH9nij4DyZpujgrvtN5R9ZI5zXvrBsHTqJm1nMZd8Gc+elli2yGSCGj
+ 2Y63m/nIZha3IRUYtCwNBZO/n0EjJgNI/Ht0J9S7q8mga2CoVYJXiERjBe8dMjpKJv
+ vK6OfKXYqNJdg==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
 Subject: [PATCH] erofs-utils: mkfs: fill filesystem inode count
-Date: Tue, 28 Sep 2021 09:41:08 +0800
-Message-Id: <20210928014108.30079-1-xiang@kernel.org>
+Date: Tue, 28 Sep 2021 09:44:26 +0800
+Message-Id: <20210928014426.30174-1-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
