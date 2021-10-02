@@ -2,67 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C55441FE80
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 00:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ECDA41FE90
+	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 00:51:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HMMND5hlsz2yNK
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 09:39:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HMMf00Q9Cz2yNY
+	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 09:51:04 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qtLTmGGn;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=SyC2HGu5;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::730;
- helo=mail-qk1-x730.google.com; envelope-from=fedora.dm0@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f30;
+ helo=mail-qv1-xf30.google.com; envelope-from=fedora.dm0@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=qtLTmGGn; dkim-atps=neutral
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com
- [IPv6:2607:f8b0:4864:20::730])
+ header.s=20210112 header.b=SyC2HGu5; dkim-atps=neutral
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com
+ [IPv6:2607:f8b0:4864:20::f30])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HMMN83ywYz2yHj
- for <linux-erofs@lists.ozlabs.org>; Sun,  3 Oct 2021 09:39:03 +1100 (AEDT)
-Received: by mail-qk1-x730.google.com with SMTP id m7so12775391qke.8
- for <linux-erofs@lists.ozlabs.org>; Sat, 02 Oct 2021 15:39:03 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HMMdx1rLpz2yHt
+ for <linux-erofs@lists.ozlabs.org>; Sun,  3 Oct 2021 09:51:00 +1100 (AEDT)
+Received: by mail-qv1-xf30.google.com with SMTP id o13so2087162qvm.4
+ for <linux-erofs@lists.ozlabs.org>; Sat, 02 Oct 2021 15:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=from:to:cc:subject:date:message-id:mime-version;
- bh=W/aSRieWDLsSJdnzH8A8K1Xh+uxwmG6ud9nYrUVC73g=;
- b=qtLTmGGnec/HN48lzIo0bs4+CylOyXNH9J4nAG8P9vxJZ5ozTHx+BOtEvNpsiA6AJ2
- 7mG25quHaAKdmSaRZdbDU1+O0qCxLOuNQA7PDXESFt+5OvnZRk/QEXjr4aKJf7PV741Q
- wgmg2YVAMUFS4amw1MqSpnJZpHGMINS42uEqCyyl4whiCefHbe28VegaOW06jD5YCuKR
- 78lYOb2/2lHjXNiL06LORCONca3mtDlKdeC0s2eWIICi51ZmlMwMvIHdbPMbRIVnLc2S
- wveRHPS4QDzAL6EYLdfbmvBireizY3PxHyIctCIV13JPntPkN5/f3v802qirv/eVaDja
- QM4w==
+ h=from:to:subject:date:message-id:mime-version;
+ bh=xcJrrGWDbdJwOSoRknAYWyFbA2y63Ll+oilD762j6MY=;
+ b=SyC2HGu59eWx1aRJRtwINM5ikkq/se6l9QJZ4N6Dvj2f4tPI4Oz/FgFtbQmN+A4lNE
+ Pa/eOBOSN4Y1B67i5ZTmF7HcSDjy8FOvUejiZPiZpcsQ60PpKcQZTn0ZMnnXAm9odJO0
+ VfepENBcDzzvZpQvdnJOP269vuFieXyyQwfU7mWu5ouI9e3wYhfnhGSQHcTtJxlUlWN0
+ 96iwBmSUToVjW1QKgXYc5m2IVwzbnanPaS2ebPlNXOx99AxbmGZ0oyNV1XdMcudcaiXO
+ ESATU9zv1wWEVb0C39CkNUcuwrth5UFzmJQRlTu/J/ocZGpEvuYmkPpipSR7QE5Gw9ov
+ 2pxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
- bh=W/aSRieWDLsSJdnzH8A8K1Xh+uxwmG6ud9nYrUVC73g=;
- b=isLBcaH/CZie1vpiibxpv2Hn/DXtthsUZGHZyvQo2a4vb05O1OI/Xd0ysk9M5N2cR9
- RT/JC7VfLJubzxMrCWX0juJNkqxR5gU+L0xcAiWZwXNLNm56V/q/0MbLONho7x9FoPaI
- Qkbg9gvZr7wv8McsBa1q+W9X8QHxEi+58uJEt7Ku5Xkv/8ICBWaMxedBPqITcBhIf246
- QP6tfzyEjAw05O+/MI7TkaXnpDexrxhsvvIvRVB0yYddFYzUe5uPRMqJSpogYwoJ5dy0
- 4gs5t9JdwLsY/CkJ/Q06SLmoYG6QvJKOZmclSjagoKESNcicoNkhRTwWpp6e6CJuGX+3
- /IFA==
-X-Gm-Message-State: AOAM5320qZDDRECI5rnQo9+EUKQm1NsK3e34uVIbOYjJHXeGOog6nADV
- tXrCjnGpY/4GttrmiyrdyJk=
-X-Google-Smtp-Source: ABdhPJxA8xHm+SRTyx969M2ydweCqwsy2UshZP9EsWiQqnGYTLQkTCDeAkpTm8JqdesiIl/BXylUyw==
-X-Received: by 2002:a37:9401:: with SMTP id w1mr4121778qkd.166.1633214338831; 
- Sat, 02 Oct 2021 15:38:58 -0700 (PDT)
+ h=x-gm-message-state:from:to:subject:date:message-id:mime-version;
+ bh=xcJrrGWDbdJwOSoRknAYWyFbA2y63Ll+oilD762j6MY=;
+ b=gDb2Wo+mNG+13LZMdqVYq/SVpjQrOo0QULecrxdoilv9X5TkX5IDXxgPiW7bzegxLj
+ DG951aV1Zo0d4FYMPMqdGbPn3BfDPY1OQ7+ybR0rkzlrt1B1Hzt4iNzaDdABJJU4OwjR
+ nVgPkhOhG73MUv6z9HmNAvZcv/Z4Sszdb8FjpFx7zrKAEtvya48o2YSdn78NNqv/Z/KU
+ BixG6/UGx9PAlWEru5jkmz2F54PA2kJLATwgosgWEWYolUbuDLzi5d0UXinxCvuzERgh
+ FuRj+u56RTIAOB6bbA98Vfx91fgpdGFTHS7YoRXLMRJw4RNk8deAkjpGpYJhioRLmJaF
+ ksjg==
+X-Gm-Message-State: AOAM533d2z4/1DwZnMCVgFILeHi0o2ezMRo8hrxOIa/pLlkqzYLBYIJt
+ LJM5iK89nb3tp97zRIvQ9tYZ80gXjec=
+X-Google-Smtp-Source: ABdhPJw7dJy3hNtaTpbbNOaFs3Wpa5OwBS883GiDBdXQ6iOrpTC6aVt0AaoYjYM040hIh8kFz6RAWg==
+X-Received: by 2002:a0c:8dc6:: with SMTP id u6mr9446538qvb.66.1633215056620;
+ Sat, 02 Oct 2021 15:50:56 -0700 (PDT)
 Received: from callisto (c-73-175-137-55.hsd1.pa.comcast.net. [73.175.137.55])
  by smtp.gmail.com with ESMTPSA id
- u12sm6618978qtw.73.2021.10.02.15.38.57
+ k19sm5642463qko.115.2021.10.02.15.50.55
+ for <linux-erofs@lists.ozlabs.org>
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sat, 02 Oct 2021 15:38:58 -0700 (PDT)
+ Sat, 02 Oct 2021 15:50:56 -0700 (PDT)
 From: David Michael <fedora.dm0@gmail.com>
-To: linux-erofs@lists.ozlabs.org, bluce.liguifu@huawei.com,
- miaoxie@huawei.com, fangwei1@huawei.com
-Subject: [PATCH] erofs-utils: dump: fix linking when using --with-selinux
-Date: Sat, 02 Oct 2021 18:38:57 -0400
-Message-ID: <875yufoxvi.fsf@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: SELinux labels not defined
+Date: Sat, 02 Oct 2021 18:50:55 -0400
+Message-ID: <8735pjoxbk.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -76,49 +76,47 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yuchao0@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The libselinux functions selabel_open and selabel_close are called
-by lib/config.c, so include libselinux in CFLAGS and LIBS to fix
-building dump.erofs.
-
-Signed-off-by: David Michael <fedora.dm0@gmail.com>
----
-
 Hi,
 
-I tried building the dev branch with SELinux support and got this:
+I tried to make an SELinux-labeled EROFS image, and the image itself
+seems to contain the labels from a hex dump, but the mounted files are
+all unlabeled:
 
-/bin/sh ../libtool  --tag=CC   --mode=link x86_64-pc-linux-gnu-gcc -Wall -Werror -I../include -O2 -pipe  -Wl,-O1 -Wl,--as-needed -o dump.erofs dump_erofs-main.o ../lib/liberofs.la -luuid  
-libtool: link: x86_64-pc-linux-gnu-gcc -Wall -Werror -I../include -O2 -pipe -Wl,-O1 -o dump.erofs dump_erofs-main.o  -Wl,--as-needed ../lib/.libs/liberofs.a -luuid
-/usr/lib/gcc/x86_64-pc-linux-gnu/10.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: ../lib/.libs/liberofs.a(liberofs_la-config.o): in function `erofs_exit_configure':
-config.c:(.text+0xe2): undefined reference to `selabel_close'
-/usr/lib/gcc/x86_64-pc-linux-gnu/10.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: ../lib/.libs/liberofs.a(liberofs_la-config.o): in function `erofs_selabel_open':
-config.c:(.text+0x180): undefined reference to `selabel_open'
-collect2: error: ld returned 1 exit status
+# ls -lZ xml
+total 8
+drwxr-xr-x. 2 root root unconfined_u:object_r:var_t:s0         4096 Sep 29 21:43 dbus-1
+drwxr-xr-x. 2 root root unconfined_u:object_r:fonts_cache_t:s0 4096 Sep 29 22:19 fontconfig
+# mkfs.erofs test.img xml
+mkfs.erofs 1.3-g4e183568-dirty
+	c_version:           [1.3-g4e183568-dirty]
+	c_dbg_lvl:           [       2]
+	c_dry_run:           [       0]
+# mount -o X-mount.mkdir test.img test
+# ls -lZ test
+total 8
+drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 78 Oct  2 18:37 dbus-1
+drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 48 Oct  2 18:37 fontconfig
 
-Should it just link libselinux to fix the build?
+This is running on the current Fedora kernel 5.14.9-200.fc34.x86_64 with
+the relevant config options:
+
+CONFIG_EROFS_FS=m
+# CONFIG_EROFS_FS_DEBUG is not set
+CONFIG_EROFS_FS_XATTR=y
+CONFIG_EROFS_FS_POSIX_ACL=y
+CONFIG_EROFS_FS_SECURITY=y
+CONFIG_EROFS_FS_ZIP=y
+
+I tried the earliest kernel in Fedora 34 (5.11.12-300.fc34.x86_64), and
+it also has the same issue.  However, the earliest kernel in Fedora 33
+(5.8.15-301.fc33.x86_64) has the correct labels when the image is
+mounted.  Is there a problem in the file system driver, or do I need to
+do something different for newer kernels?
 
 Thanks.
 
 David
-
- dump/Makefile.am | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/dump/Makefile.am b/dump/Makefile.am
-index 0bb7b4e..f0246d7 100644
---- a/dump/Makefile.am
-+++ b/dump/Makefile.am
-@@ -6,4 +6,4 @@ bin_PROGRAMS     = dump.erofs
- AM_CPPFLAGS = ${libuuid_CFLAGS}
- dump_erofs_SOURCES = main.c
- dump_erofs_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
--dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libuuid_LIBS}
-\ No newline at end of file
-+dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} ${libuuid_LIBS}
--- 
-2.31.1
