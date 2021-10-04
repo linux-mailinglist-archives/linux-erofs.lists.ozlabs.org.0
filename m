@@ -2,48 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8729E42000B
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 06:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EC9B420488
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Oct 2021 02:31:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HMWXr1lLnz2yQB
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Oct 2021 15:47:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HN1qc0DFcz2yNr
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Oct 2021 11:31:40 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dC3nb+km;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=dqasK4eu;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::434;
+ helo=mail-wr1-x434.google.com; envelope-from=fedora.dm0@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=dC3nb+km; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=dqasK4eu; dkim-atps=neutral
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com
+ [IPv6:2a00:1450:4864:20::434])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HMWXn260qz2yMg
- for <linux-erofs@lists.ozlabs.org>; Sun,  3 Oct 2021 15:47:05 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA7D361352;
- Sun,  3 Oct 2021 04:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1633236423;
- bh=pmjQEK3CejdjwYd2fj7jwIswUlmfIESPVIAIGQlKOxY=;
- h=From:To:Cc:Subject:Date:From;
- b=dC3nb+kmeZgwjm3ly3i8XxeiAYxTu1+DsXSQEUmAgPXmKiIW6Qw2a6kHy4aJ6GCX5
- jxIdQEhSoeYdOMVI8iqEGM4J4Kx9NWYbTrvcWo1jN+noECkikjo0qxnkrpAd/o0YrR
- DrIZ+LEU+5wl4/hGvWp7tWCjga0l88W3tKIBh31zSw9hr+bYPOwT1ckezYXOt7IDtu
- xxIG2+BgfXwp5uLFJ1IGGZCc3WKqw2ZcsXplRU2a8nvrPdOELsqAmnteQsSoC1VHn9
- OAL+YLVSqiFvsDr3Q9b0vEfMoPC6H2zEv10Iyp17ULYGjUTFE2KwL5VKmkkw5UPFH1
- H9MIlNyESvBbw==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: clevel set up as an individual function
-Date: Sun,  3 Oct 2021 12:46:55 +0800
-Message-Id: <20211003044655.9991-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HN1qX2DzRz2xtM
+ for <linux-erofs@lists.ozlabs.org>; Mon,  4 Oct 2021 11:31:34 +1100 (AEDT)
+Received: by mail-wr1-x434.google.com with SMTP id m22so22028781wrb.0
+ for <linux-erofs@lists.ozlabs.org>; Sun, 03 Oct 2021 17:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+ bh=g3xwmYtxgcpo7X3+9BS7QHQNUzqWAUEcAawK5Ecufd8=;
+ b=dqasK4euLUXwzIW3gAFwFsE98uRZVUKJc38ezr+F6Rl6k7Ol4SIZjRxHnxVGvAVqRl
+ Yz+EK4dikSNjtLVbHoVeR6Tcu6cgF5cz1GSnxPpIMhFyMPo/GhrFJ83ukM06w1To55Zd
+ pboSo3NO94V7jau1oQWc2MhA1AqR2G13v0eNF3QG4WEXIsypT4mcI5peQ2Ii/81X6qtM
+ +hHVCa5ptEiHL35l94wZ42S7UuIrWDh/9ZT9EKl3cuMINoOJkHTvQMsGk8IZw9LKqdVj
+ EVEYvqHW+g0yEcq7bW/6YXIZf1UK0RKYe2mOAZt/92/a6bScYT1bF3oyLitqRUozWeGQ
+ HkgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to;
+ bh=g3xwmYtxgcpo7X3+9BS7QHQNUzqWAUEcAawK5Ecufd8=;
+ b=5lpyue77XaCTW5XC8V2NrvzI0FngYqahsiaL+cgq7+Gdhm+cn1wttMuxeeV8m2VSIu
+ Vvb34rj8L+GpU7+oM5etZknsIryhM5r3SmQjkQgBg0GrDz3fT6uDQ5AQRd90XIQKJOvh
+ oYrPDlgpolp0Jiyp4v9Psj9fl/WAVGaUPdJDnJgyH8itxIGdmX5/xpfxtCF9KplL+MAo
+ dBvB3Y9EveTpvu7jALTXxxFrr3VFjTuM+9nMhNINbhmr7oKVdcMCrz+6K+rwlwEDmPAk
+ NbXmZwKtiBvfapJ4eFcOtHne3vSBZFu2Dnjk0qGIPAFZJ29htgXNaQkSO3MpXR66lrOi
+ 9cTg==
+X-Gm-Message-State: AOAM532Z01mKXnXf7ayeSXg8rdfadFsu58/XM3WB9z+BWY3MSQ9zoge9
+ EU1qJudvQogSZoz7OtT8ucdXbziX42s7vSOKRdPJJMnZ
+X-Google-Smtp-Source: ABdhPJw508Y9AVKWOtKzp1qcukFW/P/yHlVgPgREi0ouBmo0tmwspPxrWJw4H89wiQYnDYnnTCzmh6i85yKwXpOZZiA=
+X-Received: by 2002:adf:a3d0:: with SMTP id m16mr10856548wrb.345.1633307489725; 
+ Sun, 03 Oct 2021 17:31:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <8735pjoxbk.fsf@gmail.com>
+ <20211003043840.GA9546@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20211003043840.GA9546@hsiangkao-HP-ZHAN-66-Pro-G1>
+From: David Michael <fedora.dm0@gmail.com>
+Date: Sun, 3 Oct 2021 20:31:18 -0400
+Message-ID: <CAEvUa7=pmF-NkUkx99D9E8xf2Cu9gjXxWd_H7r9UZiCgR-gbmQ@mail.gmail.com>
+Subject: Re: SELinux labels not defined
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,200 +78,64 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Compression level passed in can be verified then. Also, in order for
-preparation of upcoming LZMA fixed-sized output compression.
+On Sun, Oct 3, 2021 at 12:38 AM Gao Xiang <xiang@kernel.org> wrote:
+> Hi David,
+>
+> On Sat, Oct 02, 2021 at 06:50:55PM -0400, David Michael wrote:
+> > Hi,
+> >
+> > I tried to make an SELinux-labeled EROFS image, and the image itself
+> > seems to contain the labels from a hex dump, but the mounted files are
+> > all unlabeled:
+> >
+> > # ls -lZ xml
+> > total 8
+> > drwxr-xr-x. 2 root root unconfined_u:object_r:var_t:s0         4096 Sep 29 21:43 dbus-1
+> > drwxr-xr-x. 2 root root unconfined_u:object_r:fonts_cache_t:s0 4096 Sep 29 22:19 fontconfig
+> > # mkfs.erofs test.img xml
+> > mkfs.erofs 1.3-g4e183568-dirty
+> >       c_version:           [1.3-g4e183568-dirty]
+> >       c_dbg_lvl:           [       2]
+> >       c_dry_run:           [       0]
+> > # mount -o X-mount.mkdir test.img test
+> > # ls -lZ test
+> > total 8
+> > drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 78 Oct  2 18:37 dbus-1
+> > drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 48 Oct  2 18:37 fontconfig
+> >
+> > This is running on the current Fedora kernel 5.14.9-200.fc34.x86_64 with
+> > the relevant config options:
+> >
+> > CONFIG_EROFS_FS=m
+> > # CONFIG_EROFS_FS_DEBUG is not set
+> > CONFIG_EROFS_FS_XATTR=y
+> > CONFIG_EROFS_FS_POSIX_ACL=y
+> > CONFIG_EROFS_FS_SECURITY=y
+> > CONFIG_EROFS_FS_ZIP=y
+> >
+> > I tried the earliest kernel in Fedora 34 (5.11.12-300.fc34.x86_64), and
+> > it also has the same issue.  However, the earliest kernel in Fedora 33
+> > (5.8.15-301.fc33.x86_64) has the correct labels when the image is
+> > mounted.  Is there a problem in the file system driver, or do I need to
+> > do something different for newer kernels?
+>
+> Thanks for your report!
+>
+> I don't think there is any difference between 5.8 - 5.14 on EROFS selinux
+> xattrs. And AFAIK some users already use EROFS selinux on Linux 5.10.
+>
+> Would you mind checking if Fedora kernels did something new for EROFS or
+> something else on fc34? Can you check if the images work on upstream
+> kernels?
 
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
-A preparing patch for LZMA and range LZ4 dictionary I'd like to merge
-in advance.
+The labels failed in the same way on every distro I tried: Fedora,
+openSUSE (5.14.6-1.4.x86_64), Ubuntu (5.11.0-37-generic), and Gentoo
+(5.14.8-gentoo-dist-hardened and 5.10.68-gentoo-dist-hardened).
 
- lib/compress.c         | 11 ++++-------
- lib/compressor.c       | 22 +++++++++++++++-------
- lib/compressor.h       |  6 ++++--
- lib/compressor_lz4.c   |  1 -
- lib/compressor_lz4hc.c | 21 +++++++++++++++------
- 5 files changed, 38 insertions(+), 23 deletions(-)
+I noticed that the labels appear correctly when the system is running
+with SELinux disabled, but booting with it enabled results in
+unlabeled_t labels on erofs mounts.
 
-diff --git a/lib/compress.c b/lib/compress.c
-index 36c6a28ad0f6..6ca5bedaf596 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -20,8 +20,6 @@
- #include "erofs/compress_hints.h"
- 
- static struct erofs_compress compresshandle;
--static int compressionlevel;
--
- static unsigned int algorithmtype[2];
- 
- struct z_erofs_vle_compress_ctx {
-@@ -190,8 +188,7 @@ static int vle_compress_one(struct erofs_inode *inode,
- 		}
- 
- 		count = min(len, cfg.c_max_decompressed_extent_bytes);
--		ret = erofs_compress_destsize(h, compressionlevel,
--					      ctx->queue + ctx->head,
-+		ret = erofs_compress_destsize(h, ctx->queue + ctx->head,
- 					      &count, dst, pclustersize);
- 		if (ret <= 0) {
- 			if (ret != -EAGAIN) {
-@@ -645,9 +642,9 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 	if (!cfg.c_compr_alg_master)
- 		return 0;
- 
--	compressionlevel = cfg.c_compr_level_master < 0 ?
--		compresshandle.alg->default_level :
--		cfg.c_compr_level_master;
-+	ret = erofs_compressor_setlevel(&compresshandle, cfg.c_compr_level_master);
-+	if (ret)
-+		return ret;
- 
- 	/* figure out primary algorithm */
- 	ret = erofs_get_compress_algorithm_id(cfg.c_compr_alg_master);
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 1f1a33d099ba..89c1be10dd0c 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -20,11 +20,8 @@ static struct erofs_compressor *compressors[] = {
- };
- 
- int erofs_compress_destsize(struct erofs_compress *c,
--			    int compression_level,
--			    void *src,
--			    unsigned int *srcsize,
--			    void *dst,
--			    unsigned int dstsize)
-+			    void *src, unsigned int *srcsize,
-+			    void *dst, unsigned int dstsize)
- {
- 	unsigned int uncompressed_size;
- 	int ret;
-@@ -33,8 +30,7 @@ int erofs_compress_destsize(struct erofs_compress *c,
- 	if (!c->alg->compress_destsize)
- 		return -ENOTSUP;
- 
--	ret = c->alg->compress_destsize(c, compression_level,
--					src, srcsize, dst, dstsize);
-+	ret = c->alg->compress_destsize(c, src, srcsize, dst, dstsize);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -51,6 +47,18 @@ const char *z_erofs_list_available_compressors(unsigned int i)
- 	return i >= ARRAY_SIZE(compressors) ? NULL : compressors[i]->name;
- }
- 
-+int erofs_compressor_setlevel(struct erofs_compress *c, int compression_level)
-+{
-+	DBG_BUGON(!c->alg);
-+	if (c->alg->setlevel)
-+		return c->alg->setlevel(c, compression_level);
-+
-+	if (compression_level >= 0)
-+		return -EINVAL;
-+	c->compression_level = 0;
-+	return 0;
-+}
-+
- int erofs_compressor_init(struct erofs_compress *c, char *alg_name)
- {
- 	int ret, i;
-diff --git a/lib/compressor.h b/lib/compressor.h
-index 151c43d607db..d1b43c87291f 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -19,9 +19,9 @@ struct erofs_compressor {
- 
- 	int (*init)(struct erofs_compress *c);
- 	int (*exit)(struct erofs_compress *c);
-+	int (*setlevel)(struct erofs_compress *c, int compression_level);
- 
- 	int (*compress_destsize)(struct erofs_compress *c,
--				 int compress_level,
- 				 void *src, unsigned int *srcsize,
- 				 void *dst, unsigned int dstsize);
- };
-@@ -30,6 +30,7 @@ struct erofs_compress {
- 	struct erofs_compressor *alg;
- 
- 	unsigned int compress_threshold;
-+	unsigned int compression_level;
- 
- 	/* *_destsize specific */
- 	unsigned int destsize_alignsize;
-@@ -43,10 +44,11 @@ struct erofs_compress {
- extern struct erofs_compressor erofs_compressor_lz4;
- extern struct erofs_compressor erofs_compressor_lz4hc;
- 
--int erofs_compress_destsize(struct erofs_compress *c, int compression_level,
-+int erofs_compress_destsize(struct erofs_compress *c,
- 			    void *src, unsigned int *srcsize,
- 			    void *dst, unsigned int dstsize);
- 
-+int erofs_compressor_setlevel(struct erofs_compress *c, int compression_level);
- int erofs_compressor_init(struct erofs_compress *c, char *alg_name);
- int erofs_compressor_exit(struct erofs_compress *c);
- 
-diff --git a/lib/compressor_lz4.c b/lib/compressor_lz4.c
-index f71252ed6dca..f6832be251b2 100644
---- a/lib/compressor_lz4.c
-+++ b/lib/compressor_lz4.c
-@@ -13,7 +13,6 @@
- #endif
- 
- static int lz4_compress_destsize(struct erofs_compress *c,
--				 int compression_level,
- 				 void *src, unsigned int *srcsize,
- 				 void *dst, unsigned int dstsize)
- {
-diff --git a/lib/compressor_lz4hc.c b/lib/compressor_lz4hc.c
-index 0c912fb0ea1e..fd801ab16f37 100644
---- a/lib/compressor_lz4hc.c
-+++ b/lib/compressor_lz4hc.c
-@@ -14,16 +14,13 @@
- #endif
- 
- static int lz4hc_compress_destsize(struct erofs_compress *c,
--				   int compression_level,
--				   void *src,
--				   unsigned int *srcsize,
--				   void *dst,
--				   unsigned int dstsize)
-+				   void *src, unsigned int *srcsize,
-+				   void *dst, unsigned int dstsize)
- {
- 	int srcSize = (int)*srcsize;
- 	int rc = LZ4_compress_HC_destSize(c->private_data, src, dst,
- 					  &srcSize, (int)dstsize,
--					  compression_level);
-+					  c->compression_level);
- 	if (!rc)
- 		return -EFAULT;
- 	*srcsize = srcSize;
-@@ -51,11 +48,23 @@ static int compressor_lz4hc_init(struct erofs_compress *c)
- 	return 0;
- }
- 
-+static int compressor_lz4hc_setlevel(struct erofs_compress *c,
-+				     int compression_level)
-+{
-+	if (compression_level > LZ4HC_CLEVEL_MAX)
-+		return -EINVAL;
-+
-+	c->compression_level = compression_level < 0 ?
-+		LZ4HC_CLEVEL_DEFAULT : compression_level;
-+	return 0;
-+}
-+
- struct erofs_compressor erofs_compressor_lz4hc = {
- 	.name = "lz4hc",
- 	.default_level = LZ4HC_CLEVEL_DEFAULT,
- 	.best_level = LZ4HC_CLEVEL_MAX,
- 	.init = compressor_lz4hc_init,
- 	.exit = compressor_lz4hc_exit,
-+	.setlevel = compressor_lz4hc_setlevel,
- 	.compress_destsize = lz4hc_compress_destsize,
- };
--- 
-2.20.1
+Thanks.
 
+David
