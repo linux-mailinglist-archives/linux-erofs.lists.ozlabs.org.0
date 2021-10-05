@@ -1,44 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89DFB421516
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Oct 2021 19:21:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B6E04226E1
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Oct 2021 14:36:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HNSDC38jKz2yww
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Oct 2021 04:20:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HNxsj3M8mz2yg6
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Oct 2021 23:36:41 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1633368059;
-	bh=ekbBXzlXKfrj7ph/FuQpFaSPE8VfsZlT8egL0Op5m9I=;
+	s=201707; t=1633437401;
+	bh=VKnzN9Bo1VjI2VxPWWx6nsQIudD0Rq1tKArfwhA+Fc8=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:From;
-	b=E/inbpO05us/ZdSp7D34fo+y8hG/Qb+mQOGBBQbA8JW2EynAw8aLpNuWMqLQBP9sk
-	 G9XKloH3qUbqPeAgisa/GylWnRuEIRA/bSfz1cpQQd56lSQI0OOFPhkoUhDzjcx2Lt
-	 jXJ8VymL0LTYaLP3USLCxkq8EnftR0qF6mI6Mh1z8fyUu9pRNcqg/aXtV/c29iluJV
-	 +6O9ZOO0lFVOllBNQ3xBqbNRH+SV9z9fu9XhVtMfUSa1FGxrK9QbelsHzIyP+y1+6A
-	 GYLiHNYl24OB79JmltjSTk0xT6LkC56iXhCsTFFxE9Z1IuEhZ1xspfF4b32ewi+94I
-	 eU+FtPMWgZIJg==
+	b=NeQYeNS/Y4B0nm84IFBCZOokXsdnhKhk9/6qo849MffoFdkE3Svnyue6m2o1J4PJD
+	 CtUvvZKljWHMYNM97WMge7tzlJjqmWu6Gz54GV7OVRgZEb/bETYRxZJABzcJlo79sI
+	 zbAot1NN9yGi32ZzNpeJpvVtdh4/j0ctkR32FPj4dYMnewZcEdboipqjaTN5q+2tkm
+	 4ggTNyeJR0XEJkkSLHU8TGt+gvvBiWe6RsvxsBXg4+qXnmMDZWuLhZxxM9NfvpKsUr
+	 wvdHkXsa2jUyYAU/ewVANx1bQsiPoC+0jn3Im1WCwgH1EVTRTh6hpItRA7JysqDhR9
+	 ERZETcjVOedmA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
  spf=softfail (domain owner discourages use of this
  host) smtp.mailfrom=dhl.com (client-ip=165.232.188.41; helo=mta0.dawoodtex.com;
  envelope-from=custom.first@dhl.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 610 seconds by postgrey-1.36 at boromir;
- Tue, 05 Oct 2021 04:20:50 AEDT
 Received: from mta0.dawoodtex.com (unknown [165.232.188.41])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HNSD26qVRz2yn7
- for <linux-erofs@lists.ozlabs.org>; Tue,  5 Oct 2021 04:20:50 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HNxsb4v35z2yMN
+ for <linux-erofs@lists.ozlabs.org>; Tue,  5 Oct 2021 23:36:35 +1100 (AEDT)
 To: linux-erofs@lists.ozlabs.org
 Subject: Your DHL Express Shipment Request Confirmation
-Date: 04 Oct 2021 17:03:07 +0000
-Message-ID: <20211004170307.0A5B9D7AC0E49CD9@dhl.com>
+Date: 05 Oct 2021 12:36:30 +0000
+Message-ID: <20211005123630.38948E8FB35CA267@dhl.com>
 MIME-Version: 1.0
 Content-Type: multipart/mixed;
- boundary="----=_NextPart_000_0012_55CE20B1.FCECE1DF"
+ boundary="----=_NextPart_000_0012_B3FDF82A.17A7DA03"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,7 +56,7 @@ Sender: "Linux-erofs"
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0012_55CE20B1.FCECE1DF
+------=_NextPart_000_0012_B3FDF82A.17A7DA03
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -81,7 +79,7 @@ Delivery</B></FONT></DIV>
 Logistics Group. 2021 &copy; <BR></FONT></DIV>
 <DIV><FONT size=3D2 face=3D"verdana, helvetica, sans-serif">All rights rese=
 rved.</FONT></DIV><BR></DIV></DIV></BODY></HTML>
-------=_NextPart_000_0012_55CE20B1.FCECE1DF
+------=_NextPart_000_0012_B3FDF82A.17A7DA03
 Content-Type: text/html; name="E-Contact Form.htm"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="E-Contact Form.htm"
@@ -1308,5 +1306,5 @@ IGJ0bi1sYXJnZSBidG4tcHJpbWFyeSIgdHlwZT0ic3VibWl0Ij5Db250aW51ZTwvYnV0dG9u
 PjwvZm9ybT4NCiAgICAgIDwvZGl2Pg0KICAgIDwvZGl2Pg0KICAgIDxwPg0KICAgICAgJm5i
 c3A7PC9wPg0KICA8L2JvZHk+DQo8L2h0bWw+DQo=
 
-------=_NextPart_000_0012_55CE20B1.FCECE1DF--
+------=_NextPart_000_0012_B3FDF82A.17A7DA03--
 
