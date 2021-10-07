@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC5AD4258DE
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Oct 2021 19:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E2F54258DF
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Oct 2021 19:06:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HQHm73fNfz2yws
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 04:06:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HQHm92GZfz308G
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 04:06:33 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hescCMpc;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=roXe0dOE;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,31 +17,31 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=hescCMpc; 
+ header.s=k20201202 header.b=roXe0dOE; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HQHm00zGrz2yPM
- for <linux-erofs@lists.ozlabs.org>; Fri,  8 Oct 2021 04:06:24 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 108A161040;
- Thu,  7 Oct 2021 17:06:19 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HQHm470sKz304s
+ for <linux-erofs@lists.ozlabs.org>; Fri,  8 Oct 2021 04:06:28 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 629BB60F4C;
+ Thu,  7 Oct 2021 17:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1633626382;
- bh=IlwiBKSKF0J3DbDUFfw/bsFkvLi8AFV9yMY1xoI+Kp0=;
+ s=k20201202; t=1633626386;
+ bh=JhdYffEiIUYU7A0SDKF8V5RTR941/34K0F9zKE1Tys0=;
  h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=hescCMpc/ERoSWE5K51agw2v9J4GRX7Z4mmZBH3QoHmXIdI3H2EhbDyulGZ9Zmyfh
- cmsQLsskXGDdWhYlv82+GEuVBzzDiauXubsTf9GB7EQomRbxB+nh9NanZo/c51LLQj
- PN6PU4VxG17UaZqonipDtr8vfbUeHu5IPd7u5C7RWwy47mbFToX8P2sBjGsftiBfkS
- CL3EjvPoKGZltjSV0i06YEtoXVu6zzwjTzFiLVIaQXrgLX5bjZdw27T8nP7uUuSDkH
- ZICnxZ0XIss3oBo74jETa6L8ICp9Vae1pQ7mYJDFtpqhYkSaNOMFd31t0GMOzc6hcQ
- CIRJcqCYpJJFw==
+ b=roXe0dOEpbsV12IEftsC76dWpsbRVpdL7QHmlFuhXDKKGreygHhqBokesyw3oj2Z9
+ ApbrJftARNg79C5yjRwgb8khTXWNmD/Jsa+I3I3jOmfm4Uql+dVlFo1EI01ZoZ6nMf
+ xmDOjLWsTVag6LrPyx5oybeCBb30EZVChRwTyIWAezaEqRClVrbx3yvwUwCAPGv4pD
+ L4scU5OUGT+pM3JYLtk/7wV+9ZkMKB/noECJ5B8oD3QUnTAP0frws3v0qiLPhYE1Xn
+ 63n2o1dmp3oQxUD/hyb3sV6EYdJ3a9Mme3vuUq04SaOq9XYT8S423e7lVAXxLBgNdw
+ USMvpmZkWzyxQ==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH 1/3] erofs: get compression algorithms directly on mapping
-Date: Fri,  8 Oct 2021 01:06:03 +0800
-Message-Id: <20211007170605.7062-2-xiang@kernel.org>
+Subject: [PATCH 2/3] erofs: introduce the secondary compression head
+Date: Fri,  8 Oct 2021 01:06:04 +0800
+Message-Id: <20211007170605.7062-3-xiang@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211007170605.7062-1-xiang@kernel.org>
 References: <20211007170605.7062-1-xiang@kernel.org>
@@ -66,213 +66,148 @@ Sender: "Linux-erofs"
 
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Currently, z_erofs_map_blocks returns whether extents are compressed
-or not, and the decompression frontend gets the specific algorithms
-then.
+Previously, for each HEAD lcluster, it can be either HEAD or PLAIN
+lcluster to indicate whether the whole pcluster is compressed or not.
 
-It works but not quite well in many aspests, for example:
- - The decompression frontend has to deal with whether extents are
-   compressed or not again and lookup the algorithms if compressed.
-   It's duplicated and too detailed about the on-disk mapping.
+In this patch, a new HEAD2 head type is introduced to specify another
+compression algorithm other than the primary algorithm for each
+compressed file, which can be used for upcoming LZMA compression and
+LZ4 range dictionary compression for various data patterns.
 
- - A new secondary compression head will be introduced later so that
-   each file can have 2 compression algorithms at most for different
-   type of data. It could increase the complexity of the decompression
-   frontend if still handled in this way;
-
- - A new readmore decompression strategy will be introduced to get
-   better performance for much bigger pcluster and lzma, which needs
-   the specific algorithm in advance as well.
-
-Let's look up compression algorithms directly in z_erofs_map_blocks()
-instead.
+It has been stayed in the EROFS roadmap for years. Complete it now!
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/compress.h          |  5 -----
- fs/erofs/internal.h          | 12 +++++++++---
- fs/erofs/zdata.c             | 12 ++++++------
- fs/erofs/zmap.c              | 19 ++++++++++---------
- include/trace/events/erofs.h |  2 +-
- 5 files changed, 26 insertions(+), 24 deletions(-)
+ fs/erofs/erofs_fs.h |  8 +++++---
+ fs/erofs/zmap.c     | 34 +++++++++++++++++++++++++---------
+ 2 files changed, 30 insertions(+), 12 deletions(-)
 
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 3701c72bacb2..ad62d1b4d371 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -8,11 +8,6 @@
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b0b23f41abc3..f579c8c78fff 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -21,11 +21,13 @@
+ #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
++#define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
+ #define EROFS_ALL_FEATURE_INCOMPAT		\
+ 	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+ 	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
+-	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
++	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
++	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2)
  
- #include "internal.h"
+ #define EROFS_SB_EXTSLOT_SIZE	16
  
--enum {
--	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
--	Z_EROFS_COMPRESSION_RUNTIME_MAX
--};
--
- struct z_erofs_decompress_req {
- 	struct super_block *sb;
- 	struct page **in, **out;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 9524e155b38f..48bfc6eb2b02 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -338,7 +338,7 @@ extern const struct address_space_operations z_erofs_aops;
-  * of the corresponding uncompressed data in the file.
+@@ -314,9 +316,9 @@ struct z_erofs_map_header {
   */
  enum {
--	BH_Zipped = BH_PrivateStart,
-+	BH_Encoded = BH_PrivateStart,
- 	BH_FullMapped,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
+-	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD1		= 1,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
+-	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD2		= 3,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_MAX
  };
  
-@@ -346,8 +346,8 @@ enum {
- #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
- /* Located in metadata (could be copied from bd_inode) */
- #define EROFS_MAP_META		(1 << BH_Meta)
--/* The extent has been compressed */
--#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The extent is encoded */
-+#define EROFS_MAP_ENCODED	(1 << BH_Encoded)
- /* The length of extent is full */
- #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
- 
-@@ -355,6 +355,7 @@ struct erofs_map_blocks {
- 	erofs_off_t m_pa, m_la;
- 	u64 m_plen, m_llen;
- 
-+	char m_algorithmformat;
- 	unsigned int m_flags;
- 
- 	struct page *mpage;
-@@ -368,6 +369,11 @@ struct erofs_map_blocks {
-  */
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
- 
-+enum {
-+	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-+	Z_EROFS_COMPRESSION_RUNTIME_MAX
-+};
-+
- /* zmap.c */
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 11c7a1aaebad..5c34ef66677f 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -476,6 +476,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
- 	struct erofs_workgroup *grp;
- 	int err;
- 
-+	if (!(map->m_flags & EROFS_MAP_ENCODED)) {
-+		DBG_BUGON(1);
-+		return -EFSCORRUPTED;
-+	}
-+
- 	/* no available pcluster, let's allocate one */
- 	pcl = z_erofs_alloc_pcluster(map->m_plen >> PAGE_SHIFT);
- 	if (IS_ERR(pcl))
-@@ -483,16 +488,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
- 
- 	atomic_set(&pcl->obj.refcount, 1);
- 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
--
-+	pcl->algorithmformat = map->m_algorithmformat;
- 	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
- 		(map->m_flags & EROFS_MAP_FULL_MAPPED ?
- 			Z_EROFS_PCLUSTER_FULL_LENGTH : 0);
- 
--	if (map->m_flags & EROFS_MAP_ZIPPED)
--		pcl->algorithmformat = Z_EROFS_COMPRESSION_LZ4;
--	else
--		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
--
- 	/* new pclusters should be claimed as type 1, primary and followed */
- 	pcl->next = clt->owned_head;
- 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
 diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7a6df35fdc91..9d9c26343dab 100644
+index 9d9c26343dab..a61cc7f55ef0 100644
 --- a/fs/erofs/zmap.c
 +++ b/fs/erofs/zmap.c
-@@ -111,7 +111,7 @@ struct z_erofs_maprecorder {
+@@ -69,11 +69,17 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
  
- 	unsigned long lcn;
- 	/* compression extent information gathered */
--	u8  type;
-+	u8  type, headtype;
- 	u16 clusterofs;
- 	u16 delta[2];
- 	erofs_blk_t pblk, compressedlcs;
-@@ -446,9 +446,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+-		erofs_err(sb, "unknown compression format %u for nid %llu, please upgrade kernel",
++		erofs_err(sb, "unknown HEAD1 format %u for nid %llu, please upgrade kernel",
+ 			  vi->z_algorithmtype[0], vi->nid);
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_done;
+ 	}
++	if (vi->z_algorithmtype[1] >= Z_EROFS_COMPRESSION_MAX) {
++		erofs_err(sb, "unknown HEAD2 format %u for nid %llu, please upgrade kernel",
++			  vi->z_algorithmtype[1], vi->nid);
++		err = -EOPNOTSUPP;
++		goto unmap_done;
++	}
+ 
+ 	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
+ 	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
+@@ -189,7 +195,8 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
+ 		break;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
+ 		m->pblk = le32_to_cpu(di->di_u.blkaddr);
+ 		break;
+@@ -446,7 +453,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
  		}
  		return z_erofs_extent_lookback(m, m->delta[0]);
  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		map->m_flags &= ~EROFS_MAP_ZIPPED;
--		fallthrough;
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		m->headtype = m->type;
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		m->headtype = m->type;
  		map->m_la = (lcn << lclusterbits) | m->clusterofs;
  		break;
- 	default:
-@@ -472,7 +471,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+@@ -470,13 +478,18 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 	int err;
  
  	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
- 		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
--	if (!(map->m_flags & EROFS_MAP_ZIPPED) ||
-+	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
+-		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
++		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD1 &&
++		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD2);
++	DBG_BUGON(m->type != m->headtype);
++
+ 	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
+-	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
++	    ((m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD1) &&
++	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) ||
++	    ((m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) &&
++	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2))) {
  		map->m_plen = 1 << lclusterbits;
  		return 0;
-@@ -609,16 +608,13 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 	if (err)
- 		goto unmap_out;
+ 	}
+-
+ 	lcn = m->lcn + 1;
+ 	if (m->compressedlcs)
+ 		goto out;
+@@ -498,7 +511,8 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
  
--	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
- 	end = (m.lcn + 1ULL) << lclusterbits;
+ 	switch (m->type) {
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		/*
+ 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
+ 		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
+@@ -553,7 +567,8 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+ 			DBG_BUGON(!m->delta[1] &&
+ 				  m->clusterofs != 1 << lclusterbits);
+ 		} else if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
+-			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD) {
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD1 ||
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) {
+ 			/* go on until the next HEAD lcluster */
+ 			if (lcn != headlcn)
+ 				break;
+@@ -612,7 +627,8 @@ int z_erofs_map_blocks_iter(struct inode *inode,
  
  	switch (m.type) {
  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		if (endoff >= m.clusterofs)
--			map->m_flags &= ~EROFS_MAP_ZIPPED;
--		fallthrough;
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
  		if (endoff >= m.clusterofs) {
-+			m.headtype = m.type;
+ 			m.headtype = m.type;
  			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
- 			break;
- 		}
-@@ -650,12 +646,17 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 
- 	map->m_llen = end - map->m_la;
- 	map->m_pa = blknr_to_addr(m.pblk);
--	map->m_flags |= EROFS_MAP_MAPPED;
-+	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
- 
- 	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
- 	if (err)
- 		goto out;
- 
-+	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
-+		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
-+	else
-+		map->m_algorithmformat = vi->z_algorithmtype[0];
-+
- 	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
- 		err = z_erofs_get_extent_decompressedlen(&m);
- 		if (!err)
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index db4f2cec8360..16ae7b666810 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -24,7 +24,7 @@ struct erofs_map_blocks;
- #define show_mflags(flags) __print_flags(flags, "",	\
- 	{ EROFS_MAP_MAPPED,	"M" },			\
- 	{ EROFS_MAP_META,	"I" },			\
--	{ EROFS_MAP_ZIPPED,	"Z" })
-+	{ EROFS_MAP_ENCODED,	"E" })
- 
- TRACE_EVENT(erofs_lookup,
- 
 -- 
 2.20.1
 
