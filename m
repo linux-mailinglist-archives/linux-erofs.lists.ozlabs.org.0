@@ -1,43 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00DB74262F3
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 05:28:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE167426339
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 05:41:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HQYYt6VqSz2yw6
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 14:28:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HQYs20Sswz2ywG
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 14:41:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
- helo=out30-132.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com
- (out30-132.freemail.mail.aliyun.com [115.124.30.132])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HQYYk3d8jz2xtv
- for <linux-erofs@lists.ozlabs.org>; Fri,  8 Oct 2021 14:28:20 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0UqtpnV8_1633663691; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UqtpnV8_1633663691) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 08 Oct 2021 11:28:13 +0800
-Date: Fri, 8 Oct 2021 11:28:11 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Yue Hu <zbestahu@gmail.com>
-Subject: Re: [PATCH 1/3] erofs: get compression algorithms directly on mapping
-Message-ID: <YV+6ywZIenMBOYDs@B-P7TQMD6M-0146.local>
-References: <20211007170605.7062-1-xiang@kernel.org>
- <20211007170605.7062-2-xiang@kernel.org>
- <20211008110029.0000181f.zbestahu@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HQYrw1zfNz2yJ4
+ for <linux-erofs@lists.ozlabs.org>; Fri,  8 Oct 2021 14:41:30 +1100 (AEDT)
+X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="226326278"
+X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; d="scan'208";a="226326278"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+ by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 07 Oct 2021 20:40:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; d="scan'208";a="484874097"
+Received: from lkp-server01.sh.intel.com (HELO 72c3bd3cf19c) ([10.239.97.150])
+ by fmsmga007.fm.intel.com with ESMTP; 07 Oct 2021 20:40:25 -0700
+Received: from kbuild by 72c3bd3cf19c with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mYgkC-0007w0-SF; Fri, 08 Oct 2021 03:40:24 +0000
+Date: Fri, 08 Oct 2021 11:39:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ eb50fb1351b171c84343ff369afce88518c9732a
+Message-ID: <615fbd79.lUxJrqFprJuWlxmF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211008110029.0000181f.zbestahu@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,232 +50,169 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: eb50fb1351b171c84343ff369afce88518c9732a  erofs: add multiple device support
 
-On Fri, Oct 08, 2021 at 11:00:29AM +0800, Yue Hu wrote:
-> On Fri,  8 Oct 2021 01:06:03 +0800
-> Gao Xiang <xiang@kernel.org> wrote:
-> 
-> > From: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > 
-> > Currently, z_erofs_map_blocks returns whether extents are compressed
-> 
-> Mapping function is z_erofs_map_blocks_iter()?
+elapsed time: 1144m
 
-I just meant the compression mapping... I'm fine with the update..
+configs tested: 141
+configs skipped: 3
 
-> 
-> > or not, and the decompression frontend gets the specific algorithms
-> > then.
-> > 
-> > It works but not quite well in many aspests, for example:
-> >  - The decompression frontend has to deal with whether extents are
-> >    compressed or not again and lookup the algorithms if compressed.
-> >    It's duplicated and too detailed about the on-disk mapping.
-> > 
-> >  - A new secondary compression head will be introduced later so that
-> >    each file can have 2 compression algorithms at most for different
-> >    type of data. It could increase the complexity of the decompression
-> >    frontend if still handled in this way;
-> > 
-> >  - A new readmore decompression strategy will be introduced to get
-> >    better performance for much bigger pcluster and lzma, which needs
-> >    the specific algorithm in advance as well.
-> > 
-> > Let's look up compression algorithms directly in z_erofs_map_blocks()
-> 
-> Same mapping function name mistake?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Ok, will update as well.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+m68k                       m5475evb_defconfig
+powerpc                     tqm5200_defconfig
+m68k                       m5249evb_defconfig
+powerpc                     skiroot_defconfig
+powerpc                   motionpro_defconfig
+arc                 nsimosci_hs_smp_defconfig
+m68k                          atari_defconfig
+powerpc                      ppc40x_defconfig
+powerpc                     stx_gp3_defconfig
+m68k                          multi_defconfig
+sh                          landisk_defconfig
+sh                         microdev_defconfig
+powerpc                       ppc64_defconfig
+mips                          ath25_defconfig
+arm                         orion5x_defconfig
+arm                          collie_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                   microwatt_defconfig
+arm                        multi_v5_defconfig
+xtensa                       common_defconfig
+m68k                        m5272c3_defconfig
+s390                       zfcpdump_defconfig
+sparc                            alldefconfig
+sparc                       sparc64_defconfig
+sh                        sh7757lcr_defconfig
+arc                          axs101_defconfig
+sh                          kfr2r09_defconfig
+mips                        maltaup_defconfig
+mips                      loongson3_defconfig
+sh                   sh7724_generic_defconfig
+arm                           viper_defconfig
+arm                          simpad_defconfig
+powerpc                         ps3_defconfig
+h8300                            allyesconfig
+powerpc                      pcm030_defconfig
+powerpc                      pasemi_defconfig
+powerpc64                           defconfig
+mips                       capcella_defconfig
+arm                          moxart_defconfig
+arm                           sama5_defconfig
+arc                     nsimosci_hs_defconfig
+m68k                        stmark2_defconfig
+arm                       omap2plus_defconfig
+mips                           ip27_defconfig
+mips                      malta_kvm_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                     davinci_all_defconfig
+sh                          polaris_defconfig
+xtensa                          iss_defconfig
+arm                       multi_v4t_defconfig
+powerpc                     ksi8560_defconfig
+mips                        bcm63xx_defconfig
+x86_64               randconfig-c001-20211003
+i386                 randconfig-c001-20211003
+arm                  randconfig-c002-20211003
+x86_64               randconfig-c001-20211004
+i386                 randconfig-c001-20211004
+arm                  randconfig-c002-20211004
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a015-20211004
+x86_64               randconfig-a012-20211004
+x86_64               randconfig-a016-20211004
+x86_64               randconfig-a014-20211004
+x86_64               randconfig-a013-20211004
+x86_64               randconfig-a011-20211004
+i386                 randconfig-a013-20211004
+i386                 randconfig-a016-20211004
+i386                 randconfig-a014-20211004
+i386                 randconfig-a011-20211004
+i386                 randconfig-a012-20211004
+i386                 randconfig-a015-20211004
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
 
-> 
-> > instead.
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > ---
-> >  fs/erofs/compress.h          |  5 -----
-> >  fs/erofs/internal.h          | 12 +++++++++---
-> >  fs/erofs/zdata.c             | 12 ++++++------
-> >  fs/erofs/zmap.c              | 19 ++++++++++---------
-> >  include/trace/events/erofs.h |  2 +-
-> >  5 files changed, 26 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-> > index 3701c72bacb2..ad62d1b4d371 100644
-> > --- a/fs/erofs/compress.h
-> > +++ b/fs/erofs/compress.h
-> > @@ -8,11 +8,6 @@
-> >  
-> >  #include "internal.h"
-> >  
-> > -enum {
-> > -	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-> > -	Z_EROFS_COMPRESSION_RUNTIME_MAX
-> > -};
-> > -
-> >  struct z_erofs_decompress_req {
-> >  	struct super_block *sb;
-> >  	struct page **in, **out;
-> > diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> > index 9524e155b38f..48bfc6eb2b02 100644
-> > --- a/fs/erofs/internal.h
-> > +++ b/fs/erofs/internal.h
-> > @@ -338,7 +338,7 @@ extern const struct address_space_operations z_erofs_aops;
-> >   * of the corresponding uncompressed data in the file.
-> >   */
-> >  enum {
-> > -	BH_Zipped = BH_PrivateStart,
-> > +	BH_Encoded = BH_PrivateStart,
-> >  	BH_FullMapped,
-> >  };
-> >  
-> > @@ -346,8 +346,8 @@ enum {
-> >  #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
-> >  /* Located in metadata (could be copied from bd_inode) */
-> >  #define EROFS_MAP_META		(1 << BH_Meta)
-> > -/* The extent has been compressed */
-> > -#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-> > +/* The extent is encoded */
-> > +#define EROFS_MAP_ENCODED	(1 << BH_Encoded)
-> >  /* The length of extent is full */
-> >  #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
-> >  
-> > @@ -355,6 +355,7 @@ struct erofs_map_blocks {
-> >  	erofs_off_t m_pa, m_la;
-> >  	u64 m_plen, m_llen;
-> >  
-> > +	char m_algorithmformat;
-> >  	unsigned int m_flags;
-> >  
-> >  	struct page *mpage;
-> > @@ -368,6 +369,11 @@ struct erofs_map_blocks {
-> >   */
-> >  #define EROFS_GET_BLOCKS_FIEMAP	0x0002
-> >  
-> > +enum {
-> > +	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-> > +	Z_EROFS_COMPRESSION_RUNTIME_MAX
-> > +};
-> > +
-> >  /* zmap.c */
-> >  extern const struct iomap_ops z_erofs_iomap_report_ops;
-> >  
-> > diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> > index 11c7a1aaebad..5c34ef66677f 100644
-> > --- a/fs/erofs/zdata.c
-> > +++ b/fs/erofs/zdata.c
-> > @@ -476,6 +476,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
-> >  	struct erofs_workgroup *grp;
-> >  	int err;
-> >  
-> > +	if (!(map->m_flags & EROFS_MAP_ENCODED)) {
-> > +		DBG_BUGON(1);
-> > +		return -EFSCORRUPTED;
-> > +	}
-> > +
-> >  	/* no available pcluster, let's allocate one */
-> >  	pcl = z_erofs_alloc_pcluster(map->m_plen >> PAGE_SHIFT);
-> >  	if (IS_ERR(pcl))
-> > @@ -483,16 +488,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
-> >  
-> >  	atomic_set(&pcl->obj.refcount, 1);
-> >  	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
-> > -
-> > +	pcl->algorithmformat = map->m_algorithmformat;
-> >  	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
-> >  		(map->m_flags & EROFS_MAP_FULL_MAPPED ?
-> >  			Z_EROFS_PCLUSTER_FULL_LENGTH : 0);
-> >  
-> > -	if (map->m_flags & EROFS_MAP_ZIPPED)
-> > -		pcl->algorithmformat = Z_EROFS_COMPRESSION_LZ4;
-> > -	else
-> > -		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
-> > -
-> >  	/* new pclusters should be claimed as type 1, primary and followed */
-> >  	pcl->next = clt->owned_head;
-> >  	clt->mode = COLLECT_PRIMARY_FOLLOWED;
-> > diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> > index 7a6df35fdc91..9d9c26343dab 100644
-> > --- a/fs/erofs/zmap.c
-> > +++ b/fs/erofs/zmap.c
-> > @@ -111,7 +111,7 @@ struct z_erofs_maprecorder {
-> >  
-> >  	unsigned long lcn;
-> >  	/* compression extent information gathered */
-> > -	u8  type;
-> > +	u8  type, headtype;
-> >  	u16 clusterofs;
-> >  	u16 delta[2];
-> >  	erofs_blk_t pblk, compressedlcs;
-> > @@ -446,9 +446,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
-> >  		}
-> >  		return z_erofs_extent_lookback(m, m->delta[0]);
-> >  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-> > -		map->m_flags &= ~EROFS_MAP_ZIPPED;
-> > -		fallthrough;
-> >  	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-> > +		m->headtype = m->type;
-> >  		map->m_la = (lcn << lclusterbits) | m->clusterofs;
-> >  		break;
-> >  	default:
-> > @@ -472,7 +471,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
-> >  
-> >  	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
-> >  		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
-> > -	if (!(map->m_flags & EROFS_MAP_ZIPPED) ||
-> > +	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
-> >  	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
-> >  		map->m_plen = 1 << lclusterbits;
-> >  		return 0;
-> > @@ -609,16 +608,13 @@ int z_erofs_map_blocks_iter(struct inode *inode,
-> >  	if (err)
-> >  		goto unmap_out;
-> >  
-> > -	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
-> >  	end = (m.lcn + 1ULL) << lclusterbits;
-> >  
-> >  	switch (m.type) {
-> >  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-> > -		if (endoff >= m.clusterofs)
-> > -			map->m_flags &= ~EROFS_MAP_ZIPPED;
-> > -		fallthrough;
-> >  	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-> >  		if (endoff >= m.clusterofs) {
-> > +			m.headtype = m.type;
-> >  			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
-> >  			break;
-> >  		}
-> > @@ -650,12 +646,17 @@ int z_erofs_map_blocks_iter(struct inode *inode,
-> >  
-> >  	map->m_llen = end - map->m_la;
-> >  	map->m_pa = blknr_to_addr(m.pblk);
-> > -	map->m_flags |= EROFS_MAP_MAPPED;
-> > +	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
-> 
-> Seems the new flag EROFS_MAP_ENCODED may be a little redundant?
-> 
-> It is used only for checking whether the file system is corrupted or not when
-> entering z_erofs_register_collection(). 
-> 
-> And before collection begins, we will check whether the EROFS_MAP_MAPPED is set
-> or not. We will do the collection only if EROFS_MAP_MAPPED is set. That's to say,
-> the above checking to EROFS_MAP_ENCODED should be not possible?
+clang tested configs:
+x86_64               randconfig-c007-20211003
+i386                 randconfig-c001-20211003
+arm                  randconfig-c002-20211003
+s390                 randconfig-c005-20211003
+powerpc              randconfig-c003-20211003
+riscv                randconfig-c006-20211003
+mips                 randconfig-c004-20211003
+x86_64               randconfig-a003-20211004
+x86_64               randconfig-a005-20211004
+x86_64               randconfig-a001-20211004
+x86_64               randconfig-a002-20211004
+x86_64               randconfig-a004-20211004
+x86_64               randconfig-a006-20211004
+i386                 randconfig-a001-20211004
+i386                 randconfig-a003-20211004
+i386                 randconfig-a005-20211004
+i386                 randconfig-a002-20211004
+i386                 randconfig-a004-20211004
+i386                 randconfig-a006-20211004
+hexagon              randconfig-r045-20211007
+hexagon              randconfig-r041-20211007
+s390                 randconfig-r044-20211007
+riscv                randconfig-r042-20211007
 
-I think it's useful to mark such data isn't a plain data (cannot read
-directly, plus m_llen != m_plen). For example, t's useful for fiemap
-(actually there is an improvement / a fix for iomap fiemap report code
- to identify/mark the encode flag.)
-
-BTW, I found that this patchset was still buggy, I'd suggest to ignore
-this patchset. I need to revise them later.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
