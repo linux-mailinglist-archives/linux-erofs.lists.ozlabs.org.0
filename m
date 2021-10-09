@@ -2,42 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47F6042776D
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 06:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE9914277B2
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 08:12:18 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HRCHF14r0z308J
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 15:48:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HRF8J5bnWz2yws
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 17:12:16 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BDan8AMW;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=BDan8AMW; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HRCH55SF8z2yyh
- for <linux-erofs@lists.ozlabs.org>; Sat,  9 Oct 2021 15:47:56 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R351e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=7; SR=0; TI=SMTPD_---0Ur3l3OA_1633754867; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Ur3l3OA_1633754867) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 09 Oct 2021 12:47:48 +0800
-Date: Sat, 9 Oct 2021 12:47:46 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Yue Hu <zbestahu@gmail.com>
-Subject: Re: [PATCH v2 2/3] erofs: introduce the secondary compression head
-Message-ID: <YWEe8nPqFEusXkKP@B-P7TQMD6M-0146.local>
-References: <20211008200839.24541-1-xiang@kernel.org>
- <20211008200839.24541-3-xiang@kernel.org>
- <20211009115032.00002f26.zbestahu@gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HRF8G0V6Sz2yS3
+ for <linux-erofs@lists.ozlabs.org>; Sat,  9 Oct 2021 17:12:13 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3ACC360F6B;
+ Sat,  9 Oct 2021 06:12:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1633759931;
+ bh=qLSBBQ632nMCyxb242DdPSgRnLk6kzPo4o6DPvL6XS0=;
+ h=Date:From:To:Cc:Subject:From;
+ b=BDan8AMWRkWYmREExxCThNh7NYAer663r7L2Q2y9m+q8Up6CtIlKZdAK3YNLVg2UH
+ YdrtnWoYhC0o+aYYvW0dMY0WfSzCUZuLr7VtFw67KJA/L081oKCo90sI2wlAY+qakJ
+ jMbaGITm6BVEo3tFzltAjjXsx+b4wG4km+ZIQNAlBVX8SeK3TvcfMIs1X0it/c8kh+
+ IBF+tUPl7IOW5C2zqEhrbE7cJVAbRP0QIiflB8NAbg5Fa1+em9ZLZYStPFJGH3v4QU
+ AiwcCzIYQXHblP0FmZ4X/7e1Yd6Tlz/AYuVXqgGr9DPnagfd4VvxvrvpA03tpoX2US
+ 5S56vOeATN0TQ==
+Date: Sat, 9 Oct 2021 14:11:51 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: EROFS roadmap update
+Message-ID: <20211009061150.GA7479@hsiangkao-HP-ZHAN-66-Pro-G1>
+Mail-Followup-To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
+ Lasse Collin <lasse.collin@tukaani.org>, Yue Hu <huyue2@yulong.com>,
+ Yan Song <imeoer@linux.alibaba.com>,
+ Changwei Ge <chge@linux.alibaba.com>,
+ Peng Tao <tao.peng@linux.alibaba.com>,
+ Liu Jiang <gerry@linux.alibaba.com>, Miao Xie <miaoxie@huawei.com>,
+ Guo Xuenan <guoxuenan@huawei.com>, Qi Wang <mpiglet@outlook.com>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, kernel-team@android.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211009115032.00002f26.zbestahu@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,100 +65,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>, huyue2@yulong.com,
- linux-erofs@lists.ozlabs.org, zhangwen@yulong.com
+Cc: kernel-team@android.com, Lasse Collin <lasse.collin@tukaani.org>,
+ Yan Song <imeoer@linux.alibaba.com>, Greg KH <gregkh@linuxfoundation.org>,
+ Peng Tao <tao.peng@linux.alibaba.com>, Yue Hu <huyue2@yulong.com>,
+ Qi Wang <mpiglet@outlook.com>, Changwei Ge <chge@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Liu Jiang <gerry@linux.alibaba.com>,
+ Miao Xie <miaoxie@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+Hi folks,
 
-On Sat, Oct 09, 2021 at 11:50:32AM +0800, Yue Hu wrote:
-> On Sat,  9 Oct 2021 04:08:38 +0800
-> Gao Xiang <xiang@kernel.org> wrote:
-> 
-> > From: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > 
-> > Previously, for each HEAD lcluster, it can be either HEAD or PLAIN
-> > lcluster to indicate whether the whole pcluster is compressed or not.
-> > 
-> > In this patch, a new HEAD2 head type is introduced to specify another
-> > compression algorithm other than the primary algorithm for each
-> > compressed file, which can be used for upcoming LZMA compression and
-> > LZ4 range dictionary compression for various data patterns.
-> > 
-> > It has been stayed in the EROFS roadmap for years. Complete it now!
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > ---
-> >  fs/erofs/erofs_fs.h |  8 +++++---
-> >  fs/erofs/zmap.c     | 36 +++++++++++++++++++++++++++---------
-> >  2 files changed, 32 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> > index b0b23f41abc3..f579c8c78fff 100644
-> > --- a/fs/erofs/erofs_fs.h
-> > +++ b/fs/erofs/erofs_fs.h
-> > @@ -21,11 +21,13 @@
-> >  #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
-> >  #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
-> >  #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
-> > +#define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
-> >  #define EROFS_ALL_FEATURE_INCOMPAT		\
-> >  	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
-> >  	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-> >  	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
-> > -	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
-> > +	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
-> > +	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2)
-> >  
-> >  #define EROFS_SB_EXTSLOT_SIZE	16
-> >  
-> > @@ -314,9 +316,9 @@ struct z_erofs_map_header {
-> >   */
-> >  enum {
-> >  	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
-> > -	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
-> > +	Z_EROFS_VLE_CLUSTER_TYPE_HEAD1		= 1,
-> >  	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
-> > -	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
-> > +	Z_EROFS_VLE_CLUSTER_TYPE_HEAD2		= 3,
-> >  	Z_EROFS_VLE_CLUSTER_TYPE_MAX
-> >  };
-> >  
-> > diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> > index 9d9c26343dab..03945f15ceae 100644
-> > --- a/fs/erofs/zmap.c
-> > +++ b/fs/erofs/zmap.c
-> > @@ -69,11 +69,17 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
-> >  	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
-> >  
-> >  	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
-> > -		erofs_err(sb, "unknown compression format %u for nid %llu, please upgrade kernel",
-> > +		erofs_err(sb, "unknown HEAD1 format %u for nid %llu, please upgrade kernel",
-> >  			  vi->z_algorithmtype[0], vi->nid);
-> >  		err = -EOPNOTSUPP;
-> >  		goto unmap_done;
-> >  	}
-> > +	if (vi->z_algorithmtype[1] >= Z_EROFS_COMPRESSION_MAX) {
-> > +		erofs_err(sb, "unknown HEAD2 format %u for nid %llu, please upgrade kernel",
-> > +			  vi->z_algorithmtype[1], vi->nid);
-> > +		err = -EOPNOTSUPP;
-> > +		goto unmap_done;
-> > +	}
-> 
-> Seems duplicated a little, how about below code?
-> 
-> 	if (vi->z_algorithmtype[i] >= Z_EROFS_COMPRESSION_MAX ||
-> 	    vi->z_algorithmtype[++i] >= Z_EROFS_COMPRESSION_MAX) {
->                 erofs_err(sb, "unknown HEAD%u format %u for nid %llu, please upgrade kernel",
-> 			  i, vi->z_algorithmtype[i], vi->nid);
-> 		err = -EOPNOTSUPP;
-> 		goto unmap_done;
-> 	}
+As you may noticed, I'm working on several different stuffs for the
+upcoming 5.16 Linux kernel, which including multiple device support
+for multi-layer container images for runc and kata-likewise containers
+and LZMA algorithm support (I'll send out the formal patchset this
+week.)
 
-Yeah, good simplification. I will update it and rename `i' to `headnr'
-here.
+Here is the EROFS roadmap in the near/mid term as far as I know:
+
+Container use cases:
+ - Multiple device/blob support (v5.16, me);
+
+ - Other stuffs working in progress (our whole team, mainly working
+   in the form of new RAFS v6 format which is an EROFS-compatible
+   format for nydus [1] container image service later.)
+
+Embedded device use cases:
+ - LZMA compression support, specifically MicroLZMA (v5.16, me with
+   Lasse kind help/support) with complete in-place I/O and overlapped
+   decompression (for embedded boards or a secondary auxiliary
+   algorithm in a file as a complement for specific access patterns):
+   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git -b erofs/lzma
+
+ - Tail-packing inline for compression files (AFAIK, Yue Hu is
+   currently working on this new feature);
+
+ - LZ4 range dictionary support (v5.xx?), which works in a way to
+   seperate a file into several sub-file segments and add a
+   external dictionary for each segment (4KiB dictionary for 2MiB
+   segment for example), I can see the benefits for specific datasets
+   and have some DEMO compressor code for this, for example:
+     enwik9			1000000000
+     enwik9_4k.erofs.img	 558346240
+     enwik9_4k.dict.erofs.img	 449683456 (2MiB segs with 8KiB dicts);
+     enwik9_4k.dict.erofs.img	 400093184 (1MiB segs with 32KiB dicts);
+     ...
+
+   https://github.com/hsiangkao/erofs-utils.git -b experimental-dictdemo
+
+   I'd like to try to seek some potential volunteer who could also be
+   interested in this kind of stuffs to optimize compression ratios
+   for specific data patterns (Note that it's not a free lunch since you
+   need to keep the whole dictionaries in memory before decompressing
+   any data in the specific range, and again it doesn't work for all
+   datasets [compared with LZMA] as far as I observed and the dictionary
+   build time is relative slow);
+
+ - Multi-threaded compression for mkfs, including file level paralleled
+   compression and sub-file level paralleled compression. File level
+   paralleled compression is trivial to think and sub-file level
+   paralleled compression approach is quite similar to range
+   dictionaries, separate the files into several segments (e.g. 16MiB)
+   and compress each individually in parallel;
+
+Others:
+ - dump.erofs (AFAIK, Wang Qi / Guo Xuenan is working on this?)
+   https://lore.kernel.org/r/OSZP286MB07097AE45E9D391B0049F661B2A89@OSZP286MB0709.JPNP286.PROD.OUTLOOK.COM
+ - partial page up-to-date support and corresponding read interface;
+ - code cleanup / simplification;
+ - etc..
+
+[1] https://github.com/dragonflyoss/image-service
 
 Thanks,
 Gao Xiang
