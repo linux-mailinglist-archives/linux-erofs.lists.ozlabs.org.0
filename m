@@ -1,46 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C3D6427AAF
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 15:49:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DC70427C8B
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 20:12:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HRRHV1f7Xz308C
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Oct 2021 00:49:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HRY7f17thz2yQ3
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Oct 2021 05:12:46 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=geUQuBp/;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=geUQuBp/; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HRRHP1X3Wz2yP7
- for <linux-erofs@lists.ozlabs.org>; Sun, 10 Oct 2021 00:49:01 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R931e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0Ur7ySr0_1633787319; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Ur7ySr0_1633787319) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 09 Oct 2021 21:48:41 +0800
-Date: Sat, 9 Oct 2021 21:48:39 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: David Michael <fedora.dm0@gmail.com>
-Subject: Re: SELinux labels not defined
-Message-ID: <YWGdt7Pt7kNlUmWa@B-P7TQMD6M-0146.local>
-References: <8735pjoxbk.fsf@gmail.com>
- <20211003043840.GA9546@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAEvUa7=pmF-NkUkx99D9E8xf2Cu9gjXxWd_H7r9UZiCgR-gbmQ@mail.gmail.com>
- <20211004014449.GA16617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20211004041011.GB16617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAEvUa7kOFa_HM0GmFFZ7QQezByK8zyQXGdqwSoJCJPoAUbOkrw@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HRY7W54j3z2yJM
+ for <linux-erofs@lists.ozlabs.org>; Sun, 10 Oct 2021 05:12:39 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C7EE460F23;
+ Sat,  9 Oct 2021 18:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1633803156;
+ bh=y1QfitQt6joK9ydk+PcC3KY+Eo04RKLCeVsZMjpTwrA=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=geUQuBp/yCzGZTFtzg+pLgn3aq+LcOR3SkodwyfJyjlDL38j+llScM0Yunn4sNr/H
+ Uio4nv1HXIIzWZsPrOspZM8/PU0TbLSap1Zej1tUeTpaRWIHpxbffoY+/CkmdIk9sW
+ 7c693Ctwc8kDDFzsN1A3WujapxfRwJcdLBzve2qx7LYqB7xzIewlaeCG+YQCq5UJS3
+ 5gJWiRJhC0x4OACe7YHGI9+CkRmfFEahEmQWkJ/pLSKuODZYcOepxWi/5epfHO2GjX
+ 2TKWfCcDSqnySnGR1V6rsgdAmvB6eOwQ3kd/BHzUunLUn7mLXeXEMQciUfz/hsGvXv
+ VGSNlJaROM8pA==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3 2/3] erofs: introduce the secondary compression head
+Date: Sun, 10 Oct 2021 02:12:09 +0800
+Message-Id: <20211009181209.23041-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20211008200839.24541-3-xiang@kernel.org>
+References: <20211008200839.24541-3-xiang@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEvUa7kOFa_HM0GmFFZ7QQezByK8zyQXGdqwSoJCJPoAUbOkrw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,93 +57,174 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+ LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Oct 09, 2021 at 09:31:43AM -0400, David Michael wrote:
-> On Mon, Oct 4, 2021 at 12:10 AM Gao Xiang <xiang@kernel.org> wrote:
-> > On Mon, Oct 04, 2021 at 09:44:49AM +0800, Gao Xiang wrote:
-> > > On Sun, Oct 03, 2021 at 08:31:18PM -0400, David Michael wrote:
-> > > > On Sun, Oct 3, 2021 at 12:38 AM Gao Xiang <xiang@kernel.org> wrote:
-> > > > > Hi David,
-> > > > >
-> > > > > On Sat, Oct 02, 2021 at 06:50:55PM -0400, David Michael wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > I tried to make an SELinux-labeled EROFS image, and the image itself
-> > > > > > seems to contain the labels from a hex dump, but the mounted files are
-> > > > > > all unlabeled:
-> > > > > >
-> > > > > > # ls -lZ xml
-> > > > > > total 8
-> > > > > > drwxr-xr-x. 2 root root unconfined_u:object_r:var_t:s0         4096 Sep 29 21:43 dbus-1
-> > > > > > drwxr-xr-x. 2 root root unconfined_u:object_r:fonts_cache_t:s0 4096 Sep 29 22:19 fontconfig
-> > > > > > # mkfs.erofs test.img xml
-> > > > > > mkfs.erofs 1.3-g4e183568-dirty
-> > > > > >       c_version:           [1.3-g4e183568-dirty]
-> > > > > >       c_dbg_lvl:           [       2]
-> > > > > >       c_dry_run:           [       0]
-> > > > > > # mount -o X-mount.mkdir test.img test
-> > > > > > # ls -lZ test
-> > > > > > total 8
-> > > > > > drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 78 Oct  2 18:37 dbus-1
-> > > > > > drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 48 Oct  2 18:37 fontconfig
-> > > > > >
-> > > > > > This is running on the current Fedora kernel 5.14.9-200.fc34.x86_64 with
-> > > > > > the relevant config options:
-> > > > > >
-> > > > > > CONFIG_EROFS_FS=m
-> > > > > > # CONFIG_EROFS_FS_DEBUG is not set
-> > > > > > CONFIG_EROFS_FS_XATTR=y
-> > > > > > CONFIG_EROFS_FS_POSIX_ACL=y
-> > > > > > CONFIG_EROFS_FS_SECURITY=y
-> > > > > > CONFIG_EROFS_FS_ZIP=y
-> > > > > >
-> > > > > > I tried the earliest kernel in Fedora 34 (5.11.12-300.fc34.x86_64), and
-> > > > > > it also has the same issue.  However, the earliest kernel in Fedora 33
-> > > > > > (5.8.15-301.fc33.x86_64) has the correct labels when the image is
-> > > > > > mounted.  Is there a problem in the file system driver, or do I need to
-> > > > > > do something different for newer kernels?
-> > > > >
-> > > > > Thanks for your report!
-> > > > >
-> > > > > I don't think there is any difference between 5.8 - 5.14 on EROFS selinux
-> > > > > xattrs. And AFAIK some users already use EROFS selinux on Linux 5.10.
-> > > > >
-> > > > > Would you mind checking if Fedora kernels did something new for EROFS or
-> > > > > something else on fc34? Can you check if the images work on upstream
-> > > > > kernels?
-> > > >
-> > > > The labels failed in the same way on every distro I tried: Fedora,
-> > > > openSUSE (5.14.6-1.4.x86_64), Ubuntu (5.11.0-37-generic), and Gentoo
-> > > > (5.14.8-gentoo-dist-hardened and 5.10.68-gentoo-dist-hardened).
-> > > >
-> > > > I noticed that the labels appear correctly when the system is running
-> > > > with SELinux disabled, but booting with it enabled results in
-> > > > unlabeled_t labels on erofs mounts.
-> > >
-> > > May I ask what "getfattr -m security.selinux" returns for these files if
-> > > the issue happens?
-> > >
-> > > I have no idea what's wrong with the recent versions. I'll dig info it
-> > > further. But it needs some extra time.
-> >
-> > I found SECURITY_FS_USE_XATTR was not set due to lack of proper
-> > sepolicy. I've sent out a patch to refpolicy to address this:
-> > https://lore.kernel.org/selinux-refpolicy/20211004035901.5428-1-xiang@kernel.org/
-> 
-> Sorry for the late reply, I finally got the time to build systems with
-> this patch to test, and I can confirm this fixes the issue I was
-> seeing.
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Thanks for the confirmation! ;) (I should update it earlier...)
+Previously, for each HEAD lcluster, it can be either HEAD or PLAIN
+lcluster to indicate whether the whole pcluster is compressed or not.
 
-Thanks,
-Gao XIang
+In this patch, a new HEAD2 head type is introduced to specify another
+compression algorithm other than the primary algorithm for each
+compressed file, which can be used for upcoming LZMA compression and
+LZ4 range dictionary compression for various data patterns.
 
-> 
-> Thanks.
-> 
-> David
+It has been stayed in the EROFS roadmap for years. Complete it now!
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+v2: https://lore.kernel.org/r/20211008200839.24541-3-xiang@kernel.org
+changes since v2:
+ - simplify z_algorithmtype check suggested by Yue.
+
+ fs/erofs/erofs_fs.h |  8 +++++---
+ fs/erofs/zmap.c     | 38 ++++++++++++++++++++++++++------------
+ 2 files changed, 31 insertions(+), 15 deletions(-)
+
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b0b23f41abc3..f579c8c78fff 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -21,11 +21,13 @@
+ #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
++#define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
+ #define EROFS_ALL_FEATURE_INCOMPAT		\
+ 	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+ 	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
+-	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
++	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
++	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2)
+ 
+ #define EROFS_SB_EXTSLOT_SIZE	16
+ 
+@@ -314,9 +316,9 @@ struct z_erofs_map_header {
+  */
+ enum {
+ 	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN		= 0,
+-	Z_EROFS_VLE_CLUSTER_TYPE_HEAD		= 1,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD1		= 1,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD	= 2,
+-	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED	= 3,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD2		= 3,
+ 	Z_EROFS_VLE_CLUSTER_TYPE_MAX
+ };
+ 
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 9d9c26343dab..864d9d5474d5 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -28,7 +28,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ {
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+ 	struct super_block *const sb = inode->i_sb;
+-	int err;
++	int err, headnr;
+ 	erofs_off_t pos;
+ 	struct page *page;
+ 	void *kaddr;
+@@ -68,9 +68,11 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+ 	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
+ 
+-	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+-		erofs_err(sb, "unknown compression format %u for nid %llu, please upgrade kernel",
+-			  vi->z_algorithmtype[0], vi->nid);
++	headnr = 0;
++	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX ||
++	    vi->z_algorithmtype[++headnr] >= Z_EROFS_COMPRESSION_MAX) {
++		erofs_err(sb, "unknown HEAD%u format %u for nid %llu, please upgrade kernel",
++			  headnr + 1, vi->z_algorithmtype[headnr], vi->nid);
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_done;
+ 	}
+@@ -189,7 +191,8 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
+ 		break;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
+ 		m->pblk = le32_to_cpu(di->di_u.blkaddr);
+ 		break;
+@@ -446,7 +449,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 		}
+ 		return z_erofs_extent_lookback(m, m->delta[0]);
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		m->headtype = m->type;
+ 		map->m_la = (lcn << lclusterbits) | m->clusterofs;
+ 		break;
+@@ -470,13 +474,18 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 	int err;
+ 
+ 	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
+-		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
++		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD1 &&
++		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD2);
++	DBG_BUGON(m->type != m->headtype);
++
+ 	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
+-	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
++	    ((m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD1) &&
++	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) ||
++	    ((m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) &&
++	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2))) {
+ 		map->m_plen = 1 << lclusterbits;
+ 		return 0;
+ 	}
+-
+ 	lcn = m->lcn + 1;
+ 	if (m->compressedlcs)
+ 		goto out;
+@@ -498,7 +507,8 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 
+ 	switch (m->type) {
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		/*
+ 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
+ 		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
+@@ -553,7 +563,8 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+ 			DBG_BUGON(!m->delta[1] &&
+ 				  m->clusterofs != 1 << lclusterbits);
+ 		} else if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
+-			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD) {
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD1 ||
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) {
+ 			/* go on until the next HEAD lcluster */
+ 			if (lcn != headlcn)
+ 				break;
+@@ -612,7 +623,8 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 
+ 	switch (m.type) {
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
+ 		if (endoff >= m.clusterofs) {
+ 			m.headtype = m.type;
+ 			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
+@@ -654,6 +666,8 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 
+ 	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
+ 		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
++	else if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2)
++		map->m_algorithmformat = vi->z_algorithmtype[1];
+ 	else
+ 		map->m_algorithmformat = vi->z_algorithmtype[0];
+ 
+-- 
+2.20.1
+
