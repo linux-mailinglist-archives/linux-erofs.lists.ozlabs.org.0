@@ -1,51 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3824A4271E0
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Oct 2021 22:09:20 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EAEF42757F
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 03:52:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HQzmZ0ckjz30RN
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 07:09:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HR7NP3LpNz308J
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Oct 2021 12:52:21 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NmgXkcyV;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=m8+6I0Ak;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52b;
+ helo=mail-pg1-x52b.google.com; envelope-from=zbestahu@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=NmgXkcyV; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=m8+6I0Ak; dkim-atps=neutral
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com
+ [IPv6:2607:f8b0:4864:20::52b])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HQzmV1kf6z30MC
- for <linux-erofs@lists.ozlabs.org>; Sat,  9 Oct 2021 07:09:14 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0DCB9610E5;
- Fri,  8 Oct 2021 20:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1633723752;
- bh=3EEz07j9Wg5laxUjMiCKDXqTS3+pALCR0ncatip9pvI=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=NmgXkcyVKj/XiN7Xj6Gg45zhI81YxxBCRKtaiCFTpdIjeZE1g83D5AUdr8GqbtX0k
- yLFK6Yalwrfe3YRHaPbbXQztyVkWqA2OfTkhat3nSvyAmMA/RRK2nruBb9OHlPJKjD
- Qk2lEpPeUbsa1zWjfwqv6dp1DZuHRHiPa90+ZqIR5GSiB9uWQQgd2ITcte46e3L3II
- HcwgNQRsPZa/nPx9bVUJBHHobz5ZjU+wUjHP/z5KVVfsugxci/QlVkNxExCiIyeEph
- qsGcLZckzQIzT77R+5Crimx/D16EpN7/uRgh9V/eZnYyovgsHkrzyvHbcLj0zZoxfK
- fHdX3/23w9O6Q==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 3/3] erofs: introduce readmore decompression strategy
-Date: Sat,  9 Oct 2021 04:08:39 +0800
-Message-Id: <20211008200839.24541-4-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211008200839.24541-1-xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HR7NK6FNhz3000
+ for <linux-erofs@lists.ozlabs.org>; Sat,  9 Oct 2021 12:52:15 +1100 (AEDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 133so4769825pgb.1
+ for <linux-erofs@lists.ozlabs.org>; Fri, 08 Oct 2021 18:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=date:from:to:cc:subject:message-id:in-reply-to:references
+ :mime-version:content-transfer-encoding;
+ bh=J3/G+Htr0JzoQ9SW3wtIiw5W7YL3z8+P6XbDg6D7GbI=;
+ b=m8+6I0AkdQ6x6UksboO6N1QINdiEk6XajNGDuHqhLFaZdEmTVA0YYxFThZhwfdClSJ
+ zJY2AaBb/H3PPjv3mNLqkXbIdGwBaW6trRH75Ge2Wx1DqWcrk0RvH6w/jGjRxqCdGFAd
+ 2bKOHS457JB7ytkR8gupGVj4Z9f0wYGhw6rat3oBFHGMpbSefj43BH2oDa4DySHZ0sit
+ kBGHh5LHiuTV8wymPKl6IcqIoHyy234J9UrW4jmk8MH6jCmSkgKHEIPiuf0adu8x9Hs0
+ 7kQ6QjEq0z2BgoUQqsfN5n4UBYVb3o5mLQLJzRZIflU7cYC45buPGT0wab1ft76NWcpb
+ o24A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+ :references:mime-version:content-transfer-encoding;
+ bh=J3/G+Htr0JzoQ9SW3wtIiw5W7YL3z8+P6XbDg6D7GbI=;
+ b=IVy69pCZ6KuHwGRpPBmRYTlbW2wMSBLuHC/bPu801slFtiqzXuMi4xpVEABwiTgD94
+ PKwkPgzi+JwynOnf+LOXRZ642M+AJc+6PzgEl4BADgPu6JJ72C1B+uHr68zHcqBXr022
+ dJ5VWWLqaCQ6y/S0XJO41hX79Ui1E4SJWnYXitgVBfTmMGskcWMzTvdhgt7UA5lYjFN+
+ vCalA3uKNaED8UVaUORp8EBxbJhPpzvTeeGGRNj7xWP63caCDlwMRYElH0JdlRnoLImu
+ Kl7xUK0NLreSVYvY8psCL9A/O5nxZSw66u7w+5LASjp5EA9fmmxqw14a6oHlvSJcxF58
+ ii7g==
+X-Gm-Message-State: AOAM533InejqK9UILKEo+HGrADS79/0AEF13Cg47urN/yySv4LUs+zxY
+ mlhkyMcruRplgaqSX7hRzQY=
+X-Google-Smtp-Source: ABdhPJxVc5UpfDMkvsxcKWseNE5uyehdjqaPjnS14YlXBlap57ULvnJRqqdLE8o1kNq1b41gX+BzkA==
+X-Received: by 2002:a62:7e4e:0:b0:44c:51f5:5895 with SMTP id
+ z75-20020a627e4e000000b0044c51f55895mr13234300pfc.73.1633744331133; 
+ Fri, 08 Oct 2021 18:52:11 -0700 (PDT)
+Received: from localhost ([103.220.76.197])
+ by smtp.gmail.com with ESMTPSA id i18sm486958pfq.198.2021.10.08.18.52.09
+ (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+ Fri, 08 Oct 2021 18:52:10 -0700 (PDT)
+Date: Sat, 9 Oct 2021 09:52:04 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH v2 1/3] erofs: get compression algorithms directly on
+ mapping
+Message-ID: <20211009095204.00000974.zbestahu@gmail.com>
+In-Reply-To: <20211008200839.24541-2-xiang@kernel.org>
 References: <20211008200839.24541-1-xiang@kernel.org>
+ <20211008200839.24541-2-xiang@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,203 +83,228 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
- LKML <linux-kernel@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, shaojunjun@yulong.com,
+ huyue2@yulong.com, Gao Xiang <hsiangkao@linux.alibaba.com>,
+ zhangwen@yulong.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+On Sat,  9 Oct 2021 04:08:37 +0800
+Gao Xiang <xiang@kernel.org> wrote:
 
-Previously, the readahead window was strictly followed by EROFS
-decompression strategy in order to minimize extra memory footprint.
-However, it could become inefficient if just reading the partial
-requested data for much big LZ4 pclusters and the upcoming LZMA
-implementation.
+> From: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
+> Currently, z_erofs_map_blocks_iter() returns whether extents are
+> compressed or not, and the decompression frontend gets the specific
+> algorithms then.
+> 
+> It works but not quite well in many aspests, for example:
+>  - The decompression frontend has to deal with whether extents are
+>    compressed or not again and lookup the algorithms if compressed.
+>    It's duplicated and too detailed about the on-disk mapping.
+> 
+>  - A new secondary compression head will be introduced later so that
+>    each file can have 2 compression algorithms at most for different
+>    type of data. It could increase the complexity of the decompression
+>    frontend if still handled in this way;
+> 
+>  - A new readmore decompression strategy will be introduced to get
+>    better performance for much bigger pcluster and lzma, which needs
+>    the specific algorithm in advance as well.
+> 
+> Let's look up compression algorithms in z_erofs_map_blocks_iter()
+> directly instead.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/compress.h          |  5 -----
+>  fs/erofs/internal.h          | 12 +++++++++---
+>  fs/erofs/zdata.c             | 12 ++++++------
+>  fs/erofs/zmap.c              | 19 ++++++++++---------
+>  include/trace/events/erofs.h |  2 +-
+>  5 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+> index 3701c72bacb2..ad62d1b4d371 100644
+> --- a/fs/erofs/compress.h
+> +++ b/fs/erofs/compress.h
+> @@ -8,11 +8,6 @@
+>  
+>  #include "internal.h"
+>  
+> -enum {
+> -	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
+> -	Z_EROFS_COMPRESSION_RUNTIME_MAX
+> -};
+> -
+>  struct z_erofs_decompress_req {
+>  	struct super_block *sb;
+>  	struct page **in, **out;
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 9524e155b38f..48bfc6eb2b02 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -338,7 +338,7 @@ extern const struct address_space_operations z_erofs_aops;
+>   * of the corresponding uncompressed data in the file.
+>   */
+>  enum {
+> -	BH_Zipped = BH_PrivateStart,
+> +	BH_Encoded = BH_PrivateStart,
+>  	BH_FullMapped,
+>  };
+>  
+> @@ -346,8 +346,8 @@ enum {
+>  #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
+>  /* Located in metadata (could be copied from bd_inode) */
+>  #define EROFS_MAP_META		(1 << BH_Meta)
+> -/* The extent has been compressed */
+> -#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
+> +/* The extent is encoded */
+> +#define EROFS_MAP_ENCODED	(1 << BH_Encoded)
+>  /* The length of extent is full */
+>  #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
+>  
+> @@ -355,6 +355,7 @@ struct erofs_map_blocks {
+>  	erofs_off_t m_pa, m_la;
+>  	u64 m_plen, m_llen;
+>  
+> +	char m_algorithmformat;
+>  	unsigned int m_flags;
+>  
+>  	struct page *mpage;
+> @@ -368,6 +369,11 @@ struct erofs_map_blocks {
+>   */
+>  #define EROFS_GET_BLOCKS_FIEMAP	0x0002
+>  
+> +enum {
+> +	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
+> +	Z_EROFS_COMPRESSION_RUNTIME_MAX
+> +};
+> +
+>  /* zmap.c */
+>  extern const struct iomap_ops z_erofs_iomap_report_ops;
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 11c7a1aaebad..5c34ef66677f 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -476,6 +476,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+>  	struct erofs_workgroup *grp;
+>  	int err;
+>  
+> +	if (!(map->m_flags & EROFS_MAP_ENCODED)) {
+> +		DBG_BUGON(1);
+> +		return -EFSCORRUPTED;
+> +	}
+> +
+>  	/* no available pcluster, let's allocate one */
+>  	pcl = z_erofs_alloc_pcluster(map->m_plen >> PAGE_SHIFT);
+>  	if (IS_ERR(pcl))
+> @@ -483,16 +488,11 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+>  
+>  	atomic_set(&pcl->obj.refcount, 1);
+>  	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+> -
+> +	pcl->algorithmformat = map->m_algorithmformat;
+>  	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
+>  		(map->m_flags & EROFS_MAP_FULL_MAPPED ?
+>  			Z_EROFS_PCLUSTER_FULL_LENGTH : 0);
+>  
+> -	if (map->m_flags & EROFS_MAP_ZIPPED)
+> -		pcl->algorithmformat = Z_EROFS_COMPRESSION_LZ4;
+> -	else
+> -		pcl->algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+> -
+>  	/* new pclusters should be claimed as type 1, primary and followed */
+>  	pcl->next = clt->owned_head;
+>  	clt->mode = COLLECT_PRIMARY_FOLLOWED;
+> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> index 7a6df35fdc91..9d9c26343dab 100644
+> --- a/fs/erofs/zmap.c
+> +++ b/fs/erofs/zmap.c
+> @@ -111,7 +111,7 @@ struct z_erofs_maprecorder {
+>  
+>  	unsigned long lcn;
+>  	/* compression extent information gathered */
+> -	u8  type;
+> +	u8  type, headtype;
+>  	u16 clusterofs;
+>  	u16 delta[2];
+>  	erofs_blk_t pblk, compressedlcs;
+> @@ -446,9 +446,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+>  		}
+>  		return z_erofs_extent_lookback(m, m->delta[0]);
+>  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+> -		map->m_flags &= ~EROFS_MAP_ZIPPED;
+> -		fallthrough;
+>  	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
+> +		m->headtype = m->type;
+>  		map->m_la = (lcn << lclusterbits) | m->clusterofs;
+>  		break;
+>  	default:
+> @@ -472,7 +471,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+>  
+>  	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
+>  		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
+> -	if (!(map->m_flags & EROFS_MAP_ZIPPED) ||
+> +	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
+>  	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
+>  		map->m_plen = 1 << lclusterbits;
+>  		return 0;
+> @@ -609,16 +608,13 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+>  	if (err)
+>  		goto unmap_out;
+>  
+> -	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
+>  	end = (m.lcn + 1ULL) << lclusterbits;
+>  
+>  	switch (m.type) {
+>  	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+> -		if (endoff >= m.clusterofs)
+> -			map->m_flags &= ~EROFS_MAP_ZIPPED;
+> -		fallthrough;
+>  	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
+>  		if (endoff >= m.clusterofs) {
+> +			m.headtype = m.type;
+>  			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
+>  			break;
+>  		}
+> @@ -650,12 +646,17 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+>  
+>  	map->m_llen = end - map->m_la;
+>  	map->m_pa = blknr_to_addr(m.pblk);
+> -	map->m_flags |= EROFS_MAP_MAPPED;
+> +	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
+>  
+>  	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
+>  	if (err)
+>  		goto out;
+>  
+> +	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
+> +		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+> +	else
+> +		map->m_algorithmformat = vi->z_algorithmtype[0];
+> +
+>  	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
+>  		err = z_erofs_get_extent_decompressedlen(&m);
+>  		if (!err)
+> diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+> index db4f2cec8360..16ae7b666810 100644
+> --- a/include/trace/events/erofs.h
+> +++ b/include/trace/events/erofs.h
+> @@ -24,7 +24,7 @@ struct erofs_map_blocks;
+>  #define show_mflags(flags) __print_flags(flags, "",	\
+>  	{ EROFS_MAP_MAPPED,	"M" },			\
+>  	{ EROFS_MAP_META,	"I" },			\
+> -	{ EROFS_MAP_ZIPPED,	"Z" })
+> +	{ EROFS_MAP_ENCODED,	"E" })
 
-Let's try to request the leading data in a pcluster without
-triggering memory reclaiming instead for the LZ4 approach first
-to boost up 100% randread of large big pclusters, and it has no real
-impact on low memory scenarios.
+Looks good to me.
 
-It also introduces a way to expand read lengths in order to decompress
-the whole pcluster, which is useful for LZMA since the algorithm
-itself is relatively slow and causes CPU bound, but LZ4 is not.
+Reviewed-by: Yue Hu <huyue2@yulong.com>
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/internal.h | 13 ++++++
- fs/erofs/zdata.c    | 99 ++++++++++++++++++++++++++++++++++++---------
- 2 files changed, 93 insertions(+), 19 deletions(-)
-
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 48bfc6eb2b02..7f96265ccbdb 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -307,6 +307,19 @@ static inline unsigned int erofs_inode_datalayout(unsigned int value)
- 			      EROFS_I_DATALAYOUT_BITS);
- }
- 
-+/*
-+ * Different from grab_cache_page_nowait(), reclaiming is never triggered
-+ * when allocating new pages.
-+ */
-+static inline
-+struct page *erofs_grab_cache_page_nowait(struct address_space *mapping,
-+					  pgoff_t index)
-+{
-+	return pagecache_get_page(mapping, index,
-+			FGP_LOCK|FGP_CREAT|FGP_NOFS|FGP_NOWAIT,
-+			readahead_gfp_mask(mapping) & ~__GFP_RECLAIM);
-+}
-+
- extern const struct super_operations erofs_sops;
- 
- extern const struct address_space_operations erofs_raw_access_aops;
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5c34ef66677f..febb018e10a7 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1377,6 +1377,72 @@ static void z_erofs_runqueue(struct super_block *sb,
- 	z_erofs_decompress_queue(&io[JQ_SUBMIT], pagepool);
- }
- 
-+/*
-+ * Since partial uptodate is still unimplemented for now, we have to use
-+ * approximate readmore strategies as a start.
-+ */
-+static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
-+				      struct readahead_control *rac,
-+				      erofs_off_t end,
-+				      struct list_head *pagepool,
-+				      bool backmost)
-+{
-+	struct inode *inode = f->inode;
-+	struct erofs_map_blocks *map = &f->map;
-+	erofs_off_t cur;
-+	int err;
-+
-+	if (backmost) {
-+		map->m_la = end;
-+		/* TODO: pass in EROFS_GET_BLOCKS_READMORE for LZMA later */
-+		err = z_erofs_map_blocks_iter(inode, map, 0);
-+		if (err)
-+			return;
-+
-+		/* expend ra for the trailing edge if readahead */
-+		if (rac) {
-+			loff_t newstart = readahead_pos(rac);
-+
-+			cur = round_up(map->m_la + map->m_llen, PAGE_SIZE);
-+			readahead_expand(rac, newstart, cur - newstart);
-+			return;
-+		}
-+		end = round_up(end, PAGE_SIZE);
-+	} else {
-+		end = round_up(map->m_la, PAGE_SIZE);
-+
-+		if (!map->m_llen)
-+			return;
-+	}
-+
-+	cur = map->m_la + map->m_llen - 1;
-+	while (cur >= end) {
-+		pgoff_t index = cur >> PAGE_SHIFT;
-+		struct page *page;
-+
-+		page = erofs_grab_cache_page_nowait(inode->i_mapping, index);
-+		if (!page)
-+			goto skip;
-+
-+		if (PageUptodate(page)) {
-+			unlock_page(page);
-+			put_page(page);
-+			goto skip;
-+		}
-+
-+		err = z_erofs_do_read_page(f, page, pagepool);
-+		if (err)
-+			erofs_err(inode->i_sb,
-+				  "readmore error at page %lu @ nid %llu",
-+				  index, EROFS_I(inode)->nid);
-+		put_page(page);
-+skip:
-+		if (cur < PAGE_SIZE)
-+			break;
-+		cur = (index << PAGE_SHIFT) - 1;
-+	}
-+}
-+
- static int z_erofs_readpage(struct file *file, struct page *page)
- {
- 	struct inode *const inode = page->mapping->host;
-@@ -1385,10 +1451,13 @@ static int z_erofs_readpage(struct file *file, struct page *page)
- 	LIST_HEAD(pagepool);
- 
- 	trace_erofs_readpage(page, false);
--
- 	f.headoffset = (erofs_off_t)page->index << PAGE_SHIFT;
- 
-+	z_erofs_pcluster_readmore(&f, NULL, f.headoffset + PAGE_SIZE - 1,
-+				  &pagepool, true);
- 	err = z_erofs_do_read_page(&f, page, &pagepool);
-+	z_erofs_pcluster_readmore(&f, NULL, 0, &pagepool, false);
-+
- 	(void)z_erofs_collector_end(&f.clt);
- 
- 	/* if some compressed cluster ready, need submit them anyway */
-@@ -1409,29 +1478,20 @@ static void z_erofs_readahead(struct readahead_control *rac)
- {
- 	struct inode *const inode = rac->mapping->host;
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
--
--	unsigned int nr_pages = readahead_count(rac);
--	bool sync = (sbi->ctx.readahead_sync_decompress &&
--			nr_pages <= sbi->ctx.max_sync_decompress_pages);
- 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
- 	struct page *page, *head = NULL;
-+	unsigned int nr_pages;
- 	LIST_HEAD(pagepool);
- 
--	trace_erofs_readpages(inode, readahead_index(rac), nr_pages, false);
--
- 	f.readahead = true;
- 	f.headoffset = readahead_pos(rac);
- 
--	while ((page = readahead_page(rac))) {
--		prefetchw(&page->flags);
--
--		/*
--		 * A pure asynchronous readahead is indicated if
--		 * a PG_readahead marked page is hitted at first.
--		 * Let's also do asynchronous decompression for this case.
--		 */
--		sync &= !(PageReadahead(page) && !head);
-+	z_erofs_pcluster_readmore(&f, rac, f.headoffset +
-+				  readahead_length(rac) - 1, &pagepool, true);
-+	nr_pages = readahead_count(rac);
-+	trace_erofs_readpages(inode, readahead_index(rac), nr_pages, false);
- 
-+	while ((page = readahead_page(rac))) {
- 		set_page_private(page, (unsigned long)head);
- 		head = page;
- 	}
-@@ -1450,11 +1510,12 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 				  page->index, EROFS_I(inode)->nid);
- 		put_page(page);
- 	}
--
-+	z_erofs_pcluster_readmore(&f, rac, 0, &pagepool, false);
- 	(void)z_erofs_collector_end(&f.clt);
- 
--	z_erofs_runqueue(inode->i_sb, &f, &pagepool, sync);
--
-+	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
-+			 sbi->ctx.readahead_sync_decompress &&
-+			 nr_pages <= sbi->ctx.max_sync_decompress_pages);
- 	if (f.map.mpage)
- 		put_page(f.map.mpage);
- 
--- 
-2.20.1
+>  
+>  TRACE_EVENT(erofs_lookup,
+>  
 
