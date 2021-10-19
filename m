@@ -2,41 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63775433207
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Oct 2021 11:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14AA8433671
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Oct 2021 14:57:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HYSpS0MWVz2ybK
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Oct 2021 20:18:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HYYfk4lyXz304v
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Oct 2021 23:57:02 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SkAI15oe;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=SkAI15oe; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HYSpJ6mZzz2xfM
- for <linux-erofs@lists.ozlabs.org>; Tue, 19 Oct 2021 20:18:14 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R901e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0UstKif-_1634635074; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UstKif-_1634635074) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 19 Oct 2021 17:17:58 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: mkfs: introduce --quiet option
-Date: Tue, 19 Oct 2021 17:17:49 +0800
-Message-Id: <20211019091749.24528-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <YW1luAmReW8HpbHn@B-P7TQMD6M-0146.local>
-References: <YW1luAmReW8HpbHn@B-P7TQMD6M-0146.local>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HYYfc4sWZz2yWG
+ for <linux-erofs@lists.ozlabs.org>; Tue, 19 Oct 2021 23:56:56 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5ED4461360;
+ Tue, 19 Oct 2021 12:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1634648213;
+ bh=rpzdWCUEobf/IDekmzPNEYMxSWhS5XWJoeBbvCLEQ2U=;
+ h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+ b=SkAI15oe3aJqLCpSAzrO1oNSzlppscoCUOiUzA7fi5zu5mUJQpLt+Sa3RWydsPguM
+ dsNBiEP7+oW61RI4tzrMR0HfkwfNwH86kvNPsO+0v4pgkPLrX4itZVmg05Usljt3CS
+ aTh0bKM+noFjYEpCyQEa9/GI6ANXD4XEXQ+JhJktuCUAJW8iNONdW7o4trS39Fnkc2
+ vI5I9/+PAnkXymgQYL0ovGmzFysbOBVTavIqa+3EwcKrMQ3ZINlXokDxm0mEv2klK6
+ xEpCCOLbDPkh3fonvx/HGEzuARRjoZIT5bPtjEbc+vyLnYBZNAmcx0/NJChmnE0zDp
+ WTjbJoHioE+3A==
+Message-ID: <bec868c6-02c3-5f6d-c5d4-84cb4e1c9cb1@kernel.org>
+Date: Tue, 19 Oct 2021 20:56:48 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v4 2/3] erofs: introduce the secondary compression head
+Content-Language: en-US
+To: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+References: <20211009181209.23041-1-xiang@kernel.org>
+ <20211017165721.2442-1-xiang@kernel.org>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20211017165721.2442-1-xiang@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,133 +61,28 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, nl6720 <nl6720@gmail.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@yulong.com>,
+ LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add a preliminary quiet mode as described in
-https://gitlab.archlinux.org/archlinux/archiso/-/issues/148
+On 2021/10/18 0:57, Gao Xiang wrote:
+> From: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
+> Previously, for each HEAD lcluster, it can be either HEAD or PLAIN
+> lcluster to indicate whether the whole pcluster is compressed or not.
+> 
+> In this patch, a new HEAD2 head type is introduced to specify another
+> compression algorithm other than the primary algorithm for each
+> compressed file, which can be used for upcoming LZMA compression and
+> LZ4 range dictionary compression for various data patterns.
+> 
+> It has been stayed in the EROFS roadmap for years. Complete it now!
+> 
+> Reviewed-by: Yue Hu <huyue2@yulong.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Suggested-by: nl6720 <nl6720@gmail.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v1:
- - simplify erofs_show_progs().
+Reviewed-by: Chao Yu <chao@kernel.org>
 
- lib/config.c |  4 +++-
- mkfs/main.c  | 22 +++++++++++++++++-----
- 2 files changed, 20 insertions(+), 6 deletions(-)
-
-diff --git a/lib/config.c b/lib/config.c
-index 6d751715fcf2..363dcc5a0525 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -16,7 +16,7 @@ void erofs_init_configure(void)
- {
- 	memset(&cfg, 0, sizeof(cfg));
- 
--	cfg.c_dbg_lvl  = 2;
-+	cfg.c_dbg_lvl  = EROFS_WARN;
- 	cfg.c_version  = PACKAGE_VERSION;
- 	cfg.c_dry_run  = false;
- 	cfg.c_compr_level_master = -1;
-@@ -34,6 +34,8 @@ void erofs_show_config(void)
- {
- 	const struct erofs_configure *c = &cfg;
- 
-+	if (c->c_dbg_lvl < EROFS_WARN)
-+		return;
- 	erofs_dump("\tc_version:           [%8s]\n", c->c_version);
- 	erofs_dump("\tc_dbg_lvl:           [%8d]\n", c->c_dbg_lvl);
- 	erofs_dump("\tc_dry_run:           [%8d]\n", c->c_dry_run);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 1c8dea55f0cd..055d077988e9 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -46,6 +46,7 @@ static struct option long_options[] = {
- 	{"max-extent-bytes", required_argument, NULL, 9},
- 	{"compress-hints", required_argument, NULL, 10},
- 	{"chunksize", required_argument, NULL, 11},
-+	{"quiet", no_argument, 0, 12},
- #ifdef WITH_ANDROID
- 	{"mount-point", required_argument, NULL, 512},
- 	{"product-out", required_argument, NULL, 513},
-@@ -93,6 +94,7 @@ static void usage(void)
- 	      " --force-gid=#         set all file gids to # (# = GID)\n"
- 	      " --help                display this help and exit\n"
- 	      " --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
-+	      " --quiet               quiet execution (do not write anything to standard output.)\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
- #endif
-@@ -179,6 +181,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- {
- 	char *endptr;
- 	int opt, i;
-+	bool quiet = false;
- 
- 	while ((opt = getopt_long(argc, argv, "C:E:T:U:d:x:z:",
- 				 long_options, NULL)) != -1) {
-@@ -342,9 +345,10 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return -EINVAL;
- 			}
- 			erofs_sb_set_chunked_file();
--			erofs_warn("EXPERIMENTAL chunked file feature in use. Use at your own risk!");
- 			break;
--
-+		case 12:
-+			quiet = true;
-+			break;
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -377,6 +381,8 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		erofs_err("Unexpected argument: %s\n", argv[optind]);
- 		return -EINVAL;
- 	}
-+	if (quiet)
-+		cfg.c_dbg_lvl = EROFS_ERR;
- 	return 0;
- }
- 
-@@ -522,6 +528,12 @@ int parse_source_date_epoch(void)
- 	return 0;
- }
- 
-+void erofs_show_progs(int argc, char *argv[])
-+{
-+	if (cfg.c_dbg_lvl >= EROFS_WARN)
-+		fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
-+}
-+
- int main(int argc, char **argv)
- {
- 	int err = 0;
-@@ -534,11 +546,10 @@ int main(int argc, char **argv)
- 	char uuid_str[37] = "not available";
- 
- 	erofs_init_configure();
--	fprintf(stderr, "%s %s\n", basename(argv[0]), cfg.c_version);
--
- 	erofs_mkfs_default_options();
- 
- 	err = mkfs_parse_options_cfg(argc, argv);
-+	erofs_show_progs(argc, argv);
- 	if (err) {
- 		if (err == -EINVAL)
- 			usage();
-@@ -593,8 +604,9 @@ int main(int argc, char **argv)
- 		return 1;
- 	}
- #endif
--
- 	erofs_show_config();
-+	if (erofs_sb_has_chunked_file())
-+		erofs_warn("EXPERIMENTAL chunked file feature in use. Use at your own risk!");
- 	erofs_set_fs_root(cfg.c_src_path);
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
--- 
-2.24.4
-
+Thanks,
