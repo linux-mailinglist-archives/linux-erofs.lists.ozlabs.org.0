@@ -1,56 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58AFB438C42
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 00:09:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BD8F438C44
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 00:09:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HcsgK6KbJz2yHb
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 09:09:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hcsh76hqWz2yZf
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 09:09:43 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=EYp64EAX;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
- (client-ip=209.85.166.72; helo=mail-io1-f72.google.com;
- envelope-from=3emr0yqkbah0tz0lbmmfsbqqje.hpphmfvtfsdpoufou.dpn@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::833;
+ helo=mail-qt1-x833.google.com; envelope-from=kent.overstreet@gmail.com;
  receiver=<UNKNOWN>)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72])
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=EYp64EAX; dkim-atps=neutral
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com
+ [IPv6:2607:f8b0:4864:20::833])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HcMPd0Kwnz2yMg
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Oct 2021 13:25:23 +1100 (AEDT)
-Received: by mail-io1-f72.google.com with SMTP id
- y11-20020a056602164b00b005de32183909so6288325iow.10
- for <linux-erofs@lists.ozlabs.org>; Sat, 23 Oct 2021 19:25:23 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hckp96jTQz2ynG
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 03:59:28 +1100 (AEDT)
+Received: by mail-qt1-x833.google.com with SMTP id o12so8245836qtq.7
+ for <linux-erofs@lists.ozlabs.org>; Sun, 24 Oct 2021 09:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=date:from:to:cc:subject:message-id:references:mime-version
+ :content-disposition:in-reply-to;
+ bh=ZzV9v+7pJvz9EKj7cbiV3TsfyLtsPrvdzBHt6l5taGA=;
+ b=EYp64EAXnertXUdBpDT9U0CgdT2YctRH80w0R74nJWL9Y/0ekIpX1fV1ZjL8b34I6n
+ Zw90bNaEOCH0wE0qW6CiKyPTGgQiy/6a4BhTqvp1DpTvnV+lVTiaqPbMr339UMyRNFis
+ tptKPLqBJ5LQ9mnKPOfQGIf8LIU7Sxtrq0hX3L++29pzze4c3YdU9rVrhGV7UOAVao81
+ hkmaov6ii8+7oUtO/taKluRnsx+nrZyZbocql4MANz/o9PaRJewC6cMC2sR7VV/8Zwea
+ MAyjGm/M+8On28SuVEyzXy7FdXKPtw/oWYIQvHI/5dcobLVY9PbLLAHum0zPWo2Hw0/d
+ WlmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
- bh=7QR9akAHbSinoGJpOVe+XCc1PKKxjmber8Obdn+Lueg=;
- b=SDjZqKShhY/rxhRf1KyIi583UVVFVLkvlCu1juK+D4TuTEGjOZuINKL6xyXvA8rnyd
- VsIIkreyr+fj+tPd2bosjYu6j/m1fr/fvuD0fbKrBmslRqfQ2KaqYhcR4Qhm3wdIgqi6
- ko1qJQw9VDni249IkCApf5t2RM5htLOmuuUcAHDk5M/85jg4wQzU864zAURQfSzAfGyU
- 22RRwVSjyDKAvPuyNrZwu37Pyn8GfzooAtUGfyOz8rYmfqcUNltr+GX/e4J1mwXfsERS
- 3sV7ZWMsmUlJ49tQt4frQRR1fOBu9Yi0Stmu+0ucfEHrv7MnN9KvtKyQSnGz0qVW6WXW
- VtAg==
-X-Gm-Message-State: AOAM530PR39OprElOt3FE3JbHEilMZi+3egJBK2m70pyHb7DyQlZL0p+
- h99/F6oCJFl0XcXCcVX/VbVdcs+Pz1DuXE8raDX0gmEgFwK0
-X-Google-Smtp-Source: ABdhPJyJEy3lsFOs4MNeH/Dbm+ITEfcGDVsFhnncp7OjZMfwm4TPo/NM2QBEgmCFQwZ888HOFEvmOC6ae2+Ztzl/Am/T9+jgY3RO
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+ :mime-version:content-disposition:in-reply-to;
+ bh=ZzV9v+7pJvz9EKj7cbiV3TsfyLtsPrvdzBHt6l5taGA=;
+ b=5quV1obg04lGBajJGhiwCnZ1GIQiloyepuQESVdxomBNLCdeW5JoMLJ1NZvPhOxfrU
+ gOlOPMhbkAAFC+NH9hLG+FE35/0BXf2dBdvdcnp828enUelr67xt0FAAuPDV4+sT28d9
+ ph7P1cLgYLwgAvwG07tK/75Wwti3GPshnMu8fcfU1MkYQv2Ra18Iy1qROBpu8wL63/88
+ gdj7IUW0rp9sjrKBjqsQMnIoXuYYRE49cmoVw7e0Mc7eds082wkwsndmXvwAfxo9WoUi
+ wTiFJP8ofo6p/mbPXhsmgCD0TlVO2jP2C8ECQrnLY2ISrRTcJBHlPfcZ/UJWOmEvRoKR
+ JYig==
+X-Gm-Message-State: AOAM532mMMqvnZ+QY9EDLiHfPXk/WkRDWDdnqGfAl6BVz0z4e28AnG+o
+ 5ku9WDZX5P016Cr6S7i/TA==
+X-Google-Smtp-Source: ABdhPJzMJaqe0tBgAhV2ds6pekgjv5fUqZLbGH+NyfcBg2Ff0zdCLT+GgODdOvE58VWHym5iZWoQ5A==
+X-Received: by 2002:a05:622a:c7:: with SMTP id
+ p7mr12830518qtw.356.1635094764478; 
+ Sun, 24 Oct 2021 09:59:24 -0700 (PDT)
+Received: from moria.home.lan (c-73-219-103-14.hsd1.vt.comcast.net.
+ [73.219.103.14])
+ by smtp.gmail.com with ESMTPSA id 12sm7779026qty.9.2021.10.24.09.59.23
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sun, 24 Oct 2021 09:59:23 -0700 (PDT)
+Date: Sun, 24 Oct 2021 12:59:22 -0400
+From: Kent Overstreet <kent.overstreet@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH] erofs: get rid of ->lru usage
+Message-ID: <YXWQ6p4Hlx6tGpPN@moria.home.lan>
+References: <20211022090120.14675-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2b8e:: with SMTP id
- r14mr5794228iov.98.1635042320405; 
- Sat, 23 Oct 2021 19:25:20 -0700 (PDT)
-Date: Sat, 23 Oct 2021 19:25:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b3586105cf0ff45e@google.com>
-Subject: [syzbot] WARNING in z_erofs_lz4_decompress
-From: syzbot <syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com>
-To: chao@kernel.org, linux-erofs@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
- xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211022090120.14675-1-hsiangkao@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,64 +81,33 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ Matthew Wilcox <willy@infradead.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+On Fri, Oct 22, 2021 at 05:01:20PM +0800, Gao Xiang wrote:
+> Currently, ->lru is a way to arrange non-LRU pages and has some
+> in-kernel users. In order to minimize noticable issues of page
+> reclaim and cache thrashing under high memory presure, limited
+> temporary pages were all chained with ->lru and can be reused
+> during the request. However, it seems that ->lru could be removed
+> when folio is landing.
+> 
+> Let's use page->private to chain temporary pages for now instead
+> and transform EROFS formally after the topic of the folio / file
+> page design is finalized.
+> 
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Kent Overstreet <kent.overstreet@gmail.com>
+> Cc: Chao Yu <chao@kernel.org>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-syzbot found the following issue on:
+Would it not be an option to use an array of pointers to pages, instead of a
+linked list? Arrays are faster than lists, and page->private is another thing we
+prefer not to use if we don't have to.
 
-HEAD commit:    60e8840126bd Add linux-next specific files for 20211018
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=125932af300000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4bd44cafcda7632e
-dashboard link: https://syzkaller.appspot.com/bug?extid=d8aaffc3719597e8cfb4
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+That said - this is definitely preferable to using page->lru - thank you.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com
-
-erofs: (device loop4): z_erofs_lz4_decompress_mem: failed to decompress -4100 in[4096, 0] out[9000]
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 9895 at fs/erofs/decompressor.c:230 z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:227 [inline]
-WARNING: CPU: 1 PID: 9895 at fs/erofs/decompressor.c:230 z_erofs_lz4_decompress+0x841/0x1400 fs/erofs/decompressor.c:289
-Modules linked in:
-CPU: 1 PID: 9895 Comm: kworker/u5:3 Not tainted 5.15.0-rc5-next-20211018-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: erofs_unzipd z_erofs_decompressqueue_work
-RIP: 0010:z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:230 [inline]
-RIP: 0010:z_erofs_lz4_decompress+0x841/0x1400 fs/erofs/decompressor.c:289
-Code: e9 03 80 3c 11 00 0f 85 8c 0a 00 00 41 56 48 8b 7d 00 45 89 e9 89 d9 48 c7 c2 20 eb fb 89 48 c7 c6 40 ed fb 89 e8 ee 5d 85 05 <0f> 0b 48 b8 00 00 00 00 00 fc ff df 48 8b 4c 24 08 5f 48 89 ca 48
-RSP: 0018:ffffc90001b3f718 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffffffffffffeffc RCX: 0000000000000000
-RDX: ffff8880795b3a00 RSI: ffffffff815ef308 RDI: fffff52000367ed3
-RBP: ffffc90001b3f858 R08: 0000000000000063 R09: 0000000000000000
-R10: ffffffff815e90de R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000002328 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2ef25000 CR3: 000000002b3f7000 CR4: 00000000003506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- z_erofs_decompress_pcluster.isra.0+0x1389/0x2450 fs/erofs/zdata.c:977
- z_erofs_decompress_queue fs/erofs/zdata.c:1055 [inline]
- z_erofs_decompressqueue_work+0xe0/0x170 fs/erofs/zdata.c:1066
- process_one_work+0x9b2/0x1690 kernel/workqueue.c:2297
- worker_thread+0x658/0x11f0 kernel/workqueue.c:2444
- kthread+0x405/0x4f0 kernel/kthread.c:327
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewed-by: Kent Overstreet <kent.overstreet@gmail.com>
