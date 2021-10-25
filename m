@@ -2,39 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 868CF439089
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 09:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3ADA439669
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 14:34:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hd6Qd2hy8z2xtF
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 18:43:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HdDsz3nNsz2yPp
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 23:34:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=yulong.com (client-ip=59.36.132.85; helo=qq.com;
+ envelope-from=huyue2@yulong.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 70 seconds by postgrey-1.36 at boromir;
+ Mon, 25 Oct 2021 23:34:20 AEDT
+Received: from qq.com (smtpbg476.qq.com [59.36.132.85])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hd6QY1xssz2xY4
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 18:43:44 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R111e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0UtZ.ZRi_1635147792; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UtZ.ZRi_1635147792) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 25 Oct 2021 15:43:27 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HdDsm0R0kz2xtP
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 23:34:19 +1100 (AEDT)
+X-QQ-mid: bizesmtp46t1635165105t9udyi6o
+Received: from tj.ccdomain.com (unknown [218.94.48.178])
+ by esmtp6.qq.com (ESMTP) with 
+ id ; Mon, 25 Oct 2021 20:31:20 +0800 (CST)
+X-QQ-SSF: 01400000000000Z0Z000000A0000000
+X-QQ-FEAT: e00egQTBacRtD6R241aeCCQoFQ0XFfaQGPYE/ECVVgOJWVmg3cNUQOe2yG3gp
+ pAK29sqEt6teX9D1uy0gG2ZCqTCaPFpx8FCvdSHzS9OPM0x446vjF5qjZqJw1D+5GN+EEgu
+ +X7jAti9rowJNNPk6hh54a/F3Qk6giaaQjOeFg6txN83DRjsAhH4RWn/K9yihgpMlxLGDVm
+ 8U3o643Njm8/lLvUJeYkAURYps4EdfQxj4R1nDmo9rJNuipFDGqDMYPkpUlzH6FBlGTlHAI
+ wG3J0SMW3NZSLVUzGnDKLi4gunUs+nFcY8IA+u7dqTz0pHJi3Sg7oRwT6adO7QExFFKBIPb
+ 4MicLjmTid/ykqnrCyh/tMNXFw5s8oehNxZcVDd
+X-QQ-GoodBg: 2
+From: Yue Hu <huyue2@yulong.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: don't trigger WARN() when decompression fails
-Date: Mon, 25 Oct 2021 15:43:11 +0800
-Message-Id: <20211025074311.130395-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+Subject: [RFC PATCH 0/2] erofs-utils: compression inline feature
+Date: Mon, 25 Oct 2021 20:30:42 +0800
+Message-Id: <cover.1635162978.git.huyue2@yulong.com>
+X-Mailer: git-send-email 2.29.2.windows.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:yulong.com:qybgforeign:qybgforeign7
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,40 +53,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
- LKML <linux-kernel@vger.kernel.org>, Dmitry Vyukov <dvyukov@google.com>,
- syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com
+Cc: huyue2@yulong.com, geshifei@yulong.com, zhangwen@yulong.com,
+ shaojunjun@yulong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-syzbot reported a WARNING [1] due to corrupted compressed data.
+Now, we only support tail-end inline data for uncompressed file. We should
+also support it for compressed file to decrease tail extent I/O and save
+save more space. That is original intention from Xiang.
 
-As Dmitry said, "If this is not a kernel bug, then the code should
-not use WARN. WARN if for kernel bugs and is recognized as such by
-all testing systems and humans."
+Note that, current mapping logic code in erofsuse is only based on
+non-bigpcluster in erofsfuse, but i would like to present it. May refine
+it for big pcluster later. Let's foucs on this on-disk improvement first.
 
-[1] https://lore.kernel.org/r/000000000000b3586105cf0ff45e@google.com
-Reported-by: syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Chao Yu <chao@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/decompressor.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks.
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index a0786b95cdf9..bf37fc76b182 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -227,7 +227,6 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq,
- 		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
- 			  ret, rq->inputsize, inputmargin, rq->outputsize);
- 
--		WARN_ON(1);
- 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, src + inputmargin, rq->inputsize, true);
- 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
+
+Yue Hu (2):
+  erofs-utils: support tail-packing inline compressed data
+  erofs-utils: fuse: support tail-packing inline compressed data
+
+ include/erofs/internal.h |  2 +
+ include/erofs_fs.h       |  6 ++-
+ lib/compress.c           | 74 ++++++++++++++++++++++++-------
+ lib/compressor.c         |  9 ++--
+ lib/decompress.c         |  4 ++
+ lib/inode.c              | 50 +++++++++++----------
+ lib/zmap.c               | 95 +++++++++++++++++++++++++++++++++++++---
+ mkfs/main.c              |  6 +++
+ 8 files changed, 199 insertions(+), 47 deletions(-)
+
 -- 
-2.24.4
+2.29.0
+
+
 
