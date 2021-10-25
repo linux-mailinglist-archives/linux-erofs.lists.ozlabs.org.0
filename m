@@ -1,42 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5AEA438CC2
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 02:13:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34AEB438CC5
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 02:17:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HcwR2208fz2xtF
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 11:13:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HcwWT0PdMz2xt5
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 11:17:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
+ helo=out30-45.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-45.freemail.mail.aliyun.com
+ (out30-45.freemail.mail.aliyun.com [115.124.30.45])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HcwQr3GDxz2xYJ
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 11:13:21 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R131e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0UtUYDQq_1635120782; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HcwWP2fYqz2xYJ
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 11:17:20 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R571e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0UtUECyd_1635121022; 
 Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UtUYDQq_1635120782) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 25 Oct 2021 08:13:03 +0800
-Date: Mon, 25 Oct 2021 08:12:55 +0800
+ fp:SMTPD_---0UtUECyd_1635121022) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 25 Oct 2021 08:17:04 +0800
+Date: Mon, 25 Oct 2021 08:16:59 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Kent Overstreet <kent.overstreet@gmail.com>
-Subject: Re: [PATCH] erofs: get rid of ->lru usage
-Message-ID: <YXX2h26Fm/hztdaZ@B-P7TQMD6M-0146.local>
-References: <20211022090120.14675-1-hsiangkao@linux.alibaba.com>
- <YXWQ6p4Hlx6tGpPN@moria.home.lan>
+To: syzbot <syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com>
+Subject: Re: [syzbot] WARNING in z_erofs_lz4_decompress
+Message-ID: <YXX3e1i/f2uvMDm0@B-P7TQMD6M-0146.local>
+References: <000000000000b3586105cf0ff45e@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YXWQ6p4Hlx6tGpPN@moria.home.lan>
+In-Reply-To: <000000000000b3586105cf0ff45e@google.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,62 +47,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Matthew Wilcox <willy@infradead.org>
+Cc: syzkaller-bugs@googlegroups.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Oct 24, 2021 at 12:59:22PM -0400, Kent Overstreet wrote:
-> On Fri, Oct 22, 2021 at 05:01:20PM +0800, Gao Xiang wrote:
-> > Currently, ->lru is a way to arrange non-LRU pages and has some
-> > in-kernel users. In order to minimize noticable issues of page
-> > reclaim and cache thrashing under high memory presure, limited
-> > temporary pages were all chained with ->lru and can be reused
-> > during the request. However, it seems that ->lru could be removed
-> > when folio is landing.
-> > 
-> > Let's use page->private to chain temporary pages for now instead
-> > and transform EROFS formally after the topic of the folio / file
-> > page design is finalized.
-> > 
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Cc: Kent Overstreet <kent.overstreet@gmail.com>
-> > Cc: Chao Yu <chao@kernel.org>
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Hi,
+
+On Sat, Oct 23, 2021 at 07:25:20PM -0700, syzbot wrote:
+> Hello,
 > 
-> Would it not be an option to use an array of pointers to pages, instead of a
-> linked list? Arrays are faster than lists, and page->private is another thing we
-> prefer not to use if we don't have to.
-
-Our requirement is to maintain variable-sized temporary pages, that
-may be short or maybe long during decompression process (according to
-different algorithms and whether it's inplace I/O or not) rather than
-before I/O submission:
-
- For LZ4, that maybe 16 pages for lz4 sliding window and other
-temporary pages;
- For LZMA, since it has a internal dictionary (sliding window) so we
-don't have to allocate any temporary pages for cached decompression
-(outplace I/O), but we still need allocating temporary pages to
-handle overlapped decompression due to inplace I/O (think about it,
-if each compressed pcluster is 4pages -- 16KiB, we have to allocate
-for example another 128KiB compressed pages due to read request for
-outplace I/O, but instead 0 pages for inplace I/O during I/O process,
-and only 4 pages for decompression process. It saves much memory in
-the low memory scenarios by using inplace I/O and important to the
-performance).
-
-Currently we only add some page to the head or pick some page from
-head, so a singly-linked list is also fine to us for now.
-
+> syzbot found the following issue on:
 > 
-> That said - this is definitely preferable to using page->lru - thank you.
+> HEAD commit:    60e8840126bd Add linux-next specific files for 20211018
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=125932af300000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4bd44cafcda7632e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d8aaffc3719597e8cfb4
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
 > 
-> Reviewed-by: Kent Overstreet <kent.overstreet@gmail.com>
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+d8aaffc3719597e8cfb4@syzkaller.appspotmail.com
+> 
+> erofs: (device loop4): z_erofs_lz4_decompress_mem: failed to decompress -4100 in[4096, 0] out[9000]
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 9895 at fs/erofs/decompressor.c:230 z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:227 [inline]
+> WARNING: CPU: 1 PID: 9895 at fs/erofs/decompressor.c:230 z_erofs_lz4_decompress+0x841/0x1400 fs/erofs/decompressor.c:289
 
-Thank you!
+If you fuzz compressed data, that is what you'd expect..
 
 Thanks,
 Gao Xiang
 
+> Modules linked in:
+> CPU: 1 PID: 9895 Comm: kworker/u5:3 Not tainted 5.15.0-rc5-next-20211018-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: erofs_unzipd z_erofs_decompressqueue_work
+> RIP: 0010:z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:230 [inline]
+> RIP: 0010:z_erofs_lz4_decompress+0x841/0x1400 fs/erofs/decompressor.c:289
+> Code: e9 03 80 3c 11 00 0f 85 8c 0a 00 00 41 56 48 8b 7d 00 45 89 e9 89 d9 48 c7 c2 20 eb fb 89 48 c7 c6 40 ed fb 89 e8 ee 5d 85 05 <0f> 0b 48 b8 00 00 00 00 00 fc ff df 48 8b 4c 24 08 5f 48 89 ca 48
+> RSP: 0018:ffffc90001b3f718 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffffffffffffeffc RCX: 0000000000000000
+> RDX: ffff8880795b3a00 RSI: ffffffff815ef308 RDI: fffff52000367ed3
+> RBP: ffffc90001b3f858 R08: 0000000000000063 R09: 0000000000000000
+> R10: ffffffff815e90de R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000002328 R15: 0000000000000000
+> FS:  0000000000000000(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2ef25000 CR3: 000000002b3f7000 CR4: 00000000003506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  z_erofs_decompress_pcluster.isra.0+0x1389/0x2450 fs/erofs/zdata.c:977
+>  z_erofs_decompress_queue fs/erofs/zdata.c:1055 [inline]
+>  z_erofs_decompressqueue_work+0xe0/0x170 fs/erofs/zdata.c:1066
+>  process_one_work+0x9b2/0x1690 kernel/workqueue.c:2297
+>  worker_thread+0x658/0x11f0 kernel/workqueue.c:2444
+>  kthread+0x405/0x4f0 kernel/kthread.c:327
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+>  </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
