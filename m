@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A651E43A7F7
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Oct 2021 01:06:18 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E31D43A818
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Oct 2021 01:24:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HdVtw3gfNz2yNp
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Oct 2021 10:06:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HdWJT2Tpmz2yNC
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Oct 2021 10:24:57 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VHrcoxLq;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WTLYhsdC;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,37 +17,39 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=VHrcoxLq; 
+ header.s=k20201202 header.b=WTLYhsdC; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HdVtn4vmfz2yK2
- for <linux-erofs@lists.ozlabs.org>; Tue, 26 Oct 2021 10:06:09 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D2B8760F22;
- Mon, 25 Oct 2021 23:06:02 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HdWJM4NgCz2xtP
+ for <linux-erofs@lists.ozlabs.org>; Tue, 26 Oct 2021 10:24:51 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AC1D96058D;
+ Mon, 25 Oct 2021 23:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1635203166;
- bh=Rw30aQcXFmxu5sxGKJ+o55dCA+3vbo8a7mYDhGilThY=;
- h=Date:From:To:Cc:From;
- b=VHrcoxLqy/cHsLWLaS9VGFsCzMt9sLKs4hEM4lKUioAUcugEZJnNzKkcAUZEYfmiD
- ubxDyQWHULEIH7gaz4qAzlAnzqRKE8TOkIjotXj3LGDE8D4bey+CnPAGxidPZe0ov/
- 7mXkXr5ZlFuVWVNEKiGDl0ayhyscH3Mbp+jZ5I3KtceRxbPst4pNXi3SJYiKvXua8b
- j/6/ZvVuG+LN+ZqG+Gi2BoZJeXvNT6EPzKCIdWIm/EtHjc0Hv1hfx6sH7LEMfiUhoj
- OTtutEd+lxDz/buZbhLl2N+7b/iwXpLBG+Ydqnp5/CRTkRJPWEfbqvH81LDpfoKSUm
- mccLQFjT6tTVA==
-Date: Tue, 26 Oct 2021 07:05:53 +0800
+ s=k20201202; t=1635204289;
+ bh=GhazfgbcQFj9O6FzR5yH/Vxxi6XlCEIKZvHQO0+geL4=;
+ h=Date:From:To:Cc:Subject:In-Reply-To:From;
+ b=WTLYhsdCbVOYc26c0dGPjFFpQD2IO/cUe7YrOFs0xwRcmuX4Me9UJn204Cj4LRHzC
+ IW/xYFI5iWREbV/FDcIIz35SuTx7wRBB+Ubqgzmz+UuqL0W6V/KAoZJsSEPzVE8kwd
+ bymRk8yMcbzslKIzUIadX2k2GYDm1ECxfBu0s1vjUGsicrQ14cEB56wIuo9qUyYdkQ
+ L837N6dBfXElElicj+be1ApEL+KWjBHCcBU55aM6Gnm7WKnaJ9+/7QcbyhrqTxYRtk
+ Q6hAxPQ0tHlknEeqaMracnKXRvHhFkmoxazlhQ9Xb8AWTShieB+kwh1SM1ScZnsion
+ zTnlsDGq4baiQ==
+Date: Tue, 26 Oct 2021 07:24:37 +0800
 From: Gao Xiang <xiang@kernel.org>
 To: Daeho Jeong <daeho43@gmail.com>
-Message-ID: <20211025230551.GA10537@hsiangkao-HP-ZHAN-66-Pro-G1>
+Subject: Re: [PATCH] erofs-utils: introduce fsck.erofs
+Message-ID: <20211025232436.GB10537@hsiangkao-HP-ZHAN-66-Pro-G1>
 Mail-Followup-To: Daeho Jeong <daeho43@gmail.com>,
  linux-erofs@lists.ozlabs.org, miaoxie@huawei.com,
  fangwei1@huawei.com, xiang@kernel.org,
  Daeho Jeong <daehojeong@google.com>,
- GuoXuenan@hsiangkao-HP-ZHAN-66-Pro-G1
+ GuoXuenan <guoxuenan@huawei.com>, Wang Qi <mpiglet@outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20211025194809.1118624-1-daeho43@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -61,16 +63,13 @@ List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: Daeho Jeong <daehojeong@google.com>, linux-erofs@lists.ozlabs.org,
- GuoXuenan@hsiangkao-HP-ZHAN-66-Pro-G1, miaoxie@huawei.com
+ miaoxie@huawei.com, Wang Qi <mpiglet@outlook.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<guoxuenan@huawei.com>, Wang Qi <mpiglet@outlook.com>
-Bcc: 
-Subject: Re: [PATCH] erofs-utils: introduce fsck.erofs
-Reply-To: 
-In-Reply-To: <20211025194809.1118624-1-daeho43@gmail.com>
+(Sorry due to just mutt+vim edit by mistake. try to send properly
+ again..)
 
 Hi Daeho,
 
