@@ -2,74 +2,41 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BD8F438C44
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 00:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5AEA438CC2
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 02:13:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hcsh76hqWz2yZf
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 09:09:43 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=EYp64EAX;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HcwR2208fz2xtF
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Oct 2021 11:13:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::833;
- helo=mail-qt1-x833.google.com; envelope-from=kent.overstreet@gmail.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=EYp64EAX; dkim-atps=neutral
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com
- [IPv6:2607:f8b0:4864:20::833])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
+ helo=out30-131.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com
+ (out30-131.freemail.mail.aliyun.com [115.124.30.131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hckp96jTQz2ynG
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 03:59:28 +1100 (AEDT)
-Received: by mail-qt1-x833.google.com with SMTP id o12so8245836qtq.7
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Oct 2021 09:59:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=date:from:to:cc:subject:message-id:references:mime-version
- :content-disposition:in-reply-to;
- bh=ZzV9v+7pJvz9EKj7cbiV3TsfyLtsPrvdzBHt6l5taGA=;
- b=EYp64EAXnertXUdBpDT9U0CgdT2YctRH80w0R74nJWL9Y/0ekIpX1fV1ZjL8b34I6n
- Zw90bNaEOCH0wE0qW6CiKyPTGgQiy/6a4BhTqvp1DpTvnV+lVTiaqPbMr339UMyRNFis
- tptKPLqBJ5LQ9mnKPOfQGIf8LIU7Sxtrq0hX3L++29pzze4c3YdU9rVrhGV7UOAVao81
- hkmaov6ii8+7oUtO/taKluRnsx+nrZyZbocql4MANz/o9PaRJewC6cMC2sR7VV/8Zwea
- MAyjGm/M+8On28SuVEyzXy7FdXKPtw/oWYIQvHI/5dcobLVY9PbLLAHum0zPWo2Hw0/d
- WlmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:references
- :mime-version:content-disposition:in-reply-to;
- bh=ZzV9v+7pJvz9EKj7cbiV3TsfyLtsPrvdzBHt6l5taGA=;
- b=5quV1obg04lGBajJGhiwCnZ1GIQiloyepuQESVdxomBNLCdeW5JoMLJ1NZvPhOxfrU
- gOlOPMhbkAAFC+NH9hLG+FE35/0BXf2dBdvdcnp828enUelr67xt0FAAuPDV4+sT28d9
- ph7P1cLgYLwgAvwG07tK/75Wwti3GPshnMu8fcfU1MkYQv2Ra18Iy1qROBpu8wL63/88
- gdj7IUW0rp9sjrKBjqsQMnIoXuYYRE49cmoVw7e0Mc7eds082wkwsndmXvwAfxo9WoUi
- wTiFJP8ofo6p/mbPXhsmgCD0TlVO2jP2C8ECQrnLY2ISrRTcJBHlPfcZ/UJWOmEvRoKR
- JYig==
-X-Gm-Message-State: AOAM532mMMqvnZ+QY9EDLiHfPXk/WkRDWDdnqGfAl6BVz0z4e28AnG+o
- 5ku9WDZX5P016Cr6S7i/TA==
-X-Google-Smtp-Source: ABdhPJzMJaqe0tBgAhV2ds6pekgjv5fUqZLbGH+NyfcBg2Ff0zdCLT+GgODdOvE58VWHym5iZWoQ5A==
-X-Received: by 2002:a05:622a:c7:: with SMTP id
- p7mr12830518qtw.356.1635094764478; 
- Sun, 24 Oct 2021 09:59:24 -0700 (PDT)
-Received: from moria.home.lan (c-73-219-103-14.hsd1.vt.comcast.net.
- [73.219.103.14])
- by smtp.gmail.com with ESMTPSA id 12sm7779026qty.9.2021.10.24.09.59.23
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Sun, 24 Oct 2021 09:59:23 -0700 (PDT)
-Date: Sun, 24 Oct 2021 12:59:22 -0400
-From: Kent Overstreet <kent.overstreet@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HcwQr3GDxz2xYJ
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Oct 2021 11:13:21 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R131e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0UtUYDQq_1635120782; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0UtUYDQq_1635120782) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 25 Oct 2021 08:13:03 +0800
+Date: Mon, 25 Oct 2021 08:12:55 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Kent Overstreet <kent.overstreet@gmail.com>
 Subject: Re: [PATCH] erofs: get rid of ->lru usage
-Message-ID: <YXWQ6p4Hlx6tGpPN@moria.home.lan>
+Message-ID: <YXX2h26Fm/hztdaZ@B-P7TQMD6M-0146.local>
 References: <20211022090120.14675-1-hsiangkao@linux.alibaba.com>
+ <YXWQ6p4Hlx6tGpPN@moria.home.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211022090120.14675-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <YXWQ6p4Hlx6tGpPN@moria.home.lan>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,27 +54,56 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Oct 22, 2021 at 05:01:20PM +0800, Gao Xiang wrote:
-> Currently, ->lru is a way to arrange non-LRU pages and has some
-> in-kernel users. In order to minimize noticable issues of page
-> reclaim and cache thrashing under high memory presure, limited
-> temporary pages were all chained with ->lru and can be reused
-> during the request. However, it seems that ->lru could be removed
-> when folio is landing.
+On Sun, Oct 24, 2021 at 12:59:22PM -0400, Kent Overstreet wrote:
+> On Fri, Oct 22, 2021 at 05:01:20PM +0800, Gao Xiang wrote:
+> > Currently, ->lru is a way to arrange non-LRU pages and has some
+> > in-kernel users. In order to minimize noticable issues of page
+> > reclaim and cache thrashing under high memory presure, limited
+> > temporary pages were all chained with ->lru and can be reused
+> > during the request. However, it seems that ->lru could be removed
+> > when folio is landing.
+> > 
+> > Let's use page->private to chain temporary pages for now instead
+> > and transform EROFS formally after the topic of the folio / file
+> > page design is finalized.
+> > 
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Kent Overstreet <kent.overstreet@gmail.com>
+> > Cc: Chao Yu <chao@kernel.org>
+> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > 
-> Let's use page->private to chain temporary pages for now instead
-> and transform EROFS formally after the topic of the folio / file
-> page design is finalized.
+> Would it not be an option to use an array of pointers to pages, instead of a
+> linked list? Arrays are faster than lists, and page->private is another thing we
+> prefer not to use if we don't have to.
+
+Our requirement is to maintain variable-sized temporary pages, that
+may be short or maybe long during decompression process (according to
+different algorithms and whether it's inplace I/O or not) rather than
+before I/O submission:
+
+ For LZ4, that maybe 16 pages for lz4 sliding window and other
+temporary pages;
+ For LZMA, since it has a internal dictionary (sliding window) so we
+don't have to allocate any temporary pages for cached decompression
+(outplace I/O), but we still need allocating temporary pages to
+handle overlapped decompression due to inplace I/O (think about it,
+if each compressed pcluster is 4pages -- 16KiB, we have to allocate
+for example another 128KiB compressed pages due to read request for
+outplace I/O, but instead 0 pages for inplace I/O during I/O process,
+and only 4 pages for decompression process. It saves much memory in
+the low memory scenarios by using inplace I/O and important to the
+performance).
+
+Currently we only add some page to the head or pick some page from
+head, so a singly-linked list is also fine to us for now.
+
 > 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Kent Overstreet <kent.overstreet@gmail.com>
-> Cc: Chao Yu <chao@kernel.org>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> That said - this is definitely preferable to using page->lru - thank you.
+> 
+> Reviewed-by: Kent Overstreet <kent.overstreet@gmail.com>
 
-Would it not be an option to use an array of pointers to pages, instead of a
-linked list? Arrays are faster than lists, and page->private is another thing we
-prefer not to use if we don't have to.
+Thank you!
 
-That said - this is definitely preferable to using page->lru - thank you.
+Thanks,
+Gao Xiang
 
-Reviewed-by: Kent Overstreet <kent.overstreet@gmail.com>
