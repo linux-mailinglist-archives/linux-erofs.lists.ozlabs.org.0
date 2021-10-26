@@ -2,68 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A859A43B9BE
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Oct 2021 20:40:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76BD843BD13
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 00:14:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hf0xg41Rzz2yMN
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 05:40:23 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=USCiPN7a;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hf5h53fgNz2yV5
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 09:13:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::135;
- helo=mail-lf1-x135.google.com; envelope-from=daeho43@gmail.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=USCiPN7a; dkim-atps=neutral
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com
- [IPv6:2a00:1450:4864:20::135])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hf0xc5WdNz2x9w
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 05:40:20 +1100 (AEDT)
-Received: by mail-lf1-x135.google.com with SMTP id l13so785265lfg.6
- for <linux-erofs@lists.ozlabs.org>; Tue, 26 Oct 2021 11:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=t4Qfz0ips2V1TEHy0p8AyFf5fWvDf7yJQlsVFfPLQ9k=;
- b=USCiPN7aUUpZ06J+5Z9w7XmR4KIK1Vd7c1VgUoUF7peieC4U4qWQBCwG0Erf46Ytcw
- fDOnAn2ye8212IhbufXj8f8BjU7L3QoTCaZA5e0LyTizrsIEM7KVUnPRUYJrPGkkA7gM
- IggK9U96oLRZOqcNGWYxq/RwzD/cT52yXBI0zjXK+FZkqOwAl66uV2nSK+cCYCrh3tvt
- FjBf8s7egoqiVCLBTbEh2EOIs4nwT3q4NCaywiGSr7sY8kRkEsRD7hVT8xjxkm4wmi25
- f4388SGU/UdcHaAqYzJumgkgoGAG/Q+7xOSTi70bhZ0UOAdOUhbCWw7QfupqzDnbgR5F
- 9/WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=t4Qfz0ips2V1TEHy0p8AyFf5fWvDf7yJQlsVFfPLQ9k=;
- b=zQvz5xjKVEpj205gbw/rPSd7FdK1NyQEKc/E51yufzU2RYEDcjS0dRbGp/fvWnXOyO
- eiRSrfvLroukrRN8uUPgg36pAaOyQWiyGsteMSzaPOPLewwe61TRfMTxZOBIo5cksxDR
- BhuCbv94jdpqX3/6bM8J0QoqX+9D0pgVa9b34wdqrEV6bU8NJY2X5UHKTbZon+UMbBnd
- wMEwPaSTbbKeDPxO/l672OfS/IIuHMP/Q6NUMk8wNI4z2AMh8byXi61LtsSr5AKJ0dRw
- GymlfNT1yLmyA7yjsdeAtVnUxlx3YaVoKD3IxLj5ACY+7hy6hcj4MDJ1UpLZitOEUiuV
- pQBA==
-X-Gm-Message-State: AOAM531H5tHhngwc7vP5NrUBtz6jiPK+3p099TB+FBKLfCvNOYTWfP6v
- OoPnNvYxCmld0u4LpRZNmtjdV7C7mbmN3A0gkXo=
-X-Google-Smtp-Source: ABdhPJxddHLHKir4bOYdsXTs2zTQNkqngX2rraJP8O5XoygXX55jL2/yK6HsDXpgaFo7+L8w9lXhRQ9x1HvHgp9wiFM=
-X-Received: by 2002:a05:6512:1151:: with SMTP id
- m17mr24069049lfg.99.1635273615533; 
- Tue, 26 Oct 2021 11:40:15 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hf5h13lRxz2xTC
+ for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 09:13:46 +1100 (AEDT)
+X-IronPort-AV: E=McAfee;i="6200,9189,10149"; a="229975165"
+X-IronPort-AV: E=Sophos;i="5.87,184,1631602800"; d="scan'208";a="229975165"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+ by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 26 Oct 2021 15:12:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,184,1631602800"; d="scan'208";a="486380644"
+Received: from lkp-server01.sh.intel.com (HELO 072b454ebba8) ([10.239.97.150])
+ by orsmga007.jf.intel.com with ESMTP; 26 Oct 2021 15:12:15 -0700
+Received: from kbuild by 072b454ebba8 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mfUg3-0000Xm-2k; Tue, 26 Oct 2021 22:12:15 +0000
+Date: Wed, 27 Oct 2021 06:11:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 4e8bf1a671980a01a77533a6cda0dfd7bda7677a
+Message-ID: <61787d10.ImkbresJrhSYmmxX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20211025232436.GB10537@hsiangkao-HP-ZHAN-66-Pro-G1>
- <e48a0fbd-6e33-c75d-7991-ab9b4b755f46@huawei.com>
-In-Reply-To: <e48a0fbd-6e33-c75d-7991-ab9b4b755f46@huawei.com>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Tue, 26 Oct 2021 11:40:04 -0700
-Message-ID: <CACOAw_wOGjmqjZZF0y2gEaQ2EpSynvGB6NzrpT3dh5aMpNXFaw@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: introduce fsck.erofs
-To: Guo Xuenan <guoxuenan@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,39 +50,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Daeho Jeong <daehojeong@google.com>, linux-erofs@lists.ozlabs.org,
- Wang Qi <mpiglet@outlook.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
- miaoxie@huawei.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Oct 26, 2021 at 4:34 AM Guo Xuenan <guoxuenan@huawei.com> wrote:
->
-> Hi Daeho,
->
-> I agree with Xiang that -C/c options for collecting filesystem
-> statistics do repetitive
->
-> functional task comparing with dump tool. I think it's better to put it
-> in the dump tool.
->
-> And i have some further suggestions, In actual use scenairos of erofs on
-> mobile phone,
->
-> we found some accidental decompression failures. so, in my opinion, it
-> is better that
->
-> the fsck tool is able to unzip the overall data on disk or some specific
-> files.
->
-> Thanks.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 4e8bf1a671980a01a77533a6cda0dfd7bda7677a  erofs: don't trigger WARN() when decompression fails
 
-Hi Guo,
+elapsed time: 1832m
 
-I will move the compression rate calculation feature into the dump
-tool as one option after you've done your work.
-Plus, I think we can add the unzip feature into dump tool. It's more
-like a dump feature. :)
+configs tested: 52
+configs skipped: 3
 
-Thanks,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
