@@ -1,71 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDE6643D769
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 01:18:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE26F43D7A3
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 01:37:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hfl3W6mzCz3dfm
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 10:17:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HflV22gdZz2xX4
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 10:37:30 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=d6phRBLS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=6OnySiys;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::1033;
- helo=mail-pj1-x1033.google.com; envelope-from=dan.j.williams@intel.com;
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::42b;
+ helo=mail-pf1-x42b.google.com; envelope-from=dan.j.williams@intel.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=intel-com.20210112.gappssmtp.com
  header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=d6phRBLS; dkim-atps=neutral
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com
- [IPv6:2607:f8b0:4864:20::1033])
+ header.s=20210112 header.b=6OnySiys; dkim-atps=neutral
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com
+ [IPv6:2607:f8b0:4864:20::42b])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HfkqD6M0jz3f3K
- for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 10:07:20 +1100 (AEDT)
-Received: by mail-pj1-x1033.google.com with SMTP id
- k2-20020a17090ac50200b001a218b956aaso3229156pjt.2
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 16:07:20 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HflTy2sjVz2x9P
+ for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 10:37:16 +1100 (AEDT)
+Received: by mail-pf1-x42b.google.com with SMTP id b1so684761pfm.6
+ for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 16:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=intel-com.20210112.gappssmtp.com; s=20210112;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=3af0vrDw+XvQKylIm0LDLH9D6xoJ74LhsidYuXkOM7g=;
- b=d6phRBLSNqEavLbFGa7qsltfCwCXOIkQGNewJdYfiMwINhHDbJ+v3Tvr+m7SXCKglh
- f1Y9JyoYsY7pru2o0qaf9ZrRobsN47Jue96kM8PwOADE6VAIkbXtDJTZy+mzrce1H5ii
- TDWfFC/E9fe8cXOG72hb4HndsLJ5qovtA1WXr8x1UXXNXsg6OU7/y9sWKZsB9Ro8FzaF
- 3kotXlCmovzhrPQGnkvqh1aQ4+kBEwqSKMSlKnEz5Ahj4QsLMDMTI4jX5+IsmEJsZDOu
- D4ACx/M3ONMf14xOrt8n/jVyvHMKdyB04vPcp4aB9RBAawLg1e2wm7UXNUEREJEycjA9
- pSnQ==
+ :cc; bh=WMTMh4JidQFbMhcZT2VkZGNAi1C8CcA8jtm6BrftSss=;
+ b=6OnySiysF1hhuv+2jxJ9FfAfSmA8y9LXelAKat7WynBZQg+6PZ/Y6CL3zM18cMG3JD
+ GEnUquiuE3quJvpTuotuNPBGhT162UmD7avG0jDOAcziSvLYUVDywCngB4p3fQ58ZM0M
+ zEqOMtq2uc82z3Hyo8SHcJ4wrgy4SICUQMJg3EUzEQ97cTDTxpAJL+ZjXMrC9Pd6Yd4I
+ Hv+o6S8B5+bjhFZmSyXmvoK3vkD+a/tR7V2R1bzY3az6V1C7tt1S3O/yFi5MScIMNOJo
+ whD2gxewZ5pTPcAORmeXbNAMaeToO/lIBwIX5Bv5eefUsLjTlEzVx3onl1Zq5iL+vzm0
+ cGOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
  :message-id:subject:to:cc;
- bh=3af0vrDw+XvQKylIm0LDLH9D6xoJ74LhsidYuXkOM7g=;
- b=xS2OKGWDJGi4F6sUp0fe90wc/wZ9LdGNe6bfY4JJ1vhJu81RWchRqzFINHF/5DL9Vt
- rI7O4LM6XJ7NB35ayPUurNzuQS6wBOavkMx8Oum/YgWzcsGPiGGhfC7Y+1DBvABi3mj0
- 1DvngP0LcqdOM/Vl/gU8QL3RhJMZ3p12ZhIyto9Qb4wfBjXJ/ZuSWqkqSIPP1U3D4leG
- xbIDd3LeNmO5Kn5JkYR6rkBbYBWkO147rqVVJqUUlG43ijbt6esC2jbbVwaICLewcV5g
- brx8AGeTUcEgNtT07TztPVHxUoTnokElKLAjezACvL9ECS0FHesuUJlrkI7Xqhq30TYX
- MWoA==
-X-Gm-Message-State: AOAM5331J0ESCxRGc+M4tgDmLk4tTTF3eo+jw2Vew8dxCwOyevgBxKXU
- u8SanhWWr1WgnYnbbrr59LrydC3A+Ak+77f0Q/v94g==
-X-Google-Smtp-Source: ABdhPJxTOfk9fcqxHjqgG3f1vnNsNPlrTHxqnz6/LIE7U1wpYxfkWo7JAy9TqN/B72HDrJA9DjHrJAEIhgWs2Md2+FA=
-X-Received: by 2002:a17:90b:350f:: with SMTP id
- ls15mr618659pjb.220.1635376038542; 
- Wed, 27 Oct 2021 16:07:18 -0700 (PDT)
+ bh=WMTMh4JidQFbMhcZT2VkZGNAi1C8CcA8jtm6BrftSss=;
+ b=oyqXCVSBxwXlC6YtMnnaKxKD0KJiljQ4k20d6yK7YEo3ImiN6GywSnxCym+sP1BVeU
+ 6sGKejeh4SrvhY6zGngTI4OEozV48p4R943qIAh0QsIPzIg5N0J2F+EmDTJ9hRz6bX0t
+ Su263Qh1DUVvqk8qfhQln0E3GXhNJcBsNsUsjC1AzGTXLwLgUfxCTx0PDVzuhA8ewRYG
+ 2iER7cJ2N4vHcPs791esEL1llBkBN+EaQbXoZWQJ4gHLhuZXLzNpK/3ijkxkliKyeN4U
+ 0QCieKjjcm3OtwFBv9awJcfwhFGcI8FNzE/Mmbub10x/aqvFdzxd04BoQu74z2xrExuI
+ Ljvg==
+X-Gm-Message-State: AOAM530uBgpwdE3tXXpogBivdFpBNMRHjqZr4ZxwepWeADggm4vXFW7Y
+ 6mWn678D6fKCaZNVZXWovXIy0NGfA4kbhItYEwWcRg==
+X-Google-Smtp-Source: ABdhPJxcsU50q4uGsTOaoj9w67NPN0ee0O0WC5tw2bEynUFc2bhlW22w0QMQKH9wvcSAfLnnolzJDk1LCiKsNt9RVYY=
+X-Received: by 2002:a63:1e0e:: with SMTP id e14mr608862pge.5.1635377832818;
+ Wed, 27 Oct 2021 16:37:12 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211018044054.1779424-1-hch@lst.de>
- <20211018044054.1779424-6-hch@lst.de>
-In-Reply-To: <20211018044054.1779424-6-hch@lst.de>
+ <20211018044054.1779424-7-hch@lst.de>
+ <20211018164351.GT24307@magnolia> <20211019072326.GA23171@lst.de>
+In-Reply-To: <20211019072326.GA23171@lst.de>
 From: Dan Williams <dan.j.williams@intel.com>
-Date: Wed, 27 Oct 2021 16:07:07 -0700
-Message-ID: <CAPcyv4iqkLQWEyqRYZPaBmA=bXyJy5DR699ch+wfBanY-MKu9g@mail.gmail.com>
-Subject: Re: [PATCH 05/11] dax: move the partition alignment check into
- fs_dax_get_by_bdev
+Date: Wed, 27 Oct 2021 16:37:01 -0700
+Message-ID: <CAPcyv4hbLur8rN40zaqmBw7VH37FoPAzvj-U_NT7Lk2-v5JhSQ@mail.gmail.com>
+Subject: Re: [PATCH 06/11] xfs: factor out a xfs_setup_dax helper
 To: Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -80,8 +78,8 @@ List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
- linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- virtualization@lists.linux-foundation.org,
+ linux-s390 <linux-s390@vger.kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ linux-erofs@lists.ozlabs.org, virtualization@lists.linux-foundation.org,
  linux-xfs <linux-xfs@vger.kernel.org>,
  device-mapper development <dm-devel@redhat.com>,
  linux-fsdevel <linux-fsdevel@vger.kernel.org>,
@@ -90,68 +88,30 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Oct 19, 2021 at 12:24 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> fs_dax_get_by_bdev is the primary interface to find a dax device for a
-> block device, so move the partition alignment check there instead of
-> wiring it up through ->dax_supported.
+> On Mon, Oct 18, 2021 at 09:43:51AM -0700, Darrick J. Wong wrote:
+> > > --- a/fs/xfs/xfs_super.c
+> > > +++ b/fs/xfs/xfs_super.c
+> > > @@ -339,6 +339,32 @@ xfs_buftarg_is_dax(
+> > >                     bdev_nr_sectors(bt->bt_bdev));
+> > >  }
+> > >
+> > > +static int
+> > > +xfs_setup_dax(
+> >
+> > /me wonders if this should be named xfs_setup_dax_always, since this
+> > doesn't handle the dax=inode mode?
+>
+> Sure, why not.
 
-Looks good.
+I went ahead and made that change locally.
 
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/dax/super.c | 23 ++++++-----------------
->  1 file changed, 6 insertions(+), 17 deletions(-)
+> > The only reason I bring that up is that Eric reminded me a while ago
+> > that we don't actually print any kind of EXPERIMENTAL warning for the
+> > auto-detection behavior.
 >
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 04fc680542e8d..482fe775324a4 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -93,6 +93,12 @@ struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev)
->         if (!blk_queue_dax(bdev->bd_disk->queue))
->                 return NULL;
->
-> +       if ((get_start_sect(bdev) * SECTOR_SIZE) % PAGE_SIZE ||
-> +           (bdev_nr_sectors(bdev) * SECTOR_SIZE) % PAGE_SIZE) {
-> +               pr_info("%pg: error: unaligned partition for dax\n", bdev);
-> +               return NULL;
-> +       }
-> +
->         id = dax_read_lock();
->         dax_dev = xa_load(&dax_hosts, (unsigned long)bdev->bd_disk);
->         if (!dax_dev || !dax_alive(dax_dev) || !igrab(&dax_dev->inode))
-> @@ -107,10 +113,6 @@ bool generic_fsdax_supported(struct dax_device *dax_dev,
->                 struct block_device *bdev, int blocksize, sector_t start,
->                 sector_t sectors)
->  {
-> -       pgoff_t pgoff, pgoff_end;
-> -       sector_t last_page;
-> -       int err;
-> -
->         if (blocksize != PAGE_SIZE) {
->                 pr_info("%pg: error: unsupported blocksize for dax\n", bdev);
->                 return false;
-> @@ -121,19 +123,6 @@ bool generic_fsdax_supported(struct dax_device *dax_dev,
->                 return false;
->         }
->
-> -       err = bdev_dax_pgoff(bdev, start, PAGE_SIZE, &pgoff);
-> -       if (err) {
-> -               pr_info("%pg: error: unaligned partition for dax\n", bdev);
-> -               return false;
-> -       }
-> -
-> -       last_page = PFN_DOWN((start + sectors - 1) * 512) * PAGE_SIZE / 512;
-> -       err = bdev_dax_pgoff(bdev, last_page, PAGE_SIZE, &pgoff_end);
-> -       if (err) {
-> -               pr_info("%pg: error: unaligned partition for dax\n", bdev);
-> -               return false;
-> -       }
-> -
->         return true;
->  }
->  EXPORT_SYMBOL_GPL(generic_fsdax_supported);
-> --
-> 2.30.2
->
+> Yes, I actually noticed that as well when preparing this series.
+
+The rest looks good to me.
