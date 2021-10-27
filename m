@@ -2,44 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F62343CB7F
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 16:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88DB143D31E
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 22:46:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HfVnK26HWz2yWR
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 01:04:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HfgjC3FXBz2ypZ
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 07:46:55 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=TxZcat++;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::529;
+ helo=mail-pg1-x529.google.com; envelope-from=dan.j.williams@intel.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel-com.20210112.gappssmtp.com
+ header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
+ header.s=20210112 header.b=TxZcat++; dkim-atps=neutral
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com
+ [IPv6:2607:f8b0:4864:20::529])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HfVn80yG5z2xRn
- for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 01:04:42 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R261e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0UtuRkER_1635343458; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UtuRkER_1635343458) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 27 Oct 2021 22:04:20 +0800
-Date: Wed, 27 Oct 2021 22:04:18 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Todor Ivanov <t.i.ivanov@gmail.com>
-Subject: Re: Question about mkfs.erofs and reproducible builds
-Message-ID: <YXlcYg80Sw7AryMo@B-P7TQMD6M-0146.local>
-References: <CAOv4OrXs9-4o0JvCdSus=WBjPqUbm+YES_QrsuXkv13dt7SKjQ@mail.gmail.com>
- <YXk3kK1+NLu2h9o1@B-P7TQMD6M-0146.local>
- <CAOv4OrXqGNZMT9=jPVVxUgrcdnRtJnTk3gnufA6cKeoWDkQNvQ@mail.gmail.com>
- <YXk9MYJFAg9BLxrn@B-P7TQMD6M-0146.local>
- <CAOv4OrUhgM0K7mhGbWTh+0himfpf5eW-XvH=uVpY5AhJB3fotA@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hfgj53NLqz2xC1
+ for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 07:46:47 +1100 (AEDT)
+Received: by mail-pg1-x529.google.com with SMTP id s136so4157936pgs.4
+ for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 13:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=intel-com.20210112.gappssmtp.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=sJa1X8Nq9O3Y4Jpn6QiA74FKvcIV+C24z8IRQUjGGE0=;
+ b=TxZcat++g2F8swI/guncdG9/17Z/6RCDj0O4DaP3V2lEJrBjGy6sZkL1oaiVAPUX7i
+ ibRs8fV27ZpLTrAbifA8zRst6y+Kk83j+VEjhNI+Vbneg5PK76uFu3Pt51HYTeEaMMd/
+ OOX5Fw0eevNVN84NzUSIfUo21BQoeHWua4n8iiMA5hViXFqIkNINp7tTwt6Va0lJxObQ
+ XbAdy+YG2LtzHKedjvpvUxc4S7WGprooI9+nPgi9DghDQrCCLYP8qAZgeT7medHBfAJw
+ WFVgaDdPI0CXvVHu3YcuEB3ai43LJghhdT9dLcGlj4W6soszGfdT20P58PyL1vt7VaVP
+ hqmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=sJa1X8Nq9O3Y4Jpn6QiA74FKvcIV+C24z8IRQUjGGE0=;
+ b=U1KZ8uh35HIoquIJx5uSe5Gi8YOV2SCcrU0wlouT4cQ+OeW+FVKGxeUksGApLMnkki
+ 8BkD4rv19x3cl5t9FYHPox7KDp/jlwrLY4PXJ00r6lAxZVAnXoZjIU09ya64EpnaUB2z
+ zrGXpv3MCurztqszKJj8nbrwojxyvGMn2OsTJVRz7SeTmomD6E25z04HUNgBZBtVSYNY
+ U0gTajJzrR7sg2p5fXDvUYx4+s2cgDd7rFmkzX/Ne5JMI+yPk/4bX29EhmXPexG8kt2V
+ ie98hmeqrCZ/SYSFZxYxWsmSDvKtiYDheY2C1TR5G9ZLtXRXDUy3oKXeHWRF6gdgwwYH
+ hDNQ==
+X-Gm-Message-State: AOAM531O44JkgYIVjj0PBT3Zeon8KF6dm98v4troJZsv+JPg83H3HA29
+ v7UiTHmsWk07f++38dg78GnkwF7uIODMJgn6u9U92w==
+X-Google-Smtp-Source: ABdhPJzuYcyzIFqC2QDapdBCh3wTfdWUrlublr2aq9P2i1Emub6ylFDIqTcshjHDL5pSUpWP0gXhlJZ+k6Puz+OdoJE=
+X-Received: by 2002:a05:6a00:1348:b0:47c:e8f1:69a3 with SMTP id
+ k8-20020a056a00134800b0047ce8f169a3mr433025pfu.86.1635367603066; Wed, 27 Oct
+ 2021 13:46:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOv4OrUhgM0K7mhGbWTh+0himfpf5eW-XvH=uVpY5AhJB3fotA@mail.gmail.com>
+References: <20211018044054.1779424-1-hch@lst.de>
+In-Reply-To: <20211018044054.1779424-1-hch@lst.de>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Wed, 27 Oct 2021 13:46:31 -0700
+Message-ID: <CAPcyv4iEt78-XSsKjTWcpy71zaduXyyigTro6f3fmRqqFOG98Q@mail.gmail.com>
+Subject: Re: futher decouple DAX from block devices
+To: Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,121 +76,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ device-mapper development <dm-devel@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 27, 2021 at 04:40:28PM +0300, Todor Ivanov wrote:
->    Hi, Gao,
-> 
->    Indeed c_version:[1.3-g9fe440d0], seems to fix the problem :) Thank you
-> very much for the prompt and accurate feedback! Do you think we can use the
-> dev branch for our images or is it better until it is merged into master?
-> What do you think?
+[ add sfr ]
 
-Many thanks for your feedback too in time! ;)
-I'm fine to fast-forward the main branch without bumping up the version
-(since other folks also needed that as well...)
+On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi Dan,
+>
+> this series cleans up and simplifies the association between DAX and block
+> devices in preparation of allowing to mount file systems directly on DAX
+> devices without a detour through block devices.
 
-But I'd like to postpone new erofs-utils v1.4 for a while since I'm
-waiting for merging some other on-going features too~
+So I notice that this is based on linux-next while libnvdimm-for-next
+is based on v5.15-rc4. Since I'm not Andrew I went ahead and rebased
+these onto v5.15-rc4, tested that, and then merged with linux-next to
+resolve the conflicts and tested again.
 
-Thanks,
-Gao Xiang
+My merge resolution is here [1]. Christoph, please have a look. The
+rebase and the merge result are both passing my test and I'm now going
+to review the individual patches. However, while I do that and collect
+acks from DM and EROFS folks, I want to give Stephen a heads up that
+this is coming. Primarily I want to see if someone sees a better
+strategy to merge this, please let me know, but if not I plan to walk
+Stephen and Linus through the resolution.
 
-> 
-> Kind regards,
-> Todor
-> 
-> 
-> On Wed, Oct 27, 2021 at 2:51 PM Gao Xiang <hsiangkao@linux.alibaba.com>
-> wrote:
-> 
-> > On Wed, Oct 27, 2021 at 02:41:54PM +0300, Todor Ivanov wrote:
-> > >     Hi, Gao,
-> > >
-> > >     This is how I installed mkfs.erofs on debian10:
-> > >
-> > > apt-get install pkg-config liblz4-dev gawk
-> > > wget
-> > >
-> > http://ftp.debian.org/debian/pool/main/e/erofs-utils/erofs-utils_1.3.orig.tar.gz
-> > > tar xvzpf erofs-utils_1.3.orig.tar.gz
-> > > cd erofs-utils-1.3/
-> > > ./autogen.sh
-> > > ./configure
-> > > make
-> > > make install
-> > >
-> > > Can you tell me where do I clone it from and if build instructions are
-> > > different?
-> >
-> > You could get the latest dev branch from:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
-> >
-> > We fixed some reproducable build issues recently, I think it might
-> > be related to
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?id=6324fac820c28c6a946f595fa58a0abba0f48eb4
-> >
-> > Thanks,
-> > Gao Xiang
-> >
-> > >
-> > > Kind regards,
-> > > Todor
-> > >
-> > > On Wed, Oct 27, 2021 at 2:27 PM Gao Xiang <hsiangkao@linux.alibaba.com>
-> > > wrote:
-> > >
-> > > > Hi Todor,
-> > > >
-> > > > On Wed, Oct 27, 2021 at 02:11:24PM +0300, Todor Ivanov wrote:
-> > > > >         Hello,
-> > > > >
-> > > > >         We are trying to replace squashfs with erofs and face an
-> > issue
-> > > > with
-> > > > > reproducing the build from one and the same source folder. The source
-> > > > > folder is "/etc" actually taken from an offline ubuntu 20.04 image
-> > and
-> > > > > mounted as read-only.
-> > > > >         I managed to narrow down the scope and it turns out that the
-> > > > issue
-> > > > > is when you have a file starting with "." (dot) in this folder. I.e.:
-> > > > >
-> > > > > etc/.anyfilename
-> > > > >
-> > > > > If I remove this file the erofs image of "etc" is reproducible (-T
-> > and -U
-> > > > > are used as well)
-> > > > >
-> > > > > The issue is somehow related to the other 76 subfolders of etc and
-> > this
-> > > > > file starting with dot. For example if I create such .anyfilename in
-> > usr
-> > > > or
-> > > > > var, there is no issue. Also if I create this file under
-> > > > > etc/xdg/.anyfilename, this is fine as well.
-> > > > > I also tried with etc from debian10 and the result is the same.
-> > Removing
-> > > > > any file that starts with dot directly under etc, makes the erofs
-> > build
-> > > > > reproducible.
-> > > > > Do you have any advice on this?
-> > > >
-> > > > In principle filenames starting with '.' won't impact anything about
-> > > > reproducible builds...
-> > > >
-> > > > Let me investigate it now... But may I ask which erofs-utils version
-> > > > is used? Does it still happen on the latest dev branch?
-> > > >
-> > > > Thanks,
-> > > > Gao Xiang
-> > > >
-> > > > >
-> > > > > Regards,
-> > > > > Todor
-> > > >
-> >
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/commit/?id=c3894cf6eb8f
+
+
+>
+> Diffstat:
+>  drivers/dax/Kconfig          |    4
+>  drivers/dax/bus.c            |    2
+>  drivers/dax/super.c          |  220 +++++--------------------------------------
+>  drivers/md/dm-linear.c       |   51 +++------
+>  drivers/md/dm-log-writes.c   |   44 +++-----
+>  drivers/md/dm-stripe.c       |   65 +++---------
+>  drivers/md/dm-table.c        |   22 ++--
+>  drivers/md/dm-writecache.c   |    2
+>  drivers/md/dm.c              |   29 -----
+>  drivers/md/dm.h              |    4
+>  drivers/nvdimm/Kconfig       |    2
+>  drivers/nvdimm/pmem.c        |    9 -
+>  drivers/s390/block/Kconfig   |    2
+>  drivers/s390/block/dcssblk.c |   12 +-
+>  fs/dax.c                     |   13 ++
+>  fs/erofs/super.c             |   11 +-
+>  fs/ext2/super.c              |    6 -
+>  fs/ext4/super.c              |    9 +
+>  fs/fuse/Kconfig              |    2
+>  fs/fuse/virtio_fs.c          |    2
+>  fs/xfs/xfs_super.c           |   54 +++++-----
+>  include/linux/dax.h          |   30 ++---
+>  22 files changed, 185 insertions(+), 410 deletions(-)
