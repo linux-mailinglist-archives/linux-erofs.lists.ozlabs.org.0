@@ -1,68 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 419E443D353
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 22:54:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4219F43D63A
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 00:03:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HfgtD0L8Dz2ypZ
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 07:54:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HfjPw1BPGz3bj0
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 09:03:48 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=xAWE2Gs6;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=r4O7O+D6;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::436;
- helo=mail-pf1-x436.google.com; envelope-from=dan.j.williams@intel.com;
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::62b;
+ helo=mail-pl1-x62b.google.com; envelope-from=dan.j.williams@intel.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=intel-com.20210112.gappssmtp.com
  header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=xAWE2Gs6; dkim-atps=neutral
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com
- [IPv6:2607:f8b0:4864:20::436])
+ header.s=20210112 header.b=r4O7O+D6; dkim-atps=neutral
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com
+ [IPv6:2607:f8b0:4864:20::62b])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hfgt73xnwz2xCB
- for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 07:54:39 +1100 (AEDT)
-Received: by mail-pf1-x436.google.com with SMTP id m14so3857202pfc.9
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 13:54:39 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HfjPn2lylz2y0C
+ for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 09:03:31 +1100 (AEDT)
+Received: by mail-pl1-x62b.google.com with SMTP id z11so2984096plg.8
+ for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 15:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=intel-com.20210112.gappssmtp.com; s=20210112;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=MW2+yuOLdVC2FiYNaHWFO+PStoIyhupC83aZvNmdg00=;
- b=xAWE2Gs6elQhyFnpgWWwNUZcIIN+S0dTB23e1v1SGSkr3xAYgCO6FZbQyPbRQqQf23
- 9I8Y78UczhWRyEynzMK/aUvy5wOw4Vy6/4LxJus/eHVGZMzDNjEAK+zx722FS9qK0he2
- 1U1cd8YzY36X3CDASwjtuR6iKB/eUu6jn2zPH05rfMggNUg3QvABlXcipTgHgz3k7BuS
- H+rhb1Vq1z7S7EkZGdXP0ONpo163cZlk5BsINHv2ASIpi7dd31Nuhi/Qnq9EJvDvkYxw
- Pntfc80cc9CfDzJp6vju7flE64Efz7hVPlBsr/GGmt1WhUviknbfEb0n+v3Q2OiU1RqV
- 8kaA==
+ :cc; bh=t4Hx7HuIToogFrpWvEndnhmu5FP0FfguH4MlN11vPPE=;
+ b=r4O7O+D6bqWhbnfNK8GAK+O+V51sL8gQ71rKDmnAA3fZ320ss8g64pT5I4bw0Ty2W9
+ TGiVpZlytWCPvqsnO2KP5mgjcvtWG32bPlTJSiDywz2eUzvbv14zKkXGrmqra8bYuVcX
+ 6eTzntuayCoe6FMfUlwppg7wtXGYJnRCccwyOD6BMW/cCSj5855vgtn7jPyqngLiNh96
+ igHjZ8TKVN2e2xQDd7pHeELmJKOPqBo/gYXXJPRXVsdlZBFwujavWR+bA+YkVqvY/M8E
+ xiafLQkvUuEAFIkRuAHaQc3YSU7PAJiw0NjeujUUWeonnrpA4patIFL2eOziiAOc+jWH
+ kG3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
  :message-id:subject:to:cc;
- bh=MW2+yuOLdVC2FiYNaHWFO+PStoIyhupC83aZvNmdg00=;
- b=XXHMzj5lbSxeU2FicMz9C8Ik86qkXcIeyLcj6z9BVz7n3YS04Q5MqwElrS8NRLSRxH
- p7JTBrUckNOR57gAs8bWq8HKS1av+nbgB3zc2iSI/E5/DMxEsR2ytaIbyNaL63E35HEG
- kQkSl68D6N5N0t83kjtVi58mi8QiSzX9ioMGGIGw5+7FYsyFUqklzkty6VD/nKwmcClb
- S8OdFAGDbRl0vcyUZGqN1l3ow8EpWpuMgFImEbd7HsUEcoZohqtOYRBFxWHc6MSNR9Vr
- 0qva+trnbfbU//L56+qp0fyJ79jJKZQ1CQB1AvR/cpZm5xwThOwk66KcFV9++KIo3dsM
- qcrg==
-X-Gm-Message-State: AOAM532s7sr1IBnjewVdxzpSWvm7d2trscmSoomdhdl7RtwTdi6g1uf1
- boss58MZqZc9ZGwgFFFYgnz8Vhn8w47Vk5/vOOluCQ==
-X-Google-Smtp-Source: ABdhPJxqYRzrssHaaThSAQ3S9v6yHWHIiMadGqtNgSbRxpNG6jDSA2a4I6mJJqbjxV8Pnl8ItfliO9eaeQbTvv574gs=
-X-Received: by 2002:a63:770e:: with SMTP id s14mr43824pgc.377.1635368076533;
- Wed, 27 Oct 2021 13:54:36 -0700 (PDT)
+ bh=t4Hx7HuIToogFrpWvEndnhmu5FP0FfguH4MlN11vPPE=;
+ b=FumeTeaGNu0pwCITAS+/vyGavxOne77pfjWNagUxGRs2t1B+anHR3NHEYAkImdCW5f
+ +6oXbPTRgXMBwqOUbttka5pOxiSDMCBqws6x9yZjlJpNGJDQtYi15NmGFp0vuZ+r7eX4
+ JoaCBmYgBIxhSsPFPU64UWgFop3mRNeWaYXBlR4MM6Fqb7x6fxPBTrbqz451T97h13mp
+ ul2BE6u27KfLnNNpXjVQBsAYdnPk0Yp/ba8QgVLRJscXJNPV8eDfiY1X1qC10ADzypJL
+ 9RNZWzQRhoXhTsRSX/500GSJmMs4FJPmvIvuoxxBBiZzkEHLh1UxpyjGBDiABv3gz4Xl
+ Ay+w==
+X-Gm-Message-State: AOAM531He3H+/XUS99ij0kAHqXwXtLj7TfbR/BW+X/oTsLxtOR8UUoxR
+ r4TvyHRMDaUGOVkyLKHYB81JZH8+JeWfLrsYljaodw==
+X-Google-Smtp-Source: ABdhPJxS3XiFOqFhrRKU/byzauaRUixVOrqI145+D91dRw4A1+NV2JaZOBZF6ul8S7Q+44ceN6tvuQAEuN2PR4AM+3Q=
+X-Received: by 2002:a17:90b:3b88:: with SMTP id
+ pc8mr317033pjb.93.1635372208848; 
+ Wed, 27 Oct 2021 15:03:28 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211018044054.1779424-1-hch@lst.de>
- <20211018044054.1779424-3-hch@lst.de>
-In-Reply-To: <20211018044054.1779424-3-hch@lst.de>
+ <20211018044054.1779424-4-hch@lst.de>
+In-Reply-To: <20211018044054.1779424-4-hch@lst.de>
 From: Dan Williams <dan.j.williams@intel.com>
-Date: Wed, 27 Oct 2021 13:54:25 -0700
-Message-ID: <CAPcyv4jAd5O=keOkvtKzrnqpy21dfH0sJSk7Oo16wYrFfPnk=Q@mail.gmail.com>
-Subject: Re: [PATCH 02/11] dax: remove CONFIG_DAX_DRIVER
+Date: Wed, 27 Oct 2021 15:03:17 -0700
+Message-ID: <CAPcyv4iM4RjrQj4Q4i+tXmq1QMC=_dy0TTCzvxqRc_miv40NGg@mail.gmail.com>
+Subject: Re: [PATCH 03/11] dax: simplify the dax_device <-> gendisk association
 To: Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -89,70 +90,14 @@ Sender: "Linux-erofs"
 
 On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> CONFIG_DAX_DRIVER only selects CONFIG_DAX now, so remove it.
+> Replace the dax_host_hash with an xarray indexed by the pointer value
+> of the gendisk, and require explicitl calls from the block drivers that
 
-Looks good, I don't think an s390 ack is needed for this one.
+s/explicitl/explicitl/
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/dax/Kconfig        | 4 ----
->  drivers/nvdimm/Kconfig     | 2 +-
->  drivers/s390/block/Kconfig | 2 +-
->  fs/fuse/Kconfig            | 2 +-
->  4 files changed, 3 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> index d2834c2cfa10d..954ab14ba7778 100644
-> --- a/drivers/dax/Kconfig
-> +++ b/drivers/dax/Kconfig
-> @@ -1,8 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -config DAX_DRIVER
-> -       select DAX
-> -       bool
-> -
->  menuconfig DAX
->         tristate "DAX: direct access to differentiated memory"
->         select SRCU
-> diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-> index b7d1eb38b27d4..347fe7afa5830 100644
-> --- a/drivers/nvdimm/Kconfig
-> +++ b/drivers/nvdimm/Kconfig
-> @@ -22,7 +22,7 @@ if LIBNVDIMM
->  config BLK_DEV_PMEM
->         tristate "PMEM: Persistent memory block device support"
->         default LIBNVDIMM
-> -       select DAX_DRIVER
-> +       select DAX
->         select ND_BTT if BTT
->         select ND_PFN if NVDIMM_PFN
->         help
-> diff --git a/drivers/s390/block/Kconfig b/drivers/s390/block/Kconfig
-> index d0416dbd0cd81..e3710a762abae 100644
-> --- a/drivers/s390/block/Kconfig
-> +++ b/drivers/s390/block/Kconfig
-> @@ -5,7 +5,7 @@ comment "S/390 block device drivers"
->  config DCSSBLK
->         def_tristate m
->         select FS_DAX_LIMITED
-> -       select DAX_DRIVER
-> +       select DAX
->         prompt "DCSSBLK support"
->         depends on S390 && BLOCK
->         help
-> diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
-> index 40ce9a1c12e5d..038ed0b9aaa5d 100644
-> --- a/fs/fuse/Kconfig
-> +++ b/fs/fuse/Kconfig
-> @@ -45,7 +45,7 @@ config FUSE_DAX
->         select INTERVAL_TREE
->         depends on VIRTIO_FS
->         depends on FS_DAX
-> -       depends on DAX_DRIVER
-> +       depends on DAX
->         help
->           This allows bypassing guest page cache and allows mapping host page
->           cache directly in guest address space.
-> --
-> 2.30.2
->
+I've fixed that up locally.
+
+> want to associate their gendisk with a dax_device.
+
+This looks good. 0day-robot is now chewing on it via the test merge
+with linux-next (libnvdimm-pending).
