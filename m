@@ -1,43 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A53043C8E0
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 13:51:48 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D35543C90B
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 13:57:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HfRqk2J8sz2yMc
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 22:51:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HfRyk0SfYz2yK2
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Oct 2021 22:57:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.88.44.36;
- helo=out4436.biz.mail.alibaba.com; envelope-from=hsiangkao@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com
- [47.88.44.36])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HfRqZ10ryz2xrC
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 22:51:33 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R731e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0Utt49wT_1635335473; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Utt49wT_1635335473) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 27 Oct 2021 19:51:14 +0800
-Date: Wed, 27 Oct 2021 19:51:13 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Todor Ivanov <t.i.ivanov@gmail.com>
-Subject: Re: Question about mkfs.erofs and reproducible builds
-Message-ID: <YXk9MYJFAg9BLxrn@B-P7TQMD6M-0146.local>
-References: <CAOv4OrXs9-4o0JvCdSus=WBjPqUbm+YES_QrsuXkv13dt7SKjQ@mail.gmail.com>
- <YXk3kK1+NLu2h9o1@B-P7TQMD6M-0146.local>
- <CAOv4OrXqGNZMT9=jPVVxUgrcdnRtJnTk3gnufA6cKeoWDkQNvQ@mail.gmail.com>
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com;
+ envelope-from=guoxuenan@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HfRyX4plXz2y7K
+ for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 22:57:40 +1100 (AEDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+ by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4HfRwp2WF7z8tpw;
+ Wed, 27 Oct 2021 19:56:10 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (7.193.23.242) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Wed, 27 Oct 2021 19:57:32 +0800
+Received: from huawei.com (10.175.101.6) by kwepemm600004.china.huawei.com
+ (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 27 Oct
+ 2021 19:57:31 +0800
+From: Guo Xuenan <guoxuenan@huawei.com>
+To: <xiang@kernel.org>, <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH 1/3] erofs-utils: dump: add -S options for collecting
+ filesystem statistics
+Date: Wed, 27 Oct 2021 20:03:49 +0800
+Message-ID: <20211027120351.2885966-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOv4OrXqGNZMT9=jPVVxUgrcdnRtJnTk3gnufA6cKeoWDkQNvQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,85 +53,467 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: daeho43@gmail.com, mpiglet@outlook.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 27, 2021 at 02:41:54PM +0300, Todor Ivanov wrote:
->     Hi, Gao,
-> 
->     This is how I installed mkfs.erofs on debian10:
-> 
-> apt-get install pkg-config liblz4-dev gawk
-> wget
-> http://ftp.debian.org/debian/pool/main/e/erofs-utils/erofs-utils_1.3.orig.tar.gz
-> tar xvzpf erofs-utils_1.3.orig.tar.gz
-> cd erofs-utils-1.3/
-> ./autogen.sh
-> ./configure
-> make
-> make install
-> 
-> Can you tell me where do I clone it from and if build instructions are
-> different?
+From: Wang Qi <mpiglet@outlook.com>
 
-You could get the latest dev branch from:
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
+Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+Signed-off-by: Wang Qi <mpiglet@outlook.com>
+---
+ dump/Makefile.am         |   2 +-
+ dump/main.c              | 358 ++++++++++++++++++++++++++++++++++++++-
+ include/erofs/internal.h |   1 +
+ lib/namei.c              |   2 +-
+ 4 files changed, 360 insertions(+), 3 deletions(-)
 
-We fixed some reproducable build issues recently, I think it might
-be related to
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?id=6324fac820c28c6a946f595fa58a0abba0f48eb4
+diff --git a/dump/Makefile.am b/dump/Makefile.am
+index f0246d7..4759901 100644
+--- a/dump/Makefile.am
++++ b/dump/Makefile.am
+@@ -6,4 +6,4 @@ bin_PROGRAMS     = dump.erofs
+ AM_CPPFLAGS = ${libuuid_CFLAGS}
+ dump_erofs_SOURCES = main.c
+ dump_erofs_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+-dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} ${libuuid_LIBS}
++dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} ${libuuid_LIBS} ${liblz4_LIBS}
+diff --git a/dump/main.c b/dump/main.c
+index 5b7ac5c..98ee68b 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -18,9 +18,51 @@
+ struct erofsdump_cfg {
+ 	unsigned int totalshow;
+ 	bool show_superblock;
++	bool show_statistics;
+ };
+ static struct erofsdump_cfg dumpcfg;
+ 
++static const char chart_format[] = "%-16s	%-11d %8.2f%% |%-50s|\n";
++static const char header_format[] = "%-16s %11s %16s |%-50s|\n";
++static char *file_types[] = {
++	".txt", ".so", ".xml", ".apk",
++	".odex", ".vdex", ".oat", ".rc",
++	".otf", ".txt", "others",
++};
++#define OTHERFILETYPE	ARRAY_SIZE(file_types)
++/* (1 << FILE_MAX_SIZE_BITS)KB */
++#define	FILE_MAX_SIZE_BITS	16
++
++static const char * const file_category_types[] = {
++	[EROFS_FT_UNKNOWN] = "unknown type",
++	[EROFS_FT_REG_FILE] = "regular file",
++	[EROFS_FT_DIR] = "directory",
++	[EROFS_FT_CHRDEV] = "char dev",
++	[EROFS_FT_BLKDEV] = "block dev",
++	[EROFS_FT_FIFO] = "FIFO file",
++	[EROFS_FT_SOCK] = "SOCK file",
++	[EROFS_FT_SYMLINK] = "symlink file",
++};
++
++struct erofs_statistics {
++	unsigned long files;
++	unsigned long compressed_files;
++	unsigned long uncompressed_files;
++	unsigned long files_total_size;
++	unsigned long files_total_origin_size;
++	double compress_rate;
++
++	/* [statistics] # of files based on inode_info->flags */
++	unsigned long file_category_stat[EROFS_FT_MAX];
++	/* [statistics] # of files based on file name extensions */
++	unsigned int file_type_stat[OTHERFILETYPE];
++	/* [statistics] # of files based on the original size of files */
++	unsigned int file_original_size[FILE_MAX_SIZE_BITS + 1];
++	/* [statistics] # of files based on the compressed size of files */
++	unsigned int file_comp_size[FILE_MAX_SIZE_BITS + 1];
++};
++static struct erofs_statistics stats;
++
+ static struct option long_options[] = {
+ 	{"help", no_argument, 0, 1},
+ 	{0, 0, 0, 0},
+@@ -39,10 +81,13 @@ static struct erofsdump_feature feature_lists[] = {
+ 	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
+ };
+ 
++static int erofs_read_dir(erofs_nid_t nid, erofs_nid_t parent_nid);
++
+ static void usage(void)
+ {
+ 	fputs("usage: [options] IMAGE\n\n"
+ 	      "Dump erofs layout from IMAGE, and [options] are:\n"
++	      " -S      show statistic information of the image\n"
+ 	      " -V      print the version number of dump.erofs and exit.\n"
+ 	      " -s      show information about superblock\n"
+ 	      " --help  display this help and exit.\n",
+@@ -58,13 +103,17 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
+ {
+ 	int opt;
+ 
+-	while ((opt = getopt_long(argc, argv, "Vs",
++	while ((opt = getopt_long(argc, argv, "SVs",
+ 				  long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 's':
+ 			dumpcfg.show_superblock = true;
+ 			++dumpcfg.totalshow;
+ 			break;
++		case 'S':
++			dumpcfg.show_statistics = true;
++			++dumpcfg.totalshow;
++			break;
+ 		case 'V':
+ 			erofsdump_print_version();
+ 			exit(0);
+@@ -90,6 +139,310 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
+ 	return 0;
+ }
+ 
++static int erofs_get_occupied_size(struct erofs_inode *inode,
++		erofs_off_t *size)
++{
++	*size = 0;
++	switch (inode->datalayout) {
++	case EROFS_INODE_FLAT_INLINE:
++	case EROFS_INODE_FLAT_PLAIN:
++		stats.uncompressed_files++;
++		*size = inode->i_size;
++		break;
++	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
++	case EROFS_INODE_FLAT_COMPRESSION:
++		stats.compressed_files++;
++		*size = inode->u.i_blocks * EROFS_BLKSIZ;
++		break;
++	default:
++		erofs_err("unknown datalayout");
++		return -1;
++	}
++	return 0;
++}
++
++static int erofs_getfile_extension(const char *filename)
++{
++	char *postfix = strrchr(filename, '.');
++	int type = 0;
++
++	if (postfix == NULL)
++		return OTHERFILETYPE - 1;
++	while (type < OTHERFILETYPE - 1) {
++		if (strcmp(postfix, file_types[type]) == 0)
++			break;
++		type++;
++	}
++	return type;
++}
++
++static void update_file_size_statatics(erofs_off_t occupied_size,
++		erofs_off_t original_size)
++{
++	int occupied_size_mark;
++	int original_size_mark;
++
++	original_size_mark = 0;
++	occupied_size_mark = 0;
++	occupied_size >>= 10;
++	original_size >>= 10;
++
++	while (occupied_size || original_size) {
++		if (occupied_size) {
++			occupied_size >>= 1;
++			occupied_size_mark++;
++		}
++		if (original_size) {
++			original_size >>= 1;
++			original_size_mark++;
++		}
++	}
++
++	if (original_size_mark >= FILE_MAX_SIZE_BITS)
++		stats.file_original_size[FILE_MAX_SIZE_BITS]++;
++	else
++		stats.file_original_size[original_size_mark]++;
++
++	if (occupied_size_mark >= FILE_MAX_SIZE_BITS)
++		stats.file_comp_size[FILE_MAX_SIZE_BITS]++;
++	else
++		stats.file_comp_size[occupied_size_mark]++;
++}
++
++static inline int erofs_checkdirent(struct erofs_dirent *de,
++		struct erofs_dirent *last_de,
++		u32 maxsize, const char *dname)
++{
++	int dname_len;
++	unsigned int nameoff = le16_to_cpu(de->nameoff);
++
++	if (nameoff < sizeof(struct erofs_dirent) ||
++			nameoff >= PAGE_SIZE) {
++		erofs_err("invalid de[0].nameoff %u @ nid %llu",
++				nameoff, de->nid | 0ULL);
++		return -EFSCORRUPTED;
++	}
++
++	dname_len = (de + 1 >= last_de) ? strnlen(dname, maxsize - nameoff) :
++				le16_to_cpu(de[1].nameoff) - nameoff;
++	/* a corrupted entry is found */
++	if (nameoff + dname_len > maxsize ||
++			dname_len > EROFS_NAME_LEN) {
++		erofs_err("bogus dirent @ nid %llu",
++				le64_to_cpu(de->nid) | 0ULL);
++		DBG_BUGON(1);
++		return -EFSCORRUPTED;
++	}
++	if (de->file_type >= EROFS_FT_MAX) {
++		erofs_err("invalid file type %llu", de->nid);
++		return -EFSCORRUPTED;
++	}
++	return dname_len;
++}
++
++static int erofs_read_dirent(struct erofs_dirent *de,
++		erofs_nid_t nid, erofs_nid_t parent_nid,
++		const char *dname)
++{
++	int err;
++	erofs_off_t occupied_size = 0;
++	struct erofs_inode inode = { .nid = de->nid };
++
++	stats.files++;
++	stats.file_category_stat[de->file_type]++;
++	err = erofs_read_inode_from_disk(&inode);
++	if (err) {
++		erofs_err("read file inode from disk failed!");
++		return err;
++	}
++
++	err = erofs_get_occupied_size(&inode, &occupied_size);
++	if (err) {
++		erofs_err("get file size failed\n");
++		return err;
++	}
++
++	if (de->file_type == EROFS_FT_REG_FILE) {
++		stats.files_total_origin_size += inode.i_size;
++		stats.file_type_stat[erofs_getfile_extension(dname)]++;
++		stats.files_total_size += occupied_size;
++		update_file_size_statatics(occupied_size, inode.i_size);
++	}
++
++	if ((de->file_type == EROFS_FT_DIR)
++				 && de->nid != nid && de->nid != parent_nid) {
++		err = erofs_read_dir(de->nid, nid);
++		if (err) {
++			erofs_err("parse dir nid %llu error occurred\n",
++					de->nid);
++			return err;
++		}
++	}
++	return 0;
++}
++
++
++static int erofs_read_dir(erofs_nid_t nid, erofs_nid_t parent_nid)
++{
++	struct erofs_inode vi = { .nid = nid};
++	int err;
++	char buf[EROFS_BLKSIZ];
++	erofs_off_t offset;
++
++	err = erofs_read_inode_from_disk(&vi);
++	if (err)
++		return err;
++
++	offset = 0;
++	while (offset < vi.i_size) {
++		erofs_off_t maxsize = min_t(erofs_off_t,
++			vi.i_size - offset, EROFS_BLKSIZ);
++		struct erofs_dirent *de = (void *)buf;
++		struct erofs_dirent *end;
++		unsigned int nameoff;
++
++		err = erofs_pread(&vi, buf, maxsize, offset);
++		if (err)
++			return err;
++
++		nameoff = le16_to_cpu(de->nameoff);
++		end = (void *)buf + nameoff;
++		while (de < end) {
++			const char *dname;
++			int ret;
++
++			/* skip "." and ".." dentry */
++			if (de->nid == nid || de->nid == parent_nid) {
++				de++;
++				continue;
++			}
++
++			dname = (char *)buf + nameoff;
++			ret = erofs_checkdirent(de, end, maxsize, dname);
++			if (ret < 0)
++				return ret;
++			ret = erofs_read_dirent(de, nid, parent_nid, dname);
++			if (ret < 0)
++				return ret;
++			++de;
++		}
++		offset += maxsize;
++	}
++	return 0;
++}
++
++static void erofsdump_print_chart_row(char *col1, unsigned int col2,
++		double col3, char *col4)
++{
++	char row[500] = {0};
++
++	sprintf(row, chart_format, col1, col2, col3, col4);
++	fprintf(stdout, row);
++}
++
++static void erofsdump_filesize_distribution(const char *title,
++		unsigned int *file_counts, unsigned int len)
++{
++	char col1[30];
++	unsigned int col2;
++	double col3;
++	char col4[400];
++	unsigned int lowerbound = 0;
++	unsigned int upperbound = 1;
++
++	fprintf(stdout, "\n%s file size distribution:\n", title);
++	fprintf(stdout, header_format, ">=(KB) .. <(KB) ", "count",
++			"ratio", "distribution");
++	for (int i = 0; i < len; i++) {
++		memset(col1, 0, sizeof(col1));
++		memset(col4, 0, sizeof(col4));
++		if (i == len - 1)
++			sprintf(col1, "%6d ..", lowerbound);
++		else if (i <= 6)
++			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
++		else
++
++			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
++		col2 = file_counts[i];
++		if (stats.file_category_stat[EROFS_FT_REG_FILE])
++			col3 = (double)(100 * col2) /
++				stats.file_category_stat[EROFS_FT_REG_FILE];
++		else
++			col3 = 0.0;
++		memset(col4, '#', col3 / 2);
++		erofsdump_print_chart_row(col1, col2, col3, col4);
++		lowerbound = upperbound;
++		upperbound <<= 1;
++	}
++}
++
++static void erofsdump_filetype_distribution(char **file_types, unsigned int len)
++{
++	char col1[30];
++	unsigned int col2;
++	double col3;
++	char col4[401];
++
++	fprintf(stdout, "\nFile type distribution:\n");
++	fprintf(stdout, header_format, "type", "count", "ratio",
++			"distribution");
++	for (int i = 0; i < len; i++) {
++		memset(col1, 0, sizeof(col1));
++		memset(col4, 0, sizeof(col4));
++		sprintf(col1, "%-17s", file_types[i]);
++		col2 = stats.file_type_stat[i];
++		if (stats.file_category_stat[EROFS_FT_REG_FILE])
++			col3 = (double)(100 * col2) /
++				stats.file_category_stat[EROFS_FT_REG_FILE];
++		else
++			col3 = 0.0;
++		memset(col4, '#', col3 / 2);
++		erofsdump_print_chart_row(col1, col2, col3, col4);
++	}
++}
++
++static void erofsdump_file_statistic(void)
++{
++	fprintf(stdout, "Filesystem total file count:		%lu\n",
++			stats.files);
++	for (int i = 0; i < EROFS_FT_MAX; i++)
++		fprintf(stdout, "Filesystem %s count:		%lu\n",
++			file_category_types[i], stats.file_category_stat[i]);
++
++	stats.compress_rate = (double)(100 * stats.files_total_size) /
++		(double)(stats.files_total_origin_size);
++	fprintf(stdout, "Filesystem compressed files:            %lu\n",
++			stats.compressed_files);
++	fprintf(stdout, "Filesystem uncompressed files:          %lu\n",
++			stats.uncompressed_files);
++	fprintf(stdout, "Filesystem total original file size:    %lu Bytes\n",
++			stats.files_total_origin_size);
++	fprintf(stdout, "Filesystem total file size:             %lu Bytes\n",
++			stats.files_total_size);
++	fprintf(stdout, "Filesystem compress rate:               %.2f%%\n",
++			stats.compress_rate);
++}
++
++static void erofsdump_print_statistic(void)
++{
++	int err;
++
++	err = erofs_read_dir(sbi.root_nid, sbi.root_nid);
++	if (err) {
++		erofs_err("read dir failed");
++		return;
++	}
++
++	erofsdump_file_statistic();
++	erofsdump_filesize_distribution("Original",
++			stats.file_original_size,
++			ARRAY_SIZE(stats.file_original_size));
++	erofsdump_filesize_distribution("On-disk",
++			stats.file_comp_size,
++			ARRAY_SIZE(stats.file_comp_size));
++	erofsdump_filetype_distribution(file_types, OTHERFILETYPE);
++}
++
+ static void erofsdump_show_superblock(void)
+ {
+ 	time_t time = sbi.build_time;
+@@ -156,6 +509,9 @@ int main(int argc, char **argv)
+ 	if (dumpcfg.show_superblock)
+ 		erofsdump_show_superblock();
+ 
++	if (dumpcfg.show_statistics)
++		erofsdump_print_statistic();
++
+ exit:
+ 	erofs_exit_configure();
+ 	return err;
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 8b154ed..f19f839 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -263,6 +263,7 @@ struct erofs_map_blocks {
+ int erofs_read_superblock(void);
+ 
+ /* namei.c */
++int erofs_read_inode_from_disk(struct erofs_inode *vi);
+ int erofs_ilookup(const char *path, struct erofs_inode *vi);
+ 
+ /* data.c */
+diff --git a/lib/namei.c b/lib/namei.c
+index b4bdabf..56f199a 100644
+--- a/lib/namei.c
++++ b/lib/namei.c
+@@ -22,7 +22,7 @@ static dev_t erofs_new_decode_dev(u32 dev)
+ 	return makedev(major, minor);
+ }
+ 
+-static int erofs_read_inode_from_disk(struct erofs_inode *vi)
++int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ {
+ 	int ret, ifmt;
+ 	char buf[sizeof(struct erofs_inode_extended)];
+-- 
+2.31.1
 
-Thanks,
-Gao Xiang
-
-> 
-> Kind regards,
-> Todor
-> 
-> On Wed, Oct 27, 2021 at 2:27 PM Gao Xiang <hsiangkao@linux.alibaba.com>
-> wrote:
-> 
-> > Hi Todor,
-> >
-> > On Wed, Oct 27, 2021 at 02:11:24PM +0300, Todor Ivanov wrote:
-> > >         Hello,
-> > >
-> > >         We are trying to replace squashfs with erofs and face an issue
-> > with
-> > > reproducing the build from one and the same source folder. The source
-> > > folder is "/etc" actually taken from an offline ubuntu 20.04 image and
-> > > mounted as read-only.
-> > >         I managed to narrow down the scope and it turns out that the
-> > issue
-> > > is when you have a file starting with "." (dot) in this folder. I.e.:
-> > >
-> > > etc/.anyfilename
-> > >
-> > > If I remove this file the erofs image of "etc" is reproducible (-T and -U
-> > > are used as well)
-> > >
-> > > The issue is somehow related to the other 76 subfolders of etc and this
-> > > file starting with dot. For example if I create such .anyfilename in usr
-> > or
-> > > var, there is no issue. Also if I create this file under
-> > > etc/xdg/.anyfilename, this is fine as well.
-> > > I also tried with etc from debian10 and the result is the same. Removing
-> > > any file that starts with dot directly under etc, makes the erofs build
-> > > reproducible.
-> > > Do you have any advice on this?
-> >
-> > In principle filenames starting with '.' won't impact anything about
-> > reproducible builds...
-> >
-> > Let me investigate it now... But may I ask which erofs-utils version
-> > is used? Does it still happen on the latest dev branch?
-> >
-> > Thanks,
-> > Gao Xiang
-> >
-> > >
-> > > Regards,
-> > > Todor
-> >
