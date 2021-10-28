@@ -1,72 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCB3243D8D5
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 03:44:30 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59DD943DF3E
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 12:50:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HfpJX5VLPz2yKZ
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 12:44:28 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=NwrWjK1z;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hg2QD1Qz0z304v
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Oct 2021 21:50:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::1035;
- helo=mail-pj1-x1035.google.com; envelope-from=dan.j.williams@intel.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=intel-com.20210112.gappssmtp.com
- header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=NwrWjK1z; dkim-atps=neutral
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com
- [IPv6:2607:f8b0:4864:20::1035])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HfpJT5L3xz2xB0
- for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 12:44:18 +1100 (AEDT)
-Received: by mail-pj1-x1035.google.com with SMTP id
- q2-20020a17090a2e0200b001a0fd4efd49so4367491pjd.1
- for <linux-erofs@lists.ozlabs.org>; Wed, 27 Oct 2021 18:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=intel-com.20210112.gappssmtp.com; s=20210112;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=X1wiwLbjvMr0fUU/Ik7bpLL2xq562nKRBks78M/tbQ0=;
- b=NwrWjK1zEgkC/h0OltkWmV8v6U9kycWNkAzFyZ2UqlXn15yubZLd83LVcZWNlLL1f0
- Fv5BW1FJAtxuVzU9kXByXaxfMtmiH5UDaukXhF9R+cJyfOGMfQT6zf04USpHM9TDLMLF
- 8zm7+00diA9rU2lDu/DTfvUOEu2zCMioGVYImhjXSkJTydRCIKV9cRbUQapJjcrGiqMK
- QnZf8nIfPhTNHOoqGDCmmZuYu6PaW3nbxj784zhi1I6uIMMPp2z6oTqTZJk+LfG12Qzb
- jA/Y5wJffgH2J2qLufj0bLW03BgfGI/buoZEjp4mtmSwLrMRhWqThDSfNCSg+TsSc0DH
- V6Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=X1wiwLbjvMr0fUU/Ik7bpLL2xq562nKRBks78M/tbQ0=;
- b=0nr6aJNjP9zaFmzuBUsIWjj233VebrY3HZWv55OQj6rv4nNnoDU0KJxvaUT9UtATJ+
- BR+nUGjSguxg87gvPhpqMlnYEsdeVTVJNqxv7/bQiLUL60F/gE3PnpWnSSIefksg9+T/
- 5U0NvmbxvK9fgJ2wF6LJaToMVXp+R21+MtrFU0dhAi8nRXuBtB5n046dpXgNOjk++5vP
- gMpsmkhHTxhe2cW7b9eeIjUdZw9Ivqzr12wAnxnmw7/zStA6u68donDhrdoUJ0tQMDHv
- yvZFf0mbdFOVwKZenhNyBlNM+rxGz1sIrhPbm2T9Na5btJ4TntzzqCgmpP5xCsS0H82t
- fuGw==
-X-Gm-Message-State: AOAM531sojONAtD2MeoXM9UhTp2++A1zglrdnncly+fd/XUEE7Ovrenu
- dZtAMMA8AbHk1ox40vlUzQqVzk++XBTlyonGsGpt0Q==
-X-Google-Smtp-Source: ABdhPJyk8c8xZHfkX0RONmluScnz61A4HGhWerdM4JYgASaD4FzedQ2nCFUwr5W/5xCzT57VlrSOf0tWDKABqHHbWT8=
-X-Received: by 2002:a17:902:8a97:b0:13e:6e77:af59 with SMTP id
- p23-20020a1709028a9700b0013e6e77af59mr1240292plo.4.1635385456643; Wed, 27 Oct
- 2021 18:44:16 -0700 (PDT)
+ smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com;
+ envelope-from=guoxuenan@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hg2Q745sXz2xD7
+ for <linux-erofs@lists.ozlabs.org>; Thu, 28 Oct 2021 21:50:07 +1100 (AEDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+ by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Hg2J33VCTzbnSH;
+ Thu, 28 Oct 2021 18:44:51 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (7.193.23.242) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Thu, 28 Oct 2021 18:49:31 +0800
+Received: from huawei.com (10.175.101.6) by kwepemm600004.china.huawei.com
+ (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Thu, 28 Oct
+ 2021 18:49:30 +0800
+From: Guo Xuenan <guoxuenan@huawei.com>
+To: <xiang@kernel.org>, <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v2 1/5] erofs-utils: add support for the full decompressed
+ length
+Date: Thu, 28 Oct 2021 18:57:44 +0800
+Message-ID: <20211028105748.3586231-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20211018044054.1779424-1-hch@lst.de>
- <20211018044054.1779424-12-hch@lst.de>
-In-Reply-To: <20211018044054.1779424-12-hch@lst.de>
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Wed, 27 Oct 2021 18:44:04 -0700
-Message-ID: <CAPcyv4ht6fZOdx4YN9FRCnmD2Wy4zzG7nJPQSdSPAgvZNHxoFw@mail.gmail.com>
-Subject: Re: [PATCH 11/11] dax: move bdev_dax_pgoff to fs/dax.c
-To: Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,105 +53,252 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
- linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- virtualization@lists.linux-foundation.org,
- linux-xfs <linux-xfs@vger.kernel.org>,
- device-mapper development <dm-devel@redhat.com>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Cc: daeho43@gmail.com, mpiglet@outlook.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> No functional changet, but this will allow for a tighter integration
+From: Huang Jianan <huangjianan@oppo.com>
 
-s/changet/changes/
+Previously, there is no need to get the full decompressed length since
+EROFS supports partial decompression. However for some other cases
+such as fiemap, the full decompressed length is necessary for iomap to
+make it work properly.
 
-> with the iomap code, including possible passing the partition offset
+This patch adds a way to get the full decompressed length. Note that
+it takes more metadata overhead and it'd be avoided if possible in the
+performance sensitive scenario.
 
-s/possible/possibly/
+Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+Signed-off-by: Gao Xiang <xiang@kernel.org>
+---
+ include/erofs/internal.h |  8 +++-
+ lib/data.c               |  2 +-
+ lib/zmap.c               | 99 ++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 97 insertions(+), 12 deletions(-)
 
-> in the iomap in the future.  For now it mostly avoids growing more
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 8b154ed..a487871 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -259,6 +259,12 @@ struct erofs_map_blocks {
+ 	erofs_blk_t index;
+ };
+ 
++/*
++ * Used to get the exact decompressed length, e.g. fiemap (consider lookback
++ * approach instead if possible since it's more metadata lightweight.)
++ */
++#define EROFS_GET_BLOCKS_FIEMAP	0x0002
++
+ /* super.c */
+ int erofs_read_superblock(void);
+ 
+@@ -271,7 +277,7 @@ int erofs_pread(struct erofs_inode *inode, char *buf,
+ /* zmap.c */
+ int z_erofs_fill_inode(struct erofs_inode *vi);
+ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+-			    struct erofs_map_blocks *map);
++			    struct erofs_map_blocks *map, int flags);
+ 
+ #ifdef EUCLEAN
+ #define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+diff --git a/lib/data.c b/lib/data.c
+index 641d840..30e7312 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -201,7 +201,7 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 	while (end > offset) {
+ 		map.m_la = end - 1;
+ 
+-		ret = z_erofs_map_blocks_iter(inode, &map);
++		ret = z_erofs_map_blocks_iter(inode, &map, 0);
+ 		if (ret)
+ 			break;
+ 
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 458030b..f6a8ccf 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -159,9 +159,34 @@ static unsigned int decode_compactedbits(unsigned int lobits,
+ 	return lo;
+ }
+ 
++static int get_compacted_la_distance(unsigned int lclusterbits,
++				     unsigned int encodebits,
++				     unsigned int vcnt, u8 *in, int i)
++{
++	const unsigned int lomask = (1 << lclusterbits) - 1;
++	unsigned int lo, d1 = 0;
++	u8 type;
++
++	DBG_BUGON(i >= vcnt);
++
++	do {
++		lo = decode_compactedbits(lclusterbits, lomask,
++					  in, encodebits * i, &type);
++
++		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
++			return d1;
++		++d1;
++	} while (++i < vcnt);
++
++	/* vcnt - 1 (Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) item */
++	if (!(lo & Z_EROFS_VLE_DI_D0_CBLKCNT))
++		d1 += lo - 1;
++	return d1;
++}
++
+ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 				  unsigned int amortizedshift,
+-				  unsigned int eofs)
++				  unsigned int eofs, bool lookahead)
+ {
+ 	struct erofs_inode *const vi = m->inode;
+ 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+@@ -190,6 +215,11 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	m->type = type;
+ 	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
+ 		m->clusterofs = 1 << lclusterbits;
++
++		/* figure out lookahead_distance: delta[1] if needed */
++		if (lookahead)
++			m->delta[1] = get_compacted_la_distance(lclusterbits,
++						encodebits, vcnt, in, i);
+ 		if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
+ 			if (!big_pcluster) {
+ 				DBG_BUGON(1);
+@@ -260,7 +290,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ }
+ 
+ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+-					    unsigned long lcn)
++					    unsigned long lcn, bool lookahead)
+ {
+ 	struct erofs_inode *const vi = m->inode;
+ 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+@@ -310,11 +340,12 @@ out:
+ 	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
+ 	if (err)
+ 		return err;
+-	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
++	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos),
++				      lookahead);
+ }
+ 
+ static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+-					  unsigned int lcn)
++					  unsigned int lcn, bool lookahead)
+ {
+ 	const unsigned int datamode = m->inode->datalayout;
+ 
+@@ -322,7 +353,7 @@ static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 		return legacy_load_cluster_from_disk(m, lcn);
+ 
+ 	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
+-		return compacted_load_cluster_from_disk(m, lcn);
++		return compacted_load_cluster_from_disk(m, lcn, lookahead);
+ 
+ 	return -EINVAL;
+ }
+@@ -345,7 +376,7 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 
+ 	/* load extent head logical cluster if needed */
+ 	lcn -= lookback_distance;
+-	err = z_erofs_load_cluster_from_disk(m, lcn);
++	err = z_erofs_load_cluster_from_disk(m, lcn, false);
+ 	if (err)
+ 		return err;
+ 
+@@ -394,7 +425,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 	if (m->compressedlcs)
+ 		goto out;
+ 
+-	err = z_erofs_load_cluster_from_disk(m, lcn);
++	err = z_erofs_load_cluster_from_disk(m, lcn, false);
+ 	if (err)
+ 		return err;
+ 
+@@ -440,8 +471,50 @@ err_bonus_cblkcnt:
+ 	return -EFSCORRUPTED;
+ }
+ 
++static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
++{
++	struct erofs_inode *const vi = m->inode;
++	struct erofs_map_blocks *map = m->map;
++	unsigned int lclusterbits = vi->z_logical_clusterbits;
++	u64 lcn = m->lcn, headlcn = map->m_la >> lclusterbits;
++	int err;
++
++	do {
++		/* handle the last EOF pcluster (no next HEAD lcluster) */
++		if ((lcn << lclusterbits) >= vi->i_size) {
++			map->m_llen = vi->i_size - map->m_la;
++			return 0;
++		}
++
++		err = z_erofs_load_cluster_from_disk(m, lcn, true);
++		if (err)
++			return err;
++
++		if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
++			DBG_BUGON(!m->delta[1] &&
++				  m->clusterofs != 1 << lclusterbits);
++		} else if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD) {
++			/* go on until the next HEAD lcluster */
++			if (lcn != headlcn)
++				break;
++			m->delta[1] = 1;
++		} else {
++			erofs_err("unknown type %u @ lcn %lu of nid %llu",
++				  m->type, lcn, (unsigned long long)vi->nid);
++			DBG_BUGON(1);
++			return -EOPNOTSUPP;
++		}
++		lcn += m->delta[1];
++	} while (m->delta[1]);
++
++	map->m_llen = (lcn << lclusterbits) + m->clusterofs - map->m_la;
++	return 0;
++}
++
+ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+-			    struct erofs_map_blocks *map)
++			    struct erofs_map_blocks *map,
++			    int flags)
+ {
+ 	struct z_erofs_maprecorder m = {
+ 		.inode = vi,
+@@ -470,7 +543,7 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+ 	initial_lcn = ofs >> lclusterbits;
+ 	endoff = ofs & ((1 << lclusterbits) - 1);
+ 
+-	err = z_erofs_load_cluster_from_disk(&m, initial_lcn);
++	err = z_erofs_load_cluster_from_disk(&m, initial_lcn, false);
+ 	if (err)
+ 		goto out;
+ 
+@@ -512,11 +585,17 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+ 
+ 	map->m_llen = end - map->m_la;
+ 	map->m_pa = blknr_to_addr(m.pblk);
++	map->m_flags |= EROFS_MAP_MAPPED;
+ 
+ 	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
+ 	if (err)
+ 		goto out;
+-	map->m_flags |= EROFS_MAP_MAPPED;
++
++	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
++		err = z_erofs_get_extent_decompressedlen(&m);
++		if (!err)
++			map->m_flags |= EROFS_MAP_FULL_MAPPED;
++	}
+ 
+ out:
+ 	erofs_dbg("m_la %" PRIu64 " m_pa %" PRIu64 " m_llen %" PRIu64 " m_plen %" PRIu64 " m_flags 0%o",
+-- 
+2.31.1
 
-s/now/now,/
-
-...all of the above fixed up locally.
-
-Other than that, it looks good to me.
-
-> callers outside of fs/dax.c.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/dax/super.c | 14 --------------
->  fs/dax.c            | 13 +++++++++++++
->  include/linux/dax.h |  1 -
->  3 files changed, 13 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 803942586d1b6..c0910687fbcb2 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -67,20 +67,6 @@ void dax_remove_host(struct gendisk *disk)
->  }
->  EXPORT_SYMBOL_GPL(dax_remove_host);
->
-> -int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
-> -               pgoff_t *pgoff)
-> -{
-> -       sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
-> -       phys_addr_t phys_off = (start_sect + sector) * 512;
-> -
-> -       if (pgoff)
-> -               *pgoff = PHYS_PFN(phys_off);
-> -       if (phys_off % PAGE_SIZE || size % PAGE_SIZE)
-> -               return -EINVAL;
-> -       return 0;
-> -}
-> -EXPORT_SYMBOL(bdev_dax_pgoff);
-> -
->  /**
->   * dax_get_by_host() - temporary lookup mechanism for filesystem-dax
->   * @bdev: block device to find a dax_device for
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 4e3e5a283a916..eb715363fd667 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -709,6 +709,19 @@ int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
->         return __dax_invalidate_entry(mapping, index, false);
->  }
->
-> +static int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
-> +               pgoff_t *pgoff)
-> +{
-> +       sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
-> +       phys_addr_t phys_off = (start_sect + sector) * 512;
-> +
-> +       if (pgoff)
-> +               *pgoff = PHYS_PFN(phys_off);
-> +       if (phys_off % PAGE_SIZE || size % PAGE_SIZE)
-> +               return -EINVAL;
-> +       return 0;
-> +}
-> +
->  static int copy_cow_page_dax(struct block_device *bdev, struct dax_device *dax_dev,
->                              sector_t sector, struct page *to, unsigned long vaddr)
->  {
-> diff --git a/include/linux/dax.h b/include/linux/dax.h
-> index 439c3c70e347b..324363b798ecd 100644
-> --- a/include/linux/dax.h
-> +++ b/include/linux/dax.h
-> @@ -107,7 +107,6 @@ static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
->  #endif
->
->  struct writeback_control;
-> -int bdev_dax_pgoff(struct block_device *, sector_t, size_t, pgoff_t *pgoff);
->  #if IS_ENABLED(CONFIG_FS_DAX)
->  int dax_add_host(struct dax_device *dax_dev, struct gendisk *disk);
->  void dax_remove_host(struct gendisk *disk);
-> --
-> 2.30.2
->
