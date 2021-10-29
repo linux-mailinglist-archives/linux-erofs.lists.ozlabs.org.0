@@ -1,43 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24D7E43F664
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 06:59:08 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6714C43F6D4
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 07:52:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HgVZf0Pk8z2yQ9
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 15:59:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HgWlq1x6Nz2ynQ
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 16:52:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mga17.intel.com;
- envelope-from=ira.weiny@intel.com; receiver=<UNKNOWN>)
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+ smtp.mailfrom=yulong.com (client-ip=113.96.223.78; helo=qq.com;
+ envelope-from=huyue2@yulong.com; receiver=<UNKNOWN>)
+Received: from qq.com (smtpbg413.qq.com [113.96.223.78])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HgVZW3LRJz2xMw
- for <linux-erofs@lists.ozlabs.org>; Fri, 29 Oct 2021 15:58:57 +1100 (AEDT)
-X-IronPort-AV: E=McAfee;i="6200,9189,10151"; a="211359023"
-X-IronPort-AV: E=Sophos;i="5.87,191,1631602800"; d="scan'208";a="211359023"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
- by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 28 Oct 2021 21:57:39 -0700
-X-IronPort-AV: E=Sophos;i="5.87,191,1631602800"; d="scan'208";a="665692765"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
- by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 28 Oct 2021 21:57:38 -0700
-Date: Thu, 28 Oct 2021 21:57:37 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 03/11] dax: simplify the dax_device <-> gendisk association
-Message-ID: <20211029045737.GJ3538886@iweiny-DESK2.sc.intel.com>
-References: <20211018044054.1779424-1-hch@lst.de>
- <20211018044054.1779424-4-hch@lst.de>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HgWlh6f9dz2xXc
+ for <linux-erofs@lists.ozlabs.org>; Fri, 29 Oct 2021 16:52:00 +1100 (AEDT)
+X-QQ-mid: bizesmtp32t1635486639t6g1enlz
+Received: from tj.ccdomain.com (unknown [218.94.48.178])
+ by esmtp6.qq.com (ESMTP) with 
+ id ; Fri, 29 Oct 2021 13:50:24 +0800 (CST)
+X-QQ-SSF: 01400000000000Z0Z000B00A0000000
+X-QQ-FEAT: Mzskoac49OgAryltguf54KH8t16f3YIGLF+IJNZXPcwXU/qNj1yvx1wYFfzYp
+ zSDob/pWeibO8iNhLOGWe1PCm3DL+jKn0uH5qN+EqDSMmISC5YTzHusX7o3bpDV60PdNLxx
+ jT72/oaVHhVaHiiLkwckhYdmb+2Ks+Xrfu2jTiYGyMN5am2fsuSTmx7+8K8UvM97ag8D65h
+ CbnwGON5SBY0xheXOnDLUlZwiZ8fFRQT9PfKIWRg+DgKzTIHGYfzamOwQjgOmZMR9ClJ9w2
+ sgVKL5FP1IwgwfVDoEhzoze4a73UdeqY+GiVs6v5Lhr84lv2+RWY6dIRHMNdKDB3TQHDuGd
+ yYCqEvoFiVbAHxmSnXn9eghcuO6n6AxW8bx0BBv
+X-QQ-GoodBg: 2
+From: Yue Hu <huyue2@yulong.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [RFC PATCH v2 0/2] erofs-utils: compression inline feature
+Date: Fri, 29 Oct 2021 13:49:29 +0800
+Message-Id: <cover.1635485195.git.huyue2@yulong.com>
+X-Mailer: git-send-email 2.29.2.windows.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211018044054.1779424-4-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:yulong.com:qybgforeign:qybgforeign6
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,49 +51,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nvdimm@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>,
- linux-s390@vger.kernel.org, virtualization@lists.linux-foundation.org,
- linux-xfs@vger.kernel.org, dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
- Dan Williams <dan.j.williams@intel.com>, linux-ext4@vger.kernel.org,
- linux-erofs@lists.ozlabs.org
+Cc: zhangwen@yulong.com, Yue Hu <huyue2@yulong.com>, geshifei@yulong.com,
+ shaojunjun@yulong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Oct 18, 2021 at 06:40:46AM +0200, Christoph Hellwig wrote:
-> Replace the dax_host_hash with an xarray indexed by the pointer value
-> of the gendisk, and require explicitl calls from the block drivers that
-> want to associate their gendisk with a dax_device.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/dax/bus.c            |   2 +-
->  drivers/dax/super.c          | 106 +++++++++--------------------------
->  drivers/md/dm.c              |   6 +-
->  drivers/nvdimm/pmem.c        |   8 ++-
->  drivers/s390/block/dcssblk.c |  11 +++-
->  fs/fuse/virtio_fs.c          |   2 +-
->  include/linux/dax.h          |  19 +++++--
->  7 files changed, 60 insertions(+), 94 deletions(-)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 6cc4da4c713d9..6d91b0186e3be 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1326,7 +1326,7 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
->  	 * No 'host' or dax_operations since there is no access to this
->  	 * device outside of mmap of the resulting character device.
->  	 */
+Now, we only support tail-end inline data for uncompressed file. We should
+also support it for compressed file to further decrease tail extent I/O and
+save more space. That is original intention as well from Xiang.
 
-NIT: this comment needs to be updated as well.
+Note that tail pcluster data is compressed by 4KB in this patch, which looks
+like inefficent. As Xiang mentioned, there is another better way to handle it.
+This patch is just using 4KB compression policy, we may improve it next.
 
-Ira
+Thanks.
 
-> -	dax_dev = alloc_dax(dev_dax, NULL, NULL, DAXDEV_F_SYNC);
-> +	dax_dev = alloc_dax(dev_dax, NULL, DAXDEV_F_SYNC);
->  	if (IS_ERR(dax_dev)) {
->  		rc = PTR_ERR(dax_dev);
->  		goto err_alloc_dax;
+Yue Hu (2):
+  erofs-utils: support tail-packing inline compressed data
+  erofs-utils: fuse: support tail-packing inline compressed data
 
-[snip]
+ include/erofs/internal.h |   4 ++
+ include/erofs_fs.h       |  10 ++-
+ lib/compress.c           |  76 ++++++++++++++++++-----
+ lib/compressor.c         |   9 +--
+ lib/decompress.c         |   7 ++-
+ lib/inode.c              |  40 ++++++------
+ lib/zmap.c               | 130 ++++++++++++++++++++++++++++++++++++---
+ mkfs/main.c              |   6 ++
+ 8 files changed, 228 insertions(+), 54 deletions(-)
+
+-- 
+2.29.0
+
+
 
