@@ -2,58 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A229A43FFA7
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 17:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CDEEC43FFC5
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 17:42:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HgmhH3nV0z304v
-	for <lists+linux-erofs@lfdr.de>; Sat, 30 Oct 2021 02:34:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HgmsX5DX6z2yxx
+	for <lists+linux-erofs@lfdr.de>; Sat, 30 Oct 2021 02:42:56 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZUpHS5YE;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=6wmVMWLA;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::532;
+ helo=mail-pg1-x532.google.com; envelope-from=dan.j.williams@intel.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=ZUpHS5YE; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=intel-com.20210112.gappssmtp.com
+ header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
+ header.s=20210112 header.b=6wmVMWLA; dkim-atps=neutral
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com
+ [IPv6:2607:f8b0:4864:20::532])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HgmhD1ZjYz2xXx
- for <linux-erofs@lists.ozlabs.org>; Sat, 30 Oct 2021 02:34:52 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7E7276117A;
- Fri, 29 Oct 2021 15:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1635521689;
- bh=qT1Szh+ndbqyM/0hD/TUs97RBYUAdlEIkgLut+Otmpo=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=ZUpHS5YENNdKqDKeqXpArD4masKrX19zCdqZAKUBnvaRpCueOfO5EVEm/qojbtjHU
- iM0wfvxXPiXWRNyNweDxXfKaEjvbUOD5L3BWpwkiAEKAefr8TXZvd7YQXHaJn/y4l8
- cB6WJfQmYgA1WvctwHjphAABAYWhG/1nzHJCZTHSU/knO79aJj2P0v8894DehJdwfy
- RufeOY1eUUwxP9/dvmNCyLbA9mTL5EEV04U6E0oVJ6uwEv2nxRAatAp2e2olhu8r8S
- 9H4+bWQfkCsqftZ92pXl/5RDbYXCFg6BKNx00t5S7nZMphKh3R0bIL29Zjoi4hmdPK
- zV2OjXitr8+Lw==
-Date: Fri, 29 Oct 2021 23:32:21 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: syzbot <syzbot+63d688f1d899c588fb71@syzkaller.appspotmail.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in LZ4_decompress_safe_partial
-Message-ID: <20211029153214.GA15359@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: syzbot
- <syzbot+63d688f1d899c588fb71@syzkaller.appspotmail.com>, 
- chao@kernel.org, gaoxiang25@huawei.com, gregkh@linuxfoundation.org,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- viro@zeniv.linux.org.uk, xiang@kernel.org, yuchao0@huawei.com,
- Chengyang Fan <cy.fan@huawei.com>
-References: <000000000000830d1205cf7f0477@google.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HgmsS0dJWz2xBm
+ for <linux-erofs@lists.ozlabs.org>; Sat, 30 Oct 2021 02:42:44 +1100 (AEDT)
+Received: by mail-pg1-x532.google.com with SMTP id s136so10258673pgs.4
+ for <linux-erofs@lists.ozlabs.org>; Fri, 29 Oct 2021 08:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=intel-com.20210112.gappssmtp.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=kkrK8/+uwUhU1+ibCc9sihgvRMe3oeCDEJlEEAsQMNY=;
+ b=6wmVMWLAKN8exE8XR8wv/iFYhudFZm/xaEJpNEZmOxWSzGBAVEn+M6ckTQFipGdRJT
+ yb6PYTTcKIVqTXGsV3bkPy2TCiq4+HLgRy2cRXBAvM33znfROc4XjMNFzIfr4UE69rdj
+ 4eISFf7aFEyAHo2Sf/MANtuSqjdRnwdAyb7h0RnbdOmg2MrJVd+mPCxh87qxZR21UV1T
+ Jo7MDmjd0zsp2/1yCw8PZ5/EZTwQNFNoOJVWhez881Nf3OlrTKHfCKrLAxk43DLXDdPH
+ n00SPDakiTsjm+voDnH7pSuvR7gHcdocX6KbBQemE5xaUaALVKmTKfT7gJVRpb96WLOa
+ Bfgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=kkrK8/+uwUhU1+ibCc9sihgvRMe3oeCDEJlEEAsQMNY=;
+ b=RuPZPI7HzaTLmweBAcj6LUPdqslWfLIDduZ1Ti+Ke/getzm4OwOyWl53IhpQ/dFvNp
+ b52aAblEbCcNeiJiA+Ac8ERgqjC/jaFxaRwdnWF8midJN5Lt0G/a90tBvCZfC+Dn9yTP
+ R/2EP86xRqt8CHENR45SiEWLpVojDXWpWBTCm+D1sV9rzDkQbxmo+r1cGNQD4YuGjNMf
+ TRqVmNV2PSrEk//xAScBjf+Ppyr/P5oi6PDAVJLQDotnKzj/0XQ9X6KaOrFOXO3C8kWU
+ ciksf3BqpXcRZeNSoD45yxVs+VQGjf/TgC4HTKlKaKXUjyPc5wB6KrlMOvLqKzxn8nXJ
+ lFAg==
+X-Gm-Message-State: AOAM531BoGWBNR+9tRg/cUOczbHGpzmquvdm19cmzSq60fptLOn0YTvY
+ mkJbYI4wNtYqP3Oh0OdeWVL1jMgWJx4klTqC522ibg==
+X-Google-Smtp-Source: ABdhPJwscYMJBcsf4QuT7rFuYsL/BYYBLAhJeu/07ZB2t6F9Qexmb3kIziq0UAiLr3A7UbGhuhxXArjTEfzlR4kAptU=
+X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
+ l14-20020a056a00140e00b00444b07751efmr11616698pfu.61.1635522160977; Fri, 29
+ Oct 2021 08:42:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <000000000000830d1205cf7f0477@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211018044054.1779424-1-hch@lst.de>
+ <CAPcyv4iEt78-XSsKjTWcpy71zaduXyyigTro6f3fmRqqFOG98Q@mail.gmail.com>
+ <20211029105139.1194bb7f@canb.auug.org.au>
+In-Reply-To: <20211029105139.1194bb7f@canb.auug.org.au>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Fri, 29 Oct 2021 08:42:29 -0700
+Message-ID: <CAPcyv4g8iEyN5UN1w1xBqQDYSb3HCh7_smsmjt-PiHORRK+X9Q@mail.gmail.com>
+Subject: Re: futher decouple DAX from block devices
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Christoph Hellwig <hch@lst.de>, 
+ "Darrick J. Wong" <djwong@kernel.org>,
+ Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,87 +80,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yuchao0@huawei.com, gaoxiang25@huawei.com, gregkh@linuxfoundation.org,
- syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
- Chengyang Fan <cy.fan@huawei.com>, viro@zeniv.linux.org.uk,
- linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ device-mapper development <dm-devel@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+On Thu, Oct 28, 2021 at 4:52 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Dan,
+>
+> On Wed, 27 Oct 2021 13:46:31 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > My merge resolution is here [1]. Christoph, please have a look. The
+> > rebase and the merge result are both passing my test and I'm now going
+> > to review the individual patches. However, while I do that and collect
+> > acks from DM and EROFS folks, I want to give Stephen a heads up that
+> > this is coming. Primarily I want to see if someone sees a better
+> > strategy to merge this, please let me know, but if not I plan to walk
+> > Stephen and Linus through the resolution.
+>
+> It doesn't look to bad to me (however it is a bit late in the cycle :-(
+> ).  Once you are happy, just put it in your tree (some of the conflicts
+> are against the current -rc3 based version of your tree anyway) and I
+> will cope with it on Monday.
 
-(+cc Chengyang Fan)
+Christoph, Darrick, Shiyang,
 
-On Fri, Oct 29, 2021 at 07:55:27AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    87066fdd2e30 Revert "mm/secretmem: use refcount_t instead ..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10c2c88cb00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=59f3ef2b4077575
-> dashboard link: https://syzkaller.appspot.com/bug?extid=63d688f1d899c588fb71
-> compiler:       Debian clang version 11.0.1-2, GNU ld (GNU Binutils for Debian) 2.35.2
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17032c4ab00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170f8c3cb00000
-> 
-> The issue was bisected to:
-> 
-> commit f86cf25a609107960cf05263e491463feaae1f99
-> Author: Gao Xiang <gaoxiang25@huawei.com>
-> Date:   Tue Aug 28 03:39:48 2018 +0000
-> 
->     Revert "staging: erofs: disable compiling temporarile"
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11de0328b00000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=13de0328b00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15de0328b00000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+63d688f1d899c588fb71@syzkaller.appspotmail.com
-> Fixes: f86cf25a6091 ("Revert "staging: erofs: disable compiling temporarile"")
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in get_unaligned_le16 include/asm-generic/unaligned.h:27 [inline]
-> BUG: KASAN: use-after-free in LZ4_readLE16 lib/lz4/lz4defs.h:132 [inline]
-> BUG: KASAN: use-after-free in LZ4_decompress_generic lib/lz4/lz4_decompress.c:285 [inline]
-> BUG: KASAN: use-after-free in LZ4_decompress_safe_partial+0xff8/0x1580 lib/lz4/lz4_decompress.c:469
-> Read of size 2 at addr ffff88806dd1f000 by task kworker/u5:0/150
-> 
-> CPU: 1 PID: 150 Comm: kworker/u5:0 Not tainted 5.15.0-rc6-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: erofs_unzipd z_erofs_decompressqueue_work
-> Call Trace:
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x1dc/0x2d8 lib/dump_stack.c:106
->  print_address_description+0x66/0x3e0 mm/kasan/report.c:256
->  __kasan_report mm/kasan/report.c:442 [inline]
->  kasan_report+0x19a/0x1f0 mm/kasan/report.c:459
->  get_unaligned_le16 include/asm-generic/unaligned.h:27 [inline]
->  LZ4_readLE16 lib/lz4/lz4defs.h:132 [inline]
->  LZ4_decompress_generic lib/lz4/lz4_decompress.c:285 [inline]
->  LZ4_decompress_safe_partial+0xff8/0x1580 lib/lz4/lz4_decompress.c:469
->  z_erofs_lz4_decompress+0x4c3/0x1100 fs/erofs/decompressor.c:226
->  z_erofs_decompress_generic fs/erofs/decompressor.c:354 [inline]
->  z_erofs_decompress+0xa8e/0xe30 fs/erofs/decompressor.c:407
->  z_erofs_decompress_pcluster+0x15e4/0x2550 fs/erofs/zdata.c:977
->  z_erofs_decompress_queue fs/erofs/zdata.c:1055 [inline]
->  z_erofs_decompressqueue_work+0x123/0x1a0 fs/erofs/zdata.c:1066
->  process_one_work+0x853/0x1140 kernel/workqueue.c:2297
->  worker_thread+0xac1/0x1320 kernel/workqueue.c:2444
->  kthread+0x453/0x480 kernel/kthread.c:319
->  ret_from_fork+0x1f/0x30
-> 
-
-It's quite similar to
-https://lore.kernel.org/r/CC666AE8-4CA4-4951-B6FB-A2EFDE3AC03B@fb.com
-
-But I'm not sure if Chengyang Fan is still working on this stuff.
-
-Anyway, it can only be reproduced by specific craft compressed data.
-
-Thanks,
-Gao Xiang
-
+I'm losing my nerve to try to jam this into v5.16 this late in the
+cycle. I do want to get dax+reflink squared away as soon as possible,
+but that looks like something that needs to build on top of a
+v5.16-rc1 at this point. If Linus does a -rc8 then maybe it would have
+enough soak time, but otherwise I want to take the time to collect the
+acks and queue up some more follow-on cleanups to prepare for
+block-less-dax.
