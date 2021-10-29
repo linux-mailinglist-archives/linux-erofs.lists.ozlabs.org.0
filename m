@@ -2,47 +2,86 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F221C43F6D2
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 07:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DFC4543F716
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 08:20:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HgWlk61FGz2ybK
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 16:52:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HgXNh5Zxsz2yWR
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 Oct 2021 17:20:36 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=rHi5YhKL;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=S6CjmYqZ;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=yulong.com (client-ip=59.36.132.42; helo=qq.com;
- envelope-from=huyue2@yulong.com; receiver=<UNKNOWN>)
-Received: from qq.com (smtpbg466.qq.com [59.36.132.42])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=suse.de
+ (client-ip=195.135.220.28; helo=smtp-out1.suse.de;
+ envelope-from=colyli@suse.de; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256
+ header.s=susede2_rsa header.b=rHi5YhKL; 
+ dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256
+ header.s=susede2_ed25519 header.b=S6CjmYqZ; 
+ dkim-atps=neutral
+X-Greylist: delayed 316 seconds by postgrey-1.36 at boromir;
+ Fri, 29 Oct 2021 17:20:32 AEDT
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HgWlc5xF4z2xXc
- for <linux-erofs@lists.ozlabs.org>; Fri, 29 Oct 2021 16:51:56 +1100 (AEDT)
-X-QQ-mid: bizesmtp32t1635486644tqf0yko3
-Received: from tj.ccdomain.com (unknown [218.94.48.178])
- by esmtp6.qq.com (ESMTP) with 
- id ; Fri, 29 Oct 2021 13:50:43 +0800 (CST)
-X-QQ-SSF: 01400000000000Z0Z000B00A0000000
-X-QQ-FEAT: xoS364mEyr2ehjlcQpeWqNN6tkiZqatp9Un/cKGLkinDv8Sx00vbAnKJ4NN20
- Fzi6UrCuEeLpXkl72X6SXFfIL6/aQgYpmil5P52/SITSE7x7eHDWw5g2UuWxnJxhUjoGVaB
- r12lpJUrEY17S8CsHoJ96pa+FbOv5/kzIFCrIceOVGcfgK43tvPZE41vTfwkWveZyLf5lvX
- V535pG5/1fZWEBzddjiYKwd0TcRNegmybAYa+7+3wYJm0l2NvizWT2YSD0q9Y+ACts57QXl
- DhtYK8a7TiyReouffiW401cpG1NuretB1sUTeW8qfUus15oiNWIUOaxLuWMnb8udOrutD7k
- Cz8rBRp1Qg7X5/PrSM1uBg9GgKoPCs6IZlRvxRbCB8PT9zDOoN3L91E/1qvxQ==
-X-QQ-GoodBg: 2
-From: Yue Hu <huyue2@yulong.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH v2 2/2] erofs-utils: fuse: support tail-packing inline
- compressed data
-Date: Fri, 29 Oct 2021 13:49:31 +0800
-Message-Id: <74588f43039bb1554d3168bf54d3b987467ce26d.1635485195.git.huyue2@yulong.com>
-X-Mailer: git-send-email 2.29.2.windows.3
-In-Reply-To: <cover.1635485195.git.huyue2@yulong.com>
-References: <cover.1635485195.git.huyue2@yulong.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HgXNc22DQz2xrl
+ for <linux-erofs@lists.ozlabs.org>; Fri, 29 Oct 2021 17:20:32 +1100 (AEDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+ (No client certificate requested)
+ by smtp-out1.suse.de (Postfix) with ESMTPS id 2CA2721968;
+ Fri, 29 Oct 2021 06:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+ t=1635488112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+ mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=E919aeXK8dC3N34MDRziiU6STn2FmtpVBAk+ecOLJjo=;
+ b=rHi5YhKLU0rlCRHyPeKnauDRrrKyNolq7E6F6dDcjkjrYygp8K9iGOEHJj1sMmsNmnFoqm
+ JXUgJyq68i9P1XXycPxZOj9RRmHZ61CddjBbgHSqzeBEgXTEn3O/eT1/pGQOrrjanxFKqN
+ Ws1Xa0M9ZepgclsMvVLPpSC9aP/pzDs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+ s=susede2_ed25519; t=1635488112;
+ h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+ mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=E919aeXK8dC3N34MDRziiU6STn2FmtpVBAk+ecOLJjo=;
+ b=S6CjmYqZCZ0yYeJGy3BiUS6TxG8jiMGcenKddoe10AYo6bdOAQvrpluZxu5uvYpr7RJ4EU
+ 3KaNhyzDb7UqKtAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+ (No client certificate requested)
+ by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 55C5313AF5;
+ Fri, 29 Oct 2021 06:15:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+ by imap2.suse-dmz.suse.de with ESMTPSA id Ah71CW2Re2HXXAAAMHmgww
+ (envelope-from <colyli@suse.de>); Fri, 29 Oct 2021 06:15:09 +0000
+Message-ID: <b11bb34b-8fdf-b6ed-b305-e7145f2a7ab2@suse.de>
+Date: Fri, 29 Oct 2021 14:15:07 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:yulong.com:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.2.1
+Subject: Re: Readahead for compressed data
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>, linux-fsdevel@vger.kernel.org,
+ Jan Kara <jack@suse.cz>, Phillip Lougher <phillip@squashfs.org.uk>,
+ linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org,
+ linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ linux-bcache@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+ David Howells <dhowells@redhat.com>
+References: <YXHK5HrQpJu9oy8w@casper.infradead.org>
+From: Coly Li <colyli@suse.de>
+In-Reply-To: <YXHK5HrQpJu9oy8w@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,250 +93,73 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: zhangwen@yulong.com, Yue Hu <huyue2@yulong.com>, geshifei@yulong.com,
- shaojunjun@yulong.com
+Cc: linux-bcachefs@vger.kernel.org, Kent Overstreet <kent.overstreet@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add tail-packing inline compressed data support for erofsfuse.
+On 10/22/21 4:17 AM, Matthew Wilcox wrote:
+> As far as I can tell, the following filesystems support compressed data:
+>
+> bcachefs, btrfs, erofs, ntfs, squashfs, zisofs
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
-changes since v1:
-- add tail-packing information to inode and get it on first read.
-- update tail-packing checking logic.
+Hi Matthew,
 
- include/erofs/internal.h |   3 +
- lib/decompress.c         |   3 -
- lib/zmap.c               | 130 ++++++++++++++++++++++++++++++++++++---
- 3 files changed, 126 insertions(+), 10 deletions(-)
+There is a new bcachefs mailing list linux-bcachefs@vger.kernel.org for 
+bcachefs. I add it in Cc in this reply email.
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 3769c27..ce9fb40 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -165,6 +165,8 @@ struct erofs_inode {
- 			uint16_t z_advise;
- 			uint8_t  z_algorithmtype[2];
- 			uint8_t  z_logical_clusterbits;
-+			uint16_t z_idata_size;
-+			uint64_t z_idata_addr;
- 		};
- 	};
- #ifdef WITH_ANDROID
-@@ -251,6 +253,7 @@ struct erofs_map_blocks {
- 
- 	unsigned int m_flags;
- 	erofs_blk_t index;
-+	unsigned long m_taillcn;
- };
- 
- /* super.c */
-diff --git a/lib/decompress.c b/lib/decompress.c
-index 0b6678d..ac5d126 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -73,9 +73,6 @@ out:
- int z_erofs_decompress(struct z_erofs_decompress_req *rq)
- {
- 	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
--		if (rq->inputsize != EROFS_BLKSIZ)
--			return -EFSCORRUPTED;
--
- 		DBG_BUGON(rq->decodedlength > EROFS_BLKSIZ);
- 		DBG_BUGON(rq->decodedlength < rq->decodedskip);
- 
-diff --git a/lib/zmap.c b/lib/zmap.c
-index 1084faa..6fcb5cd 100644
---- a/lib/zmap.c
-+++ b/lib/zmap.c
-@@ -12,6 +12,9 @@
- #include "erofs/io.h"
- #include "erofs/print.h"
- 
-+static int z_erofs_map_tail_data_blocks(struct erofs_inode *vi,
-+					struct erofs_map_blocks *map);
-+
- int z_erofs_fill_inode(struct erofs_inode *vi)
- {
- 	if (!erofs_sb_has_big_pcluster() &&
-@@ -26,7 +29,68 @@ int z_erofs_fill_inode(struct erofs_inode *vi)
- 	return 0;
- }
- 
--static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
-+static erofs_off_t compacted_inline_data_addr(struct erofs_inode *vi)
-+{
-+	const erofs_off_t ebase = round_up(iloc(vi->nid) + vi->inode_isize +
-+					   vi->xattr_isize, 8) +
-+					   sizeof(struct z_erofs_map_header);
-+	const unsigned int totalidx = DIV_ROUND_UP(vi->i_size, EROFS_BLKSIZ);
-+	unsigned int compacted_4b_initial, compacted_4b_end;
-+	unsigned int compacted_2b;
-+	erofs_off_t addr;
-+
-+	compacted_4b_initial = (32 - ebase % 32) / 4;
-+	if (compacted_4b_initial == 32 / 4)
-+		compacted_4b_initial = 0;
-+
-+	if (compacted_4b_initial > totalidx) {
-+		compacted_4b_initial = 0;
-+		compacted_2b = 0;
-+	} else if (vi->z_advise & Z_EROFS_ADVISE_COMPACTED_2B) {
-+		compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
-+	} else
-+		compacted_2b = 0;
-+
-+	compacted_4b_end = totalidx - compacted_4b_initial - compacted_2b;
-+
-+	addr = ebase;
-+	addr += compacted_4b_initial * 4;
-+	addr += compacted_2b * 2;
-+	if (compacted_4b_end > 1)
-+		addr += (compacted_4b_end/2) * 8;
-+	if (compacted_4b_end % 2)
-+		addr += 8;
-+
-+	return addr;
-+}
-+
-+static erofs_off_t legacy_inline_data_addr(struct erofs_inode *vi)
-+{
-+	const erofs_off_t ibase = iloc(vi->nid);
-+	const unsigned int totalidx = DIV_ROUND_UP(vi->i_size, EROFS_BLKSIZ);
-+	erofs_off_t addr;
-+
-+	addr = Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
-+					     vi->xattr_isize) +
-+		totalidx * sizeof(struct z_erofs_vle_decompressed_index);
-+	return addr;
-+}
-+
-+static erofs_off_t z_erofs_inline_data_addr(struct erofs_inode *vi)
-+{
-+	const unsigned int datamode = vi->datalayout;
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-+		return compacted_inline_data_addr(vi);
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
-+		return legacy_inline_data_addr(vi);
-+
-+	return -EINVAL;
-+}
-+
-+static int z_erofs_fill_inode_lazy(struct erofs_inode *vi,
-+				   struct erofs_map_blocks *map)
- {
- 	int ret;
- 	erofs_off_t pos;
-@@ -46,6 +110,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
- 
- 	h = (struct z_erofs_map_header *)buf;
- 	vi->z_advise = le16_to_cpu(h->h_advise);
-+	vi->z_idata_size = le16_to_cpu(h->h_idata_size);
- 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
- 	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
- 
-@@ -64,6 +129,15 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
- 			  vi->nid * 1ULL);
- 		return -EFSCORRUPTED;
- 	}
-+	if (vi->z_advise & Z_EROFS_ADVISE_TAILPACKING)
-+		vi->z_idata_addr = z_erofs_inline_data_addr(vi);
-+
-+	if (vi->z_idata_size) {
-+		ret = z_erofs_map_tail_data_blocks(vi, map);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	vi->flags |= EROFS_I_Z_INITED;
- 	return 0;
- }
-@@ -375,6 +449,37 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 	return 0;
- }
- 
-+static int z_erofs_map_tail_data_blocks(struct erofs_inode *vi,
-+					struct erofs_map_blocks *map)
-+{
-+	struct z_erofs_maprecorder m = {
-+		.inode = vi,
-+		.map = map,
-+		.kaddr = map->mpage,
-+	};
-+        unsigned long lcn;
-+        unsigned int lclusterbits, endoff;
-+        int err;
-+
-+        lclusterbits = vi->z_logical_clusterbits;
-+        lcn = (vi->i_size - 1) >> lclusterbits;
-+        endoff = (vi->i_size - 1) & ((1 << lclusterbits) - 1);
-+
-+        err = z_erofs_load_cluster_from_disk(&m, lcn);
-+        if (err)
-+                return err;
-+
-+        if (endoff >= m.clusterofs)
-+                goto out;
-+
-+        err = z_erofs_extent_lookback(&m, 1);
-+        if (err)
-+                return err;
-+out:
-+        map->m_taillcn = m.lcn;
-+        return 0;
-+}
-+
- static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 					    unsigned int initial_lcn)
- {
-@@ -463,12 +568,12 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 		goto out;
- 	}
- 
--	err = z_erofs_fill_inode_lazy(vi);
-+	ofs = map->m_la;
-+	err = z_erofs_fill_inode_lazy(vi, map);
- 	if (err)
- 		goto out;
- 
- 	lclusterbits = vi->z_logical_clusterbits;
--	ofs = map->m_la;
- 	initial_lcn = ofs >> lclusterbits;
- 	endoff = ofs & ((1 << lclusterbits) - 1);
- 
-@@ -511,11 +616,22 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	}
- 
- 	map->m_llen = end - map->m_la;
--	map->m_pa = blknr_to_addr(m.pblk);
- 
--	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
--	if (err)
--		goto out;
-+	if (m.lcn == map->m_taillcn && vi->z_idata_size) {
-+		map->m_plen = vi->z_idata_size;
-+
-+		if (vi->z_advise & Z_EROFS_ADVISE_TAILPACKING)
-+			map->m_pa = vi->z_idata_addr;
-+		else
-+			map->m_pa = blknr_to_addr(m.pblk);
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		map->m_pa = blknr_to_addr(m.pblk);
-+
-+		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
-+		if (err)
-+			goto out;
-+	}
- 	map->m_flags |= EROFS_MAP_MAPPED;
- 
- out:
--- 
-2.29.0
+Just FYI for you and other receivers.
+
+Thanks.
+
+Coly Li
 
 
+>
+> I'd like to make it easier and more efficient for filesystems to
+> implement compressed data.  There are a lot of approaches in use today,
+> but none of them seem quite right to me.  I'm going to lay out a few
+> design considerations next and then propose a solution.  Feel free to
+> tell me I've got the constraints wrong, or suggest alternative solutions.
+>
+> When we call ->readahead from the VFS, the VFS has decided which pages
+> are going to be the most useful to bring in, but it doesn't know how
+> pages are bundled together into blocks.  As I've learned from talking to
+> Gao Xiang, sometimes the filesystem doesn't know either, so this isn't
+> something we can teach the VFS.
+>
+> We (David) added readahead_expand() recently to let the filesystem
+> opportunistically add pages to the page cache "around" the area requested
+> by the VFS.  That reduces the number of times the filesystem has to
+> decompress the same block.  But it can fail (due to memory allocation
+> failures or pages already being present in the cache).  So filesystems
+> still have to implement some kind of fallback.
+>
+> For many (all?) compression algorithms (all?) the data must be mapped at
+> all times.  Calling kmap() and kunmap() would be an intolerable overhead.
+> At the same time, we cannot write to a page in the page cache which is
+> marked Uptodate.  It might be mapped into userspace, or a read() be in
+> progress against it.  For writable filesystems, it might even be dirty!
+> As far as I know, no compression algorithm supports "holes", implying
+> that we must allocate memory which is then discarded.
+>
+> To me, this calls for a vmap() based approach.  So I'm thinking
+> something like ...
+>
+> void *readahead_get_block(struct readahead_control *ractl, loff_t start,
+> 			size_t len);
+> void readahead_put_block(struct readahead_control *ractl, void *addr,
+> 			bool success);
+>
+> Once you've figured out which bytes this encrypted block expands to, you
+> call readahead_get_block(), specifying the offset in the file and length
+> and get back a pointer.  When you're done decompressing that block of
+> the file, you get rid of it again.
+>
+> It's the job of readahead_get_block() to allocate additional pages
+> into the page cache or temporary pages.  readahead_put_block() will
+> mark page cache pages as Uptodate if 'success' is true, and unlock
+> them.  It'll free any temporary pages.
+>
+> Thoughts?  Anyone want to be the guinea pig?  ;-)
 
