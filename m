@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E90404406DC
-	for <lists+linux-erofs@lfdr.de>; Sat, 30 Oct 2021 04:01:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B21754411B7
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Nov 2021 01:40:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hh2bV5RS1z3bXR
-	for <lists+linux-erofs@lfdr.de>; Sat, 30 Oct 2021 13:01:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HjDjM3KhDz2yPL
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Nov 2021 11:40:55 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Wub9UPAB;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YnZYb/Tc;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -17,35 +17,43 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=Wub9UPAB; 
+ header.s=k20201202 header.b=YnZYb/Tc; 
  dkim-atps=neutral
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hh2bR5FHhz304y
- for <linux-erofs@lists.ozlabs.org>; Sat, 30 Oct 2021 13:01:39 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6BE146115B;
- Sat, 30 Oct 2021 02:01:35 +0000 (UTC)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HjDjH4lgBz2yKN
+ for <linux-erofs@lists.ozlabs.org>; Mon,  1 Nov 2021 11:40:51 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DA3B760E90;
+ Mon,  1 Nov 2021 00:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1635559297;
- bh=brrCMlV0dR2WbgTUVmdEjDVsdq0pLovzPciahRjf4+0=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=Wub9UPABKVVrZ9XF3EKMBpB5koAL/cITBG6FziHJiah5EqHuRdohPXy/hym+goN3c
- vZHFgEF1yT9mEpcBvKB7az30JdlgjT0YPgiLyKQ8rKkQiG1bFvfyZrXNH62ixdiRZw
- D+LFLSlJrXCdeT7N5RtSRMdtFuTGQK0idstpNICLFB2KWnMF1lGjQt9jmxuTec+eBY
- 6mOz/UxwTNf4opDq+CYviJsWfE5fJ/8sFPw0g5PLHR5C9ClfYNElFuREPX5MoCB+Ed
- u/p7ad55nOWTNtnpKCgDHw0hi2TgUAr6EwbpZx0OhuSaCNbuxPqDRivPE8XdNIDsa8
- mkvG5Se99L7jw==
+ s=k20201202; t=1635727248;
+ bh=2uUhdauGw92C8QxzP01fb14EoJ7ezdWDgs1/7QdKx6s=;
+ h=Date:From:To:Cc:Subject:From;
+ b=YnZYb/Tcg35l7Os151X8BDLQDvWmCdP4YJNNfTWbm99w4W/ck5sK2v3YMw8ZXSKaY
+ OMs8LvYESjw5cIyGQvuPKPsDjxpQzBXrNCDdqD9vyezvqp7flnpjMZWlkEvbuL8kPp
+ 4+/EHPM1empXX1m4BoWEa2gb+2TlPR5n2CTOgAu1qvacMC5K2Iv2+oBTkJdgJ/lTZA
+ btzuagRKLVGm9eH63kuZbLFUCxYDyglMmJ7bQnwWGhmx2btLeD5I3GFSi35aco0xHr
+ EcuUvD9Ogr6KkyEM/LlFMQ3K0ttV3J9AGGbN5JrS8ed6WALQnaFIJWzlyCdUOHyVN0
+ KBh/j4+oTQtGA==
+Date: Mon, 1 Nov 2021 08:40:32 +0800
 From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: mkfs: add LZMA algorithm support
-Date: Sat, 30 Oct 2021 10:01:18 +0800
-Message-Id: <20211030020118.13898-3-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211030020118.13898-1-xiang@kernel.org>
-References: <20211030020118.13898-1-xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs updates for 5.16-rc1
+Message-ID: <20211101003654.GA23732@hsiangkao-HP-ZHAN-66-Pro-G1>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ Lasse Collin <lasse.collin@tukaani.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Chao Yu <chao@kernel.org>, Yue Hu <huyue2@yulong.com>,
+ Miao Xie <miaoxie@huawei.com>, Liu Bo <bo.liu@linux.alibaba.com>,
+ Peng Tao <tao.peng@linux.alibaba.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Liu Jiang <gerry@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,294 +65,132 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Lasse Collin <lasse.collin@tukaani.org>
+Cc: Lasse Collin <lasse.collin@tukaani.org>, Miao Xie <miaoxie@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Peng Tao <tao.peng@linux.alibaba.com>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Yue Hu <huyue2@yulong.com>,
+ Liu Bo <bo.liu@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Liu Jiang <gerry@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds LZMA compression algorithm support to erofs-utils
-compression framework with upstream liblzma.
+Hi Linus,
 
-Cc: Lasse Collin <lasse.collin@tukaani.org>
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
- include/erofs/config.h   |   1 +
- include/erofs_fs.h       |   6 +++
- lib/Makefile.am          |   3 ++
- lib/compress.c           |  37 ++++++++++++--
- lib/compressor.c         |   3 ++
- lib/compressor.h         |   1 +
- lib/compressor_liblzma.c | 105 +++++++++++++++++++++++++++++++++++++++
- mkfs/main.c              |   1 -
- 8 files changed, 152 insertions(+), 5 deletions(-)
- create mode 100644 lib/compressor_liblzma.c
+Could you consider this pull request for 5.16-rc1?
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 574dd52be12d..a18c88301279 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -60,6 +60,7 @@ struct erofs_configure {
- 
- 	u32 c_pclusterblks_max, c_pclusterblks_def;
- 	u32 c_max_decompressed_extent_bytes;
-+	u32 c_dict_size;
- 	u64 c_unix_timestamp;
- 	u32 c_uid, c_gid;
- #ifdef WITH_ANDROID
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 86ad6f5fd86c..4291970753a8 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -261,6 +261,12 @@ struct z_erofs_lz4_cfgs {
- 	u8 reserved[10];
- } __packed;
- 
-+/* 14 bytes (+ length field = 16 bytes) */
-+struct z_erofs_lzma_cfgs {
-+	__le32 dict_size;
-+	__le16 format;
-+	u8 reserved[8];
-+} __packed;
- #define Z_EROFS_LZMA_MAX_DICT_SIZE	(8 * Z_EROFS_PCLUSTER_MAX_SIZE)
- 
- /*
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 370de844146f..58ad192c51b3 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -31,4 +31,7 @@ if ENABLE_LZ4HC
- liberofs_la_SOURCES += compressor_lz4hc.c
- endif
- endif
-+if ENABLE_LIBLZMA
- liberofs_la_CFLAGS += ${liblzma_CFLAGS}
-+liberofs_la_SOURCES += compressor_liblzma.c
-+endif
-diff --git a/lib/compress.c b/lib/compress.c
-index 6ca5bedaf596..98be7a26383b 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -588,6 +588,8 @@ static int erofs_get_compress_algorithm_id(const char *name)
- {
- 	if (!strcmp(name, "lz4") || !strcmp(name, "lz4hc"))
- 		return Z_EROFS_COMPRESSION_LZ4;
-+	if (!strcmp(name, "lzma"))
-+		return Z_EROFS_COMPRESSION_LZMA;
- 	return -ENOTSUP;
- }
- 
-@@ -619,6 +621,29 @@ int z_erofs_build_compr_cfgs(struct erofs_buffer_head *sb_bh)
- 				sizeof(lz4alg));
- 		bh->op = &erofs_drop_directly_bhops;
- 	}
-+#ifdef HAVE_LIBLZMA
-+	if (sbi.available_compr_algs & (1 << Z_EROFS_COMPRESSION_LZMA)) {
-+		struct {
-+			__le16 size;
-+			struct z_erofs_lzma_cfgs lzma;
-+		} __packed lzmaalg = {
-+			.size = cpu_to_le16(sizeof(struct z_erofs_lzma_cfgs)),
-+			.lzma = {
-+				.dict_size = cpu_to_le32(cfg.c_dict_size),
-+			}
-+		};
-+
-+		bh = erofs_battach(bh, META, sizeof(lzmaalg));
-+		if (IS_ERR(bh)) {
-+			DBG_BUGON(1);
-+			return PTR_ERR(bh);
-+		}
-+		erofs_mapbh(bh->block);
-+		ret = dev_write(&lzmaalg, erofs_btell(bh, false),
-+				sizeof(lzmaalg));
-+		bh->op = &erofs_drop_directly_bhops;
-+	}
-+#endif
- 	return ret;
- }
- 
-@@ -632,17 +657,18 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		return ret;
- 
- 	/*
--	 * if primary algorithm is not lz4* (e.g. compression off),
--	 * clear LZ4_0PADDING feature for old kernel compatibility.
-+	 * if primary algorithm is empty (e.g. compression off),
-+	 * clear 0PADDING feature for old kernel compatibility.
- 	 */
- 	if (!cfg.c_compr_alg_master ||
--	    strncmp(cfg.c_compr_alg_master, "lz4", 3))
-+	    (cfg.c_legacy_compress && !strcmp(cfg.c_compr_alg_master, "lz4")))
- 		erofs_sb_clear_lz4_0padding();
- 
- 	if (!cfg.c_compr_alg_master)
- 		return 0;
- 
--	ret = erofs_compressor_setlevel(&compresshandle, cfg.c_compr_level_master);
-+	ret = erofs_compressor_setlevel(&compresshandle,
-+					cfg.c_compr_level_master);
- 	if (ret)
- 		return ret;
- 
-@@ -668,6 +694,9 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		erofs_warn("EXPERIMENTAL big pcluster feature in use. Use at your own risk!");
- 	}
- 
-+	if (ret != Z_EROFS_COMPRESSION_LZ4)
-+		erofs_sb_set_compr_cfgs();
-+
- 	if (erofs_sb_has_compr_cfgs()) {
- 		sbi.available_compr_algs |= 1 << ret;
- 		return z_erofs_build_compr_cfgs(sb_bh);
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 89c1be10dd0c..ad12cdf2ceed 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -17,6 +17,9 @@ static struct erofs_compressor *compressors[] = {
- #endif
- 		&erofs_compressor_lz4,
- #endif
-+#if HAVE_LIBLZMA
-+		&erofs_compressor_lzma,
-+#endif
- };
- 
- int erofs_compress_destsize(struct erofs_compress *c,
-diff --git a/lib/compressor.h b/lib/compressor.h
-index d1b43c87291f..aa85ae0bdc2f 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -43,6 +43,7 @@ struct erofs_compress {
- /* list of compression algorithms */
- extern struct erofs_compressor erofs_compressor_lz4;
- extern struct erofs_compressor erofs_compressor_lz4hc;
-+extern struct erofs_compressor erofs_compressor_lzma;
- 
- int erofs_compress_destsize(struct erofs_compress *c,
- 			    void *src, unsigned int *srcsize,
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-new file mode 100644
-index 000000000000..e9bfcc556c54
---- /dev/null
-+++ b/lib/compressor_liblzma.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * erofs-utils/lib/compressor_liblzma.c
-+ *
-+ * Copyright (C) 2021 Gao Xiang <xiang@kernel.org>
-+ */
-+#include <stdlib.h>
-+#include <lzma.h>
-+#include "erofs/config.h"
-+#include "erofs/print.h"
-+#include "erofs/internal.h"
-+#include "compressor.h"
-+
-+struct erofs_liblzma_context {
-+	lzma_options_lzma opt;
-+	lzma_stream strm;
-+};
-+
-+static int erofs_liblzma_compress_destsize(struct erofs_compress *c,
-+					   void *src, unsigned int *srcsize,
-+					   void *dst, unsigned int dstsize)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+	lzma_stream *strm = &ctx->strm;
-+
-+	lzma_ret ret = lzma_microlzma_encoder(strm, &ctx->opt);
-+	if (ret != LZMA_OK)
-+		return -EFAULT;
-+
-+	strm->next_in = src;
-+	strm->avail_in = *srcsize;
-+	strm->next_out = dst;
-+	strm->avail_out = dstsize;
-+
-+	ret = lzma_code(strm, LZMA_FINISH);
-+	if (ret != LZMA_STREAM_END)
-+		return -EBADMSG;
-+
-+	*srcsize = strm->total_in;
-+	return strm->total_out;
-+}
-+
-+static int erofs_compressor_liblzma_exit(struct erofs_compress *c)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	lzma_end(&ctx->strm);
-+	free(ctx);
-+	return 0;
-+}
-+
-+static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
-+					     int compression_level)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+
-+	if (compression_level < 0)
-+		compression_level = LZMA_PRESET_DEFAULT;
-+
-+	if (lzma_lzma_preset(&ctx->opt, compression_level))
-+		return -EINVAL;
-+
-+	/* XXX: temporary hack */
-+	if (cfg.c_dict_size) {
-+		if (cfg.c_dict_size > Z_EROFS_LZMA_MAX_DICT_SIZE) {
-+			erofs_err("dict size %u is too large", cfg.c_dict_size);
-+			return -EINVAL;
-+		}
-+		ctx->opt.dict_size = cfg.c_dict_size;
-+	} else {
-+		if (ctx->opt.dict_size > Z_EROFS_LZMA_MAX_DICT_SIZE)
-+			ctx->opt.dict_size = Z_EROFS_LZMA_MAX_DICT_SIZE;
-+		cfg.c_dict_size = ctx->opt.dict_size;
-+	}
-+	c->compression_level = compression_level;
-+	return 0;
-+}
-+
-+static int erofs_compressor_liblzma_init(struct erofs_compress *c)
-+{
-+	struct erofs_liblzma_context *ctx;
-+
-+	c->alg = &erofs_compressor_lzma;
-+	ctx = malloc(sizeof(*ctx));
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->strm = (lzma_stream)LZMA_STREAM_INIT;
-+	c->private_data = ctx;
-+	erofs_warn("EXPERIMENTAL MicroLZMA feature in use. Use at your own risk!");
-+	erofs_warn("Note that it may take more time since the compressor is still single-threaded for now.");
-+	return 0;
-+}
-+
-+struct erofs_compressor erofs_compressor_lzma = {
-+	.name = "lzma",
-+	.default_level = LZMA_PRESET_DEFAULT,
-+	.best_level = LZMA_PRESET_EXTREME,
-+	.init = erofs_compressor_liblzma_init,
-+	.exit = erofs_compressor_liblzma_exit,
-+	.setlevel = erofs_compressor_liblzma_setlevel,
-+	.compress_destsize = erofs_liblzma_compress_destsize,
-+};
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 055d077988e9..028cf5a8911c 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -147,7 +147,6 @@ static int parse_extended_opts(const char *opts)
- 				return -EINVAL;
- 			/* disable compacted indexes and 0padding */
- 			cfg.c_legacy_compress = true;
--			erofs_sb_clear_lz4_0padding();
- 		}
- 
- 		if (MATCH_EXTENTED_OPT("force-inode-compact", token, keylen)) {
--- 
-2.20.1
+There are some new features available for this cycle. Firstly, EROFS
+LZMA algorithm support, specifically called MicroLZMA, is available
+as an option for embedded devices, LiveCDs and/or as the secondary
+auxiliary compression algorithm besides the primary algorithm in one
+file.
 
+In order to better support the LZMA fixed-sized output compression,
+especially for 4KiB pcluster size (which has lowest memory pressure
+thus useful for memory-sensitive scenarios), Lasse introduced a new
+LZMA header/container format called MicroLZMA to minimize the original
+LZMA1 header (for example, we don't need to waste 4-byte dictionary
+size and another 8-byte uncompressed size, which can be calculated by
+fs directly, for each pcluster.) and enable EROFS fixed-sized output
+compression. Note that MicroLZMA can also be later used by other
+things in addition to EROFS too where wasting minimal amount of space
+for headers is important and it can be only compiled by enabling
+XZ_DEC_MICROLZMA. MicroLZMA has been supported by the latest upstream
+XZ embedded [1] & XZ utils [2], apply the latest related XZ embedded
+upstream patches by the XZ author Lasse here.
+
+Secondly, multiple device is also supported in this cycle, which is
+designed for multi-layer container images. By working together with
+inter-layer data deduplication and compression, we can achieve the
+next high-performance container image solution. Our team will announce
+the new Nydus container image service [3] implementation with new RAFS
+v6 (EROFS-compatible) format in Open Source Summit 2021 China [4] soon.
+
+Besides, the secondary compression head support and readmore
+decompression strategy are also included in this cycle. There are also
+some minor bugfixes and cleanups, as always.
+
+All commits have been tested and have been in linux-next. This merges
+cleanly with master.
+
+[1] https://git.tukaani.org/?p=xz-embedded.git
+[2] https://git.tukaani.org/?p=xz.git
+[3] https://github.com/dragonflyoss/image-service
+[4] https://kccncosschn21.sched.com/event/pcdL/erofsdaelsju-nanojdyags-erofs-what-are-we-doing-now-for-containers-xiang-gao-alibaba
+
+Thanks,
+Gao Xiang
+
+The following changes since commit 9e1ff307c779ce1f0f810c7ecce3d95bbae40896:
+
+  Linux 5.15-rc4 (2021-10-03 14:08:47 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc1
+
+for you to fetch changes up to a0961f351d82d43ab0b845304caa235dfe249ae9:
+
+  erofs: don't trigger WARN() when decompression fails (2021-10-31 21:00:28 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - support multiple devices for multi-layer container images;
+
+ - support the secondary compression head;
+
+ - support readmore decompression strategy;
+
+ - support new LZMA algorithm (specifically called MicroLZMA);
+
+ - some bugfixes & cleanups.
+
+----------------------------------------------------------------
+Gao Xiang (9):
+      erofs: decouple basic mount options from fs_context
+      erofs: add multiple device support
+      erofs: get compression algorithms directly on mapping
+      erofs: introduce the secondary compression head
+      erofs: introduce readmore decompression strategy
+      erofs: rename some generic methods in decompressor
+      erofs: lzma compression support
+      erofs: get rid of ->lru usage
+      erofs: don't trigger WARN() when decompression fails
+
+Lasse Collin (5):
+      lib/xz: Avoid overlapping memcpy() with invalid input with in-place decompression
+      lib/xz: Validate the value before assigning it to an enum variable
+      lib/xz: Move s->lzma.len = 0 initialization to lzma_reset()
+      lib/xz: Add MicroLZMA decoder
+      lib/xz, lib/decompress_unxz.c: Fix spelling in comments
+
+Yue Hu (1):
+      erofs: remove the fast path of per-CPU buffer decompression
+
+ Documentation/filesystems/erofs.rst |  12 +-
+ fs/erofs/Kconfig                    |  40 +++--
+ fs/erofs/Makefile                   |   1 +
+ fs/erofs/compress.h                 |  28 ++--
+ fs/erofs/data.c                     |  73 +++++++--
+ fs/erofs/decompressor.c             | 139 ++++++-----------
+ fs/erofs/decompressor_lzma.c        | 290 ++++++++++++++++++++++++++++++++++++
+ fs/erofs/erofs_fs.h                 |  73 ++++++---
+ fs/erofs/inode.c                    |   2 +-
+ fs/erofs/internal.h                 | 105 +++++++++++--
+ fs/erofs/pcpubuf.c                  |   6 +-
+ fs/erofs/super.c                    | 231 ++++++++++++++++++++++------
+ fs/erofs/utils.c                    |  19 ++-
+ fs/erofs/xattr.c                    |   4 +-
+ fs/erofs/zdata.c                    | 175 +++++++++++++++-------
+ fs/erofs/zdata.h                    |   7 -
+ fs/erofs/zmap.c                     |  65 +++++---
+ include/linux/xz.h                  | 106 +++++++++++++
+ include/trace/events/erofs.h        |   2 +-
+ lib/decompress_unxz.c               |  10 +-
+ lib/xz/Kconfig                      |  13 ++
+ lib/xz/xz_dec_lzma2.c               | 182 +++++++++++++++++++++-
+ lib/xz/xz_dec_stream.c              |   6 +-
+ lib/xz/xz_dec_syms.c                |   9 +-
+ lib/xz/xz_private.h                 |   3 +
+ 25 files changed, 1281 insertions(+), 320 deletions(-)
+ create mode 100644 fs/erofs/decompressor_lzma.c
