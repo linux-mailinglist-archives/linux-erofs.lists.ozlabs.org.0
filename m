@@ -2,14 +2,14 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38E7C441DF6
-	for <lists+linux-erofs@lfdr.de>; Mon,  1 Nov 2021 17:19:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8391D441E0C
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Nov 2021 17:21:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HjdXK0J3Mz2yHP
-	for <lists+linux-erofs@lfdr.de>; Tue,  2 Nov 2021 03:19:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HjdZm2Hbnz2yHW
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Nov 2021 03:21:36 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ioV3bcGv;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ioV3bcGv;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jb2ieF+U;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jb2ieF+U;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -19,75 +19,75 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=ioV3bcGv; 
+ header.s=mimecast20190719 header.b=Jb2ieF+U; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=ioV3bcGv; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jb2ieF+U; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
  (us-smtp-delivery-124.mimecast.com [170.10.133.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HjdXF2FDCz2xBv
- for <linux-erofs@lists.ozlabs.org>; Tue,  2 Nov 2021 03:19:25 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HjdZh2Q35z2xRn
+ for <linux-erofs@lists.ozlabs.org>; Tue,  2 Nov 2021 03:21:32 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1635783562;
+ s=mimecast20190719; t=1635783689;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=C05du9bq5580dSm6IfhlDVs1xfqwhE2XhWSAZIf2yew=;
- b=ioV3bcGv85AIWOyDAkvGTS2TjAGuZiacWuWeZda+/ETDMsG5qLftSzKgmpK4q7FS2Umsnf
- OuoVbJYNu0QBQKDOLBcLohvnvmr9NWJFWEYFcXZ9DiQb5Vo6bNW/Ia5YX9AjfY0Qa//PCi
- FpPo81IXuUBBkxwQAldvhalUJRAF/xs=
+ bh=E9idZ9g7Qiy202IHm24WOcqzjkMEWV4Amwu/3bidfKY=;
+ b=Jb2ieF+UJCAXaI4awu80SUFZWF1CkD+S/ZJK/qbpHthY8oUap767smt5XzxZrVboica49v
+ Gc/NLA+cN/NPFJyzzwDixs9cL1vW5tpevJ1qXmdcl2xVTclP6wi6hIsKzEOnYopmlUHAik
+ 6/rk9NCN9qyolMzY00bExSCWPb1mljU=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1635783562;
+ s=mimecast20190719; t=1635783689;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  in-reply-to:in-reply-to:references:references;
- bh=C05du9bq5580dSm6IfhlDVs1xfqwhE2XhWSAZIf2yew=;
- b=ioV3bcGv85AIWOyDAkvGTS2TjAGuZiacWuWeZda+/ETDMsG5qLftSzKgmpK4q7FS2Umsnf
- OuoVbJYNu0QBQKDOLBcLohvnvmr9NWJFWEYFcXZ9DiQb5Vo6bNW/Ia5YX9AjfY0Qa//PCi
- FpPo81IXuUBBkxwQAldvhalUJRAF/xs=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-VRI3m1dNNIqK1MWg_qfIqA-1; Mon, 01 Nov 2021 12:19:21 -0400
-X-MC-Unique: VRI3m1dNNIqK1MWg_qfIqA-1
-Received: by mail-qv1-f69.google.com with SMTP id
- q9-20020ad45749000000b00382b7c83aa1so16753711qvx.11
- for <linux-erofs@lists.ozlabs.org>; Mon, 01 Nov 2021 09:19:21 -0700 (PDT)
+ bh=E9idZ9g7Qiy202IHm24WOcqzjkMEWV4Amwu/3bidfKY=;
+ b=Jb2ieF+UJCAXaI4awu80SUFZWF1CkD+S/ZJK/qbpHthY8oUap767smt5XzxZrVboica49v
+ Gc/NLA+cN/NPFJyzzwDixs9cL1vW5tpevJ1qXmdcl2xVTclP6wi6hIsKzEOnYopmlUHAik
+ 6/rk9NCN9qyolMzY00bExSCWPb1mljU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-j19-GSIJN0GraIHtYWhPlg-1; Mon, 01 Nov 2021 12:21:28 -0400
+X-MC-Unique: j19-GSIJN0GraIHtYWhPlg-1
+Received: by mail-qv1-f72.google.com with SMTP id
+ jo4-20020a056214500400b003a5cb094fb8so6090430qvb.22
+ for <linux-erofs@lists.ozlabs.org>; Mon, 01 Nov 2021 09:21:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:date:from:to:cc:subject:message-id:references
  :mime-version:content-disposition:in-reply-to;
- bh=C05du9bq5580dSm6IfhlDVs1xfqwhE2XhWSAZIf2yew=;
- b=bs0YYO6VX8MQwg7bpZn5Esy7f8BOs4wFuq6uR3sANAs2+FuQy+5MCqbdPbUo4y23G6
- bi38gAWiyi9gFesaEkp6EtO/HJohRT7L1Aw8E7YBzC+vUY/+REtz+UCfyoQ3UQekj6SJ
- DFYbvlzXaBsbann8gwGAGpzPFWFOuYCz5nte2rTHwOkBKm75Nd8GK33TgBckmMnAgdol
- wKY+BeSkErBnQ2TqQ4cJyzz7BrU3cl3gQotnF90bLV1+LKwsUdOtIHmt/M4kSbLQgL71
- lqDRuGf3mZvnpp3jIae4FEGOFjJmmr0MqW0Ho5Yw0wRvLooiugeHOLU4NJy6EqOfi/vV
- ExxQ==
-X-Gm-Message-State: AOAM530ZysSnR4BX7Q6q5LZtD109UjMOvob9fzUBqPPG1OhkJjqirMd6
- 9ze1KVXKSASuIq16fVvuRcdqIkTtMPlmygWG8nr8oyEJNmrepTILXPwRWG1YPPsFlDpKTIUQENA
- meahTsEnEQP+Od8tFNbCwf0k=
-X-Received: by 2002:a0c:b341:: with SMTP id a1mr28270547qvf.21.1635783560973; 
- Mon, 01 Nov 2021 09:19:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwvmIEea110PcdB5LDCY7U1ej3BdqkCE7DUWVGoDnBFq+m2W3EEPnU5Ptqvnzv3GNnSJbsMew==
-X-Received: by 2002:a0c:b341:: with SMTP id a1mr28270537qvf.21.1635783560844; 
- Mon, 01 Nov 2021 09:19:20 -0700 (PDT)
+ bh=E9idZ9g7Qiy202IHm24WOcqzjkMEWV4Amwu/3bidfKY=;
+ b=uWYbMxA05mPQyY6FMlGAnRvZ2QlPTvP540VhHgyY3MdevtkUgyc9nXXjKhFlgal2TD
+ abyFG6k5PfxHjQdDbmHtKL8A70mfoAMKAI8arwxv2X+l80qkcaZPXyrvQ0OSkPsMWAwz
+ /CJTtsKNHFWGZCXov9A5q9D0iv8OvKbldpbn+yFP8FNvwa66vrnUcZ1s31/dbKk5f1bb
+ n+HHREl5DnJvFCa0GzZEY49uVXnBx+F7TK5vqgipdfBF4GzEz84fenpU5eBHrbiATr6T
+ tKHLX6BSR+zxdUyvl0Dz4ULjOL7bcM8di+pXriVBuamsO+LIrDLTU1SDhXbjyxRWImVi
+ kkkA==
+X-Gm-Message-State: AOAM532pvVJsnEjc4zU2Gq4xg1WtrzcZH7KmhhVrOqKiMQF35v4U7hfT
+ EEq3tSWbGEe3wcMwA92/Te7Vl8UmkewfMmUHp+wZCrue+KMgLGu7XT5k/y4pFzznUBjDI6EXf53
+ q5adNtJXK2+NKS3R85dHFw7Q=
+X-Received: by 2002:ac8:7d04:: with SMTP id g4mr30472029qtb.183.1635783688228; 
+ Mon, 01 Nov 2021 09:21:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwXhGf8N2V91WU2Co6WJDyYs4GGgkn9JXnS/oEwWuG4J0RZNo7zMUQJUBh2KgjI9ZclpX5QJg==
+X-Received: by 2002:ac8:7d04:: with SMTP id g4mr30472009qtb.183.1635783688071; 
+ Mon, 01 Nov 2021 09:21:28 -0700 (PDT)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net.
  [68.160.176.52])
- by smtp.gmail.com with ESMTPSA id g8sm1775746qko.27.2021.11.01.09.19.20
+ by smtp.gmail.com with ESMTPSA id bj3sm2670847qkb.75.2021.11.01.09.21.27
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Mon, 01 Nov 2021 09:19:20 -0700 (PDT)
-Date: Mon, 1 Nov 2021 12:19:19 -0400
+ Mon, 01 Nov 2021 09:21:27 -0700 (PDT)
+Date: Mon, 1 Nov 2021 12:21:26 -0400
 From: Mike Snitzer <snitzer@redhat.com>
 To: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 09/11] dm-log-writes: add a log_writes_dax_pgoff helper
-Message-ID: <YYATh6yxGehyjpcm@redhat.com>
+Subject: Re: [PATCH 10/11] dm-stripe: add a stripe_dax_pgoff helper
+Message-ID: <YYAUBkiPlRCVPnyv@redhat.com>
 References: <20211018044054.1779424-1-hch@lst.de>
- <20211018044054.1779424-10-hch@lst.de>
- <CAPcyv4iaUPEo73+KsBdYhM72WqKqJpshL-YU_iWoujk5jNUhmA@mail.gmail.com>
+ <20211018044054.1779424-11-hch@lst.de>
+ <CAPcyv4iLbbqyAsy1yjFXT48D3Ssp+jy4EMJt+Sj_o2W-WMgK9w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iaUPEo73+KsBdYhM72WqKqJpshL-YU_iWoujk5jNUhmA@mail.gmail.com>
+In-Reply-To: <CAPcyv4iLbbqyAsy1yjFXT48D3Ssp+jy4EMJt+Sj_o2W-WMgK9w@mail.gmail.com>
 Authentication-Results: relay.mimecast.com;
  auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=snitzer@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -117,7 +117,7 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 27 2021 at  9:36P -0400,
+On Wed, Oct 27 2021 at  9:41P -0400,
 Dan Williams <dan.j.williams@intel.com> wrote:
 
 > On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
@@ -127,10 +127,10 @@ Dan Williams <dan.j.williams@intel.com> wrote:
 > > already been done by the submitting file system and don't need to be
 > > repeated.
 > 
-> Looks good.
+> Again, looks good. Kind of embarrassing when the open-coded version is
+> less LOC than using the helper.
 > 
 > Mike, ack?
-> 
 
 Acked-by: Mike Snitzer <snitzer@redhat.com>
 
