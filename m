@@ -2,40 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 697C3446E0D
-	for <lists+linux-erofs@lfdr.de>; Sat,  6 Nov 2021 14:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C4AB448206
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Nov 2021 15:44:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HmdTg1l7Rz2yS3
-	for <lists+linux-erofs@lfdr.de>; Sun,  7 Nov 2021 00:27:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hnv5c1Pqmz2yp4
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 01:44:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
- helo=out30-130.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com
- (out30-130.freemail.mail.aliyun.com [115.124.30.130])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HmdTb0vDWz2xtN
- for <linux-erofs@lists.ozlabs.org>; Sun,  7 Nov 2021 00:27:26 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R211e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0UvIHVwt_1636205234; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UvIHVwt_1636205234) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 06 Nov 2021 21:27:16 +0800
-Date: Sat, 6 Nov 2021 21:27:11 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Yue Hu <huyue2@yulong.com>
-Subject: Re: [PATCH v2] erofs: remove useless cache strategy of DELAYEDALLOC
-Message-ID: <YYaCr9YgK1I91MXX@B-P7TQMD6M-0146.local>
-References: <20211106082315.25781-1-huyue2@yulong.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hnv5W33qpz2ym7
+ for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 01:44:29 +1100 (AEDT)
+X-IronPort-AV: E=McAfee;i="6200,9189,10161"; a="318434079"
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; d="scan'208";a="318434079"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+ by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 08 Nov 2021 06:43:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; d="scan'208";a="533331732"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+ by orsmga001.jf.intel.com with ESMTP; 08 Nov 2021 06:43:26 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1mk5rp-000CCs-Dl; Mon, 08 Nov 2021 14:43:25 +0000
+Date: Mon, 08 Nov 2021 22:43:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <xiang@kernel.org>
+Subject: [xiang-erofs:fixes] BUILD SUCCESS
+ 4c7e42552b3a1536f3cdf534aba8c4262ee26716
+Message-ID: <61893786.Ww1utRlwU5dAkwQG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211106082315.25781-1-huyue2@yulong.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -47,98 +50,77 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- geshifei@yulong.com, zhangwen@yulong.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+branch HEAD: 4c7e42552b3a1536f3cdf534aba8c4262ee26716  erofs: remove useless cache strategy of DELAYEDALLOC
 
-On Sat, Nov 06, 2021 at 04:23:15PM +0800, Yue Hu wrote:
-> DELAYEDALLOC is not used at all, remove related dead code. Also,
-> remove the blank line at the end of zdata.h.
+elapsed time: 721m
 
-I'll update the commit message to:
+configs tested: 53
+configs skipped: 3
 
-After commit 1825c8d7ce93 ("erofs: force inplace I/O under low
-memory scenario") and TRYALLOC is widely used, DELAYEDALLOC won't
-be used anymore. Remove related dead code. Also, remove the blank
-line at the end of zdata.h.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
-> ---
-> v2: remove the blank line at the end of zdata.h.
-> 
->  fs/erofs/zdata.c | 20 --------------------
->  fs/erofs/zdata.h |  1 -
->  2 files changed, 21 deletions(-)
-> 
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index bcb1b91b234f..812c7c6ae456 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -96,16 +96,9 @@ static void z_erofs_free_pcluster(struct z_erofs_pcluster *pcl)
->  	DBG_BUGON(1);
->  }
->  
-> -/*
-> - * a compressed_pages[] placeholder in order to avoid
-> - * being filled with file pages for in-place decompression.
-> - */
-> -#define PAGE_UNALLOCATED     ((void *)0x5F0E4B1D)
-> -
->  /* how to allocate cached pages for a pcluster */
->  enum z_erofs_cache_alloctype {
->  	DONTALLOC,	/* don't allocate any cached pages */
-> -	DELAYEDALLOC,	/* delayed allocation (at the time of submitting io) */
->  	/*
->  	 * try to use cached I/O if page allocation succeeds or fallback
->  	 * to in-place I/O instead to avoid any direct reclaim.
-> @@ -267,10 +260,6 @@ static void preload_compressed_pages(struct z_erofs_collector *clt,
->  			/* I/O is needed, no possible to decompress directly */
->  			standalone = false;
->  			switch (type) {
-> -			case DELAYEDALLOC:
-> -				t = tagptr_init(compressed_page_t,
-> -						PAGE_UNALLOCATED);
-> -				break;
->  			case TRYALLOC:
->  				newpage = erofs_allocpage(pagepool, gfp);
->  				if (!newpage)
-> @@ -1089,15 +1078,6 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
->  	if (!page)
->  		goto out_allocpage;
->  
-> -	/*
-> -	 * the cached page has not been allocated and
-> -	 * an placeholder is out there, prepare it now.
-> -	 */
-> -	if (page == PAGE_UNALLOCATED) {
-> -		tocache = true;
-> -		goto out_allocpage;
-> -	}
-> -
->  	/* process the target tagged pointer */
->  	t = tagptr_init(compressed_page_t, page);
->  	justfound = tagptr_unfold_tags(t);
-> diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-> index 879df5362777..4a69515dea75 100644
-> --- a/fs/erofs/zdata.h
-> +++ b/fs/erofs/zdata.h
-> @@ -179,4 +179,3 @@ static inline void z_erofs_onlinepage_endio(struct page *page)
->  #define Z_EROFS_VMAP_GLOBAL_PAGES	2048
->  
->  #endif
-> -
-> -- 
-> 2.17.1
-> 
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
