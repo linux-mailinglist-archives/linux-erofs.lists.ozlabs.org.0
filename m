@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B93044A902
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 09:34:29 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B220444A905
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 09:34:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HpLr33SgMz2yN4
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 19:34:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HpLr84m5Yz2yQw
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 19:34:32 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=TVkdImeU;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=AwTyippi;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -19,34 +19,33 @@ Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=TVkdImeU; 
+ header.s=casper.20170209 header.b=AwTyippi; 
  dkim-atps=neutral
 Received: from casper.infradead.org (casper.infradead.org
  [IPv6:2001:8b0:10b:1236::1])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HpLqY4yX5z2yQ9
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 19:34:01 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HpLqZ5v9Qz30G6
+ for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 19:34:02 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
  References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
  Content-Type:Content-ID:Content-Description;
- bh=+scVZaxx4kcvp0Cboq1Z7TDSMt9zURLxK3cUHRmeCJY=; b=TVkdImeUmftPM79g0PQhq20Ta/
- RuxJyo/av4rpO9uxXtuLKWWoEXVONWEOL7vNvV5s8fmK01QKc9v6zFnOGpWQ8veO3PW41Veas6UZd
- 7vhJhKrargNEMiZSeZbpl5goXtJhQ1blmw3uTTLPOrnp4Ylr6Mkbdrwjsy2aUO2KGzReNWaN7T1RT
- 1vs5j3lyh+OmWzCpqYO62KgdQupFc3i8JBAmq1ShrHT1uqi9w8d7WcG88O26dMVcPidYVh2zNjS3K
- Y3ydrmz/SGcOgWBJAkmvOjEGIncW+Ke5rV/nj/tmVsx9UIkM/+3rpVyE4E6+uyOWiKc8zys52VYQe
- 9itJrl+Q==;
+ bh=YI5KXoTh/4gwEroExLHzFhWVvpPDf4+n7V/Xox3B544=; b=AwTyippiAZmoz/Kfz0zWZ1oNbr
+ 14RYnWC4s144kGri6OGi6exkkFBSqXwsho6c5f58x7DkOWCziZlBcyrUBi0QtIxOaDq2vKDf1d8YP
+ QIs1cRsfc41v4e2hm2QP8vJ8qUMo2N7E0VFZyqxdRM1HDHGVuG9ysNhgE/yQ2HVlrziFbBvbO07yG
+ IEkg0Krp6lFZS8nvD3l+q+d4Ysr9e+ItusH0opTuwyg+K08Lh0ajLUgazLtXCSCXwVdQ8mNqY/QTl
+ i1oSVCDOOm9vyKUN93Mc59w3ssrysrc1Dr1bAqP2f+VDYnz3fWP1WlP4ea/Yz4ZJwC90/CTYuqv9E
+ 6K+f+qYQ==;
 Received: from [2001:4bb8:19a:7ee7:fb46:2fe1:8652:d9d4] (helo=localhost)
  by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mkMZh-000s7y-MB; Tue, 09 Nov 2021 08:33:50 +0000
+ id 1mkMZj-000s8n-3T; Tue, 09 Nov 2021 08:33:52 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 21/29] xfs: move dax device handling into xfs_{alloc,
- free}_buftarg
-Date: Tue,  9 Nov 2021 09:33:01 +0100
-Message-Id: <20211109083309.584081-22-hch@lst.de>
+Subject: [PATCH 22/29] iomap: add a IOMAP_DAX flag
+Date: Tue,  9 Nov 2021 09:33:02 +0100
+Message-Id: <20211109083309.584081-23-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211109083309.584081-1-hch@lst.de>
 References: <20211109083309.584081-1-hch@lst.de>
@@ -74,160 +73,65 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hide the DAX device lookup from the xfs_super.c code.
+Add a flag so that the file system can easily detect DAX operations.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf.c   |  8 ++++----
- fs/xfs/xfs_buf.h   |  4 ++--
- fs/xfs/xfs_super.c | 26 +++++---------------------
- 3 files changed, 11 insertions(+), 27 deletions(-)
+ fs/dax.c              | 7 ++++---
+ include/linux/iomap.h | 1 +
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 631c5a61d89b7..4d4553ffa7050 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1892,6 +1892,7 @@ xfs_free_buftarg(
- 	list_lru_destroy(&btp->bt_lru);
+diff --git a/fs/dax.c b/fs/dax.c
+index 5b52b878124ac..0bd6cdcbacfc4 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1180,7 +1180,7 @@ int dax_zero_range(struct inode *inode, loff_t pos, loff_t len, bool *did_zero,
+ 		.inode		= inode,
+ 		.pos		= pos,
+ 		.len		= len,
+-		.flags		= IOMAP_ZERO,
++		.flags		= IOMAP_DAX | IOMAP_ZERO,
+ 	};
+ 	int ret;
  
- 	blkdev_issue_flush(btp->bt_bdev);
-+	fs_put_dax(btp->bt_daxdev);
+@@ -1308,6 +1308,7 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 		.inode		= iocb->ki_filp->f_mapping->host,
+ 		.pos		= iocb->ki_pos,
+ 		.len		= iov_iter_count(iter),
++		.flags		= IOMAP_DAX,
+ 	};
+ 	loff_t done = 0;
+ 	int ret;
+@@ -1461,7 +1462,7 @@ static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ 		.inode		= mapping->host,
+ 		.pos		= (loff_t)vmf->pgoff << PAGE_SHIFT,
+ 		.len		= PAGE_SIZE,
+-		.flags		= IOMAP_FAULT,
++		.flags		= IOMAP_DAX | IOMAP_FAULT,
+ 	};
+ 	vm_fault_t ret = 0;
+ 	void *entry;
+@@ -1570,7 +1571,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ 	struct iomap_iter iter = {
+ 		.inode		= mapping->host,
+ 		.len		= PMD_SIZE,
+-		.flags		= IOMAP_FAULT,
++		.flags		= IOMAP_DAX | IOMAP_FAULT,
+ 	};
+ 	vm_fault_t ret = VM_FAULT_FALLBACK;
+ 	pgoff_t max_pgoff;
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 6d1b08d0ae930..146a7e3e3ea11 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -141,6 +141,7 @@ struct iomap_page_ops {
+ #define IOMAP_NOWAIT		(1 << 5) /* do not block */
+ #define IOMAP_OVERWRITE_ONLY	(1 << 6) /* only pure overwrites allowed */
+ #define IOMAP_UNSHARE		(1 << 7) /* unshare_file_range */
++#define IOMAP_DAX		(1 << 8) /* DAX mapping */
  
- 	kmem_free(btp);
- }
-@@ -1932,11 +1933,10 @@ xfs_setsize_buftarg_early(
- 	return xfs_setsize_buftarg(btp, bdev_logical_block_size(bdev));
- }
- 
--xfs_buftarg_t *
-+struct xfs_buftarg *
- xfs_alloc_buftarg(
- 	struct xfs_mount	*mp,
--	struct block_device	*bdev,
--	struct dax_device	*dax_dev)
-+	struct block_device	*bdev)
- {
- 	xfs_buftarg_t		*btp;
- 
-@@ -1945,7 +1945,7 @@ xfs_alloc_buftarg(
- 	btp->bt_mount = mp;
- 	btp->bt_dev =  bdev->bd_dev;
- 	btp->bt_bdev = bdev;
--	btp->bt_daxdev = dax_dev;
-+	btp->bt_daxdev = fs_dax_get_by_bdev(bdev);
- 
+ struct iomap_ops {
  	/*
- 	 * Buffer IO error rate limiting. Limit it to no more than 10 messages
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 6b0200b8007d1..bd7f709f0d232 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -338,8 +338,8 @@ xfs_buf_update_cksum(struct xfs_buf *bp, unsigned long cksum_offset)
- /*
-  *	Handling of buftargs.
-  */
--extern struct xfs_buftarg *xfs_alloc_buftarg(struct xfs_mount *,
--		struct block_device *, struct dax_device *);
-+struct xfs_buftarg *xfs_alloc_buftarg(struct xfs_mount *mp,
-+		struct block_device *bdev);
- extern void xfs_free_buftarg(struct xfs_buftarg *);
- extern void xfs_buftarg_wait(struct xfs_buftarg *);
- extern void xfs_buftarg_drain(struct xfs_buftarg *);
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 3a45d5caa28d5..7262716afb215 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -391,26 +391,19 @@ STATIC void
- xfs_close_devices(
- 	struct xfs_mount	*mp)
- {
--	struct dax_device *dax_ddev = mp->m_ddev_targp->bt_daxdev;
--
- 	if (mp->m_logdev_targp && mp->m_logdev_targp != mp->m_ddev_targp) {
- 		struct block_device *logdev = mp->m_logdev_targp->bt_bdev;
--		struct dax_device *dax_logdev = mp->m_logdev_targp->bt_daxdev;
- 
- 		xfs_free_buftarg(mp->m_logdev_targp);
- 		xfs_blkdev_put(logdev);
--		fs_put_dax(dax_logdev);
- 	}
- 	if (mp->m_rtdev_targp) {
- 		struct block_device *rtdev = mp->m_rtdev_targp->bt_bdev;
--		struct dax_device *dax_rtdev = mp->m_rtdev_targp->bt_daxdev;
- 
- 		xfs_free_buftarg(mp->m_rtdev_targp);
- 		xfs_blkdev_put(rtdev);
--		fs_put_dax(dax_rtdev);
- 	}
- 	xfs_free_buftarg(mp->m_ddev_targp);
--	fs_put_dax(dax_ddev);
- }
- 
- /*
-@@ -428,8 +421,6 @@ xfs_open_devices(
- 	struct xfs_mount	*mp)
- {
- 	struct block_device	*ddev = mp->m_super->s_bdev;
--	struct dax_device	*dax_ddev = fs_dax_get_by_bdev(ddev);
--	struct dax_device	*dax_logdev = NULL, *dax_rtdev = NULL;
- 	struct block_device	*logdev = NULL, *rtdev = NULL;
- 	int			error;
- 
-@@ -439,8 +430,7 @@ xfs_open_devices(
- 	if (mp->m_logname) {
- 		error = xfs_blkdev_get(mp, mp->m_logname, &logdev);
- 		if (error)
--			goto out;
--		dax_logdev = fs_dax_get_by_bdev(logdev);
-+			return error;
- 	}
- 
- 	if (mp->m_rtname) {
-@@ -454,25 +444,24 @@ xfs_open_devices(
- 			error = -EINVAL;
- 			goto out_close_rtdev;
- 		}
--		dax_rtdev = fs_dax_get_by_bdev(rtdev);
- 	}
- 
- 	/*
- 	 * Setup xfs_mount buffer target pointers
- 	 */
- 	error = -ENOMEM;
--	mp->m_ddev_targp = xfs_alloc_buftarg(mp, ddev, dax_ddev);
-+	mp->m_ddev_targp = xfs_alloc_buftarg(mp, ddev);
- 	if (!mp->m_ddev_targp)
- 		goto out_close_rtdev;
- 
- 	if (rtdev) {
--		mp->m_rtdev_targp = xfs_alloc_buftarg(mp, rtdev, dax_rtdev);
-+		mp->m_rtdev_targp = xfs_alloc_buftarg(mp, rtdev);
- 		if (!mp->m_rtdev_targp)
- 			goto out_free_ddev_targ;
- 	}
- 
- 	if (logdev && logdev != ddev) {
--		mp->m_logdev_targp = xfs_alloc_buftarg(mp, logdev, dax_logdev);
-+		mp->m_logdev_targp = xfs_alloc_buftarg(mp, logdev);
- 		if (!mp->m_logdev_targp)
- 			goto out_free_rtdev_targ;
- 	} else {
-@@ -488,14 +477,9 @@ xfs_open_devices(
- 	xfs_free_buftarg(mp->m_ddev_targp);
-  out_close_rtdev:
- 	xfs_blkdev_put(rtdev);
--	fs_put_dax(dax_rtdev);
-  out_close_logdev:
--	if (logdev && logdev != ddev) {
-+	if (logdev && logdev != ddev)
- 		xfs_blkdev_put(logdev);
--		fs_put_dax(dax_logdev);
--	}
-- out:
--	fs_put_dax(dax_ddev);
- 	return error;
- }
- 
 -- 
 2.30.2
 
