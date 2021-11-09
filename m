@@ -2,141 +2,143 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED2A44A7A0
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 08:32:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1812E44A7C4
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 08:43:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HpKSM6B9qz2yPW
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 18:32:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HpKjS06H2z2yPW
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 18:43:40 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1636443139;
-	bh=shjhz5YKtaJCGI1Wy3JBlxW6+0xK/SWd4vQyJyP406U=;
+	s=201707; t=1636443820;
+	bh=9JdE2ZBtNj0S4npA8iFstWw6QHus87geSkOYZDmLmdA=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=lte9ZMY5dE5LTK7UdwdD9dZymOsmrxnTvA+dlMA/kkIb3LgENSE+qBuc9KuC1QVGy
-	 0d257anSyfU+Bq5NhTW+W4pXXdw8/j19YX5IUjJTVLBOxB7MRxfimxuXNWFVv9z7Pe
-	 ZEGxutke6NYXwqh9bUvHX49uq+LEZxxwhWWS06Ef5tUmNzWMnxMK143lxVFXK378A6
-	 4BvGS4k0aIpZI6USfzAduD0wBh6Ji+NUrcI2sxDHzkxGss2eedPiyv6EAYEbxllWiN
-	 NQLFg441CO8K63Xhjui2IIK2DXHRMfpDBtH9iCFUudR1yf2SbXrtFho0HIzGUbSeRJ
-	 fRHGtjaH4/gaQ==
+	b=MHkD5aDrcn+AAdBy3/mPB4rFcGu7t+rFRoYM/MzO7+rfgi2oGpK29awDgb+R5Npn2
+	 JWEq28pSXVd34CazgcAbpqzLHrPT9if0pzryFDk8XmTsE+0Gh4S9McK60K5DeeNtmZ
+	 17qdc8g9HflYjj6KwvRxf6gnfAIfWzpK58bRBnSuEzCBTjgWQeYavga10TV+Ht0dho
+	 n/2zFkHmSZmGEQaFn6n6XMISdA+SRGmiPAW62SQvchoJX+sT72LgscEdvNsHtu8zLl
+	 zNUz16FEZhHPawF4hDAeUQmeU1Mi972FVj1Lre6sbuCelJLliAcUdxUg1Hto9rQhfD
+	 vXtPWVlixoObA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oppo.com (client-ip=40.107.130.52;
- helo=apc01-hk2-obe.outbound.protection.outlook.com;
+ smtp.mailfrom=oppo.com (client-ip=2a01:111:f400:febd::618;
+ helo=apc01-sg2-obe.outbound.protection.outlook.com;
  envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
- dkim=fail reason="signature verification failed" (1024-bit key;
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=LjDHHoVU; 
+ header.s=selector1 header.b=lor4fU5x; 
  dkim-atps=neutral
-Received: from APC01-HK2-obe.outbound.protection.outlook.com
- (mail-eopbgr1300052.outbound.protection.outlook.com [40.107.130.52])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com
+ (mail-sg2apc01on0618.outbound.protection.outlook.com
+ [IPv6:2a01:111:f400:febd::618])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HpKSJ0HPkz2xtZ
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 18:32:15 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HpKjH42nwz2y7M
+ for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 18:43:30 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QxC56d0uDr5GEZp12j7sClAXEvl17mox3SmHd9C51jQqnWYlF6ZZwIuM2aFKi0K4LxLE2VijIKQPn4WQtstyeEKMwbpAKLCGjA+JBsyteljxFK2KFBnqGayv2KGKoP9qs9KbYteQzevE2jtNiqE+pk19FFeLCkElIFMpgG0M1eRTlTNobabCvyrUe0SjaLhbli/YSPu+TlvGKGcQJJNqQYLisw+bWR6dw6k+cLLuAJk8PHBmHZK1uY7oUS1g1Xaxaj/y+D1uXsF+bUKUMdD5iSkyZSL0dgcGM1vERQg8zKtaJPFj2mwcSsQmW1kPZD1F6v4siJnp70vepugCDMxZFQ==
+ b=hWOgkh/HFaSCqCXNszdcDYJ1h9gMzppr8g8HxcDKeth5dUqXBEy7j39grtfJaMftXVOHfmON2c77kWUHPMotZKZZSDpZ6BJ8dd3VZ+/nLOaM6W8785o7tIgmnkEUCtQZma7K+lbi56/7mDEfCrzUatCSx86AdGTvxrHFB6SP6557kjEdPfUujrKj5zvUFyHKr7sKkeUXXf/cs0rovaOB9epv53+ZmXRGq4aXVj0kIjcCsgKUil8VQnNz1AooZjMsLIQ1Kjsnox15nr4kGdaKEhgFEBKOJowIpvFbQXYJ7JvwdWuFCdXSvQet4zVbVUMC7RImdWCmgqI25qLTK6zwRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yTvOzss4+SXzbbuke9uD7ABW4YNfTMXY4d6UZrLlKXk=;
- b=Ky1Un8wo39SSE287mQsasQuwMjnpNz57Dj9jJJX88WbfQp9DH2ExF2wbmvdtxOZn826DfGhWV2LXAFaTtLgLE676BzC0onloDaIdNisRzP0N/uBySLrzumuL5jtnENRS5z7eYi9O+l5g4G+cz3w6hQ2SLFuzim9FgSqPLyD2chEHyAlTvsUWayBJ1SQ6RSQ6PJEZXwXEukrYsrvjTZxBZkkGqEfhcShlxa3tlhcDCt/j/XarOIedfNLKqSGg507Aq7PI5gbkkYAWmdD+ACkUtwZDJ8nYpFjyxwkKyzNE/8delFj8y8lJcJxVuJI3eLtH4t8JTlOZgEWk1OGkobBbWA==
+ bh=9JdE2ZBtNj0S4npA8iFstWw6QHus87geSkOYZDmLmdA=;
+ b=IdqcDtvnlOKKJ6qIW0/X3+cFfzgPoRUnOSH6KP7XNfVAZHgkeghss2mCGp68lg8eDXG9natOvFkqoaaKDobtyt13LlvVg88tQLhPk0O9DJolfKcY4dmpAy+LcLedFsoaQ6BwqR1Sc44JDG2wAhoR8dZ/jGHt96QGUOyn53KbW6woFkEXWRba3Z+SFDy0jGdWWqbnEH44bsVbDSpovTsxi7Onxwy5btA/cIQPri9JjtoP5j3MbIvUdxHQ42qy0iA+YXJoGbRv/JSaMY/j098tc9BQmizhS+nPHjk7kf9Cm4Ud9qAsh8iX3rhgMCoyl02nvhQBDPZCPS/cb4xBG/pr9g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oppo.com;
+Authentication-Results: oppo.com; dkim=none (message not signed)
+ header.d=none;oppo.com; dmarc=none action=none header.from=oppo.com;
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
- SG2PR02MB2557.apcprd02.prod.outlook.com (2603:1096:3:26::22) with
+ SG2PR02MB4024.apcprd02.prod.outlook.com (2603:1096:4:89::22) with
  Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4669.10; Tue, 9 Nov 2021 07:31:57 +0000
+ 15.20.4669.10; Tue, 9 Nov 2021 07:43:09 +0000
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::7e:59ef:bec3:9988]) by SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::7e:59ef:bec3:9988%7]) with mapi id 15.20.4669.016; Tue, 9 Nov 2021
- 07:31:57 +0000
-Subject: Re: [PATCH 1/2] erofs: add sysfs interface
-To: Joe Perches <joe@perches.com>, linux-erofs@lists.ozlabs.org
+ 07:43:09 +0000
+Subject: Re: [PATCH 2/2] erofs: add sysfs node to control sync decompression
+ strategy
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
 References: <20211109025445.12427-1-huangjianan@oppo.com>
- <cc9807eb594b042ec2cd958f0c70c2f3dd12d58b.camel@perches.com>
-Message-ID: <a96677ff-dad0-9baa-00ba-ccc89ac3fb49@oppo.com>
-Date: Tue, 9 Nov 2021 15:31:54 +0800
+ <20211109025445.12427-2-huangjianan@oppo.com>
+ <YYnoHw+boVFtcyfv@B-P7TQMD6M-0146.local>
+Message-ID: <82f7c99e-b83f-90b7-fceb-b8436da94339@oppo.com>
+Date: Tue, 9 Nov 2021 15:43:06 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
-In-Reply-To: <cc9807eb594b042ec2cd958f0c70c2f3dd12d58b.camel@perches.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+In-Reply-To: <YYnoHw+boVFtcyfv@B-P7TQMD6M-0146.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: HKAPR04CA0012.apcprd04.prod.outlook.com
- (2603:1096:203:d0::22) To SG2PR02MB4108.apcprd02.prod.outlook.com
+X-ClientProxiedBy: SG2PR0601CA0014.apcprd06.prod.outlook.com (2603:1096:3::24)
+ To SG2PR02MB4108.apcprd02.prod.outlook.com
  (2603:1096:4:96::19)
 MIME-Version: 1.0
 Received: from [10.118.7.229] (58.255.79.105) by
- HKAPR04CA0012.apcprd04.prod.outlook.com (2603:1096:203:d0::22) with Microsoft
+ SG2PR0601CA0014.apcprd06.prod.outlook.com (2603:1096:3::24) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4669.13 via Frontend Transport; Tue, 9 Nov 2021 07:31:56 +0000
+ 15.20.4669.11 via Frontend Transport; Tue, 9 Nov 2021 07:43:08 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9c2fca1d-4270-478d-7ae2-08d9a35302cd
-X-MS-TrafficTypeDiagnostic: SG2PR02MB2557:
-X-Microsoft-Antispam-PRVS: <SG2PR02MB25571F98F79F980BC01D0AA0C3929@SG2PR02MB2557.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Office365-Filtering-Correlation-Id: a82acf49-6d42-414a-ffc9-08d9a3549334
+X-MS-TrafficTypeDiagnostic: SG2PR02MB4024:
+X-Microsoft-Antispam-PRVS: <SG2PR02MB4024A363735E4ED058F5CB1CC3929@SG2PR02MB4024.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fNBDTpuu6zclHuIKL4JLJLUCX9aVHDd3sJhcAsI5AszVtTRaGki7aEecps4nNwnV5yKqriiz9UYLVocpMbZgM+d7Ww4jPPMvcRiJQmVjA1FBu+8/thEhkr7iokbDAs5cJ+OZGBPsFN+TrR44nS98+X8GwjKpeZ6pnPyScsgPL/VIoReOfKb1T98GVvBlDYIsLt+CQmLwaFVQ0xo7SiTQoZm31ofhg7lK+EsYdR4J7mhzVgKCCziw1KzPYgn3RDj/hrDTw58deCPik+qFE63UKOZSkvtA1R6Ej53v5lBRNvcMrBPn2hBJ90jvtFSbN6YjG4uBOUsM01nWKE6uWh4S7GDOWqk7hon2FejrM0k/rH56Jee8za2OZlO4WHe4ORx6SnrGpFZT2cT6nm4wTjOmGHhz1d5bDd7ukbuKbkPtpOhYqr0n54FveRt8wmK2qt8d7375A3l5hXAdeuWtVKXzbOCAd2e6UT260vjIMWDS4D3Bw0U2vTDiqyQJMqKj8oVV84/D9+dmchuX4hAnBaY10J0l+7etNCDSXiGf82lZdnXSEEAUgNqUicBeOMIHuU9O5ycPreHl2w2BrmdqNHvMjWOfHJ+jfN0fQNTtXG8VkB0zGUOi3OpPW9RiOgyNINY7dRwAY0xB4VXWXU9+ywRzrTcqcuB8kEMHTUFLKk/0d7e//P5w4++wl9NdrKJljl9zsbh7BA67TBm84L3dy/GKkE8AS+nElUS2hm37yznhxRITDg5ShiD2qfOonVGEfNPMJUPM/ydBZQylYhezcXa3Y7pRBKlPojrZKQ39aiPcX3Q=
+X-Microsoft-Antispam-Message-Info: fVhJjrH2sOwbkGHrY0GdgsYSuafpaslHU1TfWPIWMIU0RHD9UL6jmW8PF/jCHCofPOezTSkLVlxzcykkI+C+EDs9HY/mevQwI+sv/mD3aQe4YWayIjuSoF4VwpTQQDqpjlqp8h9ogyqMfQwSPuiA4Mgw4D5SWo9AISRb1SskY7upXqaS2ShY9/UJjejN3345i+NRW2g+sBzgo+6zPxLXiyEZAUDy2514xSkADHvAnCCYr7+vuB5Q4/lN+2GwMC5aW7LAKaNqh5z7iCR6Ma75nX6b3Y6JO8AyQvl93tJXF/OEdb4iukUEya/YlNohvN76P4yJ+Xj7FU5AHBrqDLyMC0WNlluMw62TEoGDsFnGpYWKSkQyPL1Ej1Wkc/Mc22F4ee6+/Ezzsd/ZpafmjvO7Pz3bCJ9+boYGJfSrY5We9To2db5BAyHvP+NnxuaVLkhDYFhHgwhKJqrJcxQBPjkIlCvPFX6CbEOaS4IVbHcaHRyTiTKh8TIzSOtqoaqFuGJ7U4SALMM43f+GhEPhJi6NXU+/kJXCtgU3rM/UZ/aYVr4gF+vrcsWgrzxcBcLFC8IdGbuipYQD1kMFnjEuri3rELiHXmbBwwja6m1XXUSfy2r9whmR3hH+VcMJQ0qdmqUU8LqSAkWoBTgFXFSe9AjMY0FpXFwAI9ugWVHQObNog3SMHBHBC2iEN2nE9gF4Ha+xKMgWt6szB7SbK6fip0TF6DO4quUNYglzVe0GLFqzDFpDgCCw1h96hPWhvmI30KPmxhTBnBzNrica+Xvpd42Pbl/4BZPFHdwccfQhtq2XnEHPij/ZH8b6YvqxOeKhVhVbjiJLsnaigP6o8j+z64ZAh6hq2I0RwDGngxrzJmqL8YbFERfMYqQinWYaYPrOXFpm
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(4636009)(366004)(38350700002)(186003)(26005)(956004)(2906002)(31686004)(16576012)(38100700002)(31696002)(36756003)(4326008)(6486002)(508600001)(5660300002)(66556008)(66946007)(316002)(86362001)(66476007)(52116002)(2616005)(8676002)(8936002)(11606007)(43740500002)(45980500001);
+ SFS:(4636009)(366004)(107886003)(316002)(6486002)(38100700002)(38350700002)(6916009)(2616005)(186003)(508600001)(956004)(16576012)(66556008)(26005)(83380400001)(52116002)(86362001)(31696002)(36756003)(66946007)(2906002)(8936002)(31686004)(8676002)(966005)(66476007)(5660300002)(4326008)(11606007)(43740500002)(45980500001);
  DIR:OUT; SFP:1101; 
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?gb2312?B?U1hXTUJZMU41OSs1OGM4bWI1dHk4TUFmRHM4ZTlaY2ZYZks5SHZsSjIwRThH?=
- =?gb2312?B?d3oraHJCQUpVZ2EvOXEwWGphcnRDdlRPSzdVSzJ2QVNvdHVMVjNRRThwV3JF?=
- =?gb2312?B?V0hFaTdJTzJ5MDV5YytQeE9QVGtYTE1TeUI3TW5qWTRGYlN0b1hyQXBobDJt?=
- =?gb2312?B?ZUh4SDEzVEJnYkRjM3hpVTBFTkRJLzZHNm12dWZsNDhRaCt5M2RISjEzQUJL?=
- =?gb2312?B?bm14cHY3VGF1UTdIM3k2ZUxpNW41SUcxVEEyUDdySnZIcnlqaFhSbEpYZmpE?=
- =?gb2312?B?MjlSRUp0MVZ2ZS8yR2xtUXFoNGd1aFRYdGJ6Z1U1TzJidUxCZ3VFNEw4bHUw?=
- =?gb2312?B?bkwvQ3pNaFo2M0wwMDBVTlRHN25idk0xQlFTSzB0WDNxTXBQR0dBbEVPTGpo?=
- =?gb2312?B?azVvRmd1bUtMVHRHMkRUOG1RaTk2YngyNTNrMzFMOEs1QU13eGpTU1dzeEVL?=
- =?gb2312?B?cHUxU1JNb21yS2J0Y29DbzZkWG1hdFhSa0pPVXNObnIyQzBkSHVkVXY1NFky?=
- =?gb2312?B?WUlnbTU1UzFjL1o5TTlibTJTUllxcllOaVZ3V2oycVlKdG9QTElTakU0UDUx?=
- =?gb2312?B?aWc2c1Z2Q0tLZG93eEJUc3A1emhOYndZM1NFNk82TVRodEdNa1gvWG9PZWRn?=
- =?gb2312?B?QmFHWmFsOStoSlgvbFZJSHFzTG9SLzMvSjh5QnFSenlldFZWTXp4NGkzV2ZD?=
- =?gb2312?B?YjZuMTluL2VscCsxMC84OWwxa20zYmw0TW8ydzE5OU9MZEpXNUNQYllZb29Z?=
- =?gb2312?B?WEx1RWtUc0RxbjVTWTVKMmtUM2h4S1JoRE42TkR6NVIzaHNWOFlZbllaS3R1?=
- =?gb2312?B?ZG5qZ3lVVzdabFh3NEgybHQyQ0IzTnZCSXI2UTRlcGpJVGtCR0kvME1SejM0?=
- =?gb2312?B?S0t2RFNNQm1uRjNzVHhOZkIrcVhuTnJlMXB3eVJBK3NuOXJVYnc3SHI2Y0xh?=
- =?gb2312?B?Y2hycHc3TXNkQ016YzhML3dqR1F3K1VRdGlpcVdHbElrMjJQTFlYM2dzZXE1?=
- =?gb2312?B?ajh5TjV2MU1VbUxGSzBPNExuVjdqMFVmZVdzOFB0eVhud0RibS9Dclp2cmRO?=
- =?gb2312?B?VXJhbFd5c01QUDF4TDRNM3Bqa3lYSHd0aE9yUFNZY0hEWUsrcFlZZzV3MURE?=
- =?gb2312?B?SmhyM1NEZ1A3Z21JaXNYelQ1Yk5HVWpjYXNRVE52RUpUNWtCSFIzcW9ORXV3?=
- =?gb2312?B?NGE2Z1NERGk5Q0R3RURDY2VBdWlKVDNtdUQvN29wZHhHK0dQWGswTjFNdmlP?=
- =?gb2312?B?RC9oN0FhS3czbEdtTGlDVE1kTFV5ZCtQNkM2TGpBcHlpUC92bnN0T2NVenB1?=
- =?gb2312?B?ZFlGY0NLVmxsUTNVU2cvallwOEZKWmZkM0U1NUhKanV5S2xjRUtOQW5SSUlQ?=
- =?gb2312?B?TEhPZUVNZC95aXlTMEt3MFRZVG5RMTZLTERHTVdncVdiRTBlazRZMy9BdUVa?=
- =?gb2312?B?S09NeU5teUxlTFlDdzNWQ1ZaTnB0d0l2OXZNc1FWSUFaMzVPMEdiYTQ4QnYx?=
- =?gb2312?B?Y1VlT0pmZFZ4c00wTFp4RTZDQk9rREdIYTJaRTFpTnNYdFlUOG54eEt0UXJr?=
- =?gb2312?B?QmNhNUcvcEF6azRnSEFRNHgxelcybEVkV1F4YWU1WGpZMkZxcURQdURIeWdY?=
- =?gb2312?B?Qzhod1FtZUFzaytidnpvRlVhK283SG1RWGx2Y1l1VmhXdXh5VDR4dnNMWEcw?=
- =?gb2312?B?ejJEZXliNEwzd3RwWnU1eTViOXRRNHRXTXR5Q2RMSk5LK2FJQmoyRXFZN2tE?=
- =?gb2312?B?emdtZDhMQ0NxZk5EMzgrUzl2UUNoLy9Sd2puNVErUFc1RXVrbHc4aE1YbVBn?=
- =?gb2312?B?dDBPWEU0T2lmaUJ5elpZeGRjTHA2UzljWUl4cHVPM0U0Umo0dXM1ZkJab2ZQ?=
- =?gb2312?B?eGJzc0xWc0dqM2VRWFVKOW5WRDZPdnozZHB0Q29KUEw3Wm52SWNvU0IzQ2RN?=
- =?gb2312?B?KzBZTUYwS2owbTJSZ01NemNPZHNLRlFQa2ZjSVlBM2lqQ2R1TEI1UFZBOWR3?=
- =?gb2312?B?dFRXbGZaZkV0SUpiVGlDMjg5SzZzWk0wUXN3WUFyMzh0L0pwa2lNU0YzMDV2?=
- =?gb2312?B?RzlqamgrdXNUV2ViZ0VOaDRCYzF1Q0l3WWs2RkFmb1g4b24yU2wyZjlCUzBr?=
- =?gb2312?B?M2RaVHNRYmJld09qQUJXRTRJYVF1M3YvSlAzT2U0QjFHSU5sUFFITHk3NDBT?=
- =?gb2312?Q?7FPo0rdqyFO+/pklykDGEb0=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NldCR0dLc1JOcG1sNWpkMzlyamVLbmxxcnFJZVlQOWNHT1N3MjZlVDU5VE5E?=
+ =?utf-8?B?UHRQWWtCZXovaXZuRFlyWFI2bUdGb0lTc09LKytiRDJIbzdUSFQrWHZSUjc3?=
+ =?utf-8?B?MEZOYU9hSVBrRkwxYndGMFdyQ1pIWnpVYjhRazNIaHB1OEtwQzZZaGsrVGZQ?=
+ =?utf-8?B?REI4eStlcVZjYzFRYlJyNGxaVXc4VkhVTlNrODZDaHdjSFV1amlTYi9vRTVI?=
+ =?utf-8?B?UmRpWkh6MzNDc2VnOWowSnlha0pXMVBYd0F2OTJGUUs5blF0Nld2YWlWbjgv?=
+ =?utf-8?B?VVJydnAyQTFaR3EzRk9KcUhPUnQxZThNQXlFZDFkSGJpdHFGZEEreVJ5STha?=
+ =?utf-8?B?bnppUnpYMVJDam93QktaTHd4UjNFR0JTNThpZTBPWlJCVURjS0pDdXlwN3FQ?=
+ =?utf-8?B?Y2RHUUNHaDRKZmNSSEhvN094Yjc2elY5aC8vM2tnZno4WjlJSHRxOFY3WVBk?=
+ =?utf-8?B?MWl1TXJGbFk0NE05OFhVTXNNT2JJWVhtdXU2Nmw0dHJkVm11NDNCKytUazho?=
+ =?utf-8?B?LzJGSDkyZ3JSbE1hOE03eThNV1BZTDB2YnAzeVZwejQrMmVDN0ZoSFBYZlpB?=
+ =?utf-8?B?cVhIQzhIUGNBMHUrUVdqQ05mc2VlYlhhdUlzam9PaWo3ZmFJOTYvRWR5M0ho?=
+ =?utf-8?B?aDNabjFOaFphdVA0V1VLdXRhbVpTdnhoR0Q0WCs4KzR1Q3pScXRBWDA3ajM1?=
+ =?utf-8?B?U1NGVlRFZC9nWGowNTlmaTM1Qy9VQVVxMEVXK203S2NUdUg4YlN4Ymo5eXJp?=
+ =?utf-8?B?a2ZJRERoRmtVS3BRb1FLOFBiS3BHTFQ5ekhZbGpBSnl2ak10YU5kZ2JJRzVr?=
+ =?utf-8?B?eDhhWjlRRTZ4elJsVVlmV3pJRzBuM3VtYXE4L3R5ZW1qLzJONzkwVEZubmQz?=
+ =?utf-8?B?cGNTTEdKeEg1MGpmWitGWmRlaVhnaEhDaUE5NEx2UGIyYnZ2WE5KTUc2TnBN?=
+ =?utf-8?B?Rm8wTWZLLzlDK1luRXRFSU1VYk5tNm5BN0tqTFpmeklwbERBNDA3bVJJclFF?=
+ =?utf-8?B?N2tMSGp2bGZUb3QxWC93T2VGaUpUOFpDOUc1UmRTWFBQSVFyNWlnWDhRWmFR?=
+ =?utf-8?B?eURNbGhQdWxra2xWeGZqWjE4YXgxSk82Qm4rd1h0ODZsRUs5enhaZ3RnelNI?=
+ =?utf-8?B?QXVyLzgwUmdJR1N3b1p4bTU1c1J5SkRpZlNWdW9JdTdxY0tQUlRhNzVWczd0?=
+ =?utf-8?B?dm1zRlNRd1NaYVdybmdYMlYxcm5sOGg0WTg0dTZsbmh2U0RtZHlpS0hZempL?=
+ =?utf-8?B?N2JqUGFPZjM3WmlWWnF0d0puV01vdXRCUTJ1YmtiOUFGL2pydUpjc2QzajVv?=
+ =?utf-8?B?OGtUWWxBNTJ3SGxHeHU5bmwrcUlVdVZiZXJlL0hEWVVTRkRqQ2UzUDgvZlBs?=
+ =?utf-8?B?ZDhVZVUybWFLbENFRE9ldTNlaXpDRFMwaHdXWnI4WXlQNDFBSzhTR3UwRjkv?=
+ =?utf-8?B?clM4c04yM1gzamxBMTBJT2ZBd1R1QXFMaWhtcjRVWnhoSDlUNWxYVzZsMFMw?=
+ =?utf-8?B?VG8yMU1HUjVkTUwvanFLYkRXOWdEbzZnZVdrM1Z1cmY3VStLbVZHTFZaRTJ2?=
+ =?utf-8?B?SGY0a2NMREFwdWROMFd2aGpNVDUrQTdIT2VzZEw4MERwa1pvMGNDVUM3SmdJ?=
+ =?utf-8?B?RU5zc214TEJxTUhmQ29XZnNOdDZSKzJ3R0dka3Nxa3lqKzNmRFI0M1hkZXNo?=
+ =?utf-8?B?alEycGtXNkw3U2xucC9PMHJJWVp2bXNPMWpMZFIvRWlrSUsySzFBVXhLbVIz?=
+ =?utf-8?B?OGk5V3pZcGlaRk9HTFVEQTlsM2h4a3JnOEtDcjBSdUlEYk9GNWsrUk12dVV5?=
+ =?utf-8?B?ZlA1ZW1DM3UzZVd6UERkQzdUbGkzbTkxTisvaERodklHckEreThRUlI3WHNT?=
+ =?utf-8?B?aTJjZ3ZVSUNwZHlwRkFPNFZ4Q2pOU1lIUm9EVEl0VDl3RzZsUERvQnJLYmh4?=
+ =?utf-8?B?OGVxNlhPekdSSkVQQ08wUHJhRG9rR2hZbGt4eHRqbFVrYTBjMlBVLzVjMmYw?=
+ =?utf-8?B?MFZnS2RKbzlaU1RIbG5JTVVGeldIS3dBcTh1dXYydmI5aTh2cVBhWHdDVkpL?=
+ =?utf-8?B?K3NxT2IrWUxGQ3B2amVZTG9kenRBR0oyVUJESHV3T3FvMURiZHlsS3M3ekRM?=
+ =?utf-8?B?RkxmRzBNRmN6bVYwYzVWZi93UmZVS0duVlBQd3NHZUVRZTEwYkora0EwMXVo?=
+ =?utf-8?Q?w0s5EBAlVHlo0OAtconWeZQ=3D?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c2fca1d-4270-478d-7ae2-08d9a35302cd
+X-MS-Exchange-CrossTenant-Network-Message-Id: a82acf49-6d42-414a-ffc9-08d9a3549334
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2021 07:31:57.4989 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2021 07:43:09.2819 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Pe/f3B8g+E9TpB3lxbWM/6PgU9zReydVy2+nZ8oakHKVP0wR7q9WiKei9UzJ9SZV43aLq9Pjl+ZJ2adOrjG59w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2557
+X-MS-Exchange-CrossTenant-UserPrincipalName: aGIItg4I9tTVhHzoeaaZEwZC9OiG7XNaCmKNtEpGC1I+Biq0BtNEbGhT7gG70SAsDCTjVES95zEkh2eKZ6joIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB4024
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -150,47 +152,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Huang Jianan <huangjianan@oppo.com>
-Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com, guanyuwei@oppo.com,
- linux-kernel@vger.kernel.org
+Cc: zhangshiming@oppo.com, linux-kernel@vger.kernel.org, yh@oppo.com,
+ guanyuwei@oppo.com, guoweichao@oppo.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-ÔÚ 2021/11/9 11:14, Joe Perches Ð´µÀ:
-> On Tue, 2021-11-09 at 10:54 +0800, Huang Jianan wrote:
->> Add sysfs interface to configure erofs related parameters in the
->> future.
-> []
->> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-> []
->> +static ssize_t erofs_attr_show(struct kobject *kobj,
->> +				struct attribute *attr, char *buf)
->> +{
->> +	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
->> +						s_kobj);
->> +	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
->> +	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
->> +
->> +	switch (a->attr_id) {
->> +	case attr_feature:
->> +		return snprintf(buf, PAGE_SIZE, "supported\n");
->> +	case attr_pointer_ui:
->> +		if (!ptr)
->> +			return 0;
->> +		return snprintf(buf, PAGE_SIZE, "%u\n",
->> +				*((unsigned int *) ptr));
-> Prefer sysfs_emit over snprintf
+Hi Xiang,
+
+åœ¨ 2021/11/9 11:16, Gao Xiang å†™é“:
+> On Tue, Nov 09, 2021 at 10:54:45AM +0800, Huang Jianan via Linux-erofs wrote:
+>> Although readpage is a synchronous path, there will be no additional
+>> kworker scheduling overhead in non-atomic contexts. So we can add a
+>> sysfs node to allow disable sync decompression.
+>>
+>> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+>> ---
+>>   fs/erofs/internal.h | 2 +-
+>>   fs/erofs/super.c    | 2 +-
+>>   fs/erofs/sysfs.c    | 6 ++++++
+>>   fs/erofs/zdata.c    | 9 ++++-----
+>>   4 files changed, 12 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+>> index d0cd712dc222..1ab96878009d 100644
+>> --- a/fs/erofs/internal.h
+>> +++ b/fs/erofs/internal.h
+>> @@ -60,7 +60,7 @@ struct erofs_mount_opts {
+>>   #ifdef CONFIG_EROFS_FS_ZIP
+>>   	/* current strategy of how to use managed cache */
+>>   	unsigned char cache_strategy;
+>> -	/* strategy of sync decompression (false - auto, true - force on) */
+>> +	/* strategy of sync decompression (false - disable, true - force on) */
+> Please leave false - auto.
+Agree.
+>>   	bool readahead_sync_decompress;
+>>   
+>>   	/* threshold for decompression synchronously */
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index abc1da5d1719..26585d865503 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -423,7 +423,7 @@ static void erofs_default_options(struct erofs_fs_context *ctx)
+>>   #ifdef CONFIG_EROFS_FS_ZIP
+>>   	ctx->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+>>   	ctx->opt.max_sync_decompress_pages = 3;
+>> -	ctx->opt.readahead_sync_decompress = false;
+>> +	ctx->opt.readahead_sync_decompress = true;
+> Please leave readahead_sync_decompress = false 'auto' by default.
 >
-> 	case attr_feature:
-> 		return sysfs_emit(buf, "supported\n");
-> 	case attr_pointer_ui:
-> 		...
-> 		return sysfs_emit(buf, "%u\n", *(unsigned int *)ptr);
->
-> etc...
->
-Thanks for reminding this, I will fix it in the next version.
+> I don't like .readpage() applies async decompression since it's
+> actually a sync way, otherwise, it will cause more scheduling
+> overhead, see:
+> https://lore.kernel.org/r/20201016160443.18685-1-willy@infradead.org
+> https://lore.kernel.org/r/20201102184312.25926-16-willy@infradead.org
+
+Maybe consider adding a disbale strategy? And then we will have:
+0 - auto, 1 - force on, 2 - disable
+I will try this in the next version.
+
+for .readpage(), If the decompression can be done in a non-atomic context,
+there will be no additional scheduling overhead? In this case, we can 
+turn off
+the syncdecompression.
 
 Thanks,
 Jianan
+
+> Thanks,
+> Gao Xiang
 
