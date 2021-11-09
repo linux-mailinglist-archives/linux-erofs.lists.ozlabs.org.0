@@ -2,13 +2,13 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A18E44A915
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 09:34:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A17E244A918
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 09:34:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HpLrP32zxz2yYv
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 19:34:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HpLrV3ygTz304V
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Nov 2021 19:34:50 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=hLY1nZ/k;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=gpT3QABX;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -19,33 +19,33 @@ Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=hLY1nZ/k; 
+ header.s=casper.20170209 header.b=gpT3QABX; 
  dkim-atps=neutral
 Received: from casper.infradead.org (casper.infradead.org
  [IPv6:2001:8b0:10b:1236::1])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HpLqm4Zxnz304n
- for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 19:34:12 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HpLqp1PMrz307g
+ for <linux-erofs@lists.ozlabs.org>; Tue,  9 Nov 2021 19:34:14 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
  References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
  Content-Type:Content-ID:Content-Description;
- bh=5N2wtSBKEyzbs+s60mcT1q0r4L87tEtFQFzTKPXH4O4=; b=hLY1nZ/kodqvEJXK4tgo++ZHpl
- xATjxHA2n9lCQb+BE/S9F5drb7+1FcEpSUEGk7upLJ2S0sM9gsw0lNRoF+dYHObiZFOyQAhZtDc6k
- TLBcg6UF+NUa76IhBMApzd6unCBb3P1S3kd7TXu1LRWqQDrpHasqR7az9aE3QPgOS/c2BQTdcO3jd
- DkzIuMG5A0Bw0zQzDOZywtJ7aOPiBEA+MeevBvJuXHUjBsdzdKfBrkGPgEHvlrHGT5lV1wv/IVjIN
- Vwu4HAuYXN/tanPC0AZC2u8Tw0b1o3ezXFXkYvoPZ0i47ZFyprqYRyCoNAy6eVjmywqR78Ibghr1Y
- 5QozPaQw==;
+ bh=Sy1y0UiMgxAYvlwmHMq+D5FA8YC6nzMpWW5stnnL7mE=; b=gpT3QABXYlkVO9cfQiVD4lTzsW
+ wpEmY4Z/eRxbkXYSg+JxoHSV++jJ3mKJHMfrn55KL2mcGq383JeE2GT0n04CgdH5G/vt20HeQQaO9
+ ha8NRcqJ+6vlyLr/9gPdQntTqO6D0qCC+EcTk3/BEguhqZKKy15SmdCTvO76lOOWte1YinTMjYCfi
+ /KdwmZypZoj4wrR5V//D1uQ5lhEQb0sJEsg0xrWwJmOJ7q4ZVu8d8geqMTHzf2XXvKP3vPNMuL8Pr
+ VipJXXXtONrtI41oW3trXzSqrHSuGOwLqYKEYfzEe5AM49EB/C47xpIkPi9qt5n1Z11n3latDwOG8
+ X+sUDJ5Q==;
 Received: from [2001:4bb8:19a:7ee7:fb46:2fe1:8652:d9d4] (helo=localhost)
  by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mkMZt-000sEe-DB; Tue, 09 Nov 2021 08:34:02 +0000
+ id 1mkMZu-000sFi-W7; Tue, 09 Nov 2021 08:34:04 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 28/29] iomap: build the block based code conditionally
-Date: Tue,  9 Nov 2021 09:33:08 +0100
-Message-Id: <20211109083309.584081-29-hch@lst.de>
+Subject: [PATCH 29/29] fsdax: don't require CONFIG_BLOCK
+Date: Tue,  9 Nov 2021 09:33:09 +0100
+Message-Id: <20211109083309.584081-30-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211109083309.584081-1-hch@lst.de>
 References: <20211109083309.584081-1-hch@lst.de>
@@ -73,49 +73,36 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Only build the block based iomap code if CONFIG_BLOCK is set.  Currently
-that is always the case, but it will change soon.
+The file system DAX code now does not require the block code.  So allow
+building a kernel with fuse DAX but not block layer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/Kconfig        | 4 ++--
- fs/iomap/Makefile | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index a6313a969bc5f..6d608330a096e 100644
+index 6d608330a096e..7a2b11c0b8036 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
-@@ -15,11 +15,11 @@ config VALIDATE_FS_PARSER
- 	  Enable this to perform validation of the parameter description for a
- 	  filesystem when it is registered.
+@@ -42,6 +42,8 @@ source "fs/nilfs2/Kconfig"
+ source "fs/f2fs/Kconfig"
+ source "fs/zonefs/Kconfig"
  
--if BLOCK
--
- config FS_IOMAP
++endif # BLOCK
++
+ config FS_DAX
+ 	bool "File system based Direct Access (DAX) support"
+ 	depends on MMU
+@@ -89,8 +91,6 @@ config FS_DAX_PMD
+ config FS_DAX_LIMITED
  	bool
  
-+if BLOCK
-+
- source "fs/ext2/Kconfig"
- source "fs/ext4/Kconfig"
- source "fs/jbd2/Kconfig"
-diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
-index 4143a3ff89dbc..fc070184b7faa 100644
---- a/fs/iomap/Makefile
-+++ b/fs/iomap/Makefile
-@@ -9,9 +9,9 @@ ccflags-y += -I $(srctree)/$(src)		# needed for trace events
- obj-$(CONFIG_FS_IOMAP)		+= iomap.o
- 
- iomap-y				+= trace.o \
--				   buffered-io.o \
-+				   iter.o
-+iomap-$(CONFIG_BLOCK)		+= buffered-io.o \
- 				   direct-io.o \
- 				   fiemap.o \
--				   iter.o \
- 				   seek.o
- iomap-$(CONFIG_SWAP)		+= swapfile.o
+-endif # BLOCK
+-
+ # Posix ACL utility routines
+ #
+ # Note: Posix ACLs can be implemented without these helpers.  Never use
 -- 
 2.30.2
 
