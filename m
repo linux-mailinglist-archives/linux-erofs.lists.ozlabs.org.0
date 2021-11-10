@@ -2,43 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3460B44B9F7
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Nov 2021 02:36:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C74E644BA8A
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Nov 2021 04:09:43 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HpnW21KWvz2xsV
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Nov 2021 12:36:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HpqZs4k7Zz2yPm
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Nov 2021 14:09:41 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XVRCyC2K;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=XVRCyC2K; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HpnVt6Z5Tz2xsV
- for <linux-erofs@lists.ozlabs.org>; Wed, 10 Nov 2021 12:36:01 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R101e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=10; SR=0; TI=SMTPD_---0Uvq8JEE_1636508142; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0Uvq8JEE_1636508142) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 10 Nov 2021 09:35:44 +0800
-Date: Wed, 10 Nov 2021 09:35:42 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Daeho Jeong <daeho43@gmail.com>
-Subject: Re: [PATCH v3] erofs-utils: introduce fsck.erofs
-Message-ID: <YYsh7h5IXeQd6xim@B-P7TQMD6M-0146.local>
-References: <20211029171312.2189648-1-daeho43@gmail.com>
- <YYpaySr6vGEfwduR@B-P7TQMD6M-0146.local>
- <CACOAw_zJgxwQnQTgcU4DfsxN5gFCgAONU4B3A1dR79ccJSLBfA@mail.gmail.com>
- <CACOAw_wt+DX0D+Ps-K=oF+MgUxtVKbXpamShoZR7n4WwM+wODw@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HpqZn4Qyfz2xtW
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Nov 2021 14:09:37 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E529661105;
+ Wed, 10 Nov 2021 03:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1636513774;
+ bh=uQVPZ0mWoc5SLX+cZOARzJKpAXaOWwVcwHcs3Im4nVI=;
+ h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+ b=XVRCyC2KwiDdBSbErsEpShEmHaTUvDMcfn2RmpouA3oWyvFVkQ83EUFS0Wikz4xZg
+ toQx6TezG4m7cl/a1hOi9XeTxIqJ7bdIm31Qq2tz/r+YmhhK2ch9jMeSdTcHpwcFDd
+ WXYMRxPCQwo/6/bS9fs7oc/bTGjxAGS4BEi1pgU9i9M1NiqPR1FX4dPueFfxcDIrPS
+ EHboCBIebZLRzBQoH/1qj77ni2ZLjB53AqFfLEt5u1Oy+xVEzYLLKJgzDifHQXsZaM
+ 9fzpkyYOz+eQp2HLJr6Xw6aprtZnv+rJ4kL1kBBk4aKSoM9ZZXTbUln1aM3ZPXIVti
+ NbKVcg78JFNUA==
+Message-ID: <7b82718a-2a12-67f4-42f9-523777c74573@kernel.org>
+Date: Wed, 10 Nov 2021 11:09:30 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACOAw_wt+DX0D+Ps-K=oF+MgUxtVKbXpamShoZR7n4WwM+wODw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH v3 1/2] erofs: add sysfs interface
+Content-Language: en-US
+To: Huang Jianan <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org
+References: <fa2eeb31-9579-a4a4-71b3-200509da1ed9@kernel.org>
+ <20211109153856.12956-1-huangjianan@oppo.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20211109153856.12956-1-huangjianan@oppo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,43 +62,17 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Daeho Jeong <daehojeong@google.com>, linux-erofs@lists.ozlabs.org,
- Jaegeuk Kim <jaegeuk@kernel.org>, miaoxie@huawei.com
+Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com, guanyuwei@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Daeho,
-
-On Tue, Nov 09, 2021 at 04:16:12PM -0800, Daeho Jeong wrote:
-> Hi Gao,
+On 2021/11/9 23:38, Huang Jianan wrote:
 > 
-> After merging all the latest patches, the build fails now, since we
-> don't have the lzma library on the build system now.
+> Add sysfs interface to configure erofs related parameters later.
 > 
-> external/erofs-utils/lib/compressor_liblzma.c:8:10: fatal error:
-> 'lzma.h' file not found
-> #include <lzma.h>
->          ^~~~~~~~
-> 1 error generated.
-> 16:13:47 ninja failed with: exit status 1
-> 
-> Can you fix this to make it built without the lzma library?
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 
-I think it's mainly due to Android.bp configuration, because in
-lib/Makefile.am it wrote as:
-
-...
-if ENABLE_LIBLZMA
-liberofs_la_CFLAGS += ${liblzma_CFLAGS}
-liberofs_la_SOURCES += compressor_liblzma.c
-endif
-
-I could add some macro in compressor_liblzma.c as well if needed.
-
-btw, I suggest updating the patches when 1.4 is out (next week),
-since I still do some cleanup work.
+Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
-
