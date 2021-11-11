@@ -1,58 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0BBC44CFE4
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 03:15:45 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBBF544D1A4
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 06:30:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HqQL761J7z2yNW
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 13:15:43 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B7+hf8ui;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HqVg94S0hz2yPM
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 16:30:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1636608645;
+	bh=qfGawMJeIPXnfisKlLzwDFNufJkELepuJfO21etKYK4=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=LMJcmV3KBuRRLFbhXYfOWTRmASafJ90UgADmwEB6oJlV+EzLE14q8A4ftyKDVrDwG
+	 5Hi9p+1jNLcNUoMlq2EtdspSp/vCkQXS5cwqj0O6zfjLWR3ArX3wExqum3TGwaMLWc
+	 Uq9xz5H6+okufSIZ8JBpLBqjmVueHZJExIpoKqNmGDfvmIwf6EdnvpzDD0EUa9gFiF
+	 IWP0rvfBMk/OVNS7KJTQ21xUTgy6jrfcSg3YUazKHlG8C5++p6Oj1S4bDRBHB8zAYd
+	 HdziWzA4gvioUi2KaSBOKL4cUj5ZESOASOoj82qN4cxu6yUQm1UsBbA7CoDr4xkakF
+	 zy0uQ3UBM51yQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=flex--dvander.bounces.google.com
+ (client-ip=2607:f8b0:4864:20::a4a; helo=mail-vk1-xa4a.google.com;
+ envelope-from=3eqqmyqckcxuygv8yzc19916z.x97638fi-zc90d63ded.9k6vwd.9c1@flex--dvander.bounces.google.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=B7+hf8ui; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
+ header.s=20210112 header.b=Y3/ssigA; dkim-atps=neutral
+Received: from mail-vk1-xa4a.google.com (mail-vk1-xa4a.google.com
+ [IPv6:2607:f8b0:4864:20::a4a])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HqQL455nxz2xDv
- for <linux-erofs@lists.ozlabs.org>; Thu, 11 Nov 2021 13:15:40 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B8E161208;
- Thu, 11 Nov 2021 02:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1636596937;
- bh=JFfziBYp+5yDIiX5R0WhB6KaxkyNcCATSA7Yrupceos=;
- h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=B7+hf8ui7agF2AGfk4r9ofa+Z5zsDcPerr3Ip474NZ0DICBQ9wCRsPxB9MQJJ7fhp
- BfiMNXR5W2rr89wWgSeT410W3Hwa0YdYDYdAf/UgQ3jWTIgokNdCHDeY3VWtwAsHdF
- YfG4agNlHLX1YcWmkvidRmcT27TvLZnahxygKg2Ovp5X3JJp6rROYCk7wsI8YY46gw
- 3R3ObXT+P7AesDkBlBMVtHjsKAOANnG+gM15yaXj+zSQ/GPP7Xh9kSGVfInT46KLWe
- 2gs//Onbaptt9SQ/hBrBEri3quEBEV87bcIQtqtJ9kk9QgmdpsYM8R4t2gPR671JpQ
- 3pqbqkMBoU+Mg==
-Message-ID: <f78e7371-f9ff-32e7-77ef-e6bd17e084aa@kernel.org>
-Date: Thu, 11 Nov 2021 10:15:31 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v4 2/2] erofs: add sysfs node to control sync
- decompression strategy
-Content-Language: en-US
-To: Huang Jianan <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org,
- xiang@kernel.org
-References: <20211109153856.12956-1-huangjianan@oppo.com>
- <20211110134846.2707-1-jnhuang95@gmail.com>
- <20211110134846.2707-2-jnhuang95@gmail.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20211110134846.2707-2-jnhuang95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HqVg54XQCz2yNK
+ for <linux-erofs@lists.ozlabs.org>; Thu, 11 Nov 2021 16:30:39 +1100 (AEDT)
+Received: by mail-vk1-xa4a.google.com with SMTP id
+ n6-20020a1f2706000000b002a45b52f52dso2374611vkn.22
+ for <linux-erofs@lists.ozlabs.org>; Wed, 10 Nov 2021 21:30:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+ bh=qfGawMJeIPXnfisKlLzwDFNufJkELepuJfO21etKYK4=;
+ b=GU0fC08UNcvpRn4po9ULFmE61Fa/n7OWaoRqueGXrFyQ8MJwJjO32oRnAhjKENlrB5
+ yGS0EFwPV6HUAI8tJXI/cmuShy+VD3mkSdAzp4JErikBzk3Z/uMySjX03l/TaLVRQzdw
+ TGNgwSvbC7p3fB21MkeeeHdNGmZvfTjSSScqWTzNucAXQUas6O4seVW7mLgAtvn+FFRK
+ ozzyf29qchBuyK58uKgNaOpUWcx+fpsLmA2ZLjWWW2qbK3wTHxzN/b5KwN3hUOUYg1od
+ FyLAUwcCD9ZpXJKFE9L36qKQfBDGlGyVUeJerKxfiVAUr3L9/oQh7iiMQCtbTlK+QNwk
+ uLvQ==
+X-Gm-Message-State: AOAM533rGCVWO4Gv8dlbwjk9WB9XCDWGFQiuLU/PV7jmSRlVrBmqAec1
+ 0LIfM0uZKMmLTJ0vy4P84lsf7SaY9oVuZLDlXpMkSq708hQTGAI2Ae5795pxzM11JuzHKx1Jiaq
+ DfEJHqXWKf4Hgc/E7Q+mZBCiKSKdenrosPBXBXz9VSTFhy5nWkzlWdgEvBlNE2FzqhuUWFbzs
+X-Google-Smtp-Source: ABdhPJx3X6vOUbDa0VSnYyQvpF7XTCQMqK857ThinbAVIpoz/vIpP8s9VQFx4x6FFj2JjU1MUxDWY4m8dhQe
+X-Received: from dvandertop.c.googlers.com
+ ([fda3:e722:ac3:cc00:14:4d90:c0a8:2862])
+ (user=dvander job=sendgmr) by 2002:a67:db0b:: with SMTP id
+ z11mr6655038vsj.59.1636608634440; Wed, 10 Nov 2021 21:30:34 -0800 (PST)
+Date: Thu, 11 Nov 2021 05:30:31 +0000
+Message-Id: <20211111053031.4002774-1-dvander@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
+Subject: [PATCH] erofs-utils: mkfs: add block list support for chunked files
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,20 +74,182 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com, guanyuwei@oppo.com
+From: David Anderson via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: David Anderson <dvander@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2021/11/10 21:48, Huang Jianan wrote:
-> From: Huang Jianan <huangjianan@oppo.com>
-> 
-> Although readpage is a synchronous path, there will be no additional
-> kworker scheduling overhead in non-atomic contexts. So add a sysfs
-> node to allow disable sync decompression.
-> 
-> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+When using the --block-list-file option, add block mapping lines for
+chunked files. The extent printing code has been slightly refactored to
+accommodate multiple extent ranges.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: David Anderson <dvander@google.com>
+---
+ include/erofs/block_list.h |  7 +++++++
+ lib/blobchunk.c            | 27 ++++++++++++++++++++++++-
+ lib/block_list.c           | 41 +++++++++++++++++++++++++++++---------
+ 3 files changed, 65 insertions(+), 10 deletions(-)
 
-Thanks,
+diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
+index dcc0e50..40df228 100644
+--- a/include/erofs/block_list.h
++++ b/include/erofs/block_list.h
+@@ -15,11 +15,18 @@ void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 				 erofs_blk_t blk_start, erofs_blk_t nblocks);
+ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+ 					  erofs_blk_t blkaddr);
++void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
++					erofs_blk_t blk_start, erofs_blk_t nblocks,
++					bool first_extent, bool last_extent);
+ #else
+ static inline void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 				 erofs_blk_t blk_start, erofs_blk_t nblocks) {}
+ static inline void
+ erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+ 					  erofs_blk_t blkaddr) {}
++static inline void
++erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
++				   erofs_blk_t blk_start, erofs_blk_t nblocks,
++				   bool first_extent, bool last_extent) {}
+ #endif
+ #endif
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index 661c5d0..a2e62be 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -7,6 +7,7 @@
+ #define _GNU_SOURCE
+ #include "erofs/hashmap.h"
+ #include "erofs/blobchunk.h"
++#include "erofs/block_list.h"
+ #include "erofs/cache.h"
+ #include "erofs/io.h"
+ #include <unistd.h>
+@@ -101,7 +102,10 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 				   erofs_off_t off)
+ {
+ 	struct erofs_inode_chunk_index idx = {0};
+-	unsigned int dst, src, unit;
++	erofs_blk_t extent_start = EROFS_NULL_ADDR;
++	erofs_blk_t extent_end = EROFS_NULL_ADDR;
++	unsigned int dst, src, unit, num_extents;
++	bool first_extent = true;
+ 
+ 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(struct erofs_inode_chunk_index);
+@@ -115,6 +119,20 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 		chunk = *(void **)(inode->chunkindexes + src);
+ 
+ 		idx.blkaddr = chunk->blkaddr + remapped_base;
++		if (extent_start != EROFS_NULL_ADDR &&
++		    idx.blkaddr == extent_end + 1) {
++			extent_end = idx.blkaddr;
++		} else {
++			if (extent_start != EROFS_NULL_ADDR) {
++				erofs_droid_blocklist_write_extent(inode,
++					extent_start,
++					(extent_end - extent_start) + 1,
++					first_extent, false);
++				first_extent = false;
++			}
++			extent_start = idx.blkaddr;
++			extent_end = idx.blkaddr;
++		}
+ 		if (unit == EROFS_BLOCK_MAP_ENTRY_SIZE)
+ 			memcpy(inode->chunkindexes + dst, &idx.blkaddr, unit);
+ 		else
+@@ -122,6 +140,13 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 	}
+ 	off = roundup(off, unit);
+ 
++	if (extent_start == EROFS_NULL_ADDR)
++		num_extents = 0;
++	else
++		num_extents = (extent_end - extent_start) + 1;
++	erofs_droid_blocklist_write_extent(inode, extent_start, num_extents,
++		first_extent, true);
++
+ 	return dev_write(inode->chunkindexes, off, inode->extent_isize);
+ }
+ 
+diff --git a/lib/block_list.c b/lib/block_list.c
+index 096dc9b..87609a9 100644
+--- a/lib/block_list.c
++++ b/lib/block_list.c
+@@ -32,25 +32,48 @@ void erofs_droid_blocklist_fclose(void)
+ }
+ 
+ static void blocklist_write(const char *path, erofs_blk_t blk_start,
+-			    erofs_blk_t nblocks, bool has_tail)
++			    erofs_blk_t nblocks, bool first_extent,
++			    bool last_extent)
+ {
+ 	const char *fspath = erofs_fspath(path);
+ 
+-	fprintf(block_list_fp, "/%s", cfg.mount_point);
++	if (first_extent) {
++		fprintf(block_list_fp, "/%s", cfg.mount_point);
+ 
+-	if (fspath[0] != '/')
+-		fprintf(block_list_fp, "/");
++		if (fspath[0] != '/')
++			fprintf(block_list_fp, "/");
++
++		fprintf(block_list_fp, "%s", fspath);
++	}
+ 
+ 	if (nblocks == 1)
+-		fprintf(block_list_fp, "%s %u", fspath, blk_start);
++		fprintf(block_list_fp, " %u", blk_start);
+ 	else
+-		fprintf(block_list_fp, "%s %u-%u", fspath, blk_start,
++		fprintf(block_list_fp, " %u-%u", blk_start,
+ 			blk_start + nblocks - 1);
+ 
+-	if (!has_tail)
++	if (last_extent)
+ 		fprintf(block_list_fp, "\n");
+ }
+ 
++void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
++					erofs_blk_t blk_start,
++					erofs_blk_t nblocks, bool first_extent,
++					bool last_extent)
++{
++	if (!block_list_fp || !cfg.mount_point)
++		return;
++
++	if (!nblocks) {
++		if (last_extent)
++			fprintf(block_list_fp, "\n");
++		return;
++	}
++
++	blocklist_write(inode->i_srcpath, blk_start, nblocks, first_extent,
++			last_extent);
++}
++
+ void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 				 erofs_blk_t blk_start, erofs_blk_t nblocks)
+ {
+@@ -58,7 +81,7 @@ void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 		return;
+ 
+ 	blocklist_write(inode->i_srcpath, blk_start, nblocks,
+-			!!inode->idata_size);
++			true, !inode->idata_size);
+ }
+ 
+ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+@@ -80,6 +103,6 @@ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+ 		return;
+ 	}
+ 	if (blkaddr != NULL_ADDR)
+-		blocklist_write(inode->i_srcpath, blkaddr, 1, false);
++		blocklist_write(inode->i_srcpath, blkaddr, 1, true, true);
+ }
+ #endif
+-- 
+2.34.0.rc0.344.g81b53c2807-goog
+
