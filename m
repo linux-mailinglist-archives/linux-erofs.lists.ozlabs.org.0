@@ -2,41 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F4F944CFDD
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 03:12:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0BBC44CFE4
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 03:15:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HqQFz0TB6z2yNY
-	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 13:12:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HqQL761J7z2yNW
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Nov 2021 13:15:43 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B7+hf8ui;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=B7+hf8ui; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HqQFr494nz2xt0
- for <linux-erofs@lists.ozlabs.org>; Thu, 11 Nov 2021 13:11:57 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0UvzWQhe_1636596698; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UvzWQhe_1636596698) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 11 Nov 2021 10:11:40 +0800
-Date: Thu, 11 Nov 2021 10:11:38 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: David Anderson <dvander@google.com>
-Subject: Re: [PATCH] erofs-utils: mkfs: fix integer overflow in
- erofs_blob_remap
-Message-ID: <YYx72rN3ISRcABAI@B-P7TQMD6M-0146.local>
-References: <20211111015527.2717076-1-dvander@google.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HqQL455nxz2xDv
+ for <linux-erofs@lists.ozlabs.org>; Thu, 11 Nov 2021 13:15:40 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B8E161208;
+ Thu, 11 Nov 2021 02:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1636596937;
+ bh=JFfziBYp+5yDIiX5R0WhB6KaxkyNcCATSA7Yrupceos=;
+ h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+ b=B7+hf8ui7agF2AGfk4r9ofa+Z5zsDcPerr3Ip474NZ0DICBQ9wCRsPxB9MQJJ7fhp
+ BfiMNXR5W2rr89wWgSeT410W3Hwa0YdYDYdAf/UgQ3jWTIgokNdCHDeY3VWtwAsHdF
+ YfG4agNlHLX1YcWmkvidRmcT27TvLZnahxygKg2Ovp5X3JJp6rROYCk7wsI8YY46gw
+ 3R3ObXT+P7AesDkBlBMVtHjsKAOANnG+gM15yaXj+zSQ/GPP7Xh9kSGVfInT46KLWe
+ 2gs//Onbaptt9SQ/hBrBEri3quEBEV87bcIQtqtJ9kk9QgmdpsYM8R4t2gPR671JpQ
+ 3pqbqkMBoU+Mg==
+Message-ID: <f78e7371-f9ff-32e7-77ef-e6bd17e084aa@kernel.org>
+Date: Thu, 11 Nov 2021 10:15:31 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211111015527.2717076-1-dvander@google.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH v4 2/2] erofs: add sysfs node to control sync
+ decompression strategy
+Content-Language: en-US
+To: Huang Jianan <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org
+References: <20211109153856.12956-1-huangjianan@oppo.com>
+ <20211110134846.2707-1-jnhuang95@gmail.com>
+ <20211110134846.2707-2-jnhuang95@gmail.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20211110134846.2707-2-jnhuang95@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,94 +64,20 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com, guanyuwei@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi David,
-
-On Thu, Nov 11, 2021 at 01:55:27AM +0000, David Anderson via Linux-erofs wrote:
-> When using --chunksize, partitions greater than 2GiB can fail to build
-> due to integer overflow in erofs_blob_remap.
+On 2021/11/10 21:48, Huang Jianan wrote:
+> From: Huang Jianan <huangjianan@oppo.com>
 > 
-> Signed-off-by: David Anderson <dvander@google.com>
+> Although readpage is a synchronous path, there will be no additional
+> kworker scheduling overhead in non-atomic contexts. So add a sysfs
+> node to allow disable sync decompression.
+> 
+> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 
-Thanks for the report! good catch! Will apply this later.
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-(however, I think it needs several loops for 32-bit platforms.
- I will fix it later...)
+Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
-
-> ---
->  include/erofs/io.h |  6 +++---
->  lib/blobchunk.c    |  2 +-
->  lib/io.c           | 12 ++++++------
->  3 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/erofs/io.h b/include/erofs/io.h
-> index 2597c5c..9d73adc 100644
-> --- a/include/erofs/io.h
-> +++ b/include/erofs/io.h
-> @@ -27,9 +27,9 @@ u64 dev_length(void);
->  
->  extern int erofs_devfd;
->  
-> -int erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> -                          int fd_out, erofs_off_t *off_out,
-> -                          size_t length);
-> +ssize_t erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> +			      int fd_out, erofs_off_t *off_out,
-> +			      size_t length);
->  
->  static inline int blk_write(const void *buf, erofs_blk_t blkaddr,
->  			    u32 nblocks)
-> diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-> index 661c5d0..a0ff79c 100644
-> --- a/lib/blobchunk.c
-> +++ b/lib/blobchunk.c
-> @@ -179,7 +179,7 @@ int erofs_blob_remap(void)
->  	struct erofs_buffer_head *bh;
->  	ssize_t length;
->  	erofs_off_t pos_in, pos_out;
-> -	int ret;
-> +	ssize_t ret;
->  
->  	fflush(blobfile);
->  	length = ftell(blobfile);
-> diff --git a/lib/io.c b/lib/io.c
-> index cfc062d..279c7dd 100644
-> --- a/lib/io.c
-> +++ b/lib/io.c
-> @@ -259,9 +259,9 @@ int dev_read(void *buf, u64 offset, size_t len)
->  	return 0;
->  }
->  
-> -static int __erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> -				   int fd_out, erofs_off_t *off_out,
-> -				   size_t length)
-> +static ssize_t __erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> +				       int fd_out, erofs_off_t *off_out,
-> +				       size_t length)
->  {
->  	size_t copied = 0;
->  	char buf[8192];
-> @@ -331,9 +331,9 @@ static int __erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
->  	return copied;
->  }
->  
-> -int erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> -			  int fd_out, erofs_off_t *off_out,
-> -			  size_t length)
-> +ssize_t erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
-> +			      int fd_out, erofs_off_t *off_out,
-> +			      size_t length)
->  {
->  #ifdef HAVE_COPY_FILE_RANGE
->  	off64_t off64_in = *off_in, off64_out = *off_out;
-> -- 
-> 2.34.0.rc0.344.g81b53c2807-goog
