@@ -2,53 +2,75 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3202544E9C3
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Nov 2021 16:13:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CFF444EB14
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Nov 2021 17:10:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HrMXw0p0yz2yp1
-	for <lists+linux-erofs@lfdr.de>; Sat, 13 Nov 2021 02:13:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HrNpM0K6cz2ywb
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Nov 2021 03:10:03 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=L69Vwjz+;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=bS15VsQ+;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102e;
+ helo=mail-pj1-x102e.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=L69Vwjz+; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=bS15VsQ+; dkim-atps=neutral
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com
+ [IPv6:2607:f8b0:4864:20::102e])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HrMXr73yJz2xY4
- for <linux-erofs@lists.ozlabs.org>; Sat, 13 Nov 2021 02:13:16 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC33D61039;
- Fri, 12 Nov 2021 15:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1636729994;
- bh=5hnz5F+TE+0eKQ93EziZ9HPbLm9MBzXgmdtn1ecVitE=;
- h=Date:From:To:Cc:Subject:From;
- b=L69Vwjz+yv0SKlETQvfDj8scuC7W3UwvTxyMdv87bjz2jCFxEIBfjOrgBJgDnwuWv
- EriGUFHVqiySrDzersjajR0DAEAXh46oQZVfPNzOCkHIrTIrant82hSgzpa08t+JtE
- cCdbu9vbaCCgl7wqLz4XbZ5tVWohPvFmIbuzRrDkC4ln65OfUddbDkn1/8ukN5mWFL
- OOsi2hUsfdyfzHusdhnbH6d2tdVX+bs/BNpl6zHySapOWPm3tnpsW7cbKL3dvG1WpT
- zJHH8QfEAuVoF1NP6o3HplN9aNVDw9j2AGKdW1dq+n8Yz+ygMHY25IuSXmdtmD8vPi
- AkS0FE99yb+dA==
-Date: Fri, 12 Nov 2021 23:13:06 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs fixes for 5.16-rc1
-Message-ID: <20211112151303.GA28430@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- Chao Yu <chao@kernel.org>, Yue Hu <huyue2@yulong.com>,
- Miao Xie <miaoxie@huawei.com>, Liu Bo <bo.liu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HrNpD12zsz2yb6
+ for <linux-erofs@lists.ozlabs.org>; Sat, 13 Nov 2021 03:09:54 +1100 (AEDT)
+Received: by mail-pj1-x102e.google.com with SMTP id
+ w33-20020a17090a6ba400b001a722a06212so6468317pjj.0
+ for <linux-erofs@lists.ozlabs.org>; Fri, 12 Nov 2021 08:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=9Z2b+p+zrYV8oSAddOk13Fbfa5dVMbaO2tm9glOHnpQ=;
+ b=bS15VsQ+CRU3cV8uZW6tk8yK8NK5sSs9lDjFT5CPXNwjXfDNxY2IobjS0ZBykVPPWu
+ AbSu6oEyrWFrx9pgJlTWoF3wPR7ooE7U/SsWTZHR27Zf4faARxIgoUguxhe/RoxBqDU3
+ e0JeS7QDkC+NN9px0MX3CnrMzN8zwe/mhJBKYE1DambXmXlS+Dx+SUWgui3ysazkFNrd
+ KrtUtjrqRE+gRtjMeafdnUuyEqLXPhD9ZL7Yn8Ghfro64nHGvszKBvUjMm10jGT7CS5b
+ 7Y4y10VpALctdag8XO+i5/HaEcdP4YHaj9C2LWy2rYTyH5t7W7GpM3qTLd7Y867cV1/f
+ Q5KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=9Z2b+p+zrYV8oSAddOk13Fbfa5dVMbaO2tm9glOHnpQ=;
+ b=G5PbFQp9ikrOTLykDL0HC7jruOYEkXgfI0ScKXZbMYcW0mkr2L6jU5Qkr+WmYKgBQ8
+ CWz5gzUo3+VaLtsirhcM+ukc82PQx0Hs1eftBCFQ0bLwhGa2ZIWFvQuf1ObwoET4qp9j
+ WEQgq/t58fHWMl1Bf+3O+vXdnTA2bWs9DaHL06g6NSNc/kwStm84E77NZRDfQWrWGufM
+ E2TBAcTW5zMoePsc9S38PGe5Zbo3fXryYNZDm7xqdMyM4lIKBaTbeJsJWnlYhs/39+9b
+ N+Ld0WBgEBGzYZ3jVGcL+1qKEN7i18TwW+lSthkCBWUgUX5futsHJsxNmiOs9g70+8bN
+ TH1g==
+X-Gm-Message-State: AOAM530abBJYYxlOSqBnlYMVcZ/mNg5gtP34nXsSAHl0BuJh/I/3Kbyw
+ ofPnO/0WogjV+F+zCt2srsvSBz0tVY4=
+X-Google-Smtp-Source: ABdhPJwHsP5YuxPeggZd8XTV/KViUk+mMwiR9lncT4ao0TKhbU12Ze2iHDv+10Z6gh+Du0ZcKpxXWQ==
+X-Received: by 2002:a17:90b:314d:: with SMTP id
+ ip13mr19398575pjb.228.1636733388759; 
+ Fri, 12 Nov 2021 08:09:48 -0800 (PST)
+Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
+ [45.33.61.207])
+ by smtp.gmail.com with ESMTPSA id j17sm7490674pfj.55.2021.11.12.08.09.45
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 12 Nov 2021 08:09:48 -0800 (PST)
+From: Huang Jianan <jnhuang95@gmail.com>
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH v6 1/3] erofs: rename lz4_0pading to zero_padding
+Date: Sat, 13 Nov 2021 00:09:33 +0800
+Message-Id: <20211112160935.19394-1-jnhuang95@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,58 +82,117 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Yue Hu <huyue2@yulong.com>, Liu Bo <bo.liu@linux.alibaba.com>,
- Miao Xie <miaoxie@huawei.com>
+Cc: zhangshiming@oppo.co, yh@oppo.com, guoweichao@oppo.com, guanyuwei@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+From: Huang Jianan <huangjianan@oppo.com>
 
-Could you please consider these 2 small erofs patches?
+Renaming lz4_0padding to zero_padding globally since LZMA and later
+algorithms also need that.
 
-One patch fixes an old corner case which can hardly reproduce
-but cause unsafe pagevec reuse. It needs to be fixed right now.
+Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+---
+ fs/erofs/decompressor.c | 18 +++++++++---------
+ fs/erofs/erofs_fs.h     |  4 ++--
+ fs/erofs/internal.h     |  2 +-
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-Another patch is a trivial cleanup which gets rid of the unused
-DELAYEDALLOC strategy which has already been replaced by TRYALLOC.
-
-All commits have been in linux-next for a while and no merge
-conflicts. I think no need to hold on these until 5.16-rc1 is
-out and I could plan for 5.17 cleanup/development stuffs then...
-
-Many thanks!
-Gao Xiang
-
-The following changes since commit 8bb7eca972ad531c9b149c0a51ab43a417385813:
-
-  Linux 5.15 (2021-10-31 13:53:10 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc1-fixes
-
-for you to fetch changes up to 4c7e42552b3a1536f3cdf534aba8c4262ee26716:
-
-  erofs: remove useless cache strategy of DELAYEDALLOC (2021-11-08 10:02:34 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - fix unsafe pagevec reuse which could cause unexpected behaviors;
-
- - get rid of the unused DELAYEDALLOC strategy.
-
-----------------------------------------------------------------
-Gao Xiang (1):
-      erofs: fix unsafe pagevec reuse of hooked pclusters
-
-Yue Hu (1):
-      erofs: remove useless cache strategy of DELAYEDALLOC
-
- fs/erofs/zdata.c | 33 +++++++--------------------------
- fs/erofs/zdata.h |  1 -
- fs/erofs/zpvec.h | 13 ++++++++++---
- 3 files changed, 17 insertions(+), 30 deletions(-)
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index bf37fc76b182..3c848422a9ca 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -114,7 +114,7 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_decompress_req *rq,
+ 
+ static void *z_erofs_lz4_handle_inplace_io(struct z_erofs_decompress_req *rq,
+ 			void *inpage, unsigned int *inputmargin, int *maptype,
+-			bool support_0padding)
++			bool support_zero_padding)
+ {
+ 	unsigned int nrpages_in, nrpages_out;
+ 	unsigned int ofull, oend, inputsize, total, i, j;
+@@ -128,7 +128,7 @@ static void *z_erofs_lz4_handle_inplace_io(struct z_erofs_decompress_req *rq,
+ 	nrpages_out = ofull >> PAGE_SHIFT;
+ 
+ 	if (rq->inplace_io) {
+-		if (rq->partial_decoding || !support_0padding ||
++		if (rq->partial_decoding || !support_zero_padding ||
+ 		    ofull - oend < LZ4_DECOMPRESS_INPLACE_MARGIN(inputsize))
+ 			goto docopy;
+ 
+@@ -187,17 +187,17 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq,
+ {
+ 	unsigned int inputmargin;
+ 	u8 *headpage, *src;
+-	bool support_0padding;
++	bool support_zero_padding;
+ 	int ret, maptype;
+ 
+ 	DBG_BUGON(*rq->in == NULL);
+ 	headpage = kmap_atomic(*rq->in);
+ 	inputmargin = 0;
+-	support_0padding = false;
++	support_zero_padding = false;
+ 
+-	/* decompression inplace is only safe when 0padding is enabled */
+-	if (erofs_sb_has_lz4_0padding(EROFS_SB(rq->sb))) {
+-		support_0padding = true;
++	/* decompression inplace is only safe when zero_padding is enabled */
++	if (erofs_sb_has_zero_padding(EROFS_SB(rq->sb))) {
++		support_zero_padding = true;
+ 
+ 		while (!headpage[inputmargin & ~PAGE_MASK])
+ 			if (!(++inputmargin & ~PAGE_MASK))
+@@ -211,12 +211,12 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq,
+ 
+ 	rq->inputsize -= inputmargin;
+ 	src = z_erofs_lz4_handle_inplace_io(rq, headpage, &inputmargin,
+-					    &maptype, support_0padding);
++					    &maptype, support_zero_padding);
+ 	if (IS_ERR(src))
+ 		return PTR_ERR(src);
+ 
+ 	/* legacy format could compress extra data in a pcluster. */
+-	if (rq->partial_decoding || !support_0padding)
++	if (rq->partial_decoding || !support_zero_padding)
+ 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+ 				rq->inputsize, rq->outputsize, rq->outputsize);
+ 	else
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 083997a034e5..f4506a642a12 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -17,14 +17,14 @@
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+  * be incompatible with this kernel version.
+  */
+-#define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
++#define EROFS_FEATURE_INCOMPAT_ZERO_PADDING	0x00000001
+ #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
+ #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
+ #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
+ #define EROFS_ALL_FEATURE_INCOMPAT		\
+-	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
++	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+ 	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
+ 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 3265688af7f9..273754e7b340 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -258,7 +258,7 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
+ 	return sbi->feature_##compat & EROFS_FEATURE_##feature; \
+ }
+ 
+-EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
++EROFS_FEATURE_FUNCS(zero_padding, incompat, INCOMPAT_ZERO_PADDING)
+ EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
+ EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
+ EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
+-- 
+2.25.1
 
