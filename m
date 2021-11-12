@@ -1,72 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64B6644EB15
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Nov 2021 17:10:08 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66F0344EB16
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Nov 2021 17:10:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HrNpQ2SyNz2ywt
-	for <lists+linux-erofs@lfdr.de>; Sat, 13 Nov 2021 03:10:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HrNpT1wKwz2yp1
+	for <lists+linux-erofs@lfdr.de>; Sat, 13 Nov 2021 03:10:09 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=fCnABRZw;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Ez+L4PuT;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1036;
- helo=mail-pj1-x1036.google.com; envelope-from=jnhuang95@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::535;
+ helo=mail-pg1-x535.google.com; envelope-from=jnhuang95@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=fCnABRZw; dkim-atps=neutral
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com
- [IPv6:2607:f8b0:4864:20::1036])
+ header.s=20210112 header.b=Ez+L4PuT; dkim-atps=neutral
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com
+ [IPv6:2607:f8b0:4864:20::535])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HrNpD17NLz2ymq
- for <linux-erofs@lists.ozlabs.org>; Sat, 13 Nov 2021 03:09:54 +1100 (AEDT)
-Received: by mail-pj1-x1036.google.com with SMTP id np3so7137733pjb.4
- for <linux-erofs@lists.ozlabs.org>; Fri, 12 Nov 2021 08:09:54 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HrNpF5LFyz2yb6
+ for <linux-erofs@lists.ozlabs.org>; Sat, 13 Nov 2021 03:09:57 +1100 (AEDT)
+Received: by mail-pg1-x535.google.com with SMTP id q126so8397737pgq.13
+ for <linux-erofs@lists.ozlabs.org>; Fri, 12 Nov 2021 08:09:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
  h=from:to:cc:subject:date:message-id:in-reply-to:references
  :mime-version:content-transfer-encoding;
- bh=Jo6K8Qvx43aPtS88BLouJaYDfNEWTBx2V63kBihs4bI=;
- b=fCnABRZwoxCz/1xBTxo6K14fLzXGfPEhYYEPywz/ZQvldv4hyoLDaHeqVYKM088C01
- N9dYqm8NGgFHUPak5/9mFuFAJNKoLgo9fx/16cWsZmQVuYHkH5VG2OfS7V285nFjOXev
- GkTZLs2T/dWR9c690BEbkCkI+Rl/Zn8HpPTgocXvMOGAN7DzF01bn8cbf6dwvJVD5+Z+
- ETF5ElkyOCv9B52MFMhSqeAMmZwWl57wCLh6SYCBUPybOwttjlNREr2BKYs5JFtufa1Z
- +MaJFK/qBWeGy07ZR/mwOyoojzIAvuZpjVqhwcDDwAL3biMrT3Muu1TxMIHaiGrvNw5V
- G5gg==
+ bh=kLMWAoj8qSn+0ptWLrH+Qgwuhtiiv7yETqv2709noO0=;
+ b=Ez+L4PuTj+IfJoy69BoBb6HAdgip2d6riQfR6vlN7NguWQI9vnJFuHiy8ygJEaA+2P
+ OvsISYngvcRNK5RZah1+4zAJQ6IxOkwzFsmC5yV7Cm9whH13LO8eeHfksjUcDucNSNW8
+ TEjU0IDPv6Zgy5X4NkmQJ5B/jKqWjaAs66f4ITbjB6xbKXcP1kO/e6lqyaROqR6FrMjh
+ fQeBpkDivOme8iZotCK25YXuU5Qj8R5AjQFa51N35rvrETA5BDpt1vIZCCG5ZKTLQyFt
+ Jau2Dj/EJ+thLCCbzeLn5BQOX9BjkhWIz0MRZNRkR9asdQ4EjDxae5UDsi5outboJ4o/
+ 2q2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
  :references:mime-version:content-transfer-encoding;
- bh=Jo6K8Qvx43aPtS88BLouJaYDfNEWTBx2V63kBihs4bI=;
- b=wQx9qwMmNncIvZuxmFNcJGuuk/cCNC1IMudYO046WIoPubSDZ6Rm3WKqQGb/lBlnYM
- Nb+75x047WBUpINeZrBy7uED56s7vqavd7jimMxBNrcsDjnrTXLNwBHLwe5M6W065xiM
- bJOk9PAx0ewjH/Y/mkQp2RM7aX9mY3t3lW1MjLslG9XowbE9jwCLt12HvfawioL09rog
- a6H+ixqco2lCLikDZHtFZDokYQVrGqkl0ahGzS3rihBweJ3INz6PNQf8xIgMmNwI/Wkk
- UIXcLL+efFDVHDh7oGU/ardGyGBvHCFi91WwfUYBe06nmjSzvIb9lfSvZJjuBCkz07jf
- PjJw==
-X-Gm-Message-State: AOAM533EzLLfkI4R/rBKx6N5LJ1muRnuYfD7Ub5QCRHwOXDZYZHEVRHO
- Ijx0rdro5LiuS0oT4DqWAyAvR0IZJNs=
-X-Google-Smtp-Source: ABdhPJxdSXPwBaRz+W34oFRLO+bC8ovr6REFh+PDbpornOHiHTZeSzK005DcqKyV8C0lTj889DkGsg==
-X-Received: by 2002:a17:90a:670e:: with SMTP id
- n14mr19094673pjj.144.1636733391717; 
- Fri, 12 Nov 2021 08:09:51 -0800 (PST)
+ bh=kLMWAoj8qSn+0ptWLrH+Qgwuhtiiv7yETqv2709noO0=;
+ b=ZMmJnai/4iewDYCdU1EXVJxVmj+JGHDPOwiUId6+ktUGB+A4nFJ0bb7pTDwAWA8cv1
+ qXMsm55NjSQPOM+gHjKFr6/7xt/YJy+db6r79cb7jaj8Q/dTwXwGZ1DK4EFD0edrb66t
+ gLuCzMOYRcD6mkvnqfiCCSpgUV880AlhOzL32ddJwiDJJ6nZZOVSW1+pVL4CflqUveGB
+ OE7YK5OmIlqRkWzI0j0LnavxhDXQl/FsGS+GN67DrhErbcAWYbtekkP51t+jE1OiB0YB
+ dtTHfVKUoJTNF6MbWkx0HZQDJPV4VnFW4Yy6xvjpINSTB3v082FBd+1LOHiZ8/Co2na/
+ gQGQ==
+X-Gm-Message-State: AOAM5311zzZbkK33YG5kVe+oQX2VKAfRo/SXHiWlPw20cP4TbQcNxR1y
+ yq3L5pGCaUBfpLyvu3fDqCc8TJcQ7xg=
+X-Google-Smtp-Source: ABdhPJzYPRtHTsb1CAk1fIScu8akbRcFOe37snQFIlamHNha7JHYji5V5bOCl40f0L/FkIzzp5zbpA==
+X-Received: by 2002:aa7:96ba:0:b0:49f:c35f:83f8 with SMTP id
+ g26-20020aa796ba000000b0049fc35f83f8mr14816867pfk.47.1636733394627; 
+ Fri, 12 Nov 2021 08:09:54 -0800 (PST)
 Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
  [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id j17sm7490674pfj.55.2021.11.12.08.09.49
+ by smtp.gmail.com with ESMTPSA id j17sm7490674pfj.55.2021.11.12.08.09.51
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Fri, 12 Nov 2021 08:09:51 -0800 (PST)
+ Fri, 12 Nov 2021 08:09:54 -0800 (PST)
 From: Huang Jianan <jnhuang95@gmail.com>
 To: linux-erofs@lists.ozlabs.org,
 	xiang@kernel.org,
 	chao@kernel.org
-Subject: [PATCH v6 2/3] erofs: add sysfs interface
-Date: Sat, 13 Nov 2021 00:09:34 +0800
-Message-Id: <20211112160935.19394-2-jnhuang95@gmail.com>
+Subject: [PATCH v6 3/3] erofs: add sysfs node to control sync decompression
+ strategy
+Date: Sat, 13 Nov 2021 00:09:35 +0800
+Message-Id: <20211112160935.19394-3-jnhuang95@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211112160935.19394-1-jnhuang95@gmail.com>
 References: <20211112160935.19394-1-jnhuang95@gmail.com>
@@ -90,423 +91,205 @@ Sender: "Linux-erofs"
 
 From: Huang Jianan <huangjianan@oppo.com>
 
-Add sysfs interface to configure erofs related parameters later.
+Although readpage is a synchronous path, there will be no additional
+kworker scheduling overhead in non-atomic contexts. So add a sysfs
+node to allow disable sync decompression.
 
 Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 Reviewed-by: Chao Yu <chao@kernel.org>
 ---
-since v5:
-- Add missing supported features in sysfs API documentation.
-- Fill up supported feature for EROFS_FEATURE_FUNCS.
-
 since v4:
 - Resend in a clean chain.
 
 since v3:
-- Add description of sysfs in erofs documentation.
+- Clean up the sync decompressstrategy into a separate function.
 
 since v2:
-- Check whether t in erofs_attr_store is illegal.
-- Print raw value for bool entry.
+- Use enum to indicate sync decompression strategy.
+- Add missing CONFIG_EROFS_FS_ZIP ifdef.
 
 since v1:
-- Add sysfs API documentation.
-- Use sysfs_emit over snprintf. 
+- Leave auto default.
+- Add a disable strategy for sync_decompress.
 
- Documentation/ABI/testing/sysfs-fs-erofs |   7 +
- Documentation/filesystems/erofs.rst      |   8 +
- fs/erofs/Makefile                        |   2 +-
- fs/erofs/internal.h                      |  12 ++
- fs/erofs/super.c                         |  12 ++
- fs/erofs/sysfs.c                         | 244 +++++++++++++++++++++++
- 6 files changed, 284 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-fs-erofs
- create mode 100644 fs/erofs/sysfs.c
+ Documentation/ABI/testing/sysfs-fs-erofs |  9 ++++++++
+ fs/erofs/internal.h                      | 10 ++++++--
+ fs/erofs/super.c                         |  2 +-
+ fs/erofs/sysfs.c                         | 15 ++++++++++++
+ fs/erofs/zdata.c                         | 29 ++++++++++++++++++++----
+ 5 files changed, 58 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
-new file mode 100644
-index 000000000000..a9512594dc4c
---- /dev/null
+index a9512594dc4c..8b620fb49962 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
 +++ b/Documentation/ABI/testing/sysfs-fs-erofs
-@@ -0,0 +1,7 @@
-+What:		/sys/fs/erofs/features/
+@@ -5,3 +5,12 @@ Description:	Shows all enabled kernel features.
+ 		Supported features:
+ 		zero_padding, compr_cfgs, big_pcluster, chunked_file,
+ 		device_table, compr_head2, sb_chksum.
++
++What:		/sys/fs/erofs/<disk>/sync_decompress
 +Date:		November 2021
 +Contact:	"Huang Jianan" <huangjianan@oppo.com>
-+Description:	Shows all enabled kernel features.
-+		Supported features:
-+		zero_padding, compr_cfgs, big_pcluster, chunked_file,
-+		device_table, compr_head2, sb_chksum.
-diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-index 01df283c7d04..7119aa213be7 100644
---- a/Documentation/filesystems/erofs.rst
-+++ b/Documentation/filesystems/erofs.rst
-@@ -93,6 +93,14 @@ dax                    A legacy option which is an alias for ``dax=always``.
- device=%s              Specify a path to an extra device to be used together.
- ===================    =========================================================
- 
-+Sysfs Entries
-+=============
-+
-+Information about mounted erofs file systems can be found in /sys/fs/erofs.
-+Each mounted filesystem will have a directory in /sys/fs/erofs based on its
-+device name (i.e., /sys/fs/erofs/sda).
-+(see also Documentation/ABI/testing/sysfs-fs-erofs)
-+
- On-disk details
- ===============
- 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 756fe2d65272..8a3317e38e5a 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
--erofs-objs := super.o inode.o data.o namei.o dir.o utils.o pcpubuf.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o utils.o pcpubuf.o sysfs.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o
- erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
++Description:	Control strategy of sync decompression
++		- 0 (defalut, auto): enable for readpage, and enable for
++				     readahead on atomic contexts only,
++		- 1 (force on): enable for readpage and readahead.
++		- 2 (force off): disable for all situations.
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 273754e7b340..43f0332fa489 100644
+index 43f0332fa489..8e70435629e5 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -134,6 +134,10 @@ struct erofs_sb_info {
- 	u8 volume_name[16];             /* volume name */
- 	u32 feature_compat;
- 	u32 feature_incompat;
-+
-+	/* sysfs support */
-+	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
-+	struct completion s_kobj_unregister;
+@@ -56,12 +56,18 @@ struct erofs_device_info {
+ 	u32 mapped_blkaddr;
  };
  
- #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
-@@ -261,7 +265,9 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
- EROFS_FEATURE_FUNCS(zero_padding, incompat, INCOMPAT_ZERO_PADDING)
- EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
- EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
-+EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
- EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
-+EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- 
- /* atomic flag definitions */
-@@ -498,6 +504,12 @@ int erofs_pcpubuf_growsize(unsigned int nrpages);
- void erofs_pcpubuf_init(void);
- void erofs_pcpubuf_exit(void);
- 
-+/* sysfs.c */
-+int erofs_register_sysfs(struct super_block *sb);
-+void erofs_unregister_sysfs(struct super_block *sb);
-+int __init erofs_init_sysfs(void);
-+void erofs_exit_sysfs(void);
++enum {
++	EROFS_SYNC_DECOMPRESS_AUTO,
++	EROFS_SYNC_DECOMPRESS_FORCE_ON,
++	EROFS_SYNC_DECOMPRESS_FORCE_OFF
++};
 +
- /* utils.c / zdata.c */
- struct page *erofs_allocpage(struct page **pagepool, gfp_t gfp);
- static inline void erofs_pagepool_add(struct page **pagepool,
+ struct erofs_mount_opts {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	/* current strategy of how to use managed cache */
+ 	unsigned char cache_strategy;
+-	/* strategy of sync decompression (false - auto, true - force on) */
+-	bool readahead_sync_decompress;
++	/* strategy of sync decompression (0 - auto, 1 - force on, 2 - force off) */
++	unsigned int sync_decompress;
+ 
+ 	/* threshold for decompression synchronously */
+ 	unsigned int max_sync_decompress_pages;
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 6a969b1e0ee6..abc1da5d1719 100644
+index abc1da5d1719..58f381f80205 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -695,6 +695,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
-+	err = erofs_register_sysfs(sb);
-+	if (err)
-+		return err;
-+
- 	erofs_info(sb, "mounted with root inode @ nid %llu.", ROOT_NID(sbi));
- 	return 0;
- }
-@@ -808,6 +812,7 @@ static void erofs_put_super(struct super_block *sb)
- 
- 	DBG_BUGON(!sbi);
- 
-+	erofs_unregister_sysfs(sb);
- 	erofs_shrinker_unregister(sb);
+@@ -423,7 +423,7 @@ static void erofs_default_options(struct erofs_fs_context *ctx)
  #ifdef CONFIG_EROFS_FS_ZIP
- 	iput(sbi->managed_cache);
-@@ -852,6 +857,10 @@ static int __init erofs_module_init(void)
- 	if (err)
- 		goto zip_err;
- 
-+	err = erofs_init_sysfs();
-+	if (err)
-+		goto sysfs_err;
-+
- 	err = register_filesystem(&erofs_fs_type);
- 	if (err)
- 		goto fs_err;
-@@ -859,6 +868,8 @@ static int __init erofs_module_init(void)
- 	return 0;
- 
- fs_err:
-+	erofs_exit_sysfs();
-+sysfs_err:
- 	z_erofs_exit_zip_subsystem();
- zip_err:
- 	z_erofs_lzma_exit();
-@@ -877,6 +888,7 @@ static void __exit erofs_module_exit(void)
- 	/* Ensure all RCU free inodes / pclusters are safe to be destroyed. */
- 	rcu_barrier();
- 
-+	erofs_exit_sysfs();
- 	z_erofs_exit_zip_subsystem();
- 	z_erofs_lzma_exit();
- 	erofs_exit_shrinker();
+ 	ctx->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+ 	ctx->opt.max_sync_decompress_pages = 3;
+-	ctx->opt.readahead_sync_decompress = false;
++	ctx->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
+ #endif
+ #ifdef CONFIG_EROFS_FS_XATTR
+ 	set_opt(&ctx->opt, XATTR_USER);
 diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-new file mode 100644
-index 000000000000..80ca5ed59bb4
---- /dev/null
+index 80ca5ed59bb4..8f0a71e880ea 100644
+--- a/fs/erofs/sysfs.c
 +++ b/fs/erofs/sysfs.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C), 2008-2021, OPPO Mobile Comm Corp., Ltd.
-+ *             https://www.oppo.com/
-+ */
-+#include <linux/sysfs.h>
-+#include <linux/kobject.h>
+@@ -16,6 +16,7 @@ enum {
+ 
+ enum {
+ 	struct_erofs_sb_info,
++	struct_erofs_mount_opts,
+ };
+ 
+ struct erofs_attr {
+@@ -55,7 +56,14 @@ static struct erofs_attr erofs_attr_##_name = {			\
+ 
+ #define ATTR_LIST(name) (&erofs_attr_##name.attr)
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
++#endif
 +
-+#include "internal.h"
-+
-+enum {
-+	attr_feature,
-+	attr_pointer_ui,
-+	attr_pointer_bool,
-+};
-+
-+enum {
-+	struct_erofs_sb_info,
-+};
-+
-+struct erofs_attr {
-+	struct attribute attr;
-+	short attr_id;
-+	int struct_type;
-+	int offset;
-+};
-+
-+#define EROFS_ATTR(_name, _mode, _id)					\
-+static struct erofs_attr erofs_attr_##_name = {				\
-+	.attr = {.name = __stringify(_name), .mode = _mode },		\
-+	.attr_id = attr_##_id,						\
-+}
-+#define EROFS_ATTR_FUNC(_name, _mode)	EROFS_ATTR(_name, _mode, _name)
-+#define EROFS_ATTR_FEATURE(_name)	EROFS_ATTR(_name, 0444, feature)
-+
-+#define EROFS_ATTR_OFFSET(_name, _mode, _id, _struct)	\
-+static struct erofs_attr erofs_attr_##_name = {			\
-+	.attr = {.name = __stringify(_name), .mode = _mode },	\
-+	.attr_id = attr_##_id,					\
-+	.struct_type = struct_##_struct,			\
-+	.offset = offsetof(struct _struct, _name),\
-+}
-+
-+#define EROFS_ATTR_RW(_name, _id, _struct)	\
-+	EROFS_ATTR_OFFSET(_name, 0644, _id, _struct)
-+
-+#define EROFS_RO_ATTR(_name, _id, _struct)	\
-+	EROFS_ATTR_OFFSET(_name, 0444, _id, _struct)
-+
-+#define EROFS_ATTR_RW_UI(_name, _struct)	\
-+	EROFS_ATTR_RW(_name, pointer_ui, _struct)
-+
-+#define EROFS_ATTR_RW_BOOL(_name, _struct)	\
-+	EROFS_ATTR_RW(_name, pointer_bool, _struct)
-+
-+#define ATTR_LIST(name) (&erofs_attr_##name.attr)
-+
-+static struct attribute *erofs_attrs[] = {
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(erofs);
-+
-+/* Features this copy of erofs supports */
-+EROFS_ATTR_FEATURE(zero_padding);
-+EROFS_ATTR_FEATURE(compr_cfgs);
-+EROFS_ATTR_FEATURE(big_pcluster);
-+EROFS_ATTR_FEATURE(chunked_file);
-+EROFS_ATTR_FEATURE(device_table);
-+EROFS_ATTR_FEATURE(compr_head2);
-+EROFS_ATTR_FEATURE(sb_chksum);
-+
-+static struct attribute *erofs_feat_attrs[] = {
-+	ATTR_LIST(zero_padding),
-+	ATTR_LIST(compr_cfgs),
-+	ATTR_LIST(big_pcluster),
-+	ATTR_LIST(chunked_file),
-+	ATTR_LIST(device_table),
-+	ATTR_LIST(compr_head2),
-+	ATTR_LIST(sb_chksum),
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(erofs_feat);
-+
-+static unsigned char *__struct_ptr(struct erofs_sb_info *sbi,
-+					  int struct_type, int offset)
-+{
-+	if (struct_type == struct_erofs_sb_info)
-+		return (unsigned char *)sbi + offset;
-+	return NULL;
-+}
-+
-+static ssize_t erofs_attr_show(struct kobject *kobj,
-+				struct attribute *attr, char *buf)
-+{
-+	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-+						s_kobj);
-+	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
-+	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
-+
-+	switch (a->attr_id) {
-+	case attr_feature:
-+		return sysfs_emit(buf, "supported\n");
-+	case attr_pointer_ui:
-+		if (!ptr)
-+			return 0;
-+		return sysfs_emit(buf, "%u\n", *(unsigned int *)ptr);
-+	case attr_pointer_bool:
-+		if (!ptr)
-+			return 0;
-+		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
-+						const char *buf, size_t len)
-+{
-+	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-+						s_kobj);
-+	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
-+	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
-+	unsigned long t;
-+	int ret;
-+
-+	switch (a->attr_id) {
-+	case attr_pointer_ui:
-+		if (!ptr)
-+			return 0;
-+		ret = kstrtoul(skip_spaces(buf), 0, &t);
-+		if (ret)
-+			return ret;
-+		if (t > UINT_MAX)
+ static struct attribute *erofs_attrs[] = {
++#ifdef CONFIG_EROFS_FS_ZIP
++	ATTR_LIST(sync_decompress),
++#endif
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs);
+@@ -86,6 +94,8 @@ static unsigned char *__struct_ptr(struct erofs_sb_info *sbi,
+ {
+ 	if (struct_type == struct_erofs_sb_info)
+ 		return (unsigned char *)sbi + offset;
++	if (struct_type == struct_erofs_mount_opts)
++		return (unsigned char *)&sbi->opt + offset;
+ 	return NULL;
+ }
+ 
+@@ -132,6 +142,11 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 			return ret;
+ 		if (t > UINT_MAX)
+ 			return -EINVAL;
++#ifdef CONFIG_EROFS_FS_ZIP
++		if (!strcmp(a->attr.name, "sync_decompress") &&
++		    (t > EROFS_SYNC_DECOMPRESS_FORCE_OFF))
 +			return -EINVAL;
-+		*(unsigned int *)ptr = t;
-+		return len;
-+	case attr_pointer_bool:
-+		if (!ptr)
-+			return 0;
-+		ret = kstrtoul(skip_spaces(buf), 0, &t);
-+		if (ret)
-+			return ret;
-+		if (t != 0 && t != 1)
-+			return -EINVAL;
-+		*(bool *)ptr = !!t;
-+		return len;
-+	}
-+
-+	return 0;
-+}
-+
-+static void erofs_sb_release(struct kobject *kobj)
++#endif
+ 		*(unsigned int *)ptr = t;
+ 		return len;
+ 	case attr_pointer_bool:
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index bcb1b91b234f..233c8a047c53 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -772,6 +772,26 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	goto out;
+ }
+ 
++static void set_sync_decompress_policy(struct erofs_sb_info *sbi)
 +{
-+	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-+						 s_kobj);
-+	complete(&sbi->s_kobj_unregister);
++	/* enable sync decompression in readahead for atomic contexts */
++	if (sbi->opt.sync_decompress == EROFS_SYNC_DECOMPRESS_AUTO)
++		sbi->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_FORCE_ON;
 +}
 +
-+static const struct sysfs_ops erofs_attr_ops = {
-+	.show	= erofs_attr_show,
-+	.store	= erofs_attr_store,
-+};
-+
-+static struct kobj_type erofs_sb_ktype = {
-+	.default_groups = erofs_groups,
-+	.sysfs_ops	= &erofs_attr_ops,
-+	.release	= erofs_sb_release,
-+};
-+
-+static struct kobj_type erofs_ktype = {
-+	.sysfs_ops	= &erofs_attr_ops,
-+};
-+
-+static struct kset erofs_root = {
-+	.kobj	= {.ktype = &erofs_ktype},
-+};
-+
-+static struct kobj_type erofs_feat_ktype = {
-+	.default_groups = erofs_feat_groups,
-+	.sysfs_ops	= &erofs_attr_ops,
-+};
-+
-+static struct kobject erofs_feat = {
-+	.kset	= &erofs_root,
-+};
-+
-+int erofs_register_sysfs(struct super_block *sb)
++static bool get_sync_decompress_policy(struct erofs_sb_info *sbi,
++				       unsigned int readahead_pages)
 +{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	int err;
++	/* auto: enable for readpage, disable for readahead */
++	if (sbi->opt.sync_decompress == EROFS_SYNC_DECOMPRESS_AUTO)
++		return readahead_pages == 0;
 +
-+	sbi->s_kobj.kset = &erofs_root;
-+	init_completion(&sbi->s_kobj_unregister);
-+	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL,
-+				   "%s", sb->s_id);
-+	if (err)
-+		goto put_sb_kobj;
++	if (sbi->opt.sync_decompress == EROFS_SYNC_DECOMPRESS_FORCE_ON)
++		return readahead_pages <= sbi->opt.max_sync_decompress_pages;
 +
-+	return 0;
-+
-+put_sb_kobj:
-+	kobject_put(&sbi->s_kobj);
-+	wait_for_completion(&sbi->s_kobj_unregister);
-+	return err;
++	return false;
 +}
 +
-+void erofs_unregister_sysfs(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+
-+	kobject_del(&sbi->s_kobj);
-+	kobject_put(&sbi->s_kobj);
-+	wait_for_completion(&sbi->s_kobj_unregister);
-+}
-+
-+int __init erofs_init_sysfs(void)
-+{
-+	int ret;
-+
-+	kobject_set_name(&erofs_root.kobj, "erofs");
-+	erofs_root.kobj.parent = fs_kobj;
-+	ret = kset_register(&erofs_root);
-+	if (ret)
-+		goto root_err;
-+
-+	ret = kobject_init_and_add(&erofs_feat, &erofs_feat_ktype,
-+				   NULL, "features");
-+	if (ret)
-+		goto feat_err;
-+
-+	return ret;
-+
-+feat_err:
-+	kobject_put(&erofs_feat);
-+	kset_unregister(&erofs_root);
-+root_err:
-+	return ret;
-+}
-+
-+void erofs_exit_sysfs(void)
-+{
-+	kobject_put(&erofs_feat);
-+	kset_unregister(&erofs_root);
-+}
+ static void z_erofs_decompressqueue_work(struct work_struct *work);
+ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+ 				       bool sync, int bios)
+@@ -794,7 +814,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+ 	/* Use workqueue and sync decompression for atomic contexts only */
+ 	if (in_atomic() || irqs_disabled()) {
+ 		queue_work(z_erofs_workqueue, &io->u.work);
+-		sbi->opt.readahead_sync_decompress = true;
++		set_sync_decompress_policy(sbi);
+ 		return;
+ 	}
+ 	z_erofs_decompressqueue_work(&io->u.work);
+@@ -1454,6 +1474,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ static int z_erofs_readpage(struct file *file, struct page *page)
+ {
+ 	struct inode *const inode = page->mapping->host;
++	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+ 	struct page *pagepool = NULL;
+ 	int err;
+@@ -1469,7 +1490,8 @@ static int z_erofs_readpage(struct file *file, struct page *page)
+ 	(void)z_erofs_collector_end(&f.clt);
+ 
+ 	/* if some compressed cluster ready, need submit them anyway */
+-	z_erofs_runqueue(inode->i_sb, &f, &pagepool, true);
++	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
++			 get_sync_decompress_policy(sbi, 0));
+ 
+ 	if (err)
+ 		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
+@@ -1520,8 +1542,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 	(void)z_erofs_collector_end(&f.clt);
+ 
+ 	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
+-			 sbi->opt.readahead_sync_decompress &&
+-			 nr_pages <= sbi->opt.max_sync_decompress_pages);
++			 get_sync_decompress_policy(sbi, nr_pages));
+ 	if (f.map.mpage)
+ 		put_page(f.map.mpage);
+ 	erofs_release_pages(&pagepool);
 -- 
 2.25.1
 
