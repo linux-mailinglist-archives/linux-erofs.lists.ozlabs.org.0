@@ -2,60 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00FE844F502
-	for <lists+linux-erofs@lfdr.de>; Sat, 13 Nov 2021 20:44:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A457451BF5
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 01:06:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hs5WD4R8vz2xtc
-	for <lists+linux-erofs@lfdr.de>; Sun, 14 Nov 2021 06:44:24 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=E1xbLlzg;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HtRFC0fFTz2yJM
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 11:06:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=E1xbLlzg; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hs5W95QMhz2xBq
- for <linux-erofs@lists.ozlabs.org>; Sun, 14 Nov 2021 06:44:21 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 1CDD961056;
- Sat, 13 Nov 2021 19:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1636832657;
- bh=SOohovcpMYj76l5StA5OySttoJ9fEJLI96EwedJXHXQ=;
- h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
- b=E1xbLlzgg9V9w7H4b3rHUBD0kGD/hCJ0jNun9af1DGyCIwyKmPX1Io0u8g+6KopJy
- JwKWf1IsqAz8NB5/OqSt7TxEY34PRGhMa9JzeHKZbBXWHYJ2ZVrjX7FXlmc1Czql/a
- zTtsNoteWgsERSFQFQ+re32O+AMxOnfxAa1WW49727ApT5v9ZywtLccZjCUVUV/htQ
- Ehq1UUBX0Pe1pv8UqpYua46bulUL6EKZsnE2SEkoWreUvhxoZVYwAgzaPYKbU2kizU
- vBs0OAJI9ci+2Dg9or6b7QSzmdQNhCTGh8uh/ms7ukSzsF7x/pLS++nTV+lPZjM/KD
- o3HKoy2hfT9Bw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain
- [127.0.0.1])
- by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 16A4A60721;
- Sat, 13 Nov 2021 19:44:17 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 5.16-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20211112151303.GA28430@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20211112151303.GA28430@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system
- <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <20211112151303.GA28430@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.16-rc1-fixes
-X-PR-Tracked-Commit-Id: 4c7e42552b3a1536f3cdf534aba8c4262ee26716
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a27c085874caf1a2d944bc0acc4b4ee76ffa9296
-Message-Id: <163683265708.24678.6013028869466264092.pr-tracker-bot@kernel.org>
-Date: Sat, 13 Nov 2021 19:44:17 +0000
-To: Gao Xiang <xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HtRF570H9z2xtM
+ for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 11:06:44 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R631e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0Uwm03mJ_1637021183; 
+Received: from
+ e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0Uwm03mJ_1637021183) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 16 Nov 2021 08:06:28 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: dump: refine file info statistics
+Date: Tue, 16 Nov 2021 08:06:19 +0800
+Message-Id: <20211116000619.190667-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,22 +46,83 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, Yue Hu <huyue2@yulong.com>,
- Liu Bo <bo.liu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Fri, 12 Nov 2021 23:13:06 +0800:
+Also print the file type when dumping file info.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc1-fixes
+Cc: Guo Xuenan <guoxuenan@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ dump/main.c           | 16 +++++++++-------
+ include/erofs/inode.h |  1 +
+ lib/inode.c           |  2 +-
+ 3 files changed, 11 insertions(+), 8 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a27c085874caf1a2d944bc0acc4b4ee76ffa9296
-
-Thank you!
-
+diff --git a/dump/main.c b/dump/main.c
+index 401e6841aefb..a7199937b8e0 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -9,6 +9,7 @@
+ #include <getopt.h>
+ #include <time.h>
+ #include "erofs/print.h"
++#include "erofs/inode.h"
+ #include "erofs/io.h"
+ 
+ #ifdef HAVE_LIBUUID
+@@ -461,16 +462,17 @@ static void erofsdump_show_fileinfo(bool show_extent)
+ 		if (((access_mode >> i) & 1) == 0)
+ 			access_mode_str[8 - i] = '-';
+ 	fprintf(stdout, "File : %s\n", path);
+-	fprintf(stdout, "NID: %" PRIu64 "  ", inode.nid);
+-	fprintf(stdout, "Links: %u  ", inode.i_nlink);
+-	fprintf(stdout, "Layout: %d\n", inode.datalayout);
++	fprintf(stdout, "Size: %" PRIu64"  On-disk size: %" PRIu64 "  %s\n",
++		inode.i_size, size,
++		file_category_types[erofs_mode_to_ftype(inode.i_mode)]);
++	fprintf(stdout, "NID: %" PRIu64 "   ", inode.nid);
++	fprintf(stdout, "Links: %u   ", inode.i_nlink);
++	fprintf(stdout, "Layout: %d   Compression ratio: %.2f%%\n",
++		inode.datalayout,
++		(double)(100 * size) / (double)(inode.i_size));
+ 	fprintf(stdout, "Inode size: %d   ", inode.inode_isize);
+ 	fprintf(stdout, "Extent size: %u   ", inode.extent_isize);
+ 	fprintf(stdout,	"Xattr size: %u\n", inode.xattr_isize);
+-	fprintf(stdout, "File size: %" PRIu64"  ", inode.i_size);
+-	fprintf(stdout,	"On-disk size: %" PRIu64 "  ", size);
+-	fprintf(stdout, "Compression ratio: %.2f%%\n",
+-			(double)(100 * size) / (double)(inode.i_size));
+ 	fprintf(stdout, "Uid: %u   Gid: %u  ", inode.i_uid, inode.i_gid);
+ 	fprintf(stdout, "Access: %04o/%s\n", access_mode, access_mode_str);
+ 	fprintf(stdout, "Timestamp: %s.%09d\n", timebuf, inode.i_ctime_nsec);
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index a73676212ccf..d5343c242aee 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -10,6 +10,7 @@
+ 
+ #include "erofs/internal.h"
+ 
++unsigned char erofs_mode_to_ftype(umode_t mode);
+ void erofs_inode_manager_init(void);
+ unsigned int erofs_iput(struct erofs_inode *inode);
+ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
+diff --git a/lib/inode.c b/lib/inode.c
+index 6597a26f7ac4..855a0383f31e 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -37,7 +37,7 @@ static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
+ 	[S_IFLNK >> S_SHIFT]  = EROFS_FT_SYMLINK,
+ };
+ 
+-static unsigned char erofs_mode_to_ftype(umode_t mode)
++unsigned char erofs_mode_to_ftype(umode_t mode)
+ {
+ 	return erofs_ftype_by_mode[(mode & S_IFMT) >> S_SHIFT];
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.24.4
+
