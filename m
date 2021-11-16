@@ -1,55 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 767474527E3
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 03:46:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 132FD4528B6
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 04:50:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HtVng33F5z2xh0
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 13:46:47 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=X/bXi4gv;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HtXBp19BJz2xsZ
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 14:50:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=X/bXi4gv; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56;
+ helo=out30-56.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-56.freemail.mail.aliyun.com
+ (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HtVnc1GYqz2x9Z
- for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 13:46:44 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 09EB76187F;
- Tue, 16 Nov 2021 02:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1637030800;
- bh=JwtqBvtIdTtreln/fqbBKVJNpiqNLWTVDMUeJTaVJwI=;
- h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=X/bXi4gvLRZEPVOt+x/8ee7QlKcJVJM4NwBb80QNyzd/GQNNQF+QxXl5Cj6UdsY4N
- rwB5qo1LBVhaxCPxdCOHE6wJMTZZyah0A+BgdWUHFG7WN83Dz8/GvcTuIc6pN8XF7Z
- b55zVYoSXwJGLB3a8WBDkGGDtxjWaTXUdedDbWmkBFg0Fh96E+ZZfsHHBYi/4/mdJl
- DW9nejvvN0rNBGiT4SyRrOk7wzvL5Lziup1+6w4d+eDa5U1bAqedo+WXBwz0ejjz83
- EbVE2BosN8QDBEDkwoIkurNZWIUwABEwqjyw0QAEUZ9LOfgMocbKjOWa6L4Xeqmkn7
- yH/gXGT6TS9PQ==
-Message-ID: <30b7b345-8632-ab2b-f201-f5159e52c785@kernel.org>
-Date: Tue, 16 Nov 2021 10:46:37 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HtXBd1Pyyz2xCN
+ for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 14:49:57 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R321e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=9; SR=0; TI=SMTPD_---0UwoA1Sy_1637034576; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0UwoA1Sy_1637034576) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 16 Nov 2021 11:49:38 +0800
+Date: Tue, 16 Nov 2021 11:49:36 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Huang Jianan <jnhuang95@gmail.com>
 Subject: Re: [PATCH v6 1/3] erofs: rename lz4_0pading to zero_padding
-Content-Language: en-US
-To: Huang Jianan <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org,
- xiang@kernel.org
+Message-ID: <YZMqUNy1f4ji9ZbI@B-P7TQMD6M-0146.local>
 References: <20211112160935.19394-1-jnhuang95@gmail.com>
-From: Chao Yu <chao@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <20211112160935.19394-1-jnhuang95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,12 +47,15 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: zhangshiming@oppo.co, yh@oppo.com, guoweichao@oppo.com, guanyuwei@oppo.com
+Cc: yh@oppo.com, guanyuwei@oppo.com, guoweichao@oppo.com,
+ linux-erofs@lists.ozlabs.org, zhangshiming@oppo.co
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2021/11/13 0:09, Huang Jianan wrote:
+Hi Jianan,
+
+On Sat, Nov 13, 2021 at 12:09:33AM +0800, Huang Jianan wrote:
 > From: Huang Jianan <huangjianan@oppo.com>
 > 
 > Renaming lz4_0padding to zero_padding globally since LZMA and later
@@ -74,6 +63,20 @@ On 2021/11/13 0:09, Huang Jianan wrote:
 > 
 > Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+I'm fine with renaming the original on-disk feature from lz4_0padding
+to zero_padding... but could we leave `support_0padding' as-is?
+
+My own concern is
+ 1) it seems 'support_zero_padding' is not much better than
+    'support_0padding' but it causes somewhat longer lines...
+
+ 2) it causes somewhat backporting overhead but with no real
+    benefits...
+
+Otherwise it looks good to me. If you agree on this, I could
+update this patch manually at the time when I apply this (maybe
+about this weekend).
 
 Thanks,
+Gao Xiang
+
