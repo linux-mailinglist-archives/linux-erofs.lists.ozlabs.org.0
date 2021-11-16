@@ -1,37 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE836452E5F
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 10:50:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1630B452E60
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 10:50:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HthBG5f4nz2yfg
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 20:50:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HthBJ0JZMz2yPj
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 20:50:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56;
- helo=out30-56.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-56.freemail.mail.aliyun.com
- (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HthB743cCz2yMq
- for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 20:50:07 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HthB92Q2Hz2xCt
+ for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 20:50:08 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0UwqPg0-_1637056181; 
 Received: from
  e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0UwqPg0-_1637056181) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 16 Nov 2021 17:49:51 +0800
+ Tue, 16 Nov 2021 17:49:52 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 3/6] erofs-utils: mkfs: add extra blob device support
-Date: Tue, 16 Nov 2021 17:49:36 +0800
-Message-Id: <20211116094939.32246-4-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v4 4/6] erofs-utils: dump: support multiple devices
+Date: Tue, 16 Nov 2021 17:49:37 +0800
+Message-Id: <20211116094939.32246-5-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20211116094939.32246-1-hsiangkao@linux.alibaba.com>
 References: <20211116094939.32246-1-hsiangkao@linux.alibaba.com>
@@ -56,324 +56,204 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In this patch, blob data from chunked-based files is redirected to
-another blob file.
-
-In order to achieve that, "--blobdev" should be used to specify
-the output blob file/device for all chunk-based files, e.g.
- mkfs.erofs --blobdev blob.erofs --chunksize 4096 foo.erofs foo
-
-Note that the upcoming RAFS v6 (EROFS-compatible on-disk format) [1]
-will make full use of EROFS multiple device feature together with
-Nydus [2] container image service.
-
-[1] https://sched.co/pcdL
-[2] https://github.com/dragonflyoss/image-service
+Add preliminary multiple device support for dump feature.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fuse/main.c               |  2 +-
- include/erofs/blobchunk.h |  3 +-
- include/erofs/cache.h     |  5 +++
- include/erofs/config.h    |  1 +
- include/erofs/internal.h  |  5 ++-
- lib/blobchunk.c           | 70 +++++++++++++++++++++++++++++++++------
- man/mkfs.erofs.1          |  3 ++
- mkfs/main.c               | 19 ++++++++++-
- 8 files changed, 93 insertions(+), 15 deletions(-)
+ dump/main.c              | 55 ++++++++++++++++++++++++++++++----------
+ include/erofs/internal.h |  1 +
+ man/dump.erofs.1         | 25 +++++-------------
+ 3 files changed, 49 insertions(+), 32 deletions(-)
 
-diff --git a/fuse/main.c b/fuse/main.c
-index a92f06882b75..255965e30969 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -154,7 +154,7 @@ static int optional_opt_func(void *data, const char *arg, int key,
- 
- 	switch (key) {
- 	case 1:
--		ret = blob_open_ro(arg);
-+		ret = blob_open_ro(arg + sizeof("--device=") - 1);
- 		if (ret)
- 			return -1;
- 		++sbi.extra_devices;
-diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
-index b418227e0ef8..59a47013017f 100644
---- a/include/erofs/blobchunk.h
-+++ b/include/erofs/blobchunk.h
-@@ -13,6 +13,7 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode, erofs_off_t off);
- int erofs_blob_write_chunked_file(struct erofs_inode *inode);
- int erofs_blob_remap(void);
- void erofs_blob_exit(void);
--int erofs_blob_init(void);
-+int erofs_blob_init(const char *blobfile_path);
-+int erofs_generate_devtable(void);
- 
- #endif
-diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index e324d929b0b9..b19d54e1b4f4 100644
---- a/include/erofs/cache.h
-+++ b/include/erofs/cache.h
-@@ -19,6 +19,8 @@ struct erofs_buffer_block;
- #define INODE		2
- /* shared xattrs */
- #define XATTR		3
-+/* device table */
-+#define DEVT		4
- 
- struct erofs_bhops {
- 	bool (*preflush)(struct erofs_buffer_head *bh);
-@@ -56,6 +58,9 @@ static inline const int get_alignsize(int type, int *type_ret)
- 	} else if (type == XATTR) {
- 		*type_ret = META;
- 		return sizeof(struct erofs_xattr_entry);
-+	} else if (type == DEVT) {
-+		*type_ret = META;
-+		return EROFS_DEVT_SLOT_SIZE;
- 	}
- 
- 	if (type == META)
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index a18c88301279..8d459c692dac 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -51,6 +51,7 @@ struct erofs_configure {
- 	/* related arguments for mkfs.erofs */
- 	char *c_img_path;
- 	char *c_src_path;
-+	char *c_blobdev_path;
- 	char *c_compress_hints_file;
- 	char *c_compr_alg_master;
- 	int c_compr_level_master;
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 974c069baa4f..f22a016373ca 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -93,7 +93,10 @@ struct erofs_sb_info {
- 
- 	u32 checksum;
- 	u16 extra_devices;
--	u16 device_id_mask;
-+	union {
-+		u16 devt_slotoff;		/* used for mkfs */
-+		u16 device_id_mask;		/* used for others */
-+	};
+diff --git a/dump/main.c b/dump/main.c
+index d0efe9505317..b7560eca1080 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -70,6 +70,7 @@ static struct erofs_statistics stats;
+ static struct option long_options[] = {
+ 	{"help", no_argument, NULL, 1},
+ 	{"nid", required_argument, NULL, 2},
++	{"device", required_argument, NULL, 3},
+ 	{0, 0, 0, 0},
  };
  
- /* global sbi */
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 08e5cfb287f2..a10ca8cc8750 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -25,6 +25,8 @@ struct erofs_blobchunk {
- static struct hashmap blob_hashmap;
- static FILE *blobfile;
- static erofs_blk_t remapped_base;
-+static bool multidev;
-+static struct erofs_buffer_head *bh_devt;
+@@ -84,6 +85,7 @@ static struct erofsdump_feature feature_lists[] = {
+ 	{ false, EROFS_FEATURE_INCOMPAT_LZ4_0PADDING, "0padding" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER, "big_pcluster" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
++	{ false, EROFS_FEATURE_INCOMPAT_DEVICE_TABLE, "device_table" },
+ };
  
- static struct erofs_blobchunk *erofs_blob_getchunk(int fd,
- 		unsigned int chunksize)
-@@ -103,22 +105,28 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ static int erofs_read_dir(erofs_nid_t nid, erofs_nid_t parent_nid);
+@@ -95,12 +97,13 @@ static void usage(void)
  {
- 	struct erofs_inode_chunk_index idx = {0};
- 	erofs_blk_t extent_start = EROFS_NULL_ADDR;
--	erofs_blk_t extent_end = EROFS_NULL_ADDR;
--	unsigned int dst, src, unit, num_extents;
-+	erofs_blk_t extent_end, extents_blks;
-+	unsigned int dst, src, unit;
- 	bool first_extent = true;
-+	erofs_blk_t base_blkaddr = 0;
- 
- 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
- 		unit = sizeof(struct erofs_inode_chunk_index);
- 	else
- 		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
- 
-+	if (multidev)
-+		idx.device_id = 1;
-+	else
-+		base_blkaddr = remapped_base;
-+
- 	for (dst = src = 0; dst < inode->extent_isize;
- 	     src += sizeof(void *), dst += unit) {
- 		struct erofs_blobchunk *chunk;
- 
- 		chunk = *(void **)(inode->chunkindexes + src);
- 
--		idx.blkaddr = chunk->blkaddr + remapped_base;
-+		idx.blkaddr = base_blkaddr + chunk->blkaddr;
- 		if (extent_start != EROFS_NULL_ADDR &&
- 		    idx.blkaddr == extent_end + 1) {
- 			extent_end = idx.blkaddr;
-@@ -141,11 +149,11 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 	off = roundup(off, unit);
- 
- 	if (extent_start == EROFS_NULL_ADDR)
--		num_extents = 0;
-+		extents_blks = 0;
- 	else
--		num_extents = (extent_end - extent_start) + 1;
--	erofs_droid_blocklist_write_extent(inode, extent_start, num_extents,
--		first_extent, true);
-+		extents_blks = (extent_end - extent_start) + 1;
-+	erofs_droid_blocklist_write_extent(inode, extent_start, extents_blks,
-+					   first_extent, true);
- 
- 	return dev_write(inode->chunkindexes, off, inode->extent_isize);
- }
-@@ -208,6 +216,20 @@ int erofs_blob_remap(void)
- 
- 	fflush(blobfile);
- 	length = ftell(blobfile);
-+	if (multidev) {
-+		struct erofs_deviceslot dis = {
-+			.blocks = erofs_blknr(length),
-+		};
-+
-+		pos_out = erofs_btell(bh_devt, false);
-+		ret = dev_write(&dis, pos_out, sizeof(dis));
-+		if (ret)
-+			return ret;
-+
-+		bh_devt->op = &erofs_drop_directly_bhops;
-+		erofs_bdrop(bh_devt, false);
-+		return 0;
-+	}
- 	bh = erofs_balloc(DATA, length, 0, 0);
- 	if (IS_ERR(bh))
- 		return PTR_ERR(bh);
-@@ -231,16 +253,42 @@ void erofs_blob_exit(void)
- 	hashmap_free(&blob_hashmap, 1);
+ 	fputs("usage: [options] IMAGE\n\n"
+ 	      "Dump erofs layout from IMAGE, and [options] are:\n"
+-	      " -S      show statistic information of the image\n"
+-	      " -V      print the version number of dump.erofs and exit.\n"
+-	      " -e      show extent info (--nid is required)\n"
+-	      " -s      show information about superblock\n"
+-	      " --nid=# show the target inode info of nid #\n"
+-	      " --help  display this help and exit.\n",
++	      " -S              show statistic information of the image\n"
++	      " -V              print the version number of dump.erofs and exit.\n"
++	      " -e              show extent info (--nid is required)\n"
++	      " -s              show information about superblock\n"
++	      " --device=X      specify an extra device to be used together\n"
++	      " --nid=#         show the target inode info of nid #\n"
++	      " --help          display this help and exit.\n",
+ 	      stderr);
  }
  
--int erofs_blob_init(void)
-+int erofs_blob_init(const char *blobfile_path)
+@@ -111,7 +114,7 @@ static void erofsdump_print_version(void)
+ 
+ static int erofsdump_parse_options_cfg(int argc, char **argv)
  {
-+	if (!blobfile_path) {
- #ifdef HAVE_TMPFILE64
--	blobfile = tmpfile64();
-+		blobfile = tmpfile64();
- #else
--	blobfile = tmpfile();
-+		blobfile = tmpfile();
- #endif
-+		multidev = false;
-+	} else {
-+		blobfile = fopen(blobfile_path, "wb");
-+		multidev = true;
-+	}
- 	if (!blobfile)
--		return -ENOMEM;
-+		return -EACCES;
+-	int opt;
++	int opt, err;
  
- 	hashmap_init(&blob_hashmap, erofs_blob_hashmap_cmp, 0);
- 	return 0;
- }
-+
-+int erofs_generate_devtable(void)
-+{
-+	struct erofs_deviceslot dis;
-+
-+	if (!multidev)
-+		return 0;
-+
-+	bh_devt = erofs_balloc(DEVT, sizeof(dis), 0, 0);
-+	if (IS_ERR(bh_devt))
-+		return PTR_ERR(bh_devt);
-+
-+	dis = (struct erofs_deviceslot) {};
-+	erofs_mapbh(bh_devt->block);
-+	bh_devt->op = &erofs_skip_write_bhops;
-+	sbi.devt_slotoff = erofs_btell(bh_devt, false) / EROFS_DEVT_SLOT_SIZE;
-+	sbi.extra_devices = 1;
-+	erofs_sb_set_device_table();
-+	return 0;
-+}
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index c7829c3f1c8f..71a26d88121a 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -66,6 +66,9 @@ like this: "c1b9d5a2-f162-11cf-9ece-0020afc76f16".
- .B \-\-all-root
- Make all files owned by root.
- .TP
-+.BI "\-\-blobdev " file
-+Specify another extra blob device to store chunk-based data.
-+.TP
- .BI "\-\-chunksize " #
- Generate chunk-based files with #-byte chunks.
- .TP
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 2604bf2abd6b..29042c801794 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -47,6 +47,7 @@ static struct option long_options[] = {
- 	{"compress-hints", required_argument, NULL, 10},
- 	{"chunksize", required_argument, NULL, 11},
- 	{"quiet", no_argument, 0, 12},
-+	{"blobdev", required_argument, NULL, 13},
- #ifdef WITH_ANDROID
- 	{"mount-point", required_argument, NULL, 512},
- 	{"product-out", required_argument, NULL, 513},
-@@ -83,6 +84,7 @@ static void usage(void)
- 	      " -UX                   use a given filesystem UUID\n"
- #endif
- 	      " --all-root            make all files owned by root\n"
-+	      " --blobdev=X           specify an extra device X to store chunked data\n"
- 	      " --chunksize=#         generate chunk-based files with #-byte chunks\n"
- 	      " --compress-hints=X    specify a file to configure per-file compression strategy\n"
- 	      " --exclude-path=X      avoid including file X (X = exact literal path)\n"
-@@ -348,6 +350,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 12:
- 			quiet = true;
- 			break;
-+		case 13:
-+			cfg.c_blobdev_path = optarg;
-+			break;
+ 	while ((opt = getopt_long(argc, argv, "SVes",
+ 				  long_options, NULL)) != -1) {
+@@ -139,6 +142,12 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
  		case 1:
  			usage();
  			exit(0);
-@@ -360,6 +365,10 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 	if (optind >= argc)
- 		return -EINVAL;
++		case 3:
++			err = blob_open_ro(optarg);
++			if (err)
++				return err;
++			++sbi.extra_devices;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -423,6 +432,10 @@ static int erofsdump_map_blocks(struct erofs_inode *inode,
  
-+	if (cfg.c_blobdev_path && cfg.c_chunkbits < LOG_BLOCK_SIZE) {
-+		erofs_err("--blobdev must be used together with --chunksize");
-+		return -EINVAL;
-+	}
- 	cfg.c_img_path = strdup(argv[optind++]);
- 	if (!cfg.c_img_path)
- 		return -ENOMEM;
-@@ -401,6 +410,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
- 		.feature_compat = cpu_to_le32(sbi.feature_compat &
- 					      ~EROFS_FEATURE_COMPAT_SB_CHKSUM),
-+		.extra_devices = cpu_to_le16(sbi.extra_devices),
-+		.devt_slotoff = cpu_to_le16(sbi.devt_slotoff),
- 	};
- 	const unsigned int sb_blksize =
- 		round_up(EROFS_SUPER_END, EROFS_BLKSIZ);
-@@ -549,7 +560,7 @@ int main(int argc, char **argv)
+ static void erofsdump_show_fileinfo(bool show_extent)
+ {
++	const char *ext_fmt[] = {
++		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "\n",
++		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "  # device %u\n"
++	};
+ 	int err, i;
+ 	erofs_off_t size;
+ 	u16 access_mode;
+@@ -482,16 +495,29 @@ static void erofsdump_show_fileinfo(bool show_extent)
+ 
+ 	fprintf(stdout, "\n Ext:   logical offset   |  length :     physical offset    |  length \n");
+ 	while (map.m_la < inode.i_size) {
++		struct erofs_map_dev mdev;
++
+ 		err = erofsdump_map_blocks(&inode, &map,
+ 				EROFS_GET_BLOCKS_FIEMAP);
+ 		if (err) {
+-			erofs_err("get file blocks range failed");
++			erofs_err("failed to get file blocks range");
+ 			return;
+ 		}
+ 
+-		fprintf(stdout, "%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "\n",
+-			extent_count++, map.m_la, map.m_la + map.m_llen, map.m_llen,
+-			map.m_pa, map.m_pa + map.m_plen, map.m_plen);
++		mdev = (struct erofs_map_dev) {
++			.m_deviceid = map.m_deviceid,
++			.m_pa = map.m_pa,
++		};
++		err = erofs_map_dev(&sbi, &mdev);
++		if (err) {
++			erofs_err("failed to map device");
++			return;
++		}
++
++		fprintf(stdout, ext_fmt[!!mdev.m_deviceid], extent_count++,
++			map.m_la, map.m_la + map.m_llen, map.m_llen,
++			mdev.m_pa, mdev.m_pa + map.m_plen, map.m_plen,
++			mdev.m_deviceid);
+ 		map.m_la += map.m_llen;
+ 	}
+ 	fprintf(stdout, "%s: %d extents found\n", path, extent_count);
+@@ -658,7 +684,7 @@ int main(int argc, char **argv)
+ 	err = erofs_read_superblock();
+ 	if (err) {
+ 		erofs_err("failed to read superblock");
+-		goto exit;
++		goto exit_dev_close;
  	}
  
- 	if (cfg.c_chunkbits) {
--		err = erofs_blob_init();
-+		err = erofs_blob_init(cfg.c_blobdev_path);
- 		if (err)
- 			return 1;
- 	}
-@@ -626,6 +637,12 @@ int main(int argc, char **argv)
- 		goto exit;
+ 	if (!dumpcfg.totalshow) {
+@@ -673,13 +699,16 @@ int main(int argc, char **argv)
+ 
+ 	if (dumpcfg.show_extent && !dumpcfg.show_inode) {
+ 		usage();
+-		goto exit;
++		goto exit_dev_close;
  	}
  
-+	err = erofs_generate_devtable();
-+	if (err) {
-+		erofs_err("Failed to generate device table: %s",
-+			  erofs_strerror(err));
-+		goto exit;
-+	}
- #ifdef HAVE_LIBUUID
- 	uuid_unparse_lower(sbi.uuid, uuid_str);
- #endif
+ 	if (dumpcfg.show_inode)
+ 		erofsdump_show_fileinfo(dumpcfg.show_extent);
+ 
++exit_dev_close:
++	dev_close();
+ exit:
++	blob_closeall();
+ 	erofs_exit_configure();
+ 	return err;
+ }
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index f22a016373ca..93e05bbc8271 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -300,6 +300,7 @@ int erofs_pread(struct erofs_inode *inode, char *buf,
+ 		erofs_off_t count, erofs_off_t offset);
+ int erofs_map_blocks(struct erofs_inode *inode,
+ 		struct erofs_map_blocks *map, int flags);
++int erofs_map_dev(struct erofs_sb_info *sbi, struct erofs_map_dev *map);
+ /* zmap.c */
+ int z_erofs_fill_inode(struct erofs_inode *vi);
+ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+diff --git a/man/dump.erofs.1 b/man/dump.erofs.1
+index 8233c89cdeb0..8efb161b65f1 100644
+--- a/man/dump.erofs.1
++++ b/man/dump.erofs.1
+@@ -5,24 +5,7 @@
+ dump.erofs \- retrieve directory and file entries, show specific file
+ or overall disk statistics information from an EROFS-formatted image.
+ .SH SYNOPSIS
+-.B dump.erofs
+-[
+-.B \--nid
+-.I inode NID
+-]
+-[
+-.B \-e
+-]
+-[
+-.B \-s
+-]
+-[
+-.B \-S
+-]
+-[
+-.B \-V
+-]
+-.I IMAGE
++\fBdump.erofs\fR [\fIOPTIONS\fR] \fIIMAGE\fR
+ .SH DESCRIPTION
+ .B dump.erofs
+ is used to retrieve erofs metadata from \fIIMAGE\fP and demonstrate
+@@ -32,7 +15,11 @@ is used to retrieve erofs metadata from \fIIMAGE\fP and demonstrate
+ 4) file extent information of the given inode NID.
+ .SH OPTIONS
+ .TP
+-.BI \--nid " inode NID"
++.BI "\-\-device=" path
++Specify an extra device to be used together.
++You may give multiple `--device' options in the correct order.
++.TP
++.BI "\-\-nid=" NID
+ Specify an inode NID in order to print its file information.
+ .TP
+ .BI \-e
 -- 
 2.24.4
 
