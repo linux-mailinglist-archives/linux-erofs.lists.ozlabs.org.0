@@ -1,52 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D63E454BFF
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Nov 2021 18:31:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F21F6454C79
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Nov 2021 18:49:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HvVMq2k6jz2yb7
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Nov 2021 04:31:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HvVmQ6Wnnz3f1r
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Nov 2021 04:49:10 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=REgDCmlv;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=Pv9ANnOg;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=djwong@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::633;
+ helo=mail-pl1-x633.google.com; envelope-from=dan.j.williams@intel.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=REgDCmlv; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=intel-com.20210112.gappssmtp.com
+ header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
+ header.s=20210112 header.b=Pv9ANnOg; dkim-atps=neutral
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com
+ [IPv6:2607:f8b0:4864:20::633])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HvVMl44WLz2yXc
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Nov 2021 04:31:15 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A92261B9F;
- Wed, 17 Nov 2021 17:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1637170271;
- bh=BiRKQ/d3nVUFjcnKBhqKmlNar5IqbY6hjBQWP//4lO0=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=REgDCmlv/GsdUGBCUzpgY0SLzbRa7hiC9XAkokcnw8ztdTAZXw6loYohaUrV7/92E
- P4bRiUjDuNTcTzI0vzrQ96agKc9CmHmCrcXaCZROvQtNhvQwR3t0TBYcHApAjclXSM
- RwG3+khdqhamkmbTKDMPmHpQzbrMwArDRtSrCF9cFjT4inXLa8SkeN78UiQ5CxL+yo
- NbLu0pV80tIJ7V1OH4OqygjECgeNMnPLK3PGbMD+HBNd52+pNQAUAMoBe5BtrmSENT
- wX6MAEmgIfeFftiBn3U9SsdpvtrK2RpoPT6ry6Uad/3tdXf4Om38cNgzsujDy0Bu6U
- p63F7wtEJbVHw==
-Date: Wed, 17 Nov 2021 09:31:11 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 07/29] xfs: factor out a xfs_setup_dax_always helper
-Message-ID: <20211117173111.GZ24307@magnolia>
-References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-8-hch@lst.de>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HvVfY27qmz3cNV
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Nov 2021 04:44:03 +1100 (AEDT)
+Received: by mail-pl1-x633.google.com with SMTP id p18so2783566plf.13
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Nov 2021 09:44:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=intel-com.20210112.gappssmtp.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=qvHf9aM+bFVV8YG4MJi5X6jszYRFNPnvYw8P8XxAMSs=;
+ b=Pv9ANnOgMM3OWe87npnRfFAHy06jY7erPMdRcRc3VaKoizlrQvir6ceQnBEYeLyHYq
+ r090jiPNw0sW2/Hep475ohjoYTOQRdpvhHcth1Xy44B2FrZqXQwnGcHV2wnXbXiiNy2O
+ MDFnhNTzB1g4/CDk+YjqQXYVRalwhzm8GBHuQpfxBToXDBsfgLgdgSQoTQw5N7NkHGFW
+ TO5GeE55hpjrU15s7LrDdGRZzL745vjZFcejg91qo0BT5VlwUF4cAT1X4T2RsJHhvJDD
+ yt9A6syUQNrss5NuJD0lDiesCY4CCjNhydNUyUTp9hI7U9JLuZ9oCU9X4sETOzbxu27f
+ +aeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=qvHf9aM+bFVV8YG4MJi5X6jszYRFNPnvYw8P8XxAMSs=;
+ b=Vkl5fGWyLCADkgTMZpCoV8gLEN8vIVN33zlXOXz9MvxSZ7ihF60YCllV4rv3gFFWMp
+ GDUSGE3nrgmJwSLNjdiuDKcP8pN32ChcGxsDJZxcJ+Y4sInNJvUDcJfpPKvQVuzy0xu9
+ xs3x1n2S1GRsxHN6QYh8SxAAkD+B4OSKSlYC+D/i9gHAqxRnj5SoacXDsEkogl9e6+Zd
+ QErbRe5eCuXVfpVfdcRLpixUfFBKAk7hJu9T7lBGq6sqbL/KIiVKKMHT2Mft4sGMNMXd
+ gDQDAEp6SG3mbzFMqQTa1yyUuOsyyqCby0MW8vYGwJLk8CWobkdgJZgoKc9hc4i9OGls
+ erZg==
+X-Gm-Message-State: AOAM533VC21cf4NlD/cuWbfy4NnRWznpansrzFFnz+5uWJXqqVzZfyvZ
+ me3+84I/GBg+BaKSr08zxiKQ/eXmr2pBPaUiVZdPBQ==
+X-Google-Smtp-Source: ABdhPJzkkUh8z9sNK4035DW8QI/H+P4iSKXjlSdI0PBBNtw2VKYOtUcKXKOrARUi3RsvsZHwUrgnG1t18LSvWsJCfmc=
+X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id
+ i11-20020a1709026acb00b0014276c3d35fmr57313687plt.89.1637171039968; Wed, 17
+ Nov 2021 09:43:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211109083309.584081-8-hch@lst.de>
+References: <20211109083309.584081-1-hch@lst.de>
+ <20211109083309.584081-4-hch@lst.de>
+In-Reply-To: <20211109083309.584081-4-hch@lst.de>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Wed, 17 Nov 2021 09:43:46 -0800
+Message-ID: <CAPcyv4hzWBZfex=C2_+nNLFKODw8+E9NSgK50COqE748cfEKTg@mail.gmail.com>
+Subject: Re: [PATCH 03/29] dax: remove CONFIG_DAX_DRIVER
+To: Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,97 +77,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nvdimm@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>,
- linux-s390@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- virtualization@lists.linux-foundation.org, linux-xfs@vger.kernel.org,
- dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
- Dan Williams <dan.j.williams@intel.com>, linux-ext4@vger.kernel.org,
- Ira Weiny <ira.weiny@intel.com>
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ device-mapper development <dm-devel@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Nov 09, 2021 at 09:32:47AM +0100, Christoph Hellwig wrote:
-> Factor out another DAX setup helper to simplify future changes.  Also
-> move the experimental warning after the checks to not clutter the log
-> too much if the setup failed.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Tue, Nov 9, 2021 at 12:33 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> CONFIG_DAX_DRIVER only selects CONFIG_DAX now, so remove it.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-
---D
-
-> ---
->  fs/xfs/xfs_super.c | 47 +++++++++++++++++++++++++++-------------------
->  1 file changed, 28 insertions(+), 19 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index e21459f9923a8..875fd3151d6c9 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -340,6 +340,32 @@ xfs_buftarg_is_dax(
->  			bdev_nr_sectors(bt->bt_bdev));
->  }
->  
-> +static int
-> +xfs_setup_dax_always(
-> +	struct xfs_mount	*mp)
-> +{
-> +	struct super_block	*sb = mp->m_super;
-> +
-> +	if (!xfs_buftarg_is_dax(sb, mp->m_ddev_targp) &&
-> +	   (!mp->m_rtdev_targp || !xfs_buftarg_is_dax(sb, mp->m_rtdev_targp))) {
-> +		xfs_alert(mp,
-> +			"DAX unsupported by block device. Turning off DAX.");
-> +		goto disable_dax;
-> +	}
-> +
-> +	if (xfs_has_reflink(mp)) {
-> +		xfs_alert(mp, "DAX and reflink cannot be used together!");
-> +		return -EINVAL;
-> +	}
-> +
-> +	xfs_warn(mp, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> +	return 0;
-> +
-> +disable_dax:
-> +	xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
-> +	return 0;
-> +}
-> +
->  STATIC int
->  xfs_blkdev_get(
->  	xfs_mount_t		*mp,
-> @@ -1593,26 +1619,9 @@ xfs_fs_fill_super(
->  		sb->s_flags |= SB_I_VERSION;
->  
->  	if (xfs_has_dax_always(mp)) {
-> -		bool rtdev_is_dax = false, datadev_is_dax;
-> -
-> -		xfs_warn(mp,
-> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> -
-> -		datadev_is_dax = xfs_buftarg_is_dax(sb, mp->m_ddev_targp);
-> -		if (mp->m_rtdev_targp)
-> -			rtdev_is_dax = xfs_buftarg_is_dax(sb,
-> -						mp->m_rtdev_targp);
-> -		if (!rtdev_is_dax && !datadev_is_dax) {
-> -			xfs_alert(mp,
-> -			"DAX unsupported by block device. Turning off DAX.");
-> -			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
-> -		}
-> -		if (xfs_has_reflink(mp)) {
-> -			xfs_alert(mp,
-> -		"DAX and reflink cannot be used together!");
-> -			error = -EINVAL;
-> +		error = xfs_setup_dax_always(mp);
-> +		if (error)
->  			goto out_filestream_unmount;
-> -		}
->  	}
->  
->  	if (xfs_has_discard(mp)) {
-> -- 
-> 2.30.2
-> 
+Applied.
