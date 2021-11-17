@@ -1,41 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84314452E5B
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 10:50:08 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52D4B453DF6
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Nov 2021 02:58:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HthB6258yz2xvs
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Nov 2021 20:50:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hv5gR1rJkz2yPj
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Nov 2021 12:58:27 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=au1tqJVK;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
+ envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=au1tqJVK; 
+ dkim-atps=neutral
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HthB061HGz2xCt
- for <linux-erofs@lists.ozlabs.org>; Tue, 16 Nov 2021 20:49:59 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R951e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=8; SR=0; TI=SMTPD_---0UwqPg0-_1637056181; 
-Received: from
- e18g09479.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0UwqPg0-_1637056181) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 16 Nov 2021 17:49:54 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hv5gJ3XyMz2yKF
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Nov 2021 12:58:20 +1100 (AEDT)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 483A861507;
+ Wed, 17 Nov 2021 01:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1637114297;
+ bh=PRJryqcWA510OeZ9+pEAM5ITo2Z6coa+TrWWWXs+4x8=;
+ h=From:To:Cc:Subject:Date:From;
+ b=au1tqJVKH/AaO289/+g0UP5TyRkfU2QG2/4LW2ZBu5rMa/8d3qbhKXWQruXsxftWQ
+ ijMzhC0ZYcCNslcA4Ej9q15HwPiQeqV7Q6B9/xB1tv6OIJ8qOVESaVQu20LUwGxs3c
+ CNP01GuqkzniJo24Az5KucaUpKzv6cacLdfzypFCBh8WSHSLnQ1JfkmIv63CFpi70R
+ rHRG2HZnsRkakVgTpOEEmc8dZnkGukXdkp1e1s+PbswtteoRnk5YTcb8tJFLRfFJpw
+ wrsCUpPUFtF5Sv0fv9rPgooxr8Rs1S25Z4Rv0warBptGxLtTavcTHvM2mS5+W0movu
+ T0Vj/0u3GM1ZQ==
+From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 6/6] erofs-utils: get compression algorithms directly on
- mapping
-Date: Tue, 16 Nov 2021 17:49:39 +0800
-Message-Id: <20211116094939.32246-7-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20211116094939.32246-1-hsiangkao@linux.alibaba.com>
-References: <20211116094939.32246-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/2] erofs-utils: mkfs: enable block map chunk format
+Date: Wed, 17 Nov 2021 09:57:56 +0800
+Message-Id: <20211117015757.3323-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -49,228 +55,150 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yan Song <imeoer@linux.alibaba.com>, Peng Tao <tao.peng@linux.alibaba.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Liu Bo <bo.liu@linux.alibaba.com>,
- Changwei Ge <chge@linux.alibaba.com>, Gao Xiang <hsiangkao@linux.alibaba.com>,
- Liu Jiang <gerry@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Keep in sync with the latest kernel
-commit 8f89926290c4 ("erofs: get compression algorithms directly on mapping")
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-And it also fixes fsck MicroLZMA support, btw.
+Use 4-byte block map format by default unless a blob device is
+given or chunk index format is forcely specified.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fsck/main.c                |  8 ++------
- include/erofs/decompress.h |  5 -----
- include/erofs/internal.h   | 12 +++++++++---
- lib/data.c                 | 10 ++--------
- lib/zmap.c                 | 19 ++++++++++---------
- 5 files changed, 23 insertions(+), 31 deletions(-)
+ include/erofs/config.h |  8 +++++++-
+ lib/blobchunk.c        | 12 +++++++-----
+ lib/inode.c            |  5 ++++-
+ man/mkfs.erofs.1       |  6 ++++++
+ mkfs/main.c            | 20 ++++++++++++++++++++
+ 5 files changed, 44 insertions(+), 7 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 7bee5605b9df..aefa881f740a 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -287,7 +287,7 @@ static int verify_compressed_inode(struct erofs_inode *inode)
- 	int ret = 0;
- 	u64 pchunk_len = 0;
- 	erofs_off_t end = inode->i_size;
--	unsigned int algorithmformat, raw_size = 0, buffer_size = 0;
-+	unsigned int raw_size = 0, buffer_size = 0;
- 	char *raw = NULL, *buffer = NULL;
- 
- 	while (end > 0) {
-@@ -310,10 +310,6 @@ static int verify_compressed_inode(struct erofs_inode *inode)
- 		if (!fsckcfg.check_decomp || !(map.m_flags & EROFS_MAP_MAPPED))
- 			continue;
- 
--		algorithmformat = map.m_flags & EROFS_MAP_ZIPPED ?
--						Z_EROFS_COMPRESSION_LZ4 :
--						Z_EROFS_COMPRESSION_SHIFTED;
--
- 		if (map.m_plen > raw_size) {
- 			raw_size = map.m_plen;
- 			raw = realloc(raw, raw_size);
-@@ -350,7 +346,7 @@ static int verify_compressed_inode(struct erofs_inode *inode)
- 					.decodedskip = 0,
- 					.inputsize = map.m_plen,
- 					.decodedlength = map.m_llen,
--					.alg = algorithmformat,
-+					.alg = map.m_algorithmformat,
- 					.partial_decoding = 0
- 					 });
- 
-diff --git a/include/erofs/decompress.h b/include/erofs/decompress.h
-index 0ba2b08daa73..3d0d9633865d 100644
---- a/include/erofs/decompress.h
-+++ b/include/erofs/decompress.h
-@@ -8,11 +8,6 @@
- 
- #include "internal.h"
- 
--enum {
--	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
--	Z_EROFS_COMPRESSION_RUNTIME_MAX
--};
--
- struct z_erofs_decompress_req {
- 	char *in, *out;
- 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 93e05bbc8271..666d1f2df466 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -252,7 +252,7 @@ static inline const char *erofs_strerror(int err)
- enum {
- 	BH_Meta,
- 	BH_Mapped,
--	BH_Zipped,
-+	BH_Encoded,
- 	BH_FullMapped,
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 8d459c692dac..2040dc6ff154 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -27,6 +27,11 @@ enum {
+ 	FORCE_INODE_EXTENDED,
  };
- 
-@@ -260,8 +260,8 @@ enum {
- #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
- /* Located in metadata (could be copied from bd_inode) */
- #define EROFS_MAP_META		(1 << BH_Meta)
--/* The extent has been compressed */
--#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The extent is encoded */
-+#define EROFS_MAP_ENCODED	(1 << BH_Encoded)
- /* The length of extent is full */
- #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
- 
-@@ -272,6 +272,7 @@ struct erofs_map_blocks {
- 	u64 m_plen, m_llen;
- 
- 	unsigned short m_deviceid;
-+	char m_algorithmformat;
- 	unsigned int m_flags;
- 	erofs_blk_t index;
- };
-@@ -282,6 +283,11 @@ struct erofs_map_blocks {
-  */
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
  
 +enum {
-+	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-+	Z_EROFS_COMPRESSION_RUNTIME_MAX
++	FORCE_INODE_BLOCK_MAP = 1,
++	FORCE_INODE_CHUNK_INDEXES,
 +};
 +
- struct erofs_map_dev {
- 	erofs_off_t m_pa;
- 	unsigned int m_deviceid;
-diff --git a/lib/data.c b/lib/data.c
-index 136c0d97ab45..27710f941615 100644
---- a/lib/data.c
-+++ b/lib/data.c
-@@ -226,12 +226,11 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
- 	};
- 	struct erofs_map_dev mdev;
- 	bool partial;
--	unsigned int algorithmformat, bufsize;
-+	unsigned int bufsize = 0;
- 	char *raw = NULL;
- 	int ret = 0;
+ enum {
+ 	TIMESTAMP_NONE,
+ 	TIMESTAMP_FIXED,
+@@ -55,7 +60,8 @@ struct erofs_configure {
+ 	char *c_compress_hints_file;
+ 	char *c_compr_alg_master;
+ 	int c_compr_level_master;
+-	int c_force_inodeversion;
++	char c_force_inodeversion;
++	char c_force_chunkformat;
+ 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
+ 	int c_inline_xattr_tolerance;
  
- 	end = offset + size;
--	bufsize = 0;
- 	while (end > offset) {
- 		map.m_la = end - 1;
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index a10ca8cc8750..5cbb8315b277 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -110,16 +110,18 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 	bool first_extent = true;
+ 	erofs_blk_t base_blkaddr = 0;
  
-@@ -288,18 +287,13 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
- 		if (ret < 0)
- 			break;
- 
--		if (map.m_flags & EROFS_MAP_ZIPPED)
--			algorithmformat = inode->z_algorithmtype[0];
--		else
--			algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
--
- 		ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
- 					.in = raw,
- 					.out = buffer + end - offset,
- 					.decodedskip = skip,
- 					.inputsize = map.m_plen,
- 					.decodedlength = length,
--					.alg = algorithmformat,
-+					.alg = map.m_algorithmformat,
- 					.partial_decoding = partial
- 					 });
- 		if (ret < 0)
-diff --git a/lib/zmap.c b/lib/zmap.c
-index 9dd0c7633a45..3715c47e3647 100644
---- a/lib/zmap.c
-+++ b/lib/zmap.c
-@@ -72,7 +72,7 @@ struct z_erofs_maprecorder {
- 
- 	unsigned long lcn;
- 	/* compression extent information gathered */
--	u8  type;
-+	u8  type, headtype;
- 	u16 clusterofs;
- 	u16 delta[2];
- 	erofs_blk_t pblk, compressedlcs;
-@@ -390,9 +390,8 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 		}
- 		return z_erofs_extent_lookback(m, m->delta[0]);
- 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		map->m_flags &= ~EROFS_MAP_ZIPPED;
--		/* fallthrough */
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		m->headtype = m->type;
- 		map->m_la = (lcn << lclusterbits) | m->clusterofs;
- 		break;
- 	default:
-@@ -415,7 +414,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 
- 	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
- 		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
--	if (!(map->m_flags & EROFS_MAP_ZIPPED) ||
-+	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
- 		map->m_plen = 1 << lclusterbits;
- 		return 0;
-@@ -548,15 +547,13 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	if (err)
- 		goto out;
- 
--	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
-+	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
- 	end = (m.lcn + 1ULL) << lclusterbits;
- 	switch (m.type) {
- 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		if (endoff >= m.clusterofs)
--			map->m_flags &= ~EROFS_MAP_ZIPPED;
--		/* fallthrough */
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
- 		if (endoff >= m.clusterofs) {
-+			m.headtype = m.type;
- 			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
- 			break;
- 		}
-@@ -586,12 +583,16 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 
- 	map->m_llen = end - map->m_la;
- 	map->m_pa = blknr_to_addr(m.pblk);
--	map->m_flags |= EROFS_MAP_MAPPED;
- 
- 	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
- 	if (err)
- 		goto out;
- 
-+	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
-+		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
-+	else
-+		map->m_algorithmformat = vi->z_algorithmtype[0];
++	if (multidev) {
++		idx.device_id = 1;
++		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
++	} else {
++		base_blkaddr = remapped_base;
++	}
 +
- 	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
- 		err = z_erofs_get_extent_decompressedlen(&m);
- 		if (!err)
+ 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(struct erofs_inode_chunk_index);
+ 	else
+ 		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
+ 
+-	if (multidev)
+-		idx.device_id = 1;
+-	else
+-		base_blkaddr = remapped_base;
+-
+ 	for (dst = src = 0; dst < inode->extent_isize;
+ 	     src += sizeof(void *), dst += unit) {
+ 		struct erofs_blobchunk *chunk;
+diff --git a/lib/inode.c b/lib/inode.c
+index 855a0383f31e..5cbfc780e45f 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -390,7 +390,10 @@ int erofs_write_file(struct erofs_inode *inode)
+ 
+ 	if (cfg.c_chunkbits) {
+ 		inode->u.chunkbits = cfg.c_chunkbits;
+-		inode->u.chunkformat = EROFS_CHUNK_FORMAT_INDEXES;
++		/* chunk indexes when explicitly specified */
++		inode->u.chunkformat = 0;
++		if (cfg.c_force_chunkformat == FORCE_INODE_CHUNK_INDEXES)
++			inode->u.chunkformat = EROFS_CHUNK_FORMAT_INDEXES;
+ 		return erofs_blob_write_chunked_file(inode);
+ 	}
+ 
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 71a26d88121a..f2e7d690c215 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -51,6 +51,12 @@ Forcely generate compact inodes (32-byte inodes) to output.
+ .TP
+ .BI force-inode-extended
+ Forcely generate extended inodes (64-byte inodes) to output.
++.TP
++.BI force-inode-blockmap
++Forcely generate inode chunk format in 4-byte block address array.
++.TP
++.BI force-chunk-indexes
++Forcely generate inode chunk format in 8-byte chunk indexes (with device id).
+ .RE
+ .TP
+ .BI "\-T " #
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 29042c801794..58a64411b868 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -174,6 +174,18 @@ static int parse_extended_opts(const char *opts)
+ 				return -EINVAL;
+ 			cfg.c_noinline_data = true;
+ 		}
++
++		if (MATCH_EXTENTED_OPT("force-inode-blockmap", token, keylen)) {
++			if (vallen)
++				return -EINVAL;
++			cfg.c_force_chunkformat = FORCE_INODE_BLOCK_MAP;
++		}
++
++		if (MATCH_EXTENTED_OPT("force-chunk-indexes", token, keylen)) {
++			if (vallen)
++				return -EINVAL;
++			cfg.c_force_chunkformat = FORCE_INODE_CHUNK_INDEXES;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -369,6 +381,14 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		erofs_err("--blobdev must be used together with --chunksize");
+ 		return -EINVAL;
+ 	}
++
++	/* TODO: can be implemented with (deviceslot) mapped_blkaddr */
++	if (cfg.c_blobdev_path &&
++	    cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
++		erofs_err("--blobdev cannot work with block map currently");
++		return -EINVAL;
++	}
++
+ 	cfg.c_img_path = strdup(argv[optind++]);
+ 	if (!cfg.c_img_path)
+ 		return -ENOMEM;
 -- 
-2.24.4
+2.20.1
 
