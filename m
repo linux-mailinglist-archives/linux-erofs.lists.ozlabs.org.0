@@ -1,72 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A0A8454C7A
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Nov 2021 18:49:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8383D4553A0
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Nov 2021 05:02:03 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HvVmT3LhQz3dbW
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Nov 2021 04:49:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HvmMY2kF1z2ynQ
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Nov 2021 15:02:01 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=AhgC+2wj;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Y7hqEDFb;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::431;
- helo=mail-pf1-x431.google.com; envelope-from=dan.j.williams@intel.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1032;
+ helo=mail-pj1-x1032.google.com; envelope-from=zbestahu@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=intel-com.20210112.gappssmtp.com
- header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=AhgC+2wj; dkim-atps=neutral
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com
- [IPv6:2607:f8b0:4864:20::431])
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=Y7hqEDFb; dkim-atps=neutral
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com
+ [IPv6:2607:f8b0:4864:20::1032])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HvVgF1VD0z3cRs
- for <linux-erofs@lists.ozlabs.org>; Thu, 18 Nov 2021 04:44:41 +1100 (AEDT)
-Received: by mail-pf1-x431.google.com with SMTP id m14so3349827pfc.9
- for <linux-erofs@lists.ozlabs.org>; Wed, 17 Nov 2021 09:44:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=intel-com.20210112.gappssmtp.com; s=20210112;
- h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=+uFdsysPKBJg8+GUKCjjrR+fu42d0RKVIlJ5p5O3Gqw=;
- b=AhgC+2wjkr5d9yDLbCved4jaDjwAVOHHegPWWTmEA1k+UoMOMYjm4jdejJ0FNzHR6s
- c5CZZTpF5RcDbQWqOsFLQ+5n3WzHTDlujVf/JCPu7XZBET18Z8qLE0BanPT0rnfK5Zu9
- KyIvCY0B/udnAqmbfZZUOtpDWwYOaZvFxMVOaWJLK5nqRMnfBvKrqK4xPQYQJSiLOVa8
- 0rlfBALzCZrz1lMqwQv6qq3GRi5Jd7hsx8WgDG14wOcf8TDRiDnZ6oCTTfiQ53aT4YRB
- Vf3FTTZZnWUbXVIHLEPwTQXniddBnZWJsqT6SgaoHFJDwC1BLNE6VpCGlp3JGhptmlcC
- V9cw==
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HvmMQ0lJkz2yKF
+ for <linux-erofs@lists.ozlabs.org>; Thu, 18 Nov 2021 15:01:51 +1100 (AEDT)
+Received: by mail-pj1-x1032.google.com with SMTP id
+ y14-20020a17090a2b4e00b001a5824f4918so7049406pjc.4
+ for <linux-erofs@lists.ozlabs.org>; Wed, 17 Nov 2021 20:01:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=date:from:to:cc:subject:message-id:in-reply-to:references
+ :mime-version:content-transfer-encoding;
+ bh=UxMbby/NVWZFt2XXr12pC+bZhXoF6i02LW0x3PPfYa8=;
+ b=Y7hqEDFbTsL8hZGvSLLN0GP0Q7Va+ztEQXZqWHEWDtV0tNSUaoIgO9dUGkhhIWjZAf
+ aGN/jitA+3d5mDfvztXLxW1UIfCZS/12QwlwEXkf+Huvpq54q2kM46KF4yxA8+7pBHmb
+ JftOGrAH7Teypu5e8pLW3cHc43pC+1OvltS0DoJkBH89qIbauAgB4Ore3US1dQxzruXH
+ bMHVVgBvCevLYQAR9CvJDns/wEe4P6+MS+Y4D4YrqNpk2g5Bsi2Jcqb3RMfR2wi9AINk
+ tAXN6joU3pQUaxMeDv8oQKDOSVoCaKCSdg9azYe7SBbMqc/ux/7ysw1cGXNWv13k8H0P
+ NS0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:mime-version:references:in-reply-to:from:date
- :message-id:subject:to:cc;
- bh=+uFdsysPKBJg8+GUKCjjrR+fu42d0RKVIlJ5p5O3Gqw=;
- b=GTjPDiMvxtxM6FAcMI4Jcp9amdz6m1lDcOucrFf/t7n04WuLspeKYUbxuZ6ZKM6DzG
- iOq1KUMHr6dnbXUS7eARSYVGXZG7NojOL/VgUECYlbgX490BQJqlRgwDgBLt+lPlYrFw
- obptxp6UKIiY21VbdDbWVS0WthrKFpr0QxgPLzCyYm7ilENtwU6RTpEKaoe8n3lYKMli
- T7LlWmMN+PeCOefDaFhFmPQkJnmXBgdQ4APOjUtS3U2sord8reE/Tvgn4mNJbm5YSSSl
- bbTRv86pnliiI9wlDxK8wNwN8QdZOseuTlIIWuJ657oN80jFwQwQttXXjQpIgD3PZY3E
- H1Gg==
-X-Gm-Message-State: AOAM530OmD+OHbiGNVXmV5kvTHB56DtvsuOwpymnX+KPPNNqw1d+3BFy
- W1UInhPobZ1nXgvaTSvWie9UQEclqQkXHchJtlwBRQ==
-X-Google-Smtp-Source: ABdhPJxiiB8Ak1RjXFinVMdC+8Tb3rrtEkfJ8k6NlxRhm42dcgWCdDR0kkUYUFwrF8G9DBBrfo1Xmvo4+uUGPt+QmE4=
-X-Received: by 2002:aa7:8d0a:0:b0:4a2:82d7:1695 with SMTP id
- j10-20020aa78d0a000000b004a282d71695mr37260918pfe.86.1637171078758; Wed, 17
- Nov 2021 09:44:38 -0800 (PST)
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+ :references:mime-version:content-transfer-encoding;
+ bh=UxMbby/NVWZFt2XXr12pC+bZhXoF6i02LW0x3PPfYa8=;
+ b=ZP30E9S6jC++AYfTxbnY1PLNRWxJ8Saoq0pPKCXgAlusIeybo5ypK9GBHlL8Wu74vK
+ YsUswChRH7RMf/qnrv14zmqpVmupYoCoTCwCd6jLNmWQyK5V6Pl1aQhK8D4QvTWQfY6K
+ iQzm42T18JA6IVHhlIyeD5udMErlZuPoKGKrHR5b9MHDgUp1yXj+60kASbpGYlI5zG3B
+ 8LG9NNZb5MbqNecB5eT7/LS6+OCVfNOWE7kmaalxi8nBQKBTss6lGjvQoJqjbHBbMGlj
+ rb+MwkwUyuDaBJUFoPGL9MuxukUa/PbncqqNIWxqY/PQxzRjRbLZq+Ta3txsvOmGyUeS
+ Pb9g==
+X-Gm-Message-State: AOAM531Dj4itjvJu71yn73/oKcrVA18wpHwHA3qez4AXV/D52dOQUrUE
+ fK0CrKKqdR5KQLllgzCaB70=
+X-Google-Smtp-Source: ABdhPJz7lmQYo3LunGNGd9aujRAL57UazthT4WJxZbFeKg7ta0cdDWx6WjbQvM9j51Z9MxN8waqUSg==
+X-Received: by 2002:a17:90b:4f85:: with SMTP id
+ qe5mr6565707pjb.167.1637208108747; 
+ Wed, 17 Nov 2021 20:01:48 -0800 (PST)
+Received: from localhost ([103.220.76.197])
+ by smtp.gmail.com with ESMTPSA id h64sm1111412pfe.128.2021.11.17.20.01.47
+ (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+ Wed, 17 Nov 2021 20:01:48 -0800 (PST)
+Date: Thu, 18 Nov 2021 11:59:26 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH 2/2] erofs-utils: manpage: document `noinline_data'
+ extended option
+Message-ID: <20211118115926.000004a6.zbestahu@gmail.com>
+In-Reply-To: <20211117015757.3323-2-xiang@kernel.org>
+References: <20211117015757.3323-1-xiang@kernel.org>
+ <20211117015757.3323-2-xiang@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-2-hch@lst.de>
-In-Reply-To: <20211109083309.584081-2-hch@lst.de>
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Wed, 17 Nov 2021 09:44:25 -0800
-Message-ID: <CAPcyv4ijKTcABMs2tZEuPWo1WDOux+4XWN=DNF5v8SrQRSbfDg@mail.gmail.com>
-Subject: Re: [PATCH 01/29] nvdimm/pmem: move dax_attribute_group from dax to
- pmem
-To: Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,27 +84,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
- linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
- virtualization@lists.linux-foundation.org,
- linux-xfs <linux-xfs@vger.kernel.org>,
- device-mapper development <dm-devel@redhat.com>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Nov 9, 2021 at 12:33 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> dax_attribute_group is only used by the pmem driver, and can avoid the
-> completely pointless lookup by the disk name if moved there.  This
-> leaves just a single caller of dax_get_by_host, so move dax_get_by_host
-> into the same ifdef block as that caller.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Link: https://lore.kernel.org/r/20210922173431.2454024-3-hch@lst.de
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Wed, 17 Nov 2021 09:57:57 +0800
+Gao Xiang <xiang@kernel.org> wrote:
 
-This one already made v5.16-rc1.
+> From: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
+> Add documentation for `noinline_data' as well.
+> 
+> Fixes: 60549d52c3b6 ("erofs-utils: add "noinline_data" extended option")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  man/mkfs.erofs.1 | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+> index f2e7d690c215..9c7788efbfec 100644
+> --- a/man/mkfs.erofs.1
+> +++ b/man/mkfs.erofs.1
+> @@ -52,6 +52,9 @@ Forcely generate compact inodes (32-byte inodes) to output.
+>  .BI force-inode-extended
+>  Forcely generate extended inodes (64-byte inodes) to output.
+>  .TP
+> +.BI noinline_data
+> +Don't inline regular files for FSDAX support (Linux v5.15+).
+> +.TP
+
+Reviewed-by: Yue Hu <huyue2@yulong.com>
+
+Thanks.
+
+>  .BI force-inode-blockmap
+>  Forcely generate inode chunk format in 4-byte block address array.
+>  .TP
+
