@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64CB0456A7C
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 07:55:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CE8A456A84
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 07:56:56 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HwS8y2fTZz304w
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 17:55:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HwSBt08fMz304w
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 17:56:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -16,22 +16,23 @@ Authentication-Results: lists.ozlabs.org;
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HwS8q5WzYz2xYG
- for <linux-erofs@lists.ozlabs.org>; Fri, 19 Nov 2021 17:55:06 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HwSBp5t3Bz2xYG
+ for <linux-erofs@lists.ozlabs.org>; Fri, 19 Nov 2021 17:56:50 +1100 (AEDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
- id BAD8C68AFE; Fri, 19 Nov 2021 07:54:57 +0100 (CET)
-Date: Fri, 19 Nov 2021 07:54:57 +0100
+ id F18E168AFE; Fri, 19 Nov 2021 07:56:45 +0100 (CET)
+Date: Fri, 19 Nov 2021 07:56:45 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 02/29] dm: make the DAX support dependend on CONFIG_FS_DAX
-Message-ID: <20211119065457.GA15524@lst.de>
+Subject: Re: [PATCH 01/29] nvdimm/pmem: move dax_attribute_group from dax
+ to pmem
+Message-ID: <20211119065645.GB15524@lst.de>
 References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-3-hch@lst.de>
- <CAPcyv4iPOcD8OsimpSZMnbTEsGZKj-GqSY=cWC0tPvoVs6DE1Q@mail.gmail.com>
+ <20211109083309.584081-2-hch@lst.de>
+ <CAPcyv4ijKTcABMs2tZEuPWo1WDOux+4XWN=DNF5v8SrQRSbfDg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4iPOcD8OsimpSZMnbTEsGZKj-GqSY=cWC0tPvoVs6DE1Q@mail.gmail.com>
+In-Reply-To: <CAPcyv4ijKTcABMs2tZEuPWo1WDOux+4XWN=DNF5v8SrQRSbfDg@mail.gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -56,13 +57,30 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Nov 17, 2021 at 09:23:44AM -0800, Dan Williams wrote:
-> Applied, fixed the spelling of 'dependent' in the subject and picked
-> up Mike's Ack from the previous send:
+On Wed, Nov 17, 2021 at 09:44:25AM -0800, Dan Williams wrote:
+> On Tue, Nov 9, 2021 at 12:33 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > dax_attribute_group is only used by the pmem driver, and can avoid the
+> > completely pointless lookup by the disk name if moved there.  This
+> > leaves just a single caller of dax_get_by_host, so move dax_get_by_host
+> > into the same ifdef block as that caller.
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Link: https://lore.kernel.org/r/20210922173431.2454024-3-hch@lst.de
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> https://lore.kernel.org/r/YYASBVuorCedsnRL@redhat.com
-> 
-> Christoph, any particular reason you did not pick up the tags from the
-> last posting?
+> This one already made v5.16-rc1.
 
-I thought I did, but apparently I've missed some.
+Yes, but 5.16-rc1 did not exist yet when I pointed the series.
+
+Note that the series also has a conflict against 5.16-rc1 in pmem.c,
+and buildbot pointed out the file systems need explicit dax.h
+includes in a few files for some configurations.
+
+The current branch is here, I just did not bother to repost without
+any comments:
+
+   http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dax-block-cleanup
+
+no functional changes.
