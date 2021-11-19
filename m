@@ -1,52 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3C3A4570BB
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 15:35:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15C9545755E
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Nov 2021 18:21:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HwfMT4k2pz3bXP
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 Nov 2021 01:35:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hwk3j6VSnz3bWX
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 Nov 2021 04:21:37 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=zA/T+ETl;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FQ6M7eMM;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linuxfoundation.org (client-ip=198.145.29.99;
- helo=mail.kernel.org; envelope-from=gregkh@linuxfoundation.org;
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::632;
+ helo=mail-pl1-x632.google.com; envelope-from=dan.j.williams@intel.com;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org
- header.a=rsa-sha256 header.s=korg header.b=zA/T+ETl; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel-com.20210112.gappssmtp.com
+ header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
+ header.s=20210112 header.b=FQ6M7eMM; dkim-atps=neutral
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com
+ [IPv6:2607:f8b0:4864:20::632])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HwfMQ5g0rz2xr8
- for <linux-erofs@lists.ozlabs.org>; Sat, 20 Nov 2021 01:34:58 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5FE9361544;
- Fri, 19 Nov 2021 14:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
- s=korg; t=1637332496;
- bh=uAAgXQdyoAGv0S2rq2GgjmP2bjAj/8v+LHjrbsltpio=;
- h=Subject:To:Cc:From:Date:In-Reply-To:From;
- b=zA/T+ETl1qAn7TLcHZOPofjyeC78eOlAZKzs3F/3wEfigFyxX9zq/rY48i4Y0jLaq
- K8aUAp9W+obeeBD8HeXcqmxpuAFgybhZCVCbE+xbyL32uZseLSdnun4XQyRzxwwJgQ
- nmZCtRBRUtJ+Y4qI7h4NCnH2gtpSQF86vNOkSB1Q=
-Subject: Patch "erofs: fix unsafe pagevec reuse of hooked pclusters" has been
- added to the 5.10-stable tree
-To: chao@kernel.org, gregkh@linuxfoundation.org, hsiangkao@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 19 Nov 2021 15:34:54 +0100
-In-Reply-To: <20211116010819.122905-2-hsiangkao@linux.alibaba.com>
-Message-ID: <16373324942205@kroah.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hwk3Y5fZbz2ywV
+ for <linux-erofs@lists.ozlabs.org>; Sat, 20 Nov 2021 04:21:21 +1100 (AEDT)
+Received: by mail-pl1-x632.google.com with SMTP id k4so8603210plx.8
+ for <linux-erofs@lists.ozlabs.org>; Fri, 19 Nov 2021 09:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=intel-com.20210112.gappssmtp.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=2U/4HYKnAZR7qNMIeDCg5S//595luEluzFk14uv4gBU=;
+ b=FQ6M7eMMvPf80QsdTpoBZi0VrX8bn7QeX7OvbRABdgkNvCMNjXzl7/FKjSfSUjRkzX
+ F1usfPnFQYNtajLRg0QRwSSgzt8mzXj0XCG2cnk0+F0m/6Zhw3KmrGwYuAHqWjDxU8h7
+ LoqDBYl4kQUeXb8kAZzT8ViJ+hkv5vLV1Goy6Yaluym7CVIoftX3Jldatma/nAYXl27p
+ pclrbJHG5C0Blu/232w4rLGJUG53x/PsyFdu4/UMHnSQZ8XMlr5FFqwE0la2E0Wy9pBi
+ QLaClBcQjJDmbuAEv+kCOvcY8AEg2J0pE5d377NWsFamWj8v0zJjbYMN2j8PjhK8WH2h
+ Pe+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=2U/4HYKnAZR7qNMIeDCg5S//595luEluzFk14uv4gBU=;
+ b=d2Nyh8bnOyM6Ggq83RPPn1nUExJhXKSs/BhSVonhS80q/ZqaW9WZEPyQLO7ygU9Nic
+ pr9vZCKTuJcz8DCZ5c6PEFu+rnF9Tbuo5DYpRwZcPBwPRTFjPoAT+XmtxgV1BYSA+vx2
+ koTVGbIVxE8CBmPlOMiaLIXDyC8E6Kb5S6iHPN2RoelBOJ2KhBr5x1wy86R6L5UHf1on
+ 0anTBclxPJwkO9A6lRULCH7/W/Qr/o1wXvq2pnqaIogo8qjbYzBudcq3bwJLLbwPz06X
+ XupstiNIGKw0OX32avLgCV5KHDoBQONGHXtRXfQTJoipqBf3UrK4jdRb/GAKeZ0Ji/sN
+ 2QGA==
+X-Gm-Message-State: AOAM530M8gWfxFD9xC4B6cVlJj0KVNCn7pE2NFx/ylb8vlIct2aMdw5d
+ v8FOvK3x0BsOnB7MCQTpR74jtEO1gROna8cuZ/5vYw==
+X-Google-Smtp-Source: ABdhPJxOTsb7kpZ1mbQBZyHvrw/GjkoPNdlC1Mnmi7QTa5v33P77eZ447VYbGdz8Hsj3aBiYzZhGTejFWOktm98P3BA=
+X-Received: by 2002:a17:90b:1e49:: with SMTP id
+ pi9mr1505670pjb.220.1637342480174; 
+ Fri, 19 Nov 2021 09:21:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20211109083309.584081-1-hch@lst.de>
+ <20211109083309.584081-2-hch@lst.de>
+ <CAPcyv4ijKTcABMs2tZEuPWo1WDOux+4XWN=DNF5v8SrQRSbfDg@mail.gmail.com>
+ <20211119065645.GB15524@lst.de>
+In-Reply-To: <20211119065645.GB15524@lst.de>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Fri, 19 Nov 2021 09:21:09 -0800
+Message-ID: <CAPcyv4iFG0n-vdaEi4h5ken6mPrgW6Kz6UXCTRfaHi-c99GBnw@mail.gmail.com>
+Subject: Re: [PATCH 01/29] nvdimm/pmem: move dax_attribute_group from dax to
+ pmem
+To: Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,154 +80,45 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: stable-commits@vger.kernel.org
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ device-mapper development <dm-devel@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Thu, Nov 18, 2021 at 10:56 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, Nov 17, 2021 at 09:44:25AM -0800, Dan Williams wrote:
+> > On Tue, Nov 9, 2021 at 12:33 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > dax_attribute_group is only used by the pmem driver, and can avoid the
+> > > completely pointless lookup by the disk name if moved there.  This
+> > > leaves just a single caller of dax_get_by_host, so move dax_get_by_host
+> > > into the same ifdef block as that caller.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > > Link: https://lore.kernel.org/r/20210922173431.2454024-3-hch@lst.de
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >
+> > This one already made v5.16-rc1.
+>
+> Yes, but 5.16-rc1 did not exist yet when I pointed the series.
+>
+> Note that the series also has a conflict against 5.16-rc1 in pmem.c,
+> and buildbot pointed out the file systems need explicit dax.h
+> includes in a few files for some configurations.
+>
+> The current branch is here, I just did not bother to repost without
+> any comments:
+>
+>    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dax-block-cleanup
+>
+> no functional changes.
 
-This is a note to let you know that I've just added the patch titled
-
-    erofs: fix unsafe pagevec reuse of hooked pclusters
-
-to the 5.10-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     erofs-fix-unsafe-pagevec-reuse-of-hooked-pclusters.patch
-and it can be found in the queue-5.10 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From foo@baz Fri Nov 19 03:21:54 PM CET 2021
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Date: Tue, 16 Nov 2021 09:08:19 +0800
-Subject: erofs: fix unsafe pagevec reuse of hooked pclusters
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <hsiangkao@linux.alibaba.com>, Chao Yu <chao@kernel.org>
-Message-ID: <20211116010819.122905-2-hsiangkao@linux.alibaba.com>
-
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-commit 86432a6dca9bed79111990851df5756d3eb5f57c upstream.
-
-There are pclusters in runtime marked with Z_EROFS_PCLUSTER_TAIL
-before actual I/O submission. Thus, the decompression chain can be
-extended if the following pcluster chain hooks such tail pcluster.
-
-As the related comment mentioned, if some page is made of a hooked
-pcluster and another followed pcluster, it can be reused for in-place
-I/O (since I/O should be submitted anyway):
- _______________________________________________________________
-|  tail (partial) page |          head (partial) page           |
-|_____PRIMARY_HOOKED___|____________PRIMARY_FOLLOWED____________|
-
-However, it's by no means safe to reuse as pagevec since if such
-PRIMARY_HOOKED pclusters finally move into bypass chain without I/O
-submission. It's somewhat hard to reproduce with LZ4 and I just found
-it (general protection fault) by ro_fsstressing a LZMA image for long
-time.
-
-I'm going to actively clean up related code together with multi-page
-folio adaption in the next few months. Let's address it directly for
-easier backporting for now.
-
-Call trace for reference:
-  z_erofs_decompress_pcluster+0x10a/0x8a0 [erofs]
-  z_erofs_decompress_queue.isra.36+0x3c/0x60 [erofs]
-  z_erofs_runqueue+0x5f3/0x840 [erofs]
-  z_erofs_readahead+0x1e8/0x320 [erofs]
-  read_pages+0x91/0x270
-  page_cache_ra_unbounded+0x18b/0x240
-  filemap_get_pages+0x10a/0x5f0
-  filemap_read+0xa9/0x330
-  new_sync_read+0x11b/0x1a0
-  vfs_read+0xf1/0x190
-
-Link: https://lore.kernel.org/r/20211103182006.4040-1-xiang@kernel.org
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/erofs/zdata.c |   13 +++++++------
- fs/erofs/zpvec.h |   13 ++++++++++---
- 2 files changed, 17 insertions(+), 9 deletions(-)
-
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -278,8 +278,8 @@ static inline bool z_erofs_try_inplace_i
- 
- /* callers must be with collection lock held */
- static int z_erofs_attach_page(struct z_erofs_collector *clt,
--			       struct page *page,
--			       enum z_erofs_page_type type)
-+			       struct page *page, enum z_erofs_page_type type,
-+			       bool pvec_safereuse)
- {
- 	int ret;
- 
-@@ -289,9 +289,9 @@ static int z_erofs_attach_page(struct z_
- 	    z_erofs_try_inplace_io(clt, page))
- 		return 0;
- 
--	ret = z_erofs_pagevec_enqueue(&clt->vector, page, type);
-+	ret = z_erofs_pagevec_enqueue(&clt->vector, page, type,
-+				      pvec_safereuse);
- 	clt->cl->vcnt += (unsigned int)ret;
--
- 	return ret ? 0 : -EAGAIN;
- }
- 
-@@ -645,7 +645,8 @@ hitted:
- 		tight &= (clt->mode >= COLLECT_PRIMARY_FOLLOWED);
- 
- retry:
--	err = z_erofs_attach_page(clt, page, page_type);
-+	err = z_erofs_attach_page(clt, page, page_type,
-+				  clt->mode >= COLLECT_PRIMARY_FOLLOWED);
- 	/* should allocate an additional staging page for pagevec */
- 	if (err == -EAGAIN) {
- 		struct page *const newpage =
-@@ -653,7 +654,7 @@ retry:
- 
- 		newpage->mapping = Z_EROFS_MAPPING_STAGING;
- 		err = z_erofs_attach_page(clt, newpage,
--					  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
-+					  Z_EROFS_PAGE_TYPE_EXCLUSIVE, true);
- 		if (!err)
- 			goto retry;
- 	}
---- a/fs/erofs/zpvec.h
-+++ b/fs/erofs/zpvec.h
-@@ -107,11 +107,18 @@ static inline void z_erofs_pagevec_ctor_
- 
- static inline bool z_erofs_pagevec_enqueue(struct z_erofs_pagevec_ctor *ctor,
- 					   struct page *page,
--					   enum z_erofs_page_type type)
-+					   enum z_erofs_page_type type,
-+					   bool pvec_safereuse)
- {
--	if (!ctor->next && type)
--		if (ctor->index + 1 == ctor->nr)
-+	if (!ctor->next) {
-+		/* some pages cannot be reused as pvec safely without I/O */
-+		if (type == Z_EROFS_PAGE_TYPE_EXCLUSIVE && !pvec_safereuse)
-+			type = Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED;
-+
-+		if (type != Z_EROFS_PAGE_TYPE_EXCLUSIVE &&
-+		    ctor->index + 1 == ctor->nr)
- 			return false;
-+	}
- 
- 	if (ctor->index >= ctor->nr)
- 		z_erofs_pagevec_ctor_pagedown(ctor, false);
-
-
-Patches currently in stable-queue which might be from hsiangkao@linux.alibaba.com are
-
-queue-5.10/erofs-fix-unsafe-pagevec-reuse-of-hooked-pclusters.patch
-queue-5.10/erofs-remove-the-occupied-parameter-from-z_erofs_pagevec_enqueue.patch
+Do you just want to send me a pull request after you add all the acks?
