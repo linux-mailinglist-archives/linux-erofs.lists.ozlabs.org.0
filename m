@@ -1,52 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75020458570
-	for <lists+linux-erofs@lfdr.de>; Sun, 21 Nov 2021 18:25:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CB784586B8
+	for <lists+linux-erofs@lfdr.de>; Sun, 21 Nov 2021 23:23:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Hxy2y0C0cz2yjS
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Nov 2021 04:25:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Hy4gK5mm3z2ymk
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Nov 2021 09:23:41 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=f8epykOM;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=B5CBrHOI;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=198.145.29.99; helo=mail.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::82a;
+ helo=mail-qt1-x82a.google.com; envelope-from=fedora.dm0@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=f8epykOM; 
- dkim-atps=neutral
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=B5CBrHOI; dkim-atps=neutral
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com
+ [IPv6:2607:f8b0:4864:20::82a])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Hxy2t59CLz2xXy
- for <linux-erofs@lists.ozlabs.org>; Mon, 22 Nov 2021 04:25:10 +1100 (AEDT)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 29EEC60230;
- Sun, 21 Nov 2021 17:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1637515503;
- bh=aiJq05jytq7//TsGyG6sMDwMz+aZHqTBKT1ARxUR17k=;
- h=Date:From:To:Cc:Subject:From;
- b=f8epykOM4dDb/QXcWqNNwT0zBZ6ONCkdWq2YHJkdSS4OOJbMBuwkSLa2AIss3K3vV
- /Kpv3/NsCm4SFmzDIptCB2GWr9/DF/yA37CxjRer2Q7LCuVAKbeQ9DkCh/iChanF1F
- upLLCljJrPbVh582PkB6eHuBYjC+E5FvrVk4ZlYg4z+dadUBA4pdgEHIAlpNHC0cES
- CGb1GSMeAuQ3ErLZTUNLcL8NHIijSK74Gj+ERqdNkS/nFqe0wrajX/bJ2oJjQfOdEJ
- NCEZ3Vz4BPutnqXe7lF3ftl8+RJ5ZKbjnCo3YDFG3C6PIocFjDd1ryu4b0gTsQIv8p
- lAkARzibKDYYQ==
-Date: Mon, 22 Nov 2021 01:24:56 +0800
-From: Gao Xiang <xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Hy4gB3tJFz2xtF
+ for <linux-erofs@lists.ozlabs.org>; Mon, 22 Nov 2021 09:23:32 +1100 (AEDT)
+Received: by mail-qt1-x82a.google.com with SMTP id n15so14927207qta.0
+ for <linux-erofs@lists.ozlabs.org>; Sun, 21 Nov 2021 14:23:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=from:to:cc:subject:date:message-id:mime-version;
+ bh=QovVwcCtwBCoANdiAnCc8bYM5vSj6ZoK6wNZlIO0e8E=;
+ b=B5CBrHOIKwYR7yrdjVDrVltH3F+ys5a62kzYdz7poAZoRWyFVSHhZWUw4RdFqq98KL
+ ETrelcRTFQ6dcmAm1qOco0fkwmi2OZ9YTPjtS9jfenif60MikKyiur1MXCb3LP9tV6Ke
+ +zjBiHQOgBtsnyj7hAAAbQQG0FwY+jkQxPKAaoC70vr6tMI4eQqU7Ec4K4fDykOHqyyd
+ LbDRUEd9eZVOVrM5xwu/Pmzi1ntfxKgYSUBnJtNHTe4qM9GUfNFQqQQo7+tmVhg4Gjfx
+ a/iNTLGC3qNjqJWeD6RYOt5l+3xNa0KhVPH56Tjvji+iZWx3LbRRgkuQi4tWMJIBmUn0
+ 1V3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
+ bh=QovVwcCtwBCoANdiAnCc8bYM5vSj6ZoK6wNZlIO0e8E=;
+ b=OJWLNim/XKf7hUD9JfG2VYgUjlw1Thgyus960DJKAMqUTEAphR9aPfiaobFpM2O43v
+ 0EGov2p/I2rBloR+i+cF9iJJEeiBGO2R6vtxnjhPsaXqU4Jbte+pn+cUWXR052C1xT2V
+ qY9CRDYz72hSLijOkKPg5TwfhPqfjidU4JyWdsautw7Gj73zO8/df3FyhUy3ejeW2oUH
+ oEuNc9zkyG0NVM3yM5zpkaio0t0QfIoS23N+OFc+14fY/uczrSow6QaN2/YW/T0RK6f4
+ S6rIn+MWo3R1lwvSMe87gp5ebEHF04I3zHvPfoN/483ZatCEOHLHiEqsVstAk7ypRsbT
+ I26Q==
+X-Gm-Message-State: AOAM533VTiinW953RDjlSokUbjUs96hCubcphGvQr6OejmnqeEhPQrwe
+ X7pXFA5/biIruY0BDVgKRT8=
+X-Google-Smtp-Source: ABdhPJw6900c04bFVKMJgpjdH3M3lG2n0xZXtAbsxPGpCETZSzBAOQQ9w+sjJbOal0qTb/Z40AZiwA==
+X-Received: by 2002:a05:622a:30e:: with SMTP id
+ q14mr26814704qtw.71.1637533408007; 
+ Sun, 21 Nov 2021 14:23:28 -0800 (PST)
+Received: from callisto (c-73-175-137-55.hsd1.pa.comcast.net. [73.175.137.55])
+ by smtp.gmail.com with ESMTPSA id
+ w19sm3388381qkw.49.2021.11.21.14.23.27
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sun, 21 Nov 2021 14:23:27 -0800 (PST)
+From: David Michael <fedora.dm0@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [ANNOUNCE] erofs-utils: release 1.4
-Message-ID: <20211121172455.GA8626@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] erofs-utils: dump: fix format errors on some architectures
+Date: Sun, 21 Nov 2021 17:23:26 -0500
+Message-ID: <87tug5jggx.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,63 +76,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+This applies the same type casting to nid values as is done in the
+other formatting function calls to avoid this error:
 
-A new version erofs-utils 1.4 is available at:
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git tags/v1.4
+    In file included from main.c:11:
+    main.c: In function 'erofs_checkdirent':
+    ../include/erofs/print.h:68:25: error: format '%llu' expects argument of type 'long long unsigned int', but argument 3 has type '__le64' {aka 'long unsigned int'} [-Werror=format=]
+       68 |                         "<E> " PR_FMT_FUNC_LINE(fmt),   \
+          |                         ^~~~~~
+    main.c:264:17: note: in expansion of macro 'erofs_err'
+      264 |                 erofs_err("invalid file type %llu", de->nid);
+          |                 ^~~~~~~~~
+    main.c: In function 'erofs_read_dirent':
+    ../include/erofs/print.h:68:25: error: format '%llu' expects argument of type 'long long unsigned int', but argument 3 has type '__le64' {aka 'long unsigned int'} [-Werror=format=]
+       68 |                         "<E> " PR_FMT_FUNC_LINE(fmt),   \
+          |                         ^~~~~~
+    main.c:303:25: note: in expansion of macro 'erofs_err'
+      303 |                         erofs_err("parse dir nid %llu error occurred\n",
+          |                         ^~~~~~~~~
+    cc1: all warnings being treated as errors
 
-It mainly includes the following changes:
-   - (experimental) introduce preliminary dump.erofs (Wang Qi, Guo Xuenan);
-   - (experimental) introduce preliminary fsck.erofs (Daeho Jeong);
-   - introduce MicroLZMA compression support (thanks to Lasse Collin);
-   - support chunk-based uncompressed files for deduplication;
-   - support multiple devices for multi-blob CAS container images;
-   - (mkfs.erofs, AOSP) add block list support (Yue Hu, David Anderson);
-   - (mkfs.erofs) support per-inode compress pcluster hints (Huang Jianan);
-   - (mkfs.erofs) add "noinline_data" extended option for DAX;
-   - (mkfs.erofs) introduce --quiet option (suggested by nl6720);
-   - complete MacOS build & functionality;
-   - various bugfixes and cleanups;
+Signed-off-by: David Michael <fedora.dm0@gmail.com>
+---
 
-Many noticeable updates here. First, new preliminary fsck.erofs and
-dump.erofs are now added to analyse and check EROFS images by Daeho
-Jeong, Wang Qi and Guo Xuenan. More improvements about those features
-will be shown in the future versions.
+Hi,
 
-Thanks to Lasse Collin, LZMA (specifically MicroLZMA) compression
-support is also finalized in this version. (btw, tail-packing inline
-for compressed data is now ongoing by Yue Hu [1] which will be
-addressed in the next version.)
+I hit this build failure on powerpc64le when trying the 1.4 release.
+Can something like this be applied to get around it?
 
-Also, in order to support chunk deduplication and some container use
-cases, chunk-based files and multiple devices are supported in this
-version. As usual, add a word here, our team will announce the new
-opensource Nydus container image service [2] implemented in the Rust
-language at Open Source Summit 2021 China which aims to use a minimal
-metadata (EROFS-compatible RAFS v6) + a few content-addressed
-chunk-based de-duplicated blobs for effective distribution as well as
-storage (such as minimizing underlay fs metadata overhead). It's still
-under some internal release processes so please stay tuned..
+Thanks.
 
-In addition, users can now write their own per-file pcluster hints
-to adjust compression unit size for each file, which was contributed
-by Huang Jianan. There are also some AOSP-specific features to make
-Android scenarios work better as always.
+David
 
-In the end, we are actively working on more useful scenarios [3] and
-quite happy to hear, implement and enhance any useful feature requests
-from communities. Feel free to feedback any comments, questions, bugs,
-suggestions, etc. to us for better improvements and welcome to join us
-as well :-)
+ dump/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/dump/main.c b/dump/main.c
+index b7560ec..6f5b9e7 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -261,7 +261,7 @@ static inline int erofs_checkdirent(struct erofs_dirent *de,
+ 		return -EFSCORRUPTED;
+ 	}
+ 	if (de->file_type >= EROFS_FT_MAX) {
+-		erofs_err("invalid file type %llu", de->nid);
++		erofs_err("invalid file type %llu", de->nid | 0ULL);
+ 		return -EFSCORRUPTED;
+ 	}
+ 	return dname_len;
+@@ -301,7 +301,7 @@ static int erofs_read_dirent(struct erofs_dirent *de,
+ 		err = erofs_read_dir(de->nid, nid);
+ 		if (err) {
+ 			erofs_err("parse dir nid %llu error occurred\n",
+-					de->nid);
++					de->nid | 0ULL);
+ 			return err;
+ 		}
+ 	}
+-- 
+2.31.1
 
-[1] https://lore.kernel.org/r/b1b3b72371dd4a6b46137dce2fab04899e111df9.1637140430.git.huyue2@yulong.com 
-[2] https://github.com/dragonflyoss/image-service
-[3] https://lore.kernel.org/r/20211009061150.GA7479@hsiangkao-HP-ZHAN-66-Pro-G1
