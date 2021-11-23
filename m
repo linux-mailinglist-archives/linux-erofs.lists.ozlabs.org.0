@@ -2,67 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 257A445AE34
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Nov 2021 22:17:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E624545AE67
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Nov 2021 22:22:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HzH5l0VkTz2yZC
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 08:17:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HzHCp60QDz2yZC
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 08:22:30 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=z/Kv5aF3;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=b/hUI3hQ;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::433;
- helo=mail-pf1-x433.google.com; envelope-from=dan.j.williams@intel.com;
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::535;
+ helo=mail-pg1-x535.google.com; envelope-from=dan.j.williams@intel.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=intel-com.20210112.gappssmtp.com
  header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=z/Kv5aF3; dkim-atps=neutral
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com
- [IPv6:2607:f8b0:4864:20::433])
+ header.s=20210112 header.b=b/hUI3hQ; dkim-atps=neutral
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com
+ [IPv6:2607:f8b0:4864:20::535])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HzH5h0C9Mz2xYK
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 08:17:11 +1100 (AEDT)
-Received: by mail-pf1-x433.google.com with SMTP id g18so545329pfk.5
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 13:17:11 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HzHCl3J59z2xYK
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 08:22:26 +1100 (AEDT)
+Received: by mail-pg1-x535.google.com with SMTP id h63so210416pgc.12
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 13:22:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=intel-com.20210112.gappssmtp.com; s=20210112;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=PQeh1LIqbqFtSovgn5WZ7VLYBwfefd3KuHYAxcJ6bdE=;
- b=z/Kv5aF3II2Q1LX6Aazu4oeYGV1DsHDm6VPftSCm/GsXUqcvpUYlHGhNQfvcAEzM+t
- KHEErzvzy9AE7efI2veDZidjjq+fK6s2UJs7fEhnYmQiPFx9rvXEwel822roodlc/FcK
- DEv5SfZdo4Mf/qMs7Jb75ZFTHTDu0awILjq9sqTvXs+VIsFn7y/1XB/C+/lY4NwLFtHP
- cHAfa2a7eS26AcezybSCXTWBbxiGPri9iUr8Wx/IV+DiOD4YHSNiMvTZGqn4/3tFE8gU
- fEqZVpI1Dt83hXy63DNbfv4vosQWDr6RKn8ZmI1PKEqbMIgBEyzoH/HXIZQqJ3XqzuZq
- V9lQ==
+ :cc; bh=bLSToY/Rn4QaplrUteOdrUS7Uug3uZWr/TlOz9Y1nF0=;
+ b=b/hUI3hQLxDR2Xk9r7lQxFzBrg/2/5tGZW+JSVwNYrq8dmNWS3P9ynBIU8RZmfFHUI
+ Xgm0552sZFP2+qPF3soghwDd7XxX6FGNBFe395T6bvF+N1dr29Lop15wmWK8lt8m87yV
+ 9vAVuWAMC6kkIO1VclhYl3oilFONamQuNci0i1jGGdKo0v4NlKYSPdpcWln2MSBf1py8
+ eotcm4rw3pNPGNJSmy6HW2en9pvx0GUA8KH3ho166JTJ5FG5ph7IQpvk6v1nkInbqZW5
+ YGsf77VgzBkZO6x5IA8KcT5QTl5SnWc54c+GTeaTywwpW3otwTRaZbbIpfY5ylF9vOkP
+ iFPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
  :message-id:subject:to:cc;
- bh=PQeh1LIqbqFtSovgn5WZ7VLYBwfefd3KuHYAxcJ6bdE=;
- b=3MMGqMdFLONIbJA5N6PeS9ZzWYWSOLZ3a/+OAzRJ7VYdruss99ZJrr/N7ogr6XxQZX
- tSIvWGiH7mo6PmGo/iAJ+NmQTKzdfavSp56v599KkkkLeU/nRXDhG+hkCXmB1daHjccX
- nWfGcpRGKvk/3Dh3xO6A/OLobQ3sNxnTtWh9fuhhHKRLsCgDWwnhRA74mIXnTm0STlCR
- 94dX4j0rgDAJ3nEmjkGr4uByp1wsaBk6/vkucfY3RXcGF1VHxRIbQ0WdZA4LH5BO5QGK
- 7G56rUeMbz48ZnzRgshvO6Ggoa4Tn4Moee01ofr21m4AxRsLs5bC/LHyctCbsVnPpavu
- Dx6g==
-X-Gm-Message-State: AOAM532zEaRBWEwTJa8Mp65NogfmWIv3uZEsVRzmSm/KH7n78FLjLhC7
- bjzacNc2P0HS6H8Bf5Go9xXFjzfYShdgS7rA4cerug==
-X-Google-Smtp-Source: ABdhPJxo6xmNJWXyaaVPBEUy4anrM6xGk5zJ5S54bOFTPTbJYWg88+GG8ODe3guk693xmG8x/Zkzy+Ul3gB1uuDCJIA=
-X-Received: by 2002:a63:5401:: with SMTP id i1mr6112849pgb.356.1637702228750; 
- Tue, 23 Nov 2021 13:17:08 -0800 (PST)
+ bh=bLSToY/Rn4QaplrUteOdrUS7Uug3uZWr/TlOz9Y1nF0=;
+ b=03Uvu7sK7BX+WDCgVgoTd5poPDBwqtwclsThxNyLm5TI8sooFUFVbz8U4EHg25kmhm
+ H3NkANiUp2/WrAhTKEGmCNhp8Cp8xKuuq6kpW6uGPu5X6OJvp98nKzmy1Ks+PJD91B1b
+ KoiyZShHutFtV9RQ0LHrFIPdnfKSyN5KFKpB1Xg0huMXljukrKkMtkl8w3NfnhFCygmS
+ WvCRcZjQQheZq63NMZXT8g6CZCtDSGbW/q0qWbYy0cApbFhjftFHEg5WKm418c+5EOh1
+ QsB27Lr3hDCmn/xNwpRUmD+/9fcPTWVBU5w0xESS3xMvn0W14VZEYZPpmFS/G0sRn96B
+ OApg==
+X-Gm-Message-State: AOAM5318z/JQXwnyVwHiJ1czUnvtCQwmnv9bVJdUcr1MNP7RLNxYhDNg
+ 4Sb0MjTuf66gljbRUDbNfI9EipkF+1jRAHXbJlyWaw==
+X-Google-Smtp-Source: ABdhPJynvi8g71RwjaWWgFjo9LaoTAJgYi1+7huNhjnlJVCNZL4JsPbOJLOogDISiszVaR5xm5B316tq/pqSlm2ohsA=
+X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
+ l14-20020a056a00140e00b00444b07751efmr476612pfu.61.1637702544283; Tue, 23 Nov
+ 2021 13:22:24 -0800 (PST)
 MIME-Version: 1.0
 References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-17-hch@lst.de>
-In-Reply-To: <20211109083309.584081-17-hch@lst.de>
+ <20211109083309.584081-18-hch@lst.de>
+In-Reply-To: <20211109083309.584081-18-hch@lst.de>
 From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 23 Nov 2021 13:16:58 -0800
-Message-ID: <CAPcyv4jjvoT=aW+_Ks+8L60HG0ypesSi8A+a5F2JXu1dEWHVCw@mail.gmail.com>
-Subject: Re: [PATCH 16/29] fsdax: simplify the offset check in dax_iomap_zero
+Date: Tue, 23 Nov 2021 13:22:13 -0800
+Message-ID: <CAPcyv4imPgBEbhDCQpDwCQUTxOQy=RT9ZkAueBQdPKXOLNmrAQ@mail.gmail.com>
+Subject: Re: [PATCH 17/29] fsdax: factor out a dax_memzero helper
 To: Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -89,9 +90,83 @@ Sender: "Linux-erofs"
 
 On Tue, Nov 9, 2021 at 12:34 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> The file relative offset must have the same alignment as the storage
-> offset, so use that and get rid of the call to iomap_sector.
+> Factor out a helper for the "manual" zeroing of a DAX range to clean
+> up dax_iomap_zero a lot.
+>
 
-Agree.
+Small / optional fixup below:
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/dax.c | 36 +++++++++++++++++++-----------------
+>  1 file changed, 19 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/dax.c b/fs/dax.c
+> index d7a923d152240..dc9ebeff850ab 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -1121,34 +1121,36 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+>  }
+>  #endif /* CONFIG_FS_DAX_PMD */
+>
+> +static int dax_memzero(struct dax_device *dax_dev, pgoff_t pgoff,
+> +               unsigned int offset, size_t size)
+> +{
+> +       void *kaddr;
+> +       long rc;
+> +
+> +       rc = dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
+> +       if (rc >= 0) {
+
+Technically this should be "> 0" because dax_direct_access() returns
+nr_available_pages @pgoff, but this isn't broken because
+dax_direct_access() converts the "zero pages available" case into
+-ERANGE.
+
+> +               memset(kaddr + offset, 0, size);
+> +               dax_flush(dax_dev, kaddr + offset, size);
+> +       }
+> +       return rc;
+> +}
+> +
+>  s64 dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap)
+>  {
+>         pgoff_t pgoff = dax_iomap_pgoff(iomap, pos);
+>         long rc, id;
+> -       void *kaddr;
+> -       bool page_aligned = false;
+>         unsigned offset = offset_in_page(pos);
+>         unsigned size = min_t(u64, PAGE_SIZE - offset, length);
+>
+> -       if (IS_ALIGNED(pos, PAGE_SIZE) && size == PAGE_SIZE)
+> -               page_aligned = true;
+> -
+>         id = dax_read_lock();
+> -
+> -       if (page_aligned)
+> +       if (IS_ALIGNED(pos, PAGE_SIZE) && size == PAGE_SIZE)
+>                 rc = dax_zero_page_range(iomap->dax_dev, pgoff, 1);
+>         else
+> -               rc = dax_direct_access(iomap->dax_dev, pgoff, 1, &kaddr, NULL);
+> -       if (rc < 0) {
+> -               dax_read_unlock(id);
+> -               return rc;
+> -       }
+> -
+> -       if (!page_aligned) {
+> -               memset(kaddr + offset, 0, size);
+> -               dax_flush(iomap->dax_dev, kaddr + offset, size);
+> -       }
+> +               rc = dax_memzero(iomap->dax_dev, pgoff, offset, size);
+>         dax_read_unlock(id);
+> +
+> +       if (rc < 0)
+> +               return rc;
+>         return size;
+>  }
+>
+> --
+> 2.30.2
+>
