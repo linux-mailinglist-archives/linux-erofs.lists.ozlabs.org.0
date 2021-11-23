@@ -1,44 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B151B45AC81
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Nov 2021 20:31:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E61A45AC8C
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Nov 2021 20:34:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HzDlC2JgQz2yp9
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 06:31:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HzDpl6sD4z2ypn
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 06:34:07 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=jjyjzax1;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mga01.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::42c;
+ helo=mail-pf1-x42c.google.com; envelope-from=dan.j.williams@intel.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel-com.20210112.gappssmtp.com
+ header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
+ header.s=20210112 header.b=jjyjzax1; dkim-atps=neutral
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com
+ [IPv6:2607:f8b0:4864:20::42c])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HzDl7618Pz2ygC
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 06:30:53 +1100 (AEDT)
-X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="258989017"
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; d="scan'208";a="258989017"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
- by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 23 Nov 2021 11:29:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; d="scan'208";a="674604290"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
- by orsmga005.jf.intel.com with ESMTP; 23 Nov 2021 11:29:48 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1mpbUB-0002Cb-Vd; Tue, 23 Nov 2021 19:29:47 +0000
-Date: Wed, 24 Nov 2021 03:29:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <xiang@kernel.org>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- 57bbeacdbee72a54eb97d56b876cf9c94059fc34
-Message-ID: <619d411e.kOL0+d2LZ4w7kQaa%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HzDpg2gmFz2xSH
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 06:34:02 +1100 (AEDT)
+Received: by mail-pf1-x42c.google.com with SMTP id x5so340904pfr.0
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 11:34:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=intel-com.20210112.gappssmtp.com; s=20210112;
+ h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+ :cc; bh=Hj7PcxuLnKzRepBdxbumr3rSJH1rp9RXoQiNS6BkqqY=;
+ b=jjyjzax1feHZ07LUiZ/Yf1E9Hxm1wgDLlAZ2cYg6AJFLe/d321qFax/yEEu22m6fed
+ iBHNc8Kk34bMQQ2nIQi6MEMltBfNwsAHFQR0AWSHQwNal+nFXc7edty5ia7jOUicLQW1
+ FuRddFObFySh+nkUL24rBP+JDHWbRQRoHp4NV/QyPAV4R/iAhHEl65ZT4s43voxcaEMy
+ Oc8zToerc/pGHUlRu2jWA79GIW6I3ZHT1zjOZ64ig8LsDtvPs4/T2LyRFd31HHpRYYun
+ TIkUF+RfmunDs0Ue5w+xrykDMWgvw58GCXj/wKIs5Ax9Klji3Cu6QKxzZO3Z0ZwENfiJ
+ dDSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=Hj7PcxuLnKzRepBdxbumr3rSJH1rp9RXoQiNS6BkqqY=;
+ b=vgvWWFKiRyX0tTMrB6fxn7nVqKuTiGRSD1n0YUwWnxwp5ziJEMynPOJdYbB3ezCExQ
+ D4C8dS/ATqsHJ+ilF86CuBAnPwkW0qxDddUIUrtfah+NON59SuI2egVowzqNDLAoXK3/
+ Ml0MfmGJfSCHldOYgIlmtY4xkd9NRurE03q4oZMyRjJmKSeMRU9ZWvcAUNQo9f0mXLzp
+ dinwis85NvbWnbHgCzyzQEBcmzx3FL7NMQDs319yGW0j5jLvnRibhM5kFMDZ6WdJ5Viy
+ 8LzjojfiI4jR9OrswJJCBKn6sSEhEy50GaCnDzmkdDPPBzqE3R7hszAmbDwRQcVclieA
+ Cf6A==
+X-Gm-Message-State: AOAM533wSzo8L0595E+oDHWxByJuJrLWSZLwO311A/MSsDwKjUH9QHw5
+ j6RqBrZLUXK13aQOjkzFAiAa7YLkyeonDRM15EcgPA==
+X-Google-Smtp-Source: ABdhPJzfbK/HXngr7c4SVqoUjU1z90TEgx7yZs5kS94X6ib8WevHTs6s6Lbm19DO5En0QIDCaOcGr0Q9P6r3KEtQ2kY=
+X-Received: by 2002:a63:85c6:: with SMTP id u189mr5465536pgd.377.1637696035778; 
+ Tue, 23 Nov 2021 11:33:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20211109083309.584081-1-hch@lst.de>
+ <20211109083309.584081-5-hch@lst.de>
+ <CAPcyv4ic=Mz_nr5biEoBikTBySJA947ZK3QQ9Mn=KhVb_HiwAA@mail.gmail.com>
+ <20211123055742.GB13711@lst.de>
+In-Reply-To: <20211123055742.GB13711@lst.de>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Tue, 23 Nov 2021 11:33:45 -0800
+Message-ID: <CAPcyv4jd2eUo4bDfX=idG7js6W=L8uKKveG97r1a8DWa-pJ=mQ@mail.gmail.com>
+Subject: Re: [PATCH 04/29] dax: simplify the dax_device <-> gendisk association
+To: Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,186 +78,24 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390 <linux-s390@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xfs <linux-xfs@vger.kernel.org>,
+ device-mapper development <dm-devel@redhat.com>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ linux-ext4 <linux-ext4@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: 57bbeacdbee72a54eb97d56b876cf9c94059fc34  erofs: fix deadlock when shrink erofs slab
+On Mon, Nov 22, 2021 at 9:58 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, Nov 22, 2021 at 07:33:06PM -0800, Dan Williams wrote:
+> > Is it time to add a "DAX" symbol namespace?
+>
+> What would be the benefit?
 
-elapsed time: 726m
-
-configs tested: 158
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211123
-powerpc                      tqm8xx_defconfig
-arm                         socfpga_defconfig
-arm                          pcm027_defconfig
-powerpc                        fsp2_defconfig
-mips                  decstation_64_defconfig
-sh                         ecovec24_defconfig
-mips                         rt305x_defconfig
-arm                         at91_dt_defconfig
-arm                        mvebu_v5_defconfig
-riscv                    nommu_virt_defconfig
-powerpc                       eiger_defconfig
-sh                           se7705_defconfig
-powerpc                    adder875_defconfig
-mips                        maltaup_defconfig
-sparc                       sparc64_defconfig
-sparc64                          alldefconfig
-mips                           gcw0_defconfig
-arm                          pxa3xx_defconfig
-powerpc                 linkstation_defconfig
-arm                        magician_defconfig
-sh                           se7343_defconfig
-ia64                             alldefconfig
-sh                      rts7751r2d1_defconfig
-powerpc                     pq2fads_defconfig
-powerpc                      pasemi_defconfig
-mips                            ar7_defconfig
-sh                          lboxre2_defconfig
-mips                  cavium_octeon_defconfig
-mips                     decstation_defconfig
-openrisc                            defconfig
-mips                           xway_defconfig
-powerpc                      pmac32_defconfig
-powerpc                      chrp32_defconfig
-mips                      pic32mzda_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                     mpc512x_defconfig
-m68k                       m5475evb_defconfig
-powerpc                      walnut_defconfig
-powerpc64                           defconfig
-ia64                            zx1_defconfig
-sh                              ul2_defconfig
-powerpc                  mpc885_ads_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                           se7712_defconfig
-mips                        qi_lb60_defconfig
-arm                        vexpress_defconfig
-h8300                               defconfig
-arm                         axm55xx_defconfig
-arm                      footbridge_defconfig
-mips                      malta_kvm_defconfig
-sh                             espt_defconfig
-powerpc                      ppc64e_defconfig
-powerpc                 canyonlands_defconfig
-sh                        edosk7705_defconfig
-mips                     loongson2k_defconfig
-powerpc                   lite5200b_defconfig
-arm                           h5000_defconfig
-arm                          badge4_defconfig
-mips                     cu1830-neo_defconfig
-powerpc                 mpc8540_ads_defconfig
-openrisc                 simple_smp_defconfig
-sh                          r7785rp_defconfig
-ia64                        generic_defconfig
-powerpc                   currituck_defconfig
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-mips                           mtx1_defconfig
-arm                            xcep_defconfig
-mips                       bmips_be_defconfig
-mips                           ip32_defconfig
-arm                  randconfig-c002-20211123
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a001-20211123
-x86_64               randconfig-a003-20211123
-x86_64               randconfig-a006-20211123
-x86_64               randconfig-a004-20211123
-x86_64               randconfig-a005-20211123
-x86_64               randconfig-a002-20211123
-i386                 randconfig-a001-20211123
-i386                 randconfig-a002-20211123
-i386                 randconfig-a005-20211123
-i386                 randconfig-a006-20211123
-i386                 randconfig-a004-20211123
-i386                 randconfig-a003-20211123
-arc                  randconfig-r043-20211123
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-s390                 randconfig-c005-20211123
-i386                 randconfig-c001-20211123
-powerpc              randconfig-c003-20211123
-arm                  randconfig-c002-20211123
-riscv                randconfig-c006-20211123
-x86_64               randconfig-c007-20211123
-mips                 randconfig-c004-20211123
-x86_64               randconfig-a014-20211123
-x86_64               randconfig-a011-20211123
-x86_64               randconfig-a012-20211123
-x86_64               randconfig-a016-20211123
-x86_64               randconfig-a013-20211123
-x86_64               randconfig-a015-20211123
-i386                 randconfig-a016-20211123
-i386                 randconfig-a015-20211123
-i386                 randconfig-a012-20211123
-i386                 randconfig-a013-20211123
-i386                 randconfig-a014-20211123
-i386                 randconfig-a011-20211123
-hexagon              randconfig-r045-20211123
-s390                 randconfig-r044-20211123
-hexagon              randconfig-r041-20211123
-riscv                randconfig-r042-20211123
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Just the small benefit of identifying DAX core users with a common
+grep line, and to indicate that DAX exports are more intertwined than
+standalone exports, but yeah those are minor.
