@@ -2,68 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44FB545B0B7
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 01:26:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 96F2845B0CA
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 01:36:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HzMJ90nmyz2ymP
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 11:26:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HzMX43Qvlz2ym7
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 11:36:52 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1637713593;
-	bh=X3XR1HRDUlnpEDYNgNAmV5nii8eS1g8RsE9GRa/Z8os=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=ksB+SZuHWFkGNkOd+MXGtpuzwdxz0FATYvrIbLdrpW4XC/RJ1n/JlkBrZAj/l0htX
-	 4LvObinHBJh0ZoDrKhYzAK85QLEPnMF1jSlKILz3h6GBBPZmfhxWm+PImjJ0z4yyJ/
-	 aHNFB5FosUR1oqaCquqF4s3hLJC+T7z0mS4IczB8LCKgYUgjR0AdSHG7evpC2nUz0M
-	 mk84vh7uNlSlFVqOQzhhgmjQJBBfTBS8vfFC8IO0LYxD5jfxPPWmQSFiDGM5XszVYU
-	 9pPwnuEyoyHPIR2Y4Le5vFXGBS9M78+zAvBVFZk7Wbb3RqVnPXZE9m01ATqrJkxXNZ
-	 eC+9Ie675FUwg==
+	s=201707; t=1637714212;
+	bh=OdnTPLZ/89vAzByBj2larrevUcPATNsmYOKoKfC9Z88=;
+	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=BuFHIG6m3Upid51A7e//UUdcxzRd7293hR0QQX/TzNYuH1hxqU0rgYpPfOLx/EWjN
+	 0sVgzR3AREAv5XYvMKIkHh8XvZ3qGm6eBEJFufvpWsROr0FzLbZgrdo4kOep7fvLIO
+	 mweCgf9NCG5Tm+TvrPrF7j9vRLPiQS9t9VSOq1FW9TamTdCKNlPcFuXIzg2HeerUGS
+	 2MRKqd0JcPzs58h7CcPAu1Vms6YTGYBnOO/1ysxcvHPOUCL2PR7ML/AQzuEC2XkYyb
+	 OSx9EnPmbOOtd0ljIaRPcZkK5Lbn8h/WJhdpq+o1uj8fIhOU8+IF5wqRuvgI9wNcKy
+	 Em656PmyNs+/w==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=flex--zhangkelvin.bounces.google.com
- (client-ip=2607:f8b0:4864:20::749; helo=mail-qk1-x749.google.com;
- envelope-from=3riadyqskc0m4mfslpjq0nslttlqj.htrqnsz2-jwtkxqnxyx.t4qfgx.twl@flex--zhangkelvin.bounces.google.com;
+ (client-ip=2607:f8b0:4864:20::849; helo=mail-qt1-x849.google.com;
+ envelope-from=3g4mdyqskc7yvdwjcgahrejckkcha.ykihejqt-ankboheopo.kvhwxo.knc@flex--zhangkelvin.bounces.google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
- header.s=20210112 header.b=EAIfbXbE; dkim-atps=neutral
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com
- [IPv6:2607:f8b0:4864:20::749])
+ header.s=20210112 header.b=DeZLwxY6; dkim-atps=neutral
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com
+ [IPv6:2607:f8b0:4864:20::849])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HzMJ23cgcz2yPT
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 11:26:24 +1100 (AEDT)
-Received: by mail-qk1-x749.google.com with SMTP id
- bl6-20020a05620a1a8600b0046803c08cccso687859qkb.15
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 16:26:24 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HzMX1073xz2yPT
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 11:36:47 +1100 (AEDT)
+Received: by mail-qt1-x849.google.com with SMTP id
+ z10-20020ac83e0a000000b002a732692afaso854427qtf.2
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 16:36:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
- bh=X3XR1HRDUlnpEDYNgNAmV5nii8eS1g8RsE9GRa/Z8os=;
- b=z4jSd1vW2x/QFBAryEkru/37RkFyVna7swhIYGYNlQKLJR8Y+4o8lahMDZ6mb89kq9
- kmg5ipHLZFGtYQrQXfsIePctiyqUqADthABW1zpp1rzY0Hsi0ceBsgQ6/aYq5FRgVmUQ
- vYSu+Cl15RYo6tKgokPN3vwBNXiMlwXhGvqv36DkN6Qc2gwUEJEtpqWwfrxH/waY8wGG
- pUdvtKCWiXcGhaii/UkFxGx0wGNDqCEMIznpz8vbPK64RSurXdOo8oIBuyNFNK8h7nEy
- CSKjmvOKxDRjl/6ubWILUtQItaps6LXpAiravhEaVOSR4m/gtuWy2nwl9oVFC2VG4U2M
- h2WQ==
-X-Gm-Message-State: AOAM531HNq/hT9hZd0ikwOoKwQfVbl4ImoLlxgTngS6PWi5t2FgyhD0/
- yo2xSfpByHAjU7B4NaqDbo7TUmhyifGgIOYGM4/L2D1n7gCMtTWE//B7bBTiyCbGrKp9fY32tfw
- 9ciRF7wPcs1dnjEFjEuk6pR0ajxk6YTVyMpRY5/WqD1rVuL3mwTPpF/ZgyanHcnokq/q3Utynm0
- 7Ppi+EmZk=
-X-Google-Smtp-Source: ABdhPJzTyF9J7uoq1P68tJc4VBub1zI6fvlSj4B+shFuFBnqMo8GvoMhPW0qXceyMtPokSoIvxxHB1juRoy16pPe4w==
+ h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+ :references:subject:from:to:cc;
+ bh=OdnTPLZ/89vAzByBj2larrevUcPATNsmYOKoKfC9Z88=;
+ b=OufW/xEaPV1AdiOHeMQDDih0KVsQyLXf+rUK9T4lOumBEVpHP37p8qtT4Agx2+g6zr
+ OlS09NkXS6eOocyv+oRrG1moZcDeFUIqBYUlonJz3JnBx44EzX9tcQLsU6r+KDvTrupf
+ Wbl4Lx6PMRwDTJw8TsGri8B2B+nlJxnDQSqGHl4JK4CHgYQs2DjDTG8qdHTZdUc7PVX7
+ lwhKkADuoeM5zoKyNoHXaCHieMLc1hep87qMgy7UQ6Ja+v3Z3obkABoYKhTf3auC+dN1
+ VyUy3WnnGwkV+sY93jGczhGwV4RZruP9AG4reMNobSLjdhedqWQcypAPYzRlahL85ZF8
+ PGbQ==
+X-Gm-Message-State: AOAM531agFJNsdELaHE917rONlfuBKN9kb4pBPlNW6nATgUfi4ezvTYF
+ u2+r/kcqGPvao1hW32GgU3ietmdW8sv2kBhQ8VoKhFTsMHh5TJaFOfwiTF1LkgV+j5zgv4Y4eVB
+ m2R4A9f2g+lYBMmCDVogSQaWeSC4K24hgNc4V/vxCb6jJQY2D8IW8bhu3LQFNnFfA7U/+ES1V4C
+ 2EZk+W58o=
+X-Google-Smtp-Source: ABdhPJzdUAwLBVh1IR+kCedcFHu63R3IBR9UwDJy46x7Ano/nd/vQbrqb15wlNd9GXAMyR1tmVur1exZB1AteRnYKQ==
 X-Received: from zhangkelvin-big.c.googlers.com
  ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
- (user=zhangkelvin job=sendgmr) by 2002:ac8:5fc2:: with SMTP id
- k2mr1965446qta.310.1637713580651; Tue, 23 Nov 2021 16:26:20 -0800 (PST)
-Date: Tue, 23 Nov 2021 16:26:13 -0800
-Message-Id: <20211124002614.1303130-1-zhangkelvin@google.com>
+ (user=zhangkelvin job=sendgmr) by 2002:ac8:5a51:: with SMTP id
+ o17mr1999729qta.180.1637714203632; Tue, 23 Nov 2021 16:36:43 -0800 (PST)
+Date: Tue, 23 Nov 2021 16:36:40 -0800
+In-Reply-To: <20211124002614.1303130-1-zhangkelvin@google.com>
+Message-Id: <20211124003640.1319587-1-zhangkelvin@google.com>
 Mime-Version: 1.0
+References: <20211124002614.1303130-1-zhangkelvin@google.com>
 X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH v1] Refactor out some I/O logic into separate function
+Subject: [PATCH v2] Refactor out some I/O logic into separate function
 To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
- Li Guifu <bluce.liguifu@huawei.com>, 
  Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -79,7 +82,7 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Kelvin Zhang <zhangkelvin@google.com>
-Cc: Kelvin Zhang <zhangkelvin@google.com>, Chao Yu <yuchao0@huawei.com>
+Cc: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
@@ -87,16 +90,15 @@ Sender: "Linux-erofs"
 Many of the global variables are for I/O purposes. To make the codebase
 more library friendly, decouple I/O and parsing into separate functions.
 
-Change-Id: I7dbb3dcd6e82b075205891f9a06b80e1191fa5d6
 Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
 ---
- include/erofs/defs.h  | 19 ++++++++++++
+ include/erofs/defs.h  | 19 +++++++++++++
  include/erofs/parse.h | 23 +++++++++++++++
  include/erofs_fs.h    | 12 ++++++++
  lib/io.c              |  1 +
- lib/namei.c           | 34 +++++++++++++++-------
- lib/super.c           | 67 ++++++++++++++++++++++++++-----------------
- 6 files changed, 118 insertions(+), 38 deletions(-)
+ lib/namei.c           | 38 ++++++++++++++++---------
+ lib/super.c           | 66 +++++++++++++++++++++++++------------------
+ 6 files changed, 119 insertions(+), 40 deletions(-)
  create mode 100644 include/erofs/parse.h
 
 diff --git a/include/erofs/defs.h b/include/erofs/defs.h
@@ -238,10 +240,10 @@ index a0d366a..9ee754b 100644
  #ifdef HAVE_LINUX_FS_H
  #include <linux/fs.h>
 diff --git a/lib/namei.c b/lib/namei.c
-index 7377e74..95c379c 100644
+index 7377e74..d94baad 100644
 --- a/lib/namei.c
 +++ b/lib/namei.c
-@@ -22,18 +22,15 @@ static dev_t erofs_new_decode_dev(u32 dev)
+@@ -22,17 +22,13 @@ static dev_t erofs_new_decode_dev(u32 dev)
  	return makedev(major, minor);
  }
  
@@ -250,20 +252,20 @@ index 7377e74..95c379c 100644
 +	const char buf[EROFS_MAX_INODE_SIZE],
 +	struct erofs_inode *vi)
  {
- 	int ret, ifmt;
+-	int ret, ifmt;
 -	char buf[sizeof(struct erofs_inode_extended)];
++	int ifmt;
  	struct erofs_inode_compact *dic;
  	struct erofs_inode_extended *die;
- 	const erofs_off_t inode_loc = iloc(vi->nid);
- 
+-	const erofs_off_t inode_loc = iloc(vi->nid);
+-
 -	ret = dev_read(0, buf, inode_loc, sizeof(*dic));
 -	if (ret < 0)
 -		return -EIO;
--
+ 
  	dic = (struct erofs_inode_compact *)buf;
  	ifmt = le16_to_cpu(dic->i_format);
- 
-@@ -47,11 +44,6 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+@@ -47,11 +43,6 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
  	case EROFS_INODE_LAYOUT_EXTENDED:
  		vi->inode_isize = sizeof(struct erofs_inode_extended);
  
@@ -275,7 +277,7 @@ index 7377e74..95c379c 100644
  		die = (struct erofs_inode_extended *)buf;
  		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
  		vi->i_mode = le16_to_cpu(die->i_mode);
-@@ -144,6 +136,26 @@ bogusimode:
+@@ -144,6 +135,27 @@ bogusimode:
  	return -EFSCORRUPTED;
  }
  
@@ -289,6 +291,7 @@ index 7377e74..95c379c 100644
 +	int ret = dev_read(0, buf, inode_loc, sizeof(*dic));
 +	if (ret < 0)
 +		return -EIO;
++	dic = (struct erofs_inode_compact *)buf;
 +	int ifmt = le16_to_cpu(dic->i_format);
 +	if (erofs_inode_version(ifmt)) {
 +		ret = dev_read(0, buf + sizeof(*dic), inode_loc + sizeof(*dic),
@@ -303,7 +306,7 @@ index 7377e74..95c379c 100644
  struct erofs_dirent *find_target_dirent(erofs_nid_t pnid,
  					void *dentry_blk,
 diff --git a/lib/super.c b/lib/super.c
-index 3ccc551..0e26992 100644
+index 3ccc551..f15aaf1 100644
 --- a/lib/super.c
 +++ b/lib/super.c
 @@ -4,6 +4,7 @@
@@ -324,19 +327,19 @@ index 3ccc551..0e26992 100644
 -	struct erofs_super_block *dsb;
 -	unsigned int blkszbits;
 -	int ret;
-+int erofs_parse_superblock(
-+	const char data[EROFS_BLKSIZ],
-+	struct erofs_sb_info *sbi
-+) {
-+	struct erofs_super_block *dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
- 
+-
 -	ret = blk_read(0, data, 0, 1);
 -	if (ret < 0) {
 -		erofs_err("cannot read erofs superblock: %d", ret);
 -		return -EIO;
 -	}
 -	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
--
++int erofs_parse_superblock(
++	const char data[EROFS_BLKSIZ],
++	struct erofs_sb_info *sbi
++) {
++	struct erofs_super_block *dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 
 -	ret = -EINVAL;
 +	int ret = -EINVAL;
  	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
@@ -352,7 +355,7 @@ index 3ccc551..0e26992 100644
  	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
  	if (blkszbits != LOG_BLOCK_SIZE) {
  		erofs_err("blksize %u isn't supported on this platform",
-@@ -92,20 +85,40 @@ int erofs_read_superblock(void)
+@@ -92,20 +85,39 @@ int erofs_read_superblock(void)
  		return ret;
  	}
  
@@ -389,7 +392,6 @@ index 3ccc551..0e26992 100644
 +{
 +	char data[EROFS_BLKSIZ];
 +	struct erofs_super_block *dsb;
-+	unsigned int blkszbits;
 +	int ret;
 +
 +	ret = blk_read(0, data, 0, 1);
