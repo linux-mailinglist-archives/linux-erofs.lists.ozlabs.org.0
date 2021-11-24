@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D37345B461
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 07:37:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D039445B46A
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 07:39:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HzWXV0NZ7z2yS3
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 17:37:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HzWZk5R0Vz2yS3
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 17:39:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
@@ -16,21 +16,21 @@ Authentication-Results: lists.ozlabs.org;
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HzWXM2Dnkz2xsv
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 17:37:39 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HzWZg5jgxz2xsv
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 17:39:39 +1100 (AEDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
- id 4D2F768AFE; Wed, 24 Nov 2021 07:37:35 +0100 (CET)
-Date: Wed, 24 Nov 2021 07:37:35 +0100
+ id D92CF68AFE; Wed, 24 Nov 2021 07:39:34 +0100 (CET)
+Date: Wed, 24 Nov 2021 07:39:34 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH 08/29] dax: remove dax_capable
-Message-ID: <20211124063735.GB6889@lst.de>
+Subject: Re: [PATCH 14/29] fsdax: simplify the pgoff calculation
+Message-ID: <20211124063934.GC6889@lst.de>
 References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-9-hch@lst.de> <20211123223123.GF266024@magnolia>
+ <20211109083309.584081-15-hch@lst.de> <20211123223642.GI266024@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211123223123.GF266024@magnolia>
+In-Reply-To: <20211123223642.GI266024@magnolia>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -53,19 +53,14 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Nov 23, 2021 at 02:31:23PM -0800, Darrick J. Wong wrote:
-> > -	struct super_block	*sb = mp->m_super;
+On Tue, Nov 23, 2021 at 02:36:42PM -0800, Darrick J. Wong wrote:
+> > -	phys_addr_t phys_off = (start_sect + sector) * 512;
 > > -
-> > -	if (!xfs_buftarg_is_dax(sb, mp->m_ddev_targp) &&
-> > -	   (!mp->m_rtdev_targp || !xfs_buftarg_is_dax(sb, mp->m_rtdev_targp))) {
-> > +	if (!mp->m_ddev_targp->bt_daxdev &&
-> > +	   (!mp->m_rtdev_targp || !mp->m_rtdev_targp->bt_daxdev)) {
+> > -	if (pgoff)
+> > -		*pgoff = PHYS_PFN(phys_off);
+> > -	if (phys_off % PAGE_SIZE || size % PAGE_SIZE)
 > 
-> Nit: This  ^ paren should be indented one more column because it's a
-> sub-clause of the if() test.
+> AFAICT, we're relying on fs_dax_get_by_bdev to have validated this
+> previously, which is why the error return stuff goes away?
 
-Done.
-
-> Nit: xfs_alert() already adds a newline to the end of the format string.
-
-Already done in the current tree.
+Exactly.
