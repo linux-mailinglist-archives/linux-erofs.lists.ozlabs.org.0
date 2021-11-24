@@ -2,68 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA6145B2C7
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 04:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E54F945B2DD
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 04:51:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4HzRmv0kY8z2ypX
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 14:48:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4HzRrj62gWz2ypY
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Nov 2021 14:51:33 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=jKMXPC6R;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel-com.20210112.gappssmtp.com header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=vNWAOXzy;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::102f;
- helo=mail-pj1-x102f.google.com; envelope-from=dan.j.williams@intel.com;
+ smtp.mailfrom=intel.com (client-ip=2607:f8b0:4864:20::1032;
+ helo=mail-pj1-x1032.google.com; envelope-from=dan.j.williams@intel.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=intel-com.20210112.gappssmtp.com
  header.i=@intel-com.20210112.gappssmtp.com header.a=rsa-sha256
- header.s=20210112 header.b=jKMXPC6R; dkim-atps=neutral
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com
- [IPv6:2607:f8b0:4864:20::102f])
+ header.s=20210112 header.b=vNWAOXzy; dkim-atps=neutral
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com
+ [IPv6:2607:f8b0:4864:20::1032])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4HzRmp2kfyz2xsH
- for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 14:48:04 +1100 (AEDT)
-Received: by mail-pj1-x102f.google.com with SMTP id gt5so1352605pjb.1
- for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 19:48:04 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4HzRrc2NQpz2xsC
+ for <linux-erofs@lists.ozlabs.org>; Wed, 24 Nov 2021 14:51:27 +1100 (AEDT)
+Received: by mail-pj1-x1032.google.com with SMTP id
+ gx15-20020a17090b124f00b001a695f3734aso1392813pjb.0
+ for <linux-erofs@lists.ozlabs.org>; Tue, 23 Nov 2021 19:51:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=intel-com.20210112.gappssmtp.com; s=20210112;
  h=mime-version:references:in-reply-to:from:date:message-id:subject:to
- :cc; bh=BQpMJpPq/OIJ1A+jReESOD3pvkOjXmQh8KJADyXTrz8=;
- b=jKMXPC6R380cNIQ/lk6QhOIiLqsp4XKj1eRLbWdIfXDMXjf2sFtM/A4DNKzZle92lO
- 3U1GnSeEGBEEzHeeSOTcj6e6Hlhrl2Cgom3C+oy6m84LroLIm83mhibtNhOC9a7kpuLa
- ouXLOQwDClItscEUt0Jtcfsiacpxarhj3trqquFBkBV1VRiZIUVoCcdmCugOwJ+8mJs6
- RFqDPmjgXZyOm3EQaprR9sZoOXJ0YQXXHWkXXD+DsFaSM6qnnUL3vYnF49/xzscWLZfD
- M7pqOQ9uH/J1/XHGYxb48lxo0PQegLqWhqBsHyRYBVi7oUWjdYWmqFepS80LAFQdqtcA
- s5yA==
+ :cc; bh=uJJrE2V7YDKia68Ncdl0fsAelSVdGw1v9JUEXR7xY5Y=;
+ b=vNWAOXzyAyZLL55qsyuCit1K8cMla9Q+I7a8HbLHArMfgpXCYh1wtjdFnUFWSDzn1/
+ T1Hm88FkQaWO7xTh0mJLeCLeygQ9XisaZ/XdmwUyLak3fa4OobGb1BWM5ZwyXtbfybYZ
+ AImH8X7vgDZd94f4gGyAHjFhglD+WoYohpNRn3ZnIE+uI745TpScjyc77ErLiPREiHK9
+ 9zQlfvf5/9sPOSgOLuvsV+WpFV/QM4YFfAdVMzyOtae7ikCAA2NGiOEOPGZF9XEqRun2
+ JjRU5WwiL+LDDdZvrMhOHyatQOMmuQaQU9bgUORS8BfRoMg++/EVDk/zAuYjdunbyyUb
+ o34Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:mime-version:references:in-reply-to:from:date
  :message-id:subject:to:cc;
- bh=BQpMJpPq/OIJ1A+jReESOD3pvkOjXmQh8KJADyXTrz8=;
- b=G/XKaJbXS5bv8SQLbioXcwFvtg7Uu26TW98CkcXLUjbLSbnFLL/sSZOLZ284rku/a6
- GgZMzOZYOTwCsNWs2Qk+4m+dgv8CiPD7gDYpACzaivmcjPN9UkQydA5cPiW17EV4pFo/
- oA9Om5w5wuvlfpkL+fuxZwc8yKm1FsINZJXQe6qiIZudT1pPu7VioRlm9u486puSd4ah
- RnLuRNf5uwj8FFHvMEhOM930kZOvVrmmMm305ieYCbMlvJLwc1pVZcYW33imi49vjhfr
- IPv+I81MDMkVVvTsNxt/3PX64dddO4VYtDNaiu531TIl4RmnH+x3FsE2ihm3olxdVlZb
- W+fg==
-X-Gm-Message-State: AOAM533P4AY+RS/H3MISyNnI+qiENtAfoQSHbQXlvtmH1nzKp7zl5VCN
- R/uY8W6VypwOe/FsapkThwYHPS2xeZBrRHpi9yldlw==
-X-Google-Smtp-Source: ABdhPJwXdBqxRTwwq0bi38HdemI3/UrUSQvkef2geUCQrgUs13GwLl6CkzHERiNWivJH+HCOX6YcKKMcXBwB2wDg59I=
-X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id
- i11-20020a1709026acb00b0014276c3d35fmr13991510plt.89.1637725682824; Tue, 23
- Nov 2021 19:48:02 -0800 (PST)
+ bh=uJJrE2V7YDKia68Ncdl0fsAelSVdGw1v9JUEXR7xY5Y=;
+ b=ij6VbV7/4iETg9NPtHjLLFY1m1KA3HWT6Uz6Bom9Csqtp93TOPnvRszWF+N9KL5Nfg
+ Zh0RwLy6PPK2KpuHpi1B6wKsm3i0a6Sy06cQnKbhrC1xQRHgwNzQ9aN2z8L6IWA9QaYc
+ KcxStFP3jzkzjS6aGCTPpE0a2NFFtNzMa8Cw+F3iSirIxCBQUnBO+RwgaU01EpcCWehR
+ WFS9FTJnOunrb6ovGTlvezNcZIXvuyipFS+HTefqNlzsuh1f+0s0gGeaTWiR2VjWe+zi
+ /ze4XsDY7X2krlFXpPuovXMqAQG5+Rnmwzbp2KfDwEGvIDamX+jPoTXvP+N+zbdfVFiy
+ cbhw==
+X-Gm-Message-State: AOAM533JxnUR94Mb1BcDXGY3dhLuy2pE4/9H4SpmfXX+x6VsKlXXzYkG
+ undCRx2p/eJtH2T7hs4hSzadHCXEUJVuRbJENOSO9WRoDII=
+X-Google-Smtp-Source: ABdhPJzAHmbz7abbV3IfUPlG+M3Adum2An1EImXm+0nyzeG+6b50syE8SI9jQ3gftFqA5yglDnQ0v4N9/X3Fjpc01Ms=
+X-Received: by 2002:a17:90b:1e07:: with SMTP id
+ pg7mr4029053pjb.93.1637725884625; 
+ Tue, 23 Nov 2021 19:51:24 -0800 (PST)
 MIME-Version: 1.0
 References: <20211109083309.584081-1-hch@lst.de>
- <20211109083309.584081-28-hch@lst.de>
-In-Reply-To: <20211109083309.584081-28-hch@lst.de>
+ <20211109083309.584081-29-hch@lst.de>
+In-Reply-To: <20211109083309.584081-29-hch@lst.de>
 From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 23 Nov 2021 19:47:52 -0800
-Message-ID: <CAPcyv4jrUAJ28J6Q75jmfQRz2nj4a3v6bZVjFpROd98efuafsQ@mail.gmail.com>
-Subject: Re: [PATCH 27/29] dax: fix up some of the block device related ifdefs
+Date: Tue, 23 Nov 2021 19:51:14 -0800
+Message-ID: <CAPcyv4iV+PTdvV+Tq5j3nR6UWFQPTeuzQrZGdS24HdVehY_OaA@mail.gmail.com>
+Subject: Re: [PATCH 28/29] iomap: build the block based code conditionally
 To: Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -90,13 +91,9 @@ Sender: "Linux-erofs"
 
 On Tue, Nov 9, 2021 at 12:34 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> The DAX device <-> block device association is only enabled if
-> CONFIG_BLOCK is enabled.  Update dax.h to account for that and use
-> the right conditions for the fs_put_dax stub as well.
+> Only build the block based iomap code if CONFIG_BLOCK is set.  Currently
+> that is always the case, but it will change soon.
 
-Looks good to me.
+Looks good.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
