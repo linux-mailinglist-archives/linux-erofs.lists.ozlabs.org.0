@@ -2,60 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1055D45FCA0
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Nov 2021 06:01:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8140C46010E
+	for <lists+linux-erofs@lfdr.de>; Sat, 27 Nov 2021 20:06:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J1KGK6wHTz3cBs
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Nov 2021 16:01:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J1h1G3br8z3c6N
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Nov 2021 06:06:42 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fVub9bUA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mmZTvR2S;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org;
+ envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=fVub9bUA; 
+ header.s=k20201202 header.b=mmZTvR2S; 
  dkim-atps=neutral
-X-Greylist: delayed 484 seconds by postgrey-1.36 at boromir;
- Sat, 27 Nov 2021 16:01:39 AEDT
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+X-Greylist: delayed 498 seconds by postgrey-1.36 at boromir;
+ Sun, 28 Nov 2021 06:06:40 AEDT
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J1h1D114Tz3bXV
+ for <linux-erofs@lists.ozlabs.org>; Sun, 28 Nov 2021 06:06:39 +1100 (AEDT)
+Received: from mail.kernel.org (unknown [198.145.29.99])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J1KGC4H2Zz3c7P
- for <linux-erofs@lists.ozlabs.org>; Sat, 27 Nov 2021 16:01:39 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by ams.source.kernel.org (Postfix) with ESMTPS id BE0DCB82932;
- Sat, 27 Nov 2021 04:53:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DD4C53FAD;
- Sat, 27 Nov 2021 04:53:22 +0000 (UTC)
+ by dfw.source.kernel.org (Postfix) with ESMTPS id 4F12260EC1;
+ Sat, 27 Nov 2021 18:58:17 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id B32D160174;
+ Sat, 27 Nov 2021 18:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1637988810;
- bh=qmrI6qDuYGXxcCK42IFtwac4kllQQxIR9O1mMoTZ0Gw=;
- h=Date:From:To:Cc:Subject:From;
- b=fVub9bUA5rDemlu2pJ65FP8a/VqC0dgIbSd4R1vrMZmi/U75F32XZLWtJb8fXUxti
- 7OKjCs+gIPKBWCUm8QlNBHmewUScQDQD9ry8Oh4VbHxcfZgZAAllQ21c5XNC5C1Zr2
- 8Gi1Aka55/p5Awyhy/li7QtTKdy1p5vfCGGWfeaHHjVDfVL/0OpqTb8enjbzE9BEo0
- KQZmEpvrfiE0Dn2QLJTMjkmY5c1fK3OCcdcvcPnT9CaMudDPFMGwTtA+ei0siE0+pK
- ym1dd8Di7zu5LL8VgO56/bfXp9YHNeTDIE7KRYmuNv6VngA9q1u3fYFbl7jGls1jZ7
- odQ1FGX43MGfg==
-Date: Sat, 27 Nov 2021 12:53:09 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs fixes for 5.16-rc3
-Message-ID: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
- Huang Jianan <huangjianan@oppo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ s=k20201202; t=1638039496;
+ bh=8nQ53Up+ro1K0NzJ9qoy6TvyU4mDwcYEHjLnlaxulNo=;
+ h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+ b=mmZTvR2SBtukDiPVwOMMh/uvzFFRzXORAhRm2tlL+U6xglULRdWQi8th+RMaKin7P
+ EX9A6utcWA1dmMlXwndVZrdKGDSl5tR8Q5lS21XjM60F4NgwXbrfbDCTVbf14wXJ+4
+ HRjCcqrqrSJgOElrsRoQW4uC90htb8B73U8YYQviw35fsUe6f2H8fo2Qz4BaQGND/3
+ be+mEw7IXfhPjzZXL6C2A0Bm5UrArp0YNUHQLY8Jqj+9D89SscNUQojpDRDqTjv/EF
+ 6LNLHkX811fh2zRRuh67L0h4bO+oH4+mbPM+6d9mks2tiRDFsw83bXynCaOG7NXnxQ
+ Rkn16I9+wehhw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain
+ [127.0.0.1])
+ by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id AD91C60074;
+ Sat, 27 Nov 2021 18:58:16 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 5.16-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-PR-Tracked-List-Id: Development of Linux EROFS file system
+ <linux-erofs.lists.ozlabs.org>
+X-PR-Tracked-Message-Id: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
+ tags/erofs-for-5.16-rc3-fixes
+X-PR-Tracked-Commit-Id: 57bbeacdbee72a54eb97d56b876cf9c94059fc34
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 52dc4c640ac5521cc95b3b87f9d2d276c12c07bb
+Message-Id: <163803949670.17852.12698146502651849127.pr-tracker-bot@kernel.org>
+Date: Sat, 27 Nov 2021 18:58:16 +0000
+To: Gao Xiang <xiang@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,45 +75,21 @@ List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
  LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+The pull request you sent on Sat, 27 Nov 2021 12:53:09 +0800:
 
-Could you consider this pull request for 5.16-rc3?
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc3-fixes
 
-This fixes a regression introduced by the XArray convention
-which can cause ABBA deadlock in the low memory scenarios.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/52dc4c640ac5521cc95b3b87f9d2d276c12c07bb
 
-Jianhua Hao also reported this issue recently. All commits
-have been in -next and no merge conflicts.
+Thank you!
 
-Many thanks!
-Gao Xiang
-
-The following changes since commit 136057256686de39cc3a07c2e39ef6bc43003ff6:
-
-  Linux 5.16-rc2 (2021-11-21 13:47:39 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc3-fixes
-
-for you to fetch changes up to 57bbeacdbee72a54eb97d56b876cf9c94059fc34:
-
-  erofs: fix deadlock when shrink erofs slab (2021-11-23 14:58:16 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix an ABBA deadlock introduced by XArray convention.
-
-----------------------------------------------------------------
-Huang Jianan (1):
-      erofs: fix deadlock when shrink erofs slab
-
- fs/erofs/utils.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
