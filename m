@@ -1,14 +1,14 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4038461237
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 11:23:25 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EA1F461238
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 11:23:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J2hJW3xC9z2ymt
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 21:23:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J2hJY2FSQz3cbS
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 21:23:25 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=GajxwQfn;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=iCMuy68H;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
@@ -19,33 +19,33 @@ Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
- header.s=casper.20170209 header.b=GajxwQfn; 
+ header.s=casper.20170209 header.b=iCMuy68H; 
  dkim-atps=neutral
 Received: from casper.infradead.org (casper.infradead.org
  [IPv6:2001:8b0:10b:1236::1])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J2hHT5KCwz3cZ3
- for <linux-erofs@lists.ozlabs.org>; Mon, 29 Nov 2021 21:22:28 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J2hHV3Zspz3cYB
+ for <linux-erofs@lists.ozlabs.org>; Mon, 29 Nov 2021 21:22:30 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
  d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
  References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
  Content-Type:Content-ID:Content-Description;
- bh=uudfL2VOAfnu+ewydEXNpXNrXSozdwtbo/7yz/6Xsyc=; b=GajxwQfnuRf8VNuHWwzpK3w2Kr
- TqdSnuptioNAUf6g2eYsDUaOY3wUSVh6WJEaaeuiIaRQdtIMtFzwXgznsr/myS1f4+p6gNtCq1PA3
- j+ngJRZXUiLF7NuiXS4EcXSUdQS1M1N4XPMQf0Jv+uaU6xYi6mSorvMUo0XDc9GwXwLixh8kk2VuU
- XNwgx/QQqXU+oU8o7DBBsRLxvPasm/bh55cCZ9HZB4Hdl27txeSkLuQ+zYL/BHZi9Sm8eaZP7AN5J
- GMFt5WgLHfNNj9gg/9v2kOoce//299JKLbvqaL5Td+Gyfcooc55mX3WgnyZO8W1NMQIf4DGTE2IJJ
- vorV2FIQ==;
+ bh=eMKmyUFR4KQneLT0Uhrd4iN5wiHT1qgYjiWa7k9/26c=; b=iCMuy68HIeBh8N61WZAwO2ug/H
+ /x2mGvAYdsbhASqr7LFGMw5d4XNIu3JJxuCbYo2DGAUrs42OI68BqYyHyLdXjckRTi/GJhy/3LGdQ
+ 4BwMNvI8dIK+DQK6t+jRmyYA3SoWGtJ6MuXTOHWtrQpfzqv/8+LHnhG6vYLjSUFP+J8hGuCbNgY8E
+ cutLms1cW4B2w8YSw1puVXe6/BMM8qbjqi/1ZPMGTPWDSOLAVoC6Lci87v8nBjauozRG4UHWNxKhG
+ q0fX3H3pFFAaOshXPMFUM7avuW5PfkWsml3dZ+bKOmOPeT0HN6aYvESKUEflhBfEd5uH+DV0KXO2z
+ JXdj1zNQ==;
 Received: from [2001:4bb8:184:4a23:724a:c057:c7bf:4643] (helo=localhost)
  by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mrdnd-0073N9-Jt; Mon, 29 Nov 2021 10:22:18 +0000
+ id 1mrdnf-0073Nf-0s; Mon, 29 Nov 2021 10:22:20 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 10/29] dm-log-writes: add a log_writes_dax_pgoff helper
-Date: Mon, 29 Nov 2021 11:21:44 +0100
-Message-Id: <20211129102203.2243509-11-hch@lst.de>
+Subject: [PATCH 11/29] dm-stripe: add a stripe_dax_pgoff helper
+Date: Mon, 29 Nov 2021 11:21:45 +0100
+Message-Id: <20211129102203.2243509-12-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211129102203.2243509-1-hch@lst.de>
 References: <20211129102203.2243509-1-hch@lst.de>
@@ -82,95 +82,112 @@ Signed-off-by: Christoph Hellwig <hch@lst.de>
 Acked-by: Mike Snitzer <snitzer@redhat.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/md/dm-log-writes.c | 42 +++++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+ drivers/md/dm-stripe.c | 63 ++++++++++--------------------------------
+ 1 file changed, 15 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/md/dm-log-writes.c b/drivers/md/dm-log-writes.c
-index 3155875d4e5b0..cdb22e7a1d0da 100644
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -947,17 +947,21 @@ static int log_dax(struct log_writes_c *lc, sector_t sector, size_t bytes,
- 	return 0;
+diff --git a/drivers/md/dm-stripe.c b/drivers/md/dm-stripe.c
+index f084607220293..50dba3f39274c 100644
+--- a/drivers/md/dm-stripe.c
++++ b/drivers/md/dm-stripe.c
+@@ -301,83 +301,50 @@ static int stripe_map(struct dm_target *ti, struct bio *bio)
  }
  
-+static struct dax_device *log_writes_dax_pgoff(struct dm_target *ti,
-+		pgoff_t *pgoff)
-+{
-+	struct log_writes_c *lc = ti->private;
-+
-+	*pgoff += (get_start_sect(lc->dev->bdev) >> PAGE_SECTORS_SHIFT);
-+	return lc->dev->dax_dev;
+ #if IS_ENABLED(CONFIG_FS_DAX)
+-static long stripe_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
+-		long nr_pages, void **kaddr, pfn_t *pfn)
++static struct dax_device *stripe_dax_pgoff(struct dm_target *ti, pgoff_t *pgoff)
+ {
+-	sector_t dev_sector, sector = pgoff * PAGE_SECTORS;
+ 	struct stripe_c *sc = ti->private;
+-	struct dax_device *dax_dev;
+ 	struct block_device *bdev;
++	sector_t dev_sector;
+ 	uint32_t stripe;
+-	long ret;
+ 
+-	stripe_map_sector(sc, sector, &stripe, &dev_sector);
++	stripe_map_sector(sc, *pgoff * PAGE_SECTORS, &stripe, &dev_sector);
+ 	dev_sector += sc->stripe[stripe].physical_start;
+-	dax_dev = sc->stripe[stripe].dev->dax_dev;
+ 	bdev = sc->stripe[stripe].dev->bdev;
+ 
+-	ret = bdev_dax_pgoff(bdev, dev_sector, nr_pages * PAGE_SIZE, &pgoff);
+-	if (ret)
+-		return ret;
++	*pgoff = (get_start_sect(bdev) + dev_sector) >> PAGE_SECTORS_SHIFT;
++	return sc->stripe[stripe].dev->dax_dev;
 +}
 +
- static long log_writes_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
- 					 long nr_pages, void **kaddr, pfn_t *pfn)
- {
--	struct log_writes_c *lc = ti->private;
--	sector_t sector = pgoff * PAGE_SECTORS;
--	int ret;
-+	struct dax_device *dax_dev = log_writes_dax_pgoff(ti, &pgoff);
- 
--	ret = bdev_dax_pgoff(lc->dev->bdev, sector, nr_pages * PAGE_SIZE, &pgoff);
--	if (ret)
--		return ret;
--	return dax_direct_access(lc->dev->dax_dev, pgoff, nr_pages, kaddr, pfn);
-+	return dax_direct_access(dax_dev, pgoff, nr_pages, kaddr, pfn);
++static long stripe_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
++		long nr_pages, void **kaddr, pfn_t *pfn)
++{
++	struct dax_device *dax_dev = stripe_dax_pgoff(ti, &pgoff);
++
+ 	return dax_direct_access(dax_dev, pgoff, nr_pages, kaddr, pfn);
  }
  
- static size_t log_writes_dax_copy_from_iter(struct dm_target *ti,
-@@ -966,11 +970,9 @@ static size_t log_writes_dax_copy_from_iter(struct dm_target *ti,
+ static size_t stripe_dax_copy_from_iter(struct dm_target *ti, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
  {
- 	struct log_writes_c *lc = ti->private;
- 	sector_t sector = pgoff * PAGE_SECTORS;
-+	struct dax_device *dax_dev = log_writes_dax_pgoff(ti, &pgoff);
- 	int err;
- 
--	if (bdev_dax_pgoff(lc->dev->bdev, sector, ALIGN(bytes, PAGE_SIZE), &pgoff))
--		return 0;
+-	sector_t dev_sector, sector = pgoff * PAGE_SECTORS;
+-	struct stripe_c *sc = ti->private;
+-	struct dax_device *dax_dev;
+-	struct block_device *bdev;
+-	uint32_t stripe;
 -
- 	/* Don't bother doing anything if logging has been disabled */
- 	if (!lc->logging_enabled)
- 		goto dax_copy;
-@@ -981,34 +983,24 @@ static size_t log_writes_dax_copy_from_iter(struct dm_target *ti,
- 		return 0;
- 	}
- dax_copy:
--	return dax_copy_from_iter(lc->dev->dax_dev, pgoff, addr, bytes, i);
-+	return dax_copy_from_iter(dax_dev, pgoff, addr, bytes, i);
- }
+-	stripe_map_sector(sc, sector, &stripe, &dev_sector);
+-	dev_sector += sc->stripe[stripe].physical_start;
+-	dax_dev = sc->stripe[stripe].dev->dax_dev;
+-	bdev = sc->stripe[stripe].dev->bdev;
++	struct dax_device *dax_dev = stripe_dax_pgoff(ti, &pgoff);
  
- static size_t log_writes_dax_copy_to_iter(struct dm_target *ti,
- 					  pgoff_t pgoff, void *addr, size_t bytes,
- 					  struct iov_iter *i)
- {
--	struct log_writes_c *lc = ti->private;
--	sector_t sector = pgoff * PAGE_SECTORS;
-+	struct dax_device *dax_dev = log_writes_dax_pgoff(ti, &pgoff);
- 
--	if (bdev_dax_pgoff(lc->dev->bdev, sector, ALIGN(bytes, PAGE_SIZE), &pgoff))
+-	if (bdev_dax_pgoff(bdev, dev_sector, ALIGN(bytes, PAGE_SIZE), &pgoff))
 -		return 0;
--	return dax_copy_to_iter(lc->dev->dax_dev, pgoff, addr, bytes, i);
-+	return dax_copy_to_iter(dax_dev, pgoff, addr, bytes, i);
+ 	return dax_copy_from_iter(dax_dev, pgoff, addr, bytes, i);
  }
  
- static int log_writes_dax_zero_page_range(struct dm_target *ti, pgoff_t pgoff,
- 					  size_t nr_pages)
+ static size_t stripe_dax_copy_to_iter(struct dm_target *ti, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	sector_t dev_sector, sector = pgoff * PAGE_SECTORS;
+-	struct stripe_c *sc = ti->private;
+-	struct dax_device *dax_dev;
+-	struct block_device *bdev;
+-	uint32_t stripe;
+-
+-	stripe_map_sector(sc, sector, &stripe, &dev_sector);
+-	dev_sector += sc->stripe[stripe].physical_start;
+-	dax_dev = sc->stripe[stripe].dev->dax_dev;
+-	bdev = sc->stripe[stripe].dev->bdev;
++	struct dax_device *dax_dev = stripe_dax_pgoff(ti, &pgoff);
+ 
+-	if (bdev_dax_pgoff(bdev, dev_sector, ALIGN(bytes, PAGE_SIZE), &pgoff))
+-		return 0;
+ 	return dax_copy_to_iter(dax_dev, pgoff, addr, bytes, i);
+ }
+ 
+ static int stripe_dax_zero_page_range(struct dm_target *ti, pgoff_t pgoff,
+ 				      size_t nr_pages)
  {
 -	int ret;
--	struct log_writes_c *lc = ti->private;
--	sector_t sector = pgoff * PAGE_SECTORS;
-+	struct dax_device *dax_dev = log_writes_dax_pgoff(ti, &pgoff);
+-	sector_t dev_sector, sector = pgoff * PAGE_SECTORS;
+-	struct stripe_c *sc = ti->private;
+-	struct dax_device *dax_dev;
+-	struct block_device *bdev;
+-	uint32_t stripe;
++	struct dax_device *dax_dev = stripe_dax_pgoff(ti, &pgoff);
  
--	ret = bdev_dax_pgoff(lc->dev->bdev, sector, nr_pages << PAGE_SHIFT,
--			     &pgoff);
+-	stripe_map_sector(sc, sector, &stripe, &dev_sector);
+-	dev_sector += sc->stripe[stripe].physical_start;
+-	dax_dev = sc->stripe[stripe].dev->dax_dev;
+-	bdev = sc->stripe[stripe].dev->bdev;
+-
+-	ret = bdev_dax_pgoff(bdev, dev_sector, nr_pages << PAGE_SHIFT, &pgoff);
 -	if (ret)
 -		return ret;
--	return dax_zero_page_range(lc->dev->dax_dev, pgoff,
--				   nr_pages << PAGE_SHIFT);
-+	return dax_zero_page_range(dax_dev, pgoff, nr_pages << PAGE_SHIFT);
+ 	return dax_zero_page_range(dax_dev, pgoff, nr_pages);
  }
  
- #else
 -- 
 2.30.2
 
