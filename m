@@ -2,67 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8140C46010E
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Nov 2021 20:06:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF55B46122C
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 11:23:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J1h1G3br8z3c6N
-	for <lists+linux-erofs@lfdr.de>; Sun, 28 Nov 2021 06:06:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J2hJ64dcKz3cDw
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Nov 2021 21:23:02 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mmZTvR2S;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=WyDrKe/B;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org;
- envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record)
+ smtp.mailfrom=casper.srs.infradead.org (client-ip=2001:8b0:10b:1236::1;
+ helo=casper.infradead.org;
+ envelope-from=batv+13c9c90cf431a9f4f7f6+6672+infradead.org+hch@casper.srs.infradead.org;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=mmZTvR2S; 
+ secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256
+ header.s=casper.20170209 header.b=WyDrKe/B; 
  dkim-atps=neutral
-X-Greylist: delayed 498 seconds by postgrey-1.36 at boromir;
- Sun, 28 Nov 2021 06:06:40 AEDT
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J1h1D114Tz3bXV
- for <linux-erofs@lists.ozlabs.org>; Sun, 28 Nov 2021 06:06:39 +1100 (AEDT)
-Received: from mail.kernel.org (unknown [198.145.29.99])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from casper.infradead.org (casper.infradead.org
+ [IPv6:2001:8b0:10b:1236::1])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id 4F12260EC1;
- Sat, 27 Nov 2021 18:58:17 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id B32D160174;
- Sat, 27 Nov 2021 18:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1638039496;
- bh=8nQ53Up+ro1K0NzJ9qoy6TvyU4mDwcYEHjLnlaxulNo=;
- h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
- b=mmZTvR2SBtukDiPVwOMMh/uvzFFRzXORAhRm2tlL+U6xglULRdWQi8th+RMaKin7P
- EX9A6utcWA1dmMlXwndVZrdKGDSl5tR8Q5lS21XjM60F4NgwXbrfbDCTVbf14wXJ+4
- HRjCcqrqrSJgOElrsRoQW4uC90htb8B73U8YYQviw35fsUe6f2H8fo2Qz4BaQGND/3
- be+mEw7IXfhPjzZXL6C2A0Bm5UrArp0YNUHQLY8Jqj+9D89SscNUQojpDRDqTjv/EF
- 6LNLHkX811fh2zRRuh67L0h4bO+oH4+mbPM+6d9mks2tiRDFsw83bXynCaOG7NXnxQ
- Rkn16I9+wehhw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain
- [127.0.0.1])
- by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id AD91C60074;
- Sat, 27 Nov 2021 18:58:16 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 5.16-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system
- <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <20211127045306.GA17766@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.16-rc3-fixes
-X-PR-Tracked-Commit-Id: 57bbeacdbee72a54eb97d56b876cf9c94059fc34
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 52dc4c640ac5521cc95b3b87f9d2d276c12c07bb
-Message-Id: <163803949670.17852.12698146502651849127.pr-tracker-bot@kernel.org>
-Date: Sat, 27 Nov 2021 18:58:16 +0000
-To: Gao Xiang <xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J2hHQ0yH4z2yg5
+ for <linux-erofs@lists.ozlabs.org>; Mon, 29 Nov 2021 21:22:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+ Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+ Content-Description:In-Reply-To:References;
+ bh=y+N6T9OX7HOXSR0XwGBs9AqYCmtI5mlyJgGLesZ2HD4=; b=WyDrKe/Bh7nQ7b/8LTVDbNFSYn
+ EXxq5n73/ibf7zm6FmAT7XVapvybXUPlIXP78x4LNgdHQjtaVpQbj3XC2X3raEe99lvIRSxOmR7wW
+ HiLQFMH92Ia/3oGO/pOBIv+fFbSdLCDdMhrsch/OnvhZd5mpH/29mtxEaEAJmrkCBxOc1wfFWNiM6
+ rh/11Uz6PTBjfTQAj6T0jTJTP6rj3K0mpycAiDunQm4hT8eUpq7Ss6q5cooBawGxSohnff0n4TPZ4
+ A9BNZkhL6PdqBIQElzxZLhNJAaZpf1SaVpH4aSbq7eHNN5/AkQlQrGoHjmlPCKPlRx4cjrl73Dh/y
+ 2ICGPwQA==;
+Received: from [2001:4bb8:184:4a23:724a:c057:c7bf:4643] (helo=localhost)
+ by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mrdnP-0073IP-RJ; Mon, 29 Nov 2021 10:22:04 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Subject: decouple DAX from block devices v2
+Date: Mon, 29 Nov 2021 11:21:34 +0100
+Message-Id: <20211129102203.2243509-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by
+ casper.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,22 +62,30 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>
+Cc: nvdimm@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org, linux-xfs@vger.kernel.org,
+ dm-devel@redhat.com, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Sat, 27 Nov 2021 12:53:09 +0800:
+Hi Dan,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.16-rc3-fixes
+this series decouples the DAX from the block layer so that the
+block_device is not needed at all for the DAX I/O path.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/52dc4c640ac5521cc95b3b87f9d2d276c12c07bb
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Changes since v1:
+ - rebase on latest v5.16-rc
+ - ensure the new dax zeroing helpers are always declared
+ - fix a dax_dev leak in pmem_attach_disk
+ - remove '\n' from an xfs format string
+ - fix a pre-existing error handling bug in alloc_dev
+ - fix a few whitespace issues
+ - tighten an error check
+ - use s64/u64 a little more
+ - improve a few commit messages
+ - add a CONFIG_FS_DAX ifdef to stub out IOMAP_DAX
+ - improve how IOMAP_DAX is introduced and better document why it is
+   added
