@@ -2,74 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF5C8462C63
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Nov 2021 06:56:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DBE6463CBA
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Nov 2021 18:26:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J3BKv4cWtz3c57
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Nov 2021 16:56:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1638251779;
-	bh=DQOgoLXV1vqMD6SBnxkOvTnN/9Gr43l4y8+xwO1C6jU=;
-	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=I/6BAiTKgYQ3jCZLQ1gixpcxNtEFPh1vi/0kTBbzNpXP+Rf2AtwI2M+e9/AB411m3
-	 5NSktl3vkDiopUD8o3zzhUOTcPuqDGVcPa1l8MgxQG+8kQcikuDwDajL6fJljXWECP
-	 4DhiU4aCQefEMYXOLcX9wswk+kvkkK5cxSvoI+x55/u9vwTE3KLTFK/vFdY8mDtumz
-	 loLUhyNimKTCDDxYI/mXuw04FJf1D2lGfmCeSjBtbcjE0mM/I58y2ppg7EmZ+a6fSs
-	 /6qupKbGDJCbYZPrWIfffaeW12ULoIPKhj8yVxf46rJBcUTEcqJszLhN5rvzUoQHVZ
-	 SbXoiqdbS/pQw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J3Tfc1PCHz3bXj
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Dec 2021 04:26:48 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=sNtLoYDY;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=flex--zhangkelvin.bounces.google.com
- (client-ip=2607:f8b0:4864:20::749; helo=mail-qk1-x749.google.com;
- envelope-from=3-bylyqskcx4tb4hae8fpchaiiaf8.6igfchor-8li9mfcmnm.itf45m.ila@flex--zhangkelvin.bounces.google.com;
+ smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1;
+ helo=ams.source.kernel.org; envelope-from=djwong@kernel.org;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
- header.s=20210112 header.b=dC/qXN43; dkim-atps=neutral
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com
- [IPv6:2607:f8b0:4864:20::749])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=sNtLoYDY; 
+ dkim-atps=neutral
+Received: from ams.source.kernel.org (ams.source.kernel.org
+ [IPv6:2604:1380:4601:e00::1])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J3BKm3b90z304y
- for <linux-erofs@lists.ozlabs.org>; Tue, 30 Nov 2021 16:56:12 +1100 (AEDT)
-Received: by mail-qk1-x749.google.com with SMTP id
- v13-20020a05620a440d00b00468380f4407so27371434qkp.17
- for <linux-erofs@lists.ozlabs.org>; Mon, 29 Nov 2021 21:56:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:date:in-reply-to:message-id:mime-version
- :references:subject:from:to:cc;
- bh=DQOgoLXV1vqMD6SBnxkOvTnN/9Gr43l4y8+xwO1C6jU=;
- b=gH5kxZb/H0QHXM3wqGJJS8pLlL9zLABs1ixb2EoUd5lFfXB7eXXxmwrsqwx2Uv0k6V
- 3xsKBRox7Xk83p6BgcLAS5vvLKnOgm7xrKwVMHIUXYwaUWya/ea1zK+2GtlXgXV+2M5V
- U+LPoIVJNSD0b12ntZfy/Ua7neNkqDZCuTO6n1fjAwcgZDVUpgI+SfhzvpHNRyfztiHt
- VMO2sJe9RrE/sewqfyzV0eigOrbgnKxMRbuQUkEh+0kb7HPXUkGl6OagEMA7+JRIU/lN
- 4uyW+iVZdvDKT4GHykZQwBmVgk7WAhJjwht+E7uQhnOvsDEoyS9FCIILCVAYFijJRByV
- HB8A==
-X-Gm-Message-State: AOAM533plCK9Q5AH2RFLsrumf3FX544hRScikP7lkbWFIuLh5tXqy6yW
- fMh4fhKnqxGiIbC83738jjTrLHI4w6rmjHSOLZ4d8yKAFBo22DK8/OIAAgvpyzsmmCa5ijMcpx+
- JisHoygj5XsMKdofKZhkivGS7jVRt0hQPY5kOaXAtOow/6cFsacClAoMCTIVlCuBR9fvO0fWCn0
- UGCb3Xy6E=
-X-Google-Smtp-Source: ABdhPJzkhJTVuCwYfIT1XFV8JZZRP8XjBuU+0yXMNiZHDg/iFNE5cjz+iZBNYBvjVtmsgBnRtMb7Shd0AJbtvtyEjA==
-X-Received: from zhangkelvin-big.c.googlers.com
- ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
- (user=zhangkelvin job=sendgmr) by 2002:a05:622a:307:: with SMTP id
- q7mr48862727qtw.330.1638251769517; Mon, 29 Nov 2021 21:56:09 -0800 (PST)
-Date: Mon, 29 Nov 2021 21:56:04 -0800
-In-Reply-To: <20211130055604.2876828-1-zhangkelvin@google.com>
-Message-Id: <20211130055604.2876828-2-zhangkelvin@google.com>
-Mime-Version: 1.0
-References: <YaWYErBYsG4Yjboh@B-P7TQMD6M-0146.local>
- <20211130055604.2876828-1-zhangkelvin@google.com>
-X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH v3 2/2] erofs-utils: Make erofs-utils more C++ friendly
-To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
- Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J3TfY0JTcz305v
+ for <linux-erofs@lists.ozlabs.org>; Wed,  1 Dec 2021 04:26:45 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by ams.source.kernel.org (Postfix) with ESMTPS id C1943B81A96;
+ Tue, 30 Nov 2021 17:26:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698F9C53FC1;
+ Tue, 30 Nov 2021 17:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1638293197;
+ bh=BMG4z10Kn+4IsBnm0eMRsV0qjHiN0yQ30zDqbBy45SM=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=sNtLoYDY2zHtXbW7e9UQt9r80pIhCvB+EQzY2o7of+YWnfcOK4MYRcb2KtOQ+hjzc
+ QWqWVxm6s+B1XWsdG1z4li4cve6WfhsS9kQdh0j8NjeMZIJIAJtyMbWFuqyjsfTMwU
+ gEvC/UJ38a2NUjmDdRsprA6KFnpNAeyJzkiwRjrEFGVJbVTgarZrAk1ShyIUfwhV3I
+ Jr2TX4J1lNr8G4q9yrjKraUEMRFgu3+8VrrzWCeJrMkjv2MQ06tfR0EP9WMOWB6izB
+ j7ZObSOK4eSJ5ewSukvjrEuh2qW7bMGBnjpcwDz/Q7OYh+t+ILVcujeRwHG4b6jRxL
+ jKmLZL0ruYLqQ==
+Date: Tue, 30 Nov 2021 09:26:36 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 04/29] dax: simplify the dax_device <-> gendisk association
+Message-ID: <20211130172636.GC8467@magnolia>
+References: <20211129102203.2243509-1-hch@lst.de>
+ <20211129102203.2243509-5-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211129102203.2243509-5-hch@lst.de>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,685 +65,451 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Kelvin Zhang <zhangkelvin@google.com>
-Cc: Kelvin Zhang <zhangkelvin@google.com>
+Cc: nvdimm@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>,
+ linux-s390@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ virtualization@lists.linux-foundation.org, linux-xfs@vger.kernel.org,
+ dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
+ Dan Williams <dan.j.williams@intel.com>, linux-ext4@vger.kernel.org,
+ Ira Weiny <ira.weiny@intel.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-1. Add extern "C" wrappers to headers, so that they can be included from
-C++
-2. Add const keyworkds to certain pointer type params
+On Mon, Nov 29, 2021 at 11:21:38AM +0100, Christoph Hellwig wrote:
+> Replace the dax_host_hash with an xarray indexed by the pointer value
+> of the gendisk, and require explicitly calls from the block drivers that
+> want to associate their gendisk with a dax_device.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Mike Snitzer <snitzer@redhat.com>
 
-Change-Id: Ica96c5626de7cc511ffa9a73e0e5ddf7601a7451
-Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
----
- include/erofs/blobchunk.h      | 10 ++++++++++
- include/erofs/block_list.h     | 10 ++++++++++
- include/erofs/cache.h          |  9 +++++++++
- include/erofs/compress.h       |  9 +++++++++
- include/erofs/compress_hints.h | 10 ++++++++++
- include/erofs/config.h         | 20 +++++++++-----------
- include/erofs/decompress.h     |  9 +++++++++
- include/erofs/defs.h           | 20 ++++++++++++++++++++
- include/erofs/err.h            |  9 +++++++++
- include/erofs/exclude.h        | 10 ++++++++++
- include/erofs/flex-array.h     |  9 +++++++++
- include/erofs/hashmap.h        |  9 +++++++++
- include/erofs/hashtable.h      |  9 +++++++++
- include/erofs/inode.h          |  9 +++++++++
- include/erofs/internal.h       |  9 +++++++++
- include/erofs/io.h             | 11 +++++++++++
- include/erofs/list.h           | 10 ++++++++++
- include/erofs/print.h          |  9 +++++++++
- include/erofs/trace.h          |  9 +++++++++
- include/erofs/xattr.h          |  9 +++++++++
- include/erofs_fs.h             |  9 +++++++++
- lib/config.c                   |  1 +
- lib/erofs_selinux.h            | 13 +++++++++++++
- lib/inode.c                    |  1 +
- lib/xattr.c                    |  2 ++
- 25 files changed, 224 insertions(+), 11 deletions(-)
- create mode 100644 lib/erofs_selinux.h
+Nice cleanup from the fs side!
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
-index 59a4701..6d62804 100644
---- a/include/erofs/blobchunk.h
-+++ b/include/erofs/blobchunk.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_BLOBCHUNK_H
- #define __EROFS_BLOBCHUNK_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "erofs/internal.h"
- 
- int erofs_blob_write_chunk_indexes(struct erofs_inode *inode, erofs_off_t off);
-@@ -16,4 +21,9 @@ void erofs_blob_exit(void);
- int erofs_blob_init(const char *blobfile_path);
- int erofs_generate_devtable(void);
- 
-+#ifdef __cplusplus
-+extern "C"
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
-index 40df228..ca8053e 100644
---- a/include/erofs/block_list.h
-+++ b/include/erofs/block_list.h
-@@ -6,6 +6,11 @@
- #ifndef __EROFS_BLOCK_LIST_H
- #define __EROFS_BLOCK_LIST_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "internal.h"
- 
- #ifdef WITH_ANDROID
-@@ -29,4 +34,9 @@ erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
- 				   erofs_blk_t blk_start, erofs_blk_t nblocks,
- 				   bool first_extent, bool last_extent) {}
- #endif
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index b19d54e..72b849d 100644
---- a/include/erofs/cache.h
-+++ b/include/erofs/cache.h
-@@ -8,6 +8,11 @@
- #ifndef __EROFS_CACHE_H
- #define __EROFS_CACHE_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "internal.h"
- 
- struct erofs_buffer_head;
-@@ -104,4 +109,8 @@ bool erofs_bflush(struct erofs_buffer_block *bb);
- 
- void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke);
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-index 4434aaa..fdbf5ff 100644
---- a/include/erofs/compress.h
-+++ b/include/erofs/compress.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_COMPRESS_H
- #define __EROFS_COMPRESS_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "internal.h"
- 
- /* workaround for an upstream lz4 compression issue, which can crash us */
-@@ -21,4 +26,8 @@ int z_erofs_compress_exit(void);
- 
- const char *z_erofs_list_available_compressors(unsigned int i);
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/compress_hints.h b/include/erofs/compress_hints.h
-index a5772c7..43f80e1 100644
---- a/include/erofs/compress_hints.h
-+++ b/include/erofs/compress_hints.h
-@@ -6,6 +6,11 @@
- #ifndef __EROFS_COMPRESS_HINTS_H
- #define __EROFS_COMPRESS_HINTS_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "erofs/internal.h"
- #include <sys/types.h>
- #include <regex.h>
-@@ -20,4 +25,9 @@ struct erofs_compress_hints {
- bool z_erofs_apply_compress_hints(struct erofs_inode *inode);
- void erofs_cleanup_compress_hints(void);
- int erofs_load_compress_hints(void);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 2040dc6..6ba1a30 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -7,20 +7,14 @@
- #ifndef __EROFS_CONFIG_H
- #define __EROFS_CONFIG_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "defs.h"
- #include "err.h"
- 
--#ifdef HAVE_LIBSELINUX
--#include <selinux/selinux.h>
--#include <selinux/label.h>
--#endif
--
--#ifdef WITH_ANDROID
--#include <selinux/android.h>
--#include <private/android_filesystem_config.h>
--#include <private/canned_fs_config.h>
--#include <private/fs_config.h>
--#endif
- 
- enum {
- 	FORCE_INODE_COMPACT = 1,
-@@ -96,4 +90,8 @@ static inline int erofs_selabel_open(const char *file_contexts)
- }
- #endif
- 
-+#ifdef __cplusplus
-+}
- #endif
-+
-+#endif // EROFS_CONFIG_H_
-diff --git a/include/erofs/decompress.h b/include/erofs/decompress.h
-index 3d0d963..e649c80 100644
---- a/include/erofs/decompress.h
-+++ b/include/erofs/decompress.h
-@@ -6,6 +6,11 @@
- #ifndef __EROFS_DECOMPRESS_H
- #define __EROFS_DECOMPRESS_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "internal.h"
- 
- struct z_erofs_decompress_req {
-@@ -25,4 +30,8 @@ struct z_erofs_decompress_req {
- 
- int z_erofs_decompress(struct z_erofs_decompress_req *rq);
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/defs.h b/include/erofs/defs.h
-index 6398cbb..4960dd6 100644
---- a/include/erofs/defs.h
-+++ b/include/erofs/defs.h
-@@ -8,6 +8,11 @@
- #ifndef __EROFS_DEFS_H
- #define __EROFS_DEFS_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include <stddef.h>
- #include <stdint.h>
- #include <assert.h>
-@@ -82,11 +87,16 @@ typedef int64_t         s64;
- #endif
- #endif
- 
-+#ifdef __cplusplus
-+#define BUILD_BUG_ON(condition) static_assert(!(condition))
-+#else
-+
- #ifndef __OPTIMIZE__
- #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2 * !!(condition)]))
- #else
- #define BUILD_BUG_ON(condition) assert(!(condition))
- #endif
-+#endif
- 
- #define DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
- 
-@@ -110,6 +120,9 @@ typedef int64_t         s64;
- }							\
- )
- 
-+// Can easily conflict with C++'s std::min
-+#ifndef __cplusplus
-+
- #define min(x, y) ({				\
- 	typeof(x) _min1 = (x);			\
- 	typeof(y) _min2 = (y);			\
-@@ -122,6 +135,8 @@ typedef int64_t         s64;
- 	(void) (&_max1 == &_max2);		\
- 	_max1 > _max2 ? _max1 : _max2; })
- 
-+#endif
-+
- /*
-  * ..and if you can't take the strict types, you can specify one yourself.
-  * Or don't use min/max at all, of course.
-@@ -308,4 +323,9 @@ unsigned long __roundup_pow_of_two(unsigned long n)
- #define stat64		stat
- #define lstat64		lstat
- #endif
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/err.h b/include/erofs/err.h
-index a33bdd1..18f152a 100644
---- a/include/erofs/err.h
-+++ b/include/erofs/err.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_ERR_H
- #define __EROFS_ERR_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include <errno.h>
- 
- #define MAX_ERRNO (4095)
-@@ -28,4 +33,8 @@ static inline long PTR_ERR(const void *ptr)
- 	return (long) ptr;
- }
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
-index 6930f2b..599f018 100644
---- a/include/erofs/exclude.h
-+++ b/include/erofs/exclude.h
-@@ -5,6 +5,11 @@
- #ifndef __EROFS_EXCLUDE_H
- #define __EROFS_EXCLUDE_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include <sys/types.h>
- #include <regex.h>
- 
-@@ -21,4 +26,9 @@ void erofs_cleanup_exclude_rules(void);
- int erofs_parse_exclude_path(const char *args, bool is_regex);
- struct erofs_exclude_rule *erofs_is_exclude_path(const char *dir,
- 						 const char *name);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/flex-array.h b/include/erofs/flex-array.h
-index 59168d0..9b1642f 100644
---- a/include/erofs/flex-array.h
-+++ b/include/erofs/flex-array.h
-@@ -2,6 +2,11 @@
- #ifndef __EROFS_FLEX_ARRAY_H
- #define __EROFS_FLEX_ARRAY_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include <stdio.h>
- #include <stdlib.h>
- #include <limits.h>
-@@ -144,4 +149,8 @@ static inline size_t st_add(size_t a, size_t b)
- #define FLEXPTR_ALLOC_STR(x, ptrname, str) \
- 	FLEXPTR_ALLOC_MEM((x), ptrname, (str), strlen(str))
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/hashmap.h b/include/erofs/hashmap.h
-index 024a14e..3d38578 100644
---- a/include/erofs/hashmap.h
-+++ b/include/erofs/hashmap.h
-@@ -2,6 +2,11 @@
- #ifndef __EROFS_HASHMAP_H
- #define __EROFS_HASHMAP_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- /* Copied from https://github.com/git/git.git */
- #include <stdio.h>
- #include <stdlib.h>
-@@ -100,4 +105,8 @@ static inline const char *strintern(const char *string)
- 	return memintern(string, strlen(string));
- }
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/hashtable.h b/include/erofs/hashtable.h
-index 90eb84e..3c4dfc1 100644
---- a/include/erofs/hashtable.h
-+++ b/include/erofs/hashtable.h
-@@ -5,6 +5,11 @@
- #ifndef __EROFS_HASHTABLE_H
- #define __EROFS_HASHTABLE_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- /*
-  * Fast hashing routine for ints,  longs and pointers.
-  * (C) 2002 Nadia Yvette Chambers, IBM
-@@ -380,4 +385,8 @@ static inline void hash_del(struct hlist_node *node)
- #define hash_for_each_possible(name, obj, member, key)			\
- 	hlist_for_each_entry(obj, &name[hash_min(key, HASH_BITS(name))], member)
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index d5343c2..e23d65f 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -8,6 +8,11 @@
- #ifndef __EROFS_INODE_H
- #define __EROFS_INODE_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "erofs/internal.h"
- 
- unsigned char erofs_mode_to_ftype(umode_t mode);
-@@ -17,4 +22,8 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
- 						    const char *path);
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 666d1f2..a68de32 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_INTERNAL_H
- #define __EROFS_INTERNAL_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "list.h"
- #include "err.h"
- 
-@@ -331,4 +336,8 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
- 	return crc;
- }
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/io.h b/include/erofs/io.h
-index 10a3681..6f51e06 100644
---- a/include/erofs/io.h
-+++ b/include/erofs/io.h
-@@ -7,7 +7,14 @@
- #ifndef __EROFS_IO_H
- #define __EROFS_IO_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#ifndef _GNU_SOURCE
- #define _GNU_SOURCE
-+#endif
- #include <unistd.h>
- #include "internal.h"
- 
-@@ -47,4 +54,8 @@ static inline int blk_read(int device_id, void *buf,
- 			 blknr_to_addr(nblocks));
- }
- 
-+#ifdef __cplusplus
-+}
- #endif
-+
-+#endif // EROFS_IO_H_
-diff --git a/include/erofs/list.h b/include/erofs/list.h
-index d2bc704..fd5358d 100644
---- a/include/erofs/list.h
-+++ b/include/erofs/list.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_LIST_HEAD_H
- #define __EROFS_LIST_HEAD_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "defs.h"
- 
- struct list_head {
-@@ -105,4 +110,9 @@ static inline int list_empty(struct list_head *head)
- 	     &pos->member != (head);                                           \
- 	     pos = n, n = list_next_entry(n, member))
- 
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/print.h b/include/erofs/print.h
-index 91f864b..2213d1d 100644
---- a/include/erofs/print.h
-+++ b/include/erofs/print.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_PRINT_H
- #define __EROFS_PRINT_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "config.h"
- #include <stdio.h>
- 
-@@ -72,4 +77,8 @@ enum {
- 
- #define erofs_dump(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/trace.h b/include/erofs/trace.h
-index d70d236..893e16c 100644
---- a/include/erofs/trace.h
-+++ b/include/erofs/trace.h
-@@ -5,7 +5,16 @@
- #ifndef __EROFS_TRACE_H
- #define __EROFS_TRACE_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #define trace_erofs_map_blocks_flatmode_enter(inode, map, flags) ((void)0)
- #define trace_erofs_map_blocks_flatmode_exit(inode, map, flags, ret) ((void)0)
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index f0c4c26..8e68812 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -7,6 +7,11 @@
- #ifndef __EROFS_XATTR_H
- #define __EROFS_XATTR_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #include "internal.h"
- 
- #define EROFS_INODE_XATTR_ICOUNT(_size)	({\
-@@ -44,4 +49,8 @@ int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
- char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
- int erofs_build_shared_xattrs_from_path(const char *path);
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 9a91877..62359c5 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -9,6 +9,11 @@
- #ifndef __EROFS_FS_H
- #define __EROFS_FS_H
- 
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
- #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
-@@ -425,4 +430,8 @@ static inline void erofs_check_ondisk_layout_definitions(void)
- 		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
- }
- 
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif
-diff --git a/lib/config.c b/lib/config.c
-index 363dcc5..9fe5b85 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -8,6 +8,7 @@
- #include <stdlib.h>
- #include "erofs/print.h"
- #include "erofs/internal.h"
-+#include "erofs_selinux.h"
- 
- struct erofs_configure cfg;
- struct erofs_sb_info sbi;
-diff --git a/lib/erofs_selinux.h b/lib/erofs_selinux.h
-new file mode 100644
-index 0000000..696e6fd
---- /dev/null
-+++ b/lib/erofs_selinux.h
-@@ -0,0 +1,13 @@
-+
-+
-+#ifdef HAVE_LIBSELINUX
-+#include <selinux/selinux.h>
-+#include <selinux/label.h>
-+#endif
-+
-+#ifdef WITH_ANDROID
-+#include <selinux/android.h>
-+#include <private/android_filesystem_config.h>
-+#include <private/canned_fs_config.h>
-+#include <private/fs_config.h>
-+#endif
-\ No newline at end of file
-diff --git a/lib/inode.c b/lib/inode.c
-index 2fa74e2..3a66d55 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -25,6 +25,7 @@
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
-+#include "erofs_selinux.h"
- 
- #define S_SHIFT                 12
- static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 196133a..9fbc7c7 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -18,6 +18,8 @@
- #include "erofs/cache.h"
- #include "erofs/io.h"
- 
-+#include "erofs_selinux.h"
-+
- #define EA_HASHTABLE_BITS 16
- 
- struct xattr_item {
--- 
-2.34.0.rc2.393.gf8c9666880-goog
+--D
 
+> ---
+>  drivers/dax/bus.c            |   6 +-
+>  drivers/dax/super.c          | 109 +++++++++--------------------------
+>  drivers/md/dm.c              |   6 +-
+>  drivers/nvdimm/pmem.c        |  10 +++-
+>  drivers/s390/block/dcssblk.c |  11 +++-
+>  fs/fuse/virtio_fs.c          |   2 +-
+>  include/linux/dax.h          |  19 ++++--
+>  7 files changed, 66 insertions(+), 97 deletions(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 6cc4da4c713d9..bd7af2f7c5b0a 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -1323,10 +1323,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+>  	}
+>  
+>  	/*
+> -	 * No 'host' or dax_operations since there is no access to this
+> -	 * device outside of mmap of the resulting character device.
+> +	 * No dax_operations since there is no access to this device outside of
+> +	 * mmap of the resulting character device.
+>  	 */
+> -	dax_dev = alloc_dax(dev_dax, NULL, NULL, DAXDEV_F_SYNC);
+> +	dax_dev = alloc_dax(dev_dax, NULL, DAXDEV_F_SYNC);
+>  	if (IS_ERR(dax_dev)) {
+>  		rc = PTR_ERR(dax_dev);
+>  		goto err_alloc_dax;
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index e20d0cef10a18..bf77c3da5d56d 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -7,10 +7,8 @@
+>  #include <linux/mount.h>
+>  #include <linux/pseudo_fs.h>
+>  #include <linux/magic.h>
+> -#include <linux/genhd.h>
+>  #include <linux/pfn_t.h>
+>  #include <linux/cdev.h>
+> -#include <linux/hash.h>
+>  #include <linux/slab.h>
+>  #include <linux/uio.h>
+>  #include <linux/dax.h>
+> @@ -21,15 +19,12 @@
+>   * struct dax_device - anchor object for dax services
+>   * @inode: core vfs
+>   * @cdev: optional character interface for "device dax"
+> - * @host: optional name for lookups where the device path is not available
+>   * @private: dax driver private data
+>   * @flags: state and boolean properties
+>   */
+>  struct dax_device {
+> -	struct hlist_node list;
+>  	struct inode inode;
+>  	struct cdev cdev;
+> -	const char *host;
+>  	void *private;
+>  	unsigned long flags;
+>  	const struct dax_operations *ops;
+> @@ -42,10 +37,6 @@ static DEFINE_IDA(dax_minor_ida);
+>  static struct kmem_cache *dax_cache __read_mostly;
+>  static struct super_block *dax_superblock __read_mostly;
+>  
+> -#define DAX_HASH_SIZE (PAGE_SIZE / sizeof(struct hlist_head))
+> -static struct hlist_head dax_host_list[DAX_HASH_SIZE];
+> -static DEFINE_SPINLOCK(dax_host_lock);
+> -
+>  int dax_read_lock(void)
+>  {
+>  	return srcu_read_lock(&dax_srcu);
+> @@ -58,13 +49,22 @@ void dax_read_unlock(int id)
+>  }
+>  EXPORT_SYMBOL_GPL(dax_read_unlock);
+>  
+> -static int dax_host_hash(const char *host)
+> +#if defined(CONFIG_BLOCK) && defined(CONFIG_FS_DAX)
+> +#include <linux/blkdev.h>
+> +
+> +static DEFINE_XARRAY(dax_hosts);
+> +
+> +int dax_add_host(struct dax_device *dax_dev, struct gendisk *disk)
+>  {
+> -	return hashlen_hash(hashlen_string("DAX", host)) % DAX_HASH_SIZE;
+> +	return xa_insert(&dax_hosts, (unsigned long)disk, dax_dev, GFP_KERNEL);
+>  }
+> +EXPORT_SYMBOL_GPL(dax_add_host);
+>  
+> -#if defined(CONFIG_BLOCK) && defined(CONFIG_FS_DAX)
+> -#include <linux/blkdev.h>
+> +void dax_remove_host(struct gendisk *disk)
+> +{
+> +	xa_erase(&dax_hosts, (unsigned long)disk);
+> +}
+> +EXPORT_SYMBOL_GPL(dax_remove_host);
+>  
+>  int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
+>  		pgoff_t *pgoff)
+> @@ -81,41 +81,24 @@ int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
+>  EXPORT_SYMBOL(bdev_dax_pgoff);
+>  
+>  /**
+> - * dax_get_by_host() - temporary lookup mechanism for filesystem-dax
+> - * @host: alternate name for the device registered by a dax driver
+> + * fs_dax_get_by_bdev() - temporary lookup mechanism for filesystem-dax
+> + * @bdev: block device to find a dax_device for
+>   */
+> -static struct dax_device *dax_get_by_host(const char *host)
+> +struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev)
+>  {
+> -	struct dax_device *dax_dev, *found = NULL;
+> -	int hash, id;
+> +	struct dax_device *dax_dev;
+> +	int id;
+>  
+> -	if (!host)
+> +	if (!blk_queue_dax(bdev->bd_disk->queue))
+>  		return NULL;
+>  
+> -	hash = dax_host_hash(host);
+> -
+>  	id = dax_read_lock();
+> -	spin_lock(&dax_host_lock);
+> -	hlist_for_each_entry(dax_dev, &dax_host_list[hash], list) {
+> -		if (!dax_alive(dax_dev)
+> -				|| strcmp(host, dax_dev->host) != 0)
+> -			continue;
+> -
+> -		if (igrab(&dax_dev->inode))
+> -			found = dax_dev;
+> -		break;
+> -	}
+> -	spin_unlock(&dax_host_lock);
+> +	dax_dev = xa_load(&dax_hosts, (unsigned long)bdev->bd_disk);
+> +	if (!dax_dev || !dax_alive(dax_dev) || !igrab(&dax_dev->inode))
+> +		dax_dev = NULL;
+>  	dax_read_unlock(id);
+>  
+> -	return found;
+> -}
+> -
+> -struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev)
+> -{
+> -	if (!blk_queue_dax(bdev->bd_disk->queue))
+> -		return NULL;
+> -	return dax_get_by_host(bdev->bd_disk->disk_name);
+> +	return dax_dev;
+>  }
+>  EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+>  
+> @@ -361,12 +344,7 @@ void kill_dax(struct dax_device *dax_dev)
+>  		return;
+>  
+>  	clear_bit(DAXDEV_ALIVE, &dax_dev->flags);
+> -
+>  	synchronize_srcu(&dax_srcu);
+> -
+> -	spin_lock(&dax_host_lock);
+> -	hlist_del_init(&dax_dev->list);
+> -	spin_unlock(&dax_host_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(kill_dax);
+>  
+> @@ -398,8 +376,6 @@ static struct dax_device *to_dax_dev(struct inode *inode)
+>  static void dax_free_inode(struct inode *inode)
+>  {
+>  	struct dax_device *dax_dev = to_dax_dev(inode);
+> -	kfree(dax_dev->host);
+> -	dax_dev->host = NULL;
+>  	if (inode->i_rdev)
+>  		ida_simple_remove(&dax_minor_ida, iminor(inode));
+>  	kmem_cache_free(dax_cache, dax_dev);
+> @@ -474,54 +450,25 @@ static struct dax_device *dax_dev_get(dev_t devt)
+>  	return dax_dev;
+>  }
+>  
+> -static void dax_add_host(struct dax_device *dax_dev, const char *host)
+> -{
+> -	int hash;
+> -
+> -	/*
+> -	 * Unconditionally init dax_dev since it's coming from a
+> -	 * non-zeroed slab cache
+> -	 */
+> -	INIT_HLIST_NODE(&dax_dev->list);
+> -	dax_dev->host = host;
+> -	if (!host)
+> -		return;
+> -
+> -	hash = dax_host_hash(host);
+> -	spin_lock(&dax_host_lock);
+> -	hlist_add_head(&dax_dev->list, &dax_host_list[hash]);
+> -	spin_unlock(&dax_host_lock);
+> -}
+> -
+> -struct dax_device *alloc_dax(void *private, const char *__host,
+> -		const struct dax_operations *ops, unsigned long flags)
+> +struct dax_device *alloc_dax(void *private, const struct dax_operations *ops,
+> +		unsigned long flags)
+>  {
+>  	struct dax_device *dax_dev;
+> -	const char *host;
+>  	dev_t devt;
+>  	int minor;
+>  
+> -	if (ops && !ops->zero_page_range) {
+> -		pr_debug("%s: error: device does not provide dax"
+> -			 " operation zero_page_range()\n",
+> -			 __host ? __host : "Unknown");
+> +	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
+>  		return ERR_PTR(-EINVAL);
+> -	}
+> -
+> -	host = kstrdup(__host, GFP_KERNEL);
+> -	if (__host && !host)
+> -		return ERR_PTR(-ENOMEM);
+>  
+>  	minor = ida_simple_get(&dax_minor_ida, 0, MINORMASK+1, GFP_KERNEL);
+>  	if (minor < 0)
+> -		goto err_minor;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	devt = MKDEV(MAJOR(dax_devt), minor);
+>  	dax_dev = dax_dev_get(devt);
+>  	if (!dax_dev)
+>  		goto err_dev;
+>  
+> -	dax_add_host(dax_dev, host);
+>  	dax_dev->ops = ops;
+>  	dax_dev->private = private;
+>  	if (flags & DAXDEV_F_SYNC)
+> @@ -531,8 +478,6 @@ struct dax_device *alloc_dax(void *private, const char *__host,
+>  
+>   err_dev:
+>  	ida_simple_remove(&dax_minor_ida, minor);
+> - err_minor:
+> -	kfree(host);
+>  	return ERR_PTR(-ENOMEM);
+>  }
+>  EXPORT_SYMBOL_GPL(alloc_dax);
+> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> index b93fcc91176e5..a8c650276b321 100644
+> --- a/drivers/md/dm.c
+> +++ b/drivers/md/dm.c
+> @@ -1683,6 +1683,7 @@ static void cleanup_mapped_device(struct mapped_device *md)
+>  	bioset_exit(&md->io_bs);
+>  
+>  	if (md->dax_dev) {
+> +		dax_remove_host(md->disk);
+>  		kill_dax(md->dax_dev);
+>  		put_dax(md->dax_dev);
+>  		md->dax_dev = NULL;
+> @@ -1784,12 +1785,13 @@ static struct mapped_device *alloc_dev(int minor)
+>  	sprintf(md->disk->disk_name, "dm-%d", minor);
+>  
+>  	if (IS_ENABLED(CONFIG_FS_DAX)) {
+> -		md->dax_dev = alloc_dax(md, md->disk->disk_name,
+> -					&dm_dax_ops, 0);
+> +		md->dax_dev = alloc_dax(md, &dm_dax_ops, 0);
+>  		if (IS_ERR(md->dax_dev)) {
+>  			md->dax_dev = NULL;
+>  			goto bad;
+>  		}
+> +		if (dax_add_host(md->dax_dev, md->disk))
+> +			goto bad;
+>  	}
+>  
+>  	format_dev_t(md->name, MKDEV(_major, minor));
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index fe7ece1534e1e..1018f0d44acb8 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -379,6 +379,7 @@ static void pmem_release_disk(void *__pmem)
+>  {
+>  	struct pmem_device *pmem = __pmem;
+>  
+> +	dax_remove_host(pmem->disk);
+>  	kill_dax(pmem->dax_dev);
+>  	put_dax(pmem->dax_dev);
+>  	del_gendisk(pmem->disk);
+> @@ -497,17 +498,20 @@ static int pmem_attach_disk(struct device *dev,
+>  
+>  	if (is_nvdimm_sync(nd_region))
+>  		flags = DAXDEV_F_SYNC;
+> -	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops, flags);
+> +	dax_dev = alloc_dax(pmem, &pmem_dax_ops, flags);
+>  	if (IS_ERR(dax_dev)) {
+>  		rc = PTR_ERR(dax_dev);
+>  		goto out;
+>  	}
+> +	rc = dax_add_host(dax_dev, disk);
+> +	if (rc)
+> +		goto out_cleanup_dax;
+>  	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
+>  	pmem->dax_dev = dax_dev;
+>  
+>  	rc = device_add_disk(dev, disk, pmem_attribute_groups);
+>  	if (rc)
+> -		goto out_cleanup_dax;
+> +		goto out_remove_host;
+>  	if (devm_add_action_or_reset(dev, pmem_release_disk, pmem))
+>  		return -ENOMEM;
+>  
+> @@ -519,6 +523,8 @@ static int pmem_attach_disk(struct device *dev,
+>  		dev_warn(dev, "'badblocks' notification disabled\n");
+>  	return 0;
+>  
+> +out_remove_host:
+> +	dax_remove_host(pmem->disk);
+>  out_cleanup_dax:
+>  	kill_dax(pmem->dax_dev);
+>  	put_dax(pmem->dax_dev);
+> diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
+> index 27ab888b44d0a..657e492f2bc26 100644
+> --- a/drivers/s390/block/dcssblk.c
+> +++ b/drivers/s390/block/dcssblk.c
+> @@ -687,18 +687,21 @@ dcssblk_add_store(struct device *dev, struct device_attribute *attr, const char
+>  	if (rc)
+>  		goto put_dev;
+>  
+> -	dev_info->dax_dev = alloc_dax(dev_info, dev_info->gd->disk_name,
+> -			&dcssblk_dax_ops, DAXDEV_F_SYNC);
+> +	dev_info->dax_dev = alloc_dax(dev_info, &dcssblk_dax_ops,
+> +			DAXDEV_F_SYNC);
+>  	if (IS_ERR(dev_info->dax_dev)) {
+>  		rc = PTR_ERR(dev_info->dax_dev);
+>  		dev_info->dax_dev = NULL;
+>  		goto put_dev;
+>  	}
+> +	rc = dax_add_host(dev_info->dax_dev, dev_info->gd);
+> +	if (rc)
+> +		goto out_dax;
+>  
+>  	get_device(&dev_info->dev);
+>  	rc = device_add_disk(&dev_info->dev, dev_info->gd, NULL);
+>  	if (rc)
+> -		goto out_dax;
+> +		goto out_dax_host;
+>  
+>  	switch (dev_info->segment_type) {
+>  		case SEG_TYPE_SR:
+> @@ -714,6 +717,8 @@ dcssblk_add_store(struct device *dev, struct device_attribute *attr, const char
+>  	rc = count;
+>  	goto out;
+>  
+> +out_dax_host:
+> +	dax_remove_host(dev_info->gd);
+>  out_dax:
+>  	put_device(&dev_info->dev);
+>  	kill_dax(dev_info->dax_dev);
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 4cfa4bc1f5794..242cc1c0d7ed7 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -850,7 +850,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+>  	dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr 0x%llx len 0x%llx\n",
+>  		__func__, fs->window_kaddr, cache_reg.addr, cache_reg.len);
+>  
+> -	fs->dax_dev = alloc_dax(fs, NULL, &virtio_fs_dax_ops, 0);
+> +	fs->dax_dev = alloc_dax(fs, &virtio_fs_dax_ops, 0);
+>  	if (IS_ERR(fs->dax_dev))
+>  		return PTR_ERR(fs->dax_dev);
+>  
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 8623caa673889..e2e9a67004cbd 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -11,9 +11,11 @@
+>  
+>  typedef unsigned long dax_entry_t;
+>  
+> +struct dax_device;
+> +struct gendisk;
+>  struct iomap_ops;
+>  struct iomap;
+> -struct dax_device;
+> +
+>  struct dax_operations {
+>  	/*
+>  	 * direct_access: translate a device-relative
+> @@ -39,8 +41,8 @@ struct dax_operations {
+>  };
+>  
+>  #if IS_ENABLED(CONFIG_DAX)
+> -struct dax_device *alloc_dax(void *private, const char *host,
+> -		const struct dax_operations *ops, unsigned long flags);
+> +struct dax_device *alloc_dax(void *private, const struct dax_operations *ops,
+> +		unsigned long flags);
+>  void put_dax(struct dax_device *dax_dev);
+>  void kill_dax(struct dax_device *dax_dev);
+>  void dax_write_cache(struct dax_device *dax_dev, bool wc);
+> @@ -68,7 +70,7 @@ static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+>  	return dax_synchronous(dax_dev);
+>  }
+>  #else
+> -static inline struct dax_device *alloc_dax(void *private, const char *host,
+> +static inline struct dax_device *alloc_dax(void *private,
+>  		const struct dax_operations *ops, unsigned long flags)
+>  {
+>  	/*
+> @@ -107,6 +109,8 @@ static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+>  struct writeback_control;
+>  int bdev_dax_pgoff(struct block_device *, sector_t, size_t, pgoff_t *pgoff);
+>  #if IS_ENABLED(CONFIG_FS_DAX)
+> +int dax_add_host(struct dax_device *dax_dev, struct gendisk *disk);
+> +void dax_remove_host(struct gendisk *disk);
+>  bool generic_fsdax_supported(struct dax_device *dax_dev,
+>  		struct block_device *bdev, int blocksize, sector_t start,
+>  		sector_t sectors);
+> @@ -128,6 +132,13 @@ struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t st
+>  dax_entry_t dax_lock_page(struct page *page);
+>  void dax_unlock_page(struct page *page, dax_entry_t cookie);
+>  #else
+> +static inline int dax_add_host(struct dax_device *dax_dev, struct gendisk *disk)
+> +{
+> +	return 0;
+> +}
+> +static inline void dax_remove_host(struct gendisk *disk)
+> +{
+> +}
+>  #define generic_fsdax_supported		NULL
+>  
+>  static inline bool dax_supported(struct dax_device *dax_dev,
+> -- 
+> 2.30.2
+> 
