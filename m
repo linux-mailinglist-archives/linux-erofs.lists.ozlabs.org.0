@@ -1,60 +1,128 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54A25463E73
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Nov 2021 20:07:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75BDA4649A3
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Dec 2021 09:28:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J3WtF18R8z305K
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Dec 2021 06:07:01 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gvgz+Rj+;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J3sgK2Lg8z2yng
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Dec 2021 19:28:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1638347325;
+	bh=4k3vfgzKWkgNJT6FkI1rWd5HQN6P7t9q83ZWvRYgk+w=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=KzQyZf1f8l+E9b12LasGjJ5Zvq0oR8uWgzUfQd2oiKJD+8jqlATdMWjQI1+61UKuj
+	 XAXBL4+D9jadUV6FqzRZccbfvzYVnKVRt9FYatILharqdEwVrcPzgE45QZH8Z3pXmd
+	 iWFtnMB+2l+XLG+YLPMcVh4BN84tu20yaCjWpmzaie15+1fmixDW9KV8OP/063lMNM
+	 VO1mKeJHB5uZw71DWX4RQMyJeZ2HATniIGd+UFbhTA67OAq8WFGsAl8G5tHgXI2vxH
+	 QawNO48IhvqbEizUvznBnCWKva/dt3kZwmny0sCuH9IxMpGQepsM/hMjEYa0CVClLm
+	 CXV9YkTIaD0/w==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1;
- helo=sin.source.kernel.org; envelope-from=djwong@kernel.org;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=gvgz+Rj+; 
+ smtp.mailfrom=oppo.com (client-ip=40.107.215.52;
+ helo=apc01-sg2-obe.outbound.protection.outlook.com;
+ envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
+ header.s=selector1 header.b=Kq+huXWG; 
  dkim-atps=neutral
-Received: from sin.source.kernel.org (sin.source.kernel.org
- [IPv6:2604:1380:40e1:4800::1])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com
+ (mail-sgaapc01on2052.outbound.protection.outlook.com [40.107.215.52])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J3Wt96BZ7z2xsy
- for <linux-erofs@lists.ozlabs.org>; Wed,  1 Dec 2021 06:06:57 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by sin.source.kernel.org (Postfix) with ESMTPS id 6015ECE1A42;
- Tue, 30 Nov 2021 19:06:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA8FC53FC7;
- Tue, 30 Nov 2021 19:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1638299213;
- bh=KJKLDPNJMZnV1K5CweWX9I2DHY4BO73Fj0NB73pCPa4=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=gvgz+Rj+hP2pTe+MEQL7DwGy/Ukhy9nZRuGH+uJE1TtDk94zGbW/IItYIPaYLCm3q
- RdIYTJ12ByUFbA6HYmyAiCf5+Za3J+15jADXm2QeNIFaDCYiqjevA8uXQEGwbU2p1E
- gxM4RWg+RAElOlWtVapMpgvuVPbI3cMnaaCMy5x1uGZZa3pjhHdt3ICcv5q1Rlb2hV
- ZZ/fIUNTthlyKLx9SPBRu3dc4Y3YeGK6ahzImMHCHgvOLMJiknZaeHBksHW27VFMhO
- dX3zUcZ2BHhpXYKdU+3H6DaUfOH1TzJl47VeBmM6hvoHdChsbl4/mxvia90V02XLCO
- J49q7qxT4AEvw==
-Date: Tue, 30 Nov 2021 11:06:53 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 26/29] fsdax: shift partition offset handling into the
- file systems
-Message-ID: <20211130190653.GJ8467@magnolia>
-References: <20211129102203.2243509-1-hch@lst.de>
- <20211129102203.2243509-27-hch@lst.de>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J3sg81S7gz2xXV
+ for <linux-erofs@lists.ozlabs.org>; Wed,  1 Dec 2021 19:28:32 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=np2LomFcUdyhrct+8atfjeq7sM5oMv8ZwxhrbwkfHfBisq/O6aDYe/cDjH1UqeDMSpTg8555ZrecgOEwK0ok5lnCBIJqbnJb8+0GS0PIpjsv64hGp+QgL73YSOB/XG0+f+G50q/6o394oqxvpeu2Uk3s/fy2XWhtw7cby7MgMqWJdJ9BvA5uhz4viwB8tnQAkALo1w0gENoloF1bCD4KCjmYhL6FwUJ4yDL2WgH9DOBL0GMh5H+X+130PNvlVesVG863TRQd85aWjkGC94hQCPnXe1NdalA/T04gJPE6KUdH5DVlx4aRDe4G/p9BeJC5IoF4+RkZtmpB7ZxxelMYeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4k3vfgzKWkgNJT6FkI1rWd5HQN6P7t9q83ZWvRYgk+w=;
+ b=aBllEcMCY5u75UM60u4pIUfIqdwXMO0Ub1zmdd2spQgqQSe9JEdrBaMdIxzC2N2pdptJ75Ahi8DdVdBncqdImSaO+z9gQXIH4AUzuMKLGbv9D/fUadcHlwNtUEiq586kYmxPLzE5Uf3sn61RSHeNEgvezyQ6/fvlEJTBy9f3HGLg++U91L4yQ7oQPpsKPLyU2WTnh8poi4HOlV2yrEr/kosTKzv3/xhxWlsal2AQp6pG0/LpA7dsY9WWSW05ayFV3LC1EP6qUv4Xwz55qJd3J3JQX/ExGZ8iHd5onA6G8pMjOljp84TU7xuH7pGcjiTUE7wb+7WbesRjv+lHvKxEuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oppo.com;
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
+ SG2PR02MB3116.apcprd02.prod.outlook.com (2603:1096:4:59::12) with
+ Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4734.23; Wed, 1 Dec 2021 08:28:09 +0000
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::12a:f861:9ae2:b8f0]) by SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::12a:f861:9ae2:b8f0%5]) with mapi id 15.20.4734.024; Wed, 1 Dec 2021
+ 08:28:09 +0000
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org
+Subject: [PATCH] erofs-utils: update AUTHORS
+Date: Wed,  1 Dec 2021 16:27:46 +0800
+Message-Id: <20211201082746.1642-1-huangjianan@oppo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR06CA0013.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::25) To SG2PR02MB4108.apcprd02.prod.outlook.com
+ (2603:1096:4:96::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211129102203.2243509-27-hch@lst.de>
+Received: from PC80253450.adc.com (58.252.5.73) by
+ HK2PR06CA0013.apcprd06.prod.outlook.com (2603:1096:202:2e::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4734.23 via Frontend Transport; Wed, 1 Dec 2021 08:28:08 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2376dd0a-7ae2-4737-3c90-08d9b4a481ce
+X-MS-TrafficTypeDiagnostic: SG2PR02MB3116:
+X-Microsoft-Antispam-PRVS: <SG2PR02MB31166AB7C703678CABB51C5EC3689@SG2PR02MB3116.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:849;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JCzexfvPhsWifMS9bBu84h2z8jEDIMhZjpFuTeis3FdQtrmI4vHoaY074oLeSL1eXFp9BXOPSECNAzMjAmxtvg9HA6Bt/7+/7Lh4Zk/RagGEmH2GHMlDjvbIKPSjtwMg5RhmpO2opkuMJFbJOKdv0CoWCIpqCg98gY6asqUNCQr/AmaALhzHGQQ4lJEtskB06mEqYuWJJ2N14QQW+T/j6VIq3ZAHq9XvUAwD5z3TBlW15Bn7YSeYeEq3Ax9kwPMYZjN5acIovmKQ/QSpyKiMnEao2N4H/+XKQjx2eZ6xYrTDWUVSJv9pAX5TPSU/UGSZAPdW+udcvDgVz8dkc8s/vBYK5QBsCD/HOWMqkH2AJWQIii7tDitf0RA6Y6bFjNmTruXkbdMKJIcArHisWOFKr0H/hAU14Q/gN2d3g+08Z9efzAp9Moq9hC4vhM3i9p6ZaBhQCnHsbqSb+NSZOHmqdCIMtpWSU1KyRE06YFpQ+lyc7/YmGWG2Tmf1jE/Sy6gQnzlx+/VpxsmNSJ2djbl1bWHHMaheICMW9vbnZBgDTDwQKbuMb//L8YC3vGFed7R/0Y4XnzerpkQYGawz1fahVhVSeCEuGLbHHjITIIjwSVf7Q3/ZSBkpbTAeTay3vzz9/PCIHtry7cYaRxF73daj9WvM07dkGhnlg60QIc50III58BzEW4w5lyUzEZy9K7RXl/oIuy3awE9djdJNnEoCvehtVp4XM3hNlW+Y/eqTnmw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(4636009)(366004)(6486002)(107886003)(2616005)(5660300002)(4744005)(86362001)(6666004)(508600001)(38350700002)(6506007)(52116002)(4326008)(8936002)(66556008)(38100700002)(956004)(2906002)(8676002)(36756003)(186003)(26005)(1076003)(316002)(6512007)(66476007)(66946007)(11606007);
+ DIR:OUT; SFP:1101; 
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tAO+/axyqIqDXtKjIc27B+UwNOF2zpbpwsw2ru0xWvbMt/sYjLYlZ+/shld2?=
+ =?us-ascii?Q?+6cQO6OnhneQyFi4MPEFhrnsmmouEARXhEMwrvB7AJVrH72ZXHDN5Wp4pLpT?=
+ =?us-ascii?Q?KaWlQF9Dqp1cVz4rk+dQU0Yk9q1vixxtUZZugZr4m/lNH9vCMtuiGJbdMHV0?=
+ =?us-ascii?Q?gf4xNthr7nlthYPs9BXje0SRZVVNSUlTw1S7g3Zjh4XkygVh6sDOYOmHUDm5?=
+ =?us-ascii?Q?vNUc0yMg9bSzEg1lJD2TtG1B0stAJZEjmH5Z23wMC4BsmJfaFpuOBZ6V8U5f?=
+ =?us-ascii?Q?w0MFVV7jGmfX8cjppwLN1SfQYC+NAHuaKPDmEe7SGrB7A6GdmM6BGayaMGnZ?=
+ =?us-ascii?Q?nHKqKnXDwFDCQyemp0enw1odHlfU0M65LRNP+FHWkhOOMwjrfaW0/MdICi5A?=
+ =?us-ascii?Q?8Ym2Ut3dfzjH0dKVQImw688vB4kyI2ZHo40GTHjyIDvEOitkDnNFPVyhFwCA?=
+ =?us-ascii?Q?q0b7Vp2HBd7iyWTQXJKCGNlkO68ImahPfSA/DI0W3u3O0xBkK0LU2o37s4+N?=
+ =?us-ascii?Q?S6CTE0OR6xmC0lY7dMpVXHR+TYoHa1O45ueySzoNjCw2ivK42b9pPM+cH/EI?=
+ =?us-ascii?Q?0EaEQP1fyHvySh2hUXSfyd0tCiUUNv2+g78m/AX8Rf8VfcTHGlTRnp3tUgzJ?=
+ =?us-ascii?Q?aQtY6PHoVxiJfYJSeiQT75ICVxYdYVFiPsiYZwMMueBJFTXKsfo7kNLWZH9e?=
+ =?us-ascii?Q?sMXGlGEguNtU29hzW8+UwkDby6bxo3+RjdNeCzzDVdLWzKMUr7XGmOWgFCU1?=
+ =?us-ascii?Q?Xc6XkWWaCexjLUPQB4LRpekfS00OTO87RhCmno6dYrBl3hBCQcnib+80oikX?=
+ =?us-ascii?Q?0BY/yi1lMDUJMe+Dq6y0ejgw3X7doWZ0UjNJqHiFXeDR8J57nU59XEJe+qmC?=
+ =?us-ascii?Q?boHJhTnQiTi1Y3nd69VJG1XFlsDi0/bKngyfPb2DpaM+F44iOHIHHwwbleIq?=
+ =?us-ascii?Q?pVNMENipEwvbbQ4muTooVRTLejtl2/43MVNl3oAO9PRL3pNPDlUabiV9Xwdh?=
+ =?us-ascii?Q?9ZeUsfhdPhcLnZc3Zxp/na9kH8GMwo/nti42YI51SPy/qnE0PSQTMcP7OErS?=
+ =?us-ascii?Q?feRAxjndWTkfFspFBimxgoBCKunnDDOFrVSANQ1Htt2F1YXz2kY63Gh+nRV7?=
+ =?us-ascii?Q?EWjWfn12NNfYtRvZE/yBKmuf5EgKCNqF8+88t6nTOXvy5PKyn/c4O1A0FE6e?=
+ =?us-ascii?Q?PjODAA6bS54wkdsv03UCZXD16P4pxVz4mN+oMKzyh6+gPN33zSyqQUvdyhL0?=
+ =?us-ascii?Q?gkS8dz3IRz5zS3EaRQMc1xmmVCh3gIScMsCxhuzbUVxgQed4kpqra3bgewoO?=
+ =?us-ascii?Q?pAT+QSeEo+nYS8vcTNgf4EOi/qlAgQBqeMU81WM0c7DYALSFAfzeJ+ub8kIU?=
+ =?us-ascii?Q?J4AfOKFxgbn4iZEiQEfk6sG2tTeFlhd6VGOhdqNhdisMt70iAy+G6lszhibi?=
+ =?us-ascii?Q?Ec4trnuMAXYahtJzWcjhM2vhJ+1T5kpFiIhz87D78ABsdJDDUqHsAIutYLPa?=
+ =?us-ascii?Q?U3P17yZP3LnsJZ6bTMKrk3S70t0GUfI92Izh3Rrt89VZORb4jt95NsjgYYgw?=
+ =?us-ascii?Q?5npQnxaLMIzjDPc17O7aO9tNhYyOuARXrQZaTZ6UEcJmUnky19ebL6guiS49?=
+ =?us-ascii?Q?sBVwfBsZE0+pewd5xQlPySU=3D?=
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2376dd0a-7ae2-4737-3c90-08d9b4a481ce
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2021 08:28:09.6757 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dZuA0t02FT4GFLLLwcM3pEVOM/Tzyck3drnAyMR3eq2jKbDBuguGMsGgyTXqgNfnd86k5ZdeWGTUvROVrhNKeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3116
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,230 +134,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nvdimm@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>,
- linux-s390@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- virtualization@lists.linux-foundation.org, linux-xfs@vger.kernel.org,
- dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
- Gao Xiang <hsiangkao@linux.alibaba.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-ext4@vger.kernel.org,
- Ira Weiny <ira.weiny@intel.com>
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@oppo.com>
+Cc: zhangshiming@oppo.com, yh@oppo.com, guanyuwei@oppo.com, guoweichao@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Nov 29, 2021 at 11:22:00AM +0100, Christoph Hellwig wrote:
-> Remove the last user of ->bdev in dax.c by requiring the file system to
-> pass in an address that already includes the DAX offset.  As part of the
-> only set ->bdev or ->daxdev when actually required in the ->iomap_begin
-> methods.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com> [erofs]
+Add myself to the AUTHORS file.
 
-Looks like a straightfoward conversion.  In addition to reviewing the
-xfs parts, I spot-checked the ext* bits and didn't see anything
-obviously wrong there, but you might want to get an ack from Ted and
-Jan.
+Signed-off-by: Huang Jianan <huangjianan@oppo.com>
+---
+ AUTHORS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+diff --git a/AUTHORS b/AUTHORS
+index 812042a..6b41df8 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -1,6 +1,7 @@
+ EROFS USERSPACE UTILITIES
+ M: Li Guifu <bluce.lee@aliyun.com>
+ M: Gao Xiang <xiang@kernel.org>
++M: Huang Jianan <huangjianan@oppo.com>
+ R: Chao Yu <chao@kernel.org>
+ R: Miao Xie <miaoxie@huawei.com>
+ R: Fang Wei <fangwei1@huawei.com>
+-- 
+2.25.1
 
---D
-
-> ---
->  fs/dax.c            |  6 +-----
->  fs/erofs/data.c     | 11 +++++++++--
->  fs/erofs/internal.h |  1 +
->  fs/ext2/inode.c     |  8 ++++++--
->  fs/ext4/inode.c     | 16 +++++++++++-----
->  fs/xfs/xfs_iomap.c  | 10 ++++++++--
->  6 files changed, 36 insertions(+), 16 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 148e8b0967f35..e0eecd8e3a8f8 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -711,11 +711,7 @@ int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
->  
->  static pgoff_t dax_iomap_pgoff(const struct iomap *iomap, loff_t pos)
->  {
-> -	phys_addr_t paddr = iomap->addr + (pos & PAGE_MASK) - iomap->offset;
-> -
-> -	if (iomap->bdev)
-> -		paddr += (get_start_sect(iomap->bdev) << SECTOR_SHIFT);
-> -	return PHYS_PFN(paddr);
-> +	return PHYS_PFN(iomap->addr + (pos & PAGE_MASK) - iomap->offset);
->  }
->  
->  static int copy_cow_page_dax(struct vm_fault *vmf, const struct iomap_iter *iter)
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index 0e35ef3f9f3d7..9b1bb177ce303 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -159,6 +159,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->  	/* primary device by default */
->  	map->m_bdev = sb->s_bdev;
->  	map->m_daxdev = EROFS_SB(sb)->dax_dev;
-> +	map->m_dax_part_off = EROFS_SB(sb)->dax_part_off;
->  
->  	if (map->m_deviceid) {
->  		down_read(&devs->rwsem);
-> @@ -169,6 +170,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->  		}
->  		map->m_bdev = dif->bdev;
->  		map->m_daxdev = dif->dax_dev;
-> +		map->m_dax_part_off = dif->dax_part_off;
->  		up_read(&devs->rwsem);
->  	} else if (devs->extra_devices) {
->  		down_read(&devs->rwsem);
-> @@ -185,6 +187,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->  				map->m_pa -= startoff;
->  				map->m_bdev = dif->bdev;
->  				map->m_daxdev = dif->dax_dev;
-> +				map->m_dax_part_off = dif->dax_part_off;
->  				break;
->  			}
->  		}
-> @@ -215,9 +218,13 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	if (ret)
->  		return ret;
->  
-> -	iomap->bdev = mdev.m_bdev;
-> -	iomap->dax_dev = mdev.m_daxdev;
->  	iomap->offset = map.m_la;
-> +	if (flags & IOMAP_DAX) {
-> +		iomap->dax_dev = mdev.m_daxdev;
-> +		iomap->offset += mdev.m_dax_part_off;
-> +	} else {
-> +		iomap->bdev = mdev.m_bdev;
-> +	}
->  	iomap->length = map.m_llen;
->  	iomap->flags = 0;
->  	iomap->private = NULL;
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index c1e65346e9f15..5c2a83876220c 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -438,6 +438,7 @@ static inline int z_erofs_map_blocks_iter(struct inode *inode,
->  struct erofs_map_dev {
->  	struct block_device *m_bdev;
->  	struct dax_device *m_daxdev;
-> +	u64 m_dax_part_off;
->  
->  	erofs_off_t m_pa;
->  	unsigned int m_deviceid;
-> diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
-> index 01d69618277de..602578b72d8c5 100644
-> --- a/fs/ext2/inode.c
-> +++ b/fs/ext2/inode.c
-> @@ -817,9 +817,11 @@ static int ext2_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  		return ret;
->  
->  	iomap->flags = 0;
-> -	iomap->bdev = inode->i_sb->s_bdev;
->  	iomap->offset = (u64)first_block << blkbits;
-> -	iomap->dax_dev = sbi->s_daxdev;
-> +	if (flags & IOMAP_DAX)
-> +		iomap->dax_dev = sbi->s_daxdev;
-> +	else
-> +		iomap->bdev = inode->i_sb->s_bdev;
->  
->  	if (ret == 0) {
->  		iomap->type = IOMAP_HOLE;
-> @@ -828,6 +830,8 @@ static int ext2_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	} else {
->  		iomap->type = IOMAP_MAPPED;
->  		iomap->addr = (u64)bno << blkbits;
-> +		if (flags & IOMAP_DAX)
-> +			iomap->addr += sbi->s_dax_part_off;
->  		iomap->length = (u64)ret << blkbits;
->  		iomap->flags |= IOMAP_F_MERGED;
->  	}
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 89c4a174bd393..ccafcbc146d3e 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -3272,7 +3272,7 @@ static bool ext4_inode_datasync_dirty(struct inode *inode)
->  
->  static void ext4_set_iomap(struct inode *inode, struct iomap *iomap,
->  			   struct ext4_map_blocks *map, loff_t offset,
-> -			   loff_t length)
-> +			   loff_t length, unsigned int flags)
->  {
->  	u8 blkbits = inode->i_blkbits;
->  
-> @@ -3289,8 +3289,10 @@ static void ext4_set_iomap(struct inode *inode, struct iomap *iomap,
->  	if (map->m_flags & EXT4_MAP_NEW)
->  		iomap->flags |= IOMAP_F_NEW;
->  
-> -	iomap->bdev = inode->i_sb->s_bdev;
-> -	iomap->dax_dev = EXT4_SB(inode->i_sb)->s_daxdev;
-> +	if (flags & IOMAP_DAX)
-> +		iomap->dax_dev = EXT4_SB(inode->i_sb)->s_daxdev;
-> +	else
-> +		iomap->bdev = inode->i_sb->s_bdev;
->  	iomap->offset = (u64) map->m_lblk << blkbits;
->  	iomap->length = (u64) map->m_len << blkbits;
->  
-> @@ -3310,9 +3312,13 @@ static void ext4_set_iomap(struct inode *inode, struct iomap *iomap,
->  	if (map->m_flags & EXT4_MAP_UNWRITTEN) {
->  		iomap->type = IOMAP_UNWRITTEN;
->  		iomap->addr = (u64) map->m_pblk << blkbits;
-> +		if (flags & IOMAP_DAX)
-> +			iomap->addr += EXT4_SB(inode->i_sb)->s_dax_part_off;
->  	} else if (map->m_flags & EXT4_MAP_MAPPED) {
->  		iomap->type = IOMAP_MAPPED;
->  		iomap->addr = (u64) map->m_pblk << blkbits;
-> +		if (flags & IOMAP_DAX)
-> +			iomap->addr += EXT4_SB(inode->i_sb)->s_dax_part_off;
->  	} else {
->  		iomap->type = IOMAP_HOLE;
->  		iomap->addr = IOMAP_NULL_ADDR;
-> @@ -3421,7 +3427,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	if (ret < 0)
->  		return ret;
->  out:
-> -	ext4_set_iomap(inode, iomap, &map, offset, length);
-> +	ext4_set_iomap(inode, iomap, &map, offset, length, flags);
->  
->  	return 0;
->  }
-> @@ -3541,7 +3547,7 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
->  		delalloc = ext4_iomap_is_delalloc(inode, &map);
->  
->  set_iomap:
-> -	ext4_set_iomap(inode, iomap, &map, offset, length);
-> +	ext4_set_iomap(inode, iomap, &map, offset, length, flags);
->  	if (delalloc && iomap->type == IOMAP_HOLE)
->  		iomap->type = IOMAP_DELALLOC;
->  
-> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> index 0ed3e7674353b..e552ce541ec2d 100644
-> --- a/fs/xfs/xfs_iomap.c
-> +++ b/fs/xfs/xfs_iomap.c
-> @@ -71,15 +71,21 @@ xfs_bmbt_to_iomap(
->  		iomap->type = IOMAP_DELALLOC;
->  	} else {
->  		iomap->addr = BBTOB(xfs_fsb_to_db(ip, imap->br_startblock));
-> +		if (mapping_flags & IOMAP_DAX)
-> +			iomap->addr += target->bt_dax_part_off;
-> +
->  		if (imap->br_state == XFS_EXT_UNWRITTEN)
->  			iomap->type = IOMAP_UNWRITTEN;
->  		else
->  			iomap->type = IOMAP_MAPPED;
-> +
->  	}
->  	iomap->offset = XFS_FSB_TO_B(mp, imap->br_startoff);
->  	iomap->length = XFS_FSB_TO_B(mp, imap->br_blockcount);
-> -	iomap->bdev = target->bt_bdev;
-> -	iomap->dax_dev = target->bt_daxdev;
-> +	if (mapping_flags & IOMAP_DAX)
-> +		iomap->dax_dev = target->bt_daxdev;
-> +	else
-> +		iomap->bdev = target->bt_bdev;
->  	iomap->flags = iomap_flags;
->  
->  	if (xfs_ipincount(ip) &&
-> -- 
-> 2.30.2
-> 
