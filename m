@@ -2,71 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5810046E032
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 02:21:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49E5F46E033
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 02:21:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J8bph1lD3z2yZv
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 12:21:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J8bpk1MD3z307C
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 12:21:34 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1639012892;
-	bh=KEjeKIDz2jd1Bgf2lTFVJbKZTfXuUAY/DsDcj20NZ/A=;
+	s=201707; t=1639012894;
+	bh=TclOBkLce1W+s9SeSdOj8YE7DhDtI64tC2aqDPLRMts=;
 	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=RVezJBI2pmkUqImgPm3dFozdfOEAOLqa9y9Yk2t3IokBA10/sbj0l1aPgfLU5RKHu
-	 UeYHeQdh49MgRbzX0w1DfbRz3Xe5aXBmAcEcloHUSrwpjsjq26TGOKajCOb1S0jhhm
-	 9+ZPG0C6cEac1wgpe3rPTTEANxbOC1FuxAt35JJl0qkpn3Un+CNi4bEMgBZeSoZ+1K
-	 agcmiDUnkqsabBKilkp5885JhBWV/TnO781ALd+CIBwEsy07YZweNISvj47s8qMuhu
-	 fukmUwmPzJdMAw1lZ9lS0t6o3jHDPBJrphNt2PIl02tdU4tF86uGWHAubuSS7BjqIx
-	 1e8WrCPH22Z9A==
+	b=d7tz+EDLkuyjhDjQ9ztXTqCk0bCovXAnUkNTzIz0Qzc500JsTglJnXcSbjcElgmx2
+	 zQyovGRnN18u25MoBh1rrJjYm1/yKWAi+FbeSzeikK2CNT2sFcx2tTKyg7uQ9v5QB1
+	 DFn+X+SdxuX+PHEN7tgxaj4s4twaSLxmApGMcvqIl2pc5OiKoZOC90nZCM8p3aMHUQ
+	 egXbud2LafFRkCuWm74ZVhEmCYIImhHBn59deq44wyGn9dyriVq6hEYWfSfzjB0YJV
+	 M35dwt7Zo3V0ycC6vCNGYnAchJWsmMlComsRyaH9qIW/DQCLamfKaUgEAENUo/JECy
+	 bUOKOnLlCGvpA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=flex--zhangkelvin.bounces.google.com
- (client-ip=2607:f8b0:4864:20::94a; helo=mail-ua1-x94a.google.com;
- envelope-from=3ffqxyqskc6eaibohlfmwjohpphmf.dpnmjovy-fspgtmjtut.pambct.psh@flex--zhangkelvin.bounces.google.com;
+ (client-ip=2607:f8b0:4864:20::74a; helo=mail-qk1-x74a.google.com;
+ envelope-from=3flqxyqskc6mckdqjnhoylqjrrjoh.frpolqxa-hurivolvwv.rcodev.ruj@flex--zhangkelvin.bounces.google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
- header.s=20210112 header.b=UO3MLcZW; dkim-atps=neutral
-Received: from mail-ua1-x94a.google.com (mail-ua1-x94a.google.com
- [IPv6:2607:f8b0:4864:20::94a])
+ header.s=20210112 header.b=Dn8Zfjz/; dkim-atps=neutral
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com
+ [IPv6:2607:f8b0:4864:20::74a])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J8bpb1jWRz2yPs
- for <linux-erofs@lists.ozlabs.org>; Thu,  9 Dec 2021 12:21:27 +1100 (AEDT)
-Received: by mail-ua1-x94a.google.com with SMTP id
- y21-20020ab025d5000000b002d3ca52eab5so2466411uan.22
- for <linux-erofs@lists.ozlabs.org>; Wed, 08 Dec 2021 17:21:26 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J8bpc543dz300S
+ for <linux-erofs@lists.ozlabs.org>; Thu,  9 Dec 2021 12:21:28 +1100 (AEDT)
+Received: by mail-qk1-x74a.google.com with SMTP id
+ bp17-20020a05620a459100b0045e893f2ed8so5285125qkb.11
+ for <linux-erofs@lists.ozlabs.org>; Wed, 08 Dec 2021 17:21:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:date:in-reply-to:message-id:mime-version
  :references:subject:from:to:cc;
- bh=KEjeKIDz2jd1Bgf2lTFVJbKZTfXuUAY/DsDcj20NZ/A=;
- b=vzGK02cSnAbU43siAK0OQqnxC1hgHDr39TtNGobh87lS4vyjK3WpCfElofsYVNaFSw
- aZy4lNFcMnHi5PDPvsKz/pjvbox+6ofKQXXVKvVDD5F8K/DioZaeJfY8qZcYNcKcHYqE
- 1l/W0QrfgLWQQ69tez41C6QxjOZ/q2W2bfbl5Zzu9G8TXh2kwM6jNolIS7NJt9/WBkO0
- xctKwwyQJTWXjOcNDq0xi2wTMvTO5OAg68jUo0cRHzWhQ48SVnb5mQl/oMLMh458K6+o
- 6GD0moKIeh+gl59XzBmePBpm1zJqz0Fx7SYfLboNl2X6UpAG8QPZOclJuLXR/HIgW0ON
- +9VQ==
-X-Gm-Message-State: AOAM530vH/fimTlbB7CVuJF17zTM9T44jgPJ3fbWtNLH0m3joinLK62+
- d4cgg/HPkE2qk7ug4gwQVlu82w6TcxR27nPGdEWZyXkLDbO2R7CiOP3BA/bRv9ZfQbTMdrTAemM
- awdXynqOCnOvKPjxtcPunHQsJCRCMF/varSFxHhMqB9JT6/vjXz5guzQr3nL8fH9M255CIU2YpL
- lWQHVG/u4=
-X-Google-Smtp-Source: ABdhPJwsjCHkcKbjeAUvr74VjCxo+WcSkI2SdTR5wRrBOFS7ErCNjhiWVrAp56uBXR/IyvHyaRLagKlgZRyaVoFIHg==
+ bh=TclOBkLce1W+s9SeSdOj8YE7DhDtI64tC2aqDPLRMts=;
+ b=0SSwh333+dMpdLaW+HVh8UxF2S/gfsctYFWQciSbBtw5tXbvtppt73Cb0gn1ymdgmB
+ pynffqUMoZCGjR1RrVzOWV05cpxNA10nl0nssXi2oUWiahQcx2ReV3pW298fNU7MP3ag
+ Rsh3SU4FryxBqv3PhqUnEkLZslHtW8RK/WX3RBF/jg2r0JtjeK0BA6Dz4CxPVrS4NpVk
+ Emhxuv+EQrgASzdHgEh/mtfq1TK0bwk3MHR9Rvl6fjdrKDW3cU94liiuFj9FTExlIBnk
+ fIY5tpyc77IQgxcVoa2waDacrS0JvG0mI3noDsM55OOg22amA+L5yaL1MsKbwqjD17At
+ m4yA==
+X-Gm-Message-State: AOAM530re252q/MpqZEyFv5RJSlHGRWILtYlsF8gcdo7cIC6qJnyEAY2
+ YEZNA0NSw6pQEFB7CRO3p0rEam0MQ2xXJEfmIs9FtM4E3Ld7VgZrSP12lmFlvLl5ffuuy8ytTSL
+ tazzoa9KIOmN2Yx/RAERmPpaYKkxmyIcDMIanwCZwvHO+PDy5jSNLDZwtUIkjds3lV0O4kkawV1
+ r9p87uccQ=
+X-Google-Smtp-Source: ABdhPJyxixz0gvWKCOjYBZohvwcup+ckIYV+cfpPKsoqUlx70sSxv2/1hJYJRuE7K/XiXSUJM652hx2DDLh0rT34mw==
 X-Received: from zhangkelvin-big.c.googlers.com
  ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
- (user=zhangkelvin job=sendgmr) by 2002:a05:6122:78c:: with SMTP id
- k12mr3703360vkr.22.1639012884350; Wed, 08 Dec 2021 17:21:24 -0800 (PST)
-Date: Wed,  8 Dec 2021 17:21:17 -0800
+ (user=zhangkelvin job=sendgmr) by 2002:a05:622a:1055:: with SMTP id
+ f21mr12597572qte.421.1639012886531; Wed, 08 Dec 2021 17:21:26 -0800 (PST)
+Date: Wed,  8 Dec 2021 17:21:18 -0800
 In-Reply-To: <20211209012118.4175351-1-zhangkelvin@google.com>
-Message-Id: <20211209012118.4175351-2-zhangkelvin@google.com>
+Message-Id: <20211209012118.4175351-3-zhangkelvin@google.com>
 Mime-Version: 1.0
 References: <20211209004659.4161847-1-zhangkelvin@google.com>
  <20211209012118.4175351-1-zhangkelvin@google.com>
 X-Mailer: git-send-email 2.34.1.173.g76aa8bc2d0-goog
-Subject: [PATCH v2 1/2] Add API to get full pathname of an inode
+Subject: [PATCH v2 2/2] Add API to iterate over inodes in EROFS
 To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
  Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -88,137 +88,161 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Change-Id: Iba99e590f051638285d1d1949311a08f5a5f1a82
+Change-Id: Ia35708080a72ee204eaaddfc670d3cb8023a078c
 Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
 ---
- dump/main.c              |  70 ++-----------------------
- include/erofs/internal.h |   5 ++
- lib/namei.c              | 108 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+), 67 deletions(-)
+ include/erofs/iterate.h |  57 +++++++++++++
+ lib/Makefile.am         |   2 +-
+ lib/iterate.c           | 173 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 231 insertions(+), 1 deletion(-)
+ create mode 100644 include/erofs/iterate.h
+ create mode 100644 lib/iterate.c
 
-diff --git a/dump/main.c b/dump/main.c
-index b7560ec..bcaaa21 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -11,6 +11,7 @@
- #include "erofs/print.h"
- #include "erofs/inode.h"
- #include "erofs/io.h"
+diff --git a/include/erofs/iterate.h b/include/erofs/iterate.h
+new file mode 100644
+index 0000000..96171a7
+--- /dev/null
++++ b/include/erofs/iterate.h
+@@ -0,0 +1,57 @@
++//
++// Copyright (C) 2021 The Android Open Source Project
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++//
++
++#ifndef ITERATE_ITERATE
++#define ITERATE_ITERATE
++
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
++
++#include "erofs/io.h"
++#include "erofs/print.h"
++
++
++struct erofs_inode_info {
++  uint64_t inode_id;
++  const char* name;
++  bool is_reg_file;
++  u64 compressed_size;
++  u64 uncompressed_size;
++  struct erofs_inode* inode;
++  void* arg;
++};
++// Callback function for iterating over inodes of EROFS
++
++typedef bool (*ErofsIterCallback)(struct erofs_inode_info);
++
++int erofs_iterate_dir(const struct erofs_sb_info* sbi,
++                   erofs_nid_t nid,
++                   erofs_nid_t parent_nid,
++                   ErofsIterCallback cb,
++                   void* arg);
++int erofs_iterate_root_dir(const struct erofs_sb_info* sbi,
++                        ErofsIterCallback cbg,
++                        void* arg);
++int erofs_get_occupied_size(struct erofs_inode* inode, erofs_off_t* size);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif  // ITERATE_ITERATE
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 67ba798..20c0e4f 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -27,7 +27,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+ noinst_HEADERS += compressor.h
+ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+-		      compress_hints.c hashmap.c sha256.c blobchunk.c
++		      compress_hints.c hashmap.c sha256.c blobchunk.c iterate.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ if ENABLE_LZ4
+ liberofs_la_CFLAGS += ${LZ4_CFLAGS}
+diff --git a/lib/iterate.c b/lib/iterate.c
+new file mode 100644
+index 0000000..1a10ec1
+--- /dev/null
++++ b/lib/iterate.c
+@@ -0,0 +1,173 @@
++//
++// Copyright (C) 2021 The Android Open Source Project
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++//
++
 +#include "erofs/internal.h"
- 
- #ifdef HAVE_LIBUUID
- #include <uuid.h>
-@@ -357,71 +358,6 @@ static int erofs_read_dir(erofs_nid_t nid, erofs_nid_t parent_nid)
- 	return 0;
- }
- 
--static int erofs_get_pathname(erofs_nid_t nid, erofs_nid_t parent_nid,
--		erofs_nid_t target, char *path, unsigned int pos)
--{
--	int err;
--	erofs_off_t offset;
--	char buf[EROFS_BLKSIZ];
--	struct erofs_inode inode = { .nid = nid };
--
--	path[pos++] = '/';
--	if (target == sbi.root_nid)
--		return 0;
--
--	err = erofs_read_inode_from_disk(&inode);
--	if (err) {
--		erofs_err("read inode failed @ nid %llu", nid | 0ULL);
--		return err;
--	}
--
--	offset = 0;
--	while (offset < inode.i_size) {
--		erofs_off_t maxsize = min_t(erofs_off_t,
--					inode.i_size - offset, EROFS_BLKSIZ);
--		struct erofs_dirent *de = (void *)buf;
--		struct erofs_dirent *end;
--		unsigned int nameoff;
--
--		err = erofs_pread(&inode, buf, maxsize, offset);
--		if (err)
--			return err;
--
--		nameoff = le16_to_cpu(de->nameoff);
--		end = (void *)buf + nameoff;
--		while (de < end) {
--			const char *dname;
--			int len;
--
--			nameoff = le16_to_cpu(de->nameoff);
--			dname = (char *)buf + nameoff;
--			len = erofs_checkdirent(de, end, maxsize, dname);
--			if (len < 0)
--				return len;
--
--			if (de->nid == target) {
--				memcpy(path + pos, dname, len);
--				path[pos + len] = '\0';
--				return 0;
--			}
--
--			if (de->file_type == EROFS_FT_DIR &&
--					de->nid != parent_nid &&
--					de->nid != nid) {
--				memcpy(path + pos, dname, len);
--				err = erofs_get_pathname(de->nid, nid,
--						target, path, pos + len);
--				if (!err)
--					return 0;
--				memset(path + pos, 0, len);
--			}
--			++de;
--		}
--		offset += maxsize;
--	}
--	return -1;
--}
--
- static int erofsdump_map_blocks(struct erofs_inode *inode,
- 		struct erofs_map_blocks *map, int flags)
- {
-@@ -461,12 +397,12 @@ static void erofsdump_show_fileinfo(bool show_extent)
- 		return;
- 	}
- 
--	err = erofs_get_pathname(sbi.root_nid, sbi.root_nid,
--				 inode.nid, path, 0);
-+	err = erofs_get_inode_name(&sbi, inode.nid, path, PATH_MAX+1);
- 	if (err < 0) {
- 		erofs_err("file path not found @ nid %llu", inode.nid | 0ULL);
- 		return;
- 	}
-+  printf("Path: %s\n", path);
- 
- 	strftime(timebuf, sizeof(timebuf),
- 		 "%Y-%m-%d %H:%M:%S", localtime((time_t *)&inode.i_ctime));
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index a68de32..632461e 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -305,6 +305,11 @@ int erofs_read_superblock(void);
- int erofs_read_inode_from_disk(struct erofs_inode *vi);
- int erofs_ilookup(const char *path, struct erofs_inode *vi);
- int erofs_read_inode_from_disk(struct erofs_inode *vi);
-+// Get full path name of an inode, return 0 if success
-+int erofs_get_inode_name(const struct erofs_sb_info* sbi,
-+                         erofs_nid_t target,
-+                         char* output_buffer,
-+                         size_t capacity);
- 
- /* data.c */
- int erofs_pread(struct erofs_inode *inode, char *buf,
-diff --git a/lib/namei.c b/lib/namei.c
-index 7377e74..ee76e82 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -274,3 +274,111 @@ int erofs_ilookup(const char *path, struct erofs_inode *vi)
- 	vi->nid = nd.nid;
- 	return erofs_read_inode_from_disk(vi);
- }
++#include "erofs_fs.h"
++#include "erofs/print.h"
++#include "erofs/iterate.h"
++
++static int erofs_read_dirent(const struct erofs_sb_info* sbi,
++                             const struct erofs_dirent* de,
++                             erofs_nid_t nid,
++                             erofs_nid_t parent_nid,
++                             const char* dname,
++                             ErofsIterCallback cb,
++                             void* arg) {
++  int err;
++  erofs_off_t occupied_size = 0;
++  struct erofs_inode inode = {.nid = de->nid};
++  err = erofs_read_inode_from_disk(&inode);
++  if (err) {
++    erofs_err("read file inode from disk failed!");
++    return err;
++  }
++  err = erofs_get_occupied_size(&inode, &occupied_size);
++  if (err) {
++    erofs_err("get file size failed\n");
++    return err;
++  }
++  char buf[PATH_MAX + 1];
++  erofs_get_inode_name(sbi, de->nid, buf, PATH_MAX + 1);
++  struct erofs_inode_info info = {
++      .inode_id = de->nid,
++      .name = buf,
++      .is_reg_file = de->file_type == EROFS_FT_REG_FILE,
++      .compressed_size = occupied_size,
++      .uncompressed_size = inode.i_size,
++      .inode = &inode,
++      .arg = arg};
++  cb(info);
++  if ((de->file_type == EROFS_FT_DIR) && de->nid != nid &&
++      de->nid != parent_nid) {
++    err = erofs_iterate_dir(sbi, de->nid, nid, cb, arg);
++    if (err) {
++      erofs_err("parse dir nid %u error occurred\n",
++                (unsigned int)(de->nid));
++      return err;
++    }
++  }
++  return 0;
++}
 +
 +static inline int erofs_checkdirent(const struct erofs_dirent* de,
 +                                    const struct erofs_dirent* last_de,
@@ -239,92 +263,94 @@ index 7377e74..ee76e82 100644
 +    return -EFSCORRUPTED;
 +  }
 +  if (de->file_type >= EROFS_FT_MAX) {
-+    erofs_err("invalid file type %llu", de->nid);
++    erofs_err("invalid file type %u", (unsigned int)(de->nid));
 +    return -EFSCORRUPTED;
 +  }
 +  return dname_len;
 +}
 +
-+int erofs_get_pathname(const struct erofs_sb_info* sbi,
-+                       erofs_nid_t nid,
-+                       erofs_nid_t parent_nid,
-+                       erofs_nid_t target,
-+                       char* path,
-+                       size_t capacity) {
-+  if (capacity <= 1) {
-+		return -2;
-+	}
-+	int err;
-+	erofs_off_t offset;
-+	char buf[EROFS_BLKSIZ];
-+	struct erofs_inode inode = { .nid = nid };
-+
-+	path[0] = '/';
-+	if (target == sbi->root_nid)
-+		return 0;
-+
-+	err = erofs_read_inode_from_disk(&inode);
-+	if (err) {
-+		erofs_err("read inode failed @ nid %llu", nid | 0ULL);
-+		return err;
-+	}
-+
-+	offset = 0;
-+	while (offset < inode.i_size) {
-+		erofs_off_t maxsize = min_t(erofs_off_t,
-+					inode.i_size - offset, EROFS_BLKSIZ);
-+		struct erofs_dirent *de = (void *)buf;
-+		struct erofs_dirent *end;
-+		unsigned int nameoff;
-+
-+		err = erofs_pread(&inode, buf, maxsize, offset);
-+		if (err)
-+			return err;
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		end = (void *)buf + nameoff;
-+		while (de < end) {
-+			const char *dname;
-+			int len;
-+
-+			nameoff = le16_to_cpu(de->nameoff);
-+			dname = (char *)buf + nameoff;
-+			len = erofs_checkdirent(de, end, maxsize, dname);
-+			if (len < 0)
-+				return len;
-+			// First char is '/', last char is '\0'
-+			// so usable capacity is |capacity| - 2
-+			if (len > capacity - 2) {
-+				len = capacity - 2;
-+			}
-+			if (de->nid == target) {
-+				memcpy(path + 1, dname, len);
-+				path[1 + len] = '\0';
-+				return 0;
-+			}
-+
-+			if (de->file_type == EROFS_FT_DIR &&
-+					de->nid != parent_nid &&
-+					de->nid != nid) {
-+				memcpy(path + 1, dname, len);
-+				err = erofs_get_pathname(sbi, de->nid, nid,
-+						target, path + 1 + len, capacity - 1 - len);
-+				if (!err)
-+					return 0;
-+				memset(path + 1, 0, len);
-+			}
-+			++de;
-+		}
-+		offset += maxsize;
-+	}
-+	return -1;
++int erofs_iterate_dir(const struct erofs_sb_info* sbi,
++                   erofs_nid_t nid,
++                   erofs_nid_t parent_nid,
++                   ErofsIterCallback cb,
++                   void* arg) {
++  int err;
++  erofs_off_t offset;
++  char buf[EROFS_BLKSIZ];
++  struct erofs_inode vi = {.nid = nid};
++  err = erofs_read_inode_from_disk(&vi);
++  if (err)
++    return err;
++  struct erofs_inode_info inode_info = {
++      .inode_id = nid,
++      .name = buf,
++      .is_reg_file = false,
++      .compressed_size = vi.i_size,
++      .uncompressed_size = vi.i_size,
++      .inode = &vi,
++      .arg = arg,
++  };
++  err = erofs_get_inode_name(sbi, nid, buf, EROFS_BLKSIZ);
++  cb(inode_info);
++  if (err) {
++    return err;
++  }
++  offset = 0;
++  while (offset < vi.i_size) {
++    erofs_off_t maxsize = min_t(erofs_off_t, vi.i_size - offset, EROFS_BLKSIZ);
++    const struct erofs_dirent* de = (const struct erofs_dirent*)(buf);
++    struct erofs_dirent* end;
++    unsigned int nameoff;
++    err = erofs_pread(&vi, buf, maxsize, offset);
++    if (err)
++      return err;
++    nameoff = le16_to_cpu(de->nameoff);
++    end = (struct erofs_dirent*)(buf + nameoff);
++    while (de < end) {
++      const char* dname;
++      int ret;
++      /* skip "." and ".." dentry */
++      if (de->nid == nid || de->nid == parent_nid) {
++        de++;
++        continue;
++      }
++      dname = (char*)buf + nameoff;
++      ret = erofs_checkdirent(de, end, maxsize, dname);
++      if (ret < 0)
++        return ret;
++      ret = erofs_read_dirent(sbi, de, nid, parent_nid, dname, cb, arg);
++      if (ret < 0)
++        return ret;
++      ++de;
++    }
++    offset += maxsize;
++  }
++  return 0;
 +}
 +
-+int erofs_get_inode_name(const struct erofs_sb_info* sbi,
-+                         erofs_nid_t target,
-+                         char* path,
-+                         size_t capacity) {
-+  return erofs_get_pathname(sbi, sbi->root_nid, sbi->root_nid, target, path, capacity);
++int erofs_get_occupied_size(struct erofs_inode* inode, erofs_off_t* size) {
++  *size = 0;
++  switch (inode->datalayout) {
++    case EROFS_INODE_FLAT_INLINE:
++    case EROFS_INODE_FLAT_PLAIN:
++    case EROFS_INODE_CHUNK_BASED:
++      *size = inode->i_size;
++      break;
++    case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
++    case EROFS_INODE_FLAT_COMPRESSION:
++      *size = inode->u.i_blocks * EROFS_BLKSIZ;
++      break;
++    default:
++      erofs_err("unknown datalayout");
++      return -1;
++  }
++  return 0;
++}
++
++int erofs_iterate_root_dir(const struct erofs_sb_info* sbi,
++                        ErofsIterCallback cb,
++                        void* arg) {
++  return erofs_iterate_dir(sbi, sbi->root_nid, sbi->root_nid, cb, arg);
 +}
 +
 -- 
