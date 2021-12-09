@@ -1,71 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44C4A46E031
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 02:21:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5810046E032
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 02:21:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J8bpd0dBNz3058
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 12:21:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J8bph1lD3z2yZv
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Dec 2021 12:21:32 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1639012889;
+	s=201707; t=1639012892;
 	bh=KEjeKIDz2jd1Bgf2lTFVJbKZTfXuUAY/DsDcj20NZ/A=;
 	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=BW2H6xZIKOwlA8pVmi82Bc1Fihfg5u1yiAmfIqBuFnQbaccdcfRonN7nA40pr4pPf
-	 qPA6J+fLphhN/EShUOFeE8McJE1wvgrwb1E90BaU9BSazuPR25yS0iTfl4kOHO6+vx
-	 z4U/dkwyjppJ5bMR+9J37kZyfv+YBIDBOhKR22iSt/e7QeTvZ1wNGQ0faJWpwUOERJ
-	 Zs97wO0JHqp7PWAprZxP9fi9pL3nE/xQEIQzSd+b0HFraOFTGDwYmh/+18RE9yimcM
-	 QqfrHH/JhnsulZET9M+9So35Z/MR9RtvV4ewMqoL9qPlvjK2cXHQ0v3VHZRQoV0Plx
-	 2/6Uizn3jSNhA==
+	b=RVezJBI2pmkUqImgPm3dFozdfOEAOLqa9y9Yk2t3IokBA10/sbj0l1aPgfLU5RKHu
+	 UeYHeQdh49MgRbzX0w1DfbRz3Xe5aXBmAcEcloHUSrwpjsjq26TGOKajCOb1S0jhhm
+	 9+ZPG0C6cEac1wgpe3rPTTEANxbOC1FuxAt35JJl0qkpn3Un+CNi4bEMgBZeSoZ+1K
+	 agcmiDUnkqsabBKilkp5885JhBWV/TnO781ALd+CIBwEsy07YZweNISvj47s8qMuhu
+	 fukmUwmPzJdMAw1lZ9lS0t6o3jHDPBJrphNt2PIl02tdU4tF86uGWHAubuSS7BjqIx
+	 1e8WrCPH22Z9A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=flex--zhangkelvin.bounces.google.com
- (client-ip=2607:f8b0:4864:20::74a; helo=mail-qk1-x74a.google.com;
- envelope-from=3efqxyqskc50we7kdhbisfkdlldib.9ljifkru-bolcpifpqp.lwi78p.lod@flex--zhangkelvin.bounces.google.com;
+ (client-ip=2607:f8b0:4864:20::94a; helo=mail-ua1-x94a.google.com;
+ envelope-from=3ffqxyqskc6eaibohlfmwjohpphmf.dpnmjovy-fspgtmjtut.pambct.psh@flex--zhangkelvin.bounces.google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
- header.s=20210112 header.b=nlfJHz69; dkim-atps=neutral
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com
- [IPv6:2607:f8b0:4864:20::74a])
+ header.s=20210112 header.b=UO3MLcZW; dkim-atps=neutral
+Received: from mail-ua1-x94a.google.com (mail-ua1-x94a.google.com
+ [IPv6:2607:f8b0:4864:20::94a])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J8bpY63q0z2yPs
- for <linux-erofs@lists.ozlabs.org>; Thu,  9 Dec 2021 12:21:23 +1100 (AEDT)
-Received: by mail-qk1-x74a.google.com with SMTP id
- bm33-20020a05620a19a100b0046f1b6f3526so5228459qkb.21
- for <linux-erofs@lists.ozlabs.org>; Wed, 08 Dec 2021 17:21:23 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J8bpb1jWRz2yPs
+ for <linux-erofs@lists.ozlabs.org>; Thu,  9 Dec 2021 12:21:27 +1100 (AEDT)
+Received: by mail-ua1-x94a.google.com with SMTP id
+ y21-20020ab025d5000000b002d3ca52eab5so2466411uan.22
+ for <linux-erofs@lists.ozlabs.org>; Wed, 08 Dec 2021 17:21:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:date:in-reply-to:message-id:mime-version
  :references:subject:from:to:cc;
  bh=KEjeKIDz2jd1Bgf2lTFVJbKZTfXuUAY/DsDcj20NZ/A=;
- b=pHZqcW9whAQbADtekH7KchAjEt3BHuZrfj9SZezPCNOC+sZmvQxoclPmNS4zVQaGcr
- 6SVIYjNq2Q1TMbHp40qKJXB5Y38K4rrJJypJB6VH/PQLtKBq8y+kLivPNhkV6ZS68ndH
- URThgAatfiEyDVVI4wpQO3rpqvOx02WrkpHUhGJfBEfVu5H2mSBAiotxu5ktd5zbHtn/
- RuYULzumdNG2i4/PSuxSdeGU+eT6w2X7rd/j5FsQNjCb68tw3S0mLxh/mh+Fo1EYx/VB
- dLOuJV/l9XYTi3ZB5CYnDUdFvpjrbdOm8WsWIKjdmcAR2n+iSKK9GqFqaTjmvR7NWIIs
- PH2w==
-X-Gm-Message-State: AOAM5307RwXkkM4dxBzJPbp6HXMFrrgIWWnR6jTI8EWabFW96y+7lRna
- tqq09lAFTGspA4qdfGYupWHZzVnbyWVQjKSuHkqu2ykh/9qZfx/21YVZzjueB4KAG2zH5Kq0Hel
- JapXRAL982SkvD0XsoM/l+0p5DUFm9ROU3GL5xro13AYvo62iNXkAsvtw4iykuDg802lj2LY98X
- 8SgStuCgE=
-X-Google-Smtp-Source: ABdhPJxC3VD4LJ5Ldfxd9eiP+sX/V14LY+bqNrJ7VhqHh6sR5woYodNHklpBkGozs2Q5rOAi+hXpadqx35CUoH4/1Q==
+ b=vzGK02cSnAbU43siAK0OQqnxC1hgHDr39TtNGobh87lS4vyjK3WpCfElofsYVNaFSw
+ aZy4lNFcMnHi5PDPvsKz/pjvbox+6ofKQXXVKvVDD5F8K/DioZaeJfY8qZcYNcKcHYqE
+ 1l/W0QrfgLWQQ69tez41C6QxjOZ/q2W2bfbl5Zzu9G8TXh2kwM6jNolIS7NJt9/WBkO0
+ xctKwwyQJTWXjOcNDq0xi2wTMvTO5OAg68jUo0cRHzWhQ48SVnb5mQl/oMLMh458K6+o
+ 6GD0moKIeh+gl59XzBmePBpm1zJqz0Fx7SYfLboNl2X6UpAG8QPZOclJuLXR/HIgW0ON
+ +9VQ==
+X-Gm-Message-State: AOAM530vH/fimTlbB7CVuJF17zTM9T44jgPJ3fbWtNLH0m3joinLK62+
+ d4cgg/HPkE2qk7ug4gwQVlu82w6TcxR27nPGdEWZyXkLDbO2R7CiOP3BA/bRv9ZfQbTMdrTAemM
+ awdXynqOCnOvKPjxtcPunHQsJCRCMF/varSFxHhMqB9JT6/vjXz5guzQr3nL8fH9M255CIU2YpL
+ lWQHVG/u4=
+X-Google-Smtp-Source: ABdhPJwsjCHkcKbjeAUvr74VjCxo+WcSkI2SdTR5wRrBOFS7ErCNjhiWVrAp56uBXR/IyvHyaRLagKlgZRyaVoFIHg==
 X-Received: from zhangkelvin-big.c.googlers.com
  ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
- (user=zhangkelvin job=sendgmr) by 2002:a05:622a:210:: with SMTP id
- b16mr13122177qtx.613.1639012880313; Wed, 08 Dec 2021 17:21:20 -0800 (PST)
-Date: Wed,  8 Dec 2021 17:21:16 -0800
-In-Reply-To: <20211209004659.4161847-1-zhangkelvin@google.com>
-Message-Id: <20211209012118.4175351-1-zhangkelvin@google.com>
+ (user=zhangkelvin job=sendgmr) by 2002:a05:6122:78c:: with SMTP id
+ k12mr3703360vkr.22.1639012884350; Wed, 08 Dec 2021 17:21:24 -0800 (PST)
+Date: Wed,  8 Dec 2021 17:21:17 -0800
+In-Reply-To: <20211209012118.4175351-1-zhangkelvin@google.com>
+Message-Id: <20211209012118.4175351-2-zhangkelvin@google.com>
 Mime-Version: 1.0
 References: <20211209004659.4161847-1-zhangkelvin@google.com>
+ <20211209012118.4175351-1-zhangkelvin@google.com>
 X-Mailer: git-send-email 2.34.1.173.g76aa8bc2d0-goog
-Subject: [PATCH v1] Add API to get full pathname of an inode
+Subject: [PATCH v2 1/2] Add API to get full pathname of an inode
 To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
  Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
