@@ -1,78 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD9FA46F9BE
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Dec 2021 05:03:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D643746FBEF
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Dec 2021 08:41:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4J9HMR4szdz3c4w
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Dec 2021 15:03:47 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=JZxdq0BH;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4J9NC04sXYz3c7w
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Dec 2021 18:41:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634;
- helo=mail-pl1-x634.google.com; envelope-from=zbestahu@gmail.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=JZxdq0BH; dkim-atps=neutral
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com
- [IPv6:2607:f8b0:4864:20::634])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42;
+ helo=out30-42.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-42.freemail.mail.aliyun.com
+ (out30-42.freemail.mail.aliyun.com [115.124.30.42])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4J9HMM4jKCz303F
- for <linux-erofs@lists.ozlabs.org>; Fri, 10 Dec 2021 15:03:41 +1100 (AEDT)
-Received: by mail-pl1-x634.google.com with SMTP id p18so5404402plf.13
- for <linux-erofs@lists.ozlabs.org>; Thu, 09 Dec 2021 20:03:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=date:from:to:cc:subject:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=lhA5eZbBte3B6PzEJeQULdrdR4YXJhHzPZ3WNwRUpYU=;
- b=JZxdq0BH1GS5whLXN/yt2KQihLImMV8+gs10h5f1YssP6aa6+GDad0oZ4o+f25SsZY
- wz91lFVRtcx5B+L6sbKYfhc0gBSG03D3yVb1hSq6ZFFWXm9D3cNseGVJnL7/yjtbJyTv
- ui0nvYTlG+iSHvAd/8aIRlgH4lnth2+Mjc3TcqWs1h5tCE4hMm2myQL3lZxdwfqIfxhc
- dYkvJatpyNNX0Y6fNi61BPH4PHApmlAj6zGtO+3umSZNAkxIiKkg79utcpZnr9iiedzF
- +8HEB/KS1s72fP167/8hJFwFYfV1ycbaJHozjYcV2JJWzBi7HZ8j2ciWiasmBlf2zCgX
- roJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=lhA5eZbBte3B6PzEJeQULdrdR4YXJhHzPZ3WNwRUpYU=;
- b=aaMpvGYyMGangrsaHMY7W5r88cYPlTrO8Wnd0a91nAqFzUJ6udQhOYqZ0ZhVOyoBJ6
- cfDRkXb97/d168i/anLGP3QSMSEBSRsM+/H7XPs3bPAEcV+M4YH9wCHqpvQinyNKc/Z7
- SmzZa2cSgy+OhKWwlLnzPU3e2hI5v/P7EANAcxKY2yVw5yqAIjOQU0YJfjv2HtgNWhzl
- X72d6Wj62WyTrRLoWRjPLdWQAJReTRCNSp1pIWGYhxRM5iABW/+Htl13efbPz7k20elL
- 6F33ZwCj5TgD9SZ2froKtl+gKJ350jRDVZGnA5aJN5y6u+Vn6PTr+kwRTk2Kiqheaujn
- A35Q==
-X-Gm-Message-State: AOAM531jQlFiz9z5NO14YNZ/DEDZ2DbR56de5E+Xu/3XyFL7zKobqydd
- BmLixj0CcjbzwJGI3Os7etNRxuRz9eo43g==
-X-Google-Smtp-Source: ABdhPJwssUJUzxUnmooCt8LDjldomZcH/Le4j7I+Yemm4qW0HdSvKVXAc1hgj0bXuJNQESp0lK/OQQ==
-X-Received: by 2002:a17:90a:1b2e:: with SMTP id
- q43mr20661286pjq.56.1639109016089; 
- Thu, 09 Dec 2021 20:03:36 -0800 (PST)
-Received: from localhost ([103.220.76.197])
- by smtp.gmail.com with ESMTPSA id k1sm1288483pfu.31.2021.12.09.20.03.34
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Thu, 09 Dec 2021 20:03:35 -0800 (PST)
-Date: Fri, 10 Dec 2021 12:01:40 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [RFC PATCH v3 1/2] erofs-utils: support tail-packing inline
- compressed data
-Message-ID: <20211210120140.000017f0.zbestahu@gmail.com>
-In-Reply-To: <YbLO6C8Xpnsi5fr5@B-P7TQMD6M-0146.local>
-References: <cover.1637140430.git.huyue2@yulong.com>
- <b1b3b72371dd4a6b46137dce2fab04899e111df9.1637140430.git.huyue2@yulong.com>
- <YbLO6C8Xpnsi5fr5@B-P7TQMD6M-0146.local>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4J9NBv54kxz303F
+ for <linux-erofs@lists.ozlabs.org>; Fri, 10 Dec 2021 18:41:43 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R651e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V-8PLOD_1639121779; 
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V-8PLOD_1639121779) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 10 Dec 2021 15:36:20 +0800
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
+To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+Subject: [RFC 00/19] fscache,erofs: fscache-based demand-read semantics
+Date: Fri, 10 Dec 2021 15:36:00 +0800
+Message-Id: <20211210073619.21667-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,253 +46,243 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Yue Hu <huyue2@yulong.com>,
- geshifei@yulong.com, zhangwen@yulong.com, shaojunjun@yulong.com
+Cc: tao.peng@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
+ linux-fsdevel@vger.kernel.org, eguan@linux.alibaba.com,
+ gerry@linux.alibaba.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
+[Background]
+============
+erofs (Enhanced Read-Only File System) is a filesystem specially
+optimised for read-only scenarios. (Documentation/filesystem/erofs.rst)
 
-On Fri, 10 Dec 2021 11:52:08 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+Recently we are focusing on erofs in container images distribution
+scenario (https://sched.co/pcdL). In this case, erofs can be mounted
+from one bootstrap file (metadata) with (optional) multiple data blob
+files (data) stored on another local filesystem. (All these files are
+actually image files in erofs disk format.)
 
-> Hi Yue,
-> 
-> On Wed, Nov 17, 2021 at 05:22:00PM +0800, Yue Hu wrote:
-> > Currently, we only support tail-end inline data for uncompressed
-> > files, let's support it as well for compressed files.
-> > 
-> > The idea is from Xiang.
-> > 
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>  
-> 
-> Sorry about delay. Finally I seeked some time to look into this...
-> 
-> > ---
-> > v3:
-> > - based on commit 9fe440d0ac03 ("erofs-utils: mkfs: introduce --quiet option").
-> > - move h_idata_size ahead of h_advise for compatibility.
-> > - rename feature/update messages which i think they are more exact.
-> > 
-> > v2:
-> > - add 2 bytes to record compressed size of tail-pcluster suggested from
-> >   Xiang and update related code.
-> > 
-> >  include/erofs/internal.h |  1 +
-> >  include/erofs_fs.h       | 10 ++++-
-> >  lib/compress.c           | 83 ++++++++++++++++++++++++++++++----------
-> >  lib/compressor.c         |  9 +++--
-> >  lib/decompress.c         |  4 ++
-> >  lib/inode.c              | 42 ++++++++++----------
-> >  mkfs/main.c              |  7 ++++
-> >  7 files changed, 108 insertions(+), 48 deletions(-)
-> > 
-> > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> > index 8b154ed..54e5939 100644
-> > --- a/include/erofs/internal.h
-> > +++ b/include/erofs/internal.h
-> > @@ -110,6 +110,7 @@ EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
-> >  EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
-> >  EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
-> >  EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
-> > +EROFS_FEATURE_FUNCS(tail_packing, incompat, INCOMPAT_TAIL_PACKING)  
-> 
-> How about moving fuse support as [PATCH 1/2] and introducing these?
-> 
-> Also the on-disk feature name is somewhat confusing, maybe
-> INCOMPAT_ZTAILPACKING
-> 
-> is better?
+To accelerate the container startup (fetching container image from remote
+and then start the container), we do hope that the bootstrap blob file
+could support demand read. That is, erofs can be mounted and accessed
+even when the bootstrap/data blob files have not been fully downloaded.
 
-ok, i will do that.
+That means we have to manage the cache state of the bootstrap/data blob
+files (if cache hit, read directly from the local cache; if cache miss,
+fetch the data somehow). It would be painful and may be dumb for erofs to
+implement the cache management itself. Thus we prefer fscache/cachefiles
+to do the cache management. Besides, the demand-read feature shall be
+general and it can benefit other using scenarios if it can be implemented
+in fscache level.
 
-> 
-> >  EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
-> >  
-> >  #define EROFS_I_EA_INITED	(1 << 0)
-> > diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-> > index 66a68e3..0ebcd5b 100644
-> > --- a/include/erofs_fs.h
-> > +++ b/include/erofs_fs.h
-> > @@ -22,11 +22,13 @@
-> >  #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
-> >  #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
-> >  #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
-> > +#define EROFS_FEATURE_INCOMPAT_TAIL_PACKING	0x00000010
-> >  #define EROFS_ALL_FEATURE_INCOMPAT		\
-> >  	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
-> >  	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-> >  	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
-> > -	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE)
-> > +	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
-> > +	 EROFS_FEATURE_INCOMPAT_TAIL_PACKING)
-> >  
-> >  #define EROFS_SB_EXTSLOT_SIZE	16
-> >  
-> > @@ -266,13 +268,17 @@ struct z_erofs_lz4_cfgs {
-> >   *                                  (4B) + 2B + (4B) if compacted 2B is on.
-> >   * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
-> >   * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-> > + * bit 3 : tail-packing inline (un)compressed data
-> >   */
-> >  #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
-> >  #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
-> >  #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
-> > +#define Z_EROFS_ADVISE_INLINE_DATA		0x0008
-> >  
-> >  struct z_erofs_map_header {
-> > -	__le32	h_reserved1;
-> > +	__le16	h_reserved1;
-> > +	/* record the (un)compressed size of tail-packing pcluster */
-> > +	__le16	h_idata_size;
-> >  	__le16	h_advise;
-> >  	/*
-> >  	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
-> > diff --git a/lib/compress.c b/lib/compress.c
-> > index 6ca5bed..d7d60b9 100644
-> > --- a/lib/compress.c
-> > +++ b/lib/compress.c
-> > @@ -70,11 +70,10 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
-> >  
-> >  	di.di_clusterofs = cpu_to_le16(ctx->clusterofs);
-> >  
-> > -	/* whether the tail-end uncompressed block or not */
-> > +	/* whether the tail-end (un)compressed block or not */
-> >  	if (!d1) {
-> > -		/* TODO: tail-packing inline compressed data */
-> > -		DBG_BUGON(!raw);
-> > -		type = Z_EROFS_VLE_CLUSTER_TYPE_PLAIN;
-> > +		type = raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
-> > +			Z_EROFS_VLE_CLUSTER_TYPE_HEAD;
-> >  		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
-> >  
-> >  		di.di_advise = advise;
-> > @@ -162,6 +161,17 @@ static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
-> >  	return cfg.c_pclusterblks_def;
-> >  }
-> >  
-> > +static int z_erofs_fill_inline_data(struct erofs_inode *inode, char *data,
-> > +				    unsigned int len)
-> > +{
-> > +	inode->idata_size = len;
-> > +	inode->idata = malloc(inode->idata_size);
-> > +	if (!inode->idata)
-> > +		return -ENOMEM;
-> > +	memcpy(inode->idata, data, inode->idata_size);
-> > +	return 0;
-> > +}
-> > +
-> >  static int vle_compress_one(struct erofs_inode *inode,
-> >  			    struct z_erofs_vle_compress_ctx *ctx,
-> >  			    bool final)
-> > @@ -172,15 +182,20 @@ static int vle_compress_one(struct erofs_inode *inode,
-> >  	int ret;
-> >  	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
-> >  	char *const dst = dstbuf + EROFS_BLKSIZ;
-> > +	bool tail_pcluster = false;
-> >  
-> >  	while (len) {
-> > -		const unsigned int pclustersize =
-> > +		unsigned int pclustersize =
-> >  			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
-> >  		bool raw;
-> >  
-> > -		if (len <= pclustersize) {
-> > +		if (!tail_pcluster && len <= pclustersize) {
-> >  			if (final) {
-> > -				if (len <= EROFS_BLKSIZ)
-> > +				/* TODO: compress with 2 pclusters */
-> > +				if (erofs_sb_has_tail_packing()) {
-> > +					tail_pcluster = true;
-> > +					pclustersize = EROFS_BLKSIZ;
-> > +				} else if (len <= EROFS_BLKSIZ)
-> >  					goto nocompression;
-> >  			} else {  
-> 
-> It seems somewhat messy...
-> Just a rough thought, how about the following code (not even tested...)
-> 
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -182,21 +182,22 @@ static int vle_compress_one(struct erofs_inode *inode,
->         int ret;
->         static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
->         char *const dst = dstbuf + EROFS_BLKSIZ;
-> -       bool tail_pcluster = false;
-> +       bool trailing = false;
-> 
->         while (len) {
->                 unsigned int pclustersize =
->                         z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
->                 bool raw;
-> 
-> -               if (!tail_pcluster && len <= pclustersize) {
-> +               if (len <= pclustersize) {
->                         if (final) {
->                                 /* TODO: compress with 2 pclusters */
->                                 if (erofs_sb_has_tail_packing()) {
-> -                                       tail_pcluster = true;
-> +                                       trailing = true;
->                                         pclustersize = EROFS_BLKSIZ;
-> -                               } else if (len <= EROFS_BLKSIZ)
-> +                               } else if (len <= EROFS_BLKSIZ) {
->                                         goto nocompression;
-> +                               }
->                         } else {
->                                 break;
->                         }
-> @@ -211,23 +212,29 @@ static int vle_compress_one(struct erofs_inode *inode,
->                                           inode->i_srcpath,
->                                           erofs_strerror(ret));
->                         }
-> -                       if (tail_pcluster && len < EROFS_BLKSIZ) {
-> +                       if (trailing && len < EROFS_BLKSIZ) {
->                                 ret = z_erofs_fill_inline_data(inode,
->                                         (char *)(ctx->queue + ctx->head), len);
->                                 if (ret)
->                                         return ret;
->                                 count = len;
->                                 raw = true;
-> +                               ctx->compressedblks = 0;
-> +                       } else {
-> +nocompression:
-> +                               ret = write_uncompressed_extent(ctx, &len, dst);
-> +                               if (ret < 0)
-> +                                       return ret;
-> +                               count = ret;
->                                 ctx->compressedblks = 1;
-> -                               goto add_head;
-> +                               raw = true;
->                         }
-> -nocompression:
-> -                       ret = write_uncompressed_extent(ctx, &len, dst);
-> -                       if (ret < 0)
-> +               } else if (trailing && ret < EROFS_BLKSIZ && len == count) {
-> +                       ret = z_erofs_fill_inline_data(inode, dst, ret);
-> +                       if (ret)
->                                 return ret;
-> -                       count = ret;
-> -                       ctx->compressedblks = 1;
-> -                       raw = true;
-> +                       raw = false;
-> +                       ctx->compressedblks = 0;
->                 } else {
->                         if (tail_pcluster && ret < EROFS_BLKSIZ &&
->                             !(len - count)) {
-> @@ -262,7 +269,6 @@ nocompression:
->                         raw = false;
->                 }
-> 
-> -add_head:
->                 ctx->head += count;
->                 /* write compression indexes for this pcluster */
->                 vle_write_indexes(ctx, count, raw);
-> 
-> Thanks,
-> Gao Xiang
 
-Let me think above.
+[Overall Design]
+================
+The upper fs uses a backing file on the local fs as the local cache
+(exactly the "cachefiles" way), and relies on fscache to detect if data
+is ready or not (cache hit/miss). Since currently fscache detects cache
+hit/miss by detecting the hole of the backing files, our demand-read
+mechanism also relies on the hole detecting.
 
-Thanks.
+1. initial phase
+On the first beginning, the user daemon will touch the backing files
+(bootstrap/data blob files) under corresponding directory (under
+<root>/cache/<volume>) in advance. These backing files are completely
+sparse files (with zero disk usage). Since these backing files are all
+read-only and the file size is fixed, user daemon will set corresponding
+file size and thus create all these sparse backing files in advance.
+
+2. cache miss
+When a file range (of bootstrap/data blob file) is accessed for the
+first time, a cache miss will be triggered and then .issue_op() will be
+called to fetch the data somehow.
+
+In the demand-read case, we relies on a user daemon to fetch the data
+from local/remote. In this case, .issue_op() just packages the file
+range into a message and informs the user daemon, which was polling and
+waiting on /dev/cachefiles. Once awaken, the user daemon will then read
+/dev/cachefiles to get the file range information, and go to fetch the
+data corresponding to the file range. Once data ready, the user daemon
+will write the fetched data into the backing file and then inform the
+previous .issue_op() by writing to /dev/cachefiles. The previous
+.issue_op() calling will be blocked there until it is informed by the
+user daemon that the data has been ready. By then the data has been
+ready in the backing file, and the netfs API will re-initiate a read
+request from the backing file.
+
+3. cache hit
+Once data is already ready in the backing file, netfs API will read from
+the backing file directly.
+
+
+[Advantage of fscache-based demand-read]
+========================================
+1. Asynchronous Prefetch
+In current mechanism, fscache is responsible for cache state management,
+while the data plane (fetch data from local/remote on cache miss) is
+done on the user daemon side.
+
+If data has already been ready in the backing file, netfs API will read
+from the backing file directly and won't be trapped to user space anymore.
+Thus the user daemon could fetch data (from remote) asynchronously on the
+background, and thus accelerate the backing file accessing in some degree.
+
+2. Support massive blob files
+Besides this mechanism supports a large amount of backing files, and
+thus can benefit the densely employed scenario.
+
+In our using scenario, one container image can correspond to one
+bootstrap file (required) and multiple data blob files (optional). For
+example, one container image for node.js will corresponds to ~20 files
+in total. In densely employed environment, there could be as many as
+hundreds of containers and thus thousands of backing files on one
+machine.
+
+
+[Invalidation Strategy]
+=======================
+Currently I have no clear idea on the invalidation (culling) strategy
+yet... It needs further discussion and then gets implemented later.
+
+
+[Patchset Organization]
+=======================
+- patch 1-16 implement the data plane over fscache. Until then erofs
+  could access the bootstrap blob file (backing file) with fscache,
+  though the backing file needs to be ready (fully downloaded).
+- patch 17-19 implement the demand-read semantics. Then it will rely on
+  the user daemon to fetch the data once the backing file has not been
+  ready (cache miss).
+
+
+[Interaction with fscache/cachefiles/netfs]
+===========================================
+fscache/cachefiles/netfs are initially designed to serve as a local
+cache for remote filesystems. As they are used to implement the
+demand-read semantics, the logic may need to be twisted somehow.
+
+This RFC pathset is still quite coarse and is only used to show the
+skeleton of the whole mechanism. Thus to get a workable model as soon as
+possible, the refactoring to fscache/cachefiles/netfs in this pathset is
+quite rough. (sorry for that...) Further discussion and clarification is
+obviously needed.
+
+1. The path of the backing file
+In cachefiles, the backing file will be stored under one fan
+sub-directory according to a hashing algorithm. While in our using
+scenario, user daemon need to touch bootstrap/data blob file under
+correct directory in advance.
+
+In this RFC patchset, I directly passthrough the placing algorithm
+(patch 2) for convenience of debug. But in the later version, we can
+make the hashing algorithm used by cachefiles built-in into the user
+daemon, and let user daemon compute the corresponding hash value and
+place bootstrap/data blob file under right directory. The goal is to
+keep cachefiles' placing logic untouched as much as possible.
+
+2. Upper fs doesn't know file size in advance
+The @object_size parameter of fscache_acquire_cookie() represents the
+file size of the netfs file, and serves in several places.
+
+- the size of the backing file will be set to @object_size during the
+  cookie lookup phase.
+- @object_size will be used to do the coherency checking (compared with
+  the file size in "CacheFiles.cache" xattr) during the cookie lookup
+  phase.
+- netfs API will check if the current readed file range hits EOF
+  according to the file size.
+
+While in demand-read case, the upper fs has no idea of the file size of
+the blob file. Besides, since these files are all read-only, the file
+size is fixed and (as described in 'initial phase') user daemon has set
+corresponding file size (of sparse files), maybe fscache could query the
+file size of the backing file directly, e.g. through fstat on the
+backing file, instead of relying on upper fs to offer the credible file
+size.
+
+Similarly patch 3/10/11 in this RFC just skip the related checking and
+logic for demand-read case.
+
+3. Refactor the address_space based netfs_readpage() API
+The @folio parameter of netfs_readpage() indicates a page cache in the
+address_space of the netfs file, and thus the following logic of netfs
+API will directly copy data to the page cache in the address_space,
+leaving the @folio parameter aside.
+
+While in demand-read case, the input @folio is no longer a page cache in
+the address_space of one file. Instead, it may be just a temporary page
+used to contain the data. Thus netfs API needed to be refactored somehow
+to adapt to this change.
+
+Patch 8/9 in this RFC are for this purpose.
+
+4. Maybe need another device node
+In demand-read case, we rely on the user daemon to fetch data from
+local/remote. Currently we re-use "/dev/cachefiles" for the
+communication between fscache kernel module and user daemon. It's
+obviously not acceptable since "/dev/cachefiles" is only for culling.
+Later we could create another device node for this purpose.
+
+
+[Test]
+======
+1. create erofs image (bootstrap)
+mkfs.erofs test.img tmp/
+
+2. move bootstrap to corresponding place under the root directory of
+fscache
+
+3. run user daemon
+(https://github.com/lostjeffle/demand-read-cachefilesd/blob/main/cachefilesd2.c)
+./cachefilesd2
+
+4. mount erofs from bootstrap
+mount -t erofs none -o bootstrap_path=test.img /mnt/
+
+
+
+Jeffle Xu (19):
+  cachefiles: add mode command
+  cachefiles: implement key scheme for demand-read mode
+  cachefiles: refactor cachefiles_adjust_size()
+  netfs: make ops->init_rreq() optional
+  netfs: refactor netfs_alloc_read_request
+  netfs: add type field to struct netfs_read_request
+  netfs: add netfs_readpage_demand()
+  netfs: refactor netfs_clear_unread()
+  netfs: refactor netfs_rreq_unlock()
+  netfs: refactor netfs_rreq_prepare_read
+  cachefiles: refactor cachefiles_prepare_read
+  erofs: export erofs_map_blocks
+  erofs: add bootstrap_path mount option
+  erofs: introduce fscache support
+  erofs: implement fscache-based metadata read
+  erofs: implement fscache-based data read
+  netfs: support on demand read
+  cachefiles: support on demand read
+  erofs: support on demand read
+
+ fs/cachefiles/daemon.c    | 183 ++++++++++++++++++++++++++++----------
+ fs/cachefiles/interface.c |   4 +
+ fs/cachefiles/internal.h  |  22 +++++
+ fs/cachefiles/io.c        |  59 +++++++++++-
+ fs/cachefiles/namei.c     |   8 +-
+ fs/cachefiles/xattr.c     |   5 ++
+ fs/ceph/addr.c            |   5 --
+ fs/erofs/Makefile         |   2 +-
+ fs/erofs/data.c           |  18 ++--
+ fs/erofs/fscache.c        | 161 +++++++++++++++++++++++++++++++++
+ fs/erofs/inode.c          |   6 +-
+ fs/erofs/internal.h       |  15 ++++
+ fs/erofs/super.c          |  55 ++++++++++--
+ fs/netfs/read_helper.c    | 179 +++++++++++++++++++++++++++++++++----
+ include/linux/netfs.h     |  16 ++++
+ 15 files changed, 652 insertions(+), 86 deletions(-)
+ create mode 100644 fs/erofs/fscache.c
+
+-- 
+2.27.0
 
