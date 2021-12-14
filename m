@@ -2,77 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96455473B2F
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 03:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 682A4473B35
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 03:59:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JCjjt3dL6z304y
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 13:58:10 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=pHu+4kPl;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JCjll2Ps5z304n
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 13:59:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1639450787;
+	bh=qKekMpTwenb0Drr+3NzJnCMec0j8G36fHEus5cKLb+U=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=HYsQ8gJ7RfqlMo2dPiOeJ6XkhEiCCI2PnsCefeGrEPXv2DJHcx/8O0Aygi47Hu8v4
+	 v9miCACYL8RnE/hyOo+H2oLglN5gNVMnmlpTVLzZGPNP706nd2p7bN+mGAzoEtVdhd
+	 I3832mJrXTAKJDR+JJR5x3BZLmPdQwAXF/kMxOXw807G2G2dMiApncTE/FbqyU7Myi
+	 luNmNqQHBzTlSE+9RKzYojTiznYTA4pVESzKgTO9U7r6UzMxfeLUkle468VJEPdGCR
+	 BODiqg3/hWErnY4iYjjNWCZirnKh7WVYcKJ6TwOwRVQuXc+OnAsaUJpS1xHVdx87XH
+	 f4yAxPbcQcLOg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102f;
- helo=mail-pj1-x102f.google.com; envelope-from=zbestahu@gmail.com;
+ smtp.mailfrom=google.com (client-ip=2607:f8b0:4864:20::f2b;
+ helo=mail-qv1-xf2b.google.com; envelope-from=zhangkelvin@google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=pHu+4kPl; dkim-atps=neutral
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com
- [IPv6:2607:f8b0:4864:20::102f])
+ unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
+ header.s=20210112 header.b=flpZMf9u; dkim-atps=neutral
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com
+ [IPv6:2607:f8b0:4864:20::f2b])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JCjjp1XbGz2yZt
- for <linux-erofs@lists.ozlabs.org>; Tue, 14 Dec 2021 13:58:04 +1100 (AEDT)
-Received: by mail-pj1-x102f.google.com with SMTP id v16so81193pjn.1
- for <linux-erofs@lists.ozlabs.org>; Mon, 13 Dec 2021 18:58:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=date:from:to:cc:subject:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=re3zzuDZyW9jOhYFK69BG4SXWlMMDFfXk8PXBLga6Tk=;
- b=pHu+4kPlZMs4SBK80xw6vi+PNb9iH98iYVEZAomBNpmiXtz1LJeoCvNmEjAMIngCfY
- yryz/T8c+yNBEc1IkjJZDqC6KfbCJwnfc8kGDNZYSwGEUhjsNpzYjKRobVipiTMzl2xR
- LPch75GE+//gXZlyjR4lBWqcUYiF5f0g9Y945+eSsg3Gbmf9gwmOHPxG4vBe9Sk9gkIs
- FeMB7X6OaFD0kj1NwISCHPCl+UzCxiDX7SGNlHlRhrLCfQoiwnCw13I+MDyCyE1LiPi4
- iRs6j6l5y52NNQvXjW4TZPpna2v0/s+1XPW1po4zWPnqWcOW0kNUuuOQXreWk5bF3lT4
- GGYQ==
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JCjlf62Kjz2xtQ
+ for <linux-erofs@lists.ozlabs.org>; Tue, 14 Dec 2021 13:59:42 +1100 (AEDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id jo22so16202614qvb.13
+ for <linux-erofs@lists.ozlabs.org>; Mon, 13 Dec 2021 18:59:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=re3zzuDZyW9jOhYFK69BG4SXWlMMDFfXk8PXBLga6Tk=;
- b=mdoNZd1cWI4buTbfFEpCFNMpWTev1D5qFqUQee0A+PReelSxWyvWZfst7Y5d4uF6E8
- bt8QHB2WA29ddcET7eFb1OlwokbqBFq0hkkY2XUvTLJ4PR8Z9szktRotxEAYyCFdsxLU
- fCmmafbPZNK9Vrc1rfGWokbj7mzIRpm9kAVpo3AC4uqKK0HW1GIAMA/ASZ5nU1nVHwap
- zFAIGc+WEp55SAPmDiJo8iD5K7cHcqb/HzlWuopRpwnHvceoifc9/jObx1V6cOXT91CO
- RBIHGAOZNcidzlN3TAVUiSUaCPFEjT43TeddXoEUPBcrXFwJDyxlgpW4iDi1cfzsj9Io
- 5eQQ==
-X-Gm-Message-State: AOAM530/DOqXgQ38slGeBoaIU0Cxv7kAC5aGcW7x2ngEFbcd+w+13g+I
- gVEaHsNUUh3dNRCvpQruh9E=
-X-Google-Smtp-Source: ABdhPJzSCyoSrMNb4uEqHwr9xXLlRP9JOnERaMJmhom5xquB+I0lU9jtMdwf7uI7pCGlJPsTPbuJoQ==
-X-Received: by 2002:a17:902:7289:b0:142:805f:e2c with SMTP id
- d9-20020a170902728900b00142805f0e2cmr2404183pll.42.1639450681373; 
- Mon, 13 Dec 2021 18:58:01 -0800 (PST)
-Received: from localhost ([103.220.76.197])
- by smtp.gmail.com with ESMTPSA id h13sm12775859pfv.37.2021.12.13.18.57.59
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Mon, 13 Dec 2021 18:58:01 -0800 (PST)
-Date: Tue, 14 Dec 2021 10:55:48 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [RFC PATCH v5 1/2] erofs-utils: fuse: support tail-packing
- inline compressed data
-Message-ID: <20211214105548.00001ca8.zbestahu@gmail.com>
-In-Reply-To: <YbgHdzA0FtXa4lHh@B-P7TQMD6M-0146.local>
-References: <1fc2694139fa8b217208992c72ec8ef383e3ff9e.1639377756.git.huyue2@yulong.com>
- <YbcqArpVrEXjLzW/@B-P7TQMD6M-0146.local>
- <YbgHdzA0FtXa4lHh@B-P7TQMD6M-0146.local>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=qKekMpTwenb0Drr+3NzJnCMec0j8G36fHEus5cKLb+U=;
+ b=zBRSQ8l0gdTfhcQGJWBkKiZvpy+EDLPRb+sc5/yZlecLneS9LNm0F/9oh/p03omDuY
+ a9hJ/Gzzvye1UpCcyN7EKdmvPUZXBv/22lGYdSdg5YdrTagMVHnwxBO964YssT59UvLv
+ uakCe2F/fRIP0R922niDdiQltpjFYA2khKWRAfKHKJvXmQkTUKz4LFm32kEDlNUSCKVn
+ yVGkEn0Lnbkpif6f2zgGn4NLL3/U9z/avRcfgS79wfoubpnovROlO13oxRNHX36ZW1wb
+ ls0TdF7ICttdbF5Y6gdBhdIRRVbmES9KsZTL02TgNuphCxBunF1QBigzb6tBZZpgjG40
+ zFVQ==
+X-Gm-Message-State: AOAM5317urhDg+dO0R0QFoTjtUZnp8NkLKyUOM7s0qaNX+wT2U7Wl8o7
+ usvJ9b+PmfR5p8squzolZYaiKQ4wulqxGXhmqyKRDA==
+X-Google-Smtp-Source: ABdhPJxobkI13JRA2ydugHFXSupI2MRw02b0aLjlzIAdmV8s9wTIBzDIDaY3H6EIDatdp+BHLP69VGV9Nr0kdIo6eUU=
+X-Received: by 2002:ad4:4373:: with SMTP id u19mr2535755qvt.123.1639450779122; 
+ Mon, 13 Dec 2021 18:59:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211214004311.GA2891@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20211214021955.992899-1-zhangkelvin@google.com>
+ <20211214021955.992899-2-zhangkelvin@google.com>
+ <CAOSmRzjd4j+Zus+cnor+X0bwMbdBGp4V=Pm89Co0_BeH=mt6FQ@mail.gmail.com>
+ <YbgGdXD0yYpE4B5Y@B-P7TQMD6M-0146.local>
+In-Reply-To: <YbgGdXD0yYpE4B5Y@B-P7TQMD6M-0146.local>
+Date: Mon, 13 Dec 2021 18:59:28 -0800
+Message-ID: <CAOSmRzh4VgVVbwSSoRwi3B589qrQ0AFMDSJa+honkNkf3V3asg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] Add API to iterate over inodes in EROFS
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: multipart/alternative; boundary="000000000000516f3805d312610b"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,39 +76,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: geshifei@coolpad.com, zhangwen@coolpad.com, Yue Hu <huyue2@yulong.com>,
- linux-erofs@lists.ozlabs.org, shaojunjun@coolpad.com
+From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Kelvin Zhang <zhangkelvin@google.com>
+Cc: Miao Xie <miaoxie@huawei.com>,
+ linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 14 Dec 2021 10:54:47 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+--000000000000516f3805d312610b
+Content-Type: text/plain; charset="UTF-8"
 
-> On Mon, Dec 13, 2021 at 07:09:54PM +0800, Gao Xiang wrote:
-> > Hi Yue,
-> > 
-> > On Mon, Dec 13, 2021 at 02:50:54PM +0800, Yue Hu wrote:  
-> > > Add tail-packing inline compressed data support for erofsfuse.
-> > > 
-> > > Signed-off-by: Yue Hu <huyue2@yulong.com>  
-> > 
-> > This version almost looks fine to me, no need to update. I will polish
-> > it this week.
-> >  
-> 
-> I've applied this patch
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b experimental-ztailpacking
-> 
-> Would you mind rebasing [PATCH 2/2] on this and resending? It saves much
-> time for me. (Actually the development process needs to be based on the
-> latest dev branch other than on some random commit.)
+I think we still need parent_nid to skip "." and ".." directories
+correctly? Let's leave these parameters there.
 
-no problem, i will do it later.
+On Mon, Dec 13, 2021 at 6:50 PM Gao Xiang <hsiangkao@linux.alibaba.com>
+wrote:
 
-Thanks.
-
-> 
+> On Mon, Dec 13, 2021 at 06:25:09PM -0800, Kelvin Zhang wrote:
+> > Fixed most of the issues you pointed out. Except I didn't quite
+> understand
+> > the "nid is optional unless we do a fsck." part. Not sure how we can
+> > implement the iterate dir function w/o nid. Can you provide more context?
+>
+> There were two nids there, parent_nid and nid. I meant you could leave
+> dir nid (no matter how it's called) mandatorily. dir's parent nid is
+> optional.
+>
+> Sorry if I made some confusion at that time.
+>
 > Thanks,
 > Gao Xiang
+>
 
+
+-- 
+Sincerely,
+
+Kelvin Zhang
+
+--000000000000516f3805d312610b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">I think we still need parent_nid to skip &quot;.&quot; and=
+ &quot;..&quot; directories correctly? Let&#39;s leave these parameters the=
+re.</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_att=
+r">On Mon, Dec 13, 2021 at 6:50 PM Gao Xiang &lt;<a href=3D"mailto:hsiangka=
+o@linux.alibaba.com">hsiangkao@linux.alibaba.com</a>&gt; wrote:<br></div><b=
+lockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-le=
+ft:1px solid rgb(204,204,204);padding-left:1ex">On Mon, Dec 13, 2021 at 06:=
+25:09PM -0800, Kelvin Zhang wrote:<br>
+&gt; Fixed most of the issues you pointed out. Except I didn&#39;t quite un=
+derstand<br>
+&gt; the &quot;nid is optional unless we do a fsck.&quot; part. Not sure ho=
+w we can<br>
+&gt; implement the iterate dir function w/o nid. Can you provide more conte=
+xt?<br>
+<br>
+There were two nids there, parent_nid and nid. I meant you could leave<br>
+dir nid (no matter how it&#39;s called) mandatorily. dir&#39;s parent nid i=
+s<br>
+optional.<br>
+<br>
+Sorry if I made some confusion at that time.<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr">Sincerely,<div><br></div><div>K=
+elvin Zhang</div></div></div>
+
+--000000000000516f3805d312610b--
