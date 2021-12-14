@@ -1,24 +1,24 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16902473FEB
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 10:53:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21BF9473FED
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 10:53:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JCtwY6hsVz304V
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 20:53:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JCtwd6dm4z3000
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Dec 2021 20:53:05 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1639475581;
-	bh=XykxOFVfO5rIgd3DOU8XiL3jaPdj/zLILyr92nM8oBc=;
+	s=201707; t=1639475585;
+	bh=KhSnUgUkrXjk0WCdu1A7Oy2o7l7bMIbugYgHTD1ekYU=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Gl0hdiNGJRMNxDM9Mzs97inHicBDic3lfhsb40XcyTdlMZsbBslI15GFuw2l37giv
-	 cH7lqOoa0kIMWsRwOEYViaawn/PtMoOxvJtkW4QC6DBlnypcgURVTupI+krTcQhCI+
-	 n7S0cQ71NJgAh6YzamxE6Px+y1AMgv2uP9Itgm2JiW1kvqV1ONsEo3R8fHum8rUUmg
-	 W3EeSq5gJMz9iNqs6p0mR+dsjTdG+bBkYHMev4qeXuwr6bJ5GkuLwJhh3wk97cpsDG
-	 3jlbUdHZPW8pD8p/njnCbH7NILkkjzZs/yUZaONANdEHC+PmwhNluEyYhBAlIRrSx+
-	 iGSqq9D7vf1xQ==
+	b=MHq80R0tXpDahIWPulL4z/jUgRyi+Lvvtyu5N9hk3497kph2d74oj2hnTwPzqwhic
+	 cm1hNN6vaB2gI7JKottsocnOqqC1WM9H00+S+FVc//NIclp2o8Sw+Zp4AK4MUXf3R/
+	 8vCdNhTZjUD87AY60LFY6jRHGq+a1Z+ENZ02jO1WGR7J50X6f6YuppFFwuVmG6cL6Q
+	 3iF8yfO4CvdMmAXGG13udoIj3A1AJ+5zs2qTycOI5+jUXwkPgGctsTBd8OJwzRyuyD
+	 y1/riPZm4UbhwCJqOLpflQP3ua+0VgTB1y6MqnudhODuIJKkeYbNFEuhj93d+VkyyT
+	 HtzOYajuMxKdg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -27,21 +27,21 @@ Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=kiPGb+io; 
+ header.s=selector1 header.b=HmfvCEaP; 
  dkim-atps=neutral
 Received: from APC01-PSA-obe.outbound.protection.outlook.com
  (mail-psaapc01on2055.outbound.protection.outlook.com [40.107.255.55])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JCtwP6xWLz2yY0
- for <linux-erofs@lists.ozlabs.org>; Tue, 14 Dec 2021 20:52:51 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JCtwS1lYnz2yY0
+ for <linux-erofs@lists.ozlabs.org>; Tue, 14 Dec 2021 20:52:56 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c3hFpnrhpR7c6+4F+KD/zqnx5GhQOXliCfGSNSgyMViSwGi0+z5Im0DeMW4elcqniKT8SkckVUymiHyppASo/LLHZBLcALcWi5fu6LAefGVX+SoQo6OfTtws8QYxTwQbGR8ghDpvecBKvWNaLKLZd9QXEKFPNbLzh4BNJKof816Mez7SlKJ4rOVnRZqEEuTxTfLMpi/k8niY+BwrJdZth3RQrrjGJIiRbQuIUHubRGSJZ41nQhqU1VOptHgLReOt7kpAMEUKRENYOnvBb5UnkBQXAFk4ew8nFuD4LehC6rS04fg+wPb+t4Q5z98ahCp+lmAk70ny2y26tYFndKm1Ww==
+ b=cr6WgtPEdcuHu9CL41YSkF1SNPk+OPe7EeIE4/lG2ExzoDB1V5wBsyHv7x111rae181Jrd8B0KMAPh/HCCo1fjimnj0IIBF3TCZIFy/oHL9jsFpXxA83/3Auh1E6e0HdQ/4pzdGy0W8mlmAlmeUFcCjTZV+8w9bt1fdYy9UICEBpHoYp4PkITmSjFsdRrmK12D7AVY3QG9AMYly4bWMqxa8LbE5OxSoR4pRstCOwdlbc/+419DFm6iqyGyzDBstyWgfojegMUEgcFxJlnfw9ZAH3wv1dnbqbF1a/Cz34t3v+ZhmDd/uBSnMlERqoSS7ot8w2/JFljHEr6CPXsTglBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XykxOFVfO5rIgd3DOU8XiL3jaPdj/zLILyr92nM8oBc=;
- b=e3Dh+5KXegucwekwpdbRP6OpktHTenCazuMgiJsSPrTUmGu7Tx0/aoQ2xvyRk9d/GNKBZAggJH53yWs6b/SXRN2qh75jCsGdGZMDGCoiIvkfA/8Fh5ct/ZiI+JYWHjiweTiTstZmpEmIDCCjUdGo3cJC80E/rSE7QyEHJjlqM6BLgSn57xzTSADbtqFgXZLKBkTE1nM4/pSwidKkD3sXIs76a+QKigismNPFIvsLlYsH9KNbkTH+ysopPchH4SlXdzc2g1bzw5cpyRJ+qVWkDKevYPiB/wXHs0nBzo9llxhuHs2gfQD367qEaMNX1g74+y1nXYV8s22LZ5WcHx3X9g==
+ bh=KhSnUgUkrXjk0WCdu1A7Oy2o7l7bMIbugYgHTD1ekYU=;
+ b=QWbxRYrLMth24oE7iRo3SUkfjxQNsXsgpMSvfW53BqSre4wzffrL+jPjYdmt/lRk/EUF8Xeks8lJDbg8auWDyiADJJ1aTUlHFbyeaCFubpvM+N97heWrqiEuhC9Jp0dBcjv0Xt7iAey6sVRyvdd4JYbxQw4IWhZey0iQYETmpnsOYX8q11xWCYIzCuvqZhBoAz/2P/NN98bgdi+nqEJ3ppmAhHtqTPa0cpN32SXUHDBCcYtegHX3GkZxPPWi0pkMLIDiOy++WCfAK10mmKNbovX62t28mSWjeWQRYkjI99dFyLvG3vhAko+5pHh5NdVW4aMjKuEG9Y60XdrVus5zMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
@@ -51,19 +51,20 @@ Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
  SG2PR02MB3371.apcprd02.prod.outlook.com (2603:1096:4:47::16) with
  Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4755.21; Tue, 14 Dec 2021 09:52:28 +0000
+ 15.20.4755.21; Tue, 14 Dec 2021 09:52:31 +0000
 Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::3032:4149:e5d7:982a]) by SG2PR02MB4108.apcprd02.prod.outlook.com
  ([fe80::3032:4149:e5d7:982a%3]) with mapi id 15.20.4778.018; Tue, 14 Dec 2021
- 09:52:28 +0000
+ 09:52:31 +0000
 To: linux-erofs@lists.ozlabs.org,
 	hsiangkao@linux.alibaba.com
-Subject: [PATCH v2 1/2] erofs-utils: sort shared xattr
-Date: Tue, 14 Dec 2021 17:52:01 +0800
-Message-Id: <20211214095202.11717-1-huangjianan@oppo.com>
+Subject: [PATCH 2/2] erofs-utils: tests: add test for xattr
+Date: Tue, 14 Dec 2021 17:52:02 +0800
+Message-Id: <20211214095202.11717-2-huangjianan@oppo.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <YXE30+2qU75+0szk@B-P7TQMD6M-0146.local>
+In-Reply-To: <20211214095202.11717-1-huangjianan@oppo.com>
 References: <YXE30+2qU75+0szk@B-P7TQMD6M-0146.local>
+ <20211214095202.11717-1-huangjianan@oppo.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: HK2PR02CA0172.apcprd02.prod.outlook.com
@@ -71,56 +72,56 @@ X-ClientProxiedBy: HK2PR02CA0172.apcprd02.prod.outlook.com
  (2603:1096:4:96::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 775019ba-75a0-4429-effc-08d9bee77024
+X-MS-Office365-Filtering-Correlation-Id: d6243d24-e52e-48c7-0b5b-08d9bee77210
 X-MS-TrafficTypeDiagnostic: SG2PR02MB3371:EE_
-X-Microsoft-Antispam-PRVS: <SG2PR02MB3371442DB5A5C52D0BD5ECF6C3759@SG2PR02MB3371.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-Microsoft-Antispam-PRVS: <SG2PR02MB337119ED9005774FE8C36DAAC3759@SG2PR02MB3371.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Ida/WKwWOfM8fyJLufRDL/son0+zmq23seknEqKo28uBK34KiNv2FUI42rO+J4DcTs5hhSXnflPvFuM5KvygpiPRMWpMl/YID8CS4k2HsV5sNuVFnJl+MQGXWTHbtgrIDaaoLk1w0BIWwcglDWMKI0aPR8Rv8Zx5QOQW1450H36JukW3/rxCkGGZbULDHH29lcqYFhuAzdnoXBFejqRd6w3O8MHxrlXBMvZJIXLooGy4t70C/wMHRTCKqt9hFff+eT15LMqNQGuzTZBC9a0ZDPdAefCdXH2oVzB3FKN++j2xO4oAcJU+11Lum+dy3DIRhy4t8GQ1MHvEPPZph0PaDu0cBNjynzt7gD8+n+ZNbI9VhiBImpq9bB72pv1iEHDQi8FvGMaP4EjtiS/B9a3o+mR9rjM5hhtwq9JvdGypcwm6f+T96hboeiqo7H/olEj19ZHnvPTNz5fUFMUhIC60Pgf+0HvHuWLOgq/MDyDqd0ZjnbgRMIlq9oazlz/V4CrA2XWy4yATgJLd+i/HKMppMFc3Bt1WWpP2pYulxIyzZrxlZc1qvia2Sqq9Q0yHU7U4k0PSoO5xnNptpXBmJxk8zCdqJjSgG2V3XPteMZ9uyFRqNgTbxbNjNpCERCx9uHR2mi1dZ8W+BAt6M3pD2eBF0nc1wYx95CqFsGZ7O/Nujh9hcxQU0EqVODvSN9YdlNTHUcktYZGTJq+UGHlcKdfAaU0Vp1XGThle7dRbHPykoU=
+X-Microsoft-Antispam-Message-Info: aIl4lDGwwtBMUHFwCuM41N5OoQgfYuKTGrqY1J+kxNdF2JuqoiTYGsZ9BebzY7kUnpcjf+NFjSG0pD8N1dyi7q00dTpKN7UiwqlGhm8r+wYyVlnuIGMi4wJQd9II8K29b6z90rWwe66kg4tVgSKAqbLmH7lw2oxmPzI1xkXHVhMsB79xMg0jjuhGB7JbPJbu4xvr63NVajzC6gcqj6cd8ebD9fglR+yztlBaQPigcAT+c11SAM/AJfAVR1yXK6LLnAV+kWCr7cVfsLUWkv7xmi2ItOUPyUQIurTkJJ2FdssTn1MQyoX1QubFoOYZhjQtvuTXq7rORtXVaDq1b4gqoevsuyWOJRzxgUdwxpweb5BSci9uf3MmFv8NsGM67rtLh1Kg7EX7jf4mY7HVjrkLQnxTqIFuWOP7DVgD7oRqXpBrKBHHskv6173yQDUVl37FUCjv7yCjSLZdkInZ44d5sGRfDMmRnGZdVmWvM3cgpL3VnGFi8waBvvzdxijjonJPxtN3sRIFea9KtRxGkHRaOAE0Etaj+mTD1eQmW2Uk/m+KhjkeavuAW5baNwzd5K/uIG1szmVQM+7+OS+nDO+IMHS2f2arV3d3LWGhevvUZV+SzkdEaoikHKdGgDeev58S5Kj+TD2zn+zaLc6h5ScV0EiyidRepoNnpAJmMTO7DKN8luN2aDKuSfIDT9dQYBKIEemr7dCD9l6VC74EsA0nMwDI22LynqHWDILC+cmRq78=
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
  SFS:(4636009)(366004)(26005)(186003)(2906002)(4326008)(316002)(6506007)(38350700002)(8936002)(83380400001)(38100700002)(66946007)(1076003)(52116002)(66476007)(36756003)(86362001)(2616005)(6666004)(5660300002)(6512007)(8676002)(107886003)(66556008)(508600001)(6486002)(11606007);
  DIR:OUT; SFP:1101; 
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cCRt71NkZR7tFrTJwlUrMKHxhTKHV69Vxdd5s5hRwZvkjpv1t/txCiFXk3m/?=
- =?us-ascii?Q?FeeYnheMBqQbB9IODT03WQeEOa6/EyCNQk/6VNXMHnakZJ4xVelLcgkZve7Z?=
- =?us-ascii?Q?chyVa+ziev2IJqE6Z9XhNmDkN+/bkrW/T4km6+UyAWH+tELSY+2KT+hnja8z?=
- =?us-ascii?Q?56rATrWYWZZS5rys+rcfzTFMiu0H8MTvyBNFbkk1b7m7z6o4ZLfg1jCEAsMV?=
- =?us-ascii?Q?Gs9fjKr55YlZf3bKVaHNZDNo3pXveTlVvT2PgG5W2v5vO9gMXDv1gruC0/AY?=
- =?us-ascii?Q?Nx98sgxIYe6e8R68I8kFv7f7xiF+3z6rNN9fAF9a1HfFUsvcJFgEOplpuYlT?=
- =?us-ascii?Q?uPuerlCaYwf2Z3u0iPTKQX2xzUaolUdlNhMy68dBD2pkuLs8EqTzrKnscS8p?=
- =?us-ascii?Q?w8CRztFXyyElyKm2opjzxux2apvwVArzxl3VctcSprSKnu8IhSaCxUGb8Wxt?=
- =?us-ascii?Q?Zv+CxheSSAR+1Tu2caS6b89Ef1CGmeCDF6+PFtUuIr4VZSCcP0t4rZbt2Mjc?=
- =?us-ascii?Q?f5v4g8EpX5PR85glBhr+HaEweyw3cFeAoiIDxp60+t2GYd6F5ylQ442RhdtL?=
- =?us-ascii?Q?Q9AjwPgwz5BFbQ2JplSgqI/l1zBXw9jTU5+O1vRXKHaETnfXbGRLv+R64fcH?=
- =?us-ascii?Q?eyNxarhP3pC99lJSio0rJ5oLFnbZY6COwt0LKZH8fyiCOH9Hd5IY/cCtv4Il?=
- =?us-ascii?Q?llsPPDNAsCUuXnxL5i4IQHx14uEjySXr8bHJVPCDTsumvFrlnipd/7Tw63n3?=
- =?us-ascii?Q?PBsc8EpH8qUA1TrkBFMxnfPHciq/f+sB64NciXwu8rEb/t+Udxqq1MYorS4t?=
- =?us-ascii?Q?ljch7SYAZedGmYGQawhaw+q1v6q0cVjw4KFb6HTov/Xze4+amHjV/hTwGv6H?=
- =?us-ascii?Q?Liu8zxb2S5NHd+W+Bhp+MduxCtpMZhxng08Agyx7KDmY7SstE/kRsgJKGOt0?=
- =?us-ascii?Q?mIBF4uVQ3x0/0v5GGDqInc2pk6V0Zn4JB/Wl0rwJgPCm8bnP8RUbhCxnuH6w?=
- =?us-ascii?Q?Zv77DvWdBBbJlL7B+ad5oKxnEYCmoeYj1yl84tOAxQxc/1ChKBoZboN5BVlz?=
- =?us-ascii?Q?/pD7UtQ/0WHKtee7/ffteIeB0B6+VPeYLGsQA9pUrGJtjuKGXS6ZoindGR36?=
- =?us-ascii?Q?P9SL+qZpId6fnPfbVqw8RNrcaSe/Nz/h/mfai/L30plrBaxehUHneiVhGMnG?=
- =?us-ascii?Q?I5NrnYnyHlvuj6A3p4UC9Tx0v4hYdiDAJ4TTifyrHEODSfJqdf1YZ5M3KWtv?=
- =?us-ascii?Q?sZGSM2nXAefetK4Mrm9Ig7J9DbjrtULpA3H8th49CZrI4LIrWTq00GHkYiYT?=
- =?us-ascii?Q?BSvDy6HmC1X8kiyyNLIG6mUu6xtq4YHiT8b1ZPbGMQ51DY50M+unhwBDxxOY?=
- =?us-ascii?Q?SllXgRNNM0rjZBx0eF6CljPotdAu78QtosUspvzbVm06BMZ1gDFlbAM9lRJJ?=
- =?us-ascii?Q?FjMHlF9QFnMN715vrf4edGBhzbqspbiIBdEtYnB2VzMEk0WQQjBSt6nn11df?=
- =?us-ascii?Q?Vo0HhKRRT531K+eI5G79vduD6PSk4G0KlbUFlNQyLyWBpA9JmNN9b2DoiYoF?=
- =?us-ascii?Q?4L96gTXT5G/xX8f469zbDSGM1g2WVSoaklX3c8ZpSWlOLLsVJebN9f/2ZWRd?=
- =?us-ascii?Q?3DBrWiYHmcSUs44h6hwlJgY=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m0uGw9pnorLpyX64HVBOs5tOoHmkEyBp/GyJPf5bct8pJ+KZG28xbyA2K88K?=
+ =?us-ascii?Q?DaPNM2K/DpBu0B+eg8xFrIc6TUGzKUsx8XmVHhGAE9jZgEbZ+vfUARNkdH6u?=
+ =?us-ascii?Q?Ngeri1cQMzTJ7Ey60NcfezcDm3GnYq4EZocws0jJEIx/FrFK8cAWlx1eaO9r?=
+ =?us-ascii?Q?lreqB3quC2alS0bJUri/Xs/KDahUK7Hlay4fn1DOHGTSe2Zx8J6JAxY+YUZS?=
+ =?us-ascii?Q?sHeTZjT5XL9Hy2Lnn9asp4ghA3Ar8gqHryIGbgU3C6mLkxj0JtBPPKHnmbdv?=
+ =?us-ascii?Q?h0b5yx9CS4u6hfhajwv+IdtN0ImY+qmpoi9nJiN0n0Oxd75c7XtPGHQ4HUVb?=
+ =?us-ascii?Q?oaFNBoFmJuGKIaTRaeqBbQynyq7IHApLKi8kTDU9bmK2/ZvDruVYSE31IYRK?=
+ =?us-ascii?Q?MlL3kY1q0Hayd2SrQciIZveMwHDn2yaeSde7xRTjMEOos9HxWNc5vqwJPMvq?=
+ =?us-ascii?Q?UJhC3T2AHHKY+m41wq+gfhS2Q2YmY3tPf+BqP6+o5sP3wtnL7HoWnLo4e/iQ?=
+ =?us-ascii?Q?yYLUW0rs00ejqrb8G3lVx2mKlDSLB+oxkj7/4PiggoTQSZQMwfT/zRTUtFCY?=
+ =?us-ascii?Q?k5J6yRUKibF7Q1WN+nBS3dR7PNnFfRshl0WtrakyltYfqPs6n/wTjaw6l6tc?=
+ =?us-ascii?Q?ea0sMs9Sjll7m9b6HrfN/3gep80JUf9j3DX6ZVr83gbbtv4qi5qLzPHtxDc3?=
+ =?us-ascii?Q?shcf68zWC29lIZGeMcLz1A7v03IKqS6hVgUX764UBAe/JvhB5/+6ok7vhD/t?=
+ =?us-ascii?Q?bOnUlnsxaJqx1VMRf1HuNREsC68hFkjDI6J+hWIsaEe1jIQOCInKUTOzyyHL?=
+ =?us-ascii?Q?+oYDgzSVAB8JT0QS873liTgapuNMF7MdUuwxOXK9rS8ay+jEvWffTJFmjtys?=
+ =?us-ascii?Q?rPRxKp3HKMvHEUEF0swYKOqnlrra3ON5Llw3czhVIerRvRgwX5RW9kCb7EIa?=
+ =?us-ascii?Q?z0+rPyN4Gs9rieburhTeA3a4U9fkAZlbg/ruo21o9BL0W6UZwtH8yrOTO71L?=
+ =?us-ascii?Q?2I+sFwvI2+uwfiimKwEkzMojmQTwGEEczjZ6L5BE750THa0JNheKZAfak+ct?=
+ =?us-ascii?Q?+taGgSz4bCzFdLInZU6bCdELcGIwC6P/n4LXk7ZAbR9pzjeZ5hw77B/bayXG?=
+ =?us-ascii?Q?iRPwYR36A8ez0uUc1WPtB47Oh3eAVHh/3tEF3LzsWSK5OZ+DW0SL/smSNYlC?=
+ =?us-ascii?Q?eJZwPw8RHlSE0HYe1yrRvjtusdkjQKaVREpo5TeHR5KBaAwY80P7Ro7Z3x71?=
+ =?us-ascii?Q?UkDQTgBJmY7ZeuqxmuW8472pT+EXRMpoEWbAlnW/dW7Ep05xZtsIiFwocu4b?=
+ =?us-ascii?Q?/dmpl4LXI5/u1tmkbL+FIlDPnZmenZWhgCqiu129lVLflXH3uuVu0vWuQ345?=
+ =?us-ascii?Q?1GGluuvWvYQJYeaduDkem6b7VREdRalBC2KtgGLMxzdDwjLBXybfHroNLvvk?=
+ =?us-ascii?Q?GUmgGXCzmHa2TOR1hI0GaaMgof7C6/yTfoi9WpuYaPdOR2qX97IsOK8bdDre?=
+ =?us-ascii?Q?1RtGWTTBoKd3cKJx/DgLBmcWHww7DtMFBs6F0/liXup2502F/xdPnhsOEpca?=
+ =?us-ascii?Q?K6rLKLmQ+g9kQoten1CncYwIsX0fJy5HWS5YEaUhyot0sQEwPdVKehqx6bt5?=
+ =?us-ascii?Q?zUbegIsGfkidSwXGrPOYSZE=3D?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 775019ba-75a0-4429-effc-08d9bee77024
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6243d24-e52e-48c7-0b5b-08d9bee77210
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2021 09:52:28.2202 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2021 09:52:31.2043 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Uhd8H9M7W9zCw0y3S3xqNk1UmIvHqs/GVuz8ZYKF0ch7Bze1pbU6eTKTT6ZYYAANyPXIKthBKcZhBzANNMm+NQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Eep1AX7i0Z38kaa1Jmn45xf9ypsU+rKuzLngitR4+J5g6ciQV2CJdiL13IB823j26DQBmygB30P7cMQGWyKnvQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3371
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -140,76 +141,108 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Sort shared xattr before writing to disk to ensure the consistency
-of reproducible builds.
+Add basic function check for xattr.
 
 Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 ---
-since v1:
-- use strncmp instead of strcmp.
+ tests/Makefile.am   |  3 +++
+ tests/erofs/019     | 63 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/019.out |  2 ++
+ 3 files changed, 68 insertions(+)
+ create mode 100755 tests/erofs/019
+ create mode 100644 tests/erofs/019.out
 
- lib/xattr.c | 36 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
-
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 196133a..fd998cd 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -562,13 +562,31 @@ static struct erofs_bhops erofs_write_shared_xattrs_bhops = {
- 	.flush = erofs_bh_flush_write_shared_xattrs,
- };
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 6eeaece..da3e888 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -82,6 +82,9 @@ TESTS += erofs/017
+ # 018 - verify lzma compressed image
+ TESTS += erofs/018
  
-+static int comp_xattr_item(const void *a, const void *b)
++# 019 - check the xattr functionality
++TESTS += erofs/019
++
+ EXTRA_DIST = common/rc erofs
+ 
+ clean-local: clean-local-check
+diff --git a/tests/erofs/019 b/tests/erofs/019
+new file mode 100755
+index 0000000..5e182a0
+--- /dev/null
++++ b/tests/erofs/019
+@@ -0,0 +1,63 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++
++# get standard environment, filters and checks
++. "${srcdir}/common/rc"
++
++cleanup()
 +{
-+	const struct xattr_item *ia, *ib;
-+	unsigned int la, lb;
-+	int ret;
-+
-+	ia = (*((const struct inode_xattr_node **)a))->item;
-+	ib = (*((const struct inode_xattr_node **)b))->item;
-+	la = ia->len[0] + ia->len[1];
-+	lb = ib->len[0] + ib->len[1];
-+
-+	ret = strncmp(ia->kvbuf, ib->kvbuf, min(la, lb));
-+	if (ret != 0)
-+		return ret;
-+
-+	return la > lb;
++	cd /
++	rm -rf $tmp.*
 +}
 +
- int erofs_build_shared_xattrs_from_path(const char *path)
- {
- 	int ret;
- 	struct erofs_buffer_head *bh;
--	struct inode_xattr_node *node, *n;
-+	struct inode_xattr_node *node, *n, **sorted_n;
- 	char *buf;
--	unsigned int p;
-+	unsigned int p, i;
- 	erofs_off_t off;
- 
- 	/* check if xattr or shared xattr is disabled */
-@@ -606,6 +624,20 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 	off %= EROFS_BLKSIZ;
- 	p = 0;
- 
-+	sorted_n = malloc(shared_xattrs_count * sizeof(n));
-+	if (!sorted_n)
-+		return -ENOMEM;
-+	i = 0;
-+	list_for_each_entry_safe(node, n, &shared_xattrs_list, list) {
-+		list_del(&node->list);
-+		sorted_n[i++] = node;
-+	}
-+	DBG_BUGON(i != shared_xattrs_count);
-+	qsort(sorted_n, shared_xattrs_count, sizeof(n), comp_xattr_item);
-+	for (i = 0; i < shared_xattrs_count; i++)
-+		list_add_tail(&sorted_n[i]->list, &shared_xattrs_list);
-+	free(sorted_n);
++# remove previous $seqres.full before test
++rm -f $seqres.full
 +
- 	list_for_each_entry_safe(node, n, &shared_xattrs_list, list) {
- 		struct xattr_item *const item = node->item;
- 		const struct erofs_xattr_entry entry = {
++# real QA test starts here
++echo "QA output created by $seq"
++
++_require_erofs
++
++[ -z "$lz4_on" ] && \
++	_notrun "lz4 compression is disabled, skipped."
++
++have_xattr=`which xattr`
++[ -z "$have_xattr" ] && \
++	_notrun "xattr isn't installed, skipped."
++
++if [ -z $SCRATCH_DEV ]; then
++	SCRATCH_DEV=$tmp/erofs_$seq.img
++	rm -f SCRATCH_DEV
++fi
++
++localdir="$tmp/$seq"
++rm -rf $localdir
++mkdir -p $localdir
++
++# set random xattr
++cp -nR ../ $localdir
++dirs=`ls $localdir`
++for d in $dirs; do
++	key=`head -20 /dev/urandom | cksum | cut -f1 -d " "`
++	val=`head -20 /dev/urandom | cksum | cut -f1 -d " "`
++	xattr -w user.$key $val $localdir/$d
++done
++
++_scratch_mkfs $localdir || _fail "failed to mkfs"
++
++# check xattr
++_scratch_mount 2>>$seqres.full
++
++for d in $dirs; do
++	xattr1=`xattr -l $localdir/$d`
++	xattr2=`xattr -l $SCRATCH_MNT/$d`
++	[ "$xattr1" = "$xattr2" ] || _fail "-->check xattr FAILED"
++done
++
++_scratch_unmount
++
++echo Silence is golden
++status=0
++exit 0
+diff --git a/tests/erofs/019.out b/tests/erofs/019.out
+new file mode 100644
+index 0000000..163484b
+--- /dev/null
++++ b/tests/erofs/019.out
+@@ -0,0 +1,2 @@
++QA output created by 019
++Silence is golden
 -- 
 2.25.1
 
