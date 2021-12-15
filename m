@@ -1,141 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5C66475158
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Dec 2021 04:28:20 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CED53475376
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Dec 2021 08:01:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JDLLB4NBfz304V
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Dec 2021 14:28:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1639538898;
-	bh=rBvDo+LftPN26/qd1uK3rd8grllOTi7ZfLuc2KaaD8Q=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=FQl3gCN7D5VmEbFicRkTnyItiTI7lo6Xy5PvgRZmwroVMUYYIUjZvDmtR1vfC3mrL
-	 xfazM4RLQllzexydeYSHc91psyk079YsdoUy/vzk2YiliYQDe+vy5QVQDORkdExUuD
-	 /HDo9KuNn1MpoPKqYN+hrzSCabaU83C7MfZKMMj/ozqgaQLVsCs8Ncqgh1QxC6qsFv
-	 H1GxAvSwwAcDRK/bHWdZo16fw9pZ8iBHkpBzZumkEu5xDkmueXHV3BmIQ+snCfo8Nm
-	 HyFsJWcKVHJhX+mGloY7pb0skxu+fSft2cTnj+HJSVvYg1MavEoojCLwUUCAeyy1ix
-	 Z2XQfcdK7TYog==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JDR3c5k9Bz306m
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Dec 2021 18:01:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=oppo.com (client-ip=2a01:111:f400:feab::609;
- helo=apc01-sg2-obe.outbound.protection.outlook.com;
- envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
- header.s=selector1 header.b=FZXHdf5E; 
- dkim-atps=neutral
-Received: from APC01-SG2-obe.outbound.protection.outlook.com
- (mail-sgaapc01on20609.outbound.protection.outlook.com
- [IPv6:2a01:111:f400:feab::609])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57;
+ helo=out30-57.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-57.freemail.mail.aliyun.com
+ (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JDLL53h4hz2xtP
- for <linux-erofs@lists.ozlabs.org>; Wed, 15 Dec 2021 14:28:11 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ft7dy+serZtSFCkBIkSgF5BPaG+4JZ7ivz/FCLUEGWGj8gqjA8OL9cyLeEC04QRSFzZEdZqFzFs04Gc8+0jLuRtzA/134qvIo99qpPfHiyPL+/MKFsVrjJk3rui+25R5A9ZFoiaelHWYF3sKyic1EKXdtK9Z+aWIWmZGaDjQbhKv+j7Ehq1ulAL3WrcRrp/CHz0BqtpyzPoJM38O5bO2HuTVy9dP/FNlnHCTckreN3/yXIhkw6F9V+DadTrXVMWEjoD0/5XZH+06TSU3CI8HOUztOAg9wInS74v/zlEhv8ZvwnvThwJehmVmfGiq3zlB8ZdGokUJrnHTDBieha9GAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rBvDo+LftPN26/qd1uK3rd8grllOTi7ZfLuc2KaaD8Q=;
- b=F2ZXqcJm/2hC2JBojSNOr9Euhd4hNCJKs1vnZPKYBBB1lU3nPIWf6yPL5Fz7A4o2/6Xu2EWcN0QkR6xIGarOafiA200v9IiCrnYqqxGxznOpwm1CPS08MGBo5XsmTNb34DFvxBeaJEye/mWgwB/zxF+Alu3jl0AYVjUq4wfoZU06hh6CphTf8uzYGGscoC6QvdVL4F9JYmsdZXxV2zKocivHPtIrNyeQF6dwPDZZol9F8BMlv71jFapfZhGFB9xPlT40qhpmlN/9hBES6nXIuHaxLsbMuWT/bmTVjTpN88AqShaxxTsCJoV2RE2J2keLyXq8Dnh5uR3FsOhM8x146g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oppo.com;
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
- SG2PR02MB3019.apcprd02.prod.outlook.com (2603:1096:4:5c::10) with
- Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4755.24; Wed, 15 Dec 2021 03:27:49 +0000
-Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::3032:4149:e5d7:982a]) by SG2PR02MB4108.apcprd02.prod.outlook.com
- ([fe80::3032:4149:e5d7:982a%3]) with mapi id 15.20.4778.018; Wed, 15 Dec 2021
- 03:27:49 +0000
-Message-ID: <f96bfbdc-86f8-0dab-ae05-a6c32a87a7c0@oppo.com>
-Date: Wed, 15 Dec 2021 11:27:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2 1/2] erofs-utils: sort shared xattr
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <YXE30+2qU75+0szk@B-P7TQMD6M-0146.local>
- <20211214095202.11717-1-huangjianan@oppo.com>
- <Ybi4was1yPMNlNqV@B-P7TQMD6M-0146.local>
- <2decd4e7-506f-6156-15b0-148ba5cb3089@oppo.com>
- <YblfdNxSEBhx6b3T@B-P7TQMD6M-0146.local>
-In-Reply-To: <YblfdNxSEBhx6b3T@B-P7TQMD6M-0146.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: HK2PR04CA0052.apcprd04.prod.outlook.com
- (2603:1096:202:14::20) To SG2PR02MB4108.apcprd02.prod.outlook.com
- (2603:1096:4:96::19)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JDR3V0fRCz2yyj
+ for <linux-erofs@lists.ozlabs.org>; Wed, 15 Dec 2021 18:00:48 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R161e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V-h2ICN_1639551621; 
+Received: from
+ e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V-h2ICN_1639551621) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 15 Dec 2021 15:00:29 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v6] erofs-utils: lib: add API to iterate dirs in EROFS
+Date: Wed, 15 Dec 2021 15:00:17 +0800
+Message-Id: <20211215070017.83846-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0eb97d73-2fcf-47c6-23bc-08d9bf7ade64
-X-MS-TrafficTypeDiagnostic: SG2PR02MB3019:EE_
-X-Microsoft-Antispam-PRVS: <SG2PR02MB30194CDED0B3FBE7ECD58670C3769@SG2PR02MB3019.apcprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JbQWHUrYlSFd7RWcbYDX4+wGdN+lHsqA+sZirxK901bIpgNlseBsMnUCEcMPbhltMt3FNoozXh7fdGC1obDuhbwUhkRkDKV8BImKwIVCjoz+OxInJ8ItwY0pm9bCPO/gWXWeIkpAM3gQ/Limqd0P8lSBEIj3BDDnieAMRvZ9CDw1iq32h58iFfJmSyn0nK8HOtsEITm20c3LSxiuqgn1Pflkf+hZ6SYIu+A3pMhvzKNaFjlY7kADutPdHxuRoCB8PMauL+YEnPfeHG0y0ezeKtq9c/7WWfblYfG4Bp+oDf+MvCNdkpHOJC7B3AMe6NuA3yhcHPA7JGalQM2ZrduetcddbrNA4BKs2SfhG5aM1QnACpHPXmBR6C/dlqybo/7TBk4/BSkH1Z2r6xYg5Cvvpzds6SWZrrahOZTLJyF0v/s1UYTQLhU+L+/THwhyKfD+aZaj1IWEjohNZnpY9ggJ56mU7UMGTU3qCtGA0SWlF5AC/tGp0fEsIBrmUSHiHFK7/YmXpM2Pniql24EmflIqwbSqDSypVDNbolcnpTvfrDovpxWdtJzJFrZUeOKojVP8KrCvWebyWG6cykMLOiuf3VV00y2TtfrIYPyjTEH5B77evs6KGkTyjXB/xev09G04qY/VN56wZn2/cba4Zp962/t/hbAwMYEz961VazIaXSWlcZ5SNrrDYAtGaHMEuanYdBGnvh5NWekESDdxM/sSBieZ+6vSo90Gz0k+wY7lDvyepweaoUPWJzDUYsqYCqwTBOtmTkK8VoNJQCLGlboko3jxyhDCVjlN58HYDlDy7Cg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
- IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(4636009)(366004)(83380400001)(31696002)(86362001)(316002)(52116002)(4326008)(38100700002)(66556008)(66476007)(38350700002)(186003)(31686004)(66946007)(6506007)(2906002)(36756003)(6916009)(6512007)(6486002)(107886003)(8676002)(6666004)(508600001)(5660300002)(8936002)(26005)(2616005)(11606007)(43740500002)(45980500001);
- DIR:OUT; SFP:1101; 
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2xMcWpjQlRRWkZsS3JUTDFuaUk0cXU4OWV5WjY4eUtSSzBrbnFCaWVuNjR5?=
- =?utf-8?B?aW1kWGlURlovK0V5RUQrOUdiV1pLajRxK3BVK2hSYWhObjNUNS9ob2tmY3Vv?=
- =?utf-8?B?VlZpT1Jkc3JteXdWaGcwWmVlL2dTbFZIUGxYRU45c3lmK1hLcStnZHQ3QmZK?=
- =?utf-8?B?S2VvU3FHMWg1YXZleERXMmcvMHJwU1ZvTlZxaHFwamlHM3AvQVQ3ZjgyYWpa?=
- =?utf-8?B?T2REaVNId0RsRWhoem1LbU5nVFNsbTlBQVIwMzJ1ck10N1YycXNjc2U4Q0kv?=
- =?utf-8?B?L1pBZVNxSmIrK3Jpekx3Tk9PTW1nRzdGMUVOZFRMemlpVk0zM3VuYXk2blV1?=
- =?utf-8?B?cmp6TW05TjFXVXZqcTVxM1BweXpheXlPN1puZGVNbkxYbzI3VUN4clM4T1Ju?=
- =?utf-8?B?L1JpOW5DaHBsN1p0dFpHSmFWVSswNHNSM0U2cXNJNExPbXI3bEp3Vk01MXF2?=
- =?utf-8?B?RHBBVGh4UVVINzVNcnFsTlBYMnh1Si9DOGlTcjcvU1BDQkk2endXdGtXOXlH?=
- =?utf-8?B?TG1HSFR5RTZCSEJMelpTRzlNNmkzUGUvRE1nUUU4R1YydzFmZ0ZzQVdjdVRj?=
- =?utf-8?B?d0Q1Z0NTV0h5WFYvS0szRDQrYmRGRndBZTJiSXVDY1A1UDFwL0QvLzllZmRt?=
- =?utf-8?B?Z0NjaEFKM1hLcHNTTzlEbWRTaVcwb2gyZ25MZnVKMFF4ZTF2d1FYMGxkUi90?=
- =?utf-8?B?VEl2R3UwUUxqdVZrV1hSMThRUWdDY3N3Z2cvMkdLa0FUQmcvbXZnZTlZb3RC?=
- =?utf-8?B?TVBWMldRait5Q0xVR2J0eU5iYW9aNmJ4K1pGV1c1dVdONnVGRDVKVDNwdmR0?=
- =?utf-8?B?dWxLd2pCaDV0MVZ2MStIaERVL05NZmpJa3o0amt0UU9MWjZGeHFOTkE4akRq?=
- =?utf-8?B?bnRjN3ROTU42V2hremVvS2cvd1Q2MnNFY3owWlBQaXNTN0dZUVIzQzd6Q09J?=
- =?utf-8?B?VjRrVDNYWUFOWDRUTjg3VFZlS2xCQXhGMUpVZVc2Z0Q0WEZXZncwWDFjMlNu?=
- =?utf-8?B?dmVvWno1K1BFTTNOVDVkaUN0alJZN0xGWDkzYWU5T3h2bzZrcHkrRHJGMjFE?=
- =?utf-8?B?WFpvSnB6TnJKd2pDZW1IR0lvYU1YTW45YXQxVHI4RzZ2SnQrRG1sKzRpS2VP?=
- =?utf-8?B?T0ZSWFU2NnF3dU5WeGk2bzdOb0c4ZGZWUjNrd3VXbVBSeUpsWms4TmtVUzMr?=
- =?utf-8?B?K0F2eWR1MEZwb2t2R3orWUFWdjR1emgxa1Z0VkZMbGpxVVlad096R2FwTG92?=
- =?utf-8?B?MnpJdWpsVGVNVnpTU0pndW5YanJ0M0ZTa0FrYmNpcGR3cytqZkRvbVJITkt3?=
- =?utf-8?B?bFBaTlVHaVF5QS9MaWtXYUlHZjFkeVNkWThVb3I2OWNLdGVka2xhSlBiWDh0?=
- =?utf-8?B?OHFjNW93UC9QYm1GU2FLdkpmNENOR3pHd2NnM3lvV3hkcXlDRmVmU0d2aFIr?=
- =?utf-8?B?djZVc3J2cElLWEhsSWZYbWFSNHN3ZEN6VkdMVlhHTUxUVnNaTzAwQTg4T055?=
- =?utf-8?B?TjBEMG5CbkR0S282TExoYmVheENiZHhHaW5TYVNxcytFOWFOYUJIM05FMFEy?=
- =?utf-8?B?U0hvRHQ1ZG94ZUJPSTFVTXo3OGhES3MvMlIrSjY5WVUwTTBCSVVkMEx0SjIz?=
- =?utf-8?B?emtZamVlRk5SdUFyMlRXQ1JJWjJOUVR1NUJ0YUFCYVlUTHFiMFV3NUhveE5L?=
- =?utf-8?B?WEY1ZVYvRStmYnJndlJkamVBV0VnZ2x4TmpaZnl3dUtQbk5PaDJtQ1NhY3J5?=
- =?utf-8?B?bW9rVUtpN3AyYmlQK3hqT1ZwUWt3bHFqK2kvbmhiKzZiNVNZMWhieUg2Z3c3?=
- =?utf-8?B?SEtGWlNpazZKY0xQejRGYk1xajZ2YzRZNVpFeC9FenkwOVZKbXJSWmFzbVVx?=
- =?utf-8?B?c2RsclZUODEvd0tnRFBiUjR5amxvcE1YV1EvMXBiQnNUR2ZhcHlQNjhmSU9J?=
- =?utf-8?B?b01TeDhaUzFuNnFsT1JIc2t6UkdjRVc0ZmZpRlZua1lWN2JKcTlGT3ZUNFc4?=
- =?utf-8?B?YlY3YmkwRGlMMlluMStJY21lbnJOSXZ1RjBpazJsY0dqMS9haHVQRGdSbDNZ?=
- =?utf-8?B?NDc5NFBDeWZVSDZpZ2p6cGgxMkJhOUlOa21NN29vQjFsVWN2U0JVSkNhd0VC?=
- =?utf-8?B?UDl4V3NQQ1hOWFo3OGdrRzBOeVN2WTVMTUFsSlB2d3E1QnpvTyt1am1lVEpK?=
- =?utf-8?Q?jFPQXkmOm4khJpRXIi9r6rw=3D?=
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0eb97d73-2fcf-47c6-23bc-08d9bf7ade64
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2021 03:27:48.9843 (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: miFDkQP7YWDJ5y60lDuY4iDN4OAKiznpsH/mp9IZ9kh+uys2gV5uq1wicRO9kDenMjjrpSE1ubjVkZc1eVVXcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3019
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -147,58 +46,462 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Huang Jianan <huangjianan@oppo.com>
-Cc: yh@oppo.com, guoweichao@oppo.com, linux-erofs@lists.ozlabs.org,
- zhangshiming@oppo.com, guanyuwei@oppo.com
+Cc: Kelvin Zhang <zhangkelvin@google.com>,
+ Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-在 2021/12/15 11:22, Gao Xiang 写道:
-> On Wed, Dec 15, 2021 at 10:43:40AM +0800, Huang Jianan via Linux-erofs wrote:
->> Hi Xiang,
->>
->> 在 2021/12/14 23:31, Gao Xiang 写道:
->>> Hi Jianan,
->>>
->>> On Tue, Dec 14, 2021 at 05:52:01PM +0800, Huang Jianan via Linux-erofs wrote:
->>>> Sort shared xattr before writing to disk to ensure the consistency
->>>> of reproducible builds.
->>>>
->>>> Signed-off-by: Huang Jianan <huangjianan@oppo.com>
->>> I still fail to understand why the order of shared xattrs will be
->>> a problem of reproducible builds.
->>>
->>> IOWs, if the order of shared xattrs is really a problem, do we need
->>> to sort inline xattrs as well? Or do you have some reproducer to
->>> show why the order of shared xattrs can be changed if the filesystem
->>> of srcdir isn't changed?
->> We discovered this problem when we built the same image content on
->> different machines.
->>
->> After executing readdir, the order of the subdirectories returned by the
->> two machines is different, which leads to a difference in the order of
->> shared
->> xattr. I'm not sure if this scene can be called reproducible build in the
->> strict
->> sense.
->>
->> In addition, since the problem is caused by the readdir sequence, it should
->> have no effect on inline xattr.
-> So it sounds like we need to optimize xattr readdir process instead?
-Agree, currently xattr will prepare before sorting the subdirectories , 
-I will try
-to put the process after sorting.
+From: Kelvin Zhang <zhangkelvin@google.com>
 
-Thanks,
-Jianan
-> Thanks,
-> Gao Xiang
->
->> Thanks,
->> Jianan
->>> Thanks,
->>> Gao Xiang
->>>
+This introduces erofs_iterate_dir() to read all dirents in
+a directory inode.
+
+Note that it doesn't recursively walk into sub-directories.
+If it's really needed, users should handle this in the callback.
+
+Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
+[ Gao Xiang: heavily changed and convert erofsfuse to use this. ]
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+v5: https://lore.kernel.org/r/20211214173520.1944792-2-zhangkelvin@google.com
+Changes since v5:
+ - heavily changed, most logic was borrowed from fsck.erofs;
+ - use GPL-2.0+ OR Apache-2.0 dual license.
+
+ fuse/Makefile.am    |   2 +-
+ fuse/dir.c          | 100 -------------------------
+ fuse/main.c         |  49 ++++++++++++-
+ include/erofs/dir.h |  44 +++++++++++
+ lib/Makefile.am     |   2 +-
+ lib/dir.c           | 173 ++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 266 insertions(+), 104 deletions(-)
+ delete mode 100644 fuse/dir.c
+ create mode 100644 include/erofs/dir.h
+ create mode 100644 lib/dir.c
+
+diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+index 8a2d472..5aa5ac0 100644
+--- a/fuse/Makefile.am
++++ b/fuse/Makefile.am
+@@ -3,7 +3,7 @@
+ AUTOMAKE_OPTIONS = foreign
+ noinst_HEADERS = $(top_srcdir)/fuse/macosx.h
+ bin_PROGRAMS     = erofsfuse
+-erofsfuse_SOURCES = dir.c main.c
++erofsfuse_SOURCES = main.c
+ erofsfuse_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ erofsfuse_CFLAGS += -DFUSE_USE_VERSION=26 ${libfuse_CFLAGS} ${libselinux_CFLAGS}
+ erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse_LIBS} ${liblz4_LIBS} \
+diff --git a/fuse/dir.c b/fuse/dir.c
+deleted file mode 100644
+index bc8735b..0000000
+--- a/fuse/dir.c
++++ /dev/null
+@@ -1,100 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * Created by Li Guifu <blucerlee@gmail.com>
+- */
+-#include <fuse.h>
+-#include <fuse_opt.h>
+-#include "macosx.h"
+-#include "erofs/internal.h"
+-#include "erofs/print.h"
+-
+-static int erofs_fill_dentries(struct erofs_inode *dir,
+-			       fuse_fill_dir_t filler, void *buf,
+-			       void *dblk, unsigned int nameoff,
+-			       unsigned int maxsize)
+-{
+-	struct erofs_dirent *de = dblk;
+-	const struct erofs_dirent *end = dblk + nameoff;
+-	char namebuf[EROFS_NAME_LEN + 1];
+-
+-	while (de < end) {
+-		const char *de_name;
+-		unsigned int de_namelen;
+-
+-		nameoff = le16_to_cpu(de->nameoff);
+-		de_name = (char *)dblk + nameoff;
+-
+-		/* the last dirent in the block? */
+-		if (de + 1 >= end)
+-			de_namelen = strnlen(de_name, maxsize - nameoff);
+-		else
+-			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
+-
+-		/* a corrupted entry is found */
+-		if (nameoff + de_namelen > maxsize ||
+-		    de_namelen > EROFS_NAME_LEN) {
+-			erofs_err("bogus dirent @ nid %llu", dir->nid | 0ULL);
+-			DBG_BUGON(1);
+-			return -EFSCORRUPTED;
+-		}
+-
+-		memcpy(namebuf, de_name, de_namelen);
+-		namebuf[de_namelen] = '\0';
+-
+-		filler(buf, namebuf, NULL, 0);
+-		++de;
+-	}
+-	return 0;
+-}
+-
+-int erofsfuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+-		      off_t offset, struct fuse_file_info *fi)
+-{
+-	int ret;
+-	struct erofs_inode dir;
+-	char dblk[EROFS_BLKSIZ];
+-	erofs_off_t pos;
+-
+-	erofs_dbg("readdir:%s offset=%llu", path, (long long)offset);
+-
+-	ret = erofs_ilookup(path, &dir);
+-	if (ret)
+-		return ret;
+-
+-	erofs_dbg("path=%s nid = %llu", path, dir.nid | 0ULL);
+-
+-	if (!S_ISDIR(dir.i_mode))
+-		return -ENOTDIR;
+-
+-	if (!dir.i_size)
+-		return 0;
+-
+-	pos = 0;
+-	while (pos < dir.i_size) {
+-		unsigned int nameoff, maxsize;
+-		struct erofs_dirent *de;
+-
+-		maxsize = min_t(unsigned int, EROFS_BLKSIZ,
+-				dir.i_size - pos);
+-		ret = erofs_pread(&dir, dblk, maxsize, pos);
+-		if (ret)
+-			return ret;
+-
+-		de = (struct erofs_dirent *)dblk;
+-		nameoff = le16_to_cpu(de->nameoff);
+-		if (nameoff < sizeof(struct erofs_dirent) ||
+-		    nameoff >= PAGE_SIZE) {
+-			erofs_err("invalid de[0].nameoff %u @ nid %llu",
+-				  nameoff, dir.nid | 0ULL);
+-			ret = -EFSCORRUPTED;
+-			break;
+-		}
+-
+-		ret = erofs_fill_dentries(&dir, filler, buf,
+-					  dblk, nameoff, maxsize);
+-		if (ret)
+-			break;
+-		pos += maxsize;
+-	}
+-	return 0;
+-}
+diff --git a/fuse/main.c b/fuse/main.c
+index 255965e..ca35e22 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -12,9 +12,54 @@
+ #include "erofs/config.h"
+ #include "erofs/print.h"
+ #include "erofs/io.h"
++#include "erofs/dir.h"
+ 
+-int erofsfuse_readdir(const char *path, void *buffer, fuse_fill_dir_t filler,
+-		      off_t offset, struct fuse_file_info *fi);
++struct erofsfuse_dir_context {
++	struct erofs_dir_context ctx;
++	fuse_fill_dir_t filler;
++	struct fuse_file_info *fi;
++	void *buf;
++};
++
++static int erofsfuse_fill_dentries(struct erofs_dir_context *ctx)
++{
++	struct erofsfuse_dir_context *fusectx = (void *)ctx;
++
++	fusectx->filler(fusectx->buf, ctx->dname, NULL, 0);
++	return 0;
++}
++
++int erofsfuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
++		      off_t offset, struct fuse_file_info *fi)
++{
++	int ret;
++	struct erofs_inode dir;
++	struct erofsfuse_dir_context ctx = {
++		.ctx.dir = &dir,
++		.ctx.cb = erofsfuse_fill_dentries,
++		.filler = filler,
++		.fi = fi,
++		.buf = buf,
++	};
++	erofs_dbg("readdir:%s offset=%llu", path, (long long)offset);
++
++	ret = erofs_ilookup(path, &dir);
++	if (ret)
++		return ret;
++
++	erofs_dbg("path=%s nid = %llu", path, dir.nid | 0ULL);
++	if (!S_ISDIR(dir.i_mode))
++		return -ENOTDIR;
++
++	if (!dir.i_size)
++		return 0;
++#ifdef NDEBUG
++	return erofs_iterate_dir(&ctx.ctx, false);
++#else
++	return erofs_iterate_dir(&ctx.ctx, true);
++#endif
++
++}
+ 
+ static void *erofsfuse_init(struct fuse_conn_info *info)
+ {
+diff --git a/include/erofs/dir.h b/include/erofs/dir.h
+new file mode 100644
+index 0000000..43f8d81
+--- /dev/null
++++ b/include/erofs/dir.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++#ifndef __EROFS_DIR_H
++#define __EROFS_DIR_H
++
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
++#include "internal.h"
++
++#define EROFS_READDIR_VALID_PNID	0x0001
++#define EROFS_READDIR_DOTDOT_FOUND	0x0002
++#define EROFS_READDIR_DOT_FOUND		0x0004
++
++#define EROFS_READDIR_ALL_SPECIAL_FOUND	\
++	(EROFS_READDIR_DOTDOT_FOUND | EROFS_READDIR_DOT_FOUND)
++
++struct erofs_dir_context;
++
++/* callback function for iterating over inodes of EROFS */
++typedef int (*erofs_readdir_cb)(struct erofs_dir_context *);
++
++/* callers could use a wrapper to contain extra information */
++struct erofs_dir_context {
++	erofs_nid_t pnid;		/* optional */
++	struct erofs_inode *dir;
++	erofs_readdir_cb cb;
++
++	/* dirent information which is currently found */
++	erofs_nid_t nid;
++	const char *dname;
++	u8 ftype, flags;
++	bool dot_dotdot;
++};
++
++/* iterate over inodes that are in directory */
++int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index c745e49..4a25013 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -27,7 +27,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+ noinst_HEADERS += compressor.h
+ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+-		      compress_hints.c hashmap.c sha256.c blobchunk.c
++		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
+ liberofs_la_CFLAGS = -Wall -Werror -I$(top_srcdir)/include
+ if ENABLE_LZ4
+ liberofs_la_CFLAGS += ${LZ4_CFLAGS}
+diff --git a/lib/dir.c b/lib/dir.c
+new file mode 100644
+index 0000000..a439dda
+--- /dev/null
++++ b/lib/dir.c
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++#include "erofs/print.h"
++#include "erofs/dir.h"
++#include <stdlib.h>
++
++static int traverse_dirents(struct erofs_dir_context *ctx,
++			    void *dentry_blk, unsigned int lblk,
++			    unsigned int next_nameoff, unsigned int maxsize,
++			    bool fsck)
++{
++	struct erofs_dirent *de = dentry_blk;
++	const struct erofs_dirent *end = dentry_blk + next_nameoff;
++	char *prev_name = NULL, *cur_name;
++	const char *errmsg;
++	int ret = 0;
++	bool silent = false;
++
++	while (de < end) {
++		const char *de_name;
++		unsigned int de_namelen;
++		unsigned int nameoff;
++
++		nameoff = le16_to_cpu(de->nameoff);
++		de_name = (char *)dentry_blk + nameoff;
++
++		/* the last dirent check */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
++
++		cur_name = strndup(de_name, de_namelen);
++		if (!cur_name) {
++			errmsg = "failed to allocate dirent name";
++			ret = -ENOMEM;
++			break;
++		}
++
++		erofs_dbg("traversed filename(%s)", cur_name);
++
++		ret = -EFSCORRUPTED;
++		/* corrupted entry check */
++		if (nameoff != next_nameoff) {
++			errmsg = "bogus dirent nameoff";
++			break;
++		}
++
++		if (nameoff + de_namelen > maxsize ||
++				de_namelen > EROFS_NAME_LEN) {
++			errmsg = "bogus dirent namelen";
++			break;
++		}
++
++		if (fsck && prev_name && strcmp(prev_name, cur_name) >= 0) {
++			errmsg = "wrong dirent name order";
++			break;
++		}
++
++		if (fsck && de->file_type >= EROFS_FT_MAX) {
++			errmsg = "invalid file type %u";
++			break;
++		}
++
++		ctx->dot_dotdot = is_dot_dotdot(cur_name);
++		if (ctx->dot_dotdot) {
++			switch (de_namelen) {
++			case 2:
++				if (fsck &&
++				    (ctx->flags & EROFS_READDIR_DOTDOT_FOUND)) {
++					errmsg = "duplicated `..' dirent";
++					goto out;
++				}
++				ctx->flags |= EROFS_READDIR_DOTDOT_FOUND;
++				if (sbi.root_nid == ctx->dir->nid) {
++					ctx->pnid = sbi.root_nid;
++					ctx->flags |= EROFS_READDIR_VALID_PNID;
++				}
++				if (fsck &&
++				   (ctx->flags & EROFS_READDIR_VALID_PNID) &&
++				   de->nid != ctx->pnid) {
++					errmsg = "corrupted `..' dirent";
++					goto out;
++				}
++				break;
++			case 1:
++				if (fsck &&
++				    (ctx->flags & EROFS_READDIR_DOT_FOUND)) {
++					errmsg = "duplicated `.' dirent";
++					goto out;
++				}
++
++				ctx->flags |= EROFS_READDIR_DOT_FOUND;
++				if (fsck && de->nid != ctx->dir->nid) {
++					errmsg = "corrupted `.' dirent";
++					goto out;
++				}
++				break;
++			}
++		}
++		ctx->ftype = de->file_type,
++		ctx->nid = de->nid;
++		ctx->dname = cur_name;
++		ret = ctx->cb(ctx);
++		if (ret) {
++			silent = true;
++			goto out;
++		}
++		next_nameoff += de_namelen;
++		++de;
++		if (prev_name)
++			free(prev_name);
++		prev_name = cur_name;
++		cur_name = NULL;
++	}
++out:
++	if (prev_name)
++		free(prev_name);
++	if (cur_name)
++		free(cur_name);
++	if (ret && !silent)
++		erofs_err("%s @ nid %llu, lblk %u, index %lu",
++			  errmsg, ctx->dir->nid | 0ULL, lblk,
++			  (de - (struct erofs_dirent *)dentry_blk) | 0UL);
++	return ret;
++}
++
++int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck)
++{
++	struct erofs_inode *dir = ctx->dir;
++	int err;
++	erofs_off_t pos;
++	char buf[EROFS_BLKSIZ];
++
++	if ((dir->i_mode & S_IFMT) != S_IFDIR)
++		return -ENOTDIR;
++
++	ctx->flags &= ~EROFS_READDIR_ALL_SPECIAL_FOUND;
++	pos = 0;
++	while (pos < dir->i_size) {
++		erofs_blk_t lblk = erofs_blknr(pos);
++		erofs_off_t maxsize = min_t(erofs_off_t,
++					dir->i_size - pos, EROFS_BLKSIZ);
++		const struct erofs_dirent *de = (const void *)buf;
++		unsigned int nameoff;
++
++		err = erofs_pread(dir, buf, maxsize, pos);
++		if (err) {
++			erofs_err("I/O error occurred when reading dirents @ nid %llu, lblk %u: %d",
++				  dir->nid | 0ULL, lblk, err);
++			return err;
++		}
++
++		nameoff = le16_to_cpu(de->nameoff);
++		if (nameoff < sizeof(struct erofs_dirent) ||
++		    nameoff >= PAGE_SIZE) {
++			erofs_err("invalid de[0].nameoff %u @ nid %llu, lblk %u",
++				  nameoff, dir->nid | 0ULL, lblk);
++			return -EFSCORRUPTED;
++		}
++		err = traverse_dirents(ctx, buf, lblk, nameoff, maxsize, fsck);
++		if (err)
++			break;
++		pos += maxsize;
++	}
++
++	if (fsck && (ctx->flags & EROFS_READDIR_ALL_SPECIAL_FOUND) !=
++			EROFS_READDIR_ALL_SPECIAL_FOUND) {
++		erofs_err("`.' or `..' dirent is missing @ nid %llu",
++			  dir->nid | 0ULL);
++		return -EFSCORRUPTED;
++	}
++	return 0;
++}
+-- 
+2.24.4
 
