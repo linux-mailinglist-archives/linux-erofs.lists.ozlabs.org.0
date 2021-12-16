@@ -1,58 +1,128 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 382E147676F
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Dec 2021 02:29:07 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B024767BE
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Dec 2021 03:10:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JDvf901jKz2ynm
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Dec 2021 12:29:05 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ksYcWHfa;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JDwYh5LJ0z2yph
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Dec 2021 13:10:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1639620616;
+	bh=W4f8Njg1ct1LXQP2VUDJR/dLoxgfN8bHq+mbIY7ScRQ=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=akOOKOuLxKrXXmGos/OkImPQ28VaYueWgp4WFktv8Pp6mmkBZ5lbbIwVDy1XiDTln
+	 Oab8SsoFlJk84qB4AUcMG3Nl+E767GtlemF6t0e7M3Dy5AcF/TE9bcQEW3IITgdkSN
+	 QnpbyhqIcsDmz3+Q4A4ljyKgAkVVtGjAogokv4XU5wrm0GZN7hHbIRRHeW1lNr093J
+	 4cTHeJpbNBw1m+FI9uwYaJ4osEQVm00d3A72RzmsYEscks8beYcXgAWS/5MT6yPSN4
+	 yQKzsjrBxEf1NrSRjBI58GeukOjCIVgDSqJprgMMhPv5aEpXhCXqVL/0O/UNa+ZdN/
+	 +LfMieJoM3y9A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1;
- helo=ams.source.kernel.org; envelope-from=xiang@kernel.org;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=ksYcWHfa; 
+ smtp.mailfrom=oppo.com (client-ip=2a01:111:f400:febc::602;
+ helo=apc01-hk2-obe.outbound.protection.outlook.com;
+ envelope-from=huangjianan@oppo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256
+ header.s=selector1 header.b=PVT5myJC; 
  dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org
- [IPv6:2604:1380:4601:e00::1])
+Received: from APC01-HK2-obe.outbound.protection.outlook.com
+ (mail-hk2apc01on0602.outbound.protection.outlook.com
+ [IPv6:2a01:111:f400:febc::602])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JDvf6118Nz2xsG
- for <linux-erofs@lists.ozlabs.org>; Thu, 16 Dec 2021 12:29:02 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by ams.source.kernel.org (Postfix) with ESMTPS id 3EDF0B82232;
- Thu, 16 Dec 2021 01:28:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC6CC36AE0;
- Thu, 16 Dec 2021 01:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1639618138;
- bh=mBYmTbwzGnkIqXjqSoBEpyOBUjmaAkCK9ODTol9iFX4=;
- h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
- b=ksYcWHfaCC5ivhIH/3m6+l78lfww7fwn13O+7dyKnKIMLafmdNA/stCUZq8bhmiUF
- IQptOPzP40Hr3FWq0cBA+GTEmXR2VATvFJmS2erHaFsDIdxlMe2TzjRZbJw5fgjk+H
- KODQPhNpLucGYMDD2OBG1pwfuHgDnC94b3MPqKKeMEIDUcOviE8BRdscgCcbWcdoIC
- D5R0FGMhEhGm1nl6NN9lyeILlzFQ2OBkh9e6y9vlHt7x18DQh1+kv/QLV455NtJ4u5
- 8/8H55nrUyZ6dh3dJ0qtG+0rubH097SLxs7pMCCVnGnXZzeUbNDRKKGMnbVUA3NWBe
- jeV4xmJ/NDwxQ==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 2/2] erofs-utils: fsck: convert to use erofs_iterate_dir()
-Date: Thu, 16 Dec 2021 09:24:36 +0800
-Message-Id: <20211216012436.10111-2-xiang@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211216012436.10111-1-xiang@kernel.org>
-References: <20211216012436.10111-1-xiang@kernel.org>
-MIME-Version: 1.0
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JDwYX5jKGz2yRf
+ for <linux-erofs@lists.ozlabs.org>; Thu, 16 Dec 2021 13:10:05 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fifPwce0UFWmmZLOc0fGOCtz3/BLUwnqHNtGmYLMpYDV3uRA2Y1SP8LaU4gFHj0u+a4K77Dm/+Gty307mfjIUx8FUvA4C/mlhsppfpbJ+OuwLJ6YaSwn3eh7wR8TBF+RtMN4EVc7MB2xM55l+VdC/jnrtCEya79dvc3WjEHS7280E24ySDgHEluZi7Sa7f+eNReqHF5WOwK84/+dHaUDUHND2QDLf6bjnez8k2f9OoGUoR5XTrXPf832qf+dRqf/Fp0PJeWvZRgWyhKGs0nwQips4FEtvAKL33WAp4iNV3LwI7VIiReR80AsUZZDmPvOyBMTNTiaGI3lr5ZtLv0eKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; 
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W4f8Njg1ct1LXQP2VUDJR/dLoxgfN8bHq+mbIY7ScRQ=;
+ b=ZQg/DVBOoY0XZTR30yy5gYVpwFsOa9LiwQu8VL/NSvQuJ2h8PnHE8EYSC99zASwWt6hk1iBN4NsPAGLEVvNtIkv6KXJNGslrbEF4MNj91/EkHCBMECtLEp70Jo6B9J6YvmEyGVPmvib4XhhUmmAu6xDoX03BWew/79ZFsiey/NW0ORVZMYuaejZt3+j6WY+LM0S2XDe/XkKDJG7uGBcU/fvA3rmXX74qykIk5gGrLWWwL+JvYaFWpcAIqSJkwNv9qSQAADey+1Vp3GOrPEqM194pP5jC77gC/o5Y+PIv082IxiWsHTiIea/9lNZbUZVI69zxFQYZW4dSCWwSW9pxBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oppo.com;
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com (2603:1096:4:96::19) by
+ SG2PR02MB2382.apcprd02.prod.outlook.com (2603:1096:3:1c::18) with
+ Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4778.17; Thu, 16 Dec 2021 02:09:43 +0000
+Received: from SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::3032:4149:e5d7:982a]) by SG2PR02MB4108.apcprd02.prod.outlook.com
+ ([fe80::3032:4149:e5d7:982a%3]) with mapi id 15.20.4778.018; Thu, 16 Dec 2021
+ 02:09:43 +0000
+To: linux-erofs@lists.ozlabs.org,
+	hsiangkao@linux.alibaba.com
+Subject: [PATCH v3] erofs-utils: sort shared xattr
+Date: Thu, 16 Dec 2021 10:09:25 +0800
+Message-Id: <20211216020925.24963-1-huangjianan@oppo.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <f96bfbdc-86f8-0dab-ae05-a6c32a87a7c0@oppo.coml>
+References: <f96bfbdc-86f8-0dab-ae05-a6c32a87a7c0@oppo.coml>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0178.apcprd06.prod.outlook.com
+ (2603:1096:1:1e::32) To SG2PR02MB4108.apcprd02.prod.outlook.com
+ (2603:1096:4:96::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71fa18b6-26e6-4ba7-33f8-08d9c0391fe4
+X-MS-TrafficTypeDiagnostic: SG2PR02MB2382:EE_
+X-Microsoft-Antispam-PRVS: <SG2PR02MB2382409B25CACBCDAFD2BCBEC3779@SG2PR02MB2382.apcprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3AsutwrIGvWwOaQ6xzks+1cya59NONX3g5FtuozW5TIzUf7Md4yyGyZq/fRYbXTmZCM9dQn8SjKlzQv09MrL9GS9+8tDkXVspSk2hgwN9Tq9+lq8mBRy+kM5VZRdKgopahKAMdNdR5XMK3mcfQz2q6Fo/edrrrMamIxVsrNZN5YLw43Q70QvhkMp64T+7UGK0PRwyblZKC7E7MD96oVBlNa7t2EfH/pUTgD1494hdyIN8QhAlBhOeGiJ/6NQOVCOhQiVkqUDCywUN6Qfof17V0tbCWV6PFJdusQL1JKOH6eZD+aosI3+a/vRoZGO4ZGkyRijehR/axalYEq5+ljeXILRGVfvVtwei9NBf2YJwFSSuqEvFICIMYtvlk66LHfGvNfgTKIW5IK2zKEYOH5xHYpAwSXfHuBYcHG6jcTXmjZe/HKESrPMCpQOI4AttAhSa0yvI4Ef8fPLFta8KMReHCUKmeoKhZmh7sv9sFfPRA2mAPX/ljEnMpe0MAbyQGPjNiWLgviUviHpZeB24oWVGWLpRLY8zoMH5jLCQQdgjdoUoXVm4uedb5c3B7wAC8xIxw+C/7KRDF+/0sD1vhRTBrRn/TcTeLWd4CsOCJKXQONADoI5BhtDYAnRgAfnm6m8UhClx40KneE2l+Z59OxNMUsiJOwIpfvjfHXEjeZOCeQXUjCgxi+EtLhk2WsR+ELvoGhNoHx9XJr2E6GrFIc2HDYnLXAARgTwgtfLs7Jr44I=
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:SG2PR02MB4108.apcprd02.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(4636009)(366004)(107886003)(6512007)(86362001)(6506007)(1076003)(26005)(52116002)(2906002)(4326008)(66556008)(508600001)(8936002)(38350700002)(36756003)(38100700002)(5660300002)(6486002)(8676002)(316002)(66946007)(66476007)(6666004)(186003)(2616005)(83380400001)(11606007);
+ DIR:OUT; SFP:1101; 
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?olLROdqHTsDGQqJ9lRbQ2jFgw1vC1ucmwcVBxFEY0Dbb0mj8Nl5TmqkqmMZQ?=
+ =?us-ascii?Q?9yPgoqcsZhFRs3K176olxgoLvO1I0pDZCrro6yXS8ue/VvLD5KyJHZsWjp3x?=
+ =?us-ascii?Q?Yd79lwSJMtU03j6/5pRksYQvVQHOFjnIyl8IyVDbU+y/ghBRm9MoYd5qX9qN?=
+ =?us-ascii?Q?+XJf2y79B1NXMlk2Z4/yT8PXm6ZTqugIzpQ19e4uuVJmeSGKi0St9HO/K26h?=
+ =?us-ascii?Q?X6aQmRaPNIrbJlIkI3DR1Sz0xzkzXxomusWFdFe4J59v/8axiU3N4n+GoZeD?=
+ =?us-ascii?Q?xHoPFBZPGyhM9as3R3RugCIqnujttcAcy9Z0PkSu/bUdGyMI6Dqg/wDcicxZ?=
+ =?us-ascii?Q?qiXEuSb+HUXZzy4xocpPhn7WbNaXWHk5owK7d5KYuAVpDi2NeJK48qCtvMXx?=
+ =?us-ascii?Q?TB+ysu5AhfZs7Gi++PeTLq3MgVPUBiwZPQ9+CVc2uTODFAUdNK+Y69OxWr7C?=
+ =?us-ascii?Q?pWXx8SZXQ/nJN6q64L2xZAUc6OL04nakw4xzCjjYQe6EuMgi5dj1Fl1eu/2R?=
+ =?us-ascii?Q?zjLF3oxKqceeph0jCrH1C3rc0L5totj29+OqnYxYzH3uMr86gHtBx0XSGq50?=
+ =?us-ascii?Q?xDX9/sgvPn+jcgqiqvBkAcL1GT/ZfRp5Qh3lrtmVmJVwFVVs0kI5dEUwPfYL?=
+ =?us-ascii?Q?blgrk50yCDVUpI4AkbESa7+bPqnJgpqAZqvdFaVUPTKyvngE52vjwU9cW1fm?=
+ =?us-ascii?Q?vOwYyGs2eGKRlUoIfYyItTgOQ3mu5NtGAYUNvQ0DyLBUi4qUgFIVt145gCU0?=
+ =?us-ascii?Q?/EVm8kOoa9yaoIpItf8Io//HkVOiFWFJeoZngKwRZvbs3aMisyPeoHl7Znb0?=
+ =?us-ascii?Q?oUNehjZsMh2SD1P+VpbRnddqjyd+0I7/i5uZAPKwXD4f67pbciEKcGRpN/g8?=
+ =?us-ascii?Q?6SVVN4KHXl3m+a3HPYn0FBlJuN2nR+e9Y5TAkSaN6x+veHrrbgYL/ZjkYr6x?=
+ =?us-ascii?Q?XFKaUR1ctk9gsSc+AYL6etBkEavEGuwMGXeA3bguAv7NmlQOkmrGa/+Sh0rO?=
+ =?us-ascii?Q?yYeJP+S/59sPBerrT15WoNlhB5S74Jsi9aL9tO8TeWMHheTVWdHMN/6khvX7?=
+ =?us-ascii?Q?FHFizgjsd1cKh9gIn2LKN7wXBDzLnROFn87LyqTt7cFLb77MeSp6jz+vWiBF?=
+ =?us-ascii?Q?p8FneB5tfJsDRl0k5IJGCPXBUrgSbMX8zT6fdntvUG5kDoz2zFl0FmJvEzRE?=
+ =?us-ascii?Q?PiZr887Obq4jv2wB32NKLFbAT+/QHHcc5VweWNGU78dQ480R4Yq215lTlekX?=
+ =?us-ascii?Q?lHdQu63ek94dYUuugRT7cFT7/kBwDqn01SEau0lMBjyrsVcEySFnYxWBhFC3?=
+ =?us-ascii?Q?4O+0a8cp/QDG2IgCzs4WvblOqk2yeKybM3pWswlvFPK6B3EV7O/iLqsOi7zH?=
+ =?us-ascii?Q?5tf1A2ZmHwBctXYG/uay2HtDKEmD14OHAEQtYD2raiFIONKyfr3hFq4Tr4R0?=
+ =?us-ascii?Q?U6hn9kwNvR3e5mdQr0Iw/b+ARjP4i0x6QdDAi7FXsoupOapjUuC5x6bjEnEx?=
+ =?us-ascii?Q?uezfi9+HLwKjavIRXSKM9TtDA4gE77EGkMkEoWX/99YGe5h5zLYpRw+YI7bv?=
+ =?us-ascii?Q?c/Mdc1j+vTUoAgOp8jv7UB0vz9k2XQ2AZysUC2PRBh/CavoSpyEG8eS0L/2U?=
+ =?us-ascii?Q?nvxnFs4AqNlOS8ikj/VSZ4s=3D?=
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71fa18b6-26e6-4ba7-33f8-08d9c0391fe4
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB4108.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2021 02:09:43.3322 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +oEom7uYf+OHir9ry84nF8CydUJcZrrvYCwVtJAPkzo4wz8ctKGdlj5Q0s2NOr1ZBydwsY8yacoNcdAp7eOMDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2382
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,255 +134,107 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@oppo.com>
+Cc: yh@oppo.com, guoweichao@oppo.com, zhangshiming@oppo.com, guanyuwei@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Sort shared xattr before writing to disk to ensure the consistency
+of reproducible builds.
 
-No need to open code after erofs_iterate_dir() is finalized in
-liberofs.
-
-However, there are still some TODOs for fsck:
- - Avoid too deep recursive traversal, sceptically forming a loop;
- - Check link counts at runtime to keep consistency;
- - Check if any ftype / i_mode mismatches.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Huang Jianan <huangjianan@oppo.com>
 ---
- fsck/main.c | 178 +++++++---------------------------------------------
- 1 file changed, 23 insertions(+), 155 deletions(-)
+since v2:
+- Only traverse shared_xattrs_list once to clean up code.
 
-diff --git a/fsck/main.c b/fsck/main.c
-index ad48e35f587b..038f43badb8f 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -10,8 +10,9 @@
- #include "erofs/print.h"
- #include "erofs/io.h"
- #include "erofs/decompress.h"
-+#include "erofs/dir.h"
+since v1:
+- Use strncmp instead of strcmp.
+
+ lib/xattr.c | 42 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 36 insertions(+), 6 deletions(-)
+
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 196133a..f6b2591 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -562,13 +562,31 @@ static struct erofs_bhops erofs_write_shared_xattrs_bhops = {
+ 	.flush = erofs_bh_flush_write_shared_xattrs,
+ };
  
--static void erofs_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
-+static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
- 
- struct erofsfsck_cfg {
- 	bool corrupted;
-@@ -126,121 +127,6 @@ static int erofs_check_sb_chksum(void)
- 	return 0;
- }
- 
--static bool check_special_dentry(struct erofs_dirent *de,
--				 unsigned int de_namelen, erofs_nid_t nid,
--				 erofs_nid_t pnid)
--{
--	if (de_namelen == 2 && de->nid != pnid) {
--		erofs_err("wrong parent dir nid(%llu): pnid(%llu) @ nid(%llu)",
--			  de->nid | 0ULL, pnid | 0ULL, nid | 0ULL);
--		return false;
--	}
--
--	if (de_namelen == 1 && de->nid != nid) {
--		erofs_err("wrong current dir nid(%llu) @ nid(%llu)",
--			  de->nid | 0ULL, nid | 0ULL);
--		return false;
--	}
--	return true;
--}
--
--static int traverse_dirents(erofs_nid_t pnid, erofs_nid_t nid,
--			    void *dentry_blk, erofs_blk_t block,
--			    unsigned int next_nameoff, unsigned int maxsize)
--{
--	struct erofs_dirent *de = dentry_blk;
--	const struct erofs_dirent *end = dentry_blk + next_nameoff;
--	unsigned int idx = 0;
--	char *prev_name = NULL, *cur_name = NULL;
--	int ret = 0;
--
--	erofs_dbg("traversing pnid(%llu), nid(%llu)", pnid | 0ULL, nid | 0ULL);
--
--	if (!block && (next_nameoff < 2 * sizeof(struct erofs_dirent))) {
--		erofs_err("too small dirents of size(%d) in nid(%llu)",
--			  next_nameoff, nid | 0ULL);
--		return -EFSCORRUPTED;
--	}
--
--	while (de < end) {
--		const char *de_name;
--		unsigned int de_namelen;
--		unsigned int nameoff;
--
--		nameoff = le16_to_cpu(de->nameoff);
--		de_name = (char *)dentry_blk + nameoff;
--
--		/* the last dirent check */
--		if (de + 1 >= end)
--			de_namelen = strnlen(de_name, maxsize - nameoff);
--		else
--			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
--
--		if (prev_name)
--			free(prev_name);
--		prev_name = cur_name;
--		cur_name = strndup(de_name, de_namelen);
--		if (!cur_name) {
--			ret = -ENOMEM;
--			goto out;
--		}
--
--		erofs_dbg("traversed filename(%s)", cur_name);
--
--		/* corrupted entry check */
--		if (nameoff != next_nameoff) {
--			erofs_err("bogus dirent with nameoff(%u): expected(%d) @ nid %llu, block %u, idx %u",
--				  nameoff, next_nameoff, nid | 0ULL,
--				  block, idx);
--			ret = -EFSCORRUPTED;
--			goto out;
--		}
--
--		if (nameoff + de_namelen > maxsize ||
--				de_namelen > EROFS_NAME_LEN) {
--			erofs_err("bogus dirent with namelen(%u) @ nid %llu, block %u, idx %u",
--				  de_namelen, nid | 0ULL, block, idx);
--			ret = -EFSCORRUPTED;
--			goto out;
--		}
--
--		if (prev_name && (strcmp(prev_name, cur_name) >= 0)) {
--			erofs_err("wrong dirent name order @ nid %llu block %u idx %u: prev(%s), cur(%s)",
--				  nid | 0ULL, block, idx,
--				  prev_name, cur_name);
--			ret = -EFSCORRUPTED;
--			goto out;
--		}
--
--		if (is_dot_dotdot(cur_name)) {
--			if (!check_special_dentry(de, de_namelen, nid, pnid)) {
--				ret = -EFSCORRUPTED;
--				goto out;
--			}
--		} else {
--			erofs_check_inode(nid, de->nid);
--		}
--
--		if (fsckcfg.corrupted) {
--			ret = -EFSCORRUPTED;
--			goto out;
--		}
--
--		next_nameoff += de_namelen;
--		++de;
--		++idx;
--	}
--
--out:
--	if (prev_name)
--		free(prev_name);
--	if (cur_name)
--		free(cur_name);
--
--	erofs_dbg("traversing ... done nid(%llu)", nid | 0ULL);
--	return ret;
--}
--
- static int verify_uncompressed_inode(struct erofs_inode *inode)
- {
- 	struct erofs_map_blocks map = {
-@@ -479,12 +365,18 @@ static int erofs_verify_inode_data(struct erofs_inode *inode)
- 	return ret;
- }
- 
--static void erofs_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
-+static int erofsfsck_chk_dirents(struct erofs_dir_context *ctx)
++static int comp_xattr_item(const void *a, const void *b)
 +{
-+	if (ctx->dot_dotdot)
-+		return 0;
++	const struct xattr_item *ia, *ib;
++	unsigned int la, lb;
++	int ret;
 +
-+	return erofsfsck_check_inode(ctx->dir->nid, ctx->de_nid);
++	ia = (*((const struct inode_xattr_node **)a))->item;
++	ib = (*((const struct inode_xattr_node **)b))->item;
++	la = ia->len[0] + ia->len[1];
++	lb = ib->len[0] + ib->len[1];
++
++	ret = strncmp(ia->kvbuf, ib->kvbuf, min(la, lb));
++	if (ret != 0)
++		return ret;
++
++	return la > lb;
 +}
 +
-+static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ int erofs_build_shared_xattrs_from_path(const char *path)
  {
  	int ret;
- 	struct erofs_inode inode;
--	char buf[EROFS_BLKSIZ];
--	erofs_off_t offset;
+ 	struct erofs_buffer_head *bh;
+-	struct inode_xattr_node *node, *n;
++	struct inode_xattr_node *node, *n, **sorted_n;
+ 	char *buf;
+-	unsigned int p;
++	unsigned int p, i;
+ 	erofs_off_t off;
  
- 	erofs_dbg("check inode: nid(%llu)", nid | 0ULL);
+ 	/* check if xattr or shared xattr is disabled */
+@@ -606,16 +624,26 @@ int erofs_build_shared_xattrs_from_path(const char *path)
+ 	off %= EROFS_BLKSIZ;
+ 	p = 0;
  
-@@ -507,44 +399,21 @@ static void erofs_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- 	if (ret)
- 		goto out;
++	sorted_n = malloc(shared_xattrs_count * sizeof(n));
++	if (!sorted_n)
++		return -ENOMEM;
++	i = 0;
+ 	list_for_each_entry_safe(node, n, &shared_xattrs_list, list) {
+-		struct xattr_item *const item = node->item;
++		list_del(&node->list);
++		sorted_n[i++] = node;
++	}
++	DBG_BUGON(i != shared_xattrs_count);
++	qsort(sorted_n, shared_xattrs_count, sizeof(n), comp_xattr_item);
++
++	for (i = 0; i < shared_xattrs_count; i++) {
++		struct inode_xattr_node *const tnode = sorted_n[i];
++		struct xattr_item *const item = tnode->item;
+ 		const struct erofs_xattr_entry entry = {
+ 			.e_name_index = item->prefix,
+ 			.e_name_len = item->len[0],
+ 			.e_value_size = cpu_to_le16(item->len[1])
+ 		};
  
--	if ((inode.i_mode & S_IFMT) != S_IFDIR)
--		goto out;
+-		list_del(&node->list);
 -
--	offset = 0;
--	while (offset < inode.i_size) {
--		erofs_blk_t block = erofs_blknr(offset);
--		erofs_off_t maxsize = min_t(erofs_off_t,
--					inode.i_size - offset, EROFS_BLKSIZ);
--		struct erofs_dirent *de = (void *)buf;
--
--		unsigned int nameoff;
--
--		ret = erofs_pread(&inode, buf, maxsize, offset);
--		if (ret) {
--			erofs_err("I/O error occurred when reading dirents @ nid %llu, block %u: %d",
--				  nid | 0ULL, block, ret);
--			goto out;
--		}
--
--		nameoff = le16_to_cpu(de->nameoff);
--		if (nameoff < sizeof(struct erofs_dirent) ||
--				nameoff >= PAGE_SIZE) {
--			erofs_err("invalid de[0].nameoff %u @ nid %llu block %u: %d",
--				  nameoff, nid | 0ULL, block, ret);
--			ret = -EFSCORRUPTED;
--			goto out;
--		}
--
--		ret = traverse_dirents(pnid, nid, buf, block,
--				       nameoff, maxsize);
--		if (ret)
--			goto out;
-+	/* XXXX: the dir depth should be restricted in order to avoid loops */
-+	if ((inode.i_mode & S_IFMT) == S_IFDIR) {
-+		struct erofs_dir_context ctx = {
-+			.flags = EROFS_READDIR_VALID_PNID,
-+			.pnid = pnid,
-+			.dir = &inode,
-+			.cb = erofsfsck_chk_dirents,
-+		};
+ 		item->shared_xattr_id = (off + p) /
+ 			sizeof(struct erofs_xattr_entry);
  
--		offset += maxsize;
-+		ret = erofs_iterate_dir(&ctx, true);
+@@ -623,8 +651,10 @@ int erofs_build_shared_xattrs_from_path(const char *path)
+ 		p += sizeof(struct erofs_xattr_entry);
+ 		memcpy(buf + p, item->kvbuf, item->len[0] + item->len[1]);
+ 		p = EROFS_XATTR_ALIGN(p + item->len[0] + item->len[1]);
+-		free(node);
++		free(tnode);
  	}
++
++	free(sorted_n);
+ 	bh->fsprivate = buf;
+ 	bh->op = &erofs_write_shared_xattrs_bhops;
  out:
- 	if (ret && ret != -EIO)
- 		fsckcfg.corrupted = true;
-+	return ret;
- }
- 
- int main(int argc, char **argv)
-@@ -583,12 +452,11 @@ int main(int argc, char **argv)
- 		goto exit_dev_close;
- 	}
- 
--	erofs_check_inode(sbi.root_nid, sbi.root_nid);
--
-+	err = erofsfsck_check_inode(sbi.root_nid, sbi.root_nid);
- 	if (fsckcfg.corrupted) {
- 		erofs_err("Found some filesystem corruption");
- 		err = -EFSCORRUPTED;
--	} else {
-+	} else if (!err) {
- 		erofs_info("No error found");
- 		if (fsckcfg.print_comp_ratio) {
- 			double comp_ratio =
 -- 
-2.20.1
+2.25.1
 
