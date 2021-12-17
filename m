@@ -2,47 +2,64 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9ECF4783B3
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Dec 2021 04:38:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7805D478B5C
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Dec 2021 13:31:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JFZSc5B7vz2ynk
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Dec 2021 14:38:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JFpHj1d6fz3c53
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Dec 2021 23:31:13 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=LwDT/Edu;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=yulong.com (client-ip=203.205.195.102; helo=smtpproxy21.qq.com;
- envelope-from=huyue2@yulong.com; receiver=<UNKNOWN>)
-Received: from smtpproxy21.qq.com (smtpbg702.qq.com [203.205.195.102])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::12b;
+ helo=mail-il1-x12b.google.com; envelope-from=igoreisberg@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=LwDT/Edu; dkim-atps=neutral
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com
+ [IPv6:2607:f8b0:4864:20::12b])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JFZSS4RRSz2xtM
- for <linux-erofs@lists.ozlabs.org>; Fri, 17 Dec 2021 14:37:30 +1100 (AEDT)
-X-QQ-mid: bizesmtp37t1639712230tjohzic2
-Received: from localhost.localdomain (unknown [114.221.228.108])
- by esmtp6.qq.com (ESMTP) with 
- id ; Fri, 17 Dec 2021 11:36:23 +0800 (CST)
-X-QQ-SSF: 01400000002000Z0Z000B00A0000000
-X-QQ-FEAT: BdZir0TL0TMoF1Eh6BvCFfxv5MN6lsYXC4aYIk1b6Q3Lh0miv8fuKGo9gCCYn
- dLTH7fO0SpA9+3zy8sDKDQhr+IlH7q8JfO9WLA54sPdJ9CUPBy/XTQtwWEUFzEB+pAuODuL
- OM76hvyJgqD0XNW3Bk8F9CqerFFY8kLjbWt1dfTw4c2n0P8Y2Qhyu5hT0gXXF4zAkx1VGhD
- rSccaxh1pONroFC+CTV7IDIqcplyf3XE/mFEvOpZqw5NuQCZ2OpvM3H1JPzRPkKU4SlA3p4
- fgt0HTLt7hvpOK3jyI8XGE3hR72L6JDU9yMlyrnn+j568/0e3GS707RSuDJ1iXpt/0ZC+MS
- G2RWt7Rh8F9Omu+cy+k02DeAmGvs4qGnKHqrh8+s/M9bjX1dYfGqG5MG0+rJA==
-X-QQ-GoodBg: 2
-From: Yue Hu <huyue2@yulong.com>
-To: linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org,
-	bluce.lee@aliyun.com
-Subject: [RFC PATCH v6 2/2] erofs-utils: support tail-packing inline
- compressed data
-Date: Fri, 17 Dec 2021 11:36:21 +0800
-Message-Id: <dc8cbdb7a03e839dd244702bdef3b620408aaa93.1639645434.git.huyue2@yulong.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <7189219558e9190cb807b0084233bafbd3fdd9de.1639645434.git.huyue2@yulong.com>
-References: <7189219558e9190cb807b0084233bafbd3fdd9de.1639645434.git.huyue2@yulong.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:yulong.com:qybgforeign:qybgforeign2
-X-QQ-Bgrelay: 1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JFpHd3hKQz2yPV
+ for <linux-erofs@lists.ozlabs.org>; Fri, 17 Dec 2021 23:31:07 +1100 (AEDT)
+Received: by mail-il1-x12b.google.com with SMTP id l5so1463766ilv.7
+ for <linux-erofs@lists.ozlabs.org>; Fri, 17 Dec 2021 04:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=mime-version:from:date:message-id:subject:to;
+ bh=rJFBOQSsHrGuflln6MWk5zts7eVRQxTAI/vA8UwvbP0=;
+ b=LwDT/EduimBudHO65u9jVL6y1gb/6X94LE6YeTOP7mJNpypi9WEFbH1FcszCzidm6Z
+ pn//0p7ftHCxbnZ368gpdliQLNC7Ryy8As7jY9bXegyFn2G0WxzVOb7Bd7Pk4dAsPwSU
+ c+kbvbyEA4tuaO6FZqNDSc341GesUqrNz0CFNdYQCDEQOBQwEPPeUD+AgYDZdLPl0n+b
+ AwIN1fcG/rrH/oPkCqREaxGBIm72fbe8MOVfz1GKAOD61ISieyJYI2PnQL6a5a1S6MQb
+ 3ivY6GvKnCoGKcVCm2JsP6Zcny7C8ULfP/zah7n5Sr8Vqll1QtA/CNQi+sxoAXW6XwKk
+ g4lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=rJFBOQSsHrGuflln6MWk5zts7eVRQxTAI/vA8UwvbP0=;
+ b=Jms8CFT/Ya3EAUFvqlT/ITFehUVf0V5iB//YV+jiDBxcSMmsRafJfNZ2RdC0+NmyOE
+ Lrq185wflZGm7wPGvlVmMBq8YKQ43u/d7+qF6D5U6+GZvTaZH/s8U++R4X4dNTn3oS8Q
+ AI6wmcy0JUT9nw0KJDraY3kRiYae8ZV088AJqEf1ujvutM91i9s48U+rIYrj1vVexA0/
+ j4SrZKiA9GZwhAxhyyTTdnYrGSi00Wh5S2d00nnSwTbUb2awz2flEvSIed3v1c01l5Pd
+ 6C8G1qzDy23uQ/3KV8pK4jaq9bzLjcB0ZPwAJpyKF2mwyDn3M0qSlgCPMYdFx8ecYanj
+ Kp2Q==
+X-Gm-Message-State: AOAM532Rkw2uVaabPAULCHj/ac3uQgJQp8l+95pnCzQilU1x8Mjs+XMh
+ uXjPePRpeplMlNIWq0y9LMAo90ho+r1QWoOlZHwCW5ed
+X-Google-Smtp-Source: ABdhPJyVWGIHfbzj/NSA1YCAwt0xT4Ct3eC/MAR/dW5pz0BSszQq0P8sLjVJD0x9GLXqyRLfgyFzxTO/gtmAuslzL90=
+X-Received: by 2002:a05:6e02:1645:: with SMTP id
+ v5mr1334001ilu.54.1639744264184; 
+ Fri, 17 Dec 2021 04:31:04 -0800 (PST)
+MIME-Version: 1.0
+From: Igor Eisberg <igoreisberg@gmail.com>
+Date: Fri, 17 Dec 2021 14:30:55 +0200
+Message-ID: <CABjEcnE84FNBgiHFk6Q+V3d-4L-93bUFDkdfN4ftPX19kpC=ww@mail.gmail.com>
+Subject: erofs-utils: lib: add API to get pathname of EROFS inode
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="00000000000063c5a705d356b63d"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,441 +71,160 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: geshifei@coolpad.com, zhangwen@coolpad.com, Yue Hu <huyue2@yulong.com>,
- shaojunjun@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, we only support tail-end inline data for uncompressed
-files, let's support it as well for compressed files.
+--00000000000063c5a705d356b63d
+Content-Type: multipart/alternative; boundary="00000000000063c5a605d356b63b"
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
-changes since v5:
-- fix index compressedblks
-
-changes since v4:
-- rebase on latest experimental-ztailpacking branch
-- add zero-padding for compressed tail-end since fuse logic
-
-changes since v3:
-- improve messy if-else logic in vle_compress_one() suggested by Xiang.
-- remove on-disk feature since it's moved to fuse part.
-
-changes since v2:
-- based on commit 9fe440d0ac03 ("erofs-utils: mkfs: introduce --quiet option").
-- move h_idata_size ahead of h_advise for compatibility.
-- rename feature/update messages which i think they are more exact.
-
-changes since v1:
-- add 2 bytes to record compressed size of tail-pcluster suggested by
-  Xiang and update related code.
-
- include/erofs/internal.h |  2 +
- lib/compress.c           | 88 +++++++++++++++++++++++++++++-----------
- lib/compressor.c         |  9 ++--
- lib/decompress.c         |  3 ++
- lib/inode.c              | 53 +++++++++++++-----------
- mkfs/main.c              |  7 ++++
- 6 files changed, 110 insertions(+), 52 deletions(-)
-
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 773f668..e4e92c6 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -175,6 +175,8 @@ struct erofs_inode {
- 	unsigned char inode_isize;
- 	/* inline tail-end packing size */
- 	unsigned short idata_size;
-+	/* for compression inline */
-+	bool idata_zipped;
- 
- 	unsigned int xattr_isize;
- 	unsigned int extent_isize;
-diff --git a/lib/compress.c b/lib/compress.c
-index 6f16e0c..e686ebf 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -70,11 +70,10 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
- 
- 	di.di_clusterofs = cpu_to_le16(ctx->clusterofs);
- 
--	/* whether the tail-end uncompressed block or not */
-+	/* whether the tail-end (un)compressed block or not */
- 	if (!d1) {
--		/* TODO: tail-packing inline compressed data */
--		DBG_BUGON(!raw);
--		type = Z_EROFS_VLE_CLUSTER_TYPE_PLAIN;
-+		type = raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
-+			Z_EROFS_VLE_CLUSTER_TYPE_HEAD;
- 		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
- 
- 		di.di_advise = advise;
-@@ -162,6 +161,19 @@ static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
- 	return cfg.c_pclusterblks_def;
- }
- 
-+static int z_erofs_fill_inline_data(struct erofs_inode *inode, char *data,
-+				    unsigned int len, bool raw)
-+{
-+	inode->idata_size = len;
-+	inode->idata_zipped = !raw;
-+
-+	inode->idata = malloc(inode->idata_size);
-+	if (!inode->idata)
-+		return -ENOMEM;
-+	memcpy(inode->idata, data, inode->idata_size);
-+	return 0;
-+}
-+
- static int vle_compress_one(struct erofs_inode *inode,
- 			    struct z_erofs_vle_compress_ctx *ctx,
- 			    bool final)
-@@ -172,16 +184,22 @@ static int vle_compress_one(struct erofs_inode *inode,
- 	int ret;
- 	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
- 	char *const dst = dstbuf + EROFS_BLKSIZ;
-+	bool trailing = false;
- 
- 	while (len) {
--		const unsigned int pclustersize =
-+		unsigned int pclustersize =
- 			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
- 		bool raw;
- 
- 		if (len <= pclustersize) {
- 			if (final) {
--				if (len <= EROFS_BLKSIZ)
-+				/* TODO: compress with 2 pclusters */
-+				if (erofs_sb_has_ztailpacking()) {
-+					trailing = true;
-+					pclustersize = EROFS_BLKSIZ;
-+				} else if (len <= EROFS_BLKSIZ) {
- 					goto nocompression;
-+				}
- 			} else {
- 				break;
- 			}
-@@ -196,13 +214,29 @@ static int vle_compress_one(struct erofs_inode *inode,
- 					  inode->i_srcpath,
- 					  erofs_strerror(ret));
- 			}
-+			if (trailing && len < EROFS_BLKSIZ) {
-+				ret = z_erofs_fill_inline_data(inode,
-+					(char *)(ctx->queue + ctx->head), len,
-+					true);
-+				if (ret)
-+					return ret;
-+				count = len;
-+				ctx->compressedblks = 1;
-+			} else {
- nocompression:
--			ret = write_uncompressed_extent(ctx, &len, dst);
--			if (ret < 0)
-+				ret = write_uncompressed_extent(ctx, &len, dst);
-+				if (ret < 0)
-+					return ret;
-+				count = ret;
-+				ctx->compressedblks = 1;
-+			}
-+			raw = true;
-+		} else if (trailing && ret < EROFS_BLKSIZ && len == count) {
-+			ret = z_erofs_fill_inline_data(inode, dst, ret, false);
-+			if (ret)
- 				return ret;
--			count = ret;
- 			ctx->compressedblks = 1;
--			raw = true;
-+			raw = false;
- 		} else {
- 			const unsigned int tailused = ret & (EROFS_BLKSIZ - 1);
- 			const unsigned int padding =
-@@ -232,7 +266,8 @@ nocompression:
- 		/* write compression indexes for this pcluster */
- 		vle_write_indexes(ctx, count, raw);
- 
--		ctx->blkaddr += ctx->compressedblks;
-+		if (!inode->idata_size)
-+			ctx->blkaddr += ctx->compressedblks;
- 		len -= count;
- 
- 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
-@@ -449,6 +484,7 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
- {
- 	struct z_erofs_map_header h = {
- 		.h_advise = cpu_to_le16(inode->z_advise),
-+		.h_idata_size = cpu_to_le16(inode->idata_size),
- 		.h_algorithmtype = inode->z_algorithmtype[1] << 4 |
- 				   inode->z_algorithmtype[0],
- 		/* lclustersize */
-@@ -476,7 +512,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
- 	if (fd < 0) {
- 		ret = -errno;
--		goto err_free;
-+		goto err_free_meta;
- 	}
- 
- 	/* allocate main data buffer */
-@@ -504,8 +540,6 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	inode->z_algorithmtype[1] = algorithmtype[1];
- 	inode->z_logical_clusterbits = LOG_BLOCK_SIZE;
- 
--	z_erofs_write_mapheader(inode, compressmeta);
--
- 	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
- 	ctx.blkaddr = blkaddr;
- 	ctx.metacur = compressmeta + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
-@@ -531,19 +565,23 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 			goto err_bdrop;
- 	}
- 
-+	inode->idata_size = 0;
-+
- 	/* do the final round */
- 	ret = vle_compress_one(inode, &ctx, true);
- 	if (ret)
--		goto err_bdrop;
-+		goto err_free_id;
- 
- 	/* fall back to no compression mode */
- 	compressed_blocks = ctx.blkaddr - blkaddr;
--	if (compressed_blocks >= BLK_ROUND_UP(inode->i_size)) {
-+	if (compressed_blocks >= BLK_ROUND_UP(inode->i_size) -
-+	    (inode->idata_size ? 1 : 0)) {
- 		ret = -ENOSPC;
--		goto err_bdrop;
-+		goto err_free_id;
- 	}
- 
- 	vle_write_indexes_final(&ctx);
-+	z_erofs_write_mapheader(inode, compressmeta);
- 
- 	close(fd);
- 	DBG_BUGON(!compressed_blocks);
-@@ -554,12 +592,11 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 		   inode->i_srcpath, (unsigned long long)inode->i_size,
- 		   compressed_blocks);
- 
--	/*
--	 * TODO: need to move erofs_bdrop to erofs_write_tail_end
--	 *       when both mkfs & kernel support compression inline.
--	 */
--	erofs_bdrop(bh, false);
--	inode->idata_size = 0;
-+	if (inode->idata_size)
-+		inode->bh_data = bh;
-+	else
-+		erofs_bdrop(bh, false);
-+
- 	inode->u.i_blocks = compressed_blocks;
- 
- 	legacymetasize = ctx.metacur - compressmeta;
-@@ -575,11 +612,14 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
- 	return 0;
- 
-+err_free_id:
-+	if (inode->idata)
-+		free(inode->idata);
- err_bdrop:
- 	erofs_bdrop(bh, true);	/* revoke buffer */
- err_close:
- 	close(fd);
--err_free:
-+err_free_meta:
- 	free(compressmeta);
- 	return ret;
- }
-diff --git a/lib/compressor.c b/lib/compressor.c
-index a4d696e..15d7417 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -26,7 +26,7 @@ int erofs_compress_destsize(struct erofs_compress *c,
- 			    void *src, unsigned int *srcsize,
- 			    void *dst, unsigned int dstsize)
- {
--	unsigned int uncompressed_size;
-+	unsigned int compressed_size;
- 	int ret;
- 
- 	DBG_BUGON(!c->alg);
-@@ -38,9 +38,10 @@ int erofs_compress_destsize(struct erofs_compress *c,
- 		return ret;
- 
- 	/* check if there is enough gains to compress */
--	uncompressed_size = *srcsize;
--	if (roundup(ret, EROFS_BLKSIZ) >= uncompressed_size *
--	    c->compress_threshold / 100)
-+	compressed_size = *srcsize <= EROFS_BLKSIZ ? ret :
-+			  roundup(ret, EROFS_BLKSIZ);
-+
-+	if (*srcsize <= compressed_size * c->compress_threshold / 100)
- 		return -EAGAIN;
- 	return ret;
- }
-diff --git a/lib/decompress.c b/lib/decompress.c
-index 97cb5ef..1661f91 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -110,6 +110,9 @@ static int z_erofs_decompress_lz4(struct z_erofs_decompress_req *rq)
- 					  rq->decodedlength);
- 
- 	if (ret != (int)rq->decodedlength) {
-+		erofs_err("failed to %s decompress %d in[%u, %u] out[%u]",
-+			  rq->partial_decoding ? "partial" : "full",
-+			  ret, rq->inputsize, inputmargin, rq->decodedlength);
- 		ret = -EIO;
- 		goto out;
- 	}
-diff --git a/lib/inode.c b/lib/inode.c
-index b6d3092..bfcb672 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -557,9 +557,6 @@ static int erofs_prepare_tail_block(struct erofs_inode *inode)
- 	struct erofs_buffer_head *bh;
- 	int ret;
- 
--	if (!inode->idata_size)
--		return 0;
--
- 	bh = inode->bh_data;
- 	if (!bh) {
- 		bh = erofs_balloc(DATA, EROFS_BLKSIZ, 0, 0);
-@@ -593,9 +590,7 @@ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
- 		inodesize = Z_EROFS_VLE_EXTENT_ALIGN(inodesize) +
- 			    inode->extent_isize;
- 
--	if (is_inode_layout_compression(inode))
--		goto noinline;
--	if (inode->datalayout == EROFS_INODE_CHUNK_BASED)
-+	if (!inode->idata_size || inode->datalayout == EROFS_INODE_CHUNK_BASED)
- 		goto noinline;
- 
- 	if (cfg.c_noinline_data && S_ISREG(inode->i_mode)) {
-@@ -603,23 +598,18 @@ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
- 		goto noinline;
- 	}
- 
--	/*
--	 * if the file size is block-aligned for uncompressed files,
--	 * should use EROFS_INODE_FLAT_PLAIN data mapping mode.
--	 */
--	if (!inode->idata_size)
--		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
--
- 	bh = erofs_balloc(INODE, inodesize, 0, inode->idata_size);
- 	if (bh == ERR_PTR(-ENOSPC)) {
- 		int ret;
- 
--		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
--noinline:
- 		/* expend an extra block for tail-end data */
- 		ret = erofs_prepare_tail_block(inode);
- 		if (ret)
- 			return ret;
-+noinline:
-+		if (!is_inode_layout_compression(inode))
-+			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
-+
- 		bh = erofs_balloc(INODE, inodesize, 0, 0);
- 		if (IS_ERR(bh))
- 			return PTR_ERR(bh);
-@@ -627,7 +617,17 @@ noinline:
- 	} else if (IS_ERR(bh)) {
- 		return PTR_ERR(bh);
- 	} else if (inode->idata_size) {
--		inode->datalayout = EROFS_INODE_FLAT_INLINE;
-+		if (is_inode_layout_compression(inode)) {
-+			struct z_erofs_map_header *h = inode->compressmeta;
-+
-+			h->h_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
-+			erofs_dbg("%s: inline %scompressed data (%u bytes)",
-+				  inode->i_srcpath,
-+				  inode->idata_zipped ? "" : "un",
-+				  inode->idata_size);
-+		} else {
-+			inode->datalayout = EROFS_INODE_FLAT_INLINE;
-+		}
- 
- 		/* allocate inline buffer */
- 		ibh = erofs_battach(bh, META, inode->idata_size);
-@@ -685,20 +685,25 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
- 		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR);
- 	} else {
- 		int ret;
--		erofs_off_t pos;
-+		erofs_off_t pos, zero_pos;
- 
- 		erofs_mapbh(bh->block);
- 		pos = erofs_btell(bh, true) - EROFS_BLKSIZ;
-+		zero_pos = pos + inode->idata_size;
-+
-+		if (erofs_sb_has_lz4_0padding() && inode->idata_zipped) {
-+			zero_pos = pos;
-+			pos += EROFS_BLKSIZ - inode->idata_size;
-+		}
-+
- 		ret = dev_write(inode->idata, pos, inode->idata_size);
- 		if (ret)
- 			return ret;
--		if (inode->idata_size < EROFS_BLKSIZ) {
--			ret = dev_fillzero(pos + inode->idata_size,
--					   EROFS_BLKSIZ - inode->idata_size,
--					   false);
--			if (ret)
--				return ret;
--		}
-+		ret = dev_fillzero(zero_pos,
-+				   EROFS_BLKSIZ - inode->idata_size,
-+				   false);
-+		if (ret)
-+			return ret;
- 		inode->idata_size = 0;
- 		free(inode->idata);
- 		inode->idata = NULL;
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 90cedde..89fcb18 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -49,6 +49,7 @@ static struct option long_options[] = {
- 	{"chunksize", required_argument, NULL, 11},
- 	{"quiet", no_argument, 0, 12},
- 	{"blobdev", required_argument, NULL, 13},
-+	{"inline-data", no_argument, NULL, 14},
- #ifdef WITH_ANDROID
- 	{"mount-point", required_argument, NULL, 512},
- 	{"product-out", required_argument, NULL, 513},
-@@ -98,6 +99,7 @@ static void usage(void)
- 	      " --help                display this help and exit\n"
- 	      " --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
- 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
-+	      " --inline-data         tail-packing inline compressed data\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
- #endif
-@@ -366,6 +368,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 13:
- 			cfg.c_blobdev_path = optarg;
- 			break;
-+		case 14:
-+			erofs_sb_set_ztailpacking();
-+			break;
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -625,6 +630,8 @@ int main(int argc, char **argv)
- 	erofs_show_config();
- 	if (erofs_sb_has_chunked_file())
- 		erofs_warn("EXPERIMENTAL chunked file feature in use. Use at your own risk!");
-+	if (erofs_sb_has_ztailpacking())
-+		erofs_warn("EXPERIMENTAL compression inline data feature in use. Use at your own risk!");
- 	erofs_set_fs_root(cfg.c_src_path);
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
--- 
-2.17.1
+--00000000000063c5a605d356b63b
+Content-Type: text/plain; charset="UTF-8"
 
 
 
+--00000000000063c5a605d356b63b
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr"><br></div>
+
+--00000000000063c5a605d356b63b--
+
+--00000000000063c5a705d356b63d
+Content-Type: application/octet-stream; 
+	name="0001-erofs-utils-lib-add-API-to-get-pathname-of-EROFS-ino.patch"
+Content-Disposition: attachment; 
+	filename="0001-erofs-utils-lib-add-API-to-get-pathname-of-EROFS-ino.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kxaddx3y0>
+X-Attachment-Id: f_kxaddx3y0
+
+RnJvbSAzMDYxZDY1ZWJhYjAxODAyNzgyYmZlNzkxYjgyOWJjMDBiMzg2ZjkxIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBJZ29yIE9zdGFwZW5rbyA8aWdvcmVpc2JlcmdAZ21haWwuY29t
+PgpEYXRlOiBGcmksIDE3IERlYyAyMDIxIDE0OjA4OjIzICswMjAwClN1YmplY3Q6IGVyb2ZzLXV0
+aWxzOiBsaWI6IGFkZCBBUEkgdG8gZ2V0IHBhdGhuYW1lIG9mIEVST0ZTIGlub2RlCgoqIEdlbmVy
+YWwtcHVycG9zZSBlcm9mc19nZXRfcGF0aG5hbWUgZnVuY3Rpb24gdXRpbGl6aW5nIGVyb2ZzX2l0
+ZXJhdGVfZGlyLAogIHdpdGggcmVjdXJzaW9uIGFuZCBhIHJldXNlZCBjb250ZXh0IHRvIGF2b2lk
+IG92ZXJmbG93aW5nIHRoZSBzdGFjay4KICBSZWNvbW1lbmRlZCBidWZmZXIgc2l6ZSBpcyBQQVRI
+X01BWC4gWmVyby1maWxsaW5nIHRoZSBidWZmZXIgaXMgbm90CiAgbmVjZXNzYXJ5LgoqIGR1bXA6
+IFBBVEhfTUFYKzEgaXMgbm90IHJlcXVpcmVkIHNpbmNlIHRoZSBkZWZpbml0aW9uIG9mIFBBVEhf
+TUFYIGlzCiAgImNoYXJzIGluIGEgcGF0aCBuYW1lIGluY2x1ZGluZyBudWwiLgoqIEZpeCBtaXNz
+aW5nIGN0eC0+ZGVfZnR5cGUgPSBkZS0+ZmlsZV90eXBlOyBpbiB0cmF2ZXJzZV9kaXJlbnRzCiAg
+KHdhcyBuZXZlciBzZXQpLgoqIFJldHVybiBlcnIgZnJvbSBlcm9mc19pdGVyYXRlX2RpciBpbnN0
+ZWFkIG9mIGhhcmRjb2RlZCAwLCB0byBhbGxvdwogIGJyZWFraW5nIHRoZSBpdGVyYXRpb24gYnkg
+dGhlIGNhbGxiYWNrIHVzaW5nIGEgbm9uLXplcm8gcmV0dXJuIGNvZGUuCgpTaWduZWQtb2ZmLWJ5
+OiBJZ29yIE9zdGFwZW5rbyA8aWdvcmVpc2JlcmdAZ21haWwuY29tPgotLS0KIGR1bXAvbWFpbi5j
+ICAgICAgICAgfCA3MiArKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiBpbmNsdWRl
+L2Vyb2ZzL2Rpci5oIHwgIDEgKwogbGliL2Rpci5jICAgICAgICAgICB8IDk2ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMyBmaWxlcyBjaGFuZ2VkLCA5OCBp
+bnNlcnRpb25zKCspLCA3MSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kdW1wL21haW4uYyBi
+L2R1bXAvbWFpbi5jCmluZGV4IDdmM2Y3NDMuLjNjM2NjM2YgMTAwNjQ0Ci0tLSBhL2R1bXAvbWFp
+bi5jCisrKyBiL2R1bXAvbWFpbi5jCkBAIC0zMjgsNzEgKzMyOCw2IEBAIHN0YXRpYyBpbmxpbmUg
+aW50IGVyb2ZzX2NoZWNrZGlyZW50KHN0cnVjdCBlcm9mc19kaXJlbnQgKmRlLAogCXJldHVybiBk
+bmFtZV9sZW47CiB9CiAKLXN0YXRpYyBpbnQgZXJvZnNfZ2V0X3BhdGhuYW1lKGVyb2ZzX25pZF90
+IG5pZCwgZXJvZnNfbmlkX3QgcGFyZW50X25pZCwKLQkJZXJvZnNfbmlkX3QgdGFyZ2V0LCBjaGFy
+ICpwYXRoLCB1bnNpZ25lZCBpbnQgcG9zKQotewotCWludCBlcnI7Ci0JZXJvZnNfb2ZmX3Qgb2Zm
+c2V0OwotCWNoYXIgYnVmW0VST0ZTX0JMS1NJWl07Ci0Jc3RydWN0IGVyb2ZzX2lub2RlIGlub2Rl
+ID0geyAubmlkID0gbmlkIH07Ci0KLQlwYXRoW3BvcysrXSA9ICcvJzsKLQlpZiAodGFyZ2V0ID09
+IHNiaS5yb290X25pZCkKLQkJcmV0dXJuIDA7Ci0KLQllcnIgPSBlcm9mc19yZWFkX2lub2RlX2Zy
+b21fZGlzaygmaW5vZGUpOwotCWlmIChlcnIpIHsKLQkJZXJvZnNfZXJyKCJyZWFkIGlub2RlIGZh
+aWxlZCBAIG5pZCAlbGx1IiwgbmlkIHwgMFVMTCk7Ci0JCXJldHVybiBlcnI7Ci0JfQotCi0Jb2Zm
+c2V0ID0gMDsKLQl3aGlsZSAob2Zmc2V0IDwgaW5vZGUuaV9zaXplKSB7Ci0JCWVyb2ZzX29mZl90
+IG1heHNpemUgPSBtaW5fdChlcm9mc19vZmZfdCwKLQkJCQkJaW5vZGUuaV9zaXplIC0gb2Zmc2V0
+LCBFUk9GU19CTEtTSVopOwotCQlzdHJ1Y3QgZXJvZnNfZGlyZW50ICpkZSA9ICh2b2lkICopYnVm
+OwotCQlzdHJ1Y3QgZXJvZnNfZGlyZW50ICplbmQ7Ci0JCXVuc2lnbmVkIGludCBuYW1lb2ZmOwot
+Ci0JCWVyciA9IGVyb2ZzX3ByZWFkKCZpbm9kZSwgYnVmLCBtYXhzaXplLCBvZmZzZXQpOwotCQlp
+ZiAoZXJyKQotCQkJcmV0dXJuIGVycjsKLQotCQluYW1lb2ZmID0gbGUxNl90b19jcHUoZGUtPm5h
+bWVvZmYpOwotCQllbmQgPSAodm9pZCAqKWJ1ZiArIG5hbWVvZmY7Ci0JCXdoaWxlIChkZSA8IGVu
+ZCkgewotCQkJY29uc3QgY2hhciAqZG5hbWU7Ci0JCQlpbnQgbGVuOwotCi0JCQluYW1lb2ZmID0g
+bGUxNl90b19jcHUoZGUtPm5hbWVvZmYpOwotCQkJZG5hbWUgPSAoY2hhciAqKWJ1ZiArIG5hbWVv
+ZmY7Ci0JCQlsZW4gPSBlcm9mc19jaGVja2RpcmVudChkZSwgZW5kLCBtYXhzaXplLCBkbmFtZSk7
+Ci0JCQlpZiAobGVuIDwgMCkKLQkJCQlyZXR1cm4gbGVuOwotCi0JCQlpZiAobGU2NF90b19jcHUo
+ZGUtPm5pZCkgPT0gdGFyZ2V0KSB7Ci0JCQkJbWVtY3B5KHBhdGggKyBwb3MsIGRuYW1lLCBsZW4p
+OwotCQkJCXBhdGhbcG9zICsgbGVuXSA9ICdcMCc7Ci0JCQkJcmV0dXJuIDA7Ci0JCQl9Ci0KLQkJ
+CWlmIChkZS0+ZmlsZV90eXBlID09IEVST0ZTX0ZUX0RJUiAmJgotCQkJICAgIGxlNjRfdG9fY3B1
+KGRlLT5uaWQpICE9IHBhcmVudF9uaWQgJiYKLQkJCSAgICBsZTY0X3RvX2NwdShkZS0+bmlkKSAh
+PSBuaWQpIHsKLQkJCQltZW1jcHkocGF0aCArIHBvcywgZG5hbWUsIGxlbik7Ci0JCQkJZXJyID0g
+ZXJvZnNfZ2V0X3BhdGhuYW1lKGxlNjRfdG9fY3B1KGRlLT5uaWQpLAotCQkJCQkJbmlkLCB0YXJn
+ZXQsIHBhdGgsIHBvcyArIGxlbik7Ci0JCQkJaWYgKCFlcnIpCi0JCQkJCXJldHVybiAwOwotCQkJ
+CW1lbXNldChwYXRoICsgcG9zLCAwLCBsZW4pOwotCQkJfQotCQkJKytkZTsKLQkJfQotCQlvZmZz
+ZXQgKz0gbWF4c2l6ZTsKLQl9Ci0JcmV0dXJuIC0xOwotfQotCiBzdGF0aWMgaW50IGVyb2ZzZHVt
+cF9tYXBfYmxvY2tzKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUsCiAJCXN0cnVjdCBlcm9mc19t
+YXBfYmxvY2tzICptYXAsIGludCBmbGFncykKIHsKQEAgLTQxMSw3ICszNDYsNyBAQCBzdGF0aWMg
+dm9pZCBlcm9mc2R1bXBfc2hvd19maWxlaW5mbyhib29sIHNob3dfZXh0ZW50KQogCWVyb2ZzX29m
+Zl90IHNpemU7CiAJdTE2IGFjY2Vzc19tb2RlOwogCXN0cnVjdCBlcm9mc19pbm9kZSBpbm9kZSA9
+IHsgLm5pZCA9IGR1bXBjZmcubmlkIH07Ci0JY2hhciBwYXRoW1BBVEhfTUFYICsgMV0gPSB7MH07
+CisJY2hhciBwYXRoW1BBVEhfTUFYXTsKIAljaGFyIGFjY2Vzc19tb2RlX3N0cltdID0gInJ3eHJ3
+eHJ3eCI7CiAJY2hhciB0aW1lYnVmWzEyOF0gPSB7MH07CiAJdW5zaWduZWQgaW50IGV4dGVudF9j
+b3VudCA9IDA7CkBAIC00NDEsOCArMzc2LDcgQEAgc3RhdGljIHZvaWQgZXJvZnNkdW1wX3Nob3df
+ZmlsZWluZm8oYm9vbCBzaG93X2V4dGVudCkKIAkJcmV0dXJuOwogCX0KIAotCWVyciA9IGVyb2Zz
+X2dldF9wYXRobmFtZShzYmkucm9vdF9uaWQsIHNiaS5yb290X25pZCwKLQkJCQkgaW5vZGUubmlk
+LCBwYXRoLCAwKTsKKwllcnIgPSBlcm9mc19nZXRfcGF0aG5hbWUoJmlub2RlLCBwYXRoLCBzaXpl
+b2YocGF0aCkpOwogCWlmIChlcnIgPCAwKSB7CiAJCWVyb2ZzX2VycigiZmlsZSBwYXRoIG5vdCBm
+b3VuZCBAIG5pZCAlbGx1IiwgaW5vZGUubmlkIHwgMFVMTCk7CiAJCXJldHVybjsKQEAgLTU5OCw3
+ICs1MzIsNyBAQCBzdGF0aWMgdm9pZCBlcm9mc2R1bXBfcHJpbnRfc3RhdGlzdGljKHZvaWQpCiAJ
+CS5jYiA9IGVyb2ZzZHVtcF9kaXJlbnRfaXRlciwKIAkJLmRlX25pZCA9IHNiaS5yb290X25pZCwK
+IAkJLmRuYW1lID0gIiIsCi0JCS5kZV9uYW1lbGVuID0gMAorCQkuZGVfbmFtZWxlbiA9IDAsCiAJ
+fTsKIAogCWVyciA9IGVyb2ZzZHVtcF9yZWFkZGlyKCZjdHgpOwpkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9lcm9mcy9kaXIuaCBiL2luY2x1ZGUvZXJvZnMvZGlyLmgKaW5kZXggMjVkNmNlNy4uOWQ1NmYz
+ZiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9lcm9mcy9kaXIuaAorKysgYi9pbmNsdWRlL2Vyb2ZzL2Rp
+ci5oCkBAIC00NSw2ICs0NSw3IEBAIHN0cnVjdCBlcm9mc19kaXJfY29udGV4dCB7CiAKIC8qIGl0
+ZXJhdGUgb3ZlciBpbm9kZXMgdGhhdCBhcmUgaW4gZGlyZWN0b3J5ICovCiBpbnQgZXJvZnNfaXRl
+cmF0ZV9kaXIoc3RydWN0IGVyb2ZzX2Rpcl9jb250ZXh0ICpjdHgsIGJvb2wgZnNjayk7CitpbnQg
+ZXJvZnNfZ2V0X3BhdGhuYW1lKHN0cnVjdCBlcm9mc19pbm9kZSAqaW5vZGUsIGNoYXIgKmJ1Ziwg
+c2l6ZV90IHNpemUpOwogCiAjaWZkZWYgX19jcGx1c3BsdXMKIH0KZGlmZiAtLWdpdCBhL2xpYi9k
+aXIuYyBiL2xpYi9kaXIuYwppbmRleCA2M2UzNWJhLi5hM2VkZjBiIDEwMDY0NAotLS0gYS9saWIv
+ZGlyLmMKKysrIGIvbGliL2Rpci5jCkBAIC0xLDcgKzEsNyBAQAogLy8gU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjArIE9SIEFwYWNoZS0yLjAKKyNpbmNsdWRlIDxzdGRsaWIuaD4KICNp
+bmNsdWRlICJlcm9mcy9wcmludC5oIgogI2luY2x1ZGUgImVyb2ZzL2Rpci5oIgotI2luY2x1ZGUg
+PHN0ZGxpYi5oPgogCiBzdGF0aWMgaW50IHRyYXZlcnNlX2RpcmVudHMoc3RydWN0IGVyb2ZzX2Rp
+cl9jb250ZXh0ICpjdHgsCiAJCQkgICAgdm9pZCAqZGVudHJ5X2JsaywgdW5zaWduZWQgaW50IGxi
+bGssCkBAIC02NCw2ICs2NCw3IEBAIHN0YXRpYyBpbnQgdHJhdmVyc2VfZGlyZW50cyhzdHJ1Y3Qg
+ZXJvZnNfZGlyX2NvbnRleHQgKmN0eCwKIAogCQljdHgtPmRuYW1lID0gZGVfbmFtZTsKIAkJY3R4
+LT5kZV9uYW1lbGVuID0gZGVfbmFtZWxlbjsKKwkJY3R4LT5kZV9mdHlwZSA9IGRlLT5maWxlX3R5
+cGU7CiAJCWN0eC0+ZG90X2RvdGRvdCA9IGlzX2RvdF9kb3Rkb3RfbGVuKGRlX25hbWUsIGRlX25h
+bWVsZW4pOwogCQlpZiAoY3R4LT5kb3RfZG90ZG90KSB7CiAJCQlzd2l0Y2ggKGRlX25hbWVsZW4p
+IHsKQEAgLTEyMSw3ICsxMjIsNyBAQCBvdXQ6CiBpbnQgZXJvZnNfaXRlcmF0ZV9kaXIoc3RydWN0
+IGVyb2ZzX2Rpcl9jb250ZXh0ICpjdHgsIGJvb2wgZnNjaykKIHsKIAlzdHJ1Y3QgZXJvZnNfaW5v
+ZGUgKmRpciA9IGN0eC0+ZGlyOwotCWludCBlcnI7CisJaW50IGVyciA9IDA7CiAJZXJvZnNfb2Zm
+X3QgcG9zOwogCWNoYXIgYnVmW0VST0ZTX0JMS1NJWl07CiAKQEAgLTE2Myw1ICsxNjQsOTYgQEAg
+aW50IGVyb2ZzX2l0ZXJhdGVfZGlyKHN0cnVjdCBlcm9mc19kaXJfY29udGV4dCAqY3R4LCBib29s
+IGZzY2spCiAJCQkgIGRpci0+bmlkIHwgMFVMTCk7CiAJCXJldHVybiAtRUZTQ09SUlVQVEVEOwog
+CX0KKwlyZXR1cm4gZXJyOworfQorCisjZGVmaW5lIEVST0ZTX1BBVEhOQU1FX0ZPVU5EIDEKKwor
+c3RydWN0IGdldF9wYXRobmFtZV9jb250ZXh0IHsKKwlzdHJ1Y3QgZXJvZnNfZGlyX2NvbnRleHQg
+Y3R4OworCWVyb2ZzX25pZF90IG5pZDsKKwljaGFyICpidWY7CisJc2l6ZV90IHNpemU7CisJc2l6
+ZV90IHBvczsKK307CisKK3N0YXRpYyBpbnQgZ2V0X3BhdGhuYW1lX2l0ZXIoc3RydWN0IGVyb2Zz
+X2Rpcl9jb250ZXh0ICpjdHgpCit7CisJaW50IHJldDsKKwlzdHJ1Y3QgZ2V0X3BhdGhuYW1lX2Nv
+bnRleHQgKnBjdHggPSAodm9pZCAqKWN0eDsKKwljb25zdCBjaGFyICpkbmFtZSA9IGN0eC0+ZG5h
+bWU7CisJc2l6ZV90IGxlbiA9IGN0eC0+ZGVfbmFtZWxlbjsKKwlzaXplX3QgcG9zID0gcGN0eC0+
+cG9zOworCisJaWYgKGN0eC0+ZGVfbmlkID09IHBjdHgtPm5pZCkgeworCQlpZiAocG9zICsgbGVu
+ICsgMiA+IHBjdHgtPnNpemUpIHsKKwkJCWVyb2ZzX2VycigiZ2V0X3BhdGhuYW1lIGJ1ZmZlciBu
+b3QgbGFyZ2UgZW5vdWdoOiBsZW4gJXpkLCBzaXplICV6ZCIsCisJCQkJICBwb3MgKyBsZW4gKyAy
+LCBwY3R4LT5zaXplKTsKKwkJCXJldHVybiAtRU5PTUVNOworCQl9CisKKwkJcGN0eC0+YnVmW3Bv
+cysrXSA9ICcvJzsKKwkJc3RybmNweShwY3R4LT5idWYgKyBwb3MsIGRuYW1lLCBsZW4pOworCQlw
+Y3R4LT5idWZbcG9zICsgbGVuXSA9ICdcMCc7CisJCXJldHVybiBFUk9GU19QQVRITkFNRV9GT1VO
+RDsKKwl9CisKKwlpZiAoY3R4LT5kZV9mdHlwZSA9PSBFUk9GU19GVF9ESVIgJiYgIWN0eC0+ZG90
+X2RvdGRvdCkgeworCQlzdHJ1Y3QgZXJvZnNfaW5vZGUgZGlyID0geyAubmlkID0gY3R4LT5kZV9u
+aWQgfTsKKworCQlyZXQgPSBlcm9mc19yZWFkX2lub2RlX2Zyb21fZGlzaygmZGlyKTsKKwkJaWYg
+KHJldCkgeworCQkJZXJvZnNfZXJyKCJyZWFkIGlub2RlIGZhaWxlZCBAIG5pZCAlbGx1IiwgZGly
+Lm5pZCB8IDBVTEwpOworCQkJcmV0dXJuIHJldDsKKwkJfQorCisJCWN0eC0+ZGlyID0gJmRpcjsK
+KwkJcGN0eC0+cG9zID0gcG9zICsgbGVuICsgMTsKKwkJcmV0ID0gZXJvZnNfaXRlcmF0ZV9kaXIo
+Y3R4LCBmYWxzZSk7CisJCXBjdHgtPnBvcyA9IHBvczsKKwkJaWYgKHJldCA9PSBFUk9GU19QQVRI
+TkFNRV9GT1VORCkgeworCQkJcGN0eC0+YnVmW3BvcysrXSA9ICcvJzsKKwkJCXN0cm5jcHkocGN0
+eC0+YnVmICsgcG9zLCBkbmFtZSwgbGVuKTsKKwkJfQorCQlyZXR1cm4gcmV0OworCX0KIAlyZXR1
+cm4gMDsKIH0KKworaW50IGVyb2ZzX2dldF9wYXRobmFtZShzdHJ1Y3QgZXJvZnNfaW5vZGUgKmlu
+b2RlLCBjaGFyICpidWYsIHNpemVfdCBzaXplKQoreworCWludCByZXQ7CisJc3RydWN0IGVyb2Zz
+X2lub2RlIHJvb3QgPSB7IC5uaWQgPSBzYmkucm9vdF9uaWQgfTsKKwlzdHJ1Y3QgZ2V0X3BhdGhu
+YW1lX2NvbnRleHQgcGN0eCA9IHsKKwkJLmN0eC5mbGFncyA9IEVST0ZTX1JFQURESVJfVkFMSURf
+UE5JRCwKKwkJLmN0eC5wbmlkID0gcm9vdC5uaWQsCisJCS5jdHguZGlyID0gJnJvb3QsCisJCS5j
+dHguY2IgPSBnZXRfcGF0aG5hbWVfaXRlciwKKwkJLm5pZCA9IGlub2RlLT5uaWQsCisJCS5idWYg
+PSBidWYsCisJCS5zaXplID0gc2l6ZSwKKwkJLnBvcyA9IDAsCisJfTsKKworCWlmIChpbm9kZS0+
+bmlkID09IHJvb3QubmlkKSB7CisJCWlmIChzaXplID09IDApIHsKKwkJCWVyb2ZzX2VycigiZ2V0
+X3BhdGhuYW1lIGJ1ZmZlciBub3QgbGFyZ2UgZW5vdWdoOiBsZW4gMSwgc2l6ZSAlemQiLAorCQkJ
+CSAgc2l6ZSk7CisJCQlyZXR1cm4gLUVOT01FTTsKKwkJfQorCisJCWJ1ZlswXSA9ICcvJzsKKwkJ
+cmV0dXJuIDA7CisJfQorCisJcmV0ID0gZXJvZnNfcmVhZF9pbm9kZV9mcm9tX2Rpc2soJnJvb3Qp
+OworCWlmIChyZXQpIHsKKwkJZXJvZnNfZXJyKCJyZWFkIGlub2RlIGZhaWxlZCBAIG5pZCAlbGx1
+Iiwgcm9vdC5uaWQgfCAwVUxMKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlyZXQgPSBlcm9mc19p
+dGVyYXRlX2RpcigmcGN0eC5jdHgsIGZhbHNlKTsKKwlpZiAocmV0ID09IEVST0ZTX1BBVEhOQU1F
+X0ZPVU5EKQorCQlyZXR1cm4gMDsKKwlyZXR1cm4gcmV0OworfQotLSAKMi4zMC4yCgo=
+--00000000000063c5a705d356b63d--
