@@ -1,41 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 375DB4797EE
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 Dec 2021 01:53:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A087479831
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Dec 2021 03:35:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JG6lz17fQz307W
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 Dec 2021 11:53:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JG92N1kTDz305j
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Dec 2021 13:35:56 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=UCeWDaAd;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::131;
+ helo=mail-il1-x131.google.com; envelope-from=igoreisberg@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=UCeWDaAd; dkim-atps=neutral
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com
+ [IPv6:2607:f8b0:4864:20::131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JG6lr5cNzz2xtM
- for <linux-erofs@lists.ozlabs.org>; Sat, 18 Dec 2021 11:53:07 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R641e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0V-xBnhO_1639788768; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V-xBnhO_1639788768) by smtp.aliyun-inc.com(127.0.0.1);
- Sat, 18 Dec 2021 08:52:49 +0800
-Date: Sat, 18 Dec 2021 08:52:46 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Igor Eisberg <igoreisberg@gmail.com>
-Subject: Re: erofs-utils: lib: add API to get pathname of EROFS inode
-Message-ID: <Yb0w3hY2mOTk/R+Y@B-P7TQMD6M-0146.local>
-References: <CABjEcnE84FNBgiHFk6Q+V3d-4L-93bUFDkdfN4ftPX19kpC=ww@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JG92J60FFz2ypK
+ for <linux-erofs@lists.ozlabs.org>; Sat, 18 Dec 2021 13:35:50 +1100 (AEDT)
+Received: by mail-il1-x131.google.com with SMTP id d14so3110109ila.1
+ for <linux-erofs@lists.ozlabs.org>; Fri, 17 Dec 2021 18:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=mime-version:from:date:message-id:subject:to;
+ bh=BNPi3oZh0v+fMfO0ArAFItZSUyITFKfCJjvJRUP08a8=;
+ b=UCeWDaAdlitY5NsC9/sI4Z2N8dHOZTnCkahBGhHlN9kCdESlZ4k501Nslia+4hniLm
+ TqaQzF/0cbW/r3mdbmN4ZkjmyHGHKOrL1ERmhLEd5CzbMPhXTHvVLEBCGgFS3iUnjqgU
+ YOh65Pkg4o9GAPd7AFrVmxHW4FWfUK2WOAn/VGXWPyAjjKxSnQgQWg3G5jjkpA5JL1oy
+ RParozXesa1fg2hQRsIKUytHLc2ZD5kphCy1UWdgelPeQtrL9Ab3FsSSa+giIvwAZvBz
+ 3viZG0uVkc/Imvpw1X+FuHw0hvDLTqdm5rXNv+40K6xRX+Fi497Pz5x82NnI1UlRdvI0
+ u7ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=BNPi3oZh0v+fMfO0ArAFItZSUyITFKfCJjvJRUP08a8=;
+ b=iBXT16tznFr+TqN5ofHcTCG8mAVCnOcsmi7km44dKj+nQ+w7Av1hQonggL/AXu4BGi
+ a0LE+4lHs4OdoVe6BcG+iNk1j1bIwwaEX+3uW1L7EWvQ5Vq5GrbHQYgpOvo/Zb7ZHCCB
+ dRA8B4q+l+qoZDGvk5ishzl1X7Xg7C9A30dYsLJAokaEBTwTwU7HJPphWruZDI/FI82i
+ K0UVydifbZkUfRURRelW7z+BJkS12dQBLv4DOIBvCKCA8TF7Xm3wDnz1w1T9xRsvc26I
+ iUpDVa//4wT4Wu1s8mBFuTTROiZxBqfN4gx+wnCsJsCbJvMQCmPuu4/7sgCVCvqfZHUZ
+ i3Og==
+X-Gm-Message-State: AOAM530/+ocfPA9LLFPVAfCDKR+Ln7a+Ueg4ftXGCModJUcltUmZyyZw
+ tmmdOmUQR8kmbNn78T95lSBjmjTFOXhTGa+JCzTTnSlATXo=
+X-Google-Smtp-Source: ABdhPJwEXRgD6QFHzIlOJLclO6v35u5adsO+1mFAtY+YvXJf4AZigBkPME7tuuXLkSKQHIqvsUp3xTvk6kE8SF20tng=
+X-Received: by 2002:a05:6e02:1645:: with SMTP id
+ v5mr3169167ilu.54.1639794947352; 
+ Fri, 17 Dec 2021 18:35:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABjEcnE84FNBgiHFk6Q+V3d-4L-93bUFDkdfN4ftPX19kpC=ww@mail.gmail.com>
+From: Igor Eisberg <igoreisberg@gmail.com>
+Date: Sat, 18 Dec 2021 04:35:37 +0200
+Message-ID: <CABjEcnET1aCa7yA3Vyk8RCBKK0d0wR_iPezr=N2jp6jRx6EB6w@mail.gmail.com>
+Subject: erofs-utils: fix consistency + add NUL after root path
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000576e3e05d36283c4"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -47,250 +71,124 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Igor,
+--000000000000576e3e05d36283c4
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Dec 17, 2021 at 02:30:55PM +0200, Igor Eisberg wrote:
-> 
+From 8b209620abfbd8147a2c771cb0126dcca528e34f Mon Sep 17 00:00:00 2001
+From: Igor Ostapenko <igoreisberg@gmail.com>
+Date: Sat, 18 Dec 2021 04:30:17 +0200
+Subject: erofs-utils: fix consistency + add NUL after root path
 
-Thanks for your patch. I have to sleep for a while since I'm really
-tired these days..
+Signed-off-by: Igor Ostapenko <igoreisberg@gmail.com>
+---
+ fsck/main.c | 2 +-
+ lib/dir.c   | 7 ++++---
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-As Yue Hu said, you could send out patches in the text rather as a
-attachment. That is the common way for most communities.
+diff --git a/fsck/main.c b/fsck/main.c
+index df4845d..30d0a1b 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -400,7 +400,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid,
+erofs_nid_t nid)
+  goto out;
 
-Some comments below (if you don't mind I will update when I apply):
+  /* XXXX: the dir depth should be restricted in order to avoid loops */
+- if ((inode.i_mode & S_IFMT) == S_IFDIR) {
++ if (S_ISDIR(inode.i_mode)) {
+  struct erofs_dir_context ctx = {
+  .flags = EROFS_READDIR_VALID_PNID,
+  .pnid = pnid,
+diff --git a/lib/dir.c b/lib/dir.c
+index 340dce6..d5b8096 100644
+--- a/lib/dir.c
++++ b/lib/dir.c
+@@ -127,7 +127,7 @@ int erofs_iterate_dir(struct erofs_dir_context *ctx,
+bool fsck)
+  erofs_off_t pos;
+  char buf[EROFS_BLKSIZ];
 
-> From 3061d65ebab01802782bfe791b829bc00b386f91 Mon Sep 17 00:00:00 2001
-> From: Igor Ostapenko <igoreisberg@gmail.com>
-> Date: Fri, 17 Dec 2021 14:08:23 +0200
-> Subject: erofs-utils: lib: add API to get pathname of EROFS inode
-> 
-> * General-purpose erofs_get_pathname function utilizing erofs_iterate_dir,
->   with recursion and a reused context to avoid overflowing the stack.
->   Recommended buffer size is PATH_MAX. Zero-filling the buffer is not
->   necessary.
-> * dump: PATH_MAX+1 is not required since the definition of PATH_MAX is
->   "chars in a path name including nul".
-> * Fix missing ctx->de_ftype = de->file_type; in traverse_dirents
->   (was never set).
+- if ((dir->i_mode & S_IFMT) != S_IFDIR)
++ if (!S_ISDIR(dir->i_mode))
+  return -ENOTDIR;
 
-Thanks for catching this. I will fold it in the original patch...
+  ctx->flags &= ~EROFS_READDIR_ALL_SPECIAL_FOUND;
+@@ -244,13 +244,14 @@ int erofs_get_pathname(erofs_nid_t nid, char *buf,
+size_t size)
+  };
 
-> * Return err from erofs_iterate_dir instead of hardcoded 0, to allow
->   breaking the iteration by the callback using a non-zero return code.
-> 
-> Signed-off-by: Igor Ostapenko <igoreisberg@gmail.com>
-> ---
->  dump/main.c         | 72 ++--------------------------------
->  include/erofs/dir.h |  1 +
->  lib/dir.c           | 96 ++++++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 98 insertions(+), 71 deletions(-)
-> 
-> diff --git a/dump/main.c b/dump/main.c
-> index 7f3f743..3c3cc3f 100644
-> --- a/dump/main.c
-> +++ b/dump/main.c
-> @@ -328,71 +328,6 @@ static inline int erofs_checkdirent(struct erofs_dirent *de,
->  	return dname_len;
->  }
->  
-> -static int erofs_get_pathname(erofs_nid_t nid, erofs_nid_t parent_nid,
-> -		erofs_nid_t target, char *path, unsigned int pos)
-> -{
-> -	int err;
-> -	erofs_off_t offset;
-> -	char buf[EROFS_BLKSIZ];
-> -	struct erofs_inode inode = { .nid = nid };
-> -
-> -	path[pos++] = '/';
-> -	if (target == sbi.root_nid)
-> -		return 0;
-> -
-> -	err = erofs_read_inode_from_disk(&inode);
-> -	if (err) {
-> -		erofs_err("read inode failed @ nid %llu", nid | 0ULL);
-> -		return err;
-> -	}
-> -
-> -	offset = 0;
-> -	while (offset < inode.i_size) {
-> -		erofs_off_t maxsize = min_t(erofs_off_t,
-> -					inode.i_size - offset, EROFS_BLKSIZ);
-> -		struct erofs_dirent *de = (void *)buf;
-> -		struct erofs_dirent *end;
-> -		unsigned int nameoff;
-> -
-> -		err = erofs_pread(&inode, buf, maxsize, offset);
-> -		if (err)
-> -			return err;
-> -
-> -		nameoff = le16_to_cpu(de->nameoff);
-> -		end = (void *)buf + nameoff;
-> -		while (de < end) {
-> -			const char *dname;
-> -			int len;
-> -
-> -			nameoff = le16_to_cpu(de->nameoff);
-> -			dname = (char *)buf + nameoff;
-> -			len = erofs_checkdirent(de, end, maxsize, dname);
-> -			if (len < 0)
-> -				return len;
-> -
-> -			if (le64_to_cpu(de->nid) == target) {
-> -				memcpy(path + pos, dname, len);
-> -				path[pos + len] = '\0';
-> -				return 0;
-> -			}
-> -
-> -			if (de->file_type == EROFS_FT_DIR &&
-> -			    le64_to_cpu(de->nid) != parent_nid &&
-> -			    le64_to_cpu(de->nid) != nid) {
-> -				memcpy(path + pos, dname, len);
-> -				err = erofs_get_pathname(le64_to_cpu(de->nid),
-> -						nid, target, path, pos + len);
-> -				if (!err)
-> -					return 0;
-> -				memset(path + pos, 0, len);
-> -			}
-> -			++de;
-> -		}
-> -		offset += maxsize;
-> -	}
-> -	return -1;
-> -}
-> -
->  static int erofsdump_map_blocks(struct erofs_inode *inode,
->  		struct erofs_map_blocks *map, int flags)
->  {
-> @@ -411,7 +346,7 @@ static void erofsdump_show_fileinfo(bool show_extent)
->  	erofs_off_t size;
->  	u16 access_mode;
->  	struct erofs_inode inode = { .nid = dumpcfg.nid };
-> -	char path[PATH_MAX + 1] = {0};
-> +	char path[PATH_MAX];
->  	char access_mode_str[] = "rwxrwxrwx";
->  	char timebuf[128] = {0};
->  	unsigned int extent_count = 0;
-> @@ -441,8 +376,7 @@ static void erofsdump_show_fileinfo(bool show_extent)
->  		return;
->  	}
->  
-> -	err = erofs_get_pathname(sbi.root_nid, sbi.root_nid,
-> -				 inode.nid, path, 0);
-> +	err = erofs_get_pathname(&inode, path, sizeof(path));
->  	if (err < 0) {
->  		erofs_err("file path not found @ nid %llu", inode.nid | 0ULL);
->  		return;
-> @@ -598,7 +532,7 @@ static void erofsdump_print_statistic(void)
->  		.cb = erofsdump_dirent_iter,
->  		.de_nid = sbi.root_nid,
->  		.dname = "",
-> -		.de_namelen = 0
-> +		.de_namelen = 0,
->  	};
->  
->  	err = erofsdump_readdir(&ctx);
-> diff --git a/include/erofs/dir.h b/include/erofs/dir.h
-> index 25d6ce7..9d56f3f 100644
-> --- a/include/erofs/dir.h
-> +++ b/include/erofs/dir.h
-> @@ -45,6 +45,7 @@ struct erofs_dir_context {
->  
->  /* iterate over inodes that are in directory */
->  int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck);
-> +int erofs_get_pathname(struct erofs_inode *inode, char *buf, size_t size);
->  
->  #ifdef __cplusplus
->  }
-> diff --git a/lib/dir.c b/lib/dir.c
-> index 63e35ba..a3edf0b 100644
-> --- a/lib/dir.c
-> +++ b/lib/dir.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-> +#include <stdlib.h>
->  #include "erofs/print.h"
->  #include "erofs/dir.h"
-> -#include <stdlib.h>
->  
->  static int traverse_dirents(struct erofs_dir_context *ctx,
->  			    void *dentry_blk, unsigned int lblk,
-> @@ -64,6 +64,7 @@ static int traverse_dirents(struct erofs_dir_context *ctx,
->  
->  		ctx->dname = de_name;
->  		ctx->de_namelen = de_namelen;
-> +		ctx->de_ftype = de->file_type;
->  		ctx->dot_dotdot = is_dot_dotdot_len(de_name, de_namelen);
->  		if (ctx->dot_dotdot) {
->  			switch (de_namelen) {
-> @@ -121,7 +122,7 @@ out:
->  int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck)
->  {
->  	struct erofs_inode *dir = ctx->dir;
-> -	int err;
-> +	int err = 0;
->  	erofs_off_t pos;
->  	char buf[EROFS_BLKSIZ];
->  
-> @@ -163,5 +164,96 @@ int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck)
->  			  dir->nid | 0ULL);
->  		return -EFSCORRUPTED;
->  	}
-> +	return err;
-> +}
-> +
-> +#define EROFS_PATHNAME_FOUND 1
-> +
-> +struct get_pathname_context {
-> +	struct erofs_dir_context ctx;
-> +	erofs_nid_t nid;
-> +	char *buf;
-> +	size_t size;
-> +	size_t pos;
-> +};
-> +
-> +static int get_pathname_iter(struct erofs_dir_context *ctx)
-> +{
-> +	int ret;
-> +	struct get_pathname_context *pctx = (void *)ctx;
-> +	const char *dname = ctx->dname;
-> +	size_t len = ctx->de_namelen;
-> +	size_t pos = pctx->pos;
-> +
-> +	if (ctx->de_nid == pctx->nid) {
-> +		if (pos + len + 2 > pctx->size) {
-> +			erofs_err("get_pathname buffer not large enough: len %zd, size %zd",
-> +				  pos + len + 2, pctx->size);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		pctx->buf[pos++] = '/';
-> +		strncpy(pctx->buf + pos, dname, len);
-> +		pctx->buf[pos + len] = '\0';
-> +		return EROFS_PATHNAME_FOUND;
-> +	}
-> +
-> +	if (ctx->de_ftype == EROFS_FT_DIR && !ctx->dot_dotdot) {
-> +		struct erofs_inode dir = { .nid = ctx->de_nid };
-> +
-> +		ret = erofs_read_inode_from_disk(&dir);
-> +		if (ret) {
-> +			erofs_err("read inode failed @ nid %llu", dir.nid | 0ULL);
-> +			return ret;
-> +		}
-> +
-> +		ctx->dir = &dir;
+  if (nid == root.nid) {
+- if (size == 0) {
+- erofs_err("get_pathname buffer not large enough: len 1, size %zd",
++ if (size < 2) {
++ erofs_err("get_pathname buffer not large enough: len 2, size %zd",
+    size);
+  return -ENOMEM;
+  }
 
-I think old `ctx->dir', `pnid' and `flag' should be saved
-when fsck == true.
+  buf[0] = '/';
++ buf[1] = '\0';
+  return 0;
+  }
 
-If fsck == false, I'd suggest not set
-EROFS_READDIR_VALID_PNID as well. Let me revise it.
+-- 
+2.30.2
 
-Thanks,
-Gao Xiang
+--000000000000576e3e05d36283c4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div>From 8b209620abfbd8147a2c771cb0126dc=
+ca528e34f Mon Sep 17 00:00:00 2001</div><div>From: Igor Ostapenko &lt;<a hr=
+ef=3D"mailto:igoreisberg@gmail.com">igoreisberg@gmail.com</a>&gt;</div><div=
+>Date: Sat, 18 Dec 2021 04:30:17 +0200</div><div>Subject: erofs-utils: fix =
+consistency + add NUL after root path</div><div><br></div><div>Signed-off-b=
+y: Igor Ostapenko &lt;<a href=3D"mailto:igoreisberg@gmail.com">igoreisberg@=
+gmail.com</a>&gt;</div><div>---</div><div>=C2=A0fsck/main.c | 2 +-</div><di=
+v>=C2=A0lib/dir.c=C2=A0 =C2=A0| 7 ++++---</div><div>=C2=A02 files changed, =
+5 insertions(+), 4 deletions(-)</div><div><br></div><div>diff --git a/fsck/=
+main.c b/fsck/main.c</div><div>index df4845d..30d0a1b 100644</div><div>--- =
+a/fsck/main.c</div><div>+++ b/fsck/main.c</div><div>@@ -400,7 +400,7 @@ sta=
+tic int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)</div><div>=
+=C2=A0<span style=3D"white-space:pre">		</span>goto out;</div><div>=C2=A0</=
+div><div>=C2=A0<span style=3D"white-space:pre">	</span>/* XXXX: the dir dep=
+th should be restricted in order to avoid loops */</div><div>-<span style=
+=3D"white-space:pre">	</span>if ((inode.i_mode &amp; S_IFMT) =3D=3D S_IFDIR=
+) {</div><div>+<span style=3D"white-space:pre">	</span>if (S_ISDIR(inode.i_=
+mode)) {</div><div>=C2=A0<span style=3D"white-space:pre">		</span>struct er=
+ofs_dir_context ctx =3D {</div><div>=C2=A0<span style=3D"white-space:pre">	=
+		</span>.flags =3D EROFS_READDIR_VALID_PNID,</div><div>=C2=A0<span style=
+=3D"white-space:pre">			</span>.pnid =3D pnid,</div><div>diff --git a/lib/d=
+ir.c b/lib/dir.c</div><div>index 340dce6..d5b8096 100644</div><div>--- a/li=
+b/dir.c</div><div>+++ b/lib/dir.c</div><div>@@ -127,7 +127,7 @@ int erofs_i=
+terate_dir(struct erofs_dir_context *ctx, bool fsck)</div><div>=C2=A0<span =
+style=3D"white-space:pre">	</span>erofs_off_t pos;</div><div>=C2=A0<span st=
+yle=3D"white-space:pre">	</span>char buf[EROFS_BLKSIZ];</div><div>=C2=A0</d=
+iv><div>-<span style=3D"white-space:pre">	</span>if ((dir-&gt;i_mode &amp; =
+S_IFMT) !=3D S_IFDIR)</div><div>+<span style=3D"white-space:pre">	</span>if=
+ (!S_ISDIR(dir-&gt;i_mode))</div><div>=C2=A0<span style=3D"white-space:pre"=
+>		</span>return -ENOTDIR;</div><div>=C2=A0</div><div>=C2=A0<span style=3D"=
+white-space:pre">	</span>ctx-&gt;flags &amp;=3D ~EROFS_READDIR_ALL_SPECIAL_=
+FOUND;</div><div>@@ -244,13 +244,14 @@ int erofs_get_pathname(erofs_nid_t n=
+id, char *buf, size_t size)</div><div>=C2=A0<span style=3D"white-space:pre"=
+>	</span>};</div><div>=C2=A0</div><div>=C2=A0<span style=3D"white-space:pre=
+">	</span>if (nid =3D=3D root.nid) {</div><div>-<span style=3D"white-space:=
+pre">		</span>if (size =3D=3D 0) {</div><div>-<span style=3D"white-space:pr=
+e">			</span>erofs_err(&quot;get_pathname buffer not large enough: len 1, s=
+ize %zd&quot;,</div><div>+<span style=3D"white-space:pre">		</span>if (size=
+ &lt; 2) {</div><div>+<span style=3D"white-space:pre">			</span>erofs_err(&=
+quot;get_pathname buffer not large enough: len 2, size %zd&quot;,</div><div=
+>=C2=A0<span style=3D"white-space:pre">				</span>=C2=A0 size);</div><div>=
+=C2=A0<span style=3D"white-space:pre">			</span>return -ENOMEM;</div><div>=
+=C2=A0<span style=3D"white-space:pre">		</span>}</div><div>=C2=A0</div><div=
+>=C2=A0<span style=3D"white-space:pre">		</span>buf[0] =3D &#39;/&#39;;</di=
+v><div>+<span style=3D"white-space:pre">		</span>buf[1] =3D &#39;\0&#39;;</=
+div><div>=C2=A0<span style=3D"white-space:pre">		</span>return 0;</div><div=
+>=C2=A0<span style=3D"white-space:pre">	</span>}</div><div>=C2=A0</div><div=
+>--=C2=A0</div><div>2.30.2</div><div><br></div></div></div>
+
+--000000000000576e3e05d36283c4--
