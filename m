@@ -2,42 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11D147AF1C
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Dec 2021 16:09:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 065AB47AFDF
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Dec 2021 16:21:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JHjg84SMrz2ymg
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Dec 2021 02:09:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JHjwC6h7Hz2ym7
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Dec 2021 02:20:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57;
- helo=out30-57.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
+ helo=out30-45.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-57.freemail.mail.aliyun.com
- (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+Received: from out30-45.freemail.mail.aliyun.com
+ (out30-45.freemail.mail.aliyun.com [115.124.30.45])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JHjg455Gjz2xsb
- for <linux-erofs@lists.ozlabs.org>; Tue, 21 Dec 2021 02:09:35 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R171e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V.FrMFS_1640012952; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JHjw34CgYz2xXg
+ for <linux-erofs@lists.ozlabs.org>; Tue, 21 Dec 2021 02:20:45 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R101e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V.FrONY_1640013625; 
 Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V.FrMFS_1640012952) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 20 Dec 2021 23:09:13 +0800
-Date: Mon, 20 Dec 2021 23:09:11 +0800
+ fp:SMTPD_---0V.FrONY_1640013625) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 20 Dec 2021 23:20:26 +0800
+Date: Mon, 20 Dec 2021 23:20:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: Kelvin Zhang <zhangkelvin@google.com>
 Subject: Re: Practical Limit on EROFS lcluster size
-Message-ID: <YcCclzeHYk58gZ5D@B-P7TQMD6M-0146.local>
+Message-ID: <YcCfON0nqioRr2yG@B-P7TQMD6M-0146.local>
 References: <CAOSmRzhPk4ykswcUTnK0bj2LdmJ9iwcNuzDpgPQj20d2_rf4Dw@mail.gmail.com>
  <YcCY1tmskGMy+QxV@B-P7TQMD6M-0146.local>
- <CAOSmRzhRDN62RbN1PQs=gCq0UmO9_q1F7QMd2WVPLcOLrbwZAA@mail.gmail.com>
+ <YcCbcngdf1jfh0bk@B-P7TQMD6M-0146.local>
+ <CAOSmRzgca2U148_3QaTYsPxojY59X49-1tdOCRZZuBvv+sCEvA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOSmRzhRDN62RbN1PQs=gCq0UmO9_q1F7QMd2WVPLcOLrbwZAA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOSmRzgca2U148_3QaTYsPxojY59X49-1tdOCRZZuBvv+sCEvA@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,100 +56,23 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Dec 20, 2021 at 10:02:13AM -0500, Kelvin Zhang wrote:
-> On Mon, Dec 20, 2021 at 9:53 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> >
-> > Hi Kelvin,
-> >
-> > On Mon, Dec 20, 2021 at 08:45:42AM -0500, Kelvin Zhang wrote:
-> > > Hi Gao,
-> > >     I was playing with large pcluster sizes recently, I noticed a
-> > > quirk about EROFS. In summary, logical cluster size has a practical
-> > > limit of 8MB. Here's why:
-> > >
-> > >    Looking at https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/lib/compress.c?h=experimental&id=564adb0a852b38a1790db20516862fc31bca314d#n92
-> > > , line 92, we see the following code:
-> > >
-> > > if (d0 == 1 && erofs_sb_has_big_pcluster()) {
-> > >         type = Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD;
-> > >         di.di_u.delta[0] = cpu_to_le16(ctx->compressedblks |
-> > >                 Z_EROFS_VLE_DI_D0_CBLKCNT); // This line
-> > >         di.di_u.delta[1] = cpu_to_le16(d1);
-> > > } else if (d0) {
-> > >         type = Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD;
-> > >
-> > >         di.di_u.delta[0] = cpu_to_le16(d0);  // and this line
-> > >         di.di_u.delta[1] = cpu_to_le16(d1);
-> > > }
-> > >
-> > > When a compressed index has type NOHEAD, delta[0] stores d0(distance
-> > > to head block). But The 11th bit of d0 is also used as a flag bit to
-> > > indicate that d0 stores the pcluster size. This means d0 cannot exceed
-> > > Z_EROFS_VLE_DI_D0_CBLKCNT(2048), or else the parser will incorrectly
-> > > interpret d0 as pcluster size, rather than distance to head block.
-> > >     Is this an intentional design choice? It's not necessarily bad,
-> > > but it's something I think is worth documenting in code.
-> >
-> > Thanks for this great insight! Actually on-disk EROFS format doesn't
-> > have such limitation by design, since if it looks back to the delta0
-> > lcluster and it's still a NONHEAD lcluster, it will look back with
-> > new delta0 again until finding the final HEAD lcluster.
-> >
-> > But I'm not sure if mkfs code can handle > 8MiB lcluster properly yet,
-> > without modification since lcluster size is strictly limited with
-> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/include/erofs/compress.h#n14
-> > EROFS_CONFIG_COMPR_MAX_SZ * 2
-> 
-> Right, the current lcluster buffer is on stack, and has size
-> EROFS_CONFIG_COMPR_MAX_SZ*2.
-> I was working on a patch that moves lcluster buffer to heap and
-> increase it to way beyond 900KB.
-> With large pclusters it make sense to have a larger lcluster limit as
-> well, or else users wouldn't
-> be able to take full advantage of large pclusters.
+On Mon, Dec 20, 2021 at 10:06:33AM -0500, Kelvin Zhang wrote:
+> Thanks… Another thing, I’m happy to help writing English documentation for
+> EROFS if you have a Chinese version.
+>
 
-Okay, make sense.
+:) I wrote several Chinese materials many years ago internally, especially
+for somewhat complicated compact compressed indexes (which is a reduced
+metadata to minimize metadata runtime overhead for better performance,
+each lcluster only takes 2-byte metadata on average).
 
-> Currently this fails during writing compressed indices. As
-> write_compacted_indexes
-> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/lib/compress.c?h=experimental&id=564adb0a852b38a1790db20516862fc31bca314d#n313
-> would mistakenly interpret a large delta0 value as
-> Z_EROFS_VLE_DI_D0_CBLKCNT, resulting in
-> sanity check failure later on. Let me see if I can fix that... I
-> haven't  read the kernel code so I'm not
-> sure what the kernel is going to do with a large delta0 value which
-> happens to have the
-> Z_EROFS_VLE_DI_D0_CBLKCNT bit set.
+Finally I think we might need a website to document all of this, both in
+English and Chinese, including the new container use cases -- Nydus
+image service.
 
-I think kernel lookback function works as expected, it just looks back
-with delta0 hints until finding the HEAD lcluster to get the whole
-extent information.. But yeah, we might need to actually test it if
-possible.
-
-(Although my current top priority stuff now is ztailpacking feature..)
+I plan to do these after ztailpacking, fscache, folio adaptions are all
+finished... (and I'm happy to try any better maintaining approach to
+make the overall EROFS solution better/useful for everyone...)
 
 Thanks,
 Gao Xiang
-
-> 
-> >
-> > Yeah, I have to admit the current document might not be so detailed,
-> > partially due to my somewhat bad English written speed, and limited
-> > time...
-> >
-> > Thanks,
-> > Gao Xiang
-> >
-> > >
-> > >
-> > > --
-> > > Sincerely,
-> > >
-> > > Kelvin Zhang
-> 
-> 
-> 
-> -- 
-> Sincerely,
-> 
-> Kelvin Zhang
