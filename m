@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08DEA47E066
+	by mail.lfdr.de (Postfix) with ESMTPS id 0606747E065
 	for <lists+linux-erofs@lfdr.de>; Thu, 23 Dec 2021 09:26:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JKNb21r1qz3069
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Dec 2021 19:26:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JKNb11JgPz2ywm
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Dec 2021 19:26:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -18,22 +18,24 @@ Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JKNZw6HzTz2xsb
- for <linux-erofs@lists.ozlabs.org>; Thu, 23 Dec 2021 19:26:48 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R421e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JKNZs33qzz2xsb
+ for <linux-erofs@lists.ozlabs.org>; Thu, 23 Dec 2021 19:26:41 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R851e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0V.Wa4u1_1640247975; 
 Received: from
  e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0V.Wa4u1_1640247975) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 23 Dec 2021 16:26:23 +0800
+ Thu, 23 Dec 2021 16:26:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: dump: fix --path after converting
- erofs_get_pathname()
-Date: Thu, 23 Dec 2021 16:26:13 +0800
-Message-Id: <20211223082614.74875-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: lib: fix --blobdev without
+ -Eforce-chunk-indexes
+Date: Thu, 23 Dec 2021 16:26:14 +0800
+Message-Id: <20211223082614.74875-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20211223082614.74875-1-hsiangkao@linux.alibaba.com>
+References: <20211223082614.74875-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -52,29 +54,37 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Otherwise it reports:
- $ dump.erofs --path=/ foo.erofs.img
- <E> erofs: file path not found @ nid 36
+blockmap is used by default, chunk indexes should be switched
+instead if --blobdev is specified.
 
-Fixes: e6082718f743 ("erofs-utils: lib: add API to get pathname of EROFS inode")
+Fixes: 016bd812be1e ("erofs-utils: mkfs: enable block map chunk format")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- dump/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/blobchunk.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/dump/main.c b/dump/main.c
-index 9d05d89..0616113 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -345,7 +345,7 @@ static void erofsdump_show_fileinfo(bool show_extent)
- 		return;
- 	}
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index 5e9a88a..2e06b0c 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -113,7 +113,7 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
  
--	err = erofs_get_pathname(dumpcfg.nid, path, sizeof(path));
-+	err = erofs_get_pathname(inode.nid, path, sizeof(path));
- 	if (err < 0) {
- 		erofs_err("file path not found @ nid %llu", inode.nid | 0ULL);
- 		return;
+ 	if (multidev) {
+ 		idx.device_id = 1;
+-		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
++		DBG_BUGON(inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES);
+ 	} else {
+ 		base_blkaddr = remapped_base;
+ 	}
+@@ -171,6 +171,8 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode)
+ 	int fd, ret;
+ 
+ 	inode->u.chunkformat |= inode->u.chunkbits - LOG_BLOCK_SIZE;
++	if (multidev)
++		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
+ 
+ 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(struct erofs_inode_chunk_index);
 -- 
 2.24.4
 
