@@ -2,37 +2,36 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 934A647FD33
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Dec 2021 14:01:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 703DB47FD14
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Dec 2021 13:55:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JMyVV37NPz2yxm
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 00:01:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JMyMd2Cg4z3bml
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Dec 2021 23:55:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.88.44.36;
- helo=out4436.biz.mail.alibaba.com; envelope-from=jefflexu@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com
- [47.88.44.36])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
+ helo=out30-130.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-130.freemail.mail.aliyun.com
+ (out30-130.freemail.mail.aliyun.com [115.124.30.130])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JMyVR5ggpz2xMF
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Dec 2021 00:01:51 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R461e4; CH=green; DM=||false|;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JMyMX0rg8z3c9K
+ for <linux-erofs@lists.ozlabs.org>; Mon, 27 Dec 2021 23:55:51 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R131e4; CH=green; DM=||false|;
  DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V.xJoQp_1640609696; 
+ NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V.vZtXb_1640609697; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V.xJoQp_1640609696) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 27 Dec 2021 20:54:57 +0800
+ fp:SMTPD_---0V.vZtXb_1640609697) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 27 Dec 2021 20:54:58 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v1 10/23] erofs: add anonymous inode managing page cache of
- blob file
-Date: Mon, 27 Dec 2021 20:54:31 +0800
-Message-Id: <20211227125444.21187-11-jefflexu@linux.alibaba.com>
+Subject: [PATCH v1 11/23] erofs: register cookie context for bootstrap
+Date: Mon, 27 Dec 2021 20:54:32 +0800
+Message-Id: <20211227125444.21187-12-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20211227125444.21187-1-jefflexu@linux.alibaba.com>
 References: <20211227125444.21187-1-jefflexu@linux.alibaba.com>
@@ -57,87 +56,73 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce one anonymous inode for managing page cache of corresponding
-blob file. Then erofs could read directly from the address space of the
-anonymous inode when cache hit.
+Something worth mentioning about the cleanup routine.
+
+1. The init routine is prior to when the root inode gets initialized,
+and thus the corresponding cleanup routine shall be placed under
+.kill_sb() callback.
+
+2. The init routine will instantiate anonymous inodes under the
+super_block, and thus .put_super() callback shall also contain the
+cleanup routine. Or we'll get "VFS: Busy inodes after unmount." warning.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 35 +++++++++++++++++++++++++++++++++++
- fs/erofs/internal.h |  1 +
- 2 files changed, 36 insertions(+)
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 15c5bb0f8ea5..4dfca7c95710 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -34,6 +34,33 @@ static void erofs_fscache_cleanup_cookie(struct erofs_cookie_ctx *ctx)
- 	ctx->cookie = NULL;
- }
- 
-+static const struct address_space_operations erofs_fscache_aops = {
-+};
-+
-+static int erofs_fscache_get_inode(struct erofs_cookie_ctx *ctx,
-+				   struct super_block *sb)
-+{
-+	struct inode *const inode = new_inode(sb);
-+
-+	if (!inode)
-+		return -ENOMEM;
-+
-+	set_nlink(inode, 1);
-+	inode->i_size = OFFSET_MAX;
-+
-+	inode->i_mapping->a_ops = &erofs_fscache_aops;
-+	mapping_set_gfp_mask(inode->i_mapping,
-+			GFP_NOFS | __GFP_HIGHMEM | __GFP_MOVABLE);
-+	ctx->inode = inode;
-+	return 0;
-+}
-+
-+static void erofs_fscache_put_inode(struct erofs_cookie_ctx *ctx)
-+{
-+	iput(ctx->inode);
-+	ctx->inode = NULL;
-+}
-+
- static int erofs_fscahce_init_ctx(struct erofs_cookie_ctx *ctx,
- 				  struct super_block *sb, char *path)
- {
-@@ -45,12 +72,20 @@ static int erofs_fscahce_init_ctx(struct erofs_cookie_ctx *ctx,
- 		return ret;
- 	}
- 
-+	ret = erofs_fscache_get_inode(ctx, sb);
-+	if (ret) {
-+		erofs_err(sb, "failed to get anonymous inode\n");
-+		erofs_fscache_cleanup_cookie(ctx);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
- static void erofs_fscache_cleanup_ctx(struct erofs_cookie_ctx *ctx)
- {
- 	erofs_fscache_cleanup_cookie(ctx);
-+	erofs_fscache_put_inode(ctx);
- }
- 
- struct erofs_cookie_ctx *erofs_fscache_get_ctx(struct super_block *sb,
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 4179c3dcb7f9..2e4f267b37e7 100644
+index 2e4f267b37e7..4ee4ff6774ba 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -93,6 +93,7 @@ struct erofs_sb_lz4_info {
- 
- struct erofs_cookie_ctx {
- 	struct fscache_cookie *cookie;
-+	struct inode *inode;
+@@ -141,6 +141,8 @@ struct erofs_sb_info {
+ 	u8 volume_name[16];             /* volume name */
+ 	u32 feature_compat;
+ 	u32 feature_incompat;
++
++	struct erofs_cookie_ctx *bootstrap;
  };
  
- struct erofs_sb_info {
+ #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 517d74f3c303..141cabd01d32 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -663,6 +663,16 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	else
+ 		sbi->dax_dev = NULL;
+ 
++	if (!sb->s_bdev) {
++		struct erofs_cookie_ctx *bootstrap;
++
++		bootstrap = erofs_fscache_get_ctx(sb, ctx->opt.uuid);
++		if (IS_ERR(bootstrap))
++			return PTR_ERR(bootstrap);
++
++		sbi->bootstrap = bootstrap;
++	}
++
+ 	err = erofs_read_superblock(sb);
+ 	if (err)
+ 		return err;
+@@ -820,6 +830,7 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		return;
+ 
+ 	erofs_free_dev_context(sbi->devs);
++	erofs_fscache_put_ctx(sbi->bootstrap);
+ 	fs_put_dax(sbi->dax_dev);
+ 	kfree(sbi);
+ 	sb->s_fs_info = NULL;
+@@ -837,6 +848,8 @@ static void erofs_put_super(struct super_block *sb)
+ 	iput(sbi->managed_cache);
+ 	sbi->managed_cache = NULL;
+ #endif
++	erofs_fscache_put_ctx(sbi->bootstrap);
++	sbi->bootstrap = NULL;
+ }
+ 
+ static struct file_system_type erofs_fs_type = {
 -- 
 2.27.0
 
