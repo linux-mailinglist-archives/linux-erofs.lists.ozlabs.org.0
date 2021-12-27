@@ -1,65 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7929448014B
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Dec 2021 16:58:11 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C16E848029B
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Dec 2021 18:08:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JN2Ps2TDvz2yw9
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 02:58:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JN3zQ1pP4z2ynp
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 04:08:50 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NQC0JyJ6;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VrSTBVo+;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
+ smtp.mailfrom=intel.com (client-ip=192.55.52.93; helo=mga11.intel.com;
  envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
- header.s=Intel header.b=NQC0JyJ6; dkim-atps=neutral
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ header.s=Intel header.b=VrSTBVo+; dkim-atps=neutral
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JN2PD0W6nz305F
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Dec 2021 02:57:35 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JN3zJ0jN9z2yHZ
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Dec 2021 04:08:37 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
- t=1640620656; x=1672156656;
+ t=1640624924; x=1672160924;
  h=date:from:to:cc:subject:message-id:references:
  mime-version:in-reply-to;
- bh=PxtyPzt0KLfSLLa1pPBudg9doH4Gy9uQA/cjdZanweI=;
- b=NQC0JyJ6GbLG3HjuHkkgzbzf7aBDd07P1BkOeswc4B+cxEKR3dUhP7BI
- PPneevQ3S1SV3tKBLCFMV9pSO2LQHcMbcfqkmXmoaiBj72p4S4VP3NDLR
- o0UNFZpQWD+CNz94VzJHsKsq+oHll8lXTNT6INiMALX6/iYRVqBoYj1pV
- a0eGaZhybaNn0O9J6rM9qKxNh4IOS+b3NvGkQsaNluWkojVCfjSGtUiec
- qinEgF71rOS9yk+p74ubJPOcYZEQJvfLJpcmBbCIJMs8QgMW3qeBOXfvy
- 4eCW1HqjOKEmxkGAKvECDyYQIm63fGqDPkKozta2u5AMuAIPWJKjAYQ6w Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10209"; a="241031711"
-X-IronPort-AV: E=Sophos;i="5.88,239,1635231600"; d="scan'208";a="241031711"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
- by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 27 Dec 2021 07:56:32 -0800
+ bh=nM84cc11HFk2HmUjcmlzoeZWzGPg6p3uhxB1YO8OS50=;
+ b=VrSTBVo+spfYubdIt9QYIQAE8nADMp/RRejEaAc1lJu3+O9oEziOCA7r
+ crmuQXma2eQdd+LqFx64P83NlJWhnf1jFoz39YEJrxWdsbcldBvk1/GFa
+ Coj9c7wpzI/8hzymEA2H1VD8gdoF2rUqIu5nPmUWsUuHv/BJ7Lxi0vJuV
+ qBS8KEnyg9cEVfTxWFyE6C4H4U+WmXbE4U9zVXmRwUzU9uj4iaj/h9Dvm
+ 2MHtcVwqLMi7z+ejfD0np4lw7acz4S3UA2Jk+moMUxsltDFHG+IJjmANF
+ iAupoxq4HRRnCanZ/2MVrPXHLuUDj38C3fd/1C31MLCM0tJvKsdnFVnRO Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10210"; a="238777252"
+X-IronPort-AV: E=Sophos;i="5.88,240,1635231600"; d="scan'208";a="238777252"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+ by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 27 Dec 2021 09:07:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,239,1635231600"; d="scan'208";a="686318910"
+X-IronPort-AV: E=Sophos;i="5.88,240,1635231600"; d="scan'208";a="553852120"
 Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
- by orsmga005.jf.intel.com with ESMTP; 27 Dec 2021 07:56:28 -0800
+ by orsmga001.jf.intel.com with ESMTP; 27 Dec 2021 09:07:31 -0800
 Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
  (envelope-from <lkp@intel.com>)
- id 1n1sMO-0006XQ-Bx; Mon, 27 Dec 2021 15:56:28 +0000
-Date: Mon, 27 Dec 2021 23:55:48 +0800
+ id 1n1tT8-0006cY-B8; Mon, 27 Dec 2021 17:07:30 +0000
+Date: Tue, 28 Dec 2021 01:07:25 +0800
 From: kernel test robot <lkp@intel.com>
 To: Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
  linux-cachefs@redhat.com, xiang@kernel.org, chao@kernel.org,
  linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v1 19/23] cachefiles: implement .demand_read() for demand
- read
-Message-ID: <202112272353.ekKESQX6-lkp@intel.com>
-References: <20211227125444.21187-20-jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v1 12/23] erofs: implement fscache-based metadata read
+Message-ID: <202112280115.O0H8Ow1Q-lkp@intel.com>
+References: <20211227125444.21187-13-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211227125444.21187-20-jefflexu@linux.alibaba.com>
+In-Reply-To: <20211227125444.21187-13-jefflexu@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -72,7 +71,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kbuild-all@lists.01.org, llvm@lists.linux.dev, tao.peng@linux.alibaba.com,
+Cc: kbuild-all@lists.01.org, tao.peng@linux.alibaba.com,
  joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
  linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
@@ -81,9 +80,9 @@ Sender: "Linux-erofs"
 
 Hi Jeffle,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on dhowells-fs/fscache-next]
+[auto build test ERROR on dhowells-fs/fscache-next]
 [cannot apply to xiang-erofs/dev-test ceph-client/for-linus linus/master v5.16-rc7 next-20211224]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -91,70 +90,26 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Jeffle-Xu/fscache-erofs-fscache-based-demand-read-semantics/20211227-205742
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git fscache-next
-config: i386-randconfig-r005-20211227 (https://download.01.org/0day-ci/archive/20211227/202112272353.ekKESQX6-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 511726c64d3b6cca66f7c54d457d586aa3129f67)
+config: m68k-defconfig (https://download.01.org/0day-ci/archive/20211228/202112280115.O0H8Ow1Q-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 11.2.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/54c300b4598e3f2836d8233681da387fe388cfda
+        # https://github.com/0day-ci/linux/commit/c3453b91df3b4e89c3336453437f761d6cb6bca3
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Jeffle-Xu/fscache-erofs-fscache-based-demand-read-semantics/20211227-205742
-        git checkout 54c300b4598e3f2836d8233681da387fe388cfda
+        git checkout c3453b91df3b4e89c3336453437f761d6cb6bca3
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash fs/cachefiles/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=m68k SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
->> fs/cachefiles/io.c:564:5: warning: no previous prototype for function 'cachefiles_demand_read' [-Wmissing-prototypes]
-   int cachefiles_demand_read(struct netfs_cache_resources *cres,
-       ^
-   fs/cachefiles/io.c:564:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   int cachefiles_demand_read(struct netfs_cache_resources *cres,
-   ^
-   static 
-   1 warning generated.
-
-
-vim +/cachefiles_demand_read +564 fs/cachefiles/io.c
-
-   563	
- > 564	int cachefiles_demand_read(struct netfs_cache_resources *cres,
-   565				   loff_t start_pos, size_t len)
-   566	{
-   567		struct cachefiles_object *object;
-   568		struct cachefiles_cache *cache;
-   569		struct cachefiles_req *req;
-   570		int ret;
-   571	
-   572		object = cachefiles_cres_object(cres);
-   573		cache = object->volume->cache;
-   574	
-   575		req = cachefiles_alloc_req(object, start_pos, len);
-   576		if (!req)
-   577			return -ENOMEM;
-   578	
-   579		spin_lock(&cache->reqs_lock);
-   580		ret = idr_alloc(&cache->reqs, req, 0, 0, GFP_KERNEL);
-   581		if (ret >= 0)
-   582			req->req_in.id = ret;
-   583		spin_unlock(&cache->reqs_lock);
-   584		if (ret < 0) {
-   585			kfree(req);
-   586			return -ENOMEM;
-   587		}
-   588	
-   589		wake_up_all(&cache->daemon_pollwq);
-   590	
-   591		wait_for_completion(&req->done);
-   592		kfree(req);
-   593	
-   594		return 0;
-   595	}
-   596	
+ERROR: modpost: "netfs_subreq_terminated" [fs/erofs/erofs.ko] undefined!
+>> ERROR: modpost: "netfs_readpage" [fs/erofs/erofs.ko] undefined!
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
