@@ -1,49 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E40064805CA
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 03:53:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CE7B480693
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 06:46:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JNJyK0XzPz2yw5
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 13:53:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JNNnm3SYBz302G
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Dec 2021 16:46:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42;
- helo=out30-42.freemail.mail.aliyun.com;
- envelope-from=joseph.qi@linux.alibaba.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 330 seconds by postgrey-1.36 at boromir;
- Tue, 28 Dec 2021 13:53:37 AEDT
-Received: from out30-42.freemail.mail.aliyun.com
- (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JNJy90GZZz2xtc
- for <linux-erofs@lists.ozlabs.org>; Tue, 28 Dec 2021 13:53:28 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R601e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=joseph.qi@linux.alibaba.com;
- NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V00M7xX_1640659669; 
-Received: from 30.225.24.26(mailfrom:joseph.qi@linux.alibaba.com
- fp:SMTPD_---0V00M7xX_1640659669) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 28 Dec 2021 10:47:50 +0800
-Message-ID: <d066131d-1bcb-e64d-a10b-b3dbb4506b96@linux.alibaba.com>
-Date: Tue, 28 Dec 2021 10:47:49 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JNNng0Xwfz2yZd
+ for <linux-erofs@lists.ozlabs.org>; Tue, 28 Dec 2021 16:46:30 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R461e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0V0240kf_1640670365; 
+Received: from
+ e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V0240kf_1640670365) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 28 Dec 2021 13:46:09 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v4 0/5] erofs: support tail-packing inline compressed data
+Date: Tue, 28 Dec 2021 13:45:59 +0800
+Message-Id: <20211228054604.114518-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.0
-Subject: Re: [PATCH v1 01/23] cachefiles: add cachefiles_demand devnode
-Content-Language: en-US
-To: Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- linux-cachefs@redhat.com, xiang@kernel.org, chao@kernel.org,
- linux-erofs@lists.ozlabs.org
-References: <20211227125444.21187-1-jefflexu@linux.alibaba.com>
- <20211227125444.21187-2-jefflexu@linux.alibaba.com>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20211227125444.21187-2-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,111 +47,64 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tao.peng@linux.alibaba.com, linux-kernel@vger.kernel.org,
- bo.liu@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
- eguan@linux.alibaba.com, gerry@linux.alibaba.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@yulong.com>,
+ LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi folks,
 
+v2: https://lore.kernel.org/r/20211225070626.74080-1-hsiangkao@linux.alibaba.com
+mkfs v8: https://lore.kernel.org/r/20211224012316.42929-1-hsiangkao@linux.alibaba.com
 
-On 12/27/21 8:54 PM, Jeffle Xu wrote:
-> fscache/cachefiles used to serve as a local cache for remote fs. The
-> following patches will introduce a new use case, in which local
-> read-only fs could implement demand reading with fscache. By then the
-> user daemon needs to read and poll on the devnode, and thus the original
-> cachefiles devnode can't be reused in this case.
-> 
-> Thus create a new devnode specifically for the new mode. The following
-> patches will add more file_operations.
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
->  fs/cachefiles/daemon.c   |  8 ++++++++
->  fs/cachefiles/internal.h |  1 +
->  fs/cachefiles/main.c     | 12 ++++++++++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-> index 40a792421fc1..871f1e0f423d 100644
-> --- a/fs/cachefiles/daemon.c
-> +++ b/fs/cachefiles/daemon.c
-> @@ -56,6 +56,14 @@ const struct file_operations cachefiles_daemon_fops = {
->  	.llseek		= noop_llseek,
->  };
->  
-> +const struct file_operations cachefiles_demand_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= cachefiles_daemon_open,
-> +	.release	= cachefiles_daemon_release,
-> +	.write		= cachefiles_daemon_write,
-> +	.llseek		= noop_llseek,
-> +};
-> +
+This is the 4th version of tail-packing inline compressed data feature.
+It tries to inline the tail pcluster right after the inode metadata to
+save data I/O and storage space.
 
-Better to prepare the on-demand read() and poll() first, and then add
-the on-demand cachefiles dev.
+Take Linux 5.10.87 source code as an example:
+linux-5.10.87 (erofs, uncompressed)		972570624
+
+linux-5.10.87 (erofs, lz4hc,9 4k tailpacking)	391696384
+linux-5.10.87 (erofs, lz4hc,9 8k tailpacking)	368807936
+linux-5.10.87 (erofs, lz4hc,9 16k tailpacking)	345649152
+
+linux-5.10.87 (erofs, lz4hc,9 4k vanilla)	416079872
+linux-5.10.87 (erofs, lz4hc,9 8k vanilla)	395493376
+linux-5.10.87 (erofs, lz4hc,9 16k vanilla)	383213568
 
 Thanks,
-Joseph
+Gao Xiang
 
->  struct cachefiles_daemon_cmd {
->  	char name[8];
->  	int (*handler)(struct cachefiles_cache *cache, char *args);
-> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-> index 421423819d63..e0ed811d628d 100644
-> --- a/fs/cachefiles/internal.h
-> +++ b/fs/cachefiles/internal.h
-> @@ -145,6 +145,7 @@ extern int cachefiles_has_space(struct cachefiles_cache *cache,
->   * daemon.c
->   */
->  extern const struct file_operations cachefiles_daemon_fops;
-> +extern const struct file_operations cachefiles_demand_fops;
->  
->  /*
->   * error_inject.c
-> diff --git a/fs/cachefiles/main.c b/fs/cachefiles/main.c
-> index 3f369c6f816d..0a423274d283 100644
-> --- a/fs/cachefiles/main.c
-> +++ b/fs/cachefiles/main.c
-> @@ -39,6 +39,12 @@ static struct miscdevice cachefiles_dev = {
->  	.fops	= &cachefiles_daemon_fops,
->  };
->  
-> +static struct miscdevice cachefiles_demand_dev = {
-> +	.minor	= MISC_DYNAMIC_MINOR,
-> +	.name	= "cachefiles_demand",
-> +	.fops	= &cachefiles_demand_fops,
-> +};
-> +
->  /*
->   * initialise the fs caching module
->   */
-> @@ -52,6 +58,9 @@ static int __init cachefiles_init(void)
->  	ret = misc_register(&cachefiles_dev);
->  	if (ret < 0)
->  		goto error_dev;
-> +	ret = misc_register(&cachefiles_demand_dev);
-> +	if (ret < 0)
-> +		goto error_demand_dev;
->  
->  	/* create an object jar */
->  	ret = -ENOMEM;
-> @@ -68,6 +77,8 @@ static int __init cachefiles_init(void)
->  	return 0;
->  
->  error_object_jar:
-> +	misc_deregister(&cachefiles_demand_dev);
-> +error_demand_dev:
->  	misc_deregister(&cachefiles_dev);
->  error_dev:
->  	cachefiles_unregister_error_injection();
-> @@ -86,6 +97,7 @@ static void __exit cachefiles_exit(void)
->  	pr_info("Unloading\n");
->  
->  	kmem_cache_destroy(cachefiles_object_jar);
-> +	misc_deregister(&cachefiles_demand_dev);
->  	misc_deregister(&cachefiles_dev);
->  	cachefiles_unregister_error_injection();
->  }
+changes since v3:
+ - add comments about z_erofs_lz4_decompress_ctx (Chao);
+ - move cache_strategy together with preload_compressed_pages (Yue);
+ - remove duplicated code about z_idata_size (Yue);
+ - rename z_idata_headlcn to z_tailextent_headlcn since
+   EROFS_GET_BLOCKS_FINDTAIL is a generic flag which is not
+   only used for tail pcluster (Yue).
+
+Gao Xiang (3):
+  erofs: tidy up z_erofs_lz4_decompress
+  erofs: introduce z_erofs_fixup_insize
+  erofs: support unaligned data decompression
+
+Yue Hu (2):
+  erofs: support inline data decompression
+  erofs: add on-disk compressed tail-packing inline support
+
+ fs/erofs/compress.h          |   4 +-
+ fs/erofs/decompressor.c      | 132 +++++++++++++++++++--------------
+ fs/erofs/decompressor_lzma.c |  19 ++---
+ fs/erofs/erofs_fs.h          |  10 ++-
+ fs/erofs/internal.h          |   6 ++
+ fs/erofs/super.c             |   3 +
+ fs/erofs/sysfs.c             |   2 +
+ fs/erofs/zdata.c             | 139 +++++++++++++++++++++++------------
+ fs/erofs/zdata.h             |  24 +++++-
+ fs/erofs/zmap.c              | 113 ++++++++++++++++++++--------
+ 10 files changed, 306 insertions(+), 146 deletions(-)
+
+-- 
+2.24.4
+
