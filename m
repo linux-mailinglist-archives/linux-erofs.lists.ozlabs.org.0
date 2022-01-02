@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 739DF48290E
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 05:01:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBA0C48290B
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 05:01:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JRQCz2YH1z2ywV
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 15:01:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JRQCc55w0z3bWC
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 15:01:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
- helo=out30-130.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
+ helo=out30-131.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com
- (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-131.freemail.mail.aliyun.com
+ (out30-131.freemail.mail.aliyun.com [115.124.30.131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JRQCt2V14z2xX8
- for <linux-erofs@lists.ozlabs.org>; Sun,  2 Jan 2022 15:01:13 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R171e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JRQCQ5tfMz2yg5
+ for <linux-erofs@lists.ozlabs.org>; Sun,  2 Jan 2022 15:00:48 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R471e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0V0Xfdc3_1641096018; 
 Received: from
  e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0V0Xfdc3_1641096018) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 02 Jan 2022 12:00:35 +0800
+ Sun, 02 Jan 2022 12:00:36 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
  Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH v2 4/5] erofs: use meta buffers for xattr operations
-Date: Sun,  2 Jan 2022 12:00:16 +0800
-Message-Id: <20220102040017.51352-5-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 5/5] erofs: use meta buffers for zmap operations
+Date: Sun,  2 Jan 2022 12:00:17 +0800
+Message-Id: <20220102040017.51352-6-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220102040017.51352-1-hsiangkao@linux.alibaba.com>
 References: <20220102040017.51352-1-hsiangkao@linux.alibaba.com>
@@ -55,307 +55,242 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Get rid of old erofs_get_meta_page() within xattr operations by
+Get rid of old erofs_get_meta_page() within zmap operations by
 using on-stack meta buffers in order to prepare subpage and folio
 features.
 
+Finally, erofs_get_meta_page() is useless. Get rid of it!
+
+Reviewed-by: Yue Hu <huyue2@yulong.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/xattr.c | 134 ++++++++++++++---------------------------------
- 1 file changed, 40 insertions(+), 94 deletions(-)
+ fs/erofs/data.c     | 13 -----------
+ fs/erofs/internal.h |  6 ++---
+ fs/erofs/zdata.c    | 23 ++++++++-----------
+ fs/erofs/zmap.c     | 56 +++++++++++++--------------------------------
+ 4 files changed, 28 insertions(+), 70 deletions(-)
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 01c581e93c5f..437ff6e7293d 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -8,33 +8,13 @@
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 6495e16a50a9..187f19f8a9a1 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -9,19 +9,6 @@
+ #include <linux/dax.h>
+ #include <trace/events/erofs.h>
  
- struct xattr_iter {
- 	struct super_block *sb;
+-struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
+-{
+-	struct address_space *const mapping = sb->s_bdev->bd_inode->i_mapping;
 -	struct page *page;
-+	struct erofs_buf buf;
- 	void *kaddr;
+-
+-	page = read_cache_page_gfp(mapping, blkaddr,
+-				   mapping_gfp_constraint(mapping, ~__GFP_FS));
+-	/* should already be PageUptodate */
+-	if (!IS_ERR(page))
+-		lock_page(page);
+-	return page;
+-}
+-
+ void erofs_unmap_metabuf(struct erofs_buf *buf)
+ {
+ 	if (buf->kmap_type == EROFS_KMAP)
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index f1e4eb3025f6..3db494a398b2 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -419,14 +419,14 @@ enum {
+ #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
  
- 	erofs_blk_t blkaddr;
- 	unsigned int ofs;
+ struct erofs_map_blocks {
++	struct erofs_buf buf;
++
+ 	erofs_off_t m_pa, m_la;
+ 	u64 m_plen, m_llen;
+ 
+ 	unsigned short m_deviceid;
+ 	char m_algorithmformat;
+ 	unsigned int m_flags;
+-
+-	struct page *mpage;
  };
  
--static inline void xattr_iter_end(struct xattr_iter *it, bool atomic)
--{
--	/* the only user of kunmap() is 'init_inode_xattrs' */
--	if (!atomic)
--		kunmap(it->page);
--	else
--		kunmap_atomic(it->kaddr);
--
--	unlock_page(it->page);
--	put_page(it->page);
--}
--
--static inline void xattr_iter_end_final(struct xattr_iter *it)
--{
--	if (!it->page)
--		return;
--
--	xattr_iter_end(it, true);
--}
--
- static int init_inode_xattrs(struct inode *inode)
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
-@@ -43,7 +23,6 @@ static int init_inode_xattrs(struct inode *inode)
- 	struct erofs_xattr_ibody_header *ih;
- 	struct super_block *sb;
- 	struct erofs_sb_info *sbi;
--	bool atomic_map;
- 	int ret = 0;
+ /* Flags used by erofs_map_blocks_flatmode() */
+@@ -474,7 +474,7 @@ struct erofs_map_dev {
  
- 	/* the most case is that xattrs of this inode are initialized. */
-@@ -91,26 +70,23 @@ static int init_inode_xattrs(struct inode *inode)
+ /* data.c */
+ extern const struct file_operations erofs_file_fops;
+-struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr);
++void erofs_unmap_metabuf(struct erofs_buf *buf);
+ void erofs_put_metabuf(struct erofs_buf *buf);
+ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+ 			 erofs_blk_t blkaddr, enum erofs_kmap_type type);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 49da3931b2e3..498b7666efe8 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -698,20 +698,18 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		goto err_out;
  
- 	sb = inode->i_sb;
- 	sbi = EROFS_SB(sb);
-+	it.buf = __EROFS_BUF_INITIALIZER;
- 	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
- 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
+ 	if (z_erofs_is_inline_pcluster(clt->pcl)) {
+-		struct page *mpage;
++		void *mp;
  
--	it.page = erofs_get_meta_page(sb, it.blkaddr);
--	if (IS_ERR(it.page)) {
--		ret = PTR_ERR(it.page);
-+	/* read in shared xattr array (non-atomic, see kmalloc below) */
-+	it.kaddr = erofs_read_metabuf(&it.buf, sb, it.blkaddr, EROFS_KMAP);
-+	if (IS_ERR(it.kaddr)) {
-+		ret = PTR_ERR(it.kaddr);
- 		goto out_unlock;
- 	}
- 
--	/* read in shared xattr array (non-atomic, see kmalloc below) */
--	it.kaddr = kmap(it.page);
--	atomic_map = false;
--
- 	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
--
- 	vi->xattr_shared_count = ih->h_shared_count;
- 	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
- 						sizeof(uint), GFP_KERNEL);
- 	if (!vi->xattr_shared_xattrs) {
--		xattr_iter_end(&it, atomic_map);
-+		erofs_put_metabuf(&it.buf);
- 		ret = -ENOMEM;
- 		goto out_unlock;
- 	}
-@@ -122,25 +98,22 @@ static int init_inode_xattrs(struct inode *inode)
- 		if (it.ofs >= EROFS_BLKSIZ) {
- 			/* cannot be unaligned */
- 			DBG_BUGON(it.ofs != EROFS_BLKSIZ);
--			xattr_iter_end(&it, atomic_map);
- 
--			it.page = erofs_get_meta_page(sb, ++it.blkaddr);
--			if (IS_ERR(it.page)) {
-+			it.kaddr = erofs_read_metabuf(&it.buf, sb, ++it.blkaddr,
-+						      EROFS_KMAP);
-+			if (IS_ERR(it.kaddr)) {
- 				kfree(vi->xattr_shared_xattrs);
- 				vi->xattr_shared_xattrs = NULL;
--				ret = PTR_ERR(it.page);
-+				ret = PTR_ERR(it.kaddr);
- 				goto out_unlock;
- 			}
--
--			it.kaddr = kmap_atomic(it.page);
--			atomic_map = true;
- 			it.ofs = 0;
+-		mpage = erofs_get_meta_page(inode->i_sb,
+-					    erofs_blknr(map->m_pa));
+-		if (IS_ERR(mpage)) {
+-			err = PTR_ERR(mpage);
++		mp = erofs_read_metabuf(&fe->map.buf, inode->i_sb,
++					erofs_blknr(map->m_pa), EROFS_NO_KMAP);
++		if (IS_ERR(mp)) {
++			err = PTR_ERR(mp);
+ 			erofs_err(inode->i_sb,
+ 				  "failed to get inline page, err %d", err);
+ 			goto err_out;
  		}
- 		vi->xattr_shared_xattrs[i] =
- 			le32_to_cpu(*(__le32 *)(it.kaddr + it.ofs));
- 		it.ofs += sizeof(__le32);
+-		/* TODO: new subpage feature will get rid of it */
+-		unlock_page(mpage);
+-
+-		WRITE_ONCE(clt->pcl->compressed_pages[0], mpage);
++		get_page(fe->map.buf.page);
++		WRITE_ONCE(clt->pcl->compressed_pages[0], fe->map.buf.page);
+ 		clt->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
+ 	} else {
+ 		/* preload all compressed pages (can change mode if needed) */
+@@ -1529,9 +1527,7 @@ static int z_erofs_readpage(struct file *file, struct page *page)
+ 	if (err)
+ 		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
+ 
+-	if (f.map.mpage)
+-		put_page(f.map.mpage);
+-
++	erofs_put_metabuf(&f.map.buf);
+ 	erofs_release_pages(&pagepool);
+ 	return err;
+ }
+@@ -1576,8 +1572,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 
+ 	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
+ 			 z_erofs_get_sync_decompress_policy(sbi, nr_pages));
+-	if (f.map.mpage)
+-		put_page(f.map.mpage);
++	erofs_put_metabuf(&f.map.buf);
+ 	erofs_release_pages(&pagepool);
+ }
+ 
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 1037ac17b7a6..18d7fd1a5064 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -35,7 +35,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	struct super_block *const sb = inode->i_sb;
+ 	int err, headnr;
+ 	erofs_off_t pos;
+-	struct page *page;
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 	void *kaddr;
+ 	struct z_erofs_map_header *h;
+ 
+@@ -61,14 +61,13 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 
+ 	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
+ 		    vi->xattr_isize, 8);
+-	page = erofs_get_meta_page(sb, erofs_blknr(pos));
+-	if (IS_ERR(page)) {
+-		err = PTR_ERR(page);
++	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos),
++				   EROFS_KMAP_ATOMIC);
++	if (IS_ERR(kaddr)) {
++		err = PTR_ERR(kaddr);
+ 		goto out_unlock;
  	}
--	xattr_iter_end(&it, atomic_map);
-+	erofs_put_metabuf(&it.buf);
  
- 	/* paired with smp_mb() at the beginning of the function. */
- 	smp_mb();
-@@ -172,19 +145,11 @@ static inline int xattr_iter_fixup(struct xattr_iter *it)
- 	if (it->ofs < EROFS_BLKSIZ)
- 		return 0;
+-	kaddr = kmap_atomic(page);
+-
+ 	h = kaddr + erofs_blkoff(pos);
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
+ 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+@@ -101,20 +100,19 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto unmap_done;
+ 	}
+ unmap_done:
+-	kunmap_atomic(kaddr);
+-	unlock_page(page);
+-	put_page(page);
++	erofs_put_metabuf(&buf);
+ 	if (err)
+ 		goto out_unlock;
  
--	xattr_iter_end(it, true);
+ 	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
+-		struct erofs_map_blocks map = { .mpage = NULL };
++		struct erofs_map_blocks map = {
++			.buf = __EROFS_BUF_INITIALIZER
++		};
+ 
+ 		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
+ 		err = z_erofs_do_map_blocks(inode, &map,
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
+-		if (map.mpage)
+-			put_page(map.mpage);
++		erofs_put_metabuf(&map.buf);
+ 
+ 		if (!map.m_plen ||
+ 		    erofs_blkoff(map.m_pa) + map.m_plen > EROFS_BLKSIZ) {
+@@ -151,31 +149,11 @@ static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
+ 				  erofs_blk_t eblk)
+ {
+ 	struct super_block *const sb = m->inode->i_sb;
+-	struct erofs_map_blocks *const map = m->map;
+-	struct page *mpage = map->mpage;
 -
- 	it->blkaddr += erofs_blknr(it->ofs);
--
--	it->page = erofs_get_meta_page(it->sb, it->blkaddr);
--	if (IS_ERR(it->page)) {
--		int err = PTR_ERR(it->page);
--
--		it->page = NULL;
--		return err;
+-	if (mpage) {
+-		if (mpage->index == eblk) {
+-			if (!m->kaddr)
+-				m->kaddr = kmap_atomic(mpage);
+-			return 0;
+-		}
+ 
+-		if (m->kaddr) {
+-			kunmap_atomic(m->kaddr);
+-			m->kaddr = NULL;
+-		}
+-		put_page(mpage);
 -	}
 -
--	it->kaddr = kmap_atomic(it->page);
-+	it->kaddr = erofs_read_metabuf(&it->buf, it->sb, it->blkaddr,
-+				       EROFS_KMAP_ATOMIC);
-+	if (IS_ERR(it->kaddr))
-+		return PTR_ERR(it->kaddr);
- 	it->ofs = erofs_blkoff(it->ofs);
+-	mpage = erofs_get_meta_page(sb, eblk);
+-	if (IS_ERR(mpage)) {
+-		map->mpage = NULL;
+-		return PTR_ERR(mpage);
+-	}
+-	m->kaddr = kmap_atomic(mpage);
+-	unlock_page(mpage);
+-	map->mpage = mpage;
++	m->kaddr = erofs_read_metabuf(&m->map->buf, sb, eblk,
++				      EROFS_KMAP_ATOMIC);
++	if (IS_ERR(m->kaddr))
++		return PTR_ERR(m->kaddr);
  	return 0;
  }
-@@ -207,11 +172,10 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
- 	it->blkaddr = erofs_blknr(iloc(sbi, vi->nid) + inline_xattr_ofs);
- 	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
  
--	it->page = erofs_get_meta_page(inode->i_sb, it->blkaddr);
--	if (IS_ERR(it->page))
--		return PTR_ERR(it->page);
--
--	it->kaddr = kmap_atomic(it->page);
-+	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
-+				       EROFS_KMAP_ATOMIC);
-+	if (IS_ERR(it->kaddr))
-+		return PTR_ERR(it->kaddr);
- 	return vi->xattr_isize - xattr_header_sz;
- }
- 
-@@ -272,7 +236,7 @@ static int xattr_foreach(struct xattr_iter *it,
- 			it->ofs = 0;
- 		}
- 
--		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
-+		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
- 			      entry.e_name_len - processed);
- 
- 		/* handle name */
-@@ -307,7 +271,7 @@ static int xattr_foreach(struct xattr_iter *it,
- 			it->ofs = 0;
- 		}
- 
--		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
-+		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
- 			      value_sz - processed);
- 		op->value(it, processed, it->kaddr + it->ofs, slice);
- 		it->ofs += slice;
-@@ -386,8 +350,6 @@ static int inline_getxattr(struct inode *inode, struct getxattr_iter *it)
- 		if (ret != -ENOATTR)
- 			break;
+@@ -711,8 +689,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 			map->m_flags |= EROFS_MAP_FULL_MAPPED;
  	}
--	xattr_iter_end_final(&it->it);
--
- 	return ret ? ret : it->buffer_size;
- }
+ unmap_out:
+-	if (m.kaddr)
+-		kunmap_atomic(m.kaddr);
++	erofs_unmap_metabuf(&m.map->buf);
  
-@@ -404,26 +366,16 @@ static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
- 			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
+ out:
+ 	erofs_dbg("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
+@@ -759,8 +736,7 @@ static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
+ 	struct erofs_map_blocks map = { .m_la = offset };
  
- 		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
--
--		if (!i || blkaddr != it->it.blkaddr) {
--			if (i)
--				xattr_iter_end(&it->it, true);
--
--			it->it.page = erofs_get_meta_page(sb, blkaddr);
--			if (IS_ERR(it->it.page))
--				return PTR_ERR(it->it.page);
--
--			it->it.kaddr = kmap_atomic(it->it.page);
--			it->it.blkaddr = blkaddr;
--		}
-+		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-+						  EROFS_KMAP_ATOMIC);
-+		if (IS_ERR(it->it.kaddr))
-+			return PTR_ERR(it->it.kaddr);
-+		it->it.blkaddr = blkaddr;
- 
- 		ret = xattr_foreach(&it->it, &find_xattr_handlers, NULL);
- 		if (ret != -ENOATTR)
- 			break;
- 	}
--	if (vi->xattr_shared_count)
--		xattr_iter_end_final(&it->it);
--
- 	return ret ? ret : it->buffer_size;
- }
- 
-@@ -452,10 +404,11 @@ int erofs_getxattr(struct inode *inode, int index,
+ 	ret = z_erofs_map_blocks_iter(inode, &map, EROFS_GET_BLOCKS_FIEMAP);
+-	if (map.mpage)
+-		put_page(map.mpage);
++	erofs_put_metabuf(&map.buf);
+ 	if (ret < 0)
  		return ret;
  
- 	it.index = index;
--
- 	it.name.len = strlen(name);
- 	if (it.name.len > EROFS_NAME_LEN)
- 		return -ERANGE;
-+
-+	it.it.buf = __EROFS_BUF_INITIALIZER;
- 	it.name.name = name;
- 
- 	it.buffer = buffer;
-@@ -465,6 +418,7 @@ int erofs_getxattr(struct inode *inode, int index,
- 	ret = inline_getxattr(inode, &it);
- 	if (ret == -ENOATTR)
- 		ret = shared_getxattr(inode, &it);
-+	erofs_put_metabuf(&it.it.buf);
- 	return ret;
- }
- 
-@@ -607,7 +561,6 @@ static int inline_listxattr(struct listxattr_iter *it)
- 		if (ret)
- 			break;
- 	}
--	xattr_iter_end_final(&it->it);
- 	return ret ? ret : it->buffer_ofs;
- }
- 
-@@ -625,25 +578,16 @@ static int shared_listxattr(struct listxattr_iter *it)
- 			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
- 
- 		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
--		if (!i || blkaddr != it->it.blkaddr) {
--			if (i)
--				xattr_iter_end(&it->it, true);
--
--			it->it.page = erofs_get_meta_page(sb, blkaddr);
--			if (IS_ERR(it->it.page))
--				return PTR_ERR(it->it.page);
--
--			it->it.kaddr = kmap_atomic(it->it.page);
--			it->it.blkaddr = blkaddr;
--		}
-+		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-+						  EROFS_KMAP_ATOMIC);
-+		if (IS_ERR(it->it.kaddr))
-+			return PTR_ERR(it->it.kaddr);
-+		it->it.blkaddr = blkaddr;
- 
- 		ret = xattr_foreach(&it->it, &list_xattr_handlers, NULL);
- 		if (ret)
- 			break;
- 	}
--	if (vi->xattr_shared_count)
--		xattr_iter_end_final(&it->it);
--
- 	return ret ? ret : it->buffer_ofs;
- }
- 
-@@ -659,6 +603,7 @@ ssize_t erofs_listxattr(struct dentry *dentry,
- 	if (ret)
- 		return ret;
- 
-+	it.it.buf = __EROFS_BUF_INITIALIZER;
- 	it.dentry = dentry;
- 	it.buffer = buffer;
- 	it.buffer_size = buffer_size;
-@@ -667,9 +612,10 @@ ssize_t erofs_listxattr(struct dentry *dentry,
- 	it.it.sb = dentry->d_sb;
- 
- 	ret = inline_listxattr(&it);
--	if (ret < 0 && ret != -ENOATTR)
--		return ret;
--	return shared_listxattr(&it);
-+	if (ret >= 0 || ret == -ENOATTR)
-+		ret = shared_listxattr(&it);
-+	erofs_put_metabuf(&it.it.buf);
-+	return ret;
- }
- 
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
 -- 
 2.24.4
 
