@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C121848290C
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 05:01:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B43E48290D
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 05:01:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JRQCd5L7yz2ywp
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 15:01:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JRQCg5BGnz3081
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 15:01:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
+ helo=out30-131.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+Received: from out30-131.freemail.mail.aliyun.com
+ (out30-131.freemail.mail.aliyun.com [115.124.30.131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JRQCQ0snZz2yXM
- for <linux-erofs@lists.ozlabs.org>; Sun,  2 Jan 2022 15:00:47 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R711e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JRQCS5VBhz2yb9
+ for <linux-erofs@lists.ozlabs.org>; Sun,  2 Jan 2022 15:00:49 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R681e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=6; SR=0; TI=SMTPD_---0V0Xfdc3_1641096018; 
 Received: from
  e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0V0Xfdc3_1641096018) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 02 Jan 2022 12:00:29 +0800
+ Sun, 02 Jan 2022 12:00:32 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
  Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH v2 1/5] erofs: introduce meta buffer operations
-Date: Sun,  2 Jan 2022 12:00:13 +0800
-Message-Id: <20220102040017.51352-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 2/5] erofs: use meta buffers for inode operations
+Date: Sun,  2 Jan 2022 12:00:14 +0800
+Message-Id: <20220102040017.51352-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220102040017.51352-1-hsiangkao@linux.alibaba.com>
 References: <20220102040017.51352-1-hsiangkao@linux.alibaba.com>
@@ -55,213 +55,212 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In order to support subpage and folio for all uncompressed files,
-introduce meta buffer descriptors, which can be effectively stored
-on stack, in place of meta page operations.
+Get rid of old erofs_get_meta_page() within inode operations by
+using on-stack meta buffers in order to prepare subpage and folio
+features.
 
-This converts the uncompressed data path to meta buffers.
-
+Reviewed-by: Yue Hu <huyue2@yulong.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c     | 97 +++++++++++++++++++++++++++++++++++----------
- fs/erofs/internal.h | 13 ++++++
- 2 files changed, 89 insertions(+), 21 deletions(-)
+ fs/erofs/inode.c    | 68 +++++++++++++++++++++------------------------
+ fs/erofs/internal.h |  3 ++
+ 2 files changed, 35 insertions(+), 36 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 4f98c76ec043..6495e16a50a9 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -22,6 +22,56 @@ struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr)
- 	return page;
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 2345f1de438e..ff62f84f47d3 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -13,8 +13,8 @@
+  * the inode payload page if it's an extended inode) in order to fill
+  * inline data if possible.
+  */
+-static struct page *erofs_read_inode(struct inode *inode,
+-				     unsigned int *ofs)
++static void *erofs_read_inode(struct erofs_buf *buf,
++			      struct inode *inode, unsigned int *ofs)
+ {
+ 	struct super_block *sb = inode->i_sb;
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+@@ -22,7 +22,7 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 	const erofs_off_t inode_loc = iloc(sbi, vi->nid);
+ 
+ 	erofs_blk_t blkaddr, nblks = 0;
+-	struct page *page;
++	void *kaddr;
+ 	struct erofs_inode_compact *dic;
+ 	struct erofs_inode_extended *die, *copied = NULL;
+ 	unsigned int ifmt;
+@@ -34,14 +34,14 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
+ 		  __func__, vi->nid, *ofs, blkaddr);
+ 
+-	page = erofs_get_meta_page(sb, blkaddr);
+-	if (IS_ERR(page)) {
++	kaddr = erofs_read_metabuf(buf, sb, blkaddr, EROFS_KMAP);
++	if (IS_ERR(kaddr)) {
+ 		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+-			  vi->nid, PTR_ERR(page));
+-		return page;
++			  vi->nid, PTR_ERR(kaddr));
++		return kaddr;
+ 	}
+ 
+-	dic = page_address(page) + *ofs;
++	dic = kaddr + *ofs;
+ 	ifmt = le16_to_cpu(dic->i_format);
+ 
+ 	if (ifmt & ~EROFS_I_ALL) {
+@@ -62,12 +62,12 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 	switch (erofs_inode_version(ifmt)) {
+ 	case EROFS_INODE_LAYOUT_EXTENDED:
+ 		vi->inode_isize = sizeof(struct erofs_inode_extended);
+-		/* check if the inode acrosses page boundary */
+-		if (*ofs + vi->inode_isize <= PAGE_SIZE) {
++		/* check if the extended inode acrosses block boundary */
++		if (*ofs + vi->inode_isize <= EROFS_BLKSIZ) {
+ 			*ofs += vi->inode_isize;
+ 			die = (struct erofs_inode_extended *)dic;
+ 		} else {
+-			const unsigned int gotten = PAGE_SIZE - *ofs;
++			const unsigned int gotten = EROFS_BLKSIZ - *ofs;
+ 
+ 			copied = kmalloc(vi->inode_isize, GFP_NOFS);
+ 			if (!copied) {
+@@ -75,18 +75,16 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 				goto err_out;
+ 			}
+ 			memcpy(copied, dic, gotten);
+-			unlock_page(page);
+-			put_page(page);
+-
+-			page = erofs_get_meta_page(sb, blkaddr + 1);
+-			if (IS_ERR(page)) {
+-				erofs_err(sb, "failed to get inode payload page (nid: %llu), err %ld",
+-					  vi->nid, PTR_ERR(page));
++			kaddr = erofs_read_metabuf(buf, sb, blkaddr + 1,
++						   EROFS_KMAP);
++			if (IS_ERR(kaddr)) {
++				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %ld",
++					  vi->nid, PTR_ERR(kaddr));
+ 				kfree(copied);
+-				return page;
++				return kaddr;
+ 			}
+ 			*ofs = vi->inode_isize - gotten;
+-			memcpy((u8 *)copied + gotten, page_address(page), *ofs);
++			memcpy((u8 *)copied + gotten, kaddr, *ofs);
+ 			die = copied;
+ 		}
+ 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+@@ -200,7 +198,7 @@ static struct page *erofs_read_inode(struct inode *inode,
+ 		inode->i_blocks = roundup(inode->i_size, EROFS_BLKSIZ) >> 9;
+ 	else
+ 		inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+-	return page;
++	return kaddr;
+ 
+ bogusimode:
+ 	erofs_err(inode->i_sb, "bogus i_mode (%o) @ nid %llu",
+@@ -209,12 +207,11 @@ static struct page *erofs_read_inode(struct inode *inode,
+ err_out:
+ 	DBG_BUGON(1);
+ 	kfree(copied);
+-	unlock_page(page);
+-	put_page(page);
++	erofs_put_metabuf(buf);
+ 	return ERR_PTR(err);
  }
  
-+void erofs_unmap_metabuf(struct erofs_buf *buf)
-+{
-+	if (buf->kmap_type == EROFS_KMAP)
-+		kunmap(buf->page);
-+	else if (buf->kmap_type == EROFS_KMAP_ATOMIC)
-+		kunmap_atomic(buf->base);
-+	buf->kmap_type = EROFS_NO_KMAP;
-+}
-+
-+void erofs_put_metabuf(struct erofs_buf *buf)
-+{
-+	if (!buf->page)
-+		return;
-+	erofs_unmap_metabuf(buf);
-+	put_page(buf->page);
-+	buf->page = NULL;
-+}
-+
-+void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
-+			erofs_blk_t blkaddr, enum erofs_kmap_type type)
-+{
-+	struct address_space *const mapping = sb->s_bdev->bd_inode->i_mapping;
-+	erofs_off_t offset = blknr_to_addr(blkaddr);
-+	pgoff_t index = offset >> PAGE_SHIFT;
-+	struct page *page = buf->page;
-+
-+	if (!page || page->index != index) {
-+		erofs_put_metabuf(buf);
-+		page = read_cache_page_gfp(mapping, index,
-+				mapping_gfp_constraint(mapping, ~__GFP_FS));
-+		if (IS_ERR(page))
-+			return page;
-+		/* should already be PageUptodate, no need to lock page */
-+		buf->page = page;
-+	}
-+	if (buf->kmap_type == EROFS_NO_KMAP) {
-+		if (type == EROFS_KMAP)
-+			buf->base = kmap(page);
-+		else if (type == EROFS_KMAP_ATOMIC)
-+			buf->base = kmap_atomic(page);
-+		buf->kmap_type = type;
-+	} else if (buf->kmap_type != type) {
-+		DBG_BUGON(1);
-+		return ERR_PTR(-EFAULT);
-+	}
-+	if (type == EROFS_NO_KMAP)
-+		return NULL;
-+	return buf->base + (offset & ~PAGE_MASK);
-+}
-+
- static int erofs_map_blocks_flatmode(struct inode *inode,
- 				     struct erofs_map_blocks *map,
- 				     int flags)
-@@ -31,7 +81,7 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+-static int erofs_fill_symlink(struct inode *inode, void *data,
++static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+ 			      unsigned int m_pofs)
+ {
  	struct erofs_inode *vi = EROFS_I(inode);
- 	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
+@@ -222,7 +219,7 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
  
--	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	nblocks = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
- 	lastblk = nblocks - tailendpacking;
+ 	/* if it cannot be handled with fast symlink scheme */
+ 	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
+-	    inode->i_size >= PAGE_SIZE) {
++	    inode->i_size >= EROFS_BLKSIZ) {
+ 		inode->i_op = &erofs_symlink_iops;
+ 		return 0;
+ 	}
+@@ -232,8 +229,8 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
+ 		return -ENOMEM;
  
- 	/* there is no hole in flatmode */
-@@ -72,10 +122,11 @@ static int erofs_map_blocks(struct inode *inode,
- 	struct super_block *sb = inode->i_sb;
+ 	m_pofs += vi->xattr_isize;
+-	/* inline symlink data shouldn't cross page boundary as well */
+-	if (m_pofs + inode->i_size > PAGE_SIZE) {
++	/* inline symlink data shouldn't cross block boundary */
++	if (m_pofs + inode->i_size > EROFS_BLKSIZ) {
+ 		kfree(lnk);
+ 		erofs_err(inode->i_sb,
+ 			  "inline data cross block boundary @ nid %llu",
+@@ -241,8 +238,7 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
+ 		DBG_BUGON(1);
+ 		return -EFSCORRUPTED;
+ 	}
+-
+-	memcpy(lnk, data + m_pofs, inode->i_size);
++	memcpy(lnk, kaddr + m_pofs, inode->i_size);
+ 	lnk[inode->i_size] = '\0';
+ 
+ 	inode->i_link = lnk;
+@@ -253,16 +249,17 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
+ static int erofs_fill_inode(struct inode *inode, int isdir)
+ {
  	struct erofs_inode *vi = EROFS_I(inode);
- 	struct erofs_inode_chunk_index *idx;
 -	struct page *page;
 +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 	u64 chunknr;
- 	unsigned int unit;
- 	erofs_off_t pos;
 +	void *kaddr;
+ 	unsigned int ofs;
  	int err = 0;
  
- 	trace_erofs_map_blocks_enter(inode, map, flags);
-@@ -101,9 +152,9 @@ static int erofs_map_blocks(struct inode *inode,
- 	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
- 		    vi->xattr_isize, unit) + unit * chunknr;
+ 	trace_erofs_fill_inode(inode, isdir);
  
--	page = erofs_get_meta_page(inode->i_sb, erofs_blknr(pos));
--	if (IS_ERR(page)) {
--		err = PTR_ERR(page);
-+	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos), EROFS_KMAP);
-+	if (IS_ERR(kaddr)) {
-+		err = PTR_ERR(kaddr);
- 		goto out;
- 	}
- 	map->m_la = chunknr << vi->chunkbits;
-@@ -112,7 +163,7 @@ static int erofs_map_blocks(struct inode *inode,
+ 	/* read inode base data from disk */
+-	page = erofs_read_inode(inode, &ofs);
+-	if (IS_ERR(page))
+-		return PTR_ERR(page);
++	kaddr = erofs_read_inode(&buf, inode, &ofs);
++	if (IS_ERR(kaddr))
++		return PTR_ERR(kaddr);
  
- 	/* handle block map */
- 	if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
--		__le32 *blkaddr = page_address(page) + erofs_blkoff(pos);
-+		__le32 *blkaddr = kaddr + erofs_blkoff(pos);
- 
- 		if (le32_to_cpu(*blkaddr) == EROFS_NULL_ADDR) {
- 			map->m_flags = 0;
-@@ -123,7 +174,7 @@ static int erofs_map_blocks(struct inode *inode,
- 		goto out_unlock;
- 	}
- 	/* parse chunk indexes */
--	idx = page_address(page) + erofs_blkoff(pos);
-+	idx = kaddr + erofs_blkoff(pos);
- 	switch (le32_to_cpu(idx->blkaddr)) {
- 	case EROFS_NULL_ADDR:
- 		map->m_flags = 0;
-@@ -136,8 +187,7 @@ static int erofs_map_blocks(struct inode *inode,
+ 	/* setup the new inode */
+ 	switch (inode->i_mode & S_IFMT) {
+@@ -278,7 +275,7 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
+ 		inode->i_fop = &erofs_dir_fops;
  		break;
- 	}
+ 	case S_IFLNK:
+-		err = erofs_fill_symlink(inode, page_address(page), ofs);
++		err = erofs_fill_symlink(inode, kaddr, ofs);
+ 		if (err)
+ 			goto out_unlock;
+ 		inode_nohighmem(inode);
+@@ -302,8 +299,7 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
+ 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
+ 
  out_unlock:
 -	unlock_page(page);
 -	put_page(page);
 +	erofs_put_metabuf(&buf);
- out:
- 	if (!err)
- 		map->m_llen = map->m_plen;
-@@ -226,16 +276,16 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	}
+ 	return err;
+ }
  
- 	if (map.m_flags & EROFS_MAP_META) {
--		struct page *ipage;
-+		void *ptr;
-+		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 
- 		iomap->type = IOMAP_INLINE;
--		ipage = erofs_get_meta_page(inode->i_sb,
--					    erofs_blknr(mdev.m_pa));
--		if (IS_ERR(ipage))
--			return PTR_ERR(ipage);
--		iomap->inline_data = page_address(ipage) +
--					erofs_blkoff(mdev.m_pa);
--		iomap->private = ipage;
-+		ptr = erofs_read_metabuf(&buf, inode->i_sb,
-+					 erofs_blknr(mdev.m_pa), EROFS_KMAP);
-+		if (IS_ERR(ptr))
-+			return PTR_ERR(ptr);
-+		iomap->inline_data = ptr + erofs_blkoff(mdev.m_pa);
-+		iomap->private = buf.base;
- 	} else {
- 		iomap->type = IOMAP_MAPPED;
- 		iomap->addr = mdev.m_pa;
-@@ -246,12 +296,17 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
- 		ssize_t written, unsigned int flags, struct iomap *iomap)
- {
--	struct page *ipage = iomap->private;
-+	void *ptr = iomap->private;
-+
-+	if (ptr) {
-+		struct erofs_buf buf = {
-+			.page = kmap_to_page(ptr),
-+			.base = ptr,
-+			.kmap_type = EROFS_KMAP,
-+		};
- 
--	if (ipage) {
- 		DBG_BUGON(iomap->type != IOMAP_INLINE);
--		unlock_page(ipage);
--		put_page(ipage);
-+		erofs_put_metabuf(&buf);
- 	} else {
- 		DBG_BUGON(iomap->type == IOMAP_INLINE);
- 	}
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index fca3747d97be..7053f1c4171d 100644
+index 7053f1c4171d..f1e4eb3025f6 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -251,6 +251,19 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- #error erofs cannot be used in this platform
- #endif
- 
-+enum erofs_kmap_type {
-+	EROFS_NO_KMAP,		/* don't map the buffer */
-+	EROFS_KMAP,		/* use kmap() to map the buffer */
-+	EROFS_KMAP_ATOMIC,	/* use kmap_atomic() to map the buffer */
-+};
-+
-+struct erofs_buf {
-+	struct page *page;
-+	void *base;
-+	enum erofs_kmap_type kmap_type;
-+};
-+#define __EROFS_BUF_INITIALIZER	((struct erofs_buf){ .page = NULL })
-+
- #define ROOT_NID(sb)		((sb)->root_nid)
- 
- #define erofs_blknr(addr)       ((addr) / EROFS_BLKSIZ)
+@@ -475,6 +475,9 @@ struct erofs_map_dev {
+ /* data.c */
+ extern const struct file_operations erofs_file_fops;
+ struct page *erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr);
++void erofs_put_metabuf(struct erofs_buf *buf);
++void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
++			 erofs_blk_t blkaddr, enum erofs_kmap_type type);
+ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
+ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 		 u64 start, u64 len);
 -- 
 2.24.4
 
