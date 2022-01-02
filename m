@@ -1,43 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AB36482A8F
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 09:16:45 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D9D482C6A
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 18:36:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JRWtg21Kbz2ynk
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jan 2022 19:16:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JRmJ83N3tz2yn9
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jan 2022 04:36:08 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=xvozbds.cn header.i=support-amazon.jp@xvozbds.cn header.a=rsa-sha256 header.s=default header.b=mQQqcvb1;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.88.44.36;
- helo=out4436.biz.mail.alibaba.com; envelope-from=bo.liu@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com
- [47.88.44.36])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=xvozbds.cn (client-ip=106.75.67.128; helo=mail.xvozbds.cn;
+ envelope-from=support-amazon.jp@xvozbds.cn; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=xvozbds.cn header.i=support-amazon.jp@xvozbds.cn
+ header.a=rsa-sha256 header.s=default header.b=mQQqcvb1; 
+ dkim-atps=neutral
+X-Greylist: delayed 627 seconds by postgrey-1.36 at boromir;
+ Mon, 03 Jan 2022 04:36:00 AEDT
+Received: from mail.xvozbds.cn (xvozbds.cn [106.75.67.128])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JRWtc15Qyz2xMF
- for <linux-erofs@lists.ozlabs.org>; Sun,  2 Jan 2022 19:16:39 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R131e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=bo.liu@linux.alibaba.com;
- NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0V0YVqdJ_1641111349; 
-Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com
- fp:SMTPD_---0V0YVqdJ_1641111349) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 02 Jan 2022 16:15:53 +0800
-Date: Sun, 2 Jan 2022 16:15:49 +0800
-From: Liu Bo <bo.liu@linux.alibaba.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH v3 3/5] erofs: use meta buffers for super operations
-Message-ID: <20220102081548.GA19871@rsjd01523.et2sqa>
-References: <20220102040017.51352-4-hsiangkao@linux.alibaba.com>
- <20220102081317.109797-1-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220102081317.109797-1-hsiangkao@linux.alibaba.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JRmJ06Jx4z2xBf
+ for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jan 2022 04:35:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=xvozbds.cn; 
+ h=Date:From:To:Subject:Message-ID:Mime-Version:Content-Type;
+ i=support-amazon.jp@xvozbds.cn;
+ bh=wejlH8XVURwkHgsF3R8CDjOKeb44UuqHhNKm2hAM+e0=;
+ b=mQQqcvb1+m6Fsu1zbEzbPzpcrjmLIaGZzrkjGFQcWR8k2jFIpIMA/LQnfhjNnJ5mFPUo+P5dsQzC
+ 6MxVA7+JkFxCRQlpQzIsiKeNLA88Q5dThEtuYkidy3LIJSdE/PrM0ygqWSbQJqkmzpIYIZzDz6sE
+ oRgF8hCqVUA8AXeN5cE=
+Date: Mon, 3 Jan 2022 01:17:15 +0800
+From: "Amazon" <support-amazon.jp@xvozbds.cn>
+To: <linux-erofs@lists.ozlabs.org>
+Subject: =?utf-8?B?44CQQW1hb3pu44CR5YCL5Lq65oOF5aCx44KS5pu05paw44GX44Gm44GP44Gg44GV?=
+ =?utf-8?B?44GE44CC?=
+Message-ID: <20220103011720282054@xvozbds.cn>
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="=====003_Dragon474401666483_====="
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,239 +53,177 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: bo.liu@linux.alibaba.com
-Cc: Yue Hu <huyue2@yulong.com>, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sun, Jan 02, 2022 at 04:13:17PM +0800, Gao Xiang wrote:
-> Get rid of old erofs_get_meta_page() within super operations by
-> using on-stack meta buffers in order to prepare subpage and folio
-> features.
->
+This is a multi-part message in MIME format.
 
-Reviewed-by: Liu Bo <bo.liu@linux.alibaba.com>
+--=====003_Dragon474401666483_=====
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
+DQoNCg0K5bmz57Sg44Gv44CBQW1hem9u44KS44GU5Yip55So44GE44Gf44Gg44GN44CB6Kqg44Gr
+44GC44KK44GM44Go44GG44GU44GW44GE44G+44GZ44CCDQoNCuiqsOOBi+OBjOOBguOBquOBn+OB
+rkFtYXpvbuOCouOCq+OCpuODs+ODiOOBq+ODreOCsOOCpOODs+OBl+OBpuWVhuWTgeOCkuizvOWF
+peOBl+OCiOOBhuOBqOOBl+OBpuOBhOOCi+OBk+OBqOOBq+azqOaEj+OBl+OBpuOBj+OBoOOBleOB
+hOOAgg0K44Kv44Os44K444OD44OI44Kr44O844OJ44Gu55uX6Zuj44KS6Ziy44GQ44Gf44KB44CB
+44Ot44Kw44Kk44Oz5b6M44GZ44GQ44Gr5oOF5aCx44KS5pu05paw44GX44Gm44GP44Gg44GV44GE
+44CCDQrjgYLjgarjgZ/jgYwyNOaZgumWk+S7peWGheOBq+eiuuiqjeOBp+OBjeOBquOBhOWgtOWQ
+iOOBr+eUs+OBl+ios+OBguOCiuOBvuOBm+OCk+OAguOBguOBquOBn+OBruiyoeeUo+OBruWuieWF
+qOOBruOBn+OCgeOBq+OAgeOBk+OBruOCouOCq+OCpuODs+ODiOOBruS9v+eUqOOCkuWItumZkOOB
+l+OBvuOBmeOAguOBguOCieOBi+OBmOOCgeOBlOeQhuino+OBj+OBoOOBleOBhOOAgg0K5pys5Lu2
+44Gr44Gk44GE44Gm44GU6L+35oOR44KS44GK44GL44GR44GX44G+44GX44Gf44GT44Go44KS44GK
+6Kmr44Gz55Sz44GX5LiK44GS44G+44GZ44CCDQrkvZXljZLjgIHjgojjgo3jgZfjgY/jgYrpoZjj
+gYTnlLPjgZfkuIrjgZLjgb7jgZnjgIINCg0KDQoNCuOCouOCq+OCpuODs+ODiOaDheWgseOCkuab
+tOaWsOOBmeOCiw0KDQoNCg0KQW1hem9u44Gu44G+44Gf44Gu44GU5Yip55So44KS44GK5b6F44Gh
+44GX44Gm44GK44KK44G+44GZ44CCDQoNCg0KDQrCqSAxOTk2LTIwMjIsIEFtYXpvbi4gSW5jLiBv
+ciBpdHMgYWZmaWxpYXRlcw0KDQoNCg0KDQog
 
-> Reviewed-by: Yue Hu <huyue2@yulong.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
-> changes since v2:
->  - add a missing kfree(buffer);
->  - forget to put_metabuf in erofs_load_compr_cfgs;
->  - fotget to put_metabuf in erofs_init_devices.
-> 
->  fs/erofs/super.c | 104 ++++++++++++-----------------------------------
->  1 file changed, 27 insertions(+), 77 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 0724ad5fd6cf..5c137647fa8a 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -2,6 +2,7 @@
->  /*
->   * Copyright (C) 2017-2018 HUAWEI, Inc.
->   *             https://www.huawei.com/
-> + * Copyright (C) 2021, Alibaba Cloud
->   */
->  #include <linux/module.h>
->  #include <linux/buffer_head.h>
-> @@ -124,80 +125,50 @@ static bool check_layout_compatibility(struct super_block *sb,
->  
->  #ifdef CONFIG_EROFS_FS_ZIP
->  /* read variable-sized metadata, offset will be aligned by 4-byte */
-> -static void *erofs_read_metadata(struct super_block *sb, struct page **pagep,
-> +static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
->  				 erofs_off_t *offset, int *lengthp)
->  {
-> -	struct page *page = *pagep;
->  	u8 *buffer, *ptr;
->  	int len, i, cnt;
-> -	erofs_blk_t blk;
->  
->  	*offset = round_up(*offset, 4);
-> -	blk = erofs_blknr(*offset);
-> +	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*offset), EROFS_KMAP);
-> +	if (IS_ERR(ptr))
-> +		return ptr;
->  
-> -	if (!page || page->index != blk) {
-> -		if (page) {
-> -			unlock_page(page);
-> -			put_page(page);
-> -		}
-> -		page = erofs_get_meta_page(sb, blk);
-> -		if (IS_ERR(page))
-> -			goto err_nullpage;
-> -	}
-> -
-> -	ptr = kmap(page);
->  	len = le16_to_cpu(*(__le16 *)&ptr[erofs_blkoff(*offset)]);
->  	if (!len)
->  		len = U16_MAX + 1;
->  	buffer = kmalloc(len, GFP_KERNEL);
-> -	if (!buffer) {
-> -		buffer = ERR_PTR(-ENOMEM);
-> -		goto out;
-> -	}
-> +	if (!buffer)
-> +		return ERR_PTR(-ENOMEM);
->  	*offset += sizeof(__le16);
->  	*lengthp = len;
->  
->  	for (i = 0; i < len; i += cnt) {
->  		cnt = min(EROFS_BLKSIZ - (int)erofs_blkoff(*offset), len - i);
-> -		blk = erofs_blknr(*offset);
-> -
-> -		if (!page || page->index != blk) {
-> -			if (page) {
-> -				kunmap(page);
-> -				unlock_page(page);
-> -				put_page(page);
-> -			}
-> -			page = erofs_get_meta_page(sb, blk);
-> -			if (IS_ERR(page)) {
-> -				kfree(buffer);
-> -				goto err_nullpage;
-> -			}
-> -			ptr = kmap(page);
-> +		ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*offset),
-> +					 EROFS_KMAP);
-> +		if (IS_ERR(ptr)) {
-> +			kfree(buffer);
-> +			return ptr;
->  		}
->  		memcpy(buffer + i, ptr + erofs_blkoff(*offset), cnt);
->  		*offset += cnt;
->  	}
-> -out:
-> -	kunmap(page);
-> -	*pagep = page;
->  	return buffer;
-> -err_nullpage:
-> -	*pagep = NULL;
-> -	return page;
->  }
->  
->  static int erofs_load_compr_cfgs(struct super_block *sb,
->  				 struct erofs_super_block *dsb)
->  {
-> -	struct erofs_sb_info *sbi;
-> -	struct page *page;
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->  	unsigned int algs, alg;
->  	erofs_off_t offset;
-> -	int size, ret;
-> +	int size, ret = 0;
->  
-> -	sbi = EROFS_SB(sb);
->  	sbi->available_compr_algs = le16_to_cpu(dsb->u1.available_compr_algs);
-> -
->  	if (sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS) {
->  		erofs_err(sb, "try to load compressed fs with unsupported algorithms %x",
->  			  sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS);
-> @@ -205,20 +176,17 @@ static int erofs_load_compr_cfgs(struct super_block *sb,
->  	}
->  
->  	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
-> -	page = NULL;
->  	alg = 0;
-> -	ret = 0;
-> -
->  	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
->  		void *data;
->  
->  		if (!(algs & 1))
->  			continue;
->  
-> -		data = erofs_read_metadata(sb, &page, &offset, &size);
-> +		data = erofs_read_metadata(sb, &buf, &offset, &size);
->  		if (IS_ERR(data)) {
->  			ret = PTR_ERR(data);
-> -			goto err;
-> +			break;
->  		}
->  
->  		switch (alg) {
-> @@ -234,13 +202,9 @@ static int erofs_load_compr_cfgs(struct super_block *sb,
->  		}
->  		kfree(data);
->  		if (ret)
-> -			goto err;
-> -	}
-> -err:
-> -	if (page) {
-> -		unlock_page(page);
-> -		put_page(page);
-> +			break;
->  	}
-> +	erofs_put_metabuf(&buf);
->  	return ret;
->  }
->  #else
-> @@ -261,7 +225,7 @@ static int erofs_init_devices(struct super_block *sb,
->  	struct erofs_sb_info *sbi = EROFS_SB(sb);
->  	unsigned int ondisk_extradevs;
->  	erofs_off_t pos;
-> -	struct page *page = NULL;
-> +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->  	struct erofs_device_info *dif;
->  	struct erofs_deviceslot *dis;
->  	void *ptr;
-> @@ -285,22 +249,13 @@ static int erofs_init_devices(struct super_block *sb,
->  	pos = le16_to_cpu(dsb->devt_slotoff) * EROFS_DEVT_SLOT_SIZE;
->  	down_read(&sbi->devs->rwsem);
->  	idr_for_each_entry(&sbi->devs->tree, dif, id) {
-> -		erofs_blk_t blk = erofs_blknr(pos);
->  		struct block_device *bdev;
->  
-> -		if (!page || page->index != blk) {
-> -			if (page) {
-> -				kunmap(page);
-> -				unlock_page(page);
-> -				put_page(page);
-> -			}
-> -
-> -			page = erofs_get_meta_page(sb, blk);
-> -			if (IS_ERR(page)) {
-> -				up_read(&sbi->devs->rwsem);
-> -				return PTR_ERR(page);
-> -			}
-> -			ptr = kmap(page);
-> +		ptr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos),
-> +					 EROFS_KMAP);
-> +		if (IS_ERR(ptr)) {
-> +			err = PTR_ERR(ptr);
-> +			break;
->  		}
->  		dis = ptr + erofs_blkoff(pos);
->  
-> @@ -309,7 +264,7 @@ static int erofs_init_devices(struct super_block *sb,
->  					  sb->s_type);
->  		if (IS_ERR(bdev)) {
->  			err = PTR_ERR(bdev);
-> -			goto err_out;
-> +			break;
->  		}
->  		dif->bdev = bdev;
->  		dif->dax_dev = fs_dax_get_by_bdev(bdev);
-> @@ -318,13 +273,8 @@ static int erofs_init_devices(struct super_block *sb,
->  		sbi->total_blocks += dif->blocks;
->  		pos += EROFS_DEVT_SLOT_SIZE;
->  	}
-> -err_out:
->  	up_read(&sbi->devs->rwsem);
-> -	if (page) {
-> -		kunmap(page);
-> -		unlock_page(page);
-> -		put_page(page);
-> -	}
-> +	erofs_put_metabuf(&buf);
->  	return err;
->  }
->  
-> -- 
-> 2.24.4
+--=====003_Dragon474401666483_=====
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0
+Zi04IiBodHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxNRVRBIG5hbWU9R0VORVJBVE9SIGNvbnRl
+bnQ9Ik1TSFRNTCA4LjAwLjc2MDEuMTc1MTQiPjwvSEVBRD4NCjxCT0RZIGJnQ29sb3I9d2hpdGU+
+DQo8VEFCTEUgDQpzdHlsZT0iUEFERElORy1CT1RUT006IDIwcHg7IFdJRE9XUzogMjsgVEVYVC1U
+UkFOU0ZPUk06IG5vbmU7IEZPTlQtU1RZTEU6IG5vcm1hbDsgRk9OVC1GQU1JTFk6IEFyaWFsOyBX
+SElURS1TUEFDRTogbm9ybWFsOyBPUlBIQU5TOiAyOyBMRVRURVItU1BBQ0lORzogbm9ybWFsOyBD
+T0xPUjogcmdiKDAsMCwwKTsgRk9OVC1TSVpFOiAxNHB4OyBGT05ULVdFSUdIVDogNDAwOyBXT1JE
+LVNQQUNJTkc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyBmb250LXZhcmlh
+bnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IHRleHQtZGVj
+b3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyB0
+ZXh0LWRlY29yYXRpb24tdGhpY2tuZXNzOiBpbml0aWFsIiANCmNlbGxTcGFjaW5nPTAgY2VsbFBh
+ZGRpbmc9MCB3aWR0aD01MjAgYWxpZ249Y2VudGVyPg0KICA8VEJPRFk+DQogIDxUUj4NCiAgICA8
+VEQ+DQogICAgICA8VEFCTEUgc3R5bGU9Ik1BUkdJTjogMHB4IDIwcHg7IFdJRFRIOiA1MTlweDsg
+SEVJR0hUOiA4MzNweCIgY2VsbFNwYWNpbmc9MCANCiAgICAgIGNlbGxQYWRkaW5nPTAgd2lkdGg9
+NTE5Pg0KICAgICAgICA8VEJPRFk+DQogICAgICAgIDxUUiB3aWR0aD0iNTIwIj4NCiAgICAgICAg
+ICA8VEQgDQogICAgICAgICAgc3R5bGU9IkJPUkRFUi1CT1RUT006IHJnYigyMzQsMjM0LDIzNCkg
+MXB4IHNvbGlkOyBQQURESU5HLVRPUDogMTBweCIgDQogICAgICAgICAgaGVpZ2h0PTUyIHdpZHRo
+PTUyMD4NCiAgICAgICAgICAgIDxQIGFsaWduPWNlbnRlcj48SU1HIA0KICAgICAgICAgICAgc3R5
+bGU9IldJRFRIOiAxNTBweDsgRElTUExBWTogYmxvY2s7IE1BWC1XSURUSDogMTUwcHgiIGJvcmRl
+cj0wIA0KICAgICAgICAgICAgYWx0PSIiIA0KICAgICAgICAgICAgc3JjPSJodHRwczovL2ltYWdl
+cy5iZW5jaG1hcmtlbWFpbC5jb20vY2xpZW50MTIyNzUwOC9pbWFnZTg4NjA3MjAucG5nIiANCiAg
+ICAgICAgICAgIHdpZHRoPTE1MD48L1A+PC9URD48L1RSPg0KICAgICAgICA8VFI+DQogICAgICAg
+ICAgPFREIA0KICAgICAgICAgIHN0eWxlPSJURVhULUFMSUdOOiBsZWZ0OyBQQURESU5HLUJPVFRP
+TTogMHB4OyBQQURESU5HLUxFRlQ6IDBweDsgUEFERElORy1SSUdIVDogMXB4OyBGT05ULUZBTUlM
+WTogJ0FtYXpvbiBFbWJlcicsIEFyaWFsLCBzYW5zLXNlcmlmOyBGT05ULVNJWkU6IDE3cHg7IFBB
+RERJTkctVE9QOiAxNXB4IiANCiAgICAgICAgICBjb2xTcGFuPTIgYWxpZ249bGVmdD4NCiAgICAg
+ICAgICAgIDxQIHN0eWxlPSJNQVJHSU46IDBweCIgYWxpZ249Y2VudGVyPjxJTUcgDQogICAgICAg
+ICAgICBzdHlsZT0iQk9SREVSLVJJR0hULVdJRFRIOiAwcHg7IE1BUkdJTi1UT1A6IDIwcHg7IFdJ
+RFRIOiAyNzVweDsgTUFYLVdJRFRIOiAxMDAlOyBCT1JERVItVE9QLVdJRFRIOiAwcHg7IEJPUkRF
+Ui1CT1RUT00tV0lEVEg6IDBweDsgSEVJR0hUOiAyNTZweDsgVkVSVElDQUwtQUxJR046IHRvcDsg
+Qk9SREVSLUxFRlQtV0lEVEg6IDBweCIgDQogICAgICAgICAgICBhbHQ9IkFtYXpvbiBMb2dvIElt
+YWdlIiANCiAgICAgICAgICAgIHNyYz0iaHR0cHM6Ly9tLm1lZGlhLWFtYXpvbi5jb20vaW1hZ2Vz
+L0cvMDEvSVMvVElWLzN4MXRlc2EyODJjZmcwZy5wbmciIA0KICAgICAgICAgICAgd2lkdGg9IjYw
+JSIgaGVpZ2h0PSI2MCUiPjwvUD48L1REPjwvVFI+DQogICAgICAgIDxUUj4NCiAgICAgICAgICA8
+VEQgDQogICAgICAgICAgc3R5bGU9IlRFWFQtQUxJR046IGxlZnQ7IFBBRERJTkctQk9UVE9NOiAx
+MHB4OyBQQURESU5HLUxFRlQ6IDBweDsgUEFERElORy1SSUdIVDogMXB4OyBGT05ULUZBTUlMWTog
+J0FtYXpvbiBFbWJlcicsIEFyaWFsLCBzYW5zLXNlcmlmOyBGT05ULVNJWkU6IDE3cHg7IFBBRERJ
+TkctVE9QOiAxNXB4IiANCiAgICAgICAgICBjb2xTcGFuPTIgYWxpZ249bGVmdD4NCiAgICAgICAg
+ICAgIDxQIHN0eWxlPSJNQVJHSU46IDBweCI+PEZPTlQgc2l6ZT0zPjwvRk9OVD4mbmJzcDs8L1A+
+DQogICAgICAgICAgICA8UCBzdHlsZT0iTUFSR0lOOiAwcHgiPjxGT05UIHNpemU9MyANCiAgICAg
+ICAgICAgIGZhY2U9562J57q/PuW5s+e0oOOBr+OAgUFtYXpvbuOCkuOBlOWIqeeUqOOBhOOBn+OB
+oOOBjeOAgeiqoOOBq+OBguOCiuOBjOOBqOOBhuOBlOOBluOBhOOBvuOBmeOAgjwvRk9OVD48L1A+
+DQogICAgICAgICAgICA8UCBzdHlsZT0iTUFSR0lOOiAwcHgiPjxCUj48Rk9OVCBzaXplPTMgDQog
+ICAgICAgICAgICBmYWNlPeetiee6vz7oqrDjgYvjgYzjgYLjgarjgZ/jga5BbWF6b27jgqLjgqvj
+gqbjg7Pjg4jjgavjg63jgrDjgqTjg7PjgZfjgabllYblk4HjgpLos7zlhaXjgZfjgojjgYbjgajj
+gZfjgabjgYTjgovjgZPjgajjgavms6jmhI/jgZfjgabjgY/jgaDjgZXjgYTjgII8QlI+44Kv44Os
+44K444OD44OI44Kr44O844OJ44Gu55uX6Zuj44KS6Ziy44GQ44Gf44KB44CB44Ot44Kw44Kk44Oz
+5b6M44GZ44GQ44Gr5oOF5aCx44KS5pu05paw44GX44Gm44GP44Gg44GV44GE44CCPEJSPuOBguOB
+quOBn+OBjDI05pmC6ZaT5Lul5YaF44Gr56K66KqN44Gn44GN44Gq44GE5aC05ZCI44Gv55Sz44GX
+6Kiz44GC44KK44G+44Gb44KT44CC44GC44Gq44Gf44Gu6LKh55Sj44Gu5a6J5YWo44Gu44Gf44KB
+44Gr44CB44GT44Gu44Ki44Kr44Km44Oz44OI44Gu5L2/55So44KS5Yi26ZmQ44GX44G+44GZ44CC
+44GC44KJ44GL44GY44KB44GU55CG6Kej44GP44Gg44GV44GE44CCPEJSPuacrOS7tuOBq+OBpOOB
+hOOBpuOBlOi/t+aDkeOCkuOBiuOBi+OBkeOBl+OBvuOBl+OBn+OBk+OBqOOCkuOBiuipq+OBs+eU
+s+OBl+S4iuOBkuOBvuOBmeOAgjxCUj7kvZXljZLjgIHjgojjgo3jgZfjgY/jgYrpoZjjgYTnlLPj
+gZfkuIrjgZLjgb7jgZnjgII8L0ZPTlQ+PC9QPg0KICAgICAgICAgICAgPFAgc3R5bGU9Ik1BUkdJ
+TjogMHB4Ij48Rk9OVCBzaXplPTMgZmFjZT3nrYnnur8+PC9GT05UPiZuYnNwOzwvUD4NCiAgICAg
+ICAgICAgIDxQIHN0eWxlPSJNQVJHSU46IDBweCI+PEZPTlQgc2l6ZT0zIGZhY2U9562J57q/Pjwv
+Rk9OVD4mbmJzcDs8L1A+DQogICAgICAgICAgICA8UCBzdHlsZT0iTUFSR0lOOiAwcHgiPjxGT05U
+IHNpemU9MyBmYWNlPeetiee6vz48L0ZPTlQ+Jm5ic3A7PC9QPg0KICAgICAgICAgICAgPFAgc3R5
+bGU9Ik1BUkdJTjogMHB4Ij4NCiAgICAgICAgICAgIDxUQUJMRSANCiAgICAgICAgICAgIHN0eWxl
+PSJMSU5FLUhFSUdIVDogMTsgV0lEVEg6IDI4OXB4OyBCT1JERVItQ09MTEFQU0U6IHNlcGFyYXRl
+OyBIRUlHSFQ6IDQwcHgiIA0KICAgICAgICAgICAgY2xhc3M9Ym1lQnV0dG9uIGJvcmRlcj0wIGNl
+bGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCBhbGlnbj1jZW50ZXI+DQogICAgICAgICAgICAgIDxU
+Qk9EWT4NCiAgICAgICAgICAgICAgPFRSPg0KICAgICAgICAgICAgICAgIDxURCANCiAgICAgICAg
+ICAgICAgICBzdHlsZT0iQk9SREVSLUJPVFRPTTogcmdiKDIzNCwxNzksNDMpIDFweDsgVEVYVC1B
+TElHTjogY2VudGVyOyBCT1JERVItTEVGVDogcmdiKDIzNCwxNzksNDMpIDFweDsgUEFERElORy1C
+T1RUT006IDEwcHg7IEJBQ0tHUk9VTkQtQ09MT1I6IHJnYigyNDIsMTg1LDQxKTsgUEFERElORy1M
+RUZUOiA0MHB4OyBQQURESU5HLVJJR0hUOiA0MHB4OyBCT1JERVItQ09MTEFQU0U6IHNlcGFyYXRl
+OyBCT1JERVItVE9QOiByZ2IoMjM0LDE3OSw0MykgMXB4OyBGT05ULVdFSUdIVDogbm9ybWFsOyBC
+T1JERVItUklHSFQ6IHJnYigyMzQsMTc5LDQzKSAxcHg7IFBBRERJTkctVE9QOiAxMHB4OyBib3Jk
+ZXItcmFkaXVzOiA1cHgiIA0KICAgICAgICAgICAgICAgIGNsYXNzPWJtZUJ1dHRvblRleHQ+PFNQ
+QU4gDQogICAgICAgICAgICAgICAgICBzdHlsZT0iRk9OVC1GQU1JTFk6IEFyaWFsLCBWZXJkYW5h
+OyBDT0xPUjogcmdiKDAsMCwwKTsgRk9OVC1TSVpFOiAxNHB4Ij48QSANCiAgICAgICAgICAgICAg
+ICAgIHN0eWxlPSJDT0xPUjogcmdiKDAsMCwwKTsgVEVYVC1ERUNPUkFUSU9OOiBub25lIiANCiAg
+ICAgICAgICAgICAgICAgIGhyZWY9Imh0dHBzOi8vd3d3LmNvLmpwLm5teW5hb3QuY24vIiB0YXJn
+ZXQ9X2JsYW5rPjxGT05UIA0KICAgICAgICAgICAgICAgICAgc2l6ZT0zIA0KICAgICAgICAgICAg
+ICAgICAgZmFjZT3lvq7ova/pm4Xpu5E+PFNUUk9ORz7jgqLjgqvjgqbjg7Pjg4jmg4XloLHjgpLm
+m7TmlrDjgZnjgos8L1NUUk9ORz48L0ZPTlQ+PC9BPjwvU1BBTj48L1REPjwvVFI+PC9UQk9EWT48
+L1RBQkxFPjwvUD4NCiAgICAgICAgICAgIDxQIHN0eWxlPSJNQVJHSU46IDBweCI+Jm5ic3A7PC9Q
+Pg0KICAgICAgICAgICAgPFAgc3R5bGU9Ik1BUkdJTjogMHB4Ij4mbmJzcDs8L1A+DQogICAgICAg
+ICAgICA8UD48Rk9OVCBzaXplPTMgZmFjZT3nrYnnur8+QW1hem9u44Gu44G+44Gf44Gu44GU5Yip
+55So44KS44GK5b6F44Gh44GX44Gm44GK44KK44G+44GZ44CCPC9GT05UPjwvUD4NCiAgICAgICAg
+ICAgIDxQPg0KICAgICAgICAgICAgPEhSPg0KDQogICAgICAgICAgICA8UD48L1A+DQogICAgICAg
+ICAgICA8UCBhbGlnbj1jZW50ZXI+PFNQQU4gY2xhc3M9ImEtc2l6ZS1taW5pIGEtY29sb3Itc2Vj
+b25kYXJ5Ij48Rk9OVCANCiAgICAgICAgICAgIHNpemU9MT48U1BBTiANCiAgICAgICAgICAgIHN0
+eWxlPSJCT1gtU0laSU5HOiBib3JkZXItYm94OyBMSU5FLUhFSUdIVDogMS40NjUgIWltcG9ydGFu
+dDsgQ09MT1I6IHJnYig4NSw4NSw4NSkgIWltcG9ydGFudDsgRk9OVC1TSVpFOiAxMXB4ICFpbXBv
+cnRhbnQiIA0KICAgICAgICAgICAgY2xhc3M9ImEtc2l6ZS1taW5pIGEtY29sb3Itc2Vjb25kYXJ5
+Ij48Rk9OVCBjb2xvcj1ibGFjaz48U1BBTiANCiAgICAgICAgICAgIHN0eWxlPSJCT1gtU0laSU5H
+OiBib3JkZXItYm94OyBMSU5FLUhFSUdIVDogMS40NjUgIWltcG9ydGFudDsgQ09MT1I6IHJnYig4
+NSw4NSw4NSkgIWltcG9ydGFudDsgRk9OVC1TSVpFOiAxMXB4ICFpbXBvcnRhbnQiIA0KICAgICAg
+ICAgICAgY2xhc3M9ImEtc2l6ZS1taW5pIGEtY29sb3Itc2Vjb25kYXJ5Ij7CqSA8L1NQQU4+MTk5
+Ni0yMDIyLCBBbWF6b24uIA0KICAgICAgICAgICAgSW5jLiBvciBpdHMgYWZmaWxpYXRlczwvRk9O
+VD48L1NQQU4+PC9GT05UPjwvU1BBTj48L1A+PC9URD48L1RSPg0KICAgICAgICA8VFI+DQogICAg
+ICAgICAgPFREIGFsaWduPWxlZnQ+DQogICAgICAgICAgICA8UD4mbmJzcDs8L1A+PC9URD48L1RS
+Pg0KICAgICAgICA8VFI+DQogICAgICAgICAgPFREIA0KICAgICAgICAgIHN0eWxlPSJURVhULUFM
+SUdOOiBsZWZ0OyBQQURESU5HLUJPVFRPTTogMTBweDsgUEFERElORy1MRUZUOiAwcHg7IFBBRERJ
+TkctUklHSFQ6IDFweDsgRk9OVC1GQU1JTFk6ICdBbWF6b24gRW1iZXInLCBBcmlhbCwgc2Fucy1z
+ZXJpZjsgRk9OVC1TSVpFOiAxN3B4OyBQQURESU5HLVRPUDogMTBweCIgDQogICAgICAgICAgaGVp
+Z2h0PTQ1IHdpZHRoPTUyMCBjb2xTcGFuPTIgYWxpZ249bGVmdD4NCiAgICAgICAgICAgIDxQPjxT
+UEFOIHN0eWxlPSJGT05ULUZBTUlMWTogVGFob21hOyBGT05ULVNJWkU6IDE0cHgiIA0KICAgICAg
+ICAgICAgY2xhc3M9QXBwbGUtY29udmVydGVkLXNwYWNlPjxTUEFOIA0KICAgICAgICAgICAgc3R5
+bGU9IldJRE9XUzogMjsgVEVYVC1UUkFOU0ZPUk06IG5vbmU7IEZPTlQtU1RZTEU6IG5vcm1hbDsg
+VEVYVC1JTkRFTlQ6IDBweDsgRElTUExBWTogaW5saW5lICFpbXBvcnRhbnQ7IFdISVRFLVNQQUNF
+OiBub3JtYWw7IE9SUEhBTlM6IDI7IEZMT0FUOiBub25lOyBMRVRURVItU1BBQ0lORzogbm9ybWFs
+OyBDT0xPUjogcmdiKDUxLDUxLDUxKTsgRk9OVC1XRUlHSFQ6IDcwMDsgV09SRC1TUEFDSU5HOiAw
+cHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgZm9udC12YXJpYW50LWxpZ2F0dXJl
+czogbm9ybWFsIj48U1BBTiANCiAgICAgICAgICAgIHN0eWxlPSJGT05ULVNJWkU6IDEwcHgiPjxG
+T05UIGNvbG9yPWJsYWNrPjxGT05UIGNvbG9yPWJsYWNrIA0KICAgICAgICAgICAgc2l6ZT0yPiZu
+YnNwOzwvUD48L0ZPTlQ+PC9TUEFOPjwvRk9OVD48L1NQQU4+PC9TUEFOPjxBIA0KICAgICAgICAg
+ICAgc3R5bGU9IkNPTE9SOiByZ2IoMCwxMDIsMTUzKTsgVEVYVC1ERUNPUkFUSU9OOiBub25lIiAN
+CiAgICAgICAgICAgIGhyZWY9Imh0dHBzOi8vd3d3LmFtYXpvbi5jby5qcC9ncC9mLmh0bWw/Qz0x
+TENYVkJFM09SN0VCJmFtcDtNPXVybjpydG46bXNnOjIwMjExMDI2MDQyMjQ3MGUwMTkwNmE2OTZj
+NGEyMTkzMmUzNTAzMGM2MHAwZmUmYW1wO1I9MVU4NEc1NlZBWUJBWCZhbXA7VD1DJmFtcDtVPWh0
+dHBzJTNBJTJGJTJGd3d3LmFtYXpvbi5jby5qcCUyRmElMkZjJTJGciUyRjNDVGhhYWFxdFhyUHBJ
+VDlOT1RIcUFNdkYlM0ZyZWZfJTNEcGVfMjc0ODk3MDJfNDMzMDk0NTcyJmFtcDtIPVdKT1pQWjRV
+Q0FSTU5ERDAxSEwzUE5MM0NEQ0EmYW1wO3JlZl89cGVfMjc0ODk3MDJfNDMzMDk0NTcyIj48L0E+
+PC9URD48L1RSPg0KICAgICAgICA8VFI+DQogICAgICAgICAgPFREIA0KICAgICAgICAgIHN0eWxl
+PSJURVhULUFMSUdOOiBsZWZ0OyBQQURESU5HLUJPVFRPTTogMTBweDsgUEFERElORy1MRUZUOiAw
+cHg7IFBBRERJTkctUklHSFQ6IDFweDsgRk9OVC1GQU1JTFk6ICdBbWF6b24gRW1iZXInLCBBcmlh
+bCwgc2Fucy1zZXJpZjsgUEFERElORy1UT1A6IDEwcHgiIA0KICAgICAgICAgIHdpZHRoPTUyMD48
+L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjwvVEQ+PC9UUj48L1RCT0RZPjwvVEFCTEU+PElNRyAN
+CnN0eWxlPSJCT1JERVItQk9UVE9NOiAwcHg7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBGT05ULUZB
+TUlMWTogQXJpYWw7IFdISVRFLVNQQUNFOiBub3JtYWw7IEZPTlQtU0laRTogMTRweDsgQk9SREVS
+LVRPUDogMHB4OyBGT05ULVdFSUdIVDogNDAwOyBCT1JERVItUklHSFQ6IDBweDsgV09SRC1TUEFD
+SU5HOiAwcHgiIA0KYWx0PSIiIA0Kc3JjPSJodHRwczovL3d3dy5hbWF6b24uY28uanAvZ3Avci5o
+dG1sP0M9MUxDWFZCRTNPUjdFQiZhbXA7TT11cm46cnRuOm1zZzoyMDIxMTAyNjA0MjI0NzBlMDE5
+MDZhNjk2YzRhMjE5MzJlMzUwMzBjNjBwMGZlJmFtcDtSPTJVQTE1VDJWQTdRVlImYW1wO1Q9RSZh
+bXA7VT1odHRwcyUzQSUyRiUyRmltYWdlcy1mZS5zc2wtaW1hZ2VzLWFtYXpvbi5jb20lMkZpbWFn
+ZXMlMkZHJTJGMDElMkZuYXYlMkZ0cmFuc3AuZ2lmJmFtcDtIPUxWQVRCUUZaTFU4TkhQUUtVUElS
+V1JHMUZPSUEmYW1wO3JlZl89cGVfMjc0ODk3MDJfNDMzMDk0NTcyX29wZW4iIA0Kd2lkdGg9MSBo
+ZWlnaHQ9MSA/KTsgRk9OVC1TVFlMRTogVEVYVC1BTElHTjogY2VudGVyOyBCT1JERVItTEVGVDog
+T1JQSEFOUzogDQpXSURPV1M6IDI7IE1BUkdJTjogTEVUVEVSLVNQQUNJTkc6IFRFWFQtSU5ERU5U
+OiAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IA0KZm9udC12YXJpYW50LWxpZ2F0dXJl
+czogZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiANCnRl
+eHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLXRoaWNrbmVzczog
+aW5pdGlhbD8+IA0KPC9CT0RZPjwvSFRNTD4NCg==
+
+--=====003_Dragon474401666483_=====--
+
