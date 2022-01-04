@@ -2,49 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F2564843FE
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Jan 2022 15:59:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B00AC484B3C
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 00:38:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JSwkD1sMKz2ynm
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 01:59:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JT8F03RYgz2y7Q
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 10:38:12 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1641339492;
+	bh=kuIsiW9qeD3VKnpKooFN1pUiik+NL1kGoZT63SARH4E=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=m6eS5EP9pWCapdA0XYTJOkFi2tAIczbAzySjuXTl1BIxv1OO7OdO4Rt81XYIkqXOm
+	 zvOuxwZct1J6mGpzyEjTXFg6eclQkqkNrfx/RTvDKalOKS82r0SBvyr4KimxO2l2G3
+	 QGYyjVt93H7ILqOOjWRRfpkv58ABqM4DtLMSXOPpFBfHQOWCZISMLOKz6/xo/OzyQA
+	 YMaq8DP+QqTV9HhyU0Ga3xLzXEcxz0YL5C9GfyzKUzM29UCrbDf3eEoFOPYPBiwgLF
+	 vrpcvBquGIIpy9TDNgeOnbQocCcGpDCXJeZs6E1svagrVgYF0uRU13e9tZV4KvJv0F
+	 tyhprajmJJUdA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
- helo=out30-54.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-54.freemail.mail.aliyun.com
- (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+ smtp.mailfrom=google.com (client-ip=2607:f8b0:4864:20::f2e;
+ helo=mail-qv1-xf2e.google.com; envelope-from=zhangkelvin@google.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
+ header.s=20210112 header.b=gVK63L1G; dkim-atps=neutral
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com
+ [IPv6:2607:f8b0:4864:20::f2e])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JSwk30m8yz2x9P
- for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jan 2022 01:59:04 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=13; SR=0; TI=SMTPD_---0V0z5cF9_1641308333; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V0z5cF9_1641308333) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 04 Jan 2022 22:58:55 +0800
-Date: Tue, 4 Jan 2022 22:58:53 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v1 07/23] erofs: add nodev mode
-Message-ID: <YdRgrWEDU8sJVExX@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
- dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- bo.liu@linux.alibaba.com, tao.peng@linux.alibaba.com,
- gerry@linux.alibaba.com, eguan@linux.alibaba.com,
- linux-kernel@vger.kernel.org
-References: <20211227125444.21187-1-jefflexu@linux.alibaba.com>
- <20211227125444.21187-8-jefflexu@linux.alibaba.com>
- <YdRattisu+ITYvvZ@B-P7TQMD6M-0146.local>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JT8Dw4H8Zz2xBJ
+ for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jan 2022 10:38:06 +1100 (AEDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id r6so35814641qvr.13
+ for <linux-erofs@lists.ozlabs.org>; Tue, 04 Jan 2022 15:38:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+ :message-id:subject:to:cc;
+ bh=kuIsiW9qeD3VKnpKooFN1pUiik+NL1kGoZT63SARH4E=;
+ b=XAmx47x7WS9GmPxnU5aK2KG9iRkoe77plShcw1TiJAl6rrdLR+y4ynqOUdhNgIYMpJ
+ E4AVdMf/fqH7m8puelWcb3b7rit36qlVVQ+gG8TFsqWYQzaGgDpoRMUrPG+9M6b1hj5k
+ ewrLlMiiUczdLby3/S/uHZ+cFxkRlauYIUIwcamdsBAvB5rmSJIB9jQch/Xfo9JgBVHq
+ eOY6WwpdeHrsZptIuw9bwPRYt37QjpejHvrgco7dZCosTJzF6AaYete22suBYP8kwPiZ
+ 6vTUkYyUSinqW8/sOBCK68Ztp3vyTe7FPYOqyQsUn7gRiBmfZ9K8gs296RAS5g5MQ0eO
+ ABVw==
+X-Gm-Message-State: AOAM5320jaFR8zjn9nRZuDUk9/eVRhovOO5HpQj7ml2pJ/YxkeaEnAW/
+ /nd/0YvRHSDvYnIEINjlQPRk5mxE5h5/yHD4G8dNolx20K0=
+X-Google-Smtp-Source: ABdhPJzSRsSC5dDKydRUHnkqBOhwRX1h/kH4+rOPwhjDODmOk5AjOemHA1OvpVRIWtRlLBm3BgxCJZKcFQM1vynLbE8=
+X-Received: by 2002:a05:6214:27cf:: with SMTP id
+ ge15mr47795854qvb.123.1641339482528; 
+ Tue, 04 Jan 2022 15:38:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YdRattisu+ITYvvZ@B-P7TQMD6M-0146.local>
+References: <YcKDAILGEoYFE7K0@B-P7TQMD6M-0146.local>
+ <20211222014917.265476-1-zhangkelvin@google.com>
+In-Reply-To: <20211222014917.265476-1-zhangkelvin@google.com>
+Date: Tue, 4 Jan 2022 15:37:51 -0800
+Message-ID: <CAOSmRzgOB-78BSc4Ug-xNnS+Cc6x8AZ8zEVTYPU4iiKcOowVWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] erofs-utils: lib: Add some comments about
+ const-ness around iterate API
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
+ Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,51 +76,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tao.peng@linux.alibaba.com, linux-kernel@vger.kernel.org,
- dhowells@redhat.com, joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
- bo.liu@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
- gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org, eguan@linux.alibaba.com
+From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Jan 04, 2022 at 10:33:26PM +0800, Gao Xiang wrote:
-> On Mon, Dec 27, 2021 at 08:54:28PM +0800, Jeffle Xu wrote:
-> > Until then erofs is exactly blockdev based filesystem. In other using
-> > scenarios (e.g. container image), erofs needs to run upon files.
-> > 
-> > This patch introduces a new nodev mode, in which erofs could be mounted
-> > from a bootstrap blob file containing the complete erofs image.
-> > 
-> > The following patch will introduce a new mount option "uuid", by which
-> > users could specify the bootstrap blob file.
-> > 
-> > Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> 
-> I think the order of some patches in this patchset can be improved.
-> 
-> Take this patch as an example. This patch introduces a new mount
-> option called "uuid", so the kernel will just accept it (which
-> generates a user-visible impact) after this patch but it doesn't
-> actually work.
-> 
-> Therefore, we actually have three different behaviors here:
->  - kernel doesn't support "uuid" mount option completely;
->  - kernel support "uuid" but it doesn't work;
->  - kernel support "uuid" correctly (maybe after some random patch);
-> 
-> Actually that is bad for bisecting since there are some commits
-> having temporary behaviors. And we don't know which commit
-> actually fully implements this "uuid" mount option.
-> 
-> So personally I think the proper order is just like the bottom-up
-> approach, and make sure each patch can be tested / bisected
-> independently.
+friendly ping
 
-Oh, I may misread this patch, but I still think we'd better to
-avoid dead paths "TODO" like this as much as possible.
+On Tue, Dec 21, 2021 at 5:49 PM Kelvin Zhang <zhangkelvin@google.com> wrote:
+>
+> The new iterate dir API has non-trivial const correctness requirements.
+> Document them in comment.
+>
+> Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
+> ---
+>  include/erofs/dir.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/include/erofs/dir.h b/include/erofs/dir.h
+> index 77656ca..59bd40d 100644
+> --- a/include/erofs/dir.h
+> +++ b/include/erofs/dir.h
+> @@ -39,6 +39,14 @@ typedef int (*erofs_readdir_cb)(struct erofs_dir_context *);
+>   * the callback context. |de_namelen| is the exact dirent name length.
+>   */
+>  struct erofs_dir_context {
+> +       /* During execution of |erofs_iterate_dir|, the function needs
+> +        * to read the values inside |erofs_inode* dir|. So it is important
+> +        * that the callback function does not modify stuct pointed by
+> +        * |dir|. It is OK to repoint |dir| to other objects.
+> +        * Unfortunately, it's not possible to enforce this restriction
+> +        * with const keyword, as |erofs_iterate_dir| needs to modify
+> +        * struct pointed by |dir|.
+> +        */
+>         struct erofs_inode *dir;
+>         erofs_readdir_cb cb;
+>         erofs_nid_t pnid;               /* optional */
+> --
+> 2.34.1.448.ga2b2bfdf31-goog
+>
 
-Just do in the bottom-up way.
 
-Thanks,
-Gao Xiang
+-- 
+Sincerely,
+
+Kelvin Zhang
