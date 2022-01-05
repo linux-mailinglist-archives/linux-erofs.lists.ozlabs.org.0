@@ -1,50 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41F82484C82
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 03:30:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BAC8484D9B
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 06:27:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JTD3j6Qvtz2yng
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 13:30:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JTJ0J509Pz2yMk
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jan 2022 16:27:44 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NLefRg8W;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=NLefRg8W; dkim-atps=neutral
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JTD3d5sBsz2xBJ
- for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jan 2022 13:30:21 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V1-XTae_1641349797; 
-Received: from 30.225.24.102(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V1-XTae_1641349797) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 05 Jan 2022 10:29:58 +0800
-Message-ID: <58e983fa-f913-d663-9719-0111b9130688@linux.alibaba.com>
-Date: Wed, 5 Jan 2022 10:29:57 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JTJ0C3mK8z2xDV
+ for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jan 2022 16:27:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1641360459; x=1672896459;
+ h=date:from:to:cc:subject:message-id:mime-version:
+ content-transfer-encoding;
+ bh=smhXCVVm6s868dmuL2qgFgAnuLRIhyWCANmuDWHqSuo=;
+ b=NLefRg8WOYTsSlaQVm5hO07WSqO5lG9DNLPBT98avaxWa4Th3YUvmsWv
+ u07Aw1VcprRE+3QRRvq1jm1ruSLj98g2YVut7o/Th35ruFiKtL0e7noRh
+ Uj4hjBzTYJYjhyi7SFGuBaxFeM8ZyHnCWoPAE7O95mGvtJW74+eVt87SS
+ d/u1rutSOPrQaZ5aIF6FAigqoF/i+FDMqDaUMBbxWVwluVOwYKeeTez2A
+ TgA4ZylhGk50wzys5fwHJtT/nl9dYq8m1DevYhVYPnU1DyCQBIbh28MKz
+ lxW5J8PQiERMR3/TemQgEPL5jfVphkj3jZ3cOLM7svB8HEGtW0SkRZq6k A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242170191"
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; d="scan'208";a="242170191"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+ by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 04 Jan 2022 21:26:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; d="scan'208";a="470412412"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+ by orsmga003.jf.intel.com with ESMTP; 04 Jan 2022 21:26:26 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1n4yob-000GHI-Qx; Wed, 05 Jan 2022 05:26:25 +0000
+Date: Wed, 05 Jan 2022 13:25:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 09c543798c3cde19aae575a0f76d5fc7c130ff18
+Message-ID: <61d52bdf.4jKYpMLFv4ZHSxrp%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.2
-Subject: Re: [PATCH v1 13/23] erofs: implement fscache-based data read
-Content-Language: en-US
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- bo.liu@linux.alibaba.com, tao.peng@linux.alibaba.com,
- gerry@linux.alibaba.com, eguan@linux.alibaba.com,
- linux-kernel@vger.kernel.org
-References: <20211227125444.21187-1-jefflexu@linux.alibaba.com>
- <20211227125444.21187-14-jefflexu@linux.alibaba.com>
- <YdRcdqIUkqIIw6EP@B-P7TQMD6M-0146.local>
-From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <YdRcdqIUkqIIw6EP@B-P7TQMD6M-0146.local>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -57,115 +68,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 09c543798c3cde19aae575a0f76d5fc7c130ff18  erofs: use meta buffers for zmap operations
 
+elapsed time: 720m
 
-On 1/4/22 10:40 PM, Gao Xiang wrote:
-> On Mon, Dec 27, 2021 at 08:54:34PM +0800, Jeffle Xu wrote:
->> This patch implements the data plane of reading data from bootstrap blob
->> file over fscache.
->>
->> Be noted that currently compressed layout is not supported yet.
->>
->> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
->> ---
->>  fs/erofs/fscache.c  | 91 +++++++++++++++++++++++++++++++++++++++++++++
->>  fs/erofs/inode.c    |  6 ++-
->>  fs/erofs/internal.h |  1 +
->>  3 files changed, 97 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
->> index 325f5663836b..bfcec831d58a 100644
->> --- a/fs/erofs/fscache.c
->> +++ b/fs/erofs/fscache.c
->> @@ -65,6 +65,97 @@ struct page *erofs_readpage_from_fscache(struct erofs_cookie_ctx *ctx,
->>  	return page;
->>  }
->>  
->> +static inline void do_copy_page(struct page *from, struct page *to,
->> +				size_t offset, size_t len)
->> +{
->> +	char *vfrom, *vto;
->> +
->> +	vfrom = kmap_atomic(from);
->> +	vto = kmap_atomic(to);
->> +	memcpy(vto, vfrom + offset, len);
->> +	kunmap_atomic(vto);
->> +	kunmap_atomic(vfrom);
->> +}
->> +
->> +static int erofs_fscache_do_readpage(struct file *file, struct page *page)
->> +{
->> +	struct inode *inode = page->mapping->host;
->> +	struct erofs_inode *vi = EROFS_I(inode);
->> +	struct super_block *sb = inode->i_sb;
->> +	struct erofs_map_blocks map;
->> +	erofs_off_t o_la, pa;
->> +	size_t offset, len;
->> +	struct page *ipage;
->> +	int ret;
->> +
->> +	if (erofs_inode_is_data_compressed(vi->datalayout)) {
->> +		erofs_info(sb, "compressed layout not supported yet");
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	o_la = page_offset(page);
->> +	map.m_la = o_la;
->> +
->> +	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
->> +		zero_user(page, 0, PAGE_SIZE);
->> +		return 0;
->> +	}
->> +
->> +	/*
->> +	 * 1) For FLAT_PLAIN/FLAT_INLINE layout, the output map.m_la shall be
->> +	 * equal to o_la, and the output map.m_pa is exactly the physical
->> +	 * address of o_la.
->> +	 * 2) For CHUNK_BASED layout, the output map.m_la is rounded down to the
->> +	 * nearest chunk boundary, and the output map.m_pa is actually the
->> +	 * physical address of this chunk boundary. So we need to recalculate
->> +	 * the actual physical address of o_la.
->> +	 */
->> +	pa = map.m_pa + o_la - map.m_la;
->> +
->> +	ipage = erofs_get_meta_page(sb, erofs_blknr(pa));
->> +	if (IS_ERR(ipage))
->> +		return PTR_ERR(ipage);
->> +
->> +	/*
->> +	 * @offset refers to the page offset inside @ipage.
->> +	 * 1) Except for the inline layout, the offset shall all be 0, and @pa
->> +	 * shall be aligned with EROFS_BLKSIZ in this case. Thus we can
->> +	 * conveniently get the offset from @pa.
->> +	 * 2) While for the inline layout, the offset may be non-zero. Since
->> +	 * currently only flat layout supports inline, we can calculate the
->> +	 * offset from the corresponding physical address.
->> +	 */
->> +	offset = erofs_blkoff(pa);
->> +	len = min_t(u64, map.m_llen, PAGE_SIZE);
->> +
->> +	do_copy_page(ipage, page, offset, len);
-> 
-> If my understanding is correct, I still have no idea why we need to
-> copy data here even if fscache can do direct I/O for us without extra
-> efforts.
-> 
-> I think the only case would be tail-packing inline (which should go
-> through metadata path), otherwise, all data is block-aligned. So
-> fscache can handle it directly.
-> 
+configs tested: 54
+configs skipped: 3
 
-Right, only tail packing need special handling here. Would be fixed in
-the next version. Thanks.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Thanks,
-Jeffle
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+sparc                            allyesconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+riscv                               defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
