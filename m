@@ -2,61 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7173B488EAC
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jan 2022 03:33:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00BEB48A0D0
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jan 2022 21:18:53 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JXHtz2pKgz2xWx
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jan 2022 13:33:31 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=umORd6Cg;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JXlX90WVKz2ywt
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jan 2022 07:18:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1641845929;
+	bh=UDVCYxKXjm9/LCW2cC0eQ276i1V+Flh2IdxRELs0OnM=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=VLzQfyNYUYo41XyiLvJdtG4i8H/rVDo6E/Vqfn4tKMi0/967NteArZjOMGmdxzVNC
+	 n9TdC5/lQaUHgXv/d4i5+A26UiwGWA6ZC10fOw/QGGh+yKF1sgQtXIIDSjnwsLxXnb
+	 aM4UpFeAWER5+c0hV2bA5RO2H3n0UxXZiFdWWrm89F/rkzX5y0N7M28qWeRs1zR1U4
+	 BlqljDK8LyXus8s9sjSj9/MYwrI0TBT7W9FsKOrCqTIi4zneqwnH1T7VI989qAAU4w
+	 OeF+wc17jts+XqKoW9lkB9Ia1kdFRydcrXdYpLScqxQuJp64PuGqECiVyYmr7kvIzR
+	 hfFe57RdRWJYg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=umORd6Cg; 
+ smtp.mailfrom=yuanyangyihao.com (client-ip=106.75.141.101;
+ helo=mail.yuanyangyihao.com; envelope-from=etc-a3@yuanyangyihao.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=yuanyangyihao.com header.i=@yuanyangyihao.com
+ header.a=rsa-sha256 header.s=default header.b=cT9TKXJx; 
  dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JXHtr2bNhz2xBv
- for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jan 2022 13:33:24 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+X-Greylist: delayed 6916 seconds by postgrey-1.36 at boromir;
+ Tue, 11 Jan 2022 07:18:38 AEDT
+Received: from mail.yuanyangyihao.com (mail.yuanyangyihao.com [106.75.141.101])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id 778BE610A7;
- Mon, 10 Jan 2022 02:33:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20614C36AEB;
- Mon, 10 Jan 2022 02:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1641781999;
- bh=ZCcLXImgRaqQRtW+LJ+XtzULaBeHfxsWVhfXg2K+vkM=;
- h=Date:From:To:Cc:Subject:From;
- b=umORd6CgiImPOZtD4MXSKwBBM+bo6ZUPDRkLDWKCsOtLzFL23JsXgsERrERqPR2zX
- owAjQekm0HejPGcYBuoWa5qvrK9ketJG1hKnyqMY/XXH50Wg1y+MboxeTdqZks/vCB
- RJ02ogsaNbAjVtyFyxPD4WF1DIiO2A6gkgS0vZhRnxBRNGWvHvZb8XNLVyEWfdr6jP
- zT+RuK9OjG3HvP9JuTLIOSHPvXfagqdmWLM6ruQvn84Uqn/fcygMjtplLR47kPS+BX
- ChgnVeN8msq47PnONlbNZL9WdTDbaziOo79hRjaVJs7tKdrJ/EsH9hHptnbkgaBse/
- uGnPxQYvMqHnQ==
-Date: Mon, 10 Jan 2022 10:33:09 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 5.17-rc1
-Message-ID: <20220110023303.GA26979@hsiangkao-HP-ZHAN-66-Pro-G1>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
- linux-erofs@lists.ozlabs.org, Liu Bo <bo.liu@linux.alibaba.com>,
- Huang Jianan <huangjianan@oppo.com>, Yue Hu <huyue2@yulong.com>,
- Miao Xie <miaoxie@huawei.com>,
- Joseph Qi <joseph.qi@linux.alibaba.com>,
- Peng Tao <tao.peng@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JXlWy6KVPz2xXd
+ for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jan 2022 07:18:37 +1100 (AEDT)
+Received: from ykpmv (unknown [223.73.211.148])
+ by mail.yuanyangyihao.com (Postfix) with ESMTPA id 0C843136CBC6
+ for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jan 2022 01:52:58 +0800 (CST)
+To: linux-erofs <linux-erofs@lists.ozlabs.org>
+Subject: =?utf-8?B?77yl77y077yj44K144O844OT44K544KS44GU5Yip55So44GE44Gf44Gg44GN44GC44KK44GM44Go44GG?=
+ =?utf-8?B?44GU44GW44GE44G+44GZ44CC?=
+Date: Tue, 11 Jan 2022 02:52:49 +0900
+Message-ID: <00e534557a8a$fa7befc5$9b2cfdf2$@ykpmv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/alternative;
+ boundary="----=_NextPart_000_09F6_0142B16C.12E799E0"
+X-Mailer: Microsoft Outlook 16.0
+X-Spam: Yes
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,96 +60,146 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Peng Tao <tao.peng@linux.alibaba.com>, Miao Xie <miaoxie@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Yue Hu <huyue2@yulong.com>, Liu Bo <bo.liu@linux.alibaba.com>,
- linux-erofs@lists.ozlabs.org
+From: ETC-CBC via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: ETC-CBC <etc-a3@yuanyangyihao.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+This is a multi-part message in MIME format.
 
-Could you consider this pull request for 5.17-rc1?
+------=_NextPart_000_09F6_0142B16C.12E799E0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-In this cycle, tail-packing data inline for compressed files is now
-supported so that tail pcluster can be stored and read together with
-inode metadata in order to save data I/O and storage space.
+DQrigLvvvKXvvLTvvKPjgrXjg7zjg5PjgrnjgpLjgZTliKnnlKjjgYTjgZ/jgaDjgY3jgYLjgorj
+gYzjgajjgYbjgZTjgZbjgYTjgb7jgZnjgIINCg0KIA0KDQrigLvmnKzjg6Hjg7zjg6vjgbjjga7o
+v5Tkv6HjgavjgojjgovjgZTos6rllY/jgavjga/jgZTlm57nrZTjgafjgY3jgb7jgZvjgpPjgIIN
+Cg0KIA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCg0KIA0KDQrm
+nKzjg6Hjg7zjg6vjgYzjgZToh6rouqvlrpvjgafjgarjgYTloLTlkIjjgIHku5bjga7mlrnjgYzo
+qqTjgaPjgablkIzjgZjjg6Hjg7zjg6vjgqLjg4njg6zjgrnjgpLnmbvpjLLjgZfjgZ/jgoLjga7j
+gajogIPjgYjjgonjgozjgb7jgZnjgIINCuOBiuW/g+W9k+OBn+OCiuOBruOBquOBhOaWueOBr+OA
+geOBiuaJi+aVsOOBp+OBmeOBjOODoeODvOODq+acrOaWh+OCkuWJiumZpOOBj+OBoOOBleOBhOOB
+vuOBmeOCiOOBhuOBiumhmOOBhOOBhOOBn+OBl+OBvuOBmeOAgg0KDQogDQoNCi0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KDQoNCiANCg0KIA0KDQrigLsg44G744KT44Gr
+44KT5pys5Lq644GL44GP44Gr44KT56K66KqN44Gu44Gf44KB44Gr44CB44Om44O844K244O8SUTj
+gIHjgajjg7zjgo3jgY/nmbvpjLLjg6Hjg7zjg6vjgqLjg4njg6zjgrnjgIFFVEPjgqvjg7zjg4nj
+gbDjgpPjgZTjg7znlarlj7fjgarjganjga7jgZjjgofjg7zjgbvjg7zmg4XloLHjgpLjgojjg7zj
+gYTnlKjmhI/jgZfjgabjgY/jgaDjgZXjgYTjgIIgDQoNCiANCg0KIA0KDQogDQoNCuKAu+ODoeOD
+vOODq+OCkuWPl+OBkeWPluOBo+OBn+OBiuWuouOBleOBvuWwgueUqOOBruODmuODvOOCuOOBp+OB
+meOAguOBu+OBi+OBruOBiuWuouOBleOBvuOBr+OBlOWIqeeUqOOBhOOBn+OBoOOBkeOBvuOBm+OC
+k+OAgg0K44Gq44GK44CBNzLmmYLplpPku6XlhoXjgavjgZTnorroqo3jgYzjgarjgYTloLTlkIjj
+gIHoqqDjgavnlLPjgZfoqLPjgZTjgZbjgYTjgb7jgZvjgpPjgIHjgYrlrqLmp5jjga7lronlhajj
+ga7ngrrjgIHjgqLjgqvjgqbjg7Pjg4jjga7liKnnlKjliLbpmZDjgpLjgZXjgZvjgabjgYTjgZ/j
+gaDjgY3jgb7jgZnjga7jgafjgIHkuojjgoHjgZTkuobmib/jgY/jgaDjgZXjgYTjgIINCg0KDQoN
+CuKGkuOBlOWkieabtOOBr+OBk+OBoeOCieOBi+OCiQ0KDQogDQoNCiANCg0KIA0KDQogDQoNCuKA
+u+acrOODoeODvOODq+OBuOOBrui/lOS/oeOBq+OCiOOCi+OBlOizquWVj+OBq+OBr+OBlOWbnuet
+lOOBp+OBjeOBvuOBm+OCk+OAgg0KDQoNCiANCg0K4pSB4pSB4pSB4pSB4pSB4pSB4pSBDQrilqDn
+mbrooYzogIUNCuKUgeKUgeKUgeKUgeKUgeKUgeKUgQ0KDQoNCiANCg0K77yl77y077yj5Yip55So
+54Wn5Lya44K144O844OT44K55LqL5YuZ5bGADQpFYXN0IE5pcHBvbiBFeHByZXNzd2F5IENvbXBh
+bnkgTGltaXRlZCwNCk1ldHJvcG9saXRhbiBFeHByZXNzd2F5IENvbXBhbnkgTGltaXRlZCANCg0K
 
-In addition to that, to prepare for the upcoming subpage, folio and
-fscache features, we also introduce meta buffers to get rid of
-erofs_get_meta_page() since it was too close to the page itself.
+------=_NextPart_000_09F6_0142B16C.12E799E0
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Besides, in order to show supported kernel features and control sync
-decompression strategy. new sysfs nodes are introduced in this
-cycle as well.
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MIHhtbG5zOm8gPSAidXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6
+b2ZmaWNlIj48SEVBRD4NCjxNRVRBIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCIg
+aHR0cC1lcXVpdj1Db250ZW50LVR5cGU+DQo8TUVUQSBuYW1lPUdFTkVSQVRPUiBjb250ZW50PSJN
+U0hUTUwgMTEuMDAuMTA1NzAuMTAwMSI+PC9IRUFEPg0KPEJPRFk+DQo8UCBjbGFzcz1Nc29Ob3Jt
+YWwgDQpzdHlsZT0iVEVYVC1BTElHTjogbGVmdDsgTUFSR0lOOiAwY207IG1zby1wYWdpbmF0aW9u
+OiB3aWRvdy1vcnBoYW4iIA0KYWxpZ249bGVmdD48Rk9OVCBmYWNlPeetiee6vz48U1BBTiANCmxh
+bmc9RU4tVVM+4oC7PC9TUEFOPu+8pe+8tO+8o+OCteODvOODk+OCueOCkuOBlOWIqeeUqOOBhOOB
+n+OBoOOBjeOBguOCiuOBjOOBqOOBhuOBlOOBluOBhOOBvuOBmeOAgjwvRk9OVD48U1BBTiANCmxh
+bmc9RU4tVVM+PC9QPjwvU1BBTj48U1BBTiBsYW5nPUVOLVVTPg0KPFAgY2xhc3M9TXNvTm9ybWFs
+IHN0eWxlPSJNQVJHSU46IDBjbSI+PC9TUEFOPiZuYnNwOzwvUD48U1BBTiBsYW5nPUVOLVVTPg0K
+PFAgY2xhc3M9TXNvTm9ybWFsIHN0eWxlPSJNQVJHSU46IDBjbSI+PEZPTlQgDQpmYWNlPeetiee6
+vz7igLs8L0ZPTlQ+5pys44Oh44O844Or44G444Gu6L+U5L+h44Gr44KI44KL44GU6LOq5ZWP44Gr
+44Gv44GU5Zue562U44Gn44GN44G+44Gb44KT44CCPC9QPg0KPFAgY2xhc3M9TXNvTm9ybWFsIHN0
+eWxlPSJNQVJHSU46IDBjbSI+Jm5ic3A7PC9QPg0KPFAgY2xhc3M9TXNvTm9ybWFsIHN0eWxlPSJN
+QVJHSU46IDBjbSI+PEZPTlQgDQpmYWNlPeetiee6vz4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tPC9GT05UPjwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lO
+OiAwY20iPjxGT05UIA0KZmFjZT3nrYnnur8+PEJSPiZuYnNwOzwvUD48L0ZPTlQ+PC9TUEFOPjxG
+T05UIGZhY2U9562J57q/PjwvRk9OVD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lO
+OiAwY20iPjxGT05UIA0KZmFjZT3nrYnnur8+5pys44Oh44O844Or44GM44GU6Ieq6Lqr5a6b44Gn
+44Gq44GE5aC05ZCI44CB5LuW44Gu5pa544GM6Kqk44Gj44Gm5ZCM44GY44Oh44O844Or44Ki44OJ
+44Os44K544KS55m76Yyy44GX44Gf44KC44Gu44Go6ICD44GI44KJ44KM44G+44GZ44CCPC9GT05U
+PjxTUEFOIA0KbGFuZz1FTi1VUz48QlI+PC9TUEFOPjxGT05UIA0KZmFjZT3nrYnnur8+44GK5b+D
+5b2T44Gf44KK44Gu44Gq44GE5pa544Gv44CB44GK5omL5pWw44Gn44GZ44GM44Oh44O844Or5pys
+5paH44KS5YmK6Zmk44GP44Gg44GV44GE44G+44GZ44KI44GG44GK6aGY44GE44GE44Gf44GX44G+
+44GZ44CCPC9GT05UPjwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lOOiAwY20i
+PjxGT05UIGZhY2U9562J57q/PjwvRk9OVD4mbmJzcDs8L1A+PEZPTlQgDQpmYWNlPeetiee6vz48
+L0ZPTlQ+PFNQQU4gbGFuZz1FTi1VUz4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lO
+OiAwY20iPjxGT05UIA0KZmFjZT3nrYnnur8+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLTwvRk9OVD48L1A+PEZPTlQgZmFjZT3nrYnnur8+DQo8UCBjbGFzcz1Nc29Ob3JtYWwg
+c3R5bGU9Ik1BUkdJTjogMGNtIj48QlI+PEJSPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1zb05vcm1h
+bCBzdHlsZT0iTUFSR0lOOiAwY20iPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHls
+ZT0iTUFSR0lOOiAwY20iPuKAuzwvRk9OVD48L1NQQU4+PEZPTlQgPCFET0NUWVBFIFBVQkxJQyA/
+LSANClczQyBEVEQgSFRNTCA0LjAgVHJhbnNpdGlvbmFsIEVOPz4gDQo8TUVUQSBuYW1lPUdFTkVS
+QVRPUiBjb250ZW50PSJNU0hUTUwgMTEuMDAuMTA1NzAuMTAwMSI+PFUgDQpzdHlsZT0iRk9OVC1X
+RUlHSFQ6IGJvbGQ7IENPTE9SOiAjZjAwIj48QSANCmhyZWY9Imh0dHBzOi8vZXRjLnRtbmNoLmNv
+bS8iPuOBu+OCk+OBq+OCk+acrOS6uuOBi+OBj+OBq+OCk+eiuuiqjeOBruOBn+OCgeOBq+OAgeOD
+puODvOOCtuODvElE44CB44Go44O844KN44GP55m76Yyy44Oh44O844Or44Ki44OJ44Os44K544CB
+RVRD44Kr44O844OJ44Gw44KT44GU44O855Wq5Y+344Gq44Gp44Gu44GY44KH44O844G744O85oOF
+5aCx44KS44KI44O844GE55So5oSP44GX44Gm44GP44Gg44GV44GE44CCIA0KPC9BPjwvVT48L0ZP
+TlQ+PC9QPg0KPFAgY2xhc3M9TXNvTm9ybWFsIHN0eWxlPSJNQVJHSU46IDBjbSI+PFNUUk9ORz48
+VT48Rk9OVCANCmNvbG9yPSNmZjAwMDA+PC9GT05UPjwvVT48L1NUUk9ORz4mbmJzcDs8L1A+DQo8
+UCBjbGFzcz1Nc29Ob3JtYWwgc3R5bGU9Ik1BUkdJTjogMGNtIj48U1RST05HPjxVPjxGT05UIA0K
+Y29sb3I9I2ZmMDAwMD48L0ZPTlQ+PC9VPjwvU1RST05HPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1z
+b05vcm1hbCBzdHlsZT0iTUFSR0lOOiAwY20iPjxTVFJPTkc+PFU+PEZPTlQgDQpjb2xvcj0jZmYw
+MDAwPjwvRk9OVD48L1U+PC9TVFJPTkc+Jm5ic3A7PC9QPg0KPFA+PFNQQU4gbGFuZz1FTi1VUz48
+Rk9OVCBmYWNlPeetiee6vz7igLs8L0ZPTlQ+PEZPTlQgDQpmYWNlPeetiee6vz7jg6Hjg7zjg6vj
+gpLlj5fjgZHlj5bjgaPjgZ/jgYrlrqLjgZXjgb7lsILnlKjjga7jg5rjg7zjgrjjgafjgZnjgILj
+gbvjgYvjga7jgYrlrqLjgZXjgb7jga/jgZTliKnnlKjjgYTjgZ/jgaDjgZHjgb7jgZvjgpPjgII8
+L0ZPTlQ+PFNQQU4gDQpsYW5nPUVOLVVTPjxCUj48L1NQQU4+PEZPTlQgZmFjZT3nrYnnur8+44Gq
+44GK44CBPFNQQU4gDQpsYW5nPUVOLVVTPjcyPC9TUEFOPuaZgumWk+S7peWGheOBq+OBlOeiuuiq
+jeOBjOOBquOBhOWgtOWQiOOAgeiqoOOBq+eUs+OBl+ios+OBlOOBluOBhOOBvuOBm+OCk+OAgeOB
+iuWuouanmOOBruWuieWFqOOBrueCuuOAgeOCouOCq+OCpuODs+ODiOOBruWIqeeUqOWItumZkOOC
+kuOBleOBm+OBpuOBhOOBn+OBoOOBjeOBvuOBmeOBruOBp+OAgeS6iOOCgeOBlOS6huaJv+OBj+OB
+oOOBleOBhOOAgjwvRk9OVD48L1NQQU4+PFNQQU4gDQpsYW5nPUVOLVVTPjxCUj48L1NQQU4+PC9Q
+PjxTUEFOIGxhbmc9RU4tVVM+DQo8UCBjbGFzcz1Nc29Ob3JtYWwgDQpzdHlsZT0iVEVYVC1BTElH
+TjogbGVmdDsgTUFSR0lOOiAwY207IG1zby1wYWdpbmF0aW9uOiB3aWRvdy1vcnBoYW4iIA0KYWxp
+Z249bGVmdD48QlI+PEEgaHJlZj0iaHR0cHM6Ly9ldGMudG1uY2guY29tLyI+PFNUUk9ORz48U1BB
+TiANCnN0eWxlPSdGT05ULUZBTUlMWTogRGVuZ1hpYW47IENPTE9SOiBibHVlOyBtc28tYXNjaWkt
+dGhlbWUtZm9udDogbWlub3ItbGF0aW47IG1zby1mYXJlYXN0LXRoZW1lLWZvbnQ6IG1pbm9yLWZh
+cmVhc3Q7IG1zby1oYW5zaS10aGVtZS1mb250OiBtaW5vci1sYXRpbjsgbXNvLWJpZGktZm9udC1m
+YW1pbHk6ICJUaW1lcyBOZXcgUm9tYW4iOyBtc28tYmlkaS10aGVtZS1mb250OiBtaW5vci1iaWRp
+Jz7ihpI8L1NQQU4+PC9TVFJPTkc+PFNUUk9ORz48U1BBTiANCmxhbmc9RU4tVVMgDQpzdHlsZT0n
+Rk9OVC1GQU1JTFk6IERlbmdYaWFuOyBDT0xPUjogYmx1ZTsgbXNvLWFzY2lpLXRoZW1lLWZvbnQ6
+IG1pbm9yLWxhdGluOyBtc28tZmFyZWFzdC10aGVtZS1mb250OiBtaW5vci1mYXJlYXN0OyBtc28t
+aGFuc2ktdGhlbWUtZm9udDogbWlub3ItbGF0aW47IG1zby1iaWRpLWZvbnQtZmFtaWx5OiAiVGlt
+ZXMgTmV3IFJvbWFuIjsgbXNvLWJpZGktdGhlbWUtZm9udDogbWlub3ItYmlkaSc+PFNQQU4gDQps
+YW5nPUVOLVVTPuOBlOWkieabtOOBr+OBk+OBoeOCieOBi+OCiTwvU1BBTj48L1NQQU4+PC9TVFJP
+Tkc+PEZPTlQgZmFjZT3nrYnnur8+IDwvRk9OVD48L0E+PC9QPjwvU1BBTj4NCjxQIGNsYXNzPU1z
+b05vcm1hbCBzdHlsZT0iTUFSR0lOOiAwY20iPjxTVFJPTkc+PFU+PEZPTlQgDQpjb2xvcj0jZmYw
+MDAwPjwvRk9OVD48L1U+PC9TVFJPTkc+Jm5ic3A7PC9QPg0KPFAgY2xhc3M9TXNvTm9ybWFsIHN0
+eWxlPSJNQVJHSU46IDBjbSI+PFNUUk9ORz48VT48Rk9OVCANCmNvbG9yPSNmZjAwMDA+PC9GT05U
+PjwvVT48L1NUUk9ORz4mbmJzcDs8L1A+DQo8UCBjbGFzcz1Nc29Ob3JtYWwgc3R5bGU9Ik1BUkdJ
+TjogMGNtIj48U1RST05HPjxVPjxGT05UIA0KY29sb3I9I2ZmMDAwMD48L0ZPTlQ+PC9VPjwvU1RS
+T05HPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lOOiAwY20iPjxG
+T05UIDwhRE9DVFlQRSBQVUJMSUMgPy0gVzNDIERURCBIVE1MIA0KNC4wIFRyYW5zaXRpb25hbCBF
+Tj8+PEZPTlQgZmFjZT3nrYnnur8+PC9GT05UPjwvRk9OVD4mbmJzcDs8L1A+DQo8UCBjbGFzcz1N
+c29Ob3JtYWwgc3R5bGU9Ik1BUkdJTjogMGNtIj48Rk9OVCA8IURPQ1RZUEUgUFVCTElDID8tIFcz
+QyBEVEQgSFRNTCANCjQuMCBUcmFuc2l0aW9uYWwgRU4/PjxGT05UIGZhY2U9562J57q/PuKAuzwv
+Rk9OVD7mnKzjg6Hjg7zjg6vjgbjjga7ov5Tkv6HjgavjgojjgovjgZTos6rllY/jgavjga/jgZTl
+m57nrZTjgafjgY3jgb7jgZvjgpPjgII8L0ZPTlQ+PFNQQU4gDQpsYW5nPUVOLVVTPjxCUj48L1A+
+PEZPTlQgZmFjZT3nrYnnur8+PC9GT05UPjwvU1BBTj4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHls
+ZT0iTUFSR0lOOiAwY20iPjxTUEFOIGxhbmc9RU4tVVM+PEZPTlQgDQpmYWNlPeetiee6vz48L0ZP
+TlQ+PC9TUEFOPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lOOiAw
+Y20iPjxTUEFOIGxhbmc9RU4tVVM+PEZPTlQgDQpmYWNlPeetiee6vz7ilIHilIHilIHilIHilIHi
+lIHilIE8QlI+4pagPC9GT05UPjwvU1BBTj48Rk9OVCBmYWNlPeetiee6vz7nmbrooYzogIU8L0ZP
+TlQ+PFNQQU4gDQpsYW5nPUVOLVVTPjxCUj48Rk9OVCBmYWNlPeetiee6vz7ilIHilIHilIHilIHi
+lIHilIHilIE8QlI+PC9QPjwvRk9OVD48L1NQQU4+PEZPTlQgZmFjZT3nrYnnur8+PC9GT05UPg0K
+PFAgY2xhc3M9TXNvTm9ybWFsIHN0eWxlPSJNQVJHSU46IDBjbSI+PEZPTlQgZmFjZT3nrYnnur8+
+PC9GT05UPiZuYnNwOzwvUD4NCjxQIGNsYXNzPU1zb05vcm1hbCBzdHlsZT0iTUFSR0lOOiAwY20i
+PjxGT05UIGZhY2U9562J57q/Pu+8pe+8tO+8o+WIqeeUqOeFp+S8muOCteODvOODk+OCueS6i+WL
+meWxgDwvRk9OVD48U1BBTiANCmxhbmc9RU4tVVM+PEJSPjxGT05UIGZhY2U9562J57q/PkVhc3Qg
+TmlwcG9uIEV4cHJlc3N3YXkgQ29tcGFueSANCkxpbWl0ZWQsPEJSPk1ldHJvcG9saXRhbiBFeHBy
+ZXNzd2F5IENvbXBhbnkgTGltaXRlZCANCjwvRk9OVD48bzpwPjwvbzpwPjwvU1BBTj48L1A+PEJS
+PjwvQk9EWT48L0hUTUw+DQo=
 
-All commits have been in -next and no merge conflicts.
+------=_NextPart_000_09F6_0142B16C.12E799E0--
 
-Thanks,
-Gao Xiang
-
-The following changes since commit d58071a8a76d779eedab38033ae4c821c30295a5:
-
-  Linux 5.16-rc3 (2021-11-28 14:09:19 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.17-rc1
-
-for you to fetch changes up to 09c543798c3cde19aae575a0f76d5fc7c130ff18:
-
-  erofs: use meta buffers for zmap operations (2022-01-04 23:47:36 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - add sysfs interface and a sysfs node to control sync decompression;
-
- - add tail-packing inline support for compressed files;
-
- - get rid of erofs_get_meta_page().
-
-----------------------------------------------------------------
-Gao Xiang (10):
-      erofs: Replace zero-length array with flexible-array member
-      erofs: clean up erofs_map_blocks tracepoints
-      erofs: tidy up z_erofs_lz4_decompress
-      erofs: introduce z_erofs_fixup_insize
-      erofs: support unaligned data decompression
-      erofs: introduce meta buffer operations
-      erofs: use meta buffers for inode operations
-      erofs: use meta buffers for super operations
-      erofs: use meta buffers for xattr operations
-      erofs: use meta buffers for zmap operations
-
-Huang Jianan (3):
-      erofs: rename lz4_0pading to zero_padding
-      erofs: add sysfs interface
-      erofs: add sysfs node to control sync decompression strategy
-
-Yue Hu (2):
-      erofs: support inline data decompression
-      erofs: add on-disk compressed tail-packing inline support
-
- Documentation/ABI/testing/sysfs-fs-erofs |  16 ++
- Documentation/filesystems/erofs.rst      |   8 +
- fs/erofs/Makefile                        |   2 +-
- fs/erofs/compress.h                      |   4 +-
- fs/erofs/data.c                          | 138 +++++++++++------
- fs/erofs/decompressor.c                  | 134 +++++++++-------
- fs/erofs/decompressor_lzma.c             |  19 +--
- fs/erofs/erofs_fs.h                      |  18 ++-
- fs/erofs/inode.c                         |  68 ++++----
- fs/erofs/internal.h                      |  52 ++++++-
- fs/erofs/super.c                         | 121 ++++++---------
- fs/erofs/sysfs.c                         | 256 +++++++++++++++++++++++++++++++
- fs/erofs/xattr.c                         | 135 +++++-----------
- fs/erofs/xattr.h                         |   1 -
- fs/erofs/zdata.c                         | 170 ++++++++++++++------
- fs/erofs/zdata.h                         |  24 ++-
- fs/erofs/zmap.c                          | 159 +++++++++++--------
- include/trace/events/erofs.h             |   4 +-
- 18 files changed, 870 insertions(+), 459 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-fs-erofs
- create mode 100644 fs/erofs/sysfs.c
