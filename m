@@ -2,37 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F205B48E976
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jan 2022 12:51:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C682D48E977
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jan 2022 12:51:28 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Jb04s2tcYz30Ky
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jan 2022 22:51:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Jb04t53z1z30Q8
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jan 2022 22:51:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
+ helo=out30-131.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+Received: from out30-131.freemail.mail.aliyun.com
+ (out30-131.freemail.mail.aliyun.com [115.124.30.131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Jb04n0FTtz2xvP
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Jb04m4gg5z2xsY
  for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jan 2022 22:51:18 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R121e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R201e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
  NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V1otL6J_1642161054; 
 Received: from
  e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
  fp:SMTPD_---0V1otL6J_1642161054) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 14 Jan 2022 19:51:01 +0800
+ Fri, 14 Jan 2022 19:51:02 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v9 1/2] erofs-utils: fuse: support tail-packing inline
+Subject: [PATCH v9 2/2] erofs-utils: mkfs: support tail-packing inline
  compressed data
-Date: Fri, 14 Jan 2022 19:50:52 +0800
-Message-Id: <20220114115053.28824-2-hsiangkao@linux.alibaba.com>
+Date: Fri, 14 Jan 2022 19:50:53 +0800
+Message-Id: <20220114115053.28824-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220114115053.28824-1-hsiangkao@linux.alibaba.com>
 References: <20220114115053.28824-1-hsiangkao@linux.alibaba.com>
@@ -56,336 +56,446 @@ Sender: "Linux-erofs"
 
 From: Yue Hu <huyue2@yulong.com>
 
-Add tail-packing inline compressed data support for erofsfuse.
+Currently, we only support tail-packing inline data for
+uncompressed files, let's support it as well for compressed files.
 
 Signed-off-by: Yue Hu <huyue2@yulong.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/internal.h |  5 ++
- include/erofs_fs.h       | 10 +++-
- lib/decompress.c         |  5 +-
- lib/namei.c              |  2 +-
- lib/zmap.c               | 99 ++++++++++++++++++++++++++++++----------
- 5 files changed, 92 insertions(+), 29 deletions(-)
+ include/erofs/config.h   |   1 +
+ include/erofs/internal.h |   1 +
+ lib/compress.c           | 122 ++++++++++++++++++++++++++++++---------
+ lib/compressor.c         |  16 +++--
+ lib/compressor.h         |   2 +-
+ lib/inode.c              |  57 +++++++++++++-----
+ mkfs/main.c              |   8 +++
+ 7 files changed, 159 insertions(+), 48 deletions(-)
 
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index e41c079..a3f9bac 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -43,6 +43,7 @@ struct erofs_configure {
+ 	char c_timeinherit;
+ 	char c_chunkbits;
+ 	bool c_noinline_data;
++	bool c_ztailpacking;
+ 
+ #ifdef HAVE_LIBSELINUX
+ 	struct selabel_handle *sehnd;
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 2c7b611..68cab50 100644
+index 68cab50..3615297 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -131,6 +131,7 @@ EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
- EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
- EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
- EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
-+EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+@@ -175,6 +175,7 @@ struct erofs_inode {
+ 	unsigned char inode_isize;
+ 	/* inline tail-end packing size */
+ 	unsigned short idata_size;
++	bool compressed_idata;
  
- #define EROFS_I_EA_INITED	(1 << 0)
-@@ -192,6 +193,9 @@ struct erofs_inode {
- 			uint8_t  z_algorithmtype[2];
- 			uint8_t  z_logical_clusterbits;
- 			uint8_t  z_physical_clusterblks;
-+			uint64_t z_tailextent_headlcn;
-+			unsigned int    z_idataoff;
-+#define z_idata_size	idata_size
- 		};
- 	};
- #ifdef WITH_ANDROID
-@@ -295,6 +299,7 @@ struct erofs_map_blocks {
-  * approach instead if possible since it's more metadata lightweight.)
-  */
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
-+#define EROFS_GET_BLOCKS_FINDTAIL	0x0008
+ 	unsigned int xattr_isize;
+ 	unsigned int extent_isize;
+diff --git a/lib/compress.c b/lib/compress.c
+index 6f16e0c..c872999 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -72,7 +72,10 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
  
- enum {
- 	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 9a91877..59d9bbb 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -23,12 +23,14 @@
- #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
- #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
- #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
-+#define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_LZ4_0PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
- 	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
- 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
--	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE)
-+	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
-+	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-@@ -290,13 +292,17 @@ struct z_erofs_lzma_cfgs {
-  *                                  (4B) + 2B + (4B) if compacted 2B is on.
-  * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
-  * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-+ * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
-  */
- #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
-+#define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
- 
- struct z_erofs_map_header {
--	__le32	h_reserved1;
-+	__le16	h_reserved1;
-+	/* record the size of tailpacking data */
-+	__le16  h_idata_size;
- 	__le16	h_advise;
- 	/*
- 	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
-diff --git a/lib/decompress.c b/lib/decompress.c
-index 359dae7..1661f91 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -110,6 +110,9 @@ static int z_erofs_decompress_lz4(struct z_erofs_decompress_req *rq)
- 					  rq->decodedlength);
- 
- 	if (ret != (int)rq->decodedlength) {
-+		erofs_err("failed to %s decompress %d in[%u, %u] out[%u]",
-+			  rq->partial_decoding ? "partial" : "full",
-+			  ret, rq->inputsize, inputmargin, rq->decodedlength);
- 		ret = -EIO;
- 		goto out;
- 	}
-@@ -129,7 +132,7 @@ out:
- int z_erofs_decompress(struct z_erofs_decompress_req *rq)
- {
- 	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
--		if (rq->inputsize != EROFS_BLKSIZ)
-+		if (rq->inputsize > EROFS_BLKSIZ)
- 			return -EFSCORRUPTED;
- 
- 		DBG_BUGON(rq->decodedlength > EROFS_BLKSIZ);
-diff --git a/lib/namei.c b/lib/namei.c
-index 4124170..97f0f80 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -137,7 +137,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->u.chunkbits = LOG_BLOCK_SIZE +
- 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
- 	} else if (erofs_inode_is_data_compressed(vi->datalayout))
--		z_erofs_fill_inode(vi);
-+		return z_erofs_fill_inode(vi);
- 	return 0;
- bogusimode:
- 	erofs_err("bogus i_mode (%o) @ nid %llu", vi->i_mode, vi->nid | 0ULL);
-diff --git a/lib/zmap.c b/lib/zmap.c
-index abc8bab..95745c5 100644
---- a/lib/zmap.c
-+++ b/lib/zmap.c
-@@ -10,9 +10,14 @@
- #include "erofs/io.h"
- #include "erofs/print.h"
- 
-+static int z_erofs_do_map_blocks(struct erofs_inode *vi,
-+				 struct erofs_map_blocks *map,
-+				 int flags);
-+
- int z_erofs_fill_inode(struct erofs_inode *vi)
- {
- 	if (!erofs_sb_has_big_pcluster() &&
-+	    !erofs_sb_has_ztailpacking() &&
- 	    vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
- 		vi->z_advise = 0;
- 		vi->z_algorithmtype[0] = 0;
-@@ -35,6 +40,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
- 		return 0;
- 
- 	DBG_BUGON(!erofs_sb_has_big_pcluster() &&
-+		  !erofs_sb_has_ztailpacking() &&
- 		  vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
- 	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
- 
-@@ -61,6 +67,22 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
- 			  vi->nid * 1ULL);
- 		return -EFSCORRUPTED;
- 	}
-+
-+	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
-+		struct erofs_map_blocks map = { .index = UINT_MAX };
-+
-+		vi->idata_size = le16_to_cpu(h->h_idata_size);
-+		ret = z_erofs_do_map_blocks(vi, &map,
-+					    EROFS_GET_BLOCKS_FINDTAIL);
-+		if (!map.m_plen ||
-+		    erofs_blkoff(map.m_pa) + map.m_plen > EROFS_BLKSIZ) {
-+			erofs_err("invalid tail-packing pclustersize %llu",
-+				  map.m_plen | 0ULL);
-+			return -EFSCORRUPTED;
-+		}
-+		if (ret < 0)
-+			return ret;
-+	}
- 	vi->flags |= EROFS_I_Z_INITED;
- 	return 0;
- }
-@@ -76,6 +98,7 @@ struct z_erofs_maprecorder {
- 	u16 clusterofs;
- 	u16 delta[2];
- 	erofs_blk_t pblk, compressedlcs;
-+	erofs_off_t nextpackoff;
- };
- 
- static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
-@@ -114,6 +137,7 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 	if (err)
- 		return err;
- 
-+	m->nextpackoff = pos + sizeof(struct z_erofs_vle_decompressed_index);
- 	m->lcn = lcn;
- 	di = m->kaddr + erofs_blkoff(pos);
- 
-@@ -186,12 +210,12 @@ static int get_compacted_la_distance(unsigned int lclusterbits,
- 
- static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 				  unsigned int amortizedshift,
--				  unsigned int eofs, bool lookahead)
-+				  erofs_off_t pos, bool lookahead)
- {
- 	struct erofs_inode *const vi = m->inode;
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
- 	const unsigned int lomask = (1 << lclusterbits) - 1;
--	unsigned int vcnt, base, lo, encodebits, nblk;
-+	unsigned int vcnt, base, lo, encodebits, nblk, eofs;
- 	int i;
- 	u8 *in, type;
- 	bool big_pcluster;
-@@ -203,8 +227,12 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	else
- 		return -EOPNOTSUPP;
- 
-+	/* it doesn't equal to round_up(..) */
-+	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
-+			 (vcnt << amortizedshift);
- 	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
-+	eofs = erofs_blkoff(pos);
- 	base = round_down(eofs, vcnt << amortizedshift);
- 	in = m->kaddr + base;
- 
-@@ -341,8 +369,7 @@ out:
- 	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
- 	if (err)
- 		return err;
--	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos),
--				      lookahead);
-+	return unpack_compacted_index(m, amortizedshift, pos, lookahead);
+ 	/* whether the tail-end uncompressed block or not */
+ 	if (!d1) {
+-		/* TODO: tail-packing inline compressed data */
++		/*
++		 * A lcluster cannot have there parts with the middle one which
++		 * is well-compressed. Such tail pcluster cannot be inlined.
++		 */
+ 		DBG_BUGON(!raw);
+ 		type = Z_EROFS_VLE_CLUSTER_TYPE_PLAIN;
+ 		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
+@@ -162,6 +165,21 @@ static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
+ 	return cfg.c_pclusterblks_def;
  }
  
- static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-@@ -415,6 +442,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 
- 	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
- 		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
-+
- 	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
- 		map->m_plen = 1 << lclusterbits;
-@@ -513,10 +541,11 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 	return 0;
- }
- 
--int z_erofs_map_blocks_iter(struct erofs_inode *vi,
--			    struct erofs_map_blocks *map,
--			    int flags)
-+static int z_erofs_do_map_blocks(struct erofs_inode *vi,
-+				 struct erofs_map_blocks *map,
-+				 int flags)
- {
-+	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
- 	struct z_erofs_maprecorder m = {
- 		.inode = vi,
- 		.map = map,
-@@ -527,20 +556,8 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	unsigned long initial_lcn;
- 	unsigned long long ofs, end;
- 
--	/* when trying to read beyond EOF, leave it unmapped */
--	if (map->m_la >= vi->i_size) {
--		map->m_llen = map->m_la + 1 - vi->i_size;
--		map->m_la = vi->i_size;
--		map->m_flags = 0;
--		goto out;
--	}
--
--	err = z_erofs_fill_inode_lazy(vi);
--	if (err)
--		goto out;
--
- 	lclusterbits = vi->z_logical_clusterbits;
--	ofs = map->m_la;
-+	ofs = flags & EROFS_GET_BLOCKS_FINDTAIL ? vi->i_size - 1 : map->m_la;
- 	initial_lcn = ofs >> lclusterbits;
- 	endoff = ofs & ((1 << lclusterbits) - 1);
- 
-@@ -548,6 +565,9 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	if (err)
- 		goto out;
- 
-+	if (ztailpacking && (flags & EROFS_GET_BLOCKS_FINDTAIL))
-+		vi->z_idataoff = m.nextpackoff;
-+
- 	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
- 	end = (m.lcn + 1ULL) << lclusterbits;
- 	switch (m.type) {
-@@ -583,11 +603,18 @@ int z_erofs_map_blocks_iter(struct erofs_inode *vi,
- 	}
- 
- 	map->m_llen = end - map->m_la;
--	map->m_pa = blknr_to_addr(m.pblk);
--
--	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
--	if (err)
--		goto out;
-+	if (flags & EROFS_GET_BLOCKS_FINDTAIL)
-+		vi->z_tailextent_headlcn = m.lcn;
-+	if (ztailpacking && m.lcn == vi->z_tailextent_headlcn) {
-+		map->m_flags |= EROFS_MAP_META;
-+		map->m_pa = vi->z_idataoff;
-+		map->m_plen = vi->z_idata_size;
-+	} else {
-+		map->m_pa = blknr_to_addr(m.pblk);
-+		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
-+		if (err)
-+			goto out;
-+	}
- 
- 	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
- 		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
-@@ -604,7 +631,29 @@ out:
- 	erofs_dbg("m_la %" PRIu64 " m_pa %" PRIu64 " m_llen %" PRIu64 " m_plen %" PRIu64 " m_flags 0%o",
- 		  map->m_la, map->m_pa,
- 		  map->m_llen, map->m_plen, map->m_flags);
-+	return err;
-+}
- 
-+int z_erofs_map_blocks_iter(struct erofs_inode *vi,
-+			    struct erofs_map_blocks *map,
-+			    int flags)
++static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
++				    unsigned int len, bool raw)
 +{
-+	int err = 0;
++	inode->idata_size = len;
++	inode->compressed_idata = !raw;
 +
-+	/* when trying to read beyond EOF, leave it unmapped */
-+	if (map->m_la >= vi->i_size) {
-+		map->m_llen = map->m_la + 1 - vi->i_size;
-+		map->m_la = vi->i_size;
-+		map->m_flags = 0;
-+		goto out;
++	inode->idata = malloc(inode->idata_size);
++	if (!inode->idata)
++		return -ENOMEM;
++	erofs_dbg("Recording %u %scompressed inline data",
++		  inode->idata_size, raw ? "un" : "");
++	memcpy(inode->idata, data, inode->idata_size);
++	return len;
++}
++
+ static int vle_compress_one(struct erofs_inode *inode,
+ 			    struct z_erofs_vle_compress_ctx *ctx,
+ 			    bool final)
+@@ -172,16 +190,23 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 	int ret;
+ 	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
+ 	char *const dst = dstbuf + EROFS_BLKSIZ;
++	bool trailing = false, tailpcluster = false;
+ 
+ 	while (len) {
+-		const unsigned int pclustersize =
++		unsigned int pclustersize =
+ 			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
+ 		bool raw;
+ 
++		DBG_BUGON(tailpcluster);
+ 		if (len <= pclustersize) {
+ 			if (final) {
+-				if (len <= EROFS_BLKSIZ)
++				/* TODO: compress with 2 pclusters instead */
++				if (cfg.c_ztailpacking) {
++					trailing = true;
++					pclustersize = EROFS_BLKSIZ;
++				} else if (len <= EROFS_BLKSIZ) {
+ 					goto nocompression;
++				}
+ 			} else {
+ 				break;
+ 			}
+@@ -189,20 +214,54 @@ static int vle_compress_one(struct erofs_inode *inode,
+ 
+ 		count = min(len, cfg.c_max_decompressed_extent_bytes);
+ 		ret = erofs_compress_destsize(h, ctx->queue + ctx->head,
+-					      &count, dst, pclustersize);
+-		if (ret <= 0) {
+-			if (ret != -EAGAIN) {
++					      &count, dst, pclustersize,
++					      !(final && len == count));
++
++		/* XXX: need to be polished, yet do it correctly first. */
++		if (cfg.c_ztailpacking && final) {
++			if (ret <= 0 && len < EROFS_BLKSIZ) {
++				DBG_BUGON(!trailing);
++				tailpcluster = true;
++			} else if (ret > 0 && len == count &&
++				   /* less than 1 compressed block */
++				   ret < EROFS_BLKSIZ - 10) {
++				tailpcluster = true;
++			}
++		}
++
++		if (ret <= 0 || (tailpcluster &&
++				 ctx->clusterofs + len < EROFS_BLKSIZ)) {
++			if (ret <= 0 && ret != -EAGAIN) {
+ 				erofs_err("failed to compress %s: %s",
+ 					  inode->i_srcpath,
+ 					  erofs_strerror(ret));
+ 			}
++
++			if (tailpcluster && len < EROFS_BLKSIZ)
++				ret = z_erofs_fill_inline_data(inode,
++						ctx->queue + ctx->head,
++						len, true);
++			else
+ nocompression:
+-			ret = write_uncompressed_extent(ctx, &len, dst);
++				ret = write_uncompressed_extent(ctx, &len, dst);
++
+ 			if (ret < 0)
+ 				return ret;
+ 			count = ret;
++
++			/*
++			 * XXX: For now, we have to leave `ctx->compressedblks
++			 * = 1' since there is no way to generate compressed
++			 * indexes after the time that ztailpacking is decided.
++			 */
+ 			ctx->compressedblks = 1;
+ 			raw = true;
++		} else if (tailpcluster && ret < EROFS_BLKSIZ) {
++			ret = z_erofs_fill_inline_data(inode, dst, ret, false);
++			if (ret < 0)
++				return ret;
++			ctx->compressedblks = 1;
++			raw = false;
+ 		} else {
+ 			const unsigned int tailused = ret & (EROFS_BLKSIZ - 1);
+ 			const unsigned int padding =
+@@ -449,6 +508,7 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
+ {
+ 	struct z_erofs_map_header h = {
+ 		.h_advise = cpu_to_le16(inode->z_advise),
++		.h_idata_size = cpu_to_le16(inode->idata_size),
+ 		.h_algorithmtype = inode->z_algorithmtype[1] << 4 |
+ 				   inode->z_algorithmtype[0],
+ 		/* lclustersize */
+@@ -476,7 +536,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+ 	if (fd < 0) {
+ 		ret = -errno;
+-		goto err_free;
++		goto err_free_meta;
+ 	}
+ 
+ 	/* allocate main data buffer */
+@@ -504,8 +564,6 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	inode->z_algorithmtype[1] = algorithmtype[1];
+ 	inode->z_logical_clusterbits = LOG_BLOCK_SIZE;
+ 
+-	z_erofs_write_mapheader(inode, compressmeta);
+-
+ 	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
+ 	ctx.blkaddr = blkaddr;
+ 	ctx.metacur = compressmeta + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
+@@ -534,35 +592,42 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	/* do the final round */
+ 	ret = vle_compress_one(inode, &ctx, true);
+ 	if (ret)
+-		goto err_bdrop;
++		goto err_free_idata;
+ 
+ 	/* fall back to no compression mode */
+ 	compressed_blocks = ctx.blkaddr - blkaddr;
+-	if (compressed_blocks >= BLK_ROUND_UP(inode->i_size)) {
+-		ret = -ENOSPC;
+-		goto err_bdrop;
+-	}
++	DBG_BUGON(compressed_blocks < !!inode->idata_size);
++	compressed_blocks -= !!inode->idata_size;
+ 
+ 	vle_write_indexes_final(&ctx);
++	legacymetasize = ctx.metacur - compressmeta;
++	/* estimate if data compression saves space or not */
++	if (compressed_blocks * EROFS_BLKSIZ + inode->idata_size +
++	    legacymetasize >= inode->i_size) {
++		ret = -ENOSPC;
++		goto err_free_idata;
 +	}
++	z_erofs_write_mapheader(inode, compressmeta);
+ 
+ 	close(fd);
+-	DBG_BUGON(!compressed_blocks);
+-	ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
+-	DBG_BUGON(ret != EROFS_BLKSIZ);
++	if (compressed_blocks) {
++		ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
++		DBG_BUGON(ret != EROFS_BLKSIZ);
++	} else {
++		DBG_BUGON(!inode->idata_size);
++	}
+ 
+ 	erofs_info("compressed %s (%llu bytes) into %u blocks",
+ 		   inode->i_srcpath, (unsigned long long)inode->i_size,
+ 		   compressed_blocks);
+ 
+-	/*
+-	 * TODO: need to move erofs_bdrop to erofs_write_tail_end
+-	 *       when both mkfs & kernel support compression inline.
+-	 */
+-	erofs_bdrop(bh, false);
+-	inode->idata_size = 0;
++	if (inode->idata_size)
++		inode->bh_data = bh;
++	else
++		erofs_bdrop(bh, false);
 +
-+	err = z_erofs_fill_inode_lazy(vi);
-+	if (err)
-+		goto out;
-+
-+	err = z_erofs_do_map_blocks(vi, map, flags);
-+out:
- 	DBG_BUGON(err < 0 && err != -ENOMEM);
- 	return err;
+ 	inode->u.i_blocks = compressed_blocks;
+ 
+-	legacymetasize = ctx.metacur - compressmeta;
+ 	if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
+ 		inode->extent_isize = legacymetasize;
+ 	} else {
+@@ -575,11 +640,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
+ 	erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
+ 	return 0;
+ 
++err_free_idata:
++	if (inode->idata) {
++		free(inode->idata);
++		inode->idata = NULL;
++	}
+ err_bdrop:
+ 	erofs_bdrop(bh, true);	/* revoke buffer */
+ err_close:
+ 	close(fd);
+-err_free:
++err_free_meta:
+ 	free(compressmeta);
+ 	return ret;
  }
+diff --git a/lib/compressor.c b/lib/compressor.c
+index 3e04a3a..3666496 100644
+--- a/lib/compressor.c
++++ b/lib/compressor.c
+@@ -24,23 +24,29 @@ static const struct erofs_compressor *compressors[] = {
+ 
+ int erofs_compress_destsize(const struct erofs_compress *c,
+ 			    const void *src, unsigned int *srcsize,
+-			    void *dst, unsigned int dstsize)
++			    void *dst, unsigned int dstsize, bool inblocks)
+ {
+-	unsigned int uncompressed_size;
++	unsigned int uncompressed_capacity, compressed_size;
+ 	int ret;
+ 
+ 	DBG_BUGON(!c->alg);
+ 	if (!c->alg->compress_destsize)
+ 		return -ENOTSUP;
+ 
++	uncompressed_capacity = *srcsize;
+ 	ret = c->alg->compress_destsize(c, src, srcsize, dst, dstsize);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* XXX: ret >= EROFS_BLKSIZ is a temporary hack for ztailpacking */
++	if (inblocks || ret >= EROFS_BLKSIZ ||
++	    uncompressed_capacity != *srcsize)
++		compressed_size = roundup(ret, EROFS_BLKSIZ);
++	else
++		compressed_size = ret;
++	DBG_BUGON(c->compress_threshold < 100);
+ 	/* check if there is enough gains to compress */
+-	uncompressed_size = *srcsize;
+-	if (roundup(ret, EROFS_BLKSIZ) >= uncompressed_size *
+-	    c->compress_threshold / 100)
++	if (*srcsize <= compressed_size * c->compress_threshold / 100)
+ 		return -EAGAIN;
+ 	return ret;
+ }
+diff --git a/lib/compressor.h b/lib/compressor.h
+index 728dd0b..cf063f1 100644
+--- a/lib/compressor.h
++++ b/lib/compressor.h
+@@ -47,7 +47,7 @@ extern const struct erofs_compressor erofs_compressor_lzma;
+ 
+ int erofs_compress_destsize(const struct erofs_compress *c,
+ 			    const void *src, unsigned int *srcsize,
+-			    void *dst, unsigned int dstsize);
++			    void *dst, unsigned int dstsize, bool inblocks);
+ 
+ int erofs_compressor_setlevel(struct erofs_compress *c, int compression_level);
+ int erofs_compressor_init(struct erofs_compress *c, char *alg_name);
+diff --git a/lib/inode.c b/lib/inode.c
+index b6d3092..3fd4b69 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -593,28 +593,29 @@ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
+ 		inodesize = Z_EROFS_VLE_EXTENT_ALIGN(inodesize) +
+ 			    inode->extent_isize;
+ 
+-	if (is_inode_layout_compression(inode))
+-		goto noinline;
++	/* TODO: tailpacking inline of chunk-based format isn't finalized */
+ 	if (inode->datalayout == EROFS_INODE_CHUNK_BASED)
+ 		goto noinline;
+ 
+-	if (cfg.c_noinline_data && S_ISREG(inode->i_mode)) {
+-		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+-		goto noinline;
++	if (!is_inode_layout_compression(inode)) {
++		if (cfg.c_noinline_data && S_ISREG(inode->i_mode)) {
++			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
++			goto noinline;
++		}
++		/*
++		 * If the file sizes of uncompressed files are block-aligned,
++		 * should use the EROFS_INODE_FLAT_PLAIN data layout.
++		 */
++		if (!inode->idata_size)
++			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+ 	}
+ 
+-	/*
+-	 * if the file size is block-aligned for uncompressed files,
+-	 * should use EROFS_INODE_FLAT_PLAIN data mapping mode.
+-	 */
+-	if (!inode->idata_size)
+-		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+-
+ 	bh = erofs_balloc(INODE, inodesize, 0, inode->idata_size);
+ 	if (bh == ERR_PTR(-ENOSPC)) {
+ 		int ret;
+ 
+-		inode->datalayout = EROFS_INODE_FLAT_PLAIN;
++		if (!is_inode_layout_compression(inode))
++			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+ noinline:
+ 		/* expend an extra block for tail-end data */
+ 		ret = erofs_prepare_tail_block(inode);
+@@ -627,7 +628,20 @@ noinline:
+ 	} else if (IS_ERR(bh)) {
+ 		return PTR_ERR(bh);
+ 	} else if (inode->idata_size) {
+-		inode->datalayout = EROFS_INODE_FLAT_INLINE;
++		if (is_inode_layout_compression(inode)) {
++			struct z_erofs_map_header *h = inode->compressmeta;
++
++			DBG_BUGON(!cfg.c_ztailpacking);
++			h->h_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
++			erofs_dbg("Inline %scompressed data (%u bytes) to %s",
++				  inode->compressed_idata ? "" : "un",
++				  inode->idata_size, inode->i_srcpath);
++			erofs_sb_set_ztailpacking();
++		} else {
++			inode->datalayout = EROFS_INODE_FLAT_INLINE;
++			erofs_dbg("Inline tail-end data (%u bytes) to %s",
++				  inode->idata_size, inode->i_srcpath);
++		}
+ 
+ 		/* allocate inline buffer */
+ 		ibh = erofs_battach(bh, META, inode->idata_size);
+@@ -685,15 +699,26 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR);
+ 	} else {
+ 		int ret;
+-		erofs_off_t pos;
++		erofs_off_t pos, zero_pos;
+ 
+ 		erofs_mapbh(bh->block);
+ 		pos = erofs_btell(bh, true) - EROFS_BLKSIZ;
++
++		/* 0'ed data should be padded at head for 0padding conversion */
++		if (erofs_sb_has_lz4_0padding() && inode->compressed_idata) {
++			zero_pos = pos;
++			pos += EROFS_BLKSIZ - inode->idata_size;
++		} else {
++			/* pad 0'ed data for the other cases */
++			zero_pos = pos + inode->idata_size;
++		}
+ 		ret = dev_write(inode->idata, pos, inode->idata_size);
+ 		if (ret)
+ 			return ret;
++
++		DBG_BUGON(inode->idata_size > EROFS_BLKSIZ);
+ 		if (inode->idata_size < EROFS_BLKSIZ) {
+-			ret = dev_fillzero(pos + inode->idata_size,
++			ret = dev_fillzero(zero_pos,
+ 					   EROFS_BLKSIZ - inode->idata_size,
+ 					   false);
+ 			if (ret)
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 90cedde..9eb696a 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -187,6 +187,12 @@ static int parse_extended_opts(const char *opts)
+ 				return -EINVAL;
+ 			cfg.c_force_chunkformat = FORCE_INODE_CHUNK_INDEXES;
+ 		}
++
++		if (MATCH_EXTENTED_OPT("ztailpacking", token, keylen)) {
++			if (vallen)
++				return -EINVAL;
++			cfg.c_ztailpacking = true;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -625,6 +631,8 @@ int main(int argc, char **argv)
+ 	erofs_show_config();
+ 	if (erofs_sb_has_chunked_file())
+ 		erofs_warn("EXPERIMENTAL chunked file feature in use. Use at your own risk!");
++	if (cfg.c_ztailpacking)
++		erofs_warn("EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
+ 	erofs_set_fs_root(cfg.c_src_path);
+ #ifndef NDEBUG
+ 	if (cfg.c_random_pclusterblks)
 -- 
 2.24.4
 
