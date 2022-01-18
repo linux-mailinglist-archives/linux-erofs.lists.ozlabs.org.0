@@ -1,78 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2443E48EB94
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jan 2022 15:21:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C0404926AF
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Jan 2022 14:12:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Jb3PZ6vYRz30H3
-	for <lists+linux-erofs@lfdr.de>; Sat, 15 Jan 2022 01:21:06 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=g60dh5/2;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JdTj525tyz30R0
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jan 2022 00:12:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1032;
- helo=mail-pj1-x1032.google.com; envelope-from=jnhuang95@gmail.com;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=g60dh5/2; dkim-atps=neutral
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com
- [IPv6:2607:f8b0:4864:20::1032])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
+ helo=out30-131.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com
+ (out30-131.freemail.mail.aliyun.com [115.124.30.131])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Jb3PR08l4z2yyK
- for <linux-erofs@lists.ozlabs.org>; Sat, 15 Jan 2022 01:20:56 +1100 (AEDT)
-Received: by mail-pj1-x1032.google.com with SMTP id
- ie23-20020a17090b401700b001b38a5318easo14245927pjb.2
- for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jan 2022 06:20:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=message-id:date:mime-version:user-agent:subject:to:cc:references
- :from:in-reply-to:content-transfer-encoding;
- bh=FWA4Yk5Y0Jcg68gewVhtCzAhox+VDVaZRIZAXDWpBl0=;
- b=g60dh5/2MzZ82VH9X5vzasWMnCZJExJdAfNmW6efH1OhAOCsLBc0xmJb2d7BQ6IHuj
- lYCXd5qnr8Wa7OEe7j+my38kVu222f4HiuW96PKxsU/+xIjX92bwHbuQ/BEOxtHIYAr1
- zkbBuhyP9as9B7nPA4p0OCjtexWnOA8NtYn5wXjBFDIdFxZQwykuvzJlkQ3zRD1Jpcke
- QtzVszHGQ9RW5xqmOTgmP8Et1zBenWr6C5Kq0QwbgMXzMJK1Wu57I2NKLMsTBLZMMh8/
- wVdHpSkL+NjtRDJDPXYx1VkDiv/Q2gHykoYnL2fObobKrPimZEo65dCtg0SbvjApXx10
- u6Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
- :to:cc:references:from:in-reply-to:content-transfer-encoding;
- bh=FWA4Yk5Y0Jcg68gewVhtCzAhox+VDVaZRIZAXDWpBl0=;
- b=sZ2YaH8FAX6njgtoiyA5yTiL4XuHsXWkXJ5aWRRkQy0saJ6o1LePbhMHHJyugumv6R
- 42l+asYBYgfefu4ImQex3do16oSvmF3UzXUwso7A7LjguUKQmz9ywZRbJaprfGFSIyDs
- MQFg3ei6Gu8pLDELN6ezgRuP4a7Vj/ZzH2x5tgHJvBiv4SQF47lMZLrFe1CE/q2j9uDf
- Puo72LOmHe5ffVqeZpt7Vjz3BRayMs8xoKNzeVYrhuMmM143BEOx7o+tv+/G4ZgLDuJC
- 4jWn04LpRMA++gBlPvEkXd9SN0e4SLEW3ehDz8kcvsXpoc6Z0LvHZBs0WSA6RuYlKsux
- Py1w==
-X-Gm-Message-State: AOAM533w0P8DOEIspnzezVhF38NCR1Db4wGwSLicnC5cw1bfjTxGAxJR
- lpNvUkzixWtgFxJrnaGMUNw=
-X-Google-Smtp-Source: ABdhPJwh8LooMNvlhocZpSRYGt9xgpUuOwkIShQB4ler+yHQbAI59GAjBloFq3IQyGb4rm1OIUK1cQ==
-X-Received: by 2002:a17:90b:4a45:: with SMTP id
- lb5mr2611999pjb.220.1642170052679; 
- Fri, 14 Jan 2022 06:20:52 -0800 (PST)
-Received: from [0.0.0.0] (li1080-207.members.linode.com. [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id g6sm4804961pgk.37.2022.01.14.06.20.48
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Fri, 14 Jan 2022 06:20:52 -0800 (PST)
-Message-ID: <0feb9212-f515-62f1-033f-a4af78241be6@gmail.com>
-Date: Fri, 14 Jan 2022 22:20:43 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JdThh2sLtz2ymg
+ for <linux-erofs@lists.ozlabs.org>; Wed, 19 Jan 2022 00:12:35 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R421e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V2C1owk_1642511536; 
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V2C1owk_1642511536) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 18 Jan 2022 21:12:17 +0800
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
+To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 00/20] fscache,erofs: fscache-based demand-read semantics
+Date: Tue, 18 Jan 2022 21:11:56 +0800
+Message-Id: <20220118131216.85338-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v2 0/3] fs/erofs: new filesystem
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <20210822154843.10971-1-jnhuang95@gmail.com>
- <20210823123646.9765-1-jnhuang95@gmail.com>
- <20210825224042.GF858@bill-the-cat> <YdWHxPMyojsdcg9v@B-P7TQMD6M-0146.local>
-From: Huang Jianan <jnhuang95@gmail.com>
-In-Reply-To: <YdWHxPMyojsdcg9v@B-P7TQMD6M-0146.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -85,46 +46,204 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Tom Rini <trini@konsulko.com>, linux-erofs@lists.ozlabs.org,
- u-boot@lists.denx.de
+Cc: linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+ linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-在 2022/1/5 19:57, Gao Xiang 写道:
-> Hi Jianan,
->
-> On Wed, Aug 25, 2021 at 06:40:42PM -0400, Tom Rini wrote:
->> On Mon, Aug 23, 2021 at 08:36:43PM +0800, Huang Jianan wrote:
->>
->>> From: Huang Jianan <huangjianan@oppo.com>
->>>
->>> Add erofs filesystem support.
->>>
->>> The code is adapted from erofs-utils in order to reduce maintenance
->>> burden and keep with the latest feature.
->>>
->>> Changes since v1:
->>>   - fix the inconsistency between From and SoB (Bin Meng);
->>>   - add missing license header;
->>>
->>> Huang Jianan (3):
->>>    fs/erofs: add erofs filesystem support
->>>    fs/erofs: add lz4 1.8.3 decompressor
->>>    fs/erofs: add lz4 decompression support
->> Aside from what I've just now sent, can you please extend the existing
->> py/tests/ to cover basic functionality here, ensure they run on sandbox
->> and in CI?  Thanks.
-> Any further progress on this work? At least sync it up with erofs-utils
-> 1.4?
-I'm still working on this, the new version will be sent soon.
+changes since v1:
+- rebase to v5.17
+- erofs: In chunk based layout, since the logical file offset has the
+  same remainder over PAGE_SIZE with the corresponding physical address
+  inside the data blob file, the file page cache can be directly
+  transferred to netfs library to contain the data from data blob file.
+  (patch 15) (Gao Xiang)
+- netfs,cachefiles: manage logical/physical offset separately. (patch 2)
+  (It is used by erofs_begin_cache_operation() in patch 15.)
+- cachefiles: introduce a new devnode specificaly for on-demand reading.
+  (patch 6)
+- netfs,fscache,cachefiles: add new CONFIG_* for on-demand reading.
+  (patch 3/5)
+- You could start a quick test by
+  https://github.com/lostjeffle/demand-read-cachefilesd
+- add more background information (mainly introduction to nydus) in the
+  "Background" part of this cover letter
 
-Thanks,
-Jianan
-> Thanks,
-> Gao Xiang
->
->> -- 
->> Tom
->
+[Important Issues]
+The following issues still need further discussion. Thanks for your time
+and patience.
+
+1. I noticed that there's refactoring of netfs library[1], and patch 1
+is not needed since [2].
+
+2. The current implementation will severely conflict with the
+refactoring of netfs library[1][2]. The assumption of 'struct
+netfs_i_context' [2] is that, every file in the upper netfs will
+correspond to only one backing file. While in our scenario, one file in
+erofs can correspond to multiple backing files. That is, the content of
+one file can be divided into multiple chunks, and are distrubuted over
+multiple blob files, i.e. multiple backing files. Currently I have no
+good idea solving this conflic.
+
+Besides there are still two quetions:
+- What's the plan of [1]? When is it planned to be merged?
+- It seems that all upper fs using fscache is going to use netfs API,
+  while the APIs like fscache_read_or_alloc_page() are deprecated. Is
+  that true?
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-lib
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=netfs-lib&id=087d913752522fb9aa6d3effdb9a8c7908c779dd
+
+
+RFC: https://lore.kernel.org/all/YbRL2glGzjfZkVbH@B-P7TQMD6M-0146.local/t/
+v1: https://lore.kernel.org/lkml/47831875-4bdd-8398-9f2d-0466b31a4382@linux.alibaba.com/T/
+
+
+[Background]
+============
+Nydus is a remote container snapthotter specially optimised for container
+images distribution over network. It has recently been accepted as a
+sub-project of containerd[1]. Nydus is an excellent container image
+acceleration solution, since it only pulls data from remote when it's
+really needed, a.k.a. on-demand reading.
+
+erofs (Enhanced Read-Only File System) is a filesystem specially
+optimised for read-only scenarios. (Documentation/filesystem/erofs.rst)
+
+Recently we are focusing on erofs in container images distribution
+scenario [2], trying to combine it with nydus. In this case, erofs can
+be mounted from one bootstrap file (metadata) with (optional) multiple
+data blob files (data) stored on another local filesystem. (All these
+files are actually image files in erofs disk format.)
+
+To accelerate the container startup (fetching container image from remote
+and then start the container), we do hope that the bootstrap blob file
+could support demand read. That is, erofs can be mounted and accessed
+even when the bootstrap/data blob files have not been fully downloaded.
+
+That means we have to manage the cache state of the bootstrap/data blob
+files (if cache hit, read directly from the local cache; if cache miss,
+fetch the data somehow). It would be painful and may be dumb for erofs to
+implement the cache management itself. Thus we prefer fscache/cachefiles
+to do the cache management. Besides, the demand-read feature shall be
+general and it can benefit other using scenarios if it can be implemented
+in fscache level.
+
+[1] https://d7y.io/en-us/blog/containerd_accepted_nydus-snapshotter.html
+[2] https://sched.co/pcdL
+
+
+[Overall Design]
+================
+The upper fs uses a backing file on the local fs as the local cache
+(exactly the "cachefiles" way), and relies on fscache to detect if data
+is ready or not (cache hit/miss). Since currently fscache detects cache
+hit/miss by detecting the hole of the backing files, our demand-read
+mechanism also relies on the hole detecting.
+
+1. initial phase
+On the first beginning, the user daemon will touch the backing files
+(bootstrap/data blob files) under corresponding directory (under
+<root>/cache/<volume>/<fan>/) in advance. These backing files are
+completely sparse files (with zero disk usage). Since these backing
+files are all read-only and the file size is known prior mounting, user
+daemon will set corresponding file size and thus create all these sparse
+backing files in advance.
+
+2. cache miss
+When a file range (of bootstrap/data blob file) is accessed for the
+first time, a cache miss will be triggered and then .issue_op() will be
+called to fetch the data somehow.
+
+In the demand-read case, we relies on a user daemon to fetch the data
+from local/remote. In this case, .issue_op() just packages the file
+range into a message and informs the user daemon. User daemon needs to
+poll and wait on the devnode (/dev/cachefiles_demand). Once awaken, the
+user daemon will read the devnode to get the file range information, and
+then fetch the data corresponding to the file range somehow, e.g.
+download from remote through network. Once data ready, the user daemon
+will write the fetched data into the backing file and then inform
+cachefiles backend by writing to the devnode. Cachefiles backend getting
+blocked on the previous .issue_op() calling will be awaken then. By then
+the data has been ready in the backing file, and the netfs API will
+re-initiate a read request from the backing file.
+
+3. cache hit
+Once data is already ready in the backing file, netfs API will read from
+the backing file directly.
+
+
+[Advantage of fscache-based demand-read]
+========================================
+1. Asynchronous Prefetch
+In current mechanism, fscache is responsible for cache state management,
+while the data plane (fetch data from local/remote on cache miss) is
+done on the user daemon side.
+
+If data has already been ready in the backing file, netfs API will read
+from the backing file directly and won't be trapped to user space anymore.
+Thus the user daemon could fetch data (from remote) asynchronously on the
+background, and thus accelerate the backing file accessing in some degree.
+
+2. Support massive blob files
+Besides this mechanism supports a large amount of backing files, and
+thus can benefit the densely employed scenario.
+
+In our using scenario, one container image can correspond to one
+bootstrap file (required) and multiple data blob files (optional). For
+example, one container image for node.js will corresponds to ~20 files
+in total. In densely employed environment, there could be as many as
+hundreds of containers and thus thousands of backing files on one
+machine.
+
+[Test]
+You could start a quick test by
+https://github.com/lostjeffle/demand-read-cachefilesd
+
+
+Jeffle Xu (20):
+  netfs: make @file optional in netfs_alloc_read_request()
+  netfs,cachefiles: manage logical/physical offset separately
+  netfs,fscache: support on-demand reading
+  cachefiles: extract generic daemon write function
+  cachefiles: detect backing file size in on-demand read mode
+  cachefiles: introduce new devnode for on-demand read mode
+  erofs: use meta buffers for erofs_read_superblock()
+  erofs: export erofs_map_blocks()
+  erofs: add mode checking helper
+  erofs: register global fscache volume
+  erofs: add cookie context helper functions
+  erofs: add anonymous inode managing page cache of blob file
+  erofs: register cookie context for bootstrap blob
+  erofs: implement fscache-based metadata read
+  erofs: implement fscache-based data read for non-inline layout
+  erofs: implement fscache-based data read for inline layout
+  erofs: register cookie context for data blobs
+  erofs: implement fscache-based data read for data blobs
+  erofs: add 'uuid' mount option
+  erofs: support on-demand reading
+
+ fs/cachefiles/Kconfig    |   8 +
+ fs/cachefiles/daemon.c   | 147 ++++++++++++++++-
+ fs/cachefiles/internal.h |  23 +++
+ fs/cachefiles/io.c       |  82 +++++++++-
+ fs/cachefiles/main.c     |  27 ++++
+ fs/cachefiles/namei.c    |  60 ++++++-
+ fs/erofs/Kconfig         |   2 +-
+ fs/erofs/Makefile        |   3 +-
+ fs/erofs/data.c          |  18 ++-
+ fs/erofs/fscache.c       | 339 +++++++++++++++++++++++++++++++++++++++
+ fs/erofs/inode.c         |   6 +-
+ fs/erofs/internal.h      |  30 ++++
+ fs/erofs/super.c         | 101 +++++++++---
+ fs/fscache/Kconfig       |   8 +
+ fs/netfs/Kconfig         |   8 +
+ fs/netfs/read_helper.c   |  65 ++++++--
+ include/linux/netfs.h    |  10 ++
+ 17 files changed, 886 insertions(+), 51 deletions(-)
+ create mode 100644 fs/erofs/fscache.c
+
+-- 
+2.27.0
 
