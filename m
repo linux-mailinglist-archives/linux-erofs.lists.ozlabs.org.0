@@ -1,62 +1,82 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07DF649AFBF
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jan 2022 10:17:55 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8502C49B7B3
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jan 2022 16:35:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Jjh8c4GlXz3bP4
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jan 2022 20:17:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JjrWr2jdBz30gg
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jan 2022 02:35:04 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lIqxVKNU;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bU0opONu;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bU0opONu;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
- header.s=Intel header.b=lIqxVKNU; dkim-atps=neutral
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+ smtp.mailfrom=redhat.com (client-ip=170.10.133.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=bU0opONu; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=bU0opONu; 
+ dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [170.10.133.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Jjh8T1W3Rz2xtF
- for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jan 2022 20:17:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
- d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
- t=1643102265; x=1674638265;
- h=date:from:to:cc:subject:message-id:mime-version:
- content-transfer-encoding;
- bh=4vrOOwmfznbdofPLNtiDKe9Q1ulNvaEiQEdOCzMNm2Y=;
- b=lIqxVKNUB1wjP+U0gPOD8aHgeRIttOoQ8SMs+vBHbXhdS61izaupxdYT
- 2Q69yyHJr9VCE+J7xoYfqdBRNsUUkskHXaOg37937qztLthCMCBp/tVBC
- 5dc5MyGzuCDX4PijLfG0vI53dZlfmhmq24EPU/ParWTT6eBJP2IqBGrbG
- CoEzy5zugMc9fuQJeli7ZFACZuU8A4MvONPKvakIeCRCjDIFEhkSwGe+C
- ZfrFe2XDQBgGQ03AVQKsIDeMjcIzEXKuYQz7spMcL74gOwe4e2Az0inyH
- dg0WGrHnf9TQzZ8SXSdIiekpsLLOLqhGfKxlFacQL9WxCiHOzOib5/7H2 w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10237"; a="306977455"
-X-IronPort-AV: E=Sophos;i="5.88,314,1635231600"; d="scan'208";a="306977455"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
- by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 25 Jan 2022 01:16:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,314,1635231600"; d="scan'208";a="520316928"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
- by orsmga007.jf.intel.com with ESMTP; 25 Jan 2022 01:16:33 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1nCHwH-000Jd5-2y; Tue, 25 Jan 2022 09:16:33 +0000
-Date: Tue, 25 Jan 2022 17:16:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 7865827c432bf9885ee26e5767697c3d9e21a82c
-Message-ID: <61efbfe1.y2Fk5qp0+Vq06yBl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JjrWj3hjgz2yPY
+ for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jan 2022 02:34:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1643124890;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=QjyE7wz6cil8LO6HiDitf7P9QNfNrKVet24hXy+TY64=;
+ b=bU0opONu1fC4pQIlPdoOhbB67R5AJFpCfEXqUe+RlhbLXTpm2iAK+jo+EA2Itym4qRLawY
+ Uk4bik9CL39Mo66D0vc6pnMXDAxysOKAUxFSr2AG1hGhi96wbc3kyO2u7I/+fGoNcBYSzN
+ 3M+U5+pmXu9Kju5Svh0uem0p+83LqRk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1643124890;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=QjyE7wz6cil8LO6HiDitf7P9QNfNrKVet24hXy+TY64=;
+ b=bU0opONu1fC4pQIlPdoOhbB67R5AJFpCfEXqUe+RlhbLXTpm2iAK+jo+EA2Itym4qRLawY
+ Uk4bik9CL39Mo66D0vc6pnMXDAxysOKAUxFSr2AG1hGhi96wbc3kyO2u7I/+fGoNcBYSzN
+ 3M+U5+pmXu9Kju5Svh0uem0p+83LqRk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-224-5MdDGyFQNUC_uojbNYtUKg-1; Tue, 25 Jan 2022 10:34:45 -0500
+X-MC-Unique: 5MdDGyFQNUC_uojbNYtUKg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com
+ [10.5.11.16])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06D8C84B9A7;
+ Tue, 25 Jan 2022 15:34:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.5])
+ by smtp.corp.redhat.com (Postfix) with ESMTP id 210947DE2F;
+ Tue, 25 Jan 2022 15:34:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20220118131216.85338-12-jefflexu@linux.alibaba.com>
+References: <20220118131216.85338-12-jefflexu@linux.alibaba.com>
+ <20220118131216.85338-1-jefflexu@linux.alibaba.com>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v2 11/20] erofs: add cookie context helper functions
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2812798.1643124872.1@warthog.procyon.org.uk>
+Date: Tue, 25 Jan 2022 15:34:32 +0000
+Message-ID: <2812799.1643124872@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,163 +88,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, dhowells@redhat.com,
+ joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
+ linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com,
+ linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 7865827c432bf9885ee26e5767697c3d9e21a82c  erofs: avoid unnecessary z_erofs_decompressqueue_work() declaration
+Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 
-elapsed time: 727m
+> +static int erofs_fscahce_init_ctx(struct erofs_fscache_context *ctx,
 
-configs tested: 135
-configs skipped: 4
+fscahce => fscache?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+David
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20220124
-sh                           se7722_defconfig
-mips                     decstation_defconfig
-sparc                       sparc64_defconfig
-powerpc                      ppc6xx_defconfig
-mips                            gpr_defconfig
-arc                          axs101_defconfig
-xtensa                    xip_kc705_defconfig
-powerpc                     asp8347_defconfig
-sh                          kfr2r09_defconfig
-nios2                         10m50_defconfig
-powerpc                     sequoia_defconfig
-arm                           h5000_defconfig
-riscv                    nommu_k210_defconfig
-m68k                          atari_defconfig
-openrisc                            defconfig
-csky                                defconfig
-powerpc                     tqm8548_defconfig
-sh                           se7206_defconfig
-arm                        mvebu_v7_defconfig
-arm                           viper_defconfig
-sh                   sh7724_generic_defconfig
-mips                         bigsur_defconfig
-ia64                        generic_defconfig
-sh                           sh2007_defconfig
-arm                          simpad_defconfig
-sh                          r7780mp_defconfig
-mips                  maltasmvp_eva_defconfig
-sh                             shx3_defconfig
-arm                            lart_defconfig
-sparc64                          alldefconfig
-arm                            pleb_defconfig
-mips                            ar7_defconfig
-arm                       aspeed_g5_defconfig
-arm                  randconfig-c002-20220124
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a002-20220124
-x86_64               randconfig-a003-20220124
-x86_64               randconfig-a001-20220124
-x86_64               randconfig-a004-20220124
-x86_64               randconfig-a005-20220124
-x86_64               randconfig-a006-20220124
-i386                 randconfig-a002-20220124
-i386                 randconfig-a005-20220124
-i386                 randconfig-a003-20220124
-i386                 randconfig-a004-20220124
-i386                 randconfig-a001-20220124
-i386                 randconfig-a006-20220124
-arc                  randconfig-r043-20220124
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-arm                  randconfig-c002-20220124
-riscv                randconfig-c006-20220124
-i386                 randconfig-c001-20220124
-powerpc              randconfig-c003-20220124
-mips                 randconfig-c004-20220124
-x86_64               randconfig-c007-20220124
-mips                     cu1000-neo_defconfig
-arm                           sama7_defconfig
-powerpc                     kmeter1_defconfig
-mips                        bcm63xx_defconfig
-powerpc                          g5_defconfig
-arm                          imote2_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                     tqm8560_defconfig
-mips                     cu1830-neo_defconfig
-arm                        neponset_defconfig
-mips                           ip22_defconfig
-arm                     davinci_all_defconfig
-powerpc                      ppc44x_defconfig
-arm                              alldefconfig
-arm                          moxart_defconfig
-x86_64               randconfig-a011-20220124
-x86_64               randconfig-a013-20220124
-x86_64               randconfig-a015-20220124
-x86_64               randconfig-a016-20220124
-x86_64               randconfig-a014-20220124
-x86_64               randconfig-a012-20220124
-i386                 randconfig-a011-20220124
-i386                 randconfig-a016-20220124
-i386                 randconfig-a013-20220124
-i386                 randconfig-a014-20220124
-i386                 randconfig-a015-20220124
-i386                 randconfig-a012-20220124
-riscv                randconfig-r042-20220124
-hexagon              randconfig-r045-20220124
-hexagon              randconfig-r041-20220124
-s390                 randconfig-r044-20220124
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
