@@ -1,77 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 564264ADAC8
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Feb 2022 15:05:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D507A4AE12A
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Feb 2022 19:43:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JtPtR02r2z3bV1
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 01:05:51 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=RzsA+yKi;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JtX2q3sh0z3bTT
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 05:43:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1644345811;
+	bh=cGo6qhj9mPFrI0ABrWIq8yrJ6K24RlP92l+fnqIdelU=;
+	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=EbZE4MYuZtN6xs+aNCLmD+hdOH8ULm+FwCK91HdFmc1TCw0uxxVZYez1YSdkyDe4a
+	 fWq79b1/b2BgggcWzqRX3uRSnk34yeM+YpP2YX5uwOe0GmsbjKAJrxpbyYrqdKccpo
+	 +o1uoxa31q13JANe1JCN6mFxs4xEEOAx5dsGQYuZ7O9NEOQxHQ8DCgF5D/bYtETe3W
+	 NSttz2Tu9973axfPObIUKfP2A1YIH49MSzW/JgRBib8o2t0ZfedUBFIiqLWZBFcZSi
+	 9hsL+MS/QW5Xop6l0wIRbYDJ310vYlNbDUL+i/ZueudHEF6/JjwK7Qtv3amSA44aB0
+	 lKXs2N2pR0rfg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::436;
- helo=mail-pf1-x436.google.com; envelope-from=jnhuang95@gmail.com;
+ smtp.mailfrom=flex--zhangkelvin.bounces.google.com
+ (client-ip=2607:f8b0:4864:20::a4a; helo=mail-vk1-xa4a.google.com;
+ envelope-from=3ybkcygskc14vd6jcgahrejckkcha.8kihejqt-ankboheopo.kvh67o.knc@flex--zhangkelvin.bounces.google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=RzsA+yKi; dkim-atps=neutral
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com
- [IPv6:2607:f8b0:4864:20::436])
+ unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
+ header.s=20210112 header.b=mJ2JH/A7; dkim-atps=neutral
+Received: from mail-vk1-xa4a.google.com (mail-vk1-xa4a.google.com
+ [IPv6:2607:f8b0:4864:20::a4a])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JtPtM5CT6z3bcC
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 01:05:47 +1100 (AEDT)
-Received: by mail-pf1-x436.google.com with SMTP id y5so18096083pfe.4
- for <linux-erofs@lists.ozlabs.org>; Tue, 08 Feb 2022 06:05:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=from:to:cc:subject:date:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=tZoiCU6/aiDbBEDQJM9Td+nFGQmb+92uK6kM97ktQS4=;
- b=RzsA+yKi0ahz7V3+qkLwhW4dTSfrppEh3MQuAft7QdD15ZMvQ2u0+cwATst39nI7PP
- LDp46blTBvX1S5TlLZ7FRe2bd2LMGL3jDbZZ4flBbW090h4DyyB7PiiqNx2nCyVVXj6w
- Hc98CrFvAeOdtkxLsfIuXFmSu6zsfIr3TSSJbeafFjBqt97Ab9BNrs5zcPgTZA8vJFWS
- gUSqaYMhGvWZcESJqu5jR5U30HasDV+EdH1E7cnnwId2hzgebrXrn9mutToQ0H5pwK2Y
- mNcuH7t6zlznmQik4Bl16rIq21YNEJM+xGakMz7Z2Kd8kEZ+Zhppzl5akXirYRmXzPIe
- ZIGg==
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JtX2m5XN8z30LY
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 05:43:26 +1100 (AEDT)
+Received: by mail-vk1-xa4a.google.com with SMTP id
+ 35-20020a056122072300b0032591f1a5e7so2304041vki.14
+ for <linux-erofs@lists.ozlabs.org>; Tue, 08 Feb 2022 10:43:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=tZoiCU6/aiDbBEDQJM9Td+nFGQmb+92uK6kM97ktQS4=;
- b=EPKddcBVJbBQcNbUsMlBK9cXCInf/k2Ht3BejxvS6bUxqTiY4yuQ9hMHUYPSUavaeJ
- F0Jpi8r6q6ToX7100P72LoFKtlwVHikO3sVhmBTkdo147j9A6t93RIJOxGYTHtJwmsJW
- EQcwMjQ20cuDxBLFlnH/CiI22xpbf+hPLpoMclZj4OFaemvYU/BCof5+6T1f460yaGyu
- yToBhE1ZW/CxKxqwq82iLJkYF+WaLemnIzmV+CXg8BGdPBAmXT73y/m5WS9YtifNTTkb
- W29CSiy8XMdLo6BBeuQbkg6WwnbeUAZximRfuuZuDevUAu58Y1l00HbabHb9n9WYC+Q0
- 3otA==
-X-Gm-Message-State: AOAM532STM7UFshEgMuQ56PbSPc4Y0+toYM24JDALqCSQDIDvaTeP9Qx
- +224utwQD675v3bAV8HWAoijw4Ezca0=
-X-Google-Smtp-Source: ABdhPJzpPc1iRlwfwhsNeujI2gA+etw28EovEPEu9EaRGrxkm4X8axflp8SUaQcgYSqwIK03cbPnWA==
-X-Received: by 2002:a63:5144:: with SMTP id r4mr3604052pgl.382.1644329145740; 
- Tue, 08 Feb 2022 06:05:45 -0800 (PST)
-Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
- [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id pj4sm3012006pjb.43.2022.02.08.06.05.39
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Tue, 08 Feb 2022 06:05:45 -0800 (PST)
-From: Huang Jianan <jnhuang95@gmail.com>
-To: u-boot@lists.denx.de,
-	trini@konsulko.com
-Subject: [PATCH v3 5/5] test/py: Add tests for the erofs
-Date: Tue,  8 Feb 2022 22:05:13 +0800
-Message-Id: <20220208140513.30570-6-jnhuang95@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220208140513.30570-1-jnhuang95@gmail.com>
-References: <20210823123646.9765-1-jnhuang95@gmail.com>
- <20220208140513.30570-1-jnhuang95@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+ :references:subject:from:to:cc;
+ bh=cGo6qhj9mPFrI0ABrWIq8yrJ6K24RlP92l+fnqIdelU=;
+ b=3XoN1KhL0G+DY7GfB8HF6/rAxlTW6+pOda8AU1JKLycVM9nbq3j/T4gLCJwPwbnT4w
+ 2KYqgvIcdCPEb6sUbH88By8dkt9N5j2aJeNV/oyFMzzDw2o2hiknEkLHUy8Zu3C5TrN6
+ EQ0LTCct2L1rI9eaES3g0yZ/tS3uoambdvZSRV3lu87bedbBQNzikx2py2nhRr/SoULq
+ pEyPuRPY0MjbKExeIp5Yf8uxoLBsx6DIVsSZ49PM766MV3foStSRQ6IaL0WFsuZXMIG7
+ r+Ms7YoSenXZKnxnejh0SNhRHH2jCVqT+R0GmvByC8zzTGf8SbmYN6NpS28mtI3akbp0
+ KgZg==
+X-Gm-Message-State: AOAM530jaweKDgBnjewu6IwCUA2MncuXks9O7YHXCTMlMgciQJNrEC7a
+ gPhVqkIxJlRj2nuQNqXtnYgD/GrqQcvC33n9AGUDPATsbL97Djd2tDnZc/8r52E5x2J3kMonGdg
+ TlO+SfUNNGdCIN/jfF9/7Tb9Xqy0r+xPeRaeWruijZ2p3tDtMTV+gHSHFta7BDeN6zclzvqEflt
+ QCvobFRoE=
+X-Google-Smtp-Source: ABdhPJxavLIw7eM+pHZkREGZm06TdfBfsmh5f/RaGntM+WzMxtkGKEaC5RBeQc4SO6zam4fclaBlbl2TujkXdbPfxQ==
+X-Received: from zhangkelvin-big.c.googlers.com
+ ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
+ (user=zhangkelvin job=sendgmr) by 2002:a05:6122:c8f:: with SMTP id
+ ba15mr2308940vkb.39.1644345801507; Tue, 08 Feb 2022 10:43:21 -0800 (PST)
+Date: Tue,  8 Feb 2022 10:43:17 -0800
+In-Reply-To: <YgGUL3aWmPmBvJ7z@B-P7TQMD6M-0146.local>
+Message-Id: <20220208184317.3639405-1-zhangkelvin@google.com>
+Mime-Version: 1.0
+References: <YgGUL3aWmPmBvJ7z@B-P7TQMD6M-0146.local>
+X-Mailer: git-send-email 2.35.0.263.gb82422642f-goog
+Subject: [PATCH v3] erofs-utils: lib: Fix 8MB bug on uncompressed extent size
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
+ Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,263 +80,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Kelvin Zhang <zhangkelvin@google.com>
+Cc: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add Python scripts to test 'ls' and 'load' commands, as well as
-test related filesystem functions.
+Previously, uncompressed extent can be at most 8MB before mkfs.erofs
+crashes on some error condition. This is due to a minor bug in how
+compressed indices are encoded. This patch fixes the issue.
 
-Signed-off-by: Huang Jianan <jnhuang95@gmail.com>
+Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
 ---
- MAINTAINERS                         |   1 +
- configs/sandbox_defconfig           |   1 +
- test/py/tests/test_fs/test_erofs.py | 211 ++++++++++++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100644 test/py/tests/test_fs/test_erofs.py
+ lib/compress.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa417bc44f..23ffdbc488 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -801,6 +801,7 @@ S:	Maintained
- F:	cmd/erofs.c
- F:	fs/erofs/
- F:	include/erofs.h
-+F:	test/py/tests/test_fs/test_erofs.py
+diff --git a/lib/compress.c b/lib/compress.c
+index 98be7a2..add95f5 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -97,7 +97,23 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
+ 		} else if (d0) {
+ 			type = Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD;
  
- FASTBOOT
- S:	Orphaned
-diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
-index f85274353d..78962ab4c8 100644
---- a/configs/sandbox_defconfig
-+++ b/configs/sandbox_defconfig
-@@ -105,6 +105,7 @@ CONFIG_CMD_TPM_TEST=y
- CONFIG_CMD_BTRFS=y
- CONFIG_CMD_CBFS=y
- CONFIG_CMD_CRAMFS=y
-+CONFIG_CMD_EROFS=y
- CONFIG_CMD_EXT4_WRITE=y
- CONFIG_CMD_SQUASHFS=y
- CONFIG_CMD_MTDPARTS=y
-diff --git a/test/py/tests/test_fs/test_erofs.py b/test/py/tests/test_fs/test_erofs.py
-new file mode 100644
-index 0000000000..27d3ccdf4e
---- /dev/null
-+++ b/test/py/tests/test_fs/test_erofs.py
-@@ -0,0 +1,211 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Copyright (C) 2022 Huang Jianan <jnhuang95@gmail.com>
-+# Author: Huang Jianan <jnhuang95@gmail.com>
-+
-+import os
-+import pytest
-+import shutil
-+import subprocess
-+
-+EROFS_SRC_DIR = 'erofs_src_dir'
-+EROFS_IMAGE_NAME = 'erofs.img'
-+
-+def generate_file(name, size):
-+    """
-+    Generates a file filled with 'x'.
-+    """
-+    content = 'x' * size
-+    file = open(name, 'w')
-+    file.write(content)
-+    file.close()
-+
-+def make_erofs_image(build_dir):
-+    """
-+    Makes the EROFS images used for the test.
-+
-+    The image is generated at build_dir with the following structure:
-+    erofs_src_dir/
-+    ├── f4096
-+    ├── f7812
-+    ├── subdir/
-+    │   └── subdir-file
-+    ├── symdir -> subdir
-+    └── symfile -> f5096
-+    """
-+    root = os.path.join(build_dir, EROFS_SRC_DIR)
-+    os.makedirs(root)
-+
-+    # 4096: uncompressed file
-+    generate_file(os.path.join(root, 'f4096'), 4096)
-+
-+    # 7812: Compressed file
-+    generate_file(os.path.join(root, 'f7812'), 7812)
-+
-+    # sub-directory with a single file inside
-+    subdir_path = os.path.join(root, 'subdir')
-+    os.makedirs(subdir_path)
-+    generate_file(os.path.join(subdir_path, 'subdir-file'), 100)
-+
-+    # symlink
-+    os.symlink('subdir', os.path.join(root, 'symdir'))
-+    os.symlink('f7812', os.path.join(root, 'symfile'))
-+
-+    input_path = os.path.join(build_dir, EROFS_SRC_DIR)
-+    output_path = os.path.join(build_dir, EROFS_IMAGE_NAME)
-+    args = ' '.join([output_path, input_path])
-+    subprocess.run(['mkfs.erofs -zlz4hc ' + args], shell=True, check=True,
-+                   stdout=subprocess.DEVNULL)
-+
-+def clean_erofs_image(build_dir):
-+    """
-+    Deletes the image and src_dir at build_dir.
-+    """
-+    path = os.path.join(build_dir, EROFS_SRC_DIR)
-+    shutil.rmtree(path)
-+    image_path = os.path.join(build_dir, EROFS_IMAGE_NAME)
-+    os.remove(image_path)
-+
-+def erofs_ls_at_root(u_boot_console):
-+    """
-+    Test if all the present files and directories were listed.
-+    """
-+    no_slash = u_boot_console.run_command('erofsls host 0')
-+    slash = u_boot_console.run_command('erofsls host 0 /')
-+    assert no_slash == slash
-+
-+    expected_lines = ['./', '../', '4096   f4096', '7812   f7812', 'subdir/',
-+                      '<SYM>   symdir', '<SYM>   symfile', '4 file(s), 3 dir(s)']
-+
-+    output = u_boot_console.run_command('erofsls host 0')
-+    for line in expected_lines:
-+        assert line in output
-+
-+def erofs_ls_at_subdir(u_boot_console):
-+    """
-+    Test if the path resolution works.
-+    """
-+    expected_lines = ['./', '../', '100   subdir-file', '1 file(s), 2 dir(s)']
-+    output = u_boot_console.run_command('erofsls host 0 subdir')
-+    for line in expected_lines:
-+        assert line in output
-+
-+def erofs_ls_at_symlink(u_boot_console):
-+    """
-+    Test if the symbolic link's target resolution works.
-+    """
-+    output = u_boot_console.run_command('erofsls host 0 symdir')
-+    output_subdir = u_boot_console.run_command('erofsls host 0 subdir')
-+    assert output == output_subdir
-+
-+    expected_lines = ['./', '../', '100   subdir-file', '1 file(s), 2 dir(s)']
-+    for line in expected_lines:
-+        assert line in output
-+
-+def erofs_ls_at_non_existent_dir(u_boot_console):
-+    """
-+    Test if the EROFS support will crash when get a nonexistent directory.
-+    """
-+    out_non_existent = u_boot_console.run_command('erofsls host 0 fff')
-+    out_not_dir = u_boot_console.run_command('erofsls host 0 f1000')
-+    assert out_non_existent == out_not_dir
-+    assert '' in out_non_existent
-+
-+def erofs_load_files(u_boot_console, files, sizes, address):
-+    """
-+    Loads files and asserts their checksums.
-+    """
-+    build_dir = u_boot_console.config.build_dir
-+    for (file, size) in zip(files, sizes):
-+        out = u_boot_console.run_command('erofsload host 0 {} {}'.format(address, file))
-+
-+        # check if the right amount of bytes was read
-+        assert size in out
-+
-+        # calculate u-boot file's checksum
-+        out = u_boot_console.run_command('md5sum {} {}'.format(address, hex(int(size))))
-+        u_boot_checksum = out.split()[-1]
-+
-+        # calculate original file's checksum
-+        original_file_path = os.path.join(build_dir, EROFS_SRC_DIR + '/' + file)
-+        out = subprocess.run(['md5sum ' + original_file_path], shell=True, check=True,
-+                             capture_output=True, text=True)
-+        original_checksum = out.stdout.split()[0]
-+
-+        # compare checksum
-+        assert u_boot_checksum == original_checksum
-+
-+def erofs_load_files_at_root(u_boot_console):
-+    """
-+    Test load file from the root directory.
-+    """
-+    files = ['f4096', 'f7812']
-+    sizes = ['4096', '7812']
-+    address = '$kernel_addr_r'
-+    erofs_load_files(u_boot_console, files, sizes, address)
-+
-+def erofs_load_files_at_subdir(u_boot_console):
-+    """
-+    Test load file from the subdirectory.
-+    """
-+    files = ['subdir/subdir-file']
-+    sizes = ['100']
-+    address = '$kernel_addr_r'
-+    erofs_load_files(u_boot_console, files, sizes, address)
-+
-+def erofs_load_files_at_symlink(u_boot_console):
-+    """
-+    Test load file from the symlink.
-+    """
-+    files = ['symfile']
-+    sizes = ['7812']
-+    address = '$kernel_addr_r'
-+    erofs_load_files(u_boot_console, files, sizes, address)
-+
-+def erofs_load_non_existent_file(u_boot_console):
-+    """
-+    Test if the EROFS support will crash when load a nonexistent file.
-+    """
-+    address = '$kernel_addr_r'
-+    file = 'non-existent'
-+    out = u_boot_console.run_command('erofsload host 0 {} {}'.format(address, file))
-+    assert 'Failed to load' in out
-+
-+def erofs_run_all_tests(u_boot_console):
-+    """
-+    Runs all test cases.
-+    """
-+    erofs_ls_at_root(u_boot_console)
-+    erofs_ls_at_subdir(u_boot_console)
-+    erofs_ls_at_symlink(u_boot_console)
-+    erofs_ls_at_non_existent_dir(u_boot_console)
-+    erofs_load_files_at_root(u_boot_console)
-+    erofs_load_files_at_subdir(u_boot_console)
-+    erofs_load_files_at_symlink(u_boot_console)
-+    erofs_load_non_existent_file(u_boot_console)
-+
-+@pytest.mark.boardspec('sandbox')
-+@pytest.mark.buildconfigspec('cmd_fs_generic')
-+@pytest.mark.buildconfigspec('cmd_erofs')
-+@pytest.mark.buildconfigspec('fs_erofs')
-+@pytest.mark.requiredtool('mkfs.erofs')
-+@pytest.mark.requiredtool('md5sum')
-+
-+def test_erofs(u_boot_console):
-+    """
-+    Executes the erofs test suite.
-+    """
-+    build_dir = u_boot_console.config.build_dir
-+
-+    try:
-+        # setup test environment
-+        make_erofs_image(build_dir)
-+        image_path = os.path.join(build_dir, EROFS_IMAGE_NAME)
-+        u_boot_console.run_command('host bind 0 {}'.format(image_path))
-+        # run all tests
-+        erofs_run_all_tests(u_boot_console)
-+    except:
-+        clean_erofs_image(build_dir)
-+        raise AssertionError
-+
-+    # clean test environment
-+    clean_erofs_image(build_dir)
+-			di.di_u.delta[0] = cpu_to_le16(d0);
++			/*
++			 * If the |Z_EROFS_VLE_DI_D0_CBLKCNT| bit is set, parser
++			 * will interpret |delta[0]| as size of pcluster, rather
++			 * than distance to last head cluster. Normally this
++			 * isn't a problem, because uncompressed extent size are
++			 * below Z_EROFS_VLE_DI_D0_CBLKCNT * BLOCK_SIZE = 8MB.
++			 * But with large pcluster it's possible to go over this
++			 * number, resulting in corrupted compressed indices.
++			 * To solve this, we replace d0 with
++			 * Z_EROFS_VLE_DI_D0_CBLKCNT-1.
++			 */
++			if (d0 > Z_EROFS_VLE_DI_D0_CBLKCNT) {
++				di.di_u.delta[0] = cpu_to_le16(
++					Z_EROFS_VLE_DI_D0_CBLKCNT-1);
++			} else {
++				di.di_u.delta[0] = cpu_to_le16(d0);
++			}
+ 			di.di_u.delta[1] = cpu_to_le16(d1);
+ 		} else {
+ 			type = raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
 -- 
-2.25.1
+2.35.0.263.gb82422642f-goog
 
