@@ -2,71 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D92224ADAC5
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Feb 2022 15:05:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C824A4ADAC6
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Feb 2022 15:05:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JtPtF39fjz3bbH
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 01:05:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JtPtJ3bntz3bP9
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 01:05:44 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=HSfHLEoy;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=L5AwFw6a;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1036;
- helo=mail-pj1-x1036.google.com; envelope-from=jnhuang95@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102d;
+ helo=mail-pj1-x102d.google.com; envelope-from=jnhuang95@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=HSfHLEoy; dkim-atps=neutral
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com
- [IPv6:2607:f8b0:4864:20::1036])
+ header.s=20210112 header.b=L5AwFw6a; dkim-atps=neutral
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com
+ [IPv6:2607:f8b0:4864:20::102d])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JtPt83n1Mz3bV8
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 01:05:36 +1100 (AEDT)
-Received: by mail-pj1-x1036.google.com with SMTP id
- t4-20020a17090a510400b001b8c4a6cd5dso2871457pjh.5
- for <linux-erofs@lists.ozlabs.org>; Tue, 08 Feb 2022 06:05:36 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JtPtB60V9z3bVf
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 01:05:38 +1100 (AEDT)
+Received: by mail-pj1-x102d.google.com with SMTP id v4so10439050pjh.2
+ for <linux-erofs@lists.ozlabs.org>; Tue, 08 Feb 2022 06:05:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
  h=from:to:cc:subject:date:message-id:in-reply-to:references
  :mime-version:content-transfer-encoding;
- bh=4QckuieVcCbpIBg6yEDsF82ph7+9XY07Uul0VtmXnmc=;
- b=HSfHLEoy2G2jUmNwG81+gcwNDcLajwXHVeqh6HWso2mU3C075Fdb4FylUpQXtC5fjA
- WPPLWXDwOEt6U4ZVSwX4JCB4NZC75zR/lkIm5DmELHZDIIijv8SXWzIwMfMNcOXdd+5U
- S210Hmls/e3qou+HVSRDLq97wBYO1dc/zXLwM3bzo9uSuoypVWfMsq6iURnmGbX71yK6
- MY9ETlhYt/YcAUPlI3IUScIjAzuJ0NvslZvLjAOJx86bc0coWnU+CI7v9LSrBnnckzdV
- rBRr8hegFO3aRSXJjrhNC+704nUT7Tgi8qe07/GQNJQcdefvMw4ZEmOHmjjiJVnHJLMW
- bMlQ==
+ bh=rqCFGLHgexYuxh94n4X8+5l82SBVUjCxxiHF4fVAP/Q=;
+ b=L5AwFw6a0LPwcCXTLm5lSyzxMv61bGOMStjOo2kQeRAk9RI5GZ3hfqXd78xfaGqZBf
+ jmyjI3M7Jb6UrRABg0JDBY+qKQH9DRUHhaZjRR2Tk8i4p90CBTFXITqazupzuwZcGNpK
+ ikbZjX7KRRMQDF6p6Ee/YeN7tcdPU3y2n6C6cCvb8QwaGNLGV+xIc4TuGQry4Vrdpi81
+ v1EcWWlfyWmDTxqfzcWHKyNvr8OEwgTzoq9nGaL8jQy/Ew0iWIWoj+Jk6G76CSKaSzbu
+ HfP+sH1AT994/L1cpnnLbMGN/NOV+E/h49VgfVkMuZ6tnEQzrcwCojG1+J+TisacG4kr
+ o3Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
  :references:mime-version:content-transfer-encoding;
- bh=4QckuieVcCbpIBg6yEDsF82ph7+9XY07Uul0VtmXnmc=;
- b=px66CfeszlZvdaWkQd9RzvHkjui1Zul5Ld5P5D4ly8GSm1Rfp6+o81XezHVHNpF3lo
- HA9SejlNpqFjkauTPk46g5JNtCgIpC+MyZ3SXv5DGhUfAEt+vn3YMM3dCWaT5NWE7liM
- DV5iILkulAeuQh989AhpDXT/Ayl+/NNdgIz8rG0//TO4khuTVz8zQKPfVdoQ5GHPYKW9
- sP2dvEokiGcZgNScBOZ/zF412EcIq/VpQRRcRiag4cZDMmUOCtcnyhsNg2c6UzOWBKXN
- 99A8aAm11FmDbU3rm0lmdnDdr1X4e3ZBGLxAS9fnYB/8gUS7tJxlZMIAw8HbYUcZqs0q
- l8mw==
-X-Gm-Message-State: AOAM5325fmSjWMojTgSOXoOu78EBO/g3aGsh0ueWSlYYS/nZ3YvJV14x
- ZK6G+VR8PG/295Ty7fjzbY8=
-X-Google-Smtp-Source: ABdhPJy/aNrJZacu0ttEJ/IeMb8qlyysIX39wxkB/Omvf81n7ZuyiP2cj3K6tkVkyhcmFKWDTPgIpA==
-X-Received: by 2002:a17:90b:1802:: with SMTP id
- lw2mr1558201pjb.232.1644329134328; 
- Tue, 08 Feb 2022 06:05:34 -0800 (PST)
+ bh=rqCFGLHgexYuxh94n4X8+5l82SBVUjCxxiHF4fVAP/Q=;
+ b=QHEScn01cM/P79xrYrPfN5d6hv/WGKS1CsEkJT+ZwjGLQ574ixHGP7h4KQ5bofjU+r
+ BmkFFuzN93jIIwHcMN4L4E0Nbu+K7ta6OwcXek2olka4bBAMkVvp6Zz0TLWENvE9TzpZ
+ nZdVLeW26hV8c39BgfZRpfl8ZePLFLN3+5hHKXBxZzFbM8P/hVwNGJj/bmZ8FmxDJISC
+ 6QGZ7qfJq9UjEMp57BixxM6BCsllxTqcFLHrjoPYbfNRvP2u/0ufjxqQX3EIwbOEOKI5
+ RpNlqz8C/FjBAQIhpI4p1TjPn05hxMthphqWZP9OcSsO6UxV9M6N0Vo8/TGQMts/lKD8
+ neDw==
+X-Gm-Message-State: AOAM532rtt0U3PgG0uCzvJJjcr7ZjnHT3qB2lB9AW5cPlqTpeiKzFcQB
+ 3PujwRmugFdEtdB5pJfdK2A=
+X-Google-Smtp-Source: ABdhPJy8gj5u5yZGa2O4jtP+QqVKqfBpuZ+nx2a9vrI/QUtmlZcnzDVW3xsx6KxIUODPIo/xuTea2w==
+X-Received: by 2002:a17:90a:de01:: with SMTP id
+ m1mr1517491pjv.215.1644329136832; 
+ Tue, 08 Feb 2022 06:05:36 -0800 (PST)
 Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
  [45.33.61.207])
- by smtp.gmail.com with ESMTPSA id pj4sm3012006pjb.43.2022.02.08.06.05.31
+ by smtp.gmail.com with ESMTPSA id pj4sm3012006pjb.43.2022.02.08.06.05.34
  (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Tue, 08 Feb 2022 06:05:34 -0800 (PST)
+ Tue, 08 Feb 2022 06:05:36 -0800 (PST)
 From: Huang Jianan <jnhuang95@gmail.com>
 To: u-boot@lists.denx.de,
 	trini@konsulko.com
-Subject: [PATCH v3 2/5] lib/lz4: update LZ4 decompressor module
-Date: Tue,  8 Feb 2022 22:05:10 +0800
-Message-Id: <20220208140513.30570-3-jnhuang95@gmail.com>
+Subject: [PATCH v3 3/5] fs/erofs: add lz4 decompression support
+Date: Tue,  8 Feb 2022 22:05:11 +0800
+Message-Id: <20220208140513.30570-4-jnhuang95@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220208140513.30570-1-jnhuang95@gmail.com>
 References: <20210823123646.9765-1-jnhuang95@gmail.com>
@@ -89,834 +88,899 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Update the LZ4 compression module based on LZ4 v1.8.3 in order to
-use the newest LZ4_decompress_safe_partial() which can now decode
-exactly the nb of bytes requested.
+Support EROFS lz4 compressed files.
 
 Signed-off-by: Huang Jianan <jnhuang95@gmail.com>
 ---
- include/u-boot/lz4.h |  49 ++++
- lib/lz4.c            | 679 +++++++++++++++++++++++++++++++------------
- lib/lz4_wrapper.c    |  23 +-
- 3 files changed, 536 insertions(+), 215 deletions(-)
+ fs/erofs/Kconfig      |   9 +
+ fs/erofs/Makefile     |   4 +-
+ fs/erofs/data.c       |  90 ++++++-
+ fs/erofs/decompress.c |  78 ++++++
+ fs/erofs/decompress.h |  24 ++
+ fs/erofs/namei.c      |   2 +-
+ fs/erofs/zmap.c       | 601 ++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 805 insertions(+), 3 deletions(-)
+ create mode 100644 fs/erofs/decompress.c
+ create mode 100644 fs/erofs/decompress.h
+ create mode 100644 fs/erofs/zmap.c
 
-diff --git a/include/u-boot/lz4.h b/include/u-boot/lz4.h
-index e18b39a5dc..655adbfcd1 100644
---- a/include/u-boot/lz4.h
-+++ b/include/u-boot/lz4.h
-@@ -21,4 +21,53 @@
-  */
- int ulz4fn(const void *src, size_t srcn, void *dst, size_t *dstn);
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index f4b2d51a23..ee4e777c5c 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -10,3 +10,12 @@ config FS_EROFS
+ 	  improves storage density, keeps relatively higher compression
+ 	  ratios, which is more useful to achieve high performance for
+ 	  embedded devices with limited memory.
++
++config FS_EROFS_ZIP
++	bool "EROFS Data Compression Support"
++	depends on FS_EROFS
++	select LZ4
++	default y
++	help
++	  Enable fixed-sized output compression for EROFS.
++	  If you don't want to enable compression feature, say N.
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 7398ab7a36..58af6a68e4 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -4,4 +4,6 @@
+ obj-$(CONFIG_$(SPL_)FS_EROFS) = fs.o \
+ 				super.o \
+ 				namei.o \
+-				data.o
++				data.o \
++				decompress.o \
++				zmap.o
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 699975c1be..761896054c 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ #include "internal.h"
++#include "decompress.h"
  
-+/**
-+ * LZ4_decompress_safe() - Decompression protected against buffer overflow
-+ * @source: source address of the compressed data
-+ * @dest: output buffer address of the uncompressed data
-+ *	which must be already allocated
-+ * @compressedSize: is the precise full size of the compressed block
-+ * @maxDecompressedSize: is the size of 'dest' buffer
-+ *
-+ * Decompresses data from 'source' into 'dest'.
-+ * If the source stream is detected malformed, the function will
-+ * stop decoding and return a negative result.
-+ * This function is protected against buffer overflow exploits,
-+ * including malicious data packets. It never writes outside output buffer,
-+ * nor reads outside input buffer.
-+ *
-+ * Return: number of bytes decompressed into destination buffer
-+ *	(necessarily <= maxDecompressedSize)
-+ *	or a negative result in case of error
-+ */
-+int LZ4_decompress_safe(const char *source, char *dest,
-+	int compressedSize, int maxDecompressedSize);
-+
-+/**
-+ * LZ4_decompress_safe_partial() - Decompress a block of size 'compressedSize'
-+ *	at position 'source' into buffer 'dest'
-+ * @source: source address of the compressed data
-+ * @dest: output buffer address of the decompressed data which must be
-+ *	already allocated
-+ * @compressedSize: is the precise full size of the compressed block.
-+ * @targetOutputSize: the decompression operation will try
-+ *	to stop as soon as 'targetOutputSize' has been reached
-+ * @maxDecompressedSize: is the size of destination buffer
-+ *
-+ * This function decompresses a compressed block of size 'compressedSize'
-+ * at position 'source' into destination buffer 'dest'
-+ * of size 'maxDecompressedSize'.
-+ * The function tries to stop decompressing operation as soon as
-+ * 'targetOutputSize' has been reached, reducing decompression time.
-+ * This function never writes outside of output buffer,
-+ * and never reads outside of input buffer.
-+ * It is therefore protected against malicious data packets.
-+ *
-+ * Return: the number of bytes decoded in the destination buffer
-+ *	(necessarily <= maxDecompressedSize)
-+ *	or a negative result in case of error
-+ *
-+ */
-+int LZ4_decompress_safe_partial(const char *src, char *dst,
-+	int compressedSize, int targetOutputSize, int dstCapacity);
- #endif
-diff --git a/lib/lz4.c b/lib/lz4.c
-index 046c34e390..5337842126 100644
---- a/lib/lz4.c
-+++ b/lib/lz4.c
-@@ -1,13 +1,63 @@
--// SPDX-License-Identifier: BSD-2-Clause
-+// SPDX-License-Identifier: GPL 2.0+ OR BSD-2-Clause
- /*
--   LZ4 - Fast LZ compression algorithm
--   Copyright (C) 2011-2015, Yann Collet.
-+ * LZ4 - Fast LZ compression algorithm
-+ * Copyright (C) 2011 - 2016, Yann Collet.
-+ * BSD 2 - Clause License (http://www.opensource.org/licenses/bsd - license.php)
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are
-+ * met:
-+ *	* Redistributions of source code must retain the above copyright
-+ *	  notice, this list of conditions and the following disclaimer.
-+ *	* Redistributions in binary form must reproduce the above
-+ * copyright notice, this list of conditions and the following disclaimer
-+ * in the documentation and/or other materials provided with the
-+ * distribution.
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ * You can contact the author at :
-+ *	- LZ4 homepage : http://www.lz4.org
-+ *	- LZ4 source repository : https://github.com/lz4/lz4
-+ */
-+#include <common.h>
-+#include <compiler.h>
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <linux/bug.h>
-+#include <asm/unaligned.h>
-+#include <u-boot/lz4.h>
-+
-+#define FORCE_INLINE inline __attribute__((always_inline))
-+
-+static FORCE_INLINE u16 LZ4_readLE16(const void *src)
+ static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
+ 				     struct erofs_map_blocks *map,
+@@ -205,6 +206,93 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+ 	return 0;
+ }
+ 
++static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
++			     erofs_off_t size, erofs_off_t offset)
 +{
-+	return get_unaligned_le16(src);
-+}
- 
--   You can contact the author at :
--   - LZ4 source repository : https://github.com/Cyan4973/lz4
--   - LZ4 public forum : https://groups.google.com/forum/#!forum/lz4c
--*/
-+static FORCE_INLINE void LZ4_copy8(void *dst, const void *src)
-+{
-+	put_unaligned(get_unaligned((const u64 *)src), (u64 *)dst);
-+}
++	erofs_off_t end, length, skip;
++	struct erofs_map_blocks map = {
++		.index = UINT_MAX,
++	};
++	struct erofs_map_dev mdev;
++	bool partial;
++	unsigned int bufsize = 0;
++	char *raw = NULL;
++	int ret = 0;
 +
-+typedef  uint8_t BYTE;
-+typedef uint16_t U16;
-+typedef uint32_t U32;
-+typedef  int32_t S32;
-+typedef uint64_t U64;
-+typedef uintptr_t uptrval;
- 
-+static FORCE_INLINE void LZ4_write32(void *memPtr, U32 value)
-+{
-+	put_unaligned(value, (U32 *)memPtr);
-+}
- 
- /**************************************
- *  Reading and writing into memory
-@@ -28,14 +78,17 @@ static void LZ4_wildCopy(void* dstPtr, const void* srcPtr, void* dstEnd)
- **************************************/
- #define MINMATCH 4
- 
--#define COPYLENGTH 8
-+#define WILDCOPYLENGTH 8
- #define LASTLITERALS 5
--#define MFLIMIT (COPYLENGTH+MINMATCH)
--static const int LZ4_minLength = (MFLIMIT+1);
-+#define MFLIMIT (WILDCOPYLENGTH + MINMATCH)
- 
--#define KB *(1 <<10)
--#define MB *(1 <<20)
--#define GB *(1U<<30)
-+/*
-+ * ensure it's possible to write 2 x wildcopyLength
-+ * without overflowing output buffer
-+ */
-+#define MATCH_SAFEGUARD_DISTANCE  ((2 * WILDCOPYLENGTH) - MINMATCH)
++	end = offset + size;
++	while (end > offset) {
++		map.m_la = end - 1;
 +
-+#define KB (1 <<10)
- 
- #define MAXD_LOG 16
- #define MAX_DISTANCE ((1 << MAXD_LOG) - 1)
-@@ -45,198 +98,438 @@ static const int LZ4_minLength = (MFLIMIT+1);
- #define RUN_BITS (8-ML_BITS)
- #define RUN_MASK ((1U<<RUN_BITS)-1)
- 
-+#define LZ4_STATIC_ASSERT(c)	BUILD_BUG_ON(!(c))
- 
- /**************************************
- *  Local Structures and types
- **************************************/
- typedef enum { noDict = 0, withPrefix64k, usingExtDict } dict_directive;
- typedef enum { endOnOutputSize = 0, endOnInputSize = 1 } endCondition_directive;
--typedef enum { full = 0, partial = 1 } earlyEnd_directive;
-+typedef enum { decode_full_block = 0, partial_decode = 1 } earlyEnd_directive;
- 
-+#define DEBUGLOG(l, ...) {}	/* disabled */
- 
-+#ifndef assert
-+#define assert(condition) ((void)0)
-+#endif
- 
--/*******************************
--*  Decompression functions
--*******************************/
- /*
-- * This generic decompression function cover all use cases.
-- * It shall be instantiated several times, using different sets of directives
-- * Note that it is essential this generic function is really inlined,
-+ * LZ4_decompress_generic() :
-+ * This generic decompression function covers all use cases.
-+ * It shall be instantiated several times, using different sets of directives.
-+ * Note that it is important for performance that this function really get inlined,
-  * in order to remove useless branches during compilation optimization.
-  */
--FORCE_INLINE int LZ4_decompress_generic(
--                 const char* const source,
--                 char* const dest,
--                 int inputSize,
--                 int outputSize,         /* If endOnInput==endOnInputSize, this value is the max size of Output Buffer. */
--
--                 int endOnInput,         /* endOnOutputSize, endOnInputSize */
--                 int partialDecoding,    /* full, partial */
--                 int targetOutputSize,   /* only used if partialDecoding==partial */
--                 int dict,               /* noDict, withPrefix64k, usingExtDict */
--                 const BYTE* const lowPrefix,  /* == dest if dict == noDict */
--                 const BYTE* const dictStart,  /* only if dict==usingExtDict */
--                 const size_t dictSize         /* note : = 0 if noDict */
--                 )
-+static FORCE_INLINE int LZ4_decompress_generic(
-+	 const char * const src,
-+	 char * const dst,
-+	 int srcSize,
++		ret = z_erofs_map_blocks_iter(inode, &map, 0);
++		if (ret)
++			break;
++
++		/* no device id here, thus it will always succeed */
++		mdev = (struct erofs_map_dev) {
++			.m_pa = map.m_pa,
++		};
++		ret = erofs_map_dev(&sbi, &mdev);
++		if (ret) {
++			DBG_BUGON(1);
++			break;
++		}
++
 +		/*
-+		 * If endOnInput == endOnInputSize,
-+		 * this value is `dstCapacity`
++		 * trim to the needed size if the returned extent is quite
++		 * larger than requested, and set up partial flag as well.
 +		 */
-+	 int outputSize,
-+	 /* endOnOutputSize, endOnInputSize */
-+	 endCondition_directive endOnInput,
-+	 /* full, partial */
-+	 earlyEnd_directive partialDecoding,
-+	 /* noDict, withPrefix64k, usingExtDict */
-+	 dict_directive dict,
-+	 /* always <= dst, == dst when no prefix */
-+	 const BYTE * const lowPrefix,
-+	 /* only if dict == usingExtDict */
-+	 const BYTE * const dictStart,
-+	 /* note : = 0 if noDict */
-+	 const size_t dictSize
-+	 )
++		if (end < map.m_la + map.m_llen) {
++			length = end - map.m_la;
++			partial = true;
++		} else {
++			DBG_BUGON(end != map.m_la + map.m_llen);
++			length = map.m_llen;
++			partial = !(map.m_flags & EROFS_MAP_FULL_MAPPED);
++		}
++
++		if (map.m_la < offset) {
++			skip = offset - map.m_la;
++			end = offset;
++		} else {
++			skip = 0;
++			end = map.m_la;
++		}
++
++		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
++			memset(buffer + end - offset, 0, length);
++			end = map.m_la;
++			continue;
++		}
++
++		if (map.m_plen > bufsize) {
++			bufsize = map.m_plen;
++			raw = realloc(raw, bufsize);
++			if (!raw) {
++				ret = -ENOMEM;
++				break;
++			}
++		}
++		ret = erofs_dev_read(mdev.m_deviceid, raw, mdev.m_pa, map.m_plen);
++		if (ret < 0)
++			break;
++
++		ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
++					.in = raw,
++					.out = buffer + end - offset,
++					.decodedskip = skip,
++					.inputsize = map.m_plen,
++					.decodedlength = length,
++					.alg = map.m_algorithmformat,
++					.partial_decoding = partial
++					 });
++		if (ret < 0)
++			break;
++	}
++	if (raw)
++		free(raw);
++	return ret < 0 ? ret : 0;
++}
++
+ int erofs_pread(struct erofs_inode *inode, char *buf,
+ 		erofs_off_t count, erofs_off_t offset)
  {
--    /* Local Variables */
--    const BYTE* ip = (const BYTE*) source;
--    const BYTE* const iend = ip + inputSize;
--
--    BYTE* op = (BYTE*) dest;
--    BYTE* const oend = op + outputSize;
--    BYTE* cpy;
--    BYTE* oexit = op + targetOutputSize;
--    const BYTE* const lowLimit = lowPrefix - dictSize;
--
--    const BYTE* const dictEnd = (const BYTE*)dictStart + dictSize;
--    const size_t dec32table[] = {4, 1, 2, 1, 4, 4, 4, 4};
--    const size_t dec64table[] = {0, 0, 0, (size_t)-1, 0, 1, 2, 3};
--
--    const int safeDecode = (endOnInput==endOnInputSize);
--    const int checkOffset = ((safeDecode) && (dictSize < (int)(64 KB)));
--
--
--    /* Special cases */
--    if ((partialDecoding) && (oexit> oend-MFLIMIT)) oexit = oend-MFLIMIT;                         /* targetOutputSize too high => decode everything */
--    if ((endOnInput) && (unlikely(outputSize==0))) return ((inputSize==1) && (*ip==0)) ? 0 : -1;  /* Empty output buffer */
--    if ((!endOnInput) && (unlikely(outputSize==0))) return (*ip==0?1:-1);
--
--
--    /* Main Loop */
--    while (1)
--    {
--        unsigned token;
--        size_t length;
--        const BYTE* match;
--
--        /* get literal length */
--        token = *ip++;
--        if ((length=(token>>ML_BITS)) == RUN_MASK)
--        {
--            unsigned s;
--            do
--            {
--                s = *ip++;
--                length += s;
--            }
--            while (likely((endOnInput)?ip<iend-RUN_MASK:1) && (s==255));
--            if ((safeDecode) && unlikely((size_t)(op+length)<(size_t)(op))) goto _output_error;   /* overflow detection */
--            if ((safeDecode) && unlikely((size_t)(ip+length)<(size_t)(ip))) goto _output_error;   /* overflow detection */
--        }
--
--        /* copy literals */
--        cpy = op+length;
--        if (((endOnInput) && ((cpy>(partialDecoding?oexit:oend-MFLIMIT)) || (ip+length>iend-(2+1+LASTLITERALS))) )
--            || ((!endOnInput) && (cpy>oend-COPYLENGTH)))
--        {
--            if (partialDecoding)
--            {
--                if (cpy > oend) goto _output_error;                           /* Error : write attempt beyond end of output buffer */
--                if ((endOnInput) && (ip+length > iend)) goto _output_error;   /* Error : read attempt beyond end of input buffer */
--            }
--            else
--            {
--                if ((!endOnInput) && (cpy != oend)) goto _output_error;       /* Error : block decoding must stop exactly there */
--                if ((endOnInput) && ((ip+length != iend) || (cpy > oend))) goto _output_error;   /* Error : input must be consumed */
--            }
--            memcpy(op, ip, length);
--            ip += length;
--            op += length;
--            break;     /* Necessarily EOF, due to parsing restrictions */
--        }
--        LZ4_wildCopy(op, ip, cpy);
--        ip += length; op = cpy;
--
--        /* get offset */
--        match = cpy - LZ4_readLE16(ip); ip+=2;
--        if ((checkOffset) && (unlikely(match < lowLimit))) goto _output_error;   /* Error : offset outside destination buffer */
--
--        /* get matchlength */
--        length = token & ML_MASK;
--        if (length == ML_MASK)
--        {
--            unsigned s;
--            do
--            {
--                if ((endOnInput) && (ip > iend-LASTLITERALS)) goto _output_error;
--                s = *ip++;
--                length += s;
--            } while (s==255);
--            if ((safeDecode) && unlikely((size_t)(op+length)<(size_t)op)) goto _output_error;   /* overflow detection */
--        }
--        length += MINMATCH;
--
--        /* check external dictionary */
--        if ((dict==usingExtDict) && (match < lowPrefix))
--        {
--            if (unlikely(op+length > oend-LASTLITERALS)) goto _output_error;   /* doesn't respect parsing restriction */
--
--            if (length <= (size_t)(lowPrefix-match))
--            {
--                /* match can be copied as a single segment from external dictionary */
--                match = dictEnd - (lowPrefix-match);
--                memmove(op, match, length); op += length;
--            }
--            else
--            {
--                /* match encompass external dictionary and current segment */
--                size_t copySize = (size_t)(lowPrefix-match);
--                memcpy(op, dictEnd - copySize, copySize);
--                op += copySize;
--                copySize = length - copySize;
--                if (copySize > (size_t)(op-lowPrefix))   /* overlap within current segment */
--                {
--                    BYTE* const endOfMatch = op + copySize;
--                    const BYTE* copyFrom = lowPrefix;
--                    while (op < endOfMatch) *op++ = *copyFrom++;
--                }
--                else
--                {
--                    memcpy(op, lowPrefix, copySize);
--                    op += copySize;
--                }
--            }
--            continue;
--        }
--
--        /* copy repeated sequence */
--        cpy = op + length;
--        if (unlikely((op-match)<8))
--        {
--            const size_t dec64 = dec64table[op-match];
--            op[0] = match[0];
--            op[1] = match[1];
--            op[2] = match[2];
--            op[3] = match[3];
--            match += dec32table[op-match];
--            LZ4_copy4(op+4, match);
--            op += 8; match -= dec64;
--        } else { LZ4_copy8(op, match); op+=8; match+=8; }
--
--        if (unlikely(cpy>oend-12))
--        {
--            if (cpy > oend-LASTLITERALS) goto _output_error;    /* Error : last LASTLITERALS bytes must be literals */
--            if (op < oend-8)
--            {
--                LZ4_wildCopy(op, match, oend-8);
--                match += (oend-8) - op;
--                op = oend-8;
--            }
--            while (op<cpy) *op++ = *match++;
--        }
--        else
--            LZ4_wildCopy(op, match, cpy);
--        op=cpy;   /* correction */
--    }
--
--    /* end of decoding */
--    if (endOnInput)
--       return (int) (((char*)op)-dest);     /* Nb of output bytes decoded */
--    else
--       return (int) (((const char*)ip)-source);   /* Nb of input bytes read */
--
--    /* Overflow error detected */
-+	const BYTE *ip = (const BYTE *) src;
-+	const BYTE * const iend = ip + srcSize;
+@@ -215,7 +303,7 @@ int erofs_pread(struct erofs_inode *inode, char *buf,
+ 		return erofs_read_raw_data(inode, buf, count, offset);
+ 	case EROFS_INODE_FLAT_COMPRESSION_LEGACY:
+ 	case EROFS_INODE_FLAT_COMPRESSION:
+-		return -EOPNOTSUPP;
++		return z_erofs_read_data(inode, buf, count, offset);
+ 	default:
+ 		break;
+ 	}
+diff --git a/fs/erofs/decompress.c b/fs/erofs/decompress.c
+new file mode 100644
+index 0000000000..2be3b844cf
+--- /dev/null
++++ b/fs/erofs/decompress.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0+
++#include "decompress.h"
 +
-+	BYTE *op = (BYTE *) dst;
-+	BYTE * const oend = op + outputSize;
-+	BYTE *cpy;
++#if IS_ENABLED(CONFIG_LZ4)
++#include <u-boot/lz4.h>
++static int z_erofs_decompress_lz4(struct z_erofs_decompress_req *rq)
++{
++	int ret = 0;
++	char *dest = rq->out;
++	char *src = rq->in;
++	char *buff = NULL;
++	bool support_0padding = false;
++	unsigned int inputmargin = 0;
 +
-+	const BYTE * const dictEnd = (const BYTE *)dictStart + dictSize;
-+	static const unsigned int inc32table[8] = {0, 1, 2, 1, 0, 4, 4, 4};
-+	static const int dec64table[8] = {0, 0, 0, -1, -4, 1, 2, 3};
++	if (erofs_sb_has_lz4_0padding()) {
++		support_0padding = true;
 +
-+	const int safeDecode = (endOnInput == endOnInputSize);
-+	const int checkOffset = ((safeDecode) && (dictSize < (int)(64 * KB)));
++		while (!src[inputmargin & ~PAGE_MASK])
++			if (!(++inputmargin & ~PAGE_MASK))
++				break;
 +
-+	/* Set up the "end" pointers for the shortcut. */
-+	const BYTE *const shortiend = iend -
-+		(endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
-+	const BYTE *const shortoend = oend -
-+		(endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
++		if (inputmargin >= rq->inputsize)
++			return -EIO;
++	}
 +
-+	DEBUGLOG(5, "%s (srcSize:%i, dstSize:%i)", __func__,
-+		 srcSize, outputSize);
++	if (rq->decodedskip) {
++		buff = malloc(rq->decodedlength);
++		if (!buff)
++			return -ENOMEM;
++		dest = buff;
++	}
 +
-+	/* Special cases */
-+	assert(lowPrefix <= op);
-+	assert(src != NULL);
++	if (rq->partial_decoding || !support_0padding)
++		ret = LZ4_decompress_safe_partial(src + inputmargin, dest,
++						  rq->inputsize - inputmargin,
++						  rq->decodedlength, rq->decodedlength);
++	else
++		ret = LZ4_decompress_safe(src + inputmargin, dest,
++					  rq->inputsize - inputmargin,
++					  rq->decodedlength);
 +
-+	/* Empty output buffer */
-+	if ((endOnInput) && (unlikely(outputSize == 0)))
-+		return ((srcSize == 1) && (*ip == 0)) ? 0 : -1;
++	if (ret != (int)rq->decodedlength) {
++		ret = -EIO;
++		goto out;
++	}
 +
-+	if ((!endOnInput) && (unlikely(outputSize == 0)))
-+		return (*ip == 0 ? 1 : -1);
++	if (rq->decodedskip)
++		memcpy(rq->out, dest + rq->decodedskip,
++		       rq->decodedlength - rq->decodedskip);
 +
-+	if ((endOnInput) && unlikely(srcSize == 0))
-+		return -1;
++out:
++	if (buff)
++		free(buff);
 +
-+	/* Main Loop : decode sequences */
-+	while (1) {
-+		size_t length;
-+		const BYTE *match;
-+		size_t offset;
++	return ret;
++}
++#endif
 +
-+		/* get literal length */
-+		unsigned int const token = *ip++;
-+		length = token>>ML_BITS;
++int z_erofs_decompress(struct z_erofs_decompress_req *rq)
++{
++	if (rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
++		if (rq->inputsize != EROFS_BLKSIZ)
++			return -EFSCORRUPTED;
 +
-+		/* ip < iend before the increment */
-+		assert(!endOnInput || ip <= iend);
++		DBG_BUGON(rq->decodedlength > EROFS_BLKSIZ);
++		DBG_BUGON(rq->decodedlength < rq->decodedskip);
 +
++		memcpy(rq->out, rq->in + rq->decodedskip,
++		       rq->decodedlength - rq->decodedskip);
++		return 0;
++	}
++
++#if IS_ENABLED(CONFIG_LZ4)
++	if (rq->alg == Z_EROFS_COMPRESSION_LZ4)
++		return z_erofs_decompress_lz4(rq);
++#endif
++	return -EOPNOTSUPP;
++}
+diff --git a/fs/erofs/decompress.h b/fs/erofs/decompress.h
+new file mode 100644
+index 0000000000..81d5fb84f6
+--- /dev/null
++++ b/fs/erofs/decompress.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++#ifndef __EROFS_DECOMPRESS_H
++#define __EROFS_DECOMPRESS_H
++
++#include "internal.h"
++
++struct z_erofs_decompress_req {
++	char *in, *out;
++
++	/*
++	 * initial decompressed bytes that need to be skipped
++	 * when finally copying to output buffer
++	 */
++	unsigned int decodedskip;
++	unsigned int inputsize, decodedlength;
++
++	/* indicate the algorithm will be used for decompression */
++	unsigned int alg;
++	bool partial_decoding;
++};
++
++int z_erofs_decompress(struct z_erofs_decompress_req *rq);
++
++#endif
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index f1195a09ea..d1d4757c50 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -114,7 +114,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->u.chunkbits = LOG_BLOCK_SIZE +
+ 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+ 	} else if (erofs_inode_is_data_compressed(vi->datalayout))
+-		return -EOPNOTSUPP;
++		z_erofs_fill_inode(vi);
+ 	return 0;
+ bogusimode:
+ 	erofs_err("bogus i_mode (%o) @ nid %llu", vi->i_mode, vi->nid | 0ULL);
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+new file mode 100644
+index 0000000000..be2599ac4f
+--- /dev/null
++++ b/fs/erofs/zmap.c
+@@ -0,0 +1,601 @@
++// SPDX-License-Identifier: GPL-2.0+
++#include "internal.h"
++
++int z_erofs_fill_inode(struct erofs_inode *vi)
++{
++	if (!erofs_sb_has_big_pcluster() &&
++	    vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
++		vi->z_advise = 0;
++		vi->z_algorithmtype[0] = 0;
++		vi->z_algorithmtype[1] = 0;
++		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
++
++		vi->flags |= EROFS_I_Z_INITED;
++	}
++	return 0;
++}
++
++static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
++{
++	int ret;
++	erofs_off_t pos;
++	struct z_erofs_map_header *h;
++	char buf[sizeof(struct z_erofs_map_header)];
++
++	if (vi->flags & EROFS_I_Z_INITED)
++		return 0;
++
++	DBG_BUGON(!erofs_sb_has_big_pcluster() &&
++		  vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
++	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
++
++	ret = erofs_dev_read(0, buf, pos, sizeof(buf));
++	if (ret < 0)
++		return -EIO;
++
++	h = (struct z_erofs_map_header *)buf;
++	vi->z_advise = le16_to_cpu(h->h_advise);
++	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
++	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
++
++	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
++		erofs_err("unknown compression format %u for nid %llu",
++			  vi->z_algorithmtype[0], (unsigned long long)vi->nid);
++		return -EOPNOTSUPP;
++	}
++
++	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
++	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
++	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
++	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
++		erofs_err("big pcluster head1/2 of compact indexes should be consistent for nid %llu",
++			  vi->nid * 1ULL);
++		return -EFSCORRUPTED;
++	}
++	vi->flags |= EROFS_I_Z_INITED;
++	return 0;
++}
++
++struct z_erofs_maprecorder {
++	struct erofs_inode *inode;
++	struct erofs_map_blocks *map;
++	void *kaddr;
++
++	unsigned long lcn;
++	/* compression extent information gathered */
++	u8  type, headtype;
++	u16 clusterofs;
++	u16 delta[2];
++	erofs_blk_t pblk, compressedlcs;
++};
++
++static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
++				  erofs_blk_t eblk)
++{
++	int ret;
++	struct erofs_map_blocks *const map = m->map;
++	char *mpage = map->mpage;
++
++	if (map->index == eblk)
++		return 0;
++
++	ret = erofs_blk_read(mpage, eblk, 1);
++	if (ret < 0)
++		return -EIO;
++
++	map->index = eblk;
++
++	return 0;
++}
++
++static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
++					 unsigned long lcn)
++{
++	struct erofs_inode *const vi = m->inode;
++	const erofs_off_t ibase = iloc(vi->nid);
++	const erofs_off_t pos =
++		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
++					       vi->xattr_isize) +
++		lcn * sizeof(struct z_erofs_vle_decompressed_index);
++	struct z_erofs_vle_decompressed_index *di;
++	unsigned int advise, type;
++	int err;
++
++	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
++	if (err)
++		return err;
++
++	m->lcn = lcn;
++	di = m->kaddr + erofs_blkoff(pos);
++
++	advise = le16_to_cpu(di->di_advise);
++	type = (advise >> Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT) &
++		((1 << Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) - 1);
++	switch (type) {
++	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
++		m->clusterofs = 1 << vi->z_logical_clusterbits;
++		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
++		if (m->delta[0] & Z_EROFS_VLE_DI_D0_CBLKCNT) {
++			if (!(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
++				DBG_BUGON(1);
++				return -EFSCORRUPTED;
++			}
++			m->compressedlcs = m->delta[0] &
++				~Z_EROFS_VLE_DI_D0_CBLKCNT;
++			m->delta[0] = 1;
++		}
++		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
++		break;
++	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++		m->clusterofs = le16_to_cpu(di->di_clusterofs);
++		m->pblk = le32_to_cpu(di->di_u.blkaddr);
++		break;
++	default:
++		DBG_BUGON(1);
++		return -EOPNOTSUPP;
++	}
++	m->type = type;
++	return 0;
++}
++
++static unsigned int decode_compactedbits(unsigned int lobits,
++					 unsigned int lomask,
++					 u8 *in, unsigned int pos, u8 *type)
++{
++	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
++	const unsigned int lo = v & lomask;
++
++	*type = (v >> lobits) & 3;
++	return lo;
++}
++
++static int get_compacted_la_distance(unsigned int lclusterbits,
++				     unsigned int encodebits,
++				     unsigned int vcnt, u8 *in, int i)
++{
++	const unsigned int lomask = (1 << lclusterbits) - 1;
++	unsigned int lo, d1 = 0;
++	u8 type;
++
++	DBG_BUGON(i >= vcnt);
++
++	do {
++		lo = decode_compactedbits(lclusterbits, lomask,
++					  in, encodebits * i, &type);
++
++		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
++			return d1;
++		++d1;
++	} while (++i < vcnt);
++
++	/* vcnt - 1 (Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) item */
++	if (!(lo & Z_EROFS_VLE_DI_D0_CBLKCNT))
++		d1 += lo - 1;
++	return d1;
++}
++
++static int unpack_compacted_index(struct z_erofs_maprecorder *m,
++				  unsigned int amortizedshift,
++				  unsigned int eofs, bool lookahead)
++{
++	struct erofs_inode *const vi = m->inode;
++	const unsigned int lclusterbits = vi->z_logical_clusterbits;
++	const unsigned int lomask = (1 << lclusterbits) - 1;
++	unsigned int vcnt, base, lo, encodebits, nblk;
++	int i;
++	u8 *in, type;
++	bool big_pcluster;
++
++	if (1 << amortizedshift == 4)
++		vcnt = 2;
++	else if (1 << amortizedshift == 2 && lclusterbits == 12)
++		vcnt = 16;
++	else
++		return -EOPNOTSUPP;
++
++	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
++	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
++	base = round_down(eofs, vcnt << amortizedshift);
++	in = m->kaddr + base;
++
++	i = (eofs - base) >> amortizedshift;
++
++	lo = decode_compactedbits(lclusterbits, lomask,
++				  in, encodebits * i, &type);
++	m->type = type;
++	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
++		m->clusterofs = 1 << lclusterbits;
++
++		/* figure out lookahead_distance: delta[1] if needed */
++		if (lookahead)
++			m->delta[1] = get_compacted_la_distance(lclusterbits,
++								encodebits,
++								vcnt, in, i);
++		if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
++			if (!big_pcluster) {
++				DBG_BUGON(1);
++				return -EFSCORRUPTED;
++			}
++			m->compressedlcs = lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
++			m->delta[0] = 1;
++			return 0;
++		} else if (i + 1 != (int)vcnt) {
++			m->delta[0] = lo;
++			return 0;
++		}
 +		/*
-+		 * A two-stage shortcut for the most common case:
-+		 * 1) If the literal length is 0..14, and there is enough
-+		 * space, enter the shortcut and copy 16 bytes on behalf
-+		 * of the literals (in the fast mode, only 8 bytes can be
-+		 * safely copied this way).
-+		 * 2) Further if the match length is 4..18, copy 18 bytes
-+		 * in a similar manner; but we ensure that there's enough
-+		 * space in the output for those 18 bytes earlier, upon
-+		 * entering the shortcut (in other words, there is a
-+		 * combined check for both stages).
-+		 *
-+		 * The & in the likely() below is intentionally not && so that
-+		 * some compilers can produce better parallelized runtime code
++		 * since the last lcluster in the pack is special,
++		 * of which lo saves delta[1] rather than delta[0].
++		 * Hence, get delta[0] by the previous lcluster indirectly.
 +		 */
-+		if ((endOnInput ? length != RUN_MASK : length <= 8)
-+		   /*
-+		    * strictly "less than" on input, to re-enter
-+		    * the loop with at least one byte
-+		    */
-+		   && likely((endOnInput ? ip < shortiend : 1) &
-+			     (op <= shortoend))) {
-+			/* Copy the literals */
-+			memcpy(op, ip, endOnInput ? 16 : 8);
-+			op += length; ip += length;
++		lo = decode_compactedbits(lclusterbits, lomask,
++					  in, encodebits * (i - 1), &type);
++		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
++			lo = 0;
++		else if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT)
++			lo = 1;
++		m->delta[0] = lo + 1;
++		return 0;
++	}
++	m->clusterofs = lo;
++	m->delta[0] = 0;
++	/* figout out blkaddr (pblk) for HEAD lclusters */
++	if (!big_pcluster) {
++		nblk = 1;
++		while (i > 0) {
++			--i;
++			lo = decode_compactedbits(lclusterbits, lomask,
++						  in, encodebits * i, &type);
++			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
++				i -= lo;
 +
-+			/*
-+			 * The second stage:
-+			 * prepare for match copying, decode full info.
-+			 * If it doesn't work out, the info won't be wasted.
-+			 */
-+			length = token & ML_MASK; /* match length */
-+			offset = LZ4_readLE16(ip);
-+			ip += 2;
-+			match = op - offset;
-+			assert(match <= op); /* check overflow */
-+
-+			/* Do not deal with overlapping matches. */
-+			if ((length != ML_MASK) &&
-+			    (offset >= 8) &&
-+			    (dict == withPrefix64k || match >= lowPrefix)) {
-+				/* Copy the match. */
-+				memcpy(op + 0, match + 0, 8);
-+				memcpy(op + 8, match + 8, 8);
-+				memcpy(op + 16, match + 16, 2);
-+				op += length + MINMATCH;
-+				/* Both stages worked, load the next token. */
++			if (i >= 0)
++				++nblk;
++		}
++	} else {
++		nblk = 0;
++		while (i > 0) {
++			--i;
++			lo = decode_compactedbits(lclusterbits, lomask,
++						  in, encodebits * i, &type);
++			if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
++				if (lo & Z_EROFS_VLE_DI_D0_CBLKCNT) {
++					--i;
++					nblk += lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
++					continue;
++				}
++				if (lo == 1) {
++					DBG_BUGON(1);
++					/* --i; ++nblk;	continue; */
++					return -EFSCORRUPTED;
++				}
++				i -= lo - 2;
 +				continue;
 +			}
-+
-+			/*
-+			 * The second stage didn't work out, but the info
-+			 * is ready. Propel it right to the point of match
-+			 * copying.
-+			 */
-+			goto _copy_match;
++			++nblk;
 +		}
-+
-+		/* decode literal length */
-+		if (length == RUN_MASK) {
-+			unsigned int s;
-+
-+			if (unlikely(endOnInput ? ip >= iend - RUN_MASK : 0)) {
-+				/* overflow detection */
-+				goto _output_error;
-+			}
-+			do {
-+				s = *ip++;
-+				length += s;
-+			} while (likely(endOnInput
-+				? ip < iend - RUN_MASK
-+				: 1) & (s == 255));
-+
-+			if ((safeDecode)
-+			    && unlikely((uptrval)(op) +
-+					length < (uptrval)(op))) {
-+				/* overflow detection */
-+				goto _output_error;
-+			}
-+			if ((safeDecode)
-+			    && unlikely((uptrval)(ip) +
-+					length < (uptrval)(ip))) {
-+				/* overflow detection */
-+				goto _output_error;
-+			}
-+		}
-+
-+		/* copy literals */
-+		cpy = op + length;
-+		LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
-+
-+		if (((endOnInput) && ((cpy > oend - MFLIMIT)
-+			|| (ip + length > iend - (2 + 1 + LASTLITERALS))))
-+			|| ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
-+			if (partialDecoding) {
-+				if (cpy > oend) {
-+					/*
-+					 * Partial decoding :
-+					 * stop in the middle of literal segment
-+					 */
-+					cpy = oend;
-+					length = oend - op;
-+				}
-+				if ((endOnInput)
-+					&& (ip + length > iend)) {
-+					/*
-+					 * Error :
-+					 * read attempt beyond
-+					 * end of input buffer
-+					 */
-+					goto _output_error;
-+				}
-+			} else {
-+				if ((!endOnInput)
-+					&& (cpy != oend)) {
-+					/*
-+					 * Error :
-+					 * block decoding must
-+					 * stop exactly there
-+					 */
-+					goto _output_error;
-+				}
-+				if ((endOnInput)
-+					&& ((ip + length != iend)
-+					|| (cpy > oend))) {
-+					/*
-+					 * Error :
-+					 * input must be consumed
-+					 */
-+					goto _output_error;
-+				}
-+			}
-+
-+			/*
-+			 * supports overlapping memory regions; only matters
-+			 * for in-place decompression scenarios
-+			 */
-+			memmove(op, ip, length);
-+			ip += length;
-+			op += length;
-+
-+			/* Necessarily EOF, due to parsing restrictions */
-+			if (!partialDecoding || (cpy == oend))
-+				break;
-+		} else {
-+			/* may overwrite up to WILDCOPYLENGTH beyond cpy */
-+			LZ4_wildCopy(op, ip, cpy);
-+			ip += length;
-+			op = cpy;
-+		}
-+
-+		/* get offset */
-+		offset = LZ4_readLE16(ip);
-+		ip += 2;
-+		match = op - offset;
-+
-+		/* get matchlength */
-+		length = token & ML_MASK;
-+
-+_copy_match:
-+		if ((checkOffset) && (unlikely(match + dictSize < lowPrefix))) {
-+			/* Error : offset outside buffers */
-+			goto _output_error;
-+		}
-+
-+		/* costs ~1%; silence an msan warning when offset == 0 */
-+		/*
-+		 * note : when partialDecoding, there is no guarantee that
-+		 * at least 4 bytes remain available in output buffer
-+		 */
-+		if (!partialDecoding) {
-+			assert(oend > op);
-+			assert(oend - op >= 4);
-+
-+			LZ4_write32(op, (U32)offset);
-+		}
-+
-+		if (length == ML_MASK) {
-+			unsigned int s;
-+
-+			do {
-+				s = *ip++;
-+
-+				if ((endOnInput) && (ip > iend - LASTLITERALS))
-+					goto _output_error;
-+
-+				length += s;
-+			} while (s == 255);
-+
-+			if ((safeDecode)
-+				&& unlikely(
-+					(uptrval)(op) + length < (uptrval)op)) {
-+				/* overflow detection */
-+				goto _output_error;
-+			}
-+		}
-+
-+		length += MINMATCH;
-+
-+		/* match starting within external dictionary */
-+		if ((dict == usingExtDict) && (match < lowPrefix)) {
-+			if (unlikely(op + length > oend - LASTLITERALS)) {
-+				/* doesn't respect parsing restriction */
-+				if (!partialDecoding)
-+					goto _output_error;
-+				length = min(length, (size_t)(oend - op));
-+			}
-+
-+			if (length <= (size_t)(lowPrefix - match)) {
-+				/*
-+				 * match fits entirely within external
-+				 * dictionary : just copy
-+				 */
-+				memmove(op, dictEnd - (lowPrefix - match),
-+					length);
-+				op += length;
-+			} else {
-+				/*
-+				 * match stretches into both external
-+				 * dictionary and current block
-+				 */
-+				size_t const copySize = (size_t)(lowPrefix - match);
-+				size_t const restSize = length - copySize;
-+
-+				memcpy(op, dictEnd - copySize, copySize);
-+				op += copySize;
-+				if (restSize > (size_t)(op - lowPrefix)) {
-+					/* overlap copy */
-+					BYTE * const endOfMatch = op + restSize;
-+					const BYTE *copyFrom = lowPrefix;
-+
-+					while (op < endOfMatch)
-+						*op++ = *copyFrom++;
-+				} else {
-+					memcpy(op, lowPrefix, restSize);
-+					op += restSize;
-+				}
-+			}
-+			continue;
-+		}
-+
-+		/* copy match within block */
-+		cpy = op + length;
-+
-+		/*
-+		 * partialDecoding :
-+		 * may not respect endBlock parsing restrictions
-+		 */
-+		assert(op <= oend);
-+		if (partialDecoding &&
-+		    (cpy > oend - MATCH_SAFEGUARD_DISTANCE)) {
-+			size_t const mlen = min(length, (size_t)(oend - op));
-+			const BYTE * const matchEnd = match + mlen;
-+			BYTE * const copyEnd = op + mlen;
-+
-+			if (matchEnd > op) {
-+				/* overlap copy */
-+				while (op < copyEnd)
-+					*op++ = *match++;
-+			} else {
-+				memcpy(op, match, mlen);
-+			}
-+			op = copyEnd;
-+			if (op == oend)
-+				break;
-+			continue;
-+		}
-+
-+		if (unlikely(offset < 8)) {
-+			op[0] = match[0];
-+			op[1] = match[1];
-+			op[2] = match[2];
-+			op[3] = match[3];
-+			match += inc32table[offset];
-+			memcpy(op + 4, match, 4);
-+			match -= dec64table[offset];
-+		} else {
-+			LZ4_copy8(op, match);
-+			match += 8;
-+		}
-+
-+		op += 8;
-+
-+		if (unlikely(cpy > oend - MATCH_SAFEGUARD_DISTANCE)) {
-+			BYTE * const oCopyLimit = oend - (WILDCOPYLENGTH - 1);
-+
-+			if (cpy > oend - LASTLITERALS) {
-+				/*
-+				 * Error : last LASTLITERALS bytes
-+				 * must be literals (uncompressed)
-+				 */
-+				goto _output_error;
-+			}
-+
-+			if (op < oCopyLimit) {
-+				LZ4_wildCopy(op, match, oCopyLimit);
-+				match += oCopyLimit - op;
-+				op = oCopyLimit;
-+			}
-+			while (op < cpy)
-+				*op++ = *match++;
-+		} else {
-+			LZ4_copy8(op, match);
-+			if (length > 16)
-+				LZ4_wildCopy(op + 8, match + 8, cpy);
-+		}
-+		op = cpy; /* wildcopy correction */
 +	}
-+
-+	/* end of decoding */
-+	if (endOnInput) {
-+		/* Nb of output bytes decoded */
-+		return (int) (((char *)op) - dst);
-+	} else {
-+		/* Nb of input bytes read */
-+		return (int) (((const char *)ip) - src);
-+	}
-+
-+	/* Overflow error detected */
- _output_error:
--    return (int) (-(((const char*)ip)-source))-1;
-+	return (int) (-(((const char *)ip) - src)) - 1;
++	in += (vcnt << amortizedshift) - sizeof(__le32);
++	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
++	return 0;
 +}
 +
-+int LZ4_decompress_safe(const char *source, char *dest,
-+	int compressedSize, int maxDecompressedSize)
++static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
++					    unsigned long lcn, bool lookahead)
 +{
-+	return LZ4_decompress_generic(source, dest,
-+				      compressedSize, maxDecompressedSize,
-+				      endOnInputSize, decode_full_block,
-+				      noDict, (BYTE *)dest, NULL, 0);
++	struct erofs_inode *const vi = m->inode;
++	const unsigned int lclusterbits = vi->z_logical_clusterbits;
++	const erofs_off_t ebase = round_up(iloc(vi->nid) + vi->inode_isize +
++					   vi->xattr_isize, 8) +
++		sizeof(struct z_erofs_map_header);
++	const unsigned int totalidx = DIV_ROUND_UP(vi->i_size, EROFS_BLKSIZ);
++	unsigned int compacted_4b_initial, compacted_2b;
++	unsigned int amortizedshift;
++	erofs_off_t pos;
++	int err;
++
++	if (lclusterbits != 12)
++		return -EOPNOTSUPP;
++
++	if (lcn >= totalidx)
++		return -EINVAL;
++
++	m->lcn = lcn;
++	/* used to align to 32-byte (compacted_2b) alignment */
++	compacted_4b_initial = (32 - ebase % 32) / 4;
++	if (compacted_4b_initial == 32 / 4)
++		compacted_4b_initial = 0;
++
++	if (vi->z_advise & Z_EROFS_ADVISE_COMPACTED_2B)
++		compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
++	else
++		compacted_2b = 0;
++
++	pos = ebase;
++	if (lcn < compacted_4b_initial) {
++		amortizedshift = 2;
++		goto out;
++	}
++	pos += compacted_4b_initial * 4;
++	lcn -= compacted_4b_initial;
++
++	if (lcn < compacted_2b) {
++		amortizedshift = 1;
++		goto out;
++	}
++	pos += compacted_2b * 2;
++	lcn -= compacted_2b;
++	amortizedshift = 2;
++out:
++	pos += lcn * (1 << amortizedshift);
++	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
++	if (err)
++		return err;
++	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos),
++				      lookahead);
 +}
 +
-+int LZ4_decompress_safe_partial(const char *src, char *dst,
-+	int compressedSize, int targetOutputSize, int dstCapacity)
++static int z_erofs_load_cluster_from_disk(struct z_erofs_maprecorder *m,
++					  unsigned int lcn, bool lookahead)
 +{
-+	dstCapacity = min(targetOutputSize, dstCapacity);
-+	return LZ4_decompress_generic(src, dst, compressedSize, dstCapacity,
-+				      endOnInputSize, partial_decode,
-+				      noDict, (BYTE *)dst, NULL, 0);
- }
-diff --git a/lib/lz4_wrapper.c b/lib/lz4_wrapper.c
-index ebcb5c09a2..0d2a3655a8 100644
---- a/lib/lz4_wrapper.c
-+++ b/lib/lz4_wrapper.c
-@@ -11,27 +11,6 @@
- #include <asm/unaligned.h>
- #include <u-boot/lz4.h>
- 
--static u16 LZ4_readLE16(const void *src)
--{
--	return get_unaligned_le16(src);
--}
--static void LZ4_copy4(void *dst, const void *src)
--{
--	put_unaligned(get_unaligned((const u32 *)src), (u32 *)dst);
--}
--static void LZ4_copy8(void *dst, const void *src)
--{
--	put_unaligned(get_unaligned((const u64 *)src), (u64 *)dst);
--}
--
--typedef  uint8_t BYTE;
--typedef uint16_t U16;
--typedef uint32_t U32;
--typedef  int32_t S32;
--typedef uint64_t U64;
--
--#define FORCE_INLINE static inline __attribute__((always_inline))
--
- /* lz4.c is unaltered (except removing unrelated code) from github.com/Cyan4973/lz4. */
- #include "lz4.c"	/* #include for inlining, do not link! */
- 
-@@ -112,7 +91,7 @@ int ulz4fn(const void *src, size_t srcn, void *dst, size_t *dstn)
- 			/* constant folding essential, do not touch params! */
- 			ret = LZ4_decompress_generic(in, out, block_size,
- 					end - out, endOnInputSize,
--					full, 0, noDict, out, NULL, 0);
-+					decode_full_block, noDict, out, NULL, 0);
- 			if (ret < 0) {
- 				ret = -EPROTO;	/* decompression error */
- 				break;
++	const unsigned int datamode = m->inode->datalayout;
++
++	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
++		return legacy_load_cluster_from_disk(m, lcn);
++
++	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
++		return compacted_load_cluster_from_disk(m, lcn, lookahead);
++
++	return -EINVAL;
++}
++
++static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
++				   unsigned int lookback_distance)
++{
++	struct erofs_inode *const vi = m->inode;
++	struct erofs_map_blocks *const map = m->map;
++	const unsigned int lclusterbits = vi->z_logical_clusterbits;
++	unsigned long lcn = m->lcn;
++	int err;
++
++	if (lcn < lookback_distance) {
++		erofs_err("bogus lookback distance @ nid %llu",
++			  (unsigned long long)vi->nid);
++		DBG_BUGON(1);
++		return -EFSCORRUPTED;
++	}
++
++	/* load extent head logical cluster if needed */
++	lcn -= lookback_distance;
++	err = z_erofs_load_cluster_from_disk(m, lcn, false);
++	if (err)
++		return err;
++
++	switch (m->type) {
++	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
++		if (!m->delta[0]) {
++			erofs_err("invalid lookback distance 0 @ nid %llu",
++				  (unsigned long long)vi->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
++		}
++		return z_erofs_extent_lookback(m, m->delta[0]);
++	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++		m->headtype = m->type;
++		map->m_la = (lcn << lclusterbits) | m->clusterofs;
++		break;
++	default:
++		erofs_err("unknown type %u @ lcn %lu of nid %llu",
++			  m->type, lcn, (unsigned long long)vi->nid);
++		DBG_BUGON(1);
++		return -EOPNOTSUPP;
++	}
++	return 0;
++}
++
++static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
++					    unsigned int initial_lcn)
++{
++	struct erofs_inode *const vi = m->inode;
++	struct erofs_map_blocks *const map = m->map;
++	const unsigned int lclusterbits = vi->z_logical_clusterbits;
++	unsigned long lcn;
++	int err;
++
++	DBG_BUGON(m->type != Z_EROFS_VLE_CLUSTER_TYPE_PLAIN &&
++		  m->type != Z_EROFS_VLE_CLUSTER_TYPE_HEAD);
++	if (m->headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
++	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) {
++		map->m_plen = 1 << lclusterbits;
++		return 0;
++	}
++
++	lcn = m->lcn + 1;
++	if (m->compressedlcs)
++		goto out;
++
++	err = z_erofs_load_cluster_from_disk(m, lcn, false);
++	if (err)
++		return err;
++
++	/*
++	 * If the 1st NONHEAD lcluster has already been handled initially w/o
++	 * valid compressedlcs, which means at least it mustn't be CBLKCNT, or
++	 * an internal implemenatation error is detected.
++	 *
++	 * The following code can also handle it properly anyway, but let's
++	 * BUG_ON in the debugging mode only for developers to notice that.
++	 */
++	DBG_BUGON(lcn == initial_lcn &&
++		  m->type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD);
++
++	switch (m->type) {
++	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++		/*
++		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
++		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
++		 */
++		m->compressedlcs = 1;
++		break;
++	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
++		if (m->delta[0] != 1)
++			goto err_bonus_cblkcnt;
++		if (m->compressedlcs)
++			break;
++		/* fallthrough */
++	default:
++		erofs_err("cannot found CBLKCNT @ lcn %lu of nid %llu",
++			  lcn, vi->nid | 0ULL);
++		DBG_BUGON(1);
++		return -EFSCORRUPTED;
++	}
++out:
++	map->m_plen = m->compressedlcs << lclusterbits;
++	return 0;
++err_bonus_cblkcnt:
++	erofs_err("bogus CBLKCNT @ lcn %lu of nid %llu",
++		  lcn, vi->nid | 0ULL);
++	DBG_BUGON(1);
++	return -EFSCORRUPTED;
++}
++
++static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
++{
++	struct erofs_inode *const vi = m->inode;
++	struct erofs_map_blocks *map = m->map;
++	unsigned int lclusterbits = vi->z_logical_clusterbits;
++	u64 lcn = m->lcn, headlcn = map->m_la >> lclusterbits;
++	int err;
++
++	do {
++		/* handle the last EOF pcluster (no next HEAD lcluster) */
++		if ((lcn << lclusterbits) >= vi->i_size) {
++			map->m_llen = vi->i_size - map->m_la;
++			return 0;
++		}
++
++		err = z_erofs_load_cluster_from_disk(m, lcn, true);
++		if (err)
++			return err;
++
++		if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
++			DBG_BUGON(!m->delta[1] &&
++				  m->clusterofs != 1 << lclusterbits);
++		} else if (m->type == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN ||
++			   m->type == Z_EROFS_VLE_CLUSTER_TYPE_HEAD) {
++			/* go on until the next HEAD lcluster */
++			if (lcn != headlcn)
++				break;
++			m->delta[1] = 1;
++		} else {
++			erofs_err("unknown type %u @ lcn %llu of nid %llu",
++				  m->type, lcn | 0ULL,
++				  (unsigned long long)vi->nid);
++			DBG_BUGON(1);
++			return -EOPNOTSUPP;
++		}
++		lcn += m->delta[1];
++	} while (m->delta[1]);
++
++	map->m_llen = (lcn << lclusterbits) + m->clusterofs - map->m_la;
++	return 0;
++}
++
++int z_erofs_map_blocks_iter(struct erofs_inode *vi,
++			    struct erofs_map_blocks *map,
++			    int flags)
++{
++	struct z_erofs_maprecorder m = {
++		.inode = vi,
++		.map = map,
++		.kaddr = map->mpage,
++	};
++	int err = 0;
++	unsigned int lclusterbits, endoff;
++	unsigned long initial_lcn;
++	unsigned long long ofs, end;
++
++	/* when trying to read beyond EOF, leave it unmapped */
++	if (map->m_la >= vi->i_size) {
++		map->m_llen = map->m_la + 1 - vi->i_size;
++		map->m_la = vi->i_size;
++		map->m_flags = 0;
++		goto out;
++	}
++
++	err = z_erofs_fill_inode_lazy(vi);
++	if (err)
++		goto out;
++
++	lclusterbits = vi->z_logical_clusterbits;
++	ofs = map->m_la;
++	initial_lcn = ofs >> lclusterbits;
++	endoff = ofs & ((1 << lclusterbits) - 1);
++
++	err = z_erofs_load_cluster_from_disk(&m, initial_lcn, false);
++	if (err)
++		goto out;
++
++	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
++	end = (m.lcn + 1ULL) << lclusterbits;
++	switch (m.type) {
++	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
++	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
++		if (endoff >= m.clusterofs) {
++			m.headtype = m.type;
++			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
++			break;
++		}
++		/* m.lcn should be >= 1 if endoff < m.clusterofs */
++		if (!m.lcn) {
++			erofs_err("invalid logical cluster 0 at nid %llu",
++				  (unsigned long long)vi->nid);
++			err = -EFSCORRUPTED;
++			goto out;
++		}
++		end = (m.lcn << lclusterbits) | m.clusterofs;
++		map->m_flags |= EROFS_MAP_FULL_MAPPED;
++		m.delta[0] = 1;
++		/* fallthrough */
++	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
++		/* get the correspoinding first chunk */
++		err = z_erofs_extent_lookback(&m, m.delta[0]);
++		if (err)
++			goto out;
++		break;
++	default:
++		erofs_err("unknown type %u @ offset %llu of nid %llu",
++			  m.type, ofs, (unsigned long long)vi->nid);
++		err = -EOPNOTSUPP;
++		goto out;
++	}
++
++	map->m_llen = end - map->m_la;
++	map->m_pa = blknr_to_addr(m.pblk);
++
++	err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
++	if (err)
++		goto out;
++
++	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
++		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
++	else
++		map->m_algorithmformat = vi->z_algorithmtype[0];
++
++	if (flags & EROFS_GET_BLOCKS_FIEMAP) {
++		err = z_erofs_get_extent_decompressedlen(&m);
++		if (!err)
++			map->m_flags |= EROFS_MAP_FULL_MAPPED;
++	}
++
++out:
++	erofs_dbg("m_la %" PRIu64 " m_pa %" PRIu64 " m_llen %" PRIu64 " m_plen %" PRIu64 " m_flags 0%o",
++		  map->m_la, map->m_pa,
++		  map->m_llen, map->m_plen, map->m_flags);
++
++	DBG_BUGON(err < 0 && err != -ENOMEM);
++	return err;
++}
 -- 
 2.25.1
 
