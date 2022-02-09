@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ADFC4AE9CE
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 07:01:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99A7C4AE9D0
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 07:02:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Jtq5c6PL3z3cBQ
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 17:01:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Jtq5h1wwhz30LQ
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Feb 2022 17:02:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
+ helo=out30-133.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-133.freemail.mail.aliyun.com
+ (out30-133.freemail.mail.aliyun.com [115.124.30.133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Jtq5L68H8z3cHW
- for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 17:01:42 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R631e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=15; SR=0; TI=SMTPD_---0V3zaQVI_1644386495; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Jtq5Q3r6Mz30jV
+ for <linux-erofs@lists.ozlabs.org>; Wed,  9 Feb 2022 17:01:45 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=15; SR=0; TI=SMTPD_---0V3zwJoJ_1644386496; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V3zaQVI_1644386495) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 09 Feb 2022 14:01:35 +0800
+ fp:SMTPD_---0V3zwJoJ_1644386496) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 09 Feb 2022 14:01:37 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 20/22] erofs: implement fscache-based data readahead for
- non-inline layout
-Date: Wed,  9 Feb 2022 14:01:06 +0800
-Message-Id: <20220209060108.43051-21-jefflexu@linux.alibaba.com>
+Subject: [PATCH v3 21/22] erofs: implement fscache-based data readahead for
+ inline layout
+Date: Wed,  9 Feb 2022 14:01:07 +0800
+Message-Id: <20220209060108.43051-22-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220209060108.43051-1-jefflexu@linux.alibaba.com>
 References: <20220209060108.43051-1-jefflexu@linux.alibaba.com>
@@ -59,70 +59,38 @@ Sender: "Linux-erofs"
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ fs/erofs/fscache.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index c8a0851230e5..ef5eef33e3d5 100644
+index ef5eef33e3d5..003f9abdaf1b 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -197,6 +197,7 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
- 
+@@ -198,6 +198,7 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
  enum erofs_fscache_readahead_type {
  	EROFS_FSCACHE_READAHEAD_TYPE_HOLE,
-+	EROFS_FSCACHE_READAHEAD_TYPE_NOINLINE,
+ 	EROFS_FSCACHE_READAHEAD_TYPE_NOINLINE,
++	EROFS_FSCACHE_READAHEAD_TYPE_INLINE,
  };
  
  static int erofs_fscache_do_readahead(struct readahead_control *rac,
-@@ -205,10 +206,14 @@ static int erofs_fscache_do_readahead(struct readahead_control *rac,
- {
- 	size_t offset, length, done;
- 	struct page *page;
-+	int ret = 0;
- 
- 	/*
--	 * 1) For CHUNK_BASED (HOLE), the output map.m_la is rounded down to
--	 *    the nearest chunk boundary, and thus offset will be non-zero.
-+	 * 1) For CHUNK_BASED (HOLE/NOINLINE), the output map.m_la is rounded
-+	 *    down to the nearest chunk boundary, and thus offset will be
-+	 *    non-zero.
-+	 * 2) For the other cases, the output map.m_la shall be equal to o_la,
-+	 *    and thus offset will be zero.
- 	 */
- 	offset = fsmap->o_la - fsmap->m_la;
- 	length = fsmap->m_llen - offset;
-@@ -222,11 +227,18 @@ static int erofs_fscache_do_readahead(struct readahead_control *rac,
- 		case EROFS_FSCACHE_READAHEAD_TYPE_HOLE:
- 			zero_user(page, 0, PAGE_SIZE);
+@@ -231,6 +232,9 @@ static int erofs_fscache_do_readahead(struct readahead_control *rac,
+ 			ret = erofs_fscache_readpage_noinline(page, fsmap);
+ 			fsmap->m_pa += EROFS_BLKSIZ;
  			break;
-+		case EROFS_FSCACHE_READAHEAD_TYPE_NOINLINE:
-+			ret = erofs_fscache_readpage_noinline(page, fsmap);
-+			fsmap->m_pa += EROFS_BLKSIZ;
++		case EROFS_FSCACHE_READAHEAD_TYPE_INLINE:
++			ret = erofs_fscache_readpage_inline(page, fsmap);
 +			break;
  		default:
  			DBG_BUGON(1);
  			return -EINVAL;
- 		}
- 
-+		if (ret)
-+			return ret;
-+
- 		SetPageUptodate(page);
- 		unlock_page(page);
- 	}
-@@ -263,7 +275,16 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
- 			ret = erofs_fscache_do_readahead(rac, &fsmap,
- 					EROFS_FSCACHE_READAHEAD_TYPE_HOLE);
- 		} else {
-+			ret = erofs_fscache_get_map(&fsmap, &map, sb);
-+			if (ret)
-+				return;
-+
- 			switch (vi->datalayout) {
-+			case EROFS_INODE_FLAT_PLAIN:
-+			case EROFS_INODE_CHUNK_BASED:
+@@ -285,6 +289,10 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
+ 				ret = erofs_fscache_do_readahead(rac, &fsmap,
+ 					EROFS_FSCACHE_READAHEAD_TYPE_NOINLINE);
+ 				break;
++			case EROFS_INODE_FLAT_INLINE:
 +				ret = erofs_fscache_do_readahead(rac, &fsmap,
-+					EROFS_FSCACHE_READAHEAD_TYPE_NOINLINE);
++					EROFS_FSCACHE_READAHEAD_TYPE_INLINE);
 +				break;
  			default:
  				DBG_BUGON(1);
