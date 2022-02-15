@@ -1,47 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFCD54B66E3
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Feb 2022 10:03:44 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B16234B696B
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Feb 2022 11:37:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JyZrZ1XMZz3c79
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Feb 2022 20:03:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Jycwq1Z1Kz3cBl
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Feb 2022 21:37:31 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=qbdceTkR;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=linuxfoundation.org (client-ip=139.178.84.217;
+ helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org
+ header.a=rsa-sha256 header.s=korg header.b=qbdceTkR; 
+ dkim-atps=neutral
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Jycwl0lPRz2xsb
+ for <linux-erofs@lists.ozlabs.org>; Tue, 15 Feb 2022 21:37:26 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JyZrP2V2kz3bT0
- for <linux-erofs@lists.ozlabs.org>; Tue, 15 Feb 2022 20:03:28 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R111e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=12; SR=0; TI=SMTPD_---0V4Xi.eo_1644915796; 
-Received: from 30.225.24.85(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V4Xi.eo_1644915796) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 15 Feb 2022 17:03:17 +0800
-Message-ID: <bd9cb3bb-e29c-d4b3-e9bf-915b9771b553@linux.alibaba.com>
-Date: Tue, 15 Feb 2022 17:03:16 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.0
+ by dfw.source.kernel.org (Postfix) with ESMTPS id 2327261456;
+ Tue, 15 Feb 2022 10:37:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2BEC340EB;
+ Tue, 15 Feb 2022 10:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+ s=korg; t=1644921445;
+ bh=SAHwZf+C5kw7QdhTev5TQhNms75eRKLT8hrY2rJqmsg=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=qbdceTkRnpNHIdUqG4UWqLop7ma2y9dDgXNdXTdMf7nr4q/HjMtO3mv42YD58TquB
+ Nw22GGzBmhz4W8RrYrPTlFvpxKBceI4ywfKL4yaJWunWVGQvDqjY/Kt8LoNDYh/gr+
+ Q/MfGDlp/xSMAurFNlIYDzHnnMawhIdjxoFhKDVw=
+Date: Tue, 15 Feb 2022 11:37:22 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: JeffleXu <jefflexu@linux.alibaba.com>
 Subject: Re: [PATCH v3 05/22] cachefiles: introduce new devnode for on-demand
  read mode
-Content-Language: en-US
-From: JeffleXu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
+Message-ID: <YguCYmvdyRAOjHcP@kroah.com>
 References: <20220209060108.43051-1-jefflexu@linux.alibaba.com>
  <20220209060108.43051-6-jefflexu@linux.alibaba.com>
-In-Reply-To: <20220209060108.43051-6-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <bd9cb3bb-e29c-d4b3-e9bf-915b9771b553@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd9cb3bb-e29c-d4b3-e9bf-915b9771b553@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,59 +63,21 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- willy@infradead.org, joseph.qi@linux.alibaba.com,
- linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+ willy@infradead.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
+ linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+ gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi David,
-
-FYI I've updated this patch on [1].
-
-[1]
-https://github.com/lostjeffle/linux/commit/589dd838dc539aee291d1032406653a8f6269e6f.
-
-This new version mainly adds cachefiles_ondemand_flush_reqs(), which
-drains the pending read requests when cachefilesd is going to exit.
-
-On 2/9/22 2:00 PM, Jeffle Xu wrote:
-> This patch introduces a new devnode 'cachefiles_ondemand' to support the
-> newly introduced on-demand read mode.
+On Tue, Feb 15, 2022 at 05:03:16PM +0800, JeffleXu wrote:
+> Hi David,
 > 
-> The precondition for on-demand reading semantics is that, all blob files
-> have been placed under corresponding directory with correct file size
-> (sparse files) on the first beginning. When upper fs starts to access
-> the blob file, it will "cache miss" (hit the hole) and then turn to user
-> daemon for preparing the data.
+> FYI I've updated this patch on [1].
 > 
-> The interaction between kernel and user daemon is described as below.
-> 1. Once cache miss, .ondemand_read() callback of corresponding fscache
->    backend is called to prepare the data. As for cachefiles, it just
->    packages related metadata (file range to read, etc.) into a pending
->    read request, and then the process triggering cache miss will fall
->    asleep until the corresponding data gets fetched later.
-> 2. User daemon needs to poll on the devnode ('cachefiles_ondemand'),
->    waiting for pending read request.
-> 3. Once there's pending read request, user daemon will be notified and
->    shall read the devnode ('cachefiles_ondemand') to fetch one pending
->    read request to process.
-> 4. For the fetched read request, user daemon need to somehow prepare the
->    data (e.g. download from remote through network) and then write the
->    fetched data into the backing file to fill the hole.
-> 5. After that, user daemon need to notify cachefiles backend by writing a
->    'done' command to devnode ('cachefiles_ondemand'). It will also
->    awake the previous asleep process triggering cache miss.
-> 6. By the time the process gets awaken, the data has been ready in the
->    backing file. Then process can re-initiate a read request from the
->    backing file.
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
+> [1]
+> https://github.com/lostjeffle/linux/commit/589dd838dc539aee291d1032406653a8f6269e6f.
 
+We can not review random github links :(
 
--- 
-Thanks,
-Jeffle
