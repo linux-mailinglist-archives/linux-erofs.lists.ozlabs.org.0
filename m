@@ -2,42 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92F534B879F
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Feb 2022 13:29:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4894C4B880D
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Feb 2022 13:50:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4JzHMD0y5zz3bcC
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Feb 2022 23:29:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JzHqL6D5Xz3bc3
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Feb 2022 23:50:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
- helo=out30-132.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com
- (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
+ helo=out30-133.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-133.freemail.mail.aliyun.com
+ (out30-133.freemail.mail.aliyun.com [115.124.30.133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4JzHM74HJ7z2xrG
- for <linux-erofs@lists.ozlabs.org>; Wed, 16 Feb 2022 23:29:05 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V4dQyjF_1645014537; 
-Received: from
- e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V4dQyjF_1645014537) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 16 Feb 2022 20:28:58 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 2/2] erofs-utils: lib: refine tailpcluster compression
- approach
-Date: Wed, 16 Feb 2022 20:28:45 +0800
-Message-Id: <20220216122845.47819-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20220216122845.47819-1-hsiangkao@linux.alibaba.com>
-References: <20220216122845.47819-1-hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JzHq65fvLz2ybD
+ for <linux-erofs@lists.ozlabs.org>; Wed, 16 Feb 2022 23:49:49 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=15; SR=0; TI=SMTPD_---0V4deDXW_1645015775; 
+Received: from 30.225.24.51(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V4deDXW_1645015775) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 16 Feb 2022 20:49:36 +0800
+Message-ID: <becd656c-701c-747e-f063-2b9867cbd3d2@linux.alibaba.com>
+Date: Wed, 16 Feb 2022 20:49:35 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.0
+Subject: Re: [PATCH v4 05/23] cachefiles: introduce new devnode for on-demand
+ read mode
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+References: <bd9cb3bb-e29c-d4b3-e9bf-915b9771b553@linux.alibaba.com>
+ <20220215111335.123528-1-jefflexu@linux.alibaba.com>
+ <YgzWkhXCnlNDADvb@kroah.com>
+From: JeffleXu <jefflexu@linux.alibaba.com>
+In-Reply-To: <YgzWkhXCnlNDADvb@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,322 +53,528 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@yulong.com>
+Cc: linux-erofs@lists.ozlabs.org, willy@infradead.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
+ linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+ gerry@linux.alibaba.com, torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As my previous comment [1] mentioned, currently, in order to inline
-a tail pcluster right after its inode metadata, tail data is split,
-compressed with many 4KiB pclusters and then the last pcluster is
-chosen.
+Hi,
 
-However, it can have some impacts to overall compression ratios if big
-pclusters are enabled. So instead, let's implement another approach:
-compressing with two pclusters by trying recompressing.
+Thanks for reviewing. :)
 
-It also enables EOF lcluster inlining for small compressed data, so
-please make sure the kernel is already fixed up [2].
 
-[1] https://lore.kernel.org/r/YXkBIpcCG12Y8qMN@B-P7TQMD6M-0146.local
-[2] https://lore.kernel.org/r/20220203190203.30794-1-xiang@kernel.org
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/compress.h |   1 +
- include/erofs/internal.h |   4 ++
- lib/compress.c           | 145 ++++++++++++++++++++++++++++-----------
- lib/inode.c              |   9 +--
- 4 files changed, 116 insertions(+), 43 deletions(-)
+On 2/16/22 6:48 PM, Greg KH wrote:
+> On Tue, Feb 15, 2022 at 07:13:35PM +0800, Jeffle Xu wrote:
+>> This patch introduces a new devnode 'cachefiles_ondemand' to support the
+>> newly introduced on-demand read mode.
+>>
+>> The precondition for on-demand reading semantics is that, all blob files
+>> have been placed under corresponding directory with correct file size
+>> (sparse files) on the first beginning. When upper fs starts to access
+>> the blob file, it will "cache miss" (hit the hole) and then turn to user
+>> daemon for preparing the data.
+>>
+>> The interaction between kernel and user daemon is described as below.
+>> 1. Once cache miss, .ondemand_read() callback of corresponding fscache
+>>    backend is called to prepare the data. As for cachefiles, it just
+>>    packages related metadata (file range to read, etc.) into a pending
+>>    read request, and then the process triggering cache miss will fall
+>>    asleep until the corresponding data gets fetched later.
+>> 2. User daemon needs to poll on the devnode ('cachefiles_ondemand'),
+>>    waiting for pending read request.
+>> 3. Once there's pending read request, user daemon will be notified and
+>>    shall read the devnode ('cachefiles_ondemand') to fetch one pending
+>>    read request to process.
+>> 4. For the fetched read request, user daemon need to somehow prepare the
+>>    data (e.g. download from remote through network) and then write the
+>>    fetched data into the backing file to fill the hole.
+>> 5. After that, user daemon need to notify cachefiles backend by writing a
+>>    'done' command to devnode ('cachefiles_ondemand'). It will also
+>>    awake the previous asleep process triggering cache miss.
+>> 6. By the time the process gets awaken, the data has been ready in the
+>>    backing file. Then process can re-initiate a read request from the
+>>    backing file.
+>>
+>> If user daemon exits in advance when upper fs still mounted, no new
+>> on-demand read request can be queued anymore and the existing pending
+>> read requests will fail with -EIO.
+>>
+>> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+>> ---
+>>  fs/cachefiles/daemon.c                   | 185 +++++++++++++++++++++++
+>>  fs/cachefiles/internal.h                 |  12 ++
+>>  fs/cachefiles/io.c                       |  64 ++++++++
+>>  fs/cachefiles/main.c                     |  27 ++++
+>>  include/uapi/linux/cachefiles_ondemand.h |  14 ++
+>>  5 files changed, 302 insertions(+)
+>>  create mode 100644 include/uapi/linux/cachefiles_ondemand.h
+>>
+>> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+>> index 6b8d7c5bbe5d..96aee8e0eb14 100644
+>> --- a/fs/cachefiles/daemon.c
+>> +++ b/fs/cachefiles/daemon.c
+>> @@ -757,3 +757,188 @@ static void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
+>>  
+>>  	_leave("");
+>>  }
+>> +
+>> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +static unsigned long cachefiles_open_ondemand;
+>> +
+>> +static int cachefiles_ondemand_open(struct inode *inode, struct file *file);
+>> +static int cachefiles_ondemand_release(struct inode *inode, struct file *file);
+>> +static ssize_t cachefiles_ondemand_write(struct file *, const char __user *,
+>> +					 size_t, loff_t *);
+>> +static ssize_t cachefiles_ondemand_read(struct file *, char __user *, size_t,
+>> +					loff_t *);
+>> +static __poll_t cachefiles_ondemand_poll(struct file *,
+>> +					 struct poll_table_struct *);
+>> +static int cachefiles_daemon_done(struct cachefiles_cache *, char *);
+>> +
+>> +const struct file_operations cachefiles_ondemand_fops = {
+>> +	.owner		= THIS_MODULE,
+>> +	.open		= cachefiles_ondemand_open,
+>> +	.release	= cachefiles_ondemand_release,
+>> +	.read		= cachefiles_ondemand_read,
+>> +	.write		= cachefiles_ondemand_write,
+>> +	.poll		= cachefiles_ondemand_poll,
+>> +	.llseek		= noop_llseek,
+>> +};
+>> +
+>> +static const struct cachefiles_daemon_cmd cachefiles_ondemand_cmds[] = {
+>> +	{ "bind",	cachefiles_daemon_bind		},
+>> +	{ "brun",	cachefiles_daemon_brun		},
+>> +	{ "bcull",	cachefiles_daemon_bcull		},
+>> +	{ "bstop",	cachefiles_daemon_bstop		},
+>> +	{ "cull",	cachefiles_daemon_cull		},
+>> +	{ "debug",	cachefiles_daemon_debug		},
+>> +	{ "dir",	cachefiles_daemon_dir		},
+>> +	{ "frun",	cachefiles_daemon_frun		},
+>> +	{ "fcull",	cachefiles_daemon_fcull		},
+>> +	{ "fstop",	cachefiles_daemon_fstop		},
+>> +	{ "inuse",	cachefiles_daemon_inuse		},
+>> +	{ "secctx",	cachefiles_daemon_secctx	},
+>> +	{ "tag",	cachefiles_daemon_tag		},
+>> +	{ "done",	cachefiles_daemon_done		},
+>> +	{ "",		NULL				}
+>> +};
+>> +
+>> +static int cachefiles_ondemand_open(struct inode *inode, struct file *file)
+>> +{
+>> +	struct cachefiles_cache *cache;
+>> +
+>> +	_enter("");
+> 
+> ftrace is your friend, no need to try to duplicate it with debugging
+> stuff.  This and the _leave() calls should be removed.
+> 
+>> +
+>> +	/* only the superuser may do this */
+>> +	if (!capable(CAP_SYS_ADMIN))
+>> +		return -EPERM;
+> 
+> Shouldn't you rely on the userspace permissions of the file instead of
+> this?
+> 
 
-diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-index 21eac57..c57b22a 100644
---- a/include/erofs/compress.h
-+++ b/include/erofs/compress.h
-@@ -19,6 +19,7 @@ extern "C"
- #define EROFS_CONFIG_COMPR_MAX_SZ           (900  * 1024)
- #define EROFS_CONFIG_COMPR_MIN_SZ           (32   * 1024)
- 
-+void z_erofs_fixup_eof_lcluster(struct erofs_inode *inode);
- int erofs_write_compressed_file(struct erofs_inode *inode);
- 
- int z_erofs_compress_init(struct erofs_buffer_head *bh);
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 3615297..d4efc18 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -186,6 +186,10 @@ struct erofs_inode {
- 
- 	void *idata;
- 
-+	/* (ztailpacking) in order to recover uncompressed EOF data */
-+	void *eof_tailraw;
-+	unsigned int eof_tailrawsize;
-+
- 	union {
- 		void *compressmeta;
- 		void *chunkindexes;
-diff --git a/lib/compress.c b/lib/compress.c
-index 7db666a..01b3675 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -70,14 +70,15 @@ static void vle_write_indexes(struct z_erofs_vle_compress_ctx *ctx,
- 
- 	di.di_clusterofs = cpu_to_le16(ctx->clusterofs);
- 
--	/* whether the tail-end uncompressed block or not */
-+	/* whether the tail-end (un)compressed block or not */
- 	if (!d1) {
- 		/*
--		 * A lcluster cannot have there parts with the middle one which
--		 * is well-compressed. Such tail pcluster cannot be inlined.
-+		 * A lcluster cannot have three parts with the middle one which
-+		 * is well-compressed for !ztailpacking cases.
- 		 */
--		DBG_BUGON(!raw);
--		type = Z_EROFS_VLE_CLUSTER_TYPE_PLAIN;
-+		DBG_BUGON(!raw && !cfg.c_ztailpacking);
-+		type = raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
-+			Z_EROFS_VLE_CLUSTER_TYPE_HEAD;
- 		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
- 
- 		di.di_advise = advise;
-@@ -168,6 +169,7 @@ static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
- static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
- 				    unsigned int len, bool raw)
- {
-+	inode->z_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
- 	inode->idata_size = len;
- 	inode->compressed_idata = !raw;
- 
-@@ -180,6 +182,31 @@ static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
- 	return len;
- }
- 
-+static void tryrecompress_trailing(void *in, unsigned int *insize,
-+				   void *out, int *compressedsize)
-+{
-+	static char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
-+	unsigned int count;
-+	int ret = *compressedsize;
-+
-+	/* no need to recompress */
-+	if (!(ret & (EROFS_BLKSIZ - 1)))
-+		return;
-+
-+	count = *insize;
-+	ret = erofs_compress_destsize(&compresshandle,
-+				      in, &count, (void *)tmp,
-+				      rounddown(ret, EROFS_BLKSIZ), false);
-+	if (ret <= 0 || ret + (*insize - count) >=
-+			roundup(*compressedsize, EROFS_BLKSIZ))
-+		return;
-+
-+	/* replace the original compressed data if any gain */
-+	memcpy(out, tmp, ret);
-+	*insize = count;
-+	*compressedsize = ret;
-+}
-+
- static int vle_compress_one(struct erofs_inode *inode,
- 			    struct z_erofs_vle_compress_ctx *ctx,
- 			    bool final)
-@@ -190,54 +217,32 @@ static int vle_compress_one(struct erofs_inode *inode,
- 	int ret;
- 	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
- 	char *const dst = dstbuf + EROFS_BLKSIZ;
--	bool trailing = false, tailpcluster = false;
- 
- 	while (len) {
- 		unsigned int pclustersize =
- 			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
-+		bool may_inline = (cfg.c_ztailpacking && final);
- 		bool raw;
- 
--		DBG_BUGON(tailpcluster);
- 		if (len <= pclustersize) {
--			if (final) {
--				/* TODO: compress with 2 pclusters instead */
--				if (cfg.c_ztailpacking) {
--					trailing = true;
--					pclustersize = EROFS_BLKSIZ;
--				} else if (len <= EROFS_BLKSIZ) {
--					goto nocompression;
--				}
--			} else {
-+			if (!final)
- 				break;
--			}
-+			if (!may_inline && len <= EROFS_BLKSIZ)
-+				goto nocompression;
- 		}
- 
- 		count = min(len, cfg.c_max_decompressed_extent_bytes);
- 		ret = erofs_compress_destsize(h, ctx->queue + ctx->head,
- 					      &count, dst, pclustersize,
- 					      !(final && len == count));
--
--		/* XXX: need to be polished, yet do it correctly first. */
--		if (cfg.c_ztailpacking && final) {
--			if (ret <= 0 && len < EROFS_BLKSIZ) {
--				DBG_BUGON(!trailing);
--				tailpcluster = true;
--			} else if (ret > 0 && len == count &&
--				   /* less than 1 compressed block */
--				   ret < EROFS_BLKSIZ) {
--				tailpcluster = true;
--			}
--		}
--
--		if (ret <= 0 || (tailpcluster &&
--				 ctx->clusterofs + len < EROFS_BLKSIZ)) {
--			if (ret <= 0 && ret != -EAGAIN) {
-+		if (ret <= 0) {
-+			if (ret != -EAGAIN) {
- 				erofs_err("failed to compress %s: %s",
- 					  inode->i_srcpath,
- 					  erofs_strerror(ret));
- 			}
- 
--			if (tailpcluster && len < EROFS_BLKSIZ)
-+			if (may_inline && len < EROFS_BLKSIZ)
- 				ret = z_erofs_fill_inline_data(inode,
- 						ctx->queue + ctx->head,
- 						len, true);
-@@ -256,18 +261,33 @@ nocompression:
- 			 */
- 			ctx->compressedblks = 1;
- 			raw = true;
--		} else if (tailpcluster && ret < EROFS_BLKSIZ) {
-+		/* tailpcluster should be less than 1 block */
-+		} else if (may_inline && len == count &&
-+			   ret < EROFS_BLKSIZ) {
-+			if (ctx->clusterofs + len <= EROFS_BLKSIZ) {
-+				inode->eof_tailraw = malloc(len);
-+				if (!inode->eof_tailraw)
-+					return -ENOMEM;
-+
-+				memcpy(inode->eof_tailraw,
-+				       ctx->queue + ctx->head, len);
-+				inode->eof_tailrawsize = len;
-+			}
-+
- 			ret = z_erofs_fill_inline_data(inode, dst, ret, false);
- 			if (ret < 0)
- 				return ret;
- 			ctx->compressedblks = 1;
- 			raw = false;
- 		} else {
--			const unsigned int tailused = ret & (EROFS_BLKSIZ - 1);
--			const unsigned int padding =
--				erofs_sb_has_lz4_0padding() && tailused ?
--					EROFS_BLKSIZ - tailused : 0;
-+			unsigned int tailused, padding;
- 
-+			if (may_inline && len == count)
-+				tryrecompress_trailing(ctx->queue + ctx->head,
-+						       &count, dst, &ret);
-+
-+			tailused = ret & (EROFS_BLKSIZ - 1);
-+			padding = 0;
- 			ctx->compressedblks = DIV_ROUND_UP(ret, EROFS_BLKSIZ);
- 			DBG_BUGON(ctx->compressedblks * EROFS_BLKSIZ >= count);
- 
-@@ -275,6 +295,8 @@ nocompression:
- 			if (!erofs_sb_has_lz4_0padding())
- 				memset(dst + ret, 0,
- 				       roundup(ret, EROFS_BLKSIZ) - ret);
-+			else if (tailused)
-+				padding = EROFS_BLKSIZ - tailused;
- 
- 			/* write compressed data */
- 			erofs_dbg("Writing %u compressed data to %u of %u blocks",
-@@ -521,6 +543,51 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
- 	memcpy(compressmeta, &h, sizeof(struct z_erofs_map_header));
- }
- 
-+void z_erofs_fixup_eof_lcluster(struct erofs_inode *inode)
-+{
-+	const unsigned int type = Z_EROFS_VLE_CLUSTER_TYPE_PLAIN;
-+	struct z_erofs_map_header *h = inode->compressmeta;
-+
-+	h->h_advise = cpu_to_le16(le16_to_cpu(h->h_advise) &
-+				  ~Z_EROFS_ADVISE_INLINE_PCLUSTER);
-+	if (!inode->eof_tailraw)
-+		return;
-+
-+	/* patch the EOF lcluster to uncompressed type first */
-+	if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
-+		struct z_erofs_vle_decompressed_index *di =
-+			(inode->compressmeta + inode->extent_isize) -
-+			sizeof(struct z_erofs_vle_decompressed_index);
-+		__le16 advise =
-+			cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
-+
-+		di->di_advise = advise;
-+	} else if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION) {
-+		/* handle the last compacted 4B pack */
-+		unsigned int eofs, base, pos, v, lo;
-+		u8 *out;
-+
-+		eofs = inode->extent_isize -
-+			(4 << (DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ) & 1));
-+		base = round_down(eofs, 8);
-+		pos = 16 /* encodebits */ * ((eofs - base) / 4);
-+		out = inode->compressmeta + base;
-+		lo = get_unaligned_le32(out + pos / 8) & (EROFS_BLKSIZ - 1);
-+		v = (type << LOG_BLOCK_SIZE) | lo;
-+		out[pos / 8] = v & 0xff;
-+		out[pos / 8 + 1] = v >> 8;
-+	} else {
-+		DBG_BUGON(1);
-+		return;
-+	}
-+	free(inode->idata);
-+	/* replace idata with uncompressed data */
-+	inode->idata = inode->eof_tailraw;
-+	inode->idata_size = inode->eof_tailrawsize;
-+	inode->compressed_idata = false;
-+	inode->eof_tailraw = NULL;
-+}
-+
- int erofs_write_compressed_file(struct erofs_inode *inode)
- {
- 	struct erofs_buffer_head *bh;
-diff --git a/lib/inode.c b/lib/inode.c
-index 3fd4b69..716e89f 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -96,6 +96,8 @@ unsigned int erofs_iput(struct erofs_inode *inode)
- 	list_for_each_entry_safe(d, t, &inode->i_subdirs, d_child)
- 		free(d);
- 
-+	if (inode->eof_tailraw)
-+		free(inode->eof_tailraw);
- 	list_del(&inode->i_hash);
- 	free(inode);
- 	return 0;
-@@ -614,7 +616,9 @@ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
- 	if (bh == ERR_PTR(-ENOSPC)) {
- 		int ret;
- 
--		if (!is_inode_layout_compression(inode))
-+		if (is_inode_layout_compression(inode))
-+			z_erofs_fixup_eof_lcluster(inode);
-+		else
- 			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
- noinline:
- 		/* expend an extra block for tail-end data */
-@@ -629,10 +633,7 @@ noinline:
- 		return PTR_ERR(bh);
- 	} else if (inode->idata_size) {
- 		if (is_inode_layout_compression(inode)) {
--			struct z_erofs_map_header *h = inode->compressmeta;
--
- 			DBG_BUGON(!cfg.c_ztailpacking);
--			h->h_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
- 			erofs_dbg("Inline %scompressed data (%u bytes) to %s",
- 				  inode->compressed_idata ? "" : "un",
- 				  inode->idata_size, inode->i_srcpath);
+OK. You are right.
+
+
+>> +
+>> +	/* the cachefiles device may only be open once at a time */
+>> +	if (xchg(&cachefiles_open_ondemand, 1) == 1)
+>> +		return -EBUSY;
+>> +
+>> +	cache = cachefiles_daemon_open_cache();
+>> +	if (!cache) {
+>> +		cachefiles_open_ondemand = 0;
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	xa_init_flags(&cache->reqs, XA_FLAGS_ALLOC);
+>> +	set_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags);
+>> +
+>> +	file->private_data = cache;
+>> +	cache->cachefilesd = file;
+>> +	return 0;
+>> +}
+>> +
+>> +static void cachefiles_ondemand_flush_reqs(struct cachefiles_cache *cache)
+>> +{
+>> +	struct cachefiles_req *req;
+>> +	unsigned long index;
+>> +
+>> +	xa_for_each(&cache->reqs, index, req) {
+>> +		req->error = -EIO;
+>> +		complete(&req->done);
+>> +	}
+>> +}
+>> +
+>> +static int cachefiles_ondemand_release(struct inode *inode, struct file *file)
+>> +{
+>> +	struct cachefiles_cache *cache = file->private_data;
+>> +
+>> +	_enter("");
+>> +
+>> +	ASSERT(cache);
+> 
+> We don't mess with ASSERT() in the kernel, how can this ever be false?
+> 
+>> +
+>> +	set_bit(CACHEFILES_DEAD, &cache->flags);
+>> +
+>> +	cachefiles_ondemand_flush_reqs(cache);
+>> +	cachefiles_daemon_unbind(cache);
+>> +
+>> +	/* clean up the control file interface */
+>> +	xa_destroy(&cache->reqs);
+>> +	cache->cachefilesd = NULL;
+>> +	file->private_data = NULL;
+>> +	cachefiles_open_ondemand = 0;
+>> +
+>> +	kfree(cache);
+>> +
+>> +	_leave("");
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t cachefiles_ondemand_write(struct file *file,
+>> +					 const char __user *_data,
+>> +					 size_t datalen,
+>> +					 loff_t *pos)
+>> +{
+>> +	return cachefiles_daemon_do_write(file, _data, datalen, pos,
+>> +					  cachefiles_ondemand_cmds);
+>> +}
+>> +
+>> +static ssize_t cachefiles_ondemand_read(struct file *file, char __user *_buffer,
+>> +					size_t buflen, loff_t *pos)
+>> +{
+>> +	struct cachefiles_cache *cache = file->private_data;
+>> +	struct cachefiles_req *req;
+>> +	unsigned long id = 0;
+>> +	int n;
+>> +
+>> +	if (!test_bit(CACHEFILES_READY, &cache->flags))
+>> +		return 0;
+>> +
+>> +	req = xa_find(&cache->reqs, &id, UINT_MAX, XA_PRESENT);
+>> +	if (!req)
+>> +		return 0;
+>> +
+>> +	n = sizeof(struct cachefiles_req_in);
+>> +	if (n > buflen)
+		^
+This statement is used to check if the user buffer is big enough to
+contain the data. req->base is of 'struct cachefiles_req_in' type. But
+it shall be better to be changed to
+
+"n = sizeof(req->base);"
+
+in case of type of req->base may be changed in the future.
+
+
+>> +		return -EMSGSIZE;
+> 
+> You forgot to test if you have a big enough buffer to copy the data
+> into :(
+
+
+
+> 
+>> +
+>> +	req->base.id = id;
+>> +	if (copy_to_user(_buffer, &req->base, n) != 0)
+> 
+> No endian issues?
+
+'struct cachefiles_req_in' is always in the memory. It won't be flushed
+to disk. So yes there's no endian issue.
+
+> 
+>> +		return -EFAULT;
+>> +
+>> +	return n;
+>> +}
+>> +
+>> +static __poll_t cachefiles_ondemand_poll(struct file *file,
+>> +					 struct poll_table_struct *poll)
+>> +{
+>> +	struct cachefiles_cache *cache = file->private_data;
+>> +	__poll_t mask;
+>> +
+>> +	poll_wait(file, &cache->daemon_pollwq, poll);
+>> +	mask = 0;
+>> +
+>> +	if (!xa_empty(&cache->reqs))
+>> +		mask |= EPOLLIN;
+>> +
+>> +	return mask;
+>> +}
+>> +
+>> +/*
+>> + * Request completion
+>> + * - command: "done <id>"
+>> + */
+>> +static int cachefiles_daemon_done(struct cachefiles_cache *cache, char *args)
+>> +{
+>> +	struct cachefiles_req *req;
+>> +	unsigned long id;
+>> +	int ret;
+>> +
+>> +	_enter(",%s", args);
+>> +
+>> +	if (!*args) {
+>> +		pr_err("Empty id specified\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret = kstrtoul(args, 0, &id);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	req = xa_erase(&cache->reqs, id);
+>> +	if (!req)
+>> +		return -EINVAL;
+>> +
+>> +	complete(&req->done);
+>> +	return 0;
+>> +}
+>> +#endif
+>> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+>> index 6473634c41a9..59dd11e42cb3 100644
+>> --- a/fs/cachefiles/internal.h
+>> +++ b/fs/cachefiles/internal.h
+>> @@ -15,6 +15,8 @@
+>>  #include <linux/fscache-cache.h>
+>>  #include <linux/cred.h>
+>>  #include <linux/security.h>
+>> +#include <linux/xarray.h>
+>> +#include <linux/cachefiles_ondemand.h>
+>>  
+>>  #define CACHEFILES_DIO_BLOCK_SIZE 4096
+>>  
+>> @@ -102,6 +104,15 @@ struct cachefiles_cache {
+>>  	char				*rootdirname;	/* name of cache root directory */
+>>  	char				*secctx;	/* LSM security context */
+>>  	char				*tag;		/* cache binding tag */
+>> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +	struct xarray			reqs;
+>> +#endif
+>> +};
+>> +
+>> +struct cachefiles_req {
+>> +	struct cachefiles_req_in base;
+>> +	struct completion done;
+>> +	int error;
+>>  };
+>>  
+>>  #include <trace/events/cachefiles.h>
+>> @@ -146,6 +157,7 @@ extern int cachefiles_has_space(struct cachefiles_cache *cache,
+>>   * daemon.c
+>>   */
+>>  extern const struct file_operations cachefiles_daemon_fops;
+>> +extern const struct file_operations cachefiles_ondemand_fops;
+>>  
+>>  /*
+>>   * error_inject.c
+>> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+>> index 753986ea1583..7c51e53d52d1 100644
+>> --- a/fs/cachefiles/io.c
+>> +++ b/fs/cachefiles/io.c
+>> @@ -597,6 +597,67 @@ static void cachefiles_end_operation(struct netfs_cache_resources *cres)
+>>  	fscache_end_cookie_access(fscache_cres_cookie(cres), fscache_access_io_end);
+>>  }
+>>  
+>> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +static struct cachefiles_req *cachefiles_alloc_req(struct cachefiles_object *object,
+>> +						   loff_t start_pos,
+>> +						   size_t len)
+>> +{
+>> +	struct cachefiles_req *req;
+>> +	struct cachefiles_req_in *base;
+>> +
+>> +	req = kzalloc(sizeof(*req), GFP_KERNEL);
+>> +	if (!req)
+>> +		return NULL;
+>> +
+>> +	base = &req->base;
+>> +
+>> +	base->off = start_pos;
+>> +	base->len = len;
+>> +	strncpy(base->path, object->d_name, sizeof(base->path) - 1);
+>> +
+>> +	init_completion(&req->done);
+>> +
+>> +	return req;
+>> +}
+>> +
+>> +static int cachefiles_ondemand_read(struct netfs_cache_resources *cres,
+>> +				    loff_t start_pos, size_t len)
+>> +{
+>> +	struct cachefiles_object *object;
+>> +	struct cachefiles_cache *cache;
+>> +	struct cachefiles_req *req;
+>> +	int ret;
+>> +	u32 id;
+>> +
+>> +	object = cachefiles_cres_object(cres);
+>> +	cache = object->volume->cache;
+>> +
+>> +	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (test_bit(CACHEFILES_DEAD, &cache->flags))
+>> +		return -EIO;
+>> +
+>> +	req = cachefiles_alloc_req(object, start_pos, len);
+>> +	if (!req)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = xa_alloc(&cache->reqs, &id, req, xa_limit_32b, GFP_KERNEL);
+>> +	if (ret) {
+>> +		kfree(req);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	wake_up_all(&cache->daemon_pollwq);
+>> +
+>> +	wait_for_completion(&req->done);
+>> +	ret = req->error;
+>> +	kfree(req);
+>> +
+>> +	return ret;
+>> +}
+>> +#endif
+>> +
+>>  static const struct netfs_cache_ops cachefiles_netfs_cache_ops = {
+>>  	.end_operation		= cachefiles_end_operation,
+>>  	.read			= cachefiles_read,
+>> @@ -604,6 +665,9 @@ static const struct netfs_cache_ops cachefiles_netfs_cache_ops = {
+>>  	.prepare_read		= cachefiles_prepare_read,
+>>  	.prepare_write		= cachefiles_prepare_write,
+>>  	.query_occupancy	= cachefiles_query_occupancy,
+>> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +	.ondemand_read		= cachefiles_ondemand_read,
+>> +#endif
+>>  };
+>>  
+>>  /*
+>> diff --git a/fs/cachefiles/main.c b/fs/cachefiles/main.c
+>> index 3f369c6f816d..eab17c3140d9 100644
+>> --- a/fs/cachefiles/main.c
+>> +++ b/fs/cachefiles/main.c
+>> @@ -39,6 +39,27 @@ static struct miscdevice cachefiles_dev = {
+>>  	.fops	= &cachefiles_daemon_fops,
+>>  };
+>>  
+>> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +static struct miscdevice cachefiles_ondemand_dev = {
+>> +	.minor	= MISC_DYNAMIC_MINOR,
+>> +	.name	= "cachefiles_ondemand",
+> 
+> That is a very big device node name.  Are you sure that is what you
+> want?
+
+I have to admit that it's not a good name. I need to think of a better
+name...
+
+> 
+> And where are you documenting this new misc device node name and format
+> so that userspace knows about it?
+
+Sorry I haven't documented all these. Indeed we need a better documentation.
+
+> 
+>> +	.fops	= &cachefiles_ondemand_fops,
+>> +};
+>> +
+>> +static inline int cachefiles_init_ondemand(void)
+>> +{
+>> +	return misc_register(&cachefiles_ondemand_dev);
+>> +}
+>> +
+>> +static inline void cachefiles_exit_ondemand(void)
+>> +{
+>> +	misc_deregister(&cachefiles_ondemand_dev);
+>> +}
+>> +#else
+>> +static inline int cachefiles_init_ondemand(void) { return 0; }
+>> +static inline void cachefiles_exit_ondemand(void) {}
+>> +#endif
+>> +
+>>  /*
+>>   * initialise the fs caching module
+>>   */
+>> @@ -52,6 +73,9 @@ static int __init cachefiles_init(void)
+>>  	ret = misc_register(&cachefiles_dev);
+>>  	if (ret < 0)
+>>  		goto error_dev;
+>> +	ret = cachefiles_init_ondemand();
+>> +	if (ret < 0)
+>> +		goto error_ondemand_dev;
+>>  
+>>  	/* create an object jar */
+>>  	ret = -ENOMEM;
+>> @@ -68,6 +92,8 @@ static int __init cachefiles_init(void)
+>>  	return 0;
+>>  
+>>  error_object_jar:
+>> +	cachefiles_exit_ondemand();
+>> +error_ondemand_dev:
+>>  	misc_deregister(&cachefiles_dev);
+>>  error_dev:
+>>  	cachefiles_unregister_error_injection();
+>> @@ -86,6 +112,7 @@ static void __exit cachefiles_exit(void)
+>>  	pr_info("Unloading\n");
+>>  
+>>  	kmem_cache_destroy(cachefiles_object_jar);
+>> +	cachefiles_exit_ondemand();
+>>  	misc_deregister(&cachefiles_dev);
+>>  	cachefiles_unregister_error_injection();
+>>  }
+>> diff --git a/include/uapi/linux/cachefiles_ondemand.h b/include/uapi/linux/cachefiles_ondemand.h
+>> new file mode 100644
+>> index 000000000000..e639a82f1098
+>> --- /dev/null
+>> +++ b/include/uapi/linux/cachefiles_ondemand.h
+>> @@ -0,0 +1,14 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +#ifndef _LINUX_CACHEFILES_ONDEMAND_H
+>> +#define _LINUX_CACHEFILES_ONDEMAND_H
+>> +
+>> +#include <linux/limits.h>
+>> +
+>> +struct cachefiles_req_in {
+>> +	uint64_t id;
+>> +	uint64_t off;
+>> +	uint64_t len;
+> 
+> For structures that cross the user/kernel boundry, you have to use the
+> correct types.  For this it would be __u64.
+
+OK I will change to __xx style in the next version.
+
+By the way, I can't understand the disadvantage of uintxx_t style. I can
+only find the inital commit [1] that introduces the __xx style. But
+still I can't get any background info.
+
+[1] commit d13ff31cfeedbf2fefc7ba13cb753775648eac0c ("types: create
+<asm-generic/int-*.h>")
+
+> 
+>> +	char path[NAME_MAX];
+> 
+> __u8.
+> 
+> Also, what is the endian of the other values here?  Always native?
+
+As stated previously, these structures are always in memory, and thus
+there's no endian issue.
+
 -- 
-2.24.4
-
+Thanks,
+Jeffle
