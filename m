@@ -1,46 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E52044B9ACC
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Feb 2022 09:22:35 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 716204B9B5B
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Feb 2022 09:45:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Jznr92Rx1z3cBq
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Feb 2022 19:22:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4JzpLJ6bl9z3cBs
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Feb 2022 19:45:12 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=eu04KKrP;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.6;
- helo=out199-6.us.a.mail.aliyun.com; envelope-from=bo.liu@linux.alibaba.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1035;
+ helo=mail-pj1-x1035.google.com; envelope-from=zbestahu@gmail.com;
  receiver=<UNKNOWN>)
-X-Greylist: delayed 307 seconds by postgrey-1.36 at boromir;
- Thu, 17 Feb 2022 19:22:29 AEDT
-Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com
- [47.90.199.6])
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=eu04KKrP; dkim-atps=neutral
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com
+ [IPv6:2607:f8b0:4864:20::1035])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Jznr54R2Kz30NP
- for <linux-erofs@lists.ozlabs.org>; Thu, 17 Feb 2022 19:22:29 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R161e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=bo.liu@linux.alibaba.com;
- NM=1; PH=DS; RN=15; SR=0; TI=SMTPD_---0V4gvygv_1645085823; 
-Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com
- fp:SMTPD_---0V4gvygv_1645085823) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 17 Feb 2022 16:17:09 +0800
-Date: Thu, 17 Feb 2022 16:17:03 +0800
-From: Liu Bo <bo.liu@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v3 03/22] cachefiles: extract generic function for daemon
- methods
-Message-ID: <20220217081703.GA10016@rsjd01523.et2sqa>
-References: <20220209060108.43051-1-jefflexu@linux.alibaba.com>
- <20220209060108.43051-4-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4JzpLG21phz30QD
+ for <linux-erofs@lists.ozlabs.org>; Thu, 17 Feb 2022 19:45:09 +1100 (AEDT)
+Received: by mail-pj1-x1035.google.com with SMTP id
+ h14-20020a17090a130e00b001b88991a305so8812895pja.3
+ for <linux-erofs@lists.ozlabs.org>; Thu, 17 Feb 2022 00:45:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=date:from:to:cc:subject:message-id:in-reply-to:references
+ :mime-version:content-transfer-encoding;
+ bh=vRMP65X1KTPzXnQp4TilmV5JeVYIdJMmr+qprYcnP70=;
+ b=eu04KKrPpKadhY8AJpPoOWCtPYKdMqhe8iaJuMQC4U5DeWYLEJknJvmDT/yypn/X19
+ qLCy0DBFdxnArIDZLK+RmDtg1iBYcHweBaSnTPANtIx6hoSF30ioqfKwNbOTrkkA2VSP
+ i1mYzv4W/nKQqhjgeDb8hIT4voirBJa+R7vD8ap+A7RTJIiOyTm+q36TSSD9C76/PIh/
+ EskbA11lAthjXX2tsPeENmXRY6+VOtFBVCzmcbW1IuC8po//ly2GpQeU9M5cs82al9na
+ Iz2hWAbWDvbYgsq12wCdOtpU55N02+qjDWx0ee7na1fLbEFsdzMXf1uIfHeglb89I/rv
+ NFNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+ :references:mime-version:content-transfer-encoding;
+ bh=vRMP65X1KTPzXnQp4TilmV5JeVYIdJMmr+qprYcnP70=;
+ b=Rg9V30YN/fVsl+eJstSvivMlCkE9nTH0Yje7F6JPStVS6LYByEoYCoJZTB6mQNMbvO
+ eEkJKnbsor3qOw3wIjb6CzRkK/adXAGQUSw4iwEAuDLMqIw8VsXW1KiWhrtPDo3q+gRO
+ 1XbI5DgoB3UrlQzVqqV2Ue6pvKPpM9ZvsJhlHVVGtxUTMQI5yJziT3ZmBPpux22cnrVY
+ 4MnseKQ4DxeiE3uzLw1YbGo1MaPBFNaa17/tBGTacpdNNcpkwqP1faGbRQaCgx+y5BXO
+ ZZ8mWMwQmZ3v9fO7MomVggDjjOEi/GC145poMb8ycFD3gNybPB430iSbsqvTBVYD7Jn3
+ Aavw==
+X-Gm-Message-State: AOAM533aOdW5Qi81iXfCIIS3d+kihHYjjlHTYI0Uh9iHF+uT5wi012km
+ LzZtRv16BVYwLOT8nMteS2Y=
+X-Google-Smtp-Source: ABdhPJxRzF2fpYag9dBo20ile5BY7cvOmgeu5vbnQc0eDkDw6JLcsG+tesmP51ZVotMU0kD7PENQDA==
+X-Received: by 2002:a17:90b:4b12:b0:1b9:8932:d47c with SMTP id
+ lx18-20020a17090b4b1200b001b98932d47cmr6362479pjb.50.1645087506661; 
+ Thu, 17 Feb 2022 00:45:06 -0800 (PST)
+Received: from localhost ([103.220.76.197])
+ by smtp.gmail.com with ESMTPSA id h15sm3827218pfh.143.2022.02.17.00.45.04
+ (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+ Thu, 17 Feb 2022 00:45:06 -0800 (PST)
+Date: Thu, 17 Feb 2022 16:43:23 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v2 0/2] erofs-utils: refine tailpcluster compression
+ approach
+Message-ID: <20220217164323.000019f1.zbestahu@gmail.com>
+In-Reply-To: <20220216122845.47819-1-hsiangkao@linux.alibaba.com>
+References: <20220216122845.47819-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220209060108.43051-4-jefflexu@linux.alibaba.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,144 +83,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: bo.liu@linux.alibaba.com
-Cc: linux-erofs@lists.ozlabs.org, willy@infradead.org,
- linux-kernel@vger.kernel.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
- linux-cachefs@redhat.com, gregkh@linuxfoundation.org,
- linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
+Cc: geshifei@coolpad.com, liuchao@coolpad.com, zhangwen@coolpad.com,
+ Yue Hu <huyue2@yulong.com>, linux-erofs@lists.ozlabs.org,
+ shaojunjun@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Feb 09, 2022 at 02:00:49PM +0800, Jeffle Xu wrote:
-> ... so that the following new devnode can reuse most of the code when
-> implementing its own methods.
->
+On Wed, 16 Feb 2022 20:28:43 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-Looks good.
-
-Reviewed-by: Liu Bo <bo.liu@linux.alibaba.com>
-liubo
-
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
->  fs/cachefiles/daemon.c | 70 +++++++++++++++++++++++++++---------------
->  1 file changed, 45 insertions(+), 25 deletions(-)
+> Hi,
 > 
-> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-> index 7ac04ee2c0a0..6b8d7c5bbe5d 100644
-> --- a/fs/cachefiles/daemon.c
-> +++ b/fs/cachefiles/daemon.c
-> @@ -78,6 +78,34 @@ static const struct cachefiles_daemon_cmd cachefiles_daemon_cmds[] = {
->  	{ "",		NULL				}
->  };
->  
-> +static struct cachefiles_cache *cachefiles_daemon_open_cache(void)
-> +{
-> +	struct cachefiles_cache *cache;
-> +
-> +	/* allocate a cache record */
-> +	cache = kzalloc(sizeof(struct cachefiles_cache), GFP_KERNEL);
-> +	if (cache) {
-> +		mutex_init(&cache->daemon_mutex);
-> +		init_waitqueue_head(&cache->daemon_pollwq);
-> +		INIT_LIST_HEAD(&cache->volumes);
-> +		INIT_LIST_HEAD(&cache->object_list);
-> +		spin_lock_init(&cache->object_list_lock);
-> +
-> +		/* set default caching limits
-> +		 * - limit at 1% free space and/or free files
-> +		 * - cull below 5% free space and/or free files
-> +		 * - cease culling above 7% free space and/or free files
-> +		 */
-> +		cache->frun_percent = 7;
-> +		cache->fcull_percent = 5;
-> +		cache->fstop_percent = 1;
-> +		cache->brun_percent = 7;
-> +		cache->bcull_percent = 5;
-> +		cache->bstop_percent = 1;
-> +	}
-> +
-> +	return cache;
-> +}
->  
->  /*
->   * Prepare a cache for caching.
-> @@ -96,31 +124,13 @@ static int cachefiles_daemon_open(struct inode *inode, struct file *file)
->  	if (xchg(&cachefiles_open, 1) == 1)
->  		return -EBUSY;
->  
-> -	/* allocate a cache record */
-> -	cache = kzalloc(sizeof(struct cachefiles_cache), GFP_KERNEL);
-> +
-> +	cache = cachefiles_daemon_open_cache();
->  	if (!cache) {
->  		cachefiles_open = 0;
->  		return -ENOMEM;
->  	}
->  
-> -	mutex_init(&cache->daemon_mutex);
-> -	init_waitqueue_head(&cache->daemon_pollwq);
-> -	INIT_LIST_HEAD(&cache->volumes);
-> -	INIT_LIST_HEAD(&cache->object_list);
-> -	spin_lock_init(&cache->object_list_lock);
-> -
-> -	/* set default caching limits
-> -	 * - limit at 1% free space and/or free files
-> -	 * - cull below 5% free space and/or free files
-> -	 * - cease culling above 7% free space and/or free files
-> -	 */
-> -	cache->frun_percent = 7;
-> -	cache->fcull_percent = 5;
-> -	cache->fstop_percent = 1;
-> -	cache->brun_percent = 7;
-> -	cache->bcull_percent = 5;
-> -	cache->bstop_percent = 1;
-> -
->  	file->private_data = cache;
->  	cache->cachefilesd = file;
->  	return 0;
-> @@ -209,10 +219,11 @@ static ssize_t cachefiles_daemon_read(struct file *file, char __user *_buffer,
->  /*
->   * Take a command from cachefilesd, parse it and act on it.
->   */
-> -static ssize_t cachefiles_daemon_write(struct file *file,
-> -				       const char __user *_data,
-> -				       size_t datalen,
-> -				       loff_t *pos)
-> +static ssize_t cachefiles_daemon_do_write(struct file *file,
-> +					  const char __user *_data,
-> +					  size_t datalen,
-> +					  loff_t *pos,
-> +			const struct cachefiles_daemon_cmd *cmds)
->  {
->  	const struct cachefiles_daemon_cmd *cmd;
->  	struct cachefiles_cache *cache = file->private_data;
-> @@ -261,7 +272,7 @@ static ssize_t cachefiles_daemon_write(struct file *file,
->  	}
->  
->  	/* run the appropriate command handler */
-> -	for (cmd = cachefiles_daemon_cmds; cmd->name[0]; cmd++)
-> +	for (cmd = cmds; cmd->name[0]; cmd++)
->  		if (strcmp(cmd->name, data) == 0)
->  			goto found_command;
->  
-> @@ -284,6 +295,15 @@ static ssize_t cachefiles_daemon_write(struct file *file,
->  	goto error;
->  }
->  
-> +static ssize_t cachefiles_daemon_write(struct file *file,
-> +				       const char __user *_data,
-> +				       size_t datalen,
-> +				       loff_t *pos)
-> +{
-> +	return cachefiles_daemon_do_write(file, _data, datalen, pos,
-> +					  cachefiles_daemon_cmds);
-> +}
-> +
->  /*
->   * Poll for culling state
->   * - use EPOLLOUT to indicate culling state
-> -- 
-> 2.27.0
+> This patchset refines tailpcluster compression. Firstly, instead of
+> compressing into many 4KiB pclusters, it compresses into 2 pclusters
+> as I already mentioned in the previous comment [1].
+> 
+> Secondly, it fixes up EOF lclusters which was disabled on purpose before
+> in order to achieve better inlining performance for small compressed data,
+> which matches the new kernel fix [2].
+> 
+> Still take linux-5.10.87 as an example (75368 inodes in total):
+> linux-5.10.87 (erofs, lz4hc,9 4k tailpacking)	391696384 => 331292672
+> linux-5.10.87 (erofs, lz4hc,9 8k tailpacking)	368807936 => 321961984
+> linux-5.10.87 (erofs, lz4hc,9 16k tailpacking)	345649152 => 313344000
+> linux-5.10.87 (erofs, lz4hc,9 32k tailpacking)  338649088 => 309055488
+> 
+> (There is still another improvement working in progress..)
+> 
+> Thanks,
+> Gao Xiang
+> 
+> [1] https://lore.kernel.org/r/YXkBIpcCG12Y8qMN@B-P7TQMD6M-0146.local 
+> [2] https://lore.kernel.org/r/20220203190203.30794-1-xiang@kernel.org
+> 
+> changes since v1 (reported by Yue Hu):
+>  - fall back to uncompressed data if EOF lcluster inline is no possible;
+>  - fix `ret' signedness.
+> 
+> Gao Xiang (2):
+>   erofs-utils: lib: get rid of a redundent compress round
+>   erofs-utils: lib: refine tailpcluster compression approach
+> 
+>  include/erofs/compress.h |   1 +
+>  include/erofs/internal.h |   4 +
+>  lib/compress.c           | 156 +++++++++++++++++++++++++++------------
+>  lib/inode.c              |   9 ++-
+>  4 files changed, 119 insertions(+), 51 deletions(-)
+> 
+
+Tested-by: Yue Hu <huyue2@yulong.com>
