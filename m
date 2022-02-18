@@ -2,41 +2,41 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 860F24BB1DF
-	for <lists+linux-erofs@lfdr.de>; Fri, 18 Feb 2022 07:20:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C1054BB2CE
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Feb 2022 08:02:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4K0M5N5rqtz3cPD
-	for <lists+linux-erofs@lfdr.de>; Fri, 18 Feb 2022 17:20:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4K0N1q4Nszz3cPg
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Feb 2022 18:02:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42;
+ helo=out30-42.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Received: from out30-42.freemail.mail.aliyun.com
+ (out30-42.freemail.mail.aliyun.com [115.124.30.42])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4K0M5D1DGxz3Wtr
- for <linux-erofs@lists.ozlabs.org>; Fri, 18 Feb 2022 17:20:45 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R871e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V4npfTt_1645165232; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4K0N1k21r4z3bWj
+ for <linux-erofs@lists.ozlabs.org>; Fri, 18 Feb 2022 18:02:46 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R391e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=3; SR=0; TI=SMTPD_---0V4oKdcg_1645167758; 
 Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V4npfTt_1645165232) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 18 Feb 2022 14:20:33 +0800
-Date: Fri, 18 Feb 2022 14:20:31 +0800
+ fp:SMTPD_---0V4oKdcg_1645167758) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 18 Feb 2022 15:02:40 +0800
+Date: Fri, 18 Feb 2022 15:02:38 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: Huang Jianan <huangjianan@oppo.com>
-Subject: Re: [PATCH] erofs-utils: fix some style problems
-Message-ID: <Yg86r7PmIk0ppU5X@B-P7TQMD6M-0146.local>
+Subject: Re: [PATCH] erofs-utils: fix memory leak when load compress hints file
+Message-ID: <Yg9Ejqjt+y7HPaOv@B-P7TQMD6M-0146.local>
 References: <20220218031137.18716-1-huangjianan@oppo.com>
- <20220218031137.18716-3-huangjianan@oppo.com>
+ <20220218031137.18716-2-huangjianan@oppo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220218031137.18716-3-huangjianan@oppo.com>
+In-Reply-To: <20220218031137.18716-2-huangjianan@oppo.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,60 +53,56 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jianan,
-
-On Fri, Feb 18, 2022 at 11:11:37AM +0800, Huang Jianan via Linux-erofs wrote:
-> Fix some minor issues, including:
->   - Align with the left parenthesis;
->   - Spelling mistakes;
->   - Remove redundant spaces and parenthesis;
->   - clean up file headers;
->   - Match parameters with format parameters.
+On Fri, Feb 18, 2022 at 11:11:36AM +0800, Huang Jianan via Linux-erofs wrote:
+> Execute fclose before return error.
 > 
 > Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-> ---
->  dump/main.c                | 53 +++++++++++++++++++-------------------
->  fsck/main.c                |  4 +--
->  fuse/main.c                |  1 -
->  include/erofs/block_list.h |  4 +--
->  include/erofs/defs.h       |  1 -
->  include/erofs/dir.h        |  2 +-
->  include/erofs/internal.h   |  2 +-
->  include/erofs/list.h       |  1 -
->  lib/blobchunk.c            |  2 +-
->  lib/cache.c                |  1 -
->  lib/compress.c             |  2 +-
->  lib/compress_hints.c       |  2 +-
->  lib/compressor_liblzma.c   |  5 ++--
->  lib/data.c                 |  2 +-
->  lib/dir.c                  |  2 +-
->  lib/exclude.c              |  2 +-
->  lib/inode.c                |  2 +-
->  lib/io.c                   |  2 +-
->  lib/liberofs_private.h     |  2 +-
->  lib/namei.c                |  1 -
->  lib/super.c                |  4 +--
->  lib/xattr.c                |  4 +--
->  mkfs/main.c                |  2 +-
->  23 files changed, 48 insertions(+), 55 deletions(-)
-> 
-> diff --git a/dump/main.c b/dump/main.c
-> index e6198a0..3f8c2f2 100644
-> --- a/dump/main.c
-> +++ b/dump/main.c
-> @@ -179,7 +179,7 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
->  }
->  
->  static int erofsdump_get_occupied_size(struct erofs_inode *inode,
-> -		erofs_off_t *size)
-> +				       erofs_off_t *size)
 
-There are two acceptable style (which follows kernel code style),
-1) the one is aligned with the parentheses in the previous line;
-2) the other is just using two indentations.
-
-So here we actually don't need to update... btw, was it reported
-by checkpatch.pl?
+It's actually a file descriptor leakage? 
 
 Thanks,
 Gao Xiang
+
+> ---
+>  lib/compress_hints.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/compress_hints.c b/lib/compress_hints.c
+> index c3f3d48..c52e2d3 100644
+> --- a/lib/compress_hints.c
+> +++ b/lib/compress_hints.c
+> @@ -88,6 +88,7 @@ int erofs_load_compress_hints(void)
+>  	char buf[PATH_MAX + 100];
+>  	FILE *f;
+>  	unsigned int line, max_pclustersize = 0;
+> +	int ret = 0;
+>  
+>  	if (!cfg.c_compress_hints_file)
+>  		return 0;
+> @@ -105,7 +106,8 @@ int erofs_load_compress_hints(void)
+>  		if (!pattern || *pattern == '\0') {
+>  			erofs_err("cannot find a match pattern at line %u",
+>  				  line);
+> -			return -EINVAL;
+> +			ret = -EINVAL;
+> +			goto out;
+>  		}
+>  		if (pclustersize % EROFS_BLKSIZ) {
+>  			erofs_warn("invalid physical clustersize %u, "
+> @@ -119,10 +121,12 @@ int erofs_load_compress_hints(void)
+>  		if (pclustersize > max_pclustersize)
+>  			max_pclustersize = pclustersize;
+>  	}
+> -	fclose(f);
+> +
+>  	if (cfg.c_pclusterblks_max * EROFS_BLKSIZ < max_pclustersize) {
+>  		cfg.c_pclusterblks_max = max_pclustersize / EROFS_BLKSIZ;
+>  		erofs_warn("update max pclusterblks to %u", cfg.c_pclusterblks_max);
+>  	}
+> -	return 0;
+> +out:
+> +	fclose(f);
+> +	return ret;
+>  }
+> -- 
+> 2.25.1
