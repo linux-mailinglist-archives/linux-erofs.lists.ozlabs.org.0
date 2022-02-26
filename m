@@ -2,43 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E05D4C2AF1
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Feb 2022 12:34:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E4234C5448
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Feb 2022 08:06:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4K49m246XBz30Dv
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Feb 2022 22:34:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4K5Hjl5q6Gz3bb7
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Feb 2022 18:06:03 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=p6dk6ET4;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
- spf=pass (sender SPF authorized) smtp.mailfrom=aolc.cn
- (client-ip=140.207.233.85; helo=mail.aolc.cn;
- envelope-from=kpi-support@aolc.cn; receiver=<UNKNOWN>)
-X-Greylist: delayed 945 seconds by postgrey-1.36 at boromir;
- Thu, 24 Feb 2022 22:34:01 AEDT
-Received: from mail.aolc.cn (mail.aolc.cn [140.207.233.85])
- (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::529;
+ helo=mail-pg1-x529.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=p6dk6ET4; dkim-atps=neutral
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com
+ [IPv6:2607:f8b0:4864:20::529])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4K49ls1K5hz2xKJ
- for <linux-erofs@lists.ozlabs.org>; Thu, 24 Feb 2022 22:33:50 +1100 (AEDT)
-Received: from dbhp (58.217.10.215) by exchange.aolc.cn (192.168.254.42) with
- Microsoft SMTP Server (TLS) id 15.0.847.32;
- Thu, 24 Feb 2022 19:17:30 +0800
-Date: Thu, 24 Feb 2022 19:17:13 +0800
-From: meyedn <kpi-support@aolc.cn>
-To: linux-erofs <linux-erofs@lists.ozlabs.org>
-Subject: =?UTF-8?B?U3VzcGljaW91cyBVUkw65Lq65LqL6YCa55+lbGludXgt?=
- =?UTF-8?B?ZXJvZnM=?=
-X-Priority: 3
-X-Has-Attach: no
-X-Mailer: Foxmail 7, 0, 1, 91[cn]
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4K5Hjf2n7Lz2yN3
+ for <linux-erofs@lists.ozlabs.org>; Sat, 26 Feb 2022 18:05:57 +1100 (AEDT)
+Received: by mail-pg1-x529.google.com with SMTP id 27so6649458pgk.10
+ for <linux-erofs@lists.ozlabs.org>; Fri, 25 Feb 2022 23:05:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=12pF2J7VBd40PUm9/P8/z1pEuEYwhjfpzTNllR1MSO8=;
+ b=p6dk6ET4Fbcvyvu5WHqBCiTebJdb33LNQrnjkl53DesNTYAPqGHKKuUBqHQPh6yv6Y
+ CqE+0q2WrjvLp4NdZchXp0xSEsYoX2Djza7UYLEdJungV53Y8+MIdpboPk90sBElzMCS
+ Ow/yRNvR+l9tHq8GpTxEOpWR7ZQkzhRgtDIfDkHKanqXXYIWKkZOV237iCPGItuAWSit
+ HhFG9RWleGj8w5W50hNNPEjSP7fPix7CsrrfrPY8j0tJ7X0fhgsBcAGg9hLGViX2k6mW
+ pllY9wh/TXMoSHdBk/0ZCcqC9qCr83u2xOBBsK+duOLzKZIlr/ByvnWrB0py8OsYkILs
+ WCTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=12pF2J7VBd40PUm9/P8/z1pEuEYwhjfpzTNllR1MSO8=;
+ b=ZUKjsWYLwVw1z+mKXYzVLmbsWbFQJrNnB27id8IfOr0f2lsj8x1Y7OH+E8+Mt2PXMA
+ oPXSa0n06gCSZIMjVMaOZacrxStDuDHyoDt2yy2tQJ4DbYN5rCFaU2jClpVp+7uxm/99
+ fwGWGj5/VXRVDCbV/0OihejWVstFQc3j67eQ45mWZCrKW1V/dn0eKEjQOAr3n8x5EOqx
+ +x4yX+MP+3pEPgJISkj9JdUo45bw5UH7oBEArzGACreOfKyZoJhoGudSQFCNGnJJFhm9
+ TqyCozSe2HZi4zs5pzpFoVdMIOHJ3v81Ne3whZB0TtZNtrM6ky7GC1jVKm2KdjOcc9ZU
+ P+uw==
+X-Gm-Message-State: AOAM530LVYEG6s/Lp1MnUYEIOTOfTn8gvqb0ZY3OgdSam0to4i6HXPhr
+ 9PrI/OlKkXvDsof0/EouBn0=
+X-Google-Smtp-Source: ABdhPJyunwZkIIamynu+s2SqwmhCJLv7G/YpTBi0/PTU1Jj+zmg4jqVacwWpT8GMUt5dhB8eXbnygg==
+X-Received: by 2002:a63:e718:0:b0:34b:8596:4a0d with SMTP id
+ b24-20020a63e718000000b0034b85964a0dmr9107387pgi.327.1645859156105; 
+ Fri, 25 Feb 2022 23:05:56 -0800 (PST)
+Received: from hjn-PC.localdomain (li1080-207.members.linode.com.
+ [45.33.61.207]) by smtp.gmail.com with ESMTPSA id
+ e20-20020a17090ab39400b001bc4f9ad3cbsm11044489pjr.3.2022.02.25.23.05.53
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Fri, 25 Feb 2022 23:05:55 -0800 (PST)
+From: Huang Jianan <jnhuang95@gmail.com>
+To: u-boot@lists.denx.de,
+	trini@konsulko.com
+Subject: [PATCH v4 0/5] fs/erofs: new filesystem
+Date: Sat, 26 Feb 2022 15:05:46 +0800
+Message-Id: <20220226070551.9833-1-jnhuang95@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Message-ID: <202202241917236538704@aolc.cn>
-Content-Type: multipart/alternative;
- boundary="=====001_Dragon160845422641_====="
-X-Originating-IP: [58.217.10.215]
-X-ClientProxiedBy: EXCHANGE.aolc.cn (192.168.254.42) To exchange.aolc.cn
- (192.168.254.42)
-X-TM-AS-Result: Yes-0.0-0.0-10
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,43 +80,72 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---=====001_Dragon160845422641_=====
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Changes since v3:
+ - update tools/docker/Dockerfile;
 
-DQrkvaDlpb065L2g55qE5bKX5L2N5bey5o+Q5Y2HDQoNCmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFi
-cy5vcmcNCg0K55Sx5LqO5L2g5ZCE5pa56Z2i5LyY56eA77yM5bel5L2c6KGo546w56qB5Ye677yM
-5bel5L2c6K6k55yfDQoNCue7j+WFrOWPuOWGhemDqOaOouiuqOWQjuWGs+WumuWvueS9oO+8jOWN
-h+iBjOWyl+S9je+8jOiWquawtOaPkOWNh+OAgg0KDQrngrnmraTnq4vljbPmn6XnnIss5Y2H6IGM
-5bKX5L2NLOiWquawtA0KDQogDQoNCuatpOWxnuS6juWGhemDqOmCruS7tizor7fli7/lr7nlpJbl
-hazluIPvvIENCg==
+Changes since v2:
+ - sync up with erofs-utils 1.4;
+ - update lib/lz4 to v1.8.3;
+ - add test for filesystem functions;
 
---=====001_Dragon160845422641_=====
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Changes since v1:
+ - fix the inconsistency between From and SoB;
+ - add missing license header;
 
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0
-Zi04IiBodHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxNRVRBIG5hbWU9R0VORVJBVE9SIGNvbnRl
-bnQ9Ik1TSFRNTCAxMS4wMC45NjAwLjE4NzEwIj48L0hFQUQ+DQo8Qk9EWT48U1BBTiBzdHlsZT0i
-Rk9OVC1TSVpFOiAxMnB4Ij48Rk9OVCBjb2xvcj1ncmF5PjxTUEFOIA0Kc3R5bGU9IkZPTlQtU0la
-RTogMTlweCI+PEZPTlQgY29sb3I9Z3JheT4NCjxQPjxGT05UIGNvbG9yPWJsYWNrPjxTVFJPTkc+
-5L2g5aW9OuS9oOeahOWyl+S9jeW3suaPkOWNhzwvU1RST05HPjwvRk9OVD48L1A+DQo8UD48Rk9O
-VCBjb2xvcj1ibGFjaz48U1RST05HPmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc8L1NUUk9O
-Rz48L0ZPTlQ+PC9QPg0KPFA+PEZPTlQgY29sb3I9YmxhY2s+PFNUUk9ORz7nlLHkuo7kvaDlkITm
-lrnpnaLkvJjnp4DvvIzlt6XkvZzooajnjrDnqoHlh7rvvIzlt6XkvZzorqTnnJ88L1NUUk9ORz48
-L0ZPTlQ+PC9QPg0KPFA+PEZPTlQgY29sb3I9YmxhY2s+PFNUUk9ORz7nu4/lhazlj7jlhoXpg6jm
-jqLorqjlkI7lhrPlrprlr7nkvaDvvIzljYfogYzlspfkvY3vvIzolqrmsLTmj5DljYfjgII8L1NU
-Uk9ORz48L0ZPTlQ+PC9QPg0KPFA+PFNQQU4gc3R5bGU9IkZPTlQtU0laRTogMjFweCI+PEEgDQpo
-cmVmPSJodHRwOi8vcW1haWwueW91eGlhbmduaHVpai5jb20iPjxTVFJPTkc+54K55q2k56uL5Y2z
-5p+l55yLLOWNh+iBjOWyl+S9jSzolqrmsLQ8L1NUUk9ORz48L0E+PEEgDQpocmVmPSIiPjwvU1BB
-Tj48L0E+PC9QPjwvRk9OVD48L1NQQU4+DQo8UD4mbmJzcDs8L1A+PFNQQU4gc3R5bGU9IkZPTlQt
-U0laRTogMTJweCI+DQo8UD48Rk9OVCANCmNvbG9yPWdyYXk+5q2k5bGe5LqO5YaF6YOo6YKu5Lu2
-LOivt+WLv+WvueWkluWFrOW4g++8gTwvRk9OVD48L1A+PC9TUEFOPjwvRk9OVD48L1NQQU4+PC9C
-T0RZPjwvSFRNTD4NCg==
+Huang Jianan (5):
+  fs/erofs: add erofs filesystem support
+  lib/lz4: update LZ4 decompressor module
+  fs/erofs: add lz4 decompression support
+  fs/erofs: add filesystem commands
+  test/py: Add tests for the erofs
 
---=====001_Dragon160845422641_=====--
+ MAINTAINERS                         |   9 +
+ cmd/Kconfig                         |   6 +
+ cmd/Makefile                        |   1 +
+ cmd/erofs.c                         |  42 ++
+ configs/sandbox_defconfig           |   1 +
+ fs/Kconfig                          |   2 +
+ fs/Makefile                         |   1 +
+ fs/erofs/Kconfig                    |  21 +
+ fs/erofs/Makefile                   |   9 +
+ fs/erofs/data.c                     | 311 +++++++++++++
+ fs/erofs/decompress.c               |  78 ++++
+ fs/erofs/decompress.h               |  24 +
+ fs/erofs/erofs_fs.h                 | 436 ++++++++++++++++++
+ fs/erofs/fs.c                       | 267 +++++++++++
+ fs/erofs/internal.h                 | 313 +++++++++++++
+ fs/erofs/namei.c                    | 252 +++++++++++
+ fs/erofs/super.c                    | 105 +++++
+ fs/erofs/zmap.c                     | 601 ++++++++++++++++++++++++
+ fs/fs.c                             |  22 +
+ include/erofs.h                     |  19 +
+ include/fs.h                        |   1 +
+ include/u-boot/lz4.h                |  49 ++
+ lib/lz4.c                           | 679 ++++++++++++++++++++--------
+ lib/lz4_wrapper.c                   |  23 +-
+ test/py/tests/test_fs/test_erofs.py | 211 +++++++++
+ tools/docker/Dockerfile             |   1 +
+ 26 files changed, 3269 insertions(+), 215 deletions(-)
+ create mode 100644 cmd/erofs.c
+ create mode 100644 fs/erofs/Kconfig
+ create mode 100644 fs/erofs/Makefile
+ create mode 100644 fs/erofs/data.c
+ create mode 100644 fs/erofs/decompress.c
+ create mode 100644 fs/erofs/decompress.h
+ create mode 100644 fs/erofs/erofs_fs.h
+ create mode 100644 fs/erofs/fs.c
+ create mode 100644 fs/erofs/internal.h
+ create mode 100644 fs/erofs/namei.c
+ create mode 100644 fs/erofs/super.c
+ create mode 100644 fs/erofs/zmap.c
+ create mode 100644 include/erofs.h
+ create mode 100644 test/py/tests/test_fs/test_erofs.py
+
+-- 
+2.25.1
+
