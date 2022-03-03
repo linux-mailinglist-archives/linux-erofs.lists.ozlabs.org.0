@@ -1,76 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95FAE4CB5D3
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Mar 2022 05:11:36 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1B164CC05E
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Mar 2022 15:51:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4K8Hc55L69z3bpX
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Mar 2022 15:11:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4K8YpT6CPzz3c21
+	for <lists+linux-erofs@lfdr.de>; Fri,  4 Mar 2022 01:51:29 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=NRRxcvOA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=lz7LkVwk;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::532;
- helo=mail-pg1-x532.google.com; envelope-from=zbestahu@gmail.com;
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1031;
+ helo=mail-pj1-x1031.google.com; envelope-from=jnhuang95@gmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
- header.s=20210112 header.b=NRRxcvOA; dkim-atps=neutral
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com
- [IPv6:2607:f8b0:4864:20::532])
+ header.s=20210112 header.b=lz7LkVwk; dkim-atps=neutral
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com
+ [IPv6:2607:f8b0:4864:20::1031])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4K8Hby0X16z3bNs
- for <linux-erofs@lists.ozlabs.org>; Thu,  3 Mar 2022 15:11:24 +1100 (AEDT)
-Received: by mail-pg1-x532.google.com with SMTP id c1so3431954pgk.11
- for <linux-erofs@lists.ozlabs.org>; Wed, 02 Mar 2022 20:11:24 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4K8YpL49Xxz3c1P
+ for <linux-erofs@lists.ozlabs.org>; Fri,  4 Mar 2022 01:51:20 +1100 (AEDT)
+Received: by mail-pj1-x1031.google.com with SMTP id
+ 15-20020a17090a098f00b001bef0376d5cso5036548pjo.5
+ for <linux-erofs@lists.ozlabs.org>; Thu, 03 Mar 2022 06:51:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
- h=date:from:to:cc:subject:message-id:in-reply-to:references
- :mime-version:content-transfer-encoding;
- bh=/0gmcJoxVGLhp8QjDoOGXIW850+VpROypODCpoc/l/Y=;
- b=NRRxcvOAULZfW0eDMpnk22dYL2quKs0XFau2xaVDEEvhMi34Jvduh3PQboaYRvBH4S
- dzPai7HNhY+NT8SizIuMrOiTfrzWdxZDPqjVjx1yAaFJNY3mrlbN1cmJZf+g5jeHa38l
- V2KK/QHnfrp6LY+pD5qGL3lgymtKTcm4/68ql7YssnIpZTIm24eJrpSLb4/dZZJGTRkL
- OhnzEdLN9PqLP5efR8Y5PCF2mO/ds1wiqh/+6MCXOkCxr0GWkX3sHjVuMpLYHIGXmMF/
- xxucgaoLdyAxm7D4oF/Ord2Tm84d2tR16ee7pF/F/8Bu33uIQ3rS+ieOB/cnnp2xs4h0
- 7RLw==
+ h=message-id:date:mime-version:user-agent:subject:to:cc:references
+ :from:in-reply-to:content-transfer-encoding;
+ bh=TYSVzCN1QGUzz3L0BI8hYcSC4M46VOUg2My0Kt9v4jI=;
+ b=lz7LkVwkoO7crbBGf6zASEuZASdVxET9+AXqQG8S5tDMFOP8OaAJl+AWn3gNEHHOUI
+ sCB8VfQilN7reXdr+8RH5o+61pUF6YtqbywC/SU9YWKlHEzUHfhcEsS1gDQvQWIJ1n8j
+ yWPdOMuzQrx6ClAH0oDB7+m7/pUEer7AAHmFcYfp4/hNPmTqv9Gvr8L3S9ZTLBzMFtnH
+ 7eIMrvh/vlhNcy2MeWw36GJ6ynCN1UdMWztuC6ARnS1KSfrlvN9fxS4BsU2yu14LbQ0A
+ WiSrbiiSLOLgq9APtLSbjGELpiQYbZz1ioGZROTl3JSo4Tq6XGuWMUoY5qYYhwreOwqt
+ JRSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
- :references:mime-version:content-transfer-encoding;
- bh=/0gmcJoxVGLhp8QjDoOGXIW850+VpROypODCpoc/l/Y=;
- b=DJoSTZEV6igWA99HQmAEyEDXpwy+gjdryJ3uRpQCIMMGTBO2ZTlxMjm0eZGZINqjck
- Drpq/S+gEIjvU+kWuB9Fya9oc3DlpLBTea5TUF2i+XJi/KD6hZlX24cptZhEL4ZVKACf
- UC92i/ssoxUILmoNOaHss5J7dlpxOa2BO8MhMPXcBajsDVHvKOh1DTdv8sza6c6x4JOE
- UFOY3+JRcfpQFndL7x8GY8R1S57edE92mXdnKv2WD+9/1dEp60fxiLWezFf3yIZsEsQY
- d3uJBXsjjNP8SwSGLnGd94NgYny7MvMuhj8y0whpIgQ+fCrUYGYP+1COFMKa6wV5eoTs
- H8gQ==
-X-Gm-Message-State: AOAM533gePqhkOPZlKrCO/sjhAqQTNQ0VerBGDRUDQrEZ4yirGmpk+aq
- s12n8m1SFBFOOJIk8DbchmI=
-X-Google-Smtp-Source: ABdhPJxD3zIUdv9FDDVS3XTBezqyk7zhzKfvGQNUBsrrwAQeG/w8Ht1BpAIT3dcuCmW1TxXo03YtVA==
-X-Received: by 2002:a05:6a00:26e2:b0:4e1:296b:f24e with SMTP id
- p34-20020a056a0026e200b004e1296bf24emr36402283pfw.49.1646280682661; 
- Wed, 02 Mar 2022 20:11:22 -0800 (PST)
-Received: from localhost ([103.220.76.197]) by smtp.gmail.com with ESMTPSA id
- j17-20020a634a51000000b00378f9c90e66sm634379pgl.39.2022.03.02.20.11.20
- (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
- Wed, 02 Mar 2022 20:11:22 -0800 (PST)
-Date: Thu, 3 Mar 2022 12:09:55 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/2] erofs: clean up preload_compressed_pages()
-Message-ID: <20220303120955.00002c81.zbestahu@gmail.com>
-In-Reply-To: <20220301194951.106227-2-hsiangkao@linux.alibaba.com>
-References: <20220301194951.106227-1-hsiangkao@linux.alibaba.com>
- <20220301194951.106227-2-hsiangkao@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+ h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+ :to:cc:references:from:in-reply-to:content-transfer-encoding;
+ bh=TYSVzCN1QGUzz3L0BI8hYcSC4M46VOUg2My0Kt9v4jI=;
+ b=4rDdhogehoaCpO3jIS/7OLSx1/N+oSkxZsaragShrugc4QpfpWFoP7RjAIuN2wOPAE
+ 1KXZRP7/8qF88SMWupiJrluOoHzYltlxwapsVQXFEUx1DvjSxOXibFxCt9Tdcj4XE9mH
+ fT5n/WIq1iQe3B5DKCXf/JWq+dDXpOukDkIda2YIWaLgFIHJQttX1pC96btfQSjSntP+
+ MYOT6snc0xUSSrAJwp834yNAjw2BncsVHZM5AeHQvTYir2UrW1d/5si08/po5LRPGSTI
+ 3ph8dnUV2I3uIq043hYKFIFw2NDfeJo0eu7z7nbYmtB6w86QDPsAUbnqNBlZF6LSdJ/l
+ COpA==
+X-Gm-Message-State: AOAM530lciiYY6H+18ZCVhrVsKwTVnn3dgX4TAiV4SV3AtvTShcOiGpr
+ 5TBFsCf1Ar9AFoTI1gBlp6o=
+X-Google-Smtp-Source: ABdhPJx4kGuWEpKJJkK/QOcdGYqEYe8vL2xI+Ljt0PhD1fKBCksVYPvMLRF2IgFohbWjZ/ZoJg3qYQ==
+X-Received: by 2002:a17:90a:5917:b0:1be:d200:2501 with SMTP id
+ k23-20020a17090a591700b001bed2002501mr5730561pji.15.1646319079272; 
+ Thu, 03 Mar 2022 06:51:19 -0800 (PST)
+Received: from [127.0.0.1] ([103.97.175.139]) by smtp.gmail.com with ESMTPSA id
+ q13-20020a056a00088d00b004e1bea9c582sm3026128pfj.43.2022.03.03.06.51.17
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Thu, 03 Mar 2022 06:51:18 -0800 (PST)
+Message-ID: <a028ed71-b694-2c95-094b-c50551245770@gmail.com>
+Date: Thu, 3 Mar 2022 22:51:18 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v4 0/5] fs/erofs: new filesystem
+To: u-boot@lists.denx.de, trini@konsulko.com
+References: <20220226070551.9833-1-jnhuang95@gmail.com>
+From: Huang Jianan <jnhuang95@gmail.com>
+In-Reply-To: <20220226070551.9833-1-jnhuang95@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,70 +83,83 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- huyue2@coolpad.com, zhangwen@coolpad.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed,  2 Mar 2022 03:49:51 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+Hi Tom,
 
-> Rename preload_compressed_pages() as z_erofs_bind_cache()
-> since we're try to prepare for adapting folios.
-> 
-> Also, add a comment for the gfp setting. No logic changes.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
->  fs/erofs/zdata.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 2673fc105861..59aecf42e45c 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -219,13 +219,17 @@ struct z_erofs_decompress_frontend {
->  static struct page *z_pagemap_global[Z_EROFS_VMAP_GLOBAL_PAGES];
->  static DEFINE_MUTEX(z_pagemap_global_lock);
->  
-> -static void preload_compressed_pages(struct z_erofs_decompress_frontend *fe,
-> -				     struct address_space *mc,
-> -				     enum z_erofs_cache_alloctype type,
-> -				     struct page **pagepool)
-> +static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
-> +			       enum z_erofs_cache_alloctype type,
-> +			       struct page **pagepool)
->  {
-> +	struct address_space *mc = MNGD_MAPPING(EROFS_I_SB(fe->inode));
->  	struct z_erofs_pcluster *pcl = fe->pcl;
->  	bool standalone = true;
-> +	/*
-> +	 * optimistic allocation without direct reclaim since inplace I/O
-> +	 * can be used if low memory otherwise.
-> +	 */
->  	gfp_t gfp = (mapping_gfp_mask(mc) & ~__GFP_DIRECT_RECLAIM) |
->  			__GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN;
->  	struct page **pages;
-> @@ -703,17 +707,15 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
->  		WRITE_ONCE(fe->pcl->compressed_pages[0], fe->map.buf.page);
->  		fe->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
->  	} else {
-> -		/* preload all compressed pages (can change mode if needed) */
-> +		/* bind cache first when cached decompression is preferred */
->  		if (should_alloc_managed_pages(fe, sbi->opt.cache_strategy,
->  					       map->m_la))
->  			cache_strategy = TRYALLOC;
->  		else
->  			cache_strategy = DONTALLOC;
->  
-> -		preload_compressed_pages(fe, MNGD_MAPPING(sbi),
-> -					 cache_strategy, pagepool);
-> +		z_erofs_bind_cache(fe, cache_strategy, pagepool);
->  	}
-> -
->  hitted:
->  	/*
->  	 * Ensure the current partial page belongs to this submit chain rather
+Would you mind taking some time to check if this version meets
+the requirements ？So we could have a chance to be merged
+into the next version ?
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
+I have triggered a CI via Github PR based on this version :
+https://github.com/u-boot/u-boot/pull/133
+
+Thanks，
+Jianan
+
+在 2022/2/26 15:05, Huang Jianan 写道:
+> Changes since v3:
+>   - update tools/docker/Dockerfile;
+>
+> Changes since v2:
+>   - sync up with erofs-utils 1.4;
+>   - update lib/lz4 to v1.8.3;
+>   - add test for filesystem functions;
+>
+> Changes since v1:
+>   - fix the inconsistency between From and SoB;
+>   - add missing license header;
+>
+> Huang Jianan (5):
+>    fs/erofs: add erofs filesystem support
+>    lib/lz4: update LZ4 decompressor module
+>    fs/erofs: add lz4 decompression support
+>    fs/erofs: add filesystem commands
+>    test/py: Add tests for the erofs
+>
+>   MAINTAINERS                         |   9 +
+>   cmd/Kconfig                         |   6 +
+>   cmd/Makefile                        |   1 +
+>   cmd/erofs.c                         |  42 ++
+>   configs/sandbox_defconfig           |   1 +
+>   fs/Kconfig                          |   2 +
+>   fs/Makefile                         |   1 +
+>   fs/erofs/Kconfig                    |  21 +
+>   fs/erofs/Makefile                   |   9 +
+>   fs/erofs/data.c                     | 311 +++++++++++++
+>   fs/erofs/decompress.c               |  78 ++++
+>   fs/erofs/decompress.h               |  24 +
+>   fs/erofs/erofs_fs.h                 | 436 ++++++++++++++++++
+>   fs/erofs/fs.c                       | 267 +++++++++++
+>   fs/erofs/internal.h                 | 313 +++++++++++++
+>   fs/erofs/namei.c                    | 252 +++++++++++
+>   fs/erofs/super.c                    | 105 +++++
+>   fs/erofs/zmap.c                     | 601 ++++++++++++++++++++++++
+>   fs/fs.c                             |  22 +
+>   include/erofs.h                     |  19 +
+>   include/fs.h                        |   1 +
+>   include/u-boot/lz4.h                |  49 ++
+>   lib/lz4.c                           | 679 ++++++++++++++++++++--------
+>   lib/lz4_wrapper.c                   |  23 +-
+>   test/py/tests/test_fs/test_erofs.py | 211 +++++++++
+>   tools/docker/Dockerfile             |   1 +
+>   26 files changed, 3269 insertions(+), 215 deletions(-)
+>   create mode 100644 cmd/erofs.c
+>   create mode 100644 fs/erofs/Kconfig
+>   create mode 100644 fs/erofs/Makefile
+>   create mode 100644 fs/erofs/data.c
+>   create mode 100644 fs/erofs/decompress.c
+>   create mode 100644 fs/erofs/decompress.h
+>   create mode 100644 fs/erofs/erofs_fs.h
+>   create mode 100644 fs/erofs/fs.c
+>   create mode 100644 fs/erofs/internal.h
+>   create mode 100644 fs/erofs/namei.c
+>   create mode 100644 fs/erofs/super.c
+>   create mode 100644 fs/erofs/zmap.c
+>   create mode 100644 include/erofs.h
+>   create mode 100644 test/py/tests/test_fs/test_erofs.py
+>
+
