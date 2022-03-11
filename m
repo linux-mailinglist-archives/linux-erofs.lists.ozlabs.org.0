@@ -1,67 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 161054D5975
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 05:17:42 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8D274D5976
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 05:17:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KFCMR6HbFz30BM
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 15:17:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KFCMW42BBz30Gd
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 15:17:43 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1646972259;
-	bh=SdHatth0q/4cnw+nQWn3RsPm8L+NKYlptQNznoRJW9k=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:From;
-	b=PNywEemPzOGjggCXTRFFQmL2ZCUfvkWA/0/R05G5Hb/5QI7eTrDlAmoX3jC44ZdI0
-	 aTtIQvQu1MRIJdA6IjgxGYi5ZHpX7toQkdg/qegBg+ZW6pyFZYEl/L+xGU16rk3Ost
-	 k+crcC0cSSGMSsoeknGAX67GVHshBU5iG/BcPQNrIT4kjRbjgtsjyzOMpStLniXc3R
-	 sil2QCOxHA4c2/c6o1nwBEXHtCesoAQt40jT3t2d0tsnoIOGuhRJjf0gfXNyuiX8yC
-	 kbGgujOSZENEk9Ud/tGp08tmY/T4k7OZkF8DQOsh6pPyKb3wnql8etc3u02BI2qNO9
-	 7KIbnvbQZGe9Q==
+	s=201707; t=1646972263;
+	bh=yXHN+D41TnM4dqddPeGTfM+bvOgnt5H9D7bI4rAFNGM=;
+	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=gEb5guR//djjhDglPqMLZw4TX57An2n1f5xP0SNBs1euHNHsXFSHhp62PlSbK8x2R
+	 lPZ08ALRPzvEfKEpZKY7KEzMg1I3ahTstu3lPjMrRl2DiStaNhadCfyVp1/CdeDk0f
+	 b5J7OzNGBMvdRCaN3Wb5NqHXtbayoewle+jsWDDWvOPiiC3+72LMYjBrlcqvgfBUjl
+	 oUz0Q7VtS3GIbqerECcqnQUDbJgFN4iZuLHw4pIn1qXv6buOvc02D87O9fzHVnBQW3
+	 1SAeZ42VOYXlDBrJ4MCRWqXZUbZNhyAsC9Nr6TwYd1G7Rdu3VzykdHlAhKwDglK43Y
+	 c05mnJSu/t2NQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=flex--dvander.bounces.google.com
- (client-ip=2607:f8b0:4864:20::64a; helo=mail-pl1-x64a.google.com;
- envelope-from=3wm0qygckc7uyqviyzmbjjbgz.xjhgdips-zmjangdnon.jugvwn.jmb@flex--dvander.bounces.google.com;
+ (client-ip=2607:f8b0:4864:20::b4a; helo=mail-yb1-xb4a.google.com;
+ envelope-from=3w80qygckc7gbtylbcpemmejc.amkjglsv-cpmdqjgqrq.mxjyzq.mpe@flex--dvander.bounces.google.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256
- header.s=20210112 header.b=H8kfHMQs; dkim-atps=neutral
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com
- [IPv6:2607:f8b0:4864:20::64a])
+ header.s=20210112 header.b=TI3xjZ+c; dkim-atps=neutral
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com
+ [IPv6:2607:f8b0:4864:20::b4a])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KFCMK1YMDz2xTq
- for <linux-erofs@lists.ozlabs.org>; Fri, 11 Mar 2022 15:17:31 +1100 (AEDT)
-Received: by mail-pl1-x64a.google.com with SMTP id
- z10-20020a170902708a00b0014fc3888923so3873447plk.22
- for <linux-erofs@lists.ozlabs.org>; Thu, 10 Mar 2022 20:17:31 -0800 (PST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KFCMK6sW7z2xTq
+ for <linux-erofs@lists.ozlabs.org>; Fri, 11 Mar 2022 15:17:33 +1100 (AEDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id
+ o133-20020a25738b000000b0062872621d0eso6389988ybc.2
+ for <linux-erofs@lists.ozlabs.org>; Thu, 10 Mar 2022 20:17:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
- bh=SdHatth0q/4cnw+nQWn3RsPm8L+NKYlptQNznoRJW9k=;
- b=v6YZ/FmYLZWfTXx33wk6S+3WdIIhPer75qVC1xKmTr6zaZUK2rM2crj6KEBLM4/A9s
- A1fx3MbkvrnhHa0nN78I25PlYkEPzs22y6cJyZ/WhxlXK1cR33yaEyRmCO0QCkYKFn0y
- gkNWjAXJWjlfWXS919AeRYCtijqDr32AqjIvCvQjOV7fDoUF6tty2o7jv7p5YNgopTc5
- 4616DG5/EIj47rv4penVe1Mv6Rxr/JGSphSud/3A7jfccsv196ZOhy2oOj6pgINIZXoL
- x4Sr+sUPz6IkD3a8HoPisJhcHPpwRc4yOfePCljc1wZRQo9jkywax/wfh0DLJZmA8/iE
- VOOA==
-X-Gm-Message-State: AOAM531pENxGePKQpnfzZ09NgpBAfcjkBM8cR8jD4THH1reGHaC4Twwg
- JxxylZXf3okslk5hQX2ltej+6uxdmklQT7nSwsRrsOuPWFyfTFZLa6LMTDGO8eVMy1Mjj5mhX/o
- Uc3ufXzBjMNTw5NbyWcsWDcFpAIM9jerBT1JMsM6c9a0lEnd7pQmlYo3ZI6Y03bPuNrAIqXoF
-X-Google-Smtp-Source: ABdhPJwds4gTTBvmOVPfGH2PtyBtP2MJge043yADZC5dbqaiYSa6b7lnojOsUi5vTFPRrCkZufTmGKu0VDv9
+ h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+ :references:subject:from:to:cc;
+ bh=yXHN+D41TnM4dqddPeGTfM+bvOgnt5H9D7bI4rAFNGM=;
+ b=73XLQeTF4bH8KWMtSR1L4/WSPwHEAXLhl1LasemBrY6xbgiimYiK0YRD53wf2TPvoA
+ XKhv2F+p9vLh3dN0w/7ISEfut/u0KjmT0qdd+lt2mst4Mag1/Ht3AaI4tQwVx0DGycIN
+ g3BEHmIhDEiH5ADjZ266G3wtZAda9eVZ14pkd2TwlAKdnCJuPMF0WmCuaQNKI1hVwcgB
+ tmwBUfqaA5tIZdYfmPD0ONukdKbIuTZwTvz7d5QK4naId0dyOQaXTlzmBnpnOq9zDfez
+ Buge4ULY/K720qyjuenkT+UBnoAvlmYbDHPR32ZPKxzXK32b6M5cwjOlr3bwWVQY1tF0
+ dXeg==
+X-Gm-Message-State: AOAM532HmxY12KdTkw8OVoQvxFFX/Jym1gy8lklSzFiYlgbHewUKH0dy
+ xDxqv5VvVdLVUo3swxpLr/a90B8T4cPc1ubJgXGw9vzpvIqlmPjSRC61ddwxwmTCbOYI+af/i6L
+ o9YPR9XVZjfA4/aOLSczdt7BymQh/5hx8nFWlQAVcaezqgEC4QsiTVhQUyXndTKOHRbXWW08l
+X-Google-Smtp-Source: ABdhPJzyFmaMR9aPb7Mc7bUMJ87FTsHOSbmbApsnfgqbQp0HQ58jbNs/gUWUrSfCN+HBDrPG+HJhPIbBoraN
 X-Received: from dvandertop.c.googlers.com
  ([fda3:e722:ac3:cc00:7f:e700:c0a8:5102])
- (user=dvander job=sendgmr) by 2002:a17:902:ecd0:b0:151:dd64:c79b with SMTP id
- a16-20020a170902ecd000b00151dd64c79bmr8640005plh.79.1646972248278; Thu, 10
- Mar 2022 20:17:28 -0800 (PST)
-Date: Fri, 11 Mar 2022 04:17:23 +0000
-Message-Id: <20220311041724.3107622-1-dvander@google.com>
+ (user=dvander job=sendgmr) by 2002:a25:3c3:0:b0:628:8065:f4ba with SMTP id
+ 186-20020a2503c3000000b006288065f4bamr6449319ybd.97.1646972251121; Thu, 10
+ Mar 2022 20:17:31 -0800 (PST)
+Date: Fri, 11 Mar 2022 04:17:24 +0000
+In-Reply-To: <20220311041724.3107622-1-dvander@google.com>
+Message-Id: <20220311041724.3107622-2-dvander@google.com>
 Mime-Version: 1.0
+References: <20220311041724.3107622-1-dvander@google.com>
 X-Mailer: git-send-email 2.35.1.723.g4982287a31-goog
-Subject: [PATCH 1/2] erofs-utils: mkfs: rename ctime to mtime
+Subject: [PATCH 2/2] erofs-utils: mkfs: use mtime instead of ctime
 To: linux-erofs@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -81,178 +85,93 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently mkfs.erofs picks up whatever the system time happened to be
-when the input file structure was created. Since there's no (easy) way for
-userspace to control ctime, there's no way to control the per-file ctime
-that mkfs.erofs uses.
+Change the default timestamp behavior to use modification time rather
+than creation time. This will allow more control over the output
+timestamps when not using TIMESTAMP_FIXED.
 
-In preparation for switching to mtime, rename the "ctime" members of the
-inode structure.
+EROFS_FEATURE_COMPAT_MTIME has been added so tooling can detect the
+change in timestamp behavior.
 
 Signed-off-by: David Anderson <dvander@google.com>
 ---
- dump/main.c              |  4 ++--
- fsck/main.c              | 12 ++++++------
- fuse/main.c              |  2 +-
- include/erofs/internal.h |  4 ++--
- include/erofs_fs.h       |  4 ++--
- lib/inode.c              | 14 +++++++-------
- lib/namei.c              |  8 ++++----
- 7 files changed, 24 insertions(+), 24 deletions(-)
+ dump/main.c        | 1 +
+ include/erofs_fs.h | 1 +
+ lib/inode.c        | 4 ++--
+ mkfs/main.c        | 8 +++++---
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/dump/main.c b/dump/main.c
-index bb1bd7f..6565d35 100644
+index 6565d35..72761bd 100644
 --- a/dump/main.c
 +++ b/dump/main.c
-@@ -488,7 +488,7 @@ static void erofsdump_show_fileinfo(bool show_extent)
- 	}
+@@ -84,6 +84,7 @@ struct erofsdump_feature {
  
- 	strftime(timebuf, sizeof(timebuf),
--		 "%Y-%m-%d %H:%M:%S", localtime((time_t *)&inode.i_ctime));
-+		 "%Y-%m-%d %H:%M:%S", localtime((time_t *)&inode.i_mtime));
- 	access_mode = inode.i_mode & 0777;
- 	for (i = 8; i >= 0; i--)
- 		if (((access_mode >> i) & 1) == 0)
-@@ -507,7 +507,7 @@ static void erofsdump_show_fileinfo(bool show_extent)
- 	fprintf(stdout,	"Xattr size: %u\n", inode.xattr_isize);
- 	fprintf(stdout, "Uid: %u   Gid: %u  ", inode.i_uid, inode.i_gid);
- 	fprintf(stdout, "Access: %04o/%s\n", access_mode, access_mode_str);
--	fprintf(stdout, "Timestamp: %s.%09d\n", timebuf, inode.i_ctime_nsec);
-+	fprintf(stdout, "Timestamp: %s.%09d\n", timebuf, inode.i_mtime_nsec);
- 
- 	if (!dumpcfg.show_extent)
- 		return;
-diff --git a/fsck/main.c b/fsck/main.c
-index e669b44..0af15b4 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -229,14 +229,14 @@ static void erofsfsck_set_attributes(struct erofs_inode *inode, char *path)
- 
- #ifdef HAVE_UTIMENSAT
- 	if (utimensat(AT_FDCWD, path, (struct timespec []) {
--				[0] = { .tv_sec = inode->i_ctime,
--					.tv_nsec = inode->i_ctime_nsec },
--				[1] = { .tv_sec = inode->i_ctime,
--					.tv_nsec = inode->i_ctime_nsec },
-+				[0] = { .tv_sec = inode->i_mtime,
-+					.tv_nsec = inode->i_mtime_nsec },
-+				[1] = { .tv_sec = inode->i_mtime,
-+					.tv_nsec = inode->i_mtime_nsec },
- 			}, AT_SYMLINK_NOFOLLOW) < 0)
- #else
--	if (utime(path, &((struct utimbuf){.actime = inode->i_ctime,
--					   .modtime = inode->i_ctime})) < 0)
-+	if (utime(path, &((struct utimbuf){.actime = inode->i_mtime,
-+					   .modtime = inode->i_mtime})) < 0)
- #endif
- 		erofs_warn("failed to set times: %s", path);
- 
-diff --git a/fuse/main.c b/fuse/main.c
-index 2549d8a..ae377ae 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -98,7 +98,7 @@ static int erofsfuse_getattr(const char *path, struct stat *stbuf)
- 	stbuf->st_gid = vi.i_gid;
- 	if (S_ISBLK(vi.i_mode) || S_ISCHR(vi.i_mode))
- 		stbuf->st_rdev = vi.u.i_rdev;
--	stbuf->st_ctime = vi.i_ctime;
-+	stbuf->st_ctime = vi.i_mtime;
- 	stbuf->st_mtime = stbuf->st_ctime;
- 	stbuf->st_atime = stbuf->st_ctime;
- 	return 0;
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 947304f..56627e9 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -154,8 +154,8 @@ struct erofs_inode {
- 	u64 i_ino[2];
- 	u32 i_uid;
- 	u32 i_gid;
--	u64 i_ctime;
--	u32 i_ctime_nsec;
-+	u64 i_mtime;
-+	u32 i_mtime_nsec;
- 	u32 i_nlink;
- 
- 	union {
+ static struct erofsdump_feature feature_lists[] = {
+ 	{ true, EROFS_FEATURE_COMPAT_SB_CHKSUM, "sb_csum" },
++	{ true, EROFS_FEATURE_COMPAT_MTIME, "mtime" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_LZ4_0PADDING, "0padding" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER, "big_pcluster" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
 diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 9a91877..e01f5c7 100644
+index e01f5c7..7956a62 100644
 --- a/include/erofs_fs.h
 +++ b/include/erofs_fs.h
-@@ -183,8 +183,8 @@ struct erofs_inode_extended {
+@@ -13,6 +13,7 @@
+ #define EROFS_SUPER_OFFSET      1024
  
- 	__le32 i_uid;
- 	__le32 i_gid;
--	__le64 i_ctime;
--	__le32 i_ctime_nsec;
-+	__le64 i_mtime;
-+	__le32 i_mtime_nsec;
- 	__le32 i_nlink;
- 	__u8   i_reserved2[16];
- };
+ #define EROFS_FEATURE_COMPAT_SB_CHKSUM		0x00000001
++#define EROFS_FEATURE_COMPAT_MTIME		0x00000002
+ 
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
 diff --git a/lib/inode.c b/lib/inode.c
-index 461c797..24f2567 100644
+index 24f2567..c9fdda1 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -477,8 +477,8 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- 		u.die.i_uid = cpu_to_le32(inode->i_uid);
- 		u.die.i_gid = cpu_to_le32(inode->i_gid);
- 
--		u.die.i_ctime = cpu_to_le64(inode->i_ctime);
--		u.die.i_ctime_nsec = cpu_to_le32(inode->i_ctime_nsec);
-+		u.die.i_mtime = cpu_to_le64(inode->i_mtime);
-+		u.die.i_mtime_nsec = cpu_to_le32(inode->i_mtime_nsec);
- 
- 		switch (inode->i_mode & S_IFMT) {
- 		case S_IFCHR:
-@@ -806,16 +806,16 @@ static int erofs_fill_inode(struct erofs_inode *inode,
+@@ -806,8 +806,8 @@ static int erofs_fill_inode(struct erofs_inode *inode,
  	inode->i_mode = st->st_mode;
  	inode->i_uid = cfg.c_uid == -1 ? st->st_uid : cfg.c_uid;
  	inode->i_gid = cfg.c_gid == -1 ? st->st_gid : cfg.c_gid;
--	inode->i_ctime = st->st_ctime;
--	inode->i_ctime_nsec = ST_CTIM_NSEC(st);
-+	inode->i_mtime = st->st_ctime;
-+	inode->i_mtime_nsec = ST_CTIM_NSEC(st);
+-	inode->i_mtime = st->st_ctime;
+-	inode->i_mtime_nsec = ST_CTIM_NSEC(st);
++	inode->i_mtime = st->st_mtime;
++	inode->i_mtime_nsec = ST_MTIM_NSEC(st);
  
  	switch (cfg.c_timeinherit) {
  	case TIMESTAMP_CLAMPING:
--		if (st->st_ctime < sbi.build_time)
-+		if (inode->i_mtime < sbi.build_time)
- 			break;
- 	case TIMESTAMP_FIXED:
--		inode->i_ctime = sbi.build_time;
--		inode->i_ctime_nsec = sbi.build_time_nsec;
-+		inode->i_mtime = sbi.build_time;
-+		inode->i_mtime_nsec = sbi.build_time_nsec;
- 	default:
- 		break;
- 	}
-diff --git a/lib/namei.c b/lib/namei.c
-index 7377e74..2c8891a 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -79,8 +79,8 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->i_gid = le32_to_cpu(die->i_gid);
- 		vi->i_nlink = le32_to_cpu(die->i_nlink);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 3f34450..b1ed187 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -421,6 +421,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 				  erofs_nid_t root_nid,
+ 				  erofs_blk_t *blocks)
+ {
++	int compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
++		EROFS_FEATURE_COMPAT_MTIME;
+ 	struct erofs_super_block sb = {
+ 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
+ 		.blkszbits = LOG_BLOCK_SIZE,
+@@ -431,8 +433,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 		.meta_blkaddr  = sbi.meta_blkaddr,
+ 		.xattr_blkaddr = sbi.xattr_blkaddr,
+ 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
+-		.feature_compat = cpu_to_le32(sbi.feature_compat &
+-					      ~EROFS_FEATURE_COMPAT_SB_CHKSUM),
++		.feature_compat = cpu_to_le32(sbi.feature_compat & ~compat),
+ 		.extra_devices = cpu_to_le16(sbi.extra_devices),
+ 		.devt_slotoff = cpu_to_le16(sbi.devt_slotoff),
+ 	};
+@@ -511,7 +512,8 @@ static void erofs_mkfs_default_options(void)
+ {
+ 	cfg.c_legacy_compress = false;
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
+-	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM;
++	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
++			     EROFS_FEATURE_COMPAT_MTIME;
  
--		vi->i_ctime = le64_to_cpu(die->i_ctime);
--		vi->i_ctime_nsec = le64_to_cpu(die->i_ctime_nsec);
-+		vi->i_mtime = le64_to_cpu(die->i_mtime);
-+		vi->i_mtime_nsec = le64_to_cpu(die->i_mtime_nsec);
- 		vi->i_size = le64_to_cpu(die->i_size);
- 		if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
- 			/* fill chunked inode summary info */
-@@ -114,8 +114,8 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->i_gid = le16_to_cpu(dic->i_gid);
- 		vi->i_nlink = le16_to_cpu(dic->i_nlink);
- 
--		vi->i_ctime = sbi.build_time;
--		vi->i_ctime_nsec = sbi.build_time_nsec;
-+		vi->i_mtime = sbi.build_time;
-+		vi->i_mtime_nsec = sbi.build_time_nsec;
- 
- 		vi->i_size = le32_to_cpu(dic->i_size);
- 		if (vi->datalayout == EROFS_INODE_CHUNK_BASED)
+ 	/* generate a default uuid first */
+ #ifdef HAVE_LIBUUID
 -- 
 2.35.1.723.g4982287a31-goog
 
