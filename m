@@ -1,59 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A255E4D5D39
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 09:24:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFB324D66EF
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 17:58:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KFJqq3HGbz300B
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 19:24:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KFXFg4cZpz30CP
+	for <lists+linux-erofs@lfdr.de>; Sat, 12 Mar 2022 03:58:47 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=d1Aofjpl;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AGi/m/V/;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=d1Aofjpl; 
- dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org
- [IPv6:2604:1380:4641:c500::1])
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=AGi/m/V/; dkim-atps=neutral
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KFJqn0Lygz2xgb
- for <linux-erofs@lists.ozlabs.org>; Fri, 11 Mar 2022 19:24:05 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id B5ACC61DF1;
- Fri, 11 Mar 2022 08:24:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7BCC340F3;
- Fri, 11 Mar 2022 08:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1646987042;
- bh=vj6CfSHOXQ9Mtuetdyb8VmglTURJ+IW9CGO2ktkkhl8=;
- h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=d1AofjplgR64OwNX0sGVbCWDiqMvUSM7NJ89M69UEG2NLGVRUV9X9TZ2C/IRfGAfB
- tcHFZwaD+OTW0B3/H3Av2jnM4eGYfJkfmul6AUiHRZUv7mmrmYMIZLwalBrq6wnpJJ
- x2PS1ktqRz4QWhD8e6r2j+acNGPq3vVnkyM0zdsUATMxijTImmWRB1nOPuWVhXOzUE
- LlUkXShM65Y7zJmZt9MaDb84sjlg3UG/onVKkn//ho/8iwvPHC53qiMRZKbxoI/xw6
- BIMOjpHtnUQsljmX57pIc0wz0TY4EG2UdfWDKMuEDbHp+FRFImiU21gmXG+LPp3PW/
- p2RqHm8iQ8rYA==
-Message-ID: <2c4ed430-efc9-1328-b630-9b951f87a5b1@kernel.org>
-Date: Fri, 11 Mar 2022 16:23:58 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KFXFZ5Ck5z2ypn
+ for <linux-erofs@lists.ozlabs.org>; Sat, 12 Mar 2022 03:58:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1647017922; x=1678553922;
+ h=date:from:to:cc:subject:message-id:mime-version:
+ content-transfer-encoding;
+ bh=GNHeZhyngmoH5Yq6fZTqJELTc2rjhL4QPoGD5q2RmLw=;
+ b=AGi/m/V/XwBX4Yk0aHPi3kIo0p0MkHOD+qzxta5c/XZAPk1rCuva6y0D
+ Ir402eu8KvlQtNbDArur52lAZiAXAEV/Ggk5w1oIw9VVhvBzQRnGowMkk
+ Xtnmz2kZVErXduSlS3yIebRj/IEZa9NhwGOu5hVHqc+cMx6/ytCCc9dUY
+ eqF/+CV+Hl4/MDJbAhlaqXya2ll1/pN2d2y3mE8ZUXqVc96z3fwbNrqCO
+ KKorWRYsqOZI90TN0oDWBu6oFjtKfguxQHiw+DXvIDuahB5NwgPcZiSLB
+ hMAD7mPj+v73nstE26uCTRJ4tl1J0gUmeJY7lTXQOyjHpBHVPgOYkJ73t A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10283"; a="318829772"
+X-IronPort-AV: E=Sophos;i="5.90,174,1643702400"; d="scan'208";a="318829772"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+ by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 11 Mar 2022 08:57:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,174,1643702400"; d="scan'208";a="712900147"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+ by orsmga005.jf.intel.com with ESMTP; 11 Mar 2022 08:57:37 -0800
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1nSia8-0006n4-BC; Fri, 11 Mar 2022 16:57:36 +0000
+Date: Sat, 12 Mar 2022 00:57:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ ab6bfa6e1e2222ad3de93035614b48d5a41509c6
+Message-ID: <622b7f79.xEbhNbIejBcbeQb+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH] erofs: silence warnings related to impossible m_plen
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20220310173448.19962-1-hsiangkao@linux.alibaba.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20220310173448.19962-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -66,29 +68,171 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@oracle.com>, kernel test robot <lkp@intel.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2022/3/11 1:34, Gao Xiang wrote:
-> Dan reported two smatch warnings [1],
-> .. warn: should '1 << lclusterbits' be a 64 bit type?
-> .. warn: should 'm->compressedlcs << lclusterbits' be a 64 bit type?
-> 
-> In practice, m_plen cannot be more than 1MiB due to on-disk constraint
-> for the compression mode, so we're always safe here.
-> 
-> In order to make static analyzers happy and don't report again,
-> let's silence them instead.
-> 
-> [1] https://lore.kernel.org/r/202203091002.lJVzsX6e-lkp@intel.com
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: ab6bfa6e1e2222ad3de93035614b48d5a41509c6  erofs: refine managed inode stuffs
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+elapsed time: 1309m
 
-Thanks,
+configs tested: 142
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+nios2                         3c120_defconfig
+sparc                            allyesconfig
+arm                            lart_defconfig
+sh                            titan_defconfig
+sh                            shmin_defconfig
+m68k                          multi_defconfig
+xtensa                         virt_defconfig
+sh                          rsk7203_defconfig
+m68k                       m5208evb_defconfig
+nds32                            alldefconfig
+arc                          axs101_defconfig
+mips                       bmips_be_defconfig
+powerpc                           allnoconfig
+arm                          badge4_defconfig
+sh                           se7721_defconfig
+arm                      jornada720_defconfig
+openrisc                  or1klitex_defconfig
+arm                             rpc_defconfig
+sh                          sdk7780_defconfig
+h8300                     edosk2674_defconfig
+sparc                       sparc64_defconfig
+arc                     haps_hs_smp_defconfig
+sh                           se7722_defconfig
+nds32                             allnoconfig
+arm                        realview_defconfig
+sh                           se7206_defconfig
+sh                               allmodconfig
+arc                          axs103_defconfig
+mips                       capcella_defconfig
+arm                         vf610m4_defconfig
+arm                          lpd270_defconfig
+powerpc                 mpc837x_rdb_defconfig
+mips                         db1xxx_defconfig
+arm                          pxa3xx_defconfig
+openrisc                         alldefconfig
+powerpc                       holly_defconfig
+powerpc                 mpc837x_mds_defconfig
+arm                         s3c6400_defconfig
+ia64                                defconfig
+arm                        keystone_defconfig
+h8300                    h8300h-sim_defconfig
+powerpc                     tqm8548_defconfig
+arm                  randconfig-c002-20220310
+arm                  randconfig-c002-20220311
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+i386                   debian-10.3-kselftests
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a005
+i386                          randconfig-a001
+i386                          randconfig-a003
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+i386                          randconfig-a016
+i386                          randconfig-a014
+i386                          randconfig-a012
+arc                  randconfig-r043-20220310
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                  randconfig-c002-20220310
+x86_64                        randconfig-c007
+powerpc              randconfig-c003-20220310
+riscv                randconfig-c006-20220310
+mips                 randconfig-c004-20220310
+i386                          randconfig-c001
+powerpc                     tqm8540_defconfig
+mips                       lemote2f_defconfig
+mips                     loongson2k_defconfig
+powerpc                      acadia_defconfig
+arm                       spear13xx_defconfig
+x86_64                           allyesconfig
+powerpc                      pmac32_defconfig
+mips                           rs90_defconfig
+powerpc                     mpc512x_defconfig
+arm                    vt8500_v6_v7_defconfig
+hexagon                          alldefconfig
+arm                         orion5x_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                 mpc8313_rdb_defconfig
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20220310
+hexagon              randconfig-r045-20220310
+s390                 randconfig-r044-20220310
+riscv                randconfig-r042-20220310
+
+---
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
