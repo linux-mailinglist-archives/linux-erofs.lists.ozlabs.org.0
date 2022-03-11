@@ -1,62 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA77C4D5C70
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 08:37:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D0924D5C74
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 08:39:20 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KFHnm3gh6z2yxW
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 18:37:16 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Weu8ocNd;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KFHr56jQpz2yxW
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Mar 2022 18:39:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org;
- envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=Weu8ocNd; 
- dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
+ helo=out30-54.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-54.freemail.mail.aliyun.com
+ (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KFHnh6NYGz2xBV
- for <linux-erofs@lists.ozlabs.org>; Fri, 11 Mar 2022 18:37:12 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by ams.source.kernel.org (Postfix) with ESMTPS id 08E65B82AE0;
- Fri, 11 Mar 2022 07:37:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038F3C340EC;
- Fri, 11 Mar 2022 07:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1646984227;
- bh=GQ4RaP2ez2tkLbCqL2jRU2LQnBbaB4HlcNPpvWVk95c=;
- h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=Weu8ocNdi/tIQd7tZzhM1nZuurzzjPE9n3PsbmoL0tLFZN/jGfCYkmXk32SMnDLCW
- RxmdHu2gIEXiewMZXl5kOVGfUpjOVeJ9vOulcQDX37O3ajY3TjZSqJOFZJ8b7noRIg
- NUxIzUTfkGuytF576LsAp4JvFrIq2sQgUPuESuqxPYQGXHzIImk0bzkI1pHY00PwuS
- 9RdOJIBtEBf17Zsv1YV8IsyePAv6cC2QsYIUtwss4Mpae7HbEue8wFjidvmWzqM/Z/
- uJrDZWtQBWMpa/zWAOcCIm6vfgq7TInRQqiovEQbBtPIDoOEdw3xyQ0dYGggZaExn0
- 9HY2WjvkyykxA==
-Message-ID: <13f33ba9-cbfb-6ffb-a19a-a87127c80804@kernel.org>
-Date: Fri, 11 Mar 2022 15:36:59 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KFHr00pB6z2xBV
+ for <linux-erofs@lists.ozlabs.org>; Fri, 11 Mar 2022 18:39:10 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R141e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0V6sjQC7_1646984341; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V6sjQC7_1646984341) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 11 Mar 2022 15:39:03 +0800
+Date: Fri, 11 Mar 2022 15:39:00 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Yue Hu <zbestahu@gmail.com>
+Subject: Re: [PATCH 1/2] erofs: clean up z_erofs_extent_lookback
+Message-ID: <Yir8lBR2gyN1CJ8D@B-P7TQMD6M-0146.local>
+References: <20220310182743.102365-1-hsiangkao@linux.alibaba.com>
+ <20220311151232.00003619.zbestahu@gmail.com>
+ <Yir6HNsdYFdLVwEN@B-P7TQMD6M-0146.local>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH v4 07/21] erofs: use meta buffers for
- erofs_read_superblock()
-Content-Language: en-US
-To: Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- linux-cachefs@redhat.com, xiang@kernel.org, linux-erofs@lists.ozlabs.org
-References: <20220307123305.79520-1-jefflexu@linux.alibaba.com>
- <20220307123305.79520-8-jefflexu@linux.alibaba.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20220307123305.79520-8-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Yir6HNsdYFdLVwEN@B-P7TQMD6M-0146.local>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,20 +49,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, willy@infradead.org,
- linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- linux-fsdevel@vger.kernel.org, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2022/3/7 20:32, Jeffle Xu wrote:
-> The only change is that, meta buffers read cache page without __GFP_FS
-> flag, which shall not matter.
+On Fri, Mar 11, 2022 at 03:28:28PM +0800, Gao Xiang wrote:
+> On Fri, Mar 11, 2022 at 03:12:32PM +0800, Yue Hu wrote:
+> > On Fri, 11 Mar 2022 02:27:42 +0800
+> > Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+> > 
+> > > Avoid the unnecessary tail recursion since it can be converted into
+> > > a loop directly in order to prevent potential stack overflow.
+> > > 
+> > > It's a pretty straightforward conversion.
+> > > 
+> > > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> > > ---
+> > >  fs/erofs/zmap.c | 67 ++++++++++++++++++++++++-------------------------
+> > >  1 file changed, 33 insertions(+), 34 deletions(-)
+> > > 
+> > > diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> > > index b4059b9c3bac..572f0b8151ba 100644
+> > > --- a/fs/erofs/zmap.c
+> > > +++ b/fs/erofs/zmap.c
+> > > @@ -431,48 +431,47 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+> > >  				   unsigned int lookback_distance)
+> > >  {
+> > >  	struct erofs_inode *const vi = EROFS_I(m->inode);
+> > > -	struct erofs_map_blocks *const map = m->map;
+> > >  	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+> > > -	unsigned long lcn = m->lcn;
+> > > -	int err;
+> > >  
+> > > -	if (lcn < lookback_distance) {
+> > > -		erofs_err(m->inode->i_sb,
+> > > -			  "bogus lookback distance @ nid %llu", vi->nid);
+> > > -		DBG_BUGON(1);
+> > > -		return -EFSCORRUPTED;
+> > > -	}
+> > > +	while (m->lcn >= lookback_distance) {
+> > > +		unsigned long lcn = m->lcn - lookback_distance;
+> > > +		int err;
+> > 
+> > may better to declare variable 'lclusterbits' in loop just like 'err' usage?
 > 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> I'm fine with either way. Ok, will post the next version later.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Oh, I just noticed that you mean `lclusterbits', I think it won't
+change in this function, so I don't tend to move it into the inner
+loop.
 
 Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Gao Xiang
