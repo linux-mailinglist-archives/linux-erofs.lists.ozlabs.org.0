@@ -2,57 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35AEE4D972E
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 10:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67F504D9731
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 10:09:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KHndd0zd3z30Jm
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 20:08:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KHnfc2ZTZz30KB
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 20:09:44 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M6bubW+a;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qYo81yqD;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org;
+ envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=M6bubW+a; 
+ header.s=k20201202 header.b=qYo81yqD; 
  dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org
- [IPv6:2604:1380:4641:c500::1])
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KHndW0pZWz2yjS
- for <linux-erofs@lists.ozlabs.org>; Tue, 15 Mar 2022 20:08:46 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KHnfX5mVdz2yjS
+ for <linux-erofs@lists.ozlabs.org>; Tue, 15 Mar 2022 20:09:40 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id D029A61582;
- Tue, 15 Mar 2022 09:08:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7377DC340E8;
- Tue, 15 Mar 2022 09:08:41 +0000 (UTC)
+ by ams.source.kernel.org (Postfix) with ESMTPS id C823EB811CC;
+ Tue, 15 Mar 2022 09:09:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBADC340E8;
+ Tue, 15 Mar 2022 09:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1647335322;
- bh=00Z/aPEqMpUYQEYLBU8TquCbkMu9mw2X8SAwjRv70x4=;
+ s=k20201202; t=1647335375;
+ bh=qjtgoi5NGl4oJrj4hfKOe5E1NWLCN6cFlqZz4tr9NqY=;
  h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=M6bubW+a6KhUJ/8q1M+IqR9GQQPp9ygnCSmcg1k7QRJskisgwGk7BdLojd/CKBsN6
- SWVQH2nEXSgBI8oVCHdpXR/nxHGHzmHQz2fY5BwogZqtPeZgjtKhTS2IcVOPEMMdHd
- cUl50/L8xVDYSLU4bXkJ4JxyG+DAmZvjXPHF+3/zd0/8M0H3OuR+k3ZzvVnhjgY90l
- YuZgx+hpEkUuFeJexQb87DlZwuCqzPNBB+odhoI79ZVxmAcjqo1jbqbb3isBYFg/sn
- RydA/c56HoKY6Db5JSDIfbnyoLPuT4i1fRZTpqBvn+ZRH1WcO6jlCqOSkGyJajQ3cp
- 73wy7RVALBNsQ==
-Message-ID: <37668a23-5b56-015b-fb9b-fd8acb0fd9b7@kernel.org>
-Date: Tue, 15 Mar 2022 17:08:39 +0800
+ b=qYo81yqDaPO1T4UlWcA5dYLBmQM2/DXS/eZUHLdheGu5fwRXEG9R5f1MkXgKrtH9y
+ 9j7LeTqAnkgHea+qJKudf5Zzl76nYCAMUwPZtKQi8/RYO251oG0+Mbp/bTDs+Q+lp5
+ W/JWi3DgHgitbeL3ctURqEXZLbj4jsQVcpbwbG/mFxZIQio8+zzyfygi/WTz7seyiz
+ 7Ns98AvYXfQOn7TvuZ8LBptRX+8ysPVpeOgUY4ZfhwRMHlblqyhXBY7XjSdUru0/PO
+ IQ7AExPzlzVUaFrp96zaM+6IUzSz9DR8B5c5k4Urhd7GTxU/hSsktahbyftKty7Je8
+ uVIpswvdMynEw==
+Message-ID: <419095e2-2167-ebd7-ed23-0d96ae8c095b@kernel.org>
+Date: Tue, 15 Mar 2022 17:09:32 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.2
-Subject: Re: [PATCH 1/2] erofs: clean up z_erofs_extent_lookback
+Subject: Re: [PATCH 2/2] erofs: refine managed inode stuffs
 Content-Language: en-US
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20220310182743.102365-1-hsiangkao@linux.alibaba.com>
+ <20220310182743.102365-2-hsiangkao@linux.alibaba.com>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20220310182743.102365-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20220310182743.102365-2-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -72,10 +72,8 @@ Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 2022/3/11 2:27, Gao Xiang wrote:
-> Avoid the unnecessary tail recursion since it can be converted into
-> a loop directly in order to prevent potential stack overflow.
-> 
-> It's a pretty straightforward conversion.
+> Set up the correct gfp mask and use it instead of hard coding.
+> Also add comments about .invalidatepage() to show more details.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
