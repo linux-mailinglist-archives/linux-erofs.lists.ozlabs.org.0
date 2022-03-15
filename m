@@ -1,60 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67F504D9731
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 10:09:46 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5151A4D9902
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 11:43:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KHnfc2ZTZz30KB
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 20:09:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KHqkQ15Y9z30Dp
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Mar 2022 21:43:10 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qYo81yqD;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=GmrNy/EK;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org;
- envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42d;
+ helo=mail-pf1-x42d.google.com; envelope-from=jnhuang95@gmail.com;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=qYo81yqD; 
- dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20210112 header.b=GmrNy/EK; dkim-atps=neutral
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com
+ [IPv6:2607:f8b0:4864:20::42d])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KHnfX5mVdz2yjS
- for <linux-erofs@lists.ozlabs.org>; Tue, 15 Mar 2022 20:09:40 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by ams.source.kernel.org (Postfix) with ESMTPS id C823EB811CC;
- Tue, 15 Mar 2022 09:09:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBADC340E8;
- Tue, 15 Mar 2022 09:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1647335375;
- bh=qjtgoi5NGl4oJrj4hfKOe5E1NWLCN6cFlqZz4tr9NqY=;
- h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
- b=qYo81yqDaPO1T4UlWcA5dYLBmQM2/DXS/eZUHLdheGu5fwRXEG9R5f1MkXgKrtH9y
- 9j7LeTqAnkgHea+qJKudf5Zzl76nYCAMUwPZtKQi8/RYO251oG0+Mbp/bTDs+Q+lp5
- W/JWi3DgHgitbeL3ctURqEXZLbj4jsQVcpbwbG/mFxZIQio8+zzyfygi/WTz7seyiz
- 7Ns98AvYXfQOn7TvuZ8LBptRX+8ysPVpeOgUY4ZfhwRMHlblqyhXBY7XjSdUru0/PO
- IQ7AExPzlzVUaFrp96zaM+6IUzSz9DR8B5c5k4Urhd7GTxU/hSsktahbyftKty7Je8
- uVIpswvdMynEw==
-Message-ID: <419095e2-2167-ebd7-ed23-0d96ae8c095b@kernel.org>
-Date: Tue, 15 Mar 2022 17:09:32 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KHqkM228hz2xt0
+ for <linux-erofs@lists.ozlabs.org>; Tue, 15 Mar 2022 21:43:06 +1100 (AEDT)
+Received: by mail-pf1-x42d.google.com with SMTP id l8so8482623pfu.1
+ for <linux-erofs@lists.ozlabs.org>; Tue, 15 Mar 2022 03:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20210112;
+ h=message-id:date:mime-version:user-agent:subject:to:cc:references
+ :from:in-reply-to:content-transfer-encoding;
+ bh=Q+oG0q/OqpLeOMe0H9+8fCVYgPq3RWnQ9esOTCEo9I4=;
+ b=GmrNy/EK2El8Qw8A/91ozUTgFaBURa6uPzKvvy0YkvcyJS3P+iOJjGwbO4eG7Ctpri
+ JWWHthx/4feeSYD+uhkMt+t13hDbnibm4lQo6cAYmEgOFi5B7Jsm04536KqB+JnBhimX
+ S3ntghb/gA2uWNhPzbiuCl5wcK+SxR8ffu0egGVvPtdx6yUdq3UcxMwTy6U+j1j21K6f
+ 4XGvSC4iLgDV/cYn6W8yZKRh0aiZDJ0BrPLkDXtwkySV0B68UPhGGmRuXinE1UUiUj4k
+ DbhIJHIovavmuCt0eSWgLp+tnqeJvuZ+OubQHOzWPM+gByqQfOM2JbfHUl+Wj6X05ZHn
+ Uvvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+ :to:cc:references:from:in-reply-to:content-transfer-encoding;
+ bh=Q+oG0q/OqpLeOMe0H9+8fCVYgPq3RWnQ9esOTCEo9I4=;
+ b=ShjpGJVCEiZ0TZIJ3Je7ke3zNbuSJNYOD3MeSCpPdkGhB/z25KG/YWOqIINgwIOJJV
+ 9WAegXdMhob4EHSv80OJAEMXVgCkcY5/Z5URDl5SWX7X+REHljxXc9ie402NZJtArdaE
+ lzrOmEYrg95JKmvunVIJh9yT9GrlXLFWhGXPqL++E3Vt9TUG7UfzTcZQyH6Jzsi5IIt+
+ ddFf5Cqp8K6VOjWL50Rcc5UQWBLQjkWVP/kR6hrpK+dORJIEY5LTFImj0D/TMsL9R33D
+ 7AVPcNYL1Y9B3l3EMyxi3pPDyRoqGwp2JTNYtKwgUsHTNOyzmdevBMcTUoih+XAHT2nD
+ n4+w==
+X-Gm-Message-State: AOAM530IICG1DXew5j6muoMAGfZAMcSQF3p96fSMrUBtqCoCXlZIkyF5
+ Vp5wqBmCk3qsRH7XN8RItW0=
+X-Google-Smtp-Source: ABdhPJy0ZY7pJoy5uStZDfEyHqVPsFxyURBpRlzb1QREakRD2kLUJZORdGMdmOXiYkJS5xKQh6yQTw==
+X-Received: by 2002:a63:7158:0:b0:37d:f96f:3c78 with SMTP id
+ b24-20020a637158000000b0037df96f3c78mr23048426pgn.378.1647340983404; 
+ Tue, 15 Mar 2022 03:43:03 -0700 (PDT)
+Received: from [127.0.0.1] ([103.97.175.139]) by smtp.gmail.com with ESMTPSA id
+ j14-20020a056a00174e00b004f776098715sm19768027pfc.68.2022.03.15.03.43.01
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 15 Mar 2022 03:43:03 -0700 (PDT)
+Message-ID: <bca8f865-bc3e-44d7-7298-c2c7e8973580@gmail.com>
+Date: Tue, 15 Mar 2022 18:43:01 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH 2/2] erofs: refine managed inode stuffs
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20220310182743.102365-1-hsiangkao@linux.alibaba.com>
- <20220310182743.102365-2-hsiangkao@linux.alibaba.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20220310182743.102365-2-hsiangkao@linux.alibaba.com>
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] fs: erofs: remember if kobject_init_and_add was done
+To: Dongliang Mu <dzm91@hust.edu.cn>, Gao Xiang <xiang@kernel.org>,
+ Chao Yu <chao@kernel.org>
+References: <20220315075152.63789-1-dzm91@hust.edu.cn>
+From: Huang Jianan <jnhuang95@gmail.com>
+In-Reply-To: <20220315075152.63789-1-dzm91@hust.edu.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,17 +83,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: syzkaller <syzkaller@googlegroups.com>, linux-erofs@lists.ozlabs.org,
+ Dongliang Mu <mudongliangabcd@gmail.com>, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2022/3/11 2:27, Gao Xiang wrote:
-> Set up the correct gfp mask and use it instead of hard coding.
-> Also add comments about .invalidatepage() to show more details.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+在 2022/3/15 15:51, Dongliang Mu 写道:
+> From: Dongliang Mu <mudongliangabcd@gmail.com>
+>
+> Syzkaller hit 'WARNING: kobject bug in erofs_unregister_sysfs'. This bug
+> is triggered by injecting fault in kobject_init_and_add of
+> erofs_unregister_sysfs.
+>
+> Fix this by remembering if kobject_init_and_add is successful.
+>
+> Note that I've tested the patch and the crash does not occur any more.
+>
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+> ---
+>   fs/erofs/internal.h | 1 +
+>   fs/erofs/sysfs.c    | 9 ++++++---
+>   2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 5aa2cf2c2f80..9e20665e3f68 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -144,6 +144,7 @@ struct erofs_sb_info {
+>   	u32 feature_incompat;
+>   
+>   	/* sysfs support */
+> +	bool s_sysfs_inited;
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Hi Dongliang,
+
+How about using sbi->s_kobj.state_in_sysfs to avoid adding a extra 
+member in sbi ?
 
 Thanks,
+Jianan
+
+>   	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
+>   	struct completion s_kobj_unregister;
+>   };
+> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+> index dac252bc9228..2b48a4df19b4 100644
+> --- a/fs/erofs/sysfs.c
+> +++ b/fs/erofs/sysfs.c
+> @@ -209,6 +209,7 @@ int erofs_register_sysfs(struct super_block *sb)
+>   				   "%s", sb->s_id);
+>   	if (err)
+>   		goto put_sb_kobj;
+> +	sbi->s_sysfs_inited = true;
+>   	return 0;
+>   
+>   put_sb_kobj:
+> @@ -221,9 +222,11 @@ void erofs_unregister_sysfs(struct super_block *sb)
+>   {
+>   	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>   
+> -	kobject_del(&sbi->s_kobj);
+> -	kobject_put(&sbi->s_kobj);
+> -	wait_for_completion(&sbi->s_kobj_unregister);
+> +	if (sbi->s_sysfs_inited) {
+> +		kobject_del(&sbi->s_kobj);
+> +		kobject_put(&sbi->s_kobj);
+> +		wait_for_completion(&sbi->s_kobj_unregister);
+> +	}
+>   }
+>   
+>   int __init erofs_init_sysfs(void)
+
