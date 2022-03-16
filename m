@@ -1,42 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 083E04DB116
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Mar 2022 14:18:26 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A092A4DB620
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Mar 2022 17:27:23 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KJW736tsYz3bbq
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 00:18:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KJbK51K6Vz30CP
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 03:27:21 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=D5lqy8bE;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.9;
- helo=out199-9.us.a.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out199-9.us.a.mail.aliyun.com (out199-9.us.a.mail.aliyun.com
- [47.90.199.9])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=D5lqy8bE; dkim-atps=neutral
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KJW6j3Yxxz3bSq
- for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 00:18:04 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R861e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=16; SR=0; TI=SMTPD_---0V7NEPse_1647436676; 
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V7NEPse_1647436676) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 16 Mar 2022 21:17:57 +0800
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v5 22/22] erofs: add 'uuid' mount option
-Date: Wed, 16 Mar 2022 21:17:23 +0800
-Message-Id: <20220316131723.111553-23-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220316131723.111553-1-jefflexu@linux.alibaba.com>
-References: <20220316131723.111553-1-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KJbK04FFMz2ywF
+ for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 03:27:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1647448036; x=1678984036;
+ h=date:from:to:cc:subject:message-id:mime-version:
+ content-transfer-encoding;
+ bh=DmrfRnkCYGR/PbRVQX74PKRZFtL+Hgz7fa5M0f6niBg=;
+ b=D5lqy8bEj5i0jng5vUKl/wonvqbf4RFkrVLz7JbSeuEtHu98YtorFLVR
+ 8E9tysz0fZCEa+OnyIUSLhg9UTwCfyqXadgkSYsUkclv0LyQ3qLJsu1k2
+ Q0/Z+YqSYIztPtC5KZW0n0kfkl7y3Lz8qbZBCAxWEI6Dw3at5MN6fAbdj
+ UmvgosHM2ElscX6dwuB0H04+TSg3sfV0Vl6aex988GJ0s43LkuZVQSBvs
+ HvQUSKt1bOWiQ5Z29Xc1MJ/L6TGWvL0q2ueQLuj1RSDUEXvRbNzT0DuUL
+ FzjE3YXt6IiKtoHuGrins0thVMSoihHBIJU6CdivRCUMXigHOpIdFqNPb Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="255484372"
+X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; d="scan'208";a="255484372"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+ by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 16 Mar 2022 09:26:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; d="scan'208";a="690646178"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+ by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2022 09:26:06 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1nUWTO-000CcR-8i; Wed, 16 Mar 2022 16:26:06 +0000
+Date: Thu, 17 Mar 2022 00:25:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ b0ab343bfb4d6b5df039200aa6a38750bee38cac
+Message-ID: <62320f63.Q+4cdghiUNejnTdB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,145 +68,191 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, willy@infradead.org,
- linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
- gerry@linux.alibaba.com, torvalds@linux-foundation.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce 'uuid' mount option to enable on-demand read sementics. In
-this case, erofs could be mounted from blob files instead of blkdev.
-By then users could specify the path of bootstrap blob file containing
-the complete erofs image.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: b0ab343bfb4d6b5df039200aa6a38750bee38cac  erofs: support inode lookup with metabuf
 
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+elapsed time: 799m
+
+configs tested: 164
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm64                               defconfig
+i386                 randconfig-c001-20220314
+mips                 randconfig-c004-20220314
+arm                      footbridge_defconfig
+mips                        vocore2_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                 mpc834x_itx_defconfig
+arm                         vf610m4_defconfig
+mips                        jmr3927_defconfig
+xtensa                         virt_defconfig
+sh                           se7206_defconfig
+sh                          landisk_defconfig
+powerpc                    amigaone_defconfig
+alpha                               defconfig
+h8300                            alldefconfig
+sh                          rsk7201_defconfig
+arm                         lubbock_defconfig
+powerpc                 canyonlands_defconfig
+s390                          debug_defconfig
+xtensa                  cadence_csp_defconfig
+powerpc                      cm5200_defconfig
+arm                          badge4_defconfig
+arc                         haps_hs_defconfig
+arm                        realview_defconfig
+mips                         mpc30x_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                          rsk7269_defconfig
+powerpc                     tqm8541_defconfig
+m68k                        mvme16x_defconfig
+mips                        bcm47xx_defconfig
+powerpc                     tqm8548_defconfig
+arm                         axm55xx_defconfig
+arm                        shmobile_defconfig
+arm                          pxa910_defconfig
+powerpc                      pcm030_defconfig
+arm                           sama5_defconfig
+ia64                            zx1_defconfig
+x86_64                           alldefconfig
+openrisc                 simple_smp_defconfig
+sparc                            alldefconfig
+arm                  randconfig-c002-20220313
+arm                  randconfig-c002-20220314
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+sparc                            allyesconfig
+i386                              debian-10.3
+i386                             allyesconfig
+i386                   debian-10.3-kselftests
+mips                             allmodconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a004-20220314
+x86_64               randconfig-a005-20220314
+x86_64               randconfig-a003-20220314
+x86_64               randconfig-a002-20220314
+x86_64               randconfig-a006-20220314
+x86_64               randconfig-a001-20220314
+i386                 randconfig-a001-20220314
+i386                 randconfig-a005-20220314
+i386                 randconfig-a002-20220314
+i386                 randconfig-a004-20220314
+i386                 randconfig-a006-20220314
+i386                 randconfig-a003-20220314
+x86_64                        randconfig-a006
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+arc                  randconfig-r043-20220313
+riscv                randconfig-r042-20220313
+s390                 randconfig-r044-20220313
+arc                  randconfig-r043-20220314
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                               rhel-8.3
+x86_64                         rhel-8.3-kunit
+x86_64                    rhel-8.3-kselftests
+
+clang tested configs:
+arm                       cns3420vb_defconfig
+mips                           ip28_defconfig
+powerpc                      acadia_defconfig
+arm                         s3c2410_defconfig
+arm                          ep93xx_defconfig
+powerpc                    gamecube_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                 mpc836x_mds_defconfig
+mips                      maltaaprp_defconfig
+arm                       versatile_defconfig
+mips                      bmips_stb_defconfig
+powerpc                       ebony_defconfig
+powerpc                          g5_defconfig
+powerpc                     skiroot_defconfig
+powerpc                 mpc8560_ads_defconfig
+hexagon                          alldefconfig
+arm                        neponset_defconfig
+riscv                          rv32_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                     ppa8548_defconfig
+arm                      pxa255-idp_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                 mpc832x_mds_defconfig
+x86_64               randconfig-a014-20220314
+x86_64               randconfig-a015-20220314
+x86_64               randconfig-a016-20220314
+x86_64               randconfig-a012-20220314
+x86_64               randconfig-a013-20220314
+x86_64               randconfig-a011-20220314
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                 randconfig-a012-20220314
+i386                 randconfig-a011-20220314
+i386                 randconfig-a013-20220314
+i386                 randconfig-a014-20220314
+i386                 randconfig-a016-20220314
+i386                 randconfig-a015-20220314
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r045-20220313
+hexagon              randconfig-r045-20220314
+hexagon              randconfig-r041-20220313
+hexagon              randconfig-r041-20220314
+riscv                randconfig-r042-20220314
+s390                 randconfig-r044-20220314
+
 ---
- fs/erofs/super.c | 44 +++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 37 insertions(+), 7 deletions(-)
-
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 2942029a7049..8bc4b782f9a9 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -400,6 +400,7 @@ enum {
- 	Opt_dax,
- 	Opt_dax_enum,
- 	Opt_device,
-+	Opt_uuid,
- 	Opt_err
- };
- 
-@@ -424,6 +425,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- 	fsparam_flag("dax",             Opt_dax),
- 	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
- 	fsparam_string("device",	Opt_device),
-+	fsparam_string("uuid",		Opt_uuid),
- 	{}
- };
- 
-@@ -519,6 +521,12 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		}
- 		++ctx->devs->extra_devices;
- 		break;
-+	case Opt_uuid:
-+		kfree(ctx->opt.uuid);
-+		ctx->opt.uuid = kstrdup(param->string, GFP_KERNEL);
-+		if (!ctx->opt.uuid)
-+			return -ENOMEM;
-+		break;
- 	default:
- 		return -ENOPARAM;
- 	}
-@@ -593,9 +601,14 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sb->s_magic = EROFS_SUPER_MAGIC;
- 
--	if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
--		erofs_err(sb, "failed to set erofs blksize");
--		return -EINVAL;
-+	if (erofs_bdev_mode(sb)) {
-+		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
-+			erofs_err(sb, "failed to set erofs blksize");
-+			return -EINVAL;
-+		}
-+	} else {
-+		sb->s_blocksize = EROFS_BLKSIZ;
-+		sb->s_blocksize_bits = LOG_BLOCK_SIZE;
- 	}
- 
- 	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-@@ -604,11 +617,12 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sb->s_fs_info = sbi;
- 	sbi->opt = ctx->opt;
--	sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
- 	sbi->devs = ctx->devs;
- 	ctx->devs = NULL;
- 
--	if (!erofs_bdev_mode(sb)) {
-+	if (erofs_bdev_mode(sb)) {
-+		sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
-+	} else {
- 		struct erofs_fscache_context *bootstrap;
- 
- 		bootstrap = erofs_fscache_get_ctx(sb, ctx->opt.uuid, true);
-@@ -620,6 +634,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 		err = super_setup_bdi(sb);
- 		if (err)
- 			return err;
-+
-+		sbi->dax_dev = NULL;
- 	}
- 
- 	err = erofs_read_superblock(sb);
-@@ -682,6 +698,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
-+	struct erofs_fs_context *ctx = fc->fs_private;
-+
-+	if (ctx->opt.uuid)
-+		return get_tree_nodev(fc, erofs_fc_fill_super);
-+
- 	return get_tree_bdev(fc, erofs_fc_fill_super);
- }
- 
-@@ -731,6 +752,7 @@ static void erofs_fc_free(struct fs_context *fc)
- 	struct erofs_fs_context *ctx = fc->fs_private;
- 
- 	erofs_free_dev_context(ctx->devs);
-+	kfree(ctx->opt.uuid);
- 	kfree(ctx);
- }
- 
-@@ -771,7 +793,10 @@ static void erofs_kill_sb(struct super_block *sb)
- 
- 	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
- 
--	kill_block_super(sb);
-+	if (erofs_bdev_mode(sb))
-+		kill_block_super(sb);
-+	else
-+		generic_shutdown_super(sb);
- 
- 	sbi = EROFS_SB(sb);
- 	if (!sbi)
-@@ -889,7 +914,12 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct super_block *sb = dentry->d_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
-+	u64 id;
-+
-+	if (erofs_bdev_mode(sb))
-+		id = huge_encode_dev(sb->s_bdev->bd_dev);
-+	else
-+		id = 0; /* TODO */
- 
- 	buf->f_type = sb->s_magic;
- 	buf->f_bsize = EROFS_BLKSIZ;
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
