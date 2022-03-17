@@ -1,52 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F84B4DBF3A
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 07:19:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 582274DBF85
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 07:28:37 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KJxmt3ZGHz2xgb
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 17:19:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KJxzk6yBmz308h
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 17:28:34 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Dg7JD8uF;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.115; helo=mga14.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=Dg7JD8uF; dkim-atps=neutral
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KJxmp22Rfz2xWc
- for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 17:19:02 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=17; SR=0; TI=SMTPD_---0V7QBtbp_1647497928; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V7QBtbp_1647497928) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 17 Mar 2022 14:18:51 +0800
-Date: Thu, 17 Mar 2022 14:18:48 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [Linux-cachefs] [PATCH v5 17/22] erofs: implement fscache-based
- data read for non-inline layout
-Message-ID: <YjLSyLGDtSrwJLHN@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
- dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- gregkh@linuxfoundation.org, tao.peng@linux.alibaba.com,
- willy@infradead.org, linux-kernel@vger.kernel.org,
- joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
- linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
- eguan@linux.alibaba.com, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
-References: <20220316131723.111553-1-jefflexu@linux.alibaba.com>
- <20220316131723.111553-18-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KJxzb4PDlz2xWc
+ for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 17:28:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1647498507; x=1679034507;
+ h=date:from:to:cc:subject:message-id:mime-version:
+ content-transfer-encoding;
+ bh=wKJxBkt20lwgGMEb02NspFATDS3GWbjd0zL0YyzYk2s=;
+ b=Dg7JD8uFU/kfRMYkXskjDfOg+DR8oNoHxim6WrYwo/NuirlX4l21jeqL
+ +iKtjA6kDbgHrQxPlEA7milxa4xU8yx79Bv+T/ouzWaRUysZ2Bf8GXIar
+ kmFaKmFIidlXIGj9qSuBs2irUxwDSS938hUnQbB/UZtgRg/i6xSZ1HU7X
+ H0KUa5tWj0lQCOfK8IB/ze7V9jisjf5MWBEQQ51PjRMJbnC09a8ygnfJb
+ XgWIYwDUwjasNR8kNe97Tw3gR7uf8NycgDwkCnSVPmRuS5XrtodfRsaPQ
+ ydqQkO8zTSRfj8LBQ8SFzGtswyct/igRSryf3pQBymtN/sJ7kyFKeowdq Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="256983488"
+X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; d="scan'208";a="256983488"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+ by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 16 Mar 2022 23:27:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; d="scan'208";a="646942337"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+ by orsmga004.jf.intel.com with ESMTP; 16 Mar 2022 23:27:14 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+ (envelope-from <lkp@intel.com>)
+ id 1nUjbN-000DNY-Hi; Thu, 17 Mar 2022 06:27:13 +0000
+Date: Thu, 17 Mar 2022 14:26:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 500edd0956487281a6fa0e1e34e931817e85d8b6
+Message-ID: <6232d49b.N/BV3QWtIK9RJebd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220316131723.111553-18-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,43 +68,192 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, willy@infradead.org,
- linux-kernel@vger.kernel.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
- linux-cachefs@redhat.com, torvalds@linux-foundation.org,
- linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
- gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Mar 16, 2022 at 09:17:18PM +0800, Jeffle Xu wrote:
-> This patch implements the data plane of reading data from bootstrap blob
-> file over fscache for non-inline layout.
-> 
-> Be noted that compressed layout is not supported yet.
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
->  fs/erofs/fscache.c  | 94 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/erofs/inode.c    |  6 ++-
->  fs/erofs/internal.h |  1 +
->  3 files changed, 100 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 654414aa87ad..df56562f33c4 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -4,6 +4,12 @@
->   */
->  #include "internal.h"
->  
-> +struct erofs_fscache_map {
-> +	struct erofs_fscache_context *m_ctx;
-> +	erofs_off_t m_pa, m_la, o_la;
-> +	u64 m_llen;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 500edd0956487281a6fa0e1e34e931817e85d8b6  erofs: use meta buffers for inode lookup
 
-Can we directly use "struct erofs_map_blocks map"?
-So "erofs_fscache_get_map" can be avoided then.
+elapsed time: 793m
 
-Thanks,
-Gao Xiang
+configs tested: 165
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+i386                 randconfig-c001-20220314
+mips                 randconfig-c004-20220314
+arm                         at91_dt_defconfig
+arc                      axs103_smp_defconfig
+arm                      footbridge_defconfig
+arm                            lart_defconfig
+sh                         microdev_defconfig
+arm                         vf610m4_defconfig
+powerpc                  storcenter_defconfig
+sh                           sh2007_defconfig
+ia64                            zx1_defconfig
+arc                     nsimosci_hs_defconfig
+alpha                            alldefconfig
+powerpc                         wii_defconfig
+h8300                            alldefconfig
+arm                         nhk8815_defconfig
+arc                        nsimosci_defconfig
+sh                          urquell_defconfig
+powerpc                     ep8248e_defconfig
+parisc                generic-64bit_defconfig
+xtensa                           alldefconfig
+sh                              ul2_defconfig
+powerpc                     tqm8541_defconfig
+sh                               alldefconfig
+powerpc                     tqm8555_defconfig
+h8300                               defconfig
+powerpc                      arches_defconfig
+powerpc                      ppc40x_defconfig
+sh                          sdk7780_defconfig
+arm                            xcep_defconfig
+mips                           ip32_defconfig
+sh                        edosk7705_defconfig
+nds32                             allnoconfig
+sh                           se7750_defconfig
+nios2                            alldefconfig
+m68k                       m5475evb_defconfig
+ia64                          tiger_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                         virt_defconfig
+sh                        apsh4ad0a_defconfig
+arm                           stm32_defconfig
+arm                        cerfcube_defconfig
+sh                        dreamcast_defconfig
+arm                      jornada720_defconfig
+arm                        mvebu_v7_defconfig
+xtensa                    smp_lx200_defconfig
+powerpc                     asp8347_defconfig
+arc                                 defconfig
+powerpc                     taishan_defconfig
+sh                        sh7757lcr_defconfig
+arm                  randconfig-c002-20220314
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                 randconfig-a003-20220314
+i386                 randconfig-a004-20220314
+i386                 randconfig-a001-20220314
+i386                 randconfig-a006-20220314
+i386                 randconfig-a002-20220314
+i386                 randconfig-a005-20220314
+x86_64               randconfig-a002-20220314
+x86_64               randconfig-a001-20220314
+x86_64               randconfig-a003-20220314
+x86_64               randconfig-a004-20220314
+x86_64               randconfig-a006-20220314
+x86_64               randconfig-a005-20220314
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arc                  randconfig-r043-20220313
+riscv                randconfig-r042-20220313
+s390                 randconfig-r044-20220313
+arc                  randconfig-r043-20220314
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                         shannon_defconfig
+mips                            e55_defconfig
+powerpc                     tqm8560_defconfig
+arm                        mvebu_v5_defconfig
+arm                           omap1_defconfig
+hexagon                             defconfig
+arm                                 defconfig
+powerpc                     ksi8560_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                     pseries_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                     powernv_defconfig
+mips                        maltaup_defconfig
+mips                           mtx1_defconfig
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+x86_64               randconfig-a014-20220314
+x86_64               randconfig-a015-20220314
+x86_64               randconfig-a016-20220314
+x86_64               randconfig-a012-20220314
+x86_64               randconfig-a013-20220314
+x86_64               randconfig-a011-20220314
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+i386                 randconfig-a013-20220314
+i386                 randconfig-a015-20220314
+i386                 randconfig-a014-20220314
+i386                 randconfig-a011-20220314
+i386                 randconfig-a016-20220314
+i386                 randconfig-a012-20220314
+hexagon              randconfig-r045-20220313
+hexagon              randconfig-r041-20220313
+hexagon              randconfig-r045-20220314
+riscv                randconfig-r042-20220314
+hexagon              randconfig-r041-20220314
+s390                 randconfig-r044-20220314
+
+---
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
