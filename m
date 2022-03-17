@@ -2,64 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA2D94DBCAE
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 02:51:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 923274DBE2D
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 06:23:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KJqqQ4CN6z30Bm
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 12:50:58 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=UtJoHYM5;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KJwXW3vZjz3085
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Mar 2022 16:23:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
- header.s=Intel header.b=UtJoHYM5; dkim-atps=neutral
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KJqqK1Zlpz2y8P
- for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 12:50:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
- d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
- t=1647481853; x=1679017853;
- h=date:from:to:cc:subject:message-id:references:
- mime-version:in-reply-to;
- bh=1Ka6d0lABbmnahsHXH4pHTLfnPB31dmhthO1bViS7IE=;
- b=UtJoHYM5PkoZUzmowAjqJf2vTc3eE96cklb3U78v4H1M4HR98CBOD9DY
- Y78LNbNhqW/v46N2bWQkzZbFd79z/d8rMoPsDbzZeToB8BK5Jg6CpDRmQ
- D+MhmLLfzRqhgAmJUlYL+CNC7HEKTlvZLNsK+JxFG28te7xAtNYzNTTf4
- NxTO4MDvgrdPU0Rt/VDqFaIZRImHVB1UxER+/LELQNwp6VDnJ9YiUTI9v
- lcY0PWZRl/x212dhgywnZuKAxMJhbsnkCKBMM+3RYqwD/Q0TaKK9/EfTm
- mDvpwwS2/EyEpPNGtWmO6WJzeFuR1NrZj3zLb+8exE49foXVMlthO6cr0 g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="244210005"
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; d="scan'208";a="244210005"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
- by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 16 Mar 2022 18:49:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; d="scan'208";a="581131644"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
- by orsmga001.jf.intel.com with ESMTP; 16 Mar 2022 18:49:39 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
- (envelope-from <lkp@intel.com>)
- id 1nUfGk-000DAz-Af; Thu, 17 Mar 2022 01:49:38 +0000
-Date: Thu, 17 Mar 2022 09:49:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- linux-cachefs@redhat.com, xiang@kernel.org, chao@kernel.org,
- linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v5 11/22] erofs: register global fscache volume
-Message-ID: <202203170912.gk2sqkaK-lkp@intel.com>
-References: <20220316131723.111553-12-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KJwXM4kGlz2xXZ
+ for <linux-erofs@lists.ozlabs.org>; Thu, 17 Mar 2022 16:23:09 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=17; SR=0; TI=SMTPD_---0V7QF66W_1647494576; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V7QF66W_1647494576) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 17 Mar 2022 13:22:59 +0800
+Date: Thu, 17 Mar 2022 13:22:56 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v5 21/22] erofs: implement fscache-based data readahead
+Message-ID: <YjLFsCLeEU9glmNf@B-P7TQMD6M-0146.local>
+Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
+ dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+ willy@infradead.org, linux-fsdevel@vger.kernel.org,
+ joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
+ tao.peng@linux.alibaba.com, gerry@linux.alibaba.com,
+ eguan@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ luodaowen.backend@bytedance.com
+References: <20220316131723.111553-1-jefflexu@linux.alibaba.com>
+ <20220316131723.111553-22-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220316131723.111553-12-jefflexu@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220316131723.111553-22-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,50 +57,123 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kbuild-all@lists.01.org, gregkh@linuxfoundation.org, willy@infradead.org,
- linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+Cc: linux-erofs@lists.ozlabs.org, willy@infradead.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
+ linux-cachefs@redhat.com, gregkh@linuxfoundation.org,
  linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
  gerry@linux.alibaba.com, torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jeffle,
+On Wed, Mar 16, 2022 at 09:17:22PM +0800, Jeffle Xu wrote:
+> This patch implements fscache-based data readahead. Also registers an
+> individual bdi for each erofs instance to enable readahead.
+> 
+> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> ---
+>  fs/erofs/fscache.c | 153 +++++++++++++++++++++++++++++++++++++++++++++
+>  fs/erofs/super.c   |   4 ++
+>  2 files changed, 157 insertions(+)
+> 
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index 82c52b6e077e..913ca891deb9 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -10,6 +10,13 @@ struct erofs_fscache_map {
+>  	u64 m_llen;
+>  };
+>  
+> +struct erofs_fscahce_ra_ctx {
 
-Thank you for the patch! Yet something to improve:
+typo,  should be `erofs_fscache_ra_ctx'
 
-[auto build test ERROR on trondmy-nfs/linux-next]
-[also build test ERROR on rostedt-trace/for-next linus/master v5.17-rc8]
-[cannot apply to xiang-erofs/dev-test dhowells-fs/fscache-next next-20220316]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+> +	struct readahead_control *rac;
+> +	struct address_space *mapping;
+> +	loff_t start;
+> +	size_t len, done;
+> +};
+> +
+>  static struct fscache_volume *volume;
+>  
+>  /*
+> @@ -199,12 +206,158 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
+>  	return ret;
+>  }
+>  
+> +static inline size_t erofs_fscache_calc_len(struct erofs_fscahce_ra_ctx *ractx,
+> +					    struct erofs_fscache_map *fsmap)
+> +{
+> +	/*
+> +	 * 1) For CHUNK_BASED layout, the output m_la is rounded down to the
+> +	 * nearest chunk boundary, and the output m_llen actually starts from
+> +	 * the start of the containing chunk.
+> +	 * 2) For other cases, the output m_la is equal to o_la.
+> +	 */
+> +	size_t len = fsmap->m_llen - (fsmap->o_la - fsmap->m_la);
+> +
+> +	return min_t(size_t, len, ractx->len - ractx->done);
+> +}
+> +
+> +static inline void erofs_fscache_unlock_pages(struct readahead_control *rac,
+> +					      size_t len)
 
-url:    https://github.com/0day-ci/linux/commits/Jeffle-Xu/fscache-erofs-fscache-based-on-demand-read-semantics/20220316-214711
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-config: parisc-randconfig-m031-20220317 (https://download.01.org/0day-ci/archive/20220317/202203170912.gk2sqkaK-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/f52882624bb750e533d0ffa591c3903f08f6d8bb
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Jeffle-Xu/fscache-erofs-fscache-based-on-demand-read-semantics/20220316-214711
-        git checkout f52882624bb750e533d0ffa591c3903f08f6d8bb
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=parisc SHELL=/bin/bash
+Can we convert them into folios in advance? it seems much
+straight-forward to convert these...
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+Or I have to convert them later, and it seems unnecessary...
 
-All errors (new ones prefixed by >>):
 
-   hppa-linux-ld: fs/erofs/fscache.o: in function `erofs_exit_fscache':
->> (.text+0x18): undefined reference to `__fscache_relinquish_volume'
-   hppa-linux-ld: fs/erofs/fscache.o: in function `erofs_init_fscache':
->> (.init.text+0x18): undefined reference to `__fscache_acquire_volume'
+> +{
+> +	while (len) {
+> +		struct page *page = readahead_page(rac);
+> +
+> +		SetPageUptodate(page);
+> +		unlock_page(page);
+> +		put_page(page);
+> +
+> +		len -= PAGE_SIZE;
+> +	}
+> +}
+> +
+> +static int erofs_fscache_ra_hole(struct erofs_fscahce_ra_ctx *ractx,
+> +				 struct erofs_fscache_map *fsmap)
+> +{
+> +	struct iov_iter iter;
+> +	loff_t start = ractx->start + ractx->done;
+> +	size_t length = erofs_fscache_calc_len(ractx, fsmap);
+> +
+> +	iov_iter_xarray(&iter, READ, &ractx->mapping->i_pages, start, length);
+> +	iov_iter_zero(length, &iter);
+> +
+> +	erofs_fscache_unlock_pages(ractx->rac, length);
+> +	return length;
+> +}
+> +
+> +static int erofs_fscache_ra_noinline(struct erofs_fscahce_ra_ctx *ractx,
+> +				     struct erofs_fscache_map *fsmap)
+> +{
+> +	struct fscache_cookie *cookie = fsmap->m_ctx->cookie;
+> +	loff_t start = ractx->start + ractx->done;
+> +	size_t length = erofs_fscache_calc_len(ractx, fsmap);
+> +	loff_t pstart = fsmap->m_pa + (fsmap->o_la - fsmap->m_la);
+> +	int ret;
+> +
+> +	ret = erofs_fscache_read_pages(cookie, ractx->mapping,
+> +				       start, length, pstart);
+> +	if (!ret) {
+> +		erofs_fscache_unlock_pages(ractx->rac, length);
+> +		ret = length;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int erofs_fscache_ra_inline(struct erofs_fscahce_ra_ctx *ractx,
+> +				   struct erofs_fscache_map *fsmap)
+> +{
 
----
-0-DAY CI Kernel Test Service
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+We could fold in this, since it has the only user.
+
+Thanks,
+Gao Xiang
