@@ -1,63 +1,85 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED2694E2189
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Mar 2022 08:46:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AAB24E27AA
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Mar 2022 14:35:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KMRWT5lZqz30JD
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Mar 2022 18:46:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KMbG92YBXz30Kj
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Mar 2022 00:35:13 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ck3ZkIUB;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BHV2csE3;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BHV2csE3;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org;
+ smtp.mailfrom=redhat.com (client-ip=170.10.133.124;
+ helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com;
  receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=ck3ZkIUB; 
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
+ header.s=mimecast20190719 header.b=BHV2csE3; 
+ dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=BHV2csE3; 
  dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org
- [IPv6:2604:1380:4641:c500::1])
+Received: from us-smtp-delivery-124.mimecast.com
+ (us-smtp-delivery-124.mimecast.com [170.10.133.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KMRWL32mwz3036
- for <linux-erofs@lists.ozlabs.org>; Mon, 21 Mar 2022 18:46:06 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KMbG219W3z2yy3
+ for <linux-erofs@lists.ozlabs.org>; Tue, 22 Mar 2022 00:35:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1647869698;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=2ru2iq/ox5s0Rm8wfLoTnDRL9rVImEm3d4wp9HAg3/0=;
+ b=BHV2csE3vDsxllnArDZGU3CneRBHlR4u3MLDVBCuFVA7Tlq81yXAZK0E9gBMwzLqgxfPMq
+ zdXj21daL790nFIUA9p0WndxbjwQgJqBq+rfiu2SWUrJzs/1O2TJQGigp2Jj+3rUahVXtc
+ U0oOfV1Ppo7ysuvYIqZvGiBy3KBc4Yk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+ s=mimecast20190719; t=1647869698;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=2ru2iq/ox5s0Rm8wfLoTnDRL9rVImEm3d4wp9HAg3/0=;
+ b=BHV2csE3vDsxllnArDZGU3CneRBHlR4u3MLDVBCuFVA7Tlq81yXAZK0E9gBMwzLqgxfPMq
+ zdXj21daL790nFIUA9p0WndxbjwQgJqBq+rfiu2SWUrJzs/1O2TJQGigp2Jj+3rUahVXtc
+ U0oOfV1Ppo7ysuvYIqZvGiBy3KBc4Yk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-634-P_Li5wrOPx-px3Lu6HvcqA-1; Mon, 21 Mar 2022 09:34:54 -0400
+X-MC-Unique: P_Li5wrOPx-px3Lu6HvcqA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.3])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id E0DB360FE9;
- Mon, 21 Mar 2022 07:46:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED36C340EE;
- Mon, 21 Mar 2022 07:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1647848762;
- bh=QldX2CgA/jrZgyN9GjhxNhil+DepyQR7nCll9agSBts=;
- h=Date:From:To:Cc:Subject:From;
- b=ck3ZkIUBA/csRuIiZRzDFv38GO5nDKZGp0SGz/GCchIIjtdylPAk/J2XzfDMA6mhh
- o2/cWWKkBHWwkDoCkBvnj0NyG31Td0W2ZPRFkuTpjmrzJnhkAlLM9MXbcNWzTuhwUe
- IuO9n29T9FTriCzPD5OgNzceksvOsGW16SSEVXXGIQBXeue8E7ycmQ7hfvqAhIr/Al
- rzMyTTyXyJe0dOEwz9cmJZ0I0Cf+rZ0nFfm+pfQPOgVzsP2JUP01SpDg0KDRurD4o8
- sj2PYRKf8AHmR0vbvSDwW10cHL3Li54zG3/XighK5Sf96QUiUZMmweMUi9uddHCCHn
- F24SDRw0PF6Uw==
-Date: Mon, 21 Mar 2022 15:45:38 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 5.18-rc1
-Message-ID: <YjgtIqJK0Io+zYeI@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
- linux-erofs@lists.ozlabs.org,
- Jeffle Xu <jefflexu@linux.alibaba.com>,
- lihongnan <hongnan.lhn@alibaba-inc.com>,
- Dongliang Mu <mudongliangabcd@gmail.com>,
- David Anderson <dvander@google.com>
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2DD291044562;
+ Mon, 21 Mar 2022 13:34:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+ by smtp.corp.redhat.com (Postfix) with ESMTP id 2B1821121318;
+ Mon, 21 Mar 2022 13:34:45 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20220316131723.111553-4-jefflexu@linux.alibaba.com>
+References: <20220316131723.111553-4-jefflexu@linux.alibaba.com>
+ <20220316131723.111553-1-jefflexu@linux.alibaba.com>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v5 03/22] cachefiles: introduce on-demand read mode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1027871.1647869684.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 21 Mar 2022 13:34:44 +0000
+Message-ID: <1027872.1647869684@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,95 +91,99 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- Dongliang Mu <mudongliangabcd@gmail.com>,
- lihongnan <hongnan.lhn@alibaba-inc.com>
+Cc: linux-erofs@lists.ozlabs.org, willy@infradead.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, joseph.qi@linux.alibaba.com,
+ linux-cachefs@redhat.com, gregkh@linuxfoundation.org,
+ linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
+ gerry@linux.alibaba.com, torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 
-Could you consider this pull request for 5.18-rc1?
+> Fscache/cachefiles used to serve as a local cache for remote fs. This
+> patch, along with the following patches, introduces a new on-demand read
+> mode for cachefiles, which can boost the scenario where on-demand read
+> semantics is needed, e.g. container image distribution.
+> =
 
-In this cycle, we continue converting to use meta buffers for all
-remaining uncompressed paths to prepare for the upcoming subpage,
-folio and fscache features.
+> The essential difference between the original mode and on-demand read
+> mode is that, in the original mode, when cache miss, netfs itself will
+> fetch data from remote, and then write the fetched data into cache file.
+> While in on-demand read mode, a user daemon is responsible for fetching
+> data and then writing to the cache file.
+> =
 
-We also fixed a double-free issue when sysfs initialization fails,
-which was reported by syzbot.
+> This patch only adds the command to enable on-demand read mode. An optio=
+nal
+> parameter to "bind" command is added. On-demand mode will be turned on w=
+hen
+> this optional argument matches "ondemand" exactly, i.e.  "bind
+> ondemand". Otherwise cachefiles will keep working in the original mode.
 
-Besides, in order for the userspace to control per-file timestamp
-easier, we now switch to record mtime instead of ctime with a
-compatible feature marked. And there are also some code cleanups
-and documentation update as usual.
+You're not really adding a command, per se.  Also, I would recommend
+starting the paragraph with a verb.  How about:
 
-All commits have been in -next for a while and there is a minor
-trivial merge conflict with folio -next tree [1].
+	Make it possible to enable on-demand read mode by adding an
+	optional parameter to the "bind" command.  On-demand mode will be
+	turned on when this parameter is "ondemand", i.e. "bind ondemand".
+	Otherwise cachefiles will work in the original mode.
 
-Thanks,
-Gao Xiang
+Also, I'd add a note something like the following:
 
-[1] https://lore.kernel.org/r/20220315203112.03f6120c@canb.auug.org.au
+	This is implemented as a variation on the bind command so that it
+	can't be turned on accidentally in /etc/cachefilesd.conf when
+	cachefilesd isn't expecting it.	=
 
-The following changes since commit ffb217a13a2eaf6d5bd974fc83036a53ca69f1e2:
 
-  Linux 5.17-rc7 (2022-03-06 14:28:31 -0800)
+> The following patches will implement the data plane of on-demand read
+> mode.
 
-are available in the Git repository at:
+I would remove this line.  If ondemand mode is not fully implemented in
+cachefiles at this point, I would be tempted to move this to the end of th=
+e
+cachefiles subset of the patchset.  That said, I'm not sure it can be made
+to do anything much before that point.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.18-rc1
+> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+> +static inline void cachefiles_ondemand_open(struct cachefiles_cache *ca=
+che)
+> +{
+> +	xa_init_flags(&cache->reqs, XA_FLAGS_ALLOC);
+> +	rwlock_init(&cache->reqs_lock);
+> +}
 
-for you to fetch changes up to a1108dcd9373a98f7018aa4310076260b8ecfc0b:
+Just merge that into the caller.
 
-  erofs: rename ctime to mtime (2022-03-17 23:41:14 +0800)
+> +static inline void cachefiles_ondemand_release(struct cachefiles_cache =
+*cache)
+> +{
+> +	xa_destroy(&cache->reqs);
+> +}
 
-----------------------------------------------------------------
-Changes since last update:
+Ditto.
 
- - Avoid using page structure directly for all uncompressed paths;
+> +static inline
+> +bool cachefiles_ondemand_daemon_bind(struct cachefiles_cache *cache, ch=
+ar *args)
+> +{
+> +	if (!strcmp(args, "ondemand")) {
+> +		set_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags);
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> ...
+> +	if (!cachefiles_ondemand_daemon_bind(cache, args) && *args) {
+> +		pr_err("'bind' command doesn't take an argument\n");
+> +		return -EINVAL;
+> +	}
+> +
 
- - Fix a double-free issue when sysfs initialization fails;
+I would merge these together, I think, and say something like "Ondemand
+mode not enabled in kernel" if CONFIG_CACHEFILES_ONDEMAND=3Dn.
 
- - Complete DAX description for erofs;
+David
 
- - Use mtime instead since there's no (easy) way for users to control
-   ctime;
-
- - Several code cleanups.
-
-----------------------------------------------------------------
-David Anderson (1):
-      erofs: rename ctime to mtime
-
-Dongliang Mu (1):
-      fs: erofs: add sanity check for kobject in erofs_unregister_sysfs
-
-Gao Xiang (7):
-      erofs: get rid of `struct z_erofs_collector'
-      erofs: clean up preload_compressed_pages()
-      erofs: silence warnings related to impossible m_plen
-      erofs: clean up z_erofs_extent_lookback
-      erofs: refine managed inode stuffs
-      erofs: use meta buffers for reading directories
-      erofs: use meta buffers for inode lookup
-
-Jeffle Xu (1):
-      erofs: use meta buffers for erofs_read_superblock()
-
-lihongnan (1):
-      Documentation/filesystem/dax: update DAX description on erofs
-
- Documentation/filesystems/dax.rst   |   6 +-
- Documentation/filesystems/erofs.rst |   2 +-
- fs/erofs/data.c                     |  12 ++-
- fs/erofs/dir.c                      |  21 ++--
- fs/erofs/erofs_fs.h                 |   5 +-
- fs/erofs/inode.c                    |   4 +-
- fs/erofs/internal.h                 |   2 +
- fs/erofs/namei.c                    |  54 +++++------
- fs/erofs/super.c                    |  21 ++--
- fs/erofs/sysfs.c                    |   8 +-
- fs/erofs/zdata.c                    | 184 +++++++++++++++++-------------------
- fs/erofs/zmap.c                     |  71 +++++++-------
- 12 files changed, 189 insertions(+), 201 deletions(-)
