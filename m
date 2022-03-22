@@ -1,87 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AE544E2C4E
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Mar 2022 16:31:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05F9B4E3ADB
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Mar 2022 09:41:17 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KMdr04j0Nz30Mg
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Mar 2022 02:31:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KN4hV6pn2z2yPj
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Mar 2022 19:41:14 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jx8536CA;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jx8536CA;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=SZnYjRJo;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=170.10.133.124;
- helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com;
+ smtp.mailfrom=foxmail.com (client-ip=203.205.221.192;
+ helo=out203-205-221-192.mail.qq.com; envelope-from=xkernel.wang@foxmail.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
- unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=Jx8536CA; 
- dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jx8536CA; 
- dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+ unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256
+ header.s=s201512 header.b=SZnYjRJo; dkim-atps=neutral
+X-Greylist: delayed 1724 seconds by postgrey-1.36 at boromir;
+ Tue, 22 Mar 2022 19:41:04 AEDT
+Received: from out203-205-221-192.mail.qq.com (out203-205-221-192.mail.qq.com
+ [203.205.221.192])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KMdqs4DtBz2xtp
- for <linux-erofs@lists.ozlabs.org>; Tue, 22 Mar 2022 02:31:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1647876661;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=hhSp8iQTKVEga9dadR4O7uujQ52rzrIccc6xagF59Sc=;
- b=Jx8536CASrSnokKby28qO3RpyfVuwK+1BNXpbLiTiw803hIxQkhb1zTB5gANxK2gg2RQ6J
- 2TargcLKDHm8BUlx3gVr0HZHt10Oe1Exo5mUrpgpRheRIauGQpUlBPa8k+/nPaZbQr3kwj
- TJ/h7SR7dVqc45A3CONXoSPyy0ORGNo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1647876661;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- in-reply-to:in-reply-to:references:references;
- bh=hhSp8iQTKVEga9dadR4O7uujQ52rzrIccc6xagF59Sc=;
- b=Jx8536CASrSnokKby28qO3RpyfVuwK+1BNXpbLiTiw803hIxQkhb1zTB5gANxK2gg2RQ6J
- 2TargcLKDHm8BUlx3gVr0HZHt10Oe1Exo5mUrpgpRheRIauGQpUlBPa8k+/nPaZbQr3kwj
- TJ/h7SR7dVqc45A3CONXoSPyy0ORGNo=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-662-RGOmsTb4OT-rq4KGBvxN3w-1; Mon, 21 Mar 2022 11:30:56 -0400
-X-MC-Unique: RGOmsTb4OT-rq4KGBvxN3w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com
- [10.11.54.2])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 41FDC28EA6E3;
- Mon, 21 Mar 2022 15:30:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
- by smtp.corp.redhat.com (Postfix) with ESMTP id 27A1A40C1241;
- Mon, 21 Mar 2022 15:30:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <YjiX5oXYkmN6WrA3@casper.infradead.org>
-References: <YjiX5oXYkmN6WrA3@casper.infradead.org>
- <20220316131723.111553-1-jefflexu@linux.alibaba.com>
- <20220316131723.111553-4-jefflexu@linux.alibaba.com>
- <YjiAVezd5B9auhcP@casper.infradead.org>
- <6bc551d2-15fc-5d17-c99b-8db588c6b671@linux.alibaba.com>
- <YjiLACenpRV4XTcs@casper.infradead.org>
- <adb957da-8909-06d8-1b2c-b8a293b37930@linux.alibaba.com>
-To: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v5 03/22] cachefiles: introduce on-demand read mode
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KN4hJ5yTRz2xYn
+ for <linux-erofs@lists.ozlabs.org>; Tue, 22 Mar 2022 19:40:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+ s=s201512; t=1647938450;
+ bh=xj3turLHj1+ZCP9WjX9RjyOgZj7/g+f5TXLsbJ08Z6M=;
+ h=From:To:Cc:Subject:Date;
+ b=SZnYjRJo5AGMwF73cwT3we9Z92r1nR7gNGCYewo/MEOwY49rYTxZeW2voxlfnT6vz
+ aYKK5hfZsfOmNLgwMtBEEpZpzkqVVzFEsQMd82vDgsqn3bpz1uDLb0t4JPtqpS2nmj
+ 25L1+A8hfGLtoMNIm2zrcKhFvgCf7v82BKUKjShI=
+Received: from localhost.localdomain ([43.227.136.188])
+ by newxmesmtplogicsvrsza7.qq.com (NewEsmtp) with SMTP
+ id 2198E433; Tue, 22 Mar 2022 16:08:25 +0800
+X-QQ-mid: xmsmtpt1647936505ts0dqrfgq
+Message-ID: <tencent_010A807048A5F97F0A900866A35C648E2E07@qq.com>
+X-QQ-XMAILINFO: OQhZ3T0tjf0amHFt3Tv8ZnikjPM7gbCsdRyJBbsvvF8MDJx4K0X2JtCTAGGCU0
+ USVhMFfAWjMjApTDU0aOobRK8pKYK3+RP3AW3nqaJpQDuEo3v+6XHgfjIidbeMx/M4EjU5yn3OBg
+ T1nJpiqqVxcWjX2wgfoZUT4d0K3/3Fn0ijEvxk4UYsL4gjD5JdZq/xB2vVpgTfR7qoaeyyWys8h3
+ GIxWb0I7I7iL6FCZfpKxoW+td9hHBy9cxxgmgapMa80vA6nSAuSyuoWnO5VwcirEQxNxDzspaFTc
+ Wzu9tf93C7pxlsPW9gYCxOV3rtvgNjp1P/Z1Jp9cktsS/4WE1j0EyR6N3Rw8N9Vq81jRNOqDxyNW
+ QsooJ8v+Ve1uqvfFswT+ZlDrIi/nOA5sfc5npycGs0faGzseuP8x+j8gP3C0uv/aGkcRcQ9NMqpr
+ ONKu3/KSyHZJKOpn5hM2FDv/AHegPeJPxfb0F1BAnIlUm3Uw4Dm9R0144DjFZQ1KrF4mT2qB6+bU
+ V1SsSXP2n6/OTq7FLHWbK2cWqLCMcB0hOxaUfTySxM4ExWp6XWT9DuIiQm8THsHfux+j3TFS/DGQ
+ xyo5dXyXvFCp2cLOTiO9r+v4QcU2zV//beLzq6LxW3hLz5TN1tHe64Or2BTg63qLl8o/vFWw8qKM
+ FtR1ZHdzjowCuoI5QPr/BkDrdodtZhjsET7o2lU2x9coG97wJYM8SrQZfjY6wghWAcRGx0q3IdjA
+ s0wa1nHLCU0GWlrnKN7w1Xp8vP8Ki2+qBF7Fji2KrB91QsrGWps/NIuvvemUGFtW/qTncFAhQi/M
+ 1QmnJlQFv4lP8HuAjJk337DjfCMwrQQw8AFYhHkM3WbbR4R/y6L4ISkyHjUKjbtmyWHKu89AO8pn
+ j8RUABvcj64AYPpaYlnhmxhD/T1XOSZhApA9AxkzHkL9hvz+6Io18NpxRgiXT4EbP9MdGe3vxO
+From: xkernel.wang@foxmail.com
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: fix a potential NULL dereference of alloc_pages()
+Date: Tue, 22 Mar 2022 16:08:12 +0800
+X-OQ-MSGID: <20220322080812.1574-1-xkernel.wang@foxmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1035024.1647876652.1@warthog.procyon.org.uk>
-Date: Mon, 21 Mar 2022 15:30:52 +0000
-Message-ID: <1035025.1647876652@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,22 +71,46 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: joseph.qi@linux.alibaba.com, torvalds@linux-foundation.org,
- linux-kernel@vger.kernel.org, dhowells@redhat.com,
- linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
- gregkh@linuxfoundation.org, luodaowen.backend@bytedance.com,
- gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Xiaoke Wang <xkernel.wang@foxmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Matthew Wilcox <willy@infradead.org> wrote:
+From: Xiaoke Wang <xkernel.wang@foxmail.com>
 
-> Absolutely; just use xa_lock() to protect both setting & testing the
-> flag.
+alloc_pages() returns the page on success or NULL if allocation fails,
+while set_page_private() will dereference `newpage`. So it is better to
+catch the memory error in case other errors happen.
 
-How should Jeffle deal with xarray dropping the lock internally in order to do
-an allocation and then taking it again (actually in patch 5)?
+Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
+---
+ fs/erofs/zdata.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-David
-
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 11c7a1a..36a5421 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -735,11 +735,15 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		struct page *const newpage =
+ 				alloc_page(GFP_NOFS | __GFP_NOFAIL);
+ 
+-		set_page_private(newpage, Z_EROFS_SHORTLIVED_PAGE);
+-		err = z_erofs_attach_page(clt, newpage,
+-					  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
+-		if (!err)
+-			goto retry;
++		if (!newpage) {
++			err = -ENOMEM;
++		} else {
++			set_page_private(newpage, Z_EROFS_SHORTLIVED_PAGE);
++			err = z_erofs_attach_page(clt, newpage,
++						Z_EROFS_PAGE_TYPE_EXCLUSIVE);
++			if (!err)
++				goto retry;
++		}
+ 	}
+ 
+ 	if (err)
+-- 
