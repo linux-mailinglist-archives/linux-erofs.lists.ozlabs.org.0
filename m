@@ -1,71 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BE2D4E4AA8
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 02:55:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E3F14E4C50
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 06:33:21 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KNWf00wk7z3000
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 12:55:36 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UDkkIC8q;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KNcTC3N7bz2ymt
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 16:33:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=UDkkIC8q; 
- dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org
- [IPv6:2604:1380:4641:c500::1])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
+ helo=out30-44.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-44.freemail.mail.aliyun.com
+ (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KNWdt0ydnz2xF8
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 12:55:29 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id A54296148C;
- Wed, 23 Mar 2022 01:55:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89537C340EC;
- Wed, 23 Mar 2022 01:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1648000524;
- bh=kSCpaZcs6hkCplY9uGNsf2FJl2K9ZAY3Artf7nx/gh4=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=UDkkIC8qCfqNXvOhBliX16ZFmvwqMnHs7g//69mXSFegupyNnnUm7oZEWXPQVom0d
- NUN/kGRbOMAx8Q5h25oh0rhmk2ybJ+VhqIoHiP3Pg6eEhIjoREiGcpbcf5bxsX6UWb
- VgqqWSB1b2y5GKRaLzoSfNVFhX9DH5nye3HogFr+vAaQ84OFMSOrEqjxyowMUTSVpv
- SFL90xpWi0hjORb+xyhfmMVSpVLXGvvVjU7hNmT7OeIuIEGTWrjLU1Pdj7iIDpS+S2
- 3nnKwZruLijlRN7Vp+CjxIrVLV9MR0YJsZ5UzpQ6R9ln36C2+bG73dDx35ctjTRFJB
- GVEY4g2Pw/0yQ==
-Date: Wed, 23 Mar 2022 09:54:58 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [syzbot] WARNING: kobject bug in erofs_unregister_sysfs
-Message-ID: <Yjp98n5sxzfu2q36@debian>
-Mail-Followup-To: Dmitry Vyukov <dvyukov@google.com>,
- Dongliang Mu <mudongliangabcd@gmail.com>,
- Muchun Song <songmuchun@bytedance.com>,
- syzbot <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org,
- LKML <linux-kernel@vger.kernel.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <000000000000dda2f905da80c934@google.com>
- <00000000000009cf1e05da85bb31@google.com>
- <CAMZfGtWL-2+en7=FKBoPUwq1FMGYYqZCvB1jmJ7fhiQc1XX4oQ@mail.gmail.com>
- <CAD-N9QU1CDatEhzBzFL_GMB5qcCJgZ+wfmK8ND_=7ki9pKJ-Cw@mail.gmail.com>
- <CACT4Y+Yh7t=wBftzCA9zxtVFKFiYFurBOq-5GFe1Le3W5ujOPw@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KNcT52t8Lz2xCC
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 16:33:10 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=16; SR=0; TI=SMTPD_---0V7zuNYS_1648013577; 
+Received: from 30.225.24.115(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V7zuNYS_1648013577) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 23 Mar 2022 13:32:58 +0800
+Message-ID: <8f93abf9-2c3e-51cd-9afa-ee2b68e61a4b@linux.alibaba.com>
+Date: Wed, 23 Mar 2022 13:32:57 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Yh7t=wBftzCA9zxtVFKFiYFurBOq-5GFe1Le3W5ujOPw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH v5 03/22] cachefiles: introduce on-demand read mode
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>
+References: <YjiX5oXYkmN6WrA3@casper.infradead.org>
+ <20220316131723.111553-1-jefflexu@linux.alibaba.com>
+ <20220316131723.111553-4-jefflexu@linux.alibaba.com>
+ <YjiAVezd5B9auhcP@casper.infradead.org>
+ <6bc551d2-15fc-5d17-c99b-8db588c6b671@linux.alibaba.com>
+ <YjiLACenpRV4XTcs@casper.infradead.org>
+ <adb957da-8909-06d8-1b2c-b8a293b37930@linux.alibaba.com>
+ <1035025.1647876652@warthog.procyon.org.uk>
+ <YjoBpm8mUHX/w/rK@casper.infradead.org>
+From: JeffleXu <jefflexu@linux.alibaba.com>
+In-Reply-To: <YjoBpm8mUHX/w/rK@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,59 +58,95 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
- Dongliang Mu <mudongliangabcd@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- syzbot <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com>,
- Muchun Song <songmuchun@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
+ gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+ luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
+ torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Mar 21, 2022 at 07:55:29AM +0100, Dmitry Vyukov wrote:
-> On Sun, 20 Mar 2022 at 05:19, Dongliang Mu <mudongliangabcd@gmail.com> wrote:
-> >
-> > On Sat, Mar 19, 2022 at 10:21 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> > >
-> > > On Sat, Mar 19, 2022 at 6:33 AM syzbot
-> > > <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > syzbot has bisected this issue to:
-> > > >
-> > > > commit 2768c206f2c3e95c0e5cf2e7f846103fda7cd429
-> > > > Author: Muchun Song <songmuchun@bytedance.com>
-> > > > Date:   Thu Mar 3 01:15:36 2022 +0000
-> > > >
-> > > >     mm: list_lru: allocate list_lru_one only when needed
-> > > >
-> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1495694d700000
-> > > > start commit:   91265a6da44d Add linux-next specific files for 20220303
-> > > > git tree:       linux-next
-> > > > final oops:     https://syzkaller.appspot.com/x/report.txt?x=1695694d700000
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1295694d700000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=617f79440a35673a
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f05ba4652c0471416eaf
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137f17d9700000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114ebabd700000
-> > > >
-> > > > Reported-by: syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com
-> > > > Fixes: 2768c206f2c3 ("mm: list_lru: allocate list_lru_one only when needed")
-> > >
-> > > Does this patch [1] fix the issue? If yes, I am confused why the Fixes tag
-> > > should be the commit 2768c206f2c3?  What am I missing here?
-> >
-> > Sometimes syzkaller bisection may make mistakes. Please ignore it.
-> >
-> > >
-> > > [1] https://lore.kernel.org/r/20220315132814.12332-1-dzm91@hust.edu.cn
-> >
-> 
-> Let's tell syzbot so that it reports new bugs in future:
-> 
-> #syz fix: fs: erofs: add sanity check for kobject in erofs_unregister_sysfs
 
-Thanks! The fix has been landed upstream now.
 
+On 3/23/22 1:04 AM, Matthew Wilcox wrote:
+> On Mon, Mar 21, 2022 at 03:30:52PM +0000, David Howells wrote:
+>> Matthew Wilcox <willy@infradead.org> wrote:
+>>
+>>> Absolutely; just use xa_lock() to protect both setting & testing the
+>>> flag.
+>>
+>> How should Jeffle deal with xarray dropping the lock internally in order to do
+>> an allocation and then taking it again (actually in patch 5)?
+> 
+> There are a number of ways to handle this.  I'll outline two; others
+> are surely possible.
+
+Thanks.
+
+
+> 
+> option 1:
+> 
+> add side:
+> 
+> xa_lock();
+> if (!DEAD)
+> 	xa_store(GFP_KERNEL);
+> 	if (DEAD)
+> 		xa_erase();
+> xa_unlock();
+> 
+> destroy side:
+> 
+> xa_lock();
+> set DEAD;
+> xa_for_each()
+> 	xa_erase();
+> xa_unlock();
+> 
+> That has the problem (?) that it might be temporarily possible to see
+> a newly-added entry in a DEAD array.
+
+I think this problem doesn't matter in our scenario.
+
+
+> 
+> If that is a problem, you can use xa_reserve() on the add side, followed
+> by overwriting it or removing it, depending on the state of the DEAD flag.
+
+Right. Then even the normal path (when memory allocation succeeds) needs
+to call xa_reserve() once.
+
+
+> 
+> If you really want to, you can decompose the add side so that you always
+> check the DEAD flag before doing the store, ie:
+> 
+> do {
+> 	xas_lock();
+> 	if (DEAD)
+> 		xas_set_error(-EINVAL);
+> 	else
+> 		xas_store();
+> 	xas_unlock();
+> } while (xas_nomem(GFP_KERNEL));
+
+This way is more cleaner from the locking semantics, with the cost of
+code duplication. However, after decomposing the __xa_alloc(), we can
+also reuse the xas when setting CACHEFILES_REQ_NEW mark.
+
+```
++	xa_lock(xa);
++	ret = __xa_alloc(xa, &id, req, xa_limit_32b, GFP_KERNEL);
++	if (!ret)
++		__xa_set_mark(xa, id, CACHEFILES_REQ_NEW);
++	xa_unlock(xa);
+```
+
+So far personally I prefer the decomposing way in our scenario.
+
+
+-- 
 Thanks,
-Gao Xiang
+Jeffle
