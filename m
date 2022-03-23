@@ -1,68 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 100674E4607
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Mar 2022 19:32:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BE2D4E4AA8
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 02:55:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KNKpB6lvkz2yfm
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 05:32:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KNWf00wk7z3000
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 12:55:36 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QwN68IJ8;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UDkkIC8q;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
  smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org;
+ helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=QwN68IJ8; 
+ header.s=k20201202 header.b=UDkkIC8q; 
  dkim-atps=neutral
 Received: from dfw.source.kernel.org (dfw.source.kernel.org
  [IPv6:2604:1380:4641:c500::1])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KNKp44SZ9z2yN1
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 05:31:56 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KNWdt0ydnz2xF8
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 12:55:29 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id 5475D615ED;
- Tue, 22 Mar 2022 18:31:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AE76EC340EC;
- Tue, 22 Mar 2022 18:31:51 +0000 (UTC)
+ by dfw.source.kernel.org (Postfix) with ESMTPS id A54296148C;
+ Wed, 23 Mar 2022 01:55:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89537C340EC;
+ Wed, 23 Mar 2022 01:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1647973911;
- bh=XQFBCQ2mnxzKUADqqIpqYqyNn1PFGesqW02zRxcoVBk=;
- h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
- b=QwN68IJ8N1JOJ48gkPiDzEtlfcP4IRQxrAgDoUB0cXT9kc6VBSpOviDJQcTr8EudS
- kGsmEv8DJEUpd1h2D0hOkR1FfLcA1T6dEihmp0P214YFSY/QsdoSON/i+i3vFCJw53
- ZohNNjTJhZ1VDnVQq2ALvDY43AU+KnC9JQZTNERk9uJe72PTr70zR+N7G3iLakLicf
- P4a+UFs3IfI4ZmHjHvsxaazRDNbKhsPAErcE+Pd0rJvq9MI5d48lma2DKBK51rRqqA
- uoi4+rKvA1ue+K1NNAZZ8K+xujIs0wdIHxZ1xzt5WYwxIrkDVQ4HkkkWmdA+g9oaqY
- RAv99w0blAHsg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org
- (localhost.localdomain [127.0.0.1])
- by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id
- 9C8A6E6D402; Tue, 22 Mar 2022 18:31:51 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 5.18-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <YjgtIqJK0Io+zYeI@debian>
-References: <YjgtIqJK0Io+zYeI@debian>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system
- <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <YjgtIqJK0Io+zYeI@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.18-rc1
-X-PR-Tracked-Commit-Id: a1108dcd9373a98f7018aa4310076260b8ecfc0b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aab4ed5816acc0af8cce2680880419cd64982b1d
-Message-Id: <164797391163.17704.7734840067307301191.pr-tracker-bot@kernel.org>
-Date: Tue, 22 Mar 2022 18:31:51 +0000
-To: Gao Xiang <xiang@kernel.org>
+ s=k20201202; t=1648000524;
+ bh=kSCpaZcs6hkCplY9uGNsf2FJl2K9ZAY3Artf7nx/gh4=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=UDkkIC8qCfqNXvOhBliX16ZFmvwqMnHs7g//69mXSFegupyNnnUm7oZEWXPQVom0d
+ NUN/kGRbOMAx8Q5h25oh0rhmk2ybJ+VhqIoHiP3Pg6eEhIjoREiGcpbcf5bxsX6UWb
+ VgqqWSB1b2y5GKRaLzoSfNVFhX9DH5nye3HogFr+vAaQ84OFMSOrEqjxyowMUTSVpv
+ SFL90xpWi0hjORb+xyhfmMVSpVLXGvvVjU7hNmT7OeIuIEGTWrjLU1Pdj7iIDpS+S2
+ 3nnKwZruLijlRN7Vp+CjxIrVLV9MR0YJsZ5UzpQ6R9ln36C2+bG73dDx35ctjTRFJB
+ GVEY4g2Pw/0yQ==
+Date: Wed, 23 Mar 2022 09:54:58 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [syzbot] WARNING: kobject bug in erofs_unregister_sysfs
+Message-ID: <Yjp98n5sxzfu2q36@debian>
+Mail-Followup-To: Dmitry Vyukov <dvyukov@google.com>,
+ Dongliang Mu <mudongliangabcd@gmail.com>,
+ Muchun Song <songmuchun@bytedance.com>,
+ syzbot <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000dda2f905da80c934@google.com>
+ <00000000000009cf1e05da85bb31@google.com>
+ <CAMZfGtWL-2+en7=FKBoPUwq1FMGYYqZCvB1jmJ7fhiQc1XX4oQ@mail.gmail.com>
+ <CAD-N9QU1CDatEhzBzFL_GMB5qcCJgZ+wfmK8ND_=7ki9pKJ-Cw@mail.gmail.com>
+ <CACT4Y+Yh7t=wBftzCA9zxtVFKFiYFurBOq-5GFe1Le3W5ujOPw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Yh7t=wBftzCA9zxtVFKFiYFurBOq-5GFe1Le3W5ujOPw@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,23 +77,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, lihongnan <hongnan.lhn@alibaba-inc.com>,
- Dongliang Mu <mudongliangabcd@gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+ Dongliang Mu <mudongliangabcd@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ syzbot <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com>,
+ Muchun Song <songmuchun@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Mon, 21 Mar 2022 15:45:38 +0800:
+On Mon, Mar 21, 2022 at 07:55:29AM +0100, Dmitry Vyukov wrote:
+> On Sun, 20 Mar 2022 at 05:19, Dongliang Mu <mudongliangabcd@gmail.com> wrote:
+> >
+> > On Sat, Mar 19, 2022 at 10:21 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > >
+> > > On Sat, Mar 19, 2022 at 6:33 AM syzbot
+> > > <syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > syzbot has bisected this issue to:
+> > > >
+> > > > commit 2768c206f2c3e95c0e5cf2e7f846103fda7cd429
+> > > > Author: Muchun Song <songmuchun@bytedance.com>
+> > > > Date:   Thu Mar 3 01:15:36 2022 +0000
+> > > >
+> > > >     mm: list_lru: allocate list_lru_one only when needed
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1495694d700000
+> > > > start commit:   91265a6da44d Add linux-next specific files for 20220303
+> > > > git tree:       linux-next
+> > > > final oops:     https://syzkaller.appspot.com/x/report.txt?x=1695694d700000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1295694d700000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=617f79440a35673a
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f05ba4652c0471416eaf
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137f17d9700000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114ebabd700000
+> > > >
+> > > > Reported-by: syzbot+f05ba4652c0471416eaf@syzkaller.appspotmail.com
+> > > > Fixes: 2768c206f2c3 ("mm: list_lru: allocate list_lru_one only when needed")
+> > >
+> > > Does this patch [1] fix the issue? If yes, I am confused why the Fixes tag
+> > > should be the commit 2768c206f2c3?  What am I missing here?
+> >
+> > Sometimes syzkaller bisection may make mistakes. Please ignore it.
+> >
+> > >
+> > > [1] https://lore.kernel.org/r/20220315132814.12332-1-dzm91@hust.edu.cn
+> >
+> 
+> Let's tell syzbot so that it reports new bugs in future:
+> 
+> #syz fix: fs: erofs: add sanity check for kobject in erofs_unregister_sysfs
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.18-rc1
+Thanks! The fix has been landed upstream now.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aab4ed5816acc0af8cce2680880419cd64982b1d
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Gao Xiang
