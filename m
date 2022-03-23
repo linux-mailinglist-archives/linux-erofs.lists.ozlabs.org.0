@@ -1,52 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E3F14E4C50
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 06:33:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE954E4EC1
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 09:55:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KNcTC3N7bz2ymt
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 16:33:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KNhxr4gsRz2ywp
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Mar 2022 19:54:56 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=kuaishou.com header.i=@kuaishou.com header.a=rsa-sha256 header.s=dkim header.b=BgOYdr0W;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kuaishou.com (client-ip=103.107.216.241;
+ helo=bjfk-gateway01.kuaishou.com; envelope-from=tianzichen@kuaishou.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
+ unprotected) header.d=kuaishou.com header.i=@kuaishou.com header.a=rsa-sha256
+ header.s=dkim header.b=BgOYdr0W; dkim-atps=neutral
+X-Greylist: delayed 862 seconds by postgrey-1.36 at boromir;
+ Wed, 23 Mar 2022 19:54:48 AEDT
+Received: from bjfk-gateway01.kuaishou.com (smtpcn02.kuaishou.com
+ [103.107.216.241])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KNcT52t8Lz2xCC
- for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 16:33:10 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=16; SR=0; TI=SMTPD_---0V7zuNYS_1648013577; 
-Received: from 30.225.24.115(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V7zuNYS_1648013577) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 23 Mar 2022 13:32:58 +0800
-Message-ID: <8f93abf9-2c3e-51cd-9afa-ee2b68e61a4b@linux.alibaba.com>
-Date: Wed, 23 Mar 2022 13:32:57 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KNhxh1GPPz2xCB
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 19:54:45 +1100 (AEDT)
+Received: from bjfk-gateway01.kuaishou.com (localhost [127.0.0.2] (may be
+ forged)) by bjfk-gateway01.kuaishou.com with ESMTP id 22N8eSO1015991
+ for <linux-erofs@lists.ozlabs.org>; Wed, 23 Mar 2022 16:40:28 +0800 (GMT-8)
+ (envelope-from tianzichen@kuaishou.com)
+Received: from bjfk-pm-mail30.kuaishou.com ([172.29.5.62])
+ by bjfk-gateway01.kuaishou.com with ESMTPS id 22N8c83w014939
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+ Wed, 23 Mar 2022 16:38:08 +0800 (GMT-8)
+ (envelope-from tianzichen@kuaishou.com)
+Content-Language: zh-CN
+Content-Type: multipart/alternative;
+ boundary="_000_B6EA31D4877C450EBF892879044B9EADkuaishoucom_"
+DKIM-Signature: v=1; a=rsa-sha256; d=kuaishou.com; s=dkim; c=relaxed/relaxed; 
+ t=1648024688; h=from:subject:to:date:message-id;
+ bh=4kL7tQZDTAgVsXKxnGPv0KZ902+QYaSJkq0VF7eBHoY=;
+ b=BgOYdr0W358QcMux6zPV1cL+nd2aHIJbOZssfvD11yg2JIqUVjB9KDLRLABqYRpnKJQNbU4NtuL
+ Z9pq2IXiACQLRUpYdWd+lVyD9pg/SnpN8JHylnWXOO9c5rEf4Bgd/8uYurNyfE8sLH53B22Ny1V2B
+ r2dCM+fAsgxs5PuSppY=
+Received: from bjfk-pm-mail30.kuaishou.com (172.29.5.62) by
+ bjfk-pm-mail30.kuaishou.com (172.29.5.62) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.14; Wed, 23 Mar 2022 16:38:07 +0800
+Received: from bjfk-pm-mail30.kuaishou.com ([fe80::2534:b256:58c3:b20]) by
+ bjfk-pm-mail30.kuaishou.com ([fe80::2534:b256:58c3:b20%17]) with mapi id
+ 15.01.2176.014; Wed, 23 Mar 2022 16:38:07 +0800
+From: =?utf-8?B?55Sw5a2Q5pmo?= <tianzichen@kuaishou.com>
+To: "jefflexu@linux.alibaba.com" <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v5 00/22] fscache, erofs: fscache-based on-demand read
+ semantics
+Thread-Topic: [PATCH v5 00/22] fscache, erofs: fscache-based on-demand read
+ semantics
+Thread-Index: AQHYPpFSpObg91d1C0qJ04JyRDD9Sw==
+Date: Wed, 23 Mar 2022 08:38:07 +0000
+Message-ID: <B6EA31D4-877C-450E-BF89-2879044B9EAD@kuaishou.com>
+Accept-Language: zh-CN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.20.112.31]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v5 03/22] cachefiles: introduce on-demand read mode
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>
-References: <YjiX5oXYkmN6WrA3@casper.infradead.org>
- <20220316131723.111553-1-jefflexu@linux.alibaba.com>
- <20220316131723.111553-4-jefflexu@linux.alibaba.com>
- <YjiAVezd5B9auhcP@casper.infradead.org>
- <6bc551d2-15fc-5d17-c99b-8db588c6b671@linux.alibaba.com>
- <YjiLACenpRV4XTcs@casper.infradead.org>
- <adb957da-8909-06d8-1b2c-b8a293b37930@linux.alibaba.com>
- <1035025.1647876652@warthog.procyon.org.uk>
- <YjoBpm8mUHX/w/rK@casper.infradead.org>
-From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <YjoBpm8mUHX/w/rK@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-DNSRBL: 
+X-MAIL: bjfk-gateway01.kuaishou.com 22N8eSO1015991
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,95 +79,43 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
- gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
- luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "willy@infradead.org" <willy@infradead.org>,
+ "dhowells@redhat.com" <dhowells@redhat.com>,
+ "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
+ "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+ "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "luodaowen.backend@bytedance.com" <luodaowen.backend@bytedance.com>,
+ "gerry@linux.alibaba.com" <gerry@linux.alibaba.com>,
+ "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+--_000_B6EA31D4877C450EBF892879044B9EADkuaishoucom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
+VGhpcyBzb2x1dGlvbiBsb29rcyBnb29kLCBhbmQgd2XigJkgcmUgYWxzbyBpbnRlcmVzdGVkICBp
+biBpdCAsICBwbGVhc2UgYWNjZWxlcmF0ZSBpdHMgcHJvZ3Jlc3Mgc28gd2UgY2FuIHVzZSBpdC4N
+Cg0KQmVzdCB3aXNoZXMsDQp6aWNoZW4NCg==
 
-On 3/23/22 1:04 AM, Matthew Wilcox wrote:
-> On Mon, Mar 21, 2022 at 03:30:52PM +0000, David Howells wrote:
->> Matthew Wilcox <willy@infradead.org> wrote:
->>
->>> Absolutely; just use xa_lock() to protect both setting & testing the
->>> flag.
->>
->> How should Jeffle deal with xarray dropping the lock internally in order to do
->> an allocation and then taking it again (actually in patch 5)?
-> 
-> There are a number of ways to handle this.  I'll outline two; others
-> are surely possible.
+--_000_B6EA31D4877C450EBF892879044B9EADkuaishoucom_
+Content-Type: text/html; charset="utf-8"
+Content-ID: <F1CEFBBF477C7A4BB0CA656FDCF9E72A@kuaishou.com>
+Content-Transfer-Encoding: base64
 
-Thanks.
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHN0eWxlPSJ3b3JkLXdy
+YXA6IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgLXdlYmtpdC1saW5lLWJy
+ZWFrOiBhZnRlci13aGl0ZS1zcGFjZTsiIGNsYXNzPSIiPg0KPGRpdiBjbGFzcz0iIj48Zm9udCBz
+aXplPSI0IiBjbGFzcz0iIj5UaGlzIHNvbHV0aW9uIGxvb2tzIGdvb2QsIGFuZCB3ZeKAmSByZSBh
+bHNvIGludGVyZXN0ZWQgJm5ic3A7aW4gaXQgLCAmbmJzcDtwbGVhc2UgYWNjZWxlcmF0ZSBpdHMg
+cHJvZ3Jlc3Mgc28gd2UgY2FuIHVzZSBpdC48L2ZvbnQ+PC9kaXY+DQo8ZGl2IGNsYXNzPSIiPjxm
+b250IHNpemU9IjQiIGNsYXNzPSIiPjxiciBjbGFzcz0iIj4NCkJlc3Qgd2lzaGVzLDwvZm9udD48
+L2Rpdj4NCjxkaXYgY2xhc3M9IiI+PGZvbnQgc2l6ZT0iNCIgY2xhc3M9IiI+emljaGVuPC9mb250
+PjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
-
-> 
-> option 1:
-> 
-> add side:
-> 
-> xa_lock();
-> if (!DEAD)
-> 	xa_store(GFP_KERNEL);
-> 	if (DEAD)
-> 		xa_erase();
-> xa_unlock();
-> 
-> destroy side:
-> 
-> xa_lock();
-> set DEAD;
-> xa_for_each()
-> 	xa_erase();
-> xa_unlock();
-> 
-> That has the problem (?) that it might be temporarily possible to see
-> a newly-added entry in a DEAD array.
-
-I think this problem doesn't matter in our scenario.
-
-
-> 
-> If that is a problem, you can use xa_reserve() on the add side, followed
-> by overwriting it or removing it, depending on the state of the DEAD flag.
-
-Right. Then even the normal path (when memory allocation succeeds) needs
-to call xa_reserve() once.
-
-
-> 
-> If you really want to, you can decompose the add side so that you always
-> check the DEAD flag before doing the store, ie:
-> 
-> do {
-> 	xas_lock();
-> 	if (DEAD)
-> 		xas_set_error(-EINVAL);
-> 	else
-> 		xas_store();
-> 	xas_unlock();
-> } while (xas_nomem(GFP_KERNEL));
-
-This way is more cleaner from the locking semantics, with the cost of
-code duplication. However, after decomposing the __xa_alloc(), we can
-also reuse the xas when setting CACHEFILES_REQ_NEW mark.
-
-```
-+	xa_lock(xa);
-+	ret = __xa_alloc(xa, &id, req, xa_limit_32b, GFP_KERNEL);
-+	if (!ret)
-+		__xa_set_mark(xa, id, CACHEFILES_REQ_NEW);
-+	xa_unlock(xa);
-```
-
-So far personally I prefer the decomposing way in our scenario.
-
-
--- 
-Thanks,
-Jeffle
+--_000_B6EA31D4877C450EBF892879044B9EADkuaishoucom_--
