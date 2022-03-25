@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 967EE4E7318
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 13:23:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C7384E731F
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 13:23:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ1T746Pmz3bTH
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 23:23:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ1T92QLCz3bYB
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 23:23:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ1T413wNz302S
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ1T41h0Rz3bM7
  for <linux-erofs@lists.ozlabs.org>; Fri, 25 Mar 2022 23:23:03 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R271e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V89qR1S_1648210970; 
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R341e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V89aFuG_1648210971; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V89qR1S_1648210970) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 25 Mar 2022 20:22:51 +0800
+ fp:SMTPD_---0V89aFuG_1648210971) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 25 Mar 2022 20:22:52 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 17/22] erofs: implement fscache-based data read for
- non-inline layout
-Date: Fri, 25 Mar 2022 20:22:18 +0800
-Message-Id: <20220325122223.102958-18-jefflexu@linux.alibaba.com>
+Subject: [PATCH v6 18/22] erofs: implement fscache-based data read for inline
+ layout
+Date: Fri, 25 Mar 2022 20:22:19 +0800
+Message-Id: <20220325122223.102958-19-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
 References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
@@ -58,158 +58,89 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Implements the data plane of reading data from bootstrap blob file over
-fscache for non-inline layout.
+This patch implements the data plane of reading data from bootstrap blob
+file over fscache for inline layout.
 
-Be noted that compressed layout is not supported yet.
+For the heading non-inline part, the data plane for non-inline layout is
+resued, while only the tail packing part needs special handling.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 83 +++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/inode.c    |  8 ++++-
- fs/erofs/internal.h |  5 +++
- 3 files changed, 95 insertions(+), 1 deletion(-)
+ fs/erofs/fscache.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 91377939b4f7..4a9a4e60c15d 100644
+index 4a9a4e60c15d..d75958470645 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -60,10 +60,93 @@ static int erofs_fscache_readpage_blob(struct file *data, struct page *page)
- 	return ret;
+@@ -74,8 +74,9 @@ static int erofs_fscache_readpage_noinline(struct folio *folio,
+ {
+ 	struct fscache_cookie *cookie = map->m_fscache->cookie;
+ 	/*
+-	 * 1) For FLAT_PLAIN layout, the output map.m_la shall be equal to o_la,
+-	 * and the output map.m_pa is exactly the physical address of o_la.
++	 * 1) For FLAT_PLAIN and FLAT_INLINE (the heading non tail packing part)
++	 * layout, the output map.m_la shall be equal to o_la, and the output
++	 * map.m_pa is exactly the physical address of o_la.
+ 	 * 2) For CHUNK_BASED layout, the output map.m_la is rounded down to the
+ 	 * nearest chunk boundary, and the output map.m_pa is actually the
+ 	 * physical address of this chunk boundary. So we need to recalculate
+@@ -86,6 +87,42 @@ static int erofs_fscache_readpage_noinline(struct folio *folio,
+ 	return erofs_fscache_read_folio(cookie, folio, start);
  }
  
-+static inline int erofs_fscache_get_map(struct erofs_map_blocks *map,
-+					struct super_block *sb)
++static int erofs_fscache_readpage_inline(struct folio *folio,
++					 struct erofs_map_blocks *map)
 +{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	struct inode *inode = folio_file_mapping(folio)->host;
++	struct super_block *sb = inode->i_sb;
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
++	erofs_blk_t blknr;
++	size_t offset, len;
++	void *src, *dst;
 +
-+	map->m_fscache	= sbi->bootstrap;
++	/*
++	 * For inline (tail packing) layout, the offset may be non-zero, which
++	 * can be calculated from corresponding physical address directly.
++	 * Currently only flat layout supports inline (FLAT_INLINE), and the
++	 * output map.m_pa is exactly the physical address of o_la in this case.
++	 */
++	offset = erofs_blkoff(map->m_pa);
++	blknr = erofs_blknr(map->m_pa);
++	len = map->m_llen;
++
++	src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
++	if (IS_ERR(src))
++		return PTR_ERR(src);
++
++	DBG_BUGON(folio_size(folio) != PAGE_SIZE);
++
++	dst = kmap(folio_page(folio, 0));
++	memcpy(dst, src + offset, len);
++	memset(dst + len, 0, PAGE_SIZE - len);
++	kunmap(folio_page(folio, 0));
++
++	erofs_put_metabuf(&buf);
++
 +	return 0;
 +}
 +
-+static int erofs_fscache_readpage_noinline(struct folio *folio,
-+					   struct erofs_map_blocks *map)
-+{
-+	struct fscache_cookie *cookie = map->m_fscache->cookie;
-+	/*
-+	 * 1) For FLAT_PLAIN layout, the output map.m_la shall be equal to o_la,
-+	 * and the output map.m_pa is exactly the physical address of o_la.
-+	 * 2) For CHUNK_BASED layout, the output map.m_la is rounded down to the
-+	 * nearest chunk boundary, and the output map.m_pa is actually the
-+	 * physical address of this chunk boundary. So we need to recalculate
-+	 * the actual physical address of o_la.
-+	 */
-+	loff_t start = map->m_pa + (map->o_la - map->m_la);
-+
-+	return erofs_fscache_read_folio(cookie, folio, start);
-+}
-+
-+static int erofs_fscache_do_readpage(struct folio *folio)
-+{
-+	struct inode *inode = folio_file_mapping(folio)->host;
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct super_block *sb = inode->i_sb;
-+	struct erofs_map_blocks map;
-+	int ret;
-+
-+	if (erofs_inode_is_data_compressed(vi->datalayout)) {
-+		erofs_info(sb, "compressed layout not supported yet");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	DBG_BUGON(folio_size(folio) != EROFS_BLKSIZ);
-+
-+	map.m_la = map.o_la = folio_pos(folio);
-+
-+	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (ret)
-+		return ret;
-+
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		folio_zero_range(folio, 0, folio_size(folio));
-+		return 0;
-+	}
-+
-+	ret = erofs_fscache_get_map(&map, sb);
-+	if (ret)
-+		return ret;
-+
-+	switch (vi->datalayout) {
-+	case EROFS_INODE_FLAT_PLAIN:
-+	case EROFS_INODE_CHUNK_BASED:
-+		return erofs_fscache_readpage_noinline(folio, &map);
-+	default:
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int erofs_fscache_readpage(struct file *file, struct page *page)
-+{
-+	struct folio *folio = page_folio(page);
-+	int ret;
-+
-+	ret = erofs_fscache_do_readpage(folio);
-+	if (!ret)
-+		folio_mark_uptodate(folio);
-+
-+	folio_unlock(folio);
-+	return ret;
-+}
-+
- static const struct address_space_operations erofs_fscache_blob_aops = {
- 	.readpage = erofs_fscache_readpage_blob,
- };
+ static int erofs_fscache_do_readpage(struct folio *folio)
+ {
+ 	struct inode *inode = folio_file_mapping(folio)->host;
+@@ -116,8 +153,12 @@ static int erofs_fscache_do_readpage(struct folio *folio)
+ 	if (ret)
+ 		return ret;
  
-+const struct address_space_operations erofs_fscache_access_aops = {
-+	.readpage = erofs_fscache_readpage,
-+};
++	if (map.m_flags & EROFS_MAP_META)
++		return erofs_fscache_readpage_inline(folio, &map);
 +
- /*
-  * erofs_fscache_get_folio - find and read page cache of blob file
-  * @ctx:	the context of the blob file
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index ff62f84f47d3..744faf3ef9f4 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -296,7 +296,13 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
- 		err = z_erofs_fill_inode(inode);
- 		goto out_unlock;
- 	}
--	inode->i_mapping->a_ops = &erofs_raw_access_aops;
-+
-+#ifdef CONFIG_EROFS_FS_ONDEMAND
-+	if (erofs_is_nodev_mode(inode->i_sb))
-+		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
-+#endif
-+	if (!erofs_is_nodev_mode(inode->i_sb))
-+		inode->i_mapping->a_ops = &erofs_raw_access_aops;
- 
- out_unlock:
- 	erofs_put_metabuf(&buf);
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index fa89a1e3012f..6537ededed51 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -442,6 +442,9 @@ struct erofs_map_blocks {
- 	unsigned short m_deviceid;
- 	char m_algorithmformat;
- 	unsigned int m_flags;
-+
-+	struct erofs_fscache *m_fscache;
-+	erofs_off_t o_la;
- };
- 
- /* Flags used by erofs_map_blocks_flatmode() */
-@@ -634,6 +637,8 @@ struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path,
- void erofs_fscache_put(struct erofs_fscache *ctx);
- 
- struct folio *erofs_fscache_get_folio(struct erofs_fscache *ctx, pgoff_t index);
-+
-+extern const struct address_space_operations erofs_fscache_access_aops;
- #else
- static inline int erofs_init_fscache(void) { return 0; }
- static inline void erofs_exit_fscache(void) {}
+ 	switch (vi->datalayout) {
+ 	case EROFS_INODE_FLAT_PLAIN:
++	case EROFS_INODE_FLAT_INLINE:
+ 	case EROFS_INODE_CHUNK_BASED:
+ 		return erofs_fscache_readpage_noinline(folio, &map);
+ 	default:
 -- 
 2.27.0
 
