@@ -1,53 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C40EB4E7471
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 14:46:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD4EC4E7A33
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 19:17:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ3Km4TQjz306m
-	for <lists+linux-erofs@lfdr.de>; Sat, 26 Mar 2022 00:46:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ9LG22TRz308h
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Mar 2022 05:17:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ3Kj2rjwz2yPj
- for <linux-erofs@lists.ozlabs.org>; Sat, 26 Mar 2022 00:46:48 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R501e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0V8A2H-n_1648215995; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V8A2H-n_1648215995) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 25 Mar 2022 21:46:37 +0800
-Date: Fri, 25 Mar 2022 21:46:35 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [Linux-cachefs] [PATCH v6 13/22] erofs: add anonymous inode
- managing page cache of blob file
-Message-ID: <Yj3HuzncvkkwWBvD@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
- dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- gregkh@linuxfoundation.org, fannaihao@baidu.com,
- tao.peng@linux.alibaba.com, willy@infradead.org,
- linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
- joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
- linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
- eguan@linux.alibaba.com, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
-References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
- <20220325122223.102958-14-jefflexu@linux.alibaba.com>
+ smtp.mailfrom=smmail.cn (client-ip=218.78.214.69; helo=smmail.cn;
+ envelope-from=xiajinzhu@smmail.cn; receiver=<UNKNOWN>)
+X-Greylist: delayed 426 seconds by postgrey-1.36 at boromir;
+ Sat, 26 Mar 2022 05:17:36 AEDT
+Received: from smmail.cn (unknown [218.78.214.69])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4KQ9L84DSWz2yN1
+ for <linux-erofs@lists.ozlabs.org>; Sat, 26 Mar 2022 05:17:34 +1100 (AEDT)
+Received: from pc248 (unknown [58.243.138.164])
+ by qianduan_4 (Coremail) with SMTP id BAYKCgB3T1aDBT5iGLcyAg--.57145S2;
+ Sat, 26 Mar 2022 02:10:12 +0800 (CST)
+X-GUID: E45662DB-2A9B-4DCB-B0A5-C0E68FF80067
+X-Has-Attach: no
+From: =?UTF-8?B?Iue0p+aApemAmuefpe+8mumCrueuse+8iOezu+e7n+S8mOWMlu+8iSI=?=
+ <xiajinzhu@smmail.cn>
+Subject: =?UTF-8?B?5YWz5LqO77ya5ZCv55So5paw6YKu5Lu257O757uf6YCa55+l77yB?=
+To: "linux-erofs" <linux-erofs@lists.ozlabs.org>
+Content-Type: multipart/alternative; charset=UTF-8;
+ boundary="----=_792_NextPart668994133575_=----"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220325122223.102958-14-jefflexu@linux.alibaba.com>
+Date: Sat, 26 Mar 2022 02:10:12 +0800
+Message-Id: <202203260210124504825@smmail.cn>
+X-Mailer: Foxmail 7, 2, 5, 140[cn]
+X-CM-TRANSID: BAYKCgB3T1aDBT5iGLcyAg--.57145S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+ VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO27k0a2IF6F4UM7kC6x804xWl14x267AK
+ xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+ A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j
+ 6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280aVAFwI0_Gc
+ CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+ r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87
+ Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFcxC0VAY
+ jxAxZF0Ew4CEw7xC0wACY4xI67k04243AVC20s07Mx8GjcxK6IxK0xIIj40E5I8CrwCY02
+ Avz4vE14v_XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+ 67AKxVW8Jr1j6ryUJr1lx2IqxVAqx4xG67AKxVWUGVWUWwC20s026x8GjcxK67AKxVWUGV
+ WUWwC2zVAF1VAY17CE14v26r1j6r15MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+ Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+ W8JVW3JwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j
+ 6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUIWEEDUUUU
+X-CM-SenderInfo: x0ldyxpq2k3qhpdlzhlvkou0/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,97 +60,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, gregkh@linuxfoundation.org, fannaihao@baidu.com,
- willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
- joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
- torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
- luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Mar 25, 2022 at 08:22:14PM +0800, Jeffle Xu wrote:
-> Introduce one anonymous inode for managing page cache of corresponding
-> blob file. Then erofs could read directly from the address space of the
-> anonymous inode when cache hit.
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
->  fs/erofs/fscache.c  | 41 ++++++++++++++++++++++++++++++++++++++++-
->  fs/erofs/internal.h |  7 +++++--
->  2 files changed, 45 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 73235fd43bf6..30383d9adb62 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -7,6 +7,9 @@
->  
->  static struct fscache_volume *volume;
->  
-> +static const struct address_space_operations erofs_fscache_blob_aops = {
-> +};
-> +
->  static int erofs_fscache_init_cookie(struct erofs_fscache *ctx, char *path)
->  {
->  	struct fscache_cookie *cookie;
-> @@ -31,6 +34,29 @@ static inline void erofs_fscache_cleanup_cookie(struct erofs_fscache *ctx)
->  	ctx->cookie = NULL;
->  }
->  
-> +static int erofs_fscache_get_inode(struct erofs_fscache *ctx,
-> +				   struct super_block *sb)
+This is a multi-part message in MIME format
 
-I think it can be folded as well.
+------=_792_NextPart668994133575_=----
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-> +{
-> +	struct inode *const inode = new_inode(sb);
-> +
-> +	if (!inode)
-> +		return -ENOMEM;
-> +
-> +	set_nlink(inode, 1);
-> +	inode->i_size = OFFSET_MAX;
-> +	inode->i_mapping->a_ops = &erofs_fscache_blob_aops;
-> +	mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
-> +
-> +	ctx->inode = inode;
-> +	return 0;
-> +}
-> +
-> +static inline void erofs_fscache_put_inode(struct erofs_fscache *ctx)
+PHA+DQoJ6YCa55+l77yabGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZ+eUseS6juWkmuS9jeaP
+kOekuumCrueuseWNoemhv++8jOaIkeagoeWwhuS6jjIwMjLlubQ05pyI6LW35byA5aeL5Y2H57qn
+6YKu566x57O757uf77yM546w5Zyo5o+Q5YmN6YeH6ZuG5L+h5oGv5pa55L6/5Y2H57qn5L2/55So
+77yB6L+H5pyf5pyq5pu05o2i57uf6K6h55qE5LiA5bm25YGa5Li65bqf5byD6YKu566x5bCG5LqI
+5Lul5Zue5pS25bm25Yig6Zmk44CCDQo8L3A+DQo8cD4NCgnor7fmjInnhafopoHmsYLnu5/kuIDn
+mbvorrDjgIINCjwvcD4NCjxwPg0KCei0puWPt++8mmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5v
+cmcNCjwvcD4NCjxwPg0KCeWnk+WQjToNCjwvcD4NCjxwPg0KCeWvhueggToNCjwvcD4NCjxwPg0K
+Cee7n+S4gOWbnuWkjeiHs++8mjxhPmFkLW1pbi1pbnN0b3JAZm94bWFpbC5jb208L2E+IA0KPC9w
+Pg0K
 
-Ditto.
+------=_792_NextPart668994133575_=----
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-> +{
-> +	iput(ctx->inode);
-> +	ctx->inode = NULL;
-> +}
-> +
->  /*
->   * erofs_fscache_get - create an fscache context for blob file
->   * @sb:		superblock
-> @@ -38,7 +64,8 @@ static inline void erofs_fscache_cleanup_cookie(struct erofs_fscache *ctx)
->   *
->   * Return: fscache context on success, ERR_PTR() on failure.
->   */
-> -struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path)
-> +struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path,
-> +					bool need_inode)
->  {
->  	struct erofs_fscache *ctx;
->  	int ret;
-> @@ -53,7 +80,18 @@ struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path)
->  		goto err;
->  	}
->  
-> +	if (need_inode) {
-> +		ret = erofs_fscache_get_inode(ctx, sb);
-> +		if (ret) {
-> +			erofs_err(sb, "failed to get anonymous inode");
+PHA+DQoJ6YCa55+l77yabGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZ+eUseS6juWkmuS9jeaP
+kOekuumCrueuseWNoemhv++8jOaIkeagoeWwhuS6jjIwMjLlubQ05pyI6LW35byA5aeL5Y2H57qn
+6YKu566x57O757uf77yM546w5Zyo5o+Q5YmN6YeH6ZuG5L+h5oGv5pa55L6/5Y2H57qn5L2/55So
+77yB6L+H5pyf5pyq5pu05o2i57uf6K6h55qE5LiA5bm25YGa5Li65bqf5byD6YKu566x5bCG5LqI
+5Lul5Zue5pS25bm25Yig6Zmk44CCDQo8L3A+DQo8cD4NCgnor7fmjInnhafopoHmsYLnu5/kuIDn
+mbvorrDjgIINCjwvcD4NCjxwPg0KCei0puWPt++8mmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5v
+cmcNCjwvcD4NCjxwPg0KCeWnk+WQjToNCjwvcD4NCjxwPg0KCeWvhueggToNCjwvcD4NCjxwPg0K
+Cee7n+S4gOWbnuWkjeiHs++8mjxhPmFkLW1pbi1pbnN0b3JAZm94bWFpbC5jb208L2E+IA0KPC9w
+Pg0K
 
-				       failed to get fscache inode of [path].
+------=_792_NextPart668994133575_=------
 
-Thanks,
-Gao Xiang
