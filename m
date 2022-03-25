@@ -1,42 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35AAE4E7328
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 13:23:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102844E745C
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 14:42:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ1TF12p3z3bVZ
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 23:23:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ3DJ4GmDz306m
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Mar 2022 00:42:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42;
+ helo=out30-42.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-42.freemail.mail.aliyun.com
+ (out30-42.freemail.mail.aliyun.com [115.124.30.42])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ1T95G3bz3bXK
- for <linux-erofs@lists.ozlabs.org>; Fri, 25 Mar 2022 23:23:09 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R651e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V89qR2m_1648210978; 
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V89qR2m_1648210978) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 25 Mar 2022 20:22:59 +0800
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 22/22] erofs: add 'tag' mount option
-Date: Fri, 25 Mar 2022 20:22:23 +0800
-Message-Id: <20220325122223.102958-23-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ3D965Lvz2yY1
+ for <linux-erofs@lists.ozlabs.org>; Sat, 26 Mar 2022 00:41:58 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0V89jU5E_1648215702; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V89jU5E_1648215702) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 25 Mar 2022 21:41:44 +0800
+Date: Fri, 25 Mar 2022 21:41:42 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v6 12/22] erofs: add cookie context helper functions
+Message-ID: <Yj3GlpvjL3u0RTjN@B-P7TQMD6M-0146.local>
+Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
+ dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+ willy@infradead.org, linux-fsdevel@vger.kernel.org,
+ joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
+ tao.peng@linux.alibaba.com, gerry@linux.alibaba.com,
+ eguan@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ luodaowen.backend@bytedance.com, tianzichen@kuaishou.com,
+ fannaihao@baidu.com
 References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
+ <20220325122223.102958-13-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220325122223.102958-13-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,143 +58,165 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, fannaihao@baidu.com, willy@infradead.org,
- linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
- joseph.qi@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+Cc: tianzichen@kuaishou.com, linux-erofs@lists.ozlabs.org, fannaihao@baidu.com,
+ willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
+ joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
+ gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
  luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
  torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce 'tag' mount option to enable on-demand read sementics. In
-this case, erofs could be mounted from blob files instead of blkdev.
-By then users could specify the name of bootstrap blob file containing
-the complete erofs image.
+Hi Jeffle,
 
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/super.c | 44 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 6 deletions(-)
+On Fri, Mar 25, 2022 at 08:22:13PM +0800, Jeffle Xu wrote:
+> Introduce "struct erofs_fscache" for managing cookie for backinig file,
+> and helper functions for initializing and cleaning up this context
+> structure.
+> 
+> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> ---
+>  fs/erofs/fscache.c  | 61 +++++++++++++++++++++++++++++++++++++++++++++
+>  fs/erofs/internal.h | 14 +++++++++++
+>  2 files changed, 75 insertions(+)
+> 
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index 08cf570a0810..73235fd43bf6 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -7,6 +7,67 @@
+>  
+>  static struct fscache_volume *volume;
+>  
+> +static int erofs_fscache_init_cookie(struct erofs_fscache *ctx, char *path)
+> +{
+> +	struct fscache_cookie *cookie;
+> +
+> +	cookie = fscache_acquire_cookie(volume, FSCACHE_ADV_WANT_CACHE_SIZE,
+> +					path, strlen(path),
+> +					NULL, 0, 0);
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 8ac400581784..6ea83f36842c 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -403,6 +403,7 @@ enum {
- 	Opt_dax,
- 	Opt_dax_enum,
- 	Opt_device,
-+	Opt_tag,
- 	Opt_err
- };
- 
-@@ -427,6 +428,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- 	fsparam_flag("dax",             Opt_dax),
- 	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
- 	fsparam_string("device",	Opt_device),
-+	fsparam_string("tag",		Opt_tag),
- 	{}
- };
- 
-@@ -522,6 +524,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		}
- 		++ctx->devs->extra_devices;
- 		break;
-+	case Opt_tag:
-+#ifdef CONFIG_EROFS_FS_ONDEMAND
-+		kfree(ctx->opt.tag);
-+		ctx->opt.tag = kstrdup(param->string, GFP_KERNEL);
-+		if (!ctx->opt.tag)
-+			return -ENOMEM;
-+#else
-+		errorfc(fc, "tag option not supported");
-+#endif
-+		break;
- 	default:
- 		return -ENOPARAM;
- 	}
-@@ -596,9 +608,14 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sb->s_magic = EROFS_SUPER_MAGIC;
- 
--	if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
--		erofs_err(sb, "failed to set erofs blksize");
--		return -EINVAL;
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && erofs_is_nodev_mode(sb)) {
-+		sb->s_blocksize = EROFS_BLKSIZ;
-+		sb->s_blocksize_bits = LOG_BLOCK_SIZE;
-+	} else {
-+		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
-+			erofs_err(sb, "failed to set erofs blksize");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-@@ -607,7 +624,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sb->s_fs_info = sbi;
- 	sbi->opt = ctx->opt;
--	sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
- 	sbi->devs = ctx->devs;
- 	ctx->devs = NULL;
- 
-@@ -623,6 +639,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 		err = super_setup_bdi(sb);
- 		if (err)
- 			return err;
-+
-+		sbi->dax_dev = NULL;
-+	} else {
-+		sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
- 	}
- 
- 	err = erofs_read_superblock(sb);
-@@ -685,6 +705,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
-+	struct erofs_fs_context *ctx = fc->fs_private;
-+
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->opt.tag)
-+		return get_tree_nodev(fc, erofs_fc_fill_super);
-+
- 	return get_tree_bdev(fc, erofs_fc_fill_super);
- }
- 
-@@ -734,6 +759,7 @@ static void erofs_fc_free(struct fs_context *fc)
- 	struct erofs_fs_context *ctx = fc->fs_private;
- 
- 	erofs_free_dev_context(ctx->devs);
-+	kfree(ctx->opt.tag);
- 	kfree(ctx);
- }
- 
-@@ -774,7 +800,10 @@ static void erofs_kill_sb(struct super_block *sb)
- 
- 	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
- 
--	kill_block_super(sb);
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && erofs_is_nodev_mode(sb))
-+		generic_shutdown_super(sb);
-+	else
-+		kill_block_super(sb);
- 
- 	sbi = EROFS_SB(sb);
- 	if (!sbi)
-@@ -896,7 +925,10 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct super_block *sb = dentry->d_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
-+	u64 id = 0;
-+
-+	if (!IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) || !erofs_is_nodev_mode(sb))
-+		id = huge_encode_dev(sb->s_bdev->bd_dev);
- 
- 	buf->f_type = sb->s_magic;
- 	buf->f_bsize = EROFS_BLKSIZ;
--- 
-2.27.0
+It'd be better to rearrange in one line?
 
+					path, strlen(path), NULL, 0, 0);
+
+> +	if (!cookie)
+> +		return -EINVAL;
+> +
+> +	fscache_use_cookie(cookie, false);
+> +	ctx->cookie = cookie;
+> +	return 0;
+> +}
+> +
+> +static inline void erofs_fscache_cleanup_cookie(struct erofs_fscache *ctx)
+> +{
+> +	struct fscache_cookie *cookie = ctx->cookie;
+> +
+> +	fscache_unuse_cookie(cookie, NULL, NULL);
+> +	fscache_relinquish_cookie(cookie, false);
+> +	ctx->cookie = NULL;
+> +}
+> +
+> +/*
+> + * erofs_fscache_get - create an fscache context for blob file
+> + * @sb:		superblock
+> + * @path:	name of blob file
+> + *
+> + * Return: fscache context on success, ERR_PTR() on failure.
+> + */
+> +struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path)
+
+erofs_fscache_register?
+
+> +{
+> +	struct erofs_fscache *ctx;
+> +	int ret;
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret = erofs_fscache_init_cookie(ctx, path);
+
+Can we fold it here? No need to introduce such simple wrapper..
+
+> +	if (ret) {
+> +		erofs_err(sb, "failed to init cookie");
+
+It would be better to print the path?
+
+> +		goto err;
+
+		kfree(ctx);
+		return ERR_PTR(ret);
+
+At least for now.
+
+> +	}
+> +
+> +	return ctx;
+> +err:
+> +	kfree(ctx);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +void erofs_fscache_put(struct erofs_fscache *ctx)
+
+erofs_fscache_unregister?
+
+> +{
+> +	if (!ctx)
+> +		return;
+> +
+> +	erofs_fscache_cleanup_cookie(ctx);
+
+Fold it too, since such helper doesn't simplify code a lot but need
+to take one more time to redirect..
+
+Thanks,
+Gao Xiang
+
+> +	kfree(ctx);
+> +}
+> +
+>  int __init erofs_init_fscache(void)
+>  {
+>  	volume = fscache_acquire_volume("erofs", NULL, NULL, 0);
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 45b8b0dd8a27..d4f2b43cedae 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -96,6 +96,10 @@ struct erofs_sb_lz4_info {
+>  	u16 max_pclusterblks;
+>  };
+>  
+> +struct erofs_fscache {
+> +	struct fscache_cookie *cookie;
+> +};
+> +
+>  struct erofs_sb_info {
+>  	struct erofs_mount_opts opt;	/* options */
+>  #ifdef CONFIG_EROFS_FS_ZIP
+> @@ -620,9 +624,19 @@ static inline int z_erofs_load_lzma_config(struct super_block *sb,
+>  #ifdef CONFIG_EROFS_FS_ONDEMAND
+>  int erofs_init_fscache(void);
+>  void erofs_exit_fscache(void);
+> +
+> +struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path);
+> +void erofs_fscache_put(struct erofs_fscache *ctx);
+>  #else
+>  static inline int erofs_init_fscache(void) { return 0; }
+>  static inline void erofs_exit_fscache(void) {}
+> +
+> +static inline struct erofs_fscache *erofs_fscache_get(struct super_block *sb,
+> +						      char *path)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +static inline void erofs_fscache_put(struct erofs_fscache *ctx) {}
+>  #endif
+>  
+>  #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
+> -- 
+> 2.27.0
