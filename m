@@ -2,37 +2,36 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DAF14E730C
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 13:23:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C1F94E730A
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 13:23:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ1T1374Xz30HJ
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 23:23:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KQ1T02VP2z30CS
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Mar 2022 23:23:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ1Sw0Y5cz30Dh
- for <linux-erofs@lists.ozlabs.org>; Fri, 25 Mar 2022 23:22:55 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R141e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V89aFt._1648210964; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KQ1Sv22bKz3081
+ for <linux-erofs@lists.ozlabs.org>; Fri, 25 Mar 2022 23:22:54 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V89Vk7G_1648210965; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V89aFt._1648210964) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 25 Mar 2022 20:22:45 +0800
+ fp:SMTPD_---0V89Vk7G_1648210965) by smtp.aliyun-inc.com(127.0.0.1);
+ Fri, 25 Mar 2022 20:22:46 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 13/22] erofs: add anonymous inode managing page cache of
- blob file
-Date: Fri, 25 Mar 2022 20:22:14 +0800
-Message-Id: <20220325122223.102958-14-jefflexu@linux.alibaba.com>
+Subject: [PATCH v6 14/22] erofs: add erofs_fscache_read_folios() helper
+Date: Fri, 25 Mar 2022 20:22:15 +0800
+Message-Id: <20220325122223.102958-15-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
 References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
@@ -58,128 +57,71 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce one anonymous inode for managing page cache of corresponding
-blob file. Then erofs could read directly from the address space of the
-anonymous inode when cache hit.
+Add erofs_fscache_read_folios() helper reading from fscache. It supports
+on-demand read semantics. That is, it will make the backend prepare for
+the data when cache miss. Once data ready, it will reinitiate a read
+from the cache.
+
+This helper can then be used to implement .readpage()/.readahead() of
+on-demand read semantics.
+
+Besides also add erofs_fscache_read_folio() wrapper helper.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 41 ++++++++++++++++++++++++++++++++++++++++-
- fs/erofs/internal.h |  7 +++++--
- 2 files changed, 45 insertions(+), 3 deletions(-)
+ fs/erofs/fscache.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 73235fd43bf6..30383d9adb62 100644
+index 30383d9adb62..6a55f7b5f883 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -7,6 +7,9 @@
+@@ -7,6 +7,45 @@
  
  static struct fscache_volume *volume;
  
-+static const struct address_space_operations erofs_fscache_blob_aops = {
-+};
-+
- static int erofs_fscache_init_cookie(struct erofs_fscache *ctx, char *path)
- {
- 	struct fscache_cookie *cookie;
-@@ -31,6 +34,29 @@ static inline void erofs_fscache_cleanup_cookie(struct erofs_fscache *ctx)
- 	ctx->cookie = NULL;
- }
- 
-+static int erofs_fscache_get_inode(struct erofs_fscache *ctx,
-+				   struct super_block *sb)
++/*
++ * erofs_fscache_read_folios - Read data from fscache.
++ *
++ * Fill the read data into page cache described by @start/len, which shall be
++ * both aligned with PAGE_SIZE. @pstart describes the corresponding physical
++ * start address in the cache file.
++ */
++static int erofs_fscache_read_folios(struct fscache_cookie *cookie,
++				     struct address_space *mapping,
++				     loff_t start, size_t len,
++				     loff_t pstart)
 +{
-+	struct inode *const inode = new_inode(sb);
++	struct netfs_cache_resources cres;
++	struct iov_iter iter;
++	int ret;
 +
-+	if (!inode)
-+		return -ENOMEM;
++	memset(&cres, 0, sizeof(cres));
 +
-+	set_nlink(inode, 1);
-+	inode->i_size = OFFSET_MAX;
-+	inode->i_mapping->a_ops = &erofs_fscache_blob_aops;
-+	mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
++	ret = fscache_begin_read_operation(&cres, cookie);
++	if (ret)
++		return ret;
 +
-+	ctx->inode = inode;
-+	return 0;
++	iov_iter_xarray(&iter, READ, &mapping->i_pages, start, len);
++
++	ret = fscache_read(&cres, pstart, &iter,
++			   NETFS_READ_HOLE_ONDEMAND, NULL, NULL);
++
++	fscache_end_operation(&cres);
++	return ret;
 +}
 +
-+static inline void erofs_fscache_put_inode(struct erofs_fscache *ctx)
++static inline int erofs_fscache_read_folio(struct fscache_cookie *cookie,
++					   struct folio *folio, loff_t pstart)
 +{
-+	iput(ctx->inode);
-+	ctx->inode = NULL;
++	return erofs_fscache_read_folios(cookie, folio_file_mapping(folio),
++					 folio_pos(folio), folio_size(folio),
++					 pstart);
 +}
 +
- /*
-  * erofs_fscache_get - create an fscache context for blob file
-  * @sb:		superblock
-@@ -38,7 +64,8 @@ static inline void erofs_fscache_cleanup_cookie(struct erofs_fscache *ctx)
-  *
-  * Return: fscache context on success, ERR_PTR() on failure.
-  */
--struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path)
-+struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path,
-+					bool need_inode)
- {
- 	struct erofs_fscache *ctx;
- 	int ret;
-@@ -53,7 +80,18 @@ struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path)
- 		goto err;
- 	}
- 
-+	if (need_inode) {
-+		ret = erofs_fscache_get_inode(ctx, sb);
-+		if (ret) {
-+			erofs_err(sb, "failed to get anonymous inode");
-+			goto err_cookie;
-+		}
-+	}
-+
- 	return ctx;
-+
-+err_cookie:
-+	erofs_fscache_cleanup_cookie(ctx);
- err:
- 	kfree(ctx);
- 	return ERR_PTR(ret);
-@@ -65,6 +103,7 @@ void erofs_fscache_put(struct erofs_fscache *ctx)
- 		return;
- 
- 	erofs_fscache_cleanup_cookie(ctx);
-+	erofs_fscache_put_inode(ctx);
- 	kfree(ctx);
- }
- 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index d4f2b43cedae..459f31803c3b 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -98,6 +98,7 @@ struct erofs_sb_lz4_info {
- 
- struct erofs_fscache {
- 	struct fscache_cookie *cookie;
-+	struct inode *inode;
+ static const struct address_space_operations erofs_fscache_blob_aops = {
  };
  
- struct erofs_sb_info {
-@@ -625,14 +626,16 @@ static inline int z_erofs_load_lzma_config(struct super_block *sb,
- int erofs_init_fscache(void);
- void erofs_exit_fscache(void);
- 
--struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path);
-+struct erofs_fscache *erofs_fscache_get(struct super_block *sb, char *path,
-+					bool need_inode);
- void erofs_fscache_put(struct erofs_fscache *ctx);
- #else
- static inline int erofs_init_fscache(void) { return 0; }
- static inline void erofs_exit_fscache(void) {}
- 
- static inline struct erofs_fscache *erofs_fscache_get(struct super_block *sb,
--						      char *path)
-+						      char *path,
-+						      bool need_inode)
- {
- 	return ERR_PTR(-EOPNOTSUPP);
- }
 -- 
 2.27.0
 
