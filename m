@@ -1,52 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DB8E4E92D9
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Mar 2022 12:56:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E7974EA7B7
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Mar 2022 08:14:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KRqPD3knpz3c1l
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Mar 2022 21:56:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KSK6R3RCzz2xrg
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Mar 2022 17:14:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
- helo=out30-130.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com
- (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KRqP42Jtbz2ynj
- for <linux-erofs@lists.ozlabs.org>; Mon, 28 Mar 2022 21:55:49 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R151e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0V8R4iF-_1648464938; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V8R4iF-_1648464938) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 28 Mar 2022 18:55:40 +0800
-Date: Mon, 28 Mar 2022 18:55:38 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v6 21/22] erofs: implement fscache-based data readahead
-Message-ID: <YkGUKlCstdl9TnY+@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
- dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
- willy@infradead.org, linux-fsdevel@vger.kernel.org,
- joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
- tao.peng@linux.alibaba.com, gerry@linux.alibaba.com,
- eguan@linux.alibaba.com, linux-kernel@vger.kernel.org,
- luodaowen.backend@bytedance.com, tianzichen@kuaishou.com,
- fannaihao@baidu.com
-References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
- <20220325122223.102958-22-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KSK6L5bMBz2xBf
+ for <linux-erofs@lists.ozlabs.org>; Tue, 29 Mar 2022 17:14:46 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R621e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V8XENYr_1648534472; 
+Received: from 30.225.24.46(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V8XENYr_1648534472) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 29 Mar 2022 14:14:34 +0800
+Message-ID: <597372bf-06dc-defa-0628-a1c140235c1e@linux.alibaba.com>
+Date: Tue, 29 Mar 2022 14:14:32 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220325122223.102958-22-jefflexu@linux.alibaba.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [Linux-cachefs] [PATCH v6 03/22] cachefiles: notify user daemon
+ with anon_fd when looking up cookie
+Content-Language: en-US
+From: JeffleXu <jefflexu@linux.alibaba.com>
+To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
+ <20220325122223.102958-4-jefflexu@linux.alibaba.com>
+In-Reply-To: <20220325122223.102958-4-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,149 +53,56 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, linux-erofs@lists.ozlabs.org, fannaihao@baidu.com,
- willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
- joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
- gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+Cc: gregkh@linuxfoundation.org, fannaihao@baidu.com, willy@infradead.org,
+ linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
+ joseph.qi@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
  luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
  torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Mar 25, 2022 at 08:22:22PM +0800, Jeffle Xu wrote:
-> Implements fscache-based data readahead. Also registers an individual
-> bdi for each erofs instance to enable readahead.
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-> ---
->  fs/erofs/fscache.c | 114 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/erofs/super.c   |   4 ++
->  2 files changed, 118 insertions(+)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index cbb39657615e..589d1e7c2b1b 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -191,12 +191,126 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
->  	return ret;
->  }
+
+
+On 3/25/22 8:22 PM, Jeffle Xu wrote:
+
+> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+> index e80673d0ab97..8a0f1b691aca 100644
+> --- a/fs/cachefiles/internal.h
+> +++ b/fs/cachefiles/internal.h
+> @@ -15,6 +15,8 @@
 >  
-> +static inline size_t erofs_fscache_calc_len(struct erofs_map_blocks *map,
-> +					    size_t len, size_t done)
-> +{
-> +	/*
-> +	 * 1) For CHUNK_BASED layout, the output m_la is rounded down to the
-> +	 * nearest chunk boundary, and the output m_llen actually starts from
-> +	 * the start of the containing chunk.
-> +	 * 2) For other cases, the output m_la is equal to o_la.
-> +	 */
-> +	size_t length = map->m_llen - (map->o_la - map->m_la);
+> +/*
+> + * ondemand.c
+> + */
+> +#ifdef CONFIG_CACHEFILES_ONDEMAND
+> +extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+> +					       char __user *_buffer,
+> +					       size_t buflen);
 > +
-> +	return min_t(size_t, length, len - done);
+> +extern int cachefiles_ondemand_cinit(struct cachefiles_cache *cache,
+> +				     char *args);
+> +
+> +extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
+> +
+> +#else
 
-This helper can be folded too.
+> +ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+> +					char __user *_buffer, size_t buflen)
 
+Needs to be declared as static inline ...
+
+> +{
+> +	return -EOPNOTSUPP;
 > +}
 > +
-> +static inline void erofs_fscache_unlock_folios(struct readahead_control *rac,
-> +					       size_t len)
+> +static inline int cachefiles_ondemand_init_object(struct cachefiles_object *object)
 > +{
-> +	while (len) {
-> +		struct folio *folio = readahead_folio(rac);
-> +
-> +		len -= folio_size(folio);
-> +		folio_mark_uptodate(folio);
-> +		folio_unlock(folio);
-> +	}
+> +	return 0;
 > +}
-> +
-> +static void erofs_fscache_readahead(struct readahead_control *rac)
-> +{
-> +	struct inode *inode = rac->mapping->host;
-> +	struct erofs_inode *vi = EROFS_I(inode);
-> +	struct super_block *sb = inode->i_sb;
-> +	size_t len, done = 0;
-> +	loff_t start;
-> +	int ret;
-> +
-> +	if (erofs_inode_is_data_compressed(vi->datalayout)) {
-> +		erofs_info(sb, "compressed layout not supported yet");
-> +		return;
-> +	}
+> +#endif
 
-Redundant check.
 
-> +
-> +	if (!readahead_count(rac))
-> +		return;
-> +
-> +	start = readahead_pos(rac);
-> +	len = readahead_length(rac);
-> +
-> +	do {
-> +		struct erofs_map_blocks map;
-> +
-> +		map.m_la = map.o_la = start + done;
-> +
-> +		ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-> +		if (ret)
-> +			return;
-> +
-> +		/* Read-ahead Hole
-> +		 * Two cases will hit this:
-> +		 * 1) EOF. Imposibble in readahead routine;
-> +		 * 2) hole. Only CHUNK_BASED layout supports hole.
-> +		 */
-
-/*
- *
- */
-
-and typo `Imposibble'. Also I think this comment may not be useful
-though.
-
-> +		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-> +			struct iov_iter iter;
-> +			loff_t offset = start + done;
-> +			size_t count = erofs_fscache_calc_len(&map, len, done);
-> +
-> +			iov_iter_xarray(&iter, READ, &rac->mapping->i_pages, offset, count);
-> +			iov_iter_zero(count, &iter);
-> +
-> +			erofs_fscache_unlock_folios(rac, count);
-> +			ret = count;
-> +			continue;
-> +		}
-> +
-> +		ret = erofs_fscache_get_map(&map, sb);
-> +		if (ret)
-> +			return;
-> +
-> +		/* Read-ahead Inline */
-> +		if (map.m_flags & EROFS_MAP_META) {
-> +			struct folio *folio = readahead_folio(rac);
-> +
-> +			ret = erofs_fscache_readpage_inline(folio, &map);
-> +			if (!ret) {
-> +				folio_mark_uptodate(folio);
-> +				ret = folio_size(folio);
-> +			}
-> +
-> +			folio_unlock(folio);
-> +			continue;
-> +		}
-> +
-> +		/* Read-ahead No-inline */
-> +		if (vi->datalayout == EROFS_INODE_FLAT_PLAIN ||
-> +		    vi->datalayout == EROFS_INODE_FLAT_INLINE ||
-> +		    vi->datalayout == EROFS_INODE_CHUNK_BASED) {
-> +			struct fscache_cookie *cookie = map.m_fscache->cookie;
-> +			loff_t offset = start + done;
-> +			size_t count = erofs_fscache_calc_len(&map, len, done);
-
-You could promote `offset' and `count' to the outer block. So another
-`offset' and `count' in !EROFS_MAP_MAPPED can be dropped then.
-
+-- 
 Thanks,
-Gao Xiang
+Jeffle
