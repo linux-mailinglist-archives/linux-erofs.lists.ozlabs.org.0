@@ -2,46 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E7974EA7B7
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Mar 2022 08:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 984DB4ED56B
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Mar 2022 10:23:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KSK6R3RCzz2xrg
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Mar 2022 17:14:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KTbsz3bBBz2yWN
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Mar 2022 19:23:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
- helo=out30-132.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com
- (out30-132.freemail.mail.aliyun.com [115.124.30.132])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KSK6L5bMBz2xBf
- for <linux-erofs@lists.ozlabs.org>; Tue, 29 Mar 2022 17:14:46 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R621e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V8XENYr_1648534472; 
-Received: from 30.225.24.46(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V8XENYr_1648534472) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 29 Mar 2022 14:14:34 +0800
-Message-ID: <597372bf-06dc-defa-0628-a1c140235c1e@linux.alibaba.com>
-Date: Tue, 29 Mar 2022 14:14:32 +0800
+Authentication-Results: lists.ozlabs.org;
+ spf=softfail (domain owner discourages use of this
+ host) smtp.mailfrom=hxqcjt.com (client-ip=59.172.37.74; helo=test;
+ envelope-from=chengyu@hxqcjt.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 88 seconds by postgrey-1.36 at boromir;
+ Thu, 31 Mar 2022 19:23:26 AEDT
+Received: from test (unknown [59.172.37.74])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4KTbsp54y6z2xts
+ for <linux-erofs@lists.ozlabs.org>; Thu, 31 Mar 2022 19:23:26 +1100 (AEDT)
+Received: from pc275 ([114.104.182.244]) by test with Microsoft
+ SMTPSVC(7.5.7601.17514); Thu, 31 Mar 2022 16:20:59 +0800
+X-GUID: 028747C4-DCBB-4E7B-8DB3-38C094F6FCDF
+X-Has-Attach: no
+From: =?UTF-8?B?Iue0p+aApemAmuefpe+8mumCrueuse+8iOezu+e7n+S8mOWMlu+8iSI=?=
+ <chengyu@hxqcjt.com>
+Subject: =?UTF-8?B?bGludXgtZXJvZnPlhbPkuo7vvJrlkK/nlKjmlrDpgq7ku7bns7vnu5/pgJrn?=
+ =?UTF-8?B?n6XvvIE=?=
+To: "linux-erofs" <linux-erofs@lists.ozlabs.org>
+Content-Type: multipart/alternative; charset=UTF-8;
+ boundary="----=_821_NextPart671076163028_=----"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [Linux-cachefs] [PATCH v6 03/22] cachefiles: notify user daemon
- with anon_fd when looking up cookie
-Content-Language: en-US
-From: JeffleXu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-References: <20220325122223.102958-1-jefflexu@linux.alibaba.com>
- <20220325122223.102958-4-jefflexu@linux.alibaba.com>
-In-Reply-To: <20220325122223.102958-4-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 31 Mar 2022 16:20:46 +0800
+Message-Id: <202203311620464885832@hxqcjt.com>
+X-Mailer: Foxmail 7, 2, 5, 140[cn]
+X-OriginalArrivalTime: 31 Mar 2022 08:20:59.0337 (UTC)
+ FILETIME=[4082D390:01D844D8]
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,56 +46,43 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, fannaihao@baidu.com, willy@infradead.org,
- linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
- joseph.qi@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
- luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format
 
+------=_821_NextPart671076163028_=----
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On 3/25/22 8:22 PM, Jeffle Xu wrote:
+PHA+DQoJ6YCa55+l77yabGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZ+eUseS6jumCrueuseWN
+oemhv++8jOWwhuS6jjIwMjLlubQ05pyI6LW35byA5aeL5Y2H57qn6YKu566x57O757uf77yM546w
+5Zyo5o+Q5YmN6YeH6ZuG5L+h5oGv5pa55L6/5Y2H57qn5L2/55So77yB6L+H5pyf5pyq5pu05o2i
+57uf6K6h55qE5LiA5bm25YGa5Li65bqf5byD6YKu566x5bCG5LqI5Lul5Zue5pS25bm25Yig6Zmk
+44CC5aSH5rOo77ya5Y2H57qn5pyf6Ze05bm25LiN5b2x5ZON6YKu566x5q2j5bi45L2/55So77yM
+5Lya5YaN5pS25Yiw6YKu5Lu25ZCO5LiJ5Liq5bel5L2c5pel5a6M5oiQ77yB6LCi6LCi6YWN5ZCI
+77yBDQo8L3A+DQo8cD4NCgnor7fmjInnhafopoHmsYLnu5/kuIDnmbvorrDjgIINCjwvcD4NCjxw
+Pg0KCei0puWPt++8mmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcNCjwvcD4NCjxwPg0KCeWn
+k+WQjToNCjwvcD4NCjxwPg0KCeWvhuegge+8mg0KPC9wPg0KPHA+DQoJ57uf5LiA5Zue5aSN6Iez
+77yaPGEgaHJlZj0ibWFpbHRvOmFkLW1paS1pbnN0b3JAZm94bWFpbC5jb20iPmFkLW1paS1pbnN0
+b3JAZm94bWFpbC5jb208L2E+DQo8L3A+DQo=
 
-> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-> index e80673d0ab97..8a0f1b691aca 100644
-> --- a/fs/cachefiles/internal.h
-> +++ b/fs/cachefiles/internal.h
-> @@ -15,6 +15,8 @@
->  
-> +/*
-> + * ondemand.c
-> + */
-> +#ifdef CONFIG_CACHEFILES_ONDEMAND
-> +extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
-> +					       char __user *_buffer,
-> +					       size_t buflen);
-> +
-> +extern int cachefiles_ondemand_cinit(struct cachefiles_cache *cache,
-> +				     char *args);
-> +
-> +extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
-> +
-> +#else
+------=_821_NextPart671076163028_=----
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-> +ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
-> +					char __user *_buffer, size_t buflen)
+PHA+DQoJ6YCa55+l77yabGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZ+eUseS6jumCrueuseWN
+oemhv++8jOWwhuS6jjIwMjLlubQ05pyI6LW35byA5aeL5Y2H57qn6YKu566x57O757uf77yM546w
+5Zyo5o+Q5YmN6YeH6ZuG5L+h5oGv5pa55L6/5Y2H57qn5L2/55So77yB6L+H5pyf5pyq5pu05o2i
+57uf6K6h55qE5LiA5bm25YGa5Li65bqf5byD6YKu566x5bCG5LqI5Lul5Zue5pS25bm25Yig6Zmk
+44CC5aSH5rOo77ya5Y2H57qn5pyf6Ze05bm25LiN5b2x5ZON6YKu566x5q2j5bi45L2/55So77yM
+5Lya5YaN5pS25Yiw6YKu5Lu25ZCO5LiJ5Liq5bel5L2c5pel5a6M5oiQ77yB6LCi6LCi6YWN5ZCI
+77yBDQo8L3A+DQo8cD4NCgnor7fmjInnhafopoHmsYLnu5/kuIDnmbvorrDjgIINCjwvcD4NCjxw
+Pg0KCei0puWPt++8mmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcNCjwvcD4NCjxwPg0KCeWn
+k+WQjToNCjwvcD4NCjxwPg0KCeWvhuegge+8mg0KPC9wPg0KPHA+DQoJ57uf5LiA5Zue5aSN6Iez
+77yaPGEgaHJlZj0ibWFpbHRvOmFkLW1paS1pbnN0b3JAZm94bWFpbC5jb20iPmFkLW1paS1pbnN0
+b3JAZm94bWFpbC5jb208L2E+DQo8L3A+DQo=
 
-Needs to be declared as static inline ...
+------=_821_NextPart671076163028_=------
 
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline int cachefiles_ondemand_init_object(struct cachefiles_object *object)
-> +{
-> +	return 0;
-> +}
-> +#endif
-
-
--- 
-Thanks,
-Jeffle
