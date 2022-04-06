@@ -1,42 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F190A4F2095
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Apr 2022 03:37:47 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E6E4F5701
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 09:56:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KXVdP584Lz2yMS
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Apr 2022 11:37:45 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=jmmlm.com header.i=Amazon.co.jp@jmmlm.com header.a=rsa-sha256 header.s=default header.b=QtrTOZ2j;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KYH030dgQz3bYn
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 17:56:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=jmmlm.com (client-ip=173.82.212.139; helo=jmmlm.com;
- envelope-from=amazon.co.jp@jmmlm.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 606 seconds by postgrey-1.36 at boromir;
- Tue, 05 Apr 2022 11:37:33 AEST
-Received: from jmmlm.com (jmmlm.com [173.82.212.139])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
+ helo=out30-44.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-44.freemail.mail.aliyun.com
+ (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KXVd92Fkwz2x9X
- for <linux-erofs@lists.ozlabs.org>; Tue,  5 Apr 2022 11:37:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jmmlm.com; 
- h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
- i=Amazon.co.jp@jmmlm.com;
- bh=BS85fzoV5HsnqfsdcaecwkM/yRpnUZDJzMo8FijNEQs=;
- b=QtrTOZ2j5nqeAAaKAIKiIUHX64HKgDNB3CCFJaFCf0qaCkVysjo+3vO9Q5bica0XC4lp7lpmSt3a
- Ww0eJmc0E/otqYpWIYKsxlDsVLaihKYRu4HJZSJ9MnfQraKcb4tnvhNX6oW0i2vm4eo5YxeMz3OC
- lTwoXjJ7muyIqMdyYtc=
-From: Amazon.co.jp@jmmlm.com <Amazon.co.jp@jmmlm.com>
-To: linux-erofs <linux-erofs@lists.ozlabs.org>
-Subject: =?UTF-8?B?QW1hem9uLmNvLmpw6YeN6KaB44Gq44GK55+l44KJ44Gb?=
-Date: Tue, 5 Apr 2022 01:26:54 +000
-Message-ID: <002ab43cd896$e04b48ba$f5a753b8$@Amazon.co.jp>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KYGzv2lP8z2yRX
+ for <linux-erofs@lists.ozlabs.org>; Wed,  6 Apr 2022 17:56:24 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R161e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9LC80w_1649231772; 
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0V9LC80w_1649231772) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 06 Apr 2022 15:56:13 +0800
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
+To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+Subject: [PATCH v8 00/20] fscache,
+ erofs: fscache-based on-demand read semantics
+Date: Wed,  6 Apr 2022 15:55:52 +0800
+Message-Id: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="----=_NextPart_000_0680_0171447E.12B3B500"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,206 +47,214 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: gregkh@linuxfoundation.org, fannaihao@baidu.com, willy@infradead.org,
+ linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
+ joseph.qi@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+ luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
+ torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
+changes since v7:
+- rebased to 5.18-rc1
+- include "cachefiles: unmark inode in use in error path" patch into
+  this patchset to avoid warning from test robot (patch 1)
+- cachefiles: rename [cookie|volume]_key_len field of struct
+  cachefiles_open to [cookie|volume]_key_size to avoid potential
+  misunderstanding. Also add more documentation to
+  include/uapi/linux/cachefiles.h. (patch 3)
+- cachefiles: valid check for error code returned from user daemon
+  (patch 3)
+- cachefiles: change WARN_ON_ONCE() to pr_info_once() when user daemon
+  closes anon_fd prematurely (patch 4/5)
+- ready for complete review
 
-------=_NextPart_000_0680_0171447E.12B3B500
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
 
-DQogDQoNCg0K44GK5pSv5omV5pa55rOV44Gr5ZWP6aGM44GM44GC44KK44CB44OX44Op44Kk44Og
-54m55YW444KS44GU5Yip55So44GE44Gf44Gg44GR44Gq44GE54q25rOB44Gn44GZDQpBbWF6b27j
-g5fjg6njgqTjg6DjgpLjgZTliKnnlKjpoILjgY3jgYLjgorjgYzjgajjgYbjgZTjgZbjgYTjgb7j
-gZnjgIINCuOBiuiqv+OBueOBl+OBn+OBqOOBk+OCjeOAgeS8muiyu+OBruOBiuaUr+aJleOBhOOB
-q+S9v+eUqOOBp+OBjeOCi+acieWKueOBquOCr+ODrOOCuOODg+ODiOOCq+ODvOODieOBjOOCouOC
-q+OCpuODs+ODiOOBq+eZu+mMsuOBleOCjOOBpuOBhOOBvuOBm+OCk+OAguOCr+ODrOOCuOODg+OD
-iOOCq+ODvOODieaDheWgseOBruabtOaWsOOAgeaWsOOBl+OBhOOCr+ODrOOCuOODg+ODiOOCq+OD
-vOODieOBrui/veWKoOOBq+OBpOOBhOOBpuOBr+S7peS4i+OBruaJi+mghuOCkuOBlOeiuuiqjeOB
-j+OBoOOBleOBhOOAgg0KICANCjEuIOOCouOCq+OCpuODs+ODiOOCteODvOODk+OCueOBi+OCiUFt
-YXpvbuODl+ODqeOCpOODoOS8muWToeaDheWgseOCkueuoeeQhuOBmeOCi+OBqOOBk+OCjeOCkuOC
-ouOCr+OCu+OCueOBl+OBvuOBmeOAgg0KMi4gQW1hem9u44OX44Op44Kk44Og44Gr55m76Yyy44GX
-44GfQW1hem9uLmNvLmpw44Gu44Ki44Kr44Km44Oz44OI44KS5L2/55So44GX44Gm44K144Kk44Oz
-44Kk44Oz44GX44G+44GZ44CCDQozLiDjgIznj77lnKjjga7mlK/miZXmlrnms5XjgI3jga7kuIvj
-gavjgYLjgovjgIzmlK/miZXmlrnms5XjgpLlpInmm7TjgZnjgovjgI3jga7jg6rjg7Pjgq/jgpLj
-gq/jg6rjg4Pjgq/jgZfjgb7jgZnjgIINCjQuIOacieWKueacn+mZkOOBruabtOaWsOOBvuOBn+OB
-r+aWsOOBl+OBhOOCr+ODrOOCuOODg+ODiOOCq+ODvOODieaDheWgseOCkuWFpeWKm+OBl+OBpuOB
-j+OBoOOBleOBhOOAgg0KDQrmlK/miZXmlrnms5XjgpLlpInmm7TjgZnjgosgDQoNCg0KDQoNCjQx
-MCBUZXJyeSBBdmUuIE5vcnRoIFNlYXR0bGUsIFdBIDk4MTA5LTUyMTAsIFVTQSAgICAgICBWaWV3
-IHRoaXMgZW1haWwgaW4geW91ciBicm93c2VyIA0KDQoNCg==
+Kernel Patchset
+---------------
+Git tree:
 
-------=_NextPart_000_0680_0171447E.12B3B500
-Content-Type: text/html;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+    https://github.com/lostjeffle/linux.git jingbo/dev-erofs-fscache-v8
 
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPjxUSVRMRT5TYWx0ZWQgfCBBIFJlc3BvbnNpdmUgRW1haWwgVGVt
-cGxhdGU8L1RJVExFPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVURi04IiBo
-dHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxTVFlMRSBjbGFzcz1mb3hfZ2xvYmFsX3N0eWxlPg0K
-CQkJZGl2LmZveF9odG1sX2NvbnRlbnQgeyBsaW5lLWhlaWdodDogMS41O30NCgkJCS8qIOS4gOS6
-m+m7mOiupOagt+W8jyAqLw0KCQkJYmxvY2txdW90ZSB7IG1hcmdpbi1Ub3A6IDBweDsgbWFyZ2lu
-LUJvdHRvbTogMHB4OyBtYXJnaW4tTGVmdDogMC41ZW0gfQ0KCQkJb2wsIHVsIHsgbWFyZ2luLVRv
-cDogMHB4OyBtYXJnaW4tQm90dG9tOiAwcHg7IGxpc3Qtc3R5bGUtcG9zaXRpb246IGluc2lkZTsg
-fQ0KCQkJcCB7IG1hcmdpbi1Ub3A6IDBweDsgbWFyZ2luLUJvdHRvbTogMHB4IH0NCgkJPC9TVFlM
-RT4NCjwhLS0gT05FIENPTFVNTiBTRUNUSU9OIC0tPg0KPE1FVEEgbmFtZT1HRU5FUkFUT1IgY29u
-dGVudD0iTVNIVE1MIDExLjAwLjEwNTcwLjEwMDEiPjwvSEVBRD4NCjxCT0RZPg0KPFRBQkxFIHN0
-eWxlPSJCT1JERVItQ09MTEFQU0U6IGNvbGxhcHNlOyB0ZXh0LXNpemUtYWRqdXN0OiAxMDAlIiBj
-ZWxsU3BhY2luZz0wIA0KY2VsbFBhZGRpbmc9MCB3aWR0aD0iMTAwJSIgYm9yZGVyPTA+DQogIDxU
-Qk9EWT4NCiAgPFRSPg0KICAgIDxURCBjbGFzcz1zZWN0aW9uLXBhZGRpbmcgDQogICAgc3R5bGU9
-IlBBRERJTkctQk9UVE9NOiA3MHB4OyBQQURESU5HLVRPUDogNzBweDsgUEFERElORy1MRUZUOiAx
-NXB4OyBQQURESU5HLVJJR0hUOiAxNXB4OyB0ZXh0LXNpemUtYWRqdXN0OiAxMDAlIiANCiAgICBi
-Z0NvbG9yPSNmZmZmZmYgYWxpZ249Y2VudGVyPg0KICAgICAgPFRBQkxFIGNsYXNzPXJlc3BvbnNp
-dmUtdGFibGUgDQogICAgICBzdHlsZT0iQk9SREVSLUNPTExBUFNFOiBjb2xsYXBzZTsgdGV4dC1z
-aXplLWFkanVzdDogMTAwJSIgY2VsbFNwYWNpbmc9MCANCiAgICAgIGNlbGxQYWRkaW5nPTAgd2lk
-dGg9NTAwIGJvcmRlcj0wPg0KICAgICAgICA8VEJPRFk+DQogICAgICAgIDxUUj4NCiAgICAgICAg
-ICA8VEQgc3R5bGU9InRleHQtc2l6ZS1hZGp1c3Q6IDEwMCUiPg0KICAgICAgICAgICAgPFRBQkxF
-IHN0eWxlPSJCT1JERVItQ09MTEFQU0U6IGNvbGxhcHNlOyB0ZXh0LXNpemUtYWRqdXN0OiAxMDAl
-IiANCiAgICAgICAgICAgIGNlbGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCB3aWR0aD0iMTAwJSIg
-Ym9yZGVyPTA+DQogICAgICAgICAgICAgIDxUQk9EWT4NCiAgICAgICAgICAgICAgPFRSPg0KICAg
-ICAgICAgICAgICAgIDxURCBzdHlsZT0idGV4dC1zaXplLWFkanVzdDogMTAwJSI+PCEtLSBIRVJP
-IElNQUdFIC0tPg0KICAgICAgICAgICAgICAgICAgPFRBQkxFIA0KICAgICAgICAgICAgICAgICAg
-c3R5bGU9IkJPUkRFUi1DT0xMQVBTRTogY29sbGFwc2U7IHRleHQtc2l6ZS1hZGp1c3Q6IDEwMCUi
-IA0KICAgICAgICAgICAgICAgICAgY2VsbFNwYWNpbmc9MCBjZWxsUGFkZGluZz0wIHdpZHRoPSIx
-MDAlIiBib3JkZXI9MD4NCiAgICAgICAgICAgICAgICAgICAgPFRCT0RZPg0KICAgICAgICAgICAg
-ICAgICAgICA8VFI+DQogICAgICAgICAgICAgICAgICAgICAgPFREIGNsYXNzPXBhZGRpbmctY29w
-eSBzdHlsZT0idGV4dC1zaXplLWFkanVzdDogMTAwJSI+DQogICAgICAgICAgICAgICAgICAgICAg
-ICA8RElWIHN0eWxlPSJXSURUSDogMTUwcHg7IE1BUkdJTjogMHB4IGF1dG8iPjxBIA0KICAgICAg
-ICAgICAgICAgICAgICAgICAgc3R5bGU9InRleHQtc2l6ZS1hZGp1c3Q6IDEwMCUiIGhyZWY9IiMi
-IA0KICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0PV9ibGFuaz48SU1HIA0KICAgICAgICAg
-ICAgICAgICAgICAgICAgc3R5bGU9IkZPTlQtU0laRTogMTZweDsgVEVYVC1ERUNPUkFUSU9OOiBu
-b25lOyBCT1JERVItVE9QOiAwcHg7IEhFSUdIVDogYXV0bzsgRk9OVC1GQU1JTFk6IEhlbHZldGlj
-YSwgQXJpYWwsIHNhbnMtc2VyaWY7IEJPUkRFUi1SSUdIVDogMHB4OyBCT1JERVItQk9UVE9NOiAw
-cHg7IENPTE9SOiByZ2IoMTAyLDEwMiwxMDIpOyBPVVRMSU5FLVdJRFRIOiBtZWRpdW07IE9VVExJ
-TkUtU1RZTEU6IG5vbmU7IEJPUkRFUi1MRUZUOiAwcHg7IERJU1BMQVk6IGJsb2NrOyBPVVRMSU5F
-LUNPTE9SOiBpbnZlcnQ7IExJTkUtSEVJR0hUOiAxMDAlIiANCiAgICAgICAgICAgICAgICAgICAg
-ICAgIGJvcmRlcj0wIGFsdD1Mb2dvIA0KICAgICAgICAgICAgICAgICAgICAgICAgc3JjPSJodHRw
-czovL3N0YXRpYzEuYnVzaW5lc3NpbnNpZGVyLmNvbS9pbWFnZS81MzlmM2ZmYmVjYWQwNDQyNzY3
-MjZjMDEtOTYwL2FtYXpvbi1jb20tbG9nby5qcGciIA0KICAgICAgICAgICAgICAgICAgICAgICAg
-d2lkdGg9MTUwPjwvQT4gPC9ESVY+PEJSPg0KICAgICAgICAgICAgICAgICAgICAgICAgPFRBQkxF
-IA0KICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9IkJPUkRFUi1DT0xMQVBTRTogY29sbGFw
-c2U7IHRleHQtc2l6ZS1hZGp1c3Q6IDEwMCUiIA0KICAgICAgICAgICAgICAgICAgICAgICAgY2Vs
-bFNwYWNpbmc9MCBjZWxsUGFkZGluZz0wIHdpZHRoPSIxMDAlIiBib3JkZXI9MD4NCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPFRCT0RZPg0KICAgICAgICAgICAgICAgICAgICAgICAgICA8VFI+
-DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgPFREIHN0eWxlPSJ0ZXh0LXNpemUtYWRqdXN0
-OiAxMDAlIj48QSANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJ0ZXh0LXNp
-emUtYWRqdXN0OiAxMDAlIiBocmVmPSIjIiANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHRhcmdldD1fYmxhbms+PElNRyBjbGFzcz1pbWctbWF4IA0KICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgc3R5bGU9IkZPTlQtU0laRTogMTZweDsgVEVYVC1ERUNPUkFUSU9OOiBub25lOyBC
-T1JERVItVE9QOiAwcHg7IEhFSUdIVDogYXV0bzsgRk9OVC1GQU1JTFk6IEhlbHZldGljYSwgYXJp
-YWwsIHNhbnMtc2VyaWY7IEJPUkRFUi1SSUdIVDogMHB4OyBXSURUSDogNTAwcHg7IEJPUkRFUi1C
-T1RUT006IDBweDsgQ09MT1I6IHJnYigxMDIsMTAyLDEwMik7IE9VVExJTkUtV0lEVEg6IG1lZGl1
-bTsgUEFERElORy1CT1RUT006IDBweDsgUEFERElORy1UT1A6IDBweDsgT1VUTElORS1TVFlMRTog
-bm9uZTsgUEFERElORy1MRUZUOiAwcHg7IEJPUkRFUi1MRUZUOiAwcHg7IERJU1BMQVk6IGJsb2Nr
-OyBPVVRMSU5FLUNPTE9SOiBpbnZlcnQ7IExJTkUtSEVJR0hUOiAxMDAlOyBQQURESU5HLVJJR0hU
-OiAwcHgiIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYm9yZGVyPTAgYWx0PSJDYW4g
-YW4gZW1haWwgcmVhbGx5IGJlIHJlc3BvbnNpdmU/IiANCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHNyYz0iaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3JvZHJpZ3VlemNv
-bW1hai9zYWx0ZWQvbWFzdGVyL2ltZy9yZXNwb25zaXZlLWVtYWlsLmpwZyIgDQogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB3aWR0aD01MDAgaGVpZ2h0PTIwMD48L0E+IA0KICAgICAgICAg
-ICAgICAgICAgICA8L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjwvVEQ+PC9UUj48L1RCT0RZPjwv
-VEFCTEU+PC9URD48L1RSPg0KICAgICAgICAgICAgICA8VFI+DQogICAgICAgICAgICAgICAgPFRE
-IHN0eWxlPSJ0ZXh0LXNpemUtYWRqdXN0OiAxMDAlIj48IS0tIENPUFkgLS0+DQogICAgICAgICAg
-ICAgICAgICA8VEFCTEUgDQogICAgICAgICAgICAgICAgICBzdHlsZT0iQk9SREVSLUNPTExBUFNF
-OiBjb2xsYXBzZTsgdGV4dC1zaXplLWFkanVzdDogMTAwJSIgDQogICAgICAgICAgICAgICAgICBj
-ZWxsU3BhY2luZz0wIGNlbGxQYWRkaW5nPTAgd2lkdGg9IjEwMCUiIGJvcmRlcj0wPg0KICAgICAg
-ICAgICAgICAgICAgICA8VEJPRFk+DQogICAgICAgICAgICAgICAgICAgIDxUUj4NCiAgICAgICAg
-ICAgICAgICAgICAgICA8VEQgY2xhc3M9cGFkZGluZy1jb3B5IA0KICAgICAgICAgICAgICAgICAg
-ICAgIHN0eWxlPSJGT05ULVNJWkU6IDI1cHg7IEZPTlQtRkFNSUxZOiBIZWx2ZXRpY2EsIEFyaWFs
-LCBzYW5zLXNlcmlmOyBDT0xPUjogcmdiKDUxLDUxLDUxKTsgUEFERElORy1UT1A6IDMwcHg7IHRl
-eHQtc2l6ZS1hZGp1c3Q6IDEwMCUiIA0KICAgICAgICAgICAgICAgICAgICAgIGFsaWduPWNlbnRl
-cj48U1BBTiANCiAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJGT05ULVNJWkU6IDE5cHgi
-PuOBiuaUr+aJleaWueazleOBq+WVj+mhjOOBjOOBguOCiuOAgeODl+ODqeOCpOODoOeJueWFuOOC
-kuOBlOWIqeeUqOOBhOOBn+OBoOOBkeOBquOBhOeKtuazgeOBp+OBmTwvU1BBTj48L1REPjwvVFI+
-DQogICAgICAgICAgICAgICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICAgICAgICA8VEQgY2xh
-c3M9cGFkZGluZy1jb3B5IA0KICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJGT05ULVNJWkU6
-IDE2cHg7IEZPTlQtRkFNSUxZOiBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmOyBDT0xPUjog
-cmdiKDEwMiwxMDIsMTAyKTsgUEFERElORy1CT1RUT006IDBweDsgUEFERElORy1UT1A6IDIwcHg7
-IFBBRERJTkctTEVGVDogMHB4OyBMSU5FLUhFSUdIVDogMjVweDsgUEFERElORy1SSUdIVDogMHB4
-OyB0ZXh0LXNpemUtYWRqdXN0OiAxMDAlIiANCiAgICAgICAgICAgICAgICAgICAgICBhbGlnbj1s
-ZWZ0Pg0KICAgICAgICAgICAgICAgICAgICAgICAgPERJVj4NCiAgICAgICAgICAgICAgICAgICAg
-ICAgIDxESVY+QW1hem9u44OX44Op44Kk44Og44KS44GU5Yip55So6aCC44GN44GC44KK44GM44Go
-44GG44GU44GW44GE44G+44GZ44CCPEJSPuOBiuiqv+OBueOBl+OBn+OBqOOBk+OCjeOAgeS8muiy
-u+OBruOBiuaUr+aJleOBhOOBq+S9v+eUqOOBp+OBjeOCi+acieWKueOBquOCr+ODrOOCuOODg+OD
-iOOCq+ODvOODieOBjOOCouOCq+OCpuODs+ODiOOBq+eZu+mMsuOBleOCjOOBpuOBhOOBvuOBm+OC
-k+OAguOCr+ODrOOCuOODg+ODiOOCq+ODvOODieaDheWgseOBruabtOaWsOOAgeaWsOOBl+OBhOOC
-r+ODrOOCuOODg+ODiOOCq+ODvOODieOBrui/veWKoOOBq+OBpOOBhOOBpuOBr+S7peS4i+OBruaJ
-i+mghuOCkuOBlOeiuuiqjeOBj+OBoOOBleOBhOOAgjxCUj4mbmJzcDsgDQogICAgICAgICAgICAg
-ICAgICAgICAgICA8QlI+MS4g44Ki44Kr44Km44Oz44OI44K144O844OT44K544GL44KJQW1hem9u
-44OX44Op44Kk44Og5Lya5ZOh5oOF5aCx44KS566h55CG44GZ44KL44Go44GT44KN44KS44Ki44Kv
-44K744K544GX44G+44GZ44CCPC9ESVY+DQogICAgICAgICAgICAgICAgICAgICAgICA8RElWPjxC
-Uj4yLiANCiAgICAgICAgICAgICAgICAgICAgICAgIEFtYXpvbuODl+ODqeOCpOODoOOBq+eZu+mM
-suOBl+OBn0FtYXpvbi5jby5qcOOBruOCouOCq+OCpuODs+ODiOOCkuS9v+eUqOOBl+OBpuOCteOC
-pOODs+OCpOODs+OBl+OBvuOBmeOAgjwvRElWPg0KICAgICAgICAgICAgICAgICAgICAgICAgPERJ
-Vj48QlI+My4g44CM54++5Zyo44Gu5pSv5omV5pa55rOV44CN44Gu5LiL44Gr44GC44KL44CM5pSv
-5omV5pa55rOV44KS5aSJ5pu044GZ44KL44CN44Gu44Oq44Oz44Kv44KS44Kv44Oq44OD44Kv44GX
-44G+44GZ44CCPC9ESVY+DQogICAgICAgICAgICAgICAgICAgICAgICA8RElWPjxCUj40LiDmnInl
-irnmnJ/pmZDjga7mm7TmlrDjgb7jgZ/jga/mlrDjgZfjgYTjgq/jg6zjgrjjg4Pjg4jjgqvjg7zj
-g4nmg4XloLHjgpLlhaXlipvjgZfjgabjgY/jgaDjgZXjgYTjgII8L0RJVj4NCiAgICAgICAgICAg
-ICAgICAgICAgICAgIDxESVYgY2xhc3M9cGFhZD48L0RJVj48L0RJVj48L1REPjwvVFI+PC9UQk9E
-WT48L1RBQkxFPjwvVEQ+PC9UUj4NCiAgICAgICAgICAgICAgPFRSPg0KICAgICAgICAgICAgICAg
-IDxURCBzdHlsZT0idGV4dC1zaXplLWFkanVzdDogMTAwJSI+PCEtLSBCVUxMRVRQUk9PRiBCVVRU
-T04gLS0+DQogICAgICAgICAgICAgICAgICA8VEFCTEUgY2xhc3M9bW9iaWxlLWJ1dHRvbi1jb250
-YWluZXIgDQogICAgICAgICAgICAgICAgICBzdHlsZT0iQk9SREVSLUNPTExBUFNFOiBjb2xsYXBz
-ZTsgdGV4dC1zaXplLWFkanVzdDogMTAwJSIgDQogICAgICAgICAgICAgICAgICBjZWxsU3BhY2lu
-Zz0wIGNlbGxQYWRkaW5nPTAgd2lkdGg9IjEwMCUiIGJvcmRlcj0wPg0KICAgICAgICAgICAgICAg
-ICAgICA8VEJPRFk+DQogICAgICAgICAgICAgICAgICAgIDxUUj4NCiAgICAgICAgICAgICAgICAg
-ICAgICA8VEQgY2xhc3M9cGFkZGluZy1jb3B5IA0KICAgICAgICAgICAgICAgICAgICAgIHN0eWxl
-PSJQQURESU5HLUJPVFRPTTogMHB4OyBQQURESU5HLVRPUDogMjVweDsgUEFERElORy1MRUZUOiAw
-cHg7IFBBRERJTkctUklHSFQ6IDBweDsgdGV4dC1zaXplLWFkanVzdDogMTAwJSIgDQogICAgICAg
-ICAgICAgICAgICAgICAgYWxpZ249Y2VudGVyPg0KICAgICAgICAgICAgICAgICAgICAgICAgPFRB
-QkxFIGNsYXNzPXJlc3BvbnNpdmUtdGFibGUgDQogICAgICAgICAgICAgICAgICAgICAgICBzdHls
-ZT0iQk9SREVSLUNPTExBUFNFOiBjb2xsYXBzZTsgdGV4dC1zaXplLWFkanVzdDogMTAwJSIgDQog
-ICAgICAgICAgICAgICAgICAgICAgICBjZWxsU3BhY2luZz0wIGNlbGxQYWRkaW5nPTAgYm9yZGVy
-PTA+DQogICAgICAgICAgICAgICAgICAgICAgICAgIDxUQk9EWT4NCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgPFRSPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxURCBzdHlsZT0idGV4
-dC1zaXplLWFkanVzdDogMTAwJSIgYWxpZ249Y2VudGVyPjxBIA0KICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgY2xhc3M9bW9iaWxlLWJ1dHRvbiANCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHN0eWxlPSJGT05ULVNJWkU6IDE1cHg7IFRFWFQtREVDT1JBVElPTjogbm9uZTsgQk9S
-REVSLVRPUDogcmdiKDI0NiwxODcsNjYpIDEwcHggc29saWQ7IEZPTlQtRkFNSUxZOiBIZWx2ZXRp
-Y2EsIEFyaWFsLCBzYW5zLXNlcmlmOyBCT1JERVItUklHSFQ6IHJnYigyNDYsMTg3LDY2KSA1MHB4
-IHNvbGlkOyBCT1JERVItQk9UVE9NOiByZ2IoMjQ2LDE4Nyw2NikgMTBweCBzb2xpZDsgRk9OVC1X
-RUlHSFQ6IG5vcm1hbDsgQ09MT1I6IHJnYigyNTUsMjU1LDI1NSk7IEJPUkRFUi1MRUZUOiByZ2Io
-MjQ2LDE4Nyw2NikgNTBweCBzb2xpZDsgRElTUExBWTogaW5saW5lLWJsb2NrOyBCQUNLR1JPVU5E
-LUNPTE9SOiByZ2IoMjQ2LDE4Nyw2Nik7IHRleHQtc2l6ZS1hZGp1c3Q6IDEwMCU7IGJvcmRlci1y
-YWRpdXM6IDNweCIgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBocmVmPSJodHRwczov
-L3d3dy5hbXp1cGRhdGUtYWNjb3VudC5jby5qcC5oc2hpZmlhLmNuIiANCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHRhcmdldD1fYmxhbms+5pSv5omV5pa55rOV44KS5aSJ5pu044GZ44KL
-IA0KICAgICAgICAgICAgICAgICAgICA8L0E+PC9URD48L1RSPjwvVEJPRFk+PC9UQUJMRT48L1RE
-PjwvVFI+PC9UQk9EWT48L1RBQkxFPjwvVEQ+PC9UUj48L1RCT0RZPjwvVEFCTEU+PC9URD48L1RS
-PjwvVEJPRFk+PC9UQUJMRT48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjwhLS0gRk9PVEVSIC0t
-Pg0KPFRBQkxFIHN0eWxlPSJCT1JERVItQ09MTEFQU0U6IGNvbGxhcHNlOyB0ZXh0LXNpemUtYWRq
-dXN0OiAxMDAlIiBjZWxsU3BhY2luZz0wIA0KY2VsbFBhZGRpbmc9MCB3aWR0aD0iMTAwJSIgYm9y
-ZGVyPTA+DQogIDxUQk9EWT4NCiAgPFRSPg0KICAgIDxURCBzdHlsZT0idGV4dC1zaXplLWFkanVz
-dDogMTAwJSIgYmdDb2xvcj0jZmZmZmZmIGFsaWduPWNlbnRlcj4NCiAgICAgIDxUQUJMRSBzdHls
-ZT0iQk9SREVSLUNPTExBUFNFOiBjb2xsYXBzZTsgdGV4dC1zaXplLWFkanVzdDogMTAwJSIgDQog
-ICAgICBjZWxsU3BhY2luZz0wIGNlbGxQYWRkaW5nPTAgd2lkdGg9IjEwMCUiIGFsaWduPWNlbnRl
-ciBib3JkZXI9MD4NCiAgICAgICAgPFRCT0RZPg0KICAgICAgICA8VFI+DQogICAgICAgICAgPFRE
-IA0KICAgICAgICAgIHN0eWxlPSJQQURESU5HLUJPVFRPTTogMjBweDsgUEFERElORy1UT1A6IDIw
-cHg7IFBBRERJTkctTEVGVDogMHB4OyBQQURESU5HLVJJR0hUOiAwcHg7IHRleHQtc2l6ZS1hZGp1
-c3Q6IDEwMCUiPjwhLS0gVU5TVUJTQ1JJQkUgQ09QWSAtLT4NCiAgICAgICAgICAgIDxUQUJMRSBj
-bGFzcz1yZXNwb25zaXZlLXRhYmxlIA0KICAgICAgICAgICAgc3R5bGU9IkJPUkRFUi1DT0xMQVBT
-RTogY29sbGFwc2U7IHRleHQtc2l6ZS1hZGp1c3Q6IDEwMCUiIA0KICAgICAgICAgICAgY2VsbFNw
-YWNpbmc9MCBjZWxsUGFkZGluZz0wIHdpZHRoPTUwMCBhbGlnbj1jZW50ZXIgYm9yZGVyPTA+DQog
-ICAgICAgICAgICAgIDxUQk9EWT4NCiAgICAgICAgICAgICAgPFRSPg0KICAgICAgICAgICAgICAg
-IDxURCANCiAgICAgICAgICAgICAgICBzdHlsZT0iRk9OVC1TSVpFOiAxMnB4OyBGT05ULUZBTUlM
-WTogSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsgQ09MT1I6IHJnYigxMDIsMTAyLDEwMik7
-IExJTkUtSEVJR0hUOiAxOHB4OyB0ZXh0LXNpemUtYWRqdXN0OiAxMDAlIiANCiAgICAgICAgICAg
-ICAgICB2QWxpZ249bWlkZGxlIGFsaWduPWNlbnRlcj4NCiAgICAgICAgICAgICAgICAgIDxDRU5U
-RVI+PFNQQU4gY2xhc3M9YXBwbGVGb290ZXIgc3R5bGU9IkNPTE9SOiAjNjY2NjY2Ij40MTAgDQog
-ICAgICAgICAgICAgICAgICBUZXJyeSBBdmUuIE5vcnRoIFNlYXR0bGUsIFdBIDk4MTA5LTUyMTAs
-IFVTQTwvU1BBTj48U1BBTiANCiAgICAgICAgICAgICAgICAgIGNsYXNzPW9yaWdpbmFsLW9ubHkg
-DQogICAgICAgICAgICAgICAgICBzdHlsZT0iRk9OVC1TSVpFOiAxMnB4OyBGT05ULUZBTUlMWTog
-QXJpYWwsIHNhbnMtc2VyaWY7IENPTE9SOiAjNDQ0NDQ0Ij4mbmJzcDsmbmJzcDsmbmJzcDt8Jm5i
-c3A7Jm5ic3A7Jm5ic3A7PC9TUEFOPjxBIA0KICAgICAgICAgICAgICAgICAgc3R5bGU9IlRFWFQt
-REVDT1JBVElPTjogbm9uZTsgQ09MT1I6IHJnYigxMDIsMTAyLDEwMik7IHRleHQtc2l6ZS1hZGp1
-c3Q6IDEwMCUiPlZpZXcgDQogICAgICAgICAgICAgICAgICB0aGlzIGVtYWlsIGluIHlvdXIgYnJv
-d3NlcjwvQT4gDQogICAgICAgIDwvQ0VOVEVSPjwvVEQ+PC9UUj48L1RCT0RZPjwvVEFCTEU+PC9U
-RD48L1RSPjwvVEJPRFk+PC9UQUJMRT48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjwvQk9EWT48
-L0hUTUw+DQo=
+Gitweb:
 
-------=_NextPart_000_0680_0171447E.12B3B500--
+    https://github.com/lostjeffle/linux/commits/jingbo/dev-erofs-fscache-v8
+
+
+User Daemon for Quick Test
+--------------------------
+Git tree:
+
+    https://github.com/lostjeffle/demand-read-cachefilesd.git main
+
+Gitweb:
+
+    https://github.com/lostjeffle/demand-read-cachefilesd
+
+
+RFC: https://lore.kernel.org/all/YbRL2glGzjfZkVbH@B-P7TQMD6M-0146.local/t/
+v1: https://lore.kernel.org/lkml/47831875-4bdd-8398-9f2d-0466b31a4382@linux.alibaba.com/T/
+v2: https://lore.kernel.org/all/2946d871-b9e1-cf29-6d39-bcab30f2854f@linux.alibaba.com/t/
+v3: https://lore.kernel.org/lkml/20220209060108.43051-1-jefflexu@linux.alibaba.com/T/
+v4: https://lore.kernel.org/lkml/20220307123305.79520-1-jefflexu@linux.alibaba.com/T/#t
+v5: https://lore.kernel.org/lkml/202203170912.gk2sqkaK-lkp@intel.com/T/
+v6: https://lore.kernel.org/lkml/202203260720.uA5o7k5w-lkp@intel.com/T/
+v7: https://www.spinics.net/lists/linux-fsdevel/msg215066.html
+
+
+[Background]
+============
+Nydus [1] is an image distribution service especially optimized for
+distribution over network. Nydus is an excellent container image
+acceleration solution, since it only pulls data from remote when needed,
+a.k.a. on-demand reading and it also supports chunk-based deduplication,
+compression, etc.
+
+erofs (Enhanced Read-Only File System) is a filesystem designed for
+read-only scenarios. (Documentation/filesystem/erofs.rst)
+
+Over the past months we've been focusing on supporting Nydus image service
+with in-kernel erofs format[2]. In that case, each container image will be
+organized in one bootstrap (metadata) and (optional) multiple data blobs in
+erofs format. Massive container images will be stored on one machine.
+
+To accelerate the container startup (fetching container images from remote
+and then start the container), we do hope that the bootstrap & blob files
+could support on-demand read. That is, erofs can be mounted and accessed
+even when the bootstrap/data blob files have not been fully downloaded.
+Then it'll have native performance after data is available locally.
+
+That means we have to manage the cache state of the bootstrap/data blob
+files (if cache hit, read directly from the local cache; if cache miss,
+fetch the data somehow). It would be painful and may be dumb for erofs to
+implement the cache management itself. Thus we prefer fscache/cachefiles
+to do the cache management instead.
+
+The fscache on-demand read feature aims to be implemented in a generic way
+so that it can benefit other use cases and/or filesystems if it's
+implemented in the fscache subsystem.
+
+[1] https://nydus.dev
+[2] https://sched.co/pcdL
+
+
+[Overall Design]
+================
+Please refer to patch 7 ("cachefiles: document on-demand read mode") for
+more details.
+
+When working in the original mode, cachefiles mainly serves as a local cache
+for remote networking fs, while in on-demand read mode, cachefiles can work
+in the scenario where on-demand read semantics is needed, e.g. container image
+distribution.
+
+The essential difference between these two modes is that, in original mode,
+when cache miss, netfs itself will fetch data from remote, and then write the
+fetched data into cache file. While in on-demand read mode, a user daemon is
+responsible for fetching data and then feeds to the kernel fscache side.
+
+The on-demand read mode relies on a simple protocol used for communication
+between kernel and user daemon.
+
+The proposed implementation relies on the anonymous fd mechanism to avoid
+the dependence on the format of cache file. When a fscache cachefile is opened
+for the first time, an anon_fd associated with the cache file is sent to the
+user daemon. With the given anon_fd, user daemon could fetch and write data
+into the cache file in the background, even when kernel has not triggered the
+cache miss. Besides, the write() syscall to the anon_fd will finally call
+cachefiles kernel module, which will write data to cache file in the latest
+format of cache file.
+
+1. cache miss
+When cache miss, cachefiles kernel module will notify user daemon with the
+anon_fd, along with the requested file range. When notified, user daemon
+needs to fetch data of the requested file range, and then write the fetched
+data into cache file with the given anonymous fd. When finished processing
+the request, user daemon needs to notify the kernel.
+
+After notifying the user daemon, the kernel read routine will hang there,
+until the request is handled by user daemon. When it's awaken by the
+notification from user daemon, i.e. the corresponding hole has been filled
+by the user daemon, it will retry to read from the same file range.
+
+2. cache hit
+Once data is already ready in cache file, netfs will read from cache
+file directly.
+
+
+[Advantage of fscache-based on-demand read]
+========================================
+1. Asynchronous Prefetch
+In current mechanism, fscache is responsible for cache state management,
+while the data plane (fetch data from local/remote on cache miss) is
+done on the user daemon side.
+
+If data has already been ready in the backing file, netfs (e.g. erofs)
+will read from the backing file directly and won't be trapped to user
+space anymore. Thus the user daemon could fetch data (from remote)
+asynchronously on the background, and thus accelerate the backing file
+accessing in some degree.
+
+2. Support massive blob files
+Besides this mechanism supports a large amount of backing files, and
+thus can benefit the densely employed scenario.
+
+In our using scenario, one container image can correspond to one
+bootstrap file (required) and multiple data blob files (optional). For
+example, one container image for node.js will corresponds to ~20 files
+in total. In densely employed environment, there could be as many as
+hundreds of containers and thus thousands of backing files on one
+machine.
+
+
+Jeffle Xu (20):
+  cachefiles: unmark inode in use in error path
+  cachefiles: extract write routine
+  cachefiles: notify user daemon with anon_fd when looking up cookie
+  cachefiles: notify user daemon when withdrawing cookie
+  cachefiles: implement on-demand read
+  cachefiles: enable on-demand read mode
+  cachefiles: document on-demand read mode
+  erofs: make erofs_map_blocks() generally available
+  erofs: add mode checking helper
+  erofs: register fscache volume
+  erofs: add fscache context helper functions
+  erofs: add anonymous inode managing page cache for data blob
+  erofs: add erofs_fscache_read_folios() helper
+  erofs: register fscache context for primary data blob
+  erofs: register fscache context for extra data blobs
+  erofs: implement fscache-based metadata read
+  erofs: implement fscache-based data read for non-inline layout
+  erofs: implement fscache-based data read for inline layout
+  erofs: implement fscache-based data readahead
+  erofs: add 'fsid' mount option
+
+ .../filesystems/caching/cachefiles.rst        | 165 ++++++
+ fs/cachefiles/Kconfig                         |  11 +
+ fs/cachefiles/Makefile                        |   1 +
+ fs/cachefiles/daemon.c                        |  90 +++-
+ fs/cachefiles/interface.c                     |   2 +
+ fs/cachefiles/internal.h                      |  67 +++
+ fs/cachefiles/io.c                            |  72 ++-
+ fs/cachefiles/namei.c                         |  49 +-
+ fs/cachefiles/ondemand.c                      | 479 ++++++++++++++++++
+ fs/erofs/Kconfig                              |  10 +
+ fs/erofs/Makefile                             |   1 +
+ fs/erofs/data.c                               |  27 +-
+ fs/erofs/fscache.c                            | 369 ++++++++++++++
+ fs/erofs/inode.c                              |   5 +
+ fs/erofs/internal.h                           |  55 ++
+ fs/erofs/super.c                              |  99 +++-
+ include/linux/fscache.h                       |   1 +
+ include/linux/netfs.h                         |   1 +
+ include/trace/events/cachefiles.h             |   2 +
+ include/uapi/linux/cachefiles.h               |  72 +++
+ 20 files changed, 1501 insertions(+), 77 deletions(-)
+ create mode 100644 fs/cachefiles/ondemand.c
+ create mode 100644 fs/erofs/fscache.c
+ create mode 100644 include/uapi/linux/cachefiles.h
+
+-- 
+2.27.0
 
