@@ -1,38 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A8624F5710
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 09:56:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F43A4F5712
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 09:56:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KYH0P3zVMz3bVc
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 17:56:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KYH0R21vzz3bjG
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 17:56:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.9;
- helo=out199-9.us.a.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out199-9.us.a.mail.aliyun.com (out199-9.us.a.mail.aliyun.com
- [47.90.199.9])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
+ helo=out30-54.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-54.freemail.mail.aliyun.com
+ (out30-54.freemail.mail.aliyun.com [115.124.30.54])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KYH075sk5z2ypn
- for <linux-erofs@lists.ozlabs.org>; Wed,  6 Apr 2022 17:56:39 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R671e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9L3PCZ_1649231791; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KYH0C00ymz2yg7
+ for <linux-erofs@lists.ozlabs.org>; Wed,  6 Apr 2022 17:56:42 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R591e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9Ko7Vp_1649231793; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V9L3PCZ_1649231791) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 06 Apr 2022 15:56:32 +0800
+ fp:SMTPD_---0V9Ko7Vp_1649231793) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 06 Apr 2022 15:56:34 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v8 12/20] erofs: add anonymous inode managing page cache for
- data blob
-Date: Wed,  6 Apr 2022 15:56:04 +0800
-Message-Id: <20220406075612.60298-13-jefflexu@linux.alibaba.com>
+Subject: [PATCH v8 13/20] erofs: add erofs_fscache_read_folios() helper
+Date: Wed,  6 Apr 2022 15:56:05 +0800
+Message-Id: <20220406075612.60298-14-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
 References: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
@@ -58,128 +57,59 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce one anonymous inode managing page cache for data blob. Then
-erofs could read directly from the address space of the anonymous inode
-when cache hit.
+Add erofs_fscache_read_folios() helper reading from fscache. It supports
+on-demand read semantics. That is, it will make the backend prepare for
+the data when cache miss. Once data ready, it will reinitiate a read
+from the cache.
+
+This helper can then be used to implement .readpage()/.readahead() of
+on-demand read semantics.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 39 ++++++++++++++++++++++++++++++++++++---
- fs/erofs/internal.h |  6 ++++--
- 2 files changed, 40 insertions(+), 5 deletions(-)
+ fs/erofs/fscache.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 67a3c4935245..1c88614203d2 100644
+index 1c88614203d2..d38a6efc8e50 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -5,17 +5,22 @@
+@@ -5,6 +5,35 @@
  #include <linux/fscache.h>
  #include "internal.h"
  
-+static const struct address_space_operations erofs_fscache_meta_aops = {
-+};
-+
- /*
-  * Create an fscache context for data blob.
-  * Return: 0 on success and allocated fscache context is assigned to @fscache,
-  *	   negative error number on failure.
-  */
- int erofs_fscache_register_cookie(struct super_block *sb,
--				  struct erofs_fscache **fscache, char *name)
-+				  struct erofs_fscache **fscache,
-+				  char *name, bool need_inode)
- {
- 	struct fscache_volume *volume = EROFS_SB(sb)->volume;
- 	struct erofs_fscache *ctx;
- 	struct fscache_cookie *cookie;
++/*
++ * Read data from fscache and fill the read data into page cache described by
++ * @start/len, which shall be both aligned with PAGE_SIZE. @pstart describes
++ * the start physical address in the cache file.
++ */
++static int erofs_fscache_read_folios(struct fscache_cookie *cookie,
++				     struct address_space *mapping,
++				     loff_t start, size_t len,
++				     loff_t pstart)
++{
++	struct netfs_cache_resources cres;
++	struct iov_iter iter;
 +	int ret;
- 
- 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
-@@ -25,15 +30,40 @@ int erofs_fscache_register_cookie(struct super_block *sb,
- 					name, strlen(name), NULL, 0, 0);
- 	if (!cookie) {
- 		erofs_err(sb, "failed to get cookie for %s", name);
--		kfree(name);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err;
- 	}
- 
- 	fscache_use_cookie(cookie, false);
- 	ctx->cookie = cookie;
- 
-+	if (need_inode) {
-+		struct inode *const inode = new_inode(sb);
 +
-+		if (!inode) {
-+			erofs_err(sb, "failed to get anon inode for %s", name);
-+			ret = -ENOMEM;
-+			goto err_cookie;
-+		}
++	memset(&cres, 0, sizeof(cres));
 +
-+		set_nlink(inode, 1);
-+		inode->i_size = OFFSET_MAX;
-+		inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
-+		mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
++	ret = fscache_begin_read_operation(&cres, cookie);
++	if (ret)
++		return ret;
 +
-+		ctx->inode = inode;
-+	}
++	iov_iter_xarray(&iter, READ, &mapping->i_pages, start, len);
 +
- 	*fscache = ctx;
- 	return 0;
++	ret = fscache_read(&cres, pstart, &iter,
++			   NETFS_READ_HOLE_ONDEMAND, NULL, NULL);
 +
-+err_cookie:
-+	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
-+	fscache_relinquish_cookie(ctx->cookie, false);
-+	ctx->cookie = NULL;
-+err:
-+	kfree(ctx);
++	fscache_end_operation(&cres);
 +	return ret;
- }
- 
- void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
-@@ -47,6 +77,9 @@ void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
- 	fscache_relinquish_cookie(ctx->cookie, false);
- 	ctx->cookie = NULL;
- 
-+	iput(ctx->inode);
-+	ctx->inode = NULL;
++}
 +
- 	kfree(ctx);
- 	*fscache = NULL;
- }
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index c6a3351a4d7d..3a4a344cfed3 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -99,6 +99,7 @@ struct erofs_sb_lz4_info {
- 
- struct erofs_fscache {
- 	struct fscache_cookie *cookie;
-+	struct inode *inode;
+ static const struct address_space_operations erofs_fscache_meta_aops = {
  };
  
- struct erofs_sb_info {
-@@ -632,7 +633,8 @@ int erofs_fscache_register_fs(struct super_block *sb);
- void erofs_fscache_unregister_fs(struct super_block *sb);
- 
- int erofs_fscache_register_cookie(struct super_block *sb,
--				  struct erofs_fscache **fscache, char *name);
-+				  struct erofs_fscache **fscache,
-+				  char *name, bool need_inode);
- void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache);
- #else
- static inline int erofs_fscache_register_fs(struct super_block *sb) { return 0; }
-@@ -640,7 +642,7 @@ static inline void erofs_fscache_unregister_fs(struct super_block *sb) {}
- 
- static inline int erofs_fscache_register_cookie(struct super_block *sb,
- 						struct erofs_fscache **fscache,
--						char *name)
-+						char *name, bool need_inode)
- {
- 	return -EOPNOTSUPP;
- }
 -- 
 2.27.0
 
