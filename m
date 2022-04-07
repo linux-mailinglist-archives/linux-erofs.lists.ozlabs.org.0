@@ -1,42 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E560C4F571C
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 09:57:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 548A44F7239
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 04:45:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KYH0d67Cbz3bcm
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Apr 2022 17:57:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KYm2P1hnWz2ygC
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 12:45:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
- envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KYH0P5tLhz2ywF
- for <linux-erofs@lists.ozlabs.org>; Wed,  6 Apr 2022 17:56:53 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9L1BOu_1649231803; 
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V9L1BOu_1649231803) by smtp.aliyun-inc.com(127.0.0.1);
- Wed, 06 Apr 2022 15:56:44 +0800
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v8 20/20] erofs: add 'fsid' mount option
-Date: Wed,  6 Apr 2022 15:56:12 +0800
-Message-Id: <20220406075612.60298-21-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KYm2H3SmTz2xdN
+ for <linux-erofs@lists.ozlabs.org>; Thu,  7 Apr 2022 12:45:05 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R101e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0V9O8VBd_1649299490; 
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0V9O8VBd_1649299490) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 07 Apr 2022 10:44:52 +0800
+Date: Thu, 7 Apr 2022 10:44:50 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v8 08/20] erofs: make erofs_map_blocks() generally
+ available
+Message-ID: <Yk5QIsUKie+dI8KR@B-P7TQMD6M-0146.local>
+Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
+ dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+ willy@infradead.org, linux-fsdevel@vger.kernel.org,
+ joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
+ tao.peng@linux.alibaba.com, gerry@linux.alibaba.com,
+ eguan@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ luodaowen.backend@bytedance.com, tianzichen@kuaishou.com,
+ fannaihao@baidu.com
 References: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
+ <20220406075612.60298-9-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220406075612.60298-9-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,160 +59,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, fannaihao@baidu.com, willy@infradead.org,
- linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
- joseph.qi@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+Cc: tianzichen@kuaishou.com, linux-erofs@lists.ozlabs.org, fannaihao@baidu.com,
+ willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
+ joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
+ gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
  luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
  torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce 'fsid' mount option to enable on-demand read sementics, in
-which case, erofs will be mounted from data blobs. Users could specify
-the name of primary data blob by this mount option.
+On Wed, Apr 06, 2022 at 03:56:00PM +0800, Jeffle Xu wrote:
+> ... so that it can be used in the following introduced fscache mode.
+> 
+> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/super.c | 48 ++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 6 deletions(-)
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index a5e4de60a0d8..292b4a70ce19 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -398,6 +398,7 @@ enum {
- 	Opt_dax,
- 	Opt_dax_enum,
- 	Opt_device,
-+	Opt_fsid,
- 	Opt_err
- };
- 
-@@ -422,6 +423,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- 	fsparam_flag("dax",             Opt_dax),
- 	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
- 	fsparam_string("device",	Opt_device),
-+	fsparam_string("fsid",		Opt_fsid),
- 	{}
- };
- 
-@@ -517,6 +519,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		}
- 		++ctx->devs->extra_devices;
- 		break;
-+	case Opt_fsid:
-+#ifdef CONFIG_EROFS_FS_ONDEMAND
-+		kfree(ctx->opt.fsid);
-+		ctx->opt.fsid = kstrdup(param->string, GFP_KERNEL);
-+		if (!ctx->opt.fsid)
-+			return -ENOMEM;
-+#else
-+		errorfc(fc, "fsid option not supported");
-+#endif
-+		break;
- 	default:
- 		return -ENOPARAM;
- 	}
-@@ -597,9 +609,14 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_maxbytes = MAX_LFS_FILESIZE;
- 	sb->s_op = &erofs_sops;
- 
--	if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
--		erofs_err(sb, "failed to set erofs blksize");
--		return -EINVAL;
-+	if (erofs_is_fscache_mode(sb)) {
-+		sb->s_blocksize = EROFS_BLKSIZ;
-+		sb->s_blocksize_bits = LOG_BLOCK_SIZE;
-+	} else {
-+		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
-+			erofs_err(sb, "failed to set erofs blksize");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-@@ -608,7 +625,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sb->s_fs_info = sbi;
- 	sbi->opt = ctx->opt;
--	sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
-+	ctx->opt.fsid = NULL;
- 	sbi->devs = ctx->devs;
- 	ctx->devs = NULL;
- 
-@@ -625,6 +642,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 		err = super_setup_bdi(sb);
- 		if (err)
- 			return err;
-+	} else {
-+		sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev, &sbi->dax_part_off);
- 	}
- 
- 	err = erofs_read_superblock(sb);
-@@ -684,6 +703,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
-+	struct erofs_fs_context *ctx = fc->fs_private;
-+
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->opt.fsid)
-+		return get_tree_nodev(fc, erofs_fc_fill_super);
-+
- 	return get_tree_bdev(fc, erofs_fc_fill_super);
- }
- 
-@@ -733,6 +757,7 @@ static void erofs_fc_free(struct fs_context *fc)
- 	struct erofs_fs_context *ctx = fc->fs_private;
- 
- 	erofs_free_dev_context(ctx->devs);
-+	kfree(ctx->opt.fsid);
- 	kfree(ctx);
- }
- 
-@@ -773,7 +798,10 @@ static void erofs_kill_sb(struct super_block *sb)
- 
- 	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
- 
--	kill_block_super(sb);
-+	if (erofs_is_fscache_mode(sb))
-+		generic_shutdown_super(sb);
-+	else
-+		kill_block_super(sb);
- 
- 	sbi = EROFS_SB(sb);
- 	if (!sbi)
-@@ -783,6 +811,7 @@ static void erofs_kill_sb(struct super_block *sb)
- 	fs_put_dax(sbi->dax_dev);
- 	erofs_fscache_unregister_cookie(&sbi->s_fscache);
- 	erofs_fscache_unregister_fs(sb);
-+	kfree(sbi->opt.fsid);
- 	kfree(sbi);
- 	sb->s_fs_info = NULL;
- }
-@@ -884,7 +913,10 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct super_block *sb = dentry->d_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
-+	u64 id = 0;
-+
-+	if (!erofs_is_fscache_mode(sb))
-+		id = huge_encode_dev(sb->s_bdev->bd_dev);
- 
- 	buf->f_type = sb->s_magic;
- 	buf->f_bsize = EROFS_BLKSIZ;
-@@ -929,6 +961,10 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- 		seq_puts(seq, ",dax=always");
- 	if (test_opt(opt, DAX_NEVER))
- 		seq_puts(seq, ",dax=never");
-+#ifdef CONFIG_EROFS_FS_ONDEMAND
-+	if (opt->fsid)
-+		seq_printf(seq, ",fsid=%s", opt->fsid);
-+#endif
- 	return 0;
- }
- 
--- 
-2.27.0
+Thanks,
+Gao Xiang
 
+> ---
+>  fs/erofs/data.c     | 4 ++--
+>  fs/erofs/internal.h | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 780db1e5f4b7..bc22642358ec 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -110,8 +110,8 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
+>  	return 0;
+>  }
+>  
+> -static int erofs_map_blocks(struct inode *inode,
+> -			    struct erofs_map_blocks *map, int flags)
+> +int erofs_map_blocks(struct inode *inode,
+> +		     struct erofs_map_blocks *map, int flags)
+>  {
+>  	struct super_block *sb = inode->i_sb;
+>  	struct erofs_inode *vi = EROFS_I(inode);
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 5298c4ee277d..fe9564e5091e 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -486,6 +486,8 @@ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+>  int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
+>  int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+>  		 u64 start, u64 len);
+> +int erofs_map_blocks(struct inode *inode,
+> +		     struct erofs_map_blocks *map, int flags);
+>  
+>  /* inode.c */
+>  static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
+> -- 
+> 2.27.0
