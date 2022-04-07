@@ -1,52 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3AD4F81B1
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 16:32:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35FB44F81E1
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 16:37:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KZ3k21GtHz2ymS
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Apr 2022 00:32:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KZ3qb1JpYz2ymb
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Apr 2022 00:36:59 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=inxngaAv;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=prdLhdwW;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org;
- envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+ smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1;
+ helo=ams.source.kernel.org; envelope-from=xiang@kernel.org;
+ receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
  unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=inxngaAv; 
+ header.s=k20201202 header.b=prdLhdwW; 
  dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Received: from ams.source.kernel.org (ams.source.kernel.org
+ [IPv6:2604:1380:4601:e00::1])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KZ3jy6R6Dz2xsc
- for <linux-erofs@lists.ozlabs.org>; Fri,  8 Apr 2022 00:32:06 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KZ3qW5SS0z2xsc
+ for <linux-erofs@lists.ozlabs.org>; Fri,  8 Apr 2022 00:36:55 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by ams.source.kernel.org (Postfix) with ESMTPS id D6982B81D07;
- Thu,  7 Apr 2022 14:32:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DF6C385A0;
- Thu,  7 Apr 2022 14:31:57 +0000 (UTC)
+ by ams.source.kernel.org (Postfix) with ESMTPS id 0E6C4B82737;
+ Thu,  7 Apr 2022 14:36:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75840C385A5;
+ Thu,  7 Apr 2022 14:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1649341922;
- bh=1mo8AG4FIR1/02YpFR4zJU4OcpMYkIGir1YVgUBVtjM=;
+ s=k20201202; t=1649342211;
+ bh=5+bk4CcEaJUSJAT88KegWTZKhFaoE5MAk1IU5Pfy8lw=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=inxngaAvGk4ci4lL9D9ebkrGzcMpUuh0DxcHhPClkg9ctSXRjUR+WDfkTT1nVwwAt
- hTrjaa7ywrI4/z+Mzm+XFo7OKykHYTfaUGj9wY6tvuuVo5glndB2vBfM/6JZonyuAx
- us5csSm0foMRHB+fOnpT5tBy1jPaDO5maUHCK/jHcRUVWv2veIyZCSIvWSH3/Vly0Z
- WCZLy6y3URLTMcrRfaTGyhEWrYjAAMEMMcWdXEuMlADTwGpCHCb/gx9Ir3dgYHZiLg
- ouQpoqYiFYo4txOAeu9SJj2Jhc++HixksTam/lMcrGo9TaGLIFS002BA17+j2kcood
- 8fQvGjtOcWTCg==
-Date: Thu, 7 Apr 2022 22:31:54 +0800
+ b=prdLhdwWpe2/mj0TsH26rPRdwQ2O7CAJEScgSz4yZPvPj0DznoTvWdFlHoGNsHETP
+ bM0xB2CvHAXc4fMNceLCKL/wL9TzKsvUyth5kRsEbBT99fBh3QIHK/vG08ZSNeNvFG
+ Q45wFK8Av8QYu84lRIbD3xojYHrL/U5Cokm5hLJ4YgmkO94cdaaTessd0RFo0BCQf7
+ ozdbgG5fV/fIIk/wXbPVBdtnYm/M40miSWd5iR4MzYlRBc4xos6Pb0YRZY5AI3jDZQ
+ EPXXC3YU92bacJIT2byUS1vD/DDCbwJSY0jxEtMwnJlPgAowbHmvBjscDfKNSg/yL6
+ UBWIO1dujRJvA==
+Date: Thu, 7 Apr 2022 22:36:42 +0800
 From: Gao Xiang <xiang@kernel.org>
 To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v8 18/20] erofs: implement fscache-based data read for
- inline layout
-Message-ID: <Yk712oM2xrEUmbhZ@debian>
+Subject: Re: [PATCH v8 19/20] erofs: implement fscache-based data readahead
+Message-ID: <Yk72+uwwg3/bG72X@debian>
 Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
  dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org,
@@ -58,11 +59,11 @@ Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
  luodaowen.backend@bytedance.com, tianzichen@kuaishou.com,
  fannaihao@baidu.com
 References: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
- <20220406075612.60298-19-jefflexu@linux.alibaba.com>
+ <20220406075612.60298-20-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220406075612.60298-19-jefflexu@linux.alibaba.com>
+In-Reply-To: <20220406075612.60298-20-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,88 +85,155 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Apr 06, 2022 at 03:56:10PM +0800, Jeffle Xu wrote:
-> Implement the data plane of reading data from data blobs over fscache
-> for inline layout.
-> 
-> For the heading non-inline part, the data plane for non-inline layout is
-> reused, while only the tail packing part needs special handling.
+On Wed, Apr 06, 2022 at 03:56:11PM +0800, Jeffle Xu wrote:
+> Implement fscache-based data readahead. Also registers an individual
+> bdi for each erofs instance to enable readahead.
 > 
 > Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 > ---
->  fs/erofs/fscache.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+>  fs/erofs/fscache.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/erofs/super.c   |  4 ++
+>  2 files changed, 98 insertions(+)
 > 
 > diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 65de1c754e80..d32cb5840c6d 100644
+> index d32cb5840c6d..620d44210809 100644
 > --- a/fs/erofs/fscache.c
 > +++ b/fs/erofs/fscache.c
-> @@ -60,6 +60,40 @@ static int erofs_fscache_meta_readpage(struct file *data, struct page *page)
+> @@ -148,12 +148,106 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
 >  	return ret;
 >  }
 >  
-> +static int erofs_fscache_readpage_inline(struct folio *folio,
-> +					 struct erofs_map_blocks *map)
+> +static inline void erofs_fscache_unlock_folios(struct readahead_control *rac,
+> +					       size_t len)
 > +{
-> +	struct inode *inode = folio_file_mapping(folio)->host;
-> +	struct super_block *sb = inode->i_sb;
-> +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> +	erofs_blk_t blknr;
-> +	size_t offset, len;
-> +	void *src, *dst;
+> +	while (len) {
+> +		struct folio *folio = readahead_folio(rac);
 > +
-> +	/*
-> +	 * For inline (tail packing) layout, the offset may be non-zero, which
-> +	 * can be calculated from corresponding physical address directly.
-> +	 */
-> +	offset = erofs_blkoff(map->m_pa);
-> +	blknr = erofs_blknr(map->m_pa);
-> +	len = map->m_llen;
-> +
-> +	src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
-> +	if (IS_ERR(src))
-> +		return PTR_ERR(src);
-> +
-> +	DBG_BUGON(folio_size(folio) != PAGE_SIZE);
-> +
-> +	dst = kmap(folio_page(folio, 0));
-
-kmap_local_folio?
-
-> +	memcpy(dst, src + offset, len);
-> +	memset(dst + len, 0, PAGE_SIZE - len);
-> +	kunmap(folio_page(folio, 0));
-> +
-> +	erofs_put_metabuf(&buf);
-> +
-> +	return 0;
+> +		len -= folio_size(folio);
+> +		folio_mark_uptodate(folio);
+> +		folio_unlock(folio);
+> +	}
 > +}
 > +
->  static int erofs_fscache_readpage(struct file *file, struct page *page)
->  {
->  	struct folio *folio = page_folio(page);
-> @@ -85,6 +119,12 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
->  		goto out_uptodate;
->  	}
->  
-> +	/* inline readpage */
-
-I think the code below is self-explained.
-
-> +	if (map.m_flags & EROFS_MAP_META) {
-> +		ret = erofs_fscache_readpage_inline(folio, &map);
-> +		goto out_uptodate;
-> +	}
+> +static void erofs_fscache_readahead(struct readahead_control *rac)
+> +{
+> +	struct inode *inode = rac->mapping->host;
+> +	struct super_block *sb = inode->i_sb;
+> +	size_t len, count, done = 0;
+> +	erofs_off_t pos;
+> +	loff_t start, offset;
+> +	int ret;
 > +
->  	/* no-inline readpage */
+> +	if (!readahead_count(rac))
+> +		return;
+> +
+> +	start = readahead_pos(rac);
+> +	len = readahead_length(rac);
+> +
+> +	do {
+> +		struct erofs_map_blocks map;
+> +		struct erofs_map_dev mdev;
+> +
+> +		pos = start + done;
+> +		map.m_la = pos;
+> +
+> +		ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+> +		if (ret)
+> +			return;
+> +
+> +		/*
+> +		 * 1) For CHUNK_BASED layout, the output m_la is rounded down to
+> +		 * the nearest chunk boundary, and the output m_llen actually
+> +		 * starts from the start of the containing chunk.
+> +		 * 2) For other cases, the output m_la is equal to o_la.
+> +		 */
+
+I think such comment is really unneeded, we should calculate like below
+as always. Also I don't find o_la here anymore.
+
+> +		offset = start + done;
+> +		count = min_t(size_t, map.m_llen - (pos - map.m_la), len - done);
+> +
+> +		/* Read-ahead Hole */
+> +		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+> +			struct iov_iter iter;
+> +
+> +			iov_iter_xarray(&iter, READ, &rac->mapping->i_pages,
+> +					offset, count);
+> +			iov_iter_zero(count, &iter);
+> +
+> +			erofs_fscache_unlock_folios(rac, count);
+> +			ret = count;
+> +			continue;
+> +		}
+> +
+> +		/* Read-ahead Inline */
+
+Unnecessary comment.
+
+> +		if (map.m_flags & EROFS_MAP_META) {
+> +			struct folio *folio = readahead_folio(rac);
+> +
+> +			ret = erofs_fscache_readpage_inline(folio, &map);
+> +			if (!ret) {
+> +				folio_mark_uptodate(folio);
+> +				ret = folio_size(folio);
+> +			}
+> +
+> +			folio_unlock(folio);
+> +			continue;
+> +		}
+> +
+> +		/* Read-ahead No-inline */
 
 Same here.
 
 Thanks,
 Gao Xiang
 
->  	mdev = (struct erofs_map_dev) {
->  		.m_deviceid = map.m_deviceid,
+> +		mdev = (struct erofs_map_dev) {
+> +			.m_deviceid = map.m_deviceid,
+> +			.m_pa = map.m_pa,
+> +		};
+> +		ret = erofs_map_dev(sb, &mdev);
+> +		if (ret)
+> +			return;
+> +
+> +		ret = erofs_fscache_read_folios(mdev.m_fscache->cookie,
+> +				rac->mapping, offset, count,
+> +				mdev.m_pa + (pos - map.m_la));
+> +		if (!ret) {
+> +			erofs_fscache_unlock_folios(rac, count);
+> +			ret = count;
+> +		}
+> +	} while (ret > 0 && ((done += ret) < len));
+> +}
+> +
+>  static const struct address_space_operations erofs_fscache_meta_aops = {
+>  	.readpage = erofs_fscache_meta_readpage,
+>  };
+>  
+>  const struct address_space_operations erofs_fscache_access_aops = {
+>  	.readpage = erofs_fscache_readpage,
+> +	.readahead = erofs_fscache_readahead,
+>  };
+>  
+>  /*
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 8c7181cd37e6..a5e4de60a0d8 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -621,6 +621,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>  						    sbi->opt.fsid, true);
+>  		if (err)
+>  			return err;
+> +
+> +		err = super_setup_bdi(sb);
+> +		if (err)
+> +			return err;
+>  	}
+>  
+>  	err = erofs_read_superblock(sb);
 > -- 
 > 2.27.0
 > 
