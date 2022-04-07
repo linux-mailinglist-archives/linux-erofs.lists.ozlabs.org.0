@@ -1,53 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F7804F7559
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 07:31:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21A1A4F76E1
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 09:09:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KYqk20nQVz2yh9
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 15:31:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KYsvV0yXSz2ymf
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Apr 2022 17:09:42 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iOhmBQrS;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57;
- helo=out30-57.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-57.freemail.mail.aliyun.com
- (out30-57.freemail.mail.aliyun.com [115.124.30.57])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=iOhmBQrS; dkim-atps=neutral
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KYqjy0W3xz2xgY
- for <linux-erofs@lists.ozlabs.org>; Thu,  7 Apr 2022 15:31:13 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0V9PKx-H_1649309460; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0V9PKx-H_1649309460) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 07 Apr 2022 13:31:03 +0800
-Date: Thu, 7 Apr 2022 13:31:00 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v8 12/20] erofs: add anonymous inode managing page cache
- for data blob
-Message-ID: <Yk53FOjDLzN941b4@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
- dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org,
- torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
- willy@infradead.org, linux-fsdevel@vger.kernel.org,
- joseph.qi@linux.alibaba.com, bo.liu@linux.alibaba.com,
- tao.peng@linux.alibaba.com, gerry@linux.alibaba.com,
- eguan@linux.alibaba.com, linux-kernel@vger.kernel.org,
- luodaowen.backend@bytedance.com, tianzichen@kuaishou.com,
- fannaihao@baidu.com
-References: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
- <20220406075612.60298-13-jefflexu@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KYsvP1yK0z2xdN
+ for <linux-erofs@lists.ozlabs.org>; Thu,  7 Apr 2022 17:09:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1649315377; x=1680851377;
+ h=date:from:to:cc:subject:message-id:mime-version:
+ content-transfer-encoding;
+ bh=usDN+/krblqUxZiV7jUmaQ/Ji+OS0u6OJj2Y+RbsTgI=;
+ b=iOhmBQrSyCFfDf7c2/LtFwIh+p2RT0N+Al3Y19mg8N9jymb5RE/9NoGn
+ ufMBT6xUyXuArHsV9kiS1w/zC8WUDJXeL8lUAXg3lKjQGl/JzYWdVv1YL
+ LeOvKeRtig4WYzA/uyQyh3N6FAuQRFr7kC5JgfmeBT2CVM9yFuGV4C0Nz
+ oHhlV8vX5KuDPYCgfO/lIoaW6u9MpNWjNBffQtEzJcsPTCphdOk1DZudM
+ OEUb3tjkWf0s6zAyriJGsS0uu7fWvY9ZnFql1CoVBizd45ZklPz0pGbwW
+ Gus3fdT6MATWCXJUBsUC4j85avrKXdfzZO+8F8Ri/p22J2xE9i2b5vLEv g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10309"; a="243382082"
+X-IronPort-AV: E=Sophos;i="5.90,241,1643702400"; d="scan'208";a="243382082"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+ by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 07 Apr 2022 00:08:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,241,1643702400"; d="scan'208";a="658955422"
+Received: from lkp-server02.sh.intel.com (HELO a44fdfb70b94) ([10.239.97.151])
+ by orsmga004.jf.intel.com with ESMTP; 07 Apr 2022 00:08:32 -0700
+Received: from kbuild by a44fdfb70b94 with local (Exim 4.95)
+ (envelope-from <lkp@intel.com>) id 1ncMFs-0005BS-2G;
+ Thu, 07 Apr 2022 07:08:32 +0000
+Date: Thu, 07 Apr 2022 15:07:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 967375d467ac5660c2133fb35335d5410df41742
+Message-ID: <624e8dba.J/JGp9ONybwOzAnh%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220406075612.60298-13-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,151 +68,153 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, linux-erofs@lists.ozlabs.org, fannaihao@baidu.com,
- willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
- joseph.qi@linux.alibaba.com, linux-cachefs@redhat.com,
- gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
- luodaowen.backend@bytedance.com, gerry@linux.alibaba.com,
- torvalds@linux-foundation.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Apr 06, 2022 at 03:56:04PM +0800, Jeffle Xu wrote:
-> Introduce one anonymous inode managing page cache for data blob. Then
-> erofs could read directly from the address space of the anonymous inode
-> when cache hit.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 967375d467ac5660c2133fb35335d5410df41742  erofs: fix use-after-free of on-stack io[]
 
-Introduce one anonymous inode for data blobs so that erofs
-can cache metadata directly within such anonymous inode.
+elapsed time: 724m
 
-> 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+configs tested: 125
+configs skipped: 3
 
-Yeah, I think currently we can live with that:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+arm                        spear6xx_defconfig
+sh                        sh7757lcr_defconfig
+xtensa                generic_kc705_defconfig
+sh                           se7712_defconfig
+arc                        nsim_700_defconfig
+powerpc                        warp_defconfig
+mips                           ci20_defconfig
+arm                             rpc_defconfig
+powerpc                 linkstation_defconfig
+m68k                         apollo_defconfig
+sparc                               defconfig
+mips                      loongson3_defconfig
+xtensa                           alldefconfig
+arc                     haps_hs_smp_defconfig
+m68k                          atari_defconfig
+arm                           stm32_defconfig
+powerpc                     stx_gp3_defconfig
+powerpc                      cm5200_defconfig
+m68k                        m5407c3_defconfig
+powerpc                         wii_defconfig
+arc                        vdk_hs38_defconfig
+arm                            pleb_defconfig
+arm                         s3c6400_defconfig
+powerpc                         ps3_defconfig
+h8300                       h8s-sim_defconfig
+ia64                          tiger_defconfig
+m68k                        mvme147_defconfig
+sh                        dreamcast_defconfig
+arc                         haps_hs_defconfig
+powerpc64                           defconfig
+sh                        apsh4ad0a_defconfig
+powerpc                      chrp32_defconfig
+parisc64                         alldefconfig
+arm                        clps711x_defconfig
+sh                   secureedge5410_defconfig
+ia64                         bigsur_defconfig
+arc                          axs101_defconfig
+mips                         db1xxx_defconfig
+x86_64                           alldefconfig
+um                                  defconfig
+riscv                               defconfig
+mips                          rb532_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220406
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                             allyesconfig
+sparc                            allyesconfig
+mips                             allmodconfig
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220406
+s390                 randconfig-r044-20220406
+riscv                randconfig-r042-20220406
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
 
-Thanks,
-Gao Xiang
+clang tested configs:
+x86_64                        randconfig-c007
+i386                          randconfig-c001
+powerpc              randconfig-c003-20220406
+riscv                randconfig-c006-20220406
+mips                 randconfig-c004-20220406
+arm                  randconfig-c002-20220406
+arm                       mainstone_defconfig
+arm                        multi_v5_defconfig
+mips                     cu1830-neo_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
 
-
-> ---
->  fs/erofs/fscache.c  | 39 ++++++++++++++++++++++++++++++++++++---
->  fs/erofs/internal.h |  6 ++++--
->  2 files changed, 40 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 67a3c4935245..1c88614203d2 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -5,17 +5,22 @@
->  #include <linux/fscache.h>
->  #include "internal.h"
->  
-> +static const struct address_space_operations erofs_fscache_meta_aops = {
-> +};
-> +
->  /*
->   * Create an fscache context for data blob.
->   * Return: 0 on success and allocated fscache context is assigned to @fscache,
->   *	   negative error number on failure.
->   */
->  int erofs_fscache_register_cookie(struct super_block *sb,
-> -				  struct erofs_fscache **fscache, char *name)
-> +				  struct erofs_fscache **fscache,
-> +				  char *name, bool need_inode)
->  {
->  	struct fscache_volume *volume = EROFS_SB(sb)->volume;
->  	struct erofs_fscache *ctx;
->  	struct fscache_cookie *cookie;
-> +	int ret;
->  
->  	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
->  	if (!ctx)
-> @@ -25,15 +30,40 @@ int erofs_fscache_register_cookie(struct super_block *sb,
->  					name, strlen(name), NULL, 0, 0);
->  	if (!cookie) {
->  		erofs_err(sb, "failed to get cookie for %s", name);
-> -		kfree(name);
-> -		return -EINVAL;
-> +		ret = -EINVAL;
-> +		goto err;
->  	}
->  
->  	fscache_use_cookie(cookie, false);
->  	ctx->cookie = cookie;
->  
-> +	if (need_inode) {
-> +		struct inode *const inode = new_inode(sb);
-> +
-> +		if (!inode) {
-> +			erofs_err(sb, "failed to get anon inode for %s", name);
-> +			ret = -ENOMEM;
-> +			goto err_cookie;
-> +		}
-> +
-> +		set_nlink(inode, 1);
-> +		inode->i_size = OFFSET_MAX;
-> +		inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
-> +		mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
-> +
-> +		ctx->inode = inode;
-> +	}
-> +
->  	*fscache = ctx;
->  	return 0;
-> +
-> +err_cookie:
-> +	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
-> +	fscache_relinquish_cookie(ctx->cookie, false);
-> +	ctx->cookie = NULL;
-> +err:
-> +	kfree(ctx);
-> +	return ret;
->  }
->  
->  void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
-> @@ -47,6 +77,9 @@ void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
->  	fscache_relinquish_cookie(ctx->cookie, false);
->  	ctx->cookie = NULL;
->  
-> +	iput(ctx->inode);
-> +	ctx->inode = NULL;
-> +
->  	kfree(ctx);
->  	*fscache = NULL;
->  }
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index c6a3351a4d7d..3a4a344cfed3 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -99,6 +99,7 @@ struct erofs_sb_lz4_info {
->  
->  struct erofs_fscache {
->  	struct fscache_cookie *cookie;
-> +	struct inode *inode;
->  };
->  
->  struct erofs_sb_info {
-> @@ -632,7 +633,8 @@ int erofs_fscache_register_fs(struct super_block *sb);
->  void erofs_fscache_unregister_fs(struct super_block *sb);
->  
->  int erofs_fscache_register_cookie(struct super_block *sb,
-> -				  struct erofs_fscache **fscache, char *name);
-> +				  struct erofs_fscache **fscache,
-> +				  char *name, bool need_inode);
->  void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache);
->  #else
->  static inline int erofs_fscache_register_fs(struct super_block *sb) { return 0; }
-> @@ -640,7 +642,7 @@ static inline void erofs_fscache_unregister_fs(struct super_block *sb) {}
->  
->  static inline int erofs_fscache_register_cookie(struct super_block *sb,
->  						struct erofs_fscache **fscache,
-> -						char *name)
-> +						char *name, bool need_inode)
->  {
->  	return -EOPNOTSUPP;
->  }
-> -- 
-> 2.27.0
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
