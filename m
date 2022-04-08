@@ -1,85 +1,85 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 091EC4F9FE6
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Apr 2022 01:07:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7B004F9FE8
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Apr 2022 01:07:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KZv5Z6L7zz3bXw
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Apr 2022 09:06:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KZv5g6d0Xz3bYJ
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Apr 2022 09:07:03 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LGoklrW9;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LGoklrW9;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TUA6kVra;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TUA6kVra;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=redhat.com (client-ip=170.10.133.124;
+ smtp.mailfrom=redhat.com (client-ip=170.10.129.124;
  helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com;
  receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org; dkim=pass (1024-bit key;
  unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256
- header.s=mimecast20190719 header.b=LGoklrW9; 
+ header.s=mimecast20190719 header.b=TUA6kVra; 
  dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com
- header.a=rsa-sha256 header.s=mimecast20190719 header.b=LGoklrW9; 
+ header.a=rsa-sha256 header.s=mimecast20190719 header.b=TUA6kVra; 
  dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com
- (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+ (us-smtp-delivery-124.mimecast.com [170.10.129.124])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KZv5W6y3Dz2xnL
- for <linux-erofs@lists.ozlabs.org>; Sat,  9 Apr 2022 09:06:55 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KZv5d2HJ2z3bYq
+ for <linux-erofs@lists.ozlabs.org>; Sat,  9 Apr 2022 09:07:01 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1649459213;
+ s=mimecast20190719; t=1649459218;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  content-transfer-encoding:content-transfer-encoding:
  in-reply-to:in-reply-to:references:references;
- bh=jqzg2fYMpoH1LLv57GgLSuWlw1HsiXibIwniW9QRYis=;
- b=LGoklrW9zCRVgRBD2kckiBsdJQcbVrr/9xKAcLw8LGtBW4U+EXox1joNx9dRPtFTMNrWR7
- G7LQeQ8tCRPfcKT1sHt05ezDhxJiTJXHixh9EVFrgW0W2WNbyu8fZVGuJrJ6VLmyX8ympA
- rScIpk/pE+C3U4k+HRfxGAlyJujbSlY=
+ bh=Wf6Y5mRoiMWUztM6lpAzUiquRe1dvL2pPgHC7rsAV5g=;
+ b=TUA6kVraUzFK0ACm8qrOA98L6m3gLRQpQ4FjOnmnuWTO4vsuqPxEj1mT9yEKDUG+DBkR/z
+ /qCXyiGbigS7xnUVZl6/CEDkOMJf1gFCncV0f84VEIURIqHsaBjHQLok2q4Ynkc/7tzE1U
+ au/qS9p/TpcDwF/K/Mhmh05LCPecO0k=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1649459213;
+ s=mimecast20190719; t=1649459218;
  h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
  to:to:cc:cc:mime-version:mime-version:content-type:content-type:
  content-transfer-encoding:content-transfer-encoding:
  in-reply-to:in-reply-to:references:references;
- bh=jqzg2fYMpoH1LLv57GgLSuWlw1HsiXibIwniW9QRYis=;
- b=LGoklrW9zCRVgRBD2kckiBsdJQcbVrr/9xKAcLw8LGtBW4U+EXox1joNx9dRPtFTMNrWR7
- G7LQeQ8tCRPfcKT1sHt05ezDhxJiTJXHixh9EVFrgW0W2WNbyu8fZVGuJrJ6VLmyX8ympA
- rScIpk/pE+C3U4k+HRfxGAlyJujbSlY=
+ bh=Wf6Y5mRoiMWUztM6lpAzUiquRe1dvL2pPgHC7rsAV5g=;
+ b=TUA6kVraUzFK0ACm8qrOA98L6m3gLRQpQ4FjOnmnuWTO4vsuqPxEj1mT9yEKDUG+DBkR/z
+ /qCXyiGbigS7xnUVZl6/CEDkOMJf1gFCncV0f84VEIURIqHsaBjHQLok2q4Ynkc/7tzE1U
+ au/qS9p/TpcDwF/K/Mhmh05LCPecO0k=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-134-xqvezP7MPHKc47y8N8OCYg-1; Fri, 08 Apr 2022 19:06:50 -0400
-X-MC-Unique: xqvezP7MPHKc47y8N8OCYg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
- [10.11.54.4])
+ us-mta-635-yXrh2nxMPki8q5VXNA9swg-1; Fri, 08 Apr 2022 19:06:57 -0400
+X-MC-Unique: yXrh2nxMPki8q5VXNA9swg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DA6A680B710;
- Fri,  8 Apr 2022 23:06:49 +0000 (UTC)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E90AC802803;
+ Fri,  8 Apr 2022 23:06:56 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.37.45])
- by smtp.corp.redhat.com (Postfix) with ESMTP id 155B420296A6;
- Fri,  8 Apr 2022 23:06:39 +0000 (UTC)
+ by smtp.corp.redhat.com (Postfix) with ESMTP id C6B4E434832;
+ Fri,  8 Apr 2022 23:06:55 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 5/8] fscache: Remove the cookie parameter from
- fscache_clear_page_bits()
+Subject: [PATCH 6/8] fscache: Move fscache_cookies_seq_ops specific code under
+ CONFIG_PROC_FS
 From: David Howells <dhowells@redhat.com>
 To: linux-cachefs@redhat.com
-Date: Sat, 09 Apr 2022 00:06:39 +0100
-Message-ID: <164945919939.773423.16389718107369702519.stgit@warthog.procyon.org.uk>
+Date: Sat, 09 Apr 2022 00:06:55 +0100
+Message-ID: <164945921506.773423.5359381227919135073.stgit@warthog.procyon.org.uk>
 In-Reply-To: <164945915630.773423.14655306154231712324.stgit@warthog.procyon.org.uk>
 References: <164945915630.773423.14655306154231712324.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/1.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -100,121 +100,72 @@ Sender: "Linux-erofs"
 
 From: Yue Hu <huyue2@coolpad.com>
 
-The cookie is not used at all, remove it and update the usage in io.c
-and afs/write.c (which is the only user outside of fscache currently)
-at the same time.
+fscache_cookies_seq_ops is only used in proc.c that is compiled under
+enabled CONFIG_PROC_FS, so move related code under this config. The
+same case exsits in internal.h.
 
-[DH: Amended the documentation also]
+Also, make fscache_lru_cookie_timeout static due to no user outside
+of cookie.c.
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: linux-cachefs@redhat.com
-Link: https://listman.redhat.com/archives/linux-cachefs/2022-April/006659.html
+Link: https://listman.redhat.com/archives/linux-cachefs/2022-April/006649.html # v1
 ---
 
- Documentation/filesystems/caching/netfs-api.rst |   25 +++++++++++------------
- fs/afs/write.c                                  |    3 +--
- fs/fscache/io.c                                 |    5 ++---
- include/linux/fscache.h                         |    4 +---
- 4 files changed, 16 insertions(+), 21 deletions(-)
+ fs/fscache/cookie.c   |    4 +++-
+ fs/fscache/internal.h |    4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/filesystems/caching/netfs-api.rst b/Documentation/filesystems/caching/netfs-api.rst
-index 5066113acad5..7308d76a29dc 100644
---- a/Documentation/filesystems/caching/netfs-api.rst
-+++ b/Documentation/filesystems/caching/netfs-api.rst
-@@ -404,22 +404,21 @@ schedule a write of that region::
- And if an error occurs before that point is reached, the marks can be removed
- by calling::
+diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
+index 9bb1ab5fe5ed..9d3cf0111709 100644
+--- a/fs/fscache/cookie.c
++++ b/fs/fscache/cookie.c
+@@ -30,7 +30,7 @@ static DEFINE_SPINLOCK(fscache_cookie_lru_lock);
+ DEFINE_TIMER(fscache_cookie_lru_timer, fscache_cookie_lru_timed_out);
+ static DECLARE_WORK(fscache_cookie_lru_work, fscache_cookie_lru_worker);
+ static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
+-unsigned int fscache_lru_cookie_timeout = 10 * HZ;
++static unsigned int fscache_lru_cookie_timeout = 10 * HZ;
  
--	void fscache_clear_page_bits(struct fscache_cookie *cookie,
--				     struct address_space *mapping,
-+	void fscache_clear_page_bits(struct address_space *mapping,
- 				     loff_t start, size_t len,
- 				     bool caching)
- 
--In both of these functions, the cookie representing the cache object to be
--written to and a pointer to the mapping to which the source pages are attached
--are passed in; start and len indicate the size of the region that's going to be
--written (it doesn't have to align to page boundaries necessarily, but it does
--have to align to DIO boundaries on the backing filesystem).  The caching
--parameter indicates if caching should be skipped, and if false, the functions
--do nothing.
--
--The write function takes some additional parameters: i_size indicates the size
--of the netfs file and term_func indicates an optional completion function, to
--which term_func_priv will be passed, along with the error or amount written.
-+In these functions, a pointer to the mapping to which the source pages are
-+attached is passed in and start and len indicate the size of the region that's
-+going to be written (it doesn't have to align to page boundaries necessarily,
-+but it does have to align to DIO boundaries on the backing filesystem).  The
-+caching parameter indicates if caching should be skipped, and if false, the
-+functions do nothing.
-+
-+The write function takes some additional parameters: the cookie representing
-+the cache object to be written to, i_size indicates the size of the netfs file
-+and term_func indicates an optional completion function, to which
-+term_func_priv will be passed, along with the error or amount written.
- 
- Note that the write function will always run asynchronously and will unmark all
- the pages upon completion before calling term_func.
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 6bcf1475511b..4763132ca57e 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -616,8 +616,7 @@ static ssize_t afs_write_back_from_locked_folio(struct address_space *mapping,
- 		_debug("write discard %x @%llx [%llx]", len, start, i_size);
- 
- 		/* The dirty region was entirely beyond the EOF. */
--		fscache_clear_page_bits(afs_vnode_cache(vnode),
--					mapping, start, len, caching);
-+		fscache_clear_page_bits(mapping, start, len, caching);
- 		afs_pages_written_back(vnode, start, len);
- 		ret = 0;
- 	}
-diff --git a/fs/fscache/io.c b/fs/fscache/io.c
-index c8c7fe9e9a6e..3af3b08a9bb3 100644
---- a/fs/fscache/io.c
-+++ b/fs/fscache/io.c
-@@ -235,8 +235,7 @@ static void fscache_wreq_done(void *priv, ssize_t transferred_or_error,
+ void fscache_print_cookie(struct fscache_cookie *cookie, char prefix)
  {
- 	struct fscache_write_request *wreq = priv;
- 
--	fscache_clear_page_bits(fscache_cres_cookie(&wreq->cache_resources),
--				wreq->mapping, wreq->start, wreq->len,
-+	fscache_clear_page_bits(wreq->mapping, wreq->start, wreq->len,
- 				wreq->set_bits);
- 
- 	if (wreq->term_func)
-@@ -296,7 +295,7 @@ void __fscache_write_to_cache(struct fscache_cookie *cookie,
- abandon_free:
- 	kfree(wreq);
- abandon:
--	fscache_clear_page_bits(cookie, mapping, start, len, cond);
-+	fscache_clear_page_bits(mapping, start, len, cond);
- 	if (term_func)
- 		term_func(term_func_priv, ret, false);
+@@ -1069,6 +1069,7 @@ void __fscache_invalidate(struct fscache_cookie *cookie,
  }
-diff --git a/include/linux/fscache.h b/include/linux/fscache.h
-index 6727fb0db619..e25539072463 100644
---- a/include/linux/fscache.h
-+++ b/include/linux/fscache.h
-@@ -573,7 +573,6 @@ int fscache_write(struct netfs_cache_resources *cres,
+ EXPORT_SYMBOL(__fscache_invalidate);
  
- /**
-  * fscache_clear_page_bits - Clear the PG_fscache bits from a set of pages
-- * @cookie: The cookie representing the cache object
-  * @mapping: The netfs inode to use as the source
-  * @start: The start position in @mapping
-  * @len: The amount of data to unlock
-@@ -582,8 +581,7 @@ int fscache_write(struct netfs_cache_resources *cres,
-  * Clear the PG_fscache flag from a sequence of pages and wake up anyone who's
-  * waiting.
++#ifdef CONFIG_PROC_FS
+ /*
+  * Generate a list of extant cookies in /proc/fs/fscache/cookies
   */
--static inline void fscache_clear_page_bits(struct fscache_cookie *cookie,
--					   struct address_space *mapping,
-+static inline void fscache_clear_page_bits(struct address_space *mapping,
- 					   loff_t start, size_t len,
- 					   bool caching)
- {
+@@ -1145,3 +1146,4 @@ const struct seq_operations fscache_cookies_seq_ops = {
+ 	.stop   = fscache_cookies_seq_stop,
+ 	.show   = fscache_cookies_seq_show,
+ };
++#endif
+diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
+index ed1c9ed737f2..1336f517e9b1 100644
+--- a/fs/fscache/internal.h
++++ b/fs/fscache/internal.h
+@@ -56,7 +56,9 @@ static inline bool fscache_set_cache_state_maybe(struct fscache_cache *cache,
+  * cookie.c
+  */
+ extern struct kmem_cache *fscache_cookie_jar;
++#ifdef CONFIG_PROC_FS
+ extern const struct seq_operations fscache_cookies_seq_ops;
++#endif
+ extern struct timer_list fscache_cookie_lru_timer;
+ 
+ extern void fscache_print_cookie(struct fscache_cookie *cookie, char prefix);
+@@ -137,7 +139,9 @@ int fscache_stats_show(struct seq_file *m, void *v);
+ /*
+  * volume.c
+  */
++#ifdef CONFIG_PROC_FS
+ extern const struct seq_operations fscache_volumes_seq_ops;
++#endif
+ 
+ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
+ 					  enum fscache_volume_trace where);
 
 
