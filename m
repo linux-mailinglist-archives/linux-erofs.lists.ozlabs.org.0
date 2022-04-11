@@ -1,33 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70CB14FBC32
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 14:36:27 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FCB74FBC37
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 14:36:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KcSyd3gqcz2yg5
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 22:36:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KcSyz0Djgz2yHt
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 22:36:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56;
+ helo=out30-56.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+Received: from out30-56.freemail.mail.aliyun.com
+ (out30-56.freemail.mail.aliyun.com [115.124.30.56])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KcSyT06Ccz2xfP
- for <linux-erofs@lists.ozlabs.org>; Mon, 11 Apr 2022 22:36:16 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R111e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9pPvL2_1649680565; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KcSyt4zTtz2xfP
+ for <linux-erofs@lists.ozlabs.org>; Mon, 11 Apr 2022 22:36:38 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R511e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9pPvR6_1649680589; 
 Received: from 30.225.24.83(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V9pPvL2_1649680565) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 11 Apr 2022 20:36:07 +0800
-Message-ID: <46dc4929-b52b-474c-1bdb-b3e439f09585@linux.alibaba.com>
-Date: Mon, 11 Apr 2022 20:36:05 +0800
+ fp:SMTPD_---0V9pPvR6_1649680589) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 11 Apr 2022 20:36:31 +0800
+Message-ID: <d66b3c35-cfaa-8e2b-7085-ad8642851d08@linux.alibaba.com>
+Date: Mon, 11 Apr 2022 20:36:29 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.6.1
@@ -37,9 +37,9 @@ Content-Language: en-US
 To: David Howells <dhowells@redhat.com>
 References: <20220406075612.60298-4-jefflexu@linux.alibaba.com>
  <20220406075612.60298-1-jefflexu@linux.alibaba.com>
- <1091118.1649680137@warthog.procyon.org.uk>
+ <1091267.1649680325@warthog.procyon.org.uk>
 From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <1091118.1649680137@warthog.procyon.org.uk>
+In-Reply-To: <1091267.1649680325@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -65,36 +65,15 @@ Sender: "Linux-erofs"
 
 
 
-On 4/11/22 8:28 PM, David Howells wrote:
+On 4/11/22 8:32 PM, David Howells wrote:
 > Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 > 
->> +	  This permits on-demand read mode of cachefiles. In this mode, when
->> +	  cache miss, the cachefiles backend instead of netfs, is responsible
->> +          for fetching data, e.g. through user daemon.
+>> +static int init_open_req(struct cachefiles_req *req, void *private)
 > 
-> That third line should probably begin with a tab as the other two line do.
-
-Oh yeah...
-
+> Please prefix with "cachefiles_".
 > 
->> +static inline void cachefiles_flush_reqs(struct cachefiles_cache *cache)
-> 
-> If it's in a .c file, there's no need to mark it "inline".  The compiler will
-> inline it anyway if it decides it should.
 
 Okay.
-
-> 
->> +#ifdef CONFIG_CACHEFILES_ONDEMAND
->> +	cachefiles_flush_reqs(cache);
->> +	xa_destroy(&cache->reqs);
->> +#endif
-> 
-> If cachefiles_flush_reqs() is only used in this one place, the xa_destroy()
-> should possibly be moved into it.
-> 
-
-Alright.
 
 
 -- 
