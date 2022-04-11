@@ -2,44 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953BE4FBC69
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 14:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E6394FBC75
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 14:51:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KcTFP4vMhz2yn9
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 22:49:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KcTHQ2P7Dz2ync
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Apr 2022 22:50:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KcTFF683nz2xnR
- for <linux-erofs@lists.ozlabs.org>; Mon, 11 Apr 2022 22:49:03 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R991e4; CH=green; DM=||false|;
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KcTHM3QHXz2xnR
+ for <linux-erofs@lists.ozlabs.org>; Mon, 11 Apr 2022 22:50:54 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R111e4; CH=green; DM=||false|;
  DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9qAczp_1649681329; 
+ NM=1; PH=DS; RN=18; SR=0; TI=SMTPD_---0V9pCfav_1649681444; 
 Received: from 30.225.24.83(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0V9qAczp_1649681329) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 11 Apr 2022 20:48:50 +0800
-Message-ID: <542f749c-b0f1-1de6-cb41-26e296afb2df@linux.alibaba.com>
-Date: Mon, 11 Apr 2022 20:48:49 +0800
+ fp:SMTPD_---0V9pCfav_1649681444) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 11 Apr 2022 20:50:46 +0800
+Message-ID: <1225fb70-a785-9d4d-5532-28bfde8214f1@linux.alibaba.com>
+Date: Mon, 11 Apr 2022 20:50:44 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v8 04/20] cachefiles: notify user daemon when withdrawing
- cookie
+Subject: Re: [PATCH v8 05/20] cachefiles: implement on-demand read
 Content-Language: en-US
 To: David Howells <dhowells@redhat.com>
-References: <20220406075612.60298-5-jefflexu@linux.alibaba.com>
+References: <20220406075612.60298-6-jefflexu@linux.alibaba.com>
  <20220406075612.60298-1-jefflexu@linux.alibaba.com>
- <1091405.1649680508@warthog.procyon.org.uk>
+ <1091905.1649681074@warthog.procyon.org.uk>
 From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <1091405.1649680508@warthog.procyon.org.uk>
+In-Reply-To: <1091905.1649681074@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -65,41 +64,26 @@ Sender: "Linux-erofs"
 
 
 
-On 4/11/22 8:35 PM, David Howells wrote:
+On 4/11/22 8:44 PM, David Howells wrote:
 > Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 > 
->> +static int init_close_req(struct cachefiles_req *req, void *private)
+>>  	/*
+>>  	 * Uninstall anon_fd to the cachefiles object, so that no further
+>>  	 * associated requests will get enqueued.
+>>  	 */
 > 
-> "cachefiles_" prefix please.
+> "Uninstall anon_fd from..."?
 
-Okay.
-
-> 
->> +	/*
->> +	 * It's possible if the cookie looking up phase failed before READ
->> +	 * request has ever been sent.
->> +	 */
-> 
-> What "it" is possible?  You might want to say "It's possible that the
-> cookie..."
-
-"It's possible that the following if (fd == 0) condition is triggered
-when cookie looking up phase failed before READ request has ever been sent."
-
-Anyway I will fix this comment then.
+Okay, will be fixed.
 
 > 
->> +	if (fd == 0)
->> +		return -ENOENT;
+>> +static int init_read_req(struct cachefiles_req *req, void *private)
 > 
-> 0 is a valid fd.
+> Prefix with "cachefiles_" please (or "cachefiles_ondemand_").
 
-Yeah, but IMHO fd 0 is always for stdin? I think the allocated anon_fd
-won't install at fd 0. Please correct me if I'm wrong.
+Alright.
 
-In fact I wanna use "fd == 0" as the initial state as struct
-cachefiles_object is allocated with kmem_cache_zalloc().
-
+Thanks for reviewing.
 
 -- 
 Thanks,
