@@ -2,53 +2,64 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA5B05009DB
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Apr 2022 11:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 567F3501B6A
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Apr 2022 20:59:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KfDgw5R5Hz2yZv
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Apr 2022 19:29:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KfTJz1RPSz305j
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Apr 2022 04:59:15 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qZeSw6bL;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org;
+ envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=qZeSw6bL; 
+ dkim-atps=neutral
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KfTJq6WJYz2xKT
+ for <linux-erofs@lists.ozlabs.org>; Fri, 15 Apr 2022 04:59:07 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KfDgn0glVz2xKT
- for <linux-erofs@lists.ozlabs.org>; Thu, 14 Apr 2022 19:29:37 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R181e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=20; SR=0; TI=SMTPD_---0VA1uGiX_1649928564; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0VA1uGiX_1649928564) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 14 Apr 2022 17:29:27 +0800
-Date: Thu, 14 Apr 2022 17:29:24 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jiachen Zhang <zhangjiachen.jaycee@bytedance.com>
-Subject: Re: Re: [PATCH v8 00/20] fscache, erofs: fscache-based on-demand read
- semantics
-Message-ID: <YlfpdAjfRclK4aLQ@B-P7TQMD6M-0146.local>
-Mail-Followup-To: Jiachen Zhang <zhangjiachen.jaycee@bytedance.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- linux-cachefs@redhat.com, xiang@kernel.org, chao@kernel.org,
- linux-erofs@lists.ozlabs.org, torvalds@linux-foundation.org,
- gregkh@linuxfoundation.org, willy@infradead.org,
- linux-fsdevel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- bo.liu@linux.alibaba.com, tao.peng@linux.alibaba.com,
- gerry@linux.alibaba.com, eguan@linux.alibaba.com,
- linux-kernel@vger.kernel.org, luodaowen.backend@bytedance.com,
- tianzichen@kuaishou.com, fannaihao@baidu.com
-References: <20220406075612.60298-1-jefflexu@linux.alibaba.com>
- <YlLS47A9TpHyZJQi@B-P7TQMD6M-0146.local>
- <CAFQAk7iUuaUL40NGzOkCOL=P9d6PgsDjRoKLs_5KDycaA9RQ4w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAFQAk7iUuaUL40NGzOkCOL=P9d6PgsDjRoKLs_5KDycaA9RQ4w@mail.gmail.com>
+ by dfw.source.kernel.org (Postfix) with ESMTPS id F0E0E61AD2;
+ Thu, 14 Apr 2022 18:59:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 52A6BC385A1;
+ Thu, 14 Apr 2022 18:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1649962744;
+ bh=x/weOCQCdvFtzXlyiWa6EIeco2L9fkCRTJx4jP9BVB8=;
+ h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+ b=qZeSw6bL4FtjZRW3tzVe2uFuhoR3SUjEm3HOUGziwpkmqJ1Pk7NB1/leWB8ZiBMGt
+ Rft4mPS/efypPjma7PByAB+7ON1sYITnhY/WoUiy2AwgU/q/GdJ8YF2gQmgKUAyvLx
+ OCxTo0FxIjd3hwSmaKEmrqehfb8lBhOd1wqHt15t7RZlJDDeBVtb2W36+rlWGDuxOi
+ GQp2nMlwK8Brl6cK/rqWJ0r0eT2n0OMwsXHdv/Hed6T8cCOuwDJY8P4NN/56W8ueht
+ /ABZcHckXUHG/0zUMQ/dwP45qjN1bgAPCrHlaEAJC8VyhlaNahvzi95euV6qjAtopu
+ zyH9IFhcju24g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org
+ (localhost.localdomain [127.0.0.1])
+ by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id
+ 3E806E85D15; Thu, 14 Apr 2022 18:59:04 +0000 (UTC)
+Subject: Re: [GIT PULL] fscache: Miscellaneous fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <2266868.1649864097@warthog.procyon.org.uk>
+References: <2266868.1649864097@warthog.procyon.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <2266868.1649864097@warthog.procyon.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+ tags/fscache-fixes-20220413
+X-PR-Tracked-Commit-Id: 61132ceeda723d2c48cbc2610ca3213a7fcb083b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ec9c57a7328b178918aa3124f989060bc5624a3f
+Message-Id: <164996274424.15440.4867741345263392092.pr-tracker-bot@kernel.org>
+Date: Thu, 14 Apr 2022 18:59:04 +0000
+To: David Howells <dhowells@redhat.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,82 +71,24 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, joseph.qi@linux.alibaba.com,
- torvalds@linux-foundation.org, fannaihao@baidu.com, willy@infradead.org,
+Cc: linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org,
+ Dave Wysochanski <dwysocha@redhat.com>, Jeff Layton <jlayton@kernel.org>,
  linux-kernel@vger.kernel.org, dhowells@redhat.com,
- linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
- gregkh@linuxfoundation.org, luodaowen.backend@bytedance.com,
- gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+ linux-fsdevel@vger.kernel.org, Yue Hu <huyue2@coolpad.com>,
+ Gao Xiang <hsiangkao@linux.alibaba.com>, torvalds@linux-foundation.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jiachen,
+The pull request you sent on Wed, 13 Apr 2022 16:34:57 +0100:
 
-On Thu, Apr 14, 2022 at 04:10:10PM +0800, Jiachen Zhang wrote:
-> On Sun, Apr 10, 2022 at 8:52 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> >
-> > On Wed, Apr 06, 2022 at 03:55:52PM +0800, Jeffle Xu wrote:
-> > > changes since v7:
-> > > - rebased to 5.18-rc1
-> > > - include "cachefiles: unmark inode in use in error path" patch into
-> > >   this patchset to avoid warning from test robot (patch 1)
-> > > - cachefiles: rename [cookie|volume]_key_len field of struct
-> > >   cachefiles_open to [cookie|volume]_key_size to avoid potential
-> > >   misunderstanding. Also add more documentation to
-> > >   include/uapi/linux/cachefiles.h. (patch 3)
-> > > - cachefiles: valid check for error code returned from user daemon
-> > >   (patch 3)
-> > > - cachefiles: change WARN_ON_ONCE() to pr_info_once() when user daemon
-> > >   closes anon_fd prematurely (patch 4/5)
-> > > - ready for complete review
-> > >
-> > >
-> > > Kernel Patchset
-> > > ---------------
-> > > Git tree:
-> > >
-> > >     https://github.com/lostjeffle/linux.git jingbo/dev-erofs-fscache-v8
-> > >
-> > > Gitweb:
-> > >
-> > >     https://github.com/lostjeffle/linux/commits/jingbo/dev-erofs-fscache-v8
-> > >
-> > >
-> > > User Daemon for Quick Test
-> > > --------------------------
-> > > Git tree:
-> > >
-> > >     https://github.com/lostjeffle/demand-read-cachefilesd.git main
-> > >
-> > > Gitweb:
-> > >
-> > >     https://github.com/lostjeffle/demand-read-cachefilesd
-> > >
-> >
-> > Btw, we've also finished a preliminary end-to-end on-demand download
-> > daemon in order to test the fscache on-demand kernel code as a real
-> > end-to-end workload for container use cases:
-> >
-> > User guide: https://github.com/dragonflyoss/image-service/blob/fscache/docs/nydus-fscache.md
-> > Video: https://youtu.be/F4IF2_DENXo
-> >
-> > Thanks,
-> > Gao Xiang
-> 
-> Hi Xiang,
-> 
-> I think this feature is interesting and promising. So I have performed
-> some tests according to the user guide. Hope it can be an upstream
-> feature.
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/fscache-fixes-20220413
 
-Many thanks for the feedback. We're doing our best to form/stablize it
-now. Still struggle with some specific cases.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ec9c57a7328b178918aa3124f989060bc5624a3f
 
-Thanks,
-Gao Xiang
+Thank you!
 
-
-> 
-> Thanks,
-> Jiachen
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
