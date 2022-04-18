@@ -2,39 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 861F150599E
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 Apr 2022 16:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D7E4505C97
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 Apr 2022 18:44:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Khpyt4NlXz2yg7
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Apr 2022 00:21:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Kht7Q233Mz2yn2
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Apr 2022 02:44:18 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BvV/Unb2;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130;
- helo=out30-130.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com
- (out30-130.freemail.mail.aliyun.com [115.124.30.130])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1;
+ helo=sin.source.kernel.org; envelope-from=xiang@kernel.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=BvV/Unb2; 
+ dkim-atps=neutral
+Received: from sin.source.kernel.org (sin.source.kernel.org
+ [IPv6:2604:1380:40e1:4800::1])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Khpyn4nf7z2xD3
- for <linux-erofs@lists.ozlabs.org>; Tue, 19 Apr 2022 00:21:35 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0VAQFSW._1650291679; 
-Received: from
- e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0VAQFSW._1650291679) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 18 Apr 2022 22:21:23 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: dump: support listing sub-directories
-Date: Mon, 18 Apr 2022 22:21:17 +0800
-Message-Id: <20220418142117.96109-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Kht7J1fwhz2yQK
+ for <linux-erofs@lists.ozlabs.org>; Tue, 19 Apr 2022 02:44:12 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by sin.source.kernel.org (Postfix) with ESMTPS id 1453ECE1000;
+ Mon, 18 Apr 2022 16:44:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED97C385A1;
+ Mon, 18 Apr 2022 16:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1650300246;
+ bh=JvnW2ozespb52lH6msQpgKbA7utUCamhmI6+q8wdsec=;
+ h=Date:From:To:Cc:Subject:From;
+ b=BvV/Unb2MbsQjxbXEqoYLkWXM1VRP325ae+RXseFDJVIzs4eP8A9pAUD406f5/dPL
+ DxBQmuAYfNs288XsZJaMBSmOqOmrRAImDN7Lny81VLQiv2yNFAOnohidpJn7nJfBO5
+ Ov49mdJgC13+xEoGrNs5ol3u4fVwnu0TUlhrSXyoQLo8ZPMV6mcnHbtCmcV5HQq2GM
+ HlzzCfox97vHKXFEtWb3zNWYGMFPtRsk0bqB0vKPuG/dfIVcqRIKjVsIzEirGoeObX
+ PVDKxFJqf7GYDo7o6h8eZn8gTqUAcVgwOR5U6Ypmr6Eb70nWpOPZBOsWfh91qQGyyh
+ quD9Jg+Q01Y1w==
+Date: Tue, 19 Apr 2022 00:43:16 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 5.18-rc4
+Message-ID: <Yl2VJEuDCWT4lycg@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ Chao Yu <chao@kernel.org>, Hongyu Jin <hongyu.jin@unisoc.com>,
+ Hans de Goede <hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,133 +66,55 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Hongyu Jin <hongyu.jin@unisoc.com>, Hans de Goede <hdegoede@redhat.com>,
+ linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add a new option helper to list sub-directories.
+Hi Linus,
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- dump/main.c      | 40 ++++++++++++++++++++++++++++++++++++++--
- man/dump.erofs.1 |  5 ++++-
- 2 files changed, 42 insertions(+), 3 deletions(-)
+Could you consider these two fixes for 5.18-rc4?
 
-diff --git a/dump/main.c b/dump/main.c
-index b431e18..49ff2b7 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -26,6 +26,7 @@ struct erofsdump_cfg {
- 	bool show_extent;
- 	bool show_superblock;
- 	bool show_statistics;
-+	bool show_subdirectories;
- 	erofs_nid_t nid;
- 	const char *inode_path;
- };
-@@ -77,6 +78,7 @@ static struct option long_options[] = {
- 	{"nid", required_argument, NULL, 2},
- 	{"device", required_argument, NULL, 3},
- 	{"path", required_argument, NULL, 4},
-+	{"ls", no_argument, NULL, 5},
- 	{0, 0, 0, 0},
- };
- 
-@@ -103,9 +105,10 @@ static void usage(void)
- 	      "Dump erofs layout from IMAGE, and [options] are:\n"
- 	      " -S              show statistic information of the image\n"
- 	      " -V              print the version number of dump.erofs and exit.\n"
--	      " -e              show extent info (--nid is required)\n"
-+	      " -e              show extent info (INODE required)\n"
- 	      " -s              show information about superblock\n"
- 	      " --device=X      specify an extra device to be used together\n"
-+	      " --ls            show directory contents (INODE required)\n"
- 	      " --nid=#         show the target inode info of nid #\n"
- 	      " --path=X        show the target inode info of path X\n"
- 	      " --help          display this help and exit.\n",
-@@ -158,6 +161,9 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
- 			dumpcfg.show_inode = true;
- 			++dumpcfg.totalshow;
- 			break;
-+		case 5:
-+			dumpcfg.show_subdirectories = true;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -250,6 +256,17 @@ static void update_file_size_statatics(erofs_off_t occupied_size,
- 		stats.file_comp_size[occupied_size_mark]++;
- }
- 
-+static int erofsdump_ls_dirent_iter(struct erofs_dir_context *ctx)
-+{
-+	char fname[EROFS_NAME_LEN + 1];
-+
-+	strncpy(fname, ctx->dname, ctx->de_namelen);
-+	fname[ctx->de_namelen] = '\0';
-+	fprintf(stdout, "%10llu    %u  %s\n",  ctx->de_nid | 0ULL,
-+		ctx->de_ftype, fname);
-+	return 0;
-+}
-+
- static int erofsdump_dirent_iter(struct erofs_dir_context *ctx)
- {
- 	/* skip "." and ".." dentry */
-@@ -376,10 +393,29 @@ static void erofsdump_show_fileinfo(bool show_extent)
- 	fprintf(stdout, "Access: %04o/%s\n", access_mode, access_mode_str);
- 	fprintf(stdout, "Timestamp: %s.%09d\n", timebuf, inode.i_mtime_nsec);
- 
-+	if (dumpcfg.show_subdirectories) {
-+		struct erofs_dir_context ctx = {
-+			.flags = EROFS_READDIR_VALID_PNID,
-+			.pnid = inode.nid,
-+			.dir = &inode,
-+			.cb = erofsdump_ls_dirent_iter,
-+			.de_nid = 0,
-+			.dname = "",
-+			.de_namelen = 0,
-+		};
-+
-+		fprintf(stdout, "\n       NID TYPE  FILENAME\n");
-+		err = erofs_iterate_dir(&ctx, false);
-+		if (err) {
-+			erofs_err("failed to list directory contents");
-+			return;
-+		}
-+	}
-+
- 	if (!dumpcfg.show_extent)
- 		return;
- 
--	fprintf(stdout, "\n Ext:   logical offset   |  length :     physical offset    |  length \n");
-+	fprintf(stdout, "\n Ext:   logical offset   |  length :     physical offset    |  length\n");
- 	while (map.m_la < inode.i_size) {
- 		struct erofs_map_dev mdev;
- 
-diff --git a/man/dump.erofs.1 b/man/dump.erofs.1
-index fd437cf..209e5f9 100644
---- a/man/dump.erofs.1
-+++ b/man/dump.erofs.1
-@@ -19,6 +19,9 @@ is used to retrieve erofs metadata from \fIIMAGE\fP and demonstrate
- Specify an extra device to be used together.
- You may give multiple `--device' options in the correct order.
- .TP
-+.BI "\-\-ls"
-+List directory contents. An inode should be specified together.
-+.TP
- .BI "\-\-nid=" NID
- Specify an inode NID in order to print its file information.
- .TP
-@@ -26,7 +29,7 @@ Specify an inode NID in order to print its file information.
- Specify an inode path in order to print its file information.
- .TP
- .BI \-e
--Show the file extent information. The option depends on option --nid to specify NID.
-+Show the file extent information. An inode should be specified together.
- .TP
- .BI \-V
- Print the version number and exit.
--- 
-2.24.4
+One patch fixes a use-after-free race related to the on-stack
+z_erofs_decompressqueue, which happens very rarely but needs to
+be fixed properly soon. The other patch fixes some sysfs Sphinx
+warnings.
 
+All commits have been in linux-next for a while and no merge
+conflicts.
+
+Thanks,
+Gao Xiang
+
+
+The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
+
+  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.18-rc4-fixes
+
+for you to fetch changes up to 8b1ac84dcf2cf0fc86f29e92e5c63c4862de6e55:
+
+  Documentation/ABI: sysfs-fs-erofs: Fix Sphinx errors (2022-04-15 23:51:54 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix use-after-free of the on-stack z_erofs_decompressqueue;
+
+ - Fix sysfs documentation Sphinx warnings.
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      Documentation/ABI: sysfs-fs-erofs: Fix Sphinx errors
+
+Hongyu Jin (1):
+      erofs: fix use-after-free of on-stack io[]
+
+ Documentation/ABI/testing/sysfs-fs-erofs |  5 +++--
+ fs/erofs/zdata.c                         | 12 ++++--------
+ fs/erofs/zdata.h                         |  2 +-
+ 3 files changed, 8 insertions(+), 11 deletions(-)
