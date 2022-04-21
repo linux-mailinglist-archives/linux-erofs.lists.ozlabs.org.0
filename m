@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 477ED50A38F
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Apr 2022 17:01:00 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A938F50A3B9
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Apr 2022 17:12:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Kkghp1XPFz3bWm
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 01:00:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KkgxZ3jBxz3bWf
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 01:12:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
@@ -18,27 +18,27 @@ Received: from out30-56.freemail.mail.aliyun.com
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kkghh2XWnz2yHD
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Apr 2022 01:00:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R591e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0VAgCgRW_1650553238; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KkgxT4tgKz2yHD
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Apr 2022 01:11:54 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R121e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0VAg.y.s_1650553903; 
 Received: from 192.168.31.65(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0VAgCgRW_1650553238) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 21 Apr 2022 23:00:41 +0800
-Message-ID: <9b99e246-fbdf-2d78-7773-bf4481a8e122@linux.alibaba.com>
-Date: Thu, 21 Apr 2022 23:00:38 +0800
+ fp:SMTPD_---0VAg.y.s_1650553903) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 21 Apr 2022 23:11:45 +0800
+Message-ID: <a79e09a0-16d2-4d73-af9f-05a259431040@linux.alibaba.com>
+Date: Thu, 21 Apr 2022 23:11:43 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v9 05/21] cachefiles: implement on-demand read
+Subject: Re: [PATCH v9 06/21] cachefiles: enable on-demand read mode
 Content-Language: en-US
 To: David Howells <dhowells@redhat.com>
-References: <20220415123614.54024-6-jefflexu@linux.alibaba.com>
+References: <20220415123614.54024-7-jefflexu@linux.alibaba.com>
  <20220415123614.54024-1-jefflexu@linux.alibaba.com>
- <1445520.1650550446@warthog.procyon.org.uk>
+ <1445691.1650550659@warthog.procyon.org.uk>
 From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <1445520.1650550446@warthog.procyon.org.uk>
+In-Reply-To: <1445691.1650550659@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -64,26 +64,58 @@ Sender: "Linux-erofs"
 
 
 
-On 4/21/22 10:14 PM, David Howells wrote:
+On 4/21/22 10:17 PM, David Howells wrote:
 > Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 > 
->> A new NETFS_SREQ_ONDEMAND flag is introduced to indicate that on-demand
->> read should be done when a cache miss encountered.
+>> +	if (IS_ENABLED(CONFIG_CACHEFILES_ONDEMAND) &&
+>> +	    !strcmp(args, "ondemand")) {
+>> +		set_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags);
+>> +	} else if (*args) {
+>> +		pr_err("'bind' command doesn't take an argument\n");
 > 
-> That may conflict with changes I'm making - but it's just a matter of flag
-> renumbering.
-> 
->> +#define CACHEFILES_IOC_CREAD	_IOW(0x98, 1, int)
-> 
-> I wonder if CACHEFILES_IOC_READ_COMPLETE would be a better name, 
+> The error message isn't true if CONFIG_CACHEFILES_ONDEMAND=y.  It would be
+> better to say "Invalid argument to the 'bind' command".
 
-Okay, it sounds more readable. Thanks.
+Right. Or users may gets confused then. Will be fixed in the next version.
 
-
-but apart
-> from that:
 > 
-> Acked-by: David Howells <dhowells@redhat.com>
+>> -retry:
+>>  	/* If the caller asked us to seek for data before doing the read, then
+>>  	 * we should do that now.  If we find a gap, we fill it with zeros.
+>>  	 */
+>> @@ -120,16 +119,6 @@ static int cachefiles_read(struct netfs_cache_resources *cres,
+>>  			if (read_hole == NETFS_READ_HOLE_FAIL)
+>>  				goto presubmission_error;
+>>  
+>> -			if (read_hole == NETFS_READ_HOLE_ONDEMAND) {
+>> -				ret = cachefiles_ondemand_read(object, off, len);
+>> -				if (ret)
+>> -					goto presubmission_error;
+>> -
+>> -				/* fail the read if no progress achieved */
+>> -				read_hole = NETFS_READ_HOLE_FAIL;
+>> -				goto retry;
+>> -			}
+>> -
+> 
+
+Sorry, it's my mistake when doing "git rebase". The previous version
+(v8) actually calls cachefiles_ondemand_read() in cachefiles_read().
+However as explained in the commit message of patch 5 ("cachefiles:
+implement on-demand read"), fscache_read() can only detect if the
+requested file range is fully cache miss, whilst it can't detect if it
+is partial cache miss, i.e. there's a hole inside the requested file range.
+
+Thus in this patchset (v9), we move the entry of calling
+cachefiles_ondemand_read() from cachefiles_read() to
+cachefiles_prepare_read(). The above "deletion of newly added code" is
+actually reverting the previous change to cachefiles_read(). It was
+mistakenly merged to this patch when I was doing "git rebase"...
+Actually it should be merged to patch 5 ("cachefiles: implement
+on-demand read"), which initially introduce the change to cachefiles_read().
+
+Apologize for the careless mistake...
+
 
 -- 
 Thanks,
