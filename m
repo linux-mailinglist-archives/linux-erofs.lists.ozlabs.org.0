@@ -2,44 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 613F350A37A
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Apr 2022 16:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 477ED50A38F
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Apr 2022 17:01:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KkgdC2KTnz3bWf
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 00:57:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Kkghp1XPFz3bWm
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 01:00:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44;
- helo=out30-44.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56;
+ helo=out30-56.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-44.freemail.mail.aliyun.com
- (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+Received: from out30-56.freemail.mail.aliyun.com
+ (out30-56.freemail.mail.aliyun.com [115.124.30.56])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kkgd70hBVz2yHD
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Apr 2022 00:57:44 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R161e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0VAgCg.U_1650553055; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Kkghh2XWnz2yHD
+ for <linux-erofs@lists.ozlabs.org>; Fri, 22 Apr 2022 01:00:50 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R591e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0VAgCgRW_1650553238; 
 Received: from 192.168.31.65(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0VAgCg.U_1650553055) by smtp.aliyun-inc.com(127.0.0.1);
- Thu, 21 Apr 2022 22:57:37 +0800
-Message-ID: <e2a38f8c-ba20-0368-c3cb-aeb4d5212cc6@linux.alibaba.com>
-Date: Thu, 21 Apr 2022 22:57:35 +0800
+ fp:SMTPD_---0VAgCgRW_1650553238) by smtp.aliyun-inc.com(127.0.0.1);
+ Thu, 21 Apr 2022 23:00:41 +0800
+Message-ID: <9b99e246-fbdf-2d78-7773-bf4481a8e122@linux.alibaba.com>
+Date: Thu, 21 Apr 2022 23:00:38 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v9 04/21] cachefiles: notify user daemon when withdrawing
- cookie
+Subject: Re: [PATCH v9 05/21] cachefiles: implement on-demand read
 Content-Language: en-US
 To: David Howells <dhowells@redhat.com>
-References: <20220415123614.54024-5-jefflexu@linux.alibaba.com>
+References: <20220415123614.54024-6-jefflexu@linux.alibaba.com>
  <20220415123614.54024-1-jefflexu@linux.alibaba.com>
- <1445104.1650549959@warthog.procyon.org.uk>
+ <1445520.1650550446@warthog.procyon.org.uk>
 From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <1445104.1650549959@warthog.procyon.org.uk>
+In-Reply-To: <1445520.1650550446@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -65,17 +64,24 @@ Sender: "Linux-erofs"
 
 
 
-On 4/21/22 10:05 PM, David Howells wrote:
+On 4/21/22 10:14 PM, David Howells wrote:
 > Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
 > 
->> +	 * It's possiblie that object id is still 0 if the cookie looking up
+>> A new NETFS_SREQ_ONDEMAND flag is introduced to indicate that on-demand
+>> read should be done when a cache miss encountered.
 > 
-> possiblie -> possible
-
-Thanks.
-
+> That may conflict with changes I'm making - but it's just a matter of flag
+> renumbering.
 > 
-> Otherwise:
+>> +#define CACHEFILES_IOC_CREAD	_IOW(0x98, 1, int)
+> 
+> I wonder if CACHEFILES_IOC_READ_COMPLETE would be a better name, 
+
+Okay, it sounds more readable. Thanks.
+
+
+but apart
+> from that:
 > 
 > Acked-by: David Howells <dhowells@redhat.com>
 
