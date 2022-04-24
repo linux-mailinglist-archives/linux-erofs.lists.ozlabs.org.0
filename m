@@ -2,42 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C261450D1D9
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Apr 2022 15:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8482750D246
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Apr 2022 16:32:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KmT1N4SrDz3bY8
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Apr 2022 23:06:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KmVvy3Jh9z3bYS
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 00:31:58 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Q7Q7mA5M;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
- helo=out30-133.freemail.mail.aliyun.com;
- envelope-from=hongnan.li@linux.alibaba.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 308 seconds by postgrey-1.36 at boromir;
- Sun, 24 Apr 2022 23:06:27 AEST
-Received: from out30-133.freemail.mail.aliyun.com
- (out30-133.freemail.mail.aliyun.com [115.124.30.133])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=intel.com (client-ip=192.55.52.93; helo=mga11.intel.com;
+ envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
+ header.s=Intel header.b=Q7Q7mA5M; dkim-atps=neutral
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KmT1H3RpHz2xm2
- for <linux-erofs@lists.ozlabs.org>; Sun, 24 Apr 2022 23:06:26 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R911e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hongnan.li@linux.alibaba.com;
- NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0VB1Lv.._1650805264; 
-Received: from localhost(mailfrom:hongnan.li@linux.alibaba.com
- fp:SMTPD_---0VB1Lv.._1650805264) by smtp.aliyun-inc.com(127.0.0.1);
- Sun, 24 Apr 2022 21:01:04 +0800
-From: Hongnan Li <hongnan.li@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org,
-	chao@kernel.org
-Subject: [PATCH] erofs: make filesystem exportable
-Date: Sun, 24 Apr 2022 21:01:04 +0800
-Message-Id: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KmVvs50Xwz2xgN
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 00:31:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+ d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+ t=1650810713; x=1682346713;
+ h=date:from:to:cc:subject:message-id:references:
+ mime-version:in-reply-to;
+ bh=1o4u4tcHj8GJHvMb2O8TmdCKH7Vu63K+AlpEAuoV8Qo=;
+ b=Q7Q7mA5MA1m5Keh4QWIFhdjT9UtdVxTxRixLuaefceYjHB+bF6CngrXf
+ 2n0ISKdblf23ZSkb2it/dmxOvoJlmftO4F7AcFJugAm3L5YvCbitl4ixw
+ 6NQSzQnLUBgVF8iIIekscTLaFdUD4nJw8uCBXRzBzzPaR8uUHIZ52Vph5
+ QRHujB8eV+8mkRxpICE/5Oachn5CTzYVxJ2oIDWlFnadCPDfohcXdK8Ek
+ HDuLpfmolNRA7T+nDRC78qORVCYqueK9DcryyDstWZUsMWaMGw7dYOqn/
+ XGXWAuYHQfiDWvSQEDC4O9RBGy0lKXGTJQFJ4lUhu/Q/mDOQ7as/Wt9B/ Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10326"; a="262647439"
+X-IronPort-AV: E=Sophos;i="5.90,286,1643702400"; d="scan'208";a="262647439"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+ by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 24 Apr 2022 07:30:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,286,1643702400"; d="scan'208";a="594855437"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+ by orsmga001.jf.intel.com with ESMTP; 24 Apr 2022 07:30:42 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+ (envelope-from <lkp@intel.com>) id 1nidG6-0001WV-0m;
+ Sun, 24 Apr 2022 14:30:42 +0000
+Date: Sun, 24 Apr 2022 22:30:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hongnan Li <hongnan.li@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org, chao@kernel.org
+Subject: Re: [PATCH] erofs: make filesystem exportable
+Message-ID: <202204242236.0aTl5THK-lkp@intel.com>
+References: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,125 +69,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Implement export operations in order to make EROFS support accessing
-inodes with filehandles so that it can be exported via NFS and used
-by overlayfs.
+Hi Hongnan,
 
-Without this patch, 'exportfs -rv' will report:
-exportfs: /root/erofs_mp does not support NFS export
+Thank you for the patch! Perhaps something to improve:
 
-Also tested with unionmount-testsuite and the testcase below passes now:
-./run --ov --erofs --verify hard-link
+[auto build test WARNING on xiang-erofs/dev-test]
+[also build test WARNING on v5.18-rc3 next-20220422]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-For more details about the testcase, see:
-https://github.com/amir73il/unionmount-testsuite/pull/6
+url:    https://github.com/intel-lab-lkp/linux/commits/Hongnan-Li/erofs-make-filesystem-exportable/20220424-211653
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+config: hexagon-buildonly-randconfig-r005-20220424 (https://download.01.org/0day-ci/archive/20220424/202204242236.0aTl5THK-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 1cddcfdc3c683b393df1a5c9063252eb60e52818)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/c0fc15c5ccc4a5090cc32744ba63bde8ea558ac7
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Hongnan-Li/erofs-make-filesystem-exportable/20220424-211653
+        git checkout c0fc15c5ccc4a5090cc32744ba63bde8ea558ac7
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash fs/erofs/
 
-Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
----
- fs/erofs/internal.h |  2 +-
- fs/erofs/namei.c    |  5 ++---
- fs/erofs/super.c    | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 43 insertions(+), 4 deletions(-)
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 5298c4ee277d..12c65f647324 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -509,7 +509,7 @@ int erofs_getattr(struct user_namespace *mnt_userns, const struct path *path,
- /* namei.c */
- extern const struct inode_operations erofs_dir_iops;
- 
--int erofs_namei(struct inode *dir, struct qstr *name,
-+int erofs_namei(struct inode *dir, const struct qstr *name,
- 		erofs_nid_t *nid, unsigned int *d_type);
- 
- /* dir.c */
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index 554efa363317..fd75506799c4 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -165,9 +165,8 @@ static void *find_target_block_classic(struct erofs_buf *target,
- 	return candidate;
- }
- 
--int erofs_namei(struct inode *dir,
--		struct qstr *name,
--		erofs_nid_t *nid, unsigned int *d_type)
-+int erofs_namei(struct inode *dir, const struct qstr *name, erofs_nid_t *nid,
-+		unsigned int *d_type)
- {
- 	int ndirents;
- 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 0c4b41130c2f..17ad271677b6 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -13,6 +13,7 @@
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
- #include <linux/dax.h>
-+#include <linux/exportfs.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -577,6 +578,44 @@ static int erofs_init_managed_cache(struct super_block *sb)
- static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
- #endif
- 
-+static struct inode *erofs_nfs_get_inode(struct super_block *sb,
-+		u64 ino, u32 generation)
-+{
-+	return erofs_iget(sb, ino, false);
-+}
-+
-+static struct dentry *erofs_fh_to_dentry(struct super_block *sb, struct fid *fid,
-+		int fh_len, int fh_type)
-+{
-+	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
-+				    erofs_nfs_get_inode);
-+}
-+
-+static struct dentry *erofs_fh_to_parent(struct super_block *sb, struct fid *fid,
-+		int fh_len, int fh_type)
-+{
-+	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
-+				    erofs_nfs_get_inode);
-+}
-+
-+struct dentry *erofs_get_parent(struct dentry *child)
-+{
-+	erofs_nid_t nid;
-+	unsigned int d_type;
-+	int err;
-+
-+	err = erofs_namei(d_inode(child), &dotdot_name, &nid, &d_type);
-+	if (err)
-+		return ERR_PTR(err);
-+	return d_obtain_alias(erofs_iget(child->d_sb, nid, d_type == FT_DIR));
-+}
-+
-+static const struct export_operations erofs_export_ops = {
-+	.fh_to_dentry = erofs_fh_to_dentry,
-+	.fh_to_parent = erofs_fh_to_parent,
-+	.get_parent = erofs_get_parent,
-+};
-+
- static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
-@@ -618,6 +657,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_time_gran = 1;
- 
- 	sb->s_op = &erofs_sops;
-+	sb->s_export_op = &erofs_export_ops;
- 	sb->s_xattr = erofs_xattr_handlers;
- 
- 	if (test_opt(&sbi->opt, POSIX_ACL))
+All warnings (new ones prefixed by >>):
+
+>> fs/erofs/super.c:601:16: warning: no previous prototype for function 'erofs_get_parent' [-Wmissing-prototypes]
+   struct dentry *erofs_get_parent(struct dentry *child)
+                  ^
+   fs/erofs/super.c:601:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   struct dentry *erofs_get_parent(struct dentry *child)
+   ^
+   static 
+   1 warning generated.
+
+
+vim +/erofs_get_parent +601 fs/erofs/super.c
+
+   600	
+ > 601	struct dentry *erofs_get_parent(struct dentry *child)
+   602	{
+   603		erofs_nid_t nid;
+   604		unsigned int d_type;
+   605		int err;
+   606	
+   607		err = erofs_namei(d_inode(child), &dotdot_name, &nid, &d_type);
+   608		if (err)
+   609			return ERR_PTR(err);
+   610		return d_obtain_alias(erofs_iget(child->d_sb, nid, d_type == FT_DIR));
+   611	}
+   612	
+
 -- 
-2.19.1.6.gb485710b
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
