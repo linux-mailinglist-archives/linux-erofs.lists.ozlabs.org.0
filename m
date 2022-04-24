@@ -2,45 +2,42 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3406F50AE64
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 05:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C261450D1D9
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Apr 2022 15:06:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Kkztw0Rzfz3bWx
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Apr 2022 13:10:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4KmT1N4SrDz3bY8
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Apr 2022 23:06:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.10;
- helo=out199-10.us.a.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com;
- receiver=<UNKNOWN>)
-Received: from out199-10.us.a.mail.aliyun.com (out199-10.us.a.mail.aliyun.com
- [47.90.199.10])
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133;
+ helo=out30-133.freemail.mail.aliyun.com;
+ envelope-from=hongnan.li@linux.alibaba.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 308 seconds by postgrey-1.36 at boromir;
+ Sun, 24 Apr 2022 23:06:27 AEST
+Received: from out30-133.freemail.mail.aliyun.com
+ (out30-133.freemail.mail.aliyun.com [115.124.30.133])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kkztq70TFz2yK2
- for <linux-erofs@lists.ozlabs.org>; Fri, 22 Apr 2022 13:10:40 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R201e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04357; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=19; SR=0; TI=SMTPD_---0VAk49Jj_1650597028; 
-Received: from 30.225.24.197(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0VAk49Jj_1650597028) by smtp.aliyun-inc.com(127.0.0.1);
- Fri, 22 Apr 2022 11:10:30 +0800
-Message-ID: <a15c3c93-3472-5bed-c8bb-4416bb809325@linux.alibaba.com>
-Date: Fri, 22 Apr 2022 11:10:28 +0800
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4KmT1H3RpHz2xm2
+ for <linux-erofs@lists.ozlabs.org>; Sun, 24 Apr 2022 23:06:26 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R911e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04407; MF=hongnan.li@linux.alibaba.com;
+ NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0VB1Lv.._1650805264; 
+Received: from localhost(mailfrom:hongnan.li@linux.alibaba.com
+ fp:SMTPD_---0VB1Lv.._1650805264) by smtp.aliyun-inc.com(127.0.0.1);
+ Sun, 24 Apr 2022 21:01:04 +0800
+From: Hongnan Li <hongnan.li@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: make filesystem exportable
+Date: Sun, 24 Apr 2022 21:01:04 +0800
+Message-Id: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v9 08/21] cachefiles: document on-demand read mode
-Content-Language: en-US
-To: David Howells <dhowells@redhat.com>
-References: <20220415123614.54024-9-jefflexu@linux.alibaba.com>
- <20220415123614.54024-1-jefflexu@linux.alibaba.com>
- <1447053.1650552451@warthog.procyon.org.uk>
-From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <1447053.1650552451@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,92 +49,125 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, fannaihao@baidu.com, willy@infradead.org,
- linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
- joseph.qi@linux.alibaba.com, zhangjiachen.jaycee@bytedance.com,
- linux-cachefs@redhat.com, gregkh@linuxfoundation.org,
- linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
- gerry@linux.alibaba.com, torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi David, thanks for polishing the documents. It's a detailed and
-meticulous review again. Really thanks for your time :) I will fix all
-these in the next version.
+Implement export operations in order to make EROFS support accessing
+inodes with filehandles so that it can be exported via NFS and used
+by overlayfs.
 
-On 4/21/22 10:47 PM, David Howells wrote:
-> Jeffle Xu <jefflexu@linux.alibaba.com> wrote:
-> 
->> +The essential difference between these two modes is that, in original mode,
->> +when a cache miss occurs, the netfs will fetch the data from the remote server
->> +and then write it to the cache file.  With on-demand read mode, however,
->> +fetching the data and writing it into the cache is delegated to a user daemon.
-> 
-> The starting sentence seems off.  How about:
-> 
->   The essential difference between these two modes is seen when a cache miss
->   occurs: In the original mode, the netfs will fetch the data from the remote
->   server and then write it to the cache file; in on-demand read mode, fetching
->   data and writing it into the cache is delegated to a user daemon.
+Without this patch, 'exportfs -rv' will report:
+exportfs: /root/erofs_mp does not support NFS export
 
-Okay, it sounds better.
+Also tested with unionmount-testsuite and the testcase below passes now:
+./run --ov --erofs --verify hard-link
 
->> the devnode ('/dev/cachefiles') to check if
->> +there's a pending request to be processed.  A POLLIN event will be returned
->> +when there's a pending request.
->> +
->> +The user daemon then reads the devnode to fetch a request and process it
->> +accordingly.
-> 
-> Reading the devnode doesn't process the request, so I think something like:
-> 
-> "... and process it accordingly" -> "... that it can then process."
-> 
-> or:
-> 
-> "... and process it accordingly" -> "... to process."
+For more details about the testcase, see:
+https://github.com/amir73il/unionmount-testsuite/pull/6
 
-Yeah the original statement is indeed misleading.
+Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
+---
+ fs/erofs/internal.h |  2 +-
+ fs/erofs/namei.c    |  5 ++---
+ fs/erofs/super.c    | 40 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 43 insertions(+), 4 deletions(-)
 
-
->> Each cache file has a unique object_id, while it
->> +may have multiple anonymous fds. The user daemon may duplicate anonymous fds
->> +from the initial anonymous fd indicated by the @fd field through dup(). Thus
->> +each object_id can be mapped to multiple anonymous fds, while the usr daemon
->> +itself needs to maintain the mapping.
->> +
->> +With the given anonymous fd, the user daemon can fetch data and write it to the
->> +cache file in the background, even when kernel has not triggered a cache miss
->> +yet.
->> +
->> +The user daemon should complete the READ request
-> 
-> READ request -> OPEN request?
-
-Good catch. Will be fixed.
-
-
->> in the READ request.  The ioctl is of the form::
->> +
->> +	ioctl(fd, CACHEFILES_IOC_CREAD, msg_id);
->> +
->> +	* ``fd`` is one of the anonymous fds associated with the given object_id
->> +	  in the READ request.
-> 
-> the given object_id in the READ request -> object_id
-> 
->> +
->> +	* ``msg_id`` must match the msg_id field of the previous READ request.
-> 
-> By "previous READ request" is this referring to something different to "the
-> READ request" you mentioned against the fd parameter?
-
-Actually it is referring to the same thing (the same READ request). I
-will change the statement simply to:
-
-``msg_id`` must match the msg_id field of the READ request.
-
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 5298c4ee277d..12c65f647324 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -509,7 +509,7 @@ int erofs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+ /* namei.c */
+ extern const struct inode_operations erofs_dir_iops;
+ 
+-int erofs_namei(struct inode *dir, struct qstr *name,
++int erofs_namei(struct inode *dir, const struct qstr *name,
+ 		erofs_nid_t *nid, unsigned int *d_type);
+ 
+ /* dir.c */
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index 554efa363317..fd75506799c4 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -165,9 +165,8 @@ static void *find_target_block_classic(struct erofs_buf *target,
+ 	return candidate;
+ }
+ 
+-int erofs_namei(struct inode *dir,
+-		struct qstr *name,
+-		erofs_nid_t *nid, unsigned int *d_type)
++int erofs_namei(struct inode *dir, const struct qstr *name, erofs_nid_t *nid,
++		unsigned int *d_type)
+ {
+ 	int ndirents;
+ 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0c4b41130c2f..17ad271677b6 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -13,6 +13,7 @@
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
+ #include <linux/dax.h>
++#include <linux/exportfs.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -577,6 +578,44 @@ static int erofs_init_managed_cache(struct super_block *sb)
+ static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
+ #endif
+ 
++static struct inode *erofs_nfs_get_inode(struct super_block *sb,
++		u64 ino, u32 generation)
++{
++	return erofs_iget(sb, ino, false);
++}
++
++static struct dentry *erofs_fh_to_dentry(struct super_block *sb, struct fid *fid,
++		int fh_len, int fh_type)
++{
++	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
++				    erofs_nfs_get_inode);
++}
++
++static struct dentry *erofs_fh_to_parent(struct super_block *sb, struct fid *fid,
++		int fh_len, int fh_type)
++{
++	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
++				    erofs_nfs_get_inode);
++}
++
++struct dentry *erofs_get_parent(struct dentry *child)
++{
++	erofs_nid_t nid;
++	unsigned int d_type;
++	int err;
++
++	err = erofs_namei(d_inode(child), &dotdot_name, &nid, &d_type);
++	if (err)
++		return ERR_PTR(err);
++	return d_obtain_alias(erofs_iget(child->d_sb, nid, d_type == FT_DIR));
++}
++
++static const struct export_operations erofs_export_ops = {
++	.fh_to_dentry = erofs_fh_to_dentry,
++	.fh_to_parent = erofs_fh_to_parent,
++	.get_parent = erofs_get_parent,
++};
++
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+@@ -618,6 +657,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_time_gran = 1;
+ 
+ 	sb->s_op = &erofs_sops;
++	sb->s_export_op = &erofs_export_ops;
+ 	sb->s_xattr = erofs_xattr_handlers;
+ 
+ 	if (test_opt(&sbi->opt, POSIX_ACL))
 -- 
-Thanks,
-Jeffle
+2.19.1.6.gb485710b
+
