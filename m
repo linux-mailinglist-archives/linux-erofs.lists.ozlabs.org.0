@@ -2,37 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CB2550E003
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 14:22:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 244A850DFFF
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 14:22:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Kn40C11Kdz3bxl
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 22:22:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Kn40802scz3bqb
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 22:22:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
+ helo=out30-43.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+Received: from out30-43.freemail.mail.aliyun.com
+ (out30-43.freemail.mail.aliyun.com [115.124.30.43])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kn4020Rvtz3bs3
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 22:22:25 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R921e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04426; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=20; SR=0; TI=SMTPD_---0VBGH8HR_1650889333; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Kn4011pTmz3bs2
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 22:22:24 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=20; SR=0; TI=SMTPD_---0VBDlJL0_1650889335; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0VBGH8HR_1650889333) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 25 Apr 2022 20:22:14 +0800
+ fp:SMTPD_---0VBDlJL0_1650889335) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 25 Apr 2022 20:22:16 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v10 18/21] erofs: implement fscache-based data read for
- non-inline layout
-Date: Mon, 25 Apr 2022 20:21:40 +0800
-Message-Id: <20220425122143.56815-19-jefflexu@linux.alibaba.com>
+Subject: [PATCH v10 19/21] erofs: implement fscache-based data read for inline
+ layout
+Date: Mon, 25 Apr 2022 20:21:41 +0800
+Message-Id: <20220425122143.56815-20-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
 References: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
@@ -59,110 +59,67 @@ Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 Implement the data plane of reading data from data blobs over fscache
-for non-inline layout.
+for inline layout.
+
+For the heading non-inline part, the data plane for non-inline layout is
+reused, while only the tail packing part needs special handling.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
 Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 51 +++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/inode.c    |  4 ++++
- fs/erofs/internal.h |  2 ++
- 3 files changed, 57 insertions(+)
+ fs/erofs/fscache.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 23d7e862eed8..b3af72af7c88 100644
+index b3af72af7c88..5b779812a5ee 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -83,10 +83,61 @@ static int erofs_fscache_meta_readpage(struct file *data, struct page *page)
+@@ -83,6 +83,33 @@ static int erofs_fscache_meta_readpage(struct file *data, struct page *page)
  	return ret;
  }
  
-+static int erofs_fscache_readpage(struct file *file, struct page *page)
++static int erofs_fscache_readpage_inline(struct folio *folio,
++					 struct erofs_map_blocks *map)
 +{
-+	struct folio *folio = page_folio(page);
-+	struct inode *inode = folio_mapping(folio)->host;
-+	struct super_block *sb = inode->i_sb;
-+	struct erofs_map_blocks map;
-+	struct erofs_map_dev mdev;
-+	erofs_off_t pos;
-+	loff_t pstart;
-+	int ret;
++	struct super_block *sb = folio_mapping(folio)->host->i_sb;
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
++	erofs_blk_t blknr;
++	size_t offset, len;
++	void *src, *dst;
 +
-+	DBG_BUGON(folio_size(folio) != EROFS_BLKSIZ);
++	/* For tail packing layout, the offset may be non-zero. */
++	offset = erofs_blkoff(map->m_pa);
++	blknr = erofs_blknr(map->m_pa);
++	len = map->m_llen;
 +
-+	pos = folio_pos(folio);
-+	map.m_la = pos;
++	src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
++	if (IS_ERR(src))
++		return PTR_ERR(src);
 +
-+	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (ret)
-+		goto out_unlock;
++	dst = kmap_local_folio(folio, 0);
++	memcpy(dst, src + offset, len);
++	memset(dst + len, 0, PAGE_SIZE - len);
++	kunmap_local(dst);
 +
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		folio_zero_range(folio, 0, folio_size(folio));
++	erofs_put_metabuf(&buf);
++	return 0;
++}
++
+ static int erofs_fscache_readpage(struct file *file, struct page *page)
+ {
+ 	struct folio *folio = page_folio(page);
+@@ -108,6 +135,11 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
+ 		goto out_uptodate;
+ 	}
+ 
++	if (map.m_flags & EROFS_MAP_META) {
++		ret = erofs_fscache_readpage_inline(folio, &map);
 +		goto out_uptodate;
 +	}
 +
-+	mdev = (struct erofs_map_dev) {
-+		.m_deviceid = map.m_deviceid,
-+		.m_pa = map.m_pa,
-+	};
-+
-+	ret = erofs_map_dev(sb, &mdev);
-+	if (ret)
-+		goto out_unlock;
-+
-+	pstart = mdev.m_pa + (pos - map.m_la);
-+	ret = erofs_fscache_read_folios(mdev.m_fscache->cookie,
-+			folio_mapping(folio), folio_pos(folio),
-+			folio_size(folio), pstart);
-+
-+out_uptodate:
-+	if (!ret)
-+		folio_mark_uptodate(folio);
-+out_unlock:
-+	folio_unlock(folio);
-+	return ret;
-+}
-+
- static const struct address_space_operations erofs_fscache_meta_aops = {
- 	.readpage = erofs_fscache_meta_readpage,
- };
- 
-+const struct address_space_operations erofs_fscache_access_aops = {
-+	.readpage = erofs_fscache_readpage,
-+};
-+
- int erofs_fscache_register_cookie(struct super_block *sb,
- 				  struct erofs_fscache **fscache,
- 				  char *name, bool need_inode)
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index e8b37ba5e9ad..8d3f56c6469b 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -297,6 +297,10 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
- 		goto out_unlock;
- 	}
- 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
-+#ifdef CONFIG_EROFS_FS_ONDEMAND
-+	if (erofs_is_fscache_mode(inode->i_sb))
-+		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
-+#endif
- 
- out_unlock:
- 	erofs_put_metabuf(&buf);
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index fa488af8dfcf..c8f6ac910976 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -639,6 +639,8 @@ int erofs_fscache_register_cookie(struct super_block *sb,
- 				  struct erofs_fscache **fscache,
- 				  char *name, bool need_inode);
- void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache);
-+
-+extern const struct address_space_operations erofs_fscache_access_aops;
- #else
- static inline int erofs_fscache_register_fs(struct super_block *sb)
- {
+ 	mdev = (struct erofs_map_dev) {
+ 		.m_deviceid = map.m_deviceid,
+ 		.m_pa = map.m_pa,
 -- 
 2.27.0
 
