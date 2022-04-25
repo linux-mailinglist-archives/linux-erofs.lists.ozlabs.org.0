@@ -1,38 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 244A850DFFF
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 14:22:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EDAE50E005
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 14:22:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Kn40802scz3bqb
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 22:22:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Kn40G1Rxbz3byH
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 22:22:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43;
- helo=out30-43.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
+ helo=out30-54.freemail.mail.aliyun.com;
  envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com
- (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Received: from out30-54.freemail.mail.aliyun.com
+ (out30-54.freemail.mail.aliyun.com [115.124.30.54])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kn4011pTmz3bs2
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 22:22:24 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=jefflexu@linux.alibaba.com;
- NM=1; PH=DS; RN=20; SR=0; TI=SMTPD_---0VBDlJL0_1650889335; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Kn4051MZyz3bxC
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 22:22:28 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R611e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04395; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=20; SR=0; TI=SMTPD_---0VBE4bLd_1650889336; 
 Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
- fp:SMTPD_---0VBDlJL0_1650889335) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 25 Apr 2022 20:22:16 +0800
+ fp:SMTPD_---0VBE4bLd_1650889336) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 25 Apr 2022 20:22:17 +0800
 From: Jeffle Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: [PATCH v10 19/21] erofs: implement fscache-based data read for inline
- layout
-Date: Mon, 25 Apr 2022 20:21:41 +0800
-Message-Id: <20220425122143.56815-20-jefflexu@linux.alibaba.com>
+Subject: [PATCH v10 20/21] erofs: implement fscache-based data readahead
+Date: Mon, 25 Apr 2022 20:21:42 +0800
+Message-Id: <20220425122143.56815-21-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
 References: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
@@ -58,68 +57,137 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Implement the data plane of reading data from data blobs over fscache
-for inline layout.
-
-For the heading non-inline part, the data plane for non-inline layout is
-reused, while only the tail packing part needs special handling.
+Implement fscache-based data readahead. Also registers an individual
+bdi for each erofs instance to enable readahead.
 
 Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/fscache.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ fs/erofs/fscache.c | 90 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/super.c   |  4 +++
+ 2 files changed, 94 insertions(+)
 
 diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index b3af72af7c88..5b779812a5ee 100644
+index 5b779812a5ee..a402d8f0a063 100644
 --- a/fs/erofs/fscache.c
 +++ b/fs/erofs/fscache.c
-@@ -83,6 +83,33 @@ static int erofs_fscache_meta_readpage(struct file *data, struct page *page)
+@@ -162,12 +162,102 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
  	return ret;
  }
  
-+static int erofs_fscache_readpage_inline(struct folio *folio,
-+					 struct erofs_map_blocks *map)
++static void erofs_fscache_unlock_folios(struct readahead_control *rac,
++					size_t len)
 +{
-+	struct super_block *sb = folio_mapping(folio)->host->i_sb;
-+	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+	erofs_blk_t blknr;
-+	size_t offset, len;
-+	void *src, *dst;
++	while (len) {
++		struct folio *folio = readahead_folio(rac);
 +
-+	/* For tail packing layout, the offset may be non-zero. */
-+	offset = erofs_blkoff(map->m_pa);
-+	blknr = erofs_blknr(map->m_pa);
-+	len = map->m_llen;
-+
-+	src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
-+	if (IS_ERR(src))
-+		return PTR_ERR(src);
-+
-+	dst = kmap_local_folio(folio, 0);
-+	memcpy(dst, src + offset, len);
-+	memset(dst + len, 0, PAGE_SIZE - len);
-+	kunmap_local(dst);
-+
-+	erofs_put_metabuf(&buf);
-+	return 0;
++		len -= folio_size(folio);
++		folio_mark_uptodate(folio);
++		folio_unlock(folio);
++	}
 +}
 +
- static int erofs_fscache_readpage(struct file *file, struct page *page)
- {
- 	struct folio *folio = page_folio(page);
-@@ -108,6 +135,11 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
- 		goto out_uptodate;
- 	}
- 
-+	if (map.m_flags & EROFS_MAP_META) {
-+		ret = erofs_fscache_readpage_inline(folio, &map);
-+		goto out_uptodate;
-+	}
++static void erofs_fscache_readahead(struct readahead_control *rac)
++{
++	struct inode *inode = rac->mapping->host;
++	struct super_block *sb = inode->i_sb;
++	size_t len, count, done = 0;
++	erofs_off_t pos;
++	loff_t start, offset;
++	int ret;
 +
- 	mdev = (struct erofs_map_dev) {
- 		.m_deviceid = map.m_deviceid,
- 		.m_pa = map.m_pa,
++	if (!readahead_count(rac))
++		return;
++
++	start = readahead_pos(rac);
++	len = readahead_length(rac);
++
++	do {
++		struct erofs_map_blocks map;
++		struct erofs_map_dev mdev;
++
++		pos = start + done;
++		map.m_la = pos;
++
++		ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
++		if (ret)
++			return;
++
++		offset = start + done;
++		count = min_t(size_t, map.m_llen - (pos - map.m_la),
++			      len - done);
++
++		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
++			struct iov_iter iter;
++
++			iov_iter_xarray(&iter, READ, &rac->mapping->i_pages,
++					offset, count);
++			iov_iter_zero(count, &iter);
++
++			erofs_fscache_unlock_folios(rac, count);
++			ret = count;
++			continue;
++		}
++
++		if (map.m_flags & EROFS_MAP_META) {
++			struct folio *folio = readahead_folio(rac);
++
++			ret = erofs_fscache_readpage_inline(folio, &map);
++			if (!ret) {
++				folio_mark_uptodate(folio);
++				ret = folio_size(folio);
++			}
++
++			folio_unlock(folio);
++			continue;
++		}
++
++		mdev = (struct erofs_map_dev) {
++			.m_deviceid = map.m_deviceid,
++			.m_pa = map.m_pa,
++		};
++		ret = erofs_map_dev(sb, &mdev);
++		if (ret)
++			return;
++
++		ret = erofs_fscache_read_folios(mdev.m_fscache->cookie,
++				rac->mapping, offset, count,
++				mdev.m_pa + (pos - map.m_la));
++		/*
++		 * For the error cases, the folios will be unlocked when
++		 * .readahead() returns.
++		 */
++		if (!ret) {
++			erofs_fscache_unlock_folios(rac, count);
++			ret = count;
++		}
++	} while (ret > 0 && ((done += ret) < len));
++}
++
+ static const struct address_space_operations erofs_fscache_meta_aops = {
+ 	.readpage = erofs_fscache_meta_readpage,
+ };
+ 
+ const struct address_space_operations erofs_fscache_access_aops = {
+ 	.readpage = erofs_fscache_readpage,
++	.readahead = erofs_fscache_readahead,
+ };
+ 
+ int erofs_fscache_register_cookie(struct super_block *sb,
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c6755bcae4a6..f68ba929100d 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -619,6 +619,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 						    sbi->opt.fsid, true);
+ 		if (err)
+ 			return err;
++
++		err = super_setup_bdi(sb);
++		if (err)
++			return err;
+ 	} else {
+ 		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
+ 			erofs_err(sb, "failed to set erofs blksize");
 -- 
 2.27.0
 
