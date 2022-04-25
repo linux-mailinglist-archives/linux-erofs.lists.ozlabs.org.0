@@ -1,38 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8108E50D78C
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 05:29:15 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C265D50D82B
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 06:12:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Kmr8n3F4wz3bYl
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 13:29:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Kms6w4hmbz3bYn
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Apr 2022 14:12:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54;
- helo=out30-54.freemail.mail.aliyun.com;
- envelope-from=hongnan.li@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-54.freemail.mail.aliyun.com
- (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+ smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.7;
+ helo=out199-7.us.a.mail.aliyun.com; envelope-from=hongnan.li@linux.alibaba.com;
+ receiver=<UNKNOWN>)
+X-Greylist: delayed 308 seconds by postgrey-1.36 at boromir;
+ Mon, 25 Apr 2022 14:12:33 AEST
+Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com
+ [47.90.199.7])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4Kmr8j2cS8z2yLg
- for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 13:29:04 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R901e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hongnan.li@linux.alibaba.com;
- NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0VB61z1y_1650857334; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Kms6n21gRz2xm2
+ for <linux-erofs@lists.ozlabs.org>; Mon, 25 Apr 2022 14:12:32 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R981e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hongnan.li@linux.alibaba.com;
+ NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0VB6FjoQ_1650859632; 
 Received: from localhost(mailfrom:hongnan.li@linux.alibaba.com
- fp:SMTPD_---0VB61z1y_1650857334) by smtp.aliyun-inc.com(127.0.0.1);
- Mon, 25 Apr 2022 11:28:54 +0800
+ fp:SMTPD_---0VB6FjoQ_1650859632) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 25 Apr 2022 12:07:12 +0800
 From: Hongnan Li <hongnan.li@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	xiang@kernel.org,
 	chao@kernel.org
-Subject: [PATCH v2] erofs: make filesystem exportable
-Date: Mon, 25 Apr 2022 11:28:54 +0800
-Message-Id: <20220425032854.43497-1-hongnan.li@linux.alibaba.com>
+Subject: [PATCH v2 resend] erofs: make filesystem exportable
+Date: Mon, 25 Apr 2022 12:07:12 +0800
+Message-Id: <20220425040712.91685-1-hongnan.li@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
 References: <20220424130104.102365-1-hongnan.li@linux.alibaba.com>
@@ -49,7 +51,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
