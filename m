@@ -1,36 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20E1050F06F
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Apr 2022 07:43:18 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA8950FE5F
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Apr 2022 15:10:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4KnW4z7430z2yN4
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Apr 2022 15:43:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Knj1V5j1Fz2yw9
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Apr 2022 23:10:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131;
- helo=out30-131.freemail.mail.aliyun.com;
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132;
+ helo=out30-132.freemail.mail.aliyun.com;
  envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com
- (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-132.freemail.mail.aliyun.com
+ (out30-132.freemail.mail.aliyun.com [115.124.30.132])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4KnW4w1SZTz2xgN
- for <linux-erofs@lists.ozlabs.org>; Tue, 26 Apr 2022 15:43:11 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R191e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=21; SR=0; TI=SMTPD_---0VBJMKCy_1650951781; 
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4Knj1M1BBVz2xnR
+ for <linux-erofs@lists.ozlabs.org>; Tue, 26 Apr 2022 23:10:41 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R161e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04394; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=21; SR=0; TI=SMTPD_---0VBMUIgL_1650977664; 
 Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0VBJMKCy_1650951781) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 26 Apr 2022 13:43:04 +0800
-Date: Tue, 26 Apr 2022 13:43:01 +0800
+ fp:SMTPD_---0VBMUIgL_1650977664) by smtp.aliyun-inc.com(127.0.0.1);
+ Tue, 26 Apr 2022 20:54:27 +0800
+Date: Tue, 26 Apr 2022 20:54:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v10 20/21] erofs: implement fscache-based data readahead
-Message-ID: <YmeGZZHnbrQy4pnR@B-P7TQMD6M-0146.local>
+To: Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com
+Subject: Re: [PATCH v10 00/21] fscache,erofs: fscache-based on-demand read
+ semantics
+Message-ID: <YmfrgPkloTAgYe4Z@B-P7TQMD6M-0146.local>
 Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
  dhowells@redhat.com, linux-cachefs@redhat.com, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org,
@@ -43,11 +44,10 @@ Mail-Followup-To: Jeffle Xu <jefflexu@linux.alibaba.com>,
  fannaihao@baidu.com, zhangjiachen.jaycee@bytedance.com,
  zhujia.zj@bytedance.com
 References: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
- <20220425122143.56815-21-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220425122143.56815-21-jefflexu@linux.alibaba.com>
+In-Reply-To: <20220425122143.56815-1-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,8 +59,8 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, linux-erofs@lists.ozlabs.org, fannaihao@baidu.com,
- willy@infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com,
+Cc: linux-erofs@lists.ozlabs.org, fannaihao@baidu.com, willy@infradead.org,
+ linux-kernel@vger.kernel.org, tianzichen@kuaishou.com,
  joseph.qi@linux.alibaba.com, zhangjiachen.jaycee@bytedance.com,
  linux-cachefs@redhat.com, gregkh@linuxfoundation.org,
  linux-fsdevel@vger.kernel.org, luodaowen.backend@bytedance.com,
@@ -69,145 +69,36 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Apr 25, 2022 at 08:21:42PM +0800, Jeffle Xu wrote:
-> Implement fscache-based data readahead. Also registers an individual
-                                               ^ register
-
-> bdi for each erofs instance to enable readahead.
+On Mon, Apr 25, 2022 at 08:21:22PM +0800, Jeffle Xu wrote:
+> changes since v9:
+> - rebase to 5.18-rc3
+> - cachefiles: extract cachefiles_in_ondemand_mode() helper; add barrier
+>   pair between enqueuing and flushing requests; make the xarray
+>   structures non-conditionally defined in struct cachefiles_cache
+>   (patch 2) (David Howells)
+> - cacehfiles: use refcount_t for unbind_pincount; run "cachefiles_open = 0;"
+>   cleanup only when unbind_pincount is decreased to 0 (patch 3)
+>   (David Howells)
+> - cachefiles: rename CACHEFILES_IOC_CREAD ioctl to
+>   CACHEFILES_IOC_READ_COMPLETE (patch 5) (David Howells)
+> - cachefiles: fix the error message when the argument to the 'bind'
+>   command is invalid (patch 6) (David Howells)
+> - cachefiles: update the documentation polished by David (patch 8)
+> - erofs: tweak the code arrangement of erofs_fscache_meta_readpage()
+>   (patch 17) (Gao Xiang)
+> - erofs: add comment on error cases (patch 20) (Gao Xiang)
+> - update Tested-by tags in the cover letter
 > 
-> Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> 
+> Kernel Patchset
+> ---------------
+> Git tree:
+> 
+>     https://github.com/lostjeffle/linux.git jingbo/dev-erofs-fscache-v10
+> 
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Come to an agreement with David on IRC, I will push out this series to
+-next later for wider testing aiming for 5.19.
 
 Thanks,
 Gao Xiang
-
-> ---
->  fs/erofs/fscache.c | 90 ++++++++++++++++++++++++++++++++++++++++++++++
->  fs/erofs/super.c   |  4 +++
->  2 files changed, 94 insertions(+)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 5b779812a5ee..a402d8f0a063 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -162,12 +162,102 @@ static int erofs_fscache_readpage(struct file *file, struct page *page)
->  	return ret;
->  }
->  
-> +static void erofs_fscache_unlock_folios(struct readahead_control *rac,
-> +					size_t len)
-> +{
-> +	while (len) {
-> +		struct folio *folio = readahead_folio(rac);
-> +
-> +		len -= folio_size(folio);
-> +		folio_mark_uptodate(folio);
-> +		folio_unlock(folio);
-> +	}
-> +}
-> +
-> +static void erofs_fscache_readahead(struct readahead_control *rac)
-> +{
-> +	struct inode *inode = rac->mapping->host;
-> +	struct super_block *sb = inode->i_sb;
-> +	size_t len, count, done = 0;
-> +	erofs_off_t pos;
-> +	loff_t start, offset;
-> +	int ret;
-> +
-> +	if (!readahead_count(rac))
-> +		return;
-> +
-> +	start = readahead_pos(rac);
-> +	len = readahead_length(rac);
-> +
-> +	do {
-> +		struct erofs_map_blocks map;
-> +		struct erofs_map_dev mdev;
-> +
-> +		pos = start + done;
-> +		map.m_la = pos;
-> +
-> +		ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-> +		if (ret)
-> +			return;
-> +
-> +		offset = start + done;
-> +		count = min_t(size_t, map.m_llen - (pos - map.m_la),
-> +			      len - done);
-> +
-> +		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-> +			struct iov_iter iter;
-> +
-> +			iov_iter_xarray(&iter, READ, &rac->mapping->i_pages,
-> +					offset, count);
-> +			iov_iter_zero(count, &iter);
-> +
-> +			erofs_fscache_unlock_folios(rac, count);
-> +			ret = count;
-> +			continue;
-> +		}
-> +
-> +		if (map.m_flags & EROFS_MAP_META) {
-> +			struct folio *folio = readahead_folio(rac);
-> +
-> +			ret = erofs_fscache_readpage_inline(folio, &map);
-> +			if (!ret) {
-> +				folio_mark_uptodate(folio);
-> +				ret = folio_size(folio);
-> +			}
-> +
-> +			folio_unlock(folio);
-> +			continue;
-> +		}
-> +
-> +		mdev = (struct erofs_map_dev) {
-> +			.m_deviceid = map.m_deviceid,
-> +			.m_pa = map.m_pa,
-> +		};
-> +		ret = erofs_map_dev(sb, &mdev);
-> +		if (ret)
-> +			return;
-> +
-> +		ret = erofs_fscache_read_folios(mdev.m_fscache->cookie,
-> +				rac->mapping, offset, count,
-> +				mdev.m_pa + (pos - map.m_la));
-> +		/*
-> +		 * For the error cases, the folios will be unlocked when
-> +		 * .readahead() returns.
-> +		 */
-> +		if (!ret) {
-> +			erofs_fscache_unlock_folios(rac, count);
-> +			ret = count;
-> +		}
-> +	} while (ret > 0 && ((done += ret) < len));
-> +}
-> +
->  static const struct address_space_operations erofs_fscache_meta_aops = {
->  	.readpage = erofs_fscache_meta_readpage,
->  };
->  
->  const struct address_space_operations erofs_fscache_access_aops = {
->  	.readpage = erofs_fscache_readpage,
-> +	.readahead = erofs_fscache_readahead,
->  };
->  
->  int erofs_fscache_register_cookie(struct super_block *sb,
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index c6755bcae4a6..f68ba929100d 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -619,6 +619,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  						    sbi->opt.fsid, true);
->  		if (err)
->  			return err;
-> +
-> +		err = super_setup_bdi(sb);
-> +		if (err)
-> +			return err;
->  	} else {
->  		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
->  			erofs_err(sb, "failed to set erofs blksize");
-> -- 
-> 2.27.0
