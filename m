@@ -2,61 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E9F05278BD
-	for <lists+linux-erofs@lfdr.de>; Sun, 15 May 2022 18:28:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1817A527E4A
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 May 2022 09:11:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4L1SVm6rQsz3bwg
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 May 2022 02:28:32 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Of1PAwTA;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4L1r4x6R0Rz3bsD
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 May 2022 17:10:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mga01.intel.com;
- envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256
- header.s=Intel header.b=Of1PAwTA; dkim-atps=neutral
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
+ helo=out30-45.freemail.mail.aliyun.com;
+ envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-45.freemail.mail.aliyun.com
+ (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4L1SVc4qHqz2yZc
- for <linux-erofs@lists.ozlabs.org>; Mon, 16 May 2022 02:28:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
- d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
- t=1652632104; x=1684168104;
- h=date:from:to:cc:subject:message-id:mime-version:
- content-transfer-encoding;
- bh=c27LdTfqS3jLzI5xmFGuMfxc2FT0TTaav5p+44m42cc=;
- b=Of1PAwTAmIi0CCn05Cr71H/yNqY/6b1vxpMNrQYq3XJ9znpjmPz/eZAI
- 2i+32hxfSKxPK5jFNaNXHpnkBTCADDo0c2ngNlasqb3B7QPkADXluUFXK
- EEfFjYveTqeB0jQQiTcO/A6j+9OdOR81l9Y+mj9VsXkgbuSrW8RjW9EUe
- AyP5+CESr4ttYjf7/FVT6RQiU6cttKGDrFHHPusVmB4+iNkeIKowf/NKP
- 8YImqkJ3amINzVnEPNoPuYOJzbqF0t6QZ+cuxr0CBKpPZ1znNogZUYPZ5
- FYenZROnqgh/xflftFsGMFXfNRLGbJxu0ofrTtSdF5w80aNsdU8imCaJn w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10348"; a="295909049"
-X-IronPort-AV: E=Sophos;i="5.91,228,1647327600"; d="scan'208";a="295909049"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
- by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 15 May 2022 09:27:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,228,1647327600"; d="scan'208";a="554960990"
-Received: from lkp-server01.sh.intel.com (HELO d1462bc4b09b) ([10.239.97.150])
- by orsmga002.jf.intel.com with ESMTP; 15 May 2022 09:27:12 -0700
-Received: from kbuild by d1462bc4b09b with local (Exim 4.95)
- (envelope-from <lkp@intel.com>) id 1nqH5L-0001nq-Jq;
- Sun, 15 May 2022 16:27:11 +0000
-Date: Mon, 16 May 2022 00:26:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 34f78be468b9e9f951caad31b098871530a5bb56
-Message-ID: <628129a8./m5YubJIiMaQTphd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4L1r4p16Vcz2ybB
+ for <linux-erofs@lists.ozlabs.org>; Mon, 16 May 2022 17:10:46 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R141e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04423; MF=hsiangkao@linux.alibaba.com;
+ NM=1; PH=DS; RN=2; SR=0; TI=SMTPD_---0VDFjyV2_1652685034; 
+Received: from
+ e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com
+ fp:SMTPD_---0VDFjyV2_1652685034) by smtp.aliyun-inc.com(127.0.0.1);
+ Mon, 16 May 2022 15:10:39 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: show per-file progress
+Date: Mon, 16 May 2022 15:10:33 +0800
+Message-Id: <20220516071033.96151-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,158 +46,194 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 34f78be468b9e9f951caad31b098871530a5bb56  erofs: scan devices from device table
+Generally, users want to know the latest progress since it may take
+long time to build a image. Let's add a per-file progress as a start.
 
-elapsed time: 3311m
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/config.h |  3 +++
+ include/erofs/print.h  | 26 ++++++++++++++------------
+ lib/config.c           | 34 ++++++++++++++++++++++++++++++++++
+ lib/inode.c            |  1 +
+ mkfs/main.c            |  7 ++++++-
+ 5 files changed, 58 insertions(+), 13 deletions(-)
 
-configs tested: 130
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-powerpc              randconfig-c003-20220512
-i386                          randconfig-c001
-x86_64                              defconfig
-mips                         tb0226_defconfig
-arm                           stm32_defconfig
-um                               alldefconfig
-xtensa                    xip_kc705_defconfig
-xtensa                generic_kc705_defconfig
-parisc                generic-64bit_defconfig
-arm                        trizeps4_defconfig
-sh                          r7785rp_defconfig
-powerpc                      makalu_defconfig
-arm                         axm55xx_defconfig
-nios2                         3c120_defconfig
-m68k                       bvme6000_defconfig
-arm                             ezx_defconfig
-sh                          lboxre2_defconfig
-powerpc                     taishan_defconfig
-sparc                       sparc32_defconfig
-arc                           tb10x_defconfig
-xtensa                  cadence_csp_defconfig
-h8300                     edosk2674_defconfig
-sh                        sh7763rdp_defconfig
-powerpc                           allnoconfig
-powerpc                 mpc837x_mds_defconfig
-powerpc                  iss476-smp_defconfig
-mips                       capcella_defconfig
-arm                     eseries_pxa_defconfig
-arm                        cerfcube_defconfig
-mips                           gcw0_defconfig
-parisc                generic-32bit_defconfig
-sh                            hp6xx_defconfig
-sh                           se7751_defconfig
-sh                          rsk7264_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220512
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-s390                 randconfig-r044-20220512
-riscv                randconfig-r042-20220512
-arc                  randconfig-r043-20220512
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                                  kexec
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-arm                          collie_defconfig
-powerpc                 mpc8272_ads_defconfig
-mips                  cavium_octeon_defconfig
-powerpc                     tqm8540_defconfig
-riscv                             allnoconfig
-powerpc                        fsp2_defconfig
-arm                          moxart_defconfig
-mips                           ip22_defconfig
-powerpc                      ppc64e_defconfig
-x86_64                           allyesconfig
-arm                      pxa255-idp_defconfig
-arm                        mvebu_v5_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                   lite5200b_defconfig
-mips                   sb1250_swarm_defconfig
-powerpc                      ppc44x_defconfig
-mips                      pic32mzda_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220512
-hexagon              randconfig-r041-20220512
-
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 1e985b0..aeacb7b 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -45,6 +45,7 @@ struct erofs_configure {
+ 	bool c_noinline_data;
+ 	bool c_ztailpacking;
+ 	bool c_ignore_mtime;
++	bool c_showprogress;
+ 
+ #ifdef HAVE_LIBSELINUX
+ 	struct selabel_handle *sehnd;
+@@ -92,6 +93,8 @@ static inline int erofs_selabel_open(const char *file_contexts)
+ }
+ #endif
+ 
++void erofs_update_progressinfo(const char *fmt, ...);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/include/erofs/print.h b/include/erofs/print.h
+index f188a6b..a896d75 100644
+--- a/include/erofs/print.h
++++ b/include/erofs/print.h
+@@ -41,37 +41,39 @@ enum {
+ #define PR_FMT_FUNC_LINE(fmt)	pr_fmt(fmt), __func__, __LINE__
+ #endif
+ 
++void erofs_msg(int dbglv, const char *fmt, ...);
++
+ #define erofs_dbg(fmt, ...) do {			\
+ 	if (cfg.c_dbg_lvl >= EROFS_DBG) {		\
+-		fprintf(stdout,				\
+-			"<D> " PR_FMT_FUNC_LINE(fmt),	\
+-			##__VA_ARGS__);			\
++		erofs_msg(EROFS_DBG,			\
++			  "<D> " PR_FMT_FUNC_LINE(fmt),	\
++			  ##__VA_ARGS__);		\
+ 	}						\
+ } while (0)
+ 
+ #define erofs_info(fmt, ...) do {			\
+ 	if (cfg.c_dbg_lvl >= EROFS_INFO) {		\
+-		fprintf(stdout,				\
+-			"<I> " PR_FMT_FUNC_LINE(fmt),	\
+-			##__VA_ARGS__);			\
++		erofs_msg(EROFS_INFO,			\
++			  "<I> " PR_FMT_FUNC_LINE(fmt),	\
++			  ##__VA_ARGS__);		\
+ 		fflush(stdout);				\
+ 	}						\
+ } while (0)
+ 
+ #define erofs_warn(fmt, ...) do {			\
+ 	if (cfg.c_dbg_lvl >= EROFS_WARN) {		\
+-		fprintf(stdout,				\
+-			"<W> " PR_FMT_FUNC_LINE(fmt),	\
+-			##__VA_ARGS__);			\
++		erofs_msg(EROFS_WARN,			\
++			  "<W> " PR_FMT_FUNC_LINE(fmt),	\
++			  ##__VA_ARGS__);		\
+ 		fflush(stdout);				\
+ 	}						\
+ } while (0)
+ 
+ #define erofs_err(fmt, ...) do {			\
+ 	if (cfg.c_dbg_lvl >= EROFS_ERR) {		\
+-		fprintf(stderr,				\
+-			"<E> " PR_FMT_FUNC_LINE(fmt),	\
+-			##__VA_ARGS__);			\
++		erofs_msg(EROFS_ERR,			\
++			  "<E> " PR_FMT_FUNC_LINE(fmt),	\
++			  ##__VA_ARGS__);		\
+ 	}						\
+ } while (0)
+ 
+diff --git a/lib/config.c b/lib/config.c
+index 24db751..0ae3120 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -6,6 +6,7 @@
+  */
+ #include <string.h>
+ #include <stdlib.h>
++#include <stdarg.h>
+ #include "erofs/print.h"
+ #include "erofs/internal.h"
+ #include "liberofs_private.h"
+@@ -91,3 +92,36 @@ int erofs_selabel_open(const char *file_contexts)
+ 	return 0;
+ }
+ #endif
++
++bool __erofs_is_progressmsg;
++
++void erofs_msg(int dbglv, const char *fmt, ...)
++{
++	va_list ap;
++	FILE *f = dbglv >= EROFS_ERR ? stderr : stdout;
++
++	if (__erofs_is_progressmsg) {
++		fputc('\n', f);
++		__erofs_is_progressmsg = false;
++	}
++	va_start(ap, fmt);
++	vfprintf(f, fmt, ap);
++	va_end(ap);
++}
++
++void erofs_update_progressinfo(const char *fmt, ...)
++{
++	char msg[1024];
++	va_list ap;
++
++	if (cfg.c_dbg_lvl >= EROFS_INFO || !cfg.c_showprogress)
++		return;
++
++	va_start(ap, fmt);
++	vsprintf(msg, fmt, ap);
++	va_end(ap);
++
++	printf("\r\033[K%s", msg);
++	__erofs_is_progressmsg = true;
++	fflush(stdout);
++}
+diff --git a/lib/inode.c b/lib/inode.c
+index 6c6e42e..cafac40 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1098,6 +1098,7 @@ static struct erofs_inode *erofs_mkfs_build_tree(struct erofs_inode *dir)
+ 			goto fail;
+ 		}
+ 
++		erofs_update_progressinfo("Processing %s ...", buf);
+ 		d->inode = erofs_mkfs_build_tree_from_path(dir, buf);
+ 		if (IS_ERR(d->inode)) {
+ 			ret = PTR_ERR(d->inode);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 25b72ad..0e09b38 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -423,8 +423,10 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		erofs_err("unexpected argument: %s\n", argv[optind]);
+ 		return -EINVAL;
+ 	}
+-	if (quiet)
++	if (quiet) {
+ 		cfg.c_dbg_lvl = EROFS_ERR;
++		cfg.c_showprogress = false;
++	}
+ 	return 0;
+ }
+ 
+@@ -520,6 +522,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+ 
+ static void erofs_mkfs_default_options(void)
+ {
++	cfg.c_showprogress = true;
+ 	cfg.c_legacy_compress = false;
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
+ 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
+@@ -738,6 +741,8 @@ exit:
+ 		erofs_err("\tCould not format the device : %s\n",
+ 			  erofs_strerror(err));
+ 		return 1;
++	} else {
++		erofs_update_progressinfo("Build completed.");
+ 	}
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.24.4
+
