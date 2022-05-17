@@ -1,36 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4BB4529B9A
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 May 2022 10:00:30 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6B6529D69
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 May 2022 11:06:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4L2T7c5Yr6z3bqn
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 May 2022 18:00:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4L2Vbv09Whz3brt
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 May 2022 19:06:35 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=EWC0+VWw;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
- helo=out30-45.freemail.mail.aliyun.com;
- envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com
- (out30-45.freemail.mail.aliyun.com [115.124.30.45])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1;
+ helo=ams.source.kernel.org; envelope-from=brauner@kernel.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=EWC0+VWw; 
+ dkim-atps=neutral
+Received: from ams.source.kernel.org (ams.source.kernel.org
+ [IPv6:2604:1380:4601:e00::1])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4L2T7V302kz3bXn
- for <linux-erofs@lists.ozlabs.org>; Tue, 17 May 2022 18:00:20 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R871e4; CH=green; DM=||false|;
- DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e01424; MF=hsiangkao@linux.alibaba.com;
- NM=1; PH=DS; RN=5; SR=0; TI=SMTPD_---0VDT5j9R_1652774413; 
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com
- fp:SMTPD_---0VDT5j9R_1652774413) by smtp.aliyun-inc.com(127.0.0.1);
- Tue, 17 May 2022 16:00:14 +0800
-Date: Tue, 17 May 2022 16:00:12 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4L2Vbq1c4Bz3bcl
+ for <linux-erofs@lists.ozlabs.org>; Tue, 17 May 2022 19:06:31 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by ams.source.kernel.org (Postfix) with ESMTPS id 9DC24B817D0;
+ Tue, 17 May 2022 09:06:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB64C385B8;
+ Tue, 17 May 2022 09:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1652778387;
+ bh=ENqi3aLkqn49mx4+rl49Xw8BDX34aNuG7l7yN93Q+Qg=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=EWC0+VWwbdgQkqHToSIj7jZ8r1BPxUwTp6MojD4/n79S52TyFFcb+h/+J9EgjCctv
+ ckLoFf4IXxit9pRlb9GGMt0VcRaJUjp0lc1jLmAMyrXYza3N0xfkEtwlo6hhTrmIr4
+ K7Z1SSNkSKbLiDFQEqYLDdeitQGAyFxhJD03TqiOZ02s7YrR0J/9Mn9lcnmGOuLw1F
+ r/hEZ91LJmO6mxb2Zf0gIk4m/AWfMZ6gzb2OPNFau3Nv7XWhopBzRV0+SX6lHFqqjP
+ EHPlVXD2OCXke+7vcMDmxcx3Hd0fUgOmRtx4EfnrMcVIqv4j+YjurnhrutMXBMj1Mq
+ SwyFKFIMK4uqg==
+Date: Tue, 17 May 2022 11:06:22 +0200
+From: Christian Brauner <brauner@kernel.org>
 To: Chao Yu <chao@kernel.org>
 Subject: Re: [PATCH] erofs: support idmapped mounts
-Message-ID: <YoNWDHI5u76qk6TM@B-P7TQMD6M-0146.local>
+Message-ID: <20220517090622.4wrtrjmzknh66bci@wittgenstein>
 References: <20220517073210.3569589-1-chao@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -48,12 +65,10 @@ List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Chao Yu <chao.yu@oppo.com>
+ Chao Yu <chao.yu@oppo.com>, fsdevel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
-
-Hi Chao,
 
 On Tue, May 17, 2022 at 03:32:10PM +0800, Chao Yu wrote:
 > This patch enables idmapped mounts for erofs, since all dedicated helpers
@@ -76,16 +91,38 @@ On Tue, May 17, 2022 at 03:32:10PM +0800, Chao Yu wrote:
 > 7. ls -ln /mnt/scratch_erofs/
 > total 0
 > -rw-rw-r-- 1 65534 65534 0 May 17 15:26 file
+
+Your current example maps id 0 in the filesystem to id 1001 in the
+mount. But since no files with id 0 exist in the filesystem you're
+illustrating that unmapped ids are correctly reported as overflow{g,u}id.
+
+I think what you'd rather want to show is something like this:
+
+5. ls -ln /mnt/erofs/
+total 0
+-rw-rw-r-- 1 1000 1000 0 May 17 15:26 file
+
+6. mount-idmapped --map-mount b:1000:1001:1 /mnt/erofs/ /mnt/scratch_erofs/
+
+7. ls -ln /mnt/scratch_erofs/
+total 0
+-rw-rw-r-- 1 1001 1001 0 May 17 15:26 file
+
+where id 1000 in the filesystem maps to id 1001 in the mount.
+
 > 
 > Signed-off-by: Chao Yu <chao.yu@oppo.com>
-
-Thanks, yeah, I think it's enough to enable idmapped mount for EROFS:
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
 > ---
+
+Overall this is currently the smallest patch to support idmapped mounts.
+
+Is erofs integrated with xfstests in any way?
+For read-only filesystems we probably only need to verify that {g,u}id
+are correctly reported. All the writable aspects are irrelevant.
+
+Looks good,
+Reviewed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+
 >  fs/erofs/inode.c | 2 +-
 >  fs/erofs/super.c | 2 +-
 >  2 files changed, 2 insertions(+), 2 deletions(-)
@@ -118,3 +155,4 @@ Gao Xiang
 >  
 > -- 
 > 2.25.1
+> 
