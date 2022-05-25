@@ -1,67 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92C68533535
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 May 2022 04:16:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C005337E2
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 May 2022 10:00:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4L7F7J3Ykfz3bcW
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 May 2022 12:16:44 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=alj8u9u4;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4L7Nlb6Rtdz3bg4
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 May 2022 18:00:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized)
- smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1;
- helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org;
- receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org; dkim=pass (2048-bit key;
- unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
- header.s=k20201202 header.b=alj8u9u4; 
- dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org
- [IPv6:2604:1380:4641:c500::1])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45;
+ helo=out30-45.freemail.mail.aliyun.com;
+ envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-45.freemail.mail.aliyun.com
+ (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4L7F7922mZz300K
- for <linux-erofs@lists.ozlabs.org>; Wed, 25 May 2022 12:16:37 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by dfw.source.kernel.org (Postfix) with ESMTPS id 95DFC614EE;
- Wed, 25 May 2022 02:16:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E3C38C34100;
- Wed, 25 May 2022 02:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
- s=k20201202; t=1653444993;
- bh=q5F9s2pdE+K4CCyB8i32EvzHkMHwEzfkGQR8P31j2sQ=;
- h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
- b=alj8u9u4ZWKbTxntXrENDQkfXmBzMsxsYLB3kPAuUY+ukKj6g/HoILhkEDzifpDE8
- +qMyVUDvGNnnfnHHeD6L+7rLAXVSFnxofWmxT+EtUNcS0LkpMLqb6O2Xskv3MU/TjZ
- KZdkESQCiRiYi1azI732z9M5bZlbS5FoD1PJIs99Q0J+y1TRgAae8hDG7lKd5ijCXD
- qobKjJ5dVhp8ljYjgy//P6MCFYMW3GbFtpHWAiExP53chdBoqZWjUY5X9YlS82YZG3
- UQjuB0PXXWj+3lOaOmmudt+BwAszcW+5FfsC1Tc1DOU2qUyC006XwXRWJrP7KJ488Z
- 5pt0IwKb0ODZg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org
- (localhost.localdomain [127.0.0.1])
- by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id
- D0D91F03938; Wed, 25 May 2022 02:16:32 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 5.19-rc1 (fscache part inclusive)
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Yoj1AcHoBPqir++H@debian>
-References: <Yoj1AcHoBPqir++H@debian>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Yoj1AcHoBPqir++H@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.19-rc1
-X-PR-Tracked-Commit-Id: ba73eadd23d1c2dc5c8dc0c0ae2eeca2b9b709a7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 65965d9530b0c320759cd18a9a5975fb2e098462
-Message-Id: <165344499284.22339.1005839809480771514.pr-tracker-bot@kernel.org>
-Date: Wed, 25 May 2022 02:16:32 +0000
-To: Gao Xiang <xiang@kernel.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4L7NlS2TpWz303H
+ for <linux-erofs@lists.ozlabs.org>; Wed, 25 May 2022 18:00:00 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS; BC=-1|-1; BR=01201311R101e4; CH=green; DM=||false|;
+ DS=||; FP=0|-1|-1|-1|0|-1|-1|-1; HT=e01e04400; MF=jefflexu@linux.alibaba.com;
+ NM=1; PH=DS; RN=4; SR=0; TI=SMTPD_---0VEMXST1_1653465590; 
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com
+ fp:SMTPD_---0VEMXST1_1653465590) by smtp.aliyun-inc.com(127.0.0.1);
+ Wed, 25 May 2022 15:59:50 +0800
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: leave compressed inodes unsupported in fscache mode
+ for now
+Date: Wed, 25 May 2022 15:59:50 +0800
+Message-Id: <20220525075950.21535-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -73,27 +48,48 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: tianzichen@kuaishou.com, Yan Song <yansong.ys@antgroup.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>,
- David Howells <dhowells@redhat.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- zhangjiachen.jaycee@bytedance.com, Zefan Li <lizefan.x@bytedance.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fsdevel@vger.kernel.org,
- Tao Ma <boyu.mt@taobao.com>, gerry@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org, Xin Yin <yinxin.x@bytedance.com>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs"
  <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Sat, 21 May 2022 22:19:45 +0800:
+erofs over fscache doesn't support the compressed layout yet. It will
+cause NULL crash if there are compressed inodes contained when working
+in fscache mode.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.19-rc1
+So far in the erofs based container image distribution scenarios
+(RAFS v6), the compressed images are downloaded to local and then
+decompressed as a erofs image of uncompressed layout. Then the erofs
+image is mounted in fscache mode and serves as the container image. Thus
+the current implementation won't break the container image distribution
+scenarios.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/65965d9530b0c320759cd18a9a5975fb2e098462
+The fscache support for the compressed layout is still under
+development. Anyway, to avoid the potential crash, let's leave the
+compressed inodes unsupported in fscache mode until we support it later.
 
-Thank you!
+Fixes: 1442b02b66ad ("erofs: implement fscache-based data read for non-inline layout")
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+---
+ fs/erofs/inode.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index bcc8335b46b3..95a403720e8c 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -288,7 +288,10 @@ static int erofs_fill_inode(struct inode *inode, int isdir)
+ 	}
+ 
+ 	if (erofs_inode_is_data_compressed(vi->datalayout)) {
+-		err = z_erofs_fill_inode(inode);
++		if (!erofs_is_fscache_mode(inode->i_sb))
++			err = z_erofs_fill_inode(inode);
++		else
++			err = -EOPNOTSUPP;
+ 		goto out_unlock;
+ 	}
+ 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.27.0
+
