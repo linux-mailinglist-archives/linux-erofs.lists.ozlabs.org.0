@@ -1,56 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2F23536D04
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 May 2022 14:56:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E139536D2A
+	for <lists+linux-erofs@lfdr.de>; Sat, 28 May 2022 15:54:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4L9MBB6tPQz3bmk
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 May 2022 22:56:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4L9NT72MDsz3blX
+	for <lists+linux-erofs@lfdr.de>; Sat, 28 May 2022 23:54:35 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OAXCeLmS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ENyK/Kh2;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OAXCeLmS;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ENyK/Kh2;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4L9MB44zXMz304F
-	for <linux-erofs@lists.ozlabs.org>; Sat, 28 May 2022 22:56:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4L9NT46Ys3z2yjC
+	for <linux-erofs@lists.ozlabs.org>; Sat, 28 May 2022 23:54:32 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 4376560E88;
-	Sat, 28 May 2022 12:56:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74A0C34100;
-	Sat, 28 May 2022 12:56:22 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 33068B8273B;
+	Sat, 28 May 2022 13:54:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABAAC34100;
+	Sat, 28 May 2022 13:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1653742584;
-	bh=J7E0lVyIo+juV6HoBpjS0XC2CTEDG/qqYQnsEbI+6KM=;
+	s=k20201202; t=1653746068;
+	bh=16QmJOXv5FA2FQ51XVO8E/GjNdwb2ImY5kcBHOqS2ek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OAXCeLmS0ELKIjWVPGhirgLBRU3x4frBF+lzSaeOqheE6zEQCAHO7boLdjdFQk700
-	 s4v0CgbBnQfstpnz2kcfzQcPDfTSsmF4zfiiUoB2Rq4nZbIEftL1uJrqqQeWaI4gR6
-	 MOaN39L1zpApUUXLgQ3G/IFF0RGXvPqCk613v8NsVeHH8VQpxVZ3WqempZOxNWE0Hp
-	 z2xlNlJdsjte1PEHHlpYrLj5FkLUSMs+bw6xcVzl83WpsoBx/+Hb6B6aH/aoLl3UNz
-	 7RUQzsCVXA8Vbv539D8qdBcG0QucPIclZEtfa2wgiO0jvrHk2NlZXWrlC03zX62WG8
-	 q/kHXkS0/f1Jw==
-Date: Sat, 28 May 2022 20:56:17 +0800
+	b=ENyK/Kh2YBKMWCvv4bsg/AAPThIet3SejzYYlJHuMzGEC6fNiGmsKfBxRZSEEQbiZ
+	 JlSRXu+YoebiCmXPxLN2ASvq4KV0BrO5nqYGnBR9I1w/g6Fs60zWO9jnxi8TCAlPf8
+	 tAntWar9dz+Ut7HDyPNNMyO9gnOgh5DJqqKu1LxVbzCeQk3Ym7F1QYfASaKj6CIR20
+	 vQTADazjJ99yhkRGtFAUOZpuI5RedCoGeJNGEJS8Dp0hBcskpcujs42cMnhhAl6OMW
+	 O5IpGCHu46xg1bqAeNgIyRGkOrHKH9qwbty5Mzoa5Dequ4B65Te2G0Pj94eehAPwqf
+	 722T2lng+w0bg==
+Date: Sat, 28 May 2022 21:54:19 +0800
 From: Gao Xiang <xiang@kernel.org>
-To: Hongnan Li <hongnan.li@linux.alibaba.com>
-Subject: Re: [PATCH] erofs: update ctx->pos for every emitted dirent
-Message-ID: <YpIb8e7eWy+IFi/j@debian>
-Mail-Followup-To: Hongnan Li <hongnan.li@linux.alibaba.com>,
-	linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
-	linux-kernel@vger.kernel.org
-References: <20220527072536.68516-1-hongnan.li@linux.alibaba.com>
+To: JeffleXu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH] erofs: fix crash when enable tracepoint
+ cachefiles_prep_read
+Message-ID: <YpIpiyVUDNHpw75Y@debian>
+Mail-Followup-To: JeffleXu <jefflexu@linux.alibaba.com>,
+	Xin Yin <yinxin.x@bytedance.com>, hsiangkao@linux.alibaba.com,
+	chao@kernel.org, linux-erofs@lists.ozlabs.org
+References: <20220527101800.22360-1-yinxin.x@bytedance.com>
+ <dfc3c10a-5f95-cfa3-53ba-d159d2a2f50b@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220527072536.68516-1-hongnan.li@linux.alibaba.com>
+In-Reply-To: <dfc3c10a-5f95-cfa3-53ba-d159d2a2f50b@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,65 +64,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, Xin Yin <yinxin.x@bytedance.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Hongnan,
-
-On Fri, May 27, 2022 at 03:25:36PM +0800, Hongnan Li wrote:
-> erofs_readdir update ctx->pos after filling a batch of dentries
-> and it may cause dir/files duplication for NFS readdirplus which
-> depends on ctx->pos to fill dir correctly. So update ctx->pos for
-> every emitted dirent in erofs_fill_dentries to fix it.
+On Fri, May 27, 2022 at 08:01:14PM +0800, JeffleXu wrote:
+> Hi, thanks for catching this.
 > 
-> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
-> Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
-> ---
->  fs/erofs/dir.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
 > 
-> diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-> index 18e59821c597..3015974fe2ff 100644
-> --- a/fs/erofs/dir.c
-> +++ b/fs/erofs/dir.c
-> @@ -22,11 +22,12 @@ static void debug_one_dentry(unsigned char d_type, const char *de_name,
->  }
->  
->  static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
-> -			       void *dentry_blk, unsigned int *ofs,
-> +			       void *dentry_blk, void *dentry_begin,
->  			       unsigned int nameoff, unsigned int maxsize)
->  {
-> -	struct erofs_dirent *de = dentry_blk + *ofs;
-> +	struct erofs_dirent *de = dentry_begin;
->  	const struct erofs_dirent *end = dentry_blk + nameoff;
-> +	loff_t begin_pos = ctx->pos;
->  
->  	while (de < end) {
->  		const char *de_name;
-> @@ -59,9 +60,9 @@ static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
->  			/* stopped by some reason */
->  			return 1;
->  		++de;
-> -		*ofs += sizeof(struct erofs_dirent);
-> +		ctx->pos += sizeof(struct erofs_dirent);
->  	}
-> -	*ofs = maxsize;
-> +	ctx->pos = begin_pos + maxsize;
->  	return 0;
->  }
->  
-> @@ -110,11 +111,9 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
->  				goto skip_this;
->  		}
->  
-> -		err = erofs_fill_dentries(dir, ctx, de, &ofs,
-> +		err = erofs_fill_dentries(dir, ctx, de, de + ofs,
->  					  nameoff, maxsize);
+> On 5/27/22 6:18 PM, Xin Yin wrote:
+> > RIP: 0010:trace_event_raw_event_cachefiles_prep_read+0x88/0xe0
+> > [cachefiles]
+> > Call Trace:
+> >   <TASK>
+> >   cachefiles_prepare_read+0x1d7/0x3a0 [cachefiles]
+> >   erofs_fscache_read_folios+0x188/0x220 [erofs]
+> >   erofs_fscache_meta_readpage+0x106/0x160 [erofs]
+> >   do_read_cache_folio+0x42a/0x590
+> >   ? bdi_register_va.part.14+0x1a7/0x210
+> >   ? super_setup_bdi_name+0x76/0xe0
+> >   erofs_bread+0x5b/0x170 [erofs]
+> >   erofs_fc_fill_super+0x12b/0xc50 [erofs]
+> > 
+> > This tracepoint uses rreq->inode, should set it when allocating.
+> > 
+> > Fixes: d435d53228dd ("erofs: change to use asynchronous io for fscache
+> > readpage/readahead")
+> 
+> The "Fixes" line should better be one single line. But no worry, I think
+> Gao Xiang will fix this then :)
 
-This will break the calculation, since de is a pointer of erofs_dirent
-rather than byte-based.
+Yeah,
+
+> 
+> > Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
+> > ---
+> >  fs/erofs/fscache.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> > index a5cc4ed2cd0d..8e01d89c3319 100644
+> > --- a/fs/erofs/fscache.c
+> > +++ b/fs/erofs/fscache.c
+> > @@ -17,6 +17,7 @@ static struct netfs_io_request *erofs_fscache_alloc_request(struct address_space
+> >  	rreq->start	= start;
+> >  	rreq->len	= len;
+> >  	rreq->mapping	= mapping;
+> > +	rreq->inode	= mapping->host;
+> >  	INIT_LIST_HEAD(&rreq->subrequests);
+> >  	refcount_set(&rreq->ref, 1);
+> >  	return rreq;
+> 
+> Otherwise, LGTM.
+> 
+> Reviewed-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+> 
+
+Thanks, applied.
 
 Thanks,
 Gao Xiang
+
+> -- 
+> Thanks,
+> Jeffle
