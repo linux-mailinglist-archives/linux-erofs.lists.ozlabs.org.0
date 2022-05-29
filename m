@@ -2,48 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4F80536FCF
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 May 2022 07:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3396536FD0
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 May 2022 07:56:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4L9nq06Vsmz3blp
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 May 2022 15:56:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4L9nq26W6Fz3blR
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 May 2022 15:56:30 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NEWte+aA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gXUTrQO6;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NEWte+aA;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gXUTrQO6;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4L9nps5Xt7z2xXV
-	for <linux-erofs@lists.ozlabs.org>; Sun, 29 May 2022 15:56:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4L9npv3J3yz2yhD
+	for <linux-erofs@lists.ozlabs.org>; Sun, 29 May 2022 15:56:23 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D9CCD60DF2;
-	Sun, 29 May 2022 05:56:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9FCC34119;
-	Sun, 29 May 2022 05:56:17 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 92B5860DD6;
+	Sun, 29 May 2022 05:56:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D742C3411C;
+	Sun, 29 May 2022 05:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1653803778;
-	bh=ILHcOL+VeOJQPjhcWAot4jRYCJb0WUQYJb7FOE03RaI=;
+	s=k20201202; t=1653803781;
+	bh=IJu+gkphhFylVDsQzhP8KOtGyF6aW9neo4uSaI2lipk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NEWte+aAbfP1T1fPvnc0T551Ldf4jdMQjn0IxlI/JX9lDizQ+nVHQhs+900J1AnxV
-	 clyZb9JohlaRK/lZIWHFoyBZJWddRdY6bU09JYQbB0Orl9D3ApGdCUdGE6DiooH+0l
-	 +VHde9X8ixHF3xexJ1XCP9rUNkRJtLgS5uZfLvNbq39FGwz97nIrMNm77qOdmAfI67
-	 HOj/PYJGB2kPLaSO6Pgurm4FJStC+CnlHbiK05AGcZTasizRzp/2tXYVHnMSZc0msc
-	 6FiVC/ZPvjesP2gOJBno1Qv0t9XmCuu2HYGLqGkSkJ//ldMuusg5yL/US+n9AnUdPK
-	 p7eHU0e+0WHVQ==
+	b=gXUTrQO6ZFLlgIQrh39yuohMijrv1AGoz4cZf4mzpmJgJNKBlnTG1oFJ7gNnRkKGL
+	 +Ls9+4ziGmn3YWT+tngfnuZxDnRk9IkOZcDigGgivbo9yRCd7Ea/bFEAW7wwY5XISi
+	 DtFlDDC5lJM3B+4R+esdPxurYgqs5L+cnDdjB8d9ztAlbSYALIHgBNW7Fv4FU6Edcf
+	 k/tEMelO8S/J0kl19Yq5xMh5xSZ4dJBarecR2BREdvz/4fd9L5YAEo2z2UZ5jDkpGf
+	 zZSNozKaVsc72uFiFG+Drn2Vtd0OLKE4ONw0zf1mHuhkqf39awJrEOCnJlwK0oeDm6
+	 3M1jT8Ud4GB9A==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/3] erofs: get rid of label `restart_now'
-Date: Sun, 29 May 2022 13:54:24 +0800
-Message-Id: <20220529055425.226363-3-xiang@kernel.org>
+Subject: [PATCH 3/3] erofs: simplify z_erofs_pcluster_readmore()
+Date: Sun, 29 May 2022 13:54:25 +0800
+Message-Id: <20220529055425.226363-4-xiang@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220529055425.226363-1-xiang@kernel.org>
 References: <20220529055425.226363-1-xiang@kernel.org>
@@ -66,60 +66,50 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Simplify this part of code. No logic changes.
+Get rid of unnecessary label `skip'. No logic changes.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
+ fs/erofs/zdata.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 4fd66a66c5f9..6dd858f94e44 100644
+index 6dd858f94e44..b33fb64b3393 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -643,28 +643,23 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- repeat:
- 	cur = end - 1;
+@@ -1436,22 +1436,19 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ 		struct page *page;
  
--	/* lucky, within the range of the current map_blocks */
--	if (offset + cur >= map->m_la &&
--	    offset + cur < map->m_la + map->m_llen) {
-+	if (offset + cur < map->m_la ||
-+	    offset + cur >= map->m_la + map->m_llen) {
-+		erofs_dbg("out-of-range map @ pos %llu", offset + cur);
-+
-+		if (z_erofs_collector_end(fe))
-+			fe->backmost = false;
-+		map->m_la = offset + cur;
-+		map->m_llen = 0;
-+		err = z_erofs_map_blocks_iter(inode, map, 0);
-+		if (err)
-+			goto err_out;
-+	} else {
-+		if (fe->pcl)
-+			goto hitted;
- 		/* didn't get a valid pcluster previously (very rare) */
--		if (!fe->pcl)
--			goto restart_now;
--		goto hitted;
- 	}
+ 		page = erofs_grab_cache_page_nowait(inode->i_mapping, index);
+-		if (!page)
+-			goto skip;
+-
+-		if (PageUptodate(page)) {
+-			unlock_page(page);
++		if (page) {
++			if (PageUptodate(page)) {
++				unlock_page(page);
++			} else {
++				err = z_erofs_do_read_page(f, page, pagepool);
++				if (err)
++					erofs_err(inode->i_sb,
++						  "readmore error at page %lu @ nid %llu",
++						  index, EROFS_I(inode)->nid);
++			}
+ 			put_page(page);
+-			goto skip;
+ 		}
  
--	/* go ahead the next map_blocks */
--	erofs_dbg("%s: [out-of-range] pos %llu", __func__, offset + cur);
--
--	if (z_erofs_collector_end(fe))
--		fe->backmost = false;
--
--	map->m_la = offset + cur;
--	map->m_llen = 0;
--	err = z_erofs_map_blocks_iter(inode, map, 0);
--	if (err)
--		goto err_out;
--
--restart_now:
- 	if (!(map->m_flags & EROFS_MAP_MAPPED))
- 		goto hitted;
- 
+-		err = z_erofs_do_read_page(f, page, pagepool);
+-		if (err)
+-			erofs_err(inode->i_sb,
+-				  "readmore error at page %lu @ nid %llu",
+-				  index, EROFS_I(inode)->nid);
+-		put_page(page);
+-skip:
+ 		if (cur < PAGE_SIZE)
+ 			break;
+ 		cur = (index << PAGE_SHIFT) - 1;
 -- 
 2.30.2
 
