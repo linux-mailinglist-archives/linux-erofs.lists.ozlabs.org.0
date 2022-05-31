@@ -1,36 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD4DF538B92
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 May 2022 08:51:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFCE0538CEC
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 May 2022 10:33:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LC2x24XWFz3bfr
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 May 2022 16:51:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LC5C73CHCz3bkM
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 May 2022 18:33:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1653986003;
+	bh=/FaQR/Y7sk0N57132u+KZyYBxIY/ost7ZPh2RPAJJFE=;
+	h=Subject:To:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=lWvqUYmqi+R7vA84y6Evsqp5B4MjRhVk5mLCkWwzQDCdYI53E+zLkWQfpymHm+cNb
+	 LNjG3mlwLryKByhM3jD/3ARfWKWFNCw91rh09ySNBof/NHSmrU6a9DcI9j2Chx889y
+	 znEB/u5TDYzpTHGtKYgDe3NI4FsTmNvZwDBAzF2eUaPVfgqzHioi/TADhQ47nxR80E
+	 g1yYNqO66xaZsvA9pjm2jFxTr1ATutItRKq4QN1uM3HgKd1+oZ95klVquWv3B4WKzW
+	 dRb5s3/gc8Ow2Wv0LKTIRuNI/zWdAqLSgFStE6JKt4m5l6xLJbHJflmAp7Frd9zmHo
+	 Xg0keiAdPZSKw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LC2wt4hKvz2yyQ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 31 May 2022 16:50:52 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VEu7moQ_1653979844;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VEu7moQ_1653979844)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 31 May 2022 14:50:46 +0800
-Date: Tue, 31 May 2022 14:50:44 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Chao Yu <chao@kernel.org>
-Subject: Re: [PATCH 0/3] erofs: random decompression cleanups
-Message-ID: <YpW6xNPXHig7Djee@B-P7TQMD6M-0146.local>
-References: <20220529055425.226363-1-xiang@kernel.org>
- <903a5a66-be1c-6371-708e-ac7f491b9585@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <903a5a66-be1c-6371-708e-ac7f491b9585@kernel.org>
+Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=proton.me (client-ip=45.66.248.76; helo=host.hosttoname.com; envelope-from=mathej200@proton.me; receiver=<UNKNOWN>)
+X-Greylist: delayed 440 seconds by postgrey-1.36 at boromir; Tue, 31 May 2022 18:33:19 AEST
+Received: from host.hosttoname.com (unknown [45.66.248.76])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LC5C356Y3z302d
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 May 2022 18:33:19 +1000 (AEST)
+Received: from [193.70.26.62] (ip62.ip-193-70-26.eu [193.70.26.62])
+	by host.hosttoname.com (Postfix) with ESMTPA id E044023746
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 May 2022 08:25:57 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Your kind attention
+To: linux-erofs@lists.ozlabs.org
+Date: Tue, 31 May 2022 01:25:53 -0700
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,53 +46,26 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From: mathej200--- via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: mathew@mjsconsortium.com
+Cc: mathej200@proton.me
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Message-Id: <4LC5C73CHCz3bkM@lists.ozlabs.org>
 
-On Tue, May 31, 2022 at 02:45:38PM +0800, Chao Yu wrote:
-> Acked-by: Chao Yu <chao@kernel.org>
+Hello there,
 
-Thanks Chao! It'd be much helpful for me if we apply these cleanups
-so I can have a new folio rework+cleanup+rolling hash 5.20 cycle.
+My names are Mathew Johnson, I am representing the interest of a certain po=
+litically exposed person, we are looking for partners overseas that can man=
+age high-value funds for a period of 5-10 years, the funds have been accrue=
+d by the influence of the power of my benefactor=E2=80=99s office.
 
-Thanks,
-Gao Xiang
+Please do contact me if you are interested and I will explain the business =
+to you in detail for you to better understand the transaction, I can assure=
+ you that this will be of mutual benefit to all.
 
-> 
-> Thanks,
-> 
-> On 2022/5/29 13:54, Gao Xiang wrote:
-> > From: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > 
-> > Hi folks,
-> > 
-> > Now I'm working on cleanuping decompression code and doing some
-> > folio adaption for the next 5.20 cycle, see:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/log/?h=erofs/folios
-> > 
-> > This cleanup work completely gets rid of PageError usage finally
-> > and tries to prepare for introducing rolling hashing for EROFS
-> > since EROFS supports compressing variable-sized data instead of
-> > fixed-sized clusters.
-> > 
-> > Therefore, EROFS can support rolling hash easily and our mechanism
-> > can make full use of filesystem interfaces (byte-addressed) naturally.
-> > 
-> > Before that, I'd like to submit some trivial cleanups in advance for
-> > the 5.19 cycle. All patches are without any logical change, so I can
-> > have a more recent codebase for the next rework cycle.
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > Gao Xiang (3):
-> >    erofs: get rid of `struct z_erofs_collection'
-> >    erofs: get rid of label `restart_now'
-> >    erofs: simplify z_erofs_pcluster_readmore()
-> > 
-> >   fs/erofs/zdata.c | 165 +++++++++++++++++++----------------------------
-> >   fs/erofs/zdata.h |  50 +++++++-------
-> >   2 files changed, 88 insertions(+), 127 deletions(-)
-> > 
+You can respond to me and i will send you a detailed explanation
+
+Yours.
+
+Mathew Johnson.
