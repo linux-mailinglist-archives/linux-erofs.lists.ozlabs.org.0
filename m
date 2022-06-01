@@ -1,63 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7376A539BDD
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Jun 2022 06:00:13 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 103B553AB77
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Jun 2022 19:01:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LCb5G4qLnz3bfh
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Jun 2022 14:00:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LCwQy72FGz3blH
+	for <lists+linux-erofs@lfdr.de>; Thu,  2 Jun 2022 03:01:30 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=meOpPK/G;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UmMIsjoy;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=meOpPK/G;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UmMIsjoy;
 	dkim-atps=neutral
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LCb5719xXz2yXP
-	for <linux-erofs@lists.ozlabs.org>; Wed,  1 Jun 2022 13:59:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654055995; x=1685591995;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xrzDT0gyOtjp+6AzEfZ344hwgOUOJXyO+ZZokaVSFj4=;
-  b=meOpPK/GVuU3EoIudg+cuers6WnXZQRkA0f4hOMUTfaZqXdZKet21Ypr
-   NZWKp4RCf/E+0SOZ/0F666VrqOv3glzmqAKN6hpXgTzgPM6jvo+CcWZaB
-   AKnUJ7/YbtElyYNFEEIqRqo9zN2d86QSig17xdEeryR32UHlAMVp/ygcA
-   CrBuB881+2E0D1qHCaV4smI4AfuqZLwBBDfu2JK/ErwwliV/SBl9Hv++F
-   rB6jorXyYBVlpgjafxYD0iB4UtbAbxTUywPmGiC0HxZUObspoJzQpCMjf
-   QxhXAdGirYe8PQpfqu6aWpmT7J4R1e1UjKR2uo9ByWpbEakT7MRoSxsWn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="361834768"
-X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="361834768"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 20:58:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
-   d="scan'208";a="612138779"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 31 May 2022 20:58:44 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-	(envelope-from <lkp@intel.com>)
-	id 1nwFVK-0003VC-MC;
-	Wed, 01 Jun 2022 03:58:42 +0000
-Date: Wed, 01 Jun 2022 11:57:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 4398d3c31b582db0d640b23434bf344a6c8df57c
-Message-ID: <6296e3b8.kfMzbX325ORCUzX5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LCwQr5CTRz3bkk
+	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Jun 2022 03:01:24 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id E77ED615E8;
+	Wed,  1 Jun 2022 17:01:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1100C385B8;
+	Wed,  1 Jun 2022 17:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1654102880;
+	bh=DjugIgjMpnLg2sPBAyVxP39aECuON049MwOKV8GD/bY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=UmMIsjoydp/DWM+rFLQIuL6vrWZFbRyhSN0liZ9qDgnSMo3elq5ZpczKUlwrvd9f7
+	 slJWRA4AEhiohX/gQjucXYUsSgRRh1pN3bZRsz2SerbNg+V3PxZy0IfY7QRKp64RQC
+	 xRt643mCy4ZNZ8/qa8Tf4faVIgChe7+tq0BgUb/oE1/FfwGQyoUQTSTCGnuDIqK1IG
+	 1FNdbiBjKwfOqnKLM+BrKCTN66b/4wlfIK8rhhwyrqaFIf474lpDBTXtgUG5gsDzEI
+	 5+RjcrfB+eFrev1pkGaz8GsM+ebWMul1vfpydoEnenZIoUwDAoBVyjZvoQ+udqcDyr
+	 Vvc4N2wxdbevw==
+Date: Thu, 2 Jun 2022 01:01:11 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 5.19-rc1
+Message-ID: <YpebV0BiGsrl8UDQ@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,135 +60,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 4398d3c31b582db0d640b23434bf344a6c8df57c  erofs: fix 'backmost' member of z_erofs_decompress_frontend
+Hi Linus,
 
-elapsed time: 723m
+This is a follow-up pull request including some fixes of fscache
+mode related to compressed inodes and a cachefiles tracepoint.
+There is also a patch to fix an unexpected decompression strategy
+change due to a cleanup in the past.  All the fixes are quite small.
 
-configs tested: 108
-configs skipped: 3
+Apart from these, documentation is also updated for a better
+description of recent new features.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+In addition, the reason why I decided to post these now is that
+I'm working on folio adaption for compressed files with widely
+cleanups.  It seems that some trivial cleanups without actual logical
+change can be submitted in advance, so I could have a more recent
+codebase to work on folios and avoiding the PG_error page flag for
+the next cycle.  It'd be better to submit them in this merge window
+instead of post-rc1 since they are not fixes strictly.
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-sh                  sh7785lcr_32bit_defconfig
-arm64                            alldefconfig
-sh                   sh7770_generic_defconfig
-sh                          lboxre2_defconfig
-powerpc                     pq2fads_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                     tqm8555_defconfig
-arc                           tb10x_defconfig
-sh                          sdk7786_defconfig
-arm                        realview_defconfig
-powerpc                     stx_gp3_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220531
-ia64                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-riscv                             allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220531
-s390                 randconfig-r044-20220531
-riscv                randconfig-r042-20220531
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
+All commits have been in -next and stress tested.
+Please consider this request!
 
-clang tested configs:
-mips                 randconfig-c004-20220531
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-s390                 randconfig-c005-20220531
-arm                  randconfig-c002-20220531
-powerpc              randconfig-c003-20220531
-riscv                randconfig-c006-20220531
-mips                        bcm63xx_defconfig
-mips                        workpad_defconfig
-arm                           sama7_defconfig
-arm                         shannon_defconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                     skiroot_defconfig
-powerpc                    ge_imp3a_defconfig
-mips                         tb0287_defconfig
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220531
-hexagon              randconfig-r045-20220531
+Thanks,
+Gao Xiang
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+The following changes since commit 65965d9530b0c320759cd18a9a5975fb2e098462:
+
+  Merge tag 'erofs-for-5.19-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs (2022-05-24 18:42:04 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.19-rc1-fixes
+
+for you to fetch changes up to 4398d3c31b582db0d640b23434bf344a6c8df57c:
+
+  erofs: fix 'backmost' member of z_erofs_decompress_frontend (2022-05-31 23:15:30 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Leave compressed inodes unsupported in fscache mode for now;
+
+ - Avoid crash when using tracepoint cachefiles_prep_read;
+
+ - Fix `backmost' behavior due to a recent cleanup;
+
+ - Update documentation for better description of recent new features;
+
+ - Several decompression cleanups w/o logical change.
+
+----------------------------------------------------------------
+Gao Xiang (4):
+      erofs: update documentation
+      erofs: get rid of `struct z_erofs_collection'
+      erofs: get rid of label `restart_now'
+      erofs: simplify z_erofs_pcluster_readmore()
+
+Jeffle Xu (1):
+      erofs: leave compressed inodes unsupported in fscache mode for now
+
+Weizhao Ouyang (1):
+      erofs: fix 'backmost' member of z_erofs_decompress_frontend
+
+Xin Yin (1):
+      erofs: fix crash when enable tracepoint cachefiles_prep_read
+
+ Documentation/filesystems/erofs.rst |  64 +++++++++-----
+ fs/erofs/fscache.c                  |   1 +
+ fs/erofs/inode.c                    |   5 +-
+ fs/erofs/zdata.c                    | 167 +++++++++++++++---------------------
+ fs/erofs/zdata.h                    |  50 +++++------
+ 5 files changed, 136 insertions(+), 151 deletions(-)
+
