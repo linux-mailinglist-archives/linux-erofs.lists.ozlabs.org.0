@@ -2,76 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E452E546DC1
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Jun 2022 21:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA22546FEA
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 01:20:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LKWvk6VDJz3c4h
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 05:57:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LKcPk1Tv9z3c2B
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 09:20:10 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HYn8G1nV;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HYn8G1nV;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=Aoxxrgfm;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2a00:1450:4864:20::62c; helo=mail-ej1-x62c.google.com; envelope-from=torvalds@linuxfoundation.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HYn8G1nV;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HYn8G1nV;
+	dkim=pass (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=Aoxxrgfm;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKWvf37qcz3c8x
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 05:57:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1654891035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8NSkt+9OBeiMDSzKoOk1px92nniKwBrH90yvJxWMzUc=;
-	b=HYn8G1nVjVIpIdNIJ/JitCyI/pIW1DahtqRc2R/yY3/wKa54OB1/GQtUPvv7SV4Zz5AE8l
-	0W0v5+jyS4epI0UU3TjKr52nwsG+22cEU0P30aPS53v3Kr0x2/dtmQf71ClWRvuwPukjFh
-	Ok23/iCkuCMkd4IXCFVOMMBrn9Y+kDc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1654891035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8NSkt+9OBeiMDSzKoOk1px92nniKwBrH90yvJxWMzUc=;
-	b=HYn8G1nVjVIpIdNIJ/JitCyI/pIW1DahtqRc2R/yY3/wKa54OB1/GQtUPvv7SV4Zz5AE8l
-	0W0v5+jyS4epI0UU3TjKr52nwsG+22cEU0P30aPS53v3Kr0x2/dtmQf71ClWRvuwPukjFh
-	Ok23/iCkuCMkd4IXCFVOMMBrn9Y+kDc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-av3RAJm5M3qyoV1NkwL1hw-1; Fri, 10 Jun 2022 15:57:12 -0400
-X-MC-Unique: av3RAJm5M3qyoV1NkwL1hw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75773811E76;
-	Fri, 10 Jun 2022 19:57:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.62])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B1EAB492C3B;
-	Fri, 10 Jun 2022 19:57:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 3/3] netfs: Rename the netfs_io_request cleanup op and give it
- an op pointer
-From: David Howells <dhowells@redhat.com>
-Date: Fri, 10 Jun 2022 20:57:09 +0100
-Message-ID:  <165489102899.703883.17034408390431788184.stgit@warthog.procyon.org.uk>
-In-Reply-To:  <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
-References:  <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/1.4
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKcPb1PXsz2yyh
+	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 09:20:02 +1000 (AEST)
+Received: by mail-ej1-x62c.google.com with SMTP id me5so779631ejb.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 10 Jun 2022 16:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mFUZ/4X/JukFzJtRWCj5IwVqnR0commkjm8Ld9IJoQA=;
+        b=AoxxrgfmaiG7fB01rWVX7//fR7hc8pfPaO6KuFkmEJpDpFR/HpqhwLdFQM6dVgzan3
+         DB7+Ryy9LWRyARZSjDc1y62fbB3v6E3HNwslaXd4JIbxny9dkIOf8ftYNIIBC41esAeu
+         4Gv6sMSeEfJjJ4Ad3imZr/QdI/L/mCWsQLeaA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mFUZ/4X/JukFzJtRWCj5IwVqnR0commkjm8Ld9IJoQA=;
+        b=ZYZ1240m3yTeFH7+u0uBEAAwqsp4KaFDEmoJIshy9Sa8F8JQ5VCedkSAxykEdJLtJO
+         bDN1HaFO6IrbNdEwjwLvQ+GosfyqxJAyCUrP93MtKQYvxj/LSrrTG3CXbJqVyOFFaj35
+         nFX3eUKNfG8lSCs64IIRCbl4ymnylATu4WYUPpSsllplfYUKYhPiqLeXQZDBoHhH9vW1
+         b9cCRv8o8I7svZZSOnEWj1yP1y7YjE7StRBw+Vdl+UtLGZ+ZNlxW+iHLRjKaL2nASngs
+         sfU+lRkS4/Y5dHEg1FHZfc86IurDSAuRHo4hixGeYOOlaK70PW4i7gIG93DGH1SReECL
+         GnKA==
+X-Gm-Message-State: AOAM531f5lVGqXrbqFJfDFLF5S3Lhv9fXL5qMxHDf8Dh9wOY9w6N8Dlq
+	mkQ5Wjal8LStpvZ17vTANg8J39OW1QxVuQ75
+X-Google-Smtp-Source: ABdhPJylxCGfjdZQ/z5i/+h2IYTgJHdh/JCFqrFFi6vKs2+exMU1Ss0ekJfUdg1CaDi8d4mfNaVtdQ==
+X-Received: by 2002:a17:906:4786:b0:6fe:a20a:fcd1 with SMTP id cw6-20020a170906478600b006fea20afcd1mr40982145ejc.442.1654903196356;
+        Fri, 10 Jun 2022 16:19:56 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id pv17-20020a170907209100b00704757b1debsm219875ejb.9.2022.06.10.16.19.55
+        for <linux-erofs@lists.ozlabs.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jun 2022 16:19:55 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id m125-20020a1ca383000000b0039c63fe5f64so363498wme.0
+        for <linux-erofs@lists.ozlabs.org>; Fri, 10 Jun 2022 16:19:55 -0700 (PDT)
+X-Received: by 2002:a05:600c:3485:b0:39c:7db5:f0f7 with SMTP id
+ a5-20020a05600c348500b0039c7db5f0f7mr2015707wmq.8.1654903194928; Fri, 10 Jun
+ 2022 16:19:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+References: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
+In-Reply-To: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 10 Jun 2022 16:19:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgeW2nF5MZzmx6cPmS8mbq0kjP+VF5V76LNDLDjJ64hUA@mail.gmail.com>
+Message-ID: <CAHk-=wgeW2nF5MZzmx6cPmS8mbq0kjP+VF5V76LNDLDjJ64hUA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/3] netfs, afs: Cleanups
+To: David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,231 +79,14 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, linux-afs@lists.infradead.org
+Cc: CIFS <linux-cifs@vger.kernel.org>, "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>, Jeff Layton <jlayton@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-cachefs@redhat.com, linux-fsdevel <linux-fsdevel@vger.kernel.org>, v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The netfs_io_request cleanup op is now always in a position to be given a
-pointer to a netfs_io_request struct, so this can be passed in instead of
-the mapping and private data arguments (both of which are included in the
-struct).
+On Fri, Jun 10, 2022 at 12:56 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Here are some cleanups, one for afs and a couple for netfs:
 
-So rename the ->cleanup op to ->free_request (to match ->init_request) and
-pass in the I/O pointer.
+Pulled,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
----
-
- Documentation/filesystems/netfs_library.rst |   24 ++++++++++++------------
- fs/9p/vfs_addr.c                            |   11 +++++------
- fs/afs/file.c                               |    6 +++---
- fs/ceph/addr.c                              |    9 ++++-----
- fs/netfs/objects.c                          |    6 +++---
- include/linux/netfs.h                       |    3 ++-
- 6 files changed, 29 insertions(+), 30 deletions(-)
-
-diff --git a/Documentation/filesystems/netfs_library.rst b/Documentation/filesystems/netfs_library.rst
-index 9332f66373ee..4d19b19bcc08 100644
---- a/Documentation/filesystems/netfs_library.rst
-+++ b/Documentation/filesystems/netfs_library.rst
-@@ -158,9 +158,10 @@ The helpers manage the read request, calling back into the network filesystem
- through the suppplied table of operations.  Waits will be performed as
- necessary before returning for helpers that are meant to be synchronous.
- 
--If an error occurs and netfs_priv is non-NULL, ops->cleanup() will be called to
--deal with it.  If some parts of the request are in progress when an error
--occurs, the request will get partially completed if sufficient data is read.
-+If an error occurs, the ->free_request() will be called to clean up the
-+netfs_io_request struct allocated.  If some parts of the request are in
-+progress when an error occurs, the request will get partially completed if
-+sufficient data is read.
- 
- Additionally, there is::
- 
-@@ -208,8 +209,7 @@ The above fields are the ones the netfs can use.  They are:
-  * ``netfs_priv``
- 
-    The network filesystem's private data.  The value for this can be passed in
--   to the helper functions or set during the request.  The ->cleanup() op will
--   be called if this is non-NULL at the end.
-+   to the helper functions or set during the request.
- 
-  * ``start``
-  * ``len``
-@@ -294,6 +294,7 @@ through which it can issue requests and negotiate::
- 
- 	struct netfs_request_ops {
- 		void (*init_request)(struct netfs_io_request *rreq, struct file *file);
-+		void (*free_request)(struct netfs_io_request *rreq);
- 		int (*begin_cache_operation)(struct netfs_io_request *rreq);
- 		void (*expand_readahead)(struct netfs_io_request *rreq);
- 		bool (*clamp_length)(struct netfs_io_subrequest *subreq);
-@@ -302,7 +303,6 @@ through which it can issue requests and negotiate::
- 		int (*check_write_begin)(struct file *file, loff_t pos, unsigned len,
- 					 struct folio *folio, void **_fsdata);
- 		void (*done)(struct netfs_io_request *rreq);
--		void (*cleanup)(struct address_space *mapping, void *netfs_priv);
- 	};
- 
- The operations are as follows:
-@@ -310,7 +310,12 @@ The operations are as follows:
-  * ``init_request()``
- 
-    [Optional] This is called to initialise the request structure.  It is given
--   the file for reference and can modify the ->netfs_priv value.
-+   the file for reference.
-+
-+ * ``free_request()``
-+
-+   [Optional] This is called as the request is being deallocated so that the
-+   filesystem can clean up any state it has attached there.
- 
-  * ``begin_cache_operation()``
- 
-@@ -384,11 +389,6 @@ The operations are as follows:
-    [Optional] This is called after the folios in the request have all been
-    unlocked (and marked uptodate if applicable).
- 
-- * ``cleanup``
--
--   [Optional] This is called as the request is being deallocated so that the
--   filesystem can clean up ->netfs_priv.
--
- 
- 
- Read Helper Procedure
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index c004b9a73a92..a8f512b44a85 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -66,13 +66,12 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- }
- 
- /**
-- * v9fs_req_cleanup - Cleanup request initialized by v9fs_init_request
-- * @mapping: unused mapping of request to cleanup
-- * @priv: private data to cleanup, a fid, guaranted non-null.
-+ * v9fs_free_request - Cleanup request initialized by v9fs_init_rreq
-+ * @rreq: The I/O request to clean up
-  */
--static void v9fs_req_cleanup(struct address_space *mapping, void *priv)
-+static void v9fs_free_request(struct netfs_io_request *rreq)
- {
--	struct p9_fid *fid = priv;
-+	struct p9_fid *fid = rreq->netfs_priv;
- 
- 	p9_client_clunk(fid);
- }
-@@ -94,9 +93,9 @@ static int v9fs_begin_cache_operation(struct netfs_io_request *rreq)
- 
- const struct netfs_request_ops v9fs_req_ops = {
- 	.init_request		= v9fs_init_request,
-+	.free_request		= v9fs_free_request,
- 	.begin_cache_operation	= v9fs_begin_cache_operation,
- 	.issue_read		= v9fs_issue_read,
--	.cleanup		= v9fs_req_cleanup,
- };
- 
- /**
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 4de7af7c2f09..42118a4f3383 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -382,17 +382,17 @@ static int afs_check_write_begin(struct file *file, loff_t pos, unsigned len,
- 	return test_bit(AFS_VNODE_DELETED, &vnode->flags) ? -ESTALE : 0;
- }
- 
--static void afs_priv_cleanup(struct address_space *mapping, void *netfs_priv)
-+static void afs_free_request(struct netfs_io_request *rreq)
- {
--	key_put(netfs_priv);
-+	key_put(rreq->netfs_priv);
- }
- 
- const struct netfs_request_ops afs_req_ops = {
- 	.init_request		= afs_init_request,
-+	.free_request		= afs_free_request,
- 	.begin_cache_operation	= afs_begin_cache_operation,
- 	.check_write_begin	= afs_check_write_begin,
- 	.issue_read		= afs_issue_read,
--	.cleanup		= afs_priv_cleanup,
- };
- 
- int afs_write_inode(struct inode *inode, struct writeback_control *wbc)
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 9763e7ea8148..6dee88815491 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -394,11 +394,10 @@ static int ceph_init_request(struct netfs_io_request *rreq, struct file *file)
- 	return 0;
- }
- 
--static void ceph_readahead_cleanup(struct address_space *mapping, void *priv)
-+static void ceph_netfs_free_request(struct netfs_io_request *rreq)
- {
--	struct inode *inode = mapping->host;
--	struct ceph_inode_info *ci = ceph_inode(inode);
--	int got = (uintptr_t)priv;
-+	struct ceph_inode_info *ci = ceph_inode(rreq->inode);
-+	int got = (uintptr_t)rreq->netfs_priv;
- 
- 	if (got)
- 		ceph_put_cap_refs(ci, got);
-@@ -406,12 +405,12 @@ static void ceph_readahead_cleanup(struct address_space *mapping, void *priv)
- 
- const struct netfs_request_ops ceph_netfs_ops = {
- 	.init_request		= ceph_init_request,
-+	.free_request		= ceph_netfs_free_request,
- 	.begin_cache_operation	= ceph_begin_cache_operation,
- 	.issue_read		= ceph_netfs_issue_read,
- 	.expand_readahead	= ceph_netfs_expand_readahead,
- 	.clamp_length		= ceph_netfs_clamp_length,
- 	.check_write_begin	= ceph_netfs_check_write_begin,
--	.cleanup		= ceph_readahead_cleanup,
- };
- 
- #ifdef CONFIG_CEPH_FSCACHE
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index c6afa605b63b..e17cdf53f6a7 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -75,10 +75,10 @@ static void netfs_free_request(struct work_struct *work)
- 	struct netfs_io_request *rreq =
- 		container_of(work, struct netfs_io_request, work);
- 
--	netfs_clear_subrequests(rreq, false);
--	if (rreq->netfs_priv)
--		rreq->netfs_ops->cleanup(rreq->mapping, rreq->netfs_priv);
- 	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
-+	netfs_clear_subrequests(rreq, false);
-+	if (rreq->netfs_ops->free_request)
-+		rreq->netfs_ops->free_request(rreq);
- 	if (rreq->cache_resources.ops)
- 		rreq->cache_resources.ops->end_operation(&rreq->cache_resources);
- 	kfree(rreq);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index a62739f3726b..097cdd644665 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -206,7 +206,9 @@ struct netfs_io_request {
-  */
- struct netfs_request_ops {
- 	int (*init_request)(struct netfs_io_request *rreq, struct file *file);
-+	void (*free_request)(struct netfs_io_request *rreq);
- 	int (*begin_cache_operation)(struct netfs_io_request *rreq);
-+
- 	void (*expand_readahead)(struct netfs_io_request *rreq);
- 	bool (*clamp_length)(struct netfs_io_subrequest *subreq);
- 	void (*issue_read)(struct netfs_io_subrequest *subreq);
-@@ -214,7 +216,6 @@ struct netfs_request_ops {
- 	int (*check_write_begin)(struct file *file, loff_t pos, unsigned len,
- 				 struct folio *folio, void **_fsdata);
- 	void (*done)(struct netfs_io_request *rreq);
--	void (*cleanup)(struct address_space *mapping, void *netfs_priv);
- };
- 
- /*
-
-
+               Linus
