@@ -2,47 +2,47 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CC6C5472D7
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 10:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A36E754733D
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 11:29:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LKrSt6tZNz3c00
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 18:23:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LKsx32lMqz3bjX
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 19:29:43 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Zvb3Zjai;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=L5xirZSv;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Zvb3Zjai;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=L5xirZSv;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKrSp0LVgz3bnV
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 18:23:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKsx00yYhz3053
+	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 19:29:40 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 3CE60611C6
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 08:23:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8921C34116;
-	Sat, 11 Jun 2022 08:23:32 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 3AB98B80E49
+	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 09:29:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFE2BC34116;
+	Sat, 11 Jun 2022 09:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1654935813;
-	bh=lorDQmV36ovS2gj//3UEGcfxdLB4WFes3ACLD83oKvY=;
+	s=k20201202; t=1654939775;
+	bh=Qcs1sbVeLL1Uda50vfVxPj+Y3bcLw6pnfwaKSDjmbbo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Zvb3Zjaig6Rm1dGAsF00/o8RKYnk26+7Oz6XQEc0GZ/PW/DlraSbPm5KNO4AINekU
-	 xOXFB7tQVSE4wphaF43UcCdmdgPdCSo4dM2a/VtdDSak02tMR5si6gDyj0tVoVOpx6
-	 HS5Wl1Lrqx2M3EqT3SnrAqn2H5+KelrJqhSA2h1U7vcnXS7wAKN0/9QzmwTxl49hx8
-	 uV8yMMG3QroQH1tGDkgBHOvQpQjlDBVRPLNtOGiuzlqkO6KQ/58lio81BTfwKl4aXw
-	 v9Y7yrJAm5GjcnDwjKsPN9CuVVmNt1S+sbj3EU+xIgrHzRTPuUJNYKWfgzeNIGrLN+
-	 BoqyoOAHZYN/Q==
+	b=L5xirZSvnumrHlkvZRa1vH+YGNdi0JBCWxB6RzwhAJCCrvvXhiMJEjtFTHkdUUHFS
+	 K3t79/iSvWOGZP187BO6waP7wohhoWuc/7jm5sP2uhkVFu02m8uyqQzCP0/zzh6nV6
+	 Nt7T5hHej3zeIWZ/DWaaKWaoWwEpPJ7lch8XwplYjJ3sFbJXPZHzpWS/Hu8bu57DZz
+	 oTlDrDdfiRGFKt8PIuVDydBB/wuBcYymTK2mam3DmjMQ286No3qpGk6F3RMUyFtKrT
+	 vXTeNFeaBzgde+SdRoa3M/VZ/GNyQ8tNq4xswuoOgpz3mFyOIlSb0+NpPclEfhDfpL
+	 r6Tpb5jQAN4gQ==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: introduce `--preserve-mtime'
-Date: Sat, 11 Jun 2022 16:22:48 +0800
-Message-Id: <20220611082248.338369-1-xiang@kernel.org>
+Subject: [PATCH] erofs-utils: fsck: support extracting special files
+Date: Sat, 11 Jun 2022 17:28:55 +0800
+Message-Id: <20220611092855.347106-1-xiang@kernel.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -60,64 +60,94 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In the past versions, `-Eforce-inode-compact' worked since timestamps
-were ignored.  Currently, since we don't ignore mtime by default any
-more, `-Eforce-inode-compact' fails and that breaks compatibility.
-
-Let's fix `-Eforce-inode-compact' to ignore mtime as the past versions
-did, also add another option `--preserve-mtime' for this.
+Now device special file, named pipe and UNIX domain socket can be
+extracted too.
 
 Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
- man/mkfs.erofs.1 | 4 ++++
- mkfs/main.c      | 5 +++++
- 2 files changed, 9 insertions(+)
+ fsck/main.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index d61e33e..6017760 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -119,6 +119,10 @@ can reduce total metadata size.
- .TP
- .BI "\-\-max-extent-bytes " #
- Specify maximum decompressed extent size # in bytes.
-+.TP
-+.B "\-\-preserve-mtime"
-+File modification time is preserved whenever \fBmkfs.erofs\fR decides to use
-+extended inodes over compact inodes.
- .SH AUTHOR
- This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
- Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 9d43cd4..54a3fed 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -50,6 +50,7 @@ static struct option long_options[] = {
- 	{"quiet", no_argument, 0, 12},
- 	{"blobdev", required_argument, NULL, 13},
- 	{"ignore-mtime", no_argument, NULL, 14},
-+	{"preserve-mtime", no_argument, NULL, 15},
- #ifdef WITH_ANDROID
- 	{"mount-point", required_argument, NULL, 512},
- 	{"product-out", required_argument, NULL, 513},
-@@ -158,6 +159,7 @@ static int parse_extended_opts(const char *opts)
- 			if (vallen)
- 				return -EINVAL;
- 			cfg.c_force_inodeversion = FORCE_INODE_COMPACT;
-+			cfg.c_ignore_mtime = true;
- 		}
+diff --git a/fsck/main.c b/fsck/main.c
+index 7fc7b6f..5a2f659 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -638,6 +638,44 @@ out:
+ 	return ret;
+ }
  
- 		if (MATCH_EXTENTED_OPT("force-inode-extended", token, keylen)) {
-@@ -377,6 +379,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 14:
- 			cfg.c_ignore_mtime = true;
++static int erofs_extract_special(struct erofs_inode *inode)
++{
++	bool tryagain = true;
++	int ret;
++
++	erofs_dbg("extract special to path: %s", fsckcfg.extract_path);
++
++	/* verify data chunk layout */
++	ret = erofs_verify_inode_data(inode, -1);
++	if (ret)
++		return ret;
++
++again:
++	if (mknod(fsckcfg.extract_path, inode->i_mode, inode->u.i_rdev) < 0) {
++		if (errno == EEXIST && fsckcfg.overwrite && tryagain) {
++			erofs_warn("try to forcely remove file %s",
++				   fsckcfg.extract_path);
++			if (unlink(fsckcfg.extract_path) < 0) {
++				erofs_err("failed to remove: %s",
++					  fsckcfg.extract_path);
++				return -errno;
++			}
++			tryagain = false;
++			goto again;
++		}
++		if (errno == EEXIST || fsckcfg.superuser) {
++			erofs_err("failed to create special file: %s",
++				  fsckcfg.extract_path);
++			ret = -errno;
++		} else {
++			erofs_warn("failed to create special file: %s, skipped",
++				   fsckcfg.extract_path);
++			ret = -ECANCELED;
++		}
++	}
++	return ret;
++}
++
+ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
+ {
+ 	int ret;
+@@ -698,6 +736,12 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 		case S_IFLNK:
+ 			ret = erofs_extract_symlink(&inode);
  			break;
-+		case 15:
-+			cfg.c_ignore_mtime = false;
++		case S_IFCHR:
++		case S_IFBLK:
++		case S_IFIFO:
++		case S_IFSOCK:
++			ret = erofs_extract_special(&inode);
 +			break;
- 		case 1:
- 			usage();
- 			exit(0);
+ 		default:
+ 			/* TODO */
+ 			goto verify;
+@@ -707,7 +751,7 @@ verify:
+ 		/* verify data chunk layout */
+ 		ret = erofs_verify_inode_data(&inode, -1);
+ 	}
+-	if (ret)
++	if (ret && ret != -ECANCELED)
+ 		goto out;
+ 
+ 	/* XXXX: the dir depth should be restricted in order to avoid loops */
+@@ -725,6 +769,8 @@ verify:
+ 	if (!ret)
+ 		erofsfsck_set_attributes(&inode, fsckcfg.extract_path);
+ 
++	if (ret == -ECANCELED)
++		ret = 0;
+ out:
+ 	if (ret && ret != -EIO)
+ 		fsckcfg.corrupted = true;
 -- 
 2.30.2
 
