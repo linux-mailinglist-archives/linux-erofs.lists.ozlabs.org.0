@@ -1,51 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4D00547469
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 14:02:25 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AF1254747F
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 14:28:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LKxKC5FjJz3bsK
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 22:02:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LKxvR5p2Pz3c1g
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jun 2022 22:28:35 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gRVZ7uiR;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=DTBELQ0X;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2607:5300:60:148a::1; helo=zeniv-ca.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gRVZ7uiR;
+	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=DTBELQ0X;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+X-Greylist: delayed 913 seconds by postgrey-1.36 at boromir; Sat, 11 Jun 2022 22:28:28 AEST
+Received: from zeniv-ca.linux.org.uk (zeniv-ca.linux.org.uk [IPv6:2607:5300:60:148a::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKxK80dmXz3bpw
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 22:02:19 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 76C15B80B4D
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 12:02:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BB6C34116;
-	Sat, 11 Jun 2022 12:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1654948936;
-	bh=OfVEk1+55vCPCgAZlhVLafSMvBIkuEzPvNLbBDWHWms=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gRVZ7uiRwezrWIQ1a4kb0sGTnmZdBuv5aFFFSi85KVBhdXgppPA/dqIqLJXQboDXZ
-	 iEkbrLjMhtIS5P1KIvUpDLxHBBHrrVK+45VTveWZhV8avxO4JiZnWHqJzLp8OVQW8s
-	 N3y8Usbbz/OUvknnHLFw8m9SC5Z1U/ePHW5jVXkrsyyAsrqEoWCj8Ev9dnBCtlMa/j
-	 c4nqYEwsErV6AfCDiT6gPd6T93/Qg/VATW7SaqH6Hhx7WRyGCgDhKJ1Y+lGo0nGdft
-	 cYcTFZcjEGjaBl8KLr5pocxK5ZQCa2sOXfNzX6zFbxPlq/RvCWKRMt9po9iKBsvvMn
-	 kafoobsQR1/fw==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: use EROFS_BLKSIZ unconditionally
-Date: Sat, 11 Jun 2022 20:01:35 +0800
-Message-Id: <20220611120135.363323-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LKxvJ0kpVz30D0
+	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jun 2022 22:28:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=atgndddR6SXbIyqaExtJZJhw3ic+UgK9VwWvZJVDRqM=; b=DTBELQ0XOtAet4aUT4efB1q+ia
+	sP7gw1tag71Ut9T9J0Y25hndtEHuQORviFREhu65NZ0JgunSjujQajXnFDN3Uhx2zyhojxkmZdwl0
+	qFbkPtFs+jzPUrd06AFHJ66iAw0ZejUG7QGBkdYtMMAUYvF9gwQ6+Ge5hl2MN67J7+9sdYld9SbYL
+	7zB8a17jvdMvDNcoBdbiC4mM+jU2vVpWX0/p6VbQ5opblAuQF9I0QDAwkqUReQnlGVQzFY2iASRbs
+	tjceebpiSFE/FT8okP3RGX3Tw9QnTYrgEfjEhqkRpch/IGE+mV1sULTrAUnDj20FxAqpoFnIyfoHN
+	le1+vSDQ==;
+Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1nzzyx-0065U6-SO; Sat, 11 Jun 2022 12:12:48 +0000
+Date: Sat, 11 Jun 2022 12:12:47 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: Re: mainline build failure due to 6c77676645ad ("iov_iter: Fix
+ iter_xarray_get_pages{,_alloc}()")
+Message-ID: <YqSGv6uaZzLxKfmG@zeniv-ca.linux.org.uk>
+References: <YqRyL2sIqQNDfky2@debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqRyL2sIqQNDfky2@debian>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,102 +57,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, devel@lists.orangefs.org, Mike Marshall <hubcap@omnibond.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use EROFS_BLKSIZ only in the codebase and just warn potential
-incompatible PAGE_SIZE.
+On Sat, Jun 11, 2022 at 11:45:03AM +0100, Sudip Mukherjee wrote:
+> Hi All,
+> 
+> The latest mainline kernel branch fails to build for "arm allmodconfig",
+> "xtensa allmodconfig" and "csky allmodconfig" with the error:
+> 
+> In file included from ./include/linux/kernel.h:26,
+>                  from ./include/linux/crypto.h:16,
+>                  from ./include/crypto/hash.h:11,
+>                  from lib/iov_iter.c:2:
+> lib/iov_iter.c: In function 'iter_xarray_get_pages':
+> ./include/linux/minmax.h:20:35: error: comparison of distinct pointer types lacks a cast [-Werror]
+>    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+>       |                                   ^~
+> ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
+>    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+>       |                  ^~~~~~~~~~~
+> ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+>    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+>       |                               ^~~~~~~~~~
+> ./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
+>    45 | #define min(x, y)       __careful_cmp(x, y, <)
+>       |                         ^~~~~~~~~~~~~
+> lib/iov_iter.c:1464:16: note: in expansion of macro 'min'
+>  1464 |         return min(nr * PAGE_SIZE - offset, maxsize);
+>       |                ^~~
+> lib/iov_iter.c: In function 'iter_xarray_get_pages_alloc':
+> ./include/linux/minmax.h:20:35: error: comparison of distinct pointer types lacks a cast [-Werror]
+>    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+>       |                                   ^~
+> ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
+>    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+>       |                  ^~~~~~~~~~~
+> ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+>    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+>       |                               ^~~~~~~~~~
+> ./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
+>    45 | #define min(x, y)       __careful_cmp(x, y, <)
+>       |                         ^~~~~~~~~~~~~
+> lib/iov_iter.c:1628:16: note: in expansion of macro 'min'
+>  1628 |         return min(nr * PAGE_SIZE - offset, maxsize);
+> 
+> 
+> git bisect pointed to 6c77676645ad ("iov_iter: Fix iter_xarray_get_pages{,_alloc}()")
 
-It fixes,
-http://autobuild.buildroot.net/results/2daa0f7a7418f7491b8b4c5495904abb86efa809/build-end.log
+At a guess, should be
+	return min((size_t)nr * PAGE_SIZE - offset, maxsize);
 
-Signed-off-by: Gao Xiang <xiang@kernel.org>
----
- include/erofs/internal.h | 2 +-
- lib/compressor.c         | 4 ++--
- lib/data.c               | 6 +++---
- lib/dir.c                | 2 +-
- lib/namei.c              | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 2686570..6a70f11 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -36,7 +36,7 @@ typedef unsigned short umode_t;
- 
- /* no obvious reason to support explicit PAGE_SIZE != 4096 for now */
- #if PAGE_SIZE != 4096
--#error incompatible PAGE_SIZE is already defined
-+#warning EROFS may be incompatible on your platform
- #endif
- 
- #ifndef PAGE_MASK
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 3666496..a46bc39 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -76,8 +76,8 @@ int erofs_compressor_init(struct erofs_compress *c, char *alg_name)
- 	c->compress_threshold = 100;
- 
- 	/* optimize for 4k size page */
--	c->destsize_alignsize = PAGE_SIZE;
--	c->destsize_redzone_begin = PAGE_SIZE - 16;
-+	c->destsize_alignsize = EROFS_BLKSIZ;
-+	c->destsize_redzone_begin = EROFS_BLKSIZ - 16;
- 	c->destsize_redzone_end = EROFS_CONFIG_COMPR_DEF_BOUNDARY;
- 
- 	if (!alg_name) {
-diff --git a/lib/data.c b/lib/data.c
-index e57707e..6bc554d 100644
---- a/lib/data.c
-+++ b/lib/data.c
-@@ -22,7 +22,7 @@ static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
- 
- 	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
- 
--	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	nblocks = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
- 	lastblk = nblocks - tailendpacking;
- 
- 	/* there is no hole in flatmode */
-@@ -37,8 +37,8 @@ static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
- 			vi->xattr_isize + erofs_blkoff(map->m_la);
- 		map->m_plen = inode->i_size - offset;
- 
--		/* inline data should be located in one meta block */
--		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+		/* inline data should be located in the same meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > EROFS_BLKSIZ) {
- 			erofs_err("inline data cross block boundary @ nid %" PRIu64,
- 				  vi->nid);
- 			DBG_BUGON(1);
-diff --git a/lib/dir.c b/lib/dir.c
-index 8955931..e6b9283 100644
---- a/lib/dir.c
-+++ b/lib/dir.c
-@@ -148,7 +148,7 @@ int erofs_iterate_dir(struct erofs_dir_context *ctx, bool fsck)
- 
- 		nameoff = le16_to_cpu(de->nameoff);
- 		if (nameoff < sizeof(struct erofs_dirent) ||
--		    nameoff >= PAGE_SIZE) {
-+		    nameoff >= EROFS_BLKSIZ) {
- 			erofs_err("invalid de[0].nameoff %u @ nid %llu, lblk %u",
- 				  nameoff, dir->nid | 0ULL, lblk);
- 			return -EFSCORRUPTED;
-diff --git a/lib/namei.c b/lib/namei.c
-index 8e9867d..7b69a59 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -212,7 +212,7 @@ int erofs_namei(struct nameidata *nd,
- 
- 		nameoff = le16_to_cpu(de->nameoff);
- 		if (nameoff < sizeof(struct erofs_dirent) ||
--		    nameoff >= PAGE_SIZE) {
-+		    nameoff >= EROFS_BLKSIZ) {
- 			erofs_err("invalid de[0].nameoff %u @ nid %llu",
- 				  nameoff, nid | 0ULL);
- 			return -EFSCORRUPTED;
--- 
-2.30.2
-
+in both places.  I'm more than half-asleep right now; could you verify that it
+(as the last lines of both iter_xarray_get_pages() and iter_xarray_get_pages_alloc())
+builds correctly?
