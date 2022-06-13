@@ -2,55 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C444547BFB
-	for <lists+linux-erofs@lfdr.de>; Sun, 12 Jun 2022 22:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB4BA548311
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jun 2022 11:19:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LLmZn2PX4z3c85
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jun 2022 06:32:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LM5cT5Wdrz3brp
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jun 2022 19:19:37 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=a/z2IWkp;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hGkPUOzC;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hGkPUOzC;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=a/z2IWkp;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hGkPUOzC;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hGkPUOzC;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LLmZf2TwLz3bpy
-	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jun 2022 06:31:54 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LM5cP6gBCz2xn8
+	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jun 2022 19:19:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655111968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w+/GwuuQGFS111woXNsLKjQljVwtMltJeO1V2zF9Vjo=;
+	b=hGkPUOzCZMlvJ4sqDuUJIlTyxGwAbARH9361qG7qHdS8SfcqsfOWccDehqOYw68bVClzFN
+	OorKoMiIuS94w2Mv4YCdnLyHYHRg6WzxL971A1c/c/MRlPPJymTmkVJJN9a/LCSRG01nV1
+	WbUZWtwPTC7LUZdtJrGWV6mTsaw9hwM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655111968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w+/GwuuQGFS111woXNsLKjQljVwtMltJeO1V2zF9Vjo=;
+	b=hGkPUOzCZMlvJ4sqDuUJIlTyxGwAbARH9361qG7qHdS8SfcqsfOWccDehqOYw68bVClzFN
+	OorKoMiIuS94w2Mv4YCdnLyHYHRg6WzxL971A1c/c/MRlPPJymTmkVJJN9a/LCSRG01nV1
+	WbUZWtwPTC7LUZdtJrGWV6mTsaw9hwM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-619-t37ddbngOHOr1NtMTjiYhg-1; Mon, 13 Jun 2022 05:19:21 -0400
+X-MC-Unique: t37ddbngOHOr1NtMTjiYhg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 5D15DB80CA0;
-	Sun, 12 Jun 2022 20:31:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661B0C34115;
-	Sun, 12 Jun 2022 20:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655065908;
-	bh=AyOwRz/gKBKScbBHHI/YAvxa737PnezhWjLreCbZODo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=a/z2IWkpd5qV4cXB2TknZUAP2iLaBhTIFTWqXbmHzugQvgU47X/gYznY5rgduL8uV
-	 oqD5fyuvOCgbhCGLTMInBvip7PDzEopF+ENjU9x/mmwOKMKXHqLoXOQ0r0tT/pHn5g
-	 dmCHhtFKopgQF3fYxhX+fa0I3MRPiwRECIoaV5YiRLgxVWPqr1jdgNxZnxgmq2iW8T
-	 U47Ygdpr1XdHEhOZ7ZXBvXiqSu2CSytsTJptHm2hgYHVnFifR8ApohCOh8IRhDAUX0
-	 HAMyepx9uPLj6SDKcJMewaVduj9JjzT/W/v1w2BORmO2vHURz/iK0oWEKjkm2TjCgM
-	 7MSvhrJyZ1f2A==
-Date: Mon, 13 Jun 2022 04:31:34 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [ANNOUNCE] erofs-utils: release 1.5
-Message-ID: <YqZNJpgQ+xLSHBqK@debian>
-Mail-Followup-To: linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	kernel-team@android.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B90A101E9BE;
+	Mon, 13 Jun 2022 09:19:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.62])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 201EC492CA2;
+	Mon, 13 Jun 2022 09:19:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <YqSQ++8UnEW0AJ2y@zeniv-ca.linux.org.uk>
+References: <YqSQ++8UnEW0AJ2y@zeniv-ca.linux.org.uk> <YqRyL2sIqQNDfky2@debian> <YqSGv6uaZzLxKfmG@zeniv-ca.linux.org.uk> <YqSMmC/UuQpXdxtR@zeniv-ca.linux.org.uk>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: mainline build failure due to 6c77676645ad ("iov_iter: Fix iter_xarray_get_pages{,_alloc}()")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1075695.1655111958.1@warthog.procyon.org.uk>
+Date: Mon, 13 Jun 2022 10:19:18 +0100
+Message-ID: <1075696.1655111958@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,104 +80,20 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel-team@android.com, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, devel@lists.orangefs.org, Mike Marshall <hubcap@omnibond.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-A new version erofs-utils 1.5 is available at:
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git tags/v1.5
+> The reason we can't overflow on multiplication there, BTW, is that we have
+> nr <= count, and count has come from weirdly open-coded
+> 	DIV_ROUND_UP(size + offset, PAGE_SIZE)
+> IMO we'd better make it explicit, so how about the following:
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-It mainly includes the following changes:
-   - (fsck.erofs) support filesystem extraction (Igor Ostapenko);
-   - support ztailpacking inline feature for compressed files (Yue Hu);
-   - (dump.erofs) support listing directories;
-   - more liberofs APIs (including iterate APIs) (me, Kelvin Zhang);
-   - use mtime to allow more control over the timestamps (David Anderson);
-   - switch to GPL-2.0+ OR Apache-2.0 dual license for liberofs;
-   - various bugfixes and cleanups;
+It seems reasonable.
 
+Reviewed-by: David Howells <dhowells@redhat.com>
 
-A little bit delay this time for more than half a year.  This release
-mainly includes ztailpacking feature by Yue Hu which can inline the
-tail pcluster with its inode metadata thus save space and a tail I/O,
-it's highly recommended to be enabled if possible.
-
-Apart from that, fsck.erofs now supports extracting filesystem, thanks
-to Igor Ostapenko.  There are other changes listed above.
-
-
-In the end, I'd like to update the roadmap of EROFS since the last
-update for the coming year:
-
-https://lore.kernel.org/r/20211009061150.GA7479@hsiangkao-HP-ZHAN-66-Pro-G1
-
-Thankfully many of them are finished during the past year.
-
-
-1. Common stuffs:
-
- - Switch to folios and enable large folios if possible in the next
-   cycles;
-
- - Get rid of PG_error flag in Linux 5.20 (pending review);
-
- - Explore byte-addressed rolling hash compression + deduplication since
-   on-disk format already supports such way but needs runtime tuning;
-
- - LZ4 range dictionary support.  We don't have enough manpower on this
-   yet, but hopefully it can have some progress in the coming year;
-
- - Further code cleanups.
-
-
-2. Container image use cases:
-
- - Recently, we posted a article to introduce erofs over fscache
-   feature working with CNCF Dragonfly Nydus image service and give
-   some performance numbers.
-
-     https://d7y.io/blog/2022/06/06/evolution-of-nydus/
-
-   Our Alibaba kernel team are still working on several stuffs about
-   Nydus image service and fscache, including:
-
-    - Better flexible cache management, including repacking and blob
-      GC in order to make better use to the local cache database;
-
-    - Convert and run (e)stargz and others on the fly with fscache
-      feature.  In the future, different formats are also able to be
-      merged in one fs tree:
-      https://github.com/dragonflyoss/image-service/pull/486
-
-    - Runtime decompression support over fscache;
-
-    - Blob cache sharing within the same trusted domain;
-
-    - Page cache sharing between different files with the same chunk;
-
-    - Enhanced convergent encryption to share chunk data in a trusted
-      domain and runtime verification;
-
-    - And other fscache/cachefiles common improvements like fallback
-      format, multiple daemons/dirs, FSDAX, etc.
-
- - Apart from Nydus, it's planned to introduce a native fscache daemon
-   integrated in erofs-utils to mount EROFS, (e)stargz images from
-   network as well as provide fscache interfaces as liberofs APIs.
-
-
-3. Embedded devices
-
- - Yue Hu is currently working on a fragment-likewise feature, which
-   can merged tails or the whole files into a special inode in order to
-   minimize the space;
-
- - Multi-threaded mkfs, fsck.erofs.  I know someone is working on this
-   but I'm not sure the current progress.  It's a bit delay but needs
-   to be resolved anyway.
-
-
-Thanks,
-Gao Xiang
