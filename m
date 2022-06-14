@@ -1,52 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A74685484F7
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jun 2022 13:49:20 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90B3054A98B
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jun 2022 08:35:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LM8xB36T2z3blN
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jun 2022 21:49:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LMdwF44MBz3cgF
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jun 2022 16:35:09 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=C2VNNnSD;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=7Hz1hDej;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::52f; helo=mail-pg1-x52f.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=C2VNNnSD;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=7Hz1hDej;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LM8x80qK0z2xCB
-	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jun 2022 21:49:15 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 993B3B80D3A;
-	Mon, 13 Jun 2022 11:49:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D887EC34114;
-	Mon, 13 Jun 2022 11:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1655120951;
-	bh=ZjDVsKHFBSnws36ePAnZg275uQcp5H4PcRvFzlD2OCY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C2VNNnSDuzssjT4v8h5W44Kbe+IzWJJ1+4cOzM4wbbZ39q5RujfIuCLloKczU12KN
-	 vEzp3thvxFLwmn0rtXp9X6gG9FT6hfQ1P1zL2PHMcZHin51ex2EQ3Imaz2lXPrqqwe
-	 fc+fTLuvUdvqx/eGxCVomjVhybqiUWBpD1J8y74k=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Subject: [PATCH 5.17 195/298] iov_iter: Fix iter_xarray_get_pages{,_alloc}()
-Date: Mon, 13 Jun 2022 12:11:29 +0200
-Message-Id: <20220613094931.021071516@linuxfoundation.org>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220613094924.913340374@linuxfoundation.org>
-References: <20220613094924.913340374@linuxfoundation.org>
-User-Agent: quilt/0.66
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LMdvm5sPfz3cBk
+	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Jun 2022 16:34:43 +1000 (AEST)
+Received: by mail-pg1-x52f.google.com with SMTP id f65so7657071pgc.7
+        for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jun 2022 23:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:from:subject:references:to
+         :cc:in-reply-to:content-transfer-encoding;
+        bh=+jAhLK+0fRHMqQ7qoZz//CDul2lnBSp2wfTG4W3TRQY=;
+        b=7Hz1hDej1YfISAhj2ghxc0GuGt9PuotmojKTh/wg//kRhsnoNxfc9Gp9LvFaBQPI0l
+         YHKYhqJvGpQpbYuFf9Ot1cur89S3jnDDzRI5DBjedkjHjsxNYgtH1eED7YmCgftrJ3/R
+         lELB83OmKsKTdtDVTgOjLQD9ASREJCYAHZYj1nfJXZnnny2BNlZmQ2/jf/nEUBJIuc8R
+         tjYhQdvSg59dBQnJ4lkLON1lW8OrnrmDJZRFwGG7PJIqo6h0fXrx/8ZIdFd5MlOmkpYQ
+         0nJ+isjUBxgLmbtEB4FvTMylSj8e/xsxS4HApXUbKCp6bpAtKgUPUHgwmFuztn90L/DM
+         vCjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:references:to:cc:in-reply-to:content-transfer-encoding;
+        bh=+jAhLK+0fRHMqQ7qoZz//CDul2lnBSp2wfTG4W3TRQY=;
+        b=5bdowuAgnGkvWVObvZiB9XM03OAIvkhFD4+/Emw0Z5qZmefib2QI2+pma5ioyrmZ5I
+         9qi/Mc8kuh9XlwEhj01ZicIGe9tSDI8PZFVVDlIgn8Y1GvoTMsxYCQvMKTEFjDp4oW7H
+         KXfVLe48pgVSi66g1/kJAmOprrSkNGbZgnKQpjaQoApmasNh2xSzZDySBoxq+MYM2CMh
+         sTKYddwYj6ZYGGn4GYKJfsEggTbc9vW75UsiABna2qwgntxWjfm6EX6YadLTIbez6dr/
+         oFmC92zMZrTNDOFe2MiJ97wWpP21r3w6yNug0jMPAQi703BgqvOtXYkgPpUMlTDAOWTE
+         003A==
+X-Gm-Message-State: AOAM533KLqD0L7UyCWoTt2/fHyOu2SY6Smr77z33uTC1G0eHHeiuf1Zs
+	pb91Zf25QhGCiKqLnOg8gZ5yvg==
+X-Google-Smtp-Source: ABdhPJwI8ptLculCXHH09zaUTB4/GIyuPN6zhr0t2oVTtpjjxCMh96Fh9i44Mib1GeyNhURAH8gs1Q==
+X-Received: by 2002:a05:6a00:a21:b0:522:9134:c620 with SMTP id p33-20020a056a000a2100b005229134c620mr2891196pfh.68.1655188480394;
+        Mon, 13 Jun 2022 23:34:40 -0700 (PDT)
+Received: from [10.4.226.233] ([139.177.225.232])
+        by smtp.gmail.com with ESMTPSA id x16-20020a1709027c1000b0015e8d4eb276sm6277288pll.192.2022.06.13.23.34.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 23:34:40 -0700 (PDT)
+Message-ID: <0ccf0d41-f080-5dde-6afb-5957e2d92a39@bytedance.com>
+Date: Tue, 14 Jun 2022 14:34:35 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+From: Jia Zhu <zhujia.zj@bytedance.com>
+Subject: [PATCH 0/1] cachefiles: Add a command to restore on-demand requests
+References: <98ac6b1a-1c63-65ab-d315-7a1e38cef46f@bytedance.com>
+To: dhowells@redhat.com, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ xiang@kernel.org
+In-Reply-To: <98ac6b1a-1c63-65ab-d315-7a1e38cef46f@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,103 +79,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, stable@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, devel@lists.orangefs.org, Mike Marshall <hubcap@omnibond.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: David Howells <dhowells@redhat.com>
+Hi David, Jeffle & Xiang
 
-[ Upstream commit 6c77676645ad42993e0a8bdb8dafa517851a352a ]
+In production environment, process crashes sometimes occurs.
 
-The maths at the end of iter_xarray_get_pages() to calculate the actual
-size doesn't work under some circumstances, such as when it's been asked to
-extract a partial single page.  Various terms of the equation cancel out
-and you end up with actual == offset.  The same issue exists in
-iter_xarray_get_pages_alloc().
+In cachefiles on-demand read scenario, if user daemon crashes,
+requests will return -EIO.
+User programs which do not consider this error will trap into
+uncertain state.
 
-Fix these to just use min() to select the lesser amount from between the
-amount of page content transcribed into the buffer, minus the offset, and
-the size limit specified.
+Based on this, we came up with a user daemon crash recover scheme.
+Even if user daemon crashes, the device connection and anonymous fd
+will not be released. Recovered user daemon only needs to write 'restore'
+to /dev/cachefiles to restore in-flight requests.
 
-This doesn't appear to have caused a problem yet upstream because network
-filesystems aren't getting the pages from an xarray iterator, but rather
-passing it directly to the socket, which just iterates over it.  Cachefiles
-*does* do DIO from one to/from ext4/xfs/btrfs/etc. but it always asks for
-whole pages to be written or read.
+Userspace Crash Recover Demo (Based on Jeffle's User Demo)
+--------------------------
+Git tree:
+	https://github.com/userzj/demand-read-cachefilesd.git main
+Gitweb:
+	https://github.com/userzj/demand-read-cachefilesd
 
-Fixes: 7ff5062079ef ("iov_iter: Add ITER_XARRAY")
-Reported-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Mike Marshall <hubcap@omnibond.com>
-cc: Gao Xiang <xiang@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: devel@lists.orangefs.org
-cc: linux-erofs@lists.ozlabs.org
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- lib/iov_iter.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+Jia Zhu (1):
+   cachefiles: Add a command to restore on-demand requests
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 6dd5330f7a99..dda6d5f481c1 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1434,7 +1434,7 @@ static ssize_t iter_xarray_get_pages(struct iov_iter *i,
- {
- 	unsigned nr, offset;
- 	pgoff_t index, count;
--	size_t size = maxsize, actual;
-+	size_t size = maxsize;
- 	loff_t pos;
- 
- 	if (!size || !maxpages)
-@@ -1461,13 +1461,7 @@ static ssize_t iter_xarray_get_pages(struct iov_iter *i,
- 	if (nr == 0)
- 		return 0;
- 
--	actual = PAGE_SIZE * nr;
--	actual -= offset;
--	if (nr == count && size > 0) {
--		unsigned last_offset = (nr > 1) ? 0 : offset;
--		actual -= PAGE_SIZE - (last_offset + size);
--	}
--	return actual;
-+	return min(nr * PAGE_SIZE - offset, maxsize);
- }
- 
- /* must be done on non-empty ITER_IOVEC one */
-@@ -1602,7 +1596,7 @@ static ssize_t iter_xarray_get_pages_alloc(struct iov_iter *i,
- 	struct page **p;
- 	unsigned nr, offset;
- 	pgoff_t index, count;
--	size_t size = maxsize, actual;
-+	size_t size = maxsize;
- 	loff_t pos;
- 
- 	if (!size)
-@@ -1631,13 +1625,7 @@ static ssize_t iter_xarray_get_pages_alloc(struct iov_iter *i,
- 	if (nr == 0)
- 		return 0;
- 
--	actual = PAGE_SIZE * nr;
--	actual -= offset;
--	if (nr == count && size > 0) {
--		unsigned last_offset = (nr > 1) ? 0 : offset;
--		actual -= PAGE_SIZE - (last_offset + size);
--	}
--	return actual;
-+	return min(nr * PAGE_SIZE - offset, maxsize);
- }
- 
- ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+  fs/cachefiles/daemon.c   |  1 +
+  fs/cachefiles/internal.h |  3 +++
+  fs/cachefiles/ondemand.c | 25 +++++++++++++++++++++++++
+  3 files changed, 29 insertions(+)
+
 -- 
-2.35.1
-
-
-
+2.20.1
