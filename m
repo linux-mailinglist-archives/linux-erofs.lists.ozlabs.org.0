@@ -2,55 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B73054D6DA
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jun 2022 03:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E39A54D6D9
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jun 2022 03:17:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LNkp96PVmz3bvW
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jun 2022 11:18:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LNkn93FyWz3by6
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jun 2022 11:17:49 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=expoplatform.com header.i=@expoplatform.com header.a=rsa-sha256 header.s=mqy4nq24v44agy3wx43syyt7rieosr22 header.b=ZT8Kn/7s;
-	dkim=pass (1024-bit key; unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=NMoDQ1DE;
+	dkim=pass (1024-bit key; unprotected) header.d=expoplatform.com header.i=@expoplatform.com header.a=rsa-sha256 header.s=mqy4nq24v44agy3wx43syyt7rieosr22 header.b=TYx5CB+j;
+	dkim=pass (1024-bit key; unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=ZYnfPw06;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=eu-west-1.amazonses.com (client-ip=54.240.3.20; helo=a3-20.smtp-out.eu-west-1.amazonses.com; envelope-from=010201816a108c94-79c51f2e-cca3-4d5e-a018-f784f42c9281-000000@eu-west-1.amazonses.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=eu-west-1.amazonses.com (client-ip=54.240.3.2; helo=a3-2.smtp-out.eu-west-1.amazonses.com; envelope-from=010201816a109206-ac949301-6327-44e1-81ee-56e6fd6a0654-000000@eu-west-1.amazonses.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=expoplatform.com header.i=@expoplatform.com header.a=rsa-sha256 header.s=mqy4nq24v44agy3wx43syyt7rieosr22 header.b=ZT8Kn/7s;
-	dkim=pass (1024-bit key; unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=NMoDQ1DE;
+	dkim=pass (1024-bit key; unprotected) header.d=expoplatform.com header.i=@expoplatform.com header.a=rsa-sha256 header.s=mqy4nq24v44agy3wx43syyt7rieosr22 header.b=TYx5CB+j;
+	dkim=pass (1024-bit key; unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn header.b=ZYnfPw06;
 	dkim-atps=neutral
-X-Greylist: delayed 436 seconds by postgrey-1.36 at boromir; Thu, 16 Jun 2022 11:18:38 AEST
-Received: from a3-20.smtp-out.eu-west-1.amazonses.com (a3-20.smtp-out.eu-west-1.amazonses.com [54.240.3.20])
+X-Greylist: delayed 382 seconds by postgrey-1.36 at boromir; Thu, 16 Jun 2022 11:17:45 AEST
+Received: from a3-2.smtp-out.eu-west-1.amazonses.com (a3-2.smtp-out.eu-west-1.amazonses.com [54.240.3.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LNkp62BnHz3bfC
-	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Jun 2022 11:18:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LNkn50mcwz3bcp
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Jun 2022 11:17:44 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
 	s=mqy4nq24v44agy3wx43syyt7rieosr22; d=expoplatform.com;
-	t=1655341878;
+	t=1655341879;
 	h=Date:From:Reply-To:Message-ID:MIME-Version:Content-Type:To:Subject;
-	bh=Wda7BkK2SPWtwJbbOmSBUU871X0Hh+wn6cDUGP+kG10=;
-	b=ZT8Kn/7sVdgCJFt1g933tkNZvfStsxmA0jR9QSNqzMlNSPF9urTpiXXDgbXmArNr
-	FlWVzbcW0UFrZbHyW3QA8V/NDDJFJa6lS3JYdAgyYqUNNmi9tmfUznTqlH9o/NRZ7cs
-	4MU4iQVQW6bEFJwMr5yqZvq9wTek0CeX8F1peCJk=
+	bh=bJkwJ8DLILh/xtnyzPEaYsCdHxyVBLqJRUUNnd/hQG4=;
+	b=TYx5CB+jhO9HW+XgRnbtOhaNDQsecaq/WGlfrmFS/ZV0SkY0saNRs+wlPFCAWu4L
+	lf5gsKWgyjKVqoFYGYezpgHarHu9rZtHO7LmQf3b0n/q2xxhAbdgmKiaaRrmz9GFwBT
+	cOhx4iJULigEgaOz8pE71bYBZKU+8EGAEAyAnwyA=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1655341878;
+	s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1655341879;
 	h=Date:From:Reply-To:Message-ID:MIME-Version:Content-Type:To:Subject:Feedback-ID;
-	bh=Wda7BkK2SPWtwJbbOmSBUU871X0Hh+wn6cDUGP+kG10=;
-	b=NMoDQ1DEq+lR5S6Vo7/bJknfpC6/k5Sn4kjjGgAn3mkZ5AI55NmoK5HeGJEBvAUJ
-	cc7+mGmLsx3ZNoiu3YU4b6kI2z5sbtL9WoIFzoYK/woJINFtyKI9zQ8o2Zt5llT9VZN
-	AG4TqGtQ/0Z1EjayyswUcy5V+2I3KSaeBjY9ENaY=
-Date: Thu, 16 Jun 2022 01:11:18 +0000
-From: NBE20 Website <noreply@expoplatform.com>
-Message-ID: <010201816a108c94-79c51f2e-cca3-4d5e-a018-f784f42c9281-000000@eu-west-1.amazonses.com>
+	bh=bJkwJ8DLILh/xtnyzPEaYsCdHxyVBLqJRUUNnd/hQG4=;
+	b=ZYnfPw06uazAq9t5vhh8jVTimRstBiYyM86dkXREUsVeo0PqHGPS6hwiwyPdFuJb
+	BSlyIvItQVUEiVbI8GVgwpGdwqrYjfWilUn7xZlZbjX2DAVNM2n55xd05EHSlsK95We
+	FZ63K3I6n1+OQDxEXxI3d+/mymngAjyvvmiXrvbg=
+Date: Thu, 16 Jun 2022 01:11:19 +0000
+From: NBE21 Website <noreply@expoplatform.com>
+Message-ID: <010201816a109206-ac949301-6327-44e1-81ee-56e6fd6a0654-000000@eu-west-1.amazonses.com>
 X-Mailer: PHPMailer 6.5.0 (https://github.com/PHPMailer/PHPMailer)
 url: =?us-ascii?Q?https://api-newstart.expoplatform.com/index/ses?=
  =?us-ascii?Q?status?=
 MIME-Version: 1.0
 Content-Type: text/html; charset=UTF-8
 To: linux-erofs@lists.ozlabs.org
-Subject: Thank you for your enquiry
+Subject: Thank you for your request
 Feedback-ID: 1.eu-west-1.rw81kvIovACgqEi+EGyvFo5hfqvsssubVRIHHkv0GI4=:AmazonSES
-X-SES-Outgoing: 2022.06.16-54.240.3.20
+X-SES-Outgoing: 2022.06.16-54.240.3.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -180,10 +180,6 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
   <center>
 
-  <!-- preheaderBlock -->
-  
-  <!-- /preheaderBlock -->
-
   <table class="vb-outer" width="100%" cellpadding="0" border="0" cellspacing="0" bgcolor="#ffffff" style="background-color: #ffffff;" id="ko_sideArticleBlock_1">
     <tbody><tr>
       <td class="vb-outer" align="center" valign="top" bgcolor="#ffffff" style="background-color: #ffffff;">
@@ -202,11 +198,11 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
                     <table class="vb-content" border="0" cellspacing="9" cellpadding="0" width="368" align="left" style="width: 100%;">
                       <tbody><tr>
                         <td style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: #000000; text-align: left;">
-                          <span style="color: #000000;">Thank you for sending your enquiry</span>
+                          <span style="color: #000000;">Thank you for requesting to be a 1-2-1 expert at NBE21</span>
                         </td>
                       </tr>
                       <tr>
-                        <td align="left" class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #000000;"><p>One of our team will be in touch soon on the contact details you provided to discuss the sponsorship options.<br><br>Many Thanks,<br><span style="color: rgb(0, 204, 255);" data-mce-style="color: #00ccff;"><strong>The NBE Team</strong></span></p></td>
+                        <td align="left" class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #000000;"><p>One of our team will be in touch soon to discuss the opportunity with you.<br><br>Thanks,<br><strong><span style="color: rgb(0, 204, 255);" data-mce-style="color: #00ccff;">The NBE Team</span></strong></p></td>
                       </tr>
                       
                     </tbody></table>
@@ -219,7 +215,7 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
                       <tbody><tr>
                         <td width="100%" valign="top" align="left" class="links-color">
                           
-                            <img border="0" hspace="0" vspace="0" width="166" class="mobile-full" alt="" style="vertical-align: top; width: 100%; height: auto; max-width: 166px;" src="https://api-newstart.expoplatform.com/eimg/?src=https%3A%2F%2Fdi9mr54a05a64.cloudfront.net%2Fapi-newstart.expoplatform.com%2Fgallery%2FMTU1NDk5ODE3ODVjYWY2M2EyNWM4MjU%3D.png&amp;method=resize&amp;params=166%2Cnull">
+                            <img border="0" hspace="0" vspace="0" width="166" class="mobile-full" alt="" style="vertical-align: top; width: 100%; height: auto; max-width: 166px;" src="https://api-newstart.expoplatform.com/eimg/?src=https%3A%2F%2Fdi9mr54a05a64.cloudfront.net%2Fapi-newstart.expoplatform.com%2Fgallery%2FMTU1NDk5MjM0MjVjYWY0Y2Q2MzU2Yzc%3D.png&amp;method=resize&amp;params=166%2Cnull">
                           
                         </td>
                       </tr>
@@ -242,6 +238,6 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
   <!-- footerBlock -->
   
   </center>
-  <div style="display: none;"><img src="https://api-newstart.expoplatform.com/opened/?e=linux-erofs@lists.ozlabs.org&act=tr&en=customform_autoanswer_105&eid=156&src=wellcome.png" width="0" height="0"/></div>
+  <div style="display: none;"><img src="https://api-newstart.expoplatform.com/opened/?e=linux-erofs@lists.ozlabs.org&act=tr&en=customform_autoanswer_104&eid=156&src=wellcome.png" width="0" height="0"/></div>
 
 </body></html>
