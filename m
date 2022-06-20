@@ -2,38 +2,25 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02DC1551476
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jun 2022 11:37:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D55E05516B1
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jun 2022 13:10:10 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LRPgk6RMjz3bsc
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jun 2022 19:37:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LRRkm65QZz3bvP
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jun 2022 21:10:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57; helo=out30-57.freemail.mail.aliyun.com; envelope-from=hongnan.li@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LRPgg1ztDz2yV6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jun 2022 19:37:17 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hongnan.li@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VGulrh2_1655717827;
-Received: from 30.225.24.32(mailfrom:hongnan.li@linux.alibaba.com fp:SMTPD_---0VGulrh2_1655717827)
-          by smtp.aliyun-inc.com;
-          Mon, 20 Jun 2022 17:37:07 +0800
-Message-ID: <70fe93a3-7af5-b563-dcb7-3f7be81348ed@linux.alibaba.com>
-Date: Mon, 20 Jun 2022 17:37:07 +0800
+Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=skyglowproject.com (client-ip=45.42.45.115; helo=smokeysteakranch.com; envelope-from=jonathaniu@skyglowproject.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 3631 seconds by postgrey-1.36 at boromir; Mon, 20 Jun 2022 21:10:05 AEST
+Received: from smokeysteakranch.com (sanmingby.com [45.42.45.115])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LRRkj4YkKz3bl0
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jun 2022 21:10:05 +1000 (AEST)
+To: linux-erofs@lists.ozlabs.org
+Subject: take a look at this again
+Message-ID: <65dfb68c9329b5af5916b8ee6e93f586@dronesvilla.com>
+Date: Mon, 20 Jun 2022 07:29:54 +0200
+From: "Jonathan Durham" <jonathanhc@skyglowproject.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.10.0
-From: hongnanLi <hongnan.li@linux.alibaba.com>
-Subject: Re: [PATCH v2] erofs: update ctx->pos for every emitted dirent
-To: Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org, xiang@kernel.org
-References: <20220527072536.68516-1-hongnan.li@linux.alibaba.com>
- <20220609034006.76649-1-hongnan.li@linux.alibaba.com>
- <0c139517-e976-5017-8e7a-d34c38f0f6bb@kernel.org>
-Content-Language: en-US
-In-Reply-To: <0c139517-e976-5017-8e7a-d34c38f0f6bb@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -46,90 +33,70 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Reply-To: jonathan@zkchji.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-on 2022/6/19 8:19, Chao Yu wrote:
-> On 2022/6/9 11:40, Hongnan Li wrote:
->> erofs_readdir update ctx->pos after filling a batch of dentries
->> and it may cause dir/files duplication for NFS readdirplus which
->> depends on ctx->pos to fill dir correctly. So update ctx->pos for
->> every emitted dirent in erofs_fill_dentries to fix it.
->>
->> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
->> Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
->> ---
->>   fs/erofs/dir.c | 20 ++++++++++----------
->>   1 file changed, 10 insertions(+), 10 deletions(-)
->>
->> diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
->> index 18e59821c597..94ef5287237a 100644
->> --- a/fs/erofs/dir.c
->> +++ b/fs/erofs/dir.c
->> @@ -22,10 +22,9 @@ static void debug_one_dentry(unsigned char d_type, 
->> const char *de_name,
->>   }
->>   static int erofs_fill_dentries(struct inode *dir, struct dir_context 
->> *ctx,
->> -                   void *dentry_blk, unsigned int *ofs,
->> +                   void *dentry_blk, struct erofs_dirent *de,
->>                      unsigned int nameoff, unsigned int maxsize)
->>   {
->> -    struct erofs_dirent *de = dentry_blk + *ofs;
->>       const struct erofs_dirent *end = dentry_blk + nameoff;
->>       while (de < end) {
->> @@ -59,9 +58,8 @@ static int erofs_fill_dentries(struct inode *dir, 
->> struct dir_context *ctx,
->>               /* stopped by some reason */
->>               return 1;
->>           ++de;
->> -        *ofs += sizeof(struct erofs_dirent);
->> +        ctx->pos += sizeof(struct erofs_dirent);
->>       }
->> -    *ofs = maxsize;
->>       return 0;
->>   }
->> @@ -95,7 +93,7 @@ static int erofs_readdir(struct file *f, struct 
->> dir_context *ctx)
->>                     "invalid de[0].nameoff %u @ nid %llu",
->>                     nameoff, EROFS_I(dir)->nid);
->>               err = -EFSCORRUPTED;
->> -            goto skip_this;
->> +            break;
->>           }
->>           maxsize = min_t(unsigned int,
->> @@ -106,17 +104,19 @@ static int erofs_readdir(struct file *f, struct 
->> dir_context *ctx)
->>               initial = false;
->>               ofs = roundup(ofs, sizeof(struct erofs_dirent));
->> -            if (ofs >= nameoff)
->> +            if (ofs >= nameoff) {
->> +                ctx->pos = blknr_to_addr(i) + ofs;
->>                   goto skip_this;
->> +            }
->>           }
->> -        err = erofs_fill_dentries(dir, ctx, de, &ofs,
->> -                      nameoff, maxsize);
->> -skip_this:
->>           ctx->pos = blknr_to_addr(i) + ofs;
-> 
-> Why updating ctx->pos before erofs_fill_dentries()?
-> 
-> Thanks,
+<html>
+<head>
+</head>
+<body>
+<p>Hello,<br /> <br /> How is everything going with you?<br /> Have you
+received the introduction that we sent you on the little drone-quadcopter
+that we sent you last week?<br /> <br /> The drone-quadcopter can fly for
+30 minutes nonstop and record video at a frame rate of 25 frames per
+second.<br /> Product dimensions: 45x40x12cm (before folding) 21x11x9cm
+(after folding)<br /> Dual-mode The positioning system provides GPS
+positioning. Brushless motor model number: 1806.<br /> Remote control
+range: around 3000m<br /> The remote control's height is roughly 120
+meters.<br /> 1-3 meters for gesture recognition shooting Resolution of
+aerial images: 4096 x 3072 (APP)<br /> 2048 x 1080 video resolution
+(APP)<br /> Frame rate of transmission: 25fps<br /> <br /> The auto return
+feature allows you to order the aircraft to take off, land, and even return
+to its original spot with the push of a button.<br /> When summoned, the
+drone-quadcopter will return to the location from which it took off.<br />
+Fixed-point surround: you can now make stunning videos with this
+professional drone-quadcopter without doing any extra work.<br /> <br />
+The following are the cost details for varied quantities:<br /> 1 unit:
+229.90<br /> 2-50 units 209.90 each<br /> 51-100 units 189.90 each<br /><br
+/> Would you be interested in purchasing one or two of these?<br /> Send us
+your location and we will make the appropriate preparations on your behalf
+after contacting the logistics department.<br /><br /><img
+src="https://cdn.32pt.com/public/sl-prod-od-0/images/retail-products/D18C49281AF5F7/D18C49281AF5F7-DS_600ef313c100037048a59353_4487-DS_600ef313c100037048a59353-DS_600ef313c100037048a59353_1005002073569910-14%253A200006154%2523GPS-5G-4K%201B%20Foambox%253B200007763%253A201336100/template/thumb.jpg"
+width="640" height="636" /><br /><img
+src="https://media.karousell.com/media/photos/products/2021/3/8/drone_4drc_f9_4k_1615221385_0f7cbce4_progressive.jpg"
+width="585" height="812" /><br /> <br /> The development of optical flow
+occurs from the combination of a fixed point located within the system and
+a GPS position retrieved from outside the system.<br /> When you walk
+through your front door, either the electricity is totally turned off or
+you receive a notification stating that the energy has been turned off.<br
+/> This camera also has a virtual reality mode, as well as the option to
+switch between various lenses, a video/picture panorama, and a
+video/picture panorama.<br /> There are also MV (with a single button to
+return to the home screen), headless, photo/video gestures, and front lens
+adjustment modes. Each of these modes has its own set of capabilities.<br
+/> The GPS and air pressure combination employed in the system for flying
+at a fixed altitude is essentially a hybrid of the two technologies.<br />
+Wind resistance is rated as an 8, and it is measured in meters per
+second.<br /> <br /> <br /> Thanks,<br /> Jonathan Durham<br /> <br /> <br
+/> ======<br /> <br /> Is it necessary to print this email? If you care
+about the environment like we do, please refrain from printing emails. It
+helps to keep the environment forested.<br /> Please consider the
+environment before printing this email. Please do not print this email
+unless it is necessary. Every unprinted email helps the environment.<br />
+If you received this message by mistake, please reply to this message and
+follow with its deletion, so that we can ensure such a mistake does not
+occur in the future.<br /> <br /> Is printing out this email really
+required? If you share the same concern for the environment that we do, we
+kindly ask that you avoid from printing off any emails. It contributes to
+the maintenance of a forest-rich environment.<br /> Before printing this
+email, I ask that you keep in mind its impact on the environment. If
+printing it isn't absolutely required, please refrain from doing so. Every
+email that is not printed out is beneficial to the environment.<br /> If
+you believe that you have got this message in error, please respond to it
+and then delete it so that we can avoid making the same mistake in the
+future. Thank you.</p>
+<br /><br />
+</body>
+</html>
 
-It’s to ensure the ctx->pos is correct and up to date in 
-erofs_fill_dentries() so that we can update ctx->pos instead of ofs for 
-every emitted dirent.
-
-> 
->> -
->> +        err = erofs_fill_dentries(dir, ctx, de, (void *)de + ofs,
->> +                      nameoff, maxsize);
->>           if (err)
->>               break;
->> +        ctx->pos = blknr_to_addr(i) + maxsize;
->> +skip_this:
->>           ++i;
->>           ofs = 0;
->>       }
