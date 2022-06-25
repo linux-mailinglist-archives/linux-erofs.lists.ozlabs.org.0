@@ -2,41 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75E915596B1
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jun 2022 11:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42A8255A869
+	for <lists+linux-erofs@lfdr.de>; Sat, 25 Jun 2022 11:29:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LTsMX3Gdwz3c85
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jun 2022 19:31:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LVTGm4qywz3c7D
+	for <lists+linux-erofs@lfdr.de>; Sat, 25 Jun 2022 19:29:52 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=126.com header.i=@126.com header.a=rsa-sha256 header.s=s110527 header.b=W8ozts2K;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hongnan.li@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LTsMS2lYjz30QW
-	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Jun 2022 19:31:46 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hongnan.li@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VHGmWSp_1656063100;
-Received: from 30.225.24.47(mailfrom:hongnan.li@linux.alibaba.com fp:SMTPD_---0VHGmWSp_1656063100)
-          by smtp.aliyun-inc.com;
-          Fri, 24 Jun 2022 17:31:40 +0800
-Message-ID: <2e708294-a2df-e775-4ea8-5b1fd0aa4544@linux.alibaba.com>
-Date: Fri, 24 Jun 2022 17:31:40 +0800
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=126.com (client-ip=220.181.15.114; helo=m15114.mail.126.com; envelope-from=cheny_wen@126.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=126.com header.i=@126.com header.a=rsa-sha256 header.s=s110527 header.b=W8ozts2K;
+	dkim-atps=neutral
+X-Greylist: delayed 1896 seconds by postgrey-1.36 at boromir; Sat, 25 Jun 2022 19:29:43 AEST
+Received: from m15114.mail.126.com (m15114.mail.126.com [220.181.15.114])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LVTGb4QQhz3bls
+	for <linux-erofs@lists.ozlabs.org>; Sat, 25 Jun 2022 19:29:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=X6rIM
+	tLO3uci6xsCn9+sGkQf0y5oJPBg8DN1+ZQ9zq8=; b=W8ozts2K5V858tq/jX0Gk
+	enaspmJgs5Ds/nFZxCarhItJEkaD5+CItXNoXzR6GaGLcdpr09DaZnUH+Ei5vUsT
+	558WKr5ma8owv1+Yw4QY4sZb5QZ3UfbIS/3Dca2EPoPrGCJx3sJfQs3R50xiaRbB
+	WRHaQDFUHgaOe1bR0pJeuk=
+Received: from localhost.localdomain (unknown [120.231.117.174])
+	by smtp7 (Coremail) with SMTP id DsmowACHx_8EzrZiFAfLDw--.2621S2;
+	Sat, 25 Jun 2022 16:57:40 +0800 (CST)
+From: Even <cheny_wen@126.com>
+To: xiang@kernel.org
+Subject: [PATCH] erofs: Wake up all waiters after z_erofs_lzma_head ready.
+Date: Sat, 25 Jun 2022 16:57:38 +0800
+Message-Id: <20220625085738.12834-1-cheny_wen@126.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.10.0
-Subject: Re: [PATCH v2] erofs: update ctx->pos for every emitted dirent
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <20220527072536.68516-1-hongnan.li@linux.alibaba.com>
- <20220609034006.76649-1-hongnan.li@linux.alibaba.com>
- <0c139517-e976-5017-8e7a-d34c38f0f6bb@kernel.org>
- <70fe93a3-7af5-b563-dcb7-3f7be81348ed@linux.alibaba.com>
- <YrBl4CMZUiO6YqNM@B-P7TQMD6M-0146.local>
-From: hongnanLi <hongnan.li@linux.alibaba.com>
-In-Reply-To: <YrBl4CMZUiO6YqNM@B-P7TQMD6M-0146.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DsmowACHx_8EzrZiFAfLDw--.2621S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ArW3uF18Ww1fKw1UZFW7CFg_yoW8Zw1kpr
+	nIkFyxKrWxWrn8u3yfJr13Gry7CrWSgr48G3s7tF93Xay5JF4xXw18tFnFgF4UWr90v39Y
+	ya1j9w17J34F9FJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bj_-PUUUUU=
+X-Originating-IP: [120.231.117.174]
+X-CM-SenderInfo: xfkh05hbzh0qqrswhudrp/1tbiFAUrhl86VkqFxAAAsE
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,107 +55,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Even <chenyuwen1@meizu.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Gao Xiang,
+From: Even <chenyuwen1@meizu.com>
 
-on 2022/6/20 下午8:19, Gao Xiang wrote:
-> Hi Hongnan,
-> 
-> On Mon, Jun 20, 2022 at 05:37:07PM +0800, hongnanLi wrote:
->> on 2022/6/19 8:19, Chao Yu wrote:
->>> On 2022/6/9 11:40, Hongnan Li wrote:
->>>> erofs_readdir update ctx->pos after filling a batch of dentries
->>>> and it may cause dir/files duplication for NFS readdirplus which
->>>> depends on ctx->pos to fill dir correctly. So update ctx->pos for
->>>> every emitted dirent in erofs_fill_dentries to fix it.
->>>>
->>>> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
->>>> Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
->>>> ---
->>>>    fs/erofs/dir.c | 20 ++++++++++----------
->>>>    1 file changed, 10 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
->>>> index 18e59821c597..94ef5287237a 100644
->>>> --- a/fs/erofs/dir.c
->>>> +++ b/fs/erofs/dir.c
->>>> @@ -22,10 +22,9 @@ static void debug_one_dentry(unsigned char
->>>> d_type, const char *de_name,
->>>>    }
->>>>    static int erofs_fill_dentries(struct inode *dir, struct
->>>> dir_context *ctx,
->>>> -                   void *dentry_blk, unsigned int *ofs,
->>>> +                   void *dentry_blk, struct erofs_dirent *de,
->>>>                       unsigned int nameoff, unsigned int maxsize)
->>>>    {
->>>> -    struct erofs_dirent *de = dentry_blk + *ofs;
->>>>        const struct erofs_dirent *end = dentry_blk + nameoff;
->>>>        while (de < end) {
->>>> @@ -59,9 +58,8 @@ static int erofs_fill_dentries(struct inode *dir,
->>>> struct dir_context *ctx,
->>>>                /* stopped by some reason */
->>>>                return 1;
->>>>            ++de;
->>>> -        *ofs += sizeof(struct erofs_dirent);
->>>> +        ctx->pos += sizeof(struct erofs_dirent);
->>>>        }
->>>> -    *ofs = maxsize;
->>>>        return 0;
->>>>    }
->>>> @@ -95,7 +93,7 @@ static int erofs_readdir(struct file *f, struct
->>>> dir_context *ctx)
->>>>                      "invalid de[0].nameoff %u @ nid %llu",
->>>>                      nameoff, EROFS_I(dir)->nid);
->>>>                err = -EFSCORRUPTED;
->>>> -            goto skip_this;
->>>> +            break;
->>>>            }
->>>>            maxsize = min_t(unsigned int,
->>>> @@ -106,17 +104,19 @@ static int erofs_readdir(struct file *f,
->>>> struct dir_context *ctx)
->>>>                initial = false;
->>>>                ofs = roundup(ofs, sizeof(struct erofs_dirent));
->>>> -            if (ofs >= nameoff)
->>>> +            if (ofs >= nameoff) {
->>>> +                ctx->pos = blknr_to_addr(i) + ofs;
->>>>                    goto skip_this;
->>>> +            }
->>>>            }
->>>> -        err = erofs_fill_dentries(dir, ctx, de, &ofs,
->>>> -                      nameoff, maxsize);
->>>> -skip_this:
->>>>            ctx->pos = blknr_to_addr(i) + ofs;
->>>
->>> Why updating ctx->pos before erofs_fill_dentries()?
->>>
->>> Thanks,
->>
->> It’s to ensure the ctx->pos is correct and up to date in
->> erofs_fill_dentries() so that we can update ctx->pos instead of ofs for
->> every emitted dirent.
->>
-> 
-> How about this, since blknr_to_addr(i) + maxsize should be the start of
-> the next dir block.
-> 
-> 	if (initial) {
-> 		ofs = roundup(ofs, sizeof(struct erofs_dirent));
-> 		ctx->pos = blknr_to_addr(i) + ofs;
-> 		if (ofs >= nameoff)
-> 			goto skip_this;
-> 	}
-> 	err = erofs_fill_dentries(dir, ctx, de, (void *)de + ofs,
-> 				  nameoff, maxsize);
-> 	if (err)
-> 		break;
-> 	ctx->pos = blknr_to_addr(i) + maxsize;
-> 
+When the user mounts the erofs second times, the decompression thread
+may hung. The problem happens due to a sequence of steps like the
+following:
 
-Thanks for your suggestion. It looks good and works well in my test. I 
-will send PATCH v3 later if everything else is okay.
+1) Task A called z_erofs_load_lzma_config which obtain all of the node
+   from the z_erofs_lzma_head.
 
-Thanks,
-Hongnan Li
+2) At this time, task B called the z_erofs_lzma_decompress and wanted to
+   get a node. But the z_erofs_lzma_head was empty, the Task B had to
+   sleep.
+
+3) Task A release nodes and push nodes into the z_erofs_lzma_head. But
+   task B was still sleeping.
+
+One example report when the hung happens:
+task:kworker/u3:1 state:D stack:14384 pid: 86 ppid: 2 flags:0x00004000
+Workqueue: erofs_unzipd z_erofs_decompressqueue_work
+Call Trace:
+ <TASK>
+ __schedule+0x281/0x760
+ schedule+0x49/0xb0
+ z_erofs_lzma_decompress+0x4bc/0x580
+ ? cpu_core_flags+0x10/0x10
+ z_erofs_decompress_pcluster+0x49b/0xba0
+ ? __update_load_avg_se+0x2b0/0x330
+ ? __update_load_avg_se+0x2b0/0x330
+ ? update_load_avg+0x5f/0x690
+ ? update_load_avg+0x5f/0x690
+ ? set_next_entity+0xbd/0x110
+ ? _raw_spin_unlock+0xd/0x20
+ z_erofs_decompress_queue.isra.0+0x2e/0x50
+ z_erofs_decompressqueue_work+0x30/0x60
+ process_one_work+0x1d3/0x3a0
+ worker_thread+0x45/0x3a0
+ ? process_one_work+0x3a0/0x3a0
+ kthread+0xe2/0x110
+ ? kthread_complete_and_exit+0x20/0x20
+ ret_from_fork+0x22/0x30
+ </TASK>
+
+Signed-off-by: Even <chenyuwen1@meizu.com>
+---
+ fs/erofs/decompressor_lzma.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+index 05a3063cf2bc..5e59b3f523eb 100644
+--- a/fs/erofs/decompressor_lzma.c
++++ b/fs/erofs/decompressor_lzma.c
+@@ -143,6 +143,7 @@ int z_erofs_load_lzma_config(struct super_block *sb,
+ 	DBG_BUGON(z_erofs_lzma_head);
+ 	z_erofs_lzma_head = head;
+ 	spin_unlock(&z_erofs_lzma_lock);
++	wake_up_all(&z_erofs_lzma_wq);
+ 
+ 	z_erofs_lzma_max_dictsize = dict_size;
+ 	mutex_unlock(&lzma_resize_mutex);
+-- 
+2.25.1
+
