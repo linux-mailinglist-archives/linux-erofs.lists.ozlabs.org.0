@@ -2,39 +2,34 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FB6255AD00
-	for <lists+linux-erofs@lfdr.de>; Sun, 26 Jun 2022 00:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 506AE55B578
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Jun 2022 04:56:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LVq3h6F7fz3bpy
-	for <lists+linux-erofs@lfdr.de>; Sun, 26 Jun 2022 08:51:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LWXRw47x1z3bsH
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Jun 2022 12:56:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=meizu.com (client-ip=157.122.146.251; helo=mail.meizu.com; envelope-from=chenyuwen1@meizu.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 66 seconds by postgrey-1.36 at boromir; Sun, 26 Jun 2022 08:51:24 AEST
-Received: from mail.meizu.com (edge05.meizu.com [157.122.146.251])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57; helo=out30-57.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LVq3c2rW9z3bkr
-	for <linux-erofs@lists.ozlabs.org>; Sun, 26 Jun 2022 08:51:24 +1000 (AEST)
-Received: from IT-EXMB-1-125.meizu.com (172.16.1.125) by mz-mail12.meizu.com
- (172.16.1.108) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sun, 26 Jun
- 2022 06:50:08 +0800
-Received: from localhost.localdomain (172.16.255.36) by
- IT-EXMB-1-125.meizu.com (172.16.1.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.14; Sun, 26 Jun 2022 06:50:05 +0800
-From: Yuwen Chen <chenyuwen1@meizu.com>
-To: <xiang@kernel.org>
-Subject: [PATCH] erofs: Wake up all waiters after z_erofs_lzma_head ready.
-Date: Sat, 25 Jun 2022 22:50:00 +0800
-Message-ID: <20220625145000.2720-1-chenyuwen1@meizu.com>
-X-Mailer: git-send-email 2.25.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LWXRm1tNpz2xt3
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Jun 2022 12:56:18 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VHRLgaG_1656298568;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VHRLgaG_1656298568)
+          by smtp.aliyun-inc.com;
+          Mon, 27 Jun 2022 10:56:10 +0800
+Date: Mon, 27 Jun 2022 10:56:08 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Yuwen Chen <chenyuwen1@meizu.com>
+Subject: Re: [PATCH] erofs: Wake up all waiters after z_erofs_lzma_head ready.
+Message-ID: <YrkcSB3MmvtCiVN3@B-P7TQMD6M-0146.local>
+References: <20220625145000.2720-1-chenyuwen1@meizu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.16.255.36]
-X-ClientProxiedBy: IT-EXMB-1-126.meizu.com (172.16.1.126) To
- IT-EXMB-1-125.meizu.com (172.16.1.125)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220625145000.2720-1-chenyuwen1@meizu.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,67 +41,54 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yuwen Chen <chenyuwen1@meizu.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When the user mounts the erofs second times, the decompression thread
-may hung. The problem happens due to a sequence of steps like the
-following:
+On Sat, Jun 25, 2022 at 10:50:00PM +0800, Yuwen Chen wrote:
+> When the user mounts the erofs second times, the decompression thread
+> may hung. The problem happens due to a sequence of steps like the
+> following:
+> 
+> 1) Task A called z_erofs_load_lzma_config which obtain all of the node
+>    from the z_erofs_lzma_head.
+> 
+> 2) At this time, task B called the z_erofs_lzma_decompress and wanted to
+>    get a node. But the z_erofs_lzma_head was empty, the Task B had to
+>    sleep.
+> 
+> 3) Task A release nodes and push nodes into the z_erofs_lzma_head. But
+>    task B was still sleeping.
+> 
+> One example report when the hung happens:
+> task:kworker/u3:1 state:D stack:14384 pid: 86 ppid: 2 flags:0x00004000
+> Workqueue: erofs_unzipd z_erofs_decompressqueue_work
+> Call Trace:
+>  <TASK>
+>  __schedule+0x281/0x760
+>  schedule+0x49/0xb0
+>  z_erofs_lzma_decompress+0x4bc/0x580
+>  ? cpu_core_flags+0x10/0x10
+>  z_erofs_decompress_pcluster+0x49b/0xba0
+>  ? __update_load_avg_se+0x2b0/0x330
+>  ? __update_load_avg_se+0x2b0/0x330
+>  ? update_load_avg+0x5f/0x690
+>  ? update_load_avg+0x5f/0x690
+>  ? set_next_entity+0xbd/0x110
+>  ? _raw_spin_unlock+0xd/0x20
+>  z_erofs_decompress_queue.isra.0+0x2e/0x50
+>  z_erofs_decompressqueue_work+0x30/0x60
+>  process_one_work+0x1d3/0x3a0
+>  worker_thread+0x45/0x3a0
+>  ? process_one_work+0x3a0/0x3a0
+>  kthread+0xe2/0x110
+>  ? kthread_complete_and_exit+0x20/0x20
+>  ret_from_fork+0x22/0x30
+>  </TASK>
+> 
+> Signed-off-by: Yuwen Chen <chenyuwen1@meizu.com>
 
-1) Task A called z_erofs_load_lzma_config which obtain all of the node
-   from the z_erofs_lzma_head.
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-2) At this time, task B called the z_erofs_lzma_decompress and wanted to
-   get a node. But the z_erofs_lzma_head was empty, the Task B had to
-   sleep.
-
-3) Task A release nodes and push nodes into the z_erofs_lzma_head. But
-   task B was still sleeping.
-
-One example report when the hung happens:
-task:kworker/u3:1 state:D stack:14384 pid: 86 ppid: 2 flags:0x00004000
-Workqueue: erofs_unzipd z_erofs_decompressqueue_work
-Call Trace:
- <TASK>
- __schedule+0x281/0x760
- schedule+0x49/0xb0
- z_erofs_lzma_decompress+0x4bc/0x580
- ? cpu_core_flags+0x10/0x10
- z_erofs_decompress_pcluster+0x49b/0xba0
- ? __update_load_avg_se+0x2b0/0x330
- ? __update_load_avg_se+0x2b0/0x330
- ? update_load_avg+0x5f/0x690
- ? update_load_avg+0x5f/0x690
- ? set_next_entity+0xbd/0x110
- ? _raw_spin_unlock+0xd/0x20
- z_erofs_decompress_queue.isra.0+0x2e/0x50
- z_erofs_decompressqueue_work+0x30/0x60
- process_one_work+0x1d3/0x3a0
- worker_thread+0x45/0x3a0
- ? process_one_work+0x3a0/0x3a0
- kthread+0xe2/0x110
- ? kthread_complete_and_exit+0x20/0x20
- ret_from_fork+0x22/0x30
- </TASK>
-
-Signed-off-by: Yuwen Chen <chenyuwen1@meizu.com>
----
- fs/erofs/decompressor_lzma.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-index 05a3063cf2bc..5e59b3f523eb 100644
---- a/fs/erofs/decompressor_lzma.c
-+++ b/fs/erofs/decompressor_lzma.c
-@@ -143,6 +143,7 @@ int z_erofs_load_lzma_config(struct super_block *sb,
- 	DBG_BUGON(z_erofs_lzma_head);
- 	z_erofs_lzma_head = head;
- 	spin_unlock(&z_erofs_lzma_lock);
-+	wake_up_all(&z_erofs_lzma_wq);
- 
- 	z_erofs_lzma_max_dictsize = dict_size;
- 	mutex_unlock(&lzma_resize_mutex);
--- 
-2.25.1
-
+Thanks,
+Gao Xiang
