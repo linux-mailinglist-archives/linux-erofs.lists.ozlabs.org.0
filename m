@@ -1,56 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FBD655FEC5
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 13:39:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0CBA55FEC8
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 13:39:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LXzxx52qJz3c9Z
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 21:39:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LXzy26M06z3cCk
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 21:39:06 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1656502741;
-	bh=mr46B25ZUmI7GGQ5t6X0E3WzxzV6Pf3dl/rRvmfxgMo=;
+	s=201707; t=1656502746;
+	bh=7y0xdegoE/qvJXezDri4FFPx3jPOeWDAMQ91i07uFx8=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=LSfr0CijkeVEhkNb4GGsWWVSy3ZWvBDfeDmFUiYda43PzS0a7eNYD4CxfH4Mth21R
-	 vQSiVXmAV5hkeEGHinFsljDF6b9fzu9o2vLiCtbtcYdj7dsegFu0JTvSI+t/4HfnDE
-	 3az7QwL0MKXmMZpXKxYXOH5hXKorxtjBYZ6nU9OZA1LnLAg2Ep2Qij74b8U/atOoOY
-	 S9xAV1LT/8mpZd+wAivqUC50tHv36aWeT6FCLREh74C0Nv/rrnVxPJ0VsBN0Dd5T9p
-	 l9BEEG7EwTb2J1ybEZTZlzp+JcziciM27nR+IeeyS2uI104E8KhZB+oIsfU03ZYxlS
-	 ojHSByI6qIJCA==
+	b=MJfqFMggeG0ciF7GDxAGYkJlTGm76K6QQzVVwZQOIMV5hymXblIBVM9hEI3m2llKO
+	 Ta7SNqtcHH9FBYL+dk3Zxi2I8ESXDdc84Qnlt+wfHntaw417N9YbP8kcgWC4LFjXyH
+	 Emeglge+6shjqQONS+jWu+eyP9p490y7hqPNhLrXdZYoYqb9emcowjgOuG8iLIfOIh
+	 akfiBU6aOq4e9jLhyVvL+0M/8X3I9FDNcLfk12/mFiUOg11HIUVOj7kt4PnIlM1LQe
+	 YLs2wt0qOHhx34PnD0PICisYmEymeHtSxXci8X+dGwO1yiVCbJvpEQOQoY6Uxepro+
+	 Axn01fkUD22mQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.29; helo=smtp-out2.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=tL3h0ntz;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=qt5GL8bB;
 	dkim-atps=neutral
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LXzxq1l7Tz3c9Z
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Jun 2022 21:38:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LXzxs0tWTz3c9K
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Jun 2022 21:38:57 +1000 (AEST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EC9501F915;
-	Wed, 29 Jun 2022 11:38:51 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 944A71FE7B;
+	Wed, 29 Jun 2022 11:38:54 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AAF30133D1;
-	Wed, 29 Jun 2022 11:38:49 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 55AB2133D1;
+	Wed, 29 Jun 2022 11:38:52 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 0M6THck5vGLFPwAAMHmgww
-	(envelope-from <wqu@suse.com>); Wed, 29 Jun 2022 11:38:49 +0000
+	id yBu5CMw5vGLFPwAAMHmgww
+	(envelope-from <wqu@suse.com>); Wed, 29 Jun 2022 11:38:52 +0000
 To: u-boot@lists.denx.de
-Subject: [PATCH 1/8] fs: fat: unexport file_fat_read_at()
-Date: Wed, 29 Jun 2022 19:38:22 +0800
-Message-Id: <b28b8d554dd3d1fc6bed8fc7f5b9cb71e1880e38.1656502685.git.wqu@suse.com>
+Subject: [PATCH 2/8] fs: btrfs: fix a bug which no data get read if the length is not 0
+Date: Wed, 29 Jun 2022 19:38:23 +0800
+Message-Id: <0c873979cf1c277e7a3a46b8839014990ee1b874.1656502685.git.wqu@suse.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <cover.1656502685.git.wqu@suse.com>
 References: <cover.1656502685.git.wqu@suse.com>
@@ -73,42 +73,67 @@ Cc: trini@konsulko.com, jnhuang95@gmail.com, joaomarcos.costa@bootlin.com, marek
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-That function is only utilized inside fat driver, unexport it.
+[BUG]
+When testing with unaligned read, if a specific length is passed in,
+btrfs driver will read out nothing:
+
+ => load host 0 $kernel_addr_r 5k_file 0x1000 0
+ 0 bytes read in 0 ms
+
+But if no length is passed in, it works fine, even if we pass a non-zero
+length:
+
+ => load host 0 $kernel_addr_r 5k_file 0 0x1000
+ 1024 bytes read in 0 ms
+
+[CAUSE]
+In btrfs_read() if we have a larger size than our file, we will try to
+truncate it using the file size.
+
+However the real file size is not initialized if @len is not zero, thus
+we always truncate our length to 0, and cause the problem.
+
+[FIX]
+Fix it by just always do the file size check.
+
+In fact btrfs_size() always follow soft link, thus it will return the
+real file size correctly.
 
 Signed-off-by: Qu Wenruo <wqu@suse.com>
 ---
- fs/fat/fat.c  | 4 ++--
- include/fat.h | 2 --
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ fs/btrfs/btrfs.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/fs/fat/fat.c b/fs/fat/fat.c
-index df9ea2c028fc..dcceccbcee0a 100644
---- a/fs/fat/fat.c
-+++ b/fs/fat/fat.c
-@@ -1243,8 +1243,8 @@ out_free_itr:
- 	return ret;
- }
+diff --git a/fs/btrfs/btrfs.c b/fs/btrfs/btrfs.c
+index 741c6e20f533..9145727058d4 100644
+--- a/fs/btrfs/btrfs.c
++++ b/fs/btrfs/btrfs.c
+@@ -246,16 +246,17 @@ int btrfs_read(const char *file, void *buf, loff_t offset, loff_t len,
+ 		return -EINVAL;
+ 	}
  
--int file_fat_read_at(const char *filename, loff_t pos, void *buffer,
--		     loff_t maxsize, loff_t *actread)
-+static int file_fat_read_at(const char *filename, loff_t pos, void *buffer,
-+			    loff_t maxsize, loff_t *actread)
- {
- 	fsdata fsdata;
- 	fat_itr *itr;
-diff --git a/include/fat.h b/include/fat.h
-index bd8e450b33a3..a9756fb4cd1b 100644
---- a/include/fat.h
-+++ b/include/fat.h
-@@ -200,8 +200,6 @@ static inline u32 sect_to_clust(fsdata *fsdata, int sect)
- int file_fat_detectfs(void);
- int fat_exists(const char *filename);
- int fat_size(const char *filename, loff_t *size);
--int file_fat_read_at(const char *filename, loff_t pos, void *buffer,
--		     loff_t maxsize, loff_t *actread);
- int file_fat_read(const char *filename, void *buffer, int maxsize);
- int fat_set_blk_dev(struct blk_desc *rbdd, struct disk_partition *info);
- int fat_register_device(struct blk_desc *dev_desc, int part_no);
+-	if (!len) {
+-		ret = btrfs_size(file, &real_size);
+-		if (ret < 0) {
+-			error("Failed to get inode size: %s", file);
+-			return ret;
+-		}
+-		len = real_size;
++	ret = btrfs_size(file, &real_size);
++	if (ret < 0) {
++		error("Failed to get inode size: %s", file);
++		return ret;
+ 	}
+ 
+-	if (len > real_size - offset)
++	/*
++	 * If the length is 0 (meaning read the whole file) or the range is
++	 * beyond file size, truncate it to the end of the file.
++	 */
++	if (!len || len > real_size - offset)
+ 		len = real_size - offset;
+ 
+ 	ret = btrfs_file_read(root, ino, offset, len, buf);
 -- 
 2.36.1
 
