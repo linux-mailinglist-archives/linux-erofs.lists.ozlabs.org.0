@@ -1,61 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A9EA55FECE
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 13:39:28 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDCA456006D
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 14:53:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LXzyQ0mZLz3cds
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 21:39:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1656502766;
-	bh=L4I5I3S9ilY3spcPRnIUU/SDcsKs8TsClQWza9PwS9U=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=SvLUQHGQCMEDtvfGrpK5aDUyJXSBnQg85PlSzyoGWsJuJbwTHfnUrnnm295MXJ5cB
-	 SH7c+cffvNpypaO1e9rOnAtO6xCEtbcruKtAS18QTbhuvL53Cfhm0CnoojbOAkV/Qa
-	 f9daKKg7I0UeYZEq9C1O7yp1GCF4MMVRAQh9XXUhOHiliKRlkAI3DWOgPUl7Uve95F
-	 rWINpkY0bx6fuJ7qWIeosAqy+GrfE6LRSRziPPOcg7POlC39v++JtmbCbsySFnhdTo
-	 paUO/j0VJGXo5enl/9v2WjtOSuCH/EAxTnNGyapxp3XUkytUnrPOiK2iiR5gpAsiq2
-	 cDKqSIR/H5ALQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LY1cH2PQ0z3cdV
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Jun 2022 22:53:51 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=bjxYUzrN;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.28; helo=smtp-out1.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::f30; helo=mail-qv1-xf30.google.com; envelope-from=trini@konsulko.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=S4QD1C+s;
+	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=bjxYUzrN;
 	dkim-atps=neutral
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LXzy86CYnz3cgv
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Jun 2022 21:39:12 +1000 (AEST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 71B14220C7;
-	Wed, 29 Jun 2022 11:39:10 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 363D3133D1;
-	Wed, 29 Jun 2022 11:39:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id WN4YAdw5vGLFPwAAMHmgww
-	(envelope-from <wqu@suse.com>); Wed, 29 Jun 2022 11:39:08 +0000
-To: u-boot@lists.denx.de
-Subject: [PATCH 8/8] fs: erofs: add unaligned read range handling
-Date: Wed, 29 Jun 2022 19:38:29 +0800
-Message-Id: <f1f81773bf816717089d2ffde1ce673f5bb25e1e.1656502685.git.wqu@suse.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <cover.1656502685.git.wqu@suse.com>
-References: <cover.1656502685.git.wqu@suse.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LY1c90Ygtz30D8
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Jun 2022 22:53:42 +1000 (AEST)
+Received: by mail-qv1-xf30.google.com with SMTP id c1so24518456qvi.11
+        for <linux-erofs@lists.ozlabs.org>; Wed, 29 Jun 2022 05:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/4bff15D+nY/gHRlKW2uLNIt4hIWR6BwmCkO+OKY2JY=;
+        b=bjxYUzrN+ACXmAzWcgEKqpuWfySTW6JwiMhM9Tf622JeZxWQusqKkjNkjacADEGnt4
+         aM3LAyGKsi3S5AVB9AqHgzd1X/ad2ih2ksBATvBDhezpvMNX7tkRI8h6H2YJgU1Km6lq
+         kcW25hDLpvhTfCeXPxoZbbDB2jPWWpigcIKV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/4bff15D+nY/gHRlKW2uLNIt4hIWR6BwmCkO+OKY2JY=;
+        b=cf+etys8OQ6xCEX6Gi6B1j9302DiTlulhg7JoP3Aw3YGCE+9Wqdq2/jG82Y2ImVne4
+         cUqZTBkhlox0z/JYcwNaqeHvBQCO4Y6/nekF9f3wLtPlNdwZlndE6+os0NlJPK6k1Vvw
+         P4BYubZTJTi8a3qYpx06W+Gweboga7gCEyxEcS3BlU3waDJxCL+jKvlD0u8U1BXHjcYU
+         Yt21OF3gz1Vlr5UrWSP7Nw0puOaN+YYUGXlZywFNF3JGTtztElNau7ud0H9clOQiU4St
+         vP4u26WFnvKoWABR7WrUbJHBYt3zAYI6ofh7LuYF71oa4j3ZAz4p3UfyAgeymhBYv+nk
+         jUJg==
+X-Gm-Message-State: AJIora+2IoJeo+Fm+bnKk4YamrXPOg/eAGxXVVntf7++C0vPNVAN6Ruy
+	vMEXrXkCv3mZqHvjP/hQazyQeA==
+X-Google-Smtp-Source: AGRyM1v4wuMFHQhhOaVqEyWZEijAcwxUejvBWDUdHQeQBzSWPvdSO7BWNBpROZNlam4ucAkAL5fufw==
+X-Received: by 2002:a05:622a:354:b0:317:7a1d:ce4e with SMTP id r20-20020a05622a035400b003177a1dce4emr2244347qtw.419.1656507217043;
+        Wed, 29 Jun 2022 05:53:37 -0700 (PDT)
+Received: from bill-the-cat (cpe-65-184-195-139.ec.res.rr.com. [65.184.195.139])
+        by smtp.gmail.com with ESMTPSA id 196-20020a3704cd000000b006a6ae9150fesm12637186qke.41.2022.06.29.05.53.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 05:53:36 -0700 (PDT)
+Date: Wed, 29 Jun 2022 08:53:34 -0400
+From: Tom Rini <trini@konsulko.com>
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Subject: Re: [PATCH 0/8] u-boot: fs: add generic unaligned read handling
+Message-ID: <20220629125334.GC1146598@bill-the-cat>
+References: <cover.1656401086.git.wqu@suse.com>
+ <20220628141708.GJ1146598@bill-the-cat>
+ <8728cb97-6bb6-fae9-025b-42bd1a439386@gmx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hCRFYJKfs6IGypzU"
+Content-Disposition: inline
+In-Reply-To: <8728cb97-6bb6-fae9-025b-42bd1a439386@gmx.com>
+X-Clacks-Overhead: GNU Terry Pratchett
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,84 +77,119 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Qu Wenruo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Qu Wenruo <wqu@suse.com>
-Cc: trini@konsulko.com, jnhuang95@gmail.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: jnhuang95@gmail.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, u-boot@lists.denx.de, Qu Wenruo <wqu@suse.com>, thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-I'm not an expert on erofs, but my quick glance didn't expose any
-special handling on unaligned range, thus I think the U-boot erofs
-driver doesn't really support unaligned read range.
 
-This patch will add erofs_get_blocksize() so erofs can benefit from the
-generic unaligned read support.
+--hCRFYJKfs6IGypzU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Huang Jianan <jnhuang95@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org
-Signed-off-by: Qu Wenruo <wqu@suse.com>
----
- fs/erofs/internal.h | 1 +
- fs/erofs/super.c    | 6 ++++++
- fs/fs.c             | 2 +-
- include/erofs.h     | 1 +
- 4 files changed, 9 insertions(+), 1 deletion(-)
+On Wed, Jun 29, 2022 at 09:40:58AM +0800, Qu Wenruo wrote:
+>=20
+>=20
+> On 2022/6/28 22:17, Tom Rini wrote:
+> > On Tue, Jun 28, 2022 at 03:28:00PM +0800, Qu Wenruo wrote:
+> > > [BACKGROUND]
+> > > Unlike FUSE/Kernel which always pass aligned read range, U-boot fs co=
+de
+> > > just pass the request range to underlying fses.
+> > >=20
+> > > Under most case, this works fine, as U-boot only really needs to read
+> > > the whole file (aka, 0 for both offset and len, len will be later
+> > > determined using file size).
+> > >=20
+> > > But if some advanced user/script wants to extract kernel/initramfs fr=
+om
+> > > combined image, we may need to do unaligned read in that case.
+> > >=20
+> > > [ADVANTAGE]
+> > > This patchset will handle unaligned read range in _fs_read():
+> > >=20
+> > > - Get blocksize of the underlying fs
+> > >=20
+> > > - Read the leading block contianing the unaligned range
+> > >    The full block will be stored in a local buffer, then only copy
+> > >    the bytes in the unaligned range into the destination buffer.
+> > >=20
+> > >    If the first block covers the whole range, we just call it aday.
+> > >=20
+> > > - Read the aligned range if there is any
+> > >=20
+> > > - Read the tailing block containing the unaligned range
+> > >    And copy the covered range into the destination.
+> > >=20
+> > > [DISADVANTAGE]
+> > > There are mainly two problems:
+> > >=20
+> > > - Extra memory allocation for every _fs_read() call
+> > >    For the leading and tailing block.
+> > >=20
+> > > - Extra path resolving
+> > >    All those supported fs will have to do extra path resolving up to 2
+> > >    times (one for the leading block, one for the tailing block).
+> > >    This may slow down the read.
+> >=20
+> > This conceptually seems like a good thing.  Can you please post some
+> > before/after times of reading large images from the supported
+> > filesystems?
+> >=20
+>=20
+> One thing to mention is, this change doesn't really bother large file rea=
+d.
+>=20
+> As the patchset is splitting a large read into 3 parts:
+>=20
+> 1) Leading block
+> 2) Aligned blocks, aka the main part of a large file
+> 3) Tailing block
+>=20
+> Most time should still be spent on part 2), not much different than the
+> old code. Part 1) and Part 3) are at most 2 blocks (aka, 2 * 4KiB for
+> most modern large enough fses).
+>=20
+> So I doubt it would make any difference for large file read.
+>=20
+>=20
+> Furthermore, as pointed out by Huang Jianan, currently the patchset can
+> not handle read on soft link correctly, thus I'd update the series to do
+> the split into even less parts:
+>=20
+> 1) Leading block
+>    For the unaligned initial block
+>=20
+> 2) Aligned blocks until the end
+>    The tailing block should still starts at a block aligned position,
+>    thus most filesystems is already handling them correctly.
+>    (Just a min(end, blockend) is enough for most cases already).
+>=20
+> Anyway, I'll try to craft some benchmarking for file reads using sandbox.
+> But please don't expect much (or any) difference in that case.
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 4af7c91560cc..d368a6481bf1 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -83,6 +83,7 @@ struct erofs_sb_info {
- 	u16 available_compr_algs;
- 	u16 lz4_max_distance;
- 	u32 checksum;
-+	u32 blocksize;
- 	u16 extra_devices;
- 	union {
- 		u16 devt_slotoff;		/* used for mkfs */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 4cca322b9ead..df01d2e719a7 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -99,7 +99,13 @@ int erofs_read_superblock(void)
- 
- 	sbi.build_time = le64_to_cpu(dsb->build_time);
- 	sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
-+	sbi.blocksize = 1 << blkszbits;
- 
- 	memcpy(&sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
- 	return erofs_init_devices(&sbi, dsb);
- }
-+
-+int erofs_get_blocksize(const char *filename)
-+{
-+	return sbi.blocksize;
-+}
-diff --git a/fs/fs.c b/fs/fs.c
-index 61bae1051406..e92174d89c28 100644
---- a/fs/fs.c
-+++ b/fs/fs.c
-@@ -375,7 +375,7 @@ static struct fstype_info fstypes[] = {
- 		.readdir = erofs_readdir,
- 		.ls = fs_ls_generic,
- 		.read = erofs_read,
--		.get_blocksize = fs_get_blocksize_unsupported,
-+		.get_blocksize = erofs_get_blocksize,
- 		.size = erofs_size,
- 		.close = erofs_close,
- 		.closedir = erofs_closedir,
-diff --git a/include/erofs.h b/include/erofs.h
-index 1fbe82bf72cb..18bd6807c538 100644
---- a/include/erofs.h
-+++ b/include/erofs.h
-@@ -10,6 +10,7 @@ int erofs_probe(struct blk_desc *fs_dev_desc,
- 		struct disk_partition *fs_partition);
- int erofs_read(const char *filename, void *buf, loff_t offset,
- 	       loff_t len, loff_t *actread);
-+int erofs_get_blocksize(const char *filename);
- int erofs_size(const char *filename, loff_t *size);
- int erofs_exists(const char *filename);
- void erofs_close(void);
--- 
-2.36.1
+The rework sounds good.  And doing it without any real impact to
+performance either way is good.
 
+--=20
+Tom
+
+--hCRFYJKfs6IGypzU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmK8S00ACgkQFHw5/5Y0
+tyyL7gv/RsMcVnrx02hMQxtQG4UuktxMz9gftbRFDC6xJrV5olnwzqgRXOxT1I3c
+Yeabw66LR0XBog1E5UDnGIw/aDwahB5Zv74EHl912Y42PHSRSvV1ILacCih+tyW7
+YgzHCnikt6Dp0D6yd9KK+RUxGfCGrD2izWjrpBhKJJkSOAXVMwdTxZyDkf67/Pjq
+CCQ4Lc35o45BwBB9bZ1NIQl6FQQ/pXxHADu5Ttnk2ZaHycF07UYsCddvkqD2+kjC
+Ta+LLKXGT10FwFEGJwAInRk8oY9xre0wuTbDtMUzGRJry7If65si9KRTWoiQ5Ffq
+3zwKTQqr6rL0hvVRDvGdWbTGICd86eANHdkJhRl1ZO5XrsouyZGgH6KB1XPgHk0O
+hwANXxtXOnI2sYLN7vCe2zfkOlr+iz5Bx+a7Up/hbrXlhA8YRNba+i1036edcHmg
+hhpzbSu4nCJRJVuKakQpg5LSUx5PvCfr7RVp6FHVXf8bdtj1AkrQZnp73DrzJOmK
+PrVMFS+t
+=W9My
+-----END PGP SIGNATURE-----
+
+--hCRFYJKfs6IGypzU--
