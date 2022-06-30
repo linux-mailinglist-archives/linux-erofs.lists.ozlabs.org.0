@@ -2,72 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 357B9561A38
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 Jun 2022 14:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E281F562108
+	for <lists+linux-erofs@lfdr.de>; Thu, 30 Jun 2022 19:15:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LYcrs0hz0z3ch9
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 Jun 2022 22:21:49 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=AwQWGTsm;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LYlMH15SXz3cgy
+	for <lists+linux-erofs@lfdr.de>; Fri,  1 Jul 2022 03:15:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1656609307;
+	bh=OJK5Aq3wptvvi2FaL91ME/MM/CFSh3CnjuRQVgbcuhQ=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=Ja4JWW1Jx6Ttxy01OOtvJxUxxtlugaJewZbXLBySfN33wyEWl/zCo4auDvZAB56H5
+	 vUdBpp0OOTzm1cQz0G2E0PA3t52ZK80F2MoCpUvJoh7tupvTl/KPDQE03jRrePPq13
+	 KpCtwz6te/LonwNMg8lex7I5CnjL8myPv4NC8biiKnxaTB+kDBzMnhJ39+Ta2A2gI3
+	 7liG1H683Cz4YS3FD1xWuSFLvKXHfolHnMyioeuU9AFGG8n+I5/Y9RUyl5ZYdcnkfY
+	 lsEBgNhR3FHouFqpwZSWRtnDPHq/wkWNslmp1HSnkzNkdwXAgfYHHvDhxn9t9LqHhH
+	 Gu+F7/WEh8d9Q==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=jnhuang95@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--zhangkelvin.bounces.google.com (client-ip=2607:f8b0:4864:20::b49; helo=mail-yb1-xb49.google.com; envelope-from=3ddq9ygskc9qp70d6a4bl8d6ee6b4.2ecb8dkn-4he5ib8iji.epb01i.eh6@flex--zhangkelvin.bounces.google.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=AwQWGTsm;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20210112 header.b=UvTiCKlh;
 	dkim-atps=neutral
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LYcrj1GMlz2ypH
-	for <linux-erofs@lists.ozlabs.org>; Thu, 30 Jun 2022 22:21:38 +1000 (AEST)
-Received: by mail-pj1-x1034.google.com with SMTP id c6-20020a17090abf0600b001eee794a478so2847319pjs.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 30 Jun 2022 05:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:to:cc:references
-         :from:in-reply-to:content-transfer-encoding;
-        bh=lbYoREvmzql9lYj8aM58YAT4aurGaSf+5cLoACdtQTo=;
-        b=AwQWGTsm0Vh3YYS6d/tE0fktE8C+ieT3zwVRsV32gyT67P/2L1YHz0MqSFiyyXQtqv
-         A6SWL+btCsqV/1cmgqY9cMX02Uy4eukN7ryVwQSuaIX3oZSBSvxTHpJ45uA3F+SaAaaL
-         pxkOHFb1n/GcZ764bZpjYSRHoAfvicqCyM1cQwTwgef9m1EewGfv0UIY2tmnJZa7QRLG
-         k1AlzaRd/yn1AV8SzgAIolxs4vpOVPhRn4kgCns0jdHyj2PK9ZK7JaQQT0lDHMfr54b+
-         RPU0OtDEL/v4x+2kXHmfYWBgWMVA6nosuEkGDpW4/DUGyBwJrDpa/askj5p44DIx/NnJ
-         LjRg==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LYlM75bWTz3bnd
+	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Jul 2022 03:14:57 +1000 (AEST)
+Received: by mail-yb1-xb49.google.com with SMTP id s194-20020a252ccb000000b00669b5702413so17150716ybs.22
+        for <linux-erofs@lists.ozlabs.org>; Thu, 30 Jun 2022 10:14:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=lbYoREvmzql9lYj8aM58YAT4aurGaSf+5cLoACdtQTo=;
-        b=lvuoo4eD2TSZ40YwVDBRzp/oP6UCaOUzu5lyKubbhBIzEL4q4o2G/U26983wYd/H5y
-         L3n5ovE0tqaJNpjvxqxUEU2oP9vVfXvy/HpAGqdUHupPmeUT8UqFreQQ1AvLfQp+FKV7
-         /SJQc8KCYHyURqDWEI8uMy6wLruJ5G/34DaiVpYqgZh7cuqyJiC8P8u4ECKX8ULOVJ/z
-         c8ieTDh5bXWDgvUn3/Xr21GjdbaB5IN+s0xZ9DN0w+h61yA/iDX3eFAJBqBKXT4kYtgg
-         UcNv+vvvbRsIGcDu+hijBGcBsQCtOIDMVHbmlVOVImo238vbtgyw6ruJ3DTipw6TlSFS
-         AHGA==
-X-Gm-Message-State: AJIora+tpyr8KqTXt+77MSc//kPmbnkNR5DpWZENMpbgee6Y1VStWI0G
-	htvgPU3SiH+zkTpizm5DHMM=
-X-Google-Smtp-Source: AGRyM1teyPzDASWD2AOc8A5z5MCL2FmhumEw4bgn4mZq0g242lrPVc0u/uaIgEqI+fZpma4tgUrp7Q==
-X-Received: by 2002:a17:90b:3b41:b0:1ed:25b1:e53a with SMTP id ot1-20020a17090b3b4100b001ed25b1e53amr12175390pjb.71.1656591695860;
-        Thu, 30 Jun 2022 05:21:35 -0700 (PDT)
-Received: from [192.168.50.25] ([150.107.0.182])
-        by smtp.gmail.com with ESMTPSA id c22-20020a170902b69600b0016b82943821sm7607851pls.73.2022.06.30.05.21.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jun 2022 05:21:35 -0700 (PDT)
-Message-ID: <fe4a2475-f8c3-8e66-82db-7ee20922713f@gmail.com>
-Date: Thu, 30 Jun 2022 20:21:26 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 8/8] fs: erofs: add unaligned read range handling
-To: Qu Wenruo <wqu@suse.com>, u-boot@lists.denx.de
-References: <cover.1656502685.git.wqu@suse.com>
- <f1f81773bf816717089d2ffde1ce673f5bb25e1e.1656502685.git.wqu@suse.com>
-From: Huang Jianan <jnhuang95@gmail.com>
-In-Reply-To: <f1f81773bf816717089d2ffde1ce673f5bb25e1e.1656502685.git.wqu@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=OJK5Aq3wptvvi2FaL91ME/MM/CFSh3CnjuRQVgbcuhQ=;
+        b=FnF6y+cKrjlL2M/sFLqOjGV/76xvsgySppaSzCsP43Wcu21ubB2ZuU91Z+3LL+fzvy
+         CTj4RuAxDwF/X6DDK1pkEnhQFZpd3PaC8d5fc2Gja8RMcKC1fWePRw2tZzwx5uh91Xji
+         ZS9ejqDXUzcCtRTt0fzTT6yu4te+myf+ZGLLufkim62nfyzigLxiqjz0LUUW3lbs9e7I
+         EIUg2qwj3x+TIbg8KTMB7xoZRxwU+zNHvI2AkcdPZlCM52R0enQr45oLOKy3Wj8OfaG7
+         AXbOhAlcYqucYmM2ltb2PlIiMqVE3mYX8S15D7ZaqRuNbFpnCmoWDA7pzAO4BRRAI9vt
+         hNBg==
+X-Gm-Message-State: AJIora9LHXk2MzAba7RIeC1BAcOMTTc0sy6QJgbCqf/dyGCHnGNOLQ26
+	C1aLvSxLhLaOcXnCf36IDgKv/aNSxNe57Ri1geqonmFPIGWZxwHCqImgueQxymC+gqryxGp+Ash
+	ea77+qR9TQVyPi/oSV29PmLnbS+P9mEMh3rr/1D3T+iaFkU6AhFTNBpoGS+rhsMlr7qyt1baTbD
+	zEARU7sMs=
+X-Google-Smtp-Source: AGRyM1tBf9cqbzar1lrIXSqtqqqb1yegOssw1PbwA+i7XeKbNcrHitiTedUnQuewuSEVmP8eK0mQzsd7Tt1SZBtY4Q==
+X-Received: from zhangkelvin-big.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:1f4a])
+ (user=zhangkelvin job=sendgmr) by 2002:a05:6902:a:b0:65c:b38e:6d9f with SMTP
+ id l10-20020a056902000a00b0065cb38e6d9fmr11190423ybh.36.1656609293146; Thu,
+ 30 Jun 2022 10:14:53 -0700 (PDT)
+Date: Thu, 30 Jun 2022 10:14:42 -0700
+Message-Id: <20220630171442.3945056-1-zhangkelvin@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v1] Make --mount-point option generally available
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>, 
+	Fang Wei <fangwei1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,88 +70,95 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: trini@konsulko.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Kelvin Zhang <zhangkelvin@google.com>
+Cc: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This option does not have any android specific dependencies. It is also
+useful for all selinux enabled fs images, so move it out of android
+specific feature sets.
 
+Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
+---
+ include/erofs/config.h | 2 +-
+ lib/xattr.c            | 2 --
+ mkfs/main.c            | 6 +++---
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
-在 2022/6/29 19:38, Qu Wenruo 写道:
-> I'm not an expert on erofs, but my quick glance didn't expose any
-> special handling on unaligned range, thus I think the U-boot erofs
-> driver doesn't really support unaligned read range.
-> 
-> This patch will add erofs_get_blocksize() so erofs can benefit from the
-> generic unaligned read support.
-> 
-> Cc: Huang Jianan <jnhuang95@gmail.com>
-> Cc: linux-erofs@lists.ozlabs.org
-> Signed-off-by: Qu Wenruo <wqu@suse.com>
-Looks good to me,
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 0a1b18b..030054b 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -65,8 +65,8 @@ struct erofs_configure {
+ 	u32 c_dict_size;
+ 	u64 c_unix_timestamp;
+ 	u32 c_uid, c_gid;
++	const char *mount_point;
+ #ifdef WITH_ANDROID
+-	char *mount_point;
+ 	char *target_out_path;
+ 	char *fs_config_file;
+ 	char *block_list_file;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 00fb963..cf5c447 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -210,12 +210,10 @@ static struct xattr_item *erofs_get_selabel_xattr(const char *srcpath,
+ 		unsigned int len[2];
+ 		char *kvbuf, *fspath;
+ 
+-#ifdef WITH_ANDROID
+ 		if (cfg.mount_point)
+ 			ret = asprintf(&fspath, "/%s/%s", cfg.mount_point,
+ 				       erofs_fspath(srcpath));
+ 		else
+-#endif
+ 			ret = asprintf(&fspath, "/%s", erofs_fspath(srcpath));
+ 		if (ret <= 0)
+ 			return ERR_PTR(-ENOMEM);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index b62a8aa..879c2f2 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -50,8 +50,8 @@ static struct option long_options[] = {
+ 	{"quiet", no_argument, 0, 12},
+ 	{"blobdev", required_argument, NULL, 13},
+ 	{"ignore-mtime", no_argument, NULL, 14},
+-#ifdef WITH_ANDROID
+ 	{"mount-point", required_argument, NULL, 512},
++#ifdef WITH_ANDROID
+ 	{"product-out", required_argument, NULL, 513},
+ 	{"fs-config-file", required_argument, NULL, 514},
+ 	{"block-list-file", required_argument, NULL, 515},
+@@ -103,9 +103,9 @@ static void usage(void)
+ #ifndef NDEBUG
+ 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
+ #endif
++	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
+ #ifdef WITH_ANDROID
+ 	      "\nwith following android-specific options:\n"
+-	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
+ 	      " --product-out=X       X=product_out directory\n"
+ 	      " --fs-config-file=X    X=fs_config file\n"
+ 	      " --block-list-file=X   X=block_list file\n"
+@@ -314,7 +314,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		case 10:
+ 			cfg.c_compress_hints_file = optarg;
+ 			break;
+-#ifdef WITH_ANDROID
+ 		case 512:
+ 			cfg.mount_point = optarg;
+ 			/* all trailing '/' should be deleted */
+@@ -322,6 +321,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			if (opt && optarg[opt - 1] == '/')
+ 				optarg[opt - 1] = '\0';
+ 			break;
++#ifdef WITH_ANDROID
+ 		case 513:
+ 			cfg.target_out_path = optarg;
+ 			break;
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
 
-Reviewed-by: Huang Jianan <jnhuang95@gmail.com>
-
-Thanks,
-Jianan
-> ---
->   fs/erofs/internal.h | 1 +
->   fs/erofs/super.c    | 6 ++++++
->   fs/fs.c             | 2 +-
->   include/erofs.h     | 1 +
->   4 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 4af7c91560cc..d368a6481bf1 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -83,6 +83,7 @@ struct erofs_sb_info {
->   	u16 available_compr_algs;
->   	u16 lz4_max_distance;
->   	u32 checksum;
-> +	u32 blocksize;
->   	u16 extra_devices;
->   	union {
->   		u16 devt_slotoff;		/* used for mkfs */
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 4cca322b9ead..df01d2e719a7 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -99,7 +99,13 @@ int erofs_read_superblock(void)
->   
->   	sbi.build_time = le64_to_cpu(dsb->build_time);
->   	sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
-> +	sbi.blocksize = 1 << blkszbits;
->   
->   	memcpy(&sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
->   	return erofs_init_devices(&sbi, dsb);
->   }
-> +
-> +int erofs_get_blocksize(const char *filename)
-> +{
-> +	return sbi.blocksize;
-> +}
-> diff --git a/fs/fs.c b/fs/fs.c
-> index 61bae1051406..e92174d89c28 100644
-> --- a/fs/fs.c
-> +++ b/fs/fs.c
-> @@ -375,7 +375,7 @@ static struct fstype_info fstypes[] = {
->   		.readdir = erofs_readdir,
->   		.ls = fs_ls_generic,
->   		.read = erofs_read,
-> -		.get_blocksize = fs_get_blocksize_unsupported,
-> +		.get_blocksize = erofs_get_blocksize,
->   		.size = erofs_size,
->   		.close = erofs_close,
->   		.closedir = erofs_closedir,
-> diff --git a/include/erofs.h b/include/erofs.h
-> index 1fbe82bf72cb..18bd6807c538 100644
-> --- a/include/erofs.h
-> +++ b/include/erofs.h
-> @@ -10,6 +10,7 @@ int erofs_probe(struct blk_desc *fs_dev_desc,
->   		struct disk_partition *fs_partition);
->   int erofs_read(const char *filename, void *buf, loff_t offset,
->   	       loff_t len, loff_t *actread);
-> +int erofs_get_blocksize(const char *filename);
->   int erofs_size(const char *filename, loff_t *size);
->   int erofs_exists(const char *filename);
->   void erofs_close(void);
