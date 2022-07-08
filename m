@@ -1,67 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E22E56BAE9
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Jul 2022 15:35:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B87856C17D
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Jul 2022 23:32:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LfZ5d0nggz3c4k
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Jul 2022 23:35:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lfmj14nRgz3c6N
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Jul 2022 07:32:53 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YgyDGTd7;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=anamf6ZR;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=anamf6ZR;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::633; helo=mail-ej1-x633.google.com; envelope-from=duguoweisz@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YgyDGTd7;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=anamf6ZR;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=anamf6ZR;
 	dkim-atps=neutral
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LfZ5Z2Zz5z3c1y
-	for <linux-erofs@lists.ozlabs.org>; Fri,  8 Jul 2022 23:34:56 +1000 (AEST)
-Received: by mail-ej1-x633.google.com with SMTP id u12so37714626eja.8
-        for <linux-erofs@lists.ozlabs.org>; Fri, 08 Jul 2022 06:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9FETep9Ek9gSiul8WKfcdviH+3UDvrrt6pdD1gpIrAc=;
-        b=YgyDGTd7xjbiXv1wiZxzNSF6gv2w3B/kLv4Z0helVPUR/S6wK4wCFhcXw4FudJ627i
-         4iCvMvkKLHqiRMPRVcpNY0+nyCaVH2nN2eMB16loNKFHOYreD+0bkhMqZoJJ9Qsud5qd
-         3SS+RrnzOXlgSFDyQJPw3Resq8kWcfSnNwutraXuKk9BpjVerY5Oyjnnu0vM2ZkIRNPM
-         75qhNgarRvKlIqchLun/2U547GnjvPfo2uUDyugEjY+edsFmv/CNIrecKmpiqYhr5VK3
-         AI0wG98zg0y+EjWiLNYIsTZT8z3YSdz/ZlZcsoapZircyiZ9y5cBZokmmkKKnMq+BDHC
-         eatQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9FETep9Ek9gSiul8WKfcdviH+3UDvrrt6pdD1gpIrAc=;
-        b=bDb6dJWnG4FcOwdC5GXaGAW0TXHfP+elHIMS7akYt2DIYC1xI1JNjz5b6z1rNyjCqo
-         dWwjOOAIphW/6c/xQ3divBh4hwIUPcGuSDsXcpdbLAQP3GkXWVRbKEaWglWRQxSSGsgn
-         aGpG7fYULBnXri2C+VYaPzzFgK4Fcwe1ZjJVaHMcTk7QoycQM15ZHk3XfGRIR3oQSujg
-         tB86dbJfPMfZZxjq8vNjp2MsRHltt+qEhe7w8bw5145SSPGwuqZ6B14A3qe1YCf7vuVf
-         e9X3/9XiVeBfpl9G2+uHSt/P5/dWAo2CDUnBPhXLCRY8C25+PZc0sMp1AwYOSMQAzZms
-         z3OA==
-X-Gm-Message-State: AJIora/cYpPJuVeM8mKEC20uyzfzvJZYuMhrqA43dXLSD2/A0+Q+CieS
-	uEj5EcJu9TsqVdnT4NUbgEXIbfb00omhLBJFWjQ=
-X-Google-Smtp-Source: AGRyM1tQiW6X/36irQZ4K4HFTGCbKrfeZFc5mhj5cjun8A3IGHnQ+WBrPkqBClvjR+NEJ6CUy9EDbSLUGgKm+pkTevc=
-X-Received: by 2002:a17:907:7202:b0:722:e4d6:2e17 with SMTP id
- dr2-20020a170907720200b00722e4d62e17mr3660455ejc.434.1657287289238; Fri, 08
- Jul 2022 06:34:49 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lfmht1zGwz2xXw
+	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Jul 2022 07:32:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1657315959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cLD6V0BQa36edMLgHMFHkOTrNlZhNZjBOzy1qNyvvuU=;
+	b=anamf6ZRW1lcFDePVS+1ccNveMqC5l+ZbzcBGxpF5yq6BR7NJivyv2hSSL8//S+/2tEPxy
+	kJtX/zUySLhXvJJvvv1fceEY2frpKZwLQuKC0Mz8w6TfgiLFWxn7WsAHJEk3HOS7sgm78w
+	Zpl+869aR+PiLWhLXTpIF+iJscHn5zU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1657315959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cLD6V0BQa36edMLgHMFHkOTrNlZhNZjBOzy1qNyvvuU=;
+	b=anamf6ZRW1lcFDePVS+1ccNveMqC5l+ZbzcBGxpF5yq6BR7NJivyv2hSSL8//S+/2tEPxy
+	kJtX/zUySLhXvJJvvv1fceEY2frpKZwLQuKC0Mz8w6TfgiLFWxn7WsAHJEk3HOS7sgm78w
+	Zpl+869aR+PiLWhLXTpIF+iJscHn5zU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-527-L1s-bVZRNh23PIdMI0BY5w-1; Fri, 08 Jul 2022 17:32:36 -0400
+X-MC-Unique: L1s-bVZRNh23PIdMI0BY5w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CECC1C05132;
+	Fri,  8 Jul 2022 21:32:35 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1E1C540D282E;
+	Fri,  8 Jul 2022 21:32:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: torvalds@linux-foundation.org
+Subject: [GIT PULL] fscache: Miscellaneous fixes
 MIME-Version: 1.0
-References: <20220708031155.21878-1-duguoweisz@gmail.com> <YsejnaY7cy3SeHBF@B-P7TQMD6M-0146.local>
- <CAC+1NxvifeHmrerWUqhC-gCUk11vudLVc=o=Hnr5EwYJv+N0ZA@mail.gmail.com> <YsfDm5q9wIyewtWR@B-P7TQMD6M-0146.local>
-In-Reply-To: <YsfDm5q9wIyewtWR@B-P7TQMD6M-0146.local>
-From: guowei du <duguoweisz@gmail.com>
-Date: Fri, 8 Jul 2022 21:34:38 +0800
-Message-ID: <CAC+1Nxt_UL_0rSdEfJCaKKan1sA5aYrN1ev9pyUGF4VXPxRkJw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] erofs: sequence each shrink task
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Content-Type: multipart/alternative; boundary="0000000000002a788e05e34b44c5"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3753786.1657315951.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 08 Jul 2022 22:32:31 +0100
+Message-ID: <3753787.1657315951@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -73,166 +79,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel <linux-kernel@vger.kernel.org>, duguowei <duguowei@xiaomi.com>
+Cc: linux-cachefs@redhat.com, Max Kellermann <mk@cm4all.com>, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, Yue Hu <huyue2@coolpad.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---0000000000002a788e05e34b44c5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Got it.
+Could you pull these fscache/cachefiles fixes please?
 
-Thanks very much.
+ (1) Fix a check in fscache_wait_on_volume_collision() in which the
+     polarity is reversed.  It should complain if a volume is still marked
+     acquisition-pending after 20s, but instead complains if the mark has
+     been cleared (ie. the condition has cleared).
 
-On Fri, Jul 8, 2022 at 1:41 PM Gao Xiang <hsiangkao@linux.alibaba.com>
-wrote:
+     Also switch an open-coded test of the ACQUIRE_PENDING volume flag to
+     use the helper function for consistency.
 
-> Hi,
->
-> On Fri, Jul 08, 2022 at 12:49:07PM +0800, guowei du wrote:
-> > hi,
-> > I am sorry=EF=BC=8Cthere is only one patch.
-> >
-> > If two or more tasks are doing a shrinking job, there are different
-> results
-> > for each task.
-> > That is to say, the status of each task is not persistent each time,
-> > although they have
-> > the same purpose to release memory.
-> >
-> > And, If two tasks are shrinking, the erofs_sb_list will become no order=
-,
-> > because each task will
-> > move one sbi to tail, but sbi is random, so results are more complex.
->
-> Thanks for the explanation. So it doesn't sound like a real issue but see=
-ms
-> like an improvement? If it's more like this, you could patch this to the
-> products first and beta for more time and see if it works well.. I'm
-> more careful about such change to shrinker since it could impact
-> downstream users...
->
-> Yes, I know this behavior, but I'm not sure if it's needed to be treated
-> as this way, because in principle shrinker can be processed by multiple
-> tasks since otherwise it could be stuck by some low priority task (I
-> remember it sometimes happens in Android.)
->
-> >
-> > Because of the use of the local variable 'run_no', it took me a long ti=
-me
-> > to understand the
-> > procedure of each task when they are concurrent.
-> >
-> > There is the same issue for other fs, such as
-> > fs/ubifs/shrink.c=E3=80=81fs/f2fs/shrink.c.
-> >
-> > If scan_objects cost a long time ,it will trigger a watchdog, shrinking
-> > should
-> > not make work time-consuming. It should be done ASAP.
-> > So, I add a new spin lock to let tasks shrink fs sequentially, it will
-> just
-> > make all tasks shrink
-> > one by one.
->
-> Actually such shrinker is used for managed slots (sorry I needs more
-> work to rename workgroup to such name). But currently one of my ongoing
-> improvements is to remove pclusters immediately from managed slots if
-> no compressed buffer is cached, so it's used for inflight I/Os (to merge
-> decompression requests, including ongoing deduplication requests) and
-> cached I/O only.  So in that way objects will be more fewer than now.
->
-> >
-> >
-> > Thanks very much.
->
-> Thank you.
->
-> Thanks,
-> Gao Xiang
->
->
+ (2) Not a fix per se, but neaten the code by using a helper to check for
+     the DROPPED state.
 
---0000000000002a788e05e34b44c5
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ (3) Fix cachefiles's support for erofs to only flush requests associated
+     with a released control file, not all requests.
 
-<div dir=3D"ltr">Got it.=C2=A0<br><div><br></div><div>Thanks very much.</di=
-v></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr=
-">On Fri, Jul 8, 2022 at 1:41 PM Gao Xiang &lt;<a href=3D"mailto:hsiangkao@=
-linux.alibaba.com">hsiangkao@linux.alibaba.com</a>&gt; wrote:<br></div><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">Hi,<br>
-<br>
-On Fri, Jul 08, 2022 at 12:49:07PM +0800, guowei du wrote:<br>
-&gt; hi,<br>
-&gt; I am sorry=EF=BC=8Cthere is only one patch.<br>
-&gt; <br>
-&gt; If two or more tasks are doing a shrinking job, there are different re=
-sults<br>
-&gt; for each task.<br>
-&gt; That is to say, the status of each task is not persistent each time,<b=
-r>
-&gt; although they have<br>
-&gt; the same purpose to release memory.<br>
-&gt; <br>
-&gt; And, If two tasks are shrinking, the erofs_sb_list will become no orde=
-r,<br>
-&gt; because each task will<br>
-&gt; move one sbi to tail, but sbi is random, so results are more complex.<=
-br>
-<br>
-Thanks for the explanation. So it doesn&#39;t sound like a real issue but s=
-eems<br>
-like an improvement? If it&#39;s more like this, you could patch this to th=
-e<br>
-products first and beta for more time and see if it works well.. I&#39;m<br=
->
-more careful about such change to shrinker since it could impact<br>
-downstream users...<br>
-<br>
-Yes, I know this behavior, but I&#39;m not sure if it&#39;s needed to be tr=
-eated<br>
-as this way, because in principle shrinker can be processed by multiple<br>
-tasks since otherwise it could be stuck by some low priority task (I<br>
-remember it sometimes happens in Android.)<br>
-<br>
-&gt; <br>
-&gt; Because of the use of the local variable &#39;run_no&#39;, it took me =
-a long time<br>
-&gt; to understand the<br>
-&gt; procedure of each task when they are concurrent.<br>
-&gt; <br>
-&gt; There is the same issue for other fs, such as<br>
-&gt; fs/ubifs/shrink.c=E3=80=81fs/f2fs/shrink.c.<br>
-&gt; <br>
-&gt; If scan_objects cost a long time ,it will trigger a watchdog, shrinkin=
-g<br>
-&gt; should<br>
-&gt; not make work time-consuming. It should be done ASAP.<br>
-&gt; So, I add a new spin lock to let tasks shrink fs sequentially, it will=
- just<br>
-&gt; make all tasks shrink<br>
-&gt; one by one.<br>
-<br>
-Actually such shrinker is used for managed slots (sorry I needs more<br>
-work to rename workgroup to such name). But currently one of my ongoing<br>
-improvements is to remove pclusters immediately from managed slots if<br>
-no compressed buffer is cached, so it&#39;s used for inflight I/Os (to merg=
-e<br>
-decompression requests, including ongoing deduplication requests) and<br>
-cached I/O only.=C2=A0 So in that way objects will be more fewer than now.<=
-br>
-<br>
-&gt; <br>
-&gt; <br>
-&gt; Thanks very much.<br>
-<br>
-Thank you.<br>
-<br>
-Thanks,<br>
-Gao Xiang<br>
-<br>
-</blockquote></div>
+ (4) Fix a race between one process invalidating an object in the cache an=
+d
+     another process trying to look it up.
 
---0000000000002a788e05e34b44c5--
+Thanks,
+David
+---
+The following changes since commit 03c765b0e3b4cb5063276b086c76f7a612856a9=
+a:
+
+  Linux 5.19-rc4 (2022-06-26 14:22:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/fscache-fixes-20220708
+
+for you to fetch changes up to 85e4ea1049c70fb99de5c6057e835d151fb647da:
+
+  fscache: Fix invalidation/lookup race (2022-07-05 16:12:55 +0100)
+
+----------------------------------------------------------------
+fscache fixes
+
+----------------------------------------------------------------
+David Howells (1):
+      fscache: Fix invalidation/lookup race
+
+Jia Zhu (1):
+      cachefiles: narrow the scope of flushed requests when releasing fd
+
+Yue Hu (2):
+      fscache: Fix if condition in fscache_wait_on_volume_collision()
+      fscache: Introduce fscache_cookie_is_dropped()
+
+ fs/cachefiles/ondemand.c |  3 ++-
+ fs/fscache/cookie.c      | 26 ++++++++++++++++++++++----
+ fs/fscache/volume.c      |  4 ++--
+ include/linux/fscache.h  |  1 +
+ 4 files changed, 27 insertions(+), 7 deletions(-)
+
