@@ -1,47 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2067E56F95F
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 10:55:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3999056F9E7
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 11:10:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LhHlp6KwQz3by9
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 18:55:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LhJ5B23RYz3c00
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 19:10:38 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Ev5wMINI;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=54.92.39.34; helo=smtpbgjp3.qq.com; envelope-from=lihe@uniontech.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 22049 seconds by postgrey-1.36 at boromir; Mon, 11 Jul 2022 18:55:26 AEST
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52a; helo=mail-pg1-x52a.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Ev5wMINI;
+	dkim-atps=neutral
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LhHlf5H8yz3btW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 18:55:10 +1000 (AEST)
-X-QQ-mid: bizesmtp89t1657529700tg6rrjsa
-Received: from localhost.localdomain ( [61.183.83.60])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 11 Jul 2022 16:54:59 +0800 (CST)
-X-QQ-SSF: 01400000002000P0W000000A0000000
-X-QQ-FEAT: WBSeGZ0pNqgivPkuyp7eKK+k0GtARSH1Z5en7Ht8y9L1dM/7/d6QftjVRaq/M
-	1KXuZotDiEMfVHSKAWTQag3T7QZiI3gKo49oi+V6NPMDKJQ6Tuxh5APXjIpDh8w1pOPzcnO
-	OPIfkpH9dw2C1MUAmxmy2pNZZYtlUy1OyD5VS2yBMYdQl0XGbri+uNptNN68225hv0U1Dxl
-	YCOZKzbODrzZQm2szDoyg6Uk1deq+iO6GYVanNqBQlm0avQd3tjcPrzSkN//GOaN+w1Z7Jg
-	PiuDWFxqOH9zAgwosIU8NjtjwnQvaBb3eBN+r3VUdiiYSpMnWYWXYhNYB1z/Ex7d2qrv3hy
-	i0UTVTrsWcGcn97Us2QdBTdujWhbt1crPM9EbL5kdImkBd0JbBuzsGmEyiuKWyk5R3I04w8
-	CeY0l3R/pTA=
-X-QQ-GoodBg: 2
-From: Li He <lihe@uniontech.com>
-To: hsiangkao@linux.alibaba.com
-Subject: [PATCH] erofs-utils: fuse: support offset when read image
-Date: Mon, 11 Jul 2022 16:54:59 +0800
-Message-Id: <20220711085459.19730-1-lihe@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <YsuejqlGUUp3cC4S@B-P7TQMD6M-0146.local>
-References: <YsuejqlGUUp3cC4S@B-P7TQMD6M-0146.local>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign8
-X-QQ-Bgrelay: 1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LhJ532tcYz3bf5
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 19:10:29 +1000 (AEST)
+Received: by mail-pg1-x52a.google.com with SMTP id 73so4197781pgb.10
+        for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 02:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=sWHLlvMnzBgraN34zttD07EQT9FTI83jbnPlzCAVa6U=;
+        b=Ev5wMINIOXbV8SGa/066bl5vuQUqRRIHywZU2SU61ly5VDI7I04cIf85ASkhsRkH+0
+         iP0FZ+bCBTXEAWXKolidHLW3Hp/SWQQ+seNOC44BqnbtCxH3NUaHNfP3ZetgqJKj+7yz
+         bBzCcZWnSuSU1o424u4iZZIS7rdcAIjtQAMmE3Ce5JcxtO2HjI9pD7bPjRclqZWjWrRf
+         mt6mfc64Nyagyde0IsfI7CSLWzin0QiWi11FNUrtW9+opG3PpsRkSv6IJ+7XtBPK0TaU
+         uCHUkF9pePqLWaXNDYLSUfCeRAHJNmlFqSr1iFxvoO5twFgVfRauCX967uNfj5dFca5/
+         XREQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sWHLlvMnzBgraN34zttD07EQT9FTI83jbnPlzCAVa6U=;
+        b=NR5fiRW7Ypza3EdUmX3aoQS5KMIA735q1xQ5MPsiepaWUgjxLba/g8F16EZ+mlVA2r
+         rPdWT6i5Y6KLVPBGG+0zXz+KuGb9U+RwEbClFExLd0AlWAqIZwoQeyBsrGkTuAhhaLrb
+         O6ndL7ySPhCSCWL2g1gvsuYiGBJjDlmcv9gsYYdKHT66HXIHTk36r6AI7mWA8dSvXDvM
+         qN9Vb/NaAzUXLMiTnWCvWooyGPuRrBm+pFEk4QTbUAHW8WiiWotY31UqH6A8QJz2vsL8
+         drofETb0JC45hoHjcB9Zzkieo1MVlsHha69FCQR0I1QtTOs6ohRo3z6FTutInyxOk7mN
+         +lxw==
+X-Gm-Message-State: AJIora/+yQrrRI0IXbT8+T0COS9YfJl4eGltrSqEf4oDRZtSq/5I26NF
+	9gK65db8k6mSCy5MNGFFHWWwluNAU6o=
+X-Google-Smtp-Source: AGRyM1sBRkPU6DeIoIe/PVFoFqtYizfoe3p2vyzffXWDetMlHM3JMBvkDAhVUs58TV51CYIS6ISLmQ==
+X-Received: by 2002:a05:6a00:852:b0:528:c669:ad65 with SMTP id q18-20020a056a00085200b00528c669ad65mr17393141pfk.75.1657530626117;
+        Mon, 11 Jul 2022 02:10:26 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id n2-20020a170902968200b00165105518f6sm4145052plp.287.2022.07.11.02.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 02:10:25 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+X-Google-Original-From: Yue Hu <huyue2@coolpad.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [RFC PATCH 0/3] erofs-utils: compressed fragments feature
+Date: Mon, 11 Jul 2022 17:09:55 +0800
+Message-Id: <cover.1657528899.git.huyue2@coolpad.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,114 +71,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com, shaojunjun@coolpad.com, zbestahu@163.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add --offset to erofsfuse to skip bytes at the start of the image file.
+In order to achieve greater compression ratio, let's introduce
+compressed fragments feature which can merge tail of per-file or the
+whole files into one special inode to reach the target.
 
-Signed-off-by: Li He <lihe@uniontech.com>
----
-We should add offset to fuse_operations so erofsfuse can parse it from
-command line. fuse_opt_parse can not parse cfg directly.
+And we can also set pcluster size to fragments inode for different
+compression requirments.
 
-Changes since v0
-+ Add manpage for erofsfuse offset option
+In this patchset, we also improve the uncompressed data layout of
+compressed files. Just write it from 'clusterofs' instead of 0 since it
+can benefit from in-place I/O. For now, it only goes with fragments.
 
- fuse/main.c            | 6 ++++++
- include/erofs/config.h | 3 +++
- lib/io.c               | 2 ++
- man/erofsfuse.1        | 3 +++
- 4 files changed, 14 insertions(+)
+The main idea above is from Xiang.
 
-diff --git a/fuse/main.c b/fuse/main.c
-index f4c2476..a2a6449 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -151,6 +151,7 @@ static struct fuse_operations erofs_ops = {
- static struct options {
- 	const char *disk;
- 	const char *mountpoint;
-+	u64 offset;
- 	unsigned int debug_lvl;
- 	bool show_help;
- 	bool odebug;
-@@ -158,6 +159,7 @@ static struct options {
- 
- #define OPTION(t, p) { t, offsetof(struct options, p), 1 }
- static const struct fuse_opt option_spec[] = {
-+	OPTION("--offset=%lu", offset),
- 	OPTION("--dbglevel=%u", debug_lvl),
- 	OPTION("--help", show_help),
- 	FUSE_OPT_KEY("--device=", 1),
-@@ -170,6 +172,7 @@ static void usage(void)
- 
- 	fputs("usage: [options] IMAGE MOUNTPOINT\n\n"
- 	      "Options:\n"
-+	      "    --offset=#             # bytes to skip when read IMAGE\n"
- 	      "    --dbglevel=#           set output message level to # (maximum 9)\n"
- 	      "    --device=#             specify an extra device to be used together\n"
- #if FUSE_MAJOR_VERSION < 3
-@@ -190,6 +193,7 @@ static void usage(void)
- static void erofsfuse_dumpcfg(void)
- {
- 	erofs_dump("disk: %s\n", fusecfg.disk);
-+	erofs_dump("offset: %lu\n", fusecfg.offset);
- 	erofs_dump("mountpoint: %s\n", fusecfg.mountpoint);
- 	erofs_dump("dbglevel: %u\n", cfg.c_dbg_lvl);
- }
-@@ -279,6 +283,8 @@ int main(int argc, char *argv[])
- 	if (fusecfg.odebug && cfg.c_dbg_lvl < EROFS_DBG)
- 		cfg.c_dbg_lvl = EROFS_DBG;
- 
-+	cfg.c_offset = fusecfg.offset;
-+
- 	erofsfuse_dumpcfg();
- 	ret = dev_open_ro(fusecfg.disk);
- 	if (ret) {
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 0d0916c..8b6f7db 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -73,6 +73,9 @@ struct erofs_configure {
- 	char *fs_config_file;
- 	char *block_list_file;
- #endif
-+
-+	/* offset when read mutli partiton image */
-+	u64 c_offset;
- };
- 
- extern struct erofs_configure cfg;
-diff --git a/lib/io.c b/lib/io.c
-index 9c663c5..524cfb4 100644
---- a/lib/io.c
-+++ b/lib/io.c
-@@ -261,6 +261,8 @@ int dev_read(int device_id, void *buf, u64 offset, size_t len)
- 	if (cfg.c_dry_run)
- 		return 0;
- 
-+	offset += cfg.c_offset;
-+
- 	if (!buf) {
- 		erofs_err("buf is NULL");
- 		return -EINVAL;
-diff --git a/man/erofsfuse.1 b/man/erofsfuse.1
-index 9db6827..1d47163 100644
---- a/man/erofsfuse.1
-+++ b/man/erofsfuse.1
-@@ -26,6 +26,9 @@ warning messages.
- .BI "\-\-device=" path
- Specify an extra device to be used together.
- You may give multiple `--device' options in the correct order.
-+.TP
-+.BI "\-\-offset=" #
-+Specify offset bytes to skip when read image file. The default is 0.
- .SS "FUSE options:"
- .TP
- \fB-d -o\fR debug
+Here is some test data of Linux 5.10.87 source code under Ubuntu 18.04:
+
+linux-5.10.87 (erofs, uncompressed)                1.1G
+
+linux-5.10.87 (erofs, lz4hc,12 4k fragments,4k)    304M
+linux-5.10.87 (erofs, lz4hc,12 8k fragments,8k)    271M
+linux-5.10.87 (erofs, lz4hc,12 16k fragments,16k)  245M
+linux-5.10.87 (erofs, lz4hc,12 32k fragments,32k)  228M
+linux-5.10.87 (erofs, lz4hc,12 64k fragments,64k)  220M
+
+linux-5.10.87 (erofs, lz4hc,12 4k vanilla)         396M
+linux-5.10.87 (erofs, lz4hc,12 8k vanilla)         376M
+linux-5.10.87 (erofs, lz4hc,12 16k vanilla)        364M
+linux-5.10.87 (erofs, lz4hc,12 32k vanilla)        359M
+linux-5.10.87 (erofs, lz4hc,12 64k vanilla)        358M
+
+Usage:
+mkfs.erofs -zlz4hc,12 -C65536 -Efragments,65536 foo.erofs.img foo/
+
+Yue Hu (3):
+  erofs-utils: lib: add support for fragments data decompression
+  erofs-utils: lib: support on-disk offset for shifted decompression
+  erofs-utils: introduce compressed fragments support
+
+ include/erofs/compress.h   |  2 +-
+ include/erofs/config.h     |  3 +-
+ include/erofs/decompress.h |  3 ++
+ include/erofs/fragments.h  | 25 ++++++++++
+ include/erofs/inode.h      |  2 +
+ include/erofs/internal.h   |  9 ++++
+ include/erofs_fs.h         | 20 ++++++--
+ lib/Makefile.am            |  4 +-
+ lib/compress.c             | 94 ++++++++++++++++++++++++++++----------
+ lib/data.c                 | 33 ++++++++++++-
+ lib/decompress.c           | 10 +++-
+ lib/fragments.c            | 77 +++++++++++++++++++++++++++++++
+ lib/inode.c                | 50 +++++++++++++-------
+ lib/super.c                |  1 +
+ lib/zmap.c                 | 14 ++++++
+ mkfs/main.c                | 63 ++++++++++++++++++++++---
+ 16 files changed, 352 insertions(+), 58 deletions(-)
+ create mode 100644 include/erofs/fragments.h
+ create mode 100644 lib/fragments.c
+
 -- 
-2.20.1
-
-
+2.17.1
 
