@@ -1,63 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA1D456C930
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Jul 2022 13:30:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 040BA56D313
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 04:50:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lg7Gs3kjGz3bt0
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Jul 2022 21:29:57 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ErZq3hVt;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lh7f43p1zz3bv4
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 12:50:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ErZq3hVt;
-	dkim-atps=neutral
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=59.36.132.74; helo=qq.com; envelope-from=lihe@uniontech.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 68 seconds by postgrey-1.36 at boromir; Mon, 11 Jul 2022 12:49:57 AEST
+Received: from qq.com (smtpbg474.qq.com [59.36.132.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lg7Gl18pjz30Mr
-	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Jul 2022 21:29:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657366191; x=1688902191;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+h9L1y0PpzCHSNXt8K1fgkxa5246AXAyYpiAwZXdvqg=;
-  b=ErZq3hVtOsfUdIBjXpZlFOTVJKNrqzV8vHYzSwGGXHL15DIa9lH8BYxv
-   JYM9ye9axApxs0ZhZ57J2u5MLuvYefnKa1cYzZ3Djy9tfwVIHPsHNssIy
-   bwwEwoszcMzcRrq9RlXqdvYyhWd/Z7Y5yhykSl3ULvoI/tWSSZjahb3Ey
-   qE9jw9TauoG3YwDdNyp6lmkguoPjCa/l1sOhI8MrL6gXiY5SBQxrvbEKL
-   VKlZ2M0ypc4DGb42GNfRxZiRTnV4EMMVWIDVjrrBMZjhZYtjA+/3gjO04
-   jxqfBkYm+kJMG4ba9ZItswLR0XbVc7fVFVMszXYD7gWeKX4+AL30O0TjC
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="283182069"
-X-IronPort-AV: E=Sophos;i="5.92,258,1650956400"; 
-   d="scan'208";a="283182069"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2022 04:29:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,258,1650956400"; 
-   d="scan'208";a="736605149"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2022 04:29:40 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-	(envelope-from <lkp@intel.com>)
-	id 1oA8eZ-000Ohe-KG;
-	Sat, 09 Jul 2022 11:29:39 +0000
-Date: Sat, 09 Jul 2022 19:29:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 448b5a1548d87c246c3d0c3df8480d3c6eb6c11a
-Message-ID: <62c96690.oyN429zTAX2sT77m%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lh7dx1btNz30LS
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 12:49:54 +1000 (AEST)
+X-QQ-mid: bizesmtp85t1657507638tjpoe34p
+Received: from localhost.localdomain ( [61.183.83.60])
+	by bizesmtp.qq.com (ESMTP) with SMTP id 0
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 10:47:17 +0800 (CST)
+X-QQ-SSF: 01400000000000P0W000000A0000000
+X-QQ-FEAT: FVl8EHhfVR6rDfeQoTxhMmnl1eiBHW3qcQwk9CKuNiY3ZGm0sqEoQVvl6DM3A
+	DGlZvyoIaOHWVz9sTOdHCdssbFK9PPlfI74epFPfoUwktL78DE+SrawuuyMCw6YqBliWRu0
+	QOKM0DTtqATgWs+AmjnlAuuHH2P/OES2O2YyIE3il65J57xOEwdNdkdw7qBeJpm020E+PsH
+	FHy9uZo5G+qmeD6VP2P3wpqqP8dkwJBPZQZ1zg5nnUm/4xg5H+omJEBh9bofDq359mP3gAo
+	Cox+AWFYI5LEMDaJW7pMg+tG4eryPnZ/9rqEMEqSEIwEzHquI+mmBZL6bL+C9uiGvnxb+LT
+	aeOJ2G7CodHOmH5Be3u/jMsvM4bVeBrY8s844nPp8+OHhHHZDVboQsGMN929a7M64y2cWYV
+X-QQ-GoodBg: 2
+From: Li He <lihe@uniontech.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fuse: support offset when read image
+Date: Mon, 11 Jul 2022 10:47:17 +0800
+Message-Id: <20220711024717.5554-1-lihe@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign10
+X-QQ-Bgrelay: 1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,114 +50,92 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 448b5a1548d87c246c3d0c3df8480d3c6eb6c11a  erofs: avoid consecutive detection for Highmem memory
+Add --offset to erofsfuse to skip bytes at the start of the image file.
 
-elapsed time: 721m
+Signed-off-by: Li He <lihe@uniontech.com>
+---
+ fuse/main.c            | 6 ++++++
+ include/erofs/config.h | 3 +++
+ lib/io.c               | 2 ++
+ 3 files changed, 11 insertions(+)
 
-configs tested: 89
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-m68k                         apollo_defconfig
-arm                      footbridge_defconfig
-microblaze                      mmu_defconfig
-sh                          rsk7264_defconfig
-arc                 nsimosci_hs_smp_defconfig
-ia64                          tiger_defconfig
-sh                        edosk7705_defconfig
-arm                           corgi_defconfig
-sh                           se7721_defconfig
-sh                           se7750_defconfig
-mips                         rt305x_defconfig
-alpha                            alldefconfig
-xtensa                         virt_defconfig
-m68k                         amcore_defconfig
-arm                      integrator_defconfig
-arm                            lart_defconfig
-mips                       bmips_be_defconfig
-arm                        clps711x_defconfig
-arm                        oxnas_v6_defconfig
-arm                            hisi_defconfig
-parisc64                            defconfig
-nios2                            alldefconfig
-mips                      maltasmvp_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-ia64                             allmodconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220707
-riscv                randconfig-r042-20220707
-s390                 randconfig-r044-20220707
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-
-clang tested configs:
-hexagon                          alldefconfig
-arm                   milbeaut_m10v_defconfig
-powerpc                      walnut_defconfig
-powerpc                          g5_defconfig
-mips                       rbtx49xx_defconfig
-arm                         palmz72_defconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220707
-hexagon              randconfig-r041-20220707
-
+diff --git a/fuse/main.c b/fuse/main.c
+index f4c2476..a2a6449 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -151,6 +151,7 @@ static struct fuse_operations erofs_ops = {
+ static struct options {
+ 	const char *disk;
+ 	const char *mountpoint;
++	u64 offset;
+ 	unsigned int debug_lvl;
+ 	bool show_help;
+ 	bool odebug;
+@@ -158,6 +159,7 @@ static struct options {
+ 
+ #define OPTION(t, p) { t, offsetof(struct options, p), 1 }
+ static const struct fuse_opt option_spec[] = {
++	OPTION("--offset=%lu", offset),
+ 	OPTION("--dbglevel=%u", debug_lvl),
+ 	OPTION("--help", show_help),
+ 	FUSE_OPT_KEY("--device=", 1),
+@@ -170,6 +172,7 @@ static void usage(void)
+ 
+ 	fputs("usage: [options] IMAGE MOUNTPOINT\n\n"
+ 	      "Options:\n"
++	      "    --offset=#             # bytes to skip when read IMAGE\n"
+ 	      "    --dbglevel=#           set output message level to # (maximum 9)\n"
+ 	      "    --device=#             specify an extra device to be used together\n"
+ #if FUSE_MAJOR_VERSION < 3
+@@ -190,6 +193,7 @@ static void usage(void)
+ static void erofsfuse_dumpcfg(void)
+ {
+ 	erofs_dump("disk: %s\n", fusecfg.disk);
++	erofs_dump("offset: %lu\n", fusecfg.offset);
+ 	erofs_dump("mountpoint: %s\n", fusecfg.mountpoint);
+ 	erofs_dump("dbglevel: %u\n", cfg.c_dbg_lvl);
+ }
+@@ -279,6 +283,8 @@ int main(int argc, char *argv[])
+ 	if (fusecfg.odebug && cfg.c_dbg_lvl < EROFS_DBG)
+ 		cfg.c_dbg_lvl = EROFS_DBG;
+ 
++	cfg.c_offset = fusecfg.offset;
++
+ 	erofsfuse_dumpcfg();
+ 	ret = dev_open_ro(fusecfg.disk);
+ 	if (ret) {
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 0d0916c..8b6f7db 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -73,6 +73,9 @@ struct erofs_configure {
+ 	char *fs_config_file;
+ 	char *block_list_file;
+ #endif
++
++	/* offset when read mutli partiton image */
++	u64 c_offset;
+ };
+ 
+ extern struct erofs_configure cfg;
+diff --git a/lib/io.c b/lib/io.c
+index 9c663c5..524cfb4 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -261,6 +261,8 @@ int dev_read(int device_id, void *buf, u64 offset, size_t len)
+ 	if (cfg.c_dry_run)
+ 		return 0;
+ 
++	offset += cfg.c_offset;
++
+ 	if (!buf) {
+ 		erofs_err("buf is NULL");
+ 		return -EINVAL;
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.20.1
+
+
+
