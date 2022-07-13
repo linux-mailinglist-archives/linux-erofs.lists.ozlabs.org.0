@@ -2,71 +2,33 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AABC56FE86
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 12:13:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AA09572E8E
+	for <lists+linux-erofs@lfdr.de>; Wed, 13 Jul 2022 08:55:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LhKTY271Kz3by6
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Jul 2022 20:13:21 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=RH05kk3h;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LjT0G4Mhrz3c3W
+	for <lists+linux-erofs@lfdr.de>; Wed, 13 Jul 2022 16:55:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=RH05kk3h;
-	dkim-atps=neutral
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=contactorutempresa29.sending.contact (client-ip=94.101.178.88; helo=contactorutempresa29.sending.contact; envelope-from=root@contactorutempresa29.sending.contact; receiver=<UNKNOWN>)
+X-Greylist: delayed 858 seconds by postgrey-1.36 at boromir; Wed, 13 Jul 2022 16:55:20 AEST
+Received: from contactorutempresa29.sending.contact (contactorutempresa29.sending.contact [94.101.178.88])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LhKTQ5BgPz3btW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 20:13:12 +1000 (AEST)
-Received: by mail-pl1-x62a.google.com with SMTP id c13so4033278pla.6
-        for <linux-erofs@lists.ozlabs.org>; Mon, 11 Jul 2022 03:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hl6SPBbcxnLLqUyEqwGr1xCp1ST4jLdZII9tc/ys75w=;
-        b=RH05kk3hMZDKvbvrNTCOEaPOXhCfh8wdSCPwJy4v1sfheyVkPT6SrL8R5e9L+z7yiL
-         0OOb62yTqwxKSQzWnGrTXnjq4qXknHE321VsYonW5upN5rirHR9Hs5/0TpntCUZQXVXf
-         uiowtslfDNLDG0SSVR2bRCqfiQR1q3AxMU9fYm5V8yKG1YmisGonf72Wv2W6paPHC7Xq
-         nCy7/Lk4sPuphw+xF2ioFo2ummIIyTdT+tYYD7sYsz6Gn7YYnq8iEBvMU1t/2DXmkUUP
-         tt3YGY3IOKVOdWsnx0/fcDNFRhB47wDs2tSEtzhVUjVwsdYH/hxQVJ/ehuaPG9+Lv7Dz
-         zvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hl6SPBbcxnLLqUyEqwGr1xCp1ST4jLdZII9tc/ys75w=;
-        b=KwZKgmE5q35owdHPx9rMic+Ja8hGSsfF4LBMsJNp2s2rEMI3AfwMeUbLA8FGrF08cS
-         kGtqbEcgZo1cLqDiG6zBbCcoHzBj30US06ySlfGL0R9+aqTZKZ1oTDLSut8FVM3WFlKQ
-         jlHYemI+vyc+4AL8nC8DKyU6+z5aSn/9GSX2rS6rHx55bmSWhq9AKvP2cvWgpWnglN7X
-         oL0X2D0hbR4RYCpTK0hQEvdxiiuyorSjAUoATdi3V/B7Qa9yiIfimWWUkia6PMNXS3ZK
-         kurO+TQt2WKoWOhmZQ0vPYnIo8uqjptnS9Vp9otRo0XMD3wEEmct59PDh+J2igWjdp+h
-         ziaQ==
-X-Gm-Message-State: AJIora9BpvuQlJb024uyQz7FMG1sVpv2mmaWeNGxD7YafQhq2b/9aRz5
-	BjUlnNm/w346Fv4mbYIsfuA=
-X-Google-Smtp-Source: AGRyM1vfwxhg0wpcqdiS201pXwdYjtwaHRutWaklx717Xd3k2UCJqQ+NIRSa9yERA8T60o0zi7ZvNQ==
-X-Received: by 2002:a17:902:db12:b0:16c:3273:c7a9 with SMTP id m18-20020a170902db1200b0016c3273c7a9mr11440548plx.49.1657534390630;
-        Mon, 11 Jul 2022 03:13:10 -0700 (PDT)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id q11-20020aa7982b000000b005289fad1bbesm4523218pfl.94.2022.07.11.03.13.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Jul 2022 03:13:10 -0700 (PDT)
-Date: Mon, 11 Jul 2022 18:14:30 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [RFC PATCH 0/3] erofs-utils: compressed fragments feature
-Message-ID: <20220711181430.000006bd.zbestahu@gmail.com>
-In-Reply-To: <Ysv1QyAvxfmiRECJ@B-P7TQMD6M-0146.local>
-References: <cover.1657528899.git.huyue2@coolpad.com>
-	<Ysv1QyAvxfmiRECJ@B-P7TQMD6M-0146.local>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LjT081Wrzz2yLT
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Jul 2022 16:55:20 +1000 (AEST)
+Received: by contactorutempresa29.sending.contact (Postfix, from userid 0)
+	id 8C5AB1167E4; Wed, 13 Jul 2022 06:38:33 +0000 (UTC)
+Date: Wed, 13 Jul 2022 06:38:33 +0000
+To: linux-erofs@lists.ozlabs.org
+From: =?UTF-8?Q?=E2=9C=85_?=Agencia Tributaria <contactorutempresacl066601@sending.contact>
+Subject: En relacion con el Impuesto sobre Transacciones Financieras - Protocolo: JGTAMOK3JH
+Message-ID: <094b43a918f1bd898013fd72570e9b1d@localhost.localdomain>
+X-Priority: 3
+X-Mailer: PHPMailer [version 1.73]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="b1_094b43a918f1bd898013fd72570e9b1d"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,41 +40,92 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zbestahu@163.com, shaojunjun@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
 
-On Mon, 11 Jul 2022 18:02:43 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+--b1_094b43a918f1bd898013fd72570e9b1d
+Content-Type: text/plain; charset = "UTF-8"
+Content-Transfer-Encoding: base64
 
-> Hi Yue,
-> 
-> On Mon, Jul 11, 2022 at 05:09:55PM +0800, Yue Hu wrote:
-> > In order to achieve greater compression ratio, let's introduce
-> > compressed fragments feature which can merge tail of per-file or the
-> > whole files into one special inode to reach the target.
-> > 
-> > And we can also set pcluster size to fragments inode for different
-> > compression requirments.
-> > 
-> > In this patchset, we also improve the uncompressed data layout of
-> > compressed files. Just write it from 'clusterofs' instead of 0 since it
-> > can benefit from in-place I/O. For now, it only goes with fragments.
-> > 
-> > The main idea above is from Xiang.
-> >   
-> 
-> I just took a preliminary try and it seems work, but in order to form it
-> better, I have to postpone it for the next version of 5.20 (6.0?)
-> since I'm still working on cleaning up and rolling hash deduplication.
+c3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc2FhYWFhYWFhYWFhYWFhYWFh
 
-Got it.
 
-Thanks.
+--b1_094b43a918f1bd898013fd72570e9b1d
+Content-Type: text/html; charset = "UTF-8"
+Content-Transfer-Encoding: base64
 
-> 
-> Thanks,
-> Gao Xiang
+PGh0bWw+DQoJPGhlYWQ+DQoJCTx0aXRsZT48L3RpdGxlPg0KCTwvaGVhZD4NCgk8Ym9keT4NCgkJ
+PHRhYmxlIGJvcmRlcj0iMCIgY2VsbHBhZGRpbmc9IjEiIGNlbGxzcGFjaW5nPSIxIiBzdHlsZT0i
+d2lkdGg6IDUwMHB4Ij4NCgkJCTx0Ym9keT4NCgkJCQk8dHI+DQoJCQkJCTx0ZD4NCgkJCQkJCTxp
+bWcgYWx0PSIiIHNyYz0iaHR0cDovL2VjMi0xOC0yMjgtMTEtMzYuc2EtZWFzdC0xLmNvbXB1dGUu
+YW1hem9uYXdzLmNvbS8wMDEyOTMwMS8wMTkyMzAxOTAyMy9pbWcvXzAwOTI5ODMyLmpwZyIgc3R5
+bGU9IndpZHRoOiA4NDBweDsgaGVpZ2h0OiA2M3B4OyIgLz48L3RkPg0KCQkJCTwvdHI+DQoJCQkJ
+PHRyPg0KCQkJCQk8dGQ+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8aDIg
+Y2xhc3M9InhfdGl0bGUiIHN0eWxlPSJmb250LWZhbWlseTogJnF1b3Q7SGVsdmV0aWNhIE5ldWUm
+cXVvdDssIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7IGJhY2tncm91bmQtY29sb3I6IHJn
+YigyNTUsIDI1NSwgMjU1KTsgYm94LXNpemluZzogYm9yZGVyLWJveDsgZm9udC13ZWlnaHQ6IG5v
+cm1hbDsgbGluZS1oZWlnaHQ6IDEuMTsgbWFyZ2luOiA1cHggMHB4IDE1cHg7IGZvbnQtc2l6ZTog
+MjdweDsgY29sb3I6IHJnYig1MSwgNTEsIDUxKSAhaW1wb3J0YW50OyI+DQoJCQkJCQkJRmFjdHVy
+YSBFbGVjdHImb2FjdXRlO25pY2E8L2gyPg0KCQkJCQkJPHA+DQoJCQkJCQkJPHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZToyMHB4OyI+PHNwYW4gc3R5bGU9ImNvbG9yOiMwMDAwODA7Ij48c3Ryb25nPkVz
+dGltYWRvKGEpIGRlbCBjb250cmlidXllbnRlPC9zdHJvbmc+PC9zcGFuPjwvc3Bhbj48L3A+DQoJ
+CQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQk8c3BhbiBzdHls
+ZT0iZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiByZ2IoMSwgNjIsIDEyNyk7Ij48c3BhbiBzdHls
+ZT0iZm9udC1mYW1pbHk6IFZlcmRhbmE7Ij5TZWd1cmlkYWQgU29jaWFsPC9zcGFuPjwvc3Bhbj48
+c21hbGwgc3R5bGU9ImNvbG9yOiByZ2IoMSwgNjIsIDEyNyk7Ij48c3BhbiBzdHlsZT0iZm9udC1m
+YW1pbHk6IFZlcmRhbmE7Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6IGJvbGQ7Ij46PC9zcGFu
+PiZuYnNwO0xlIGluZm9ybWEgcXVlIGV4aXN0ZW4gb2JsaWdhY2lvbmVzLDxiciAvPg0KCQkJCQkJ
+CVByb2R1Y3RvIGRlIHVuYSBsaXF1aWRhY2kmb2FjdXRlO24gdHJpYnV0YXJpYSBxdWUgc2UgZW5j
+dWVudHJhIGltcGFnYS48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6IGJvbGQ7Ij4mbmJzcDs8L3Nw
+YW4+PC9zcGFuPjwvc21hbGw+PHNtYWxsIHN0eWxlPSJjb2xvcjogcmdiKDEsIDYyLCAxMjcpOyI+
+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5hOyI+cHVlZGUgZGVzY2FyZ2FyPGJyIC8+
+DQoJCQkJCQkJRWwgaW5mb3JtZSBnZW5lcmFkbyBwb3IgZWwmbmJzcDs8c3BhbiBzdHlsZT0iZm9u
+dC13ZWlnaHQ6IGJvbGQ7Ij5TSUk8L3NwYW4+Jm5ic3A7ZW4mbmJzcDs8c3BhbiBzdHlsZT0iZm9u
+dC13ZWlnaHQ6IGJvbGQ7Ij5lbCBzaWd1aWVudGU8L3NwYW4+Jm5ic3A7PHNwYW4gc3R5bGU9ImZv
+bnQtd2VpZ2h0OiBib2xkOyI+ZW5sYW5jZTwvc3Bhbj46PC9zcGFuPjwvc21hbGw+PC9wPg0KCQkJ
+CQkJPHA+DQoJCQkJCQkJPHNwYW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMTI4KTsiPkxvIGlu
+dml0YW1vcyBhIHJlZ3VsYXJpemFyIGVzdGEgc2l0dWFjaSZvYWN1dGU7biBhIHRyYXYmZWFjdXRl
+O3MgZGUgbnVlc3RyYSBwJmFhY3V0ZTtnaW5hIHdlYiwgZW4gZWwgbWVuJnVhY3V0ZTsgcmVjYXVk
+YWNpb24vcGFnYWRvL0ltcHVlc3RvcyBpbXB1ZXN0b3MsIHBvciBsYSBicmV2ZWRhZCZuYnNwOyBw
+b3NpYmxlLCBhIGZpbiBkZSBldml0YXIgbGFzIG1vbGVzdGlhcyBkZSB1bmEgY2FyZ2EganVkaWNp
+YWwsIHF1ZSBlbnRyZSBvdHJhcyBhY2Npb25lcywgcHVlZGUgaW1wbGljYXIgZWwgZW1iYXJnbyBk
+ZSBiaWVuZXMgdSBvdHJhcyBtZWRpZGFzIGRlbCBsYXVkbyZuYnNwOzwvc3Bhbj48L3A+DQoJCQkJ
+CQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8dWwgY2xhc3M9Imxpc3QtdW5zdHlsZWQg
+bWItNSIgc3R5bGU9ImJveC1zaXppbmc6IGJvcmRlci1ib3g7IG1hcmdpbi10b3A6IDBweDsgcGFk
+ZGluZy1pbmxpbmUtc3RhcnQ6IDEuNXJlbTsgcGFkZGluZy1sZWZ0OiAwcHg7IGxpc3Qtc3R5bGU6
+IG5vbmU7IGZvbnQtZmFtaWx5OiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNp
+emU6IDE2cHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsgbWFyZ2luLWJv
+dHRvbTogMnJlbSAhaW1wb3J0YW50OyI+DQoJCQkJCQk8L3VsPg0KCQkJCQkJPHAgc3R5bGU9InRl
+eHQtYWxpZ246IGNlbnRlcjsiPg0KCQkJCQkJCTxhIGRhdGEtYXV0aD0iTm90QXBwbGljYWJsZSIg
+ZGF0YS1saW5raW5kZXg9IjAiIGhyZWY9Imh0dHA6Ly9lYzItMTgtMjI4LTExLTM2LnNhLWVhc3Qt
+MS5jb21wdXRlLmFtYXpvbmF3cy5jb20vMDAxMjkzMDEvMDE5MjMwMTkwMjMvP2hhc2g9YkdsdWRY
+Z3RaWEp2Wm5OQWJHbHpkSE11YjNwc1lXSnpMbTl5Wnc9PSIgcmVsPSJub29wZW5lciBub3JlZmVy
+cmVyIiBzdHlsZT0iYm9yZGVyOiAwcHg7IGZvbnQtdmFyaWFudC1udW1lcmljOiBpbmhlcml0OyBm
+b250LXZhcmlhbnQtZWFzdC1hc2lhbjogaW5oZXJpdDsgZm9udC1zdHJldGNoOiBpbmhlcml0OyBm
+b250LXNpemU6IDE1cHg7IGxpbmUtaGVpZ2h0OiBpbmhlcml0OyBmb250LWZhbWlseTogJnF1b3Q7
+U2Vnb2UgVUkmcXVvdDssICZxdW90O1NlZ29lIFVJIFdlYiAoV2VzdCBFdXJvcGVhbikmcXVvdDss
+ICZxdW90O1NlZ29lIFVJJnF1b3Q7LCAtYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQs
+IFJvYm90bywgJnF1b3Q7SGVsdmV0aWNhIE5ldWUmcXVvdDssIHNhbnMtc2VyaWY7IG1hcmdpbjog
+MHB4OyBwYWRkaW5nOiAwcHg7IHZlcnRpY2FsLWFsaWduOiBiYXNlbGluZTsgdGV4dC1hbGlnbjog
+Y2VudGVyOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IiB0YXJnZXQ9Il9i
+bGFuayI+PHNwYW4gc3R5bGU9ImJvcmRlcjogMHB4OyBmb250LXN0eWxlOiBpbmhlcml0OyBmb250
+LXZhcmlhbnQ6IGluaGVyaXQ7IGZvbnQtd2VpZ2h0OiBpbmhlcml0OyBmb250LXN0cmV0Y2g6IGlu
+aGVyaXQ7IGZvbnQtc2l6ZTogMjBweDsgbGluZS1oZWlnaHQ6IGluaGVyaXQ7IGZvbnQtZmFtaWx5
+OiBpbmhlcml0OyBtYXJnaW46IDBweDsgcGFkZGluZzogMHB4OyB2ZXJ0aWNhbC1hbGlnbjogYmFz
+ZWxpbmU7IGNvbG9yOiBpbmhlcml0OyI+RGVzY2FyZ2FyIGluZm9ybWFjaSZvYWN1dGU7biBkZXRh
+bGxhZGE8L3NwYW4+PC9hPjwvcD4NCgkJCQkJCTxwPg0KCQkJCQkJCSZuYnNwOzwvcD4NCgkJCQkJ
+CTxwPg0KCQkJCQkJCTxzcGFuIHN0eWxlPSJmb250LXNpemU6IDEycHg7Ij48c3BhbiBzdHlsZT0i
+Y29sb3I6IHJnYigxMjgsIDAsIDApOyI+UHVlZGUgZGVzY2FyZ2FyIGVsIGluZm9ybWUgZ2VuZXJh
+ZG8gcG9yIGVsIFNJSSBlbiBlbCBzaWd1aWVudGUgUERGPC9zcGFuPjwvc3Bhbj48L3A+DQoJCQkJ
+CQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJ
+CQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+
+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8
+L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJzcDs8L3A+DQoJCQkJCQk8cD4NCgkJCQkJCQkmbmJz
+cDs8L3A+DQoJCQkJCTwvdGQ+DQoJCQkJPC90cj4NCgkJCQk8dHI+DQoJCQkJCTx0ZD4NCgkJCQkJ
+CSZuYnNwOzwvdGQ+DQoJCQkJPC90cj4NCgkJCTwvdGJvZHk+DQoJCTwvdGFibGU+DQoJCTxwPg0K
+CQkJJm5ic3A7PC9wPg0KCTwvYm9keT4NCjwvaHRtbD4NCg==
 
+
+
+--b1_094b43a918f1bd898013fd72570e9b1d--
