@@ -1,32 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2758E574EED
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:21:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D3E8574EEE
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:21:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFWG0x61z3c4h
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:21:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFWJ22vXz3cCP
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:21:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.9; helo=out199-9.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out199-9.us.a.mail.aliyun.com (out199-9.us.a.mail.aliyun.com [47.90.199.9])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFW42glvz3brm
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFW51GcWz3051
 	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Jul 2022 23:21:18 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJJkPA3_1657804852;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJkPA3_1657804852)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJJkPD9_1657804858;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJkPD9_1657804858)
           by smtp.aliyun-inc.com;
-          Thu, 14 Jul 2022 21:20:58 +0800
+          Thu, 14 Jul 2022 21:20:59 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH 00/16] erofs: prepare for folios, duplication and kill PG_error
-Date: Thu, 14 Jul 2022 21:20:35 +0800
-Message-Id: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 01/16] erofs: get rid of unneeded `inode', `map' and `sb'
+Date: Thu, 14 Jul 2022 21:20:36 +0800
+Message-Id: <20220714132051.46012-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
+References: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -44,65 +46,162 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+Since commit 5c6dcc57e2e5 ("erofs: get rid of
+`struct z_erofs_collector'"), these arguments can be dropped as well.
 
-I've been doing this for almost 2 months, the main point of this is
-to support large folios and rolling hash duplication for compressed
-data.
+No logic changes.
 
-This patchset is as a start of this work targeting for the next 5.20,
-it introduces a flexable range representation for (de)compressed buffers
-instead of too relying on page(s) directly themselves, so large folios
-can laterly base on this work.  Also, this patchset gets rid of all
-PG_error flags in the decompression code. It's a cleanup as a result
-as well.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 42 +++++++++++++++++++-----------------------
+ 1 file changed, 19 insertions(+), 23 deletions(-)
 
-In addition, this patchset kicks off rolling hash duplication for
-compressed data by introducing fully-referenced multi-reference
-pclusters first instead of reporting fs corruption if one pcluster
-is introduced by several differnt extents.  The full implementation
-is expected to be finished in the merge window after the next.  One
-of my colleagues is actively working on the userspace part of this
-feature.
-
-However, it's still easy to verify fully-referenced multi-reference
-pcluster by constructing some image by hand (see attachment):
-
-Dataset: 300M
-seq-read (data-duplicated, read_ahead_kb 8192): 1095MiB/s
-seq-read (data-duplicated, read_ahead_kb 4096): 771MiB/s
-seq-read (data-duplicated, read_ahead_kb 512):  577MiB/s
-seq-read (vanilla, read_ahead_kb 8192):         364MiB/s
-
-Finally, this patchset survives ro-fsstress on my side.
-
-Thanks,
-Gao Xiang
-
-Gao Xiang (16):
-  erofs: get rid of unneeded `inode', `map' and `sb'
-  erofs: clean up z_erofs_collector_begin()
-  erofs: introduce `z_erofs_parse_out_bvecs()'
-  erofs: introduce bufvec to store decompressed buffers
-  erofs: drop the old pagevec approach
-  erofs: introduce `z_erofs_parse_in_bvecs'
-  erofs: switch compressed_pages[] to bufvec
-  erofs: rework online page handling
-  erofs: get rid of `enum z_erofs_page_type'
-  erofs: clean up `enum z_erofs_collectmode'
-  erofs: get rid of `z_pagemap_global'
-  erofs: introduce struct z_erofs_decompress_backend
-  erofs: try to leave (de)compressed_pages on stack if possible
-  erofs: introduce z_erofs_do_decompressed_bvec()
-  erofs: record the longest decompressed size in this round
-  erofs: introduce multi-reference pclusters (fully-referenced)
-
- fs/erofs/compress.h     |   2 +-
- fs/erofs/decompressor.c |   2 +-
- fs/erofs/zdata.c        | 777 ++++++++++++++++++++++------------------
- fs/erofs/zdata.h        | 119 +++---
- fs/erofs/zpvec.h        | 159 --------
- 5 files changed, 490 insertions(+), 569 deletions(-)
- delete mode 100644 fs/erofs/zpvec.h
-
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 724bb57075f6..1b6816dd235f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -404,10 +404,9 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
+ 	f->mode = COLLECT_PRIMARY;
+ }
+ 
+-static int z_erofs_lookup_pcluster(struct z_erofs_decompress_frontend *fe,
+-				   struct inode *inode,
+-				   struct erofs_map_blocks *map)
++static int z_erofs_lookup_pcluster(struct z_erofs_decompress_frontend *fe)
+ {
++	struct erofs_map_blocks *map = &fe->map;
+ 	struct z_erofs_pcluster *pcl = fe->pcl;
+ 	unsigned int length;
+ 
+@@ -449,10 +448,9 @@ static int z_erofs_lookup_pcluster(struct z_erofs_decompress_frontend *fe,
+ 	return 0;
+ }
+ 
+-static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe,
+-				     struct inode *inode,
+-				     struct erofs_map_blocks *map)
++static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ {
++	struct erofs_map_blocks *map = &fe->map;
+ 	bool ztailpacking = map->m_flags & EROFS_MAP_META;
+ 	struct z_erofs_pcluster *pcl;
+ 	struct erofs_workgroup *grp;
+@@ -494,7 +492,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe,
+ 	} else {
+ 		pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+ 
+-		grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
++		grp = erofs_insert_workgroup(fe->inode->i_sb, &pcl->obj);
+ 		if (IS_ERR(grp)) {
+ 			err = PTR_ERR(grp);
+ 			goto err_out;
+@@ -520,10 +518,9 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe,
+ 	return err;
+ }
+ 
+-static int z_erofs_collector_begin(struct z_erofs_decompress_frontend *fe,
+-				   struct inode *inode,
+-				   struct erofs_map_blocks *map)
++static int z_erofs_collector_begin(struct z_erofs_decompress_frontend *fe)
+ {
++	struct erofs_map_blocks *map = &fe->map;
+ 	struct erofs_workgroup *grp;
+ 	int ret;
+ 
+@@ -541,19 +538,19 @@ static int z_erofs_collector_begin(struct z_erofs_decompress_frontend *fe,
+ 		goto tailpacking;
+ 	}
+ 
+-	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
++	grp = erofs_find_workgroup(fe->inode->i_sb, map->m_pa >> PAGE_SHIFT);
+ 	if (grp) {
+ 		fe->pcl = container_of(grp, struct z_erofs_pcluster, obj);
+ 	} else {
+ tailpacking:
+-		ret = z_erofs_register_pcluster(fe, inode, map);
++		ret = z_erofs_register_pcluster(fe);
+ 		if (!ret)
+ 			goto out;
+ 		if (ret != -EEXIST)
+ 			return ret;
+ 	}
+ 
+-	ret = z_erofs_lookup_pcluster(fe, inode, map);
++	ret = z_erofs_lookup_pcluster(fe);
+ 	if (ret) {
+ 		erofs_workgroup_put(&fe->pcl->obj);
+ 		return ret;
+@@ -663,7 +660,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	if (!(map->m_flags & EROFS_MAP_MAPPED))
+ 		goto hitted;
+ 
+-	err = z_erofs_collector_begin(fe, inode, map);
++	err = z_erofs_collector_begin(fe);
+ 	if (err)
+ 		goto err_out;
+ 
+@@ -1259,13 +1256,13 @@ static void z_erofs_decompressqueue_endio(struct bio *bio)
+ 	bio_put(bio);
+ }
+ 
+-static void z_erofs_submit_queue(struct super_block *sb,
+-				 struct z_erofs_decompress_frontend *f,
++static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
+ 				 struct page **pagepool,
+ 				 struct z_erofs_decompressqueue *fgq,
+ 				 bool *force_fg)
+ {
+-	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	struct super_block *sb = f->inode->i_sb;
++	struct address_space *mc = MNGD_MAPPING(EROFS_SB(sb));
+ 	z_erofs_next_pcluster_t qtail[NR_JOBQUEUES];
+ 	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
+ 	void *bi_private;
+@@ -1317,7 +1314,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 			struct page *page;
+ 
+ 			page = pickup_page_for_submission(pcl, i++, pagepool,
+-							  MNGD_MAPPING(sbi));
++							  mc);
+ 			if (!page)
+ 				continue;
+ 
+@@ -1369,15 +1366,14 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 	z_erofs_decompress_kickoff(q[JQ_SUBMIT], *force_fg, nr_bios);
+ }
+ 
+-static void z_erofs_runqueue(struct super_block *sb,
+-			     struct z_erofs_decompress_frontend *f,
++static void z_erofs_runqueue(struct z_erofs_decompress_frontend *f,
+ 			     struct page **pagepool, bool force_fg)
+ {
+ 	struct z_erofs_decompressqueue io[NR_JOBQUEUES];
+ 
+ 	if (f->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		return;
+-	z_erofs_submit_queue(sb, f, pagepool, io, &force_fg);
++	z_erofs_submit_queue(f, pagepool, io, &force_fg);
+ 
+ 	/* handle bypass queue (no i/o pclusters) immediately */
+ 	z_erofs_decompress_queue(&io[JQ_BYPASS], pagepool);
+@@ -1475,7 +1471,7 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ 	(void)z_erofs_collector_end(&f);
+ 
+ 	/* if some compressed cluster ready, need submit them anyway */
+-	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
++	z_erofs_runqueue(&f, &pagepool,
+ 			 z_erofs_get_sync_decompress_policy(sbi, 0));
+ 
+ 	if (err)
+@@ -1524,7 +1520,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 	z_erofs_pcluster_readmore(&f, rac, 0, &pagepool, false);
+ 	(void)z_erofs_collector_end(&f);
+ 
+-	z_erofs_runqueue(inode->i_sb, &f, &pagepool,
++	z_erofs_runqueue(&f, &pagepool,
+ 			 z_erofs_get_sync_decompress_policy(sbi, nr_pages));
+ 	erofs_put_metabuf(&f.map.buf);
+ 	erofs_release_pages(&pagepool);
 -- 
+2.24.4
+
