@@ -2,35 +2,35 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03841574EFD
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C4165574F5B
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:39:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFWf6nZfz3chN
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:21:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFvx54bvz3c4B
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:39:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFWb0Twgz3cgd
-	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Jul 2022 23:21:46 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJJkPSH_1657804881;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJkPSH_1657804881)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFvk3LQqz3bdM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Jul 2022 23:39:09 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VJJnnTC_1657805937;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJnnTC_1657805937)
           by smtp.aliyun-inc.com;
-          Thu, 14 Jul 2022 21:21:23 +0800
+          Thu, 14 Jul 2022 21:38:59 +0800
+Date: Thu, 14 Jul 2022 21:38:57 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 16/16] erofs: introduce multi-reference pclusters (fully-referenced)
-Date: Thu, 14 Jul 2022 21:20:51 +0800
-Message-Id: <20220714132051.46012-17-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>
+Subject: Re: [PATCH 00/16] erofs: prepare for folios, duplication and kill
+ PG_error
+Message-ID: <YtAcceR/K/2eFqN4@B-P7TQMD6M-0146.local>
 References: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8p0f8rH78wjnSdC4"
+Content-Disposition: inline
+In-Reply-To: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,290 +42,280 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Let's introduce multi-reference pclusters at runtime. In details,
-if one pcluster is requested by multiple extents at almost the same
-time (even belong to different files), the longest extent will be
-decompressed as representative and the other extents are actually
-copied from the longest one.
 
-After this patch, fully-referenced extents can be correctly handled
-and the full decoding check needs to be bypassed for
-partial-referenced extents.
+--8p0f8rH78wjnSdC4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/compress.h     |   2 +-
- fs/erofs/decompressor.c |   2 +-
- fs/erofs/zdata.c        | 120 +++++++++++++++++++++++++++-------------
- fs/erofs/zdata.h        |   3 +
- 4 files changed, 88 insertions(+), 39 deletions(-)
+On Thu, Jul 14, 2022 at 09:20:35PM +0800, Gao Xiang wrote:
+> Hi folks,
+> 
+> I've been doing this for almost 2 months, the main point of this is
+> to support large folios and rolling hash deduplication for compressed
+> data.
+> 
+> This patchset is as a start of this work targeting for the next 5.20,
+> it introduces a flexable range representation for (de)compressed buffers
+> instead of too relying on page(s) directly themselves, so large folios
+> can laterly base on this work.  Also, this patchset gets rid of all
+> PG_error flags in the decompression code. It's a cleanup as a result
+> as well.
+> 
+> In addition, this patchset kicks off rolling hash deduplication for
+> compressed data by introducing fully-referenced multi-reference
+> pclusters first instead of reporting fs corruption if one pcluster
+> is introduced by several differnt extents.  The full implementation
+> is expected to be finished in the merge window after the next.  One
+> of my colleagues is actively working on the userspace part of this
+> feature.
+> 
+> However, it's still easy to verify fully-referenced multi-reference
+> pcluster by constructing some image by hand (see attachment):
+> 
+> Dataset: 300M
+> seq-read (data-deduplicated, read_ahead_kb 8192): 1095MiB/s
+> seq-read (data-deduplicated, read_ahead_kb 4096): 771MiB/s
+> seq-read (data-deduplicated, read_ahead_kb 512):  577MiB/s
+> seq-read (vanilla, read_ahead_kb 8192):         364MiB/s
+> 
 
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 19e6c56a9f47..26fa170090b8 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -17,7 +17,7 @@ struct z_erofs_decompress_req {
- 
- 	/* indicate the algorithm will be used for decompression */
- 	unsigned int alg;
--	bool inplace_io, partial_decoding;
-+	bool inplace_io, partial_decoding, fillgaps;
- };
- 
- struct z_erofs_decompressor {
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 6dca1900c733..91b9bff10198 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -83,7 +83,7 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
- 			j = 0;
- 
- 		/* 'valid' bounced can only be tested after a complete round */
--		if (test_bit(j, bounced)) {
-+		if (!rq->fillgaps && test_bit(j, bounced)) {
- 			DBG_BUGON(i < lz4_max_distance_pages);
- 			DBG_BUGON(top >= lz4_max_distance_pages);
- 			availables[top++] = rq->out[i - lz4_max_distance_pages];
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 8dcfc2a9704e..601cfcb07c50 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -467,7 +467,8 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
- 	 * type 2, link to the end of an existing open chain, be careful
- 	 * that its submission is controlled by the original attached chain.
- 	 */
--	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
-+	if (*owned_head != &pcl->next && pcl != f->tailpcl &&
-+	    cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
- 		    *owned_head) == Z_EROFS_PCLUSTER_TAIL) {
- 		*owned_head = Z_EROFS_PCLUSTER_TAIL;
- 		f->mode = Z_EROFS_PCLUSTER_HOOKED;
-@@ -480,20 +481,8 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
- 
- static int z_erofs_lookup_pcluster(struct z_erofs_decompress_frontend *fe)
- {
--	struct erofs_map_blocks *map = &fe->map;
- 	struct z_erofs_pcluster *pcl = fe->pcl;
- 
--	/* to avoid unexpected loop formed by corrupted images */
--	if (fe->owned_head == &pcl->next || pcl == fe->tailpcl) {
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
--	}
--
--	if (pcl->pageofs_out != (map->m_la & ~PAGE_MASK)) {
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
--	}
--
- 	mutex_lock(&pcl->lock);
- 	/* used to check tail merging loop due to corrupted images */
- 	if (fe->owned_head == Z_EROFS_PCLUSTER_TAIL)
-@@ -785,6 +774,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 	z_erofs_onlinepage_split(page);
- 	/* bump up the number of spiltted parts of a page */
- 	++spiltted;
-+	fe->pcl->multibases =
-+		(fe->pcl->pageofs_out != (map->m_la & ~PAGE_MASK));
- 
- 	if (fe->pcl->length < offset + end - map->m_la) {
- 		fe->pcl->length = offset + end - map->m_la;
-@@ -842,36 +833,90 @@ struct z_erofs_decompress_backend {
- 	/* pages to keep the compressed data */
- 	struct page **compressed_pages;
- 
-+	struct list_head decompressed_secondary_bvecs;
- 	struct page **pagepool;
- 	unsigned int onstack_used, nr_pages;
- };
- 
--static int z_erofs_do_decompressed_bvec(struct z_erofs_decompress_backend *be,
--					struct z_erofs_bvec *bvec)
-+struct z_erofs_bvec_item {
-+	struct z_erofs_bvec bvec;
-+	struct list_head list;
-+};
-+
-+static void z_erofs_do_decompressed_bvec(struct z_erofs_decompress_backend *be,
-+					 struct z_erofs_bvec *bvec)
- {
--	unsigned int pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
--	struct page *oldpage;
-+	struct z_erofs_bvec_item *item;
- 
--	DBG_BUGON(pgnr >= be->nr_pages);
--	oldpage = be->decompressed_pages[pgnr];
--	be->decompressed_pages[pgnr] = bvec->page;
-+	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK)) {
-+		unsigned int pgnr;
-+		struct page *oldpage;
- 
--	/* error out if one pcluster is refenenced multiple times. */
--	if (oldpage) {
--		DBG_BUGON(1);
--		z_erofs_page_mark_eio(oldpage);
--		z_erofs_onlinepage_endio(oldpage);
--		return -EFSCORRUPTED;
-+		pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
-+		DBG_BUGON(pgnr >= be->nr_pages);
-+		oldpage = be->decompressed_pages[pgnr];
-+		be->decompressed_pages[pgnr] = bvec->page;
-+
-+		if (!oldpage)
-+			return;
-+	}
-+
-+	/* (cold path) one pcluster is requested multiple times */
-+	item = kmalloc(sizeof(*item), GFP_KERNEL | __GFP_NOFAIL);
-+	item->bvec = *bvec;
-+	list_add(&item->list, &be->decompressed_secondary_bvecs);
-+}
-+
-+static void z_erofs_fill_other_copies(struct z_erofs_decompress_backend *be,
-+				      int err)
-+{
-+	unsigned int off0 = be->pcl->pageofs_out;
-+	struct list_head *p, *n;
-+
-+	list_for_each_safe(p, n, &be->decompressed_secondary_bvecs) {
-+		struct z_erofs_bvec_item *bvi;
-+		unsigned int end, cur;
-+		void *dst, *src;
-+
-+		bvi = container_of(p, struct z_erofs_bvec_item, list);
-+		cur = bvi->bvec.offset < 0 ? -bvi->bvec.offset : 0;
-+		end = min_t(unsigned int, be->pcl->length - bvi->bvec.offset,
-+			    bvi->bvec.end);
-+		dst = kmap_local_page(bvi->bvec.page);
-+		while (cur < end) {
-+			unsigned int pgnr, scur, len;
-+
-+			pgnr = (bvi->bvec.offset + cur + off0) >> PAGE_SHIFT;
-+			DBG_BUGON(pgnr >= be->nr_pages);
-+
-+			scur = bvi->bvec.offset + cur -
-+					((pgnr << PAGE_SHIFT) - off0);
-+			len = min_t(unsigned int, end - cur, PAGE_SIZE - scur);
-+			if (!be->decompressed_pages[pgnr]) {
-+				err = -EFSCORRUPTED;
-+				cur += len;
-+				continue;
-+			}
-+			src = kmap_local_page(be->decompressed_pages[pgnr]);
-+			memcpy(dst + cur, src + scur, len);
-+			kunmap_local(src);
-+			cur += len;
-+		}
-+		kunmap_local(dst);
-+		if (err)
-+			z_erofs_page_mark_eio(bvi->bvec.page);
-+		z_erofs_onlinepage_endio(bvi->bvec.page);
-+		list_del(p);
-+		kfree(bvi);
- 	}
--	return 0;
- }
- 
--static int z_erofs_parse_out_bvecs(struct z_erofs_decompress_backend *be)
-+static void z_erofs_parse_out_bvecs(struct z_erofs_decompress_backend *be)
- {
- 	struct z_erofs_pcluster *pcl = be->pcl;
- 	struct z_erofs_bvec_iter biter;
- 	struct page *old_bvpage;
--	int i, err = 0;
-+	int i;
- 
- 	z_erofs_bvec_iter_begin(&biter, &pcl->bvset, Z_EROFS_INLINE_BVECS, 0);
- 	for (i = 0; i < pcl->vcnt; ++i) {
-@@ -883,13 +928,12 @@ static int z_erofs_parse_out_bvecs(struct z_erofs_decompress_backend *be)
- 			z_erofs_put_shortlivedpage(be->pagepool, old_bvpage);
- 
- 		DBG_BUGON(z_erofs_page_is_invalidated(bvec.page));
--		err = z_erofs_do_decompressed_bvec(be, &bvec);
-+		z_erofs_do_decompressed_bvec(be, &bvec);
- 	}
- 
- 	old_bvpage = z_erofs_bvec_iter_end(&biter);
- 	if (old_bvpage)
- 		z_erofs_put_shortlivedpage(be->pagepool, old_bvpage);
--	return err;
- }
- 
- static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
-@@ -924,7 +968,7 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
- 					err = -EIO;
- 				continue;
- 			}
--			err = z_erofs_do_decompressed_bvec(be, bvec);
-+			z_erofs_do_decompressed_bvec(be, bvec);
- 			*overlapped = true;
- 		}
- 	}
-@@ -940,7 +984,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	struct erofs_sb_info *const sbi = EROFS_SB(be->sb);
- 	struct z_erofs_pcluster *pcl = be->pcl;
- 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
--	unsigned int i, inputsize, err2;
-+	unsigned int i, inputsize;
- 	struct page *page;
- 	bool overlapped;
- 
-@@ -970,10 +1014,8 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 			kvcalloc(pclusterpages, sizeof(struct page *),
- 				 GFP_KERNEL | __GFP_NOFAIL);
- 
--	err = z_erofs_parse_out_bvecs(be);
--	err2 = z_erofs_parse_in_bvecs(be, &overlapped);
--	if (err2)
--		err = err2;
-+	z_erofs_parse_out_bvecs(be);
-+	err = z_erofs_parse_in_bvecs(be, &overlapped);
- 	if (err)
- 		goto out;
- 
-@@ -993,6 +1035,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 					.alg = pcl->algorithmformat,
- 					.inplace_io = overlapped,
- 					.partial_decoding = pcl->partial,
-+					.fillgaps = pcl->multibases,
- 				 }, be->pagepool);
- 
- out:
-@@ -1016,6 +1059,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	if (be->compressed_pages < be->onstack_pages ||
- 	    be->compressed_pages >= be->onstack_pages + Z_EROFS_ONSTACK_PAGES)
- 		kvfree(be->compressed_pages);
-+	z_erofs_fill_other_copies(be, err);
- 
- 	for (i = 0; i < be->nr_pages; ++i) {
- 		page = be->decompressed_pages[i];
-@@ -1052,6 +1096,8 @@ static void z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
- 	struct z_erofs_decompress_backend be = {
- 		.sb = io->sb,
- 		.pagepool = pagepool,
-+		.decompressed_secondary_bvecs =
-+			LIST_HEAD_INIT(be.decompressed_secondary_bvecs),
- 	};
- 	z_erofs_next_pcluster_t owned = io->head;
- 
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index a7fd44d21d9e..515fa2b28b97 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -84,6 +84,9 @@ struct z_erofs_pcluster {
- 	/* L: whether partial decompression or not */
- 	bool partial;
- 
-+	/* L: indicate several pageofs_outs or not */
-+	bool multibases;
-+
- 	/* A: compressed bvecs (can be cached or inplaced pages) */
- 	struct z_erofs_bvec compressed_bvecs[];
- };
--- 
-2.24.4
+Testdata above as attachment for reference.
 
+--8p0f8rH78wjnSdC4
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="pat.erofs.xz"
+Content-Transfer-Encoding: base64
+
+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
+AgAAAAAEWVo=
+
+--8p0f8rH78wjnSdC4--
