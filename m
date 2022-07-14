@@ -1,31 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0058D574EFE
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:21:54 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF045574EFC
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 15:21:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFWh6tnlz3cDF
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:21:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LkFWd42Xwz3c5v
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Jul 2022 23:21:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFW90vmlz3c6n
-	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Jul 2022 23:21:23 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJJkPLG_1657804870;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJkPLG_1657804870)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LkFWX267wz3c40
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Jul 2022 23:21:35 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJJkPMN_1657804872;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJJkPMN_1657804872)
           by smtp.aliyun-inc.com;
-          Thu, 14 Jul 2022 21:21:12 +0800
+          Thu, 14 Jul 2022 21:21:13 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH 09/16] erofs: get rid of `enum z_erofs_page_type'
-Date: Thu, 14 Jul 2022 21:20:44 +0800
-Message-Id: <20220714132051.46012-10-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 10/16] erofs: clean up `enum z_erofs_collectmode'
+Date: Thu, 14 Jul 2022 21:20:45 +0800
+Message-Id: <20220714132051.46012-11-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
 References: <20220714132051.46012-1-hsiangkao@linux.alibaba.com>
@@ -46,94 +46,204 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Remove it since pagevec[] is no longer used.
+`enum z_erofs_collectmode' is really ambiguous, but I'm not quite
+sure if there are better naming, basically it's used to judge whether
+inplace I/O can be used due to the current status of pclusters in
+the chain.
+
+Rename it as `enum z_erofs_pclustermode' instead.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 30 +++++-------------------------
- 1 file changed, 5 insertions(+), 25 deletions(-)
+ fs/erofs/zdata.c | 63 ++++++++++++++++++++++++------------------------
+ 1 file changed, 31 insertions(+), 32 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 9065e160d6a6..cdfb2706e4ae 100644
+index cdfb2706e4ae..55bcd6e5ae9a 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -27,17 +27,6 @@ static struct z_erofs_pcluster_slab pcluster_pool[] __read_mostly = {
- 	_PCLP(Z_EROFS_PCLUSTER_MAX_PAGES)
- };
- 
--/* page type in pagevec for decompress subsystem */
--enum z_erofs_page_type {
--	/* including Z_EROFS_VLE_PAGE_TAIL_EXCLUSIVE */
--	Z_EROFS_PAGE_TYPE_EXCLUSIVE,
--
--	Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED,
--
--	Z_EROFS_VLE_PAGE_TYPE_HEAD,
--	Z_EROFS_VLE_PAGE_TYPE_MAX
--};
--
- struct z_erofs_bvec_iter {
- 	struct page *bvpage;
- 	struct z_erofs_bvset *bvset;
-@@ -429,7 +418,6 @@ int erofs_try_to_free_cached_page(struct page *page)
- 	return ret;
+@@ -227,30 +227,29 @@ int __init z_erofs_init_zip_subsystem(void)
+ 	return err;
  }
  
--/* page_type must be Z_EROFS_PAGE_TYPE_EXCLUSIVE */
- static bool z_erofs_try_inplace_io(struct z_erofs_decompress_frontend *fe,
- 				   struct z_erofs_bvec *bvec)
- {
-@@ -447,13 +435,11 @@ static bool z_erofs_try_inplace_io(struct z_erofs_decompress_frontend *fe,
+-enum z_erofs_collectmode {
+-	COLLECT_SECONDARY,
+-	COLLECT_PRIMARY,
++enum z_erofs_pclustermode {
++	Z_EROFS_PCLUSTER_INFLIGHT,
+ 	/*
+-	 * The current collection was the tail of an exist chain, in addition
+-	 * that the previous processed chained collections are all decided to
++	 * The current pclusters was the tail of an exist chain, in addition
++	 * that the previous processed chained pclusters are all decided to
+ 	 * be hooked up to it.
+-	 * A new chain will be created for the remaining collections which are
+-	 * not processed yet, therefore different from COLLECT_PRIMARY_FOLLOWED,
+-	 * the next collection cannot reuse the whole page safely in
+-	 * the following scenario:
++	 * A new chain will be created for the remaining pclusters which are
++	 * not processed yet, so different from Z_EROFS_PCLUSTER_FOLLOWED,
++	 * the next pcluster cannot reuse the whole page safely for inplace I/O
++	 * in the following scenario:
+ 	 *  ________________________________________________________________
+ 	 * |      tail (partial) page     |       head (partial) page       |
+-	 * |   (belongs to the next cl)   |   (belongs to the current cl)   |
+-	 * |_______PRIMARY_FOLLOWED_______|________PRIMARY_HOOKED___________|
++	 * |   (belongs to the next pcl)  |   (belongs to the current pcl)  |
++	 * |_______PCLUSTER_FOLLOWED______|________PCLUSTER_HOOKED__________|
+ 	 */
+-	COLLECT_PRIMARY_HOOKED,
++	Z_EROFS_PCLUSTER_HOOKED,
+ 	/*
+-	 * a weak form of COLLECT_PRIMARY_FOLLOWED, the difference is that it
++	 * a weak form of Z_EROFS_PCLUSTER_FOLLOWED, the difference is that it
+ 	 * could be dispatched into bypass queue later due to uptodated managed
+ 	 * pages. All related online pages cannot be reused for inplace I/O (or
+ 	 * pagevec) since it can be directly decoded without I/O submission.
+ 	 */
+-	COLLECT_PRIMARY_FOLLOWED_NOINPLACE,
++	Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE,
+ 	/*
+ 	 * The current collection has been linked with the owned chain, and
+ 	 * could also be linked with the remaining collections, which means
+@@ -261,12 +260,12 @@ enum z_erofs_collectmode {
+ 	 *  ________________________________________________________________
+ 	 * |  tail (partial) page |          head (partial) page           |
+ 	 * |  (of the current cl) |      (of the previous collection)      |
+-	 * |  PRIMARY_FOLLOWED or |                                        |
+-	 * |_____PRIMARY_HOOKED___|____________PRIMARY_FOLLOWED____________|
++	 * | PCLUSTER_FOLLOWED or |                                        |
++	 * |_____PCLUSTER_HOOKED__|___________PCLUSTER_FOLLOWED____________|
+ 	 *
+ 	 * [  (*) the above page can be used as inplace I/O.               ]
+ 	 */
+-	COLLECT_PRIMARY_FOLLOWED,
++	Z_EROFS_PCLUSTER_FOLLOWED,
+ };
  
- /* callers must be with pcluster lock held */
- static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
--			       struct z_erofs_bvec *bvec,
--			       enum z_erofs_page_type type)
-+			       struct z_erofs_bvec *bvec, bool exclusive)
+ struct z_erofs_decompress_frontend {
+@@ -277,7 +276,7 @@ struct z_erofs_decompress_frontend {
+ 	struct page *candidate_bvpage;
+ 	struct z_erofs_pcluster *pcl, *tailpcl;
+ 	z_erofs_next_pcluster_t owned_head;
+-	enum z_erofs_collectmode mode;
++	enum z_erofs_pclustermode mode;
+ 
+ 	bool readahead;
+ 	/* used for applying cache strategy on the fly */
+@@ -290,7 +289,7 @@ struct z_erofs_decompress_frontend {
+ 
+ #define DECOMPRESS_FRONTEND_INIT(__i) { \
+ 	.inode = __i, .owned_head = Z_EROFS_PCLUSTER_TAIL, \
+-	.mode = COLLECT_PRIMARY_FOLLOWED, .backmost = true }
++	.mode = Z_EROFS_PCLUSTER_FOLLOWED, .backmost = true }
+ 
+ static struct page *z_pagemap_global[Z_EROFS_VMAP_GLOBAL_PAGES];
+ static DEFINE_MUTEX(z_pagemap_global_lock);
+@@ -310,7 +309,7 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
+ 			__GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN;
+ 	unsigned int i;
+ 
+-	if (fe->mode < COLLECT_PRIMARY_FOLLOWED)
++	if (fe->mode < Z_EROFS_PCLUSTER_FOLLOWED)
+ 		return;
+ 
+ 	for (i = 0; i < pcl->pclusterpages; ++i) {
+@@ -358,7 +357,7 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
+ 	 * managed cache since it can be moved to the bypass queue instead.
+ 	 */
+ 	if (standalone)
+-		fe->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
++		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
+ }
+ 
+ /* called by erofs_shrinker to get rid of all compressed_pages */
+@@ -439,12 +438,12 @@ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
  {
  	int ret;
  
--	if (fe->mode >= COLLECT_PRIMARY &&
--	    type == Z_EROFS_PAGE_TYPE_EXCLUSIVE) {
-+	if (fe->mode >= COLLECT_PRIMARY && exclusive) {
+-	if (fe->mode >= COLLECT_PRIMARY && exclusive) {
++	if (exclusive) {
  		/* give priority for inplaceio to use file pages first */
  		if (z_erofs_try_inplace_io(fe, bvec))
  			return 0;
-@@ -718,10 +704,9 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
- 	struct erofs_map_blocks *const map = &fe->map;
- 	const loff_t offset = page_offset(page);
--	bool tight = true;
-+	bool tight = true, exclusive;
- 
- 	enum z_erofs_cache_alloctype cache_strategy;
--	enum z_erofs_page_type page_type;
- 	unsigned int cur, end, spiltted, index;
- 	int err = 0;
- 
-@@ -798,12 +783,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		goto next_part;
+ 		/* otherwise, check if it can be used as a bvpage */
+-		if (fe->mode >= COLLECT_PRIMARY_FOLLOWED &&
++		if (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED &&
+ 		    !fe->candidate_bvpage)
+ 			fe->candidate_bvpage = bvec->page;
+ 	}
+@@ -463,7 +462,7 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
+ 		    *owned_head) == Z_EROFS_PCLUSTER_NIL) {
+ 		*owned_head = &pcl->next;
+ 		/* so we can attach this pcluster to our submission chain. */
+-		f->mode = COLLECT_PRIMARY_FOLLOWED;
++		f->mode = Z_EROFS_PCLUSTER_FOLLOWED;
+ 		return;
  	}
  
--	/* let's derive page type */
--	page_type = cur ? Z_EROFS_VLE_PAGE_TYPE_HEAD :
--		(!spiltted ? Z_EROFS_PAGE_TYPE_EXCLUSIVE :
--			(tight ? Z_EROFS_PAGE_TYPE_EXCLUSIVE :
--				Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED));
--
-+	exclusive = (!cur && (!spiltted || tight));
- 	if (cur)
- 		tight &= (fe->mode >= COLLECT_PRIMARY_FOLLOWED);
+@@ -474,12 +473,12 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
+ 	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_TAIL,
+ 		    *owned_head) == Z_EROFS_PCLUSTER_TAIL) {
+ 		*owned_head = Z_EROFS_PCLUSTER_TAIL;
+-		f->mode = COLLECT_PRIMARY_HOOKED;
++		f->mode = Z_EROFS_PCLUSTER_HOOKED;
+ 		f->tailpcl = NULL;
+ 		return;
+ 	}
+ 	/* type 3, it belongs to a chain, but it isn't the end of the chain */
+-	f->mode = COLLECT_PRIMARY;
++	f->mode = Z_EROFS_PCLUSTER_INFLIGHT;
+ }
  
-@@ -812,7 +792,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 					.page = page,
- 					.offset = offset - map->m_la,
- 					.end = end,
--				  }), page_type);
-+				  }), exclusive);
- 	/* should allocate an additional short-lived page for bvset */
- 	if (err == -EAGAIN && !fe->candidate_bvpage) {
- 		fe->candidate_bvpage = alloc_page(GFP_NOFS | __GFP_NOFAIL);
+ static int z_erofs_lookup_pcluster(struct z_erofs_decompress_frontend *fe)
+@@ -554,7 +553,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ 	/* new pclusters should be claimed as type 1, primary and followed */
+ 	pcl->next = fe->owned_head;
+ 	pcl->pageofs_out = map->m_la & ~PAGE_MASK;
+-	fe->mode = COLLECT_PRIMARY_FOLLOWED;
++	fe->mode = Z_EROFS_PCLUSTER_FOLLOWED;
+ 
+ 	/*
+ 	 * lock all primary followed works before visible to others
+@@ -676,7 +675,7 @@ static bool z_erofs_collector_end(struct z_erofs_decompress_frontend *fe)
+ 	 * if all pending pages are added, don't hold its reference
+ 	 * any longer if the pcluster isn't hosted by ourselves.
+ 	 */
+-	if (fe->mode < COLLECT_PRIMARY_FOLLOWED_NOINPLACE)
++	if (fe->mode < Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE)
+ 		erofs_workgroup_put(&pcl->obj);
+ 
+ 	fe->pcl = NULL;
+@@ -756,7 +755,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		get_page(fe->map.buf.page);
+ 		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page,
+ 			   fe->map.buf.page);
+-		fe->mode = COLLECT_PRIMARY_FOLLOWED_NOINPLACE;
++		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
+ 	} else {
+ 		/* bind cache first when cached decompression is preferred */
+ 		if (should_alloc_managed_pages(fe, sbi->opt.cache_strategy,
+@@ -774,8 +773,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	 * those chains are handled asynchronously thus the page cannot be used
+ 	 * for inplace I/O or pagevec (should be processed in strict order.)
+ 	 */
+-	tight &= (fe->mode >= COLLECT_PRIMARY_HOOKED &&
+-		  fe->mode != COLLECT_PRIMARY_FOLLOWED_NOINPLACE);
++	tight &= (fe->mode >= Z_EROFS_PCLUSTER_HOOKED &&
++		  fe->mode != Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE);
+ 
+ 	cur = end - min_t(unsigned int, offset + end - map->m_la, end);
+ 	if (!(map->m_flags & EROFS_MAP_MAPPED)) {
+@@ -785,7 +784,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 
+ 	exclusive = (!cur && (!spiltted || tight));
+ 	if (cur)
+-		tight &= (fe->mode >= COLLECT_PRIMARY_FOLLOWED);
++		tight &= (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED);
+ 
+ retry:
+ 	err = z_erofs_attach_page(fe, &((struct z_erofs_bvec) {
 -- 
 2.24.4
 
