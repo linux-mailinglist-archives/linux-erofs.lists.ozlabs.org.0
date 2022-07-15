@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F4AB57649E
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Jul 2022 17:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 552C757649C
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Jul 2022 17:42:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lkwbt0Frtz3cjC
-	for <lists+linux-erofs@lfdr.de>; Sat, 16 Jul 2022 01:42:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lkwbp1kj0z3chV
+	for <lists+linux-erofs@lfdr.de>; Sat, 16 Jul 2022 01:42:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lkwbd74rHz3cD7
-	for <linux-erofs@lists.ozlabs.org>; Sat, 16 Jul 2022 01:42:36 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJPnC8L_1657899746;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJPnC8L_1657899746)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lkwbd6D8qz3cFj
+	for <linux-erofs@lists.ozlabs.org>; Sat, 16 Jul 2022 01:42:37 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VJPnC8s_1657899747;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJPnC8s_1657899747)
           by smtp.aliyun-inc.com;
-          Fri, 15 Jul 2022 23:42:27 +0800
+          Fri, 15 Jul 2022 23:42:28 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH v2 13/16] erofs: try to leave (de)compressed_pages on stack if possible
-Date: Fri, 15 Jul 2022 23:42:00 +0800
-Message-Id: <20220715154203.48093-14-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 14/16] erofs: introduce z_erofs_do_decompressed_bvec()
+Date: Fri, 15 Jul 2022 23:42:01 +0800
+Message-Id: <20220715154203.48093-15-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220715154203.48093-1-hsiangkao@linux.alibaba.com>
 References: <20220715154203.48093-1-hsiangkao@linux.alibaba.com>
@@ -46,107 +46,102 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-For the most cases, small pclusters can be decompressed with page
-arrays on stack.
-
-Try to leave both (de)compressed_pages on stack if possible as before.
+Both out_bvecs and in_bvecs share the common logic for decompressed
+buffers. So let's make a helper for this.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ fs/erofs/zdata.c | 49 ++++++++++++++++++++++--------------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 1cf377ed1452..d93ba0adcf9e 100644
+index d93ba0adcf9e..d4db2c1d53a6 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -858,6 +858,7 @@ struct z_erofs_decompress_backend {
- 	struct page **compressed_pages;
- 
- 	struct page **pagepool;
-+	unsigned int onstack_used;
+@@ -861,6 +861,26 @@ struct z_erofs_decompress_backend {
+ 	unsigned int onstack_used;
  };
  
++static int z_erofs_do_decompressed_bvec(struct z_erofs_decompress_backend *be,
++					struct z_erofs_bvec *bvec)
++{
++	unsigned int pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
++	struct page *oldpage;
++
++	DBG_BUGON(pgnr >= be->pcl->nr_pages);
++	oldpage = be->decompressed_pages[pgnr];
++	be->decompressed_pages[pgnr] = bvec->page;
++
++	/* error out if one pcluster is refenenced multiple times. */
++	if (oldpage) {
++		DBG_BUGON(1);
++		z_erofs_page_mark_eio(oldpage);
++		z_erofs_onlinepage_endio(oldpage);
++		return -EFSCORRUPTED;
++	}
++	return 0;
++}
++
  static int z_erofs_parse_out_bvecs(struct z_erofs_decompress_backend *be)
-@@ -904,14 +905,9 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
  {
  	struct z_erofs_pcluster *pcl = be->pcl;
- 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
--	struct page **compressed_pages;
- 	int i, err = 0;
+@@ -871,27 +891,14 @@ static int z_erofs_parse_out_bvecs(struct z_erofs_decompress_backend *be)
+ 	z_erofs_bvec_iter_begin(&biter, &pcl->bvset, Z_EROFS_INLINE_BVECS, 0);
+ 	for (i = 0; i < pcl->vcnt; ++i) {
+ 		struct z_erofs_bvec bvec;
+-		unsigned int pgnr;
  
--	/* XXX: will have a better approach in the following commits */
--	compressed_pages = kmalloc_array(pclusterpages, sizeof(struct page *),
--					 GFP_KERNEL | __GFP_NOFAIL);
- 	*overlapped = false;
--
+ 		z_erofs_bvec_dequeue(&biter, &bvec, &old_bvpage);
+ 
+ 		if (old_bvpage)
+ 			z_erofs_put_shortlivedpage(be->pagepool, old_bvpage);
+ 
+-		pgnr = (bvec.offset + pcl->pageofs_out) >> PAGE_SHIFT;
+-		DBG_BUGON(pgnr >= pcl->nr_pages);
+ 		DBG_BUGON(z_erofs_page_is_invalidated(bvec.page));
+-		/*
+-		 * currently EROFS doesn't support multiref(dedup),
+-		 * so here erroring out one multiref page.
+-		 */
+-		if (be->decompressed_pages[pgnr]) {
+-			DBG_BUGON(1);
+-			z_erofs_page_mark_eio(be->decompressed_pages[pgnr]);
+-			z_erofs_onlinepage_endio(be->decompressed_pages[pgnr]);
+-			err = -EFSCORRUPTED;
+-		}
+-		be->decompressed_pages[pgnr] = bvec.page;
++		err = z_erofs_do_decompressed_bvec(be, &bvec);
+ 	}
+ 
+ 	old_bvpage = z_erofs_bvec_iter_end(&biter);
+@@ -911,7 +918,6 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
  	for (i = 0; i < pclusterpages; ++i) {
  		struct z_erofs_bvec *bvec = &pcl->compressed_bvecs[i];
  		struct page *page = bvec->page;
-@@ -922,7 +918,7 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
- 			DBG_BUGON(1);
- 			continue;
- 		}
--		compressed_pages[i] = page;
-+		be->compressed_pages[i] = page;
+-		unsigned int pgnr;
  
- 		if (z_erofs_is_inline_pcluster(pcl)) {
- 			if (!PageUptodate(page))
-@@ -953,11 +949,8 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
- 		}
- 	}
- 
--	if (err) {
--		kfree(compressed_pages);
-+	if (err)
- 		return err;
--	}
--	be->compressed_pages = compressed_pages;
- 	return 0;
- }
- 
-@@ -976,15 +969,28 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	mutex_lock(&pcl->lock);
- 	nr_pages = pcl->nr_pages;
- 
-+	/* allocate (de)compressed page arrays if cannot be kept on stack */
-+	be->decompressed_pages = NULL;
-+	be->compressed_pages = NULL;
-+	be->onstack_used = 0;
- 	if (nr_pages <= Z_EROFS_ONSTACK_PAGES) {
- 		be->decompressed_pages = be->onstack_pages;
-+		be->onstack_used = nr_pages;
- 		memset(be->decompressed_pages, 0,
- 		       sizeof(struct page *) * nr_pages);
--	} else {
-+	}
-+
-+	if (pclusterpages + be->onstack_used <= Z_EROFS_ONSTACK_PAGES)
-+		be->compressed_pages = be->onstack_pages + be->onstack_used;
-+
-+	if (!be->decompressed_pages)
- 		be->decompressed_pages =
- 			kvcalloc(nr_pages, sizeof(struct page *),
- 				 GFP_KERNEL | __GFP_NOFAIL);
--	}
-+	if (!be->compressed_pages)
-+		be->compressed_pages =
-+			kvcalloc(pclusterpages, sizeof(struct page *),
-+				 GFP_KERNEL | __GFP_NOFAIL);
- 
- 	err2 = z_erofs_parse_out_bvecs(be);
- 	if (err2)
-@@ -1041,7 +1047,9 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
+ 		/* compressed pages ought to be present before decompressing */
+ 		if (!page) {
+@@ -933,18 +939,7 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
+ 					err = -EIO;
+ 				continue;
+ 			}
+-
+-			pgnr = (bvec->offset + pcl->pageofs_out) >> PAGE_SHIFT;
+-			DBG_BUGON(pgnr >= pcl->nr_pages);
+-			if (be->decompressed_pages[pgnr]) {
+-				DBG_BUGON(1);
+-				z_erofs_page_mark_eio(
+-						be->decompressed_pages[pgnr]);
+-				z_erofs_onlinepage_endio(
+-						be->decompressed_pages[pgnr]);
+-				err = -EFSCORRUPTED;
+-			}
+-			be->decompressed_pages[pgnr] = page;
++			err = z_erofs_do_decompressed_bvec(be, bvec);
+ 			*overlapped = true;
  		}
  	}
--	kfree(be->compressed_pages);
-+	if (be->compressed_pages < be->onstack_pages ||
-+	    be->compressed_pages >= be->onstack_pages + Z_EROFS_ONSTACK_PAGES)
-+		kvfree(be->compressed_pages);
- 
- 	for (i = 0; i < nr_pages; ++i) {
- 		page = be->decompressed_pages[i];
 -- 
 2.24.4
 
