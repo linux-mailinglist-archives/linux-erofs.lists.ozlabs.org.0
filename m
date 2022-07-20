@@ -1,33 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4324157B2CC
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jul 2022 10:22:56 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 690B457BDCF
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jul 2022 20:31:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lnpbx247rz3blT
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Jul 2022 18:22:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lp46K1pz8z3c4B
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jul 2022 04:31:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1658341897;
+	bh=zwNI3jQ7tLs0upKG/iQyujfw1zUDS83J8vSSyo2PQPg=;
+	h=Date:From:To:Subject:List-Id:List-Unsubscribe:List-Archive:
+	 List-Post:List-Help:List-Subscribe:From;
+	b=P+jg6r/HXUHZjuD8yFzkllPEZDPW83QHXnXMGxVoO05y/0tTCGjpM0ItbVGtzMJYA
+	 SnBTnlH4RGuqgu7Q1QyAejukIB2Bn2hWT+6g1jxPzQpJu249COXbwS0/UOrlO45uni
+	 2QsKPLAVr5o87LAMgi1EC37XHo52aSyPB2OCL9kzlY5HIcNWG92lgW+v+KP5M6qtQS
+	 6PCJT9d3QhYCaigOhCWVxvHqSc7R0TboKXYLPhfkKH7yG0dkCkfD9f9K4wMHt44JkW
+	 XQN0SY8ATdrDUpBAClvL5PsKHJhWKXx0113wjOnzVNP/+9gdrD69QfCDWw6pcev60C
+	 bq3eoppzEoJ5A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.3; helo=out199-3.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out199-3.us.a.mail.aliyun.com (out199-3.us.a.mail.aliyun.com [47.90.199.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lnpbq1Zj5z2xmk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 20 Jul 2022 18:22:43 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VJw6BQ8_1658305349;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VJw6BQ8_1658305349)
-          by smtp.aliyun-inc.com;
-          Wed, 20 Jul 2022 16:22:34 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: get rid of erofs_prepare_dio() helper
-Date: Wed, 20 Jul 2022 16:22:29 +0800
-Message-Id: <20220720082229.12172-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=myqhix.shop (client-ip=116.63.236.191; helo=myqhix.shop; envelope-from=c-smart@myqhix.shop; receiver=<UNKNOWN>)
+X-Greylist: delayed 578 seconds by postgrey-1.36 at boromir; Thu, 21 Jul 2022 04:31:32 AEST
+Received: from myqhix.shop (myqhix.shop [116.63.236.191])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lp46D60p3z3bNj
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jul 2022 04:31:32 +1000 (AEST)
+Received: from uqtegbam (unknown [27.156.205.216])
+	by myqhix.shop (Postfix) with ESMTPA id CBA4CC531E
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jul 2022 02:20:43 +0800 (CST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 myqhix.shop CBA4CC531E
+Date: Thu, 21 Jul 2022 02:20:36 +0800
+From: "2022-07-21 02:20:44" <linux-erofs@lists.ozlabs.org>
+To: <linux-erofs@lists.ozlabs.org>
+Subject: =?utf-8?B?5Zyo5a6F5Yuk5YuZ44Gr6YGp44GX44Gf44Ki44Or44OQ44Kk44OI44Gn44GZYw==?=
+Message-ID: <20220721022044735881@myqhix.shop>
+X-mailer: Foxmail 6, 13, 102, 15 [cn]
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="=====003_Dragon727162578667_====="
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,81 +49,63 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fold in erofs_prepare_dio() in order to simplify the code.
+This is a multi-part message in MIME format.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-v1: https://lore.kernel.org/r/20220506194612.117120-1-hsiangkao@linux.alibaba.com
+--=====003_Dragon727162578667_=====
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
- fs/erofs/data.c | 39 +++++++++++++++------------------------
- 1 file changed, 15 insertions(+), 24 deletions(-)
+5b+c5Yuf44GZ44KLTElORe+8iElE77yJ77yaYTk1ODUNCiAgICAgICAgICANCuiBt+eoru+8muiH
+quWuheOBq+OBhOOBquOBjOOCieWlveOBjeOBquaZgumWk+OBp09LDQogICAgICBb5qWt5YuZ5aeU
+6KiXXeOCquODs+ODqeOCpOODs+OCouODq+ODkOOCpOODiOOAgeWVhuW6l+OBruS6uuawl+OCkumr
+mOOCgeOCiw0KDQrloLHphazvvJrmr47ml6XlhavkuIflhobjgYvjgonljYHkuIflhoYNCg0K5L2c
+5qWt5pmC6ZaT77yaW+alreWLmeWnlOiol10wMDowMO+9njAwOjAwDQrlnKjlroXjg6/jg7zjgq/j
+gavjgarjgorjgb7jgZnjga7jgafjgIENCuOBguOBquOBn+OBruOBlOmDveWQiOOBq+WQiOOCj+OB
+m+OBpueEoeeQhuOBruOBquOBhOevhOWbsuOBpw0K5LuV5LqL44KS6KGM44Gj44Gm44GP44Gg44GV
+44GE44CCDQrjgZToh6rliIbjga7lpb3jgY3jgarjgr/jgqTjg5/jg7PjgrDjgIENCuWlveOBjeOB
+quOBiuS7leS6i+OBruOBv+OCkuOBmeOCi+OBoOOBkeOBp09L44Gn44GZ44CCICAgDQoNCue1jOmo
+k+ODu+izh+agvO+8miDimIXlrabnlJ/jg7vjg5Xjg6rjg7zjgr/jg7zjg7vml6LlqZrogIXjga7m
+lrnjgIHnmobjgZXjgpPlpKfmrZPov47vvIENCuKYheW/heimgee1jOmok+ODu+izh+agvOOBr+OB
+lOOBluOBhOOBvuOBm+OCk+OAgg0K4piF5bGl5q205pu45LiN6KaB44CB5p2l56S+5LiN6KaBDQri
+mIXmnKrntYzpqJPlpKfmrZPov47imIUNCuS4u+WppuOCkuOBr+OBmOOCgeOAgVfjg6/jg7zjgqvj
+g7zjgarjgakNCjIw5Luj772eNDDku6Pjgb7jgafluYXluoPjgYTlsaTjga7jgrnjgr/jg4Pjg5Xj
+gYzlpJrmlbDmtLvouo3kuK3vvIENCuKAu+epuuOBhOOBn+aZgumWk+OBq+OBiuWwj+mBo+OBhOeo
+vOOBjuOBquOBqeOAgemDveWQiOOBq+WQiOOCj+OBm+OBpuOBiuS7leS6i+WPr+iDveOBp+OBmeOA
+gg==
+--=====003_Dragon727162578667_=====
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index fbb037ba326e..fe8ac0e163f7 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -366,42 +366,33 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
- 	return iomap_bmap(mapping, block, &erofs_iomap_ops);
- }
- 
--static int erofs_prepare_dio(struct kiocb *iocb, struct iov_iter *to)
-+static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
- 	struct inode *inode = file_inode(iocb->ki_filp);
--	loff_t align = iocb->ki_pos | iov_iter_count(to) |
--		iov_iter_alignment(to);
--	struct block_device *bdev = inode->i_sb->s_bdev;
--	unsigned int blksize_mask;
--
--	if (bdev)
--		blksize_mask = (1 << ilog2(bdev_logical_block_size(bdev))) - 1;
--	else
--		blksize_mask = (1 << inode->i_blkbits) - 1;
- 
--	if (align & blksize_mask)
--		return -EINVAL;
--	return 0;
--}
--
--static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
--{
- 	/* no need taking (shared) inode lock since it's a ro filesystem */
- 	if (!iov_iter_count(to))
- 		return 0;
- 
- #ifdef CONFIG_FS_DAX
--	if (IS_DAX(iocb->ki_filp->f_mapping->host))
-+	if (IS_DAX(inode))
- 		return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
- #endif
- 	if (iocb->ki_flags & IOCB_DIRECT) {
--		int err = erofs_prepare_dio(iocb, to);
-+		struct block_device *bdev = inode->i_sb->s_bdev;
-+		unsigned int blksize_mask;
-+
-+		if (bdev)
-+			blksize_mask = bdev_logical_block_size(bdev) - 1;
-+		else
-+			blksize_mask = (1 << inode->i_blkbits) - 1;
-+
-+		if ((iocb->ki_pos | iov_iter_count(to) |
-+		     iov_iter_alignment(to)) & blksize_mask)
-+			return -EINVAL;
- 
--		if (!err)
--			return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
--					    NULL, 0, NULL, 0);
--		if (err < 0)
--			return err;
-+		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
-+				    NULL, 0, NULL, 0);
- 	}
- 	return filemap_read(iocb, to, 0);
- }
--- 
-2.24.4
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MIHhtbG5zOm8+PEhFQUQ+DQo8TUVUQSBjb250ZW50PSJ0ZXh0L2h0bWw7IGNo
+YXJzZXQ9dXRmLTgiIGh0dHAtZXF1aXY9Q29udGVudC1UeXBlPg0KPE1FVEEgbmFtZT1HRU5FUkFU
+T1IgY29udGVudD0iTVNIVE1MIDExLjAwLjEwNTcwLjEwMDEiPjwvSEVBRD4NCjxCT0RZPg0KPFA+
+5b+c5Yuf44GZ44KLTElORe+8iElE77yJ77yaYTk1ODU8L1A+DQo8UD4mbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgPC9QPg0KPFA+6IG356iu77ya
+6Ieq5a6F44Gr44GE44Gq44GM44KJ5aW944GN44Gq5pmC6ZaT44GnT0s8L1A+DQo8UD4mbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgW+alreWLmeWnlOiol13jgqrjg7Pjg6njgqTjg7PjgqLj
+g6vjg5DjgqTjg4jjgIHllYblupfjga7kurrmsJfjgpLpq5jjgoHjgos8L1A+DQo8UD4mbmJzcDs8
+L1A+DQo8UD7loLHphazvvJrmr47ml6XlhavkuIflhobjgYvjgonljYHkuIflhoY8L1A+DQo8UD4m
+bmJzcDs8L1A+DQo8UD7kvZzmpa3mmYLplpPvvJpb5qWt5YuZ5aeU6KiXXTAwOjAw772eMDA6MDA8
+L1A+DQo8UD7lnKjlroXjg6/jg7zjgq/jgavjgarjgorjgb7jgZnjga7jgafjgIE8L1A+DQo8UD7j
+gYLjgarjgZ/jga7jgZTpg73lkIjjgavlkIjjgo/jgZvjgabnhKHnkIbjga7jgarjgYTnr4Tlm7Lj
+gac8L1A+DQo8UD7ku5XkuovjgpLooYzjgaPjgabjgY/jgaDjgZXjgYTjgII8L1A+DQo8UD7jgZTo
+h6rliIbjga7lpb3jgY3jgarjgr/jgqTjg5/jg7PjgrDjgIE8L1A+DQo8UD7lpb3jgY3jgarjgYrk
+u5Xkuovjga7jgb/jgpLjgZnjgovjgaDjgZHjgadPS+OBp+OBmeOAgiZuYnNwOyZuYnNwOyA8L1A+
+DQo8UD4mbmJzcDs8L1A+DQo8UD7ntYzpqJPjg7vos4fmoLzvvJog4piF5a2m55Sf44O744OV44Oq
+44O844K/44O844O75pei5ama6ICF44Gu5pa544CB55qG44GV44KT5aSn5q2T6L+O77yBPC9QPg0K
+PFA+4piF5b+F6KaB57WM6aiT44O76LOH5qC844Gv44GU44GW44GE44G+44Gb44KT44CCPC9QPg0K
+PFA+4piF5bGl5q205pu45LiN6KaB44CB5p2l56S+5LiN6KaBPC9QPg0KPFA+4piF5pyq57WM6aiT
+5aSn5q2T6L+O4piFPC9QPg0KPFA+5Li75amm44KS44Gv44GY44KB44CBV+ODr+ODvOOCq+ODvOOB
+quOBqTwvUD4NCjxQPjIw5Luj772eNDDku6Pjgb7jgafluYXluoPjgYTlsaTjga7jgrnjgr/jg4Pj
+g5XjgYzlpJrmlbDmtLvouo3kuK3vvIE8L1A+DQo8UD7igLvnqbrjgYTjgZ/mmYLplpPjgavjgYrl
+sI/pgaPjgYTnqLzjgY7jgarjganjgIHpg73lkIjjgavlkIjjgo/jgZvjgabjgYrku5Xkuovlj6/o
+g73jgafjgZnjgII8L1A+PC9CT0RZPjwvSFRNTD4NCg==
+
+--=====003_Dragon727162578667_=====--
 
