@@ -1,56 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFE6E57C1C4
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jul 2022 02:58:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 897CE57C2DB
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jul 2022 05:40:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LpDhk0Fvxz3c2q
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jul 2022 10:58:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LpJJ33P46z3bl6
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Jul 2022 13:40:51 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZrOE8fOC;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TRMCRTcH;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZrOE8fOC;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TRMCRTcH;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LpDhZ6mtTz2ynx
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jul 2022 10:58:22 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 03243B82156;
-	Thu, 21 Jul 2022 00:58:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A569DC3411E;
-	Thu, 21 Jul 2022 00:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658365095;
-	bh=4JdUnCsdBHN0EjyTXiz3Hpq6NmilTbZ1NX9AlgddAY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrOE8fOCEa33EOc+MrGdUHwW3fjksFG4cBop8yB7tFVDHo9BjzLias1jzWRyLH51v
-	 fAGwV7BFYoPzMrUVIufvB1s6c0S5HsFxnX3Mg1TmRrmdgLgOkovrj1VqRm+7FzilPq
-	 GPzGid3zbu8wzs3tWci8GhRx6trPw/+1VSqkNF7TUUIknp9qM/n03brI45qcwPJTph
-	 Vs/KsQGVjhvnVEL8obeie1jkjUuFr3UntAk8ZVz5yYaLdTiHIVnqBvC/ggsPtF316R
-	 1ndpxPRulgVDszyAPwGH7iqjvCAd2DVB74IoCvU5WhXAJo3xFz8BwSwK7WbQ77V/V9
-	 +56BE0d1w6kjw==
-Date: Thu, 21 Jul 2022 08:58:10 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Paul Spooren <mail@aparcar.org>
-Subject: Re: Tail packing feature on 5.15 Kernel
-Message-ID: <YtikopUfGNUsVfP+@debian>
-Mail-Followup-To: Paul Spooren <mail@aparcar.org>,
-	linux-erofs@lists.ozlabs.org
-References: <DA1A8293-6DE7-49EA-B109-162B121C601A@aparcar.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LpJHy5FRbz2yMk
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Jul 2022 13:40:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658374846; x=1689910846;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nel/GlV29PYmX4rBHkkmTvtWodRP5lYxArG5fZF8X/Q=;
+  b=TRMCRTcHTI6gPgsODieQAQuJOE759ERPwQZ+2ZN32SvEoA2V2AN48Z4m
+   AgzKriNmYZkTZYGatgS5VD//kloyTiKBJWXXQxUwAd+uVH+cUwrLk1WO8
+   ixurfhlcfhnnZEj3GWs0FY1iapZS8KmFDdk97hyxiRfEKuQEvKdZohMrG
+   raInGrZzFxFzYPt2TgIXXAKp0xizRg/zBkQweBQR5gAP/PJ6szrW2CoBh
+   ccw+F8wLQvYCRC9kuwoqeMMWu4kmLDkUZ4Fc51RdfOELxg1hjgL7BVQgG
+   9Iq3Ij19JxQbp812vy+i+Y0B3Hz74Fg2UNriduy9Ra7ZCmkxx8rFpcQ/2
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10414"; a="273786758"
+X-IronPort-AV: E=Sophos;i="5.92,288,1650956400"; 
+   d="scan'208";a="273786758"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2022 20:40:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,288,1650956400"; 
+   d="scan'208";a="573571785"
+Received: from lkp-server01.sh.intel.com (HELO 7dfbdc7c7900) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 20 Jul 2022 20:40:31 -0700
+Received: from kbuild by 7dfbdc7c7900 with local (Exim 4.95)
+	(envelope-from <lkp@intel.com>)
+	id 1oEN38-0001PV-IC;
+	Thu, 21 Jul 2022 03:40:30 +0000
+Date: Thu, 21 Jul 2022 11:40:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ cd084cb3db6e65535fd13f933a15747cdb6240c1
+Message-ID: <62d8caa8.AZfyIAF45V4wu5Dq%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DA1A8293-6DE7-49EA-B109-162B121C601A@aparcar.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,49 +73,135 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Paul,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: cd084cb3db6e65535fd13f933a15747cdb6240c1  erofs: get rid of erofs_prepare_dio() helper
 
-On Wed, Jul 20, 2022 at 10:38:15PM +0200, Paul Spooren wrote:
-> Hi all,
-> 
-> I’m currently in the process[1] to evaluate erofs as a replacement of squashfs on OpenWrt.
-> 
-> Since 5.15 will be our next Kernel release but tail packing is only available starting from 5.17, did anyone already do the work of back porting the required patches? If not, could anyone please give me pointers which patches are required?
-> 
-> Thank you very much for all further advice!
+elapsed time: 732m
 
-Thanks for your interest.
+configs tested: 114
+configs skipped: 6
 
-EROFS is now actively developing so you could see new features
-on each new Linux version (I believe many active in-kernel features
-behave like this, for example iouring.)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The initial EROFS version was formed as an optimized solution to
-compress in 4KiB pcluster so it has minimized memory footprints
-and best random performance on Android smartphones, for now the
-optimized and recommended configuration is still this one (4KiB,
-lz4hc) even though things are quickly changing since recent features
-add more possibility but most of these are still quite new and need
-to go with the next LTS version (maybe 6.0?).
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+arm                          iop32x_defconfig
+sh                      rts7751r2d1_defconfig
+arm                         nhk8815_defconfig
+xtensa                  audio_kc705_defconfig
+powerpc                    adder875_defconfig
+m68k                        m5272c3_defconfig
+mips                         bigsur_defconfig
+csky                              allnoconfig
+um                             i386_defconfig
+arm                      integrator_defconfig
+arm                        mvebu_v7_defconfig
+m68k                           virt_defconfig
+sh                           se7206_defconfig
+sh                             shx3_defconfig
+sh                                  defconfig
+powerpc                        cell_defconfig
+nios2                               defconfig
+openrisc                 simple_smp_defconfig
+arc                 nsimosci_hs_smp_defconfig
+arm                          badge4_defconfig
+sparc                             allnoconfig
+arm                        mini2440_defconfig
+arc                        nsimosci_defconfig
+sparc                            allyesconfig
+mips                  maltasmvp_eva_defconfig
+sh                   secureedge5410_defconfig
+m68k                        mvme147_defconfig
+nios2                         10m50_defconfig
+xtensa                              defconfig
+m68k                            mac_defconfig
+arm                           viper_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                      pcm030_defconfig
+alpha                            allyesconfig
+ia64                         bigsur_defconfig
+arm                          exynos_defconfig
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+loongarch                           defconfig
+loongarch                         allnoconfig
+arm                  randconfig-c002-20220718
+i386                 randconfig-c001-20220718
+x86_64               randconfig-c001-20220718
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64               randconfig-a012-20220718
+x86_64               randconfig-a011-20220718
+x86_64               randconfig-a014-20220718
+x86_64               randconfig-a016-20220718
+x86_64               randconfig-a013-20220718
+x86_64               randconfig-a015-20220718
+i386                 randconfig-a015-20220718
+i386                 randconfig-a011-20220718
+i386                 randconfig-a012-20220718
+i386                 randconfig-a014-20220718
+i386                 randconfig-a016-20220718
+i386                 randconfig-a013-20220718
+i386                          randconfig-a012
+i386                          randconfig-a016
+s390                 randconfig-r044-20220718
+riscv                randconfig-r042-20220718
+arc                  randconfig-r043-20220718
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-Also if you'd like to maximize the compression ratio you probably
-need `fragments` features which is still under development by Yue
-Hu [1].  As I said to you before [2], I still suggest that Openwrt
-takes EROFS as an _alternative approach_ instead of a replacement
-of Squashfs at least this year since we still need time to optimize
-the maximum compression ratio scenarios in addition to 4KiB, lz4hc
-(we also need to wait the next stable XZ-utils version first.)
+clang tested configs:
+arm                      tct_hammer_defconfig
+mips                           ip28_defconfig
+powerpc                 mpc8315_rdb_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                    gamecube_defconfig
+mips                          ath25_defconfig
+powerpc                      acadia_defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+i386                 randconfig-a001-20220718
+i386                 randconfig-a006-20220718
+i386                 randconfig-a002-20220718
+i386                 randconfig-a004-20220718
+i386                 randconfig-a005-20220718
+i386                 randconfig-a003-20220718
+hexagon              randconfig-r041-20220718
+hexagon              randconfig-r045-20220718
 
-[1] https://lore.kernel.org/r/YpXnhI8gBlSgHEBW@B-P7TQMD6M-0146.local
-[2] https://lore.kernel.org/r/cover.1657528899.git.huyue2@coolpad.com
-
-Thanks,
-Gao Xiang
-
-> 
-> Best,
-> Paul
-> 
-> [1]: https://github.com/openwrt/openwrt/pull/9968
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
