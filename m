@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B860B57DA21
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jul 2022 08:16:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7938257DC10
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jul 2022 10:16:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lpzhb6tdtz3c7H
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jul 2022 16:15:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lq2Mt2m7pz3c7M
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Jul 2022 18:16:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 306 seconds by postgrey-1.36 at boromir; Fri, 22 Jul 2022 16:15:51 AEST
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LpzhR643cz307C
-	for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jul 2022 16:15:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VK4..rj_1658470235;
-Received: from 30.227.66.15(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VK4..rj_1658470235)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lq2Mp0bjKz302W
+	for <linux-erofs@lists.ozlabs.org>; Fri, 22 Jul 2022 18:16:35 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VK4F-Js_1658477787;
+Received: from 30.227.66.15(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VK4F-Js_1658477787)
           by smtp.aliyun-inc.com;
-          Fri, 22 Jul 2022 14:10:36 +0800
-Message-ID: <528c0378-90c2-8bcd-032c-837fc82bb321@linux.alibaba.com>
-Date: Fri, 22 Jul 2022 14:10:35 +0800
+          Fri, 22 Jul 2022 16:16:27 +0800
+Message-ID: <f50081dc-a1e9-2714-77a5-9c17e2334d00@linux.alibaba.com>
+Date: Fri, 22 Jul 2022 16:16:26 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH] erofs: get rid of the leftover PAGE_SIZE in dir.c
+Subject: Re: [PATCH v3] erofs: update ctx->pos for every emitted dirent
 Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, Chao Yu <chao@kernel.org>,
- linux-erofs@lists.ozlabs.org
-References: <20220619150940.121005-1-hsiangkao@linux.alibaba.com>
+To: Hongnan Li <hongnan.li@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org, chao@kernel.org
+References: <20220527072536.68516-1-hongnan.li@linux.alibaba.com>
+ <20220629081550.23501-1-hongnan.li@linux.alibaba.com>
 From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20220619150940.121005-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20220629081550.23501-1-hongnan.li@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -50,42 +50,101 @@ Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+The patch itself looks good to me.
 
 
-On 6/19/22 11:09 PM, Gao Xiang wrote:
-> Convert the last hardcoded PAGE_SIZEs of uncompressed cases.
+On 6/29/22 4:15 PM, Hongnan Li wrote:
+> erofs_readdir update ctx->pos after filling a batch of dentries
+> and it may cause dir/files duplication for NFS readdirplus which
+> depends on ctx->pos to fill dir correctly. So update ctx->pos for
+> every emitted dirent in erofs_fill_dentries to fix it.
 > 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
+> Signed-off-by: Hongnan Li <hongnan.li@linux.alibaba.com>
 > ---
->  fs/erofs/dir.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/erofs/dir.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
 > 
 > diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-> index 18e59821c597..723f5223a4fa 100644
+> index 18e59821c597..6fc325052853 100644
 > --- a/fs/erofs/dir.c
 > +++ b/fs/erofs/dir.c
-> @@ -90,7 +90,7 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+> @@ -22,10 +22,9 @@ static void debug_one_dentry(unsigned char d_type, const char *de_name,
+>  }
 >  
->  		nameoff = le16_to_cpu(de->nameoff);
->  		if (nameoff < sizeof(struct erofs_dirent) ||
-> -		    nameoff >= PAGE_SIZE) {
-> +		    nameoff >= EROFS_BLKSIZ) {
->  			erofs_err(dir->i_sb,
+>  static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
+> -			       void *dentry_blk, unsigned int *ofs,
+> +			       void *dentry_blk, struct erofs_dirent *de,
+>  			       unsigned int nameoff, unsigned int maxsize)
+>  {
+> -	struct erofs_dirent *de = dentry_blk + *ofs;
+>  	const struct erofs_dirent *end = dentry_blk + nameoff;
+>  
+>  	while (de < end) {
+> @@ -59,9 +58,8 @@ static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
+>  			/* stopped by some reason */
+>  			return 1;
+>  		++de;
+> -		*ofs += sizeof(struct erofs_dirent);
+> +		ctx->pos += sizeof(struct erofs_dirent);
+>  	}
+> -	*ofs = maxsize;
+>  	return 0;
+>  }
+>  
+> @@ -95,7 +93,7 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
 >  				  "invalid de[0].nameoff %u @ nid %llu",
 >  				  nameoff, EROFS_I(dir)->nid);
-> @@ -99,7 +99,7 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+>  			err = -EFSCORRUPTED;
+> -			goto skip_this;
+> +			break;
 >  		}
 >  
 >  		maxsize = min_t(unsigned int,
-> -				dirsize - ctx->pos + ofs, PAGE_SIZE);
-> +				dirsize - ctx->pos + ofs, EROFS_BLKSIZ);
+> @@ -106,17 +104,17 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+>  			initial = false;
 >  
->  		/* search dirents at the arbitrary position */
->  		if (initial) {
+>  			ofs = roundup(ofs, sizeof(struct erofs_dirent));
+> +			ctx->pos = blknr_to_addr(i) + ofs;
+>  			if (ofs >= nameoff)
+>  				goto skip_this;
 
-LGTM.
+Besides, I thinks there's another issue with erofs_readdir() here
+(though unrelated to the issue this patch wants to fix).
 
-Reviewed-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+We need to update ctx->pos correctly if the initial file position has
+exceeded nameoff. ctx->pos needs to be updated to the end of
+EROFS_BLKSIZ or directory's i_size, surpassing the remaining name string
+in the current EROFS block.
+
+>  		}
+>  
+> -		err = erofs_fill_dentries(dir, ctx, de, &ofs,
+> +		err = erofs_fill_dentries(dir, ctx, de, (void *)de + ofs,
+>  					  nameoff, maxsize);
+> -skip_this:
+> -		ctx->pos = blknr_to_addr(i) + ofs;
+> -
+>  		if (err)
+>  			break;
+
+> +		ctx->pos = blknr_to_addr(i) + maxsize;
+
+It's quite easy to fix the above issue. We only need to move this line
+beneath skip_this label.
+
+> +skip_this:>  		++i;
+>  		ofs = 0;
+>  	}
+
+like:
+
+	skip_this:
+		ctx->pos = blknr_to_addr(i) + maxsize;
+		++i;
+		ofs = 0;
+
+Thus we'd better fold this simple fix into this patch.
 
 -- 
 Thanks,
