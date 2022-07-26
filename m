@@ -1,56 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D58BC580ACE
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 07:23:09 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5F74580ACF
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 07:23:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LsQKl5Kzrz3bq2
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 15:23:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LsQKp5Wzrz3c3L
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 15:23:10 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1658812987;
-	bh=2nhzVVuKofriwbmEVC76SfMev9B/InrAWOCi8ssri1I=;
+	s=201707; t=1658812990;
+	bh=Uq70NWCgKNoYyVM47N8p/bv3HKKY5s4pX/Il0N4z2PQ=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=EDhL1w2t4omKQ5PVC9bj3dqRowDak66oSHs+19OtLR9l0LTfPRhC1gd41j5bhCkkX
-	 W7DkfZzK7ai8BELo7AGNGclzvIJAJagyg/46xSXKfdSHI+AU07+ZdwgmOqx06NRg2d
-	 sVx1Jm9+i0lyVeVG9gEDW9k6UWf7nvr6JgzJjE36eXgu+Pc0g/DwCOzGhThvZvG2Nw
-	 X6cUwmnjuTvAIcEKgqWXPt9KSZYUfsh9ca338xcP5ev0nxtHrjWuRxRCMcT1OXTtsc
-	 jzAeYBhsEDKiedNJYeFFQBQACQ+7Fm4U8h8c3HBbhY4Mws8XftYQZw3SXfkJCKNaiH
-	 Z7uDtZGrvU6fw==
+	b=a9E0uyr/iXDPyakRmhqsXyRYhMQkrnyKlWB6qLpv5V9s0GhPvCmCmMQkbkhPK/JwW
+	 wxuARl5XvlDTcTNvMQqi0DVECLOqYmSgPf4dvw45X8WXv+bB0Dfhwn8TJLHyLJ7bET
+	 U8EqYNJDKlAGpBRr5rXeCq6B3i4hY3Zp2XEUYJd6todMOuS6rsqnOWgbOa3CLw2qwc
+	 HiS/5he3sua1TyqGQhZXkH0nQhPIbER1TsDNhp8a8sMBOtRwD+9wuCQ7RXYiKHjnL9
+	 ZHFvxKpmXiWJc9kKyV8uXd2Lv3jdpGBO6s/Hl9nEYWCF5cERNSYAo8xMg2y+XpxdCx
+	 CnnhbJkuWnl2Q==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.28; helo=smtp-out1.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.29; helo=smtp-out2.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=r67x0JW4;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=Uyylh7kW;
 	dkim-atps=neutral
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LsQKV1ppMz3c2s
-	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Jul 2022 15:22:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LsQKY3pS1z3bvl
+	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Jul 2022 15:22:57 +1000 (AEST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D48C434BB2;
-	Tue, 26 Jul 2022 05:22:51 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EDDA81F9C3;
+	Tue, 26 Jul 2022 05:22:54 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7724213A12;
-	Tue, 26 Jul 2022 05:22:49 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3243B13A12;
+	Tue, 26 Jul 2022 05:22:52 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 0KpeEil632IFOwAAMHmgww
-	(envelope-from <wqu@suse.com>); Tue, 26 Jul 2022 05:22:49 +0000
+	id IJ+oASx632IFOwAAMHmgww
+	(envelope-from <wqu@suse.com>); Tue, 26 Jul 2022 05:22:52 +0000
 To: u-boot@lists.denx.de
-Subject: [PATCH v2 5/8] fs: ext4: rely on _fs_read() to handle leading unaligned block read
-Date: Tue, 26 Jul 2022 13:22:13 +0800
-Message-Id: <b8c561e7523fe53d49c5279a644736851930d1ad.1658812744.git.wqu@suse.com>
+Subject: [PATCH v2 6/8] fs: fat: rely on higher layer to get block aligned read range
+Date: Tue, 26 Jul 2022 13:22:14 +0800
+Message-Id: <70c34636e605f0cbcdaa2183bcc7fb1d5de2cb6d.1658812744.git.wqu@suse.com>
 X-Mailer: git-send-email 2.37.0
 In-Reply-To: <cover.1658812744.git.wqu@suse.com>
 References: <cover.1658812744.git.wqu@suse.com>
@@ -73,80 +73,69 @@ Cc: trini@konsulko.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, thomas
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Just add ext4_get_blocksize() and a new assert() in ext4fs_read_file().
+Just implement fat_get_blocksize() for fat, so that fat_read_file()
+always get a block aligned read range.
 
+Unfortunately I'm not experienced enough to cleanup the fat code, thus
+further cleanup is appreciated.
+
+Cc: Tom Rini <trini@konsulko.com>
 Signed-off-by: Qu Wenruo <wqu@suse.com>
 ---
- fs/ext4/ext4fs.c | 22 ++++++++++++++++++++++
- fs/fs.c          |  2 +-
- include/ext4fs.h |  1 +
- 3 files changed, 24 insertions(+), 1 deletion(-)
+ fs/fat/fat.c  | 13 +++++++++++++
+ fs/fs.c       |  2 +-
+ include/fat.h |  1 +
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/ext4fs.c b/fs/ext4/ext4fs.c
-index 4c89152ce4ad..b0568e77a895 100644
---- a/fs/ext4/ext4fs.c
-+++ b/fs/ext4/ext4fs.c
-@@ -69,6 +69,8 @@ int ext4fs_read_file(struct ext2fs_node *node, loff_t pos,
- 	short status;
- 	struct ext_block_cache cache;
- 
-+	assert(IS_ALIGNED(pos, blocksize));
-+
- 	ext_cache_init(&cache);
- 
- 	/* Adjust len so it we can't read past the end of the file. */
-@@ -259,6 +261,26 @@ int ext4_read_file(const char *filename, void *buf, loff_t offset, loff_t len,
- 	return ext4fs_read(buf, offset, len, len_read);
+diff --git a/fs/fat/fat.c b/fs/fat/fat.c
+index dcceccbcee0a..e13035e8e6d1 100644
+--- a/fs/fat/fat.c
++++ b/fs/fat/fat.c
+@@ -1299,6 +1299,19 @@ int fat_read_file(const char *filename, void *buf, loff_t offset, loff_t len,
+ 	return ret;
  }
  
-+int ext4_get_blocksize(const char *filename)
++int fat_get_blocksize(const char *filename)
 +{
-+	struct ext_filesystem *fs;
-+	int log2blksz;
-+	int log2_fs_blocksize;
-+	loff_t file_len;
++	fsdata fsdata = {0};
 +	int ret;
 +
-+	ret = ext4fs_open(filename, &file_len);
-+	if (ret < 0) {
-+		printf("** File not found %s **\n", filename);
-+		return -1;
-+	}
-+	fs = get_fs();
-+	log2blksz = fs->dev_desc->log2blksz;
-+	log2_fs_blocksize = LOG2_BLOCK_SIZE(ext4fs_file->data) - log2blksz;
++	ret = get_fs_info(&fsdata);
++	if (ret)
++		return ret;
 +
-+	return (1 << (log2_fs_blocksize + log2blksz));
++	free(fsdata.fatbuf);
++	return fsdata.sect_size;
 +}
 +
- int ext4fs_uuid(char *uuid_str)
- {
- 	if (ext4fs_root == NULL)
+ typedef struct {
+ 	struct fs_dir_stream parent;
+ 	struct fs_dirent dirent;
 diff --git a/fs/fs.c b/fs/fs.c
-index 1e9f778e1f11..3d6cc6b38b26 100644
+index 3d6cc6b38b26..3eb540c5fe30 100644
 --- a/fs/fs.c
 +++ b/fs/fs.c
-@@ -236,7 +236,7 @@ static struct fstype_info fstypes[] = {
- 		.exists = ext4fs_exists,
- 		.size = ext4fs_size,
- 		.read = ext4_read_file,
+@@ -207,7 +207,7 @@ static struct fstype_info fstypes[] = {
+ 		.exists = fat_exists,
+ 		.size = fat_size,
+ 		.read = fat_read_file,
 -		.get_blocksize = fs_get_blocksize_unsupported,
-+		.get_blocksize = ext4_get_blocksize,
- #ifdef CONFIG_CMD_EXT4_WRITE
- 		.write = ext4_write_file,
- 		.ln = ext4fs_create_link,
-diff --git a/include/ext4fs.h b/include/ext4fs.h
-index cb5d9cc0a5c0..0f4cf32dcc2a 100644
---- a/include/ext4fs.h
-+++ b/include/ext4fs.h
-@@ -161,6 +161,7 @@ int ext4fs_probe(struct blk_desc *fs_dev_desc,
- 		 struct disk_partition *fs_partition);
- int ext4_read_file(const char *filename, void *buf, loff_t offset, loff_t len,
- 		   loff_t *actread);
-+int ext4_get_blocksize(const char *filename);
- int ext4_read_superblock(char *buffer);
- int ext4fs_uuid(char *uuid_str);
- void ext_cache_init(struct ext_block_cache *cache);
++		.get_blocksize = fat_get_blocksize,
+ #if CONFIG_IS_ENABLED(FAT_WRITE)
+ 		.write = file_fat_write,
+ 		.unlink = fat_unlink,
+diff --git a/include/fat.h b/include/fat.h
+index a9756fb4cd1b..c03a2bebecef 100644
+--- a/include/fat.h
++++ b/include/fat.h
+@@ -201,6 +201,7 @@ int file_fat_detectfs(void);
+ int fat_exists(const char *filename);
+ int fat_size(const char *filename, loff_t *size);
+ int file_fat_read(const char *filename, void *buffer, int maxsize);
++int fat_get_blocksize(const char *filename);
+ int fat_set_blk_dev(struct blk_desc *rbdd, struct disk_partition *info);
+ int fat_register_device(struct blk_desc *dev_desc, int part_no);
+ 
 -- 
 2.37.0
 
