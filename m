@@ -1,72 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D887158094C
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 04:12:48 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B55580AC7
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 07:22:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LsL665NCDz3bqn
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 12:12:46 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=XKCIA4PL;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LsQKW6X4yz3c4W
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Jul 2022 15:22:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1658812975;
+	bh=N5vMrlZsznWTxDDP5VjzMo40WkvisIyfwBvd8HxY+Lw=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=DmsixI/1JJhKJQlBRIeBsEqZHje7M2DxEEKxncGEuyg7TVfDCgjTtyRdmFAms0aJv
+	 24Sa4TviWB1DUMHYoii/g8qvbAsg/mCdOY4HlCrFMps7uF1QB9TAGK856r2Eq4O/ET
+	 LhRMtrqjDfXrIWQtz4vULh4ITrEnNe8+Q7CvtQf4N5TYkA8auuhg1BNny6BhvL6Wh4
+	 hcaj64hcrNqGel9cTaU+4AsBhA8JrX8jV+yDSEa9BOpu43JM/z+d7SxyVHOTmGwhWs
+	 QVDw6qsbZUJdrUamhFAhTUgeu/o89WvGX/ppxsEw3Ycb7n0cp8qWALLCKkbxne5t0j
+	 oXeuBjIUxeWKg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::f36; helo=mail-qv1-xf36.google.com; envelope-from=trini@konsulko.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.29; helo=smtp-out2.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=XKCIA4PL;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=UtLL8nr+;
 	dkim-atps=neutral
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LsL642xDxz3bXD
-	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Jul 2022 12:12:42 +1000 (AEST)
-Received: by mail-qv1-xf36.google.com with SMTP id b11so5183663qvo.11
-        for <linux-erofs@lists.ozlabs.org>; Mon, 25 Jul 2022 19:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JHEl4AsUGM2/gSizYBBfeutiug8IP3uRWF4Ytkdrbvg=;
-        b=XKCIA4PLHALCAXI1cRbpmJo0JCQWA9+MmPFEsxMPxts1mCWLtE5d28ctL3AJmlSGHe
-         tuVqLvMmw2h9MBuWKPBTHqyFLZPPMPqlV8dvoX65fjtmaHZ34NK2AAXoxvuc4nrqd5PI
-         Tloorl3JUxNA3CF/GJGlxc3j7s2aqXGzGfyxs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JHEl4AsUGM2/gSizYBBfeutiug8IP3uRWF4Ytkdrbvg=;
-        b=tf9XcfcwQnirO2Kv7ShxgC7Y0ew3xjNibidxL6y/1Xx01lJw4PM5nnUtsLl2Nl5KY1
-         BiOkubUJ5yfwGGCCqOhhbWj17R2qJcJgtPXMPykEgWllzddSTba0PePf6hpev+LGI12C
-         B0Sdq6eimWURCUEoFPV3tcUoaR1dHULjh6AISXSXyS9PVwwmJiUFoDA1ZUn05ezyY42l
-         0LN0md1c1Cc4Ua5KIGbwdvdYw8bC6EKqvBMsl1orXDB9SYpoHKdaj98v9JtSB70nX8PL
-         hPQ9d/oGb3g0pyRMIZyOsXx8ELT8GcLGwp2hyychrFPPOYskA/P/QzzScBDCB/pKgVcn
-         wQfg==
-X-Gm-Message-State: AJIora+tEddu0jIIHowXMw6W1lJ1CGzsaqyJmju00vERvjgBouud/XYw
-	VvA+c+XtC19jVDkJR8VSN+rKvg==
-X-Google-Smtp-Source: AGRyM1vTK5tY/1suFzgnsOa4YOOdPA42xGdhEl0IFNgTY/LosxdnFPYOqQPqht804UrbM0+bXSee4g==
-X-Received: by 2002:a05:6214:19cb:b0:474:5447:2090 with SMTP id j11-20020a05621419cb00b0047454472090mr4303603qvc.93.1658801558834;
-        Mon, 25 Jul 2022 19:12:38 -0700 (PDT)
-Received: from bill-the-cat (cpe-65-184-195-139.ec.res.rr.com. [65.184.195.139])
-        by smtp.gmail.com with ESMTPSA id m9-20020a05620a13a900b006ab935c1563sm9785937qki.8.2022.07.25.19.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 19:12:37 -0700 (PDT)
-Date: Mon, 25 Jul 2022 22:12:35 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Subject: Re: [PATCH 1/8] fs: fat: unexport file_fat_read_at()
-Message-ID: <20220726021235.GI1146598@bill-the-cat>
-References: <cover.1656502685.git.wqu@suse.com>
- <b28b8d554dd3d1fc6bed8fc7f5b9cb71e1880e38.1656502685.git.wqu@suse.com>
- <20220725222850.GA3420905@bill-the-cat>
- <6271e1a2-db85-fb20-6ea8-d23afcb6bc69@gmx.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LsQKP3P4Zz2ywl
+	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Jul 2022 15:22:49 +1000 (AEST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7CD311F9C3;
+	Tue, 26 Jul 2022 05:22:37 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7B8D013A12;
+	Tue, 26 Jul 2022 05:22:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 5Ep5Ext632IFOwAAMHmgww
+	(envelope-from <wqu@suse.com>); Tue, 26 Jul 2022 05:22:35 +0000
+To: u-boot@lists.denx.de
+Subject: [PATCH v2 0/8] U-boot: fs: add generic unaligned read offset handling
+Date: Tue, 26 Jul 2022 13:22:08 +0800
+Message-Id: <cover.1658812744.git.wqu@suse.com>
+X-Mailer: git-send-email 2.37.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J7ZhEZwEjSe6poEw"
-Content-Disposition: inline
-In-Reply-To: <6271e1a2-db85-fb20-6ea8-d23afcb6bc69@gmx.com>
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,56 +64,153 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: joaomarcos.costa@bootlin.com, marek.behun@nic.cz, u-boot@lists.denx.de, Qu Wenruo <wqu@suse.com>, thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+From: Qu Wenruo via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Qu Wenruo <wqu@suse.com>
+Cc: trini@konsulko.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+[CHANGELOG]
+v2->v1:
+- Fix a linkage error where (U64 % U32) is called without proper helper
+  Fix it with U64 & (U32 - 1), as the U32 value (@blocksize) should
+  always be power of 2, thus (@blocksize - 1) is the mask we want to
+  calculate the offset inside the block.
 
---J7ZhEZwEjSe6poEw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  Above change only affects the 4th patch, everything else is not
+  touched.
 
-On Tue, Jul 26, 2022 at 09:35:51AM +0800, Qu Wenruo wrote:
->=20
->=20
-> On 2022/7/26 06:28, Tom Rini wrote:
-> > On Wed, Jun 29, 2022 at 07:38:22PM +0800, Qu Wenruo wrote:
-> >=20
-> > > That function is only utilized inside fat driver, unexport it.
-> > >=20
-> > > Signed-off-by: Qu Wenruo <wqu@suse.com>
-> >=20
-> > The series has a fails to build on nokia_rx51:
-> > https://source.denx.de/u-boot/u-boot/-/jobs/471877#L483
-> > which to me says doing 64bit division (likely related to block size,
-> > etc) without using the appropriate helper macros to turn them in to bit
-> > shifts instead.
-> >=20
-> Should I update and resend the series or just send the incremental
-> update to fix the U64/U32 division?
+RFC->v1:
+- More (manual) testing
+  Unfortunately, in the latest master (75967970850a), the fs-tests.sh
+  always seems to hang at preparing the fs image.
 
-Please rebase and resend the whole series, thanks.
+  Thus still has to do manual testing, tested btrfs, ext4 and fat, with
+  aligned and unaligned read, also added soft link read, all looks fine here.
 
---=20
-Tom
+  Extra testing is still appreciated.
 
---J7ZhEZwEjSe6poEw
-Content-Type: application/pgp-signature; name="signature.asc"
+- Two more btrfs specific bug fixes
+  All exposed during manual tests
 
------BEGIN PGP SIGNATURE-----
+- Remove the tailing unaligned block handling
+  In fact, all fses can easily handle such case, just a min() call is
+  enough.
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmLfTZAACgkQFHw5/5Y0
-tyzamAv/VH/kckEoZrZfP9tTiGmXdHr8Cx9Moey60Y0h8J/WoUaWdZiVF8wNbI6e
-8teJBnbQnmJoeG7BGcbQNv4z+r/G6V1qX8wKjdHvAMArRIg2HmeDjRl50oHTUmag
-BNQEBzE5nSGrz03GOUuSTeey1uQjwHHAiNVxRhJ6e9j2SEpBgDv3Nc2Ohycqowui
-v8xsSaEiXFOcI4PUoRjo0+EIoIjvWRMXYbVbAvqtXI9oMSTISfKpMTvi5dvHvICz
-ANCN9hkiIzXu/hAQ7dQA4/sVfUhc2E4VSkfY+0NkUQrVxtm5VN/beMeiUNesoFcz
-tMRy7dN81IKJrjVbp6Qu+ZF7rC/ZTTXqRZIzjh6gfuwqPnHcTYoSOSOlMVnlAcpc
-uU/34xyLOMBr2me1e0tdm9QQ8yQOTPF8VCzoo3OnSmLpgTUuKYg+RmQD68Zv6Pfr
-tBqhfam87jCVBlt8CRBI5LFSGEnulBPdG2IbM6FLHD0gX1HyCBK8PR9aBL7Rdqo9
-XO0aET4o
-=EqzV
------END PGP SIGNATURE-----
+- Remove the support for sandboxfs
+  Since it's using read() calls, really no need to do block alignment
+  check.
 
---J7ZhEZwEjSe6poEw--
+- Enhanced blocksize check
+  Ensure the returned blocksize is not only non-error, but also
+  non-zero.
+
+This patchset can be fetched from github:
+https://github.com/adam900710/u-boot/tree/fs_unaligned_read
+
+[BACKGROUND]
+Unlike FUSE/Kernel which always pass aligned read range, U-boot fs code
+just pass the request range to underlying fses.
+
+Under most case, this works fine, as U-boot only really needs to read
+the whole file (aka, 0 for both offset and len, len will be later
+determined using file size).
+
+But if some advanced user/script wants to extract kernel/initramfs from
+combined image, we may need to do unaligned read in that case.
+
+[ADVANTAGE]
+This patchset will handle unaligned read range in _fs_read():
+
+- Get blocksize of the underlying fs
+
+- Read the leading block contianing the unaligned range
+  The full block will be stored in a local buffer, then only copy
+  the bytes in the unaligned range into the destination buffer.
+
+  If the first block covers the whole range, we just call it aday.
+
+- Read the remaining range which starts at block aligned offset
+  For most common case, which is 0 offset and 0 len, the code will not
+  be changed at all.
+
+Just one extra get_blocksize() call, and for FAT/Btrfs/EROFS they all have
+cached blocksize, thus it takes almost no extra cost.
+
+Although for EXT4, it doesn't seem to cache the blocksize globally,
+thus has to do a path resolve and grab the blocksize.
+
+[DISADVANTAGE]
+The involved problem is:
+
+- Extra path resolving
+  All those supported fs may have to do one extra path resolve if the
+  read offset is not aligned.
+
+  For EXT4, it will do one extra path resolve just to grab the
+  blocksize.
+
+For data read which starts at offset 0 (the most common case), it
+should cause *NO* difference in performance.
+As the extra handling is only for unaligned offset.
+
+The common path is not really modified.
+
+[SUPPORTED FSES]
+
+- Btrfs (manually tested*)
+- Ext4 (manually tested)
+- FAT (manually tested)
+- Erofs
+- ubifs (unable to test, due to compile failure)
+
+*: Failed to get the test cases run, thus have to go sandbox mode, and
+attach an image with target fs, load the target file (with unaligned
+range) and compare the result using md5sum.
+
+For EXT4/FAT, they may need extra cleanup, as their existing unaligned
+range handling is no longer needed anymore, cleaning them up should free 
+more code lines than the added one.
+
+Just not confident enough to modify them all by myself.
+
+[UNSUPPORTED FSES]
+- Squashfs
+  They don't support non-zero offset, thus it can not handle the block
+  aligned range.
+  Need extra help to add block aligned offset support.
+
+- Semihostfs
+- Sandboxfs
+  They all use read() directly, no need to do alignment check at all.
+
+Extra testing/feedback is always appreciated.
+
+Qu Wenruo (8):
+  fs: fat: unexport file_fat_read_at()
+  fs: btrfs: fix a bug which no data get read if the length is not 0
+  fs: btrfs: fix a crash if specified range is beyond file size
+  fs: btrfs: move the unaligned read code to _fs_read() for btrfs
+  fs: ext4: rely on _fs_read() to handle leading unaligned block read
+  fs: fat: rely on higher layer to get block aligned read range
+  fs: ubifs: rely on higher layer to do unaligned read
+  fs: erofs: add unaligned read range handling
+
+ fs/btrfs/btrfs.c      |  33 ++++++++---
+ fs/btrfs/inode.c      |  89 +++--------------------------
+ fs/erofs/internal.h   |   1 +
+ fs/erofs/super.c      |   6 ++
+ fs/ext4/ext4fs.c      |  22 +++++++
+ fs/fat/fat.c          |  17 +++++-
+ fs/fs.c               | 130 +++++++++++++++++++++++++++++++++++++++---
+ fs/ubifs/ubifs.c      |  13 +++--
+ include/btrfs.h       |   1 +
+ include/erofs.h       |   1 +
+ include/ext4fs.h      |   1 +
+ include/fat.h         |   3 +-
+ include/ubifs_uboot.h |   1 +
+ 13 files changed, 212 insertions(+), 106 deletions(-)
+
+-- 
+2.37.0
+
