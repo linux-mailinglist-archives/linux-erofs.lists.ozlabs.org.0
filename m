@@ -1,84 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F26586178
-	for <lists+linux-erofs@lfdr.de>; Sun, 31 Jul 2022 22:54:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8070F5861AF
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Aug 2022 00:33:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lwtlk6S3vz2yjC
-	for <lists+linux-erofs@lfdr.de>; Mon,  1 Aug 2022 06:54:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LwwyF5kLmz2xrg
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Aug 2022 08:33:25 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20210705 header.b=lyvfdfJP;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=j1IvQrAm;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=canonical.com (client-ip=185.125.188.122; helo=smtp-relay-internal-0.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20210705 header.b=lyvfdfJP;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=j1IvQrAm;
 	dkim-atps=neutral
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LwtlY6zpyz2xGY
-	for <linux-erofs@lists.ozlabs.org>; Mon,  1 Aug 2022 06:54:00 +1000 (AEST)
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lwwy81qwgz2xGW
+	for <linux-erofs@lists.ozlabs.org>; Mon,  1 Aug 2022 08:33:20 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1EEED3F124
-	for <linux-erofs@lists.ozlabs.org>; Sun, 31 Jul 2022 20:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1659300836;
-	bh=oetciNaFvOyu6miLrOcIhO8I739HH4iYwVzl68thMnc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=lyvfdfJP21XAvyDXs2NUlGwpaVmIsDvkyFD/MGmc/IMHS4OCE9uYSi6KMjDeCY6kO
-	 AAYa4RsjfpsZmJXjpLSzqj4PhLvUE1iDy6DuCnd7BwEdoQw3S97s1GKELp+U2ZUWm6
-	 NIxB3qDVFADPP6TSXnfCyMuIX37Q5NCZ+zDzq/3LVRQLcCPB47xhlKoEMNksGTSaAz
-	 V2SH9mqtrKCiSpM67KfgCo8I9rMcrB/hJ3o2YVAwlbBied18/xBSUp01wwl8bRfp/c
-	 8pQ1N5ioj0qpCcYzkBl6Nn3fL+N6cT7fX+kmvt8n43QiwVTOtddTc73JYhMN6LC5wx
-	 SV3L/Axav4U/w==
-Received: by mail-lf1-f71.google.com with SMTP id j30-20020ac2551e000000b0048af37f6d46so521205lfk.3
-        for <linux-erofs@lists.ozlabs.org>; Sun, 31 Jul 2022 13:53:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=oetciNaFvOyu6miLrOcIhO8I739HH4iYwVzl68thMnc=;
-        b=AD2xIHGFcguwX/IslGPm5Ztk16djSz4oSNNSQxqV9kUvLzHvuZCNj6lOiUGuTzem/Q
-         zT9W8yuXhvEuEI6g5BU21XignMpzcjojQSquZ1ll2990SvarFVFLv6Wjx40lj4SVfKrZ
-         ff6JwICmGLveHSYXp0cysN9/8QqLnbcUWB/wkOkeV9A5tEfG8qDgmNdieRXC6TPPBP2n
-         wgbF7k09/S+ujYKx4ihI6KrtHBj9PkdS7FZHciHegVpCyITkHroLzozrNfMBLNGifoP8
-         veQMc4o5iye2kp/69zJr80j7GXXG5WwQfVd88dCovPfFnffPZXt0ou6mu0WGo46bhLEd
-         UtKg==
-X-Gm-Message-State: AJIora8hm6W3hSttWGbTSlGGMkFfN3nLOnoTGIw5SNncJSxmqk5QPbzI
-	USGiAPkPUdTG2eOUqL3hPVs9CE5ZuZqAtU0LqYwAVcteskxs28nd8UHuzPjp7n8hSLqTwyecfpz
-	XM51qxhrqnrM/RTOpiO/mdFfzLx0yIR6pJgTjhREjQg==
-X-Received: by 2002:a2e:a60b:0:b0:25e:3087:4fbb with SMTP id v11-20020a2ea60b000000b0025e30874fbbmr3972985ljp.460.1659300835577;
-        Sun, 31 Jul 2022 13:53:55 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1ubMUTmrI7LPEHhlHR7sF2lZ8y/sGM8lWRZnLX9mZvekj77KJ8bPNGSVhaasMU0yuLV25ZxJw==
-X-Received: by 2002:a2e:a60b:0:b0:25e:3087:4fbb with SMTP id v11-20020a2ea60b000000b0025e30874fbbmr3972982ljp.460.1659300835269;
-        Sun, 31 Jul 2022 13:53:55 -0700 (PDT)
-Received: from [192.168.123.94] (ip-062-143-094-109.um16.pools.vodafone-ip.de. [62.143.94.109])
-        by smtp.gmail.com with ESMTPSA id s12-20020a05651c048c00b0025d65d4e178sm1408473ljc.120.2022.07.31.13.53.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 Jul 2022 13:53:54 -0700 (PDT)
-Message-ID: <2d3db77a-66d1-8bac-dc53-30d322e6784f@canonical.com>
-Date: Sun, 31 Jul 2022 22:53:52 +0200
+	by dfw.source.kernel.org (Postfix) with ESMTPS id CAB2C61158;
+	Sun, 31 Jul 2022 22:33:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B4DC433D7;
+	Sun, 31 Jul 2022 22:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1659306795;
+	bh=U1tYY61xwY2E0whHYnaZvetVSFrW88QG1t3Zk2udQRc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=j1IvQrAmoEQ3reaLdmgeCCaNnI+9eawfthZ9rmmLQ9EXn3h390yA0aai5oIZkr6UV
+	 9qRo9Wgxefgmt/I8iRVE1WLnmyEKf7ZoVRjvbYGABf4wMHxhTzuijhrZq2X7DVn1CY
+	 rwyfzPfptMe2C2C9IzITbhor9nXxYTGZotOoQOv7JIk8QSSfMZ7qkxsXsiv3beHmkl
+	 pTTc5e6DXaFdEUNzaJkpl6rSJ2/FpYzJMMH8UifehTa5L5sl0/fPJSIbma0ps1GrpX
+	 4eVn3rukXIIV1IIzXFTXeso1LXSh7NDm1yzytLvfTQD9gR5z86B3uAWKaHnNMIzRCO
+	 JhPHQnhGbHNZw==
+Date: Mon, 1 Aug 2022 06:33:08 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs updates for 5.20-rc1
+Message-ID: <YucDJOcnlB7EOD8g@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <huyue2@yulong.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH 1/1] fs/erofs: silence erofs_probe()
-Content-Language: en-US
-To: Simon Glass <sjg@chromium.org>
-References: <20220731091006.50073-1-heinrich.schuchardt@canonical.com>
- <CAPnjgZ2mXuT5w5SKSeBnzUvBFvtwfmYqjZGWGutPiJ+4-fi_sg@mail.gmail.com>
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <CAPnjgZ2mXuT5w5SKSeBnzUvBFvtwfmYqjZGWGutPiJ+4-fi_sg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,81 +61,100 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, linux-erofs@lists.ozlabs.org
+Cc: Yue Hu <huyue2@yulong.com>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi Linus,
 
+Could you consider this pull request for 5.20-rc1?
 
-On 7/31/22 20:41, Simon Glass wrote:
-> On Sun, 31 Jul 2022 at 03:10, Heinrich Schuchardt
-> <heinrich.schuchardt@canonical.com> wrote:
->>
->> fs_set_blk_dev() probes all file-systems until it finds one that matches
->> the volume. We do not expect any console output for non-matching
->> file-systems.
->>
->> Convert error messages in erofs_read_superblock() to debug output.
->>
->> Fixes: 830613f8f5bb ("fs/erofs: add erofs filesystem support")
->> Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
->> ---
->>   fs/erofs/super.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> Reviewed-by: Simon Glass <sjg@chromium.org>
-> 
->>
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index 4cca322b9e..095754dc28 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -65,14 +65,14 @@ int erofs_read_superblock(void)
->>
->>          ret = erofs_blk_read(data, 0, 1);
->>          if (ret < 0) {
->> -               erofs_err("cannot read erofs superblock: %d", ret);
->> +               erofs_dbg("cannot read erofs superblock: %d", ret);
->>                  return -EIO;
->>          }
->>          dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
->>
->>          ret = -EINVAL;
->>          if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
->> -               erofs_err("cannot find valid erofs superblock");
->> +               erofs_dbg("cannot find valid erofs superblock");
->>                  return ret;
->>          }
-> 
->> @@ -81,7 +81,7 @@ int erofs_read_superblock(void)
->>          blkszbits = dsb->blkszbits;
->>          /* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
->>          if (blkszbits != LOG_BLOCK_SIZE) {
->> -               erofs_err("blksize %u isn't supported on this platform",
->> +               erofs_dbg("blksize %u isn't supported on this platform",
->>                            1 << blkszbits);
-> 
-> Does this message appear in normal scanning, or is it a genuine error?
+First of all, we'd like to add Yue Hu and Jeffle Xu as two new
+reviewers.  Thank them for spending time working on EROFS!
 
-The erofs driver on Linux only supports LOG_BLOCK_SIZE == 12. So if we 
-see this message we don't have a valid erofs file system.
+There is no major feature outstanding in this cycle, mainly a patchset
+I worked on to prepare for rolling hash deduplication and folios for
+compressed data as the next big features.  It kills the unneeded
+PG_error flag dependency as well.
 
-@linux-erofs:
+Apart from that, there are bugfixes and cleanups as always. Details are
+listed below.
 
-The Linux driver requires EROFS_BLKSIZ == PAGE_SIZE == 4096.
-The page size on arm64 can be 4 KiB, 16 KiB, or 64 KiB.
-The page size on amd64 can be 4 KiB, 2 MiB or 4 MiB.
-Requiring EROFS_BLKSIZ == PAGE_SIZE is obviously a restriction that 
-should be lifted.
+All commits have been in -next for a while and no potential merge
+conflict is observed.
 
-Best regards
+Thanks,
+Gao Xiang
 
-Heinrich
+The following changes since commit 03c765b0e3b4cb5063276b086c76f7a612856a9a:
 
-> 
->>                  return ret;
->>          }
-> 
->> --
->> 2.36.1
->>
+  Linux 5.19-rc4 (2022-06-26 14:22:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.20-rc1
+
+for you to fetch changes up to ecce9212d0fd7a2d4a4998f0c4623a66887e14c8:
+
+  erofs: update ctx->pos for every emitted dirent (2022-07-31 22:26:29 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Add Yue Hu and Jeffle Xu as reviewers;
+
+ - Add the missing wake_up when updating lzma streams;
+
+ - Avoid consecutive detection for Highmem memory;
+
+ - Prepare for multi-reference pclusters and get rid of PG_error;
+
+ - Fix ctx->pos update for NFS export;
+
+ - minor cleanups.
+
+----------------------------------------------------------------
+Gao Xiang (19):
+      erofs: avoid consecutive detection for Highmem memory
+      erofs: get rid of unneeded `inode', `map' and `sb'
+      erofs: clean up z_erofs_collector_begin()
+      erofs: introduce `z_erofs_parse_out_bvecs()'
+      erofs: introduce bufvec to store decompressed buffers
+      erofs: drop the old pagevec approach
+      erofs: introduce `z_erofs_parse_in_bvecs'
+      erofs: switch compressed_pages[] to bufvec
+      erofs: rework online page handling
+      erofs: get rid of `enum z_erofs_page_type'
+      erofs: clean up `enum z_erofs_collectmode'
+      erofs: get rid of `z_pagemap_global'
+      erofs: introduce struct z_erofs_decompress_backend
+      erofs: try to leave (de)compressed_pages on stack if possible
+      erofs: introduce z_erofs_do_decompressed_bvec()
+      erofs: record the longest decompressed size in this round
+      erofs: introduce multi-reference pclusters (fully-referenced)
+      erofs: get rid of erofs_prepare_dio() helper
+      erofs: get rid of the leftover PAGE_SIZE in dir.c
+
+Hongnan Li (1):
+      erofs: update ctx->pos for every emitted dirent
+
+Jeffle Xu (1):
+      MAINTAINERS: erofs: add myself as reviewer
+
+Yue Hu (1):
+      MAINTAINERS: erofs: add myself as reviewer
+
+Yuwen Chen (1):
+      erofs: wake up all waiters after z_erofs_lzma_head ready
+
+ MAINTAINERS                  |   2 +
+ fs/erofs/compress.h          |   2 +-
+ fs/erofs/data.c              |  39 +--
+ fs/erofs/decompressor.c      |  18 +-
+ fs/erofs/decompressor_lzma.c |   1 +
+ fs/erofs/dir.c               |  20 +-
+ fs/erofs/zdata.c             | 797 ++++++++++++++++++++++++-------------------
+ fs/erofs/zdata.h             | 119 +++----
+ fs/erofs/zpvec.h             | 159 ---------
+ 9 files changed, 533 insertions(+), 624 deletions(-)
+ delete mode 100644 fs/erofs/zpvec.h
