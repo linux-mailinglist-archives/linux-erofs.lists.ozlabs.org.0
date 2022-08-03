@@ -2,56 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D13B85892DB
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Aug 2022 21:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD23E5892DE
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Aug 2022 21:46:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Lyj2Y53x3z305v
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Aug 2022 05:43:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Lyj6N4ppyz305v
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Aug 2022 05:46:36 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=CQ0b8CDY;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VTSFzdP4;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=CQ0b8CDY;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VTSFzdP4;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lyj2T3drLz2xGq
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Aug 2022 05:43:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Lyj6L17jSz2xjf
+	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Aug 2022 05:46:34 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 62BD2614A1;
-	Wed,  3 Aug 2022 19:43:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7199EC433D6;
-	Wed,  3 Aug 2022 19:43:08 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 3C62BB82368;
+	Wed,  3 Aug 2022 19:46:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88134C433C1;
+	Wed,  3 Aug 2022 19:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1659555789;
-	bh=9RIGDD7mf/WVvgADZ5joUFihTqrpBw5Zy370TtH1a0s=;
+	s=k20201202; t=1659555989;
+	bh=YPzPBZHY7knItXdca8YjlPbaIioCC/ezF45Cwjvt2Yc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CQ0b8CDYTeeE8rbiCadEaAjtGoQnL4unzMHorSccGlcMzek5rTLiNoeTmo+I7obr4
-	 kUkyZgWYzIQZcdqeQtT8SJ2+JZeQSJZwvtOiVjVxgjzHQqqQ05pjsBBhEuKUazEkRm
-	 L43nWUpSe9TgczNsuYnIvkcssW2AYl/OXWXoAm2r16hY+XIb6GYGLS4TuAq5ZKvw1m
-	 vl5f+y0XVs5tgV8yLG3a0/0Z71yhap6kXARXIxVui3cRNH/q9h+qBh8kBo4a+UtOsd
-	 NyWa89hNXZ6RpI35+cDKovDFuqGnmaJCBMPTaEKKo9F3GzQNovdHc5vtO69HGNmJpE
-	 eZYB3Y2+VuUSA==
-Date: Thu, 4 Aug 2022 03:43:04 +0800
+	b=VTSFzdP4NY4aWWOBoKwpjA8/NpLQtDOYD4URYS5xGGcj4vB9peTQZSYzjTG8o3LGO
+	 IxVUS6m8AFDvTUtgI7WlFFjzAI5YYAwHWQSwPWvEPCXQyxMuwGe8hUZLhsTdLqojXc
+	 MCVx17ctLR2Befq0okxeSPt1oZKbMioxjVeDom47YQidej6Wf0uplDzWCrXUxOwlZO
+	 /xPQy4xqg/mGBW8kZYVb2t+k0egllrGFsB03dtD8fh/pn9JcBgYPGuMFN3hZFH6sYy
+	 Co+87jLfr80xeSL0k7GJACC3yvCYO6SDMk41jymmYzi0wIOyYD4aiLOzYUNTILZfyV
+	 LHAu/RQu1nyPw==
+Date: Thu, 4 Aug 2022 03:46:24 +0800
 From: Gao Xiang <xiang@kernel.org>
 To: Sheng Yong <shengyong@oppo.com>
-Subject: Re: [RFC PATCH 1/3] erofs-utils: fuse: set d_type for readdir
-Message-ID: <YurPyAkkaHDD4Lih@debian>
+Subject: Re: [RFC PATCH 2/3] erofs-utils: fuse: export erofs_xattr_foreach
+Message-ID: <YurQkH7D/Ch/clT0@debian>
 Mail-Followup-To: Sheng Yong <shengyong@oppo.com>, xiang@kernel.org,
 	bluce.lee@aliyun.com, linux-erofs@lists.ozlabs.org, chao@kernel.org
 References: <20220803142223.3962974-1-shengyong@oppo.com>
- <20220803142223.3962974-2-shengyong@oppo.com>
+ <20220803142223.3962974-3-shengyong@oppo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220803142223.3962974-2-shengyong@oppo.com>
+In-Reply-To: <20220803142223.3962974-3-shengyong@oppo.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,92 +67,289 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 03, 2022 at 10:22:21PM +0800, Sheng Yong wrote:
-> Set inode mode for libfuse readdir filler so that readdir count get
-> correct d_type.
-> 
-> Signed-off-by: Sheng Yong <shengyong@oppo.com>
+Hi Yong,
 
-Reviewed-by: Gao Xiang <xiang@kernel.org>
+On Wed, Aug 03, 2022 at 10:22:22PM +0800, Sheng Yong wrote:
+> This patch exports erofs_xattr_foreach() to iterate all xattrs.
+> Each xattr entry is handled by operations defined in `struct
+> xattr_iter_ops'.
+> 
+
+Thanks for your hard effort! 
+
+Could we import in-kernel xattr implementation with verify enabled
+(or unify these implementations) instead?
+
+( Jianan ported a kernel implementation before, could we enhance
+  it with verification?
+  https://lore.kernel.org/r/20220728120910.61636-1-jnhuang@linux.alibaba.com)
 
 Thanks,
 Gao Xiang
 
+> Signed-off-by: Sheng Yong <shengyong@oppo.com>
 > ---
->  fuse/main.c           |  5 ++++-
->  include/erofs/inode.h |  1 +
->  lib/inode.c           | 19 +++++++++++++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
+>  fsck/main.c           |  83 ++++------------------------
+>  include/erofs/xattr.h |   7 ++-
+>  lib/xattr.c           | 123 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 139 insertions(+), 74 deletions(-)
 > 
-> diff --git a/fuse/main.c b/fuse/main.c
-> index 95f939e..345bcb5 100644
-> --- a/fuse/main.c
-> +++ b/fuse/main.c
-> @@ -13,6 +13,7 @@
->  #include "erofs/print.h"
->  #include "erofs/io.h"
+> diff --git a/fsck/main.c b/fsck/main.c
+> index 5a2f659..237ccc1 100644
+> --- a/fsck/main.c
+> +++ b/fsck/main.c
+> @@ -14,6 +14,7 @@
+>  #include "erofs/compress.h"
+>  #include "erofs/decompress.h"
 >  #include "erofs/dir.h"
-> +#include "erofs/inode.h"
+> +#include "erofs/xattr.h"
 > 
->  struct erofsfuse_dir_context {
->         struct erofs_dir_context ctx;
-> @@ -24,11 +25,13 @@ struct erofsfuse_dir_context {
->  static int erofsfuse_fill_dentries(struct erofs_dir_context *ctx)
->  {
->         struct erofsfuse_dir_context *fusectx = (void *)ctx;
-> +       struct stat st = {0};
->         char dname[EROFS_NAME_LEN + 1];
+>  static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
 > 
->         strncpy(dname, ctx->dname, ctx->de_namelen);
->         dname[ctx->de_namelen] = '\0';
-> -       fusectx->filler(fusectx->buf, dname, NULL, 0);
-> +       st.st_mode = erofs_ftype_to_dtype(ctx->de_ftype) << 12;
-> +       fusectx->filler(fusectx->buf, dname, &st, 0);
+> @@ -283,82 +284,18 @@ static int erofs_check_sb_chksum(void)
 >         return 0;
 >  }
 > 
-> diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-> index 79b39b0..79b8d89 100644
-> --- a/include/erofs/inode.h
-> +++ b/include/erofs/inode.h
-> @@ -16,6 +16,7 @@ extern "C"
->  #include "erofs/internal.h"
+> -static int erofs_verify_xattr(struct erofs_inode *inode)
+> +static int erofs_verify_xattr_entry(const struct erofs_xattr_entry *entry)
+>  {
+> -       unsigned int xattr_hdr_size = sizeof(struct erofs_xattr_ibody_header);
+> -       unsigned int xattr_entry_size = sizeof(struct erofs_xattr_entry);
+> -       erofs_off_t addr;
+> -       unsigned int ofs, xattr_shared_count;
+> -       struct erofs_xattr_ibody_header *ih;
+> -       struct erofs_xattr_entry *entry;
+> -       int i, remaining = inode->xattr_isize, ret = 0;
+> -       char buf[EROFS_BLKSIZ];
+> -
+> -       if (inode->xattr_isize == xattr_hdr_size) {
+> -               erofs_err("xattr_isize %d of nid %llu is not supported yet",
+> -                         inode->xattr_isize, inode->nid | 0ULL);
+> -               ret = -EFSCORRUPTED;
+> -               goto out;
+> -       } else if (inode->xattr_isize < xattr_hdr_size) {
+> -               if (inode->xattr_isize) {
+> -                       erofs_err("bogus xattr ibody @ nid %llu",
+> -                                 inode->nid | 0ULL);
+> -                       ret = -EFSCORRUPTED;
+> -                       goto out;
+> -               }
+> -       }
+> -
+> -       addr = iloc(inode->nid) + inode->inode_isize;
+> -       ret = dev_read(0, buf, addr, xattr_hdr_size);
+> -       if (ret < 0) {
+> -               erofs_err("failed to read xattr header @ nid %llu: %d",
+> -                         inode->nid | 0ULL, ret);
+> -               goto out;
+> -       }
+> -       ih = (struct erofs_xattr_ibody_header *)buf;
+> -       xattr_shared_count = ih->h_shared_count;
+> -
+> -       ofs = erofs_blkoff(addr) + xattr_hdr_size;
+> -       addr += xattr_hdr_size;
+> -       remaining -= xattr_hdr_size;
+> -       for (i = 0; i < xattr_shared_count; ++i) {
+> -               if (ofs >= EROFS_BLKSIZ) {
+> -                       if (ofs != EROFS_BLKSIZ) {
+> -                               erofs_err("unaligned xattr entry in xattr shared area @ nid %llu",
+> -                                         inode->nid | 0ULL);
+> -                               ret = -EFSCORRUPTED;
+> -                               goto out;
+> -                       }
+> -                       ofs = 0;
+> -               }
+> -               ofs += xattr_entry_size;
+> -               addr += xattr_entry_size;
+> -               remaining -= xattr_entry_size;
+> -       }
+> -
+> -       while (remaining > 0) {
+> -               unsigned int entry_sz;
+> +       return 0;
+> +}
 > 
->  unsigned char erofs_mode_to_ftype(umode_t mode);
-> +unsigned char erofs_ftype_to_dtype(unsigned int filetype);
->  void erofs_inode_manager_init(void);
->  unsigned int erofs_iput(struct erofs_inode *inode);
->  erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
-> diff --git a/lib/inode.c b/lib/inode.c
-> index f192510..ce75014 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -43,6 +43,25 @@ unsigned char erofs_mode_to_ftype(umode_t mode)
->         return erofs_ftype_by_mode[(mode & S_IFMT) >> S_SHIFT];
+> -               ret = dev_read(0, buf, addr, xattr_entry_size);
+> -               if (ret) {
+> -                       erofs_err("failed to read xattr entry @ nid %llu: %d",
+> -                                 inode->nid | 0ULL, ret);
+> -                       goto out;
+> -               }
+> +struct xattr_iter_ops erofs_verify_xattr_ops = {
+> +       .verify = erofs_verify_xattr_entry,
+> +};
+> 
+> -               entry = (struct erofs_xattr_entry *)buf;
+> -               entry_sz = erofs_xattr_entry_size(entry);
+> -               if (remaining < entry_sz) {
+> -                       erofs_err("xattr on-disk corruption: xattr entry beyond xattr_isize @ nid %llu",
+> -                                 inode->nid | 0ULL);
+> -                       ret = -EFSCORRUPTED;
+> -                       goto out;
+> -               }
+> -               addr += entry_sz;
+> -               remaining -= entry_sz;
+> -       }
+> -out:
+> -       return ret;
+> +static int erofs_verify_xattr(struct erofs_inode *inode)
+> +{
+> +       return erofs_xattr_foreach(inode, &erofs_verify_xattr_ops, NULL);
 >  }
 > 
-> +static const unsigned char erofs_dtype_by_ftype[EROFS_FT_MAX] = {
-> +       [EROFS_FT_UNKNOWN]      = DT_UNKNOWN,
-> +       [EROFS_FT_REG_FILE]     = DT_REG,
-> +       [EROFS_FT_DIR]          = DT_DIR,
-> +       [EROFS_FT_CHRDEV]       = DT_CHR,
-> +       [EROFS_FT_BLKDEV]       = DT_BLK,
-> +       [EROFS_FT_FIFO]         = DT_FIFO,
-> +       [EROFS_FT_SOCK]         = DT_SOCK,
-> +       [EROFS_FT_SYMLINK]      = DT_LNK
+>  static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+> diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+> index 226e984..c592d47 100644
+> --- a/include/erofs/xattr.h
+> +++ b/include/erofs/xattr.h
+> @@ -45,10 +45,15 @@ extern "C"
+>  #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
+>  #endif
+> 
+> +struct xattr_iter_ops {
+> +       int (*verify)(const struct erofs_xattr_entry *entry);
 > +};
 > +
-> +unsigned char erofs_ftype_to_dtype(unsigned int filetype)
-> +{
-> +       if (filetype >= EROFS_FT_MAX)
-> +               return DT_UNKNOWN;
+>  int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
+>  char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
+>  int erofs_build_shared_xattrs_from_path(const char *path);
+> -
+> +int erofs_xattr_foreach(struct erofs_inode *vi, struct xattr_iter_ops *ops,
+> +                       void *data);
+>  #ifdef __cplusplus
+>  }
+>  #endif
+> diff --git a/lib/xattr.c b/lib/xattr.c
+> index c8ce278..92c155d 100644
+> --- a/lib/xattr.c
+> +++ b/lib/xattr.c
+> @@ -714,3 +714,126 @@ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
+>         DBG_BUGON(p > size);
+>         return buf;
+>  }
 > +
-> +       return erofs_dtype_by_ftype[filetype];
+> +static struct erofs_xattr_entry *read_xattr_entry(erofs_blk_t addr,
+> +                                                 char *buf, size_t size)
+> +{
+> +       struct erofs_xattr_entry *entry;
+> +       size_t entry_sz = sizeof(struct erofs_xattr_entry);
+> +       int ret;
+> +
+> +       if (size < entry_sz)
+> +               return ERR_PTR(-ERANGE);
+> +
+> +       ret = dev_read(0, buf, addr, entry_sz);
+> +       if (ret) {
+> +               erofs_err("failed to read xattr entry at addr %x: %d",
+> +                         addr, ret);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       entry = (struct erofs_xattr_entry *)buf;
+> +       entry_sz = erofs_xattr_entry_size(entry);
+> +       if (size < entry_sz)
+> +               return ERR_PTR(-ERANGE);
+> +
+> +       ret = dev_read(0, buf, addr, entry_sz);
+> +       if (ret) {
+> +               erofs_err("failed to read xattr entry at addr %x: %d",
+> +                         addr, ret);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       return entry;
 > +}
 > +
->  #define NR_INODE_HASHTABLE     16384
-> 
->  struct list_head inode_hashtable[NR_INODE_HASHTABLE];
+> +int erofs_xattr_foreach(struct erofs_inode *vi, struct xattr_iter_ops *ops,
+> +                       void *data)
+> +{
+> +       unsigned int xattr_hdr_size = sizeof(struct erofs_xattr_ibody_header);
+> +       unsigned int xattr_entry_size = sizeof(struct erofs_xattr_entry);
+> +       erofs_off_t addr;
+> +       unsigned int ofs, xattr_shared_count;
+> +       struct erofs_xattr_ibody_header *ih;
+> +       struct erofs_xattr_entry *entry;
+> +       int i, remaining = vi->xattr_isize, ret = 0;
+> +       char buf[EROFS_BLKSIZ];
+> +
+> +       if (vi->xattr_isize == xattr_hdr_size) {
+> +               erofs_err("xattr_isize %d of nid %llu is not supported yet",
+> +                         vi->xattr_isize, vi->nid | 0ULL);
+> +               return -EFSCORRUPTED;
+> +       } else if (vi->xattr_isize < xattr_hdr_size) {
+> +               if (vi->xattr_isize) {
+> +                       erofs_err("bogus xattr ibody @ nid %llu",
+> +                                 vi->nid | 0ULL);
+> +                       return -EFSCORRUPTED;
+> +               }
+> +       }
+> +
+> +       addr = iloc(vi->nid) + vi->inode_isize;
+> +       ret = dev_read(0, buf, addr, xattr_hdr_size);
+> +       if (ret < 0) {
+> +               erofs_err("failed to read xattr header @ nid %llu: %d",
+> +                         vi->nid | 0ULL, ret);
+> +               return ret;
+> +       }
+> +       ih = (struct erofs_xattr_ibody_header *)buf;
+> +       xattr_shared_count = ih->h_shared_count;
+> +
+> +       ofs = erofs_blkoff(addr) + xattr_hdr_size;
+> +       addr += xattr_hdr_size;
+> +       ret = dev_read(0, buf, addr, xattr_entry_size * xattr_shared_count);
+> +       remaining -= xattr_hdr_size;
+> +       for (i = 0; i < xattr_shared_count; ++i) {
+> +               unsigned int xattr_id;
+> +               erofs_blk_t xattr_addr;
+> +               char tmp[EROFS_BLKSIZ];
+> +
+> +               if (ofs >= EROFS_BLKSIZ) {
+> +                       if (ofs != EROFS_BLKSIZ) {
+> +                               erofs_err("unaligned xattr entry in xattr shared area @ nid %llu",
+> +                                         vi->nid | 0ULL);
+> +                               return -EFSCORRUPTED;
+> +                       }
+> +                       ofs = 0;
+> +               }
+> +
+> +               xattr_id = le32_to_cpu(*((__le32 *)buf + i));
+> +               xattr_addr = sbi.xattr_blkaddr * EROFS_BLKSIZ +  4 * xattr_id;
+> +
+> +               entry = read_xattr_entry(xattr_addr, tmp, EROFS_BLKSIZ);
+> +               if (IS_ERR(entry))
+> +                       return PTR_ERR(entry);
+> +
+> +               if (ops->verify) {
+> +                       ret = ops->verify(entry);
+> +                       if (ret < 0)
+> +                               return ret;
+> +               }
+> +
+> +               ofs += xattr_entry_size;
+> +               addr += xattr_entry_size;
+> +               remaining -= xattr_entry_size;
+> +       }
+> +
+> +       while (remaining > 0) {
+> +               unsigned int entry_sz;
+> +
+> +               entry = read_xattr_entry(addr, buf, EROFS_BLKSIZ);
+> +               if (IS_ERR(entry))
+> +                       return PTR_ERR(entry);
+> +               entry_sz = erofs_xattr_entry_size(entry);
+> +
+> +               if (ops->verify) {
+> +                       ret = ops->verify(entry);
+> +                       if (ret < 0)
+> +                               return ret;
+> +               }
+> +               addr += entry_sz;
+> +               remaining -= entry_sz;
+> +       }
+> +
+> +       return ret;
+> +
+> +}
 > --
 > 2.25.1
 > 
