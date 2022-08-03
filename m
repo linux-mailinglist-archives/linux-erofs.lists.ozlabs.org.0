@@ -2,41 +2,41 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64255588E9B
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Aug 2022 16:23:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E5E8588E9C
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Aug 2022 16:23:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4LyYxq43SHz2yMk
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Aug 2022 00:23:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4LyYxw0fXpz30JK
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Aug 2022 00:23:48 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1659536623;
-	bh=PreLvg+OrZYk5ZVWrS+Fkzmt5EjX9TWBB2BGQturXcI=;
+	s=201707; t=1659536628;
+	bh=6l/906D/TZot7ybMEVntJJ5hBO+iZIa4jyByO4ZN5Ro=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=bS9AjXIZOKobJpuaz00w3Im7mw+nDoIC2jwWjRABGvJFNv/aluwfphcptJbg9vf3Q
-	 Ui2Ku3MwkhbvTk9Zno2f0S+S/EzSb3cJAg4LCs3Or9zntJ/l/eONuexoUUS3IE82lq
-	 cdYPlx5Fl4qOjhkEJGVLOQjTcN7l4q7L6N5v3QtwO1F+6HV7dIQV2b2SrIGjY2NUZX
-	 w8rRJmbqvnMACFzAPwfFwG7NlLGE7p6X0JlwwPsmwD2ZtYB1XXGs3D/YtUM2fY/IWp
-	 /vGXQo+b+mPncL3GhOAlgAIxstKG3LMXeggFvShsVindHT9k4FUrl9znSsyB+L4Ky3
-	 pmnAnIIpdnf6g==
+	b=jiyQiw0bCSOLOlIFHam7+67UQTV0u4YvMxARBMM4dogtto3TaKFn9MuMUgcMeD+WS
+	 uQRJJKbn+oRh2q20e8OiwSLjfp1qG4r1YDDTtSvbWMCHPYmmflbbMqZFy11MzPEYlq
+	 VaZZ+pltyxCkeknHezRhv1kCSCUGTOYW/4QT3Gc4hogd1Taw6boqMwFb8+wljWaMnt
+	 InvJpH9QalMY+R/D5TFdJ9/Bx4XxuYjmL0WTMUn3rn/dj3N2VyLXKBSoqxW8Yimpnt
+	 Le4b+8YfiMcpvtUNqlb/ipYjvOL/tKnmKYlp3PPtjbe7w3U0VylzPy+elIf8peFHU+
+	 z5iIhpfe1NYBQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.helo=apc01-sg2-obe.outbound.protection.outlook.com (client-ip=40.107.215.64; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=shengyong@oppo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256 header.s=selector1 header.b=AyqG5Nko;
+	dkim=pass (1024-bit key; unprotected) header.d=oppo.com header.i=@oppo.com header.a=rsa-sha256 header.s=selector1 header.b=C7YbwtXo;
 	dkim-atps=neutral
 Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2064.outbound.protection.outlook.com [40.107.215.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4LyYxb6fbSz2yMk
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Aug 2022 00:23:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4LyYxc2GYWz2yMk
+	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Aug 2022 00:23:32 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KudD5ufpgjAy4SLZWRVWGDPK7TWwmwGPpKeWv9VF2A77bnTITxWAKSwVHtojmkQmSN2b9CxF2sgwOfKigBxn3zHVWNGNwtWPsc+dq0HXJ04see75bzMpWe4f2MDbJVAdIX+g9//ZloaiNqbashNSnSFUlz8rp+87jBdNkwfCpD1DM7C3zJJTiOZBbptz6pbb7IJXyiTfSSd1QCC1KyeV8MhQRbUmqR44TKH83amaCVnpAWH9PhX++1GIfnJra7y/R3iJlaxtBy5mAO8bYaKRo52I1wRE0VTMaGreBoe11i0Blu0P8/0Ar8o/mpM7BqGowxFgeQZ084GM9otdfPWWow==
+ b=cKVa3jz0pH+uHJ9Wy6juOVMdcNKuJOWTn4Wr2k6/4Ksnx9CP83W+EIP/MIo2MdpBnppz/Ir6JBEpo1S9/NVr6XS8vX7am6rqfapZwStqFvfRLQ2rr5BLYcqHB7X8H5yjCB94YDQCU4A2Y7711avq2HZ0oc2QJOxbuyQGOeVmx6GwW2blxY/iyM6z+hInoVPL0lIA4RDM9icp86+ZfgXVjJD4vQBPYvPhX0MELogh2QV4OJZcBfVVsEdwsF25lWvaqMbGF6Z+RQP/lPd1RW7Kqaph4sRJRpzoOCKqGABBrly+EUfEKp2NNJi85vwQza32xmppXST+1mIcgo53OM1KQw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PreLvg+OrZYk5ZVWrS+Fkzmt5EjX9TWBB2BGQturXcI=;
- b=aqjDtBddlnI4mq18ig6snKILCLQV1HvEfH2PfKKSzXuA7d3Is9DQfZNMo2aTe06NxiZv5l6ypdalOz7UznBHMwxxuKOjNs58Wg+R9EqyT4sfe2uRsUePVzdEdMaG3wkoiQ8o0I8jwX2s88b4E/QoeaHeM7REaed7M+sHTiqFxAAZIx7JXvLVUiJQFqbbm+hp/R42FHfd+GEumMJb0MJ+8BjzJhtlCpa0h2Wxt5KVE7f2C12JTDHIFV2ksQ0harD27tDTzUjRY8PBON2tA6NoF4MzjJpanQJgg8yPjNxNX8w1qJS6LFVNmf6FaBvA4Br1mvYraBYnlVYGRI/2PochHg==
+ bh=6l/906D/TZot7ybMEVntJJ5hBO+iZIa4jyByO4ZN5Ro=;
+ b=WuXWxkbnJyvv37K7qSa6o8lcKW/SwF8jSQM5nMQ2YPVnGctY1PCm205aSTSTp7Szuq6Ui/VXgcp5Hx3nm9VgjyMSqA+EDpbz/CGR/uYxHiX9+bwuByhTEFWt6qN29azzdf2X+W8a16eroS4wO8M90xx1y5MhYwKRzOJS3QmEpFt5RejidcMyPBsmIHSc+0JbfWMKZePA5NHxviiGS2kEb5kd9sHqFfgRzI8zPV6Oz5e+iJeyCUJACd9VxdEzOCnIpUhLv8kcji4Jea9uM6Og69UlDYFc7iDEqverwLG2gDhfh0A3UXtGXt4SxS34fvQh/dTUZHXJNKVHfnfDfuXL1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
  dkim=pass header.d=oppo.com; arc=none
@@ -46,18 +46,18 @@ Received: from SI2PR02MB5148.apcprd02.prod.outlook.com (2603:1096:4:153::6) by
  TY2PR02MB4493.apcprd02.prod.outlook.com (2603:1096:404:800d::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Wed, 3 Aug
- 2022 14:23:10 +0000
+ 2022 14:23:11 +0000
 Received: from SI2PR02MB5148.apcprd02.prod.outlook.com
  ([fe80::adea:6739:ab8a:9adf]) by SI2PR02MB5148.apcprd02.prod.outlook.com
  ([fe80::adea:6739:ab8a:9adf%3]) with mapi id 15.20.5504.014; Wed, 3 Aug 2022
- 14:23:10 +0000
+ 14:23:11 +0000
 To: xiang@kernel.org,
 	bluce.lee@aliyun.com,
 	linux-erofs@lists.ozlabs.org,
 	chao@kernel.org
-Subject: [RFC PATCH 2/3] erofs-utils: fuse: export erofs_xattr_foreach
-Date: Wed,  3 Aug 2022 22:22:22 +0800
-Message-Id: <20220803142223.3962974-3-shengyong@oppo.com>
+Subject: [RFC PATCH 3/3] erofs-utils: fuse: support get/list xattr
+Date: Wed,  3 Aug 2022 22:22:23 +0800
+Message-Id: <20220803142223.3962974-4-shengyong@oppo.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220803142223.3962974-1-shengyong@oppo.com>
 References: <20220803142223.3962974-1-shengyong@oppo.com>
@@ -67,51 +67,51 @@ X-ClientProxiedBy: SGXP274CA0017.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::29)
  To SI2PR02MB5148.apcprd02.prod.outlook.com (2603:1096:4:153::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 91cabacb-fe58-4a93-eb90-08da755bb123
+X-MS-Office365-Filtering-Correlation-Id: bedc3ecf-6dc0-4903-c8f6-08da755bb1b7
 X-MS-TrafficTypeDiagnostic: TY2PR02MB4493:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	XFO6r7UgRWm3/Dtp46laN7rBgmsSbLzhqbx4GnApGCJlI370LOrbZQoP796eXA8Dud271RdNAhbRUOR/TvmIyXAR4zagAILFzJaXMQ4w49hz5/ijJFkFCmFlCuxj3Bl0Tqko7fPhx+yaWvQddg6gCmTDIxGkcKdyBzFHCKezFoIeTH5g+kZTBiGOfvedh19OAMdVcauxYMcprSa67M4Lm5rm7SeyAYXpB/lywVzx0aHiVkdpAR+QG5Hk3EIIDAXTjWVAcwq7jIhFaIiPvQwu1gfF53XcivZfq9mdWbB4pneZJTcFlgrV7zti+H61zE9dvv4cU70glglTc8uXSdHwBulyDqM5A1GW8uyQTKKjo8Y6zpdhoPUmhwQFeheRrNDK9VV4A6rG6sN9Zk94SpChdbTRpmFusDYkgHEbqpIk8NtVCmVZQTZxqqmyp6qd2RPnMHkHI05dj4JHIyx5l+zF0lWR63uspbavWDJSDVsnAzmnMFDUgSPnJLBfHOd9/UuXBvjC0WY7Ja14I9kJ9WxGzKehWI0ZmAUKL0Jhwvugsc+X0LQ8mEiY008vG/k2H95yDk4J+dvIgYDHDD8Yja6KpU3wdz57PEtwxTAHmrHNbUGPROIYeoSDfzfdu7akw01Ndu1+znWEJqRsBg6DfO1v0eBYcvjhX1itOo+00JHIEIh4IbQPtEG0BRGwrNjGKdlq09ffIFevBnBvfdpV62buc0rQR4TLmitW70sXmNfeIwoOIRRnifyETV4QZ/rgV7ruMh3F7kZPxQW7LIjXuGUkJDg6t8y05B4nFVyJrcBOeCI=
+X-Microsoft-Antispam-Message-Info: 	SSPOb26RIs6QQx7zwL8FsR5F6eiN+KVIv4u3USfcx6vWMnDQtgkWqL9lnCPe6PnIH5Vjh8Jp9qXle69NVvM+FYVd3CLmratWUeV/Tm6PXRI3eOXRgKM0hdyipAIFCLyYDO3ooA1D4poIj48+dg7fFNxDrX/EyFhsdDGcc6Ey7D/MriCxTvl5yROmZbc5P9b0nJsaA3Hm+tDyQSEuqYMuqu8REQ8KMUy3X0xlWD2frNh/dq090WZPfINYczeEuI02f1QtCw18ZQUik5z1GXB6FRmbdkf2s5kUK4zaQHIaGlk5v3i63r/VlGiB5xqcZ0ESn3iiS0i8KM3X6BSkdkMTsMbXRRjcaaWxjSju/t7fw0W+rcnNiyys222aohqCcdIon92NRQdBzEFlyGbpMEHLIrsx9p1YwU3Zv/x0tNNB9L738437x9cUuUzA1a2y3FjbtxRePxDggXy+nnFcfLwTNoVaydZB+kH/hOIeYtwFVZmgncIOpzpbJvw+czA91ZvLDuVM/9by0zVKxfS5ZswfMW4BUGSql3BiYlgQ5VY1ya3g9m55RI+V2hUwC3o9uH5njaLQROF6PRTOSbDw7D3/sgzvR4sq5L+EZlrVViwQrG61v5d18eB+CSrO4e1ZrkPBDyDVbClc5WYSv7g+Odce+LmRVivwwrANw6weHKKsZDbzkQFOgXuyLzzpm7lEnI2Ya/o5qDJCgIvE7HBoP5A4GtNw25Lt98Dv8Hz1YDAvE8gaSB8HU+xyn69pCtv70Dad0zu85gVDJ9ojZQmRa/9UcrDvFk2Ojpg0l1z5/bZqtNQ=
 X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR02MB5148.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(8676002)(186003)(66946007)(4326008)(66556008)(6512007)(1076003)(2616005)(86362001)(107886003)(6666004)(66476007)(316002)(41300700001)(6506007)(26005)(6486002)(52116002)(478600001)(36756003)(2906002)(38350700002)(83380400001)(5660300002)(38100700002)(8936002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?OLJgktAYJy7xgy0ODbXRbxgDdu9Fkb1ojyNVgGY6KrqyCzffIY8QVwLobORx?=
- =?us-ascii?Q?MXw/oUSJljM9r4EQ3ASTPP50p1Ne8UzzI5zjHMOQdamDXUP8hblZJOQBCAOL?=
- =?us-ascii?Q?w15ixFzbmQa6+oBAuJj9K2kL/QkL7X3do5aGIvZjWwVZPsOEJ4QpeBJk5bi7?=
- =?us-ascii?Q?3XhjZDDBWyoM45e5C7oynNBBN32GYsO0h/asLqrn8z7mP2RlyyEjwHj7Lzum?=
- =?us-ascii?Q?0Nz3YQsPtMHkCntryndSQc5dVT0mDfqB4tArF/F8qSLBSpvsHhjrYOIoyGpm?=
- =?us-ascii?Q?atUSEwZHXpozXOsSy40G4fJMxCUCBrF4VLWNvPvrkpqFpmcvvai4/j3J4BVa?=
- =?us-ascii?Q?puMAe4fb8t8i4rWYi+TWdpdGQF7IVLQtyJrEfCLECWrqcYmcESuecolxqYbO?=
- =?us-ascii?Q?xatqxAkC52wyt8kPjapmkMx92cGdGA9ME88hHdLf5dNofM3Uf4FqZCVp36QH?=
- =?us-ascii?Q?jB5nQqdkk62Dl9eMrRflJWtZmUN0Z/dpuDposr78c9fdzgywSocIx3AV5SJ9?=
- =?us-ascii?Q?oy7kHAkJH+To5+U3+2Cua0D4AbZ5I9blLi2dLRuHZM5rKY+bB4ZzKe+msN2b?=
- =?us-ascii?Q?eXxnorNlmWy79KeSX/PzKm6mbv/lJJzisOoHtP1kOda5hLLNp863OGbtnOVD?=
- =?us-ascii?Q?9s226Qpyo4EMs6eZ+wB1PzSMOuM3Q/bpc/8K9/Mfqi5tMev1hibfzApZinvA?=
- =?us-ascii?Q?Gi4ZliOmoaH/1tRgzQ1y8CaN7+hYRymYJuFJskRQIRkz6JEO3mKokebt9xKv?=
- =?us-ascii?Q?jS94u54pD2V/ccmf9wV8ZNwSjctAXiC05XOYTME+PjtLqr6H2w3BLsMcAgsa?=
- =?us-ascii?Q?ZY5RujYVH7/G1SCniblQBPQHnkVzIuzziDC1jzNdhGc8UaX7n002PGmZKN+0?=
- =?us-ascii?Q?ZW+mYwQ45hOLWKqB7x9SLCs5NdWgcKjwB9YBvx+9NHh85nStUpYiBgmiJKMw?=
- =?us-ascii?Q?IoO5JcR3wn3YSmGD7aaf5RTK+QNCjbUg61maDCgym+1L0C8AAWCEbvuS/KAj?=
- =?us-ascii?Q?MbgTlUmwAIDYh0849xvtGvWim/fCLzOeQGt8dvDx+KRqyUyTpnIsfTjhYzy2?=
- =?us-ascii?Q?Gq1jLXouHqCgad9FleAj6waiTjzopc+3bQuZARjEyjPUCNW1pnx6d6C717/f?=
- =?us-ascii?Q?fsFBmFTN7aymhfbNa8oKq0PT80LzTTUwgruKkXKXMYB6EVcooAJwPbfOGSP1?=
- =?us-ascii?Q?0CBQ723ar7nZCEthGo5zkR9maPdcERSArO6cKgrtns0imb7A9bjgvBoqSUKC?=
- =?us-ascii?Q?awNGYS9yLQ/IaBXxYpQCHyXb7KvAODt1YzPs4/LSDOp3v6adjONh8Y5KOtHM?=
- =?us-ascii?Q?2smJTCN/8OSAFUsoXmypZgYfTDvwh7cg0JAEjEFl/R3vwdyNYqcd7ybqTi4W?=
- =?us-ascii?Q?yS1nwh/zmCGYo2p9MTYw2qVM+D1sJvRp67vM0/n4R+Nx5Mlyq2VVeqe2iBq8?=
- =?us-ascii?Q?0Hm6Km8hrffM3WQkzezvLpwPkMQtQoZKrTxcivOcrE+p4CHfzzUWef66Xj++?=
- =?us-ascii?Q?ZHb9dSDeLdwsgwtjjhUWGQoAuiDlFZoNn71RI+QN2sfnQuxigscH89Pt0hFf?=
- =?us-ascii?Q?rKyBL7A99Hjftltx98FTa+WwKlgmpeiv+FIwQtNk?=
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?3Nn0LIQGrAbUPdqeJKuibwJgB6EguXBij+UDaVOULlEsSiOUE/wxUDkQAycB?=
+ =?us-ascii?Q?UC1xDMCCMpJSHOjAfu1b2z7hHDRy9FrZ2ZfHbaODsNo8vAz+OHnkUJUv2pJQ?=
+ =?us-ascii?Q?AmBJBdnWf5LXpJPVp7/TgK6Bt6Texpib4Sm3yMW3CPKMdFvTH37+xh7AE++7?=
+ =?us-ascii?Q?nC1LhnE+RGIFhGLi6cHFDXvYNgB37d73rbre3/AhaD3GMflGKUlZgntHC2Fb?=
+ =?us-ascii?Q?afTqzj5/KHSG14dztFg57uPel5CkVq55m8jd+9QFxKyt/GKiBXdBqJwfpaaH?=
+ =?us-ascii?Q?MMzPib62tsQzXhBbLOvneHYaSl8KILM7gi6mckklGB+IxplyUBb3fxjfd9Lt?=
+ =?us-ascii?Q?zx58vq9kWPqyuE4h8hu1wTI9qTEBl1KNmP0TB3qGNYlsOjv1PYgLwDfZtU2s?=
+ =?us-ascii?Q?KswQc8WLoIRyvPIDbFInpqw0AdfpPA9vS1/MP87P1kLRSjCS/wKvvPNn+cuU?=
+ =?us-ascii?Q?LHlgFzFkdM5pjrgeQb4uqxKHwDdDN+eZeir7hdG04Aet32qebQ4P0YxwvSAe?=
+ =?us-ascii?Q?xZ/JgQZkedO0od0iDiBfUKSWfg3PsZ2UyE6y8PlEOZGeV7ZBNw/nqcuPNXzj?=
+ =?us-ascii?Q?gJ+fijQaT7zAKY8tm6S5Ys16IWBsLP9oWzGjjeVCbBnfJlHLwMMnOlneFcsK?=
+ =?us-ascii?Q?AgAuHFfMWczJK93KZwRpmnLUWXZPYBCy5zKVu+7OcndbJPxvkFaIumKXWSMr?=
+ =?us-ascii?Q?BVOKdKx/4JNSljqETfFJHhPTVkAGtR1R9FrklPFfM+omvi+qrfk9S+hdQNVu?=
+ =?us-ascii?Q?G6eeBnIuRbXLExpTlMiI8F4m/5K6QMvcd+IC1o+M+Klr3t6VMsJIe+AsQ2CP?=
+ =?us-ascii?Q?1BgwgZkx1Tt5Cc6roumZ4WFW5HVauWfOod1AUUEkVngrH1e9uRcXnRGB0zqX?=
+ =?us-ascii?Q?nuzsZs0kot+WWPkhXg2BpawWkaVd/am9CPJTAXCVOQr8SOrlM1BzmYlWGJO4?=
+ =?us-ascii?Q?bMfK/RIr6V7lLopMJr28GJ4W+6VZkJXe8hNzxZQmmkB7vC93lJDkKEUNXWqr?=
+ =?us-ascii?Q?zQuKRPw8HPqzTSTh7/SKi1MXuJ0vnQSJWJVqW/p19ODWTYTsgvdtHOnflwB6?=
+ =?us-ascii?Q?U9hCB6/pn2/87IUqnKa1WuPhLpDmc3zbWG+f8cGb+MX983hPJUOCRpVkP/re?=
+ =?us-ascii?Q?O/G2lZOzTebnzEc8MeJgyF3q7zl4L0rrN9GTGl6oqW+iitnUf9nm4gLFaup1?=
+ =?us-ascii?Q?2OVnkeL4se5+nvmAPr7stg0dmZ31egW/9gDZJoIVtMZkVCZulNZnfLrcHedY?=
+ =?us-ascii?Q?CeQ9PXWwus6bBjyetP7Paw6XkCoyjUMb4eYonifdz0knKLGEj3i3jBj0/8bf?=
+ =?us-ascii?Q?HO5gt1vwfVXevqwuX8Jnq0znOqXXeTIE9znW9+0PzwMu/L6dSb+L9/+m3XVE?=
+ =?us-ascii?Q?OMe9dAnXcsKT8Rp9aIX2U1D2S7e22h9JKlB8oYpIcxH9k8jJ7dtXsL2ATY8h?=
+ =?us-ascii?Q?42Baj3luF1RQkTkTagd/hOr9opFzCh+b8DmwhEKmhrgRevengSbtvXXwIMVi?=
+ =?us-ascii?Q?MDIUGNxUYemnqTjA2kZHIJGaGGhwt6gg6uiV+Cso/uaIPHsZTzVdj+Ko0KXP?=
+ =?us-ascii?Q?nOiL023hfyzviRCRIKQoBMHWiPnq1AWYsBZrmHv1?=
 X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91cabacb-fe58-4a93-eb90-08da755bb123
+X-MS-Exchange-CrossTenant-Network-Message-Id: bedc3ecf-6dc0-4903-c8f6-08da755bb1b7
 X-MS-Exchange-CrossTenant-AuthSource: SI2PR02MB5148.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2022 14:23:10.3084
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2022 14:23:11.2775
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lhp83EEaaXt6RH29kE7uvgR/kOlBIaoLfptJv1G4PBtKfvDbX/Gqp/dqB6dlOBv84HfVOJtjccKdQ7BgIg0epA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: GZCRuq8vlEjivTn48zPub6M2ssXji5fPVBwF6KMRYz7kxx/iSaRVsSm/BUSFpCccxFX6tEZlfV9D+70WFMgAyA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR02MB4493
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -130,287 +130,270 @@ Cc: shengyong@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch exports erofs_xattr_foreach() to iterate all xattrs.
-Each xattr entry is handled by operations defined in `struct
-xattr_iter_ops'.
+Add new options get and list to xattr iteration operations to
+support getxattr and listxattr.
 
 Signed-off-by: Sheng Yong <shengyong@oppo.com>
 ---
- fsck/main.c           |  83 ++++------------------------
- include/erofs/xattr.h |   7 ++-
- lib/xattr.c           | 123 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 139 insertions(+), 74 deletions(-)
+ fsck/main.c           |   2 +
+ fuse/main.c           | 135 ++++++++++++++++++++++++++++++++++++++++++
+ include/erofs/xattr.h |   8 +++
+ lib/xattr.c           |  26 ++++++--
+ 4 files changed, 167 insertions(+), 4 deletions(-)
 
 diff --git a/fsck/main.c b/fsck/main.c
-index 5a2f659..237ccc1 100644
+index 237ccc1..ceaab3d 100644
 --- a/fsck/main.c
 +++ b/fsck/main.c
+@@ -291,6 +291,8 @@ static int erofs_verify_xattr_entry(const struct erofs_=
+xattr_entry *entry)
+
+ struct xattr_iter_ops erofs_verify_xattr_ops =3D {
+        .verify =3D erofs_verify_xattr_entry,
++       .list =3D NULL,
++       .get =3D NULL,
+ };
+
+ static int erofs_verify_xattr(struct erofs_inode *inode)
+diff --git a/fuse/main.c b/fuse/main.c
+index 345bcb5..7997234 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
 @@ -14,6 +14,7 @@
- #include "erofs/compress.h"
- #include "erofs/decompress.h"
+ #include "erofs/io.h"
  #include "erofs/dir.h"
+ #include "erofs/inode.h"
 +#include "erofs/xattr.h"
 
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
-
-@@ -283,82 +284,18 @@ static int erofs_check_sb_chksum(void)
+ struct erofsfuse_dir_context {
+        struct erofs_dir_context ctx;
+@@ -142,6 +143,138 @@ static int erofsfuse_readlink(const char *path, char =
+*buffer, size_t size)
         return 0;
  }
 
--static int erofs_verify_xattr(struct erofs_inode *inode)
-+static int erofs_verify_xattr_entry(const struct erofs_xattr_entry *entry)
- {
--       unsigned int xattr_hdr_size =3D sizeof(struct erofs_xattr_ibody_hea=
-der);
--       unsigned int xattr_entry_size =3D sizeof(struct erofs_xattr_entry);
--       erofs_off_t addr;
--       unsigned int ofs, xattr_shared_count;
--       struct erofs_xattr_ibody_header *ih;
--       struct erofs_xattr_entry *entry;
--       int i, remaining =3D inode->xattr_isize, ret =3D 0;
--       char buf[EROFS_BLKSIZ];
--
--       if (inode->xattr_isize =3D=3D xattr_hdr_size) {
--               erofs_err("xattr_isize %d of nid %llu is not supported yet"=
-,
--                         inode->xattr_isize, inode->nid | 0ULL);
--               ret =3D -EFSCORRUPTED;
--               goto out;
--       } else if (inode->xattr_isize < xattr_hdr_size) {
--               if (inode->xattr_isize) {
--                       erofs_err("bogus xattr ibody @ nid %llu",
--                                 inode->nid | 0ULL);
--                       ret =3D -EFSCORRUPTED;
--                       goto out;
--               }
--       }
--
--       addr =3D iloc(inode->nid) + inode->inode_isize;
--       ret =3D dev_read(0, buf, addr, xattr_hdr_size);
--       if (ret < 0) {
--               erofs_err("failed to read xattr header @ nid %llu: %d",
--                         inode->nid | 0ULL, ret);
--               goto out;
--       }
--       ih =3D (struct erofs_xattr_ibody_header *)buf;
--       xattr_shared_count =3D ih->h_shared_count;
--
--       ofs =3D erofs_blkoff(addr) + xattr_hdr_size;
--       addr +=3D xattr_hdr_size;
--       remaining -=3D xattr_hdr_size;
--       for (i =3D 0; i < xattr_shared_count; ++i) {
--               if (ofs >=3D EROFS_BLKSIZ) {
--                       if (ofs !=3D EROFS_BLKSIZ) {
--                               erofs_err("unaligned xattr entry in xattr s=
-hared area @ nid %llu",
--                                         inode->nid | 0ULL);
--                               ret =3D -EFSCORRUPTED;
--                               goto out;
--                       }
--                       ofs =3D 0;
--               }
--               ofs +=3D xattr_entry_size;
--               addr +=3D xattr_entry_size;
--               remaining -=3D xattr_entry_size;
--       }
--
--       while (remaining > 0) {
--               unsigned int entry_sz;
-+       return 0;
-+}
-
--               ret =3D dev_read(0, buf, addr, xattr_entry_size);
--               if (ret) {
--                       erofs_err("failed to read xattr entry @ nid %llu: %=
-d",
--                                 inode->nid | 0ULL, ret);
--                       goto out;
--               }
-+struct xattr_iter_ops erofs_verify_xattr_ops =3D {
-+       .verify =3D erofs_verify_xattr_entry,
++struct listxattr_iter {
++       char *buffer;
++       size_t size;
++       unsigned int ofs;
 +};
-
--               entry =3D (struct erofs_xattr_entry *)buf;
--               entry_sz =3D erofs_xattr_entry_size(entry);
--               if (remaining < entry_sz) {
--                       erofs_err("xattr on-disk corruption: xattr entry be=
-yond xattr_isize @ nid %llu",
--                                 inode->nid | 0ULL);
--                       ret =3D -EFSCORRUPTED;
--                       goto out;
--               }
--               addr +=3D entry_sz;
--               remaining -=3D entry_sz;
--       }
--out:
--       return ret;
-+static int erofs_verify_xattr(struct erofs_inode *inode)
++
++static int list_one_xattr(const struct erofs_xattr_entry *entry, void *dat=
+a)
 +{
-+       return erofs_xattr_foreach(inode, &erofs_verify_xattr_ops, NULL);
- }
++       struct listxattr_iter *it =3D (struct listxattr_iter *)data;
++       const char *prefix =3D xattr_types[entry->e_name_index].prefix;
++       unsigned int prefix_len =3D xattr_types[entry->e_name_index].prefix=
+_len;
++       int i;
++
++       /* if size is 0, return the total size without copying data */
++       if (it->size =3D=3D 0) {
++               it->ofs +=3D prefix_len + entry->e_name_len + 1;
++               return it->ofs;
++       }
++
++       if (it->ofs + prefix_len + entry->e_name_len + 1 > it->size)
++               return -ERANGE;
++
++       switch (entry->e_name_index) {
++       case EROFS_XATTR_INDEX_USER:
++       case EROFS_XATTR_INDEX_TRUSTED:
++       case EROFS_XATTR_INDEX_SECURITY:
++               memcpy(it->buffer + it->ofs, prefix, prefix_len);
++               it->ofs +=3D prefix_len;
++               for (i =3D 0; i < entry->e_name_len; i++, it->ofs++)
++                       it->buffer[it->ofs] =3D entry->e_name[i];
++               it->buffer[it->ofs++] =3D '\0';
++               break;
++       case EROFS_XATTR_INDEX_POSIX_ACL_ACCESS:
++       case EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT:
++               memcpy(it->buffer + it->ofs, prefix, prefix_len);
++               it->ofs +=3D prefix_len;
++               it->buffer[it->ofs++] =3D '\0';
++               break;
++       default:
++               return -EINVAL;
++       }
++
++       return it->ofs;
++}
++
++struct xattr_iter_ops erofs_listxattr_ops =3D {
++       .verify =3D NULL,
++       .list =3D list_one_xattr,
++       .get =3D NULL,
++};
++
++static int erofsfuse_listxattr(const char *path, char *list, size_t size)
++{
++       struct erofs_inode vi =3D {};
++       struct listxattr_iter it =3D {
++               .buffer =3D list,
++               .size =3D size,
++               .ofs =3D 0,
++       };
++
++       erofs_dbg("listxattr(%s) size %zu", path, size);
++       if (erofs_ilookup(path, &vi))
++               return -ENOENT;
++
++       return erofs_xattr_foreach(&vi, &erofs_listxattr_ops, &it);
++}
++
++struct getxattr_iter {
++       const char *name;
++       char *buffer;
++       size_t size;
++};
++
++static int get_one_xattr(const struct erofs_xattr_entry *entry, void *data=
+)
++{
++       struct getxattr_iter *it =3D (struct getxattr_iter *)data;
++       const char *prefix =3D xattr_types[entry->e_name_index].prefix;
++       int prefix_len =3D xattr_types[entry->e_name_index].prefix_len;
++       int name_len, val_len;
++
++       name_len =3D entry->e_name_len;
++       if (strlen(it->name) !=3D prefix_len + name_len  ||
++           strncmp(it->name, prefix, prefix_len) ||
++           strncmp(it->name + prefix_len, entry->e_name, name_len))
++               /* not match */
++               return -ENODATA;
++
++       val_len =3D le16_to_cpu(entry->e_value_size);
++       if (it->size =3D=3D 0)
++               return val_len;
++       if (val_len > it->size)
++               return -ERANGE;
++
++       switch (entry->e_name_index) {
++       case EROFS_XATTR_INDEX_USER:
++       case EROFS_XATTR_INDEX_POSIX_ACL_ACCESS:
++       case EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT:
++       case EROFS_XATTR_INDEX_TRUSTED:
++       case EROFS_XATTR_INDEX_SECURITY:
++               memcpy(it->buffer, entry->e_name + name_len, val_len);
++               break;
++       default:
++               return -EINVAL;
++       }
++
++       /* found */
++       return val_len;
++}
++
++struct xattr_iter_ops erofs_getxattr_ops =3D {
++       .verify =3D NULL,
++       .list =3D NULL,
++       .get =3D get_one_xattr,
++};
++
++static int erofsfuse_getxattr(const char *path, const char *name,
++                             char *value, size_t size)
++{
++       struct erofs_inode vi =3D {};
++       struct getxattr_iter it =3D {
++               .name =3D name,
++               .buffer =3D value,
++               .size =3D size,
++       };
++
++       erofs_dbg("getxattr(%s) name %s size %zu", path, name, size);
++       if (erofs_ilookup(path, &vi))
++               return -ENOENT;
++
++       return erofs_xattr_foreach(&vi, &erofs_getxattr_ops, &it);
++}
++
+ static struct fuse_operations erofs_ops =3D {
+        .readlink =3D erofsfuse_readlink,
+        .getattr =3D erofsfuse_getattr,
+@@ -149,6 +282,8 @@ static struct fuse_operations erofs_ops =3D {
+        .open =3D erofsfuse_open,
+        .read =3D erofsfuse_read,
+        .init =3D erofsfuse_init,
++       .listxattr =3D erofsfuse_listxattr,
++       .getxattr =3D erofsfuse_getxattr,
+ };
 
- static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ static struct options {
 diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 226e984..c592d47 100644
+index c592d47..eea3a2a 100644
 --- a/include/erofs/xattr.h
 +++ b/include/erofs/xattr.h
-@@ -45,10 +45,15 @@ extern "C"
+@@ -45,8 +45,16 @@ extern "C"
  #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
  #endif
 
-+struct xattr_iter_ops {
-+       int (*verify)(const struct erofs_xattr_entry *entry);
++struct xattr_prefix {
++       const char *prefix;
++       u16 prefix_len;
 +};
++extern struct xattr_prefix xattr_types[];
 +
+ struct xattr_iter_ops {
+        int (*verify)(const struct erofs_xattr_entry *entry);
++       int (*list)(const struct erofs_xattr_entry *entry, void *data);
++       int (*get)(const struct erofs_xattr_entry *entry, void *data);
+ };
+
  int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
- char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int siz=
-e);
- int erofs_build_shared_xattrs_from_path(const char *path);
--
-+int erofs_xattr_foreach(struct erofs_inode *vi, struct xattr_iter_ops *ops=
-,
-+                       void *data);
- #ifdef __cplusplus
- }
- #endif
 diff --git a/lib/xattr.c b/lib/xattr.c
-index c8ce278..92c155d 100644
+index 92c155d..eed3c71 100644
 --- a/lib/xattr.c
 +++ b/lib/xattr.c
-@@ -714,3 +714,126 @@ char *erofs_export_xattr_ibody(struct list_head *ixat=
-trs, unsigned int size)
-        DBG_BUGON(p > size);
-        return buf;
- }
-+
-+static struct erofs_xattr_entry *read_xattr_entry(erofs_blk_t addr,
-+                                                 char *buf, size_t size)
-+{
-+       struct erofs_xattr_entry *entry;
-+       size_t entry_sz =3D sizeof(struct erofs_xattr_entry);
-+       int ret;
-+
-+       if (size < entry_sz)
-+               return ERR_PTR(-ERANGE);
-+
-+       ret =3D dev_read(0, buf, addr, entry_sz);
-+       if (ret) {
-+               erofs_err("failed to read xattr entry at addr %x: %d",
-+                         addr, ret);
-+               return ERR_PTR(ret);
-+       }
-+
-+       entry =3D (struct erofs_xattr_entry *)buf;
-+       entry_sz =3D erofs_xattr_entry_size(entry);
-+       if (size < entry_sz)
-+               return ERR_PTR(-ERANGE);
-+
-+       ret =3D dev_read(0, buf, addr, entry_sz);
-+       if (ret) {
-+               erofs_err("failed to read xattr entry at addr %x: %d",
-+                         addr, ret);
-+               return ERR_PTR(ret);
-+       }
-+
-+       return entry;
-+}
-+
-+int erofs_xattr_foreach(struct erofs_inode *vi, struct xattr_iter_ops *ops=
-,
-+                       void *data)
-+{
-+       unsigned int xattr_hdr_size =3D sizeof(struct erofs_xattr_ibody_hea=
-der);
-+       unsigned int xattr_entry_size =3D sizeof(struct erofs_xattr_entry);
-+       erofs_off_t addr;
-+       unsigned int ofs, xattr_shared_count;
-+       struct erofs_xattr_ibody_header *ih;
-+       struct erofs_xattr_entry *entry;
-+       int i, remaining =3D vi->xattr_isize, ret =3D 0;
-+       char buf[EROFS_BLKSIZ];
-+
-+       if (vi->xattr_isize =3D=3D xattr_hdr_size) {
-+               erofs_err("xattr_isize %d of nid %llu is not supported yet"=
-,
-+                         vi->xattr_isize, vi->nid | 0ULL);
-+               return -EFSCORRUPTED;
-+       } else if (vi->xattr_isize < xattr_hdr_size) {
-+               if (vi->xattr_isize) {
-+                       erofs_err("bogus xattr ibody @ nid %llu",
-+                                 vi->nid | 0ULL);
-+                       return -EFSCORRUPTED;
-+               }
-+       }
-+
-+       addr =3D iloc(vi->nid) + vi->inode_isize;
-+       ret =3D dev_read(0, buf, addr, xattr_hdr_size);
-+       if (ret < 0) {
-+               erofs_err("failed to read xattr header @ nid %llu: %d",
-+                         vi->nid | 0ULL, ret);
-+               return ret;
-+       }
-+       ih =3D (struct erofs_xattr_ibody_header *)buf;
-+       xattr_shared_count =3D ih->h_shared_count;
-+
-+       ofs =3D erofs_blkoff(addr) + xattr_hdr_size;
-+       addr +=3D xattr_hdr_size;
-+       ret =3D dev_read(0, buf, addr, xattr_entry_size * xattr_shared_coun=
-t);
-+       remaining -=3D xattr_hdr_size;
-+       for (i =3D 0; i < xattr_shared_count; ++i) {
-+               unsigned int xattr_id;
-+               erofs_blk_t xattr_addr;
-+               char tmp[EROFS_BLKSIZ];
-+
-+               if (ofs >=3D EROFS_BLKSIZ) {
-+                       if (ofs !=3D EROFS_BLKSIZ) {
-+                               erofs_err("unaligned xattr entry in xattr s=
-hared area @ nid %llu",
-+                                         vi->nid | 0ULL);
-+                               return -EFSCORRUPTED;
-+                       }
-+                       ofs =3D 0;
-+               }
-+
-+               xattr_id =3D le32_to_cpu(*((__le32 *)buf + i));
-+               xattr_addr =3D sbi.xattr_blkaddr * EROFS_BLKSIZ +  4 * xatt=
-r_id;
-+
-+               entry =3D read_xattr_entry(xattr_addr, tmp, EROFS_BLKSIZ);
-+               if (IS_ERR(entry))
-+                       return PTR_ERR(entry);
-+
-+               if (ops->verify) {
-+                       ret =3D ops->verify(entry);
+@@ -39,10 +39,7 @@ static DECLARE_HASHTABLE(ea_hashtable, EA_HASHTABLE_BITS=
+);
+ static LIST_HEAD(shared_xattrs_list);
+ static unsigned int shared_xattrs_count, shared_xattrs_size;
+
+-static struct xattr_prefix {
+-       const char *prefix;
+-       u16 prefix_len;
+-} xattr_types[] =3D {
++struct xattr_prefix xattr_types[] =3D {
+        [EROFS_XATTR_INDEX_USER] =3D {
+                XATTR_USER_PREFIX,
+                XATTR_USER_PREFIX_LEN
+@@ -811,6 +808,17 @@ int erofs_xattr_foreach(struct erofs_inode *vi, struct=
+ xattr_iter_ops *ops,
+                        if (ret < 0)
+                                return ret;
+                }
++               if (ops->list) {
++                       ret =3D ops->list(entry, data);
 +                       if (ret < 0)
 +                               return ret;
 +               }
-+
-+               ofs +=3D xattr_entry_size;
-+               addr +=3D xattr_entry_size;
-+               remaining -=3D xattr_entry_size;
-+       }
-+
-+       while (remaining > 0) {
-+               unsigned int entry_sz;
-+
-+               entry =3D read_xattr_entry(addr, buf, EROFS_BLKSIZ);
-+               if (IS_ERR(entry))
-+                       return PTR_ERR(entry);
-+               entry_sz =3D erofs_xattr_entry_size(entry);
-+
-+               if (ops->verify) {
-+                       ret =3D ops->verify(entry);
++               if (ops->get) {
++                       ret =3D ops->get(entry, data);
++                       if ((ret < 0 && ret !=3D -ENODATA) || ret >=3D 0)
++                               /* error or found */
++                               return ret;
++               }
+
+                ofs +=3D xattr_entry_size;
+                addr +=3D xattr_entry_size;
+@@ -830,6 +838,16 @@ int erofs_xattr_foreach(struct erofs_inode *vi, struct=
+ xattr_iter_ops *ops,
+                        if (ret < 0)
+                                return ret;
+                }
++               if (ops->list) {
++                       ret =3D ops->list(entry, data);
 +                       if (ret < 0)
 +                               return ret;
 +               }
-+               addr +=3D entry_sz;
-+               remaining -=3D entry_sz;
-+       }
-+
-+       return ret;
-+
-+}
++               if (ops->get) {
++                       ret =3D ops->get(entry, data);
++                       if ((ret < 0 && ret !=3D -ENODATA) || ret >=3D 0)
++                               return ret;
++               }
+                addr +=3D entry_sz;
+                remaining -=3D entry_sz;
+        }
 --
 2.25.1
 
