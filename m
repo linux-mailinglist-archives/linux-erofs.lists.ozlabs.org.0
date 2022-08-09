@@ -2,39 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E224B58D2EB
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Aug 2022 06:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 70BBA58DD91
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Aug 2022 20:00:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4M20RR5jsfz306K
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Aug 2022 14:27:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4M2LSj0783z306m
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Aug 2022 04:00:05 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=hjh3tTr7;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54; helo=out30-54.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::112d; helo=mail-yw1-x112d.google.com; envelope-from=wata2ki@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=hjh3tTr7;
+	dkim-atps=neutral
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4M20RM5Jj4z2xHY
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Aug 2022 14:27:42 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VLoLPOq_1660019256;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VLoLPOq_1660019256)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Aug 2022 12:27:38 +0800
-Date: Tue, 9 Aug 2022 12:27:36 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Sheng Yong <shengyong@oppo.com>
-Subject: Re: [RFC PATCH 2/3] erofs-utils: fuse: export erofs_xattr_foreach
-Message-ID: <YvHiOIIPO7iMgdlo@B-P7TQMD6M-0146.local>
-References: <20220803142223.3962974-1-shengyong@oppo.com>
- <20220803142223.3962974-3-shengyong@oppo.com>
- <YurQkH7D/Ch/clT0@debian>
- <YvHbZrYUU7qDP0Jg@B-P7TQMD6M-0146.local>
- <76efd3fa-e760-8321-8bb7-c7cc1daa9fe1@oppo.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4M2LSY6wC5z2xKh
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Aug 2022 03:59:57 +1000 (AEST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-3246910dac3so119342047b3.12
+        for <linux-erofs@lists.ozlabs.org>; Tue, 09 Aug 2022 10:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=sqeWFUxt/Oz7Ci86UAOOZzXD/XhtDTP8vMidh9jzElE=;
+        b=hjh3tTr7ibWnxRHQBIW9VSP95YxEZreuY7+0aImb3zRI51u8Kph/wgVo5+1YiXw088
+         NLwhY0nsWkJcrXHrhAcqqTnohYZ8YlD3+RNzpE75M1kW9BE3RfbVxGxWx8wDANkFgJnj
+         5ToJtozAjnLeCdUOzOGCF0mTdaZgy0Wz7SsH9BrIHZ7F+kK7OkCUIWo4/yQUYogAJY5s
+         4r7mzviAbkB9f4L+8/Qo4GKlTPN5DHy1eMyT558D7oVp3bVwEaNmSQVIYcaWho0v+sO2
+         FMrlQXLw1viO/LAe59xtyh2DuarThLnqf9Eyb8iWKFKETjixxAwWk/iK5MwQg0cwslBx
+         Imzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=sqeWFUxt/Oz7Ci86UAOOZzXD/XhtDTP8vMidh9jzElE=;
+        b=W+kPhKJ6+JmXoWk8vVq0iGAecBhnsOhHAtMdqygS4iWepkv2F57L3QG/J8YCi860d2
+         I1ikw44Hb4FMxhV1K+0l26MxJ7Ht4bBkS91BTfE4pgR+32txF/naAPOK7sMjJ/U2QOeg
+         L75H+2WnJLKcAjVvQlcVvxVAhiXd/HJ04QxKNLrX3phx/c7w5ZTZLPhqOnRkTAIZ5AIA
+         4yDfOIc7fP+h6TpdWjc+OTzJ5nzHbIlltKnik7wbNReKvC+RcR03sc/M+CQQTCl3sqXi
+         sFOqps50THQk3HqBUbxkSeXI7egrRBDpzRDAo2xkYwykhkuWThCwT80fXVq3rwP2wCUg
+         rzgw==
+X-Gm-Message-State: ACgBeo2ggs8jnoI7ZSEKbM1V+ZyuU1k58WZkxYzFU1LY8IO19seIqfAj
+	+t31IWFy0qq7/ZWGFCHIsvCscIKMD0R9V7P82X4gv6tUlI4=
+X-Google-Smtp-Source: AA6agR7QEGzrQVmQ6Jlw2Enh0tcxh3sfMjxrBNxzKzpxLjOcarPpePr0oZ2yNKk9VGSMqrMjmKTNEGquLb4vm1HY8po=
+X-Received: by 2002:a81:b71c:0:b0:324:5feb:c4ef with SMTP id
+ v28-20020a81b71c000000b003245febc4efmr24295941ywh.231.1660067993448; Tue, 09
+ Aug 2022 10:59:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <76efd3fa-e760-8321-8bb7-c7cc1daa9fe1@oppo.com>
+From: Naoto Yamaguchi <wata2ki@gmail.com>
+Date: Wed, 10 Aug 2022 02:59:42 +0900
+Message-ID: <CABBJnRbpAxGB644x=fBRK5GOrjxYawZE-zrhHnRHQbz5Lzp-CQ@mail.gmail.com>
+Subject: RFC: erofs-utils:mkfs: add unprivileged container use-case support
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,60 +69,18 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 09, 2022 at 12:18:34PM +0800, Sheng Yong wrote:
-> 
-> 
-> 在 2022/8/9 11:58, Gao Xiang 写道:
-> > Hi Yong,
-> > 
-> > On Thu, Aug 04, 2022 at 03:46:24AM +0800, Gao Xiang wrote:
-> > > 
-> > > On Wed, Aug 03, 2022 at 10:22:22PM +0800, Sheng Yong wrote:
-> > > > This patch exports erofs_xattr_foreach() to iterate all xattrs.
-> > > > Each xattr entry is handled by operations defined in `struct
-> > > > xattr_iter_ops'.
-> > > > 
-> > > 
-> > > Thanks for your hard effort!
-> > > 
-> > > Could we import in-kernel xattr implementation with verify enabled
-> > > (or unify these implementations) instead?
-> > > 
-> > > ( Jianan ported a kernel implementation before, could we enhance
-> > >    it with verification?
-> > >    https://lore.kernel.org/r/20220728120910.61636-1-jnhuang@linux.alibaba.com)
-> > > 
-> > 
-> > We're about to fix FUSE extended attribute support... Would you mind
-> > leaving your opinion about this?
-> 
-> Hi, Xiang
-> 
-> Sorry for late. At first glance, I though it would be too heavy to port
-> in-kernel code when I tried to add xattr to fuse client. But if we want
-> a more unified implementation and Jianan has already done it. I'd like
-> to try Jianan's version :-)
-> 
+Hi all.
 
-Okay, got it.  Also if kernel implementation has more chance to simplify
-or clean up, let's do it now.  However, it's definitely better if we share
-more code between kernel and erofs-utils in common, so we don't need to
-maintain / test two different approaches and that could lead to more bugs
-if we enhance them even further in the future...
+I investigate each read only filesystem for linux at linux container
+use-case.  The erofs is most interesting filesystem.
+A each files of guest root filesystem need to shift uid/gid in case of
+unprivileged container to use uid/gid namespace.  I work adding
+uid/gid offsetting support to erofs-utils mkfs tool now.
+Will be this patch accept in upstream community?
 
 Thanks,
-Gao Xiang
-
-> Thanks,
-> Sheng Yong
-> 
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > > Thanks,
-> > > Gao Xiang
+Naoto Yamaguchi,
+a member of Automotive Grade Linux Instrument Cluster EG.
