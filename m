@@ -1,76 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A645909FE
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Aug 2022 03:48:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D0F5590BB9
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Aug 2022 08:02:30 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4M3mlg3gGbz3bY5
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Aug 2022 11:47:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4M3tPJ0VNYz3bXZ
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Aug 2022 16:02:28 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=f+tBulor;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Q49esEub;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::434; helo=mail-pf1-x434.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=f+tBulor;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Q49esEub;
 	dkim-atps=neutral
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4M3mlY3vkWz2xX6
-	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Aug 2022 11:47:51 +1000 (AEST)
-Received: by mail-pf1-x42b.google.com with SMTP id y141so17965742pfb.7
-        for <linux-erofs@lists.ozlabs.org>; Thu, 11 Aug 2022 18:47:51 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4M3tPD5Zkhz2xjr
+	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Aug 2022 16:02:22 +1000 (AEST)
+Received: by mail-pf1-x434.google.com with SMTP id d20so93496pfq.5
+        for <linux-erofs@lists.ozlabs.org>; Thu, 11 Aug 2022 23:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc;
-        bh=ozFEP/yxJOd5RIDMUysufLZ7E8NIanoxqPsbAkiMPNw=;
-        b=f+tBulor+sAbYQVYEv5LS1+urI8Bt3/7NimeJ18XG3wZQAM9zhS0EbBC+AScTgzHBF
-         xzz1U9/DEeG8/B5ZbqeuN/NVDF2ikPWlfGZ9SRoV+yqvbOZkNzEhcd0PwmmkdsDo4p3I
-         +0sdDODlWw1Aa4MWZVPZZ8B1gT7OD6guwOROv/mdup2ku0GDOWDS+7j8hWz1DrfRL6re
-         oNUPPgE7xxtM150tMjB+Gwi78FjyOoWfa0FSzrHRyLo2SL9Z99fCwdaIeGoyUB3ScfPY
-         OdoYugUg1ylEzP3iqmh+lxwzWQszqXTMKE8QHOYIswEukyPGdy7dk+f9hOVuZMcUXjeK
-         Mu2Q==
+        h=message-id:date:subject:cc:to:from:from:to:cc;
+        bh=LGB0WFClYhcqqe+YL7LSXVJfO1SXGUU9W/Gp8VSqST4=;
+        b=Q49esEubX0ROqAm9EfEJiMjDXGIKOSdrQ+32dsHJAMyc7cO3cIFgclS3aTKmpJdi4j
+         Ei4mQ+QIMU/oMd9+Fmf9+s4IH2yoBmiGWV4FipurmPbMYNJv7tDomANzDmdBgmdFFD7C
+         xCzyE1TqJcAmmve7sHdhYaVnPUlSc/VL8orkGPQmmsBQ/1zlxKBI6EDoHfH9tsi0rnLK
+         GEKF9OQILyRW/lbRLahujxk5y2LkfkigoF+NO5R1LxDgEdYU5QdNa0+XAc9QcFo5CcmN
+         Z3jU9hX0UNXTFTm4RD/Oyu8LoNZjRgJEF2RRJxUnRzu9ILrMIYCLJfzHC6gJXQ7NQ/ga
+         nsGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=ozFEP/yxJOd5RIDMUysufLZ7E8NIanoxqPsbAkiMPNw=;
-        b=ABuEqXynPwOzRs3/Un3EdSuCD4U28A+bUfooD+2Yei0gHPAON84Sh5ajQrShbWBQEw
-         03kiwEXtcSBTWaLDUNSOFS3RbjezeHSDorwfE7t9UUDZkJgr741zqTUVIfBOr20mP6j8
-         wSLZUD8IVYIoSSDe7puZrKYJhdExjaltzlhdgaJ2IUSlWbrG5b5P3BtJD7rN5ovyEXGL
-         VLfEU6DNAz3Qfq3I5YueYutp6wQYgWg96x79cpS51PHyUz9O6xo1NqUJIFhxOxA+bt8N
-         aqBTcw630D7xkx7ZYB46eEbqF9mAPeIgXUJUUf4cPd26ullGaquAN61KhD6xXO+LN5zw
-         +mOw==
-X-Gm-Message-State: ACgBeo3LOdqPstJQxMUNmkQFWyCPMVEOkNe72qx8VErdVmPW0JJKju88
-	YqGqqqRcKSMQU0+c2sG/eNg=
-X-Google-Smtp-Source: AA6agR5/Wbrrh4kjMEWQXsZsSpteZbJp5nPll4zSf1VlIslOK8DJaurPblD3/Hiw1d1+ySVTblRqMw==
-X-Received: by 2002:a05:6a00:2352:b0:52e:a03b:76f1 with SMTP id j18-20020a056a00235200b0052ea03b76f1mr1838471pfj.34.1660268868507;
-        Thu, 11 Aug 2022 18:47:48 -0700 (PDT)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id p6-20020a63c146000000b0041a919ed63dsm391771pgi.3.2022.08.11.18.47.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Aug 2022 18:47:48 -0700 (PDT)
-Date: Fri, 12 Aug 2022 09:49:41 +0800
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=LGB0WFClYhcqqe+YL7LSXVJfO1SXGUU9W/Gp8VSqST4=;
+        b=5RNMPLYtAuxBxr6MxLKbP5gEAf8Z+ZxxcZkc9lxyKXFK2IjNYT19RlHCyzGbZAFCzM
+         RBjSgQskUptnlHvthoUnBAn6R/f8Za7I6n/K1C9XrRF8uZfj+W9tQvH55YhOGrV3xreO
+         w1EL8jcZFEAwfRilL7y0Bv8Au1RaplKWV8MAtJSxVmr6SxkaKJrrQzJAPr4cSFtR+iTc
+         dCGnPh2JPBDIgZVjG9HMZlsDjpXwTfl9HOsQN8IJD11a0OMXmqhw0X0pMJ6Lsw1M7iOb
+         Txo62kR/ikNNXSutRXthK9WeFkvj8xceD6uds0q/W77RZfnpf52pcit4FisqhbWzcKmJ
+         VO8A==
+X-Gm-Message-State: ACgBeo0HkrAyI+uUT0+8NkxgrTAP/8ciGj/54WcaI4hQ024bS0N/LTi4
+	8AQALoayNBmydlVv1QIuDmE=
+X-Google-Smtp-Source: AA6agR5rBczvnAzYLabH3mHMNCmt0pTO71n0M2QUKwFWtNWRVx2VFRqIHJQafTFPqUGunw0wo6WvDg==
+X-Received: by 2002:aa7:8289:0:b0:52c:e97c:dbe4 with SMTP id s9-20020aa78289000000b0052ce97cdbe4mr2461650pfm.49.1660284140428;
+        Thu, 11 Aug 2022 23:02:20 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id l16-20020a170902f69000b001708b189c4asm740020plg.137.2022.08.11.23.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Aug 2022 23:02:20 -0700 (PDT)
 From: Yue Hu <zbestahu@gmail.com>
-To: Naoto Yamaguchi <wata2ki@gmail.com>
-Subject: Re: RFC: erofs-utils:mkfs: add unprivileged container use-case
- support
-Message-ID: <20220812094941.00001031.zbestahu@gmail.com>
-In-Reply-To: <CABBJnRYOHLX25FmB3rhmcqEHRS28NKwNAuEihi0JDj0NoQkoDg@mail.gmail.com>
-References: <CABBJnRbpAxGB644x=fBRK5GOrjxYawZE-zrhHnRHQbz5Lzp-CQ@mail.gmail.com>
-	<YvKj8aZp/6bg/Nxv@debian>
-	<CABBJnRaP8XWbKiYVxbtdiJ0ViFz0hhkwTPnBA004aetZx_5nhQ@mail.gmail.com>
-	<YvKrs6J5zBPzFYpF@B-P7TQMD6M-0146.local>
-	<CABBJnRYOHLX25FmB3rhmcqEHRS28NKwNAuEihi0JDj0NoQkoDg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Google-Original-From: Yue Hu <huyue2@coolpad.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: avoid the potentially wrong m_plen for big pcluster
+Date: Fri, 12 Aug 2022 14:01:50 +0800
+Message-Id: <20220812060150.8510-1-huyue2@coolpad.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,32 +72,94 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Naoto,
+Actually, 'compressedlcs' stores compressed block count rather than
+lcluster count. Therefore, the number of bits for shifting the count
+should be 'LOG_BLOCK_SIZE' rather than 'lclusterbits' although current
+lcluster size is 4K. The value of 'm_plen' will be wrong once we enable
+the non 4K-sized lcluster.
 
-On Fri, 12 Aug 2022 08:04:40 +0900
-Naoto Yamaguchi <wata2ki@gmail.com> wrote:
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ fs/erofs/zmap.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-> Hi Gao
-> 
-> I created patch for submit,  but it couldn't send using git
-> send-email.   Google updated security, it blocked smtp based send
-> email by git maybe....
-
-As Xiang said, check below about 'app password' if you want:
-
-https://fmsinc.com/MicrosoftAccess/email/smtp/app-password/index.htm
-
-Thanks.
-
-> 
-> Can I submit using github pull request to
-> https://github.com/hsiangkao/erofs-utils ?
-> 
-> Thanks,
-> Naoto Yamaguchi,
-> a member of Automotive Grade Linux Instrument Cluster EG.
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 572f0b8151ba..d58549ca1df9 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -141,7 +141,7 @@ struct z_erofs_maprecorder {
+ 	u8  type, headtype;
+ 	u16 clusterofs;
+ 	u16 delta[2];
+-	erofs_blk_t pblk, compressedlcs;
++	erofs_blk_t pblk, compressedblks;
+ 	erofs_off_t nextpackoff;
+ };
+ 
+@@ -192,7 +192,7 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 				DBG_BUGON(1);
+ 				return -EFSCORRUPTED;
+ 			}
+-			m->compressedlcs = m->delta[0] &
++			m->compressedblks = m->delta[0] &
+ 				~Z_EROFS_VLE_DI_D0_CBLKCNT;
+ 			m->delta[0] = 1;
+ 		}
+@@ -293,7 +293,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 				DBG_BUGON(1);
+ 				return -EFSCORRUPTED;
+ 			}
+-			m->compressedlcs = lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
++			m->compressedblks = lo & ~Z_EROFS_VLE_DI_D0_CBLKCNT;
+ 			m->delta[0] = 1;
+ 			return 0;
+ 		} else if (i + 1 != (int)vcnt) {
+@@ -497,7 +497,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 		return 0;
+ 	}
+ 	lcn = m->lcn + 1;
+-	if (m->compressedlcs)
++	if (m->compressedblks)
+ 		goto out;
+ 
+ 	err = z_erofs_load_cluster_from_disk(m, lcn, false);
+@@ -506,7 +506,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 
+ 	/*
+ 	 * If the 1st NONHEAD lcluster has already been handled initially w/o
+-	 * valid compressedlcs, which means at least it mustn't be CBLKCNT, or
++	 * valid compressedblks, which means at least it mustn't be CBLKCNT, or
+ 	 * an internal implemenatation error is detected.
+ 	 *
+ 	 * The following code can also handle it properly anyway, but let's
+@@ -523,12 +523,12 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
+ 		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
+ 		 */
+-		m->compressedlcs = 1;
++		m->compressedblks = 1 << (lclusterbits - LOG_BLOCK_SIZE);
+ 		break;
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
+ 		if (m->delta[0] != 1)
+ 			goto err_bonus_cblkcnt;
+-		if (m->compressedlcs)
++		if (m->compressedblks)
+ 			break;
+ 		fallthrough;
+ 	default:
+@@ -539,7 +539,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 		return -EFSCORRUPTED;
+ 	}
+ out:
+-	map->m_plen = (u64)m->compressedlcs << lclusterbits;
++	map->m_plen = (u64)m->compressedblks << LOG_BLOCK_SIZE;
+ 	return 0;
+ err_bonus_cblkcnt:
+ 	erofs_err(m->inode->i_sb,
+-- 
+2.17.1
 
