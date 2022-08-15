@@ -2,55 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55267592E64
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Aug 2022 13:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC9F7592E65
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Aug 2022 13:46:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4M5stl0mRJz3bkZ
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Aug 2022 21:46:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4M5stp3m80z3bNj
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Aug 2022 21:46:26 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1660563983;
-	bh=PGSn9v/Vb0Fgf7jHEoYdiN2Gzn+Oveqc6/QJerTYZBg=;
+	s=201707; t=1660563986;
+	bh=nmei75UQLrXMG2L7/xFI+FjzoA3oEelPp+lH7jJuaIs=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=MTDfN/UNUI7N1V34cMeRM6hIoI20L+UUMoj6VAMufPnbhlon+ZDKG32MAH8GxIupj
-	 GeE1CmSvYF4vzR9JR5AzPZT+230kXzTn4cT4OqVs7srVMQv+ehxQtBsSUHRyr8iqe+
-	 yuPwH5GrUtnfmpAJVgW1FdcqHR2Vgo6eqvuutOvS2Gb+0vkpu44/qTmr7hj/dsHPIG
-	 /dPC2MSSDrcvV7D8ujpds94dlbDVAYSwPtZnRFi0P3ZLC/fnVEwLa+zFtVDmdZlpxl
-	 VZGs9MqmXzfr50Zc6t7jvSbQVZfpijErCbK7eQEAmOXJj4Y+y0ZRl17+c7fa1jn9P4
-	 iWuMgrIiLs14w==
+	b=ORZubf8jq5eF4xXPMiqN4cj8Ph6lBdnOzaQ0v7xbKUJvvNmS5LyrHN98PBO+om2sv
+	 +f0EI68moicC2JVcxu4fsk1O/EjzNeZpMx2u3Fdoy7XyGXw9PgprXrq7yiBrXbxWih
+	 YNsk8PwwyO1mmOWtYythOhmbCfDoyhjKvkli4FX7wvVNMRQyjXfNoslJO3FfAdC/ZJ
+	 nP5ZMaMGUBY3fgo2FQOklNTAuRBlOlDUIb03NY8rlZNOMfsLa9gmlxBaM3MeIEA/G/
+	 jFulWZNHDxR6+yNZC3rkxxLYfhqujwP2vy2kyXMH+zKJxb+cm23nD8jf2D3IyFqnfX
+	 enUamznh+CWEQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.28; helo=smtp-out1.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=195.135.220.29; helo=smtp-out2.suse.de; envelope-from=wqu@suse.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=W08dxO9U;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=RXdEnIvM;
 	dkim-atps=neutral
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4M5stR6m2Mz3bN6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Aug 2022 21:46:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4M5stW2ZLhz3bmK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Aug 2022 21:46:11 +1000 (AEST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 85F9B352B4;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C6C881FE69;
+	Mon, 15 Aug 2022 11:46:08 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 089D313A93;
 	Mon, 15 Aug 2022 11:46:05 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4B5AB13B10;
-	Mon, 15 Aug 2022 11:46:02 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id mPNhA/ox+mLsGAAAMHmgww
-	(envelope-from <wqu@suse.com>); Mon, 15 Aug 2022 11:46:02 +0000
+	id sCGlLv0x+mLsGAAAMHmgww
+	(envelope-from <wqu@suse.com>); Mon, 15 Aug 2022 11:46:05 +0000
 To: u-boot@lists.denx.de
-Subject: [PATCH v3 7/8] fs: ubifs: rely on higher layer to do unaligned read
-Date: Mon, 15 Aug 2022 19:45:18 +0800
-Message-Id: <e07f7166e2d451f542dfb1eba4cf40bd8f79d6c4.1660563403.git.wqu@suse.com>
+Subject: [PATCH v3 8/8] fs: erofs: add unaligned read range handling
+Date: Mon, 15 Aug 2022 19:45:19 +0800
+Message-Id: <a1ac116d3416d13161312a5a08c4d0e9f6218639.1660563403.git.wqu@suse.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <cover.1660563403.git.wqu@suse.com>
 References: <cover.1660563403.git.wqu@suse.com>
@@ -73,78 +73,78 @@ Cc: trini@konsulko.com, joaomarcos.costa@bootlin.com, marek.behun@nic.cz, thomas
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently ubifs doesn't support unaligned read offset, thanks to the
-recent _fs_read() work to handle unaligned read, we only need to
-implement ubifs_get_blocksize() to take advantage of it.
+I'm not an expert on erofs, but my quick glance didn't expose any
+special handling on unaligned range, thus I think the U-boot erofs
+driver doesn't really support unaligned read range.
 
-Now ubifs can do unaligned read without any problem.
+This patch will add erofs_get_blocksize() so erofs can benefit from the
+generic unaligned read support.
 
+Cc: Huang Jianan <jnhuang95@gmail.com>
+Cc: linux-erofs@lists.ozlabs.org
 Signed-off-by: Qu Wenruo <wqu@suse.com>
 ---
-Unfortunately I can not test ubifs, as enabling UBI would cause compile
-failure due to missing of <asm/atomic.h> header.
----
- fs/fs.c               |  2 +-
- fs/ubifs/ubifs.c      | 13 ++++++++-----
- include/ubifs_uboot.h |  1 +
- 3 files changed, 10 insertions(+), 6 deletions(-)
+ fs/erofs/internal.h | 1 +
+ fs/erofs/super.c    | 6 ++++++
+ fs/fs.c             | 2 +-
+ include/erofs.h     | 1 +
+ 4 files changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 4af7c91560cc..d368a6481bf1 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -83,6 +83,7 @@ struct erofs_sb_info {
+ 	u16 available_compr_algs;
+ 	u16 lz4_max_distance;
+ 	u32 checksum;
++	u32 blocksize;
+ 	u16 extra_devices;
+ 	union {
+ 		u16 devt_slotoff;		/* used for mkfs */
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 8277d9b53fb3..82625da59001 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -99,7 +99,13 @@ int erofs_read_superblock(void)
+ 
+ 	sbi.build_time = le64_to_cpu(dsb->build_time);
+ 	sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
++	sbi.blocksize = 1 << blkszbits;
+ 
+ 	memcpy(&sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
+ 	return erofs_init_devices(&sbi, dsb);
+ }
++
++int erofs_get_blocksize(const char *filename)
++{
++	return sbi.blocksize;
++}
 diff --git a/fs/fs.c b/fs/fs.c
-index ea4325cd0b00..43c7128bcfc5 100644
+index 43c7128bcfc5..2ac43c05fcd8 100644
 --- a/fs/fs.c
 +++ b/fs/fs.c
-@@ -312,7 +312,7 @@ static struct fstype_info fstypes[] = {
- 		.exists = ubifs_exists,
- 		.size = ubifs_size,
- 		.read = ubifs_read,
+@@ -376,7 +376,7 @@ static struct fstype_info fstypes[] = {
+ 		.readdir = erofs_readdir,
+ 		.ls = fs_ls_generic,
+ 		.read = erofs_read,
 -		.get_blocksize = fs_get_blocksize_unsupported,
-+		.get_blocksize = ubifs_get_blocksize,
- 		.write = fs_write_unsupported,
- 		.uuid = fs_uuid_unsupported,
- 		.opendir = fs_opendir_unsupported,
-diff --git a/fs/ubifs/ubifs.c b/fs/ubifs/ubifs.c
-index d3026e310168..a8ab556dd376 100644
---- a/fs/ubifs/ubifs.c
-+++ b/fs/ubifs/ubifs.c
-@@ -846,11 +846,9 @@ int ubifs_read(const char *filename, void *buf, loff_t offset,
- 
- 	*actread = 0;
- 
--	if (offset & (PAGE_SIZE - 1)) {
--		printf("ubifs: Error offset must be a multiple of %d\n",
--		       PAGE_SIZE);
--		return -1;
--	}
-+	/* Higher layer should ensure it always pass page aligned range. */
-+	assert(IS_ALIGNED(offset, PAGE_SIZE));
-+	assert(IS_ALIGNED(size, PAGE_SIZE));
- 
- 	c->ubi = ubi_open_volume(c->vi.ubi_num, c->vi.vol_id, UBI_READONLY);
- 	/* ubifs_findfile will resolve symlinks, so we know that we get
-@@ -920,6 +918,11 @@ out:
- 	return err;
- }
- 
-+int ubifs_get_blocksize(const char *filename)
-+{
-+	return PAGE_SIZE;
-+}
-+
- void ubifs_close(void)
- {
- }
-diff --git a/include/ubifs_uboot.h b/include/ubifs_uboot.h
-index b025779d59ff..bcd21715314a 100644
---- a/include/ubifs_uboot.h
-+++ b/include/ubifs_uboot.h
-@@ -29,6 +29,7 @@ int ubifs_exists(const char *filename);
- int ubifs_size(const char *filename, loff_t *size);
- int ubifs_read(const char *filename, void *buf, loff_t offset,
- 	       loff_t size, loff_t *actread);
-+int ubifs_get_blocksize(const char *filename);
- void ubifs_close(void);
- 
- #endif /* __UBIFS_UBOOT_H__ */
++		.get_blocksize = erofs_get_blocksize,
+ 		.size = erofs_size,
+ 		.close = erofs_close,
+ 		.closedir = erofs_closedir,
+diff --git a/include/erofs.h b/include/erofs.h
+index 1fbe82bf72cb..18bd6807c538 100644
+--- a/include/erofs.h
++++ b/include/erofs.h
+@@ -10,6 +10,7 @@ int erofs_probe(struct blk_desc *fs_dev_desc,
+ 		struct disk_partition *fs_partition);
+ int erofs_read(const char *filename, void *buf, loff_t offset,
+ 	       loff_t len, loff_t *actread);
++int erofs_get_blocksize(const char *filename);
+ int erofs_size(const char *filename, loff_t *size);
+ int erofs_exists(const char *filename);
+ void erofs_close(void);
 -- 
 2.37.1
 
