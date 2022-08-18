@@ -1,67 +1,67 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C56D5984C2
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Aug 2022 15:53:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 944445984C3
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Aug 2022 15:53:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4M7mYh3g2wz3c2N
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Aug 2022 23:53:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4M7mYm6VZqz3c75
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Aug 2022 23:53:16 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rGllJ5qf;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=S891HZY7;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::102c; helo=mail-pj1-x102c.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rGllJ5qf;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=S891HZY7;
 	dkim-atps=neutral
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4M7mYQ2kKRz3c0g
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Aug 2022 23:52:58 +1000 (AEST)
-Received: by mail-pl1-x62a.google.com with SMTP id jm11so1541115plb.13
-        for <linux-erofs@lists.ozlabs.org>; Thu, 18 Aug 2022 06:52:58 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4M7mYW27fJz3cCW
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Aug 2022 23:53:02 +1000 (AEST)
+Received: by mail-pj1-x102c.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso4839614pjk.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 18 Aug 2022 06:53:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=gH5/oCi30DEBEz19XNsVtoVzaMHu/eBGPrlN2e1Y2h0=;
-        b=rGllJ5qfUKtgRcE6ph85inw6yJ/YbZxn/wFWsyQ7ROH2rCs31NiBACpx7H7Muz3lqH
-         Rnh0DAKL15v0O+ccWZpbJgGIoZQN2nMg1XB2xV6pf/bt03k6ttpgkkYmwEDuXdV8IDJi
-         DmhJb88Y/BaK9TFk9JopbxPHtjay1COsouFWqklIWkkwoDzbENOLtz5/DxckQOR4vG4u
-         k/2RcaJXCAvLPIRplAk8Jq6jPowhJeG/CyWiUddUwlcmUnQAwsFcL09hDtd5Zn4U0Td4
-         dRv0RWiDimE8V3nV39YGAEZZc41wDRLqyJQQW6ARLX5RIQQz7RhFnbKp1Knw12QHDHB7
-         ZMMw==
+        bh=Q3+sIJxzAESYgoNj/gGe5uNrnE6V3K6wR3w/d3iHqFA=;
+        b=S891HZY7IwVovb2S3pGJmF1I/jxpC/Cx58Dz4VCcrS4LeuU4B38PvPKR5jL412EoTx
+         aDDFzA13FGGTTUEj58LsCYckux/M88Dkv0kW7w/z0s5j/pdNOwqjM+1qussJde2Fq8qF
+         XPZ+Xawp1IkhHX2GzDtxavXary6tCvassvl+reP9Yr/wYd384decJjrLBVHLyBI+jgEl
+         wXH12rGaBVfnLd+NjWklNxO8uD9ZXocT7byuy1ngo2Q2EKF9bgMnMUYM3f3JX5Lf4fnT
+         K9R2w+nQ6t1taVE6456VKK5iV/7/PmPbYzULchJNYuAlckTsA1segPi+0CmmXvY5T92q
+         15/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=gH5/oCi30DEBEz19XNsVtoVzaMHu/eBGPrlN2e1Y2h0=;
-        b=qL8btPLlsusisX0QkEO9mn3Mg+i2OddjMofggzEy8ku+ogq69UHfy7S/XD4W3vv538
-         DWl+4gGPKq/NDFDnxxb+C3rg3dBrBtmSAFmNmSBvX6aO8soKzpZaJRRXm3+sAg0AEZRV
-         L05Ls9YrxUddagRxnoffFCOCxK+EqDaqyWI1TmMR+830hhoFGNDqfhWcDSA3cIOAjRj+
-         lfOJ9EaN4S6W4efAqYMswVUGP7ygSP3CsDkij3eVEY1D+Yo5OVjg0uZUwsMJoEmbWtvu
-         mXK+64Ah8EbH0cPD83AaurKlZ1vnTYmWm9y6fFq3wDYPLvuf6RdN1KWoUViLZE3CqCpO
-         TdGA==
-X-Gm-Message-State: ACgBeo39qg79rXqTxizzknuxys2Sqw6fXaSeDPnJid3YfObbFcLjcM5Q
-	va5pUn6SZShQEoCO4+9a0kH5Dw==
-X-Google-Smtp-Source: AA6agR4vq2EHchwptoVCg1mL3pnZdHv9shuA3Z4UdpvUSOc05rSXrUr55WTmmTrNbpL0lo6Pne9Iow==
-X-Received: by 2002:a17:90b:3a85:b0:1fa:bf98:5e3e with SMTP id om5-20020a17090b3a8500b001fabf985e3emr3183373pjb.102.1660830776207;
-        Thu, 18 Aug 2022 06:52:56 -0700 (PDT)
+        bh=Q3+sIJxzAESYgoNj/gGe5uNrnE6V3K6wR3w/d3iHqFA=;
+        b=WXpyVRHvZe1MD65c4YZrO6qARnU+ZVmPXmm1W68e5sW+l9toRlRdAVL5sep0box7io
+         3o47zGlROqcRXcpHzHDN1dRt/tCoj36Jl2QwoYwoYe7+cOVGqhBrF0843E9K+FDZM34c
+         p60rUQvVTyBryWKTC66FIwGV4KxTZgmY2mgifmZ+NJumBwZGcNRVZ3odfr8Qfmmg0uQf
+         DtPso3wcOOs4Qncku2c5bygDlvjVS8HpoH5WeZFqscwFNGeezqYzTScUhd5A1nQClg6u
+         Qn4Yq2y1c7h3uQThQaIUadWFOTSD/nI2nzQIgnO/MTEn0ks7pGdAwk4cih3zpieMy2L/
+         WeSg==
+X-Gm-Message-State: ACgBeo0faa7fVLHjfEeITo9SUFFq+56A2/0o0h3ZUQcBg0a+SMv3wF5f
+	4P3sP/u01p1fOO1KJOJPy7JWAw==
+X-Google-Smtp-Source: AA6agR5vruAaYauuniDR7hv2XcV4ouNLjLvo+7M8xNDwBLLOR4XyoMvqf+cSfddJh/MTqflxloa2LA==
+X-Received: by 2002:a17:90b:3952:b0:1fa:7f18:110f with SMTP id oe18-20020a17090b395200b001fa7f18110fmr3237446pjb.19.1660830780916;
+        Thu, 18 Aug 2022 06:53:00 -0700 (PDT)
 Received: from C02G705SMD6V.bytedance.net ([139.177.225.242])
-        by smtp.gmail.com with ESMTPSA id k17-20020a170902ce1100b0016db0d877e4sm1385697plg.221.2022.08.18.06.52.53
+        by smtp.gmail.com with ESMTPSA id k17-20020a170902ce1100b0016db0d877e4sm1385697plg.221.2022.08.18.06.52.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 06:52:55 -0700 (PDT)
+        Thu, 18 Aug 2022 06:53:00 -0700 (PDT)
 From: Jia Zhu <zhujia.zj@bytedance.com>
 To: dhowells@redhat.com,
 	xiang@kernel.org,
 	jefflexu@linux.alibaba.com
-Subject: [RFC PATCH 4/5] cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode
-Date: Thu, 18 Aug 2022 21:52:03 +0800
-Message-Id: <20220818135204.49878-5-zhujia.zj@bytedance.com>
+Subject: [RFC PATCH 5/5] cachefiles: add restore command to recover inflight ondemand read requests
+Date: Thu, 18 Aug 2022 21:52:04 +0800
+Message-Id: <20220818135204.49878-6-zhujia.zj@bytedance.com>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 In-Reply-To: <20220818135204.49878-1-zhujia.zj@bytedance.com>
 References: <20220818135204.49878-1-zhujia.zj@bytedance.com>
@@ -78,80 +78,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
+Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Don't trigger EPOLLIN when there are only reopening read requests in
-xarray.
+Previously, in ondemand read scenario, if the anonymous fd was closed by
+user daemon, inflight and subsequent read requests would return EIO.
+As long as the device connection is not released, user daemon can hold
+and restore inflight requests by setting the request flag to
+CACHEFILES_REQ_NEW.
 
-Suggested-by: Xin Yin <yinxin.x@bytedance.com>
+Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
 ---
- fs/cachefiles/daemon.c   | 13 +++++++++++--
- fs/cachefiles/internal.h | 12 ++++++++++++
- 2 files changed, 23 insertions(+), 2 deletions(-)
+ fs/cachefiles/daemon.c   |  1 +
+ fs/cachefiles/internal.h |  3 +++
+ fs/cachefiles/ondemand.c | 23 +++++++++++++++++++++++
+ 3 files changed, 27 insertions(+)
 
 diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index aa4efcabb5e3..c74bd1f4ecf5 100644
+index c74bd1f4ecf5..014369266cb2 100644
 --- a/fs/cachefiles/daemon.c
 +++ b/fs/cachefiles/daemon.c
-@@ -355,14 +355,23 @@ static __poll_t cachefiles_daemon_poll(struct file *file,
- 					   struct poll_table_struct *poll)
- {
- 	struct cachefiles_cache *cache = file->private_data;
-+	struct xarray *xa = &cache->reqs;
-+	struct cachefiles_req *req;
-+	unsigned long index;
- 	__poll_t mask;
- 
- 	poll_wait(file, &cache->daemon_pollwq, poll);
- 	mask = 0;
- 
- 	if (cachefiles_in_ondemand_mode(cache)) {
--		if (!xa_empty(&cache->reqs))
--			mask |= EPOLLIN;
-+		if (!xa_empty(xa)) {
-+			xa_for_each_marked(xa, index, req, CACHEFILES_REQ_NEW) {
-+				if (!cachefiles_ondemand_is_reopening_read(req)) {
-+					mask |= EPOLLIN;
-+					break;
-+				}
-+			}
-+		}
- 	} else {
- 		if (test_bit(CACHEFILES_STATE_CHANGED, &cache->flags))
- 			mask |= EPOLLIN;
+@@ -77,6 +77,7 @@ static const struct cachefiles_daemon_cmd cachefiles_daemon_cmds[] = {
+ 	{ "tag",	cachefiles_daemon_tag		},
+ #ifdef CONFIG_CACHEFILES_ONDEMAND
+ 	{ "copen",	cachefiles_ondemand_copen	},
++	{ "restore",	cachefiles_ondemand_restore	},
+ #endif
+ 	{ "",		NULL				}
+ };
 diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 66bbd4f1d22a..b4af67f1cbd6 100644
+index b4af67f1cbd6..d504c61a5f03 100644
 --- a/fs/cachefiles/internal.h
 +++ b/fs/cachefiles/internal.h
-@@ -344,6 +344,13 @@ cachefiles_ondemand_set_object_##_state(struct cachefiles_object *object) \
- CACHEFILES_OBJECT_STATE_FUNCS(open);
- CACHEFILES_OBJECT_STATE_FUNCS(close);
- CACHEFILES_OBJECT_STATE_FUNCS(reopening);
-+
-+static inline bool cachefiles_ondemand_is_reopening_read(struct cachefiles_req *req)
-+{
-+	return cachefiles_ondemand_object_is_reopening(req->object) &&
-+			req->msg.opcode == CACHEFILES_OP_READ;
-+}
-+
- #else
- #define CACHEFILES_ONDEMAND_OBJINFO(object)	NULL
+@@ -303,6 +303,9 @@ extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+ extern int cachefiles_ondemand_copen(struct cachefiles_cache *cache,
+ 				     char *args);
  
-@@ -373,6 +380,11 @@ static inline int cachefiles_ondemand_init_obj_info(struct cachefiles_object *ob
- {
- 	return 0;
++extern int cachefiles_ondemand_restore(struct cachefiles_cache *cache,
++					char *args);
++
+ extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
+ extern void cachefiles_ondemand_clean_object(struct cachefiles_object *object);
+ 
+diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+index 79ffb19380cd..5b1c447da976 100644
+--- a/fs/cachefiles/ondemand.c
++++ b/fs/cachefiles/ondemand.c
+@@ -178,6 +178,29 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+ 	return ret;
  }
-+
-+static inline bool cachefiles_ondemand_is_reopening_read(struct cachefiles_req *req)
-+{
-+	return false;
-+}
- #endif
  
- /*
++int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
++{
++	struct cachefiles_req *req;
++
++	XA_STATE(xas, &cache->reqs, 0);
++
++	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
++		return -EOPNOTSUPP;
++
++	/*
++	 * Search the requests which being processed before
++	 * the user daemon crashed.
++	 * Set the CACHEFILES_REQ_NEW flag and user daemon will reprocess it.
++	 */
++	xas_lock(&xas);
++	xas_for_each(&xas, req, ULONG_MAX)
++		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
++	xas_unlock(&xas);
++
++	wake_up_all(&cache->daemon_pollwq);
++	return 0;
++}
++
+ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+ {
+ 	struct cachefiles_object *object;
 -- 
 2.20.1
 
