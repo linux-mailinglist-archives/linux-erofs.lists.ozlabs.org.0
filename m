@@ -1,68 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 858AB5AA68C
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 05:48:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B440B5AA68B
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 05:48:30 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MJkQx35YSz30DP
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 13:48:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MJkR03pp2z301Y
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 13:48:28 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=3ABmY31N;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=wdHIrpiS;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::52c; helo=mail-pg1-x52c.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::529; helo=mail-pg1-x529.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=3ABmY31N;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=wdHIrpiS;
 	dkim-atps=neutral
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MJkQs6bdBz30Bl
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Sep 2022 13:48:21 +1000 (AEST)
-Received: by mail-pg1-x52c.google.com with SMTP id x80so929656pgx.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Sep 2022 20:48:21 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MJkQw64Dhz305M
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Sep 2022 13:48:24 +1000 (AEST)
+Received: by mail-pg1-x529.google.com with SMTP id bh13so887057pgb.4
+        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Sep 2022 20:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Jk44PJvjdjdt0bhfpwnVqhAy54lOcNkatPLUifUkm78=;
-        b=3ABmY31NCtPUK9+d/tEAiUK1Sw5n0PbCBRGKhZIiWLQozhGHRFk5d1ZbZAv7HW0e94
-         qj6LLPcP0RLVr3Lxe2Vg3yZyHRrsKEumnCGkXHpdDdgPZFb6O3BPlwrXgOWJwDitJ3H4
-         PQ6EeKpWHEU8O3M50XZCT8yBKE9rzr2h/bzIoZW44Spga5UTqeCH2eMZcHTL3f6WhH4Q
-         mAZKmwn6WtZgc3ftU8Dwlhpx9+72E4iXoZUd4QbrY4iXMJQJlAhyCOUkO8JMUYPQHqTJ
-         eiOD3DVVkMWK3tI0AJ0q+sTjCRH/RM5yPgsZ0XlZiYoAyJNVLyd4Mb0QRmopGcau6G5F
-         JJVw==
+        bh=29yigyMnPFGfDuD40Y83IOfvtDsC8VAK42q+yJUeUxw=;
+        b=wdHIrpiSaBhjfQbqOd+Abr+Z7iAWnqTitm0NuSsGbPvaDveHA3TOCmzxpCEaxURIvn
+         c4v4b8cLleHbAaCx7Pp/bxts1GEAxe61h0wmVCp0UPzqOM/w+wQyPhrW0zLkYq9qOBhf
+         Yok1Z6ryVNgeKydsYzrzE2f1+QcKwwUjY0epN8bEV51Gn2fpLpHQ5fimRpaiotKtRmmS
+         FaM2mEHm+hrTaNF9ek8tH40G1HIcPI1MV66GhzrFLYX1/3JVfh0AvFmLGjG/Nj71ugoc
+         m4u9opqkr/kAkUKl65Ljw2aEOhQShGIYtP46EA3cAzRgwQx/ME02xiOMWu6+NuZVKe1l
+         UEYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=Jk44PJvjdjdt0bhfpwnVqhAy54lOcNkatPLUifUkm78=;
-        b=5zbG6Pj/eHazv9b5ghwK/3i/Zjf887YyyHMYR/4P/1CAs2gtqKvKb3Y74q84UCDuu1
-         5mYE81qnwmQyLr0MLtP6tyUenn3sLOC9jV4MwUpAnT/cYI5wLKsQA5pKP/fJrH8NlK8M
-         ejvgtC+JAF0XX14gxdvYm4UqVvt6rt3BBeK51DNZbFJi+yBGuyrqzhiLtkun7xDBSj38
-         /aZ+PIrTcwJWhoXh+UNMXKwyuDWbZiaj5pEHy/3VSUEUCt+Dsv443K3EwOpM339scOYj
-         DX0fkL7gX+ezqtRUtJ/nRZpNpSeWBIzdLkEwnjT3CizYhUYkxsKS6MLW6ZFGEOaWFJNH
-         Denw==
-X-Gm-Message-State: ACgBeo0fXGO1GFi5hK6Nw8pkPFEiHhe1zLUK1bVzi6wK5eFWAN+gX/wZ
-	nSJUvORVl/7TyoM80zl3LguBHCgcW6u9tQ==
-X-Google-Smtp-Source: AA6agR6H1cxQnoOXHM2ER5sKinUb9hmkg3InKS5W80qghzWeHrK3nt3kYIKXJVHuFnBwjRiKLdGdzg==
-X-Received: by 2002:a65:620c:0:b0:431:25fe:277 with SMTP id d12-20020a65620c000000b0043125fe0277mr15252pgv.413.1662090499304;
-        Thu, 01 Sep 2022 20:48:19 -0700 (PDT)
+        bh=29yigyMnPFGfDuD40Y83IOfvtDsC8VAK42q+yJUeUxw=;
+        b=pSOVu/3IA4iJuyqxKR0K/uudv0A4HkUq5Ch2hXHSHuizDa1pKGq8NEK0kOu0EPTRU4
+         7KWchtpOPvCLyirx1MeYlGLc8A14QE57OJZwX6ydi+VTr5heexJAGc2TfZqiDWHPdseL
+         yytYRnxye65UnLKpdNOrKhRKJJyDWpvU9GCfvHR6BURaE4Y+4X1tVCEoDBwcrbVIPiGL
+         kLqv9Z370qZekf74hSmpK8FOO72fKp/US/ar+/cbFR4jP6n7XjydtGHW/C5weFB24pR7
+         221HGaf0IV9tJS+oih59+WsbA3A5S3HqutZN+a/a3dtFJEd2F5M5emoRlhWv1q66X1eH
+         xabw==
+X-Gm-Message-State: ACgBeo22ClSV3PTutWSQqf1gplltD+BtWNDHNHV4F17BvsUSu+3tIo0e
+	y3OdmeOee0WMS3KfQXxfBpdQrXqlFqpnPA==
+X-Google-Smtp-Source: AA6agR6fClfcvJYshTe0TrLdO6pfsgDgdl3xFTGMsK3VFTkr/Loa612tx9QqfoxFg/OHj7mTD7JQeA==
+X-Received: by 2002:a05:6a00:e8f:b0:536:c98e:8307 with SMTP id bo15-20020a056a000e8f00b00536c98e8307mr34362687pfb.73.1662090504153;
+        Thu, 01 Sep 2022 20:48:24 -0700 (PDT)
 Received: from C02G705SMD6V.bytedance.net ([61.120.150.76])
-        by smtp.gmail.com with ESMTPSA id w8-20020a170902e88800b0016c4546fbf9sm376152plg.128.2022.09.01.20.48.15
+        by smtp.gmail.com with ESMTPSA id w8-20020a170902e88800b0016c4546fbf9sm376152plg.128.2022.09.01.20.48.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 20:48:19 -0700 (PDT)
+        Thu, 01 Sep 2022 20:48:23 -0700 (PDT)
 From: Jia Zhu <zhujia.zj@bytedance.com>
 To: linux-erofs@lists.ozlabs.org,
 	xiang@kernel.org,
 	chao@kernel.org
-Subject: [PATCH V1 3/5] erofs: add 'domain_id' prefix when register sysfs
-Date: Fri,  2 Sep 2022 11:47:46 +0800
-Message-Id: <20220902034748.60868-4-zhujia.zj@bytedance.com>
+Subject: [PATCH V1 4/5] erofs: remove duplicated unregister_cookie
+Date: Fri,  2 Sep 2022 11:47:47 +0800
+Message-Id: <20220902034748.60868-5-zhujia.zj@bytedance.com>
 X-Mailer: git-send-email 2.32.1 (Apple Git-133)
 In-Reply-To: <20220902034748.60868-1-zhujia.zj@bytedance.com>
 References: <20220902034748.60868-1-zhujia.zj@bytedance.com>
@@ -83,42 +83,64 @@ Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-fsdevel@vger.kernel.
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In shared domain mount procedure, add 'domain_id' prefix to register
-sysfs entry. Thus we could distinguish mounts that don't use shared
-domain.
+In erofs umount scenario, erofs_fscache_unregister_cookie() is called
+twice in kill_sb() and put_super().
+
+It works for original semantics, cause 'ctx' will be set to NULL in
+put_super() and will not be unregister again in kill_sb().
+However, in shared domain scenario, we use refcount to maintain the
+lifecycle of cookie. Unregister the cookie twice will cause it to be
+released early.
+
+For the above reasons, this patch removes duplicate unregister_cookie
+and move fscache_unregister_* before shotdown_super() to prevent busy
+inode(ctx->inode) when umount.
 
 Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
 ---
- fs/erofs/sysfs.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/erofs/super.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index c1383e508bbe..c0031d7bd817 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -201,12 +201,21 @@ static struct kobject erofs_feat = {
- int erofs_register_sysfs(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	char *name = NULL;
- 	int err;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index a3ff87e45f2c..05dc83b25da3 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -920,19 +920,20 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_litter_super(sb);
+ 		return;
+ 	}
+-	if (erofs_is_fscache_mode(sb))
+-		generic_shutdown_super(sb);
+-	else
+-		kill_block_super(sb);
+-
+ 	sbi = EROFS_SB(sb);
+ 	if (!sbi)
+ 		return;
  
 +	if (erofs_is_fscache_mode(sb)) {
-+		name = kasprintf(GFP_KERNEL, "%s%s%s", sbi->opt.domain_id ?
-+				sbi->opt.domain_id : "", sbi->opt.domain_id ? "," : "",
-+				sbi->opt.fsid);
-+		if (!name)
-+			return -ENOMEM;
++		erofs_fscache_unregister_cookie(&sbi->s_fscache);
++		erofs_fscache_unregister_fs(sb);
++		generic_shutdown_super(sb);
++	} else {
++		kill_block_super(sb);
 +	}
- 	sbi->s_kobj.kset = &erofs_root;
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL, "%s",
--			erofs_is_fscache_mode(sb) ? sbi->opt.fsid : sb->s_id);
-+			name ? name : sb->s_id);
-+	kfree(name);
- 	if (err)
- 		goto put_sb_kobj;
- 	return 0;
++
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+-	erofs_fscache_unregister_cookie(&sbi->s_fscache);
+-	erofs_fscache_unregister_fs(sb);
+ 	kfree(sbi->opt.fsid);
+ 	kfree(sbi->opt.domain_id);
+ 	kfree(sbi);
+@@ -952,7 +953,6 @@ static void erofs_put_super(struct super_block *sb)
+ 	iput(sbi->managed_cache);
+ 	sbi->managed_cache = NULL;
+ #endif
+-	erofs_fscache_unregister_cookie(&sbi->s_fscache);
+ }
+ 
+ struct file_system_type erofs_fs_type = {
 -- 
 2.20.1
 
