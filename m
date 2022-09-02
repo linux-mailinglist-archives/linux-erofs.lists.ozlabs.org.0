@@ -2,65 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FFDB5AA80E
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 08:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0EB65AACDC
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 12:54:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MJp4D0NHMz2ysx
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 16:32:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MJvtN2SkXz2yyT
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Sep 2022 20:54:20 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=QqoFhQ+U;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=5RX14LCU;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::533; helo=mail-pg1-x533.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1033; helo=mail-pj1-x1033.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=QqoFhQ+U;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=5RX14LCU;
 	dkim-atps=neutral
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MJp465HHFz2xJ7
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Sep 2022 16:32:21 +1000 (AEST)
-Received: by mail-pg1-x533.google.com with SMTP id s206so1157901pgs.3
-        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Sep 2022 23:32:21 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MJvtD6Njhz2yYj
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Sep 2022 20:54:10 +1000 (AEST)
+Received: by mail-pj1-x1033.google.com with SMTP id o4so1661314pjp.4
+        for <linux-erofs@lists.ozlabs.org>; Fri, 02 Sep 2022 03:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=kLnHKzUhQUtEqhe241FKh09xdL2v/zozWI6ZKV+2obU=;
-        b=QqoFhQ+UqZRtcqRxsbr1JyRO39dkDQ5TR+O4BcwYGTZIufanaahHtNQyNF6SPx9kdc
-         hOUA2Pmmpf5m14QuDz3ZYcreqEeocku4sbuWdIVMWyZ9bbWFNBja10d+YLlr2ApnghVq
-         E+KE2EAKlldsSPpA0WNSSR+wYuZZhLVdvkzCO4xjjmXmI0s4eXqtpnA79k38BGPyHvru
-         fOZ/9Of3HGoRrw4FaMLS0Z/2nQ/3UWKZgG+7ymoMf0l1XM83bUJ8kozbSei8mZziLUun
-         hpKVvO26bgiAAGGmHn5pjqn5N3fd45U8y0A0Buqrc/efd4ibaxovwtLdYiyDC69Trt62
-         r5GA==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=vT4GD3+/0MzbbBEdOSGt98w+JvqU9hw4JCyFBULPEdA=;
+        b=5RX14LCU/zE20jlyYS+jNVKQQY9uCRNuM5U94KDBQRnMPdv/BHlAUQKGHnpHxtYgPt
+         YUC3gSidU4Ur8dKx1aE1Q39Pl1kU0Sc9F350a4+d8tRlMnGjCwrjlp1fF9xb38kQpzK4
+         8rVNcFKvZdeU+5qqa1gtZoz4qq91WYBrw0clTb3l1kCU1RENsFuy+cZRf6m82kjXwxH+
+         fUXq4nkVHXTHH8R/i1iasX0iwxtcQi1zp+kB8DAVoxpEI3K2+pNNvY8eGKO/Twl+mR0j
+         VUk9OQDPCA2VSsoVmrc3o1F7PJLe/9cWfIiIml7/qFkWRTI3tDGFFDFhGZiPcXR8J/1F
+         N9pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=kLnHKzUhQUtEqhe241FKh09xdL2v/zozWI6ZKV+2obU=;
-        b=o1gu5n6OcHjIVCLrQzfHss5PzUIwb2CrTYdPTrwlEfv+P2aM+U3sCAMTMA/EFsJY/n
-         qpTTVtyTRYYeQxqrIqjfOcRydD3iLy/tQtR+FdXpR+Dbwoz+8F/y7pISwXPCkmcThdcd
-         yizF07SOaIfjOeDV+NuFZkAD5EbavebYTnUud2IK0cFJ6czwcwwBcudJS7j+3Mcud0Kq
-         1OorOXEdtk7oovgmZMlY8Jr83rgL7UoAKVoh5dkHUtDSHEzJCFUkXhdzguTn/eBS2fOh
-         LnEMH8qJrEH24gWNCk4mS3kPxg6v7hzlY6QImZrDsn5dpOurd6G6msg4mwebxjU9RscR
-         OONQ==
-X-Gm-Message-State: ACgBeo3bkWTPYkdAUuSsFFOG0WSnAJgrLS1QkMKwdIgrBCiX2sKqHfad
-	5HTCRYojKcjITB0mUaFkyzvtr357RJI=
-X-Google-Smtp-Source: AA6agR75raVgus7hK607KKw892NdHOvA5Fn41T8aDP2nbQPifHOsmsJrZNstB8b8rZgF6US1bqFmJw==
-X-Received: by 2002:a63:d607:0:b0:427:bc0c:55c8 with SMTP id q7-20020a63d607000000b00427bc0c55c8mr29376102pgg.402.1662100338852;
-        Thu, 01 Sep 2022 23:32:18 -0700 (PDT)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id c82-20020a621c55000000b005381f50d1e8sm769851pfc.115.2022.09.01.23.32.16
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=vT4GD3+/0MzbbBEdOSGt98w+JvqU9hw4JCyFBULPEdA=;
+        b=LKC5ypgY3d5M71+KZC54cKp5o82p1dssy1mUQCLL2OmaN6LsDRsQFIeGVFMQKzzXv+
+         an3uJW5NlRK3wuNyUvb570JfQNBVyPfgSk1fF2ZW3YtpwpXCuJzbhFxMeJdZhcLnjnlu
+         7Ts+/YrfoIpvUINInDAo3L3x9Q6TwF51hVNpsjxhkGWjN75FGENyErq/Z+0x7UCbepL2
+         klq7tTAwDFh9G8oFmroqemkW8DaCEDUuAjAt1NffWwJOZiS1AY3FMo7wbsU+0hthOp5L
+         8kkPmjSgBJdUz086h0v9pxHrSXFDR6Hx8/QUQR/L3FwKt3SC3J6HFeB70TsZUm8bI+w/
+         VPTA==
+X-Gm-Message-State: ACgBeo11lTr2MMjC0OiOLhA8oCaUxmaiGRCDg04psFCGNikXXhS0Cik4
+	dAuEnTubqaZZ/q0Xp85SqeoOwsIJBgQjpw==
+X-Google-Smtp-Source: AA6agR6kEeWww8j05ZFcDdob4i78cy50JnfDQIPezSnmR418EyvU4bI8yHEHQdn5r9dIeRz74989RQ==
+X-Received: by 2002:a17:90b:4d12:b0:1f5:59e1:994f with SMTP id mw18-20020a17090b4d1200b001f559e1994fmr4142105pjb.217.1662116047024;
+        Fri, 02 Sep 2022 03:54:07 -0700 (PDT)
+Received: from C02G705SMD6V.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id e4-20020a63d944000000b0041b29fd0626sm1128681pgj.88.2022.09.02.03.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 23:32:18 -0700 (PDT)
-From: Yue Hu <zbestahu@gmail.com>
-To: xiang@kernel.org,
+        Fri, 02 Sep 2022 03:54:06 -0700 (PDT)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org,
 	chao@kernel.org
-Subject: [PATCH] erofs: support uncompressed pcluster with more than 1 block
-Date: Fri,  2 Sep 2022 14:31:34 +0800
-Message-Id: <20220902063134.7639-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH V2 0/5] Introduce erofs shared domain
+Date: Fri,  2 Sep 2022 18:53:00 +0800
+Message-Id: <20220902105305.79687-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.32.1 (Apple Git-133)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,102 +76,90 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
+Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-fsdevel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Changes since V1:
+0. Only initialize one pseudo fs to manage anonymous inodes(cookies).
+1. Remove ctx's 'ref' field and replace it with inode's i_count.
+2. Add lock in erofs_fscache_unregister_cookie() to avoid race condition
+   between cookie's get/put/search.
+3. Remove useless blank lines.
 
-The length of uncompressed pcluster may exceed one block in some new
-scenarios such as non 4K-sized lcluster (which will be supported later).
-So, let's support the decompression for this firstly.
+[Kernel Patchset]
+===============
+Git tree:
+	https://github.com/userzj/linux.git zhujia/shared-domain-v2
+Git web:
+	https://github.com/userzj/linux/tree/zhujia/shared-domain-v2
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- fs/erofs/decompressor.c | 56 +++++++++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 21 deletions(-)
+[Background]
+============
+In ondemand read mode, we use individual volume to present an erofs
+mountpoint, cookies to present bootstrap and data blobs.
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 2d55569f96ac..fe6abb79e560 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -320,41 +320,55 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
- static int z_erofs_shifted_transform(struct z_erofs_decompress_req *rq,
- 				     struct page **pagepool)
- {
-+	const unsigned int nrpages_in = rq->inputsize >> PAGE_SHIFT;
- 	const unsigned int nrpages_out =
- 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
- 	const unsigned int righthalf = min_t(unsigned int, rq->outputsize,
- 					     PAGE_SIZE - rq->pageofs_out);
--	const unsigned int lefthalf = rq->outputsize - righthalf;
-+	const unsigned int lefthalf = min_t(unsigned int,
-+					    rq->outputsize - righthalf,
-+					    PAGE_SIZE - righthalf);
- 	unsigned char *src, *dst;
-+	unsigned int i;
- 
--	if (nrpages_out > 2) {
-+	if (nrpages_in == 1 && nrpages_out > 2) {
- 		DBG_BUGON(1);
- 		return -EIO;
- 	}
- 
--	if (rq->out[0] == *rq->in) {
--		DBG_BUGON(nrpages_out != 1);
--		return 0;
--	}
-+	i = 0;
-+	do {
-+		src = kmap_atomic(rq->in[i]) + rq->pageofs_in;
-+
-+		if (rq->out[i]) {
-+			if (rq->out[i] == rq->in[i]) {
-+				DBG_BUGON(nrpages_in == 1 && nrpages_out != 1);
-+			} else {
-+				dst = kmap_atomic(rq->out[i]);
-+				memcpy(dst + rq->pageofs_out, src, righthalf);
-+				kunmap_atomic(dst);
-+			}
-+		}
- 
--	src = kmap_atomic(*rq->in) + rq->pageofs_in;
--	if (rq->out[0]) {
--		dst = kmap_atomic(rq->out[0]);
--		memcpy(dst + rq->pageofs_out, src, righthalf);
--		kunmap_atomic(dst);
--	}
-+		if (i + 1 == nrpages_out) {
-+			kunmap_atomic(src);
-+			break;
-+		}
- 
--	if (nrpages_out == 2) {
--		DBG_BUGON(!rq->out[1]);
--		if (rq->out[1] == *rq->in) {
--			memmove(src, src + righthalf, lefthalf);
-+		if (rq->out[i + 1]) {
-+			if (rq->out[i + 1] == rq->in[i]) {
-+				memmove(src, src + righthalf, lefthalf);
-+			} else {
-+				dst = kmap_atomic(rq->out[i + 1]);
-+				memcpy(dst, src + righthalf, lefthalf);
-+				kunmap_atomic(dst);
-+			}
- 		} else {
--			dst = kmap_atomic(rq->out[1]);
--			memcpy(dst, src + righthalf, lefthalf);
--			kunmap_atomic(dst);
-+			DBG_BUGON(nrpages_in == 1 && nrpages_out == 2);
- 		}
--	}
--	kunmap_atomic(src);
-+		kunmap_atomic(src);
-+	} while (++i < nrpages_in);
-+
- 	return 0;
- }
- 
+In which case, since cookies can't be shared between fscache volumes,
+even if the data blobs between different mountpoints are exactly same,
+they can't be shared.
+
+[Introduction]
+==============
+Here we introduce erofs shared domain to resolve above mentioned case.
+Several erofs filesystems can belong to one domain, and data blobs can
+be shared among these erofs filesystems of same domain.
+
+[Usage]
+Users could specify 'domain_id' mount option to create or join into a
+domain which reuses the same cookies(blobs).
+
+[Design]
+========
+1. Use pseudo mnt to manage domain's lifecycle.
+2. Use a linked list to maintain & traverse domains.
+3. Use pseudo sb to create anonymous inode for recording cookie's info
+   and manage cookies lifecycle.
+
+[Flow Path]
+===========
+1. User specify a new 'domain_id' in mount option.
+   1.1 Traverse domain list, compare domain_id with existing domain.[Miss]
+   1.2 Create a new domain(volume), add it to domain list.
+   1.3 Traverse pseudo sb's inode list, compare cookie name with
+       existing cookies.[Miss]
+   1.4 Alloc new anonymous inodes and cookies.
+
+2. User specify an existing 'domain_id' in mount option and the data
+   blob is existed in domain.
+   2.1 Traverse domain list, compare domain_id with existing domain.[Hit]
+   2.2 Reuse the domain and increase its refcnt.
+   2.3 Traverse pseudo sb's inode list, compare cookie name with
+   	   existing cookies.[Hit]
+   2.4 Reuse the cookie and increase its refcnt.
+[Test]
+======
+Git web:
+	https://github.com/userzj/demand-read-cachefilesd/tree/shared-domain
+More test cases will be added to:
+	https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests-fscache 
+
+RFC: https://lore.kernel.org/all/YxAlO%2FDHDrIAafR2@B-P7TQMD6M-0146.local/
+V1: https://lore.kernel.org/all/20220902034748.60868-1-zhujia.zj@bytedance.com/
+
+
+Jia Zhu (5):
+  erofs: add 'domain_id' mount option for on-demand read sementics
+  erofs: introduce fscache-based domain
+  erofs: add 'domain_id' prefix when register sysfs
+  erofs: remove duplicated unregister_cookie
+  erofs: support fscache based shared domain
+
+ fs/erofs/fscache.c  | 168 +++++++++++++++++++++++++++++++++++++++++++-
+ fs/erofs/internal.h |  31 +++++++-
+ fs/erofs/super.c    |  94 +++++++++++++++++++------
+ fs/erofs/sysfs.c    |  11 ++-
+ 4 files changed, 278 insertions(+), 26 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
