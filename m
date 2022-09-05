@@ -2,65 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5B205AC908
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 05:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EB4945AC90E
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 05:21:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MLYgx0l5sz2yyT
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 13:21:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MLYh25Hlcz3042
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 13:21:06 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=fL+HTU4o;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qPIV2PlL;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::533; helo=mail-pg1-x533.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=fL+HTU4o;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qPIV2PlL;
 	dkim-atps=neutral
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MLYgn1xmnz2xRq
-	for <linux-erofs@lists.ozlabs.org>; Mon,  5 Sep 2022 13:20:51 +1000 (AEST)
-Received: by mail-pj1-x102d.google.com with SMTP id o15-20020a17090a3d4f00b002004ed4d77eso1882712pjf.5
-        for <linux-erofs@lists.ozlabs.org>; Sun, 04 Sep 2022 20:20:51 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MLYgn3qp3z2xr1
+	for <linux-erofs@lists.ozlabs.org>; Mon,  5 Sep 2022 13:20:53 +1000 (AEST)
+Received: by mail-pg1-x533.google.com with SMTP id c24so6977980pgg.11
+        for <linux-erofs@lists.ozlabs.org>; Sun, 04 Sep 2022 20:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=references:in-reply-to:references:in-reply-to:message-id:date
          :subject:cc:to:from:from:to:cc:subject:date;
-        bh=1XsIXzCfYSNzIOIGImGAWV+tb3SyPubQmBiPiBkaZ8w=;
-        b=fL+HTU4o9FF6kWlGXP5zzc+Su7OgwNV24fv++3yiaEw0ZjONVHunjE7lZ3bxiWAzIm
-         +2sOBeflg8s25jcAxgdKy7tL5rxPeUSx8uK0VHC56/tCH1h1/j5gaaGRXWM2QdVqLaD+
-         f+fecuNxkczvsV9u3yniZ8s39kSiG5oBE+VNRYqHi3ZcXzq7rvlpoiehjUKjvLbuzuld
-         hV1mTog0ETLjjPeqnaHtvj5H0Y2jptPlGyXwdnMQamoaQY3/ooL96D1LsLYzia7lzVRZ
-         0cf0JvrRMo8OP6q5AHW7NMqusvVt2UEc7SGGoY6sQi3sEKNnPK4terCyy826uhtK7dIY
-         BoiQ==
+        bh=PH7+zpumLfKnJ8tedJPys6FvOjdFO79Xd7DoO6blg/Q=;
+        b=qPIV2PlLbfFTR8RqbMmENNwBbk2g7d21RPDtMhzx1cN0ASJremcRZ63yg8y+ODV88Z
+         +ySu599rbwDw+0OJqmeccoHw7rwpY3t8WxH+dHsrVlBbNf1C+W4YyW56NUlpjKfqVk3P
+         QwSiaXUv5qK2cxI8Np8cEb4N+Kp23czopgaGMjzTD+ps3vivtggxBmp+3SBw3xP2bhQG
+         /7x4AhsLCoZM4SbKU7wfhtazDQd6xEruuLuLtxT2q+tdJ6HYPpdW+3Z9qjjCZOBPavhH
+         TZcr1/TlQIhDEinc7SS6RKRtRkuUNSnvtoACZ35zZk0xvfxriXEWzcPEP+QiX9LI30E5
+         a5pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=references:in-reply-to:references:in-reply-to:message-id:date
          :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=1XsIXzCfYSNzIOIGImGAWV+tb3SyPubQmBiPiBkaZ8w=;
-        b=3Pkbs+syRJrM4M1u7aKOVHDWwI4prNSqYM7hnfP+ab/AmmDw+QlqbDqAohOlfiAzk3
-         MweK97v7O5q5fS4pgyjxVmpKIWxtt5SOFRzNYDUqjaZkUxjBYbvm07V+Lo51ydLaC5fH
-         NAN4RAC5AwRZ4P+51okdVPulPT4m8W+Xfqt7HizlXrx2Y2OYngQ6HtJd1MrJEkTiWdPJ
-         9zk0qQfs7FgJYUXAkQP40bfO9XO1Xk75no6L1ZCYOkT+xuNqSeUilV0tvgVREca55zzL
-         m0FgxUCP94jK28J5st8k5NSwp/g/t4Fshfx3bpJsAmg0fpo141lToFWYa0dNl2bjbnhi
-         Le3A==
-X-Gm-Message-State: ACgBeo004DHJzbT9WvSP/JE8ir464OzifEpBD1+2QwyO5rs2VnbbrjpF
-	8MfQjz+Rk/eyEfjosjezyRA=
-X-Google-Smtp-Source: AA6agR5y83vwrBlpEZ0CWr8hny5Qz72uTm7u7os2hkcASUtX/LnGioJIsBg/ua/q9rZJ2MS7o8lBoQ==
-X-Received: by 2002:a17:90a:ac2:b0:1fd:fad1:e506 with SMTP id r2-20020a17090a0ac200b001fdfad1e506mr17466968pje.66.1662348049040;
-        Sun, 04 Sep 2022 20:20:49 -0700 (PDT)
+        bh=PH7+zpumLfKnJ8tedJPys6FvOjdFO79Xd7DoO6blg/Q=;
+        b=Fjv9bEGUkSh5UyhzVSMc7/3WDwvrOy1cwGrRyNFODCJBlX3nkWmRDIUkncl1jeNtqy
+         B/t2N9ZETjScFdrlUbKr5nnvyejQWxUHN5jxJf8iRPFX7Mg4GotHOLYdJRkZxFMr7NMA
+         FByWVcvNuvysUi5zCUJ0o/LaQgSJvf5Ra71MxBlxWjgZnXTkwEn8zkl+aMyOod9e1EN3
+         IZiLl1GZaZxwwwryq//WNUOSdDKbDnjpaTO0QzDvVqpmiLUs3sT7/Yf8nJIRcj1vTXG4
+         uXrnB/xfHRsA3ilP6BmeWN88R4i7EdT1Pb2JCDEZZ++ndFVypSPjHunV+DRoVgLixxSA
+         C5qQ==
+X-Gm-Message-State: ACgBeo0tEASX646IV/4hCZ88spwiM65NjtplkZuA0/ndgB1igDqFovEy
+	kBJrnhMiGAZxJrjexaU280R6GjROVvg=
+X-Google-Smtp-Source: AA6agR4Ycdasqfb76VP+awlhYtas5DyZsZ/6gDloVm77QULsiRJ+olHiGMyqJX9j2pO5D98WvFoTzg==
+X-Received: by 2002:a63:4e56:0:b0:428:ee87:3791 with SMTP id o22-20020a634e56000000b00428ee873791mr39492630pgl.11.1662348051225;
+        Sun, 04 Sep 2022 20:20:51 -0700 (PDT)
 Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id w5-20020a17090ac98500b001f216407204sm5610265pjt.36.2022.09.04.20.20.47
+        by smtp.gmail.com with ESMTPSA id w5-20020a17090ac98500b001f216407204sm5610265pjt.36.2022.09.04.20.20.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Sep 2022 20:20:48 -0700 (PDT)
+        Sun, 04 Sep 2022 20:20:50 -0700 (PDT)
 From: Yue Hu <zbestahu@gmail.com>
 To: xiang@kernel.org,
 	chao@kernel.org
-Subject: [RFC PATCH v3 1/2] erofs: support interlaced uncompressed data for compressed files
-Date: Mon,  5 Sep 2022 11:20:07 +0800
-Message-Id: <3d5e2da044c751afdd4dc8a5b845b18d2e14194b.1662347031.git.huyue2@coolpad.com>
+Subject: [RFC PATCH v3 2/2] erofs: support on-disk compressed fragments data
+Date: Mon,  5 Sep 2022 11:20:08 +0800
+Message-Id: <4f9394b0d60afe5dfdfcfbf9ea6fe900fddbcf4a.1662347031.git.huyue2@coolpad.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1662347031.git.huyue2@coolpad.com>
 References: <cover.1662347031.git.huyue2@coolpad.com>
@@ -83,147 +83,373 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yue Hu <huyue2@coolpad.com>
 
-Currently, there is no start offset when writing uncompressed data to
-disk blocks for compressed files. However, we are using in-place I/O
-which will decrease the number of memory copies a lot if we write it
-just from an offset of 'pageofs_out'. So, let's support it.
+Introduce on-disk compressed fragments data feature.
+
+This approach adds a new field called `h_fragmentoff' in the per-file
+compression header to indicate the fragment offset of each tail pcluster
+or the whole file in the special packed inode.
+
+Like ztailpacking, it will also find and record the 'headlcn' of the
+tail pcluster when initializing per-inode zmap for making follow-on
+requests more easy.
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
- fs/erofs/compress.h     |  3 +++
- fs/erofs/decompressor.c | 12 +++++++-----
- fs/erofs/erofs_fs.h     |  2 ++
- fs/erofs/zdata.c        | 12 +++++++++++-
- fs/erofs/zdata.h        |  3 +++
- 5 files changed, 26 insertions(+), 6 deletions(-)
+ fs/erofs/erofs_fs.h | 26 ++++++++++++++++++------
+ fs/erofs/internal.h | 16 ++++++++++++---
+ fs/erofs/super.c    | 15 ++++++++++++++
+ fs/erofs/sysfs.c    |  2 ++
+ fs/erofs/zdata.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++-
+ fs/erofs/zmap.c     | 33 ++++++++++++++++++++++++++++++-
+ 6 files changed, 129 insertions(+), 11 deletions(-)
 
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 26fa170090b8..cef26c63d6b1 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -15,6 +15,9 @@ struct z_erofs_decompress_req {
- 	unsigned short pageofs_in, pageofs_out;
- 	unsigned int inputsize, outputsize;
- 
-+	/* cut point of interlaced uncompressed data */
-+	unsigned int interlaced_offset;
-+
- 	/* indicate the algorithm will be used for decompression */
- 	unsigned int alg;
- 	bool inplace_io, partial_decoding, fillgaps;
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 2d55569f96ac..e5dc8eb992b1 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -340,18 +340,20 @@ static int z_erofs_shifted_transform(struct z_erofs_decompress_req *rq,
- 	src = kmap_atomic(*rq->in) + rq->pageofs_in;
- 	if (rq->out[0]) {
- 		dst = kmap_atomic(rq->out[0]);
--		memcpy(dst + rq->pageofs_out, src, righthalf);
-+		memcpy(dst + rq->pageofs_out, src + rq->interlaced_offset,
-+		       righthalf);
- 		kunmap_atomic(dst);
- 	}
- 
- 	if (nrpages_out == 2) {
- 		DBG_BUGON(!rq->out[1]);
--		if (rq->out[1] == *rq->in) {
--			memmove(src, src + righthalf, lefthalf);
--		} else {
-+		if (rq->out[1] != *rq->in) {
- 			dst = kmap_atomic(rq->out[1]);
--			memcpy(dst, src + righthalf, lefthalf);
-+			memcpy(dst, rq->interlaced_offset ? src :
-+						(src + righthalf), lefthalf);
- 			kunmap_atomic(dst);
-+		} else if (!rq->interlaced_offset) {
-+			memmove(src, src + righthalf, lefthalf);
- 		}
- 	}
- 	kunmap_atomic(src);
 diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 2b48373f690b..5c1de6d7ad71 100644
+index 5c1de6d7ad71..340fb980fe03 100644
 --- a/fs/erofs/erofs_fs.h
 +++ b/fs/erofs/erofs_fs.h
-@@ -295,11 +295,13 @@ struct z_erofs_lzma_cfgs {
-  * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
+@@ -25,6 +25,7 @@
+ #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
+ #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
+ #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
++#define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
+ #define EROFS_ALL_FEATURE_INCOMPAT		\
+ 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+@@ -32,7 +33,8 @@
+ 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
+ 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
+-	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING)
++	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
++	 EROFS_FEATURE_INCOMPAT_FRAGMENTS)
+ 
+ #define EROFS_SB_EXTSLOT_SIZE	16
+ 
+@@ -71,7 +73,9 @@ struct erofs_super_block {
+ 	} __packed u1;
+ 	__le16 extra_devices;	/* # of devices besides the primary device */
+ 	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
+-	__u8 reserved2[38];
++	__u8 reserved[6];
++	__le64 packed_nid;	/* nid of the special packed inode */
++	__u8 reserved2[24];
+ };
+ 
+ /*
+@@ -296,17 +300,26 @@ struct z_erofs_lzma_cfgs {
   * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
   * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
-+ * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
+  * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
++ * bit 5 : fragment pcluster (0 - off; 1 - on)
   */
  #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
  #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
  #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
  #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
-+#define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
+ #define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
++#define Z_EROFS_ADVISE_FRAGMENT_PCLUSTER	0x0020
  
++#define Z_EROFS_FRAGMENT_INODE_BIT              7
  struct z_erofs_map_header {
- 	__le16	h_reserved1;
+-	__le16	h_reserved1;
+-	/* indicates the encoded size of tailpacking data */
+-	__le16  h_idata_size;
++	union {
++		/* direct addressing for fragment offset */
++		__le32  h_fragmentoff;
++		struct {
++			__le16  h_reserved1;
++			/* indicates the encoded size of tailpacking data */
++			__le16  h_idata_size;
++		};
++	};
+ 	__le16	h_advise;
+ 	/*
+ 	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
+@@ -315,7 +328,8 @@ struct z_erofs_map_header {
+ 	__u8	h_algorithmtype;
+ 	/*
+ 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
+-	 * bit 3-7 : reserved.
++	 * bit 3-6 : reserved;
++	 * bit 7   : move the whole file into packed inode or not.
+ 	 */
+ 	__u8	h_clusterbits;
+ };
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index cfee49d33b95..7b9d31bab928 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -120,6 +120,7 @@ struct erofs_sb_info {
+ 	struct inode *managed_cache;
+ 
+ 	struct erofs_sb_lz4_info lz4;
++	struct inode *packed_inode;
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	struct erofs_dev_context *devs;
+ 	struct dax_device *dax_dev;
+@@ -306,6 +307,7 @@ EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
+ EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
+ EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
+ EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
++EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ 
+ /* atomic flag definitions */
+@@ -341,8 +343,13 @@ struct erofs_inode {
+ 			unsigned char  z_algorithmtype[2];
+ 			unsigned char  z_logical_clusterbits;
+ 			unsigned long  z_tailextent_headlcn;
+-			erofs_off_t    z_idataoff;
+-			unsigned short z_idata_size;
++			union {
++				struct {
++					erofs_off_t    z_idataoff;
++					unsigned short z_idata_size;
++				};
++				erofs_off_t z_fragmentoff;
++			};
+ 		};
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	};
+@@ -400,6 +407,7 @@ extern const struct address_space_operations z_erofs_aops;
+ enum {
+ 	BH_Encoded = BH_PrivateStart,
+ 	BH_FullMapped,
++	BH_Fragment,
+ };
+ 
+ /* Has a disk mapping */
+@@ -410,6 +418,8 @@ enum {
+ #define EROFS_MAP_ENCODED	(1 << BH_Encoded)
+ /* The length of extent is full */
+ #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
++/* Located in the special packed inode */
++#define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
+ 
+ struct erofs_map_blocks {
+ 	struct erofs_buf buf;
+@@ -431,7 +441,7 @@ struct erofs_map_blocks {
+ #define EROFS_GET_BLOCKS_FIEMAP	0x0002
+ /* Used to map the whole extent if non-negligible data is requested for LZMA */
+ #define EROFS_GET_BLOCKS_READMORE	0x0004
+-/* Used to map tail extent for tailpacking inline pcluster */
++/* Used to map tail extent for tailpacking inline or fragment pcluster */
+ #define EROFS_GET_BLOCKS_FINDTAIL	0x0008
+ 
+ enum {
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 3173debeaa5a..8170c0d8ab92 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -381,6 +381,17 @@ static int erofs_read_superblock(struct super_block *sb)
+ #endif
+ 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
+ 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
++#ifdef CONFIG_EROFS_FS_ZIP
++	sbi->packed_inode = NULL;
++	if (erofs_sb_has_fragments(sbi)) {
++		sbi->packed_inode =
++			erofs_iget(sb, le64_to_cpu(dsb->packed_nid), false);
++		if (IS_ERR(sbi->packed_inode)) {
++			ret = PTR_ERR(sbi->packed_inode);
++			goto out;
++		}
++	}
++#endif
+ 	sbi->inos = le64_to_cpu(dsb->inos);
+ 
+ 	sbi->build_time = le64_to_cpu(dsb->build_time);
+@@ -411,6 +422,8 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		erofs_info(sb, "EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
+ 	if (erofs_is_fscache_mode(sb))
+ 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
++	if (erofs_sb_has_fragments(sbi))
++		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
+ out:
+ 	erofs_put_metabuf(&buf);
+ 	return ret;
+@@ -908,6 +921,8 @@ static void erofs_put_super(struct super_block *sb)
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	iput(sbi->managed_cache);
+ 	sbi->managed_cache = NULL;
++	iput(sbi->packed_inode);
++	sbi->packed_inode = NULL;
+ #endif
+ 	erofs_fscache_unregister_cookie(&sbi->s_fscache);
+ }
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index c1383e508bbe..1b52395be82a 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -76,6 +76,7 @@ EROFS_ATTR_FEATURE(device_table);
+ EROFS_ATTR_FEATURE(compr_head2);
+ EROFS_ATTR_FEATURE(sb_chksum);
+ EROFS_ATTR_FEATURE(ztailpacking);
++EROFS_ATTR_FEATURE(fragments);
+ 
+ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(zero_padding),
+@@ -86,6 +87,7 @@ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(compr_head2),
+ 	ATTR_LIST(sb_chksum),
+ 	ATTR_LIST(ztailpacking),
++	ATTR_LIST(fragments),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_feat);
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5792ca9e0d5e..bbaa3a924852 100644
+index bbaa3a924852..ecafe85c2763 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -481,6 +481,7 @@ static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
+@@ -657,6 +657,33 @@ static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
+ 		la < fe->headoffset;
+ }
  
- static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
++static int z_erofs_read_fragment_data(struct page *page, unsigned int pageofs,
++				      loff_t start, unsigned int len)
++{
++	struct inode *const inode = page->mapping->host;
++	erofs_off_t offset = EROFS_I(inode)->z_fragmentoff + start;
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
++	u8 *src, *dst;
++	unsigned int i, cnt;
++
++	for (i = 0; i < len; i += cnt) {
++		cnt = min(EROFS_BLKSIZ - (unsigned int)erofs_blkoff(offset),
++			  len - i);
++		src = erofs_bread(&buf, EROFS_I_SB(inode)->packed_inode,
++				  erofs_blknr(offset), EROFS_KMAP);
++		if (IS_ERR(src))
++			return PTR_ERR(src);
++
++		dst = kmap_local_page(page);
++		memcpy(dst + pageofs + i, src + erofs_blkoff(offset), cnt);
++		kunmap_local(dst);
++
++		offset += cnt;
++	}
++	erofs_put_metabuf(&buf);
++	return 0;
++}
++
+ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 				struct page *page, struct page **pagepool)
  {
-+	struct erofs_inode *const vi = EROFS_I(fe->inode);
- 	struct erofs_map_blocks *map = &fe->map;
- 	bool ztailpacking = map->m_flags & EROFS_MAP_META;
- 	struct z_erofs_pcluster *pcl;
-@@ -508,6 +509,12 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 	pcl->pageofs_out = map->m_la & ~PAGE_MASK;
- 	fe->mode = Z_EROFS_PCLUSTER_FOLLOWED;
+@@ -695,7 +722,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		/* didn't get a valid pcluster previously (very rare) */
+ 	}
  
-+	pcl->interlaced = false;
-+	if ((vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER) &&
-+	    pcl->algorithmformat == Z_EROFS_COMPRESSION_SHIFTED &&
-+	    pcl->pageofs_out)
-+		pcl->interlaced = true;
-+
- 	/*
- 	 * lock all primary followed works before visible to others
- 	 * and mutex_trylock *never* fails for a new pcluster.
-@@ -972,7 +979,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	struct erofs_sb_info *const sbi = EROFS_SB(be->sb);
- 	struct z_erofs_pcluster *pcl = be->pcl;
- 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
--	unsigned int i, inputsize;
-+	unsigned int i, inputsize, interlaced_offset;
- 	int err2;
- 	struct page *page;
- 	bool overlapped;
-@@ -1015,6 +1022,8 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	else
- 		inputsize = pclusterpages * PAGE_SIZE;
+-	if (!(map->m_flags & EROFS_MAP_MAPPED))
++	if (!(map->m_flags & EROFS_MAP_MAPPED) ||
++	    map->m_flags & EROFS_MAP_FRAGMENT)
+ 		goto hitted;
  
-+	interlaced_offset = pcl->interlaced ? pcl->pageofs_out : 0;
+ 	err = z_erofs_collector_begin(fe);
+@@ -742,6 +770,24 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		zero_user_segment(page, cur, end);
+ 		goto next_part;
+ 	}
++	if (map->m_flags & EROFS_MAP_FRAGMENT) {
++		unsigned int pageofs, skip, len;
 +
- 	err = z_erofs_decompress(&(struct z_erofs_decompress_req) {
- 					.sb = be->sb,
- 					.in = be->compressed_pages,
-@@ -1023,6 +1032,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 					.pageofs_out = pcl->pageofs_out,
- 					.inputsize = inputsize,
- 					.outputsize = pcl->length,
-+					.interlaced_offset = interlaced_offset,
- 					.alg = pcl->algorithmformat,
- 					.inplace_io = overlapped,
- 					.partial_decoding = pcl->partial,
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index e7f04c4fbb81..75f3a52fc66f 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -87,6 +87,9 @@ struct z_erofs_pcluster {
- 	/* L: indicate several pageofs_outs or not */
- 	bool multibases;
++		if (map->m_la < offset) {
++			pageofs = 0;
++			skip = offset - map->m_la;
++		} else {
++			pageofs = map->m_la & ~PAGE_MASK;
++			skip = 0;
++		}
++		len = min((unsigned int)(map->m_llen - skip), end - cur);
++		err = z_erofs_read_fragment_data(page, pageofs, skip, len);
++		if (err)
++			goto out;
++		++spiltted;
++		tight = false;
++		goto next_part;
++	}
  
-+	/* I: whether interlaced uncompressed data or not */
-+	bool interlaced;
+ 	exclusive = (!cur && (!spiltted || tight));
+ 	if (cur)
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index d58549ca1df9..2863ed6c6df9 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -123,6 +123,23 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		if (err < 0)
+ 			goto out_unlock;
+ 	}
++	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER) {
++		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
 +
- 	/* A: compressed bvecs (can be cached or inplaced pages) */
- 	struct z_erofs_bvec compressed_bvecs[];
- };
++		if (h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT) {
++			vi->z_tailextent_headlcn = 0;
++		} else {
++			struct erofs_map_blocks map = {
++				.buf = __EROFS_BUF_INITIALIZER
++			};
++
++			err = z_erofs_do_map_blocks(inode, &map,
++						    EROFS_GET_BLOCKS_FINDTAIL);
++			erofs_put_metabuf(&map.buf);
++			if (err < 0)
++				goto out_unlock;
++		}
++	}
+ 	/* paired with smp_mb() at the beginning of the function */
+ 	smp_mb();
+ 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+@@ -598,6 +615,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ {
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+ 	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
++	bool inpacked = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+ 	struct z_erofs_maprecorder m = {
+ 		.inode = inode,
+ 		.map = map,
+@@ -672,6 +690,9 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		map->m_flags |= EROFS_MAP_META;
+ 		map->m_pa = vi->z_idataoff;
+ 		map->m_plen = vi->z_idata_size;
++	} else if (inpacked && m.lcn == vi->z_tailextent_headlcn) {
++		map->m_flags |= EROFS_MAP_FRAGMENT;
++		DBG_BUGON(!map->m_la);
+ 	} else {
+ 		map->m_pa = blknr_to_addr(m.pblk);
+ 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
+@@ -709,6 +730,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 			    struct erofs_map_blocks *map,
+ 			    int flags)
+ {
++	struct erofs_inode *const vi = EROFS_I(inode);
+ 	int err = 0;
+ 
+ 	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
+@@ -725,6 +747,14 @@ int z_erofs_map_blocks_iter(struct inode *inode,
+ 	if (err)
+ 		goto out;
+ 
++	if ((vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER) &&
++	    !vi->z_tailextent_headlcn) {
++		map->m_llen = map->m_la + 1;
++		map->m_la = 0;
++		map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_FRAGMENT;
++		goto out;
++	}
++
+ 	err = z_erofs_do_map_blocks(inode, map, flags);
+ out:
+ 	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
+@@ -751,7 +781,8 @@ static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
+ 	iomap->length = map.m_llen;
+ 	if (map.m_flags & EROFS_MAP_MAPPED) {
+ 		iomap->type = IOMAP_MAPPED;
+-		iomap->addr = map.m_pa;
++		iomap->addr = map.m_flags & EROFS_MAP_FRAGMENT ?
++			      IOMAP_NULL_ADDR : map.m_pa;
+ 	} else {
+ 		iomap->type = IOMAP_HOLE;
+ 		iomap->addr = IOMAP_NULL_ADDR;
 -- 
 2.17.1
 
