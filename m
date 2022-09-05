@@ -2,70 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB4945AC90E
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 05:21:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ADB05AD5CD
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 17:10:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MLYh25Hlcz3042
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Sep 2022 13:21:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MLsQv6vZmz300l
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 01:10:47 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qPIV2PlL;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=exYKUhxT;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::533; helo=mail-pg1-x533.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qPIV2PlL;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=exYKUhxT;
 	dkim-atps=neutral
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MLYgn3qp3z2xr1
-	for <linux-erofs@lists.ozlabs.org>; Mon,  5 Sep 2022 13:20:53 +1000 (AEST)
-Received: by mail-pg1-x533.google.com with SMTP id c24so6977980pgg.11
-        for <linux-erofs@lists.ozlabs.org>; Sun, 04 Sep 2022 20:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date;
-        bh=PH7+zpumLfKnJ8tedJPys6FvOjdFO79Xd7DoO6blg/Q=;
-        b=qPIV2PlLbfFTR8RqbMmENNwBbk2g7d21RPDtMhzx1cN0ASJremcRZ63yg8y+ODV88Z
-         +ySu599rbwDw+0OJqmeccoHw7rwpY3t8WxH+dHsrVlBbNf1C+W4YyW56NUlpjKfqVk3P
-         QwSiaXUv5qK2cxI8Np8cEb4N+Kp23czopgaGMjzTD+ps3vivtggxBmp+3SBw3xP2bhQG
-         /7x4AhsLCoZM4SbKU7wfhtazDQd6xEruuLuLtxT2q+tdJ6HYPpdW+3Z9qjjCZOBPavhH
-         TZcr1/TlQIhDEinc7SS6RKRtRkuUNSnvtoACZ35zZk0xvfxriXEWzcPEP+QiX9LI30E5
-         a5pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=PH7+zpumLfKnJ8tedJPys6FvOjdFO79Xd7DoO6blg/Q=;
-        b=Fjv9bEGUkSh5UyhzVSMc7/3WDwvrOy1cwGrRyNFODCJBlX3nkWmRDIUkncl1jeNtqy
-         B/t2N9ZETjScFdrlUbKr5nnvyejQWxUHN5jxJf8iRPFX7Mg4GotHOLYdJRkZxFMr7NMA
-         FByWVcvNuvysUi5zCUJ0o/LaQgSJvf5Ra71MxBlxWjgZnXTkwEn8zkl+aMyOod9e1EN3
-         IZiLl1GZaZxwwwryq//WNUOSdDKbDnjpaTO0QzDvVqpmiLUs3sT7/Yf8nJIRcj1vTXG4
-         uXrnB/xfHRsA3ilP6BmeWN88R4i7EdT1Pb2JCDEZZ++ndFVypSPjHunV+DRoVgLixxSA
-         C5qQ==
-X-Gm-Message-State: ACgBeo0tEASX646IV/4hCZ88spwiM65NjtplkZuA0/ndgB1igDqFovEy
-	kBJrnhMiGAZxJrjexaU280R6GjROVvg=
-X-Google-Smtp-Source: AA6agR4Ycdasqfb76VP+awlhYtas5DyZsZ/6gDloVm77QULsiRJ+olHiGMyqJX9j2pO5D98WvFoTzg==
-X-Received: by 2002:a63:4e56:0:b0:428:ee87:3791 with SMTP id o22-20020a634e56000000b00428ee873791mr39492630pgl.11.1662348051225;
-        Sun, 04 Sep 2022 20:20:51 -0700 (PDT)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id w5-20020a17090ac98500b001f216407204sm5610265pjt.36.2022.09.04.20.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Sep 2022 20:20:50 -0700 (PDT)
-From: Yue Hu <zbestahu@gmail.com>
-To: xiang@kernel.org,
-	chao@kernel.org
-Subject: [RFC PATCH v3 2/2] erofs: support on-disk compressed fragments data
-Date: Mon,  5 Sep 2022 11:20:08 +0800
-Message-Id: <4f9394b0d60afe5dfdfcfbf9ea6fe900fddbcf4a.1662347031.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1662347031.git.huyue2@coolpad.com>
-References: <cover.1662347031.git.huyue2@coolpad.com>
-In-Reply-To: <cover.1662347031.git.huyue2@coolpad.com>
-References: <cover.1662347031.git.huyue2@coolpad.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MLsQn6tyYz2xfm
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Sep 2022 01:10:41 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id AE25461325;
+	Mon,  5 Sep 2022 15:10:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494AAC433D7;
+	Mon,  5 Sep 2022 15:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662390638;
+	bh=pmChB25I0/xOioQuvfxS4anHlEB/iWlW/oPqp/l37GY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=exYKUhxTTuUxLlAx8IzrxsRZycm6/RCghmfrKnf2Y+jgggnhvGFRKOfDw938k0eN7
+	 Ka4/6j2Tuj9Zt3Y7X48mHrSvXPQT9guosY4ssOdTs8TzsrlYLI3Nv0vyGfXCiff25g
+	 oGcKLVvtoTelM/rTwKUu8ympPdTQ2bUDucZKu/lUv0CpFG/t96Bpd0eBgBtqg4gCAO
+	 e9FM9ZW6Nw0N97ZcWZGujwsngRoxOZE4XkM26Vr7u4r1qfaD/sKHzGCn3D9ay7+Kck
+	 qjp+hPfCYI/J9b5M4VtpggZ4OO68EL+fS0AvERDajOWIHN2BUedv9uXH9fFqY8X3Ty
+	 rErhw2shs1pLw==
+Message-ID: <ef807497-6394-8274-71ce-ace51db31398@kernel.org>
+Date: Mon, 5 Sep 2022 23:10:35 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH] erofs: fix error return code in
+ erofs_fscache_meta_read_folio and erofs_fscache_read_folio
+Content-Language: en-US
+To: Sun Ke <sunke32@huawei.com>, xiang@kernel.org
+References: <20220815034829.3940803-1-sunke32@huawei.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20220815034829.3940803-1-sunke32@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,379 +63,17 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
+Cc: kernel-janitors@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+On 2022/8/15 11:48, Sun Ke wrote:
+> If erofs_fscache_alloc_request fail and then goto out, it will return 0.
+> it should return a negative error code instead of 0.
+> 
+> Fixes: d435d53228dd ("erofs: change to use asynchronous io for fscache readpage/readahead")
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
 
-Introduce on-disk compressed fragments data feature.
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-This approach adds a new field called `h_fragmentoff' in the per-file
-compression header to indicate the fragment offset of each tail pcluster
-or the whole file in the special packed inode.
-
-Like ztailpacking, it will also find and record the 'headlcn' of the
-tail pcluster when initializing per-inode zmap for making follow-on
-requests more easy.
-
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- fs/erofs/erofs_fs.h | 26 ++++++++++++++++++------
- fs/erofs/internal.h | 16 ++++++++++++---
- fs/erofs/super.c    | 15 ++++++++++++++
- fs/erofs/sysfs.c    |  2 ++
- fs/erofs/zdata.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++-
- fs/erofs/zmap.c     | 33 ++++++++++++++++++++++++++++++-
- 6 files changed, 129 insertions(+), 11 deletions(-)
-
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 5c1de6d7ad71..340fb980fe03 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -25,6 +25,7 @@
- #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
- #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
- #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
-+#define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-@@ -32,7 +33,8 @@
- 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
- 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
--	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING)
-+	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
-+	 EROFS_FEATURE_INCOMPAT_FRAGMENTS)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-@@ -71,7 +73,9 @@ struct erofs_super_block {
- 	} __packed u1;
- 	__le16 extra_devices;	/* # of devices besides the primary device */
- 	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
--	__u8 reserved2[38];
-+	__u8 reserved[6];
-+	__le64 packed_nid;	/* nid of the special packed inode */
-+	__u8 reserved2[24];
- };
- 
- /*
-@@ -296,17 +300,26 @@ struct z_erofs_lzma_cfgs {
-  * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-  * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
-  * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
-+ * bit 5 : fragment pcluster (0 - off; 1 - on)
-  */
- #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
- #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
- #define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
-+#define Z_EROFS_ADVISE_FRAGMENT_PCLUSTER	0x0020
- 
-+#define Z_EROFS_FRAGMENT_INODE_BIT              7
- struct z_erofs_map_header {
--	__le16	h_reserved1;
--	/* indicates the encoded size of tailpacking data */
--	__le16  h_idata_size;
-+	union {
-+		/* direct addressing for fragment offset */
-+		__le32  h_fragmentoff;
-+		struct {
-+			__le16  h_reserved1;
-+			/* indicates the encoded size of tailpacking data */
-+			__le16  h_idata_size;
-+		};
-+	};
- 	__le16	h_advise;
- 	/*
- 	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
-@@ -315,7 +328,8 @@ struct z_erofs_map_header {
- 	__u8	h_algorithmtype;
- 	/*
- 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
--	 * bit 3-7 : reserved.
-+	 * bit 3-6 : reserved;
-+	 * bit 7   : move the whole file into packed inode or not.
- 	 */
- 	__u8	h_clusterbits;
- };
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index cfee49d33b95..7b9d31bab928 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -120,6 +120,7 @@ struct erofs_sb_info {
- 	struct inode *managed_cache;
- 
- 	struct erofs_sb_lz4_info lz4;
-+	struct inode *packed_inode;
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	struct erofs_dev_context *devs;
- 	struct dax_device *dax_dev;
-@@ -306,6 +307,7 @@ EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
- EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
- EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
- EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
-+EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- 
- /* atomic flag definitions */
-@@ -341,8 +343,13 @@ struct erofs_inode {
- 			unsigned char  z_algorithmtype[2];
- 			unsigned char  z_logical_clusterbits;
- 			unsigned long  z_tailextent_headlcn;
--			erofs_off_t    z_idataoff;
--			unsigned short z_idata_size;
-+			union {
-+				struct {
-+					erofs_off_t    z_idataoff;
-+					unsigned short z_idata_size;
-+				};
-+				erofs_off_t z_fragmentoff;
-+			};
- 		};
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	};
-@@ -400,6 +407,7 @@ extern const struct address_space_operations z_erofs_aops;
- enum {
- 	BH_Encoded = BH_PrivateStart,
- 	BH_FullMapped,
-+	BH_Fragment,
- };
- 
- /* Has a disk mapping */
-@@ -410,6 +418,8 @@ enum {
- #define EROFS_MAP_ENCODED	(1 << BH_Encoded)
- /* The length of extent is full */
- #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
-+/* Located in the special packed inode */
-+#define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
- 
- struct erofs_map_blocks {
- 	struct erofs_buf buf;
-@@ -431,7 +441,7 @@ struct erofs_map_blocks {
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
- /* Used to map the whole extent if non-negligible data is requested for LZMA */
- #define EROFS_GET_BLOCKS_READMORE	0x0004
--/* Used to map tail extent for tailpacking inline pcluster */
-+/* Used to map tail extent for tailpacking inline or fragment pcluster */
- #define EROFS_GET_BLOCKS_FINDTAIL	0x0008
- 
- enum {
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3173debeaa5a..8170c0d8ab92 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -381,6 +381,17 @@ static int erofs_read_superblock(struct super_block *sb)
- #endif
- 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
- 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-+#ifdef CONFIG_EROFS_FS_ZIP
-+	sbi->packed_inode = NULL;
-+	if (erofs_sb_has_fragments(sbi)) {
-+		sbi->packed_inode =
-+			erofs_iget(sb, le64_to_cpu(dsb->packed_nid), false);
-+		if (IS_ERR(sbi->packed_inode)) {
-+			ret = PTR_ERR(sbi->packed_inode);
-+			goto out;
-+		}
-+	}
-+#endif
- 	sbi->inos = le64_to_cpu(dsb->inos);
- 
- 	sbi->build_time = le64_to_cpu(dsb->build_time);
-@@ -411,6 +422,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 		erofs_info(sb, "EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
- 	if (erofs_is_fscache_mode(sb))
- 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
-+	if (erofs_sb_has_fragments(sbi))
-+		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
- out:
- 	erofs_put_metabuf(&buf);
- 	return ret;
-@@ -908,6 +921,8 @@ static void erofs_put_super(struct super_block *sb)
- #ifdef CONFIG_EROFS_FS_ZIP
- 	iput(sbi->managed_cache);
- 	sbi->managed_cache = NULL;
-+	iput(sbi->packed_inode);
-+	sbi->packed_inode = NULL;
- #endif
- 	erofs_fscache_unregister_cookie(&sbi->s_fscache);
- }
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index c1383e508bbe..1b52395be82a 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -76,6 +76,7 @@ EROFS_ATTR_FEATURE(device_table);
- EROFS_ATTR_FEATURE(compr_head2);
- EROFS_ATTR_FEATURE(sb_chksum);
- EROFS_ATTR_FEATURE(ztailpacking);
-+EROFS_ATTR_FEATURE(fragments);
- 
- static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(zero_padding),
-@@ -86,6 +87,7 @@ static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(compr_head2),
- 	ATTR_LIST(sb_chksum),
- 	ATTR_LIST(ztailpacking),
-+	ATTR_LIST(fragments),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(erofs_feat);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index bbaa3a924852..ecafe85c2763 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -657,6 +657,33 @@ static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
- 		la < fe->headoffset;
- }
- 
-+static int z_erofs_read_fragment_data(struct page *page, unsigned int pageofs,
-+				      loff_t start, unsigned int len)
-+{
-+	struct inode *const inode = page->mapping->host;
-+	erofs_off_t offset = EROFS_I(inode)->z_fragmentoff + start;
-+	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+	u8 *src, *dst;
-+	unsigned int i, cnt;
-+
-+	for (i = 0; i < len; i += cnt) {
-+		cnt = min(EROFS_BLKSIZ - (unsigned int)erofs_blkoff(offset),
-+			  len - i);
-+		src = erofs_bread(&buf, EROFS_I_SB(inode)->packed_inode,
-+				  erofs_blknr(offset), EROFS_KMAP);
-+		if (IS_ERR(src))
-+			return PTR_ERR(src);
-+
-+		dst = kmap_local_page(page);
-+		memcpy(dst + pageofs + i, src + erofs_blkoff(offset), cnt);
-+		kunmap_local(dst);
-+
-+		offset += cnt;
-+	}
-+	erofs_put_metabuf(&buf);
-+	return 0;
-+}
-+
- static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 				struct page *page, struct page **pagepool)
- {
-@@ -695,7 +722,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		/* didn't get a valid pcluster previously (very rare) */
- 	}
- 
--	if (!(map->m_flags & EROFS_MAP_MAPPED))
-+	if (!(map->m_flags & EROFS_MAP_MAPPED) ||
-+	    map->m_flags & EROFS_MAP_FRAGMENT)
- 		goto hitted;
- 
- 	err = z_erofs_collector_begin(fe);
-@@ -742,6 +770,24 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		zero_user_segment(page, cur, end);
- 		goto next_part;
- 	}
-+	if (map->m_flags & EROFS_MAP_FRAGMENT) {
-+		unsigned int pageofs, skip, len;
-+
-+		if (map->m_la < offset) {
-+			pageofs = 0;
-+			skip = offset - map->m_la;
-+		} else {
-+			pageofs = map->m_la & ~PAGE_MASK;
-+			skip = 0;
-+		}
-+		len = min((unsigned int)(map->m_llen - skip), end - cur);
-+		err = z_erofs_read_fragment_data(page, pageofs, skip, len);
-+		if (err)
-+			goto out;
-+		++spiltted;
-+		tight = false;
-+		goto next_part;
-+	}
- 
- 	exclusive = (!cur && (!spiltted || tight));
- 	if (cur)
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index d58549ca1df9..2863ed6c6df9 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -123,6 +123,23 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		if (err < 0)
- 			goto out_unlock;
- 	}
-+	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER) {
-+		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
-+
-+		if (h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT) {
-+			vi->z_tailextent_headlcn = 0;
-+		} else {
-+			struct erofs_map_blocks map = {
-+				.buf = __EROFS_BUF_INITIALIZER
-+			};
-+
-+			err = z_erofs_do_map_blocks(inode, &map,
-+						    EROFS_GET_BLOCKS_FINDTAIL);
-+			erofs_put_metabuf(&map.buf);
-+			if (err < 0)
-+				goto out_unlock;
-+		}
-+	}
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
-@@ -598,6 +615,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
- 	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
-+	bool inpacked = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
- 	struct z_erofs_maprecorder m = {
- 		.inode = inode,
- 		.map = map,
-@@ -672,6 +690,9 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		map->m_flags |= EROFS_MAP_META;
- 		map->m_pa = vi->z_idataoff;
- 		map->m_plen = vi->z_idata_size;
-+	} else if (inpacked && m.lcn == vi->z_tailextent_headlcn) {
-+		map->m_flags |= EROFS_MAP_FRAGMENT;
-+		DBG_BUGON(!map->m_la);
- 	} else {
- 		map->m_pa = blknr_to_addr(m.pblk);
- 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
-@@ -709,6 +730,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 			    struct erofs_map_blocks *map,
- 			    int flags)
- {
-+	struct erofs_inode *const vi = EROFS_I(inode);
- 	int err = 0;
- 
- 	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
-@@ -725,6 +747,14 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 	if (err)
- 		goto out;
- 
-+	if ((vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER) &&
-+	    !vi->z_tailextent_headlcn) {
-+		map->m_llen = map->m_la + 1;
-+		map->m_la = 0;
-+		map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_FRAGMENT;
-+		goto out;
-+	}
-+
- 	err = z_erofs_do_map_blocks(inode, map, flags);
- out:
- 	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
-@@ -751,7 +781,8 @@ static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
- 	iomap->length = map.m_llen;
- 	if (map.m_flags & EROFS_MAP_MAPPED) {
- 		iomap->type = IOMAP_MAPPED;
--		iomap->addr = map.m_pa;
-+		iomap->addr = map.m_flags & EROFS_MAP_FRAGMENT ?
-+			      IOMAP_NULL_ADDR : map.m_pa;
- 	} else {
- 		iomap->type = IOMAP_HOLE;
- 		iomap->addr = IOMAP_NULL_ADDR;
--- 
-2.17.1
-
+Thanks,
