@@ -1,27 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9CAA5ADEF9
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 07:44:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 032335ADE48
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 06:03:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MMDpy2Pgbz30DP
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 15:44:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MMBZM6mpzz3042
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 14:03:23 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Wdng61nu;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=thebinarymill.com (client-ip=134.255.235.210; helo=thebrokentoys.com; envelope-from=jonuo@thebinarymill.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 9542 seconds by postgrey-1.36 at boromir; Tue, 06 Sep 2022 15:44:21 AEST
-Received: from thebrokentoys.com (fvinziant.xyz [134.255.235.210])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MMDps5jsHz2xbC
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Sep 2022 15:44:21 +1000 (AEST)
-To: linux-erofs@lists.ozlabs.org
-Subject: following up on my last email
-Message-ID: <3239967ed096b6ecea5c401c22d46504@extrememotorsales.com>
-Date: Tue, 06 Sep 2022 04:18:05 +0200
-From: "Jon Young" <jonsl@thebinarymill.com>
+Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Two or more type TXT spf records found.) smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Wdng61nu;
+	dkim-atps=neutral
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MMBZG6Rh4z2xbC
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Sep 2022 14:03:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662436999; x=1693972999;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TDFuNsuwOMC6+wLQ6W3tYi0xCxrpU0AMU4jdJA/I9DE=;
+  b=Wdng61nuzQZeCBfQT1EXHL5ke35PU3T3/52mkJtzUBUOFyhz1mY5RZ5I
+   zc+uBbhHlzzco0le0rS+GuUoDCYhG2lfzJiv3uhaVDlUQTSpZsY+3CFiE
+   ZnsMqLYvEhlfhBKn3Whn0SJax8GGxMvVsWTJsA7rOxAno65dr6ugcm+jD
+   GLm7fg948S3sYT6hGqxb/rKz48rdvzf9rkbHyffYVqQlaSvPWeAf4UZ8B
+   1afj9otrRZ9AZQszccWaaVQJWiah5kCeS7TbJD3gjhQ/20BgW+DY/qCsl
+   vIyQ696CvWU+z1HXemnhNcqkDjXCzfiek5LElA3xPSJpDAyGAYs8yFx9+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10461"; a="358212885"
+X-IronPort-AV: E=Sophos;i="5.93,293,1654585200"; 
+   d="scan'208";a="358212885"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 21:03:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,293,1654585200"; 
+   d="scan'208";a="942302910"
+Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2022 21:03:08 -0700
+Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oVPno-0004nI-0d;
+	Tue, 06 Sep 2022 04:03:08 +0000
+Date: Tue, 06 Sep 2022 12:02:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 2f44013e39984c127c6efedf70e6b5f4e9dcf315
+Message-ID: <6316c66c.y6wndPTPrGgrFQdS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -33,61 +69,88 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: jon@pp9p.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-<p>Hello,<br /> <br /> How is everything going with you?<br /> Have you
-received the introduction that we sent you on the little quadcopter?<br />
-<br /> The drone-quadcopter can fly for 30 minutes nonstop.<br /> Product
-dimensions: 45x40x12cm (before folding) 21x11x9cm (after folding)<br />
-Dual-mode The positioning system provides GPS positioning. Brushless motor
-model number: 1806.<br /> Remote control range: around 3000m<br /> The
-remote control's height is roughly 120 meters.<br /> 2048 x 1080 video
-resolution (APP)<br /> The auto return feature allows you to order the
-aircraft to take off, land, and even return to its original spot with the
-push of a button.<br /><br /> The following are the cost details:<br />1
-unit 229.50<br /> 2-50 units 209.50 each<br /> 51-100 units 189.50 each<br
-/><br /> Would you be interested in purchasing one or two of these?<br
-/>Please provide us with address, and we will contact logistics to arrange
-your shipping.<br /><br /><img
-src="https://cdn.32pt.com/public/sl-prod-od-0/images/retail-products/D18C49281AF5F7/D18C49281AF5F7-DS_600ef313c100037048a59353_4487-DS_600ef313c100037048a59353-DS_600ef313c100037048a59353_1005002073569910-14%253A200006154%2523GPS-5G-4K%201B%20Foambox%253B200007763%253A201336100/template/thumb.jpg"
-width="640" height="636" /><br /><img
-src="https://media.karousell.com/media/photos/products/2021/3/8/drone_4drc_f9_4k_1615221385_0f7cbce4_progressive.jpg"
-width="585" height="812" /><br /> <br /> The development of optical flow
-occurs from the combination of a fixed point located within the system and
-a GPS position retrieved from outside the system.<br /> When you walk
-through your front door, either the electricity is totally turned off or
-you receive a notification stating that the energy has been turned off.<br
-/> This camera also has a virtual reality mode, as well as the option to
-switch between various lenses, a video/picture panorama, and a
-video/picture panorama.<br /> There are also MV (with a single button to
-return to the home screen), headless, photo/video gestures, and front lens
-adjustment modes. Each of these modes has its own set of capabilities.<br
-/>Wind resistance is rated as an 8, and it is measured in meters per
-second.<br /> <br /> <br /> Thanks,<br /> Jonathan Smith<br /> <br /> <br
-/> ======<br /> <br /> Is it necessary to print this email? If you care
-about the environment like we do, please refrain from printing emails. It
-helps to keep the environment forested.<br /> Please consider the
-environment before printing this email. Please do not print this email
-unless it is necessary. Every unprinted email helps the environment.<br />
-If you received this message by mistake, please reply to this message and
-follow with its deletion, so that we can ensure such a mistake does not
-occur in the future.<br /> <br /> Is printing out this email really
-required? If you share the same concern for the environment that we do, we
-kindly ask that you avoid from printing off any emails. It contributes to
-the maintenance of a forest-rich environment.<br /> Before printing this
-email, I ask that you keep in mind its impact on the environment. If
-printing it isn't absolutely required, please refrain from doing so. Every
-email that is not printed out is beneficial to the environment.<br /> If
-you believe that you have got this message in error, please respond to it
-and then delete it so that we can avoid making the same mistake in the
-future. Thank you.</p>
-<br /><br />
-</body>
-</html>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 2f44013e39984c127c6efedf70e6b5f4e9dcf315  erofs: fix pcluster use-after-free on UP platforms
 
+elapsed time: 720m
+
+configs tested: 63
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+i386                                defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                              defconfig
+x86_64                           rhel-8.3-syz
+x86_64                           allyesconfig
+x86_64                           rhel-8.3-kvm
+ia64                             allmodconfig
+i386                 randconfig-a001-20220905
+i386                 randconfig-a002-20220905
+x86_64                               rhel-8.3
+i386                             allyesconfig
+i386                 randconfig-a005-20220905
+powerpc                          allmodconfig
+mips                             allyesconfig
+i386                 randconfig-a003-20220905
+i386                 randconfig-a006-20220905
+powerpc                           allnoconfig
+sh                               allmodconfig
+i386                 randconfig-a004-20220905
+arm                                 defconfig
+x86_64               randconfig-a003-20220905
+x86_64               randconfig-a002-20220905
+x86_64               randconfig-a004-20220905
+x86_64               randconfig-a005-20220905
+x86_64               randconfig-a001-20220905
+arm64                            allyesconfig
+x86_64               randconfig-a006-20220905
+arm                              allyesconfig
+arc                  randconfig-r043-20220905
+m68k                             allmodconfig
+arc                  randconfig-r043-20220906
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+riscv                randconfig-r042-20220906
+s390                 randconfig-r044-20220906
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+
+clang tested configs:
+x86_64               randconfig-a012-20220905
+x86_64               randconfig-a011-20220905
+i386                 randconfig-a013-20220905
+x86_64               randconfig-a013-20220905
+i386                 randconfig-a012-20220905
+i386                 randconfig-a011-20220905
+i386                 randconfig-a014-20220905
+x86_64               randconfig-a016-20220905
+s390                 randconfig-r044-20220905
+i386                 randconfig-a015-20220905
+x86_64               randconfig-a014-20220905
+hexagon              randconfig-r041-20220906
+i386                 randconfig-a016-20220905
+x86_64               randconfig-a015-20220905
+hexagon              randconfig-r045-20220906
+hexagon              randconfig-r045-20220905
+arm                       cns3420vb_defconfig
+riscv                randconfig-r042-20220905
+hexagon              randconfig-r041-20220905
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
