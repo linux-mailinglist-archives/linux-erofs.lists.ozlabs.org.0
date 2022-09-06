@@ -2,69 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 995365AE839
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 14:33:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B993E5AF01B
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 18:16:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MMPtR3XjLz3bXg
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Sep 2022 22:33:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MMVrN55NLz30NS
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Sep 2022 02:16:36 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YforIchN;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GckO6Dab;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YforIchN;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GckO6Dab;
 	dkim-atps=neutral
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MMPtD4CyBz30JR
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Sep 2022 22:32:52 +1000 (AEST)
-Received: by mail-pf1-x42b.google.com with SMTP id o126so2224143pfb.6
-        for <linux-erofs@lists.ozlabs.org>; Tue, 06 Sep 2022 05:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date;
-        bh=mb+05/tcxw+XYUDGUQb2AK3Td3oxF2QuBffspW1CWJw=;
-        b=YforIchNeSOogITdJ21TcFrfO9yKAW8Nbr01JUfdTj4qs0eC+wJ6a1dOyzwMr10YBj
-         wlOtBvEIS7RiiNiXy3cpov3gAh5TN8pRGprtIp68T1B0rslcqS1b/RTSQozbYPu9nInl
-         L4U3Uv7MekqcXZgr9xEZRGvou+Qch2RP6Kjg89r3GAHjfLkKIWE+HOT+w1Y8jWa5CE8K
-         0sGm0ojh0miDlNBi/insmSYaEJuVH5OjRz4op6grZAd6YBMOgxqcESISrpM/U00DPHET
-         54fYzaKwL0HpSJIYhPu9VCQnrJFGExGK+nzzWBKzKwzccg293JxyCzeHQEky2vJ/+GB8
-         siTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=mb+05/tcxw+XYUDGUQb2AK3Td3oxF2QuBffspW1CWJw=;
-        b=7MjHOJyGhnObQL3fRxYkQGInTAkKxD0p8v05wWQXRNekhnTAXhW2mCuNnOkPm+SDAN
-         ODAnLFYgVM747Aa515jcm1HZV7dqsgxRQUe0GWv4gNqcmKu0/JHGP70J2ywBGjKMIcLK
-         rM/L0iZOLpgSsjtOpiK8wrggoHJzfPecwJdGOBj6iZqi2ZmjpEYo4RscLxKqXeufwNBg
-         oei8P851tAiySqItZcsZgwEVGKNMuxKNNytRcoGi1fKi6/n1xS95qTTpPZ/Z26wxss+1
-         ApfCcZTzOL21ICO9GIyI+swszqe+Comwp0M34djSzWk6bCBK8z4yLCIQQUhC+BPaJvuQ
-         bjdw==
-X-Gm-Message-State: ACgBeo3XAxEs263AA+npic0VLJxMvBIu0PPye23+r0Yeltj72H0Qj3HS
-	XYCr0PLRlvuLOwk4LnLfmA+DYi1Yb2I=
-X-Google-Smtp-Source: AA6agR6EhPRN+UmkFR184DKrjhgdjBTIVNbQV4Sz2ySKpWE0CShKfNFAGZVgLG2X3bMdUNn9OklSvg==
-X-Received: by 2002:a65:44c1:0:b0:428:ab8f:62dd with SMTP id g1-20020a6544c1000000b00428ab8f62ddmr46229990pgs.211.1662467570101;
-        Tue, 06 Sep 2022 05:32:50 -0700 (PDT)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902c11500b001714c36a6e7sm3510993pli.284.2022.09.06.05.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 05:32:49 -0700 (PDT)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH V7 4/4] erofs-utils: mkfs: introduce compressed fragments support
-Date: Tue,  6 Sep 2022 20:32:35 +0800
-Message-Id: <dcf38a094d213f3c0a7814dcfe81ff4a0219f7d7.1662460303.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1662460303.git.huyue2@coolpad.com>
-References: <cover.1662460303.git.huyue2@coolpad.com>
-In-Reply-To: <cover.1662460303.git.huyue2@coolpad.com>
-References: <cover.1662460303.git.huyue2@coolpad.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MMVrF6wx3z2xn5
+	for <linux-erofs@lists.ozlabs.org>; Wed,  7 Sep 2022 02:16:29 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id A17CC6159A;
+	Tue,  6 Sep 2022 16:16:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB517C433B5;
+	Tue,  6 Sep 2022 16:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662480985;
+	bh=8WcaE0tiCNvuuwz8DZZ6kQiMgY1Udyvw/3H0BR4qL04=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GckO6DabkKG7qGxm3/LoYg2wK75NSR1IFK7DOkEqi1HMfbsyqZ4V6eqpZ4GNJvAsr
+	 kEf5Zy9c1l9SQ68aZTh0wJ3qfVlDjj2dTKgNwD2MchkefmzXGBDnQMooi7/CNvRZMM
+	 Psovo/bRSch79Zwo4gp9hjMmKAAdCuhjkRf9XqZUV9ohyP5EZBjgUnJpcAKdF4j6Ah
+	 KYPQ4A7paV5wfTmVi4jIqidlmmYlh7C5H6iEvUpoYGe2sOeST9tEiYpzjGYNj0vkWh
+	 jLfLmIa3SVFan2IzJp67qli/+26nFYrNsxjwaz7bznl3xVCLleQ+E3kdgiErYgupi5
+	 YGqODi5M50ijg==
+Date: Wed, 7 Sep 2022 00:16:19 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 6.0-rc5
+Message-ID: <YxdyU26Us1vmDxVJ@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+	Sun Ke <sunke32@huawei.com>, Jingbo Xu <jefflexu@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -76,640 +61,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
+Cc: LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, Sun Ke <sunke32@huawei.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Hi Linus,
 
-This approach can merge tail pclusters or the whole files into a special
-inode in order to achieve greater compression ratio. And an option of
-pcluster size is provided for different compression requirments.
+Could you consider these three fixes for 6.0-rc5?
 
-Also enable interlaced uncompressed data layout for compressed files at
-the same time.
+One patch fixes error paths in fscache backend.  Another fixes a
+use-after-free on UP platforms whose path is now dropped directly.
+The rest addresses potential wrong pcluster sizes for later non-4K
+lclusters.  It should have no effect on the existing fs images but
+the fix is small and straight-forward so that it'd be better to be
+fixed from now on.
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- include/erofs/compress.h  |  8 ++++-
- include/erofs/config.h    |  3 +-
- include/erofs/fragments.h | 28 ++++++++++++++++
- include/erofs/inode.h     |  1 +
- include/erofs/internal.h  |  3 ++
- lib/Makefile.am           |  4 ++-
- lib/compress.c            | 70 +++++++++++++++++++++++++++++----------
- lib/fragments.c           | 59 +++++++++++++++++++++++++++++++++
- lib/inode.c               | 47 ++++++++++++++++++++++++--
- mkfs/main.c               | 61 ++++++++++++++++++++++++++++++----
- 10 files changed, 254 insertions(+), 30 deletions(-)
- create mode 100644 include/erofs/fragments.h
- create mode 100644 lib/fragments.c
+All commits have been in linux-next and no merge conflicts.
 
-diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-index 24f6204..2e0f3f5 100644
---- a/include/erofs/compress.h
-+++ b/include/erofs/compress.h
-@@ -18,13 +18,19 @@ extern "C"
- #define EROFS_CONFIG_COMPR_MIN_SZ           (32   * 1024)
- 
- void z_erofs_drop_inline_pcluster(struct erofs_inode *inode);
--int erofs_write_compressed_file(struct erofs_inode *inode);
-+int erofs_write_compressed_file_from_fd(struct erofs_inode *inode, int fd);
- 
- int z_erofs_compress_init(struct erofs_buffer_head *bh);
- int z_erofs_compress_exit(void);
- 
- const char *z_erofs_list_available_compressors(unsigned int i);
- 
-+static inline bool is_inode_packed(struct erofs_inode *inode)
-+{
-+	return (inode->nid == sbi.packed_nid ||
-+		inode->nid == EROFS_PACKED_NID_UNALLOCATED);
-+}
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 539d813..764b0f7 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -44,6 +44,7 @@ struct erofs_configure {
- 	char c_chunkbits;
- 	bool c_noinline_data;
- 	bool c_ztailpacking;
-+	bool c_fragments;
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
- 
-@@ -62,7 +63,7 @@ struct erofs_configure {
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
- 	int c_inline_xattr_tolerance;
- 
--	u32 c_pclusterblks_max, c_pclusterblks_def;
-+	u32 c_pclusterblks_max, c_pclusterblks_def, c_pclusterblks_packed;
- 	u32 c_max_decompressed_extent_bytes;
- 	u32 c_dict_size;
- 	u64 c_unix_timestamp;
-diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
-new file mode 100644
-index 0000000..05a88da
---- /dev/null
-+++ b/include/erofs/fragments.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * Copyright (C), 2022, Coolpad Group Limited.
-+ */
-+#ifndef __EROFS_FRAGMENTS_H
-+#define __EROFS_FRAGMENTS_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "erofs/internal.h"
-+
-+const char *frags_packedname;
-+#define EROFS_PACKED_INODE	frags_packedname
-+
-+int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
-+			   unsigned int len);
-+struct erofs_inode *erofs_mkfs_build_fragments(void);
-+int erofs_fragments_init(void);
-+void erofs_fragments_exit(void);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index 79b8d89..bf20cd3 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -22,6 +22,7 @@ unsigned int erofs_iput(struct erofs_inode *inode);
- erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
- 						    const char *path);
-+struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name);
- 
- #ifdef __cplusplus
- }
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 742bfed..8abcfc6 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -70,6 +70,8 @@ struct erofs_device_info {
- 	u32 mapped_blkaddr;
- };
- 
-+#define EROFS_PACKED_NID_UNALLOCATED	-1
-+
- struct erofs_sb_info {
- 	struct erofs_device_info *devs;
- 
-@@ -212,6 +214,7 @@ struct erofs_inode {
- 	uint64_t capabilities;
- #endif
- 	erofs_off_t fragmentoff;
-+	unsigned int fragment_size;
- };
- 
- static inline bool is_inode_layout_compression(struct erofs_inode *inode)
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 3fad357..95f1d55 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -22,12 +22,14 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/trace.h \
-       $(top_srcdir)/include/erofs/xattr.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-+      $(top_srcdir)/include/erofs/fragments.h \
-       $(top_srcdir)/lib/liberofs_private.h
- 
- noinst_HEADERS += compressor.h
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
--		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
-+		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
-+		      fragments.c
- liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/compress.c b/lib/compress.c
-index 4bd4e6b..368db1f 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -18,6 +18,7 @@
- #include "compressor.h"
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
-+#include "erofs/fragments.h"
- 
- static struct erofs_compress compresshandle;
- static unsigned int algorithmtype[2];
-@@ -160,7 +161,12 @@ static int write_uncompressed_extent(struct erofs_inode *inode,
- 	 * write uncompressed data from clusterofs which can benefit from
- 	 * in-place I/O, loop shift right when to exceed EROFS_BLKSIZ.
- 	 */
--	interlaced_offset = 0; /* will set it to clusterofs */
-+	if (cfg.c_fragments && ctx->clusterofs) {
-+		interlaced_offset = ctx->clusterofs;
-+		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
-+	} else {
-+		interlaced_offset = 0;
-+	}
- 	rightpart = min(EROFS_BLKSIZ - interlaced_offset, count);
- 
- 	memset(dst, 0, EROFS_BLKSIZ);
-@@ -178,6 +184,8 @@ static int write_uncompressed_extent(struct erofs_inode *inode,
- 
- static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
- {
-+	if (cfg.c_fragments && is_inode_packed(inode))
-+		return cfg.c_pclusterblks_packed;
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
- 		return 1 + rand() % cfg.c_pclusterblks_max;
-@@ -246,11 +254,17 @@ static int vle_compress_one(struct erofs_inode *inode,
- 		unsigned int pclustersize =
- 			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
- 		bool may_inline = (cfg.c_ztailpacking && final);
-+		bool may_packing = (cfg.c_fragments && final &&
-+				   !is_inode_packed(inode));
- 		bool raw;
- 
- 		if (len <= pclustersize) {
- 			if (!final)
- 				break;
-+			if (may_packing) {
-+				count = len;
-+				goto frag_packing;
-+			}
- 			if (!may_inline && len <= EROFS_BLKSIZ)
- 				goto nocompression;
- 		}
-@@ -265,7 +279,6 @@ static int vle_compress_one(struct erofs_inode *inode,
- 					  inode->i_srcpath,
- 					  erofs_strerror(ret));
- 			}
--
- 			if (may_inline && len < EROFS_BLKSIZ)
- 				ret = z_erofs_fill_inline_data(inode,
- 						ctx->queue + ctx->head,
-@@ -304,6 +317,19 @@ nocompression:
- 				return ret;
- 			ctx->compressedblks = 1;
- 			raw = false;
-+		} else if (may_packing && len == count && ret < pclustersize) {
-+frag_packing:
-+			ret = z_erofs_pack_fragments(inode,
-+						     ctx->queue + ctx->head,
-+						     len);
-+			if (ret < 0)
-+				return ret;
-+			if (inode->i_size == inode->fragment_size) {
-+				ctx->head += len;
-+				return 0;
-+			}
-+			ctx->compressedblks = 0;
-+			raw = true;
- 		} else {
- 			unsigned int tailused, padding;
- 
-@@ -556,13 +582,20 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
- {
- 	struct z_erofs_map_header h = {
- 		.h_advise = cpu_to_le16(inode->z_advise),
--		.h_idata_size = cpu_to_le16(inode->idata_size),
- 		.h_algorithmtype = inode->z_algorithmtype[1] << 4 |
- 				   inode->z_algorithmtype[0],
- 		/* lclustersize */
- 		.h_clusterbits = inode->z_logical_clusterbits - 12,
- 	};
- 
-+	if (cfg.c_fragments)
-+		h.h_fragmentoff = cpu_to_le32(inode->fragmentoff);
-+	else
-+		h.h_idata_size = cpu_to_le16(inode->idata_size);
-+
-+	if (inode->fragment_size && inode->i_size == inode->fragment_size)
-+		h.h_clusterbits |=  1 << Z_EROFS_FRAGMENT_INODE_BIT;
-+
- 	memset(compressmeta, 0, Z_EROFS_LEGACY_MAP_HEADER_SIZE);
- 	/* write out map header */
- 	memcpy(compressmeta, &h, sizeof(struct z_erofs_map_header));
-@@ -615,30 +648,24 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
- 	inode->eof_tailraw = NULL;
- }
- 
--int erofs_write_compressed_file(struct erofs_inode *inode)
-+int erofs_write_compressed_file_from_fd(struct erofs_inode *inode, int fd)
- {
- 	struct erofs_buffer_head *bh;
- 	static struct z_erofs_vle_compress_ctx ctx;
- 	erofs_off_t remaining;
- 	erofs_blk_t blkaddr, compressed_blocks;
- 	unsigned int legacymetasize;
--	int ret, fd;
-+	int ret;
- 	u8 *compressmeta = malloc(vle_compressmeta_capacity(inode->i_size));
- 
- 	if (!compressmeta)
- 		return -ENOMEM;
- 
--	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
--	if (fd < 0) {
--		ret = -errno;
--		goto err_free_meta;
--	}
--
- 	/* allocate main data buffer */
- 	bh = erofs_balloc(DATA, 0, 0, 0);
- 	if (IS_ERR(bh)) {
- 		ret = PTR_ERR(bh);
--		goto err_close;
-+		goto err_free_meta;
- 	}
- 
- 	/* initialize per-file compression setting */
-@@ -659,6 +686,9 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	inode->z_algorithmtype[1] = algorithmtype[1];
- 	inode->z_logical_clusterbits = LOG_BLOCK_SIZE;
- 
-+	inode->idata_size = 0;
-+	inode->fragment_size = 0;
-+
- 	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
- 	ctx.blkaddr = blkaddr;
- 	ctx.metacur = compressmeta + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
-@@ -692,19 +722,20 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	vle_write_indexes_final(&ctx);
- 	legacymetasize = ctx.metacur - compressmeta;
- 	/* estimate if data compression saves space or not */
--	if (compressed_blocks * EROFS_BLKSIZ + inode->idata_size +
-+	if (!inode->fragment_size && !is_inode_packed(inode) &&
-+	    compressed_blocks * EROFS_BLKSIZ + inode->idata_size +
- 	    legacymetasize >= inode->i_size) {
- 		ret = -ENOSPC;
- 		goto err_free_idata;
- 	}
- 	z_erofs_write_mapheader(inode, compressmeta);
- 
--	close(fd);
- 	if (compressed_blocks) {
- 		ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
- 		DBG_BUGON(ret != EROFS_BLKSIZ);
- 	} else {
--		DBG_BUGON(!inode->idata_size);
-+		if (!cfg.c_fragments)
-+			DBG_BUGON(!inode->idata_size);
- 	}
- 
- 	erofs_info("compressed %s (%llu bytes) into %u blocks",
-@@ -727,7 +758,8 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 		DBG_BUGON(ret);
- 	}
- 	inode->compressmeta = compressmeta;
--	erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
-+	if (!is_inode_packed(inode))
-+		erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
- 	return 0;
- 
- err_free_idata:
-@@ -737,8 +769,6 @@ err_free_idata:
- 	}
- err_bdrop:
- 	erofs_bdrop(bh, true);	/* revoke buffer */
--err_close:
--	close(fd);
- err_free_meta:
- 	free(compressmeta);
- 	return ret;
-@@ -852,6 +882,10 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		}
- 		erofs_sb_set_big_pcluster();
- 	}
-+	if (cfg.c_pclusterblks_packed > cfg.c_pclusterblks_max) {
-+		erofs_err("invalid physical cluster size for the packed file");
-+		return -EINVAL;
-+	}
- 
- 	if (ret != Z_EROFS_COMPRESSION_LZ4)
- 		erofs_sb_set_compr_cfgs();
-diff --git a/lib/fragments.c b/lib/fragments.c
-new file mode 100644
-index 0000000..61e711e
---- /dev/null
-+++ b/lib/fragments.c
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C), 2022, Coolpad Group Limited.
-+ * Created by Yue Hu <huyue2@coolpad.com>
-+ */
-+#define _GNU_SOURCE
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include "erofs/err.h"
-+#include "erofs/inode.h"
-+#include "erofs/compress.h"
-+#include "erofs/print.h"
-+#include "erofs/fragments.h"
-+
-+static FILE *packedfile;
-+const char *frags_packedname = "frags_packed_file";
-+
-+int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
-+			   unsigned int len)
-+{
-+	inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
-+	inode->fragmentoff = ftell(packedfile);
-+	inode->fragment_size = len;
-+
-+	if (write(fileno(packedfile), data, len) < 0)
-+		return -EIO;
-+
-+	erofs_sb_set_fragments();
-+
-+	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
-+		  inode->fragmentoff);
-+	return len;
-+}
-+
-+struct erofs_inode *erofs_mkfs_build_fragments(void)
-+{
-+	fseek(packedfile, 0, SEEK_SET);
-+
-+	return erofs_mkfs_build_special_from_fd(fileno(packedfile),
-+						frags_packedname);
-+}
-+
-+void erofs_fragments_exit(void)
-+{
-+	if (packedfile)
-+		fclose(packedfile);
-+}
-+
-+int erofs_fragments_init(void)
-+{
-+#ifdef HAVE_TMPFILE64
-+	packedfile = tmpfile64();
-+#else
-+	packedfile = tmpfile();
-+#endif
-+	if (!packedfile)
-+		return -ENOMEM;
-+	return 0;
-+}
-diff --git a/lib/inode.c b/lib/inode.c
-index 4da28b3..43de1d0 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -25,6 +25,7 @@
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
-+#include "erofs/fragments.h"
- #include "liberofs_private.h"
- 
- #define S_SHIFT                 12
-@@ -424,7 +425,11 @@ int erofs_write_file(struct erofs_inode *inode)
- 	}
- 
- 	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
--		ret = erofs_write_compressed_file(inode);
-+		fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
-+		if (fd < 0)
-+			return -errno;
-+		ret = erofs_write_compressed_file_from_fd(inode, fd);
-+		close(fd);
- 
- 		if (!ret || ret != -ENOSPC)
- 			return ret;
-@@ -844,8 +849,7 @@ static int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
- }
- #endif
- 
--static int erofs_fill_inode(struct erofs_inode *inode,
--			    struct stat64 *st,
-+static int erofs_fill_inode(struct erofs_inode *inode, struct stat64 *st,
- 			    const char *path)
- {
- 	int err = erofs_droid_inode_fsconfig(inode, st, path);
-@@ -1180,3 +1184,40 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
- 
- 	return erofs_mkfs_build_tree(inode);
- }
-+
-+struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
-+{
-+	struct stat64 st;
-+	struct erofs_inode *inode;
-+	int ret;
-+
-+	ret = fstat64(fd, &st);
-+	if (ret)
-+		return ERR_PTR(-errno);
-+
-+	inode = erofs_new_inode();
-+	if (IS_ERR(inode))
-+		return inode;
-+
-+	ret = erofs_fill_inode(inode, &st, name);
-+	if (ret) {
-+		free(inode);
-+		return ERR_PTR(ret);
-+	}
-+
-+	if (name == EROFS_PACKED_INODE) {
-+		sbi.packed_nid = EROFS_PACKED_NID_UNALLOCATED;
-+		inode->nid = sbi.packed_nid;
-+	}
-+
-+	/* only for compressed file now */
-+	ret = erofs_write_compressed_file_from_fd(inode, fd);
-+	if (ret) {
-+		DBG_BUGON(ret == -ENOSPC);
-+		return ERR_PTR(ret);
-+	}
-+
-+	erofs_prepare_inode_buffer(inode);
-+
-+	return inode;
-+}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index b969b35..adad0d7 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -23,6 +23,7 @@
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
-+#include "erofs/fragments.h"
- #include "../lib/liberofs_private.h"
- 
- #ifdef HAVE_LIBUUID
-@@ -133,9 +134,9 @@ static int parse_extended_opts(const char *opts)
- 		const char *p = strchr(token, ',');
- 
- 		next = NULL;
--		if (p)
-+		if (p) {
- 			next = p + 1;
--		else {
-+		} else {
- 			p = token + strlen(token);
- 			next = p;
- 		}
-@@ -202,7 +203,31 @@ static int parse_extended_opts(const char *opts)
- 				return -EINVAL;
- 			cfg.c_ztailpacking = true;
- 		}
-+
-+		if (MATCH_EXTENTED_OPT("fragments", token, keylen)) {
-+			char *endptr;
-+			u64 i;
-+
-+			if (vallen || cfg.c_ztailpacking)
-+				return -EINVAL;
-+			cfg.c_fragments = true;
-+
-+			i = strtoull(next, &endptr, 0);
-+			if ((*endptr != '\0' && *endptr != ',') ||
-+			    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
-+				erofs_err("invalid physical cluster size for the packed file %s",
-+					  next);
-+				return -EINVAL;
-+			}
-+			cfg.c_pclusterblks_packed = i / EROFS_BLKSIZ;
-+
-+			if (*endptr == ',')
-+				next = strchr(next, ',')  + 1;
-+			else
-+				goto out;
-+		}
- 	}
-+out:
- 	return 0;
- }
- 
-@@ -458,7 +483,8 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 
- int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 				  erofs_nid_t root_nid,
--				  erofs_blk_t *blocks)
-+				  erofs_blk_t *blocks,
-+				  erofs_nid_t packed_nid)
- {
- 	struct erofs_super_block sb = {
- 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
-@@ -482,6 +508,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 	*blocks         = erofs_mapbh(NULL);
- 	sb.blocks       = cpu_to_le32(*blocks);
- 	sb.root_nid     = cpu_to_le16(root_nid);
-+	sb.packed_nid    = cpu_to_le64(packed_nid);
- 	memcpy(sb.uuid, sbi.uuid, sizeof(sb.uuid));
- 
- 	if (erofs_sb_has_compr_cfgs())
-@@ -599,8 +626,8 @@ int main(int argc, char **argv)
- {
- 	int err = 0;
- 	struct erofs_buffer_head *sb_bh;
--	struct erofs_inode *root_inode;
--	erofs_nid_t root_nid;
-+	struct erofs_inode *root_inode, *packed_inode;
-+	erofs_nid_t root_nid, packed_nid;
- 	struct stat64 st;
- 	erofs_blk_t nblocks;
- 	struct timeval t;
-@@ -670,6 +697,14 @@ int main(int argc, char **argv)
- 		erofs_warn("EXPERIMENTAL chunked file feature in use. Use at your own risk!");
- 	if (cfg.c_ztailpacking)
- 		erofs_warn("EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
-+	if (cfg.c_fragments) {
-+		err = erofs_fragments_init();
-+		if (err) {
-+			erofs_err("failed to initialize fragments");
-+			return 1;
-+		}
-+		erofs_warn("EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
-+	}
- 	erofs_set_fs_root(cfg.c_src_path);
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
-@@ -739,7 +774,19 @@ int main(int argc, char **argv)
- 			goto exit;
- 	}
- 
--	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks);
-+	packed_nid = 0;
-+	if (cfg.c_fragments) {
-+		packed_inode = erofs_mkfs_build_fragments();
-+		if (IS_ERR(packed_inode)) {
-+			err = PTR_ERR(packed_inode);
-+			goto exit;
-+		}
-+		packed_nid = erofs_lookupnid(packed_inode);
-+		erofs_iput(packed_inode);
-+	}
-+
-+	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
-+					    packed_nid);
- 	if (err)
- 		goto exit;
- 
-@@ -761,6 +808,8 @@ exit:
- 	erofs_cleanup_exclude_rules();
- 	if (cfg.c_chunkbits)
- 		erofs_blob_exit();
-+	if (cfg.c_fragments)
-+		erofs_fragments_exit();
- 	erofs_exit_configure();
- 
- 	if (err) {
--- 
-2.17.1
+Thanks,
+Gao Xiang
+
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.0-rc5-fixes
+
+for you to fetch changes up to 2f44013e39984c127c6efedf70e6b5f4e9dcf315:
+
+  erofs: fix pcluster use-after-free on UP platforms (2022-09-05 23:23:30 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix return codes in erofs_fscache_{meta_,}read_folio error paths;
+
+ - Fix potential wrong pcluster sizes for later non-4K lclusters;
+
+ - Fix in-memory pcluster use-after-free on UP platforms.
+
+----------------------------------------------------------------
+Gao Xiang (1):
+      erofs: fix pcluster use-after-free on UP platforms
+
+Sun Ke (1):
+      erofs: fix error return code in erofs_fscache_{meta_,}read_folio
+
+Yue Hu (1):
+      erofs: avoid the potentially wrong m_plen for big pcluster
+
+ fs/erofs/fscache.c  |  8 ++++++--
+ fs/erofs/internal.h | 29 -----------------------------
+ fs/erofs/zmap.c     | 16 ++++++++--------
+ 3 files changed, 14 insertions(+), 39 deletions(-)
 
