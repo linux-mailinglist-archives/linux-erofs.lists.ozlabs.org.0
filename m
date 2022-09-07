@@ -1,37 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B63A5AFC0D
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Sep 2022 07:56:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCBCB5B0630
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Sep 2022 16:13:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MMs216y2Hz30JR
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Sep 2022 15:56:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MN44C35PHz3bk9
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Sep 2022 00:13:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54; helo=out30-54.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.helo=dal210.hawkhost.com (client-ip=198.252.105.24; helo=dal210.hawkhost.com; envelope-from=<>; receiver=<UNKNOWN>)
+X-Greylist: delayed 5052 seconds by postgrey-1.36 at boromir; Thu, 08 Sep 2022 00:13:44 AEST
+Received: from dal210.hawkhost.com (dal210.hawkhost.com [198.252.105.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MMs1v0XJMz2xHF
-	for <linux-erofs@lists.ozlabs.org>; Wed,  7 Sep 2022 15:56:00 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VOwMHB2_1662530150;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VOwMHB2_1662530150)
-          by smtp.aliyun-inc.com;
-          Wed, 07 Sep 2022 13:55:52 +0800
-Date: Wed, 7 Sep 2022 13:55:50 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-Subject: Re: [PATCH 4/4] erofs-utils: mkfs: introduce global compressed data
- deduplication
-Message-ID: <YxgyZqrZs1X2V1pC@B-P7TQMD6M-0146.local>
-References: <20220906114057.151445-1-ZiyangZhang@linux.alibaba.com>
- <20220906114057.151445-4-ZiyangZhang@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MN4482ZZZz2yxG
+	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Sep 2022 00:13:44 +1000 (AEST)
+Received: from mailnull by dal210.hawkhost.com with local (Exim 4.95)
+	id 1oVuUi-003Aee-A2
+	for linux-erofs@lists.ozlabs.org;
+	Wed, 07 Sep 2022 07:49:28 -0500
+X-Failed-Recipients: dan3255@gmail.com
+Auto-Submitted: auto-replied
+From: Mail Delivery System <Mailer-Daemon@dal210.hawkhost.com>
+To: linux-erofs@lists.ozlabs.org
+References: <eb0c8064-a9a0-403d-904f-e1a2ae2e68e9@lists.ozlabs.org>
+Content-Type: multipart/report; report-type=delivery-status; boundary=1662554968-eximdsn-685503588
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220906114057.151445-4-ZiyangZhang@linux.alibaba.com>
+Subject: Mail delivery failed: returning message to sender
+Message-Id: <E1oVuUi-003Aee-A2@dal210.hawkhost.com>
+Date: Wed, 07 Sep 2022 07:49:28 -0500
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - dal210.hawkhost.com
+X-AntiAbuse: Original Domain - lists.ozlabs.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - 
+X-Get-Message-Sender-Via: dal210.hawkhost.com: sender_ident via received_protocol == local: mailnull/primary_hostname/system user
+X-Authenticated-Sender: dal210.hawkhost.com: mailnull
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,72 +51,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Sep 06, 2022 at 07:40:57PM +0800, ZiyangZhang wrote:
-> From: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-> 
-> This patch introduces global compressed data deduplication to
-> reuse potential prefixes for each pcluster.
-> 
-> It also uses rolling hashing and shortens the previous compressed
-> extent in order to explore more possibilities for deduplication.
-> 
-> Co-developped-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
+--1662554968-eximdsn-685503588
+Content-type: text/plain; charset=us-ascii
 
-Some preliminary numbers:
-Image				Fs	Type						Size
-system.raven.87e115a1           erofs   uncompressed                                    910082048
-system.raven.87e115a1           erofs   4k pcluster + lz4hc,9 + ztailpacking            584970240       -35.7% off
-system.raven.87e115a1           erofs   4k pcluster + lz4hc,9 + ztailpacking + dedupe   569376768       -37.4% off
+This message was created automatically by mail delivery software.
 
-linux-5.10 + linux-5.10.87      erofs   uncompressed                                     1943691264
-linux-5.10 + linux-5.10.87      erofs   4k pcluster + lz4hc,9 + ztailpacking             661987328      -65.9% off
-linux-5.10 + linux-5.10.87      erofs   4k pcluster + lz4hc,9 + ztailpacking + dedupe    490295296      -74.8% off
+A message that you sent could not be delivered to one or more of its
+recipients. This is a permanent error. The following address(es) failed:
 
-linux-5.10.87                   erofs   4k pcluster + lz4hc,9                            331292672
+  dan3255@gmail.com
+    (generated from marketing@artisankegcleaner.com)
+    host se001.arandomserver.com [198.252.100.64]
+    SMTP error from remote mail server after end of data:
+    550 High probability of spam
 
-One observation is since the tailpacking pcluster doesn't have blkaddr
-so data relating to tailpacking pcluster cannot be deduped.
+--1662554968-eximdsn-685503588
+Content-type: message/delivery-status
 
-On the other side, it can work with `fragment' feature later together to
-minimize image sizes.
+Reporting-MTA: dns; dal210.hawkhost.com
+
+Action: failed
+Final-Recipient: rfc822;marketing@artisankegcleaner.com
+Status: 5.0.0
+Remote-MTA: dns; se001.arandomserver.com
+Diagnostic-Code: smtp; 550 High probability of spam
+
+--1662554968-eximdsn-685503588
+Content-type: text/rfc822-headers
+
+Return-path: <linux-erofs@lists.ozlabs.org>
+Received: from [115.148.43.40] (port=34712 helo=lists.ozlabs.org)
+	by dal210.hawkhost.com with esmtp (Exim 4.95)
+	(envelope-from <linux-erofs@lists.ozlabs.org>)
+	id 1oVuUa-0039sv-GZ
+	for marketing@artisankegcleaner.com;
+	Wed, 07 Sep 2022 07:49:22 -0500
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101 Thunderbird/68.2.2
+From: "U787Q55" <linux-erofs@lists.ozlabs.org>
+To: "marketing" <marketing@artisankegcleaner.com>
+Content-Type: multipart/mixed; charset=UTF-8; boundary="------------FDBF196A987FB8FF37C1BB03"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 7 Sep 2022 20:49:24 +0800
+Message-Id: <eb0c8064-a9a0-403d-904f-e1a2ae2e68e9@lists.ozlabs.org>
+X-Mailer: Thunderbird/68.2.2
+X-Spam-Status: Yes, score=13.2
+X-Spam-Score: 132
+X-Spam-Bar: +++++++++++++
+X-Spam-Report: Spam detection software, running on the system "dal210.hawkhost.com",
+ has identified this incoming email as possible spam.  The original
+ message has been attached to this so you can view it or label
+ similar future email.  If you have any questions, see
+ root\@localhost for details.
+ Content preview:  УԩлюЧӖ 湖南株洲一官员多次接受私企安排打高尔夫已被双开12:18四川泸定6.8级地震已造成65人遇难11:53国
+    
+ Content analysis details:   (13.2 points, 5.0 required)
+  pts rule name              description
+ ---- ---------------------- --------------------------------------------------
+  1.0 BAYES_999              BODY: Bayes spam probability is 99.9 to 100%
+                             [score: 1.0000]
+  5.0 BAYES_99               BODY: Bayes spam probability is 99 to 100%
+                             [score: 1.0000]
+  0.5 JMQ_SPF_NEUTRAL        ASKDNS: SPF set to ?all
+ [lists.ozlabs.org TXT:v=spf1 include:_spf.lists.ozlabs.org include:_spf.ozlabs.org ?all]
+  0.0 RCVD_IN_ZEN_BLOCKED_OPENDNS RBL: ADMINISTRATOR NOTICE: The query
+                              to zen.spamhaus.org was blocked due to
+                             usage of an open resolver. See
+                             https://www.spamhaus.org/returnc/pub/
+                             [115.148.43.40 listed in zen.spamhaus.org]
+  0.0 HTML_MESSAGE           BODY: HTML included in message
+  0.1 MIME_HTML_ONLY         BODY: Message only has text/html MIME parts
+  1.2 HTML_IMAGE_ONLY_04     BODY: HTML: images with 0-400 bytes of words
+  0.8 MPART_ALT_DIFF         BODY: HTML and text parts are different
+  0.0 T_OBFU_JPG_ATTACH      BODY: JPG attachment with generic MIME type
+  1.8 PYZOR_CHECK            Listed in Pyzor
+                             (https://pyzor.readthedocs.io/en/latest/)
+  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
+                             Alignment
+  0.4 HTML_MIME_NO_HTML_TAG  HTML-only message, but there is no HTML
+                             tag
+  2.0 RDNS_NONE              Delivered to internal network by a host with no rDNS
+ -0.0 T_SCC_BODY_TEXT_LINE   No description available.
+  0.3 FSL_BULK_SIG           Bulk signature with no Unsubscribe
+  0.2 TVD_SPACE_RATIO_MINFP  Space ratio (vertical text obfuscation?)
+  0.0 T_REMOTE_IMAGE         Message contains an external image
+X-Spam-Flag: YES
+Subject:  ***SPAM*** 
+ =?UTF-8?B?5LyY5YyW6JCl6ZSALS0t5oyJ5pWI5p6c6K6h6LS567+u65Ge7JKT7J697IWb?=
+X-Exim-DSN-Information: Due to administrative limits only headers are returned
 
 
-Attach a fix for uncompressed pcluster:
-
-diff --git a/lib/dedupe.c b/lib/dedupe.c
-index c53a64edfc8d..c382303e2ceb 100644
---- a/lib/dedupe.c
-+++ b/lib/dedupe.c
-@@ -21,7 +21,7 @@ struct z_erofs_dedupe_item {
- 	unsigned int	compressed_blks;
- 
- 	int		original_length;
--	bool		partial;
-+	bool		partial, raw;
- 	u8		extra_data[];
- };
- 
-@@ -86,6 +86,7 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *ctx)
- 		ctx->e.length = window_size + extra;
- 		ctx->e.partial = e->partial ||
- 			(window_size + extra < e->original_length);
-+		ctx->e.raw = e->raw;
- 		ctx->e.blkaddr = e->compressed_blkaddr;
- 		ctx->e.compressedblks = e->compressed_blks;
- 		return 0;
-@@ -114,6 +115,7 @@ int z_erofs_dedupe_insert(struct z_erofs_inmem_extent *e,
- 	di->compressed_blkaddr = e->blkaddr;
- 	di->compressed_blks = e->compressedblks;
- 	di->partial = e->partial;
-+	di->raw = e->raw;
- 
- 	/* with the same rolling hash */
- 	if (!rb_tree_insert(dedupe_subtree, di))
--- 
-2.30.2
-
+--1662554968-eximdsn-685503588--
