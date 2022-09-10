@@ -1,75 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3178A5B460D
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Sep 2022 13:32:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D6465B460F
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Sep 2022 13:34:15 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MPrM26398z3bc8
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Sep 2022 21:32:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MPrNg6rNPz3bc8
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Sep 2022 21:34:11 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel-dk.20210112.gappssmtp.com header.i=@kernel-dk.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=ZH5YuCof;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel-dk.20210112.gappssmtp.com header.i=@kernel-dk.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rt56lu4z;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.dk (client-ip=2a00:1450:4864:20::52b; helo=mail-ed1-x52b.google.com; envelope-from=axboe@kernel.dk; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.dk (client-ip=2a00:1450:4864:20::631; helo=mail-ej1-x631.google.com; envelope-from=axboe@kernel.dk; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel-dk.20210112.gappssmtp.com header.i=@kernel-dk.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=ZH5YuCof;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel-dk.20210112.gappssmtp.com header.i=@kernel-dk.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rt56lu4z;
 	dkim-atps=neutral
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MPrLt1h6Bz2ywS
-	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Sep 2022 21:32:35 +1000 (AEST)
-Received: by mail-ed1-x52b.google.com with SMTP id b35so6213620edf.0
-        for <linux-erofs@lists.ozlabs.org>; Sat, 10 Sep 2022 04:32:35 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MPrNc4B6dz2ywS
+	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Sep 2022 21:34:08 +1000 (AEST)
+Received: by mail-ej1-x631.google.com with SMTP id nc14so9883717ejc.4
+        for <linux-erofs@lists.ozlabs.org>; Sat, 10 Sep 2022 04:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=oO2f6puxNv2WM0203jHJ9dATLxOnB/EAhNK0gKh1Fco=;
-        b=ZH5YuCofNtiX91aOQ8okF8wGG31vLQnBuGTbsJIxq6skqZDH7RvK+S6Wg/jL8kGMG0
-         wxALhNndMloVN1pmlZYgbSnkA4WugVPm6xPyUnDyPXtNQrabmBlb3doY3JHFHpEwdDOn
-         UCMlcq27n8LGY/fiI8rrezsaIzsFdm7yeal6QiEIrx2i6u5RSvNr3NejNRbuoylCf6VT
-         1NmPWSzvA4lzXHfElWpQVZrWn1GOb5l1rdycwSX1lGO4Q9iha+7RREdHfUFuABmzTqNy
-         MS6wyNdM+htzk0aYqzebY8yDNHwmUT2SYl/24SW+F1b30ss1/TkgEA7qVOS7cSXPX2Wb
-         gdkw==
+        bh=8Ag6mHz6RaJKAvIf3yWG8/NFxf6UdfL+MIDBEsLCyN8=;
+        b=rt56lu4zDxtfFC0gCwopFBFWhVClMEv05ZLa6FVTJvWQfkY2PRelXahCVRkTH0W0EE
+         SDi7Jg1T1Uk7Cgx8nOrb1llp4a5ljwV0hdWJLnKvHp44g8AGFKUUuXIYEu47fVHTnc+/
+         8wGHkEV4bRaaeVojMOyW1sd84KJqpHyhoHmwKscMTML1EIFROO1ffCslzJIrMkPlYesA
+         CBTvyvCmvmcJsItPrNfbGgD6LX3xXNlU+Uvr8Wo01rpF/CTHcxytcMd7P56VsFix0FeR
+         nYU0jAzsSdPZvhNnm7dXkuhgwaXZBEfS/U1FJvc3Zvz9IP4l/XZZ4aGZLlBa7gaLGUT8
+         q2nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=oO2f6puxNv2WM0203jHJ9dATLxOnB/EAhNK0gKh1Fco=;
-        b=UH2IfyXusyX27AyFqvv96OMoEEQuCaeNOqQBU03FTAAOeEtK71tyzd5Mt1Brb7atAT
-         l8wHuK81SNlkSIx9Nyhstmwz3PfaTX7ksD2FBFiAmaVR6qsg7etOIC7eyoflO6x6Kcfp
-         ceR/S/KCIm7tLhppFatwddLnORoFU7TyMNiFH3UmSyDRqR0v1VA98ZDnRg/CpXtqGIZz
-         W/Wqp9Pm9uwJ4urs4BeWeVsqP056yPQyxxCGimPtCBicDUVCr/PvX2EyRRX97NtutwX5
-         5tPnZfwWNqKc28WDUpkXjA8v9iw/qy9jSWRZLlpiR8gZthc6o7ARA85xlp+QtwNwRVa+
-         ULRQ==
-X-Gm-Message-State: ACgBeo1xaQIsqjMkPtUtxvndR/H8dmckj8tDwQYCZ+rSprB6NeVoAoUS
-	J+BwU5kUizNZMTUxarwWjWlsQg==
-X-Google-Smtp-Source: AA6agR7ABzhvw0hLX7UM5YEGmj7ooKpj1BWh9U8hMic6ls9gEZTIgOqBBSoD7neml/f66zDsZ4trLA==
-X-Received: by 2002:a05:6402:280f:b0:44e:ee5c:da6b with SMTP id h15-20020a056402280f00b0044eee5cda6bmr15219418ede.256.1662809547250;
-        Sat, 10 Sep 2022 04:32:27 -0700 (PDT)
-Received: from [10.41.110.194] ([77.241.232.28])
-        by smtp.gmail.com with ESMTPSA id g2-20020a17090604c200b00731582babcasm1625186eja.71.2022.09.10.04.32.25
+        bh=8Ag6mHz6RaJKAvIf3yWG8/NFxf6UdfL+MIDBEsLCyN8=;
+        b=x3kHTjFMvobn5FKW0CLEuo/ucjyo66EPUdDp+Mq41DTHHR0REW88LY8Pvr6ua8ZW2o
+         kywkt5HCKA8qrACXXO/SAZZPimuZxQGvIdJD2SmQeu2ZN4Phzr/VUTe7l4/cFL7qFDjt
+         jwLCiqD9DdKL48VLAAGrfjXjJ6dXXd+pkePlt3Ak1OvT9ivS5u4Z4LrKk8VC0V4haSj4
+         +C28/YGSpTwbS9xj9eSCXhlok6QJpQ0Tq7/Hsd1J8WD0ilEtcyeJsQTfgDO5i2cDI3B9
+         E4Bfxi7kIwoZFK267I62IuWXsnRNHc/PF8JlCGPupZTCXg2kjOmkn+CPz/IRwVr3w7Ue
+         NGdQ==
+X-Gm-Message-State: ACgBeo0vWbw41xWnPVq9LxVum8i+5TC1y1/CN4/KH/bKkW9iKYYmwvxH
+	eBDIN0IeV6HU1GnFMdkUP1aoogD5GNMI4wD6
+X-Google-Smtp-Source: AA6agR6l/1o9KPVR6GtRSUN/6LhKnQUVR80O3xKSuOcDWQt5wKNsZnh3qcOtdZWGGeWimCE3wtzgXg==
+X-Received: by 2002:a17:906:9750:b0:77b:6f08:986f with SMTP id o16-20020a170906975000b0077b6f08986fmr1210041ejy.416.1662809644338;
+        Sat, 10 Sep 2022 04:34:04 -0700 (PDT)
+Received: from [10.41.110.194] ([77.241.232.19])
+        by smtp.gmail.com with ESMTPSA id s1-20020a056402014100b0044e8d0682b2sm2014194edu.71.2022.09.10.04.34.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Sep 2022 04:32:26 -0700 (PDT)
-Message-ID: <c76b45ad-c4ef-5166-fec3-a05e2febcce3@kernel.dk>
-Date: Sat, 10 Sep 2022 05:32:25 -0600
+        Sat, 10 Sep 2022 04:34:03 -0700 (PDT)
+Message-ID: <bcabe527-7940-8658-1728-28d64bd3cf80@kernel.dk>
+Date: Sat, 10 Sep 2022 05:34:02 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: improve pagecache PSI annotations
+Subject: Re: [PATCH 1/5] mm: add PSI accounting around ->read_folio and
+ ->readahead calls
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Matthew Wilcox <willy@infradead.org>,
  Johannes Weiner <hannes@cmpxchg.org>, Suren Baghdasaryan
  <surenb@google.com>, Andrew Morton <akpm@linux-foundation.org>
 References: <20220910065058.3303831-1-hch@lst.de>
+ <20220910065058.3303831-2-hch@lst.de>
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220910065058.3303831-1-hch@lst.de>
+In-Reply-To: <20220910065058.3303831-2-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -88,30 +90,32 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 9/10/22 12:50 AM, Christoph Hellwig wrote:
-> Hi all,
-> 
-> currently the VM tries to abuse the block layer submission path for
-> the page cache PSI annotations.  This series instead annotates the
-> ->read_folio and ->readahead calls in the core VM code, and then
-> only deals with the odd direct add_to_page_cache_lru calls manually.
-> 
-> Diffstat:
->  block/bio.c               |    8 --------
->  block/blk-core.c          |   17 -----------------
->  fs/btrfs/compression.c    |   14 ++++++++++++--
->  fs/direct-io.c            |    2 --
->  fs/erofs/zdata.c          |   13 ++++++++++++-
->  include/linux/blk_types.h |    1 -
->  include/linux/pagemap.h   |    2 ++
->  kernel/sched/psi.c        |    2 ++
->  mm/filemap.c              |    7 +++++++
->  mm/readahead.c            |   22 ++++++++++++++++++----
->  10 files changed, 53 insertions(+), 35 deletions(-)
+> @@ -2390,8 +2392,13 @@ static int filemap_read_folio(struct file *file, filler_t filler,
+>  	 * fails.
+>  	 */
+>  	folio_clear_error(folio);
+> +
+>  	/* Start the actual read. The read will unlock the page. */
+> +	if (unlikely(workingset))
+> +		psi_memstall_enter(&pflags);
+>  	error = filler(file, folio);
+> +	if (unlikely(workingset))
+> +		psi_memstall_leave(&pflags);
+>  	if (error)
+>  		return error;
 
-Nice! It's always bothered me that we have this weird layering
-here.
+I think this would read better as:
+
+  	/* Start the actual read. The read will unlock the page. */
+	if (unlikely(workingset)) {
+		psi_memstall_enter(&pflags);
+		error = filler(file, folio);
+		psi_memstall_leave(&pflags);
+	} else {
+		error = filler(file, folio);
+	}
+  	if (error)
+  		return error;
 
 -- 
 Jens Axboe
-
-
