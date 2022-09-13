@@ -1,71 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 046FB5B6C30
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Sep 2022 13:07:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0C565B6DD8
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Sep 2022 15:00:10 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MRgdw61nFz3bnH
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Sep 2022 21:07:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MRk8P044mz304J
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Sep 2022 23:00:05 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=WRRnMuQ5;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FrvzOOFu;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102c; helo=mail-pj1-x102c.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::635; helo=mail-pl1-x635.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=WRRnMuQ5;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FrvzOOFu;
 	dkim-atps=neutral
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MRgdh4v5Gz2xvJ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Sep 2022 21:06:48 +1000 (AEST)
-Received: by mail-pj1-x102c.google.com with SMTP id q15-20020a17090a304f00b002002ac83485so11009212pjl.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 13 Sep 2022 04:06:48 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MRk8G3Xnmz2xHx
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Sep 2022 22:59:55 +1000 (AEST)
+Received: by mail-pl1-x635.google.com with SMTP id t3so11747072ply.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 13 Sep 2022 05:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date;
-        bh=8mkzjSRjFKMU3g2uHBonaE+/cKBJcje4WHjCeYyn5Xs=;
-        b=WRRnMuQ5Lf48hM8gQi6eeTIMn8UwJnvuDDpNilFcVdEIGaCsl9ERnAJriqEa1ZEfHN
-         taPqlIEkH+OFk/LszRMqoYTit2d/0poDUZzo8T87CgsdSb2x8asvQS1jShoMpWyct+j/
-         FW+oHP3VvO35i2v2agVfE4FxT6GRPRHtRKbjtBQK0rlVFO1WhKmOeHHCYMPOMyJxXjfc
-         vPo+SWwFsmh4sKXnrgSPEKz9GCVEFXe7hnrxlxt0bT1nTR08dOhbIkf84oKUay6BEH6x
-         0D0PT2JytXPkvA0/rpoUlPg2VYKKV9niGVtGHSbqcqhBhONJYcpU+pYlvIUfby+kGaIc
-         pR5g==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date;
+        bh=xG9hg062b2ZIS+JDzyuJF9PDLmjCBLQtx5EPxF5Afdo=;
+        b=FrvzOOFuTsDxW1FIWU2/cr+lbtpLEpLNQu1O2Fyq5PwLA6HtIbHcqBfIHFLkmr1nZD
+         +qXuzx5UW0q8G/FpJK+ycBdP1GopWgWOcbciCYmEs64d/0MGpiTVuGIPvh5/0pVlcGUk
+         SeV/tErBE3Hbe085vAvSzHaVvUKUrKOWXyeeqIyp1GrqzoopDGAeom8hwAPZ+J8Xi26I
+         SNAmBSojnSFF5EUtn/qOIVXxKV4/IFLDfr1nNkh7AH4HktInbBTbRFe5J/8FOiFBTEzK
+         VuVOkCwZjfcNqIET+2GOxutqogTqmjm9xJomlQp46C69+C5FW93IjB10faMrRZ0OR/eF
+         UHlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=8mkzjSRjFKMU3g2uHBonaE+/cKBJcje4WHjCeYyn5Xs=;
-        b=yqIvlcQgigfDxh26ii/RgH9DHufthVIir4Q4flZ81S9giD0PRd9LX+w8Il13WZNlJf
-         1C+trhW7rzFuPJzeK968bjtBh/lnUCvBH2dmVa1pWxn8P65Ul++Yg4ELvE99ryvKkV4C
-         Q/sQG1Mo97s0AWBG6aSemBJgIDJNISQrw9vynm1dVY93TZIQ3kYlhEfLxb7Em0CCn/Kx
-         rB10j3huEM5oqrqJ7xVjkTxUVZKfFS4EHaLExrroh2A3KqlZp/kYQaRqFopF0BP6mVEa
-         Dmo8u2V1MymFg+bcPsNGijxunrh/iNKgRmgoeKwtWeMcK+ypDdpxqTVlOHebKku7GbzW
-         V97g==
-X-Gm-Message-State: ACgBeo2m/wVb9ehZZWA/nTdjKr3tP1ImjxPc9S7hoNx+Hae0P3aD+164
-	/4nrHFjtpmFGbw7mFNYqEMmFwcI6CZA=
-X-Google-Smtp-Source: AA6agR60i5Jmhi23RnPgayTyVAQVNdUGw6XHH2oPUEweOmGWsirHXAJ9qzxrdsZQNxE7kKnr0MKL2Q==
-X-Received: by 2002:a17:90b:4a89:b0:202:d56e:e202 with SMTP id lp9-20020a17090b4a8900b00202d56ee202mr3340730pjb.22.1663067206251;
-        Tue, 13 Sep 2022 04:06:46 -0700 (PDT)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id cm3-20020a17090afa0300b002000d577cc3sm6888658pjb.55.2022.09.13.04.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 04:06:46 -0700 (PDT)
-From: Yue Hu <zbestahu@gmail.com>
-To: xiang@kernel.org,
-	chao@kernel.org
-Subject: [RFC PATCH v4 2/2] erofs: support on-disk compressed fragments data
-Date: Tue, 13 Sep 2022 19:05:52 +0800
-Message-Id: <6ded0c212d7da65b70c853fd04f21da229cdefb1.1663066966.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1663065625.git.huyue2@coolpad.com>
-References: <cover.1663065625.git.huyue2@coolpad.com>
-In-Reply-To: <cover.1663066966.git.huyue2@coolpad.com>
-References: <cover.1663066966.git.huyue2@coolpad.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date;
+        bh=xG9hg062b2ZIS+JDzyuJF9PDLmjCBLQtx5EPxF5Afdo=;
+        b=dZx62/3hfSxX1Bh5ez0qx/XwQMadHQbQo73K/vJCxW1Sd/+Pi+iYyJ3IU+Orgj9p7/
+         Tx02w6uRiuHDGOWTlXWOyF73jqQR0XC7E6EyfslVgFh0tWWK7Pbn5s2d15pij1qRYfdx
+         UZHBoxSSNPK70P85HoRPX7JxcWThSsB4WmJsbsLEEu4vKO+cJd6g0RnnaPCHqZMAvlKP
+         P4PbCCYyjzJ6Prmumiwg84yEpxuf2nt7ZGHOyPzceEOpZPJUquIFzvPZ68YLqr2gZezo
+         YmwiueXsXGYtvJrcbQ6dHeRXKrBPz4LfXBG3tB2WbK26DgFuhIJkiZzguQY/oz+f3aRm
+         AsKg==
+X-Gm-Message-State: ACgBeo2Z2Krd8K0//LVLAfabGsICz2DhWS/QlutVaI7qGoHC1AO6cIm/
+	v3D2Hz2gR8ClXG5VnsoO4+GWEg==
+X-Google-Smtp-Source: AA6agR5bhxWeNfqv9JPYlGg1fagPXBZrurfTVzo+IVWkH3d+2spTZ8UiMMiwfdk/y+jxRkZi4aAmnQ==
+X-Received: by 2002:a17:90a:1b6e:b0:1f5:1902:af92 with SMTP id q101-20020a17090a1b6e00b001f51902af92mr3984254pjq.238.1663073992788;
+        Tue, 13 Sep 2022 05:59:52 -0700 (PDT)
+Received: from [10.76.37.214] ([61.213.176.11])
+        by smtp.gmail.com with ESMTPSA id z8-20020aa79e48000000b0053b850b17c8sm7803611pfq.152.2022.09.13.05.59.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Sep 2022 05:59:52 -0700 (PDT)
+Message-ID: <23018405-bd62-45b6-d3d0-6f0acb5630f5@bytedance.com>
+Date: Tue, 13 Sep 2022 20:59:47 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.0
+Subject: Re: [External] Re: [PATCH V2 5/5] erofs: support fscache based shared
+ domain
+To: JeffleXu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org, chao@kernel.org
+References: <20220902105305.79687-1-zhujia.zj@bytedance.com>
+ <20220902105305.79687-6-zhujia.zj@bytedance.com>
+ <097a8ffb-c8b0-ed10-6c82-8a6de9bed09b@linux.alibaba.com>
+From: Jia Zhu <zhujia.zj@bytedance.com>
+In-Reply-To: <097a8ffb-c8b0-ed10-6c82-8a6de9bed09b@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,416 +83,208 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, zhangwen@coolpad.com, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, shaojunjun@coolpad.com
+Cc: linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
 
-Introduce on-disk compressed fragments data feature.
 
-This approach adds a new field called `h_fragmentoff' in the per-file
-compression header to indicate the fragment offset of each tail pcluster
-or the whole file in the special packed inode.
-
-Similar to ztailpacking, it will also find and record the 'headlcn'
-of the tail pcluster when initializing per-inode zmap for making
-follow-on requests more easy.
-
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- fs/erofs/erofs_fs.h | 29 +++++++++++++++++++++------
- fs/erofs/internal.h | 16 ++++++++++++---
- fs/erofs/super.c    | 15 ++++++++++++++
- fs/erofs/sysfs.c    |  2 ++
- fs/erofs/zdata.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++-
- fs/erofs/zmap.c     | 48 +++++++++++++++++++++++++++++++++++++++++++--
- 6 files changed, 146 insertions(+), 12 deletions(-)
-
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 5c1de6d7ad71..aa976757328b 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -25,6 +25,7 @@
- #define EROFS_FEATURE_INCOMPAT_DEVICE_TABLE	0x00000008
- #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
- #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
-+#define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-@@ -32,7 +33,8 @@
- 	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
- 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
--	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING)
-+	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
-+	 EROFS_FEATURE_INCOMPAT_FRAGMENTS)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-@@ -71,7 +73,9 @@ struct erofs_super_block {
- 	} __packed u1;
- 	__le16 extra_devices;	/* # of devices besides the primary device */
- 	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
--	__u8 reserved2[38];
-+	__u8 reserved[6];
-+	__le64 packed_nid;	/* nid of the special packed inode */
-+	__u8 reserved2[24];
- };
- 
- /*
-@@ -296,17 +300,26 @@ struct z_erofs_lzma_cfgs {
-  * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-  * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
-  * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
-+ * bit 5 : fragment pcluster (0 - off; 1 - on)
-  */
- #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
- #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
- #define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
-+#define Z_EROFS_ADVISE_FRAGMENT_PCLUSTER	0x0020
- 
-+#define Z_EROFS_FRAGMENT_INODE_BIT              7
- struct z_erofs_map_header {
--	__le16	h_reserved1;
--	/* indicates the encoded size of tailpacking data */
--	__le16  h_idata_size;
-+	union {
-+		/* fragment data offset in the packed inode */
-+		__le32  h_fragmentoff;
-+		struct {
-+			__le16  h_reserved1;
-+			/* indicates the encoded size of tailpacking data */
-+			__le16  h_idata_size;
-+		};
-+	};
- 	__le16	h_advise;
- 	/*
- 	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
-@@ -315,7 +328,8 @@ struct z_erofs_map_header {
- 	__u8	h_algorithmtype;
- 	/*
- 	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
--	 * bit 3-7 : reserved.
-+	 * bit 3-6 : reserved;
-+	 * bit 7   : move the whole file into packed inode or not.
- 	 */
- 	__u8	h_clusterbits;
- };
-@@ -421,6 +435,9 @@ static inline void erofs_check_ondisk_layout_definitions(void)
- 
- 	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
- 		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
-+	WARN_ON(*(__le64 *)&(struct z_erofs_map_header) {
-+			.h_clusterbits = 1 << Z_EROFS_FRAGMENT_INODE_BIT
-+		} != cpu_to_le64(1ULL << 63));
- }
- 
- #endif
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index f3ed36445d73..b133664b4ad2 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -120,6 +120,7 @@ struct erofs_sb_info {
- 	struct inode *managed_cache;
- 
- 	struct erofs_sb_lz4_info lz4;
-+	struct inode *packed_inode;
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	struct erofs_dev_context *devs;
- 	struct dax_device *dax_dev;
-@@ -306,6 +307,7 @@ EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
- EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
- EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
- EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
-+EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- 
- /* atomic flag definitions */
-@@ -341,8 +343,13 @@ struct erofs_inode {
- 			unsigned char  z_algorithmtype[2];
- 			unsigned char  z_logical_clusterbits;
- 			unsigned long  z_tailextent_headlcn;
--			erofs_off_t    z_idataoff;
--			unsigned short z_idata_size;
-+			union {
-+				struct {
-+					erofs_off_t    z_idataoff;
-+					unsigned short z_idata_size;
-+				};
-+				erofs_off_t z_fragmentoff;
-+			};
- 		};
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	};
-@@ -400,6 +407,7 @@ extern const struct address_space_operations z_erofs_aops;
- enum {
- 	BH_Encoded = BH_PrivateStart,
- 	BH_FullMapped,
-+	BH_Fragment,
- };
- 
- /* Has a disk mapping */
-@@ -410,6 +418,8 @@ enum {
- #define EROFS_MAP_ENCODED	(1 << BH_Encoded)
- /* The length of extent is full */
- #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
-+/* Located in the special packed inode */
-+#define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
- 
- struct erofs_map_blocks {
- 	struct erofs_buf buf;
-@@ -431,7 +441,7 @@ struct erofs_map_blocks {
- #define EROFS_GET_BLOCKS_FIEMAP	0x0002
- /* Used to map the whole extent if non-negligible data is requested for LZMA */
- #define EROFS_GET_BLOCKS_READMORE	0x0004
--/* Used to map tail extent for tailpacking inline pcluster */
-+/* Used to map tail extent for tailpacking inline or fragment pcluster */
- #define EROFS_GET_BLOCKS_FINDTAIL	0x0008
- 
- enum {
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3173debeaa5a..8170c0d8ab92 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -381,6 +381,17 @@ static int erofs_read_superblock(struct super_block *sb)
- #endif
- 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
- 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-+#ifdef CONFIG_EROFS_FS_ZIP
-+	sbi->packed_inode = NULL;
-+	if (erofs_sb_has_fragments(sbi)) {
-+		sbi->packed_inode =
-+			erofs_iget(sb, le64_to_cpu(dsb->packed_nid), false);
-+		if (IS_ERR(sbi->packed_inode)) {
-+			ret = PTR_ERR(sbi->packed_inode);
-+			goto out;
-+		}
-+	}
-+#endif
- 	sbi->inos = le64_to_cpu(dsb->inos);
- 
- 	sbi->build_time = le64_to_cpu(dsb->build_time);
-@@ -411,6 +422,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 		erofs_info(sb, "EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
- 	if (erofs_is_fscache_mode(sb))
- 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
-+	if (erofs_sb_has_fragments(sbi))
-+		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
- out:
- 	erofs_put_metabuf(&buf);
- 	return ret;
-@@ -908,6 +921,8 @@ static void erofs_put_super(struct super_block *sb)
- #ifdef CONFIG_EROFS_FS_ZIP
- 	iput(sbi->managed_cache);
- 	sbi->managed_cache = NULL;
-+	iput(sbi->packed_inode);
-+	sbi->packed_inode = NULL;
- #endif
- 	erofs_fscache_unregister_cookie(&sbi->s_fscache);
- }
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index c1383e508bbe..1b52395be82a 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -76,6 +76,7 @@ EROFS_ATTR_FEATURE(device_table);
- EROFS_ATTR_FEATURE(compr_head2);
- EROFS_ATTR_FEATURE(sb_chksum);
- EROFS_ATTR_FEATURE(ztailpacking);
-+EROFS_ATTR_FEATURE(fragments);
- 
- static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(zero_padding),
-@@ -86,6 +87,7 @@ static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(compr_head2),
- 	ATTR_LIST(sb_chksum),
- 	ATTR_LIST(ztailpacking),
-+	ATTR_LIST(fragments),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(erofs_feat);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5792ca9e0d5e..aa2a3cdeea57 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -650,6 +650,33 @@ static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
- 		la < fe->headoffset;
- }
- 
-+static int z_erofs_read_fragment(struct inode *inode, erofs_off_t pos,
-+				 struct page *page, unsigned int pageofs,
-+				 unsigned int len)
-+{
-+	struct inode *packed_inode = EROFS_I_SB(inode)->packed_inode;
-+	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+	u8 *src, *dst;
-+	unsigned int i, cnt;
-+
-+	pos += EROFS_I(inode)->z_fragmentoff;
-+	for (i = 0; i < len; i += cnt) {
-+		cnt = min_t(unsigned int, len - i,
-+			    EROFS_BLKSIZ - erofs_blkoff(pos));
-+		src = erofs_bread(&buf, packed_inode,
-+				  erofs_blknr(pos), EROFS_KMAP);
-+		if (IS_ERR(src))
-+			return PTR_ERR(src);
-+
-+		dst = kmap_local_page(page);
-+		memcpy(dst + pageofs + i, src + erofs_blkoff(pos), cnt);
-+		kunmap_local(dst);
-+		pos += cnt;
-+	}
-+	erofs_put_metabuf(&buf);
-+	return 0;
-+}
-+
- static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 				struct page *page, struct page **pagepool)
- {
-@@ -688,7 +715,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		/* didn't get a valid pcluster previously (very rare) */
- 	}
- 
--	if (!(map->m_flags & EROFS_MAP_MAPPED))
-+	if (!(map->m_flags & EROFS_MAP_MAPPED) ||
-+	    map->m_flags & EROFS_MAP_FRAGMENT)
- 		goto hitted;
- 
- 	err = z_erofs_collector_begin(fe);
-@@ -735,6 +763,24 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		zero_user_segment(page, cur, end);
- 		goto next_part;
- 	}
-+	if (map->m_flags & EROFS_MAP_FRAGMENT) {
-+		unsigned int pageofs, skip, len;
-+
-+		if (offset > map->m_la) {
-+			pageofs = 0;
-+			skip = offset - map->m_la;
-+		} else {
-+			pageofs = map->m_la & ~PAGE_MASK;
-+			skip = 0;
-+		}
-+		len = min_t(unsigned int, map->m_llen - skip, end - cur);
-+		err = z_erofs_read_fragment(inode, skip, page, pageofs, len);
-+		if (err)
-+			goto out;
-+		++spiltted;
-+		tight = false;
-+		goto next_part;
-+	}
- 
- 	exclusive = (!cur && (!spiltted || tight));
- 	if (cur)
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7196235a441c..6830999529d7 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -69,6 +69,16 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	}
- 
- 	h = kaddr + erofs_blkoff(pos);
-+	/*
-+	 * if the highest bit of the 8-byte map header is set, the whole file
-+	 * is stored in the packed inode. The rest bits keeps z_fragmentoff.
-+	 */
-+	if (h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT) {
-+		vi->z_advise = Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
-+		vi->z_fragmentoff = le64_to_cpu(*(__le64 *)h) ^ (1ULL << 63);
-+		vi->z_tailextent_headlcn = 0;
-+		goto unmap_done;
-+	}
- 	vi->z_advise = le16_to_cpu(h->h_advise);
- 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
- 	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
-@@ -123,6 +133,20 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		if (err < 0)
- 			goto out_unlock;
- 	}
-+
-+	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
-+	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
-+		struct erofs_map_blocks map = {
-+			.buf = __EROFS_BUF_INITIALIZER
-+		};
-+
-+		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
-+		err = z_erofs_do_map_blocks(inode, &map,
-+					    EROFS_GET_BLOCKS_FINDTAIL);
-+		erofs_put_metabuf(&map.buf);
-+		if (err < 0)
-+			goto out_unlock;
-+	}
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
-@@ -598,6 +622,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
- 	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
-+	bool fragment = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
- 	struct z_erofs_maprecorder m = {
- 		.inode = inode,
- 		.map = map,
-@@ -666,12 +691,20 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 
- 	map->m_llen = end - map->m_la;
- 
--	if (flags & EROFS_GET_BLOCKS_FINDTAIL)
-+	if (flags & EROFS_GET_BLOCKS_FINDTAIL) {
- 		vi->z_tailextent_headlcn = m.lcn;
-+		/* for non-compact indexes, fragmentoff is 64 bits */
-+		if (fragment &&
-+		    vi->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
-+			vi->z_fragmentoff |= (u64)m.pblk << 32;
-+	}
- 	if (ztailpacking && m.lcn == vi->z_tailextent_headlcn) {
- 		map->m_flags |= EROFS_MAP_META;
- 		map->m_pa = vi->z_idataoff;
- 		map->m_plen = vi->z_idata_size;
-+	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
-+		map->m_flags |= EROFS_MAP_FRAGMENT;
-+		DBG_BUGON(!map->m_la);
- 	} else {
- 		map->m_pa = blknr_to_addr(m.pblk);
- 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
-@@ -715,6 +748,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 			    struct erofs_map_blocks *map,
- 			    int flags)
- {
-+	struct erofs_inode *const vi = EROFS_I(inode);
- 	int err = 0;
- 
- 	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
-@@ -731,6 +765,15 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 	if (err)
- 		goto out;
- 
-+	if ((vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER) &&
-+	    !vi->z_tailextent_headlcn) {
-+		map->m_la = 0;
-+		map->m_llen = inode->i_size;
-+		map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_FULL_MAPPED |
-+				EROFS_MAP_FRAGMENT;
-+		goto out;
-+	}
-+
- 	err = z_erofs_do_map_blocks(inode, map, flags);
- out:
- 	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
-@@ -757,7 +800,8 @@ static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
- 	iomap->length = map.m_llen;
- 	if (map.m_flags & EROFS_MAP_MAPPED) {
- 		iomap->type = IOMAP_MAPPED;
--		iomap->addr = map.m_pa;
-+		iomap->addr = map.m_flags & EROFS_MAP_FRAGMENT ?
-+			      IOMAP_NULL_ADDR : map.m_pa;
- 	} else {
- 		iomap->type = IOMAP_HOLE;
- 		iomap->addr = IOMAP_NULL_ADDR;
--- 
-2.17.1
-
+在 2022/9/13 14:27, JeffleXu 写道:
+> 
+> 
+> On 9/2/22 6:53 PM, Jia Zhu wrote:
+>> Several erofs filesystems can belong to one domain, and data blobs can
+>> be shared among these erofs filesystems of same domain.
+>>
+>> Users could specify domain_id mount option to create or join into a domain.
+>>
+>> Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+>> ---
+>>   fs/erofs/fscache.c  | 73 +++++++++++++++++++++++++++++++++++++++++++++
+>>   fs/erofs/internal.h | 12 ++++++++
+>>   fs/erofs/super.c    | 10 +++++--
+>>   3 files changed, 93 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+>> index 439dd3cc096a..c01845808ede 100644
+>> --- a/fs/erofs/fscache.c
+>> +++ b/fs/erofs/fscache.c
+>> @@ -559,12 +559,27 @@ int erofs_fscache_register_cookie(struct super_block *sb,
+>>   void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
+>>   {
+>>   	struct erofs_fscache *ctx = *fscache;
+>> +	struct erofs_domain *domain;
+>>   
+>>   	if (!ctx)
+>>   		return;
+>> +	domain = ctx->domain;
+>> +	if (domain) {
+>> +		mutex_lock(&domain->mutex);
+>> +		/* Cookie is still in use */
+>> +		if (atomic_read(&ctx->anon_inode->i_count) > 1) {
+>> +			iput(ctx->anon_inode);
+>> +			mutex_unlock(&domain->mutex);
+>> +			return;
+>> +		}
+>> +		iput(ctx->anon_inode);
+>> +		kfree(ctx->name);
+>> +		mutex_unlock(&domain->mutex);
+>> +	}
+>>   
+>>   	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
+>>   	fscache_relinquish_cookie(ctx->cookie, false);
+>> +	erofs_fscache_domain_put(domain);
+>>   	ctx->cookie = NULL;
+>>   
+>>   	iput(ctx->inode);
+>> @@ -609,3 +624,61 @@ void erofs_fscache_unregister_fs(struct super_block *sb)
+>>   	sbi->volume = NULL;
+>>   	sbi->domain = NULL;
+>>   }
+>> +
+>> +static int erofs_fscache_domain_init_cookie(struct super_block *sb,
+>> +		struct erofs_fscache **fscache, char *name, bool need_inode)
+>> +{
+>> +	int ret;
+>> +	struct inode *inode;
+>> +	struct erofs_fscache *ctx;
+>> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>> +	struct erofs_domain *domain = sbi->domain;
+>> +
+>> +	ret = erofs_fscache_register_cookie(sb, &ctx, name, need_inode);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ctx->name = kstrdup(name, GFP_KERNEL);
+>> +	if (!ctx->name)
+>> +		return -ENOMEM;
+> 
+> Shall we clean up the above registered cookie in the error path?
+> 
+If this step fails, error will be transmitted to vfs_get_tree() and
+erofs_kill_sb() will relinquish the cookie.
+>> +
+>> +	inode = new_inode(erofs_pseudo_mnt->mnt_sb);
+>> +	if (!inode) {
+>> +		kfree(ctx->name);
+>> +		return -ENOMEM;
+>> +	}
+> 
+> Ditto.
+> 
+>> +
+>> +	ctx->domain = domain;
+>> +	ctx->anon_inode = inode;
+>> +	inode->i_private = ctx;
+>> +	erofs_fscache_domain_get(domain);
+>> +	*fscache = ctx;
+>> +	return 0;
+>> +}
+>> +
+>> +int erofs_domain_register_cookie(struct super_block *sb,
+>> +	struct erofs_fscache **fscache, char *name, bool need_inode)
+>> +{
+>> +	int err;
+>> +	struct inode *inode;
+>> +	struct erofs_fscache *ctx;
+>> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>> +	struct erofs_domain *domain = sbi->domain;
+>> +	struct super_block *psb = erofs_pseudo_mnt->mnt_sb;
+>> +
+>> +	mutex_lock(&domain->mutex);
+> 
+> What is domain->mutex used for?
+> 
+This lock is used to avoid race conditions between cookie's
+traverse/del/insert in the inode list.
+It seems to be possible to increase the granularity of the lock
+after v2's change "Only initialize one pseudo fs to manage anonymous 
+inodes(cookies).".
+> 
+>> +	list_for_each_entry(inode, &psb->s_inodes, i_sb_list) {
+>> +		ctx = inode->i_private;
+>> +		if (!ctx)
+>> +			continue;
+>> +		if (!strcmp(ctx->name, name)) {
+>> +			*fscache = ctx;
+>> +			igrab(inode);
+>> +			mutex_unlock(&domain->mutex);
+>> +			return 0;
+>> +		}
+>> +	}
+>> +	err = erofs_fscache_domain_init_cookie(sb, fscache, name, need_inode);
+>> +	mutex_unlock(&domain->mutex);
+>> +	return err;
+>> +}
+>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+>> index 2790c93ffb83..efa4f4ad77cc 100644
+>> --- a/fs/erofs/internal.h
+>> +++ b/fs/erofs/internal.h
+>> @@ -110,6 +110,9 @@ struct erofs_domain {
+>>   struct erofs_fscache {
+>>   	struct fscache_cookie *cookie;
+>>   	struct inode *inode;
+>> +	struct inode *anon_inode;
+> 
+> Why can't we reuse @inode for anon_inode?
+> 
+We use pseudo sb's anonymous inodes list to manage the cookie.
+Wouldn't it be a bit of messy if reuses erofs meta inode?
+> 
+>> +	struct erofs_domain *domain;
+>> +	char *name;
+>>   };
+>>   
+>>   struct erofs_sb_info {
+>> @@ -625,6 +628,9 @@ int erofs_fscache_register_domain(struct super_block *sb);
+>>   int erofs_fscache_register_cookie(struct super_block *sb,
+>>   				  struct erofs_fscache **fscache,
+>>   				  char *name, bool need_inode);
+>> +int erofs_domain_register_cookie(struct super_block *sb,
+>> +				  struct erofs_fscache **fscache,
+>> +				  char *name, bool need_inode);
+>>   void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache);
+>>   
+>>   extern const struct address_space_operations erofs_fscache_access_aops;
+>> @@ -646,6 +652,12 @@ static inline int erofs_fscache_register_cookie(struct super_block *sb,
+>>   {
+>>   	return -EOPNOTSUPP;
+>>   }
+>> +static inline int erofs_domain_register_cookie(struct super_block *sb,
+>> +						struct erofs_fscache **fscache,
+>> +						char *name, bool need_inode)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>>   
+>>   static inline void erofs_fscache_unregister_cookie(struct erofs_fscache **fscache)
+>>   {
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index 667a78f0ee70..11c5ba84567c 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -245,8 +245,12 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+>>   	}
+>>   
+>>   	if (erofs_is_fscache_mode(sb)) {
+>> -		ret = erofs_fscache_register_cookie(sb, &dif->fscache,
+>> -				dif->path, false);
+>> +		if (sbi->opt.domain_id)
+>> +			ret = erofs_domain_register_cookie(sb, &dif->fscache, dif->path,
+>> +					false);
+>> +		else
+>> +			ret = erofs_fscache_register_cookie(sb, &dif->fscache, dif->path,
+>> +					false);
+>>   		if (ret)
+>>   			return ret;
+>>   	} else {
+>> @@ -726,6 +730,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>>   			err = erofs_fscache_register_domain(sb);
+>>   			if (err)
+>>   				return err;
+>> +			err = erofs_domain_register_cookie(sb, &sbi->s_fscache,
+>> +					sbi->opt.fsid, true);
+>>   		} else {
+>>   			err = erofs_fscache_register_fs(sb);
+>>   			if (err)
+> 
