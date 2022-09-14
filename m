@@ -2,71 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7491C5B8779
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Sep 2022 13:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 824485B877E
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Sep 2022 13:48:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MSJVX2D2Nz3bbj
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Sep 2022 21:47:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MSJWC2gLRz3bbj
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Sep 2022 21:48:23 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=cmpxchg-org.20210112.gappssmtp.com header.i=@cmpxchg-org.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=gNw8KIHA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=cmpxchg-org.20210112.gappssmtp.com header.i=@cmpxchg-org.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FuvRBy/Y;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cmpxchg.org (client-ip=2a00:1450:4864:20::32b; helo=mail-wm1-x32b.google.com; envelope-from=hannes@cmpxchg.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=cmpxchg-org.20210112.gappssmtp.com header.i=@cmpxchg-org.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=gNw8KIHA;
+	dkim=pass (2048-bit key; unprotected) header.d=cmpxchg-org.20210112.gappssmtp.com header.i=@cmpxchg-org.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FuvRBy/Y;
 	dkim-atps=neutral
 Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MSJVS6n2Jz2yMk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Sep 2022 21:47:44 +1000 (AEST)
-Received: by mail-wm1-x32b.google.com with SMTP id ay7-20020a05600c1e0700b003b49861bf48so2143702wmb.0
-        for <linux-erofs@lists.ozlabs.org>; Wed, 14 Sep 2022 04:47:44 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MSJW74d1Pz2yMk
+	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Sep 2022 21:48:19 +1000 (AEST)
+Received: by mail-wm1-x32b.google.com with SMTP id az24-20020a05600c601800b003a842e4983cso11383178wmb.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 14 Sep 2022 04:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=jkjInFA4v6207rYNR9PZy7GQsLdw9JOAYyp4dYZPwKo=;
-        b=gNw8KIHA1akV3WAIG3mTyAM9FwwfR45IWHpt7v8NJ/D3h8AuPnRAR4Fr9l6bY4Z+l+
-         yBth3uvMnFhQguK7OFTCFEvob15XvvYYkQE6d5COR/F3dEL9EtIxWGeLd3Ti+huvh2AS
-         UBiZdvfDAe2ffljdOWuaI7kc+tuNrsOiJfuhmKifgcExmxx2CxBo4QEmKguep2CjcgBi
-         Mp80NzZ2QTsl+f2ooHri9mIxl/A9EFiJh010AdjbJ9RG0BFdICtooF0X4b+3YpOiUcxo
-         PiaQDy5iGBG39jXagGb5CLj0tueVl6vvcptlPqe1xaYjbhuQ/GbIW0ZWRwxqmB33Cc8w
-         iz1w==
+        bh=ekhj2cbi3pFqj5WaOvlPJtFmfVNyvuw6Du6P5WWhCmQ=;
+        b=FuvRBy/YDM9LvorkFgZMIarw2akZH9vRnqqyhXP4k4jBOCqDTdBb19LVMnYiY8f/KT
+         Ac8yoGMc0IM7/slzBhY+mUCg70lPo4PTje6o4SeKZfGlbpbep8XuBNqGbD1vPCk3SQ7/
+         k0/fIt9gCA/7yY9b3TuFHeyaudSHRxPL8W/uv2JsW9w5PhZwyFvP66FkbmQ4vdMDliSF
+         U6oj+1Ag2EPqDq3bYXfISpy8s7xWiAIIm70MSaPiR3gvV+pa1mKtP5n8Un8YJxCaXTsU
+         +jehRcd4Tur+HMGOVDfj1OkDtsXFw1Ij31j8iYZdnQDYyNwrqDF6ajaYSf/hlAW+igEL
+         tu2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=jkjInFA4v6207rYNR9PZy7GQsLdw9JOAYyp4dYZPwKo=;
-        b=PPzTs85UxT4miVxr/7cjrnP2FseX0FQrTaRMw8R+ttD8TofKtKo2Enx/3jWCyYiqr8
-         cpenQc1EW+aS8gyGZI1vk9vZwqXn6nkw9NLkpz/34Sy7kszOvJO5A1Cv49aIAZVhEZf9
-         1bs5Kh2TmhKgWQr6nh0XyFsa5EN3a1n6XKSRawP+jEq2C4fgDiEq9h/ls9qnNwOC+EBx
-         fB5F1MTwrBBalNN9SmH6pWHed4ACB5EzY0N4WFLM/iAz04biPtMVeY4X5qYdf5FNly2d
-         tq5ukLc5d5DhbfddhkqSqOVCnRTiU4/YNnrJ0XUeBJjc5E6xhACAkt8KuEU3ky//LXYe
-         PkDw==
-X-Gm-Message-State: ACgBeo0qp06f6E657Gp2EtX9JivZp/AEG3nda8QxkewGB35rqlVHEPXv
-	KDlIq9DqiPL6kkY6Jj7ugvVhgA==
-X-Google-Smtp-Source: AA6agR6aSV3jXyKXuS6Lp8ysxs2qtNOBdPRNKt7wbfiui0ec8Ug1sA6v6mmiNfrSa5l3/MzmVoabgw==
-X-Received: by 2002:a7b:c84c:0:b0:3b3:3faa:10c3 with SMTP id c12-20020a7bc84c000000b003b33faa10c3mr2800743wml.94.1663156061281;
-        Wed, 14 Sep 2022 04:47:41 -0700 (PDT)
+        bh=ekhj2cbi3pFqj5WaOvlPJtFmfVNyvuw6Du6P5WWhCmQ=;
+        b=wt7jEh0EaJUceRnXkDEinPYhzGXSOT+9SZn5M53jKBGUOYfU74+rb0BiWYoE2c2lvc
+         MAzxCRPSrHuvqP60gDqtn44wfqdcHGLzd/7L//Vsh38NSw1EXFySDCgnHkHfS+ltRkwq
+         UMoOeeq+SxUxGpijDcax5SYhsAZimxwuAqZDOnZJ190OYLgM8gzHe4PqORffw0pJn2N1
+         Qz3d041bQiMZW6ops73gGvea3+VxYi3x6f6N1/gVU4cOMuwI8JCz61cACHPXi1pBb673
+         ColLEoG+CHl2GxNExRuq665NXlRrUwLtQC2kWxY0EEErsEvpKm3Wgh4cOcc7+8SVW1AU
+         Y/zA==
+X-Gm-Message-State: ACgBeo10LBwIUsJEwtDEYzUc06a049Fz4Y5O+X5cfVSuxcoiXoUZLjku
+	RZtYqP26sQ+cUACTtg45ud6jgA==
+X-Google-Smtp-Source: AA6agR5ezVjBKHmGNFAxhaPLrFFF0Krm6Pp93Ol6cKN8R23OK6bW1ticeztjxY3umNpndws1iPQzIA==
+X-Received: by 2002:a05:600c:4793:b0:3b4:7276:1c5e with SMTP id k19-20020a05600c479300b003b472761c5emr2866737wmo.118.1663156096067;
+        Wed, 14 Sep 2022 04:48:16 -0700 (PDT)
 Received: from localhost ([185.122.133.20])
-        by smtp.gmail.com with ESMTPSA id n9-20020a5d6609000000b0021e51c039c5sm13066031wru.80.2022.09.14.04.47.40
+        by smtp.gmail.com with ESMTPSA id t12-20020a05600c198c00b003b47e75b401sm13069133wmq.37.2022.09.14.04.48.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 04:47:40 -0700 (PDT)
-Date: Wed, 14 Sep 2022 12:47:40 +0100
+        Wed, 14 Sep 2022 04:48:15 -0700 (PDT)
+Date: Wed, 14 Sep 2022 12:48:15 +0100
 From: Johannes Weiner <hannes@cmpxchg.org>
 To: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4/5] erofs: add manual PSI accounting for the compressed
- address space
-Message-ID: <YyG/XKXFNxk+HfXf@cmpxchg.org>
+Subject: Re: [PATCH 5/5] block: remove PSI accounting from the bio layer
+Message-ID: <YyG/f5AjkcKcbC6K@cmpxchg.org>
 References: <20220910065058.3303831-1-hch@lst.de>
- <20220910065058.3303831-5-hch@lst.de>
+ <20220910065058.3303831-6-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220910065058.3303831-5-hch@lst.de>
+In-Reply-To: <20220910065058.3303831-6-hch@lst.de>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,14 +81,12 @@ Cc: Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, linux-erofs@lists.ozlabs.o
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Sep 10, 2022 at 08:50:57AM +0200, Christoph Hellwig wrote:
-> erofs uses an additional address space for compressed data read from disk
-> in addition to the one directly associated with the inode.  Reading into
-> the lower address space is open coded using add_to_page_cache_lru instead
-> of using the filemap.c helper for page allocation micro-optimizations,
-> which means it is not covered by the MM PSI annotations for ->read_folio
-> and ->readahead, so add manual ones instead.
+On Sat, Sep 10, 2022 at 08:50:58AM +0200, Christoph Hellwig wrote:
+> PSI accounting is now done by the VM code, where it should have been
+> since the beginning.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Nice!
 
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
