@@ -2,48 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8B4C5B97B1
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Sep 2022 11:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3C255B97B2
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Sep 2022 11:42:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MSsgh24Bxz3bkh
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Sep 2022 19:42:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MSsgk5h9Zz3bl3
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Sep 2022 19:42:42 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LBYTaNgK;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bXeNhFFD;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+aa90abf7a61f323a8d2f+6962+infradead.org+hch@bombadil.srs.infradead.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LBYTaNgK;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=bXeNhFFD;
 	dkim-atps=neutral
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MSsgM5npYz3052
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Sep 2022 19:42:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MSsgN5d5zz3052
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Sep 2022 19:42:24 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=zSqQSYiG/yhGt5jVAkpLYmREyG39C2nKNIUNc2bjsak=; b=LBYTaNgK69SCGNd0NypzW88Xv5
-	Yx58YrbfYXYM3VU1TTaXmnHJhmAosi9GxG5fHizuaiSpsfQyyTrQq+gWKQKGswDMr3IXN1ZrWzMVP
-	UY1tiT8IDnZgbhBOAQ3xCJ+2VZ7AX9J7984+cTjW67hOwi9a/fxdM4uq9b3MQocffDqEAIF78Qo78
-	gqCr/pS8eAu+ePAIAL48Nsgbsq1v9+2L+IYizWE+7uXKkal5cK3KhOBwcusamcfxoDVeuG3s8KEDX
-	vjUdj6mQwI2K2tNhBci5SxLXAld8gZc6Vz+gdOMjtgn/GsCCBLZKbXJ5lYzK1oAc2wfdMZD/5hqfX
-	L5xq1muA==;
+	bh=PzlrQ8oKvfWNjDBiduvx+RzNOBIgqE2Y/9GDFrAa5zA=; b=bXeNhFFDCpfkRWHXmWzdHwlB5U
+	ebzGk7+4exPACeou4fI+Sm6JQFfbX33mPhr7e+OY/vsBOl+7KB4pjS4bZIZmQBKspIrcU6Do7JYgB
+	H66JJ5LEpcNzjlgpmde8OXP0YN93isg92RFIGpYP4eIsiAM2zsRgJ64ui9RH8ZXVhVfDu0YBFF3LE
+	M5dml3Id3wks6W5Ui9PYxUv0W0G0mv5pIbLUdioFpLJQdNk+eUZyJq95PBmrV2Ra3D8ir74eOeDfy
+	DZdcZFhb46yvO66ykAJ0TjIXLo+uKG2Nxo+zFLhSQr8Qeiaf7+ctmRj1h1E2s4mnsAnzj/LV9UNQv
+	0kRBcInw==;
 Received: from [185.122.133.20] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oYlNs-005b4u-GP; Thu, 15 Sep 2022 09:42:13 +0000
+	id 1oYlNu-005b8U-Qp; Thu, 15 Sep 2022 09:42:15 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	Matthew Wilcox <willy@infradead.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/5] erofs: add manual PSI accounting for the compressed address space
-Date: Thu, 15 Sep 2022 10:41:59 +0100
-Message-Id: <20220915094200.139713-5-hch@lst.de>
+Subject: [PATCH 5/5] block: remove PSI accounting from the bio layer
+Date: Thu, 15 Sep 2022 10:42:00 +0100
+Message-Id: <20220915094200.139713-6-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220915094200.139713-1-hch@lst.de>
 References: <20220915094200.139713-1-hch@lst.de>
@@ -61,74 +61,115 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-mm@kvack.org, Josef Bacik <josef@toxicpanda.com>, linux-block@vger.kernel.org, Chris Mason <clm@fb.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: linux-mm@kvack.org, Josef Bacik <josef@toxicpanda.com>, linux-block@vger.kernel.org, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-erofs uses an additional address space for compressed data read from disk
-in addition to the one directly associated with the inode.  Reading into
-the lower address space is open coded using add_to_page_cache_lru instead
-of using the filemap.c helper for page allocation micro-optimizations,
-which means it is not covered by the MM PSI annotations for ->read_folio
-and ->readahead, so add manual ones instead.
+PSI accounting is now done by the VM code, where it should have been
+since the beginning.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ block/bio.c               |  8 --------
+ block/blk-core.c          | 17 -----------------
+ fs/direct-io.c            |  2 --
+ include/linux/blk_types.h |  1 -
+ 4 files changed, 28 deletions(-)
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5792ca9e0d5ef..143a101a36887 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -7,6 +7,7 @@
- #include "zdata.h"
- #include "compress.h"
- #include <linux/prefetch.h>
-+#include <linux/psi.h>
+diff --git a/block/bio.c b/block/bio.c
+index 3d3a2678fea25..d10c4e888cdcf 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1065,9 +1065,6 @@ void __bio_add_page(struct bio *bio, struct page *page,
  
- #include <trace/events/erofs.h>
+ 	bio->bi_iter.bi_size += len;
+ 	bio->bi_vcnt++;
+-
+-	if (!bio_flagged(bio, BIO_WORKINGSET) && unlikely(PageWorkingset(page)))
+-		bio_set_flag(bio, BIO_WORKINGSET);
+ }
+ EXPORT_SYMBOL_GPL(__bio_add_page);
  
-@@ -1365,6 +1366,8 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 	struct block_device *last_bdev;
- 	unsigned int nr_bios = 0;
- 	struct bio *bio = NULL;
-+	/* initialize to 1 to make skip psi_memstall_leave unless needed */
-+	unsigned long pflags = 1;
+@@ -1276,9 +1273,6 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+  * fit into the bio, or are requested in @iter, whatever is smaller. If
+  * MM encounters an error pinning the requested pages, it stops. Error
+  * is returned only if 0 pages could be pinned.
+- *
+- * It's intended for direct IO, so doesn't do PSI tracking, the caller is
+- * responsible for setting BIO_WORKINGSET if necessary.
+  */
+ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ {
+@@ -1294,8 +1288,6 @@ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 		ret = __bio_iov_iter_get_pages(bio, iter);
+ 	} while (!ret && iov_iter_count(iter) && !bio_full(bio, 0));
  
- 	bi_private = jobqueueset_init(sb, q, fgq, force_fg);
- 	qtail[JQ_BYPASS] = &q[JQ_BYPASS]->head;
-@@ -1414,10 +1417,15 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 			if (bio && (cur != last_index + 1 ||
- 				    last_bdev != mdev.m_bdev)) {
- submit_bio_retry:
-+				if (!pflags)
-+					psi_memstall_leave(&pflags);
- 				submit_bio(bio);
- 				bio = NULL;
- 			}
+-	/* don't account direct I/O as memory stall */
+-	bio_clear_flag(bio, BIO_WORKINGSET);
+ 	return bio->bi_vcnt ? 0 : ret;
+ }
+ EXPORT_SYMBOL_GPL(bio_iov_iter_get_pages);
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a0d1104c5590c..9e19195af6f5b 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -37,7 +37,6 @@
+ #include <linux/t10-pi.h>
+ #include <linux/debugfs.h>
+ #include <linux/bpf.h>
+-#include <linux/psi.h>
+ #include <linux/part_stat.h>
+ #include <linux/sched/sysctl.h>
+ #include <linux/blk-crypto.h>
+@@ -829,22 +828,6 @@ void submit_bio(struct bio *bio)
+ 		count_vm_events(PGPGOUT, bio_sectors(bio));
+ 	}
  
-+			if (unlikely(PageWorkingset(page)))
-+				psi_memstall_enter(&pflags);
-+
- 			if (!bio) {
- 				bio = bio_alloc(mdev.m_bdev, BIO_MAX_VECS,
- 						REQ_OP_READ, GFP_NOIO);
-@@ -1445,8 +1453,11 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 			move_to_bypass_jobqueue(pcl, qtail, owned_head);
- 	} while (owned_head != Z_EROFS_PCLUSTER_TAIL);
+-	/*
+-	 * If we're reading data that is part of the userspace workingset, count
+-	 * submission time as memory stall.  When the device is congested, or
+-	 * the submitting cgroup IO-throttled, submission can be a significant
+-	 * part of overall IO time.
+-	 */
+-	if (unlikely(bio_op(bio) == REQ_OP_READ &&
+-	    bio_flagged(bio, BIO_WORKINGSET))) {
+-		unsigned long pflags;
+-
+-		psi_memstall_enter(&pflags);
+-		submit_bio_noacct(bio);
+-		psi_memstall_leave(&pflags);
+-		return;
+-	}
+-
+ 	submit_bio_noacct(bio);
+ }
+ EXPORT_SYMBOL(submit_bio);
+diff --git a/fs/direct-io.c b/fs/direct-io.c
+index f669163d5860f..03d381377ae10 100644
+--- a/fs/direct-io.c
++++ b/fs/direct-io.c
+@@ -421,8 +421,6 @@ static inline void dio_bio_submit(struct dio *dio, struct dio_submit *sdio)
+ 	unsigned long flags;
  
--	if (bio)
-+	if (bio) {
-+		if (!pflags)
-+			psi_memstall_leave(&pflags);
- 		submit_bio(bio);
-+	}
+ 	bio->bi_private = dio;
+-	/* don't account direct I/O as memory stall */
+-	bio_clear_flag(bio, BIO_WORKINGSET);
  
- 	/*
- 	 * although background is preferred, no one is pending for submission.
+ 	spin_lock_irqsave(&dio->bio_lock, flags);
+ 	dio->refcount++;
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 1ef99790f6ed3..8b1858df21752 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -321,7 +321,6 @@ enum {
+ 	BIO_NO_PAGE_REF,	/* don't put release vec pages */
+ 	BIO_CLONED,		/* doesn't own data */
+ 	BIO_BOUNCED,		/* bio is a bounce bio */
+-	BIO_WORKINGSET,		/* contains userspace workingset pages */
+ 	BIO_QUIET,		/* Make BIO Quiet */
+ 	BIO_CHAIN,		/* chained bio, ->bi_remaining in effect */
+ 	BIO_REFFED,		/* bio has elevated ->bi_cnt */
 -- 
 2.30.2
 
