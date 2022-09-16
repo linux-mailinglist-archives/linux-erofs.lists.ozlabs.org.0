@@ -2,38 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8D615BA645
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Sep 2022 07:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E715BA8C8
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Sep 2022 11:00:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MTMb506Tkz3bc3
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Sep 2022 15:10:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MTSh12Vqgz3bls
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Sep 2022 19:00:01 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=PFppksqT;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=PFppksqT;
+	dkim-atps=neutral
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MTMZy3nFHz2xfv
-	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Sep 2022 15:10:17 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VPvYIal_1663305011;
-Received: from 30.221.130.67(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VPvYIal_1663305011)
-          by smtp.aliyun-inc.com;
-          Fri, 16 Sep 2022 13:10:12 +0800
-Message-ID: <a866c880-860c-5558-e5fe-e12afd943324@linux.alibaba.com>
-Date: Fri, 16 Sep 2022 13:10:11 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MTSgv22yGz2xH9
+	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Sep 2022 18:59:53 +1000 (AEST)
+Received: by mail-pj1-x1034.google.com with SMTP id go6so16228902pjb.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 16 Sep 2022 01:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=bpay7ieFN7L2BD1r82YunERmYrsWOu8zYKex4r+0oWE=;
+        b=PFppksqTikwmeE7hjwS3gKaMSubi4w8nin/s0f8Y78blL3QN/srJIxl00OgBygNxxA
+         uLI5mknRGe/QUsBXg9PkfQmXDGapb6+kTcRr+Lb70NU6v8BtWyZLb8TTMHvAowT+nd7O
+         4s1QoXILXUqDbnyvPzYatuaq56I/HklY5hg+QOQzm9ekqYJuWl/W71mIL2i+26LwII1C
+         Rmmar2t20U21mDlS/JXBLr8i/QN6tKr6tuPVPq8iXGj6k+eeVoayxnV+udj7Gfxz4an/
+         1sNkvPSKFMgw4Z6VnDjtxmEJuLafHwNNkn23SdnjgMqomPPmkCyIsE35YTK9jOPJvEMb
+         l2Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=bpay7ieFN7L2BD1r82YunERmYrsWOu8zYKex4r+0oWE=;
+        b=j5chkR+hQjyMRJ/0AhfoURjIpp0YHWPPs9V4c5jT6Y3Iphh3s9P4A+ltOevr6y47cp
+         d7cRceG0SSBb4qFbhAldJ2+IxB29jtM2G5p9T3i7qOmWYXD/HjOIaH3EbY1Nw8aLhIPW
+         WAYaHjXnNbrW0Jro61YS4mXi9+Cg2WtdDZIioQPDD6ZCMRUjNArWmZDwZNnNu/l1pHu0
+         fO6Qq0MYPMAvguWAfNVLwD+V+RI8vk4d37EN2Jq4D1/kULNqXF7yOhZ4PHWPGoXRwce9
+         7rJs1rIIJiJHB38LUaHgh2r+v5lRBU8jGcfZglMiX7IuiL4r0HklhYZ9dv/i9k10onAv
+         yOrA==
+X-Gm-Message-State: ACrzQf0OknMD814r/ve5iOJo/M6WXMICXDg0hnU+XbNhXXxhssKtBGfL
+	cOQTdhfXAJ+z1IM6Ux4TjQv3AmnrKQEcOw==
+X-Google-Smtp-Source: AMsMyM4Z/PgW19wtEWnOkFA0a40RWMyMBzggOVW5eKXzaASNM8IvaNms0QWc9EI4dLnEcyvXoOv14A==
+X-Received: by 2002:a17:902:e212:b0:178:5c:8248 with SMTP id u18-20020a170902e21200b00178005c8248mr3884974plb.102.1663318790508;
+        Fri, 16 Sep 2022 01:59:50 -0700 (PDT)
+Received: from C02G705SMD6V.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id u11-20020a17090a450b00b001fd7fe7d369sm970578pjg.54.2022.09.16.01.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 01:59:49 -0700 (PDT)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH V5 0/6] Introduce erofs shared domain
+Date: Fri, 16 Sep 2022 16:59:34 +0800
+Message-Id: <20220916085940.89392-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.37.0 (Apple Git-136)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.2.2
-Subject: Re: [PATCH V4 6/6] erofs: introduce 'domain_id' mount option
-Content-Language: en-US
-To: Jia Zhu <zhujia.zj@bytedance.com>, linux-erofs@lists.ozlabs.org
-References: <20220915124213.25767-1-zhujia.zj@bytedance.com>
- <20220915124213.25767-7-zhujia.zj@bytedance.com>
-From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20220915124213.25767-7-zhujia.zj@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,131 +78,99 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, yinxin.x@byteda
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Changes since V4:
+0. Relinquish the volume after mutex unlock in erofs_fscache_domain_put().
+1. Use kill_anon_super() instead of kill_litter_super() to umount pseudo mnt.
+2. Extract erofs_fscache_relinquish_cookie() to reduce lines.
+3. Add code comments.
+4. Remove useless local variable initialization.
+5. Add "Fixes" line to patch 1.
+6. Add Reviewed-by lines from Jingbo Xu.
 
+[Kernel Patchset]
+===============
+Git tree:
+	https://github.com/userzj/linux.git zhujia/shared-domain-v5
+Git web:
+	https://github.com/userzj/linux/tree/zhujia/shared-domain-v5
 
-On 9/15/22 8:42 PM, Jia Zhu wrote:
-> Introduce 'domain_id' mount option to enable shared domain sementics.
-> In which case, the related cookie is shared if two mountpoints in the
-> same domain have the same data blob. Users could specify the name of
-> domain by this mount option.
-> 
-> Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+[User Daemon for Quick Test]
+============================
+Git web:
+	https://github.com/userzj/demand-read-cachefilesd/tree/shared-domain
+More test cases will be added to:
+	https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests-fscache 
 
-LGTM.
+[E2E Container Demo for Quick Test]
+===================================
+[Issue]
+	https://github.com/containerd/nydus-snapshotter/issues/161
+[PR]
+	https://github.com/containerd/nydus-snapshotter/pull/162
 
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+[Background]
+============
+In ondemand read mode, we use individual volume to present an erofs
+mountpoint, cookies to present bootstrap and data blobs.
 
+In which case, since cookies can't be shared between fscache volumes,
+even if the data blobs between different mountpoints are exactly same,
+they can't be shared.
 
-> ---
->  fs/erofs/super.c | 17 +++++++++++++++++
->  fs/erofs/sysfs.c | 19 +++++++++++++++++--
->  2 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 24bac58285e8..5e55c4fe6220 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -440,6 +440,7 @@ enum {
->  	Opt_dax_enum,
->  	Opt_device,
->  	Opt_fsid,
-> +	Opt_domain_id,
->  	Opt_err
->  };
->  
-> @@ -465,6 +466,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
->  	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
->  	fsparam_string("device",	Opt_device),
->  	fsparam_string("fsid",		Opt_fsid),
-> +	fsparam_string("domain_id",	Opt_domain_id),
->  	{}
->  };
->  
-> @@ -568,6 +570,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->  			return -ENOMEM;
->  #else
->  		errorfc(fc, "fsid option not supported");
-> +#endif
-> +		break;
-> +	case Opt_domain_id:
-> +#ifdef CONFIG_EROFS_FS_ONDEMAND
-> +		kfree(ctx->opt.domain_id);
-> +		ctx->opt.domain_id = kstrdup(param->string, GFP_KERNEL);
-> +		if (!ctx->opt.domain_id)
-> +			return -ENOMEM;
-> +#else
-> +		errorfc(fc, "domain_id option not supported");
->  #endif
->  		break;
->  	default:
-> @@ -702,6 +714,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  	sb->s_fs_info = sbi;
->  	sbi->opt = ctx->opt;
->  	ctx->opt.fsid = NULL;
-> +	ctx->opt.domain_id = NULL;
->  	sbi->devs = ctx->devs;
->  	ctx->devs = NULL;
->  
-> @@ -846,6 +859,7 @@ static void erofs_fc_free(struct fs_context *fc)
->  
->  	erofs_free_dev_context(ctx->devs);
->  	kfree(ctx->opt.fsid);
-> +	kfree(ctx->opt.domain_id);
->  	kfree(ctx);
->  }
->  
-> @@ -914,6 +928,7 @@ static void erofs_kill_sb(struct super_block *sb)
->  	fs_put_dax(sbi->dax_dev, NULL);
->  	erofs_fscache_unregister_fs(sb);
->  	kfree(sbi->opt.fsid);
-> +	kfree(sbi->opt.domain_id);
->  	kfree(sbi);
->  	sb->s_fs_info = NULL;
->  }
-> @@ -1067,6 +1082,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
->  #ifdef CONFIG_EROFS_FS_ONDEMAND
->  	if (opt->fsid)
->  		seq_printf(seq, ",fsid=%s", opt->fsid);
-> +	if (opt->domain_id)
-> +		seq_printf(seq, ",domain_id=%s", opt->domain_id);
->  #endif
->  	return 0;
->  }
-> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-> index c1383e508bbe..341fb43ad587 100644
-> --- a/fs/erofs/sysfs.c
-> +++ b/fs/erofs/sysfs.c
-> @@ -201,12 +201,27 @@ static struct kobject erofs_feat = {
->  int erofs_register_sysfs(struct super_block *sb)
->  {
->  	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +	char *name;
-> +	char *str = NULL;
->  	int err;
->  
-> +	if (erofs_is_fscache_mode(sb)) {
-> +		if (sbi->opt.domain_id) {
-> +			str = kasprintf(GFP_KERNEL, "%s,%s", sbi->opt.domain_id,
-> +					sbi->opt.fsid);
-> +			if (!str)
-> +				return -ENOMEM;
-> +			name = str;
-> +		} else {
-> +			name = sbi->opt.fsid;
-> +		}
-> +	} else {
-> +		name = sb->s_id;
-> +	}
->  	sbi->s_kobj.kset = &erofs_root;
->  	init_completion(&sbi->s_kobj_unregister);
-> -	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL, "%s",
-> -			erofs_is_fscache_mode(sb) ? sbi->opt.fsid : sb->s_id);
-> +	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL, "%s", name);
-> +	kfree(str);
->  	if (err)
->  		goto put_sb_kobj;
->  	return 0;
+[Introduction]
+==============
+Here we introduce erofs shared domain to resolve above mentioned case.
+Several erofs filesystems can belong to one domain, and data blobs can
+be shared among these erofs filesystems of same domain.
+
+[Usage]
+Users could specify 'domain_id' mount option to create or join into a
+domain which reuses the same cookies(blobs).
+
+[Design]
+========
+1. Use pseudo mnt to manage domain's lifecycle.
+2. Use a linked list to maintain & traverse domains.
+3. Use pseudo sb to create anonymous inode for recording cookie's info
+   and manage cookies lifecycle.
+
+[Flow Path]
+===========
+1. User specify a new 'domain_id' in mount option.
+   1.1 Traverse domain list, compare domain_id with existing domain.[Miss]
+   1.2 Create a new domain(volume), add it to domain list.
+   1.3 Traverse pseudo sb's inode list, compare cookie name with
+       existing cookies.[Miss]
+   1.4 Alloc new anonymous inodes and cookies.
+
+2. User specify an existing 'domain_id' in mount option and the data
+   blob is existed in domain.
+   2.1 Traverse domain list, compare domain_id with existing domain.[Hit]
+   2.2 Reuse the domain and increase its refcnt.
+   2.3 Traverse pseudo sb's inode list, compare cookie name with
+   	   existing cookies.[Hit]
+   2.4 Reuse the cookie and increase its refcnt.
+
+RFC: https://lore.kernel.org/all/YxAlO%2FDHDrIAafR2@B-P7TQMD6M-0146.local/
+V1: https://lore.kernel.org/all/20220902034748.60868-1-zhujia.zj@bytedance.com/
+V2: https://lore.kernel.org/all/20220902105305.79687-1-zhujia.zj@bytedance.com/
+V3: https://lore.kernel.org/all/20220914105041.42970-1-zhujia.zj@bytedance.com/
+V4: https://lore.kernel.org/all/20220915124213.25767-1-zhujia.zj@bytedance.com/
+
+Jia Zhu (6):
+  erofs: use kill_anon_super() to kill super in fscache mode
+  erofs: code clean up for fscache
+  erofs: introduce fscache-based domain
+  erofs: introduce a pseudo mnt to manage shared cookies
+  erofs: Support sharing cookies in the same domain
+  erofs: introduce 'domain_id' mount option
+
+ fs/erofs/fscache.c  | 264 ++++++++++++++++++++++++++++++++++++++------
+ fs/erofs/internal.h |  32 ++++--
+ fs/erofs/super.c    |  73 +++++++++---
+ fs/erofs/sysfs.c    |  19 +++-
+ 4 files changed, 325 insertions(+), 63 deletions(-)
 
 -- 
-Thanks,
-Jingbo
+2.20.1
+
