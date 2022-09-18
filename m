@@ -1,61 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D80565BBC76
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Sep 2022 10:03:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22B295BBD81
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Sep 2022 13:02:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MVgL34JBkz304y
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Sep 2022 18:03:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MVlJK4mHPz308B
+	for <lists+linux-erofs@lfdr.de>; Sun, 18 Sep 2022 21:02:25 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YFjie30H;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=ag00KFBq;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mga01.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1032; helo=mail-pj1-x1032.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YFjie30H;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=ag00KFBq;
 	dkim-atps=neutral
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MVgKw6J6Xz2xKf
-	for <linux-erofs@lists.ozlabs.org>; Sun, 18 Sep 2022 18:03:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663488213; x=1695024213;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=1xbNfYIc0IdkEiL/rGnJalGBADaXFrjWxqTZIXfpC58=;
-  b=YFjie30HOcNx5GrS9U6QK1VttnC1XSTPoZqONYJSCjc9q0Q6sm40jmkH
-   a0p/b01KJ4X5zY4BSTD9UM01sLWjWkj+o3C1Nd9RC3uddjV1Cl9zQ003g
-   Kka2/1ESU9LTl2qWKQ6N79ZEfRJRaXg5Ers49/DphiCC7N5c5mAOuE1oV
-   eN0dscXLa6eQcDH1Uw9z93eM9HLYez60YNMoifE2bTBahqdSNwpoA9HMM
-   2ZzoaTv/YaMmoGnZxz1KDp/O7wDRKhVsByvd+iGmFQWFxq18HC0g3Cjin
-   S7KGdiFWxJYtXb0yazZMhEVF1oKEDweKVcZtKMApIZvXHcoPYkUzSb40p
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10473"; a="325496871"
-X-IronPort-AV: E=Sophos;i="5.93,325,1654585200"; 
-   d="scan'208";a="325496871"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2022 01:03:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,325,1654585200"; 
-   d="scan'208";a="686621227"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Sep 2022 01:03:23 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oZpGs-00011h-1B;
-	Sun, 18 Sep 2022 08:03:22 +0000
-Date: Sun, 18 Sep 2022 16:02:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jia Zhu <zhujia.zj@bytedance.com>
-Subject: [xiang-erofs:dev-test 5/6] fs/erofs/fscache.c:535:23: warning: no
- previous prototype for function 'erofs_fscache_acquire_cookie'
-Message-ID: <202209181550.IB5iSy64-lkp@intel.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MVlJC4TJ5z2xrW
+	for <linux-erofs@lists.ozlabs.org>; Sun, 18 Sep 2022 21:02:17 +1000 (AEST)
+Received: by mail-pj1-x1032.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so3550825pjh.3
+        for <linux-erofs@lists.ozlabs.org>; Sun, 18 Sep 2022 04:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=UweWG+KAoxByUvXZiE3w8yEZnszL9VIJ0HppK6iQww0=;
+        b=ag00KFBqWU+JiczYO3n8Rf0xhiOUKF+o4e/4tBQimFDUVD4YOWwQ4u/pujKCNMYHGV
+         XibmFxEpwZq2PkHRvgPb1Zr7z0tzhs8QPlLwE8p/rTJ2XqkM9CF9aAyz4D4KQMKdhMrj
+         r4lfpNJRHtUfy5/WsKw8HFNGTU36ENxR7n+PKcy7pEhhsplHe7yAbJU80uoTLGk99OeL
+         LYiuMQTASydOdUSCqB+0O9wki2H79uMKuFEyxXxhq+yzD8snAUVbRjTN8H16BtXeGYMS
+         9b18VKQL9VKpHTqorE7aUrT7RngbLlqZi2cjD6G+hmRnURv2i0OWb/+XsXxG1f0ieUls
+         S0+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=UweWG+KAoxByUvXZiE3w8yEZnszL9VIJ0HppK6iQww0=;
+        b=BGk4Y4k2gIws6C8YLZJ6lBRuA0xJLYOcepci7EauDewoaINcEJlBw0PvemRYyzO9bQ
+         +ijiVjG2qHLSw0s/WhjtCZN8M8rGJIfNaCcnT3B7UcKad7C6VizHKUpmysDhUeyqJGmG
+         szC/4lKXfY2S+jhsIwZVZP0fxF+tlhH9zqf9uHZqP+27btPqF7moXQTteUTjYNvbbQwp
+         U4U7+Q+B1oMIrJ6jibKMwVrzFBkZb5iaHAsam/V65cGpQLrcZcgJTpDl2EvrKBe+sW1z
+         fHKFkYyL5FGUvZMSCG8sAv0obfppZM9YrigBF//+OkqP36+UAukAO0LSXJOYjIbkGsCg
+         e8Vg==
+X-Gm-Message-State: ACrzQf17y/ndyPRQPPVTo/OhrrqghZXeeRxNcyqlWUhiJHqcPtfddSa6
+	RxCHH2JG60bKoXjWadL5BKafzni+aGKisA==
+X-Google-Smtp-Source: AMsMyM75FwxtKty+GHBdCRVMz8gsVEXtrZ7edfDeBRIsRRTIVYHdoogNtGfyq/2bgUh6fGWBUAyrzg==
+X-Received: by 2002:a17:90a:e552:b0:203:627b:6c6e with SMTP id ei18-20020a17090ae55200b00203627b6c6emr9060897pjb.59.1663498931920;
+        Sun, 18 Sep 2022 04:02:11 -0700 (PDT)
+Received: from localhost.localdomain ([139.177.225.226])
+        by smtp.gmail.com with ESMTPSA id b6-20020a1709027e0600b00176dee43e0dsm18161704plm.285.2022.09.18.04.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Sep 2022 04:02:11 -0700 (PDT)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH V6 5/6] erofs: Support sharing cookies in the same domain
+Date: Sun, 18 Sep 2022 19:01:50 +0800
+Message-Id: <20220918110150.6338-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.37.0 (Apple Git-136)
+In-Reply-To: <20220918043456.147-6-zhujia.zj@bytedance.com>
+References: <20220918043456.147-6-zhujia.zj@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,95 +77,168 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, llvm@lists.linux.dev, kbuild-all@lists.01.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-head:   73ac9605cc83179e0d44a8c64d85ab81d5d7a57e
-commit: 0c8acee18add4f65597f6a2a3111256bee50ffc8 [5/6] erofs: Support sharing cookies in the same domain
-config: hexagon-randconfig-r025-20220918 (https://download.01.org/0day-ci/archive/20220918/202209181550.IB5iSy64-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 791a7ae1ba3efd6bca96338e10ffde557ba83920)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git/commit/?id=0c8acee18add4f65597f6a2a3111256bee50ffc8
-        git remote add xiang-erofs https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
-        git fetch --no-tags xiang-erofs dev-test
-        git checkout 0c8acee18add4f65597f6a2a3111256bee50ffc8
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash fs/erofs/
+Several erofs filesystems can belong to one domain, and data blobs can
+be shared among these erofs filesystems of same domain.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+Users could specify domain_id mount option to create or join into a
+domain.
 
-All warnings (new ones prefixed by >>):
+Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/erofs/fscache.c  | 99 ++++++++++++++++++++++++++++++++++++++++++---
+ fs/erofs/internal.h |  3 ++
+ 2 files changed, 96 insertions(+), 6 deletions(-)
 
->> fs/erofs/fscache.c:535:23: warning: no previous prototype for function 'erofs_fscache_acquire_cookie' [-Wmissing-prototypes]
-   struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
-                         ^
-   fs/erofs/fscache.c:535:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
-   ^
-   static 
-   1 warning generated.
-
-
-vim +/erofs_fscache_acquire_cookie +535 fs/erofs/fscache.c
-
-   534	
- > 535	struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
-   536							    char *name, bool need_inode)
-   537	{
-   538		struct fscache_volume *volume = EROFS_SB(sb)->volume;
-   539		struct erofs_fscache *ctx;
-   540		struct fscache_cookie *cookie;
-   541		int ret;
-   542	
-   543		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-   544		if (!ctx)
-   545			return ERR_PTR(-ENOMEM);
-   546	
-   547		cookie = fscache_acquire_cookie(volume, FSCACHE_ADV_WANT_CACHE_SIZE,
-   548						name, strlen(name), NULL, 0, 0);
-   549		if (!cookie) {
-   550			erofs_err(sb, "failed to get cookie for %s", name);
-   551			ret = -EINVAL;
-   552			goto err;
-   553		}
-   554	
-   555		fscache_use_cookie(cookie, false);
-   556		ctx->cookie = cookie;
-   557	
-   558		if (need_inode) {
-   559			struct inode *const inode = new_inode(sb);
-   560	
-   561			if (!inode) {
-   562				erofs_err(sb, "failed to get anon inode for %s", name);
-   563				ret = -ENOMEM;
-   564				goto err_cookie;
-   565			}
-   566	
-   567			set_nlink(inode, 1);
-   568			inode->i_size = OFFSET_MAX;
-   569			inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
-   570			mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
-   571	
-   572			ctx->inode = inode;
-   573		}
-   574	
-   575		return ctx;
-   576	
-   577	err_cookie:
-   578		fscache_unuse_cookie(ctx->cookie, NULL, NULL);
-   579		fscache_relinquish_cookie(ctx->cookie, false);
-   580	err:
-   581		kfree(ctx);
-   582		return ERR_PTR(ret);
-   583	}
-   584	
-
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index 4a7346b9fa73..ce9301a890f9 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -7,6 +7,7 @@
+ #include "internal.h"
+ 
+ static DEFINE_MUTEX(erofs_domain_list_lock);
++static DEFINE_MUTEX(erofs_domain_cookies_lock);
+ static LIST_HEAD(erofs_domain_list);
+ static struct vfsmount *erofs_pseudo_mnt;
+ 
+@@ -527,8 +528,9 @@ static int erofs_fscache_register_domain(struct super_block *sb)
+ 	return err;
+ }
+ 
+-struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
+-						     char *name, bool need_inode)
++static
++struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
++						    char *name, bool need_inode)
+ {
+ 	struct fscache_volume *volume = EROFS_SB(sb)->volume;
+ 	struct erofs_fscache *ctx;
+@@ -577,17 +579,102 @@ struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
+ 	return ERR_PTR(ret);
+ }
+ 
+-void erofs_fscache_unregister_cookie(struct erofs_fscache *ctx)
++static void erofs_fscache_relinquish_cookie(struct erofs_fscache *ctx)
+ {
+-	if (!ctx)
+-		return;
+-
+ 	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
+ 	fscache_relinquish_cookie(ctx->cookie, false);
+ 	iput(ctx->inode);
++	kfree(ctx->name);
+ 	kfree(ctx);
+ }
+ 
++static
++struct erofs_fscache *erofs_fscache_domain_init_cookie(struct super_block *sb,
++							char *name, bool need_inode)
++{
++	int err;
++	struct inode *inode;
++	struct erofs_fscache *ctx;
++	struct erofs_domain *domain = EROFS_SB(sb)->domain;
++
++	ctx = erofs_fscache_acquire_cookie(sb, name, need_inode);
++	if (IS_ERR(ctx))
++		return ctx;
++
++	ctx->name = kstrdup(name, GFP_KERNEL);
++	if (!ctx->name) {
++		err = -ENOMEM;
++		goto out;
++	}
++
++	inode = new_inode(erofs_pseudo_mnt->mnt_sb);
++	if (!inode) {
++		err = -ENOMEM;
++		goto out;
++	}
++
++	ctx->domain = domain;
++	ctx->anon_inode = inode;
++	inode->i_private = ctx;
++	refcount_inc(&domain->ref);
++	return ctx;
++out:
++	erofs_fscache_relinquish_cookie(ctx);
++	return ERR_PTR(err);
++}
++
++static
++struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
++						    char *name, bool need_inode)
++{
++	struct inode *inode;
++	struct erofs_fscache *ctx;
++	struct erofs_domain *domain = EROFS_SB(sb)->domain;
++	struct super_block *psb = erofs_pseudo_mnt->mnt_sb;
++
++	mutex_lock(&erofs_domain_cookies_lock);
++	list_for_each_entry(inode, &psb->s_inodes, i_sb_list) {
++		ctx = inode->i_private;
++		if (!ctx || ctx->domain != domain || strcmp(ctx->name, name))
++			continue;
++		igrab(inode);
++		mutex_unlock(&erofs_domain_cookies_lock);
++		return ctx;
++	}
++	ctx = erofs_fscache_domain_init_cookie(sb, name, need_inode);
++	mutex_unlock(&erofs_domain_cookies_lock);
++	return ctx;
++}
++
++struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
++						     char *name, bool need_inode)
++{
++	if (EROFS_SB(sb)->opt.domain_id)
++		return erofs_domain_register_cookie(sb, name, need_inode);
++	return erofs_fscache_acquire_cookie(sb, name, need_inode);
++}
++
++void erofs_fscache_unregister_cookie(struct erofs_fscache *ctx)
++{
++	bool drop;
++	struct erofs_domain *domain;
++
++	if (!ctx)
++		return;
++	domain = ctx->domain;
++	if (domain) {
++		mutex_lock(&erofs_domain_cookies_lock);
++		drop = atomic_read(&ctx->anon_inode->i_count) == 1;
++		iput(ctx->anon_inode);
++		mutex_unlock(&erofs_domain_cookies_lock);
++		if (!drop)
++			return;
++	}
++
++	erofs_fscache_relinquish_cookie(ctx);
++	erofs_fscache_domain_put(domain);
++}
++
+ int erofs_fscache_register_fs(struct super_block *sb)
+ {
+ 	int ret;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 273fb35170e2..0f63830c9056 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -109,6 +109,9 @@ struct erofs_domain {
+ struct erofs_fscache {
+ 	struct fscache_cookie *cookie;
+ 	struct inode *inode;
++	struct inode *anon_inode;
++	struct erofs_domain *domain;
++	char *name;
+ };
+ 
+ struct erofs_sb_info {
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.20.1
+
