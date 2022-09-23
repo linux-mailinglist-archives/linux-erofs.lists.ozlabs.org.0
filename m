@@ -2,32 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B32945E5B4C
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Sep 2022 08:24:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFFF85E7191
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 03:49:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MY4xk4RJWz3c16
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Sep 2022 16:24:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MYZp95TFxz3c2N
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 11:49:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MY4xc43yZz300V
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Sep 2022 16:24:19 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VQRD9k2_1663827854;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VQRD9k2_1663827854)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MYZp253gDz2xk6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Sep 2022 11:49:29 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VQUVO-6_1663897756;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VQUVO-6_1663897756)
           by smtp.aliyun-inc.com;
-          Thu, 22 Sep 2022 14:24:15 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: clean up .read_folio() and .readahead() in fscache mode
-Date: Thu, 22 Sep 2022 14:24:14 +0800
-Message-Id: <20220922062414.20437-1-jefflexu@linux.alibaba.com>
+          Fri, 23 Sep 2022 09:49:22 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: introduce partial-referenced pclusters
+Date: Fri, 23 Sep 2022 09:49:15 +0800
+Message-Id: <20220923014915.4362-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -42,296 +40,179 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The implementation of these two functions in fscache mode is almost the
-same. Extract the same part as a generic helper to remove the code
-duplication.
+Due to deduplication for compressed data, pclusters can be partially
+referenced with their prefixes.
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
----
-changes since v1:
-- update the commit subject to stress it's in fscache mode
-- rename erofs_fscache_read() to erofs_fscache_data_read()
-- add more comment on the return value of erofs_fscache_data_read() to
-  avoid misunderstanding
-- add Reviewed-by tag
----
- fs/erofs/fscache.c | 213 ++++++++++++++++++---------------------------
- 1 file changed, 83 insertions(+), 130 deletions(-)
+Together with the user-space implementation, it enables EROFS
+variable-length global compressed data deduplication with rolling
+hash.
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index b5fd9d71e67f..508b1a4df15e 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -234,113 +234,111 @@ static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/decompressor_lzma.c | 3 +++
+ fs/erofs/erofs_fs.h          | 7 ++++++-
+ fs/erofs/internal.h          | 4 ++++
+ fs/erofs/super.c             | 2 ++
+ fs/erofs/sysfs.c             | 2 ++
+ fs/erofs/zdata.c             | 1 +
+ fs/erofs/zmap.c              | 6 +++++-
+ 7 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+index 5e59b3f523eb..091fd5adf818 100644
+--- a/fs/erofs/decompressor_lzma.c
++++ b/fs/erofs/decompressor_lzma.c
+@@ -217,6 +217,9 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 			strm->buf.out_size = min_t(u32, outlen,
+ 						   PAGE_SIZE - pageofs);
+ 			outlen -= strm->buf.out_size;
++			if (!rq->out[no] && rq->fillgaps)	/* deduped */
++				rq->out[no] = erofs_allocpage(pagepool,
++						GFP_KERNEL | __GFP_NOFAIL);
+ 			if (rq->out[no])
+ 				strm->buf.out = kmap(rq->out[no]) + pageofs;
+ 			pageofs = 0;
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 5d8fefd8b3fb..0e6c6a234438 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -26,6 +26,7 @@
+ #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
+ #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
+ #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
++#define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
+ #define EROFS_ALL_FEATURE_INCOMPAT		\
+ 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
+@@ -34,7 +35,8 @@
+ 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
+ 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
+ 	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
+-	 EROFS_FEATURE_INCOMPAT_FRAGMENTS)
++	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
++	 EROFS_FEATURE_INCOMPAT_DEDUPE)
+ 
+ #define EROFS_SB_EXTSLOT_SIZE	16
+ 
+@@ -371,6 +373,9 @@ enum {
+ #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
+ #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
+ 
++/* (noncompact only, HEAD) This pcluster refers to partial decompressed data */
++#define Z_EROFS_VLE_DI_PARTIAL_REF		(1 << 15)
++
+ /*
+  * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
+  * compressed block count of a compressed extent (in logical clusters, aka.
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 9f89c1da6229..db8466f2a918 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -291,6 +291,7 @@ EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
+ EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
+ EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
+ EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
++EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ 
+ /* atomic flag definitions */
+@@ -392,6 +393,7 @@ enum {
+ 	BH_Encoded = BH_PrivateStart,
+ 	BH_FullMapped,
+ 	BH_Fragment,
++	BH_Partialref,
+ };
+ 
+ /* Has a disk mapping */
+@@ -404,6 +406,8 @@ enum {
+ #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
+ /* Located in the special packed inode */
+ #define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
++/* the extent refers to partial compressed data */
++#define EROFS_MAP_PARTIAL_REF	(1 << BH_Partialref)
+ 
+ struct erofs_map_blocks {
+ 	struct erofs_buf buf;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 4a55908ad37b..6bc45403ea5e 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -424,6 +424,8 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
+ 	if (erofs_sb_has_fragments(sbi))
+ 		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
++	if (erofs_sb_has_dedupe(sbi))
++		erofs_info(sb, "EXPERIMENTAL global deduplication feature in use. Use at your own risk!");
+ out:
+ 	erofs_put_metabuf(&buf);
  	return ret;
- }
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index dd6eb7eccf9a..783bb7b21b51 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -77,6 +77,7 @@ EROFS_ATTR_FEATURE(compr_head2);
+ EROFS_ATTR_FEATURE(sb_chksum);
+ EROFS_ATTR_FEATURE(ztailpacking);
+ EROFS_ATTR_FEATURE(fragments);
++EROFS_ATTR_FEATURE(dedupe);
  
--static int erofs_fscache_read_folio_inline(struct folio *folio,
--					 struct erofs_map_blocks *map)
--{
--	struct super_block *sb = folio_mapping(folio)->host->i_sb;
--	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
--	erofs_blk_t blknr;
--	size_t offset, len;
--	void *src, *dst;
--
--	/* For tail packing layout, the offset may be non-zero. */
--	offset = erofs_blkoff(map->m_pa);
--	blknr = erofs_blknr(map->m_pa);
--	len = map->m_llen;
--
--	src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
--	if (IS_ERR(src))
--		return PTR_ERR(src);
--
--	dst = kmap_local_folio(folio, 0);
--	memcpy(dst, src + offset, len);
--	memset(dst + len, 0, PAGE_SIZE - len);
--	kunmap_local(dst);
--
--	erofs_put_metabuf(&buf);
--	return 0;
--}
--
--static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
-+/*
-+ * Read into page cache in the range described by (@pos, @len).
-+ *
-+ * On return, the caller is responsible for page unlocking if the output @unlock
-+ * is true, or the callee will take this responsibility through netfs_io_request
-+ * interface.
-+ *
-+ * The return value is the number of bytes successfully handled, or negative
-+ * error code on failure. The only exception is that, the length of the range
-+ * instead of the error code is returned on failure after netfs_io_request is
-+ * allocated, so that .readahead() could advance rac accordingly.
-+ */
-+static int erofs_fscache_data_read(struct address_space *mapping,
-+				   loff_t pos, size_t len, bool *unlock)
- {
--	struct inode *inode = folio_mapping(folio)->host;
-+	struct inode *inode = mapping->host;
- 	struct super_block *sb = inode->i_sb;
-+	struct netfs_io_request *rreq;
- 	struct erofs_map_blocks map;
- 	struct erofs_map_dev mdev;
--	struct netfs_io_request *rreq;
--	erofs_off_t pos;
--	loff_t pstart;
-+	struct iov_iter iter;
-+	size_t count;
- 	int ret;
+ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(zero_padding),
+@@ -88,6 +89,7 @@ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(sb_chksum),
+ 	ATTR_LIST(ztailpacking),
+ 	ATTR_LIST(fragments),
++	ATTR_LIST(dedupe),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_feat);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index c92a72f5bca6..cce56dde135c 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -814,6 +814,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		fe->pcl->multibases = true;
  
--	DBG_BUGON(folio_size(folio) != EROFS_BLKSIZ);
-+	*unlock = true;
+ 	if ((map->m_flags & EROFS_MAP_FULL_MAPPED) &&
++	    !(map->m_flags & EROFS_MAP_PARTIAL_REF) &&
+ 	    fe->pcl->length == map->m_llen)
+ 		fe->pcl->partial = false;
+ 	if (fe->pcl->length < offset + end - map->m_la) {
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 6830999529d7..5ce63326aa7d 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -167,6 +167,7 @@ struct z_erofs_maprecorder {
+ 	u16 delta[2];
+ 	erofs_blk_t pblk, compressedblks;
+ 	erofs_off_t nextpackoff;
++	bool partialref;
+ };
  
--	pos = folio_pos(folio);
- 	map.m_la = pos;
--
- 	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
- 	if (ret)
--		goto out_unlock;
-+		return ret;
- 
--	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
--		folio_zero_range(folio, 0, folio_size(folio));
--		goto out_uptodate;
-+	if (map.m_flags & EROFS_MAP_META) {
-+		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+		erofs_blk_t blknr;
-+		size_t offset, size;
-+		void *src;
-+
-+		/* For tail packing layout, the offset may be non-zero. */
-+		offset = erofs_blkoff(map.m_pa);
-+		blknr = erofs_blknr(map.m_pa);
-+		size = map.m_llen;
-+
-+		src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
-+		if (IS_ERR(src))
-+			return PTR_ERR(src);
-+
-+		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, PAGE_SIZE);
-+		if (copy_to_iter(src + offset, size, &iter) != size)
-+			return -EFAULT;
-+		iov_iter_zero(PAGE_SIZE - size, &iter);
-+		erofs_put_metabuf(&buf);
-+		return PAGE_SIZE;
+ static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
+@@ -225,6 +226,8 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
+ 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
++		if (advise & Z_EROFS_VLE_DI_PARTIAL_REF)
++			m->partialref = true;
+ 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
+ 		m->pblk = le32_to_cpu(di->di_u.blkaddr);
+ 		break;
+@@ -688,7 +691,8 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_out;
  	}
+-
++	if (m.partialref)
++		map->m_flags |= EROFS_MAP_PARTIAL_REF;
+ 	map->m_llen = end - map->m_la;
  
--	if (map.m_flags & EROFS_MAP_META) {
--		ret = erofs_fscache_read_folio_inline(folio, &map);
--		goto out_uptodate;
-+	count = min_t(size_t, map.m_llen - (pos - map.m_la), len);
-+	DBG_BUGON(!count || count % PAGE_SIZE);
-+
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, count);
-+		iov_iter_zero(count, &iter);
-+		return count;
- 	}
- 
- 	mdev = (struct erofs_map_dev) {
- 		.m_deviceid = map.m_deviceid,
- 		.m_pa = map.m_pa,
- 	};
--
- 	ret = erofs_map_dev(sb, &mdev);
- 	if (ret)
--		goto out_unlock;
--
--
--	rreq = erofs_fscache_alloc_request(folio_mapping(folio),
--				folio_pos(folio), folio_size(folio));
--	if (IS_ERR(rreq)) {
--		ret = PTR_ERR(rreq);
--		goto out_unlock;
--	}
-+		return ret;
- 
--	pstart = mdev.m_pa + (pos - map.m_la);
--	return erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
--				rreq, pstart);
-+	rreq = erofs_fscache_alloc_request(mapping, pos, count);
-+	if (IS_ERR(rreq))
-+		return PTR_ERR(rreq);
- 
--out_uptodate:
--	if (!ret)
--		folio_mark_uptodate(folio);
--out_unlock:
--	folio_unlock(folio);
--	return ret;
-+	*unlock = false;
-+	erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-+			rreq, mdev.m_pa + (pos - map.m_la));
-+	return count;
- }
- 
--static void erofs_fscache_advance_folios(struct readahead_control *rac,
--					 size_t len, bool unlock)
-+static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
- {
--	while (len) {
--		struct folio *folio = readahead_folio(rac);
--		len -= folio_size(folio);
--		if (unlock) {
-+	bool unlock;
-+	int ret;
-+
-+	DBG_BUGON(folio_size(folio) != EROFS_BLKSIZ);
-+
-+	ret = erofs_fscache_data_read(folio_mapping(folio), folio_pos(folio),
-+				      folio_size(folio), &unlock);
-+	if (unlock) {
-+		if (ret > 0)
- 			folio_mark_uptodate(folio);
--			folio_unlock(folio);
--		}
-+		folio_unlock(folio);
- 	}
-+	return ret < 0 ? ret : 0;
- }
- 
- static void erofs_fscache_readahead(struct readahead_control *rac)
- {
--	struct inode *inode = rac->mapping->host;
--	struct super_block *sb = inode->i_sb;
--	size_t len, count, done = 0;
--	erofs_off_t pos;
--	loff_t start, offset;
--	int ret;
-+	struct folio *folio;
-+	size_t len, done = 0;
-+	loff_t start, pos;
-+	bool unlock;
-+	int ret, size;
- 
- 	if (!readahead_count(rac))
- 		return;
-@@ -349,67 +347,22 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
- 	len = readahead_length(rac);
- 
- 	do {
--		struct erofs_map_blocks map;
--		struct erofs_map_dev mdev;
--		struct netfs_io_request *rreq;
--
- 		pos = start + done;
--		map.m_la = pos;
--
--		ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
--		if (ret)
-+		ret = erofs_fscache_data_read(rac->mapping, pos,
-+					      len - done, &unlock);
-+		if (ret <= 0)
- 			return;
- 
--		offset = start + done;
--		count = min_t(size_t, map.m_llen - (pos - map.m_la),
--			      len - done);
--
--		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
--			struct iov_iter iter;
--
--			iov_iter_xarray(&iter, READ, &rac->mapping->i_pages,
--					offset, count);
--			iov_iter_zero(count, &iter);
--
--			erofs_fscache_advance_folios(rac, count, true);
--			ret = count;
--			continue;
--		}
--
--		if (map.m_flags & EROFS_MAP_META) {
--			struct folio *folio = readahead_folio(rac);
--
--			ret = erofs_fscache_read_folio_inline(folio, &map);
--			if (!ret) {
-+		size = ret;
-+		while (size) {
-+			folio = readahead_folio(rac);
-+			size -= folio_size(folio);
-+			if (unlock) {
- 				folio_mark_uptodate(folio);
--				ret = folio_size(folio);
-+				folio_unlock(folio);
- 			}
--
--			folio_unlock(folio);
--			continue;
- 		}
--
--		mdev = (struct erofs_map_dev) {
--			.m_deviceid = map.m_deviceid,
--			.m_pa = map.m_pa,
--		};
--		ret = erofs_map_dev(sb, &mdev);
--		if (ret)
--			return;
--
--		rreq = erofs_fscache_alloc_request(rac->mapping, offset, count);
--		if (IS_ERR(rreq))
--			return;
--		/*
--		 * Drop the ref of folios here. Unlock them in
--		 * rreq_unlock_folios() when rreq complete.
--		 */
--		erofs_fscache_advance_folios(rac, count, false);
--		ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
--					rreq, mdev.m_pa + (pos - map.m_la));
--		if (!ret)
--			ret = count;
--	} while (ret > 0 && ((done += ret) < len));
-+	} while ((done += ret) < len);
- }
- 
- static const struct address_space_operations erofs_fscache_meta_aops = {
+ 	if (flags & EROFS_GET_BLOCKS_FINDTAIL) {
 -- 
 2.24.4
 
