@@ -2,33 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFFF85E7191
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 03:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97FC85E71C9
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 04:12:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MYZp95TFxz3c2N
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 11:49:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MYbK24r5nz3c6J
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Sep 2022 12:12:54 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Qdc5dGGR;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::530; helo=mail-pg1-x530.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Qdc5dGGR;
+	dkim-atps=neutral
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MYZp253gDz2xk6
-	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Sep 2022 11:49:29 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VQUVO-6_1663897756;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VQUVO-6_1663897756)
-          by smtp.aliyun-inc.com;
-          Fri, 23 Sep 2022 09:49:22 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH] erofs: introduce partial-referenced pclusters
-Date: Fri, 23 Sep 2022 09:49:15 +0800
-Message-Id: <20220923014915.4362-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MYbJy1plcz3bcF
+	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Sep 2022 12:12:48 +1000 (AEST)
+Received: by mail-pg1-x530.google.com with SMTP id f193so10982599pgc.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 22 Sep 2022 19:12:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date;
+        bh=nBLIRKbQy5m+kK9o+AaELIEBiSlMmEbK2d2rH3x2pJ8=;
+        b=Qdc5dGGRjnzDt565/IPgqBjHZoX7CHW5WoLzTKGzLbYgeVrjVc+b5uAYq9Is7HkZ9E
+         9EAHREbKIc7fR0//g1R4Oes1ucj/AeTbO3JmO+mafERA7suTwUEYMnk+oat0KxxNXCcn
+         H8sGY3dYYYGfyWg+44q+lqUZkwyrJb0q1ZNWFLMRBYgMPe8W1/plmzL3GMOn3bbMWPtB
+         NBUNFvSAkz9/E4cIhPUeftE1O3U8dKuesvWF7ARaQSIgN8dceVJ9fQoQlX3i38+rAKv5
+         HxafXt3gt4jeQwrCuqtVNt5DW6ES9xtiWC9Qca7ySGQFHxOHEKM2T6WZU1Ld5mv2CcRl
+         R5fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=nBLIRKbQy5m+kK9o+AaELIEBiSlMmEbK2d2rH3x2pJ8=;
+        b=Cr0ZCbaSFIIxbIuyIQeF5MJhV96fkKv7rXhiHMsNkCbBCacVdNksI9qTkmSAotH2E6
+         Ifid+9UncYiIS+PY+wAOmeTMvCW4AlMmwG7UvYe9jYrhsiJ3EPU7pl6OVp+PY1nJJ+3k
+         wVUJXn+Zj5iCAk0luA6KA7fOly3BT2SIBKFrHlGYkxRFjk3mmSrNxeY8JkLDAlsQXgkr
+         GVBbkYT/DFgwB+OG/jQ/gj5wGUH2uOzOSP33WoBsexJocQLwtRRKtm53ZBJgnvqZWBMZ
+         RyJTvpKuvw42TwdOE7uJWJUEVGx8YHpXZySReYYZRPI0Np+N30qlfhoVXtiAE1RfXTWd
+         VG0Q==
+X-Gm-Message-State: ACrzQf2J7AisZOEXqDaz43X5GpQFBEk0AWrsFVsnTFJ0dEUCGrcUsTYi
+	ZZ9QDk0/UojT4JazUQKSbL8=
+X-Google-Smtp-Source: AMsMyM6Xmx11kK3SIMvtkK748zGxlz2fPbrlhOnDsg3depP0GiStQPv1vl+oSTc+jjLGIicV5RO3PA==
+X-Received: by 2002:a05:6a02:19c:b0:43c:401:1bc9 with SMTP id bj28-20020a056a02019c00b0043c04011bc9mr5543119pgb.222.1663899164521;
+        Thu, 22 Sep 2022 19:12:44 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id n3-20020a170902e54300b001768517f99esm4735204plf.244.2022.09.22.19.12.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 19:12:44 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH v6 1/2] erofs: support interlaced uncompressed data for compressed files
+Date: Fri, 23 Sep 2022 10:11:21 +0800
+Message-Id: <8369112678604fdf4ef796626d59b1fdd0745a53.1663898962.git.huyue2@coolpad.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1663898962.git.huyue2@coolpad.com>
+References: <cover.1663898962.git.huyue2@coolpad.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -40,179 +75,183 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Due to deduplication for compressed data, pclusters can be partially
-referenced with their prefixes.
+From: Yue Hu <huyue2@coolpad.com>
 
-Together with the user-space implementation, it enables EROFS
-variable-length global compressed data deduplication with rolling
-hash.
+Currently, uncompressed data is all handled in the shifted way, which
+means we have to shift the whole on-disk plain pcluster to get the
+logical data.   However, since we are also using in-place I/O for
+uncompressed data, data copy will be reduced a lot if pcluster is
+recorded in the interlaced way as illustrated below:
+ _______________________________________________________________
+|               |    |               |_ tail part |_ head part _|
+|<-   blk0    ->| .. |<-   blkn-2  ->|<-         blkn-1       ->|
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+The logical data then becomes:
+ ________________________________________________________
+|_ head part _|_  blk0  _| .. |_  blkn-2  _|_ tail part _|
+
+In addition, non-4k plain pclusters are also survived by the
+interlaced way, which can be used for non-4k lclusters as well.
+
+However, it's almost impossible to de-duplicate uncompressed data
+in the interlaced way, therefore shifted uncompressed data is still
+useful.
+
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/decompressor_lzma.c | 3 +++
- fs/erofs/erofs_fs.h          | 7 ++++++-
- fs/erofs/internal.h          | 4 ++++
- fs/erofs/super.c             | 2 ++
- fs/erofs/sysfs.c             | 2 ++
- fs/erofs/zdata.c             | 1 +
- fs/erofs/zmap.c              | 6 +++++-
- 7 files changed, 23 insertions(+), 2 deletions(-)
+ fs/erofs/decompressor.c | 47 ++++++++++++++++++++++++-----------------
+ fs/erofs/erofs_fs.h     |  2 ++
+ fs/erofs/internal.h     |  1 +
+ fs/erofs/zmap.c         | 14 ++++++++----
+ 4 files changed, 41 insertions(+), 23 deletions(-)
 
-diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-index 5e59b3f523eb..091fd5adf818 100644
---- a/fs/erofs/decompressor_lzma.c
-+++ b/fs/erofs/decompressor_lzma.c
-@@ -217,6 +217,9 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
- 			strm->buf.out_size = min_t(u32, outlen,
- 						   PAGE_SIZE - pageofs);
- 			outlen -= strm->buf.out_size;
-+			if (!rq->out[no] && rq->fillgaps)	/* deduped */
-+				rq->out[no] = erofs_allocpage(pagepool,
-+						GFP_KERNEL | __GFP_NOFAIL);
- 			if (rq->out[no])
- 				strm->buf.out = kmap(rq->out[no]) + pageofs;
- 			pageofs = 0;
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 2d55569f96ac..51b7ac7166d9 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -317,52 +317,61 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ 	return ret;
+ }
+ 
+-static int z_erofs_shifted_transform(struct z_erofs_decompress_req *rq,
+-				     struct page **pagepool)
++static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
++				   struct page **pagepool)
+ {
+-	const unsigned int nrpages_out =
++	const unsigned int inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
++	const unsigned int outpages =
+ 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+ 	const unsigned int righthalf = min_t(unsigned int, rq->outputsize,
+ 					     PAGE_SIZE - rq->pageofs_out);
+ 	const unsigned int lefthalf = rq->outputsize - righthalf;
++	const unsigned int interlaced_offset =
++		rq->alg == Z_EROFS_COMPRESSION_SHIFTED ? 0 : rq->pageofs_out;
+ 	unsigned char *src, *dst;
+ 
+-	if (nrpages_out > 2) {
++	if (outpages > 2 && rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
+ 		DBG_BUGON(1);
+-		return -EIO;
++		return -EFSCORRUPTED;
+ 	}
+ 
+ 	if (rq->out[0] == *rq->in) {
+-		DBG_BUGON(nrpages_out != 1);
++		DBG_BUGON(rq->pageofs_out);
+ 		return 0;
+ 	}
+ 
+-	src = kmap_atomic(*rq->in) + rq->pageofs_in;
++	src = kmap_local_page(rq->in[inpages - 1]) + rq->pageofs_in;
+ 	if (rq->out[0]) {
+-		dst = kmap_atomic(rq->out[0]);
+-		memcpy(dst + rq->pageofs_out, src, righthalf);
+-		kunmap_atomic(dst);
++		dst = kmap_local_page(rq->out[0]);
++		memcpy(dst + rq->pageofs_out, src + interlaced_offset,
++		       righthalf);
++		kunmap_local(dst);
+ 	}
+ 
+-	if (nrpages_out == 2) {
+-		DBG_BUGON(!rq->out[1]);
+-		if (rq->out[1] == *rq->in) {
++	if (outpages > inpages) {
++		DBG_BUGON(!rq->out[outpages - 1]);
++		if (rq->out[outpages - 1] != rq->in[inpages - 1]) {
++			dst = kmap_local_page(rq->out[outpages - 1]);
++			memcpy(dst, interlaced_offset ? src :
++					(src + righthalf), lefthalf);
++			kunmap_local(dst);
++		} else if (!interlaced_offset) {
+ 			memmove(src, src + righthalf, lefthalf);
+-		} else {
+-			dst = kmap_atomic(rq->out[1]);
+-			memcpy(dst, src + righthalf, lefthalf);
+-			kunmap_atomic(dst);
+ 		}
+ 	}
+-	kunmap_atomic(src);
++	kunmap_local(src);
+ 	return 0;
+ }
+ 
+ static struct z_erofs_decompressor decompressors[] = {
+ 	[Z_EROFS_COMPRESSION_SHIFTED] = {
+-		.decompress = z_erofs_shifted_transform,
++		.decompress = z_erofs_transform_plain,
+ 		.name = "shifted"
+ 	},
++	[Z_EROFS_COMPRESSION_INTERLACED] = {
++		.decompress = z_erofs_transform_plain,
++		.name = "interlaced"
++	},
+ 	[Z_EROFS_COMPRESSION_LZ4] = {
+ 		.decompress = z_erofs_lz4_decompress,
+ 		.name = "lz4"
 diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 5d8fefd8b3fb..0e6c6a234438 100644
+index 2b48373f690b..5c1de6d7ad71 100644
 --- a/fs/erofs/erofs_fs.h
 +++ b/fs/erofs/erofs_fs.h
-@@ -26,6 +26,7 @@
- #define EROFS_FEATURE_INCOMPAT_COMPR_HEAD2	0x00000008
- #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
- #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
-+#define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-@@ -34,7 +35,8 @@
- 	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
- 	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
--	 EROFS_FEATURE_INCOMPAT_FRAGMENTS)
-+	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
-+	 EROFS_FEATURE_INCOMPAT_DEDUPE)
+@@ -295,11 +295,13 @@ struct z_erofs_lzma_cfgs {
+  * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
+  * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
+  * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
++ * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
+  */
+ #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
+ #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
+ #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
+ #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
++#define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
  
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-@@ -371,6 +373,9 @@ enum {
- #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
- #define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
- 
-+/* (noncompact only, HEAD) This pcluster refers to partial decompressed data */
-+#define Z_EROFS_VLE_DI_PARTIAL_REF		(1 << 15)
-+
- /*
-  * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
-  * compressed block count of a compressed extent (in logical clusters, aka.
+ struct z_erofs_map_header {
+ 	__le16	h_reserved1;
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 9f89c1da6229..db8466f2a918 100644
+index cfee49d33b95..f3ed36445d73 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -291,6 +291,7 @@ EROFS_FEATURE_FUNCS(device_table, incompat, INCOMPAT_DEVICE_TABLE)
- EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
- EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
- EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
-+EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+@@ -436,6 +436,7 @@ struct erofs_map_blocks {
  
- /* atomic flag definitions */
-@@ -392,6 +393,7 @@ enum {
- 	BH_Encoded = BH_PrivateStart,
- 	BH_FullMapped,
- 	BH_Fragment,
-+	BH_Partialref,
+ enum {
+ 	Z_EROFS_COMPRESSION_SHIFTED = Z_EROFS_COMPRESSION_MAX,
++	Z_EROFS_COMPRESSION_INTERLACED,
+ 	Z_EROFS_COMPRESSION_RUNTIME_MAX
  };
  
- /* Has a disk mapping */
-@@ -404,6 +406,8 @@ enum {
- #define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
- /* Located in the special packed inode */
- #define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
-+/* the extent refers to partial compressed data */
-+#define EROFS_MAP_PARTIAL_REF	(1 << BH_Partialref)
- 
- struct erofs_map_blocks {
- 	struct erofs_buf buf;
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 4a55908ad37b..6bc45403ea5e 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -424,6 +424,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
- 	if (erofs_sb_has_fragments(sbi))
- 		erofs_info(sb, "EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
-+	if (erofs_sb_has_dedupe(sbi))
-+		erofs_info(sb, "EXPERIMENTAL global deduplication feature in use. Use at your own risk!");
- out:
- 	erofs_put_metabuf(&buf);
- 	return ret;
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index dd6eb7eccf9a..783bb7b21b51 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -77,6 +77,7 @@ EROFS_ATTR_FEATURE(compr_head2);
- EROFS_ATTR_FEATURE(sb_chksum);
- EROFS_ATTR_FEATURE(ztailpacking);
- EROFS_ATTR_FEATURE(fragments);
-+EROFS_ATTR_FEATURE(dedupe);
- 
- static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(zero_padding),
-@@ -88,6 +89,7 @@ static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(sb_chksum),
- 	ATTR_LIST(ztailpacking),
- 	ATTR_LIST(fragments),
-+	ATTR_LIST(dedupe),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(erofs_feat);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index c92a72f5bca6..cce56dde135c 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -814,6 +814,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		fe->pcl->multibases = true;
- 
- 	if ((map->m_flags & EROFS_MAP_FULL_MAPPED) &&
-+	    !(map->m_flags & EROFS_MAP_PARTIAL_REF) &&
- 	    fe->pcl->length == map->m_llen)
- 		fe->pcl->partial = false;
- 	if (fe->pcl->length < offset + end - map->m_la) {
 diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 6830999529d7..5ce63326aa7d 100644
+index d58549ca1df9..7196235a441c 100644
 --- a/fs/erofs/zmap.c
 +++ b/fs/erofs/zmap.c
-@@ -167,6 +167,7 @@ struct z_erofs_maprecorder {
- 	u16 delta[2];
- 	erofs_blk_t pblk, compressedblks;
- 	erofs_off_t nextpackoff;
-+	bool partialref;
- };
- 
- static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
-@@ -225,6 +226,8 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD1:
- 	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD2:
-+		if (advise & Z_EROFS_VLE_DI_PARTIAL_REF)
-+			m->partialref = true;
- 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
- 		m->pblk = le32_to_cpu(di->di_u.blkaddr);
- 		break;
-@@ -688,7 +691,8 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
+@@ -679,12 +679,18 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 			goto out;
  	}
--
-+	if (m.partialref)
-+		map->m_flags |= EROFS_MAP_PARTIAL_REF;
- 	map->m_llen = end - map->m_la;
  
- 	if (flags & EROFS_GET_BLOCKS_FINDTAIL) {
+-	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN)
+-		map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
+-	else if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2)
++	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN) {
++		if (vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
++			map->m_algorithmformat =
++				Z_EROFS_COMPRESSION_INTERLACED;
++		else
++			map->m_algorithmformat =
++				Z_EROFS_COMPRESSION_SHIFTED;
++	} else if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) {
+ 		map->m_algorithmformat = vi->z_algorithmtype[1];
+-	else
++	} else {
+ 		map->m_algorithmformat = vi->z_algorithmtype[0];
++	}
+ 
+ 	if ((flags & EROFS_GET_BLOCKS_FIEMAP) ||
+ 	    ((flags & EROFS_GET_BLOCKS_READMORE) &&
 -- 
-2.24.4
+2.17.1
 
