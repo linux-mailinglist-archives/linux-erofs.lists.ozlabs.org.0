@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 091025EAAE0
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Sep 2022 17:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F4285EAAE3
+	for <lists+linux-erofs@lfdr.de>; Mon, 26 Sep 2022 17:25:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MbmmS0cZyz3c1n
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 01:25:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MbmmZ2g2lz3bkZ
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 01:25:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.9; helo=out199-9.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out199-9.us.a.mail.aliyun.com (out199-9.us.a.mail.aliyun.com [47.90.199.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MbmmC6Pp0z3bc3
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 01:25:31 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VQoJOMk_1664205927;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VQoJOMk_1664205927)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MbmmJ5lM2z3bnM
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 01:25:36 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VQoJONA_1664205928;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VQoJONA_1664205928)
           by smtp.aliyun-inc.com;
-          Mon, 26 Sep 2022 23:25:28 +0800
+          Mon, 26 Sep 2022 23:25:29 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 5/8] erofs-utils: mkfs: support fragments
-Date: Mon, 26 Sep 2022 23:25:08 +0800
-Message-Id: <20220926152511.94832-6-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6/8] erofs-utils: lib: add rb-tree implementation
+Date: Mon, 26 Sep 2022 23:25:09 +0800
+Message-Id: <20220926152511.94832-7-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20220926152511.94832-1-hsiangkao@linux.alibaba.com>
 References: <20220926152511.94832-1-hsiangkao@linux.alibaba.com>
@@ -45,748 +45,662 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@coolpad.com>, Ziyang
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+From: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
 
-This approach can merge tail pclusters or the whole files into a special
-inode in order to achieve greater compression ratios. Also, an option of
-pcluster size is provided for different compression requirements.
+Introduce a simple rb-tree implementation in order to store the
+hash map for deduplication.
 
-Enable interlaced uncompressed data layout for compressed files at the
-same time as well.
-
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
+Signed-off-by: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/compress.h  |  11 ++++-
- include/erofs/config.h    |   3 +-
- include/erofs/fragments.h |  28 +++++++++++
- include/erofs/inode.h     |   1 +
- include/erofs/internal.h  |   3 ++
- lib/Makefile.am           |   4 +-
- lib/compress.c            | 101 ++++++++++++++++++++++++++++----------
- lib/fragments.c           |  65 ++++++++++++++++++++++++
- lib/inode.c               |  58 ++++++++++++++++++++--
- mkfs/main.c               |  58 +++++++++++++++++++---
- 10 files changed, 295 insertions(+), 37 deletions(-)
- create mode 100644 include/erofs/fragments.h
- create mode 100644 lib/fragments.c
+ lib/Makefile.am |   2 +-
+ lib/rb_tree.c   | 512 ++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/rb_tree.h   | 104 ++++++++++
+ 3 files changed, 617 insertions(+), 1 deletion(-)
+ create mode 100644 lib/rb_tree.c
+ create mode 100644 lib/rb_tree.h
 
-diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-index 24f6204..e9dfaf2 100644
---- a/include/erofs/compress.h
-+++ b/include/erofs/compress.h
-@@ -18,13 +18,22 @@ extern "C"
- #define EROFS_CONFIG_COMPR_MIN_SZ           (32   * 1024)
- 
- void z_erofs_drop_inline_pcluster(struct erofs_inode *inode);
--int erofs_write_compressed_file(struct erofs_inode *inode);
-+int erofs_write_compressed_file(struct erofs_inode *inode, int fd);
- 
- int z_erofs_compress_init(struct erofs_buffer_head *bh);
- int z_erofs_compress_exit(void);
- 
- const char *z_erofs_list_available_compressors(unsigned int i);
- 
-+static inline bool erofs_is_packed_inode(struct erofs_inode *inode)
-+{
-+	if (inode->nid == EROFS_PACKED_NID_UNALLOCATED) {
-+		DBG_BUGON(sbi.packed_nid != EROFS_PACKED_NID_UNALLOCATED);
-+		return true;
-+	}
-+	return (sbi.packed_nid > 0 && inode->nid == sbi.packed_nid);
-+}
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 539d813..764b0f7 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -44,6 +44,7 @@ struct erofs_configure {
- 	char c_chunkbits;
- 	bool c_noinline_data;
- 	bool c_ztailpacking;
-+	bool c_fragments;
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
- 
-@@ -62,7 +63,7 @@ struct erofs_configure {
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
- 	int c_inline_xattr_tolerance;
- 
--	u32 c_pclusterblks_max, c_pclusterblks_def;
-+	u32 c_pclusterblks_max, c_pclusterblks_def, c_pclusterblks_packed;
- 	u32 c_max_decompressed_extent_bytes;
- 	u32 c_dict_size;
- 	u64 c_unix_timestamp;
-diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
-new file mode 100644
-index 0000000..5444384
---- /dev/null
-+++ b/include/erofs/fragments.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * Copyright (C), 2022, Coolpad Group Limited.
-+ */
-+#ifndef __EROFS_FRAGMENTS_H
-+#define __EROFS_FRAGMENTS_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "erofs/internal.h"
-+
-+extern const char *frags_packedname;
-+#define EROFS_PACKED_INODE	frags_packedname
-+
-+int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
-+			   unsigned int len);
-+struct erofs_inode *erofs_mkfs_build_fragments(void);
-+int erofs_fragments_init(void);
-+void erofs_fragments_exit(void);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index 79b8d89..bf20cd3 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -22,6 +22,7 @@ unsigned int erofs_iput(struct erofs_inode *inode);
- erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
- 						    const char *path);
-+struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name);
- 
- #ifdef __cplusplus
- }
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index dd3776c..6fc58f9 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -70,6 +70,8 @@ struct erofs_device_info {
- 	u32 mapped_blkaddr;
- };
- 
-+#define EROFS_PACKED_NID_UNALLOCATED	-1
-+
- struct erofs_sb_info {
- 	struct erofs_device_info *devs;
- 
-@@ -212,6 +214,7 @@ struct erofs_inode {
- 	uint64_t capabilities;
- #endif
- 	erofs_off_t fragmentoff;
-+	unsigned int fragment_size;
- };
- 
- static inline bool is_inode_layout_compression(struct erofs_inode *inode)
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 3fad357..95f1d55 100644
+index 95f1d55..1a2071c 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -22,12 +22,14 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/trace.h \
-       $(top_srcdir)/include/erofs/xattr.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-+      $(top_srcdir)/include/erofs/fragments.h \
-       $(top_srcdir)/lib/liberofs_private.h
- 
- noinst_HEADERS += compressor.h
+@@ -29,7 +29,7 @@ noinst_HEADERS += compressor.h
  liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
  		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
--		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
-+		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
-+		      fragments.c
+ 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+-		      fragments.c
++		      fragments.c rb_tree.c
  liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
  if ENABLE_LZ4
  liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-diff --git a/lib/compress.c b/lib/compress.c
-index 8fa60e2..c0bd307 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -18,6 +18,7 @@
- #include "compressor.h"
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
-+#include "erofs/fragments.h"
- 
- static struct erofs_compress compresshandle;
- static unsigned int algorithmtype[2];
-@@ -33,6 +34,7 @@ struct z_erofs_vle_compress_ctx {
- 	u8 queue[EROFS_CONFIG_COMPR_MAX_SZ * 2];
- 	struct z_erofs_inmem_extent e;	/* (lookahead) extent */
- 
-+	struct erofs_inode *inode;
- 	u8 *metacur;
- 	unsigned int head, tail;
- 	erofs_blk_t blkaddr;		/* pointing to the next blkaddr */
-@@ -68,6 +70,7 @@ static void z_erofs_write_indexes_final(struct z_erofs_vle_compress_ctx *ctx)
- 
- static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
- {
-+	struct erofs_inode *inode = ctx->inode;
- 	unsigned int clusterofs = ctx->clusterofs;
- 	unsigned int count = ctx->e.length;
- 	unsigned int d0 = 0, d1 = (clusterofs + count) / EROFS_BLKSIZ;
-@@ -89,7 +92,11 @@ static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
- 		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
- 
- 		di.di_advise = advise;
--		di.di_u.blkaddr = cpu_to_le32(ctx->e.blkaddr);
-+		if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY &&
-+		    !ctx->e.compressedblks)
-+			di.di_u.blkaddr = cpu_to_le32(inode->fragmentoff >> 32);
-+		else
-+			di.di_u.blkaddr = cpu_to_le32(ctx->e.blkaddr);
- 		memcpy(ctx->metacur, &di, sizeof(di));
- 		ctx->metacur += sizeof(di);
- 
-@@ -128,7 +135,12 @@ static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
- 		} else {
- 			type = ctx->e.raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
- 				Z_EROFS_VLE_CLUSTER_TYPE_HEAD;
--			di.di_u.blkaddr = cpu_to_le32(ctx->e.blkaddr);
-+
-+			if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION_LEGACY &&
-+			    !ctx->e.compressedblks)
-+				di.di_u.blkaddr = cpu_to_le32(inode->fragmentoff >> 32);
-+			else
-+				di.di_u.blkaddr = cpu_to_le32(ctx->e.blkaddr);
- 		}
- 		advise = cpu_to_le16(type << Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT);
- 		di.di_advise = advise;
-@@ -163,7 +175,10 @@ static int write_uncompressed_extent(struct z_erofs_vle_compress_ctx *ctx,
- 	count = min(EROFS_BLKSIZ, *len);
- 
- 	/* write interlaced uncompressed data if needed */
--	interlaced_offset = 0; /* will set it to clusterofs */
-+	if (ctx->inode->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
-+		interlaced_offset = ctx->clusterofs;
-+	else
-+		interlaced_offset = 0;
- 	rightpart = min(EROFS_BLKSIZ - interlaced_offset, count);
- 
- 	memset(dst, 0, EROFS_BLKSIZ);
-@@ -181,6 +196,8 @@ static int write_uncompressed_extent(struct z_erofs_vle_compress_ctx *ctx,
- 
- static unsigned int z_erofs_get_max_pclusterblks(struct erofs_inode *inode)
- {
-+	if (erofs_is_packed_inode(inode))
-+		return cfg.c_pclusterblks_packed;
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
- 		return 1 + rand() % cfg.c_pclusterblks_max;
-@@ -234,11 +251,11 @@ static void tryrecompress_trailing(void *in, unsigned int *insize,
- 	*compressedsize = ret;
- }
- 
--static int vle_compress_one(struct erofs_inode *inode,
--			    struct z_erofs_vle_compress_ctx *ctx,
-+static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx,
- 			    bool final)
- {
- 	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
-+	struct erofs_inode *inode = ctx->inode;
- 	char *const dst = dstbuf + EROFS_BLKSIZ;
- 	struct erofs_compress *const h = &compresshandle;
- 	unsigned int len = ctx->tail - ctx->head;
-@@ -248,10 +265,16 @@ static int vle_compress_one(struct erofs_inode *inode,
- 		unsigned int pclustersize =
- 			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
- 		bool may_inline = (cfg.c_ztailpacking && final);
-+		bool may_packing = (cfg.c_fragments && final &&
-+				   !erofs_is_packed_inode(inode));
- 
- 		if (len <= pclustersize) {
- 			if (!final)
- 				break;
-+			if (may_packing) {
-+				ctx->e.length = len;
-+				goto frag_packing;
-+			}
- 			if (!may_inline && len <= EROFS_BLKSIZ)
- 				goto nocompression;
- 		}
-@@ -267,7 +290,6 @@ static int vle_compress_one(struct erofs_inode *inode,
- 					  inode->i_srcpath,
- 					  erofs_strerror(ret));
- 			}
--
- 			if (may_inline && len < EROFS_BLKSIZ)
- 				ret = z_erofs_fill_inline_data(inode,
- 						ctx->queue + ctx->head,
-@@ -287,6 +309,16 @@ nocompression:
- 			 */
- 			ctx->e.compressedblks = 1;
- 			ctx->e.raw = true;
-+		} else if (may_packing && len == ctx->e.length &&
-+			   ret < pclustersize) {
-+frag_packing:
-+			ret = z_erofs_pack_fragments(inode,
-+						     ctx->queue + ctx->head,
-+						     len);
-+			if (ret < 0)
-+				return ret;
-+			ctx->e.compressedblks = 0; /* indicate a fragment */
-+			ctx->e.raw = true;
- 		/* tailpcluster should be less than 1 block */
- 		} else if (may_inline && len == ctx->e.length &&
- 			   ret < EROFS_BLKSIZ) {
-@@ -559,13 +591,17 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
- {
- 	struct z_erofs_map_header h = {
- 		.h_advise = cpu_to_le16(inode->z_advise),
--		.h_idata_size = cpu_to_le16(inode->idata_size),
- 		.h_algorithmtype = inode->z_algorithmtype[1] << 4 |
- 				   inode->z_algorithmtype[0],
- 		/* lclustersize */
- 		.h_clusterbits = inode->z_logical_clusterbits - 12,
- 	};
- 
-+	if (inode->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)
-+		h.h_fragmentoff = cpu_to_le32(inode->fragmentoff);
-+	else
-+		h.h_idata_size = cpu_to_le16(inode->idata_size);
-+
- 	memset(compressmeta, 0, Z_EROFS_LEGACY_MAP_HEADER_SIZE);
- 	/* write out map header */
- 	memcpy(compressmeta, &h, sizeof(struct z_erofs_map_header));
-@@ -618,30 +654,24 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
- 	inode->eof_tailraw = NULL;
- }
- 
--int erofs_write_compressed_file(struct erofs_inode *inode)
-+int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
- {
- 	struct erofs_buffer_head *bh;
- 	static struct z_erofs_vle_compress_ctx ctx;
- 	erofs_off_t remaining;
- 	erofs_blk_t blkaddr, compressed_blocks;
- 	unsigned int legacymetasize;
--	int ret, fd;
-+	int ret;
- 	u8 *compressmeta = malloc(vle_compressmeta_capacity(inode->i_size));
- 
- 	if (!compressmeta)
- 		return -ENOMEM;
- 
--	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
--	if (fd < 0) {
--		ret = -errno;
--		goto err_free_meta;
--	}
--
- 	/* allocate main data buffer */
- 	bh = erofs_balloc(DATA, 0, 0, 0);
- 	if (IS_ERR(bh)) {
- 		ret = PTR_ERR(bh);
--		goto err_close;
-+		goto err_free_meta;
- 	}
- 
- 	/* initialize per-file compression setting */
-@@ -658,11 +688,17 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 		if (inode->datalayout == EROFS_INODE_FLAT_COMPRESSION)
- 			inode->z_advise |= Z_EROFS_ADVISE_BIG_PCLUSTER_2;
- 	}
-+	if (cfg.c_fragments)
-+		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
- 	inode->z_algorithmtype[0] = algorithmtype[0];
- 	inode->z_algorithmtype[1] = algorithmtype[1];
- 	inode->z_logical_clusterbits = LOG_BLOCK_SIZE;
- 
-+	inode->idata_size = 0;
-+	inode->fragment_size = 0;
-+
- 	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
-+	ctx.inode = inode;
- 	ctx.blkaddr = blkaddr;
- 	ctx.metacur = compressmeta + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
- 	ctx.head = ctx.tail = 0;
-@@ -682,7 +718,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 		remaining -= readcount;
- 		ctx.tail += readcount;
- 
--		ret = vle_compress_one(inode, &ctx, !remaining);
-+		ret = vle_compress_one(&ctx, !remaining);
- 		if (ret)
- 			goto err_free_idata;
- 	}
-@@ -696,29 +732,41 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 	z_erofs_write_indexes_final(&ctx);
- 	legacymetasize = ctx.metacur - compressmeta;
- 	/* estimate if data compression saves space or not */
--	if (compressed_blocks * EROFS_BLKSIZ + inode->idata_size +
-+	if (!inode->fragment_size &&
-+	    compressed_blocks * EROFS_BLKSIZ + inode->idata_size +
- 	    legacymetasize >= inode->i_size) {
- 		ret = -ENOSPC;
- 		goto err_free_idata;
- 	}
- 	z_erofs_write_mapheader(inode, compressmeta);
- 
--	close(fd);
-+	/* if the entire file is a fragment, a simplified form is used. */
-+	if (inode->i_size == inode->fragment_size) {
-+		DBG_BUGON(inode->fragmentoff >> 63);
-+		*(__le64 *)compressmeta =
-+			cpu_to_le64(inode->fragmentoff | 1ULL << 63);
-+		inode->datalayout = EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-+		legacymetasize = Z_EROFS_LEGACY_MAP_HEADER_SIZE;
-+	}
-+
- 	if (compressed_blocks) {
- 		ret = erofs_bh_balloon(bh, blknr_to_addr(compressed_blocks));
- 		DBG_BUGON(ret != EROFS_BLKSIZ);
- 	} else {
--		DBG_BUGON(!inode->idata_size);
-+		if (!cfg.c_fragments)
-+			DBG_BUGON(!inode->idata_size);
- 	}
- 
- 	erofs_info("compressed %s (%llu bytes) into %u blocks",
- 		   inode->i_srcpath, (unsigned long long)inode->i_size,
- 		   compressed_blocks);
- 
--	if (inode->idata_size)
-+	if (inode->idata_size) {
-+		bh->op = &erofs_skip_write_bhops;
- 		inode->bh_data = bh;
--	else
-+	} else {
- 		erofs_bdrop(bh, false);
-+	}
- 
- 	inode->u.i_blocks = compressed_blocks;
- 
-@@ -731,7 +779,8 @@ int erofs_write_compressed_file(struct erofs_inode *inode)
- 		DBG_BUGON(ret);
- 	}
- 	inode->compressmeta = compressmeta;
--	erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
-+	if (!erofs_is_packed_inode(inode))
-+		erofs_droid_blocklist_write(inode, blkaddr, compressed_blocks);
- 	return 0;
- 
- err_free_idata:
-@@ -741,8 +790,6 @@ err_free_idata:
- 	}
- err_bdrop:
- 	erofs_bdrop(bh, true);	/* revoke buffer */
--err_close:
--	close(fd);
- err_free_meta:
- 	free(compressmeta);
- 	return ret;
-@@ -856,6 +903,10 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		}
- 		erofs_sb_set_big_pcluster();
- 	}
-+	if (cfg.c_pclusterblks_packed > cfg.c_pclusterblks_max) {
-+		erofs_err("invalid physical cluster size for the packed file");
-+		return -EINVAL;
-+	}
- 
- 	if (ret != Z_EROFS_COMPRESSION_LZ4)
- 		erofs_sb_set_compr_cfgs();
-diff --git a/lib/fragments.c b/lib/fragments.c
+diff --git a/lib/rb_tree.c b/lib/rb_tree.c
 new file mode 100644
-index 0000000..b8c37d5
+index 0000000..28800a9
 --- /dev/null
-+++ b/lib/fragments.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C), 2022, Coolpad Group Limited.
-+ * Created by Yue Hu <huyue2@coolpad.com>
-+ */
-+#define _GNU_SOURCE
++++ b/lib/rb_tree.c
+@@ -0,0 +1,512 @@
++// SPDX-License-Identifier: Unlicense
++//
++// Based on Julienne Walker's <http://eternallyconfuzzled.com/> rb_tree
++// implementation.
++//
++// Modified by Mirek Rusin <http://github.com/mirek/rb_tree>.
++//
++// This is free and unencumbered software released into the public domain.
++//
++// Anyone is free to copy, modify, publish, use, compile, sell, or
++// distribute this software, either in source code form or as a compiled
++// binary, for any purpose, commercial or non-commercial, and by any
++// means.
++//
++// In jurisdictions that recognize copyright laws, the author or authors
++// of this software dedicate any and all copyright interest in the
++// software to the public domain. We make this dedication for the benefit
++// of the public at large and to the detriment of our heirs and
++// successors. We intend this dedication to be an overt act of
++// relinquishment in perpetuity of all present and future rights to this
++// software under copyright law.
++//
++// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
++// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
++// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
++// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++// OTHER DEALINGS IN THE SOFTWARE.
++//
++// For more information, please refer to <http://unlicense.org/>
++//
++
++#include "rb_tree.h"
++
++// rb_node
++
++struct rb_node *
++rb_node_alloc () {
++    return malloc(sizeof(struct rb_node));
++}
++
++struct rb_node *
++rb_node_init (struct rb_node *self, void *value) {
++    if (self) {
++        self->red = 1;
++        self->link[0] = self->link[1] = NULL;
++        self->value = value;
++    }
++    return self;
++}
++
++struct rb_node *
++rb_node_create (void *value) {
++    return rb_node_init(rb_node_alloc(), value);
++}
++
++void
++rb_node_dealloc (struct rb_node *self) {
++    if (self) {
++        free(self);
++    }
++}
++
++static int
++rb_node_is_red (const struct rb_node *self) {
++    return self ? self->red : 0;
++}
++
++static struct rb_node *
++rb_node_rotate (struct rb_node *self, int dir) {
++    struct rb_node *result = NULL;
++    if (self) {
++        result = self->link[!dir];
++        self->link[!dir] = result->link[dir];
++        result->link[dir] = self;
++        self->red = 1;
++        result->red = 0;
++    }
++    return result;
++}
++
++static struct rb_node *
++rb_node_rotate2 (struct rb_node *self, int dir) {
++    struct rb_node *result = NULL;
++    if (self) {
++        self->link[!dir] = rb_node_rotate(self->link[!dir], !dir);
++        result = rb_node_rotate(self, dir);
++    }
++    return result;
++}
++
++// rb_tree - default callbacks
++
++int
++rb_tree_node_cmp_ptr_cb (struct rb_tree *self, struct rb_node *a, struct rb_node *b) {
++    return (a->value > b->value) - (a->value < b->value);
++}
++
++void
++rb_tree_node_dealloc_cb (struct rb_tree *self, struct rb_node *node) {
++    if (self) {
++        if (node) {
++            rb_node_dealloc(node);
++        }
++    }
++}
++
++// rb_tree
++
++struct rb_tree *
++rb_tree_alloc () {
++    return malloc(sizeof(struct rb_tree));
++}
++
++struct rb_tree *
++rb_tree_init (struct rb_tree *self, rb_tree_node_cmp_f node_cmp_cb) {
++    if (self) {
++        self->root = NULL;
++        self->size = 0;
++        self->cmp = node_cmp_cb ? node_cmp_cb : rb_tree_node_cmp_ptr_cb;
++    }
++    return self;
++}
++
++struct rb_tree *
++rb_tree_create (rb_tree_node_cmp_f node_cb) {
++    return rb_tree_init(rb_tree_alloc(), node_cb);
++}
++
++void
++rb_tree_dealloc (struct rb_tree *self, rb_tree_node_f node_cb) {
++    if (self) {
++        if (node_cb) {
++            struct rb_node *node = self->root;
++            struct rb_node *save = NULL;
++
++            // Rotate away the left links so that
++            // we can treat this like the destruction
++            // of a linked list
++            while (node) {
++                if (node->link[0] == NULL) {
++
++                    // No left links, just kill the node and move on
++                    save = node->link[1];
++                    node_cb(self, node);
++                    node = NULL;
++                } else {
++
++                    // Rotate away the left link and check again
++                    save = node->link[0];
++                    node->link[0] = save->link[1];
++                    save->link[1] = node;
++                }
++                node = save;
++            }
++        }
++        free(self);
++    }
++}
++
++int
++rb_tree_test (struct rb_tree *self, struct rb_node *root) {
++    int lh, rh;
++
++    if ( root == NULL )
++        return 1;
++    else {
++        struct rb_node *ln = root->link[0];
++        struct rb_node *rn = root->link[1];
++
++        /* Consecutive red links */
++        if (rb_node_is_red(root)) {
++            if (rb_node_is_red(ln) || rb_node_is_red(rn)) {
++                printf("Red violation");
++                return 0;
++            }
++        }
++
++        lh = rb_tree_test(self, ln);
++        rh = rb_tree_test(self, rn);
++
++        /* Invalid binary search tree */
++        if ( ( ln != NULL && self->cmp(self, ln, root) >= 0 )
++            || ( rn != NULL && self->cmp(self, rn, root) <= 0))
++        {
++            puts ( "Binary tree violation" );
++            return 0;
++        }
++
++        /* Black height mismatch */
++        if ( lh != 0 && rh != 0 && lh != rh ) {
++            puts ( "Black violation" );
++            return 0;
++        }
++
++        /* Only count black links */
++        if ( lh != 0 && rh != 0 )
++            return rb_node_is_red ( root ) ? lh : lh + 1;
++        else
++            return 0;
++    }
++}
++
++void *
++rb_tree_find(struct rb_tree *self, void *value) {
++    void *result = NULL;
++    if (self) {
++        struct rb_node node = { .value = value };
++        struct rb_node *it = self->root;
++        int cmp = 0;
++        while (it) {
++            if ((cmp = self->cmp(self, it, &node))) {
++
++                // If the tree supports duplicates, they should be
++                // chained to the right subtree for this to work
++                it = it->link[cmp < 0];
++            } else {
++                break;
++            }
++        }
++        result = it ? it->value : NULL;
++    }
++    return result;
++}
++
++// Creates (malloc'ates)
++int
++rb_tree_insert (struct rb_tree *self, void *value) {
++    return rb_tree_insert_node(self, rb_node_create(value));
++}
++
++// Returns 1 on success, 0 otherwise.
++int
++rb_tree_insert_node (struct rb_tree *self, struct rb_node *node) {
++    if (self && node) {
++        if (self->root == NULL) {
++            self->root = node;
++        } else {
++            struct rb_node head = { 0 }; // False tree root
++            struct rb_node *g, *t;       // Grandparent & parent
++            struct rb_node *p, *q;       // Iterator & parent
++            int dir = 0, last = 0;
++
++            // Set up our helpers
++            t = &head;
++            g = p = NULL;
++            q = t->link[1] = self->root;
++
++            // Search down the tree for a place to insert
++            while (1) {
++                if (q == NULL) {
++
++                    // Insert node at the first null link.
++                    p->link[dir] = q = node;
++                } else if (rb_node_is_red(q->link[0]) && rb_node_is_red(q->link[1])) {
++
++                    // Simple red violation: color flip
++                    q->red = 1;
++                    q->link[0]->red = 0;
++                    q->link[1]->red = 0;
++                }
++
++                if (rb_node_is_red(q) && rb_node_is_red(p)) {
++
++                    // Hard red violation: rotations necessary
++                    int dir2 = t->link[1] == g;
++                    if (q == p->link[last]) {
++                        t->link[dir2] = rb_node_rotate(g, !last);
++                    } else {
++                        t->link[dir2] = rb_node_rotate2(g, !last);
++                    }
++                }
++
++                // Stop working if we inserted a node. This
++                // check also disallows duplicates in the tree
++                if (self->cmp(self, q, node) == 0) {
++                    break;
++                }
++
++                last = dir;
++                dir = self->cmp(self, q, node) < 0;
++
++                // Move the helpers down
++                if (g != NULL) {
++                    t = g;
++                }
++
++                g = p, p = q;
++                q = q->link[dir];
++            }
++
++            // Update the root (it may be different)
++            self->root = head.link[1];
++        }
++
++        // Make the root black for simplified logic
++        self->root->red = 0;
++        ++self->size;
++        return 1;
++    }
++    return 0;
++}
++
++// Returns 1 if the value was removed, 0 otherwise. Optional node callback
++// can be provided to dealloc node and/or user data. Use rb_tree_node_dealloc
++// default callback to deallocate node created by rb_tree_insert(...).
++int
++rb_tree_remove_with_cb (struct rb_tree *self, void *value, rb_tree_node_f node_cb) {
++    if (self->root != NULL) {
++        struct rb_node head = {0}; // False tree root
++        struct rb_node node = { .value = value }; // Value wrapper node
++        struct rb_node *q, *p, *g; // Helpers
++        struct rb_node *f = NULL;  // Found item
++        int dir = 1;
++
++        // Set up our helpers
++        q = &head;
++        g = p = NULL;
++        q->link[1] = self->root;
++
++        // Search and push a red node down
++        // to fix red violations as we go
++        while (q->link[dir] != NULL) {
++            int last = dir;
++
++            // Move the helpers down
++            g = p, p = q;
++            q = q->link[dir];
++            dir = self->cmp(self, q, &node) < 0;
++
++            // Save the node with matching value and keep
++            // going; we'll do removal tasks at the end
++            if (self->cmp(self, q, &node) == 0) {
++                f = q;
++            }
++
++            // Push the red node down with rotations and color flips
++            if (!rb_node_is_red(q) && !rb_node_is_red(q->link[dir])) {
++                if (rb_node_is_red(q->link[!dir])) {
++                    p = p->link[last] = rb_node_rotate(q, dir);
++                } else if (!rb_node_is_red(q->link[!dir])) {
++                    struct rb_node *s = p->link[!last];
++                    if (s) {
++                        if (!rb_node_is_red(s->link[!last]) && !rb_node_is_red(s->link[last])) {
++
++                            // Color flip
++                            p->red = 0;
++                            s->red = 1;
++                            q->red = 1;
++                        } else {
++                            int dir2 = g->link[1] == p;
++                            if (rb_node_is_red(s->link[last])) {
++                                g->link[dir2] = rb_node_rotate2(p, last);
++                            } else if (rb_node_is_red(s->link[!last])) {
++                                g->link[dir2] = rb_node_rotate(p, last);
++                            }
++
++                            // Ensure correct coloring
++                            q->red = g->link[dir2]->red = 1;
++                            g->link[dir2]->link[0]->red = 0;
++                            g->link[dir2]->link[1]->red = 0;
++                        }
++                    }
++                }
++            }
++        }
++
++        // Replace and remove the saved node
++        if (f) {
++            void *tmp = f->value;
++            f->value = q->value;
++            q->value = tmp;
++
++            p->link[p->link[1] == q] = q->link[q->link[0] == NULL];
++
++            if (node_cb) {
++                node_cb(self, q);
++            }
++            q = NULL;
++        }
++
++        // Update the root (it may be different)
++        self->root = head.link[1];
++
++        // Make the root black for simplified logic
++        if (self->root != NULL) {
++            self->root->red = 0;
++        }
++
++        --self->size;
++    }
++    return 1;
++}
++
++int
++rb_tree_remove (struct rb_tree *self, void *value) {
++    int result = 0;
++    if (self) {
++        result = rb_tree_remove_with_cb(self, value, rb_tree_node_dealloc_cb);
++    }
++    return result;
++}
++
++size_t
++rb_tree_size (struct rb_tree *self) {
++    size_t result = 0;
++    if (self) {
++        result = self->size;
++    }
++    return result;
++}
++
++// rb_iter
++
++struct rb_iter *
++rb_iter_alloc () {
++    return malloc(sizeof(struct rb_iter));
++}
++
++struct rb_iter *
++rb_iter_init (struct rb_iter *self) {
++    if (self) {
++        self->tree = NULL;
++        self->node = NULL;
++        self->top = 0;
++    }
++    return self;
++}
++
++struct rb_iter *
++rb_iter_create () {
++    return rb_iter_init(rb_iter_alloc());
++}
++
++void
++rb_iter_dealloc (struct rb_iter *self) {
++    if (self) {
++        free(self);
++    }
++}
++
++// Internal function, init traversal object, dir determines whether
++// to begin traversal at the smallest or largest valued node.
++static void *
++rb_iter_start (struct rb_iter *self, struct rb_tree *tree, int dir) {
++    void *result = NULL;
++    if (self) {
++        self->tree = tree;
++        self->node = tree->root;
++        self->top = 0;
++
++        // Save the path for later selfersal
++        if (self->node != NULL) {
++            while (self->node->link[dir] != NULL) {
++                self->path[self->top++] = self->node;
++                self->node = self->node->link[dir];
++            }
++        }
++
++        result = self->node == NULL ? NULL : self->node->value;
++    }
++    return result;
++}
++
++// Traverse a red black tree in the user-specified direction (0 asc, 1 desc)
++static void *
++rb_iter_move (struct rb_iter *self, int dir) {
++    if (self->node->link[dir] != NULL) {
++
++        // Continue down this branch
++        self->path[self->top++] = self->node;
++        self->node = self->node->link[dir];
++        while ( self->node->link[!dir] != NULL ) {
++            self->path[self->top++] = self->node;
++            self->node = self->node->link[!dir];
++        }
++    } else {
++
++        // Move to the next branch
++        struct rb_node *last = NULL;
++        do {
++            if (self->top == 0) {
++                self->node = NULL;
++                break;
++            }
++            last = self->node;
++            self->node = self->path[--self->top];
++        } while (last == self->node->link[dir]);
++    }
++    return self->node == NULL ? NULL : self->node->value;
++}
++
++void *
++rb_iter_first (struct rb_iter *self, struct rb_tree *tree) {
++    return rb_iter_start(self, tree, 0);
++}
++
++void *
++rb_iter_last (struct rb_iter *self, struct rb_tree *tree) {
++    return rb_iter_start(self, tree, 1);
++}
++
++void *
++rb_iter_next (struct rb_iter *self) {
++    return rb_iter_move(self, 1);
++}
++
++void *
++rb_iter_prev (struct rb_iter *self) {
++    return rb_iter_move(self, 0);
++}
+diff --git a/lib/rb_tree.h b/lib/rb_tree.h
+new file mode 100644
+index 0000000..5b35c74
+--- /dev/null
++++ b/lib/rb_tree.h
+@@ -0,0 +1,104 @@
++/* SPDX-License-Identifier: Unlicense */
++//
++// Based on Julienne Walker's <http://eternallyconfuzzled.com/> rb_tree
++// implementation.
++//
++// Modified by Mirek Rusin <http://github.com/mirek/rb_tree>.
++//
++// This is free and unencumbered software released into the public domain.
++//
++// Anyone is free to copy, modify, publish, use, compile, sell, or
++// distribute this software, either in source code form or as a compiled
++// binary, for any purpose, commercial or non-commercial, and by any
++// means.
++//
++// In jurisdictions that recognize copyright laws, the author or authors
++// of this software dedicate any and all copyright interest in the
++// software to the public domain. We make this dedication for the benefit
++// of the public at large and to the detriment of our heirs and
++// successors. We intend this dedication to be an overt act of
++// relinquishment in perpetuity of all present and future rights to this
++// software under copyright law.
++//
++// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
++// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
++// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
++// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++// OTHER DEALINGS IN THE SOFTWARE.
++//
++// For more information, please refer to <http://unlicense.org/>
++//
++
++#ifndef __RB_TREE_H__
++#define __RB_TREE_H__ 1
++
++#include <stdio.h>
++#include <stdint.h>
++#include <stddef.h>
 +#include <stdlib.h>
-+#include <unistd.h>
-+#include "erofs/err.h"
-+#include "erofs/inode.h"
-+#include "erofs/compress.h"
-+#include "erofs/print.h"
-+#include "erofs/fragments.h"
 +
-+static FILE *packedfile;
-+const char *frags_packedname = "packed_file";
-+
-+int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
-+			   unsigned int len)
-+{
-+	inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
-+	inode->fragmentoff = ftell(packedfile);
-+	inode->fragment_size = len;
-+	/*
-+	 * If the packed inode is larger than 4GiB, the full fragmentoff
-+	 * will be recorded by switching to the noncompact layout anyway.
-+	 */
-+	if (inode->fragmentoff >> 32)
-+		inode->datalayout = EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-+
-+	if (fwrite(data, len, 1, packedfile) != 1)
-+		return -EIO;
-+
-+	erofs_sb_set_fragments();
-+
-+	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
-+		  inode->fragmentoff);
-+	return len;
-+}
-+
-+struct erofs_inode *erofs_mkfs_build_fragments(void)
-+{
-+	fflush(packedfile);
-+
-+	return erofs_mkfs_build_special_from_fd(fileno(packedfile),
-+						frags_packedname);
-+}
-+
-+void erofs_fragments_exit(void)
-+{
-+	if (packedfile)
-+		fclose(packedfile);
-+}
-+
-+int erofs_fragments_init(void)
-+{
-+#ifdef HAVE_TMPFILE64
-+	packedfile = tmpfile64();
-+#else
-+	packedfile = tmpfile();
++#ifndef RB_ITER_MAX_HEIGHT
++#define RB_ITER_MAX_HEIGHT 64 // Tallest allowable tree to iterate
 +#endif
-+	if (!packedfile)
-+		return -ENOMEM;
-+	return 0;
-+}
-diff --git a/lib/inode.c b/lib/inode.c
-index 4da28b3..130e275 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -25,6 +25,7 @@
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
-+#include "erofs/fragments.h"
- #include "liberofs_private.h"
- 
- #define S_SHIFT                 12
-@@ -424,7 +425,11 @@ int erofs_write_file(struct erofs_inode *inode)
- 	}
- 
- 	if (cfg.c_compr_alg_master && erofs_file_is_compressible(inode)) {
--		ret = erofs_write_compressed_file(inode);
-+		fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
-+		if (fd < 0)
-+			return -errno;
-+		ret = erofs_write_compressed_file(inode, fd);
-+		close(fd);
- 
- 		if (!ret || ret != -ENOSPC)
- 			return ret;
-@@ -769,6 +774,8 @@ static bool erofs_should_use_inode_extended(struct erofs_inode *inode)
- 		return true;
- 	if (inode->i_size > UINT_MAX)
- 		return true;
-+	if (erofs_is_packed_inode(inode))
-+		return false;
- 	if (inode->i_uid > USHRT_MAX)
- 		return true;
- 	if (inode->i_gid > USHRT_MAX)
-@@ -844,8 +851,7 @@ static int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
- }
- #endif
- 
--static int erofs_fill_inode(struct erofs_inode *inode,
--			    struct stat64 *st,
-+static int erofs_fill_inode(struct erofs_inode *inode, struct stat64 *st,
- 			    const char *path)
- {
- 	int err = erofs_droid_inode_fsconfig(inode, st, path);
-@@ -1180,3 +1186,49 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_inode *parent,
- 
- 	return erofs_mkfs_build_tree(inode);
- }
 +
-+struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
-+{
-+	struct stat64 st;
-+	struct erofs_inode *inode;
-+	int ret;
++struct rb_node;
++struct rb_tree;
 +
-+	lseek(fd, 0, SEEK_SET);
-+	ret = fstat64(fd, &st);
-+	if (ret)
-+		return ERR_PTR(-errno);
++typedef int  (*rb_tree_node_cmp_f) (struct rb_tree *self, struct rb_node *a, struct rb_node *b);
++typedef void (*rb_tree_node_f)     (struct rb_tree *self, struct rb_node *node);
 +
-+	inode = erofs_new_inode();
-+	if (IS_ERR(inode))
-+		return inode;
++struct rb_node {
++    int             red;     // Color red (1), black (0)
++    struct rb_node *link[2]; // Link left [0] and right [1]
++    void           *value;   // User provided, used indirectly via rb_tree_node_cmp_f.
++};
 +
-+	if (name == EROFS_PACKED_INODE) {
-+		st.st_uid = st.st_gid = 0;
-+		st.st_nlink = 0;
-+	}
++struct rb_tree {
++    struct rb_node    *root;
++    rb_tree_node_cmp_f cmp;
++    size_t             size;
++    void              *info; // User provided, not used by rb_tree.
++};
 +
-+	ret = erofs_fill_inode(inode, &st, name);
-+	if (ret) {
-+		free(inode);
-+		return ERR_PTR(ret);
-+	}
++struct rb_iter {
++    struct rb_tree *tree;
++    struct rb_node *node;                     // Current node
++    struct rb_node *path[RB_ITER_MAX_HEIGHT]; // Traversal path
++    size_t          top;                      // Top of stack
++    void           *info;                     // User provided, not used by rb_iter.
++};
 +
-+	if (name == EROFS_PACKED_INODE) {
-+		sbi.packed_nid = EROFS_PACKED_NID_UNALLOCATED;
-+		inode->nid = sbi.packed_nid;
-+	}
++int             rb_tree_node_cmp_ptr_cb (struct rb_tree *self, struct rb_node *a, struct rb_node *b);
++void            rb_tree_node_dealloc_cb (struct rb_tree *self, struct rb_node *node);
 +
-+	ret = erofs_write_compressed_file(inode, fd);
-+	if (ret == -ENOSPC) {
-+		lseek(fd, 0, SEEK_SET);
-+		ret = write_uncompressed_file_from_fd(inode, fd);
-+	}
++struct rb_node *rb_node_alloc           ();
++struct rb_node *rb_node_create          (void *value);
++struct rb_node *rb_node_init            (struct rb_node *self, void *value);
++void            rb_node_dealloc         (struct rb_node *self);
 +
-+	if (ret) {
-+		DBG_BUGON(ret == -ENOSPC);
-+		return ERR_PTR(ret);
-+	}
-+	erofs_prepare_inode_buffer(inode);
-+	erofs_write_tail_end(inode);
-+	return inode;
-+}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 594ecf9..bbca7b9 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -23,6 +23,7 @@
- #include "erofs/block_list.h"
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
-+#include "erofs/fragments.h"
- #include "../lib/liberofs_private.h"
- 
- #ifdef HAVE_LIBUUID
-@@ -133,9 +134,9 @@ static int parse_extended_opts(const char *opts)
- 		const char *p = strchr(token, ',');
- 
- 		next = NULL;
--		if (p)
-+		if (p) {
- 			next = p + 1;
--		else {
-+		} else {
- 			p = token + strlen(token);
- 			next = p;
- 		}
-@@ -202,6 +203,23 @@ static int parse_extended_opts(const char *opts)
- 				return -EINVAL;
- 			cfg.c_ztailpacking = true;
- 		}
++struct rb_tree *rb_tree_alloc           ();
++struct rb_tree *rb_tree_create          (rb_tree_node_cmp_f cmp);
++struct rb_tree *rb_tree_init            (struct rb_tree *self, rb_tree_node_cmp_f cmp);
++void            rb_tree_dealloc         (struct rb_tree *self, rb_tree_node_f node_cb);
++void           *rb_tree_find            (struct rb_tree *self, void *value);
++int             rb_tree_insert          (struct rb_tree *self, void *value);
++int             rb_tree_remove          (struct rb_tree *self, void *value);
++size_t          rb_tree_size            (struct rb_tree *self);
 +
-+		if (MATCH_EXTENTED_OPT("fragments", token, keylen)) {
-+			char *endptr;
-+			u64 i;
++int             rb_tree_insert_node     (struct rb_tree *self, struct rb_node *node);
++int             rb_tree_remove_with_cb  (struct rb_tree *self, void *value, rb_tree_node_f node_cb);
 +
-+			cfg.c_fragments = true;
-+			if (vallen) {
-+				i = strtoull(value, &endptr, 0);
-+				if (endptr - value != vallen ||
-+				    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
-+					erofs_err("invalid pcluster size for the packed file %s",
-+						  next);
-+					return -EINVAL;
-+				}
-+				cfg.c_pclusterblks_packed = i / EROFS_BLKSIZ;
-+			}
-+		}
- 	}
- 	return 0;
- }
-@@ -458,7 +476,8 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 
- int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 				  erofs_nid_t root_nid,
--				  erofs_blk_t *blocks)
-+				  erofs_blk_t *blocks,
-+				  erofs_nid_t packed_nid)
- {
- 	struct erofs_super_block sb = {
- 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
-@@ -482,6 +501,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 	*blocks         = erofs_mapbh(NULL);
- 	sb.blocks       = cpu_to_le32(*blocks);
- 	sb.root_nid     = cpu_to_le16(root_nid);
-+	sb.packed_nid    = cpu_to_le64(packed_nid);
- 	memcpy(sb.uuid, sbi.uuid, sizeof(sb.uuid));
- 
- 	if (erofs_sb_has_compr_cfgs())
-@@ -599,8 +619,8 @@ int main(int argc, char **argv)
- {
- 	int err = 0;
- 	struct erofs_buffer_head *sb_bh;
--	struct erofs_inode *root_inode;
--	erofs_nid_t root_nid;
-+	struct erofs_inode *root_inode, *packed_inode;
-+	erofs_nid_t root_nid, packed_nid;
- 	struct stat64 st;
- 	erofs_blk_t nblocks;
- 	struct timeval t;
-@@ -668,6 +688,17 @@ int main(int argc, char **argv)
- 	erofs_show_config();
- 	if (cfg.c_ztailpacking)
- 		erofs_warn("EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
-+	if (cfg.c_fragments) {
-+		if (!cfg.c_pclusterblks_packed)
-+			cfg.c_pclusterblks_packed = cfg.c_pclusterblks_def;
++int             rb_tree_test            (struct rb_tree *self, struct rb_node *root);
 +
-+		err = erofs_fragments_init();
-+		if (err) {
-+			erofs_err("failed to initialize fragments");
-+			return 1;
-+		}
-+		erofs_warn("EXPERIMENTAL compressed fragments feature in use. Use at your own risk!");
-+	}
- 	erofs_set_fs_root(cfg.c_src_path);
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
-@@ -737,7 +768,20 @@ int main(int argc, char **argv)
- 			goto exit;
- 	}
- 
--	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks);
-+	packed_nid = 0;
-+	if (cfg.c_fragments && erofs_sb_has_fragments()) {
-+		erofs_update_progressinfo("Handling packed_file ...");
-+		packed_inode = erofs_mkfs_build_fragments();
-+		if (IS_ERR(packed_inode)) {
-+			err = PTR_ERR(packed_inode);
-+			goto exit;
-+		}
-+		packed_nid = erofs_lookupnid(packed_inode);
-+		erofs_iput(packed_inode);
-+	}
++struct rb_iter *rb_iter_alloc           ();
++struct rb_iter *rb_iter_init            ();
++struct rb_iter *rb_iter_create          ();
++void            rb_iter_dealloc         (struct rb_iter *self);
++void           *rb_iter_first           (struct rb_iter *self, struct rb_tree *tree);
++void           *rb_iter_last            (struct rb_iter *self, struct rb_tree *tree);
++void           *rb_iter_next            (struct rb_iter *self);
++void           *rb_iter_prev            (struct rb_iter *self);
 +
-+	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
-+					    packed_nid);
- 	if (err)
- 		goto exit;
- 
-@@ -759,6 +803,8 @@ exit:
- 	erofs_cleanup_exclude_rules();
- 	if (cfg.c_chunkbits)
- 		erofs_blob_exit();
-+	if (cfg.c_fragments)
-+		erofs_fragments_exit();
- 	erofs_exit_configure();
- 
- 	if (err) {
++#endif
 -- 
 2.24.4
 
