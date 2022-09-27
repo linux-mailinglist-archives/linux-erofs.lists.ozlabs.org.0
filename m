@@ -1,69 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8C445EBDE7
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 10:59:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FF1E5EBDEE
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 11:00:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4McD7y1ZFCz3btV
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 18:59:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4McD9t3x3nz3btV
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Sep 2022 19:00:50 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=GgBmwcCk;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=g58BAz3l;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::434; helo=mail-pf1-x434.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=GgBmwcCk;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=g58BAz3l;
 	dkim-atps=neutral
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4McD7r0DxFz2xsD
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 18:59:03 +1000 (AEST)
-Received: by mail-pl1-x634.google.com with SMTP id z20so1618245plb.10
-        for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 01:59:03 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4McD9n4H5Wz3blg
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 19:00:44 +1000 (AEST)
+Received: by mail-pf1-x434.google.com with SMTP id w2so9162838pfb.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 27 Sep 2022 02:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=moz07TbQsZiM7w/D7SkEWNGBlBmpAeho7lKvgwF+ioc=;
-        b=GgBmwcCkCghH3MmiFp36Bde43puo4yGC6iHlrQyyrizw7oRjuKA66En2G4yrAdj/Hm
-         x75igb7Y2V5fQgBHvtXdEP9vrqSM8nAkGLcs1+tViPK1OPp8EpSSr/aBMRSGiZC48Vxu
-         P6Xv/hQ2ifGTD9Qtfm0/5pve8/z1pwNzUDMVeaMmfjbL6RGR4T8x6107BNAEFCsrra05
-         z2gqE8SKGmB2FtxIric0wWe8/zOyAaiOsoRlb6sj3CEegylEaws1mdTIM+A0u4+AVo9y
-         nDDcDbj0XoSypdTwHmHwyz9nL1YrvS1pdXaiydwayVeGYESLhkGaazDr4oIM/IwK2JLi
-         GCzw==
+        bh=FoWxL7OPF5Vt7GG7PGeiRRE+3SfmYsfHI6XYr9SmeEo=;
+        b=g58BAz3lJ7SA0EDVHpTmY6Ubk/YayOVdFDT7CqDjA5USIPw2pvaOfSVlU6iRsnuyuH
+         /z6LdV+A60Z9+UVUyqBvbqmBHpgLj/EZhDFnRyR9Jt7MAL953z3E4JNB5SkDApgV9HLx
+         b5JGpeSUucYff5i9roKkpZjcth92Qn3TUoYeJAsgyQzodstEbFiWkDCg3vZA5K2ObK25
+         hX6OqLlOZ95F5ezbjJJfA432wiJAXE44YSKKgl/ukIP+3AP4vSVV1iUyx3eBUlAw5JUB
+         J8oe4V1mf3tj803y0VfSj6bXQniY8zs26xv9DbwJwD13yMMkytA9HG9ASPO90nTY9TOa
+         nR6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=moz07TbQsZiM7w/D7SkEWNGBlBmpAeho7lKvgwF+ioc=;
-        b=uxoYTGvOP6Xfb7zG/7BT2bzcT9ZH9hRpOcUYVNNIiBvGbiU2UYHx8yXRW0329ogmBh
-         r/Y/eQwgLqu0Q2ZSlJUSQnK/xVX/CM/xJMHxDLzbfEB1ILibsJ2OgSAkYP85Cw6tFLOK
-         dBnqvnSrIknzDAWpmTZcHmtXGdVjRth7yqC419hOkc6XeNJiYy3K3PVj23bPlHvVsqc/
-         PMoXZT5iyyBnGeYAcRtI1NwPf01e9NokSdTvlHLytUZfBPdT9yY5XKdVMpacS1V4dSPk
-         7buuQmPLDTBGancMa1Oka46CS6eQGI+WA/lGfRVmp87dKD3fJFMf+A7naIpSrCYaHPmk
-         b3Aw==
-X-Gm-Message-State: ACrzQf0YCKtWKP0236VczHTHm0uILa+ti3M/IxWr+xhc57NNw76Ly6u1
-	Bxof2vIxE2ZZkk+4qgLl4Wc=
-X-Google-Smtp-Source: AMsMyM7iCEjOg8Cze41po0WsIFUj30hSloeEo+ux85VFzGjsUyG+MekPzJ/Xwfw68xK91RCWJd3ZxA==
-X-Received: by 2002:a17:902:f152:b0:179:f329:8d6d with SMTP id d18-20020a170902f15200b00179f3298d6dmr781012plb.122.1664269140134;
-        Tue, 27 Sep 2022 01:59:00 -0700 (PDT)
+        bh=FoWxL7OPF5Vt7GG7PGeiRRE+3SfmYsfHI6XYr9SmeEo=;
+        b=PiFIbDpNNIPR3yghihLoPqPUeKP0ldmjTobZXxchpYwd8UAVe0tvwWXSG6JsF0W+Fj
+         ghPyRYTMrE0A6aelMoZT3qUPPxIjS70WdueY75iVcwGJg/QzvkcrwGQaxDQRCC/KauPn
+         mt2070zBGQH5hQOJPQd6P1zi+jD0XMDRVwQ6YkTN6SuNObzzpk+RO87tdJU25UGsnKaQ
+         oItREjAGpm4bj1v8beaYFF8S/FP5CedhiOLd6nTzEyUbxHdvjcE9hzBs+nTLtlaIWLYI
+         P0974hJnzMyjL78YM9BzxWwJtxW/b52vZ+AzxQQZl+Poxb5uVhcirB2AmS3+R/3lTudN
+         0kZw==
+X-Gm-Message-State: ACrzQf35WhD4G9WbBzNG4c3ihhkZ+fvyQPXOvuqlVWaYY1ljENh26nY2
+	EmsweKfwHV6JROq8jQc/Rtw=
+X-Google-Smtp-Source: AMsMyM4KHQVLxG6sNP6ySsjx+1ZLTwimQzqB0i4wiGvtNmhqYM6NfCsVjvFxefO3zWeNOF8BXzW+5w==
+X-Received: by 2002:a63:6a85:0:b0:43b:dac2:ff0b with SMTP id f127-20020a636a85000000b0043bdac2ff0bmr24406872pgc.234.1664269241408;
+        Tue, 27 Sep 2022 02:00:41 -0700 (PDT)
 Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id q10-20020aa7982a000000b0053e56165f42sm1140996pfl.146.2022.09.27.01.58.58
+        by smtp.gmail.com with ESMTPSA id f13-20020a170902ce8d00b001786b712bf7sm948900plg.151.2022.09.27.02.00.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Sep 2022 01:58:59 -0700 (PDT)
-Date: Tue, 27 Sep 2022 17:01:47 +0800
+        Tue, 27 Sep 2022 02:00:41 -0700 (PDT)
+Date: Tue, 27 Sep 2022 17:03:29 +0800
 From: Yue Hu <zbestahu@gmail.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/2] erofs: clean up erofs_iget()
-Message-ID: <20220927170147.000021fe.zbestahu@gmail.com>
-In-Reply-To: <20220927063607.54832-2-hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] erofs: clean up unnecessary code and comments
+Message-ID: <20220927170329.000013b1.zbestahu@gmail.com>
+In-Reply-To: <20220927063607.54832-1-hsiangkao@linux.alibaba.com>
 References: <20220927063607.54832-1-hsiangkao@linux.alibaba.com>
-	<20220927063607.54832-2-hsiangkao@linux.alibaba.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -83,21 +82,20 @@ Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 27 Sep 2022 14:36:07 +0800
+On Tue, 27 Sep 2022 14:36:06 +0800
 Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> isdir indicated REQ_META|REQ_PRIO which no longer works now.
-> Get rid of isdir entirely.
+> Some conditional macros and comments are useless.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Yue Hu <huyue2@coolpad.com>
 
 > ---
->  fs/erofs/inode.c             | 24 ++++++++----------------
->  fs/erofs/internal.h          |  2 +-
->  fs/erofs/namei.c             |  2 +-
->  fs/erofs/super.c             |  8 ++++----
->  include/trace/events/erofs.h | 11 ++++-------
->  5 files changed, 18 insertions(+), 29 deletions(-)
-> 
+>  fs/erofs/internal.h |  2 --
+>  fs/erofs/namei.c    | 11 +----------
+>  fs/erofs/xattr.h    |  2 --
+>  fs/erofs/zmap.c     |  3 +--
+>  4 files changed, 2 insertions(+), 16 deletions(-)
+>
+
