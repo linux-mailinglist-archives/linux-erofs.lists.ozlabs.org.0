@@ -2,56 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEEFC5F4726
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Oct 2022 18:08:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 31F245F4752
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Oct 2022 18:16:07 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MhjLG27Mmz30Mn
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Oct 2022 03:08:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MhjVr67nkz30NS
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Oct 2022 03:16:04 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HFN/1mY+;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=otqypTAr;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HFN/1mY+;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=otqypTAr;
 	dkim-atps=neutral
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MhjL70wGFz2xYy
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Oct 2022 03:08:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MhjVm4Tl9z2xyB
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Oct 2022 03:16:00 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 827C2614B0;
-	Tue,  4 Oct 2022 16:08:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD6EC433C1;
-	Tue,  4 Oct 2022 16:08:24 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 022CB614B0;
+	Tue,  4 Oct 2022 16:15:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A45BEC433C1;
+	Tue,  4 Oct 2022 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664899705;
-	bh=uFMwOLP3RUhCOk0dtvA+jQ3MjGUaf7MqATOqt3PVaOE=;
+	s=k20201202; t=1664900157;
+	bh=mTxm81WlhwLNeRXNGoYwb+9o4PCxVTEvJixOWIHQsdo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HFN/1mY+sFwQiffx3YtSM4uJXf8ssrhi8l7C/bwLZfTtbMfDtwmVX/U93UJkuyfhf
-	 tul7ZEdJ8N2YykR2wp5/2sG/S+N99dDIlM1mHOk9+Gq4SP/i9BvZwDdmcJkpMWPoau
-	 ViCBwEKLUYNHgorUHZAv89jgPRlmBtKt309BhlwpF7h880R1zcaTr/NPBvTzcKVS0m
-	 nQIeXAPPf8R/+umcG71x2/pdW+QOSIWIYS86pvrjSFkequhR+3wMZjedLLLshiJwmX
-	 UDAJzlyit5UJVJfqZTCQRoLrHcKF4HquMvjprz55Y+uRr4fiOPKOV52dsO5IjPFJDc
-	 WVdplxud/jGuw==
-Date: Wed, 5 Oct 2022 00:08:21 +0800
+	b=otqypTAr/BrDIZ8W97oecwmS4KZg4kiV+9w0XPA93Zctd0ZvyauiIioYlcCuR/qCM
+	 9MRtUIzdvEx53ihOID3PuY7O9dTQS8TNMApT0dPcfouOxaC0qLqMf0cfJdt4Texv4Z
+	 c3Dt644lHkkdyRwld3JnPj3b9cW6FK4JZZuOKf5ZKxIsPCrjIuh2aM0GBEAxu2VctI
+	 jAy71Dyzgyef7DWAQ06f2Yqa0poVYg1y5ZwMn69XzdBdJI76r/y0MhGMIUOpWOxyGg
+	 HH6vKbLnHzT/JCNNduOydHpw83Pq4sWZadeuIVpN980WJztCf/SPNrELgrUT3ZOWPp
+	 bsiUBffWcCccw==
+Date: Wed, 5 Oct 2022 00:15:53 +0800
 From: Gao Xiang <xiang@kernel.org>
-To: Yue Hu <zbestahu@163.com>
-Subject: Re: [PATCH] erofs: fix the unmapped access in
- z_erofs_fill_inode_lazy()
-Message-ID: <YzxadSy1YToNHQGr@debian>
-Mail-Followup-To: Yue Hu <zbestahu@163.com>, chao@kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	zhangwen@coolpad.com, Yue Hu <huyue2@coolpad.com>
-References: <20221004144951.31075-1-zbestahu@163.com>
+To: Naoto Yamaguchi <wata2ki@gmail.com>
+Subject: Re: [PATCH] erofs-utils: mkfs: Add volume-name setting support
+Message-ID: <YzxcOcJK+8gB8psP@debian>
+Mail-Followup-To: Naoto Yamaguchi <wata2ki@gmail.com>,
+	linux-erofs@lists.ozlabs.org,
+	Naoto Yamaguchi <naoto.yamaguchi@aisin.co.jp>
+References: <20221004160237.10849-1-naoto.yamaguchi@aisin.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221004144951.31075-1-zbestahu@163.com>
+In-Reply-To: <20221004160237.10849-1-naoto.yamaguchi@aisin.co.jp>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,99 +62,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
+Cc: Naoto Yamaguchi <naoto.yamaguchi@aisin.co.jp>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Oct 04, 2022 at 10:49:51PM +0800, Yue Hu wrote:
-> From: Yue Hu <huyue2@coolpad.com>
+Hi Naoto,
+
+On Wed, Oct 05, 2022 at 01:02:37AM +0900, Naoto Yamaguchi wrote:
+> The erofs_super_block has volume_name field.  On the other hand,
+> mkfs.erofs is not supporting to set volume name.
+> This patch add volume-name setting support to mkfs.erofs.
+> Option keyword is similar to mkfs.vfat.
 > 
-> Note that we are still accessing 'h_idata_size' and 'h_fragmentoff'
-> after calling erofs_put_metabuf(), that is not correct. Fix it.
+> usage:
+>   mkfs.erofs -n volume-name image-fn dir
+
+Thanks for your patch! The patch itself generally looks good to me.
+
+
+Just two minor ideas:
+
+1) How about following mke2fs by using "-L volume-label" ?
+https://www.man7.org/linux/man-pages/man8/mke2fs.8.html
+
+2) If possible, how about adding a kernel ioctl for this if you have
+more interest?  I mean FS_IOC_GETFSLABEL.
+
 > 
-> Fixes: ab92184ff8f1 ("add on-disk compressed tail-packing inline support")
-> Fixes: b15b2e307c3a ("support on-disk compressed fragments data")
-> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> Signed-off-by: Naoto Yamaguchi <naoto.yamaguchi@aisin.co.jp>
 > ---
->  fs/erofs/zmap.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
+>  include/erofs/internal.h |  1 +
+>  man/mkfs.erofs.1         |  4 ++++
+>  mkfs/main.c              | 13 ++++++++++++-
+>  3 files changed, 17 insertions(+), 1 deletion(-)
 > 
-
-erofs: fix invalid unmapped accesses in z_erofs_fill_inode_lazy()
-
-> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> index 44c27ef39c43..1a15bbf18ba3 100644
-> --- a/fs/erofs/zmap.c
-> +++ b/fs/erofs/zmap.c
-> @@ -58,7 +58,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
->  	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
->  		    vi->xattr_isize, 8);
->  	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos),
-> -				   EROFS_KMAP_ATOMIC);
-> +				   EROFS_KMAP);
-
-	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos), EROFS_KMAP); ?
-
-Also I will use kmap_local later to replace kmap and kmap_atomic if
-possible.
-
->  	if (IS_ERR(kaddr)) {
->  		err = PTR_ERR(kaddr);
->  		goto out_unlock;
-> @@ -73,7 +73,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
->  		vi->z_advise = Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
->  		vi->z_fragmentoff = le64_to_cpu(*(__le64 *)h) ^ (1ULL << 63);
->  		vi->z_tailextent_headlcn = 0;
-> -		goto unmap_done;
-> +		goto init_done;
->  	}
->  	vi->z_advise = le16_to_cpu(h->h_advise);
->  	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
-> @@ -105,10 +105,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
->  		err = -EFSCORRUPTED;
->  		goto unmap_done;
->  	}
-> -unmap_done:
-> -	erofs_put_metabuf(&buf);
-> -	if (err)
-> -		goto out_unlock;
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index 2e0aae8..7dc42eb 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -92,6 +92,7 @@ struct erofs_sb_info {
+>  	u64 inos;
 >  
->  	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
->  		struct erofs_map_blocks map = {
-> @@ -127,7 +123,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
->  			err = -EFSCORRUPTED;
->  		}
->  		if (err < 0)
-> -			goto out_unlock;
-> +			goto unmap_done;
->  	}
+>  	u8 uuid[16];
+> +	char volume_name[16];
 >  
->  	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
-> @@ -141,11 +137,14 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
->  					    EROFS_GET_BLOCKS_FINDTAIL);
->  		erofs_put_metabuf(&map.buf);
->  		if (err < 0)
-> -			goto out_unlock;
-> +			goto unmap_done;
->  	}
-> +init_done:
+>  	u16 available_compr_algs;
+>  	u16 lz4_max_distance;
+> diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+> index 11e8323..fb98505 100644
+> --- a/man/mkfs.erofs.1
+> +++ b/man/mkfs.erofs.1
+> @@ -32,6 +32,10 @@ big pcluster feature if needed (Linux v5.13+).
+>  Specify the level of debugging messages. The default is 2, which shows basic
+>  warning messages.
+>  .TP
+> +.BI "\-n " volume-name
+> +Set the volume name for the filesystem to volume-name.  The maximum length of
+> +the volume name is 16 bytes.
+> +.TP
+>  .BI "\-x " #
+>  Specify the upper limit of an xattr which is still inlined. The default is 2.
+>  Disable storing xattrs if < 0.
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index 594ecf9..613ee46 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -80,6 +80,7 @@ static void usage(void)
+>  	fputs("usage: [options] FILE DIRECTORY\n\n"
+>  	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
+>  	      " -d#                   set output message level to # (maximum 9)\n"
+> +	      " -n volume-name        set the volume name (max 16 bytes).\n"
 
-done:
+...
 
->  	/* paired with smp_mb() at the beginning of the function */
->  	smp_mb();
->  	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
-> +unmap_done:
+>  	      " -x#                   set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+>  	      " -zX[,Y]               X=compressor (Y=compression level, optional)\n"
+>  	      " -C#                   specify the size of compress physical cluster in bytes\n"
 
-out_put_metabuf:
+
+	      " -L volume-label       set the volume label (maximum 12)\n"
 
 Thanks,
 Gao Xiang
-
-> +	erofs_put_metabuf(&buf);
->  out_unlock:
->  	clear_and_wake_up_bit(EROFS_I_BL_Z_BIT, &vi->flags);
->  	return err;
-> -- 
-> 2.25.1
-> 
