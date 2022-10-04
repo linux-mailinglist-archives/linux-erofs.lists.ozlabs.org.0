@@ -2,59 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39EA25F3BBB
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Oct 2022 05:45:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCC7C5F45E7
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Oct 2022 16:50:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MhNrK08M5z302k
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Oct 2022 14:45:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MhgcJ10CXz2xgN
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Oct 2022 01:50:40 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FYD8xpXz;
+	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=leFOk6Ki;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=163.com (client-ip=220.181.12.16; helo=m12-16.163.com; envelope-from=zbestahu@163.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FYD8xpXz;
+	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=leFOk6Ki;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MhNrC39DCz2xfV
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Oct 2022 14:44:59 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id D2B0EB818FB;
-	Tue,  4 Oct 2022 03:44:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C62EC433D6;
-	Tue,  4 Oct 2022 03:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664855092;
-	bh=NoqojNcFXzfUqgBFfqu+BYWlUYNJaSSg4ZYHNlhpHEw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FYD8xpXzShMy/4cBu+x5kC/55BpajXb0/Z31I/dj5gHQiJe7ZQlYmvkhgAQZDh0Uz
-	 ydJLfUCc/pf1OqoIhIobL7SXjrcg/YJveNALPQ+9DxKN1wMEo9r7m+cdWrv16f/ECG
-	 VM98JuWZ+wW2GaXz/YfTjMxnWBi3A8GbvMlyeHn+Xh/S/cyMDB8yRuN6Rh0XuSDQ/y
-	 lOFeS1zZfnL6P9VmK5DFD6gAvqu5MHi8FwFzqjMd/p+RUFBcDE7WPK1nS5rezYPIQy
-	 ss11mdYhoaxUPjZqxISv4bCjCx8o2aGIKs6NYxPiUVnBvzEzVFcf3fii23TNZ3Ca8p
-	 +eyrXr7eVVzKA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 82974E49FA3;
-	Tue,  4 Oct 2022 03:44:52 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 6.1-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <YzrD50lgln3c9zEf@debian>
-References: <YzrD50lgln3c9zEf@debian>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <YzrD50lgln3c9zEf@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.1-rc1
-X-PR-Tracked-Commit-Id: 312fe643ad1153fe0337c46f4573030d0c2bac73
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3497640a80d77cd098d45c9f3ab235b1aa472dbc
-Message-Id: <166485509252.18435.13778164711420552778.pr-tracker-bot@kernel.org>
-Date: Tue, 04 Oct 2022 03:44:52 +0000
-To: Gao Xiang <xiang@kernel.org>
+Received: from m12-16.163.com (m12-16.163.com [220.181.12.16])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mhgc672Rlz2xGv
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Oct 2022 01:50:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=FiGiW
+	uqNMxRYmMEJen9U4DdoTiKrvBlJbml9qjjwVXc=; b=leFOk6Ki2fQv6j7ISe0yI
+	RzwUAPTjLxp6gYyKMfLcIWHVQiQGCN+3AhbtoyKJjr5acde9vRPTKNEpdJ91Ta+6
+	Kz5maqXSM1cfcivBUqIKn780FA8hXGOwtqbEFKjVLC+A1X9Lp23Hyt5J6DvGSWBB
+	/4q7GR4b44cI8YzFhUUVO4=
+Received: from localhost.localdomain (unknown [112.22.168.89])
+	by smtp12 (Coremail) with SMTP id EMCowACno3UQSDxjXwxPBw--.264S2;
+	Tue, 04 Oct 2022 22:49:58 +0800 (CST)
+From: Yue Hu <zbestahu@163.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: fix the unmapped access in z_erofs_fill_inode_lazy()
+Date: Tue,  4 Oct 2022 22:49:51 +0800
+Message-Id: <20221004144951.31075-1-zbestahu@163.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: EMCowACno3UQSDxjXwxPBw--.264S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AFyfGFyxZF4rtw4rtw4rGrg_yoW8tw47pF
+	42krWSyryrJrn7ZrWI9F18Xry3Kay8Jw4DGw13G34rZ3Z0g3ZagFy8tF9xJF45GrWrZr4F
+	qF1jva4rurWxG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j3OzsUUUUU=
+X-Originating-IP: [112.22.168.89]
+X-CM-SenderInfo: p2eh23xdkxqiywtou0bp/xtbBoRaQEWI0VBeiqAAAsp
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,19 +55,80 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Yue Hu <huyue2@yulong.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Mon, 3 Oct 2022 19:13:43 +0800:
+From: Yue Hu <huyue2@coolpad.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.1-rc1
+Note that we are still accessing 'h_idata_size' and 'h_fragmentoff'
+after calling erofs_put_metabuf(), that is not correct. Fix it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3497640a80d77cd098d45c9f3ab235b1aa472dbc
+Fixes: ab92184ff8f1 ("add on-disk compressed tail-packing inline support")
+Fixes: b15b2e307c3a ("support on-disk compressed fragments data")
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ fs/erofs/zmap.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-Thank you!
-
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 44c27ef39c43..1a15bbf18ba3 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -58,7 +58,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
+ 		    vi->xattr_isize, 8);
+ 	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos),
+-				   EROFS_KMAP_ATOMIC);
++				   EROFS_KMAP);
+ 	if (IS_ERR(kaddr)) {
+ 		err = PTR_ERR(kaddr);
+ 		goto out_unlock;
+@@ -73,7 +73,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		vi->z_advise = Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+ 		vi->z_fragmentoff = le64_to_cpu(*(__le64 *)h) ^ (1ULL << 63);
+ 		vi->z_tailextent_headlcn = 0;
+-		goto unmap_done;
++		goto init_done;
+ 	}
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
+ 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+@@ -105,10 +105,6 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		err = -EFSCORRUPTED;
+ 		goto unmap_done;
+ 	}
+-unmap_done:
+-	erofs_put_metabuf(&buf);
+-	if (err)
+-		goto out_unlock;
+ 
+ 	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
+ 		struct erofs_map_blocks map = {
+@@ -127,7 +123,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 			err = -EFSCORRUPTED;
+ 		}
+ 		if (err < 0)
+-			goto out_unlock;
++			goto unmap_done;
+ 	}
+ 
+ 	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
+@@ -141,11 +137,14 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
+ 		erofs_put_metabuf(&map.buf);
+ 		if (err < 0)
+-			goto out_unlock;
++			goto unmap_done;
+ 	}
++init_done:
+ 	/* paired with smp_mb() at the beginning of the function */
+ 	smp_mb();
+ 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
++unmap_done:
++	erofs_put_metabuf(&buf);
+ out_unlock:
+ 	clear_and_wake_up_bit(EROFS_I_BL_Z_BIT, &vi->flags);
+ 	return err;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
