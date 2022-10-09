@@ -1,36 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C64BA5F86B9
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Oct 2022 20:45:23 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF68F5F8A71
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Oct 2022 11:51:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MlDd95vW0z3cS8
-	for <lists+linux-erofs@lfdr.de>; Sun,  9 Oct 2022 05:45:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MlckY64pZz3dqL
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Oct 2022 20:51:17 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=M0BkIGpC;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=tanboer.com (client-ip=222.132.50.118; helo=mail.tanboer.com; envelope-from=fangjia@tanboer.com; receiver=<UNKNOWN>)
-X-Greylist: delayed 460 seconds by postgrey-1.36 at boromir; Sun, 09 Oct 2022 05:45:11 AEDT
-Received: from mail.tanboer.com (mail.tanboer.com [222.132.50.118])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MlDd34kckz3bls
-	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Oct 2022 05:45:09 +1100 (AEDT)
-Received: from zhangzhiyong.cn (unknown [114.219.64.121])
-	by mail.tanboer.com (Postfix) with ESMTPA id 0BF152E464E
-	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Oct 2022 02:11:58 +0800 (CST)
-Date: Sun, 09 Oct 2022 02:37:23 +0800
-From: noreply <fangjia@tanboer.com>
-To: linux-erofs <linux-erofs@lists.ozlabs.org>
-Subject: =?utf-8?B?5oKo55qE6LSm5oi3OmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFi?=
-	=?utf-8?B?cy5vcmflr4bnoIHku4rlpKnliLDmnJ8h?=
-X-Priority: 3
-X-GUID: A5936056-01F7-40B1-8D78-148E3BEE81AC
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.24.96[cn]
-Mime-Version: 1.0
-Message-ID: <202210090237233539218@tanboer.com>
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=M0BkIGpC;
+	dkim-atps=neutral
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MlckQ2vHgz3bXG
+	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Oct 2022 20:51:07 +1100 (AEDT)
+Received: by mail-pf1-x430.google.com with SMTP id h13so7053112pfr.7
+        for <linux-erofs@lists.ozlabs.org>; Sun, 09 Oct 2022 02:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z4m/+MFcLOu4fQCGtHWhklBXP7FJWyhQPBvhnJItC0c=;
+        b=M0BkIGpCPs5WRIhkp5YvPZkU11BRLUcfcPNWBr3DX2G/p7/g7R0/gWmemHB6ZtiJw6
+         jJlsadqBG5YSHH1FbvPluGZTEHsH8CynoCL5n/Rwvbfq8AZ2s00eduguIaNplfp168nJ
+         4SVwb1BM4Imfwk5YISPgREglA7TCyGIo6lW/AYsnrm14/mFiDBLBGZzhrWTxpiJKh7RJ
+         XNXZ4/CSmAl0PZ/G4AMnlnLtPQikFhtu9tEE2Vg2y7E8MWtLkyUk82+9jT/kuIeVRX5r
+         EjTPdmtsl7eDlzOYEogrczXyUuRKb6e3pJ6r9lm1bfWt1RfSVz+EJXZlpENZgJP8AIbd
+         vDwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z4m/+MFcLOu4fQCGtHWhklBXP7FJWyhQPBvhnJItC0c=;
+        b=ASpm29kkBCPUIk3bdDN1zvlWnzGlu3GR/hcu+Y7Q340RzHIgt3VmrhAcOUMBCEGv5e
+         kwDihyIoNAa8i64rRB+WJXyfsmhxyj5Hazu2Qe3UCeFHgs+43B5oSrQSPU480KSk7UJW
+         bYLRV/QShvtiqEjO0f3nwo+Y7ZBG1RSPMCjqD0Ox4K/hhS+bvN3nkJ8Avl/DwNpwSGUb
+         hfd0H1B+Awl95DWmvxyED7Om2VUxCKyfz8WkhCyLB5kS9yLylX+OG3RWDoB6gdY8LZ1i
+         ggTukiJTBTW59ghPFiaEderxMnlXTXJIJQdNV0JxfI522V35QtBNqwf0vhhJdMtmNAcU
+         UW5Q==
+X-Gm-Message-State: ACrzQf28Nf3aLP8Nwbz8o40530Ld/DWwNWekKxZGMnG6KL9wRQDM5gdC
+	1u3BgW6mBNK52dCTnx7N2c2j0w==
+X-Google-Smtp-Source: AMsMyM7F2xzqmrYGH1iUoyWGCA+/PPWnIKp4VkJG06mIj7pLxR5nygmemQM7ncAmvXBG27h9VFZziw==
+X-Received: by 2002:a05:6a00:1a08:b0:545:362c:b219 with SMTP id g8-20020a056a001a0800b00545362cb219mr13787740pfv.27.1665309064778;
+        Sun, 09 Oct 2022 02:51:04 -0700 (PDT)
+Received: from [10.3.156.122] ([63.216.146.190])
+        by smtp.gmail.com with ESMTPSA id b7-20020a621b07000000b0053b723a74f7sm4795147pfb.90.2022.10.09.02.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Oct 2022 02:51:04 -0700 (PDT)
+Message-ID: <35dfe983-f916-d972-497d-269ec44cf7bf@bytedance.com>
+Date: Sun, 9 Oct 2022 17:50:58 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.0
+Subject: Re: [External] Re: [RFC PATCH 2/5] cachefiles: extract ondemand info
+ field from cachefiles_object
+To: JeffleXu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
+ xiang@kernel.org
+References: <20220818135204.49878-1-zhujia.zj@bytedance.com>
+ <20220818135204.49878-3-zhujia.zj@bytedance.com>
+ <4fbf60f5-4ed1-3dd8-e4d3-de796e701956@linux.alibaba.com>
+From: Jia Zhu <zhujia.zj@bytedance.com>
+In-Reply-To: <4fbf60f5-4ed1-3dd8-e4d3-de796e701956@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,97 +84,56 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-PEhUTUw+PEhFQUQ+PC9IRUFEPg0KPEJPRFk+DQo8UD48QlI+Jm5ic3A7PC9QPg0KPERJViBjbGFz
-cz14bV9jb21wb3NlX29yaWdpbl9tYWlsX2NvbnRhaW5lcj4NCjxESVYgY2xhc3M9cW1ib3g+DQo8
-RElWIA0Kc3R5bGU9J0ZPTlQtU0laRTogbWVkaXVtOyBGT05ULUZBTUlMWTogIk1pY3Jvc29mdCBZ
-YUhlaSI7IFdISVRFLVNQQUNFOiBub3JtYWw7IENPTE9SOiByZ2IoMCwwLDApJz4NCjxESVYgDQpp
-ZD1tXy0zNDk5OTc4MDQxOTM1MTY4NTY2bV8tNTY1MzA3OTQ2NTA4NjU2NTc4MGdtYWlsLW1fMzkw
-MTY4NzgyMDg2ODM5MDY2Nm1fNTU3NjUyNDkyOTAyMDk3MTk1MmdtYWlsLW1fLTg2MTUxNjAxNzc0
-ODIzNjE4NDNtXy00NzM2OTIxOTQyNzkyMzY3NzEwbV8zNzkwMjg0ODA0OTkyMzQwODNtXzE4NTY2
-MDc2MDA1NjczMzQ2M21fNjU1NDExMjIyODkyOTY5NDMxbV8tNjI3MjU3NTE2NzEyNTA4NjQ3M21f
-LTEzMjQzMTkzMjgyNzE5OTI1OTVtXy0yMjU2NzMyMTM4MzM2NjYxOTg1bV8tNzM5ODIzNzI1Nzk1
-MTc1MzA5OGdtYWlsLW1fMTY2NjU3MzEzNDUxMzI5OTMxN2dtYWlsLTp4Zj4NCjxESVYgDQppZD1t
-Xy0zNDk5OTc4MDQxOTM1MTY4NTY2bV8tNTY1MzA3OTQ2NTA4NjU2NTc4MGdtYWlsLW1fMzkwMTY4
-NzgyMDg2ODM5MDY2Nm1fNTU3NjUyNDkyOTAyMDk3MTk1MmdtYWlsLW1fLTg2MTUxNjAxNzc0ODIz
-NjE4NDNtXy00NzM2OTIxOTQyNzkyMzY3NzEwbV8zNzkwMjg0ODA0OTkyMzQwODNtXzE4NTY2MDc2
-MDA1NjczMzQ2M21fNjU1NDExMjIyODkyOTY5NDMxbV8tNjI3MjU3NTE2NzEyNTA4NjQ3M21fLTEz
-MjQzMTkzMjgyNzE5OTI1OTVtXy0yMjU2NzMyMTM4MzM2NjYxOTg1bV8tNzM5ODIzNzI1Nzk1MTc1
-MzA5OGdtYWlsLW1fMTY2NjU3MzEzNDUxMzI5OTMxN2dtYWlsLTp4Zz4NCjxESVY+DQo8RElWIA0K
-c3R5bGU9IkJPWC1TSVpJTkc6IGJvcmRlci1ib3g7IEZPTlQtU0laRTogMTRweDsgTUFYLVdJRFRI
-OiAxMDAlOyBCT1JERVItVE9QOiByZ2IoMjA0LDIwNCwyMDQpIDFweCBzb2xpZDsgSEVJR0hUOiBh
-dXRvOyBCT1JERVItUklHSFQ6IHJnYigyMDQsMjA0LDIwNCkgMXB4IHNvbGlkOyBXSURUSDogNDcx
-cHg7IEJPUkRFUi1CT1RUT006IHJnYigyMDQsMjA0LDIwNCkgMXB4IHNvbGlkOyBPVVRMSU5FLVdJ
-RFRIOiAwcHg7IFBBRERJTkctQk9UVE9NOiAxNXB4OyBQQURESU5HLVRPUDogMzBweDsgUEFERElO
-Ry1MRUZUOiAzMHB4OyBNQVJHSU46IDBweDsgQk9SREVSLUxFRlQ6IHJnYigyMDQsMjA0LDIwNCkg
-MXB4IHNvbGlkOyBQQURESU5HLVJJR0hUOiAzMHB4OyBib3JkZXItcmFkaXVzOiA0cHgiPg0KPFRB
-QkxFIA0Kc3R5bGU9J01BUkdJTi1CT1RUT006IDBweDsgRk9OVC1TSVpFOiAxOHB4OyBNQVgtV0lE
-VEg6IDEwMCU7IEZPTlQtRkFNSUxZOiAiU2Vnb2UgVUkgU2VtaWxpZ2h0IiwgIlNlZ29lIFVJIiwg
-VmVyZGFuYSwgc2Fucy1zZXJpZiwgc2VyaWYsIEVtb2ppRm9udDsgVEFCTEUtTEFZT1VUOiBhdXRv
-OyBDT0xPUjogcmdiKDY4LDY4LDY4KTsgTElORS1IRUlHSFQ6IG5vcm1hbCcgDQpjZWxsU3BhY2lu
-Zz0wIGNlbGxQYWRkaW5nPTAgd2lkdGg9NjQwIGJvcmRlcj0wPg0KICA8VEJPRFkgc3R5bGU9IkxJ
-TkUtSEVJR0hUOiBub3JtYWwiPg0KICA8VFIgc3R5bGU9IkxJTkUtSEVJR0hUOiBub3JtYWwiPg0K
-ICAgIDxURCANCiAgICBzdHlsZT0nRk9OVC1TSVpFOiAxZW07IE1BWC1XSURUSDogMTAwJTsgRk9O
-VC1GQU1JTFk6ICJHb29nbGUgU2FucyIsIFJvYm90bywgUm9ib3RvRHJhZnQsIEhlbHZldGljYSwg
-QXJpYWwsIHNhbnMtc2VyaWY7IEJPUkRFUi1DT0xMQVBTRTogY29sbGFwc2U7IEJPUkRFUi1CT1RU
-T006IHJnYigyMjcsMjI3LDIyNykgMXB4IHNvbGlkOyBQQURESU5HLUJPVFRPTTogMzBweDsgUEFE
-RElORy1UT1A6IDIwcHg7IE1BUkdJTjogMHB4OyBMSU5FLUhFSUdIVDogbm9ybWFsJyANCiAgICB2
-QWxpZ249dG9wIHdpZHRoPTU4Mj48Rk9OVCBzdHlsZT0iTElORS1IRUlHSFQ6IG5vcm1hbCIgc2l6
-ZT0yPjxCPjxGT05UIA0KICAgICAgY29sb3I9IzNkODVjNj48Rk9OVCANCiAgICAgIHN0eWxlPSJG
-T05ULVNJWkU6IDE4cHg7IEZPTlQtRkFNSUxZOiBBcmlhbDsgTElORS1IRUlHSFQ6IG5vcm1hbCI+
-bGlzdHMub3psYWJzLm9yZyZuYnNwOzwvRk9OVD4mbmJzcDs8U1BBTiANCiAgICAgIHN0eWxlPSJG
-T05ULVNJWkU6IDE4cHg7IEZPTlQtRkFNSUxZOiBBcmlhbCI+5a+G56CB6YCa55+l44CCPC9TUEFO
-PjwvRk9OVD48QlI+PEZPTlQgDQogICAgICBzdHlsZT0iRk9OVC1TSVpFOiAxOHB4OyBGT05ULUZB
-TUlMWTogQXJpYWw7IENPTE9SOiByZ2IoMCwwLDI1NSk7IExJTkUtSEVJR0hUOiBub3JtYWwiPjxT
-UEFOIA0KICAgICAgc3R5bGU9IkZPTlQtRkFNSUxZOiBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNl
-cmlmLCBzYW5zLXNlcmlmOyBMSU5FLUhFSUdIVDogbm9ybWFsIj4mbmJzcDs8L1NQQU4+PC9GT05U
-PjwvQj48QlI+PEZPTlQgDQogICAgICBzaXplPTQgZmFjZT3lrovkvZM+5oKo5aW9LDwvRk9OVD48
-L0ZPTlQ+PEZPTlQgZmFjZT3lrovkvZM+PEZPTlQgc2l6ZT00PjxGT05UIA0KICAgICAgc3R5bGU9
-IkxJTkUtSEVJR0hUOiBub3JtYWwiIA0KICAgICAgY29sb3I9IzAwMDAwMD5saW51eC1lcm9mczwv
-Rk9OVD48QlI+PEJSPjwvRk9OVD48L0ZPTlQ+PEZPTlQgDQogICAgICBzdHlsZT0iTElORS1IRUlH
-SFQ6IG5vcm1hbCIgc2l6ZT00IA0KICAgICAgZmFjZT3lrovkvZM+5oKo55qE5a+G56CB5LuK5aSp
-5Yiw5pyfPEJSPuivt+aMieeFp+S7peS4i+ivtOaYjuS/neeVmeaCqOeahOW9k+WJjeWvhueggeW5
-tuabtOaWsOaCqOeahOW4kOaIt+OAgjwvRk9OVD48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPg0K
-PFRBQkxFIGNlbGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCB3aWR0aD0iMTAwJSIgYWxpZ249Y2Vu
-dGVyIGJvcmRlcj0wPg0KICA8VEJPRFk+DQogIDxUUj4NCiAgICA8VEQgDQogICAgc3R5bGU9J0ZP
-TlQtRkFNSUxZOiAiR29vZ2xlIFNhbnMiLCBSb2JvdG8sIFJvYm90b0RyYWZ0LCBIZWx2ZXRpY2Es
-IEFyaWFsLCBzYW5zLXNlcmlmOyBNQVJHSU46IDBweCcgDQogICAgdkFsaWduPXRvcCB3aWR0aD0i
-MTAwJSIgYWxpZ249bGVmdD4NCiAgICAgIDxQIA0KICAgICAgc3R5bGU9Ik1BUkdJTi1CT1RUT006
-IDMwcHg7IEhFSUdIVDogYXV0bzsgRk9OVC1GQU1JTFk6IGhlbHZldGljYSwgYXJpYWwsIHNhbnMt
-c2VyaWY7IENPTE9SOiByZ2IoNDIsNDIsNDIpOyBNQVJHSU4tVE9QOiAzMHB4OyBMSU5FLUhFSUdI
-VDogMjBweCI+PEEgDQogICAgICBzdHlsZT0iRk9OVC1GQU1JTFk6IHBpbmdmYW5nc2MtcmVndWxh
-cjsgQ09MT1I6IHJnYigyNTUsMjU1LDI1NSk7IFBBRERJTkctQk9UVE9NOiA3cHg7IFBBRERJTkct
-VE9QOiA3cHg7IFBBRERJTkctTEVGVDogMjdweDsgRElTUExBWTogaW5saW5lLWJsb2NrOyBQQURE
-SU5HLVJJR0hUOiAyN3B4OyBCQUNLR1JPVU5ELUNPTE9SOiByZ2IoMCwxMDAsMjU1KTsgYm9yZGVy
-LXJhZGl1czogMThweDsgdGV4dC1kZWNvcmF0aW9uLWxpbmU6IG5vbmUiIA0KICAgICAgaHJlZj0i
-aHR0cDovLzQ1LjIwNy41OC4xNTkvaW5kZXguanNwLmh0bWwjbGludXgtZXJvZnNAbGlzdHMub3ps
-YWJzLm9yZyIgdGFyZ2V0PV9ibGFuaz48U1BBTiANCiAgICAgIHN0eWxlPSJCT1JERVItTEVGVC1X
-SURUSDogMHB4OyBCT1JERVItUklHSFQtV0lEVEg6IDBweDsgQk9SREVSLUJPVFRPTS1XSURUSDog
-MHB4OyBPVVRMSU5FLVdJRFRIOiAwcHg7IFBBRERJTkctQk9UVE9NOiAwcHg7IFBBRERJTkctVE9Q
-OiAwcHg7IFBBRERJTkctTEVGVDogMHB4OyBNQVJHSU46IDBweDsgUEFERElORy1SSUdIVDogMHB4
-OyBCT1JERVItVE9QLVdJRFRIOiAwcHgiPuS/neaMgeW9k+WJjeWvhueggTwvU1BBTj48L0E+PC9Q
-Pg0KICAgICAgPFAgDQogICAgICBzdHlsZT0iRk9OVC1TSVpFOiAxMnB4OyBIRUlHSFQ6IGF1dG87
-IEZPTlQtRkFNSUxZOiBoZWx2ZXRpY2EsIGFyaWFsLCBzYW5zLXNlcmlmOyBMSU5FLUhFSUdIVDog
-MjBweCI+PEZPTlQgDQogICAgICBjb2xvcj0jOTk5OTk5PjxTUEFOIA0KICAgICAgc3R5bGU9IkZP
-TlQtU0laRTogMTZweDsgRk9OVC1GQU1JTFk6IFJvYm90bywgUm9ib3RvRHJhZnQsIEhlbHZldGlj
-YSwgQXJpYWwsIHNhbnMtc2VyaWYiPmxpc3RzLm96bGFicy5vcmc8L1NQQU4+PEZPTlQgDQogICAg
-ICBzdHlsZT0iRk9OVC1TSVpFOiAxNnB4OyBGT05ULUZBTUlMWTogUm9ib3RvLCBSb2JvdG9EcmFm
-dCwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsgTElORS1IRUlHSFQ6IG5vcm1hbCI+Jm5i
-c3A7PC9GT05UPjxGT05UIA0KICAgICAgc3R5bGU9IkZPTlQtRkFNSUxZOiBSb2JvdG8sIFJvYm90
-b0RyYWZ0LCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmOyBMSU5FLUhFSUdIVDogbm9ybWFs
-IiANCiAgICAgIHNpemU9Mj4mbmJzcDsmbmJzcDvlr4bnoIHpgJrnn6XjgII8L0ZPTlQ+Jm5ic3A7
-PFNQQU4gDQogICAgICBzdHlsZT0nRk9OVC1TSVpFOiAxM3B4OyBGT05ULUZBTUlMWTogaGVsdmV0
-aWNhLCAibWljcm9zb2Z0IHlhaGVpIiwgdmVyZGFuYSc+wqk8L1NQQU4+PFNQQU4gDQogICAgICBz
-dHlsZT0nRk9OVC1TSVpFOiAxM3B4OyBGT05ULUZBTUlMWTogaGVsdmV0aWNhLCAibWljcm9zb2Z0
-IHlhaGVpIiwgdmVyZGFuYSc+Jm5ic3A7PC9TUEFOPjxTUEFOIA0KICAgICAgc3R5bGU9IkZPTlQt
-U0laRTogc21hbGw7IEZPTlQtRkFNSUxZOiBSb2JvdG8sIFJvYm90b0RyYWZ0LCBIZWx2ZXRpY2Es
-IEFyaWFsLCBzYW5zLXNlcmlmIj48Rk9OVCANCiAgICAgIHNpemU9Mz4yMDIyPC9GT05UPjwvU1BB
-Tj48L0ZPTlQ+PC9QPjwvVEQ+PC9UUj48L1RCT0RZPjwvVEFCTEU+PC9ESVY+PC9ESVY+DQo8RElW
-PiZuYnNwOzwvRElWPjwvRElWPjwvRElWPjwvRElWPg0KPERJViANCnN0eWxlPSdGT05ULVNJWkU6
-IG1lZGl1bTsgRk9OVC1GQU1JTFk6ICJNaWNyb3NvZnQgWWFIZWkiOyBXSElURS1TUEFDRTogbm9y
-bWFsOyBDT0xPUjogcmdiKDAsMCwwKSc+DQo8RElWPjwvRElWPjwvRElWPjxCUj4NCjxQPjwvUD48
-L0RJVj48U1BBTiBjbGFzcz14bV9jb21wb3NlX29yaWdpbl9tYWlsX2NvbnRhaW5lcl9zaWduIA0K
-c3R5bGU9IkRJU1BMQVk6IG5vbmUiPjwvU1BBTj48L0RJVj48L0JPRFk+PC9IVE1MPg0K
 
+
+在 2022/10/8 17:06, JeffleXu 写道:
+> 
+> 
+> On 8/18/22 9:52 PM, Jia Zhu wrote:
+> 
+>>   /*
+>>    * Backing file state.
+>>    */
+>> @@ -67,8 +73,7 @@ struct cachefiles_object {
+>>   	unsigned long			flags;
+>>   #define CACHEFILES_OBJECT_USING_TMPFILE	0		/* Have an unlinked tmpfile */
+>>   #ifdef CONFIG_CACHEFILES_ONDEMAND
+>> -	int				ondemand_id;
+>> -	enum cachefiles_object_state	state;
+>> +	void				*private;
+>>   #endif
+>>   };
+> 
+> Personally I would prefer
+> 
+> 	struct cachefiles_object {
+> 		...
+> 	#ifdef CONFIG_CACHEFILES_ONDEMAND
+> 		struct cachefiles_ondemand_info *private;
+> 	#endif
+> 	}
+> 
+> and
+> 
+>> @@ -88,6 +93,7 @@ void cachefiles_put_object(struct cachefiles_object
+> *object,
+>>   		ASSERTCMP(object->file, ==, NULL);
+>>
+>>   		kfree(object->d_name);
+>> + #ifdef CONFIG_CACHEFILES_ONDEMAND
+>> +		kfree(object->private);
+>> + #endif
+>>
+>>   		cache = object->volume->cache->cache;
+>>   		fscache_put_cookie(object->cookie,
+> 
+> so that we can get rid of CACHEFILES_ONDEMAND_OBJINFO() stuff, to make
+> the code more readable.
+Hi JingBo. Thanks for your review. I'll revise it in next version.
+> 
+> 
+> 
