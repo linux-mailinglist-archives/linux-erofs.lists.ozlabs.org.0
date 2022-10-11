@@ -1,71 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C64A5F9BD9
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Oct 2022 11:28:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 959A45FB320
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Oct 2022 15:16:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MmDB14YWpz3cB6
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Oct 2022 20:28:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MmxBd3cZVz2yhy
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 00:16:41 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=delyorkcreative.academy header.i=@delyorkcreative.academy header.a=rsa-sha256 header.s=default header.b=gZwNzK+H;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rY+PWlvE;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=delyorkcreative.academy (client-ip=142.93.37.208; helo=delyorkcreative.delyorkcreative.academy; envelope-from=noreply@delyorkcreative.academy; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2001:4860:4864:20::32; helo=mail-oa1-x32.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=delyorkcreative.academy header.i=@delyorkcreative.academy header.a=rsa-sha256 header.s=default header.b=gZwNzK+H;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=rY+PWlvE;
 	dkim-atps=neutral
-X-Greylist: delayed 1435 seconds by postgrey-1.36 at boromir; Mon, 10 Oct 2022 20:28:32 AEDT
-Received: from delyorkcreative.delyorkcreative.academy (delyorkcreative.delyorkcreative.academy [142.93.37.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MmD9r3GFjz305X
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Oct 2022 20:28:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=delyorkcreative.academy; s=default; h=Content-Type:MIME-Version:Message-ID:
-	Date:Subject:To:From:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mcUz+l3PdQunRzz2XZlzlpOKhf6ma8z6dGE2NBaP+Jo=; b=gZwNzK+HAKY+AyUOxHD5FHZSty
-	K7j4VzKKVvOzZ3Rl6jXrmqANxp7ZAKJVR+wvsOvxJbzcZHqigFj6JyLl5egElOTTFNtYj/Iq9u6ju
-	F9y1MI+ij1zqz15boczIUYQAs4CoVkCwP2DIEz+xML/tGKMI8nXaAIHgX7/7CIWH1cBu2leYoYi+n
-	cZukUPLTQ4Ko1ijNQORM4fNXcW4mPdCmy/ux7AF4nXqTbVoT6yQio2NixI7RfYWll1W5ewRO6g1px
-	v7I/uGOEaXtwuM8PHuwzXmQDUgnehEcVLTpsfb376J5nh8WlDMnteYqjEAOS6UxXgjPmX0NCG+1CB
-	bJvuRaGw==;
-Received: from [20.25.129.65] (port=62567 helo=bs1092)
-	by delyorkcreative.delyorkcreative.academy with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <noreply@delyorkcreative.academy>)
-	id 1ohoi7-0008An-Fe
-	for linux-erofs@lists.ozlabs.org;
-	Mon, 10 Oct 2022 09:04:31 +0000
-thread-index: Adjch0450AIiQsR5TNaotA6Rx/e62g==
-Thread-Topic: Your Order details: 55465025
-From: =?utf-8?Q?support?= <noreply@delyorkcreative.academy>
-To: <linux-erofs@lists.ozlabs.org>
-Subject: Your Order details: 55465025
-Date: Mon, 10 Oct 2022 09:04:29 -0000
-Message-ID: <A05A2DE6BEA94D438A8E2FA0E23E7356@bs1092>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MmxBJ03dGz3blj
+	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Oct 2022 00:16:23 +1100 (AEDT)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1322fa1cf6fso15798973fac.6
+        for <linux-erofs@lists.ozlabs.org>; Tue, 11 Oct 2022 06:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P0QJPhughD80u7ewLF/tLA+xOCDrl/cfryqlkNyAxbY=;
+        b=rY+PWlvEEZtJ+HmXXbLiYRgNbuvRmBZeRWVqWpI2rKqCJccNk+ZqopV4EPVf1Q0qpz
+         B/bSu3cokc+8EocLFcORWfEckjlHkoHjle5UXU3LwaAwXMLI74KLRyCQgWf09lg25Fbi
+         4JmNle7Lcw5uqueqRyJ1df3nmHfLiu0IgnMBkvPYpe+KLtFYw0Ww5lwTXssb5cK9LeDB
+         F5zYYGYT1ENpmoXg3MC5MD4+rPPPx5EkwjlylMTlRTQxytrEPhJSetBoYUpx2Lj7XSuO
+         iGmbMyCobXc/Zm0gUG3FfaX3ouOgzkVB+yV8TKFoC9BVySClixuELZ5bX8Xtpsxojzyh
+         +sXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P0QJPhughD80u7ewLF/tLA+xOCDrl/cfryqlkNyAxbY=;
+        b=LdgAWGxpkIFwPics6/UwAsjzPESdgvU/bxbr+D9/IHBQxEOVIUqC7q+E7fPIWvqdvS
+         5a2HjlgJqoF2fjCcExNqJGiYwEt7+UUqZm2OunMNzxARfE9FMShxungzjksZaM91hf9M
+         8Am6QmAvzysciDAymCzwryS4Y4jiLoC6E2gQrFZ6u0V5XNmkZ0hQoBqsOy2T8wH35G/F
+         itc+dyniY9i610YgKEHB6ZaDH0kYLrLX+juJSlmaYr4xSQ7ckw3Zz7BIGplL0NpOxTjK
+         S2DLPwVEoqpikAkK2GIABnVJ+R4/8TOVHdK4VK6dMOTXSDcxuKr3yD2v81lP1BbCHlqm
+         Fnww==
+X-Gm-Message-State: ACrzQf0HalbdMJHRNi5WSeJCByAXr5O8ydlgnlWAxqunr9V4SfXr47H6
+	i3iOat9d49QEHVFFhaS60jGTSk+JeyCawL5N
+X-Google-Smtp-Source: AMsMyM6VuhiNMjdIO3SyvCAmXoE9oQdlr+6UO2h2kSoiH3hgKQ+xUOuHexT0ia7yWQdNOXMDI90tHA==
+X-Received: by 2002:a17:90a:d983:b0:20a:ec04:e028 with SMTP id d3-20020a17090ad98300b0020aec04e028mr35546281pjv.122.1665494165504;
+        Tue, 11 Oct 2022 06:16:05 -0700 (PDT)
+Received: from C02G705SMD6V.bytedance.net ([63.216.146.190])
+        by smtp.gmail.com with ESMTPSA id d14-20020a170902654e00b00181f8523f60sm4773415pln.225.2022.10.11.06.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Oct 2022 06:16:05 -0700 (PDT)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: dhowells@redhat.com,
+	xiang@kernel.org,
+	jefflexu@linux.alibaba.com
+Subject: [PATCH 0/5] Introduce daemon failover mechanism to recover from crashing
+Date: Tue, 11 Oct 2022 21:15:47 +0800
+Message-Id: <20221011131552.23833-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.37.0 (Apple Git-136)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_260B_01D8DC87.4E39B4D0"
-X-Mailer: Microsoft CDO for Windows 2000
-Content-Class: urn:content-classes:message
-Importance: normal
-Priority: normal
-X-MimeOLE: Produced By Microsoft MimeOLE
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - delyorkcreative.delyorkcreative.academy
-X-AntiAbuse: Original Domain - lists.ozlabs.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - delyorkcreative.academy
-X-Get-Message-Sender-Via: delyorkcreative.delyorkcreative.academy: authenticated_id: noreply@delyorkcreative.academy
-X-Authenticated-Sender: delyorkcreative.delyorkcreative.academy: noreply@delyorkcreative.academy
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,38 +77,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
+Changes since RFC:
+1. Solve the conflict with patch "cachefiles: make on-demand request distribution fairer" 
+2. Add some code comments.
+3. Optimize some structures to make the code more readable.
+4. Extract cachefiles_ondemand_skip_req() from cachefiles_ondemand_daemon_read()
+   to make codes more intuitional.
 
-------=_NextPart_000_260B_01D8DC87.4E39B4D0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+[Background]
+============
+In ondemand read mode, if user daemon closes anonymous fd(e.g. daemon
+crashes), subsequent read and inflight requests based on these fd will
+return -EIO.
+Even if above mentioned case is tolerable for some individual users, but
+when it happenens in real cloud service production environment, such IO
+errors will be passed to cloud service users and impact its working jobs.
+It's terrible for cloud service stability.
 
+[Design]
+========
+This patchset introduce three states for ondemand object:
+CLOSE: Object which just be allocated or closed by user daemon.
+OPEN: Object which related OPEN request has been processed correctly.
+REOPENING: Object which has been closed, and is drived to open by a read
+request.
 
-------=_NextPart_000_260B_01D8DC87.4E39B4D0
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+[Flow Path]
+===========
+[Daemon Crash] 
+0. Daemon use UDS send/receive fd to keep and pass the fd reference of
+   "/dev/cachefiles".
+1. User daemon crashes -> restart and recover dev fd's reference.
+2. User daemon write "restore" to device.
+   2.1 Reset the object's state from CLOSE to OPENING.
+   2.2 Init a work which reinit the object and add it to wq. (daemon can
+       get rid of kernel space and handle that open request).
+3. The user of upper filesystem won't notice that the daemon ever crashed
+   since the inflight IO is restored and handled correctly.
 
-PFA+SW52b2ljZSBmb3IgbGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZzxCUj4tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLTxCUj5HRUVLIFRFQ0ggU1FVQUQgTExDOkJlc3QgT25saW5lIFRlY2huaWNh
-bCBTb2x1dGlvbjxCUj5QUk9EVUNUIERFU0NSSVBUSU9OOjxCUj4tLS0tLS0tLS0tLS0tLS0tLS0t
-PEJSPkEvQyBUeXBlIDotIFBlcnNvbmFsIEhvbWUgU3Vic2NyaXB0aW9uPEJSPlByb2R1Y3Q6LSBH
-Sy9QQzM8QlI+RGV2aWNlOi0gVXB0byAzIERldmljZTxCUj5JbnZvaWNlIElEOiBHRUVLNTU0NjUw
-MjU8QlI+UXVuYXRpdHk6LSAxPEJSPlRlbnVyZTotIDEgWWVhcjxCUj5QYXltZW50IE1vZGU6LSBP
-bmxpbmU8QlI+RGVhciBsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnLDxCUj5UaGFuayB5b3Ug
-Zm9yIGNob29zaW5nIG91ciBzZXJ2aWNlcy5Zb3VyIFBlcnNvbmFsIFN1YnNjcmlwdGlvbiBHRUVL
-U1FVQUQgQ0FSRSB3aWxsIEV4cGlyZSB0b2RheS4gVGhlIFN1YnNjcmlwdGlvbiBXaWxsIEF1dG8t
-IFJlbmV3LjxCUj5Zb3VyIHN1YnNjcmlwdGlvbiBoYXMgYmVlbiByZW5ld2VkIGZvciBhbm90aGVy
-IG9uZSB5ZWFyIHdpdGggR2Vlay1TcXVhZCBmb3ImbmJzcDsgJDMzOC4wNSwgYW5kIGFtb3VudCBo
-YXMgYmVlbiBkZWR1Y3RlZCBmcm9tIHRoZSByZWdpc3RlcmVkIHBheW1lbnQgbWV0aG9kLCBvbiAx
-MC0xMC0yMDIyLjwvUD4NCjxQPk5PVEU6PEJSPklmIHlvdSBoYXZlIGFueSBxdWVzdGlvbiBhYm91
-dCB0aGlzIGludm9pY2Ugb3IgeW91IHdhbnQgdG8gY2FuY2VsIHRoZSBzdWJzY3JpcHRpb24sIHlv
-dSBjYW4gY2FsbCBvdXQgb3VyIEN1c3RvbWVyIFN1cHBvcnQgYXQgOiArMSg4MDUpLTkyNC03MzAy
-LjwvUD4NCjxQPlJlZ2FyZHMsPEJSPkdlZWsgU3F1YWQgVGVhbTwvUD4NCjxQPiZuYnNwOzwvUD4=
+[Daemon Close fd]
+1. User daemon closes an anonymous fd.
+2. User daemon reads a READ request which the associated anonymous fd was
+   closed and init a work which re-open the object.
+3. User daemon handles above open request normally.
+4. The user of upper filesystem won't notice that the daemon ever closed
+   any fd since the closed object is re-opened and related request was
+   handled correctly.
 
-------=_NextPart_000_260B_01D8DC87.4E39B4D0--
+[Test]
+======
+There is a testcase for above mentioned scenario.
+A user process read the file by fscache ondemand reading.
+At the same time, we kill the daemon constantly.
+The expected result is that the file read by user is consistent with
+original, and the user doesn't notice that daemon has ever been killed.
+
+https://github.com/userzj/demand-read-cachefilesd/commits/failover-test
+
+[GitWeb]
+========
+https://github.com/userzj/linux/tree/fscache-failover-v2
+
+Jia Zhu (5):
+  cachefiles: introduce object ondemand state
+  cachefiles: extract ondemand info field from cachefiles_object
+  cachefiles: resend an open request if the read request's object is
+    closed
+  cachefiles: narrow the scope of triggering EPOLLIN events in ondemand
+    mode
+  cachefiles: add restore command to recover inflight ondemand read
+    requests
+
+ fs/cachefiles/daemon.c    |  14 +++-
+ fs/cachefiles/interface.c |   6 ++
+ fs/cachefiles/internal.h  |  71 ++++++++++++++++-
+ fs/cachefiles/ondemand.c  | 155 +++++++++++++++++++++++++++++---------
+ 4 files changed, 205 insertions(+), 41 deletions(-)
+
+-- 
+2.20.1
 
