@@ -1,78 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06DCB5FC883
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 17:37:57 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F4315FCBA0
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 21:36:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MncH16qMcz3bqw
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Oct 2022 02:37:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MnjYr73vXz3c2L
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Oct 2022 06:36:00 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=eBOd2UuS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZNCAYi6b;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::102a; helo=mail-pj1-x102a.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=eBOd2UuS;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZNCAYi6b;
 	dkim-atps=neutral
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MncGt3PNtz2xJF
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Oct 2022 02:37:39 +1100 (AEDT)
-Received: by mail-pj1-x102a.google.com with SMTP id o9-20020a17090a0a0900b0020ad4e758b3so2411155pjo.4
-        for <linux-erofs@lists.ozlabs.org>; Wed, 12 Oct 2022 08:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S2jK+cfoyd0vz00QrrKo8s95SUmryHgC+6RpgzWjESk=;
-        b=eBOd2UuSqlSwTb9yRs9MMfT1V1SiZQCHtOSU7F47t8ziFbFGFkZ0e+tyi8d34iv6kx
-         rNiNK6avWTnnQAJPDLH4IigRS/GKQpsADf2ZVslAZWUtPjkAhKXq1jbZ03VrRiEbbSND
-         uUTGKNymB7vWRPisBFi1DL1Skav+Jl9aYtJKS1bKVWfb4QpkQFYdZP5m/PQgIvYhoIe+
-         EEv91h8hfg2OtLZG8daMrXcavSz5o6sk4gmJC4hEzo54R5H502um6hiR15oFAjpxaqo/
-         pv+PIGKJ/BbWfPqLow1394L7tX3huIw84EcSY+Cshm1tMxGTQ3BDD8lvKInGHSikIY3x
-         KvJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=S2jK+cfoyd0vz00QrrKo8s95SUmryHgC+6RpgzWjESk=;
-        b=FuaEc/er4hLYN6acvxkK7lDBhyNpPYzowfHp5gOxzqbG1WZ9hIOmkfjdn4CbMK/rIQ
-         tTfw1OF5+P1GK8dnCboy3E88Z7uHk15sIO9GvuiZ2WQUkl7ES7xulKF1rwN40YTETltR
-         snvsOAdAPJMIU+T+wMKGIwS4tl8aNha605OrfurfOGtKqGuTWub75PNok+eDFAVtHajM
-         8DP6P81KxDXWa2oseQz+yIGEgj5bndgxJUs2YOOnveOvxbh6hw/dFZaGVBADHW/dC/8W
-         ywt+WkPe8V6cyUb/ul4lKkogSa8YNW+cb1XYiosqmg5RBDKgPZl3Ol8KG5kWJUY5oPNf
-         js3A==
-X-Gm-Message-State: ACrzQf2e54v1tuRbnRHQGUZ28u87+S+lMseFNWmp7mYIeE/Z8Oa2Wo/Z
-	K0HoTK6zG9oeixiqiTPUStLDYg==
-X-Google-Smtp-Source: AMsMyM6zMT5rB8y6CsFFXm1ViiLl06XxlM+uWUoIAm5MYoVEUa8Qy5VJ+MIob9kOJV5FH5dzgSaigA==
-X-Received: by 2002:a17:903:2411:b0:184:7159:dce6 with SMTP id e17-20020a170903241100b001847159dce6mr4224709plo.101.1665589057095;
-        Wed, 12 Oct 2022 08:37:37 -0700 (PDT)
-Received: from [10.3.156.122] ([63.216.146.190])
-        by smtp.gmail.com with ESMTPSA id i11-20020a17090a650b00b0020a821e97fbsm1664306pjj.13.2022.10.12.08.37.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Oct 2022 08:37:36 -0700 (PDT)
-Message-ID: <c6f5d729-2083-817d-fe7d-b01bce27e39f@bytedance.com>
-Date: Wed, 12 Oct 2022 23:37:31 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MnjYm2ZNZz3bm9
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Oct 2022 06:35:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665603356; x=1697139356;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iHG+5hQFP4mUfjUm8AXhijtxoMbwB2WX1ypmqEwXN8E=;
+  b=ZNCAYi6b6Es7ZBH9kWepSrbDQekjbihgYCf/fakz7gBXqBlbUykFiCqL
+   y7iLtdWu6R36xfS0HhE1HNd+vv+7dbzqIOX3D7Oie0lKBKGSJd0neMUhP
+   8fOOvh0Td3z3zs1EnPbLtDcVz3cBor80HzLs52RH8awlomQYVUJYcgnP0
+   wHUZAlOIv/6tthyZ0O74/UUAIJFeuKIfuk97hE9kX+jzDs1uuKxbP+SDN
+   lSJ9Vl6lvU0fDm45NOJ+47q+N5viKJSBGPS88Y0zyHxIw8pK/43PPH/PR
+   Iz92mi1N8+MXf9QZ0baI4tgd+A5hakBXzEhnA8Os5UQnlAefuNcBVrbnz
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="292216732"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="292216732"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 12:35:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="695598785"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="695598785"
+Received: from lkp-server01.sh.intel.com (HELO 2af0a69ca4e0) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Oct 2022 12:35:43 -0700
+Received: from kbuild by 2af0a69ca4e0 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oihW2-00047D-2e;
+	Wed, 12 Oct 2022 19:35:42 +0000
+Date: Thu, 13 Oct 2022 03:34:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 4d9849343ecae16cf236547f1493113fd52dc076
+Message-ID: <634716d8.StD+tiBZC9ofMHCT%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.3.2
-Subject: Re: [External] Re: [PATCH 3/5] cachefiles: resend an open request if
- the read request's object is closed
-To: JeffleXu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- xiang@kernel.org
-References: <20221011131552.23833-1-zhujia.zj@bytedance.com>
- <20221011131552.23833-4-zhujia.zj@bytedance.com>
- <28d64f00-e408-9fc2-9506-63c1d8b08b9c@linux.alibaba.com>
-From: Jia Zhu <zhujia.zj@bytedance.com>
-In-Reply-To: <28d64f00-e408-9fc2-9506-63c1d8b08b9c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,96 +70,122 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 4d9849343ecae16cf236547f1493113fd52dc076  erofs: shouldn't churn the mapping page for duplicated copies
 
+elapsed time: 720m
 
-在 2022/10/12 15:53, JeffleXu 写道:
-> 
-> 
-> On 10/11/22 9:15 PM, Jia Zhu wrote:
->> @@ -254,12 +282,18 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
->>   	 * request distribution fair.
->>   	 */
->>   	xa_lock(&cache->reqs);
->> -	req = xas_find_marked(&xas, UINT_MAX, CACHEFILES_REQ_NEW);
->> -	if (!req && cache->req_id_next > 0) {
->> -		xas_set(&xas, 0);
->> -		req = xas_find_marked(&xas, cache->req_id_next - 1, CACHEFILES_REQ_NEW);
->> +retry:
->> +	xas_for_each_marked(&xas, req, xa_max, CACHEFILES_REQ_NEW) {
->> +		if (cachefiles_ondemand_skip_req(req))
->> +			continue;
->> +		break;
->>   	}
->>   	if (!req) {
->> +		if (cache->req_id_next > 0 && xa_max == ULONG_MAX) {
->> +			xas_set(&xas, 0);
->> +			xa_max = cache->req_id_next - 1;
->> +			goto retry;
->> +		}
-> 
-> I would suggest abstracting the "xas_for_each_marked(...,
-> CACHEFILES_REQ_NEW)" part into a helper function to avoid the "goto retry".
-> 
-Hi JingBo,
+configs tested: 96
+configs skipped: 2
 
-Thanks for your advice. Are the following revises appropriate？
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-static struct cachefiles_req *cachefiles_ondemand_select_req(struct 
-xa_state *xas, unsigned long xa_max)
-{
-     struct cachefiles_req *req;
-     struct cachefiles_ondemand_info *info;
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+i386                                defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+s390                 randconfig-r044-20221012
+i386                          randconfig-a012
+x86_64                              defconfig
+i386                          randconfig-a014
+i386                             allyesconfig
+arc                                 defconfig
+powerpc                           allnoconfig
+x86_64                               rhel-8.3
+s390                             allmodconfig
+i386                          randconfig-a016
+i386                          randconfig-a001
+m68k                             allmodconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a015
+sh                               allmodconfig
+arm                                 defconfig
+arc                              allyesconfig
+alpha                               defconfig
+i386                          randconfig-a003
+x86_64                        randconfig-a002
+i386                          randconfig-a005
+x86_64                        randconfig-a006
+s390                             allyesconfig
+s390                                defconfig
+mips                             allyesconfig
+x86_64                           allyesconfig
+alpha                            allyesconfig
+x86_64                        randconfig-a004
+m68k                             allyesconfig
+arc                              alldefconfig
+sh                            shmin_defconfig
+sh                         apsh4a3a_defconfig
+openrisc                            defconfig
+arm                        keystone_defconfig
+powerpc                     tqm8548_defconfig
+powerpc                 mpc834x_mds_defconfig
+mips                       bmips_be_defconfig
+arc                  randconfig-r043-20221012
+riscv                randconfig-r042-20221012
+arc                               allnoconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+alpha                             allnoconfig
+riscv                             allnoconfig
+csky                              allnoconfig
+xtensa                           allyesconfig
+sh                           se7750_defconfig
+powerpc                     rainier_defconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+powerpc                    amigaone_defconfig
+mips                           ci20_defconfig
+m68k                                defconfig
+riscv                    nommu_k210_defconfig
+i386                          randconfig-c001
+ia64                             allmodconfig
+sparc                               defconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
 
-     xas_for_each_marked(xas, req, xa_max, CACHEFILES_REQ_NEW) {
-         if (!req || req->msg.opcode != CACHEFILES_OP_READ)
-             return req;
-         info = req->object->private;
-         if (info->state == CACHEFILES_ONDEMAND_OBJSTATE_close) {
-             cachefiles_ondemand_set_object_reopening(req->object);
-             queue_work(fscache_wq, &info->work);
-             continue;
-         } else if (info->state == CACHEFILES_ONDEMAND_OBJSTATE_reopening) {
-             continue;
-         }
-         return req;
-     }
-     return NULL;
-}
+clang tested configs:
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+i386                          randconfig-a004
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+i386                          randconfig-a006
+x86_64                        randconfig-a003
+riscv                             allnoconfig
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+powerpc                 mpc8560_ads_defconfig
+mips                      maltaaprp_defconfig
+x86_64                        randconfig-k001
+powerpc                      obs600_defconfig
+mips                           mtx1_defconfig
+powerpc                      katmai_defconfig
+mips                     cu1830-neo_defconfig
 
-...
-
-  xa_lock(&cache->reqs);
-     req = cachefiles_ondemand_select_req(&xas, ULONG_MAX);
-     if (!req && cache->req_id_next > 0) {
-         xas_set(&xas, 0);
-         req = cachefiles_ondemand_select_req(&xas, cache->req_id_next - 1);
-     }
-     if (!req) {
-         xa_unlock(&cache->reqs);
-         return 0;
-     }
-> 
->> @@ -392,8 +434,16 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
->>   	wake_up_all(&cache->daemon_pollwq);
->>   	wait_for_completion(&req->done);
->>   	ret = req->error;
->> +	kfree(req);
->> +	return ret;
->>   out:
->>   	kfree(req);
->> +	/* Reset the object to close state in error handling path.
->> +	 * If error occurs after creating the anonymous fd,
->> +	 * cachefiles_ondemand_fd_release() will set object to close.
->> +	 */
->> +	if (opcode == CACHEFILES_OP_OPEN)
->> +		cachefiles_ondemand_set_object_close(req->object);
-> 
-> This may cause use-after-free since @req has been freed.
-Thanks for catching this, I'll fix it in next version.
-> 
-> 
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
