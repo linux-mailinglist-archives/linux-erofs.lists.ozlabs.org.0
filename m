@@ -2,71 +2,31 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E105FB321
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Oct 2022 15:16:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 717885FBFF6
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 06:51:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MmxBj2Vhxz3bk8
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 00:16:45 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=QUnuJb+6;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MnKww4z1wz3bjD
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Oct 2022 15:51:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::533; helo=mail-pg1-x533.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=QUnuJb+6;
-	dkim-atps=neutral
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44; helo=out30-44.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MmxBK6WsXz3c25
-	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Oct 2022 00:16:25 +1100 (AEDT)
-Received: by mail-pg1-x533.google.com with SMTP id s206so12797946pgs.3
-        for <linux-erofs@lists.ozlabs.org>; Tue, 11 Oct 2022 06:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kf3ZhctXueFJ0kbJ2xpRhM9KgFk3kGNXq2GUSVGfPOQ=;
-        b=QUnuJb+6K78QvzX+CdefQECwtLKILI2InWFSw4OzOu7QHNDVoLPmNqV5UvdKmhyA3N
-         KgzM7ww0PT7BkpNoOqo4MHkGexzbg3CK36roe4uoSD9jf26rKZMgpbGHi3D5lBCICVUa
-         TyvYGVzJ0S2jFoSNd8eZpaD2WzpZiysKrBycBrHsaku1p37fHRu0BMk7MbT2AU+0Qybg
-         egPZv1YRQtXiMlilzSUZlmYMqO2aTY774H89QOao2P8uyAsM5twteFQ8af0GeLWb6u3w
-         fYtMjA1cBKSwTDj8DczZffZWgbFXKdahvzKi3fcIjFDujBaA9wqWREOC8QQnajIR9EVB
-         Ao/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kf3ZhctXueFJ0kbJ2xpRhM9KgFk3kGNXq2GUSVGfPOQ=;
-        b=ZRMo4Zf2y4vOveAaTCGvgsDDcdbEJxQFr2jd6xHyfWg6NPM1MQfdp/TPAoF0AxQV1E
-         FLeZI61LO4ylNM4sr0aJaEiGXLyTXNA1/vHOwtXmRNQ8nOH/CDEdrsdtx/Ji16AAJnMC
-         +/p9FjsG4HeePyLgZAkyLsfHz3UJJdUC9ah0llgaJBj7Hootj1i+BfWEerlqZLY9ZaWx
-         ICWLtRO0QIOO+tB5cJcOtCPPQJrb0N+lBwMf/+3Tm/zIHsk2GhpBNlA2gN/AKaAz0eIT
-         brDS4IRZmxMpCL7AZHLTDHgxx7D9JDX2jcHQTWB3agf195AzYSKdpCNFdrwoeUa5haqB
-         vI8A==
-X-Gm-Message-State: ACrzQf1vF47q1bE/Jj++pKbZ4C7VEhUUInKTtO6z6TjTxDeMnu68N4An
-	88/MerDB+/iSYb2ZJRmcuyZKPw==
-X-Google-Smtp-Source: AMsMyM5wocz0IUq2R8PGrFxw3m0trQqxL3DgQyV3I+hO0vivP4bDdgKuFhVD/ihMXnNQhambCbkWpw==
-X-Received: by 2002:a63:2c4c:0:b0:434:e001:89fd with SMTP id s73-20020a632c4c000000b00434e00189fdmr21065376pgs.444.1665494183614;
-        Tue, 11 Oct 2022 06:16:23 -0700 (PDT)
-Received: from C02G705SMD6V.bytedance.net ([63.216.146.190])
-        by smtp.gmail.com with ESMTPSA id d14-20020a170902654e00b00181f8523f60sm4773415pln.225.2022.10.11.06.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 06:16:23 -0700 (PDT)
-From: Jia Zhu <zhujia.zj@bytedance.com>
-To: dhowells@redhat.com,
-	xiang@kernel.org,
-	jefflexu@linux.alibaba.com
-Subject: [PATCH 5/5] cachefiles: add restore command to recover inflight ondemand read requests
-Date: Tue, 11 Oct 2022 21:15:52 +0800
-Message-Id: <20221011131552.23833-6-zhujia.zj@bytedance.com>
-X-Mailer: git-send-email 2.37.0 (Apple Git-136)
-In-Reply-To: <20221011131552.23833-1-zhujia.zj@bytedance.com>
-References: <20221011131552.23833-1-zhujia.zj@bytedance.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MnKwr1Ymmz2xgb
+	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Oct 2022 15:51:06 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VS-GD.8_1665550256;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VS-GD.8_1665550256)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Oct 2022 12:51:01 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: shouldn't churn the mapping page for duplicated copies
+Date: Wed, 12 Oct 2022 12:50:56 +0800
+Message-Id: <20221012045056.13421-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -80,85 +40,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously, in ondemand read scenario, if the anonymous fd was closed by
-user daemon, inflight and subsequent read requests would return EIO.
-As long as the device connection is not released, user daemon can hold
-and restore inflight requests by setting the request flag to
-CACHEFILES_REQ_NEW.
+If other duplicated copies exist in one decompression shot, should
+leave the old page as is rather than replace it with the new duplicated
+one.  Otherwise, the following cold path to deal with duplicated copies
+will use the invalid bvec.  It impacts compressed data deduplication.
 
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
-Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
+Also, shift the onlinepage EIO bit to avoid touching the signed bit.
+
+Fixes: 267f2492c8f7 ("erofs: introduce multi-reference pclusters (fully-referenced)")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/cachefiles/daemon.c   |  1 +
- fs/cachefiles/internal.h |  3 +++
- fs/cachefiles/ondemand.c | 23 +++++++++++++++++++++++
- 3 files changed, 27 insertions(+)
+ fs/erofs/zdata.c | 8 +++-----
+ fs/erofs/zdata.h | 6 +++---
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index c74bd1f4ecf5..014369266cb2 100644
---- a/fs/cachefiles/daemon.c
-+++ b/fs/cachefiles/daemon.c
-@@ -77,6 +77,7 @@ static const struct cachefiles_daemon_cmd cachefiles_daemon_cmds[] = {
- 	{ "tag",	cachefiles_daemon_tag		},
- #ifdef CONFIG_CACHEFILES_ONDEMAND
- 	{ "copen",	cachefiles_ondemand_copen	},
-+	{ "restore",	cachefiles_ondemand_restore	},
- #endif
- 	{ "",		NULL				}
- };
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 4655b8a14a60..756812fd8f68 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -302,6 +302,9 @@ extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- extern int cachefiles_ondemand_copen(struct cachefiles_cache *cache,
- 				     char *args);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index cce56dde135c..8d6ff8bcffdd 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -887,15 +887,13 @@ static void z_erofs_do_decompressed_bvec(struct z_erofs_decompress_backend *be,
  
-+extern int cachefiles_ondemand_restore(struct cachefiles_cache *cache,
-+					char *args);
-+
- extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
- extern void cachefiles_ondemand_clean_object(struct cachefiles_object *object);
+ 	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK)) {
+ 		unsigned int pgnr;
+-		struct page *oldpage;
  
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 69bf5446cc9c..bf3005dce00f 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -182,6 +182,29 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	return ret;
+ 		pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
+ 		DBG_BUGON(pgnr >= be->nr_pages);
+-		oldpage = be->decompressed_pages[pgnr];
+-		be->decompressed_pages[pgnr] = bvec->page;
+-
+-		if (!oldpage)
++		if (!be->decompressed_pages[pgnr]) {
++			be->decompressed_pages[pgnr] = bvec->page;
+ 			return;
++		}
+ 	}
+ 
+ 	/* (cold path) one pcluster is requested multiple times */
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index e7f04c4fbb81..d98c95212985 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -126,10 +126,10 @@ static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
  }
  
-+int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
-+{
-+	struct cachefiles_req *req;
-+
-+	XA_STATE(xas, &cache->reqs, 0);
-+
-+	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * Reset the requests to CACHEFILES_REQ_NEW state, so that the
-+	 * requests have been processed halfway before the crash of the
-+	 * user daemon could be reprocessed after the recovery.
-+	 */
-+	xas_lock(&xas);
-+	xas_for_each(&xas, req, ULONG_MAX)
-+		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+	xas_unlock(&xas);
-+
-+	wake_up_all(&cache->daemon_pollwq);
-+	return 0;
-+}
-+
- static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+ /*
+- * bit 31: I/O error occurred on this page
+- * bit 0 - 30: remaining parts to complete this page
++ * bit 30: I/O error occurred on this page
++ * bit 0 - 29: remaining parts to complete this page
+  */
+-#define Z_EROFS_PAGE_EIO			(1 << 31)
++#define Z_EROFS_PAGE_EIO			(1 << 30)
+ 
+ static inline void z_erofs_onlinepage_init(struct page *page)
  {
- 	struct cachefiles_object *object;
 -- 
-2.20.1
+2.24.4
 
