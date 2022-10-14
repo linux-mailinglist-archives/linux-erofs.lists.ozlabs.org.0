@@ -2,73 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A832C5FE762
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 05:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF75C5FE8E4
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 08:31:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MpWcJ48kKz3ds0
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 14:10:56 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=uR1wnjzo;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mpc451KP9z3c9B
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 17:31:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=uR1wnjzo;
-	dkim-atps=neutral
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MpWYZ6dvTz3chb
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 14:08:34 +1100 (AEDT)
-Received: by mail-pl1-x62a.google.com with SMTP id k9so3127553pll.11
-        for <linux-erofs@lists.ozlabs.org>; Thu, 13 Oct 2022 20:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RPYvhf6hYj1gmxvw7dTnMnSbUK/V1sm26ubqcw4lSFY=;
-        b=uR1wnjzoh66Ntwurmw7mKwF1tShfnXY9UWfot3dsRbBXUbtebLzF0fV/OdZO1YB5Yw
-         PcIMj+Ydd5Hn2ryM/TVGAKfZN0TZjdE6wCe+F3ctIO6FHCtRgJFCsBZIabYASTtj7hln
-         XLsFKwqQlgniZqtFO6A/gIowSCRYZAj2hcvGo8DCes9+7qUqhO1J776gtuITkdeK0N+R
-         UCWdGHLsKwtvYhGN+SfYD2BTsK0or91WpNavAyzl3NsTvh4cFtEMEUkWSbpWAPS3BfS5
-         gfLNCK1IEWcc2/kryI9FvqKKmhhxnFa5vC2Pe9soKZt87Sg2tIscUDwTaTd9N+OwA2hF
-         baMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RPYvhf6hYj1gmxvw7dTnMnSbUK/V1sm26ubqcw4lSFY=;
-        b=7XRPu91qMrn+dYWCAXnu+4iULd1L0cDzdVPwjYlL739EpK1T3Xg+wPDyabgfYZqLRt
-         fDU4UsYtjj9xxmbQ8NzUmew6+K9rFRlT/PDPu5MP0c0KSPm6oH1xKux2WtJ7q4aFKJ5K
-         l14Yj/NiuphHXQ4uiQBTpy/LDwvmAon0W2pZU9rtFhajaYgMgZKNENy6Fn5eCCUyBZoq
-         cCdfBB1emZwK5hhBuL2pq6sgFcdK5AADP4olQGnciHfPbAd6enp6p1iyWg3LYaM+GktP
-         gGhXNNw94MLdQctNOAKw8f3UouHoFek8L2Sj97zyOBSLfBJw7MdQOIlEWCkrjiJ8vHC7
-         PmAg==
-X-Gm-Message-State: ACrzQf1OiOKpHWZTPMgRSCDBDEEtdMMrMLs47B2RYX3cZwKaueZBanbb
-	x/u8Hn2pUpdRhKDmON3TSV6yutAZRSSTTwj5
-X-Google-Smtp-Source: AMsMyM4JUmouJomkbkEP9IQpxtTBmIPr2OqA4geZ0pPrmUDavC6IaCWTRrMaDFGGxduazCATfRujOA==
-X-Received: by 2002:a17:902:db11:b0:17d:5e67:c51c with SMTP id m17-20020a170902db1100b0017d5e67c51cmr2829795plx.64.1665716912810;
-        Thu, 13 Oct 2022 20:08:32 -0700 (PDT)
-Received: from C02G705SMD6V.bytedance.net ([63.216.146.183])
-        by smtp.gmail.com with ESMTPSA id h4-20020a17090a710400b0020ae09e9724sm425524pjk.53.2022.10.13.20.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 20:08:32 -0700 (PDT)
-From: Jia Zhu <zhujia.zj@bytedance.com>
-To: dhowells@redhat.com,
-	xiang@kernel.org,
-	jefflexu@linux.alibaba.com
-Subject: [PATCH V2 5/5] cachefiles: add restore command to recover inflight ondemand read requests
-Date: Fri, 14 Oct 2022 11:07:45 +0800
-Message-Id: <20221014030745.25748-6-zhujia.zj@bytedance.com>
-X-Mailer: git-send-email 2.37.0 (Apple Git-136)
-In-Reply-To: <20221014030745.25748-1-zhujia.zj@bytedance.com>
-References: <20221014030745.25748-1-zhujia.zj@bytedance.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mpc3w5Vx3z3bN6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 17:31:39 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VS6WuA7_1665729090;
+Received: from 30.221.130.30(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VS6WuA7_1665729090)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Oct 2022 14:31:32 +0800
+Message-ID: <5ca5d4bd-63b4-12e9-39cd-7580958980db@linux.alibaba.com>
+Date: Fri, 14 Oct 2022 14:31:29 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.0
+Subject: Re: [PATCH V2 3/5] cachefiles: resend an open request if the read
+ request's object is closed
+Content-Language: en-US
+To: Jia Zhu <zhujia.zj@bytedance.com>, dhowells@redhat.com, xiang@kernel.org
+References: <20221014030745.25748-1-zhujia.zj@bytedance.com>
+ <20221014030745.25748-4-zhujia.zj@bytedance.com>
+From: JeffleXu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20221014030745.25748-4-zhujia.zj@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,85 +46,52 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
+Cc: linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously, in ondemand read scenario, if the anonymous fd was closed by
-user daemon, inflight and subsequent read requests would return EIO.
-As long as the device connection is not released, user daemon can hold
-and restore inflight requests by setting the request flag to
-CACHEFILES_REQ_NEW.
 
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
-Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
----
- fs/cachefiles/daemon.c   |  1 +
- fs/cachefiles/internal.h |  3 +++
- fs/cachefiles/ondemand.c | 23 +++++++++++++++++++++++
- 3 files changed, 27 insertions(+)
 
-diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index c74bd1f4ecf5..014369266cb2 100644
---- a/fs/cachefiles/daemon.c
-+++ b/fs/cachefiles/daemon.c
-@@ -77,6 +77,7 @@ static const struct cachefiles_daemon_cmd cachefiles_daemon_cmds[] = {
- 	{ "tag",	cachefiles_daemon_tag		},
- #ifdef CONFIG_CACHEFILES_ONDEMAND
- 	{ "copen",	cachefiles_ondemand_copen	},
-+	{ "restore",	cachefiles_ondemand_restore	},
- #endif
- 	{ "",		NULL				}
- };
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 98d6cf58db11..a3cacba57def 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -302,6 +302,9 @@ extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- extern int cachefiles_ondemand_copen(struct cachefiles_cache *cache,
- 				     char *args);
- 
-+extern int cachefiles_ondemand_restore(struct cachefiles_cache *cache,
-+					char *args);
-+
- extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
- extern void cachefiles_ondemand_clean_object(struct cachefiles_object *object);
- 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index c9eea89befec..08677c9d0004 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -182,6 +182,29 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	return ret;
- }
- 
-+int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
-+{
-+	struct cachefiles_req *req;
-+
-+	XA_STATE(xas, &cache->reqs, 0);
-+
-+	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * Reset the requests to CACHEFILES_REQ_NEW state, so that the
-+	 * requests have been processed halfway before the crash of the
-+	 * user daemon could be reprocessed after the recovery.
-+	 */
-+	xas_lock(&xas);
-+	xas_for_each(&xas, req, ULONG_MAX)
-+		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+	xas_unlock(&xas);
-+
-+	wake_up_all(&cache->daemon_pollwq);
-+	return 0;
-+}
-+
- static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
- {
- 	struct cachefiles_object *object;
+On 10/14/22 11:07 AM, Jia Zhu wrote:
+
+> +/*
+> + * Reopen the closed object with associated read request.
+
+I think "Reopen the closed object if there's any inflight or subsequent
+READ request on this object" would be better?
+
+> + * Skip read requests whose related object are reopening.
+					       ^
+					      is ?
+
+
+> @@ -277,14 +308,18 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>  	xa_unlock(&cache->reqs);
+>  
+>  	id = xas.xa_index;
+> -	msg->msg_id = id;
+>  
+>  	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>  		ret = cachefiles_ondemand_get_fd(req);
+> -		if (ret)
+> +		if (ret) {
+> +			cachefiles_ondemand_set_object_close(req->object);
+>  			goto error;
+> +		}
+>  	}
+>  
+> +	msg->msg_id = id;
+> +	msg->object_id = req->object->private->ondemand_id;
+
+Since currently msg->object_id is always assigned in
+cachefiles_ondemand_daemon_read(), we can remove the assignment in
+cachefiles_ondemand_get_fd().
+
+
+Otherwise LGTM.
+
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+
 -- 
-2.20.1
-
+Thanks,
+Jingbo
