@@ -1,69 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 275FA5FEA10
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 10:06:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35B325FEA11
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 10:06:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Mpf9f69mdz3cBV
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 19:06:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mpf9k4Ltcz3c4N
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 19:06:50 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=OtPMThNb;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=s6mTcuzx;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::529; helo=mail-pg1-x529.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::52c; helo=mail-pg1-x52c.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=OtPMThNb;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=s6mTcuzx;
 	dkim-atps=neutral
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mpf9W2c1fz2xHM
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 19:06:38 +1100 (AEDT)
-Received: by mail-pg1-x529.google.com with SMTP id s196so2387863pgs.3
-        for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 01:06:38 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mpf9W389bz307g
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 19:06:39 +1100 (AEDT)
+Received: by mail-pg1-x52c.google.com with SMTP id e129so3671345pgc.9
+        for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 01:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=90kmgNBxYuQDRjoJ++HQAlxGZIWs9oLzsbBHk0vLgUo=;
-        b=OtPMThNbb2WOOHLxa+QlctGa0JbZInKy8kSXh9SoHLMCt8nULHPQnF09yBTHpP/Udk
-         gu5KnxTVZoOUFHA/9H1eutkfBF3jVWc0fItRmP6uvZ9Ey+NoJPO6lZm3NPbZAGqnjQaY
-         IVIk40rjWuKwERXAWAEXExLmLK0tFhM77u9fEdlCWFf5RyJR4Oe0ONg8KO+OviHZXmZd
-         R0lcP+zIKbbZPU75ixyN3lOFmcrj2KPjcqTjH6da57Os3AOujFcXPbvSz/r8H5Spn7Dr
-         /nTyFdJMPJsoT3nxEvsgEd1z9N3zTHshx7VbJsOiY9MBe30I4xdRBGX4PV05vF6iLmye
-         qR9A==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fNcrPzu+uKXnduESO+DuwK3jbFzibhJrS7INeKZTCZc=;
+        b=s6mTcuzxdQgjMZE+5rWYB3WrBeBE0mZ0uh+9CoMVdSZf/Rer1uclsQsj1VpvUf88H2
+         I3CVtWquR0qeE0e0qpqx7LHQWmP911nP/15f3lsxYpurPX3vWxmZcm1k33VDR6u08183
+         nt1pDo5AACmby1uPOceFFJqqIBHeYzlibk57ZQbRC4++rn++5jkOK9Q/L/jSgBf0OVij
+         NE9tAeBAsBxcGfjY8HF0lht0puF1ZPdyAKg7/fFSB4lfyBCV/QFinmAZBFpyNO3S8XOv
+         WezHwXuVe259W19+ecN3fU3vSg6g7v1yGhHLecR+0KSONAMdSDeohqpnvcxtzhFVwP0C
+         eHxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=90kmgNBxYuQDRjoJ++HQAlxGZIWs9oLzsbBHk0vLgUo=;
-        b=AafsTSVmMoeZmYvXLjzkolqwa75Ro5PIJbEwfCU/K5MGmk3SCl/5of5L2BK/iIoh9f
-         xMc2yE+2brdKft5f3pJHcuIa07Sni0h3xzg+/GPpvd/31uA9HI0cvHbKlFCzwvqmSNYK
-         0T0F9MQpBHcjuanjQINuve66YpAtC1xyz7GFRxpOZ7PLEPpatMIEa/3L/y0H719mOglA
-         B7sWhNYyWhZn0u7iKHTJpLqjtm7gURTRbm7CvD035aj/WV5lqKy7ujW5pUV5jBaCjvhr
-         NcWFd/tmdhmNilIHQpYr64L7rz8jG8oOtl1G7C4OMMYrOg5un6VSgFrJP4R8/Ouv1B5Y
-         aD/w==
-X-Gm-Message-State: ACrzQf3Ys2nGBNXeYI9bPKFdxc8vL8pOnVWvk4CI+mXPe1XsuD4grivC
-	Q+UZhiA690qsYd7B5QbXzGk3Vw==
-X-Google-Smtp-Source: AMsMyM5Zx7Qn9iRmKEY5gHbnSMEHHrDjyxn7uuX9kvfDoFaNsj+MDU3tUeehdFxmy9MnBKR6CLGVUA==
-X-Received: by 2002:a65:63ce:0:b0:43a:2103:b7b8 with SMTP id n14-20020a6563ce000000b0043a2103b7b8mr3666169pgv.59.1665734793849;
-        Fri, 14 Oct 2022 01:06:33 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fNcrPzu+uKXnduESO+DuwK3jbFzibhJrS7INeKZTCZc=;
+        b=zXqI2jKHLseZeTj/4HStohVJnqPKDINUI89mkp5wcsJwp3ZQ0WKtlaLZTBiw/Vw9cT
+         9/F9pwhLPTV9xGaqduRbH1ho8HRgzq8+Fu1ITlGQiyaGgnSDdnQ2sNmC3jx8oMroQfen
+         t1KZ9Zc9WRIvGAn9a6RnwxmoBhGQGEvnYCro7ZqWMPZESzMQIQB/PRRB/LqkkagqAbSF
+         1cmZHSAepW0fMnQ6zcJvQDudKysrTczrT/oylnCJ+0xaCqpVMdSmlBGy1n48+f6ZxJtT
+         MIoIQX0xW/N+v/794rAztAwiWGtHqkoitjZBjZwUeaUrtzI+qwvR/ax8HsZQNhSQj6LU
+         Hhtw==
+X-Gm-Message-State: ACrzQf3yvhUhjhGoWCfAMD9NHwE3eC9oWIt18MKgeBXb0+T9oJ6+Mka5
+	ikZeYqy2E3JzkqCFc/TkJ7XGQQ==
+X-Google-Smtp-Source: AMsMyM7ceHYkWcbuULehu8UFmw6AgT6m80cCW9EMPSVoN/pz6Ka1EI0nfRQMsOQk1HnRKFJdaPu+Yw==
+X-Received: by 2002:a63:f07:0:b0:440:5c6e:5833 with SMTP id e7-20020a630f07000000b004405c6e5833mr3564382pgl.375.1665734797311;
+        Fri, 14 Oct 2022 01:06:37 -0700 (PDT)
 Received: from C02G705SMD6V.bytedance.net ([63.216.146.188])
-        by smtp.gmail.com with ESMTPSA id ik20-20020a170902ab1400b001730a1af0fbsm1119196plb.23.2022.10.14.01.06.30
+        by smtp.gmail.com with ESMTPSA id ik20-20020a170902ab1400b001730a1af0fbsm1119196plb.23.2022.10.14.01.06.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 01:06:33 -0700 (PDT)
+        Fri, 14 Oct 2022 01:06:37 -0700 (PDT)
 From: Jia Zhu <zhujia.zj@bytedance.com>
 To: dhowells@redhat.com,
 	xiang@kernel.org,
 	jefflexu@linux.alibaba.com
-Subject: [PATCH V3 0/5] Introduce daemon failover mechanism to recover from crashing
-Date: Fri, 14 Oct 2022 16:05:54 +0800
-Message-Id: <20221014080559.42108-1-zhujia.zj@bytedance.com>
+Subject: [PATCH V3 1/5] cachefiles: introduce object ondemand state
+Date: Fri, 14 Oct 2022 16:05:55 +0800
+Message-Id: <20221014080559.42108-2-zhujia.zj@bytedance.com>
 X-Mailer: git-send-email 2.37.0 (Apple Git-136)
+In-Reply-To: <20221014080559.42108-1-zhujia.zj@bytedance.com>
+References: <20221014080559.42108-1-zhujia.zj@bytedance.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -81,86 +84,135 @@ Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.k
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Changes since v2:
-1. Remove useless header file.
-2. Remove useless assignment statement about object_id.
-3. Modify some code comments.
-4. Add Reviewed-by lines from Jingbo Xu.
+Previously, @ondemand_id field was used not only to identify ondemand
+state of the object, but also to represent the index of the xarray.
+This commit introduces @state field to decouple the role of @ondemand_id
+and adds helpers to access it.
 
-[Background]
-============
-In ondemand read mode, if user daemon closes anonymous fd(e.g. daemon
-crashes), subsequent read and inflight requests based on these fd will
-return -EIO.
-Even if above mentioned case is tolerable for some individual users, but
-when it happenens in real cloud service production environment, such IO
-errors will be passed to cloud service users and impact its working jobs.
-It's terrible for cloud service stability.
+Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+Reviewed-by: Xin Yin <yinxin.x@bytedance.com>
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/cachefiles/internal.h | 21 +++++++++++++++++++++
+ fs/cachefiles/ondemand.c | 21 +++++++++------------
+ 2 files changed, 30 insertions(+), 12 deletions(-)
 
-[Design]
-========
-This patchset introduce three states for ondemand object:
-CLOSE: Object which just be allocated or closed by user daemon.
-OPEN: Object which related OPEN request has been processed correctly.
-REOPENING: Object which has been closed, and is drived to open by a read
-request.
-
-[Flow Path]
-===========
-[Daemon Crash] 
-0. Daemon use UDS send/receive fd to keep and pass the fd reference of
-   "/dev/cachefiles".
-1. User daemon crashes -> restart and recover dev fd's reference.
-2. User daemon write "restore" to device.
-   2.1 Reset the object's state from CLOSE to OPENING.
-   2.2 Init a work which reinit the object and add it to wq. (daemon can
-       get rid of kernel space and handle that open request).
-3. The user of upper filesystem won't notice that the daemon ever crashed
-   since the inflight IO is restored and handled correctly.
-
-[Daemon Close fd]
-1. User daemon closes an anonymous fd.
-2. User daemon reads a READ request which the associated anonymous fd was
-   closed and init a work which re-open the object.
-3. User daemon handles above open request normally.
-4. The user of upper filesystem won't notice that the daemon ever closed
-   any fd since the closed object is re-opened and related request was
-   handled correctly.
-
-[Test]
-======
-There is a testcase for above mentioned scenario.
-A user process read the file by fscache ondemand reading.
-At the same time, we kill the daemon constantly.
-The expected result is that the file read by user is consistent with
-original, and the user doesn't notice that daemon has ever been killed.
-
-https://github.com/userzj/demand-read-cachefilesd/commits/failover-test
-
-[GitWeb]
-========
-https://github.com/userzj/linux/tree/fscache-failover-v4
-
-RFC: https://lore.kernel.org/all/20220818135204.49878-1-zhujia.zj@bytedance.com/
-V1: https://lore.kernel.org/all/20221011131552.23833-1-zhujia.zj@bytedance.com/
-V2: https://lore.kernel.org/all/20221014030745.25748-1-zhujia.zj@bytedance.com/
-
-Jia Zhu (5):
-  cachefiles: introduce object ondemand state
-  cachefiles: extract ondemand info field from cachefiles_object
-  cachefiles: resend an open request if the read request's object is
-    closed
-  cachefiles: narrow the scope of triggering EPOLLIN events in ondemand
-    mode
-  cachefiles: add restore command to recover inflight ondemand read
-    requests
-
- fs/cachefiles/daemon.c    |  14 +++-
- fs/cachefiles/interface.c |   6 ++
- fs/cachefiles/internal.h  |  57 +++++++++++++-
- fs/cachefiles/ondemand.c  | 158 ++++++++++++++++++++++++++++----------
- 4 files changed, 188 insertions(+), 47 deletions(-)
-
+diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+index 2ad58c465208..b9c76a935ecd 100644
+--- a/fs/cachefiles/internal.h
++++ b/fs/cachefiles/internal.h
+@@ -44,6 +44,11 @@ struct cachefiles_volume {
+ 	struct dentry			*fanout[256];	/* Fanout subdirs */
+ };
+ 
++enum cachefiles_object_state {
++	CACHEFILES_ONDEMAND_OBJSTATE_close, /* Anonymous fd closed by daemon or initial state */
++	CACHEFILES_ONDEMAND_OBJSTATE_open, /* Anonymous fd associated with object is available */
++};
++
+ /*
+  * Backing file state.
+  */
+@@ -62,6 +67,7 @@ struct cachefiles_object {
+ #define CACHEFILES_OBJECT_USING_TMPFILE	0		/* Have an unlinked tmpfile */
+ #ifdef CONFIG_CACHEFILES_ONDEMAND
+ 	int				ondemand_id;
++	enum cachefiles_object_state	state;
+ #endif
+ };
+ 
+@@ -296,6 +302,21 @@ extern void cachefiles_ondemand_clean_object(struct cachefiles_object *object);
+ extern int cachefiles_ondemand_read(struct cachefiles_object *object,
+ 				    loff_t pos, size_t len);
+ 
++#define CACHEFILES_OBJECT_STATE_FUNCS(_state)	\
++static inline bool								\
++cachefiles_ondemand_object_is_##_state(const struct cachefiles_object *object) \
++{												\
++	return object->state == CACHEFILES_ONDEMAND_OBJSTATE_##_state; \
++}												\
++												\
++static inline void								\
++cachefiles_ondemand_set_object_##_state(struct cachefiles_object *object) \
++{												\
++	object->state = CACHEFILES_ONDEMAND_OBJSTATE_##_state; \
++}
++
++CACHEFILES_OBJECT_STATE_FUNCS(open);
++CACHEFILES_OBJECT_STATE_FUNCS(close);
+ #else
+ static inline ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+ 					char __user *_buffer, size_t buflen)
+diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+index 0254ed39f68c..90456b8a4b3e 100644
+--- a/fs/cachefiles/ondemand.c
++++ b/fs/cachefiles/ondemand.c
+@@ -15,6 +15,7 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
+ 
+ 	xa_lock(&cache->reqs);
+ 	object->ondemand_id = CACHEFILES_ONDEMAND_ID_CLOSED;
++	cachefiles_ondemand_set_object_close(object);
+ 
+ 	/*
+ 	 * Flush all pending READ requests since their completion depends on
+@@ -176,6 +177,8 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+ 		set_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
+ 	trace_cachefiles_ondemand_copen(req->object, id, size);
+ 
++	cachefiles_ondemand_set_object_open(req->object);
++
+ out:
+ 	complete(&req->done);
+ 	return ret;
+@@ -363,7 +366,8 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
+ 		/* coupled with the barrier in cachefiles_flush_reqs() */
+ 		smp_mb();
+ 
+-		if (opcode != CACHEFILES_OP_OPEN && object->ondemand_id <= 0) {
++		if (opcode != CACHEFILES_OP_OPEN &&
++			!cachefiles_ondemand_object_is_open(object)) {
+ 			WARN_ON_ONCE(object->ondemand_id == 0);
+ 			xas_unlock(&xas);
+ 			ret = -EIO;
+@@ -430,18 +434,11 @@ static int cachefiles_ondemand_init_close_req(struct cachefiles_req *req,
+ 					      void *private)
+ {
+ 	struct cachefiles_object *object = req->object;
+-	int object_id = object->ondemand_id;
+ 
+-	/*
+-	 * It's possible that object id is still 0 if the cookie looking up
+-	 * phase failed before OPEN request has ever been sent. Also avoid
+-	 * sending CLOSE request for CACHEFILES_ONDEMAND_ID_CLOSED, which means
+-	 * anon_fd has already been closed.
+-	 */
+-	if (object_id <= 0)
++	if (!cachefiles_ondemand_object_is_open(object))
+ 		return -ENOENT;
+ 
+-	req->msg.object_id = object_id;
++	req->msg.object_id = object->ondemand_id;
+ 	trace_cachefiles_ondemand_close(object, &req->msg);
+ 	return 0;
+ }
+@@ -460,7 +457,7 @@ static int cachefiles_ondemand_init_read_req(struct cachefiles_req *req,
+ 	int object_id = object->ondemand_id;
+ 
+ 	/* Stop enqueuing requests when daemon has closed anon_fd. */
+-	if (object_id <= 0) {
++	if (!cachefiles_ondemand_object_is_open(object)) {
+ 		WARN_ON_ONCE(object_id == 0);
+ 		pr_info_once("READ: anonymous fd closed prematurely.\n");
+ 		return -EIO;
+@@ -485,7 +482,7 @@ int cachefiles_ondemand_init_object(struct cachefiles_object *object)
+ 	 * creating a new tmpfile as the cache file. Reuse the previously
+ 	 * allocated object ID if any.
+ 	 */
+-	if (object->ondemand_id > 0)
++	if (cachefiles_ondemand_object_is_open(object))
+ 		return 0;
+ 
+ 	volume_key_size = volume->key[0] + 1;
 -- 
 2.20.1
 
