@@ -2,73 +2,76 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F3C15FEA1F
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 10:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E458D5FEAAB
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 10:41:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MpfB70vv9z3c6r
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 19:07:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mpfxr5kC5z3c9p
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Oct 2022 19:41:36 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=qVTtmipa;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=f74R1eu/;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::42c; helo=mail-pf1-x42c.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::e30; helo=mail-vs1-xe30.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=qVTtmipa;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=f74R1eu/;
 	dkim-atps=neutral
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mpf9p0CcZz3cd2
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 19:06:53 +1100 (AEDT)
-Received: by mail-pf1-x42c.google.com with SMTP id y8so4197760pfp.13
-        for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 01:06:53 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mpfxh7098z2xf4
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 19:41:27 +1100 (AEDT)
+Received: by mail-vs1-xe30.google.com with SMTP id p7so4196480vsr.7
+        for <linux-erofs@lists.ozlabs.org>; Fri, 14 Oct 2022 01:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mJhr9GEso5XW6jomGaYhGKFuz4nHt5uQZJthz4evrwY=;
-        b=qVTtmipam3rM6KfQlKjS9oB81qvNT4EbK05pZ/u8KhqTeMxi1fgQuugD0vIdferh4A
-         YbPU1ZdtYPR/ZPK5WVwhOLx0PTxgdovGreGSp3BwRvbk/eVN1SZMEkZTSXOGevy3iugB
-         AogReglRz/ngZipTLIK2lRwUlzQ7E6noznmewO+dUqWDsZMVyqKhugFDig/QBvybFt8t
-         Vsx7w7v2uUUB5MSDzYmRU6/oD4TB2PLfO4YaDpnr5j9n7LFnLE8L91zITpD9smh490eb
-         0/OSLFJHUGkje4f/2tYzx91hXBA5zHhogkFUEypk+BKxWcCeQ66erKddmZAiYYVM9FTE
-         hyHQ==
+        bh=tRQg6RjQGJENsG7CF0FPudfuL82rZYfFlg8d/iSFwrg=;
+        b=f74R1eu/WjTVGmhtltkZ29+rXHklK7MZtjpK8vfbJaE0DuZFsOXVtx9bsH+UO3hu14
+         6e8c20KtsJ+qF14rlJyjkwbQi3AxIIV0oTxLbX0XArv6r0i+Hu2gqKaeGDrThDUni1+U
+         tUj5Khe3nlHobA1U8n5SK0TET6hevXcQ3zp3PQAdxS4v21f/z8E9+32e0q1H78el5zKP
+         FN8o3POBAGtivXBUiQ/7rDVAIIuFW7va77Ob7yfXu1rl+rduov81DhUnvUDxxEuvIJ/u
+         TVMlsECT2P1Ue0gp0O+MJrl5hEQ2i8NkSyVXf07yR6ovBNnEtWwdeqPO1xdK3sn0pmhJ
+         8GRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mJhr9GEso5XW6jomGaYhGKFuz4nHt5uQZJthz4evrwY=;
-        b=DHVyurSffmvjd6VaVJdWmoVviVzJBqFf9Tsu2t4KHH31EP/Wy9XbuiAM/5xbl/Od7E
-         CV1GjjZH7SRDSNrxR8RV2t78QOG1MsAJNtUJOKwR6LXoqEtrg8egNWN69mqcHorzDrpL
-         RVf7XtGfbgHnwDaRtPXOyu9w+CRxo1MsMxoK1ZvQPXHmmPCAL52RmQ5gpJ0Jt8Elbcve
-         c6Lj0l88bMjjrf0xBscVI8DtrRGscW2gRnH6u0IXEWfQXaqlvqWlZiTMU/A69z7su7Un
-         9ZMKs615qXKUesFwVlCvhL3AcmHbNMDsNd0szhcnZBlzvwL65oqjhqzzmjcnlMGJyfPf
-         2C7Q==
-X-Gm-Message-State: ACrzQf0Y9XwJn0IuyrTMgQAW0RQzyu6BNFVuOYuRq/rm8ONdffvguIEL
-	1YDaLJHkqon4vtr4dkLYNIAWcQ==
-X-Google-Smtp-Source: AMsMyM5JxpG9s5zxrgZFOJc1qRRC6V0WPzYraBHHSO028+hk4ZTnTxwCa5/lFVyTrnav5G/YHeoJVg==
-X-Received: by 2002:a05:6a00:1a0e:b0:547:1cf9:40e8 with SMTP id g14-20020a056a001a0e00b005471cf940e8mr3894976pfv.82.1665734811751;
-        Fri, 14 Oct 2022 01:06:51 -0700 (PDT)
-Received: from C02G705SMD6V.bytedance.net ([63.216.146.188])
-        by smtp.gmail.com with ESMTPSA id ik20-20020a170902ab1400b001730a1af0fbsm1119196plb.23.2022.10.14.01.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 01:06:51 -0700 (PDT)
-From: Jia Zhu <zhujia.zj@bytedance.com>
-To: dhowells@redhat.com,
-	xiang@kernel.org,
-	jefflexu@linux.alibaba.com
-Subject: [PATCH V3 5/5] cachefiles: add restore command to recover inflight ondemand read requests
-Date: Fri, 14 Oct 2022 16:05:59 +0800
-Message-Id: <20221014080559.42108-6-zhujia.zj@bytedance.com>
-X-Mailer: git-send-email 2.37.0 (Apple Git-136)
-In-Reply-To: <20221014080559.42108-1-zhujia.zj@bytedance.com>
-References: <20221014080559.42108-1-zhujia.zj@bytedance.com>
+        bh=tRQg6RjQGJENsG7CF0FPudfuL82rZYfFlg8d/iSFwrg=;
+        b=JtEUrEFRenVsMdIHSi7kc4cnmu23SzLPK2w+Yic67gSav1Nv4ArUPo/uw0UYtBOYUE
+         Wd0OuUa82EcjpSSfnF7WNZoONP61PdqVvSQnLXbwEAW9w0zL7pnBgnq3dV4rM72NCd/d
+         2dD1G/DF8pitP1HAklXcxNtP/o6uDObXnb4w7K46rcATpfrIXWjSabxF16I0cA3ycKwb
+         kco2aA6YFVzMow41+gjhJizykskQiipZ81iCM8LCSXywiRT/DiDInOuUV+GVRY5wtYOl
+         d6B7BfqAdWI70tfNkp7IceGM69CRof9xaSzED0jYU8tpj4Dfe86pQDhDEDnSJnmRMwwx
+         8/3A==
+X-Gm-Message-State: ACrzQf251S1rMOh7XzGEHV9K/CocJBWp6jwJK1iJ5v3O0u7M0gQrcd8U
+	MRzROBuBXwxmIPxP8qDuvrpHaTSAaIM=
+X-Google-Smtp-Source: AMsMyM68VgWNRfuve9zyXSSI0tuO9Cc3UW+BRaQQgHw2DEDWrU0OSSA8EXdE7A2pkIS4RmBMOLyg6g==
+X-Received: by 2002:a17:903:48e:b0:17f:802b:f079 with SMTP id jj14-20020a170903048e00b0017f802bf079mr4210484plb.89.1665736873654;
+        Fri, 14 Oct 2022 01:41:13 -0700 (PDT)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id cq14-20020a17090af98e00b001fe39bda429sm1000986pjb.38.2022.10.14.01.41.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Oct 2022 01:41:13 -0700 (PDT)
+Date: Fri, 14 Oct 2022 16:44:22 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH] erofs-utils: avoid unnecessary insert behavior when not
+ deduplicating
+Message-ID: <20221014164422.0000497a.zbestahu@gmail.com>
+In-Reply-To: <Y0jGP6gDnP+2WAry@B-P7TQMD6M-0146.local>
+References: <20221013040011.31944-1-zbestahu@gmail.com>
+	<Y0fTbmoezlKid246@B-P7TQMD6M-0146.local>
+	<20221014094846.00005bdb.zbestahu@gmail.com>
+	<Y0jGP6gDnP+2WAry@B-P7TQMD6M-0146.local>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,86 +83,71 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
+Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously, in ondemand read scenario, if the anonymous fd was closed by
-user daemon, inflight and subsequent read requests would return EIO.
-As long as the device connection is not released, user daemon can hold
-and restore inflight requests by setting the request flag to
-CACHEFILES_REQ_NEW.
+Hi Xiang,
 
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
-Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/cachefiles/daemon.c   |  1 +
- fs/cachefiles/internal.h |  3 +++
- fs/cachefiles/ondemand.c | 23 +++++++++++++++++++++++
- 3 files changed, 27 insertions(+)
+On Fri, 14 Oct 2022 10:15:27 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index c74bd1f4ecf5..014369266cb2 100644
---- a/fs/cachefiles/daemon.c
-+++ b/fs/cachefiles/daemon.c
-@@ -77,6 +77,7 @@ static const struct cachefiles_daemon_cmd cachefiles_daemon_cmds[] = {
- 	{ "tag",	cachefiles_daemon_tag		},
- #ifdef CONFIG_CACHEFILES_ONDEMAND
- 	{ "copen",	cachefiles_ondemand_copen	},
-+	{ "restore",	cachefiles_ondemand_restore	},
- #endif
- 	{ "",		NULL				}
- };
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 3d94990a8b38..e1f8bd47a315 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -301,6 +301,9 @@ extern ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- extern int cachefiles_ondemand_copen(struct cachefiles_cache *cache,
- 				     char *args);
- 
-+extern int cachefiles_ondemand_restore(struct cachefiles_cache *cache,
-+					char *args);
+> On Fri, Oct 14, 2022 at 09:48:46AM +0800, Yue Hu wrote:
+> > On Thu, 13 Oct 2022 16:59:26 +0800
+> > Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+> >   
+> > > Hi Yue,
+> > > 
+> > > On Thu, Oct 13, 2022 at 12:00:11PM +0800, Yue Hu wrote:  
+> > > > From: Yue Hu <huyue2@coolpad.com>
+> > > > 
+> > > > We should do nothing in dedupe inserting when it's not configured.
+> > > > 
+> > > > Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> > > > ---    
+> > > 
+> > > Thanks for the patch, do you observe some strange happening?   
+> > 
+> > I can see malloc/memcpy at runtime when dedupe is disabled. So, just skip.  
+> 
+> Would you mind confirming the numbers of e->length and window_size 
+> at that time?
+
+The caller to insert function is just checking "!may_inline && !may_packing".
+
+Check below (-zlz4hc foo.img foo/):
+
+Processing .gitignore ...
+<E> erofs: z_erofs_dedupe_insert() Line[105] e->length 84, window_size 0
+Processing Kconfig.freezer ...
+<E> erofs: z_erofs_dedupe_insert() Line[105] e->length 92, window_size 0
+Processing Kconfig.hz ...
+<E> erofs: z_erofs_dedupe_insert() Line[105] e->length 1709, window_size 0
+
+--- a/lib/dedupe.c
++++ b/lib/dedupe.c
+@@ -102,6 +102,8 @@ int z_erofs_dedupe_insert(struct z_erofs_inmem_extent *e,
+        if (e->length < window_size)
+                return 0;
+
++       erofs_err("e->length %u, window_size %u", e->length, window_size);
 +
- extern int cachefiles_ondemand_init_object(struct cachefiles_object *object);
- extern void cachefiles_ondemand_clean_object(struct cachefiles_object *object);
- 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index d8dce55d907c..c773ea940cc1 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -182,6 +182,29 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	return ret;
- }
- 
-+int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
-+{
-+	struct cachefiles_req *req;
-+
-+	XA_STATE(xas, &cache->reqs, 0);
-+
-+	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * Reset the requests to CACHEFILES_REQ_NEW state, so that the
-+	 * requests have been processed halfway before the crash of the
-+	 * user daemon could be reprocessed after the recovery.
-+	 */
-+	xas_lock(&xas);
-+	xas_for_each(&xas, req, ULONG_MAX)
-+		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+	xas_unlock(&xas);
-+
-+	wake_up_all(&cache->daemon_pollwq);
-+	return 0;
-+}
-+
- static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
- {
- 	struct cachefiles_object *object;
--- 
-2.20.1
+        di = malloc(sizeof(*di) + e->length - window_size);
+
+Thanks.
+
+> 
+> Thanks,
+> Gao Xiang
+> 
+> >   
+> > > 
+> > > IMO, If dedupe is not enabled, window_size will be 0 I think.
+> > > However, I think we might need to disable it explicitly like below.
+> > > 
+> > > So,
+> > > Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> > > 
+> > > Thanks,
+> > > Gao Xiang  
 
