@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 867656034F4
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 23:29:40 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A48160359A
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Oct 2022 00:00:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MsRp95sPGz3bwQ
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Oct 2022 08:29:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MsSTy00d4z3blt
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Oct 2022 09:00:38 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
@@ -14,23 +14,25 @@ Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MsRp22sX1z2xZV
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Oct 2022 08:29:28 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VSXOP2U_1666128562;
-Received: from B-P7TQMD6M-0146.lan(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VSXOP2U_1666128562)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MsSTv0tvVz2xk6
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Oct 2022 09:00:33 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VSXTliC_1666130427;
+Received: from B-P7TQMD6M-0146.lan(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VSXTliC_1666130427)
           by smtp.aliyun-inc.com;
-          Wed, 19 Oct 2022 05:29:24 +0800
-Date: Wed, 19 Oct 2022 05:29:21 +0800
+          Wed, 19 Oct 2022 06:00:29 +0800
+Date: Wed, 19 Oct 2022 06:00:27 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-Subject: Re: [PATCH v2] erofs: use kmap_local_page() only for erofs_bread()
-Message-ID: <Y08asdeoz5yOAefN@B-P7TQMD6M-0146.lan>
-References: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
- <9108233.CDJkKcVGEf@mypc>
+To: =?utf-8?B?QW5kcsOp?= Goddard Rosa <andre.goddard@gmail.com>
+Subject: Re: erofs + zstd : a super combination!
+Message-ID: <Y08h+z6CZdnS1XBm@B-P7TQMD6M-0146.lan>
+References: <CAGje9yROxonTPdyEmTCC-+7SsR-Zbq-VasySaTtVwu-=HJ7TwQ@mail.gmail.com>
+ <Y08Xg53TyxTFlRTR@B-P7TQMD6M-0146.lan>
+ <CAGje9yRjZbnnj=oHoP0ccP+_GrmPHSUyCPmNRnmRf-0TJR4OKg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9108233.CDJkKcVGEf@mypc>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGje9yRjZbnnj=oHoP0ccP+_GrmPHSUyCPmNRnmRf-0TJR4OKg@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,51 +44,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: ira.weiny@intel.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Fabio,
+(cc linux-erofs mailing list for archival use only)
 
-On Tue, Oct 18, 2022 at 09:18:49PM +0200, Fabio M. De Francesco wrote:
-> On Tuesday, October 18, 2022 12:53:13 PM CEST Gao Xiang wrote:
-> > Convert all mapped erofs_bread() users to use kmap_local_page()
-> > instead of kmap() or kmap_atomic().
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > ---
-> >  fs/erofs/data.c     | 8 ++------
-> >  fs/erofs/internal.h | 3 +--
-> >  fs/erofs/xattr.c    | 8 ++++----
-> >  fs/erofs/zmap.c     | 4 ++--
-> >  4 files changed, 9 insertions(+), 14 deletions(-)
-> > 
+On Tue, Oct 18, 2022 at 04:26:09PM -0500, André Goddard Rosa wrote:
+> On Tue, Oct 18, 2022 at 4:15 PM Gao Xiang <hsiangkao@linux.alibaba.com>
+> wrote:
 > 
-> I just realized that you know the code of fs/erofs very well. I saw a Gao 
-> Xiang in MAINTAINERS, although having a different email address.
+> > Hi André,
+> >
+> > On Tue, Oct 18, 2022 at 03:34:18PM -0500, André Goddard Rosa wrote:
+> > > Hi Gao Xiang, good day!
+> > >
+> > > I noticed that you were trying to add support for zstd to erofs in #1399
+> > > [1] , but you mentioned it was a low priority at the time. By looking at
+> > > this nice article [2], erofs+zstd are probably going to give an excellent
+> > > compression rate with a really fast decompression, so it can compress
+> > > better than LZ4 with a decompression performance much better than
+> > MicroLZMA
+> > > (it's outstanding you worked with Lasse Collin on that!) benefitting a
+> > lot
+> > > of small systems with low memory.
+> > >
+> > > As you mentioned, some slight variation resembling a binary search could
+> > be
+> > > done in order to make use of zstd. Also, Yann Collet, lz4&zstd author,
+> > > suggested a similar mechanism on #204 [3].
+> > >
+> > > Because of the great potential for this, I'd like to ask what are your
+> > > plans with regard to it. Please let me know if you would need any help
+> > with
+> > > it or if you have anything in progress or plans you could share with me.
+> >
+> > There are several ways to make EROFS work with zstd.  Of course [3] will
+> > be a way, but I've seen they have a superblock compression support as
+> > well. Or I can just compress to several blocks and leave the last
+> > remaining block as is even if it's not full.
+> >
+> > I will try to implment zstd in my spare time in the next few months, but
+> > I cannot promise anything.  Since once the implementation is done, it
+> > has to be supported all the time in order to make EROFS compatibility.
+> > Therefore, the formal version will be done with care.
+> >
 > 
-> Therefore, I'm sure that everybody can trust that you checked everything is 
-> needed to assure the safety of the conversions.
+> Great, thanks for the quick update Gao Xiang!
 > 
-> However, an extended commit message would have prevented me to send you the 
-> previous email with all those questions / objections.
+> Please let me know if you'd benefit from any help in implementing this
+> feature. I can definitely help to test too.
+> 
+> In many cases, the compression speed is less important than the
+> decompression time,
+> so even if there's no perfectly optimized zstd backend, it could still
+> work. Also, it would be
 
-Thanks for your suggestion.  Yeah, this conversion looks trivial [since most
-paths for erofs_bread() don't have more restriction in principle so we can
-just disable migration.  One of what I need to care is nested kmap() usage,
-some unmap/remap order cannot be simply converted to kmap_local() but I think
-it's not the case for erofs_bread().  Actually EROFS has one of such nested
-kmap() usage, but I don't really care its performance on HIGHMEM platforms,
-so I think kmap() is still somewhat useful compared to kmap_local() from this
-point of view], but in order to make it all work properly, I will try to do
-stress test with 32-bit platform later.  Since it targets for the next cycle
-6.2, I will do a full stress test in the next following weeks.
+Yes, even we try to compress to several blocks and leave the last remaining
+block non-full.  It's still comparable to btrfs or f2fs since they both
+work as this way.  And anyway, the decompression side is unrelated to the
+compression side.
+
+> really nice if it could be supported on older devices running kernel 4.19+
+> like erofs
+> originally did.
+
+I mostly work for the upstream kernel and LTS kernels are bugfixes only
+so they don't really accept feature backports and I'm afraid I don't
+have full time to look after so many old LTS kernels with new features..
 
 Thanks,
 Gao Xiang
 
 > 
-> Thanks,
-> 
-> Fabio
-> 
+> Thanks and best regards,
+> Andre
