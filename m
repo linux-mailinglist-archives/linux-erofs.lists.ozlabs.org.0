@@ -2,53 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171F66025FF
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 09:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC9F660289F
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 11:45:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ms5Q76hDZz3c1x
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 18:41:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666078863;
-	bh=mRCWfaHgwGA1JNCyES2+dKHA4gqpMRRooEjQ6Jm9ZHU=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=ZyGN7LPCZR3Fh57O1jnEUEAnbMCvv/vQ4mxK9hpXTPmTDbZe5V/Bfk9ssQB429/uT
-	 C4BJX1dY0DWf6ZOohSix0bOTvP3PUNtf+aRbTQdcG4HYLa34qi3yJZ6G5AQjlktYBr
-	 xhgU3wcA+fzNXa9QnzuX2LqlThYPSXdlldyzjHmGQziNm5uhK/9TIqnz+H6HlFCBIZ
-	 qcZiyfb3NT27tOUHeiunvLahWdZfJHDv8cQJ48yfJRqSrLCPTbUggqhAAtgq2J2/iv
-	 hWFsKz97gHfVQ1wLqt6v45E3dvv/VPDzLvrtvpdvoUfQQboW6ijEket7jIaL7O4kcF
-	 9qLJLJMWi0QMA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ms8B4422qz3c3Z
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 20:45:48 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GNfiAcGQ;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GNfiAcGQ;
+	dkim-atps=neutral
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ms5Py1R1Cz2xy6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Oct 2022 18:40:49 +1100 (AEDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Ms5Lj2XgRzJn36;
-	Tue, 18 Oct 2022 15:38:05 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 15:40:25 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 18 Oct
- 2022 15:40:25 +0800
-To: <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH] erofs: fix possible memory leak in erofs_init_sysfs()
-Date: Tue, 18 Oct 2022 15:39:47 +0800
-Message-ID: <20221018073947.693206-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ms89y33ZNz3bjW
+	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Oct 2022 20:45:42 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 53875614F9;
+	Tue, 18 Oct 2022 09:45:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01ACC433D6;
+	Tue, 18 Oct 2022 09:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666086338;
+	bh=ynFfTnsMzotOvesw2GH8zo+VK9nmB0W4W0cdoZ7kzQM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GNfiAcGQnrrL6bKw5nbO7Vgu6yGNgbpkmhdRW+jVcUF0qgEKNUPr8N0Xqewf537SH
+	 /5fVLtG/mhOF6s+5bnKJ4J8iCv8EFA+1u/w0Y1yxCfeCWK6oAFu10y6AZWvXllcn+T
+	 gOtgsmOKL+Kc2IGmntilHIMpSlnyRaEuc2ynpjYJ3VQXkTrTRYhEnfD+n7PM9C2P0e
+	 tIz5PZOs2ggc6f1M561ODPlMCfwEWKXJmEi6MgWZ4VYH3r0U1EQDOOuYr7NYrWvFH+
+	 v/hFIK2C9JYaXZkUQjspuOOKR08uCZeVHH07r/u4YwTXQp9aoO1iWPqL+zn8RzDo/F
+	 KD38S88m0uPFQ==
+Date: Tue, 18 Oct 2022 17:45:30 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 6.1-rc2
+Message-ID: <Y051uhn/opotPmAo@hsiangkao-PC>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+	Dawei Li <set_pte_at@outlook.com>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>,
+	Jia Zhu <zhujia.zj@bytedance.com>, linux-erofs@lists.ozlabs.org,
+	LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,52 +63,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yang Yingliang <yangyingliang@huawei.com>
-Cc: yangyingliang@huawei.com, hsiangkao@linux.alibaba.com, huangjianan@oppo.com
+Cc: LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, Dawei Li <set_pte_at@outlook.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Inject fault while probing module, kset_register() may fail,
-if it fails, but the refcount of kobject is not decreased to
-0, the name allocated in kobject_set_name() is leaked. Fix
-this by calling kset_put(), so that name can be freed in
-callback function kobject_cleanup().
+(sorry, forgot to send to related mailing lists... resend now)
 
-unreferenced object 0xffff888101d228c0 (size 8):
-  comm "modprobe", pid 276, jiffies 4294722700 (age 13.151s)
-  hex dump (first 8 bytes):
-    65 72 6f 66 73 00 ff ff                          erofs...
-  backtrace:
-    [<00000000e2a9a4a6>] __kmalloc_node_track_caller+0x44/0x1b0
-    [<00000000b8ce02de>] kstrdup+0x3a/0x70
-    [<000000004a0e01d2>] kstrdup_const+0x63/0x80
-    [<00000000051b6cda>] kvasprintf_const+0x149/0x180
-    [<000000004dc51dad>] kobject_set_name_vargs+0x56/0x150
-    [<00000000b30f0bad>] kobject_set_name+0xab/0xe0
+Hi Linus,
 
-Fixes: 168e9a76200c ("erofs: add sysfs interface")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- fs/erofs/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Could you consider these fixes for 6.1-rc2?
 
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 783bb7b21b51..653b35001bc5 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -254,8 +254,10 @@ int __init erofs_init_sysfs(void)
- 	kobject_set_name(&erofs_root.kobj, "erofs");
- 	erofs_root.kobj.parent = fs_kobj;
- 	ret = kset_register(&erofs_root);
--	if (ret)
-+	if (ret) {
-+		kset_put(&erofs_root);
- 		goto root_err;
-+	}
- 
- 	ret = kobject_init_and_add(&erofs_feat, &erofs_feat_ktype,
- 				   NULL, "features");
--- 
-2.25.1
+There are some bugs reported these days and the following patches
+address them.
 
+Some issues looks trivial but the compressed data deduplication one
+can only be reproduced with the stress test for almost two weeks.
+
+Anyway, I think all of them needs to be fixed immediately and details
+are shown as below.  All commits have been in linux-next and no merge
+conflicts.
+
+Thanks,
+Gao Xiang
+
+The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
+
+  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.1-rc2-fixes
+
+for you to fetch changes up to ce4b815686573bef82d5ee53bf6f509bf20904dc:
+
+  erofs: protect s_inodes with s_inode_list_lock for fscache (2022-10-17 14:57:57 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix illegal unmapped accesses when initializing compressed inodes;
+
+ - Fix up very rare hung on page lock after enabling compressed data
+   deduplication;
+
+ - Fix up inplace decompression success rate;
+
+ - Take s_inode_list_lock to protect sb->s_inodes for fscache shared
+   domain.
+
+----------------------------------------------------------------
+Dawei Li (1):
+      erofs: protect s_inodes with s_inode_list_lock for fscache
+
+Gao Xiang (2):
+      erofs: shouldn't churn the mapping page for duplicated copies
+      erofs: fix up inplace decompression success rate
+
+Yue Hu (1):
+      erofs: fix illegal unmapped accesses in z_erofs_fill_inode_lazy()
+
+ fs/erofs/fscache.c |  3 +++
+ fs/erofs/zdata.c   | 17 +++++++----------
+ fs/erofs/zdata.h   |  6 +++---
+ fs/erofs/zmap.c    | 22 ++++++++++------------
+ 4 files changed, 23 insertions(+), 25 deletions(-)
