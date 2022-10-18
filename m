@@ -2,38 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFB156024BB
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 08:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 171F66025FF
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 09:41:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ms4DY56zyz3bsK
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 17:47:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ms5Q76hDZz3c1x
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 18:41:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1666078863;
+	bh=mRCWfaHgwGA1JNCyES2+dKHA4gqpMRRooEjQ6Jm9ZHU=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ZyGN7LPCZR3Fh57O1jnEUEAnbMCvv/vQ4mxK9hpXTPmTDbZe5V/Bfk9ssQB429/uT
+	 C4BJX1dY0DWf6ZOohSix0bOTvP3PUNtf+aRbTQdcG4HYLa34qi3yJZ6G5AQjlktYBr
+	 xhgU3wcA+fzNXa9QnzuX2LqlThYPSXdlldyzjHmGQziNm5uhK/9TIqnz+H6HlFCBIZ
+	 qcZiyfb3NT27tOUHeiunvLahWdZfJHDv8cQJ48yfJRqSrLCPTbUggqhAAtgq2J2/iv
+	 hWFsKz97gHfVQ1wLqt6v45E3dvv/VPDzLvrtvpdvoUfQQboW6ijEket7jIaL7O4kcF
+	 9qLJLJMWi0QMA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ms4DP1hCpz2xJF
-	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Oct 2022 17:47:32 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VSTSjO6_1666075645;
-Received: from 30.221.130.77(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VSTSjO6_1666075645)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Oct 2022 14:47:26 +0800
-Message-ID: <537dcde9-864e-37d4-1898-2307d254c69d@linux.alibaba.com>
-Date: Tue, 18 Oct 2022 14:47:24 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ms5Py1R1Cz2xy6
+	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Oct 2022 18:40:49 +1100 (AEDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Ms5Lj2XgRzJn36;
+	Tue, 18 Oct 2022 15:38:05 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 18 Oct 2022 15:40:25 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 18 Oct
+ 2022 15:40:25 +0800
+To: <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH] erofs: fix possible memory leak in erofs_init_sysfs()
+Date: Tue, 18 Oct 2022 15:39:47 +0800
+Message-ID: <20221018073947.693206-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.3.0
-Subject: Re: [PATCH] erofs: use kmap_local_page() only for erofs_bread()
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
- Chao Yu <chao@kernel.org>
-References: <20221018035536.114792-1-hsiangkao@linux.alibaba.com>
-From: JeffleXu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20221018035536.114792-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,132 +60,52 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yang Yingliang <yangyingliang@huawei.com>
+Cc: yangyingliang@huawei.com, hsiangkao@linux.alibaba.com, huangjianan@oppo.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Inject fault while probing module, kset_register() may fail,
+if it fails, but the refcount of kobject is not decreased to
+0, the name allocated in kobject_set_name() is leaked. Fix
+this by calling kset_put(), so that name can be freed in
+callback function kobject_cleanup().
 
+unreferenced object 0xffff888101d228c0 (size 8):
+  comm "modprobe", pid 276, jiffies 4294722700 (age 13.151s)
+  hex dump (first 8 bytes):
+    65 72 6f 66 73 00 ff ff                          erofs...
+  backtrace:
+    [<00000000e2a9a4a6>] __kmalloc_node_track_caller+0x44/0x1b0
+    [<00000000b8ce02de>] kstrdup+0x3a/0x70
+    [<000000004a0e01d2>] kstrdup_const+0x63/0x80
+    [<00000000051b6cda>] kvasprintf_const+0x149/0x180
+    [<000000004dc51dad>] kobject_set_name_vargs+0x56/0x150
+    [<00000000b30f0bad>] kobject_set_name+0xab/0xe0
 
-On 10/18/22 11:55 AM, Gao Xiang wrote:
-> Convert all mapped erofs_bread() users to use kmap_local_page()
-> instead of kmap() or kmap_atomic().
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Fixes: 168e9a76200c ("erofs: add sysfs interface")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ fs/erofs/sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-LGTM.
-
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-
-> ---
->  fs/erofs/data.c     | 8 ++------
->  fs/erofs/internal.h | 3 +--
->  fs/erofs/xattr.c    | 8 ++++----
->  fs/erofs/zmap.c     | 4 ++--
->  4 files changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index fe8ac0e163f7..3873395173b5 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -13,9 +13,7 @@
->  void erofs_unmap_metabuf(struct erofs_buf *buf)
->  {
->  	if (buf->kmap_type == EROFS_KMAP)
-> -		kunmap(buf->page);
-> -	else if (buf->kmap_type == EROFS_KMAP_ATOMIC)
-> -		kunmap_atomic(buf->base);
-> +		kunmap_local(buf->page);
->  	buf->base = NULL;
->  	buf->kmap_type = EROFS_NO_KMAP;
->  }
-> @@ -54,9 +52,7 @@ void *erofs_bread(struct erofs_buf *buf, struct inode *inode,
->  	}
->  	if (buf->kmap_type == EROFS_NO_KMAP) {
->  		if (type == EROFS_KMAP)
-> -			buf->base = kmap(page);
-> -		else if (type == EROFS_KMAP_ATOMIC)
-> -			buf->base = kmap_atomic(page);
-> +			buf->base = kmap_local_page(page);
->  		buf->kmap_type = type;
->  	} else if (buf->kmap_type != type) {
->  		DBG_BUGON(1);
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 1701df48c446..67dc8e177211 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -253,8 +253,7 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
->  
->  enum erofs_kmap_type {
->  	EROFS_NO_KMAP,		/* don't map the buffer */
-> -	EROFS_KMAP,		/* use kmap() to map the buffer */
-> -	EROFS_KMAP_ATOMIC,	/* use kmap_atomic() to map the buffer */
-> +	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
->  };
->  
->  struct erofs_buf {
-> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-> index 8106bcb5a38d..a62fb8a3318a 100644
-> --- a/fs/erofs/xattr.c
-> +++ b/fs/erofs/xattr.c
-> @@ -148,7 +148,7 @@ static inline int xattr_iter_fixup(struct xattr_iter *it)
->  
->  	it->blkaddr += erofs_blknr(it->ofs);
->  	it->kaddr = erofs_read_metabuf(&it->buf, it->sb, it->blkaddr,
-> -				       EROFS_KMAP_ATOMIC);
-> +				       EROFS_KMAP);
->  	if (IS_ERR(it->kaddr))
->  		return PTR_ERR(it->kaddr);
->  	it->ofs = erofs_blkoff(it->ofs);
-> @@ -174,7 +174,7 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
->  	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
->  
->  	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
-> -				       EROFS_KMAP_ATOMIC);
-> +				       EROFS_KMAP);
->  	if (IS_ERR(it->kaddr))
->  		return PTR_ERR(it->kaddr);
->  	return vi->xattr_isize - xattr_header_sz;
-> @@ -368,7 +368,7 @@ static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
->  
->  		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
->  		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-> -						  EROFS_KMAP_ATOMIC);
-> +						  EROFS_KMAP);
->  		if (IS_ERR(it->it.kaddr))
->  			return PTR_ERR(it->it.kaddr);
->  		it->it.blkaddr = blkaddr;
-> @@ -580,7 +580,7 @@ static int shared_listxattr(struct listxattr_iter *it)
->  
->  		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
->  		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-> -						  EROFS_KMAP_ATOMIC);
-> +						  EROFS_KMAP);
->  		if (IS_ERR(it->it.kaddr))
->  			return PTR_ERR(it->it.kaddr);
->  		it->it.blkaddr = blkaddr;
-> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> index 0bb66927e3d0..749a5ac943f4 100644
-> --- a/fs/erofs/zmap.c
-> +++ b/fs/erofs/zmap.c
-> @@ -178,7 +178,7 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
->  	unsigned int advise, type;
->  
->  	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
-> -				      erofs_blknr(pos), EROFS_KMAP_ATOMIC);
-> +				      erofs_blknr(pos), EROFS_KMAP);
->  	if (IS_ERR(m->kaddr))
->  		return PTR_ERR(m->kaddr);
->  
-> @@ -416,7 +416,7 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
->  out:
->  	pos += lcn * (1 << amortizedshift);
->  	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
-> -				      erofs_blknr(pos), EROFS_KMAP_ATOMIC);
-> +				      erofs_blknr(pos), EROFS_KMAP);
->  	if (IS_ERR(m->kaddr))
->  		return PTR_ERR(m->kaddr);
->  	return unpack_compacted_index(m, amortizedshift, pos, lookahead);
-
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 783bb7b21b51..653b35001bc5 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -254,8 +254,10 @@ int __init erofs_init_sysfs(void)
+ 	kobject_set_name(&erofs_root.kobj, "erofs");
+ 	erofs_root.kobj.parent = fs_kobj;
+ 	ret = kset_register(&erofs_root);
+-	if (ret)
++	if (ret) {
++		kset_put(&erofs_root);
+ 		goto root_err;
++	}
+ 
+ 	ret = kobject_init_and_add(&erofs_feat, &erofs_feat_ktype,
+ 				   NULL, "features");
 -- 
-Thanks,
-Jingbo
+2.25.1
+
