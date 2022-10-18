@@ -2,59 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D347F603301
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 21:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9771260333E
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Oct 2022 21:18:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MsNdX544jz3c87
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Oct 2022 06:06:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MsNvK3SyGz3c8j
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Oct 2022 06:18:53 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=i+jeyJtA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=UXY+7vEz;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::32d; helo=mail-wm1-x32d.google.com; envelope-from=fmdefrancesco@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=i+jeyJtA;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=UXY+7vEz;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MsNdS4jk6z3cf2
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Oct 2022 06:06:52 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D974E61668;
-	Tue, 18 Oct 2022 19:06:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3654DC433C1;
-	Tue, 18 Oct 2022 19:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666120009;
-	bh=AhZSPrQ+ySyLQOwegsh0IpWm98ikHtRgqAp05ODo4K4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=i+jeyJtA8NDTpBqPAMXKb64ElrntEDRYo8xZsoQzFVPPsfl570+eaHlIsPtQf4TkA
-	 fbkBE9Fh+cY+6PqKIOf/WYyC7IzkCMiSiHjhK29V4Q115mQJU9u2dwYg8WGhDSzhQt
-	 KzaWVdcGExDn0qFrzkiJvJf7iUlSyJMKXkR0hJniX0QUxjlE/3fLC9Q3uOrfnWqdWI
-	 B7LlJLjXOdldAxtrMThXK71GEnKbIylO+s46N014uoOCVnSO40Q/U6Bo805GPsNfj8
-	 Vft39g9mhc6JyM7mervO0qj0VFm9001vTdsi+A+DQlfxtGQ9bSOzJmqymAMAFgEQgL
-	 2QDm1FBeNeQ6w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2336FE21ED4;
-	Tue, 18 Oct 2022 19:06:49 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 6.1-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Y051uhn/opotPmAo@hsiangkao-PC>
-References: <Y051uhn/opotPmAo@hsiangkao-PC>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <Y051uhn/opotPmAo@hsiangkao-PC>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.1-rc2-fixes
-X-PR-Tracked-Commit-Id: ce4b815686573bef82d5ee53bf6f509bf20904dc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7ae460973d3455371a1182297357eeb9fafb0227
-Message-Id: <166612000914.5469.8048419574604088110.pr-tracker-bot@kernel.org>
-Date: Tue, 18 Oct 2022 19:06:49 +0000
-To: Gao Xiang <xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MsNv81FgWz2xYy
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Oct 2022 06:18:43 +1100 (AEDT)
+Received: by mail-wm1-x32d.google.com with SMTP id bg9-20020a05600c3c8900b003bf249616b0so13004896wmb.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 18 Oct 2022 12:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RjbO23Kmf5BvgFjN1z1uqLCDsbhW7avPARU1Jkeq+U8=;
+        b=UXY+7vEzyyIUoZX8qENreyalPp7Pp825/HqaRmLaEqpWo5oNCBaiF0clpYwqRJbSZI
+         k/TLs9qHgGX4qNPPusnZLHw4DJ/Dbw/+328xIOxXuHtiB/hgoK2x2V3XyVKfZA3euQEn
+         wHYqk5agUu/WYCqKgThBUNTcg6+wZ++PbaX3QU+rn/FW7ht8pheHqE5phRJ/dDkXXwnv
+         v3jbSRU/B6Crab0IZYlwwQoTFO+ZSt8jdtbhK6c9caBo9ilnoNEPawfaJBfE/SQinFjz
+         0hl3K+M/EAqr/oOJQjgMoWHPHCgmARNzjE48bvIogdHB9p0/CRg0rOXIQAcycMOVilEz
+         oC3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RjbO23Kmf5BvgFjN1z1uqLCDsbhW7avPARU1Jkeq+U8=;
+        b=ZQwyP18VzkQXS/C+AaiKQKUGKGbHihCuboReoo/ITnz/TVgRPHSqFszNauYTpdftqN
+         YXtTSV/10KCSTpHupAG6tquUUSYjCqd8ClYefRzj1k8I3zKbXErgiECdUBAhlFCDZ3I/
+         bTYLtnQ4O3s2f1JHpIKMy+TCwPK1tM37DBZhuIaOmBBTPMyDocg+lpjPyhpEdew43dgF
+         88MwCb0Nk5rgHD5rA63QKr8ERsqBaN3y7VtSWqd9YAopq92G4PM77quG5LRILo2VYb4a
+         1N1ZGvuGSN/GVQRJHY4gcTUPB+ZOEX1uSEOADCS8Jhz2Sj+UaSTaqEspX6BGxe86/oG2
+         yBaQ==
+X-Gm-Message-State: ACrzQf31rMAGN0mtPixnbe7xSUhAOIR6RpQIF5spX5lAzFR5hFAXsYTi
+	Q4Zw173saZF59QlhDF2fqmA=
+X-Google-Smtp-Source: AMsMyM6LhEUEwAFsNy/Sd6G0ILdt2v+yd4rHRoFcgt61bvHIHmyHdNCg5dxP5r8XFEEEQ+zER6NUNw==
+X-Received: by 2002:a05:600c:1d17:b0:3c5:d7ca:190c with SMTP id l23-20020a05600c1d1700b003c5d7ca190cmr3095244wms.137.1666120716649;
+        Tue, 18 Oct 2022 12:18:36 -0700 (PDT)
+Received: from mypc.localnet (host-82-59-43-249.retail.telecomitalia.it. [82.59.43.249])
+        by smtp.gmail.com with ESMTPSA id m7-20020a5d6247000000b0022c906ffedasm11937506wrv.70.2022.10.18.12.18.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 12:18:35 -0700 (PDT)
+From: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v2] erofs: use kmap_local_page() only for erofs_bread()
+Date: Tue, 18 Oct 2022 21:18:49 +0200
+Message-ID: <9108233.CDJkKcVGEf@mypc>
+In-Reply-To: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
+References: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,19 +78,34 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Dawei Li <set_pte_at@outlook.com>, Yue Hu <huyue2@coolpad.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: ira.weiny@intel.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Tue, 18 Oct 2022 17:45:30 +0800:
+On Tuesday, October 18, 2022 12:53:13 PM CEST Gao Xiang wrote:
+> Convert all mapped erofs_bread() users to use kmap_local_page()
+> instead of kmap() or kmap_atomic().
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/data.c     | 8 ++------
+>  fs/erofs/internal.h | 3 +--
+>  fs/erofs/xattr.c    | 8 ++++----
+>  fs/erofs/zmap.c     | 4 ++--
+>  4 files changed, 9 insertions(+), 14 deletions(-)
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.1-rc2-fixes
+I just realized that you know the code of fs/erofs very well. I saw a Gao 
+Xiang in MAINTAINERS, although having a different email address.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7ae460973d3455371a1182297357eeb9fafb0227
+Therefore, I'm sure that everybody can trust that you checked everything is 
+needed to assure the safety of the conversions.
 
-Thank you!
+However, an extended commit message would have prevented me to send you the 
+previous email with all those questions / objections.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+
+Fabio
+
+
