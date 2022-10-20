@@ -2,55 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D181F605959
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 10:10:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A9C3605A28
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 10:50:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtKyv721Sz3c7V
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 19:10:15 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RUrUJY+Z;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtLrv0JrFz3cfB
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 19:50:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RUrUJY+Z;
-	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=54.204.34.129; helo=smtpbguseast1.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 2199 seconds by postgrey-1.36 at boromir; Thu, 20 Oct 2022 19:50:02 AEDT
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtKyp038Bz3bjh
-	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 19:10:09 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 4FEC1B8269E;
-	Thu, 20 Oct 2022 08:10:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458F4C433D7;
-	Thu, 20 Oct 2022 08:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666253403;
-	bh=TZH3HlrUcw85qXpZBg1C/yHHkc3IDLD5ROD1X0bKVM8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RUrUJY+ZQID6beKKY8k/RIFOChFc6D1S84jdodkaPggjPAtO3AfUyUWiYQIuE3MEP
-	 zaL6Gtg63O0Fe0KWa/SsjRS3BcUlJ5ASCyxCaXQzK4SPlIkG7czgBPbpCJ6bRGDFbu
-	 jBQeGqIH5kTj8k8x8lZnbvBFdiCfrXzhkCM6xjdMbHWJ9OrrKuVD1sWKApkksSKoy1
-	 Ov0WKaEGoOssY3kM2nJdPhZ8S9frYiSwASv9nTPhshse4s2gITPwGhvf2yppCScqrM
-	 BAm2v3bjBh2Xb+pTHmKQKrFelaDDB8iJePbq3q37+KX2DngBF7IDCeqhV2KvfyBSOG
-	 fuT8Z8hw2l0Kg==
-Message-ID: <0b2d44b0-7a72-2788-b8cc-b5c1ecfbcbae@kernel.org>
-Date: Thu, 20 Oct 2022 16:09:59 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtLrp3QXhz3c46
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 19:49:57 +1100 (AEDT)
+X-QQ-mid: bizesmtp84t1666253578tm89pjze
+Received: from [10.20.52.53] ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with SMTP id 0
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 16:12:57 +0800 (CST)
+X-QQ-SSF: 01400000000000B0E000000A0000000
+X-QQ-FEAT: cIAm9Ti9Z0xB2hAnhT416P5/SygxhsqniWmSAneh31Nn4tLI63NajNR9mDebZ
+	jKOriceCI+A2xD6t3tp7dyAOHyUl4TTdjsuelOBhIMHU7ncAx9qWavabO0gYMHxz9SLSH3L
+	lm/O4sm1rrdBDl5Eg8krpdctwM+xq6S/s9bYkU9mPGDMiWgJQkYQtcIDZ/6Cd24GEQM7i9x
+	wDDRNwoWzSoKFKZWPpbUKNJ60XJ1GWDIoRi4fJ8EqMMdYMSsqdAj+kyAM5vFfb2k+N++UB2
+	rOPXXRmnZIBln6SU7UO9LdKvrnkWvrv0kbZkEUnOdrNDCbspVp76StGa/mzDb3ybh0CrJhh
+	yvXgb6VUYVwiYP+gHb+hjlxk+tg0PcItZRAWnEpD9bLh+fCFNw=
+X-QQ-GoodBg: 2
+Message-ID: <70667519DD94DA0B+b911194e-0b38-9674-eb9f-5ed8d93a3044@uniontech.com>
+Date: Thu, 20 Oct 2022 16:12:57 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2] erofs: protect s_inodes with s_inode_list_lock
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
 Content-Language: en-US
-To: Dawei Li <set_pte_at@outlook.com>, xiang@kernel.org
-References: <TYCP286MB23238380DE3B74874E8D78ABCA299@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <TYCP286MB23238380DE3B74874E8D78ABCA299@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+From: chenlinxuan <chenlinxuan@uniontech.com>
+Subject: A little patch fix dev_read to make it works with large file
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr6
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,24 +52,95 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2022/10/17 9:55, Dawei Li wrote:
-> s_inodes is superblock-specific resource, which should be
-> protected by sb's specific lock s_inode_list_lock.
-> 
-> v2: update the locking mechanisim to protect mutual-exclusive access
-> both for s_inode_list_lock & erofs_fscache_domain_init_cookie(), as the
-> reviewing comments from Jia Zhu.
-> 
-> v1: https://lore.kernel.org/all/TYCP286MB23237A9993E0FFCFE5C2BDBECA269@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM/
-> 
-> base-commit: 8436c4a57bd147b0bd2943ab499bb8368981b9e1
-> 
-> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
+When using `fsck.erofs` to extract some image have a very large file 
+(3G) inside, my fsck.erofs report some thing like:
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+<E> erofs_io: Failed to read data from device - erofs.image:[4096, 
+2147483648].
+<E> erofs: failed to read data of m_pa 4096, m_plen 2147483648 @ nid 40: -17
+<E> erofs: Failed to extract filesystem
 
-Thanks,
+You can use this script to reproduce this issue.
+
+#!/bin/env sh
+
+mkdir tmp extract
+dd if=/dev/urandom of=tmp/big_file bs=1M count=2048
+
+mkfs.erofs erofs.image tmp
+fsck.erofs erofs.image --extract=extract
+
+I found that dev_open will failed if we can not get all data we want 
+with one pread call.
+
+I write this little patch try to fix this issue.
+
+This is my first patch send via email, sorry if anything goes wrong.
+
+ From 156af5b173c1f9e2a91e4d2126214b96966babd1 Mon Sep 17 00:00:00 2001
+From: chenlinxuan <chenlinxuan@uniontech.com>
+Date: Thu, 20 Oct 2022 14:39:17 +0800
+Subject: [PATCH] erofs-utils: lib: fix dev_read
+
+We need to keep calling pread until we get all data we want
+---
+  lib/io.c | 28 +++++++++++++++++++++-------
+  1 file changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/lib/io.c b/lib/io.c
+index 524cfb4..bd3d790 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -256,7 +256,7 @@ int dev_resize(unsigned int blocks)
+
+  int dev_read(int device_id, void *buf, u64 offset, size_t len)
+  {
+-   int ret, fd;
++   int read_count, fd;
+
+     if (cfg.c_dry_run)
+         return 0;
+@@ -278,15 +278,29 @@ int dev_read(int device_id, void *buf, u64 offset, 
+size_t len)
+         fd = erofs_blobfd[device_id - 1];
+     }
+
++   while (len > 0) {
+  #ifdef HAVE_PREAD64
+-   ret = pread64(fd, buf, len, (off64_t)offset);
++       read_count = pread64(fd, buf, len, (off64_t)offset);
+  #else
+-   ret = pread(fd, buf, len, (off_t)offset);
++       read_count = pread(fd, buf, len, (off_t)offset);
+  #endif
+-   if (ret != (int)len) {
+-       erofs_err("Failed to read data from device - %s:[%" PRIu64 ", 
+%zd].",
+-             erofs_devname, offset, len);
+-       return -errno;
++       if (read_count == -1 || read_count ==  0) {
++           if (errno) {
++               erofs_err("Failed to read data from device - "
++                     "%s:[%" PRIu64 ", %zd].",
++                     erofs_devname, offset, len);
++               return -errno;
++           } else {
++               erofs_err("Reach EOF of device - "
++                     "%s:[%" PRIu64 ", %zd].",
++                     erofs_devname, offset, len);
++               return -EINVAL;
++           }
++       }
++
++       offset += read_count;
++       len -= read_count;
++       buf += read_count;
+     }
+     return 0;
+  }
+-- 
+2.37.3
+
