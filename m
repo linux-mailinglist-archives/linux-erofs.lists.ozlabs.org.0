@@ -2,39 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCD9860561A
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 05:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D181F605959
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 10:10:18 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtDCR3TTjz3cdy
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 14:50:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtKyv721Sz3c7V
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Oct 2022 19:10:15 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RUrUJY+Z;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45; helo=out30-45.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RUrUJY+Z;
+	dkim-atps=neutral
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtDCM2cxjz2xJ8
-	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 14:50:37 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VSdLuJ5_1666237829;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VSdLuJ5_1666237829)
-          by smtp.aliyun-inc.com;
-          Thu, 20 Oct 2022 11:50:31 +0800
-Date: Thu, 20 Oct 2022 11:50:28 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v2] erofs: use kmap_local_page() only for erofs_bread()
-Message-ID: <Y1DFhKvOWvJacTIk@B-P7TQMD6M-0146.local>
-References: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
- <2019477.yKVeVyVuyW@mypc>
- <Y084l0m88JGOqGRN@B-P7TQMD6M-0146.lan>
- <12077010.O9o76ZdvQC@mypc>
- <Y1Cv/LuiGpVdO5im@B-P7TQMD6M-0146.local>
- <Y1C9y2y/87tIgfia@iweiny-mobl>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtKyp038Bz3bjh
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 19:10:09 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 4FEC1B8269E;
+	Thu, 20 Oct 2022 08:10:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458F4C433D7;
+	Thu, 20 Oct 2022 08:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666253403;
+	bh=TZH3HlrUcw85qXpZBg1C/yHHkc3IDLD5ROD1X0bKVM8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RUrUJY+ZQID6beKKY8k/RIFOChFc6D1S84jdodkaPggjPAtO3AfUyUWiYQIuE3MEP
+	 zaL6Gtg63O0Fe0KWa/SsjRS3BcUlJ5ASCyxCaXQzK4SPlIkG7czgBPbpCJ6bRGDFbu
+	 jBQeGqIH5kTj8k8x8lZnbvBFdiCfrXzhkCM6xjdMbHWJ9OrrKuVD1sWKApkksSKoy1
+	 Ov0WKaEGoOssY3kM2nJdPhZ8S9frYiSwASv9nTPhshse4s2gITPwGhvf2yppCScqrM
+	 BAm2v3bjBh2Xb+pTHmKQKrFelaDDB8iJePbq3q37+KX2DngBF7IDCeqhV2KvfyBSOG
+	 fuT8Z8hw2l0Kg==
+Message-ID: <0b2d44b0-7a72-2788-b8cc-b5c1ecfbcbae@kernel.org>
+Date: Thu, 20 Oct 2022 16:09:59 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y1C9y2y/87tIgfia@iweiny-mobl>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2] erofs: protect s_inodes with s_inode_list_lock
+Content-Language: en-US
+To: Dawei Li <set_pte_at@outlook.com>, xiang@kernel.org
+References: <TYCP286MB23238380DE3B74874E8D78ABCA299@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <TYCP286MB23238380DE3B74874E8D78ABCA299@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,85 +62,24 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, "Fabio M. De Francesco" <fmdefrancesco@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 19, 2022 at 08:17:31PM -0700, Ira Weiny wrote:
-> On Thu, Oct 20, 2022 at 10:18:36AM +0800, Gao Xiang wrote:
-> > On Wed, Oct 19, 2022 at 08:17:05PM +0200, Fabio M. De Francesco wrote:
-> > > On Wednesday, October 19, 2022 1:36:55 AM CEST Gao Xiang wrote:
-> > > > On Wed, Oct 19, 2022 at 01:21:27AM +0200, Fabio M. De Francesco wrote:
-> > > > > On Tuesday, October 18, 2022 11:29:21 PM CEST Gao Xiang wrote:
+On 2022/10/17 9:55, Dawei Li wrote:
+> s_inodes is superblock-specific resource, which should be
+> protected by sb's specific lock s_inode_list_lock.
 > 
-> [snip]
+> v2: update the locking mechanisim to protect mutual-exclusive access
+> both for s_inode_list_lock & erofs_fscache_domain_init_cookie(), as the
+> reviewing comments from Jia Zhu.
 > 
-> > 
-> > That is not the simple nested unmapped case as you said above, I could take
-> > a very brief example:
+> v1: https://lore.kernel.org/all/TYCP286MB23237A9993E0FFCFE5C2BDBECA269@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM/
 > 
-> Building on this.  The uncompressed pages always outnumber the compressed
-> pages, right?
+> base-commit: 8436c4a57bd147b0bd2943ab499bb8368981b9e1
+> 
+> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
 
-Yes, it's always true for EROFS case.
-
-I think if the locking order is reversed I could unmap and remap the
-pages in the correct order.  But as you said below, it just could work
-but complex the code (I think if you have extra time you could check
-the code first.)
-
-So as I said before, I don't really care HIGHMEM performance so here
-kmap_local() cannot benefit such case.  Anyway, it'd be much better
-if kmap() is kept on my side anyway.
+Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
-
-> 
-> > 
-> > 1. map a decompresed page
-> > 2. map a compressed page
-> 
-> First reverse these because you are going to need to map a new decompressed
-> page before another compressed page.  So:
-> 
-> 1. map compressed
-> 2. map decompressed
-> 
-> Then 4/5 and 7/8 become unmap/map new without issue.
-> 
-> > 3. working
-> > 4. decompressed page is all consumed, unmap the current decompressed page
-> > 5. map the next decompressed page
-> > 6. working
-> > 7. decompressed page is all consumed, unmap the current decompressed page
-> > 8. map the next decompressed page
-> > 9. working
-> 
-> This is more complicated but not overly so.
-> 
-> Simply
-> 
-> 9.1 unmap decompressed
-> 
-> > 10. compressed page is all consumed, unmap the current compressed page
-> > 11. map the next compressed page
-> 
-> 11.1 remap decompressed
-> 
-> > 12. working
-> > 13. ... (anyway, unmap and remap a compressed page or a decompressed page
-> >          in any order.)
-> > 
-> > until all process is finished.  by using kmap(), it's much simple to
-> > implement this, but kmap_local(), it only complexes the code.
-> 
-> Agreed kmap() is easier but I think this could work.
-> 
-> Basically you keep the compressed mapped first.
-> 
-> I also assume there is also a reverse of this so reverse the pages in that
-> case.
-> 
-> Thoughts?
-> Ira
