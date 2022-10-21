@@ -1,60 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4646860739C
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 11:13:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEDB76073EB
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 11:23:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtzK145Bfz3drW
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 20:13:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtzXq4fq6z3drW
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 20:23:23 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666343589;
-	bh=mVjxaa9G9RxQE0jI1jk9dCyMzXIJAlT2XTMFYUT9Et4=;
+	s=201707; t=1666344203;
+	bh=C7/ITu/tSwA/pkRtZxTZtmHaJd1wHxoQN5FN0rMwaiw=;
 	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Gb4MIcj6JGlK3jW9akPdOyueCad+jXrsxW3o/2U9QqY9Zd/w0g9kPjsmcVM3Ejfk7
-	 YG1qaNpQffcmUg0bEoOzZiR9AjgKGDWjdta+MHm+2SInn35zjqAjjHr5XmT0EZVqtL
-	 49LdzTwfJxtOSui6tP3ci2A6qSHGUi5NeCtum6bup5JLeXYL0TnYVLuxjNMqOrkcxo
-	 fH0ozeFEKvRWfbavQLj9LXidM45W+fZj1SvltFOqCnxehcbms8u/mFgfKUfVzq3Wrb
-	 99AEXgWP1FOUaaCM75QnhKA5BAOQMO8scL38dzReHLSiXv+eTGyksIToERdr/BgXV3
-	 KQh08GmSLOtLg==
+	b=d3tt79axOMo/4vYn5VppqUlFmc3N1XxiEt1IpI9d81WzA9pmpoG6y8hTonU/sIn1R
+	 D+INVBwUsjEWslISSE0Q4L7kqcNUnBOBMmU8yvEnOORUxfERtuJafsVKGh+tJ/QzOc
+	 a39vpIzNHDoaH3JGkwlPXrpEz50yLDYNQ6B82FZQqJotrvM5lJKPZkZcQygyoWjujJ
+	 93EY8hayCeZ/SjupkwXAShWCwlxi9cKk0XrE5ycHTQul4/DpUKP669EqvXcGqspvtD
+	 1qkVCAUfAmMLjknuqDLuX3gTKBmMBfCsmDU4D6FBxRRLGDQvv36gQVN4pBmf+Lywqe
+	 w5iVeiyRGdY0g==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtzJt3qrJz3bj0
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 20:13:00 +1100 (AEDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.57])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MtzJb6fMCzHvCS;
-	Fri, 21 Oct 2022 17:12:47 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtzXj66dMz3bj0
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 20:23:14 +1100 (AEDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MtzR01jchz15Lws;
+	Fri, 21 Oct 2022 17:18:20 +0800 (CST)
 Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
  dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 17:12:39 +0800
+ 15.1.2375.31; Fri, 21 Oct 2022 17:23:06 +0800
 Received: from [10.174.178.174] (10.174.178.174) by
  dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 17:12:38 +0800
+ 15.1.2375.31; Fri, 21 Oct 2022 17:23:05 +0800
 Subject: Re: [PATCH 00/11] fix memory leak while kset_register() fails
-To: Greg KH <gregkh@linuxfoundation.org>
+To: Luben Tuikov <luben.tuikov@amd.com>, Greg KH <gregkh@linuxfoundation.org>
 References: <20221021022102.2231464-1-yangyingliang@huawei.com>
  <d559793a-0ce4-3384-e74e-19855aa31f31@amd.com> <Y1IwLOUGayjT9p6d@kroah.com>
- <0591e66f-731a-5f81-fc9d-3a6d80516c65@huawei.com>
- <Y1JZ9IUPL6jZIQ8E@kroah.com>
-Message-ID: <1f3aa2ac-fba6-dc7a-d01d-7dd5331c8dc5@huawei.com>
-Date: Fri, 21 Oct 2022 17:12:37 +0800
+ <5efd73b0-d634-d34f-3d7a-13d674e40d04@amd.com> <Y1JV1wxf/7ERAMhl@kroah.com>
+ <35e66c7c-ff25-efd3-cfbc-d06130687aa7@amd.com>
+ <19689b9e-16d1-c6c5-4ee8-58885fbf8fb0@amd.com>
+Message-ID: <e8e21756-c5b8-9098-8fb6-8e381bbf3dd1@huawei.com>
+Date: Fri, 21 Oct 2022 17:23:04 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <Y1JZ9IUPL6jZIQ8E@kroah.com>
+In-Reply-To: <19689b9e-16d1-c6c5-4ee8-58885fbf8fb0@amd.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-Originating-IP: [10.174.178.174]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpemm500007.china.huawei.com (7.185.36.183)
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -70,110 +71,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Yang Yingliang <yangyingliang@huawei.com>
-Cc: rafael@kernel.org, qemu-devel@nongnu.org, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, linux-mtd@lists.infradead.org, huangjianan@oppo.com, richard@nod.at, mark@fasheh.com, mst@redhat.com, amd-gfx@lists.freedesktop.org, Luben Tuikov <luben.tuikov@amd.com>, hsiangkao@linux.alibaba.com, somlo@cmu.edu, jlbec@evilplan.org, jaegeuk@kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, alexander.deucher@amd.com, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, ocfs2-devel@oss.oracle.com
+Cc: rafael@kernel.org, qemu-devel@nongnu.org, richard@nod.at, somlo@cmu.edu, mst@redhat.com, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-f2fs-devel@lists.sourceforge.net, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, linux-mtd@lists.infradead.org, jlbec@evilplan.org, hsiangkao@linux.alibaba.com, alexander.deucher@amd.com, jaegeuk@kernel.org, akpm@linux-foundation.org, huangjianan@oppo.com, linux-erofs@lists.ozlabs.org, mark@fasheh.com, ocfs2-devel@oss.oracle.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
-On 2022/10/21 16:36, Greg KH wrote:
-> On Fri, Oct 21, 2022 at 04:24:23PM +0800, Yang Yingliang wrote:
->> On 2022/10/21 13:37, Greg KH wrote:
->>> On Fri, Oct 21, 2022 at 01:29:31AM -0400, Luben Tuikov wrote:
->>>> On 2022-10-20 22:20, Yang Yingliang wrote:
->>>>> The previous discussion link:
->>>>> https://lore.kernel.org/lkml/0db486eb-6927-927e-3629-958f8f211194@huawei.com/T/
->>>> The very first discussion on this was here:
+On 2022/10/21 16:41, Luben Tuikov wrote:
+> On 2022-10-21 04:24, Luben Tuikov wrote:
+>> On 2022-10-21 04:18, Greg KH wrote:
+>>> On Fri, Oct 21, 2022 at 03:55:18AM -0400, Luben Tuikov wrote:
+>>>> On 2022-10-21 01:37, Greg KH wrote:
+>>>>> On Fri, Oct 21, 2022 at 01:29:31AM -0400, Luben Tuikov wrote:
+>>>>>> On 2022-10-20 22:20, Yang Yingliang wrote:
+>>>>>>> The previous discussion link:
+>>>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F0db486eb-6927-927e-3629-958f8f211194%40huawei.com%2FT%2F&amp;data=05%7C01%7Cluben.tuikov%40amd.com%7Cd41da3fd6449492d01f808dab33cdb75%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638019371236833115%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=C%2Bj1THkHpzVGks5eqB%2Fm%2FPAkMRohR7CYvRnOCqUqdcM%3D&amp;reserved=0
+>>>>>> The very first discussion on this was here:
+>>>>>>
+>>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.spinics.net%2Flists%2Fdri-devel%2Fmsg368077.html&amp;data=05%7C01%7Cluben.tuikov%40amd.com%7Cd41da3fd6449492d01f808dab33cdb75%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638019371236833115%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=pSR10abmK8nAMvKSezqWC0SPUBL4qEwtCCizyIKW7Dc%3D&amp;reserved=0
+>>>>>>
+>>>>>> Please use this link, and not the that one up there you which quoted above,
+>>>>>> and whose commit description is taken verbatim from the this link.
+>>>>>>
+>>>>>>> kset_register() is currently used in some places without calling
+>>>>>>> kset_put() in error path, because the callers think it should be
+>>>>>>> kset internal thing to do, but the driver core can not know what
+>>>>>>> caller doing with that memory at times. The memory could be freed
+>>>>>>> both in kset_put() and error path of caller, if it is called in
+>>>>>>> kset_register().
+>>>>>> As I explained in the link above, the reason there's
+>>>>>> a memory leak is that one cannot call kset_register() without
+>>>>>> the kset->kobj.name being set--kobj_add_internal() returns -EINVAL,
+>>>>>> in this case, i.e. kset_register() fails with -EINVAL.
+>>>>>>
+>>>>>> Thus, the most common usage is something like this:
+>>>>>>
+>>>>>> 	kobj_set_name(&kset->kobj, format, ...);
+>>>>>> 	kset->kobj.kset = parent_kset;
+>>>>>> 	kset->kobj.ktype = ktype;
+>>>>>> 	res = kset_register(kset);
+>>>>>>
+>>>>>> So, what is being leaked, is the memory allocated in kobj_set_name(),
+>>>>>> by the common idiom shown above. This needs to be mentioned in
+>>>>>> the documentation, at least, in case, in the future this is absolved
+>>>>>> in kset_register() redesign, etc.
+>>>>> Based on this, can kset_register() just clean up from itself when an
+>>>>> error happens?  Ideally that would be the case, as the odds of a kset
+>>>>> being embedded in a larger structure is probably slim, but we would have
+>>>>> to search the tree to make sure.
+>>>> Looking at kset_register(), we can add kset_put() in the error path,
+>>>> when kobject_add_internal(&kset->kobj) fails.
 >>>>
->>>> https://www.spinics.net/lists/dri-devel/msg368077.html
+>>>> See the attached patch. It needs to be tested with the same error injection
+>>>> as Yang has been doing.
 >>>>
->>>> Please use this link, and not the that one up there you which quoted above,
->>>> and whose commit description is taken verbatim from the this link.
->>>>
->>>>> kset_register() is currently used in some places without calling
->>>>> kset_put() in error path, because the callers think it should be
->>>>> kset internal thing to do, but the driver core can not know what
->>>>> caller doing with that memory at times. The memory could be freed
->>>>> both in kset_put() and error path of caller, if it is called in
->>>>> kset_register().
->>>> As I explained in the link above, the reason there's
->>>> a memory leak is that one cannot call kset_register() without
->>>> the kset->kobj.name being set--kobj_add_internal() returns -EINVAL,
->>>> in this case, i.e. kset_register() fails with -EINVAL.
->>>>
->>>> Thus, the most common usage is something like this:
->>>>
->>>> 	kobj_set_name(&kset->kobj, format, ...);
->>>> 	kset->kobj.kset = parent_kset;
->>>> 	kset->kobj.ktype = ktype;
->>>> 	res = kset_register(kset);
->>>>
->>>> So, what is being leaked, is the memory allocated in kobj_set_name(),
->>>> by the common idiom shown above. This needs to be mentioned in
->>>> the documentation, at least, in case, in the future this is absolved
->>>> in kset_register() redesign, etc.
->>> Based on this, can kset_register() just clean up from itself when an
->>> error happens?  Ideally that would be the case, as the odds of a kset
->>> being embedded in a larger structure is probably slim, but we would have
->>> to search the tree to make sure.
->> I have search the whole tree, the kset used in bus_register() - patch #3,
->> kset_create_and_add() - patch #4
->> __class_register() - patch #5,  fw_cfg_build_symlink() - patch #6 and
->> amdgpu_discovery.c - patch #10
->> is embedded in a larger structure. In these cases, we can not call
->> kset_put() in error path in kset_register()
-> Yes you can as the kobject in the kset should NOT be controling the
-> lifespan of those larger objects.
-Read through the code the only leak in this case is the name, so can we 
-free it
-directly in kset_register():
-
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -844,8 +844,11 @@ int kset_register(struct kset *k)
-
-         kset_init(k);
-         err = kobject_add_internal(&k->kobj);
--       if (err)
-+       if (err) {
-+               kfree_const(k->kobj.name);
-+               k->kobj.name = NULL;
-                 return err;
-+       }
-         kobject_uevent(&k->kobj, KOBJ_ADD);
-         return 0;
-  }
-
-or unset ktype of kobject, then call kset_put():
-
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -844,8 +844,11 @@ int kset_register(struct kset *k)
-
-         kset_init(k);
-         err = kobject_add_internal(&k->kobj);
--       if (err)
-+       if (err) {
-+               k->kobj.ktype = NULL;
-+               kset_put(k);
-                 return err;
-+       }
-         kobject_uevent(&k->kobj, KOBJ_ADD);
-         return 0;
-  }
-
+>>>> Now, struct kset is being embedded in larger structs--see amdgpu_discovery.c
+>>>> starting at line 575. If you're on an AMD system, it gets you the tree
+>>>> structure you'll see when you run "tree /sys/class/drm/card0/device/ip_discovery/".
+>>>> That shouldn't be a problem though.
+>>> Yes, that shouldn't be an issue as the kobject embedded in a kset is
+>>> ONLY for that kset itself, the kset structure should not be controling
+>>> the lifespan of the object it is embedded in, right?
+>> Yes, and it doesn't. It only does a kobject_get(parent) and kobject_put(parent).
+>> So that's fine and natural.
+>>
+>> Yang, do you want to try the patch in my previous email in this thread, since you've
+>> got the error injection set up already?
+> I spoke too soon. I believe you're onto something, because looking at the idiom:
 >
-> If it is, please point out the call chain here as I don't think that
-> should be possible.
+> 	kobj_set_name(&kset->kobj, format, ...);
+> 	kset->kobj.kset = parent_kset;
+> 	kset->kobj.ktype = ktype;
+> 	res = kset_register(kset);
 >
-> Note all of this is a mess because the kobject name stuff was added much
-> later, after the driver model had been created and running for a while.
-> We missed this error path when adding the dynamic kobject name logic,
-> thank for looking into this.
+> The ktype defines a release method, which frees the larger struct the kset is embedded in.
+> And this would result in double free, for instance in the amdgpu_discovery.c code, if
+> kset_put() is called after kset_register() fails, since we kzalloc the larger object
+> just before and kfree it on error just after. Ideally, we'd only "revert" the actions
+> done by kobj_set_name(), as there's some error recovery on create_dir() in kobject_add_internal().
 >
-> If you could test the patch posted with your error injection systems,
-> that could make this all much simpler to solve.
+> So, we cannot do this business with the kset_put() on error from kset_register(), after all.
+> Not sure how this wasn't caught in Yang's testing--the kernel should've complained.
+I have already tried the change that in your posted patch when I was 
+debugging this issue
+before sent these fixes, because it may lead double free in some cases, 
+and I had mentioned
+it in this mail:
+
+https://lore.kernel.org/lkml/0db486eb-6927-927e-3629-958f8f211194@huawei.com/T/#m68eade1993859dfc6c3d14d35f988d35a32ef837
+
+Thanks,
+Yang
 >
-> thanks,
+> Regards,
+> Luben
 >
-> greg k-h
 > .
