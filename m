@@ -1,60 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE951606DAC
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17FD0606DA1
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDh4WV6z3cfv
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666319028;
-	bh=Le9tPcdohqK3UOrnanVaHtQhl6eTkZN7tCulrd3hy6g=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=niHB4PaQWfSSx5BWOaxUhR83T7ROGcZMK7rzix2AFy1fjSwAorIQeS74uBOX+EdRy
-	 c3Iu1C7NAI+LlDkTXW4fKFICkU343nLiWIKZK9jFlbOoi0om7Cz6VT49GqggAsN5N4
-	 +BEd4Aq3xtAYAwx1LfKxmm6qfdQaHUS8dMXjDF9/fBeySm/gO0sJhdN98BRV7K072T
-	 1RXBsUQQCPT++9xw+YhreppzC6JRhPuaAElvcVz1nPPr4U1AOxaRFO/6Ds+cRZITl0
-	 tLoe+bTGo7IZkaBf8yVPCf0BhFRby+pta69A72xMARWFrFZC3LBzZksu6pe4TR27fv
-	 26EIC1Qjw1KHw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpD16ZRbz3dql
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54; helo=out30-54.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpD82wq2z3drV
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:23:20 +1100 (AEDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mtp605R63zmVCd;
-	Fri, 21 Oct 2022 10:18:00 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 10:22:46 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 10:22:46 +0800
-To: <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
-	<linux-f2fs-devel@lists.sourceforge.net>, <linux-erofs@lists.ozlabs.org>,
-	<ocfs2-devel@oss.oracle.com>, <linux-mtd@lists.infradead.org>,
-	<amd-gfx@lists.freedesktop.org>
-Subject: [PATCH 11/11] ubifs: Fix memory leak in ubifs_sysfs_init()
-Date: Fri, 21 Oct 2022 10:21:02 +0800
-Message-ID: <20221021022102.2231464-12-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221021022102.2231464-1-yangyingliang@huawei.com>
-References: <20221021022102.2231464-1-yangyingliang@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpCb2Dnrz2yxd
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:22:50 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VShP65l_1666318964;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VShP65l_1666318964)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Oct 2022 10:22:46 +0800
+Date: Fri, 21 Oct 2022 10:22:43 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: chenlinxuan <chenlinxuan@uniontech.com>
+Subject: Re: A little patch fix dev_read to make it works with large file
+Message-ID: <Y1ICczImbJb/lg7N@B-P7TQMD6M-0146.local>
+References: <70667519DD94DA0B+b911194e-0b38-9674-eb9f-5ed8d93a3044@uniontech.com>
+ <Y1ET0jXRfA7PNEVT@B-P7TQMD6M-0146.local>
+ <35DADC97C92E6537+142bad0a-97d1-5327-7188-d26c330ef061@uniontech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <35DADC97C92E6537+142bad0a-97d1-5327-7188-d26c330ef061@uniontech.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,58 +43,105 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yang Yingliang <yangyingliang@huawei.com>
-Cc: alexander.deucher@amd.com, richard@nod.at, mst@redhat.com, gregkh@linuxfoundation.org, somlo@cmu.edu, huangjianan@oppo.com, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, luben.tuikov@amd.com, jlbec@evilplan.org, hsiangkao@linux.alibaba.com, rafael@kernel.org, jaegeuk@kernel.org, akpm@linux-foundation.org, mark@fasheh.com
+Cc: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Liu Shixin <liushixin2@huawei.com>
+Hi Linxuan,
 
-When insmod ubifs.ko, a kmemleak reported as below:
+I still cannot apply this patch since the patch itself is corrupted.
 
- unreferenced object 0xffff88817fb1a780 (size 8):
-   comm "insmod", pid 25265, jiffies 4295239702 (age 100.130s)
-   hex dump (first 8 bytes):
-     75 62 69 66 73 00 ff ff                          ubifs...
-   backtrace:
-     [<ffffffff81b3fc4c>] slab_post_alloc_hook+0x9c/0x3c0
-     [<ffffffff81b44bf3>] __kmalloc_track_caller+0x183/0x410
-     [<ffffffff8198d3da>] kstrdup+0x3a/0x80
-     [<ffffffff8198d486>] kstrdup_const+0x66/0x80
-     [<ffffffff83989325>] kvasprintf_const+0x155/0x190
-     [<ffffffff83bf55bb>] kobject_set_name_vargs+0x5b/0x150
-     [<ffffffff83bf576b>] kobject_set_name+0xbb/0xf0
-     [<ffffffff8100204c>] do_one_initcall+0x14c/0x5a0
-     [<ffffffff8157e380>] do_init_module+0x1f0/0x660
-     [<ffffffff815857be>] load_module+0x6d7e/0x7590
-     [<ffffffff8158644f>] __do_sys_finit_module+0x19f/0x230
-     [<ffffffff815866b3>] __x64_sys_finit_module+0x73/0xb0
-     [<ffffffff88c98e85>] do_syscall_64+0x35/0x80
-     [<ffffffff88e00087>] entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Could you check out the submitting process
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
 
-When kset_register() failed, we should call kset_put to cleanup it.
+And as a reference, could you also check out another
+https://lore.kernel.org/linux-erofs/20221013040011.31944-1-zbestahu@gmail.com/
+erofs-utils patch compared to your patch here?
+https://lore.kernel.org/linux-erofs/35DADC97C92E6537+142bad0a-97d1-5327-7188-d26c330ef061@uniontech.com/
 
-Fixes: 2e3cbf425804 ("ubifs: Export filesystem error counters")
-Signed-off-by: Liu Shixin <liushixin2@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- fs/ubifs/sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+And some minor comments as below:
 
-diff --git a/fs/ubifs/sysfs.c b/fs/ubifs/sysfs.c
-index 06ad8fa1fcfb..54270ad36321 100644
---- a/fs/ubifs/sysfs.c
-+++ b/fs/ubifs/sysfs.c
-@@ -144,6 +144,8 @@ int __init ubifs_sysfs_init(void)
- 	kobject_set_name(&ubifs_kset.kobj, "ubifs");
- 	ubifs_kset.kobj.parent = fs_kobj;
- 	ret = kset_register(&ubifs_kset);
-+	if (ret)
-+		kset_put(&ubifs_kset);
- 
- 	return ret;
- }
--- 
-2.25.1
+On Fri, Oct 21, 2022 at 09:37:57AM +0800, chenlinxuan wrote:
+> From 83e965dc6ec45e5c9811a27023c9cc213d50816b Mon Sep 17 00:00:00 2001
+> From: Chen Linxuan <chenlinxuan@uniontech.com>
+> Date: Thu, 20 Oct 2022 17:53:03 +0800
+> Subject: [PATCH] erofs-utils: erofs-utils: lib: fix dev_read
+> 
+> When using `fsck.erofs` to extract some image have a very large file
+> inside, for example 2G, my fsck.erofs report some thing like this:
+> 
+> <E> erofs_io: Failed to read data from device - erofs.image:[4096,
+> 2147483648].
+> <E> erofs: failed to read data of m_pa 4096, m_plen 2147483648 @ nid 40: -17
+> <E> erofs: Failed to extract filesystem
+> 
+> You can use this script to reproduce this issue.
+> 
+> mkdir tmp extract
+> dd if=/dev/urandom of=tmp/big_file bs=1M count=2048
+> 
+> mkfs.erofs erofs.image tmp
+> fsck.erofs erofs.image --extract=extract
+> 
+> I found that dev_open will failed if we can not get all data we want
+> with one pread call.
+> 
+> I write this little patch try to fix this issue.
+> 
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
+>  lib/io.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/io.c b/lib/io.c
+> index 524cfb4..5cb2b3a 100644
+> --- a/lib/io.c
+> +++ b/lib/io.c
+> @@ -256,7 +256,7 @@ int dev_resize(unsigned int blocks)
+> 
+>  int dev_read(int device_id, void *buf, u64 offset, size_t len)
+>  {
+> -    int ret, fd;
+> +    int read_count, fd;
+> 
+>      if (cfg.c_dry_run)
+>          return 0;
+> @@ -278,15 +278,29 @@ int dev_read(int device_id, void *buf, u64 offset,
+> size_t len)
 
+Here indicates that the patch itself is corrupted.
+
+>          fd = erofs_blobfd[device_id - 1];
+>      }
+> 
+> +    while (len > 0) {
+>  #ifdef HAVE_PREAD64
+> -    ret = pread64(fd, buf, len, (off64_t)offset);
+> +        read_count = pread64(fd, buf, len, (off64_t)offset);
+>  #else
+> -    ret = pread(fd, buf, len, (off_t)offset);
+> +        read_count = pread(fd, buf, len, (off_t)offset);
+>  #endif
+> -    if (ret != (int)len) {
+> -        erofs_err("Failed to read data from device - %s:[%" PRIu64 ",
+> %zd].",
+> -              erofs_devname, offset, len);
+> -        return -errno;
+> +        if (read_count == -1 || read_count == 0) {
+> +            if (errno) {
+> +                erofs_err("Failed to read data from device - "
+> +                      "%s:[%" PRIu64 ", %zd].",
+
+It'd be better not to separate the print line for easy grep.
+
+> +                      erofs_devname, offset, len);
+> +                return -errno;
+> +            } else {
+> +                erofs_err("Reach EOF of device - "
+> +                      "%s:[%" PRIu64 ", %zd].",
+
+same here.
+
+
+Thanks,
+Gao Xiang
