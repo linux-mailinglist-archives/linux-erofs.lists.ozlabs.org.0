@@ -1,50 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B19606D9F
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE951606DAC
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpCw2JzZz3drK
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDh4WV6z3cfv
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:48 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666318988;
-	bh=fcb42qrfZG9mh/rj+mBA5Uh2bL3ghst+sBplzJYJjDM=;
+	s=201707; t=1666319028;
+	bh=Le9tPcdohqK3UOrnanVaHtQhl6eTkZN7tCulrd3hy6g=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=IPjPYg+472melyqYTKAzoUjhrDqqerprvTsjMRNS27Wd2J5Cbqzsw4ySOn9k7elff
-	 t+WXXM6s+PioQbzPxhMz0Z1OG//3AyCbM0acBQl+ernTvgDvXz546gQi9USjt4trZc
-	 dJw04P7NMFb9qIRkZhwnOgWlvKm8CUbOwjLKHUDCbA4c0clKHvsOqxr7l0vE2TwK2W
-	 +PqmF9GzxNjPbUD66K/toGIUbumuYLsUXnNT+6e0UWpdy2ryv01F/5hqmu2FHCcR0L
-	 t9+S9yqRpTe7Mbr0qUEmEZOEQRTW5AZ2itIxU1Z7WOmgSje2Wy6wGRGOIOM8QpU1Yh
-	 ArMQyo/hyDKEg==
+	b=niHB4PaQWfSSx5BWOaxUhR83T7ROGcZMK7rzix2AFy1fjSwAorIQeS74uBOX+EdRy
+	 c3Iu1C7NAI+LlDkTXW4fKFICkU343nLiWIKZK9jFlbOoi0om7Cz6VT49GqggAsN5N4
+	 +BEd4Aq3xtAYAwx1LfKxmm6qfdQaHUS8dMXjDF9/fBeySm/gO0sJhdN98BRV7K072T
+	 1RXBsUQQCPT++9xw+YhreppzC6JRhPuaAElvcVz1nPPr4U1AOxaRFO/6Ds+cRZITl0
+	 tLoe+bTGo7IZkaBf8yVPCf0BhFRby+pta69A72xMARWFrFZC3LBzZksu6pe4TR27fv
+	 26EIC1Qjw1KHw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpCZ3vd1z2yxd
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:22:50 +1100 (AEDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MtpCK4pJ1zHvCk;
-	Fri, 21 Oct 2022 10:22:37 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpD82wq2z3drV
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:23:20 +1100 (AEDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mtp605R63zmVCd;
+	Fri, 21 Oct 2022 10:18:00 +0800 (CST)
 Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.2375.31; Fri, 21 Oct 2022 10:22:46 +0800
 Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
  (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 10:22:45 +0800
+ 2022 10:22:46 +0800
 To: <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
 	<linux-f2fs-devel@lists.sourceforge.net>, <linux-erofs@lists.ozlabs.org>,
 	<ocfs2-devel@oss.oracle.com>, <linux-mtd@lists.infradead.org>,
 	<amd-gfx@lists.freedesktop.org>
-Subject: [PATCH 10/11] drm/amdgpu/discovery: fix possible memory leak
-Date: Fri, 21 Oct 2022 10:21:01 +0800
-Message-ID: <20221021022102.2231464-11-yangyingliang@huawei.com>
+Subject: [PATCH 11/11] ubifs: Fix memory leak in ubifs_sysfs_init()
+Date: Fri, 21 Oct 2022 10:21:02 +0800
+Message-ID: <20221021022102.2231464-12-yangyingliang@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221021022102.2231464-1-yangyingliang@huawei.com>
 References: <20221021022102.2231464-1-yangyingliang@huawei.com>
@@ -72,49 +72,52 @@ Cc: alexander.deucher@amd.com, richard@nod.at, mst@redhat.com, gregkh@linuxfound
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-If kset_register() fails, the refcount of kobject is not 0,
-the name allocated in kobject_set_name(&kset.kobj, ...) is
-leaked. Fix this by calling kset_put(), so that it will be
-freed in callback function kobject_cleanup().
+From: Liu Shixin <liushixin2@huawei.com>
 
-Cc: stable@vger.kernel.org
-Fixes: a6c40b178092 ("drm/amdgpu: Show IP discovery in sysfs")
+When insmod ubifs.ko, a kmemleak reported as below:
+
+ unreferenced object 0xffff88817fb1a780 (size 8):
+   comm "insmod", pid 25265, jiffies 4295239702 (age 100.130s)
+   hex dump (first 8 bytes):
+     75 62 69 66 73 00 ff ff                          ubifs...
+   backtrace:
+     [<ffffffff81b3fc4c>] slab_post_alloc_hook+0x9c/0x3c0
+     [<ffffffff81b44bf3>] __kmalloc_track_caller+0x183/0x410
+     [<ffffffff8198d3da>] kstrdup+0x3a/0x80
+     [<ffffffff8198d486>] kstrdup_const+0x66/0x80
+     [<ffffffff83989325>] kvasprintf_const+0x155/0x190
+     [<ffffffff83bf55bb>] kobject_set_name_vargs+0x5b/0x150
+     [<ffffffff83bf576b>] kobject_set_name+0xbb/0xf0
+     [<ffffffff8100204c>] do_one_initcall+0x14c/0x5a0
+     [<ffffffff8157e380>] do_init_module+0x1f0/0x660
+     [<ffffffff815857be>] load_module+0x6d7e/0x7590
+     [<ffffffff8158644f>] __do_sys_finit_module+0x19f/0x230
+     [<ffffffff815866b3>] __x64_sys_finit_module+0x73/0xb0
+     [<ffffffff88c98e85>] do_syscall_64+0x35/0x80
+     [<ffffffff88e00087>] entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+When kset_register() failed, we should call kset_put to cleanup it.
+
+Fixes: 2e3cbf425804 ("ubifs: Export filesystem error counters")
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
 Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Reviewed-by: Luben Tuikov <luben.tuikov@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/ubifs/sysfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c
-index 3993e6134914..638edcf70227 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c
-@@ -863,7 +863,7 @@ static int amdgpu_discovery_sysfs_ips(struct amdgpu_device *adev,
- 				res = kset_register(&ip_hw_id->hw_id_kset);
- 				if (res) {
- 					DRM_ERROR("Couldn't register ip_hw_id kset");
--					kfree(ip_hw_id);
-+					kset_put(&ip_hw_id->hw_id_kset);
- 					return res;
- 				}
- 				if (hw_id_names[ii]) {
-@@ -954,7 +954,7 @@ static int amdgpu_discovery_sysfs_recurse(struct amdgpu_device *adev)
- 		res = kset_register(&ip_die_entry->ip_kset);
- 		if (res) {
- 			DRM_ERROR("Couldn't register ip_die_entry kset");
--			kfree(ip_die_entry);
-+			kset_put(&ip_die_entry->ip_kset);
- 			return res;
- 		}
+diff --git a/fs/ubifs/sysfs.c b/fs/ubifs/sysfs.c
+index 06ad8fa1fcfb..54270ad36321 100644
+--- a/fs/ubifs/sysfs.c
++++ b/fs/ubifs/sysfs.c
+@@ -144,6 +144,8 @@ int __init ubifs_sysfs_init(void)
+ 	kobject_set_name(&ubifs_kset.kobj, "ubifs");
+ 	ubifs_kset.kobj.parent = fs_kobj;
+ 	ret = kset_register(&ubifs_kset);
++	if (ret)
++		kset_put(&ubifs_kset);
  
-@@ -989,6 +989,7 @@ static int amdgpu_discovery_sysfs_init(struct amdgpu_device *adev)
- 	res = kset_register(&adev->ip_top->die_kset);
- 	if (res) {
- 		DRM_ERROR("Couldn't register die_kset");
-+		kset_put(&adev->ip_top->die_kset);
- 		goto Err;
- 	}
- 
+ 	return ret;
+ }
 -- 
 2.25.1
 
