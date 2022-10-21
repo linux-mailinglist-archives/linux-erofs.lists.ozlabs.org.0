@@ -1,51 +1,129 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E286606F07
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 06:45:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 069BF606F71
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 07:31:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtsNZ2KN3z3cfB
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 15:45:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MttNf5r6Vz3f1F
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 16:30:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1666330258;
+	bh=c1p/x8XJ+Q362Wu9z4oBoXAVVel641qCZMxeygRMU98=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=cD7dkhwBdWLPLsmFGB+yG/nvWdQvSzOYtRIBfhDJV49AnENp8qCzYMUnQ4PpVAFkg
+	 xXsGrwVe4Nw7qX7D5gCTCWmHGr74s0isRiIrx+si2P+36hFSH8FJsM3M6MWvWqUnIi
+	 SOZglqwVdhf/8tbXhwyvSEvpEQou/CV2B/zkpSN8urY2/YbMKVq6PmNoqXOd/LRGt4
+	 HJEcpQKibKIo1cB0yqcBRV8CAyyPiBtgxm+OeG2gj/tcp7DCYm4gbYZKr+3GR/JbsH
+	 T9sHyqEPHrHT0NA10mqE6woKoY8JSRIAAuxfj//K9EmMbQYva4e3ixw4Ec3kkM5Zip
+	 GPL1aHqRJTPmQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.199; helo=mail-il1-f199.google.com; envelope-from=39snsywkbakyyefqgrrkxgvvoj.muumrkaykxiutzktz.ius@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=<UNKNOWN>)
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amd.com (client-ip=40.107.220.58; helo=nam11-co1-obe.outbound.protection.outlook.com; envelope-from=luben.tuikov@amd.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=5qc34ng+;
+	dkim-atps=neutral
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtsNV0bPhz2xZ7
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 15:45:44 +1100 (AEDT)
-Received: by mail-il1-f199.google.com with SMTP id m9-20020a056e021c2900b002fadb905ddcso2187053ilh.18
-        for <linux-erofs@lists.ozlabs.org>; Thu, 20 Oct 2022 21:45:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=orlZny6iNDk2EejWQTGbzbNNRKmJ3AK2gBOcpMbMKK0=;
-        b=ddqRHv+GEc4T41BSM86WMC21mWPmgdtVyb12I0SH/FhSY8l8EfXAxb1/0gsyoj8vo6
-         E9LL6RGfwa2u6lY1kutUGFGUoiEE+AgYibZtZsBlDtacKtLGirtgvxi9wbloVAPUSs3z
-         jXFpAplpdtrX75bqmSw8Z/Wea+puI3XmF8rsFRtRDl4pq1GJwanIfxUVjBwWMtVXT0QW
-         vww9hJW3AaCKhQ7elI+glSohbPao72FIs1cKiRd0ulV/P0wvPcnRpCdCejslBYFyUUIm
-         mh7A7xuuFd8xO5xS3P64+IR4qccRkWTHlx19BNxhIEzRX/PtG/eF1rmLhJ4DN5oz41EC
-         JsQw==
-X-Gm-Message-State: ACrzQf2FJUt2/MAvQx3cFf0+z/KfN2Uxb0+mtsPg8ARjmraSHhFhRqhw
-	jXjIyfBf0SFaToMy3zkWWhA8ggNGgBL09fkPfT7l51/4Y28W
-X-Google-Smtp-Source: AMsMyM6XPSdsldy7eaHzyo6/N0/ero2go/ewz033gZNMTycOWuvcqOSgIjWJsQogcC1L31f0/kBwFSu0GXr2/Xo4qy9ovJt7ae6C
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MttMV3hTbz3f3y
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 16:29:55 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cvqp3P3B8BLfAmpNZxHvh7i9DBRLxrF0L/Puf+VClskgfrGn6tLUXXdLD+sHtspD2l57WBbG2sjZXzUG6eiPg0fU4jRvyKPxdOw6GkssGXnsjsRrL9aZ4M6qGsrWDrN1J4VAE6nd64uj3ZIumGRMhdXMHTT8uIvxSkcOO6Hac8nLvgmtOx/DEf2WEwHPE4xZEhCUfM3uvaVO0tPrVnmu3szQEJAv0N6hVRs38BgnAA30Xd1hhOrzqwbj2MD4CZ06cYwpIMSiJRVJouM1O2UVPuLKefpkM8lBbJMVqnzgbK2k+ke7+RkXiWWZD0mY1Y291mXuICqnfv9gfQIbujqbeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c1p/x8XJ+Q362Wu9z4oBoXAVVel641qCZMxeygRMU98=;
+ b=mbQtjLOiAVIvijp3wfz9SNisohTWlTmCr+CaK2KbmRjNdggP7RN6VTe5KnTkk3Q9Na6J5WGrNntWGz4iFlAdTMFNvzSqkcdP9ZPwkWnjTj1xTOFM6DZFwrmpDiciNvlWtEe5G2CrwXG/CXWKYfQvvbSCnquY2VQwKNElLbwaxWx7z9QCaZJ9u2TgxZjwmijEoVfBoHs/zURaraT/erHU4XTzMVCZmpGB99rKRz46qwgCjnPjBcOX6xJ9yjY/Lqy1aa1bKS/Lw55thpRJ+fwE7RCFoyPVRWpJ/+S9+ijFYIAGBptPbVSpVkEzPGOqPBmpdfrPU7CX0x/BOhpPyfKppQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com (2603:10b6:5:38::25) by
+ DM4PR12MB5796.namprd12.prod.outlook.com (2603:10b6:8:63::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5723.26; Fri, 21 Oct 2022 05:29:35 +0000
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::d309:77d2:93d8:2425]) by DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::d309:77d2:93d8:2425%7]) with mapi id 15.20.5723.035; Fri, 21 Oct 2022
+ 05:29:34 +0000
+Message-ID: <d559793a-0ce4-3384-e74e-19855aa31f31@amd.com>
+Date: Fri, 21 Oct 2022 01:29:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH 00/11] fix memory leak while kset_register() fails
+Content-Language: en-CA
+To: Yang Yingliang <yangyingliang@huawei.com>, linux-kernel@vger.kernel.org,
+ qemu-devel@nongnu.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-erofs@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
+ linux-mtd@lists.infradead.org, amd-gfx@lists.freedesktop.org
+References: <20221021022102.2231464-1-yangyingliang@huawei.com>
+In-Reply-To: <20221021022102.2231464-1-yangyingliang@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT3PR01CA0006.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:86::11) To DM6PR12MB3370.namprd12.prod.outlook.com
+ (2603:10b6:5:38::25)
 MIME-Version: 1.0
-X-Received: by 2002:a02:a519:0:b0:363:b5c6:564e with SMTP id
- e25-20020a02a519000000b00363b5c6564emr13027015jam.253.1666327541346; Thu, 20
- Oct 2022 21:45:41 -0700 (PDT)
-Date: Thu, 20 Oct 2022 21:45:41 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002e7a8905eb841ddd@google.com>
-Subject: [syzbot] general protection fault in erofs_bread
-From: syzbot <syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com>
-To: chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com, 
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3370:EE_|DM4PR12MB5796:EE_
+X-MS-Office365-Filtering-Correlation-Id: c28566e1-cfbf-4438-67ea-08dab3253d04
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	mjWTlJ3Cv2/NULzy2Tc/vPlmV1pquOu9JJpHuBRHadPSWO9WG7mI5LRewAMLLM8Fwbt1IwxsJ7d63QBVd5/QMJ3xzdznICvg0MENoiuIBR3+FzawRsnpGezkk4+BDlVtwb6DSxRHE/QpV50QTyd2hHXLtU1Csld2td4wd+GPY1okb4Xj9sPSOc2hcU8WfdSxMG0blhkkjv4xMMnQZhT3pd04DroIdsH6NEQ51ibKfXcoDQbTQPfB6D/y7ZcI2oAiCjM5RIWLL2F1O8ouOBUvcHO5tb1FmYOx9osZXajXC9YtuVC3l/t9RJR9q/KhdXhMtzovyBRvvENKYIakR/j4pbZ2RdCZ9HWAmX8M/AS7VT1kVK2RAjVgOuhkQvbSWj8Qk69i0yXXZCTtTvgllUCwsVDK9+nSjtH9QUCeCuOf6aBMInSjslizYFzHulVZTBkQ0sE3uYM6utUh7+n0aNFpJs2STvSt2DCzBuxmr8ZzWCUzrK6UKK6hs3x1umkdWfFWf1EZXe2o7/jqKD7QbfZAqiTPPnqjC7Iq/HihwxIIl7UNTDXa+5ABMBvvYF6bW2pHRJG9xh48T02IyyZxcDZhlHhQA9J8/yuyNMauyQujmbyy8wgkeZP45quE09aJFQ05NkRWHDCsGkCuj+/2h0ZZEClofr5LSPMAtmWB9Zmyvm9e4uLF89Rr/Y8++k+fZ6AAxKJZBu/oL5AxjrG5kwMwU+3hiI2dAkPx2iwpnjrFEF71UrWU6F9cyzMY82azhObAQR8/BVRhj3wuICFWEWTQRhmGT7zJh/Iu0btVUHwtzyBzklJg9/atoyu9ZsWBhTfiHBZAC/IQVEtqF5f5NfajGw==
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(451199015)(36756003)(31686004)(31696002)(86362001)(5660300002)(7416002)(38100700002)(4001150100001)(44832011)(26005)(41300700001)(2906002)(2616005)(83380400001)(186003)(316002)(6512007)(4326008)(6506007)(53546011)(478600001)(6666004)(66556008)(66946007)(66476007)(8936002)(966005)(8676002)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?Wmw5T0xrR2xpTTQ4ZjNDOWYzeWgrNkovb3dEdlNNNXFOeXhLejVqc3duRkdU?=
+ =?utf-8?B?blFLY1VEa21IMEhlOHdTNGFJeHo1bzZQT3cvYW8waHJyUmFBS21NVGVNT0F4?=
+ =?utf-8?B?WVZRUjU3UXBUaTZ1MUlJQ3pSekhkTVVhR1hRUTJqQmJkM2VYWVVQWGYwMzhS?=
+ =?utf-8?B?VEc4SVJxcTg4aWZ3UGdrN2J3T3YwWUdacThiUW1kbjlXd3hEZEh4T3ZqU1Js?=
+ =?utf-8?B?a21QOWNkZXNFVk9JQklVRXJ1TDhPVGJ3NzE1UUhXaGE1MnlBYVpubERPUDdh?=
+ =?utf-8?B?K3J2eUl1WWNjc2NyK1RvdWI0NDRCM3M0eVVkWHhLODFnMFE5NUh6SUI5Tzl4?=
+ =?utf-8?B?cG5tVXZHbmpqQnU0dVp3L2RMRWpWL0NHOHcrRHV5Q21HWmFsQkFzYlExaGJp?=
+ =?utf-8?B?dlowS1Z2ZktlOUMyMzEwdGR5bDJ6ak9IR1JQRTQ4M0F1em95a25lRHZSUGwy?=
+ =?utf-8?B?Z3MzcHIzbFd2WUlqcm00WGFVOURDYUNjQWFlVGxUd2x4ZDNjdE9LSUpTVGtX?=
+ =?utf-8?B?VDFNK1hCYlQydGd0c2grYVUzVHFiWHBxdmpEQ2xSKzE5YjI5aHd2aE90ZjNF?=
+ =?utf-8?B?cnVxcGFLb21weGY0MmtyRVBWZmJYM05JaERTektIaHE0MmVqbklpbDVjdk04?=
+ =?utf-8?B?Zkw1bXJWeWdTdEgzMVJRNU5NKzlpMlBsTlZURkQxME5lcVUvRkUxYS9MVDZ1?=
+ =?utf-8?B?ZDBYNDBYQ1VuV0NuOThOZ0hzL0Y1dFltUG1PYitXbkZ2Q0hqM09ydktpd1lm?=
+ =?utf-8?B?cG00SzVTeDJTWWk5MVZnUTVoaC80cCtUMFQxUjJWWFdwRjdsdHhlVlFCT2JH?=
+ =?utf-8?B?YzBYTXJzSXozNitJck1IQkZqeFdWQjBvajNLYUFjditESDcya3hwd2MzUkE3?=
+ =?utf-8?B?WGVmLzkxNnNZNFFPVkRYS2RZYmxEN0NKcC82ZmhUdGNSVnc1TDFtQnJvZ1RI?=
+ =?utf-8?B?OEJ0M3Q1bTNlenBxSm1NRHhKQmdKNjFkYXp2eU5GeVI3VDJIYVB0SGZOODYv?=
+ =?utf-8?B?aTlnSURSVmp4YW9pRkh6RlkxZG9Fb2FKM254NkJjK1F3SnNHaU9Ibi9HTTYx?=
+ =?utf-8?B?TDlKY1Zvb1dESnJ6ZXliR1hLSTQ5NHo1RUNZOGFpZk9OQitWNFF1K2JhcHhv?=
+ =?utf-8?B?MVBwNE9lRmdsMHB6VlJ2b0xaR3VQK0owZzF4WWJkQ05zaEF2L1V0ZVpKSWN6?=
+ =?utf-8?B?bzFQOXh2MUFQZDBGNHBKVXRyZm42WnR5a3RaVHZCL1pabzVIb2I0OFhBTlVs?=
+ =?utf-8?B?UmY3RmdDcjN5SnFyU3BwRmJhcFUrNFppbDduL01RZFZRVDZFV2JPRXdic1Bl?=
+ =?utf-8?B?aU54c0huUDJrMWxkRmhUdVcwT1h3V0ZaMGJQS0pyb2FyWlBFMXZlVWc4SWNN?=
+ =?utf-8?B?ek9TYmJjZ0srZUZvOTF5MUdzeGk3eEZCaWp1aXBIaGJPMzJMcmU5K2Qrb2I5?=
+ =?utf-8?B?RThpNjdEZCtHQ2pDTUxQOGgvSGZOamMxWU1LNFJrQVo2TzZ2cWJqQlhmUnRj?=
+ =?utf-8?B?Si9vVTkwdzU0dnFzUld5RHdLS25yMEJ4ZWN3T2wzeVQ1Y1MrRWVER1BrOWJM?=
+ =?utf-8?B?cjdGdHBVcGpVdzlLZmptQUZSZ05WS3FwdERVckNVQWxHRDZudjYrK0NwcHRp?=
+ =?utf-8?B?c0ZpTVM4eTIyOHUzbmV4M1g1Zlo1QjFvb1ZPVjZCNmNqaXhSdVJzMVhZMTJ2?=
+ =?utf-8?B?b0xRdXpKOGVBcGlJelA5Y3UzQ3hNcWJ5SnkyRUUxa3RPUlZQQ0hkb0c4M05T?=
+ =?utf-8?B?NHJiQVF6bnhBbmpKSkZDaUZSSFhCdk5XR3orVFphVlhVZHdNZ2F3Q1dZNDBo?=
+ =?utf-8?B?c3pFMEVtaldJbGZmakFLSGUxWHFmV01XWUpBSklPWC9XUklVUVpGcXI5ZzBT?=
+ =?utf-8?B?VE1tdzlzLyttQllkRVB0aFBIbWFOMnZ4QkJaaVltajdMdW56Z1o0MDhBQjNh?=
+ =?utf-8?B?ZWFQWXdmL3RrVkpYeThFYzgxb2FBQmJqbFRUbXRoQlAyN3pqNmxUMUcvcTFZ?=
+ =?utf-8?B?YTZvQkQ1alFaUnRBOEJJWmh0VTlWRndCVVM5eDIrUXc5aHhRbjdrVWhDUlhB?=
+ =?utf-8?B?Tjh5NWJ3M3krOXRIWGhmM24ybzZWZjFLdGt4RkxsK3VsSHFOMXlHZUZqZktp?=
+ =?utf-8?Q?3UzzgtirfBpiDA4Ptxkl45avu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c28566e1-cfbf-4438-67ea-08dab3253d04
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2022 05:29:34.7082
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hbu/u6glgoW0HucQLPGQd6k/0y2eEgO7DiDM7flyTq6Wd4We8kaohSkQXEa+eJKK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5796
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,124 +135,82 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Luben Tuikov via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Luben Tuikov <luben.tuikov@amd.com>
+Cc: alexander.deucher@amd.com, richard@nod.at, mst@redhat.com, gregkh@linuxfoundation.org, somlo@cmu.edu, huangjianan@oppo.com, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, jlbec@evilplan.org, hsiangkao@linux.alibaba.com, rafael@kernel.org, jaegeuk@kernel.org, akpm@linux-foundation.org, mark@fasheh.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+On 2022-10-20 22:20, Yang Yingliang wrote:
+> The previous discussion link:
+> https://lore.kernel.org/lkml/0db486eb-6927-927e-3629-958f8f211194@huawei.com/T/
 
-syzbot found the following issue on:
+The very first discussion on this was here:
 
-HEAD commit:    493ffd6605b2 Merge tag 'ucount-rlimits-cleanups-for-v5.19'..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=168c673c880000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d19f5d16783f901
-dashboard link: https://syzkaller.appspot.com/bug?extid=3faecbfd845a895c04cb
-compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fb206a880000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b166ba880000
+https://www.spinics.net/lists/dri-devel/msg368077.html
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f1ff6481e26f/disk-493ffd66.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/101bd3c7ae47/vmlinux-493ffd66.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/c1b35fb0988a/mount_0.gz
+Please use this link, and not the that one up there you which quoted above,
+and whose commit description is taken verbatim from the this link.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com
+> 
+> kset_register() is currently used in some places without calling
+> kset_put() in error path, because the callers think it should be
+> kset internal thing to do, but the driver core can not know what
+> caller doing with that memory at times. The memory could be freed
+> both in kset_put() and error path of caller, if it is called in
+> kset_register().
 
-loop0: detected capacity change from 0 to 264192
-erofs: (device loop0): mounted with root inode @ nid 36.
-general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-CPU: 0 PID: 3611 Comm: syz-executor373 Not tainted 6.0.0-syzkaller-09423-g493ffd6605b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
-RIP: 0010:erofs_bread+0x33/0x760 fs/erofs/data.c:35
-Code: 53 48 83 ec 28 89 cb 41 89 d6 48 89 f5 49 89 fd 49 bc 00 00 00 00 00 fc ff df e8 78 b3 a5 fd 48 83 c5 30 48 89 e8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 ef e8 0e 1e f9 fd 89 5c 24 04 4c 8b 7d
-RSP: 0018:ffffc90003bdf2e0 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000001 RCX: ffff888018de5880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003bdf4e0
-RBP: 0000000000000030 R08: ffffffff83e25022 R09: ffffc90003bdf4e0
-R10: fffff5200077be9f R11: 1ffff9200077be9c R12: dffffc0000000000
-R13: ffffc90003bdf4e0 R14: 000000007ec94954 R15: 000032487ec94954
-FS:  00005555571fa300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa00d733260 CR3: 000000007d91f000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- z_erofs_read_fragment fs/erofs/zdata.c:667 [inline]
- z_erofs_do_read_page+0x219c/0x36c0 fs/erofs/zdata.c:780
- z_erofs_pcluster_readmore+0x292/0x450 fs/erofs/zdata.c:1592
- z_erofs_read_folio+0x28a/0x650 fs/erofs/zdata.c:1619
- filemap_read_folio+0x187/0x7d0 mm/filemap.c:2399
- do_read_cache_folio+0x2d3/0x790 mm/filemap.c:3526
- erofs_bread+0x20a/0x760 fs/erofs/data.c:46
- find_target_block_classic fs/erofs/namei.c:108 [inline]
- erofs_namei+0x1bd/0xdb0 fs/erofs/namei.c:184
- erofs_lookup+0xd6/0x1b0 fs/erofs/namei.c:212
- __lookup_hash+0x115/0x240 fs/namei.c:1601
- filename_create+0x25f/0x4f0 fs/namei.c:3785
- do_mkdirat+0xb5/0x550 fs/namei.c:4028
- __do_sys_mkdirat fs/namei.c:4053 [inline]
- __se_sys_mkdirat fs/namei.c:4051 [inline]
- __x64_sys_mkdirat+0x85/0x90 fs/namei.c:4051
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-RIP: 0033:0x7f92785b7039
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd2273aad8 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f92785b7039
-RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 0000000000000005
-RBP: 00007f9278576830 R08: 00005555571fa2c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f92785768c0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:erofs_bread+0x33/0x760 fs/erofs/data.c:35
-Code: 53 48 83 ec 28 89 cb 41 89 d6 48 89 f5 49 89 fd 49 bc 00 00 00 00 00 fc ff df e8 78 b3 a5 fd 48 83 c5 30 48 89 e8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 ef e8 0e 1e f9 fd 89 5c 24 04 4c 8b 7d
-RSP: 0018:ffffc90003bdf2e0 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000001 RCX: ffff888018de5880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003bdf4e0
-RBP: 0000000000000030 R08: ffffffff83e25022 R09: ffffc90003bdf4e0
-R10: fffff5200077be9f R11: 1ffff9200077be9c R12: dffffc0000000000
-R13: ffffc90003bdf4e0 R14: 000000007ec94954 R15: 000032487ec94954
-FS:  00005555571fa300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005593dd0b6000 CR3: 000000007d91f000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	53                   	push   %rbx
-   1:	48 83 ec 28          	sub    $0x28,%rsp
-   5:	89 cb                	mov    %ecx,%ebx
-   7:	41 89 d6             	mov    %edx,%r14d
-   a:	48 89 f5             	mov    %rsi,%rbp
-   d:	49 89 fd             	mov    %rdi,%r13
-  10:	49 bc 00 00 00 00 00 	movabs $0xdffffc0000000000,%r12
-  17:	fc ff df
-  1a:	e8 78 b3 a5 fd       	callq  0xfda5b397
-  1f:	48 83 c5 30          	add    $0x30,%rbp
-  23:	48 89 e8             	mov    %rbp,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 80 3c 20 00       	cmpb   $0x0,(%rax,%r12,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	48 89 ef             	mov    %rbp,%rdi
-  34:	e8 0e 1e f9 fd       	callq  0xfdf91e47
-  39:	89 5c 24 04          	mov    %ebx,0x4(%rsp)
-  3d:	4c                   	rex.WR
-  3e:	8b                   	.byte 0x8b
-  3f:	7d                   	.byte 0x7d
+As I explained in the link above, the reason there's
+a memory leak is that one cannot call kset_register() without
+the kset->kobj.name being set--kobj_add_internal() returns -EINVAL,
+in this case, i.e. kset_register() fails with -EINVAL.
 
+Thus, the most common usage is something like this:
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+	kobj_set_name(&kset->kobj, format, ...);
+	kset->kobj.kset = parent_kset;
+	kset->kobj.ktype = ktype;
+	res = kset_register(kset);
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+So, what is being leaked, is the memory allocated in kobj_set_name(),
+by the common idiom shown above. This needs to be mentioned in
+the documentation, at least, in case, in the future this is absolved
+in kset_register() redesign, etc.
+
+Regards,
+Luben
+
+> 
+> So make the function documentation more explicit about calling
+> kset_put() in the error path of caller first, so that people
+> have a chance to know what to do here, then fixes this leaks
+> by calling kset_put() from callers.
+> 
+> Liu Shixin (1):
+>   ubifs: Fix memory leak in ubifs_sysfs_init()
+> 
+> Yang Yingliang (10):
+>   kset: fix documentation for kset_register()
+>   kset: add null pointer check in kset_put()
+>   bus: fix possible memory leak in bus_register()
+>   kobject: fix possible memory leak in kset_create_and_add()
+>   class: fix possible memory leak in __class_register()
+>   firmware: qemu_fw_cfg: fix possible memory leak in
+>     fw_cfg_build_symlink()
+>   f2fs: fix possible memory leak in f2fs_init_sysfs()
+>   erofs: fix possible memory leak in erofs_init_sysfs()
+>   ocfs2: possible memory leak in mlog_sys_init()
+>   drm/amdgpu/discovery: fix possible memory leak
+> 
+>  drivers/base/bus.c                            | 4 +++-
+>  drivers/base/class.c                          | 6 ++++++
+>  drivers/firmware/qemu_fw_cfg.c                | 2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c | 5 +++--
+>  fs/erofs/sysfs.c                              | 4 +++-
+>  fs/f2fs/sysfs.c                               | 4 +++-
+>  fs/ocfs2/cluster/masklog.c                    | 7 ++++++-
+>  fs/ubifs/sysfs.c                              | 2 ++
+>  include/linux/kobject.h                       | 3 ++-
+>  lib/kobject.c                                 | 5 ++++-
+>  10 files changed, 33 insertions(+), 9 deletions(-)
+> 
