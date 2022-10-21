@@ -1,74 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23A34607186
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 09:56:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ED416071AD
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 10:06:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtxcP6l9Bz3dqr
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 18:56:21 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=i5rjpsQZ;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mtxr60Rxbz3dqr
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 19:06:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1666339590;
+	bh=TbkWa8UpOuwWbaKsXoVj1MqIDQZJ376yxEpng9yYR/s=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Kf4vGy5yYF31JgmeNM74m1iCrBHMaYI3Xifg46zqFE8y7sw0LVB7tnJPFIVKFujiu
+	 1qtAVrI92/XQB+e3ZAfS4a7HBanGU+SHnFuj8MsN+RuTFcb/fxbBOE/d77fNw1Xs5z
+	 lmh44qUoSzaKljrMVpWXv9xI1/nsv8ygqkV8tXTsBeXXFZ3Bdus45Q1uUqMwVNPOCH
+	 vviF7F0FahUJqKK4M+9KyUMQbWKlmPE69FTasEa1AF41ImBDYNJTRdISKNurJwFaW0
+	 BtWZZXqsQV63/OflwrI65mGpXHEJ9OWUp7viLkDS7ngXka2Ue8ekmEGTqQIRNjaNpY
+	 EaCeshBwUUAGQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42e; helo=mail-pf1-x42e.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=i5rjpsQZ;
-	dkim-atps=neutral
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtxcL081Yz2xJ7
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 18:56:17 +1100 (AEDT)
-Received: by mail-pf1-x42e.google.com with SMTP id p14so1886554pfq.5
-        for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 00:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t7AnO5H5sLRVB0mgELgO05aF29fMHtt1/HdTD0fWoi8=;
-        b=i5rjpsQZ2BYyQz206YUFkH1lNJbiLGLqRUsaHj+pcZs/BprjFe5zAGcr2bHVEWbiFD
-         cgXRO+4Zkls5kSDlr8zb4Lg2qUPAIjAclz/FuYRZzSG5+tHxU3GcDVWlV5ptNbCg/Hmz
-         LjkKBoaT1O0nEkVsBjrpN20KQbMNsjraBXjLZgIksd3MwNmujELBn1ThF1TyDJDBGSt0
-         C4eYqOJ60m6Cnlto3fKhDBEzSG+lYFMMALycMYQ6s7Wvqk+fX8RiiTt7wzQzSXSm/qoe
-         +M9GSjAgg8BoN3O9mimv/sP0iR7sI0xjOydV5idEhzhCkTXsBG4Y1jAmFUYzwuM/7Brq
-         A+sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t7AnO5H5sLRVB0mgELgO05aF29fMHtt1/HdTD0fWoi8=;
-        b=N/paJCzic/fR9YFgEFFCws2Y4tx/tzYNYUdzCbg+6ocLrcvcpHHMe/PiRVKNGiIZd5
-         /5u2Tj/w2Lt2WNj7yG+Z76G/jrg9+RdIF5FNbx46P9waxk4qWuDvUv0XAdmIAaE9mufS
-         UwCuNQ2igSL4vlGCT+hACYKs+uwK12FyX06Xf1zGkt/hcl0lYXvTYouCRnOT6sOngY+W
-         MuOjaqG1Zhrsj22ZQWnOgVCGSYA2/OZMmsgvaxwBMQuOSEjtbHxTnmGzwGtY1OordZno
-         5t5M8rQgo1izxFXJCP1XjCZp+LVM1rFK5uWbSEAI7RK0ftL04GuXlVx6/5OSGNiUwvhm
-         NWIQ==
-X-Gm-Message-State: ACrzQf1eKsVcWwAyO3XaQwHYTOvwMzJKbMiw4qEjdA7qPEVgal9Yf7On
-	4vhFUQrg/81xbBPu+hjK0G4=
-X-Google-Smtp-Source: AMsMyM717BLR7IYTlFFPA+etJaeHkC3EFcOQ0JXH1gJwB46O/KaGAkdYps33oM3FzYlmEAGdkh1Xyw==
-X-Received: by 2002:a63:b12:0:b0:44a:d193:6b16 with SMTP id 18-20020a630b12000000b0044ad1936b16mr15375023pgl.604.1666338972960;
-        Fri, 21 Oct 2022 00:56:12 -0700 (PDT)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id s1-20020a170902ea0100b001769206a766sm14180740plg.307.2022.10.21.00.56.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Oct 2022 00:56:12 -0700 (PDT)
-Date: Fri, 21 Oct 2022 15:59:30 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, zhangwen@coolpad.com
-Subject: Re: [syzbot] general protection fault in erofs_bread
-Message-ID: <20221021155930.00005eb3.zbestahu@gmail.com>
-In-Reply-To: <Y1JEeTVcuI7QEV+2@B-P7TQMD6M-0146.local>
-References: <0000000000002e7a8905eb841ddd@google.com>
-	<Y1JEeTVcuI7QEV+2@B-P7TQMD6M-0146.local>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mtxr14QmYz2xbK
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 19:06:22 +1100 (AEDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.54])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mtxjn0wbFzmVCy;
+	Fri, 21 Oct 2022 16:01:01 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 16:05:20 +0800
+Received: from [10.174.178.174] (10.174.178.174) by
+ dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 16:05:19 +0800
+Subject: Re: [PATCH 01/11] kset: fix documentation for kset_register()
+To: Luben Tuikov <luben.tuikov@amd.com>, <linux-kernel@vger.kernel.org>,
+	<qemu-devel@nongnu.org>, <linux-f2fs-devel@lists.sourceforge.net>,
+	<linux-erofs@lists.ozlabs.org>, <ocfs2-devel@oss.oracle.com>,
+	<linux-mtd@lists.infradead.org>, <amd-gfx@lists.freedesktop.org>,
+	<gregkh@linuxfoundation.org>
+References: <20221021022102.2231464-1-yangyingliang@huawei.com>
+ <20221021022102.2231464-2-yangyingliang@huawei.com>
+ <eb0f1459-7980-4a7b-58f9-652eeccc357e@amd.com>
+Message-ID: <10d887c4-7db0-8958-f661-bd52e6c8b4af@huawei.com>
+Date: Fri, 21 Oct 2022 16:05:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <eb0f1459-7980-4a7b-58f9-652eeccc357e@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.174]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,68 +71,60 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: syzbot <syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com>, linux-erofs@lists.ozlabs.org, syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yang Yingliang <yangyingliang@huawei.com>
+Cc: alexander.deucher@amd.com, mst@redhat.com, richard@nod.at, somlo@cmu.edu, huangjianan@oppo.com, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, jlbec@evilplan.org, jaegeuk@kernel.org, rafael@kernel.org, hsiangkao@linux.alibaba.com, akpm@linux-foundation.org, mark@fasheh.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, 21 Oct 2022 15:04:25 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> Hi Yue,
-> 
-> On Thu, Oct 20, 2022 at 09:45:41PM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    493ffd6605b2 Merge tag 'ucount-rlimits-cleanups-for-v5.19'..
-> > git tree:       upstream
-> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=168c673c880000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d19f5d16783f901
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3faecbfd845a895c04cb
-> > compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fb206a880000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b166ba880000
-> > 
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/f1ff6481e26f/disk-493ffd66.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/101bd3c7ae47/vmlinux-493ffd66.xz
-> > mounted in repro: https://storage.googleapis.com/syzbot-assets/c1b35fb0988a/mount_0.gz
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com
-> > 
-> > loop0: detected capacity change from 0 to 264192
-> > erofs: (device loop0): mounted with root inode @ nid 36.
-> > general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-> > KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-> > CPU: 0 PID: 3611 Comm: syz-executor373 Not tainted 6.0.0-syzkaller-09423-g493ffd6605b2 #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
-> > RIP: 0010:erofs_bread+0x33/0x760 fs/erofs/data.c:35
-> > Code: 53 48 83 ec 28 89 cb 41 89 d6 48 89 f5 49 89 fd 49 bc 00 00 00 00 00 fc ff df e8 78 b3 a5 fd 48 83 c5 30 48 89 e8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 ef e8 0e 1e f9 fd 89 5c 24 04 4c 8b 7d
-> > RSP: 0018:ffffc90003bdf2e0 EFLAGS: 00010206
-> > RAX: 0000000000000006 RBX: 0000000000000001 RCX: ffff888018de5880
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003bdf4e0
-> > RBP: 0000000000000030 R08: ffffffff83e25022 R09: ffffc90003bdf4e0
-> > R10: fffff5200077be9f R11: 1ffff9200077be9c R12: dffffc0000000000
-> > R13: ffffc90003bdf4e0 R14: 000000007ec94954 R15: 000032487ec94954
-> > FS:  00005555571fa300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007fa00d733260 CR3: 000000007d91f000 CR4: 00000000003506f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  <TASK>
-> >  z_erofs_read_fragment fs/erofs/zdata.c:667 [inline]  
-> 
-> Could you look into this issue? I think it's a simple issue (the
-> fragment feature sb flag is not set, but so packed_inode != NULL
-> needs to be checked in z_erofs_read_fragment()).
+On 2022/10/21 13:34, Luben Tuikov wrote:
+> On 2022-10-20 22:20, Yang Yingliang wrote:
+>> kset_register() is currently used in some places without calling
+>> kset_put() in error path, because the callers think it should be
+>> kset internal thing to do, but the driver core can not know what
+>> caller doing with that memory at times. The memory could be freed
+>> both in kset_put() and error path of caller, if it is called in
+>> kset_register().
+>>
+>> So make the function documentation more explicit about calling
+>> kset_put() in the error path of caller.
+>>
+>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>> ---
+>>   lib/kobject.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/lib/kobject.c b/lib/kobject.c
+>> index a0b2dbfcfa23..6da04353d974 100644
+>> --- a/lib/kobject.c
+>> +++ b/lib/kobject.c
+>> @@ -834,6 +834,9 @@ EXPORT_SYMBOL_GPL(kobj_sysfs_ops);
+>>   /**
+>>    * kset_register() - Initialize and add a kset.
+>>    * @k: kset.
+>> + *
+>> + * If this function returns an error, kset_put() must be called to
+>> + * properly clean up the memory associated with the object.
+>>    */
+> And I'd continue the sentence, with " ... with the object,
+> for instance the memory for the kset.kobj.name when kobj_set_name(&kset.kobj, format, ...)
+> was called before calling kset_register()."
+kobject_cleanup() not only frees name, but aslo calls ->release() to 
+free another resources.
+>
+> This makes it clear what we want to make sure is freed, in case of an early error
+> from kset_register().
 
-Thanks for the tip.
-Let me have a look first.
+How about like this:
 
-> 
-> Thanks,
-> Gao Xiang
+If this function returns an error, kset_put() must be called to clean up the name of
+kset object and other memory associated with the object.
 
+>
+> Regards,
+> Luben
+>
+>>   int kset_register(struct kset *k)
+>>   {
+> .
