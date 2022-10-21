@@ -2,42 +2,34 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 307F960706C
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 08:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9885C6070AB
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 09:04:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Mtw6z48dVz3cfQ
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 17:49:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtwSm3qZ6z3cfN
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 18:04:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=54.204.34.130; helo=smtpbguseast2.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=<UNKNOWN>)
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mtw6v3jffz3c6T
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 17:49:10 +1100 (AEDT)
-X-QQ-mid: bizesmtp64t1666334615tni2uq35
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 21 Oct 2022 14:43:34 +0800 (CST)
-X-QQ-SSF: 01400000000000B0E000000A0000020
-X-QQ-FEAT: ALw5QuVtm4X/0YM5+lvhrJReaPTIEBc9vr4q8wcR/6HJkITCVxlTOwM7b3pwJ
-	q6tGe6T8hHU5KyoVXw4McKYIYlmbi39Wa4b2eMazmtxBFRCKbUtkz+oeIjJ1N2u8Eg2dKpX
-	PGcU8YfMjYEl2QpULLQoaqRygvrEBCHwW3qGUHc7PzRDGqd1gr0xtcc/H++kPwrOxLx8ePW
-	D66EUYgCehk+zftAak4AjjvE2KNVKCt79IZIPrEgwvQumRMAZqula+Y2zsUBf0Y3CCdtrS4
-	8yl13rM+gbntedqI2XAb6GbXgz8n+lV8oB4HtULu3Gusv2xHHrMefOm0HFd2bPOYukwHbIh
-	7om7++MkDd30GkJfaQ2e57XQQj5uvrIDqPy5iuC3+H2fpRz4UFjxoBRkqmv7MysOOGGGhFe
-	wfY0C0H2bnx9fMjoeM1cOQ==
-X-QQ-GoodBg: 2
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH] erofs-utils: erofs-utils: lib: fix dev_read
-Date: Fri, 21 Oct 2022 14:43:32 +0800
-Message-Id: <20221021064332.357316-1-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.37.3
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtwSd47trz2xk6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 18:04:32 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VSiUXvO_1666335866;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VSiUXvO_1666335866)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Oct 2022 15:04:27 +0800
+Date: Fri, 21 Oct 2022 15:04:25 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: huyue2@coolpad.com
+Subject: Re: [syzbot] general protection fault in erofs_bread
+Message-ID: <Y1JEeTVcuI7QEV+2@B-P7TQMD6M-0146.local>
+References: <0000000000002e7a8905eb841ddd@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0000000000002e7a8905eb841ddd@google.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,83 +41,60 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: syzbot <syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com>, syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When using `fsck.erofs` to extract some image have a very large file
-inside, for example 2G, my fsck.erofs report some thing like this:
+Hi Yue,
 
-<E> erofs_io: Failed to read data from device - erofs.image:[4096,
-2147483648].
-<E> erofs: failed to read data of m_pa 4096, m_plen 2147483648 @ nid 40: -17
-<E> erofs: Failed to extract filesystem
+On Thu, Oct 20, 2022 at 09:45:41PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    493ffd6605b2 Merge tag 'ucount-rlimits-cleanups-for-v5.19'..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=168c673c880000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d19f5d16783f901
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3faecbfd845a895c04cb
+> compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fb206a880000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b166ba880000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/f1ff6481e26f/disk-493ffd66.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/101bd3c7ae47/vmlinux-493ffd66.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/c1b35fb0988a/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com
+> 
+> loop0: detected capacity change from 0 to 264192
+> erofs: (device loop0): mounted with root inode @ nid 36.
+> general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+> CPU: 0 PID: 3611 Comm: syz-executor373 Not tainted 6.0.0-syzkaller-09423-g493ffd6605b2 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
+> RIP: 0010:erofs_bread+0x33/0x760 fs/erofs/data.c:35
+> Code: 53 48 83 ec 28 89 cb 41 89 d6 48 89 f5 49 89 fd 49 bc 00 00 00 00 00 fc ff df e8 78 b3 a5 fd 48 83 c5 30 48 89 e8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 ef e8 0e 1e f9 fd 89 5c 24 04 4c 8b 7d
+> RSP: 0018:ffffc90003bdf2e0 EFLAGS: 00010206
+> RAX: 0000000000000006 RBX: 0000000000000001 RCX: ffff888018de5880
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003bdf4e0
+> RBP: 0000000000000030 R08: ffffffff83e25022 R09: ffffc90003bdf4e0
+> R10: fffff5200077be9f R11: 1ffff9200077be9c R12: dffffc0000000000
+> R13: ffffc90003bdf4e0 R14: 000000007ec94954 R15: 000032487ec94954
+> FS:  00005555571fa300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fa00d733260 CR3: 000000007d91f000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  z_erofs_read_fragment fs/erofs/zdata.c:667 [inline]
 
-You can use this script to reproduce this issue.
+Could you look into this issue? I think it's a simple issue (the
+fragment feature sb flag is not set, but so packed_inode != NULL
+needs to be checked in z_erofs_read_fragment()).
 
-mkdir tmp extract
-dd if=/dev/urandom of=tmp/big_file bs=1M count=2048
-
-mkfs.erofs erofs.image tmp
-fsck.erofs erofs.image --extract=extract
-
-I found that dev_open will failed if we can not get all data we want
-with one pread call.
-
-I write this little patch try to fix this issue.
-
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- lib/io.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/lib/io.c b/lib/io.c
-index 524cfb4..ccd433f 100644
---- a/lib/io.c
-+++ b/lib/io.c
-@@ -256,7 +256,7 @@ int dev_resize(unsigned int blocks)
- 
- int dev_read(int device_id, void *buf, u64 offset, size_t len)
- {
--	int ret, fd;
-+	int read_count, fd;
- 
- 	if (cfg.c_dry_run)
- 		return 0;
-@@ -278,15 +278,27 @@ int dev_read(int device_id, void *buf, u64 offset, size_t len)
- 		fd = erofs_blobfd[device_id - 1];
- 	}
- 
-+	while (len > 0) {
- #ifdef HAVE_PREAD64
--	ret = pread64(fd, buf, len, (off64_t)offset);
-+		read_count = pread64(fd, buf, len, (off64_t)offset);
- #else
--	ret = pread(fd, buf, len, (off_t)offset);
-+		read_count = pread(fd, buf, len, (off_t)offset);
- #endif
--	if (ret != (int)len) {
--		erofs_err("Failed to read data from device - %s:[%" PRIu64 ", %zd].",
--			  erofs_devname, offset, len);
--		return -errno;
-+		if (read_count == -1 || read_count == 0) {
-+			if (errno) {
-+				erofs_err("Failed to read data from device - %s:[%" PRIu64 ", %zd].",
-+					  erofs_devname, offset, len);
-+				return -errno;
-+			} else {
-+				erofs_err("Reach EOF of device - %s:[%" PRIu64 ", %zd].",
-+					  erofs_devname, offset, len);
-+				return -EINVAL;
-+			}
-+		}
-+
-+		offset += read_count;
-+		len -= read_count;
-+		buf += read_count;
- 	}
- 	return 0;
- }
--- 
-2.37.3
-
+Thanks,
+Gao Xiang
