@@ -1,50 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54698606DA8
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A2AE606DAD
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDH0tskz3cfX
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDq1qLMz3cBR
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:55 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666319007;
-	bh=anE6kFKk4KL8osB9HOW0knNDcuVxgwcI8Ym8jD8Lx2Y=;
+	s=201707; t=1666319035;
+	bh=xzMFxLeFKUbQzHCjgeZFy2Z3JsN/mOjM/Yn4m8OkMjM=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=XtdgKLD3DU4ZzDvirUtl1zD+I7A2KWHe+w6IK6nxjnocbXSx3MUHvIwFFtiWJpK8r
-	 WbLrcr8DP1qJTguORD2rfN3X4/FXNQPPfuAoNAYg73w5FIHdzMkQQyNpHGJ9dUOsfW
-	 gPFuRopt8WxEbTXmBxt+W1QIC9Ffa9Nn8kqf1vKTcuDNIwqZukVcreJF1kg7kw87d4
-	 7uiVYTTTpJOVJTD4xdJKq58jMGJ8RVG7VBir5K5tFWcPBayCCXAFIYsSPbyRRp7ZBB
-	 6bTFL3B+OvXhYRyr9CCdOw2Pw0ifOW5ij1wE0JKenktrbB6EFmfXGhU0EnBTEkTY3E
-	 mDLekkFv/eGKw==
+	b=LrZdI0iUXcxs3pNZZbbvSQbxo6HHryVH0Rg+oSsBHFLg924MHSAuu9ocjb/K9bVYW
+	 H2cceDh2eOZSk9nbLxPmtA0O5ardgrrfmHYVj90moemHJILe4R/uJ+iAjuWyWm1KcL
+	 wvLgXEP9u7koc9Eo2VxJZaCBMQRw/jhIpH7Ic1sEB/Y5wCBgY7os/WiT4oSSg6HpbE
+	 F2vnkP0cpgV+PGkhcTbgByqk5g4UyidbW9Es3+xGv7oSw4vl0q8KjFSr2ddwfG+jxl
+	 KgdiV02uGnHv4x2yQvHOfkwVV6d3QinotKocOy668fKmvnvhB3DiJB7OQigmGerBu3
+	 iYm2GbZg3a5pQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpCd0HrCz3c8j
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:22:53 +1100 (AEDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.57])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MtpCN18FmzHvCF;
-	Fri, 21 Oct 2022 10:22:40 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpD86jC2z3drV
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:23:20 +1100 (AEDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mtp6h64dWzVj27;
+	Fri, 21 Oct 2022 10:18:36 +0800 (CST)
 Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 10:22:44 +0800
+ 15.1.2375.31; Fri, 21 Oct 2022 10:22:45 +0800
 Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
  (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 10:22:43 +0800
+ 2022 10:22:44 +0800
 To: <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
 	<linux-f2fs-devel@lists.sourceforge.net>, <linux-erofs@lists.ozlabs.org>,
 	<ocfs2-devel@oss.oracle.com>, <linux-mtd@lists.infradead.org>,
 	<amd-gfx@lists.freedesktop.org>
-Subject: [PATCH 08/11] erofs: fix possible memory leak in erofs_init_sysfs()
-Date: Fri, 21 Oct 2022 10:20:59 +0800
-Message-ID: <20221021022102.2231464-9-yangyingliang@huawei.com>
+Subject: [PATCH 09/11] ocfs2: possible memory leak in mlog_sys_init()
+Date: Fri, 21 Oct 2022 10:21:00 +0800
+Message-ID: <20221021022102.2231464-10-yangyingliang@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221021022102.2231464-1-yangyingliang@huawei.com>
 References: <20221021022102.2231464-1-yangyingliang@huawei.com>
@@ -78,40 +78,49 @@ if it fails, but the refcount of kobject is not decreased to
 this by calling kset_put(), so that name can be freed in
 callback function kobject_cleanup().
 
-unreferenced object 0xffff888101d228c0 (size 8):
-  comm "modprobe", pid 276, jiffies 4294722700 (age 13.151s)
+unreferenced object 0xffff888100da9348 (size 8):
+  comm "modprobe", pid 257, jiffies 4294701096 (age 33.334s)
   hex dump (first 8 bytes):
-    65 72 6f 66 73 00 ff ff                          erofs...
+    6c 6f 67 6d 61 73 6b 00                          logmask.
   backtrace:
-    [<00000000e2a9a4a6>] __kmalloc_node_track_caller+0x44/0x1b0
-    [<00000000b8ce02de>] kstrdup+0x3a/0x70
-    [<000000004a0e01d2>] kstrdup_const+0x63/0x80
-    [<00000000051b6cda>] kvasprintf_const+0x149/0x180
-    [<000000004dc51dad>] kobject_set_name_vargs+0x56/0x150
-    [<00000000b30f0bad>] kobject_set_name+0xab/0xe0
+    [<00000000306e441c>] __kmalloc_node_track_caller+0x44/0x1b0
+    [<000000007c491a9e>] kstrdup+0x3a/0x70
+    [<0000000015719a3b>] kstrdup_const+0x63/0x80
+    [<0000000084e458ea>] kvasprintf_const+0x149/0x180
+    [<0000000091302b42>] kobject_set_name_vargs+0x56/0x150
+    [<000000005f48eeac>] kobject_set_name+0xab/0xe0
 
-Fixes: 168e9a76200c ("erofs: add sysfs interface")
+Fixes: 34980ca8faeb ("Drivers: clean up direct setting of the name of a kset")
 Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
- fs/erofs/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ocfs2/cluster/masklog.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 783bb7b21b51..653b35001bc5 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -254,8 +254,10 @@ int __init erofs_init_sysfs(void)
- 	kobject_set_name(&erofs_root.kobj, "erofs");
- 	erofs_root.kobj.parent = fs_kobj;
- 	ret = kset_register(&erofs_root);
--	if (ret)
-+	if (ret) {
-+		kset_put(&erofs_root);
- 		goto root_err;
-+	}
+diff --git a/fs/ocfs2/cluster/masklog.c b/fs/ocfs2/cluster/masklog.c
+index 563881ddbf00..7f9ba816d955 100644
+--- a/fs/ocfs2/cluster/masklog.c
++++ b/fs/ocfs2/cluster/masklog.c
+@@ -156,6 +156,7 @@ static struct kset mlog_kset = {
+ int mlog_sys_init(struct kset *o2cb_kset)
+ {
+ 	int i = 0;
++	int ret;
  
- 	ret = kobject_init_and_add(&erofs_feat, &erofs_feat_ktype,
- 				   NULL, "features");
+ 	while (mlog_attrs[i].attr.mode) {
+ 		mlog_default_attrs[i] = &mlog_attrs[i].attr;
+@@ -165,7 +166,11 @@ int mlog_sys_init(struct kset *o2cb_kset)
+ 
+ 	kobject_set_name(&mlog_kset.kobj, "logmask");
+ 	mlog_kset.kobj.kset = o2cb_kset;
+-	return kset_register(&mlog_kset);
++	ret = kset_register(&mlog_kset);
++	if (ret)
++		kset_put(&mlog_kset);
++
++	return ret;
+ }
+ 
+ void mlog_sys_shutdown(void)
 -- 
 2.25.1
 
