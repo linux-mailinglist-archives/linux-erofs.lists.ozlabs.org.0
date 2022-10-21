@@ -2,34 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9885C6070AB
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 09:04:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFF6B607103
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 09:26:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtwSm3qZ6z3cfN
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 18:04:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mtwxp4YK1z3chN
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 18:26:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1666337182;
+	bh=JQluvds8xOLIlfimsEnEw6zA5CGTTtIL1qDb7SHY87g=;
+	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=lNTy3kFgursva9cXr07CjRsQKm+/b44dJ8fecBL8NV9WGGDQd2ngXIDHGsLoDa5jo
+	 eb+S5ARtjUdEERw0jR7yR/fzNbInut1tNojDSz6sG6/Ffdo9vlm6cipWeS+xHxDMUV
+	 FeNXq7lXkRg+W+F+Sj7ASfwGPYZvuYQ2FKOIWOR1TByVAB625s4oSpv83lucgC/3O1
+	 4zXEgOrD/YRqgT7/cerLIxhEbWGbylLa4J6T5owr//tmnN76hP3ExKtuyvoIzDHmeB
+	 H0aZRmV+Cwp+vIsr9tz2GxLgXBlqCQuu53cxxHYugPr0CPT2PSM4r0rRUy7C4MsPGm
+	 FL4sATjqSvywA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtwSd47trz2xk6
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 18:04:32 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VSiUXvO_1666335866;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VSiUXvO_1666335866)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Oct 2022 15:04:27 +0800
-Date: Fri, 21 Oct 2022 15:04:25 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: huyue2@coolpad.com
-Subject: Re: [syzbot] general protection fault in erofs_bread
-Message-ID: <Y1JEeTVcuI7QEV+2@B-P7TQMD6M-0146.local>
-References: <0000000000002e7a8905eb841ddd@google.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mtwxg1PzKz2yfg
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 18:26:10 +1100 (AEDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mtwr34fC2zVj5k;
+	Fri, 21 Oct 2022 15:21:23 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 15:25:54 +0800
+Received: from [10.174.178.174] (10.174.178.174) by
+ dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 15:25:53 +0800
+Subject: Re: [PATCH 00/11] fix memory leak while kset_register() fails
+To: Luben Tuikov <luben.tuikov@amd.com>, <linux-kernel@vger.kernel.org>,
+	<qemu-devel@nongnu.org>, <linux-f2fs-devel@lists.sourceforge.net>,
+	<linux-erofs@lists.ozlabs.org>, <ocfs2-devel@oss.oracle.com>,
+	<linux-mtd@lists.infradead.org>, <amd-gfx@lists.freedesktop.org>
+References: <20221021022102.2231464-1-yangyingliang@huawei.com>
+ <d559793a-0ce4-3384-e74e-19855aa31f31@amd.com>
+Message-ID: <2a99c52c-d29c-5f5c-57a8-9851018e7420@huawei.com>
+Date: Fri, 21 Oct 2022 15:25:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0000000000002e7a8905eb841ddd@google.com>
+In-Reply-To: <d559793a-0ce4-3384-e74e-19855aa31f31@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.174]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,60 +69,114 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: syzbot <syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com>, syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yang Yingliang <yangyingliang@huawei.com>
+Cc: alexander.deucher@amd.com, richard@nod.at, mst@redhat.com, gregkh@linuxfoundation.org, somlo@cmu.edu, huangjianan@oppo.com, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, jlbec@evilplan.org, hsiangkao@linux.alibaba.com, rafael@kernel.org, jaegeuk@kernel.org, akpm@linux-foundation.org, mark@fasheh.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Yue,
+Hi,
 
-On Thu, Oct 20, 2022 at 09:45:41PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    493ffd6605b2 Merge tag 'ucount-rlimits-cleanups-for-v5.19'..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=168c673c880000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d19f5d16783f901
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3faecbfd845a895c04cb
-> compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fb206a880000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b166ba880000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/f1ff6481e26f/disk-493ffd66.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/101bd3c7ae47/vmlinux-493ffd66.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/c1b35fb0988a/mount_0.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+3faecbfd845a895c04cb@syzkaller.appspotmail.com
-> 
-> loop0: detected capacity change from 0 to 264192
-> erofs: (device loop0): mounted with root inode @ nid 36.
-> general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-> CPU: 0 PID: 3611 Comm: syz-executor373 Not tainted 6.0.0-syzkaller-09423-g493ffd6605b2 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
-> RIP: 0010:erofs_bread+0x33/0x760 fs/erofs/data.c:35
-> Code: 53 48 83 ec 28 89 cb 41 89 d6 48 89 f5 49 89 fd 49 bc 00 00 00 00 00 fc ff df e8 78 b3 a5 fd 48 83 c5 30 48 89 e8 48 c1 e8 03 <42> 80 3c 20 00 74 08 48 89 ef e8 0e 1e f9 fd 89 5c 24 04 4c 8b 7d
-> RSP: 0018:ffffc90003bdf2e0 EFLAGS: 00010206
-> RAX: 0000000000000006 RBX: 0000000000000001 RCX: ffff888018de5880
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003bdf4e0
-> RBP: 0000000000000030 R08: ffffffff83e25022 R09: ffffc90003bdf4e0
-> R10: fffff5200077be9f R11: 1ffff9200077be9c R12: dffffc0000000000
-> R13: ffffc90003bdf4e0 R14: 000000007ec94954 R15: 000032487ec94954
-> FS:  00005555571fa300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fa00d733260 CR3: 000000007d91f000 CR4: 00000000003506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  z_erofs_read_fragment fs/erofs/zdata.c:667 [inline]
+On 2022/10/21 13:29, Luben Tuikov wrote:
+> On 2022-10-20 22:20, Yang Yingliang wrote:
+>> The previous discussion link:
+>> https://lore.kernel.org/lkml/0db486eb-6927-927e-3629-958f8f211194@huawei.com/T/
+> The very first discussion on this was here:
+>
+> https://www.spinics.net/lists/dri-devel/msg368077.html
+>
+> Please use this link, and not the that one up there you which quoted above,
+> and whose commit description is taken verbatim from the this link.
+I found this leaks in 
+bus_register()/class_register()/kset_create_and_add() at first, and describe
+the reason in these patches which is using kobject_set_name() 
+description, here is the patches:
 
-Could you look into this issue? I think it's a simple issue (the
-fragment feature sb flag is not set, but so packed_inode != NULL
-needs to be checked in z_erofs_read_fragment()).
+https://lore.kernel.org/lkml/20221017014957.156645-1-yangyingliang@huawei.com/T/
+https://lore.kernel.org/lkml/20221017031335.1845383-1-yangyingliang@huawei.com/
+https://lore.kernel.org/lkml/Y0zfPKAgQSrYZg5o@kroah.com/T/
+
+And then I found other subsystem also have this problem, so posted the 
+fix patches for them
+(including qemu_fw_cfg/f2fs/erofs/ocfs2/amdgpu_discovery):
+
+https://www.mail-archive.com/qemu-devel@nongnu.org/msg915553.html
+https://lore.kernel.org/linux-f2fs-devel/7908686b-9a7c-b754-d312-d689fc28366e@kernel.org/T/#t
+https://lore.kernel.org/linux-erofs/20221018073947.693206-1-yangyingliang@huawei.com/
+https://lore.kernel.org/lkml/0db486eb-6927-927e-3629-958f8f211194@huawei.com/T/
+
+https://www.spinics.net/lists/dri-devel/msg368092.html
+In the amdgpu_discovery patch, I sent a old one which using wrong 
+description and you pointer out,
+and then I send a v2.
+
+And then the maintainer of ocfs2 has different thought about this, so we 
+had a discussion in the link
+that I gave out, and Greg suggested me to update kset_register() 
+documentation and then put the fix
+patches together in one series, so I sent this patchset and use the link.
 
 Thanks,
-Gao Xiang
+Yang
+
+>
+>> kset_register() is currently used in some places without calling
+>> kset_put() in error path, because the callers think it should be
+>> kset internal thing to do, but the driver core can not know what
+>> caller doing with that memory at times. The memory could be freed
+>> both in kset_put() and error path of caller, if it is called in
+>> kset_register().
+> As I explained in the link above, the reason there's
+> a memory leak is that one cannot call kset_register() without
+> the kset->kobj.name being set--kobj_add_internal() returns -EINVAL,
+> in this case, i.e. kset_register() fails with -EINVAL.
+>
+> Thus, the most common usage is something like this:
+>
+> 	kobj_set_name(&kset->kobj, format, ...);
+> 	kset->kobj.kset = parent_kset;
+> 	kset->kobj.ktype = ktype;
+> 	res = kset_register(kset);
+>
+> So, what is being leaked, is the memory allocated in kobj_set_name(),
+> by the common idiom shown above. This needs to be mentioned in
+> the documentation, at least, in case, in the future this is absolved
+> in kset_register() redesign, etc.
+>
+> Regards,
+> Luben
+>
+>> So make the function documentation more explicit about calling
+>> kset_put() in the error path of caller first, so that people
+>> have a chance to know what to do here, then fixes this leaks
+>> by calling kset_put() from callers.
+>>
+>> Liu Shixin (1):
+>>    ubifs: Fix memory leak in ubifs_sysfs_init()
+>>
+>> Yang Yingliang (10):
+>>    kset: fix documentation for kset_register()
+>>    kset: add null pointer check in kset_put()
+>>    bus: fix possible memory leak in bus_register()
+>>    kobject: fix possible memory leak in kset_create_and_add()
+>>    class: fix possible memory leak in __class_register()
+>>    firmware: qemu_fw_cfg: fix possible memory leak in
+>>      fw_cfg_build_symlink()
+>>    f2fs: fix possible memory leak in f2fs_init_sysfs()
+>>    erofs: fix possible memory leak in erofs_init_sysfs()
+>>    ocfs2: possible memory leak in mlog_sys_init()
+>>    drm/amdgpu/discovery: fix possible memory leak
+>>
+>>   drivers/base/bus.c                            | 4 +++-
+>>   drivers/base/class.c                          | 6 ++++++
+>>   drivers/firmware/qemu_fw_cfg.c                | 2 +-
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c | 5 +++--
+>>   fs/erofs/sysfs.c                              | 4 +++-
+>>   fs/f2fs/sysfs.c                               | 4 +++-
+>>   fs/ocfs2/cluster/masklog.c                    | 7 ++++++-
+>>   fs/ubifs/sysfs.c                              | 2 ++
+>>   include/linux/kobject.h                       | 3 ++-
+>>   lib/kobject.c                                 | 5 ++++-
+>>   10 files changed, 33 insertions(+), 9 deletions(-)
+>>
+> .
