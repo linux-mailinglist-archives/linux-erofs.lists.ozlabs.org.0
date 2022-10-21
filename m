@@ -1,50 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C12B606DAB
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54698606DA8
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 04:23:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDb1wsJz3cfX
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4MtpDH0tskz3cfX
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 13:23:27 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666319023;
-	bh=1tpP1hkNdWvN34AYxj6RVP7WehDDZKUj72Nls7FxEGk=;
+	s=201707; t=1666319007;
+	bh=anE6kFKk4KL8osB9HOW0knNDcuVxgwcI8Ym8jD8Lx2Y=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=WwOX+T7dFa2MeQ+NKExTbR3e6VtfryJZ+8DCk9B+XDdfXdR7bk4GM/0JGAy7+90th
-	 5J1Vr+Ikymv+BcELgcWD01n5SbLjyb8IJsWk7Z9rfJfCPJPauvyESxZJBv9K1mk05X
-	 9qb7NKO+NnUIYQ+klkMNmyBvLVsfrb5yHxSv/kC1IEemEKrgzbC3UZxtuzlYXMeNjm
-	 MtsOeAZHqla/19Y1dJ4bYnUOHDJYKgPhOqbsjilu+zuty44uRQJbM5WEZtDUwFglxG
-	 l3UJ5mbOV/YTpeQ77M/+oYk6Oji40pVkRkbHLa2Uluw4exZM1MMDbY8UELg/53wdO1
-	 WRn3PP6FZcnAQ==
+	b=XtdgKLD3DU4ZzDvirUtl1zD+I7A2KWHe+w6IK6nxjnocbXSx3MUHvIwFFtiWJpK8r
+	 WbLrcr8DP1qJTguORD2rfN3X4/FXNQPPfuAoNAYg73w5FIHdzMkQQyNpHGJ9dUOsfW
+	 gPFuRopt8WxEbTXmBxt+W1QIC9Ffa9Nn8kqf1vKTcuDNIwqZukVcreJF1kg7kw87d4
+	 7uiVYTTTpJOVJTD4xdJKq58jMGJ8RVG7VBir5K5tFWcPBayCCXAFIYsSPbyRRp7ZBB
+	 6bTFL3B+OvXhYRyr9CCdOw2Pw0ifOW5ij1wE0JKenktrbB6EFmfXGhU0EnBTEkTY3E
+	 mDLekkFv/eGKw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpD45tDZz3c7L
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:23:16 +1100 (AEDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mtp7b16HRzpVdt;
-	Fri, 21 Oct 2022 10:19:23 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4MtpCd0HrCz3c8j
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 13:22:53 +1100 (AEDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.57])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MtpCN18FmzHvCF;
+	Fri, 21 Oct 2022 10:22:40 +0800 (CST)
 Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 10:22:43 +0800
+ 15.1.2375.31; Fri, 21 Oct 2022 10:22:44 +0800
 Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
  (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 10:22:42 +0800
+ 2022 10:22:43 +0800
 To: <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
 	<linux-f2fs-devel@lists.sourceforge.net>, <linux-erofs@lists.ozlabs.org>,
 	<ocfs2-devel@oss.oracle.com>, <linux-mtd@lists.infradead.org>,
 	<amd-gfx@lists.freedesktop.org>
-Subject: [PATCH 07/11] f2fs: fix possible memory leak in f2fs_init_sysfs()
-Date: Fri, 21 Oct 2022 10:20:58 +0800
-Message-ID: <20221021022102.2231464-8-yangyingliang@huawei.com>
+Subject: [PATCH 08/11] erofs: fix possible memory leak in erofs_init_sysfs()
+Date: Fri, 21 Oct 2022 10:20:59 +0800
+Message-ID: <20221021022102.2231464-9-yangyingliang@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221021022102.2231464-1-yangyingliang@huawei.com>
 References: <20221021022102.2231464-1-yangyingliang@huawei.com>
@@ -78,40 +78,39 @@ if it fails, but the refcount of kobject is not decreased to
 this by calling kset_put(), so that name can be freed in
 callback function kobject_cleanup().
 
-unreferenced object 0xffff888101b7cc80 (size 8):
-  comm "modprobe", pid 252, jiffies 4294691378 (age 31.760s)
+unreferenced object 0xffff888101d228c0 (size 8):
+  comm "modprobe", pid 276, jiffies 4294722700 (age 13.151s)
   hex dump (first 8 bytes):
-    66 32 66 73 00 88 ff ff                          f2fs....
+    65 72 6f 66 73 00 ff ff                          erofs...
   backtrace:
-    [<000000001db5b408>] __kmalloc_node_track_caller+0x44/0x1b0
-    [<000000002783a073>] kstrdup+0x3a/0x70
-    [<00000000ead2b281>] kstrdup_const+0x63/0x80
-    [<000000003e5cf8f7>] kvasprintf_const+0x149/0x180
-    [<00000000c4d949ff>] kobject_set_name_vargs+0x56/0x150
-    [<0000000044611660>] kobject_set_name+0xab/0xe0
+    [<00000000e2a9a4a6>] __kmalloc_node_track_caller+0x44/0x1b0
+    [<00000000b8ce02de>] kstrdup+0x3a/0x70
+    [<000000004a0e01d2>] kstrdup_const+0x63/0x80
+    [<00000000051b6cda>] kvasprintf_const+0x149/0x180
+    [<000000004dc51dad>] kobject_set_name_vargs+0x56/0x150
+    [<00000000b30f0bad>] kobject_set_name+0xab/0xe0
 
-Fixes: bf9e697ecd42 ("f2fs: expose features to sysfs entry")
+Fixes: 168e9a76200c ("erofs: add sysfs interface")
 Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
 ---
- fs/f2fs/sysfs.c | 4 +++-
+ fs/erofs/sysfs.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index df27afd71ef4..2ef7a48967be 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -1250,8 +1250,10 @@ int __init f2fs_init_sysfs(void)
- 	kobject_set_name(&f2fs_kset.kobj, "f2fs");
- 	f2fs_kset.kobj.parent = fs_kobj;
- 	ret = kset_register(&f2fs_kset);
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 783bb7b21b51..653b35001bc5 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -254,8 +254,10 @@ int __init erofs_init_sysfs(void)
+ 	kobject_set_name(&erofs_root.kobj, "erofs");
+ 	erofs_root.kobj.parent = fs_kobj;
+ 	ret = kset_register(&erofs_root);
 -	if (ret)
 +	if (ret) {
-+		kset_put(&f2fs_kset);
- 		return ret;
++		kset_put(&erofs_root);
+ 		goto root_err;
 +	}
  
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
+ 	ret = kobject_init_and_add(&erofs_feat, &erofs_feat_ktype,
  				   NULL, "features");
 -- 
 2.25.1
