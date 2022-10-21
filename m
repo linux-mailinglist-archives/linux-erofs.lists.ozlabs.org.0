@@ -1,64 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55384607489
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 11:57:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E1CA607708
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 14:38:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Mv0Hr1hy4z3drV
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 20:57:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1666346232;
-	bh=TRnSBV+L+nH4U6+3XNJM6jZhEQAehli86W+oOpm0+EY=;
-	h=Subject:To:References:Date:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=lpxpNTxTJwv0RoiqO/5VslLWCglDuu+LXkZElIeIJjgBROoh3mLe3JGGgnbb/zLqF
-	 W4MZMV3WMFHzxqYDfvPnRd5aY+i+p1GiY0ueb/rpV0l6dXJtYWLK464RT++1INLXem
-	 2ixhWkOjAOzNIqNH2kYg0ZTxdcuS/nacR1O7qxB3iQDgIre1ma3yT64L1vikKsQMD9
-	 mu9TfXlfKGeldV/FmeNNNz3o++flzCNBbeUyszIE+WldIM+PaTIc1mtLEukI9kSqc3
-	 l1iIF8MabGNPDhW3B7wmb8ZzoEIUMPePerbh2OGPm6UpXqcHom9I/tBqbm8gHR+hsV
-	 T2rucu/daMXKA==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mv3tQ2NnNz3ds5
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Oct 2022 23:38:54 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dQAb0u84;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=yangyingliang@huawei.com; receiver=<UNKNOWN>)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dQAb0u84;
+	dkim-atps=neutral
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mv0Hh6mL4z3c8j
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 20:57:01 +1100 (AEDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mv09R6B5NzmVJg;
-	Fri, 21 Oct 2022 17:51:39 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 17:56:21 +0800
-Received: from [10.174.178.174] (10.174.178.174) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 17:56:20 +0800
-Subject: Re: [PATCH 00/11] fix memory leak while kset_register() fails
-To: Luben Tuikov <luben.tuikov@amd.com>, Greg KH <gregkh@linuxfoundation.org>
-References: <20221021022102.2231464-1-yangyingliang@huawei.com>
- <d559793a-0ce4-3384-e74e-19855aa31f31@amd.com> <Y1IwLOUGayjT9p6d@kroah.com>
- <0591e66f-731a-5f81-fc9d-3a6d80516c65@huawei.com>
- <Y1JZ9IUPL6jZIQ8E@kroah.com>
- <f1210e20-d167-26c4-7aba-490d8fb7241e@huawei.com>
- <78f84006-955f-6209-1cae-024e4f199b97@amd.com>
-Message-ID: <9ee10048-f3fe-533b-5f00-8e5dd176808e@huawei.com>
-Date: Fri, 21 Oct 2022 17:56:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mv3tF5Qqhz3bjJ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Oct 2022 23:38:45 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 78995B82BD0;
+	Fri, 21 Oct 2022 12:38:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9E3C433C1;
+	Fri, 21 Oct 2022 12:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666355920;
+	bh=64uVrSSZwWPzLpCq8Wif119GEfxx4bpfwwV/98dcN8g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=dQAb0u8462bv4f0DoyWtG+9rRmIhiDxj/hocWQ5lhX9d2Ua2Q4fESY7S7yMo1lEjy
+	 DmV+Vxt9MwiIkFTvMRH+Wqs1kDSSni6mocKlDcfeHn4l17r4u9FYhtlKUyBWpkdjvw
+	 9YhBLLSsJVzyXExEeaUSrtlZGlmgrYrhlNXIPr+/PHb8Njw1B646UP+QIKKtA4QohL
+	 9NfrCkkcsFck1sEQNYIk9pl4agxkBNRLxwvrBNSACIJthgMD3Ilaj+4+s5pcPpGMEm
+	 sZWB8IvIiko39ZQNzU5YXatkk9K4nnfsWaXAaJp0NzLnaanGsT2XsLHwMiW6oLTx5Y
+	 shHt9vh2deRaQ==
+Message-ID: <ce12b5050be31cc15bb84b620b4c21911d99530c.camel@kernel.org>
+Subject: Re: [PATCH 2/2] erofs: use netfs helpers manipulating request and
+ subrequest
+From: Jeff Layton <jlayton@kernel.org>
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com, 
+	xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org
+Date: Fri, 21 Oct 2022 08:38:38 -0400
+In-Reply-To: <20221021084912.61468-3-jefflexu@linux.alibaba.com>
+References: <20221021084912.61468-1-jefflexu@linux.alibaba.com>
+	 <20221021084912.61468-3-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-In-Reply-To: <78f84006-955f-6209-1cae-024e4f199b97@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.174.178.174]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,94 +63,157 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yang Yingliang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yang Yingliang <yangyingliang@huawei.com>
-Cc: rafael@kernel.org, qemu-devel@nongnu.org, richard@nod.at, somlo@cmu.edu, mst@redhat.com, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-f2fs-devel@lists.sourceforge.net, liushixin2@huawei.com, joseph.qi@linux.alibaba.com, linux-mtd@lists.infradead.org, jlbec@evilplan.org, hsiangkao@linux.alibaba.com, alexander.deucher@amd.com, jaegeuk@kernel.org, akpm@linux-foundation.org, huangjianan@oppo.com, linux-erofs@lists.ozlabs.org, mark@fasheh.com, ocfs2-devel@oss.oracle.com
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Fri, 2022-10-21 at 16:49 +0800, Jingbo Xu wrote:
+> Use netfs_put_subrequest() and netfs_rreq_completed() completing request
+> and subrequest.
+>=20
+> It is worth noting that a noop netfs_request_ops is introduced for erofs
+> since some netfs routine, e.g. netfs_free_request(), will call into
+> this ops.
+>=20
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>  fs/erofs/fscache.c | 47 ++++++++++------------------------------------
+>  1 file changed, 10 insertions(+), 37 deletions(-)
+>=20
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index fe05bc51f9f2..fa3f4ab5e3b6 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2022, Bytedance Inc. All rights reserved.
+>   */
+>  #include <linux/fscache.h>
+> +#include <trace/events/netfs.h>
+>  #include "internal.h"
+> =20
+>  static DEFINE_MUTEX(erofs_domain_list_lock);
+> @@ -11,6 +12,8 @@ static DEFINE_MUTEX(erofs_domain_cookies_lock);
+>  static LIST_HEAD(erofs_domain_list);
+>  static struct vfsmount *erofs_pseudo_mnt;
+> =20
+> +static const struct netfs_request_ops erofs_noop_req_ops;
+> +
+>  static struct netfs_io_request *erofs_fscache_alloc_request(struct addre=
+ss_space *mapping,
+>  					     loff_t start, size_t len)
+>  {
+> @@ -24,40 +27,12 @@ static struct netfs_io_request *erofs_fscache_alloc_r=
+equest(struct address_space
+>  	rreq->len	=3D len;
+>  	rreq->mapping	=3D mapping;
+>  	rreq->inode	=3D mapping->host;
+> +	rreq->netfs_ops	=3D &erofs_noop_req_ops;
+>  	INIT_LIST_HEAD(&rreq->subrequests);
+>  	refcount_set(&rreq->ref, 1);
+>  	return rreq;
+>  }
+> =20
 
-On 2022/10/21 17:08, Luben Tuikov wrote:
-> On 2022-10-21 04:59, Yang Yingliang wrote:
->> On 2022/10/21 16:36, Greg KH wrote:
->>> On Fri, Oct 21, 2022 at 04:24:23PM +0800, Yang Yingliang wrote:
->>>> On 2022/10/21 13:37, Greg KH wrote:
->>>>> On Fri, Oct 21, 2022 at 01:29:31AM -0400, Luben Tuikov wrote:
->>>>>> On 2022-10-20 22:20, Yang Yingliang wrote:
->>>>>>> The previous discussion link:
->>>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F0db486eb-6927-927e-3629-958f8f211194%40huawei.com%2FT%2F&amp;data=05%7C01%7Cluben.tuikov%40amd.com%7C74aa9b57192b406ef27408dab3429db4%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638019395979868103%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=RcK05cXm1J5%2BtYcLO2SMG7k6sjeymQzdBzMCDJSzfdE%3D&amp;reserved=0
->>>>>> The very first discussion on this was here:
->>>>>>
->>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.spinics.net%2Flists%2Fdri-devel%2Fmsg368077.html&amp;data=05%7C01%7Cluben.tuikov%40amd.com%7C74aa9b57192b406ef27408dab3429db4%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638019395979868103%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=sHZ6kfLF8HxrNXV6%2FVjgdH%2BmQM4T3Zv0U%2FAwddT97cE%3D&amp;reserved=0
->>>>>>
->>>>>> Please use this link, and not the that one up there you which quoted above,
->>>>>> and whose commit description is taken verbatim from the this link.
->>>>>>
->>>>>>> kset_register() is currently used in some places without calling
->>>>>>> kset_put() in error path, because the callers think it should be
->>>>>>> kset internal thing to do, but the driver core can not know what
->>>>>>> caller doing with that memory at times. The memory could be freed
->>>>>>> both in kset_put() and error path of caller, if it is called in
->>>>>>> kset_register().
->>>>>> As I explained in the link above, the reason there's
->>>>>> a memory leak is that one cannot call kset_register() without
->>>>>> the kset->kobj.name being set--kobj_add_internal() returns -EINVAL,
->>>>>> in this case, i.e. kset_register() fails with -EINVAL.
->>>>>>
->>>>>> Thus, the most common usage is something like this:
->>>>>>
->>>>>> 	kobj_set_name(&kset->kobj, format, ...);
->>>>>> 	kset->kobj.kset = parent_kset;
->>>>>> 	kset->kobj.ktype = ktype;
->>>>>> 	res = kset_register(kset);
->>>>>>
->>>>>> So, what is being leaked, is the memory allocated in kobj_set_name(),
->>>>>> by the common idiom shown above. This needs to be mentioned in
->>>>>> the documentation, at least, in case, in the future this is absolved
->>>>>> in kset_register() redesign, etc.
->>>>> Based on this, can kset_register() just clean up from itself when an
->>>>> error happens?  Ideally that would be the case, as the odds of a kset
->>>>> being embedded in a larger structure is probably slim, but we would have
->>>>> to search the tree to make sure.
->>>> I have search the whole tree, the kset used in bus_register() - patch #3,
->>>> kset_create_and_add() - patch #4
->>>> __class_register() - patch #5,  fw_cfg_build_symlink() - patch #6 and
->>>> amdgpu_discovery.c - patch #10
->>>> is embedded in a larger structure. In these cases, we can not call
->>>> kset_put() in error path in kset_register()
->>> Yes you can as the kobject in the kset should NOT be controling the
->>> lifespan of those larger objects.
->>>
->>> If it is, please point out the call chain here as I don't think that
->>> should be possible.
->>>
->>> Note all of this is a mess because the kobject name stuff was added much
->>> later, after the driver model had been created and running for a while.
->>> We missed this error path when adding the dynamic kobject name logic,
->>> thank for looking into this.
->>>
->>> If you could test the patch posted with your error injection systems,
->>> that could make this all much simpler to solve.
->> The patch posted by Luben will cause double free in some cases.
-> Yes, I figured this out in the other email and posted the scenario Greg
-> was asking about.
->
-> But I believe the question still stands if we can do kset_put()
-> after a *failed* kset_register(), namely if more is being done than
-> necessary, which is just to free the memory allocated by
-> kobject_set_name().
-The name memory is allocated in kobject_set_name() in caller,  and I 
-think caller
-free the memory that it allocated is reasonable, it's weird that some 
-callers allocate
-some memory and use function (kset_register) failed, then it free the 
-memory allocated
-in callers,  I think use kset_put()/kfree_const(name) in caller seems 
-more reasonable.
+Why is erofs allocating its own netfs structures? This seems quite
+fragile, and a layering violation too.
 
-Thanks,
-Yang
->
-> Regards,
-> Luben
-> .
+> -static void erofs_fscache_put_request(struct netfs_io_request *rreq)
+> -{
+> -	if (!refcount_dec_and_test(&rreq->ref))
+> -		return;
+> -	if (rreq->cache_resources.ops)
+> -		rreq->cache_resources.ops->end_operation(&rreq->cache_resources);
+> -	kfree(rreq);
+> -}
+> -
+> -static void erofs_fscache_put_subrequest(struct netfs_io_subrequest *sub=
+req)
+> -{
+> -	if (!refcount_dec_and_test(&subreq->ref))
+> -		return;
+> -	erofs_fscache_put_request(subreq->rreq);
+> -	kfree(subreq);
+> -}
+> -
+> -static void erofs_fscache_clear_subrequests(struct netfs_io_request *rre=
+q)
+> -{
+> -	struct netfs_io_subrequest *subreq;
+> -
+> -	while (!list_empty(&rreq->subrequests)) {
+> -		subreq =3D list_first_entry(&rreq->subrequests,
+> -				struct netfs_io_subrequest, rreq_link);
+> -		list_del(&subreq->rreq_link);
+> -		erofs_fscache_put_subrequest(subreq);
+> -	}
+> -}
+> -
+>  static void erofs_fscache_rreq_unlock_folios(struct netfs_io_request *rr=
+eq)
+>  {
+>  	struct netfs_io_subrequest *subreq;
+> @@ -114,11 +89,10 @@ static void erofs_fscache_rreq_unlock_folios(struct =
+netfs_io_request *rreq)
+>  static void erofs_fscache_rreq_complete(struct netfs_io_request *rreq)
+>  {
+>  	erofs_fscache_rreq_unlock_folios(rreq);
+> -	erofs_fscache_clear_subrequests(rreq);
+> -	erofs_fscache_put_request(rreq);
+> +	netfs_rreq_completed(rreq, false);
+>  }
+> =20
+> -static void erofc_fscache_subreq_complete(void *priv,
+> +static void erofs_fscache_subreq_complete(void *priv,
+>  		ssize_t transferred_or_error, bool was_async)
+>  {
+>  	struct netfs_io_subrequest *subreq =3D priv;
+> @@ -130,7 +104,7 @@ static void erofc_fscache_subreq_complete(void *priv,
+>  	if (atomic_dec_and_test(&rreq->nr_outstanding))
+>  		erofs_fscache_rreq_complete(rreq);
+> =20
+> -	erofs_fscache_put_subrequest(subreq);
+> +	netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_terminated);
+>  }
+> =20
+>  /*
+> @@ -171,9 +145,8 @@ static int erofs_fscache_read_folios_async(struct fsc=
+ache_cookie *cookie,
+>  		}
+> =20
+>  		subreq->start =3D pstart + done;
+> -		subreq->len	=3D  len - done;
+> +		subreq->len   =3D  len - done;
+>  		subreq->flags =3D 1 << NETFS_SREQ_ONDEMAND;
+> -
+>  		list_add_tail(&subreq->rreq_link, &rreq->subrequests);
+> =20
+>  		source =3D cres->ops->prepare_read(subreq, LLONG_MAX);
+> @@ -184,7 +157,7 @@ static int erofs_fscache_read_folios_async(struct fsc=
+ache_cookie *cookie,
+>  				  source);
+>  			ret =3D -EIO;
+>  			subreq->error =3D ret;
+> -			erofs_fscache_put_subrequest(subreq);
+> +			netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_failed);
+>  			goto out;
+>  		}
+> =20
+> @@ -195,7 +168,7 @@ static int erofs_fscache_read_folios_async(struct fsc=
+ache_cookie *cookie,
+> =20
+>  		ret =3D fscache_read(cres, subreq->start, &iter,
+>  				   NETFS_READ_HOLE_FAIL,
+> -				   erofc_fscache_subreq_complete, subreq);
+> +				   erofs_fscache_subreq_complete, subreq);
+>  		if (ret =3D=3D -EIOCBQUEUED)
+>  			ret =3D 0;
+>  		if (ret) {
+
+I'd rather see this done differently. Either change erofs to use the
+netfs infrastructure in a more standard fashion, or maybe consider
+teaching erofs to talk to cachefiles directly?
+
+IDK, but this sort of mucking around in the low level netfs objects
+seems wrong to me.
+--=20
+Jeff Layton <jlayton@kernel.org>
