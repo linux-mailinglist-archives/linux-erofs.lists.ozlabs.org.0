@@ -1,38 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B761660F28A
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Oct 2022 10:36:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7C3460F860
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Oct 2022 15:05:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4MyfCx4G8Jz2xb4
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Oct 2022 19:36:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Mym9x52Q4z3c6D
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Oct 2022 00:05:09 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c93JCNxt;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iW+bxBTB;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.2; helo=out199-2.us.a.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c93JCNxt;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iW+bxBTB;
+	dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4MyfCX1n2Rz3cDm
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Oct 2022 19:36:07 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VTAlX3P_1666859759;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VTAlX3P_1666859759)
-          by smtp.aliyun-inc.com;
-          Thu, 27 Oct 2022 16:36:00 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: dhowells@redhat.com,
-	jlayton@kernel.org,
-	linux-cachefs@redhat.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 9/9] fscache,netfs: move "fscache_" prefixed structures to fscache.h
-Date: Thu, 27 Oct 2022 16:35:47 +0800
-Message-Id: <20221027083547.46933-10-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20221027083547.46933-1-jefflexu@linux.alibaba.com>
-References: <20221027083547.46933-1-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Mym9n5mjgz2xZ7
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Oct 2022 00:05:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1666875895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nbdDPve9bMdFNi05LB/lERN+PFeDBEnGOqNBNGwp0ks=;
+	b=c93JCNxtTar6/DESgbxczaigFZlfbdX49WYI23UeZfzgCCNLv1OpyYRzPM5isSkZW+q8ru
+	WVKXLR4V5desv5ANO5nGMXgt7p5e5ahOJIjfgVHNKbCWEMP6srDTya1/tQdfjJtoPr4x8K
+	2G4CxUR8NX4UAUPonakSzto92AZ/gk8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1666875896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nbdDPve9bMdFNi05LB/lERN+PFeDBEnGOqNBNGwp0ks=;
+	b=iW+bxBTBl7Z4UhM9B4e2zo0bFLELkQGO6rQIx1L2gkQ+nnRkU1f2GMDU+FWvhQEgnvzBvp
+	Je1bSrTTn5cEhGqnY07Jh1lO9Z7h+qX5cbeEmASs/Vb94J+E0y9M6LjYvFZnNNUFhE6rL2
+	5v3buNm9iF4w8b1Cuz+/dos/dwq4+5E=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-317--ZUmVQNnOEChLp9IS6wMBg-1; Thu, 27 Oct 2022 09:04:39 -0400
+X-MC-Unique: -ZUmVQNnOEChLp9IS6wMBg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B7F1A811E81;
+	Thu, 27 Oct 2022 13:04:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.73])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8137D39DB3;
+	Thu, 27 Oct 2022 13:04:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20221027083547.46933-3-jefflexu@linux.alibaba.com>
+References: <20221027083547.46933-3-jefflexu@linux.alibaba.com> <20221027083547.46933-1-jefflexu@linux.alibaba.com>
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH 2/9] fscache,netfs: rename netfs_io_source as fscache_io_source
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3306187.1666875875.1@warthog.procyon.org.uk>
+Date: Thu, 27 Oct 2022 14:04:35 +0100
+Message-ID: <3306188.1666875875@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,272 +81,16 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since all related structures has been transformed with "fscache_"
-prefix, move all these structures to fscache.h as a final cleanup.
+Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
 
-Besides, make netfs.h include fscache.h rather than the other way
-around.  This is an intuitive change since libnetfs lives one layer
-above fscache, accessing backing files with facache.
+> Rename netfs_io_source as fscache_io_source.  This is a cleanup without
+> logic change.
 
-This is a cleanup without logic change.
+This is a netfslib feature that is used by fscache.  Please don't do this.
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/afs/internal.h       |  2 +-
- fs/erofs/fscache.c      |  1 +
- fs/nfs/fscache.h        |  2 +-
- include/linux/fscache.h | 80 ++++++++++++++++++++++++++++++++++++++++-
- include/linux/netfs.h   | 80 +----------------------------------------
- 5 files changed, 83 insertions(+), 82 deletions(-)
-
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 723d162078a3..5d1314265e3d 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -14,7 +14,7 @@
- #include <linux/key.h>
- #include <linux/workqueue.h>
- #include <linux/sched.h>
--#include <linux/fscache.h>
-+#include <linux/netfs.h>
- #include <linux/backing-dev.h>
- #include <linux/uuid.h>
- #include <linux/mm_types.h>
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index e30a42a35ae7..69531be66b28 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2022, Bytedance Inc. All rights reserved.
-  */
- #include <linux/fscache.h>
-+#include <linux/netfs.h>
- #include "internal.h"
- 
- static DEFINE_MUTEX(erofs_domain_list_lock);
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 2a37af880978..a0715f83a529 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -12,7 +12,7 @@
- #include <linux/nfs_fs.h>
- #include <linux/nfs_mount.h>
- #include <linux/nfs4_mount.h>
--#include <linux/fscache.h>
-+#include <linux/netfs.h>
- #include <linux/iversion.h>
- 
- #ifdef CONFIG_NFS_FSCACHE
-diff --git a/include/linux/fscache.h b/include/linux/fscache.h
-index 034d009c0de7..457226a396d2 100644
---- a/include/linux/fscache.h
-+++ b/include/linux/fscache.h
-@@ -15,7 +15,6 @@
- #define _LINUX_FSCACHE_H
- 
- #include <linux/fs.h>
--#include <linux/netfs.h>
- #include <linux/writeback.h>
- #include <linux/pagemap.h>
- 
-@@ -151,6 +150,85 @@ struct fscache_cookie {
- #define FSCACHE_REQ_COPY_TO_CACHE	0	/* Set if should copy the data to the cache */
- #define FSCACHE_REQ_ONDEMAND		1	/* Set if it's from on-demand read mode */
- 
-+enum fscache_io_source {
-+	FSCACHE_FILL_WITH_ZEROES,
-+	FSCACHE_DOWNLOAD_FROM_SERVER,
-+	FSCACHE_READ_FROM_CACHE,
-+	FSCACHE_INVALID_READ,
-+} __mode(byte);
-+
-+typedef void (*fscache_io_terminated_t)(void *priv, ssize_t transferred_or_error,
-+				      bool was_async);
-+
-+/*
-+ * Resources required to do operations on a cache.
-+ */
-+struct fscache_resources {
-+	const struct fscache_ops	*ops;
-+	void				*cache_priv;
-+	void				*cache_priv2;
-+	unsigned int			debug_id;	/* Cookie debug ID */
-+	unsigned int			inval_counter;	/* object->inval_counter at begin_op */
-+};
-+
-+/*
-+ * How to handle reading from a hole.
-+ */
-+enum fscache_read_from_hole {
-+	FSCACHE_READ_HOLE_IGNORE,
-+	FSCACHE_READ_HOLE_CLEAR,
-+	FSCACHE_READ_HOLE_FAIL,
-+};
-+
-+/*
-+ * Table of operations for access to a cache.  This is obtained by
-+ * rreq->ops->begin_cache_operation().
-+ */
-+struct fscache_ops {
-+	/* End an operation */
-+	void (*end_operation)(struct fscache_resources *cres);
-+
-+	/* Read data from the cache */
-+	int (*read)(struct fscache_resources *cres,
-+		    loff_t start_pos,
-+		    struct iov_iter *iter,
-+		    enum fscache_read_from_hole read_hole,
-+		    fscache_io_terminated_t term_func,
-+		    void *term_func_priv);
-+
-+	/* Write data to the cache */
-+	int (*write)(struct fscache_resources *cres,
-+		     loff_t start_pos,
-+		     struct iov_iter *iter,
-+		     fscache_io_terminated_t term_func,
-+		     void *term_func_priv);
-+
-+	/* Expand readahead request */
-+	void (*expand_readahead)(struct fscache_resources *cres,
-+				 loff_t *_start, size_t *_len, loff_t i_size);
-+
-+	/* Prepare a read operation, shortening it to a cached/uncached
-+	 * boundary as appropriate.
-+	 */
-+	enum fscache_io_source (*prepare_read)(struct fscache_resources *cres,
-+					     loff_t *_start, size_t *_len,
-+					     unsigned long *_flags, loff_t i_size);
-+
-+	/* Prepare a write operation, working out what part of the write we can
-+	 * actually do.
-+	 */
-+	int (*prepare_write)(struct fscache_resources *cres,
-+			     loff_t *_start, size_t *_len, loff_t i_size,
-+			     bool no_space_allocated_yet);
-+
-+	/* Query the occupancy of the cache in a region, returning where the
-+	 * next chunk of data starts and how long it is.
-+	 */
-+	int (*query_occupancy)(struct fscache_resources *cres,
-+			       loff_t start, size_t len, size_t granularity,
-+			       loff_t *_data_start, size_t *_data_len);
-+};
-+
- /*
-  * slow-path functions for when there is actually caching available, and the
-  * netfs does actually have a valid token
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 2ad4e1e88106..1977f953633a 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -16,19 +16,10 @@
- 
- #include <linux/workqueue.h>
- #include <linux/fs.h>
-+#include <linux/fscache.h>
- 
- enum netfs_sreq_ref_trace;
- 
--enum fscache_io_source {
--	FSCACHE_FILL_WITH_ZEROES,
--	FSCACHE_DOWNLOAD_FROM_SERVER,
--	FSCACHE_READ_FROM_CACHE,
--	FSCACHE_INVALID_READ,
--} __mode(byte);
--
--typedef void (*fscache_io_terminated_t)(void *priv, ssize_t transferred_or_error,
--				      bool was_async);
--
- /*
-  * Per-inode context.  This wraps the VFS inode.
-  */
-@@ -41,17 +32,6 @@ struct netfs_inode {
- 	loff_t			remote_i_size;	/* Size of the remote file */
- };
- 
--/*
-- * Resources required to do operations on a cache.
-- */
--struct fscache_resources {
--	const struct fscache_ops	*ops;
--	void				*cache_priv;
--	void				*cache_priv2;
--	unsigned int			debug_id;	/* Cookie debug ID */
--	unsigned int			inval_counter;	/* object->inval_counter at begin_op */
--};
--
- /*
-  * Descriptor for a single component subrequest.
-  */
-@@ -128,64 +108,6 @@ struct netfs_request_ops {
- 	void (*done)(struct netfs_io_request *rreq);
- };
- 
--/*
-- * How to handle reading from a hole.
-- */
--enum fscache_read_from_hole {
--	FSCACHE_READ_HOLE_IGNORE,
--	FSCACHE_READ_HOLE_CLEAR,
--	FSCACHE_READ_HOLE_FAIL,
--};
--
--/*
-- * Table of operations for access to a cache.  This is obtained by
-- * rreq->ops->begin_cache_operation().
-- */
--struct fscache_ops {
--	/* End an operation */
--	void (*end_operation)(struct fscache_resources *cres);
--
--	/* Read data from the cache */
--	int (*read)(struct fscache_resources *cres,
--		    loff_t start_pos,
--		    struct iov_iter *iter,
--		    enum fscache_read_from_hole read_hole,
--		    fscache_io_terminated_t term_func,
--		    void *term_func_priv);
--
--	/* Write data to the cache */
--	int (*write)(struct fscache_resources *cres,
--		     loff_t start_pos,
--		     struct iov_iter *iter,
--		     fscache_io_terminated_t term_func,
--		     void *term_func_priv);
--
--	/* Expand readahead request */
--	void (*expand_readahead)(struct fscache_resources *cres,
--				 loff_t *_start, size_t *_len, loff_t i_size);
--
--	/* Prepare a read operation, shortening it to a cached/uncached
--	 * boundary as appropriate.
--	 */
--	enum fscache_io_source (*prepare_read)(struct fscache_resources *cres,
--					     loff_t *_start, size_t *_len,
--					     unsigned long *_flags, loff_t i_size);
--
--	/* Prepare a write operation, working out what part of the write we can
--	 * actually do.
--	 */
--	int (*prepare_write)(struct fscache_resources *cres,
--			     loff_t *_start, size_t *_len, loff_t i_size,
--			     bool no_space_allocated_yet);
--
--	/* Query the occupancy of the cache in a region, returning where the
--	 * next chunk of data starts and how long it is.
--	 */
--	int (*query_occupancy)(struct fscache_resources *cres,
--			       loff_t start, size_t len, size_t granularity,
--			       loff_t *_data_start, size_t *_data_len);
--};
--
- struct readahead_control;
- void netfs_readahead(struct readahead_control *);
- int netfs_read_folio(struct file *, struct folio *);
--- 
-2.19.1.6.gb485710b
+David
 
