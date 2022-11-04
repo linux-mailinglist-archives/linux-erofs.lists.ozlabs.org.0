@@ -2,24 +2,24 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB0866191D5
-	for <lists+linux-erofs@lfdr.de>; Fri,  4 Nov 2022 08:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E5C86191D9
+	for <lists+linux-erofs@lfdr.de>; Fri,  4 Nov 2022 08:26:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4N3XHx65nvz3cMs
-	for <lists+linux-erofs@lfdr.de>; Fri,  4 Nov 2022 18:26:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4N3XJ00Npwz3cd2
+	for <lists+linux-erofs@lfdr.de>; Fri,  4 Nov 2022 18:26:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54; helo=out30-54.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4N3XHn4jMmz2ywV
-	for <linux-erofs@lists.ozlabs.org>; Fri,  4 Nov 2022 18:26:43 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VTwBRBs_1667546797;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VTwBRBs_1667546797)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4N3XHn5Bt2z2yyZ
+	for <linux-erofs@lists.ozlabs.org>; Fri,  4 Nov 2022 18:26:44 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VTvwsEP_1667546799;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VTvwsEP_1667546799)
           by smtp.aliyun-inc.com;
-          Fri, 04 Nov 2022 15:26:38 +0800
+          Fri, 04 Nov 2022 15:26:40 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com,
 	jlayton@kernel.org,
@@ -27,10 +27,12 @@ To: dhowells@redhat.com,
 	chao@kernel.org,
 	linux-cachefs@redhat.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 0/2] fscache,cachefiles: add prepare_ondemand_read() interface
-Date: Fri,  4 Nov 2022 15:26:35 +0800
-Message-Id: <20221104072637.72375-1-jefflexu@linux.alibaba.com>
+Subject: [PATCH 1/2] fscache,cachefiles: add prepare_ondemand_read() callback
+Date: Fri,  4 Nov 2022 15:26:36 +0800
+Message-Id: <20221104072637.72375-2-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <20221104072637.72375-1-jefflexu@linux.alibaba.com>
+References: <20221104072637.72375-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -48,69 +50,134 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-[Rationale]
-===========
-Fscache has been landed as a generic caching management framework in
-the Linux kernel for decades.  It aims to manage cache data availability
-or fetch data if needed.  Currently it's mainly used for network fses,
-but in principle the main caching subsystem can be used more widely.
-
-We do really like fscache framework and we believe it'd be better to
-reuse such framework if possible instead of duplicating other
-alternatives for better maintenance and testing.  Therefore for our
-container image use cases, we applied the existing fscache to implement
-on-demand read for erofs in the past months.  For more details, also see
-[1].
-
-In short, here each erofs filesystem is composed of multiple blobs (or
-devices).  Each blob corresponds to one fscache cookie to strictly
-follow on-disk format and implement the image downloading in a
-deterministic manner, which means it has a unique checksum and is signed
-by vendors.
-
-Data of each erofs inode can be scattered among multiple blobs (cookie)
-since erofs supports chunk-level deduplication.  In this case, each
-erofs inode can correspond to multiple cookies, and there's a logical to
-physical offset mapping between the logical offset in erofs inode and
-the physical offset in the backing file.
-
-As described above, per-cookie netfs model can not be used here
-directly.  Instead, we'd like to propose/decouple a simple set of raw
-fscache APIs, to access cache for all fses to use.  We believe it's
-useful since it's like the relationship between raw bio and iomap, both
-of which are useful for local fses.  fscache_read() seems a reasonable
-candidate and is enough for such use case.
-
-In addition, the on-demand read feature relies on .prepare_read() to
-reuse the hole detecting logic as much as possible. However, after
-fscache/netfs rework, libnetfs is preferred to access fscache, making
-.prepare_read() closely coupled with libnetfs, or more precisely,
+Add prepare_ondemand_read() callback dedicated for the on-demand read
+scenario, so that callers from this scenario can be decoupled from
 netfs_io_subrequest.
 
+To reuse the hole detecting logic as mush as possible, both the
+implementation of prepare_read() and prepare_ondemand_read() inside
+Cachefiles call a common routine.
 
-[What We Do]
-============
-As we discussed previously, we propose a new interface, i,e,
-.prepare_ondemand_read() dedicated for the on-demand read scenarios,
-which is independent on netfs_io_subrequest. The netfs will still use
-the original .prepare_read() as usual.
+In the near future, prepare_read() will get enhanced and more
+information will be needed and then returned to callers. Thus
+netfs_io_subrequest is a reasonable candidate for holding places for all
+these information needed in the internal implementation.
 
-And as we discussed, in the near future, prepare_read() will get enhanced
-and more information will be needed and then returned to callers.  Thus
-netfs_io_subrequest is retained as the aggregation for all parameters
-needed as the internal implementation inside Cachefiles.
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/cachefiles/io.c                | 42 +++++++++++++++++++++++++------
+ include/linux/netfs.h             |  7 ++++++
+ include/trace/events/cachefiles.h |  4 +--
+ 3 files changed, 43 insertions(+), 10 deletions(-)
 
-
-Jingbo Xu (2):
-  fscache,cachefiles: add prepare_ondemand_read() callback
-  erofs: switch to prepare_ondemand_read() in fscache mode
-
- fs/cachefiles/io.c                |  42 ++++-
- fs/erofs/fscache.c                | 257 +++++++++++-------------------
- include/linux/netfs.h             |   7 +
- include/trace/events/cachefiles.h |   4 +-
- 4 files changed, 135 insertions(+), 175 deletions(-)
-
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index 000a28f46e59..6427259fcba9 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -385,16 +385,11 @@ static int cachefiles_write(struct netfs_cache_resources *cres,
+ 				  term_func, term_func_priv);
+ }
+ 
+-/*
+- * Prepare a read operation, shortening it to a cached/uncached
+- * boundary as appropriate.
+- */
+-static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
+-						      loff_t i_size)
++static enum netfs_io_source cachefiles_do_prepare_read(struct netfs_io_subrequest *subreq,
++						       struct netfs_cache_resources *cres,
++						       loff_t i_size)
+ {
+ 	enum cachefiles_prepare_read_trace why;
+-	struct netfs_io_request *rreq = subreq->rreq;
+-	struct netfs_cache_resources *cres = &rreq->cache_resources;
+ 	struct cachefiles_object *object;
+ 	struct cachefiles_cache *cache;
+ 	struct fscache_cookie *cookie = fscache_cres_cookie(cres);
+@@ -501,6 +496,36 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ 	return ret;
+ }
+ 
++/*
++ * Prepare a read operation, shortening it to a cached/uncached
++ * boundary as appropriate.
++ */
++static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
++						      loff_t i_size)
++{
++	return cachefiles_do_prepare_read(subreq,
++			&subreq->rreq->cache_resources, i_size);
++}
++
++/*
++ * Prepare an on-demand read operation, shortening it to a cached/uncached
++ * boundary as appropriate.
++ */
++static enum netfs_io_source cachefiles_prepare_ondemand_read(struct netfs_cache_resources *cres,
++		loff_t start, size_t *_len, loff_t i_size)
++{
++	enum netfs_io_source source;
++	struct netfs_io_subrequest subreq = {
++		.start	= start,
++		.len	= *_len,
++		.flags	= 1 << NETFS_SREQ_ONDEMAND,
++	};
++
++	source = cachefiles_do_prepare_read(&subreq, cres, i_size);
++	*_len = subreq.len;
++	return source;
++}
++
+ /*
+  * Prepare for a write to occur.
+  */
+@@ -621,6 +646,7 @@ static const struct netfs_cache_ops cachefiles_netfs_cache_ops = {
+ 	.write			= cachefiles_write,
+ 	.prepare_read		= cachefiles_prepare_read,
+ 	.prepare_write		= cachefiles_prepare_write,
++	.prepare_ondemand_read	= cachefiles_prepare_ondemand_read,
+ 	.query_occupancy	= cachefiles_query_occupancy,
+ };
+ 
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index f2402ddeafbf..d82071c37133 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -267,6 +267,13 @@ struct netfs_cache_ops {
+ 			     loff_t *_start, size_t *_len, loff_t i_size,
+ 			     bool no_space_allocated_yet);
+ 
++	/* Prepare an on-demand read operation, shortening it to a cached/uncached
++	 * boundary as appropriate.
++	 */
++	enum netfs_io_source (*prepare_ondemand_read)(struct netfs_cache_resources *cres,
++						      loff_t start, size_t *_len,
++						      loff_t i_size);
++
+ 	/* Query the occupancy of the cache in a region, returning where the
+ 	 * next chunk of data starts and how long it is.
+ 	 */
+diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
+index d8d4d73fe7b6..655d5900b8ef 100644
+--- a/include/trace/events/cachefiles.h
++++ b/include/trace/events/cachefiles.h
+@@ -448,14 +448,14 @@ TRACE_EVENT(cachefiles_prep_read,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->rreq	= sreq->rreq->debug_id;
++		    __entry->rreq	= sreq->rreq ? sreq->rreq->debug_id : 0;
+ 		    __entry->index	= sreq->debug_index;
+ 		    __entry->flags	= sreq->flags;
+ 		    __entry->source	= source;
+ 		    __entry->why	= why;
+ 		    __entry->len	= sreq->len;
+ 		    __entry->start	= sreq->start;
+-		    __entry->netfs_inode = sreq->rreq->inode->i_ino;
++		    __entry->netfs_inode = sreq->rreq ? sreq->rreq->inode->i_ino : 0;
+ 		    __entry->cache_inode = cache_inode;
+ 			   ),
+ 
 -- 
 2.19.1.6.gb485710b
 
