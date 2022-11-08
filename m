@@ -1,56 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36CED620745
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Nov 2022 04:07:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B028662074E
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Nov 2022 04:09:43 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4N5tLn0mq0z3cJ3
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Nov 2022 14:07:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4N5tPK3XDxz3cJv
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Nov 2022 14:09:41 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=nevb3Dsr;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Go9X8vIy;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=nevb3Dsr;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Go9X8vIy;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4N5tLd5RNWz3bj0
-	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Nov 2022 14:07:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4N5tPD3GYJz3bj0
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Nov 2022 14:09:36 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 1F286B81627;
-	Tue,  8 Nov 2022 03:07:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACBFC433D6;
-	Tue,  8 Nov 2022 03:07:15 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id CD7E761380;
+	Tue,  8 Nov 2022 03:09:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D04C433C1;
+	Tue,  8 Nov 2022 03:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1667876836;
-	bh=DoQVAWYIhuU/Va/KNg+xTTJC6B/0NXt4BCWT4F1PWQI=;
+	s=k20201202; t=1667876973;
+	bh=ESaSA6P2k4Dk/Y5lWn22BcQjULKGCM7blKLusR3qWEs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nevb3DsrjqI1uRxHQEEw17z3+eEIgaQdTKi2pABtgHcvlVCEeyWefP3+0J3oOLPN1
-	 Npe7sSODV2lY2mHJXsJar6JkfJA1WY5cyRHamIcC1J3aR1coyMSw7b7CFN8QLpSKO6
-	 roVirnZahJ5hNU2pSMFmLXTVHm8OPFnWIp0yrNPnULYnHpRQXIsCgBqMRUU/PVqmma
-	 bnyvuXzaqs0mwEE4RWnbhjq0wydlZztLp29scm/A4bZTSeruaMnHCZpPtQkdy646oO
-	 NoZy686v2EMUgJ0epGH4fAJGLEY2fOeXnofiK3AFo/BMpvty1DFZRAbfflSL2DjqU8
-	 APwFKsRqG2CNQ==
-Message-ID: <9ce701ec-257a-b923-903f-2931bfb8c3ae@kernel.org>
-Date: Tue, 8 Nov 2022 11:07:13 +0800
+	b=Go9X8vIyiPTW7Rf0ol54sh23E+uekMG/Bf6R1kV95NsgAT1IbNOE3aXtlVsunGkZA
+	 C0icvDImDnBH5xu8cX3IK4Zs2iVJ0xgBb3LIkThRYFOl5sXETNz5w9EUaJB+I+uQ74
+	 +03aIE1yQTL+FkvrJs9UQhxiq+XMNQ7zl6SjoD1jKTP+671xikd/uMXni7ly4NSw0I
+	 EUVfFW2HtBWbh09klD4Fms6adjxRTqYWDZKM6VsVSsqeP3zFAjNBZGsT6esHqHVS3S
+	 U1vtqrK1PFptFCn246c5IUHk0Dm/ruhrPHh+uZb75Yte7k7OWEBvsWIzf2h54PeRbp
+	 akTxK9cv5Nc2w==
+Message-ID: <e288944b-559c-e184-96c4-370a80cbb9a9@kernel.org>
+Date: Tue, 8 Nov 2022 11:09:29 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH 1/2] erofs: put metabuf in error path in fscache mode
+Subject: Re: [PATCH 2/2] erofs: get correct count for unmapped range in
+ fscache mode
 Content-Language: en-US
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
  huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 References: <20221104054028.52208-1-jefflexu@linux.alibaba.com>
- <20221104054028.52208-2-jefflexu@linux.alibaba.com>
+ <20221104054028.52208-3-jefflexu@linux.alibaba.com>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20221104054028.52208-2-jefflexu@linux.alibaba.com>
+In-Reply-To: <20221104054028.52208-3-jefflexu@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -69,8 +70,18 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 2022/11/4 13:40, Jingbo Xu wrote:
-> For tail packing layout, put metabuf when error is encountered.
+> For unmapped range, the returned map.m_llen is zero, and thus the
+> calculated count is unexpected zero.
 > 
+> Prior to the refactoring introduced by commit 1ae9470c3e14 ("erofs:
+> clean up .read_folio() and .readahead() in fscache mode"), only the
+> readahead routine suffers from this. With the refactoring of making
+> .read_folio() and .readahead() calling one common routine, both
+> read_folio and readahead have this issue now.
+> 
+> Fix this by calculating count separately in unmapped condition.
+> 
+> Fixes: c665b394b9e8 ("erofs: implement fscache-based data readahead")
 > Fixes: 1ae9470c3e14 ("erofs: clean up .read_folio() and .readahead() in fscache mode")
 > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
