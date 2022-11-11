@@ -1,36 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD4AE6253E2
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Nov 2022 07:36:44 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 084CD62563B
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Nov 2022 10:08:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4N7prp461hz3cKG
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Nov 2022 17:36:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4N7tCw6zm0z3cMP
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Nov 2022 20:08:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4N7prg234wz2yHc
-	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Nov 2022 17:36:33 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VUWA-4Q_1668148586;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VUWA-4Q_1668148586)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4N7tCn6c8Rz3cF6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Nov 2022 20:08:20 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VUWtHXK_1668157693;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VUWtHXK_1668157693)
           by smtp.aliyun-inc.com;
-          Fri, 11 Nov 2022 14:36:28 +0800
-Date: Fri, 11 Nov 2022 14:36:25 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: JeffleXu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH] erofs: enable large folio in device-based mode
-Message-ID: <Y23taS26HMwhkdhN@B-P7TQMD6M-0146.local>
-References: <20221110074023.8059-1-jefflexu@linux.alibaba.com>
- <315099ec-b6c3-1aa0-c83e-86f6074bd674@linux.alibaba.com>
+          Fri, 11 Nov 2022 17:08:14 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	yinxin.x@bytedance.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix missing xas_retry() in fscache mode
+Date: Fri, 11 Nov 2022 17:08:13 +0800
+Message-Id: <20221111090813.72068-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <315099ec-b6c3-1aa0-c83e-86f6074bd674@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,60 +42,46 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@coolpad.com
+Cc: dhowells@redhat.com, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+The xarray iteration only holds RCU and thus may encounter
+XA_RETRY_ENTRY if there's process modifying the xarray concurrently.
+This will cause oops when referring to the invalid entry.
 
-On Thu, Nov 10, 2022 at 03:59:14PM +0800, JeffleXu wrote:
-> 
-> 
-> On 11/10/22 3:40 PM, Jingbo Xu wrote:
-> > Enable large folio in device-based mode. Then the radahead routine will
-> > pass down large folio containing multiple pages.
-> > 
-> > Enable this feature for non-compressed format for now, until the
-> > compression part supports large folio later.
-> > 
-> > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> > ---
-> > I have tested it under workload of Linux compiling. I know it's not a
-> > perfect workload testing this feature, because large folio is less
-> > likely hit in this case since source files are generally small. But I
-> > indeed observed large folios (e.g. 16 pages) by peeking
-> > readahead_count(rac) in erofs_readahead().
-> 
-> Sorry, readahead_count(rac) returns the whole number of pages inside the
-> rac, which can not prove large folio passed in.
-> 
-> I retired later and observed large folio (e.g. with order 2) by peeking
-> folio_order(ctx->cur_folio) inside iomap_readahead_iter()
+Fix this by adding the missing xas_retry(), which will make the
+iteration wind back to the root node if XA_RETRY_ENTRY is encountered.
 
-I will test it as well after I send out all bug fixes for this cycle.
+Fixes: d435d53228dd ("erofs: change to use asynchronous io for fscache readpage/readahead")
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/erofs/fscache.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index fe05bc51f9f2..458c1c70ef30 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -75,11 +75,15 @@ static void erofs_fscache_rreq_unlock_folios(struct netfs_io_request *rreq)
+ 
+ 	rcu_read_lock();
+ 	xas_for_each(&xas, folio, last_page) {
+-		unsigned int pgpos =
+-			(folio_index(folio) - start_page) * PAGE_SIZE;
+-		unsigned int pgend = pgpos + folio_size(folio);
++		unsigned int pgpos, pgend;
+ 		bool pg_failed = false;
+ 
++		if (xas_retry(&xas, folio))
++			continue;
++
++		pgpos = (folio_index(folio) - start_page) * PAGE_SIZE;
++		pgend = pgpos + folio_size(folio);
++
+ 		for (;;) {
+ 			if (!subreq) {
+ 				pg_failed = true;
+-- 
+2.19.1.6.gb485710b
 
-> 
-> > ---
-> >  fs/erofs/inode.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-> > index ad2a82f2eb4c..e457b8a59ee7 100644
-> > --- a/fs/erofs/inode.c
-> > +++ b/fs/erofs/inode.c
-> > @@ -295,6 +295,8 @@ static int erofs_fill_inode(struct inode *inode)
-> >  		goto out_unlock;
-> >  	}
-> >  	inode->i_mapping->a_ops = &erofs_raw_access_aops;
-> > +	if (!erofs_is_fscache_mode(inode->i_sb))
-> > +		mapping_set_large_folios(inode->i_mapping);
-> >  #ifdef CONFIG_EROFS_FS_ONDEMAND
-> >  	if (erofs_is_fscache_mode(inode->i_sb))
-> >  		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
-> 
-> -- 
-> Thanks,
-> Jingbo
