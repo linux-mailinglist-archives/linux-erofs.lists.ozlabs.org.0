@@ -1,78 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39CB2627CA1
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Nov 2022 12:44:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5623C627D85
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Nov 2022 13:19:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4N9nXz6Bssz3cGm
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Nov 2022 22:44:51 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=H0e91hfR;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=H0e91hfR;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4N9pJy14pqz3cGm
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Nov 2022 23:19:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1668428370;
+	bh=IggqRsG6zyyiJTsuHTvPfu+aryWmvQ8Thb531wDkz4U=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=YsecxgfelThGlvMJVJBpbSUiytYLXdnQSW3ua73cybzm8EiEtbnPWhFk9wwf09p5a
+	 OxycwyV4CvTm4E3IL6ekqacpMGKq12DXU4bfs4WofswwtQmnmt4veXtkofDflgpmrF
+	 UbboTqAs3xB9AHxxK47z8d7xtHsA3ocksda2Hho4lqP8gQ3XPrbZW4NUHBJdMq+88z
+	 0zGqM6EpXbwM/j6EXCcpxAV6r0zNz1Ad81FwXW5OP8v2RokhCY+tT7hevjyfRMGEBh
+	 UMcutH6Lg1gYB2APxlHjn/MyNzLU/AQ0cwmlCjVYIlpOYcYpkv18a7DVVoQLLlv5M4
+	 +V31cGeKrz/8A==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=siddh.me (client-ip=103.117.158.50; helo=sender-of-o50.zoho.in; envelope-from=code@siddh.me; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=H0e91hfR;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=H0e91hfR;
+	dkim=pass (1024-bit key; secure) header.d=siddh.me header.i=code@siddh.me header.a=rsa-sha256 header.s=zmail header.b=JPHUw5BK;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+X-Greylist: delayed 906 seconds by postgrey-1.36 at boromir; Mon, 14 Nov 2022 23:19:23 AEDT
+Received: from sender-of-o50.zoho.in (sender-of-o50.zoho.in [103.117.158.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4N9nXt4y1lz3bb2
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Nov 2022 22:44:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668426281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EMhSzxc71gtsWdv7tBdLboQapjVVOXhkp285VQ60rL4=;
-	b=H0e91hfR0q3LFfeFBnu5xRq2Z2XXYdxp36NIBtfUN9C5KWoPRuYEROnGvdzuoj/+OyxGjW
-	yN8bGzuiICs6cxoZjyzUlwK9bDeJ1CywUeCNt4PFYjEyr98QugMAyZOyao05OoLVJ32elo
-	Za41f0riYqxeY5tfDaRngWNH0YQiZec=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668426281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EMhSzxc71gtsWdv7tBdLboQapjVVOXhkp285VQ60rL4=;
-	b=H0e91hfR0q3LFfeFBnu5xRq2Z2XXYdxp36NIBtfUN9C5KWoPRuYEROnGvdzuoj/+OyxGjW
-	yN8bGzuiICs6cxoZjyzUlwK9bDeJ1CywUeCNt4PFYjEyr98QugMAyZOyao05OoLVJ32elo
-	Za41f0riYqxeY5tfDaRngWNH0YQiZec=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-Otw1wR4uPsei68QnsffE2A-1; Mon, 14 Nov 2022 06:44:37 -0500
-X-MC-Unique: Otw1wR4uPsei68QnsffE2A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EA228101A528;
-	Mon, 14 Nov 2022 11:44:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.24])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E805140C6EC2;
-	Mon, 14 Nov 2022 11:44:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20221111090813.72068-1-jefflexu@linux.alibaba.com>
-References: <20221111090813.72068-1-jefflexu@linux.alibaba.com>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH] erofs: fix missing xas_retry() in fscache mode
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4N9pJq3Ttkz2yYj
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Nov 2022 23:19:23 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1668427448; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=ZRzORh6m8nEovh7z5LC9xoKhnIYR2azpervtA+NTZV0P0nNZh7GDcun/d8lEJ5dKKUvlJOV0juJkvf64ZDm2QmtEBe9D+wyi3xwfqoARpgojzTNxCroQklWyjC98A6YUe85aK45FM/dR8dXq22FKXTj5dHcS3jYjdw2VZRiBMDU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1668427448; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+	bh=IggqRsG6zyyiJTsuHTvPfu+aryWmvQ8Thb531wDkz4U=; 
+	b=cjE7oDUZx0sspDXdnM0tglLm97e4Yn4ueJQ1AFaM0KfOke1ao0TZabJosM+BupogR2DiVjOp35fGiw2KER0k6hD6NVw0jhhis6I5V85iCqRoTtxxdhsINbnGOJonbwjfM+LrByHGppbMRXU0Mo0ao5W4jOluz0Tc4VkSwly+Wwg=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=siddh.me;
+	spf=pass  smtp.mailfrom=code@siddh.me;
+	dmarc=pass header.from=<code@siddh.me>
+Received: from kampyooter.. (110.226.30.173 [110.226.30.173]) by mx.zoho.in
+	with SMTPS id 1668427447485815.8405388936613; Mon, 14 Nov 2022 17:34:07 +0530 (IST)
+To: Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Message-ID: <20221114120349.472418-1-code@siddh.me>
+Subject: [RFC PATCH] erofs/zmap.c: Bail out when no further region remains
+Date: Mon, 14 Nov 2022 17:33:49 +0530
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <575541.1668426273.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Nov 2022 11:44:33 +0000
-Message-ID: <575542.1668426273@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,20 +66,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-erofs@lists.ozlabs.org, yinxin.x@bytedance.com
+From: Siddh Raman Pant via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Siddh Raman Pant <code@siddh.me>
+Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-erofs <linux-erofs@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+The following calculation of iomap->length on line 798 in
+z_erofs_iomap_begin_report() can yield 0:
+=09if (iomap->offset >=3D inode->i_size)
+=09=09iomap->length =3D length + map.m_la - offset;
 
-> The xarray iteration only holds RCU
+This triggers a WARN_ON in iomap_iter_done() (see line 34 of
+fs/iomap/iter.c).
 
-I would say "the RCU read lock".
+Hence, return error when this scenario is encountered.
 
-Also, I think you've copied the code to which my dodgy-maths fix applies:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-	https://lore.kernel.org/linux-fsdevel/166757988611.950645.762695906984689=
-3164.stgit@warthog.procyon.org.uk/
+This was reported as a crash by syzbot under an issue about
+warning encountered in iomap_iter_done(), but unrelated to
+erofs. Hence, not adding issue hash in Reported-by line.
 
-David
+C reproducer: https://syzkaller.appspot.com/text?tag=3DReproC&x=3D1037a6b28=
+80000
+Kernel config: https://syzkaller.appspot.com/text?tag=3DKernelConfig&x=3De2=
+021a61197ebe02
+Dashboard link: https://syzkaller.appspot.com/bug?extid=3Da8e049cd3abd34293=
+6b6
+
+Reported-by: syzbot@syzkaller.appspotmail.com
+Signed-off-by: Siddh Raman Pant <code@siddh.me>
+---
+ fs/erofs/zmap.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 0bb66927e3d0..bad852983eb9 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -796,6 +796,9 @@ static int z_erofs_iomap_begin_report(struct inode *ino=
+de, loff_t offset,
+ =09=09 */
+ =09=09if (iomap->offset >=3D inode->i_size)
+ =09=09=09iomap->length =3D length + map.m_la - offset;
++
++=09=09if (iomap->length =3D=3D 0)
++=09=09=09return -EINVAL;
+ =09}
+ =09iomap->flags =3D 0;
+ =09return 0;
+--=20
+2.35.1
+
 
