@@ -2,41 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336E162D249
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Nov 2022 05:24:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A6B062D2AF
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Nov 2022 06:30:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NCRf00TGXz3cQ0
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Nov 2022 15:24:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NCT5j6LyPz3cVQ
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Nov 2022 16:30:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57; helo=out30-57.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NCRds2kmqz3bjf
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Nov 2022 15:24:47 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VV-VtWS_1668659080;
-Received: from 30.221.128.178(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VV-VtWS_1668659080)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NCT5X3bgMz3cLB
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Nov 2022 16:30:23 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VV-W7uG_1668663017;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VV-W7uG_1668663017)
           by smtp.aliyun-inc.com;
-          Thu, 17 Nov 2022 12:24:42 +0800
-Message-ID: <c529ee21-699d-dfc8-5f7d-2597fa00796d@linux.alibaba.com>
-Date: Thu, 17 Nov 2022 12:24:40 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.0
-Subject: Re: [PATCH v3 1/2] fscache,cachefiles: add prepare_ondemand_read()
- callback
-Content-Language: en-US
-To: David Howells <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>
-References: <2b595b62f6ecd28298a860fcdc5b4941dcafd9eb.camel@kernel.org>
- <20221116104502.107431-1-jefflexu@linux.alibaba.com>
- <20221116104502.107431-2-jefflexu@linux.alibaba.com>
- <2968419.1668606101@warthog.procyon.org.uk>
+          Thu, 17 Nov 2022 13:30:18 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <2968419.1668606101@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: xiang@kernel.org,
+	chao@kernel.org,
+	jlayton@kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	linux-cachefs@redhat.com,
+	dhowells@redhat.com
+Subject: [PATCH v4 0/2] fscache,cachefiles: add prepare_ondemand_read() interface
+Date: Thu, 17 Nov 2022 13:30:15 +0800
+Message-Id: <20221117053017.21074-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,46 +44,98 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+v4:
+- patch 1
+  - make cachefiles_do_prepare_read() pass start by value (Jeff Layton)
+  - adjust the indentation of the parameter/argument list, so that
+    they are all lined up (David)
+  - pass flags in for cachefiles_prepare_ondemand_read(), so that it can
+    tail call cachefiles_do_prepare_read() directly without shuffling
+    arguments around (David)
+  - declare cachefiles_do_prepare_read() as inline, to eliminate one
+    extra function calling and arguments copying when calling
+    cachefiles_do_prepare_read() (David)
 
 
-On 11/16/22 9:41 PM, David Howells wrote:
-> Jeff Layton <jlayton@kernel.org> wrote:
-> 
->>> +static enum netfs_io_source cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
->>> +					loff_t *_start, size_t *_len,
->>> +					unsigned long *_flags, loff_t i_size)
->>
->> _start is never changed, so it should be passed by value instead of by
->> pointer.
-> 
-> Hmmm.  The intention was that the start pointer should be able to be moved
-> backwards by the cache - but that's not necessary in ->prepare_read() and
-> ->expand_readahead() is provided for that now.  So yes, the start pointer
-> shouldn't get changed at this point.
+v3:
+- rebase to v6.1-rc5, while the xas_retry() checking in patch 2 has
+  been extracted out as a separate fix [1]
 
-Okay.
+[1] commit 37020bbb71d9 ("erofs: fix missing xas_retry() in fscache mode")
+(https://github.com/torvalds/linux/commit/37020bbb71d9)
 
 
-> 
->> I'd also reverse the position of the arguments for _flags and i_size.
->> Otherwise, the CPU/compiler have to shuffle things around more in
->> cachefiles_prepare_ondemand_read before they call this.
-> 
-> Better to pass the flags in and then ignore them.  That way it can tail call,
-> or just call cachefiles_do_prepare_read() directly from erofs.  If you're
-> going to have a wrapper, then you might be just as well create a
-> netfs_io_subrequest struct on the stack.
+v2:
+- patch 1: the generic routine, i.e. cachefiles_do_prepare_read() now
+  accepts a parameter list instead of netfs_io_subrequest, and thus some
+  debug info retrieved from netfs_io_subrequest is removed from
+  trace_cachefiles_prep_read().
+- patch 2: add xas_retry() checking in erofs_fscache_req_complete()
 
-I would prefer letting cachefiles_prepare_ondemand_read() pass flags in
-and then tail call cachefiles_do_prepare_read() directly.
 
-Many thanks for the suggestion.
+[Rationale]
+===========
+Fscache has been landed as a generic caching management framework in
+the Linux kernel for decades.  It aims to manage cache data availability
+or fetch data if needed.  Currently it's mainly used for network fses,
+but in principle the main caching subsystem can be used more widely.
 
+We do really like fscache framework and we believe it'd be better to
+reuse such framework if possible instead of duplicating other
+alternatives for better maintenance and testing.  Therefore for our
+container image use cases, we applied the existing fscache to implement
+on-demand read for erofs in the past months.  For more details, also see
+[1].
+
+In short, here each erofs filesystem is composed of multiple blobs (or
+devices).  Each blob corresponds to one fscache cookie to strictly
+follow on-disk format and implement the image downloading in a
+deterministic manner, which means it has a unique checksum and is signed
+by vendors.
+
+Data of each erofs inode can be scattered among multiple blobs (cookie)
+since erofs supports chunk-level deduplication.  In this case, each
+erofs inode can correspond to multiple cookies, and there's a logical to
+physical offset mapping between the logical offset in erofs inode and
+the physical offset in the backing file.
+
+As described above, per-cookie netfs model can not be used here
+directly.  Instead, we'd like to propose/decouple a simple set of raw
+fscache APIs, to access cache for all fses to use.  We believe it's
+useful since it's like the relationship between raw bio and iomap, both
+of which are useful for local fses.  fscache_read() seems a reasonable
+candidate and is enough for such use case.
+
+In addition, the on-demand read feature relies on .prepare_read() to
+reuse the hole detecting logic as much as possible. However, after
+fscache/netfs rework, libnetfs is preferred to access fscache, making
+.prepare_read() closely coupled with libnetfs, or more precisely,
+netfs_io_subrequest.
+
+
+[What We Do]
+============
+As we discussed previously, we propose a new interface, i,e,
+.prepare_ondemand_read() dedicated for the on-demand read scenarios,
+which is independent on netfs_io_subrequest. The netfs will still use
+the original .prepare_read() as usual.
+
+
+
+Jingbo Xu (2):
+  fscache,cachefiles: add prepare_ondemand_read() callback
+  erofs: switch to prepare_ondemand_read() in fscache mode
+
+ fs/cachefiles/io.c                |  77 +++++----
+ fs/erofs/fscache.c                | 260 +++++++++++-------------------
+ include/linux/netfs.h             |   8 +
+ include/trace/events/cachefiles.h |  27 ++--
+ 4 files changed, 164 insertions(+), 208 deletions(-)
 
 -- 
-Thanks,
-Jingbo
+2.19.1.6.gb485710b
+
