@@ -1,25 +1,25 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C686A63712E
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 04:42:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB82C637132
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 04:42:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NHkMk0PkHz3ccg
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 14:42:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NHkMq5BvPz3dvq
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 14:42:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.45; helo=out30-45.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NHkMZ3CSMz3cGV
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Nov 2022 14:42:17 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VVZO4J._1669261332;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VVZO4J._1669261332)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NHkMb6DbRz3cKr
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Nov 2022 14:42:19 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VVZ97Yj_1669261333;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VVZ97Yj_1669261333)
           by smtp.aliyun-inc.com;
-          Thu, 24 Nov 2022 11:42:13 +0800
+          Thu, 24 Nov 2022 11:42:14 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: dhowells@redhat.com,
 	jlayton@kernel.org,
@@ -27,10 +27,12 @@ To: dhowells@redhat.com,
 	chao@kernel.org,
 	linux-cachefs@redhat.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v5 0/2] fscache,cachefiles: add prepare_ondemand_read() interface
-Date: Thu, 24 Nov 2022 11:42:10 +0800
-Message-Id: <20221124034212.81892-1-jefflexu@linux.alibaba.com>
+Subject: [PATCH v5 1/2] fscache,cachefiles: add prepare_ondemand_read() callback
+Date: Thu, 24 Nov 2022 11:42:11 +0800
+Message-Id: <20221124034212.81892-2-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <20221124034212.81892-1-jefflexu@linux.alibaba.com>
+References: <20221124034212.81892-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -48,101 +50,264 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-v5:
-- patch 1: add back netfs_inode number to trace_cachefiles_prep_read,
-  and .prepare_ondemand_read() now also accepts a "ino_t ino" parameter
-  (David)
-- add reviewed-by tags
-
-
-v4: https://lore.kernel.org/all/20221117053017.21074-1-jefflexu@linux.alibaba.com/
-- patch 1
-  - make cachefiles_do_prepare_read() pass start by value (Jeff Layton)
-  - adjust the indentation of the parameter/argument list, so that
-    they are all lined up (David)
-  - pass flags in for cachefiles_prepare_ondemand_read(), so that it can
-    tail call cachefiles_do_prepare_read() directly without shuffling
-    arguments around (David)
-  - declare cachefiles_do_prepare_read() as inline, to eliminate one
-    extra function calling and arguments copying when calling
-    cachefiles_do_prepare_read() (David)
-
-
-v3:
-- rebase to v6.1-rc5, while the xas_retry() checking in patch 2 has
-  been extracted out as a separate fix [1]
-
-[1] commit 37020bbb71d9 ("erofs: fix missing xas_retry() in fscache mode")
-(https://github.com/torvalds/linux/commit/37020bbb71d9)
-
-
-v2:
-- patch 1: the generic routine, i.e. cachefiles_do_prepare_read() now
-  accepts a parameter list instead of netfs_io_subrequest, and thus some
-  debug info retrieved from netfs_io_subrequest is removed from
-  trace_cachefiles_prep_read().
-- patch 2: add xas_retry() checking in erofs_fscache_req_complete()
-
-
-[Rationale]
-===========
-Fscache has been landed as a generic caching management framework in
-the Linux kernel for decades.  It aims to manage cache data availability
-or fetch data if needed.  Currently it's mainly used for network fses,
-but in principle the main caching subsystem can be used more widely.
-
-We do really like fscache framework and we believe it'd be better to
-reuse such framework if possible instead of duplicating other
-alternatives for better maintenance and testing.  Therefore for our
-container image use cases, we applied the existing fscache to implement
-on-demand read for erofs in the past months.  For more details, also see
-[1].
-
-In short, here each erofs filesystem is composed of multiple blobs (or
-devices).  Each blob corresponds to one fscache cookie to strictly
-follow on-disk format and implement the image downloading in a
-deterministic manner, which means it has a unique checksum and is signed
-by vendors.
-
-Data of each erofs inode can be scattered among multiple blobs (cookie)
-since erofs supports chunk-level deduplication.  In this case, each
-erofs inode can correspond to multiple cookies, and there's a logical to
-physical offset mapping between the logical offset in erofs inode and
-the physical offset in the backing file.
-
-As described above, per-cookie netfs model can not be used here
-directly.  Instead, we'd like to propose/decouple a simple set of raw
-fscache APIs, to access cache for all fses to use.  We believe it's
-useful since it's like the relationship between raw bio and iomap, both
-of which are useful for local fses.  fscache_read() seems a reasonable
-candidate and is enough for such use case.
-
-In addition, the on-demand read feature relies on .prepare_read() to
-reuse the hole detecting logic as much as possible. However, after
-fscache/netfs rework, libnetfs is preferred to access fscache, making
-.prepare_read() closely coupled with libnetfs, or more precisely,
+Add prepare_ondemand_read() callback dedicated for the on-demand read
+scenario, so that callers from this scenario can be decoupled from
 netfs_io_subrequest.
 
+The original cachefiles_prepare_read() is now refactored to a generic
+routine accepting a parameter list instead of netfs_io_subrequest.
+There's no logic change, except that the debug id of subrequest and
+request is removed from trace_cachefiles_prep_read().
 
-[What We Do]
-============
-As we discussed previously, we propose a new interface, i,e,
-.prepare_ondemand_read() dedicated for the on-demand read scenarios,
-which is independent on netfs_io_subrequest. The netfs will still use
-the original .prepare_read() as usual.
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/cachefiles/io.c                | 77 ++++++++++++++++++++-----------
+ include/linux/netfs.h             |  8 ++++
+ include/trace/events/cachefiles.h | 27 +++++------
+ 3 files changed, 72 insertions(+), 40 deletions(-)
 
-
-
-Jingbo Xu (2):
-  fscache,cachefiles: add prepare_ondemand_read() callback
-  erofs: switch to prepare_ondemand_read() in fscache mode
-
- fs/cachefiles/io.c                |  77 +++++----
- fs/erofs/fscache.c                | 261 +++++++++++-------------------
- include/linux/netfs.h             |   8 +
- include/trace/events/cachefiles.h |  27 ++--
- 4 files changed, 166 insertions(+), 207 deletions(-)
-
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index 000a28f46e59..175a25fcade8 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -385,38 +385,35 @@ static int cachefiles_write(struct netfs_cache_resources *cres,
+ 				  term_func, term_func_priv);
+ }
+ 
+-/*
+- * Prepare a read operation, shortening it to a cached/uncached
+- * boundary as appropriate.
+- */
+-static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
+-						      loff_t i_size)
++static inline enum netfs_io_source
++cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
++			   loff_t start, size_t *_len, loff_t i_size,
++			   unsigned long *_flags, ino_t netfs_ino)
+ {
+ 	enum cachefiles_prepare_read_trace why;
+-	struct netfs_io_request *rreq = subreq->rreq;
+-	struct netfs_cache_resources *cres = &rreq->cache_resources;
+-	struct cachefiles_object *object;
++	struct cachefiles_object *object = NULL;
+ 	struct cachefiles_cache *cache;
+ 	struct fscache_cookie *cookie = fscache_cres_cookie(cres);
+ 	const struct cred *saved_cred;
+ 	struct file *file = cachefiles_cres_file(cres);
+ 	enum netfs_io_source ret = NETFS_DOWNLOAD_FROM_SERVER;
++	size_t len = *_len;
+ 	loff_t off, to;
+ 	ino_t ino = file ? file_inode(file)->i_ino : 0;
+ 	int rc;
+ 
+-	_enter("%zx @%llx/%llx", subreq->len, subreq->start, i_size);
++	_enter("%zx @%llx/%llx", len, start, i_size);
+ 
+-	if (subreq->start >= i_size) {
++	if (start >= i_size) {
+ 		ret = NETFS_FILL_WITH_ZEROES;
+ 		why = cachefiles_trace_read_after_eof;
+ 		goto out_no_object;
+ 	}
+ 
+ 	if (test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags)) {
+-		__set_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
++		__set_bit(NETFS_SREQ_COPY_TO_CACHE, _flags);
+ 		why = cachefiles_trace_read_no_data;
+-		if (!test_bit(NETFS_SREQ_ONDEMAND, &subreq->flags))
++		if (!test_bit(NETFS_SREQ_ONDEMAND, _flags))
+ 			goto out_no_object;
+ 	}
+ 
+@@ -437,7 +434,7 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ retry:
+ 	off = cachefiles_inject_read_error();
+ 	if (off == 0)
+-		off = vfs_llseek(file, subreq->start, SEEK_DATA);
++		off = vfs_llseek(file, start, SEEK_DATA);
+ 	if (off < 0 && off >= (loff_t)-MAX_ERRNO) {
+ 		if (off == (loff_t)-ENXIO) {
+ 			why = cachefiles_trace_read_seek_nxio;
+@@ -449,21 +446,22 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ 		goto out;
+ 	}
+ 
+-	if (off >= subreq->start + subreq->len) {
++	if (off >= start + len) {
+ 		why = cachefiles_trace_read_found_hole;
+ 		goto download_and_store;
+ 	}
+ 
+-	if (off > subreq->start) {
++	if (off > start) {
+ 		off = round_up(off, cache->bsize);
+-		subreq->len = off - subreq->start;
++		len = off - start;
++		*_len = len;
+ 		why = cachefiles_trace_read_found_part;
+ 		goto download_and_store;
+ 	}
+ 
+ 	to = cachefiles_inject_read_error();
+ 	if (to == 0)
+-		to = vfs_llseek(file, subreq->start, SEEK_HOLE);
++		to = vfs_llseek(file, start, SEEK_HOLE);
+ 	if (to < 0 && to >= (loff_t)-MAX_ERRNO) {
+ 		trace_cachefiles_io_error(object, file_inode(file), to,
+ 					  cachefiles_trace_seek_error);
+@@ -471,12 +469,13 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ 		goto out;
+ 	}
+ 
+-	if (to < subreq->start + subreq->len) {
+-		if (subreq->start + subreq->len >= i_size)
++	if (to < start + len) {
++		if (start + len >= i_size)
+ 			to = round_up(to, cache->bsize);
+ 		else
+ 			to = round_down(to, cache->bsize);
+-		subreq->len = to - subreq->start;
++		len = to - start;
++		*_len = len;
+ 	}
+ 
+ 	why = cachefiles_trace_read_have_data;
+@@ -484,12 +483,11 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ 	goto out;
+ 
+ download_and_store:
+-	__set_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+-	if (test_bit(NETFS_SREQ_ONDEMAND, &subreq->flags)) {
+-		rc = cachefiles_ondemand_read(object, subreq->start,
+-					      subreq->len);
++	__set_bit(NETFS_SREQ_COPY_TO_CACHE, _flags);
++	if (test_bit(NETFS_SREQ_ONDEMAND, _flags)) {
++		rc = cachefiles_ondemand_read(object, start, len);
+ 		if (!rc) {
+-			__clear_bit(NETFS_SREQ_ONDEMAND, &subreq->flags);
++			__clear_bit(NETFS_SREQ_ONDEMAND, _flags);
+ 			goto retry;
+ 		}
+ 		ret = NETFS_INVALID_READ;
+@@ -497,10 +495,34 @@ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *
+ out:
+ 	cachefiles_end_secure(cache, saved_cred);
+ out_no_object:
+-	trace_cachefiles_prep_read(subreq, ret, why, ino);
++	trace_cachefiles_prep_read(object, start, len, *_flags, ret, why, ino, netfs_ino);
+ 	return ret;
+ }
+ 
++/*
++ * Prepare a read operation, shortening it to a cached/uncached
++ * boundary as appropriate.
++ */
++static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
++						    loff_t i_size)
++{
++	return cachefiles_do_prepare_read(&subreq->rreq->cache_resources,
++					  subreq->start, &subreq->len, i_size,
++					  &subreq->flags, subreq->rreq->inode->i_ino);
++}
++
++/*
++ * Prepare an on-demand read operation, shortening it to a cached/uncached
++ * boundary as appropriate.
++ */
++static enum netfs_io_source
++cachefiles_prepare_ondemand_read(struct netfs_cache_resources *cres,
++				 loff_t start, size_t *_len, loff_t i_size,
++				 unsigned long *_flags, ino_t ino)
++{
++	return cachefiles_do_prepare_read(cres, start, _len, i_size, _flags, ino);
++}
++
+ /*
+  * Prepare for a write to occur.
+  */
+@@ -621,6 +643,7 @@ static const struct netfs_cache_ops cachefiles_netfs_cache_ops = {
+ 	.write			= cachefiles_write,
+ 	.prepare_read		= cachefiles_prepare_read,
+ 	.prepare_write		= cachefiles_prepare_write,
++	.prepare_ondemand_read	= cachefiles_prepare_ondemand_read,
+ 	.query_occupancy	= cachefiles_query_occupancy,
+ };
+ 
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index f2402ddeafbf..4c76ddfb6a67 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -267,6 +267,14 @@ struct netfs_cache_ops {
+ 			     loff_t *_start, size_t *_len, loff_t i_size,
+ 			     bool no_space_allocated_yet);
+ 
++	/* Prepare an on-demand read operation, shortening it to a cached/uncached
++	 * boundary as appropriate.
++	 */
++	enum netfs_io_source (*prepare_ondemand_read)(struct netfs_cache_resources *cres,
++						      loff_t start, size_t *_len,
++						      loff_t i_size,
++						      unsigned long *_flags, ino_t ino);
++
+ 	/* Query the occupancy of the cache in a region, returning where the
+ 	 * next chunk of data starts and how long it is.
+ 	 */
+diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
+index d8d4d73fe7b6..cf4b98b9a9ed 100644
+--- a/include/trace/events/cachefiles.h
++++ b/include/trace/events/cachefiles.h
+@@ -428,16 +428,18 @@ TRACE_EVENT(cachefiles_vol_coherency,
+ 	    );
+ 
+ TRACE_EVENT(cachefiles_prep_read,
+-	    TP_PROTO(struct netfs_io_subrequest *sreq,
++	    TP_PROTO(struct cachefiles_object *obj,
++		     loff_t start,
++		     size_t len,
++		     unsigned short flags,
+ 		     enum netfs_io_source source,
+ 		     enum cachefiles_prepare_read_trace why,
+-		     ino_t cache_inode),
++		     ino_t cache_inode, ino_t netfs_inode),
+ 
+-	    TP_ARGS(sreq, source, why, cache_inode),
++	    TP_ARGS(obj, start, len, flags, source, why, cache_inode, netfs_inode),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,		rreq		)
+-		    __field(unsigned short,		index		)
++		    __field(unsigned int,		obj		)
+ 		    __field(unsigned short,		flags		)
+ 		    __field(enum netfs_io_source,	source		)
+ 		    __field(enum cachefiles_prepare_read_trace,	why	)
+@@ -448,19 +450,18 @@ TRACE_EVENT(cachefiles_prep_read,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->rreq	= sreq->rreq->debug_id;
+-		    __entry->index	= sreq->debug_index;
+-		    __entry->flags	= sreq->flags;
++		    __entry->obj	= obj ? obj->debug_id : 0;
++		    __entry->flags	= flags;
+ 		    __entry->source	= source;
+ 		    __entry->why	= why;
+-		    __entry->len	= sreq->len;
+-		    __entry->start	= sreq->start;
+-		    __entry->netfs_inode = sreq->rreq->inode->i_ino;
++		    __entry->len	= len;
++		    __entry->start	= start;
++		    __entry->netfs_inode = netfs_inode;
+ 		    __entry->cache_inode = cache_inode;
+ 			   ),
+ 
+-	    TP_printk("R=%08x[%u] %s %s f=%02x s=%llx %zx ni=%x B=%x",
+-		      __entry->rreq, __entry->index,
++	    TP_printk("o=%08x %s %s f=%02x s=%llx %zx ni=%x B=%x",
++		      __entry->obj,
+ 		      __print_symbolic(__entry->source, netfs_sreq_sources),
+ 		      __print_symbolic(__entry->why, cachefiles_prepare_read_traces),
+ 		      __entry->flags,
 -- 
 2.19.1.6.gb485710b
 
