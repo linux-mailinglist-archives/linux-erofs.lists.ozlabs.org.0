@@ -2,77 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BECDB637352
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 09:08:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F65663847C
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Nov 2022 08:31:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NHrG86DDpz3cNY
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Nov 2022 19:08:00 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=wHBWJu7X;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NJRPh2Y7Rz3ccw
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Nov 2022 18:31:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::62c; helo=mail-pl1-x62c.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=wHBWJu7X;
-	dkim-atps=neutral
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=houtao@huaweicloud.com; receiver=<UNKNOWN>)
+X-Greylist: delayed 957 seconds by postgrey-1.36 at boromir; Fri, 25 Nov 2022 18:31:31 AEDT
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NHrG237MKz2xG6
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Nov 2022 19:07:52 +1100 (AEDT)
-Received: by mail-pl1-x62c.google.com with SMTP id k7so821398pll.6
-        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Nov 2022 00:07:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iM0lTfYIhETIe2iFkmswE6KgPm9P1o45ifSWjqS2kL4=;
-        b=wHBWJu7XnahJRNfHski75v0ebXsfggZ9mxRunLaXrimWr77OZKf1RzA5GqGB6cACTG
-         hC6wX9IKSb0Xbm8xxkNbtohoLNxXB04sU7eauz8EQkvX/fKsM0H5ZgSyaYH7FgELFPQc
-         21/3lCLUmnS1cUCZWnaKMK69S5+RlynNwY6f1yw4nHQH8cTxcoWkkrylJ6piX3hcu3oj
-         LIN/Jomo1Kom9iFCF921rIBg2Gt4wAcOH0XFwS0dZHl9AvYbCdLlnqO9XlBpXOhnGS6N
-         e/HaDtCE9dycBKttx3jw+1XbDVr8cqRrcSbJMxiHVSTIUUie8mPQEEVNaCNEaGyDLnPf
-         M0Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iM0lTfYIhETIe2iFkmswE6KgPm9P1o45ifSWjqS2kL4=;
-        b=1ThfuU8DbELG3/gXlQXimqzCkjCVxQk/Ljgy8HH+9C4l0a/sETOu9gqUF/vWtTqOzK
-         aGqvgRwbMh6PiSP05MfoiPmDq2spSQ2VwBiqZ186Gk/ehWsepYA+pW/jGdnyhV2cyFpH
-         HgtThu8+hptw0LmnUc78NB/EDFGzc/5sdsEKMzukeq/swLqfUmFLgdb2A9njWX19zmeX
-         YpYwOltK9LxwZ0TNwqe09SgK6yfbH/hmcbQGM6SmJwBq7JkA2343RfL9ya7RSXYwwl/2
-         ZaP+c/eRFQYKR3u35zrHA9AUG/7JfZSl1R+uRg/jz0pumrsyljPh11PvWdEACI2K9WAX
-         gXNg==
-X-Gm-Message-State: ANoB5pmB6mxFVbWiXJCxbyfzvycNhm+OLOhx96LSpHvQmGCaeY/KIxAh
-	yaVkHjoYbtXZD7/aeC+v5aQTPw==
-X-Google-Smtp-Source: AA0mqf4IiNFSAOrxBSxpg6zWv8oDD+4/IuodLjfEz8dZnd30u3VgZZvbsCqs9I5+E8aU3QDr2TMjdA==
-X-Received: by 2002:a17:90a:dc06:b0:218:9196:1cd1 with SMTP id i6-20020a17090adc0600b0021891961cd1mr27437978pjv.230.1669277268155;
-        Thu, 24 Nov 2022 00:07:48 -0800 (PST)
-Received: from [10.5.67.213] ([139.177.225.240])
-        by smtp.gmail.com with ESMTPSA id c14-20020aa7952e000000b005745481a614sm555587pfp.76.2022.11.24.00.07.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Nov 2022 00:07:47 -0800 (PST)
-Message-ID: <2250d2e8-f996-4d58-3679-775bcfd5a8dc@bytedance.com>
-Date: Thu, 24 Nov 2022 16:07:42 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NJRPb5Jspz3cFn
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Nov 2022 18:31:30 +1100 (AEDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NJR2r5yqhz4f3tTd
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Nov 2022 15:15:16 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP4 (Coremail) with SMTP id gCh0CgDHONaGa4BjmM56BA--.40764S4;
+	Fri, 25 Nov 2022 15:15:19 +0800 (CST)
+From: Hou Tao <houtao@huaweicloud.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: check the uniqueness of fsid in shared domain in advance
+Date: Fri, 25 Nov 2022 15:40:57 +0800
+Message-Id: <20221125074057.2229083-1-houtao@huaweicloud.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.5.0
-Subject: Re: [Linux-cachefs] [PATCH v5 2/2] erofs: switch to
- prepare_ondemand_read() in fscache mode
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
- jlayton@kernel.org, xiang@kernel.org, chao@kernel.org,
- linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org
-References: <20221124034212.81892-1-jefflexu@linux.alibaba.com>
- <20221124034212.81892-3-jefflexu@linux.alibaba.com>
-From: Jia Zhu <zhujia.zj@bytedance.com>
-In-Reply-To: <20221124034212.81892-3-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgDHONaGa4BjmM56BA--.40764S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF1Dury8ur4xXFy5Gr1rJFb_yoW3Wr1xpa
+	yfCw1SqrWkXry5ua1fXF4DXFyfK3s7ta1DCw48J3sYyw48Jr18GryvyFyYkF47GryDArWI
+	vF42va1Uuw48Ar7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJV
+	Cq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
+	daVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,395 +60,224 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Yue Hu <huyue2@coolpad.com>, houtao1@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Hou Tao <houtao1@huawei.com>
 
+When shared domain is enabled, doing mount twice with the same fsid and
+domain_id will trigger sysfs warning as shown below:
 
-在 2022/11/24 11:42, Jingbo Xu 写道:
-> Switch to prepare_ondemand_read() interface and a self-contained request
-> completion to get rid of netfs_io_[request|subrequest].
-> 
-> The whole request will still be split into slices (subrequest) according
-> to the cache state of the backing file.  As long as one of the
-> subrequests fails, the whole request will be marked as failed.
-> 
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
-Thanks.
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> ---
->   fs/erofs/fscache.c | 261 ++++++++++++++++-----------------------------
->   1 file changed, 94 insertions(+), 167 deletions(-)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index af5ed6b9c54d..3cfe1af7a46e 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -11,257 +11,180 @@ static DEFINE_MUTEX(erofs_domain_cookies_lock);
->   static LIST_HEAD(erofs_domain_list);
->   static struct vfsmount *erofs_pseudo_mnt;
->   
-> -static struct netfs_io_request *erofs_fscache_alloc_request(struct address_space *mapping,
-> +struct erofs_fscache_request {
-> +	struct netfs_cache_resources cache_resources;
-> +	struct address_space	*mapping;	/* The mapping being accessed */
-> +	loff_t			start;		/* Start position */
-> +	size_t			len;		/* Length of the request */
-> +	size_t			submitted;	/* Length of submitted */
-> +	short			error;		/* 0 or error that occurred */
-> +	refcount_t		ref;
-> +};
-> +
-> +static struct erofs_fscache_request *erofs_fscache_req_alloc(struct address_space *mapping,
->   					     loff_t start, size_t len)
->   {
-> -	struct netfs_io_request *rreq;
-> +	struct erofs_fscache_request *req;
->   
-> -	rreq = kzalloc(sizeof(struct netfs_io_request), GFP_KERNEL);
-> -	if (!rreq)
-> +	req = kzalloc(sizeof(struct erofs_fscache_request), GFP_KERNEL);
-> +	if (!req)
->   		return ERR_PTR(-ENOMEM);
->   
-> -	rreq->start	= start;
-> -	rreq->len	= len;
-> -	rreq->mapping	= mapping;
-> -	rreq->inode	= mapping->host;
-> -	INIT_LIST_HEAD(&rreq->subrequests);
-> -	refcount_set(&rreq->ref, 1);
-> -	return rreq;
-> -}
-> -
-> -static void erofs_fscache_put_request(struct netfs_io_request *rreq)
-> -{
-> -	if (!refcount_dec_and_test(&rreq->ref))
-> -		return;
-> -	if (rreq->cache_resources.ops)
-> -		rreq->cache_resources.ops->end_operation(&rreq->cache_resources);
-> -	kfree(rreq);
-> -}
-> -
-> -static void erofs_fscache_put_subrequest(struct netfs_io_subrequest *subreq)
-> -{
-> -	if (!refcount_dec_and_test(&subreq->ref))
-> -		return;
-> -	erofs_fscache_put_request(subreq->rreq);
-> -	kfree(subreq);
-> -}
-> +	req->mapping = mapping;
-> +	req->start   = start;
-> +	req->len     = len;
-> +	refcount_set(&req->ref, 1);
->   
-> -static void erofs_fscache_clear_subrequests(struct netfs_io_request *rreq)
-> -{
-> -	struct netfs_io_subrequest *subreq;
-> -
-> -	while (!list_empty(&rreq->subrequests)) {
-> -		subreq = list_first_entry(&rreq->subrequests,
-> -				struct netfs_io_subrequest, rreq_link);
-> -		list_del(&subreq->rreq_link);
-> -		erofs_fscache_put_subrequest(subreq);
-> -	}
-> +	return req;
->   }
->   
-> -static void erofs_fscache_rreq_unlock_folios(struct netfs_io_request *rreq)
-> +static void erofs_fscache_req_complete(struct erofs_fscache_request *req)
->   {
-> -	struct netfs_io_subrequest *subreq;
->   	struct folio *folio;
-> -	unsigned int iopos = 0;
-> -	pgoff_t start_page = rreq->start / PAGE_SIZE;
-> -	pgoff_t last_page = ((rreq->start + rreq->len) / PAGE_SIZE) - 1;
-> -	bool subreq_failed = false;
-> +	bool failed = req->error;
-> +	pgoff_t start_page = req->start / PAGE_SIZE;
-> +	pgoff_t last_page = ((req->start + req->len) / PAGE_SIZE) - 1;
->   
-> -	XA_STATE(xas, &rreq->mapping->i_pages, start_page);
-> -
-> -	subreq = list_first_entry(&rreq->subrequests,
-> -				  struct netfs_io_subrequest, rreq_link);
-> -	subreq_failed = (subreq->error < 0);
-> +	XA_STATE(xas, &req->mapping->i_pages, start_page);
->   
->   	rcu_read_lock();
->   	xas_for_each(&xas, folio, last_page) {
-> -		unsigned int pgpos, pgend;
-> -		bool pg_failed = false;
-> -
->   		if (xas_retry(&xas, folio))
->   			continue;
-> -
-> -		pgpos = (folio_index(folio) - start_page) * PAGE_SIZE;
-> -		pgend = pgpos + folio_size(folio);
-> -
-> -		for (;;) {
-> -			if (!subreq) {
-> -				pg_failed = true;
-> -				break;
-> -			}
-> -
-> -			pg_failed |= subreq_failed;
-> -			if (pgend < iopos + subreq->len)
-> -				break;
-> -
-> -			iopos += subreq->len;
-> -			if (!list_is_last(&subreq->rreq_link,
-> -					  &rreq->subrequests)) {
-> -				subreq = list_next_entry(subreq, rreq_link);
-> -				subreq_failed = (subreq->error < 0);
-> -			} else {
-> -				subreq = NULL;
-> -				subreq_failed = false;
-> -			}
-> -			if (pgend == iopos)
-> -				break;
-> -		}
-> -
-> -		if (!pg_failed)
-> +		if (!failed)
->   			folio_mark_uptodate(folio);
-> -
->   		folio_unlock(folio);
->   	}
->   	rcu_read_unlock();
-> +
-> +	if (req->cache_resources.ops)
-> +		req->cache_resources.ops->end_operation(&req->cache_resources);
-> +
-> +	kfree(req);
->   }
->   
-> -static void erofs_fscache_rreq_complete(struct netfs_io_request *rreq)
-> +static void erofs_fscache_req_put(struct erofs_fscache_request *req)
->   {
-> -	erofs_fscache_rreq_unlock_folios(rreq);
-> -	erofs_fscache_clear_subrequests(rreq);
-> -	erofs_fscache_put_request(rreq);
-> +	if (refcount_dec_and_test(&req->ref))
-> +		erofs_fscache_req_complete(req);
->   }
->   
-> -static void erofc_fscache_subreq_complete(void *priv,
-> +static void erofs_fscache_subreq_complete(void *priv,
->   		ssize_t transferred_or_error, bool was_async)
->   {
-> -	struct netfs_io_subrequest *subreq = priv;
-> -	struct netfs_io_request *rreq = subreq->rreq;
-> +	struct erofs_fscache_request *req = priv;
->   
->   	if (IS_ERR_VALUE(transferred_or_error))
-> -		subreq->error = transferred_or_error;
-> -
-> -	if (atomic_dec_and_test(&rreq->nr_outstanding))
-> -		erofs_fscache_rreq_complete(rreq);
-> -
-> -	erofs_fscache_put_subrequest(subreq);
-> +		req->error = transferred_or_error;
-> +	erofs_fscache_req_put(req);
->   }
->   
->   /*
-> - * Read data from fscache and fill the read data into page cache described by
-> - * @rreq, which shall be both aligned with PAGE_SIZE. @pstart describes
-> - * the start physical address in the cache file.
-> + * Read data from fscache (cookie, pstart, len), and fill the read data into
-> + * page cache described by (req->mapping, lstart, len). @pstart describeis the
-> + * start physical address in the cache file.
->    */
->   static int erofs_fscache_read_folios_async(struct fscache_cookie *cookie,
-> -				struct netfs_io_request *rreq, loff_t pstart)
-> +		struct erofs_fscache_request *req, loff_t pstart, size_t len)
->   {
->   	enum netfs_io_source source;
-> -	struct super_block *sb = rreq->mapping->host->i_sb;
-> -	struct netfs_io_subrequest *subreq;
-> -	struct netfs_cache_resources *cres = &rreq->cache_resources;
-> +	struct super_block *sb = req->mapping->host->i_sb;
-> +	struct netfs_cache_resources *cres = &req->cache_resources;
->   	struct iov_iter iter;
-> -	loff_t start = rreq->start;
-> -	size_t len = rreq->len;
-> +	loff_t lstart = req->start + req->submitted;
->   	size_t done = 0;
->   	int ret;
->   
-> -	atomic_set(&rreq->nr_outstanding, 1);
-> +	DBG_BUGON(len > req->len - req->submitted);
->   
->   	ret = fscache_begin_read_operation(cres, cookie);
->   	if (ret)
-> -		goto out;
-> +		return ret;
->   
->   	while (done < len) {
-> -		subreq = kzalloc(sizeof(struct netfs_io_subrequest),
-> -				 GFP_KERNEL);
-> -		if (subreq) {
-> -			INIT_LIST_HEAD(&subreq->rreq_link);
-> -			refcount_set(&subreq->ref, 2);
-> -			subreq->rreq = rreq;
-> -			refcount_inc(&rreq->ref);
-> -		} else {
-> -			ret = -ENOMEM;
-> -			goto out;
-> -		}
-> -
-> -		subreq->start = pstart + done;
-> -		subreq->len	=  len - done;
-> -		subreq->flags = 1 << NETFS_SREQ_ONDEMAND;
-> +		loff_t sstart = pstart + done;
-> +		size_t slen = len - done;
-> +		unsigned long flags = 1 << NETFS_SREQ_ONDEMAND;
->   
-> -		list_add_tail(&subreq->rreq_link, &rreq->subrequests);
-> -
-> -		source = cres->ops->prepare_read(subreq, LLONG_MAX);
-> -		if (WARN_ON(subreq->len == 0))
-> +		source = cres->ops->prepare_ondemand_read(cres,
-> +				sstart, &slen, LLONG_MAX, &flags, 0);
-> +		if (WARN_ON(slen == 0))
->   			source = NETFS_INVALID_READ;
->   		if (source != NETFS_READ_FROM_CACHE) {
-> -			erofs_err(sb, "failed to fscache prepare_read (source %d)",
-> -				  source);
-> -			ret = -EIO;
-> -			subreq->error = ret;
-> -			erofs_fscache_put_subrequest(subreq);
-> -			goto out;
-> +			erofs_err(sb, "failed to fscache prepare_read (source %d)", source);
-> +			return -EIO;
->   		}
->   
-> -		atomic_inc(&rreq->nr_outstanding);
-> +		refcount_inc(&req->ref);
-> +		iov_iter_xarray(&iter, READ, &req->mapping->i_pages,
-> +				lstart + done, slen);
->   
-> -		iov_iter_xarray(&iter, READ, &rreq->mapping->i_pages,
-> -				start + done, subreq->len);
-> -
-> -		ret = fscache_read(cres, subreq->start, &iter,
-> -				   NETFS_READ_HOLE_FAIL,
-> -				   erofc_fscache_subreq_complete, subreq);
-> +		ret = fscache_read(cres, sstart, &iter, NETFS_READ_HOLE_FAIL,
-> +				   erofs_fscache_subreq_complete, req);
->   		if (ret == -EIOCBQUEUED)
->   			ret = 0;
->   		if (ret) {
->   			erofs_err(sb, "failed to fscache_read (ret %d)", ret);
-> -			goto out;
-> +			return ret;
->   		}
->   
-> -		done += subreq->len;
-> +		done += slen;
->   	}
-> -out:
-> -	if (atomic_dec_and_test(&rreq->nr_outstanding))
-> -		erofs_fscache_rreq_complete(rreq);
-> -
-> -	return ret;
-> +	DBG_BUGON(done != len);
-> +	req->submitted += len;
-> +	return 0;
->   }
->   
->   static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
->   {
->   	int ret;
->   	struct super_block *sb = folio_mapping(folio)->host->i_sb;
-> -	struct netfs_io_request *rreq;
-> +	struct erofs_fscache_request *req;
->   	struct erofs_map_dev mdev = {
->   		.m_deviceid = 0,
->   		.m_pa = folio_pos(folio),
->   	};
->   
->   	ret = erofs_map_dev(sb, &mdev);
-> -	if (ret)
-> -		goto out;
-> +	if (ret) {
-> +		folio_unlock(folio);
-> +		return ret;
-> +	}
->   
-> -	rreq = erofs_fscache_alloc_request(folio_mapping(folio),
-> +	req = erofs_fscache_req_alloc(folio_mapping(folio),
->   				folio_pos(folio), folio_size(folio));
-> -	if (IS_ERR(rreq)) {
-> -		ret = PTR_ERR(rreq);
-> -		goto out;
-> +	if (IS_ERR(req)) {
-> +		folio_unlock(folio);
-> +		return PTR_ERR(req);
->   	}
->   
-> -	return erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-> -				rreq, mdev.m_pa);
-> -out:
-> -	folio_unlock(folio);
-> +	ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-> +				req, mdev.m_pa, folio_size(folio));
-> +	if (ret)
-> +		req->error = ret;
-> +
-> +	erofs_fscache_req_put(req);
->   	return ret;
->   }
->   
->   /*
->    * Read into page cache in the range described by (@pos, @len).
->    *
-> - * On return, the caller is responsible for page unlocking if the output @unlock
-> - * is true, or the callee will take this responsibility through netfs_io_request
-> - * interface.
-> + * On return, if the output @unlock is true, the caller is responsible for page
-> + * unlocking; otherwise the callee will take this responsibility through request
-> + * completion.
->    *
->    * The return value is the number of bytes successfully handled, or negative
->    * error code on failure. The only exception is that, the length of the range
-> - * instead of the error code is returned on failure after netfs_io_request is
-> - * allocated, so that .readahead() could advance rac accordingly.
-> + * instead of the error code is returned on failure after request is allocated,
-> + * so that .readahead() could advance rac accordingly.
->    */
->   static int erofs_fscache_data_read(struct address_space *mapping,
->   				   loff_t pos, size_t len, bool *unlock)
->   {
->   	struct inode *inode = mapping->host;
->   	struct super_block *sb = inode->i_sb;
-> -	struct netfs_io_request *rreq;
-> +	struct erofs_fscache_request *req;
->   	struct erofs_map_blocks map;
->   	struct erofs_map_dev mdev;
->   	struct iov_iter iter;
-> @@ -318,13 +241,17 @@ static int erofs_fscache_data_read(struct address_space *mapping,
->   	if (ret)
->   		return ret;
->   
-> -	rreq = erofs_fscache_alloc_request(mapping, pos, count);
-> -	if (IS_ERR(rreq))
-> -		return PTR_ERR(rreq);
-> +	req = erofs_fscache_req_alloc(mapping, pos, count);
-> +	if (IS_ERR(req))
-> +		return PTR_ERR(req);
->   
->   	*unlock = false;
-> -	erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-> -			rreq, mdev.m_pa + (pos - map.m_la));
-> +	ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-> +			req, mdev.m_pa + (pos - map.m_la), count);
-> +	if (ret)
-> +		req->error = ret;
-> +
-> +	erofs_fscache_req_put(req);
->   	return count;
->   }
->   
+ sysfs: cannot create duplicate filename '/fs/erofs/d0,meta.bin'
+ CPU: 15 PID: 1051 Comm: mount Not tainted 6.1.0-rc6+ #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x38/0x49
+  dump_stack+0x10/0x12
+  sysfs_warn_dup.cold+0x17/0x27
+  sysfs_create_dir_ns+0xb8/0xd0
+  kobject_add_internal+0xb1/0x240
+  kobject_init_and_add+0x71/0xa0
+  erofs_register_sysfs+0x89/0x110
+  erofs_fc_fill_super+0x98c/0xaf0
+  vfs_get_super+0x7d/0x100
+  get_tree_nodev+0x16/0x20
+  erofs_fc_get_tree+0x20/0x30
+  vfs_get_tree+0x24/0xb0
+  path_mount+0x2fa/0xa90
+  do_mount+0x7c/0xa0
+  __x64_sys_mount+0x8b/0xe0
+  do_syscall_64+0x30/0x60
+  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+
+The reason is erofs_fscache_register_cookie() doesn't guarantee the primary
+data blob (aka fsid) is unique in the shared domain and
+erofs_register_sysfs() invoked by the second mount will fail due to the
+duplicated fsid in the shared domain and report warning.
+
+It would be better to check the uniqueness of fsid before doing
+erofs_register_sysfs(), so adding a new flags parameter for
+erofs_fscache_register_cookie() and doing the uniqueness check if
+EROFS_REG_COOKIE_NEED_NOEXIST is enabled.
+
+After the patch, the error in dmesg for the duplicated mount would be:
+
+ erofs: ...: erofs_domain_register_cookie: XX already exists in domain YY
+
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+---
+ fs/erofs/fscache.c  | 47 +++++++++++++++++++++++++++++++++------------
+ fs/erofs/internal.h | 10 ++++++++--
+ fs/erofs/super.c    |  2 +-
+ 3 files changed, 44 insertions(+), 15 deletions(-)
+
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index af5ed6b9c54d..6a792a513d6b 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -494,7 +494,8 @@ static int erofs_fscache_register_domain(struct super_block *sb)
+ 
+ static
+ struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
+-						    char *name, bool need_inode)
++						   char *name,
++						   unsigned int flags)
+ {
+ 	struct fscache_volume *volume = EROFS_SB(sb)->volume;
+ 	struct erofs_fscache *ctx;
+@@ -516,7 +517,7 @@ struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
+ 	fscache_use_cookie(cookie, false);
+ 	ctx->cookie = cookie;
+ 
+-	if (need_inode) {
++	if (flags & EROFS_REG_COOKIE_NEED_INODE) {
+ 		struct inode *const inode = new_inode(sb);
+ 
+ 		if (!inode) {
+@@ -554,14 +555,15 @@ static void erofs_fscache_relinquish_cookie(struct erofs_fscache *ctx)
+ 
+ static
+ struct erofs_fscache *erofs_fscache_domain_init_cookie(struct super_block *sb,
+-		char *name, bool need_inode)
++						       char *name,
++						       unsigned int flags)
+ {
+ 	int err;
+ 	struct inode *inode;
+ 	struct erofs_fscache *ctx;
+ 	struct erofs_domain *domain = EROFS_SB(sb)->domain;
+ 
+-	ctx = erofs_fscache_acquire_cookie(sb, name, need_inode);
++	ctx = erofs_fscache_acquire_cookie(sb, name, flags);
+ 	if (IS_ERR(ctx))
+ 		return ctx;
+ 
+@@ -589,7 +591,8 @@ struct erofs_fscache *erofs_fscache_domain_init_cookie(struct super_block *sb,
+ 
+ static
+ struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
+-						   char *name, bool need_inode)
++						   char *name,
++						   unsigned int flags)
+ {
+ 	struct inode *inode;
+ 	struct erofs_fscache *ctx;
+@@ -602,23 +605,30 @@ struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
+ 		ctx = inode->i_private;
+ 		if (!ctx || ctx->domain != domain || strcmp(ctx->name, name))
+ 			continue;
+-		igrab(inode);
++		if (!(flags & EROFS_REG_COOKIE_NEED_NOEXIST)) {
++			igrab(inode);
++		} else {
++			erofs_err(sb, "%s already exists in domain %s", name,
++				  domain->domain_id);
++			ctx = ERR_PTR(-EEXIST);
++		}
+ 		spin_unlock(&psb->s_inode_list_lock);
+ 		mutex_unlock(&erofs_domain_cookies_lock);
+ 		return ctx;
+ 	}
+ 	spin_unlock(&psb->s_inode_list_lock);
+-	ctx = erofs_fscache_domain_init_cookie(sb, name, need_inode);
++	ctx = erofs_fscache_domain_init_cookie(sb, name, flags);
+ 	mutex_unlock(&erofs_domain_cookies_lock);
+ 	return ctx;
+ }
+ 
+ struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
+-						    char *name, bool need_inode)
++						    char *name,
++						    unsigned int flags)
+ {
+ 	if (EROFS_SB(sb)->domain_id)
+-		return erofs_domain_register_cookie(sb, name, need_inode);
+-	return erofs_fscache_acquire_cookie(sb, name, need_inode);
++		return erofs_domain_register_cookie(sb, name, flags);
++	return erofs_fscache_acquire_cookie(sb, name, flags);
+ }
+ 
+ void erofs_fscache_unregister_cookie(struct erofs_fscache *ctx)
+@@ -647,6 +657,7 @@ int erofs_fscache_register_fs(struct super_block *sb)
+ 	int ret;
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	struct erofs_fscache *fscache;
++	unsigned int flags;
+ 
+ 	if (sbi->domain_id)
+ 		ret = erofs_fscache_register_domain(sb);
+@@ -655,8 +666,20 @@ int erofs_fscache_register_fs(struct super_block *sb)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* acquired domain/volume will be relinquished in kill_sb() on error */
+-	fscache = erofs_fscache_register_cookie(sb, sbi->fsid, true);
++	/*
++	 * When shared domain is enabled, using NEED_NOEXIST to guarantee
++	 * the primary data blob (aka fsid) is unique in the shared domain.
++	 *
++	 * For non-shared-domain case, fscache_acquire_volume() invoked by
++	 * erofs_fscache_register_volume() has already guaranteed
++	 * the uniqueness of primary data blob.
++	 *
++	 * Acquired domain/volume will be relinquished in kill_sb() on error.
++	 */
++	flags = EROFS_REG_COOKIE_NEED_INODE;
++	if (sbi->domain_id)
++		flags |= EROFS_REG_COOKIE_NEED_NOEXIST;
++	fscache = erofs_fscache_register_cookie(sb, sbi->fsid, flags);
+ 	if (IS_ERR(fscache))
+ 		return PTR_ERR(fscache);
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 05dc68627722..a5f8c8fcdd17 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -604,13 +604,18 @@ static inline int z_erofs_load_lzma_config(struct super_block *sb,
+ }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
++/* flags for erofs_fscache_register_cookie() */
++#define EROFS_REG_COOKIE_NEED_INODE 1
++#define EROFS_REG_COOKIE_NEED_NOEXIST 2
++
+ /* fscache.c */
+ #ifdef CONFIG_EROFS_FS_ONDEMAND
+ int erofs_fscache_register_fs(struct super_block *sb);
+ void erofs_fscache_unregister_fs(struct super_block *sb);
+ 
+ struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
+-						     char *name, bool need_inode);
++						    char *name,
++						    unsigned int flags);
+ void erofs_fscache_unregister_cookie(struct erofs_fscache *fscache);
+ 
+ extern const struct address_space_operations erofs_fscache_access_aops;
+@@ -623,7 +628,8 @@ static inline void erofs_fscache_unregister_fs(struct super_block *sb) {}
+ 
+ static inline
+ struct erofs_fscache *erofs_fscache_register_cookie(struct super_block *sb,
+-						     char *name, bool need_inode)
++						     char *name,
++						     unsigned int flags)
+ {
+ 	return ERR_PTR(-EOPNOTSUPP);
+ }
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 1c7dcca702b3..481788c24a68 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -245,7 +245,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 	}
+ 
+ 	if (erofs_is_fscache_mode(sb)) {
+-		fscache = erofs_fscache_register_cookie(sb, dif->path, false);
++		fscache = erofs_fscache_register_cookie(sb, dif->path, 0);
+ 		if (IS_ERR(fscache))
+ 			return PTR_ERR(fscache);
+ 		dif->fscache = fscache;
+-- 
+2.29.2
+
