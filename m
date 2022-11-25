@@ -2,74 +2,60 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD1E963894B
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Nov 2022 12:58:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B7A5638AC5
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Nov 2022 14:01:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NJYKT5Wd8z3dvX
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Nov 2022 22:58:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NJZkW4kbpz3dvc
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Nov 2022 00:01:39 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VivUFhax;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iUSZIOoE;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rN3HdXqT;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VivUFhax;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iUSZIOoE;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rN3HdXqT;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NJYKL3S9Fz3cD2
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Nov 2022 22:58:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669377487;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=18eKkqzY4QfZggnhIBrTnwfUuxA6G9dwStlUaTlx9d0=;
-	b=VivUFhaxoo6sOqzr/tUbq3bIFY5oM/u8LVtDNQVrdqc28IjVqw4CeubGvvqS5nUIP2rsVk
-	vde8suMBcJMO8QI5yHd1f+mXDOWsJU+q6ELMU3U8nlV4OK8ClCDptMPQMRuAj6stG5bypy
-	vX9J+2hgKuQTJswmoHQrJ3J60oWOm8M=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669377488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=18eKkqzY4QfZggnhIBrTnwfUuxA6G9dwStlUaTlx9d0=;
-	b=iUSZIOoE9MWMNHOjgzkNeH5io8UJzOC0ioppAcI/Q6tCYihTuYgqvWkTISjtMEZHRR+uRG
-	U4CEnVib4VbR+qFjv7b4rJyCoybFVRkUr8S3WeX1iwxl55IJ5ymhvpkwqyXYeVmCCj6WOZ
-	AByP/ZtRMScGpdcd9x4ptfpZwf9rl+I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-3-LrOTnjvLPa21Y1TGscRZPA-1; Fri, 25 Nov 2022 06:58:02 -0500
-X-MC-Unique: LrOTnjvLPa21Y1TGscRZPA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NJZkM6jLYz3cFn
+	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Nov 2022 00:01:31 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A4BE858F17;
-	Fri, 25 Nov 2022 11:58:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.14])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F07601415121;
-	Fri, 25 Nov 2022 11:58:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20221124034212.81892-2-jefflexu@linux.alibaba.com>
-References: <20221124034212.81892-2-jefflexu@linux.alibaba.com> <20221124034212.81892-1-jefflexu@linux.alibaba.com>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v5 1/2] fscache,cachefiles: add prepare_ondemand_read() callback
+	by dfw.source.kernel.org (Postfix) with ESMTPS id D7B01623D2;
+	Fri, 25 Nov 2022 13:01:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E731EC433C1;
+	Fri, 25 Nov 2022 13:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669381287;
+	bh=Bd6+TW+SUllGke4xXPsi3E6NWwGNc4MDvTSGFvrCkNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rN3HdXqTCE4bVjC5CMTwEYV/a3IqLkxDV8dp6hFvDxLFX7AnpNe8ReTonzysdsYOH
+	 Z8uxb6ZC+Pzpf/C76pu/5Sv0zibmR6Hu1RB9G0Og5MecEpDXIBvcTp8wXTQLuPA0H2
+	 irjJcfK9oQK/83jsOKllASa9HpcPSDP460eKPrJoenS1Uy3yGBNvfMWjnfcj9Ny2hA
+	 V7c+OOkTU1rj36gqP+plmOFMGnYcfXVgyIQiyCCIVua2ZkyDO5vLRb1DsXxff+Jt3u
+	 JCb0In9/OEMc6LiCC6iQDPCFRsWf3y3xE5h2OmSigcgPq+yrmVX0j6mHIhMkBGGY2R
+	 ht3jRsPiafuTg==
+Date: Fri, 25 Nov 2022 21:01:21 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v5 1/2] fscache,cachefiles: add prepare_ondemand_read()
+ callback
+Message-ID: <Y4C8ocemviAGpxRC@debian>
+Mail-Followup-To: David Howells <dhowells@redhat.com>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>, jlayton@kernel.org,
+	xiang@kernel.org, chao@kernel.org, linux-cachefs@redhat.com,
+	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20221124034212.81892-2-jefflexu@linux.alibaba.com>
+ <20221124034212.81892-1-jefflexu@linux.alibaba.com>
+ <2386961.1669377478@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2386960.1669377478.1@warthog.procyon.org.uk>
-Date: Fri, 25 Nov 2022 11:57:58 +0000
-Message-ID: <2386961.1669377478@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2386961.1669377478@warthog.procyon.org.uk>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,23 +67,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+Hi David,
 
-> Add prepare_ondemand_read() callback dedicated for the on-demand read
-> scenario, so that callers from this scenario can be decoupled from
-> netfs_io_subrequest.
+On Fri, Nov 25, 2022 at 11:57:58AM +0000, David Howells wrote:
+> Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
 > 
-> The original cachefiles_prepare_read() is now refactored to a generic
-> routine accepting a parameter list instead of netfs_io_subrequest.
-> There's no logic change, except that the debug id of subrequest and
-> request is removed from trace_cachefiles_prep_read().
+> > Add prepare_ondemand_read() callback dedicated for the on-demand read
+> > scenario, so that callers from this scenario can be decoupled from
+> > netfs_io_subrequest.
+> > 
+> > The original cachefiles_prepare_read() is now refactored to a generic
+> > routine accepting a parameter list instead of netfs_io_subrequest.
+> > There's no logic change, except that the debug id of subrequest and
+> > request is removed from trace_cachefiles_prep_read().
+> > 
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 > 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> Acked-by: David Howells <dhowells@redhat.com>
 
-Acked-by: David Howells <dhowells@redhat.com>
+Thanks!  I will apply them for -next, and soon Jingbo will
+submit large folios support for erofs iomap/fscache modes.
+
+Thank all again,
+Gao Xiang
 
