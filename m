@@ -1,39 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BAEB63937D
-	for <lists+linux-erofs@lfdr.de>; Sat, 26 Nov 2022 03:50:40 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB1BF6393A5
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Nov 2022 04:21:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NJx6y03XSz3f5Z
-	for <lists+linux-erofs@lfdr.de>; Sat, 26 Nov 2022 13:50:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NJxp81JXWz3f5Y
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Nov 2022 14:21:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.57; helo=out30-57.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NJx6p4fXkz3ccg
-	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Nov 2022 13:50:25 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VVhKlCy_1669431019;
-Received: from 30.15.198.69(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VVhKlCy_1669431019)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NJxp05gBpz3cTC
+	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Nov 2022 14:20:55 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VVhOwfb_1669432849;
+Received: from 30.15.198.69(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VVhOwfb_1669432849)
           by smtp.aliyun-inc.com;
-          Sat, 26 Nov 2022 10:50:20 +0800
-Message-ID: <37198439-8d2d-dfb9-38b4-a68091c640cc@linux.alibaba.com>
-Date: Sat, 26 Nov 2022 10:50:19 +0800
+          Sat, 26 Nov 2022 11:20:50 +0800
+Message-ID: <dd919a21-956b-77ef-c5d2-92ef554b31c8@linux.alibaba.com>
+Date: Sat, 26 Nov 2022 11:20:49 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.4.0
-Subject: Re: [PATCH 2/2] erofs: enable large folio support for non-compressed
- format
+Subject: Re: [PATCH v2] erofs: check the uniqueness of fsid in shared domain
+ in advance
 Content-Language: en-US
-To: xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20221126005756.7662-1-jefflexu@linux.alibaba.com>
- <20221126005756.7662-3-jefflexu@linux.alibaba.com> <Y4F3EGk+0najgTco@debian>
+To: Hou Tao <houtao@huaweicloud.com>, linux-erofs@lists.ozlabs.org
+References: <20221125110822.3812942-1-houtao@huaweicloud.com>
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <Y4F3EGk+0najgTco@debian>
+In-Reply-To: <20221125110822.3812942-1-houtao@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -47,75 +45,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org, Yue Hu <huyue2@coolpad.com>, houtao1@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi Tao,
+
+Thanks for catching this!
 
 
-On 11/26/22 10:16 AM, Gao Xiang wrote:
-> Hi Jingbo,
+On 11/25/22 7:08 PM, Hou Tao wrote:
+> From: Hou Tao <houtao1@huawei.com>
 > 
-> On Sat, Nov 26, 2022 at 08:57:56AM +0800, Jingbo Xu wrote:
->> Enable large folio in both device and fscache mode.  Then the readahead
+> When shared domain is enabled, doing mount twice with the same fsid and
+> domain_id will trigger sysfs warning as shown below:
 > 
->          ^ large folios in both iomap and fscache modes.
+>  sysfs: cannot create duplicate filename '/fs/erofs/d0,meta.bin'
+>  CPU: 15 PID: 1051 Comm: mount Not tainted 6.1.0-rc6+ #1
+>  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
+>  Call Trace:
+>   <TASK>
+>   dump_stack_lvl+0x38/0x49
+>   dump_stack+0x10/0x12
+>   sysfs_warn_dup.cold+0x17/0x27
+>   sysfs_create_dir_ns+0xb8/0xd0
+>   kobject_add_internal+0xb1/0x240
+>   kobject_init_and_add+0x71/0xa0
+>   erofs_register_sysfs+0x89/0x110
+>   erofs_fc_fill_super+0x98c/0xaf0
+>   vfs_get_super+0x7d/0x100
+>   get_tree_nodev+0x16/0x20
+>   erofs_fc_get_tree+0x20/0x30
+>   vfs_get_tree+0x24/0xb0
+>   path_mount+0x2fa/0xa90
+>   do_mount+0x7c/0xa0
+>   __x64_sys_mount+0x8b/0xe0
+>   do_syscall_64+0x30/0x60
+>   entry_SYSCALL_64_after_hwframe+0x46/0xb0
 > 
-> I tend to enable iomap/fscache large folios with two patches.
-> Also please see dev-test branch.
+> The reason is erofs_fscache_register_cookie() doesn't guarantee the primary
+> data blob (aka fsid) is unique in the shared domain and
+> erofs_register_sysfs() invoked by the second mount will fail due to the
+> duplicated fsid in the shared domain and report warning.
+> 
+> It would be better to check the uniqueness of fsid before doing
+> erofs_register_sysfs(), so adding a new flags parameter for
+> erofs_fscache_register_cookie() and doing the uniqueness check if
+> EROFS_REG_COOKIE_NEED_NOEXIST is enabled.
+> 
+> After the patch, the error in dmesg for the duplicated mount would be:
+> 
+>  erofs: ...: erofs_domain_register_cookie: XX already exists in domain YY
+> 
+> Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
 
-Got it.
+LGTM.
 
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-> 
-> 
->> routine will pass down large folio containing multiple pages.
->>
->> Enable this feature for non-compressed format for now, until the
->> compression part supports large folio later.
-> 
->                             ^ large folios
-> 
->>
->> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
->> ---
->>  fs/erofs/fscache.c | 1 +
->>  fs/erofs/inode.c   | 1 +
->>  2 files changed, 2 insertions(+)
->>
->> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
->> index 0643b205c7eb..d2dd58ce312b 100644
->> --- a/fs/erofs/fscache.c
->> +++ b/fs/erofs/fscache.c
->> @@ -436,6 +436,7 @@ struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
->>  		inode->i_size = OFFSET_MAX;
->>  		inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
->>  		mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
->> +		mapping_set_large_folios(inode->i_mapping);
->>  
-> 
-> Meta inodes currently doesn't need large folios for now, and
-> we don't have readahead policy for these.
-
-Alright, I will fix this in a quick v2.
-
-> 
->>  		ctx->inode = inode;
->>  	}
->> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
->> index ad2a82f2eb4c..85932086d23f 100644
->> --- a/fs/erofs/inode.c
->> +++ b/fs/erofs/inode.c
->> @@ -295,6 +295,7 @@ static int erofs_fill_inode(struct inode *inode)
->>  		goto out_unlock;
->>  	}
->>  	inode->i_mapping->a_ops = &erofs_raw_access_aops;
->> +	mapping_set_large_folios(inode->i_mapping);
->>  #ifdef CONFIG_EROFS_FS_ONDEMAND
->>  	if (erofs_is_fscache_mode(inode->i_sb))
->>  		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
->> -- 
->> 2.19.1.6.gb485710b
->>
 
 -- 
 Thanks,
