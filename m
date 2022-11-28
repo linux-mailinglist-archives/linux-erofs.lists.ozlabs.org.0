@@ -2,74 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4038663AA28
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Nov 2022 14:55:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D5763AA34
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Nov 2022 14:57:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NLRmf6jsyz3cK2
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 00:54:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NLRqC6wB3z2xl6
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 00:57:11 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FQI9X7Iv;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=lZ2i6PZY;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1032; helo=mail-pj1-x1032.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=FQI9X7Iv;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=lZ2i6PZY;
 	dkim-atps=neutral
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NLRmV36xdz2xl6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 00:54:48 +1100 (AEDT)
-Received: by mail-pg1-x535.google.com with SMTP id 82so2502992pgc.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 28 Nov 2022 05:54:48 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NLRpB1WFjz3cKG
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 00:56:18 +1100 (AEDT)
+Received: by mail-pj1-x1032.google.com with SMTP id mv18so9569249pjb.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 28 Nov 2022 05:56:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rMA+IUVNpHjy6oRpBwY4wSKmCCzGqf4ZRGC6jZ1EpTI=;
-        b=FQI9X7IvdVLYyxyUvFcjWK6AmfB0hgD+8iJ970sSnhH81qxLmd2nWUdfzRPTPyPKA1
-         7+IrbDVSs9U/U4tWqXK+GDfn8sW/YORHvffBtXO4wkNuzWZ0P+R+913FpCfPKEmIn+Ij
-         oKDlg4cW3ZE+41p/lLWC/+hDyzgMrHnipSoJ9Zk3mYlnUunN0Cx+NSDrj+3qmcS448Oc
-         1JlXVLa+aH732KRPVJsHo98Q9Js5O5fEsHtkatyJmxsiaQcFeB85QKd4Tyk6Mgw7USr1
-         ANaBtV6kaCvTRT19zYoH83agggrmBrPC/+yl2FKCKkFVpVfZ5RmyGxNzdedl3u/ra14f
-         ZaBg==
+        bh=EN7rQQJkZzGKEVRkng3QEGcqHp0wQ4sozNyGRC6tD9w=;
+        b=lZ2i6PZY8eyhSsYyjh+6s0/zQ9/Vo5vtrWFoEW6ECVeZX4emyOz/m78YMnU67H6nky
+         jvR9VAX6So1YT6twa/x4ODb9WhBUPTubbTAn3594Ee6GrTcrH2730TOLcqbvRkGBhXVN
+         scbhIYD5DtEzyPF5/5zg1dU0vN4OYbImSS6Gc9yTO4e654DhB/3xywxoBsCRZuJVrbrS
+         a0hZONlpgUDOxz3VGCVh7Er7e2AYLYdaKH/q4H5vs/q9zaWcecAnO9BbgVjFx5XDbm3+
+         z3l9UEwylLYWMwrPsP26ctDFOc6GCvCxpGjLIU12Gclz9d8Ye6bKrQ0C9V9hLUO/dMeQ
+         +VWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=rMA+IUVNpHjy6oRpBwY4wSKmCCzGqf4ZRGC6jZ1EpTI=;
-        b=DDut3kIAHFNxPsXS2odajlHEBpbHNEtQElhoiUykt8s2XW3bR8KUPfu7FrUXnM8z6o
-         EDwpA2O85zuDpQ9Y560h4vW1dLll3Y4O//fe0pzAN0W5YA/tlxWiEGyVS5+rrYDYuO/H
-         KNS6wrq8XS/fYsj3yOP/B383BptL4rTC2vo36RSs8UesxkyB+nzvtH3VF4UI0abb21qR
-         kxB+ICogdo0IcMtecyKOZvCcwiyTjdaiULi6n5LD4Nc/Tvg1j9yFlYuSRD5u2EjMS+M9
-         wRlKnryYUHGk/2yXAkq10K0nyvsk4TSsih5ANaEMxDYZJSY5ZHlbjxRO41Qnyy1u6+QN
-         GD9A==
-X-Gm-Message-State: ANoB5pmI6bG681FEtkeyM3U1IGMXAhmcRN0XDthBeWqHEPT4jTfTuJup
-	+d5EABzJgqv+SOnL2yWwgA5LWA==
-X-Google-Smtp-Source: AA0mqf4/FNyX5rt/qrKuFS5pWpY/k783Kz27Hx1zCYQkzpioPz/Oi19D1IF2JWJXjBA2FqlZdYU9PQ==
-X-Received: by 2002:a62:5281:0:b0:561:efcf:1d21 with SMTP id g123-20020a625281000000b00561efcf1d21mr32130776pfb.68.1669643686149;
-        Mon, 28 Nov 2022 05:54:46 -0800 (PST)
+        bh=EN7rQQJkZzGKEVRkng3QEGcqHp0wQ4sozNyGRC6tD9w=;
+        b=nhDiORFTpvZF/tY4qqAr5SOt7aSMTThhHT6qGWBZitBTDwtEDaxEtRC5Ff+J/7cJg5
+         AgZpjexBW7kYebnG5yX4D5VdGRGjW9u7Q6hYPjByz5AmFGw5EE3XzEwiRg0JVg+4IxJH
+         Qc7wy3vZW6ZRtPbGW0OYzDdX8tGXSRDJwpDh4qilXxpx6zBbaoJkL+FoVqEhCfUhSvHP
+         NwIp3HBoHnPiIrtYkn3PU3wwgzFe61QKZqCG+ROiZRfCAwl4Dy14DBRj2i64nftqkD9O
+         jxs3DDrP/jgvUm484SLQu2sJNds4ngzjnr+GOxrzOr1s8FCgISxWpTiWZQk2K5evqrne
+         wvgg==
+X-Gm-Message-State: ANoB5pl62qRLLUoBdHY03cB4RbBmjPSZ/vtUynjdG8PP4U5IjhU0Dd4k
+	5X9+UEMVaIvtWArS+P6/CZtDB4QCRq/fSw==
+X-Google-Smtp-Source: AA0mqf4sjfA9knsCcA5y2f2dZ75SzSmtPB28mKVwtEXzFIdeq4+vIwlvPJsPzGmlyJEbi5cz5RpW1g==
+X-Received: by 2002:a17:90a:9904:b0:213:6442:232a with SMTP id b4-20020a17090a990400b002136442232amr61073250pjp.117.1669643774308;
+        Mon, 28 Nov 2022 05:56:14 -0800 (PST)
 Received: from [10.255.134.244] ([139.177.225.246])
-        by smtp.gmail.com with ESMTPSA id o14-20020a63f14e000000b00476c9df11fesm6749363pgk.68.2022.11.28.05.54.43
+        by smtp.gmail.com with ESMTPSA id b4-20020a170902d50400b001869ba04c83sm8873745plg.245.2022.11.28.05.56.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 05:54:45 -0800 (PST)
-Message-ID: <fc2f4c6e-26c5-927c-dc03-bb5b28fcb2bf@bytedance.com>
-Date: Mon, 28 Nov 2022 21:54:41 +0800
+        Mon, 28 Nov 2022 05:56:14 -0800 (PST)
+Message-ID: <042ebc25-f9ab-b407-033b-86d6fe5fda98@bytedance.com>
+Date: Mon, 28 Nov 2022 21:56:10 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.5.0
-Subject: Re: [Phishing Risk] [External] [PATCH v2 1/2] erofs: support large
+Subject: Re: [Phishing Risk] [External] [PATCH v2 2/2] erofs: enable large
  folios for fscache mode
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org
 References: <20221128025011.36352-1-jefflexu@linux.alibaba.com>
- <20221128025011.36352-2-jefflexu@linux.alibaba.com>
+ <20221128025011.36352-3-jefflexu@linux.alibaba.com>
 From: Jia Zhu <zhujia.zj@bytedance.com>
-In-Reply-To: <20221128025011.36352-2-jefflexu@linux.alibaba.com>
+In-Reply-To: <20221128025011.36352-3-jefflexu@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -90,14 +90,13 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 在 2022/11/28 10:50, Jingbo Xu 写道:
-> When large folios supported, one folio can be split into several slices,
-> each of which may be mapped to META/UNMAPPED/MAPPED, and the folio can
-> be unlocked as a whole only when all slices have completed.
+> Enable large folios for fscache mode.  Enable this feature for
+> non-compressed format for now, until the compression part supports large
+> folios later.
 > 
-> Thus always allocate erofs_fscache_request for each .read_folio() or
-> .readahead(). In this case, only when all slices of the folio or folio
-> range have completed, the request will be marked as completed and the
-> folio or folio range will be unlocked then.
+> One thing worth noting is that, the feature is not enabled for the meta
+> data routine since meta inodes don't need large folios for now, nor do
+> they support readahead yet.
 > 
 > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
@@ -105,197 +104,20 @@ Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 
 Thanks.
 > ---
->   fs/erofs/fscache.c | 116 +++++++++++++++++++--------------------------
->   1 file changed, 48 insertions(+), 68 deletions(-)
+>   fs/erofs/inode.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 3cfe1af7a46e..0643b205c7eb 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -167,32 +167,18 @@ static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
->   	return ret;
->   }
->   
-> -/*
-> - * Read into page cache in the range described by (@pos, @len).
-> - *
-> - * On return, if the output @unlock is true, the caller is responsible for page
-> - * unlocking; otherwise the callee will take this responsibility through request
-> - * completion.
-> - *
-> - * The return value is the number of bytes successfully handled, or negative
-> - * error code on failure. The only exception is that, the length of the range
-> - * instead of the error code is returned on failure after request is allocated,
-> - * so that .readahead() could advance rac accordingly.
-> - */
-> -static int erofs_fscache_data_read(struct address_space *mapping,
-> -				   loff_t pos, size_t len, bool *unlock)
-> +static int erofs_fscache_data_read_slice(struct erofs_fscache_request *req)
->   {
-> +	struct address_space *mapping = req->mapping;
->   	struct inode *inode = mapping->host;
->   	struct super_block *sb = inode->i_sb;
-> -	struct erofs_fscache_request *req;
-> +	loff_t pos = req->start + req->submitted;
->   	struct erofs_map_blocks map;
->   	struct erofs_map_dev mdev;
->   	struct iov_iter iter;
->   	size_t count;
->   	int ret;
->   
-> -	*unlock = true;
-> -
->   	map.m_la = pos;
->   	ret = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
->   	if (ret)
-> @@ -201,36 +187,37 @@ static int erofs_fscache_data_read(struct address_space *mapping,
->   	if (map.m_flags & EROFS_MAP_META) {
->   		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->   		erofs_blk_t blknr;
-> -		size_t offset, size;
-> +		size_t offset;
->   		void *src;
->   
->   		/* For tail packing layout, the offset may be non-zero. */
->   		offset = erofs_blkoff(map.m_pa);
->   		blknr = erofs_blknr(map.m_pa);
-> -		size = map.m_llen;
-> +		count = map.m_llen;
->   
->   		src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
->   		if (IS_ERR(src))
->   			return PTR_ERR(src);
->   
-> -		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, PAGE_SIZE);
-> -		if (copy_to_iter(src + offset, size, &iter) != size) {
-> +		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, count);
-> +		if (copy_to_iter(src + offset, count, &iter) != count) {
->   			erofs_put_metabuf(&buf);
->   			return -EFAULT;
->   		}
-> -		iov_iter_zero(PAGE_SIZE - size, &iter);
->   		erofs_put_metabuf(&buf);
-> -		return PAGE_SIZE;
-> +		req->submitted += count;
-> +		return 0;
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index e457b8a59ee7..85932086d23f 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -295,8 +295,7 @@ static int erofs_fill_inode(struct inode *inode)
+>   		goto out_unlock;
 >   	}
->   
-> +	count = req->len - req->submitted;
->   	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-> -		count = len;
->   		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, count);
->   		iov_iter_zero(count, &iter);
-> -		return count;
-> +		req->submitted += count;
-> +		return 0;
->   	}
->   
-> -	count = min_t(size_t, map.m_llen - (pos - map.m_la), len);
-> +	count = min_t(size_t, map.m_llen - (pos - map.m_la), count);
->   	DBG_BUGON(!count || count % PAGE_SIZE);
->   
->   	mdev = (struct erofs_map_dev) {
-> @@ -241,68 +228,61 @@ static int erofs_fscache_data_read(struct address_space *mapping,
->   	if (ret)
->   		return ret;
->   
-> -	req = erofs_fscache_req_alloc(mapping, pos, count);
-> -	if (IS_ERR(req))
-> -		return PTR_ERR(req);
-> -
-> -	*unlock = false;
-> -	ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
-> +	return erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
->   			req, mdev.m_pa + (pos - map.m_la), count);
-> -	if (ret)
-> -		req->error = ret;
-> +}
->   
-> -	erofs_fscache_req_put(req);
-> -	return count;
-> +/*
-> + * Read into page cache in the range described by (req->start, req->len).
-> + */
-> +static int erofs_fscache_data_read(struct erofs_fscache_request *req)
-> +{
-> +	int ret;
-> +
-> +	do {
-> +		ret = erofs_fscache_data_read_slice(req);
-> +		if (ret)
-> +			req->error = ret;
-> +	} while (!ret && req->submitted < req->len);
-> +
-> +	return ret;
->   }
->   
->   static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
->   {
-> -	bool unlock;
-> +	struct erofs_fscache_request *req;
->   	int ret;
->   
-> -	DBG_BUGON(folio_size(folio) != EROFS_BLKSIZ);
-> -
-> -	ret = erofs_fscache_data_read(folio_mapping(folio), folio_pos(folio),
-> -				      folio_size(folio), &unlock);
-> -	if (unlock) {
-> -		if (ret > 0)
-> -			folio_mark_uptodate(folio);
-> +	req = erofs_fscache_req_alloc(folio_mapping(folio),
-> +			folio_pos(folio), folio_size(folio));
-> +	if (IS_ERR(req)) {
->   		folio_unlock(folio);
-> +		return PTR_ERR(req);
->   	}
-> -	return ret < 0 ? ret : 0;
-> +
-> +	ret = erofs_fscache_data_read(req);
-> +	erofs_fscache_req_put(req);
-> +	return ret;
->   }
->   
->   static void erofs_fscache_readahead(struct readahead_control *rac)
->   {
-> -	struct folio *folio;
-> -	size_t len, done = 0;
-> -	loff_t start, pos;
-> -	bool unlock;
-> -	int ret, size;
-> +	struct erofs_fscache_request *req;
->   
->   	if (!readahead_count(rac))
->   		return;
->   
-> -	start = readahead_pos(rac);
-> -	len = readahead_length(rac);
-> +	req = erofs_fscache_req_alloc(rac->mapping,
-> +			readahead_pos(rac), readahead_length(rac));
-> +	if (IS_ERR(req))
-> +		return;
->   
-> -	do {
-> -		pos = start + done;
-> -		ret = erofs_fscache_data_read(rac->mapping, pos,
-> -					      len - done, &unlock);
-> -		if (ret <= 0)
-> -			return;
-> +	/* The request completion will drop refs on the folios. */
-> +	while (readahead_folio(rac))
-> +		;
->   
-> -		size = ret;
-> -		while (size) {
-> -			folio = readahead_folio(rac);
-> -			size -= folio_size(folio);
-> -			if (unlock) {
-> -				folio_mark_uptodate(folio);
-> -				folio_unlock(folio);
-> -			}
-> -		}
-> -	} while ((done += ret) < len);
-> +	erofs_fscache_data_read(req);
-> +	erofs_fscache_req_put(req);
->   }
->   
->   static const struct address_space_operations erofs_fscache_meta_aops = {
+>   	inode->i_mapping->a_ops = &erofs_raw_access_aops;
+> -	if (!erofs_is_fscache_mode(inode->i_sb))
+> -		mapping_set_large_folios(inode->i_mapping);
+> +	mapping_set_large_folios(inode->i_mapping);
+>   #ifdef CONFIG_EROFS_FS_ONDEMAND
+>   	if (erofs_is_fscache_mode(inode->i_sb))
+>   		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
