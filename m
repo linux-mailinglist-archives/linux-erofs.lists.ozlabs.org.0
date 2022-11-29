@@ -2,50 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4A7163BBE7
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 09:44:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C6A263BD72
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 11:01:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NLwqk595Mz3bfJ
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 19:44:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NLyY80Hj9z3bNw
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Nov 2022 21:01:48 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ptc+gdLo;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3ocafywkbap4y45qgrrkxgvvoj.muumrk0ykxiutzktz.ius@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=<UNKNOWN>)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ptc+gdLo;
+	dkim-atps=neutral
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NLwq267wfz30Qg
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 19:43:41 +1100 (AEDT)
-Received: by mail-il1-f197.google.com with SMTP id l4-20020a056e021aa400b00300ad9535c8so11439101ilv.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 00:43:41 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NLyY20TYXz30QS
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 21:01:39 +1100 (AEDT)
+Received: by mail-pj1-x1034.google.com with SMTP id w15-20020a17090a380f00b0021873113cb4so12920839pjb.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 29 Nov 2022 02:01:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/qi+J6kzvsPJwzznh9PRE8GU9tlUzaAtAd33MOx/ZAs=;
+        b=ptc+gdLo4shz/SvqVTeVhbcw0sXAmNx5gKIABub1EVbkNxTwYRJlrOZEi8qzu1TlXA
+         wltMYJdCAcQu0JEzqo3Hv3ArUY6QyQsOEDFwPhGQ5ycHOXBQ90oCGkoHadtB/4aUHis7
+         VhssiBOaAeEgL0qiWGu7nCsw+09ty+A1o39MTDYoUH2twzH+CpIDobLqV8kO5T0lP3MW
+         aJ5rG4N00B1R346DOUwzDWQE3xAB6cWZXOIuwTDWuI9Bc2teqAE32qyplavJW58lV3qO
+         ZsmHJLbPp4GPXXGkixNtDDueQwtsDjqEtou9OsCgd5mSJDb9YbuQzP+i8UbOqUsaF58A
+         FJzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zg5az6xrnSvzem2gwMfor+gDgHn0N57V8GOUL7tP8Vs=;
-        b=FZZPC+BGs1n6uKSWZ5aJPGALm4iACFpE6J+nTkgV72Ntk7zIrYI//DAAjNxWOGoGHD
-         AmK1naDqakV8vpKbbgQ15IZ8z56l/IHPkqOKlwKoZzK2pV9NX++MYarOwmP5eIvv//me
-         +XQxvFXX7seibdcWbUtjITceTCa9SvuQcCH63uFROiWuskQChkl8CAcs/j1/OtIm4Wsa
-         E3cfeAXylWQEfbWd+t5RLIm+N02n7apFs+mPs7p2yyI+NxVmg8ILHhPSlomNb83bWWXL
-         QnfQD6g/oCrwRb9hgMgIDnqkF/oYjZLOuYDLMP+KB5LKmi8onOhVFqSPYz13etKqxwkR
-         ezXg==
-X-Gm-Message-State: ANoB5pm8jl42BWGThTAwki3bIdslHgBACr7Re5ZtGa3hc9zsJgKR4f0f
-	3K6+HcoRr3TGFsqhGPk/ZucfG/PWLULvd85i5flZFIxBdGgr
-X-Google-Smtp-Source: AA0mqf42d/jX0JIdrKgatOfuS0V1VVLRZ/xgvKBJO2A+0Zyg1bC4Sd5T3GZtgMUGAeIPdwxzOhTcwyeGsoyPqqDqiCEfCt8LS4Yz
-MIME-Version: 1.0
-X-Received: by 2002:a02:5146:0:b0:371:1431:d4f2 with SMTP id
- s67-20020a025146000000b003711431d4f2mr26840101jaa.184.1669711417600; Tue, 29
- Nov 2022 00:43:37 -0800 (PST)
-Date: Tue, 29 Nov 2022 00:43:37 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ec75b005ee97fbaa@google.com>
-Subject: [syzbot] WARNING in rmqueue
-From: syzbot <syzbot+aafb3f37cfeb6534c4ac@syzkaller.appspotmail.com>
-To: chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com, 
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/qi+J6kzvsPJwzznh9PRE8GU9tlUzaAtAd33MOx/ZAs=;
+        b=DDjfPqD6m8hLWlovOnNLObBdAWk1CxWZVRBBYts4g6rVKu9J5Ym8I0nC1o/l/4WlCJ
+         2pFFx4iGwasvZxYOM5jByc4MYfEUYVgRWjwA336W/DQ3zt2mCPGpPS6yTfFyQ85b3oP5
+         CdaT1ZoO+thkSzSuF1lR6q20G+TC+Pkzji9qjoRoDZSxKgQ/0oRuc7ztNGf+2XIp9a2H
+         Yim6Yqe8VT1TdHtYe1lkAgCwsK2LwrDAXen3teXJpyLLGX1j1c/0RO7KCG4VwKo1b2SF
+         VveXNOvVjWrMopRoEQdaWAhC1ONsyDyiWUxyFBynsb+rjdNcO6uG/hEjxN/tn21kg/kC
+         Ifrw==
+X-Gm-Message-State: ANoB5pncZkLA52wCF6uG4hcQ7ekaVBh0cHnrItpz3Fz6Y7JqBdsnbVzT
+	BS8OlHHJXtXxzsSvl6On8FV/WslcpxQ=
+X-Google-Smtp-Source: AA0mqf5EeDyDBCyOHfjU738iQPiqDT/8oiLLYB8wlKi6lbz7gVJUYnqte7Z8iw3Kh45RkWFBFCBZBA==
+X-Received: by 2002:a17:902:9a01:b0:186:8791:e9a7 with SMTP id v1-20020a1709029a0100b001868791e9a7mr39444040plp.91.1669716096727;
+        Tue, 29 Nov 2022 02:01:36 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id z14-20020a1709027e8e00b00188fdae6e0esm10404631pla.44.2022.11.29.02.01.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 02:01:36 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3] erofs-utils: mkfs: support fragment deduplication
+Date: Tue, 29 Nov 2022 18:00:53 +0800
+Message-Id: <20221129100053.10665-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,80 +72,512 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Yue Hu <huyue2@coolpad.com>, zbestahu@163.com, shaojunjun@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+From: Yue Hu <huyue2@coolpad.com>
 
-syzbot found the following issue on:
+Previously, there's no fragment deduplication when this feature is
+introduced. Let's support it now.
 
-HEAD commit:    b7b275e60bcd Linux 6.1-rc7
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=16a70187880000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2325e409a9a893e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=aafb3f37cfeb6534c4ac
-compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15dde8a1880000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15685e8d880000
+With this patch, for Linux 5.10.1 + 5.10.87 source code:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/525233126d34/disk-b7b275e6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e8299bf41400/vmlinux-b7b275e6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eebf691dbf6f/bzImage-b7b275e6.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/d643567f551d/mount_0.gz
+[before]
+ 32k pcluster + lz4hc,12 + fragment		454M
+ 64k pcluster + lz4hc,12 + fragment		439M
+128k pcluster + lz4hc,12 + fragment		431M
+ 32k pcluster + lz4hc,12 + fragment + dedupe	376M
+ 64k pcluster + lz4hc,12 + fragment + dedupe	384M
+128k pcluster + lz4hc,12 + fragment + dedupe	399M
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+aafb3f37cfeb6534c4ac@syzkaller.appspotmail.com
+[after]
+ 32k pcluster + lz4hc,12 + fragment		316M
+ 64k pcluster + lz4hc,12 + fragment		300M
+128k pcluster + lz4hc,12 + fragment		292M
+ 32k pcluster + lz4hc,12 + fragment + dedupe	291M
+ 64k pcluster + lz4hc,12 + fragment + dedupe	286M
+128k pcluster + lz4hc,12 + fragment + dedupe	283M
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 48 at mm/page_alloc.c:3837 __count_numa_events include/linux/vmstat.h:249 [inline]
-WARNING: CPU: 0 PID: 48 at mm/page_alloc.c:3837 zone_statistics mm/page_alloc.c:3692 [inline]
-WARNING: CPU: 0 PID: 48 at mm/page_alloc.c:3837 rmqueue_buddy mm/page_alloc.c:3728 [inline]
-WARNING: CPU: 0 PID: 48 at mm/page_alloc.c:3837 rmqueue+0x1d6b/0x1ed0 mm/page_alloc.c:3853
-Modules linked in:
-CPU: 0 PID: 48 Comm: kworker/u5:0 Not tainted 6.1.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
-Workqueue: erofs_unzipd z_erofs_decompressqueue_work
-RIP: 0010:rmqueue+0x1d6b/0x1ed0 mm/page_alloc.c:3837
-Code: 48 8b 02 65 48 ff 40 20 49 83 f6 05 42 80 3c 2b 00 74 08 4c 89 e7 e8 a4 44 0b 00 49 8b 04 24 65 4a ff 44 f0 10 e9 2a fe ff ff <0f> 0b e9 29 e3 ff ff 48 89 df be 08 00 00 00 e8 31 46 0b 00 f0 41
-RSP: 0018:ffffc90000b97260 EFLAGS: 00010202
-RAX: f301f204f1f1f1f1 RBX: ffff88813fffae00 RCX: 000000000000adc2
-RDX: 1ffff92000172e70 RSI: 1ffff92000172e70 RDI: ffff88813fffae00
-RBP: ffffc90000b97420 R08: 0000000000000901 R09: 0000000000000009
-R10: ffffed1027fff5b3 R11: 1ffff11027fff5b2 R12: ffff88813fffc310
-R13: dffffc0000000000 R14: 0000000000000000 R15: ffff88813fffa700
-FS:  0000000000000000(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7bec722f10 CR3: 000000004a430000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- get_page_from_freelist+0x4b6/0x7c0 mm/page_alloc.c:4288
- __alloc_pages+0x259/0x560 mm/page_alloc.c:5558
- vm_area_alloc_pages mm/vmalloc.c:2975 [inline]
- __vmalloc_area_node mm/vmalloc.c:3043 [inline]
- __vmalloc_node_range+0x8f4/0x1290 mm/vmalloc.c:3213
- kvmalloc_node+0x13e/0x180 mm/util.c:606
- kvmalloc include/linux/slab.h:706 [inline]
- kvmalloc_array include/linux/slab.h:724 [inline]
- kvcalloc include/linux/slab.h:729 [inline]
- z_erofs_decompress_pcluster fs/erofs/zdata.c:1049 [inline]
- z_erofs_decompress_queue+0x693/0x2c30 fs/erofs/zdata.c:1155
- z_erofs_decompressqueue_work+0x95/0xe0 fs/erofs/zdata.c:1167
- process_one_work+0x877/0xdb0 kernel/workqueue.c:2289
- worker_thread+0xb14/0x1330 kernel/workqueue.c:2436
- kthread+0x266/0x300 kernel/kthread.c:376
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:306
- </TASK>
-
-
+Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v3: 
+- modify acrroding to Xiang's comments in v2
+- simplify the logic in vle_compress_one
+- fix the crash for 1MB pcluster
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+v2: mainly improve the logic in compression
+
+ include/erofs/fragments.h |   3 +-
+ lib/compress.c            | 115 ++++++++++++++++++++----
+ lib/fragments.c           | 180 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 277 insertions(+), 21 deletions(-)
+
+diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
+index 5444384..6c51fc9 100644
+--- a/include/erofs/fragments.h
++++ b/include/erofs/fragments.h
+@@ -15,8 +15,9 @@ extern "C"
+ extern const char *frags_packedname;
+ #define EROFS_PACKED_INODE	frags_packedname
+ 
++int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *crc);
+ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
+-			   unsigned int len);
++			   unsigned int len, u32 crc);
+ struct erofs_inode *erofs_mkfs_build_fragments(void);
+ int erofs_fragments_init(void);
+ void erofs_fragments_exit(void);
+diff --git a/lib/compress.c b/lib/compress.c
+index 17b3213..7e01932 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -33,6 +33,10 @@ struct z_erofs_vle_compress_ctx {
+ 	unsigned int head, tail;
+ 	erofs_blk_t blkaddr;		/* pointing to the next blkaddr */
+ 	u16 clusterofs;
++
++	u32 crc;
++	unsigned int pclustersize;
++	erofs_off_t remaining;
+ };
+ 
+ #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	\
+@@ -162,10 +166,10 @@ static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
+ 	ctx->clusterofs = clusterofs + count;
+ }
+ 
+-static int z_erofs_compress_dedupe(struct erofs_inode *inode,
+-				   struct z_erofs_vle_compress_ctx *ctx,
++static int z_erofs_compress_dedupe(struct z_erofs_vle_compress_ctx *ctx,
+ 				   unsigned int *len)
+ {
++	struct erofs_inode *inode = ctx->inode;
+ 	int ret = 0;
+ 
+ 	do {
+@@ -319,30 +323,62 @@ static void tryrecompress_trailing(void *in, unsigned int *insize,
+ 	*compressedsize = ret;
+ }
+ 
+-static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx,
+-			    bool final)
++static void z_erofs_fragments_dedupe_update(struct z_erofs_vle_compress_ctx *ctx,
++					    unsigned int *len)
++{
++	struct erofs_inode *inode = ctx->inode;
++	const unsigned int remaining = ctx->remaining + *len;
++
++	DBG_BUGON(!inode->fragment_size);
++
++	/* try to close the gap if it gets larger (should be rare) */
++	if (inode->fragment_size < remaining) {
++		ctx->pclustersize = roundup(remaining - inode->fragment_size,
++					    EROFS_BLKSIZ);
++		return;
++	}
++
++	inode->fragmentoff += inode->fragment_size - remaining;
++	inode->fragment_size = remaining;
++
++	erofs_dbg("Reducing fragment size to %u at %lu",
++		  inode->fragment_size, inode->fragmentoff);
++
++	/* it's ending */
++	ctx->head += remaining;
++	ctx->remaining = 0;
++	*len = 0;
++}
++
++static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx, bool fixup)
+ {
+ 	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_BLKSIZ];
+ 	struct erofs_inode *inode = ctx->inode;
+ 	char *const dst = dstbuf + EROFS_BLKSIZ;
+ 	struct erofs_compress *const h = &compresshandle;
+ 	unsigned int len = ctx->tail - ctx->head;
++	bool final = !ctx->remaining;
+ 	int ret;
+ 
+ 	while (len) {
+-		unsigned int pclustersize =
+-			z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
+ 		bool may_inline = (cfg.c_ztailpacking && final);
+ 		bool may_packing = (cfg.c_fragments && final &&
+ 				   !erofs_is_packed_inode(inode));
+ 
+-		if (z_erofs_compress_dedupe(inode, ctx, &len) && !final)
++		if (z_erofs_compress_dedupe(ctx, &len) && !final)
+ 			break;
+ 
+-		if (len <= pclustersize) {
++		if (len <= ctx->pclustersize) {
+ 			if (!final || !len)
+ 				break;
+ 			if (may_packing) {
++				if (inode->fragment_size && !fixup) {
++					ctx->remaining = inode->fragment_size;
++					ctx->pclustersize =
++						roundup(len, EROFS_BLKSIZ);
++					ctx->e.length = 0;
++					return -EAGAIN;
++				}
+ 				ctx->e.length = len;
+ 				goto frag_packing;
+ 			}
+@@ -353,7 +389,7 @@ static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx,
+ 		ctx->e.length = min(len,
+ 				cfg.c_max_decompressed_extent_bytes);
+ 		ret = erofs_compress_destsize(h, ctx->queue + ctx->head,
+-				&ctx->e.length, dst, pclustersize,
++				&ctx->e.length, dst, ctx->pclustersize,
+ 				!(final && len == ctx->e.length));
+ 		if (ret <= 0) {
+ 			if (ret != -EAGAIN) {
+@@ -385,11 +421,12 @@ nocompression:
+ 			ctx->e.compressedblks = 1;
+ 			ctx->e.raw = true;
+ 		} else if (may_packing && len == ctx->e.length &&
+-			   ret < pclustersize) {
++			   ret < ctx->pclustersize && (!inode->fragment_size ||
++			   fixup)) {
+ frag_packing:
+ 			ret = z_erofs_pack_fragments(inode,
+ 						     ctx->queue + ctx->head,
+-						     len);
++						     len, ctx->crc);
+ 			if (ret < 0)
+ 				return ret;
+ 			ctx->e.compressedblks = 0; /* indicate a fragment */
+@@ -425,6 +462,21 @@ frag_packing:
+ 			DBG_BUGON(ctx->e.compressedblks * EROFS_BLKSIZ >=
+ 				  ctx->e.length);
+ 
++			/*
++			 * Try to recompress a litte more if there's space left
++			 * for fragment deduplication.
++			 */
++			if (may_packing && len == ctx->e.length && tailused &&
++			    ctx->tail < sizeof(ctx->queue)) {
++				DBG_BUGON(!inode->fragment_size);
++
++				ctx->remaining = inode->fragment_size;
++				ctx->pclustersize =
++					ctx->e.compressedblks * EROFS_BLKSIZ;
++				ctx->e.length = 0;
++				return -EAGAIN;
++			}
++
+ 			/* zero out garbage trailing data for non-0padding */
+ 			if (!erofs_sb_has_lz4_0padding())
+ 				memset(dst + ret, 0,
+@@ -454,6 +506,9 @@ frag_packing:
+ 		ctx->head += ctx->e.length;
+ 		len -= ctx->e.length;
+ 
++		if (fixup && ctx->e.compressedblks)
++			z_erofs_fragments_dedupe_update(ctx, &len);
++
+ 		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
+ 			const unsigned int qh_aligned =
+ 				round_down(ctx->head, EROFS_BLKSIZ);
+@@ -736,10 +791,9 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+ {
+ 	struct erofs_buffer_head *bh;
+ 	static struct z_erofs_vle_compress_ctx ctx;
+-	erofs_off_t remaining;
+ 	erofs_blk_t blkaddr, compressed_blocks;
+ 	unsigned int legacymetasize;
+-	int ret;
++	int ret = 0;
+ 	u8 *compressmeta = malloc(vle_compressmeta_capacity(inode->i_size));
+ 
+ 	if (!compressmeta)
+@@ -775,6 +829,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+ 	inode->idata_size = 0;
+ 	inode->fragment_size = 0;
+ 
++	/*
++	 * Dedupe fragments before compression to avoid writing duplicate parts
++	 * into packed inode.
++	 */
++	if (cfg.c_fragments && !erofs_is_packed_inode(inode)) {
++		ret = z_erofs_fragments_dedupe(inode, fd, &ctx.crc);
++		if (ret < 0)
++			goto err_bdrop;
++	}
++
+ 	blkaddr = erofs_mapbh(bh->block);	/* start_blkaddr */
+ 	ctx.inode = inode;
+ 	ctx.blkaddr = blkaddr;
+@@ -782,22 +846,25 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+ 	ctx.head = ctx.tail = 0;
+ 	ctx.clusterofs = 0;
+ 	ctx.e.length = 0;
+-	remaining = inode->i_size;
++	ctx.e.compressedblks = 0;
++	ctx.pclustersize = z_erofs_get_max_pclusterblks(inode) * EROFS_BLKSIZ;
++	ctx.remaining = inode->i_size - inode->fragment_size;
+ 
+-	while (remaining) {
+-		const u64 readcount = min_t(u64, remaining,
++	while (ctx.remaining) {
++		const u64 readcount = min_t(u64, ctx.remaining,
+ 					    sizeof(ctx.queue) - ctx.tail);
++		bool fixup = ret < 0;
+ 
+ 		ret = read(fd, ctx.queue + ctx.tail, readcount);
+ 		if (ret != readcount) {
+ 			ret = -errno;
+ 			goto err_bdrop;
+ 		}
+-		remaining -= readcount;
++		ctx.remaining -= readcount;
+ 		ctx.tail += readcount;
+ 
+-		ret = vle_compress_one(&ctx, !remaining);
+-		if (ret)
++		ret = vle_compress_one(&ctx, fixup);
++		if (ret && ret != -EAGAIN)
+ 			goto err_free_idata;
+ 	}
+ 	DBG_BUGON(ctx.head != ctx.tail);
+@@ -807,6 +874,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+ 	DBG_BUGON(compressed_blocks < !!inode->idata_size);
+ 	compressed_blocks -= !!inode->idata_size;
+ 
++	if (inode->fragment_size && ctx.e.compressedblks) {
++		z_erofs_write_indexes(&ctx);
++
++		inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
++		ctx.e.length = inode->fragment_size;
++		ctx.e.compressedblks = 0;
++		ctx.e.raw = true;
++		ctx.e.partial = false;
++		ctx.e.blkaddr = ctx.blkaddr;
++	}
+ 	z_erofs_write_indexes(&ctx);
+ 	z_erofs_write_indexes_final(&ctx);
+ 	legacymetasize = ctx.metacur - compressmeta;
+diff --git a/lib/fragments.c b/lib/fragments.c
+index b8c37d5..48c133f 100644
+--- a/lib/fragments.c
++++ b/lib/fragments.c
+@@ -10,14 +10,183 @@
+ #include "erofs/inode.h"
+ #include "erofs/compress.h"
+ #include "erofs/print.h"
++#include "erofs/internal.h"
+ #include "erofs/fragments.h"
+ 
++struct erofs_fragment_dedupe_item {
++	struct list_head	list;
++	unsigned int		length, nr_dup;
++	erofs_off_t		pos;
++	u8			data[];
++};
++
++#define FRAGMENT_HASHTABLE_SIZE		65536
++#define FRAGMENT_HASH(crc)		(crc & (FRAGMENT_HASHTABLE_SIZE - 1))
++
++static struct list_head dupli_frags[FRAGMENT_HASHTABLE_SIZE];
++static unsigned int len_to_hash; /* the fragment length for crc32 hash */
++
+ static FILE *packedfile;
+ const char *frags_packedname = "packed_file";
+ 
++static int z_erofs_fragments_dedupe_find(struct erofs_inode *inode, int fd,
++					 u32 crc)
++{
++	struct erofs_fragment_dedupe_item *cur, *di = NULL;
++	struct list_head *head;
++	u8 *data;
++	unsigned int length;
++	int ret;
++
++	head = &dupli_frags[FRAGMENT_HASH(crc)];
++	if (list_empty(head))
++		return 0;
++
++	/* XXX: no need to read so much for smaller? */
++	if (inode->i_size < 2 * EROFS_CONFIG_COMPR_MAX_SZ)
++		length = inode->i_size;
++	else
++		length = 2 * EROFS_CONFIG_COMPR_MAX_SZ;
++
++	data = malloc(length);
++	if (!data)
++		return -ENOMEM;
++
++	ret = lseek(fd, inode->i_size - length, SEEK_SET);
++	if (ret == -1) {
++		ret = -errno;
++		goto out;
++	}
++
++	ret = read(fd, data, length);
++	if (ret != length) {
++		ret = -errno;
++		goto out;
++	}
++
++	list_for_each_entry(cur, head, list) {
++		unsigned int e1, e2, i = 0;
++
++		DBG_BUGON(cur->length < len_to_hash + 1);
++		DBG_BUGON(length < len_to_hash + 1);
++
++		e1 = cur->length - len_to_hash - 1;
++		e2 = length - len_to_hash - 1;
++
++		if (memcmp(cur->data + e1 + 1, data + e2 + 1, len_to_hash))
++			continue;
++
++		while (i <= min(e1, e2) && cur->data[e1 - i] == data[e2 - i])
++			i++;
++
++		if (i && (!di || i + len_to_hash > di->nr_dup)) {
++			cur->nr_dup = i + len_to_hash;
++			di = cur;
++
++			/* full match */
++			if (i == min(e1, e2) + 1)
++				break;
++		}
++	}
++	if (!di)
++		goto out;
++
++	DBG_BUGON(di->length < di->nr_dup);
++
++	inode->fragment_size = di->nr_dup;
++	inode->fragmentoff = di->pos + di->length - di->nr_dup;
++
++	erofs_dbg("Dedupe %u fragment data at %lu", inode->fragment_size,
++		  inode->fragmentoff);
++out:
++	free(data);
++	return ret;
++}
++
++
++int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *crc_ret)
++{
++	u8 data_to_hash[len_to_hash];
++	u32 crc;
++	int ret;
++
++	if (inode->i_size <= len_to_hash)
++		return 0;
++
++	ret = lseek(fd, inode->i_size - len_to_hash, SEEK_SET);
++	if (ret == -1)
++		return -errno;
++
++	ret = read(fd, data_to_hash, len_to_hash);
++	if (ret != len_to_hash)
++		return -errno;
++
++	crc = erofs_crc32c(~0, data_to_hash, len_to_hash);
++	*crc_ret = crc;
++
++	ret = z_erofs_fragments_dedupe_find(inode, fd, crc);
++	if (ret < 0)
++		return ret;
++
++	ret = lseek(fd, 0, SEEK_SET);
++	if (ret == -1)
++		return -errno;
++	return 0;
++}
++
++static int z_erofs_fragments_dedupe_insert(void *data, unsigned int len,
++					   erofs_off_t pos, u32 crc)
++{
++	struct erofs_fragment_dedupe_item *di;
++
++	if (len <= len_to_hash)
++		return 0;
++
++	di = malloc(sizeof(*di) + len);
++	if (!di)
++		return -ENOMEM;
++
++	memcpy(di->data, data, len);
++	di->length = len;
++	di->pos = pos;
++	di->nr_dup = 0;
++
++	list_add_tail(&di->list, &dupli_frags[FRAGMENT_HASH(crc)]);
++	return 0;
++}
++
++static inline void z_erofs_fragments_dedupe_init(unsigned int clen)
++{
++	unsigned int i;
++
++	for (i = 0; i < FRAGMENT_HASHTABLE_SIZE; ++i)
++		init_list_head(&dupli_frags[i]);
++
++	len_to_hash = clen;
++}
++
++static void z_erofs_fragments_dedupe_exit(void)
++{
++	struct erofs_fragment_dedupe_item *di, *n;
++	struct list_head *head;
++	unsigned int i;
++
++	for (i = 0; i < FRAGMENT_HASHTABLE_SIZE; ++i) {
++		head = &dupli_frags[i];
++
++		if (list_empty(head))
++			continue;
++
++		list_for_each_entry_safe(di, n, head, list)
++			free(di);
++	}
++}
++
+ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
+-			   unsigned int len)
++			   unsigned int len, u32 crc)
+ {
++	int ret;
++
+ 	inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+ 	inode->fragmentoff = ftell(packedfile);
+ 	inode->fragment_size = len;
+@@ -35,6 +204,11 @@ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
+ 
+ 	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
+ 		  inode->fragmentoff);
++
++	ret = z_erofs_fragments_dedupe_insert(data, len, inode->fragmentoff,
++					      crc);
++	if (ret)
++		return ret;
+ 	return len;
+ }
+ 
+@@ -50,6 +224,8 @@ void erofs_fragments_exit(void)
+ {
+ 	if (packedfile)
+ 		fclose(packedfile);
++
++	z_erofs_fragments_dedupe_exit();
+ }
+ 
+ int erofs_fragments_init(void)
+@@ -61,5 +237,7 @@ int erofs_fragments_init(void)
+ #endif
+ 	if (!packedfile)
+ 		return -ENOMEM;
++
++	z_erofs_fragments_dedupe_init(16);
+ 	return 0;
+ }
+-- 
+2.17.1
+
