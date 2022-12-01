@@ -2,38 +2,34 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE33F63ED45
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Dec 2022 11:09:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FAC463EE93
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Dec 2022 11:58:43 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NNBdB04G2z3bXK
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Dec 2022 21:09:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NNCjs12rRz3bXR
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Dec 2022 21:58:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.6; helo=out30-6.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-6.freemail.mail.aliyun.com (out30-6.freemail.mail.aliyun.com [115.124.30.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NNBd63Pzzz30QS
-	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Dec 2022 21:09:29 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VW8IkAi_1669889363;
-Received: from 30.221.129.69(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VW8IkAi_1669889363)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NNCjl5gTrz30Qq
+	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Dec 2022 21:58:34 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jefflexu@linux.alibaba.com;NM=0;PH=DS;RN=4;SR=0;TI=SMTPD_---0VW8aXKh_1669892309;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VW8aXKh_1669892309)
           by smtp.aliyun-inc.com;
-          Thu, 01 Dec 2022 18:09:24 +0800
-Message-ID: <016136f8-7402-3f57-0e16-1a3f3ec055ec@linux.alibaba.com>
-Date: Thu, 1 Dec 2022 18:09:23 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.0
-Subject: Re: [PATCH v2] erofs: use kmap_local_page() only for erofs_bread()
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
- Chao Yu <chao@kernel.org>
-References: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
+          Thu, 01 Dec 2022 18:58:30 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20221018105313.4940-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs: split inline data reading and tail zeroing in fscache mode
+Date: Thu,  1 Dec 2022 18:58:29 +0800
+Message-Id: <20221201105829.90692-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,130 +41,91 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Prior to this patch, the INLINE routine will also zero the tail part of
+the folio.  This is reasonable since currently for each file, only the
+tail part over EROFS_BLKSIZ boundary is stored as tail packing format,
+and thus the tail part in the same folio is treated as EOF and shall be
+zeroed.
 
+Since we have supported large folios now and
+erofs_fscache_data_read_slice() can be called multiple times for each
+folio or folio range, for tail packing format, we can defer zeroing the
+EOF part to the UNMAPPED routine in the next calling of
+erofs_fscache_data_read_slice().  This cleanup makes the INLINE routine
+focusing on reading inline data, while zeroing is left to the UNMAPPED
+routine.
 
-On 10/18/22 6:53 PM, Gao Xiang wrote:
-> Convert all mapped erofs_bread() users to use kmap_local_page()
-> instead of kmap() or kmap_atomic().
+Besides, make the naming consistent among INLINE/UNMAPPED/MAPPED
+routines.
 
-Reviewed-and-tested-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+v2: rename 'size' to 'count' to make git diff statistics more cleaner,
+while v1 renames 'count' to 'size'
 
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
->  fs/erofs/data.c     | 8 ++------
->  fs/erofs/internal.h | 3 +--
->  fs/erofs/xattr.c    | 8 ++++----
->  fs/erofs/zmap.c     | 4 ++--
->  4 files changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index fe8ac0e163f7..fe1ae80284bf 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -13,9 +13,7 @@
->  void erofs_unmap_metabuf(struct erofs_buf *buf)
->  {
->  	if (buf->kmap_type == EROFS_KMAP)
-> -		kunmap(buf->page);
-> -	else if (buf->kmap_type == EROFS_KMAP_ATOMIC)
-> -		kunmap_atomic(buf->base);
-> +		kunmap_local(buf->base);
->  	buf->base = NULL;
->  	buf->kmap_type = EROFS_NO_KMAP;
->  }
-> @@ -54,9 +52,7 @@ void *erofs_bread(struct erofs_buf *buf, struct inode *inode,
->  	}
->  	if (buf->kmap_type == EROFS_NO_KMAP) {
->  		if (type == EROFS_KMAP)
-> -			buf->base = kmap(page);
-> -		else if (type == EROFS_KMAP_ATOMIC)
-> -			buf->base = kmap_atomic(page);
-> +			buf->base = kmap_local_page(page);
->  		buf->kmap_type = type;
->  	} else if (buf->kmap_type != type) {
->  		DBG_BUGON(1);
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 1701df48c446..67dc8e177211 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -253,8 +253,7 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
->  
->  enum erofs_kmap_type {
->  	EROFS_NO_KMAP,		/* don't map the buffer */
-> -	EROFS_KMAP,		/* use kmap() to map the buffer */
-> -	EROFS_KMAP_ATOMIC,	/* use kmap_atomic() to map the buffer */
-> +	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
->  };
->  
->  struct erofs_buf {
-> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-> index 8106bcb5a38d..a62fb8a3318a 100644
-> --- a/fs/erofs/xattr.c
-> +++ b/fs/erofs/xattr.c
-> @@ -148,7 +148,7 @@ static inline int xattr_iter_fixup(struct xattr_iter *it)
->  
->  	it->blkaddr += erofs_blknr(it->ofs);
->  	it->kaddr = erofs_read_metabuf(&it->buf, it->sb, it->blkaddr,
-> -				       EROFS_KMAP_ATOMIC);
-> +				       EROFS_KMAP);
->  	if (IS_ERR(it->kaddr))
->  		return PTR_ERR(it->kaddr);
->  	it->ofs = erofs_blkoff(it->ofs);
-> @@ -174,7 +174,7 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
->  	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
->  
->  	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
-> -				       EROFS_KMAP_ATOMIC);
-> +				       EROFS_KMAP);
->  	if (IS_ERR(it->kaddr))
->  		return PTR_ERR(it->kaddr);
->  	return vi->xattr_isize - xattr_header_sz;
-> @@ -368,7 +368,7 @@ static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
->  
->  		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
->  		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-> -						  EROFS_KMAP_ATOMIC);
-> +						  EROFS_KMAP);
->  		if (IS_ERR(it->it.kaddr))
->  			return PTR_ERR(it->it.kaddr);
->  		it->it.blkaddr = blkaddr;
-> @@ -580,7 +580,7 @@ static int shared_listxattr(struct listxattr_iter *it)
->  
->  		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
->  		it->it.kaddr = erofs_read_metabuf(&it->it.buf, sb, blkaddr,
-> -						  EROFS_KMAP_ATOMIC);
-> +						  EROFS_KMAP);
->  		if (IS_ERR(it->it.kaddr))
->  			return PTR_ERR(it->it.kaddr);
->  		it->it.blkaddr = blkaddr;
-> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> index 0bb66927e3d0..749a5ac943f4 100644
-> --- a/fs/erofs/zmap.c
-> +++ b/fs/erofs/zmap.c
-> @@ -178,7 +178,7 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
->  	unsigned int advise, type;
->  
->  	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
-> -				      erofs_blknr(pos), EROFS_KMAP_ATOMIC);
-> +				      erofs_blknr(pos), EROFS_KMAP);
->  	if (IS_ERR(m->kaddr))
->  		return PTR_ERR(m->kaddr);
->  
-> @@ -416,7 +416,7 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
->  out:
->  	pos += lcn * (1 << amortizedshift);
->  	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
-> -				      erofs_blknr(pos), EROFS_KMAP_ATOMIC);
-> +				      erofs_blknr(pos), EROFS_KMAP);
->  	if (IS_ERR(m->kaddr))
->  		return PTR_ERR(m->kaddr);
->  	return unpack_compacted_index(m, amortizedshift, pos, lookahead);
+v1: https://lore.kernel.org/all/20221201075018.27925-1-jefflexu@linux.alibaba.com/
+---
+ fs/erofs/fscache.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index f14886c479bd..c9bf59aac5ac 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -214,35 +214,32 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
+ 	if (map.m_flags & EROFS_MAP_META) {
+ 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 		erofs_blk_t blknr;
+-		size_t offset, size;
++		size_t offset;
+ 		void *src;
+ 
+ 		/* For tail packing layout, the offset may be non-zero. */
+ 		offset = erofs_blkoff(map.m_pa);
+ 		blknr = erofs_blknr(map.m_pa);
+-		size = map.m_llen;
++		count = map.m_llen;
+ 
+ 		src = erofs_read_metabuf(&buf, sb, blknr, EROFS_KMAP);
+ 		if (IS_ERR(src))
+ 			return PTR_ERR(src);
+ 
+-		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, PAGE_SIZE);
+-		if (copy_to_iter(src + offset, size, &iter) != size) {
++		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, count);
++		if (copy_to_iter(src + offset, count, &iter) != count) {
+ 			erofs_put_metabuf(&buf);
+ 			return -EFAULT;
+ 		}
+-		iov_iter_zero(PAGE_SIZE - size, &iter);
+ 		erofs_put_metabuf(&buf);
+-		primary->submitted += PAGE_SIZE;
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	count = primary->len - primary->submitted;
+ 	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+ 		iov_iter_xarray(&iter, READ, &mapping->i_pages, pos, count);
+ 		iov_iter_zero(count, &iter);
+-		primary->submitted += count;
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	count = min_t(size_t, map.m_llen - (pos - map.m_la), count);
+@@ -263,6 +260,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
+ 	ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
+ 			req, mdev.m_pa + (pos - map.m_la), count);
+ 	erofs_fscache_req_put(req);
++out:
+ 	primary->submitted += count;
+ 	return ret;
+ }
 -- 
-Thanks,
-Jingbo
+2.19.1.6.gb485710b
+
