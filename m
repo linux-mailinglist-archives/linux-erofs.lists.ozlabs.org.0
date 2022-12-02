@@ -1,73 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7705564057F
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Dec 2022 12:06:39 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8786A64104C
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Dec 2022 23:01:53 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NNqrY2Xgdz3bdh
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Dec 2022 22:06:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NP6NW0Y9hz3bfm
+	for <lists+linux-erofs@lfdr.de>; Sat,  3 Dec 2022 09:01:47 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YBSuNHhs;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Smh3r6lG;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YBSuNHhs;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Smh3r6lG;
 	dkim-atps=neutral
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NNqrT0W7yz3bNB
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Dec 2022 22:06:32 +1100 (AEDT)
-Received: by mail-pg1-x535.google.com with SMTP id 6so4101535pgm.6
-        for <linux-erofs@lists.ozlabs.org>; Fri, 02 Dec 2022 03:06:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aTz51F9bsPoB86Y9QHHYRtEzGWPyrep/wS4rjmBJiCk=;
-        b=YBSuNHhsY+1n0OeMkSuouxSlcj3anBw1J77GmKsXTHnymgbLPxu6nkZIA4kv1EgDaK
-         QTvmXEL73aZm7ZJeglLw3PWUG5ieWOt8+blpUrBGAcPuERzVNirX2r606iHGEW+LARZ8
-         N8OhxvBWDDQnOsH1//oMOXngN99+R2F1Af6v0yUtdWwhPohS2OzyWJ2pLDLTg/26NETI
-         6+Yi6c95DP/pRCClUG4b20N0dulXEPjV83lnl7+d/i6uNqLVKurrS5bOS2ppToqSq7xy
-         l4ifKG2Aikzqc+fTbSBv8dFFMcen48TbMRx0udwNIbF72YX6QWjLyNCZl8lWWv/8fOIN
-         NxVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aTz51F9bsPoB86Y9QHHYRtEzGWPyrep/wS4rjmBJiCk=;
-        b=L4t/tvSuM5PsRbZIpePIq7Qi8gr48Fw3qRRqClEtzpnteTAWY37AWnOzEkHbkaXFTV
-         6fIaO4+7QMrZIFzkoPeiRNBkEahweeGIaLWzVxBzOjYM9e9CkR7R2QMOO5ziXy5rZHP+
-         jOxwVPDt4oMvGvj1bWSeaTb1ccF+nEVkRG13jB5LEkq2x6xKBT9uS96lvZaFqAUxbDom
-         vRRmIiMl3edwNlrqzpa2Hdi8WdJOMYw1NfY8IE0qIgZM7GVdoIuR/ZiH29F1t+T5UO7K
-         2G23dpt/S5tvFiJL7HYGRRUGsy9jI1iYEkg8gQsBj+a0O63Kv3tMX38YPvcHjvr6B1V2
-         slxw==
-X-Gm-Message-State: ANoB5pmS58oypcoiXGrV1kpjAoVHNwXV747oQliDdeDIBvr+Uhccz2gZ
-	32byXs7G0ghZ8Z/vKoWwixgaQnHLo7EDbA==
-X-Google-Smtp-Source: AA0mqf4Uo/mmmpV03ILc3zfcom8L3eR4lgiYC3mr6bFrQ5apm6Fq2qt3XUmOhccrquo45qUQG1q9dw==
-X-Received: by 2002:a63:eb16:0:b0:477:5f10:204f with SMTP id t22-20020a63eb16000000b004775f10204fmr44994558pgh.144.1669979189508;
-        Fri, 02 Dec 2022 03:06:29 -0800 (PST)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id je10-20020a170903264a00b00186abb95bfdsm5342025plb.25.2022.12.02.03.06.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Dec 2022 03:06:29 -0800 (PST)
-Date: Fri, 2 Dec 2022 19:10:42 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: <linux-erofs@lists.ozlabs.org>
-Subject: Re: [PATCH v4] erofs-utils: mkfs: support fragment deduplication
-Message-ID: <20221202191042.000004b9.zbestahu@gmail.com>
-In-Reply-To: <20221201205358.00003061.huyue2@coolpad.com>
-References: <20221201111615.9593-1-zbestahu@gmail.com>
-	<20221201205358.00003061.huyue2@coolpad.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NP6NP0f01z3bWF
+	for <linux-erofs@lists.ozlabs.org>; Sat,  3 Dec 2022 09:01:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670018501; x=1701554501;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RKKQRvFwPlwuUQgc1/Z5zSAKAyVH2yYh0cgpL19MVmM=;
+  b=Smh3r6lGT8OYFh1euypsLzRlKjDHpr8rwaT8SWWTVXSiW10BFW7CaBbR
+   b4/6c9zzEiVByMaYgLnvm7jsiwu2whH/RWbEPLRZHNieDk4ZzcCDSZe5J
+   yDxUvfqcGzUn+rBgAa9KeXbYQxQX5nz+SwL63u6K0XqURSiWciEvOVOcn
+   tbb/zA5cb/FPM2NkDL6qZpj1OmFCnN2s+fDmO8lmPVzNCupLO77NafjVS
+   mN1NmOpTj6jBT1zdgEiHRIgoiFPp7FWq6adRVXKalzj4zVxuo1eVThFyS
+   OSHEW3K222Idfxh2tku7d78NhJdsIvOvWqpUDdOvz2lYCnJUxKrAJgHvc
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="402333936"
+X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
+   d="scan'208";a="402333936"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 14:01:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="675974076"
+X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
+   d="scan'208";a="675974076"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 02 Dec 2022 14:01:30 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1p1E65-000E3u-2Y;
+	Fri, 02 Dec 2022 22:01:29 +0000
+Date: Sat, 03 Dec 2022 06:01:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 51e5be28a87d08a4f2890ee4edf8632092ca5a7d
+Message-ID: <638a759e.W5hx/P75nH/W90ix%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -80,75 +70,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, shaojunjun@coolpad.com, zhangwen@coolpad.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, 01 Dec 2022 20:49:46 +0800
-"Yue Hu" <huyue2@coolpad.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 51e5be28a87d08a4f2890ee4edf8632092ca5a7d  erofs: use kmap_local_page() only for erofs_bread()
 
-> Add a missing change:
-> - change to generate a ctx for duplicate fragment in compression.
-> 
-> On Thu,  1 Dec 2022 19:16:15 +0800
-> Yue Hu <zbestahu@gmail.com> wrote:
-> 
-> > From: Yue Hu <huyue2@coolpad.com>
-> > 
-> > Previously, there's no fragment deduplication when this feature is
-> > introduced. Let's support it now.
-> > 
-> > We intend to dedupe the fragments before compression, so that duplicate
-> > parts will not be written into packed inode.
-> > 
-> > With this patch, for Linux 5.10.1 + 5.10.87 source code:
-> > 
-> > [before]
-> >  32k pcluster + T0 + lz4hc,12 + fragment		450M
-> >  64k pcluster + T0 + lz4hc,12 + fragment		434M
-> > 128k pcluster + T0 + lz4hc,12 + fragment		426M
-> >  32k pcluster + T0 + lz4hc,12 + fragment + dedupe	368M
-> >  64k pcluster + T0 + lz4hc,12 + fragment + dedupe	380M
-> > 128k pcluster + T0 + lz4hc,12 + fragment + dedupe	395M
-> > 
-> > [after]
-> >  32k pcluster + T0 + lz4hc,12 + fragment		311M
-> >  64k pcluster + T0 + lz4hc,12 + fragment		295M
-> > 128k pcluster + T0 + lz4hc,12 + fragment		287M
-> >  32k pcluster + T0 + lz4hc,12 + fragment + dedupe	286M
-> >  64k pcluster + T0 + lz4hc,12 + fragment + dedupe	281M
-> > 128k pcluster + T0 + lz4hc,12 + fragment + dedupe	278M
-> > 
-> > Tested on SquashFS (which uses level 12 by default for lz4hc):
-> > 
-> >  32k block + lz4hc		332M
-> >  64k block + lz4hc		304M
-> > 128k block + lz4hc		283M
-> > 256k block + lz4hc		273M
-> > 256k block + lz4hc + noI	278M
-> > 
-> > Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > Signed-off-by: Yue Hu <huyue2@coolpad.com>
-> > ---
-> > v4:
-> > - renaming include tofcrc/new_fragmentsize
-> > - move fixup into ctx
-> > - use may_fixing to check packing fragment or not
-> > - move sb/inode flag + 64bits case from erofs_pack_fragments() to new
-> >   helper erofs_fragments_commit()
-> > - move recompress ahead of may_inline case when compressing succeeds
-> > - update commit message/code comments
-> > - note that decompress will fail when enable ztailpacking at the same
-> >   time, need some time to debug
+elapsed time: 773m
 
-No need to care may_inline case if we find duplicate fragment.
+configs tested: 62
+configs skipped: 2
 
--               bool may_inline = (cfg.c_ztailpacking && final);
-+               bool may_inline = (cfg.c_ztailpacking && final &&
-+                                  !inode->fragment_size);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Should be included in v5.
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+s390                                defconfig
+alpha                             allnoconfig
+i386                              allnoconfig
+arc                               allnoconfig
+arm                               allnoconfig
+x86_64                        randconfig-a004
+s390                 randconfig-r044-20221201
+x86_64                        randconfig-a002
+ia64                             allmodconfig
+arc                                 defconfig
+powerpc                           allnoconfig
+alpha                               defconfig
+x86_64                        randconfig-a006
+x86_64                              defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+m68k                             allmodconfig
+x86_64                          rhel-8.3-func
+sh                               allmodconfig
+arc                              allyesconfig
+mips                             allyesconfig
+alpha                            allyesconfig
+i386                          randconfig-a003
+arc                  randconfig-r043-20221201
+m68k                             allyesconfig
+s390                             allmodconfig
+powerpc                          allmodconfig
+i386                          randconfig-a001
+x86_64                               rhel-8.3
+i386                          randconfig-a016
+x86_64                           allyesconfig
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+s390                             allyesconfig
+i386                          randconfig-a014
+x86_64                        randconfig-a011
+i386                          randconfig-a012
+riscv                randconfig-r042-20221201
+x86_64                        randconfig-a015
+i386                                defconfig
+i386                             allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
 
-> > 
-> > v3:
+clang tested configs:
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a006
+hexagon              randconfig-r041-20221201
+i386                          randconfig-a002
+x86_64                        randconfig-a014
+i386                          randconfig-a004
+i386                          randconfig-a011
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+x86_64                        randconfig-a012
+i386                          randconfig-a015
+hexagon              randconfig-r045-20221201
 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
