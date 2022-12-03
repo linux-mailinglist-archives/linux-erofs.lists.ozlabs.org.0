@@ -1,64 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8786A64104C
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Dec 2022 23:01:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0796164156D
+	for <lists+linux-erofs@lfdr.de>; Sat,  3 Dec 2022 10:49:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NP6NW0Y9hz3bfm
-	for <lists+linux-erofs@lfdr.de>; Sat,  3 Dec 2022 09:01:47 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Smh3r6lG;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NPQ4m1jDcz3bbX
+	for <lists+linux-erofs@lfdr.de>; Sat,  3 Dec 2022 20:49:12 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1670060952;
+	bh=cQEt/QlRk75VA1tfV8jav2K0Kc/PE5eF3mJoLOKRQ5o=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=eRJ22H8nl3cd+weKTj86a0xTVy8ebtlPvmuz7Aebq88T/rCFeQa2ImQM1ikJpfUHW
+	 8JbqZTW+3v5JbrmcW+VkOBPMm+/vFSZOdfvxKCDTS0PYjLfsrzASooBJxYvj8n2NUf
+	 iCPQtfagBu5+6EV8cBlDLtyqwu8ad6kykGrp/1tErDFH8voKVHRnKYBQ9YnFVjwoTR
+	 zr2SrKa1iyR0rjX80dNJUFW2zR9MVP46Y1MgeBBOGzFUPh3IBsfaRrBkMBgOjG6Ie4
+	 EETgL+uNXs5UjUQd7F7StvbPwSu4OdbZM0/XV1jrYzGrv5zchNsTyLVUoxZsoPVs95
+	 Ipak1va+vDeGg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Smh3r6lG;
-	dkim-atps=neutral
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=chenzhongjin@huawei.com; receiver=<UNKNOWN>)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NP6NP0f01z3bWF
-	for <linux-erofs@lists.ozlabs.org>; Sat,  3 Dec 2022 09:01:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670018501; x=1701554501;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RKKQRvFwPlwuUQgc1/Z5zSAKAyVH2yYh0cgpL19MVmM=;
-  b=Smh3r6lGT8OYFh1euypsLzRlKjDHpr8rwaT8SWWTVXSiW10BFW7CaBbR
-   b4/6c9zzEiVByMaYgLnvm7jsiwu2whH/RWbEPLRZHNieDk4ZzcCDSZe5J
-   yDxUvfqcGzUn+rBgAa9KeXbYQxQX5nz+SwL63u6K0XqURSiWciEvOVOcn
-   tbb/zA5cb/FPM2NkDL6qZpj1OmFCnN2s+fDmO8lmPVzNCupLO77NafjVS
-   mN1NmOpTj6jBT1zdgEiHRIgoiFPp7FWq6adRVXKalzj4zVxuo1eVThFyS
-   OSHEW3K222Idfxh2tku7d78NhJdsIvOvWqpUDdOvz2lYCnJUxKrAJgHvc
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="402333936"
-X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="402333936"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 14:01:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="675974076"
-X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="675974076"
-Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 02 Dec 2022 14:01:30 -0800
-Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p1E65-000E3u-2Y;
-	Fri, 02 Dec 2022 22:01:29 +0000
-Date: Sat, 03 Dec 2022 06:01:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 51e5be28a87d08a4f2890ee4edf8632092ca5a7d
-Message-ID: <638a759e.W5hx/P75nH/W90ix%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NPQ4c712Mz3bSm
+	for <linux-erofs@lists.ozlabs.org>; Sat,  3 Dec 2022 20:49:01 +1100 (AEDT)
+Received: from dggpemm500013.china.huawei.com (unknown [172.30.72.55])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NPQ304YqhzmVxm;
+	Sat,  3 Dec 2022 17:47:40 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.175.36) by
+ dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 3 Dec 2022 17:48:25 +0800
+To: <syzbot+6f8cd9a0155b366d227f@syzkaller.appspotmail.com>,
+	<linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] erofs: Fix pcluster become inline when m_pa is zero
+Date: Sat, 3 Dec 2022 17:45:27 +0800
+Message-ID: <20221203094527.129869-1-chenzhongjin@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.175.36]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,87 +56,83 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Chen Zhongjin via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Chen Zhongjin <chenzhongjin@huawei.com>
+Cc: chenzhongjin@huawei.com, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 51e5be28a87d08a4f2890ee4edf8632092ca5a7d  erofs: use kmap_local_page() only for erofs_bread()
+syzkaller reported a memleak:
+https://syzkaller.appspot.com/bug?id=62f37ff612f0021641eda5b17f056f1668aa9aed
 
-elapsed time: 773m
+unreferenced object 0xffff88811009c7f8 (size 136):
+  ...
+  backtrace:
+    [<ffffffff821db19b>] z_erofs_do_read_page+0x99b/0x1740
+    [<ffffffff821dee9e>] z_erofs_readahead+0x24e/0x580
+    [<ffffffff814bc0d6>] read_pages+0x86/0x3d0
+    ...
 
-configs tested: 62
-configs skipped: 2
+syzkaller constructed a case: in z_erofs_register_pcluster(),
+ztailpacking = false and map->m_pa = zero. This makes pcl->obj.index
+become zero although pcl is not an inline pcluster.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Then following path adds refcount for grp, but the it won't be put
+because pcl is inline, which makes pcl not released when shrink.
 
-gcc tested configs:
-um                           x86_64_defconfig
-um                             i386_defconfig
-s390                                defconfig
-alpha                             allnoconfig
-i386                              allnoconfig
-arc                               allnoconfig
-arm                               allnoconfig
-x86_64                        randconfig-a004
-s390                 randconfig-r044-20221201
-x86_64                        randconfig-a002
-ia64                             allmodconfig
-arc                                 defconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-x86_64                        randconfig-a006
-x86_64                              defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-m68k                             allmodconfig
-x86_64                          rhel-8.3-func
-sh                               allmodconfig
-arc                              allyesconfig
-mips                             allyesconfig
-alpha                            allyesconfig
-i386                          randconfig-a003
-arc                  randconfig-r043-20221201
-m68k                             allyesconfig
-s390                             allmodconfig
-powerpc                          allmodconfig
-i386                          randconfig-a001
-x86_64                               rhel-8.3
-i386                          randconfig-a016
-x86_64                           allyesconfig
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-s390                             allyesconfig
-i386                          randconfig-a014
-x86_64                        randconfig-a011
-i386                          randconfig-a012
-riscv                randconfig-r042-20221201
-x86_64                        randconfig-a015
-i386                                defconfig
-i386                             allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
+z_erofs_readahead()
+  z_erofs_do_read_page() # for another page
+    z_erofs_collector_begin()
+      erofs_find_workgroup()
+        erofs_workgroup_get()
 
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a006
-hexagon              randconfig-r041-20221201
-i386                          randconfig-a002
-x86_64                        randconfig-a014
-i386                          randconfig-a004
-i386                          randconfig-a011
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-x86_64                        randconfig-a012
-i386                          randconfig-a015
-hexagon              randconfig-r045-20221201
+To fix this, add an attribute in z_erofs_pcluster to mark the inline
+state which not depends on index of grp.
 
+Fixes: cecf864d3d76 ("erofs: support inline data decompression")
+Reported-by: syzbot+6f8cd9a0155b366d227f@syzkaller.appspotmail.com
+Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+---
+ fs/erofs/zdata.c | 2 +-
+ fs/erofs/zdata.h | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index b792d424d774..fef2624d19e3 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -517,7 +517,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ 	DBG_BUGON(!mutex_trylock(&pcl->lock));
+ 
+ 	if (ztailpacking) {
+-		pcl->obj.index = 0;	/* which indicates ztailpacking */
++		pcl->is_inline = true;  /* which indicates ztailpacking */
+ 		pcl->pageofs_in = erofs_blkoff(map->m_pa);
+ 		pcl->tailpacking_size = map->m_plen;
+ 	} else {
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index d98c95212985..35051ad27521 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -78,6 +78,9 @@ struct z_erofs_pcluster {
+ 		unsigned short tailpacking_size;
+ 	};
+ 
++	/* I:  whether it is inline or not */
++	bool is_inline;
++
+ 	/* I: compression algorithm format */
+ 	unsigned char algorithmformat;
+ 
+@@ -115,7 +118,7 @@ struct z_erofs_decompressqueue {
+ 
+ static inline bool z_erofs_is_inline_pcluster(struct z_erofs_pcluster *pcl)
+ {
+-	return !pcl->obj.index;
++	return pcl->is_inline;
+ }
+ 
+ static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.17.1
+
