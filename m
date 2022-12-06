@@ -2,53 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8FBE6445B3
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 15:32:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DD5E6447B0
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 16:12:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NRNCf3NF3z3bY2
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Dec 2022 01:31:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NRP630XY7z3fPD
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Dec 2022 02:12:11 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WG6eEwKa;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MIYdA8N3;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WG6eEwKa;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MIYdA8N3;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NRNCb318Sz2xJF
-	for <linux-erofs@lists.ozlabs.org>; Wed,  7 Dec 2022 01:31:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NRP0M1gjgz3fgd
+	for <linux-erofs@lists.ozlabs.org>; Wed,  7 Dec 2022 02:07:15 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id B7515B815A6;
-	Tue,  6 Dec 2022 14:31:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D22DC433D6;
-	Tue,  6 Dec 2022 14:31:50 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 2F6C661786;
+	Tue,  6 Dec 2022 15:07:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA27C43148;
+	Tue,  6 Dec 2022 15:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670337111;
-	bh=JeoFrNywnaQIRQPztyv4k9bjuMDfct61Uzw4cnGKLCo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WG6eEwKaV7dWcpLCHsNZjtGR2LkZiZZFadt2VSMp+3SuEazEY8wSoda0Fmim8S0tc
-	 O2iqTtqC1g2PbdGakqdkIfulajicHAlJa7keuVRhCFxKE0NvUkT4hut88upm352COm
-	 pZNNbGaMr2oQkngkU9thZeXG2PfjNVDG/ylsnjXP+CRxW99k2Vif60wPSKXwcJ8/3s
-	 QfsRe3VvkEjdTwJjqDgfmpAjm8PNeZ8n8ut3dq72H/c1X3ATH2qErvT/H1R4Nn9MDl
-	 Y9ITfbFcOeteffmK0aIBziJNNk8OtSqYYGa5Odkw1efRfIm5Jixoi3x8zbiPh9OGNU
-	 vU6L40m8GMfDg==
-Message-ID: <0fe48416-fbc6-17de-0dcf-5c506315b23a@kernel.org>
-Date: Tue, 6 Dec 2022 22:31:49 +0800
+	s=k20201202; t=1670339231;
+	bh=Ob5V/tXbNKgT/KoriEtKPMuFGstfF4RJaAV5mgAFA/s=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=MIYdA8N3D4tUbrP7PFSPc4eF4CWQTrNDFGIiJNjLRkGsftrTKeK2fkL/Fe4UKLNHq
+	 miyEydnH5QYTrljdLUQWHA7FXr0683GhQvYEksBSvU6sPgEYThnDbUJJIhVgD7aOWM
+	 dCp5Ym4MCzQ3aTaGv8+hrj1umcpOru/jggGf1jKvGvkDEFkcelPiRUXLZclsqtSLjr
+	 6DzOVAAZLl1ReZZB5ZPH+6zb1unNcKu62bI0QzU7PzEtu8Rz/tgTXezMadMolX/chM
+	 HNfSIse9tUew1zmIk7ApHQajmpTNehjvvuydRPm1lySz5mHCt8PhPQFaHktj+tSV4T
+	 +/VRNve91V2Dg==
+Message-ID: <1022b823-b0a7-0afa-bb88-954182e372cf@kernel.org>
+Date: Tue, 6 Dec 2022 23:07:07 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH v2] erofs: clean up cached I/O strategies
+Subject: Re: [PATCH -next v3] erofs: Fix pcluster memleak when its block
+ address is zero
 Content-Language: en-US
-To: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-References: <20221206060352.152830-1-xiang@kernel.org>
+To: Chen Zhongjin <chenzhongjin@huawei.com>, huyue2@coolpad.com,
+ syzbot+6f8cd9a0155b366d227f@syzkaller.appspotmail.com,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ xiang@kernel.org, jefflexu@linux.alibaba.com
+References: <20221205034957.90362-1-chenzhongjin@huawei.com>
+ <Y42Kz6sVkf+XqJRB@debian>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20221206060352.152830-1-xiang@kernel.org>
+In-Reply-To: <Y42Kz6sVkf+XqJRB@debian>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -62,23 +67,93 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@coolpad.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2022/12/6 14:03, Gao Xiang wrote:
-> From: Gao Xiang <hsiangkao@linux.alibaba.com>
+On 2022/12/5 14:08, Gao Xiang wrote:
+> Hi all,
 > 
-> After commit 4c7e42552b3a ("erofs: remove useless cache strategy of
-> DELAYEDALLOC"), only one cached I/O allocation strategy is supported:
+> On Mon, Dec 05, 2022 at 11:49:57AM +0800, Chen Zhongjin wrote:
+>> syzkaller reported a memleak:
+>> https://syzkaller.appspot.com/bug?id=62f37ff612f0021641eda5b17f056f1668aa9aed
+>>
+>> unreferenced object 0xffff88811009c7f8 (size 136):
+>>    ...
+>>    backtrace:
+>>      [<ffffffff821db19b>] z_erofs_do_read_page+0x99b/0x1740
+>>      [<ffffffff821dee9e>] z_erofs_readahead+0x24e/0x580
+>>      [<ffffffff814bc0d6>] read_pages+0x86/0x3d0
+>>      ...
+>>
+>> syzkaller constructed a case: in z_erofs_register_pcluster(),
+>> ztailpacking = false and map->m_pa = zero. This makes pcl->obj.index be
+>> zero although pcl is not a inline pcluster.
+>>
+>> Then following path adds refcount for grp, but the refcount won't be put
+>> because pcl is inline.
+>>
+>> z_erofs_readahead()
+>>    z_erofs_do_read_page() # for another page
+>>      z_erofs_collector_begin()
+>>        erofs_find_workgroup()
+>>          erofs_workgroup_get()
+>>
+>> Since it's illegal for the block address of a pcluster to be zero, add
+>> check here to avoid registering the pcluster which would be leaked.
+>>
+>> Fixes: cecf864d3d76 ("erofs: support inline data decompression")
+>> Reported-by: syzbot+6f8cd9a0155b366d227f@syzkaller.appspotmail.com
+>> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+>> ---
+>> v1 -> v2:
+>> As Gao's advice, we should fail to register pcluster if m_pa is zero.
+>> Maked it this way and changed the commit message.
+>>
+>> v2 -> v3:
+>> Slightly fix commit message and add -next tag.
 > 
->    When cached I/O is preferred, page allocation is applied without
->    direct reclaim.  If allocation fails, fall back to inplace I/O.
+> I've updated the patch itself as below
+> (Since we only need to fail out for non-tailpacking cases, tailpacking
+>   inline inodes could still have m_pa < EROFS_BLKSIZ):
 > 
-> Let's get rid of z_erofs_cache_alloctype.  No logical changes.
+>  From f5e037e760d338ca0c116e507be663cb843d42f0 Mon Sep 17 00:00:00 2001
+> From: Chen Zhongjin <chenzhongjin@huawei.com>
+> Date: Mon, 5 Dec 2022 11:49:57 +0800
+> Subject: [PATCH] erofs: Fix pcluster memleak when its block address is zero
 > 
+> syzkaller reported a memleak:
+> https://syzkaller.appspot.com/bug?id=62f37ff612f0021641eda5b17f056f1668aa9aed
+> 
+> unreferenced object 0xffff88811009c7f8 (size 136):
+>    ...
+>    backtrace:
+>      [<ffffffff821db19b>] z_erofs_do_read_page+0x99b/0x1740
+>      [<ffffffff821dee9e>] z_erofs_readahead+0x24e/0x580
+>      [<ffffffff814bc0d6>] read_pages+0x86/0x3d0
+>      ...
+> 
+> syzkaller constructed a case: in z_erofs_register_pcluster(),
+> ztailpacking = false and map->m_pa = zero. This makes pcl->obj.index be
+> zero although pcl is not a inline pcluster.
+> 
+> Then following path adds refcount for grp, but the refcount won't be put
+> because pcl is inline.
+> 
+> z_erofs_readahead()
+>    z_erofs_do_read_page() # for another page
+>      z_erofs_collector_begin()
+>        erofs_find_workgroup()
+>          erofs_workgroup_get()
+> 
+> Since it's illegal for the block address of a non-inlined pcluster to
+> be zero, add check here to avoid registering the pcluster which would
+> be leaked.
+> 
+> Fixes: cecf864d3d76 ("erofs: support inline data decompression")
+> Reported-by: syzbot+6f8cd9a0155b366d227f@syzkaller.appspotmail.com
+> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 > Reviewed-by: Yue Hu <huyue2@coolpad.com>
-> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
