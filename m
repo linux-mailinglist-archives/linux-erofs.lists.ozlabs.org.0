@@ -1,51 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EFEF643CF9
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 07:04:12 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00E06643D12
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 07:18:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NR8xk2clzz3bWq
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 17:04:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NR9GY658Zz3bX4
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 17:18:45 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=uEVXx1qS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=C9WGBIcA;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62b; helo=mail-pl1-x62b.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=uEVXx1qS;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=C9WGBIcA;
 	dkim-atps=neutral
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NR8xg17wTz2xGH
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Dec 2022 17:04:07 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sin.source.kernel.org (Postfix) with ESMTPS id BF467CE168E;
-	Tue,  6 Dec 2022 06:04:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A2FC433C1;
-	Tue,  6 Dec 2022 06:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670306640;
-	bh=a2DXxzn2tCMHvMeAX4+C+K/btZTLZZOQGTh6c8Fnjn0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uEVXx1qSx6SIB5uOnJZGJ71z0f97sOlkVleCJS5JphJVp6nSU77fnzTFVUGe8IYHn
-	 7svbYWpi6P3MnX1Glr3LTC5+xhfr3S348ZcpCtlQPOU9YAn43Ygo64jB6whsfyyjni
-	 H6/0Mf3b/A2UeOrDYhqyjAIlYaWh6y72Hs3z/fkDN33/6Ndrac3DT68MVSInHM19+M
-	 wAFrE67i2S05y04kbqZxPURgbvPo+DjNAibW2ymkTyfnoE78m/QiMs0765nMDChEGq
-	 aBW2jefgTZDVCeQYog/Ayx/nk9WAeuAsI1IFbmix68HGFwxtZPFmcwWFG4BIHj3Or7
-	 P8px9rwoXv5nA==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: clean up cached I/O strategies
-Date: Tue,  6 Dec 2022 14:03:52 +0800
-Message-Id: <20221206060352.152830-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NR9GR0BhXz306l
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Dec 2022 17:18:36 +1100 (AEDT)
+Received: by mail-pl1-x62b.google.com with SMTP id k7so12986545pll.6
+        for <linux-erofs@lists.ozlabs.org>; Mon, 05 Dec 2022 22:18:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y2DddouEQKfe5T1HPT/o0Lvg9osxHkFVaTa2j8bSG2k=;
+        b=C9WGBIcADVx5WxbQuiycCiuFkyWSPSIJiFzY157WCnH+dsSXS5Y///0Xd8j3BvHF6z
+         T4zcCEx+nLcHdxv8DH4oVu0NZlyNlGnSMbYj/IJccrz/lk/TiZUBVwoh3q+xllkaAlz6
+         2zfoKYdgoU7MITUXmSc4UC2F4DTwhuM6U7UOiIZREHtwlo9MF5NVgZ2tBoCIyhW6NAnv
+         L1NYGgleRCDUjVf1Up21uxmodRV5MkRkMtMX6JbuAVzhngTXk78mz2u1FmFYUXPnmRja
+         7F+uHdS3mL7Wa54KykG7QWCUddnkwoL1BMQx2ZjUlLX6J5hF9p9b0c/ZuxWlaMLQ7qXy
+         akvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y2DddouEQKfe5T1HPT/o0Lvg9osxHkFVaTa2j8bSG2k=;
+        b=3N1/sWFwvAyM6qTxRRcShREJe3mU7zIXK2f5rmPWlWbikVHm3j8glFjx8g1AiYeFjL
+         mIwnchsPqbopOyMYxjQdUu6dytwB75vMo4veex1LKZ4pfflkH/sOKNdy0MyE361MYGH8
+         iDugi8oFHYh4WcZDKwJ7T9Sr6f7ASwNoNiXQcgM0n5sozQV8ltSzs+c3uDgyesWlhm7d
+         0qZuWWKoS+0JQ5jIYno754kXSNx/Obwp9sUJhgZrK2yLzuytPMygFqzPz3fI3CxFMctD
+         zjoikAzQjRLapXnIh52IFYfBnWcqsqSzE9DaVI4BOf5JKDUDiaLQn3+B/0MF2sgp7DeF
+         OkqQ==
+X-Gm-Message-State: ANoB5pkUIk1OEgUBOxNsj7p0GZV0/rMLKaj37xpPQuqxb6Mbixx3kWWz
+	gVkHqhMjDa5icsp0nVB8xP8=
+X-Google-Smtp-Source: AA0mqf5wxtCVesu9mY9IFcfl8szGXpgSADbr5LDn5xdnCZXE2JllW6Hek5ZLQ6Xi5jvDGUgduV8lpg==
+X-Received: by 2002:a17:90a:9402:b0:219:6c4d:ba9d with SMTP id r2-20020a17090a940200b002196c4dba9dmr28116826pjo.175.1670307514015;
+        Mon, 05 Dec 2022 22:18:34 -0800 (PST)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id e13-20020a17090a280d00b00218a7808ec9sm3489737pjd.8.2022.12.05.22.18.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 05 Dec 2022 22:18:33 -0800 (PST)
+Date: Tue, 6 Dec 2022 14:22:51 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] erofs: fix missing unmap if
+ z_erofs_get_extent_compressedlen() fails
+Message-ID: <20221206142251.00001fb4.zbestahu@gmail.com>
+In-Reply-To: <20221205150050.47784-1-hsiangkao@linux.alibaba.com>
+References: <20221205150050.47784-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,163 +80,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@coolpad.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+On Mon,  5 Dec 2022 23:00:49 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-After commit 4c7e42552b3a ("erofs: remove useless cache strategy of
-DELAYEDALLOC"), only one cached I/O allocation strategy is supported:
-
-  When cached I/O is preferred, page allocation is applied without
-  direct reclaim.  If allocation fails, fall back to inplace I/O.
-
-Let's get rid of z_erofs_cache_alloctype.  No logical changes.
+> Otherwise, meta buffers could be leaked.
+> 
+> Fixes: cec6e93beadf ("erofs: support parsing big pcluster compress indexes")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Yue Hu <huyue2@coolpad.com>
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v1:
- - fold in Yue Hu's fix:
-   https://lore.kernel.org/r/20221206053633.4251-1-zbestahu@gmail.com
 
- fs/erofs/zdata.c | 77 +++++++++++++++++++-----------------------------
- 1 file changed, 31 insertions(+), 46 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index b792d424d774..b66c16473273 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -175,16 +175,6 @@ static void z_erofs_free_pcluster(struct z_erofs_pcluster *pcl)
- 	DBG_BUGON(1);
- }
- 
--/* how to allocate cached pages for a pcluster */
--enum z_erofs_cache_alloctype {
--	DONTALLOC,	/* don't allocate any cached pages */
--	/*
--	 * try to use cached I/O if page allocation succeeds or fallback
--	 * to in-place I/O instead to avoid any direct reclaim.
--	 */
--	TRYALLOC,
--};
--
- /*
-  * tagged pointer with 1-bit tag for all compressed pages
-  * tag 0 - the page is just found with an extra page reference
-@@ -292,12 +282,29 @@ struct z_erofs_decompress_frontend {
- 	.inode = __i, .owned_head = Z_EROFS_PCLUSTER_TAIL, \
- 	.mode = Z_EROFS_PCLUSTER_FOLLOWED, .backmost = true }
- 
-+static bool z_erofs_should_alloc_cache(struct z_erofs_decompress_frontend *fe)
-+{
-+	unsigned int cachestrategy = EROFS_I_SB(fe->inode)->opt.cache_strategy;
-+
-+	if (cachestrategy <= EROFS_ZIP_CACHE_DISABLED)
-+		return false;
-+
-+	if (fe->backmost)
-+		return true;
-+
-+	if (cachestrategy >= EROFS_ZIP_CACHE_READAROUND &&
-+	    fe->map.m_la < fe->headoffset)
-+		return true;
-+
-+	return false;
-+}
-+
- static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
--			       enum z_erofs_cache_alloctype type,
- 			       struct page **pagepool)
- {
- 	struct address_space *mc = MNGD_MAPPING(EROFS_I_SB(fe->inode));
- 	struct z_erofs_pcluster *pcl = fe->pcl;
-+	bool shouldalloc = z_erofs_should_alloc_cache(fe);
- 	bool standalone = true;
- 	/*
- 	 * optimistic allocation without direct reclaim since inplace I/O
-@@ -326,18 +333,19 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
- 		} else {
- 			/* I/O is needed, no possible to decompress directly */
- 			standalone = false;
--			switch (type) {
--			case TRYALLOC:
--				newpage = erofs_allocpage(pagepool, gfp);
--				if (!newpage)
--					continue;
--				set_page_private(newpage,
--						 Z_EROFS_PREALLOCATED_PAGE);
--				t = tag_compressed_page_justfound(newpage);
--				break;
--			default:        /* DONTALLOC */
-+			if (!shouldalloc)
- 				continue;
--			}
-+
-+			/*
-+			 * try to use cached I/O if page allocation
-+			 * succeeds or fallback to in-place I/O instead
-+			 * to avoid any direct reclaim.
-+			 */
-+			newpage = erofs_allocpage(pagepool, gfp);
-+			if (!newpage)
-+				continue;
-+			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
-+			t = tag_compressed_page_justfound(newpage);
- 		}
- 
- 		if (!cmpxchg_relaxed(&pcl->compressed_bvecs[i].page, NULL,
-@@ -637,20 +645,6 @@ static bool z_erofs_collector_end(struct z_erofs_decompress_frontend *fe)
- 	return true;
- }
- 
--static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
--				       unsigned int cachestrategy,
--				       erofs_off_t la)
--{
--	if (cachestrategy <= EROFS_ZIP_CACHE_DISABLED)
--		return false;
--
--	if (fe->backmost)
--		return true;
--
--	return cachestrategy >= EROFS_ZIP_CACHE_READAROUND &&
--		la < fe->headoffset;
--}
--
- static int z_erofs_read_fragment(struct inode *inode, erofs_off_t pos,
- 				 struct page *page, unsigned int pageofs,
- 				 unsigned int len)
-@@ -687,12 +681,9 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 				struct page *page, struct page **pagepool)
- {
- 	struct inode *const inode = fe->inode;
--	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
- 	struct erofs_map_blocks *const map = &fe->map;
- 	const loff_t offset = page_offset(page);
- 	bool tight = true, exclusive;
--
--	enum z_erofs_cache_alloctype cache_strategy;
- 	unsigned int cur, end, spiltted;
- 	int err = 0;
- 
-@@ -746,13 +737,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
- 	} else {
- 		/* bind cache first when cached decompression is preferred */
--		if (should_alloc_managed_pages(fe, sbi->opt.cache_strategy,
--					       map->m_la))
--			cache_strategy = TRYALLOC;
--		else
--			cache_strategy = DONTALLOC;
--
--		z_erofs_bind_cache(fe, cache_strategy, pagepool);
-+		z_erofs_bind_cache(fe, pagepool);
- 	}
- hitted:
- 	/*
--- 
-2.30.2
+> ---
+>  fs/erofs/zmap.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> index 749a5ac943f4..98eff1259de4 100644
+> --- a/fs/erofs/zmap.c
+> +++ b/fs/erofs/zmap.c
+> @@ -694,7 +694,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+>  		map->m_pa = blknr_to_addr(m.pblk);
+>  		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
+>  		if (err)
+> -			goto out;
+> +			goto unmap_out;
+>  	}
+>  
+>  	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN) {
+> @@ -718,14 +718,12 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+>  		if (!err)
+>  			map->m_flags |= EROFS_MAP_FULL_MAPPED;
+>  	}
+> +
+>  unmap_out:
+>  	erofs_unmap_metabuf(&m.map->buf);
+> -
+> -out:
+>  	erofs_dbg("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
+>  		  __func__, map->m_la, map->m_pa,
+>  		  map->m_llen, map->m_plen, map->m_flags);
+> -
+>  	return err;
+>  }
+>  
 
