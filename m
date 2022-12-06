@@ -1,64 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C531C643C48
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 05:33:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD185643CB6
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 06:37:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NR6wV6HPkz3bY0
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 15:32:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NR8Lg64w0z3bX0
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Dec 2022 16:37:15 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Pokj1BZt;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=l3HsB9xf;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Pokj1BZt;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=l3HsB9xf;
 	dkim-atps=neutral
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NR6wN601dz2y34
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Dec 2022 15:32:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670301173; x=1701837173;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BgsK/GlPLJwXzwOT0nN5kEcU34V0flly7/WYhFsD+0A=;
-  b=Pokj1BZtKrwms38IYQudbwrHN5M6BFPWuisuh1aWX/IX0Tb0AWug37k3
-   HqfX6c/3VvPBO4kWI+VMBmlsbso369RZb+QCYgkJ8KOOAf03oProlJxcb
-   3Z4tgJ4a1UqIhImLLVisQkDequsd17sAFpM6TBPsGpRa5JZzruknXI4sP
-   GfcqpA/pTOqkn1gJ+VV8USv8torYAxIRjpnHkncRBWKuctZl2zf0LO1rq
-   iXWUca6lpFVyS53SyE6vGOWxiQOfKLmzftkEpKhAQM6HUNcJ1qxiOrHeF
-   wgKO/UQfPdunS0XnBf7oPrwxXgSqG9El05qu/8P765aervxxIKhotwvNV
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="296223118"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="296223118"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:32:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="676839740"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="676839740"
-Received: from lkp-server01.sh.intel.com (HELO b3c45e08cbc1) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 05 Dec 2022 20:32:41 -0800
-Received: from kbuild by b3c45e08cbc1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p2PdI-0000aQ-34;
-	Tue, 06 Dec 2022 04:32:40 +0000
-Date: Tue, 06 Dec 2022 12:32:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- a391c2a69c94ba32cb084bb0c6d41d955a67b8c3
-Message-ID: <638ec5e3.B3kL0R91qfopHR9y%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NR8LZ0Xp7z2yN9
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Dec 2022 16:37:08 +1100 (AEDT)
+Received: by mail-pl1-x634.google.com with SMTP id d3so12911273plr.10
+        for <linux-erofs@lists.ozlabs.org>; Mon, 05 Dec 2022 21:37:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QQZFshjqB4wtFOz2UdJmUUSt4cp78Rg6R2ZZnizTKMg=;
+        b=l3HsB9xfeGFcIIP515/iK95rBFJKDGwlVkcARHwqen0mD40gKB/Yn7NQZyMWoudwjy
+         8MRXlW5s5bDKsqGU9Cak0jPqZQ1Flu0kG88Ie3Dr+ZI4glRiK1WUm47/ROQ3fBT3/bHC
+         ZkOVdc+qklLxFuW924h1qsdp+RifGP3HnFdyVA8jJuqcy4YKYM10nFRXI1bg23grsl0t
+         YiShF0ICEgoV3CoKI0uxzWjbHUo/H5RdG7V2Pb6WYtAlfiwcP7rFaRQ0wbPU80WkrqW3
+         5OQYyLRj36leTdvt//Wj+JsMmrCk8zUsjEioanMIoDiSDsFKZz6ksGO5kTInOYW0YD6+
+         oWIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QQZFshjqB4wtFOz2UdJmUUSt4cp78Rg6R2ZZnizTKMg=;
+        b=jO6aMjgnwT7Z3wtKEVZFznNwGGYgly13hgSbo+8krmUG3NmkDNt2AN5pIeKDtFuLJF
+         /gaxSsh+IUpx+dNJxarz9cS2SabOCbpA6IfmpAepqiJXujovEPWdjgFnlsevZjn5+Jgt
+         z+amYPBwzOPtWd/JZddSsu+8ejl1fTuY1kHopnpPMSJLCrwzhmnL/eFSVR9JQaLodRmL
+         rL6hR8J4JmVwq7e6LX7NzcG4j0fv2NJ2uDkxEfSFzwuRyKQYQsMGVcTOKx9v1IrilPqO
+         EBRKhzOE4GJesgfTVqo6tXni6Y6ZJdc6OYZnq8q4AISWSBy+G3hxQCfEyerIuKvxakTD
+         FThQ==
+X-Gm-Message-State: ANoB5pmqxwTmfSX+n9JeJC6dmB40qM6h7VbkICPddClZM/2+U+xEUQjQ
+	8wlVhhPo5doSzSOItWkhnjI=
+X-Google-Smtp-Source: AA0mqf6xgrbNZcgk5sPZ4G06UTfOQd8rQ6ESvJb75FR6JtpK6sjL9G648ZUupvwyCnMBanTZOI1+pQ==
+X-Received: by 2002:a17:902:e311:b0:189:c7f1:c2a1 with SMTP id q17-20020a170902e31100b00189c7f1c2a1mr13885211plc.141.1670305026035;
+        Mon, 05 Dec 2022 21:37:06 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id nk13-20020a17090b194d00b00219feae9486sm357964pjb.7.2022.12.05.21.37.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Dec 2022 21:37:05 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix missing continue for !shouldalloc in z_erofs_bind_cache()
+Date: Tue,  6 Dec 2022 13:36:33 +0800
+Message-Id: <20221206053633.4251-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,93 +74,57 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Yue Hu <huyue2@coolpad.com>, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: a391c2a69c94ba32cb084bb0c6d41d955a67b8c3  erofs: validate the extent length for uncompressed pclusters
+From: Yue Hu <huyue2@coolpad.com>
 
-elapsed time: 730m
+Do cmpxchg_relaxed() is only for successful allocation if I/O is needed.
 
-configs tested: 68
-configs skipped: 3
+Fixes: 69b511baa0be ("erofs: clean up cached I/O strategies")
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ fs/erofs/zdata.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-alpha                             allnoconfig
-i386                              allnoconfig
-arm                               allnoconfig
-arc                               allnoconfig
-arc                                 defconfig
-alpha                               defconfig
-i386                                defconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-s390                                defconfig
-ia64                             allmodconfig
-um                             i386_defconfig
-s390                             allmodconfig
-m68k                             allyesconfig
-um                           x86_64_defconfig
-m68k                             allmodconfig
-x86_64                              defconfig
-arc                  randconfig-r043-20221205
-x86_64                           allyesconfig
-x86_64                           rhel-8.3-kvm
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-syz
-s390                 randconfig-r044-20221205
-x86_64                         rhel-8.3-kunit
-riscv                randconfig-r042-20221205
-s390                             allyesconfig
-powerpc                           allnoconfig
-i386                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-i386                 randconfig-a014-20221205
-i386                 randconfig-a016-20221205
-i386                 randconfig-a013-20221205
-i386                 randconfig-a012-20221205
-i386                 randconfig-a011-20221205
-i386                 randconfig-a015-20221205
-arm                                 defconfig
-x86_64               randconfig-a015-20221205
-x86_64               randconfig-a016-20221205
-x86_64               randconfig-a011-20221205
-x86_64               randconfig-a013-20221205
-x86_64               randconfig-a012-20221205
-x86_64               randconfig-a014-20221205
-arm                              allyesconfig
-arm64                            allyesconfig
-x86_64                            allnoconfig
-
-clang tested configs:
-x86_64               randconfig-a003-20221205
-x86_64               randconfig-a001-20221205
-x86_64               randconfig-a002-20221205
-hexagon              randconfig-r045-20221205
-arm                  randconfig-r046-20221205
-hexagon              randconfig-r041-20221205
-x86_64               randconfig-a004-20221205
-x86_64               randconfig-a006-20221205
-x86_64               randconfig-a005-20221205
-i386                 randconfig-a001-20221205
-i386                 randconfig-a004-20221205
-i386                 randconfig-a005-20221205
-i386                 randconfig-a002-20221205
-i386                 randconfig-a003-20221205
-i386                 randconfig-a006-20221205
-hexagon              randconfig-r041-20221204
-riscv                randconfig-r042-20221204
-hexagon              randconfig-r045-20221204
-s390                 randconfig-r044-20221204
-
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 2584a62c9d28..b66c16473273 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -333,19 +333,19 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe,
+ 		} else {
+ 			/* I/O is needed, no possible to decompress directly */
+ 			standalone = false;
+-			if (shouldalloc) {
+-				/*
+-				 * try to use cached I/O if page allocation
+-				 * succeeds or fallback to in-place I/O instead
+-				 * to avoid any direct reclaim.
+-				 */
+-				newpage = erofs_allocpage(pagepool, gfp);
+-				if (!newpage)
+-					continue;
+-				set_page_private(newpage,
+-						 Z_EROFS_PREALLOCATED_PAGE);
+-				t = tag_compressed_page_justfound(newpage);
+-			}
++			if (!shouldalloc)
++				continue;
++
++			/*
++			 * try to use cached I/O if page allocation
++			 * succeeds or fallback to in-place I/O instead
++			 * to avoid any direct reclaim.
++			 */
++			newpage = erofs_allocpage(pagepool, gfp);
++			if (!newpage)
++				continue;
++			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
++			t = tag_compressed_page_justfound(newpage);
+ 		}
+ 
+ 		if (!cmpxchg_relaxed(&pcl->compressed_bvecs[i].page, NULL,
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.17.1
+
