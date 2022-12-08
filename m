@@ -2,34 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 166036468DC
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Dec 2022 07:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E714F646AFF
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Dec 2022 09:49:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NSNsZ1pFmz3bfv
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Dec 2022 17:04:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NSSWj557wz30QX
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Dec 2022 19:49:37 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=dnYs6mGj;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.42; helo=out30-42.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::629; helo=mail-pl1-x629.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=dnYs6mGj;
+	dkim-atps=neutral
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NSNsV2SyMz2xZV
-	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Dec 2022 17:04:45 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=0;PH=DS;RN=3;SR=0;TI=SMTPD_---0VWoqCsz_1670479473;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VWoqCsz_1670479473)
-          by smtp.aliyun-inc.com;
-          Thu, 08 Dec 2022 14:04:39 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NSSWY4Y8Qz2xHJ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Dec 2022 19:49:28 +1100 (AEDT)
+Received: by mail-pl1-x629.google.com with SMTP id m4so904290pls.4
+        for <linux-erofs@lists.ozlabs.org>; Thu, 08 Dec 2022 00:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f0RPUHUGywKgAgeICfmyPl8OYkC8ewaDdC1yrK+MItM=;
+        b=dnYs6mGjFPpxANG/7RywygcLPRjasX0LRvk1CrCMH6JEck4+AKUL6+eMwCqjakmBDm
+         olimGA/LBzaRFGvCylfMg8Ooqd89FyId3+AuE/LlVdYh5wx3JY3/i2hY3p3dzwDyuOFX
+         HOB7Z2ZtnRAgdx3/7zgGdLvjbOBEEee+QwNwJ0zXn57c7n+EKoUJx2pkFvqjSqfMd3u7
+         Ef/3mwCwydl454TNrZ72zMzRdNdF5DQOjRyaxCZOD1VMJauhnw3YeRXY6JVhzBd9M7Jq
+         ctaTOdoH/lsCOOzdqLxAKTDZdSGKDR9zRPlNmQEMjSambigajpL8lu4lBTg/zPv7Ra3k
+         4yDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f0RPUHUGywKgAgeICfmyPl8OYkC8ewaDdC1yrK+MItM=;
+        b=xtUqx3xlF3ku3o9XBqHhm94fzi6DdV+VAPMSTOJ2RKTQJo6BDrr6J4Gy4UdZGbd10i
+         lge8UVVjl0wNEVxZX8fWeH8mUvZVCD1MyYVHOD2eTl3ICYhXV9pZzSB6fbJ3JMXDz8dI
+         Olql0QSMQ5qNNgUeEW7hUrKZbmIQiYT8yqD2oJUQM9U2x+67ZeHOhdfqmG1aQcR0deCZ
+         2qaj1a/h8pyYTb5wtcjvBQhau+afLhM5ki+ekju0UKfSZgceWaIq7YofLroAOXSwwUxv
+         8r3cZLeueD3XavPql4lA6vFJVJe/NY+/uPEWOc4yb7/4hRwfmX1Xh6SABeMwKXCBlQSy
+         GN5Q==
+X-Gm-Message-State: ANoB5pkxywOn4tsbPQyfTI7VOpr9SCLFFSTMauq397epnKmnOxIle6Cz
+	7OvB2PQPMdO4BD2igPDBSMPsBiEwI0I=
+X-Google-Smtp-Source: AA0mqf7IqFyjuLKvTNOE14Bjb/cHeHuIm9l2Z1uA4K+NvPtO1oNsZU/Dxgjp4xDDmVOsX1XGjtLu/Q==
+X-Received: by 2002:a17:903:40d1:b0:189:894a:a637 with SMTP id t17-20020a17090340d100b00189894aa637mr1948961pld.65.1670489365463;
+        Thu, 08 Dec 2022 00:49:25 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id d15-20020a170903230f00b0018911ae9dfasm4778238plh.232.2022.12.08.00.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Dec 2022 00:49:25 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 SUBMIT] erofs-utils: mkfs: support fragment deduplication
-Date: Thu,  8 Dec 2022 14:04:33 +0800
-Message-Id: <20221208060433.58948-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <Y5BBcie3vNZ7arc2@B-P7TQMD6M-0146.local>
-References: <Y5BBcie3vNZ7arc2@B-P7TQMD6M-0146.local>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v7] erofs-utils: mkfs: support fragment deduplication
+Date: Thu,  8 Dec 2022 16:48:59 +0800
+Message-Id: <20221208084859.24190-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -92,13 +123,16 @@ Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-Let's submit this version.
+v6 submit -> v7:
+- move tailused in if condition for fixing and recover original code
+  related in vle_compress_one, otherwise decompression may fail when
+  only ztailpacking is enabled
 
  include/erofs/compress.h  |   3 +-
  include/erofs/fragments.h |   4 +-
- lib/compress.c            | 133 +++++++++++++++++++++-----
+ lib/compress.c            | 126 +++++++++++++++++++++----
  lib/fragments.c           | 190 ++++++++++++++++++++++++++++++++++++--
- 4 files changed, 296 insertions(+), 34 deletions(-)
+ 4 files changed, 295 insertions(+), 28 deletions(-)
 
 diff --git a/include/erofs/compress.h b/include/erofs/compress.h
 index e9dfaf2..08af9e3 100644
@@ -131,7 +165,7 @@ index 5444384..4caaf6b 100644
  int erofs_fragments_init(void);
  void erofs_fragments_exit(void);
 diff --git a/lib/compress.c b/lib/compress.c
-index 8f4c63a..b205aa6 100644
+index 8f4c63a..4fced9a 100644
 --- a/lib/compress.c
 +++ b/lib/compress.c
 @@ -31,8 +31,14 @@ struct z_erofs_vle_compress_ctx {
@@ -162,18 +196,7 @@ index 8f4c63a..b205aa6 100644
  	int ret = 0;
  
  	do {
-@@ -311,10 +317,6 @@ static void tryrecompress_trailing(void *in, unsigned int *insize,
- 	unsigned int count;
- 	int ret = *compressedsize;
- 
--	/* no need to recompress */
--	if (!(ret & (EROFS_BLKSIZ - 1)))
--		return;
--
- 	count = *insize;
- 	ret = erofs_compress_destsize(&compresshandle,
- 				      in, &count, (void *)tmp,
-@@ -329,30 +331,62 @@ static void tryrecompress_trailing(void *in, unsigned int *insize,
+@@ -329,30 +335,62 @@ static void tryrecompress_trailing(void *in, unsigned int *insize,
  	*compressedsize = ret;
  }
  
@@ -243,7 +266,7 @@ index 8f4c63a..b205aa6 100644
  				ctx->e.length = len;
  				goto frag_packing;
  			}
-@@ -363,7 +397,7 @@ static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx,
+@@ -363,7 +401,7 @@ static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx,
  		ctx->e.length = min(len,
  				cfg.c_max_decompressed_extent_bytes);
  		ret = erofs_compress_destsize(h, ctx->queue + ctx->head,
@@ -252,7 +275,7 @@ index 8f4c63a..b205aa6 100644
  				!(final && len == ctx->e.length));
  		if (ret <= 0) {
  			if (ret != -EAGAIN) {
-@@ -395,15 +429,18 @@ nocompression:
+@@ -395,15 +433,18 @@ nocompression:
  			ctx->e.compressedblks = 1;
  			ctx->e.raw = true;
  		} else if (may_packing && len == ctx->e.length &&
@@ -273,12 +296,10 @@ index 8f4c63a..b205aa6 100644
  		/* tailpcluster should be less than 1 block */
  		} else if (may_inline && len == ctx->e.length &&
  			   ret < EROFS_BLKSIZ) {
-@@ -425,11 +462,25 @@ frag_packing:
+@@ -425,6 +466,21 @@ frag_packing:
  		} else {
  			unsigned int tailused, padding;
  
--			if (may_inline && len == ctx->e.length)
-+			tailused = ret & (EROFS_BLKSIZ - 1);
 +			/*
 +			 * If there's space left for the last round when
 +			 * deduping fragments, try to read the fragment and
@@ -286,22 +307,18 @@ index 8f4c63a..b205aa6 100644
 +			 * filled up. Fix up the fragment if succeeds.
 +			 * Otherwise, just drop it and go to packing.
 +			 */
-+			if (may_packing && len == ctx->e.length && tailused &&
++			if (may_packing && len == ctx->e.length &&
++			    (ret & (EROFS_BLKSIZ - 1)) &&
 +			    ctx->tail < sizeof(ctx->queue)) {
 +				ctx->pclustersize =
 +					BLK_ROUND_UP(ret) * EROFS_BLKSIZ;
 +				goto fix_dedupedfrag;
 +			}
 +
-+			if (may_inline && len == ctx->e.length && tailused)
+ 			if (may_inline && len == ctx->e.length)
  				tryrecompress_trailing(ctx->queue + ctx->head,
  						&ctx->e.length, dst, &ret);
- 
--			tailused = ret & (EROFS_BLKSIZ - 1);
- 			padding = 0;
- 			ctx->e.compressedblks = BLK_ROUND_UP(ret);
- 			DBG_BUGON(ctx->e.compressedblks * EROFS_BLKSIZ >=
-@@ -464,6 +515,10 @@ frag_packing:
+@@ -464,6 +520,10 @@ frag_packing:
  		ctx->head += ctx->e.length;
  		len -= ctx->e.length;
  
@@ -312,7 +329,7 @@ index 8f4c63a..b205aa6 100644
  		if (!final && ctx->head >= EROFS_CONFIG_COMPR_MAX_SZ) {
  			const unsigned int qh_aligned =
  				round_down(ctx->head, EROFS_BLKSIZ);
-@@ -477,6 +532,13 @@ frag_packing:
+@@ -477,6 +537,13 @@ frag_packing:
  		}
  	}
  	return 0;
@@ -326,7 +343,7 @@ index 8f4c63a..b205aa6 100644
  }
  
  struct z_erofs_compressindex_vec {
-@@ -746,7 +808,6 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+@@ -746,7 +813,6 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
  {
  	struct erofs_buffer_head *bh;
  	static struct z_erofs_vle_compress_ctx ctx;
@@ -334,7 +351,7 @@ index 8f4c63a..b205aa6 100644
  	erofs_blk_t blkaddr, compressed_blocks;
  	unsigned int legacymetasize;
  	int ret;
-@@ -785,17 +846,30 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+@@ -785,17 +851,30 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
  	inode->idata_size = 0;
  	inode->fragment_size = 0;
  
@@ -368,7 +385,7 @@ index 8f4c63a..b205aa6 100644
  					    sizeof(ctx.queue) - ctx.tail);
  
  		ret = read(fd, ctx.queue + ctx.tail, readcount);
-@@ -803,10 +877,10 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+@@ -803,10 +882,10 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
  			ret = -errno;
  			goto err_bdrop;
  		}
@@ -381,7 +398,7 @@ index 8f4c63a..b205aa6 100644
  		if (ret)
  			goto err_free_idata;
  	}
-@@ -817,6 +891,17 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
+@@ -817,6 +896,17 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
  	DBG_BUGON(compressed_blocks < !!inode->idata_size);
  	compressed_blocks -= !!inode->idata_size;
  
@@ -632,5 +649,5 @@ index b8c37d5..e69ae47 100644
  	return 0;
  }
 -- 
-2.24.4
+2.17.1
 
