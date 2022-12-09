@@ -2,58 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF2FC6480DA
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 11:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 060FD64817E
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 12:18:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NT6X44dt5z3bfM
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 21:22:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1670581332;
-	bh=JUZ1nbgPyt696GphUrYZhsJZC+42uCS/7nfOQ2ALbBw=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=am19ixIY/j+5YnedU+HRQTXHx1Y1mJD1suJYM7hlWjqddwHAIzK2CF6tHGwvDOeQZ
-	 E8BNyi8V1/926KPJtuGbSfdqFnkh/Ll5vDOahzYKTMFOvgSNNOWMI9bHuZSboY5PYA
-	 L3PscID9psapeYBrnkh7GrkjwTHDlE0cL+bVONdkznRSXAYkFmdEI04EyuFWRSlzYS
-	 dO2QasxnhTZzA9qDP3EWCj1Ef+Crq4stlWXvuMva7BJxNotRcgghmZgwWqLbnYUj5f
-	 +MRxC6OvITFMcC7XOJEY6YSh79nrNl4Uws1rz/gdphBPNwM8w5MHJljrloBrJLDO8o
-	 lcdYiXxNbe0nQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NT7mh63Zhz3bfZ
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 22:18:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=siddh.me (client-ip=103.117.158.50; helo=sender-of-o50.zoho.in; envelope-from=code@siddh.me; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; secure) header.d=siddh.me header.i=code@siddh.me header.a=rsa-sha256 header.s=zmail header.b=PnHtyBfH;
-	dkim-atps=neutral
-Received: from sender-of-o50.zoho.in (sender-of-o50.zoho.in [103.117.158.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=houtao@huaweicloud.com; receiver=<UNKNOWN>)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NT6Wx6mCqz3bZS
-	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Dec 2022 21:22:05 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1670581320; cv=none; 
-	d=zohomail.in; s=zohoarc; 
-	b=JKZvFEQC0s+u8mPgmbSg+4UnMydSwUlXT7fqoEejG0SsstB2FdiD4GRHE7PDef5NucFMzmuyqfZUZ4XSG5LtfL/xGPS42BG6JJvUDLUoVbEg70I+2I+3PBGnTt1xWLJuUk5xyuANF9q+XYCUQLcA2xRfJZYl5SXwME+3pdUEhik=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1670581320; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=JUZ1nbgPyt696GphUrYZhsJZC+42uCS/7nfOQ2ALbBw=; 
-	b=M1BKZrHabNPzWfYVHg9Yse+zEUwQV4k89Js9gDG2v79E0BICX7ASemKskTNQJDIY88VAdPfwtFMQY7AwuOpJcawS3JW/wd9GhgLo9tGbrIOaM1+taio25LZj+iTR6PZgH9qKO9mhPA9ZjuXJ48cwZAuHggaOOmoun8XxN+szwVY=
-ARC-Authentication-Results: i=1; mx.zohomail.in;
-	dkim=pass  header.i=siddh.me;
-	spf=pass  smtp.mailfrom=code@siddh.me;
-	dmarc=pass header.from=<code@siddh.me>
-Received: from kampyooter.. (110.226.31.37 [110.226.31.37]) by mx.zoho.in
-	with SMTPS id 1670581318019810.3770917612286; Fri, 9 Dec 2022 15:51:58 +0530 (IST)
-To: Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Message-ID: <20221209102151.311049-1-code@siddh.me>
-Subject: [PATCH v2] erofs/zmap.c: Fix incorrect offset calculation
-Date: Fri,  9 Dec 2022 15:51:51 +0530
-X-Mailer: git-send-email 2.35.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NT7mc12jXz3bbF
+	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Dec 2022 22:18:03 +1100 (AEDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NT7mJ2jbtz4f3lGS
+	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Dec 2022 19:17:52 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP2 (Coremail) with SMTP id Syh0CgDXOrZgGZNjhjCcBw--.37129S2;
+	Fri, 09 Dec 2022 19:17:55 +0800 (CST)
+Subject: Re: [PATCH] fscache: Use wake_up_var() to wake up pending volume
+ acquisition
+To: linux-cachefs@redhat.com, David Howells <dhowells@redhat.com>
+References: <20221128031929.3918348-1-houtao@huaweicloud.com>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <42b33792-50e9-77d7-4d3e-ac5ce1adeda6@huaweicloud.com>
+Date: Fri, 9 Dec 2022 19:17:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+In-Reply-To: <20221128031929.3918348-1-houtao@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: Syh0CgDXOrZgGZNjhjCcBw--.37129S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw13ur1fWryrWw1rArW3trb_yoW5WrW7p3
+	9I9ayftFWkX342yw45Jw47ZryS9FykGFs7Gr4vkryUCF4xJr1ktF1Ikan8uFW7C3yDJrW2
+	qa1Ykw1agw4jy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,64 +65,80 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Siddh Raman Pant via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Siddh Raman Pant <code@siddh.me>
-Cc: linux-erofs <linux-erofs@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>, syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com
+Cc: linux-erofs@lists.ozlabs.org, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, "houtao1@huawei.com" <houtao1@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Effective offset to add to length was being incorrectly calculated,
-which resulted in iomap->length being set to 0, triggering a WARN_ON
-in iomap_iter_done().
+Hi David,
 
-Fix that, and describe it in comments.
+Could you please pick it up for v6.2 ?
 
-This was reported as a crash by syzbot under an issue about a warning
-encountered in iomap_iter_done(), but unrelated to erofs.
-
-C reproducer: https://syzkaller.appspot.com/text?tag=3DReproC&x=3D1037a6b28=
-80000
-Kernel config: https://syzkaller.appspot.com/text?tag=3DKernelConfig&x=3De2=
-021a61197ebe02
-Dashboard link: https://syzkaller.appspot.com/bug?extid=3Da8e049cd3abd34293=
-6b6
-
-Reported-by: syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Siddh Raman Pant <code@siddh.me>
----
-Changes since v2:
-- Fix the calculation instead of bailing out.
-
- fs/erofs/zmap.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 0bb66927e3d0..a171e4caba3c 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -790,12 +790,16 @@ static int z_erofs_iomap_begin_report(struct inode *i=
-node, loff_t offset,
- =09=09iomap->type =3D IOMAP_HOLE;
- =09=09iomap->addr =3D IOMAP_NULL_ADDR;
- =09=09/*
--=09=09 * No strict rule how to describe extents for post EOF, yet
--=09=09 * we need do like below. Otherwise, iomap itself will get
-+=09=09 * No strict rule on how to describe extents for post EOF, yet
-+=09=09 * we need to do like below. Otherwise, iomap itself will get
- =09=09 * into an endless loop on post EOF.
-+=09=09 *
-+=09=09 * Calculate the effective offset by subtracting extent start
-+=09=09 * (map.m_la) from the requested offset, and add it to length.
-+=09=09 * (NB: offset >=3D map.m_la always)
- =09=09 */
- =09=09if (iomap->offset >=3D inode->i_size)
--=09=09=09iomap->length =3D length + map.m_la - offset;
-+=09=09=09iomap->length =3D length + offset - map.m_la;
- =09}
- =09iomap->flags =3D 0;
- =09return 0;
---=20
-2.35.1
-
+On 11/28/2022 11:19 AM, Hou Tao wrote:
+> From: Hou Tao <houtao1@huawei.com>
+>
+> The freeing of relinquished volume will wake up the pending volume
+> acquisition by using wake_up_bit(), however it is mismatched with
+> wait_var_event() used in fscache_wait_on_volume_collision() and it will
+> never wake up the waiter in the wait-queue because these two functions
+> operate on different wait-queues.
+>
+> According to the implementation in fscache_wait_on_volume_collision(),
+> if the wake-up of pending acquisition is delayed longer than 20 seconds
+> (e.g., due to the delay of on-demand fd closing), the first
+> wait_var_event_timeout() will timeout and the following wait_var_event()
+> will hang forever as shown below:
+>
+>  FS-Cache: Potential volume collision new=00000024 old=00000022
+>  ......
+>  INFO: task mount:1148 blocked for more than 122 seconds.
+>        Not tainted 6.1.0-rc6+ #1
+>  task:mount           state:D stack:0     pid:1148  ppid:1
+>  Call Trace:
+>   <TASK>
+>   __schedule+0x2f6/0xb80
+>   schedule+0x67/0xe0
+>   fscache_wait_on_volume_collision.cold+0x80/0x82
+>   __fscache_acquire_volume+0x40d/0x4e0
+>   erofs_fscache_register_volume+0x51/0xe0 [erofs]
+>   erofs_fscache_register_fs+0x19c/0x240 [erofs]
+>   erofs_fc_fill_super+0x746/0xaf0 [erofs]
+>   vfs_get_super+0x7d/0x100
+>   get_tree_nodev+0x16/0x20
+>   erofs_fc_get_tree+0x20/0x30 [erofs]
+>   vfs_get_tree+0x24/0xb0
+>   path_mount+0x2fa/0xa90
+>   do_mount+0x7c/0xa0
+>   __x64_sys_mount+0x8b/0xe0
+>   do_syscall_64+0x30/0x60
+>   entry_SYSCALL_64_after_hwframe+0x46/0xb0
+>
+> Fixing it by using wake_up_var() instead of wake_up_bit(). In addition
+> because waitqueue_active() is used in wake_up_var() and clear_bit()
+> doesn't imply any memory barrier, so do smp_mb__after_atomic() before
+> invoking wake_up_var().
+>
+> Fixes: 62ab63352350 ("fscache: Implement volume registration")
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
+> ---
+>  fs/fscache/volume.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/fscache/volume.c b/fs/fscache/volume.c
+> index ab8ceddf9efa..cf8293bb1aca 100644
+> --- a/fs/fscache/volume.c
+> +++ b/fs/fscache/volume.c
+> @@ -348,7 +348,12 @@ static void fscache_wake_pending_volume(struct fscache_volume *volume,
+>  		if (fscache_volume_same(cursor, volume)) {
+>  			fscache_see_volume(cursor, fscache_volume_see_hash_wake);
+>  			clear_bit(FSCACHE_VOLUME_ACQUIRE_PENDING, &cursor->flags);
+> -			wake_up_bit(&cursor->flags, FSCACHE_VOLUME_ACQUIRE_PENDING);
+> +			/*
+> +			 * Paired with barrier in wait_var_event(). Check
+> +			 * waitqueue_active() and wake_up_var() for details.
+> +			 */
+> +			smp_mb__after_atomic();
+> +			wake_up_var(&cursor->flags);
+>  			return;
+>  		}
+>  	}
 
