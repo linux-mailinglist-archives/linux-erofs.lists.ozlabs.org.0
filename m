@@ -2,65 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A75647CA9
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 04:54:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B3BF647D0F
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 05:51:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NSxwM1Gwlz3bbJ
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 14:54:11 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=O1rYO1Mc;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NSz9y6zzcz3bfB
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Dec 2022 15:51:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::431; helo=mail-pf1-x431.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=O1rYO1Mc;
-	dkim-atps=neutral
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.56; helo=out30-56.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NSxwD2n1Nz2yRV
-	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Dec 2022 14:54:03 +1100 (AEDT)
-Received: by mail-pf1-x431.google.com with SMTP id t18so2802604pfq.13
-        for <linux-erofs@lists.ozlabs.org>; Thu, 08 Dec 2022 19:54:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OOhCE5cIfiw7Mx1VgqbMEntY03WvstAD+tMaMCDfHZg=;
-        b=O1rYO1Mcp4vw6Bu/X+ei+hDFt3qoqmPZPEDKw78tXXz/vQYkRHAuEzU/w0o6QY9obo
-         0DPTOUrvJ/7YQ8SINSBPULPVoMpMb7K7fWBS1U0nDZnB4FVK2zQnT2oqqGPMIcNvDyw6
-         4onTHzZ8i2ijkBLGCqTyrzuFQ4YD0zraB5XM0prYVmhBPZ8BQRml3V99AA9g3WxWg3YP
-         kdE7Xa6Azh31R94uJIj0slR51ueJJ2IcCoE51IRChZekcF5DlwQr5fgAWrCwsRgtaK9j
-         dPfO2pP8UZv03n8h10ZJynfSR2H3WHmtCoAXcVxwZTf1elwlc3D7FiIhRDZkerl2xlZM
-         1HKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OOhCE5cIfiw7Mx1VgqbMEntY03WvstAD+tMaMCDfHZg=;
-        b=wtEeyscjSZ665fQOiJTOyfMijD28VtC9pc9xNAJs/wz1srcrCmIrru6xvB2Pwtx8gW
-         bK+ZuglnnzCXU5VfVXurfKSxchNDFNKVjIrPlc63cP2Hlb1t2JefAyA69bZP6Le2ohaZ
-         itdxiIS4bRl+Wd208Ndzk4SlxIIyCPHvf1fdtIvJ0EXBG6vZGJ0XzyeRMFChvwn6Wd5c
-         H+coDxLyaaR1wF30pZMlM4wxLYPUxza3WF299o+D2Sdf5Fg3kYSpuKij9pUBpQezMD3t
-         TdS/OZA3uESqTSun6WzEbCH76f2Xqd0rPG5NKrM16TNwMxagZXQu2xrDxQfv3Cdn+nnQ
-         VdMQ==
-X-Gm-Message-State: ANoB5pl1Zd4rOMKnpQrfsMIttMCUJzWKF/OWhRdBTD4RgpPNGKF9fyov
-	uwBn6qqWF7kJTD3U/Zpp7ZiDraVMKpg=
-X-Google-Smtp-Source: AA0mqf6EKVu55tGMfeIazz01oS3UeTfc6RMRG7K4XPrEn1fYgPEFCH0x8mhOPZ5zaJvJdYh/7GAkiA==
-X-Received: by 2002:aa7:9112:0:b0:574:35fd:379e with SMTP id 18-20020aa79112000000b0057435fd379emr3572795pfh.2.1670558039633;
-        Thu, 08 Dec 2022 19:53:59 -0800 (PST)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id z16-20020aa79590000000b0056bb36c047asm249142pfj.105.2022.12.08.19.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Dec 2022 19:53:59 -0800 (PST)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: do not deduplicate compressed data for packed inode
-Date: Fri,  9 Dec 2022 11:53:37 +0800
-Message-Id: <20221209035337.26998-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NSz9t2q94z2xml
+	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Dec 2022 15:50:57 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=0;PH=DS;RN=5;SR=0;TI=SMTPD_---0VWt-q52_1670561448;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VWt-q52_1670561448)
+          by smtp.aliyun-inc.com;
+          Fri, 09 Dec 2022 12:50:51 +0800
+Date: Fri, 9 Dec 2022 12:50:47 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Siddh Raman Pant <code@siddh.me>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	linux-erofs <linux-erofs@lists.ozlabs.org>
+Subject: Re: [RFC PATCH] erofs/zmap.c: Bail out when no further region remains
+Message-ID: <Y5K+p6td52QppRZt@B-P7TQMD6M-0146.local>
+Mail-Followup-To: Siddh Raman Pant <code@siddh.me>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	linux-erofs <linux-erofs@lists.ozlabs.org>
+References: <Y3MGf3TzgKpAz4IP@B-P7TQMD6M-0146.local>
+ <917344b4-4256-6d77-b89b-07fa96ec4539@siddh.me>
+ <Y3Nu+TNRp6Fv3L19@B-P7TQMD6M-0146.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y3Nu+TNRp6Fv3L19@B-P7TQMD6M-0146.local>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,70 +52,60 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Hi Siddh,
 
-Packed inode is composed of fragments which have already been
-deduplicated before.
+On Tue, Nov 15, 2022 at 06:50:33PM +0800, Gao Xiang wrote:
+> On Tue, Nov 15, 2022 at 03:39:38PM +0530, Siddh Raman Pant via Linux-erofs wrote:
+> > On Tue, 15 Nov 2022 08:54:47 +0530, Gao Xiang wrote:
+> > > I just wonder if we should return -EINVAL for post-EOF cases or
+> > > IOMAP_HOLE with arbitrary length?
+> > 
+> > Since it has been observed that length can be zeroed, and we
+> > must stop, I think we should return an error appropriately.
+> > 
+> > For a read-only filesystem, we probably don't really need to
+> > care what's after the EOF or in unmapped regions, nothing can
+> > be changed/extended. The definition of IOMAP_HOLE in iomap.h
+> > says it stands for "no blocks allocated, need allocation".
+> 
+> For fiemap implementation, yes.  So it looks fine to me.
+> 
+> Let's see what other people think.  Anyway, I'd like to apply it later.
+>
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- lib/compress.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Very sorry for late response.
 
-diff --git a/lib/compress.c b/lib/compress.c
-index 4fced9a..2987b10 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -174,6 +174,13 @@ static int z_erofs_compress_dedupe(struct z_erofs_vle_compress_ctx *ctx,
- 	struct erofs_inode *inode = ctx->inode;
- 	int ret = 0;
- 
-+	/*
-+	 * No need dedupe for packed inode since it is composed of
-+	 * fragments which have already been deduplicated.
-+	 */
-+	if (erofs_is_packed_inode(inode))
-+		goto out;
-+
- 	do {
- 		struct z_erofs_dedupe_ctx dctx = {
- 			.start = ctx->queue + ctx->head - ({ int rc;
-@@ -238,6 +245,7 @@ static int z_erofs_compress_dedupe(struct z_erofs_vle_compress_ctx *ctx,
- 		}
- 	} while (*len);
- 
-+out:
- 	z_erofs_write_indexes(ctx);
- 	return ret;
- }
-@@ -369,12 +377,13 @@ static int vle_compress_one(struct z_erofs_vle_compress_ctx *ctx)
- 	char *const dst = dstbuf + EROFS_BLKSIZ;
- 	struct erofs_compress *const h = &compresshandle;
- 	unsigned int len = ctx->tail - ctx->head;
-+	bool is_packed_inode = erofs_is_packed_inode(inode);
- 	bool final = !ctx->remaining;
- 	int ret;
- 
- 	while (len) {
- 		bool may_packing = (cfg.c_fragments && final &&
--				   !erofs_is_packed_inode(inode));
-+				   !is_packed_inode);
- 		bool may_inline = (cfg.c_ztailpacking && final &&
- 				  !may_packing);
- 		bool fix_dedupedfrag = ctx->fix_dedupedfrag;
-@@ -513,7 +522,7 @@ frag_packing:
- 		}
- 		ctx->e.partial = false;
- 		ctx->e.blkaddr = ctx->blkaddr;
--		if (!may_inline && !may_packing)
-+		if (!may_inline && !may_packing && !is_packed_inode)
- 			(void)z_erofs_dedupe_insert(&ctx->e,
- 						    ctx->queue + ctx->head);
- 		ctx->blkaddr += ctx->e.compressedblks;
--- 
-2.17.1
+I've just confirmed that the reason is that
 
+796                 /*
+797                  * No strict rule how to describe extents for post EOF, yet
+798                  * we need do like below. Otherwise, iomap itself will get
+799                  * into an endless loop on post EOF.
+800                  */
+801                 if (iomap->offset >= inode->i_size)
+802                         iomap->length = length + map.m_la - offset;
+
+Here iomap->length should be length + offset - map.m_la here. Because
+the extent start (map.m_la) is always no more than requested `offset'.
+
+We should need this code sub-block since userspace (filefrag -v) could
+pass
+ioctl(3, FS_IOC_FIEMAP, {fm_start=0, fm_length=18446744073709551615, fm_flags=0, fm_extent_count=292} => {fm_flags=0, fm_mapped_extents=68, ...}) = 0
+
+without this sub-block, fiemap could get into a very long loop as below:
+[  574.030856][ T7030] erofs: m_la 70000000 offset 70457397 length 9223372036784318410 m_llen 457398
+[  574.031622][ T7030] erofs: m_la 70000000 offset 70457398 length 9223372036784318409 m_llen 457399
+[  574.032397][ T7030] erofs: m_la 70000000 offset 70457399 length 9223372036784318408 m_llen 457400
+
+So could you fix this as?
+	iomap->length = length + offset - map.m_la;
+
+I've already verified it can properly resolve the issue and do the
+correct thing although I'd like to submit this later since we're quite
+close to the merge window.
+
+Thanks,
+Gao Xiang
