@@ -2,58 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04E21649000
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 18:29:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9A164907A
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 20:50:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NTvyh5jH4z3bgZ
-	for <lists+linux-erofs@lfdr.de>; Sun, 11 Dec 2022 04:29:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NTz4p6SZJz3bgv
+	for <lists+linux-erofs@lfdr.de>; Sun, 11 Dec 2022 06:50:02 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=kMSpuHF7;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Cy2nEgSf;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2001:4860:4864:20::33; helo=mail-oa1-x33.google.com; envelope-from=raj.khem@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=kMSpuHF7;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Cy2nEgSf;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NTvyY3djxz2xbC
-	for <linux-erofs@lists.ozlabs.org>; Sun, 11 Dec 2022 04:29:25 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id BFCDE60C73;
-	Sat, 10 Dec 2022 17:29:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74EE5C433EF;
-	Sat, 10 Dec 2022 17:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670693361;
-	bh=wiKXS951R0J+e00NOnz0xf3GpSwcSCJH0lNaVupW9nI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=kMSpuHF7sqpW85DL5XJkXQKYMtiAuEYhuNgN51FDAJvmcdOL6MssYdhHd6lO1h87I
-	 1XVMiQWszGqFcDrS9LMJOh6rxSg4vmeXEKg8z7+/dfBQlHkmmzi0utn0gKsh9J3/ga
-	 fNdXeUlrSx0Bs62FCtIPqphI3/vS+bBW1ISf6lknyqvby+TIlK8sEYWPxysf/tcQFC
-	 gBLSkAKMBWeSwb4Guui3Bnm2EyohjiiWpBgYsBYHKZNAEQTPPkTzeKFfkj9FaTOOot
-	 OKLXUZRPEjFZ+AAqk8IQk5Ugx8LkhpZKKlpGh293g2YeHgKOAQOHQPdcQ7D1lAbz/+
-	 tO8xEtS25vCMA==
-Date: Sun, 11 Dec 2022 01:29:12 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 6.2-rc1 (fscache part inclusive)
-Message-ID: <Y5TB6E77vbpRMhIk@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, linux-cachefs@redhat.com,
-	LKML <linux-kernel@vger.kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>, Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Hou Tao <houtao1@huawei.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NTz4h1W1Rz3bSp
+	for <linux-erofs@lists.ozlabs.org>; Sun, 11 Dec 2022 06:49:55 +1100 (AEDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1433ef3b61fso3816168fac.10
+        for <linux-erofs@lists.ozlabs.org>; Sat, 10 Dec 2022 11:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KxFcDp+HqpL96RX0+RxPB2V181zGP/joJ6HEQT2NXVs=;
+        b=Cy2nEgSf4zZ1fR6ozBMRUm8llh055j5fxuCK9z32NUUAYuHJBgYV2tmTw51lzCDMx8
+         5SMcuorl7uqLspWKSlOB3O5+N5DLEKnLXxFx4B21FVq0rvzisT5l6gC/9oOL0xJeGNGC
+         xrWRyy+Qzsn5r4sd+5ECaTAU1/SsFlmm9xs+/0D7AzVAaLMeJ+gYFg7ll+P35WA6UlUC
+         eNkhlaTMHMk6VgCuerixj11pDA0C+wu/WIrCwn1YV/47MY0ady98eV0SdlIdwotmrKQy
+         Vw9OcknmH+anaIvkwT+B0EgCfvkepoUwWxLIyJTNu095Ks+n9uKb12hn92zstOvQQtRe
+         OVXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxFcDp+HqpL96RX0+RxPB2V181zGP/joJ6HEQT2NXVs=;
+        b=z6kLZiUKpamkJEvOEz/eKcthwCIR3TQK/ApHgvR0k5J5cZ9nL5JlyK697Ueg8DV0Bk
+         D0zqqFFqASLRCecVCirCFsCUDlA5yiHjLhiL2SFsthVC4XMBfCUqHh4ZdDujiJjtlKO2
+         1V/JbZxaVtIVMNeJxOISmgj+tLeKW3V5Bt8q18aHUlAxJ1Zd+TZf1KJ0GGnR4fQhneBI
+         vUVagLVawathHQrQBUH3l4jUJ25wOAx+AIW1P7DI6UoKFYQ06Esu0WsY9Rjf+mZCLU7U
+         mOOBDWTVGzTfGaNO8a5fKtLHF8/CCav1jgY/3msa2hSM6xAr3g1yzULNuoMzY90lix+P
+         MHTg==
+X-Gm-Message-State: ANoB5plAO95YqqNEhmENTEFmZZF5feVe2J83ogXCihPJ7WmXxdZ1iyz6
+	shMAhVn1b0VW94vKGiP/mSMinfzNWo5lqzfagB8=
+X-Google-Smtp-Source: AA0mqf6e8/DfEuhY1I0wdkvl2ON7RJJkRhkVbKICsM05YuhU4hmdh4LfkBCymAmrv4wVL7tAP/GSCXSx45mjHc1EX6w=
+X-Received: by 2002:a05:6870:9d98:b0:144:e1eb:419 with SMTP id
+ pv24-20020a0568709d9800b00144e1eb0419mr3736785oab.262.1670701791344; Sat, 10
+ Dec 2022 11:49:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20221208085335.2884608-1-raj.khem@gmail.com> <20221208085335.2884608-2-raj.khem@gmail.com>
+ <Y5HySDMzY8CSLQeJ@debian> <CAMKF1srO6o=RAt_HUTTJ5fQXHErUHJ=oZ2yjw5pE7B4tV6s7Gg@mail.gmail.com>
+ <Y5SfrbgaHgFxk/Dg@debian>
+In-Reply-To: <Y5SfrbgaHgFxk/Dg@debian>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 10 Dec 2022 11:49:25 -0800
+Message-ID: <CAMKF1spkK0e6CehNkx7003v=rsSWRcms8MARqedjsno-4dk-2Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] erofs_fs.h: Make LFS mandatory for all usecases
+To: Khem Raj <raj.khem@gmail.com>, linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,90 +74,136 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, Chen Zhongjin <chenzhongjin@huawei.com>, Jeff Layton <jlayton@kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com, Hou Tao <houtao1@huawei.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+On Sat, Dec 10, 2022 at 7:03 AM Gao Xiang <xiang@kernel.org> wrote:
+>
+> Hi Khem,
+>
+> On Fri, Dec 09, 2022 at 06:20:12PM -0800, Khem Raj wrote:
+> > On Thu, Dec 8, 2022 at 6:18 AM Gao Xiang <xiang@kernel.org> wrote:
+> > >
+> > > Hi Khem,
+> > >
+> > > On Thu, Dec 08, 2022 at 12:53:34AM -0800, Khem Raj wrote:
+> > > > erosfs depend on the consistent use of a 64bit offset
+> > >
+> > > Thanks for your patch!
+> > >
+> > >   ^ erofs
+> >
+> > Done in v2
+> >
+> > >
+> > > > type, force downstreams to use transparent LFS (_FILE_OFFSET_BITS=64),
+> > > > so that it becomes impossible for them to use 32bit interfaces.
+> > > >
+> > > > include autoconf'ed config.h to get definition of _FILE_OFFSET_BITS
+> > > > which was detected by configure. This header needs to be included
+> > > > before any system headers are included to ensure they see the correct
+> > > > definition of _FILE_OFFSET_BITS for the platform
+> > > >
+> > > > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > > > ---
+> > >
+> > > ...
+> > >
+> > > > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> > > > index 6a70f11..9cc20a8 100644
+> > > > --- a/include/erofs/internal.h
+> > > > +++ b/include/erofs/internal.h
+> > > > @@ -12,6 +12,7 @@ extern "C"
+> > > >  {
+> > > >  #endif
+> > > >
+> > > > +#include <config.h>
+> > >
+> > > could we use alternative way? since I'd like to make include/ as
+> > > liberofs later, and "config.h" autoconf seems weird to me...
+> > >
+> >
+> > I am using the AC_SYS_LARGEFILE macro from autoconf to enable support for
+> > largefile support during configure. configure will generate config.h
+> > in build dir which
+> > will contain the essential macros which we use e.g. _FILE_OFFSET_BITS defined
+> > to right values. Alternate way is to pass it _always_ or demand it to
+> > be passed from
+> > user. Which in a way it will do with internal.h check added in this
+> > series. I am fine
+> > if you do not want to depend on autoconf support to enable LFS. Let me know.
+> >
+> > > >  #include "list.h"
+> > > >  #include "err.h"
+> > > >
+> > > > diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+> > > > index 08f9761..a3bd93c 100644
+> > > > --- a/include/erofs_fs.h
+> > > > +++ b/include/erofs_fs.h
+> > > > @@ -9,6 +9,8 @@
+> > > >  #ifndef __EROFS_FS_H
+> > > >  #define __EROFS_FS_H
+> > > >
+> > > > +#include <sys/types.h>
+> > >
+> > > Could you give more hints why we need this here?
+> >
+> > Its needed to get off_t defined, I have added a comment here
+> > in v2i
+>
+> but we don't use off_t in erofs_fs.h?
 
-Once the merge window opens, could you consider this pull request for
-6.2-rc1?
+the new check I added does use it.
 
-In this cycle, large folios are now enabled in the iomap/fscache mode
-for uncompressed files first.  In order to do that, we've also cleaned
-up better interfaces between erofs and fscache, which are acked by
-fscache/netfs folks and included in this pull request.
+>
+> > >
+> > > > +
+> > > >  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+> > > >  #define EROFS_SUPER_OFFSET      1024
+> > > >
+> > > > @@ -410,6 +412,10 @@ enum {
+> > > >
+> > > >  #define EROFS_NAME_LEN      255
+> > > >
+> > > > +
+> > > > +/* make sure that any user of the erofs headers has atleast 64bit off_t type */
+> > > > +extern int eros_assert_largefile[sizeof(off_t)-8];
+> > >
+> > > erofs? also you could add this into erofs/internal.h...
+> > >
+> > > This file is just the on-disk definition...
+> >
+> > yeah moved the check to internal.h in v2
+> >
+> > >
+> > > > +
+> > > >  /* check the EROFS on-disk layout strictly at compile time */
+> > > >  static inline void erofs_check_ondisk_layout_definitions(void)
+> > > >  {
+> > > > diff --git a/lib/Makefile.am b/lib/Makefile.am
+> > > > index 3fad357..88400ed 100644
+> > > > --- a/lib/Makefile.am
+> > > > +++ b/lib/Makefile.am
+> > > > @@ -28,7 +28,7 @@ noinst_HEADERS += compressor.h
+> > > >  liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+> > > >                     namei.c data.c compress.c compressor.c zmap.c decompress.c \
+> > > >                     compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
+> > > > -liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
+> > > > +liberofs_la_CFLAGS = -Wall -I$(top_builddir) -I$(top_srcdir)/include -include config.h
+> > >
+> > > same here too...
+> >
+> > as said above if we are ok to pass it always then we can add -D
+> > _FILE_OFFSET_BITS=64 via toplevel Makefile.am
+> > it will only be needed on 32bit systems though, so maybe we do not
+> > define it and demand it from users via CFLAGS
+> > if they compile it for 32bit systems.
+> >
+>
+> I think use -D _FILE_OFFSET_BITS=64 would be a better choice...
+>
 
-Other than that, there are random fixes around erofs over fscache and
-crafted images by syzbot, minor cleanups and documentation updates.
+OK I will rework it in v3.
 
-Note that there could be a trivial conflict between erofs and vfs
-tree according to linux-next report [1].
-
-Happy Holidays!
-Gao Xiang
-
-[1] https://lore.kernel.org/r/20221205092415.56cc6e19@canb.auug.org.au/
-
-The following changes since commit eb7081409f94a9a8608593d0fb63a1aa3d6f95d8:
-
-  Linux 6.1-rc6 (2022-11-20 16:02:16 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.2-rc1
-
-for you to fetch changes up to c505feba4c0d76084e56ec498ce819f02a7043ae:
-
-  erofs: validate the extent length for uncompressed pclusters (2022-12-07 10:56:31 +0800)
-
-----------------------------------------------------------------
-Changes since the last update:
-
- - Enable large folios for iomap/fscache mode;
-
- - Avoid sysfs warning due to mounting twice with the same fsid and
-   domain_id in fscache mode;
-
- - Refine fscache interface among erofs, fscache, and cachefiles;
-
- - Use kmap_local_page() only for metabuf;
-
- - Fixes around crafted images found by syzbot;
-
- - Minor cleanups and documentation updates.
-
-----------------------------------------------------------------
-Chen Zhongjin (1):
-      erofs: Fix pcluster memleak when its block address is zero
-
-Gao Xiang (5):
-      erofs: update documentation
-      erofs: clean up cached I/O strategies
-      erofs: use kmap_local_page() only for erofs_bread()
-      erofs: fix missing unmap if z_erofs_get_extent_compressedlen() fails
-      erofs: validate the extent length for uncompressed pclusters
-
-Hou Tao (1):
-      erofs: check the uniqueness of fsid in shared domain in advance
-
-Jingbo Xu (5):
-      erofs: enable large folios for iomap mode
-      fscache,cachefiles: add prepare_ondemand_read() callback
-      erofs: switch to prepare_ondemand_read() in fscache mode
-      erofs: support large folios for fscache mode
-      erofs: enable large folios for fscache mode
-
- Documentation/filesystems/erofs.rst |  38 ++--
- fs/cachefiles/io.c                  |  77 ++++---
- fs/erofs/data.c                     |  10 +-
- fs/erofs/fscache.c                  | 408 ++++++++++++++++--------------------
- fs/erofs/inode.c                    |   2 +
- fs/erofs/internal.h                 |  13 +-
- fs/erofs/super.c                    |   2 +-
- fs/erofs/xattr.c                    |   8 +-
- fs/erofs/zdata.c                    |  80 +++----
- fs/erofs/zmap.c                     |  15 +-
- include/linux/netfs.h               |   8 +
- include/trace/events/cachefiles.h   |  27 +--
- 12 files changed, 344 insertions(+), 344 deletions(-)
+> Thanks,
+> Gao Xiang
