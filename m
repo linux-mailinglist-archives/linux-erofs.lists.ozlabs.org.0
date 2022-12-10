@@ -2,66 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DBCA648C81
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 03:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF486648C83
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 03:22:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NTWp93Yr4z3bf3
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 13:20:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NTWr058v8z3bg1
+	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 13:22:24 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=B+7KqOJU;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YeYQ/enY;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::22a; helo=mail-oi1-x22a.google.com; envelope-from=raj.khem@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42a; helo=mail-pf1-x42a.google.com; envelope-from=raj.khem@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=B+7KqOJU;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=YeYQ/enY;
 	dkim-atps=neutral
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NTWp331xRz3bNs
-	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Dec 2022 13:20:42 +1100 (AEDT)
-Received: by mail-oi1-x22a.google.com with SMTP id e205so6140364oif.11
-        for <linux-erofs@lists.ozlabs.org>; Fri, 09 Dec 2022 18:20:42 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NTWqn4x6dz3bVP
+	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Dec 2022 13:22:13 +1100 (AEDT)
+Received: by mail-pf1-x42a.google.com with SMTP id a14so4968355pfa.1
+        for <linux-erofs@lists.ozlabs.org>; Fri, 09 Dec 2022 18:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iWe5xnGlHWF9DM5FGCfzjHwP6D4OISs8MVKoxdPg4Zk=;
-        b=B+7KqOJUCpgLTXp6y/6+bzKtI08EMErSSPU9DAchSXBt/S1bl7upoJJvrbtpfxjGGr
-         YoB/npMx8/ALKd9dRRqXIwVfZ1q6XdeEeasJBJ2YGDFhqqdQwUnRr/PxDN+bo0sLIkuf
-         f986VL6XYgSxSTaIt74Rp9ITZNKcBAGKoATRe/5QGSl/0ZjL0MtpeJp1yg62/Y1qFFrq
-         CIAKM00eu+9+fSoY06yNnLScAu4rsx//NOSWICHjqIovpBWlXHCL6opPKOMHkQ85hwKR
-         XxrMMUrHp7pYQuK8dHTU8flDJqyRBTEqZzo+zZgZKDULDRt7iZshEVWK1Gcv7uz/0H9b
-         fVtA==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U/ii1dil+CbFFXLB+JoOAXlZbxGAp4w7qPIBdB4vFF8=;
+        b=YeYQ/enY2GpsVToJRpYrMwX/WP0eGGyrxtiny3TW6Q6rcoK6cDr08LmNSR69iUmqbp
+         SazuY6Uvx9kv5UK1wGcEHztTPyBYabrACocJRt0xKxPeuFC0+j4Dm0UB+dEDJPD/J2zT
+         Y+EIxZRB5G5xJVUFWF+rrtXa/U+pjGLRm9gTaBumAZIpyTGaJFEhQSneiljPUQ12slBZ
+         Qggi2wRC4A4aUSDyYHo0SzV1ePsz564Mykfg7iFtmyCuqOshMeb38DPbsi5CBhqNjsF7
+         BHW3CMELFYMZw9CmshnAHzvk8YneQQdxML3UbWH9YqRAal9lDjfqyp5MYjzrWk4Tq90A
+         N4lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iWe5xnGlHWF9DM5FGCfzjHwP6D4OISs8MVKoxdPg4Zk=;
-        b=r9LcMcRB3zft5fYIddcSc2D+Joulxn4zhf4kAzsEyhqLZd8uDguNcrWUp3PF255t63
-         v44SsNPZQu/3BxOACMSbIRea25scUaAcCLLdsVeDH4PXyLU/GDz67FN/N29TzHHudJfc
-         4pG1w1pC872Njc/N2Zka3uJdrscSRRwvGpTfQlq3ELt7ioKheFr7zPCnoRX7gxrzkqiB
-         MOHbCLRwr5GT+wohKXQ6qNz3RUP1Xy6+ULWkYP+nZfFqKCs2FXK05GS7BJ/aDzljpejL
-         0bYevjSeV3Nb6j3WfNtwyCZ3XnhFhheQTU3hHXu3KQmdu2g1m/slEw2G0XAxrbNui2DS
-         dPjg==
-X-Gm-Message-State: ANoB5pn6E+OSUUmE5RGcCH4WSwW9bokXuUeCZ4EIBbOwDsYzvaiamYgG
-	Fe+zSGhvA8F13KjrwfR2RONQAlQRwTqwB1qlsgO/O/Y82PI=
-X-Google-Smtp-Source: AA0mqf5WnBw3L+PfvVSQmTbEfpe5Fo2vh65hrq46Q/KQuop1nKN9Z5r5a0KnsxrNO1w9+IRLMSEmj9ifVMnNFoIWeYg=
-X-Received: by 2002:a05:6808:48d:b0:35e:5451:42f3 with SMTP id
- z13-20020a056808048d00b0035e545142f3mr434666oid.55.1670638838858; Fri, 09 Dec
- 2022 18:20:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20221208085335.2884608-1-raj.khem@gmail.com> <20221208085335.2884608-2-raj.khem@gmail.com>
- <Y5HySDMzY8CSLQeJ@debian>
-In-Reply-To: <Y5HySDMzY8CSLQeJ@debian>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U/ii1dil+CbFFXLB+JoOAXlZbxGAp4w7qPIBdB4vFF8=;
+        b=PQL3xm1/AiVATPcah0fP2jDoF98bvGw5wwePTUft4Retqg7lUILneGQRskcnXkAvlA
+         +j7R+gRfBlvYLlFOa3TMk/Q0n8Lz6g2ZF8Sgc+0/miCp+tLftBaz2/uYidQO3hvXsZfj
+         l5u4A0sU9qbN5PUKKzcZVxfc+MeGmlcXnuojaAj3krZksPGiDq7I5zDW8jVXZfJx8Xsm
+         UGtGEluDFjcYY9J8f7fTiYD7rrzQ9G+zp/cX4biNHgHRnTWiEbBiPAYAWQ6m3xT+Acqj
+         cd1ykaU3gX9Ha+wKMO2W2Sms1UcqQcyfrROdKB0jOTRWEC/JEQcBhvxFxwjRKPVEZ6YJ
+         n6Ag==
+X-Gm-Message-State: ANoB5pkZZxBs50Kx2bk1QtscZizoh1Z0Nv4c6R8845a6zFpA1nNgAup9
+	imNaTr/oz5GEuyQ45Gm1Z5TwjxHUcPA=
+X-Google-Smtp-Source: AA0mqf645GqBDEat8qR2GbeKktLiyuTh8P2p6/+b/wamZnBXVUYEejNcIQArntpKULpaV0XIx0w3Hw==
+X-Received: by 2002:a62:1c93:0:b0:576:45c8:100f with SMTP id c141-20020a621c93000000b0057645c8100fmr6809204pfc.23.1670638930188;
+        Fri, 09 Dec 2022 18:22:10 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::7d9c])
+        by smtp.gmail.com with ESMTPSA id b64-20020a621b43000000b0056c3a0dc65fsm1814475pfb.71.2022.12.09.18.22.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Dec 2022 18:22:09 -0800 (PST)
 From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 9 Dec 2022 18:20:12 -0800
-Message-ID: <CAMKF1srO6o=RAt_HUTTJ5fQXHErUHJ=oZ2yjw5pE7B4tV6s7Gg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] erofs_fs.h: Make LFS mandatory for all usecases
-To: Khem Raj <raj.khem@gmail.com>, linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+To: linux-erofs@lists.ozlabs.org
+Subject: [[PATCH v2 1/3] configure: use AC_SYS_LARGEFILE
+Date: Fri,  9 Dec 2022 18:22:05 -0800
+Message-Id: <20221210022207.757975-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.38.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -73,139 +75,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Khem Raj <raj.khem@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Dec 8, 2022 at 6:18 AM Gao Xiang <xiang@kernel.org> wrote:
->
-> Hi Khem,
->
-> On Thu, Dec 08, 2022 at 12:53:34AM -0800, Khem Raj wrote:
-> > erosfs depend on the consistent use of a 64bit offset
->
-> Thanks for your patch!
->
->   ^ erofs
+The autoconf macro AC_SYS_LARGEFILE defines _FILE_OFFSET_BITS=64
+where necessary to ensure that off_t and all interfaces using off_t
+are 64bit, even on 32bit systems.
 
-Done in v2
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ configure.ac | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
-> > type, force downstreams to use transparent LFS (_FILE_OFFSET_BITS=64),
-> > so that it becomes impossible for them to use 32bit interfaces.
-> >
-> > include autoconf'ed config.h to get definition of _FILE_OFFSET_BITS
-> > which was detected by configure. This header needs to be included
-> > before any system headers are included to ensure they see the correct
-> > definition of _FILE_OFFSET_BITS for the platform
-> >
-> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > ---
->
-> ...
->
-> > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> > index 6a70f11..9cc20a8 100644
-> > --- a/include/erofs/internal.h
-> > +++ b/include/erofs/internal.h
-> > @@ -12,6 +12,7 @@ extern "C"
-> >  {
-> >  #endif
-> >
-> > +#include <config.h>
->
-> could we use alternative way? since I'd like to make include/ as
-> liberofs later, and "config.h" autoconf seems weird to me...
->
+diff --git a/configure.ac b/configure.ac
+index a736ff0..b880bb0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -13,6 +13,8 @@ AC_CONFIG_MACRO_DIR([m4])
+ AC_CONFIG_AUX_DIR(config)
+ AM_INIT_AUTOMAKE([foreign -Wall])
+ 
++AC_SYS_LARGEFILE
++
+ # Checks for programs.
+ AM_PROG_AR
+ AC_PROG_CC
+-- 
+2.38.1
 
-I am using the AC_SYS_LARGEFILE macro from autoconf to enable support for
-largefile support during configure. configure will generate config.h
-in build dir which
-will contain the essential macros which we use e.g. _FILE_OFFSET_BITS defined
-to right values. Alternate way is to pass it _always_ or demand it to
-be passed from
-user. Which in a way it will do with internal.h check added in this
-series. I am fine
-if you do not want to depend on autoconf support to enable LFS. Let me know.
-
-> >  #include "list.h"
-> >  #include "err.h"
-> >
-> > diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-> > index 08f9761..a3bd93c 100644
-> > --- a/include/erofs_fs.h
-> > +++ b/include/erofs_fs.h
-> > @@ -9,6 +9,8 @@
-> >  #ifndef __EROFS_FS_H
-> >  #define __EROFS_FS_H
-> >
-> > +#include <sys/types.h>
->
-> Could you give more hints why we need this here?
-
-Its needed to get off_t defined, I have added a comment here
-in v2
->
-> > +
-> >  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
-> >  #define EROFS_SUPER_OFFSET      1024
-> >
-> > @@ -410,6 +412,10 @@ enum {
-> >
-> >  #define EROFS_NAME_LEN      255
-> >
-> > +
-> > +/* make sure that any user of the erofs headers has atleast 64bit off_t type */
-> > +extern int eros_assert_largefile[sizeof(off_t)-8];
->
-> erofs? also you could add this into erofs/internal.h...
->
-> This file is just the on-disk definition...
-
-yeah moved the check to internal.h in v2
-
->
-> > +
-> >  /* check the EROFS on-disk layout strictly at compile time */
-> >  static inline void erofs_check_ondisk_layout_definitions(void)
-> >  {
-> > diff --git a/lib/Makefile.am b/lib/Makefile.am
-> > index 3fad357..88400ed 100644
-> > --- a/lib/Makefile.am
-> > +++ b/lib/Makefile.am
-> > @@ -28,7 +28,7 @@ noinst_HEADERS += compressor.h
-> >  liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
-> >                     namei.c data.c compress.c compressor.c zmap.c decompress.c \
-> >                     compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
-> > -liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
-> > +liberofs_la_CFLAGS = -Wall -I$(top_builddir) -I$(top_srcdir)/include -include config.h
->
-> same here too...
-
-as said above if we are ok to pass it always then we can add -D
-_FILE_OFFSET_BITS=64 via toplevel Makefile.am
-it will only be needed on 32bit systems though, so maybe we do not
-define it and demand it from users via CFLAGS
-if they compile it for 32bit systems.
-
->
-> Thanks,
-> Gao Xiang
->
-> >  if ENABLE_LZ4
-> >  liberofs_la_CFLAGS += ${LZ4_CFLAGS}
-> >  liberofs_la_SOURCES += compressor_lz4.c
-> > diff --git a/mkfs/main.c b/mkfs/main.c
-> > index d2c9830..0e601d9 100644
-> > --- a/mkfs/main.c
-> > +++ b/mkfs/main.c
-> > @@ -5,6 +5,7 @@
-> >   * Created by Li Guifu <bluce.liguifu@huawei.com>
-> >   */
-> >  #define _GNU_SOURCE
-> > +#include "config.h"
-> >  #include <time.h>
-> >  #include <sys/time.h>
-> >  #include <stdlib.h>
-> > --
-> > 2.38.1
-> >
