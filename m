@@ -1,68 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B9A164907A
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Dec 2022 20:50:05 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B2FD649266
+	for <lists+linux-erofs@lfdr.de>; Sun, 11 Dec 2022 06:09:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NTz4p6SZJz3bgv
-	for <lists+linux-erofs@lfdr.de>; Sun, 11 Dec 2022 06:50:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NVCVN0TrGz3bgZ
+	for <lists+linux-erofs@lfdr.de>; Sun, 11 Dec 2022 16:09:32 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Cy2nEgSf;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z9qkO7xz;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2001:4860:4864:20::33; helo=mail-oa1-x33.google.com; envelope-from=raj.khem@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=Cy2nEgSf;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z9qkO7xz;
 	dkim-atps=neutral
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NTz4h1W1Rz3bSp
-	for <linux-erofs@lists.ozlabs.org>; Sun, 11 Dec 2022 06:49:55 +1100 (AEDT)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1433ef3b61fso3816168fac.10
-        for <linux-erofs@lists.ozlabs.org>; Sat, 10 Dec 2022 11:49:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KxFcDp+HqpL96RX0+RxPB2V181zGP/joJ6HEQT2NXVs=;
-        b=Cy2nEgSf4zZ1fR6ozBMRUm8llh055j5fxuCK9z32NUUAYuHJBgYV2tmTw51lzCDMx8
-         5SMcuorl7uqLspWKSlOB3O5+N5DLEKnLXxFx4B21FVq0rvzisT5l6gC/9oOL0xJeGNGC
-         xrWRyy+Qzsn5r4sd+5ECaTAU1/SsFlmm9xs+/0D7AzVAaLMeJ+gYFg7ll+P35WA6UlUC
-         eNkhlaTMHMk6VgCuerixj11pDA0C+wu/WIrCwn1YV/47MY0ady98eV0SdlIdwotmrKQy
-         Vw9OcknmH+anaIvkwT+B0EgCfvkepoUwWxLIyJTNu095Ks+n9uKb12hn92zstOvQQtRe
-         OVXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KxFcDp+HqpL96RX0+RxPB2V181zGP/joJ6HEQT2NXVs=;
-        b=z6kLZiUKpamkJEvOEz/eKcthwCIR3TQK/ApHgvR0k5J5cZ9nL5JlyK697Ueg8DV0Bk
-         D0zqqFFqASLRCecVCirCFsCUDlA5yiHjLhiL2SFsthVC4XMBfCUqHh4ZdDujiJjtlKO2
-         1V/JbZxaVtIVMNeJxOISmgj+tLeKW3V5Bt8q18aHUlAxJ1Zd+TZf1KJ0GGnR4fQhneBI
-         vUVagLVawathHQrQBUH3l4jUJ25wOAx+AIW1P7DI6UoKFYQ06Esu0WsY9Rjf+mZCLU7U
-         mOOBDWTVGzTfGaNO8a5fKtLHF8/CCav1jgY/3msa2hSM6xAr3g1yzULNuoMzY90lix+P
-         MHTg==
-X-Gm-Message-State: ANoB5plAO95YqqNEhmENTEFmZZF5feVe2J83ogXCihPJ7WmXxdZ1iyz6
-	shMAhVn1b0VW94vKGiP/mSMinfzNWo5lqzfagB8=
-X-Google-Smtp-Source: AA0mqf6e8/DfEuhY1I0wdkvl2ON7RJJkRhkVbKICsM05YuhU4hmdh4LfkBCymAmrv4wVL7tAP/GSCXSx45mjHc1EX6w=
-X-Received: by 2002:a05:6870:9d98:b0:144:e1eb:419 with SMTP id
- pv24-20020a0568709d9800b00144e1eb0419mr3736785oab.262.1670701791344; Sat, 10
- Dec 2022 11:49:51 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NVCV816qzz30hh
+	for <linux-erofs@lists.ozlabs.org>; Sun, 11 Dec 2022 16:09:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670735360; x=1702271360;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YvhuK8bksgfu8zTcuNkJcCcvQ6+JIBnOrYPpn4+P1BI=;
+  b=Z9qkO7xz+4hUtXyon5P7wRQBs/JW7bMCedt/aU3inTDVf8gFS+A6ew+I
+   Rnuxp1mD7w5n9pkwnAPByaRHJZeXCDZiZoGLgzDOkmfk8YcxyY7CZFRgd
+   Spdu8KYyN1QEtNXif8ukHj66TaCcteiM6MRCVmDmz1MhAGXpDDrwU5cFm
+   Kse5rktON2/AdunrCcCfyz0MhKE+69lxgjNNgvgfJl/W8EkJproUewcXa
+   rpsP458UGWeBbgcatTlvNNA6XG4Q5fDAWOhRs5yovRQ2puGc0IQUPfa1i
+   in5IyjWrlAHz6OwNcebXmXADr7CSRrXO5pambcNP30LMMXnSVZ9Mnme+C
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="318822061"
+X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
+   d="scan'208";a="318822061"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2022 21:09:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="976677219"
+X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
+   d="scan'208";a="976677219"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Dec 2022 21:09:10 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1p4EaL-0002rS-1j;
+	Sun, 11 Dec 2022 05:09:09 +0000
+Date: Sun, 11 Dec 2022 13:08:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ c505feba4c0d76084e56ec498ce819f02a7043ae
+Message-ID: <639565d0.FEF91a38lLn3afo2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20221208085335.2884608-1-raj.khem@gmail.com> <20221208085335.2884608-2-raj.khem@gmail.com>
- <Y5HySDMzY8CSLQeJ@debian> <CAMKF1srO6o=RAt_HUTTJ5fQXHErUHJ=oZ2yjw5pE7B4tV6s7Gg@mail.gmail.com>
- <Y5SfrbgaHgFxk/Dg@debian>
-In-Reply-To: <Y5SfrbgaHgFxk/Dg@debian>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Sat, 10 Dec 2022 11:49:25 -0800
-Message-ID: <CAMKF1spkK0e6CehNkx7003v=rsSWRcms8MARqedjsno-4dk-2Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] erofs_fs.h: Make LFS mandatory for all usecases
-To: Khem Raj <raj.khem@gmail.com>, linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,136 +70,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Sat, Dec 10, 2022 at 7:03 AM Gao Xiang <xiang@kernel.org> wrote:
->
-> Hi Khem,
->
-> On Fri, Dec 09, 2022 at 06:20:12PM -0800, Khem Raj wrote:
-> > On Thu, Dec 8, 2022 at 6:18 AM Gao Xiang <xiang@kernel.org> wrote:
-> > >
-> > > Hi Khem,
-> > >
-> > > On Thu, Dec 08, 2022 at 12:53:34AM -0800, Khem Raj wrote:
-> > > > erosfs depend on the consistent use of a 64bit offset
-> > >
-> > > Thanks for your patch!
-> > >
-> > >   ^ erofs
-> >
-> > Done in v2
-> >
-> > >
-> > > > type, force downstreams to use transparent LFS (_FILE_OFFSET_BITS=64),
-> > > > so that it becomes impossible for them to use 32bit interfaces.
-> > > >
-> > > > include autoconf'ed config.h to get definition of _FILE_OFFSET_BITS
-> > > > which was detected by configure. This header needs to be included
-> > > > before any system headers are included to ensure they see the correct
-> > > > definition of _FILE_OFFSET_BITS for the platform
-> > > >
-> > > > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > > > ---
-> > >
-> > > ...
-> > >
-> > > > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> > > > index 6a70f11..9cc20a8 100644
-> > > > --- a/include/erofs/internal.h
-> > > > +++ b/include/erofs/internal.h
-> > > > @@ -12,6 +12,7 @@ extern "C"
-> > > >  {
-> > > >  #endif
-> > > >
-> > > > +#include <config.h>
-> > >
-> > > could we use alternative way? since I'd like to make include/ as
-> > > liberofs later, and "config.h" autoconf seems weird to me...
-> > >
-> >
-> > I am using the AC_SYS_LARGEFILE macro from autoconf to enable support for
-> > largefile support during configure. configure will generate config.h
-> > in build dir which
-> > will contain the essential macros which we use e.g. _FILE_OFFSET_BITS defined
-> > to right values. Alternate way is to pass it _always_ or demand it to
-> > be passed from
-> > user. Which in a way it will do with internal.h check added in this
-> > series. I am fine
-> > if you do not want to depend on autoconf support to enable LFS. Let me know.
-> >
-> > > >  #include "list.h"
-> > > >  #include "err.h"
-> > > >
-> > > > diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-> > > > index 08f9761..a3bd93c 100644
-> > > > --- a/include/erofs_fs.h
-> > > > +++ b/include/erofs_fs.h
-> > > > @@ -9,6 +9,8 @@
-> > > >  #ifndef __EROFS_FS_H
-> > > >  #define __EROFS_FS_H
-> > > >
-> > > > +#include <sys/types.h>
-> > >
-> > > Could you give more hints why we need this here?
-> >
-> > Its needed to get off_t defined, I have added a comment here
-> > in v2i
->
-> but we don't use off_t in erofs_fs.h?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: c505feba4c0d76084e56ec498ce819f02a7043ae  erofs: validate the extent length for uncompressed pclusters
 
-the new check I added does use it.
+elapsed time: 725m
 
->
-> > >
-> > > > +
-> > > >  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
-> > > >  #define EROFS_SUPER_OFFSET      1024
-> > > >
-> > > > @@ -410,6 +412,10 @@ enum {
-> > > >
-> > > >  #define EROFS_NAME_LEN      255
-> > > >
-> > > > +
-> > > > +/* make sure that any user of the erofs headers has atleast 64bit off_t type */
-> > > > +extern int eros_assert_largefile[sizeof(off_t)-8];
-> > >
-> > > erofs? also you could add this into erofs/internal.h...
-> > >
-> > > This file is just the on-disk definition...
-> >
-> > yeah moved the check to internal.h in v2
-> >
-> > >
-> > > > +
-> > > >  /* check the EROFS on-disk layout strictly at compile time */
-> > > >  static inline void erofs_check_ondisk_layout_definitions(void)
-> > > >  {
-> > > > diff --git a/lib/Makefile.am b/lib/Makefile.am
-> > > > index 3fad357..88400ed 100644
-> > > > --- a/lib/Makefile.am
-> > > > +++ b/lib/Makefile.am
-> > > > @@ -28,7 +28,7 @@ noinst_HEADERS += compressor.h
-> > > >  liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
-> > > >                     namei.c data.c compress.c compressor.c zmap.c decompress.c \
-> > > >                     compress_hints.c hashmap.c sha256.c blobchunk.c dir.c
-> > > > -liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
-> > > > +liberofs_la_CFLAGS = -Wall -I$(top_builddir) -I$(top_srcdir)/include -include config.h
-> > >
-> > > same here too...
-> >
-> > as said above if we are ok to pass it always then we can add -D
-> > _FILE_OFFSET_BITS=64 via toplevel Makefile.am
-> > it will only be needed on 32bit systems though, so maybe we do not
-> > define it and demand it from users via CFLAGS
-> > if they compile it for 32bit systems.
-> >
->
-> I think use -D _FILE_OFFSET_BITS=64 would be a better choice...
->
+configs tested: 85
+configs skipped: 2
 
-OK I will rework it in v3.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> Thanks,
-> Gao Xiang
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+x86_64                        randconfig-a004
+x86_64                            allnoconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a014
+i386                          randconfig-a005
+ia64                             allmodconfig
+i386                          randconfig-a012
+arc                               allnoconfig
+x86_64                        randconfig-a013
+x86_64                          rhel-8.3-rust
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+alpha                             allnoconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a006
+i386                              allnoconfig
+arm                               allnoconfig
+x86_64                    rhel-8.3-kselftests
+sh                               allmodconfig
+mips                             allyesconfig
+i386                          randconfig-a016
+x86_64                          rhel-8.3-func
+x86_64                        randconfig-a015
+arc                                 defconfig
+s390                             allmodconfig
+arc                  randconfig-r043-20221211
+alpha                               defconfig
+s390                                defconfig
+arm                  randconfig-r046-20221211
+s390                             allyesconfig
+x86_64                              defconfig
+x86_64                           rhel-8.3-bpf
+x86_64                         rhel-8.3-kunit
+m68k                             allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           allyesconfig
+m68k                             allmodconfig
+x86_64                           rhel-8.3-syz
+arc                              allyesconfig
+x86_64                               rhel-8.3
+alpha                            allyesconfig
+arc                        nsim_700_defconfig
+i386                                defconfig
+ia64                            zx1_defconfig
+arm                        realview_defconfig
+powerpc                     tqm8555_defconfig
+alpha                            alldefconfig
+mips                    maltaup_xpa_defconfig
+powerpc                     pq2fads_defconfig
+i386                             allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+i386                          randconfig-c001
+mips                     decstation_defconfig
+sh                           se7206_defconfig
+riscv                             allnoconfig
+m68k                            q40_defconfig
+riscv                               defconfig
+
+clang tested configs:
+x86_64                        randconfig-a014
+i386                          randconfig-a013
+i386                          randconfig-a002
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+i386                          randconfig-a015
+i386                          randconfig-a011
+hexagon              randconfig-r041-20221211
+hexagon              randconfig-r045-20221211
+riscv                randconfig-r042-20221211
+s390                 randconfig-r044-20221211
+mips                  cavium_octeon_defconfig
+powerpc                     kmeter1_defconfig
+arm                          sp7021_defconfig
+powerpc                      obs600_defconfig
+arm                              alldefconfig
+arm                                 defconfig
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
