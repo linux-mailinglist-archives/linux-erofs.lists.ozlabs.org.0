@@ -1,72 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2790364D820
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Dec 2022 09:59:01 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E4C964DBC9
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Dec 2022 13:58:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NXmPG6mqgz3bfF
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Dec 2022 19:58:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NXsjY2f2Lz3bf1
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Dec 2022 23:58:25 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=BjAyFpPw;
+	dkim=pass (2048-bit key; unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=eE7Ak6jK;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102b; helo=mail-pj1-x102b.google.com; envelope-from=raj.khem@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linaro.org (client-ip=2a00:1450:4864:20::32b; helo=mail-wm1-x32b.google.com; envelope-from=tudor.ambarus@linaro.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=BjAyFpPw;
+	dkim=pass (2048-bit key; unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=eE7Ak6jK;
 	dkim-atps=neutral
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NXmP453lYz3bNy
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Dec 2022 19:58:48 +1100 (AEDT)
-Received: by mail-pj1-x102b.google.com with SMTP id t11-20020a17090a024b00b0021932afece4so2041372pje.5
-        for <linux-erofs@lists.ozlabs.org>; Thu, 15 Dec 2022 00:58:48 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NXsjT095tz3bNs
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Dec 2022 23:58:18 +1100 (AEDT)
+Received: by mail-wm1-x32b.google.com with SMTP id f13-20020a1cc90d000000b003d08c4cf679so1750267wmb.5
+        for <linux-erofs@lists.ozlabs.org>; Thu, 15 Dec 2022 04:58:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pZ7hxoKNbTjaybD4RlFEQkUEwp1y3rxCjfROeQyRoZQ=;
-        b=BjAyFpPwtCmeKp69CUCkvB7gvs3Bnjq6nKL1jPmGL1Fje6/ZFsIVIMEGY3bRmeDjfC
-         gwEWM8zj9EH4P/2RVZ5dFaI0Sosm9A2zplJtv4vJtKjXhzEI5rhbap4u1rbV971MfUFl
-         N8rYvQfSZAizS0gwYlm+Nj8chGTzp/ox9rvys6f0z8bWwnvNcz9qCPJWNTIOCNvjuZXJ
-         oFsKIShUJjTh4OpmUJDapPtKDX6ikUvb7ZQuVkQ+QSxgtKXgImeNdMELDsbWqsqimmWJ
-         hCf+q6OHVDKrg/sdYShUzMvAIwVWY3DGkVavR88mBxqDYpPDbN3MoDeA6XYigiOrpAX5
-         n8pg==
+        bh=jwYH3ujKbU1Du63Snr0pMmTST6dRtu8bysSgCO116YY=;
+        b=eE7Ak6jKbiwDMWCYFiVygnx51rea3oQHieIRkFnhtDwwYfp/LsMkHbhtRPZVK6aISa
+         uLwjgtpouvOwWtkNrZfMvShhUFEJfF1bv4xpC0hJv4MDH/fHgic41HvZGPa+7djniI9y
+         ABoLhXEYzoqliCHvnq0Vy+Cy3hwFMZA2QKrOPMr7KaqF36XjL6pQ0Oqds4h7B1vbn8y0
+         q2C/+aSFf52Ou1LZx+f/2gtGmo9RFVgDoYxGi8Y7pRj2F+PMeRV0TltprCgf6er47WSZ
+         Gr5+2C8x+i0MxlhSjpYY5Snw0WyA8LIBddTl6h0N6t8JtnTU+lgUiZzAs7aVE0DEkQNu
+         7QsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pZ7hxoKNbTjaybD4RlFEQkUEwp1y3rxCjfROeQyRoZQ=;
-        b=W4v8oPQ35VXs7VFBjurMdfN0yEF6KuaD9LH3qpb6AF9LOOTd67uHlOhZOn75sctGhY
-         fbV9WJ0q9XC0CloSfcrVzuIWMmaH+zTaa53U3JCE4hPrEwOHmJbgsDajz/iv2UhIumYx
-         NkJRSE9cL/lzuh2XyGp/2pcVJvVGQg9NRtBcSFCMH9oauSehWWTNzr/fv2DFGfiyo1yI
-         fMSMKFK20KuP53prQ4/CPruMZrlweD7FjcGaOyKWjMZmcG8SnuvBhXun9vddVeCR7pVh
-         hmYbUarNuao5uboshdbkS3ttxwHH5EP87veFuT/PfPGq9Nl2Ym67nAE06/UTIVpD7SSI
-         F3wQ==
-X-Gm-Message-State: ANoB5pkVVYnb7nppT8MGEgAvhKZIiuIs31gW4r0rn5VpQk/hJrTDTB/M
-	5x/xAHbObqfwqiHGi1xeG6cW6Y/F3fY=
-X-Google-Smtp-Source: AA0mqf5q1COjzE482KpHJ7IlcDlYoJLOqVFgEJsForxABtXDi+5t4fF6PDi74mFqfUpmDuBTpdWo5Q==
-X-Received: by 2002:a17:903:1109:b0:185:441f:70a1 with SMTP id n9-20020a170903110900b00185441f70a1mr37427473plh.38.1671094725808;
-        Thu, 15 Dec 2022 00:58:45 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::7d9c])
-        by smtp.gmail.com with ESMTPSA id f21-20020a170902f39500b00186a6b63525sm3247881ple.120.2022.12.15.00.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Dec 2022 00:58:45 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 3/3] internal.h: Make LFS mandatory for all usecases
-Date: Thu, 15 Dec 2022 00:58:42 -0800
-Message-Id: <20221215085842.130804-3-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20221215085842.130804-1-raj.khem@gmail.com>
-References: <20221215085842.130804-1-raj.khem@gmail.com>
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jwYH3ujKbU1Du63Snr0pMmTST6dRtu8bysSgCO116YY=;
+        b=BfJWPrYbsknZoEjJtx6vRIPI2oC+Ze+993B/1EjHLMBMbrwnR0c5AiZ65x3RGDxrzE
+         VazNEtM1LzDY9CH9fqd/xX1p7r8aP5XpeoZL8g21nXSezamp+DIdrf68Stu9l0XzJ7Qb
+         7GIsWz18rak6cNfsg8hMkmY2P88mCA9A/3T7XkZNgEU89qGyUvnXU2zEnXjIJu0VYq5k
+         fx3+J/TObPND2mtqiGXm4XjAWu3hJlbvip5R7ukCQ75NNT82a5jtOHik6iEzYLhaJ79b
+         zMUIc4oJL73Lu+bRb9BgjDDcPcnjIir9NQtNupvCj74coplYEnzPHS02JX5xi7OzucUC
+         zkTA==
+X-Gm-Message-State: ANoB5pmlWZ9TN5egUVn6IGlgg5jbDGuZ2DKkeu3j+/3470ny7wPEkjY6
+	zVUkYF6yHyNeGnLX2NBeZOl6t3BRyPGudySYr7U=
+X-Google-Smtp-Source: AA0mqf4atkMpL65PjLsyFlVw5AF8QsgJ5VGJ8W+Ej+Ee5o9xomZOkrFcTbIpIpdByvvfcuZBFLcTNg==
+X-Received: by 2002:a05:600c:3b84:b0:3cf:8762:22c2 with SMTP id n4-20020a05600c3b8400b003cf876222c2mr22284442wms.38.1671109092141;
+        Thu, 15 Dec 2022 04:58:12 -0800 (PST)
+Received: from [192.168.2.104] ([79.115.63.55])
+        by smtp.gmail.com with ESMTPSA id q11-20020a7bce8b000000b003d23a3b783bsm5852026wmj.10.2022.12.15.04.58.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Dec 2022 04:58:11 -0800 (PST)
+Message-ID: <17c7a0fb-9dc3-6197-358b-894aeb8ee662@linaro.org>
+Date: Thu, 15 Dec 2022 14:58:10 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Content-Language: en-US
+To: linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
+ huyue2@coolpad.com, jefflexu@linux.alibaba.com
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: BUG: unable to handle kernel paging request in
+ z_erofs_decompress_queue
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,42 +81,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Khem Raj <raj.khem@gmail.com>
+Cc: joneslee@google.com, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-erosfs depend on the consistent use of a 64bit offset
-type, force downstreams to use transparent LFS (_FILE_OFFSET_BITS=64),
-so that it becomes impossible for them to use 32bit interfaces.
+Hi, Gao, Chao, Yue, Jeffle, all,
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- include/erofs/internal.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Syzbot reported a bug at [1] that is reproducible in upstream kernel
+since
+   commit 47e4937a4a7c ("erofs: move erofs out of staging")
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 6a70f11..d3b2986 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -21,6 +21,7 @@ typedef unsigned short umode_t;
- 
- #include "erofs_fs.h"
- #include <fcntl.h>
-+#include <sys/types.h> /* for off_t definition */
- 
- #ifndef PATH_MAX
- #define PATH_MAX        4096    /* # chars in a path name including nul */
-@@ -104,6 +105,10 @@ struct erofs_sb_info {
- 	};
- };
- 
-+
-+/* make sure that any user of the erofs headers has atleast 64bit off_t type */
-+extern int erofs_assert_largefile[sizeof(off_t)-8];
-+
- /* global sbi */
- extern struct erofs_sb_info sbi;
- 
--- 
-2.39.0
+and up to (inclusively)
+   commit 2bfab9c0edac ("erofs: record the longest decompressed size in 
+this round")
 
+The first commit that makes this bug go away is:
+   commit 267f2492c8f7 ("erofs: introduce multi-reference pclusters 
+(fully-referenced)")
+Although, this commit looks like new support and not like an explicit
+bug fix.
+
+I'd like to fix the lts kernels. I'm happy to try any suggestions or do
+some tests. Please let me know if the bug rings a bell.
+
+Thanks,
+ta
+
+[1] 
+https://syzkaller.appspot.com/bug?id=a9b56d324d0de9233ad80633826fac76836d792a
