@@ -2,33 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDBD7652CF7
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Dec 2022 07:41:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25451652D5C
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Dec 2022 08:42:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NcP4N26Slz3c69
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Dec 2022 17:41:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NcQPj3Ycsz3c6H
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Dec 2022 18:42:01 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=oBg5ZP+K;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.18; helo=out199-18.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out199-18.us.a.mail.aliyun.com (out199-18.us.a.mail.aliyun.com [47.90.199.18])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102f; helo=mail-pj1-x102f.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=oBg5ZP+K;
+	dkim-atps=neutral
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NcP4H2Mcmz3bVK
-	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Dec 2022 17:41:49 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VXoU692_1671604901;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VXoU692_1671604901)
-          by smtp.aliyun-inc.com;
-          Wed, 21 Dec 2022 14:41:42 +0800
-Date: Wed, 21 Dec 2022 14:41:40 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-fscrypt@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [RFC] fs-verity and encryption for EROFS
-Message-ID: <Y6KqpGscDV6u5AfQ@B-P7TQMD6M-0146.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NcQPX1mbgz3bZk
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Dec 2022 18:41:50 +1100 (AEDT)
+Received: by mail-pj1-x102f.google.com with SMTP id n65-20020a17090a2cc700b0021bc5ef7a14so1324111pjd.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 20 Dec 2022 23:41:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NkLMygPIhMkn1JMuS1SQINsksFne/Btnep0O6ThNa4M=;
+        b=oBg5ZP+KqKs/muY8t+ZeW2nb29zGVTdrmsSzHQ10vwBD6JHJlFEhxGp6ZhKq0NwRt7
+         7HpON2ZlFBreLb5Ymgk1oBZnV9rHqciSsk6l8vF0hW1508jCvZVRacYmqOx6aj8gOiSO
+         U1t7n571ClmlmGdClvahohTtu5Vnobm3up7ONzIIOefV+cnA94dx9soQk8UxYshnbTBj
+         nl9NQ93hxeLkERQaCjvhFx4lajtcEMf4RDEKr2HV0RqDtD6VOypprVIEH9YE77nabPSI
+         vrCBe9X8eP1OMpZOQ6vk7XfKpHR4B52knujS4DpCWEy46keqLQOXJ5rN4ihK6YiE1hXT
+         R1sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NkLMygPIhMkn1JMuS1SQINsksFne/Btnep0O6ThNa4M=;
+        b=S84Y7U1NFT36vx5wvrgniRbmY1kp/Zadug9iYsr3EHkQDIRkzAheXGKxY9IqXxfKxT
+         FnU7UFXpKxlQ5nBPTR7X06eLW14s+xEahDRbqItpQUveGFKLEoEVfFRvBb40dKTSPqof
+         Tyuah+bDYhNtFXw7u3RpTt8SZiQ+xWOlLmQlKOWhgbXAEKTRD4/tuQalNwlO61IT0LHW
+         MDN/p40mfb6PRYvZpWsW2w8eYFIkU5UxwOFpcw97lIxtpSmZJ3BM1YZK94nax6iCi+0W
+         752Z15ta6WOEN5ygqEWckTanvWk+yi3tyBN+Lf7kc3rbLlzFyvdXTqGQ9kL445MPFj72
+         eSQQ==
+X-Gm-Message-State: AFqh2kpzaJzyuD3nkJt1ghJudl8YtU8OlXFzrNn2+pNYpyTSQhVRBhB6
+	WI7SqwhiQkjwHUuj0h5g3Ju6peKByuI=
+X-Google-Smtp-Source: AMrXdXtBiTs/bYUZ+pw/IONnwNe91J605CXB1tzRD/AtI+WWfLyWBv8xYUZOIxB2wJbYcuYCshkwFw==
+X-Received: by 2002:a17:902:f68a:b0:192:49f4:fe67 with SMTP id l10-20020a170902f68a00b0019249f4fe67mr76265plg.57.1671608504667;
+        Tue, 20 Dec 2022 23:41:44 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id t7-20020a1709027fc700b00189f69c1aa0sm10660820plb.270.2022.12.20.23.41.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Dec 2022 23:41:44 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fsck: support interlaced uncompressed pcluster
+Date: Wed, 21 Dec 2022 15:41:30 +0800
+Message-Id: <20221221074130.26034-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -40,85 +72,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Joseph Qi <joseph.qi@linux.alibaba.com>, Zefan Li <lizefan.x@bytedance.com>, Liu Jiang <gerry@linux.alibaba.com>, Xin Yin <yinxin.x@bytedance.com>
+Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+From: Yue Hu <huyue2@coolpad.com>
 
-(As Eric suggested, I post it on list now..)
+Support uncompressed data layout with on-disk interlaced offset in
+compression mode for fsck.erofs.
 
-In order to outline what we could do next to benefit various image-based
-distribution use cases (especially for signed+verified images and
-confidential computing), I'd like to discuss two potential new
-features for EROFS: verification and encryption.
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ fsck/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-- Verification
+diff --git a/fsck/main.c b/fsck/main.c
+index 410e756..c2f57bc 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -458,12 +458,16 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 				.in = raw,
+ 				.out = buffer,
+ 				.decodedskip = 0,
++				.interlaced_offset = 0,
+ 				.inputsize = map.m_plen,
+ 				.decodedlength = map.m_llen,
+ 				.alg = map.m_algorithmformat,
+ 				.partial_decoding = 0
+ 			};
+ 
++			if (map.m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED)
++				rq.interlaced_offset = erofs_blkoff(map.m_la);
++
+ 			ret = z_erofs_decompress(&rq);
+ 			if (ret < 0) {
+ 				erofs_err("failed to decompress data of m_pa %" PRIu64 ", m_plen %" PRIu64 " @ nid %llu: %s",
+-- 
+2.17.1
 
-As we're known that currently dm-verity is mainly used for read-only
-devices to keep the image integrity.  However, if we consider an
-image-based system with lots of shared blobs (no matter they are
-device-based or file-based).  IMHO, it'd be better to have an in-band
-(rather than a device-mapper out-of-band) approach to verify such blobs.
-
-In particular, currently in container image use cases, an EROFS image
-can consist of
-
-  - one meta blob for metadata and filesystem tree;
-
-  - several data-shared blobs with chunk-based de-duplicated data (in
-    layers to form the incremental update way; or some other ways like
-    one file-one blob)
-
-Currently data blobs can be varied from (typically) dozen blobs to (in
-principle) 2^16 - 1 blobs.  dm-verity setup is much hard to cover such
-usage but that distribution form is more and more common with the
-revolution of containerization.
-
-Also since we have EROFS over fscache infrastructure, file-based
-distribution makes dm-verity almost impossible as well. Generally we
-could enable underlayfs fs-verity I think, but considering on-demand
-lazy pulling from remote, such data may be incomplete before data is
-fully downloaded. (I think that is also almost like what Google did
-fs-verity for incfs.)  In addition, IMO it's not good if we rely on
-features of a random underlay fs with generated tree from random
-hashing algorithm and no original signing (by image creator).
-
-My preliminary thought for EROFS on verification is to have blob-based
-(or device-based) merkle trees but makes such image integrity
-self-contained so that Android, embedded, system rootfs, and container
-use cases can all benefit from it.. 
-
-Also as a self-containerd verfication approaches as the other Linux
-filesystems, it makes bootloaders and individual EROFS image unpacker
-to support/check image integrity and signing easily...
-
-It seems the current fs-verity codebase can almost be well-fitted for
-this with some minor modification.  If possible, we could go further
-in this way.
-
-- Encryption
-
-I also have some rough preliminary thought for EROFS encryption.
-(Although that is not quite in details as verification.)  Currently we
-have full-disk encryption and file-based encryption, However, in order
-to do finer data sharing between encrypted data (it seems hard to do
-finer data de-duplication with file-based encryption), we could also
-consider modified convergence encryption, especially for image-based
-offline data.
-
-In order to prevent dictionary attack, the key itself may not directly be
-derived from its data hashing, but we could assign some random key
-relating to specific data as an encrypted chunk and find a way to share
-these keys and data in a trusted domain.
-
-The similar thought was also shown in the presentation of AWS Lambda
-sparse filesystem, although they don't show much internal details:
-https://youtu.be/FTwsMYXWGB0
-
-Anyway, for encryption, it's just a preliminary thought but we're happy
-to have a better encryption solution for data sharing for confidential
-container images... 
-
-Thanks,
-Gao Xiang
