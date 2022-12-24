@@ -2,51 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF377655216
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Dec 2022 16:32:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F2156559B1
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Dec 2022 10:39:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NdrlG4QpMz3bZn
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Dec 2022 02:32:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NfJt44xzWz3bdn
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Dec 2022 20:39:40 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RkLgtlP2;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qsBal0eq;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+a36cbb7ae26730e9169d+7061+infradead.org+hch@bombadil.srs.infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102a; helo=mail-pj1-x102a.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=RkLgtlP2;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=qsBal0eq;
 	dkim-atps=neutral
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ndrl54f4wz3bVZ
-	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Dec 2022 02:31:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YI+GETaE07zfIF6gTr93yZkoaqmkXGRyTSkPLa22IzA=; b=RkLgtlP2zs+0grtCP2XKKuFJes
-	6FHjSru80hSAyAYCWjR4giWwoV3DaU3XpMF7/3HZDUa+E/kozrd+x6VmAXg4TRMKJHW9b8wzSyfeD
-	VokI0tlui9x8PQhh88Z82EqORo/ZAaFcoi8Gbx6S9ZrNjmqThuHWTTIRq3+YEjgq3IX5yINDVvjt+
-	e0+/qxQDLcU/llLFjIUrhW0P/9m/nHcrhbkOptvrE3r4S9ZgmuFyMLR/rPv50gmRKgcXjautu9IC5
-	U8MyiLTneJokeOtEKvUEFCZUMIUmLTbzJVU1SPbmDcoK0FIf2BAPGpTW1uoenfctyu+YHc+9jx57b
-	guycEkxA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p8k0x-009SnO-0o; Fri, 23 Dec 2022 15:31:15 +0000
-Date: Fri, 23 Dec 2022 07:31:14 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH v5 3/3] mm: Make filemap_release_folio() better inform
- shrink_folio_list()
-Message-ID: <Y6XJwvjKyTgRIiI3@infradead.org>
-References: <167172131368.2334525.8569808925687731937.stgit@warthog.procyon.org.uk>
- <167172134962.2334525.570622889806603086.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <167172134962.2334525.570622889806603086.stgit@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NfJsw5b27z2ynD
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Dec 2022 20:39:31 +1100 (AEDT)
+Received: by mail-pj1-x102a.google.com with SMTP id gt4so6925975pjb.1
+        for <linux-erofs@lists.ozlabs.org>; Sat, 24 Dec 2022 01:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IdoA2pELSiKAaJVeHVwg0Uzmu0qpsY9PIP5dxhNe9Bo=;
+        b=qsBal0eq32coAd2womwjekJgCmlbj2Wl3bVKFQb0mjtsuwq7V6D03B95fA107sBn+5
+         joiTLBUHkRRDwbJib1XwKDltHV5vI7QBIoPp16E7Ni2SotppF2EC+oXIorNgrzH6hKKb
+         0nzKRoa1dC7ho5NPyjfi3+SPguET71s/fs3ifzWCX+2piwViJuCsqwSlECBP0nSGlSuL
+         KCE8GRpZRsuIpQa/nAhjO8an7zHdigwjwOo4ZzP/wu67gjrMgpZjvzH+OeGxQYohvEAt
+         G1Px9qNMMYJo4g8vltdtEhbvQ032eY12gCiwuegoyJC0akaXqIeQ8ENS0VMI0cY6OdcT
+         hhsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IdoA2pELSiKAaJVeHVwg0Uzmu0qpsY9PIP5dxhNe9Bo=;
+        b=gTqH2iiRWi7hkJfLe0bTA99Wi1mvXYWywELOQKBR4iHTQPcc9fNFGx6wpzZA8UpfAl
+         Qu1FPRNP69d5CPfY5LPAKWCBU625HlpXPPy7cdHsmDUk700WVyEP4BFuBqtiWC2jPp6c
+         +7OB5krVBApuqZFQNFbv21c18OuVLxzZ/F4f1bg9W6PMq+4giDSPBMK6HO1awxNYF1oB
+         +/cA8AkBwVKVS0p01WKHTTD7aklv/fp3TV3nFcBM4apwTwFwt8/vNCeOzor2Uu9yJ/1i
+         pG8G2sR8/ySn9NsjpO5Qz4x60osiczTbI8ENPmMQVo5gXt0TmeeCskCgMd/0gRBwKIZ9
+         b5ag==
+X-Gm-Message-State: AFqh2kpW7J5v70rE/W9Wmk3tba7TtpoOXLidvr85jj1glyjc8dj+oJoN
+	rU2QPHITuMKWYvLDoXHukNOyKQ45yaLLyw==
+X-Google-Smtp-Source: AMrXdXtMBe3l8Bi/w5qk0Om8BHRTUnaCUOoZ5wf7YL2ldfvZsXyTEBGyiR7I3ebPKLhFyG8h+y8SkQ==
+X-Received: by 2002:a17:902:f30a:b0:192:5d9b:5881 with SMTP id c10-20020a170902f30a00b001925d9b5881mr4657257ple.31.1671874767412;
+        Sat, 24 Dec 2022 01:39:27 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id k5-20020a170902694500b00186cf82717fsm2671084plt.165.2022.12.24.01.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Dec 2022 01:39:27 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fuse: change to use erofs_pread to read fragment
+Date: Sat, 24 Dec 2022 17:38:51 +0800
+Message-Id: <20221224093851.10095-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,49 +72,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Shyam Prasad N <nspmangalore@gmail.com>, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, Rohith Surabattula <rohiths.msft@gmail.com>, Jeff Layton <jlayton@kernel.org>, Dave Wysochanski <dwysocha@redhat.com>, ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-afs@lists.infradead.org, Steve French <sfrench@samba.org>, linux-mm@kvack.org, linux-erofs@lists.ozlabs.org, linux-cachefs@redhat.com, linux-ext4@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Dominique Martinet <asmadeus@codewreck.org>
+Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Dec 22, 2022 at 03:02:29PM +0000, David Howells wrote:
-> Make filemap_release_folio() return one of three values:
-> 
->  (0) FILEMAP_CANT_RELEASE_FOLIO
-> 
->      Couldn't release the folio's private data, so the folio can't itself
->      be released.
-> 
->  (1) FILEMAP_RELEASED_FOLIO
-> 
->      The private data on the folio was released and the folio can be
->      released.
-> 
->  (2) FILEMAP_FOLIO_HAD_NO_PRIVATE
+From: Yue Hu <huyue2@coolpad.com>
 
-These names read really odd, due to the different placementments
-of FOLIO, the present vs past tense and the fact that 2 also released
-the folio, and the reliance of callers that one value of an enum
-must be 0, while no unprecedented, is a bit ugly.
+Packed inode may be uncompressed as well due to no space.
 
-But do we even need them?  What abut just open coding
-filemap_release_folio (which is a mostly trivial function) in
-shrink_folio_list, which is the only place that cares?
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ lib/data.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-	if (folio_has_private(folio) && folio_needs_release(folio)) {
-		if (folio_test_writeback(folio))
-			goto activate_locked;
+diff --git a/lib/data.c b/lib/data.c
+index 76a6677..fce3da2 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -287,9 +287,9 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 				return ret;
+ 			}
+ 
+-			ret = z_erofs_read_data(&packed_inode,
+-					buffer + end - offset, length - skip,
+-					inode->fragmentoff + skip);
++			ret = erofs_pread(&packed_inode, buffer + end - offset,
++					  length - skip,
++					  inode->fragmentoff + skip);
+ 			if (ret < 0)
+ 				break;
+ 			continue;
+-- 
+2.17.1
 
-		if (mapping && mapping->a_ops->release_folio) {
-			if (!mapping->a_ops->release_folio(folio, gfp))
-				goto activate_locked;
-		} else {
-			if (!try_to_free_buffers(folio))
-				goto activate_locked;
-		}
-
-		if (!mapping && folio_ref_count(folio) == 1) {
-			...
-
-alternatively just keep using filemap_release_folio and just add the
-folio_needs_release in the first branch.  That duplicates the test,
-but makes the change a one-liner.
