@@ -1,64 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8439365C241
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Jan 2023 15:50:26 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9354665CBFF
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 03:48:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NmbHy1f37z3bgt
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 01:50:22 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hWFUqj3/;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NmvF21HW3z3bTq
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 13:48:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.93; helo=mga11.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hWFUqj3/;
-	dkim-atps=neutral
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.8; helo=out30-8.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-8.freemail.mail.aliyun.com (out30-8.freemail.mail.aliyun.com [115.124.30.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NmbHp0fqpz2ybK
-	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 01:50:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672757415; x=1704293415;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rYByriY6B+t5GIfGfzOMb/UiWHPloGDqlku4XbImpqI=;
-  b=hWFUqj3/A8hDa619MJZ/6Dt9hAwpEQ2wYNOPTUTJZewSeQDQh5ru+j9H
-   3QmzyngkQ+6MUhyHMzo+17Frp8yclmdNNzKN5ASCMh6BvRrm2RK2THopE
-   ZBD8LNZAxAZ/D5OoLJONq2svTSGttfif4a1Nnm8rnyknq/u5zrjLzm6LM
-   bosaRzrt7pIY9XHQLl2P78/HH1CTpdyRXKyZfsK19KDtzPLuQbJlgneDW
-   MRfBKPr7f6gbIY26uDGy3u75mBCFabbDYBsaZfQGybGd2SdKffX3WH9ys
-   NUeNbWZHWI0JD1oVtAyJd6yNAXJyz6d6RiaotMKyLqNaaC/YzjhkR7Fx1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="319382384"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="319382384"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 06:50:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="723291102"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="723291102"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Jan 2023 06:50:03 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pCic6-000SML-1m;
-	Tue, 03 Jan 2023 14:50:02 +0000
-Date: Tue, 03 Jan 2023 22:49:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 3ae2c449e4122fabf4da1c1392776255a0aa6e6e
-Message-ID: <63b4408c.SLL7y1OaI+qjKfTw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NmvDw3S6Zz2xZB
+	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 13:48:46 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VYpZBrj_1672800520;
+Received: from 30.97.49.3(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VYpZBrj_1672800520)
+          by smtp.aliyun-inc.com;
+          Wed, 04 Jan 2023 10:48:41 +0800
+Message-ID: <fa1df3e5-9158-4381-5315-d243f77542a6@linux.alibaba.com>
+Date: Wed, 4 Jan 2023 10:48:40 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [RFC PATCH] erofs-utils: fsck: support fragments
+To: Yue Hu <zbestahu@gmail.com>, linux-erofs@lists.ozlabs.org
+References: <20221224094319.10317-1-zbestahu@gmail.com>
+From: Xiang Gao <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20221224094319.10317-1-zbestahu@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,98 +43,129 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 3ae2c449e4122fabf4da1c1392776255a0aa6e6e  erofs/zmap.c: Fix incorrect offset calculation
+Hi Yue,
 
-elapsed time: 722m
+在 2022/12/24 17:43, Yue Hu 写道:
+> From: Yue Hu <huyue2@coolpad.com>
+> 
+> Add compressed fragments support for fsck.erofs.
+> 
+> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> ---
+>   fsck/main.c | 41 +++++++++++++++++++++++++++++++++++++++--
+>   lib/zmap.c  |  1 +
+>   2 files changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fsck/main.c b/fsck/main.c
+> index 2a9c501..9babc61 100644
+> --- a/fsck/main.c
+> +++ b/fsck/main.c
+> @@ -421,6 +421,31 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+>   		if (!(map.m_flags & EROFS_MAP_MAPPED) || !fsckcfg.check_decomp)
+>   			continue;
+>   
+> +		if (map.m_flags & EROFS_MAP_FRAGMENT) {
+> +			struct erofs_inode packed_inode = {
+> +				.nid = sbi.packed_nid,
+> +			};
 
-configs tested: 73
-configs skipped: 2
+Sorry for late response.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+a question... why don't we just rely on z_erofs_read_data()?
 
-gcc tested configs:
-powerpc                           allnoconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-sh                               allmodconfig
-arc                                 defconfig
-alpha                            allyesconfig
-s390                             allmodconfig
-mips                             allyesconfig
-alpha                               defconfig
-s390                                defconfig
-arc                              allyesconfig
-s390                             allyesconfig
-arm                                 defconfig
-i386                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arm64                            allyesconfig
-x86_64                              defconfig
-x86_64               randconfig-a004-20230102
-i386                 randconfig-a004-20230102
-alpha                             allnoconfig
-i386                              allnoconfig
-arm                               allnoconfig
-x86_64                               rhel-8.3
-arc                               allnoconfig
-i386                 randconfig-a003-20230102
-x86_64               randconfig-a006-20230102
-x86_64               randconfig-a002-20230102
-arm                              allyesconfig
-x86_64                           rhel-8.3-bpf
-i386                 randconfig-a006-20230102
-riscv                randconfig-r042-20230101
-x86_64               randconfig-a003-20230102
-powerpc                          allmodconfig
-i386                 randconfig-a001-20230102
-x86_64                           allyesconfig
-ia64                             allmodconfig
-arc                  randconfig-r043-20230102
-x86_64               randconfig-a005-20230102
-s390                 randconfig-r044-20230101
-x86_64                           rhel-8.3-syz
-x86_64               randconfig-a001-20230102
-i386                 randconfig-a002-20230102
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-i386                 randconfig-a005-20230102
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-kvm
-arm                  randconfig-r046-20230102
-arc                  randconfig-r043-20230101
-i386                             allyesconfig
-x86_64                            allnoconfig
-riscv                             allnoconfig
 
-clang tested configs:
-i386                 randconfig-a016-20230102
-i386                 randconfig-a012-20230102
-i386                 randconfig-a011-20230102
-i386                 randconfig-a014-20230102
-i386                 randconfig-a013-20230102
-x86_64               randconfig-a011-20230102
-i386                 randconfig-a015-20230102
-x86_64               randconfig-a012-20230102
-x86_64               randconfig-a013-20230102
-hexagon              randconfig-r041-20230102
-x86_64               randconfig-a015-20230102
-s390                 randconfig-r044-20230102
-arm                  randconfig-r046-20230101
-x86_64                          rhel-8.3-rust
-hexagon              randconfig-r045-20230102
-x86_64               randconfig-a016-20230102
-x86_64               randconfig-a014-20230102
-riscv                randconfig-r042-20230102
-hexagon              randconfig-r041-20230101
-hexagon              randconfig-r045-20230101
+Thanks,
+Gao Xiang
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> +
+> +			ret = erofs_read_inode_from_disk(&packed_inode);
+> +			if (ret) {
+> +				erofs_err("failed to read packed inode from disk");
+> +				goto out;
+> +			}
+> +
+> +			if (!buffer || map.m_llen > buffer_size) {
+> +				buffer_size = map.m_llen;
+> +				buffer = realloc(buffer, map.m_llen);
+> +				BUG_ON(!buffer);
+> +			}
+> +			ret = erofs_pread(&packed_inode, buffer, map.m_llen,
+> +					  inode->fragmentoff);
+> +			if (ret)
+> +				goto out;
+> +
+> +			compressed = true;	/* force using buffer */
+> +			goto write_outfd;
+> +		}
+> +
+>   		if (map.m_plen > raw_size) {
+>   			raw_size = map.m_plen;
+>   			raw = realloc(raw, raw_size);
+> @@ -476,6 +501,7 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+>   			}
+>   		}
+>   
+> +write_outfd:
+>   		if (outfd >= 0 && write(outfd, compressed ? buffer : raw,
+>   					map.m_llen) < 0) {
+>   			erofs_err("I/O error occurred when verifying data chunk @ nid %llu",
+> @@ -486,8 +512,9 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+>   	}
+>   
+>   	if (fsckcfg.print_comp_ratio) {
+> -		fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
+>   		fsckcfg.physical_blocks += BLK_ROUND_UP(pchunk_len);
+> +		if (!erofs_is_packed_inode(inode))
+> +			fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
+>   	}
+>   out:
+>   	if (raw)
+> @@ -732,6 +759,8 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+>   			ret = erofs_extract_dir(&inode);
+>   			break;
+>   		case S_IFREG:
+> +			if (erofs_is_packed_inode(&inode))
+> +				goto verify;
+>   			ret = erofs_extract_file(&inode);
+>   			break;
+>   		case S_IFLNK:
+> @@ -767,7 +796,7 @@ verify:
+>   		ret = erofs_iterate_dir(&ctx, true);
+>   	}
+>   
+> -	if (!ret)
+> +	if (!ret && !erofs_is_packed_inode(&inode))
+>   		erofsfsck_set_attributes(&inode, fsckcfg.extract_path);
+>   
+>   	if (ret == -ECANCELED)
+> @@ -822,6 +851,14 @@ int main(int argc, char **argv)
+>   		goto exit_put_super;
+>   	}
+>   
+> +	if (erofs_sb_has_fragments()) {
+> +		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
+> +		if (err) {
+> +			erofs_err("failed to verify packed file");
+> +			goto exit_put_super;
+> +		}
+> +	}
+> +
+>   	err = erofsfsck_check_inode(sbi.root_nid, sbi.root_nid);
+>   	if (fsckcfg.corrupted) {
+>   		if (!fsckcfg.extract_path)
+> diff --git a/lib/zmap.c b/lib/zmap.c
+> index 41e0713..ca65038 100644
+> --- a/lib/zmap.c
+> +++ b/lib/zmap.c
+> @@ -639,6 +639,7 @@ static int z_erofs_do_map_blocks(struct erofs_inode *vi,
+>   		map->m_plen = vi->z_idata_size;
+>   	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
+>   		map->m_flags |= EROFS_MAP_FRAGMENT;
+> +		map->m_plen = 0;
+>   	} else {
+>   		map->m_pa = blknr_to_addr(m.pblk);
+>   		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
