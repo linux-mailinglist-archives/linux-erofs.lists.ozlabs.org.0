@@ -2,73 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA5F65CCD6
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 07:11:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B11A65CD4C
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 07:44:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Nmzl657mpz3bb2
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 17:11:46 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=B/TPfSoz;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Nn0TG1R0gz3bbR
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 17:44:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=B/TPfSoz;
-	dkim-atps=neutral
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44; helo=out30-44.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nmzl16vlPz2yPD
-	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 17:11:39 +1100 (AEDT)
-Received: by mail-pf1-x429.google.com with SMTP id 124so22154134pfy.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 03 Jan 2023 22:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=is4feB2qqpp5sj+Kso/bHry/bP6oQ6F7VIV+dekX/fM=;
-        b=B/TPfSozXkMwbsPsZFiDHhHzhv97/Y463Jb23ep1xGOaQpXJ6xHlG8Im+ydcyLcM/y
-         6psRl22ZPNgo5lxBLeb8q1dYBgNeilQCvquKoOwduu7QQuKslYgLDVV/sGCTqXCqcs91
-         jV1khzIzciv+yV30uQrGNb83ZvlQLYrRqjUSXvnyjN9JHZXmwjZF3w5UxiLhRCoGvYQ9
-         TghEe/y/ShEOIyJVTMx/GNejU5gi8L81tSt6eCyOA9eyKj60P/5CZjWAOiWtpm5956pb
-         LlCCzULED3nhleJw6FE8DfULqy/gy3TkebppsEbRbPeHSjtMtXARPMElFCrRXbkpiQNW
-         1YcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=is4feB2qqpp5sj+Kso/bHry/bP6oQ6F7VIV+dekX/fM=;
-        b=EY30hvyM2AzhlLjsevNAu6G1x0RVw4LJ+UYGohMDS8CBNWB5Tfx3tPGIkohyndhtC+
-         Mdhy8MTePx9Uar9K3qjTB8dTc50DzxhZiGMC76Or8yhsH/mlIrOtNnv0zxE4pLMXlua5
-         DxOLYLZmqp/Qc4zk38obdMp41ioz5wIoqyf9xpkllP3HmNC2R/Sf0po5sLz4PWb99sxH
-         SwMVV1iavKeuj+giLdlHRSBawPfWb1R6HaFdb2sGOefeEP5tl6b4ycpNnU1qrawNqGYy
-         YmVZ6lipWixlI3QpbXQgXc55OiOsGePUHQDK+Z4o7ngmLQ7R3mvzalpW5zY97SDcV9Hf
-         axYA==
-X-Gm-Message-State: AFqh2kqxmj3xrTen2k03kH/TR2GoZKzsH0STRz2RjinmBaaP1yzYlpCz
-	tsHqPmvcBl0FuTOeBmWiC/Q=
-X-Google-Smtp-Source: AMrXdXv+8o/xXRvRGj8p+OKUPn0xZ51BTfC8ttdeTXs3iCGU6qU4GYdTRxa6KF2dWo3TxNttGetguA==
-X-Received: by 2002:a05:6a00:1485:b0:57f:ef11:acf6 with SMTP id v5-20020a056a00148500b0057fef11acf6mr57602183pfu.8.1672812696765;
-        Tue, 03 Jan 2023 22:11:36 -0800 (PST)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id y13-20020aa79aed000000b00582cb9d9ad3sm2344462pfp.178.2023.01.03.22.11.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Jan 2023 22:11:36 -0800 (PST)
-Date: Wed, 4 Jan 2023 14:16:35 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Xiang Gao <hsiangkao@linux.alibaba.com>
-Subject: Re: [RFC PATCH 2/2] erofs-utils: dump: support fragments
-Message-ID: <20230104141635.000061b1.zbestahu@gmail.com>
-In-Reply-To: <443a1f23-451a-c964-442b-843519ce9ec9@linux.alibaba.com>
-References: <0e4797ef5f22ac3c2134aa4b005c489c233d2eec.1671443064.git.huyue2@coolpad.com>
-	<8c66d0d7b0d4f5fa18566bedeaa0b38458b97aa7.1671443064.git.huyue2@coolpad.com>
-	<443a1f23-451a-c964-442b-843519ce9ec9@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nn0T90vscz2xkD
+	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 17:44:43 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VYqS8ks_1672814676;
+Received: from 30.97.49.3(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VYqS8ks_1672814676)
+          by smtp.aliyun-inc.com;
+          Wed, 04 Jan 2023 14:44:38 +0800
+Message-ID: <f9d113dc-134a-bdef-34e2-672bb5220b0c@linux.alibaba.com>
+Date: Wed, 4 Jan 2023 14:44:35 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [RFC PATCH 2/2] erofs-utils: dump: support fragments
+To: Yue Hu <zbestahu@gmail.com>
+References: <0e4797ef5f22ac3c2134aa4b005c489c233d2eec.1671443064.git.huyue2@coolpad.com>
+ <8c66d0d7b0d4f5fa18566bedeaa0b38458b97aa7.1671443064.git.huyue2@coolpad.com>
+ <443a1f23-451a-c964-442b-843519ce9ec9@linux.alibaba.com>
+ <20230104141635.000061b1.zbestahu@gmail.com>
+From: Xiang Gao <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230104141635.000061b1.zbestahu@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -85,269 +50,249 @@ Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zhangwen@coolpad.
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
 
-Thanks for the reviewing. I'm planning to send v2.
 
-On Wed, 4 Jan 2023 11:13:55 +0800
-Xiang Gao <hsiangkao@linux.alibaba.com> wrote:
-
-> On 2022/12/19 17:50, Yue Hu wrote:
-> > From: Yue Hu <huyue2@coolpad.com>
-> > 
-> > Add compressed fragments support for dump feature.
-> > 
-> > Signed-off-by: Yue Hu <huyue2@coolpad.com>
-> > ---
-> >   dump/main.c              | 78 ++++++++++++++++++++++++++++++++--------
-> >   include/erofs/internal.h |  1 +
-> >   lib/zmap.c               |  2 +-
-> >   3 files changed, 65 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/dump/main.c b/dump/main.c
-> > index bc4f047..d387841 100644
-> > --- a/dump/main.c
-> > +++ b/dump/main.c
-> > @@ -14,6 +14,8 @@
-> >   #include "erofs/inode.h"
-> >   #include "erofs/io.h"
-> >   #include "erofs/dir.h"
-> > +#include "erofs/compress.h"
-> > +#include "erofs/fragments.h"
-> >   #include "../lib/liberofs_private.h"
-> >   
-> >   #ifdef HAVE_LIBUUID
-> > @@ -96,6 +98,7 @@ static struct erofsdump_feature feature_lists[] = {
-> >   	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
-> >   	{ false, EROFS_FEATURE_INCOMPAT_DEVICE_TABLE, "device_table" },
-> >   	{ false, EROFS_FEATURE_INCOMPAT_ZTAILPACKING, "ztailpacking" },
-> > +	{ false, EROFS_FEATURE_INCOMPAT_FRAGMENTS, "fragments" },
-> >   };
-> >   
-> >   static int erofsdump_readdir(struct erofs_dir_context *ctx);
-> > @@ -285,10 +288,12 @@ static int erofsdump_readdir(struct erofs_dir_context *ctx)
-> >   	}
-> >   
-> >   	if (S_ISREG(vi.i_mode)) {
-> > -		stats.files_total_origin_size += vi.i_size;
-> > -		inc_file_extension_count(ctx->dname, ctx->de_namelen);
-> > +		if (!erofs_is_packed_inode(&vi)) {
-> > +			stats.files_total_origin_size += vi.i_size;
-> > +			inc_file_extension_count(ctx->dname, ctx->de_namelen);
-> > +			update_file_size_statistics(vi.i_size, true);
-> > +		}
-> >   		stats.files_total_size += occupied_size;
-> > -		update_file_size_statistics(vi.i_size, true);
-> >   		update_file_size_statistics(occupied_size, false);
-> >   	}
-> >   
-> > @@ -320,6 +325,10 @@ static void erofsdump_show_fileinfo(bool show_extent)
-> >   		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "\n",
-> >   		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "  # device %u\n"
-> >   	};
-> > +	const char *frag_ext_fmt[] = {
-> > +		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 "\n",
-> > +		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 "  # device %u\n"
-> > +	};  
+On 2023/1/4 14:16, Yue Hu wrote:
+> Hi Xiang,
 > 
-> Why do we need another fmt rather than just fill fragment extent with 
-
-I also plan to remove this fmt in v2.
-
-> physical addr 0?
-
-Okay. Just leave latter physical length as empty?
-
+> Thanks for the reviewing. I'm planning to send v2.
 > 
-> >   	int err, i;
-> >   	erofs_off_t size;
-> >   	u16 access_mode;
-> > @@ -348,16 +357,31 @@ static void erofsdump_show_fileinfo(bool show_extent)
-> >   		}
-> >   	}
-> >   
-> > +	if (erofs_inode_is_data_compressed(inode.datalayout)) {
-> > +		err = z_erofs_fill_inode_lazy(&inode);
-> > +		if (err) {
-> > +			erofs_err("read inode map header failed @ nid %llu",
-> > +				  inode.nid | 0ULL);
-> > +			return;
-> > +		}
-> > +	}  
+> On Wed, 4 Jan 2023 11:13:55 +0800
+> Xiang Gao <hsiangkao@linux.alibaba.com> wrote:
 > 
-> Why do we need to call z_erofs_fill_inode_lazy here?
-
-Used to check if the file has fragment. If yes, i think 'Compression ratio' can not be showed
-exactly. 
-
-So, I'd like to show fragment information related instead as below:
-
-NID: 715   Links: 1   Layout: 1   Fragment: entire file
-
-NID: 715   Links: 1   Layout: 3   Fragment: tail of file
-
+>> On 2022/12/19 17:50, Yue Hu wrote:
+>>> From: Yue Hu <huyue2@coolpad.com>
+>>>
+>>> Add compressed fragments support for dump feature.
+>>>
+>>> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+>>> ---
+>>>    dump/main.c              | 78 ++++++++++++++++++++++++++++++++--------
+>>>    include/erofs/internal.h |  1 +
+>>>    lib/zmap.c               |  2 +-
+>>>    3 files changed, 65 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/dump/main.c b/dump/main.c
+>>> index bc4f047..d387841 100644
+>>> --- a/dump/main.c
+>>> +++ b/dump/main.c
+>>> @@ -14,6 +14,8 @@
+>>>    #include "erofs/inode.h"
+>>>    #include "erofs/io.h"
+>>>    #include "erofs/dir.h"
+>>> +#include "erofs/compress.h"
+>>> +#include "erofs/fragments.h"
+>>>    #include "../lib/liberofs_private.h"
+>>>    
+>>>    #ifdef HAVE_LIBUUID
+>>> @@ -96,6 +98,7 @@ static struct erofsdump_feature feature_lists[] = {
+>>>    	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
+>>>    	{ false, EROFS_FEATURE_INCOMPAT_DEVICE_TABLE, "device_table" },
+>>>    	{ false, EROFS_FEATURE_INCOMPAT_ZTAILPACKING, "ztailpacking" },
+>>> +	{ false, EROFS_FEATURE_INCOMPAT_FRAGMENTS, "fragments" },
+>>>    };
+>>>    
+>>>    static int erofsdump_readdir(struct erofs_dir_context *ctx);
+>>> @@ -285,10 +288,12 @@ static int erofsdump_readdir(struct erofs_dir_context *ctx)
+>>>    	}
+>>>    
+>>>    	if (S_ISREG(vi.i_mode)) {
+>>> -		stats.files_total_origin_size += vi.i_size;
+>>> -		inc_file_extension_count(ctx->dname, ctx->de_namelen);
+>>> +		if (!erofs_is_packed_inode(&vi)) {
+>>> +			stats.files_total_origin_size += vi.i_size;
+>>> +			inc_file_extension_count(ctx->dname, ctx->de_namelen);
+>>> +			update_file_size_statistics(vi.i_size, true);
+>>> +		}
+>>>    		stats.files_total_size += occupied_size;
+>>> -		update_file_size_statistics(vi.i_size, true);
+>>>    		update_file_size_statistics(occupied_size, false);
+>>>    	}
+>>>    
+>>> @@ -320,6 +325,10 @@ static void erofsdump_show_fileinfo(bool show_extent)
+>>>    		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "\n",
+>>>    		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 " : %10" PRIu64 "..%10" PRIu64 " | %7" PRIu64 "  # device %u\n"
+>>>    	};
+>>> +	const char *frag_ext_fmt[] = {
+>>> +		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 "\n",
+>>> +		"%4d: %8" PRIu64 "..%8" PRIu64 " | %7" PRIu64 "  # device %u\n"
+>>> +	};
+>>
+>> Why do we need another fmt rather than just fill fragment extent with
 > 
-> > +
-> >   	err = erofs_get_occupied_size(&inode, &size);
-> >   	if (err) {
-> >   		erofs_err("get file size failed @ nid %llu", inode.nid | 0ULL);
-> >   		return;
-> >   	}
-> >   
-> > -	err = erofs_get_pathname(inode.nid, path, sizeof(path));
-> > -	if (err < 0) {
-> > -		erofs_err("file path not found @ nid %llu", inode.nid | 0ULL);
-> > -		return;  
+> I also plan to remove this fmt in v2.
 > 
-> Can we just ignore pathname if it doesn't exist?
+>> physical addr 0?
+> 
+> Okay. Just leave latter physical length as empty?
+> 
+>>
+>>>    	int err, i;
+>>>    	erofs_off_t size;
+>>>    	u16 access_mode;
+>>> @@ -348,16 +357,31 @@ static void erofsdump_show_fileinfo(bool show_extent)
+>>>    		}
+>>>    	}
+>>>    
+>>> +	if (erofs_inode_is_data_compressed(inode.datalayout)) {
+>>> +		err = z_erofs_fill_inode_lazy(&inode);
+>>> +		if (err) {
+>>> +			erofs_err("read inode map header failed @ nid %llu",
+>>> +				  inode.nid | 0ULL);
+>>> +			return;
+>>> +		}
+>>> +	}
+>>
+>> Why do we need to call z_erofs_fill_inode_lazy here?
+> 
+> Used to check if the file has fragment. If yes, i think 'Compression ratio' can not be showed
+> exactly.
+> 
+> So, I'd like to show fragment information related instead as below:
+> 
+> NID: 715   Links: 1   Layout: 1   Fragment: entire file
+> 
+> NID: 715   Links: 1   Layout: 3   Fragment: tail of file
 
-Okay.
+I think no need to distinguish these two stuffs considering extra 
+complexity.
 
 > 
-> > +	if (erofs_is_packed_inode(&inode) { > +		strncpy(path, EROFS_PACKED_INODE, sizeof(path) - 1);
-> > +		path[sizeof(path) - 1] = '\0';
-> > +	} else {
-> > +		err = erofs_get_pathname(inode.nid, path, sizeof(path));
-> > +		if (err < 0) {
-> > +			erofs_err("file path not found @ nid %llu",
-> > +				  inode.nid | 0ULL);
-> > +			return;
-> > +		}
-> >   	}
-> >   
-> >   	strftime(timebuf, sizeof(timebuf),
-> > @@ -372,9 +396,13 @@ static void erofsdump_show_fileinfo(bool show_extent)
-> >   		file_category_types[erofs_mode_to_ftype(inode.i_mode)]);
-> >   	fprintf(stdout, "NID: %" PRIu64 "   ", inode.nid);
-> >   	fprintf(stdout, "Links: %u   ", inode.i_nlink);
-> > -	fprintf(stdout, "Layout: %d   Compression ratio: %.2f%%\n",
-> > -		inode.datalayout,
-> > -		(double)(100 * size) / (double)(inode.i_size));
-> > +	if (inode.z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)
-> > +		fprintf(stdout, "Layout: %d   Fragment: %s\n",
-> > +			inode.datalayout, size ? "partial" : "full");
-> > +	else
-> > +		fprintf(stdout, "Layout: %d   Compression ratio: %.2f%%\n",
-> > +			inode.datalayout,
-> > +			(double)(100 * size) / (double)(inode.i_size));
-> >   	fprintf(stdout, "Inode size: %d   ", inode.inode_isize);
-> >   	fprintf(stdout, "Extent size: %u   ", inode.extent_isize);
-> >   	fprintf(stdout,	"Xattr size: %u\n", inode.xattr_isize);
-> > @@ -404,7 +432,8 @@ static void erofsdump_show_fileinfo(bool show_extent)
-> >   	if (!dumpcfg.show_extent)
-> >   		return;
-> >   
-> > -	fprintf(stdout, "\n Ext:   logical offset   |  length :     physical offset    |  length\n");
-> > +	fprintf(stdout, "\n Ext:   logical offset   |  length%s\n",
-> > +			size ? " :     physical offset    |  length" : "");
-> >   	while (map.m_la < inode.i_size) {
-> >   		struct erofs_map_dev mdev;
-> >   
-> > @@ -425,10 +454,17 @@ static void erofsdump_show_fileinfo(bool show_extent)
-> >   			return;
-> >   		}
-> >   
-> > -		fprintf(stdout, ext_fmt[!!mdev.m_deviceid], extent_count++,
-> > -			map.m_la, map.m_la + map.m_llen, map.m_llen,
-> > -			mdev.m_pa, mdev.m_pa + map.m_plen, map.m_plen,
-> > -			mdev.m_deviceid);
-> > +		if (map.m_flags & EROFS_MAP_FRAGMENT)
-> > +			fprintf(stdout, frag_ext_fmt[!!mdev.m_deviceid],
-> > +				extent_count++,
-> > +				map.m_la, map.m_la + map.m_llen, map.m_llen,
-> > +				mdev.m_deviceid);  
+>>
+>>> +
+>>>    	err = erofs_get_occupied_size(&inode, &size);
+>>>    	if (err) {
+>>>    		erofs_err("get file size failed @ nid %llu", inode.nid | 0ULL);
+>>>    		return;
+>>>    	}
+>>>    
+>>> -	err = erofs_get_pathname(inode.nid, path, sizeof(path));
+>>> -	if (err < 0) {
+>>> -		erofs_err("file path not found @ nid %llu", inode.nid | 0ULL);
+>>> -		return;
+>>
+>> Can we just ignore pathname if it doesn't exist?
 > 
-> except for the last fragment extent, the other extents all have physical 
-> addr and length...
-
-It's true.
-
-What bothers me is how to better show fragment extent based on current format (especially
-no physical address and offset for fragment extent).
-
-Now, i think the fragment extent should be showed like below (just use a '0' to represent it)?
-
-a) the whole file is a fragment:
-
- Ext:   logical offset   |  length :     physical offset    |  length
-   1:        0..    1046 |    1046 :    0
-
-b) the tail of file is a fragment:
-
- Ext:   logical offset   |  length :     physical offset    |  length
-   0:        0..   19672 |   19672 :    1314816..   1323008 |    8192
-    ...
-  13:   165989..  182474 |   16485 :    1421312..   1429504 |    8192
-  14:   182474..  196435 |   13961 :    0
-
+> Okay.
 > 
-> > +		else
-> > +			fprintf(stdout, ext_fmt[!!mdev.m_deviceid],
-> > +				extent_count++,
-> > +				map.m_la, map.m_la + map.m_llen, map.m_llen,
-> > +				mdev.m_pa, mdev.m_pa + map.m_plen, map.m_plen,
-> > +				mdev.m_deviceid);
-> >   		map.m_la += map.m_llen;
-> >   	}
-> >   	fprintf(stdout, "%s: %d extents found\n", path, extent_count);
-> > @@ -537,6 +573,15 @@ static void erofsdump_print_statistic(void)
-> >   		erofs_err("read dir failed");
-> >   		return;
-> >   	}
-> > +	if (erofs_sb_has_fragments()) {
-> > +		err = erofsdump_readdir(&(struct erofs_dir_context) {
-> > +					.de_nid = sbi.packed_nid
-> > +					});  
+>>
+>>> +	if (erofs_is_packed_inode(&inode) { > +		strncpy(path, EROFS_PACKED_INODE, sizeof(path) - 1);
+>>> +		path[sizeof(path) - 1] = '\0';
+>>> +	} else {
+>>> +		err = erofs_get_pathname(inode.nid, path, sizeof(path));
+>>> +		if (err < 0) {
+>>> +			erofs_err("file path not found @ nid %llu",
+>>> +				  inode.nid | 0ULL);
+>>> +			return;
+>>> +		}
+>>>    	}
+>>>    
+>>>    	strftime(timebuf, sizeof(timebuf),
+>>> @@ -372,9 +396,13 @@ static void erofsdump_show_fileinfo(bool show_extent)
+>>>    		file_category_types[erofs_mode_to_ftype(inode.i_mode)]);
+>>>    	fprintf(stdout, "NID: %" PRIu64 "   ", inode.nid);
+>>>    	fprintf(stdout, "Links: %u   ", inode.i_nlink);
+>>> -	fprintf(stdout, "Layout: %d   Compression ratio: %.2f%%\n",
+>>> -		inode.datalayout,
+>>> -		(double)(100 * size) / (double)(inode.i_size));
+>>> +	if (inode.z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)
+>>> +		fprintf(stdout, "Layout: %d   Fragment: %s\n",
+>>> +			inode.datalayout, size ? "partial" : "full");
+>>> +	else
+>>> +		fprintf(stdout, "Layout: %d   Compression ratio: %.2f%%\n",
+>>> +			inode.datalayout,
+>>> +			(double)(100 * size) / (double)(inode.i_size));
+>>>    	fprintf(stdout, "Inode size: %d   ", inode.inode_isize);
+>>>    	fprintf(stdout, "Extent size: %u   ", inode.extent_isize);
+>>>    	fprintf(stdout,	"Xattr size: %u\n", inode.xattr_isize);
+>>> @@ -404,7 +432,8 @@ static void erofsdump_show_fileinfo(bool show_extent)
+>>>    	if (!dumpcfg.show_extent)
+>>>    		return;
+>>>    
+>>> -	fprintf(stdout, "\n Ext:   logical offset   |  length :     physical offset    |  length\n");
+>>> +	fprintf(stdout, "\n Ext:   logical offset   |  length%s\n",
+>>> +			size ? " :     physical offset    |  length" : "");
+>>>    	while (map.m_la < inode.i_size) {
+>>>    		struct erofs_map_dev mdev;
+>>>    
+>>> @@ -425,10 +454,17 @@ static void erofsdump_show_fileinfo(bool show_extent)
+>>>    			return;
+>>>    		}
+>>>    
+>>> -		fprintf(stdout, ext_fmt[!!mdev.m_deviceid], extent_count++,
+>>> -			map.m_la, map.m_la + map.m_llen, map.m_llen,
+>>> -			mdev.m_pa, mdev.m_pa + map.m_plen, map.m_plen,
+>>> -			mdev.m_deviceid);
+>>> +		if (map.m_flags & EROFS_MAP_FRAGMENT)
+>>> +			fprintf(stdout, frag_ext_fmt[!!mdev.m_deviceid],
+>>> +				extent_count++,
+>>> +				map.m_la, map.m_la + map.m_llen, map.m_llen,
+>>> +				mdev.m_deviceid);
+>>
+>> except for the last fragment extent, the other extents all have physical
+>> addr and length...
 > 
-> why do we need this?
+> It's true.
+> 
+> What bothers me is how to better show fragment extent based on current format (especially
+> no physical address and offset for fragment extent).
+> 
+> Now, i think the fragment extent should be showed like below (just use a '0' to represent it)?
+> 
+> a) the whole file is a fragment:
+> 
+>   Ext:   logical offset   |  length :     physical offset    |  length
+>     1:        0..    1046 |    1046 :    0
 
-Since some status need to be updated such as stats.files_total_size.
+
+Can we use
+    Ext:   logical offset   |  length :     physical offset    |  length
+      1:        0..    1046 |    1046 :     0..0               |  0
 
 > 
-> Thanks,
-> Gao Xiang
+> b) the tail of file is a fragment:
 > 
-> > +		if (err) {
-> > +			erofs_err("read packed inode failed");
-> > +			return;
-> > +		}
-> > +	}
-> >   	erofsdump_file_statistic();
-> >   	erofsdump_filesize_distribution("Original",
-> >   			stats.file_original_size,
-> > @@ -563,6 +608,9 @@ static void erofsdump_show_superblock(void)
-> >   			sbi.xattr_blkaddr);
-> >   	fprintf(stdout, "Filesystem root nid:                          %llu\n",
-> >   			sbi.root_nid | 0ULL);
-> > +	if (erofs_sb_has_fragments())
-> > +		fprintf(stdout, "Filesystem packed nid:                        %llu\n",
-> > +				sbi.packed_nid | 0ULL);
-> >   	fprintf(stdout, "Filesystem inode count:                       %llu\n",
-> >   			sbi.inos | 0ULL);
-> >   	fprintf(stdout, "Filesystem created:                           %s",
-> > diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> > index 206913c..947894d 100644
-> > --- a/include/erofs/internal.h
-> > +++ b/include/erofs/internal.h
-> > @@ -383,6 +383,7 @@ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size);
-> >   
-> >   /* zmap.c */
-> >   int z_erofs_fill_inode(struct erofs_inode *vi);
-> > +int z_erofs_fill_inode_lazy(struct erofs_inode *vi);
-> >   int z_erofs_map_blocks_iter(struct erofs_inode *vi,
-> >   			    struct erofs_map_blocks *map, int flags);
-> >   
-> > diff --git a/lib/zmap.c b/lib/zmap.c
-> > index 89e9da1..41e0713 100644
-> > --- a/lib/zmap.c
-> > +++ b/lib/zmap.c
-> > @@ -29,7 +29,7 @@ int z_erofs_fill_inode(struct erofs_inode *vi)
-> >   	return 0;
-> >   }
-> >   
-> > -static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
-> > +int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
-> >   {
-> >   	int ret;
-> >   	erofs_off_t pos;  
+>   Ext:   logical offset   |  length :     physical offset    |  length
+>     0:        0..   19672 |   19672 :    1314816..   1323008 |    8192
+>      ...
+>    13:   165989..  182474 |   16485 :    1421312..   1429504 |    8192
+>    14:   182474..  196435 |   13961 :    0
 
+Here
+      14:   182474..  196435 |   13961 :    0..         0       |    0
+
+as well?
+
+> 
+>>
+>>> +		else
+>>> +			fprintf(stdout, ext_fmt[!!mdev.m_deviceid],
+>>> +				extent_count++,
+>>> +				map.m_la, map.m_la + map.m_llen, map.m_llen,
+>>> +				mdev.m_pa, mdev.m_pa + map.m_plen, map.m_plen,
+>>> +				mdev.m_deviceid);
+>>>    		map.m_la += map.m_llen;
+>>>    	}
+>>>    	fprintf(stdout, "%s: %d extents found\n", path, extent_count);
+>>> @@ -537,6 +573,15 @@ static void erofsdump_print_statistic(void)
+>>>    		erofs_err("read dir failed");
+>>>    		return;
+>>>    	}
+>>> +	if (erofs_sb_has_fragments()) {
+>>> +		err = erofsdump_readdir(&(struct erofs_dir_context) {
+>>> +					.de_nid = sbi.packed_nid
+>>> +					});
+>>
+>> why do we need this?
+> 
+> Since some status need to be updated such as stats.files_total_size.
+
+why should packed file be recorded in files_total_size?
+
+Thanks,
+Gao Xiang
+
+> 
+>>
+>> Thanks,
+>> Gao Xiang
