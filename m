@@ -1,41 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B04B65CD9A
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 08:28:55 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8626965CD9D
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 08:30:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Nn1S463f7z3bTJ
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 18:28:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Nn1V56fzgz3bTJ
+	for <lists+linux-erofs@lfdr.de>; Wed,  4 Jan 2023 18:30:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.8; helo=out30-8.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-8.freemail.mail.aliyun.com (out30-8.freemail.mail.aliyun.com [115.124.30.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nn1S04K1Wz2yPD
-	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 18:28:48 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VYqimyD_1672817323;
-Received: from 30.97.49.3(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VYqimyD_1672817323)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nn1V23js5z2yPD
+	for <linux-erofs@lists.ozlabs.org>; Wed,  4 Jan 2023 18:30:33 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VYqhgLI_1672817420;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VYqhgLI_1672817420)
           by smtp.aliyun-inc.com;
-          Wed, 04 Jan 2023 15:28:44 +0800
-Message-ID: <99d24ef5-c72a-80ea-9ea5-2b7e1e60af79@linux.alibaba.com>
-Date: Wed, 4 Jan 2023 15:28:42 +0800
+          Wed, 04 Jan 2023 15:30:30 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: dump: avoid printing `Extent size` field
+Date: Wed,  4 Jan 2023 15:30:19 +0800
+Message-Id: <20230104073019.90530-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [RFC PATCH] erofs-utils: fsck: support fragments
-To: Yue Hu <zbestahu@gmail.com>
-References: <20221224094319.10317-1-zbestahu@gmail.com>
- <fa1df3e5-9158-4381-5315-d243f77542a6@linux.alibaba.com>
- <20230104112445.000075d8.zbestahu@gmail.com>
- <5236b19c-763f-9a5b-a0c1-4c59fa7c6d05@linux.alibaba.com>
- <20230104152651.000051df.zbestahu@gmail.com>
-From: Xiang Gao <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230104152651.000051df.zbestahu@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -47,35 +39,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zhangwen@coolpad.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+inode.extent_isize is only meaningful during mkfs for now.
 
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ dump/main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On 2023/1/4 15:26, Yue Hu wrote:
+diff --git a/dump/main.c b/dump/main.c
+index 93dce8b..86a244c 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -388,7 +388,6 @@ static void erofsdump_show_fileinfo(bool show_extent)
+ 		inode.datalayout,
+ 		(double)(100 * size) / (double)(inode.i_size));
+ 	fprintf(stdout, "Inode size: %d   ", inode.inode_isize);
+-	fprintf(stdout, "Extent size: %u   ", inode.extent_isize);
+ 	fprintf(stdout,	"Xattr size: %u\n", inode.xattr_isize);
+ 	fprintf(stdout, "Uid: %u   Gid: %u  ", inode.i_uid, inode.i_gid);
+ 	fprintf(stdout, "Access: %04o/%s\n", access_mode, access_mode_str);
+-- 
+2.24.4
 
-...
-
->>
->> I think we could just export parts of erofs_pread() to clean up the
->> whole erofs_verify_inode_data()...
-> 
-> What's the clean up referring to?
-> 
-> However, i think erofs_verify_inode_data() looks a little duplicate compared to erofs_read_raw_data/z_erofs_read_data().
-
-We should reuse the main part (for example, by introducing an interface 
-to accept mapping) of
-erofs_read_raw_data() and z_erofs_read_data() to avoid duplicated code 
-in erofs_verify_inode_data().
-
-Thanks,
-Gao Xiang
-
-> 
->>
->> Thanks,
->> Gao Xiang
->>
->>
