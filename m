@@ -1,71 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CA5565E7AF
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Jan 2023 10:23:48 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC1BA65E834
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Jan 2023 10:50:17 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NngyB1Jnrz3c4Y
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Jan 2023 20:23:46 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=gH56m1M9;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NnhXh4QNDz3bNs
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Jan 2023 20:50:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1033; helo=mail-pj1-x1033.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=gH56m1M9;
-	dkim-atps=neutral
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.6; helo=out199-6.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com [47.90.199.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nngxv5LbZz2ynB
-	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Jan 2023 20:23:29 +1100 (AEDT)
-Received: by mail-pj1-x1033.google.com with SMTP id c8-20020a17090a4d0800b00225c3614161so1419856pjg.5
-        for <linux-erofs@lists.ozlabs.org>; Thu, 05 Jan 2023 01:23:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nth5qk97YKFDPPUYZcHlMng61la9S1ks345ePJR1m1s=;
-        b=gH56m1M9Za3IPau2ZfhoA0rZ3ccygvqyLjOaCzHTNkDck85uEy3ugx4OH2tl/El4pv
-         s28fWGB8YKMCoQsQE/kb0NYTOcFgRJzBuW35y5GQ290PVpTsLL9HQuMsJx3aBHoT6bUS
-         P4f4pv/zZsmSzzRV+OkLC8Z4m1WTLagZQbllfNWMULLzviDFrIGQ7Y3HYdshPmtS+1Ju
-         IQWcBBx5AfqG5u+sgie+CMiOHP+80n8tFexaZtPW2TyDpkjhWPrAAEuF2GonQ1LevrQB
-         kcqvCjJQytrLNadJd/nmt9BJWqthYvpHAN75grl5M5UEUhA0YfgMImOwIu0oMOPaUB1x
-         1z0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nth5qk97YKFDPPUYZcHlMng61la9S1ks345ePJR1m1s=;
-        b=tOLNtZLZgJuIQnG+LRr/9FZXfp4trLgiKdDx63kN1c/WjE8vkUa/wZs0OsHII0pNHl
-         zRGQlctPPohjowOPsJYLv8Yj+4XB3U5s5QUqP1R6m+JwM7SOtFr/pEkx0PMK+gmz2dZN
-         8vHSAEMXYc9fhlC6V+uN2SIsQ2ivnBMKJZ61GhGDji1pTZNK0f7IjWYiPul8fM+z7R/N
-         2GqD3lWwWXTjZBKRbAtbOBPOrnlpSDuw2C0xqW6HVUalLu+XIAv2N53wgayId0gGv7iN
-         oRc+rJE0UqpjheGQwojjX1B5/ok3JAd3Pj7jaZ94jelUAv0jbdiypo9R0pHhuzxncWd0
-         LlfQ==
-X-Gm-Message-State: AFqh2kpgO8J1SpVEamwTtyWHffrjv+5MBarjJ7OPj5uuXOd4F89LqkYY
-	yBpIsZAZdgwe5xNu3EgGTTEpeIXUYw0=
-X-Google-Smtp-Source: AMrXdXvodFhcDicWO2PMKAmvE1gf8ncIo0T8oaoUmi2LR8W3nOLufrN4AxC69z44Qz+a0VEeRa/i6Q==
-X-Received: by 2002:a05:6a20:b29e:b0:ad:48b3:c5d1 with SMTP id ei30-20020a056a20b29e00b000ad48b3c5d1mr52670097pzb.47.1672910607285;
-        Thu, 05 Jan 2023 01:23:27 -0800 (PST)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id w2-20020a626202000000b00576145a9bd0sm23847285pfb.127.2023.01.05.01.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 01:23:27 -0800 (PST)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils: fsck: add a check to packed inode
-Date: Thu,  5 Jan 2023 17:21:57 +0800
-Message-Id: <08cde366fc3a5dafbcdde0c0f904e045daeb0bab.1672909705.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <9d6764beb664af4cbe70869e7e45bdab57357e59.1672909705.git.huyue2@coolpad.com>
-References: <9d6764beb664af4cbe70869e7e45bdab57357e59.1672909705.git.huyue2@coolpad.com>
-In-Reply-To: <9d6764beb664af4cbe70869e7e45bdab57357e59.1672909705.git.huyue2@coolpad.com>
-References: <9d6764beb664af4cbe70869e7e45bdab57357e59.1672909705.git.huyue2@coolpad.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NnhXc1Bdjz2yg5
+	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Jan 2023 20:50:06 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VYvX.gW_1672912199;
+Received: from 30.97.48.239(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VYvX.gW_1672912199)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Jan 2023 17:50:00 +0800
+Message-ID: <f126fc95-fdbe-cc2e-5efb-ab704d13bd41@linux.alibaba.com>
+Date: Thu, 5 Jan 2023 17:49:59 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [syzbot] [erofs?] WARNING: CPU: NUM PID: NUM at
+ mm/page_alloc.c:LINE get_page_from_freeli
+To: syzbot <syzbot+c3729cda01706a04fb98@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ xiang@kernel.org
+References: <000000000000c0a08805f07291a0@google.com>
+From: Xiang Gao <hsiangkao@linux.alibaba.com>
+In-Reply-To: <000000000000c0a08805f07291a0@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,66 +47,125 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Hi,
 
-Add a check to packed inode for fsck.erofs.
+On 2022/12/23 06:55, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f9ff5644bcc0 Merge tag 'hsi-for-6.2' of git://git.kernel.o..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15aa58f7880000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=827916bd156c2ec6
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- fsck/main.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+I wasn't able to build the kernel with this kernel config, it shows:
+"...
+FATAL: modpost: vmlinux.o is truncated. sechdrs[i].sh_offset=1399394064 > sizeof(*hrd)=64
+make[2]: *** [Module.symvers] Error 1
+make[1]: *** [modpost] Error 2
+make: *** [__sub-make] Error 2
+"
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 6c43816..e60b6c1 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -467,7 +467,8 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 		return ret;
- 
- 	if (fsckcfg.print_comp_ratio) {
--		fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
-+		if (!erofs_is_packed_inode(inode))
-+			fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
- 		fsckcfg.physical_blocks += compressed ? inode->u.i_blocks :
- 					   BLK_ROUND_UP(inode->i_size);
- 	}
-@@ -709,6 +710,8 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- 			ret = erofs_extract_dir(&inode);
- 			break;
- 		case S_IFREG:
-+			if (erofs_is_packed_inode(&inode))
-+				goto verify;
- 			ret = erofs_extract_file(&inode);
- 			break;
- 		case S_IFLNK:
-@@ -744,7 +747,7 @@ verify:
- 		ret = erofs_iterate_dir(&ctx, true);
- 	}
- 
--	if (!ret)
-+	if (!ret && !erofs_is_packed_inode(&inode))
- 		erofsfsck_set_attributes(&inode, fsckcfg.extract_path);
- 
- 	if (ret == -ECANCELED)
-@@ -799,6 +802,14 @@ int main(int argc, char **argv)
- 		goto exit_put_super;
- 	}
- 
-+	if (erofs_sb_has_fragments()) {
-+		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
-+		if (err) {
-+			erofs_err("failed to verify packed file");
-+			goto exit_put_super;
-+		}
-+	}
-+
- 	err = erofsfsck_check_inode(sbi.root_nid, sbi.root_nid);
- 	if (fsckcfg.corrupted) {
- 		if (!fsckcfg.extract_path)
--- 
-2.17.1
+Not sure what happened, and it seems some other person also reported
+before:
+https://lore.kernel.org/r/CAAGKmqL9k87xw68zwH9ZM7fQFFsgMnA7V=RB+tQ-M2WS6CZg4A@mail.gmail.com/
 
+
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c3729cda01706a04fb98
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11bdd020480000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c53ab3880000
+
+Then I tried this C reproducer with my own kernel config and
+it didn't show any strange.
+
+
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0c8a5f06ceb3/disk-f9ff5644.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/be222e852ae2/vmlinux-f9ff5644.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/d9f42a53b05e/bzImage-f9ff5644.xz
+
+Finally I tried the original kernel image, and it printed some other
+random bug when booting system and then reboot, like:
+
+[   36.991123][    T1] ==================================================================
+[   36.991800][    T1] BUG: KASAN: slab-out-of-bounds in copy_array+0x96/0x100
+[   36.992438][    T1] Write of size 32 at addr ffff888018c34640 by task systemd/1
+[   36.993032][    T1]
+[   36.993249][    T1] CPU: 2 PID: 1 Comm: systemd Not tainted 6.1.0-syzkaller-13139-gf9ff5644bcc0 #0
+[   36.993980][    T1] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[   36.994520][    T1] Call Trace:
+[   36.994806][    T1]  <TASK>
+[   36.995060][    T1]  dump_stack_lvl+0xd1/0x138
+[   36.995488][    T1]  print_report+0x15e/0x45d
+[   36.995891][    T1]  ? __phys_addr+0xc8/0x140
+[   36.996293][    T1]  ? copy_array+0x96/0x100
+[   36.996677][    T1]  kasan_report+0xbf/0x1f0
+[   36.997063][    T1]  ? copy_array+0x96/0x100
+[   36.997448][    T1]  kasan_check_range+0x141/0x190
+[   36.997865][    T1]  memcpy+0x3d/0x60
+[   36.998196][    T1]  copy_array+0x96/0x100
+[   36.998561][    T1]  copy_verifier_state+0xa9/0xc60
+[   36.998985][    T1]  ? bpf_log+0x270/0x270
+[   36.999343][    T1]  ? check_buffer_access.constprop.0+0x2e0/0x2e0
+[   36.999867][    T1]  pop_stack+0x8c/0x2f0
+[   37.000223][    T1]  do_check_common+0x5663/0xbca0
+[   37.000654][    T1]  ? _raw_spin_unlock_irqrestore+0x54/0x70
+[   37.001152][    T1]  ? check_helper_call+0x8ef0/0x8ef0
+[   37.001614][    T1]  ? kvfree+0x46/0x50
+[   37.001963][    T1]  ? check_cfg+0x6aa/0xb20
+[   37.002353][    T1]  bpf_check+0x7348/0xacc0
+[   37.002751][    T1]  ? find_held_lock+0x2d/0x110
+[   37.003168][    T1]  ? lockdep_hardirqs_on_prepare+0x410/0x410
+[   37.003676][    T1]  ? bpf_get_btf_vmlinux+0x20/0x20
+[   37.004104][    T1]  ? find_held_lock+0x2d/0x110
+[   37.004524][    T1]  ? bpf_prog_load+0x1486/0x2230
+[   37.004935][    T1]  ? lock_downgrade+0x6e0/0x6e0
+[   37.005341][    T1]  ? __might_fault+0xd9/0x180
+[   37.005747][    T1]  ? memset+0x24/0x50
+[   37.006087][    T1]  ? bpf_obj_name_cpy+0x148/0x1a0
+[   37.006541][    T1]  bpf_prog_load+0x1543/0x2230
+[   37.006943][    T1]  ? __bpf_prog_put.constprop.0+0x220/0x220
+[   37.007438][    T1]  ? find_held_lock+0x2d/0x110
+[   37.007854][    T1]  ? __might_fault+0xd9/0x180
+[   37.008261][    T1]  ? lock_downgrade+0x6e0/0x6e0
+[   37.008673][    T1]  ? bpf_lsm_bpf+0x9/0x10
+[   37.009055][    T1]  __sys_bpf+0x1436/0x4ff0
+[   37.009434][    T1]  ? bpf_perf_link_attach+0x520/0x520
+[   37.009875][    T1]  ? lock_downgrade+0x6e0/0x6e0
+[   37.010299][    T1]  __x64_sys_bpf+0x79/0xc0
+[   37.010678][    T1]  ? syscall_enter_from_user_mode+0x26/0xb0
+[   37.011171][    T1]  do_syscall_64+0x39/0xb0
+[   37.011561][    T1]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[   37.012058][    T1] RIP: 0033:0x7fee6fa1c5a9
+...
+
+May I ask it can be reproducable on the latest -rc kernel?
+
+Thanks,
+Gao Xiang
+
+
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/7f2f76b76cd2/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c3729cda01706a04fb98@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 4386 at mm/page_alloc.c:3829 get_page_from_freeli
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
