@@ -2,67 +2,36 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98D15663BB1
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Jan 2023 09:50:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D54E663C0C
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Jan 2023 10:00:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NrkzV64S4z3cKb
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Jan 2023 19:50:30 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=n2T1mepf;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NrlCM31Ctz3cBF
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Jan 2023 20:00:47 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42f; helo=mail-pf1-x42f.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=n2T1mepf;
-	dkim-atps=neutral
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.43; helo=out30-43.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NrkzJ5Frnz3c6P
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 19:50:20 +1100 (AEDT)
-Received: by mail-pf1-x42f.google.com with SMTP id 20so2850891pfu.13
-        for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 00:50:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6rntazpxWNvol4EXTzfUrHLRo/0CaAbJ5b6GPd/rBn0=;
-        b=n2T1mepfbZE5WWvXxtzGuq+IgzDgTdBYggeJY4EN7qOW8ChXXVuXI62P6Weu5IB4cs
-         ZE0RlzUdDduST7lJCYy+Zk8uObrd9DkzH6KaXtL40+gOMnExSse7PYeT7/Xcb/InOnae
-         itsT0OzjNCMOy1CTyHhwtfcDF0RwllJ/RtPFT9N0XF8CXir4ZfYRYeyMGHIMvD0TDUgt
-         mSReVVJ7L7UTSdDrQq0qCNOwAc+ax3qCel6AF95vJSdhMpAOdCmvJTxwYxOUExdhE390
-         PKxlPl89LTKMuVozLyRsSbm/M/zGMBOVSTLFCXElk/3kn8lJ3ZkUk5TzXmt7BGhS1mkx
-         ZEYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6rntazpxWNvol4EXTzfUrHLRo/0CaAbJ5b6GPd/rBn0=;
-        b=55SEG4R+dROfHIbVvjbRA3dH7aKjlnf1Em/rNiBl8uB48+hh3arc8jW15XR9FdgrLR
-         lKntK1BqZgEsSPfmyqR7ToFCjf4BG38pveItfrVoKT7E4tUw48is/688hg5NeOMkNr44
-         tD8hg26hGqjUXQZs21za9y5vQz+fMGbQ1hN/WVmBFxR52R+PuIRlgch/gBrSsAYLc0vz
-         EHxjtfVZiRxaXTBcgwDPmP5VzEc1tAemZkTj2wZ7YWz1BKhaF2o62srwItnMKcIF5e8S
-         Jcu8T4hbSuS3txWArZWsQcXK+2PzwkH0xzijjHXQkfo87k3kfuD+lvz60/E2Wq4ZrhcW
-         6e8w==
-X-Gm-Message-State: AFqh2krXoChxWIE4zF2FYojcOKPgoTMOPQlWuBolvbQ/nCZcd8rHI8cR
-	ZEpSLojeHSQPUrnN09bEMGApYXTLYVc=
-X-Google-Smtp-Source: AMrXdXvYI7L7qZNcaPjkYe7v0mVOc6FHu4GlSD8gGjcRLPVnFP2B3X7UYAdre2zq/qSBShqfqEwyHQ==
-X-Received: by 2002:a05:6a00:1787:b0:588:e132:a2f8 with SMTP id s7-20020a056a00178700b00588e132a2f8mr7028678pfg.23.1673340618286;
-        Tue, 10 Jan 2023 00:50:18 -0800 (PST)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id y24-20020aa79438000000b00574ebfdc721sm7783030pfo.16.2023.01.10.00.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 00:50:18 -0800 (PST)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 2/3] erofs-utils: fsck: cleanup erofs_verify_inode_data()
-Date: Tue, 10 Jan 2023 16:49:59 +0800
-Message-Id: <20230110084959.1955-2-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230110084959.1955-1-zbestahu@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NrlCF1dT7z3bTK
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 20:00:40 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VZIZFJP_1673341234;
+Received: from 30.97.49.37(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZIZFJP_1673341234)
+          by smtp.aliyun-inc.com;
+          Tue, 10 Jan 2023 17:00:35 +0800
+Message-ID: <24d6bb29-d81e-14b7-141d-c13477819143@linux.alibaba.com>
+Date: Tue, 10 Jan 2023 17:00:33 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v2 1/3] erofs-utils: lib: export parts of erofs_pread()
+To: Yue Hu <zbestahu@gmail.com>, linux-erofs@lists.ozlabs.org
 References: <20230110084959.1955-1-zbestahu@gmail.com>
+From: Xiang Gao <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230110084959.1955-1-zbestahu@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,97 +47,128 @@ Cc: Yue Hu <huyue2@coolpad.com>, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Hi Yue,
 
-Diretly call {z_}erofs_read_{raw_}data_mapped() to avoid duplicated
-code. Accordingly, fragment and partial-referenced plusters are also
-supported after this change.
+The patch itself generally looks good to me:
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
-v2: parameter '0' -> false and update commit message
+On 2023/1/10 16:49, Yue Hu wrote:
+> From: Yue Hu <huyue2@coolpad.com>
+> 
+> Export parts of erofs_pread() to avoid duplicated code in
+> erofs_verify_inode_data(). Let's make two helpers for this.
+> 
+> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> ---
+> v2: use parameter trimmed instead of partial
+> 
+>   include/erofs/internal.h |   5 ++
+>   lib/data.c               | 154 ++++++++++++++++++++++-----------------
+>   2 files changed, 92 insertions(+), 67 deletions(-)
+> 
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index 206913c..47240f5 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -355,6 +355,11 @@ int erofs_pread(struct erofs_inode *inode, char *buf,
+>   int erofs_map_blocks(struct erofs_inode *inode,
+>   		struct erofs_map_blocks *map, int flags);
+>   int erofs_map_dev(struct erofs_sb_info *sbi, struct erofs_map_dev *map);
+> +int erofs_read_raw_data_mapped(struct erofs_map_blocks *map, char *buffer,
+> +			       u64 offset, size_t len);
+> +int z_erofs_read_data_mapped(struct erofs_inode *inode,
+> +			struct erofs_map_blocks *map, char *raw, char *buffer,
+> +			erofs_off_t skip, erofs_off_t length, bool trimmed);
+>   
+>   static inline int erofs_get_occupied_size(const struct erofs_inode *inode,
+>   					  erofs_off_t *size)
+> diff --git a/lib/data.c b/lib/data.c
+> index 76a6677..d8c6076 100644
+> --- a/lib/data.c
+> +++ b/lib/data.c
+> @@ -158,19 +158,38 @@ int erofs_map_dev(struct erofs_sb_info *sbi, struct erofs_map_dev *map)
+>   	return 0;
+>   }
+>   
+> +int erofs_read_raw_data_mapped(struct erofs_map_blocks *map, char *buffer,
 
- fsck/main.c | 57 +++++++++++------------------------------------------
- 1 file changed, 11 insertions(+), 46 deletions(-)
+erofs_read_one_data?
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 2a9c501..4dfab29 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -366,7 +366,6 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 	struct erofs_map_blocks map = {
- 		.index = UINT_MAX,
- 	};
--	struct erofs_map_dev mdev;
- 	int ret = 0;
- 	bool compressed;
- 	erofs_off_t pos = 0;
-@@ -427,54 +426,20 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 			BUG_ON(!raw);
- 		}
- 
--		mdev = (struct erofs_map_dev) {
--			.m_deviceid = map.m_deviceid,
--			.m_pa = map.m_pa,
--		};
--		ret = erofs_map_dev(&sbi, &mdev);
--		if (ret) {
--			erofs_err("failed to map device of m_pa %" PRIu64 ", m_deviceid %u @ nid %llu: %d",
--				  map.m_pa, map.m_deviceid, inode->nid | 0ULL,
--				  ret);
--			goto out;
--		}
--
--		if (compressed && map.m_llen > buffer_size) {
--			buffer_size = map.m_llen;
--			buffer = realloc(buffer, buffer_size);
--			BUG_ON(!buffer);
--		}
--
--		ret = dev_read(mdev.m_deviceid, raw, mdev.m_pa, map.m_plen);
--		if (ret < 0) {
--			erofs_err("failed to read data of m_pa %" PRIu64 ", m_plen %" PRIu64 " @ nid %llu: %d",
--				  mdev.m_pa, map.m_plen, inode->nid | 0ULL,
--				  ret);
--			goto out;
--		}
--
- 		if (compressed) {
--			struct z_erofs_decompress_req rq = {
--				.in = raw,
--				.out = buffer,
--				.decodedskip = 0,
--				.interlaced_offset =
--					map.m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED ?
--						erofs_blkoff(map.m_la) : 0,
--				.inputsize = map.m_plen,
--				.decodedlength = map.m_llen,
--				.alg = map.m_algorithmformat,
--				.partial_decoding = 0
--			};
--
--			ret = z_erofs_decompress(&rq);
--			if (ret < 0) {
--				erofs_err("failed to decompress data of m_pa %" PRIu64 ", m_plen %" PRIu64 " @ nid %llu: %s",
--					  mdev.m_pa, map.m_plen,
--					  inode->nid | 0ULL, strerror(-ret));
--				goto out;
-+			if (map.m_llen > buffer_size) {
-+				buffer_size = map.m_llen;
-+				buffer = realloc(buffer, buffer_size);
-+				BUG_ON(!buffer);
- 			}
-+			ret = z_erofs_read_data_mapped(inode, &map, raw,
-+						buffer, 0, map.m_llen, false);
-+		} else {
-+			ret = erofs_read_raw_data_mapped(&map, raw, 0,
-+							 map.m_plen);
- 		}
-+		if (ret)
-+			goto out;
- 
- 		if (outfd >= 0 && write(outfd, compressed ? buffer : raw,
- 					map.m_llen) < 0) {
--- 
-2.17.1
+> +				u64 offset, size_t len)
+> +{
+> +	struct erofs_map_dev mdev;
+> +	int ret;
+> +
+> +	mdev = (struct erofs_map_dev) {
+> +		.m_deviceid = map->m_deviceid,
+> +		.m_pa = map->m_pa,
+> +	};
+> +	ret = erofs_map_dev(&sbi, &mdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = dev_read(mdev.m_deviceid, buffer, mdev.m_pa + offset, len);
+> +	if (ret < 0)
+> +		return -EIO;
+> +	return 0;
+> +}
+> +
+>   static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+>   			       erofs_off_t size, erofs_off_t offset)
+>   {
+>   	struct erofs_map_blocks map = {
+>   		.index = UINT_MAX,
+>   	};
+> -	struct erofs_map_dev mdev;
+>   	int ret;
+>   	erofs_off_t ptr = offset;
+>   
+>   	while (ptr < offset + size) {
+>   		char *const estart = buffer + ptr - offset;
+> -		erofs_off_t eend;
+> +		erofs_off_t eend, moff = 0;
+>   
+>   		map.m_la = ptr;
+>   		ret = erofs_map_blocks(inode, &map, 0);
+> @@ -179,14 +198,6 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+>   
+>   		DBG_BUGON(map.m_plen != map.m_llen);
+>   
+> -		mdev = (struct erofs_map_dev) {
+> -			.m_deviceid = map.m_deviceid,
+> -			.m_pa = map.m_pa,
+> -		};
+> -		ret = erofs_map_dev(&sbi, &mdev);
+> -		if (ret)
+> -			return ret;
+> -
+>   		/* trim extent */
+>   		eend = min(offset + size, map.m_la + map.m_llen);
+>   		DBG_BUGON(ptr < map.m_la);
+> @@ -204,19 +215,74 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+>   		}
+>   
+>   		if (ptr > map.m_la) {
+> -			mdev.m_pa += ptr - map.m_la;
+> +			moff = ptr - map.m_la;
+>   			map.m_la = ptr;
+>   		}
+>   
+> -		ret = dev_read(mdev.m_deviceid, estart, mdev.m_pa,
+> -			       eend - map.m_la);
+> -		if (ret < 0)
+> -			return -EIO;
+> +		ret = erofs_read_raw_data_mapped(&map, estart, moff,
+> +						 eend - map.m_la);
+> +		if (ret)
+> +			return ret;
+>   		ptr = eend;
+>   	}
+>   	return 0;
+>   }
+>   
+> +int z_erofs_read_data_mapped(struct erofs_inode *inode,
 
+z_erofs_read_one_data?
+
+Thanks,
+Gao Xiang
