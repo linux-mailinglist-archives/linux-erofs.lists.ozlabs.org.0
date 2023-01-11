@@ -1,77 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71B4F6656F9
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 10:09:40 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D514666003
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 17:06:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NsMM62FG3z3cDT
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 20:09:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NsXc45hd3z3c8M
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 03:06:28 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=tR+pQJ4j;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=irmKfOND;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=irmKfOND;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::62e; helo=mail-pl1-x62e.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=tR+pQJ4j;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=irmKfOND;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=irmKfOND;
 	dkim-atps=neutral
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NsMM14r9pz3bfy
-	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 20:09:31 +1100 (AEDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d15so16118691pls.6
-        for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 01:09:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JJOauMbSW88GAjj4ZRlRlEslA3B+Klpw8vA3Ba7wPBA=;
-        b=tR+pQJ4j0gQnCw8f29LxFrFjA7OGKau2jboVV/pfVFTuMzXEeyrYGRceE8+RYXPma7
-         ToNgrI248CQwo+OP5WdK/Uj5D5/QnKrxXE4+ppVotdcWcXWcoftx9Y7fcFa2ezQ7GLYh
-         2IJeGVu3NgyQAYWxTN/+C823ekjZ68cHGoUdWzuoVC1zXWVWQpb4I9ngJHl7Z3D3aMxo
-         InyT78bLH4Jc7TokCjB1AdcdW98HBGf4tCrEXR9JhGi01LYSBnUoT6CKzDkMeAQUpBD6
-         bYR7IV5toANf4KVASBydtsFCYO/RrHDqLEaL7f77DtJ4UnmMOhR6qN8qkgso16jVuy9g
-         lmbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JJOauMbSW88GAjj4ZRlRlEslA3B+Klpw8vA3Ba7wPBA=;
-        b=mu4FXoUpLW/S/QtokOsmRQjMJko3efCJihKmNOJ50uPiACGqEsarWrzAuSHSw2AetR
-         HpVqyYNOoPw1jkJDc/rcxLBWPqAsgBOBnse2u2rkgtiw88a62gTHkE3cB0ufBo63aTX7
-         wh3MavnEBIxk4CP/RCaFlRpAlphrsfEILy65FkodnKxcN9zBAcxaUGEqdv0lQbTpoA8C
-         xK/GHMA8Nnv+yNjHi89+Y5jqaAQSxdtmafw4b/oHmPoebN9TPWDJWGJjgzPaMP/FN8VX
-         UW6iAEFBzLauiUvhzy02At8fZo1UbEYF61buHwZAFo2IIGWbvo/BFla6Kpyrz3Vg3YCj
-         STcA==
-X-Gm-Message-State: AFqh2kqqa0HPeookAizKMPpLdNwXLx2d+6HPvca5rAfg2dMuEsI+jDTV
-	Wearh3tAwmiK4+U0zWwC0N9snQ==
-X-Google-Smtp-Source: AMrXdXuhPGvgLLjvLZV7aDaj6Q8f8017XpxGS2VV6jXwhCqCB4P1NCUnZ+ZQO0WN9V2Rnnz3qnKJRg==
-X-Received: by 2002:a17:902:ebc6:b0:194:4fb3:65a6 with SMTP id p6-20020a170902ebc600b001944fb365a6mr588075plg.18.1673428168866;
-        Wed, 11 Jan 2023 01:09:28 -0800 (PST)
-Received: from [10.3.144.50] ([61.213.176.14])
-        by smtp.gmail.com with ESMTPSA id n7-20020a170902e54700b00191292875desm9574618plf.279.2023.01.11.01.09.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 01:09:28 -0800 (PST)
-Message-ID: <aef857c3-a1e1-d39e-c8c7-43cad1a48864@bytedance.com>
-Date: Wed, 11 Jan 2023 17:09:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NsXc05zZrz2xCj
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Jan 2023 03:06:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673453179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z1BOT8mAy+WkQiTgOjzQ2w9X/QEdQS1JO0z90YIXXdk=;
+	b=irmKfONDYufAt65MX/bK6SO9PcPQouBs6TOgwAK5/1ccpfi6L/tWUKG8ontn6KbFiQApk2
+	W+a/zSchro1OJKgBBcaPoDwiPKFCUAvnvlSwsKirOxuQaTdwx4YRo4eIYwRqTam9jiN/Bc
+	oxunSZyiY1GURxYt1aBYHMG352xOLiU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673453179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z1BOT8mAy+WkQiTgOjzQ2w9X/QEdQS1JO0z90YIXXdk=;
+	b=irmKfONDYufAt65MX/bK6SO9PcPQouBs6TOgwAK5/1ccpfi6L/tWUKG8ontn6KbFiQApk2
+	W+a/zSchro1OJKgBBcaPoDwiPKFCUAvnvlSwsKirOxuQaTdwx4YRo4eIYwRqTam9jiN/Bc
+	oxunSZyiY1GURxYt1aBYHMG352xOLiU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-259-3UZB8fl6PHyrfmyEvQ-2PA-1; Wed, 11 Jan 2023 11:06:14 -0500
+X-MC-Unique: 3UZB8fl6PHyrfmyEvQ-2PA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD98F1C29D43;
+	Wed, 11 Jan 2023 16:06:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.87])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5A4AEC15BA0;
+	Wed, 11 Jan 2023 16:06:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20221226103309.953112-2-houtao@huaweicloud.com>
+References: <20221226103309.953112-2-houtao@huaweicloud.com> <20221226103309.953112-1-houtao@huaweicloud.com>
+To: Hou Tao <houtao@huaweicloud.com>
+Subject: Re: [PATCH v2 1/2] fscache: Use wait_on_bit() to wait for the freeing of relinquished volume
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [External] [PATCH 2/2] erofs: clean up parsing of fscache related
- options
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-References: <20230111081547.126322-1-jefflexu@linux.alibaba.com>
- <20230111081547.126322-3-jefflexu@linux.alibaba.com>
-From: Jia Zhu <zhujia.zj@bytedance.com>
-In-Reply-To: <20230111081547.126322-3-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2431837.1673453170.1@warthog.procyon.org.uk>
+Date: Wed, 11 Jan 2023 16:06:10 +0000
+Message-ID: <2431838.1673453170@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,58 +81,21 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, houtao1@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hou Tao <houtao@huaweicloud.com> wrote:
 
+>  			clear_bit(FSCACHE_VOLUME_ACQUIRE_PENDING, &cursor->flags);
+> +			/*
+> +			 * Paired with barrier in wait_on_bit(). Check
+> +			 * wake_up_bit() and waitqueue_active() for details.
+> +			 */
+> +			smp_mb__after_atomic();
+>  			wake_up_bit(&cursor->flags, FSCACHE_VOLUME_ACQUIRE_PENDING);
 
-在 2023/1/11 16:15, Jingbo Xu 写道:
-> ... to avoid the mess of conditional preprocessing as we are continually
-> adding fscache related mount options.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+What two values are you applying a partial ordering to?
 
-Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+David
 
-Thanks.
-> ---
->   fs/erofs/super.c | 13 ++++++-------
->   1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 481788c24a68..626a615dafc2 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -577,26 +577,25 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   		}
->   		++ctx->devs->extra_devices;
->   		break;
-> -	case Opt_fsid:
->   #ifdef CONFIG_EROFS_FS_ONDEMAND
-> +	case Opt_fsid:
->   		kfree(ctx->fsid);
->   		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
->   		if (!ctx->fsid)
->   			return -ENOMEM;
-> -#else
-> -		errorfc(fc, "fsid option not supported");
-> -#endif
->   		break;
->   	case Opt_domain_id:
-> -#ifdef CONFIG_EROFS_FS_ONDEMAND
->   		kfree(ctx->domain_id);
->   		ctx->domain_id = kstrdup(param->string, GFP_KERNEL);
->   		if (!ctx->domain_id)
->   			return -ENOMEM;
-> +		break;
->   #else
-> -		errorfc(fc, "domain_id option not supported");
-> -#endif
-> +	case Opt_fsid:
-> +	case Opt_domain_id:
-> +		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
->   		break;
-> +#endif
->   	default:
->   		return -ENOPARAM;
->   	}
