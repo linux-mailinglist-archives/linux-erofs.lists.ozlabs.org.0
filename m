@@ -1,66 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15A1366513F
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 02:50:02 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7319E665141
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 02:50:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ns9bq3hS3z3cGh
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 12:49:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ns9c22WSrz3cCF
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 12:50:10 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=RS9KXGur;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=VSi98dx8;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::434; helo=mail-pf1-x434.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42a; helo=mail-pf1-x42a.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=RS9KXGur;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=VSi98dx8;
 	dkim-atps=neutral
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ns9bg38c6z3c3N
-	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 12:49:49 +1100 (AEDT)
-Received: by mail-pf1-x434.google.com with SMTP id c85so7021425pfc.8
-        for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 17:49:49 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ns9bg6H7Xz3c65
+	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 12:49:51 +1100 (AEDT)
+Received: by mail-pf1-x42a.google.com with SMTP id k19so10281430pfg.11
+        for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 17:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=references:in-reply-to:references:in-reply-to:message-id:date
          :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NB0IAL3oqJcQL6j/nrfVypxL0yORPjZGHUtTFKuAW1w=;
-        b=RS9KXGur3U5O4kKwu+7hW5qDsuJxYQ9W3GseNVsxlE14q4VSdLyW1ZFlEYL0n3RF6V
-         TP7YjsMlqoDSZ2Hbp7cukHKw0pg5hC8BJUMKBDzi4ntfVuQiO3HqQmSQbfUW0syukdGf
-         HDPXi2xZ/4YVwk8rvtLHAXdCodRY/vxhNIMTElHZ5p48eeuVjK6yvEvT2F0W11rCiMZ6
-         e01Jh9Lr4FYaYfX7e5jRDpDwXZTOEPSNK+x4jrWLTav/mi6IGVx9b9A/8GFuHgu2uMFW
-         azS8SF9QGq1LPZMDIVZOBI8sFPQOkm0l2xfWR24uO6aPjbydVid3wwm8US+5s6nQTHm5
-         TMxA==
+        bh=+somNYB4QjQh87fmh5RL0427NfaPhPDoM4PgorryzSY=;
+        b=VSi98dx8ltYKaqcE5Od8sKSBAAHX1NrNP2w5qu7ESmAJ9h3J5Hsr0Qk+PhKxKHtEBz
+         k13aPukM3CZO/AStMp0ZZaueO7MxyUgrl6x0hP6WwUV+mPLIrwk4J3fNprZY4xedDjR/
+         CiGBIMP1K9FZg5ziJUBFploycKNvMbrE4XbEQzary6rbTQbtqXArf7/pa1QQnWgDe0LA
+         5KraXeVIrzV35GZFX8ViCalCT7Go6YzIU8pipvSwDwoPtSN+4R2pX8jaB4do95pFPtXQ
+         sX9sSjYjjdJUaDKuXVuBBNsBPaF/+IeLknGTRG9FcWjBAtDnYPIKu8vHtZoEaiojFPV6
+         mcbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=references:in-reply-to:references:in-reply-to:message-id:date
          :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NB0IAL3oqJcQL6j/nrfVypxL0yORPjZGHUtTFKuAW1w=;
-        b=l+wL+pD9cbmWKe+UHsqDhj6KVepQJdGjPAKyc0Jx8bSx0auZxdMhi9yLHv1c0Mwnvi
-         /n3XOvIUcuWkPf2g6wPinShKWkYiSuREoKOBiGn2bLm+3aWhHP8RD2l4b75HArsDBVgq
-         CZyDEcNqJVyMwqb08uktxngZjgSUxv12ra6oHzA6FHQbGGX65qbpYhjX02U3ihlkBaKk
-         JIiho8e0gL3sZuLceiUjO0fELE/M9XUSrVMvIC4pi9jbDWPDypCarD85ulxBGLL0nkfd
-         JVx0dhITYCg9gnwU77HwjrVJIXYIF3l4zWDLC40iJVln1VEb5O4cW2ZtnJY0EI8ZTVoW
-         zTZg==
-X-Gm-Message-State: AFqh2koPcE6inhEbJzk6OJwRtzXIgyIFN+arasglJUIDoVQSw4ysrQjz
-	0oCb30enFm9wy+wnkd0wj1kDjw9iE/g=
-X-Google-Smtp-Source: AMrXdXtlpuJlKjLoXWKTEpYXjGJps3g2ByU4ipjiU1Rfd69zsvuoAsdVsVen0IeWZXTTtO7GrKHZHA==
-X-Received: by 2002:a05:6a00:e8d:b0:580:c223:90e9 with SMTP id bo13-20020a056a000e8d00b00580c22390e9mr61281177pfb.6.1673401787799;
-        Tue, 10 Jan 2023 17:49:47 -0800 (PST)
+        bh=+somNYB4QjQh87fmh5RL0427NfaPhPDoM4PgorryzSY=;
+        b=YmklR5ZX8cpUUebzwpAmi5mthGlxxXL2SZiN2LH5X8uTGuEc6yzxMDK9P8xPYGmd4W
+         Kd/kAGJfuSCeR51crCxFti/kGlVh2QKj0WmnPFKTMEPzafavlqiCABzN166z3Rvju+ji
+         mQekVpDYPuKSxJuMwMf2dSafa1xpthjbQpPmuthK1G4438XG94k3LtCQooe+Xlm8+bT+
+         uKHngSRNtCAh4jgyl2LtFY2zLd3/ApiNBVOwz+xlxGVMZvLFw6nZoB+LrxIm0PI2fury
+         nhix/LtqikZIrCRZBjG+UbcmeRDGXTtTfrf3xRKY/cvI0c1OGSMHMM83nNDWRXNIrHLO
+         ZCbA==
+X-Gm-Message-State: AFqh2kpDbmxy1piL2VbhS1nm4Up2Kh6O2H8nnPGEZGuiBfXrZv/qu56u
+	o76KP1ClCZGVev3sfsRMr7+B+SNlOa4=
+X-Google-Smtp-Source: AMrXdXvPVvTRIdyVZliPGcK280sHma6j+1kNEk37YZD9xjb7oLrjvH4aZbcz2/FEKhe83GMtmle4HA==
+X-Received: by 2002:a62:1c8a:0:b0:58b:3168:4d53 with SMTP id c132-20020a621c8a000000b0058b31684d53mr2038318pfc.24.1673401789364;
+        Tue, 10 Jan 2023 17:49:49 -0800 (PST)
 Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id w2-20020a623002000000b0056283e2bdbdsm8669847pfw.138.2023.01.10.17.49.46
+        by smtp.gmail.com with ESMTPSA id w2-20020a623002000000b0056283e2bdbdsm8669847pfw.138.2023.01.10.17.49.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 17:49:47 -0800 (PST)
+        Tue, 10 Jan 2023 17:49:49 -0800 (PST)
 From: Yue Hu <zbestahu@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH resend v3 2/3] erofs-utils: fsck: cleanup erofs_verify_inode_data()
-Date: Wed, 11 Jan 2023 09:49:27 +0800
-Message-Id: <115e61fc9c2d34cab6d3dd78383ac57c94a491fc.1673401718.git.huyue2@coolpad.com>
+Subject: [PATCH resend v3 3/3] erofs-utils: fsck: add a check to packed inode
+Date: Wed, 11 Jan 2023 09:49:28 +0800
+Message-Id: <ce29198d32f284c19589877c4c9e4e1588ad77b3.1673401718.git.huyue2@coolpad.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <ff560da9c798b2ca1f1a663a000501486d865487.1673401718.git.huyue2@coolpad.com>
 References: <ff560da9c798b2ca1f1a663a000501486d865487.1673401718.git.huyue2@coolpad.com>
@@ -83,92 +83,60 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yue Hu <huyue2@coolpad.com>
 
-Diretly call {z_}erofs_read_one_data() to avoid duplicated code.
-Accordingly, fragment and partial-referenced plusters are also supported
-after this change.
+Add a check to packed inode for fsck.erofs.
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
- fsck/main.c | 56 ++++++++++-------------------------------------------
- 1 file changed, 10 insertions(+), 46 deletions(-)
+ fsck/main.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/fsck/main.c b/fsck/main.c
-index 2a9c501..a01ca76 100644
+index a01ca76..6b42252 100644
 --- a/fsck/main.c
 +++ b/fsck/main.c
-@@ -366,7 +366,6 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 	struct erofs_map_blocks map = {
- 		.index = UINT_MAX,
- 	};
--	struct erofs_map_dev mdev;
- 	int ret = 0;
- 	bool compressed;
- 	erofs_off_t pos = 0;
-@@ -427,54 +426,19 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 			BUG_ON(!raw);
- 		}
+@@ -450,7 +450,8 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 	}
  
--		mdev = (struct erofs_map_dev) {
--			.m_deviceid = map.m_deviceid,
--			.m_pa = map.m_pa,
--		};
--		ret = erofs_map_dev(&sbi, &mdev);
--		if (ret) {
--			erofs_err("failed to map device of m_pa %" PRIu64 ", m_deviceid %u @ nid %llu: %d",
--				  map.m_pa, map.m_deviceid, inode->nid | 0ULL,
--				  ret);
--			goto out;
--		}
--
--		if (compressed && map.m_llen > buffer_size) {
--			buffer_size = map.m_llen;
--			buffer = realloc(buffer, buffer_size);
--			BUG_ON(!buffer);
--		}
--
--		ret = dev_read(mdev.m_deviceid, raw, mdev.m_pa, map.m_plen);
--		if (ret < 0) {
--			erofs_err("failed to read data of m_pa %" PRIu64 ", m_plen %" PRIu64 " @ nid %llu: %d",
--				  mdev.m_pa, map.m_plen, inode->nid | 0ULL,
--				  ret);
--			goto out;
--		}
--
- 		if (compressed) {
--			struct z_erofs_decompress_req rq = {
--				.in = raw,
--				.out = buffer,
--				.decodedskip = 0,
--				.interlaced_offset =
--					map.m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED ?
--						erofs_blkoff(map.m_la) : 0,
--				.inputsize = map.m_plen,
--				.decodedlength = map.m_llen,
--				.alg = map.m_algorithmformat,
--				.partial_decoding = 0
--			};
--
--			ret = z_erofs_decompress(&rq);
--			if (ret < 0) {
--				erofs_err("failed to decompress data of m_pa %" PRIu64 ", m_plen %" PRIu64 " @ nid %llu: %s",
--					  mdev.m_pa, map.m_plen,
--					  inode->nid | 0ULL, strerror(-ret));
--				goto out;
-+			if (map.m_llen > buffer_size) {
-+				buffer_size = map.m_llen;
-+				buffer = realloc(buffer, buffer_size);
-+				BUG_ON(!buffer);
- 			}
-+			ret = z_erofs_read_one_data(inode, &map, raw, buffer,
-+						    0, map.m_llen, false);
-+		} else {
-+			ret = erofs_read_one_data(&map, raw, 0, map.m_plen);
- 		}
-+		if (ret)
-+			goto out;
+ 	if (fsckcfg.print_comp_ratio) {
+-		fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
++		if (!erofs_is_packed_inode(inode))
++			fsckcfg.logical_blocks += BLK_ROUND_UP(inode->i_size);
+ 		fsckcfg.physical_blocks += BLK_ROUND_UP(pchunk_len);
+ 	}
+ out:
+@@ -696,6 +697,8 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 			ret = erofs_extract_dir(&inode);
+ 			break;
+ 		case S_IFREG:
++			if (erofs_is_packed_inode(&inode))
++				goto verify;
+ 			ret = erofs_extract_file(&inode);
+ 			break;
+ 		case S_IFLNK:
+@@ -731,7 +734,7 @@ verify:
+ 		ret = erofs_iterate_dir(&ctx, true);
+ 	}
  
- 		if (outfd >= 0 && write(outfd, compressed ? buffer : raw,
- 					map.m_llen) < 0) {
+-	if (!ret)
++	if (!ret && !erofs_is_packed_inode(&inode))
+ 		erofsfsck_set_attributes(&inode, fsckcfg.extract_path);
+ 
+ 	if (ret == -ECANCELED)
+@@ -786,6 +789,14 @@ int main(int argc, char **argv)
+ 		goto exit_put_super;
+ 	}
+ 
++	if (erofs_sb_has_fragments()) {
++		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
++		if (err) {
++			erofs_err("failed to verify packed file");
++			goto exit_put_super;
++		}
++	}
++
+ 	err = erofsfsck_check_inode(sbi.root_nid, sbi.root_nid);
+ 	if (fsckcfg.corrupted) {
+ 		if (!fsckcfg.extract_path)
 -- 
 2.17.1
 
