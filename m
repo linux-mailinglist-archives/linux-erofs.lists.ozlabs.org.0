@@ -2,57 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73A7E6652A7
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 05:04:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DCCC6653A7
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 06:25:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NsDZf2lV1z3cGh
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 15:04:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NsGNd2lQtz3cJB
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Jan 2023 16:25:37 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=z5siAmwL;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=houtao@huaweicloud.com; receiver=<UNKNOWN>)
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1035; helo=mail-pj1-x1035.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance-com.20210112.gappssmtp.com header.i=@bytedance-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=z5siAmwL;
+	dkim-atps=neutral
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NsDZY4vbSz3bYw
-	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 15:04:03 +1100 (AEDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NsDZG3QNMz4f3s5y
-	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 12:03:50 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP2 (Coremail) with SMTP id Syh0CgCHeugkNb5jzwboBQ--.7168S2;
-	Wed, 11 Jan 2023 12:03:51 +0800 (CST)
-Subject: Re: [PATCH v2 0/2] Fixes for fscache volume operations
-To: linux-cachefs@redhat.com
-References: <20221226103309.953112-1-houtao@huaweicloud.com>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <57afbcf7-df1f-47b8-2b81-8fca87487f57@huaweicloud.com>
-Date: Wed, 11 Jan 2023 12:03:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NsGNW5Hqhz3bT5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Jan 2023 16:25:30 +1100 (AEDT)
+Received: by mail-pj1-x1035.google.com with SMTP id bj3so11514768pjb.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 10 Jan 2023 21:25:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+zKLZ4cMF4VZH8zOzNr6plvSw69rGNAVsqBjH7W6v6Q=;
+        b=z5siAmwL0KyX3ZAkTakARazMKr4W80Evyjiap3KoB249oAn29O0Wc3a89zZfNTxmCU
+         nakN0bq7rIJkBBmlXBQwwNCv+/WeFVOPAOTRi23O0o9Iz9Ne9emioRPjfG0HP41SdG9E
+         ry5CoGjhHruyyIPsQv3JoOHUc2TvuZ5jB76HRNGT4ORAt97bReLLosizCUFaqtvurzGJ
+         Tu/Wcd3fqr3drSAhKbIfCm1yWcYBhTdlL1/IgjPn1rUzPs0SiHUYVMa03x7ImQ4CmSLY
+         hSyurk8FXo6tB/5sq0k/kUEm6CEsxs3aw82aE1ugLgymue/qO0lEOfdPi5Q+iGSkDMao
+         zn/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+zKLZ4cMF4VZH8zOzNr6plvSw69rGNAVsqBjH7W6v6Q=;
+        b=W8C0VByL1VMdMelBdaoXt7mUPUKK56RC/t3HT3yJfA/ywElvkr6IyqXcMw8qGaFf3C
+         vrLGqyUjVQX/ootIsSdrnkuw3CSWs6kEp/dVDJ9AwpgZ+G1m+fWKfnEGWps7aplGR8N+
+         PLVNenPcUlPRoyc/xlE5B9Xx0rSx4dA6EuOxK7mpMp7y7UE4MdYV2V0v1CW3Aj4TtNOI
+         K9F67IWxUIrHoziYtWeaAabbX0aBbglHQ/K/PUL011Csk5I75p5L5zrVNuO3rkQIIrpE
+         2RsKJPf1wbWrgvYrnBTY4to0f0Wy3oXmauNHS/gRJlOHPsXzPTDc+ALT1gbBtq87hmPW
+         Rl1g==
+X-Gm-Message-State: AFqh2kocr5pwu6nBCNjZdWBfdLpm1zG4keAZtC80ECNX20U2kxRThbtx
+	56q2R/wniMcWEj9DkHSIJPmKng==
+X-Google-Smtp-Source: AMrXdXskv4V+w6rv13eZ0t91lgtE+UkuxrtFOIPL7NLfX0z7KikkZVtz4uyclgawuLN/+DOvISOr+g==
+X-Received: by 2002:a17:902:9b8f:b0:192:6d68:158 with SMTP id y15-20020a1709029b8f00b001926d680158mr66117737plp.15.1673414725912;
+        Tue, 10 Jan 2023 21:25:25 -0800 (PST)
+Received: from C02G705SMD6V.bytedance.net ([61.213.176.10])
+        by smtp.gmail.com with ESMTPSA id l10-20020a170903244a00b0019334350ce6sm4934520pls.244.2023.01.10.21.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 21:25:25 -0800 (PST)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: dhowells@redhat.com
+Subject: [PATCH V4 0/5] Introduce daemon failover mechanism to recover from crashing
+Date: Wed, 11 Jan 2023 13:25:10 +0800
+Message-Id: <20230111052515.53941-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 MIME-Version: 1.0
-In-Reply-To: <20221226103309.953112-1-houtao@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID: Syh0CgCHeugkNb5jzwboBQ--.7168S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr15Wr1xCFWktFyxXF18Zrb_yoWDKFg_u3
-	4xKas8uw40qayDKayYkFnIqrs3uw4jga18JFyDtr17G34F9rn09F1kKrySyF1Igay7ZF45
-	Cr1kKFZYqr129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-	k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrR6zUUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,40 +75,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, "houtao1@huawei.com" <houtao1@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-ping ?
+Changes since v3:
+1. Add xa_lock for traverse xarray in cachefiles_daemon_poll(). 
+2. Use macro to simplify the code  in cachefiles_ondemand_select_req().
 
-On 12/26/2022 6:33 PM, Hou Tao wrote:
-> From: Hou Tao <houtao1@huawei.com>
->
-> Hi,
->
-> The patchset includes two fixes for fscache volume operations: patch 1
-> fixes the hang problem during volume acquisition when the volume
-> acquisition process waits for the freeing of relinquished volume, patch
-> 2 adds the missing memory barrier in fscache_create_volume_work() and it
-> is spotted through code review when checking whether or not these is
-> missing smp_mb() before invoking wake_up_bit().
->
-> Comments are always welcome.
->
-> Chang Log:
-> v2:
->  * rebased on v6.1-rc1
->  * Patch 1: use wait_on_bit() instead (Suggested by David)
->  * Patch 2: add the missing smp_mb() in fscache_create_volume_work()
->
-> v1: https://listman.redhat.com/archives/linux-cachefs/2022-December/007384.html
->
-> Hou Tao (2):
->   fscache: Use wait_on_bit() to wait for the freeing of relinquished
->     volume
->   fscache: Add the missing smp_mb__after_atomic() before wake_up_bit()
->
->  fs/fscache/volume.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
->
+[Background]
+============
+In ondemand read mode, if user daemon closes anonymous fd(e.g. daemon
+crashes), subsequent read and inflight requests based on these fd will
+return -EIO.
+Even if above mentioned case is tolerable for some individual users, but
+when it happenens in real cloud service production environment, such IO
+errors will be passed to cloud service users and impact its working jobs.
+It's terrible for cloud service stability.
+
+[Design]
+========
+The main idea of daemon failover is reopen the inflight req related object,
+thus the newly started daemon could process the req as usual. 
+To implement that, we need to support:
+	1. Store inflight requests during daemon crash.
+	2. Hold the handle of /dev/cachefiles(by container snapshotter/systemd).
+BTW, if user chooses not to keep /dev/cachefiles fd, failover is not enabled.
+Inflight requests return error and passed it to container.(same behavior as now).
+
+[Flow Path]
+===========
+This patchset introduce three states for ondemand object:
+CLOSE: Object which just be allocated or closed by user daemon.
+OPEN: Object which related OPEN request has been processed correctly.
+REOPENING: Object which has been closed, and is drived to open by a read
+request.
+
+1. Daemon use UDS send/receive fd to keep and pass the fd reference of
+   "/dev/cachefiles".
+2. User daemon crashes -> restart and recover dev fd's reference.
+3. User daemon write "restore" to device.
+   2.1 Reset the object's state from CLOSE to REOPENING.
+   2.2 Init a work which reinit the object and add it to wq. (daemon can
+       get rid of kernel space and handle that open request).
+4. The user of upper filesystem won't notice that the daemon ever crashed
+   since the inflight IO is restored and handled correctly.
+
+[Test]
+======
+There is a testcase for above mentioned scenario.
+A user process read the file by fscache ondemand reading.
+At the same time, we kill the daemon constantly.
+The expected result is that the file read by user is consistent with
+original, and the user doesn't notice that daemon has ever been killed.
+
+https://github.com/userzj/demand-read-cachefilesd/commits/failover-test
+
+[GitWeb]
+========
+https://github.com/userzj/linux/tree/fscache-failover-v5
+
+RFC: https://lore.kernel.org/all/20220818135204.49878-1-zhujia.zj@bytedance.com/
+V1: https://lore.kernel.org/all/20221011131552.23833-1-zhujia.zj@bytedance.com/
+V2: https://lore.kernel.org/all/20221014030745.25748-1-zhujia.zj@bytedance.com/
+V3: https://lore.kernel.org/all/20221014080559.42108-1-zhujia.zj@bytedance.com/
+
+Jia Zhu (5):
+  cachefiles: introduce object ondemand state
+  cachefiles: extract ondemand info field from cachefiles_object
+  cachefiles: resend an open request if the read request's object is
+    closed
+  cachefiles: narrow the scope of triggering EPOLLIN events in ondemand
+    mode
+  cachefiles: add restore command to recover inflight ondemand read
+    requests
+
+ fs/cachefiles/daemon.c    |  16 +++-
+ fs/cachefiles/interface.c |   6 ++
+ fs/cachefiles/internal.h  |  57 +++++++++++++-
+ fs/cachefiles/ondemand.c  | 160 ++++++++++++++++++++++++++++----------
+ 4 files changed, 192 insertions(+), 47 deletions(-)
+
+-- 
+2.20.1
 
