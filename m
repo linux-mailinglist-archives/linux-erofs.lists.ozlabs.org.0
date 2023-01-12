@@ -2,38 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4704B666D63
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 10:05:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C727F6685F3
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 22:49:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NszCf0lJzz3cH1
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 20:05:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NtJ9l4MBLz3fTh
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 08:49:47 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VsWlR4bS;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.1; helo=out30-1.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-1.freemail.mail.aliyun.com (out30-1.freemail.mail.aliyun.com [115.124.30.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VsWlR4bS;
+	dkim-atps=neutral
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NszCZ3swyz3c7J
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Jan 2023 20:05:13 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VZQepLC_1673514307;
-Received: from 30.97.48.238(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZQepLC_1673514307)
-          by smtp.aliyun-inc.com;
-          Thu, 12 Jan 2023 17:05:08 +0800
-Message-ID: <16f8c9cf-c819-1b62-14d2-afdb568369a5@linux.alibaba.com>
-Date: Thu, 12 Jan 2023 17:05:07 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtHvH4QQXz3gMx
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 08:37:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673559435; x=1705095435;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ubxtojzCJEGom/+i2suaEct6NvNj4B0zQzYd4IlXDMM=;
+  b=VsWlR4bSgvNEMwVjzKI8Dsps5rauhP9uw5B2cjFlYgT7WQ9pQKvAQFtP
+   MoSfYZEF04LD1NLA4PAT/dK/JBbgd/9L6xfb5vagEqkQ2D4XTgx+IGw21
+   uoBOXWa11BwsNRWHR1JZn00bnc8JMIhuxfRb+PGJZUlJQs3N/6Qb5Sp2I
+   f5srSAYrZlOuvLeEEHXh9dMyY0AawFlFgWMZeLMLL3zRloZEKneLFekCC
+   dXSCagjco2WwfvAqjZnG28N3BkIY0qC7jcQw0r6yO/2u4FC74ZR8YaOZP
+   FcVfbuLKrI8XLcKY+JKpm4TmgOxtTLrbhPZ+7hzicIOXdMggWDgXE8p6Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="386181034"
+X-IronPort-AV: E=Sophos;i="5.97,212,1669104000"; 
+   d="scan'208";a="386181034"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 13:37:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="607951033"
+X-IronPort-AV: E=Sophos;i="5.97,212,1669104000"; 
+   d="scan'208";a="607951033"
+Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jan 2023 13:37:09 -0800
+Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pG5G0-000ARg-0U;
+	Thu, 12 Jan 2023 21:37:08 +0000
+Date: Fri, 13 Jan 2023 05:36:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 35626ac92db0300691a60c8061da2146c0943ba3
+Message-ID: <63c07d49./lBWSAOmmlJT3VgM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v2 1/2] erofs: add documentation for 'domain_id' mount
- option
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-References: <20230112065431.124926-1-jefflexu@linux.alibaba.com>
- <20230112065431.124926-2-jefflexu@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230112065431.124926-2-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -46,39 +70,102 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 35626ac92db0300691a60c8061da2146c0943ba3  erofs: clean up parsing of fscache related options
 
+elapsed time: 725m
 
-On 2023/1/12 14:54, Jingbo Xu wrote:
-> Since the EROFS share domain feature for fscache mode has been available
-> since Linux v6.1, let's add documentation for 'domain_id' mount option.
-> 
-> Cc: linux-doc@vger.kernel.org
-> Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+configs tested: 77
+configs skipped: 2
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Gao Xiang
+gcc tested configs:
+arc                  randconfig-r043-20230110
+s390                 randconfig-r044-20230110
+riscv                randconfig-r042-20230110
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+alpha                             allnoconfig
+i386                              allnoconfig
+arm                               allnoconfig
+arc                               allnoconfig
+s390                                defconfig
+x86_64                            allnoconfig
+s390                             allyesconfig
+powerpc                           allnoconfig
+x86_64                           rhel-8.3-syz
+um                           x86_64_defconfig
+ia64                             allmodconfig
+x86_64                         rhel-8.3-kunit
+um                             i386_defconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+alpha                            allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+sh                               allmodconfig
+arm                                 defconfig
+x86_64                              defconfig
+i386                                defconfig
+mips                             allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+powerpc                          allmodconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+x86_64                        randconfig-a006
+i386                             allyesconfig
+riscv                             allnoconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+x86_64                               rhel-8.3
+arm                      integrator_defconfig
+sh                           se7721_defconfig
+m68k                          atari_defconfig
+arc                          axs103_defconfig
+m68k                       bvme6000_defconfig
+x86_64                           allyesconfig
+riscv                randconfig-r042-20230112
+s390                 randconfig-r044-20230112
+arc                  randconfig-r043-20230112
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
 
-> ---
->   Documentation/filesystems/erofs.rst | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-> index 067fd1670b1f..a43aacf1494e 100644
-> --- a/Documentation/filesystems/erofs.rst
-> +++ b/Documentation/filesystems/erofs.rst
-> @@ -120,6 +120,8 @@ dax={always,never}     Use direct access (no page cache).  See
->   dax                    A legacy option which is an alias for ``dax=always``.
->   device=%s              Specify a path to an extra device to be used together.
->   fsid=%s                Specify a filesystem image ID for Fscache back-end.
-> +domain_id=%s           Specify a domain ID in fscache mode so that different images
-> +                       with the same blobs under a given domain ID can share storage.
->   ===================    =========================================================
->   
->   Sysfs Entries
+clang tested configs:
+hexagon              randconfig-r041-20230110
+arm                  randconfig-r046-20230110
+hexagon              randconfig-r045-20230110
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a002
+i386                          randconfig-a013
+i386                          randconfig-a004
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+powerpc                          g5_defconfig
+mips                          malta_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                      maltaaprp_defconfig
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+i386                          randconfig-a006
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
