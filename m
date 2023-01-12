@@ -1,39 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F17F6669D7
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 04:58:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE850666A56
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 05:34:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NsrPm3VgYz3c9V
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 14:58:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NssCQ3xZlz3cCF
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 15:34:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.1; helo=out30-1.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-1.freemail.mail.aliyun.com (out30-1.freemail.mail.aliyun.com [115.124.30.1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NsrPh70SDz3c3m
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Jan 2023 14:58:31 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VZPF1qd_1673495907;
-Received: from 30.221.131.229(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VZPF1qd_1673495907)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NssCK4S2fz3c5D
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Jan 2023 15:34:36 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VZPZhea_1673498070;
+Received: from 30.221.131.229(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VZPZhea_1673498070)
           by smtp.aliyun-inc.com;
-          Thu, 12 Jan 2023 11:58:28 +0800
-Message-ID: <6acd0aea-2e7b-e30e-214f-81f4c3766ead@linux.alibaba.com>
-Date: Thu, 12 Jan 2023 11:58:27 +0800
+          Thu, 12 Jan 2023 12:34:31 +0800
+Message-ID: <8b0af045-25c1-9848-3c8c-de7da94d06da@linux.alibaba.com>
+Date: Thu, 12 Jan 2023 12:34:30 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.4.0
-Subject: Re: [PATCH v2 1/2] fscache: Use wait_on_bit() to wait for the freeing
- of relinquished volume
+Subject: Re: [PATCH v2 2/2] fscache: Add the missing smp_mb__after_atomic()
+ before wake_up_bit()
 Content-Language: en-US
-To: David Howells <dhowells@redhat.com>, Hou Tao <houtao@huaweicloud.com>
-References: <20221226103309.953112-2-houtao@huaweicloud.com>
- <20221226103309.953112-1-houtao@huaweicloud.com>
- <2431838.1673453170@warthog.procyon.org.uk>
+To: Hou Tao <houtao@huaweicloud.com>, linux-cachefs@redhat.com
+References: <20221226103309.953112-1-houtao@huaweicloud.com>
+ <20221226103309.953112-3-houtao@huaweicloud.com>
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <2431838.1673453170@warthog.procyon.org.uk>
+In-Reply-To: <20221226103309.953112-3-houtao@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -47,56 +46,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, houtao1@huawei.com
+Cc: David Howells <dhowells@redhat.com>, linux-erofs@lists.ozlabs.org, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, houtao1@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
 
-On 1/12/23 12:06 AM, David Howells wrote:
-> Hou Tao <houtao@huaweicloud.com> wrote:
+On 12/26/22 6:33 PM, Hou Tao wrote:
+> From: Hou Tao <houtao1@huawei.com>
 > 
->>  			clear_bit(FSCACHE_VOLUME_ACQUIRE_PENDING, &cursor->flags);
->> +			/*
->> +			 * Paired with barrier in wait_on_bit(). Check
->> +			 * wake_up_bit() and waitqueue_active() for details.
->> +			 */
->> +			smp_mb__after_atomic();
->>  			wake_up_bit(&cursor->flags, FSCACHE_VOLUME_ACQUIRE_PENDING);
+> fscache_create_volume_work() uses wake_up_bit() to wake up the processes
+> which are waiting for the completion of volume creation. According to
+> comments in wake_up_bit() and waitqueue_active(), an extra smp_mb() is
+> needed to guarantee the memory order between FSCACHE_VOLUME_CREATING
+> flag and waitqueue_active() before invoking wake_up_bit().
 > 
-> What two values are you applying a partial ordering to?
+> Considering clear_bit_unlock() before wake_up_bit() is an atomic
+> operation, use smp_mb__after_atomic() instead of smp_mb() to provide
+> such guarantee.
+> 
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
+> ---
+>  fs/fscache/volume.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/fscache/volume.c b/fs/fscache/volume.c
+> index fc3dd3bc851d..734d17f404e7 100644
+> --- a/fs/fscache/volume.c
+> +++ b/fs/fscache/volume.c
+> @@ -281,6 +281,11 @@ static void fscache_create_volume_work(struct work_struct *work)
+>  				 fscache_access_acquire_volume_end);
+>  
+>  	clear_bit_unlock(FSCACHE_VOLUME_CREATING, &volume->flags);
+> +	/*
+> +	 * Paired with barrier in wait_on_bit(). Check wake_up_bit() and
+> +	 * waitqueue_active() for details.
+> +	 */
+> +	smp_mb__after_atomic();
+>  	wake_up_bit(&volume->flags, FSCACHE_VOLUME_CREATING);
+>  	fscache_put_volume(volume, fscache_volume_put_create_work);
+>  }
 
-Yeah Hou Tao has explained that a full barrier is needed here to avoid
-the potential reordering at the waker side.
+LGTM.
 
-As I was also researching on this these days, I'd like to share my
-thought on this, hopefully if it could give some insight :)
-
-Without the barrier at the waker side, it may suffer from the following
-race:
-
-```
-CPU0 - waker                    CPU1 - waiter
-
-if (waitqueue_active(wq_head)) <-- find no wq_entry in wq_head list
-    wake_up(wq_head);
-
-                                for (;;) {
-                                   prepare_to_wait(...);
-                                        # add wq_entry into wq_head list
-
-                                    if (@cond)  <-- @cond is false
-                                        break;
-                                    schedule(); <-- wq_entry still in
-                                                    wq_head list,
-                                                    wait for next wakeup
-                                 }
-                                 finish_wait(&wq_head, &wait);
-
-@cond = true;
-```
-
-in which case the waiter misses the wakeup for one time.
+Actually I'm thinking if clear_and_wake_up_bit() could be used here.
+Ditto for patch 1.
 
 -- 
 Thanks,
