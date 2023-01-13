@@ -1,38 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74780668F6E
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 08:46:30 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CEA466900C
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 09:04:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NtYQD2FXLz3fB4
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 18:46:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NtYqH3BZKz3f9s
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 19:04:43 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtYQ73Xrkz3c9G
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 18:46:22 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VZTolwy_1673595977;
-Received: from 30.97.48.201(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZTolwy_1673595977)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtYqC1Z7gz3c90
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 19:04:37 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VZU0LP2_1673597071;
+Received: from 30.221.130.30(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VZU0LP2_1673597071)
           by smtp.aliyun-inc.com;
-          Fri, 13 Jan 2023 15:46:18 +0800
-Message-ID: <feaaaa52-1464-644f-2942-aaf53b6c783a@linux.alibaba.com>
-Date: Fri, 13 Jan 2023 15:46:16 +0800
+          Fri, 13 Jan 2023 16:04:31 +0800
+Message-ID: <990cc386-cad6-3164-6a13-527bc93f8840@linux.alibaba.com>
+Date: Fri, 13 Jan 2023 16:04:30 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH 1/2] erofs: clean up erofs_iget()
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ Gecko/20100101 Thunderbird/102.4.0
+Subject: Re: [PATCH 2/2] erofs: remove linux/buffer_head.h dependency
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
  Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>
 References: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
- <144922ad-66a3-27e8-df85-4a58c175a630@linux.alibaba.com>
-From: Xiang Gao <hsiangkao@linux.alibaba.com>
-In-Reply-To: <144922ad-66a3-27e8-df85-4a58c175a630@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <20230113065226.68801-2-hsiangkao@linux.alibaba.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20230113065226.68801-2-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -51,50 +52,15 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 
-On 2023/1/13 15:41, Jingbo Xu wrote:
+On 1/13/23 2:52 PM, Gao Xiang wrote:
+> EROFS actually never uses buffer heads, therefore just get rid of
+> BH_xxx definitions and linux/buffer_head.h inclusive.
 > 
-> 
-> On 1/13/23 2:52 PM, Gao Xiang wrote:
->> Move inode hash function into inode.c and simplify erofs_iget().
->>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/inode.c    | 40 +++++++++++++++++++++-------------------
->>   fs/erofs/internal.h |  9 ---------
->>   2 files changed, 21 insertions(+), 28 deletions(-)
->>
->> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
->> index d3b8736fa124..57328691582e 100644
->> --- a/fs/erofs/inode.c
->> +++ b/fs/erofs/inode.c
->> @@ -308,47 +308,49 @@ static int erofs_fill_inode(struct inode *inode)
->>   }
->>   
->>   /*
->> - * erofs nid is 64bits, but i_ino is 'unsigned long', therefore
->> - * we should do more for 32-bit platform to find the right inode.
->> + * ino_t is 32-bits on 32-bit arch. We have to squash the 64-bit value down
->> + * so that it will fit.
->>    */
->> -static int erofs_ilookup_test_actor(struct inode *inode, void *opaque)
->> +static ino_t erofs_squash_ino(erofs_nid_t nid)
->>   {
->> -	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
->> +	ino_t ino = (ino_t)nid;
->> +
->> +	if (sizeof(ino_t) < sizeof(erofs_nid_t))
->> +		ino ^= nid >> (sizeof(erofs_nid_t) - sizeof(ino_t)) * 8;
-> 
-> Shouldn't we do:
-> 
-> 	ino ^= nid >> sizeof(ino_t) * 8
-Actually I copied it from fuse, for 64-bit erofs_nid_t it has no difference
-though. I will also update it as your suggestion in v2.
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+
+
+-- 
 Thanks,
-Gao Xiang
-
-
-> ?
-> 
-> 
+Jingbo
