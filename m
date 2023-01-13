@@ -1,64 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C727F6685F3
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Jan 2023 22:49:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0646668E54
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 07:52:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NtJ9l4MBLz3fTh
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 08:49:47 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VsWlR4bS;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NtXDB4rm7z3fB8
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 17:52:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.31; helo=mga06.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VsWlR4bS;
-	dkim-atps=neutral
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.54; helo=out30-54.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtHvH4QQXz3gMx
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 08:37:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673559435; x=1705095435;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ubxtojzCJEGom/+i2suaEct6NvNj4B0zQzYd4IlXDMM=;
-  b=VsWlR4bSgvNEMwVjzKI8Dsps5rauhP9uw5B2cjFlYgT7WQ9pQKvAQFtP
-   MoSfYZEF04LD1NLA4PAT/dK/JBbgd/9L6xfb5vagEqkQ2D4XTgx+IGw21
-   uoBOXWa11BwsNRWHR1JZn00bnc8JMIhuxfRb+PGJZUlJQs3N/6Qb5Sp2I
-   f5srSAYrZlOuvLeEEHXh9dMyY0AawFlFgWMZeLMLL3zRloZEKneLFekCC
-   dXSCagjco2WwfvAqjZnG28N3BkIY0qC7jcQw0r6yO/2u4FC74ZR8YaOZP
-   FcVfbuLKrI8XLcKY+JKpm4TmgOxtTLrbhPZ+7hzicIOXdMggWDgXE8p6Y
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="386181034"
-X-IronPort-AV: E=Sophos;i="5.97,212,1669104000"; 
-   d="scan'208";a="386181034"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 13:37:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="607951033"
-X-IronPort-AV: E=Sophos;i="5.97,212,1669104000"; 
-   d="scan'208";a="607951033"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 12 Jan 2023 13:37:09 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pG5G0-000ARg-0U;
-	Thu, 12 Jan 2023 21:37:08 +0000
-Date: Fri, 13 Jan 2023 05:36:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 35626ac92db0300691a60c8061da2146c0943ba3
-Message-ID: <63c07d49./lBWSAOmmlJT3VgM%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtXD66Ym4z3c8b
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 17:52:37 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VZToXhD_1673592747;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZToXhD_1673592747)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jan 2023 14:52:32 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: [PATCH 1/2] erofs: clean up erofs_iget()
+Date: Fri, 13 Jan 2023 14:52:25 +0800
+Message-Id: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,102 +42,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 35626ac92db0300691a60c8061da2146c0943ba3  erofs: clean up parsing of fscache related options
+Move inode hash function into inode.c and simplify erofs_iget().
 
-elapsed time: 725m
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/inode.c    | 40 +++++++++++++++++++++-------------------
+ fs/erofs/internal.h |  9 ---------
+ 2 files changed, 21 insertions(+), 28 deletions(-)
 
-configs tested: 77
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                  randconfig-r043-20230110
-s390                 randconfig-r044-20230110
-riscv                randconfig-r042-20230110
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-alpha                             allnoconfig
-i386                              allnoconfig
-arm                               allnoconfig
-arc                               allnoconfig
-s390                                defconfig
-x86_64                            allnoconfig
-s390                             allyesconfig
-powerpc                           allnoconfig
-x86_64                           rhel-8.3-syz
-um                           x86_64_defconfig
-ia64                             allmodconfig
-x86_64                         rhel-8.3-kunit
-um                             i386_defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-bpf
-alpha                            allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-sh                               allmodconfig
-arm                                 defconfig
-x86_64                              defconfig
-i386                                defconfig
-mips                             allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-powerpc                          allmodconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                        randconfig-a006
-i386                             allyesconfig
-riscv                             allnoconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-x86_64                               rhel-8.3
-arm                      integrator_defconfig
-sh                           se7721_defconfig
-m68k                          atari_defconfig
-arc                          axs103_defconfig
-m68k                       bvme6000_defconfig
-x86_64                           allyesconfig
-riscv                randconfig-r042-20230112
-s390                 randconfig-r044-20230112
-arc                  randconfig-r043-20230112
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-
-clang tested configs:
-hexagon              randconfig-r041-20230110
-arm                  randconfig-r046-20230110
-hexagon              randconfig-r045-20230110
-x86_64                          rhel-8.3-rust
-i386                          randconfig-a002
-i386                          randconfig-a013
-i386                          randconfig-a004
-x86_64                        randconfig-a016
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-powerpc                          g5_defconfig
-mips                          malta_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                      maltaaprp_defconfig
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-i386                          randconfig-a006
-
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index d3b8736fa124..57328691582e 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -308,47 +308,49 @@ static int erofs_fill_inode(struct inode *inode)
+ }
+ 
+ /*
+- * erofs nid is 64bits, but i_ino is 'unsigned long', therefore
+- * we should do more for 32-bit platform to find the right inode.
++ * ino_t is 32-bits on 32-bit arch. We have to squash the 64-bit value down
++ * so that it will fit.
+  */
+-static int erofs_ilookup_test_actor(struct inode *inode, void *opaque)
++static ino_t erofs_squash_ino(erofs_nid_t nid)
+ {
+-	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++	ino_t ino = (ino_t)nid;
++
++	if (sizeof(ino_t) < sizeof(erofs_nid_t))
++		ino ^= nid >> (sizeof(erofs_nid_t) - sizeof(ino_t)) * 8;
++	return ino;
++}
+ 
+-	return EROFS_I(inode)->nid == nid;
++static int erofs_iget5_eq(struct inode *inode, void *opaque)
++{
++	return EROFS_I(inode)->nid == *(erofs_nid_t *)opaque;
+ }
+ 
+-static int erofs_iget_set_actor(struct inode *inode, void *opaque)
++static int erofs_iget5_set(struct inode *inode, void *opaque)
+ {
+ 	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
+ 
+-	inode->i_ino = erofs_inode_hash(nid);
++	inode->i_ino = erofs_squash_ino(nid);
++	EROFS_I(inode)->nid = nid;
+ 	return 0;
+ }
+ 
+ struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid)
+ {
+-	const unsigned long hashval = erofs_inode_hash(nid);
+ 	struct inode *inode;
+ 
+-	inode = iget5_locked(sb, hashval, erofs_ilookup_test_actor,
+-		erofs_iget_set_actor, &nid);
++	inode = iget5_locked(sb, erofs_squash_ino(nid), erofs_iget5_eq,
++			     erofs_iget5_set, &nid);
+ 	if (!inode)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	if (inode->i_state & I_NEW) {
+-		int err;
+-		struct erofs_inode *vi = EROFS_I(inode);
+-
+-		vi->nid = nid;
++		int err = erofs_fill_inode(inode);
+ 
+-		err = erofs_fill_inode(inode);
+-		if (!err) {
+-			unlock_new_inode(inode);
+-		} else {
++		if (err) {
+ 			iget_failed(inode);
+-			inode = ERR_PTR(err);
++			return ERR_PTR(err);
+ 		}
++		unlock_new_inode(inode);
+ 	}
+ 	return inode;
+ }
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index bb8501c0ff5b..168c21f16383 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -480,15 +480,6 @@ int erofs_map_blocks(struct inode *inode,
+ 		     struct erofs_map_blocks *map, int flags);
+ 
+ /* inode.c */
+-static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
+-{
+-#if BITS_PER_LONG == 32
+-	return (nid >> 32) ^ (nid & 0xffffffff);
+-#else
+-	return nid;
+-#endif
+-}
+-
+ extern const struct inode_operations erofs_generic_iops;
+ extern const struct inode_operations erofs_symlink_iops;
+ extern const struct inode_operations erofs_fast_symlink_iops;
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.24.4
+
