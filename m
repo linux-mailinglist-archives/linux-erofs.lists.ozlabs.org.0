@@ -1,72 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F821668F44
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 08:33:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 133C7668F58
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 08:41:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NtY7T17fVz3fB4
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 18:33:41 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ZaZpq1+T;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NtYJY6vTPz3fB4
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Jan 2023 18:41:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62c; helo=mail-pl1-x62c.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ZaZpq1+T;
-	dkim-atps=neutral
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtY7K6lqBz3c9G
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 18:33:33 +1100 (AEDT)
-Received: by mail-pl1-x62c.google.com with SMTP id v23so17729108plo.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 12 Jan 2023 23:33:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nr9ttpCswQ8apK4LORys5AV0ucvWwQG6uR6ZGlqUXNE=;
-        b=ZaZpq1+TqvEhnzNB+8vjM+ioiypsU6kNEm2B4sZu5m4I/FfpmhpeZKjGDIc0rf20dV
-         TMxLPUfBj/rx+f0sY+bBUucR4utaR2joBUiwUYebs3nmKq9d+BzcEFusCvCL91Ct/zUY
-         /ibkI3Du7ENktVdC9p89vVcvbwtDzUVtJj3sHX+SUW10/yV21f1UQSfullUBhb5Ta102
-         hNTjUAkokw6K0WUUa7GWz7NlJS2scqhupilR/U/Ep8CB0LRhQEq2b42LK937+GEgnGny
-         8eTWRWEWxAIRR0AehG7nUxYQ7wd5m+1ZRUC7jxm90ezKCBqhCyN4uX5+pyRajozfB6LT
-         mqrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nr9ttpCswQ8apK4LORys5AV0ucvWwQG6uR6ZGlqUXNE=;
-        b=UjZ79YzrIFCFwhzMR4rRZmr/pcJvpqnaqz1f9HG5i6sj3aToLQfbaQL6N0T6wpLj4f
-         V0k51T+93Xr/cWtTkSbhEu2Np8pkGJv04oEKYJH6YI9UpkAv63jgSbxFLqCh4D3LzSvF
-         CUhOmv9wIpZy58C2tnoY6JXCFXEvKbZlDjnOwa6m8XcWJ7aRI5BqPF2/Xiz1jPax38Y/
-         juCj+jgdH+aIH/vg9yBr1qJR+so6J7wLmbxrJxALVHE9KwvDyrRy2v/q1oisIfir2cBy
-         XMmuOh6775arX8YSucqcxIWY7H1jjrUnxtIjsGK5N0/4iFelyiBdj8WU9FJg0VChTah1
-         9sXw==
-X-Gm-Message-State: AFqh2kqdo8u0RX8YeCEVGZs0hYuqRV5G+BGowrtCOfmuM1Sspk8H3rDy
-	6joqBhDysGpLJFbJOHUBY48=
-X-Google-Smtp-Source: AMrXdXvoqzdRZaceDiXenPxlxL4X9EMeMiqX40DcrvohhA3eh2BRUaEnCw4OHU8SPiqJtDZKuhZhQA==
-X-Received: by 2002:a17:902:9898:b0:193:1aa5:573 with SMTP id s24-20020a170902989800b001931aa50573mr9544335plp.13.1673595209200;
-        Thu, 12 Jan 2023 23:33:29 -0800 (PST)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id jd9-20020a170903260900b00186727e5f5csm13367492plb.248.2023.01.12.23.33.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Jan 2023 23:33:29 -0800 (PST)
-Date: Fri, 13 Jan 2023 15:38:39 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] erofs: clean up erofs_iget()
-Message-ID: <20230113153839.000057d0.zbestahu@gmail.com>
-In-Reply-To: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
-References: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NtYJS018Mz3c9G
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Jan 2023 18:41:26 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VZU0FMj_1673595681;
+Received: from 30.221.130.30(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VZU0FMj_1673595681)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jan 2023 15:41:22 +0800
+Message-ID: <144922ad-66a3-27e8-df85-4a58c175a630@linux.alibaba.com>
+Date: Fri, 13 Jan 2023 15:41:21 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.0
+Subject: Re: [PATCH 1/2] erofs: clean up erofs_iget()
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>
+References: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20230113065226.68801-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -79,16 +45,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, zhangwen@coolpad.com
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, 13 Jan 2023 14:52:25 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
+
+On 1/13/23 2:52 PM, Gao Xiang wrote:
 > Move inode hash function into inode.c and simplify erofs_iget().
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/inode.c    | 40 +++++++++++++++++++++-------------------
+>  fs/erofs/internal.h |  9 ---------
+>  2 files changed, 21 insertions(+), 28 deletions(-)
+> 
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index d3b8736fa124..57328691582e 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -308,47 +308,49 @@ static int erofs_fill_inode(struct inode *inode)
+>  }
+>  
+>  /*
+> - * erofs nid is 64bits, but i_ino is 'unsigned long', therefore
+> - * we should do more for 32-bit platform to find the right inode.
+> + * ino_t is 32-bits on 32-bit arch. We have to squash the 64-bit value down
+> + * so that it will fit.
+>   */
+> -static int erofs_ilookup_test_actor(struct inode *inode, void *opaque)
+> +static ino_t erofs_squash_ino(erofs_nid_t nid)
+>  {
+> -	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
+> +	ino_t ino = (ino_t)nid;
+> +
+> +	if (sizeof(ino_t) < sizeof(erofs_nid_t))
+> +		ino ^= nid >> (sizeof(erofs_nid_t) - sizeof(ino_t)) * 8;
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
+Shouldn't we do:
 
+	ino ^= nid >> sizeof(ino_t) * 8
+?
+
+
+-- 
+Thanks,
+Jingbo
