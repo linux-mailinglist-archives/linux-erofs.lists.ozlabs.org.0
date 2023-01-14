@@ -1,38 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C1766A879
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 02:58:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 851DE66A89F
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 03:20:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Nv1ff5Pycz3fB8
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 12:58:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Nv2786prtz3fCB
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 13:20:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.44; helo=out30-44.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nv1fT3G2Bz3cBP
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jan 2023 12:58:41 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VZWAukk_1673661515;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZWAukk_1673661515)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nv27227vMz3bPW
+	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jan 2023 13:19:56 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VZW9rHd_1673662790;
+Received: from 30.27.94.170(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VZW9rHd_1673662790)
           by smtp.aliyun-inc.com;
-          Sat, 14 Jan 2023 09:58:37 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: [PATCH v2 2/2] erofs: remove linux/buffer_head.h dependency
-Date: Sat, 14 Jan 2023 09:58:12 +0800
-Message-Id: <20230114015812.96836-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230114015812.96836-1-hsiangkao@linux.alibaba.com>
-References: <20230114015812.96836-1-hsiangkao@linux.alibaba.com>
+          Sat, 14 Jan 2023 10:19:52 +0800
+Message-ID: <d6ec50c4-5fc3-eb17-e9e8-fce334038193@linux.alibaba.com>
+Date: Sat, 14 Jan 2023 10:19:50 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH] workqueue: Add WQ_SCHED_FIFO
+To: Nathan Huckleberry <nhuck@google.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Tejun Heo <tj@kernel.org>
+References: <20230113210703.62107-1-nhuck@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230113210703.62107-1-nhuck@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,77 +44,261 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Daeho Jeong <daehojeong@google.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Sandeep Dhavale <dhavale@google.com>, linux-kernel@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-EROFS actually never uses buffer heads, therefore just get rid of
-BH_xxx definitions and linux/buffer_head.h inclusive.
+Hi Nathan!
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/internal.h | 20 ++++++--------------
- fs/erofs/super.c    |  1 -
- 2 files changed, 6 insertions(+), 15 deletions(-)
+On 2023/1/14 05:07, Nathan Huckleberry wrote:
+> Add a WQ flag that allows workqueues to use SCHED_FIFO with the least
+> imporant RT priority.  This can reduce scheduler latency for IO
+> post-processing when the CPU is under load without impacting other RT
+> workloads.  This has been shown to improve app startup time on Android
+> [1].
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 168c21f16383..b4cc40fa3803 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -12,7 +12,6 @@
- #include <linux/mm.h>
- #include <linux/pagemap.h>
- #include <linux/bio.h>
--#include <linux/buffer_head.h>
- #include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-@@ -388,25 +387,18 @@ extern struct file_system_type erofs_fs_type;
- extern const struct address_space_operations erofs_raw_access_aops;
- extern const struct address_space_operations z_erofs_aops;
- 
--enum {
--	BH_Encoded = BH_PrivateStart,
--	BH_FullMapped,
--	BH_Fragment,
--	BH_Partialref,
--};
--
- /* Has a disk mapping */
--#define EROFS_MAP_MAPPED	(1 << BH_Mapped)
-+#define EROFS_MAP_MAPPED	0x0001
- /* Located in metadata (could be copied from bd_inode) */
--#define EROFS_MAP_META		(1 << BH_Meta)
-+#define EROFS_MAP_META		0x0002
- /* The extent is encoded */
--#define EROFS_MAP_ENCODED	(1 << BH_Encoded)
-+#define EROFS_MAP_ENCODED	0x0004
- /* The length of extent is full */
--#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
-+#define EROFS_MAP_FULL_MAPPED	0x0008
- /* Located in the special packed inode */
--#define EROFS_MAP_FRAGMENT	(1 << BH_Fragment)
-+#define EROFS_MAP_FRAGMENT	0x0010
- /* The extent refers to partial decompressed data */
--#define EROFS_MAP_PARTIAL_REF	(1 << BH_Partialref)
-+#define EROFS_MAP_PARTIAL_REF	0x0020
- 
- struct erofs_map_blocks {
- 	struct erofs_buf buf;
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 481788c24a68..36b795f1ad44 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -5,7 +5,6 @@
-  * Copyright (C) 2021, Alibaba Cloud
-  */
- #include <linux/module.h>
--#include <linux/buffer_head.h>
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
--- 
-2.24.4
+Thank you all for your effort on this.  Unfortunately I have no time to
+setup the test [1] until now.  If it can be addressed as a new workqueue
+feature, that would be much helpful to me.  Otherwise, I still need to
+find a way to resolve the latest Android + EROFS latency problem.
 
+> 
+> Scheduler latency affects several drivers as evidenced by [1], [2], [3],
+> [4].  Some of these drivers have moved post-processing into IRQ context.
+> However, this can cause latency spikes for real-time threads and jitter
+> related jank on Android.  Using a workqueue with SCHED_FIFO improves
+> scheduler latency without causing latency problems for RT threads.
+
+softirq context is actually mainly for post-interrupt handling I think.
+but considering decompression/verification/decryption all workload are much
+complex than that and less important than real post-interrupt handling.
+I don't think softirq context is the best place to handle these
+CPU-intensive jobs.  Beside, it could cause some important work moving to
+softirqd unexpectedly in the extreme cases.  Also such many post-processing
+jobs are as complex as they could sleep so that softirq context is
+unsuitable as well.
+
+Anyway, I second this proposal if possible:
+
+Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+Thanks,
+Gao Xiang
+
+> 
+> [1]:
+> https://lore.kernel.org/linux-erofs/20230106073502.4017276-1-dhavale@google.com/
+> [2]:
+> https://lore.kernel.org/linux-f2fs-devel/20220802192437.1895492-1-daeho43@gmail.com/
+> [3]:
+> https://lore.kernel.org/dm-devel/20220722093823.4158756-4-nhuck@google.com/
+> [4]:
+> https://lore.kernel.org/dm-crypt/20200706173731.3734-1-ignat@cloudflare.com/
+> 
+> This change has been tested on dm-verity with the following fio config:
+> 
+> [global]
+> time_based
+> runtime=120
+> 
+> [do-verify]
+> ioengine=sync
+> filename=/dev/testing
+> rw=randread
+> direct=1
+> 
+> [burn_8x90%_qsort]
+> ioengine=cpuio
+> cpuload=90
+> numjobs=8
+> cpumode=qsort
+> 
+> Before:
+> clat (usec): min=13, max=23882, avg=29.56, stdev=113.29 READ:
+> bw=122MiB/s (128MB/s), 122MiB/s-122MiB/s (128MB/s-128MB/s), io=14.3GiB
+> (15.3GB), run=120001-120001msec
+> 
+> After:
+> clat (usec): min=13, max=23137, avg=19.96, stdev=105.71 READ:
+> bw=180MiB/s (189MB/s), 180MiB/s-180MiB/s (189MB/s-189MB/s), io=21.1GiB
+> (22.7GB), run=120012-120012msec
+> 
+> Cc: Sandeep Dhavale <dhavale@google.com>
+> Cc: Daeho Jeong <daehojeong@google.com>
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+>   Documentation/core-api/workqueue.rst | 12 ++++++++++
+>   include/linux/workqueue.h            |  9 +++++++
+>   kernel/workqueue.c                   | 36 +++++++++++++++++++++-------
+>   3 files changed, 48 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
+> index 3b22ed137662..26faf2806c66 100644
+> --- a/Documentation/core-api/workqueue.rst
+> +++ b/Documentation/core-api/workqueue.rst
+> @@ -216,6 +216,18 @@ resources, scheduled and executed.
+>   
+>     This flag is meaningless for unbound wq.
+>   
+> +``WQ_SCHED_FIFO``
+> +  Work items of a fifo wq are queued to the fifo
+> +  worker-pool of the target cpu.  Fifo worker-pools are
+> +  served by worker threads with scheduler policy SCHED_FIFO and
+> +  the least important real-time priority.  This can be useful
+> +  for workloads where low latency is imporant.
+> +
+> +  A workqueue cannot be both high-priority and fifo.
+> +
+> +  Note that normal and fifo worker-pools don't interact with
+> +  each other.  Each maintains its separate pool of workers and
+> +  implements concurrency management among its workers.
+>   
+>   ``max_active``
+>   --------------
+> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> index ac551b8ee7d9..43a4eeaf8ff4 100644
+> --- a/include/linux/workqueue.h
+> +++ b/include/linux/workqueue.h
+> @@ -134,6 +134,10 @@ struct workqueue_attrs {
+>   	 * @nice: nice level
+>   	 */
+>   	int nice;
+> +	/**
+> +	 * @sched_fifo: is using SCHED_FIFO
+> +	 */
+> +	bool sched_fifo;
+>   
+>   	/**
+>   	 * @cpumask: allowed CPUs
+> @@ -334,6 +338,11 @@ enum {
+>   	 * http://thread.gmane.org/gmane.linux.kernel/1480396
+>   	 */
+>   	WQ_POWER_EFFICIENT	= 1 << 7,
+> +	/*
+> +	 * Low real-time priority workqueues can reduce scheduler latency
+> +	 * for latency sensitive workloads like IO post-processing.
+> +	 */
+> +	WQ_SCHED_FIFO		= 1 << 8,
+>   
+>   	__WQ_DESTROYING		= 1 << 15, /* internal: workqueue is destroying */
+>   	__WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 5dc67aa9d696..99c5e0a3dc28 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -85,7 +85,7 @@ enum {
+>   	WORKER_NOT_RUNNING	= WORKER_PREP | WORKER_CPU_INTENSIVE |
+>   				  WORKER_UNBOUND | WORKER_REBOUND,
+>   
+> -	NR_STD_WORKER_POOLS	= 2,		/* # standard pools per cpu */
+> +	NR_STD_WORKER_POOLS	= 3,		/* # standard pools per cpu */
+>   
+>   	UNBOUND_POOL_HASH_ORDER	= 6,		/* hashed by pool->attrs */
+>   	BUSY_WORKER_HASH_ORDER	= 6,		/* 64 pointers */
+> @@ -1949,7 +1949,8 @@ static struct worker *create_worker(struct worker_pool *pool)
+>   
+>   	if (pool->cpu >= 0)
+>   		snprintf(id_buf, sizeof(id_buf), "%d:%d%s", pool->cpu, id,
+> -			 pool->attrs->nice < 0  ? "H" : "");
+> +			 pool->attrs->sched_fifo ? "F" :
+> +			 (pool->attrs->nice < 0  ? "H" : ""));
+>   	else
+>   		snprintf(id_buf, sizeof(id_buf), "u%d:%d", pool->id, id);
+>   
+> @@ -1958,7 +1959,11 @@ static struct worker *create_worker(struct worker_pool *pool)
+>   	if (IS_ERR(worker->task))
+>   		goto fail;
+>   
+> -	set_user_nice(worker->task, pool->attrs->nice);
+> +	if (pool->attrs->sched_fifo)
+> +		sched_set_fifo_low(worker->task);
+> +	else
+> +		set_user_nice(worker->task, pool->attrs->nice);
+> +
+>   	kthread_bind_mask(worker->task, pool->attrs->cpumask);
+>   
+>   	/* successful, attach the worker to the pool */
+> @@ -4323,9 +4328,17 @@ static void wq_update_unbound_numa(struct workqueue_struct *wq, int cpu,
+>   
+>   static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+>   {
+> -	bool highpri = wq->flags & WQ_HIGHPRI;
+> +	int pool_index = 0;
+>   	int cpu, ret;
+>   
+> +	if (wq->flags & WQ_HIGHPRI && wq->flags & WQ_SCHED_FIFO)
+> +		return -EINVAL;
+> +
+> +	if (wq->flags & WQ_HIGHPRI)
+> +		pool_index = 1;
+> +	if (wq->flags & WQ_SCHED_FIFO)
+> +		pool_index = 2;
+> +
+>   	if (!(wq->flags & WQ_UNBOUND)) {
+>   		wq->cpu_pwqs = alloc_percpu(struct pool_workqueue);
+>   		if (!wq->cpu_pwqs)
+> @@ -4337,7 +4350,7 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+>   			struct worker_pool *cpu_pools =
+>   				per_cpu(cpu_worker_pools, cpu);
+>   
+> -			init_pwq(pwq, wq, &cpu_pools[highpri]);
+> +			init_pwq(pwq, wq, &cpu_pools[pool_index]);
+>   
+>   			mutex_lock(&wq->mutex);
+>   			link_pwq(pwq);
+> @@ -4348,13 +4361,13 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+>   
+>   	cpus_read_lock();
+>   	if (wq->flags & __WQ_ORDERED) {
+> -		ret = apply_workqueue_attrs(wq, ordered_wq_attrs[highpri]);
+> +		ret = apply_workqueue_attrs(wq, ordered_wq_attrs[pool_index]);
+>   		/* there should only be single pwq for ordering guarantee */
+>   		WARN(!ret && (wq->pwqs.next != &wq->dfl_pwq->pwqs_node ||
+>   			      wq->pwqs.prev != &wq->dfl_pwq->pwqs_node),
+>   		     "ordering guarantee broken for workqueue %s\n", wq->name);
+>   	} else {
+> -		ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);
+> +		ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[pool_index]);
+>   	}
+>   	cpus_read_unlock();
+>   
+> @@ -6138,7 +6151,8 @@ static void __init wq_numa_init(void)
+>    */
+>   void __init workqueue_init_early(void)
+>   {
+> -	int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL };
+> +	int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL, 0 };
+> +	bool std_sched_fifo[NR_STD_WORKER_POOLS] = { false, false, true };
+>   	int i, cpu;
+>   
+>   	BUILD_BUG_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
+> @@ -6158,8 +6172,10 @@ void __init workqueue_init_early(void)
+>   			BUG_ON(init_worker_pool(pool));
+>   			pool->cpu = cpu;
+>   			cpumask_copy(pool->attrs->cpumask, cpumask_of(cpu));
+> -			pool->attrs->nice = std_nice[i++];
+> +			pool->attrs->nice = std_nice[i];
+> +			pool->attrs->sched_fifo = std_sched_fifo[i];
+>   			pool->node = cpu_to_node(cpu);
+> +			i++;
+>   
+>   			/* alloc pool ID */
+>   			mutex_lock(&wq_pool_mutex);
+> @@ -6174,6 +6190,7 @@ void __init workqueue_init_early(void)
+>   
+>   		BUG_ON(!(attrs = alloc_workqueue_attrs()));
+>   		attrs->nice = std_nice[i];
+> +		attrs->sched_fifo = std_sched_fifo[i];
+>   		unbound_std_wq_attrs[i] = attrs;
+>   
+>   		/*
+> @@ -6183,6 +6200,7 @@ void __init workqueue_init_early(void)
+>   		 */
+>   		BUG_ON(!(attrs = alloc_workqueue_attrs()));
+>   		attrs->nice = std_nice[i];
+> +		attrs->sched_fifo = std_sched_fifo[i];
+>   		attrs->no_numa = true;
+>   		ordered_wq_attrs[i] = attrs;
+>   	}
