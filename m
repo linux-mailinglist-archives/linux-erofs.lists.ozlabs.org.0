@@ -1,56 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4103466AC03
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 16:08:58 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE7F766AE0A
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 22:02:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NvMBH0vd3z3cdQ
-	for <lists+linux-erofs@lfdr.de>; Sun, 15 Jan 2023 02:08:55 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s+PLrJlp;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NvW1n0ZbNz3cff
+	for <lists+linux-erofs@lfdr.de>; Sun, 15 Jan 2023 08:02:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1673730125;
+	bh=KN01LWM9/LUXltKKSmtMd/RUSx7UguMnoLJJp28TR2M=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=LZobzZG8YwsVYjRtBf/hXe1PN3yr+zZdT2WS9n9dimgyYowzKkRr8eJV0Fc9lXMNt
+	 saG6YQ/VXdcvBKpkop5yQ9Qctb1LBiZKdqwAF1Af2ZZqCYHXX2Npx9xqhGVODQagN5
+	 JQti7mgRQOOUcn4FXPu8QLz5tWSaQCdbnlbRmz52w9uloUJ+5Mtk3fsJtggX8GVbwG
+	 tRDdv1UMIqOk/cz2HTr5JDp9jxec6/H5Wz1wCUNI41l9o57Aq638hWt2hINTAL1fMK
+	 WPZ0Ec/Db4wnBCbLNpnmR95INafcNy1cg0Gn2Y8hti1/Sk2c8WlCdIjDzI0sEkCXcX
+	 NB2cOXtdi3xlw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::42a; helo=mail-wr1-x42a.google.com; envelope-from=nhuck@google.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s+PLrJlp;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20210112 header.b=QsiszUWH;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NvMB73pPPz3c7x
-	for <linux-erofs@lists.ozlabs.org>; Sun, 15 Jan 2023 02:08:47 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 0F12EB80922;
-	Sat, 14 Jan 2023 15:08:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD6DC433EF;
-	Sat, 14 Jan 2023 15:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673708921;
-	bh=5Auz8Wbp11PiCheP7gUTI6cSUz4rehq5bER29K3Mt9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s+PLrJlp8S9QLNR6L5FOxySfru/TuhNMcbGasPoZZvGYMFAhJHqVuRzmxt/T0rndJ
-	 d9G2hyXdpmJ9cIW5SM1EEYrp33kPUD7WSegmwuqSoOeRNw1X8u5+SNlzQLtPyHf1u5
-	 qM6o4lxPsKl/ArYwFPHNk8UOmO+V6XPxFXTzEcOVF5OTUYPtrxmaA/ggo6MrUtGaEJ
-	 KXgZv+Y4NZrPJ2BrqB2mOaTSH+TvwJSYp+YInE9PO/iUtD6CINT+PBwyEgkVJ4sIM6
-	 Jzyg0pJtDRiS3IuVPT5wu5MniW6wS5gGsTqyC7W6QBrGILnO1TzDc3ZuRxiEobxyNK
-	 md7dS2mq/wHPA==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: [PATCH v2 2/2] erofs: simplify iloc()
-Date: Sat, 14 Jan 2023 23:08:23 +0800
-Message-Id: <20230114150823.432069-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230114125746.399253-2-xiang@kernel.org>
-References: <20230114125746.399253-2-xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NvW1d2h8Bz2ynx
+	for <linux-erofs@lists.ozlabs.org>; Sun, 15 Jan 2023 08:01:56 +1100 (AEDT)
+Received: by mail-wr1-x42a.google.com with SMTP id b5so2888848wrn.0
+        for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jan 2023 13:01:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KN01LWM9/LUXltKKSmtMd/RUSx7UguMnoLJJp28TR2M=;
+        b=myLLsGqv3NBMY4sMzWXmanLre4OANiT2YM/ULjIzpbfZ8IxeXpKrqyjEUmPkfh2My9
+         weUTBBIpwJC5badsiXCpgBxoPH5wu0wA+Rf3wn6uCYTMaFFN8X2eYbeK3mzSGIwbanoW
+         XN1IA4mDJZkFPJy/pieRXSOrpBIFdvyqgxJbCEzlcVdHvDbEDvXxPwsmx1lDUI9mLL/b
+         D4tSz5FqJAbelKC10DRWEkWd8Dp15Wr1jMzLmRfjJuoTmbWVu78QJ7UWl92+n3FC88oC
+         PUfcepgt/XpPyPIwh+OLIptSiRN+U4B80j5w8VOPSzqmEwG8W0xYeXUjnaPyLWdoIufF
+         X8JQ==
+X-Gm-Message-State: AFqh2koLC93GTYSkJfDkwfafMknUDSOCPhC4SaNm4FZsyXcmVS9nPs7K
+	fUs3oPZRJXj8e3Zzk0otvGPU/1TQnxMYNGDyaJvluw==
+X-Google-Smtp-Source: AMrXdXuh7Lz7PGrs/ub29x3S9kYdGXvR5rWxvSJTVHDa9B3ev4VuGa5yMF6TovVvQ3Xfm9k0fna/vkXGbqJgpSovDds=
+X-Received: by 2002:a5d:4808:0:b0:2bd:e0d5:3da3 with SMTP id
+ l8-20020a5d4808000000b002bde0d53da3mr281961wrq.132.1673730110686; Sat, 14 Jan
+ 2023 13:01:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230113210703.62107-1-nhuck@google.com> <d6ec50c4-5fc3-eb17-e9e8-fce334038193@linux.alibaba.com>
+In-Reply-To: <d6ec50c4-5fc3-eb17-e9e8-fce334038193@linux.alibaba.com>
+Date: Sat, 14 Jan 2023 13:00:00 -0800
+Message-ID: <CAJkfWY7duk+5tWpW3g1iMyV9Q5t5cGunC-dh3M0X25wNq0z-TA@mail.gmail.com>
+Subject: Re: [PATCH] workqueue: Add WQ_SCHED_FIFO
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,222 +70,288 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+From: Nathan Huckleberry via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Nathan Huckleberry <nhuck@google.com>
+Cc: Daeho Jeong <daehojeong@google.com>, Sandeep Dhavale <dhavale@google.com>, Jonathan Corbet <corbet@lwn.net>, Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>, Tejun Heo <tj@kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+On Fri, Jan 13, 2023 at 6:20 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+>
+> Hi Nathan!
+>
+> On 2023/1/14 05:07, Nathan Huckleberry wrote:
+> > Add a WQ flag that allows workqueues to use SCHED_FIFO with the least
+> > imporant RT priority.  This can reduce scheduler latency for IO
+> > post-processing when the CPU is under load without impacting other RT
+> > workloads.  This has been shown to improve app startup time on Android
+> > [1].
+>
+> Thank you all for your effort on this.  Unfortunately I have no time to
+> setup the test [1] until now.  If it can be addressed as a new workqueue
+> feature, that would be much helpful to me.  Otherwise, I still need to
+> find a way to resolve the latest Android + EROFS latency problem.
+>
 
-Actually we could pass in inodes directly to clean up all callers.
-Also rename iloc() as erofs_iloc().
+The above patch and following diff should have equivalent performance
+to [1], but I have not tested it.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v1:
- - fix compile errors reported by intel lkp.
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index ccf7c55d477f..a9c3893ad1d4 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -201,7 +201,7 @@ static inline int z_erofs_init_workqueue(void)
+         * scheduling overhead, perhaps per-CPU threads should be better?
+         */
+        z_erofs_workqueue = alloc_workqueue("erofs_unzipd",
+-                                           WQ_UNBOUND | WQ_HIGHPRI,
++                                           WQ_SCHED_FIFO,
+                                            onlinecpus + onlinecpus / 4);
+        return z_erofs_workqueue ? 0 : -ENOMEM;
 
- fs/erofs/data.c              |  9 +++------
- fs/erofs/inode.c             |  2 +-
- fs/erofs/internal.h          | 16 +++++++++-------
- fs/erofs/xattr.c             | 20 +++++++-------------
- fs/erofs/zmap.c              | 13 +++++--------
- include/trace/events/erofs.h |  4 ++--
- 6 files changed, 27 insertions(+), 37 deletions(-)
+Thanks,
+Huck
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index f57f921683d7..2713257ee718 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -91,11 +91,8 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- 		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
- 		map->m_plen = blknr_to_addr(lastblk) - offset;
- 	} else if (tailendpacking) {
--		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
--		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
--
--		map->m_pa = iloc(sbi, vi->nid) + vi->inode_isize +
--			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_pa = erofs_iloc(inode) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(offset);
- 		map->m_plen = inode->i_size - offset;
- 
- 		/* inline data should be located in the same meta block */
-@@ -150,7 +147,7 @@ int erofs_map_blocks(struct inode *inode,
- 		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;	/* block map */
- 
- 	chunknr = map->m_la >> vi->chunkbits;
--	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
-+	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize +
- 		    vi->xattr_isize, unit) + unit * chunknr;
- 
- 	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos), EROFS_KMAP);
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 57328691582e..d7e87d41f7bf 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -14,7 +14,7 @@ static void *erofs_read_inode(struct erofs_buf *buf,
- 	struct super_block *sb = inode->i_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	struct erofs_inode *vi = EROFS_I(inode);
--	const erofs_off_t inode_loc = iloc(sbi, vi->nid);
-+	const erofs_off_t inode_loc = erofs_iloc(inode);
- 
- 	erofs_blk_t blkaddr, nblks = 0;
- 	void *kaddr;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index b4cc40fa3803..08ba817d6551 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -270,11 +270,6 @@ struct erofs_buf {
- #define erofs_blkoff(addr)      ((addr) % EROFS_BLKSIZ)
- #define blknr_to_addr(nr)       ((erofs_off_t)(nr) * EROFS_BLKSIZ)
- 
--static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
--{
--	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
--}
--
- #define EROFS_FEATURE_FUNCS(name, compat, feature) \
- static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
- { \
-@@ -339,8 +334,15 @@ struct erofs_inode {
- 	struct inode vfs_inode;
- };
- 
--#define EROFS_I(ptr)	\
--	container_of(ptr, struct erofs_inode, vfs_inode)
-+#define EROFS_I(ptr)	container_of(ptr, struct erofs_inode, vfs_inode)
-+
-+static inline erofs_off_t erofs_iloc(struct inode *inode)
-+{
-+	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
-+
-+	return blknr_to_addr(sbi->meta_blkaddr) +
-+		(EROFS_I(inode)->nid << sbi->islotbits);
-+}
- 
- static inline unsigned long erofs_inode_datablocks(struct inode *inode)
- {
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index a62fb8a3318a..60729b1220b6 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -22,8 +22,7 @@ static int init_inode_xattrs(struct inode *inode)
- 	struct xattr_iter it;
- 	unsigned int i;
- 	struct erofs_xattr_ibody_header *ih;
--	struct super_block *sb;
--	struct erofs_sb_info *sbi;
-+	struct super_block *sb = inode->i_sb;
- 	int ret = 0;
- 
- 	/* the most case is that xattrs of this inode are initialized. */
-@@ -52,15 +51,14 @@ static int init_inode_xattrs(struct inode *inode)
- 	 *    undefined right now (maybe use later with some new sb feature).
- 	 */
- 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
--		erofs_err(inode->i_sb,
-+		erofs_err(sb,
- 			  "xattr_isize %d of nid %llu is not supported yet",
- 			  vi->xattr_isize, vi->nid);
- 		ret = -EOPNOTSUPP;
- 		goto out_unlock;
- 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
- 		if (vi->xattr_isize) {
--			erofs_err(inode->i_sb,
--				  "bogus xattr ibody @ nid %llu", vi->nid);
-+			erofs_err(sb, "bogus xattr ibody @ nid %llu", vi->nid);
- 			DBG_BUGON(1);
- 			ret = -EFSCORRUPTED;
- 			goto out_unlock;	/* xattr ondisk layout error */
-@@ -69,11 +67,9 @@ static int init_inode_xattrs(struct inode *inode)
- 		goto out_unlock;
- 	}
- 
--	sb = inode->i_sb;
--	sbi = EROFS_SB(sb);
- 	it.buf = __EROFS_BUF_INITIALIZER;
--	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
--	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
-+	it.blkaddr = erofs_blknr(erofs_iloc(inode) + vi->inode_isize);
-+	it.ofs = erofs_blkoff(erofs_iloc(inode) + vi->inode_isize);
- 
- 	/* read in shared xattr array (non-atomic, see kmalloc below) */
- 	it.kaddr = erofs_read_metabuf(&it.buf, sb, it.blkaddr, EROFS_KMAP);
-@@ -159,7 +155,6 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
- 				   struct inode *inode)
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
--	struct erofs_sb_info *const sbi = EROFS_SB(inode->i_sb);
- 	unsigned int xattr_header_sz, inline_xattr_ofs;
- 
- 	xattr_header_sz = inlinexattr_header_size(inode);
-@@ -170,9 +165,8 @@ static int inline_xattr_iter_begin(struct xattr_iter *it,
- 
- 	inline_xattr_ofs = vi->inode_isize + xattr_header_sz;
- 
--	it->blkaddr = erofs_blknr(iloc(sbi, vi->nid) + inline_xattr_ofs);
--	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
--
-+	it->blkaddr = erofs_blknr(erofs_iloc(inode) + inline_xattr_ofs);
-+	it->ofs = erofs_blkoff(erofs_iloc(inode) + inline_xattr_ofs);
- 	it->kaddr = erofs_read_metabuf(&it->buf, inode->i_sb, it->blkaddr,
- 				       EROFS_KMAP);
- 	if (IS_ERR(it->kaddr))
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 98fb90b9af71..3aeffc762b2f 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -55,8 +55,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags))
- 		goto out_unlock;
- 
--	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
--		    vi->xattr_isize, 8);
-+	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
- 	kaddr = erofs_read_metabuf(&buf, sb, erofs_blknr(pos), EROFS_KMAP);
- 	if (IS_ERR(kaddr)) {
- 		err = PTR_ERR(kaddr);
-@@ -169,10 +168,9 @@ static int legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- {
- 	struct inode *const inode = m->inode;
- 	struct erofs_inode *const vi = EROFS_I(inode);
--	const erofs_off_t ibase = iloc(EROFS_I_SB(inode), vi->nid);
- 	const erofs_off_t pos =
--		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
--					       vi->xattr_isize) +
-+		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(erofs_iloc(inode) +
-+				vi->inode_isize + vi->xattr_isize) +
- 		lcn * sizeof(struct z_erofs_vle_decompressed_index);
- 	struct z_erofs_vle_decompressed_index *di;
- 	unsigned int advise, type;
-@@ -372,9 +370,8 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
- 	struct inode *const inode = m->inode;
- 	struct erofs_inode *const vi = EROFS_I(inode);
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	const erofs_off_t ebase = ALIGN(iloc(EROFS_I_SB(inode), vi->nid) +
--					vi->inode_isize + vi->xattr_isize, 8) +
--		sizeof(struct z_erofs_map_header);
-+	const erofs_off_t ebase = sizeof(struct z_erofs_map_header) +
-+		ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
- 	const unsigned int totalidx = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
- 	unsigned int compacted_4b_initial, compacted_2b;
- 	unsigned int amortizedshift;
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index 4f4c44ea3a65..e095d36db939 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -66,8 +66,8 @@ TRACE_EVENT(erofs_fill_inode,
- 	TP_fast_assign(
- 		__entry->dev		= inode->i_sb->s_dev;
- 		__entry->nid		= EROFS_I(inode)->nid;
--		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
--		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->blkaddr	= erofs_blknr(erofs_iloc(inode));
-+		__entry->ofs		= erofs_blkoff(erofs_iloc(inode));
- 	),
- 
- 	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u",
--- 
-2.30.2
+ }
 
+
+> >
+> > Scheduler latency affects several drivers as evidenced by [1], [2], [3],
+> > [4].  Some of these drivers have moved post-processing into IRQ context.
+> > However, this can cause latency spikes for real-time threads and jitter
+> > related jank on Android.  Using a workqueue with SCHED_FIFO improves
+> > scheduler latency without causing latency problems for RT threads.
+>
+> softirq context is actually mainly for post-interrupt handling I think.
+> but considering decompression/verification/decryption all workload are much
+> complex than that and less important than real post-interrupt handling.
+> I don't think softirq context is the best place to handle these
+> CPU-intensive jobs.  Beside, it could cause some important work moving to
+> softirqd unexpectedly in the extreme cases.  Also such many post-processing
+> jobs are as complex as they could sleep so that softirq context is
+> unsuitable as well.
+>
+> Anyway, I second this proposal if possible:
+>
+> Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > [1]:
+> > https://lore.kernel.org/linux-erofs/20230106073502.4017276-1-dhavale@google.com/
+> > [2]:
+> > https://lore.kernel.org/linux-f2fs-devel/20220802192437.1895492-1-daeho43@gmail.com/
+> > [3]:
+> > https://lore.kernel.org/dm-devel/20220722093823.4158756-4-nhuck@google.com/
+> > [4]:
+> > https://lore.kernel.org/dm-crypt/20200706173731.3734-1-ignat@cloudflare.com/
+> >
+> > This change has been tested on dm-verity with the following fio config:
+> >
+> > [global]
+> > time_based
+> > runtime=120
+> >
+> > [do-verify]
+> > ioengine=sync
+> > filename=/dev/testing
+> > rw=randread
+> > direct=1
+> >
+> > [burn_8x90%_qsort]
+> > ioengine=cpuio
+> > cpuload=90
+> > numjobs=8
+> > cpumode=qsort
+> >
+> > Before:
+> > clat (usec): min=13, max=23882, avg=29.56, stdev=113.29 READ:
+> > bw=122MiB/s (128MB/s), 122MiB/s-122MiB/s (128MB/s-128MB/s), io=14.3GiB
+> > (15.3GB), run=120001-120001msec
+> >
+> > After:
+> > clat (usec): min=13, max=23137, avg=19.96, stdev=105.71 READ:
+> > bw=180MiB/s (189MB/s), 180MiB/s-180MiB/s (189MB/s-189MB/s), io=21.1GiB
+> > (22.7GB), run=120012-120012msec
+> >
+> > Cc: Sandeep Dhavale <dhavale@google.com>
+> > Cc: Daeho Jeong <daehojeong@google.com>
+> > Cc: Eric Biggers <ebiggers@kernel.org>
+> > Cc: Sami Tolvanen <samitolvanen@google.com>
+> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > ---
+> >   Documentation/core-api/workqueue.rst | 12 ++++++++++
+> >   include/linux/workqueue.h            |  9 +++++++
+> >   kernel/workqueue.c                   | 36 +++++++++++++++++++++-------
+> >   3 files changed, 48 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
+> > index 3b22ed137662..26faf2806c66 100644
+> > --- a/Documentation/core-api/workqueue.rst
+> > +++ b/Documentation/core-api/workqueue.rst
+> > @@ -216,6 +216,18 @@ resources, scheduled and executed.
+> >
+> >     This flag is meaningless for unbound wq.
+> >
+> > +``WQ_SCHED_FIFO``
+> > +  Work items of a fifo wq are queued to the fifo
+> > +  worker-pool of the target cpu.  Fifo worker-pools are
+> > +  served by worker threads with scheduler policy SCHED_FIFO and
+> > +  the least important real-time priority.  This can be useful
+> > +  for workloads where low latency is imporant.
+> > +
+> > +  A workqueue cannot be both high-priority and fifo.
+> > +
+> > +  Note that normal and fifo worker-pools don't interact with
+> > +  each other.  Each maintains its separate pool of workers and
+> > +  implements concurrency management among its workers.
+> >
+> >   ``max_active``
+> >   --------------
+> > diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> > index ac551b8ee7d9..43a4eeaf8ff4 100644
+> > --- a/include/linux/workqueue.h
+> > +++ b/include/linux/workqueue.h
+> > @@ -134,6 +134,10 @@ struct workqueue_attrs {
+> >        * @nice: nice level
+> >        */
+> >       int nice;
+> > +     /**
+> > +      * @sched_fifo: is using SCHED_FIFO
+> > +      */
+> > +     bool sched_fifo;
+> >
+> >       /**
+> >        * @cpumask: allowed CPUs
+> > @@ -334,6 +338,11 @@ enum {
+> >        * http://thread.gmane.org/gmane.linux.kernel/1480396
+> >        */
+> >       WQ_POWER_EFFICIENT      = 1 << 7,
+> > +     /*
+> > +      * Low real-time priority workqueues can reduce scheduler latency
+> > +      * for latency sensitive workloads like IO post-processing.
+> > +      */
+> > +     WQ_SCHED_FIFO           = 1 << 8,
+> >
+> >       __WQ_DESTROYING         = 1 << 15, /* internal: workqueue is destroying */
+> >       __WQ_DRAINING           = 1 << 16, /* internal: workqueue is draining */
+> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> > index 5dc67aa9d696..99c5e0a3dc28 100644
+> > --- a/kernel/workqueue.c
+> > +++ b/kernel/workqueue.c
+> > @@ -85,7 +85,7 @@ enum {
+> >       WORKER_NOT_RUNNING      = WORKER_PREP | WORKER_CPU_INTENSIVE |
+> >                                 WORKER_UNBOUND | WORKER_REBOUND,
+> >
+> > -     NR_STD_WORKER_POOLS     = 2,            /* # standard pools per cpu */
+> > +     NR_STD_WORKER_POOLS     = 3,            /* # standard pools per cpu */
+> >
+> >       UNBOUND_POOL_HASH_ORDER = 6,            /* hashed by pool->attrs */
+> >       BUSY_WORKER_HASH_ORDER  = 6,            /* 64 pointers */
+> > @@ -1949,7 +1949,8 @@ static struct worker *create_worker(struct worker_pool *pool)
+> >
+> >       if (pool->cpu >= 0)
+> >               snprintf(id_buf, sizeof(id_buf), "%d:%d%s", pool->cpu, id,
+> > -                      pool->attrs->nice < 0  ? "H" : "");
+> > +                      pool->attrs->sched_fifo ? "F" :
+> > +                      (pool->attrs->nice < 0  ? "H" : ""));
+> >       else
+> >               snprintf(id_buf, sizeof(id_buf), "u%d:%d", pool->id, id);
+> >
+> > @@ -1958,7 +1959,11 @@ static struct worker *create_worker(struct worker_pool *pool)
+> >       if (IS_ERR(worker->task))
+> >               goto fail;
+> >
+> > -     set_user_nice(worker->task, pool->attrs->nice);
+> > +     if (pool->attrs->sched_fifo)
+> > +             sched_set_fifo_low(worker->task);
+> > +     else
+> > +             set_user_nice(worker->task, pool->attrs->nice);
+> > +
+> >       kthread_bind_mask(worker->task, pool->attrs->cpumask);
+> >
+> >       /* successful, attach the worker to the pool */
+> > @@ -4323,9 +4328,17 @@ static void wq_update_unbound_numa(struct workqueue_struct *wq, int cpu,
+> >
+> >   static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+> >   {
+> > -     bool highpri = wq->flags & WQ_HIGHPRI;
+> > +     int pool_index = 0;
+> >       int cpu, ret;
+> >
+> > +     if (wq->flags & WQ_HIGHPRI && wq->flags & WQ_SCHED_FIFO)
+> > +             return -EINVAL;
+> > +
+> > +     if (wq->flags & WQ_HIGHPRI)
+> > +             pool_index = 1;
+> > +     if (wq->flags & WQ_SCHED_FIFO)
+> > +             pool_index = 2;
+> > +
+> >       if (!(wq->flags & WQ_UNBOUND)) {
+> >               wq->cpu_pwqs = alloc_percpu(struct pool_workqueue);
+> >               if (!wq->cpu_pwqs)
+> > @@ -4337,7 +4350,7 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+> >                       struct worker_pool *cpu_pools =
+> >                               per_cpu(cpu_worker_pools, cpu);
+> >
+> > -                     init_pwq(pwq, wq, &cpu_pools[highpri]);
+> > +                     init_pwq(pwq, wq, &cpu_pools[pool_index]);
+> >
+> >                       mutex_lock(&wq->mutex);
+> >                       link_pwq(pwq);
+> > @@ -4348,13 +4361,13 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+> >
+> >       cpus_read_lock();
+> >       if (wq->flags & __WQ_ORDERED) {
+> > -             ret = apply_workqueue_attrs(wq, ordered_wq_attrs[highpri]);
+> > +             ret = apply_workqueue_attrs(wq, ordered_wq_attrs[pool_index]);
+> >               /* there should only be single pwq for ordering guarantee */
+> >               WARN(!ret && (wq->pwqs.next != &wq->dfl_pwq->pwqs_node ||
+> >                             wq->pwqs.prev != &wq->dfl_pwq->pwqs_node),
+> >                    "ordering guarantee broken for workqueue %s\n", wq->name);
+> >       } else {
+> > -             ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);
+> > +             ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[pool_index]);
+> >       }
+> >       cpus_read_unlock();
+> >
+> > @@ -6138,7 +6151,8 @@ static void __init wq_numa_init(void)
+> >    */
+> >   void __init workqueue_init_early(void)
+> >   {
+> > -     int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL };
+> > +     int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL, 0 };
+> > +     bool std_sched_fifo[NR_STD_WORKER_POOLS] = { false, false, true };
+> >       int i, cpu;
+> >
+> >       BUILD_BUG_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
+> > @@ -6158,8 +6172,10 @@ void __init workqueue_init_early(void)
+> >                       BUG_ON(init_worker_pool(pool));
+> >                       pool->cpu = cpu;
+> >                       cpumask_copy(pool->attrs->cpumask, cpumask_of(cpu));
+> > -                     pool->attrs->nice = std_nice[i++];
+> > +                     pool->attrs->nice = std_nice[i];
+> > +                     pool->attrs->sched_fifo = std_sched_fifo[i];
+> >                       pool->node = cpu_to_node(cpu);
+> > +                     i++;
+> >
+> >                       /* alloc pool ID */
+> >                       mutex_lock(&wq_pool_mutex);
+> > @@ -6174,6 +6190,7 @@ void __init workqueue_init_early(void)
+> >
+> >               BUG_ON(!(attrs = alloc_workqueue_attrs()));
+> >               attrs->nice = std_nice[i];
+> > +             attrs->sched_fifo = std_sched_fifo[i];
+> >               unbound_std_wq_attrs[i] = attrs;
+> >
+> >               /*
+> > @@ -6183,6 +6200,7 @@ void __init workqueue_init_early(void)
+> >                */
+> >               BUG_ON(!(attrs = alloc_workqueue_attrs()));
+> >               attrs->nice = std_nice[i];
+> > +             attrs->sched_fifo = std_sched_fifo[i];
+> >               attrs->no_numa = true;
+> >               ordered_wq_attrs[i] = attrs;
+> >       }
