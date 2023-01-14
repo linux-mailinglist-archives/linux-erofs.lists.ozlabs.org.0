@@ -1,54 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDC7566AB6D
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 13:58:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4103466AC03
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 16:08:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4NvJHh6D9hz3cC4
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jan 2023 23:58:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4NvMBH0vd3z3cdQ
+	for <lists+linux-erofs@lfdr.de>; Sun, 15 Jan 2023 02:08:55 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=P8kcW9Fa;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s+PLrJlp;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=P8kcW9Fa;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s+PLrJlp;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4NvJHb5Ybcz3cgq
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jan 2023 23:58:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4NvMB73pPPz3c7x
+	for <linux-erofs@lists.ozlabs.org>; Sun, 15 Jan 2023 02:08:47 +1100 (AEDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 1ADA16091F;
-	Sat, 14 Jan 2023 12:58:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19278C433D2;
-	Sat, 14 Jan 2023 12:58:13 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 0F12EB80922;
+	Sat, 14 Jan 2023 15:08:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD6DC433EF;
+	Sat, 14 Jan 2023 15:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673701095;
-	bh=/LYB2TwpC+HPUPWYl+FMF4k9ra4MQtGSeEtXZo29/rc=;
+	s=k20201202; t=1673708921;
+	bh=5Auz8Wbp11PiCheP7gUTI6cSUz4rehq5bER29K3Mt9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P8kcW9Fa7n9kWGIFVlbyX6iV4O5zELbms8nkLKF2tQyKUM1Vu5TjzGIhkTV1qCq9+
-	 mhXACSG1qlEA8Hohi6zp2X82+DVdu8rXW+pjAygfPPw2VT4jfgVwZFWLR7efrp++AV
-	 dPwPVREG1FA+PNvKEcf4pmF3cE4uQl8uC0nKFgI3WZ57Qc74Z56kLpctVtzNBn54TW
-	 kmHKdLWx4PW0TCEV+ZJoSd71wzJomb/hkMGeN9NB2mrOMUaxpOpgn3kZu9wcRpz2PY
-	 xrg1kEJTc/UR6bBE5+kWYrHvgdskqh6Yjx4IpB/0MRt7Ka7eLKSSA7wW0vp4xdJGJB
-	 br5+8C0kfToIQ==
+	b=s+PLrJlp8S9QLNR6L5FOxySfru/TuhNMcbGasPoZZvGYMFAhJHqVuRzmxt/T0rndJ
+	 d9G2hyXdpmJ9cIW5SM1EEYrp33kPUD7WSegmwuqSoOeRNw1X8u5+SNlzQLtPyHf1u5
+	 qM6o4lxPsKl/ArYwFPHNk8UOmO+V6XPxFXTzEcOVF5OTUYPtrxmaA/ggo6MrUtGaEJ
+	 KXgZv+Y4NZrPJ2BrqB2mOaTSH+TvwJSYp+YInE9PO/iUtD6CINT+PBwyEgkVJ4sIM6
+	 Jzyg0pJtDRiS3IuVPT5wu5MniW6wS5gGsTqyC7W6QBrGILnO1TzDc3ZuRxiEobxyNK
+	 md7dS2mq/wHPA==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org,
 	Chao Yu <chao@kernel.org>,
 	Yue Hu <huyue2@coolpad.com>,
 	Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs: simplify iloc()
-Date: Sat, 14 Jan 2023 20:57:46 +0800
-Message-Id: <20230114125746.399253-2-xiang@kernel.org>
+Subject: [PATCH v2 2/2] erofs: simplify iloc()
+Date: Sat, 14 Jan 2023 23:08:23 +0800
+Message-Id: <20230114150823.432069-1-xiang@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230114125746.399253-1-xiang@kernel.org>
-References: <20230114125746.399253-1-xiang@kernel.org>
+In-Reply-To: <20230114125746.399253-2-xiang@kernel.org>
+References: <20230114125746.399253-2-xiang@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -73,12 +73,16 @@ Also rename iloc() as erofs_iloc().
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c     |  9 +++------
- fs/erofs/inode.c    |  2 +-
- fs/erofs/internal.h | 16 +++++++++-------
- fs/erofs/xattr.c    | 20 +++++++-------------
- fs/erofs/zmap.c     | 13 +++++--------
- 5 files changed, 25 insertions(+), 35 deletions(-)
+changes since v1:
+ - fix compile errors reported by intel lkp.
+
+ fs/erofs/data.c              |  9 +++------
+ fs/erofs/inode.c             |  2 +-
+ fs/erofs/internal.h          | 16 +++++++++-------
+ fs/erofs/xattr.c             | 20 +++++++-------------
+ fs/erofs/zmap.c              | 13 +++++--------
+ include/trace/events/erofs.h |  4 ++--
+ 6 files changed, 27 insertions(+), 37 deletions(-)
 
 diff --git a/fs/erofs/data.c b/fs/erofs/data.c
 index f57f921683d7..2713257ee718 100644
@@ -121,7 +125,7 @@ index 57328691582e..d7e87d41f7bf 100644
  	erofs_blk_t blkaddr, nblks = 0;
  	void *kaddr;
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index b4cc40fa3803..b7291691be68 100644
+index b4cc40fa3803..08ba817d6551 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
 @@ -270,11 +270,6 @@ struct erofs_buf {
@@ -146,10 +150,10 @@ index b4cc40fa3803..b7291691be68 100644
 +
 +static inline erofs_off_t erofs_iloc(struct inode *inode)
 +{
-+	struct erofs_sb_info *sbi = EROFS_I_SB(sbi);
++	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
 +
 +	return blknr_to_addr(sbi->meta_blkaddr) +
-+		(EROFS_I(nid) << sbi->islotbits);
++		(EROFS_I(inode)->nid << sbi->islotbits);
 +}
  
  static inline unsigned long erofs_inode_datablocks(struct inode *inode)
@@ -259,6 +263,21 @@ index 98fb90b9af71..3aeffc762b2f 100644
  	const unsigned int totalidx = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
  	unsigned int compacted_4b_initial, compacted_2b;
  	unsigned int amortizedshift;
+diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+index 4f4c44ea3a65..e095d36db939 100644
+--- a/include/trace/events/erofs.h
++++ b/include/trace/events/erofs.h
+@@ -66,8 +66,8 @@ TRACE_EVENT(erofs_fill_inode,
+ 	TP_fast_assign(
+ 		__entry->dev		= inode->i_sb->s_dev;
+ 		__entry->nid		= EROFS_I(inode)->nid;
+-		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
+-		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
++		__entry->blkaddr	= erofs_blknr(erofs_iloc(inode));
++		__entry->ofs		= erofs_blkoff(erofs_iloc(inode));
+ 	),
+ 
+ 	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u",
 -- 
 2.30.2
 
