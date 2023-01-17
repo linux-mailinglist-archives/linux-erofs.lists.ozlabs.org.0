@@ -1,60 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB15466D4E2
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jan 2023 04:10:22 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCDE66D4E4
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jan 2023 04:11:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Nwv5g3kFtz3c9Q
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jan 2023 14:10:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Nwv6c75P1z3c9Q
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jan 2023 14:11:04 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W9/6JMHf;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KAmxKTMO;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W9/6JMHf;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KAmxKTMO;
 	dkim-atps=neutral
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nwv5W2XWBz30CT
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jan 2023 14:10:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nwv6Y2XCQz30CT
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jan 2023 14:11:00 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673925007; x=1705461007;
+  t=1673925061; x=1705461061;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=YUR9XUekIbg4FSg6/UpfyYe4nboVmfuzaE/NH5b1NrE=;
-  b=W9/6JMHfV23pjlb9j2tJEzAdDsDl0Y0z/snebjoUpz2z3RGqIgJejCOm
-   PAxF7u4mAIbzHj6q9dxVFhGOPZDsLKVx43MhRd0UiBpOSDKW33Nf5Ovkr
-   0ttkCM4x7mU6KNReR9FqcUVURfn0t3JldBxbhfWDDV1WsyEh/h4xIWNSk
-   kpq/IkpMy1athb12g8Xfskc66N0YS7gVZdBewUbtd7HDKlkxRM/XffygQ
-   HLTikvjCnSJGqAlqeIVTO+ZfB3e7xj6mHoNR6KqjY5Y9ye6tUGC0e4jXF
-   m23q1vLRHJUIlTIGIu+jfZ4gtengnCwFi3Ma73adtiWiwyeSnAUPf6HYX
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="323296743"
+  bh=XjBAI5ApN6JqrguVZ7MHvDLMBfNhxWfovqd86OlToHQ=;
+  b=KAmxKTMOFgNpLZlSufuKtyxUyA9bHZRDIH5L3Boy6ywrTBPhd5V9HRRf
+   qJ7P0uI6s7YubHoCO6E9siuceCLGDojWaJU16yn5lszMSPdQAISXLzOrd
+   fGh2a0bygSezNiObspIlYlMRYGysm3spN1v/odDZ6rvwkb/TANrq2M+5G
+   VFJws/+Q3z+iN8B7cWITR0v+S1oMBs0zuGPYtfECA2wTC5sp1+OLUbgHN
+   Z2cZPxRPJ5rey++RCOGtfs4rzvBkgnLC6skevYb9/vjTrAgf9sTQHRxY9
+   T/PDirfZgG936ppFyf0QBqtW0QpHlNAOQHmsW8E9aceK28CwjLvGvzyxO
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="326666098"
 X-IronPort-AV: E=Sophos;i="5.97,222,1669104000"; 
-   d="scan'208";a="323296743"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2023 19:09:56 -0800
+   d="scan'208";a="326666098"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2023 19:10:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="783094382"
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="659235188"
 X-IronPort-AV: E=Sophos;i="5.97,222,1669104000"; 
-   d="scan'208";a="783094382"
+   d="scan'208";a="659235188"
 Received: from lkp-server02.sh.intel.com (HELO f57cd993bc73) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2023 19:09:54 -0800
+  by orsmga002.jf.intel.com with ESMTP; 16 Jan 2023 19:10:54 -0800
 Received: from kbuild by f57cd993bc73 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1pHcMD-0000tw-1W;
-	Tue, 17 Jan 2023 03:09:53 +0000
-Date: Tue, 17 Jan 2023 11:09:47 +0800
+	id 1pHcNB-0000u6-1q;
+	Tue, 17 Jan 2023 03:10:53 +0000
+Date: Tue, 17 Jan 2023 11:10:00 +0800
 From: kernel test robot <lkp@intel.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- d2503ec21b59c115aafdb90874244d9e5fdd153d
-Message-ID: <63c6117b.mh1afVkdQWIn4ZYN%lkp@intel.com>
+Subject: [xiang-erofs:fixes] BUILD SUCCESS
+ e02ac3e7329f76c5de40cba2746cbe165f571dff
+Message-ID: <63c61188.4OnrhSs5rm/GnDoR%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -74,10 +74,10 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: d2503ec21b59c115aafdb90874244d9e5fdd153d  erofs: simplify iloc()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+branch HEAD: e02ac3e7329f76c5de40cba2746cbe165f571dff  erofs: clean up parsing of fscache related options
 
-elapsed time: 724m
+elapsed time: 723m
 
 configs tested: 126
 configs skipped: 4
@@ -87,16 +87,16 @@ More configs may be tested in the coming days.
 
 gcc tested configs:
 x86_64                            allnoconfig
+arc                               allnoconfig
+alpha                             allnoconfig
+i386                              allnoconfig
+arm                               allnoconfig
 x86_64               randconfig-a011-20230116
 x86_64               randconfig-a016-20230116
 x86_64               randconfig-a014-20230116
 x86_64               randconfig-a013-20230116
 x86_64               randconfig-a015-20230116
 x86_64               randconfig-a012-20230116
-i386                              allnoconfig
-arm                               allnoconfig
-arc                               allnoconfig
-alpha                             allnoconfig
 um                           x86_64_defconfig
 um                             i386_defconfig
 x86_64                          rhel-8.3-func
@@ -210,8 +210,8 @@ arm                          pxa168_defconfig
 arm                     am200epdkit_defconfig
 mips                           mtx1_defconfig
 powerpc                     pseries_defconfig
-x86_64                        randconfig-k001
 x86_64                          rhel-8.3-rust
+x86_64                        randconfig-k001
 i386                              allnoconfig
 powerpc                   lite5200b_defconfig
 mips                  cavium_octeon_defconfig
