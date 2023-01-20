@@ -1,65 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 571B4673062
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Jan 2023 05:32:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E392674A71
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Jan 2023 05:03:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ny8qC1kH3z3fBZ
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Jan 2023 15:32:07 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GNw/iqkp;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Nym7H2Ms2z3fCN
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Jan 2023 15:03:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1674187387;
+	bh=2Z8uheAAI67y2WlugVMVWR4ZBRShmwwoN2mwKHtMBwA=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=IBV7ovVdWMkYCZjg7ydO7qno8LbZ7Sx0zL+pgV7i1jRrf2tVDieg4VdvKkLuHYkSo
+	 QkEMz/3fwGa10yyWqJ64r7vW0n+JtlLLNnib9IZecncapBNNL1jcJq5hjcb1OPJUYx
+	 Mk11pZQm45nOpik1NQF3wGiJaT2a/JKQVidKXy7qjsTH4CaUhwxGnTRnkVoMp9IXeu
+	 FzWZCgdTnOa3uyKwYbVs3qLJ2TscAR3ZqvpGvJXlRjDdBhVrGCmG2X/0At3a8SpRd0
+	 h7XAuGZ7PfeA688x8mHpODm59FLCkezvrNNvhqfuE7JzV3VLA00LJhnmmgABC/ZhU3
+	 q8eHAbNub5DsA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bestimien.com (client-ip=23.95.50.146; helo=srv.bestimien.com; envelope-from=info@bestimien.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GNw/iqkp;
+	dkim=pass (1024-bit key; unprotected) header.d=bestimien.com header.i=info@bestimien.com header.a=rsa-sha256 header.s=dkim header.b=PfgQg/Pc;
 	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+X-Greylist: delayed 602 seconds by postgrey-1.36 at boromir; Fri, 20 Jan 2023 15:03:00 AEDT
+Received: from srv.bestimien.com (srv.bestimien.com [23.95.50.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ny8q51lPSz3bYW
-	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Jan 2023 15:32:01 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 19F10B81FBC;
-	Thu, 19 Jan 2023 04:31:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30E9C433D2;
-	Thu, 19 Jan 2023 04:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674102715;
-	bh=6R4ck5Hrg0+smXHpEF8YO3zq4K1dptTAjKL9KShKRUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GNw/iqkphRxnFkPKMLKJtl2oxZz8lv3uFTExhH/I4gNklxRf6xgmlbCfhuu27uMjd
-	 rkkUsePu+XNKImPT9MFeSJ3ifwVQf/hKfAD34fYnkuaAf+H7thaGemEE6QfL9ka9nP
-	 OqgrJkqZlt6YsdrMmE8xF2Hl/27UhxkV3dDLEuW8Sxr6+3iLUz2vzc8+rUc9kpuTXW
-	 dgG4qTAmXcchEeRwP95uded/wSPgCzL3TPaUj0NuOvR0gL0qUgekfq2hMWxtKxGgdp
-	 /FGnWN1Ng33RVSoV5pjf1G6eGtveLlrCjes4frUSLCEguFk4poEbSAMZstVhiWx4Pz
-	 Xxs6tIYRVXrrQ==
-Date: Thu, 19 Jan 2023 12:31:49 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Sandeep Dhavale <dhavale@google.com>
-Subject: Re: [PATCH] workqueue: Add WQ_SCHED_FIFO
-Message-ID: <Y8jHtWEz/9MaJwAD@debian>
-Mail-Followup-To: Sandeep Dhavale <dhavale@google.com>,
-	Nathan Huckleberry <nhuck@google.com>,
-	Daeho Jeong <daehojeong@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Sami Tolvanen <samitolvanen@google.com>, Tejun Heo <tj@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	linux-erofs@lists.ozlabs.org
-References: <20230113210703.62107-1-nhuck@google.com>
- <d6ec50c4-5fc3-eb17-e9e8-fce334038193@linux.alibaba.com>
- <CAJkfWY7duk+5tWpW3g1iMyV9Q5t5cGunC-dh3M0X25wNq0z-TA@mail.gmail.com>
- <CAB=BE-SBtqis6U423zP+-8MqYDqtokOdds=5B6rUrWJ6R1c99A@mail.gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Nym785pDXz3045
+	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Jan 2023 15:03:00 +1100 (AEDT)
+To: linux-erofs@lists.ozlabs.org
+Subject: Profitable Business Proposal
+Date: 20 Jan 2023 04:52:56 +0100
+Message-ID: <20230120045255.194C9E1C25C09DB3@bestimien.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAB=BE-SBtqis6U423zP+-8MqYDqtokOdds=5B6rUrWJ6R1c99A@mail.gmail.com>
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0012_14B84BE8.23AAB3B9"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,326 +48,96 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Daeho Jeong <daehojeong@google.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org, Nathan Huckleberry <nhuck@google.com>, Sami Tolvanen <samitolvanen@google.com>, Tejun Heo <tj@kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+From: "Mrs. Madelein Briggs via Linux-erofs" <linux-erofs@lists.ozlabs.org>
+Reply-To: mandy@szksnk.com
+Cc: "Mrs. Madelein Briggs" <info@bestimien.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Jan 18, 2023 at 06:41:26PM -0800, Sandeep Dhavale via Linux-erofs wrote:
-> On Sat, Jan 14, 2023 at 1:01 PM Nathan Huckleberry <nhuck@google.com> wrote:
-> >
-> > On Fri, Jan 13, 2023 at 6:20 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> > >
-> > > Hi Nathan!
-> > >
-> > > On 2023/1/14 05:07, Nathan Huckleberry wrote:
-> > > > Add a WQ flag that allows workqueues to use SCHED_FIFO with the least
-> > > > imporant RT priority.  This can reduce scheduler latency for IO
-> > > > post-processing when the CPU is under load without impacting other RT
-> > > > workloads.  This has been shown to improve app startup time on Android
-> > > > [1].
-> > >
-> > > Thank you all for your effort on this.  Unfortunately I have no time to
-> > > setup the test [1] until now.  If it can be addressed as a new workqueue
-> > > feature, that would be much helpful to me.  Otherwise, I still need to
-> > > find a way to resolve the latest Android + EROFS latency problem.
-> > >
-> >
-> > The above patch and following diff should have equivalent performance
-> > to [1], but I have not tested it.
-> >
-> > diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> > index ccf7c55d477f..a9c3893ad1d4 100644
-> > --- a/fs/erofs/zdata.c
-> > +++ b/fs/erofs/zdata.c
-> > @@ -201,7 +201,7 @@ static inline int z_erofs_init_workqueue(void)
-> >          * scheduling overhead, perhaps per-CPU threads should be better?
-> >          */
-> >         z_erofs_workqueue = alloc_workqueue("erofs_unzipd",
-> > -                                           WQ_UNBOUND | WQ_HIGHPRI,
-> > +                                           WQ_SCHED_FIFO,
-> >                                             onlinecpus + onlinecpus / 4);
-> >         return z_erofs_workqueue ? 0 : -ENOMEM;
-> >
-> > Thanks,
-> > Huck
-> >
-> >  }
-> >
-> Hello All,
-> With WQ_SCHED_FIFO and erofs patch mentioned above, I see that average
-> sched latency improves in the same ballpark as my previous
-> work proposed in [1] doing the same experiment (app launch tests) and
-> variation is reduced significantly.
-> 
-> Here is the table
-> |--------------+-----------+---------------+---------|
-> |              | Workqueue | WQ_SCHED_FIFO | Delta   |
-> |--------------+-----------+---------------+---------|
-> | Average (us) | 15253     | 3514          | -76.96% |
-> |--------------+-----------+---------------+---------|
-> | Median (us)  | 14001     | 3450          | -75.36% |
-> |--------------+-----------+---------------+---------|
-> | Minimum (us) | 3117      | 3097          | -0.64%  |
-> |--------------+-----------+---------------+---------|
-> | Maximum (us) | 30170     | 4896          | -83.77% |
-> |--------------+-----------+---------------+---------|
-> | Stdev        | 7166      | 319           |         |
-> |--------------+-----------+---------------+---------|
+------=_NextPart_000_0012_14B84BE8.23AAB3B9
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, Sandeep.  If so, there could be a way forward in
-this WQ_SCHED_FIFO way as well?
 
-Anyway, I will seek time working on kthread_worker
-alternatively in my Lunar New year vacations since I'd
-like to resolve it in some way anyway.
 
-Thanks,
-Gao Xiang
 
-> 
-> Thanks,
-> Sandeep.
-> 
-> [1] https://lore.kernel.org/linux-erofs/20230106073502.4017276-1-dhavale@google.com/
-> 
-> >
-> > > >
-> > > > Scheduler latency affects several drivers as evidenced by [1], [2], [3],
-> > > > [4].  Some of these drivers have moved post-processing into IRQ context.
-> > > > However, this can cause latency spikes for real-time threads and jitter
-> > > > related jank on Android.  Using a workqueue with SCHED_FIFO improves
-> > > > scheduler latency without causing latency problems for RT threads.
-> > >
-> > > softirq context is actually mainly for post-interrupt handling I think.
-> > > but considering decompression/verification/decryption all workload are much
-> > > complex than that and less important than real post-interrupt handling.
-> > > I don't think softirq context is the best place to handle these
-> > > CPU-intensive jobs.  Beside, it could cause some important work moving to
-> > > softirqd unexpectedly in the extreme cases.  Also such many post-processing
-> > > jobs are as complex as they could sleep so that softirq context is
-> > > unsuitable as well.
-> > >
-> > > Anyway, I second this proposal if possible:
-> > >
-> > > Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > >
-> > > Thanks,
-> > > Gao Xiang
-> > >
-> > > >
-> > > > [1]:
-> > > > https://lore.kernel.org/linux-erofs/20230106073502.4017276-1-dhavale@google.com/
-> > > > [2]:
-> > > > https://lore.kernel.org/linux-f2fs-devel/20220802192437.1895492-1-daeho43@gmail.com/
-> > > > [3]:
-> > > > https://lore.kernel.org/dm-devel/20220722093823.4158756-4-nhuck@google.com/
-> > > > [4]:
-> > > > https://lore.kernel.org/dm-crypt/20200706173731.3734-1-ignat@cloudflare.com/
-> > > >
-> > > > This change has been tested on dm-verity with the following fio config:
-> > > >
-> > > > [global]
-> > > > time_based
-> > > > runtime=120
-> > > >
-> > > > [do-verify]
-> > > > ioengine=sync
-> > > > filename=/dev/testing
-> > > > rw=randread
-> > > > direct=1
-> > > >
-> > > > [burn_8x90%_qsort]
-> > > > ioengine=cpuio
-> > > > cpuload=90
-> > > > numjobs=8
-> > > > cpumode=qsort
-> > > >
-> > > > Before:
-> > > > clat (usec): min=13, max=23882, avg=29.56, stdev=113.29 READ:
-> > > > bw=122MiB/s (128MB/s), 122MiB/s-122MiB/s (128MB/s-128MB/s), io=14.3GiB
-> > > > (15.3GB), run=120001-120001msec
-> > > >
-> > > > After:
-> > > > clat (usec): min=13, max=23137, avg=19.96, stdev=105.71 READ:
-> > > > bw=180MiB/s (189MB/s), 180MiB/s-180MiB/s (189MB/s-189MB/s), io=21.1GiB
-> > > > (22.7GB), run=120012-120012msec
-> > > >
-> > > > Cc: Sandeep Dhavale <dhavale@google.com>
-> > > > Cc: Daeho Jeong <daehojeong@google.com>
-> > > > Cc: Eric Biggers <ebiggers@kernel.org>
-> > > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> > > > ---
-> > > >   Documentation/core-api/workqueue.rst | 12 ++++++++++
-> > > >   include/linux/workqueue.h            |  9 +++++++
-> > > >   kernel/workqueue.c                   | 36 +++++++++++++++++++++-------
-> > > >   3 files changed, 48 insertions(+), 9 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
-> > > > index 3b22ed137662..26faf2806c66 100644
-> > > > --- a/Documentation/core-api/workqueue.rst
-> > > > +++ b/Documentation/core-api/workqueue.rst
-> > > > @@ -216,6 +216,18 @@ resources, scheduled and executed.
-> > > >
-> > > >     This flag is meaningless for unbound wq.
-> > > >
-> > > > +``WQ_SCHED_FIFO``
-> > > > +  Work items of a fifo wq are queued to the fifo
-> > > > +  worker-pool of the target cpu.  Fifo worker-pools are
-> > > > +  served by worker threads with scheduler policy SCHED_FIFO and
-> > > > +  the least important real-time priority.  This can be useful
-> > > > +  for workloads where low latency is imporant.
-> > > > +
-> > > > +  A workqueue cannot be both high-priority and fifo.
-> > > > +
-> > > > +  Note that normal and fifo worker-pools don't interact with
-> > > > +  each other.  Each maintains its separate pool of workers and
-> > > > +  implements concurrency management among its workers.
-> > > >
-> > > >   ``max_active``
-> > > >   --------------
-> > > > diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-> > > > index ac551b8ee7d9..43a4eeaf8ff4 100644
-> > > > --- a/include/linux/workqueue.h
-> > > > +++ b/include/linux/workqueue.h
-> > > > @@ -134,6 +134,10 @@ struct workqueue_attrs {
-> > > >        * @nice: nice level
-> > > >        */
-> > > >       int nice;
-> > > > +     /**
-> > > > +      * @sched_fifo: is using SCHED_FIFO
-> > > > +      */
-> > > > +     bool sched_fifo;
-> > > >
-> > > >       /**
-> > > >        * @cpumask: allowed CPUs
-> > > > @@ -334,6 +338,11 @@ enum {
-> > > >        * http://thread.gmane.org/gmane.linux.kernel/1480396
-> > > >        */
-> > > >       WQ_POWER_EFFICIENT      = 1 << 7,
-> > > > +     /*
-> > > > +      * Low real-time priority workqueues can reduce scheduler latency
-> > > > +      * for latency sensitive workloads like IO post-processing.
-> > > > +      */
-> > > > +     WQ_SCHED_FIFO           = 1 << 8,
-> > > >
-> > > >       __WQ_DESTROYING         = 1 << 15, /* internal: workqueue is destroying */
-> > > >       __WQ_DRAINING           = 1 << 16, /* internal: workqueue is draining */
-> > > > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> > > > index 5dc67aa9d696..99c5e0a3dc28 100644
-> > > > --- a/kernel/workqueue.c
-> > > > +++ b/kernel/workqueue.c
-> > > > @@ -85,7 +85,7 @@ enum {
-> > > >       WORKER_NOT_RUNNING      = WORKER_PREP | WORKER_CPU_INTENSIVE |
-> > > >                                 WORKER_UNBOUND | WORKER_REBOUND,
-> > > >
-> > > > -     NR_STD_WORKER_POOLS     = 2,            /* # standard pools per cpu */
-> > > > +     NR_STD_WORKER_POOLS     = 3,            /* # standard pools per cpu */
-> > > >
-> > > >       UNBOUND_POOL_HASH_ORDER = 6,            /* hashed by pool->attrs */
-> > > >       BUSY_WORKER_HASH_ORDER  = 6,            /* 64 pointers */
-> > > > @@ -1949,7 +1949,8 @@ static struct worker *create_worker(struct worker_pool *pool)
-> > > >
-> > > >       if (pool->cpu >= 0)
-> > > >               snprintf(id_buf, sizeof(id_buf), "%d:%d%s", pool->cpu, id,
-> > > > -                      pool->attrs->nice < 0  ? "H" : "");
-> > > > +                      pool->attrs->sched_fifo ? "F" :
-> > > > +                      (pool->attrs->nice < 0  ? "H" : ""));
-> > > >       else
-> > > >               snprintf(id_buf, sizeof(id_buf), "u%d:%d", pool->id, id);
-> > > >
-> > > > @@ -1958,7 +1959,11 @@ static struct worker *create_worker(struct worker_pool *pool)
-> > > >       if (IS_ERR(worker->task))
-> > > >               goto fail;
-> > > >
-> > > > -     set_user_nice(worker->task, pool->attrs->nice);
-> > > > +     if (pool->attrs->sched_fifo)
-> > > > +             sched_set_fifo_low(worker->task);
-> > > > +     else
-> > > > +             set_user_nice(worker->task, pool->attrs->nice);
-> > > > +
-> > > >       kthread_bind_mask(worker->task, pool->attrs->cpumask);
-> > > >
-> > > >       /* successful, attach the worker to the pool */
-> > > > @@ -4323,9 +4328,17 @@ static void wq_update_unbound_numa(struct workqueue_struct *wq, int cpu,
-> > > >
-> > > >   static int alloc_and_link_pwqs(struct workqueue_struct *wq)
-> > > >   {
-> > > > -     bool highpri = wq->flags & WQ_HIGHPRI;
-> > > > +     int pool_index = 0;
-> > > >       int cpu, ret;
-> > > >
-> > > > +     if (wq->flags & WQ_HIGHPRI && wq->flags & WQ_SCHED_FIFO)
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     if (wq->flags & WQ_HIGHPRI)
-> > > > +             pool_index = 1;
-> > > > +     if (wq->flags & WQ_SCHED_FIFO)
-> > > > +             pool_index = 2;
-> > > > +
-> > > >       if (!(wq->flags & WQ_UNBOUND)) {
-> > > >               wq->cpu_pwqs = alloc_percpu(struct pool_workqueue);
-> > > >               if (!wq->cpu_pwqs)
-> > > > @@ -4337,7 +4350,7 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
-> > > >                       struct worker_pool *cpu_pools =
-> > > >                               per_cpu(cpu_worker_pools, cpu);
-> > > >
-> > > > -                     init_pwq(pwq, wq, &cpu_pools[highpri]);
-> > > > +                     init_pwq(pwq, wq, &cpu_pools[pool_index]);
-> > > >
-> > > >                       mutex_lock(&wq->mutex);
-> > > >                       link_pwq(pwq);
-> > > > @@ -4348,13 +4361,13 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
-> > > >
-> > > >       cpus_read_lock();
-> > > >       if (wq->flags & __WQ_ORDERED) {
-> > > > -             ret = apply_workqueue_attrs(wq, ordered_wq_attrs[highpri]);
-> > > > +             ret = apply_workqueue_attrs(wq, ordered_wq_attrs[pool_index]);
-> > > >               /* there should only be single pwq for ordering guarantee */
-> > > >               WARN(!ret && (wq->pwqs.next != &wq->dfl_pwq->pwqs_node ||
-> > > >                             wq->pwqs.prev != &wq->dfl_pwq->pwqs_node),
-> > > >                    "ordering guarantee broken for workqueue %s\n", wq->name);
-> > > >       } else {
-> > > > -             ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);
-> > > > +             ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[pool_index]);
-> > > >       }
-> > > >       cpus_read_unlock();
-> > > >
-> > > > @@ -6138,7 +6151,8 @@ static void __init wq_numa_init(void)
-> > > >    */
-> > > >   void __init workqueue_init_early(void)
-> > > >   {
-> > > > -     int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL };
-> > > > +     int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL, 0 };
-> > > > +     bool std_sched_fifo[NR_STD_WORKER_POOLS] = { false, false, true };
-> > > >       int i, cpu;
-> > > >
-> > > >       BUILD_BUG_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
-> > > > @@ -6158,8 +6172,10 @@ void __init workqueue_init_early(void)
-> > > >                       BUG_ON(init_worker_pool(pool));
-> > > >                       pool->cpu = cpu;
-> > > >                       cpumask_copy(pool->attrs->cpumask, cpumask_of(cpu));
-> > > > -                     pool->attrs->nice = std_nice[i++];
-> > > > +                     pool->attrs->nice = std_nice[i];
-> > > > +                     pool->attrs->sched_fifo = std_sched_fifo[i];
-> > > >                       pool->node = cpu_to_node(cpu);
-> > > > +                     i++;
-> > > >
-> > > >                       /* alloc pool ID */
-> > > >                       mutex_lock(&wq_pool_mutex);
-> > > > @@ -6174,6 +6190,7 @@ void __init workqueue_init_early(void)
-> > > >
-> > > >               BUG_ON(!(attrs = alloc_workqueue_attrs()));
-> > > >               attrs->nice = std_nice[i];
-> > > > +             attrs->sched_fifo = std_sched_fifo[i];
-> > > >               unbound_std_wq_attrs[i] = attrs;
-> > > >
-> > > >               /*
-> > > > @@ -6183,6 +6200,7 @@ void __init workqueue_init_early(void)
-> > > >                */
-> > > >               BUG_ON(!(attrs = alloc_workqueue_attrs()));
-> > > >               attrs->nice = std_nice[i];
-> > > > +             attrs->sched_fifo = std_sched_fifo[i];
-> > > >               attrs->no_numa = true;
-> > > >               ordered_wq_attrs[i] = attrs;
-> > > >       }
+
+
+    Greetings=C2=A0 linux-erofs=C2=A0!
+
+
+    I am Madeleine Briggs, Research Assistant at one of the=20
+leading UK Pharmaceutical Companies. I have a business proposal=20
+for you which is worth a substantial amount and will save lives=20
+too.=C2=A0
+
+
+    I would be glad to receive your acknowledgement of this email=20
+so I can furnish you more with details of my proposal for your=20
+consideration.
+
+
+    Please give me the opportunity to explain to you in detail=20
+what the business is all about by replying back to me. Note: You=20
+have the right to quit by the end of my detailed explanation if=20
+only you don't feel like moving forward with me. But Trust me,=20
+you won't regret it.
+
+
+    Best Regards,
+    Mrs. Madelein Briggs
+------=_NextPart_000_0012_14B84BE8.23AAB3B9
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML>
+
+<html><head><title></title>
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body style=3D"margin: 0.4em; font-size: 14pt;">
+<div>
+<blockquote style=3D"color: rgb(34, 34, 34); text-transform: none; text-ind=
+ent: 0px; letter-spacing: normal; font-family: Arial, Helvetica, sans-serif=
+; font-size: small; word-spacing: 0px; white-space: normal; orphans: 2; wid=
+ows: 2; background-color: rgb(255, 255, 255); font-variant-ligatures: norma=
+l; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decorati=
+on-thickness: initial; text-decoration-style: initial; text-decoration-colo=
+r: initial;" type=3D"cite"><div dir=3D"ltr">
+<div dir=3D"ltr"><font color=3D"#888888"><div dir=3D"ltr" data-smartmail=3D=
+"gmail_signature"><div dir=3D"ltr"><div><br></div><div><font color=3D"#0000=
+00"><br><br><strong><em><br><br></em></strong>
+<blockquote style=3D"color: rgb(34, 34, 34); text-transform: none; text-ind=
+ent: 0px; letter-spacing: normal; font-family: Arial, Helvetica, sans-serif=
+; font-size: small; word-spacing: 0px; white-space: normal; orphans: 2; wid=
+ows: 2; background-color: rgb(255, 255, 255); font-variant-ligatures: norma=
+l; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decorati=
+on-thickness: initial; text-decoration-style: initial; text-decoration-colo=
+r: initial;" type=3D"cite"><div dir=3D"ltr">
+<div dir=3D"ltr"><font color=3D"#888888"><div dir=3D"ltr" data-smartmail=3D=
+"gmail_signature"><div dir=3D"ltr"><div><font color=3D"#000000"><strong><em=
+>Greetings&nbsp;</em></strong><strong><em> linux-erofs</em></strong><strong=
+><em>&nbsp;!</em></strong></font></div><div><font color=3D"#000000"><b><i><=
+br></i></b></font></div><div><font color=3D"#000000"><b><i>
+I am Madeleine Briggs, Research Assistant at one of the leading UK Pharmace=
+utical Companies. I have a business proposal for you which is worth a subst=
+antial amount and will save lives too.&nbsp;</i></b></font></div><div><font=
+ color=3D"#000000"><b><i><br></i></b></font></div><div><font color=3D"#0000=
+00"><b><i>I would be glad to receive your acknowledgement of this email so =
+I can furnish you more with details of my proposal for your consideration.<=
+/i></b></font></div><div><font color=3D"#000000"><b><i>
+<br></i></b></font></div><div><font color=3D"#000000"><b><i>Please give me =
+the opportunity to explain to you in detail what the business is all about =
+by replying back to me. Note: You have the right to quit by the end of my d=
+etailed explanation if only you don't feel like moving forward with me. But=
+ Trust me, you won't regret it.</i></b></font></div><div><font color=3D"#00=
+0000"><b><i><br></i></b></font></div><div><font color=3D"#000000"><b><i>Bes=
+t Regards,</i></b></font></div><div>
+<font color=3D"#000000"><b><i>Mrs. Madelein Briggs</i></b></font></div></di=
+v></div></font></div></div></blockquote></font></div></div><strong><em>
+</em></strong></div></font></div></div></blockquote></div>
+
+
+</body></html>
+------=_NextPart_000_0012_14B84BE8.23AAB3B9--
