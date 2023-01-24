@@ -2,55 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C18FA6799F0
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Jan 2023 14:43:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1F67679A9D
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Jan 2023 14:53:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P1Spz2YmLz3cBC
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Jan 2023 00:43:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P1T2N3NtHz3cB9
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Jan 2023 00:53:16 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ERU+UFS3;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=g77GVhMJ;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ERU+UFS3;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=g77GVhMJ;
 	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P1Spv5msjz2ym7
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Jan 2023 00:43:19 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id B218760FAC;
-	Tue, 24 Jan 2023 13:43:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A56C433D2;
-	Tue, 24 Jan 2023 13:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674567796;
-	bh=rABEJ5R54kDbYVYt0oHBixOG5wLExHEGnQML3AO2kk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ERU+UFS3D4KUAuwhK0AAvlqS5VZ1cE6Q4Z8+gqJm2HRvGh6oZzsXI58QoNj0aUG3m
-	 ToovmtMZTxtO6pmy7n5e+g//4emaoY1uLuB7KbS7jImYXlejq+6ICKVnH/o5OUX8Jd
-	 YMG4x4mIozAmfP06DIUl5xMPrnX+AP1ELAK6HF+z2qKlWLZsi5MxzFmZKe/uQoF43Z
-	 z290rOexIQy74wtk1oBlIWQTZol+Tq+qeV/kODPLck+4LjB1WRBaPK5R0+D+oBGnEK
-	 ivzhM4jTFxbp4bOvNVvFGcRFMiVDynNzHx6C+0oz2lSPozFIsyqcnsH0ljE62BJzRt
-	 EjTkpJniCeLwQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 07/14] erofs/zmap.c: Fix incorrect offset calculation
-Date: Tue, 24 Jan 2023 08:42:50 -0500
-Message-Id: <20230124134257.637523-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230124134257.637523-1-sashal@kernel.org>
-References: <20230124134257.637523-1-sashal@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P1T2F20j9z3c3m
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Jan 2023 00:53:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674568389; x=1706104389;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XynxcTJL1DsVqQQTs6nPR3Q32glw0Rws5ObJGTFjojc=;
+  b=g77GVhMJutIjbZqopcbkrq+Md01u40C3I5bbKNu+GnU9kqhMdZiHzqFC
+   qxGjEanUwzX6cenFg3urFjERVmcYCOeT2XfZZPxbDyXBl1WIykyx7G8Pq
+   ooRSnFFuq6Styv4kQ1ofDScOcH/KdnqMK4+V+HX9LucU/KO42m0RFazhX
+   Yl4QICoB8Ys1lsFyWSbllxlblDmEn9ISPLUTIqpRPs6JIP9YYYki84q21
+   PZ2+YG7OaPCJDo+5ZlQbJmXD/4sHSyBNBHRIDDWRKs9QoYmnzm2SQzqUr
+   HnKQG0bxq4cP1RFFVaIQKlZUZEMCM9K1bCIbMWxaOnMPOP37vTU081Uj0
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="390800010"
+X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
+   d="scan'208";a="390800010"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 05:52:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="664076100"
+X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
+   d="scan'208";a="664076100"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Jan 2023 05:52:57 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pKJjN-0006WG-0y;
+	Tue, 24 Jan 2023 13:52:57 +0000
+Date: Tue, 24 Jan 2023 21:52:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ e809f631b128a8cfd0834f47bc76b64f3f6be0a3
+Message-ID: <63cfe284.UffhY2U/R3XgVnCP%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,63 +70,121 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Sasha Levin <sashal@kernel.org>, Siddh Raman Pant <code@siddh.me>, syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Siddh Raman Pant <code@siddh.me>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: e809f631b128a8cfd0834f47bc76b64f3f6be0a3  erofs: simplify iloc()
 
-[ Upstream commit 6acd87d50998ef0afafc441613aeaf5a8f5c9eff ]
+elapsed time: 724m
 
-Effective offset to add to length was being incorrectly calculated,
-which resulted in iomap->length being set to 0, triggering a WARN_ON
-in iomap_iter_done().
+configs tested: 96
+configs skipped: 2
 
-Fix that, and describe it in comments.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This was reported as a crash by syzbot under an issue about a warning
-encountered in iomap_iter_done(), but unrelated to erofs.
+gcc tested configs:
+x86_64                            allnoconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+powerpc                           allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+sh                               allmodconfig
+s390                                defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+mips                             allyesconfig
+s390                             allyesconfig
+alpha                             allnoconfig
+i386                              allnoconfig
+arm                               allnoconfig
+arc                               allnoconfig
+i386                                defconfig
+i386                 randconfig-a004-20230123
+i386                 randconfig-a003-20230123
+i386                 randconfig-a002-20230123
+i386                 randconfig-a001-20230123
+i386                             allyesconfig
+i386                 randconfig-a005-20230123
+i386                 randconfig-a006-20230123
+arc                  randconfig-r043-20230123
+x86_64                              defconfig
+arm                  randconfig-r046-20230123
+powerpc                          allmodconfig
+arm                                 defconfig
+x86_64                               rhel-8.3
+x86_64               randconfig-a002-20230123
+x86_64               randconfig-a001-20230123
+x86_64               randconfig-a004-20230123
+x86_64               randconfig-a003-20230123
+x86_64               randconfig-a005-20230123
+x86_64               randconfig-a006-20230123
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+arm64                            allyesconfig
+arm                              allyesconfig
+x86_64                           allyesconfig
+ia64                             allmodconfig
+sh                   sh7724_generic_defconfig
+powerpc                     rainier_defconfig
+arm                         vf610m4_defconfig
+mips                          rb532_defconfig
+um                                  defconfig
+sh                             espt_defconfig
+sh                          rsk7201_defconfig
+m68k                        m5407c3_defconfig
+arm                            lart_defconfig
+arm                             rpc_defconfig
+s390                          debug_defconfig
+arc                    vdk_hs38_smp_defconfig
+openrisc                       virt_defconfig
+i386                 randconfig-c001-20230123
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+powerpc                         ps3_defconfig
+powerpc                       eiger_defconfig
+nios2                         10m50_defconfig
+arm                          iop32x_defconfig
+x86_64               randconfig-c001-20230123
+arm                  randconfig-c002-20230123
 
-C reproducer: https://syzkaller.appspot.com/text?tag=ReproC&x=1037a6b2880000
-Kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=e2021a61197ebe02
-Dashboard link: https://syzkaller.appspot.com/bug?extid=a8e049cd3abd342936b6
+clang tested configs:
+x86_64                          rhel-8.3-rust
+hexagon              randconfig-r041-20230123
+hexagon              randconfig-r045-20230123
+i386                 randconfig-a012-20230123
+s390                 randconfig-r044-20230123
+i386                 randconfig-a013-20230123
+i386                 randconfig-a011-20230123
+i386                 randconfig-a014-20230123
+riscv                randconfig-r042-20230123
+i386                 randconfig-a016-20230123
+i386                 randconfig-a015-20230123
+x86_64               randconfig-a013-20230123
+x86_64               randconfig-a011-20230123
+x86_64               randconfig-a012-20230123
+x86_64               randconfig-a014-20230123
+x86_64               randconfig-a016-20230123
+x86_64               randconfig-a015-20230123
+x86_64               randconfig-k001-20230123
 
-Reported-by: syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Siddh Raman Pant <code@siddh.me>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Link: https://lore.kernel.org/r/20221209102151.311049-1-code@siddh.me
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/erofs/zmap.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7a6df35fdc91..73b86b5c1a75 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -700,12 +700,16 @@ static int z_erofs_iomap_begin_report(struct inode *inode, loff_t offset,
- 		iomap->type = IOMAP_HOLE;
- 		iomap->addr = IOMAP_NULL_ADDR;
- 		/*
--		 * No strict rule how to describe extents for post EOF, yet
--		 * we need do like below. Otherwise, iomap itself will get
-+		 * No strict rule on how to describe extents for post EOF, yet
-+		 * we need to do like below. Otherwise, iomap itself will get
- 		 * into an endless loop on post EOF.
-+		 *
-+		 * Calculate the effective offset by subtracting extent start
-+		 * (map.m_la) from the requested offset, and add it to length.
-+		 * (NB: offset >= map.m_la always)
- 		 */
- 		if (iomap->offset >= inode->i_size)
--			iomap->length = length + map.m_la - offset;
-+			iomap->length = length + offset - map.m_la;
- 	}
- 	iomap->flags = 0;
- 	return 0;
 -- 
-2.39.0
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
