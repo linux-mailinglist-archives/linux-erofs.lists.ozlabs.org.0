@@ -2,60 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB05167B130
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Jan 2023 12:29:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 043DE67E10F
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Jan 2023 11:08:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P21pJ4cL1z3cdV
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Jan 2023 22:29:44 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QJJ9Z4WN;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P3Cvh4fZ5z3fGQ
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Jan 2023 21:08:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=QJJ9Z4WN;
-	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P21pB3CPrz3cdj
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Jan 2023 22:29:38 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 11955614C5;
-	Wed, 25 Jan 2023 11:29:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBB6C4339E;
-	Wed, 25 Jan 2023 11:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674646175;
-	bh=MKSA4pnIEhyA1wK9ZUCK91ZgbKvksc8BYw8SfMd3xXc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QJJ9Z4WN0Il91E9PeY3JoUgIo3rpqItLB+HW8PAn6mqk1rzueejoBMJvnXTLLwcr2
-	 XnNjOTXls/1LFQ+ovVV/pE9q5YW5c99H1FlfG1227ZqKsu1yjQMuQejfRsHp3lQ15c
-	 N9iVmCDrzVPZvU+rrQ3dOE1h4LQJ34lekKR3NDfTeS/IczFi83yn7O8nCC66T5xoy4
-	 WQ6SFejNtnSoMNNJRKSK96N6hLOb48cbLptc19AP5YVk/vV5EIBxXznBn4NJf5Emit
-	 KqWeXb3Gt7x7nh13hUQkSadcYcNyThkR8MPZQc2e+a8l1o9wyo+eniKJLhGsA7FVB/
-	 7LfKr6EbQoujQ==
-From: Christian Brauner <brauner@kernel.org>
-Date: Wed, 25 Jan 2023 12:28:50 +0100
-Subject: [PATCH 05/12] erofs: drop posix acl handlers
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P3CvX5Rrqz3fCY
+	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Jan 2023 21:08:23 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VaEZTNx_1674814092;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VaEZTNx_1674814092)
+          by smtp.aliyun-inc.com;
+          Fri, 27 Jan 2023 18:08:17 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: support chunk-based sparse files
+Date: Fri, 27 Jan 2023 18:08:11 +0800
+Message-Id: <20230127100811.109549-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230125-fs-acl-remove-generic-xattr-handlers-v1-5-6cf155b492b6@kernel.org>
-References: <20230125-fs-acl-remove-generic-xattr-handlers-v1-0-6cf155b492b6@kernel.org>
-In-Reply-To: <20230125-fs-acl-remove-generic-xattr-handlers-v1-0-6cf155b492b6@kernel.org>
-To: linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4168; i=brauner@kernel.org;
- h=from:subject:message-id; bh=MKSA4pnIEhyA1wK9ZUCK91ZgbKvksc8BYw8SfMd3xXc=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMSRfFJqYwrjvz0nn9CnfdzjMikjas9H8cRb/tDevlZI6di5T
- C9VY01HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRDlNGhtUNKxrZNT8xzzWLOPaG/e
- bhA7v/nRH+/XfKJDPrJ/22ovsZGRZXWp/6eNc6O/mSucH+qvlrNCbeuB58ty7vqLNrzOld37kA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,135 +39,151 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "Christian Brauner \(Microsoft\)" <brauner@kernel.org>, linux-erofs@lists.ozlabs.org, Al Viro <viro@zeniv.linux.org.uk>, Seth Forshee <sforshee@kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Last cycle we introduced a new posix acl api. Filesystems now only need
-to implement the inode operations for posix acls. The generic xattr
-handlers aren't used anymore by the vfs and will be completely removed.
-Keeping the handler around is confusing and gives the false impression
-that the xattr infrastructure of the vfs is used to interact with posix
-acls when it really isn't anymore.
+Scan holes for chunk-based inodes if either --chunksize=# or
+-Ededupe (without compression) is specified so that sparse files
+can be made, which has already been supported since Linux 5.15.
 
-For this to work we simply rework the ->listxattr() inode operation to
-not rely on the generix posix acl handlers anymore.
-
-Cc: <linux-erofs@lists.ozlabs.org>
-Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/xattr.c | 49 +++++++++++++++++++++++++++++++++++++++----------
- fs/erofs/xattr.h | 21 ---------------------
- 2 files changed, 39 insertions(+), 31 deletions(-)
+ lib/blobchunk.c | 71 ++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 55 insertions(+), 16 deletions(-)
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index a62fb8a3318a..a787e74d9a21 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -469,10 +469,6 @@ const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
- 
- const struct xattr_handler *erofs_xattr_handlers[] = {
- 	&erofs_xattr_user_handler,
--#ifdef CONFIG_EROFS_FS_POSIX_ACL
--	&posix_acl_access_xattr_handler,
--	&posix_acl_default_xattr_handler,
--#endif
- 	&erofs_xattr_trusted_handler,
- #ifdef CONFIG_EROFS_FS_SECURITY
- 	&erofs_xattr_security_handler,
-@@ -480,6 +476,43 @@ const struct xattr_handler *erofs_xattr_handlers[] = {
- 	NULL,
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index 77b0c17..55ea061 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -18,7 +18,7 @@ void erofs_sha256(const unsigned char *in, unsigned long in_size,
+ struct erofs_blobchunk {
+ 	struct hashmap_entry ent;
+ 	char		sha256[32];
+-	unsigned int	chunksize;
++	erofs_off_t	chunksize;
+ 	erofs_blk_t	blkaddr;
  };
  
-+static const char *erofs_xattr_prefix(int xattr_index, struct dentry *dentry)
-+{
-+	const char *name = NULL;
-+	const struct xattr_handler *handler = NULL;
+@@ -27,9 +27,12 @@ static FILE *blobfile;
+ static erofs_blk_t remapped_base;
+ static bool multidev;
+ static struct erofs_buffer_head *bh_devt;
++struct erofs_blobchunk erofs_holechunk = {
++	.blkaddr = EROFS_NULL_ADDR,
++};
+ 
+ static struct erofs_blobchunk *erofs_blob_getchunk(int fd,
+-		unsigned int chunksize)
++		erofs_off_t chunksize)
+ {
+ 	static u8 zeroed[EROFS_BLKSIZ];
+ 	u8 *chunkdata, sha256[32];
+@@ -129,7 +132,11 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 
+ 		chunk = *(void **)(inode->chunkindexes + src);
+ 
+-		idx.blkaddr = base_blkaddr + chunk->blkaddr;
++		if (chunk->blkaddr != EROFS_NULL_ADDR)
++			idx.blkaddr = base_blkaddr + chunk->blkaddr;
++		else
++			idx.blkaddr = EROFS_NULL_ADDR;
 +
-+	switch (xattr_index) {
-+	case EROFS_XATTR_INDEX_USER:
-+		handler = &erofs_xattr_user_handler;
-+		break;
-+	case EROFS_XATTR_INDEX_TRUSTED:
-+		handler = &erofs_xattr_trusted_handler;
-+		break;
-+#ifdef CONFIG_EROFS_FS_SECURITY
-+	case EROFS_XATTR_INDEX_SECURITY:
-+		handler = &erofs_xattr_security_handler;
-+		break;
-+#endif
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+	case EROFS_XATTR_INDEX_POSIX_ACL_ACCESS:
-+		if (posix_acl_dentry_list(dentry))
-+			name = XATTR_NAME_POSIX_ACL_ACCESS;
-+		break;
-+	case EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT:
-+		if (posix_acl_dentry_list(dentry))
-+			name = XATTR_NAME_POSIX_ACL_DEFAULT;
-+		break;
-+#endif
-+	default:
-+		return NULL;
+ 		if (extent_start != EROFS_NULL_ADDR &&
+ 		    idx.blkaddr == extent_end + 1) {
+ 			extent_end = idx.blkaddr;
+@@ -163,14 +170,28 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 
+ int erofs_blob_write_chunked_file(struct erofs_inode *inode)
+ {
+-	unsigned int chunksize = 1 << cfg.c_chunkbits;
+-	unsigned int count = DIV_ROUND_UP(inode->i_size, chunksize);
++	unsigned int chunkbits = cfg.c_chunkbits;
++	unsigned int count, unit;
+ 	struct erofs_inode_chunk_index *idx;
+-	erofs_off_t pos, len;
+-	unsigned int unit;
++	erofs_off_t pos, len, chunksize;
+ 	int fd, ret;
+ 
+-	inode->u.chunkformat |= inode->u.chunkbits - LOG_BLOCK_SIZE;
++	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
++	if (fd < 0)
++		return -errno;
++#ifdef SEEK_DATA
++	/* if the file is fully sparsed, use one big chunk instead */
++	if (lseek(fd, 0, SEEK_DATA) < 0 && errno == ENXIO) {
++		chunkbits = ilog2(inode->i_size - 1) + 1;
++		if (chunkbits < LOG_BLOCK_SIZE)
++			chunkbits = LOG_BLOCK_SIZE;
 +	}
++#endif
++	if (chunkbits - LOG_BLOCK_SIZE > EROFS_CHUNK_FORMAT_BLKBITS_MASK)
++		chunkbits = EROFS_CHUNK_FORMAT_BLKBITS_MASK + LOG_BLOCK_SIZE;
++	chunksize = 1ULL << chunkbits;
++	count = DIV_ROUND_UP(inode->i_size, chunksize);
++	inode->u.chunkformat |= chunkbits - LOG_BLOCK_SIZE;
+ 	if (multidev)
+ 		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
+ 
+@@ -181,24 +202,41 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode)
+ 
+ 	inode->extent_isize = count * unit;
+ 	idx = malloc(count * max(sizeof(*idx), sizeof(void *)));
+-	if (!idx)
++	if (!idx) {
++		close(fd);
+ 		return -ENOMEM;
+-	inode->chunkindexes = idx;
+-
+-	fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+-	if (fd < 0) {
+-		ret = -errno;
+-		goto err;
+ 	}
++	inode->chunkindexes = idx;
+ 
+ 	for (pos = 0; pos < inode->i_size; pos += len) {
+ 		struct erofs_blobchunk *chunk;
++#ifdef SEEK_DATA
++		off64_t offset = lseek(fd, pos, SEEK_DATA);
 +
-+	if (xattr_dentry_list(handler, dentry))
-+		name = xattr_prefix(handler);
++		if (offset < 0) {
++			if (errno != ENXIO)
++				offset = pos;
++			else
++				offset = ((pos >> chunkbits) + 1) << chunkbits;
++		} else {
++			offset &= ~(chunksize - 1);
++		}
 +
-+	return name;
-+}
-+
- struct listxattr_iter {
- 	struct xattr_iter it;
++		if (offset > pos) {
++			len = 0;
++			do {
++				*(void **)idx++ = &erofs_holechunk;
++				pos += chunksize;
++			} while (pos < offset);
++			DBG_BUGON(pos != offset);
++			continue;
++		}
++#endif
  
-@@ -496,13 +529,9 @@ static int xattr_entrylist(struct xattr_iter *_it,
- 	unsigned int prefix_len;
- 	const char *prefix;
- 
--	const struct xattr_handler *h =
--		erofs_xattr_handler(entry->e_name_index);
--
--	if (!h || (h->list && !h->list(it->dentry)))
-+	prefix = erofs_xattr_prefix(entry->e_name_index, it->dentry);
-+	if (!prefix)
- 		return 1;
--
--	prefix = xattr_prefix(h);
- 	prefix_len = strlen(prefix);
- 
- 	if (!it->buffer) {
-diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
-index 0a43c9ee9f8f..9376cbdc32d8 100644
---- a/fs/erofs/xattr.h
-+++ b/fs/erofs/xattr.h
-@@ -40,27 +40,6 @@ static inline unsigned int xattrblock_offset(struct erofs_sb_info *sbi,
- extern const struct xattr_handler erofs_xattr_user_handler;
- extern const struct xattr_handler erofs_xattr_trusted_handler;
- extern const struct xattr_handler erofs_xattr_security_handler;
--
--static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
--{
--	static const struct xattr_handler *xattr_handler_map[] = {
--		[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
--#ifdef CONFIG_EROFS_FS_POSIX_ACL
--		[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] =
--			&posix_acl_access_xattr_handler,
--		[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] =
--			&posix_acl_default_xattr_handler,
--#endif
--		[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
--#ifdef CONFIG_EROFS_FS_SECURITY
--		[EROFS_XATTR_INDEX_SECURITY] = &erofs_xattr_security_handler,
--#endif
--	};
--
--	return idx && idx < ARRAY_SIZE(xattr_handler_map) ?
--		xattr_handler_map[idx] : NULL;
--}
--
- extern const struct xattr_handler *erofs_xattr_handlers[];
- 
- int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
-
+ 		len = min_t(u64, inode->i_size - pos, chunksize);
+ 		chunk = erofs_blob_getchunk(fd, len);
+ 		if (IS_ERR(chunk)) {
+ 			ret = PTR_ERR(chunk);
+-			close(fd);
+ 			goto err;
+ 		}
+ 		*(void **)idx++ = chunk;
+@@ -207,6 +245,7 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode)
+ 	close(fd);
+ 	return 0;
+ err:
++	close(fd);
+ 	free(inode->chunkindexes);
+ 	inode->chunkindexes = NULL;
+ 	return ret;
 -- 
-2.34.1
+2.24.4
 
