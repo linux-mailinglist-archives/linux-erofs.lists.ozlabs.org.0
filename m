@@ -2,73 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94247680E6F
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Jan 2023 14:05:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC3206813F4
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Jan 2023 15:59:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P57h209qVz3cFN
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Jan 2023 00:05:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P5BCT2DPzz3cFm
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Jan 2023 01:59:01 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FsTmxfO+;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FsTmxfO+;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=ju3Xm72J;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2607:f8b0:4864:20::d2e; helo=mail-io1-xd2e.google.com; envelope-from=sjg@chromium.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FsTmxfO+;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FsTmxfO+;
+	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=ju3Xm72J;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P57gs0zd8z3bW0
-	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Jan 2023 00:04:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675083890;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uBCujYj2Veetu7QK57xU7G/CWr3+t3ZM1ReUnbevAXw=;
-	b=FsTmxfO+S+Onkd3o+T4mL6JgjMWmPoeI3D95j4re85b5tr8mhIRynnYmki6KMvIvZSLLm3
-	ULL1eYWCbhBo09hpLSO+imgPdUioWu0s93gvR/014Fpyo6v318+/EQ07j2WxjNX5WD96i+
-	CVKcoNNK+RRr1v/SNaj6w1zwz/3B0Zw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675083890;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uBCujYj2Veetu7QK57xU7G/CWr3+t3ZM1ReUnbevAXw=;
-	b=FsTmxfO+S+Onkd3o+T4mL6JgjMWmPoeI3D95j4re85b5tr8mhIRynnYmki6KMvIvZSLLm3
-	ULL1eYWCbhBo09hpLSO+imgPdUioWu0s93gvR/014Fpyo6v318+/EQ07j2WxjNX5WD96i+
-	CVKcoNNK+RRr1v/SNaj6w1zwz/3B0Zw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-106-TGlHHuprOdK2blxvl6wn1A-1; Mon, 30 Jan 2023 08:04:46 -0500
-X-MC-Unique: TGlHHuprOdK2blxvl6wn1A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 46E1285A588;
-	Mon, 30 Jan 2023 13:04:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3D3742166B29;
-	Mon, 30 Jan 2023 13:04:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: torvalds@linux-foundation.org
-Subject: [GIT PULL] fscache: Fix incorrect mixing of wake/wait and missing barriers
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P5BCJ3M98z2xBF
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Jan 2023 01:58:49 +1100 (AEDT)
+Received: by mail-io1-xd2e.google.com with SMTP id b4so2890685ioj.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Jan 2023 06:58:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G5KEmv2oVzAqywxC9/2SH7vy4mYDl98FWLr256iQF9k=;
+        b=ju3Xm72Jvq/BJbBp/zX6dAx5rstYq1MPeo46MBWxqX1ph4EKpwLZBFvDRHYULd93fT
+         pnX0XK/+XkwMmoe3gdswEa4zp/n1QhqJ/O87ektn61yEP0JwS15Y4qmRY9dpLi1UcEY+
+         r4roioYOqVnfURR5bBAqk/1ENX1uIDxOrTSRM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G5KEmv2oVzAqywxC9/2SH7vy4mYDl98FWLr256iQF9k=;
+        b=TiSbLrVuqA4Vu57NFtjz0GBsilNXfLBBch+SMX8KTeZKAyxjYwVE1vvqQnl62Oqvp1
+         JxDCvIuNHB4i4/u4voI4t3dO8iM9dm7Co5U6By5xC33d6TyUU1MsmAB3qyGgpU3ueZKb
+         do/9xvn2mePNZVsSbADPcj5lEhio1KTeafj3BPOhbENXMkLlSTWc0SyvaPgIN3wFku4L
+         UiOMFO98YhqnmHkHQhgxlxWhlJyQyNqA3JQaukjA10TqC1kwsAwJr3vvf9ldVlUFHYdf
+         Os+y8M/45ctLNHYvBbzkvA37N7gLFFZboPdtw1KfVq3nxmpsBASNiMNwP9vAlOr9n3Hf
+         cGqQ==
+X-Gm-Message-State: AO0yUKXvqQJpyNnS82FARxcLX8l2PBsmSjzkwrFDok+c1Nw1UtvFzfDb
+	wlwC9s8Bde3nj4pvbOE1jfZUtQ==
+X-Google-Smtp-Source: AK7set8XaDZ/lnWmaWkJkJLzEhDMWtSQ3UGQ1VwvfNsUjIgjwXzxxiwSc7sG0CuYBiumiIeZYy15dw==
+X-Received: by 2002:a5e:9506:0:b0:716:9f7a:e783 with SMTP id r6-20020a5e9506000000b007169f7ae783mr7074980ioj.0.1675090724214;
+        Mon, 30 Jan 2023 06:58:44 -0800 (PST)
+Received: from sjg1.lan (c-73-14-173-85.hsd1.co.comcast.net. [73.14.173.85])
+        by smtp.gmail.com with ESMTPSA id g18-20020a926b12000000b0030bfdb6ef60sm4008830ilc.58.2023.01.30.06.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jan 2023 06:58:44 -0800 (PST)
+From: Simon Glass <sjg@chromium.org>
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Subject: [PATCH 096/171] Correct SPL use of FS_EROFS
+Date: Mon, 30 Jan 2023 07:42:09 -0700
+Message-Id: <20230130144324.206208-97-sjg@chromium.org>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+In-Reply-To: <20230130144324.206208-1-sjg@chromium.org>
+References: <20230130144324.206208-1-sjg@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3425803.1675083883.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 30 Jan 2023 13:04:43 +0000
-Message-ID: <3425804.1675083883@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,76 +75,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Hou Tao <houtao@huaweicloud.com>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, houtao1@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+This converts 1 usage of this option to the non-SPL form, since there is
+no SPL_FS_EROFS defined in Kconfig
 
-Could you pull these fixes from Hou Tao please?  There are two problems
-fixed in fscache volume handling:
-
- (1) wake_up_bit() is incorrectly paired with wait_var_event().  The latte=
-r
-     selects the waitqueue to use differently.
-
- (2) Missing barriers ordering between state bit and task state.
-
-Thanks,
-David
-
-To quote Hou Tao:
-
-    The patchset includes two fixes for fscache volume operations: patch 1
-    fixes the hang problem during volume acquisition when the volume
-    acquisition process waits for the freeing of relinquished volume, patc=
-h
-    2 adds the missing memory barrier in fscache_create_volume_work() and =
-it
-    is spotted through code review when checking whether or not these is
-    missing smp_mb() before invoking wake_up_bit().
-
-    Change Log:
-    v3:
-     * Use clear_and_wake_up_bit() helper (Suggested by Jingbo Xu)
-     * Tidy up commit message and add Reviewed-by tag
-
-    v2: https://listman.redhat.com/archives/linux-cachefs/2022-December/00=
-7402.html
-     * rebased on v6.1-rc1
-     * Patch 1: use wait_on_bit() instead (Suggested by David)
-     * Patch 2: add the missing smp_mb() in fscache_create_volume_work()
-
-    v1: https://listman.redhat.com/archives/linux-cachefs/2022-December/00=
-7384.html
-
-Link: https://lore.kernel.org/r/20230113115211.2895845-1-houtao@huaweiclou=
-d.com
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
-The following changes since commit 6d796c50f84ca79f1722bb131799e5a5710c470=
-0:
 
-  Linux 6.2-rc6 (2023-01-29 13:59:43 -0800)
+ fs/erofs/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/fscache-fixes-20230130
-
-for you to fetch changes up to 3288666c72568fe1cc7f5c5ae33dfd3ab18004c8:
-
-  fscache: Use clear_and_wake_up_bit() in fscache_create_volume_work() (20=
-23-01-30 12:51:54 +0000)
-
-----------------------------------------------------------------
-fscache fixes
-
-----------------------------------------------------------------
-Hou Tao (2):
-      fscache: Use wait_on_bit() to wait for the freeing of relinquished v=
-olume
-      fscache: Use clear_and_wake_up_bit() in fscache_create_volume_work()
-
- fs/fscache/volume.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 58af6a68e41..ef94d2db45d 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ 
+-obj-$(CONFIG_$(SPL_)FS_EROFS) = fs.o \
++obj-$(CONFIG_FS_EROFS) = fs.o \
+ 				super.o \
+ 				namei.o \
+ 				data.o \
+-- 
+2.39.1.456.gfc5497dd1b-goog
 
