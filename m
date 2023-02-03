@@ -1,32 +1,32 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1016A688DB2
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 04:02:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20DA8688DB7
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 04:02:24 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P7L6b6Nfkz3f8H
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 14:02:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P7L6k0LSGz3f7R
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 14:02:22 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P7L6B3hb4z3f5w
-	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Feb 2023 14:01:54 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vamlo-T_1675393309;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vamlo-T_1675393309)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P7L6C6J33z3f6p
+	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Feb 2023 14:01:55 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VamroM2_1675393310;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VamroM2_1675393310)
           by smtp.aliyun-inc.com;
-          Fri, 03 Feb 2023 11:01:50 +0800
+          Fri, 03 Feb 2023 11:01:51 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 7/9] erofs: implement .mmap for page cache sharing
-Date: Fri,  3 Feb 2023 11:01:41 +0800
-Message-Id: <20230203030143.73105-8-jefflexu@linux.alibaba.com>
+Subject: [PATCH v3 8/9] erofs: add helper checking if page cache sharing shall be enabled
+Date: Fri,  3 Feb 2023 11:01:42 +0800
+Message-Id: <20230203030143.73105-9-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230203030143.73105-1-jefflexu@linux.alibaba.com>
 References: <20230203030143.73105-1-jefflexu@linux.alibaba.com>
@@ -47,65 +47,82 @@ Cc: linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, linux-kernel@vger.kernel.
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In mmap(2), replace vma->vm_file with the anonymous file associated with
-the blob, so that the vma will be linked to the address_space of the
-blob.
+Erofs supports chunk deduplication to reduce disk usage.  Furthermore we
+can make inodes share page cache of these deduplicated chunks to reduce
+the memory usage.  This shall be much usable in container scenarios as
+deduplication is requisite for container image.
 
-One thing worth noting is that, we return error early in mmap(2) if
-users attempt to map beyond the file size.  Normally filesystems won't
-restrict this in mmap(2).  The checking is done in the fault handler,
-and SIGBUS will be signaled to users if they actually attempt to access
-the area beyond the end of the file.  However since vma->vm_file has
-been changed to the anonymous file in mmap(2), we can no way derive the
-file size of the original file.  As file size is immutable in ro
-filesystem, let's fail early in mmap(2) in this case.
+This can be achieved by managing page cache of deduplicated chunks in
+blob's address space.  In this way, all inodes sharing the deduplicated
+chunk will refer to and share the page cache in the blob's address
+space.
+
+So far there are some restrictions for enabling this feature.
+
+The page cache sharing feature also supports .mmap().  The reverse
+mapping requires that one vma can not be shared among inodes and can
+be linked to only one inode.  As the vma will be finally linked to the
+blob's address space when page cache sharing enabled, the restriction of
+the reverse mapping actually requires that the mapped file area can not
+be mapped to multiple blobs.  Thus page cache sharing can only be
+enabled for those files mapped to one blob.
+
+The chunk based data layout guarantees that a chunk will not cross the
+device (blob) boundary.  Thus in chunk based data layout, those files
+smaller than the chunk size shall be guaranteed to be mapped to one
+blob.  As chunk size is tunable at a per-file basis, this restriction
+can be relaxed at image building phase.  As long as we ensure that the
+file can not be deduplicated, the file's chunk size can be set to a
+reasonable value larger than the file size, so that the page cache
+sharing feature can be enabled on this file later.
+
+The second restriction is that EROFS_BLKSIZ mus be multiples of
+PAGE_SIZE to avoid data leakage.  Otherwise unrelated data may be
+exposed at the end of the last page, since file's data is arranged in
+unit of EROFS_BLKSIZ in the image.
+
+Considering all these restrictions, add a helper checking if page cache
+sharing shall be enabled for specific file.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/fscache.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ fs/erofs/internal.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index bdeb048b78b5..af6ba52bbe8b 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -432,9 +432,36 @@ static ssize_t erofs_fscache_share_file_read_iter(struct kiocb *iocb,
- 	return res;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 60d14561fb46..6019b076c625 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -369,6 +369,29 @@ static inline unsigned int erofs_inode_datalayout(unsigned int value)
+ 			      EROFS_I_DATALAYOUT_BITS);
  }
  
-+vm_fault_t erofs_fscache_share_fault(struct vm_fault *vmf)
++static inline bool erofs_can_share_page(struct inode *inode)
 +{
-+	struct erofs_fscache_finfo *finfo = vmf->vma->vm_file->private_data;
++	struct erofs_inode *vi = EROFS_I(inode);
++	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
 +
-+	if (unlikely(vmf->pgoff >= finfo->max_idx))
-+		return VM_FAULT_SIGBUS;
-+	return filemap_fault(vmf);
++	/* enable page cache sharing only in share domain mode */
++	if (!erofs_is_fscache_mode(inode->i_sb) || !sbi->domain_id)
++		return false;
++
++	if (vi->datalayout != EROFS_INODE_CHUNK_BASED)
++		return false;
++
++	/* avoid crossing multi devicces/blobs */
++	if (inode->i_size > 1UL << vi->chunkbits)
++		return false;
++
++	/* avoid data leakage in mmap routine */
++	if (EROFS_BLKSIZ % PAGE_SIZE)
++		return false;
++
++	return true;
 +}
 +
-+static const struct vm_operations_struct erofs_fscache_share_file_vm_ops = {
-+	.fault = erofs_fscache_share_fault,
-+};
-+
-+static int erofs_fscache_share_file_mmap(struct file *file,
-+					 struct vm_area_struct *vma)
-+{
-+	struct file *realfile = file->private_data;
-+	struct erofs_fscache_finfo *finfo = realfile->private_data;
-+
-+	vma_set_file(vma, realfile);
-+	vma->vm_pgoff = (finfo->pa >> PAGE_SHIFT) + vma->vm_pgoff;
-+	vma->vm_ops = &erofs_fscache_share_file_vm_ops;
-+	file_accessed(file);
-+	return 0;
-+}
-+
- const struct file_operations erofs_fscache_share_file_fops = {
- 	.llseek		= generic_file_llseek,
- 	.read_iter	= erofs_fscache_share_file_read_iter,
-+	.mmap		= erofs_fscache_share_file_mmap,
- 	.open		= erofs_fscache_share_file_open,
- 	.release	= erofs_fscache_share_file_release,
- };
+ /*
+  * Different from grab_cache_page_nowait(), reclaiming is never triggered
+  * when allocating new pages.
 -- 
 2.19.1.6.gb485710b
 
