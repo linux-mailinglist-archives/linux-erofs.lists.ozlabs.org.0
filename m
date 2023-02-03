@@ -2,37 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15FF5688F1F
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 06:52:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7000688F27
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 06:55:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P7Pv9648wz3bhW
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 16:52:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P7Pz10VFwz3f4y
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 16:55:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P7Pv712yhz3bhW
-	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Feb 2023 16:52:34 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VanVKHo_1675403550;
-Received: from 30.97.48.205(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VanVKHo_1675403550)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P7Pyx6vKTz3bfj
+	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Feb 2023 16:55:53 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VandA8f_1675403748;
+Received: from 30.221.129.149(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VandA8f_1675403748)
           by smtp.aliyun-inc.com;
-          Fri, 03 Feb 2023 13:52:30 +0800
-Message-ID: <cc67566e-6b49-c351-b8e7-9c842df8325e@linux.alibaba.com>
-Date: Fri, 3 Feb 2023 13:52:29 +0800
+          Fri, 03 Feb 2023 13:55:49 +0800
+Message-ID: <9d14321a-2406-df05-0401-699547c1b12d@linux.alibaba.com>
+Date: Fri, 3 Feb 2023 13:55:48 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.1
 Subject: Re: [PATCH 3/3] erofs: call erofs_map_dev() inside erofs_map_blocks()
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org,
  chao@kernel.org, linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
 References: <20230203035303.35082-1-jefflexu@linux.alibaba.com>
  <20230203035303.35082-4-jefflexu@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230203035303.35082-4-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <cc67566e-6b49-c351-b8e7-9c842df8325e@linux.alibaba.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <cc67566e-6b49-c351-b8e7-9c842df8325e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -51,131 +53,27 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 
-On 2023/2/3 11:53, Jingbo Xu wrote:
-> For now erofs_map_blocks() is always followed by erofs_map_dev().
-> Make erofs_map_dev() called inside erofs_map_blocks() to reduce code
-> duplication.
+On 2/3/23 1:52 PM, Gao Xiang wrote:
+> 
+> 
+> On 2023/2/3 11:53, Jingbo Xu wrote:
+>> For now erofs_map_blocks() is always followed by erofs_map_dev().
+>> Make erofs_map_dev() called inside erofs_map_blocks() to reduce code
+>> duplication.
+> 
+> Could we just integrate mdev into struct erofs_map_blocks?
 
-Could we just integrate mdev into struct erofs_map_blocks?
+Okay I will give it a try.
 
-BTW, I still think erofs_map_dev() is useful since it can handle
-non-inode IO requests, so let's keep this rather than mergeing all
-code into erofs_map_blocks()
 
+> 
+> BTW, I still think erofs_map_dev() is useful since it can handle
+> non-inode IO requests, so let's keep this rather than mergeing all
+> code into erofs_map_blocks()
+
+Yeah erofs_map_dev() is kept as a separated function API.
+
+
+-- 
 Thanks,
-Gao Xiang
-
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> ---
->   fs/erofs/data.c     | 21 ++++++++++-----------
->   fs/erofs/fscache.c  | 20 ++------------------
->   fs/erofs/internal.h |  3 ++-
->   3 files changed, 14 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index 32e66d29968f..cbe7a6d6846d 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -116,7 +116,8 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
->   	return 0;
->   }
->   
-> -int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
-> +int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map,
-> +		     struct erofs_map_dev *mdev)
->   {
->   	struct super_block *sb = inode->i_sb;
->   	struct erofs_inode *vi = EROFS_I(inode);
-> @@ -188,8 +189,14 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
->   out_unlock:
->   	erofs_put_metabuf(&buf);
->   out:
-> -	if (!err)
-> +	if (!err) {
->   		map->m_llen = map->m_plen;
-> +		*mdev = (struct erofs_map_dev) {
-> +			.m_deviceid = map->m_deviceid,
-> +			.m_pa = map->m_pa,
-> +		};
-> +		err = erofs_map_dev(sb, mdev);
-> +	}
->   	trace_erofs_map_blocks_exit(inode, map, EROFS_GET_BLOCKS_RAW, err);
->   	return err;
->   }
-> @@ -253,15 +260,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->   	map.m_la = offset;
->   	map.m_llen = length;
->   
-> -	ret = erofs_map_blocks(inode, &map);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	mdev = (struct erofs_map_dev) {
-> -		.m_deviceid = map.m_deviceid,
-> -		.m_pa = map.m_pa,
-> -	};
-> -	ret = erofs_map_dev(inode->i_sb, &mdev);
-> +	ret = erofs_map_blocks(inode, &map, &mdev);
->   	if (ret)
->   		return ret;
->   
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 7f1ef2ffc4db..140ccacc1043 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -229,7 +229,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
->   	int ret;
->   
->   	map.m_la = pos;
-> -	ret = erofs_map_blocks(inode, &map);
-> +	ret = erofs_map_blocks(inode, &map, &mdev);
->   	if (ret)
->   		return ret;
->   
-> @@ -270,14 +270,6 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
->   	count = min_t(size_t, map.m_llen - (pos - map.m_la), count);
->   	DBG_BUGON(!count || count % PAGE_SIZE);
->   
-> -	mdev = (struct erofs_map_dev) {
-> -		.m_deviceid = map.m_deviceid,
-> -		.m_pa = map.m_pa,
-> -	};
-> -	ret = erofs_map_dev(sb, &mdev);
-> -	if (ret)
-> -		return ret;
-> -
->   	req = erofs_fscache_req_chain(primary, count);
->   	if (IS_ERR(req))
->   		return PTR_ERR(req);
-> @@ -377,15 +369,7 @@ static int erofs_fscache_share_file_open(struct inode *inode, struct file *filp)
->   	struct file *realfile;
->   	int ret;
->   
-> -	ret = erofs_map_blocks(inode, &map);
-> -	if (ret)
-> -		return ret;
-> -
-> -	mdev = (struct erofs_map_dev) {
-> -		.m_deviceid = map.m_deviceid,
-> -		.m_pa = map.m_pa,
-> -	};
-> -	ret = erofs_map_dev(inode->i_sb, &mdev);
-> +	ret = erofs_map_blocks(inode, &map, &mdev);
->   	if (ret)
->   		return ret;
->   
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 323c2c775023..c54dec32a868 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -502,7 +502,8 @@ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
->   int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
->   int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->   		 u64 start, u64 len);
-> -int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map);
-> +int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map,
-> +		     struct erofs_map_dev *mdev);
->   
->   /* inode.c */
->   static inline unsigned long erofs_inode_hash(erofs_nid_t nid)
+Jingbo
