@@ -2,64 +2,35 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95B69689DA3
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Feb 2023 16:13:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3094868A92E
+	for <lists+linux-erofs@lfdr.de>; Sat,  4 Feb 2023 10:31:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P7fLJ3K7fz3f5h
-	for <lists+linux-erofs@lfdr.de>; Sat,  4 Feb 2023 02:13:28 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HKf7Vjeo;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P86hj61BZz3fBS
+	for <lists+linux-erofs@lfdr.de>; Sat,  4 Feb 2023 20:31:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mga05.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HKf7Vjeo;
-	dkim-atps=neutral
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P7fL923Chz3bZj
-	for <linux-erofs@lists.ozlabs.org>; Sat,  4 Feb 2023 02:13:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675437201; x=1706973201;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+qhJGcdQMX1iSW34SbhRnsrfh1meYsJgBSEcMcY+h0U=;
-  b=HKf7VjeoLrZQCGllagGJeHpBsSXRTtJE4io7LNGF8On/4yzxHE+tGFah
-   cARZ3lndSVjlQlVf5e1n6o3gQsAiVzqrimNPbfKBSUpo14EJodiMNG9O9
-   +EXC3iKkdmc6qVZv6Wh80g/Zt+UkukXqDsUQawoJmRLNHqOuB3Qvs8as8
-   lss5w+UHLAm5tMmGdWuzSbfaTxpE8A5++LYSflpkxz62Wa7511R69pSSx
-   DbGJSdnzM/hV4x+3l00lCmo0/KrvAxOVg/KO1lprxlPG5UlySdnVCriF5
-   LApzdEbypPldxI5UdKUrskXnEgD+sRZgsSbb6UgPGOLXhISaUgt905y4G
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="414978556"
-X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
-   d="scan'208";a="414978556"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 07:13:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="789722313"
-X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
-   d="scan'208";a="789722313"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 03 Feb 2023 07:13:10 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pNxkO-0000aZ-18;
-	Fri, 03 Feb 2023 15:13:04 +0000
-Date: Fri, 3 Feb 2023 23:12:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
-	chao@kernel.org, linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v3 7/9] erofs: implement .mmap for page cache sharing
-Message-ID: <202302032301.KaFzWF1g-lkp@intel.com>
-References: <20230203030143.73105-8-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P86hY65rCz3c6q
+	for <linux-erofs@lists.ozlabs.org>; Sat,  4 Feb 2023 20:30:52 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VarVFIX_1675503041;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VarVFIX_1675503041)
+          by smtp.aliyun-inc.com;
+          Sat, 04 Feb 2023 17:30:46 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: [PATCH 1/6] erofs: get rid of erofs_inode_datablocks()
+Date: Sat,  4 Feb 2023 17:30:35 +0800
+Message-Id: <20230204093040.97967-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230203030143.73105-8-jefflexu@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,61 +42,82 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jingbo,
+erofs_inode_datablocks() has the only one caller, let's just get
+rid of it entirely.  No logic changes.
 
-Thank you for the patch! Perhaps something to improve:
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/internal.h |  6 ------
+ fs/erofs/namei.c    | 18 +++++-------------
+ 2 files changed, 5 insertions(+), 19 deletions(-)
 
-[auto build test WARNING on xiang-erofs/dev-test]
-[also build test WARNING on xiang-erofs/dev xiang-erofs/fixes linus/master v6.2-rc6 next-20230203]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jingbo-Xu/erofs-support-readahead-in-meta-routine/20230203-110255
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-patch link:    https://lore.kernel.org/r/20230203030143.73105-8-jefflexu%40linux.alibaba.com
-patch subject: [PATCH v3 7/9] erofs: implement .mmap for page cache sharing
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230203/202302032301.KaFzWF1g-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/499758ba5c442083b32a76a3fd55b734df0c486b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jingbo-Xu/erofs-support-readahead-in-meta-routine/20230203-110255
-        git checkout 499758ba5c442083b32a76a3fd55b734df0c486b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash fs/erofs/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> fs/erofs/fscache.c:435:12: warning: no previous prototype for 'erofs_fscache_share_fault' [-Wmissing-prototypes]
-     435 | vm_fault_t erofs_fscache_share_fault(struct vm_fault *vmf)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/erofs_fscache_share_fault +435 fs/erofs/fscache.c
-
-   434	
- > 435	vm_fault_t erofs_fscache_share_fault(struct vm_fault *vmf)
-   436	{
-   437		struct erofs_fscache_finfo *finfo = vmf->vma->vm_file->private_data;
-   438	
-   439		if (unlikely(vmf->pgoff >= finfo->max_idx))
-   440			return VM_FAULT_SIGBUS;
-   441		return filemap_fault(vmf);
-   442	}
-   443	
-
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 08ba817d6551..c18af21ba9c4 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -344,12 +344,6 @@ static inline erofs_off_t erofs_iloc(struct inode *inode)
+ 		(EROFS_I(inode)->nid << sbi->islotbits);
+ }
+ 
+-static inline unsigned long erofs_inode_datablocks(struct inode *inode)
+-{
+-	/* since i_size cannot be changed */
+-	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
+-}
+-
+ static inline unsigned int erofs_bitrange(unsigned int value, unsigned int bit,
+ 					  unsigned int bits)
+ {
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index b64a108fac92..966eabc61c13 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -5,7 +5,6 @@
+  * Copyright (C) 2022, Alibaba Cloud
+  */
+ #include "xattr.h"
+-
+ #include <trace/events/erofs.h>
+ 
+ struct erofs_qstr {
+@@ -87,19 +86,13 @@ static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-static void *find_target_block_classic(struct erofs_buf *target,
+-				       struct inode *dir,
+-				       struct erofs_qstr *name,
+-				       int *_ndirents)
++static void *erofs_find_target_block(struct erofs_buf *target,
++		struct inode *dir, struct erofs_qstr *name, int *_ndirents)
+ {
+-	unsigned int startprfx, endprfx;
+-	int head, back;
++	int head = 0, back = DIV_ROUND_UP(dir->i_size, EROFS_BLKSIZ) - 1;
++	unsigned int startprfx = 0, endprfx = 0;
+ 	void *candidate = ERR_PTR(-ENOENT);
+ 
+-	startprfx = endprfx = 0;
+-	head = 0;
+-	back = erofs_inode_datablocks(dir) - 1;
+-
+ 	while (head <= back) {
+ 		const int mid = head + (back - head) / 2;
+ 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+@@ -180,8 +173,7 @@ int erofs_namei(struct inode *dir, const struct qstr *name, erofs_nid_t *nid,
+ 	qn.end = name->name + name->len;
+ 
+ 	ndirents = 0;
+-
+-	de = find_target_block_classic(&buf, dir, &qn, &ndirents);
++	de = erofs_find_target_block(&buf, dir, &qn, &ndirents);
+ 	if (IS_ERR(de))
+ 		return PTR_ERR(de);
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.24.4
+
