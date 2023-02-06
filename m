@@ -1,63 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28A3668AE31
-	for <lists+linux-erofs@lfdr.de>; Sun,  5 Feb 2023 05:06:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1884268B3A8
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Feb 2023 02:11:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P8bRj3HYVz3f40
-	for <lists+linux-erofs@lfdr.de>; Sun,  5 Feb 2023 15:06:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P97Vs6JZrz3cJC
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Feb 2023 12:11:01 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dM/0oqHb;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=URtug1Wu;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.65; helo=mga03.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::529; helo=mail-pg1-x529.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dM/0oqHb;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=URtug1Wu;
 	dkim-atps=neutral
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P8bRc53Pzz3cKB
-	for <linux-erofs@lists.ozlabs.org>; Sun,  5 Feb 2023 15:06:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675569980; x=1707105980;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CYvnUzU9pikLzMRKKidvyRRQwde5i56wcdLf3YKye+M=;
-  b=dM/0oqHbmuYOjmTZt9rZQRAW1EI0PZBFjCiRkEoyXM1cr1iDpJ8+YHMU
-   BbLeO97LNh8TqTf4+ikvKh4GRTVG4JDV8JtTLR/t9ADHY/nG2Soyp3X0Q
-   i4JKP7SZzFlsd4RyLU5PZX0EA0ZqkRNEvhQQwtbqLJVeNxjFI7JyQ+K1/
-   USCOnzGOb86E17OyPiAWEqlPiEwKu86EeX7JSGaOX+BQihMf/iosvNrk5
-   CA/+J8Iz+d8k4W+1Rd58eYfbceebYTWwSAUntV/X8jnw1rvgWBfQxC2cT
-   jBbMIz8wExTL26WTJoLSoY64I6O+HYX8cPnS0cufECdSrqI9UtTgj0bEM
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="331149358"
-X-IronPort-AV: E=Sophos;i="5.97,274,1669104000"; 
-   d="scan'208";a="331149358"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2023 20:06:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="840018352"
-X-IronPort-AV: E=Sophos;i="5.97,274,1669104000"; 
-   d="scan'208";a="840018352"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 04 Feb 2023 20:06:08 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pOWI3-0001jC-0w;
-	Sun, 05 Feb 2023 04:06:07 +0000
-Date: Sun, 05 Feb 2023 12:05:38 +0800
-From: kernel test robot <lkp@intel.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P97Vj3VX9z3045
+	for <linux-erofs@lists.ozlabs.org>; Mon,  6 Feb 2023 12:10:51 +1100 (AEDT)
+Received: by mail-pg1-x529.google.com with SMTP id 141so7211161pgc.0
+        for <linux-erofs@lists.ozlabs.org>; Sun, 05 Feb 2023 17:10:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X8koHqYtcGKtK9ShE60+AKTtKz4cqfXuzvfRTgSACa0=;
+        b=URtug1Wu5FhPZFWn4UEncRpKJEjVT8KGu4Mv2T/cbdiuEEXvj04wSTdZAHBTiaWrM+
+         9iFnqE1CZuMQB4xBQSUuXX6r+MfKwKd4JhaYnzKGB/bOfWct7x+TC/+5RbygsDP+MDNs
+         rW2SMP+E2frDRFZsfGe1oJqq8C8vAVdo2vWRU4MzIiBw2IzfERP6M2VV4u0H6TaFK092
+         gP6sHPQtCI7axgzVW9QiVab7R32SFN/6QIpKpNi9zoifg5aPrafER1lU1emc0Sc9Ej+x
+         Cin5a3/xLYEcGRYQGTgSs8Lgnb5psb1RKWIpZZSB5Eg7RQ4CViR6sZ+c5dGtWWMXeXfb
+         qjWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X8koHqYtcGKtK9ShE60+AKTtKz4cqfXuzvfRTgSACa0=;
+        b=Iw71s1KopFVdNGXqhbLwvvvUna6l2ASL1oB/JRJEXntwQjIqx+yjEX6uL4vUX67Rby
+         9D0dMSt6STOCCO3aQWWOGeg0xgPYw+MRW8IQo7ahg/0HMTuwqEA+Wk2YCHIwk735Zusv
+         ZS/2uLc48tscXNKeYFqqUx7OxnGqCKDqRcGcAfw17apcd9ruLc6WbZJODw6k0EseUiyh
+         x5oXfEr9KFAQRR8EnyrOL+A7KMZOXG5HmQawJkyCvQ/f7HbGGgvuNAvw78wkSGPwNKza
+         spUUpq1VynoVf9W8HQi/kPOBfeKW9hsTGjVzzlrhPhAwnM3cwahMPAg4+S0+oEB2cDZM
+         EkXQ==
+X-Gm-Message-State: AO0yUKWHLdjmTzoNsTirkynlyh0DMQ9sxVqmaWDjmp3Y83MqJuN/bbM2
+	szs26xwr1Ls3vDcBufx2hKc=
+X-Google-Smtp-Source: AK7set8fT3ODZoWF86+1UvsxoUnNGS/nwGtC/D2vrM0qUK8yE/K/FN1lONE6namVd6AjWVKIwnnJCg==
+X-Received: by 2002:aa7:8558:0:b0:592:3e51:d881 with SMTP id y24-20020aa78558000000b005923e51d881mr16184226pfn.14.1675645845522;
+        Sun, 05 Feb 2023 17:10:45 -0800 (PST)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id j4-20020aa78004000000b0059242cd5469sm5919068pfi.13.2023.02.05.17.10.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 Feb 2023 17:10:45 -0800 (PST)
+Date: Mon, 6 Feb 2023 09:16:25 +0800
+From: Yue Hu <zbestahu@gmail.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 55262d32779907c171eb0e590e5558626f842011
-Message-ID: <63df2b12.FnBPje0hMc5nPPnO%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Subject: Re: [PATCH 1/6] erofs: get rid of erofs_inode_datablocks()
+Message-ID: <20230206091625.00000a70.zbestahu@gmail.com>
+In-Reply-To: <20230204093040.97967-1-hsiangkao@linux.alibaba.com>
+References: <20230204093040.97967-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -70,102 +79,16 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>, zhangwen@coolpad.com, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 55262d32779907c171eb0e590e5558626f842011  erofs: tidy up internal.h
+On Sat,  4 Feb 2023 17:30:35 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-elapsed time: 1073m
+> erofs_inode_datablocks() has the only one caller, let's just get
+> rid of it entirely.  No logic changes.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-configs tested: 77
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                            allnoconfig
-powerpc                           allnoconfig
-um                             i386_defconfig
-x86_64                              defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-s390                             allmodconfig
-x86_64                           rhel-8.3-bpf
-x86_64                               rhel-8.3
-alpha                               defconfig
-i386                              allnoconfig
-x86_64                           rhel-8.3-syz
-arm                               allnoconfig
-s390                                defconfig
-x86_64                         rhel-8.3-kunit
-arc                               allnoconfig
-s390                             allyesconfig
-alpha                             allnoconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-x86_64                        randconfig-a004
-arc                              allyesconfig
-x86_64                        randconfig-a002
-alpha                            allyesconfig
-x86_64                        randconfig-a006
-ia64                             allmodconfig
-s390                 randconfig-r044-20230204
-riscv                randconfig-r042-20230204
-arc                  randconfig-r043-20230204
-sh                               allmodconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-i386                                defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-i386                             allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                        cell_defconfig
-powerpc                      pasemi_defconfig
-sh                                  defconfig
-sh                            migor_defconfig
-sh                           se7619_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a001
-hexagon              randconfig-r041-20230204
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-arm                  randconfig-r046-20230204
-hexagon              randconfig-r045-20230204
-x86_64                        randconfig-a014
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                          rhel-8.3-rust
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-riscv                randconfig-r042-20230205
-s390                 randconfig-r044-20230205
-hexagon              randconfig-r045-20230205
-hexagon              randconfig-r041-20230205
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
