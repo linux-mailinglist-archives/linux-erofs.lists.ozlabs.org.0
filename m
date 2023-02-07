@@ -2,48 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 244F268CFD5
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Feb 2023 07:53:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA7068D174
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Feb 2023 09:27:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4P9v3j3tkpz3c81
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Feb 2023 17:53:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1675752817;
-	bh=1oBaSOHuGOn9xvoleevID7T0iYumZr6xDct+7ZuQH2E=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:From;
-	b=ZMrZh2Bhrt3D2Yd5l+jrV+47dYZFb1YZ0gsPDmznPURLsFS1C8bRN3FuUylqdtHYA
-	 9YgfVdGJNCBHpH4E9aV9pt1VnH+AW7lgQK6yyeAFykh3MaTU7FhUjAimDVuzhnKhaD
-	 EW+jKIqfR+60FjRsPbs+EgnA6XtHOyDM6PWY/95Qi1ZqywDA9T5L5AExJRLhEqBedN
-	 7FpUJwIjhj2p4B4igdssF+hvelDB8XVv8oP6wun1NCjGtjtiC5/KT+hyQGXTO5VbkT
-	 s7o66GyiEHQgewtUVMFrPbFt8KOJ/A5CDsy4m3GkvnTYIeT6thR5jSWOiyDmmiqA72
-	 9dxphuLTIYcjw==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4P9x806NHfz3cKB
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Feb 2023 19:27:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=anaae.shop (client-ip=43.231.234.99; helo=anaae.shop; envelope-from=account-ml.smile-etc.jp@anaae.shop; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=anaae.shop header.i=@anaae.shop header.a=rsa-sha256 header.s=default header.b=CuU3C17Q;
-	dkim-atps=neutral
-X-Greylist: delayed 2199 seconds by postgrey-1.36 at boromir; Tue, 07 Feb 2023 17:53:31 AEDT
-Received: from anaae.shop (unknown [43.231.234.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4P9v3b1ksxz3bP0
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Feb 2023 17:53:30 +1100 (AEDT)
-Received: from adogitutx (unknown [104.225.141.107])
-	by anaae.shop (Postfix) with ESMTPA id A950EA1D7F
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Feb 2023 14:03:51 +0800 (CST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 anaae.shop A950EA1D7F
-Message-ID: <BE57BC9021A632A23C3E752D5CEEB320@adogitutx>
-To: linux-erofs <linux-erofs@lists.ozlabs.org>
-Subject: =?utf-8?B?44GU5Yip55So56K66KqN44Gu44GK55+l44KJ44Gb44Gr44Gk44GE44Gm77yI77yl77y077yj5Yip55So?=
-	=?utf-8?B?54Wn5Lya44K144O844OT44K577yJ?=
-Date: Tue, 7 Feb 2023 15:03:38 +0900
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4P9x7v5qMYz3bTS
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Feb 2023 19:27:22 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Vb6WRLm_1675758436;
+Received: from 30.221.130.169(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vb6WRLm_1675758436)
+          by smtp.aliyun-inc.com;
+          Tue, 07 Feb 2023 16:27:17 +0800
+Message-ID: <c08e9251-79ef-d43c-27e2-c5b5e535f322@linux.alibaba.com>
+Date: Tue, 7 Feb 2023 16:27:16 +0800
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_001_5b16ac1170e1c072_=----"
-X-Priority: 3
-X-Mailer: Supmailer 38.0.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH 1/6] erofs: get rid of erofs_inode_datablocks()
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
+ Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>
+References: <20230204093040.97967-1-hsiangkao@linux.alibaba.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20230204093040.97967-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,139 +45,90 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: =?utf-8?b?77yl77y077yj5Yip55So54Wn5Lya44K144O844OT44K5IHZpYSBMaW51eC1l?=
- =?utf-8?q?rofs?= <linux-erofs@lists.ozlabs.org>
-Reply-To: =?utf-8?B?77yl77y077yj5Yip55So54Wn5Lya44K144O844OT44K5?= <account-ml.smile-etc.jp@anaae.shop>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
 
-------=_001_5b16ac1170e1c072_=----
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
 
-DQoNCg0K4oC74oC74oC777yl77y077yj5Yip55So54Wn5Lya44K144O844OT44K544KS6KOF44Gj
-44Gf5LiN5a+p44Oh44O844Or44Gr44GU5rOo5oSP44GP44Gg44GV44GE4oC74oC74oC7DQoNCuW5
-s+e0oOOCiOOCiu+8pe+8tO+8o+WIqeeUqOeFp+S8muOCteODvOODk+OCueOCkuOBlOWIqeeUqOOB
-hOOBn+OBoOOBjeOAgeiqoOOBq+OBguOCiuOBjOOBqOOBhuOBlOOBluOBhOOBvuOBmQ0K44GT44Gu
-44Oh44O844Or44Gv44CB77yl77y077yj5Yip55So54Wn5Lya44K144O844OT44K5KOeZu+mMsuWe
-iynjgavjgZTnmbvpjLLjgZXjgozjgabjgYTjgabjgIENCu+8lO+8ku+8kOaXpemWk+ODreOCsOOC
-pOODs+OBruOBquOBhOaWueOBq+OBiumAgeOCiuOBl+OBpuOBhOOBvuOBmeOAgg0K44GK5a6i5qeY
-44Gu44Om44O844K244O8SUTjga/jgIHop6PntITkuojlrprml6Xjgb7jgafjgavjg63jgrDjgqTj
-g7PjgYTjgZ/jgaDjgZHjgarjgYTjgagNCueZu+mMhOOBjOino+e0hOOBqOOBquOCiuOBvuOBmeOA
-gg0K4oC777yl77y077yj5Yip55So54Wn5Lya44K144O844OT44K5KOeZu+mMhOWeiynjga/vvJQ1
-77yQ5pel6ZaT44Ot44Kw44Kk44Oz44GM44Gq44GE44CCDQogICAgICDjg6bjg7zjgrbjg7xJROOB
-rueZu+mMhOOBjOiHquWLleeahOOBq+ino+e0hOOBqOOBquOCiuOBvuOBmQ0KDQrjgJDjg6bjg7zj
-grbjg7xJROOAkQ0KbGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZw0KDQrjgJDop6PntITkuojl
-rprml6XjgJENCjIwMjPlubQwMuaciDA35pelDQoNCuino+e0hOS6iOWumuaXpeOBvuOBp+OBq+OA
-jO+8pe+8tO+8o+WIqeeUqOeFp+S8muOCteODvOODk+OCueOAjeOBq+ODreOCsOOCpOODs+OBl+OB
-pg0K44GE44Gf44Gg44GN44G+44GZ44Go44CB44GU55m76Yyy44Gv57aZ57aa44GV44KM44G+44GZ
-44CCDQrjg63jgrDjgqTjg7Plvozjga7nibnliKXjgarmk43kvZzjga/lv4XopoHjgYLjgorjgb7j
-gZvjgpPjgIINCuOBquOBiuOAgUVUQ+WIqeeUqOeFp+S8muOCteODvOODk+OCueOBruOBlOeZu+mM
-suOBjOWPlua2iOOBlyjop6PntIQp44Go44Gq44KK44G+44GX44Gm44KC44CB77yl77y077yj54Sh
-57ea6LWw6KGM562J44CBDQpFVEPjgqvjg7zjg4njga7jgZTliKnnlKgo44Kv44Os44K444OD44OI
-5rG65riI562J44Gr44KI44KL5b6M5omV44GEKeOBr+OBhOOBn+OBoOOBkeOBvuOBmeOAgg0KDQri
-gLvnmbvpjLLjgYzntpnntprjgZXjgozjgZ/pmpvjga7jgYrnn6XjgonjgZvjga/jgZTjgZbjgYTj
-gb7jgZvjgpPjgIINCuKAu+ODkeOCueODr+ODvOODieOBjOOBlOS4jeaYjuOBruWgtOWQiOOCguS4
-i+iomO+8te+8su+8rOOBi+OCieaWsOODkeOCueODr+ODvOODieOBruWGjeioreWumuOCkuihjOOB
-o+OBpuOBj+OBoOOBleOBhOOAgg0KDQrjgJDvvKXvvLTvvKPliKnnlKjnhafkvJrjgrXjg7zjg5Pj
-grko55m76YyE5Z6LKeODreOCsOOCpOODs+OAkQ0KDQpodHRwczovL3d3dzIuZXRjLW1laXNhaS5q
-cC9ldGMvUj9mdW5jY29kZT0xMDEzMDAwMDAwJm5leHRmdW5jPTEwMTMwMDAwMDANCg0K4oC744GT
-44GuVVJM44Gu5pyJ5Yq55pyf6ZaT44Gv5omL57aa44GN5Y+X5LuY5pmC44KI44KKNDjmmYLplpPj
-gafjgZnjgIINCu+8iOacieWKueacn+mZkOOAgDIwMjMvMDIvMDkgMjM6NTnvvIkNCg0K44CM6Kej
-57SE5LqI5ZGK44Gu44GK55+l44KJ44Gb44CN44Gu44Oh44O844Or44Gr6KiY6LyJ44Gu77y177yy
-77ys44GL44KJ5pys44K144O844OT44K544Gr44Ot44Kw44Kk44Oz44GX44Gm44GE44Gf44Gg44GN
-44G+44GZ44Go44CBDQrjgZTnmbvpjLLjga/ntpnntprjgZXjgozjgb7jgZnjgILjg63jgrDjgqTj
-g7Plvozjga7nibnliKXjgarmk43kvZzjga/lv4XopoHjgYLjgorjgb7jgZvjgpPjgIINCuOBn+OB
-oOOBl+OAgeeZu+mMsuOBjOe2mee2muOBleOCjOOBn+mam+OBruOBiuefpeOCieOBm+OBr+OBlOOB
-luOBhOOBvuOBm+OCk+OAgg0K44Gq44GK44CB55m76YyE44GM6Ieq5YuV44Gr6Kej57SE44Go44Gq
-44KK44G+44GX44Gf5aC05ZCI44KC44CBDQrlho3luqbnmbvpjLLjgYTjgZ/jgaDjgZHjgozjgbDj
-gZTliKnnlKjjgYTjgZ/jgaDjgZHjgb7jgZnjgIINCuKAu0VUQ+WIqeeUqOeFp+S8muOCteODvOOD
-k+OCueOBrueZu+mMsuOBjOWPlua2iOOBl+OBq+OBquOBo+OBpuOCguOAgUVUQ+OCq+ODvOODieOB
-ruOBlOWIqeeUqOOBq+OBr+W9semfv+OBguOCiuOBvuOBm+OCk+OAgg0K4oC744GT44Gu44Oh44O8
-44Or44Gv6YCB5L+h5bCC55So44Gn44GZ44CCDQrjgIDjgZPjga7jgqLjg4njg6zjgrnjgavpgIHk
-v6HjgYTjgZ/jgaDjgYTjgabjgoLov5Tkv6HjgYTjgZ/jgZfjgYvjga3jgb7jgZnjga7jgafjgIHj
-gYLjgonjgYvjgZjjgoHjgZTkuobmib/poZjjgYTjgb7jgZnjgIINCuKAu+acrOODoeODvOODq+OB
-q+W/g+W9k+OBn+OCiuOBjOOBquOBhOWgtOWQiOOBr+OAgemAn+OChOOBi+OBq+WJiumZpOOBiumh
-mOOBhOOBhOOBn+OBl+OBvuOBmeOAgg0KDQrjgarjgYrjgIHjgZTkuI3mmI7jgarngrnjgavjgaTj
-gY3jgb7jgZfjgabjga/jgIHjgYrmiYvmlbDjgafjgZnjgYzjgIENCu+8pe+8tO+8o+WIqeeUqOeF
-p+S8muOCteODvOODk+OCueS6i+WLmeWxgOOBq+OBiuWVj+OBhOWQiOOCj+OBm+OBj+OBoOOBleOB
-hOOAgg0KDQrilqDvvKXvvLTvvKPliKnnlKjnhafkvJrjgrXjg7zjg5Pjgrnkuovli5nlsYANCuOA
-gOW5tOS4reeEoeS8keOAgDk6MDDvvZ4xODowMA0K44CA44OK44OT44OA44Kk44Ok44Or44CAMDU3
-MC0wMDEwNjkNCuOAgO+8iOODiuODk+ODgOOCpOODpOODq+OBjOOBlOWIqeeUqOOBhOOBn+OBoOOB
-keOBquOBhOOBiuWuouOBleOBvuOAgDA0NS00NzctMTI2Mu+8iQ0KDQpodHRwczovL3d3dy5ldGMt
-bWVpc2FpLmpwLw0K
+On 2/4/23 5:30 PM, Gao Xiang wrote:
+> erofs_inode_datablocks() has the only one caller, let's just get
+> rid of it entirely.  No logic changes.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-------=_001_5b16ac1170e1c072_=----
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0
-Zi04IiBodHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxNRVRBIG5hbWU9R0VORVJBVE9SIGNvbnRl
-bnQ9Ik1TSFRNTCAxMS4wMC45NjAwLjIwMDQ1Ij48L0hFQUQ+DQo8Qk9EWT4NCjxQPjxJTUcgYm9y
-ZGVyPTAgaHNwYWNlPTAgYWx0PSIiIA0Kc3JjPSJodHRwczovL3d3dy5zbWlsZS1ldGMuanAvaW1n
-L2NvbW1vbi9sb2dvLnBuZyIgYWxpZ249YmFzZWxpbmU+PC9QPjxTUEFOIA0Kc3R5bGU9IkZPTlQt
-U0laRTogMTNweDsgRk9OVC1GQU1JTFk6IE1laXJ5byI+DQo8UD7igLvigLvigLvvvKXvvLTvvKPl
-iKnnlKjnhafkvJrjgrXjg7zjg5PjgrnjgpLoo4XjgaPjgZ/kuI3lr6njg6Hjg7zjg6vjgavjgZTm
-s6jmhI/jgY/jgaDjgZXjgYTigLvigLvigLs8L1A+DQo8UD7lubPntKDjgojjgorvvKXvvLTvvKPl
-iKnnlKjnhafkvJrjgrXjg7zjg5PjgrnjgpLjgZTliKnnlKjjgYTjgZ/jgaDjgY3jgIHoqqDjgavj
-gYLjgorjgYzjgajjgYbjgZTjgZbjgYTjgb7jgZk8QlI+44GT44Gu44Oh44O844Or44Gv44CB77yl
-77y077yj5Yip55So54Wn5Lya44K144O844OT44K5KOeZu+mMsuWeiynjgavjgZTnmbvpjLLjgZXj
-gozjgabjgYTjgabjgIE8QlI+77yU77yS77yQ5pel6ZaT44Ot44Kw44Kk44Oz44Gu44Gq44GE5pa5
-44Gr44GK6YCB44KK44GX44Gm44GE44G+44GZ44CCPEJSPuOBiuWuouanmOOBruODpuODvOOCtuOD
-vElE44Gv44CB6Kej57SE5LqI5a6a5pel44G+44Gn44Gr44Ot44Kw44Kk44Oz44GE44Gf44Gg44GR
-44Gq44GE44GoPEJSPueZu+mMhOOBjOino+e0hOOBqOOBquOCiuOBvuOBmeOAgjxCUj7igLvvvKXv
-vLTvvKPliKnnlKjnhafkvJrjgrXjg7zjg5Pjgrko55m76YyE5Z6LKeOBr++8lDXvvJDml6XplpPj
-g63jgrDjgqTjg7PjgYzjgarjgYTjgII8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-IA0K44Om44O844K244O8SUTjga7nmbvpjITjgYzoh6rli5XnmoTjgavop6PntITjgajjgarjgorj
-gb7jgZk8L1A+DQo8UD48U1RST05HPuOAkOODpuODvOOCtuODvElE44CRPEJSPmxpbnV4LWVyb2Zz
-QGxpc3RzLm96bGFicy5vcmc8L1NUUk9ORz48L1A+DQo8UD48U1RST05HPuOAkOino+e0hOS6iOWu
-muaXpeOAkTwvU1RST05HPjxCUj48U1RST05HPjIwMjPlubQwMuaciDA35pelPC9TVFJPTkc+PC9Q
-Pg0KPFA+6Kej57SE5LqI5a6a5pel44G+44Gn44Gr44CM77yl77y077yj5Yip55So54Wn5Lya44K1
-44O844OT44K544CN44Gr44Ot44Kw44Kk44Oz44GX44GmPEJSPuOBhOOBn+OBoOOBjeOBvuOBmeOB
-qOOAgeOBlOeZu+mMsuOBr+e2mee2muOBleOCjOOBvuOBmeOAgjxCUj7jg63jgrDjgqTjg7Plvozj
-ga7nibnliKXjgarmk43kvZzjga/lv4XopoHjgYLjgorjgb7jgZvjgpPjgII8QlI+44Gq44GK44CB
-RVRD5Yip55So54Wn5Lya44K144O844OT44K544Gu44GU55m76Yyy44GM5Y+W5raI44GXKOino+e0
-hCnjgajjgarjgorjgb7jgZfjgabjgoLjgIHvvKXvvLTvvKPnhKHnt5rotbDooYznrYnjgIE8QlI+
-RVRD44Kr44O844OJ44Gu44GU5Yip55SoKOOCr+ODrOOCuOODg+ODiOaxuua4iOetieOBq+OCiOOC
-i+W+jOaJleOBhCnjga/jgYTjgZ/jgaDjgZHjgb7jgZnjgII8L1A+DQo8UD7igLvnmbvpjLLjgYzn
-tpnntprjgZXjgozjgZ/pmpvjga7jgYrnn6XjgonjgZvjga/jgZTjgZbjgYTjgb7jgZvjgpPjgII8
-QlI+4oC744OR44K544Ov44O844OJ44GM44GU5LiN5piO44Gu5aC05ZCI44KC5LiL6KiY77y177yy
-77ys44GL44KJ5paw44OR44K544Ov44O844OJ44Gu5YaN6Kit5a6a44KS6KGM44Gj44Gm44GP44Gg
-44GV44GE44CCPC9QPg0KPFA+PFNUUk9ORz7jgJDvvKXvvLTvvKPliKnnlKjnhafkvJrjgrXjg7zj
-g5Pjgrko55m76YyE5Z6LKeODreOCsOOCpOODs+OAkTwvU1RST05HPjwvUD4NCjxQPjxBIA0KaHJl
-Zj0iaHR0cHM6Ly9iY3plYS5zaG9wIj5odHRwczovL3d3dzIuZXRjLW1laXNhaS5qcC9ldGMvUj9m
-dW5jY29kZT0xMDEzMDAwMDAwJmFtcDtuZXh0ZnVuYz0xMDEzMDAwMDAwPC9BPjwvUD4NCjxQPuKA
-u+OBk+OBrlVSTOOBruacieWKueacn+mWk+OBr+aJi+e2muOBjeWPl+S7mOaZguOCiOOCijQ45pmC
-6ZaT44Gn44GZ44CCPEJSPu+8iOacieWKueacn+mZkOOAgDIwMjMvMDIvMDkgMjM6NTnvvIk8L1A+
-DQo8UD7jgIw8U1RST05HPuino+e0hOS6iOWRiuOBruOBiuefpeOCieOBmzwvU1RST05HPuOAjeOB
-ruODoeODvOODq+OBq+iomOi8ieOBru+8te+8su+8rOOBi+OCieacrOOCteODvOODk+OCueOBq+OD
-reOCsOOCpOODs+OBl+OBpuOBhOOBn+OBoOOBjeOBvuOBmeOBqOOAgTxCUj7jgZTnmbvpjLLjga/n
-tpnntprjgZXjgozjgb7jgZnjgILjg63jgrDjgqTjg7Plvozjga7nibnliKXjgarmk43kvZzjga/l
-v4XopoHjgYLjgorjgb7jgZvjgpPjgII8QlI+44Gf44Gg44GX44CB55m76Yyy44GM57aZ57aa44GV
-44KM44Gf6Zqb44Gu44GK55+l44KJ44Gb44Gv44GU44GW44GE44G+44Gb44KT44CCPEJSPuOBquOB
-iuOAgeeZu+mMhOOBjOiHquWLleOBq+ino+e0hOOBqOOBquOCiuOBvuOBl+OBn+WgtOWQiOOCguOA
-gTxCUj7lho3luqbnmbvpjLLjgYTjgZ/jgaDjgZHjgozjgbDjgZTliKnnlKjjgYTjgZ/jgaDjgZHj
-gb7jgZnjgII8QlI+PEZPTlQgDQpjb2xvcj1yZWQ+4oC7RVRD5Yip55So54Wn5Lya44K144O844OT
-44K544Gu55m76Yyy44GM5Y+W5raI44GX44Gr44Gq44Gj44Gm44KC44CBRVRD44Kr44O844OJ44Gu
-44GU5Yip55So44Gr44Gv5b2x6Z+/44GC44KK44G+44Gb44KT44CCPC9GT05UPjxCUj7igLvjgZPj
-ga7jg6Hjg7zjg6vjga/pgIHkv6HlsILnlKjjgafjgZnjgII8QlI+44CA44GT44Gu44Ki44OJ44Os
-44K544Gr6YCB5L+h44GE44Gf44Gg44GE44Gm44KC6L+U5L+h44GE44Gf44GX44GL44Gt44G+44GZ
-44Gu44Gn44CB44GC44KJ44GL44GY44KB44GU5LqG5om/6aGY44GE44G+44GZ44CCPEJSPuKAu+ac
-rOODoeODvOODq+OBq+W/g+W9k+OBn+OCiuOBjOOBquOBhOWgtOWQiOOBr+OAgemAn+OChOOBi+OB
-q+WJiumZpOOBiumhmOOBhOOBhOOBn+OBl+OBvuOBmeOAgjwvUD4NCjxQPuOBquOBiuOAgeOBlOS4
-jeaYjuOBqueCueOBq+OBpOOBjeOBvuOBl+OBpuOBr+OAgeOBiuaJi+aVsOOBp+OBmeOBjOOAgTxC
-Uj7vvKXvvLTvvKPliKnnlKjnhafkvJrjgrXjg7zjg5Pjgrnkuovli5nlsYDjgavjgYrllY/jgYTl
-kIjjgo/jgZvjgY/jgaDjgZXjgYTjgII8L1A+DQo8UD7ilqDvvKXvvLTvvKPliKnnlKjnhafkvJrj
-grXjg7zjg5Pjgrnkuovli5nlsYA8QlI+44CA5bm05Lit54Sh5LyR44CAOTowMO+9njE4OjAwPEJS
-PuOAgOODiuODk+ODgOOCpOODpOODq+OAgDA1NzAtMDAxMDY5PEJSPuOAgO+8iOODiuODk+ODgOOC
-pOODpOODq+OBjOOBlOWIqeeUqOOBhOOBn+OBoOOBkeOBquOBhOOBiuWuouOBleOBvuOAgDA0NS00
-NzctMTI2Mu+8iTwvUD4NCjxQPjxBIA0KaHJlZj0iaHR0cHM6Ly9iY3plYS5zaG9wIj5odHRwczov
-L3d3dy5ldGMtbWVpc2FpLmpwLzwvQT48L1A+PC9TUEFOPjwvQk9EWT48L0hUTUw+DQo=
 
-------=_001_5b16ac1170e1c072_=------
+> ---
+>  fs/erofs/internal.h |  6 ------
+>  fs/erofs/namei.c    | 18 +++++-------------
+>  2 files changed, 5 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 08ba817d6551..c18af21ba9c4 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -344,12 +344,6 @@ static inline erofs_off_t erofs_iloc(struct inode *inode)
+>  		(EROFS_I(inode)->nid << sbi->islotbits);
+>  }
+>  
+> -static inline unsigned long erofs_inode_datablocks(struct inode *inode)
+> -{
+> -	/* since i_size cannot be changed */
+> -	return DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
+> -}
+> -
+>  static inline unsigned int erofs_bitrange(unsigned int value, unsigned int bit,
+>  					  unsigned int bits)
+>  {
+> diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+> index b64a108fac92..966eabc61c13 100644
+> --- a/fs/erofs/namei.c
+> +++ b/fs/erofs/namei.c
+> @@ -5,7 +5,6 @@
+>   * Copyright (C) 2022, Alibaba Cloud
+>   */
+>  #include "xattr.h"
+> -
+>  #include <trace/events/erofs.h>
+>  
+>  struct erofs_qstr {
+> @@ -87,19 +86,13 @@ static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
+>  	return ERR_PTR(-ENOENT);
+>  }
+>  
+> -static void *find_target_block_classic(struct erofs_buf *target,
+> -				       struct inode *dir,
+> -				       struct erofs_qstr *name,
+> -				       int *_ndirents)
+> +static void *erofs_find_target_block(struct erofs_buf *target,
+> +		struct inode *dir, struct erofs_qstr *name, int *_ndirents)
+>  {
+> -	unsigned int startprfx, endprfx;
+> -	int head, back;
+> +	int head = 0, back = DIV_ROUND_UP(dir->i_size, EROFS_BLKSIZ) - 1;
+> +	unsigned int startprfx = 0, endprfx = 0;
+>  	void *candidate = ERR_PTR(-ENOENT);
+>  
+> -	startprfx = endprfx = 0;
+> -	head = 0;
+> -	back = erofs_inode_datablocks(dir) - 1;
+> -
+>  	while (head <= back) {
+>  		const int mid = head + (back - head) / 2;
+>  		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+> @@ -180,8 +173,7 @@ int erofs_namei(struct inode *dir, const struct qstr *name, erofs_nid_t *nid,
+>  	qn.end = name->name + name->len;
+>  
+>  	ndirents = 0;
+> -
+> -	de = find_target_block_classic(&buf, dir, &qn, &ndirents);
+> +	de = erofs_find_target_block(&buf, dir, &qn, &ndirents);
+>  	if (IS_ERR(de))
+>  		return PTR_ERR(de);
+>  
 
+-- 
+Thanks,
+Jingbo
