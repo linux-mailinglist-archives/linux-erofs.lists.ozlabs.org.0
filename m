@@ -1,38 +1,113 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 836CC68FFD1
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Feb 2023 06:19:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8218268FFD9
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Feb 2023 06:21:01 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PC4sh2l2gz3f4c
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Feb 2023 16:19:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PC4vv2vZ9z3c4B
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Feb 2023 16:20:59 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=L+RjT8kK;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::703; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=L+RjT8kK;
+	dkim-atps=neutral
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on20703.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::703])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PC4sL2zwSz3c7S
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Feb 2023 16:18:46 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VbEaZFw_1675919921;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VbEaZFw_1675919921)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Feb 2023 13:18:42 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PC4vm3Vj0z3c4B
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Feb 2023 16:20:50 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BAfit2X2LR135TX2vKQKGxc+0tdCbzeUWBro1e0RnDnzQm1xtFgfSCTu1RO+rnyuoei8mMXzN2hUS6Df540bwz92qjDI5eGyKFOWqMdp9HjBM6dK56TG2GxJZu4+WEjn/6Tzuk1nLgpTV+dKOhxe0kxhfdXLKst2YMfEZ5LVxqchVm5jjCiCzOHfdAuAfAeSdHzBVuzo1D8bXZ1YKkfqKYukKzOxbQHdWSIRZLuwcnkuewLCU4jdgDOjSa2e7P5aGwVEsuZXl31tHmJOsSQfbtedrnGezecyOSHEaSoF1J8p0OvMSmGwNAqPLZOBukGOOnyOwwqB2Q0FyLgD6zmIfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3JGl8KFZctzLkJX0zA/UUfpUfaxkrMddEbbmxDYVQLQ=;
+ b=LsfayCrOb1uYoo4dC8jGpaxZbMERUqUx/Qqg8TQVudonwg0h5nxcyXBfW3sR5khmRAViKhscVejBpgLSIzHbUz8sVLSQaRZGaJp1L6Idts4xFFLbvyRfUZ7QeJyzNV6HL6+7aTUiWV1XDhObwWDf7ztVhiSf0YN8ZyJ8gFbxjlb7W5ptyhkcrSUZNSZ2lZt+z9PzCQBscU8hVnl6DfY6VvVcpqO195DBKUuRXD0oAyZNbqLDOQN0fi9kqi/3zNXflishRP7xi/S9DhxS6pRkLnGkAJCHv/wB4381WFK0uDlbpsCCQUXM5n7GC2Qz/OJen/nhMeXvpjxVK8aCBq7DRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3JGl8KFZctzLkJX0zA/UUfpUfaxkrMddEbbmxDYVQLQ=;
+ b=L+RjT8kK8yIyP+InjVBnygFbtlRvcOqNo7sNNoq8TVaiyRMvbdtra0ryMF2YvP95FOKMUgDQcXUDFe2RDrIODspLdUWDFUWKph8o6yGSh7lmF/WeNEgOnrd4jm065ZcXAWPAF2UPuOCPWyqVoFPmr64jVlwOPcxj4VzjHA9J3o3C/Gy6D2y5cmpnnBhqE412sYtuYHBuBs3aEijxBrnjlf0mzc4E4RISGeokpFxAyUDODWS0jl9oy9qehQsKedKPwREV2Skg8xL1t1inLK0+cuo5Q+bCz3DPwPxADka+zcUZa2exaXPmSsGANSq/FezoRaujoRDTCyDFJPrSXlOTrg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SI2PR06MB4251.apcprd06.prod.outlook.com (2603:1096:4:154::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Thu, 9 Feb
+ 2023 05:20:24 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::3e52:d08c:ecf4:d572]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::3e52:d08c:ecf4:d572%5]) with mapi id 15.20.6086.011; Thu, 9 Feb 2023
+ 05:20:24 +0000
+From: Yangtao Li <frank.li@vivo.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
-	linux-erofs@lists.ozlabs.org,
-	zhujia.zj@bytedance.com
-Subject: [PATCH v2 4/4] erofs: unify anonymous inodes for blob
-Date: Thu,  9 Feb 2023 13:18:38 +0800
-Message-Id: <20230209051838.33297-5-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230209051838.33297-1-jefflexu@linux.alibaba.com>
-References: <20230209051838.33297-1-jefflexu@linux.alibaba.com>
-MIME-Version: 1.0
+	huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com
+Subject: [PATCH] MAINTAINERS: erofs: Add Documentation/ABI/testing/sysfs-fs-erofs
+Date: Thu,  9 Feb 2023 13:20:13 +0800
+Message-Id: <20230209052013.34952-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.35.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0045.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::19) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SI2PR06MB4251:EE_
+X-MS-Office365-Filtering-Correlation-Id: f81aa1c4-3bc7-41ad-8c91-08db0a5d586c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	cx6ZvByu0PJqPugASqJ4tB+ObeNH+sj3dZGsCWoVUcBmTu2xkl5bE9KSbnTWQVAUqMMaWmgstx6ZTOwiHtS9G9gjyiiOns+ewOC5q3sDfSpR2iOYsxgVkOfnQq+uFYH+ZCjYWiXIC7YzJif89Wx9KDkV5Xn4LQfK+WNMfsMgzt2m+KO2eWc7b7fFULJ6TxQlL5LIQ8XH7V7r28Q5vYm8UYG5DOS6llEp52Z2mA8aQWk1Gl/b3/49BONT3KreCaaR7RjBqb4EVhQQJ8rM03JuD3shlOvjwi5Furh66cnMtS6GuDkdw0p3qr3a9LGz6gF54z1qYELWXt/EG+AUu3Ghk5/U7uLcdIGTnzUh7dGXpFj47Vn2qs9fQNE3eI+39Q7C/qg3sj6UpHPbI01P78UwnzgV8c3Qzckd2htR3Wtn2hMbtCKKn7sAvDivwWVny63ZcrWkBJduCQZhEYUuDfGNPRwRg6CU52xCj75koa/lXM/maEfI3OuzM+Y96EKD4ny0iTdl3KuOnk1hr/Lu8BNzJr2HsmNlvC/cg29Wta5xiRDd0XN/vSUXM11kCJG7NbWrJ6rWDPCzhYreyLJ32euPqrWoDWxqYpWPgaoU3MdYqO1tfLH88mXItiouyL+BEGd7wL+BLVZch32G1k8UBZRHgSSIc48Dx7koXqruUtvRvxK476Kl8UTIIhrCWMqfvV7TVoxT28TvCiiBrps0fAYTQg==
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199018)(6512007)(186003)(8936002)(4744005)(5660300002)(2906002)(36756003)(4326008)(38350700002)(8676002)(38100700002)(66946007)(66476007)(66556008)(26005)(1076003)(2616005)(41300700001)(6506007)(86362001)(6666004)(316002)(52116002)(478600001)(6486002)(107886003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?swaMveYbUy3tf72FDQg48QjkrY/Fqnukdy4yCQbx+8QOXtdlCAQauFvpO232?=
+ =?us-ascii?Q?uY7r/9+w7bSXhnEZ69FXiDRmjszYsbaJwx9Oma7A0BE0+T9mtk8W9eRaUZJf?=
+ =?us-ascii?Q?0wOgqlU6uu9X8Bd+bftgCchSt2cC0nk5bdWEeer2WhDav03CyymRjzPlcDQP?=
+ =?us-ascii?Q?dl5C8qQwDX0ez1w+kccwHLB/rTaJsbQH38GV5hP7drtvsZolzu1zuASasrRh?=
+ =?us-ascii?Q?PRHpLmXdNkOpW5HR/o5bC1C5jdxmMoo/72Svqv2B2m0KiDyOZEQcn5HsVY4y?=
+ =?us-ascii?Q?SeNr+57kv29o0ld9kRKtIBLTp2xjLtGs44cRxzOsFlfVAzJMbHV3/IxjIPAY?=
+ =?us-ascii?Q?d8Ygu+uPNvmrVeCAiWLAdC7mKu/JSEt1mqaK8rD2a9Qdbtmiy8qpHb/DQmbE?=
+ =?us-ascii?Q?cUr2cYerkZklrY9S0qBCD/wTOIj+LmdsC/W5MmL0tlqZJkb6Szq2ZHKbQlfX?=
+ =?us-ascii?Q?+bDmzhG17J1Pd0QcXg5PTMv9yGsBIettQqXGPw9mLu+00OLEZkvKwTJFAXjh?=
+ =?us-ascii?Q?W8yxTfQapHeVVq64rf8cg+RIoAiHq4esbaf+xXje+NbdghGLsCHpzMxMY3bi?=
+ =?us-ascii?Q?0UHWpX+Q0B/gIy3HfbqBdziJKjAuIIGN3C9Mg0+pB87osGNQmqIZYD/qXVdx?=
+ =?us-ascii?Q?Np7uy/9p0AKdqPW5yfPrZDiiiVHd9NprSv0F2cJ7q+UNa5U68vHZv8RyBQjJ?=
+ =?us-ascii?Q?BhLWJov3c0V2j68aAxb/cQXInrsqXCQfqecKxee+EhbrwHNYnZp0Umc5zWpm?=
+ =?us-ascii?Q?il8y5+5+gsbu/LV0pj+/2+S159UYR19iCP42ZXyzyW0gHxXsuWEphHbfyphh?=
+ =?us-ascii?Q?1P+b2dn4cdrI+hGsj8X+7At1XkPhT+gdvfqk2OHbEmDi6uFnu/KLRvQXc7x/?=
+ =?us-ascii?Q?JU0s91bnAQlDdPCBEGKD+voTgu76KRfikml/Zi+9Wk+qd4MUqI8JDvlC4CKi?=
+ =?us-ascii?Q?FMtHE+AWSZzioxuB2kcEJonp++N6sRXpkrbtm5zhlzUHv8a7qP0+WbnD5qMy?=
+ =?us-ascii?Q?43I4f01rZJOtGeiaGE0RpJI4tXTWQco/kMgfKiPGNTv7XPh7uUiwk4F7LiP9?=
+ =?us-ascii?Q?B8cIaD4VbS9Sa5RF5w5qyzgfPVI+99W50a+Ow3iY9uX8uGC/rQ3XomP8g+AR?=
+ =?us-ascii?Q?B56r11UcAm0IgnLiPJNKC2B/PNWcBaZVFYABAM+kyKpu7POljhUf5Wbj4Fn9?=
+ =?us-ascii?Q?5XQLgn34CVZWOOtkWenGpfu1NaJk+PBzpTjfPXQl0cNg/hT6gqbtSy46lLF5?=
+ =?us-ascii?Q?Xm1zGfahocl6eG5a8lfUwlzIM7K1iniJw8u/fBFTwLLym+LbPxT9btky9v8a?=
+ =?us-ascii?Q?BLfkeX+LJIPT9+txnOGNuafkvd5SXJ5VdDWn7hRbUKGMeXgi9aMWLmkBbVd7?=
+ =?us-ascii?Q?207IM6VKsJ5PcY4IjOooUdI+xP/wk9rr6tneGYrUS+b4oqfNSFvrWDA/2C3h?=
+ =?us-ascii?Q?rJ/6wBsrzf+/28hsiPUDv7vHCpbRV73Lylvc11kRQUvzTKNvCGNXGOWefNhu?=
+ =?us-ascii?Q?+bjidp/jp/kohDfw+yDBvOkznUooa84Qgkueik2EKwuJubRUdlTt0A5v7hob?=
+ =?us-ascii?Q?KqXUxJkSTu0BKTN9K3j89CLsAugnnSOPWIMnax8b?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f81aa1c4-3bc7-41ad-8c91-08db0a5d586c
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2023 05:20:23.7145
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PFNb9n2JUY7LlRoLfQUzKU/LFWxILRnYS35R2kkBRd5M5MoKmIKL1RED4rYsqnvgoIrsPy3tX3/9Gpx1mTGB1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4251
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,240 +119,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yangtao Li <frank.li@vivo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently there're two anonymous inodes (inode and anon_inode in struct
-erofs_fscache) for each blob.  The former was introduced as the
-address_space of page cache for bootstrap.
+Add this doc to the erofs maintainers entry.
 
-The latter was initially introduced as both the address_space of page
-cache and also a sentinel in the shared domain.  Since now the management
-of cookies in share domain has been decoupled with the anonymous inode,
-there's no need to maintain an extra anonymous inode.  Let's unify these
-two anonymous inodes.
-
-Besides, in non-share-domain mode only bootstrap will allocate anonymous
-inode.  To simplify the implementation, always allocate anonymous inode
-for both bootstrap and data blobs.  Similarly release anonymous inodes
-for data blobs when .put_super() is called, or we'll get "VFS: Busy
-inodes after unmount." warning.
-
-Also remove the redundant set_nlink() when initializing the anonymous
-inode, since i_nlink has already been initialized to 1 when the inode
-gets allocated.
-
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
 ---
- fs/erofs/fscache.c  | 85 ++++++++++++++++++---------------------------
- fs/erofs/internal.h |  7 ++--
- fs/erofs/super.c    |  2 ++
- 3 files changed, 38 insertions(+), 56 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index a6f030966147..a9498239163a 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -422,14 +422,14 @@ static int erofs_fscache_register_domain(struct super_block *sb)
- 	return err;
- }
- 
--static
--struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
--						   char *name,
--						   unsigned int flags)
-+static struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
-+						char *name, unsigned int flags)
- {
- 	struct fscache_volume *volume = EROFS_SB(sb)->volume;
- 	struct erofs_fscache *ctx;
- 	struct fscache_cookie *cookie;
-+	struct super_block *isb;
-+	struct inode *inode;
- 	int ret;
- 
- 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-@@ -445,33 +445,32 @@ struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb,
- 		ret = -EINVAL;
- 		goto err;
- 	}
--
- 	fscache_use_cookie(cookie, false);
--	ctx->cookie = cookie;
--
--	if (flags & EROFS_REG_COOKIE_NEED_INODE) {
--		struct inode *const inode = new_inode(sb);
--
--		if (!inode) {
--			erofs_err(sb, "failed to get anon inode for %s", name);
--			ret = -ENOMEM;
--			goto err_cookie;
--		}
--
--		set_nlink(inode, 1);
--		inode->i_size = OFFSET_MAX;
--		inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
--		mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
--		inode->i_private = ctx;
- 
--		ctx->inode = inode;
-+	/*
-+	 * Allocate anonymous inode in global pseudo mount for shareable blobs,
-+	 * so that they are accessible among erofs fs instances.
-+	 */
-+	isb = flags & EROFS_REG_COOKIE_SHARE ? erofs_pseudo_mnt->mnt_sb : sb;
-+	inode = new_inode(isb);
-+	if (!inode) {
-+		erofs_err(sb, "failed to get anon inode for %s", name);
-+		ret = -ENOMEM;
-+		goto err_cookie;
- 	}
- 
-+	inode->i_size = OFFSET_MAX;
-+	inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
-+	mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
-+	inode->i_private = ctx;
-+
-+	ctx->cookie = cookie;
-+	ctx->inode = inode;
- 	return ctx;
- 
- err_cookie:
--	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
--	fscache_relinquish_cookie(ctx->cookie, false);
-+	fscache_unuse_cookie(cookie, NULL, NULL);
-+	fscache_relinquish_cookie(cookie, false);
- err:
- 	kfree(ctx);
- 	return ERR_PTR(ret);
-@@ -482,18 +481,13 @@ static void erofs_fscache_relinquish_cookie(struct erofs_fscache *ctx)
- 	fscache_unuse_cookie(ctx->cookie, NULL, NULL);
- 	fscache_relinquish_cookie(ctx->cookie, false);
- 	iput(ctx->inode);
--	iput(ctx->anon_inode);
- 	kfree(ctx->name);
- 	kfree(ctx);
- }
- 
--static
--struct erofs_fscache *erofs_fscache_domain_init_cookie(struct super_block *sb,
--						       char *name,
--						       unsigned int flags)
-+static struct erofs_fscache *erofs_domain_init_cookie(struct super_block *sb,
-+						char *name, unsigned int flags)
- {
--	int err;
--	struct inode *inode;
- 	struct erofs_fscache *ctx;
- 	struct erofs_domain *domain = EROFS_SB(sb)->domain;
- 
-@@ -503,35 +497,23 @@ struct erofs_fscache *erofs_fscache_domain_init_cookie(struct super_block *sb,
- 
- 	ctx->name = kstrdup(name, GFP_KERNEL);
- 	if (!ctx->name) {
--		err = -ENOMEM;
--		goto out;
--	}
--
--	inode = new_inode(erofs_pseudo_mnt->mnt_sb);
--	if (!inode) {
--		err = -ENOMEM;
--		goto out;
-+		erofs_fscache_relinquish_cookie(ctx);
-+		return ERR_PTR(-ENOMEM);
- 	}
- 
-+	refcount_inc(&domain->ref);
- 	ctx->domain = domain;
--	ctx->anon_inode = inode;
- 	list_add(&ctx->node, &erofs_domain_cookies_list);
--	inode->i_private = ctx;
--	refcount_inc(&domain->ref);
- 	return ctx;
--out:
--	erofs_fscache_relinquish_cookie(ctx);
--	return ERR_PTR(err);
- }
- 
--static
--struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
--						   char *name,
--						   unsigned int flags)
-+static struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
-+						char *name, unsigned int flags)
- {
- 	struct erofs_fscache *ctx;
- 	struct erofs_domain *domain = EROFS_SB(sb)->domain;
- 
-+	flags |= EROFS_REG_COOKIE_SHARE;
- 	mutex_lock(&erofs_domain_cookies_lock);
- 	list_for_each_entry(ctx, &erofs_domain_cookies_list, node) {
- 		if (ctx->domain != domain || strcmp(ctx->name, name))
-@@ -546,7 +528,7 @@ struct erofs_fscache *erofs_domain_register_cookie(struct super_block *sb,
- 		mutex_unlock(&erofs_domain_cookies_lock);
- 		return ctx;
- 	}
--	ctx = erofs_fscache_domain_init_cookie(sb, name, flags);
-+	ctx = erofs_domain_init_cookie(sb, name, flags);
- 	mutex_unlock(&erofs_domain_cookies_lock);
- 	return ctx;
- }
-@@ -585,7 +567,7 @@ int erofs_fscache_register_fs(struct super_block *sb)
- 	int ret;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	struct erofs_fscache *fscache;
--	unsigned int flags;
-+	unsigned int flags = 0;
- 
- 	if (sbi->domain_id)
- 		ret = erofs_fscache_register_domain(sb);
-@@ -604,7 +586,6 @@ int erofs_fscache_register_fs(struct super_block *sb)
- 	 *
- 	 * Acquired domain/volume will be relinquished in kill_sb() on error.
- 	 */
--	flags = EROFS_REG_COOKIE_NEED_INODE;
- 	if (sbi->domain_id)
- 		flags |= EROFS_REG_COOKIE_NEED_NOEXIST;
- 	fscache = erofs_fscache_register_cookie(sb, sbi->fsid, flags);
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 8358cf5f731e..50cd257d04e3 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -107,8 +107,7 @@ struct erofs_domain {
- 
- struct erofs_fscache {
- 	struct fscache_cookie *cookie;
--	struct inode *inode;
--	struct inode *anon_inode;
-+	struct inode *inode;	/* anonymous indoe for the blob */
- 
- 	/* used for share domain mode */
- 	struct erofs_domain *domain;
-@@ -450,8 +449,8 @@ extern const struct file_operations erofs_dir_fops;
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
- /* flags for erofs_fscache_register_cookie() */
--#define EROFS_REG_COOKIE_NEED_INODE	1
--#define EROFS_REG_COOKIE_NEED_NOEXIST	2
-+#define EROFS_REG_COOKIE_SHARE		0x0001
-+#define EROFS_REG_COOKIE_NEED_NOEXIST	0x0002
- 
- void erofs_unmap_metabuf(struct erofs_buf *buf);
- void erofs_put_metabuf(struct erofs_buf *buf);
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 715efa94eed4..19b1ae79cec4 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -968,6 +968,8 @@ static void erofs_put_super(struct super_block *sb)
- 	iput(sbi->packed_inode);
- 	sbi->packed_inode = NULL;
- #endif
-+	erofs_free_dev_context(sbi->devs);
-+	sbi->devs = NULL;
- 	erofs_fscache_unregister_fs(sb);
- }
- 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d0485b58b9d9..7d50e5df4508 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7745,6 +7745,7 @@ R:	Jeffle Xu <jefflexu@linux.alibaba.com>
+ L:	linux-erofs@lists.ozlabs.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
++F:	Documentation/ABI/testing/sysfs-fs-erofs
+ F:	Documentation/filesystems/erofs.rst
+ F:	fs/erofs/
+ F:	include/trace/events/erofs.h
 -- 
-2.19.1.6.gb485710b
+2.25.1
 
