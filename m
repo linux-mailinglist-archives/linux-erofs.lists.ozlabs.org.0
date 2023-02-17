@@ -1,60 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5106869A3EF
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 03:34:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5270969A492
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 04:50:22 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PHwqp0j84z3chZ
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 13:34:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PHyWb31hwz3f2p
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 14:50:19 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mrxAfiHv;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GbMUt8zV;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.115; helo=mga14.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mrxAfiHv;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GbMUt8zV;
 	dkim-atps=neutral
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PHwqg0vFwz3cBy
-	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Feb 2023 13:34:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PHyWR0zy6z3c8h
+	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Feb 2023 14:50:05 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676601247; x=1708137247;
+  t=1676605811; x=1708141811;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=xTucAtXIL8+fdcfDDA1AN57JfEYNyE/o/QzIiGXzTJw=;
-  b=mrxAfiHvbWKBUU+8Z9LVQh7fq7/9EL5nr57MgNVgWdwy7fYFoFKw/mci
-   7tyeVQvOe0hopYURhOj9jpu/HhiOAN+fcGSwhiypBmAho5j2DOpR22ra0
-   1mH4NzeQ6UARNGP+Mjk5ZYXX6+1dXfu/u2Rg7T9hbefVFJwE7Fw1JIk+2
-   IOMfCL14m//cg44s8kEyE3JvkuZ/aVDg8PjsobjidMU+1U65jEd37PcGB
-   Umlj/3kD+/IVlYQRaNxeqnjL4rHdO9IN/zsY0lUQSM869pYpxlc07hnx6
-   y+z22VNTpLH00vO+Va0l0+lXi4vbxLAbWH8SmTMnQlMLGD27jNteA+JyE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="319994358"
+  bh=O+c6MjNUQXeadDzpM+t8VgVjrw7GBTRFLweCYRCA8HY=;
+  b=GbMUt8zV221EKi36ikD9jDQPMnFNilfPR38u0FS8T+/mnDXpHN2GpCHZ
+   xxvlguY5qmiaOv8B366igf9mTgMzCze6ebBAqqWkNmirxeJ5JF3CY6wfs
+   /AeB9AO52iATOVE+h3tcktNB+SCdYhcrp22aSfnCP0HYLCejCpOi3xFKJ
+   whw1ZAO2Zm2acRkjw/2mKd4oXXKgg0iUs/L6u8DZ4ca7zdjmsQoLUJm+R
+   bOfPocqbKPVfuwalopEqJwXCsWCH623yKYTpU8d+doXpcKslBp8KY5cQf
+   7ugMeOGadeFwrcedz1igrihyqjHpqW+Y4EphfHTwUs1RcDbwu+V7jtvb1
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="331903914"
 X-IronPort-AV: E=Sophos;i="5.97,304,1669104000"; 
-   d="scan'208";a="319994358"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2023 18:33:58 -0800
+   d="scan'208";a="331903914"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2023 19:50:01 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="759205573"
+X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="915946649"
 X-IronPort-AV: E=Sophos;i="5.97,304,1669104000"; 
-   d="scan'208";a="759205573"
+   d="scan'208";a="915946649"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Feb 2023 18:33:56 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 16 Feb 2023 19:49:59 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1pSqZQ-000B3F-0H;
-	Fri, 17 Feb 2023 02:33:56 +0000
-Date: Fri, 17 Feb 2023 10:33:34 +0800
+	id 1pSrl0-000B5h-01;
+	Fri, 17 Feb 2023 03:49:58 +0000
+Date: Fri, 17 Feb 2023 11:49:51 +0800
 From: kernel test robot <lkp@intel.com>
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.or,
 	chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Subject: Re: [PATCH 1/2] erofs: convert hardcoded blocksize to sb->s_blocksize
-Message-ID: <202302171043.1jwcthbb-lkp@intel.com>
+Message-ID: <202302171143.RmhVCgqe-lkp@intel.com>
 References: <20230216094745.47868-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -90,8 +90,8 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Jingbo-Xu/erofs-set-block
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
 patch link:    https://lore.kernel.org/r/20230216094745.47868-1-jefflexu%40linux.alibaba.com
 patch subject: [PATCH 1/2] erofs: convert hardcoded blocksize to sb->s_blocksize
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20230217/202302171043.1jwcthbb-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20230217/202302171143.RmhVCgqe-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -101,16 +101,38 @@ reproduce (this is a W=1 build):
         git checkout 30b09ec3be57f3777d22e71d2d4e5ec70d9227f8
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302171043.1jwcthbb-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202302171143.RmhVCgqe-lkp@intel.com/
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+All errors (new ones prefixed by >>):
 
->> ERROR: modpost: "__aeabi_ldivmod" [fs/erofs/erofs.ko] undefined!
+   arch/mips/kernel/head.o: in function `kernel_entry':
+   (.ref.text+0xac): relocation truncated to fit: R_MIPS_26 against `start_kernel'
+   init/main.o: in function `set_reset_devices':
+   main.c:(.init.text+0x20): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x30): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `debug_kernel':
+   main.c:(.init.text+0xa4): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0xb4): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `quiet_kernel':
+   main.c:(.init.text+0x128): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x138): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `warn_bootconfig':
+   main.c:(.init.text+0x1ac): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x1bc): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `init_setup':
+   main.c:(.init.text+0x234): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x254): additional relocation overflows omitted from the output
+   mips-linux-ld: fs/erofs/data.o: in function `erofs_map_blocks_flatmode.constprop.0':
+>> data.c:(.text.erofs_map_blocks_flatmode.constprop.0+0x118): undefined reference to `__divdi3'
+   mips-linux-ld: fs/erofs/namei.o: in function `erofs_find_target_block.constprop.0':
+>> namei.c:(.text.erofs_find_target_block.constprop.0+0xf8): undefined reference to `__divdi3'
+   mips-linux-ld: fs/erofs/zmap.o: in function `compacted_load_cluster_from_disk':
+>> zmap.c:(.text.compacted_load_cluster_from_disk+0x224): undefined reference to `__divdi3'
 
 -- 
 0-DAY CI Kernel Test Service
