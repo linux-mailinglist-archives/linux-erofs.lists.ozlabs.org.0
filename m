@@ -1,64 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C04C69A648
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 08:54:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF0269B179
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 17:56:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PJ3x20qz8z3f37
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Feb 2023 18:54:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PJHz25vNvz3f3P
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Feb 2023 03:56:46 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jccFety1;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KLhpq9ae;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mga01.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mga17.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jccFety1;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KLhpq9ae;
 	dkim-atps=neutral
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PJ3wx2CmSz3cfY
-	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Feb 2023 18:54:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PJHyt6Vh3z3c2j
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Feb 2023 03:56:33 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676620449; x=1708156449;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KKRJJP3lr1LqH4aXnJABylM6EktUHF7oQJ+JOlqiEHU=;
-  b=jccFety1K6COrsgNnuaHAjqSO2S5LwGQ020yRgtpDBNQEsje/dIzwu+b
-   K4+wBBDyDkmwGySMyFMo4JPFMGTM32IIt7XhKjGSaBmMmITb2Rdf/yjbG
-   6vOQzheC1ibMOmytjaygVLC6yghI52gO8fKwF1ohb2vBkWkqY1jlpaqrg
-   P7LRYA14njxqH54TN1PgNehXx2qAcklaJyaQxsH0FraPqnCy/0jLexGzu
-   Hzr6sKdFUnjj1HJXPJ3imI2eO6R/EVIoJy01udsD9vlgMynCP1WDz8flh
-   sSy8OJ5LJPmn9BNJJWbRG7cakWhBr6Z2yfx9hw5WhEeykCgwMCkDq3mJh
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="359382718"
-X-IronPort-AV: E=Sophos;i="5.97,304,1669104000"; 
-   d="scan'208";a="359382718"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2023 23:54:04 -0800
+  t=1676652999; x=1708188999;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3aIo2q4rrbz+QhAty9dbB6TAzju45I5+EuDMZYyHTsk=;
+  b=KLhpq9aec8ziRy2h62Jl1GPShkLKiCadAgLaHPBnSe18gClA5Ex3zsYM
+   kk22jQkfNf729zE1dndKGLERNDG7AqORfPrMlQhh+DTzpwbXDRze+/JCp
+   MYGoD3XZHZdozNJm8AygNOq+Lt9UeJmwCD0OX6IRgaHfrwRH9tep8DoMU
+   o44ubE0PEqSameoGjMQPWqbYvhzPSxaLbM0yKc7f/wuTzSTpmh1GJyQqt
+   TqHCgw+Pc6sQHDb/a/O+KIN+TTsFpjWCFFCkQp2zIyV+F9UfgdSJnmICk
+   Tsjo5H6jlCCn4UMhmjBsKuSYpMhBmusx/0TIldDuBwx8efla+x+d4I218
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="312399194"
+X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
+   d="scan'208";a="312399194"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 08:56:30 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="915989883"
-X-IronPort-AV: E=Sophos;i="5.97,304,1669104000"; 
-   d="scan'208";a="915989883"
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="794450450"
+X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
+   d="scan'208";a="794450450"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Feb 2023 23:54:02 -0800
+  by orsmga004.jf.intel.com with ESMTP; 17 Feb 2023 08:56:28 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1pSvZC-000BD9-15;
-	Fri, 17 Feb 2023 07:54:02 +0000
-Date: Fri, 17 Feb 2023 15:53:28 +0800
+	id 1pT427-000Bf3-25;
+	Fri, 17 Feb 2023 16:56:27 +0000
+Date: Sat, 18 Feb 2023 00:56:21 +0800
 From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 8d1b80a79452630f157bf634ae9cfcd9f4eed161
-Message-ID: <63ef3278.Q+RPlFwo3GpkRXxB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.or,
+	chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/2] erofs: avoid hardcoded blocksize for subpage
+ block support
+Message-ID: <202302180056.Qg8HFrkU-lkp@intel.com>
+References: <20230217055016.71462-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20230217055016.71462-1-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,119 +72,95 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 8d1b80a79452630f157bf634ae9cfcd9f4eed161  erofs: fix an error code in z_erofs_init_zip_subsystem()
+Hi Jingbo,
 
-elapsed time: 995m
+Thank you for the patch! Yet something to improve:
 
-configs tested: 95
-configs skipped: 3
+[auto build test ERROR on xiang-erofs/dev-test]
+[also build test ERROR on xiang-erofs/dev next-20230217]
+[cannot apply to xiang-erofs/fixes linus/master v6.2-rc8]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jingbo-Xu/erofs-set-block-size-to-the-on-disk-block-size/20230217-135145
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+patch link:    https://lore.kernel.org/r/20230217055016.71462-1-jefflexu%40linux.alibaba.com
+patch subject: [PATCH v2 1/2] erofs: avoid hardcoded blocksize for subpage block support
+config: i386-randconfig-a014 (https://download.01.org/0day-ci/archive/20230218/202302180056.Qg8HFrkU-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/f3fa173833cc0b885d46a6c71796687a03ce25e1
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Jingbo-Xu/erofs-set-block-size-to-the-on-disk-block-size/20230217-135145
+        git checkout f3fa173833cc0b885d46a6c71796687a03ce25e1
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
 
-gcc tested configs:
-alpha                             allnoconfig
-alpha                            allyesconfig
-alpha                               defconfig
-arc                               allnoconfig
-arc                              allyesconfig
-arc                                 defconfig
-arc                  randconfig-r043-20230212
-arc                  randconfig-r043-20230213
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                                 defconfig
-arm                  randconfig-r046-20230212
-arm64                            allyesconfig
-arm64                               defconfig
-csky                                defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-i386                 randconfig-a011-20230213
-i386                          randconfig-a012
-i386                 randconfig-a012-20230213
-i386                 randconfig-a013-20230213
-i386                          randconfig-a014
-i386                 randconfig-a014-20230213
-i386                 randconfig-a015-20230213
-i386                          randconfig-a016
-i386                 randconfig-a016-20230213
-ia64                             allmodconfig
-ia64                                defconfig
-loongarch                        allmodconfig
-loongarch                         allnoconfig
-loongarch                           defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                randconfig-r042-20230213
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                                defconfig
-s390                 randconfig-r044-20230213
-sh                               allmodconfig
-sparc                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                            allnoconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                        randconfig-a011
-x86_64               randconfig-a011-20230213
-x86_64               randconfig-a012-20230213
-x86_64                        randconfig-a013
-x86_64               randconfig-a013-20230213
-x86_64               randconfig-a014-20230213
-x86_64                        randconfig-a015
-x86_64               randconfig-a015-20230213
-x86_64               randconfig-a016-20230213
-x86_64                               rhel-8.3
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302180056.Qg8HFrkU-lkp@intel.com/
 
-clang tested configs:
-arm                  randconfig-r046-20230213
-hexagon              randconfig-r041-20230212
-hexagon              randconfig-r041-20230213
-hexagon              randconfig-r045-20230212
-hexagon              randconfig-r045-20230213
-i386                 randconfig-a001-20230213
-i386                 randconfig-a002-20230213
-i386                 randconfig-a003-20230213
-i386                 randconfig-a004-20230213
-i386                 randconfig-a005-20230213
-i386                 randconfig-a006-20230213
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-riscv                randconfig-r042-20230212
-s390                 randconfig-r044-20230212
-x86_64               randconfig-a001-20230213
-x86_64               randconfig-a002-20230213
-x86_64               randconfig-a003-20230213
-x86_64               randconfig-a004-20230213
-x86_64               randconfig-a005-20230213
-x86_64               randconfig-a006-20230213
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
+All errors (new ones prefixed by >>):
+
+   ld: fs/erofs/data.o: in function `erofs_map_blocks_flatmode':
+>> fs/erofs/data.c:89: undefined reference to `__divdi3'
+   ld: fs/erofs/namei.o: in function `erofs_find_target_block':
+>> fs/erofs/namei.c:93: undefined reference to `__divdi3'
+   ld: fs/erofs/zmap.o: in function `compacted_load_cluster_from_disk':
+>> fs/erofs/zmap.c:252: undefined reference to `__divdi3'
+
+
+vim +89 fs/erofs/data.c
+
+    79	
+    80	static int erofs_map_blocks_flatmode(struct inode *inode,
+    81					     struct erofs_map_blocks *map)
+    82	{
+    83		erofs_blk_t nblocks, lastblk;
+    84		u64 offset = map->m_la;
+    85		struct erofs_inode *vi = EROFS_I(inode);
+    86		struct super_block *sb = inode->i_sb;
+    87		bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
+    88	
+  > 89		nblocks = DIV_ROUND_UP(inode->i_size, sb->s_blocksize);
+    90		lastblk = nblocks - tailendpacking;
+    91	
+    92		/* there is no hole in flatmode */
+    93		map->m_flags = EROFS_MAP_MAPPED;
+    94		if (offset < erofs_pos(sb, lastblk)) {
+    95			map->m_pa = erofs_pos(sb, vi->raw_blkaddr) + map->m_la;
+    96			map->m_plen = erofs_pos(sb, lastblk) - offset;
+    97		} else if (tailendpacking) {
+    98			map->m_pa = erofs_iloc(inode) + vi->inode_isize +
+    99				vi->xattr_isize + erofs_blkoff(sb, offset);
+   100			map->m_plen = inode->i_size - offset;
+   101	
+   102			/* inline data should be located in the same meta block */
+   103			if (erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
+   104				erofs_err(sb,
+   105					  "inline data cross block boundary @ nid %llu",
+   106					  vi->nid);
+   107				DBG_BUGON(1);
+   108				return -EFSCORRUPTED;
+   109			}
+   110			map->m_flags |= EROFS_MAP_META;
+   111		} else {
+   112			erofs_err(sb,
+   113				  "internal error @ nid: %llu (size %llu), m_la 0x%llx",
+   114				  vi->nid, inode->i_size, map->m_la);
+   115			DBG_BUGON(1);
+   116			return -EIO;
+   117		}
+   118		return 0;
+   119	}
+   120	
 
 -- 
 0-DAY CI Kernel Test Service
