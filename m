@@ -2,36 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC0669C440
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Feb 2023 03:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E70069C44A
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Feb 2023 04:03:16 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PKn3k5Krcz3c6m
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Feb 2023 13:50:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PKnKs70kNz3c6Y
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Feb 2023 14:03:13 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XP1MxDD2;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XP1MxDD2;
+	dkim-atps=neutral
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PKn3f141Pz3bZl
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Feb 2023 13:50:52 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Vc-LZU0_1676861447;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vc-LZU0_1676861447)
-          by smtp.aliyun-inc.com;
-          Mon, 20 Feb 2023 10:50:47 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 2/2] erofs: set block size to the on-disk block size
-Date: Mon, 20 Feb 2023 10:50:46 +0800
-Message-Id: <20230220025046.103777-2-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230220025046.103777-1-jefflexu@linux.alibaba.com>
-References: <20230220025046.103777-1-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PKnKp5tW3z3bT1
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Feb 2023 14:03:10 +1100 (AEDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 94970B809E3;
+	Mon, 20 Feb 2023 03:03:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00220C433D2;
+	Mon, 20 Feb 2023 03:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676862185;
+	bh=K4g+VWnYi5actU4XQ7u2VfOjBh1wfqtMcWd25MgtzYY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XP1MxDD2uR2PcAJ7G3afM0U1tJyCa5WqVHcG2X1jM3nZm6l5qdJnm+8MACuNmpr36
+	 bbVddT3X1TYN0YJ9wyVCbBtrOQqnis1T8dlriLryiXG86rYp9gzp9HqfASZ7E03FYm
+	 7GqAZQw8RTl2ld2GPxsI80Qlnk11U53UpP38V/rxMIXvT251/rpAMKYTx+hcNEK8gP
+	 RyqDPI4vgzzyD3X0g82Quy0UzAPdagJ0IdrL5rvD4CDBzP0L48xVS42VVaRwqfVPTI
+	 XfxuZbGtLOQH42/VfYpXI3+jY/ivaHm8KOIXizeqaQ4haD8WRKeWcZL6wplpVfk4h0
+	 Q0h9VtRsoeiGw==
+Date: Mon, 20 Feb 2023 11:02:58 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs updates for 6.3-rc1
+Message-ID: <Y/Li4s7qPOArhcSm@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Yue Hu <huyue2@coolpad.com>, Yangtao Li <frank.li@vivo.com>,
+	Dan Carpenter <error27@gmail.com>, Chao Yu <chao@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -44,164 +65,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: Dan Carpenter <error27@gmail.com>, Sandeep Dhavale <dhavale@google.com>, Yangtao Li <frank.li@vivo.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Set the block size to that specified in on-disk superblock.
+Hi Linus,
 
-Also remove the hard constraint of PAGE_SIZE block size for the
-uncompressed device backend.  This constraint is temporarily remained
-for compressed device and fscache backend, as there is more work needed
-to handle the condition where the block size is not equal to PAGE_SIZE.
+Could you consider this pull request for 6.3-rc1?
 
-It is worth noting that the on-disk block size is read prior to
-erofs_superblock_csum_verify(), as the read block size is needed in the
-latter.
+The most noticeable feature for this cycle is per-CPU kthread
+decompression since Android use cases need low-latency I/O handling
+in order to ensure the app runtime performance, currently unbounded
+workqueue latencies are not quite good for production on many aarch64
+hardwares and thus we need to introduce a deterministic expectation
+for these.  Decompression is CPU-intensive and it is sleepable for
+EROFS, so other alternatives like decompression under softirq contexts
+are not considered.  More details are in the corresponding commit
+message.
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/erofs_fs.h |  2 +-
- fs/erofs/inode.c    |  3 ++-
- fs/erofs/internal.h |  8 --------
- fs/erofs/super.c    | 42 +++++++++++++++++++++++++++---------------
- 4 files changed, 30 insertions(+), 25 deletions(-)
+Others are random cleanups around the whole codebase and we will
+continue to clean up further in the next few months.
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index dbcd24371002..5c7647d68c07 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -53,7 +53,7 @@ struct erofs_super_block {
- 	__le32 magic;           /* file system magic number */
- 	__le32 checksum;        /* crc32c(super_block) */
- 	__le32 feature_compat;
--	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-+	__u8 blkszbits;         /* filesystem block size */
- 	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
- 
- 	__le16 root_nid;	/* nid of root directory */
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index de26dac4e07e..0e6ff8a98c68 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -291,7 +291,8 @@ static int erofs_fill_inode(struct inode *inode)
- 	}
- 
- 	if (erofs_inode_is_data_compressed(vi->datalayout)) {
--		if (!erofs_is_fscache_mode(inode->i_sb))
-+		if (!erofs_is_fscache_mode(inode->i_sb) &&
-+		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT)
- 			err = z_erofs_fill_inode(inode);
- 		else
- 			err = -EOPNOTSUPP;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index d8019d835405..612543915e9e 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -240,14 +240,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- 					VAL != EROFS_LOCKED_MAGIC);
- }
- 
--/* we strictly follow PAGE_SIZE and no buffer head yet */
--#define LOG_BLOCK_SIZE		PAGE_SHIFT
--#define EROFS_BLKSIZ		(1 << LOG_BLOCK_SIZE)
--
--#if (EROFS_BLKSIZ % 4096 || !EROFS_BLKSIZ)
--#error erofs cannot be used in this platform
--#endif
--
- enum erofs_kmap_type {
- 	EROFS_NO_KMAP,		/* don't map the buffer */
- 	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index c97615c96ef8..89011a4ed274 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -349,6 +349,14 @@ static int erofs_read_superblock(struct super_block *sb)
- 		goto out;
- 	}
- 
-+	blkszbits = dsb->blkszbits;
-+	sbi->blkszbits = dsb->blkszbits;
-+	if (blkszbits < 9 || blkszbits > PAGE_SHIFT) {
-+		erofs_err(sb, "blkszbits %u isn't supported on this platform",
-+			  blkszbits);
-+		goto out;
-+	}
-+
- 	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
- 	if (erofs_sb_has_sb_chksum(sbi)) {
- 		ret = erofs_superblock_csum_verify(sb, data);
-@@ -357,19 +365,11 @@ static int erofs_read_superblock(struct super_block *sb)
- 	}
- 
- 	ret = -EINVAL;
--	blkszbits = dsb->blkszbits;
--	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
--	if (blkszbits != LOG_BLOCK_SIZE) {
--		erofs_err(sb, "blkszbits %u isn't supported on this platform",
--			  blkszbits);
--		goto out;
--	}
--
- 	if (!check_layout_compatibility(sb, dsb))
- 		goto out;
- 
- 	sbi->sb_size = 128 + dsb->sb_extslots * EROFS_SB_EXTSLOT_SIZE;
--	if (sbi->sb_size > EROFS_BLKSIZ) {
-+	if (sbi->sb_size > PAGE_SIZE - EROFS_SUPER_OFFSET) {
- 		erofs_err(sb, "invalid sb_extslots %u (more than a fs block)",
- 			  sbi->sb_size);
- 		goto out;
-@@ -736,8 +736,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- 	sbi->blkszbits = PAGE_SHIFT;
- 	if (erofs_is_fscache_mode(sb)) {
--		sb->s_blocksize = EROFS_BLKSIZ;
--		sb->s_blocksize_bits = LOG_BLOCK_SIZE;
-+		sb->s_blocksize = PAGE_SIZE;
-+		sb->s_blocksize_bits = PAGE_SHIFT;
- 
- 		err = erofs_fscache_register_fs(sb);
- 		if (err)
-@@ -747,8 +747,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 		if (err)
- 			return err;
- 	} else {
--		if (!sb_set_blocksize(sb, EROFS_BLKSIZ)) {
--			erofs_err(sb, "failed to set erofs blksize");
-+		if (!sb_set_blocksize(sb, PAGE_SIZE)) {
-+			errorfc(fc, "failed to set initial blksize");
- 			return -EINVAL;
- 		}
- 
-@@ -761,12 +761,24 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
--	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
--		BUILD_BUG_ON(EROFS_BLKSIZ != PAGE_SIZE);
-+	if (sb->s_blocksize_bits != sbi->blkszbits) {
-+		if (erofs_is_fscache_mode(sb)) {
-+			errorfc(fc, "unsupported blksize for fscache mode");
-+			return -EINVAL;
-+		}
-+		if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
-+			errorfc(fc, "failed to set erofs blksize");
-+			return -EINVAL;
-+		}
-+	}
- 
-+	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
- 		if (!sbi->dax_dev) {
- 			errorfc(fc, "DAX unsupported by block device. Turning off DAX.");
- 			clear_opt(&sbi->opt, DAX_ALWAYS);
-+		} else if (sbi->blkszbits != PAGE_SHIFT) {
-+			errorfc(fc, "unsupported blocksize for DAX");
-+			clear_opt(&sbi->opt, DAX_ALWAYS);
- 		}
- 	}
- 
--- 
-2.19.1.6.gb485710b
+Due to Lunar New Year holidays, some new features were not completely
+reviewed and solidified as expected and we may delay them into the
+next version.  All commits have been in -next for a while.
 
+Thanks,
+Gao Xiang
+
+The following changes since commit 2241ab53cbb5cdb08a6b2d4688feb13971058f65:
+
+  Linux 6.2-rc5 (2023-01-21 16:27:01 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.3-rc1
+
+for you to fetch changes up to 8d1b80a79452630f157bf634ae9cfcd9f4eed161:
+
+  erofs: fix an error code in z_erofs_init_zip_subsystem() (2023-02-16 22:51:53 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Add per-cpu kthreads for low-latency decompression for Android
+   use cases;
+
+ - Get rid of tagged pointer helpers since they are rarely used now;
+
+ - Several code cleanups to reduce codebase;
+
+ - Documentation and MAINTAINERS updates.
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      erofs: fix an error code in z_erofs_init_zip_subsystem()
+
+Gao Xiang (10):
+      erofs: clean up erofs_iget()
+      erofs: remove linux/buffer_head.h dependency
+      erofs: get rid of debug_one_dentry()
+      erofs: simplify iloc()
+      erofs: get rid of erofs_inode_datablocks()
+      erofs: avoid tagged pointers to mark sync decompression
+      erofs: remove tagged pointer helpers
+      erofs: move zdata.h into zdata.c
+      erofs: get rid of z_erofs_do_map_blocks() forward declaration
+      erofs: tidy up internal.h
+
+Jingbo Xu (6):
+      erofs: update print symbols for various flags in trace
+      erofs: remove unused EROFS_GET_BLOCKS_RAW flag
+      erofs: remove unused device mapping in meta routine
+      erofs: maintain cookies of share domain in self-contained list
+      erofs: relinquish volume with mutex held
+      erofs: unify anonymous inodes for blob
+
+Sandeep Dhavale (1):
+      erofs: add per-cpu threads for decompression as an option
+
+Thomas Weißschuh (1):
+      erofs: make kobj_type structures constant
+
+Yangtao Li (1):
+      MAINTAINERS: erofs: Add Documentation/ABI/testing/sysfs-fs-erofs
+
+Yue Hu (1):
+      Documentation/ABI: sysfs-fs-erofs: update supported features
+
+ Documentation/ABI/testing/sysfs-fs-erofs |   3 +-
+ MAINTAINERS                              |   1 +
+ fs/erofs/Kconfig                         |  18 ++
+ fs/erofs/data.c                          |  23 +-
+ fs/erofs/dir.c                           |  17 --
+ fs/erofs/fscache.c                       | 146 +++++------
+ fs/erofs/inode.c                         |  42 +--
+ fs/erofs/internal.h                      | 146 ++++-------
+ fs/erofs/namei.c                         |  18 +-
+ fs/erofs/super.c                         |   3 +-
+ fs/erofs/sysfs.c                         |   6 +-
+ fs/erofs/tagptr.h                        | 107 --------
+ fs/erofs/xattr.c                         |  20 +-
+ fs/erofs/zdata.c                         | 424 ++++++++++++++++++++++++++-----
+ fs/erofs/zdata.h                         | 178 -------------
+ fs/erofs/zmap.c                          | 253 +++++++++---------
+ include/trace/events/erofs.h             |  17 +-
+ 17 files changed, 667 insertions(+), 755 deletions(-)
+ delete mode 100644 fs/erofs/tagptr.h
+ delete mode 100644 fs/erofs/zdata.h
