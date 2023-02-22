@@ -1,35 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9990C69DCB6
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Feb 2023 10:17:42 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2343F69F1BD
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 10:30:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PLYbS3Hk2z3cBq
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Feb 2023 20:17:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PM9qs0SWtz3cBm
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 20:30:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PLYbB51Zgz309V
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Feb 2023 20:17:26 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VcBjLWD_1676971041;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VcBjLWD_1676971041)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PM9qh5dGSz3bT5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Feb 2023 20:30:23 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VcGKO3F_1677058211;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcGKO3F_1677058211)
           by smtp.aliyun-inc.com;
-          Tue, 21 Feb 2023 17:17:22 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs: set blksize to on-disk blksize for fscache mode
-Date: Tue, 21 Feb 2023 17:17:19 +0800
-Message-Id: <20230221091719.126127-3-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230221091719.126127-1-jefflexu@linux.alibaba.com>
-References: <20230221091719.126127-1-jefflexu@linux.alibaba.com>
+          Wed, 22 Feb 2023 17:30:17 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs-utils: ignore comments and blank lines in compress hints
+Date: Wed, 22 Feb 2023 17:30:09 +0800
+Message-Id: <20230222093010.55999-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -43,95 +39,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since fscache mode has supported PAGE_SIZE other than 4KB, remove the
-constraint and set to on-disk blksize.
+Identify lines starting with '#' as a comment.
 
-We need to initialize the fscache context for the bootstrap before
-setting the initial blksize as it will also update anonymous inode's
-i_blkbits for the bootstrap.
-
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/super.c | 38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ lib/compress_hints.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 89011a4ed274..130e0f6db3c7 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -709,6 +709,17 @@ static int erofs_fc_fill_pseudo_super(struct super_block *sb, struct fs_context
- 	return simple_fill_super(sb, EROFS_SUPER_MAGIC, &empty_descr);
- }
+diff --git a/lib/compress_hints.c b/lib/compress_hints.c
+index 92964eb..3e5c8c8 100644
+--- a/lib/compress_hints.c
++++ b/lib/compress_hints.c
+@@ -101,6 +101,9 @@ int erofs_load_compress_hints(void)
+ 		unsigned int pclustersize;
+ 		char *pattern;
  
-+static bool erofs_set_block_size(struct super_block *sb, unsigned int blkszbits)
-+{
-+	if (!erofs_is_fscache_mode(sb))
-+		return sb_set_blocksize(sb, 1 << blkszbits);
++		if (*buf == '#' || *buf == '\n')
++			continue;
 +
-+	sb->s_blocksize = 1 << blkszbits;
-+	sb->s_blocksize_bits = blkszbits;
-+	EROFS_SB(sb)->s_fscache->inode->i_blkbits = blkszbits;
-+	return true;
-+}
-+
- static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
-@@ -734,11 +745,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sbi->domain_id = ctx->domain_id;
- 	ctx->domain_id = NULL;
- 
--	sbi->blkszbits = PAGE_SHIFT;
- 	if (erofs_is_fscache_mode(sb)) {
--		sb->s_blocksize = PAGE_SIZE;
--		sb->s_blocksize_bits = PAGE_SHIFT;
--
- 		err = erofs_fscache_register_fs(sb);
- 		if (err)
- 			return err;
-@@ -747,29 +754,24 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 		if (err)
- 			return err;
- 	} else {
--		if (!sb_set_blocksize(sb, PAGE_SIZE)) {
--			errorfc(fc, "failed to set initial blksize");
--			return -EINVAL;
--		}
--
- 		sbi->dax_dev = fs_dax_get_by_bdev(sb->s_bdev,
- 						  &sbi->dax_part_off,
- 						  NULL, NULL);
- 	}
- 
-+	if (!erofs_set_block_size(sb, PAGE_SHIFT)) {
-+		errorfc(fc, "failed to set initial blksize");
-+		return -EINVAL;
-+	}
-+
- 	err = erofs_read_superblock(sb);
- 	if (err)
- 		return err;
- 
--	if (sb->s_blocksize_bits != sbi->blkszbits) {
--		if (erofs_is_fscache_mode(sb)) {
--			errorfc(fc, "unsupported blksize for fscache mode");
--			return -EINVAL;
--		}
--		if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
--			errorfc(fc, "failed to set erofs blksize");
--			return -EINVAL;
--		}
-+	if (sb->s_blocksize_bits != sbi->blkszbits &&
-+	    !erofs_set_block_size(sb, sbi->blkszbits)) {
-+		errorfc(fc, "failed to set erofs blksize");
-+		return -EINVAL;
- 	}
- 
- 	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
+ 		pclustersize = atoi(strtok(buf, "\t "));
+ 		pattern = strtok(NULL, "\n");
+ 		if (!pattern || *pattern == '\0') {
 -- 
-2.19.1.6.gb485710b
+2.36.1
 
