@@ -1,30 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D2F669F2D5
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 11:39:50 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BC2F69FBB6
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 20:08:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PMCMm36rWz3c8x
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 21:39:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PMQfn0nv9z3bh1
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 06:08:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PMCMh0xbmz2xJ4
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Feb 2023 21:39:43 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VcGXfA3_1677062364;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcGXfA3_1677062364)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PMQfj3tKrz3bwQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Feb 2023 06:08:28 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VcHjprx_1677092895;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcHjprx_1677092895)
           by smtp.aliyun-inc.com;
-          Wed, 22 Feb 2023 18:39:37 +0800
+          Thu, 23 Feb 2023 03:08:22 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: support randomizing algorithms in debugging mode
-Date: Wed, 22 Feb 2023 18:39:23 +0800
-Message-Id: <20230222103923.10815-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: get rid of PAGE_SIZE leftovers
+Date: Thu, 23 Feb 2023 03:08:14 +0800
+Message-Id: <20230222190814.102585-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -43,86 +43,36 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It's used for multiple algorithms selftest.
+commit c47df5aa2d16 ("erofs-utils: fuse: introduce xattr support")
+introduced two new references.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/config.h |  1 +
- lib/compress.c         | 11 +++++++++++
- mkfs/main.c            |  5 +++++
- 3 files changed, 17 insertions(+)
+ lib/xattr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 17db98c..7b64d89 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -41,6 +41,7 @@ struct erofs_configure {
- 	bool c_legacy_compress;
- #ifndef NDEBUG
- 	bool c_random_pclusterblks;
-+	bool c_random_algorithms;
- #endif
- 	char c_timeinherit;
- 	char c_chunkbits;
-diff --git a/lib/compress.c b/lib/compress.c
-index 012a90c..4c314e7 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -860,6 +860,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
- 	if (cfg.c_fragments && !cfg.c_dedupe)
- 		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 0ca89a4..024ecbe 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -915,7 +915,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 			it->ofs = 0;
+ 		}
  
-+#ifndef NDEBUG
-+	if (cfg.c_random_algorithms) {
-+		while (1) {
-+			inode->z_algorithmtype[0] =
-+				rand() % EROFS_MAX_COMPR_CFG;
-+			if (erofs_ccfg[inode->z_algorithmtype[0]].enable)
-+				break;
-+		}
-+	}
-+#endif
- 	ctx.ccfg = &erofs_ccfg[inode->z_algorithmtype[0]];
- 	inode->z_algorithmtype[0] = ctx.ccfg[0].algorithmtype;
- 	inode->z_algorithmtype[1] = 0;
-@@ -1075,6 +1085,7 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		if (ret < 0)
- 			return ret;
- 		erofs_ccfg[i].algorithmtype = ret;
-+		erofs_ccfg[i].enable = true;
- 		sbi.available_compr_algs |= 1 << ret;
- 		if (ret != Z_EROFS_COMPRESSION_LZ4)
- 			erofs_sb_set_compr_cfgs();
-diff --git a/mkfs/main.c b/mkfs/main.c
-index bb3628f..206a669 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -45,6 +45,7 @@ static struct option long_options[] = {
- 	{"all-root", no_argument, NULL, 7},
- #ifndef NDEBUG
- 	{"random-pclusterblks", no_argument, NULL, 8},
-+	{"random-algorithms", no_argument, NULL, 18},
- #endif
- 	{"max-extent-bytes", required_argument, NULL, 9},
- 	{"compress-hints", required_argument, NULL, 10},
-@@ -111,6 +112,7 @@ static void usage(void)
- 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
-+	      " --random-algorithms   randomize per-file algorithms (debugging only)\n"
- #endif
- 	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
- #ifdef WITH_ANDROID
-@@ -370,6 +372,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 8:
- 			cfg.c_random_pclusterblks = true;
- 			break;
-+		case 18:
-+			cfg.c_random_algorithms = true;
-+			break;
- #endif
- 		case 9:
- 			cfg.c_max_decompressed_extent_bytes =
+-		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
++		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
+ 			      entry.e_name_len - processed);
+ 
+ 		/* handle name */
+@@ -950,7 +950,7 @@ static int xattr_foreach(struct xattr_iter *it,
+ 			it->ofs = 0;
+ 		}
+ 
+-		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
++		slice = min_t(unsigned int, EROFS_BLKSIZ - it->ofs,
+ 			      value_sz - processed);
+ 		op->value(it, processed, it->kaddr + it->ofs, slice);
+ 		it->ofs += slice;
 -- 
-2.36.1
+2.24.4
 
