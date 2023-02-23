@@ -1,54 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB5876A0F73
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 19:30:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 392D96A0FC6
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 19:53:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PN1lz3RDYz3cXX
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Feb 2023 05:30:07 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=E1Vs560f;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PN2GV1DDPz3cct
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Feb 2023 05:53:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=ebiggers@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=E1Vs560f;
-	dkim-atps=neutral
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PN1lt6qRQz2yRV
-	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Feb 2023 05:30:02 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 1D5B1B81AA9;
-	Thu, 23 Feb 2023 18:29:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD50FC433EF;
-	Thu, 23 Feb 2023 18:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1677176997;
-	bh=FDtSn6RCdhK29pIP/7am1BjCvIl0avHM6OD1PRsuEaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E1Vs560faX2Rwvsoa/KWKQjxFyh/MR7/JgHP73Iu2kiW6lgV/x3diRoIFEEP5DBuV
-	 OWy6Qgt7UTJuNTevYMjETeogFTbw6tiCCo3YhnUwmmqqTvnGB5+or+HFQp+k1I1LU3
-	 +oOVG9bPs0UK8xzae2LTQqHEhtiJg//LIeAPnida//rcqW/rCuppLvad6pbfhNMfCE
-	 XdAgxvQ5MGRfEfPJirnvdcY3Q1rF/c21AYOe7vQyIS6HWdsX+fGK3Hj7nUm6jw4hYW
-	 IogWCTeKjzf96djhht+bjzzxx9yPkzeNUGHoX+96vGaQvpY4eg5aizuHHfGnHN607g
-	 HnA7oxsGW9hRA==
-Date: Thu, 23 Feb 2023 18:29:56 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PN2GR2d39z3bhD
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Feb 2023 05:53:02 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VcLG3xX_1677178375;
+Received: from 30.25.216.19(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcLG3xX_1677178375)
+          by smtp.aliyun-inc.com;
+          Fri, 24 Feb 2023 02:52:57 +0800
+Message-ID: <ca1e604a-92ba-023b-8896-dcad9413081d@linux.alibaba.com>
+Date: Fri, 24 Feb 2023 02:52:54 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
 Subject: Re: [PATCH v5] erofs: add per-cpu threads for decompression as an
  option
-Message-ID: <Y/ewpGQkpWvOf7qh@gmail.com>
+To: Eric Biggers <ebiggers@kernel.org>
 References: <20230208093322.75816-1-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230208093322.75816-1-hsiangkao@linux.alibaba.com>
+ <Y/ewpGQkpWvOf7qh@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <Y/ewpGQkpWvOf7qh@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,20 +49,40 @@ Cc: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org, LKML <li
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+Hi Eric,
 
-On Wed, Feb 08, 2023 at 05:33:22PM +0800, Gao Xiang wrote:
-> From: Sandeep Dhavale <dhavale@google.com>
+On 2023/2/24 02:29, Eric Biggers wrote:
+> Hi,
 > 
-> Using per-cpu thread pool we can reduce the scheduling latency compared
-> to workqueue implementation. With this patch scheduling latency and
-> variation is reduced as per-cpu threads are high priority kthread_workers.
+> On Wed, Feb 08, 2023 at 05:33:22PM +0800, Gao Xiang wrote:
+>> From: Sandeep Dhavale <dhavale@google.com>
+>>
+>> Using per-cpu thread pool we can reduce the scheduling latency compared
+>> to workqueue implementation. With this patch scheduling latency and
+>> variation is reduced as per-cpu threads are high priority kthread_workers.
+>>
+>> The results were evaluated on arm64 Android devices running 5.10 kernel.
 > 
-> The results were evaluated on arm64 Android devices running 5.10 kernel.
+> I see that this patch was upstreamed.  Meanwhile, commit c25da5b7baf1d
+> ("dm verity: stop using WQ_UNBOUND for verify_wq") was also upstreamed.
+> 
+> Why is this more complex solution better than simply removing WQ_UNBOUND?
 
-I see that this patch was upstreamed.  Meanwhile, commit c25da5b7baf1d
-("dm verity: stop using WQ_UNBOUND for verify_wq") was also upstreamed.
+I do think it's a specific issue on specific arm64 hardwares (assuming
+qualcomm, I don't know) since WQ_UNBOUND decompression once worked well
+on the hardwares I once used (I meant Hisilicon, and most x86_64 CPUs,
+I tested at that time) compared with per-cpu workqueue.
 
-Why is this more complex solution better than simply removing WQ_UNBOUND?
+Also RT threads are also matchable with softirq approach.  In addition,
+many configurations work without dm-verity.
 
-- Eric
+I don't have more time to dig into it for now but it's important to
+resolve this problem on some arm64 hardwares first.  Also it's an
+optional stuff, if the root cause of workqueue issue can be resolved,
+we could consider drop it then.
+
+Thsnka,
+Gao Xiang
+
+> 
+> - Eric
