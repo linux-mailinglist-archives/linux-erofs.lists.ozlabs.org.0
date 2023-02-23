@@ -1,33 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35C9B69FBCA
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Feb 2023 20:12:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDC856A066A
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 11:38:41 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PMQkv1HmYz3cBF
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 06:12:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PMqHz4bM1z3cMm
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Feb 2023 21:38:39 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=lU8FgkKv;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=yinxin.x@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=lU8FgkKv;
+	dkim-atps=neutral
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PMQkq0fMDz3c9x
-	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Feb 2023 06:12:02 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VcHhJLC_1677093116;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcHhJLC_1677093116)
-          by smtp.aliyun-inc.com;
-          Thu, 23 Feb 2023 03:11:58 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 3/3] erofs-utils: support randomizing algorithms in debugging mode
-Date: Thu, 23 Feb 2023 03:11:48 +0800
-Message-Id: <20230222191148.112677-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230222191148.112677-1-hsiangkao@linux.alibaba.com>
-References: <20230222191148.112677-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PMqHr55wMz3cCy
+	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Feb 2023 21:38:30 +1100 (AEDT)
+Received: by mail-pl1-x634.google.com with SMTP id z2so12412730plf.12
+        for <linux-erofs@lists.ozlabs.org>; Thu, 23 Feb 2023 02:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fVSa2HEsQUgf21db/3wCzFJNJMjWdnCpTJDc8PUFVUg=;
+        b=lU8FgkKvew6zeeC7G69X4TxFJBb6QWZlDuZ9v7A0KzpCZLQyd29EW+Na2IinIktbsa
+         3MjN3Fuwg3McSkkeOZ4E7Yohs6gz03s/dGdfUhKDTrC2pdJMfPjsX+FB6rMSohUykLiN
+         VtwNNUPznaDrmtLGDMEoU1kFhT7MHvN/OFEFn/WlKJigKPpkArcaOEDC9y5m9ZxwQxon
+         9UYmUk2BCOnm6xBdo7L9U7MM/56n8lPPC1lWhvv9r0iexkhYJwAF65D56uvpPtqAeIQA
+         v9Y5zP8xzKuVVMgFP9mFRcciYNwRzeGbOCsEWYA5kt0z9xL1N8uI7Ga+Te/Jq1Tpa6Eb
+         oGYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fVSa2HEsQUgf21db/3wCzFJNJMjWdnCpTJDc8PUFVUg=;
+        b=kIZ6CnG8xrCZ6ZKP+2OH5sZ47oDRU2VMQg43ca0X0X/xKR9VBaP+MWmXAVjsUuSS5M
+         Yzb7/c8OV64ZgTE7y8urqzPR5fNZ8r+/nQ8id/b1mL1f5u4ztRdeJ3xLzum9WiqEHJ4G
+         +UC6GDEncxUyzHt7ouSILA8ndgZTWh9fX0m0gtQ9VCCHycE6WyCTsFo/RffaI0UukRxf
+         FGrgkmIOS3FJigGV5x30SiF7T9aGuHoWUfdqKZ49z/4IpLJwOLZ8VDpRW2rER8ZPsCer
+         kF6nkfsv3u4ZzteqrGRur6ml3tpOcIhUdMY/kngtxWyMdsWFs2zT236jJzn0RHGR1SIC
+         VfKQ==
+X-Gm-Message-State: AO0yUKUGHVPlTwnn4/ohE45anwWVKSycMos+yrW+Q67UnXVbiTZ9wtht
+	aOlNrbhe7HIPRA4dT3yhCbpauw==
+X-Google-Smtp-Source: AK7set+0jn8Cq1tdeYA8ETTeDoEUzWWKCbB49zI0EQps1JzP1Nkvgo7c6CHnCE4d8nV1/gVLsQdesw==
+X-Received: by 2002:a17:902:d2ca:b0:19a:e762:a1af with SMTP id n10-20020a170902d2ca00b0019ae762a1afmr12972180plc.33.1677148705621;
+        Thu, 23 Feb 2023 02:38:25 -0800 (PST)
+Received: from yinxin.bytedance.net ([139.177.225.243])
+        by smtp.gmail.com with ESMTPSA id g2-20020a170902868200b0019896d29197sm5639913plo.46.2023.02.23.02.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Feb 2023 02:38:25 -0800 (PST)
+From: Xin Yin <yinxin.x@bytedance.com>
+To: xiang@kernel.org
+Subject: Re: [LSF/MM/BPF TOPIC] Image-based read-only filesystem: further use cases & directions
+Date: Thu, 23 Feb 2023 18:38:16 +0800
+Message-Id: <20230223103816.2623-1-yinxin.x@bytedance.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <Y7vTpeNRaw3Nlm9B@debian>
+References: <Y7vTpeNRaw3Nlm9B@debian>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -41,98 +78,134 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: lsf-pc@lists.linuxfoundation.org, kernel-team@android.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It's used for multiple algorithms selftest.
+On 2023/1/9 16:43, Gao Xiang wrote:
+> Hi folks,
+> 
+> * Background *
+> 
+> We've been continuously working on forming a useful read-only
+> (immutable) image solution since the end of 2017 (as a part of our
+> work) until now as everyone may know:  EROFS.
+> 
+> Currently it has already successfully landed to (about) billions of
+> Android-related devices, other types of embedded devices and containers
+> with many vendors involved, and we've always been seeking more use
+> cases such as incremental immutable rootfs, app sandboxes or packages
+> (Android apk? with many duplicated libraries), dataset packages, etc.
+> 
+> The reasons why we always do believe immutable images can benefit
+> various use cases are:
+> 
+>   - much easier for all vendors to ship/distribute/keep original signing
+>     (golden) images to each instance;
+> 
+>   - (combined with the writable layer such as overlayfs) easy to roll
+>     back to the original shipped state or do incremental updates;
+> 
+>   - easy to check data corruption or do data recovery (no matter
+>     whether physical device or network errors);
+> 
+>   - easy for real storage devices to do hardware write-protection for
+>     immutable images;
+> 
+>   - can do various offline algorithms (such as reduced metadata,
+>     content-defined rolling hash deduplication, compression) to minimize
+>     image sizes;
+> 
+>   - initrd with FSDAX to avoid double caching with advantages above;
+> 
+>   - and more.
+> 
+> In 2019, a LSF/MM/BPF topic was put forward to show EROFS initial use
+> cases [1] as the read-only Android rootfs of a single instance on
+> resource-limited devices so that effective compression became quite
+> important at that time.
+> 
+> 
+> * Problem *
+> 
+> In addition to enhance data compression for single-instance deployment,
+> as a self-contained approach (so that all use cases can share the only
+> _one_ signed image), we've also focusing on multiple instances (such as
+> containers or apps, each image represents a complete filesystem tree)
+> all together on one device with similar data recently years so that
+> effective data deduplication, on-demand lazy pulling, page cache
+> sharing among such different golden images became vital as well.
+> 
+> 
+> * Current progresses *
+> 
+> In order to resolve the challenges above, we've worked out:
+> 
+>   - (v5.15) chunk-based inodes (to form inode extents) to do data
+>     deduplication among a single image;
+> 
+>   - (v5.16) multiple shared blobs (to keep content-defined data) in
+>     addition to the primary blob (to keep filesystem metadata) for wider
+>     deduplication across different images:
+> 
+>   - (v5.19) file-based distribution by introducing in-kernel local
+>     caching fscache and on-demand lazy pulling feature [2];
+> 
+>   - (v6.1) shared domain to share such multiple shared blobs in
+>     fscache mode [3];
+> 
+>   - [RFC] preliminary page cache sharing between diffenent images [4].
+> 
+> 
+> * Potential topics to discuss *
+> 
+>   - data verification of different images with thousands (or more)
+>     shared blobs [5];
+> 
+>   - encryption with per-extent keys for confidential containers [5][6];
+> 
+>   - current page cache sharing limitation due to mm reserve mapping and
+>     finer (folio or page-based) page cache sharing among images/blobs
+>     [4][7];
+> 
+>   - more effective in-kernel local caching features for fscache such as
+>     failover and daemonless;
+> 
+>   - (wild preliminary ideas, maybe) overlayfs partial copy-up with
+>     fscache as the upper layer in order to form a unique caching
+>     subsystem for better space saving?
+>
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/config.h |  1 +
- lib/compress.c         | 12 ++++++++++++
- mkfs/main.c            |  5 +++++
- 3 files changed, 18 insertions(+)
+We also interested in these topic, page cache sharing is an exciting feature, and may can save 
+a lot of memory in high-density deployment scenarios, cause we already can share blobs.
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index aee2815..39a6162 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -41,6 +41,7 @@ struct erofs_configure {
- 	bool c_legacy_compress;
- #ifndef NDEBUG
- 	bool c_random_pclusterblks;
-+	bool c_random_algorithms;
- #endif
- 	char c_timeinherit;
- 	char c_chunkbits;
-diff --git a/lib/compress.c b/lib/compress.c
-index b1185bd..0aaec30 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -25,6 +25,7 @@
- struct erofs_compress_cfg {
- 	struct erofs_compress handle;
- 	unsigned int algorithmtype;
-+	bool enable;
- } erofs_ccfg[EROFS_MAX_COMPR_CFGS];
- 
- struct z_erofs_vle_compress_ctx {
-@@ -859,6 +860,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
- 	if (cfg.c_fragments && !cfg.c_dedupe)
- 		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
- 
-+#ifndef NDEBUG
-+	if (cfg.c_random_algorithms) {
-+		while (1) {
-+			inode->z_algorithmtype[0] =
-+				rand() % EROFS_MAX_COMPR_CFGS;
-+			if (erofs_ccfg[inode->z_algorithmtype[0]].enable)
-+				break;
-+		}
-+	}
-+#endif
- 	ctx.ccfg = &erofs_ccfg[inode->z_algorithmtype[0]];
- 	inode->z_algorithmtype[0] = ctx.ccfg[0].algorithmtype;
- 	inode->z_algorithmtype[1] = 0;
-@@ -1074,6 +1085,7 @@ int z_erofs_compress_init(struct erofs_buffer_head *sb_bh)
- 		if (ret < 0)
- 			return ret;
- 		erofs_ccfg[i].algorithmtype = ret;
-+		erofs_ccfg[i].enable = true;
- 		sbi.available_compr_algs |= 1 << ret;
- 		if (ret != Z_EROFS_COMPRESSION_LZ4)
- 			erofs_sb_set_compr_cfgs();
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 2c3a3b7..d055902 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -45,6 +45,7 @@ static struct option long_options[] = {
- 	{"all-root", no_argument, NULL, 7},
- #ifndef NDEBUG
- 	{"random-pclusterblks", no_argument, NULL, 8},
-+	{"random-algorithms", no_argument, NULL, 18},
- #endif
- 	{"max-extent-bytes", required_argument, NULL, 9},
- 	{"compress-hints", required_argument, NULL, 10},
-@@ -111,6 +112,7 @@ static void usage(void)
- 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
-+	      " --random-algorithms   randomize per-file algorithms (debugging only)\n"
- #endif
- 	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
- #ifdef WITH_ANDROID
-@@ -370,6 +372,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 8:
- 			cfg.c_random_pclusterblks = true;
- 			break;
-+		case 18:
-+			cfg.c_random_algorithms = true;
-+			break;
- #endif
- 		case 9:
- 			cfg.c_max_decompressed_extent_bytes =
+Hope to have further discussion on the failover, mutiple daemons/dirs and daemonless feature of fscache & cachefiles.
+So we can have a better form for our production.
+
+And Looking forward to the opportunity to discuss online, if I can't attend offline.
+
+Thanks,
+Xin Yin
+
+>   - FSDAX enhancements for initial ramdisk or other use cases;
+> 
+>   - other issues when landing.
+> 
+> 
+> Finally, if our efforts (or plans) also make sense to you, we do hope
+> more people could join us, Thanks!
+> 
+> [1] https://lore.kernel.org/r/f44b1696-2f73-3637-9964-d73e3d5832b7@huawei.com
+> [2] https://lore.kernel.org/r/Yoj1AcHoBPqir++H@debian
+> [3] https://lore.kernel.org/r/20220918043456.147-1-zhujia.zj@bytedance.com
+> [4] https://lore.kernel.org/r/20230106125330.55529-1-jefflexu@linux.alibaba.com
+> [5] https://lore.kernel.org/r/Y6KqpGscDV6u5AfQ@B-P7TQMD6M-0146.local
+> [6] https://lwn.net/SubscriberLink/918893/4d389217f9b8d679
+> [7] https://lwn.net/Articles/895907
+> 
+> Thanks,
+> Gao Xiang
+
 -- 
-2.24.4
+2.25.1
 
