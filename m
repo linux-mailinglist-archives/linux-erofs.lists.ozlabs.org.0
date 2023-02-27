@@ -2,47 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86C6A6A2A4C
-	for <lists+linux-erofs@lfdr.de>; Sat, 25 Feb 2023 15:27:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 981FD6A3D64
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Feb 2023 09:46:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PP8HG6Z7Hz3cBX
-	for <lists+linux-erofs@lfdr.de>; Sun, 26 Feb 2023 01:27:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PQDcK3Xstz3c6f
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Feb 2023 19:46:09 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=jdROx0sc;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=K0762jnE;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=163.com (client-ip=220.181.12.197; helo=m12.mail.163.com; envelope-from=zbestahu@163.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::630; helo=mail-pl1-x630.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=jdROx0sc;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=K0762jnE;
 	dkim-atps=neutral
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.197])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PP8H72v75z3bgx
-	for <linux-erofs@lists.ozlabs.org>; Sun, 26 Feb 2023 01:27:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=sQiSC
-	/JfzhfLS10svMokIIHJ6FkOgyydyrxIY4la26c=; b=jdROx0scu4YvaYVT/ydzF
-	SNdhMEwg0GhhryIhteRsUBip1Cg5XYGg0Maskyh/1DmouQ6N3qX2Tv0DoMRLB2ec
-	omEFLQOKHAMzOKOhUJA4Gzy0YhkP7NyYTLD0nIOccO9j99FAXwLfW+ADM6aHmiWw
-	UNPy1H9j6sc2VH/PjGua6A=
-Received: from localhost.localdomain (unknown [112.22.168.212])
-	by zwqz-smtp-mta-g2-2 (Coremail) with SMTP id _____wCnxMHBGvpjMsyeBA--.35252S2;
-	Sat, 25 Feb 2023 22:27:16 +0800 (CST)
-From: Yue Hu <zbestahu@163.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: manpage: add -Ededupe option
-Date: Sat, 25 Feb 2023 22:27:07 +0800
-Message-Id: <20230225142707.28408-1-zbestahu@163.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wCnxMHBGvpjMsyeBA--.35252S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKrWktFWUAw4UKF4fGrWxWFg_yoWfWrXEq3
-	95JF1I9ayUAr97GF4fKF1fGryF9rWjkw1vqF15tF4DAryUuwsxXFZ09anxWF4fXr45Cw43
-	Jr1ayryIkanFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbE_MDUUUUU==
-X-Originating-IP: [112.22.168.212]
-X-CM-SenderInfo: p2eh23xdkxqiywtou0bp/xtbBoQYhEWI0XBYjbAAAsE
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PQDcC4QdKz2yMX
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Feb 2023 19:46:02 +1100 (AEDT)
+Received: by mail-pl1-x630.google.com with SMTP id p6so5101529plf.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 27 Feb 2023 00:46:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NFpin/ECaOJex7YpZnFv6bGio0mg33EAQtvXgREUayQ=;
+        b=K0762jnEJeB99RHRGn9nhBNoRCkFPx0Ljg3EZyQXsyQFII/I1EkFO5qgAOccMNyeD6
+         UJiRPUyOF88EKQ64ReXpDogSAEzm1FhfT5k1GGBx9mn7HhitR+o37RAqUeuqWlQoOikt
+         +7R+89Z+KoE/Ogow5wLHeo3vcvkfdxI5BB0JPnxpfd3IN7NCfNdGBGKkxhDyiFFlEQIl
+         SVPrbPfz1t9hPC+p/lRJSXw2i2wdFlh8CDDiZrPYsE9aVljQ5XZOY3TgKeJeik8HLUzL
+         pTiOS4BhrdtYCU67A7KUe4ppA7u80fNvJeQueGLVph63Z76f/+cezeihw8RdEVY9krcM
+         XIjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NFpin/ECaOJex7YpZnFv6bGio0mg33EAQtvXgREUayQ=;
+        b=nbrfkDssgTOY96WsCviW7eZ+4kR7cZn6dwmMy9luhh35VYv+6qSEiNxcVsjsEI+0sT
+         no+PZTXdOdnSi/CpABnTES2vjTPdJ/+4OkrxzaLvMNTL4mfx0MpJHIoCM1iMK2vENrpc
+         9v5RhsRySDDqrrKr7POGYQ6+NXyn/hiUj0EqWOAV8h1OjXXxGLSy7jm/24lCDX8PrZOx
+         MBbmQEY5FG2XAEBKENcZIyRs6tE+Vo/33t772w0itw75BObKBf5YT6qOXyX8Uw/WGqIX
+         MC5NbY0t9/soXfHENGgCm6Us5LGdB8Pl5VKmEMt6yPfZvgNCgYn76HW/jy9tlcr2ihfv
+         9yGw==
+X-Gm-Message-State: AO0yUKX2yTaRERuqtyzIcxEqa+oDI6ANZFj8TlbtPa0VxYsO+IWbhVrb
+	MJxl8Gxcw8DzAXlRfWkWNQc=
+X-Google-Smtp-Source: AK7set8rUqbwDb6YN70TZCYUV86Ojz9rmvp/fH3/kyj5o5+FHv+eATzeub1Rvw+C1JsZIKHgA9XKnA==
+X-Received: by 2002:a17:903:22c8:b0:192:4f85:b91d with SMTP id y8-20020a17090322c800b001924f85b91dmr27141271plg.46.1677487558137;
+        Mon, 27 Feb 2023 00:45:58 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id k3-20020a170902ba8300b0019aa8fd9485sm4013688pls.145.2023.02.27.00.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Feb 2023 00:45:57 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: don't warn ztailpacking feature anymore
+Date: Mon, 27 Feb 2023 16:44:57 +0800
+Message-Id: <20230227084457.3510-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,35 +74,33 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, zhangwen@coolpad.com
+Cc: Yue Hu <huyue2@coolpad.com>, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 From: Yue Hu <huyue2@coolpad.com>
 
-Complete the manpage for global compressed data deduplication feature.
+The ztailpacking feature has been merged for a year, it has been mostly
+stable now.
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
- man/mkfs.erofs.1 | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/erofs/super.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index 37f2609..5e039bd 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -69,6 +69,11 @@ more space and the tail part I/O. (Linux v5.17+)
- Pack the tail part (pcluster) of compressed files or the whole files into a
- special inode for smaller image sizes, may take an argument as the pcluster
- size of the packed inode in bytes. (Linux v6.1+)
-+.TP
-+.BI dedupe
-+Enable global compressed data deduplication to reduce the amount of storage
-+required for all files. May used with fragments option together to further
-+reduce storage reqirement. (Linux v6.1+)
- .RE
- .TP
- .BI "\-L " volume-label
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 19b1ae79cec4..733c22bcc3eb 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -417,8 +417,6 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	/* handle multiple devices */
+ 	ret = erofs_scan_devices(sb, dsb);
+ 
+-	if (erofs_sb_has_ztailpacking(sbi))
+-		erofs_info(sb, "EXPERIMENTAL compressed inline data feature in use. Use at your own risk!");
+ 	if (erofs_is_fscache_mode(sb))
+ 		erofs_info(sb, "EXPERIMENTAL fscache-based on-demand read feature in use. Use at your own risk!");
+ 	if (erofs_sb_has_fragments(sbi))
 -- 
-2.25.1
+2.17.1
 
