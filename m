@@ -2,32 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAB656A5F14
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Feb 2023 19:55:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D25D6A67E9
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Mar 2023 08:04:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PR64p6KvTz3cLR
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Mar 2023 05:55:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PRQGb0NsJz3c99
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Mar 2023 18:04:55 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=SJQ1r2P/;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1031; helo=mail-pj1-x1031.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=SJQ1r2P/;
+	dkim-atps=neutral
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PR64d4400z3c7X
-	for <linux-erofs@lists.ozlabs.org>; Wed,  1 Mar 2023 05:55:13 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VckM4RK_1677610508;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VckM4RK_1677610508)
-          by smtp.aliyun-inc.com;
-          Wed, 01 Mar 2023 02:55:09 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: add `-Eall-fragments` option
-Date: Wed,  1 Mar 2023 02:54:59 +0800
-Message-Id: <20230228185459.117762-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230228185459.117762-1-hsiangkao@linux.alibaba.com>
-References: <20230228185459.117762-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PRQGT22mZz2xJ4
+	for <linux-erofs@lists.ozlabs.org>; Wed,  1 Mar 2023 18:04:48 +1100 (AEDT)
+Received: by mail-pj1-x1031.google.com with SMTP id 6-20020a17090a190600b00237c5b6ecd7so11745150pjg.4
+        for <linux-erofs@lists.ozlabs.org>; Tue, 28 Feb 2023 23:04:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1677654285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/7MP/ejAI3sruq8iFOBWkRKcy/cVwRiQeeMY1HpYcV4=;
+        b=SJQ1r2P/WYtOeX7MwiIFp3r8lUoIY4iCZ4Kh8f/qVe3/AEb21nYPjUH4Hv18AlxL6o
+         nVT66J/R/ENNcfrWJal9Qz4w0cc+bslDOrJZdbPYNnVSnTgdbZTaJK9WHrZXQyp5esb5
+         5Yb5IfeL8mYmG7NirZaZnEAGLW3cOpU3SzqTbD2G1D2wcGOpHrMOGHukLzBrvcI2LfOK
+         nyyyekRH4Vmof5eh3kwHztUg2NXk0tPlvHTc6LvetxHCdrpMGRsbCZszSca+yJa/vlTH
+         m7gCcVmwIKNfkmga+j1x3I3yZL0OhUfNzvPCHP2joI67VeydZ+7WbSMdGDVFWXF8aWyA
+         5x9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677654285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/7MP/ejAI3sruq8iFOBWkRKcy/cVwRiQeeMY1HpYcV4=;
+        b=y7xyzB7YE0yeh2DrjLfuNxsyXxate9jq/2qtEUUoOlsvYf0O/F8lKyxG4KTQfL/xZI
+         NmtK4fKhW6Hml0RPRrZF8BudDjV5HUwHJh94awR1uxCN7e1pdX7kgfY60Feg4ZKEKChJ
+         TVvFEQFtEFMBg7zEfJUbput1QvkIM6ZWs9zzC/qKl9NX1jodjqHh34LYibbr8dyHYUKs
+         9nacYdaVM8ggwjBLpcbs9+7DfdaG0QmpuWKPEYKmnS1xDnySls4Lc4s8WjtLJuRSGoA0
+         dPgcxCuvJcNIlzgfUYH9H86Pqj4q79SCcAo/Qi9sGOIx+2++l0Cew84/ArMM3BGQ/jI9
+         F89g==
+X-Gm-Message-State: AO0yUKWdi233S58B5eVSCU25ZJ5vEWpBoK0UZ+UFf5YX/sI+qL0q2/IA
+	1TRnbEcFWlHQ9nvtg9UEQRmB0w==
+X-Google-Smtp-Source: AK7set+/jkVD/fqVCwDuBJSSHDh/BeXN+rwU+fD/gd7C3RkBNLPU9avj1wOQlqSbEwdnsqX5Ao/0Tg==
+X-Received: by 2002:a05:6a20:4320:b0:cc:c557:9ce with SMTP id h32-20020a056a20432000b000ccc55709cemr7634102pzk.61.1677654285266;
+        Tue, 28 Feb 2023 23:04:45 -0800 (PST)
+Received: from C02G705SMD6V.bytedance.net ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id 4-20020a630104000000b004f27761a9e7sm6701485pgb.12.2023.02.28.23.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Feb 2023 23:04:44 -0800 (PST)
+From: Jia Zhu <zhujia.zj@bytedance.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	gerry@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: support for mounting a single block device with multiple devices
+Date: Wed,  1 Mar 2023 15:04:17 +0800
+Message-Id: <20230301070417.13084-1-zhujia.zj@bytedance.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -41,237 +78,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-fsdevel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It's almost the same as `-Efragments` option, except that will
-explicitly pack the whole data into the special inode instead.
+In order to support mounting multi-layer container image as a block
+device, add single block device with multiple devices feature for EROFS.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+In this mode, all meta/data contents will be mapped into one block address.
+User could directly mount the block device by EROFS.
+
+Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+Reviewed-by: Xin Yin <yinxin.x@bytedance.com>
 ---
- configure.ac              |  1 +
- include/erofs/config.h    |  1 +
- include/erofs/fragments.h |  1 +
- lib/compress.c            | 32 ++++++++++++++++-------------
- lib/fragments.c           | 43 ++++++++++++++++++++++++++++++++++++++-
- man/mkfs.erofs.1          | 25 ++++++++++++++---------
- mkfs/main.c               |  6 ++++++
- 7 files changed, 84 insertions(+), 25 deletions(-)
+ fs/erofs/data.c  | 8 ++++++--
+ fs/erofs/super.c | 5 +++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index cdbeb33..4dbe86f 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -134,6 +134,7 @@ AC_CHECK_HEADERS(m4_flatten([
- 	stdlib.h
- 	string.h
- 	sys/ioctl.h
-+	sys/mman.h
- 	sys/stat.h
- 	sys/sysmacros.h
- 	sys/time.h
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 39a6162..648a3e8 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -48,6 +48,7 @@ struct erofs_configure {
- 	bool c_noinline_data;
- 	bool c_ztailpacking;
- 	bool c_fragments;
-+	bool c_all_fragments;
- 	bool c_dedupe;
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
-diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
-index 4caaf6b..21753ec 100644
---- a/include/erofs/fragments.h
-+++ b/include/erofs/fragments.h
-@@ -16,6 +16,7 @@ extern const char *frags_packedname;
- #define EROFS_PACKED_INODE	frags_packedname
- 
- int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *tofcrc);
-+int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd, u32 tofcrc);
- int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 			   unsigned int len, u32 tofcrc);
- void z_erofs_fragments_commit(struct erofs_inode *inode);
-diff --git a/lib/compress.c b/lib/compress.c
-index 8169990..65c6f90 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -899,22 +899,26 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
- 	ctx.remaining = inode->i_size - inode->fragment_size;
- 	ctx.fix_dedupedfrag = false;
- 	ctx.fragemitted = false;
-+	if (cfg.c_all_fragments && !erofs_is_packed_inode(inode) &&
-+	    !inode->fragment_size) {
-+		ret = z_erofs_pack_file_from_fd(inode, fd, ctx.tof_chksum);
-+	} else {
-+		while (ctx.remaining) {
-+			const u64 rx = min_t(u64, ctx.remaining,
-+					     sizeof(ctx.queue) - ctx.tail);
-+
-+			ret = read(fd, ctx.queue + ctx.tail, rx);
-+			if (ret != rx) {
-+				ret = -errno;
-+				goto err_bdrop;
-+			}
-+			ctx.remaining -= rx;
-+			ctx.tail += rx;
- 
--	while (ctx.remaining) {
--		const u64 readcount = min_t(u64, ctx.remaining,
--					    sizeof(ctx.queue) - ctx.tail);
--
--		ret = read(fd, ctx.queue + ctx.tail, readcount);
--		if (ret != readcount) {
--			ret = -errno;
--			goto err_bdrop;
-+			ret = vle_compress_one(&ctx);
-+			if (ret)
-+				goto err_free_idata;
- 		}
--		ctx.remaining -= readcount;
--		ctx.tail += readcount;
--
--		ret = vle_compress_one(&ctx);
--		if (ret)
--			goto err_free_idata;
- 	}
- 	DBG_BUGON(ctx.head != ctx.tail);
- 
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 1e41485..ebff4b5 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -17,6 +17,7 @@
- #endif
- #include <stdlib.h>
- #include <unistd.h>
-+#include <sys/mman.h>
- #include "erofs/err.h"
- #include "erofs/inode.h"
- #include "erofs/compress.h"
-@@ -154,7 +155,11 @@ static int z_erofs_fragments_dedupe_insert(void *data, unsigned int len,
- 
- 	if (len <= EROFS_TOF_HASHLEN)
- 		return 0;
--
-+	if (len > EROFS_CONFIG_COMPR_MAX_SZ) {
-+		data += len - EROFS_CONFIG_COMPR_MAX_SZ;
-+		pos += len - EROFS_CONFIG_COMPR_MAX_SZ;
-+		len = EROFS_CONFIG_COMPR_MAX_SZ;
-+	}
- 	di = malloc(sizeof(*di) + len);
- 	if (!di)
- 		return -ENOMEM;
-@@ -204,6 +209,42 @@ void z_erofs_fragments_commit(struct erofs_inode *inode)
- 	erofs_sb_set_fragments();
- }
- 
-+int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd,
-+			      u32 tofcrc)
-+{
-+#ifdef HAVE_FTELLO64
-+	off64_t offset = ftello64(packedfile);
-+#else
-+	off_t offset = ftello(packedfile);
-+#endif
-+	char *memblock;
-+	int rc;
-+
-+	if (offset < 0)
-+		return -errno;
-+
-+	memblock = mmap(NULL, inode->i_size, PROT_READ, MAP_SHARED, fd, 0);
-+	if (memblock == MAP_FAILED)
-+		return -EFAULT;
-+
-+	inode->fragmentoff = (erofs_off_t)offset;
-+	inode->fragment_size = inode->i_size;
-+
-+	if (fwrite(memblock, inode->fragment_size, 1, packedfile) != 1) {
-+		rc = -EIO;
-+		goto out;
-+	}
-+
-+	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
-+		  inode->fragmentoff);
-+
-+	rc = z_erofs_fragments_dedupe_insert(memblock, inode->fragment_size,
-+					     inode->fragmentoff, tofcrc);
-+out:
-+	munmap(memblock, inode->i_size);
-+	return rc;
-+}
-+
- int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 			   unsigned int len, u32 tofcrc)
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index e16545849ea7..870b1f7fe1d4 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -195,9 +195,9 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
  {
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index ba66a81..61ed24b 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -42,6 +42,21 @@ and may take an extra argument using the equals ('=') sign.
- The following extended options are supported:
- .RS 1.2i
- .TP
-+.BI all-fragments
-+Forcely record the whole files into a special inode for better compression and
-+it may take an argument as the pcluster size of the packed inode in bytes.
-+(Linux v6.1+)
-+.TP
-+.BI dedupe
-+Enable global compressed data deduplication to minimize duplicated data in
-+the filesystem. It may be used with \fI-Efragments\fR option together to
-+further reduce image sizes. (Linux v6.1+)
-+.TP
-+.BI fragments
-+Pack the tail part (pcluster) of compressed files or the whole files into a
-+special inode for smaller image sizes, and it may take an argument as the
-+pcluster size of the packed inode in bytes. (Linux v6.1+)
-+.TP
- .BI force-inode-compact
- Forcely generate compact inodes (32-byte inodes) to output.
- .TP
-@@ -64,16 +79,6 @@ Don't inline regular files to enable FSDAX for these files (Linux v5.15+).
- .BI ztailpacking
- Pack the tail part (pcluster) of compressed files into its metadata to save
- more space and the tail part I/O. (Linux v5.17+)
--.TP
--.BI fragments
--Pack the tail part (pcluster) of compressed files or the whole files into a
--special inode for smaller image sizes, and it may take an argument as the
--pcluster size of the packed inode in bytes. (Linux v6.1+)
--.TP
--.BI dedupe
--Enable global compressed data deduplication to minimize duplicated data in
--the filesystem. It may be used with \fI-Efragments\fR option together to
--further reduce image sizes. (Linux v6.1+)
- .RE
- .TP
- .BI "\-L " volume-label
-diff --git a/mkfs/main.c b/mkfs/main.c
-index d055902..bc973e7 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -208,10 +208,16 @@ static int parse_extended_opts(const char *opts)
- 			cfg.c_ztailpacking = true;
+ 	struct erofs_dev_context *devs = EROFS_SB(sb)->devs;
+ 	struct erofs_device_info *dif;
++	bool flatdev = !!sb->s_bdev;
+ 	int id;
+ 
+-	/* primary device by default */
+ 	map->m_bdev = sb->s_bdev;
+ 	map->m_daxdev = EROFS_SB(sb)->dax_dev;
+ 	map->m_dax_part_off = EROFS_SB(sb)->dax_part_off;
+@@ -210,12 +210,16 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+ 			up_read(&devs->rwsem);
+ 			return -ENODEV;
  		}
- 
-+		if (MATCH_EXTENTED_OPT("all-fragments", token, keylen)) {
-+			cfg.c_all_fragments = true;
-+			goto handle_fragment;
++		if (flatdev) {
++			map->m_pa += blknr_to_addr(dif->mapped_blkaddr);
++			map->m_deviceid = 0;
 +		}
-+
- 		if (MATCH_EXTENTED_OPT("fragments", token, keylen)) {
- 			char *endptr;
- 			u64 i;
+ 		map->m_bdev = dif->bdev;
+ 		map->m_daxdev = dif->dax_dev;
+ 		map->m_dax_part_off = dif->dax_part_off;
+ 		map->m_fscache = dif->fscache;
+ 		up_read(&devs->rwsem);
+-	} else if (devs->extra_devices) {
++	} else if (devs->extra_devices && !flatdev) {
+ 		down_read(&devs->rwsem);
+ 		idr_for_each_entry(&devs->tree, dif, id) {
+ 			erofs_off_t startoff, length;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 19b1ae79cec4..4f9725b0950c 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -226,6 +226,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 	struct erofs_fscache *fscache;
+ 	struct erofs_deviceslot *dis;
+ 	struct block_device *bdev;
++	bool flatdev = !!sb->s_bdev;
+ 	void *ptr;
  
-+handle_fragment:
- 			cfg.c_fragments = true;
- 			if (vallen) {
- 				i = strtoull(value, &endptr, 0);
+ 	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(*pos), EROFS_KMAP);
+@@ -248,6 +249,10 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 		if (IS_ERR(fscache))
+ 			return PTR_ERR(fscache);
+ 		dif->fscache = fscache;
++	} else if (flatdev) {
++		dif->bdev = sb->s_bdev;
++		dif->dax_dev = EROFS_SB(sb)->dax_dev;
++		dif->dax_part_off = sbi->dax_part_off;
+ 	} else {
+ 		bdev = blkdev_get_by_path(dif->path, FMODE_READ | FMODE_EXCL,
+ 					  sb->s_type);
 -- 
-2.36.1
+2.20.1
 
