@@ -2,73 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B507E6A6D7E
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Mar 2023 14:54:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B81A6A7B6D
+	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 07:40:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PRbLp3mvWz3cFN
-	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 00:54:10 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=BLZA9X59;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PS1gM100sz3cMN
+	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 17:39:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::630; helo=mail-pl1-x630.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=BLZA9X59;
-	dkim-atps=neutral
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PRbLh2gKLz301F
-	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Mar 2023 00:54:02 +1100 (AEDT)
-Received: by mail-pl1-x630.google.com with SMTP id p6so13190949plf.0
-        for <linux-erofs@lists.ozlabs.org>; Wed, 01 Mar 2023 05:54:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677678839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jO0fsd+qVnJ+SxEOcQoft+6sPRi8qs63fOYYcr8hwoo=;
-        b=BLZA9X59NabmWOD+NfYPCbLrJF5k//RWRGQIscS2e1VYKAw4712k2zp78DJfgc7jyH
-         YU+bszy3Z+AoQM8EK8RGg2eKALBrZV2hDmgTRuHyEilkF8ZUakiJ60mgcSzp2zGaLQTH
-         YrMpGXuTHDhIYys2X41u+KSDscdkOXBqkh/is66VtxzW2hth4UM8RTuq6qBuGQMt21ME
-         2wOwU6ucJ/zIc2n++gSSze9t0R82YNWaCUnTiNJ0VmXvsRHtoi7Oa82Qn3aH1aWfCOZl
-         uRRLgAvP+MQWC/GvokxgeO1dFp+BLqxul1rYhGBp7MckfHDiROOWbczCue9BFEEGL93Y
-         BQow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677678839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jO0fsd+qVnJ+SxEOcQoft+6sPRi8qs63fOYYcr8hwoo=;
-        b=fvONyrY60tcYW3aiSupgFlA4JgU1oGesHuggTscHDh1VQmDEEmPBcqCtBxr/X/Yp9I
-         CC0VLUhdK69O+L5bv48h7LT3Bt6Lxo2l5Ptb0F2DgzZwGNtApDY5bW5h6xCoMdLRQXoT
-         aY/2SI54GISx96bq2yq3xyTG464Euaejrw00vEOS1WyivLihgZo+9ZAhDpTaw7AiNz1M
-         rLlLuZy/vMs3A9v7NmTk4Tr2XZiL5SyfyEDn65EKfGmY81YBZqa4nSpkqQx2OpLF5xRm
-         IN9r188tUP/psgE5LJDUXuEKXXnE2Au/j2AJH3ESfXvWVHTKcQ5Fv1Akx9olpbK2nJRs
-         /grw==
-X-Gm-Message-State: AO0yUKV8zpKWkK1u0yu/ClIVpocBYp5dqPI6vkhezJ8khPCldlferyRT
-	RKM8q3TylAmp+kX//7A+vlKANGZmCT4=
-X-Google-Smtp-Source: AK7set/vi2B2weFsBjPMk1nSSU45zHjJfHmenayqYQVZFaOObcebrN4ODvQtC69f9l5y4WS7o+3P1A==
-X-Received: by 2002:a17:902:c94f:b0:19c:d663:a31b with SMTP id i15-20020a170902c94f00b0019cd663a31bmr7291788pla.24.1677678839158;
-        Wed, 01 Mar 2023 05:53:59 -0800 (PST)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id ix1-20020a170902f80100b0019ab58f47a6sm8533004plb.105.2023.03.01.05.53.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Mar 2023 05:53:58 -0800 (PST)
-Date: Wed, 1 Mar 2023 22:00:06 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/3] erofs-utils: use compressed pclusters to mark
- fragments
-Message-ID: <20230301220006.00007467.zbestahu@gmail.com>
-In-Reply-To: <20230228185459.117762-2-hsiangkao@linux.alibaba.com>
-References: <20230228185459.117762-1-hsiangkao@linux.alibaba.com>
-	<20230228185459.117762-2-hsiangkao@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PS1gF40t2z3bh9
+	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Mar 2023 17:39:52 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VcwEyyf_1677739186;
+Received: from 30.221.130.171(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VcwEyyf_1677739186)
+          by smtp.aliyun-inc.com;
+          Thu, 02 Mar 2023 14:39:47 +0800
+Message-ID: <8be37b4c-5a87-1c10-b0e6-99284e6fd4ca@linux.alibaba.com>
+Date: Thu, 2 Mar 2023 14:39:46 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH V2] erofs: support flattened block device for multi-blob
+ images
+Content-Language: en-US
+To: Jia Zhu <zhujia.zj@bytedance.com>, xiang@kernel.org, chao@kernel.org,
+ gerry@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+References: <20230301125908.30879-1-zhujia.zj@bytedance.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20230301125908.30879-1-zhujia.zj@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -81,54 +46,122 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, zhangwen@coolpad.com
+Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed,  1 Mar 2023 02:54:58 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> The decoded lengths of uncompressed pclusters should be
-> strictly no more than encoded lengths.
+
+On 3/1/23 8:59 PM, Jia Zhu wrote:
+> In order to support mounting multi-blobs container image as a single
+> block device, add flattened block device feature for EROFS.
 > 
-> Fixes: 9fa9b017f773 ("erofs-utils: mkfs: support fragments")
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
-
+> In this mode, all meta/data contents will be mapped into one block
+> address. User could compose a block device(by nbd/ublk/virtio-blk/
+> vhost-user-blk) from multiple sources and mount the block device by
+> EROFS directly. It can reduce the number of block devices used, and
+> it's also benefits in both VM file passthrough and distributed storage
+> scenarios.
+> 
+> You can test this using the method mentioned by:
+> https://github.com/dragonflyoss/image-service/pull/1111
+> 1. Compose a (nbd)block device from multi-blobs.
+> 2. Mount EROFS on mntdir/.
+> 3. Compare the md5sum between source dir and mntdir/.
+> 
+> Later, we could also use it to refer original tar blobs.
+> 
+> Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
+> Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
 > ---
->  lib/compress.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> v2:
+> 1. Supplement commit message.
+> 2. Add a bool field in erofs_dev_context to indicate flattened block
+>    device mode.
+> ---
+>  fs/erofs/data.c     | 8 ++++++--
+>  fs/erofs/internal.h | 1 +
+>  fs/erofs/super.c    | 6 +++++-
+>  3 files changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 0aaec30..8169990 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -95,7 +95,7 @@ static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
->  		 * A lcluster cannot have three parts with the middle one which
->  		 * is well-compressed for !ztailpacking cases.
->  		 */
-> -		DBG_BUGON(!ctx->e.raw && !cfg.c_ztailpacking);
-> +		DBG_BUGON(!ctx->e.raw && !cfg.c_ztailpacking && !cfg.c_fragments);
->  		DBG_BUGON(ctx->e.partial);
->  		type = ctx->e.raw ? Z_EROFS_VLE_CLUSTER_TYPE_PLAIN :
->  			Z_EROFS_VLE_CLUSTER_TYPE_HEAD;
-> @@ -457,7 +457,7 @@ frag_packing:
->  			if (ret < 0)
->  				return ret;
->  			ctx->e.compressedblks = 0; /* indicate a fragment */
-> -			ctx->e.raw = true;
-> +			ctx->e.raw = false;
->  			ctx->fragemitted = true;
->  			fix_dedupedfrag = false;
->  		/* tailpcluster should be less than 1 block */
-> @@ -928,7 +928,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd)
->  		z_erofs_write_indexes(&ctx);
->  		ctx.e.length = inode->fragment_size;
->  		ctx.e.compressedblks = 0;
-> -		ctx.e.raw = true;
-> +		ctx.e.raw = false;
->  		ctx.e.partial = false;
->  		ctx.e.blkaddr = ctx.blkaddr;
->  	}
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index e16545849ea7..818f78ce648c 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -197,7 +197,6 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+>  	struct erofs_device_info *dif;
+>  	int id;
+>  
+> -	/* primary device by default */
+>  	map->m_bdev = sb->s_bdev;
+>  	map->m_daxdev = EROFS_SB(sb)->dax_dev;
+>  	map->m_dax_part_off = EROFS_SB(sb)->dax_part_off;
+> @@ -210,12 +209,17 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+>  			up_read(&devs->rwsem);
+>  			return -ENODEV;
+>  		}
+> +		if (devs->flatdev) {
+> +			map->m_pa += blknr_to_addr(dif->mapped_blkaddr);
+> +			up_read(&devs->rwsem);
+> +			return 0;
+> +		}
+>  		map->m_bdev = dif->bdev;
+>  		map->m_daxdev = dif->dax_dev;
+>  		map->m_dax_part_off = dif->dax_part_off;
+>  		map->m_fscache = dif->fscache;
+>  		up_read(&devs->rwsem);
+> -	} else if (devs->extra_devices) {
+> +	} else if (devs->extra_devices && !devs->flatdev) {
+>  		down_read(&devs->rwsem);
+>  		idr_for_each_entry(&devs->tree, dif, id) {
+>  			erofs_off_t startoff, length;
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 3f3561d37d1b..4fee380a98d9 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -81,6 +81,7 @@ struct erofs_dev_context {
+>  	struct rw_semaphore rwsem;
+>  
+>  	unsigned int extra_devices;
+> +	bool flatdev;
+>  };
+>  
+>  struct erofs_fs_context {
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 19b1ae79cec4..307b3d2392cf 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -248,7 +248,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+>  		if (IS_ERR(fscache))
+>  			return PTR_ERR(fscache);
+>  		dif->fscache = fscache;
+> -	} else {
+> +	} else if (!sbi->devs->flatdev) {
+>  		bdev = blkdev_get_by_path(dif->path, FMODE_READ | FMODE_EXCL,
+>  					  sb->s_type);
+>  		if (IS_ERR(bdev))
+> @@ -281,6 +281,10 @@ static int erofs_scan_devices(struct super_block *sb,
+>  	else
+>  		ondisk_extradevs = le16_to_cpu(dsb->extra_devices);
+>  
+> +	if (!sbi->devs->extra_devices && ondisk_extradevs &&
+> +		!erofs_is_fscache_mode(sb))
+> +		sbi->devs->flatdev = true;
+> +
 
+I would move this check down after all sanity checks, e.g.
+
+	if (!ondisk_extradevs)
+		return 0;
+
++	if (!sbi->devs->extra_devices && !erofs_is_fscache_mode(sb))
++		sbi->devs->flatdev = true;
+
+
+
+Otherwise LGTM.
+
+
+-- 
+Thanks,
+Jingbo
