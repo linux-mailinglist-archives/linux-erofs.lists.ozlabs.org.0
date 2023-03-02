@@ -2,75 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 265476A7BBA
-	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 08:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D14556A8372
+	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 14:24:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PS2WZ6fG8z3cMN
-	for <lists+linux-erofs@lfdr.de>; Thu,  2 Mar 2023 18:18:18 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=SI9qPKQI;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PSBdV4tM0z3cNb
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 00:23:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::62f; helo=mail-pl1-x62f.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=SI9qPKQI;
-	dkim-atps=neutral
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PS2WV1H6gz3bvZ
-	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Mar 2023 18:18:12 +1100 (AEDT)
-Received: by mail-pl1-x62f.google.com with SMTP id a2so6192297plm.4
-        for <linux-erofs@lists.ozlabs.org>; Wed, 01 Mar 2023 23:18:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1677741489;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SOEf7Xpb5mkHbizoh2yjcukV0fYIhk+yPMhArKvHWnk=;
-        b=SI9qPKQILSUegSga9aDKDbESKV9QZgBmwdMURAH+J2GKA6miCPfU6DYdzqFMBWhjHf
-         zvepFO+Q+xMrauermsFGfMkmtL/3oMenp0t5HG9PKS8XWOEux9iG83xqWqGmL50k/n9s
-         5uKQ811tk6a+oTdG4X+nDcghxaEMfxY8YyJ4yV/1ShROkRohEXUqzbTAobTgXji3+QXx
-         BB+pxlVQux58clo1ixnLbkE+NyUpJ3Xy7CPzeETzfa2f31tsLEnUVJXeG8N2igOjF0Yg
-         pGP9P0wzV9k5gey+7HMMOUSdXVRA6CFY55ppRWxouMmg5hKiiTlHvRw2qDNXWzuIUGzR
-         Tvpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677741489;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SOEf7Xpb5mkHbizoh2yjcukV0fYIhk+yPMhArKvHWnk=;
-        b=zbjn/xa0o0ovqjsRzjBm86U7Pe3ZFkVvbU2sMQK9l4ZA0MGZkmjCNdf1bHg6D7510T
-         7H8GYuT+mzNnNqNxMzpqfJcUKuk+ChgFyMMPvZOVEV/yxuh1OxiYvzarQSHT+Q52lgHs
-         k32SPObaglUJkuatcPd39zBiFVnwbjA+13nAIi8QmRth3QzFaSIyUUj7SJVog4gFiOst
-         wah08YefKfl7pA7Z4dmLoA4Ezwymf7aYvDgyg+KNN77koYuYLvA2IHgVlFREbdh0B3MH
-         H2MO8XieOfhZiiFWafhy4UXzag8zTKX9QqdPOfA70MAuelngF1Azh/sOZzzr0+erlGeH
-         kzIA==
-X-Gm-Message-State: AO0yUKWPpZBJIo2151gWKShR++Je1gYZhvy9MSGybNPj+j1lrrJzswPj
-	g5BSJob9n1QiMYNbFd55/flG+w==
-X-Google-Smtp-Source: AK7set+3fzNkZU+X9dxOT7UWt5ecBglYgwBmfTTzoARuALfR2zWAvXYO1qXMoiCTm0BC1/Ptiz0CPQ==
-X-Received: by 2002:a05:6a20:a829:b0:cb:a64b:71d3 with SMTP id cb41-20020a056a20a82900b000cba64b71d3mr8003611pzb.26.1677741489032;
-        Wed, 01 Mar 2023 23:18:09 -0800 (PST)
-Received: from C02G705SMD6V.bytedance.net ([61.213.176.14])
-        by smtp.gmail.com with ESMTPSA id m19-20020a637d53000000b0050300e81eb9sm8611097pgn.54.2023.03.01.23.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Mar 2023 23:18:08 -0800 (PST)
-From: Jia Zhu <zhujia.zj@bytedance.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	gerry@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	jefflexu@linux.alibaba.com
-Subject: [PATCH V3] erofs: support flattened block device for multi-blob images
-Date: Thu,  2 Mar 2023 15:17:51 +0800
-Message-Id: <20230302071751.48425-1-zhujia.zj@bytedance.com>
-X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
-In-Reply-To: <8be37b4c-5a87-1c10-b0e6-99284e6fd4ca@linux.alibaba.com>
-References: <8be37b4c-5a87-1c10-b0e6-99284e6fd4ca@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PSBdP5xXnz3bZl
+	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Mar 2023 00:23:52 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VcxXSuE_1677763426;
+Received: from 30.97.48.239(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VcxXSuE_1677763426)
+          by smtp.aliyun-inc.com;
+          Thu, 02 Mar 2023 21:23:47 +0800
+Message-ID: <d729647f-df1c-07c5-3e55-b4424e4ebe5d@linux.alibaba.com>
+Date: Thu, 2 Mar 2023 21:23:46 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v3 2/2] erofs: set block size to the on-disk block size
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+References: <20230220025046.103777-1-jefflexu@linux.alibaba.com>
+ <20230220025046.103777-2-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230220025046.103777-2-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,107 +45,112 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In order to support mounting multi-blobs container image as a single
-block device, add flattened block device feature for EROFS.
+Hi Jingbo,
 
-In this mode, all meta/data contents will be mapped into one block
-address. User could compose a block device(by nbd/ublk/virtio-blk/
-vhost-user-blk) from multiple sources and mount the block device by
-EROFS directly. It can reduce the number of block devices used, and
-it's also benefits in both VM file passthrough and distributed storage
-scenarios.
+On 2023/2/20 10:50, Jingbo Xu wrote:
+> Set the block size to that specified in on-disk superblock.
+> 
+> Also remove the hard constraint of PAGE_SIZE block size for the
+> uncompressed device backend.  This constraint is temporarily remained
+> for compressed device and fscache backend, as there is more work needed
+> to handle the condition where the block size is not equal to PAGE_SIZE.
+> 
+> It is worth noting that the on-disk block size is read prior to
+> erofs_superblock_csum_verify(), as the read block size is needed in the
+> latter.
+> 
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>   fs/erofs/erofs_fs.h |  2 +-
+>   fs/erofs/inode.c    |  3 ++-
+>   fs/erofs/internal.h |  8 --------
+>   fs/erofs/super.c    | 42 +++++++++++++++++++++++++++---------------
+>   4 files changed, 30 insertions(+), 25 deletions(-)
+> 
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index dbcd24371002..5c7647d68c07 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -53,7 +53,7 @@ struct erofs_super_block {
+>   	__le32 magic;           /* file system magic number */
+>   	__le32 checksum;        /* crc32c(super_block) */
+>   	__le32 feature_compat;
+> -	__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+> +	__u8 blkszbits;         /* filesystem block size */
+>   	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
+>   
+>   	__le16 root_nid;	/* nid of root directory */
 
-You can test this using the method mentioned by:
-https://github.com/dragonflyoss/image-service/pull/1111
-1. Compose a (nbd)block device from multi-blobs.
-2. Mount EROFS on mntdir/.
-3. Compare the md5sum between source dir and mntdir/.
+Due to we already support < page_size blocks, laterly, we'd consider
+refer to tar data blobs (which is 512-byte aligned) for OCI
+containers.
 
-Later, we could also use it to refer original tar blobs.
+So we will have another use case is to use 512-byte block size, but
+in that case, dir block size is too small.
 
-Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
-Signed-off-by: Xin Yin <yinxin.x@bytedance.com>
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
-v3:
-1. Move the flatdev check down after all sanity checks.(Jingbo Xu)
-2. Add Reviewed-by tag.
----
- fs/erofs/data.c     | 8 ++++++--
- fs/erofs/internal.h | 1 +
- fs/erofs/super.c    | 5 ++++-
- 3 files changed, 11 insertions(+), 3 deletions(-)
+So I'd like to add a reserved bit
+	__u8 dirblkbits;
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index e16545849ea7..818f78ce648c 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -197,7 +197,6 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
- 	struct erofs_device_info *dif;
- 	int id;
- 
--	/* primary device by default */
- 	map->m_bdev = sb->s_bdev;
- 	map->m_daxdev = EROFS_SB(sb)->dax_dev;
- 	map->m_dax_part_off = EROFS_SB(sb)->dax_part_off;
-@@ -210,12 +209,17 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
- 			up_read(&devs->rwsem);
- 			return -ENODEV;
- 		}
-+		if (devs->flatdev) {
-+			map->m_pa += blknr_to_addr(dif->mapped_blkaddr);
-+			up_read(&devs->rwsem);
-+			return 0;
-+		}
- 		map->m_bdev = dif->bdev;
- 		map->m_daxdev = dif->dax_dev;
- 		map->m_dax_part_off = dif->dax_part_off;
- 		map->m_fscache = dif->fscache;
- 		up_read(&devs->rwsem);
--	} else if (devs->extra_devices) {
-+	} else if (devs->extra_devices && !devs->flatdev) {
- 		down_read(&devs->rwsem);
- 		idr_for_each_entry(&devs->tree, dif, id) {
- 			erofs_off_t startoff, length;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 3f3561d37d1b..4fee380a98d9 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -81,6 +81,7 @@ struct erofs_dev_context {
- 	struct rw_semaphore rwsem;
- 
- 	unsigned int extra_devices;
-+	bool flatdev;
- };
- 
- struct erofs_fs_context {
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 19b1ae79cec4..0afdfce372b3 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -248,7 +248,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
- 		if (IS_ERR(fscache))
- 			return PTR_ERR(fscache);
- 		dif->fscache = fscache;
--	} else {
-+	} else if (!sbi->devs->flatdev) {
- 		bdev = blkdev_get_by_path(dif->path, FMODE_READ | FMODE_EXCL,
- 					  sb->s_type);
- 		if (IS_ERR(bdev))
-@@ -290,6 +290,9 @@ static int erofs_scan_devices(struct super_block *sb,
- 	if (!ondisk_extradevs)
- 		return 0;
- 
-+	if (!sbi->devs->extra_devices && !erofs_is_fscache_mode(sb))
-+		sbi->devs->flatdev = true;
-+
- 	sbi->device_id_mask = roundup_pow_of_two(ondisk_extradevs + 1) - 1;
- 	pos = le16_to_cpu(dsb->devt_slotoff) * EROFS_DEVT_SLOT_SIZE;
- 	down_read(&sbi->devs->rwsem);
--- 
-2.20.1
+for this.
 
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index de26dac4e07e..0e6ff8a98c68 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -291,7 +291,8 @@ static int erofs_fill_inode(struct inode *inode)
+>   	}
+>   
+>   	if (erofs_inode_is_data_compressed(vi->datalayout)) {
+> -		if (!erofs_is_fscache_mode(inode->i_sb))
+> +		if (!erofs_is_fscache_mode(inode->i_sb) &&
+> +		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT)
+>   			err = z_erofs_fill_inode(inode);
+>   		else
+>   			err = -EOPNOTSUPP;
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index d8019d835405..612543915e9e 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -240,14 +240,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
+>   					VAL != EROFS_LOCKED_MAGIC);
+>   }
+>   
+> -/* we strictly follow PAGE_SIZE and no buffer head yet */
+> -#define LOG_BLOCK_SIZE		PAGE_SHIFT
+> -#define EROFS_BLKSIZ		(1 << LOG_BLOCK_SIZE)
+> -
+> -#if (EROFS_BLKSIZ % 4096 || !EROFS_BLKSIZ)
+> -#error erofs cannot be used in this platform
+> -#endif
+> -
+>   enum erofs_kmap_type {
+>   	EROFS_NO_KMAP,		/* don't map the buffer */
+>   	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index c97615c96ef8..89011a4ed274 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -349,6 +349,14 @@ static int erofs_read_superblock(struct super_block *sb)
+>   		goto out;
+>   	}
+>   
+> +	blkszbits = dsb->blkszbits;
+> +	sbi->blkszbits = dsb->blkszbits;
+> +	if (blkszbits < 9 || blkszbits > PAGE_SHIFT) {
+> +		erofs_err(sb, "blkszbits %u isn't supported on this platform",
+> +			  blkszbits);
+> +		goto out;
+> +	}
+
+Also,
+	if (blkszbits != PAGE_SHIFT && dsb->dirblkbits) {
+		erofs_err("dirblkbits %u isn't supported", dsb->dirblkbits);
+		goto out;
+	}
+
+Thanks,
+Gao Xiang
