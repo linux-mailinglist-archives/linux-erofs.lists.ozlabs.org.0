@@ -2,70 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E52B66A91F7
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 08:52:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B92A66A9212
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 08:59:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PSgDd52J1z3cdb
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 18:52:33 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=sijam-com.20210112.gappssmtp.com header.i=@sijam-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=zC51wvGN;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PSgNP3xkwz3cdb
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 18:59:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::62c; helo=mail-pl1-x62c.google.com; envelope-from=asai@sijam.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20210112.gappssmtp.com header.i=@sijam-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=zC51wvGN;
-	dkim-atps=neutral
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PSgDW2VTQz3cLB
-	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Mar 2023 18:52:25 +1100 (AEDT)
-Received: by mail-pl1-x62c.google.com with SMTP id i3so1879706plg.6
-        for <linux-erofs@lists.ozlabs.org>; Thu, 02 Mar 2023 23:52:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sijam-com.20210112.gappssmtp.com; s=20210112; t=1677829944;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OyynWijV+48R3sg30iOoqEkNvieuyoCQzpum+vJovD0=;
-        b=zC51wvGN5dgXQHfUtFemTIvDeKG52+SN8YGJk6hRigx8IYPMenc5gw90egeneDrCZu
-         Zid6PSd/22GzE3q+nWebwvkbsXIDZKpO3xYC4cTMXfOOb0tli/TuuODkbQ8aLvHfWBFv
-         mgs03J52ydpzsMrP3RkaSWyhTouPHgbkOamrlQIk5wu2GnYNIM54Z1P82i4yyB/GlcCj
-         ZHAgEb+0fkogYFQu7DLRYB8c/ZL1jRlrMzR3lXb7tdy02TCNnBTICbHX0ADRZofu/zFA
-         MG9nnhOb89jeE7jn/MCiTv5O3Gsxrm3A/iigXqQ2k75xxug9U9RZFeZmo3LYC5RIyK+P
-         Io3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677829944;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OyynWijV+48R3sg30iOoqEkNvieuyoCQzpum+vJovD0=;
-        b=NXYXg9i7ApPDytAM5JwYMRybzKIfatxw70AlBjN/g+8D0UA2mcVCYn8feu8RD0sZsr
-         nEkEB29+WZ94rQdc5n4uJrCJIH22FHRIU7spbl+OpixMMUJ+2iCOC7SnBZbgbzMp/aA2
-         aCm1wOVfol9GLZ2Q+0rTAnjhlUoM+8fgcR+tPjVRRbvzrHUJ7HoZDf5k25Da9D9jpR+s
-         kFn7MWzo7UzcWoJBFlMJ7JV5qI/nkZLTecWqUocZPOdOEMYGJV2rDwf+lzZJjbOp6fZo
-         a63whjWR9mXvpkckYCi9cQxN9jb3Rxk+x2ei0lX4hFAHD7YMaymnHEuVjNR/rtVzHvqL
-         pGHQ==
-X-Gm-Message-State: AO0yUKV6Po3XIHDzjbO5YycDwGRbiNnGScTL2DeUwemKFrh5Vvzlcp9j
-	bK93rOv4w+xdu5eBB9BdzmaOZstn7N4yqEbf
-X-Google-Smtp-Source: AK7set94LyXniiBMd7f3C82UviZ4npPFdxBtzDGhPcURaNhAbWnKfLpK019DYjOH4F1bZunOQt69Ww==
-X-Received: by 2002:a05:6a20:bf08:b0:b8:42b0:1215 with SMTP id gc8-20020a056a20bf0800b000b842b01215mr1267202pzb.5.1677829943997;
-        Thu, 02 Mar 2023 23:52:23 -0800 (PST)
-Received: from elric.localdomain (i121-112-72-48.s41.a027.ap.plala.or.jp. [121.112.72.48])
-        by smtp.gmail.com with ESMTPSA id j19-20020aa783d3000000b0058bf2ae9694sm917964pfn.156.2023.03.02.23.52.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 23:52:23 -0800 (PST)
-From: Noboru Asai <asai@sijam.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com
-Subject: [PATCH] erofs: avoid useless memory allocation
-Date: Fri,  3 Mar 2023 16:52:18 +0900
-Message-Id: <20230303075218.675733-1-asai@sijam.com>
-X-Mailer: git-send-email 2.39.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PSgNF6VmBz3cJK
+	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Mar 2023 18:59:08 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Vd-aexD_1677830342;
+Received: from 30.97.48.241(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vd-aexD_1677830342)
+          by smtp.aliyun-inc.com;
+          Fri, 03 Mar 2023 15:59:03 +0800
+Message-ID: <83454c5d-bcae-cead-c9a8-47d1f08178ca@linux.alibaba.com>
+Date: Fri, 3 Mar 2023 15:59:02 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v2] erofs: mark z_erofs_lzma_init/erofs_pcpubuf_init w/
+ __init
+To: Yangtao Li <frank.li@vivo.com>, xiang@kernel.org, chao@kernel.org,
+ huyue2@coolpad.com, jefflexu@linux.alibaba.com
+References: <20230303063731.66760-1-frank.li@vivo.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230303063731.66760-1-frank.li@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -77,30 +45,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The variable 'vi->xattr_shared_count' could be ZERO.
 
-Signed-off-by: Noboru Asai <asai@sijam.com>
----
- fs/erofs/xattr.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 60729b1220b6..5164813a693b 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -80,6 +80,8 @@ static int init_inode_xattrs(struct inode *inode)
- 
- 	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
- 	vi->xattr_shared_count = ih->h_shared_count;
-+	if (!vi->xattr_shared_count)
-+		goto out_unlock;
- 	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
- 						sizeof(uint), GFP_KERNEL);
- 	if (!vi->xattr_shared_xattrs) {
--- 
-2.39.2
+On 2023/3/3 14:37, Yangtao Li wrote:
+> They are used during the erofs module init phase. Let's mark it as
+> __init like any other function.
+> 
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+Thanks,
+Gao Xiang
+
+> ---
+> v2:
+> -change in internal.h
+>   fs/erofs/decompressor_lzma.c | 2 +-
+>   fs/erofs/internal.h          | 4 ++--
+>   fs/erofs/pcpubuf.c           | 2 +-
+>   3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+> index 091fd5adf818..307b37f0b9f5 100644
+> --- a/fs/erofs/decompressor_lzma.c
+> +++ b/fs/erofs/decompressor_lzma.c
+> @@ -47,7 +47,7 @@ void z_erofs_lzma_exit(void)
+>   	}
+>   }
+>   
+> -int z_erofs_lzma_init(void)
+> +int __init z_erofs_lzma_init(void)
+>   {
+>   	unsigned int i;
+>   
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 3f3561d37d1b..1db018f8c2e8 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -486,7 +486,7 @@ static inline void *erofs_vm_map_ram(struct page **pages, unsigned int count)
+>   void *erofs_get_pcpubuf(unsigned int requiredpages);
+>   void erofs_put_pcpubuf(void *ptr);
+>   int erofs_pcpubuf_growsize(unsigned int nrpages);
+> -void erofs_pcpubuf_init(void);
+> +void __init erofs_pcpubuf_init(void);
+>   void erofs_pcpubuf_exit(void);
+>   
+>   int erofs_register_sysfs(struct super_block *sb);
+> @@ -545,7 +545,7 @@ static inline int z_erofs_fill_inode(struct inode *inode) { return -EOPNOTSUPP;
+>   #endif	/* !CONFIG_EROFS_FS_ZIP */
+>   
+>   #ifdef CONFIG_EROFS_FS_ZIP_LZMA
+> -int z_erofs_lzma_init(void);
+> +int __init z_erofs_lzma_init(void);
+>   void z_erofs_lzma_exit(void);
+>   int z_erofs_load_lzma_config(struct super_block *sb,
+>   			     struct erofs_super_block *dsb,
+> diff --git a/fs/erofs/pcpubuf.c b/fs/erofs/pcpubuf.c
+> index a2efd833d1b6..c7a4b1d77069 100644
+> --- a/fs/erofs/pcpubuf.c
+> +++ b/fs/erofs/pcpubuf.c
+> @@ -114,7 +114,7 @@ int erofs_pcpubuf_growsize(unsigned int nrpages)
+>   	return ret;
+>   }
+>   
+> -void erofs_pcpubuf_init(void)
+> +void __init erofs_pcpubuf_init(void)
+>   {
+>   	int cpu;
+>   
