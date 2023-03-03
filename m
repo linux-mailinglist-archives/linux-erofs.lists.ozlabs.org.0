@@ -1,38 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF6CC6A9214
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 08:59:42 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0E8A6A922D
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 09:08:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PSgNr4NC0z3cdb
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 18:59:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PSgZl675gz3cdb
+	for <lists+linux-erofs@lfdr.de>; Fri,  3 Mar 2023 19:08:15 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=hI9qMn4T;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::435; helo=mail-pf1-x435.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=hI9qMn4T;
+	dkim-atps=neutral
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PSgNl2MRGz3cJK
-	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Mar 2023 18:59:35 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Vd-Sm0A_1677830370;
-Received: from 30.97.48.241(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vd-Sm0A_1677830370)
-          by smtp.aliyun-inc.com;
-          Fri, 03 Mar 2023 15:59:31 +0800
-Message-ID: <9088fc67-6b4b-f673-97ca-2ac4d2df0121@linux.alibaba.com>
-Date: Fri, 3 Mar 2023 15:59:30 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH] erofs: avoid useless memory allocation
-To: Noboru Asai <asai@sijam.com>, xiang@kernel.org, chao@kernel.org,
- huyue2@coolpad.com
-References: <20230303075218.675733-1-asai@sijam.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230303075218.675733-1-asai@sijam.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PSgZg6qlxz3cJK
+	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Mar 2023 19:08:09 +1100 (AEDT)
+Received: by mail-pf1-x435.google.com with SMTP id fa28so1016410pfb.12
+        for <linux-erofs@lists.ozlabs.org>; Fri, 03 Mar 2023 00:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677830887;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VoRqpQibDwb9oUpvtysPchQslDsCFyIvCUT4fTR3zSw=;
+        b=hI9qMn4T1lO1zRBKgR4akSX8DbCxFKD6xQFWht+tQpFA1zzDidpz5rYhKSYa3W0Ade
+         7Mb6Rs+nFlqB4VMCBMr7yjTgR2cagYGotyVH+6fz4hU/kTF1W1S560g5L/C6ew2lxFkm
+         0wFumXygda0SBQHDwo5e5CGvuuyjcU/ItMDAj7F/7I3Ip25AohFrEewV9pgaBos14NLE
+         pInj1hhhx6y7b8p6cdB/3cwahyaLzLKHMUnUBUqSa7Col18dVPXlBCxPZvO19vXpoVx+
+         QdGpXh2ZruhIHe196kzBFVPlKSzGbv55gLWnmT0ad6BMG60kUAw9w7u+cMZeIdvuH3ba
+         0uig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677830887;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VoRqpQibDwb9oUpvtysPchQslDsCFyIvCUT4fTR3zSw=;
+        b=am0X+VfGoDVMGr53VlT20HT8gHtHS/6wVdSW9fri/oFqWm9eUZwILa9sl80WMND3ne
+         3EjddPYDrT6db8kWLLpphrZaDsmx43V7z5U5kxrZZNqiTDnSbA28V2bWFP94AsEQQOm2
+         +bTMTopZLXMXzkT9eNEJEKkiDT/w1jAaPKdWEO3IRjmc4npo62G51FmBZduOS/cwT/TS
+         eSzJ9SeroZYyjknHJOFhcH2oxPpiZhQZBo1TcTiE4osQO3FmxKmwAFERWNm/Wh4f4gqZ
+         yhDNUJqMOB0oV9dk1/7ceaJzchfMMU1kQ2Udk6BlPk4jllO/O8a2LgEMHW+eGQx7OO9o
+         eUKQ==
+X-Gm-Message-State: AO0yUKWMG+rbk5BB4wAoL3cpEUyO0k0rZ2FY2EQmJck0WOGN7inmh1tE
+	JlCZSs41wMuSDHEVOGAekIKD9mS2FWE=
+X-Google-Smtp-Source: AK7set8pBOxk4Dp/Nqj0Ce+IGxN5jUs8FY1HCTW25fJeRH9CS7ugU0sYz8NJINSm75W0186s71cLlA==
+X-Received: by 2002:a62:1acb:0:b0:5a8:51a3:7f69 with SMTP id a194-20020a621acb000000b005a851a37f69mr856554pfa.2.1677830886830;
+        Fri, 03 Mar 2023 00:08:06 -0800 (PST)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id f6-20020aa782c6000000b0059416691b64sm1010438pfn.19.2023.03.03.00.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Mar 2023 00:08:06 -0800 (PST)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: validate the extent length for uncompressed pclusters
+Date: Fri,  3 Mar 2023 16:07:43 +0800
+Message-Id: <20230303080743.25713-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,36 +72,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Yue Hu <huyue2@coolpad.com>
 
+Keep in sync with the kernel commit c505feba4c0d ("erofs: validate the
+extent length for uncompressed pclusters"), so that we can catch the
+issue as well in fuse.
 
-On 2023/3/3 15:52, Noboru Asai wrote:
-> The variable 'vi->xattr_shared_count' could be ZERO.
-> 
-> Signed-off-by: Noboru Asai <asai@sijam.com>
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ lib/zmap.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 89e9da1..69b468d 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -647,6 +647,11 @@ static int z_erofs_do_map_blocks(struct erofs_inode *vi,
+ 	}
+ 
+ 	if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_PLAIN) {
++		if (map->m_llen > map->m_plen) {
++			DBG_BUGON(1);
++			err = -EFSCORRUPTED;
++			goto out;
++		}
+ 		if (vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
+ 			map->m_algorithmformat =
+ 				Z_EROFS_COMPRESSION_INTERLACED;
+-- 
+2.17.1
 
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/xattr.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-> index 60729b1220b6..5164813a693b 100644
-> --- a/fs/erofs/xattr.c
-> +++ b/fs/erofs/xattr.c
-> @@ -80,6 +80,8 @@ static int init_inode_xattrs(struct inode *inode)
->   
->   	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
->   	vi->xattr_shared_count = ih->h_shared_count;
-> +	if (!vi->xattr_shared_count)
-> +		goto out_unlock;
->   	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
->   						sizeof(uint), GFP_KERNEL);
->   	if (!vi->xattr_shared_xattrs) {
