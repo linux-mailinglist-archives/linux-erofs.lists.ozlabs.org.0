@@ -1,71 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D67756AB8E0
-	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 09:55:36 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E66D6AB90A
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 10:00:41 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PVXTy4kp5z3cLr
-	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 19:55:34 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ZFdpI7Eh;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PVXbq0HSnz3cBk
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 20:00:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1032; helo=mail-pj1-x1032.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=ZFdpI7Eh;
-	dkim-atps=neutral
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PVXTl6GHrz3c6R
-	for <linux-erofs@lists.ozlabs.org>; Mon,  6 Mar 2023 19:55:23 +1100 (AEDT)
-Received: by mail-pj1-x1032.google.com with SMTP id ce8-20020a17090aff0800b0023a61cff2c6so7111933pjb.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 06 Mar 2023 00:55:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678092921;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVn9cH5VyUuoVkqURZFnblD07dc8FnaUKEqFLNWRsAM=;
-        b=ZFdpI7Eh14Rlc6LJGmx+yRDUs1lv3ms9XMLd7qq0oeY3iTIv3lxMnmeijbQsGGRuHB
-         SzJ0ZDrZ70xV7bwOKrsRT9XUqFPkAIBlgvZZqWBypF9JU3lmrflGjnzaiEXoZt8f44Yn
-         q2y63Lm8xFZq5oIEy5U0mbVIajeBcxPNRhFHzNueG79SiwrGMWlJpqdlnYqNA0IJ1fKg
-         RgofHWkjAYfhbkt2FNjClHVM6wu2vTlKu/pIk+CAQ3BZmOpJwax9baRkSemU7jk0mIdH
-         VIeqTH1YVpsbl7Ov2FlJWdUX278a7ar/Jx3hW25XP+v0pPBKSjGTLgGWbbkQ6DG2wf7T
-         GFKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678092921;
-        h=references:in-reply-to:references:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uVn9cH5VyUuoVkqURZFnblD07dc8FnaUKEqFLNWRsAM=;
-        b=kC+0CEo2DOX2mhnXyvtx+pdlnJRM/uSkRDZTUAmWWUDlrEdlmuf9yuEERVsgpYMGVS
-         H1GvGJgKJW0oqDoKcO65qcjeVgm7UfRVtKCdAB8e8kUdoLo81RS9b6V4uroyMH3TGxVG
-         WvmK2kkL7sSjDwmjWhZlpmiMhSr/q/bSZJODZzb5dmjNNW1OKV05HHlBNV+u48jQmnXu
-         mIY79oiTjhzZdW6g9rnFNqF5RqRKYOymxU+Rmqp8P+TViWQ7bzuMeH9VTYu8xLKntLFV
-         E5CDUy4iK/IDPcLcqn6liIBIKkRiCiJyRePG+qxBRDG4APJ0zIT7+nrBeTjy2gtBXji8
-         6Q3Q==
-X-Gm-Message-State: AO0yUKXdqLYzoGBICEF2oVifADnnszhPlbetMaZ4GvcAEXusJVFw5cO9
-	WD5+MuCTFp6MRMUqaMPs/TGQa4Qasyc=
-X-Google-Smtp-Source: AK7set8le3LEFy3e+N3K1mDJsjwI/8y8STo63B6eFm3K/90wi542wiMKmUAClyBgP0n5b/E63djxeA==
-X-Received: by 2002:a17:90b:1d88:b0:237:c52f:a54d with SMTP id pf8-20020a17090b1d8800b00237c52fa54dmr14329047pjb.21.1678092921150;
-        Mon, 06 Mar 2023 00:55:21 -0800 (PST)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id t10-20020a17090a4e4a00b002371e2ac56csm5315013pjl.32.2023.03.06.00.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 00:55:20 -0800 (PST)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils: get rid of erofs_iget_by_nid()
-Date: Mon,  6 Mar 2023 16:54:59 +0800
-Message-Id: <b002a8bf98b9b9a69c94faccd5e672aabfc5bffb.1678092797.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <e90f4dc828bb45b1a3ccbd1769a590410f3a82da.1678092797.git.huyue2@coolpad.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PVXbh1XNhz3bvZ
+	for <linux-erofs@lists.ozlabs.org>; Mon,  6 Mar 2023 20:00:30 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VdDRTha_1678093225;
+Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdDRTha_1678093225)
+          by smtp.aliyun-inc.com;
+          Mon, 06 Mar 2023 17:00:26 +0800
+Message-ID: <6d65a6fa-869d-8259-b271-7e20332188f6@linux.alibaba.com>
+Date: Mon, 6 Mar 2023 17:00:25 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH 1/2] erofs-utils: get rid of z_erofs_do_map_blocks()
+ forward declaration
+To: Yue Hu <zbestahu@gmail.com>, linux-erofs@lists.ozlabs.org
 References: <e90f4dc828bb45b1a3ccbd1769a590410f3a82da.1678092797.git.huyue2@coolpad.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 In-Reply-To: <e90f4dc828bb45b1a3ccbd1769a590410f3a82da.1678092797.git.huyue2@coolpad.com>
-References: <e90f4dc828bb45b1a3ccbd1769a590410f3a82da.1678092797.git.huyue2@coolpad.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,38 +48,202 @@ Cc: huyue2@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
 
-No users for this helper.
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- lib/inode.c | 12 ------------
- 1 file changed, 12 deletions(-)
+On 2023/3/6 16:54, Yue Hu wrote:
+> From: Yue Hu <huyue2@coolpad.com>
+> 
+> Keep in sync with the kernel commit 999f2f9a63f4 ("erofs: get rid of
+> z_erofs_do_map_blocks() forward declaration").
 
-diff --git a/lib/inode.c b/lib/inode.c
-index bcb0986..b508c73 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -94,18 +94,6 @@ struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
- 	return NULL;
- }
- 
--struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid)
--{
--	struct list_head *head =
--		&inode_hashtable[nid % NR_INODE_HASHTABLE];
--	struct erofs_inode *inode;
--
--	list_for_each_entry(inode, head, i_hash)
--		if (inode->nid == nid)
--			return erofs_igrab(inode);
--	return NULL;
--}
--
- unsigned int erofs_iput(struct erofs_inode *inode)
- {
- 	struct erofs_dentry *d, *t;
--- 
-2.17.1
+Does z_erofs_do_map_blocks() already keep in sync with the kernel
+implementation?  Anyway, it's just another question indepentently
+to this patch.
 
+> 
+> Signed-off-by: Yue Hu <huyue2@coolpad.com>
+> ---
+>   lib/zmap.c | 156 ++++++++++++++++++++++++++---------------------------
+>   1 file changed, 76 insertions(+), 80 deletions(-)
+> 
+> diff --git a/lib/zmap.c b/lib/zmap.c
+> index 69b468d..3c665f8 100644
+> --- a/lib/zmap.c
+> +++ b/lib/zmap.c
+> @@ -10,10 +10,6 @@
+>   #include "erofs/io.h"
+>   #include "erofs/print.h"
+>   
+> -static int z_erofs_do_map_blocks(struct erofs_inode *vi,
+> -				 struct erofs_map_blocks *map,
+> -				 int flags);
+> -
+>   int z_erofs_fill_inode(struct erofs_inode *vi)
+>   {
+>   	if (!erofs_sb_has_big_pcluster() &&
+> @@ -29,82 +25,6 @@ int z_erofs_fill_inode(struct erofs_inode *vi)
+>   	return 0;
+>   }
+>   
+> -static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+> -{
+> -	int ret;
+> -	erofs_off_t pos;
+> -	struct z_erofs_map_header *h;
+> -	char buf[sizeof(struct z_erofs_map_header)];
+> -
+> -	if (vi->flags & EROFS_I_Z_INITED)
+> -		return 0;
+> -
+> -	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
+> -	ret = dev_read(0, buf, pos, sizeof(buf));
+> -	if (ret < 0)
+> -		return -EIO;
+> -
+> -	h = (struct z_erofs_map_header *)buf;
+> -	/*
+> -	 * if the highest bit of the 8-byte map header is set, the whole file
+> -	 * is stored in the packed inode. The rest bits keeps z_fragmentoff.
+> -	 */
+> -	if (h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT) {
+> -		vi->z_advise = Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+> -		vi->fragmentoff = le64_to_cpu(*(__le64 *)h) ^ (1ULL << 63);
+> -		vi->z_tailextent_headlcn = 0;
+> -		goto out;
+> -	}
+> -
+> -	vi->z_advise = le16_to_cpu(h->h_advise);
+> -	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+> -	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
+> -
+> -	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+> -		erofs_err("unknown compression format %u for nid %llu",
+> -			  vi->z_algorithmtype[0], (unsigned long long)vi->nid);
+> -		return -EOPNOTSUPP;
+> -	}
+> -
+> -	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
+> -	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
+> -	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
+> -	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
+> -		erofs_err("big pcluster head1/2 of compact indexes should be consistent for nid %llu",
+> -			  vi->nid * 1ULL);
+> -		return -EFSCORRUPTED;
+> -	}
+> -
+> -	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
+> -		struct erofs_map_blocks map = { .index = UINT_MAX };
+> -
+> -		vi->idata_size = le16_to_cpu(h->h_idata_size);
+> -		ret = z_erofs_do_map_blocks(vi, &map,
+> -					    EROFS_GET_BLOCKS_FINDTAIL);
+> -		if (!map.m_plen ||
+> -		    erofs_blkoff(map.m_pa) + map.m_plen > EROFS_BLKSIZ) {
+> -			erofs_err("invalid tail-packing pclustersize %llu",
+> -				  map.m_plen | 0ULL);
+> -			return -EFSCORRUPTED;
+> -		}
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> -	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
+> -	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
+> -		struct erofs_map_blocks map = { .index = UINT_MAX };
+> -
+> -		vi->fragmentoff = le32_to_cpu(h->h_fragmentoff);
+> -		ret = z_erofs_do_map_blocks(vi, &map,
+> -					    EROFS_GET_BLOCKS_FINDTAIL);
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> -out:
+> -	vi->flags |= EROFS_I_Z_INITED;
+> -	return 0;
+> -}
+> -
+>   struct z_erofs_maprecorder {
+>   	struct erofs_inode *inode;
+>   	struct erofs_map_blocks *map;
+> @@ -675,6 +595,82 @@ out:
+>   	return err;
+>   }
+>   
+> +static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+> +{
+> +	int ret;
+> +	erofs_off_t pos;
+> +	struct z_erofs_map_header *h;
+> +	char buf[sizeof(struct z_erofs_map_header)];
+> +
+> +	if (vi->flags & EROFS_I_Z_INITED)
+> +		return 0;
+> +
+> +	pos = round_up(iloc(vi->nid) + vi->inode_isize + vi->xattr_isize, 8);
+> +	ret = dev_read(0, buf, pos, sizeof(buf));
+> +	if (ret < 0)
+> +		return -EIO;
+> +
+> +	h = (struct z_erofs_map_header *)buf;
+> +	/*
+> +	 * if the highest bit of the 8-byte map header is set, the whole file
+> +	 * is stored in the packed inode. The rest bits keeps z_fragmentoff.
+> +	 */
+> +	if (h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT) {
+> +		vi->z_advise = Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+> +		vi->fragmentoff = le64_to_cpu(*(__le64 *)h) ^ (1ULL << 63);
+> +		vi->z_tailextent_headlcn = 0;
+> +		goto out;
+> +	}
+> +
+> +	vi->z_advise = le16_to_cpu(h->h_advise);
+> +	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+> +	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
+> +
+> +	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
+> +		erofs_err("unknown compression format %u for nid %llu",
+> +			  vi->z_algorithmtype[0], (unsigned long long)vi->nid);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
+> +	if (vi->datalayout == EROFS_INODE_FLAT_COMPRESSION &&
+> +	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
+> +	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
+> +		erofs_err("big pcluster head1/2 of compact indexes should be consistent for nid %llu",
+> +			  vi->nid * 1ULL);
+> +		return -EFSCORRUPTED;
+> +	}
+> +
+> +	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
+> +		struct erofs_map_blocks map = { .index = UINT_MAX };
+> +
+> +		vi->idata_size = le16_to_cpu(h->h_idata_size);
+> +		ret = z_erofs_do_map_blocks(vi, &map,
+> +					    EROFS_GET_BLOCKS_FINDTAIL);
+> +		if (!map.m_plen ||
+> +		    erofs_blkoff(map.m_pa) + map.m_plen > EROFS_BLKSIZ) {
+> +			erofs_err("invalid tail-packing pclustersize %llu",
+> +				  map.m_plen | 0ULL);
+> +			return -EFSCORRUPTED;
+> +		}
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
+> +	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
+> +		struct erofs_map_blocks map = { .index = UINT_MAX };
+> +
+> +		vi->fragmentoff = le32_to_cpu(h->h_fragmentoff);
+> +		ret = z_erofs_do_map_blocks(vi, &map,
+> +					    EROFS_GET_BLOCKS_FINDTAIL);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +out:
+> +	vi->flags |= EROFS_I_Z_INITED;
+> +	return 0;
+> +}
+> +
+>   int z_erofs_map_blocks_iter(struct erofs_inode *vi,
+>   			    struct erofs_map_blocks *map,
+>   			    int flags)
