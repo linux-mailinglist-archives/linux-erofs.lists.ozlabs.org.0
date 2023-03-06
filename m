@@ -1,69 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE3396AB74E
-	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 08:56:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93CD26AB805
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 09:12:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PVW9G4VYdz3cHm
-	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 18:56:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PVWXK2nFdz3f3q
+	for <lists+linux-erofs@lfdr.de>; Mon,  6 Mar 2023 19:12:33 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=JuHi9hM/;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=fOfqDdJ9;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::636; helo=mail-pl1-x636.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=JuHi9hM/;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=fOfqDdJ9;
 	dkim-atps=neutral
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PVW9B1f1Fz3c5D
-	for <linux-erofs@lists.ozlabs.org>; Mon,  6 Mar 2023 18:55:58 +1100 (AEDT)
-Received: by mail-pl1-x636.google.com with SMTP id h8so9323533plf.10
-        for <linux-erofs@lists.ozlabs.org>; Sun, 05 Mar 2023 23:55:57 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PVWWZ5DVRz309V
+	for <linux-erofs@lists.ozlabs.org>; Mon,  6 Mar 2023 19:11:53 +1100 (AEDT)
+Received: by mail-pf1-x42b.google.com with SMTP id cp12so5176289pfb.5
+        for <linux-erofs@lists.ozlabs.org>; Mon, 06 Mar 2023 00:11:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678089356;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1678090310;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DXM+F0nCeNTp6Op2aBBfKjMUtWoANY5Axbyzod0a2dk=;
-        b=JuHi9hM/KWhW1Mri//QAde/70PgU9JOPU4yDSh9qWdIQdD8fzQGWUiePB8OSSZAnV1
-         zT9kyW1GwWMvvo/Zr8C5c0mst/Ch8s3CljIrPvOkGexctWW/m/vJ12+TSDPlSE6at6N1
-         MnCrM1NAjW1I2sDCEgFV9bM66E2nTCR0K8SqwYPDCxba5DUcuMmnYrTpMGqa+WUOLqm1
-         dHZxYY6KvpB0Ox486ldWbITM5Cb3E+O5AW7d9DLzcnA5671fRdlB24bn2Sl2PMQo/KnW
-         iW/1iOojHqoQg7k0yafD8+jSiwgMK0zgRTcQ3ja7w8ajdG0b7u6H/Ey7Z0SvWEJWExzt
-         DHJA==
+        bh=qp1gun1BLOT9XnkM22r0ylB6HbLuHvziOHShU4JCZiI=;
+        b=fOfqDdJ9QLzyJMMXV0jxGLG8CPsKKTmz4HUgvY+E8fI0wotkwxnS3/3mX1kROASB5L
+         1xNFdLFVSA4PlVui6IJjrU0JlY4HL+prbiFw8DpgJI/zEKFAFKT4KS4/72KMNaBkl2DB
+         TrwQ3hkOqrUg1fzDNb970ZgwEvKLAHNT9w+AAjMCH1NyoWdLPW2AEq0SaFIZDKzQnU9R
+         skFRIMxFxSaecDgulm0frpPe21wXQ1v6Fjghmzwp70/enlOarYGRPQEkd9OfIbccAkk7
+         RAgW66ARDVAbBw1MZTU89Yl7bKRcNymlRqbumb/Kf4H901pGaF1pUiCukXJhPymgPk48
+         X5CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678089356;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1678090310;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DXM+F0nCeNTp6Op2aBBfKjMUtWoANY5Axbyzod0a2dk=;
-        b=PkP/aYlODZGEMUFfdTiw7Qs80tViHc9lovKTeV2c86wwa2+XA8uxg02IdmtYZ4Fy+Y
-         G//6amj6G/AGHdCmR40x+1GDp8ZugfaZFDe/UGM3PtCgeU82wvuB7UNKI/s8q/y2V7fs
-         VYed7g57XJAvbSxh1CmE79O4r4f7blRbiFh0DlCalMfYiArYsBjKSj+j5wC5pjXtYm1F
-         dDQOqOMBUent3vg7Ggdu3uySQETMpBf2YeZ/JKTGv4nEbDXD0ymVW7ZJCJhOt0u7vgsv
-         3jphtQOvtjgS+CYsFlwq8nu2E/Js+t+LoS/wdBX6kDoppnhY/N5MTdtoKTIDAv/VYJJR
-         qkRw==
-X-Gm-Message-State: AO0yUKX1w2+CKXtZhX1lDq/DpF51tXoCR8mK6YiPc31GM8JgC+y4h627
-	M89Y8Q19hw0z7Igh+HOwLAo=
-X-Google-Smtp-Source: AK7set81pCf7l04ni0N9M1wStJKHShAv5aKLKdYUmKU14uNwyjDN4qqUNH/yoOsUTw7c7PAana0Alg==
-X-Received: by 2002:a17:90b:3b85:b0:234:8c58:c325 with SMTP id pc5-20020a17090b3b8500b002348c58c325mr10160476pjb.31.1678089355951;
-        Sun, 05 Mar 2023 23:55:55 -0800 (PST)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id e8-20020a17090ac20800b0022be36be19asm5383079pjt.53.2023.03.05.23.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Mar 2023 23:55:55 -0800 (PST)
+        bh=qp1gun1BLOT9XnkM22r0ylB6HbLuHvziOHShU4JCZiI=;
+        b=k4u5gA4NSRkABUGV/tv7f2FR2MNU4Z0b/+H8OVLdzFgSkdhQ9CzY1IQU3HhW7FO0kz
+         59QMSrsWF0wmwM8clVPoNCQzuNmvUm4UQ6tQ2E3BZCM0RHai+LpieR/rdEX+pSkdRdre
+         FVITy7NKObzlYz5sQJvNuHQmuMzYNnu3QWO+gBmSHS+p7xJ/+AURwH1txttkcSmUrgTu
+         QFNaJk792F2gwiGfg96TDglffsr864d+V572o5oN0DNoJzE2vnq+oBErHjnWCxVfB8Kp
+         aWaKazu3VmEO5yfkZDEckRziwZ3ZiXIqPvRPTa1+iJi8WqWqQExMvNhISX0u7puS/Hy1
+         Y0MA==
+X-Gm-Message-State: AO0yUKXS9/2eGh1l7Bmb5gxLI+8DAzlRnitKx+8N4PXlBKsnPVvNwm8T
+	8l54myXMJvhXrs5h4kYtjfg=
+X-Google-Smtp-Source: AK7set/LFfMaDVI9c/CcJesoRQEmXetMxIz7x1oo+Oe1MxbjGixZgj6gUzdRsFXwFdkE1H2Z1VUX4A==
+X-Received: by 2002:aa7:9426:0:b0:60e:950c:7a55 with SMTP id y6-20020aa79426000000b0060e950c7a55mr8032387pfo.9.1678090310580;
+        Mon, 06 Mar 2023 00:11:50 -0800 (PST)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id 9-20020aa79109000000b0060c55143fdesm5706038pfh.68.2023.03.06.00.11.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Mar 2023 00:11:50 -0800 (PST)
+Date: Mon, 6 Mar 2023 16:18:08 +0800
 From: Yue Hu <zbestahu@gmail.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	jefflexu@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: use wrapper i_blocksize() in erofs_file_read_iter()
-Date: Mon,  6 Mar 2023 15:55:27 +0800
-Message-Id: <20230306075527.1338-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH] erofs: fix wrong kunmap when using LZMA on HIGHMEM
+ platforms
+Message-ID: <20230306161808.000046c0.zbestahu@gmail.com>
+In-Reply-To: <20230305134455.88236-1-hsiangkao@linux.alibaba.com>
+References: <20230305134455.88236-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,32 +80,55 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+On Sun,  5 Mar 2023 21:44:55 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-linux/fs.h has a wrapper for this operation.
+> As the call trace shown, the root cause is kunmap incorrect pages:
+> 
+>  BUG: kernel NULL pointer dereference, address: 00000000
+>  CPU: 1 PID: 40 Comm: kworker/u5:0 Not tainted 6.2.0-rc5 #4
+>  Workqueue: erofs_worker z_erofs_decompressqueue_work
+>  EIP: z_erofs_lzma_decompress+0x34b/0x8ac
+>   z_erofs_decompress+0x12/0x14
+>   z_erofs_decompress_queue+0x7e7/0xb1c
+>   z_erofs_decompressqueue_work+0x32/0x60
+>   process_one_work+0x24b/0x4d8
+>   ? process_one_work+0x1a4/0x4d8
+>   worker_thread+0x14c/0x3fc
+>   kthread+0xe6/0x10c
+>   ? rescuer_thread+0x358/0x358
+>   ? kthread_complete_and_exit+0x18/0x18
+>   ret_from_fork+0x1c/0x28
+>  ---[ end trace 0000000000000000 ]---
+> 
+> The bug is trivial and should be fixed now.  It has no impact on
+> !HIGHMEM platforms.
+> 
+> Fixes: 622ceaddb764 ("erofs: lzma compression support")
+> Cc: <stable@vger.kernel.org> # 5.16+
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
- fs/erofs/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 5bd0c956a142..7e8baf56faa5 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -380,7 +380,7 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 		if (bdev)
- 			blksize_mask = bdev_logical_block_size(bdev) - 1;
- 		else
--			blksize_mask = (1 << inode->i_blkbits) - 1;
-+			blksize_mask = i_blocksize(inode) - 1;
- 
- 		if ((iocb->ki_pos | iov_iter_count(to) |
- 		     iov_iter_alignment(to)) & blksize_mask)
--- 
-2.17.1
+> ---
+>  fs/erofs/decompressor_lzma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+> index 091fd5adf818..5cd612a8f858 100644
+> --- a/fs/erofs/decompressor_lzma.c
+> +++ b/fs/erofs/decompressor_lzma.c
+> @@ -278,7 +278,7 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+>  		}
+>  	}
+>  	if (no < nrpages_out && strm->buf.out)
+> -		kunmap(rq->in[no]);
+> +		kunmap(rq->out[no]);
+>  	if (ni < nrpages_in)
+>  		kunmap(rq->in[ni]);
+>  	/* 4. push back LZMA stream context to the global list */
 
