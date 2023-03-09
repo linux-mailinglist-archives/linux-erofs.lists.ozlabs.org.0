@@ -1,38 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83DF46B1C7F
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 08:37:11 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B8F06B1C59
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 08:31:25 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PXLc52bJrz3cL1
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 18:37:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PXLTQ6sfxz3f3R
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 18:31:22 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=bcP5IcOK;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::629; helo=mail-pl1-x629.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=bcP5IcOK;
+	dkim-atps=neutral
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXLc14d7Nz3bYW
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Mar 2023 18:37:04 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VdSUpid_1678347418;
-Received: from 30.221.130.97(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VdSUpid_1678347418)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Mar 2023 15:36:59 +0800
-Message-ID: <bee8eb33-ec23-de1c-0340-b2cc290f4d1c@linux.alibaba.com>
-Date: Thu, 9 Mar 2023 15:36:58 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXLSr33bCz3ccr
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Mar 2023 18:30:51 +1100 (AEDT)
+Received: by mail-pl1-x629.google.com with SMTP id h8so1072127plf.10
+        for <linux-erofs@lists.ozlabs.org>; Wed, 08 Mar 2023 23:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678347048;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1bDXhfS+Zf3czIKMHqpIQcR1bLl3EJ1K2VTEtlTGwI=;
+        b=bcP5IcOKm+tJOzafpX8ImYC1LGFfWUAqO5mJ/P7OSlWq/O3ZBq9tz/9BD9C53ypQGw
+         tzpbALLWOGFM2Nv3H9FCFS4g62Q1meaHncmhBvcBgSrAmH4yhsEVe1zFUzSb5CzJuQhw
+         FQliadhvVwXuRFrFT9N553574uW2V00VXLRoN/kHSTgfbWaOWmrV7ge36yzUG18sh0Qg
+         zn0XZ+6us3Z9cjFPjKmdx7b3eOAVQllz7nwHfRG3jF0U7YIaT/aMObMLH4aJHG44XjNH
+         iB/uy/9wCDeG62XB96qNUL8EMWOVpNbH3CdpbZl2824L7xcEDeSMRzmYQae+bmz4/1Nw
+         URqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678347048;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1bDXhfS+Zf3czIKMHqpIQcR1bLl3EJ1K2VTEtlTGwI=;
+        b=5mDLjYHF5NgL0LzwMPRtgb2uSQxe8hgw3iit0JyrW6MrFGW1iyA6/3CVWlMa+H1d6z
+         gQa4UqmnyEwZYLSexjY4oh+qJbEU6eRf2fzXDToi3cHWxhNyl6c4n7YgXu5NFgAaoqRO
+         Q4buDbXyfTHNZpo/gM5EwcxvEM2EmwMxuQuFBXvTweSzVn9R74kqKZeZIApFGVilM5g1
+         FPrFHWeXTyCxIgz8ZC0eYcpsWaQ09nHAmgQkF7sOYxNxBSkQNuUxEVTZ1fmkYKaChyau
+         +gc9f8KuoR7jliYHd3R5jF9fG/qDhyLAEoL9tVJFMMxAWFAFQ+xXlczYgg3WTBs8Qv0z
+         IibQ==
+X-Gm-Message-State: AO0yUKVyQlAc1NWW424Y5x3yyt/pmd4ZUyH9qqizSJmpSJwVorhF8Bq1
+	o3CACBcLw6PByU/3MuuxkQg=
+X-Google-Smtp-Source: AK7set/5X9Br2s/E6UyT7fzWcZUDC2+vFH93YUrD2Xn8Oyv0c0u5FU1SsWUTwCXRD4waj21OGszXOQ==
+X-Received: by 2002:a17:90b:4d04:b0:237:47b0:3ea8 with SMTP id mw4-20020a17090b4d0400b0023747b03ea8mr23685827pjb.41.1678347048464;
+        Wed, 08 Mar 2023 23:30:48 -0800 (PST)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id n8-20020a17090ac68800b00233ebcb52a6sm928461pjt.36.2023.03.08.23.30.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Mar 2023 23:30:47 -0800 (PST)
+Date: Thu, 9 Mar 2023 15:37:09 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Yangtao Li <frank.li@vivo.com>
 Subject: Re: erofs: use wrapper i_blocksize() in erofs_file_read_iter()
-Content-Language: en-US
-To: Yangtao Li <frank.li@vivo.com>, zbestahu@gmail.com
-References: <20230306075527.1338-1-zbestahu@gmail.com>
- <20230309071515.25675-1-frank.li@vivo.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
+Message-ID: <20230309153709.00003876.zbestahu@gmail.com>
 In-Reply-To: <20230309071515.25675-1-frank.li@vivo.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20230306075527.1338-1-zbestahu@gmail.com>
+	<20230309071515.25675-1-frank.li@vivo.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -49,22 +84,21 @@ Cc: linux-kernel@vger.kernel.org, zhangwen@coolpad.com, huyue2@coolpad.com, linu
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Thu,  9 Mar 2023 15:15:15 +0800
+Yangtao Li <frank.li@vivo.com> wrote:
 
-
-On 3/9/23 3:15 PM, Yangtao Li wrote:
->> @@ -380,7 +380,7 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
->> 		if (bdev)
->> 			blksize_mask = bdev_logical_block_size(bdev) - 1;
->> 		else
->> -			blksize_mask = (1 << inode->i_blkbits) - 1;
->> +			blksize_mask = i_blocksize(inode) - 1;
+> > @@ -380,7 +380,7 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> > 		if (bdev)
+> > 			blksize_mask = bdev_logical_block_size(bdev) - 1;
+> > 		else
+> > -			blksize_mask = (1 << inode->i_blkbits) - 1;
+> > +			blksize_mask = i_blocksize(inode) - 1;  
 > 
 > Since the mask is to be obtained here, is it more appropriate to use GENMASK(inode->i_blkbits - 1, 0)?
 
+It should be another change independently to this patch. rt?
 
-FYI it seems that GENMASK macro is widely used in driver and arch code
-base, while it's rarely used in fs, except for f2fs.
+> 
+> Thx,
+> Yangtao
 
--- 
-Thanks,
-Jingbo
