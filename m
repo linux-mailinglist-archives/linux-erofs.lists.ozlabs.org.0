@@ -1,89 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD5006B213E
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 11:21:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5636E6B22DB
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 12:26:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PXQGB4tcpz3cMc
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 21:21:54 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Zs37hMZA;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Zs37hMZA;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PXRj522ryz3cdM
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 22:26:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=agruenba@redhat.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Zs37hMZA;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Zs37hMZA;
-	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXQG50CYlz3bgn
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Mar 2023 21:21:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678357303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Ir/h645vG7/3e7LKCiTYw/Yo812wpfTRDoEn9ipx+Q=;
-	b=Zs37hMZAnLpmF3UA7V3U8UKxaQGvUdMSJhJB3plbIKIjBk7rdl8OMJuWHK/mfqvjGN0xCi
-	FhZDmBmSG0F9FtSXT7T2QTj4wstfEANj5w6oa4Q6TfdQLBeBCng2/hyuHBrpr8EY0aSId5
-	FRcX8y5Fwl1jC5ehzfHv/pOrnJ8+a0Q=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678357303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Ir/h645vG7/3e7LKCiTYw/Yo812wpfTRDoEn9ipx+Q=;
-	b=Zs37hMZAnLpmF3UA7V3U8UKxaQGvUdMSJhJB3plbIKIjBk7rdl8OMJuWHK/mfqvjGN0xCi
-	FhZDmBmSG0F9FtSXT7T2QTj4wstfEANj5w6oa4Q6TfdQLBeBCng2/hyuHBrpr8EY0aSId5
-	FRcX8y5Fwl1jC5ehzfHv/pOrnJ8+a0Q=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-112-sqMIvlERO4eH4c7Vefz5lg-1; Thu, 09 Mar 2023 05:21:41 -0500
-X-MC-Unique: sqMIvlERO4eH4c7Vefz5lg-1
-Received: by mail-pj1-f72.google.com with SMTP id v15-20020a17090a458f00b0023816b2f381so960047pjg.2
-        for <linux-erofs@lists.ozlabs.org>; Thu, 09 Mar 2023 02:21:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678357295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Ir/h645vG7/3e7LKCiTYw/Yo812wpfTRDoEn9ipx+Q=;
-        b=Duftz7RX41GUu9Z2X92oRvbbN9RR8TsU+jBYZMMa1+TKyvQfyujHyeOFGJVa/UPOOG
-         nceMVqBDTrFAHPEKDzqMEEObvcNejHh4UMW06r2JFJ35UemTB7QaIQ1D8BgLes3yg7He
-         632EO9UVKJ9UBtskWgkp45/8i/dBmJnsKHu0E/b3wzQS2nDJvCrSD9Px2iKb9uNCz+9b
-         iMdMUitkx9yY9CPGKIApGOvCQWTVTqczOfA/h1ARWYk6rlBtjVSNYtMJmbbvvd4LKK+V
-         nyE90GvhdPq5AkQBoEltAjElrPEcO4qC5H9lrS3xytyKhbK+H22/qIodr7wADzFGm6D1
-         Ubhw==
-X-Gm-Message-State: AO0yUKXmKlc10/Q1jhSoShtl+UWodTPvj7VhCqWG5RJznxyteQd1eTJ+
-	RHC0mG2ZE5k50GJFt7zXq5xP6vgREZVzV9P1Y5KYkcNRucrrKOQJfK8maLHnfTYu2pLUzIac8sY
-	jwHNEoRFcoTzcnXVBI2aVTm9xcScgzuqry0gvuzlN
-X-Received: by 2002:a17:902:f7c1:b0:19c:a3be:a4f3 with SMTP id h1-20020a170902f7c100b0019ca3bea4f3mr8229339plw.4.1678357295500;
-        Thu, 09 Mar 2023 02:21:35 -0800 (PST)
-X-Google-Smtp-Source: AK7set9VDTf99mRyC2eJOBxIkMspHxJ2pV++2lzfcL1yIkpa4x+m9xdxgNtT/wUdeXHjX/qKTQaaMK9Wp7kJK/Zrno4=
-X-Received: by 2002:a17:902:f7c1:b0:19c:a3be:a4f3 with SMTP id
- h1-20020a170902f7c100b0019ca3bea4f3mr8229321plw.4.1678357295164; Thu, 09 Mar
- 2023 02:21:35 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXRhz1gh3z3bhx
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Mar 2023 22:26:42 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdTT6VY_1678361192;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdTT6VY_1678361192)
+          by smtp.aliyun-inc.com;
+          Thu, 09 Mar 2023 19:26:37 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/3] erofs-utils: optimize dedupe matching
+Date: Thu,  9 Mar 2023 19:26:28 +0800
+Message-Id: <20230309112630.74230-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-References: <20230309094317.69773-1-frank.li@vivo.com>
-In-Reply-To: <20230309094317.69773-1-frank.li@vivo.com>
-From: Andreas Gruenbacher <agruenba@redhat.com>
-Date: Thu, 9 Mar 2023 11:21:23 +0100
-Message-ID: <CAHc6FU7vGD9NGn0phJsLEmcU8O7AaBS+hm=AEwYOc0nFGHS-hQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] fs: add i_blocksize_mask()
-To: Yangtao Li <frank.li@vivo.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -95,47 +39,83 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: brauner@kernel.org, tytso@mit.edu, linux-kernel@vger.kernel.org, cluster-devel@redhat.com, rpeterso@redhat.com, huyue2@coolpad.com, adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Mar 9, 2023 at 10:43=E2=80=AFAM Yangtao Li <frank.li@vivo.com> wrot=
-e:
-> Introduce i_blocksize_mask() to simplify code, which replace
-> (i_blocksize(node) - 1). Like done in commit
-> 93407472a21b("fs: add i_blocksize()").
+Match in words instead of byte granularity.
 
-I would call this i_blockmask().
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/dedupe.c | 48 ++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 6 deletions(-)
 
-Note that it could be used in ocfs2_is_io_unaligned() as well.
-
->
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  include/linux/fs.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index c85916e9f7db..db335bd9c256 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -711,6 +711,11 @@ static inline unsigned int i_blocksize(const struct =
-inode *node)
->         return (1 << node->i_blkbits);
->  }
->
-> +static inline unsigned int i_blocksize_mask(const struct inode *node)
-> +{
-> +       return i_blocksize(node) - 1;
-> +}
-> +
->  static inline int inode_unhashed(struct inode *inode)
->  {
->         return hlist_unhashed(&inode->i_hash);
-> --
-> 2.25.1
->
-
-Thanks,
-Andreas
+diff --git a/lib/dedupe.c b/lib/dedupe.c
+index 7f6e56f..84c323b 100644
+--- a/lib/dedupe.c
++++ b/lib/dedupe.c
+@@ -8,6 +8,45 @@
+ #include "rolling_hash.h"
+ #include "sha256.h"
+ 
++inline unsigned long erofs_memcmp2(const u8 *s1, const u8 *s2,
++				   unsigned long sz)
++{
++	unsigned int n = sz;
++
++	if (sz >= sizeof(long) && ((long)s1 & (sizeof(long) - 1)) ==
++			((long)s2 & (sizeof(long) - 1))) {
++		const unsigned long *a1, *a2;
++
++		while ((long)s1 & (sizeof(long) - 1)) {
++			if (*s1 != *s2)
++				break;
++			++s1;
++			++s2;
++			--sz;
++		}
++
++		a1 = (const unsigned long *)s1;
++		a2 = (const unsigned long *)s2;
++		while (sz >= sizeof(long)) {
++			if (*a1 != *a2)
++				break;
++			++a1;
++			++a2;
++			sz -= sizeof(long);
++		}
++		s1 = (const u8 *)a1;
++		s2 = (const u8 *)a2;
++	}
++	while (sz) {
++		if (*s1 != *s2)
++			break;
++		++s1;
++		++s2;
++		--sz;
++	}
++	return n - sz;
++}
++
+ static unsigned int window_size, rollinghash_rm;
+ static struct rb_tree *dedupe_tree, *dedupe_subtree;
+ 
+@@ -72,12 +111,9 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *ctx)
+ 		if (memcmp(sha256, e->prefix_sha256, sizeof(sha256)))
+ 			continue;
+ 
+-		extra = 0;
+-		while (cur + window_size + extra < ctx->end &&
+-		       window_size + extra < e->original_length &&
+-		       e->extra_data[extra] == cur[window_size + extra])
+-			++extra;
+-
++		extra = min_t(unsigned int, ctx->end - cur - window_size,
++			      e->original_length - window_size);
++		extra = erofs_memcmp2(cur + window_size, e->extra_data, extra);
+ 		if (window_size + extra <= ctx->cur - cur)
+ 			continue;
+ 		ctx->cur = cur;
+-- 
+2.24.4
 
