@@ -1,64 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E5356AF18E
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Mar 2023 19:45:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95A666B1AC8
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 06:32:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PWPXH47dxz3cht
-	for <lists+linux-erofs@lfdr.de>; Wed,  8 Mar 2023 05:45:35 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nCOhVAMm;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PXHqp3lVjz3cK6
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Mar 2023 16:32:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.120; helo=mga04.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nCOhVAMm;
-	dkim-atps=neutral
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PWPX749Mbz3cMN
-	for <linux-erofs@lists.ozlabs.org>; Wed,  8 Mar 2023 05:45:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678214727; x=1709750727;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=i7GOvADt5k5Ng327RhfmKnjcL1h1PzZ4Xp8s7ivUNgU=;
-  b=nCOhVAMm39a/SOPxvCmYsUCigX/UNuLMDXTTYReJydze2puFEjP0oq9b
-   wsKL1+4vu44Wu8Do7yDw5EjVWqcWvAwjQdrEZWO0GCAw8BvH5tdGjy8sR
-   22BBFrWVU9g9XU1vaKjVGBarChjlMjboeXnVUf10g5+f65EwZ8L9QcTHs
-   c1WzvunVvVUQc7BluJW3jKqzN5zQ0hs1chHdhJJXLH9Ya+dMIGzKKIQHm
-   joqQgcQF5tDAE4hPHILH8D5f3N1UAgg9CRV3mxWlXC0V/OODz6xsayaNR
-   hIf36539rTR+kfAnyoy1VRr5fq92JwHbIsHURsBJjKP/r8LyYS6z9W2nl
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="334653057"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="334653057"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 10:45:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="819863646"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="819863646"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2023 10:45:16 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pZcJH-0001Ww-2E;
-	Tue, 07 Mar 2023 18:45:15 +0000
-Date: Wed, 08 Mar 2023 02:44:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- 83cf6dd6c187e6796de4c0faa39b2595dcbbe99a
-Message-ID: <64078611.cwZquNep+85h6Brw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXHqh3TZ1z3bgn
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Mar 2023 16:31:59 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VdS7uEN_1678339908;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdS7uEN_1678339908)
+          by smtp.aliyun-inc.com;
+          Thu, 09 Mar 2023 13:31:54 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs: Revert "erofs: fix kvcalloc() misuse with __GFP_NOFAIL"
+Date: Thu,  9 Mar 2023 13:31:47 +0800
+Message-Id: <20230309053148.9223-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,146 +39,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: 83cf6dd6c187e6796de4c0faa39b2595dcbbe99a  erofs: use wrapper i_blocksize() in erofs_file_read_iter()
+Let's revert commit 12724ba38992 ("erofs: fix kvcalloc() misuse with
+__GFP_NOFAIL") since kvmalloc() already supports __GFP_NOFAIL in commit
+a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc").  So
+the original fix was wrong.
 
-elapsed time: 731m
+Actually there was some issue as [1] discussed, so before that mm fix
+is landed, the warn could still happen but applying this commit first
+will cause less.
 
-configs tested: 123
-configs skipped: 11
+[1] https://lore.kernel.org/r/20230305053035.1911-1-hsiangkao@linux.alibaba.com
+Fixes: 12724ba38992 ("erofs: fix kvcalloc() misuse with __GFP_NOFAIL")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230305   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r004-20230305   gcc  
-arm                  randconfig-r021-20230306   gcc  
-arm                  randconfig-r036-20230306   clang
-arm                  randconfig-r046-20230305   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r022-20230305   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r003-20230305   gcc  
-csky                 randconfig-r014-20230306   gcc  
-hexagon      buildonly-randconfig-r001-20230305   clang
-hexagon      buildonly-randconfig-r002-20230305   clang
-hexagon              randconfig-r002-20230305   clang
-hexagon              randconfig-r041-20230305   clang
-hexagon              randconfig-r045-20230305   clang
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230306   gcc  
-i386                 randconfig-a002-20230306   gcc  
-i386                 randconfig-a003-20230306   gcc  
-i386                 randconfig-a004-20230306   gcc  
-i386                 randconfig-a005-20230306   gcc  
-i386                 randconfig-a006-20230306   gcc  
-i386                 randconfig-a011-20230306   clang
-i386                 randconfig-a012-20230306   clang
-i386                 randconfig-a013-20230306   clang
-i386                 randconfig-a014-20230306   clang
-i386                 randconfig-a015-20230306   clang
-i386                 randconfig-a016-20230306   clang
-i386                 randconfig-r032-20230306   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r003-20230306   gcc  
-ia64                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r012-20230305   gcc  
-loongarch            randconfig-r015-20230305   gcc  
-loongarch            randconfig-r021-20230305   gcc  
-loongarch            randconfig-r032-20230305   gcc  
-m68k                             allmodconfig   gcc  
-m68k         buildonly-randconfig-r006-20230306   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r034-20230305   gcc  
-microblaze           randconfig-r013-20230305   gcc  
-microblaze           randconfig-r026-20230305   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2        buildonly-randconfig-r004-20230306   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r033-20230305   gcc  
-openrisc     buildonly-randconfig-r006-20230305   gcc  
-openrisc             randconfig-r013-20230306   gcc  
-openrisc             randconfig-r014-20230305   gcc  
-openrisc             randconfig-r016-20230306   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r022-20230306   gcc  
-parisc               randconfig-r024-20230305   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc      buildonly-randconfig-r003-20230305   gcc  
-powerpc      buildonly-randconfig-r005-20230305   gcc  
-powerpc      buildonly-randconfig-r005-20230306   clang
-powerpc              randconfig-r025-20230306   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230305   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230305   clang
-s390                 randconfig-r033-20230306   gcc  
-s390                 randconfig-r036-20230305   clang
-s390                 randconfig-r044-20230305   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r005-20230305   gcc  
-sh                   randconfig-r011-20230306   gcc  
-sh                   randconfig-r012-20230306   gcc  
-sh                   randconfig-r031-20230306   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r023-20230306   gcc  
-sparc64              randconfig-r025-20230305   gcc  
-sparc64              randconfig-r035-20230306   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230306   gcc  
-x86_64               randconfig-a002-20230306   gcc  
-x86_64               randconfig-a003-20230306   gcc  
-x86_64               randconfig-a004-20230306   gcc  
-x86_64               randconfig-a005-20230306   gcc  
-x86_64               randconfig-a006-20230306   gcc  
-x86_64               randconfig-a011-20230306   clang
-x86_64               randconfig-a012-20230306   clang
-x86_64               randconfig-a013-20230306   clang
-x86_64               randconfig-a014-20230306   clang
-x86_64               randconfig-a015-20230306   clang
-x86_64               randconfig-a016-20230306   clang
-x86_64               randconfig-r015-20230306   clang
-x86_64               randconfig-r024-20230306   clang
-x86_64               randconfig-r026-20230306   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r002-20230306   gcc  
-xtensa               randconfig-r011-20230305   gcc  
-
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 3247d2422bea..f1708c77a991 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1312,12 +1312,12 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 
+ 	if (!be->decompressed_pages)
+ 		be->decompressed_pages =
+-			kcalloc(be->nr_pages, sizeof(struct page *),
+-				GFP_KERNEL | __GFP_NOFAIL);
++			kvcalloc(be->nr_pages, sizeof(struct page *),
++				 GFP_KERNEL | __GFP_NOFAIL);
+ 	if (!be->compressed_pages)
+ 		be->compressed_pages =
+-			kcalloc(pclusterpages, sizeof(struct page *),
+-				GFP_KERNEL | __GFP_NOFAIL);
++			kvcalloc(pclusterpages, sizeof(struct page *),
++				 GFP_KERNEL | __GFP_NOFAIL);
+ 
+ 	z_erofs_parse_out_bvecs(be);
+ 	err2 = z_erofs_parse_in_bvecs(be, &overlapped);
+@@ -1365,7 +1365,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 	}
+ 	if (be->compressed_pages < be->onstack_pages ||
+ 	    be->compressed_pages >= be->onstack_pages + Z_EROFS_ONSTACK_PAGES)
+-		kfree(be->compressed_pages);
++		kvfree(be->compressed_pages);
+ 	z_erofs_fill_other_copies(be, err);
+ 
+ 	for (i = 0; i < be->nr_pages; ++i) {
+@@ -1384,7 +1384,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 	}
+ 
+ 	if (be->decompressed_pages != be->onstack_pages)
+-		kfree(be->decompressed_pages);
++		kvfree(be->decompressed_pages);
+ 
+ 	pcl->length = 0;
+ 	pcl->partial = true;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.24.4
+
