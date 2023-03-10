@@ -2,51 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB0446B34DB
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 04:32:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0763F6B34E8
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 04:42:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PXs7W4xXvz3cdM
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 14:32:39 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=BlyYntEG;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PXsMC62Bpz3cdM
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 14:42:47 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=BlyYntEG;
-	dkim-atps=neutral
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXs7R2bv0z3bm6
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Mar 2023 14:32:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5nYji9aiOTPkm277QrYAaIqlTmxJJ+NstcSRT3Yv5A4=; b=BlyYntEGWpWNJHstS6q6njadFa
-	P58IUANDyb039xyu+2aDp2c7OzdJYDBxQ5K36A+DuuZuUxMwyf+wQEWfkoOhKX//l4UgaNIAhZroj
-	raHHfhXFjHkvEhH5SRgjFwVGqN5H037vB9hI2lc0ttLBBrZkpqsiVlRQ+zDDlDn2nXR/ym7JEaTMj
-	k6jnj+0wNV9kTXPfzi28opkBB44CtxTJKx85YoHPGh4jQsUxI800+WVVKUEpFmH/vlz+1X4VI7tC3
-	aHldI5fbRXyo7CAXw46+xJ66nAVzuZUZqoth8N05jHB92fCaFVa+cWyRpHY1w0o7SEQpAJUAyFnMg
-	lssdi5Fg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1paTUM-00FCbC-06;
-	Fri, 10 Mar 2023 03:32:14 +0000
-Date: Fri, 10 Mar 2023 03:32:13 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Yangtao Li <frank.li@vivo.com>
-Subject: Re: [PATCH v3 4/6] ext4: convert to use i_blockmask()
-Message-ID: <20230310033213.GG3390869@ZenIV>
-References: <20230309152127.41427-1-frank.li@vivo.com>
- <20230309152127.41427-4-frank.li@vivo.com>
- <20230310031940.GE3390869@ZenIV>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PXsM738qdz3bg5
+	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Mar 2023 14:42:42 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VdVlEJ2_1678419754;
+Received: from 30.97.48.46(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdVlEJ2_1678419754)
+          by smtp.aliyun-inc.com;
+          Fri, 10 Mar 2023 11:42:36 +0800
+Message-ID: <2fa31829-03f0-7bfb-a89b-e3917c479733@linux.alibaba.com>
+Date: Fri, 10 Mar 2023 11:42:34 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310031940.GE3390869@ZenIV>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v3 2/6] erofs: convert to use i_blockmask()
+To: Al Viro <viro@zeniv.linux.org.uk>, Yangtao Li <frank.li@vivo.com>
+References: <20230309152127.41427-1-frank.li@vivo.com>
+ <20230309152127.41427-2-frank.li@vivo.com> <20230310031547.GD3390869@ZenIV>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230310031547.GD3390869@ZenIV>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,39 +48,50 @@ Cc: brauner@kernel.org, tytso@mit.edu, agruenba@redhat.com, joseph.qi@linux.alib
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Mar 10, 2023 at 03:19:40AM +0000, Al Viro wrote:
-> On Thu, Mar 09, 2023 at 11:21:25PM +0800, Yangtao Li wrote:
-> > Use i_blockmask() to simplify code.
-> > 
-> > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > ---
-> > v3:
-> > -none
-> > v2:
-> > -convert to i_blockmask()
-> >  fs/ext4/inode.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > index d251d705c276..eec36520e5e9 100644
-> > --- a/fs/ext4/inode.c
-> > +++ b/fs/ext4/inode.c
-> > @@ -2218,7 +2218,7 @@ static int mpage_process_page_bufs(struct mpage_da_data *mpd,
-> >  {
-> >  	struct inode *inode = mpd->inode;
-> >  	int err;
-> > -	ext4_lblk_t blocks = (i_size_read(inode) + i_blocksize(inode) - 1)
-> > +	ext4_lblk_t blocks = (i_size_read(inode) + i_blockmask(inode))
-> >  							>> inode->i_blkbits;
+Hi Al,
+
+On 2023/3/10 11:15, Al Viro wrote:
+> On Thu, Mar 09, 2023 at 11:21:23PM +0800, Yangtao Li wrote:
+>> Use i_blockmask() to simplify code.
 > 
-> Umm...  That actually asks for DIV_ROUND_UP(i_size_read_inode(), i_blocksize(inode)) -
-> compiler should bloody well be able to figure out that division by (1 << n) is
-> shift down by n and it's easier to follow that way...
+> Umm...  What's the branchpoint for that series?  Not the mainline -
+> there we have i_blocksize() open-coded...
 
-BTW, here the fact that you are adding the mask is misleading - it's true,
-but we are not using it as a mask - it's straight arithmetics.
+Actually Yue Hu sent out a clean-up patch and I applied to -next for
+almost a week and will be upstreamed for 6.3-rc2:
 
-One can do an equivalent code where it would've been used as a mask, but that
-would be harder to read -
-	(((i_size_read(inode) - 1) | i_blockmask(inode)) + 1) >> inode->i_blkbits
-and I doubt anyone wants that kind of puzzles to stumble upon.
+https://lore.kernel.org/r/a238dca1-256f-ae2f-4a33-e54861fe4ffb@kernel.org/T/#t
+
+And then Yangtao would like to wrap this as a new VFS helper, I'm not
+sure why it's necessary since it doesn't save a lot but anyway, I'm open
+to it if VFS could have such new helper.
+
+Thanks,
+Gao Xiang
+
+> 
+>> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+>> ---
+>> v3:
+>> -none
+>> v2:
+>> -convert to i_blockmask()
+>>   fs/erofs/data.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+>> index 7e8baf56faa5..e9d1869cd4b3 100644
+>> --- a/fs/erofs/data.c
+>> +++ b/fs/erofs/data.c
+>> @@ -380,7 +380,7 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>   		if (bdev)
+>>   			blksize_mask = bdev_logical_block_size(bdev) - 1;
+>>   		else
+>> -			blksize_mask = i_blocksize(inode) - 1;
+>> +			blksize_mask = i_blockmask(inode);
+>>   
+>>   		if ((iocb->ki_pos | iov_iter_count(to) |
+>>   		     iov_iter_alignment(to)) & blksize_mask)
+>> -- 
+>> 2.25.1
+>>
