@@ -1,31 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B8086B3A00
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 10:16:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C67DF6B3A02
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 10:16:25 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PY0m51ncFz3chV
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 20:16:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PY0m75HRGz3f3m
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 20:16:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PY0lw655kz3cB9
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PY0lw68DPz3cMy
 	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Mar 2023 20:16:11 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdWq.JV_1678439762;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdWq.JV_1678439762)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdWq.Kh_1678439766;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdWq.Kh_1678439766)
           by smtp.aliyun-inc.com;
-          Fri, 10 Mar 2023 17:16:06 +0800
+          Fri, 10 Mar 2023 17:16:07 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: fix liblzma extreme compression levels
-Date: Fri, 10 Mar 2023 17:16:00 +0800
-Message-Id: <20230310091601.97930-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: refine README
+Date: Fri, 10 Mar 2023 17:16:01 +0800
+Message-Id: <20230310091601.97930-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230310091601.97930-1-hsiangkao@linux.alibaba.com>
+References: <20230310091601.97930-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -43,60 +45,50 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-100 ~ 109 are now valid for LZMA extreme compression.
+Add some words about userspace fragment cache as a TODO.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/compressor_liblzma.c | 11 ++++++++---
- man/mkfs.erofs.1         |  3 ++-
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ README | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-index 4886d6a..f274dce 100644
---- a/lib/compressor_liblzma.c
-+++ b/lib/compressor_liblzma.c
-@@ -56,11 +56,16 @@ static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
- 					     int compression_level)
- {
- 	struct erofs_liblzma_context *ctx = c->private_data;
-+	u32 preset;
+diff --git a/README b/README
+index 6474ed1..e224b23 100644
+--- a/README
++++ b/README
+@@ -183,7 +183,7 @@ Therefore, NEVER use it if performance is the top concern.
+ How to mount an EROFS image with erofsfuse
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
- 	if (compression_level < 0)
--		compression_level = LZMA_PRESET_DEFAULT;
-+		preset = LZMA_PRESET_DEFAULT;
-+	else if (compression_level >= 100)
-+		preset = (compression_level - 100) | LZMA_PRESET_EXTREME;
-+	else
-+		preset = compression_level;
+-As the other FUSE implementations, it's quite simple to mount with
++As the other FUSE implementations, it's quite easy to mount by using
+ erofsfuse, e.g.:
+  $ erofsfuse foo.erofs.img foo/
  
--	if (lzma_lzma_preset(&ctx->opt, compression_level))
-+	if (lzma_lzma_preset(&ctx->opt, preset))
- 		return -EINVAL;
+@@ -202,15 +202,19 @@ dump.erofs and fsck.erofs
  
- 	/* XXX: temporary hack */
-@@ -97,7 +102,7 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
- const struct erofs_compressor erofs_compressor_lzma = {
- 	.name = "lzma",
- 	.default_level = LZMA_PRESET_DEFAULT,
--	.best_level = LZMA_PRESET_EXTREME,
-+	.best_level = 109,
- 	.init = erofs_compressor_liblzma_init,
- 	.exit = erofs_compressor_liblzma_exit,
- 	.setlevel = erofs_compressor_liblzma_setlevel,
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index c1ad47d..e237877 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -22,7 +22,8 @@ from \fISOURCE\fR directory.
- .TP
- .BI "\-z " compression-algorithm " [" ",#" "]"
- Set an algorithm for file compression, which can be set with an optional
--compression level separated by a comma.
-+compression level (1 to 12 for LZ4HC, 0 to 9 for LZMA and 100 to 109 for LZMA
-+extreme compression) separated by a comma.
- .TP
- .BI "\-C " max-pcluster-size
- Specify the maximum size of compress physical cluster in bytes. It may enable
+ dump.erofs and fsck.erofs are used to analyze, check, and extract
+ EROFS filesystems. Note that extended attributes and ACLs are still
+-unsupported when extracting images with fsck.erofs.  If you are
+-interested, contribution is, as always, welcome.
++unsupported when extracting images with fsck.erofs.
++
++Note that fragment extraction with fsck.erofs could be slow now and
++it needs to be optimized later.  If you are interested, contribution
++is, as always, welcome.
+ 
+ 
+ Contribution
+ ------------
+ 
+-erofs-utils is a part of EROFS filesystem project, feel free to send
+-patches or feedback to:
++erofs-utils is a part of EROFS filesystem project, which is completely
++community-driven open source software.  If you have interest in EROFS,
++feel free to send feedback and/or patches to:
+   linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
+ 
+ 
 -- 
 2.24.4
 
