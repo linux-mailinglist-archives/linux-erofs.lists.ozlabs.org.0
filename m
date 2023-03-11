@@ -1,60 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 925FF6B4DC9
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Mar 2023 17:58:25 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03C806B5824
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Mar 2023 05:13:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PYC1C2dSbz3cfB
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Mar 2023 03:58:23 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=LU6L/dAQ;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PYTzf6zR1z3cdH
+	for <lists+linux-erofs@lfdr.de>; Sat, 11 Mar 2023 15:13:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=LU6L/dAQ;
-	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PYC1425qJz3bqw
-	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Mar 2023 03:58:16 +1100 (AEDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id ACD7061C99;
-	Fri, 10 Mar 2023 16:58:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1101DC4339C;
-	Fri, 10 Mar 2023 16:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678467491;
-	bh=kwM21xhk7G7fTmTDdea+n+uRzVWAm9irNixHTfQ7jcg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=LU6L/dAQbztIk3GVxzLER4oxvbygY53X8MzneuFHzGjsBwpIEU4EzBAwI2MS+4Nwc
-	 gEINdUlLJ3Ysm6gnaF+3m3a7ibEE5p9rO9Mw+xg/IPkTDPAnRaDE49/e+Q8Aw7spUq
-	 mnGAd2GVURnW5eFV79uGA0FCqohmxkNNWu5h/oFYOuLTB1AMOPYuB1w3EanTfSOVN2
-	 gVg01oFiMyRjtOSoCssn5aGuQ8XZLxLEA4EMwH1mHjkvkU3pUeU9h5rrmbGrJKpz1C
-	 xjbldmJtDNdYVkZvsI7HH03FeRb9umjd+sCQ636nkCqOk8i+2gv3JDisaCiTnr5neP
-	 UZVA2l7deNnqg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EF0E8E21EEB;
-	Fri, 10 Mar 2023 16:58:10 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 6.3-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZAtdbhFmLD4MCRk+@debian>
-References: <ZAtdbhFmLD4MCRk+@debian>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZAtdbhFmLD4MCRk+@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.3-rc2-fixes
-X-PR-Tracked-Commit-Id: 3993f4f456309580445bb515fbc609d995b6a3ae
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 388a810192fd383acce6933e7f272dd6a6802bb0
-Message-Id: <167846749097.19444.4560208674172683124.pr-tracker-bot@kernel.org>
-Date: Fri, 10 Mar 2023 16:58:10 +0000
-To: Gao Xiang <xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PYTzZ4kc5z3c6Y
+	for <linux-erofs@lists.ozlabs.org>; Sat, 11 Mar 2023 15:12:57 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdZEHmR_1678507966;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdZEHmR_1678507966)
+          by smtp.aliyun-inc.com;
+          Sat, 11 Mar 2023 12:12:51 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: add missing help for multiple algorithms
+Date: Sat, 11 Mar 2023 12:12:45 +0800
+Message-Id: <20230311041245.27006-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,19 +39,80 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yangtao Li <frank.li@vivo.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Sat, 11 Mar 2023 00:40:14 +0800:
+Users can try this with the detailed instructions.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.3-rc2-fixes
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ docs/compress-hints.example |  7 +++++++
+ man/mkfs.erofs.1            | 13 ++++++++-----
+ mkfs/main.c                 |  3 ++-
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+ create mode 100644 docs/compress-hints.example
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/388a810192fd383acce6933e7f272dd6a6802bb0
-
-Thank you!
-
+diff --git a/docs/compress-hints.example b/docs/compress-hints.example
+new file mode 100644
+index 0000000..4f481ff
+--- /dev/null
++++ b/docs/compress-hints.example
+@@ -0,0 +1,7 @@
++# https://github.com/debuerreotype/docker-debian-artifacts/blob/dist-amd64/bullseye/rootfs.tar.xz?raw=true
++# -zlzma:lz4hc,12:lzma,109 -C131072 --compress-hints=compress-hints.example  image size: 66M
++# -zlz4hc,12                                                                 image size: 76M
++4096     1 .*\.so.*$
++4096     1 bin/
++4096     1 sbin/
++131072   2 etc/
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index e237877..82ef138 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -20,10 +20,11 @@ mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
+ from \fISOURCE\fR directory.
+ .SH OPTIONS
+ .TP
+-.BI "\-z " compression-algorithm " [" ",#" "]"
+-Set an algorithm for file compression, which can be set with an optional
++.BI "\-z " compression-algorithm " [" ",#" "]" " [:" " ... " "]"
++Set a primary algorithm for data compression, which can be set with an optional
+ compression level (1 to 12 for LZ4HC, 0 to 9 for LZMA and 100 to 109 for LZMA
+-extreme compression) separated by a comma.
++extreme compression) separated by a comma.  Alternative algorithms could be
++specified and separated by colons.
+ .TP
+ .BI "\-C " max-pcluster-size
+ Specify the maximum size of compress physical cluster in bytes. It may enable
+@@ -112,9 +113,11 @@ If the optional
+ argument is given,
+ .B mkfs.erofs
+ uses it to apply the per-file compression strategy. Each line is defined by
+-tokens separated by spaces in the following form:
++tokens separated by spaces in the following form.  Optionally, instead of
++the given primary algorithm, alternative algorithms could be specified with
++\fIalgorithm-index\fR by hand:
+ .RS 1.2i
+-<pcluster-in-bytes> <match-pattern>
++<pcluster-in-bytes> [algorithm-index] <match-pattern>
+ .RE
+ .TP
+ .BI "\-\-exclude-path=" path
+diff --git a/mkfs/main.c b/mkfs/main.c
+index a3b0c34..94f51df 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -84,7 +84,8 @@ static void usage(void)
+ 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
+ 	      " -d#                   set output message level to # (maximum 9)\n"
+ 	      " -x#                   set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
+-	      " -zX[,Y]               X=compressor (Y=compression level, optional)\n"
++	      " -zX[,Y][:..]          X=compressor (Y=compression level, optional)\n"
++	      "                       alternative algorithms can be separated by colons(:)\n"
+ 	      " -C#                   specify the size of compress physical cluster in bytes\n"
+ 	      " -EX[,...]             X=extended options\n"
+ 	      " -L volume-label       set the volume label (maximum 16)\n"
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.36.1
+
