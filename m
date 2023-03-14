@@ -2,32 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DA66B890F
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 04:38:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7DC16B8B28
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 07:21:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PbK4h2GWnz3cKn
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 14:38:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PbNhd2c0Kz3cL0
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 17:21:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PbK4N5q0lz3cBF
-	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Mar 2023 14:38:28 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdqTXhk_1678765103;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdqTXhk_1678765103)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PbNhX5sW4z3cBp
+	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Mar 2023 17:21:31 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdqrT9p_1678774882;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdqrT9p_1678774882)
           by smtp.aliyun-inc.com;
-          Tue, 14 Mar 2023 11:38:24 +0800
+          Tue, 14 Mar 2023 14:21:26 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 4/4] erofs-utils: support subpage block sizes
-Date: Tue, 14 Mar 2023 11:38:14 +0800
-Message-Id: <20230314033814.57938-4-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 1/4] erofs-utils: mkfs: validate chunk/pcluster sizes in the end
+Date: Tue, 14 Mar 2023 14:21:18 +0800
+Message-Id: <20230314062121.115020-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230314033814.57938-1-hsiangkao@linux.alibaba.com>
-References: <20230314033814.57938-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -45,144 +43,109 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
- - Add a new command option for mkfs.erofs.
+Laterly, erofs-utils will support sub-page block sizes and
+an arbitrary block size can be given at any position of the
+command line.
 
- - erofsfuse supports subpage block sizes (uncompressed files).
+Therefore, chunk/pcluster sizes needs to be validated in the end.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/namei.c |  5 ++++-
- lib/super.c | 13 +++++--------
- mkfs/main.c | 27 +++++++++++++++++++++++----
- 3 files changed, 32 insertions(+), 13 deletions(-)
+v2: no change.
+ mkfs/main.c | 44 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/lib/namei.c b/lib/namei.c
-index 6ee4925..3d0cf93 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -136,8 +136,11 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		}
- 		vi->u.chunkbits = sbi.blkszbits +
- 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
--	} else if (erofs_inode_is_data_compressed(vi->datalayout))
-+	} else if (erofs_inode_is_data_compressed(vi->datalayout)) {
-+		if (erofs_blksiz() != PAGE_SIZE)
-+			return -EOPNOTSUPP;
- 		return z_erofs_fill_inode(vi);
-+	}
- 	return 0;
- bogusimode:
- 	erofs_err("bogus i_mode (%o) @ nid %llu", vi->i_mode, vi->nid | 0ULL);
-diff --git a/lib/super.c b/lib/super.c
-index ccf3ef1..e711c6c 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -68,12 +68,11 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 
- int erofs_read_superblock(void)
- {
--	char data[EROFS_MAX_BLOCK_SIZE];
-+	u8 data[EROFS_MAX_BLOCK_SIZE];
- 	struct erofs_super_block *dsb;
--	unsigned int blkszbits;
- 	int ret;
- 
--	ret = blk_read(0, data, 0, 1);
-+	ret = blk_read(0, data, 0, erofs_blknr(sizeof(data)));
- 	if (ret < 0) {
- 		erofs_err("cannot read erofs superblock: %d", ret);
- 		return -EIO;
-@@ -87,12 +86,10 @@ int erofs_read_superblock(void)
- 	}
- 
- 	sbi.feature_compat = le32_to_cpu(dsb->feature_compat);
--
--	blkszbits = dsb->blkszbits;
--	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == sbi.blkszbits */
--	if (blkszbits != sbi.blkszbits) {
-+	sbi.blkszbits = dsb->blkszbits;
-+	if (sbi.blkszbits < 9) {
- 		erofs_err("blksize %d isn't supported on this platform",
--			  1 << blkszbits);
-+			  1 << sbi.blkszbits);
- 		return ret;
- 	}
- 
 diff --git a/mkfs/main.c b/mkfs/main.c
-index b4e4c8d..f4d2330 100644
+index 94f51df..8e5a421 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -82,6 +82,7 @@ static void usage(void)
- {
- 	fputs("usage: [options] FILE DIRECTORY\n\n"
- 	      "Generate erofs image from DIRECTORY to FILE, and [options] are:\n"
-+	      " -b#                   set block size to # (# = page size by default)\n"
- 	      " -d#                   set output message level to # (maximum 9)\n"
- 	      " -x#                   set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
- 	      " -zX[,Y][:..]          X=compressor (Y=compression level, optional)\n"
-@@ -273,7 +274,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 	int opt, i;
- 	bool quiet = false;
+@@ -126,6 +126,8 @@ static void usage(void)
+ 	print_available_compressors(stderr, ", ");
+ }
  
--	while ((opt = getopt_long(argc, argv, "C:E:L:T:U:d:x:z:",
-+	while ((opt = getopt_long(argc, argv, "C:E:L:T:U:b:d:x:z:",
- 				  long_options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'z':
-@@ -287,6 +288,15 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return i;
- 			break;
- 
-+		case 'b':
-+			i = atoi(optarg);
-+			if (i < 512 || i > EROFS_MAX_BLOCK_SIZE) {
-+				erofs_err("invalid block size %s", optarg);
-+				return -EINVAL;
-+			}
-+			sbi.blkszbits = ilog2(i);
-+			break;
++static unsigned int pclustersize_packed, pclustersize_max;
 +
- 		case 'd':
- 			i = atoi(optarg);
- 			if (i < EROFS_MSG_MIN || i > EROFS_MSG_MAX) {
-@@ -515,7 +525,11 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ static int parse_extended_opts(const char *opts)
+ {
+ #define MATCH_EXTENTED_OPT(opt, token, keylen) \
+@@ -222,13 +224,12 @@ handle_fragment:
+ 			cfg.c_fragments = true;
+ 			if (vallen) {
+ 				i = strtoull(value, &endptr, 0);
+-				if (endptr - value != vallen ||
+-				    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
++				if (endptr - value != vallen) {
+ 					erofs_err("invalid pcluster size for the packed file %s",
+ 						  next);
+ 					return -EINVAL;
+ 				}
+-				cfg.c_pclusterblks_packed = i / EROFS_BLKSIZ;
++				pclustersize_packed = i;
+ 			}
+ 		}
+ 
+@@ -415,14 +416,12 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ #endif
+ 		case 'C':
+ 			i = strtoull(optarg, &endptr, 0);
+-			if (*endptr != '\0' ||
+-			    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
++			if (*endptr != '\0') {
+ 				erofs_err("invalid physical clustersize %s",
+ 					  optarg);
+ 				return -EINVAL;
+ 			}
+-			cfg.c_pclusterblks_max = i / EROFS_BLKSIZ;
+-			cfg.c_pclusterblks_def = cfg.c_pclusterblks_max;
++			pclustersize_max = i;
+ 			break;
+ 		case 11:
+ 			i = strtol(optarg, &endptr, 0);
+@@ -436,11 +435,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 					  optarg);
+ 				return -EINVAL;
+ 			}
+-			if (i < EROFS_BLKSIZ) {
+-				erofs_err("chunksize %s must be larger than block size",
+-					  optarg);
+-				return -EINVAL;
+-			}
+ 			erofs_sb_set_chunked_file();
+ 			break;
+ 		case 12:
+@@ -521,6 +515,32 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
  		cfg.c_dbg_lvl = EROFS_ERR;
  		cfg.c_showprogress = false;
  	}
--
-+	if (cfg.c_compr_alg[0] && erofs_blksiz() != PAGE_SIZE) {
-+		erofs_err("compression is unsupported for now with block size %u",
-+			  erofs_blksiz());
++
++	if (pclustersize_max) {
++		if (pclustersize_max < EROFS_BLKSIZ ||
++		    pclustersize_max % EROFS_BLKSIZ) {
++			erofs_err("invalid physical clustersize %u",
++				  pclustersize_max);
++			return -EINVAL;
++		}
++		cfg.c_pclusterblks_max = pclustersize_max / EROFS_BLKSIZ;
++		cfg.c_pclusterblks_def = cfg.c_pclusterblks_max;
++	}
++	if (cfg.c_chunkbits && 1u << cfg.c_chunkbits < EROFS_BLKSIZ) {
++		erofs_err("chunksize %u must be larger than block size",
++			  1u << cfg.c_chunkbits);
 +		return -EINVAL;
 +	}
- 	if (pclustersize_max) {
- 		if (pclustersize_max < erofs_blksiz() ||
- 		    pclustersize_max % erofs_blksiz()) {
-@@ -597,9 +611,10 @@ static int erofs_mkfs_superblock_csum_set(void)
- 	int ret;
- 	u8 buf[EROFS_MAX_BLOCK_SIZE];
- 	u32 crc;
-+	unsigned int len;
- 	struct erofs_super_block *sb;
++
++	if (pclustersize_packed) {
++		if (pclustersize_max < EROFS_BLKSIZ ||
++		    pclustersize_max % EROFS_BLKSIZ) {
++			erofs_err("invalid pcluster size for the packed file %u",
++				  pclustersize_packed);
++			return -EINVAL;
++		}
++		cfg.c_pclusterblks_packed = pclustersize_packed / EROFS_BLKSIZ;
++	}
+ 	return 0;
+ }
  
--	ret = blk_read(0, buf, 0, 1);
-+	ret = blk_read(0, buf, 0, erofs_blknr(sizeof(buf)));
- 	if (ret) {
- 		erofs_err("failed to read superblock to set checksum: %s",
- 			  erofs_strerror(ret));
-@@ -620,7 +635,11 @@ static int erofs_mkfs_superblock_csum_set(void)
- 	/* turn on checksum feature */
- 	sb->feature_compat = cpu_to_le32(le32_to_cpu(sb->feature_compat) |
- 					 EROFS_FEATURE_COMPAT_SB_CHKSUM);
--	crc = erofs_crc32c(~0, (u8 *)sb, erofs_blksiz() - EROFS_SUPER_OFFSET);
-+	if (erofs_blksiz() > EROFS_SUPER_OFFSET)
-+		len = erofs_blksiz() - EROFS_SUPER_OFFSET;
-+	else
-+		len = erofs_blksiz();
-+	crc = erofs_crc32c(~0, (u8 *)sb, len);
- 
- 	/* set up checksum field to erofs_super_block */
- 	sb->checksum = cpu_to_le32(crc);
 -- 
 2.24.4
 
