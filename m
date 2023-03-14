@@ -2,49 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9E4D6B84B0
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Mar 2023 23:22:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20C476B890D
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 04:38:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PbB413tySz3cF0
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 09:22:41 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="key not found in DNS" header.d=asda.co.uk header.i=@asda.co.uk header.a=rsa-sha256 header.s=x header.b=ZTWDDSmM;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PbK4Y6fsQz3cMs
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Mar 2023 14:38:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=asda.co.uk (client-ip=103.30.145.160; helo=defaultworkshop.klidefectmanagement.com.novalocal; envelope-from=sales1@asda.co.uk; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="key not found in DNS" header.d=asda.co.uk header.i=@asda.co.uk header.a=rsa-sha256 header.s=x header.b=ZTWDDSmM;
-	dkim-atps=neutral
-X-Greylist: delayed 17828 seconds by postgrey-1.36 at boromir; Tue, 14 Mar 2023 09:22:37 AEDT
-Received: from defaultworkshop.klidefectmanagement.com.novalocal (unknown [103.30.145.160])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PbB3x4LQBz3bym
-	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Mar 2023 09:22:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=asda.co.uk;
-	s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:
-	Subject:To:From:Reply-To:Sender:Cc:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=k5JRML3QXpLM74eEK2tlY7PWNf5BPZaIAqXewzHiCiE=; b=Z
-	TWDDSmMuXlHa0avG/V3nlbhvYndvTOPZkQ9c0B9oNp+pA0EXxocS519cwzpMv/OdBVAtQOtOlpIpl
-	N32YiGy51qvHJa6A5I9+ZjJxyzESZJmsgpjhRYgbDONeeEjfy9G/qVRoIhw/oVfWN6iC+30VWYGDI
-	4UnaCj8yRywkDMzg=;
-Received: from ec2-52-11-215-80.us-west-2.compute.amazonaws.com ([52.11.215.80] helo=asda.co.uk)
-	by defaultworkshop.klidefectmanagement.com.novalocal with esmtpa (Exim 4.94.2)
-	(envelope-from <sales1@asda.co.uk>)
-	id 1pblvH-0005hs-2w
-	for linux-erofs@lists.ozlabs.org; Tue, 14 Mar 2023 00:25:23 +0700
-From: ASDA Stores Limited <sales1@asda.co.uk>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PbK4M0dLvz3cBF
+	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Mar 2023 14:38:25 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VdqTXfW_1678765096;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VdqTXfW_1678765096)
+          by smtp.aliyun-inc.com;
+          Tue, 14 Mar 2023 11:38:20 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: First quarter procurement order/enquiry
-Date: 13 Mar 2023 17:25:22 +0000
-Message-ID: <20230313152049.9840AD62B86C1616@asda.co.uk>
+Subject: [PATCH 1/4] erofs-utils: mkfs: validate chunk/pcluster sizes in the end
+Date: Tue, 14 Mar 2023 11:38:11 +0800
+Message-Id: <20230314033814.57938-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,29 +39,112 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: sales@asda-c.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Dear linux-erofs
-I'm a procurement manager  with ASDA Group (the owners of ASDA=20
-Stores) and your company product has caught our interest.=20
-Therefore, we request you send
-list and prices of your hot selling items (products) for our=20
-evaluation/pick.
+Laterly, erofs-utils will support sub-page block sizes and
+an arbitrary block size can be given at any position of the
+command line.
 
-Soon as we receive your reply, we shall send you our company=20
-profile and buying proposal. You can also check our website below=20
-for detailed info of our purchase area and trading capacity.
+Therefore, chunk/pcluster sizes needs to be validated in the end.
 
-Your immediate response E-mail:  sales@asda-c.com   shall be=20
-appreciated.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ mkfs/main.c | 44 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-Best Wishes
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 94f51df..8e5a421 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -126,6 +126,8 @@ static void usage(void)
+ 	print_available_compressors(stderr, ", ");
+ }
+ 
++static unsigned int pclustersize_packed, pclustersize_max;
++
+ static int parse_extended_opts(const char *opts)
+ {
+ #define MATCH_EXTENTED_OPT(opt, token, keylen) \
+@@ -222,13 +224,12 @@ handle_fragment:
+ 			cfg.c_fragments = true;
+ 			if (vallen) {
+ 				i = strtoull(value, &endptr, 0);
+-				if (endptr - value != vallen ||
+-				    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
++				if (endptr - value != vallen) {
+ 					erofs_err("invalid pcluster size for the packed file %s",
+ 						  next);
+ 					return -EINVAL;
+ 				}
+-				cfg.c_pclusterblks_packed = i / EROFS_BLKSIZ;
++				pclustersize_packed = i;
+ 			}
+ 		}
+ 
+@@ -415,14 +416,12 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ #endif
+ 		case 'C':
+ 			i = strtoull(optarg, &endptr, 0);
+-			if (*endptr != '\0' ||
+-			    i < EROFS_BLKSIZ || i % EROFS_BLKSIZ) {
++			if (*endptr != '\0') {
+ 				erofs_err("invalid physical clustersize %s",
+ 					  optarg);
+ 				return -EINVAL;
+ 			}
+-			cfg.c_pclusterblks_max = i / EROFS_BLKSIZ;
+-			cfg.c_pclusterblks_def = cfg.c_pclusterblks_max;
++			pclustersize_max = i;
+ 			break;
+ 		case 11:
+ 			i = strtol(optarg, &endptr, 0);
+@@ -436,11 +435,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 					  optarg);
+ 				return -EINVAL;
+ 			}
+-			if (i < EROFS_BLKSIZ) {
+-				erofs_err("chunksize %s must be larger than block size",
+-					  optarg);
+-				return -EINVAL;
+-			}
+ 			erofs_sb_set_chunked_file();
+ 			break;
+ 		case 12:
+@@ -521,6 +515,32 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		cfg.c_dbg_lvl = EROFS_ERR;
+ 		cfg.c_showprogress = false;
+ 	}
++
++	if (pclustersize_max) {
++		if (pclustersize_max < EROFS_BLKSIZ ||
++		    pclustersize_max % EROFS_BLKSIZ) {
++			erofs_err("invalid physical clustersize %u",
++				  pclustersize_max);
++			return -EINVAL;
++		}
++		cfg.c_pclusterblks_max = pclustersize_max / EROFS_BLKSIZ;
++		cfg.c_pclusterblks_def = cfg.c_pclusterblks_max;
++	}
++	if (cfg.c_chunkbits && 1u << cfg.c_chunkbits < EROFS_BLKSIZ) {
++		erofs_err("chunksize %u must be larger than block size",
++			  1u << cfg.c_chunkbits);
++		return -EINVAL;
++	}
++
++	if (pclustersize_packed) {
++		if (pclustersize_max < EROFS_BLKSIZ ||
++		    pclustersize_max % EROFS_BLKSIZ) {
++			erofs_err("invalid pcluster size for the packed file %u",
++				  pclustersize_packed);
++			return -EINVAL;
++		}
++		cfg.c_pclusterblks_packed = pclustersize_packed / EROFS_BLKSIZ;
++	}
+ 	return 0;
+ }
+ 
+-- 
+2.24.4
 
-Ms Stelle Montgomery
-Purchasing Dept.
-ASDA Stores Limited
-Tel:  +44 7418367220
-WhatsApp: + 44-7502985874
-Website: www.asda.com
