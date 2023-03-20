@@ -1,130 +1,89 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AC0C6C0958
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 04:35:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDE6A6C0996
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 05:10:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pg0jz1fphz3cBK
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 14:35:19 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=AJe7Jj4y;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Pg1V94mHxz3bT5
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 15:10:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1679285409;
+	bh=JYV7H64jfRymT5rzh2mlGslQT2jebjxqVf+uMCU2w2U=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=OtSxTGvYvJRzL/xTzrHBlJ9DvTMFjBVNqUtQ4xoCeyXcZ13LDA5IfbLrC/+QCjASG
+	 vnuuUF64/uOEalexarpYlXlxHweRkpqPaecnZYY9L+hxMaFF4LbeuxPWUMZDt8qnnL
+	 cv9o/V+ih5Kh5GnhQBLIwb04cZTrOyehgw7sByMLXa9TE7qFHG4n2XqPLKDeoPMzRa
+	 T+ee24g+PjaHeVxLoDEGNqPExJ0+YU/t+zkVsIrmsIxwgU+TmRcgiO1eSiuTXSTVlY
+	 Yw0xNtHpmMIini3dBPBXg5KmIUqme3f7bcU6iRNF2Fu2ytBgxQUxeKcp/CeVZtWXZO
+	 eY9E53shzEhYw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::724; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=opensource.wdc.com (client-ip=216.71.153.141; helo=esa3.hgst.iphmx.com; envelope-from=prvs=436eb87b3=damien.lemoal@opensource.wdc.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=AJe7Jj4y;
+	dkim=pass (2048-bit key; unprotected) header.d=wdc.com header.i=@wdc.com header.a=rsa-sha256 header.s=dkim.wdc.com header.b=PoFjYegy;
+	dkim=pass (2048-bit key; unprotected) header.d=opensource.wdc.com header.i=@opensource.wdc.com header.a=rsa-sha256 header.s=dkim header.b=I0Nr6eY4;
 	dkim-atps=neutral
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on20724.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::724])
+X-Greylist: delayed 64 seconds by postgrey-1.36 at boromir; Mon, 20 Mar 2023 15:10:01 AEDT
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pg0jq4TJvz300C
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Mar 2023 14:35:10 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UEhCxh8D02rcHC6dO7kSOfQ+AGgqO7UxxE69tDyIm4Tqs3aweJ2dCq3UPkCLzV1UZ4dCLggR86K54XogG9H75P/5oJbWN3Ba6Wj3cGM6kQ42z+B4bFqJ7+nT4QasBoWWWNjZVEgCadrqhLpDCGGlApiRTNukDbmIEwtYHlHziyn3tLOFMVSeP4xPlntuwMq1LzzQfOpwWSp56AJ/ohgpVKYqPnOHJZjrgFkkxoNC7gV68ucQZxKEnI+wUcVzya47akjjoTVLURODESNAW7SDu5/xOkqEZJi8jBA7od1DMqCyN/EIGgQKBjL4MJQ97gRM9taOqDh8vMOb4eA3AmXF3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZcSocjSGVTF5aPxsLKaFBjySrnM82IY/w/dRKgIVLtQ=;
- b=gry7E8prSKnGmd/mnLmfUklTMk8F8AMmcWZqTtxEv2Grerwl0LY4m7aQ6ZY5ZkwGG4gRAE87lSYHjrqeNyYtyMMWY8RnHLmkE75DsqpKupAdGopskoG76nqzkrtz1G38ewu490FMsWiNviE+Mk4nNrf7EcETDNPLPwiNMaRJrXZWNSPW5QzWZBB2BJ8FpGyc8eJB9nXNOu6b0+JijkLVRSEDCQx8wbW95+aqN0L19GMhgUvlAVBizJbsGCG0og+du33uwgxtamFzQrDsjzPYZfXOjIXMO5IZpGDVHxDa2tNSRVrmGfcOCG1ZSFlZ/UNoNdq4D/Uj1QqgWxdM/XkWCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZcSocjSGVTF5aPxsLKaFBjySrnM82IY/w/dRKgIVLtQ=;
- b=AJe7Jj4ygTrfHsWmTT4gnppAGvUAtxhf60mNZ9snE2grxP1YAVIKUBTbJ/FhJ5/07pv8NeiaL6A0EZa+g5rqelTm3a0QrRsAiby1xgmZIMDm2bFMzFic3A4Ap5WaN/3eXitQCTaKrI5A+3QSsXTbt2M68c4+uZktefL9Z3fLqeW6/lu+5gysxjGPeHLC9oRgqOFrQBpJs4tJfyf6Rq2xGn1cu82nJjuy1FyxVvwVKYWDfDDhttvFoqM+VaHI1Wg1Z76w3xT8mXwPlMgZYh/Mo3P96N+cvuT2fYhTrbVfImLo75Husxpwqnv7+ngdcX8cHu+TQp/EiAT08AePZWmV1Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by TY0PR06MB5332.apcprd06.prod.outlook.com (2603:1096:400:215::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Mon, 20 Mar
- 2023 03:34:48 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::daf6:5ebb:a93f:1869]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::daf6:5ebb:a93f:1869%9]) with mapi id 15.20.6178.037; Mon, 20 Mar 2023
- 03:34:48 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com,
-	xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	jefflexu@linux.alibaba.com,
-	jaegeuk@kernel.org,
-	trond.myklebust@hammerspace.com,
-	anna@kernel.org,
-	konishi.ryusuke@gmail.com,
-	mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	richard@nod.at,
-	djwong@kernel.org,
-	damien.lemoal@opensource.wdc.com,
-	naohiro.aota@wdc.com,
-	jth@kernel.org,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org
-Subject: Re: [PATCH v2, RESEND 01/10] kobject: introduce kobject_del_and_put()
-Date: Mon, 20 Mar 2023 11:34:36 +0800
-Message-Id: <20230320033436.71982-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.35.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0010.apcprd04.prod.outlook.com
- (2603:1096:4:197::11) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pg1V15Bc3z3bT5
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Mar 2023 15:10:01 +1100 (AEDT)
+X-IronPort-AV: E=Sophos;i="5.98,274,1673884800"; 
+   d="scan'208";a="230974289"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Mar 2023 12:08:52 +0800
+IronPort-SDR: wp95rHdu7L3u9dCChBl9zefoHhaBuGWnSBhFzf+3gFcuBHdHfzttkmC5C5byXYO8GFn0BPe2MD
+ h/NDprsg8A334GQL6oM1Daq5bP40Y+XrOR0I4up/Hr0KZ3e/V/SpTjAzvRMozWkXprZcwfWkRo
+ Is6A4W+3rSVWlb/TCUWT3QeLU0tnduZRRWwBRV8IwFfBJh1obib1W94o3c2EWWG8WsUcSwmZSv
+ I9FXWphEN+ePz/0Gqe5lQ/1bvhIEZr0NTxjWiyGHL/g4iVzpnWqjmzBI3NXZ78gHYdX8YO0cLJ
+ CEk=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Mar 2023 20:25:13 -0700
+IronPort-SDR: hxT8cqNJcSx/g/vcIfrhkOCeb2HwAhxSY17UPOlhW8kIkADDAv97H3JaF5jD8chZPckQ2wDopC
+ hUX6ASFjpukro7KsbVj0dEEscfn616ONuyawr24nZbRyfbMvW0NQKUYIH65BvTNvPSu2kDlkOq
+ ft1Mt9mDlrlSKdiPHoAETP+TOurMb1jvanxtxl/8EYW6mMnNMZ/qZiN5N4khnfZ571ZVZSlkic
+ e8KeeR5HU3T+e3h1MBielGUaS3bny+tmxv9JA2F1OH6F5ye8EvnVFthR/0lfU13bKXP6JLUtmA
+ eaE=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Mar 2023 21:08:52 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Pg1Sh0LXTz1RtVq
+	for <linux-erofs@lists.ozlabs.org>; Sun, 19 Mar 2023 21:08:52 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+	reason="pass (just generated, assumed good)"
+	header.d=opensource.wdc.com
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+	by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id gFo2sIK9R2pS for <linux-erofs@lists.ozlabs.org>;
+	Sun, 19 Mar 2023 21:08:50 -0700 (PDT)
+Received: from [10.225.163.91] (unknown [10.225.163.91])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Pg1SY32s6z1RtVm;
+	Sun, 19 Mar 2023 21:08:45 -0700 (PDT)
+Message-ID: <e4b8012d-32df-e054-4a2a-772fda228a6a@opensource.wdc.com>
+Date: Mon, 20 Mar 2023 13:08:43 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|TY0PR06MB5332:EE_
-X-MS-Office365-Filtering-Correlation-Id: f751e256-4fc1-47fb-8f9e-08db28f40e26
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	wKv53Xg11R61xkWPk5mnClQ8de5hrpPWB8AtDbwQpOKWpR4TXtFRutbBhVfXYH4DJ/Fn7Uc+kee0v3FfsmfoCGKYw5Dqn7O6Cl7WWRXXfYDhl7o5kGtWqGOIfdSt+2RJPg1iUeifueBc3OlZb0UF7GUrerp95f10B5uwqhHFdR/BMn+HsajL11VjH0aY7jZ6ApJOC7NDOChCoO53Fkf1afmcztY5g+7L0qfc2lffod92lIaWCBcd6xqLok7w6Otx21yGeuY8ujiXBKEV5IqEisg7MqgpkDacRtRk0i6ZRWpZoZDGaeSU0S/Im1JXWfsifOgwoVfjS+olFjwJyhx6V/RZw8TJZJxJFhgRZemJjDpYSqGe0j1QtO971xFWo7GA34jPFEzG2M63xnpXCtnucsOGdijZDAU8CdD/1C7tbB8Al+Z7JJHoR+3wAp9DITt6TVM0hSrddjGTz702PBOIzx0pik7kONo8x+qeadcN6AGfbQ9aRyv1h1gG+xIyoB3EuP8LsinkxT3gLiJ3qoju+Ss23clyia7rf78Q03tj6wErySRJGfo/P8QikEvF1C8YbVqC4FfTu/1OJtXCSXj8ZDaKM7IhDERccfaehkWxuep3cqtzu0MgkpZy9UvFsNbEylkeKRo+UgjCle131FWoQ1yQWA/HQIWtJQvUIF2NK3Jj265bMqBRoDaFBefcMI/Hdcy3NsEuFV8xo719E0d9Yw==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(451199018)(316002)(86362001)(83380400001)(36756003)(186003)(6512007)(41300700001)(26005)(1076003)(6506007)(2906002)(8936002)(66556008)(4326008)(8676002)(66946007)(66476007)(2616005)(6666004)(4744005)(38350700002)(38100700002)(966005)(6486002)(52116002)(5660300002)(921005)(7416002)(7406005)(478600001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?bOVviU4OLZJXsyvg+Cb0Zd596sZD6jRFwETNbK1ENMei6KQLqPYkZn/LWAod?=
- =?us-ascii?Q?LFlYVQLzwo8ZkahzIgB9vkOYF9xWmlRxFJ6XRH2kCXHb5W0cm69FKoIB+IpQ?=
- =?us-ascii?Q?GHjuHbM7LAdvFXK26er7Ca4bPDbl/fCXddz5xckZu+/WFjvozf45clS3WlSQ?=
- =?us-ascii?Q?ZpTnah+B0wvHpxem+IYteQU0SwUGQfpEMRtOYbLyL6qAgF6uLWLyzt3756EQ?=
- =?us-ascii?Q?FMIZQ1qa4D2vFqz9IVIxtbu2KR+MUeiWandNIubSwD90yNIXSSPL3CRR7Kt2?=
- =?us-ascii?Q?UusFHeFqL2ZqdQGEkGmZPlhRFz0l4LaZKOgmzaiz2TvXy48bsydY5EoVC1Bx?=
- =?us-ascii?Q?c/9c8/gnepgZqLafuQ25SMlRkyINhLjju/CkTzLmJSFyWvVNr2CF4s+aj2v9?=
- =?us-ascii?Q?PTk/sv1C5pG0j+pHmx3vYdG+18eu/36mz1+MLUjt7KzrRTi58NncC2+0JTEZ?=
- =?us-ascii?Q?PLSdCL4Cp5NM77atOMH9fsIM3/VVz0sKqV2ICmanDVZI6ytbpObbBGU+bLhL?=
- =?us-ascii?Q?7SQy5atPh09G6KyykYMqyvIBWdB3T59fR+d97iAgPvGwCNBrSCehASBAcpmD?=
- =?us-ascii?Q?IqeJ59M2DWghrEpHRvyxap0VLXHY8N3f2BfUqq2NAXx3FjCAAUwasD2OWQNR?=
- =?us-ascii?Q?oP/b+x/deMyJcfGccGjtfBicWhArQgNBFT+kaRIfqNEiDIHFDUvMgb0ocERb?=
- =?us-ascii?Q?vdVbavspQUeeN9J/Og0talyjCFHNaJ75gQfz0MBvb7FXZjgPDRkHQGV3NoWG?=
- =?us-ascii?Q?R6zd4sJkyhgSHp5DghjArtkDyVPb3W1TOhcMMpQN0DrG/q7laXgKYHBB8Gs+?=
- =?us-ascii?Q?1xjv12UqQQBnOaXb8rmN4ltbQuDzHAiwlWVkvOCnN7XF9Q6ATwIHwPaIIHgJ?=
- =?us-ascii?Q?9c8obY9R+9cJAlZNFLWbXZgMr3ubMCyUooH16xG8yMoUPguLfy27PgiEsX2E?=
- =?us-ascii?Q?4CABBhAlb47zI9UEmWX3c6qoV9H1Z9c6ImmtB4G/qVGAXiYTv75Oni4VLOw0?=
- =?us-ascii?Q?Rn1MVMpc0uemHzcJ8QsYiKJOw1u1jI98d3H4l7qKiK2tqedbEBoe0z3nLiZC?=
- =?us-ascii?Q?RIOuLg9i55zHr3Z5ADGDOuigyjPSsWkEKqtjIOmUHU82tp9MUVDyowDA4AsN?=
- =?us-ascii?Q?TkTFLvQlKbg9lLVCQ0YkuSJT1fL78Zrjs1VmyVN+OLFbpZucVKY7vSOugBvJ?=
- =?us-ascii?Q?DUQ80xXsUOiY2Prv9xt1L/p3L5A1Dkdegk+hytx9NAp86EavEZjmahLYZdHX?=
- =?us-ascii?Q?VDyaqIWm2Wj7xIO05JdwEiKk8aNnXlaAPklbsh0b86kGhRJ2Or3S8d1SfEKz?=
- =?us-ascii?Q?4Llmo3ydrxoXnM92o+riWRsOUoQxo4kyFK/cUTbYeUl2KluYmYBo3hwoyG2N?=
- =?us-ascii?Q?MNy+uxpZ5Mr7yp2cP9iA+irRpXiQSu9n1LY9SI6PENKCAO8/XgjsK2/K+Oqs?=
- =?us-ascii?Q?d61g+cMbVL5QdiYE1PxJz8xlMBFO1y3LYZymTzbyfVvuzpwOug/UAd9y+85I?=
- =?us-ascii?Q?4Oo9UrWozu5FOUmkgGxE3a9SDmgtwR1haH2DcGDVSqtZbM8YJTcSv3otjWoe?=
- =?us-ascii?Q?plFj9G8asOeg74gqs1ExMB/ErjQMGIVhsm0uOCwr?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f751e256-4fc1-47fb-8f9e-08db28f40e26
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2023 03:34:48.1827
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ERXWBy66ojC7BGjyoEPIS3BCt+Up0pT8AUuN8PWEg2BC2RV9hvUWam5vNjfOSBOyJhCm7utXsOgYJTYwzm48HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5332
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2, RESEND 01/10] kobject: introduce kobject_del_and_put()
+Content-Language: en-US
+To: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com,
+ dsterba@suse.com, xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
+ jefflexu@linux.alibaba.com, jaegeuk@kernel.org,
+ trond.myklebust@hammerspace.com, anna@kernel.org, konishi.ryusuke@gmail.com,
+ mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+ richard@nod.at, djwong@kernel.org, naohiro.aota@wdc.com, jth@kernel.org,
+ gregkh@linuxfoundation.org, rafael@kernel.org
+References: <20230320033436.71982-1-frank.li@vivo.com>
+Organization: Western Digital Research
+In-Reply-To: <20230320033436.71982-1-frank.li@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -136,18 +95,30 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Damien Le Moal via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc: linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi all,
+On 3/20/23 12:34, Yangtao Li wrote:
+> Hi all,
+> 
+> Out of consideration for minimizing disruption, I did not send the
+> patchset to everyone. However, it seems that my consideration was
+> unnecessary, so I CC'd everyone on the first patch. If you would
+> like to see the entire patchset, you can access it at this address.
+> 
+> https://lore.kernel.org/lkml/20230319092641.41917-1-frank.li@vivo.com/
 
-Out of consideration for minimizing disruption, I did not send the
-patchset to everyone. However, it seems that my consideration was
-unnecessary, so I CC'd everyone on the first patch. If you would
-like to see the entire patchset, you can access it at this address.
+Hard to comment on patches with this. It is only 10 patches. So send everything
+please.
 
-https://lore.kernel.org/lkml/20230319092641.41917-1-frank.li@vivo.com/
+> 
+> Thx,
+> Yangtao
 
-Thx,
-Yangtao
+-- 
+Damien Le Moal
+Western Digital Research
+
