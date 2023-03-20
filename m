@@ -1,114 +1,89 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 008F06C2045
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 19:48:11 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D35B36C23FB
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Mar 2023 22:40:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PgNzF66B6z3cLr
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Mar 2023 05:48:09 +1100 (AEDT)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=msUuHeyS;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PgSp51C9Pz3cL0
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Mar 2023 08:40:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1679348429;
+	bh=b9zEtHDic9UqpNQ2nmRpZrwUWVXEUTDBm4dZnh94WWk=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=A1uXRRWghf65SljayxdFjY7UYbGy/clnDFdhWM4wHssRRCo/Ocm8fRktOjoGecfDt
+	 K9aGSI0e/uvIxW6i8wAiJkc6COcM+t55/6zzKKRgHqwVP4XSqTH+mYO9tnZk3crvH3
+	 q303sP6Ea7ORUGMqiJlsAnEunrGQSs/HcA38TwR8VMfgWWv3cxexodJqCo8N24Qk5k
+	 hziYctialR1xP7InrK35j0Tk/MRa3KsAAlKd4IwS82O7Dak+NokwjWTb3kR0BGGlCV
+	 FVRYZPmM8Trssfrp6LHXqze2xSYyY+rdE+AaCS1WrINVABmBnPdKleO8s8QTFvfsOP
+	 6cWiH1Qyi1LbQ==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::72e; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=opensource.wdc.com (client-ip=68.232.143.124; helo=esa2.hgst.iphmx.com; envelope-from=prvs=436eb87b3=damien.lemoal@opensource.wdc.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=msUuHeyS;
+	dkim=pass (2048-bit key; unprotected) header.d=wdc.com header.i=@wdc.com header.a=rsa-sha256 header.s=dkim.wdc.com header.b=q3evL9x4;
+	dkim=pass (2048-bit key; unprotected) header.d=opensource.wdc.com header.i=@opensource.wdc.com header.a=rsa-sha256 header.s=dkim header.b=EKxs8rpU;
 	dkim-atps=neutral
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2072e.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::72e])
+X-Greylist: delayed 63 seconds by postgrey-1.36 at boromir; Tue, 21 Mar 2023 08:40:19 AEDT
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PgNzB5mQ8z3c2j
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Mar 2023 05:48:06 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lKkpa05FHPVYLq03oEV2Ph2JQvO2JT76ZfdR1rSmToreMdspeH3mROFlVGmBGkulLtDBaly5dPGM39BLfROyFSuw4oOQEYrdoKFmqsBjmJ+B9h9NRmnjIP00vqi9DJrwihfb5kBlaa3ftAJRsEfOud+OLpiuUjuG9LdnnHo8BgovqnmUsYAd+vi9vG4rnbNhN41HAs1Y2cMU5r6Lu3MROoBfn7FCDmp4dQGMja+z11aegd9UlPHl9ke/hPiFgAlTXtmtoAuErTUnDujfFWMZfgY3TKkutL0e7/nEoWf7EYnrsLq++/pGt9l32cQWwP49g6FdYsSGilh4OFrJzwu5Ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gi/SB7uU/Vm7xG+VaANHu7liHPdOo0JIwPJ5priBNiQ=;
- b=nUkuacbYjmmnd5RAFjVdFkrpVxkDbsvjhUhkWRDeWIkGOc7DPCwHr957GwkGfR1u+lxIdiGDEDMIZlBwyrRsbA0d7tp0Z/9zrKfmth48K77TutbWcQ2RgvYpBF3w6aLfaIVWxmwuD8FhpfurOKX/FfnNHqEYhUUIkqWr7FNokHysBPURb9QPW8S/QLskoIMpwTON8j9uJ2PGqJMxybSKEygUDKivFVL/2FjlyWfRCdZrcLv7DjXhvmCevKBhslrdlBZO+hp6sDNTOAwa+232cVVdJyoQOzjVEVneeUP5619fMeT6TbZR7jkVoUQ9efLeS+RuJvi9V2nmHzvNo/BfyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gi/SB7uU/Vm7xG+VaANHu7liHPdOo0JIwPJ5priBNiQ=;
- b=msUuHeySd+HvNzZnlQ/VzyVlWmoGokAozMclfOqa5rDpcU6+mRw9enlZ+lciCBQHYvrSnJdyLqG+UIIg+R3h/ZcxSWw4rBsZiaBxZGcBdjcC8eEWMFE1TgSpXSJlV7gy2y4sUD7B03K2wZrgyg60FNmacCamsNjw6UZDILV761XLjuY3zjBzBEkL6lxEwiQ0PicTCwaXYifyreESq8p1vSXpEhUaMoya3oFLB9kj02soq6S4dEbNJl5r/rhHVFWEGBgM+yPnzzSh0Fe6QpZGddG6giV8ULdxPZn+uFtmY/5n+TwwlJGo6JGfjafWf3GjRje/rD/XskOIydPnxKthEQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by SI2PR06MB4121.apcprd06.prod.outlook.com (2603:1096:4:fe::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.37; Mon, 20 Mar 2023 18:47:48 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::daf6:5ebb:a93f:1869]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::daf6:5ebb:a93f:1869%9]) with mapi id 15.20.6178.037; Mon, 20 Mar 2023
- 18:47:48 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: [RESEND,PATCH v2 03/10] erofs: convert to kobject_del_and_put()
-Date: Tue, 21 Mar 2023 02:47:22 +0800
-Message-Id: <20230320184730.56475-2-frank.li@vivo.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230320184730.56475-1-frank.li@vivo.com>
-References: <20230320184730.56475-1-frank.li@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0215.apcprd06.prod.outlook.com
- (2603:1096:4:68::23) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PgSnv3R7pz3bT0
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Mar 2023 08:40:19 +1100 (AEDT)
+X-IronPort-AV: E=Sophos;i="5.98,276,1673884800"; 
+   d="scan'208";a="330490367"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Mar 2023 05:39:07 +0800
+IronPort-SDR: IycwjYmQN+Q7SUxm5zMkPwsMpgx/56CFGVSy3jpcRDJEIv/XcXv1JEycDSpST1Qq7GW0eINdGl
+ lj5ToSIaAj6tV05SqJV01Y1ghzheABR0EsFQhSEYgYW5lqobqUx7ZyttV+fHfid8ZOBYKrIjM6
+ jM4KjO13BcbN7FZyV9oFI1womHnqL2dqM25ZY+5DATWh8MNNO2PELwX3lC4JGBBs6AGt4bvBX8
+ /xCM4aRFaGtNSQw2AO/jWa0C6tVBHdogUUD7iSV2xhbp1hwGErcLaNZBDe5kZUpfAZHq/+t0co
+ l/k=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Mar 2023 13:55:27 -0700
+IronPort-SDR: S2KJOeBtxdUcUmzlOXr7trPAopIcSPgtl5menYr+iKfd87pt5/JLke/U3rpjCZWlXK0ykwgU97
+ e7QUxXV4yNlZwG01alCTeN4XVxRdSbY3gakTqII8WgM+28/p//FXR7oXrbld2ICmOAkoqHJ1pE
+ WmdEgo2LKjXRffJn72U5q+5f29/a2GYHXxgZbNDJiAbnyDjFzod6Ub8vlmyrOcoaGi52BclGdN
+ hx/zTuBXtNdQ/a3gxO9X/+kjyRy1TcwlX0NCGFe3xvZIZUiKq/aaizCLWZRzbsQ+GnzxUG4Z44
+ eB4=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Mar 2023 14:39:07 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PgSmV6zvMz1RtVn
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Mar 2023 14:39:06 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+	reason="pass (just generated, assumed good)"
+	header.d=opensource.wdc.com
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+	by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id pGWsvYYTxSPZ for <linux-erofs@lists.ozlabs.org>;
+	Mon, 20 Mar 2023 14:39:05 -0700 (PDT)
+Received: from [10.225.163.91] (unknown [10.225.163.91])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PgSmM4CNrz1RtVm;
+	Mon, 20 Mar 2023 14:38:59 -0700 (PDT)
+Message-ID: <2229e074-d78e-3bd5-bf06-a53e9ad57d02@opensource.wdc.com>
+Date: Tue, 21 Mar 2023 06:38:58 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SI2PR06MB4121:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1a50b14-7e0b-4c5b-3a25-08db297399fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	nkcOnaNbyM9UVaj53P5i2tQuVGTs4QcqmfYwRYtRxcYkjqyU3XtBH3xRDKnophgjhI2rE5dnhrlh7V844HIhRoQ0X4+THi0m931xLYkETYp5mVSq/sjWCoCiTonWE2JRxmNurvUP9Fz+hD5BKdQNdu1yhFiVLDSVVx4ucZiLiDJdR58xkpHR3ehC/eN5j5BQNRmEQvYt9zczhfEvf48VnWKtGO5kyCQhgQvnSvhge87YhkwxMB/vI45PpyTO5stkGQ/yb1+spMZIajvgjQuxcOy7kNMfpBH8bGX5l8bKEMVPNui+Fn68QvFPqhNjCQjHS/qPLBPvAxIS9ErE6+dYpGf9N0xeHYJF2l+B9pWkgYtbXESRrNZApWI4I6rBJByU0VgvmxYb9N8U2E4WColP2FElco+VA5H/3yktcmgcjp09rWfqBIh/6oZccb/uadF6VCysZUYMGmkamX9K8MbKw78yJHBGa6moOi3VS/Wjr4rhf12UJwPZnZGClZ54+byqIm1PLSKofjPb6HtdlJOmppk8TKT4FCCxeQBmuJ9vkY8t2XZyo5VlJW/Yiipt/N8kpurTKKxHpd84PTzgeCvhMlCdzjJfFtssmJMMBhjeqKcS6cGsDcSehP0BgHhn16vod/8wOktFakCf3FAqLfHcbzgaxDxE1K8uuJNIln+duEvoTb8/t4kfRa9scU2YyZpDKJEQeOb3rXNZL+BE8ZlaQg==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(396003)(39860400002)(366004)(346002)(451199018)(86362001)(36756003)(52116002)(316002)(4326008)(83380400001)(66946007)(478600001)(66556008)(110136005)(54906003)(8676002)(186003)(66476007)(6486002)(26005)(6506007)(6512007)(2616005)(6666004)(1076003)(38350700002)(38100700002)(5660300002)(4744005)(8936002)(41300700001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?KFZdApr3gNn9tZHF30YaOMl6U65Pu/s3qIN4Xjk7L8cy5pMX6b8uA3WhY2bA?=
- =?us-ascii?Q?eIJ10DRTyiCj9qJL+xeVcTwc3Ovx4KVbY4xA4kXJcq2Wcs989ccXlVFx1J8w?=
- =?us-ascii?Q?PvdKVZA8kG+/qXtBJQ9jLOKZblFO8KX8XAPYweUjhWzuj7gP/mPvpuogpX9v?=
- =?us-ascii?Q?rXWNolgjutlJgWuT7yP6Pb/C1sAWTeiWJf+ZMdpELwx6CXCJ98aTstZc/U1M?=
- =?us-ascii?Q?0GnurqTXQvatsg/ezKprmkR+Ne6xLtP4rAC3iXjyrOxZnpID2xxFeqQWHeUS?=
- =?us-ascii?Q?G7hVqWX2ga0Luq2bEQUqh/RaSxyCH/LNDFAX7AZ2EoKfFvAQ58CEsT02xHE7?=
- =?us-ascii?Q?9WMU9N9GDef+rchaaEAuravrd/gjBDiS7EHrls+eyYaYdIl22fqvm9++SlmR?=
- =?us-ascii?Q?tmWvaMXyQ9uao8cfr4WLURx/3Dau1Oy1ImTRQ97FMte45idxSkqQFklzql2B?=
- =?us-ascii?Q?H1ON9Ug/mmYY/dEAojtE7Y4PfsabcM8Ajp3INEYu7J2m13wmdAKFJzwbZuTc?=
- =?us-ascii?Q?v6/e29GLtdEXDyUE1T/fHSIX5xWhSiaZDKEUOabtREUebZ/R60p1MprH3ncH?=
- =?us-ascii?Q?YmSIamdyyL0JWgcZgCF8Aor90L56EvNutP5DTDysYYYU7Jbl64wXDZ6B6Nw/?=
- =?us-ascii?Q?cJZj86JF8DE93BhdBvDa98H9pzpYXwhY41FCL1TLxdgqqO5vejnzLYfHR1ta?=
- =?us-ascii?Q?d7QmhKw5st4NCt/oqWbL0OZkV6JIONkcyKle2MV2SYj1vH0SEhC94aSHIELH?=
- =?us-ascii?Q?uYV3Nau0MkCkDmJRkHgaAT+BjP5a3v39ZMb5aV7Prlr9BZDLX4QCQ/jLZcem?=
- =?us-ascii?Q?rovgrAeiYqUBUbjUh+saxHbuNglH4BUXWkChOJDt9k4m1GDZPr7yIOnHQp2s?=
- =?us-ascii?Q?UH1/AfHpYdTFMgx5yc3CWgEBIp5YmAGic19qhSSxhFEG2rB3hg8eMrquEM6h?=
- =?us-ascii?Q?QJsmh8Zdr5hR3oJOFoeB1U59CsIPtcmXIxEE2s0WoqXPerZNP3diABMwqz2e?=
- =?us-ascii?Q?PGC3c1Ub66wtQADUz+nocduxQCmNdnNP70/Sg11WD3k4Iiz1W2VU2n/V3FJF?=
- =?us-ascii?Q?rHeS8+eELWHc4h26d/RvxGTnAHU1HNDsai2LxzLBBj5JJnX+GoqQC3zx7oJJ?=
- =?us-ascii?Q?Rk2l5HUm0QUAb5LmJEhbyWUvT0iggrzm/Cp1lqELWAUkvlntXEvfWVOonJl+?=
- =?us-ascii?Q?Uhl4rZcMm+R287kgCbRxcUtesxtD2PbugHTR+MYCuHBpL2nsYzAhYScDegcA?=
- =?us-ascii?Q?ljml/YZskcNLr8dT0Z6q2lvV0hHjxq9Ef27Ko5mIkUc2F2tjCy6LDT8ySXyn?=
- =?us-ascii?Q?MA1NsRQKgTx8Dht2tdJmzYiKQWZcNBaQXFgxQ6Aq+CwJNgVCR6IiXgrs1BSf?=
- =?us-ascii?Q?0GoLEvajBDf6nLIaFVlHs4GqapgTwXeFLRjavCzHr+6d0/dmTfSpJFmhq6KL?=
- =?us-ascii?Q?rCekQ6pvcfNTxscXssHqIZwvdkfzAoY8yeZqCHnCAmmpm6xedu21P6wdgRKN?=
- =?us-ascii?Q?e2tVICIRduod6KUihTCer4ePdPsqQLsv0VsfNqFgbO5PEuRfS8/Uu9UTwRad?=
- =?us-ascii?Q?dPTvW4waQnZNtsNzstsC8uZIFRy4jq/a6GFtOEVm?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1a50b14-7e0b-4c5b-3a25-08db297399fe
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2023 18:47:48.6484
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /kAtJf5ELGvkUzc0XWrBzUi1RM9WaVQDzQ5WYo2Tdut/K0q/gi40iRs2oEjXcgepxVBje33t/uiMcuDsS9PuOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4121
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RESEND,PATCH v2 01/10] kobject: introduce kobject_del_and_put()
+Content-Language: en-US
+To: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com,
+ dsterba@suse.com, xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
+ jefflexu@linux.alibaba.com, jaegeuk@kernel.org,
+ trond.myklebust@hammerspace.com, anna@kernel.org, konishi.ryusuke@gmail.com,
+ mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+ richard@nod.at, djwong@kernel.org, naohiro.aota@wdc.com, jth@kernel.org,
+ gregkh@linuxfoundation.org, rafael@kernel.org
+References: <20230320184657.56198-1-frank.li@vivo.com>
+Organization: Western Digital Research
+In-Reply-To: <20230320184657.56198-1-frank.li@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -120,34 +95,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Damien Le Moal <damien.lemoal@opensource.wdc.com>, Yangtao Li <frank.li@vivo.com>, linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+From: Damien Le Moal via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc: linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use kobject_del_and_put() to simplify code.
+On 3/21/23 03:46, Yangtao Li wrote:
+> There are plenty of using kobject_del() and kobject_put() together
+> in the kernel tree. This patch wraps these two calls in a single helper.
+> 
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> ---
+> v2:
+> -add kobject_del_and_put() users
+> resend patchset to gregkh, Rafael and Damien
+>  include/linux/kobject.h |  1 +
+>  lib/kobject.c           | 17 +++++++++++++++--
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+> index bdab370a24f4..782d4bd119f8 100644
+> --- a/include/linux/kobject.h
+> +++ b/include/linux/kobject.h
+> @@ -111,6 +111,7 @@ extern struct kobject *kobject_get(struct kobject *kobj);
+>  extern struct kobject * __must_check kobject_get_unless_zero(
+>  						struct kobject *kobj);
+>  extern void kobject_put(struct kobject *kobj);
+> +extern void kobject_del_and_put(struct kobject *kobj);
+>  
+>  extern const void *kobject_namespace(const struct kobject *kobj);
+>  extern void kobject_get_ownership(const struct kobject *kobj,
+> diff --git a/lib/kobject.c b/lib/kobject.c
+> index 6e2f0bee3560..8c0293e37214 100644
+> --- a/lib/kobject.c
+> +++ b/lib/kobject.c
+> @@ -731,6 +731,20 @@ void kobject_put(struct kobject *kobj)
+>  }
+>  EXPORT_SYMBOL(kobject_put);
+>  
+> +/**
+> + * kobject_del_and_put() - Delete kobject.
+> + * @kobj: object.
+> + *
+> + * Unlink kobject from hierarchy and decrement the refcount.
+> + * If refcount is 0, call kobject_cleanup().
+> + */
+> +void kobject_del_and_put(struct kobject *kobj)
+> +{
+> +	kobject_del(kobj);
+> +	kobject_put(kobj);
+> +}
+> +EXPORT_SYMBOL_GPL(kobject_del_and_put);
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- fs/erofs/sysfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Why not make this an inline helper defined in include/linux/kobject.h instead of
+a new symbol ?
 
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 435e515c0792..9ed7d6552155 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -241,8 +241,7 @@ void erofs_unregister_sysfs(struct super_block *sb)
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
- 	if (sbi->s_kobj.state_in_sysfs) {
--		kobject_del(&sbi->s_kobj);
--		kobject_put(&sbi->s_kobj);
-+		kobject_del_and_put(&sbi->s_kobj);
- 		wait_for_completion(&sbi->s_kobj_unregister);
- 	}
- }
+> +
+>  static void dynamic_kobj_release(struct kobject *kobj)
+>  {
+>  	pr_debug("kobject: (%p): %s\n", kobj, __func__);
+> @@ -874,8 +888,7 @@ void kset_unregister(struct kset *k)
+>  {
+>  	if (!k)
+>  		return;
+> -	kobject_del(&k->kobj);
+> -	kobject_put(&k->kobj);
+> +	kobject_del_and_put(&k->kobj);
+>  }
+>  EXPORT_SYMBOL(kset_unregister);
+>  
+
 -- 
-2.35.1
+Damien Le Moal
+Western Digital Research
 
