@@ -2,37 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 143FA6C5B21
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Mar 2023 01:10:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 578D96C5E99
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Mar 2023 06:17:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Phm2904Hyz3f72
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Mar 2023 11:10:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Phtqy4gqtz3cFW
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Mar 2023 16:17:02 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C96ibbiI;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C96ibbiI;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=ming.lei@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C96ibbiI;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C96ibbiI;
+	dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Phm1k539nz3f4F
-	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Mar 2023 11:10:02 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VeS0V4I_1679530197;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VeS0V4I_1679530197)
-          by smtp.aliyun-inc.com;
-          Thu, 23 Mar 2023 08:09:58 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 8/8] erofs: use separate xattr parsers for listxattr/getxattr
-Date: Thu, 23 Mar 2023 08:09:49 +0800
-Message-Id: <20230323000949.57608-9-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230323000949.57608-1-jefflexu@linux.alibaba.com>
-References: <20230323000949.57608-1-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Phtqp5dkqz3bjX
+	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Mar 2023 16:16:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679548609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HoUzTMO8R5MhPq7S8OoMssryl9/6eR6zluDti49MEro=;
+	b=C96ibbiIuzN3zlyh6zyQ8Fswhj48p5IeO4UJvpUfhLHTHmPNbleUia9lT07XxvEa/+V+ul
+	QR/9MGJy2B5pbNLGBdLVZfxlyWj528TB+X8tjDaHPxybajNXKBd5TFMLn176WfPkydQZK4
+	/v71z2/MFv13R9PdHMp7qvSOAmEpfCg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679548609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HoUzTMO8R5MhPq7S8OoMssryl9/6eR6zluDti49MEro=;
+	b=C96ibbiIuzN3zlyh6zyQ8Fswhj48p5IeO4UJvpUfhLHTHmPNbleUia9lT07XxvEa/+V+ul
+	QR/9MGJy2B5pbNLGBdLVZfxlyWj528TB+X8tjDaHPxybajNXKBd5TFMLn176WfPkydQZK4
+	/v71z2/MFv13R9PdHMp7qvSOAmEpfCg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-179-KY9zo7YzPqyCZhglvOgcqw-1; Thu, 23 Mar 2023 01:16:43 -0400
+X-MC-Unique: KY9zo7YzPqyCZhglvOgcqw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 362258828C2;
+	Thu, 23 Mar 2023 05:16:41 +0000 (UTC)
+Received: from ovpn-8-16.pek2.redhat.com (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D3854021B1;
+	Thu, 23 Mar 2023 05:16:24 +0000 (UTC)
+Date: Thu, 23 Mar 2023 13:16:20 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yangtao Li <frank.li@vivo.com>
+Subject: Re: [PATCH v3 01/10] kobject: introduce kobject_del_and_put()
+Message-ID: <ZBvgpBzEuFuyOD/c@ovpn-8-16.pek2.redhat.com>
+References: <20230322165830.55071-1-frank.li@vivo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230322165830.55071-1-frank.li@vivo.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,439 +77,50 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: rafael@kernel.org, djwong@kernel.org, joseph.qi@linux.alibaba.com, linux-mtd@lists.infradead.org, naohiro.aota@wdc.com, linux-nilfs@vger.kernel.org, richard@nod.at, mark@fasheh.com, trond.myklebust@hammerspace.com, josef@toxicpanda.com, ming.lei@redhat.com, huyue2@coolpad.com, dsterba@suse.com, jlbec@evilplan.org, jaegeuk@kernel.org, konishi.ryusuke@gmail.com, linux-nfs@vger.kernel.org, clm@fb.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, ocfs2-devel@oss.oracle.com, anna@kernel.org, linux-fsdevel@vger.kernel.org, jth@kernel.org, linux-erofs@lists.ozlabs.org, damien.lemoal@opensource.wdc.com, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-There's a callback styled xattr parser, i.e. xattr_foreach(), which is
-shared among listxattr and getxattr.  Convert it to two separate xattr
-parsers for listxattr and getxattr.
+On Thu, Mar 23, 2023 at 12:58:30AM +0800, Yangtao Li wrote:
+> There are plenty of using kobject_del() and kobject_put() together
+> in the kernel tree. This patch wraps these two calls in a single helper.
+> 
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> ---
+> v3:
+> -convert to inline helper
+> v2:
+> -add kobject_del_and_put() users
+>  include/linux/kobject.h | 13 +++++++++++++
+>  lib/kobject.c           |  3 +--
+>  2 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+> index bdab370a24f4..e21b7c22e355 100644
+> --- a/include/linux/kobject.h
+> +++ b/include/linux/kobject.h
+> @@ -112,6 +112,19 @@ extern struct kobject * __must_check kobject_get_unless_zero(
+>  						struct kobject *kobj);
+>  extern void kobject_put(struct kobject *kobj);
+>  
+> +/**
+> + * kobject_del_and_put() - Delete kobject.
+> + * @kobj: object.
+> + *
+> + * Unlink kobject from hierarchy and decrement the refcount.
+> + * If refcount is 0, call kobject_cleanup().
+> + */
+> +static inline void kobject_del_and_put(struct kobject *kobj)
+> +{
+> +	kobject_del(kobj);
+> +	kobject_put(kobj);
+> +}
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/xattr.c | 347 ++++++++++++++++++++++-------------------------
- 1 file changed, 159 insertions(+), 188 deletions(-)
+kobject_put() actually covers kobject removal automatically, which is
+single stage removal. So if you see the two called together, it is
+safe to kill kobject_del() directly.
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 196b2eb59e29..eac5b7b69691 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -24,6 +24,7 @@ struct erofs_xattr_iter {
- 	struct qstr name;
- 	struct dentry *dentry;
- 	struct inode *inode;
-+	unsigned int remaining; /* size of inline xattrs to be iterated */
- 	bool getxattr;
- };
- 
-@@ -144,153 +145,6 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	return ret;
- }
- 
--/*
-- * the general idea for these return values is
-- * if    0 is returned, go on processing the current xattr;
-- *       1 (> 0) is returned, skip this round to process the next xattr;
-- *    -err (< 0) is returned, an error (maybe ENOXATTR) occurred
-- *                            and need to be handled
-- */
--struct xattr_iter_handlers {
--	int (*entry)(struct erofs_xattr_iter *it, struct erofs_xattr_entry *entry);
--	int (*name)(struct erofs_xattr_iter *it, unsigned int processed, char *buf,
--		    unsigned int len);
--	int (*alloc_buffer)(struct erofs_xattr_iter *it, unsigned int value_sz);
--	void (*value)(struct erofs_xattr_iter *it, unsigned int processed, char *buf,
--		      unsigned int len);
--};
--
--/*
-- * Regardless of success or failure, `xattr_foreach' will end up with
-- * `ofs' pointing to the next xattr item rather than an arbitrary position.
-- */
--static int xattr_foreach(struct erofs_xattr_iter *it,
--			 const struct xattr_iter_handlers *op,
--			 unsigned int *tlimit)
--{
--	struct erofs_xattr_entry entry;
--	unsigned int value_sz, processed, slice;
--	int err;
--
--	/* 0. fixup blkaddr, ofs, ipage */
--	err = erofs_xattr_iter_fixup(it);
--	if (err)
--		return err;
--
--	/*
--	 * 1. read xattr entry to the memory,
--	 *    since we do EROFS_XATTR_ALIGN
--	 *    therefore entry should be in the page
--	 */
--	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
--	if (tlimit) {
--		unsigned int entry_sz = erofs_xattr_entry_size(&entry);
--
--		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
--		if (*tlimit < entry_sz) {
--			DBG_BUGON(1);
--			return -EFSCORRUPTED;
--		}
--		*tlimit -= entry_sz;
--	}
--
--	it->ofs += sizeof(struct erofs_xattr_entry);
--	value_sz = le16_to_cpu(entry.e_value_size);
--
--	/* handle entry */
--	err = op->entry(it, &entry);
--	if (err) {
--		it->ofs += entry.e_name_len + value_sz;
--		goto out;
--	}
--
--	/* 2. handle xattr name (ofs will finally be at the end of name) */
--	processed = 0;
--
--	while (processed < entry.e_name_len) {
--		err = erofs_xattr_iter_fixup_aligned(it);
--		if (err)
--			goto out;
--
--		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
--			      entry.e_name_len - processed);
--
--		/* handle name */
--		err = op->name(it, processed, it->kaddr + it->ofs, slice);
--		if (err) {
--			it->ofs += entry.e_name_len - processed + value_sz;
--			goto out;
--		}
--
--		it->ofs += slice;
--		processed += slice;
--	}
--
--	/* 3. handle xattr value */
--	processed = 0;
--
--	if (op->alloc_buffer) {
--		err = op->alloc_buffer(it, value_sz);
--		if (err) {
--			it->ofs += value_sz;
--			goto out;
--		}
--	}
--
--	while (processed < value_sz) {
--		err = erofs_xattr_iter_fixup_aligned(it);
--		if (err)
--			goto out;
--
--		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
--			      value_sz - processed);
--		op->value(it, processed, it->kaddr + it->ofs, slice);
--		it->ofs += slice;
--		processed += slice;
--	}
--
--out:
--	/* xattrs should be 4-byte aligned (on-disk constraint) */
--	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
--	return err < 0 ? err : 0;
--}
--
--static int xattr_entrymatch(struct erofs_xattr_iter *it,
--			    struct erofs_xattr_entry *entry)
--{
--	return (it->index != entry->e_name_index ||
--		it->name.len != entry->e_name_len) ? -ENOATTR : 0;
--}
--
--static int xattr_namematch(struct erofs_xattr_iter *it,
--			   unsigned int processed, char *buf, unsigned int len)
--{
--	return memcmp(buf, it->name.name + processed, len) ? -ENOATTR : 0;
--}
--
--static int xattr_checkbuffer(struct erofs_xattr_iter *it,
--			     unsigned int value_sz)
--{
--	int err = it->buffer_size < value_sz ? -ERANGE : 0;
--
--	it->buffer_ofs = value_sz;
--	return !it->buffer ? 1 : err;
--}
--
--static void xattr_copyvalue(struct erofs_xattr_iter *it,
--			    unsigned int processed,
--			    char *buf, unsigned int len)
--{
--	memcpy(it->buffer + processed, buf, len);
--}
--
--static const struct xattr_iter_handlers find_xattr_handlers = {
--	.entry = xattr_entrymatch,
--	.name = xattr_namematch,
--	.alloc_buffer = xattr_checkbuffer,
--	.value = xattr_copyvalue
--};
--
- static bool erofs_xattr_user_list(struct dentry *dentry)
- {
- 	return test_opt(&EROFS_SB(dentry->d_sb)->opt, XATTR_USER);
-@@ -367,62 +221,178 @@ static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
- 		xattr_handler_map[idx] : NULL;
- }
- 
--static int xattr_entrylist(struct erofs_xattr_iter *it,
--			   struct erofs_xattr_entry *entry)
-+/*
-+ * the general idea for these return values is
-+ * if    0 is returned, go on processing the current xattr;
-+ *       1 (> 0) is returned, skip this round to process the next xattr;
-+ *    -err (< 0) is returned, an error (maybe ENOXATTR) occurred
-+ *                            and need to be handled
-+ */
-+typedef int (*erofs_xattr_body_handler)(struct erofs_xattr_iter *it,
-+					unsigned int processed,
-+					char *buf, unsigned int len);
-+
-+static int erofs_xattr_namematch(struct erofs_xattr_iter *it,
-+		unsigned int processed, char *buf, unsigned int len)
-+{
-+	return memcmp(buf, it->name.name + processed, len) ? -ENOATTR : 0;
-+}
-+
-+static int erofs_xattr_copy(struct erofs_xattr_iter *it,
-+		unsigned int unused, char *buf, unsigned int len)
-+{
-+	memcpy(it->buffer + it->buffer_ofs, buf, len);
-+	it->buffer_ofs += len;
-+	return 0;
-+}
-+
-+static int erofs_xattr_body(struct erofs_xattr_iter *it, unsigned int len,
-+			    erofs_xattr_body_handler handler)
-+{
-+	unsigned int slice, processed = 0;
-+
-+	while (processed < len) {
-+		int err = erofs_xattr_iter_fixup_aligned(it);
-+		if (err)
-+			return err;
-+
-+		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
-+			      len - processed);
-+		err = handler(it, processed, it->kaddr + it->ofs, slice);
-+		if (err) {
-+			it->ofs += len - processed;
-+			return err;
-+		}
-+
-+		it->ofs += slice;
-+		processed += slice;
-+	}
-+	return 0;
-+}
-+
-+static int erofs_xattr_check_entry(struct erofs_xattr_iter *it)
- {
--	unsigned int prefix_len;
-+	int err;
-+
-+	err = erofs_xattr_iter_fixup(it);
-+	if (err)
-+		return err;
-+
-+	if (it->remaining) {
-+		struct erofs_xattr_entry *entry = it->kaddr + it->ofs;
-+		unsigned int entry_sz = erofs_xattr_entry_size(entry);
-+		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
-+		if (it->remaining < entry_sz) {
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		it->remaining -= entry_sz;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Regardless of success or failure, erofs_[get|list]xattr_foreach() will end up
-+ * with `ofs' pointing to the next xattr item rather than an arbitrary position.
-+ */
-+static int erofs_listxattr_foreach(struct erofs_xattr_iter *it)
-+{
-+	struct erofs_xattr_entry entry;
-+	const struct xattr_handler *h;
- 	const char *prefix;
-+	unsigned int value_sz, prefix_len, name_sz;
-+	int err;
- 
--	const struct xattr_handler *h =
--		erofs_xattr_handler(entry->e_name_index);
-+	err = erofs_xattr_check_entry(it);
-+	if (err)
-+		return err;
- 
--	if (!h || (h->list && !h->list(it->dentry)))
--		return 1;
-+	/* 1. handle xattr entry */
-+	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-+	it->ofs += sizeof(struct erofs_xattr_entry);
-+	value_sz = le16_to_cpu(entry.e_value_size);
-+
-+	h = erofs_xattr_handler(entry.e_name_index);
-+	if (!h || (h->list && !h->list(it->dentry))) {
-+		it->ofs += entry.e_name_len + value_sz;
-+		goto out;
-+	}
- 
- 	prefix = xattr_prefix(h);
- 	prefix_len = strlen(prefix);
-+	name_sz = prefix_len + entry.e_name_len + 1;
- 
- 	if (!it->buffer) {
--		it->buffer_ofs += prefix_len + entry->e_name_len + 1;
--		return 1;
-+		it->buffer_ofs += name_sz;
-+		it->ofs += entry.e_name_len + value_sz;
-+		goto out;
- 	}
--
--	if (it->buffer_ofs + prefix_len
--		+ entry->e_name_len + 1 > it->buffer_size)
-+	if (it->buffer_ofs + name_sz > it->buffer_size)
- 		return -ERANGE;
- 
- 	memcpy(it->buffer + it->buffer_ofs, prefix, prefix_len);
- 	it->buffer_ofs += prefix_len;
--	return 0;
--}
- 
--static int xattr_namelist(struct erofs_xattr_iter *it,
--			  unsigned int processed, char *buf, unsigned int len)
--{
--	memcpy(it->buffer + it->buffer_ofs, buf, len);
--	it->buffer_ofs += len;
-+	/* 2. handle xattr name (err can't be 1 or ENOATTR) */
-+	err = erofs_xattr_body(it, entry.e_name_len, erofs_xattr_copy);
-+	if (err)
-+		return err;
-+
-+	it->buffer[it->buffer_ofs++] = '\0';
-+	it->ofs += value_sz;
-+out:
-+	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
- 	return 0;
- }
- 
--static int xattr_skipvalue(struct erofs_xattr_iter *it,
--			   unsigned int value_sz)
-+static int erofs_getxattr_foreach(struct erofs_xattr_iter *it)
- {
--	it->buffer[it->buffer_ofs++] = '\0';
--	return 1;
--}
-+	struct erofs_xattr_entry entry;
-+	unsigned int value_sz;
-+	int err;
- 
--static const struct xattr_iter_handlers list_xattr_handlers = {
--	.entry = xattr_entrylist,
--	.name = xattr_namelist,
--	.alloc_buffer = xattr_skipvalue,
--	.value = NULL
--};
-+	err = erofs_xattr_check_entry(it);
-+	if (err)
-+		return err;
-+
-+	/* 1. handle xattr entry */
-+	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-+	it->ofs += sizeof(struct erofs_xattr_entry);
-+	value_sz = le16_to_cpu(entry.e_value_size);
-+
-+	if (it->index != entry.e_name_index || it->name.len != entry.e_name_len) {
-+		it->ofs += entry.e_name_len + value_sz;
-+		err = -ENOATTR;
-+		goto out;
-+	}
-+
-+	/* 2. handle xattr name */
-+	err = erofs_xattr_body(it, entry.e_name_len, erofs_xattr_namematch);
-+	if (err) {
-+		it->ofs += value_sz;
-+		goto out;
-+	}
-+
-+	/* 3. handle xattr value */
-+	if (!it->buffer) {
-+		it->buffer_ofs = value_sz;
-+		it->ofs += value_sz;
-+		goto out; /* err == 0 */
-+	}
-+	if (it->buffer_size < value_sz)
-+		return -ERANGE;
-+
-+	/* no need updating ofs on error (err can't be 1 or ENOATTR) */
-+	err = erofs_xattr_body(it, value_sz, erofs_xattr_copy);
-+out:
-+	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
-+	return err < 0 ? err : 0;
-+}
- 
- static int erofs_iter_inline_xattr(struct erofs_xattr_iter *it)
- {
- 	struct erofs_inode *const vi = EROFS_I(it->inode);
--	const struct xattr_iter_handlers *op;
--	unsigned int xattr_header_sz, remaining;
-+	unsigned int xattr_header_sz;
- 	erofs_off_t pos;
- 	int ret;
- 
-@@ -440,11 +410,12 @@ static int erofs_iter_inline_xattr(struct erofs_xattr_iter *it)
- 	if (IS_ERR(it->kaddr))
- 		return PTR_ERR(it->kaddr);
- 
--	remaining = vi->xattr_isize - xattr_header_sz;
--	op = it->getxattr ? &find_xattr_handlers : &list_xattr_handlers;
--
--	while (remaining) {
--		ret = xattr_foreach(it, op, &remaining);
-+	it->remaining = vi->xattr_isize - xattr_header_sz;
-+	while (it->remaining) {
-+		if (it->getxattr)
-+			ret = erofs_getxattr_foreach(it);
-+		else
-+			ret = erofs_listxattr_foreach(it);
- 		if ((it->getxattr && ret != -ENOATTR) || (!it->getxattr && ret))
- 			break;
- 	}
-@@ -455,12 +426,9 @@ static int erofs_iter_shared_xattr(struct erofs_xattr_iter *it)
- {
- 	struct erofs_inode *const vi = EROFS_I(it->inode);
- 	struct super_block *const sb = it->sb;
--	const struct xattr_iter_handlers *op;
- 	unsigned int i, xsid;
- 	int ret = -ENOATTR;
- 
--	op = it->getxattr ? &find_xattr_handlers : &list_xattr_handlers;
--
- 	for (i = 0; i < vi->xattr_shared_count; ++i) {
- 		xsid = vi->xattr_shared_xattrs[i];
- 		it->blkaddr = EROFS_SB(sb)->xattr_blkaddr +
-@@ -470,7 +438,10 @@ static int erofs_iter_shared_xattr(struct erofs_xattr_iter *it)
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
--		ret = xattr_foreach(it, op, NULL);
-+		if (it->getxattr)
-+			ret = erofs_getxattr_foreach(it);
-+		else
-+			ret = erofs_listxattr_foreach(it);
- 		if ((it->getxattr && ret != -ENOATTR) || (!it->getxattr && ret))
- 			break;
- 	}
--- 
-2.19.1.6.gb485710b
+
+thanks,
+Ming
 
