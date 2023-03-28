@@ -2,30 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 390576CB52D
+	by mail.lfdr.de (Postfix) with ESMTPS id A34E96CB52E
 	for <lists+linux-erofs@lfdr.de>; Tue, 28 Mar 2023 05:55:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PlwnP0d4Kz3fCp
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Mar 2023 14:55:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PlwnR3r5wz3fT5
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Mar 2023 14:55:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PlwnD5sKvz3cRW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 28 Mar 2023 14:55:11 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VerNeOs_1679975697;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VerNeOs_1679975697)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PlwnD6WTZz3cfh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 28 Mar 2023 14:55:12 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VerNeST_1679975706;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VerNeST_1679975706)
           by smtp.aliyun-inc.com;
-          Tue, 28 Mar 2023 11:55:06 +0800
+          Tue, 28 Mar 2023 11:55:07 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: fix missing tail blocks for directories
-Date: Tue, 28 Mar 2023 11:54:55 +0800
-Message-Id: <20230328035456.89831-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: mkfs: fix EOD read when calculate sb checksum
+Date: Tue, 28 Mar 2023 11:54:56 +0800
+Message-Id: <20230328035456.89831-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230328035456.89831-1-hsiangkao@linux.alibaba.com>
+References: <20230328035456.89831-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -43,62 +45,27 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently directory blocks will be allocated after inode metadata
-space is reserved, but miss to fix tail blocks.
+Since images could be very small for smaller block sizes.
 
-Fixes: 21d84349e79a ("erofs-utils: rearrange on-disk metadata")
+Fixes: a4fb8ea13ac7 ("erofs-utils: support arbitrary block sizes")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/internal.h |  1 +
- lib/inode.c              | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ mkfs/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 1f1e730..641a795 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -180,6 +180,7 @@ struct erofs_inode {
- 	/* inline tail-end packing size */
- 	unsigned short idata_size;
- 	bool compressed_idata;
-+	bool lazy_tailblock;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 27e3f03..65d3df6 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -614,7 +614,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+ 	unsigned int len;
+ 	struct erofs_super_block *sb;
  
- 	unsigned int xattr_isize;
- 	unsigned int extent_isize;
-diff --git a/lib/inode.c b/lib/inode.c
-index 9db84a8..871968d 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -608,7 +608,12 @@ static int erofs_prepare_tail_block(struct erofs_inode *inode)
- 	if (bh) {
- 		/* expend a block as the tail block (should be successful) */
- 		ret = erofs_bh_balloon(bh, erofs_blksiz());
--		DBG_BUGON(ret != erofs_blksiz());
-+		if (ret != erofs_blksiz()) {
-+			DBG_BUGON(1);
-+			return -EIO;
-+		}
-+	} else {
-+		inode->lazy_tailblock = true;
- 	}
- 	return 0;
- }
-@@ -743,6 +748,15 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
- 			inode->u.i_blkaddr = bh->block->blkaddr;
- 			inode->bh_data = bh;
- 		} else {
-+			if (inode->lazy_tailblock) {
-+				/* expend a tail block (should be successful) */
-+				ret = erofs_bh_balloon(bh, erofs_blksiz());
-+				if (ret != erofs_blksiz()) {
-+					DBG_BUGON(1);
-+					return -EIO;
-+				}
-+				inode->lazy_tailblock = false;
-+			}
- 			ret = erofs_mapbh(bh->block);
- 		}
- 		DBG_BUGON(ret < 0);
+-	ret = blk_read(0, buf, 0, erofs_blknr(sizeof(buf)));
++	ret = blk_read(0, buf, 0, erofs_blknr(EROFS_SUPER_END) + 1);
+ 	if (ret) {
+ 		erofs_err("failed to read superblock to set checksum: %s",
+ 			  erofs_strerror(ret));
 -- 
 2.24.4
 
