@@ -2,73 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F9156CC18D
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Mar 2023 15:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55EFE6CC1C4
+	for <lists+linux-erofs@lfdr.de>; Tue, 28 Mar 2023 16:12:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PmB9Z3nDVz3cj1
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Mar 2023 00:58:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PmBTk0vW8z3cj1
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Mar 2023 01:12:42 +1100 (AEDT)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=a0ekzXtR;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LXXmd1rx;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=F0JPUNpB;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=F0JPUNpB;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=a0ekzXtR;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LXXmd1rx;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=F0JPUNpB;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=F0JPUNpB;
 	dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PmB9W3CSwz3cJK
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Mar 2023 00:58:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PmBTb2mY0z3cLT
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Mar 2023 01:12:34 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680011915;
+	s=mimecast20190719; t=1680012751;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r/qQMzMODq2NJQFTscBdpgqP90R/mKK82eNeMCBGbBc=;
-	b=a0ekzXtR2QKeUE4qxps1+bMnMBpKMGR/W5d3Hs2FfuES86F1vRf5JAn7noWUC1TzBdBbGX
-	Ec6jG2MP+QeqFMMF4gCQGiuzsAd6j0RtPQoq/ygadKwAidPmcx7Xi1bj+g0Ld0bmhcFbKd
-	A62L4YAzTDg8F6Ebe7GYIyCc0h8Oxp4=
+	bh=jFnQl8ATxoafGr28+mJKj23xjOS1vRu21jhKl7IouiY=;
+	b=F0JPUNpBrkVFD/YdmFLTn6pSOHwy/lnmmVsvm+Tp1fz5OFfjU4eeDsJtj2bD6OThB7ziDI
+	I/lM/XSbvqtSdzLCaarb6V8j9eXC4lwGgDKJNa0ZOojYedD8T53mJECuROlpiC67JoiDug
+	G2OAvziAQ+49Xvj5HuLwjaEgl7H+UTw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680011916;
+	s=mimecast20190719; t=1680012751;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r/qQMzMODq2NJQFTscBdpgqP90R/mKK82eNeMCBGbBc=;
-	b=LXXmd1rxa9jBhQCOl8oGZkaQJP+7MqdgOKMFuPlgKPt+kdkf2gNe8N46BbNP3q8QYeNJqc
-	uDhApHcvI+e0AcTN3wL1m1wK59+Fm85dZMbX+i8UKHnMYB+mNWvBoB7z77KglZIA0XdKw0
-	RPKAFWbTp8E8TkYllwZTxm4pX+R/EmU=
+	bh=jFnQl8ATxoafGr28+mJKj23xjOS1vRu21jhKl7IouiY=;
+	b=F0JPUNpBrkVFD/YdmFLTn6pSOHwy/lnmmVsvm+Tp1fz5OFfjU4eeDsJtj2bD6OThB7ziDI
+	I/lM/XSbvqtSdzLCaarb6V8j9eXC4lwGgDKJNa0ZOojYedD8T53mJECuROlpiC67JoiDug
+	G2OAvziAQ+49Xvj5HuLwjaEgl7H+UTw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-411-88GSLgrJOO-ZtuAQA0V4cw-1; Tue, 28 Mar 2023 09:58:30 -0400
-X-MC-Unique: 88GSLgrJOO-ZtuAQA0V4cw-1
+ us-mta-189-ycdylGt2MaKNYmlGjU3KkA-1; Tue, 28 Mar 2023 10:12:27 -0400
+X-MC-Unique: ycdylGt2MaKNYmlGjU3KkA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91F44185A78F;
-	Tue, 28 Mar 2023 13:58:29 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD323100DEAE;
+	Tue, 28 Mar 2023 14:12:26 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B9AC3492C14;
-	Tue, 28 Mar 2023 13:58:28 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 88E5C492C13;
+	Tue, 28 Mar 2023 14:12:25 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
 	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
 	Kingdom.
 	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20230111052515.53941-3-zhujia.zj@bytedance.com>
-References: <20230111052515.53941-3-zhujia.zj@bytedance.com> <20230111052515.53941-1-zhujia.zj@bytedance.com>
+In-Reply-To: <20230111052515.53941-4-zhujia.zj@bytedance.com>
+References: <20230111052515.53941-4-zhujia.zj@bytedance.com> <20230111052515.53941-1-zhujia.zj@bytedance.com>
 To: Jia Zhu <zhujia.zj@bytedance.com>
-Subject: Re: [PATCH V4 2/5] cachefiles: extract ondemand info field from cachefiles_object
+Subject: Re: [PATCH V4 3/5] cachefiles: resend an open request if the read request's object is closed
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <132136.1680011908.1@warthog.procyon.org.uk>
-Date: Tue, 28 Mar 2023 14:58:28 +0100
-Message-ID: <132137.1680011908@warthog.procyon.org.uk>
+Content-ID: <132776.1680012744.1@warthog.procyon.org.uk>
+Date: Tue, 28 Mar 2023 15:12:24 +0100
+Message-ID: <132777.1680012744@warthog.procyon.org.uk>
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -87,20 +87,24 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 Jia Zhu <zhujia.zj@bytedance.com> wrote:
 
-> @@ -65,10 +71,7 @@ struct cachefiles_object {
->  	enum cachefiles_content		content_info:8;	/* Info about content presence */
->  	unsigned long			flags;
->  #define CACHEFILES_OBJECT_USING_TMPFILE	0		/* Have an unlinked tmpfile */
-> -#ifdef CONFIG_CACHEFILES_ONDEMAND
-> -	int				ondemand_id;
-> -	enum cachefiles_object_state	state;
-> -#endif
-> +	struct cachefiles_ondemand_info	*private;
+> +	struct cachefiles_object *object =
+> +		((struct cachefiles_ondemand_info *)work)->object;
 
-Why is this no longer inside "#ifdef CONFIG_CACHEFILES_ONDEMAND"?
+container_of().
 
-Also, please don't call it "private", but rather something like "ondemand" or
-"ondemand_info".
+> +			continue;
+> +		} else if (cachefiles_ondemand_object_is_reopening(object)) {
 
-David
+The "else" is unnecessary.
+
+> +static void ondemand_object_worker(struct work_struct *work)
+> +{
+> +	struct cachefiles_object *object =
+> +		((struct cachefiles_ondemand_info *)work)->object;
+> +
+> +	cachefiles_ondemand_init_object(object);
+> +}
+
+I can't help but feel there's some missing exclusion/locking.  This feels like
+it really ought to be driven from the fscache object state machine.
 
