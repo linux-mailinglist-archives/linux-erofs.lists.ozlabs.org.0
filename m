@@ -1,115 +1,94 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DB7D6D6521
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 16:21:53 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13A066D65E1
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 16:54:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PrVM22zj8z3cZp
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 00:21:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PrW5B6JdVz3ccr
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 00:54:54 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=dUyJVSsT;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jEl8gdgx;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jEl8gdgx;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::70d; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=aalbersh@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=dUyJVSsT;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jEl8gdgx;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jEl8gdgx;
 	dkim-atps=neutral
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2070d.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::70d])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrVLv4jvyz3cLF
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 00:21:40 +1000 (AEST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E1/+KnR2QvyegDH0HqgyL+Cgxcu6L6aiEuBHXs5U93qukMIvfWFJoYRdSJQmhHtHM0PS4fldk4rP1+ghteuve4qWBsGDPP3Blv6QRz0bVo4/bfSxL/fkjci+/G1DzItrfopxBh2gt2uVoeSv7c3jlb7ZrJOHM/feOhcRRng1YS8rDplCdEgX0de6Z6dSF2fCJkvERmHgJHX0MWosVcG6fV6+NEwVct1yOe9ozqyaw0Hm5Umkrfl7Wo/8GwcxTkfZ10Htm38OaGcJqrLHoncFdGbzDuLeHszMnFJMSs7PkZwZoels14ZcMXsLnKLmjFCusH0YmFzc4gm+2pcPqrcqlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mxQVT2Lab/BDVcz6BJ5VFF55WIP2l+zcFbF6B3CEPAQ=;
- b=bOx6ZtTT+9UjDk8bP7AkwHHBjJFpmP+8/YL/kxj49qdo0H9JK8U12GM7YimHey6BlCNYZJU794C6UuO4+iT3q3c5Cgw+VIaEPhB7axpfIyQ5M3Z3y5MXj0bvk9NTTg/PjDO187IQqR6yXbvQpCbOyBr397i8loO7EPCIUGuL8RXKcoS5PN36SYWvDxl3H0SP8dMSha362sHXU2GoS/gJ1Nj5X6eIqAXrR2jfQ2/gNN5RwG2hBHYsWxlEikS88fTYI6AiUJWcN507QDrFhgdwM2Mdc2THHXhkn9z9+orR60vIDXIOT0LFf5aE7tr3CB0emtnRTs2a1qR8tViq4G1FQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxQVT2Lab/BDVcz6BJ5VFF55WIP2l+zcFbF6B3CEPAQ=;
- b=dUyJVSsTMvdUfwkmGBjEeeeOHw8FKUWz/8xlinrHlto15XzsR41drvK9iPicUvJLH0P6KFKP46GdQbh1YsFsN+xFSOQVBcCRZoLtvsV027amfa36Vy9LZEP4XfQUsClHnkaHJkOterGdPHf0daDWcbsYoSYQgK2trUCT0dkSLtsPvl5MHmveLG+qVzMdd5rBxKHgjgVJ12Q1yMH4++PIfVhsFeEuxTuXaSigpGsRj7rvo+LqLazQOswwWb+JhYjo+kob5qsQOfVgl/f3aJpdBhsojzrNItzj9wF+eYxA63uRQ7d9Th1iEAaKG40gQZitIy/egEaK0J3sPGZYqUBYxw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by KL1PR0601MB4641.apcprd06.prod.outlook.com (2603:1096:820:82::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.34; Tue, 4 Apr
- 2023 14:21:19 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::a3a1:af8e:be1e:437c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::a3a1:af8e:be1e:437c%6]) with mapi id 15.20.6254.028; Tue, 4 Apr 2023
- 14:21:19 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs: remove unnecessary kobject_del()
-Date: Tue,  4 Apr 2023 22:21:02 +0800
-Message-Id: <20230404142102.13226-2-frank.li@vivo.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230404142102.13226-1-frank.li@vivo.com>
-References: <20230404142102.13226-1-frank.li@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0019.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::15) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrW525b9Yz3cBX
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 00:54:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680620082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oD3C5F3LGtukmBxzahEExE7hRIVYDTE1CCzX3qZAvIY=;
+	b=jEl8gdgxbntUy+UZO+dtMGSkwNQQDW81AcIjmamB4S6uVNVBy5s4LCHIehFr5PMlUBELvN
+	TvtELr/mn7e7tpvLKebpe+yarwNrzcj2zhsLEegMT86MypqPLA58M9VnYDbKOGr0RO2CWc
+	U0XVEVqG/F2qis9J1wDA01RuoDRjkO0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680620082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oD3C5F3LGtukmBxzahEExE7hRIVYDTE1CCzX3qZAvIY=;
+	b=jEl8gdgxbntUy+UZO+dtMGSkwNQQDW81AcIjmamB4S6uVNVBy5s4LCHIehFr5PMlUBELvN
+	TvtELr/mn7e7tpvLKebpe+yarwNrzcj2zhsLEegMT86MypqPLA58M9VnYDbKOGr0RO2CWc
+	U0XVEVqG/F2qis9J1wDA01RuoDRjkO0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-249-3vIqOQBwMmuUijDX3eN3uQ-1; Tue, 04 Apr 2023 10:54:41 -0400
+X-MC-Unique: 3vIqOQBwMmuUijDX3eN3uQ-1
+Received: by mail-qk1-f197.google.com with SMTP id 72-20020a37044b000000b0074694114c09so14710988qke.4
+        for <linux-erofs@lists.ozlabs.org>; Tue, 04 Apr 2023 07:54:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680620081;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oD3C5F3LGtukmBxzahEExE7hRIVYDTE1CCzX3qZAvIY=;
+        b=Kjxqx784IZNVf/y91Ic07dCb++UoqR2xkc1E7FKFFbG+etRGIUXGsmvUoPWjNZ6Oz1
+         xqg21fc8CVzlKPjJuSiZjypFD2fYgvM1S5dT3WhjNHKNKTJhGGjnc9OSE5ctU6NaJrdQ
+         363ne0unrOCU5RXOv6RUae2m+qVbU/Gfd5nm6TIAdKnsHo6XlCJ+f0q7wWfbs3elTJn/
+         LnRF6jlnztviMMmnZ29skul+/AWt/eySf52sz5XkHIL5tp+Wu5CgHqQg2itBthMxvb9x
+         s0+pz8zJyrT0kAuJmMpDE+zXB+gveoEbTlk+tfeJczULVFtS+jQVuRe4CBoGiP0wyCSd
+         R2zg==
+X-Gm-Message-State: AAQBX9ePyQsfIgREsIA4T7eCS2lJ4WeXykQxdVC6Ve3mWsul/wZgxrFl
+	/2NlFE8UwVPVMhbLJFWAnKbtqK41DeFmXxxwvJH4JOzLht+CKDPmtBtNUHgen4Qe4h7/ortcOxw
+	AtJJ7WbWP8GRhj6V3lO05NVk=
+X-Received: by 2002:a05:622a:183:b0:3e4:9f9a:54b2 with SMTP id s3-20020a05622a018300b003e49f9a54b2mr3125025qtw.65.1680620080397;
+        Tue, 04 Apr 2023 07:54:40 -0700 (PDT)
+X-Google-Smtp-Source: AKy350aQaTUsx1W6QCtRYW4E/BPPbSUPOo7MRSxPdoArP74ywpcoKBragJvpDtJCE5UocjgeAZeoJA==
+X-Received: by 2002:a05:622a:183:b0:3e4:9f9a:54b2 with SMTP id s3-20020a05622a018300b003e49f9a54b2mr3124990qtw.65.1680620080023;
+        Tue, 04 Apr 2023 07:54:40 -0700 (PDT)
+Received: from aalbersh.remote.csb ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id j4-20020ac86644000000b003e6387431dcsm3296539qtp.7.2023.04.04.07.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 07:54:39 -0700 (PDT)
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: djwong@kernel.org,
+	dchinner@redhat.com,
+	ebiggers@kernel.org,
+	hch@infradead.org,
+	linux-xfs@vger.kernel.org,
+	fsverity@lists.linux.dev
+Subject: [PATCH v2 00/23] fs-verity support for XFS
+Date: Tue,  4 Apr 2023 16:52:56 +0200
+Message-Id: <20230404145319.2057051-1-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR0601MB4641:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c4d76f0-efda-438c-4da8-08db3517dba5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	hEigWHB7ymj9FXfc+/MkC+B1nERNC37zygfegOZvqVZcp4YNK6kfw1BCdDpcdAj3003gsoMqyXKfDKmI4Ko9MKhBF1GLDYeQfxMSD/RR1PmmplEAeIYdXQSrYSb5EdRXJVRqk13WO+MeyNCwz1Apot5TTAe4ziaWOY+Pul7U5JXSLDof6OtDhjx7azXnzdQ2H1DcW8QH3QxuHrPg7Sig9tgstNaQTV4YVhOGaSk1Ou2WY7onGNIQRcR6DUreGhRNS0aLRwlXpsLJRppvRlatI4uakggtbXp+rAQ720wADGBDXwbYimN+sitdIM9q6AcUrTx6efvi8v3ZntVTth+1FC33IJXaErSFjCQOy75Ib4lkkpMfWqy0jdcI8buSQYoxOUwa8190WjgmkOK6iPy6O4IKUFQsWQEMaCeUmwimzNueYEltnDpNrYXLUos2NYN1vMXOA3OeaXoLyMqZtYgccWms/pbRCop1VZebfbe+J4xK13Bi1nYU2ePKd+wq2R6dX5tLHYqNn6AlK1Px7lihkXCeAhVuN7FYhzha5kogZLZLSbPesRB6Dp4mK0Vdg0IhOS7jFawZuTF6bxHPLHPj218tspETFQMVZFWr8yVfvRyyW2owASA/6UFu7JCfelBF
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(346002)(136003)(39860400002)(366004)(451199021)(4326008)(6666004)(2616005)(6506007)(66476007)(66556008)(186003)(66946007)(26005)(6512007)(1076003)(8676002)(6486002)(41300700001)(2906002)(52116002)(83380400001)(4744005)(5660300002)(86362001)(316002)(8936002)(478600001)(36756003)(38100700002)(110136005)(38350700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?2h/u2U4diDAUWqIZvttvyUqyMY7ukGVMMnTtgBYaq6lbnUKERwFk6Rg4AC4F?=
- =?us-ascii?Q?XF9XVxGya7ITOIWPITnTOhbPjuQCDGbV9MVjQE9UJCtZFNcsl8aCSdPJUP3p?=
- =?us-ascii?Q?nFzFNm/vxCCLk8kHW8Tm9wzHqQM071jNumg5SdLgynlxcSlc9S9ymTaxUpts?=
- =?us-ascii?Q?ZACZjSO+h+F8/m3WbLzs7MrmTu7BjaumMvvgEBfO1uNbmztiSQJcFa6YwzWe?=
- =?us-ascii?Q?LSHXzSjZOMXjaP3g+wkjTIuyngcF5Ct9lCx/oVTnuKyvgS1jw7JQ+19kh/v9?=
- =?us-ascii?Q?ym84z2sLwL660f3DAdLnW4t7sE8obmRgLB0ENUWe1SzMnZk6GeS3d7IRvj2D?=
- =?us-ascii?Q?v7Ddzq+ZFb2C6FrnE4bGEo2vtUEgeiqtBmR9EYc+7Z3dYkTvCLDjxxqUPjXG?=
- =?us-ascii?Q?P9Xyvn3b9aum6Ie8hEor8S92Wnav9Twx2sn4KSv2ZQLQFiezoqnuvqnAVMke?=
- =?us-ascii?Q?V2S/wvQwzj+QkUbjD7zjp0MWOV4x99alumz+WLA1S9pqGt5Y/AQiakuJgNS7?=
- =?us-ascii?Q?hZc1oVE9V9YGqzzrR7oDsaN74zuJCMMXCizQA5L2wlllu2QngQCMsGlaCDI2?=
- =?us-ascii?Q?zcmzl+j8Kic+3A0UsBmEOukhpO3GjvvEONDnaUNmVFCzJw25r3Dw7uqehK1z?=
- =?us-ascii?Q?i3iTY7sTWosvsdvhl5gwOdDQ+fALGleozPa3qNLjmg1t5nTlXhJ3v6WjCWJS?=
- =?us-ascii?Q?mqx/13bUGjg+dv3m2jvtatkanlFyZWtlZKIbxnRVP79wn7jDyIlexgq5yPxr?=
- =?us-ascii?Q?mq1TFe1TylYmUKLZcVCgtxgTgqTM7cr4uR+YCB6PIydH430PGJGC7qKZAeTT?=
- =?us-ascii?Q?H81m2DgABaSqNDgdgA9efPaDfCwZyJv+oGUlbKTMXKa9c6u/0y5TOENQA3+a?=
- =?us-ascii?Q?hsdBBk1P/raT8HlT2V7i6wX4Jd6g8yy96OZx/180x4Gh78spFm+672hlQu4Q?=
- =?us-ascii?Q?Tp2IBdDlBN1B5mVkrtLKjEsccmWCcKa2MCZrZ6u+hk9eCOf2Mc1EPESOmuXz?=
- =?us-ascii?Q?ACocEnBtEt4DpdbSr/0ohoNJV2GusTvmiayE0NyFE1nMIbaf7ga7Jpfnzvyj?=
- =?us-ascii?Q?05f55RTyZDIQt+oRNkanUPpjxkKq2c3b0b+2h94xj6vZNUuJEgsiRMgs2YQT?=
- =?us-ascii?Q?zWmCV+dfaI9FR22MxNwrsOdG1nK7DeLWK0SciOfm86pxsAQUroxVcNCRsj0E?=
- =?us-ascii?Q?crs6Swvrze++Af58WC4n0fuJox7svRyuapGMa7igl8m61uax+pxznrrSBcR3?=
- =?us-ascii?Q?5oGW+2PJquEGkzIr4CF/3vyoTvGcyw1pv+keVvovdkG29OlZ6JiYsKG6v3I4?=
- =?us-ascii?Q?caRdMYS2IjNijImvKofVTIXaa+T9/cb/WEY/drCMqlU/PDzGdl7ZUlJCoo5N?=
- =?us-ascii?Q?aitDdEtbvPPG9M6BunctQqB5vTnvzkV1Ry2afXxCqrQxSgpoRpv54ffT+k/o?=
- =?us-ascii?Q?TqUYvq9nCI+SD0sTjlkkAuUVnD639kJTDOdk6yqW0li/eifmuOfg+nmrzatk?=
- =?us-ascii?Q?+KQrCYEztqWNBpkiLfAjbDHR1kMp4NjPIBaXG73bk6IszY+Iix8aRSWeopyM?=
- =?us-ascii?Q?ciEHjCsJYE0XeZEn6Wn43WGRuXhOc5q/LAObLKGj?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c4d76f0-efda-438c-4da8-08db3517dba5
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 14:21:19.1068
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d+2YK0yB8HhBCuF/nC+WbQlr1kTaI+eXBT3oRFW7VumNJ/Tft+2pc5Wbtv0W4jQuiEfize7Csce6VIni9t8yhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB4641
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -121,36 +100,149 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yangtao Li <frank.li@vivo.com>
+Cc: linux-ext4@vger.kernel.org, agruenba@redhat.com, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, Andrey Albershteyn <aalbersh@redhat.com>, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-kobject_put() actually covers kobject removal automatically, which is
-single stage removal. So it is safe to kill kobject_del() directly.
+Hi all,
 
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- fs/erofs/sysfs.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+This is V2 of fs-verity support in XFS. In this series I did
+numerous changes from V1 which are described below.
 
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 435e515c0792..c3ba981b4472 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -240,11 +240,8 @@ void erofs_unregister_sysfs(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
--	if (sbi->s_kobj.state_in_sysfs) {
--		kobject_del(&sbi->s_kobj);
--		kobject_put(&sbi->s_kobj);
--		wait_for_completion(&sbi->s_kobj_unregister);
--	}
-+	kobject_put(&sbi->s_kobj);
-+	wait_for_completion(&sbi->s_kobj_unregister);
- }
- 
- int __init erofs_init_sysfs(void)
+This patchset introduces fs-verity [5] support for XFS. This
+implementation utilizes extended attributes to store fs-verity
+metadata. The Merkle tree blocks are stored in the remote extended
+attributes.
+
+A few key points:
+- fs-verity metadata is stored in extended attributes
+- Direct path and DAX are disabled for inodes with fs-verity
+- Pages are verified in iomap's read IO path (offloaded to
+  workqueue)
+- New workqueue for verification processing
+- New ro-compat flag
+- Inodes with fs-verity have new on-disk diflag
+- xfs_attr_get() can return buffer with the attribute
+
+The patchset is tested with xfstests -g auto on xfs_1k, xfs_4k,
+xfs_1k_quota, and xfs_4k_quota. Haven't found any major failures.
+
+Patches [6/23] and [7/23] touch ext4, f2fs, btrfs, and patch [8/23]
+touches erofs, gfs2, and zonefs.
+
+The patchset consist of four parts:
+- [1..4]: Patches from Parent Pointer patchset which add binary
+          xattr names with a few deps
+- [5..7]: Improvements to core fs-verity
+- [8..9]: Add read path verification to iomap
+- [10..23]: Integration of fs-verity to xfs
+
+Changes from V1:
+- Added parent pointer patches for easier testing
+- Many issues and refactoring points fixed from the V1 review
+- Adjusted for recent changes in fs-verity core (folios, non-4k)
+- Dropped disabling of large folios
+- Completely new fsverity patches (fix, callout, log_blocksize)
+- Change approach to verification in iomap to the same one as in
+  write path. Callouts to fs instead of direct fs-verity use.
+- New XFS workqueue for post read folio verification
+- xfs_attr_get() can return underlying xfs_buf
+- xfs_bufs are marked with XBF_VERITY_CHECKED to track verified
+  blocks
+
+kernel:
+[1]: https://github.com/alberand/linux/tree/xfs-verity-v2
+
+xfsprogs:
+[2]: https://github.com/alberand/xfsprogs/tree/fsverity-v2
+
+xfstests:
+[3]: https://github.com/alberand/xfstests/tree/fsverity-v2
+
+v1:
+[4]: https://lore.kernel.org/linux-xfs/20221213172935.680971-1-aalbersh@redhat.com/
+
+fs-verity:
+[5]: https://www.kernel.org/doc/html/latest/filesystems/fsverity.html
+
+Thanks,
+Andrey
+
+Allison Henderson (4):
+  xfs: Add new name to attri/d
+  xfs: add parent pointer support to attribute code
+  xfs: define parent pointer xattr format
+  xfs: Add xfs_verify_pptr
+
+Andrey Albershteyn (19):
+  fsverity: make fsverity_verify_folio() accept folio's offset and size
+  fsverity: add drop_page() callout
+  fsverity: pass Merkle tree block size to ->read_merkle_tree_page()
+  iomap: hoist iomap_readpage_ctx from the iomap_readahead/_folio
+  iomap: allow filesystem to implement read path verification
+  xfs: add XBF_VERITY_CHECKED xfs_buf flag
+  xfs: add XFS_DA_OP_BUFFER to make xfs_attr_get() return buffer
+  xfs: introduce workqueue for post read IO work
+  xfs: add iomap's readpage operations
+  xfs: add attribute type for fs-verity
+  xfs: add fs-verity ro-compat flag
+  xfs: add inode on-disk VERITY flag
+  xfs: initialize fs-verity on file open and cleanup on inode
+    destruction
+  xfs: don't allow to enable DAX on fs-verity sealsed inode
+  xfs: disable direct read path for fs-verity sealed files
+  xfs: add fs-verity support
+  xfs: handle merkle tree block size != fs blocksize != PAGE_SIZE
+  xfs: add fs-verity ioctls
+  xfs: enable ro-compat fs-verity flag
+
+ fs/btrfs/verity.c               |  15 +-
+ fs/erofs/data.c                 |  12 +-
+ fs/ext4/verity.c                |   9 +-
+ fs/f2fs/verity.c                |   9 +-
+ fs/gfs2/aops.c                  |  10 +-
+ fs/ioctl.c                      |   4 +
+ fs/iomap/buffered-io.c          |  89 ++++++-----
+ fs/verity/read_metadata.c       |   7 +-
+ fs/verity/verify.c              |   9 +-
+ fs/xfs/Makefile                 |   1 +
+ fs/xfs/libxfs/xfs_attr.c        |  81 +++++++++-
+ fs/xfs/libxfs/xfs_attr.h        |   7 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c   |   7 +
+ fs/xfs/libxfs/xfs_attr_remote.c |  13 +-
+ fs/xfs/libxfs/xfs_da_btree.h    |   7 +-
+ fs/xfs/libxfs/xfs_da_format.h   |  46 +++++-
+ fs/xfs/libxfs/xfs_format.h      |  14 +-
+ fs/xfs/libxfs/xfs_log_format.h  |   8 +-
+ fs/xfs/libxfs/xfs_sb.c          |   2 +
+ fs/xfs/scrub/attr.c             |   4 +-
+ fs/xfs/xfs_aops.c               |  61 +++++++-
+ fs/xfs/xfs_attr_item.c          | 142 +++++++++++++++---
+ fs/xfs/xfs_attr_item.h          |   1 +
+ fs/xfs/xfs_attr_list.c          |  17 ++-
+ fs/xfs/xfs_buf.h                |  17 ++-
+ fs/xfs/xfs_file.c               |  22 ++-
+ fs/xfs/xfs_inode.c              |   2 +
+ fs/xfs/xfs_inode.h              |   3 +-
+ fs/xfs/xfs_ioctl.c              |  22 +++
+ fs/xfs/xfs_iomap.c              |  14 ++
+ fs/xfs/xfs_iops.c               |   4 +
+ fs/xfs/xfs_linux.h              |   1 +
+ fs/xfs/xfs_mount.h              |   3 +
+ fs/xfs/xfs_ondisk.h             |   4 +
+ fs/xfs/xfs_super.c              |  19 +++
+ fs/xfs/xfs_trace.h              |   1 +
+ fs/xfs/xfs_verity.c             | 256 ++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_verity.h             |  27 ++++
+ fs/xfs/xfs_xattr.c              |   9 ++
+ fs/zonefs/file.c                |  12 +-
+ include/linux/fsverity.h        |  18 ++-
+ include/linux/iomap.h           |  39 ++++-
+ include/uapi/linux/fs.h         |   1 +
+ 43 files changed, 923 insertions(+), 126 deletions(-)
+ create mode 100644 fs/xfs/xfs_verity.c
+ create mode 100644 fs/xfs/xfs_verity.h
+
 -- 
-2.35.1
+2.38.4
 
