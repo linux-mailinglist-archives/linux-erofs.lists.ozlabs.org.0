@@ -2,35 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7F576D5A36
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F417D6D5A9D
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:20:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PrKxr5rxVz3chX
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:02:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PrLKX1WzDz3cJK
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:20:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrKxR5Rk0z3cG7
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:02:35 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfL00-W_1680595350;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfL00-W_1680595350)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrLKS2FJzz3bfk
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:19:54 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfL61xU_1680596389;
+Received: from 30.97.49.14(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfL61xU_1680596389)
           by smtp.aliyun-inc.com;
-          Tue, 04 Apr 2023 16:02:31 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	hsiangkao@linux.alibaba.com
-Subject: [PATCH] tmp debug
-Date: Tue,  4 Apr 2023 16:02:24 +0800
-Message-Id: <20230404080224.77577-8-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
-References: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
+          Tue, 04 Apr 2023 16:19:50 +0800
+Message-ID: <0b077f65-42b7-08f2-46cb-3d07131deeb5@linux.alibaba.com>
+Date: Tue, 4 Apr 2023 16:19:49 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [PATCH 3/6] erofs-utils: introduce on-disk format for extra xattr
+ name prefix
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
+ <20230404080224.77577-4-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230404080224.77577-4-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,80 +48,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- lib/inode.c | 7 ++++++-
- lib/xattr.c | 3 +++
- mkfs/main.c | 4 ++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 6861b99..b252904 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -272,8 +272,11 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
- 	struct erofs_buffer_head *const bh = inode->bh;
- 	erofs_off_t off, meta_offset;
- 
--	if (!bh || (long long)inode->nid > 0)
-+	if (!bh || (long long)inode->nid > 0) {
-+		erofs_dbg(" nid %llu to file %s, bh %p",
-+		  inode->nid, inode->i_srcpath, inode->bh);
- 		return inode->nid;
-+	}
- 
- 	erofs_mapbh(bh->block);
- 	off = erofs_btell(bh, false);
-@@ -1266,6 +1269,8 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
- 	if (name == EROFS_PACKED_INODE) {
- 		sbi.packed_nid = EROFS_PACKED_NID_UNALLOCATED;
- 		inode->nid = sbi.packed_nid;
-+		erofs_dbg("erofs_mkfs_build_special_from_fd: nid %llu to file %s, bh %p",
-+		  inode->nid, inode->i_srcpath, inode->bh);
- 	}
- 
- 	ret = erofs_write_compressed_file(inode, fd);
-diff --git a/lib/xattr.c b/lib/xattr.c
-index de462ab..c336d9d 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -141,11 +141,14 @@ static bool match_prefix(const char *key, u8 *index, u16 *len)
- 	struct xattr_prefix *p;
- 	struct extra_xattr_type_node *tnode;
- 
-+	printf("[match_prefix]: enter extra_xattr_types_count++ is %u\n", extra_xattr_types_count);
- 	list_for_each_entry(tnode, &extra_xattr_types, list) {
- 		p = &tnode->type;
-+		printf("[iterating]: key %s, prefix %s\n", key, p->prefix);
- 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
- 			*len = p->prefix_len;
- 			*index = tnode->index;
-+			printf("match_prefix: key %s, matches prefix %s, index %u\n", key, p->prefix, tnode->index);
- 			return true;
- 		}
- 	}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index d06f6f5..ce220c7 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -911,13 +911,17 @@ int main(int argc, char **argv)
- 			erofs_update_progressinfo("Handling packed_file ...");
- 			packed_inode = erofs_mkfs_build_packedfile();
- 			if (IS_ERR(packed_inode)) {
-+				printf("[%s %d] erofs_mkfs_build_packedfile failed\n", __func__, __LINE__);
- 				err = PTR_ERR(packed_inode);
- 				goto exit;
- 			}
-+			printf("[%s %d] start erofs_lookupnid...\n", __func__, __LINE__);
- 			packed_nid = erofs_lookupnid(packed_inode);
-+			printf("[%s %d] packed_nid %lu\n", __func__, __LINE__, packed_nid);
- 			erofs_iput(packed_inode);
- 		}
- 	}
-+	printf("[%s %d] packed_nid %lu\n", __func__, __LINE__, packed_nid);
- 
- 	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
- 					    packed_nid);
--- 
-2.19.1.6.gb485710b
 
+On 2023/4/4 16:02, Jingbo Xu wrote:
+> Besides the predefined xattr name prefixes, introduces extra xattr name
+> prefixes, which works similarly as the predefined xattr name prefixees,
+> except that they are user specified.
+
+Besides the built-in xattr name prefixes, let's introduce user-defined
+extra xattr name prefixes, which works similarly as the pre-defined xattr
+name prefixees, except that they are user specified.
+
+> 
+> When matched with a user specified extra xattr name prefix, only the
+> trailing part of the xattr name except the xattr name prefix will be
+> stored in erofs_xattr_entry.e_name.  e_name is empty if the xattr name
+> matches exactly as the extra xattr name prefix.
+
+When a user-specified extra xattr name prefix is matched, only the
+trailing part of the xattr name which already eliminates the given
+prefix will be stored in `erofs_xattr_entry.e_name`.  `e_name` can be
+empty if the xattr full name matches exactly as the name prefix.
+
+> 
+> All extra xattr name prefixes are stored in the packed file.  For each
+> extra xattr name prefix, the on-disk format in packed file can be shown
+> as (u8 prefix_len, prefix string), where the first u8 represents the
+> length of the prefix string (excluding '\0'), followed by the content of
+> the prefix string (including '\0').
+
+Why we have to introduce a prefix_len here?
+
+> 
+> Two fields are introduced to the on-disk superblock, where
+> ea_prefix_count represents the total number of the extra xattr name
+> prefixes recorded in the packed file, and ea_prefix_off represents the
+> start offset of recorded name prefixes in the packed file.
+> 
+> When referring to an extra xattr name prefix, the highest bit (bit 7) of
+> erofs_xattr_entry.e_name_index is set, while the lower bits (bit 0-6)
+> as a whole represents the index of the referred name prefix among all
+> extra xattr name prefixes in the packed file.
+
+When an extra xattr name prefix is referred, the highest bit (bit 7) of
+`erofs_xattr_entry.e_name_index` is set, while the lower bits (bit 0-6)
+as a whole represents the index of the referred name prefix among all
+extra xattr name prefixes in the packed file.
+
+> 
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>   include/erofs_fs.h | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+> index 8835a76..3d8eb5f 100644
+> --- a/include/erofs_fs.h
+> +++ b/include/erofs_fs.h
+> @@ -77,7 +77,9 @@ struct erofs_super_block {
+>   	} __packed u1;
+>   	__le16 extra_devices;	/* # of devices besides the primary device */
+>   	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
+> -	__u8 reserved[6];
+> +	__u8 reserved;
+> +	__u8 ea_prefix_count;	/* # of extra xattr name prefix */
+> +	__le32 ea_prefix_off;	/* start offset of extra prefixes in packed inode */
+>   	__le64 packed_nid;	/* nid of the special packed inode */
+>   	__u8 reserved2[24];
+>   };
+> @@ -228,6 +230,9 @@ struct erofs_xattr_ibody_header {
+>   #define EROFS_XATTR_INDEX_LUSTRE            5
+>   #define EROFS_XATTR_INDEX_SECURITY          6
+>   
+> +#define EROFS_XATTR_EA_FLAG	(1 << 7)
+> +#define EROFS_XATTR_EA_MASK	(EROFS_XATTR_EINDEX_FLAG - 1)
+
+EROFS_EXTRA_XATTR_FLAG		0x80
+EROFS_EXTRA_XATTR_MASK		0x7F
+
+?
+
+Thanks,
+Gao Xiang
+
+> +
+>   /* xattr entry (for both inline & shared xattrs) */
+>   struct erofs_xattr_entry {
+>   	__u8   e_name_len;      /* length of name */
