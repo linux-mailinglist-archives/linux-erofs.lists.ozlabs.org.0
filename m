@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 690656D5A32
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF37C6D5A34
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:02:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PrKxl1xL7z3f3c
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:02:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PrKxp4szdz3chV
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:02:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
@@ -14,18 +14,18 @@ Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyu
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrKxP67VJz3cG7
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:02:33 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfKztQ2_1680595349;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfKztQ2_1680595349)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrKxQ3pWqz3cG7
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:02:34 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfL00--_1680595349;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfL00--_1680595349)
           by smtp.aliyun-inc.com;
-          Tue, 04 Apr 2023 16:02:29 +0800
+          Tue, 04 Apr 2023 16:02:30 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	hsiangkao@linux.alibaba.com
-Subject: [PATCH 5/6] erofs-utils: build erofs_xattr_entry upon extra xattr name prefix
-Date: Tue,  4 Apr 2023 16:02:22 +0800
-Message-Id: <20230404080224.77577-6-jefflexu@linux.alibaba.com>
+Subject: [PATCH 6/6] erofs-utils: mkfs.erofs: introduce --xattr-prefix option
+Date: Tue,  4 Apr 2023 16:02:23 +0800
+Message-Id: <20230404080224.77577-7-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
 References: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
@@ -45,121 +45,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Build the xattr entry also considering the extra xattr name prefix.  The
-user specified extra xattr name prefix takes precedence over the
-predefined xattr name prefix.
+Introduce --xattr-prefix option to make user capable of specifying
+customised extra xattr name prefix.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/internal.h |  3 +++
- lib/xattr.c              | 44 ++++++++++++++++++++++++++++++++++++++++
- mkfs/main.c              |  2 ++
- 3 files changed, 49 insertions(+)
+ include/erofs/config.h |  1 +
+ mkfs/main.c            | 16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 641a795..f441429 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -102,6 +102,9 @@ struct erofs_sb_info {
- 		u16 device_id_mask;		/* used for others */
- 	};
- 	erofs_nid_t packed_nid;
-+
-+	u32 ea_prefix_off;
-+	u8 ea_prefix_count;
- };
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index e4d4130..bf3c5d2 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -53,6 +53,7 @@ struct erofs_configure {
+ 	bool c_ignore_mtime;
+ 	bool c_showprogress;
+ 	bool c_packedfile;
++	bool c_ea_prefix;
  
- /* make sure that any user of the erofs headers has atleast 64bit off_t type */
-diff --git a/lib/xattr.c b/lib/xattr.c
-index ec40aad..f1db8bf 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -17,6 +17,7 @@
- #include "erofs/xattr.h"
- #include "erofs/cache.h"
- #include "erofs/io.h"
-+#include "erofs/fragments.h"
- #include "liberofs_private.h"
- 
- #define EA_HASHTABLE_BITS 16
-@@ -138,7 +139,16 @@ static struct xattr_item *get_xattritem(u8 prefix, char *kvbuf,
- static bool match_prefix(const char *key, u8 *index, u16 *len)
- {
- 	struct xattr_prefix *p;
-+	struct ea_type_node *tnode;
- 
-+	list_for_each_entry(tnode, &ea_types, list) {
-+		p = &tnode->type;
-+		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
-+			*len = p->prefix_len;
-+			*index = tnode->index;
-+			return true;
-+		}
-+	}
- 	for (p = xattr_types; p < xattr_types + ARRAY_SIZE(xattr_types); ++p) {
- 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
- 			*len = p->prefix_len;
-@@ -587,6 +597,34 @@ static int comp_xattr_item(const void *a, const void *b)
- 	return la > lb;
- }
- 
-+static int erofs_xattr_write_ea_prefix(void)
-+{
-+	struct ea_type_node *tnode;
-+	struct xattr_prefix *p;
-+#ifdef HAVE_FTELLO64
-+	off64_t offset = ftello64(packedfile);
-+#else
-+	off_t offset = ftello(packedfile);
-+#endif
-+
-+	if (offset < 0)
-+		return -errno;
-+	if (offset > UINT32_MAX)
-+		return -EOVERFLOW;
-+
-+	sbi.ea_prefix_count = ea_types_count;
-+	sbi.ea_prefix_off = (u32)offset;
-+
-+	list_for_each_entry(tnode, &ea_types, list) {
-+		p = &tnode->type;
-+		if (fwrite(&p->prefix_len, sizeof(u8), 1, packedfile) != 1)
-+			return -EIO;
-+		if (fwrite(p->prefix, p->prefix_len + 1, 1, packedfile) != 1)
-+			return -EIO;
-+	}
-+	return 0;
-+}
-+
- int erofs_build_shared_xattrs_from_path(const char *path)
- {
- 	int ret;
-@@ -610,6 +648,12 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 	if (ret)
- 		return ret;
- 
-+	if (ea_types_count) {
-+		ret = erofs_xattr_write_ea_prefix();
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (!shared_xattrs_size)
- 		goto out;
- 
+ #ifdef HAVE_LIBSELINUX
+ 	struct selabel_handle *sehnd;
 diff --git a/mkfs/main.c b/mkfs/main.c
-index 50fd908..56b100c 100644
+index 56b100c..09b03fc 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -574,6 +574,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
- 		.blocks = 0,
- 		.meta_blkaddr  = sbi.meta_blkaddr,
- 		.xattr_blkaddr = sbi.xattr_blkaddr,
-+		.ea_prefix_count = sbi.ea_prefix_count,
-+		.ea_prefix_off = cpu_to_le32(sbi.ea_prefix_off),
- 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
- 		.feature_compat = cpu_to_le32(sbi.feature_compat &
- 					      ~EROFS_FEATURE_COMPAT_SB_CHKSUM),
+@@ -56,6 +56,7 @@ static struct option long_options[] = {
+ 	{"preserve-mtime", no_argument, NULL, 15},
+ 	{"uid-offset", required_argument, NULL, 16},
+ 	{"gid-offset", required_argument, NULL, 17},
++	{"xattr-prefix", required_argument, NULL, 19},
+ 	{"mount-point", required_argument, NULL, 512},
+ #ifdef WITH_ANDROID
+ 	{"product-out", required_argument, NULL, 513},
+@@ -116,6 +117,7 @@ static void usage(void)
+ 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
+ 	      " --random-algorithms   randomize per-file algorithms (debugging only)\n"
+ #endif
++	      " --xattr-prefix=X      X=extra xattr name prefix\n"
+ 	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
+ #ifdef WITH_ANDROID
+ 	      "\nwith following android-specific options:\n"
+@@ -475,6 +477,16 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 19:
++			errno = 0;
++			opt = erofs_insert_ea_type(optarg);
++			if (opt) {
++				erofs_err("failed to parse extra xattr prefix: %s",
++					  erofs_strerror(opt));
++				return opt;
++			}
++			cfg.c_ea_prefix = true;
++			break;
+ 		case 1:
+ 			usage();
+ 			exit(0);
+@@ -555,7 +567,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		}
+ 		cfg.c_pclusterblks_packed = pclustersize_packed >> sbi.blkszbits;
+ 	}
+-	if (cfg.c_fragments)
++	if (cfg.c_fragments || cfg.c_ea_prefix)
+ 		cfg.c_packedfile = true;
+ 	return 0;
+ }
+@@ -935,6 +947,8 @@ exit:
+ 		erofs_fragments_exit();
+ 	if (cfg.c_packedfile)
+ 		erofs_packedfile_exit();
++	if (cfg.c_ea_prefix)
++		erofs_cleanup_ea_type();
+ 	erofs_exit_configure();
+ 
+ 	if (err) {
 -- 
 2.19.1.6.gb485710b
 
