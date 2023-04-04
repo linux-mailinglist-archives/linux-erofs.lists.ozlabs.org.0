@@ -1,31 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF37C6D5A34
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:02:56 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7F576D5A36
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 10:02:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PrKxp4szdz3chV
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:02:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PrKxr5rxVz3chX
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Apr 2023 18:02:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrKxQ3pWqz3cG7
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:02:34 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfL00--_1680595349;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfL00--_1680595349)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PrKxR5Rk0z3cG7
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Apr 2023 18:02:35 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfL00-W_1680595350;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfL00-W_1680595350)
           by smtp.aliyun-inc.com;
-          Tue, 04 Apr 2023 16:02:30 +0800
+          Tue, 04 Apr 2023 16:02:31 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org,
 	hsiangkao@linux.alibaba.com
-Subject: [PATCH 6/6] erofs-utils: mkfs.erofs: introduce --xattr-prefix option
-Date: Tue,  4 Apr 2023 16:02:23 +0800
-Message-Id: <20230404080224.77577-7-jefflexu@linux.alibaba.com>
+Subject: [PATCH] tmp debug
+Date: Tue,  4 Apr 2023 16:02:24 +0800
+Message-Id: <20230404080224.77577-8-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
 References: <20230404080224.77577-1-jefflexu@linux.alibaba.com>
@@ -45,82 +45,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce --xattr-prefix option to make user capable of specifying
-customised extra xattr name prefix.
-
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/config.h |  1 +
- mkfs/main.c            | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ lib/inode.c | 7 ++++++-
+ lib/xattr.c | 3 +++
+ mkfs/main.c | 4 ++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index e4d4130..bf3c5d2 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -53,6 +53,7 @@ struct erofs_configure {
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
- 	bool c_packedfile;
-+	bool c_ea_prefix;
+diff --git a/lib/inode.c b/lib/inode.c
+index 6861b99..b252904 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -272,8 +272,11 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
+ 	struct erofs_buffer_head *const bh = inode->bh;
+ 	erofs_off_t off, meta_offset;
  
- #ifdef HAVE_LIBSELINUX
- 	struct selabel_handle *sehnd;
+-	if (!bh || (long long)inode->nid > 0)
++	if (!bh || (long long)inode->nid > 0) {
++		erofs_dbg(" nid %llu to file %s, bh %p",
++		  inode->nid, inode->i_srcpath, inode->bh);
+ 		return inode->nid;
++	}
+ 
+ 	erofs_mapbh(bh->block);
+ 	off = erofs_btell(bh, false);
+@@ -1266,6 +1269,8 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
+ 	if (name == EROFS_PACKED_INODE) {
+ 		sbi.packed_nid = EROFS_PACKED_NID_UNALLOCATED;
+ 		inode->nid = sbi.packed_nid;
++		erofs_dbg("erofs_mkfs_build_special_from_fd: nid %llu to file %s, bh %p",
++		  inode->nid, inode->i_srcpath, inode->bh);
+ 	}
+ 
+ 	ret = erofs_write_compressed_file(inode, fd);
+diff --git a/lib/xattr.c b/lib/xattr.c
+index de462ab..c336d9d 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -141,11 +141,14 @@ static bool match_prefix(const char *key, u8 *index, u16 *len)
+ 	struct xattr_prefix *p;
+ 	struct extra_xattr_type_node *tnode;
+ 
++	printf("[match_prefix]: enter extra_xattr_types_count++ is %u\n", extra_xattr_types_count);
+ 	list_for_each_entry(tnode, &extra_xattr_types, list) {
+ 		p = &tnode->type;
++		printf("[iterating]: key %s, prefix %s\n", key, p->prefix);
+ 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
+ 			*len = p->prefix_len;
+ 			*index = tnode->index;
++			printf("match_prefix: key %s, matches prefix %s, index %u\n", key, p->prefix, tnode->index);
+ 			return true;
+ 		}
+ 	}
 diff --git a/mkfs/main.c b/mkfs/main.c
-index 56b100c..09b03fc 100644
+index d06f6f5..ce220c7 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -56,6 +56,7 @@ static struct option long_options[] = {
- 	{"preserve-mtime", no_argument, NULL, 15},
- 	{"uid-offset", required_argument, NULL, 16},
- 	{"gid-offset", required_argument, NULL, 17},
-+	{"xattr-prefix", required_argument, NULL, 19},
- 	{"mount-point", required_argument, NULL, 512},
- #ifdef WITH_ANDROID
- 	{"product-out", required_argument, NULL, 513},
-@@ -116,6 +117,7 @@ static void usage(void)
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
- 	      " --random-algorithms   randomize per-file algorithms (debugging only)\n"
- #endif
-+	      " --xattr-prefix=X      X=extra xattr name prefix\n"
- 	      " --mount-point=X       X=prefix of target fs path (default: /)\n"
- #ifdef WITH_ANDROID
- 	      "\nwith following android-specific options:\n"
-@@ -475,6 +477,16 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return -EINVAL;
+@@ -911,13 +911,17 @@ int main(int argc, char **argv)
+ 			erofs_update_progressinfo("Handling packed_file ...");
+ 			packed_inode = erofs_mkfs_build_packedfile();
+ 			if (IS_ERR(packed_inode)) {
++				printf("[%s %d] erofs_mkfs_build_packedfile failed\n", __func__, __LINE__);
+ 				err = PTR_ERR(packed_inode);
+ 				goto exit;
  			}
- 			break;
-+		case 19:
-+			errno = 0;
-+			opt = erofs_insert_ea_type(optarg);
-+			if (opt) {
-+				erofs_err("failed to parse extra xattr prefix: %s",
-+					  erofs_strerror(opt));
-+				return opt;
-+			}
-+			cfg.c_ea_prefix = true;
-+			break;
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -555,7 +567,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
++			printf("[%s %d] start erofs_lookupnid...\n", __func__, __LINE__);
+ 			packed_nid = erofs_lookupnid(packed_inode);
++			printf("[%s %d] packed_nid %lu\n", __func__, __LINE__, packed_nid);
+ 			erofs_iput(packed_inode);
  		}
- 		cfg.c_pclusterblks_packed = pclustersize_packed >> sbi.blkszbits;
  	}
--	if (cfg.c_fragments)
-+	if (cfg.c_fragments || cfg.c_ea_prefix)
- 		cfg.c_packedfile = true;
- 	return 0;
- }
-@@ -935,6 +947,8 @@ exit:
- 		erofs_fragments_exit();
- 	if (cfg.c_packedfile)
- 		erofs_packedfile_exit();
-+	if (cfg.c_ea_prefix)
-+		erofs_cleanup_ea_type();
- 	erofs_exit_configure();
++	printf("[%s %d] packed_nid %lu\n", __func__, __LINE__, packed_nid);
  
- 	if (err) {
+ 	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
+ 					    packed_nid);
 -- 
 2.19.1.6.gb485710b
 
