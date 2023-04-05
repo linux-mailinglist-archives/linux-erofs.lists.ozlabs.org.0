@@ -1,89 +1,89 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACE496D7A91
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 13:01:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59E8F6D7AAB
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 13:08:10 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps1sV3Z7yz3cLB
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 21:01:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps2141jwjz3cF6
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 21:08:08 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TltS/fZr;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TltS/fZr;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=aalbersh@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=aalbersh@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TltS/fZr;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TltS/fZr;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps1sQ1FgQz3bZj
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 21:01:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps2106vtkz3bNj
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 21:08:04 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680692486;
+	s=mimecast20190719; t=1680692881;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
-	b=V0YFHs3q1dLyZp4PMwJNCCZ33lAFL3XbzLK2np25QTW7So8YIDuXIa+RO/8Dnu2ClfuhnK
-	ZPRWi7QRhYts68A5SRVeptxYKJ77Lv9cKPElSU901ixPibk7i2+Ak241hDyVxHeAUytT9c
-	dncUlvYXYDjomzIs6g84eq76rx7baj8=
+	bh=LzJaUmfW7LSdhmFGvI4GPq0lFJqiEtn70THgtiWFu7E=;
+	b=TltS/fZrwC7Z6rKtgtFK8n7XxwwqhOYjVwM60Q+SVsM4k+BsIktMSPihUkZB3cesJPEQls
+	QSUew5FqB8phEFcNvSlH/PxGe2MGLbRIqH/W6Zxb8r7+tvos7t5FIqVPLsp5YC5+T/fE/L
+	ZIjlHT5uGSmmR/SHwEBE174k3QyFAZg=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680692486;
+	s=mimecast20190719; t=1680692881;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
-	b=V0YFHs3q1dLyZp4PMwJNCCZ33lAFL3XbzLK2np25QTW7So8YIDuXIa+RO/8Dnu2ClfuhnK
-	ZPRWi7QRhYts68A5SRVeptxYKJ77Lv9cKPElSU901ixPibk7i2+Ak241hDyVxHeAUytT9c
-	dncUlvYXYDjomzIs6g84eq76rx7baj8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=LzJaUmfW7LSdhmFGvI4GPq0lFJqiEtn70THgtiWFu7E=;
+	b=TltS/fZrwC7Z6rKtgtFK8n7XxwwqhOYjVwM60Q+SVsM4k+BsIktMSPihUkZB3cesJPEQls
+	QSUew5FqB8phEFcNvSlH/PxGe2MGLbRIqH/W6Zxb8r7+tvos7t5FIqVPLsp5YC5+T/fE/L
+	ZIjlHT5uGSmmR/SHwEBE174k3QyFAZg=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-486-I7b6f8XwPYqUi0dcBArpWg-1; Wed, 05 Apr 2023 07:01:23 -0400
-X-MC-Unique: I7b6f8XwPYqUi0dcBArpWg-1
-Received: by mail-qk1-f200.google.com with SMTP id q143-20020a374395000000b0074690a17414so16136353qka.7
-        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
+ us-mta-349-L_C_rAkCMCa2zCJS6AZCcQ-1; Wed, 05 Apr 2023 07:07:58 -0400
+X-MC-Unique: L_C_rAkCMCa2zCJS6AZCcQ-1
+Received: by mail-qv1-f69.google.com with SMTP id g6-20020ad45426000000b005a33510e95aso16092614qvt.16
+        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 04:07:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680692482;
+        d=1e100.net; s=20210112; t=1680692877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
-        b=W8g8bT8ouimKUfS2cs+dQ/fAaYL79mxuXmVDKj3CkWdIYTKKaAmMDpJzldkINKHKQ2
-         paoWH3PF2SHoejruhmn26Kf0Ih2ViC5RAigIT2xXTGFeFWla7L97/KWRiHZKErrO4kHE
-         vJx4q9veEUNb87F38YzqNCi318N5QHt2P4/zai+AWcKUjSkTu+wWY3Ip4HXCu74oaaqB
-         oywuIDJ2Nm5ozs1SUMI/zuRbUSszZYpQT0B7i6WKpto8ZAhPuYIdATXQNfwoMt7aiutY
-         jrAAM9mjp6kdWPPQBe2tcKlxmLB7mCrJcGEDRN/3fdZq5s2OOnAht9Ok1u6qXPTt4+Jp
-         BRtA==
-X-Gm-Message-State: AAQBX9c8/BB8+vTLn+7cWzGHe7cGp13tR+R1+d60Xsku3FN23gqoCiuy
-	OU5dKpypcomjP4Rzf/JoefwgPCKfKks+Q//AyaGP9m/TmSLWJztTziNuPEi3E0fmKycyl6CwuSg
-	gzum9pEoKu/XG1Y3Brt1uV8c=
-X-Received: by 2002:a05:6214:4001:b0:5ca:f6dd:f3b6 with SMTP id kd1-20020a056214400100b005caf6ddf3b6mr8310661qvb.16.1680692482365;
-        Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZN5rxyt4g78lpjs6te5NjsBmYN83L29u8HXb3VRNmLRZGiyzEv7hgqJmGPE20fJY6cuY/SPQ==
-X-Received: by 2002:a05:6214:4001:b0:5ca:f6dd:f3b6 with SMTP id kd1-20020a056214400100b005caf6ddf3b6mr8310617qvb.16.1680692482068;
-        Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
+        bh=LzJaUmfW7LSdhmFGvI4GPq0lFJqiEtn70THgtiWFu7E=;
+        b=69upRpvraJcwhxx+z32ECX1cCX7d2avS8Lmze6tdK4sQAu0R4JXc6sX5mUTQ5Jkn9P
+         oUsmEJLo/9MblzqZgBA2i0XCsYsqWAOK7E4/pd37RuYDD05BI90TE7+6YNMKFUf5L1BJ
+         0YQ0RS3tMC/SV9Ki/0TBSEzvbC3DFM1bTwosIxUWczM1TB5W0g/4nKxhQpUOs7/lDG8l
+         Cr/bUoBPhEYFrsbdXGFk6T1XnxaQmsoAzEKmeD71/HBcuq5V+71bbD7p5KMFvd8iVT3r
+         xaI7YHogjyXNodbhp/JtPbRhl6TFc7wpaevSZ2yb5uKfVAwYtBNXuMI45oLuobHCDiYC
+         hV7g==
+X-Gm-Message-State: AAQBX9dw08m0V5qjojch00nLgS5uyaZaOabUqhqwKIoM1Fw9Z89yr+RS
+	oCSeNyK9TyBQi/w4+qRXIUhSpTta5mQyIxQihKbh8mEgbITHVUT5TufbqR5lGxFfyejnYpGC5NH
+	P5UsN+REUUDIYurJ7+xfwWWkHp46c1IeNNw==
+X-Received: by 2002:a05:622a:1a9a:b0:3d2:a927:21b8 with SMTP id s26-20020a05622a1a9a00b003d2a92721b8mr4385119qtc.11.1680692877532;
+        Wed, 05 Apr 2023 04:07:57 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZeP9y1P8OSuMOyueFPI4oWaLkw1tcoh1zocY7G03xptTKH+In+mgb9Q5Zm39xqD2zbBaEQ0g==
+X-Received: by 2002:a05:622a:1a9a:b0:3d2:a927:21b8 with SMTP id s26-20020a05622a1a9a00b003d2a92721b8mr4385083qtc.11.1680692877295;
+        Wed, 05 Apr 2023 04:07:57 -0700 (PDT)
 Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id om30-20020a0562143d9e00b005dd8b934576sm4136208qvb.14.2023.04.05.04.01.18
+        by smtp.gmail.com with ESMTPSA id k19-20020ac84753000000b003dffd3d3df5sm3934121qtp.2.2023.04.05.04.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 04:01:21 -0700 (PDT)
-Date: Wed, 5 Apr 2023 13:01:16 +0200
+        Wed, 05 Apr 2023 04:07:57 -0700 (PDT)
+Date: Wed, 5 Apr 2023 13:07:52 +0200
 From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2 09/23] iomap: allow filesystem to implement read path
- verification
-Message-ID: <20230405110116.ia5wv3qxbnpdciui@aalbersh.remote.csb>
+To: Dave Chinner <david@fromorbit.com>, ebiggers@kernel.org
+Subject: Re: [PATCH v2 16/23] xfs: add inode on-disk VERITY flag
+Message-ID: <20230405110752.ih5qvu2cr6folkds@aalbersh.remote.csb>
 References: <20230404145319.2057051-1-aalbersh@redhat.com>
- <20230404145319.2057051-10-aalbersh@redhat.com>
- <ZCxEHkWayQyGqnxL@infradead.org>
+ <20230404145319.2057051-17-aalbersh@redhat.com>
+ <20230404224123.GD1893@sol.localdomain>
+ <20230404235633.GN3223426@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <ZCxEHkWayQyGqnxL@infradead.org>
+In-Reply-To: <20230404235633.GN3223426@dread.disaster.area>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
@@ -99,76 +99,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, djwong@kernel.org, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, hch@infradead.org, djwong@kernel.org, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christoph,
+Hi Eric and Dave,
 
-On Tue, Apr 04, 2023 at 08:37:02AM -0700, Christoph Hellwig wrote:
-> >  	if (iomap_block_needs_zeroing(iter, pos)) {
-> >  		folio_zero_range(folio, poff, plen);
-> > +		if (iomap->flags & IOMAP_F_READ_VERITY) {
+On Wed, Apr 05, 2023 at 09:56:33AM +1000, Dave Chinner wrote:
+> On Tue, Apr 04, 2023 at 03:41:23PM -0700, Eric Biggers wrote:
+> > Hi Andrey,
+> > 
+> > On Tue, Apr 04, 2023 at 04:53:12PM +0200, Andrey Albershteyn wrote:
+> > > Add flag to mark inodes which have fs-verity enabled on them (i.e.
+> > > descriptor exist and tree is built).
+> > > 
+> > > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+> > > ---
+> > >  fs/ioctl.c                 | 4 ++++
+> > >  fs/xfs/libxfs/xfs_format.h | 4 +++-
+> > >  fs/xfs/xfs_inode.c         | 2 ++
+> > >  fs/xfs/xfs_iops.c          | 2 ++
+> > >  include/uapi/linux/fs.h    | 1 +
+> > >  5 files changed, 12 insertions(+), 1 deletion(-)
+> > [...]
+> > > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > > index b7b56871029c..5172a2eb902c 100644
+> > > --- a/include/uapi/linux/fs.h
+> > > +++ b/include/uapi/linux/fs.h
+> > > @@ -140,6 +140,7 @@ struct fsxattr {
+> > >  #define FS_XFLAG_FILESTREAM	0x00004000	/* use filestream allocator */
+> > >  #define FS_XFLAG_DAX		0x00008000	/* use DAX for IO */
+> > >  #define FS_XFLAG_COWEXTSIZE	0x00010000	/* CoW extent size allocator hint */
+> > > +#define FS_XFLAG_VERITY		0x00020000	/* fs-verity sealed inode */
+> > >  #define FS_XFLAG_HASATTR	0x80000000	/* no DIFLAG for this	*/
+> > >  
+> > 
+> > I don't think "xfs: add inode on-disk VERITY flag" is an accurate description of
+> > a patch that involves adding something to the UAPI.
 > 
-> Wju do we need the new flag vs just testing that folio_ops and
-> folio_ops->verify_folio is non-NULL?
+> Well it does that, but it also adds the UAPI for querying the
+> on-disk flag via the FS_IOC_FSGETXATTR interface as well.  It
+> probably should be split up into two patches.
 
-Yes, it can be just test, haven't noticed that it's used only here,
-initially I used it in several places.
+Sure.
 
 > 
-> > -		ctx->bio = bio_alloc(iomap->bdev, bio_max_segs(nr_vecs),
-> > -				     REQ_OP_READ, gfp);
-> > +		ctx->bio = bio_alloc_bioset(iomap->bdev, bio_max_segs(nr_vecs),
-> > +				REQ_OP_READ, GFP_NOFS, &iomap_read_ioend_bioset);
+> > Should the other filesystems support this new flag too?
 > 
-> All other callers don't really need the larger bioset, so I'd avoid
-> the unconditional allocation here, but more on that later.
-
-Ok, make sense.
-
+> I think they should get it automatically now that it has been
+> defined for FS_IOC_FSGETXATTR and added to the generic fileattr flag
+> fill functions in fs/ioctl.c.
 > 
-> > +		ioend = container_of(ctx->bio, struct iomap_read_ioend,
-> > +				read_inline_bio);
-> > +		ioend->io_inode = iter->inode;
-> > +		if (ctx->ops && ctx->ops->prepare_ioend)
-> > +			ctx->ops->prepare_ioend(ioend);
-> > +
+> > I'd also like all ways of getting the verity flag to continue to be mentioned in
+> > Documentation/filesystems/fsverity.rst.  The existing methods (FS_IOC_GETFLAGS
+> > and statx) are already mentioned there.
 > 
-> So what we're doing in writeback and direct I/O, is to:
-> 
->  a) have a submit_bio hook
->  b) allow the file system to then hook the bi_end_io caller
->  c) (only in direct O/O for now) allow the file system to provide
->     a bio_set to allocate from
-
-I see.
-
-> 
-> I wonder if that also makes sense and keep all the deferral in the
-> file system.  We'll need that for the btrfs iomap conversion anyway,
-> and it seems more flexible.  The ioend processing would then move into
-> XFS.
-> 
-
-Not sure what you mean here.
-
-> > @@ -156,6 +160,11 @@ struct iomap_folio_ops {
-> >  	 * locked by the iomap code.
-> >  	 */
-> >  	bool (*iomap_valid)(struct inode *inode, const struct iomap *iomap);
-> > +
-> > +	/*
-> > +	 * Verify folio when successfully read
-> > +	 */
-> > +	bool (*verify_folio)(struct folio *folio, loff_t pos, unsigned int len);
-> 
-> Why isn't this in iomap_readpage_ops?
+> *nod*
 > 
 
-Yes, it can be. But it appears to me to be more relevant to
-_folio_ops, any particular reason to move it there? Don't mind
-moving it to iomap_readpage_ops.
+Ok, sure, missed that. Will split this patch and add description.
 
 -- 
 - Andrey
