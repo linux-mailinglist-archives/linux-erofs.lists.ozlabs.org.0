@@ -1,93 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD6D6D8048
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 17:02:30 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E0766D81A2
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 17:21:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps7CS2Xntz3chd
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 01:02:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps7dw1HBxz3fbD
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 01:21:56 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=D/HFrc8H;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UmgF0PRj;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Z0Y5O+66;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=aalbersh@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=djwong@kernel.org; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=D/HFrc8H;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UmgF0PRj;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Z0Y5O+66;
 	dkim-atps=neutral
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps7CG5M69z3c8n
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 01:02:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680706933;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ijdR/MHnRs9yin6C5jhmGmV2EeFx7fyGP+HaH521iTo=;
-	b=D/HFrc8HIOTF3k6PI91qokB7jxAAjqWCKg1bxAIkQ1YYzJWik1c6iUqEnnVyzx3AIjYZ2i
-	GsQd0rRW4ugKza7XnUgVCikznWXYzVaOK+2SqiPl6rg1Vy/8ZojAdyJ5QrspWo2vU44UY8
-	ivPU1p7WLMvLVIl8lUZYX25i/s7sh7E=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680706934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ijdR/MHnRs9yin6C5jhmGmV2EeFx7fyGP+HaH521iTo=;
-	b=UmgF0PRjdPJgUxae9SNHpHRAVPd3MclNaZ8vC3r8xYjqtoptE0NqFaf9s2cYkvcJJIeYIG
-	fffsTwtSMdGLuU0Y3Fgn1jQpge4/zHAUKaxV9BnUyJPFFF3UGYK9uhtmT9ysv9L3kMftRR
-	v/Y4muFv1K2YknqglmWMm5RWfRIn5UM=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-U-uXJ7uPMBuDXD1dpB7yGg-1; Wed, 05 Apr 2023 11:01:53 -0400
-X-MC-Unique: U-uXJ7uPMBuDXD1dpB7yGg-1
-Received: by mail-qv1-f69.google.com with SMTP id r4-20020ad44044000000b005ad0ce58902so16263410qvp.5
-        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 08:01:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680706911;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ijdR/MHnRs9yin6C5jhmGmV2EeFx7fyGP+HaH521iTo=;
-        b=Pck8nmr76Je0TZNpFpJzJY8WGcNIBHX0C2O5azk/cnILqWqBmFdN/FLNTjEp817EFB
-         cWHl18b6UZ18ZoN9zeVMCjxbbSdSnC2F5w4PKFMa4QvPSYoh765ukgmp6uSLcqVuE6HA
-         96+6rlibnuBSMSf4u9NJ8u2g3R+Le0lrzYgJRXEv12Cy6mRe900cBgOAu1IUHulyDVRL
-         kXLdcdvyKPId+fTbgFvCfZR90RVck+5hGQlmsw7lXAvycfub66Iwv0NTx92+JuuKrE6R
-         rbd9Pet2+cjwsyyfVsJr4pyCVZ8g17nOyi1V8YsaEAeDjhXBy/D38pQMKPH+MOqFWXRo
-         mQoA==
-X-Gm-Message-State: AAQBX9c8effjsUAdmKujYizoTsOpsPRDPVV6aZnNH/zjvZ6phiAIF/Q8
-	P04O+No1AFC2T4OfOA3wBXC7XXkUQ6jDflqgf+oKJdoObiLiPi955AJ+u3prykrawfPhRA2vNrx
-	gUjzygpxHd7jub40yqsKuL+0=
-X-Received: by 2002:a05:6214:2504:b0:5a3:cbc6:8145 with SMTP id gf4-20020a056214250400b005a3cbc68145mr11557272qvb.19.1680706910930;
-        Wed, 05 Apr 2023 08:01:50 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YVeAhEKCJSk+gIHwjGx6PP08vlMKC4voUohfc6ezEBe0HN6HJNbkVZpy9LxJ1aS1g8D9uc0g==
-X-Received: by 2002:a05:6214:2504:b0:5a3:cbc6:8145 with SMTP id gf4-20020a056214250400b005a3cbc68145mr11557235qvb.19.1680706910656;
-        Wed, 05 Apr 2023 08:01:50 -0700 (PDT)
-Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id o8-20020a0cc388000000b005dd8b93457dsm4236165qvi.21.2023.04.05.08.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 08:01:49 -0700 (PDT)
-Date: Wed, 5 Apr 2023 17:01:42 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH v2 19/23] xfs: disable direct read path for fs-verity
- sealed files
-Message-ID: <20230405150142.3jmxzo5i27bbc4c4@aalbersh.remote.csb>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps7J80Cs6z3f5l
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 01:06:32 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 2EFCB63E94;
+	Wed,  5 Apr 2023 15:06:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E90FCC4339E;
+	Wed,  5 Apr 2023 15:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680707188;
+	bh=mlni390c+gmIDMlX2RnZzsHsCPBkb+xutjeyTZL88LA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z0Y5O+66tWXrhcV6ndCx07PGooMOJap5OIdpqEdvYFYnMHN0z5WiLYrWuKcSeaXHl
+	 UcZpAG3fUrlrKjP5/sAagW6AWG69d+rXgg1WBgDW+rC9NaJekXCvMerJzsJkjRnsXH
+	 m4Q6uAO39XKLOFgPn03RBth+eXeK/rY/VE0Yu1qLMe93Au/pMBUkCWq3xQz6voM133
+	 knKAwxEb9wOgh0gF0jn6wi8T39XIQ/aCS62UgeWnfbPOpTkjgiMeytHY928u5OUjWN
+	 J9dEljNMTn2fktd2Sp1o8GdjUkAWHM/TRVCjrukbVy3Hv8BEKS4poWg1XrW7ftU4DI
+	 o6Z6xJuTGto9g==
+Date: Wed, 5 Apr 2023 08:06:27 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Subject: Re: [PATCH v2 09/23] iomap: allow filesystem to implement read path
+ verification
+Message-ID: <20230405150627.GC303486@frogsfrogsfrogs>
 References: <20230404145319.2057051-1-aalbersh@redhat.com>
- <20230404145319.2057051-20-aalbersh@redhat.com>
- <20230404161047.GA109974@frogsfrogsfrogs>
+ <20230404145319.2057051-10-aalbersh@redhat.com>
+ <ZCxEHkWayQyGqnxL@infradead.org>
+ <20230405110116.ia5wv3qxbnpdciui@aalbersh.remote.csb>
 MIME-Version: 1.0
-In-Reply-To: <20230404161047.GA109974@frogsfrogsfrogs>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230405110116.ia5wv3qxbnpdciui@aalbersh.remote.csb>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -99,70 +63,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: fsverity@lists.linux.dev, hch@infradead.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: fsverity@lists.linux.dev, linux-ext4@vger.kernel.org, agruenba@redhat.com, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, Christoph Hellwig <hch@infradead.org>, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Apr 04, 2023 at 09:10:47AM -0700, Darrick J. Wong wrote:
-> On Tue, Apr 04, 2023 at 04:53:15PM +0200, Andrey Albershteyn wrote:
-> > The direct path is not supported on verity files. Attempts to use direct
-> > I/O path on such files should fall back to buffered I/O path.
+On Wed, Apr 05, 2023 at 01:01:16PM +0200, Andrey Albershteyn wrote:
+> Hi Christoph,
+> 
+> On Tue, Apr 04, 2023 at 08:37:02AM -0700, Christoph Hellwig wrote:
+> > >  	if (iomap_block_needs_zeroing(iter, pos)) {
+> > >  		folio_zero_range(folio, poff, plen);
+> > > +		if (iomap->flags & IOMAP_F_READ_VERITY) {
 > > 
-> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > ---
-> >  fs/xfs/xfs_file.c | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > Wju do we need the new flag vs just testing that folio_ops and
+> > folio_ops->verify_folio is non-NULL?
+> 
+> Yes, it can be just test, haven't noticed that it's used only here,
+> initially I used it in several places.
+> 
 > > 
-> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> > index 947b5c436172..9e072e82f6c1 100644
-> > --- a/fs/xfs/xfs_file.c
-> > +++ b/fs/xfs/xfs_file.c
-> > @@ -244,7 +244,8 @@ xfs_file_dax_read(
-> >  	struct kiocb		*iocb,
-> >  	struct iov_iter		*to)
-> >  {
-> > -	struct xfs_inode	*ip = XFS_I(iocb->ki_filp->f_mapping->host);
-> > +	struct inode		*inode = iocb->ki_filp->f_mapping->host;
-> > +	struct xfs_inode	*ip = XFS_I(inode);
-> >  	ssize_t			ret = 0;
-> >  
-> >  	trace_xfs_file_dax_read(iocb, to);
-> > @@ -297,10 +298,17 @@ xfs_file_read_iter(
-> >  
-> >  	if (IS_DAX(inode))
-> >  		ret = xfs_file_dax_read(iocb, to);
-> > -	else if (iocb->ki_flags & IOCB_DIRECT)
-> > +	else if (iocb->ki_flags & IOCB_DIRECT && !fsverity_active(inode))
-> >  		ret = xfs_file_dio_read(iocb, to);
-> > -	else
-> > +	else {
-> > +		/*
-> > +		 * In case fs-verity is enabled, we also fallback to the
-> > +		 * buffered read from the direct read path. Therefore,
-> > +		 * IOCB_DIRECT is set and need to be cleared
-> > +		 */
-> > +		iocb->ki_flags &= ~IOCB_DIRECT;
-> >  		ret = xfs_file_buffered_read(iocb, to);
+> > > -		ctx->bio = bio_alloc(iomap->bdev, bio_max_segs(nr_vecs),
+> > > -				     REQ_OP_READ, gfp);
+> > > +		ctx->bio = bio_alloc_bioset(iomap->bdev, bio_max_segs(nr_vecs),
+> > > +				REQ_OP_READ, GFP_NOFS, &iomap_read_ioend_bioset);
+> > 
+> > All other callers don't really need the larger bioset, so I'd avoid
+> > the unconditional allocation here, but more on that later.
 > 
-> XFS doesn't usually allow directio fallback to the pagecache. Why
-> would fsverity be any different?
-
-Didn't know that, this is what happens on ext4 so I did the same.
-Then it probably make sense to just error on DIRECT on verity
-sealed file.
-
+> Ok, make sense.
 > 
-> --D
+> > 
+> > > +		ioend = container_of(ctx->bio, struct iomap_read_ioend,
+> > > +				read_inline_bio);
+> > > +		ioend->io_inode = iter->inode;
+> > > +		if (ctx->ops && ctx->ops->prepare_ioend)
+> > > +			ctx->ops->prepare_ioend(ioend);
+> > > +
+> > 
+> > So what we're doing in writeback and direct I/O, is to:
+> > 
+> >  a) have a submit_bio hook
+> >  b) allow the file system to then hook the bi_end_io caller
+> >  c) (only in direct O/O for now) allow the file system to provide
+> >     a bio_set to allocate from
 > 
-> > +	}
-> >  
-> >  	if (ret > 0)
-> >  		XFS_STATS_ADD(mp, xs_read_bytes, ret);
-> > -- 
-> > 2.38.4
+> I see.
+> 
+> > 
+> > I wonder if that also makes sense and keep all the deferral in the
+> > file system.  We'll need that for the btrfs iomap conversion anyway,
+> > and it seems more flexible.  The ioend processing would then move into
+> > XFS.
 > > 
 > 
+> Not sure what you mean here.
 
--- 
-- Andrey
+I /think/ Christoph is talking about allowing callers of iomap pagecache
+operations to supply a custom submit_bio function and a bio_set so that
+filesystems can add in their own post-IO processing and appropriately
+sized (read: minimum you can get away with) bios.  I imagine btrfs has
+quite a lot of (read) ioend processing they need to do, as will xfs now
+that you're adding fsverity.
 
+> > > @@ -156,6 +160,11 @@ struct iomap_folio_ops {
+> > >  	 * locked by the iomap code.
+> > >  	 */
+> > >  	bool (*iomap_valid)(struct inode *inode, const struct iomap *iomap);
+> > > +
+> > > +	/*
+> > > +	 * Verify folio when successfully read
+> > > +	 */
+> > > +	bool (*verify_folio)(struct folio *folio, loff_t pos, unsigned int len);
+
+Any reason why we shouldn't return the usual negative errno?
+
+> > Why isn't this in iomap_readpage_ops?
+> > 
+> 
+> Yes, it can be. But it appears to me to be more relevant to
+> _folio_ops, any particular reason to move it there? Don't mind
+> moving it to iomap_readpage_ops.
+
+I think the point is that this is a general "check what we just read"
+hook, so it could be in readpage_ops since we're never going to need to
+re-validate verity contents, right?  Hence it could be in readpage_ops
+instead of the general iomap_folio_ops.
+
+<shrug> Is there a use case for ->verify_folio that isn't a read post-
+processing step?
+
+--D
+
+> -- 
+> - Andrey
+> 
