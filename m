@@ -1,88 +1,89 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 780C96D79EC
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 12:39:22 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACE496D7A91
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 13:01:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps1Mr2bPJz3cDG
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 20:39:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ps1sV3Z7yz3cLB
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Apr 2023 21:01:34 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IZ+80HHy;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IZ+80HHy;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=aalbersh@redhat.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IZ+80HHy;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IZ+80HHy;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V0YFHs3q;
 	dkim-atps=neutral
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps1Mm2STlz3bZj
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 20:39:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ps1sQ1FgQz3bZj
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Apr 2023 21:01:29 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680691153;
+	s=mimecast20190719; t=1680692486;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sBkFB8fAWBN3smTHXDCk9Sdy8T63XJRLVaCuva4Dlh8=;
-	b=IZ+80HHyflA0PA7JbWhpmorV4w26vqCt95GTbtlvNBsGt1R1wNgXV+S9kHlYM/EbLUW1p9
-	gaCq4dIKPNr/PRlXUCsiQnZZM+ko1a6jwgAMCVBqJ6n9jT+5egVYiKZsJ53tz1GpGircO9
-	Lp7SmEsPz5jWvo51V5SivpQin+t8f0A=
+	bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
+	b=V0YFHs3q1dLyZp4PMwJNCCZ33lAFL3XbzLK2np25QTW7So8YIDuXIa+RO/8Dnu2ClfuhnK
+	ZPRWi7QRhYts68A5SRVeptxYKJ77Lv9cKPElSU901ixPibk7i2+Ak241hDyVxHeAUytT9c
+	dncUlvYXYDjomzIs6g84eq76rx7baj8=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680691153;
+	s=mimecast20190719; t=1680692486;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sBkFB8fAWBN3smTHXDCk9Sdy8T63XJRLVaCuva4Dlh8=;
-	b=IZ+80HHyflA0PA7JbWhpmorV4w26vqCt95GTbtlvNBsGt1R1wNgXV+S9kHlYM/EbLUW1p9
-	gaCq4dIKPNr/PRlXUCsiQnZZM+ko1a6jwgAMCVBqJ6n9jT+5egVYiKZsJ53tz1GpGircO9
-	Lp7SmEsPz5jWvo51V5SivpQin+t8f0A=
+	bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
+	b=V0YFHs3q1dLyZp4PMwJNCCZ33lAFL3XbzLK2np25QTW7So8YIDuXIa+RO/8Dnu2ClfuhnK
+	ZPRWi7QRhYts68A5SRVeptxYKJ77Lv9cKPElSU901ixPibk7i2+Ak241hDyVxHeAUytT9c
+	dncUlvYXYDjomzIs6g84eq76rx7baj8=
 Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
  [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-524-JFXyxVNwONqDzUoq25vSAw-1; Wed, 05 Apr 2023 06:39:11 -0400
-X-MC-Unique: JFXyxVNwONqDzUoq25vSAw-1
-Received: by mail-qk1-f200.google.com with SMTP id 195-20020a3705cc000000b00746a3ab9426so15973997qkf.20
-        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 03:39:11 -0700 (PDT)
+ us-mta-486-I7b6f8XwPYqUi0dcBArpWg-1; Wed, 05 Apr 2023 07:01:23 -0400
+X-MC-Unique: I7b6f8XwPYqUi0dcBArpWg-1
+Received: by mail-qk1-f200.google.com with SMTP id q143-20020a374395000000b0074690a17414so16136353qka.7
+        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680691151;
+        d=1e100.net; s=20210112; t=1680692482;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sBkFB8fAWBN3smTHXDCk9Sdy8T63XJRLVaCuva4Dlh8=;
-        b=sjfPb8z6+rJVCU08eWjdhrWfBqqs2R7eF1B4Ka9bb2fznHkcjd6/JMY29LSRSCGw8e
-         OUWYQ1JOzWLZa7Yr2k4MnSwNAtEmgmi59sVvI47plKW6+20tddyjGYVdvM86O1avOUJR
-         whjnI+srA5f56v+RQ7zuVa3TeOvLPWROmg8bSC4aBAVDYUx2Yu3rwDJY9fC1j6vcJFtq
-         YO/BVsNKYq38sNm0twMRsIENzl3MpBlefgcYbRecpYrdT6MfrHXHcrttR4MxgRYPuqqf
-         /MQ0GCR3of4LfcB9eyRqroSErEfnk8KU8bL38Y9sj7FPDF6xSbLZohgg/aqfTOnicQn8
-         LIYw==
-X-Gm-Message-State: AAQBX9fpE96WVvGFk4pOoN6ovJSC1A0Iz9ZcuOsLxmfuI4k7Z+6ETaKf
-	phrq+wurNMgcUgqJyCe08CdWWMtBVDejaV4rJw9tuunyK7dsmVFUbzUH6/0069bjblSfFsXDMy4
-	VSZk+L5iXtVbrRqCiXxeqYJU=
-X-Received: by 2002:ac8:7e96:0:b0:3b6:323d:bcac with SMTP id w22-20020ac87e96000000b003b6323dbcacmr4150868qtj.32.1680691151322;
-        Wed, 05 Apr 2023 03:39:11 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aYAf0v49WL6o/QofipBP4L4y6flhFYcYqZzNpajsevFC+xcPnxT0A0hb6dINwVq/YpVvvMSw==
-X-Received: by 2002:ac8:7e96:0:b0:3b6:323d:bcac with SMTP id w22-20020ac87e96000000b003b6323dbcacmr4150840qtj.32.1680691150879;
-        Wed, 05 Apr 2023 03:39:10 -0700 (PDT)
+        bh=BoHgQZFE6GmfSeys+DR2W7oxw4hgWtoFTpySQ2VkKFk=;
+        b=W8g8bT8ouimKUfS2cs+dQ/fAaYL79mxuXmVDKj3CkWdIYTKKaAmMDpJzldkINKHKQ2
+         paoWH3PF2SHoejruhmn26Kf0Ih2ViC5RAigIT2xXTGFeFWla7L97/KWRiHZKErrO4kHE
+         vJx4q9veEUNb87F38YzqNCi318N5QHt2P4/zai+AWcKUjSkTu+wWY3Ip4HXCu74oaaqB
+         oywuIDJ2Nm5ozs1SUMI/zuRbUSszZYpQT0B7i6WKpto8ZAhPuYIdATXQNfwoMt7aiutY
+         jrAAM9mjp6kdWPPQBe2tcKlxmLB7mCrJcGEDRN/3fdZq5s2OOnAht9Ok1u6qXPTt4+Jp
+         BRtA==
+X-Gm-Message-State: AAQBX9c8/BB8+vTLn+7cWzGHe7cGp13tR+R1+d60Xsku3FN23gqoCiuy
+	OU5dKpypcomjP4Rzf/JoefwgPCKfKks+Q//AyaGP9m/TmSLWJztTziNuPEi3E0fmKycyl6CwuSg
+	gzum9pEoKu/XG1Y3Brt1uV8c=
+X-Received: by 2002:a05:6214:4001:b0:5ca:f6dd:f3b6 with SMTP id kd1-20020a056214400100b005caf6ddf3b6mr8310661qvb.16.1680692482365;
+        Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZN5rxyt4g78lpjs6te5NjsBmYN83L29u8HXb3VRNmLRZGiyzEv7hgqJmGPE20fJY6cuY/SPQ==
+X-Received: by 2002:a05:6214:4001:b0:5ca:f6dd:f3b6 with SMTP id kd1-20020a056214400100b005caf6ddf3b6mr8310617qvb.16.1680692482068;
+        Wed, 05 Apr 2023 04:01:22 -0700 (PDT)
 Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id r206-20020a3744d7000000b0074a0051fcd4sm4331706qka.88.2023.04.05.03.39.06
+        by smtp.gmail.com with ESMTPSA id om30-20020a0562143d9e00b005dd8b934576sm4136208qvb.14.2023.04.05.04.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 03:39:10 -0700 (PDT)
-Date: Wed, 5 Apr 2023 12:39:04 +0200
+        Wed, 05 Apr 2023 04:01:21 -0700 (PDT)
+Date: Wed, 5 Apr 2023 13:01:16 +0200
 From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v2 06/23] fsverity: add drop_page() callout
-Message-ID: <20230405103904.2ugfxqmuuqjd7itz@aalbersh.remote.csb>
+To: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2 09/23] iomap: allow filesystem to implement read path
+ verification
+Message-ID: <20230405110116.ia5wv3qxbnpdciui@aalbersh.remote.csb>
 References: <20230404145319.2057051-1-aalbersh@redhat.com>
- <20230404145319.2057051-7-aalbersh@redhat.com>
- <20230404234019.GM3223426@dread.disaster.area>
+ <20230404145319.2057051-10-aalbersh@redhat.com>
+ <ZCxEHkWayQyGqnxL@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20230404234019.GM3223426@dread.disaster.area>
+In-Reply-To: <ZCxEHkWayQyGqnxL@infradead.org>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
@@ -98,87 +99,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, hch@infradead.org, djwong@kernel.org, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, djwong@kernel.org, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Dave,
+Hi Christoph,
 
-On Wed, Apr 05, 2023 at 09:40:19AM +1000, Dave Chinner wrote:
-> On Tue, Apr 04, 2023 at 04:53:02PM +0200, Andrey Albershteyn wrote:
-> > Allow filesystem to make additional processing on verified pages
-> > instead of just dropping a reference. This will be used by XFS for
-> > internal buffer cache manipulation in further patches. The btrfs,
-> > ext4, and f2fs just drop the reference.
-> > 
-> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > ---
-> >  fs/btrfs/verity.c         | 12 ++++++++++++
-> >  fs/ext4/verity.c          |  6 ++++++
-> >  fs/f2fs/verity.c          |  6 ++++++
-> >  fs/verity/read_metadata.c |  4 ++--
-> >  fs/verity/verify.c        |  6 +++---
-> >  include/linux/fsverity.h  | 10 ++++++++++
-> >  6 files changed, 39 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/btrfs/verity.c b/fs/btrfs/verity.c
-> > index c5ff16f9e9fa..4c2c09204bb4 100644
-> > --- a/fs/btrfs/verity.c
-> > +++ b/fs/btrfs/verity.c
-> > @@ -804,10 +804,22 @@ static int btrfs_write_merkle_tree_block(struct inode *inode, const void *buf,
-> >  			       pos, buf, size);
-> >  }
-> >  
-> > +/*
-> > + * fsverity op that releases the reference obtained by ->read_merkle_tree_page()
-> > + *
-> > + * @page:  reference to the page which can be released
-> > + *
-> > + */
-> > +static void btrfs_drop_page(struct page *page)
-> > +{
-> > +	put_page(page);
-> > +}
+On Tue, Apr 04, 2023 at 08:37:02AM -0700, Christoph Hellwig wrote:
+> >  	if (iomap_block_needs_zeroing(iter, pos)) {
+> >  		folio_zero_range(folio, poff, plen);
+> > +		if (iomap->flags & IOMAP_F_READ_VERITY) {
+> 
+> Wju do we need the new flag vs just testing that folio_ops and
+> folio_ops->verify_folio is non-NULL?
+
+Yes, it can be just test, haven't noticed that it's used only here,
+initially I used it in several places.
+
+> 
+> > -		ctx->bio = bio_alloc(iomap->bdev, bio_max_segs(nr_vecs),
+> > -				     REQ_OP_READ, gfp);
+> > +		ctx->bio = bio_alloc_bioset(iomap->bdev, bio_max_segs(nr_vecs),
+> > +				REQ_OP_READ, GFP_NOFS, &iomap_read_ioend_bioset);
+> 
+> All other callers don't really need the larger bioset, so I'd avoid
+> the unconditional allocation here, but more on that later.
+
+Ok, make sense.
+
+> 
+> > +		ioend = container_of(ctx->bio, struct iomap_read_ioend,
+> > +				read_inline_bio);
+> > +		ioend->io_inode = iter->inode;
+> > +		if (ctx->ops && ctx->ops->prepare_ioend)
+> > +			ctx->ops->prepare_ioend(ioend);
 > > +
-> >  const struct fsverity_operations btrfs_verityops = {
-> >  	.begin_enable_verity     = btrfs_begin_enable_verity,
-> >  	.end_enable_verity       = btrfs_end_enable_verity,
-> >  	.get_verity_descriptor   = btrfs_get_verity_descriptor,
-> >  	.read_merkle_tree_page   = btrfs_read_merkle_tree_page,
-> >  	.write_merkle_tree_block = btrfs_write_merkle_tree_block,
-> > +	.drop_page		 = &btrfs_drop_page,
-> >  };
 > 
-> Ok, that's a generic put_page() call.
+> So what we're doing in writeback and direct I/O, is to:
 > 
-> ....
-> > diff --git a/fs/verity/verify.c b/fs/verity/verify.c
-> > index f50e3b5b52c9..c2fc4c86af34 100644
-> > --- a/fs/verity/verify.c
-> > +++ b/fs/verity/verify.c
-> > @@ -210,7 +210,7 @@ verify_data_block(struct inode *inode, struct fsverity_info *vi,
-> >  		if (is_hash_block_verified(vi, hpage, hblock_idx)) {
-> >  			memcpy_from_page(_want_hash, hpage, hoffset, hsize);
-> >  			want_hash = _want_hash;
-> > -			put_page(hpage);
-> > +			inode->i_sb->s_vop->drop_page(hpage);
-> >  			goto descend;
-> 
-> 			fsverity_drop_page(hpage);
-> 
-> static inline void
-> fsverity_drop_page(struct inode *inode, struct page *page)
-> {
-> 	if (inode->i_sb->s_vop->drop_page)
-> 		inode->i_sb->s_vop->drop_page(page);
-> 	else
-> 		put_page(page);
-> }
-> 
-> And then you don't need to add the functions to each of the
-> filesystems nor make an indirect call just to run put_page().
+>  a) have a submit_bio hook
+>  b) allow the file system to then hook the bi_end_io caller
+>  c) (only in direct O/O for now) allow the file system to provide
+>     a bio_set to allocate from
 
-Sure, this makes more sense, thank you!
+I see.
+
+> 
+> I wonder if that also makes sense and keep all the deferral in the
+> file system.  We'll need that for the btrfs iomap conversion anyway,
+> and it seems more flexible.  The ioend processing would then move into
+> XFS.
+> 
+
+Not sure what you mean here.
+
+> > @@ -156,6 +160,11 @@ struct iomap_folio_ops {
+> >  	 * locked by the iomap code.
+> >  	 */
+> >  	bool (*iomap_valid)(struct inode *inode, const struct iomap *iomap);
+> > +
+> > +	/*
+> > +	 * Verify folio when successfully read
+> > +	 */
+> > +	bool (*verify_folio)(struct folio *folio, loff_t pos, unsigned int len);
+> 
+> Why isn't this in iomap_readpage_ops?
+> 
+
+Yes, it can be. But it appears to me to be more relevant to
+_folio_ops, any particular reason to move it there? Don't mind
+moving it to iomap_readpage_ops.
 
 -- 
 - Andrey
