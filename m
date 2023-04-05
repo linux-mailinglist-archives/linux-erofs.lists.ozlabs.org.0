@@ -2,76 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EB576D8A8A
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 00:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A1996D8AC6
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 00:51:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PsK4Q042Bz3chl
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 08:27:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PsKcn5Rz1z3f8T
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 08:51:37 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1680733622;
-	bh=XK91TzLV+BuNFfVuafZ92bpnVCXIC7GzKLzoDgloMhQ=;
+	s=201707; t=1680735097;
+	bh=dLSxfaMFCVS8468KN/z0VwXJmbpcmKd5R8VPq1b2igA=;
 	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=XppKtZcuk9xDn5CgIRwKhR8001t9ehkem0bWhv4kRmOC1F7kGVFkrm3Cp4iI06Vzu
-	 NqzkWX0pC5KRF6iWg/1tlZbOckyFnyocHOBFk9ojTNnx9miz2DsoLGuUstsbMYIT7S
-	 4YZqgcuS/b/snTZnEFuZ7h79YPzBUPyNrWD+qSoxOP5UqW9WZdhIEWeHibFUC8sC8b
-	 puQ9WHZ+K9lrAEwO86JfuZZ9yDAbk5XVyI01he8elL53rfFD7zHbd+8KWwMF7Q7gPD
-	 tW+IUCTgbpqXKPJLn8Pskj7hXvdWPlOKSTk0d0bZvylMDe5nadAVYBplB+yzqHpc7F
-	 DC8lzGIU7aX0A==
+	b=ZEFjTeAphPxfrvz77pArEmvG79fQcfpkWMQCVOUCy67dEXzcqloRM/R51i+rR///p
+	 +Kn9GcSAchKKbo1PoH8jaRt8PXuA4iErtOJ7eILqMrvZB3fGuOpyI01roinKABIMOz
+	 JsomMuu9DRwDPFoahSEZnFEium0fODkEilLBqHvnZRRpcsAQ3YLJCbGMJWhp2h8peo
+	 TzIkDNXHNbfEj2bYtcJO/XrGgPsAGjIHlFEjd7eRafBMkH5V54SOdMahZWEYrnqrde
+	 WlBR9cFWDC0DgslQ+rsfTz1j8r5AkeCuekVFuTWg7s+T5zg+sQDT00NPK/cstAZgmw
+	 QMbvb8d8Au6Mg==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=fromorbit.com (client-ip=2607:f8b0:4864:20::436; helo=mail-pf1-x436.google.com; envelope-from=david@fromorbit.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=fromorbit.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=david@fromorbit.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=fromorbit-com.20210112.gappssmtp.com header.i=@fromorbit-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=phPcb/SN;
+	dkim=pass (2048-bit key; unprotected) header.d=fromorbit-com.20210112.gappssmtp.com header.i=@fromorbit-com.20210112.gappssmtp.com header.a=rsa-sha256 header.s=20210112 header.b=DKNaEMAv;
 	dkim-atps=neutral
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PsK4H0nDHz3c41
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 08:26:53 +1000 (AEST)
-Received: by mail-pf1-x436.google.com with SMTP id y2so24658415pfw.9
-        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 15:26:52 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PsKcj5k4Xz3chZ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 08:51:31 +1000 (AEST)
+Received: by mail-pf1-x433.google.com with SMTP id bm13so10557916pfb.5
+        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Apr 2023 15:51:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680733610;
+        d=1e100.net; s=20210112; t=1680735089;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XK91TzLV+BuNFfVuafZ92bpnVCXIC7GzKLzoDgloMhQ=;
-        b=yVaHIj6RU6gwCN9G3ezhQEHfW/mkXyIuEIo93NIm8GNPfx5fozhczPumjMKMk/Qt5j
-         mUNkkDrjrOZE2xTvIKEB47Ij/SmRTrAmxmhfiJZhyC6RTjFD2bGUo0qUe2R+Xb0hnnbl
-         y+oyd01WxUSDinW/mAoUOJoDAoSNGOuJ4AWNGd/QWfnAQndBjd8ZiuNhEST5Zw35GNBi
-         oZkcl5H95Or4u2g4T62UPNJ0NnPPOOet/loEwbANEcKAYswS4ug8PsMgi6KqC8KNOqki
-         csnI4tHy9HtviwpvZjkR2xvTdJdJr9uD1b6tWSSXefzZZMPTzjXAsKdPbTn44CgBI3kt
-         C0Cg==
-X-Gm-Message-State: AAQBX9eitJZobuR7WYxIfkaPan9szmD2aHNTGDlnMPjxnMUSjN5tVEkP
-	0rxbV9uyYsVUlw9eMxLtQMlafg==
-X-Google-Smtp-Source: AKy350ZizTU3q/Uc2TiZy7crqeJ4jvK0CtSZoX/AzNtdP+Y2QHldAbm030UMhCShfo2v0Sb07Y+LGg==
-X-Received: by 2002:a62:1d8f:0:b0:627:e577:4326 with SMTP id d137-20020a621d8f000000b00627e5774326mr6595721pfd.17.1680733610237;
-        Wed, 05 Apr 2023 15:26:50 -0700 (PDT)
+        bh=dLSxfaMFCVS8468KN/z0VwXJmbpcmKd5R8VPq1b2igA=;
+        b=TpPo3SUBMXt7VVrP99xIADVMgfVx89p7U3iwoEwFZN5IJq7Bh9YyfDnwhmSMwvogPu
+         saw/aBbY4SMbCzC0kv0rM4mqAFbw/08HXejTg+du+bof6AHn4rnybq7llmaYOYyApR5x
+         LcX45HN7Fr3qvOdE5YuR/BuO9YMI8QmnevgC/3KARmh7ySncOXjJQtHNMfnpUVlokgCQ
+         mfslDimpKLsuC/W6qFjHAoTTjlv46hNA3RtWPPwglhw05u7dYRfjL6VD3XHfLOUhi6p/
+         J03DlH81DCvGXdnAFj5sjYOp/42C80Va25plhac0KVzDW6doPSsq1PhC9h7MDuxSi7D7
+         xM1Q==
+X-Gm-Message-State: AAQBX9cHfDPi0wEy94Toyqm1RATxd/G+cAmtq0oDE0QG1fs7n1rBOQRd
+	6U6dlgIKotodSrgRlOOYeSAr8Q==
+X-Google-Smtp-Source: AKy350byI2dOXAx2UUhieoBDXlt6kMcfX++CjjnLqbSOozpqmQEUOmvJ7mOnsddzMAKRV6q6VXMDHg==
+X-Received: by 2002:a62:7b8b:0:b0:625:cc03:df33 with SMTP id w133-20020a627b8b000000b00625cc03df33mr7050385pfc.31.1680735088792;
+        Wed, 05 Apr 2023 15:51:28 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-91-157.pa.nsw.optusnet.com.au. [49.181.91.157])
-        by smtp.gmail.com with ESMTPSA id 2-20020aa79142000000b0062c0cfbb264sm11493110pfi.93.2023.04.05.15.26.49
+        by smtp.gmail.com with ESMTPSA id m3-20020aa79003000000b006260645f2a7sm11619498pfo.17.2023.04.05.15.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 15:26:49 -0700 (PDT)
+        Wed, 05 Apr 2023 15:51:28 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
 	(envelope-from <david@fromorbit.com>)
-	id 1pkBaY-00HUjN-NL; Thu, 06 Apr 2023 08:26:46 +1000
-Date: Thu, 6 Apr 2023 08:26:46 +1000
-To: Eric Biggers <ebiggers@kernel.org>
+	id 1pkByP-00HV2h-IA; Thu, 06 Apr 2023 08:51:25 +1000
+Date: Thu, 6 Apr 2023 08:51:25 +1000
+To: Andrey Albershteyn <aalbersh@redhat.com>
 Subject: Re: [PATCH v2 21/23] xfs: handle merkle tree block size != fs
  blocksize != PAGE_SIZE
-Message-ID: <20230405222646.GR3223426@dread.disaster.area>
+Message-ID: <20230405225125.GS3223426@dread.disaster.area>
 References: <20230404145319.2057051-1-aalbersh@redhat.com>
  <20230404145319.2057051-22-aalbersh@redhat.com>
- <20230404163602.GC109974@frogsfrogsfrogs>
- <20230405160221.he76fb5b45dud6du@aalbersh.remote.csb>
- <20230405163847.GG303486@frogsfrogsfrogs>
- <ZC264FSkDQidOQ4N@gmail.com>
+ <20230404233224.GE1893@sol.localdomain>
+ <20230405151234.sgkuasb7lwmgetzz@aalbersh.remote.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZC264FSkDQidOQ4N@gmail.com>
+In-Reply-To: <20230405151234.sgkuasb7lwmgetzz@aalbersh.remote.csb>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,62 +83,172 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Dave Chinner via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Dave Chinner <david@fromorbit.com>
-Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, "Darrick J. Wong" <djwong@kernel.org>, Andrey Albershteyn <aalbersh@redhat.com>, linux-f2fs-devel@lists.sourceforge.net, hch@infradead.org, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, damien.lemoal@opensource.wdc.com, linux-btrfs@vger.kernel.org
+Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, agruenba@redhat.com, hch@infradead.org, djwong@kernel.org, damien.lemoal@opensource.wdc.com, linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com, dchinner@redhat.com, rpeterso@redhat.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Apr 05, 2023 at 06:16:00PM +0000, Eric Biggers wrote:
-> On Wed, Apr 05, 2023 at 09:38:47AM -0700, Darrick J. Wong wrote:
-> > > The merkle tree pages are dropped after verification. When page is
-> > > dropped xfs_buf is marked as verified. If fs-verity wants to
-> > > verify again it will get the same verified buffer. If buffer is
-> > > evicted it won't have verified state.
-> > > 
-> > > So, with enough memory pressure buffers will be dropped and need to
-> > > be reverified.
-> > 
-> > Please excuse me if this was discussed and rejected long ago, but
-> > perhaps fsverity should try to hang on to the merkle tree pages that
-> > this function returns for as long as possible until reclaim comes for
-> > them?
-> > 
-> > With the merkle tree page lifetimes extended, you then don't need to
-> > attach the xfs_buf to page->private, nor does xfs have to extend the
-> > buffer cache to stash XBF_VERITY_CHECKED.
+On Wed, Apr 05, 2023 at 05:12:34PM +0200, Andrey Albershteyn wrote:
+> Hi Eric,
 > 
-> Well, all the other filesystems that support fsverity (ext4, f2fs, and btrfs)
-> just cache the Merkle tree pages in the inode's page cache.  It's an approach
-> that I know some people aren't a fan of, but it's efficient and it works.
+> On Tue, Apr 04, 2023 at 04:32:24PM -0700, Eric Biggers wrote:
+> > Hi Andrey,
+> > 
+> > On Tue, Apr 04, 2023 at 04:53:17PM +0200, Andrey Albershteyn wrote:
+> > > In case of different Merkle tree block size fs-verity expects
+> > > ->read_merkle_tree_page() to return Merkle tree page filled with
+> > > Merkle tree blocks. The XFS stores each merkle tree block under
+> > > extended attribute. Those attributes are addressed by block offset
+> > > into Merkle tree.
+> > > 
+> > > This patch make ->read_merkle_tree_page() to fetch multiple merkle
+> > > tree blocks based on size ratio. Also the reference to each xfs_buf
+> > > is passed with page->private to ->drop_page().
+> > > 
+> > > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+> > > ---
+> > >  fs/xfs/xfs_verity.c | 74 +++++++++++++++++++++++++++++++++++----------
+> > >  fs/xfs/xfs_verity.h |  8 +++++
+> > >  2 files changed, 66 insertions(+), 16 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_verity.c b/fs/xfs/xfs_verity.c
+> > > index a9874ff4efcd..ef0aff216f06 100644
+> > > --- a/fs/xfs/xfs_verity.c
+> > > +++ b/fs/xfs/xfs_verity.c
+> > > @@ -134,6 +134,10 @@ xfs_read_merkle_tree_page(
+> > >  	struct page		*page = NULL;
+> > >  	__be64			name = cpu_to_be64(index << PAGE_SHIFT);
+> > >  	uint32_t		bs = 1 << log_blocksize;
+> > > +	int			blocks_per_page =
+> > > +		(1 << (PAGE_SHIFT - log_blocksize));
+> > > +	int			n = 0;
+> > > +	int			offset = 0;
+> > >  	struct xfs_da_args	args = {
+> > >  		.dp		= ip,
+> > >  		.attr_filter	= XFS_ATTR_VERITY,
+> > > @@ -143,26 +147,59 @@ xfs_read_merkle_tree_page(
+> > >  		.valuelen	= bs,
+> > >  	};
+> > >  	int			error = 0;
+> > > +	bool			is_checked = true;
+> > > +	struct xfs_verity_buf_list	*buf_list;
+> > >  
+> > >  	page = alloc_page(GFP_KERNEL);
+> > >  	if (!page)
+> > >  		return ERR_PTR(-ENOMEM);
+> > >  
+> > > -	error = xfs_attr_get(&args);
+> > > -	if (error) {
+> > > -		kmem_free(args.value);
+> > > -		xfs_buf_rele(args.bp);
+> > > +	buf_list = kzalloc(sizeof(struct xfs_verity_buf_list), GFP_KERNEL);
+> > > +	if (!buf_list) {
+> > >  		put_page(page);
+> > > -		return ERR_PTR(-EFAULT);
+> > > +		return ERR_PTR(-ENOMEM);
+> > >  	}
+> > >  
+> > > -	if (args.bp->b_flags & XBF_VERITY_CHECKED)
+> > > +	/*
+> > > +	 * Fill the page with Merkle tree blocks. The blcoks_per_page is higher
+> > > +	 * than 1 when fs block size != PAGE_SIZE or Merkle tree block size !=
+> > > +	 * PAGE SIZE
+> > > +	 */
+> > > +	for (n = 0; n < blocks_per_page; n++) {
+> > > +		offset = bs * n;
+> > > +		name = cpu_to_be64(((index << PAGE_SHIFT) + offset));
+> > > +		args.name = (const uint8_t *)&name;
+> > > +
+> > > +		error = xfs_attr_get(&args);
+> > > +		if (error) {
+> > > +			kmem_free(args.value);
+> > > +			/*
+> > > +			 * No more Merkle tree blocks (e.g. this was the last
+> > > +			 * block of the tree)
+> > > +			 */
+> > > +			if (error == -ENOATTR)
+> > > +				break;
+> > > +			xfs_buf_rele(args.bp);
+> > > +			put_page(page);
+> > > +			kmem_free(buf_list);
+> > > +			return ERR_PTR(-EFAULT);
+> > > +		}
+> > > +
+> > > +		buf_list->bufs[buf_list->buf_count++] = args.bp;
+> > > +
+> > > +		/* One of the buffers was dropped */
+> > > +		if (!(args.bp->b_flags & XBF_VERITY_CHECKED))
+> > > +			is_checked = false;
+> > > +
+> > > +		memcpy(page_address(page) + offset, args.value, args.valuelen);
+> > > +		kmem_free(args.value);
+> > > +		args.value = NULL;
+> > > +	}
+> > 
+> > I was really hoping for a solution where the cached data can be used directly,
+> > instead allocating a temporary page and copying the cached data into it every
+> > time the cache is accessed.  The problem with what you have now is that every
+> > time a single 32-byte hash is accessed, a full page (potentially 64KB!) will be
+> > allocated and filled.  That's not very efficient.  The need to allocate the
+> > temporary page can also cause ENOMEM (which will get reported as EIO).
+> > 
+> > Did you consider alternatives that would work more efficiently?  I think it
+> > would be worth designing something that works properly with how XFS is planned
+> > to cache the Merkle tree, instead of designing a workaround.
+> > ->read_merkle_tree_page was not really designed for what you are doing here.
+> > 
+> > How about replacing ->read_merkle_tree_page with a function that takes in a
+> > Merkle tree block index (not a page index!) and hands back a (page, offset) pair
+> > that identifies where the Merkle tree block's data is located?  Or (folio,
+> > offset), I suppose.
 
-Which puts pages beyond EOF in the page cache. Given that XFS also
-allows persistent block allocation beyond EOF, having both data in the page
-cache and blocks beyond EOF that contain unrelated information is a
-Real Bad Idea.
+{kaddr, len}, please.
 
-Just because putting metadata in the file data address space works
-for one filesystem, it doesn't me it's a good idea or that it works
-for every filesystem.
+> > 
+> > With that, would it be possible to directly return the XFS cache?
+> > 
+> > - Eric
+> > 
+> 
+> Yeah, I also don't like it, I didn't want to change fs-verity much
+> so went with this workaround. But as it's ok, I will look into trying
+> to pass xfs buffers to fs-verity without direct use of
+> ->read_merkle_tree_page(). I think it's possible with (folio,
+> offset), the xfs buffers aren't xattr value align so the 4k merkle
+> tree block is stored in two pages.
 
-> We could certainly think about moving to a design where fs/verity/ asks the
-> filesystem to just *read* a Merkle tree block, without adding it to a cache, and
-> then fs/verity/ implements the caching itself.  That would require some large
-> changes to each filesystem, though, unless we were to double-cache the Merkle
-> tree blocks which would be inefficient.
+I don't think this is necessary to actually merge the code. We want
+it to work correctly as the primary concern, performance is a
+secondary concern.
 
-No, that's unnecessary.
+Regardless, as you mention, the xfs_buf is not made up of contiguous
+pages so the merkle tree block data will be split across two
+(or more) pages.  AFAICT, the fsverity code doesn't work with data
+structures that span multiple disjoint pages...
 
-All we need if for fsverity to require filesystems to pass it byte
-addressable data buffers that are externally reference counted. The
-filesystem can take a page reference before mapping the page and
-passing the kaddr to fsverity, then unmap and drop the reference
-when the merkle tree walk is done as per Andrey's new drop callout.
+Another problem is that the xfs-buf might be backed by heap memory
+(e.g. 4kB fs block size on 64kB PAGE_SIZE) and so it cannot be
+treated like a page cache page by the fsverity merkle tree code. We
+most definitely do not want to be passing pages containing heap
+memory to functions expecting to be passed lru-resident page cache
+pages....
 
-fsverity doesn't need to care what the buffer is made from, how it
-is cached, what it's life cycle is, etc. The caching mechanism and
-reference counting is entirely controlled by the filesystem callout
-implementations, and fsverity only needs to deal with memory buffers
-that are guaranteed to live for the entire walk of the merkle
-tree....
+That said, xfs-bufs do have a stable method of addressing the data
+in the buffers, and all the XFS code uses this to access and
+manipulate data directly in the buffers.
+
+That is, xfs_buf_offset() returns a mapped kaddr that points to the
+contiguous memory region containing the metadata in the buffer.  If
+the xfs_buf spans multiple pages, it will return a kaddr pointing
+into the contiguous vmapped memory address that maps the entire
+buffer data range. If it is heap memory, it simply returns a pointer
+into that heap memory. If it's a single page, then it returns the
+kaddr for the data within the page.
+
+If you move all the assumptions about how the merkle tree data is
+managed out of fsverity and require the fielsystems to do the
+mapping to kaddrs and reference counting to guarantee life times,
+then the need for multiple different methods for reading merkle tree
+data go away...
 
 Cheers,
 
