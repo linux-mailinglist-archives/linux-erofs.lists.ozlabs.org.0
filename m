@@ -1,40 +1,93 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B4146D9480
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 12:55:54 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 979376D948F
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 12:58:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PsdhR6mr4z3fJ6
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 20:55:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Psdlx3jRLz3fJK
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 20:58:53 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=fastmail.com header.i=@fastmail.com header.a=rsa-sha256 header.s=fm2 header.b=HXlgZjFU;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=i3db14652.fm2 header.b=RVcPjQRF;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=fastmail.com (client-ip=66.111.4.230; helo=new4-smtp.messagingengine.com; envelope-from=dlemoal@fastmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=fastmail.com header.i=@fastmail.com header.a=rsa-sha256 header.s=fm2 header.b=HXlgZjFU;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=i3db14652.fm2 header.b=RVcPjQRF;
+	dkim-atps=neutral
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PsdhM5bwhz3f47
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 20:55:46 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VfSuMsQ_1680778540;
-Received: from 30.97.49.15(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfSuMsQ_1680778540)
-          by smtp.aliyun-inc.com;
-          Thu, 06 Apr 2023 18:55:41 +0800
-Message-ID: <589f6665-824f-bf08-3458-d3986d88f7fc@linux.alibaba.com>
-Date: Thu, 6 Apr 2023 18:55:40 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Psdlr2VT6z3f6W
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 20:58:47 +1000 (AEST)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 7C3DD5820D0;
+	Thu,  6 Apr 2023 06:58:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 06 Apr 2023 06:58:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+	1680778724; x=1680782324; bh=Q2m1kci/EP4IG1lF0MfJfyKUGN/Uk8YX5ZS
+	0D1+MIUk=; b=HXlgZjFU+cAzi8fVYZ3ieEuyXVgmr7WPTsesBy2rLFPMYCKpIyn
+	v12cjlEDMTp1gBJBK2JCL9L+UUdyekKHC7Zl1tPF8XtFF8kTYGeBk+kdwT2QbaId
+	ZgZCmGl/OsQO4k5Q3TP+QZ28CqAoNhT1KAJSG5EWmLq162ZRFYRrnqvsesqU6ruP
+	k8Mwx/EuwvX31/uCswzZjU5vZlvEdDvoR+KGPudBQddh4+XJ/bfqA2lzMl9FqvU2
+	kk6eVKSs4Hv1hVtC5kVpiCnCfu6bdUsfzuH8p2+V8RzUBhOPMHsWIn9++bWngpk+
+	SMC6UJu2JU+X5Jl66ycRCqOeP1JR9RLR4TA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=i3db14652.fm2;
+	 t=1680778724; x=1680782324; bh=Q2m1kci/EP4IG1lF0MfJfyKUGN/Uk8YX
+	5ZS0D1+MIUk=; b=RVcPjQRFbdo6hVuCZI4+6tK3Vq86w7l8TLKbX19OqrWM41Wd
+	8JJf26gLcPAJLCXknkmubxbSe4pZC8R3JqWhLJF4OZlv0kK61yD54we5+4b9sm37
+	FVNtqxBLsASydtPAh22nPyBvy6Hxn2rxYb7/eM7kdaBpCkLzE4Y43f62O/YaTdyV
+	f+kalY7a2tPW9tAHSS9bCDewSzXvXf1e/iMXrCJvDMf/Yd1BFWUH8imnbPT6rg6P
+	nYmzHNwinZG3tVpntBg2hhOEGI6JxIHzx+II8OwdNaGX1ORXAoIGK7eGMU645Tk/
+	YeImSalhXU/YAAGAnGNOAZbPTKbKL1qxbbitFQ==
+X-ME-Sender: <xms:46UuZPWWKtHuO5l0LFAk3w3YC-eb_XKzKbYBpAgJmrcIJeHy5omKCA>
+    <xme:46UuZHmAlDonNJjvRk-Sftt76Y_ESVGzz54QnLSbZ2jjThl_0WONtP6l4ip5mt9Pk
+    kfRIbPZP3stG8u0sBY>
+X-ME-Received: <xmr:46UuZLbBk7Hay6gHYKlJ4OPlgPvdhcVxuAqJW6qjZSkky7dPEbtrTWypEQ4T4m6N-dvdrSfiYu-QaaAGPaUwJFqsMoYUrjvd>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejfedgfeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeffrghm
+    ihgvnhcunfgvucfoohgrlhcuoegulhgvmhhorghlsehfrghsthhmrghilhdrtghomheqne
+    cuggftrfgrthhtvghrnhepteefiefhieetgfevhfegfeehffetteduieetudfgleetvdff
+    udelveejfefhfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepughlvghmohgrlhesfhgrshhtmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:46UuZKVqnghzZigo3_xc7UQ8d7BarGx6dTWkv96qclX1YWAI2tbSyA>
+    <xmx:46UuZJlqo6Hc66G0ia8wUIQT7a_n1tQuMzypRSRkkqALEx7eUybdoQ>
+    <xmx:46UuZHd1TBjHAAB_-5sN6JGRoJSXImiE-IkEeBzXS5cHS3azzwOKhg>
+    <xmx:5KUuZPfT1txrBWxq7cLwYw1ahBDxMHmtYr80E9DOWMmcJXDtXSxkXA>
+Feedback-ID: i3db14652:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Apr 2023 06:58:40 -0400 (EDT)
+Message-ID: <d732a8f6-4a0a-d7ff-af9c-f377fefd1283@fastmail.com>
+Date: Thu, 6 Apr 2023 19:58:38 +0900
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH 2/3] erofs: convert to use kobject_is_added()
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 3/3] zonefs: convert to use kobject_is_added()
+Content-Language: en-US
 To: Greg KH <gregkh@linuxfoundation.org>
 References: <20230406093056.33916-1-frank.li@vivo.com>
- <20230406093056.33916-2-frank.li@vivo.com>
- <2023040635-duty-overblown-7b4d@gregkh>
- <cc219a52-e89c-b7e7-5bfd-0124f881a29f@linux.alibaba.com>
- <2023040654-protrude-unlucky-f164@gregkh>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <2023040654-protrude-unlucky-f164@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <20230406093056.33916-3-frank.li@vivo.com>
+ <2023040616-armory-unmade-4422@gregkh>
+ <8ca8c138-67fd-73ed-1ce5-c090d49f31e9@fastmail.com>
+ <2023040627-paver-recipient-3713@gregkh>
+From: Damien Le Moal <dlemoal@fastmail.com>
+In-Reply-To: <2023040627-paver-recipient-3713@gregkh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -51,67 +104,85 @@ Cc: naohiro.aota@wdc.com, Yangtao Li <frank.li@vivo.com>, damien.lemoal@opensour
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2023/4/6 18:27, Greg KH wrote:
-> On Thu, Apr 06, 2023 at 06:13:05PM +0800, Gao Xiang wrote:
->> Hi Greg,
->>
->> On 2023/4/6 18:03, Greg KH wrote:
->>> On Thu, Apr 06, 2023 at 05:30:55PM +0800, Yangtao Li wrote:
->>>> Use kobject_is_added() instead of directly accessing the internal
->>>> variables of kobject. BTW kill kobject_del() directly, because
->>>> kobject_put() actually covers kobject removal automatically.
+On 4/6/23 19:26, Greg KH wrote:
+> On Thu, Apr 06, 2023 at 07:13:38PM +0900, Damien Le Moal wrote:
+>> On 4/6/23 19:05, Greg KH wrote:
+>>> On Thu, Apr 06, 2023 at 05:30:56PM +0800, Yangtao Li wrote:
+>>>> Use kobject_is_added() instead of local `s_sysfs_registered` variables.
+>>>> BTW kill kobject_del() directly, because kobject_put() actually covers
+>>>> kobject removal automatically.
 >>>>
 >>>> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 >>>> ---
->>>>    fs/erofs/sysfs.c | 3 +--
->>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>  fs/zonefs/sysfs.c  | 11 +++++------
+>>>>  fs/zonefs/zonefs.h |  1 -
+>>>>  2 files changed, 5 insertions(+), 7 deletions(-)
 >>>>
->>>> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
->>>> index 435e515c0792..daac23e32026 100644
->>>> --- a/fs/erofs/sysfs.c
->>>> +++ b/fs/erofs/sysfs.c
->>>> @@ -240,8 +240,7 @@ void erofs_unregister_sysfs(struct super_block *sb)
->>>>    {
->>>>    	struct erofs_sb_info *sbi = EROFS_SB(sb);
->>>> -	if (sbi->s_kobj.state_in_sysfs) {
->>>> -		kobject_del(&sbi->s_kobj);
->>>> +	if (kobject_is_added(&sbi->s_kobj)) {
+>>>> diff --git a/fs/zonefs/sysfs.c b/fs/zonefs/sysfs.c
+>>>> index 8ccb65c2b419..f0783bf7a25c 100644
+>>>> --- a/fs/zonefs/sysfs.c
+>>>> +++ b/fs/zonefs/sysfs.c
+>>>> @@ -101,8 +101,6 @@ int zonefs_sysfs_register(struct super_block *sb)
+>>>>  		return ret;
+>>>>  	}
+>>>>  
+>>>> -	sbi->s_sysfs_registered = true;
 >>>
->>> I do not understand why this check is even needed, I do not think it
->>> should be there at all as obviously the kobject was registered if it now
->>> needs to not be registered.
+>>> You know this, why do you need to have a variable tell you this or not?
 >>
->> I think Yangtao sent a new patchset which missed the whole previous
->> background discussions as below:
->> https://lore.kernel.org/r/028a1b56-72c9-75f6-fb68-1dc5181bf2e8@linux.alibaba.com
->>
->> It's needed because once a syzbot complaint as below:
->> https://lore.kernel.org/r/CAD-N9QXNx=p3-QoWzk6pCznF32CZy8kM3vvo8mamfZZ9CpUKdw@mail.gmail.com
->>
->> I'd suggest including the previous backgrounds at least in the newer patchset,
->> otherwise it makes me explain again and again...
+>> If kobject_init_and_add() fails, zonefs_sysfs_register() returns an error and
+>> fill_super will also return that error. vfs will then call kill_super, which
+>> calls zonefs_sysfs_unregister(). For that case, we need to know that we actually
+>> added the kobj.
 > 
-> That would be good, as I do not think this is correct, it should be
-> fixed in a different way, see my response to the zonefs patch in this
-> series as a much simpler method to use.
+> Ok, but then why not just 0 out the kobject pointer here instead?  That
+> way you will always know if it's a valid pointer or not and you don't
+> have to rely on some other variable?  Use the one that you have already :)
 
-Yes, but here (sbi->s_kobj) is not a kobject pointer (also at a quick
-glance it seems that zonefs has similar code), and also we couldn't
-just check the sbi is NULL or not here only, since sbi is already
-non-NULL in this path and there are some others in sbi to free in
-other functions.
+but sbi->s_kobj is the kobject itself, not a pointer. I can still zero it out in
+case of error to avoid using the added s_sysfs_registered bool. I would need to
+check a field of s_kobj though, which is not super clean and makes the code
+dependent on kobject internals. Not super nice in my opinion, unless I am
+missing something.
 
-s_kobj could be changed into a pointer if needed.  I'm all fine with
-either way since as you said, it's a boilerplate filesystem kobject
-logic duplicated from somewhere.  Hopefully Yangtao could help take
-this task since he sent me patches about this multiple times.
+> And you really don't even need to check anything, just pass in NULL to
+> kobject_del() and friends, it should handle it.>
+>>>> -
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> @@ -110,12 +108,13 @@ void zonefs_sysfs_unregister(struct super_block *sb)
+>>>>  {
+>>>>  	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+>>>>  
+>>>> -	if (!sbi || !sbi->s_sysfs_registered)
+>>>
+>>> How can either of these ever be true?  Note, sbi should be passed here
+>>> to this function, not the super block as that is now unregistered from
+>>> the system.  Looks like no one has really tested this codepath that much
+>>> :(
+>>>
+>>>> +	if (!sbi)
+>>>>  		return;
+>>>
+>>> this can not ever be true, right?
+>>
+>> Yes it can, if someone attempt to mount a non zoned device. In that case,
+>> fill_super returns early without setting sb->s_fs_info but vfs still calls
+>> kill_super.
+> 
+> But you already had a sbi pointer in the place that this was called, so
+> you "know" if you need to even call into here or not.  You are having to
+> look up the same pointer multiple times in this call chain, there's no
+> need for that.
 
-Thanks,
-Gao Xiang
+I am not following here. Either we check that we have sbi here in
+zonefs_sysfs_unregister(), or we conditionally call this function in
+zonefs_kill_super() with a "if (sbi)". Either way, we need to check since sbi
+can be NULL.
 
 > 
 > thanks,
 > 
 > greg k-h
+
