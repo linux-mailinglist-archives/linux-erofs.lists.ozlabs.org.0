@@ -2,95 +2,111 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A456D9504
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 13:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 969006D96C5
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 14:08:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PsfKG0dWyz3fJK
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 21:24:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PsgHq30Bfz3fQl
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Apr 2023 22:08:07 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=fastmail.com header.i=@fastmail.com header.a=rsa-sha256 header.s=fm2 header.b=OfPDKUIx;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=i3db14652.fm2 header.b=cph75FLN;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=W7fUHsN/;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=fastmail.com (client-ip=66.111.4.230; helo=new4-smtp.messagingengine.com; envelope-from=dlemoal@fastmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:704b::710; helo=apc01-tyz-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=fastmail.com header.i=@fastmail.com header.a=rsa-sha256 header.s=fm2 header.b=OfPDKUIx;
-	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=i3db14652.fm2 header.b=cph75FLN;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=W7fUHsN/;
 	dkim-atps=neutral
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on20710.outbound.protection.outlook.com [IPv6:2a01:111:f403:704b::710])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PsfK43G2sz3f9s
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 21:24:06 +1000 (AEST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 9BE0C582089;
-	Thu,  6 Apr 2023 07:24:03 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 06 Apr 2023 07:24:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-	1680780243; x=1680783843; bh=8mqNNjIcX5qc/Tx56KbRBl6BMXan1AA6YQt
-	3ILlf2D8=; b=OfPDKUIx3qFvTnRXvtonABTm55+1CvG5Zdwi3+g7Fql3ngdbH/I
-	ea2wpLFjo1uiMv1AtkZNrHJGibMPUEWcyByM6NhJzmb9B7BF7ip/Wkd12zA1e0pP
-	3/ic6Kd8+oxDAGtXHPCvDp6NhHwAUUlb5cVDVZwKZDPYNg2NMkKgUh8cefzOvBqV
-	CVqsxjNWIQ89E1LY2U7B2eHQPgktgRtF08RPVyaCOdSoisUsLjsqLzlQ5VI+s31H
-	F6qN/dlRof5hon8e9vqVjTokIG4oDpVpVaPwcOwjFarjyoNrFMTkxi7lAh4XFg/n
-	2eKi2cflJ2S3SwiBLNsZ07RMKEPvoOmNrSg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=i3db14652.fm2;
-	 t=1680780243; x=1680783843; bh=8mqNNjIcX5qc/Tx56KbRBl6BMXan1AA6
-	YQt3ILlf2D8=; b=cph75FLNA63AqDYKE4N+sRvPooBSI5Gn7xbP+quH3yTn7J6R
-	Q62UNiDkiO4SpIHKeZYJ0B37CjPgOFXjItasxxSjNUNPcUFC3g2u4Zdqc1Ym22yy
-	DECVFvjg89NpJsg7PCiTjJL3b+ZPfylw7wVPddSHhdnllASQkGG2Bu5WKbQkwKpS
-	BB2EE3w8FaXDOEMlF7P2ylRysMpSwO2zjiFSSyk33rgjkswZkkAuNzAvGZ8ZEj+2
-	RvC+Fv1mLgredlsDByFkpsREG8rnRHcNFOUVzf3cbB6qWwM+jTs1tZxxidmqTS8y
-	yl//WS6blEbCMJezjuhbEm1qHlkT5x+MAubWJg==
-X-ME-Sender: <xms:0asuZFxsqcWxKPfem8J2kpfFoozlgiSKKHOR2T9rCp3ezdaHBF7eCg>
-    <xme:0asuZFTnQ1UUoOcJv2SLp6YudcHN80okN07Ldw4nP-Nt61IVngxee-bZ8XPKl4i9g
-    r_0AyZMCvkGd1w2LdU>
-X-ME-Received: <xmr:0asuZPVOj2CsSuML9wHoBd0S9Y1ap90Xgf9v5bU4PnkgW2mW_iaa99eWiBCa1EHtMEy71Xq1OhTbwY39IH7DhDlyTrc2lk3K>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejfedgfeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeffrghm
-    ihgvnhcunfgvucfoohgrlhcuoegulhgvmhhorghlsehfrghsthhmrghilhdrtghomheqne
-    cuggftrfgrthhtvghrnhepteefiefhieetgfevhfegfeehffetteduieetudfgleetvdff
-    udelveejfefhfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepughlvghmohgrlhesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:0asuZHgotGI04OW7x3LuQaVy7tE2sPthNS1sNg8BLbIGMvdx-MMTRQ>
-    <xmx:0asuZHDP9H3QgSJ-SoqCpa4qlPksnLmrLhgKR_nhZ1qaMYnSVJEuWA>
-    <xmx:0asuZAKPwW9oKQnHYcTlpPBm61oMfjE4yP-O7Je5IRsaXcpR_DP1GQ>
-    <xmx:06suZEJmwa4MFDkYQAh7h61_xEn_2ExkASd93mau8BXmwanHJEUqUw>
-Feedback-ID: i3db14652:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Apr 2023 07:23:58 -0400 (EDT)
-Message-ID: <003260d1-f1db-9d62-23fa-9acfba849782@fastmail.com>
-Date: Thu, 6 Apr 2023 20:23:57 +0900
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PsgHf3KR3z3cjW
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Apr 2023 22:07:53 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JbFf7W1F8+wdqBNkCOiMrIisJr/OL1XD5aJ0OhfPhuW20thp8TkZQ/1B7HVi/xIsZT6ZT0Jy874rPqIffAJmj2lRFzBrHjQh5+EM7jrdSsRtcyvPtx3/oJUkMbOC8ixQh3uOHnapHhnXp5zkeODRmVuXEHjpw54vK6I0k67rMHnTXXSzzzrUuyqJLgJ0Q8KbaLFnEty2/dnXuPH1kvGoi0+D6UIRQMFM2HlXFrUJ1rxSsFiZR6shrmaV/VmcItYBDV3XdiBExM0qZ3NNCz0HsHrQYVizlHFy/8AYKwlaOuNCtaBKqhiXuEzwXfs1OYnrhmoYK4ZSySyyjr1xnInYig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/+Ck+2lE0MtdhErnUlr5PFQx4kEw0dEhHa/v9MlT438=;
+ b=bR8Z5sC7HCIXMX9imjTDgYyjJ6OfSl7aBTr7ks7srlxborUT3L7jYoHFl7NwU4QszCyvH2hXLBUFXUBpyvPUVzrCq/alTlGbn9n4dSx5apW7VZ1SFO4NT9PTIzMN9ppu7d+KWugWoipgBTDFEYl1FxbwLNl+w2MaFbkScmGXX8mSFAM7bUl74SmkFuD+l7+/b8j2TrSS90SlO9hrCi56O8pH9aoSPdKwcCINgMOygh+6ooYoq1RS2Tlw0Tf3ZDET3Qsf+5g25neVVpNBhXX2NH+Cg752rqcJfARzf72zIQ3JRgtrP+464deXXzlk3CT5CM4dTfSnmj6qgs8F1xJhzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/+Ck+2lE0MtdhErnUlr5PFQx4kEw0dEhHa/v9MlT438=;
+ b=W7fUHsN/MmVNbiVctoKE+zNjHoWcfoTdueUlYGOcJULd8rjFsNh3mSCC5gzG6XW1vgC1MQpQQ3j3W4oL8HJw5MQWhYNlfQIkVHMBndmi6ndSvZ5Hf3C5YNWoO0CVeUzn+0Pg+qAqLP9Pso9oel/rZhuHQ4hfHWbverYLPJH3XtxDLKSQxizhdORsSQl1Gd0bMqytI1vFkycEg4bOPvtG74YfqE4W9azKYVNsUxrZvKMdoVuPaVVc5rErRg7z7HBhwCWiOX8VLGRJdaxpMpSK3kDbwfAkpAVTnVdJmWbsPPufFRBj/1Y1GxlT9GPfCrlzbrfcc34Nus7xrJ42qNyRrQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by KL1PR0601MB5461.apcprd06.prod.outlook.com (2603:1096:820:c0::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.30; Thu, 6 Apr
+ 2023 12:07:27 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::a3a1:af8e:be1e:437c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::a3a1:af8e:be1e:437c%6]) with mapi id 15.20.6277.031; Thu, 6 Apr 2023
+ 12:07:26 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: gregkh@linuxfoundation.org
+Subject: Re: [PATCH 2/3] erofs: convert to use kobject_is_added()
+Date: Thu,  6 Apr 2023 20:07:16 +0800
+Message-Id: <20230406120716.80980-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <2023040635-duty-overblown-7b4d@gregkh>
+References: <2023040635-duty-overblown-7b4d@gregkh>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0002.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::16) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 3/3] zonefs: convert to use kobject_is_added()
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-References: <20230406093056.33916-1-frank.li@vivo.com>
- <20230406093056.33916-3-frank.li@vivo.com>
- <2023040616-armory-unmade-4422@gregkh>
- <8ca8c138-67fd-73ed-1ce5-c090d49f31e9@fastmail.com>
- <2023040627-paver-recipient-3713@gregkh>
- <d732a8f6-4a0a-d7ff-af9c-f377fefd1283@fastmail.com>
- <2023040627-platter-twisted-c1e6@gregkh>
-From: Damien Le Moal <dlemoal@fastmail.com>
-In-Reply-To: <2023040627-platter-twisted-c1e6@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR0601MB5461:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9327f43-e919-4449-4969-08db36977cc3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	vejkLj8hzS3eOGUD5ZqzzlIkEOwyJ/h5GX6FX7ohXh2ASS7D0k70nOIPzEJWWXoQ8YgHjXgeujEBL6kMMNEPvrM7jdflJj1QxZgSLeZZZpJ1YWPTjAv1PpGcT7LJH5HTRrUFTv35vp13Cuzr1tJRgwFz8OcpGC8KIvrXcFkSEqLq9ViBygPqWD9UicemdoO7z9NDrKhRaHl2e+bhVKtXtRPF1n/cJfq92lDcuzH9r+FeXj+B0KcQQlKssvzwxJnx0mQHl8f+LZlhfr682OAr7IkDNv+noAoMsGe9OjHO/+Xf2dFBYUZdLa1cXfs5pCJV051GGKH78XFFzEhtZ9IULlAo45EJ4ZvJwkpCgZ0oxDBorUvUwxmHqeBkFn1ifd3NoWYN9d+Wm0dU9d7gX+6+MqDDemdIpP8pTcfhPoZm0F9hXCYera99/8p9IJCgZa0bhdGVJZehuKygwOSDogyhQclvCAGcE7szQFbRHtI9Oqp/6PPEhQnNHf7ABN3zwoOKWQzUNK7o33LGFZ7Y1QVov8bRkbgbIL4yb1ThXJKrTzg4sJWkJayMPIhsezzOxJxCDfzkCaHZ0Z1lAPnVIpZ7V9emjyeYI+LLgy5YNTQ4Hn6oijhOkUcuwHSpG8gJm+cu
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199021)(6666004)(6486002)(478600001)(38100700002)(38350700002)(36756003)(86362001)(2616005)(52116002)(7416002)(2906002)(4744005)(316002)(26005)(6512007)(6506007)(1076003)(186003)(8936002)(8676002)(5660300002)(6916009)(4326008)(66556008)(66946007)(66476007)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?I5fmB+06wjRU5CDcW8wHymm8YwX+fhTdIcaUfflNi+olUk14sqfJuQoRCDwC?=
+ =?us-ascii?Q?w0ndce3QylzEDR9I7jT1MuK+GZ93SGU0PoB2rpIQW9RZKjqAcST73dCPfHtP?=
+ =?us-ascii?Q?749+Rmg9f+Ms1REu2VRXScKBehbB5caxZ431JSib5naRdJLhq+bW9aM+U7Br?=
+ =?us-ascii?Q?xAbKfgugdG+BwCU0b5nRGwrs2GhOpwThrAu8rSKQZFeqn1BA/KkV6c79utHj?=
+ =?us-ascii?Q?zbrR2GrZQt4uqsRgi1LKwFtdxJiblbUq+c3oqmPjQ/9+PRFfrfAx33ZJdm38?=
+ =?us-ascii?Q?9XT6w04ERKjQGygvBmSiw2oxFWl1YJW5EQuLA1kDGnSrE2X3by+7+Vg6YjBW?=
+ =?us-ascii?Q?HmbTOBur7uujZ6VeKUDJPSYk82leDn4LV40OvnqkGU+vFUuh4B/RfEcEzijA?=
+ =?us-ascii?Q?6wPiA5ABlMm4nIKeKt3qL7pMoQ0UB+Ea7l+b2VCpC8mVk3uVPhsTITCrUC/z?=
+ =?us-ascii?Q?kVOglGpxc09yZ81Fq9BBFSIjExIYh0HcqoTeylEStl3o+8bJ2ayHx4Z9SdGw?=
+ =?us-ascii?Q?BHLw4RVx2VcwlsKGTwxCTKcu1m2mZM90g62VP6yS/lWwETCJ04a6/jIFWyXl?=
+ =?us-ascii?Q?9fYHf2DIvkNjgeXp9hbvzdqFtAED6cTgOO/hnLuDxhOfiZr7ib8sg1veQ1lQ?=
+ =?us-ascii?Q?cxDbOH+4cFJfNlwUE0CWubZeEvcl42v4iiHSU/nHrhbvfeLdh4Vn/t+os9Od?=
+ =?us-ascii?Q?cus711/QBVzwSbja+M6L9ulfI/VTbrdtuf213T5yrIjAb0KPxV+tAk/+CnIP?=
+ =?us-ascii?Q?cjRQwpJIHdwH5VkyJFj9B+sQZqN2JaJXLjxKwMTUt/uRoqV8Dmw9dZ2j5ZrT?=
+ =?us-ascii?Q?MsqlJW37RFEIbqR/qnxcMCqKgyxq2IsAFajXTDOEqzZSJPsiIEvrDi4L0ZKd?=
+ =?us-ascii?Q?wn2bViVNU1rqJWwc4ON+h9VKNp4KqewfBxF0WdW0L6D4POqCpguFzxuVFV/h?=
+ =?us-ascii?Q?C3H9v+X/2sRlhqQDWv+1NBktv5YuinRvD8oE1gf+LeTCerPesF850GNITbF+?=
+ =?us-ascii?Q?mU8u+cqc/VP8jEGN6AN/yClKRek6cbOwjZ1O4OA0KcoK96o0qkk7YJJAG4Pa?=
+ =?us-ascii?Q?8udeMQlX9VAQjtUdCajGq+KOr2HbGKUjyt2OawLmxNZ83Nsu+yMrqECYVBQY?=
+ =?us-ascii?Q?WPU3aq2pEHLQEXH1QukdFAMpL1vpBX5bJ9OsDIL9Ys47C7xz3aKKvaExbjiu?=
+ =?us-ascii?Q?y1i11A17F2+qd9DtoiaN5RMOF+9KZtr2sNbRDfQ0eVOerzcF4AolmeYmAZiL?=
+ =?us-ascii?Q?yjV1BxMLauyu7oq1x4Pyip0Rl08+m1WHk6QtnRlsLDK/guUjcxv7IK4qqnms?=
+ =?us-ascii?Q?ZrmCNYK9FPmMPxEbx9nRpn2ZkDMIPsidp1rMR8oGo9meFpGA7nJjkUcA2Ckf?=
+ =?us-ascii?Q?eOxmNTjrsT/LnjNaV2d1lEf0YlnuGQKssJyN/ocFdXJ35oJhfC3v8OwmbfdQ?=
+ =?us-ascii?Q?a3nZTscC9xOHdTKTkfFZzMbjr6PVsm8tEF3PAapRvfdZ8DB/gQv/IpcTnI3r?=
+ =?us-ascii?Q?N9GYrYiKksLOACoPQaL5cmKiWILSr2NMJbFmVOqaHjCUXBzjKRmKGO07NDyc?=
+ =?us-ascii?Q?JDidaJbPtCQLv0jd9VXttJna3TfvIIa/FBaseBP6?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9327f43-e919-4449-4969-08db36977cc3
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2023 12:07:26.6655
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c4eGhBazu+NgFBmWG1cBIvQYIG8wdXJFszf2xXb/lIKQBst7Aj/uqqq6U+efaucV07L4mABU+BfcbuJz60fcLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5461
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -102,119 +118,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: naohiro.aota@wdc.com, Yangtao Li <frank.li@vivo.com>, damien.lemoal@opensource.wdc.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, rafael@kernel.org
+Cc: naohiro.aota@wdc.com, frank.li@vivo.com, damien.lemoal@opensource.wdc.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, rafael@kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 4/6/23 20:18, Greg KH wrote:
-> On Thu, Apr 06, 2023 at 07:58:38PM +0900, Damien Le Moal wrote:
->> On 4/6/23 19:26, Greg KH wrote:
->>> On Thu, Apr 06, 2023 at 07:13:38PM +0900, Damien Le Moal wrote:
->>>> On 4/6/23 19:05, Greg KH wrote:
->>>>> On Thu, Apr 06, 2023 at 05:30:56PM +0800, Yangtao Li wrote:
->>>>>> Use kobject_is_added() instead of local `s_sysfs_registered` variables.
->>>>>> BTW kill kobject_del() directly, because kobject_put() actually covers
->>>>>> kobject removal automatically.
->>>>>>
->>>>>> Signed-off-by: Yangtao Li <frank.li@vivo.com>
->>>>>> ---
->>>>>>  fs/zonefs/sysfs.c  | 11 +++++------
->>>>>>  fs/zonefs/zonefs.h |  1 -
->>>>>>  2 files changed, 5 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/fs/zonefs/sysfs.c b/fs/zonefs/sysfs.c
->>>>>> index 8ccb65c2b419..f0783bf7a25c 100644
->>>>>> --- a/fs/zonefs/sysfs.c
->>>>>> +++ b/fs/zonefs/sysfs.c
->>>>>> @@ -101,8 +101,6 @@ int zonefs_sysfs_register(struct super_block *sb)
->>>>>>  		return ret;
->>>>>>  	}
->>>>>>  
->>>>>> -	sbi->s_sysfs_registered = true;
->>>>>
->>>>> You know this, why do you need to have a variable tell you this or not?
->>>>
->>>> If kobject_init_and_add() fails, zonefs_sysfs_register() returns an error and
->>>> fill_super will also return that error. vfs will then call kill_super, which
->>>> calls zonefs_sysfs_unregister(). For that case, we need to know that we actually
->>>> added the kobj.
->>>
->>> Ok, but then why not just 0 out the kobject pointer here instead?  That
->>> way you will always know if it's a valid pointer or not and you don't
->>> have to rely on some other variable?  Use the one that you have already :)
->>
->> but sbi->s_kobj is the kobject itself, not a pointer.
-> 
-> Then it should not be there if the kobject is not valid as it should
-> have been freed when the kobject_init_and_add() call failed, right?
+> Meta-comment, we need to come up with a "filesystem kobject type" to get
+> rid of lots of the boilerplate filesystem kobject logic as it's
+> duplicated in every filesystem in tiny different ways and lots of times
+> (like here), it's wrong.
 
-What do you mean freed ? the kboject itself is a field of zonefs sbi. So the
-kobject gets freed together with sbi.
+Can we add the following structure?
 
->> I can still zero it out in
->> case of error to avoid using the added s_sysfs_registered bool. I would need to
->> check a field of s_kobj though, which is not super clean and makes the code
->> dependent on kobject internals. Not super nice in my opinion, unless I am
->> missing something.
-> 
-> See above, if a kobject fails to be registered, just remove the whole
-> object as it's obviously "dead" now and you can not trust it.
+struct filesystem_kobject {
+        struct kobject kobject;
+        struct completion unregister;
+};
 
-Well yes, that is what s_sysfs_registered indicates, that the kobject is not
-valid. I do not understand what you mean with "just remove the whole object".
+w/ it, we can simplify something:
 
->>> And you really don't even need to check anything, just pass in NULL to
->>> kobject_del() and friends, it should handle it.>
->>>>>> -
->>>>>>  	return 0;
->>>>>>  }
->>>>>>  
->>>>>> @@ -110,12 +108,13 @@ void zonefs_sysfs_unregister(struct super_block *sb)
->>>>>>  {
->>>>>>  	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
->>>>>>  
->>>>>> -	if (!sbi || !sbi->s_sysfs_registered)
->>>>>
->>>>> How can either of these ever be true?  Note, sbi should be passed here
->>>>> to this function, not the super block as that is now unregistered from
->>>>> the system.  Looks like no one has really tested this codepath that much
->>>>> :(
->>>>>
->>>>>> +	if (!sbi)
->>>>>>  		return;
->>>>>
->>>>> this can not ever be true, right?
->>>>
->>>> Yes it can, if someone attempt to mount a non zoned device. In that case,
->>>> fill_super returns early without setting sb->s_fs_info but vfs still calls
->>>> kill_super.
->>>
->>> But you already had a sbi pointer in the place that this was called, so
->>> you "know" if you need to even call into here or not.  You are having to
->>> look up the same pointer multiple times in this call chain, there's no
->>> need for that.
->>
->> I am not following here. Either we check that we have sbi here in
->> zonefs_sysfs_unregister(), or we conditionally call this function in
->> zonefs_kill_super() with a "if (sbi)". Either way, we need to check since sbi
->> can be NULL.
-> 
-> In zonefs_kill_super() you have get the spi at the top of the function,
-> so use that, don't make zonefs_sysfs_unregister() have to compute it
-> again.
+1. merge init_completion and kobject_init_and_add
 
-That I can do, yes.
+2. merge kobject_put and wait_for_completion
 
-> 
-> But again, if the kobject fails to be registered, you have to treat the
-> memory contained there as not valid and get rid of it as soon as
-> possible.
+3. we can have a common release func for kobj_type release
 
-If the kobject add failed, we never touch it thanks to s_sysfs_registered. I
-still do not see the issue here.
-
-> 
-> thanks,
-> 
-> greg k-h
-
+MBR,
+Yangtao
