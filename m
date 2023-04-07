@@ -2,119 +2,115 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9CDB6DA8BD
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 08:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9A116DA962
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 09:23:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pt7Hj4nb7z3fSn
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 16:09:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Pt8xK5xvTz3fSs
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 17:23:49 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=owD8ZGPa;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=qyU4UwFf;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:704b::70c; helo=apc01-tyz-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feab::70f; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=owD8ZGPa;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=qyU4UwFf;
 	dkim-atps=neutral
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2070c.outbound.protection.outlook.com [IPv6:2a01:111:f403:704b::70c])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2070f.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::70f])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pt7Hb2Gt4z3fJd
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Apr 2023 16:09:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pt8x93tylz3fGQ
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Apr 2023 17:23:39 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mkkZdWHz/6dB9hkOtGQTexvoAEPDVba9u197pPDe8KnsS5Qbnz3pvdIfDgDy/eFuwwSXui3zPuRQ1EMnTM3JDJFA1QSVjFVcJZxI80S3r8KxdMdQeAj59xmbKV1X0xBSpkAuMTvXYsWmwjZhmBFxhewdonuz+JHyMPLJf1u7ojZLfBgK5nbZ0j9gpaNVJ4e/0f1qqetvLcUdIRibQVulLPyMMij2Nz3lInkP+uusl0l+Y6Jv5BYpN9qtZU6GpKmsfpwzw/1+npqHmh/DAUz+i96uJ17j+M6RXp2/OmQAf6Zg7HhG5NjYaSgZidt1Ng/zWF1nLvsK38bR9okXTgim4Q==
+ b=K7sMUSlW053cfPZzemnGRfaLTkpooilvn9HtyO/TwEjT8o+89tmvZUTK+iSl07N0I0eGiFctiEMTWeKeAlFL55+qRVswETnlcPxFcUxcEFL3AYeuN5cCMBrxe4LZwXnT5rMmgEU4eCTbdL4q6M3r/bMwlq1To2eBIm65ue/BSk0rHgkqNpGEhmwIsFVc+x09tF55WcXX/QqQezEK7W0SYwsQ/82H/jeL48hhvS8c/IJjWArhwPVu1DzPB/9lyjWJ74a4hJps04lMOswtkZ95xAq1MMyZD/xSIg41wbHRy8vNnPLgfeDocBu0VqtWd9V2LwM50RKKFIEJ+QPUokmedg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U2f0eVhQyzx3bjJQ9y3gm/qKkBhpK4y77kbZLGkY6s4=;
- b=Eo9nKPOCFGj2sKX+7Yp0hTGD46vtZ+6o+6FTygx14BuokY3HHLUiOouGp5//Vn7kKzTNPta7is4S+Q2zLV1PYgWdyU6hir77oJWx8wc/BHHWYgeU+Ze/M58/2Ar7YFEW9us7+KJJ8ZECN5RvmJbWgvOumhOB/ifugHFD/QO8Jsp5n3L/ocZUy75A6S8FB9Z0FDMTFMzK1P+jehFkx5xERHlQlUjUyyjEuY7GljgxaIxiDUOWJrFeb6aSGlqYxp7uaI/YQkc/KqG6uneYtNFDJsLlQe3oOAO6Z07RYz3rpPXt9HN+DlTM6gcziMDFWDN5hyQpKPh0vqtBPiytaR+X9w==
+ bh=sa8s7jctBAs56tOQIH43Q0IRpOFPy9NjsiCsicmye1I=;
+ b=NmF2UPKJJ/0+WBXuZ3UFkOn357sgpbfzig46dl1sznpIE6o78riAW2RlbDOFXimcwUW7gdLOXeRavqZ7kIsIm1Hx/FsZnxF/mCZlJS+Uhtb18AFY8fJfnORjpeViHlE0LjPlEumKnuCgOSrWWNCl9jMhG1cwg13kMH4NIo49USdOxcwa9Lk+3fBn+lx3ia43A3MAyygRfkPjZpRkefMW293zfYiNIPXAd6wnFBsCjJPCf8yfH5Qwy32vfqyJYjN7BQbIVEr5t4Xh7BcrINezgr9us11hmFnTwkYywBKyukMryIsUbEAKB8sLDkGvjXsXC3M93Oxm8CPodipYPNEBsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
  dkim=pass header.d=vivo.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U2f0eVhQyzx3bjJQ9y3gm/qKkBhpK4y77kbZLGkY6s4=;
- b=owD8ZGPa2IqlzPrR3Yx4ccLQHZbjwzz1owWMF1VBDaoUqEAWoKJTEcd/TKBJHUjQXQmn8wndB7dD8MTTh9lD6FeSZMFBRLfrg7kOpqOVEBeJMjvwTGEL5t9kPB0+giWIroJUYrbRmZm6By0VwdAk6/9i6eFfI4q0p/a/XXWu5Yu9Asr7DvjvS/ZkH+ghvC3vaF9/quHadZ2rOEexCy9Cc+yySHRFiV7XWk2bnI/BHsZoJ2q4179ipkv/D7tUqhSjCZqt2HzyEKTEmAQVB6tnrDVsKTXG3VJmr81frrxEWud5Jb8T5hb3D6TaJNpbG9fT1b+fdiTkATn8havBYWZSOg==
+ bh=sa8s7jctBAs56tOQIH43Q0IRpOFPy9NjsiCsicmye1I=;
+ b=qyU4UwFfROe6g2z+W87sM4pdmCBE2oiJW+l2DXNW1qSJjIj5st1JGR+n4HGbzJbpYFmoxT8ymR5fynhNqplN5jrU5eEsop8sjcKLoaagVu/ot2b1fGm4T3LKoe6bsenh4gbPG9Ab235nOrGSno34kABLYkzj0PT9ssnMim2XLFjo+sGW5mXcbigOCoAz9i78z7vFG3obkCE10jV5nKLcLg6xlhrYKqXm390PsLKEd7Qw/K5luaNR1lykwnF1uCKFR84zo2zXcu0Ui7bwYImnVkhMFg5SXLRa8Ltgcx1GoTm55dBvDyBNe1Jv8AJ3+HJsSwueAakoWWsJ9XFohNTQxg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=vivo.com;
 Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by TYUPR06MB6079.apcprd06.prod.outlook.com (2603:1096:400:347::11) with
+ by SEZPR06MB5855.apcprd06.prod.outlook.com (2603:1096:101:9f::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.33; Fri, 7 Apr
- 2023 06:09:10 +0000
+ 2023 07:23:14 +0000
 Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
  ([fe80::a3a1:af8e:be1e:437c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
  ([fe80::a3a1:af8e:be1e:437c%6]) with mapi id 15.20.6277.031; Fri, 7 Apr 2023
- 06:09:10 +0000
+ 07:23:14 +0000
 From: Yangtao Li <frank.li@vivo.com>
-To: gregkh@linuxfoundation.org
+To: gregkh@linuxfoundation.org,
+	xiang@kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
 Subject: Re: [PATCH 2/3] erofs: convert to use kobject_is_added()
-Date: Fri,  7 Apr 2023 14:09:00 +0800
-Message-Id: <20230407060901.22446-1-frank.li@vivo.com>
+Date: Fri,  7 Apr 2023 15:23:03 +0800
+Message-Id: <20230407072303.34570-1-frank.li@vivo.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <2023040602-stack-overture-d418@gregkh>
 References: <2023040602-stack-overture-d418@gregkh>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33)
- To SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR04CA0005.apcprd04.prod.outlook.com
+ (2603:1096:4:197::16) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|TYUPR06MB6079:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4b22288-b0c3-428d-bb9b-08db372e9a17
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEZPR06MB5855:EE_
+X-MS-Office365-Filtering-Correlation-Id: f64e8ff4-e7c2-49a7-5e9b-08db3738f344
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	tu31TZIxdZa84B8QPjWjhRtM7/krRjuSDbWyWA34iCcdU/mevIf1+kGnt54C0sIBlRcso2hEDnLjfG3a2F4yoCsXu3jSMahFZizBRFcKSFRiiAmthXrcdf7Fah1VRCGOK8u7v453TjBaQueukRgyLeUorYRrJ2wSKJuCfbtlp5jyW0YoMcNj48lnWuWqGZwQqX2ntPEkf4uJbLQEJ/U845e1i1Bj6r9NOwtQiJIyDkpFqoNPSK+u60vvkOgDQzh5mx32oWdSLi/x0qaimh7j2yzAkU3P5xo+/oq553xwMHGc0qkjxsVt9SqVmuJ7xeX2VtkdD8iJ+hGYTlEloH1vi0guGgWm0pGd1cxt2heuxvkOvK+osF24bzoKzb/bazNWIwgqj+TgarPJTW/i9W6tVy930LbYnC1COy22h5z9ud7WkdsPEEIpy5q1MQaqfp7LRmi3+4iWgJjwtCYWc9XBFqoQQIA58+grX78kH/ZfATRgSBJXUhx1tgWPT3StyyZsOsIFWF+heA093ICWGUGNQLx5lzD2flDYl0vgc24p40vNRR6KMjP2mGyKMEP6J+FwZ4xRkSbRRGsHA1MqG3EIXo0v2ZH3u9Wk1Ff9w0VdXbl6+VX7iIIXaVHx3kwryqO8
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(451199021)(7416002)(36756003)(2906002)(8676002)(8936002)(5660300002)(38350700002)(38100700002)(86362001)(478600001)(6486002)(52116002)(6666004)(2616005)(316002)(186003)(26005)(6512007)(6506007)(1076003)(66476007)(4326008)(6916009)(66556008)(66946007)(41300700001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 	vrQQxl1+Nj+MzC3qFQ+bfWP3vVWJOxdzLSWtkH+CJHCaK4n18SUMQl8r5019K6YUnoVkWr94nurEg2U+B9BlMVvn1WGFtZo8fUE8W8cISHPbGR+5NASlu1vlFqyjNQZtCHviasTmnfnZy1nTL8ZKcSfnmu5bc60JjXIz2F3t+izeESYsJj6+gnqRAni5UjJXh6F2GuZWkU+ycjFDajLrIX4f7SsZFZ6du2Ug90pGVNulTDKVuLWviQ3WSF5ENSFPR7oSF6shvlgYIjmS/rYkLSiCh4SnYUfayqfbzrk8gPVgGgHLroo46crLKE85VNE8oN0WiazZIUtxwNh2gKk3gkKdudeHfHyEkbCPvjR1Vj4EfHXnZ+hmtm/7WhlGECc3hTrt/UkLkszAbwUJ4K8T+g7iCev6VwSxijuGB1jU/n1kPcCo/ZyGkoJdBGK6qTdHaX3nVrMS9wcn7dANy6AIUU8Y4fwm75zrSsZJv0VhybL6n/AewRnYMSx60ufWHnWI3d/NufDL+6rCKVZ0HFNUK7SiubVsd/+xpcBmv0Ydjpzh0Db74EK16MditHW8J4Ha8D4Ek1dMOA31Ox+A6zHmztsI6SJysmH7T6wJ6HsZBuzBKHtykxvXBzdXJZMcM3Ya
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(136003)(39860400002)(366004)(376002)(451199021)(36756003)(38350700002)(38100700002)(5660300002)(2906002)(7416002)(8676002)(86362001)(66556008)(66946007)(66476007)(41300700001)(4326008)(8936002)(83380400001)(2616005)(1076003)(110136005)(26005)(6506007)(6512007)(316002)(52116002)(478600001)(6486002)(186003)(6666004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?TmxZcDQyaHdUTFdMYjNnRkV5OTNJeUZNKzRCVU9RQlNIbTlpZUlzV1YyWXVr?=
- =?utf-8?B?UnBVVTRwQVRxMmtjZmFET0ttNmhibHFmUTdlM0duclowRFVCMkhDbWpDMmsr?=
- =?utf-8?B?Tlo0dnI5dUloR2JNN1h4R3RtVlk0WVV4YmZ1bjkwLzRSQzdzY25jZGlwRmkr?=
- =?utf-8?B?RDFnVGVjNGsrS29BR1Vqbi9RelZWeUF3WUZEeXEwSXpvS01veVZJaFIxUG8v?=
- =?utf-8?B?eEZRTWdNZ2dHd0J3ZlpxRFdxUTd6OTl1UXhYTy9ENjZjdktBY0ZtRVJXV3Uy?=
- =?utf-8?B?Nk1abEdmRHYyMnJTV2h1Z2JkNkowS05sVTd5WFoyRmM2eFl5OHBLYkFqeTJ6?=
- =?utf-8?B?UWJZZGk2WCtIOUlIaTdkRGlpTi94QkVtbmMwMGI2Z0VzODJzTjlwakloem1S?=
- =?utf-8?B?dFNSN2VZYkRON0ZyVlJpaTZVQ3ZUblB0VWRTYTlQTHBSZ3NiUDR5czZUbW5x?=
- =?utf-8?B?SGo3KzBpUUx5ZGdUMjVqUFk1Z2N0N25tT1A1akd6T2Q2OHFqNDVibUpPV29u?=
- =?utf-8?B?Uk1pWkE0MDBKSUg5SEdHeXoxTW5NMTV0UU5yQW10eUNBN3FuU3pBUUVPaU5F?=
- =?utf-8?B?R2xsU2xUbW1Qd2NRdTBkU1lLVWxTSEVmMG5maGsrKzVIWWF1bytZUERFSmxz?=
- =?utf-8?B?RHdPNjNxUnVtd0taT28wU3hJVThZSkIzdUhHNU9sODhWMUZSUGhpcitqTXhx?=
- =?utf-8?B?M3RDYzAzakVDMFFaYlZ2ZmNYamUyWkI0YWFSb1dMSVVueitZWW9VbDM4YXZv?=
- =?utf-8?B?UUxGYVl0cSs3a0xTMDdjQlU4SkVzUWdLTXEyMW1DemtocS9HT3lOY2Z1N01m?=
- =?utf-8?B?R0wzaGhmSXNuTi9BbVhkdFpvYUhMZ1Q2WFFRT3U5dTZLRWR3a1NmT25EZWhj?=
- =?utf-8?B?RHE5SE1YbXQyNjhuZHc2d213Q28yOVgrNFo0RWpES1BqNGRDMWtTb1JJaHJX?=
- =?utf-8?B?SmdiT2FEOGZ4SmdSaGlHK1hWRFZJakV2MkNZRmdCSmtDdlpyY3BUa0Rqcm1y?=
- =?utf-8?B?Qm4wWkZhU3l3b2pwUi9qYUxJME1Ram9QT2E5SzQ3SGhlTmpZdDc4bUNzRTNG?=
- =?utf-8?B?T0RwZDBHKzNNbjdqWVBFOURXcUpraEpCNldNU0NwdjZqL0VPa2x0YWw1bTRG?=
- =?utf-8?B?cVg3eldpTkZBMFBLMzFJZkMzZDZsWnlGMWd6cExNSkIxL2tNTVJXTk83dDhi?=
- =?utf-8?B?S1BPZ0ZHMlVnWk9QYTE3Vmc4ZXIxSnVidGQ3aFR5UTN1WXl3UU1tSW04QWJp?=
- =?utf-8?B?dUtGTmpFdkZlbzVlU2FiMmxsdGF0WXRadUNzNmM0encvTVg2RlB4Y0M3OHpi?=
- =?utf-8?B?S01pb3lLTFU3aTBYMTVSc3ExTDFHQTdJdkpHdkRzQlJ5eFJEQyt5dkU1VS9u?=
- =?utf-8?B?WUJNWmFmWEFrcFpRY0hiRHN1TUtGT2RvSHpDd3BZM3pCekU5K1FlOVVZSy9m?=
- =?utf-8?B?cU9ETmJNb1ZiM01OKzFldjdxSVhvK0NoOWNPWk5IYWlpWXQ3MVBnYXA0OTNW?=
- =?utf-8?B?N2hLUHN0eC9QZ2h1cnlLVHpUUk9OS0VSb1U0T1dJVVlzV2V2TUx3RWdCMkJW?=
- =?utf-8?B?MGc5KytCbjJlTERPY2t2NHJjVUxsQkVlNVMybERFT2EybFU1TUZ6VnErbFM0?=
- =?utf-8?B?Wm5CcDY4azBFZ3pBM1VzcHMyOE43c1ZXbVBPc003T0lINzBUcVhuMSsxdEVL?=
- =?utf-8?B?YUM1U005dXJ6K3BGQTUvSXNpZGZSSjR5M2JFUCsyL09xR2ZJRzVLMHBJUGsv?=
- =?utf-8?B?MHI5QmdYK01GaXpXUWhrbEpKU0d4Y2t6clc2TzJXSnNzb2ZKWUJTY2NwNWdz?=
- =?utf-8?B?cHMwdlI4SXVIVHpBbVV2YWNkOVNmRHZEL0djNmU2RDJUd3NkaS9CN0E4cmFF?=
- =?utf-8?B?MHFOTmEvend6TWJEbmxnZmJjb0l2cURIa3RsTVIyRmN6Mk5lVldLTHJFenI5?=
- =?utf-8?B?amdUWWhyR1BrNHFGTVNJcEJ3aVIvNjYzS005MnZFS1BEa3VUY1p5aEZEZ29J?=
- =?utf-8?B?WWZ4UUYrV1hKakQ2MHpPRGozM0xkSHNLQzNXdVJEcGl5UlF1cWE2emxCV21W?=
- =?utf-8?B?NXZENjNmeTlnTlNJaE9udTZVT25zd2kzbjhXUDlDaDIzaVJ4aGhIOGtOMUdB?=
- =?utf-8?Q?C/I6CJVRdIgo1XnXlA4jCozIg?=
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?EPre3Ujfjn3znLQidvh/XtnRUPF+twcv9Z0mJLykuDsmHyEN5fFh0cMwjrRH?=
+ =?us-ascii?Q?5xWW5wjGRjnSHD3KvdyOw764e8b4GJ+bFdSYxVQzI5C+X6404UHK7sLlXl7g?=
+ =?us-ascii?Q?o3CTHYrcjMLLrIS2ixT5eVwdgCX53w/4ZOqjC8EmlETZOIxY/qYmA8ca9YoN?=
+ =?us-ascii?Q?k3wsyfKxedTp21RqLxwAaSW0ODcdWGM5FVoiwIlnrvq8JJh9h36BARcT7mkp?=
+ =?us-ascii?Q?2YIzudZq77fb9cC1JSugoul1AIUfcPUIaIyZ4yfFxQM20OChhlq5qniGpNzx?=
+ =?us-ascii?Q?KgdN07Ad1vOfOJFt9M0Urm0sJzlwzO+F3t72a8lRKrjn5Zij7ma+1AnBB+w7?=
+ =?us-ascii?Q?59YhjXmIFLNdzgZdjMU7jpLIZ2Ccx61CTEG/8IEa28i4x1xv3yAPxQkrt0Pj?=
+ =?us-ascii?Q?OvQpHyGVP0oWQEARl4cxGpo3mrRKiaZG/mM0RFEGYBEp6GEo4BZW2n8d5rxr?=
+ =?us-ascii?Q?ddWJdwEQf+ztc8qr/QW9zA+7+O8EHMyO5OZZWGfrDYL1EXtXGTUmLKQQRZ/R?=
+ =?us-ascii?Q?bQxPxzJV0pgHXCnBrBv0es+MfP+ZySYbEbrU74SrjXdvkh6H6PJy9NGdFZLf?=
+ =?us-ascii?Q?J8qi6wpfew2dWcBKpbXM44RMSHMWN8tx4ihN0cwJED9GuLhzp3z48Rs2DgWK?=
+ =?us-ascii?Q?eq6xeWD3WcMF9ZlpADXzGn/xQFwRyixm7N0CHMJyh1uZtfGNI5PtpRY0CAmn?=
+ =?us-ascii?Q?IdmPC94+Jj2Jh0ZWJ/RPJ2H0AQGef58nf/lYoqHvK83nw7wBVMXHf/tjV+CQ?=
+ =?us-ascii?Q?PZF31Tuv5gpy1EYDvuu2QdQyXOvCbaUW0z0IVZ1uxw2xCdWPQKHyuTDCqJ4e?=
+ =?us-ascii?Q?V3ubjJKb15It8H9uzw3267G8RXIUAG3BL8+iXDf4evWM+i44SUFI+mPJBbM2?=
+ =?us-ascii?Q?+5OKHvcTU/7diBmzz7GqgOj8oF8kHnPvt4mzQnKMOGI/3aYACTl8otUCURZ9?=
+ =?us-ascii?Q?8599znRVQMFOpmXcb0wBnfI3wWiiD6m9kUOMr/TVNyjqrYvxBzw956oLsrmq?=
+ =?us-ascii?Q?9UI3S7UeF2N2niauEQaWc8M9tWZV5386bu44WxdXO7EeQWSh+T7p2UwGGZKE?=
+ =?us-ascii?Q?wCmphzBgWuIApNjHQYSvYQSh1ODJEG48EbLfd9Q8zIYhwGWgTmge0T98cZDN?=
+ =?us-ascii?Q?5Z2/u0Hd2FbGdCmRq474tC8dUvnV/oqstbVNCAXnSmPvxOSY/PT6eGWP2+CK?=
+ =?us-ascii?Q?kwXSUjASu3UReP0g6I5bpDNIe3CLzQQ73FrLIiLD45iA2m3r0LJqdkffjcPc?=
+ =?us-ascii?Q?ybTTMjn4eGtKaCOALs85Gpom4avBS1VxiJl3btfKCc/8h7LqPsH0uRiCFesD?=
+ =?us-ascii?Q?2GjgRc8zyKTxmj0AFOi20gSPPIC+M6hG8kATZWwOGysJ71qWkR7TaNT95ZoP?=
+ =?us-ascii?Q?M2sd/BPRqjSeDbfP2h+8WmmYjiT4+t2lXGF66gRX4NCSJF22uvJIgUsF41VH?=
+ =?us-ascii?Q?D61k0/S4+WZMfwPxbzpFjwNKV+D2ZwwQRYv/W0GMdYhdlpJQHGMWmEmWwgrW?=
+ =?us-ascii?Q?Gr7tUHxEFG4Bf/22JvIBmSVYvefdQnp3sTFOMy4wS9CZ7nLmGboJscKZ4Zrh?=
+ =?us-ascii?Q?rr4Fv3jLR/kCxWvHHbDvOCN5JcaKYXcxIsPMp2+j?=
 X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4b22288-b0c3-428d-bb9b-08db372e9a17
+X-MS-Exchange-CrossTenant-Network-Message-Id: f64e8ff4-e7c2-49a7-5e9b-08db3738f344
 X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2023 06:09:10.0107
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2023 07:23:14.4225
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aVEbf2mKqBLfs/qRd4eJ1RId5rF6FMaAvh2c2YfABXnRoFYT0rA72zFVKKw+miTPVOKvEv9m3knkqoBDUsAJSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6079
+X-MS-Exchange-CrossTenant-UserPrincipalName: TJAlYvrX7lM4NlY/4ybnMDkCJROdtlirk1v/I0aUbLx4pCty8iHSFSl8EN3Y/MYcCjSRePoxKfeLAubWMMaHnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5855
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -126,36 +122,156 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: naohiro.aota@wdc.com, frank.li@vivo.com, damien.lemoal@opensource.wdc.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, huyue2@coolpad.com, jth@kernel.org, linux-erofs@lists.ozlabs.org, rafael@kernel.org
+Cc: naohiro.aota@wdc.com, frank.li@vivo.com, damien.lemoal@opensource.wdc.com, rafael@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, jth@kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Greg,
+Hi all,
 
-> just let it hang off as a separate structure (i.e. a pointer to something else.)
+> Later, I thought I could send some demo code that strips the kobject in sbi into a pointer.
 
-I have made some attempts. According to my understanding, the reason why the
-filesystem needs to embed the kobj structure (not a pointer) is that the kobj_to_sbi
-method is required in the attr_store/attr_show method for subsequent data processing.
+I made the following modifications, not sure if I'm going the right way.
 
-130 static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
-131                                                 const char *buf, size_t len)
-132 {
-133         struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-134                                                 s_kobj);
-
-If we turn the kobject in sbi into a pointer, then we need to insert a pointer
-to sbi in the kobject, or perform the following encapsulation.
-
-struct filesystem_kobject {
-        struct kobject kobject;
-	void *private;
-};
-
-Later, I thought I could send some demo code that strips the kobject in sbi into a pointer.
-
-BTW, Now sysfs.c in many file systems is full of a lot of repetitive code, maybe we can abstract the common part?
-Like filesystem_attr、filesystem_kobject_ops、filesystem_kobject_ktype...
-
-Thx,
-Yangtao
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 1db018f8c2e8..8e1799f690c0 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -165,8 +165,7 @@ struct erofs_sb_info {
+ 	u32 feature_incompat;
+ 
+ 	/* sysfs support */
+-	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
+-	struct completion s_kobj_unregister;
++	struct filesystem_kobject *f_kobj;
+ 
+ 	/* fscache support */
+ 	struct fscache_volume *volume;
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 435e515c0792..70e915906012 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -8,6 +8,33 @@
+ 
+ #include "internal.h"
+ 
++//maybe we should add following thins to include/linux/filesystem_kobject.h ?
++struct filesystem_kobject {
++	struct kobject kobject;
++	void *private;
++};
++
++void filesystem_kobject_put(struct filesystem_kobject *f_kobj)
++{
++	if (f_kobj)
++		kobject_put(&f_kobj->kobject);
++}
++
++void filesystem_kobject_set_private(struct filesystem_kobject *f_kobj, void *p)
++{
++	f_kobj->private = p;
++}
++
++void *filesystem_kobject_get_private(struct filesystem_kobject *f_kobj)
++{
++	return f_kobj->private;
++}
++
++struct kobject *filesystem_kobject_get_kobject(struct filesystem_kobject *f_kobj)
++{
++	return &f_kobj->kobject;
++}
++
+ enum {
+ 	attr_feature,
+ 	attr_pointer_ui,
+@@ -107,8 +134,9 @@ static unsigned char *__struct_ptr(struct erofs_sb_info *sbi,
+ static ssize_t erofs_attr_show(struct kobject *kobj,
+ 				struct attribute *attr, char *buf)
+ {
+-	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
+-						s_kobj);
++	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
++						kobject);
++	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
+ 	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
+ 	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
+ 
+@@ -130,8 +158,9 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
+ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 						const char *buf, size_t len)
+ {
+-	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
+-						s_kobj);
++	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
++						kobject);
++	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
+ 	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
+ 	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
+ 	unsigned long t;
+@@ -169,9 +198,12 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 
+ static void erofs_sb_release(struct kobject *kobj)
+ {
+-	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
+-						 s_kobj);
+-	complete(&sbi->s_kobj_unregister);
++	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
++						kobject);
++	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
++
++	kfree(f_kobject);
++	sbi->f_kobj = NULL;
+ }
+ 
+ static const struct sysfs_ops erofs_attr_ops = {
+@@ -205,6 +237,7 @@ static struct kobject erofs_feat = {
+ int erofs_register_sysfs(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	struct kobject *kobj;
+ 	char *name;
+ 	char *str = NULL;
+ 	int err;
+@@ -222,17 +255,24 @@ int erofs_register_sysfs(struct super_block *sb)
+ 	} else {
+ 		name = sb->s_id;
+ 	}
+-	sbi->s_kobj.kset = &erofs_root;
+-	init_completion(&sbi->s_kobj_unregister);
+-	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL, "%s", name);
++
++	sbi->f_kobj = kzalloc(sizeof(struct filesystem_kobject), GFP_KERNEL);
++	if (!sbi->f_kobj) {
++		kfree(str);
++		return -ENOMEM;
++	}
++	filesystem_kobject_set_private(sbi->f_kobj, sbi);
++	kobj = filesystem_kobject_get_kobject(sbi->f_kobj);
++	kobj->kset = &erofs_root;
++
++	err = kobject_init_and_add(&sbi->f_kobj->kobject, &erofs_sb_ktype, NULL, "%s", name);
+ 	kfree(str);
+ 	if (err)
+ 		goto put_sb_kobj;
+ 	return 0;
+ 
+ put_sb_kobj:
+-	kobject_put(&sbi->s_kobj);
+-	wait_for_completion(&sbi->s_kobj_unregister);
++	filesystem_kobject_put(sbi->f_kobj);
+ 	return err;
+ }
+ 
+@@ -240,11 +280,7 @@ void erofs_unregister_sysfs(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
+-	if (sbi->s_kobj.state_in_sysfs) {
+-		kobject_del(&sbi->s_kobj);
+-		kobject_put(&sbi->s_kobj);
+-		wait_for_completion(&sbi->s_kobj_unregister);
+-	}
++	filesystem_kobject_put(sbi->f_kobj);
+ }
+ 
+ int __init erofs_init_sysfs(void)
