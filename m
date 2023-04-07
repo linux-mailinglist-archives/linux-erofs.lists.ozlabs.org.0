@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 556DB6DADAF
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 15:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FCD46DAE9B
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 16:09:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PtKFc1vRkz3fXN
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 23:38:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PtKxH38lZz3fVt
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 00:09:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
@@ -14,17 +14,17 @@ Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyu
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtKFQ4ghWz3fSj
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Apr 2023 23:38:17 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfWxv18_1680874692;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfWxv18_1680874692)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtKx11cmLz3fSs
+	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 00:09:08 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfX79n9_1680876538;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfX79n9_1680876538)
           by smtp.aliyun-inc.com;
-          Fri, 07 Apr 2023 21:38:12 +0800
+          Fri, 07 Apr 2023 22:09:05 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: xattr: avoid using inode_xattr_node for shared xattrs
-Date: Fri,  7 Apr 2023 21:38:05 +0800
-Message-Id: <20230407133805.60975-3-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 1/3] erofs-utils: get rid of erofs_buf_write_bhops
+Date: Fri,  7 Apr 2023 22:08:56 +0800
+Message-Id: <20230407140856.100602-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20230407133805.60975-1-hsiangkao@linux.alibaba.com>
 References: <20230407133805.60975-1-hsiangkao@linux.alibaba.com>
@@ -45,138 +45,94 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Let's introduce next_shared_xattr instead to chain shared xattrs,
-and it will also be used for ranged shared xattrs.
+`nbh->off - bh->off` in erofs_bh_flush_generic_write() is
+problematic due to erofs_bdrop(bh, false).
+
+Let's avoid generic erofs_buf_write_bhops instead.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/xattr.c | 43 +++++++++++++++++++------------------------
- 1 file changed, 19 insertions(+), 24 deletions(-)
+changes since v1:
+ - should use EROFS_SUPER_END instead of sb_blksize, otherwise it
+   could cause overlapping.
 
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 5f11cbe..6034e7b 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -22,6 +22,7 @@
- #define EA_HASHTABLE_BITS 16
+ include/erofs/cache.h |  1 -
+ lib/cache.c           | 23 -----------------------
+ mkfs/main.c           |  8 +++++---
+ 3 files changed, 5 insertions(+), 27 deletions(-)
+
+diff --git a/include/erofs/cache.h b/include/erofs/cache.h
+index b04eb47..8c3bd46 100644
+--- a/include/erofs/cache.h
++++ b/include/erofs/cache.h
+@@ -80,7 +80,6 @@ static inline const int get_alignsize(int type, int *type_ret)
  
- struct xattr_item {
-+	struct xattr_item *next_shared_xattr;
- 	const char *kvbuf;
- 	unsigned int hash[2], len[2], count;
- 	int shared_xattr_id;
-@@ -36,7 +37,7 @@ struct inode_xattr_node {
+ extern const struct erofs_bhops erofs_drop_directly_bhops;
+ extern const struct erofs_bhops erofs_skip_write_bhops;
+-extern const struct erofs_bhops erofs_buf_write_bhops;
  
- static DECLARE_HASHTABLE(ea_hashtable, EA_HASHTABLE_BITS);
- 
--static LIST_HEAD(shared_xattrs_list);
-+static struct xattr_item *shared_xattrs_list;
- static unsigned int shared_xattrs_count;
- 
- static struct xattr_prefix {
-@@ -261,14 +262,8 @@ static int inode_xattr_add(struct list_head *hlist, struct xattr_item *item)
- 
- static int shared_xattr_add(struct xattr_item *item)
+ static inline erofs_off_t erofs_btell(struct erofs_buffer_head *bh, bool end)
  {
--	struct inode_xattr_node *node = malloc(sizeof(*node));
+diff --git a/lib/cache.c b/lib/cache.c
+index 9eb0394..178bd5a 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -39,29 +39,6 @@ const struct erofs_bhops erofs_skip_write_bhops = {
+ 	.flush = erofs_bh_flush_skip_write,
+ };
+ 
+-int erofs_bh_flush_generic_write(struct erofs_buffer_head *bh, void *buf)
+-{
+-	struct erofs_buffer_head *nbh = list_next_entry(bh, list);
+-	erofs_off_t offset = erofs_btell(bh, false);
 -
--	if (!node)
--		return -ENOMEM;
+-	DBG_BUGON(nbh->off < bh->off);
+-	return dev_write(buf, offset, nbh->off - bh->off);
+-}
 -
--	init_list_head(&node->list);
--	node->item = item;
--	list_add(&node->list, &shared_xattrs_list);
-+	item->next_shared_xattr = shared_xattrs_list;
-+	shared_xattrs_list = item;
- 	return ++shared_xattrs_count;
- }
- 
-@@ -542,14 +537,14 @@ static void erofs_cleanxattrs(bool sharedxattrs)
- 	shared_xattrs_count = 0;
- }
- 
--static int comp_xattr_item(const void *a, const void *b)
-+static int comp_shared_xattr_item(const void *a, const void *b)
+-static bool erofs_bh_flush_buf_write(struct erofs_buffer_head *bh)
+-{
+-	int err = erofs_bh_flush_generic_write(bh, bh->fsprivate);
+-
+-	if (err)
+-		return false;
+-	free(bh->fsprivate);
+-	return erofs_bh_flush_generic_end(bh);
+-}
+-
+-const struct erofs_bhops erofs_buf_write_bhops = {
+-	.flush = erofs_bh_flush_buf_write,
+-};
+-
+ /* return buffer_head of erofs super block (with size 0) */
+ struct erofs_buffer_head *erofs_buffer_init(void)
  {
- 	const struct xattr_item *ia, *ib;
- 	unsigned int la, lb;
- 	int ret;
- 
--	ia = (*((const struct inode_xattr_node **)a))->item;
--	ib = (*((const struct inode_xattr_node **)b))->item;
-+	ia = *((const struct xattr_item **)a);
-+	ib = *((const struct xattr_item **)b);
- 	la = ia->len[0] + ia->len[1];
- 	lb = ib->len[0] + ib->len[1];
- 
-@@ -564,7 +559,7 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- {
- 	int ret;
- 	struct erofs_buffer_head *bh;
--	struct inode_xattr_node *node, *n, **sorted_n;
-+	struct xattr_item *n, **sorted_n;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 65d3df6..12e43c8 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -580,6 +580,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	};
+ 	const u32 sb_blksize = round_up(EROFS_SUPER_END, erofs_blksiz());
  	char *buf;
- 	unsigned int p, i;
- 	erofs_off_t off;
-@@ -587,22 +582,23 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 	if (!shared_xattrs_count)
- 		goto out;
++	int ret;
  
--	sorted_n = malloc(shared_xattrs_count * sizeof(n));
-+	sorted_n = malloc((shared_xattrs_count + 1) * sizeof(n));
- 	if (!sorted_n)
- 		return -ENOMEM;
- 
- 	i = 0;
--	list_for_each_entry_safe(node, n, &shared_xattrs_list, list) {
--		list_del(&node->list);
--		sorted_n[i++] = node;
-+	while (shared_xattrs_list) {
-+		struct xattr_item *item = shared_xattrs_list;
- 
-+		sorted_n[i++] = item;
-+		shared_xattrs_list = item->next_shared_xattr;
- 		shared_xattrs_size += sizeof(struct erofs_xattr_entry);
- 		shared_xattrs_size = EROFS_XATTR_ALIGN(shared_xattrs_size +
--				node->item->len[0] + node->item->len[1]);
--
-+				item->len[0] + item->len[1]);
+ 	*blocks         = erofs_mapbh(NULL);
+ 	sb.blocks       = cpu_to_le32(*blocks);
+@@ -601,9 +602,10 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
  	}
- 	DBG_BUGON(i != shared_xattrs_count);
--	qsort(sorted_n, shared_xattrs_count, sizeof(n), comp_xattr_item);
-+	sorted_n[i] = NULL;
-+	qsort(sorted_n, shared_xattrs_count, sizeof(n), comp_shared_xattr_item);
+ 	memcpy(buf + EROFS_SUPER_OFFSET, &sb, sizeof(sb));
  
- 	buf = calloc(1, shared_xattrs_size);
- 	if (!buf)
-@@ -622,14 +618,14 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 	off %= erofs_blksiz();
- 	p = 0;
- 	for (i = 0; i < shared_xattrs_count; i++) {
--		struct inode_xattr_node *const tnode = sorted_n[i];
--		struct xattr_item *const item = tnode->item;
-+		struct xattr_item *item = sorted_n[i];
- 		const struct erofs_xattr_entry entry = {
- 			.e_name_index = item->prefix,
- 			.e_name_len = item->len[0],
- 			.e_value_size = cpu_to_le16(item->len[1])
- 		};
+-	bh->fsprivate = buf;
+-	bh->op = &erofs_buf_write_bhops;
+-	return 0;
++	ret = dev_write(buf, erofs_btell(bh, false), EROFS_SUPER_END);
++	free(buf);
++	erofs_bdrop(bh, false);
++	return ret;
+ }
  
-+		item->next_shared_xattr = sorted_n[i + 1];
- 		item->shared_xattr_id = (off + p) /
- 			sizeof(struct erofs_xattr_entry);
- 
-@@ -637,9 +633,8 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 		p += sizeof(struct erofs_xattr_entry);
- 		memcpy(buf + p, item->kvbuf, item->len[0] + item->len[1]);
- 		p = EROFS_XATTR_ALIGN(p + item->len[0] + item->len[1]);
--		free(tnode);
- 	}
--
-+	shared_xattrs_list = sorted_n[0];
- 	free(sorted_n);
- 	bh->op = &erofs_drop_directly_bhops;
- 	ret = dev_write(buf, erofs_btell(bh, false), shared_xattrs_size);
+ static int erofs_mkfs_superblock_csum_set(void)
 -- 
 2.24.4
 
