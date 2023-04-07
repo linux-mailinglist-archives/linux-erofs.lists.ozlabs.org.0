@@ -1,60 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B4FD6DB19F
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 19:30:20 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A40E6DB2BD
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 20:23:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PtQP56YSFz3fVQ
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 03:30:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PtRZS6tmdz3fVQ
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 04:23:28 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E/d62mRx;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mv0HM1Y5;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.93; helo=mga11.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.115; helo=mga14.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E/d62mRx;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mv0HM1Y5;
 	dkim-atps=neutral
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtQNx729Hz3fSp
-	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 03:30:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtRZL0jRrz3cd4
+	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 04:23:16 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680888610; x=1712424610;
+  t=1680891802; x=1712427802;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=CYXKLadMU6YmZuv3O6s2W7HbQyKFPZXnKCtATk9B7q0=;
-  b=E/d62mRx94qPNhS8DZ16HhUYqunlamjvpDJJIaB/gzZRJ2HBOYAYsbOZ
-   JVwVE94GXlvtYpAw08pl7SLjPrvkGR6wSK5P5Tf0XQCUxR6ldhlt/0Hua
-   aGGkYelaXBWCNOkwz0Ni55QXDRFMJCw6Zj2tMQKzEk3VGVBHNvU8CJwBN
-   do57Kw0qeTkKHrYdnhqcYYxAV3GyLg/x6tHw8LY+sUBWJM5LM7KELvEcL
-   o5pbSH8Cw0VFRp5pYaiwTndNPifYGQUvC8JUEPMmQluAuSmydrpn296Ag
-   ynSSLRQiwxwymvqOJDi86HGA2o1Kw/zNFta1QizLjXNaaWIpf7eur7Qb3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="340523057"
+  bh=DydUZtz/GhGz8ydOChRYHR+rrl4V0bkzfHEu5HgIPzI=;
+  b=mv0HM1Y5Dn+ciWf590rmFb3Z+Fph+VkpkBuDdlllR9v3CV56Ye9ec+g0
+   y5uLNHpMXkRAkBHVAekd8IC5k6bbhHFINMDXZQPH/NH+tVWDrIE1KrD5p
+   W+QIb908xdSA4Cd1hkBxsREHcVyzMb9gl7PRnY10X9QSWIwdthu2+Mf8q
+   qZyd9lhvAg1EOKYoM+NvY21RcMZxB5W5yrut3W0BCBvRGX2RCSL35p797
+   Kqao4nP5mCRYoF/Vd4XtSt+MeCY7Uf8WK5jkC53CF1l+hHYjMh98xrUDY
+   FlPJMgmRCB8QEolDnSVWlhoiKfQLWi19Q5iSPlR/sGPbMdDjr4rYGTijx
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="343050185"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="340523057"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 10:29:59 -0700
+   d="scan'208";a="343050185"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 11:23:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="690125363"
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="756803347"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="690125363"
+   d="scan'208";a="756803347"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Apr 2023 10:29:57 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 07 Apr 2023 11:23:04 -0700
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1pkpuO-000Sji-1Y;
-	Fri, 07 Apr 2023 17:29:56 +0000
-Date: Sat, 8 Apr 2023 01:29:27 +0800
+	id 1pkqji-000Smc-0R;
+	Fri, 07 Apr 2023 18:22:58 +0000
+Date: Sat, 8 Apr 2023 02:22:15 +0800
 From: kernel test robot <lkp@intel.com>
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
 	chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Subject: Re: [PATCH 7/7] erofs: enable long extended attribute name prefixes
-Message-ID: <202304080101.D8cyKOoF-lkp@intel.com>
+Message-ID: <202304080206.t45iYSop-lkp@intel.com>
 References: <20230407141710.113882-8-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -71,7 +71,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
@@ -90,8 +90,8 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Jingbo-Xu/erofs-keep-meta
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
 patch link:    https://lore.kernel.org/r/20230407141710.113882-8-jefflexu%40linux.alibaba.com
 patch subject: [PATCH 7/7] erofs: enable long extended attribute name prefixes
-config: alpha-randconfig-r026-20230403 (https://download.01.org/0day-ci/archive/20230408/202304080101.D8cyKOoF-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.1.0
+config: x86_64-randconfig-a005-20230403 (https://download.01.org/0day-ci/archive/20230408/202304080206.t45iYSop-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -101,22 +101,22 @@ reproduce (this is a W=1 build):
         git checkout 8cd5bbc6f857d54388099c30c3e3a48fdb15c283
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash fs/erofs/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304080101.D8cyKOoF-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202304080206.t45iYSop-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   fs/erofs/super.c: In function 'erofs_read_superblock':
->> fs/erofs/super.c:394:12: error: 'struct erofs_sb_info' has no member named 'xattr_prefix_start'
-     394 |         sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
-         |            ^~
->> fs/erofs/super.c:395:12: error: 'struct erofs_sb_info' has no member named 'xattr_prefix_count'
-     395 |         sbi->xattr_prefix_count = dsb->xattr_prefix_count;
-         |            ^~
+>> fs/erofs/super.c:394:7: error: no member named 'xattr_prefix_start' in 'struct erofs_sb_info'
+           sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
+           ~~~  ^
+>> fs/erofs/super.c:395:7: error: no member named 'xattr_prefix_count' in 'struct erofs_sb_info'
+           sbi->xattr_prefix_count = dsb->xattr_prefix_count;
+           ~~~  ^
+   2 errors generated.
 
 
 vim +394 fs/erofs/super.c
