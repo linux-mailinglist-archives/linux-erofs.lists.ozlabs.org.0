@@ -2,32 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01CA66DAEB6
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 16:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF93A6DAEB4
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 16:17:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PtL6g6gsJz3fTf
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 00:17:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PtL6d5Ztjz3fVx
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 00:17:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtL6T5z33z3fVm
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtL6T26cfz3fVJ
 	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 00:17:21 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VfX7DEZ_1680877035;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfX7DEZ_1680877035)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VfX7DF5_1680877036;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfX7DF5_1680877036)
           by smtp.aliyun-inc.com;
-          Fri, 07 Apr 2023 22:17:15 +0800
+          Fri, 07 Apr 2023 22:17:16 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
 	huyue2@coolpad.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 4/7] erofs: introduce on-disk format for long xattr name prefixes
-Date: Fri,  7 Apr 2023 22:17:07 +0800
-Message-Id: <20230407141710.113882-5-jefflexu@linux.alibaba.com>
+Subject: [PATCH 5/7] erofs: add helpers to load long xattr name prefixes
+Date: Fri,  7 Apr 2023 22:17:08 +0800
+Message-Id: <20230407141710.113882-6-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
 References: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
@@ -48,87 +48,162 @@ Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Besides the predefined xattr name prefixes, introduces long xattr name
-prefixes, which work similarly as the predefined name prefixes, except
-that they are user specified.
-
-It is especially useful for use cases together with overlayfs like
-Composefs model, which introduces diverse xattr values with only a few
-common xattr names (trusted.overlay.redirect, trusted.overlay.digest,
-and maybe more in the future).  That makes the existing predefined
-prefixes ineffective in both image size and runtime performance.
-
-When a user specified long xattr name prefix is used, only the trailing
-part of the xattr name apart from the long xattr name prefix will be
-stored in erofs_xattr_entry.e_name.  e_name is empty if the xattr name
-matches exactly as the long xattr name prefix.  All long xattr prefixes
-are stored in the packed or meta inode, which depends if fragments
-feature is enabled or not.
-
-For each long xattr name prefix, the on-disk format is kept as the same
-as the unique metadata format: ALIGN({__le16 len, data}, 4), where len
-represents the total size of struct erofs_xattr_long_prefix, followed
-by data of struct erofs_xattr_long_prefix itself.
-
-Each erofs_xattr_long_prefix keeps predefined prefixes (base_index)
-and the remaining prefix string without the trailing '\0'.
-
-Two fields are introduced to the on-disk superblock, where
-xattr_prefix_count represents the total number of the long xattr name
-prefixes recorded, and xattr_prefix_start represents the start offset of
-recorded name prefixes in the packed/meta inode divided by 4.
-
-When referring to a long xattr name prefix, the highest bit (bit 7) of
-erofs_xattr_entry.e_name_index is set, while the lower bits (bit 0-6)
-as a whole represents the index of the referred long name prefix among
-all long xattr name prefixes.
+Long xattr name prefixes will be scanned upon mounting and the in-memory
+long xattr name prefix array will be initialized accordingly.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/erofs_fs.h | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/erofs/internal.h | 10 ++++++++
+ fs/erofs/super.c    |  6 ++---
+ fs/erofs/xattr.c    | 56 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/xattr.h    |  4 ++++
+ 4 files changed, 73 insertions(+), 3 deletions(-)
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 44876a97cabd..ea62f83dac40 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -76,7 +76,8 @@ struct erofs_super_block {
- 	__le16 extra_devices;	/* # of devices besides the primary device */
- 	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
- 	__u8 dirblkbits;	/* directory block size in bit shift */
--	__u8 reserved[5];
-+	__u8 xattr_prefix_count;	/* # of long xattr name prefixes */
-+	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
- 	__le64 packed_nid;	/* nid of the special packed inode */
- 	__u8 reserved2[24];
- };
-@@ -229,6 +230,13 @@ struct erofs_xattr_ibody_header {
- #define EROFS_XATTR_INDEX_LUSTRE            5
- #define EROFS_XATTR_INDEX_SECURITY          6
- 
-+/*
-+ * bit 7 of e_name_index is set when it refers to a long xattr name prefix,
-+ * while the remained lower bits represent the index of the prefix.
-+ */
-+#define EROFS_XATTR_LONG_PREFIX		0x80
-+#define EROFS_XATTR_LONG_PREFIX_MASK	0x7f
-+
- /* xattr entry (for both inline & shared xattrs) */
- struct erofs_xattr_entry {
- 	__u8   e_name_len;      /* length of name */
-@@ -238,6 +246,12 @@ struct erofs_xattr_entry {
- 	char   e_name[];        /* attribute name */
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 8b5168f94dd2..5a9c19654b19 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -117,6 +117,11 @@ struct erofs_fscache {
+ 	char *name;
  };
  
-+/* long xattr name prefix */
-+struct erofs_xattr_long_prefix {
-+	__u8   base_index;	/* short xattr name prefix index */
-+	char   infix[];		/* infix apart from short prefix */
++struct erofs_xattr_prefix_item {
++	struct erofs_xattr_long_prefix *prefix;
++	u8 infix_len;
 +};
 +
- static inline unsigned int erofs_xattr_ibody_size(__le16 i_xattr_icount)
+ struct erofs_sb_info {
+ 	struct erofs_mount_opts opt;	/* options */
+ #ifdef CONFIG_EROFS_FS_ZIP
+@@ -145,6 +150,9 @@ struct erofs_sb_info {
+ 	u32 meta_blkaddr;
+ #ifdef CONFIG_EROFS_FS_XATTR
+ 	u32 xattr_blkaddr;
++	u32 xattr_prefix_start;
++	u8 xattr_prefix_count;
++	struct erofs_xattr_prefix_item *xattr_prefixes;
+ #endif
+ 	u16 device_id_mask;	/* valid bits of device id to be used */
+ 
+@@ -440,6 +448,8 @@ extern const struct iomap_ops z_erofs_iomap_report_ops;
+ #define EROFS_REG_COOKIE_SHARE		0x0001
+ #define EROFS_REG_COOKIE_NEED_NOEXIST	0x0002
+ 
++void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
++			  erofs_off_t *offset, int *lengthp);
+ void erofs_unmap_metabuf(struct erofs_buf *buf);
+ void erofs_put_metabuf(struct erofs_buf *buf);
+ void *erofs_bread(struct erofs_buf *buf, erofs_blk_t blkaddr,
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 8f2f8433db61..bf396e0c243a 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -126,10 +126,9 @@ static bool check_layout_compatibility(struct super_block *sb,
+ 	return true;
+ }
+ 
+-#ifdef CONFIG_EROFS_FS_ZIP
+ /* read variable-sized metadata, offset will be aligned by 4-byte */
+-static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+-				 erofs_off_t *offset, int *lengthp)
++void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
++			  erofs_off_t *offset, int *lengthp)
  {
- 	if (!i_xattr_icount)
+ 	u8 *buffer, *ptr;
+ 	int len, i, cnt;
+@@ -162,6 +161,7 @@ static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+ 	return buffer;
+ }
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
+ static int erofs_load_compr_cfgs(struct super_block *sb,
+ 				 struct erofs_super_block *dsb)
+ {
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index d76b74ece2e5..684571e83a2c 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -610,6 +610,62 @@ ssize_t erofs_listxattr(struct dentry *dentry,
+ 	return ret;
+ }
+ 
++void erofs_xattr_prefixes_cleanup(struct super_block *sb)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	int i;
++
++	if (sbi->xattr_prefixes) {
++		for (i = 0; i < sbi->xattr_prefix_count; i++)
++			kfree(sbi->xattr_prefixes[i].prefix);
++		kfree(sbi->xattr_prefixes);
++		sbi->xattr_prefixes = NULL;
++	}
++}
++
++int erofs_xattr_prefixes_init(struct super_block *sb)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
++	erofs_off_t pos = (erofs_off_t)sbi->xattr_prefix_start << 2;
++	struct erofs_xattr_prefix_item *pfs;
++	int ret = 0, i, len;
++
++	if (!sbi->xattr_prefix_count)
++		return 0;
++
++	pfs = kzalloc(sbi->xattr_prefix_count * sizeof(*pfs), GFP_KERNEL);
++	if (!pfs)
++		return -ENOMEM;
++
++	if (erofs_sb_has_fragments(sbi))
++		buf.inode = sbi->packed_inode;
++	else
++		erofs_init_metabuf(&buf, sb);
++
++	for (i = 0; i < sbi->xattr_prefix_count; i++) {
++		void *ptr = erofs_read_metadata(sb, &buf, &pos, &len);
++
++		if (IS_ERR(ptr)) {
++			ret = PTR_ERR(ptr);
++			break;
++		} else if (len < sizeof(*pfs->prefix) ||
++			   len > EROFS_NAME_LEN + sizeof(*pfs->prefix)) {
++			kfree(ptr);
++			ret = -EFSCORRUPTED;
++			break;
++		}
++		pfs[i].prefix = ptr;
++		pfs[i].infix_len = len - sizeof(struct erofs_xattr_long_prefix);
++	}
++
++	erofs_put_metabuf(&buf);
++	sbi->xattr_prefixes = pfs;
++	if (ret)
++		erofs_xattr_prefixes_cleanup(sb);
++	return ret;
++}
++
+ #ifdef CONFIG_EROFS_FS_POSIX_ACL
+ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu)
+ {
+diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
+index a65158cba14f..e1265351aedd 100644
+--- a/fs/erofs/xattr.h
++++ b/fs/erofs/xattr.h
+@@ -40,9 +40,13 @@ static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
+ 
+ extern const struct xattr_handler *erofs_xattr_handlers[];
+ 
++int erofs_xattr_prefixes_init(struct super_block *sb);
++void erofs_xattr_prefixes_cleanup(struct super_block *sb);
+ int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
+ ssize_t erofs_listxattr(struct dentry *, char *, size_t);
+ #else
++static inline int erofs_xattr_prefixes_init(struct super_block *sb) { return 0; }
++static inline void erofs_xattr_prefixes_cleanup(struct super_block *sb) {}
+ static inline int erofs_getxattr(struct inode *inode, int index,
+ 				 const char *name, void *buffer,
+ 				 size_t buffer_size)
 -- 
 2.19.1.6.gb485710b
 
