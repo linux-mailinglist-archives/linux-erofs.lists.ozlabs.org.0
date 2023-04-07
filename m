@@ -2,115 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9A116DA962
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 09:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55E1B6DADAE
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 15:38:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pt8xK5xvTz3fSs
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 17:23:49 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=qyU4UwFf;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PtKFV3VZ3z3c8G
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Apr 2023 23:38:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feab::70f; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=qyU4UwFf;
-	dkim-atps=neutral
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2070f.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::70f])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pt8x93tylz3fGQ
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Apr 2023 17:23:39 +1000 (AEST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K7sMUSlW053cfPZzemnGRfaLTkpooilvn9HtyO/TwEjT8o+89tmvZUTK+iSl07N0I0eGiFctiEMTWeKeAlFL55+qRVswETnlcPxFcUxcEFL3AYeuN5cCMBrxe4LZwXnT5rMmgEU4eCTbdL4q6M3r/bMwlq1To2eBIm65ue/BSk0rHgkqNpGEhmwIsFVc+x09tF55WcXX/QqQezEK7W0SYwsQ/82H/jeL48hhvS8c/IJjWArhwPVu1DzPB/9lyjWJ74a4hJps04lMOswtkZ95xAq1MMyZD/xSIg41wbHRy8vNnPLgfeDocBu0VqtWd9V2LwM50RKKFIEJ+QPUokmedg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sa8s7jctBAs56tOQIH43Q0IRpOFPy9NjsiCsicmye1I=;
- b=NmF2UPKJJ/0+WBXuZ3UFkOn357sgpbfzig46dl1sznpIE6o78riAW2RlbDOFXimcwUW7gdLOXeRavqZ7kIsIm1Hx/FsZnxF/mCZlJS+Uhtb18AFY8fJfnORjpeViHlE0LjPlEumKnuCgOSrWWNCl9jMhG1cwg13kMH4NIo49USdOxcwa9Lk+3fBn+lx3ia43A3MAyygRfkPjZpRkefMW293zfYiNIPXAd6wnFBsCjJPCf8yfH5Qwy32vfqyJYjN7BQbIVEr5t4Xh7BcrINezgr9us11hmFnTwkYywBKyukMryIsUbEAKB8sLDkGvjXsXC3M93Oxm8CPodipYPNEBsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sa8s7jctBAs56tOQIH43Q0IRpOFPy9NjsiCsicmye1I=;
- b=qyU4UwFfROe6g2z+W87sM4pdmCBE2oiJW+l2DXNW1qSJjIj5st1JGR+n4HGbzJbpYFmoxT8ymR5fynhNqplN5jrU5eEsop8sjcKLoaagVu/ot2b1fGm4T3LKoe6bsenh4gbPG9Ab235nOrGSno34kABLYkzj0PT9ssnMim2XLFjo+sGW5mXcbigOCoAz9i78z7vFG3obkCE10jV5nKLcLg6xlhrYKqXm390PsLKEd7Qw/K5luaNR1lykwnF1uCKFR84zo2zXcu0Ui7bwYImnVkhMFg5SXLRa8Ltgcx1GoTm55dBvDyBNe1Jv8AJ3+HJsSwueAakoWWsJ9XFohNTQxg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by SEZPR06MB5855.apcprd06.prod.outlook.com (2603:1096:101:9f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.33; Fri, 7 Apr
- 2023 07:23:14 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::a3a1:af8e:be1e:437c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::a3a1:af8e:be1e:437c%6]) with mapi id 15.20.6277.031; Fri, 7 Apr 2023
- 07:23:14 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: gregkh@linuxfoundation.org,
-	xiang@kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH 2/3] erofs: convert to use kobject_is_added()
-Date: Fri,  7 Apr 2023 15:23:03 +0800
-Message-Id: <20230407072303.34570-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <2023040602-stack-overture-d418@gregkh>
-References: <2023040602-stack-overture-d418@gregkh>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0005.apcprd04.prod.outlook.com
- (2603:1096:4:197::16) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtKFQ3QNvz3fFV
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Apr 2023 23:38:17 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VfWxuzn_1680874686;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfWxuzn_1680874686)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Apr 2023 21:38:10 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/3] erofs-utils: get rid of erofs_buf_write_bhops
+Date: Fri,  7 Apr 2023 21:38:03 +0800
+Message-Id: <20230407133805.60975-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEZPR06MB5855:EE_
-X-MS-Office365-Filtering-Correlation-Id: f64e8ff4-e7c2-49a7-5e9b-08db3738f344
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	vrQQxl1+Nj+MzC3qFQ+bfWP3vVWJOxdzLSWtkH+CJHCaK4n18SUMQl8r5019K6YUnoVkWr94nurEg2U+B9BlMVvn1WGFtZo8fUE8W8cISHPbGR+5NASlu1vlFqyjNQZtCHviasTmnfnZy1nTL8ZKcSfnmu5bc60JjXIz2F3t+izeESYsJj6+gnqRAni5UjJXh6F2GuZWkU+ycjFDajLrIX4f7SsZFZ6du2Ug90pGVNulTDKVuLWviQ3WSF5ENSFPR7oSF6shvlgYIjmS/rYkLSiCh4SnYUfayqfbzrk8gPVgGgHLroo46crLKE85VNE8oN0WiazZIUtxwNh2gKk3gkKdudeHfHyEkbCPvjR1Vj4EfHXnZ+hmtm/7WhlGECc3hTrt/UkLkszAbwUJ4K8T+g7iCev6VwSxijuGB1jU/n1kPcCo/ZyGkoJdBGK6qTdHaX3nVrMS9wcn7dANy6AIUU8Y4fwm75zrSsZJv0VhybL6n/AewRnYMSx60ufWHnWI3d/NufDL+6rCKVZ0HFNUK7SiubVsd/+xpcBmv0Ydjpzh0Db74EK16MditHW8J4Ha8D4Ek1dMOA31Ox+A6zHmztsI6SJysmH7T6wJ6HsZBuzBKHtykxvXBzdXJZMcM3Ya
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(136003)(39860400002)(366004)(376002)(451199021)(36756003)(38350700002)(38100700002)(5660300002)(2906002)(7416002)(8676002)(86362001)(66556008)(66946007)(66476007)(41300700001)(4326008)(8936002)(83380400001)(2616005)(1076003)(110136005)(26005)(6506007)(6512007)(316002)(52116002)(478600001)(6486002)(186003)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?EPre3Ujfjn3znLQidvh/XtnRUPF+twcv9Z0mJLykuDsmHyEN5fFh0cMwjrRH?=
- =?us-ascii?Q?5xWW5wjGRjnSHD3KvdyOw764e8b4GJ+bFdSYxVQzI5C+X6404UHK7sLlXl7g?=
- =?us-ascii?Q?o3CTHYrcjMLLrIS2ixT5eVwdgCX53w/4ZOqjC8EmlETZOIxY/qYmA8ca9YoN?=
- =?us-ascii?Q?k3wsyfKxedTp21RqLxwAaSW0ODcdWGM5FVoiwIlnrvq8JJh9h36BARcT7mkp?=
- =?us-ascii?Q?2YIzudZq77fb9cC1JSugoul1AIUfcPUIaIyZ4yfFxQM20OChhlq5qniGpNzx?=
- =?us-ascii?Q?KgdN07Ad1vOfOJFt9M0Urm0sJzlwzO+F3t72a8lRKrjn5Zij7ma+1AnBB+w7?=
- =?us-ascii?Q?59YhjXmIFLNdzgZdjMU7jpLIZ2Ccx61CTEG/8IEa28i4x1xv3yAPxQkrt0Pj?=
- =?us-ascii?Q?OvQpHyGVP0oWQEARl4cxGpo3mrRKiaZG/mM0RFEGYBEp6GEo4BZW2n8d5rxr?=
- =?us-ascii?Q?ddWJdwEQf+ztc8qr/QW9zA+7+O8EHMyO5OZZWGfrDYL1EXtXGTUmLKQQRZ/R?=
- =?us-ascii?Q?bQxPxzJV0pgHXCnBrBv0es+MfP+ZySYbEbrU74SrjXdvkh6H6PJy9NGdFZLf?=
- =?us-ascii?Q?J8qi6wpfew2dWcBKpbXM44RMSHMWN8tx4ihN0cwJED9GuLhzp3z48Rs2DgWK?=
- =?us-ascii?Q?eq6xeWD3WcMF9ZlpADXzGn/xQFwRyixm7N0CHMJyh1uZtfGNI5PtpRY0CAmn?=
- =?us-ascii?Q?IdmPC94+Jj2Jh0ZWJ/RPJ2H0AQGef58nf/lYoqHvK83nw7wBVMXHf/tjV+CQ?=
- =?us-ascii?Q?PZF31Tuv5gpy1EYDvuu2QdQyXOvCbaUW0z0IVZ1uxw2xCdWPQKHyuTDCqJ4e?=
- =?us-ascii?Q?V3ubjJKb15It8H9uzw3267G8RXIUAG3BL8+iXDf4evWM+i44SUFI+mPJBbM2?=
- =?us-ascii?Q?+5OKHvcTU/7diBmzz7GqgOj8oF8kHnPvt4mzQnKMOGI/3aYACTl8otUCURZ9?=
- =?us-ascii?Q?8599znRVQMFOpmXcb0wBnfI3wWiiD6m9kUOMr/TVNyjqrYvxBzw956oLsrmq?=
- =?us-ascii?Q?9UI3S7UeF2N2niauEQaWc8M9tWZV5386bu44WxdXO7EeQWSh+T7p2UwGGZKE?=
- =?us-ascii?Q?wCmphzBgWuIApNjHQYSvYQSh1ODJEG48EbLfd9Q8zIYhwGWgTmge0T98cZDN?=
- =?us-ascii?Q?5Z2/u0Hd2FbGdCmRq474tC8dUvnV/oqstbVNCAXnSmPvxOSY/PT6eGWP2+CK?=
- =?us-ascii?Q?kwXSUjASu3UReP0g6I5bpDNIe3CLzQQ73FrLIiLD45iA2m3r0LJqdkffjcPc?=
- =?us-ascii?Q?ybTTMjn4eGtKaCOALs85Gpom4avBS1VxiJl3btfKCc/8h7LqPsH0uRiCFesD?=
- =?us-ascii?Q?2GjgRc8zyKTxmj0AFOi20gSPPIC+M6hG8kATZWwOGysJ71qWkR7TaNT95ZoP?=
- =?us-ascii?Q?M2sd/BPRqjSeDbfP2h+8WmmYjiT4+t2lXGF66gRX4NCSJF22uvJIgUsF41VH?=
- =?us-ascii?Q?D61k0/S4+WZMfwPxbzpFjwNKV+D2ZwwQRYv/W0GMdYhdlpJQHGMWmEmWwgrW?=
- =?us-ascii?Q?Gr7tUHxEFG4Bf/22JvIBmSVYvefdQnp3sTFOMy4wS9CZ7nLmGboJscKZ4Zrh?=
- =?us-ascii?Q?rr4Fv3jLR/kCxWvHHbDvOCN5JcaKYXcxIsPMp2+j?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f64e8ff4-e7c2-49a7-5e9b-08db3738f344
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2023 07:23:14.4225
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TJAlYvrX7lM4NlY/4ybnMDkCJROdtlirk1v/I0aUbLx4pCty8iHSFSl8EN3Y/MYcCjSRePoxKfeLAubWMMaHnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5855
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -122,156 +39,94 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: naohiro.aota@wdc.com, frank.li@vivo.com, damien.lemoal@opensource.wdc.com, rafael@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, jth@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi all,
+`nbh->off - bh->off` in erofs_bh_flush_generic_write() is
+problematic due to erofs_bdrop(bh, false).
 
-> Later, I thought I could send some demo code that strips the kobject in sbi into a pointer.
+Let's avoid generic erofs_buf_write_bhops instead.
 
-I made the following modifications, not sure if I'm going the right way.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/cache.h |  1 -
+ lib/cache.c           | 23 -----------------------
+ mkfs/main.c           |  8 +++++---
+ 3 files changed, 5 insertions(+), 27 deletions(-)
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 1db018f8c2e8..8e1799f690c0 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -165,8 +165,7 @@ struct erofs_sb_info {
- 	u32 feature_incompat;
+diff --git a/include/erofs/cache.h b/include/erofs/cache.h
+index b04eb47..8c3bd46 100644
+--- a/include/erofs/cache.h
++++ b/include/erofs/cache.h
+@@ -80,7 +80,6 @@ static inline const int get_alignsize(int type, int *type_ret)
  
- 	/* sysfs support */
--	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
--	struct completion s_kobj_unregister;
-+	struct filesystem_kobject *f_kobj;
+ extern const struct erofs_bhops erofs_drop_directly_bhops;
+ extern const struct erofs_bhops erofs_skip_write_bhops;
+-extern const struct erofs_bhops erofs_buf_write_bhops;
  
- 	/* fscache support */
- 	struct fscache_volume *volume;
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 435e515c0792..70e915906012 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -8,6 +8,33 @@
- 
- #include "internal.h"
- 
-+//maybe we should add following thins to include/linux/filesystem_kobject.h ?
-+struct filesystem_kobject {
-+	struct kobject kobject;
-+	void *private;
-+};
-+
-+void filesystem_kobject_put(struct filesystem_kobject *f_kobj)
-+{
-+	if (f_kobj)
-+		kobject_put(&f_kobj->kobject);
-+}
-+
-+void filesystem_kobject_set_private(struct filesystem_kobject *f_kobj, void *p)
-+{
-+	f_kobj->private = p;
-+}
-+
-+void *filesystem_kobject_get_private(struct filesystem_kobject *f_kobj)
-+{
-+	return f_kobj->private;
-+}
-+
-+struct kobject *filesystem_kobject_get_kobject(struct filesystem_kobject *f_kobj)
-+{
-+	return &f_kobj->kobject;
-+}
-+
- enum {
- 	attr_feature,
- 	attr_pointer_ui,
-@@ -107,8 +134,9 @@ static unsigned char *__struct_ptr(struct erofs_sb_info *sbi,
- static ssize_t erofs_attr_show(struct kobject *kobj,
- 				struct attribute *attr, char *buf)
+ static inline erofs_off_t erofs_btell(struct erofs_buffer_head *bh, bool end)
  {
--	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
--						s_kobj);
-+	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
-+						kobject);
-+	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
- 	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
- 	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
+diff --git a/lib/cache.c b/lib/cache.c
+index 9eb0394..178bd5a 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -39,29 +39,6 @@ const struct erofs_bhops erofs_skip_write_bhops = {
+ 	.flush = erofs_bh_flush_skip_write,
+ };
  
-@@ -130,8 +158,9 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
- static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 						const char *buf, size_t len)
+-int erofs_bh_flush_generic_write(struct erofs_buffer_head *bh, void *buf)
+-{
+-	struct erofs_buffer_head *nbh = list_next_entry(bh, list);
+-	erofs_off_t offset = erofs_btell(bh, false);
+-
+-	DBG_BUGON(nbh->off < bh->off);
+-	return dev_write(buf, offset, nbh->off - bh->off);
+-}
+-
+-static bool erofs_bh_flush_buf_write(struct erofs_buffer_head *bh)
+-{
+-	int err = erofs_bh_flush_generic_write(bh, bh->fsprivate);
+-
+-	if (err)
+-		return false;
+-	free(bh->fsprivate);
+-	return erofs_bh_flush_generic_end(bh);
+-}
+-
+-const struct erofs_bhops erofs_buf_write_bhops = {
+-	.flush = erofs_bh_flush_buf_write,
+-};
+-
+ /* return buffer_head of erofs super block (with size 0) */
+ struct erofs_buffer_head *erofs_buffer_init(void)
  {
--	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
--						s_kobj);
-+	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
-+						kobject);
-+	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
- 	struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
- 	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
- 	unsigned long t;
-@@ -169,9 +198,12 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 65d3df6..05db4c8 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -580,6 +580,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	};
+ 	const u32 sb_blksize = round_up(EROFS_SUPER_END, erofs_blksiz());
+ 	char *buf;
++	int ret;
  
- static void erofs_sb_release(struct kobject *kobj)
- {
--	struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
--						 s_kobj);
--	complete(&sbi->s_kobj_unregister);
-+	struct filesystem_kobject *f_kobject = container_of(kobj, struct filesystem_kobject,
-+						kobject);
-+	struct erofs_sb_info *sbi = filesystem_kobject_get_private(f_kobject);
-+
-+	kfree(f_kobject);
-+	sbi->f_kobj = NULL;
- }
- 
- static const struct sysfs_ops erofs_attr_ops = {
-@@ -205,6 +237,7 @@ static struct kobject erofs_feat = {
- int erofs_register_sysfs(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	struct kobject *kobj;
- 	char *name;
- 	char *str = NULL;
- 	int err;
-@@ -222,17 +255,24 @@ int erofs_register_sysfs(struct super_block *sb)
- 	} else {
- 		name = sb->s_id;
+ 	*blocks         = erofs_mapbh(NULL);
+ 	sb.blocks       = cpu_to_le32(*blocks);
+@@ -601,9 +602,10 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
  	}
--	sbi->s_kobj.kset = &erofs_root;
--	init_completion(&sbi->s_kobj_unregister);
--	err = kobject_init_and_add(&sbi->s_kobj, &erofs_sb_ktype, NULL, "%s", name);
-+
-+	sbi->f_kobj = kzalloc(sizeof(struct filesystem_kobject), GFP_KERNEL);
-+	if (!sbi->f_kobj) {
-+		kfree(str);
-+		return -ENOMEM;
-+	}
-+	filesystem_kobject_set_private(sbi->f_kobj, sbi);
-+	kobj = filesystem_kobject_get_kobject(sbi->f_kobj);
-+	kobj->kset = &erofs_root;
-+
-+	err = kobject_init_and_add(&sbi->f_kobj->kobject, &erofs_sb_ktype, NULL, "%s", name);
- 	kfree(str);
- 	if (err)
- 		goto put_sb_kobj;
- 	return 0;
+ 	memcpy(buf + EROFS_SUPER_OFFSET, &sb, sizeof(sb));
  
- put_sb_kobj:
--	kobject_put(&sbi->s_kobj);
--	wait_for_completion(&sbi->s_kobj_unregister);
-+	filesystem_kobject_put(sbi->f_kobj);
- 	return err;
+-	bh->fsprivate = buf;
+-	bh->op = &erofs_buf_write_bhops;
+-	return 0;
++	ret = dev_write(buf, erofs_btell(bh, false), sb_blksize);
++	free(buf);
++	erofs_bdrop(bh, false);
++	return ret;
  }
  
-@@ -240,11 +280,7 @@ void erofs_unregister_sysfs(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
--	if (sbi->s_kobj.state_in_sysfs) {
--		kobject_del(&sbi->s_kobj);
--		kobject_put(&sbi->s_kobj);
--		wait_for_completion(&sbi->s_kobj_unregister);
--	}
-+	filesystem_kobject_put(sbi->f_kobj);
- }
- 
- int __init erofs_init_sysfs(void)
+ static int erofs_mkfs_superblock_csum_set(void)
+-- 
+2.24.4
+
