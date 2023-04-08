@@ -2,37 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 507446DB675
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 00:28:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A8C16DB95A
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 09:47:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PtY1016Hpz3fS5
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 08:28:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PtnQg2wQMz3fXC
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 17:47:55 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8ERb3zs;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.20; helo=mga02.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8ERb3zs;
+	dkim-atps=neutral
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtY0w4ZCPz3f7t
-	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 08:28:15 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VfY-f.6_1680906488;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VfY-f.6_1680906488)
-          by smtp.aliyun-inc.com;
-          Sat, 08 Apr 2023 06:28:08 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 7/7] erofs: enable long extended attribute name prefixes
-Date: Sat,  8 Apr 2023 06:28:08 +0800
-Message-Id: <20230407222808.19670-1-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230407141710.113882-8-jefflexu@linux.alibaba.com>
-References: <20230407141710.113882-8-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PtnQY6zK6z3fTS
+	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Apr 2023 17:47:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680940070; x=1712476070;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=f3riINcVR+P4Qs6BQnkDvZbRnpsuwviDQcaRdnZvDZs=;
+  b=U8ERb3zs7z1Lx8inHRYZmYMiA0Q9OQSV+nlwI810j45PzUt2NjcJ8xWG
+   lrPswosQlLoGbDrML3ZEq1R6r2ARSDepetg+RmCduwqSl8xcf4qlUVeBT
+   r6Ya1O8XFOjB0YW2CsuAkOlusJa/VvSCfUSniycW6rL0BvEUPWPCXBh2n
+   RefZGKZInBEfuUTAnycUzryMFzfAdsbjsFSTyfaFxqIC3pykGagadTkv7
+   +DdZPJ/HnJF0TH9v6k779FCPcc9D19i5h7OQRjlm/8n4W/dtOQawMqeLV
+   HrnuVLR76GfMAHTAudUxtcny7kceUioyXTrKLY6KnHlXx24YRlYWbuhkr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="331782572"
+X-IronPort-AV: E=Sophos;i="5.98,329,1673942400"; 
+   d="scan'208";a="331782572"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2023 00:47:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="752243202"
+X-IronPort-AV: E=Sophos;i="5.98,329,1673942400"; 
+   d="scan'208";a="752243202"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Apr 2023 00:47:37 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pl3IP-000TU9-0t;
+	Sat, 08 Apr 2023 07:47:37 +0000
+Date: Sat, 08 Apr 2023 15:46:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 03f74401141f309de6c48ca045f256fda328d740
+Message-ID: <64311bdd.I33A68fV7y9fKmhw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,90 +70,138 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Let's enable long xattr name prefix feature.  Old kernels will just
-ignore / skip such extended attributes so that in case you don't want
-to mount such images.  Add another incompatible feature as an option
-for this.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 03f74401141f309de6c48ca045f256fda328d740  erofs: don't warn ztailpacking feature anymore
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
-v2: fix build error when CONFIG_EROFS_FS_XATTR is not defined
----
- fs/erofs/erofs_fs.h | 4 +++-
- fs/erofs/internal.h | 1 +
- fs/erofs/super.c    | 7 +++++++
- 3 files changed, 11 insertions(+), 1 deletion(-)
+elapsed time: 725m
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index ea62f83dac40..ac42a7255b39 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -27,6 +27,7 @@
- #define EROFS_FEATURE_INCOMPAT_ZTAILPACKING	0x00000010
- #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
- #define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
-+#define EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES	0x00000040
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-@@ -36,7 +37,8 @@
- 	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
- 	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
- 	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
--	 EROFS_FEATURE_INCOMPAT_DEDUPE)
-+	 EROFS_FEATURE_INCOMPAT_DEDUPE | \
-+	 EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 5a9c19654b19..f675050af2bb 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -285,6 +285,7 @@ EROFS_FEATURE_FUNCS(compr_head2, incompat, INCOMPAT_COMPR_HEAD2)
- EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
- EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
-+EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- 
- /* atomic flag definitions */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index bf396e0c243a..e44cd69c9d9c 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -385,6 +385,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 	sbi->meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
- #ifdef CONFIG_EROFS_FS_XATTR
- 	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
-+	sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
-+	sbi->xattr_prefix_count = dsb->xattr_prefix_count;
- #endif
- 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
- 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-@@ -822,6 +824,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
-+	err = erofs_xattr_prefixes_init(sb);
-+	if (err)
-+		return err;
-+
- 	err = erofs_register_sysfs(sb);
- 	if (err)
- 		return err;
-@@ -981,6 +987,7 @@ static void erofs_put_super(struct super_block *sb)
- 
- 	erofs_unregister_sysfs(sb);
- 	erofs_shrinker_unregister(sb);
-+	erofs_xattr_prefixes_cleanup(sb);
- #ifdef CONFIG_EROFS_FS_ZIP
- 	iput(sbi->managed_cache);
- 	sbi->managed_cache = NULL;
+configs tested: 115
+configs skipped: 6
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r003-20230405   gcc  
+alpha                randconfig-r005-20230403   gcc  
+alpha                randconfig-r036-20230403   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r004-20230403   gcc  
+arc                  randconfig-r016-20230403   gcc  
+arc                  randconfig-r033-20230403   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r034-20230403   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r015-20230403   gcc  
+arm64                randconfig-r015-20230406   clang
+arm64                randconfig-r016-20230406   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r002-20230405   gcc  
+hexagon              randconfig-r004-20230403   clang
+hexagon              randconfig-r012-20230403   clang
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230403   clang
+i386                 randconfig-a002-20230403   clang
+i386                 randconfig-a003-20230403   clang
+i386                 randconfig-a004-20230403   clang
+i386                 randconfig-a005-20230403   clang
+i386                 randconfig-a006-20230403   clang
+i386                 randconfig-a011-20230403   gcc  
+i386                 randconfig-a012-20230403   gcc  
+i386                 randconfig-a013-20230403   gcc  
+i386                 randconfig-a014-20230403   gcc  
+i386                 randconfig-a015-20230403   gcc  
+i386                 randconfig-a016-20230403   gcc  
+i386                 randconfig-r022-20230403   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r006-20230406   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r001-20230405   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r003-20230406   gcc  
+microblaze           randconfig-r023-20230403   gcc  
+microblaze           randconfig-r024-20230403   gcc  
+microblaze           randconfig-r031-20230403   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r001-20230406   gcc  
+nios2                randconfig-r014-20230403   gcc  
+openrisc             randconfig-r006-20230405   gcc  
+openrisc             randconfig-r025-20230403   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r006-20230403   clang
+powerpc              randconfig-r013-20230403   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r012-20230406   clang
+riscv                randconfig-r021-20230403   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230403   clang
+s390                 randconfig-r003-20230403   clang
+s390                 randconfig-r004-20230403   clang
+s390                 randconfig-r005-20230406   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r001-20230403   gcc  
+sh                   randconfig-r002-20230406   gcc  
+sh                   randconfig-r003-20230403   gcc  
+sh                   randconfig-r005-20230405   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r032-20230403   gcc  
+sparc64              randconfig-r004-20230405   gcc  
+sparc64              randconfig-r004-20230406   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230403   clang
+x86_64               randconfig-a002-20230403   clang
+x86_64               randconfig-a003-20230403   clang
+x86_64               randconfig-a004-20230403   clang
+x86_64               randconfig-a005-20230403   clang
+x86_64               randconfig-a006-20230403   clang
+x86_64               randconfig-a011-20230403   gcc  
+x86_64               randconfig-a012-20230403   gcc  
+x86_64                        randconfig-a012   clang
+x86_64               randconfig-a013-20230403   gcc  
+x86_64               randconfig-a014-20230403   gcc  
+x86_64                        randconfig-a014   clang
+x86_64               randconfig-a015-20230403   gcc  
+x86_64               randconfig-a016-20230403   gcc  
+x86_64                        randconfig-a016   clang
+x86_64               randconfig-k001-20230403   gcc  
+x86_64               randconfig-r026-20230403   gcc  
+x86_64                               rhel-8.3   gcc  
+
 -- 
-2.19.1.6.gb485710b
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
