@@ -1,42 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3A946DBCE8
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Apr 2023 22:27:33 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C90556DBF8C
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 12:52:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pv6H661lvz3fXS
-	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 06:27:30 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=service.zgjsyw.cn header.i=@service.zgjsyw.cn header.a=rsa-sha1 header.s=mykey header.b=Lr1AdViB;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PvTTJ53xFz3cf0
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 20:52:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=service.zgjsyw.cn (client-ip=45.156.27.160; helo=service.zgjsyw.cn; envelope-from=vodurkd@service.zgjsyw.cn; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=service.zgjsyw.cn header.i=@service.zgjsyw.cn header.a=rsa-sha1 header.s=mykey header.b=Lr1AdViB;
-	dkim-atps=neutral
-X-Greylist: delayed 606 seconds by postgrey-1.36 at boromir; Sun, 09 Apr 2023 06:27:22 AEST
-Received: from service.zgjsyw.cn (unknown [45.156.27.160])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pv6Gy5G1Vz3cfB
-	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Apr 2023 06:27:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=mykey; d=service.zgjsyw.cn;
- h=Date:From:To:Subject:Message-ID:Mime-Version:Content-Type;
- bh=uTr6s/ncDgELHPVGeSioNVsSM0k=;
- b=Lr1AdViB46gCkftIOhThahSok0ia4Mjcxvndksr5+bP0MrhqQZhbbgNPc3qZQ8IiXa4D+4qHQjGY
-   wZiqFxFi6I86hZgz2R4onwNItUd69r3rIjVubogJZLm9J5uBrGu4LI5oPRWcoRUEWQQW3GZ+US2j
-   oUPw7ruK/1ABXlLXYZo=
-Received: from yahoo2.com.cn (13.231.198.200) by service.zgjsyw.cn id h6772m0001gi for <linux-erofs@lists.ozlabs.org>; Sat, 8 Apr 2023 20:17:01 +0000 (envelope-from <vodurkd@service.zgjsyw.cn>)
-Date: Sun, 9 Apr 2023 04:16:48 +0800
-From: "Amazon.co.jp" <vodurkd@service.zgjsyw.cn>
-To: <linux-erofs@lists.ozlabs.org>
-Subject: =?utf-8?B?44CQ6YeN6KaB44CRQW1hem9u44Gu44GK55+l44KJ44Gb44CB5oOF5aCx44KS5pu0?=
-	=?utf-8?B?5paw44GX44Gm44GP44Gg44GV44GE44CC44Oh44O844Or55Wq5Y+3Ok00NjE=?=
-Message-ID: <20230409041659234417@service.zgjsyw.cn>
-X-mailer: Foxmail 6, 13, 102, 15 [cn]
-Mime-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="=====003_Dragon184474885628_====="
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PvTTC0cLJz3cLr
+	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Apr 2023 20:52:30 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VfcswfY_1681037541;
+Received: from 30.13.186.222(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VfcswfY_1681037541)
+          by smtp.aliyun-inc.com;
+          Sun, 09 Apr 2023 18:52:24 +0800
+Message-ID: <013084a3-8a80-9825-66b9-e4bd6674169e@linux.alibaba.com>
+Date: Sun, 9 Apr 2023 18:52:20 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [PATCH 2/7] erofs: initialize packed inode after root inode is
+ assigned
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+References: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
+ <20230407141710.113882-3-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230407141710.113882-3-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,150 +46,27 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
 
---=====003_Dragon184474885628_=====
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
 
-DQogDQog0JBtYXpvbiDjgYrlrqLmp5g6bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZyANCtCQ
-bWFbOV16b24g44Gr55m76Yyy44GE44Gf44Gg44GE44Gf44GK5a6i5qeY44Gr44CB0JBtIGF6b24g
-44Ki44Kr44Km44Oz44OI44Gu5oOF5aCx5pu05paw44KS44GK5bGK44GR44GX44G+44GZ44CCDQrm
-rovlv7XjgarjgYzjgonjgIHQkG1bXWF6b24g44Gu44Ki44Kr44Km44Oz44OI44KS5pu05paw44Gn
-44GN44G+44Gb44KT44Gn44GX44Gf44CCDQrku4rlm57jga/jgIHjgqvjg7zjg4njgYzmnJ/pmZDl
-iIfjgozjgavjgarjgaPjgabjgovjgYvjgIHoq4vmsYLlhYjkvY/miYDjgYzlpInmm7TjgZXjgozj
-gZ/jgarjganjgIHjgZXjgb7jgZbjgb7jgarnkIbnlLHjgafjgqvjg7zjg4njga7mg4XloLHjgpLm
-m7TmlrDjgafjgY3jgb7jgZvjgpPjgafjgZfjgZ/jgIINCuOCouOCq+OCpuODs+ODiOaDheWgseOB
-ruS4gOmDqOOBjOiqpOOBo+OBpuOBhOOCi+aVheOBq+OAgeOBiuWuouanmOOBruOCouOCq+OCpuOD
-s+ODiOOCkue2reaMgeOBmeOCi+OBn+OCgSDQkG1hWzldem9uIOOCouOCq+OCpuODs+ODiOOBriDm
-g4XloLHjgpLnorroqo3jgZnjgovlv4XopoHjgYzjgYLjgorjgb7jgZnjgILkuIvjgYvjgonjgqLj
-gqvjgqbjg7Pjg4jjgpLjg63jgrDjgqTjg7PjgZfjgIHmg4XloLHjgpLmm7TmlrDjgZfjgabjgY/j
-gaDjgZXjgYTjgIINCtCQbWF6b24g44Ot44Kw44Kk44Oz44Gq44GK44CBMjTmmYLplpPku6XlhoXj
-gavjgZTnorroqo3jgYzjgarjgYTloLTlkIjjgIHoqqDjgavnlLPjgZfoqLPjgZTjgZbjgYTjgb7j
-gZvjgpPjgIHjgYrlrqLmp5jjga7lronlhajjga7ngrrjgIHjgqLjgqvjgqbjg7Pjg4jjga7liKnn
-lKjliLbpmZDjgpLjgZXjgZvjgabjgYTjgZ/jgaDjgY3jgb7jgZnjga7jgafjgIHkuojjgoHjgZTk
-uobmib/jgY/jgaDjgZXjgYTjgIINCuOCouOCq+OCpuODs+ODiOOBq+eZu+mMsuOBrkXjg6Hjg7zj
-g6vjgqLjg4njg6zjgrnjgavjgqLjgq/jgrvjgrnjgafjgY3jgarjgYTloLTlkIgNCuOBiuWVj+OB
-hOWQiOOCj+OBm++8miBBbWFbem9u44Kr44K544K/44Oe44O844K144O844OT44K544CCDQoNCuOB
-iuefpeOCieOBmzogDQrjg5Hjgrnjg6/jg7zjg4njga/oqrDjgavjgoLmlZnjgYjjgarjgYTjgafj
-gY/jgaDjgZXjgYTjgIIgDQrlgIvkurrmg4XloLHjgajplqLkv4LjgYzjgarjgY/jgIHmjqjmuKzj
-gZfjgavjgY/jgYTjg5Hjgrnjg6/jg7zjg4njgpLkvZzmiJDjgZfjgabjgY/jgaDjgZXjgYTjgILl
-pKfmloflrZfjgajlsI/mloflrZfjgIHmlbDlrZfjgIHjgYrjgojjgbPoqJjlj7fjgpLlv4XjgZrk
-vb/nlKjjgZfjgabjgY/jgaDjgZXjgYTjgIIgDQrjgqrjg7Pjg6njgqTjg7PjgqLjgqvjgqbjg7Pj
-g4jjgZTjgajjgavjgIHnlbDjgarjgovjg5Hjgrnjg6/jg7zjg4njgpLkvb/nlKjjgZfjgabjgY/j
-gaDjgZXjgYTjgIINCg0KDQoNCuOBqeOBhuOBnuOCiOOCjeOBl+OBj+OBiumhmOOBhOOBhOOBn+OB
-l+OBvuOBmeOAgiANCtCQbWF6b24=
+On 2023/4/7 22:17, Jingbo Xu wrote:
+> As commit 8f7acdae2cd4 ("staging: erofs: kill all failure handling in
+> fill_super()"), move the initialization of packed inode after root
+> inode is assigned, so that the iput() in .put_super() is adequate as
+> the failure handling.
+> 
+> Otherwise, iput() is also needed in .kill_sb(), in case of the mounting
+> fails halfway.
+> 
 
---=====003_Dragon184474885628_=====
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Fixes: b15b2e307c3a ("erofs: support on-disk compressed fragments data")
 
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVU
-Ri04IiBodHRwLWVxdWl2PUNvbnRlbnQtVHlwZT4NCjxNRVRBIG5hbWU9R0VORVJBVE9SIGNvbnRl
-bnQ9Ik1TSFRNTCAxMS4wMC4xMDU3MC4xMDAxIj48L0hFQUQ+DQo8Qk9EWT4NCjxUQUJMRSANCnN0
-eWxlPSdNQVJHSU4tQk9UVE9NOiAxMHB4OyBGT05ULUZBTUlMWTogIk1pY3Jvc29mdCBZYUhlaSI7
-IFdPUkQtU1BBQ0lORzogMHB4OyBURVhULVRSQU5TRk9STTogbm9uZTsgT1JQSEFOUzogMjsgV0lE
-T1dTOiAyOyBMRVRURVItU1BBQ0lORzogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0
-LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsg
-dGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsJyANCmNlbGxTcGFjaW5nPTAgY2VsbFBhZGRp
-bmc9MCB3aWR0aD0iMTAwJSIgYm9yZGVyPTA+DQogIDxUQk9EWT4NCiAgPFRSIHZBbGlnbj1ib3R0
-b20+DQogICAgPFREIGhlaWdodD02NCBhbGlnbj1sZWZ0PjxCUiBjbGFzcz1BcHBsZS1pbnRlcmNo
-YW5nZS1uZXdsaW5lPjxJTUcgDQogICAgICBzdHlsZT0iV0lEVEg6IDExM3B4OyBNSU4tSEVJR0hU
-OiA0NnB4IiBib3JkZXI9MCANCiAgICAgIHNyYz0iaHR0cDovL2ctZWMyLmltYWdlcy1hbWF6b24u
-Y29tL2ltYWdlcy9HLzAxL2UtbWFpbC9sb2dvcy9hX2pwX3ByaW1lX2xvZ29fNDguZ2lmIiANCiAg
-ICAgIHdpZHRoPTExMyBoZWlnaHQ9NDY+PC9URD4NCiAgICA8VEQgdkFsaWduPXRvcCB3aWR0aD0y
-MCBhbGlnbj1jZW50ZXI+Jm5ic3A7PC9URD48L1RSPjwvVEJPRFk+PC9UQUJMRT4NCjxUQUJMRSBp
-ZD15dWlfM18yXzBfMV8xNTM3NTY0ODBbUkFORF9JTlRfMF85OTk5OTk5OV0gDQpzdHlsZT0nTUFS
-R0lOLUJPVFRPTTogMjBweDsgRk9OVC1GQU1JTFk6ICJNaWNyb3NvZnQgWWFIZWkiOyBXT1JELVNQ
-QUNJTkc6IDBweDsgVEVYVC1UUkFOU0ZPUk06IG5vbmU7IFBBRERJTkctQk9UVE9NOiAxMHB4OyBQ
-QURESU5HLVRPUDogMTBweDsgT1JQSEFOUzogMjsgV0lET1dTOiAyOyBMRVRURVItU1BBQ0lORzog
-bm9ybWFsOyBURVhULUlOREVOVDogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7
-IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBp
-bml0aWFsJyANCmNlbGxTcGFjaW5nPTAgY2VsbFBhZGRpbmc9MCB3aWR0aD0iMTAwJSIgYm9yZGVy
-PTA+DQogIDxUQk9EWSBpZD15dWlfM18yXzBfMV8xNTM3NTY0ODBbUkFORF9JTlRfMF85OTk5OTk5
-OV0+DQogIDxUUiBpZD15dWlfM18yXzBfMV8xNTM3NTY0ODBbUkFORF9JTlRfMF85OTk5OTk5OV0g
-dkFsaWduPWJvdHRvbT4NCiAgICA8VEQgdkFsaWduPXRvcCB3aWR0aD0yMCBhbGlnbj1jZW50ZXI+
-Jm5ic3A7PC9URD4NCiAgICA8VEQgaWQ9eXVpXzNfMl8wXzFfMTUzNzU2NDgwW1JBTkRfSU5UXzBf
-OTk5OTk5OTldIGNsYXNzPXlpdjIxNDU4NzM4MDNwcHNhbnMgDQogICAgc3R5bGU9J0ZPTlQtU0la
-RTogMTVweDsgRk9OVC1GQU1JTFk6IENhbGlicmksIFRyZWJ1Y2hldCwgQXJpYWwsICJzYW5zIHNl
-cmlmIjsgQ09MT1I6IHJnYig1MSw1MSw1MSk7IExJTkUtSEVJR0hUOiAyMnB4JyANCiAgICB2QWxp
-Z249dG9wPtCQbWF6b24g44GK5a6i5qeYOjxTUEFOIA0KICAgICAgc3R5bGU9J0ZPTlQtU0laRTog
-MTVweDsgRk9OVC1GQU1JTFk6ICJTb3VyY2UgU2FucyBQcm8iLCBDYWxpYnJpLCBDYW5kYXJhLCBB
-cmlhbCwgc2Fucy1zZXJpZjsgV0hJVEUtU1BBQ0U6IG5vcm1hbDsgV09SRC1TUEFDSU5HOiAwcHg7
-IFRFWFQtVFJBTlNGT1JNOiBub25lOyBGTE9BVDogbm9uZTsgRk9OVC1XRUlHSFQ6IDQwMDsgQ09M
-T1I6IHJnYig1MSw1MSw1MSk7IEZPTlQtU1RZTEU6IG5vcm1hbDsgVEVYVC1BTElHTjogbGVmdDsg
-T1JQSEFOUzogMjsgV0lET1dTOiAyOyBESVNQTEFZOiBpbmxpbmUgIWltcG9ydGFudDsgTEVUVEVS
-LVNQQUNJTkc6IG5vcm1hbDsgQkFDS0dST1VORC1DT0xPUjogcmdiKDI0NSwyNDUsMjQ1KTsgVEVY
-VC1JTkRFTlQ6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29y
-YXRpb24tc3R5bGU6IGluaXRpYWw7IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgdGV4
-dC1kZWNvcmF0aW9uLXRoaWNrbmVzczogaW5pdGlhbDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczog
-bm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsJz5saW51eC1lcm9mc0BsaXN0cy5vemxh
-YnMub3JnPC9TUEFOPjxTUEFOIA0KICAgICAgaWQ9eXVpXzNfMl8wXzFfMTUzNzU2NDgwW1JBTkRf
-SU5UXzBfOTk5OTk5OTldIHN0eWxlPSJESVNQTEFZOiBpbmxpbmUiPiANCiAgICAgIDxQPtCQbWE8
-Rk9OVCBzdHlsZT0iRk9OVC1TSVpFOiAwcHg7IENPTE9SOiB0cmFuc3BhcmVudCI+WzldPC9GT05U
-PnpvbiANCiAgICAgIOOBq+eZu+mMsuOBhOOBn+OBoOOBhOOBn+OBiuWuouanmOOBq+OAgdCQbSBh
-em9uIOOCouOCq+OCpuODs+ODiOOBruaDheWgseabtOaWsOOCkuOBiuWxiuOBkeOBl+OBvuOBmeOA
-gjxCUj7mrovlv7XjgarjgYzjgonjgIHQkG08Rk9OVCANCiAgICAgIHN0eWxlPSJGT05ULVNJWkU6
-IDBweDsgQ09MT1I6IHRyYW5zcGFyZW50Ij5bXTwvRk9OVD5hem9uIA0KICAgICAg44Gu44Ki44Kr
-44Km44Oz44OI44KS5pu05paw44Gn44GN44G+44Gb44KT44Gn44GX44Gf44CCPEJSPuS7iuWbnuOB
-r+OAgeOCq+ODvOODieOBjOacn+mZkOWIh+OCjOOBq+OBquOBo+OBpuOCi+OBi+OAgeiri+axguWF
-iOS9j+aJgOOBjOWkieabtOOBleOCjOOBn+OBquOBqeOAgeOBleOBvuOBluOBvuOBqueQhueUseOB
-p+OCq+ODvOODieOBruaDheWgseOCkuabtOaWsOOBp+OBjeOBvuOBm+OCk+OBp+OBl+OBn+OAgjwv
-UD4NCiAgICAgIDxQPjxGT05UIGNvbG9yPSMzMzMzMzM+PFNQQU4gDQogICAgICBzdHlsZT0iRk9O
-VC1TSVpFOiAxNHB4Ij7jgqLjgqvjgqbjg7Pjg4jmg4XloLHjga7kuIDpg6jjgYzoqqTjgaPjgabj
-gYTjgovmlYXjgavjgIHjgYrlrqLmp5jjga7jgqLjgqvjgqbjg7Pjg4jjgpLntq3mjIHjgZnjgovj
-gZ/jgoE8U1BBTj4mbmJzcDs8L1NQQU4+PEZPTlQgDQogICAgICBzaXplPTM+0JBtYTxGT05UIA0K
-ICAgICAgc3R5bGU9IkZPTlQtU0laRTogMHB4OyBDT0xPUjogdHJhbnNwYXJlbnQiPls5XTwvRk9O
-VD56b248U1BBTj4mbmJzcDs8L1NQQU4+PC9GT05UPuOCouOCq+OCpuODs+ODiOOBriANCiAgICAg
-IOaDheWgseOCkueiuuiqjeOBmeOCi+W/heimgeOBjOOBguOCiuOBvuOBmeOAguS4i+OBi+OCieOC
-ouOCq+OCpuODs+ODiOOCkuODreOCsOOCpOODs+OBl+OAgeaDheWgseOCkuabtOaWsOOBl+OBpuOB
-j+OBoOOBleOBhOOAgjwvU1BBTj48L0ZPTlQ+PEZPTlQgDQogICAgICBjb2xvcj0jMzMzMzMzPjxC
-Uj48QSBjbGFzcz1idXR0b24gDQogICAgICBzdHlsZT0iRk9OVC1TSVpFOiAxNnB4OyBDVVJTT1I6
-IHBvaW50ZXI7IFRFWFQtREVDT1JBVElPTjogbm9uZTsgQk9SREVSLVRPUDogbWVkaXVtIG5vbmU7
-IEJPUkRFUi1SSUdIVDogbWVkaXVtIG5vbmU7IEJPUkRFUi1CT1RUT006IG1lZGl1bSBub25lOyBD
-T0xPUjogd2hpdGU7IFBBRERJTkctQk9UVE9NOiAxNXB4OyBURVhULUFMSUdOOiBjZW50ZXI7IFBB
-RERJTkctVE9QOiAxNXB4OyBQQURESU5HLUxFRlQ6IDMycHg7IEJPUkRFUi1MRUZUOiBtZWRpdW0g
-bm9uZTsgTUFSR0lOOiAxNHB4IDEycHg7IERJU1BMQVk6IGlubGluZS1ibG9jazsgUEFERElORy1S
-SUdIVDogMzJweDsgQkFDS0dST1VORC1DT0xPUjogcmdiKDI1NSwxOTYsNTMpOyBib3JkZXItcmFk
-aXVzOiA4cHgiIA0KICAgICAgaHJlZj0iaHR0cHM6Ly92ZXJ5LmFjb3JudWcuY29tLyIgdGFyZ2V0
-PV9ibGFuaz48Rk9OVCBjb2xvcj1ibGFjaz48U1RST05HPtCQbWF6b24gDQogICAgICDjg63jgrDj
-gqTjg7M8L1NUUk9ORz48L0ZPTlQ+PC9BPjwvRk9OVD48L1A+PEZPTlQgY29sb3I9IzMzMzMzMz4N
-CiAgICAgIDxQPjxTUEFOIA0KICAgICAgc3R5bGU9IkZPTlQtU0laRTogMTRweCI+PEI+44Gq44GK
-44CBMjTmmYLplpPku6XlhoXjgavjgZTnorroqo3jgYzjgarjgYTloLTlkIjjgIHoqqDjgavnlLPj
-gZfoqLPjgZTjgZbjgYTjgb7jgZvjgpPjgIHjgYrlrqLmp5jjga7lronlhajjga7ngrrjgIHjgqLj
-gqvjgqbjg7Pjg4jjga7liKnnlKjliLbpmZDjgpLjgZXjgZvjgabjgYTjgZ/jgaDjgY3jgb7jgZnj
-ga7jgafjgIHkuojjgoHjgZTkuobmib/jgY/jgaDjgZXjgYTjgII8L0I+PC9TUEFOPjwvUD4NCiAg
-ICAgIDxQPuOCouOCq+OCpuODs+ODiOOBq+eZu+mMsuOBrkXjg6Hjg7zjg6vjgqLjg4njg6zjgrnj
-gavjgqLjgq/jgrvjgrnjgafjgY3jgarjgYTloLTlkIg8QlI+44GK5ZWP44GE5ZCI44KP44Gb77ya
-IEFtYTxGT05UIA0KICAgICAgc3R5bGU9IkZPTlQtU0laRTogMHB4OyBDT0xPUjogdHJhbnNwYXJl
-bnQiPls8L0ZPTlQ+em9u44Kr44K544K/44Oe44O844K144O844OT44K544CCPC9QPjxCUj48L0ZP
-TlQ+PC9TUEFOPjxGT05UIA0KICAgICAgY29sb3I9IzMzMzMzMz4NCiAgICAgIDxUQUJMRSBjbGFz
-cz15aXYyMTQ1ODczODAzdGlwcyANCiAgICAgIHN0eWxlPSdCT1JERVItVE9QOiByZ2IoMjM4LDIz
-OCwyMzgpIDFweCBzb2xpZDsgQk9SREVSLVJJR0hUOiByZ2IoMjM4LDIzOCwyMzgpIDFweCBzb2xp
-ZDsgQk9SREVSLUJPVFRPTTogcmdiKDIzOCwyMzgsMjM4KSAxcHggc29saWQ7IEZPTlQ6IDExcHgg
-Q2FsaWJyaSwgVHJlYnVjaGV0LCBBcmlhbCwgInNhbnMgc2VyaWYiLCBzYW5zLXNlcmlmOyBCT1JE
-RVItTEVGVDogcmdiKDIzOCwyMzgsMjM4KSAxcHggc29saWQnIA0KICAgICAgY2VsbFNwYWNpbmc9
-MCBjZWxsUGFkZGluZz0xMD4NCiAgICAgICAgPFRCT0RZPg0KICAgICAgICA8VFI+DQogICAgICAg
-ICAgPFREIA0KICAgICAgICAgIHN0eWxlPSdDT0xPUjogcmdiKDUxLDUxLDUxKTsgRk9OVDogMTFw
-eCBDYWxpYnJpLCBUcmVidWNoZXQsIEFyaWFsLCAic2FucyBzZXJpZiIsIHNhbnMtc2VyaWY7IE1B
-UkdJTjogMHB4Jz7jgYrnn6XjgonjgZs6IA0KDQogICAgICAgICAgICA8VUw+DQogICAgICAgICAg
-ICAgIDxMST48U1BBTiBzdHlsZT0iRElTUExBWTogaW5saW5lIj7jg5Hjgrnjg6/jg7zjg4njga/o
-qrDjgavjgoLmlZnjgYjjgarjgYTjgafjgY/jgaDjgZXjgYTjgII8L1NQQU4+IA0KICAgICAgICAg
-ICAgICA8TEk+5YCL5Lq65oOF5aCx44Go6Zai5L+C44GM44Gq44GP44CB5o6o5ris44GX44Gr44GP
-44GE44OR44K544Ov44O844OJ44KS5L2c5oiQ44GX44Gm44GP44Gg44GV44GE44CC5aSn5paH5a2X
-44Go5bCP5paH5a2X44CB5pWw5a2X44CB44GK44KI44Gz6KiY5Y+344KS5b+F44Ga5L2/55So44GX
-44Gm44GP44Gg44GV44GE44CCIA0KICAgICAgICAgICAgICA8TEk+44Kq44Oz44Op44Kk44Oz44Ki
-44Kr44Km44Oz44OI44GU44Go44Gr44CB55Ww44Gq44KL44OR44K544Ov44O844OJ44KS5L2/55So
-44GX44Gm44GP44Gg44GV44GE44CCPC9MST48L1VMPjwvVEQ+PC9UUj48L1RCT0RZPjwvVEFCTEU+
-DQogICAgICA8UD48QlI+44Gp44GG44Ge44KI44KN44GX44GP44GK6aGY44GE44GE44Gf44GX44G+
-44GZ44CCPFNQQU4+Jm5ic3A7PC9TUEFOPjxCUj7QkG1hem9uPC9QPjwvRk9OVD48L1REPjwvVFI+
-PC9UQk9EWT48L1RBQkxFPjwvQk9EWT48L0hUTUw+DQo=
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
---=====003_Dragon184474885628_=====--
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
+Thanks,
+Gao Xiang
