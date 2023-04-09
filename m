@@ -2,38 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94EB26DBFE8
-	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 14:52:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB5D6DC016
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 15:41:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PvX7H2b5Tz3cf0
-	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 22:52:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PvYD01mpVz3cdx
+	for <lists+linux-erofs@lfdr.de>; Sun,  9 Apr 2023 23:41:20 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.a=rsa-sha256 header.s=202211 header.b=Z5Vf2oD8;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PvX7B62mZz3cd5
-	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Apr 2023 22:52:06 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vfd1oIs_1681044719;
-Received: from 30.213.177.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vfd1oIs_1681044719)
-          by smtp.aliyun-inc.com;
-          Sun, 09 Apr 2023 20:52:02 +0800
-Message-ID: <e5a823d7-5d54-6543-1e1b-9391681cce65@linux.alibaba.com>
-Date: Sun, 9 Apr 2023 20:51:59 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH 5/5] erofs-utils: man: dump.erofs: wording/formatting
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nabijaczleweli.xyz (client-ip=139.28.40.42; helo=tarta.nabijaczleweli.xyz; envelope-from=nabijaczleweli@nabijaczleweli.xyz; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.a=rsa-sha256 header.s=202211 header.b=Z5Vf2oD8;
+	dkim-atps=neutral
+Received: from tarta.nabijaczleweli.xyz (unknown [139.28.40.42])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PvYCt4mvnz3cd4
+	for <linux-erofs@lists.ozlabs.org>; Sun,  9 Apr 2023 23:41:14 +1000 (AEST)
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 12C425C0C;
+	Sun,  9 Apr 2023 15:41:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202211; t=1681047671;
+	bh=BI/jzYVW0J4FpNqta/DWu3bKg2SF+Gyx1EApCxzf9Vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z5Vf2oD8Chi6z12+Et3i+VDQy7eXZ6XVAHebl/xiaDVR1mRqZStuahf94ADQSM8lW
+	 8MavCtqDXFUtZMtBrZVKW7PlcHYHVS9L2f1GA0XPxfMFtW17JlJarFUKhk2ojKAyng
+	 ddYrNJ6F/FMuGUTW+WPTIMGLY8VSuMb+hRDX8aj9EjqmDnz7HzYDw4AR9w4ys9YiNT
+	 V26p8cV+LppOSomfojX7TuoMqbOqpfOIq7qPUPsewZ69hkmldSPWgDm5xSphWQYYn9
+	 iGZk9uRbgkABx3MGaWBp556A4ZTFyjW5Z+DvouxFQxYe7HIaIF4gd9dQXfj/3Lx0MG
+	 UnMz8M5H/q0hw==
+Date: Sun, 9 Apr 2023 15:41:09 +0200
+From: 	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 4/5] erofs-utils: man: fsck.erofs: wording/formatting
  touchups
-To: =?UTF-8?Q?Ahelenia_Ziemia=c5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-References: <d80484200b3ba60127ff3b92e0c7660a2e8726bf.1681041325.git.nabijaczleweli@nabijaczleweli.xyz>
- <c556cbafa7124d5ab5d20979be068ba36a125ed6.1681041325.git.nabijaczleweli@nabijaczleweli.xyz>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <c556cbafa7124d5ab5d20979be068ba36a125ed6.1681041325.git.nabijaczleweli@nabijaczleweli.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <nrjslxj7x6fufnvg4qavwm6zy5gues42wbjf23fgxpihsxyrrc@ddkzmz2usmyl>
+References: <38744cc8-f791-90e9-67d4-83eecbe81c5e@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="z5amb6urn7q4kx6b"
+Content-Disposition: inline
+In-Reply-To: <38744cc8-f791-90e9-67d4-83eecbe81c5e@linux.alibaba.com>
+User-Agent: NeoMutt/20230407
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,78 +61,80 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
+--z5amb6urn7q4kx6b
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2023/4/9 19:56, Ahelenia Ziemiańska wrote:
-> Some things that gave me pause or were weirdly formatted.
-> 
-> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
+Some things that gave me pause or were weirdly formatted.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+Yep :)
 
-Thanks,
-Gao Xiang
+ man/fsck.erofs.1 | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-> ---
->   man/dump.erofs.1 | 25 ++++++++++++++++++++-----
->   1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/man/dump.erofs.1 b/man/dump.erofs.1
-> index 209e5f9..7316f4b 100644
-> --- a/man/dump.erofs.1
-> +++ b/man/dump.erofs.1
-> @@ -9,18 +9,28 @@ or overall disk statistics information from an EROFS-formatted image.
->   .SH DESCRIPTION
->   .B dump.erofs
->   is used to retrieve erofs metadata from \fIIMAGE\fP and demonstrate
-> +.br
->   1) overall disk statistics,
-> +.br
->   2) superblock information,
-> +.br
->   3) file information of the given inode NID,
-> +.br
->   4) file extent information of the given inode NID.
->   .SH OPTIONS
->   .TP
->   .BI "\-\-device=" path
->   Specify an extra device to be used together.
-> -You may give multiple `--device' options in the correct order.
-> +You may give multiple
-> +.B --device
-> +options in the correct order.
->   .TP
->   .BI "\-\-ls"
-> -List directory contents. An inode should be specified together.
-> +List directory contents.
-> +.I NID
-> +or
-> +.I path
-> +required.
->   .TP
->   .BI "\-\-nid=" NID
->   Specify an inode NID in order to print its file information.
-> @@ -29,16 +39,21 @@ Specify an inode NID in order to print its file information.
->   Specify an inode path in order to print its file information.
->   .TP
->   .BI \-e
-> -Show the file extent information. An inode should be specified together.
-> +Show the file extent information.
-> +.I NID
-> +or
-> +.I path
-> +required.
->   .TP
->   .BI \-V
->   Print the version number and exit.
->   .TP
->   .BI \-s
-> -Show superblock information of the an EROFS-formatted image.
-> +Show superblock information.
-> +This is the default if no options are specified.
->   .TP
->   .BI \-S
-> -Show EROFS disk statistics, including file type/size distribution, number of (un)compressed files, compression ratio of the whole image, etc.
-> +Show image statistics, including file type/size distribution, number of (un)compressed files, compression ratio, etc.
->   .SH AUTHOR
->   Initial code was written by Wang Qi <mpiglet@outlook.com>, Guo Xuenan <guoxuenan@huawei.com>.
->   .PP
+diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
+index f3e9c3b..364219a 100644
+--- a/man/fsck.erofs.1
++++ b/man/fsck.erofs.1
+@@ -2,7 +2,7 @@
+ .\"
+ .TH FSCK.EROFS 1
+ .SH NAME
+-fsck.erofs \- tool to check the EROFS filesystem's integrity
++fsck.erofs \- tool to check an EROFS filesystem's integrity
+ .SH SYNOPSIS
+ \fBfsck.erofs\fR [\fIOPTIONS\fR] \fIIMAGE\fR
+ .SH DESCRIPTION
+@@ -22,15 +22,18 @@ Print total compression ratio of all files including co=
+mpressed and
+ non-compressed files.
+ .TP
+ .BI "\-\-device=3D" path
+-Specify an extra device to be used together.
+-You may give multiple `--device' options in the correct order.
++Specify an extra blob device to be used together.
++You may give multiple
++.B --device
++options in the correct order.
+ .TP
+ .B \-\-extract
+-Check if all files are well encoded. This will induce more I/Os to read
+-compressed file data, so it might take too much time depending on the imag=
+e.
++Check if all files are well encoded. This read all compressed files,
++and hence create more I/O load,
++so it might take too much time depending on the image.
+ .TP
+ .B \-\-help
+-Display this help and exit.
++Display help string and exit.
+ .SH AUTHOR
+ This version of \fBfsck.erofs\fR is written by
+ Daeho Jeong <daehojeong@google.com>.
+--=20
+2.30.2
+
+--z5amb6urn7q4kx6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmQywHUACgkQvP0LAY0m
+WPH0uRAAiKWkPDnLBnxc5ldaVb3q8DSLD8hK6pRQ+Pxjl90EnaTaV1YoU9ILG+LD
+3M2BtBwZ7ZDkFYOQJ0BhwzC7uv1XWyYqVxHsU5is3maTIxxU+JEom8FnWpXHv8KM
+8PaZ1oVIMXLUxsQpVhs6kWPycj7a05JVdm8+nUNb6TnzoexS49WI5ihgT0uTR2+S
+C0u156s8iJbx4VHjUxrEVggRFFQqrbBbBpXvLXNKjiC9K92i8mcLH+VyKLXkP7dP
+yoIrJRFu+DyZA+r3Lia3nzyse+k9WZ6Dl0NdeY51RXCtok9kh03SYfs1aWIHvAmx
+UBPAiY7MhvfUAkk/0x4rM2hfLeOzQ1JYvwpxGLyT9qkBYDsDn2Jk3W30dNAghoUf
+kDm3o78BAngY3c4vWbLo2Rmmvg2BgoYAP5S95bKfEumkw3gE+h1DCODKSqlmN04H
+hbxKwb2tYM3i3GkSH5wGJRK3Kdfn2WvGB95y31I3oKst7vTfK5bp203LlENNIlGc
+Aq7qcr8HFsgKoQRyOEP/8uqYHKtR2sJo3YTBxUjMm/yLBpGhrIcMwbQDVwTjlxS8
+rJNna+unietIdyiBwhCS9XVZku1a2QDLzUSSol8Kn9fzLGAW4PQtvs7nj7Ofnitk
+oNuB6ZlSmwmC5Jb0USGNy/F3Jyg0HP9z2isgWEy8xyyXowf256Y=
+=YTfi
+-----END PGP SIGNATURE-----
+
+--z5amb6urn7q4kx6b--
