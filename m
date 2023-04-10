@@ -2,73 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 586286DC2CB
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 04:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 913856DC349
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 07:24:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PvtSq17gxz3chj
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 12:38:35 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=HO0JdJmI;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Pvy8J0G17z3cfY
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 15:24:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1030; helo=mail-pj1-x1030.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20210112 header.b=HO0JdJmI;
-	dkim-atps=neutral
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PvtSm0zkfz3cL8
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Apr 2023 12:38:31 +1000 (AEST)
-Received: by mail-pj1-x1030.google.com with SMTP id v9so8278712pjk.0
-        for <linux-erofs@lists.ozlabs.org>; Sun, 09 Apr 2023 19:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681094309;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rCtGUQFe5Dbm6hG4sTfRdcAn7odOh+gle3cljKvZY1A=;
-        b=HO0JdJmIvIlkeoqzcxm4OquQFOW5UQPR8tciBqzwYuMnvnaNbD0TvRUyoG7T8ZbODD
-         Jr3O3ucLkb4EYdU/pC37Xh3ZrYEuRYbIcx3fZarqPgNGpyhtp7VoxQzOy2paGNzWqE/r
-         A13dC4fKnhWNSdbiZGLXk+fquwXoIPMDdTUNZCDHqFH1LQNdEJPcazrbm0iS1plSOrnE
-         rMEzQPRVYRlbDGisPNI2KOUQZe8JdmvNbm5Gjy4tXxNQS/IuLcdpNjMDe0z/JACV4fGx
-         KmcwS6oFO+6w2ju6O+kiNhmKhWfxsS6j3vBPZMiuS67WQ84ZQwa0fxSZM6qMBxuDhcwN
-         ac1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681094309;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rCtGUQFe5Dbm6hG4sTfRdcAn7odOh+gle3cljKvZY1A=;
-        b=1i7hpBT1b4bi3I3r4wzslVteG442uWc5pXzQQGpEgjwwOTH8UMIUn6MVTJh1sBE6p3
-         CWxowN9cHJ6KZhPXidpcaABKvOQFe85Z+Yhf8CnbEw4x8t2ClvDDAIgRwKn2kFGRbh1j
-         XoGYF7UNs+9Yt56fRemXYFHEUKWI1zobbAUeLQr/kdIVZC9xbx0eNYVY6vGUyxkObflP
-         ShlxqbCIpPhFN74LopsutFodTteZNFvUBEeyc9mwklPGcj2wuk/L6bDcQMa0y7tcCnWD
-         PTgne9txGATtptJNe/w0AO34NrykPjyQyC0tJbgY/7qng0A2Ve3wMoWTzDIke623yRPW
-         YG/g==
-X-Gm-Message-State: AAQBX9fiJH5JBxeAgcTkvT228HE4rhQEkMowI4orOqfsbOM2xBebCsBA
-	D01XWKkGa1UOI8AQmSFe+wk=
-X-Google-Smtp-Source: AKy350YmT/B2xIHq1k5QPFp0mwZibS3LCgetSwB+W8Tvl5wdry74Po3rJy4g1mvxEqMICzO9iU2AVA==
-X-Received: by 2002:a05:6a20:3b28:b0:de:6e42:e0e5 with SMTP id c40-20020a056a203b2800b000de6e42e0e5mr9400995pzh.13.1681094308667;
-        Sun, 09 Apr 2023 19:38:28 -0700 (PDT)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id j11-20020aa78dcb000000b005e4c3e2022fsm6740568pfr.72.2023.04.09.19.38.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Apr 2023 19:38:28 -0700 (PDT)
-Date: Mon, 10 Apr 2023 10:45:32 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH 3/7] erofs: move packed inode out of the compression
- part
-Message-ID: <20230410104532.000034fa.zbestahu@gmail.com>
-In-Reply-To: <20230407141710.113882-4-jefflexu@linux.alibaba.com>
-References: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
-	<20230407141710.113882-4-jefflexu@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pvy8D64R9z3cL8
+	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Apr 2023 15:24:27 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VffRxgD_1681104256;
+Received: from 30.97.49.25(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VffRxgD_1681104256)
+          by smtp.aliyun-inc.com;
+          Mon, 10 Apr 2023 13:24:17 +0800
+Message-ID: <d064267e-8ee6-4259-1cd3-3554b88ce662@linux.alibaba.com>
+Date: Mon, 10 Apr 2023 13:24:15 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [PATCH 4/7] erofs: introduce on-disk format for long xattr name
+ prefixes
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+References: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
+ <20230407141710.113882-5-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230407141710.113882-5-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -81,71 +46,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, zhangwen@coolpad.com, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri,  7 Apr 2023 22:17:06 +0800
-Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
 
-> packed inode could be used in more scenarios which are independent of
-> compression in the future.
+
+On 2023/4/7 22:17, Jingbo Xu wrote:
+> Besides the predefined xattr name prefixes, introduces long xattr name
+> prefixes, which work similarly as the predefined name prefixes, except
+> that they are user specified.
 > 
-> For example, packed inode could be used to keep extra long xattr
-> prefixes with the help of following patches.
+> It is especially useful for use cases together with overlayfs like
+> Composefs model, which introduces diverse xattr values with only a few
+> common xattr names (trusted.overlay.redirect, trusted.overlay.digest,
+> and maybe more in the future).  That makes the existing predefined
+> prefixes ineffective in both image size and runtime performance.
+> 
+> When a user specified long xattr name prefix is used, only the trailing
+> part of the xattr name apart from the long xattr name prefix will be
+> stored in erofs_xattr_entry.e_name.  e_name is empty if the xattr name
+> matches exactly as the long xattr name prefix.  All long xattr prefixes
+> are stored in the packed or meta inode, which depends if fragments
+> feature is enabled or not.
+> 
+> For each long xattr name prefix, the on-disk format is kept as the same
+> as the unique metadata format: ALIGN({__le16 len, data}, 4), where len
+> represents the total size of struct erofs_xattr_long_prefix, followed
+> by data of struct erofs_xattr_long_prefix itself.
+> 
+> Each erofs_xattr_long_prefix keeps predefined prefixes (base_index)
+> and the remaining prefix string without the trailing '\0'.
+> 
+> Two fields are introduced to the on-disk superblock, where
+> xattr_prefix_count represents the total number of the long xattr name
+> prefixes recorded, and xattr_prefix_start represents the start offset of
+> recorded name prefixes in the packed/meta inode divided by 4.
+> 
+> When referring to a long xattr name prefix, the highest bit (bit 7) of
+> erofs_xattr_entry.e_name_index is set, while the lower bits (bit 0-6)
+> as a whole represents the index of the referred long name prefix among
+> all long xattr name prefixes.
 > 
 > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+Thanks,
+Gao Xiang
 
 > ---
->  fs/erofs/internal.h | 2 +-
->  fs/erofs/super.c    | 4 +---
->  2 files changed, 2 insertions(+), 4 deletions(-)
+>   fs/erofs/erofs_fs.h | 16 +++++++++++++++-
+>   1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index caea9dc1cd82..8b5168f94dd2 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -134,8 +134,8 @@ struct erofs_sb_info {
->  	struct inode *managed_cache;
->  
->  	struct erofs_sb_lz4_info lz4;
-> -	struct inode *packed_inode;
->  #endif	/* CONFIG_EROFS_FS_ZIP */
-> +	struct inode *packed_inode;
->  	struct erofs_dev_context *devs;
->  	struct dax_device *dax_dev;
->  	u64 dax_part_off;
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 325602820dc8..8f2f8433db61 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -810,7 +810,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  
->  	erofs_shrinker_register(sb);
->  	/* sb->s_umount is already locked, SB_ACTIVE and SB_BORN are not set */
-> -#ifdef CONFIG_EROFS_FS_ZIP
->  	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
->  		sbi->packed_inode = erofs_iget(sb, sbi->packed_nid);
->  		if (IS_ERR(sbi->packed_inode)) {
-> @@ -819,7 +818,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  			return err;
->  		}
->  	}
-> -#endif
->  	err = erofs_init_managed_cache(sb);
->  	if (err)
->  		return err;
-> @@ -986,9 +984,9 @@ static void erofs_put_super(struct super_block *sb)
->  #ifdef CONFIG_EROFS_FS_ZIP
->  	iput(sbi->managed_cache);
->  	sbi->managed_cache = NULL;
-> +#endif
->  	iput(sbi->packed_inode);
->  	sbi->packed_inode = NULL;
-> -#endif
->  	erofs_free_dev_context(sbi->devs);
->  	sbi->devs = NULL;
->  	erofs_fscache_unregister_fs(sb);
-
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index 44876a97cabd..ea62f83dac40 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -76,7 +76,8 @@ struct erofs_super_block {
+>   	__le16 extra_devices;	/* # of devices besides the primary device */
+>   	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
+>   	__u8 dirblkbits;	/* directory block size in bit shift */
+> -	__u8 reserved[5];
+> +	__u8 xattr_prefix_count;	/* # of long xattr name prefixes */
+> +	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
+>   	__le64 packed_nid;	/* nid of the special packed inode */
+>   	__u8 reserved2[24];
+>   };
+> @@ -229,6 +230,13 @@ struct erofs_xattr_ibody_header {
+>   #define EROFS_XATTR_INDEX_LUSTRE            5
+>   #define EROFS_XATTR_INDEX_SECURITY          6
+>   
+> +/*
+> + * bit 7 of e_name_index is set when it refers to a long xattr name prefix,
+> + * while the remained lower bits represent the index of the prefix.
+> + */
+> +#define EROFS_XATTR_LONG_PREFIX		0x80
+> +#define EROFS_XATTR_LONG_PREFIX_MASK	0x7f
+> +
+>   /* xattr entry (for both inline & shared xattrs) */
+>   struct erofs_xattr_entry {
+>   	__u8   e_name_len;      /* length of name */
+> @@ -238,6 +246,12 @@ struct erofs_xattr_entry {
+>   	char   e_name[];        /* attribute name */
+>   };
+>   
+> +/* long xattr name prefix */
+> +struct erofs_xattr_long_prefix {
+> +	__u8   base_index;	/* short xattr name prefix index */
+> +	char   infix[];		/* infix apart from short prefix */
+> +};
+> +
+>   static inline unsigned int erofs_xattr_ibody_size(__le16 i_xattr_icount)
+>   {
+>   	if (!i_xattr_icount)
