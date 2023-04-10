@@ -2,37 +2,36 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 913856DC349
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 07:24:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D08D6DC356
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 07:44:15 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Pvy8J0G17z3cfY
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 15:24:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Pvyb11zn2z3cNM
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Apr 2023 15:44:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pvy8D64R9z3cL8
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Apr 2023 15:24:27 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VffRxgD_1681104256;
-Received: from 30.97.49.25(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VffRxgD_1681104256)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PvyZv4npVz3c8n
+	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Apr 2023 15:44:06 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vfftkyt_1681105440;
+Received: from 30.97.49.25(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vfftkyt_1681105440)
           by smtp.aliyun-inc.com;
-          Mon, 10 Apr 2023 13:24:17 +0800
-Message-ID: <d064267e-8ee6-4259-1cd3-3554b88ce662@linux.alibaba.com>
-Date: Mon, 10 Apr 2023 13:24:15 +0800
+          Mon, 10 Apr 2023 13:44:01 +0800
+Message-ID: <368e3b9a-4e1e-29cf-558c-413e3be478ba@linux.alibaba.com>
+Date: Mon, 10 Apr 2023 13:44:00 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH 4/7] erofs: introduce on-disk format for long xattr name
- prefixes
+Subject: Re: [PATCH 5/7] erofs: add helpers to load long xattr name prefixes
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
  chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 References: <20230407141710.113882-1-jefflexu@linux.alibaba.com>
- <20230407141710.113882-5-jefflexu@linux.alibaba.com>
+ <20230407141710.113882-6-jefflexu@linux.alibaba.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230407141710.113882-5-jefflexu@linux.alibaba.com>
+In-Reply-To: <20230407141710.113882-6-jefflexu@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -53,40 +52,8 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 On 2023/4/7 22:17, Jingbo Xu wrote:
-> Besides the predefined xattr name prefixes, introduces long xattr name
-> prefixes, which work similarly as the predefined name prefixes, except
-> that they are user specified.
-> 
-> It is especially useful for use cases together with overlayfs like
-> Composefs model, which introduces diverse xattr values with only a few
-> common xattr names (trusted.overlay.redirect, trusted.overlay.digest,
-> and maybe more in the future).  That makes the existing predefined
-> prefixes ineffective in both image size and runtime performance.
-> 
-> When a user specified long xattr name prefix is used, only the trailing
-> part of the xattr name apart from the long xattr name prefix will be
-> stored in erofs_xattr_entry.e_name.  e_name is empty if the xattr name
-> matches exactly as the long xattr name prefix.  All long xattr prefixes
-> are stored in the packed or meta inode, which depends if fragments
-> feature is enabled or not.
-> 
-> For each long xattr name prefix, the on-disk format is kept as the same
-> as the unique metadata format: ALIGN({__le16 len, data}, 4), where len
-> represents the total size of struct erofs_xattr_long_prefix, followed
-> by data of struct erofs_xattr_long_prefix itself.
-> 
-> Each erofs_xattr_long_prefix keeps predefined prefixes (base_index)
-> and the remaining prefix string without the trailing '\0'.
-> 
-> Two fields are introduced to the on-disk superblock, where
-> xattr_prefix_count represents the total number of the long xattr name
-> prefixes recorded, and xattr_prefix_start represents the start offset of
-> recorded name prefixes in the packed/meta inode divided by 4.
-> 
-> When referring to a long xattr name prefix, the highest bit (bit 7) of
-> erofs_xattr_entry.e_name_index is set, while the lower bits (bit 0-6)
-> as a whole represents the index of the referred long name prefix among
-> all long xattr name prefixes.
+> Long xattr name prefixes will be scanned upon mounting and the in-memory
+> long xattr name prefix array will be initialized accordingly.
 > 
 > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
@@ -94,49 +61,3 @@ Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Thanks,
 Gao Xiang
-
-> ---
->   fs/erofs/erofs_fs.h | 16 +++++++++++++++-
->   1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> index 44876a97cabd..ea62f83dac40 100644
-> --- a/fs/erofs/erofs_fs.h
-> +++ b/fs/erofs/erofs_fs.h
-> @@ -76,7 +76,8 @@ struct erofs_super_block {
->   	__le16 extra_devices;	/* # of devices besides the primary device */
->   	__le16 devt_slotoff;	/* startoff = devt_slotoff * devt_slotsize */
->   	__u8 dirblkbits;	/* directory block size in bit shift */
-> -	__u8 reserved[5];
-> +	__u8 xattr_prefix_count;	/* # of long xattr name prefixes */
-> +	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
->   	__le64 packed_nid;	/* nid of the special packed inode */
->   	__u8 reserved2[24];
->   };
-> @@ -229,6 +230,13 @@ struct erofs_xattr_ibody_header {
->   #define EROFS_XATTR_INDEX_LUSTRE            5
->   #define EROFS_XATTR_INDEX_SECURITY          6
->   
-> +/*
-> + * bit 7 of e_name_index is set when it refers to a long xattr name prefix,
-> + * while the remained lower bits represent the index of the prefix.
-> + */
-> +#define EROFS_XATTR_LONG_PREFIX		0x80
-> +#define EROFS_XATTR_LONG_PREFIX_MASK	0x7f
-> +
->   /* xattr entry (for both inline & shared xattrs) */
->   struct erofs_xattr_entry {
->   	__u8   e_name_len;      /* length of name */
-> @@ -238,6 +246,12 @@ struct erofs_xattr_entry {
->   	char   e_name[];        /* attribute name */
->   };
->   
-> +/* long xattr name prefix */
-> +struct erofs_xattr_long_prefix {
-> +	__u8   base_index;	/* short xattr name prefix index */
-> +	char   infix[];		/* infix apart from short prefix */
-> +};
-> +
->   static inline unsigned int erofs_xattr_ibody_size(__le16 i_xattr_icount)
->   {
->   	if (!i_xattr_icount)
