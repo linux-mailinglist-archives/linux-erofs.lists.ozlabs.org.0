@@ -1,31 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C18456DD78E
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Apr 2023 12:11:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82A746DD7F3
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Apr 2023 12:30:15 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PwhSc4Xgmz3cLh
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Apr 2023 20:11:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PwhtY2dmxz3cLx
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Apr 2023 20:30:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PwhSS3Yqvz3c8T
-	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Apr 2023 20:11:03 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vfrtabo_1681207847;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vfrtabo_1681207847)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4PwhtV45djz3bjb
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Apr 2023 20:30:09 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vfrzwwx_1681209004;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vfrzwwx_1681209004)
           by smtp.aliyun-inc.com;
-          Tue, 11 Apr 2023 18:10:59 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: get rid of z_erofs_fill_inode()
-Date: Tue, 11 Apr 2023 18:10:45 +0800
-Message-Id: <20230411101045.35762-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+          Tue, 11 Apr 2023 18:30:05 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: tests: add test for long xattr name prefixes
+Date: Tue, 11 Apr 2023 18:30:04 +0800
+Message-Id: <20230411103004.104064-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -39,94 +42,148 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Prior to big pclusters, non-compact compression indexes could have
-empty headers.
+mkfs.erofs supports user specified long xattr name prefix through
+"--xattr_prefix" option.
 
-Let's just avoid the legacy path since it can be handled properly
-as a specific compression header with z_erofs_fill_inode_lazy() too.
+Add test case for this feature.
 
-Tested with erofs-utils exist versions.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- fs/erofs/inode.c    |  8 +++++---
- fs/erofs/internal.h |  2 --
- fs/erofs/zmap.c     | 18 ------------------
- 3 files changed, 5 insertions(+), 23 deletions(-)
+v2: test the scenario where normal xattrs and long prefix xattrs mixed in
+one file
+---
+ tests/Makefile.am   |  3 ++
+ tests/erofs/021     | 94 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/021.out |  2 ++
+ 3 files changed, 99 insertions(+)
+ create mode 100755 tests/erofs/021
+ create mode 100644 tests/erofs/021.out
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 7ca9aafb7471..4438ed5b08be 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -292,10 +292,12 @@ static int erofs_fill_inode(struct inode *inode)
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 67e2bbc..be2dfd9 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -94,6 +94,9 @@ TESTS += erofs/019
+ # 020 - check extended attribute in different layouts
+ TESTS += erofs/020
  
- 	if (erofs_inode_is_data_compressed(vi->datalayout)) {
- 		if (!erofs_is_fscache_mode(inode->i_sb) &&
--		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT)
--			err = z_erofs_fill_inode(inode);
--		else
-+		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT) {
-+			inode->i_mapping->a_ops = &z_erofs_aops;
-+			err = 0;
-+		} else {
- 			err = -EOPNOTSUPP;
-+		}
- 		goto out_unlock;
- 	}
- 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index f675050af2bb..f1268cb6a37c 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -522,7 +522,6 @@ int erofs_try_to_free_cached_page(struct page *page);
- int z_erofs_load_lz4_config(struct super_block *sb,
- 			    struct erofs_super_block *dsb,
- 			    struct z_erofs_lz4_cfgs *lz4, int len);
--int z_erofs_fill_inode(struct inode *inode);
- int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
- 			    int flags);
- #else
-@@ -542,7 +541,6 @@ static inline int z_erofs_load_lz4_config(struct super_block *sb,
- 	}
- 	return 0;
- }
--static inline int z_erofs_fill_inode(struct inode *inode) { return -EOPNOTSUPP; }
- #endif	/* !CONFIG_EROFS_FS_ZIP */
++# 021 - check long extended attribute name prefixes
++TESTS += erofs/021
++
+ EXTRA_DIST = common/rc erofs
  
- #ifdef CONFIG_EROFS_FS_ZIP_LZMA
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7ca108c3834c..14c21284d019 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -7,24 +7,6 @@
- #include <asm/unaligned.h>
- #include <trace/events/erofs.h>
- 
--int z_erofs_fill_inode(struct inode *inode)
--{
--	struct erofs_inode *const vi = EROFS_I(inode);
--	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
--
--	if (!erofs_sb_has_big_pcluster(sbi) &&
--	    !erofs_sb_has_ztailpacking(sbi) && !erofs_sb_has_fragments(sbi) &&
--	    vi->datalayout == EROFS_INODE_COMPRESSED_FULL) {
--		vi->z_advise = 0;
--		vi->z_algorithmtype[0] = 0;
--		vi->z_algorithmtype[1] = 0;
--		vi->z_logical_clusterbits = inode->i_sb->s_blocksize_bits;
--		set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
--	}
--	inode->i_mapping->a_ops = &z_erofs_aops;
--	return 0;
--}
--
- struct z_erofs_maprecorder {
- 	struct inode *inode;
- 	struct erofs_map_blocks *map;
+ clean-local: clean-local-check
+diff --git a/tests/erofs/021 b/tests/erofs/021
+new file mode 100755
+index 0000000..3d598a8
+--- /dev/null
++++ b/tests/erofs/021
+@@ -0,0 +1,94 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++#
++# 021 - check long extended attribute name prefixes
++#
++set -x
++seq=`basename $0`
++seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
++
++# get standard environment, filters and checks
++. "${srcdir}/common/rc"
++
++cleanup()
++{
++	cd /
++	rm -rf $tmp.*
++}
++
++generate_random()
++{
++	head -20 /dev/urandom | base64 -w0 | head -c $1
++}
++
++_require_erofs
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++# real QA test starts here
++echo "QA output created by $seq"
++
++have_attr=`which setfattr`
++[ -z "$have_attr" ] && \
++	_notrun "attr isn't installed, skipped."
++
++if [ -z $SCRATCH_DEV ]; then
++	SCRATCH_DEV=$tmp/erofs_$seq.img
++	rm -f SCRATCH_DEV
++fi
++
++localdir="$tmp/$seq"
++rm -rf $localdir
++mkdir -p $localdir
++
++# set random xattrs (mix of normal xattrs and long prefix xattrs)
++
++# file1: multiple inline xattrs
++touch $localdir/file1
++setfattr -n user.infix.p$(generate_random 16) -v $(generate_random 16) $localdir/file1
++setfattr -n user.infix.p$(generate_random 16) -v $(generate_random 16) $localdir/file1
++setfattr -n user.p$(generate_random 16) -v $(generate_random 16) $localdir/file1
++setfattr -n user.p$(generate_random 16) -v $(generate_random 16) $localdir/file1
++
++# file2: multiple share xattrs
++s_key_1=$(generate_random 16)
++s_key_2=$(generate_random 16)
++s_val=$(generate_random 16)
++
++touch $localdir/file2
++setfattr -n user.infix.s$s_key_1 -v $s_val $localdir/file2
++setfattr -n user.infix.s$s_key_2 -v $s_val $localdir/file2
++setfattr -n user.s$s_key_1 -v $s_val $localdir/file2
++setfattr -n user.s$s_key_2 -v $s_val $localdir/file2
++
++# file3: mixed inline and share xattrs
++touch $localdir/file3
++setfattr -n user.infix.p$(generate_random 16) -v $(generate_random 16) $localdir/file3
++setfattr -n user.infix.s$s_key_1 -v $s_val $localdir/file3
++setfattr -n user.p$(generate_random 16) -v $(generate_random 16) $localdir/file3
++setfattr -n user.s$s_key_1 -v $s_val $localdir/file3
++
++# file4: share xattr
++touch $localdir/file4
++setfattr -n user.infix.s$s_key_2 -v $s_val $localdir/file4
++setfattr -n user.s$s_key_2 -v $s_val $localdir/file4
++
++# specify long xattr name prefix through "--xattr-prefix"
++MKFS_OPTIONS="$MKFS_OPTIONS -x1 --xattr-prefix=user.infix."
++_scratch_mkfs $localdir >> $seqres.full 2>&1 || _fail "failed to mkfs"
++_scratch_mount 2>>$seqres.full
++
++# check xattrs
++dirs=`ls $localdir`
++for d in $dirs; do
++	xattr1=`getfattr --absolute-names -d $localdir/$d | tail -n+2`
++	xattr2=`getfattr --absolute-names -d $SCRATCH_MNT/$d | tail -n+2`
++	[ "x$xattr1" = "x$xattr2" ] || _fail "-->check xattrs FAILED"
++done
++
++_scratch_unmount
++
++echo Silence is golden
++status=0
++exit 0
+diff --git a/tests/erofs/021.out b/tests/erofs/021.out
+new file mode 100644
+index 0000000..09f4062
+--- /dev/null
++++ b/tests/erofs/021.out
+@@ -0,0 +1,2 @@
++QA output created by 021
++Silence is golden
 -- 
-2.24.4
+1.8.3.1
 
