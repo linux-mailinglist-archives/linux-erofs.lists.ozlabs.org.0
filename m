@@ -2,34 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87D736E1E4E
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Apr 2023 10:30:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 491DF6E24B9
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Apr 2023 15:51:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4PyV5R316gz3cjK
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Apr 2023 18:30:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4PydCw1PGfz3fvy
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Apr 2023 23:51:56 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hG48ade7;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QAq9pHwC;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=hG48ade7;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QAq9pHwC;
+	dkim-atps=neutral
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4PyV5D6Cfwz3c9r
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Apr 2023 18:30:39 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vg2zKY5_1681461034;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vg2zKY5_1681461034)
-          by smtp.aliyun-inc.com;
-          Fri, 14 Apr 2023 16:30:35 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs: cleanup i_format-related stuffs
-Date: Fri, 14 Apr 2023 16:30:27 +0800
-Message-Id: <20230414083027.12307-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230414083027.12307-1-hsiangkao@linux.alibaba.com>
-References: <20230414083027.12307-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Pyd8T1mW2z3gg8
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Apr 2023 23:48:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681480132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n9KTxwucszaTPogQTyzYW05x/84ce5RmeI1lCrNY9JY=;
+	b=hG48ade7h8eFF0isZPokZltNFUyqgLijowx5e+lYwXOW0uYwE4zTMI8I8RWkPaD/095J5V
+	ukh3iWvgh7IEel3y08WjKOe/eKtIjsE4MtzPtzK/QHxca8twJ9SmMMWtIl1yPDhyQku/u+
+	cyP7KiNthZe52P6+WoqVKXbNcFhBQog=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681480133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n9KTxwucszaTPogQTyzYW05x/84ce5RmeI1lCrNY9JY=;
+	b=QAq9pHwC0fLodVcG+BtzTLsAXaVv6/LdSn3fMFigPCYt6nrNOEXL0EgHMwm4wZXoa9MCND
+	Wi05HbpOkEsRtQL97+YiAhIapAe2C5GbPwG1N3RFPpMjrhRl0jP5+G0g9105B4hr+40IwW
+	fW1Awz5NdYu0hoDUqC8JJue29XCkcS0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-536-RwSb7RRiNreUmN_e4zUG7w-1; Fri, 14 Apr 2023 09:48:51 -0400
+X-MC-Unique: RwSb7RRiNreUmN_e4zUG7w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ACF8110334A6;
+	Fri, 14 Apr 2023 13:48:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8577E2166B26;
+	Fri, 14 Apr 2023 13:48:49 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20230329140155.53272-5-zhujia.zj@bytedance.com>
+References: <20230329140155.53272-5-zhujia.zj@bytedance.com> <20230329140155.53272-1-zhujia.zj@bytedance.com>
+To: Jia Zhu <zhujia.zj@bytedance.com>
+Subject: Re: [PATCH V5 4/5] cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1250224.1681480128.1@warthog.procyon.org.uk>
+Date: Fri, 14 Apr 2023 14:48:48 +0100
+Message-ID: <1250225.1681480128@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,77 +81,27 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Switch EROFS_I_{VERSION,DATALAYOUT}_BITS into
-EROFS_I_{VERSION,DATALAYOUT}_MASK.
+Jia Zhu <zhujia.zj@bytedance.com> wrote:
 
-Also avoid erofs_bitrange() since its functionality is simple enough.
+>  	if (cachefiles_in_ondemand_mode(cache)) {
+> -		if (!xa_empty(&cache->reqs))
+> -			mask |= EPOLLIN;
+> +		if (!xa_empty(xa)) {
+> +			rcu_read_lock();
+> +			xa_for_each_marked(xa, index, req, CACHEFILES_REQ_NEW) {
+> +				if (!cachefiles_ondemand_is_reopening_read(req)) {
+> +					mask |= EPOLLIN;
+> +					break;
+> +				}
+> +			}
+> +			rcu_read_unlock();
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/erofs_fs.h |  8 ++++----
- fs/erofs/internal.h | 18 ++++--------------
- 2 files changed, 8 insertions(+), 18 deletions(-)
+You should probably use xas_for_each_marked() instead of xa_for_each_marked()
+as the former should perform better.
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 4ec422c2b74f..2c7b16e340fe 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -109,14 +109,14 @@ static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
- }
- 
- /* bit definitions of inode i_format */
--#define EROFS_I_VERSION_BITS            1
--#define EROFS_I_DATALAYOUT_BITS         3
-+#define EROFS_I_VERSION_MASK            0x01
-+#define EROFS_I_DATALAYOUT_MASK         0x07
- 
- #define EROFS_I_VERSION_BIT             0
- #define EROFS_I_DATALAYOUT_BIT          1
-+#define EROFS_I_ALL_BIT			4
- 
--#define EROFS_I_ALL	\
--	((1 << (EROFS_I_DATALAYOUT_BIT + EROFS_I_DATALAYOUT_BITS)) - 1)
-+#define EROFS_I_ALL	((1 << EROFS_I_ALL_BIT) - 1)
- 
- /* indicate chunk blkbits, thus 'chunksize = blocksize << chunk blkbits' */
- #define EROFS_CHUNK_FORMAT_BLKBITS_MASK		0x001F
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 6c8c0504032e..e7b7d3f581c4 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -343,24 +343,14 @@ static inline erofs_off_t erofs_iloc(struct inode *inode)
- 		(EROFS_I(inode)->nid << sbi->islotbits);
- }
- 
--static inline unsigned int erofs_bitrange(unsigned int value, unsigned int bit,
--					  unsigned int bits)
-+static inline unsigned int erofs_inode_version(unsigned int ifmt)
- {
--
--	return (value >> bit) & ((1 << bits) - 1);
--}
--
--
--static inline unsigned int erofs_inode_version(unsigned int value)
--{
--	return erofs_bitrange(value, EROFS_I_VERSION_BIT,
--			      EROFS_I_VERSION_BITS);
-+	return (ifmt >> EROFS_I_VERSION_BIT) & EROFS_I_VERSION_MASK;
- }
- 
--static inline unsigned int erofs_inode_datalayout(unsigned int value)
-+static inline unsigned int erofs_inode_datalayout(unsigned int ifmt)
- {
--	return erofs_bitrange(value, EROFS_I_DATALAYOUT_BIT,
--			      EROFS_I_DATALAYOUT_BITS);
-+	return (ifmt >> EROFS_I_DATALAYOUT_BIT) & EROFS_I_DATALAYOUT_MASK;
- }
- 
- /*
--- 
-2.24.4
+David
 
