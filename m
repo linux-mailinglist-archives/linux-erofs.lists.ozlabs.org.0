@@ -2,59 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B90D36ED6E3
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Apr 2023 23:45:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 587B36EDF4F
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Apr 2023 11:33:18 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Q4zG30SMHz3bdm
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Apr 2023 07:45:47 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cbfBMkx+;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Q5GyN2JlVz3ccg
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Apr 2023 19:33:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cbfBMkx+;
-	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Q4zFv2PYWz3Wtr
-	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Apr 2023 07:45:39 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id CEAB062953;
-	Mon, 24 Apr 2023 21:45:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 31684C433D2;
-	Mon, 24 Apr 2023 21:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682372735;
-	bh=HUnZzgCKUHUfilPp2qY2dzIsVqnaG0ylfpU11ZB8bCg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=cbfBMkx+Q5/NIKyBTVZcugifVtQgjAaEpYHQB00MzMVP5fPRHoYmduczA4juc0DJx
-	 5LLY8Ojr23P4Ynp1ZFR5chfjQ61JQa4FKhd+VeJJEnWzqJ7c+X2oxLR2ZLkZYjIyPg
-	 K3W9WUtCgrGALzJOEzBaQkLrLctTGuuMSkU/iJ+3OxxXrB/jq+GJbn8dlCTqOMeybb
-	 GyGX+rove1lpUuTxkEkv04btm/1LczZZMIlN6zbr9yVihfqd/2CUikWgfYHUX+4vfO
-	 H8eIzs7gBF5ShUXo0vdk+HXphBXZUfeOynO3L+/h8g98gKOTCOYmRK0S2yhw5yeucK
-	 lvevqI8bEMjpg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1DDB0E5FFC7;
-	Mon, 24 Apr 2023 21:45:35 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 6.4-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZEX/1kWqrA8pU/g5@debian>
-References: <ZEX/1kWqrA8pU/g5@debian>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <ZEX/1kWqrA8pU/g5@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.4-rc1
-X-PR-Tracked-Commit-Id: 745ed7d77834048879bf24088c94e5a6462b613f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 61d325dcbc05d8fef88110d35ef7776f3ac3f68b
-Message-Id: <168237273511.2393.17852620444983688131.pr-tracker-bot@kernel.org>
-Date: Mon, 24 Apr 2023 21:45:35 +0000
-To: Gao Xiang <xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Q5GyJ0Qbwz3bTJ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Apr 2023 19:33:10 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VgzkH.5_1682415174;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VgzkH.5_1682415174)
+          by smtp.aliyun-inc.com;
+          Tue, 25 Apr 2023 17:33:05 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: allocate extra bvec pages directly instead of retrying
+Date: Tue, 25 Apr 2023 17:32:53 +0800
+Message-Id: <20230425093253.17553-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,19 +39,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Christian Brauner <brauner@kernel.org>, Yue Hu <huyue2@coolpad.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Mon, 24 Apr 2023 12:04:38 +0800:
+If non-bootstrap bvecs cannot be kept in place (very rarely), an extra
+short-lived page is allocated.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.4-rc1
+Let's just allocate it immediately rather than do unnecessary -EAGAIN
+return first and retry as a cleanup.  Also it's unnecessary to use
+__GFP_NOFAIL here since we could gracefully fail out this case instead.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/61d325dcbc05d8fef88110d35ef7776f3ac3f68b
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
-Thank you!
-
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 45f21db2303a..5f11362d617d 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -243,12 +243,17 @@ static int z_erofs_bvec_enqueue(struct z_erofs_bvec_iter *iter,
+ 				struct z_erofs_bvec *bvec,
+ 				struct page **candidate_bvpage)
+ {
+-	if (iter->cur == iter->nr) {
+-		if (!*candidate_bvpage)
+-			return -EAGAIN;
+-
++	if (iter->cur >= iter->nr) {
++		struct page *nextpage = *candidate_bvpage;
++
++		if (!nextpage) {
++			nextpage = alloc_page(GFP_NOFS);
++			if (!nextpage)
++				return -ENOMEM;
++			set_page_private(nextpage, Z_EROFS_SHORTLIVED_PAGE);
++		}
+ 		DBG_BUGON(iter->bvset->nextpage);
+-		iter->bvset->nextpage = *candidate_bvpage;
++		iter->bvset->nextpage = nextpage;
+ 		z_erofs_bvset_flip(iter);
+ 
+ 		iter->bvset->nextpage = NULL;
+@@ -910,10 +915,8 @@ static bool z_erofs_collector_end(struct z_erofs_decompress_frontend *fe)
+ 	z_erofs_bvec_iter_end(&fe->biter);
+ 	mutex_unlock(&pcl->lock);
+ 
+-	if (fe->candidate_bvpage) {
+-		DBG_BUGON(z_erofs_is_shortlived_page(fe->candidate_bvpage));
++	if (fe->candidate_bvpage)
+ 		fe->candidate_bvpage = NULL;
+-	}
+ 
+ 	/*
+ 	 * if all pending pages are added, don't hold its reference
+@@ -1058,24 +1061,13 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	if (cur)
+ 		tight &= (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED);
+ 
+-retry:
+ 	err = z_erofs_attach_page(fe, &((struct z_erofs_bvec) {
+ 					.page = page,
+ 					.offset = offset - map->m_la,
+ 					.end = end,
+ 				  }), exclusive);
+-	/* should allocate an additional short-lived page for bvset */
+-	if (err == -EAGAIN && !fe->candidate_bvpage) {
+-		fe->candidate_bvpage = alloc_page(GFP_NOFS | __GFP_NOFAIL);
+-		set_page_private(fe->candidate_bvpage,
+-				 Z_EROFS_SHORTLIVED_PAGE);
+-		goto retry;
+-	}
+-
+-	if (err) {
+-		DBG_BUGON(err == -EAGAIN && fe->candidate_bvpage);
++	if (err)
+ 		goto out;
+-	}
+ 
+ 	z_erofs_onlinepage_split(page);
+ 	/* bump up the number of spiltted parts of a page */
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.24.4
+
