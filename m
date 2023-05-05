@@ -2,68 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C8166F7E93
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 May 2023 10:19:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77E266F80E9
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 May 2023 12:40:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QCNs52QWXz3bjY
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 May 2023 18:19:53 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=rv6YF5JE;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QCRzb0X0Xz3cj6
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 May 2023 20:40:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52e; helo=mail-pg1-x52e.google.com; envelope-from=daan.j.demeyer@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=rv6YF5JE;
-	dkim-atps=neutral
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QCNry2z7Mz3bjY
-	for <linux-erofs@lists.ozlabs.org>; Fri,  5 May 2023 18:19:45 +1000 (AEST)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-52867360efcso950102a12.2
-        for <linux-erofs@lists.ozlabs.org>; Fri, 05 May 2023 01:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683274782; x=1685866782;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c7Gro5Z7ePx/3jIof8yZe4Ayp9HGHMH4N1e/SpF5Zds=;
-        b=rv6YF5JENX0S1KBMvFE8zi2i9SSWXdINh9mbqcYBDxYmKxku2zhG3UgLIxUnROgwWW
-         grPGVaUGqKA0+FWgA9smQ+maBwhp9PNo/+SyH8XE4PYpzAc33lOtYMM7S5TnFUzlrIK7
-         Ixu8aNpXXBMAk3xU+K5LSuliFn7ofvpPkRpqFBgEGjtDnevoZElMlGjD3WZKCUKE17LX
-         L+qR2iU0GXVDSL2qtigl9pO2ePum4vBDu8tVzuEo4HHyZqTGA3NVNJn6R3RKfv0qLCI8
-         UWgXR4+56XeJo6GXQJCVc9Ba6LZXVA3gp8o5PruxBSjCZexQuEc/iBcv6PxRgAU3E/bC
-         8i6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683274782; x=1685866782;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c7Gro5Z7ePx/3jIof8yZe4Ayp9HGHMH4N1e/SpF5Zds=;
-        b=Nmgu5zNw3siOpxWm1vmdGYw3b94s+SNzMj53QD+0mCqPgSHYUj022pt7JWFr6XaQ8o
-         T/jGxpiN8jNx8N0jnQImp3Hg5Vf+LtGB+zP58C83lFje6iyxFdguJu3VSIJHGCGvs5AA
-         AwSvAotXcCZ4wJLzu/LrRxM2f7412Vq3sBr7tFN0O7YSU+Djvom2x2/ND1DrW5t4DxWR
-         u5q/bHEXui9Zy1qnu+FgOKPoEAVc+cPDRPaCEvjAfO1INLkGvNxTtn9M5M0lt6UHQ+gX
-         Qt6PUSu36O2i8fTUMFawKcHaWjpIX4BeGr90D6oloon06sYikRmsb+jlhnfLdIMWGy1V
-         8k4w==
-X-Gm-Message-State: AC+VfDyHwDkukN3nQFRTjpSHE9IZPWjyCHFFLY0jNgvY9BW1tPikuoNC
-	W6eg74mzORSKV06VfDCaOfX9dvitDJO928Xz5misLCGjDJqhWiUm
-X-Google-Smtp-Source: ACHHUZ67ruy8/nHOtmtYfQDKwKiZk7VE9rTv3CfDZ8XUaiOZQBje7sRqJnTuBC+w2UMbovJLgDbo2YeSHgDoUXpwcQ0=
-X-Received: by 2002:a17:90b:230c:b0:24e:4d53:a9e6 with SMTP id
- mt12-20020a17090b230c00b0024e4d53a9e6mr599084pjb.35.1683274782392; Fri, 05
- May 2023 01:19:42 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QCRzV6dSQz3cMj
+	for <linux-erofs@lists.ozlabs.org>; Fri,  5 May 2023 20:40:37 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vhp0B3X_1683283229;
+Received: from 192.168.3.7(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vhp0B3X_1683283229)
+          by smtp.aliyun-inc.com;
+          Fri, 05 May 2023 18:40:30 +0800
+Message-ID: <49735bd0-2897-c918-8692-eb8702921e77@linux.alibaba.com>
+Date: Fri, 5 May 2023 18:40:29 +0800
 MIME-Version: 1.0
-References: <CAO8sHc=vxhp_+98Om7C83zOyXmdAkAxeoOrnffgwqkPntvO2fw@mail.gmail.com>
- <86f08d9c-ea37-6012-fbb9-c2e2710c00f1@linux.alibaba.com> <CAO8sHc=7FHA8vEnHHOySnOCDQ9HvWbCEC3nVqyG6J=OJEfz38Q@mail.gmail.com>
- <3e0474fc-2d24-8c47-9f0f-40b6709d6e74@linux.alibaba.com>
-In-Reply-To: <3e0474fc-2d24-8c47-9f0f-40b6709d6e74@linux.alibaba.com>
-From: Daan De Meyer <daan.j.demeyer@gmail.com>
-Date: Fri, 5 May 2023 10:19:31 +0200
-Message-ID: <CAO8sHcmFF5KrB5GkXvCcueNHzZcyksWsGTJjjxSE=uo+=xRVFg@mail.gmail.com>
-Subject: Re: Merging multiple erofs file systems on the same block device
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: =?UTF-8?B?UmU6IGVyb2Zz5pawZmVhdHVyZS3ljovnvKnlubbljrvph40=?=
+To: =?UTF-8?B?5a2Z5aOr5p2w?= <sunshijie@xiaomi.com>,
+ "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+References: <9d8fc832ec934a34bcf4d4d0f334a631@xiaomi.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <9d8fc832ec934a34bcf4d4d0f334a631@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,160 +44,54 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: =?UTF-8?B?Smlhbmh1YTEgSGFvIOmDneW7uuWNjg==?= <haojianhua1@xiaomi.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> On 2023/5/2 18:03, Daan De Meyer wrote:
-> >> On 2023/5/1 22:09, Daan De Meyer wrote:
-> >>> Hi,
-> >>>
-> >>> I've been looking into erofs as an initramfs replacement by using
-> >>> root=/dev/ram0 to tell the kernel to load the initramfs as a ramdisk.
-> >>
-> >> Sorry, I'm on vacation now.
-> >>
-> >> May I ask what's your detailed use cases?  Sure, you could use
-> >> /dev/ram0 as a replacement, but currently it still takes double
-> >> memory compared with initramfs since ramdisk doesn't support FSDAX
-> >> for now (by enabling FSDAX, it won't take double memory at all.)
-> >
-> > I'm experimenting with larger initramfses and running into memory
-> > bottlenecks since the entire compressed cpio has to be decompressed
-> > into memory. I was hoping to use erofs as a replacement that could stay
-> > compressed, where only the files that are actually accessed are
-> > decompressed at runtime.
->
-> Sorry for late reply.
->
-> Okay, that makes sense, although FSDAX cannot be used as this way since
-> decompressed data is needed for mmapped accesses.
-
-Can you clarify why using a ramdisk would take double the memory if FSDAX
-is not used?
-
-> >
-> >> Actually I think ramdisk FSDAX is useful and I might sync up this on
-> >> the following LSF/MM/BPF 2023.
-> >>
-> >>> However, by using a ramdisk instead of the usual compressed cpio, I
-> >>> would lose the feature where the kernel merges multiple individual
-> >>> cpios together into a single tmpfs filesystem. Looking at the
-> >>> documentation for erofs, I noticed that erofs already seems to support
-> >>> merging multiple erofs filesystems on separate block devices using the
-> >>> device= cmdline option. Would it be possible to extend this so that
-> >> Here `device=` is actually used to refer to seperate blobs with the
-> >> merged metadata.  For example, you could have
-> >>
-> >>     device=/dev/ram1 original tar1
-> >>     device=/dev/ram2 original tar2
-> >>     /dev/ram0        merged metadata for tar1 + tar2.
-> >>
-> >> which means, if you'd like to merge multiple EROFS filesystems, you
-> >> might need another step to build a merged metadata in advance in order
-> >> to merges multiple individual tarballs together, which could be built
-> >> when applying images or booting (by using a special bootloader with
-> >> such functionality.)
-> >
-> > Ahh, I misunderstood the device= option then.
-> >
-> >> EROFS doesn't support stacking multiple fses runtimely since it seems
-> >> a duplicated feature of overlayfs (you could consider using overlayfs
-> >> honestly.)
-> >
-> > I would love to use overlayfs, but there's no way to specify to the kernel that
-> > the initrd should be set up as an overlayfs of a set of ram disks. It would be
-> > interesting if I could put multiple filesystems in the initrd and the
-> > kernel would
-> > notice and automatically set up an overlayfs of them.
->
-> I didn't use overlayfs as this way so I'm not sure as well.  Yet as a wild
-> guess, you could specify a ramdisk with a customized init to stack
-> overlayfs like this in the userspace?  Not sure though...
-
-This approach generally works, but if you want to enforce all mounted
-filesystems to be dm-verity protected, you now need to add verity data
-for all these filesystems to the initramfs. That's why we're looking
-for a solution where the kernel sets up the filesystem mount of the
-ramdisk which is special cased and doesn't require verity data to be
-present. Anyway, the overlayfs issue is not something for erofs to
-solve. If at all desirable, it should probably be filesystem
-independent where the kernel just looks for multiple filesystems in
-the initrd buffer and sets up an overlay mount using each found
-filesystem.
-
-Cheers,
-
-Daan De Meyer
 
 
-On Fri, 5 May 2023 at 07:05, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->
->
->
-> On 2023/5/2 18:03, Daan De Meyer wrote:
-> >> On 2023/5/1 22:09, Daan De Meyer wrote:
-> >>> Hi,
-> >>>
-> >>> I've been looking into erofs as an initramfs replacement by using
-> >>> root=/dev/ram0 to tell the kernel to load the initramfs as a ramdisk.
-> >>
-> >> Sorry, I'm on vacation now.
-> >>
-> >> May I ask what's your detailed use cases?  Sure, you could use
-> >> /dev/ram0 as a replacement, but currently it still takes double
-> >> memory compared with initramfs since ramdisk doesn't support FSDAX
-> >> for now (by enabling FSDAX, it won't take double memory at all.)
-> >
-> > I'm experimenting with larger initramfses and running into memory
-> > bottlenecks since the entire compressed cpio has to be decompressed
-> > into memory. I was hoping to use erofs as a replacement that could stay
-> > compressed, where only the files that are actually accessed are
-> > decompressed at runtime.
->
-> Sorry for late reply.
->
-> Okay, that makes sense, although FSDAX cannot be used as this way since
-> decompressed data is needed for mmapped accesses.
->
-> >
-> >> Actually I think ramdisk FSDAX is useful and I might sync up this on
-> >> the following LSF/MM/BPF 2023.
-> >>
-> >>> However, by using a ramdisk instead of the usual compressed cpio, I
-> >>> would lose the feature where the kernel merges multiple individual
-> >>> cpios together into a single tmpfs filesystem. Looking at the
-> >>> documentation for erofs, I noticed that erofs already seems to support
-> >>> merging multiple erofs filesystems on separate block devices using the
-> >>> device= cmdline option. Would it be possible to extend this so that
-> >> Here `device=` is actually used to refer to seperate blobs with the
-> >> merged metadata.  For example, you could have
-> >>
-> >>     device=/dev/ram1 original tar1
-> >>     device=/dev/ram2 original tar2
-> >>     /dev/ram0        merged metadata for tar1 + tar2.
-> >>
-> >> which means, if you'd like to merge multiple EROFS filesystems, you
-> >> might need another step to build a merged metadata in advance in order
-> >> to merges multiple individual tarballs together, which could be built
-> >> when applying images or booting (by using a special bootloader with
-> >> such functionality.)
-> >
-> > Ahh, I misunderstood the device= option then.
-> >
-> >> EROFS doesn't support stacking multiple fses runtimely since it seems
-> >> a duplicated feature of overlayfs (you could consider using overlayfs
-> >> honestly.)
-> >
-> > I would love to use overlayfs, but there's no way to specify to the kernel that
-> > the initrd should be set up as an overlayfs of a set of ram disks. It would be
-> > interesting if I could put multiple filesystems in the initrd and the
-> > kernel would
-> > notice and automatically set up an overlayfs of them.
->
-> I didn't use overlayfs as this way so I'm not sure as well.  Yet as a wild
-> guess, you could specify a ramdisk with a customized init to stack
-> overlayfs like this in the userspace?  Not sure though...
->
-> Thanks,
-> Gao Xiang
+On 2023/5/5 14:32, 孙士杰 wrote:
+>          高翔 老师、各位老师，大家好！
+> 
+> 
+>          为了 erofs 存储精简，进一步减少 erofs 存储空间大小，基于 android13/linux-5.15.41 开发了压缩并去重的feature，新 feature 分为 mkfs.erofs 和 linux 内核 erofs 两部分；
+> 
+> 
+> 一、mkfs.erofs 工具侧大致思路如下：
+> 
+>          mkfs.erofs 制作镜像时，layout采用 EROFS_INODE_FLAT_COMPRESSION_LEGACY，先压缩，然后对压缩后的数据块去重，
+> 
+> 对于重复的压缩数据块，更新 decompressed index 中的 blkaddr，不做实际blk_write，从而进一步减少 erofs 的 imgae 大小；
+
+One question:
+
+Did you ever check the compressed deduplication feature introduced in v6.1
+with erofs-utils 1.6?
+
+  -Ededupe
+
+Thanks,
+Gao Xiang
+
+> 
+> 
+> 二、linux 内核 erofs 侧大致思路如下：
+> 
+>          1、重构 z_erofs_collection、z_erofs_pcluster 数据结构，重构后的 z_erofs_collection 是  decompressed 相关属性的抽象，比如pageofs、nr_pages、vcnt、length、pagevec等，去重后为了唯一确定一个 decompressed index，又新增了i_ino、m_la等属性，内部通过 z_erofs_pcluster 指针关联所属的压缩数据块 pcl；
+> 
+>        重构后的 z_erofs_pcluster 是压缩数据块相关属性的抽象，比如：obj、pclusterpages、compressed_pages等，重构后 z_erofs_pcluster 和 z_erofs_collection 不再是一对一的关系，而是一对N的关系，z_erofs_pcluster 内部通过 list 管理重复压缩数据块对应的 z_erofs_collection；
+> 
+>        2、重构 collector、submit bio、decompress 等相关代码，比如：通过 index 查找到 erofs_workgroup 后，还要结合 i_ino、m_la 才可以唯一确定一个 z_erofs_collection；比如：解压缩时，pcl 依次对 z_erofs_pcluster 中的 N 个 z_erofs_collection 解压缩(z_erofs_collection 中 nr_pages 不为 0 ，说明还未解压缩，则解压缩之)，最后再标记 Z_EROFS_PCLUSTER_NIL，解锁z_erofs_pcluster ，同时调整 mutex 锁的位置，以实现collector、submit bio、decompress 间的同步；
+> 
+>        3、重构 z_erofs_rcu_callback 相关代码，实现 z_erofs_collection 、z_erofs_pcluster 等的同步回收和释放；
+> 
+> 
+> 三、该feature需要关闭inplace io；
+> 
+> 
+> 四、feature 相关完整的开发代码详见附件，通过宏定义 CONFIG_EROFS_DUP_ON_COMPRESS 区分；
+> 
+> 
+> 谢谢；
+> 
+> #/******本邮件及其附件含有小米公司的保密信息，仅限于发送给上面地址中列出的个人或群组。禁止任何其他人以任何形式使用（包括但不限于全部或部分地泄露、复制、或散发）本邮件中的信息。如果您错收了本邮件，请您立即电话或邮件通知发件人并删除本邮件！ This e-mail and its attachments contain confidential information from XIAOMI, which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction, or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this e-mail in error, please notify the sender by phone or email immediately and delete it!******/#
