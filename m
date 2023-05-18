@@ -2,45 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A52A7070F1
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 May 2023 20:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D5F477076B7
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 02:06:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QM2240pmpz3f8l
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 04:39:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QM9Hv4tJGz3f5p
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 10:06:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3ih9lzakbab8ntuf5gg9m5kkd8.bjjbg9pn9m7jio9io.7jh@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=<UNKNOWN>)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.70; helo=mail-io1-f70.google.com; envelope-from=3awxlzakbajgkqrc2dd6j2hha5.8gg8d6mk6j4gfl6fl.4ge@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=<UNKNOWN>)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QM21K4P4Tz3fCY
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 May 2023 04:38:28 +1000 (AEST)
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3382e29ab5bso7118705ab.0
-        for <linux-erofs@lists.ozlabs.org>; Wed, 17 May 2023 11:38:28 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QM9Hp1dkRz3drM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 May 2023 10:06:28 +1000 (AEST)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-76c27782e30so92175739f.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 17 May 2023 17:06:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684348706; x=1686940706;
+        d=1e100.net; s=20221208; t=1684368385; x=1686960385;
         h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Vamjh5zaT+/xLZPoxv52up73xCnN6/tfSU9g/y8Wto=;
-        b=TgX6W+iEIinmlrxa1s39L4bSgU6wzxkni0LxTGhIQkHqsqmMRK+tP2amwzod+TqJJa
-         Orz98NPh0DW1OXOkY3wa7YnlNGSzfzFrT+83v7l4ND9FDT5b8sLpOFjsGmWXka0WPXxh
-         z7jHbxAsGRtq5Dghyw57B9VHU1y1g/Jh4a6YRF5kB5ST8e/H5yPk3FRMfltJbmtWQuZY
-         UID/bxG7hsIa+7ppmlP/fxWSz/ijTnp0VfBRhuT5TzaEudjMhi2Cx9ym6DgaGpMY3kaY
-         NmKzLkGxywJusQ5Xk3P4dMRgjQCmxpggjEovLe8lE29Xj/uNe2j5k7jXoTMIrAlA3VjG
-         SSJg==
-X-Gm-Message-State: AC+VfDw1Rs9/53BaRWSBOBr69yjhsX3ldO+eui/6ymW8qPzJs3qEIWaR
-	oj25eaLWV8T8+7Cw/x9aH1gajhwTovu9DvSgwR9fR43LlhdH
-X-Google-Smtp-Source: ACHHUZ6+DaqJKQq5UGHV13ZmtB1Lik9tk/rPaeURCGSY41bL/WLiaZFVIqeSPs8lpve1mrKhkaVJF6OOQSxfZVx2zQoYNtzKfQVI
+        bh=JoMoqXQ0K9ottZ20H37Za5eMXtoOXhgZyhPciqIVH40=;
+        b=CJlP41p54Ek/tsUmuN18IbGvCJ5au06+efnsQL0FG92QCnHVAwwjX5RAUtw4xoSk74
+         5AD4mDSqxdDPX1kCnj5zVEafDr6RYe4KYkkOVVC9Cg/tOjEVTmdvwVBTDBioAI7vgEhJ
+         OwVtAk/s8fxg7wpr3pD4R8LyZeP3dXNTRq03Y9VbZt9Q3Hs4DRfgtGqkY89xr9WZE3pr
+         cLR3rwhfKIWEItumcsgnIZq8WFhNpSpWfVmDjuiedjlXT05Ewm8HqIlSq6T7HKVa3MKj
+         h+rZSlspsBNeTrTwMyGJJu6NrA0yFuHf0wheMh6x5CyleOa/pgxADoyOlJGXEC6+m44K
+         wHDA==
+X-Gm-Message-State: AC+VfDwwobHtTq4I+OqAbJ/aVFMDbO8OGlG7RYYXDz/sH/o+U6Agi+bs
+	42m+S0zwH4m9p5xMo8baqmhQJnSpa0YHEUc6Dhso1txSxeVw
+X-Google-Smtp-Source: ACHHUZ6DNGJMApeEtlCbWYZKgYUwbD77h7Sl32mT1FuFXMAbv1g8H2Rp/h6l/JOhvlYQ3m90Yo89xTWn99FpYmbgBWBt1f8GKVyH
 MIME-Version: 1.0
-X-Received: by 2002:a92:d152:0:b0:331:9a82:33f8 with SMTP id
- t18-20020a92d152000000b003319a8233f8mr1830905ilg.3.1684348706156; Wed, 17 May
- 2023 11:38:26 -0700 (PDT)
-Date: Wed, 17 May 2023 11:38:26 -0700
-In-Reply-To: <85c61aae-6716-9936-1533-91624f70eefe@linux.alibaba.com>
+X-Received: by 2002:a5e:db04:0:b0:76f:d7c2:aa54 with SMTP id
+ q4-20020a5edb04000000b0076fd7c2aa54mr3866659iop.1.1684368385810; Wed, 17 May
+ 2023 17:06:25 -0700 (PDT)
+Date: Wed, 17 May 2023 17:06:25 -0700
+In-Reply-To: <000000000000d03b0805fbe71d55@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004ef96f05fbe7fe6f@google.com>
+Message-ID: <0000000000004ea77505fbec93b6@google.com>
 Subject: Re: [syzbot] [erofs?] general protection fault in erofs_bread (2)
 From: syzbot <syzbot+bbb353775d51424087f2@syzkaller.appspotmail.com>
 To: chao@kernel.org, hsiangkao@linux.alibaba.com, huyue2@coolpad.com, 
@@ -62,20 +62,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+syzbot has bisected this issue to:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+commit 6a318ccd7e083729cbcdbd174d7070f6b7d24130
+Author: Jingbo Xu <jefflexu@linux.alibaba.com>
+Date:   Fri Apr 7 22:28:08 2023 +0000
 
-Reported-and-tested-by: syzbot+bbb353775d51424087f2@syzkaller.appspotmail.com
+    erofs: enable long extended attribute name prefixes
 
-Tested on:
-
-commit:         ae0bac79 erofs: avoid pcpubuf.c inclusion if CONFIG_ER..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-console output: https://syzkaller.appspot.com/x/log.txt?x=16793226280000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=159afed9280000
+start commit:   f1fcbaa18b28 Linux 6.4-rc2
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=179afed9280000
+console output: https://syzkaller.appspot.com/x/log.txt?x=139afed9280000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=6beb6ffe4f59ef2a
 dashboard link: https://syzkaller.appspot.com/bug?extid=bbb353775d51424087f2
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13dd834e280000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167ef106280000
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Reported-by: syzbot+bbb353775d51424087f2@syzkaller.appspotmail.com
+Fixes: 6a318ccd7e08 ("erofs: enable long extended attribute name prefixes")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
