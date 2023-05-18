@@ -2,37 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09794707831
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 04:46:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7CB17083FB
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 16:36:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QMDrC6yJwz3fFk
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 12:46:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QMXc41kp5z3fC8
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 00:36:52 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HsqJo9+d;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HsqJo9+d;
+	dkim-atps=neutral
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMDqt5yL4z3f6G
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 May 2023 12:46:02 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ViuseHy_1684377957;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0ViuseHy_1684377957)
-          by smtp.aliyun-inc.com;
-          Thu, 18 May 2023 10:45:58 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: xiang@kernel.org,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 5/5] erofs: use separate xattr parsers for listxattr/getxattr
-Date: Thu, 18 May 2023 10:45:51 +0800
-Message-Id: <20230518024551.123990-6-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230518024551.123990-1-jefflexu@linux.alibaba.com>
-References: <20230518024551.123990-1-jefflexu@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMXbw0k3Wz3f8Z
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 May 2023 00:36:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684420604; x=1715956604;
+  h=date:from:to:cc:subject:message-id;
+  bh=LRhLY5PClUr20EerDnkMnJCuPuXMqTxpV/wECQuWTU4=;
+  b=HsqJo9+dGDN71GFocLyRSu21VwwD2uCM5Hfg7Z99C3vIPBneNX674c//
+   Q9ssGwaqvdyva9eithce5jagXEGcoe/pzm94ifGt9/WEIpxr1LzlinouJ
+   AvGlRhQi22+tBshJxb629PTkHwZsxu5xpHB9MUc3SoaXEqInsyCPKFnVe
+   nsefL4Fz4r+8e+7mlDV1sqkBsL7zwM9ntBMv7uoPwTJGqyyoGtpkmBqYW
+   CyrJtaBvR7uAUbNV0jlkz+RhHhKbidkBN1FGypjMgQ8yGNaQQRmFllf+L
+   Tc5YELQ1BVVIZ0yfOaiSygvRUemDyfdip30Y+7Izm3IeWpbrH3iLcZbFU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="331697059"
+X-IronPort-AV: E=Sophos;i="5.99,285,1677571200"; 
+   d="scan'208";a="331697059"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 07:36:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="771883285"
+X-IronPort-AV: E=Sophos;i="5.99,285,1677571200"; 
+   d="scan'208";a="771883285"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 18 May 2023 07:36:32 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pzek4-000A6l-0K;
+	Thu, 18 May 2023 14:36:32 +0000
+Date: Thu, 18 May 2023 22:36:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 3b35f11c99e128625623df9a80035cfa1b79d504
+Message-ID: <20230518143631.qS2rE%lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,506 +66,225 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-There's a callback styled xattr parser, i.e. xattr_foreach(), which is
-shared among listxattr and getxattr.  Convert it to two separate xattr
-parsers for listxattr and getxattr.
+tree/branch: INFO setup_repo_specs: /db/releases/20230517200055/lkp-src/repo/*/xiang-erofs
+https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 3b35f11c99e128625623df9a80035cfa1b79d504  erofs: avoid pcpubuf.c inclusion if CONFIG_EROFS_FS_ZIP is off
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/xattr.c | 389 +++++++++++++++++++++--------------------------
- 1 file changed, 170 insertions(+), 219 deletions(-)
+elapsed time: 725m
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 435146628eed..111735fb6fbc 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -12,7 +12,7 @@ struct erofs_xattr_iter {
- 	struct erofs_buf buf;
- 	void *kaddr;
- 	erofs_blk_t blkaddr;
--	unsigned int ofs;
-+	unsigned int ofs, t_ofs;
- 
- 	char *buffer;
- 	int buffer_size, buffer_ofs;
-@@ -21,6 +21,7 @@ struct erofs_xattr_iter {
- 	struct qstr name;
- 	struct dentry *dentry;
- 	struct inode *inode;
-+	unsigned int remaining; /* size of inline xattrs to be iterated */
- 	bool getxattr;
- };
- 
-@@ -46,6 +47,28 @@ static inline int erofs_xattr_iter_fixup_aligned(struct erofs_xattr_iter *it)
- 	return erofs_xattr_iter_fixup(it);
- }
- 
-+static int erofs_xattr_iter_prep(struct erofs_xattr_iter *it)
-+{
-+	unsigned int entry_sz;
-+	int err;
-+
-+	err = erofs_xattr_iter_fixup(it);
-+	if (err)
-+		return err;
-+
-+	entry_sz = erofs_xattr_entry_size(it->kaddr + it->ofs);
-+	it->t_ofs = it->ofs + entry_sz;
-+	if (it->remaining) {
-+		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
-+		if (it->remaining < entry_sz) {
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		it->remaining -= entry_sz;
-+	}
-+	return 0;
-+}
-+
- static int erofs_init_inode_xattrs(struct inode *inode)
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
-@@ -144,183 +167,6 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	return ret;
- }
- 
--/*
-- * the general idea for these return values is
-- * if    0 is returned, go on processing the current xattr;
-- *       1 (> 0) is returned, skip this round to process the next xattr;
-- *    -err (< 0) is returned, an error (maybe ENOXATTR) occurred
-- *                            and need to be handled
-- */
--struct xattr_iter_handlers {
--	int (*entry)(struct erofs_xattr_iter *it, struct erofs_xattr_entry *entry);
--	int (*name)(struct erofs_xattr_iter *it, unsigned int processed, char *buf,
--		    unsigned int len);
--	int (*alloc_buffer)(struct erofs_xattr_iter *it, unsigned int value_sz);
--	void (*value)(struct erofs_xattr_iter *it, unsigned int processed, char *buf,
--		      unsigned int len);
--};
--
--/*
-- * Regardless of success or failure, `xattr_foreach' will end up with
-- * `ofs' pointing to the next xattr item rather than an arbitrary position.
-- */
--static int xattr_foreach(struct erofs_xattr_iter *it,
--			 const struct xattr_iter_handlers *op,
--			 unsigned int *tlimit)
--{
--	struct erofs_xattr_entry entry;
--	unsigned int value_sz, processed, slice;
--	int err;
--
--	/* 0. fixup blkaddr, ofs, ipage */
--	err = erofs_xattr_iter_fixup(it);
--	if (err)
--		return err;
--
--	/*
--	 * 1. read xattr entry to the memory,
--	 *    since we do EROFS_XATTR_ALIGN
--	 *    therefore entry should be in the page
--	 */
--	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
--	if (tlimit) {
--		unsigned int entry_sz = erofs_xattr_entry_size(&entry);
--
--		/* xattr on-disk corruption: xattr entry beyond xattr_isize */
--		if (*tlimit < entry_sz) {
--			DBG_BUGON(1);
--			return -EFSCORRUPTED;
--		}
--		*tlimit -= entry_sz;
--	}
--
--	it->ofs += sizeof(struct erofs_xattr_entry);
--	value_sz = le16_to_cpu(entry.e_value_size);
--
--	/* handle entry */
--	err = op->entry(it, &entry);
--	if (err) {
--		it->ofs += entry.e_name_len + value_sz;
--		goto out;
--	}
--
--	/* 2. handle xattr name (ofs will finally be at the end of name) */
--	processed = 0;
--
--	while (processed < entry.e_name_len) {
--		err = erofs_xattr_iter_fixup_aligned(it);
--		if (err)
--			goto out;
--
--		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
--			      entry.e_name_len - processed);
--
--		/* handle name */
--		err = op->name(it, processed, it->kaddr + it->ofs, slice);
--		if (err) {
--			it->ofs += entry.e_name_len - processed + value_sz;
--			goto out;
--		}
--
--		it->ofs += slice;
--		processed += slice;
--	}
--
--	/* 3. handle xattr value */
--	processed = 0;
--
--	if (op->alloc_buffer) {
--		err = op->alloc_buffer(it, value_sz);
--		if (err) {
--			it->ofs += value_sz;
--			goto out;
--		}
--	}
--
--	while (processed < value_sz) {
--		err = erofs_xattr_iter_fixup_aligned(it);
--		if (err)
--			goto out;
--
--		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
--			      value_sz - processed);
--		op->value(it, processed, it->kaddr + it->ofs, slice);
--		it->ofs += slice;
--		processed += slice;
--	}
--
--out:
--	/* xattrs should be 4-byte aligned (on-disk constraint) */
--	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
--	return err < 0 ? err : 0;
--}
--
--static int erofs_xattr_long_entrymatch(struct erofs_xattr_iter *it,
--				       struct erofs_xattr_entry *entry)
--{
--	struct erofs_sb_info *sbi = EROFS_SB(it->sb);
--	struct erofs_xattr_prefix_item *pf = sbi->xattr_prefixes +
--		(entry->e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
--
--	if (pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
--		return -ENOATTR;
--
--	if (it->index != pf->prefix->base_index ||
--	    it->name.len != entry->e_name_len + pf->infix_len)
--		return -ENOATTR;
--
--	if (memcmp(it->name.name, pf->prefix->infix, pf->infix_len))
--		return -ENOATTR;
--
--	it->infix_len = pf->infix_len;
--	return 0;
--}
--
--static int xattr_entrymatch(struct erofs_xattr_iter *it,
--			    struct erofs_xattr_entry *entry)
--{
--	/* should also match the infix for long name prefixes */
--	if (entry->e_name_index & EROFS_XATTR_LONG_PREFIX)
--		return erofs_xattr_long_entrymatch(it, entry);
--
--	if (it->index != entry->e_name_index ||
--	    it->name.len != entry->e_name_len)
--		return -ENOATTR;
--	it->infix_len = 0;
--	return 0;
--}
--
--static int xattr_namematch(struct erofs_xattr_iter *it,
--			   unsigned int processed, char *buf, unsigned int len)
--{
--	if (memcmp(buf, it->name.name + it->infix_len + processed, len))
--		return -ENOATTR;
--	return 0;
--}
--
--static int xattr_checkbuffer(struct erofs_xattr_iter *it,
--			     unsigned int value_sz)
--{
--	int err = it->buffer_size < value_sz ? -ERANGE : 0;
--
--	it->buffer_ofs = value_sz;
--	return !it->buffer ? 1 : err;
--}
--
--static void xattr_copyvalue(struct erofs_xattr_iter *it,
--			    unsigned int processed,
--			    char *buf, unsigned int len)
--{
--	memcpy(it->buffer + processed, buf, len);
--}
--
--static const struct xattr_iter_handlers find_xattr_handlers = {
--	.entry = xattr_entrymatch,
--	.name = xattr_namematch,
--	.alloc_buffer = xattr_checkbuffer,
--	.value = xattr_copyvalue
--};
--
- static bool erofs_xattr_user_list(struct dentry *dentry)
- {
- 	return test_opt(&EROFS_SB(dentry->d_sb)->opt, XATTR_USER);
-@@ -373,20 +219,74 @@ const struct xattr_handler *erofs_xattr_handlers[] = {
- 	NULL,
- };
- 
--static int xattr_entrylist(struct erofs_xattr_iter *it,
--			   struct erofs_xattr_entry *entry)
-+typedef int (*erofs_xattr_body_handler)(struct erofs_xattr_iter *it,
-+		unsigned int processed, char *buf, unsigned int len);
-+
-+static int erofs_xattr_namematch(struct erofs_xattr_iter *it,
-+		unsigned int processed, char *buf, unsigned int len)
-+{
-+	if (memcmp(buf, it->name.name + it->infix_len + processed, len))
-+		return -ENOATTR;
-+	return 0;
-+}
-+
-+static int erofs_xattr_copy(struct erofs_xattr_iter *it,
-+		unsigned int unused, char *buf, unsigned int len)
-+{
-+	memcpy(it->buffer + it->buffer_ofs, buf, len);
-+	it->buffer_ofs += len;
-+	return 0;
-+}
-+
-+static int erofs_xattr_body(struct erofs_xattr_iter *it, unsigned int len,
-+			    erofs_xattr_body_handler handler)
-+{
-+	unsigned int slice, processed = 0;
-+
-+	while (processed < len) {
-+		int err = erofs_xattr_iter_fixup_aligned(it);
-+		if (err)
-+			return err;
-+
-+		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
-+			      len - processed);
-+		err = handler(it, processed, it->kaddr + it->ofs, slice);
-+		if (err)
-+			return err;
-+
-+		it->ofs += slice;
-+		processed += slice;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Wen returning 0 or ENOATTR, erofs_[list|get]xattr_foreach() will end up
-+ * with `ofs' pointing to the next xattr item rather than an arbitrary position.
-+ */
-+static int erofs_listxattr_foreach(struct erofs_xattr_iter *it)
- {
--	unsigned int base_index = entry->e_name_index;
--	unsigned int prefix_len, infix_len = 0;
-+	struct erofs_xattr_entry entry;
-+	unsigned int base_index, prefix_len, infix_len = 0;
- 	const char *prefix, *infix = NULL;
-+	int err;
-+
-+	err = erofs_xattr_iter_prep(it);
-+	if (err)
-+		return err;
-+
-+	/* 1. handle xattr entry */
-+	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-+	it->ofs += sizeof(struct erofs_xattr_entry);
-+	base_index = entry.e_name_index;
- 
--	if (entry->e_name_index & EROFS_XATTR_LONG_PREFIX) {
-+	if (entry.e_name_index & EROFS_XATTR_LONG_PREFIX) {
- 		struct erofs_sb_info *sbi = EROFS_SB(it->sb);
- 		struct erofs_xattr_prefix_item *pf = sbi->xattr_prefixes +
--			(entry->e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
-+			(entry.e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
- 
- 		if (pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
--			return 1;
-+			goto out;
- 		infix = pf->prefix->infix;
- 		infix_len = pf->infix_len;
- 		base_index = pf->prefix->base_index;
-@@ -394,52 +294,102 @@ static int xattr_entrylist(struct erofs_xattr_iter *it,
- 
- 	prefix = erofs_xattr_prefix(base_index, it->dentry);
- 	if (!prefix)
--		return 1;
-+		goto out;
- 	prefix_len = strlen(prefix);
- 
- 	if (!it->buffer) {
--		it->buffer_ofs += prefix_len + infix_len +
--					entry->e_name_len + 1;
--		return 1;
-+		it->buffer_ofs += prefix_len + infix_len + entry.e_name_len + 1;
-+		goto out;
- 	}
- 
- 	if (it->buffer_ofs + prefix_len + infix_len +
--		+ entry->e_name_len + 1 > it->buffer_size)
-+		entry.e_name_len + 1 > it->buffer_size)
- 		return -ERANGE;
- 
- 	memcpy(it->buffer + it->buffer_ofs, prefix, prefix_len);
- 	memcpy(it->buffer + it->buffer_ofs + prefix_len, infix, infix_len);
- 	it->buffer_ofs += prefix_len + infix_len;
--	return 0;
--}
- 
--static int xattr_namelist(struct erofs_xattr_iter *it,
--			  unsigned int processed, char *buf, unsigned int len)
--{
--	memcpy(it->buffer + it->buffer_ofs, buf, len);
--	it->buffer_ofs += len;
-+	/* 2. handle xattr name (err can't be ENOATTR) */
-+	err = erofs_xattr_body(it, entry.e_name_len, erofs_xattr_copy);
-+	if (err)
-+		return err;
-+
-+	it->buffer[it->buffer_ofs++] = '\0';
-+	it->ofs += le16_to_cpu(entry.e_value_size);
-+	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
-+	return 0;
-+out:
-+	it->ofs = it->t_ofs;
- 	return 0;
- }
- 
--static int xattr_skipvalue(struct erofs_xattr_iter *it,
--			   unsigned int value_sz)
-+static int erofs_getxattr_foreach(struct erofs_xattr_iter *it)
- {
--	it->buffer[it->buffer_ofs++] = '\0';
--	return 1;
--}
-+	struct erofs_xattr_entry entry;
-+	unsigned int value_sz;
-+	int err;
- 
--static const struct xattr_iter_handlers list_xattr_handlers = {
--	.entry = xattr_entrylist,
--	.name = xattr_namelist,
--	.alloc_buffer = xattr_skipvalue,
--	.value = NULL
--};
-+	err = erofs_xattr_iter_prep(it);
-+	if (err)
-+		return err;
-+
-+	/* 1. handle xattr entry */
-+	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-+	it->ofs += sizeof(struct erofs_xattr_entry);
-+	value_sz = le16_to_cpu(entry.e_value_size);
-+
-+	err = -ENOATTR;
-+	/* should also match the infix for long name prefixes */
-+	if (entry.e_name_index & EROFS_XATTR_LONG_PREFIX) {
-+		struct erofs_sb_info *sbi = EROFS_SB(it->sb);
-+		struct erofs_xattr_prefix_item *pf = sbi->xattr_prefixes +
-+			(entry.e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
-+
-+		if (pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
-+			goto out;
-+
-+		if (it->index != pf->prefix->base_index ||
-+		    it->name.len != entry.e_name_len + pf->infix_len)
-+			goto out;
-+
-+		if (memcmp(it->name.name, pf->prefix->infix, pf->infix_len))
-+			goto out;
-+
-+		it->infix_len = pf->infix_len;
-+	} else {
-+		if (it->index != entry.e_name_index ||
-+		    it->name.len != entry.e_name_len)
-+			goto out;
-+		it->infix_len = 0;
-+	}
-+
-+	/* 2. handle xattr name */
-+	err = erofs_xattr_body(it, entry.e_name_len, erofs_xattr_namematch);
-+	if (err)
-+		goto out;
-+
-+	/* 3. handle xattr value */
-+	if (!it->buffer) {
-+		it->buffer_ofs = value_sz;
-+		goto out; /* err == 0 */
-+	}
-+	if (it->buffer_size < value_sz)
-+		return -ERANGE;
-+
-+	/* no need normalizing ofs on error (err can't be ENOATTR) */
-+	err = erofs_xattr_body(it, value_sz, erofs_xattr_copy);
-+	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
-+	return err;
-+out:
-+	it->ofs = it->t_ofs;
-+	return err;
-+}
- 
- static int erofs_iter_inline_xattr(struct erofs_xattr_iter *it)
- {
- 	struct erofs_inode *const vi = EROFS_I(it->inode);
--	const struct xattr_iter_handlers *op;
--	unsigned int xattr_header_sz, remaining;
-+	unsigned int xattr_header_sz;
- 	erofs_off_t pos;
- 	int ret;
- 
-@@ -457,11 +407,12 @@ static int erofs_iter_inline_xattr(struct erofs_xattr_iter *it)
- 	if (IS_ERR(it->kaddr))
- 		return PTR_ERR(it->kaddr);
- 
--	remaining = vi->xattr_isize - xattr_header_sz;
--	op = it->getxattr ? &find_xattr_handlers : &list_xattr_handlers;
--
--	while (remaining) {
--		ret = xattr_foreach(it, op, &remaining);
-+	it->remaining = vi->xattr_isize - xattr_header_sz;
-+	while (it->remaining) {
-+		if (it->getxattr)
-+			ret = erofs_getxattr_foreach(it);
-+		else
-+			ret = erofs_listxattr_foreach(it);
- 		if ((it->getxattr && ret != -ENOATTR) || (!it->getxattr && ret))
- 			break;
- 	}
-@@ -472,12 +423,9 @@ static int erofs_iter_shared_xattr(struct erofs_xattr_iter *it)
- {
- 	struct erofs_inode *const vi = EROFS_I(it->inode);
- 	struct super_block *const sb = it->sb;
--	const struct xattr_iter_handlers *op;
- 	unsigned int i, xsid;
- 	int ret = -ENOATTR;
- 
--	op = it->getxattr ? &find_xattr_handlers : &list_xattr_handlers;
--
- 	for (i = 0; i < vi->xattr_shared_count; ++i) {
- 		xsid = vi->xattr_shared_xattrs[i];
- 		it->blkaddr = EROFS_SB(sb)->xattr_blkaddr +
-@@ -487,7 +435,10 @@ static int erofs_iter_shared_xattr(struct erofs_xattr_iter *it)
- 		if (IS_ERR(it->kaddr))
- 			return PTR_ERR(it->kaddr);
- 
--		ret = xattr_foreach(it, op, NULL);
-+		if (it->getxattr)
-+			ret = erofs_getxattr_foreach(it);
-+		else
-+			ret = erofs_listxattr_foreach(it);
- 		if ((it->getxattr && ret != -ENOATTR) || (!it->getxattr && ret))
- 			break;
- 	}
+configs tested: 201
+configs skipped: 12
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r001-20230517   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r003-20230517   gcc  
+alpha                randconfig-r005-20230517   gcc  
+alpha                randconfig-r006-20230517   gcc  
+alpha                randconfig-r013-20230517   gcc  
+alpha                randconfig-r022-20230517   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r002-20230517   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r003-20230517   gcc  
+arc                  randconfig-r023-20230517   gcc  
+arc                  randconfig-r034-20230517   gcc  
+arc                  randconfig-r043-20230517   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                       imx_v6_v7_defconfig   gcc  
+arm                        keystone_defconfig   gcc  
+arm                        mvebu_v5_defconfig   clang
+arm                  randconfig-r001-20230517   gcc  
+arm                  randconfig-r003-20230517   gcc  
+arm                  randconfig-r004-20230517   gcc  
+arm                  randconfig-r011-20230517   clang
+arm                  randconfig-r015-20230517   clang
+arm                  randconfig-r036-20230517   gcc  
+arm                  randconfig-r046-20230517   clang
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r003-20230517   clang
+arm64                               defconfig   gcc  
+arm64                randconfig-r002-20230517   clang
+arm64                randconfig-r003-20230517   clang
+arm64                randconfig-r006-20230517   clang
+arm64                randconfig-r011-20230517   gcc  
+arm64                randconfig-r012-20230517   gcc  
+arm64                randconfig-r014-20230517   gcc  
+arm64                randconfig-r022-20230518   clang
+csky         buildonly-randconfig-r005-20230517   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r001-20230517   gcc  
+csky                 randconfig-r004-20230517   gcc  
+csky                 randconfig-r013-20230517   gcc  
+csky                 randconfig-r021-20230517   gcc  
+csky                 randconfig-r024-20230517   gcc  
+csky                 randconfig-r025-20230517   gcc  
+hexagon              randconfig-r035-20230517   clang
+hexagon              randconfig-r041-20230517   clang
+hexagon              randconfig-r045-20230517   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                          randconfig-a001   gcc  
+i386                          randconfig-a002   clang
+i386                          randconfig-a003   gcc  
+i386                          randconfig-a004   clang
+i386                          randconfig-a005   gcc  
+i386                          randconfig-a006   clang
+i386                          randconfig-a011   clang
+i386                          randconfig-a012   gcc  
+i386                          randconfig-a013   clang
+i386                          randconfig-a014   gcc  
+i386                          randconfig-a015   clang
+i386                          randconfig-a016   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r004-20230517   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r006-20230517   gcc  
+ia64                 randconfig-r016-20230517   gcc  
+ia64                 randconfig-r023-20230517   gcc  
+ia64                 randconfig-r036-20230517   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r001-20230517   gcc  
+loongarch    buildonly-randconfig-r006-20230517   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r005-20230517   gcc  
+m68k                             allmodconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+m68k                 randconfig-r016-20230517   gcc  
+m68k                 randconfig-r023-20230517   gcc  
+m68k                 randconfig-r024-20230517   gcc  
+m68k                 randconfig-r034-20230517   gcc  
+microblaze   buildonly-randconfig-r004-20230517   gcc  
+microblaze           randconfig-r031-20230517   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath79_defconfig   clang
+mips         buildonly-randconfig-r005-20230517   gcc  
+mips                            gpr_defconfig   gcc  
+mips                 randconfig-r006-20230517   gcc  
+mips                 randconfig-r015-20230517   clang
+mips                 randconfig-r023-20230517   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r004-20230517   gcc  
+nios2                randconfig-r025-20230517   gcc  
+nios2                randconfig-r036-20230517   gcc  
+openrisc             randconfig-r002-20230517   gcc  
+openrisc             randconfig-r013-20230517   gcc  
+openrisc             randconfig-r035-20230517   gcc  
+parisc                           alldefconfig   gcc  
+parisc       buildonly-randconfig-r005-20230517   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r013-20230517   gcc  
+parisc               randconfig-r014-20230517   gcc  
+parisc               randconfig-r024-20230517   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r011-20230517   gcc  
+powerpc              randconfig-r012-20230517   gcc  
+powerpc              randconfig-r014-20230517   gcc  
+powerpc              randconfig-r025-20230518   clang
+powerpc                     tqm5200_defconfig   clang
+powerpc                      tqm8xx_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r001-20230517   clang
+riscv                randconfig-r002-20230517   clang
+riscv                randconfig-r005-20230517   clang
+riscv                randconfig-r026-20230517   gcc  
+riscv                randconfig-r032-20230517   clang
+riscv                randconfig-r042-20230517   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r003-20230517   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r015-20230517   gcc  
+s390                 randconfig-r016-20230517   gcc  
+s390                 randconfig-r021-20230517   gcc  
+s390                 randconfig-r022-20230517   gcc  
+s390                 randconfig-r026-20230517   gcc  
+s390                 randconfig-r031-20230517   clang
+s390                 randconfig-r032-20230517   clang
+s390                 randconfig-r044-20230517   gcc  
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r006-20230517   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                   randconfig-r012-20230517   gcc  
+sh                   randconfig-r022-20230517   gcc  
+sh                   randconfig-r024-20230517   gcc  
+sh                           se7619_defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sh                   secureedge5410_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc        buildonly-randconfig-r002-20230517   gcc  
+sparc        buildonly-randconfig-r004-20230517   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r003-20230517   gcc  
+sparc                randconfig-r006-20230517   gcc  
+sparc                randconfig-r032-20230517   gcc  
+sparc                randconfig-r033-20230517   gcc  
+sparc64      buildonly-randconfig-r003-20230517   gcc  
+sparc64              randconfig-r004-20230517   gcc  
+sparc64              randconfig-r005-20230517   gcc  
+sparc64              randconfig-r033-20230517   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                        randconfig-a001   clang
+x86_64                        randconfig-a002   gcc  
+x86_64                        randconfig-a003   clang
+x86_64                        randconfig-a004   gcc  
+x86_64                        randconfig-a005   clang
+x86_64                        randconfig-a006   gcc  
+x86_64                        randconfig-a011   gcc  
+x86_64                        randconfig-a012   clang
+x86_64                        randconfig-a013   gcc  
+x86_64                        randconfig-a014   clang
+x86_64                        randconfig-a015   gcc  
+x86_64                        randconfig-a016   clang
+x86_64                        randconfig-k001   clang
+x86_64                        randconfig-x051   gcc  
+x86_64                        randconfig-x052   clang
+x86_64                        randconfig-x053   gcc  
+x86_64                        randconfig-x054   clang
+x86_64                        randconfig-x055   gcc  
+x86_64                        randconfig-x056   clang
+x86_64                        randconfig-x061   gcc  
+x86_64                        randconfig-x062   clang
+x86_64                        randconfig-x063   gcc  
+x86_64                        randconfig-x064   clang
+x86_64                        randconfig-x065   gcc  
+x86_64                        randconfig-x066   clang
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r002-20230517   gcc  
+xtensa               randconfig-r002-20230517   gcc  
+xtensa               randconfig-r021-20230517   gcc  
+xtensa               randconfig-r025-20230517   gcc  
+xtensa               randconfig-r034-20230517   gcc  
+xtensa               randconfig-r035-20230517   gcc  
+
 -- 
-2.19.1.6.gb485710b
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
