@@ -2,30 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9965709024
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 09:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E28E170902B
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 09:12:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QMybx4FlZz3f8y
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 17:08:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QMyht5SxJz3fBk
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 17:12:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMybt1Q96z3bNj
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 May 2023 17:08:09 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VizfTZj_1684480078;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VizfTZj_1684480078)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMyhn2zWCz3cCW
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 May 2023 17:12:25 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vizf8dk_1684480340;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vizf8dk_1684480340)
           by smtp.aliyun-inc.com;
-          Fri, 19 May 2023 15:08:02 +0800
+          Fri, 19 May 2023 15:12:20 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix a race of deduplicated compressed images to avoid loops
-Date: Fri, 19 May 2023 15:07:58 +0800
-Message-Id: <20230519070758.36779-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH RESEND] erofs: fix a race of deduplicated compressed images to avoid loops
+Date: Fri, 19 May 2023 15:12:19 +0800
+Message-Id: <20230519071219.41757-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230519070758.36779-1-hsiangkao@linux.alibaba.com>
+References: <20230519070758.36779-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -44,18 +46,18 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 After heavily stressing EROFS with several images which include a
-hand-crafted image of repeated patttens for more than 46 days, I found
+hand-crafted image of repeated patterns for more than 46 days, I found
 two chains could be linked with each other almost simultaneously and
 form a loop, so the entire loop won't be submitted to the device.  As a
 consequence, the corresponding file pages will remain locked forever.
 
 It can be _only_ observed on data-deduplicated compressed images.  For
 example, consider two chains with five pclusters in total:
-	Chain 1:  2->3->4->5    -- The tail pcluster is .;
+	Chain 1:  2->3->4->5    -- The tail pcluster is 5;
         Chain 2:  5->1->2       -- The tail pcluster is 2.
 
-Chain 2 could link to Chain 1 with pcluster 5; and Chain 1 could link
-to Chain 2 at the same time with pcluster 2  (Note that Chain 2 is
+Chain 2 could link to Chain 1 due to pcluster 5; and Chain 1 could link
+to Chain 2 at the same time due to pcluster 2  (Note that Chain 2 is
 invalid on traditional compressed images without data deduplciation.)
 
 Fix this by checking if the tail of a chain is extended after the chain
@@ -64,6 +66,9 @@ itself is attached into another chain.  If so, bail out instead.
 Fixes: 267f2492c8f7 ("erofs: introduce multi-reference pclusters (fully-referenced)")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+RESEND:
+ fix commit message.
+
 I plan to stress this patch for a week before upstreaming.
 
  fs/erofs/zdata.c | 29 +++++++++++++++--------------
