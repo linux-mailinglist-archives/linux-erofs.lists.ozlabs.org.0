@@ -2,59 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7CB17083FB
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 May 2023 16:36:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D491708DD2
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 04:34:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QMXc41kp5z3fC8
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 00:36:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QMrWh05xFz3f7X
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 May 2023 12:34:08 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HsqJo9+d;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=cthiU+9I;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.136; helo=mga12.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HsqJo9+d;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=cthiU+9I;
 	dkim-atps=neutral
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMXbw0k3Wz3f8Z
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 May 2023 00:36:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684420604; x=1715956604;
-  h=date:from:to:cc:subject:message-id;
-  bh=LRhLY5PClUr20EerDnkMnJCuPuXMqTxpV/wECQuWTU4=;
-  b=HsqJo9+dGDN71GFocLyRSu21VwwD2uCM5Hfg7Z99C3vIPBneNX674c//
-   Q9ssGwaqvdyva9eithce5jagXEGcoe/pzm94ifGt9/WEIpxr1LzlinouJ
-   AvGlRhQi22+tBshJxb629PTkHwZsxu5xpHB9MUc3SoaXEqInsyCPKFnVe
-   nsefL4Fz4r+8e+7mlDV1sqkBsL7zwM9ntBMv7uoPwTJGqyyoGtpkmBqYW
-   CyrJtaBvR7uAUbNV0jlkz+RhHhKbidkBN1FGypjMgQ8yGNaQQRmFllf+L
-   Tc5YELQ1BVVIZ0yfOaiSygvRUemDyfdip30Y+7Izm3IeWpbrH3iLcZbFU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="331697059"
-X-IronPort-AV: E=Sophos;i="5.99,285,1677571200"; 
-   d="scan'208";a="331697059"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 07:36:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="771883285"
-X-IronPort-AV: E=Sophos;i="5.99,285,1677571200"; 
-   d="scan'208";a="771883285"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2023 07:36:32 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pzek4-000A6l-0K;
-	Thu, 18 May 2023 14:36:32 +0000
-Date: Thu, 18 May 2023 22:36:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 3b35f11c99e128625623df9a80035cfa1b79d504
-Message-ID: <20230518143631.qS2rE%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QMrWb1SYTz3bdm
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 May 2023 12:34:01 +1000 (AEST)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1ae85b71141so67845ad.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 18 May 2023 19:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684463637; x=1687055637;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W+KLO8kfhh/ehAJcoZFZyic4XaS3xMS9Q6emroTwVE0=;
+        b=cthiU+9IQNQti2B6zpcXJctFQENHs0De8M6OVjXZWRjvv89ObB19AZcSD1hVDI6bIq
+         tp47XOiQ5hLPTIcKTmJBD+YtJC4x/SCCq4RJlX2Z65RpKbueEotZjTmRO0A9Y4zgtTLP
+         oBvuUSZrtkTYzDp7Ov2jI5d3bZO+MdXODjgbqscpmRjZZcRbtlu5GYXS6bt/yj8xw6Tk
+         Zw5Ny5cp0YWLiN8TRnDjD6ORYVQ1Dntv33LzcFKislzRHhwb4b3Laet2ZksVkc1+LteY
+         TDVAV6SHdjRkvkMM62Tb/WfktPGJijJ/00pMnAZTEJSeJZJTw12rt3f/iJjl3IqHKTJw
+         EiYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684463637; x=1687055637;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W+KLO8kfhh/ehAJcoZFZyic4XaS3xMS9Q6emroTwVE0=;
+        b=B/eXiT4N4QQqR9QJHprly8Q0TmqEhgkmdj0oMvUqFCkFHLffmdXc7/AShBNPQFrWUO
+         VXzKbbtva5MUn+cSOJmW5spcKkwI1Ok6YkLfk19NzVzVJa2ZkeVLSmle6eW2hjU3sGBG
+         ArXPEDxZU0NXHahUTlxKaqFvY6H2bnOzAI5zYaeap3j0+qBAJj7+ZMAT9o8B4dRY22bX
+         y/ZFO+FP5zjW2Xa+navZJgjyImICKr6IIQmkh+hjhaQ9UdGOlUXS3Pj1bfjsg3oyVRCG
+         SGQdcR81dILiWX7SadHF0e8H3Ixq+W5S+vziSd3QrqBGCx+3UuHWIhvfZNIYEHKpP33H
+         wX3Q==
+X-Gm-Message-State: AC+VfDxWzV04RaAbIbbyfATMKCgnoZUExI3q3OzW9TYU/UsW4/YsqQMO
+	gLYOEuvrgNMHHmIj7gsrRos=
+X-Google-Smtp-Source: ACHHUZ6XisjMlgkxAik7qc3jmnRJ2+i1rCJ9pNHbYp/N+aeCFg8vUvXVuKM/KOZCM1bxHdyI7J9UyA==
+X-Received: by 2002:a17:902:ecc6:b0:1a6:9f9b:1327 with SMTP id a6-20020a170902ecc600b001a69f9b1327mr1343417plh.45.1684463637189;
+        Thu, 18 May 2023 19:33:57 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170902e80b00b0019f3cc463absm2202645plg.0.2023.05.18.19.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 May 2023 19:33:56 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	jefflexu@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: move erofs_{allocpage,release_pages}() under CONFIG_EROFS_FS_ZIP
+Date: Fri, 19 May 2023 10:33:13 +0800
+Message-Id: <20230519023313.24892-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,225 +75,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230517200055/lkp-src/repo/*/xiang-erofs
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 3b35f11c99e128625623df9a80035cfa1b79d504  erofs: avoid pcpubuf.c inclusion if CONFIG_EROFS_FS_ZIP is off
+From: Yue Hu <huyue2@coolpad.com>
 
-elapsed time: 725m
+These two functions are only used for compression side now. Also,
+eliminate unused pagevec.h inclusion.
 
-configs tested: 201
-configs skipped: 12
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ fs/erofs/Makefile | 4 ++--
+ fs/erofs/utils.c  | 3 ---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r001-20230517   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r003-20230517   gcc  
-alpha                randconfig-r005-20230517   gcc  
-alpha                randconfig-r006-20230517   gcc  
-alpha                randconfig-r013-20230517   gcc  
-alpha                randconfig-r022-20230517   gcc  
-arc                              allyesconfig   gcc  
-arc          buildonly-randconfig-r002-20230517   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r003-20230517   gcc  
-arc                  randconfig-r023-20230517   gcc  
-arc                  randconfig-r034-20230517   gcc  
-arc                  randconfig-r043-20230517   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                       imx_v6_v7_defconfig   gcc  
-arm                        keystone_defconfig   gcc  
-arm                        mvebu_v5_defconfig   clang
-arm                  randconfig-r001-20230517   gcc  
-arm                  randconfig-r003-20230517   gcc  
-arm                  randconfig-r004-20230517   gcc  
-arm                  randconfig-r011-20230517   clang
-arm                  randconfig-r015-20230517   clang
-arm                  randconfig-r036-20230517   gcc  
-arm                  randconfig-r046-20230517   clang
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r003-20230517   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r002-20230517   clang
-arm64                randconfig-r003-20230517   clang
-arm64                randconfig-r006-20230517   clang
-arm64                randconfig-r011-20230517   gcc  
-arm64                randconfig-r012-20230517   gcc  
-arm64                randconfig-r014-20230517   gcc  
-arm64                randconfig-r022-20230518   clang
-csky         buildonly-randconfig-r005-20230517   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r001-20230517   gcc  
-csky                 randconfig-r004-20230517   gcc  
-csky                 randconfig-r013-20230517   gcc  
-csky                 randconfig-r021-20230517   gcc  
-csky                 randconfig-r024-20230517   gcc  
-csky                 randconfig-r025-20230517   gcc  
-hexagon              randconfig-r035-20230517   clang
-hexagon              randconfig-r041-20230517   clang
-hexagon              randconfig-r045-20230517   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a001   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a003   gcc  
-i386                          randconfig-a004   clang
-i386                          randconfig-a005   gcc  
-i386                          randconfig-a006   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r004-20230517   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r006-20230517   gcc  
-ia64                 randconfig-r016-20230517   gcc  
-ia64                 randconfig-r023-20230517   gcc  
-ia64                 randconfig-r036-20230517   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r001-20230517   gcc  
-loongarch    buildonly-randconfig-r006-20230517   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r005-20230517   gcc  
-m68k                             allmodconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
-m68k                 randconfig-r016-20230517   gcc  
-m68k                 randconfig-r023-20230517   gcc  
-m68k                 randconfig-r024-20230517   gcc  
-m68k                 randconfig-r034-20230517   gcc  
-microblaze   buildonly-randconfig-r004-20230517   gcc  
-microblaze           randconfig-r031-20230517   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          ath79_defconfig   clang
-mips         buildonly-randconfig-r005-20230517   gcc  
-mips                            gpr_defconfig   gcc  
-mips                 randconfig-r006-20230517   gcc  
-mips                 randconfig-r015-20230517   clang
-mips                 randconfig-r023-20230517   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r004-20230517   gcc  
-nios2                randconfig-r025-20230517   gcc  
-nios2                randconfig-r036-20230517   gcc  
-openrisc             randconfig-r002-20230517   gcc  
-openrisc             randconfig-r013-20230517   gcc  
-openrisc             randconfig-r035-20230517   gcc  
-parisc                           alldefconfig   gcc  
-parisc       buildonly-randconfig-r005-20230517   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r013-20230517   gcc  
-parisc               randconfig-r014-20230517   gcc  
-parisc               randconfig-r024-20230517   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r011-20230517   gcc  
-powerpc              randconfig-r012-20230517   gcc  
-powerpc              randconfig-r014-20230517   gcc  
-powerpc              randconfig-r025-20230518   clang
-powerpc                     tqm5200_defconfig   clang
-powerpc                      tqm8xx_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r001-20230517   clang
-riscv                randconfig-r002-20230517   clang
-riscv                randconfig-r005-20230517   clang
-riscv                randconfig-r026-20230517   gcc  
-riscv                randconfig-r032-20230517   clang
-riscv                randconfig-r042-20230517   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r003-20230517   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r015-20230517   gcc  
-s390                 randconfig-r016-20230517   gcc  
-s390                 randconfig-r021-20230517   gcc  
-s390                 randconfig-r022-20230517   gcc  
-s390                 randconfig-r026-20230517   gcc  
-s390                 randconfig-r031-20230517   clang
-s390                 randconfig-r032-20230517   clang
-s390                 randconfig-r044-20230517   gcc  
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r006-20230517   gcc  
-sh                        dreamcast_defconfig   gcc  
-sh                   randconfig-r012-20230517   gcc  
-sh                   randconfig-r022-20230517   gcc  
-sh                   randconfig-r024-20230517   gcc  
-sh                           se7619_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sh                   secureedge5410_defconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sh                   sh7770_generic_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc        buildonly-randconfig-r002-20230517   gcc  
-sparc        buildonly-randconfig-r004-20230517   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r003-20230517   gcc  
-sparc                randconfig-r006-20230517   gcc  
-sparc                randconfig-r032-20230517   gcc  
-sparc                randconfig-r033-20230517   gcc  
-sparc64      buildonly-randconfig-r003-20230517   gcc  
-sparc64              randconfig-r004-20230517   gcc  
-sparc64              randconfig-r005-20230517   gcc  
-sparc64              randconfig-r033-20230517   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-k001   clang
-x86_64                        randconfig-x051   gcc  
-x86_64                        randconfig-x052   clang
-x86_64                        randconfig-x053   gcc  
-x86_64                        randconfig-x054   clang
-x86_64                        randconfig-x055   gcc  
-x86_64                        randconfig-x056   clang
-x86_64                        randconfig-x061   gcc  
-x86_64                        randconfig-x062   clang
-x86_64                        randconfig-x063   gcc  
-x86_64                        randconfig-x064   clang
-x86_64                        randconfig-x065   gcc  
-x86_64                        randconfig-x066   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r002-20230517   gcc  
-xtensa               randconfig-r002-20230517   gcc  
-xtensa               randconfig-r021-20230517   gcc  
-xtensa               randconfig-r025-20230517   gcc  
-xtensa               randconfig-r034-20230517   gcc  
-xtensa               randconfig-r035-20230517   gcc  
-
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index a3a98fc3e481..1b1c3e3127cd 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+-erofs-objs := super.o inode.o data.o namei.o dir.o utils.o sysfs.o
++erofs-objs := super.o inode.o data.o namei.o dir.o sysfs.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+-erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o pcpubuf.o
++erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o utils.o pcpubuf.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
+ erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index 46627cb69abe..72ba7daba33c 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -4,7 +4,6 @@
+  *             https://www.huawei.com/
+  */
+ #include "internal.h"
+-#include <linux/pagevec.h>
+ 
+ struct page *erofs_allocpage(struct page **pagepool, gfp_t gfp)
+ {
+@@ -29,7 +28,6 @@ void erofs_release_pages(struct page **pagepool)
+ 	}
+ }
+ 
+-#ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
+@@ -289,4 +287,3 @@ void erofs_exit_shrinker(void)
+ {
+ 	unregister_shrinker(&erofs_shrinker_info);
+ }
+-#endif	/* !CONFIG_EROFS_FS_ZIP */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.17.1
+
