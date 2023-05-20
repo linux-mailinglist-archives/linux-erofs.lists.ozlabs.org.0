@@ -1,38 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31A3870A48F
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 May 2023 04:08:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C34670A529
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 May 2023 06:12:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QNRty2S36z3fDN
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 May 2023 12:07:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QNVf60458z3chm
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 May 2023 14:11:58 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BpM3vCav;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+2d90232fd80ffab3c8b5+7209+infradead.org+hch@bombadil.srs.infradead.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=BpM3vCav;
+	dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QNRtt5yN5z3cMH
-	for <linux-erofs@lists.ozlabs.org>; Sat, 20 May 2023 12:07:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vj0SAfv_1684548461;
-Received: from 192.168.3.7(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vj0SAfv_1684548461)
-          by smtp.aliyun-inc.com;
-          Sat, 20 May 2023 10:07:44 +0800
-Message-ID: <caa318ba-a6fb-caa9-c7e0-f1f13b5ee577@linux.alibaba.com>
-Date: Sat, 20 May 2023 10:07:40 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QNVdy0SlBz3cL0
+	for <linux-erofs@lists.ozlabs.org>; Sat, 20 May 2023 14:11:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=BpM3vCav2LNkqTheri33lK/GJ+
+	RMLI+guMl5TqFBr+GYTJZZ8Wlne4ono1feA/e+SxxFzC4otggobZOmtUqlSZ0n2LMCjIlCDxVMvPe
+	ycnrQZKp+RYQbWeC1lv64tGEnyN+vUGQMmapenZ5e04x2Tncognia3j7ZbViDpwxSNG2RxOSWPSZG
+	DLHAlwhF1urkEgYqqNPGC+py/Qb5kn6+ZJqFdw9gDjLNCMxnLMBQ6FJaXMGVOAYF0hslD0g/dNCRW
+	j4BtlnbP5jZWGsYU4fQBVPGbXxsKCWoFOlKlkf60lZTjYK8K0RwkFwoXTzmBQSWpDSZWM0dN9pUvV
+	4e1xVYaw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1q0DwK-000dPa-27;
+	Sat, 20 May 2023 04:11:32 +0000
+Date: Fri, 19 May 2023 21:11:32 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v21 08/30] splice: Make splice from a DAX file use
+ copy_splice_read()
+Message-ID: <ZGhIdB5ORIVzjWDs@infradead.org>
+References: <20230520000049.2226926-1-dhowells@redhat.com>
+ <20230520000049.2226926-9-dhowells@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [Linux-cachefs] [PATCH] cachefiles: Allow the cache to be
- non-root
-To: David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-References: <1853230.1684516880@warthog.procyon.org.uk>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <1853230.1684516880@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230520000049.2226926-9-dhowells@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,31 +59,10 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, Hillf Danton <hdanton@sina.com>, Jan Kara <jack@suse.cz>, linux-xfs@vger.kernel.org, David Hildenbrand <david@redhat.com>, linux-erofs@lists.ozlabs.org, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>, Jason Gunthorpe <jgg@nvidia.com>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, Christoph Hellwig <hch@lst.de>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Looks good:
 
-
-On 2023/5/20 10:21, David Howells wrote:
->      
-> Set mode 0600 on files in the cache so that cachefilesd can run as an
-> unprivileged user rather than leaving the files all with 0.  Directories
-> are already set to 0700.
-> 
-> Userspace then needs to set the uid and gid before issuing the "bind"
-> command and the cache must've been chown'd to those IDs.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: David Howells <dhowells@redhat.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-cachefs@redhat.com
-> cc: linux-erofs@lists.ozlabs.org
-> cc: linux-fsdevel@vger.kernel.org
-
-It seems useful on our side as well and safe:
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
+Reviewed-by: Christoph Hellwig <hch@lst.de>
