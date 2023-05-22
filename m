@@ -1,40 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A47E70AE5E
-	for <lists+linux-erofs@lfdr.de>; Sun, 21 May 2023 16:55:46 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38F3D70B34E
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 May 2023 04:49:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QPNtQ1TTyz3bqx
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 May 2023 00:55:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QPhjT6NKyz3cdB
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 May 2023 12:49:01 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QPNtJ2m5pz3bgX
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 May 2023 00:55:35 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vj5ET5O_1684680925;
-Received: from 30.15.209.15(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vj5ET5O_1684680925)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QPhjM6Gs0z3bgv
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 May 2023 12:48:54 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vj6edcd_1684723728;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vj6edcd_1684723728)
           by smtp.aliyun-inc.com;
-          Sun, 21 May 2023 22:55:27 +0800
-Message-ID: <d4ed0a75-f71c-ef42-7845-c1fa78b36fa7@linux.alibaba.com>
-Date: Sun, 21 May 2023 22:55:25 +0800
+          Mon, 22 May 2023 10:48:49 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: fix the endianness of erofs_super_block
+Date: Mon, 22 May 2023 10:48:48 +0800
+Message-Id: <20230522024848.89861-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v21 08/30] splice: Make splice from a DAX file use
- copy_splice_read()
-To: David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>,
- Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@infradead.org>
-References: <20230520000049.2226926-1-dhowells@redhat.com>
- <20230520000049.2226926-9-dhowells@redhat.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230520000049.2226926-9-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,32 +42,44 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, Hillf Danton <hdanton@sina.com>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-mm@kvack.org, Logan Gunthorpe <logang@deltatee.com>, Jason Gunthorpe <jgg@nvidia.com>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Add the missing cpu_to_le[16|32]() conversion when initializing
+erofs_super_block.
 
+Fixes: 0a94653c56b2 ("erofs-utils: introduce mkfs support")
+Fixes: 116ac0a254fc ("erofs-utils: introduce shared xattr support")
+Fixes: a70f35adc1b0 ("erofs-utils: introduce ondisk compression cfgs")
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ mkfs/main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 2023/5/20 17:00, David Howells wrote:
-> Make a read splice from a DAX file go directly to copy_splice_read() to do
-> the reading as filemap_splice_read() is unlikely to find any pagecache to
-> splice.
-> 
-> I think this affects only erofs, Ext2, Ext4, fuse and XFS.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Christoph Hellwig <hch@lst.de>
-> cc: Al Viro <viro@zeniv.linux.org.uk>
-> cc: Jens Axboe <axboe@kernel.dk>
-> cc: linux-erofs@lists.ozlabs.org
-> cc: linux-ext4@vger.kernel.org
-> cc: linux-xfs@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-block@vger.kernel.org
-> cc: linux-mm@kvack.org
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 61387b3..3ec4903 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -577,8 +577,8 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 		.build_time = cpu_to_le64(sbi.build_time),
+ 		.build_time_nsec = cpu_to_le32(sbi.build_time_nsec),
+ 		.blocks = 0,
+-		.meta_blkaddr  = sbi.meta_blkaddr,
+-		.xattr_blkaddr = sbi.xattr_blkaddr,
++		.meta_blkaddr  = cpu_to_le32(sbi.meta_blkaddr),
++		.xattr_blkaddr = cpu_to_le32(sbi.xattr_blkaddr),
+ 		.xattr_prefix_count = sbi.xattr_prefix_count,
+ 		.xattr_prefix_start = cpu_to_le32(sbi.xattr_prefix_start),
+ 		.feature_incompat = cpu_to_le32(sbi.feature_incompat),
+@@ -599,7 +599,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	memcpy(sb.volume_name, sbi.volume_name, sizeof(sb.volume_name));
+ 
+ 	if (erofs_sb_has_compr_cfgs())
+-		sb.u1.available_compr_algs = sbi.available_compr_algs;
++		sb.u1.available_compr_algs = cpu_to_le16(sbi.available_compr_algs);
+ 	else
+ 		sb.u1.lz4_max_distance = cpu_to_le16(sbi.lz4_max_distance);
+ 
+-- 
+2.19.1.6.gb485710b
 
