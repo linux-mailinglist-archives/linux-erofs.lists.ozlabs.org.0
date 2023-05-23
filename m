@@ -1,60 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6662770CE31
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 May 2023 00:45:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 986F970CFB3
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 May 2023 02:44:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QQCGK0VTkz3c9x
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 May 2023 08:45:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QQFvT2xy4z3cL0
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 May 2023 10:44:37 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RoC9TIPc;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=Lh2t3iKM;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mga17.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102e; helo=mail-pj1-x102e.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RoC9TIPc;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=Lh2t3iKM;
 	dkim-atps=neutral
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QQCG92FM7z3bYW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 May 2023 08:45:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684795537; x=1716331537;
-  h=date:from:to:cc:subject:message-id;
-  bh=s4sru/vFVk5txYgsYsni5qhxkSxmn6ItQMUh40eusKk=;
-  b=RoC9TIPcFAkZVdWv1DhFEPSH2ma23l/avUD5JrwTrEgKRlFGVljOsBBZ
-   R6qGFjcfccFPD9lnlkcJ7/sw4NSrv2LIdDZI0+h9JzSNWhePX1Dfynfvi
-   O6ZFvXchcQhLczBrBxjrM+S9d+zczufJkEGzqF2D5c1xKItTA3fajzDmq
-   5CEYO5fKqevh82XOxUrp1k8OBSuqWUqy6b/UizxcWgMOWJ3HXg/6c8fb8
-   51I39AqYmQW9p9mf6o46w4yBYExDmPici/Vhijqjl8x3X0cGVVVQlK2XQ
-   Um8vCizecN+07Q0WCNKpst9j6u7L5FGVVUZDpH0UW2o9UEJItBf7Hv/rd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="333426627"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="333426627"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 15:45:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="736594002"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="736594002"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 22 May 2023 15:45:26 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1q1EHN-000DHa-22;
-	Mon, 22 May 2023 22:45:25 +0000
-Date: Tue, 23 May 2023 06:45:02 +0800
-From: kernel test robot <lkp@intel.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QQFvP4mq3z3bgr
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 May 2023 10:44:32 +1000 (AEST)
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-2533d74895bso4984211a91.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 22 May 2023 17:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684802668; x=1687394668;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+ohaTtJOaeTv+DUbIMaoQB65niNoQeGMvZ+rell6iqk=;
+        b=Lh2t3iKMxSvClzmCWv9vggXg6qa912HRceMhmGZW22Nea0fZW/Q4GLwhOXlOvZlt8+
+         svTRTl6rlknvFhR/Vb28ViINP9WwvZd/IjbY8vu685AtJGUVUZog1b3RQQM9orQ0WDtk
+         dECpFw98w8XuJATQW2Y9dMfd+3Xoavt+3vGl6CQsk2BtDr0Qu2EJi01c1Oe3q75H7bHv
+         1OGVaoV2JE/o0M/8bwm9TIGFYoE8GSL+GWN8OpYHBWW6QU2KiWyW6OLC9Dv0mIABSqSV
+         wS7nO7w+CYB2CEx/D2V5zSOHVLL/c3SiyK87ySOtc86/ZhxG8Hlq6aUypkW0y1WTBXZy
+         cQKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684802668; x=1687394668;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+ohaTtJOaeTv+DUbIMaoQB65niNoQeGMvZ+rell6iqk=;
+        b=d7NU6N/bQc/JzFK1xrjACjQV+u41SRGp5dFtcnzQ0j77AWv11IabVqI00k81I++UDv
+         Bj2BuDC5wGHktYqocJ5fYjJBx1EuX/DJN9vaiK9wVweR+LU4YoXazGvlsBZwxsjvG6Za
+         yNowcBJEavDt3+Q4beFBs9CMOZR9ZkcWaAgl6fSQXHYE5iAjyndVHxHyEMK6EehC+Dj1
+         Azj+Vsof7MgRoYwmdyHn3lYn6J3RjX6xHqLn15gM/KXSgCx9VM6obQC5xOf2SnuuTozv
+         s8CF9sc3rDBRCiIBWNwkvm0qXLjKoaChYNPH7LBD/LU9LdrNpd3VyljU6QnGFcpdP6LP
+         3Xsw==
+X-Gm-Message-State: AC+VfDyozyXeTq1Jxr745UT1OFsjfVywiybtYP6BqFJbwTfJWVlxYRKL
+	n6zFJSFi6rh3vE6uDa4qvkM=
+X-Google-Smtp-Source: ACHHUZ7Z00JJe8o88wNi/jig565qsA7QD7/XTMHnzm4a67eYa0dAv7dLNOTRPHowJnhdhWSqEW9znQ==
+X-Received: by 2002:a17:90a:d513:b0:24d:d377:d1 with SMTP id t19-20020a17090ad51300b0024dd37700d1mr12085705pju.45.1684802668474;
+        Mon, 22 May 2023 17:44:28 -0700 (PDT)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id lp4-20020a17090b4a8400b002555689006esm3048698pjb.47.2023.05.22.17.44.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 May 2023 17:44:28 -0700 (PDT)
+Date: Tue, 23 May 2023 08:52:26 +0800
+From: Yue Hu <zbestahu@gmail.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 040fe4eee2f91fdfea6306489bbbda1cf33f9151
-Message-ID: <20230522224502.kszsI%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Subject: Re: [PATCH] erofs: use HIPRI by default if per-cpu kthreads are
+ enabled
+Message-ID: <20230523085226.00006933.zbestahu@gmail.com>
+In-Reply-To: <20230522092141.124290-1-hsiangkao@linux.alibaba.com>
+References: <20230522092141.124290-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,270 +80,57 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: zhangwen@coolpad.com, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Sandeep Dhavale <dhavale@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230522162832/lkp-src/repo/*/xiang-erofs
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 040fe4eee2f91fdfea6306489bbbda1cf33f9151  erofs: use HIPRI by default if per-cpu kthreads are enabled
+On Mon, 22 May 2023 17:21:41 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-elapsed time: 724m
+> As Sandeep shown [1], high priority RT per-cpu kthreads are
+> typically helpful for Android scenarios to minimize the scheduling
+> latencies.
+> 
+> Switch EROFS_FS_PCPU_KTHREAD_HIPRI on by default if
+> EROFS_FS_PCPU_KTHREAD is on since it's the typical use cases for
+> EROFS_FS_PCPU_KTHREAD.
+> 
+> Also clean up unneeded sched_set_normal().
+> 
+> [1] https://lore.kernel.org/r/CAB=BE-SBtO6vcoyLNA9F-9VaN5R0t3o_Zn+FW8GbO6wyUqFneQ@mail.gmail.com
+> Cc: Sandeep Dhavale <dhavale@google.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/Kconfig | 1 +
+>  fs/erofs/zdata.c | 2 --
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 704fb59577e0..f259d92c9720 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -121,6 +121,7 @@ config EROFS_FS_PCPU_KTHREAD
+>  config EROFS_FS_PCPU_KTHREAD_HIPRI
+>  	bool "EROFS high priority per-CPU kthread workers"
+>  	depends on EROFS_FS_ZIP && EROFS_FS_PCPU_KTHREAD
+> +	default y
 
-configs tested: 246
-configs skipped: 19
+How about removing this config option?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>  	help
+>  	  This permits EROFS to configure per-CPU kthread workers to run
+>  	  at higher priority.
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 92f3a01262cf..3ba505434f03 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -367,8 +367,6 @@ static struct kthread_worker *erofs_init_percpu_worker(int cpu)
+>  		return worker;
+>  	if (IS_ENABLED(CONFIG_EROFS_FS_PCPU_KTHREAD_HIPRI))
+>  		sched_set_fifo_low(worker->task);
+> -	else
+> -		sched_set_normal(worker->task, 0);
+>  	return worker;
+>  }
+>  
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r002-20230521   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r002-20230522   gcc  
-alpha                randconfig-r013-20230521   gcc  
-alpha                randconfig-r025-20230521   gcc  
-alpha                randconfig-r025-20230522   gcc  
-alpha                randconfig-r036-20230522   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r013-20230521   gcc  
-arc                  randconfig-r014-20230521   gcc  
-arc                  randconfig-r026-20230521   gcc  
-arc                  randconfig-r043-20230521   gcc  
-arc                  randconfig-r043-20230522   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                       multi_v4t_defconfig   gcc  
-arm                  randconfig-r024-20230522   gcc  
-arm                  randconfig-r046-20230521   clang
-arm                  randconfig-r046-20230522   gcc  
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r003-20230521   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230521   clang
-arm64                randconfig-r011-20230522   clang
-arm64                randconfig-r022-20230522   clang
-arm64                randconfig-r023-20230521   gcc  
-arm64                randconfig-r033-20230521   clang
-csky         buildonly-randconfig-r004-20230522   gcc  
-csky         buildonly-randconfig-r006-20230522   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r012-20230521   gcc  
-csky                 randconfig-r014-20230521   gcc  
-csky                 randconfig-r023-20230522   gcc  
-csky                 randconfig-r025-20230521   gcc  
-csky                 randconfig-r026-20230521   gcc  
-csky                 randconfig-r026-20230522   gcc  
-csky                 randconfig-r031-20230521   gcc  
-csky                 randconfig-r031-20230522   gcc  
-csky                 randconfig-r032-20230522   gcc  
-csky                 randconfig-r035-20230521   gcc  
-hexagon              randconfig-r003-20230521   clang
-hexagon              randconfig-r032-20230521   clang
-hexagon              randconfig-r041-20230521   clang
-hexagon              randconfig-r041-20230522   clang
-hexagon              randconfig-r045-20230521   clang
-hexagon              randconfig-r045-20230522   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230522   gcc  
-i386                 randconfig-a002-20230522   gcc  
-i386                 randconfig-a003-20230522   gcc  
-i386                 randconfig-a004-20230522   gcc  
-i386                 randconfig-a005-20230522   gcc  
-i386                 randconfig-a006-20230522   gcc  
-i386                 randconfig-a011-20230522   clang
-i386                 randconfig-a012-20230522   clang
-i386                 randconfig-a013-20230522   clang
-i386                 randconfig-a014-20230522   clang
-i386                 randconfig-a015-20230522   clang
-i386                 randconfig-a016-20230522   clang
-i386                 randconfig-r033-20230522   gcc  
-i386                 randconfig-r036-20230522   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r003-20230522   gcc  
-ia64         buildonly-randconfig-r006-20230521   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r006-20230521   gcc  
-ia64                 randconfig-r013-20230522   gcc  
-ia64                 randconfig-r016-20230521   gcc  
-ia64                 randconfig-r021-20230521   gcc  
-ia64                 randconfig-r023-20230521   gcc  
-ia64                 randconfig-r025-20230522   gcc  
-ia64                          tiger_defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r005-20230522   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r002-20230521   gcc  
-loongarch            randconfig-r005-20230521   gcc  
-loongarch            randconfig-r005-20230522   gcc  
-loongarch            randconfig-r011-20230521   gcc  
-loongarch            randconfig-r012-20230522   gcc  
-loongarch            randconfig-r022-20230522   gcc  
-loongarch            randconfig-r034-20230521   gcc  
-m68k                             alldefconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r011-20230522   gcc  
-m68k                 randconfig-r036-20230522   gcc  
-microblaze   buildonly-randconfig-r001-20230521   gcc  
-microblaze           randconfig-r004-20230521   gcc  
-microblaze           randconfig-r014-20230522   gcc  
-microblaze           randconfig-r021-20230521   gcc  
-microblaze           randconfig-r034-20230521   gcc  
-microblaze           randconfig-r036-20230521   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm47xx_defconfig   gcc  
-mips                 randconfig-r004-20230522   clang
-mips                 randconfig-r015-20230521   clang
-mips                 randconfig-r031-20230521   gcc  
-mips                 randconfig-r032-20230521   gcc  
-mips                 randconfig-r036-20230521   gcc  
-nios2        buildonly-randconfig-r004-20230521   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230522   gcc  
-nios2                randconfig-r005-20230521   gcc  
-nios2                randconfig-r016-20230521   gcc  
-nios2                randconfig-r016-20230522   gcc  
-nios2                randconfig-r021-20230522   gcc  
-nios2                randconfig-r026-20230522   gcc  
-nios2                randconfig-r032-20230522   gcc  
-openrisc     buildonly-randconfig-r003-20230521   gcc  
-openrisc             randconfig-r015-20230522   gcc  
-openrisc             randconfig-r032-20230521   gcc  
-parisc       buildonly-randconfig-r001-20230521   gcc  
-parisc       buildonly-randconfig-r001-20230522   gcc  
-parisc       buildonly-randconfig-r004-20230522   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r013-20230522   gcc  
-parisc               randconfig-r023-20230521   gcc  
-parisc               randconfig-r024-20230522   gcc  
-parisc               randconfig-r036-20230521   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      cm5200_defconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                       ppc64_defconfig   gcc  
-powerpc              randconfig-r001-20230522   gcc  
-powerpc              randconfig-r006-20230521   clang
-powerpc              randconfig-r012-20230521   gcc  
-powerpc              randconfig-r015-20230522   clang
-powerpc              randconfig-r022-20230521   gcc  
-powerpc              randconfig-r024-20230521   gcc  
-powerpc              randconfig-r032-20230522   gcc  
-powerpc              randconfig-r034-20230521   clang
-powerpc                         wii_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r004-20230521   gcc  
-riscv        buildonly-randconfig-r005-20230522   clang
-riscv        buildonly-randconfig-r006-20230522   clang
-riscv                               defconfig   gcc  
-riscv                randconfig-r006-20230522   gcc  
-riscv                randconfig-r021-20230522   clang
-riscv                randconfig-r024-20230522   clang
-riscv                randconfig-r035-20230521   clang
-riscv                randconfig-r042-20230521   gcc  
-riscv                randconfig-r042-20230522   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r006-20230521   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230522   gcc  
-s390                 randconfig-r021-20230521   gcc  
-s390                 randconfig-r033-20230522   gcc  
-s390                 randconfig-r035-20230522   gcc  
-s390                 randconfig-r044-20230521   gcc  
-s390                 randconfig-r044-20230522   clang
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r002-20230521   gcc  
-sh                          polaris_defconfig   gcc  
-sh                   randconfig-r002-20230522   gcc  
-sh                   randconfig-r014-20230522   gcc  
-sh                   randconfig-r034-20230522   gcc  
-sh                   randconfig-r035-20230522   gcc  
-sh                          sdk7786_defconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r011-20230521   gcc  
-sparc                randconfig-r013-20230521   gcc  
-sparc                randconfig-r015-20230521   gcc  
-sparc                randconfig-r022-20230522   gcc  
-sparc                randconfig-r025-20230521   gcc  
-sparc                randconfig-r033-20230521   gcc  
-sparc                randconfig-r034-20230522   gcc  
-sparc                randconfig-r035-20230522   gcc  
-sparc64      buildonly-randconfig-r002-20230522   gcc  
-sparc64      buildonly-randconfig-r003-20230522   gcc  
-sparc64              randconfig-r005-20230522   gcc  
-sparc64              randconfig-r012-20230522   gcc  
-sparc64              randconfig-r023-20230522   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230522   gcc  
-x86_64               randconfig-a002-20230522   gcc  
-x86_64               randconfig-a003-20230522   gcc  
-x86_64               randconfig-a004-20230522   gcc  
-x86_64               randconfig-a005-20230522   gcc  
-x86_64               randconfig-a006-20230522   gcc  
-x86_64               randconfig-a011-20230522   clang
-x86_64               randconfig-a012-20230522   clang
-x86_64               randconfig-a013-20230522   clang
-x86_64               randconfig-a014-20230522   clang
-x86_64               randconfig-a015-20230522   clang
-x86_64               randconfig-a016-20230522   clang
-x86_64                        randconfig-k001   clang
-x86_64               randconfig-r015-20230522   clang
-x86_64               randconfig-x051-20230522   clang
-x86_64               randconfig-x052-20230522   clang
-x86_64               randconfig-x053-20230522   clang
-x86_64               randconfig-x054-20230522   clang
-x86_64               randconfig-x055-20230522   clang
-x86_64               randconfig-x056-20230522   clang
-x86_64               randconfig-x061-20230522   clang
-x86_64               randconfig-x062-20230522   clang
-x86_64               randconfig-x063-20230522   clang
-x86_64               randconfig-x064-20230522   clang
-x86_64               randconfig-x065-20230522   clang
-x86_64               randconfig-x066-20230522   clang
-x86_64               randconfig-x071-20230522   gcc  
-x86_64               randconfig-x072-20230522   gcc  
-x86_64               randconfig-x073-20230522   gcc  
-x86_64               randconfig-x074-20230522   gcc  
-x86_64               randconfig-x075-20230522   gcc  
-x86_64               randconfig-x076-20230522   gcc  
-x86_64               randconfig-x081-20230522   gcc  
-x86_64               randconfig-x082-20230522   gcc  
-x86_64               randconfig-x083-20230522   gcc  
-x86_64               randconfig-x084-20230522   gcc  
-x86_64               randconfig-x085-20230522   gcc  
-x86_64               randconfig-x086-20230522   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r001-20230522   gcc  
-xtensa       buildonly-randconfig-r005-20230521   gcc  
-xtensa               randconfig-r002-20230521   gcc  
-xtensa               randconfig-r003-20230522   gcc  
-xtensa               randconfig-r004-20230521   gcc  
-xtensa               randconfig-r004-20230522   gcc  
-xtensa               randconfig-r016-20230521   gcc  
-xtensa               randconfig-r024-20230521   gcc  
-xtensa               randconfig-r031-20230522   gcc  
-xtensa               randconfig-r033-20230521   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
