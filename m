@@ -2,32 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FADF71076B
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 10:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AF9D71076D
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 10:32:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QRhBL38wlz3fCp
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 18:32:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QRhBP1cKkz3fDH
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 18:32:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRhB16d5Pz3f6n
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 18:32:09 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VjRTy8D_1685003524;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VjRTy8D_1685003524)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRhB4023mz3f6n
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 18:32:11 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VjRUz.s_1685003525;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VjRUz.s_1685003525)
           by smtp.aliyun-inc.com;
-          Thu, 25 May 2023 16:32:05 +0800
+          Thu, 25 May 2023 16:32:06 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
 	huyue2@coolpad.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/5] erofs-utils: tests: add test for xattrs in different layouts
-Date: Thu, 25 May 2023 16:31:59 +0800
-Message-Id: <20230525083201.23740-4-jefflexu@linux.alibaba.com>
+Subject: [PATCH 4/5] erofs-utils: tests: add test for xattr crossing block boundary
+Date: Thu, 25 May 2023 16:32:00 +0800
+Message-Id: <20230525083201.23740-5-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230525083201.23740-1-jefflexu@linux.alibaba.com>
 References: <20230525083201.23740-1-jefflexu@linux.alibaba.com>
@@ -47,45 +47,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Test extended attributes in following layouts:
-
-- multiple inline xattrs for one single file
-- multiple share xattrs for one single file
-- mixed inline and share xattrs for one single file
+Test the extended attribute which crosses block boundary.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
  tests/Makefile.am   |  3 +++
- tests/erofs/020     | 77 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/erofs/020.out |  2 ++
- 3 files changed, 82 insertions(+)
- create mode 100755 tests/erofs/020
- create mode 100644 tests/erofs/020.out
+ tests/common/rc     |  6 ++++++
+ tests/erofs/021     | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/021.out |  2 ++
+ 4 files changed, 71 insertions(+)
+ create mode 100755 tests/erofs/021
+ create mode 100644 tests/erofs/021.out
 
 diff --git a/tests/Makefile.am b/tests/Makefile.am
-index b85ae89..1d6ea5c 100644
+index 1d6ea5c..61bbb4d 100644
 --- a/tests/Makefile.am
 +++ b/tests/Makefile.am
-@@ -91,6 +91,9 @@ TESTS += erofs/018
- # 019 - check extended attribute functionality
- TESTS += erofs/019
+@@ -94,6 +94,9 @@ TESTS += erofs/019
+ # 020 - check extended attributes in different layouts
+ TESTS += erofs/020
  
-+# 020 - check extended attributes in different layouts
-+TESTS += erofs/020
++# 021 - check extended attributes crossing block boundary
++TESTS += erofs/021
 +
  EXTRA_DIST = common/rc erofs
  
  clean-local: clean-local-check
-diff --git a/tests/erofs/020 b/tests/erofs/020
+diff --git a/tests/common/rc b/tests/common/rc
+index 293e556..0361c68 100644
+--- a/tests/common/rc
++++ b/tests/common/rc
+@@ -92,6 +92,12 @@ _require_xattr()
+ 		_notrun "attr isn't installed, skipped."
+ }
+ 
++_require_mkfs_blksize()
++{
++	"$MKFS_EROFS_PROG" --help 2>&1 | grep -q -- '-b#' ||
++		_notrun "-b# feature needed for mkfs.erofs"
++}
++
+ # this test requires erofs kernel support
+ _require_erofs()
+ {
+diff --git a/tests/erofs/021 b/tests/erofs/021
 new file mode 100755
-index 0000000..5f98be2
+index 0000000..d36aa56
 --- /dev/null
-+++ b/tests/erofs/020
-@@ -0,0 +1,77 @@
++++ b/tests/erofs/021
+@@ -0,0 +1,60 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0+
 +#
-+# 020 - check extended attributes in different layouts
++# 021 - check extended attributes crossing block boundary
 +#
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
@@ -101,6 +115,7 @@ index 0000000..5f98be2
 +
 +_require_erofs
 +_require_xattr
++_require_mkfs_blksize
 +
 +# remove previous $seqres.full before test
 +rm -f $seqres.full
@@ -117,37 +132,19 @@ index 0000000..5f98be2
 +rm -rf $localdir
 +mkdir -p $localdir
 +
-+# set random xattrs
-+
-+# preapre key/value of shared xattrs
-+s_key_1=$(_srandom)
-+s_key_2=$(_srandom)
-+s_val=$(_srandom)
-+
-+# file1: one inline xattr
++# set inline xattr (large name/value crossing block boundary)
++# given blksize will be set to 512 later, it is ensured that xattr values
++# cross the block boundary; besides set three xattrs to ensure at least
++# one xattr name crosses the block boundary
 +touch $localdir/file1
-+setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file1
++for i in {1..3}; do
++	setfattr -n user.p$(_random 249) -v $(_random 512) $localdir/file1 \
++		|| _notrun "no space for xattrs"
++done
 +
-+# file2: one share xattr
-+touch $localdir/file2
-+setfattr -n user.s$s_key_1 -v $s_val $localdir/file2
-+
-+# file3: multiple inline xattrs
-+touch $localdir/file3
-+setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file3
-+setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file3
-+
-+# file4: multiple share xattrs
-+touch $localdir/file4
-+setfattr -n user.s$s_key_1 -v $s_val $localdir/file4
-+setfattr -n user.s$s_key_2 -v $s_val $localdir/file4
-+
-+# file5: mixed inline and share xattrs
-+touch $localdir/file5
-+setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file5
-+setfattr -n user.s$s_key_1 -v $s_val $localdir/file5
-+
-+MKFS_OPTIONS="$MKFS_OPTIONS -x1"
++# specify 512 blocksize explicitly so that the large name/value of file1
++# could cross the block boundary
++MKFS_OPTIONS="$MKFS_OPTIONS -b512"
 +_scratch_mkfs $localdir >> $seqres.full 2>&1 || _fail "failed to mkfs"
 +_scratch_mount 2>>$seqres.full
 +
@@ -159,13 +156,13 @@ index 0000000..5f98be2
 +echo Silence is golden
 +status=0
 +exit 0
-diff --git a/tests/erofs/020.out b/tests/erofs/020.out
+diff --git a/tests/erofs/021.out b/tests/erofs/021.out
 new file mode 100644
-index 0000000..20d7944
+index 0000000..09f4062
 --- /dev/null
-+++ b/tests/erofs/020.out
++++ b/tests/erofs/021.out
 @@ -0,0 +1,2 @@
-+QA output created by 020
++QA output created by 021
 +Silence is golden
 -- 
 1.8.3.1
