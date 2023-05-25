@@ -1,68 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED4997102BC
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 04:14:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34C72710580
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 07:53:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QRWpS3t69z3f67
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 12:14:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QRcfx2q2Wz3f7D
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 15:53:29 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=DcGMR9DB;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=dkzqX7I+;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52c; helo=mail-pg1-x52c.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::436; helo=mail-pf1-x436.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=DcGMR9DB;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=dkzqX7I+;
 	dkim-atps=neutral
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRWpN6MsWz3bT1
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 12:14:34 +1000 (AEST)
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-530638a60e1so921103a12.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 24 May 2023 19:14:34 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRcfr2CJHz3cM1
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 15:53:23 +1000 (AEST)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-64d293746e0so2021969b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 24 May 2023 22:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684980870; x=1687572870;
+        d=gmail.com; s=20221208; t=1684993999; x=1687585999;
         h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VzBlJLFAfyWSWb9nUXk9FvhTpGSd0CozzP+TkVxRg2s=;
-        b=DcGMR9DBSVzrk5auQ81PVyyXqY8c/vFLnhHRdHPhhPmZz0vtzbwzTvIOJjrTT0zIKZ
-         bG9JjhgNIS9oX2kG0Sa805UV4jYkp+MfUjb0VCp8XZAj+kQ7WKnOFOJI+bT++XPYQLtb
-         +0sINuIAfwJhxEwF9LT/NBBRTEv4AejT+ozTzIijOSfml1JNZajVMKsCcowJg1JcxrSe
-         m2IAOHXsiTAHzD6xiKvulAa0TbKcaYgArLYYZ5BDkiiSC2TSqiFVdZHxgZx/f8ZsBdu7
-         a7z8boqqtBLe8OQg1kV/5ze9dvsm7gtQAaKQbBeM1oC5X4mwe4ceKHPK6QacXs+LgxaP
-         /UPg==
+        bh=l7P2pViE0Pdm1oz/lthOVONUXxJhbAwJFigoZZnYI7I=;
+        b=dkzqX7I+LHjgODgV0ywVKF5SLiBAzr+fGfCFf4pam8H9IH8uK2DHL9sYz1mJQS+T0j
+         QGPRv+8atks+Kg3RkZzzt2nYCvFvKiycZ+lBKTZKBJc5LTFDvnHfJw/l+5PVDXEUzzE/
+         BxFMkUbVzc1Vi9KvP5BU2ypMquo3bkBJHMh6tNCJyVQAIzez4AeuyUq/xKQMkTPpLyv5
+         c6R27f2W1KANiiXX1d547hMrtCug7n26Pu25Wa0MtlQTwNC0Y7gfvKNlc7+iqX4uRNHM
+         dNzlmlAuakASNyGw/L4BvGTGwzfDL8qBKcvQeMux0JDr6i1AbbgGi/18DhmFzz9SDLtp
+         Kt8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684980870; x=1687572870;
+        d=1e100.net; s=20221208; t=1684993999; x=1687585999;
         h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VzBlJLFAfyWSWb9nUXk9FvhTpGSd0CozzP+TkVxRg2s=;
-        b=cuVQa/4Ysk4wz3bs5gWhPM6EDSuVrV+VosZCfFNzvzvTGAPoVyJubmK4pjxzeWmVTi
-         IA5+8eBFlGBXk+dJjwcHlsJ1zoK6MwJMU0MbTNa0I4y/+npexL9u2pvE4bbgboLUiPwe
-         SMhUW/c1cURGWV2edASLdXrTPckE/iO66+BV0voI84TnPTwa6nfTcb1s6prnKoEqwMAv
-         e8a3t0Qvl8vj0HsMWMFZu0tFkkwUDgncrmAtJHHckBLnjZxFp9nqccs9K12m0wOL2u5R
-         hwzAnFnAEvO8g1TkzwnGSGjavPjtZ1EsJYTIHaL9XNy1PnVIBdi90Oa0uHCdF2OsdQHA
-         C7tQ==
-X-Gm-Message-State: AC+VfDynjbwmmXBBDY1LHDk3nXZAdBFpCYcQ6pDKkNXAOXXAqbTdIQll
-	c3myBQyzvnFZDcIMN8yZywA=
-X-Google-Smtp-Source: ACHHUZ43FYWuhk0l+Ak68yTcquXM88HZT1KFK0hTwq6+94J/kpjUCgMfXykuPcsBujVQAY4P4jFEpg==
-X-Received: by 2002:a17:90b:4b04:b0:253:5728:f631 with SMTP id lx4-20020a17090b4b0400b002535728f631mr19992pjb.15.1684980870426;
-        Wed, 24 May 2023 19:14:30 -0700 (PDT)
+        bh=l7P2pViE0Pdm1oz/lthOVONUXxJhbAwJFigoZZnYI7I=;
+        b=RMXnNrRyp/dW+jxgDooPyHtG7jk56D6xCrv4DQfIZCL0beXCs+Qhkon7HSduQm98K6
+         v3vn8VXoQXPAlSkaPwQWupa8W8MXAQEdKZh9WL6RyhV7+t0c4Wnx2l3pQVPhqbDoMXi5
+         Lbt6He/kiS6CwXeUZxfiCyVm5KGi9vktZcCdQir1Lx5CYu6RSypAgYYo9fzMkkAJv9Qt
+         ExidcujPf1O+G55ZWe37SNCPSlzSiedz38USMAdj+Zb/0Qbv3i4HCGHy6WfLPlaOHqSK
+         JJFGf7icn/XZT3Wf2zcIqz5cD/0cDtr7Ev9JxqhNToNnWLUG5+/mIB8dGBFj/JdWAYPv
+         /wkw==
+X-Gm-Message-State: AC+VfDw5fwFbbFcUxBSNPNk6K5pyv1dXRXOFzrqCZgNc9j4Re+IuH94D
+	FgVO/uxyp1Nd3f5qpm++bKbZujItYqo=
+X-Google-Smtp-Source: ACHHUZ4/7hCeo6+NoomrhmCHRq3yUsBAuo2crzdqr8m6FlZpndwMWY0HzBfzd6xDatii84yEQvl5mw==
+X-Received: by 2002:a05:6a00:13a8:b0:64b:205:dbf3 with SMTP id t40-20020a056a0013a800b0064b0205dbf3mr7081362pfg.34.1684993999543;
+        Wed, 24 May 2023 22:53:19 -0700 (PDT)
 Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id t30-20020a63225e000000b0051afa49e07asm8419929pgm.50.2023.05.24.19.14.28
+        by smtp.gmail.com with ESMTPSA id j1-20020aa78001000000b006437c0edf9csm415895pfi.16.2023.05.24.22.53.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 19:14:29 -0700 (PDT)
+        Wed, 24 May 2023 22:53:18 -0700 (PDT)
 From: Yue Hu <zbestahu@gmail.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
 	jefflexu@linux.alibaba.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: remove end parameter from z_erofs_pcluster_readmore()
-Date: Thu, 25 May 2023 10:14:15 +0800
-Message-Id: <20230525021415.8594-1-zbestahu@gmail.com>
+Subject: [PATCH] erofs: don't calculate new start when expanding read length
+Date: Thu, 25 May 2023 13:51:47 +0800
+Message-Id: <20230525055147.13220-1-zbestahu@gmail.com>
 X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -81,89 +81,50 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yue Hu <huyue2@coolpad.com>
 
-The `end` argument is pointless if it's not backmost.  And we already
-have `headoffset` in struct `*f`, so let's use this offset to get the
-`end` for backmost only instead in this function.
-
-Also, remove linux/prefetch.h that is not used anymore after commit
-386292919c25 ("erofs: introduce readmore decompression strategy").
+We only expand the trailing edge and not the leading edge.  So no need
+to obtain new start again.  Let's use the existing ->headoffset instead.
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
-v2:
- - change to use if-else to obtain end value
- - minor commit message update
-
- fs/erofs/zdata.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ fs/erofs/zdata.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5cd971bcf95e..874fee35af32 100644
+index 874fee35af32..bab8dcb8e848 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -5,7 +5,6 @@
-  * Copyright (C) 2022 Alibaba Cloud
-  */
- #include "compress.h"
--#include <linux/prefetch.h>
- #include <linux/psi.h>
- #include <linux/cpuhotplug.h>
- #include <trace/events/erofs.h>
-@@ -1825,16 +1824,18 @@ static void z_erofs_runqueue(struct z_erofs_decompress_frontend *f,
-  */
- static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
- 				      struct readahead_control *rac,
--				      erofs_off_t end,
--				      struct page **pagepool,
--				      bool backmost)
-+				      struct page **pagepool, bool backmost)
+@@ -1828,26 +1828,24 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
  {
  	struct inode *inode = f->inode;
  	struct erofs_map_blocks *map = &f->map;
--	erofs_off_t cur;
-+	erofs_off_t cur, end;
+-	erofs_off_t cur, end;
++	erofs_off_t cur, end, headoffset = f->headoffset;
  	int err;
  
  	if (backmost) {
-+		if (rac)
-+			end = f->headoffset + readahead_length(rac) - 1;
-+		else
-+			end = f->headoffset + PAGE_SIZE - 1;
+ 		if (rac)
+-			end = f->headoffset + readahead_length(rac) - 1;
++			end = headoffset + readahead_length(rac) - 1;
+ 		else
+-			end = f->headoffset + PAGE_SIZE - 1;
++			end = headoffset + PAGE_SIZE - 1;
  		map->m_la = end;
  		err = z_erofs_map_blocks_iter(inode, map,
  					      EROFS_GET_BLOCKS_READMORE);
-@@ -1894,10 +1895,9 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
- 	trace_erofs_readpage(page, false);
- 	f.headoffset = (erofs_off_t)page->index << PAGE_SHIFT;
+ 		if (err)
+ 			return;
  
--	z_erofs_pcluster_readmore(&f, NULL, f.headoffset + PAGE_SIZE - 1,
--				  &pagepool, true);
-+	z_erofs_pcluster_readmore(&f, NULL, &pagepool, true);
- 	err = z_erofs_do_read_page(&f, page, &pagepool);
--	z_erofs_pcluster_readmore(&f, NULL, 0, &pagepool, false);
-+	z_erofs_pcluster_readmore(&f, NULL, &pagepool, false);
- 
- 	(void)z_erofs_collector_end(&f);
- 
-@@ -1923,8 +1923,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 
- 	f.headoffset = readahead_pos(rac);
- 
--	z_erofs_pcluster_readmore(&f, rac, f.headoffset +
--				  readahead_length(rac) - 1, &pagepool, true);
-+	z_erofs_pcluster_readmore(&f, rac, &pagepool, true);
- 	nr_pages = readahead_count(rac);
- 	trace_erofs_readpages(inode, readahead_index(rac), nr_pages, false);
- 
-@@ -1947,7 +1946,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 				  page->index, EROFS_I(inode)->nid);
- 		put_page(page);
- 	}
--	z_erofs_pcluster_readmore(&f, rac, 0, &pagepool, false);
-+	z_erofs_pcluster_readmore(&f, rac, &pagepool, false);
- 	(void)z_erofs_collector_end(&f);
- 
- 	z_erofs_runqueue(&f, &pagepool,
+-		/* expend ra for the trailing edge if readahead */
++		/* expand ra for the trailing edge if readahead */
+ 		if (rac) {
+-			loff_t newstart = readahead_pos(rac);
+-
+ 			cur = round_up(map->m_la + map->m_llen, PAGE_SIZE);
+-			readahead_expand(rac, newstart, cur - newstart);
++			readahead_expand(rac, headoffset, cur - headoffset);
+ 			return;
+ 		}
+ 		end = round_up(end, PAGE_SIZE);
 -- 
 2.17.1
 
