@@ -2,32 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D684871076A
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 10:32:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FADF71076B
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 10:32:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QRhBH5DyJz3f8f
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 18:32:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QRhBL38wlz3fCp
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 May 2023 18:32:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRhB16Jr9z3f67
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 18:32:08 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VjRUz-S_1685003523;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VjRUz-S_1685003523)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QRhB16d5Pz3f6n
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 May 2023 18:32:09 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VjRTy8D_1685003524;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VjRTy8D_1685003524)
           by smtp.aliyun-inc.com;
-          Thu, 25 May 2023 16:32:04 +0800
+          Thu, 25 May 2023 16:32:05 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	chao@kernel.org,
 	huyue2@coolpad.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/5] erofs-utils: tests: add test for xattrs
-Date: Thu, 25 May 2023 16:31:58 +0800
-Message-Id: <20230525083201.23740-3-jefflexu@linux.alibaba.com>
+Subject: [PATCH 3/5] erofs-utils: tests: add test for xattrs in different layouts
+Date: Thu, 25 May 2023 16:31:59 +0800
+Message-Id: <20230525083201.23740-4-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230525083201.23740-1-jefflexu@linux.alibaba.com>
 References: <20230525083201.23740-1-jefflexu@linux.alibaba.com>
@@ -47,44 +47,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Huang Jianan <huangjianan@oppo.com>
+Test extended attributes in following layouts:
 
-Add basic functional check for xattrs.
+- multiple inline xattrs for one single file
+- multiple share xattrs for one single file
+- mixed inline and share xattrs for one single file
 
-Signed-off-by: Huang Jianan <huangjianan@oppo.com>
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
  tests/Makefile.am   |  3 +++
- tests/erofs/019     | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/erofs/019.out |  2 ++
- 3 files changed, 60 insertions(+)
- create mode 100755 tests/erofs/019
- create mode 100644 tests/erofs/019.out
+ tests/erofs/020     | 77 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/020.out |  2 ++
+ 3 files changed, 82 insertions(+)
+ create mode 100755 tests/erofs/020
+ create mode 100644 tests/erofs/020.out
 
 diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 3bd6ad5..b85ae89 100644
+index b85ae89..1d6ea5c 100644
 --- a/tests/Makefile.am
 +++ b/tests/Makefile.am
-@@ -88,6 +88,9 @@ TESTS += erofs/017
- # 018 - verify lzma compressed image
- TESTS += erofs/018
+@@ -91,6 +91,9 @@ TESTS += erofs/018
+ # 019 - check extended attribute functionality
+ TESTS += erofs/019
  
-+# 019 - check extended attribute functionality
-+TESTS += erofs/019
++# 020 - check extended attributes in different layouts
++TESTS += erofs/020
 +
  EXTRA_DIST = common/rc erofs
  
  clean-local: clean-local-check
-diff --git a/tests/erofs/019 b/tests/erofs/019
+diff --git a/tests/erofs/020 b/tests/erofs/020
 new file mode 100755
-index 0000000..0b89b77
+index 0000000..5f98be2
 --- /dev/null
-+++ b/tests/erofs/019
-@@ -0,0 +1,55 @@
++++ b/tests/erofs/020
+@@ -0,0 +1,77 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0+
 +#
-+# 019 - check extended attribute functionality
++# 020 - check extended attributes in different layouts
 +#
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
@@ -117,14 +118,36 @@ index 0000000..0b89b77
 +mkdir -p $localdir
 +
 +# set random xattrs
-+cp -nR ../ $localdir
-+dirs=`ls $localdir`
-+for d in $dirs; do
-+	key=`head -20 /dev/urandom | cksum | cut -f1 -d " "`
-+	val="0s"`head -3 /dev/urandom | base64 -w0`
-+	setfattr -n user.$key -v $val $localdir/$d
-+done
 +
++# preapre key/value of shared xattrs
++s_key_1=$(_srandom)
++s_key_2=$(_srandom)
++s_val=$(_srandom)
++
++# file1: one inline xattr
++touch $localdir/file1
++setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file1
++
++# file2: one share xattr
++touch $localdir/file2
++setfattr -n user.s$s_key_1 -v $s_val $localdir/file2
++
++# file3: multiple inline xattrs
++touch $localdir/file3
++setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file3
++setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file3
++
++# file4: multiple share xattrs
++touch $localdir/file4
++setfattr -n user.s$s_key_1 -v $s_val $localdir/file4
++setfattr -n user.s$s_key_2 -v $s_val $localdir/file4
++
++# file5: mixed inline and share xattrs
++touch $localdir/file5
++setfattr -n user.p$(_srandom) -v $(_srandom) $localdir/file5
++setfattr -n user.s$s_key_1 -v $s_val $localdir/file5
++
++MKFS_OPTIONS="$MKFS_OPTIONS -x1"
 +_scratch_mkfs $localdir >> $seqres.full 2>&1 || _fail "failed to mkfs"
 +_scratch_mount 2>>$seqres.full
 +
@@ -136,13 +159,13 @@ index 0000000..0b89b77
 +echo Silence is golden
 +status=0
 +exit 0
-diff --git a/tests/erofs/019.out b/tests/erofs/019.out
+diff --git a/tests/erofs/020.out b/tests/erofs/020.out
 new file mode 100644
-index 0000000..163484b
+index 0000000..20d7944
 --- /dev/null
-+++ b/tests/erofs/019.out
++++ b/tests/erofs/020.out
 @@ -0,0 +1,2 @@
-+QA output created by 019
++QA output created by 020
 +Silence is golden
 -- 
 1.8.3.1
