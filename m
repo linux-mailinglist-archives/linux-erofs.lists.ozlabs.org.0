@@ -2,34 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF11071457D
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 May 2023 09:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC0887145AD
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 May 2023 09:41:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QV6c7412Jz3f6V
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 May 2023 17:29:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QV6t543vwz3f7L
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 May 2023 17:41:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QV6c33Xb1z3bl3
-	for <linux-erofs@lists.ozlabs.org>; Mon, 29 May 2023 17:29:38 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VjiZqm2_1685345364;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VjiZqm2_1685345364)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QV6t23YDNz3bnV
+	for <linux-erofs@lists.ozlabs.org>; Mon, 29 May 2023 17:41:45 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vjis6Cv_1685346099;
+Received: from 30.221.134.122(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vjis6Cv_1685346099)
           by smtp.aliyun-inc.com;
-          Mon, 29 May 2023 15:29:32 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 5/6] erofs: use struct lockref to replace handcrafted approach
-Date: Mon, 29 May 2023 15:29:23 +0800
-Message-Id: <20230529072923.91736-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230526201459.128169-6-hsiangkao@linux.alibaba.com>
-References: <20230526201459.128169-6-hsiangkao@linux.alibaba.com>
+          Mon, 29 May 2023 15:41:40 +0800
+Message-ID: <9d928aa7-31cf-e4c1-8694-0aa63e55b382@linux.alibaba.com>
+Date: Mon, 29 May 2023 15:41:38 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH v3 1/5] erofs: introduce erofs_xattr_iter_fixup_aligned()
+ helper
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+References: <20230518024551.123990-1-jefflexu@linux.alibaba.com>
+ <20230518024551.123990-2-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230518024551.123990-2-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,297 +46,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Let's avoid the current handcrafted lockref although `struct lockref`
-inclusion usually increases extra 4 bytes with an explicit spinlock if
-CONFIG_DEBUG_SPINLOCK is off.
+Hi,
 
-Apart from the size difference, note that the meaning of refcount is
-also changed to active users. IOWs, it doesn't take an extra refcount
-for XArray tree insertion.
+On 2023/5/18 10:45, Jingbo Xu wrote:
+> Introduce erofs_xattr_iter_fixup_aligned() helper where
+> it.ofs <= EROFS_BLKSIZ is mandatory.
+> 
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>   fs/erofs/xattr.c | 79 +++++++++++++++++++++---------------------------
+>   1 file changed, 35 insertions(+), 44 deletions(-)
+> 
+> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+> index bbfe7ce170d2..b79be2a556ba 100644
+> --- a/fs/erofs/xattr.c
+> +++ b/fs/erofs/xattr.c
+> @@ -29,6 +29,28 @@ struct xattr_iter {
+>   	unsigned int ofs;
+>   };
+>   
+> +static inline int erofs_xattr_iter_fixup(struct xattr_iter *it)
+> +{
+> +	if (it->ofs < it->sb->s_blocksize)
+> +		return 0;
+> +
+> +	it->blkaddr += erofs_blknr(it->sb, it->ofs);
+> +	it->kaddr = erofs_read_metabuf(&it->buf, it->sb, it->blkaddr, EROFS_KMAP);
 
-I don't observe any significant performance difference at least on
-our cloud compute server but the new one indeed simplifies the
-overall codebase a bit.
+could we use a new buf interface to init_metabuf at once?
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v1:
- - fix reference leaking due to improper fallback of
-   erofs_workgroup_put().
+> +	if (IS_ERR(it->kaddr))
+> +		return PTR_ERR(it->kaddr);
+> +	it->ofs = erofs_blkoff(it->sb, it->ofs);
+> +	return 0;
+> +}
+> +
+> +static inline int erofs_xattr_iter_fixup_aligned(struct xattr_iter *it)
 
- fs/erofs/internal.h | 38 ++------------------
- fs/erofs/utils.c    | 86 ++++++++++++++++++++++-----------------------
- fs/erofs/zdata.c    | 15 ++++----
- 3 files changed, 52 insertions(+), 87 deletions(-)
+Since we're doing cleanup, this name sounds confusing to me
+since here the meaning is actually "we don't allow pos >
+blksize", IOWs, any pos <= blksize is allowed here, so
+'aligned' is not accurate.
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 0b8506c39145..e63f6cd424a0 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -208,46 +208,12 @@ enum {
- 	EROFS_ZIP_CACHE_READAROUND
- };
- 
--#define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
--
- /* basic unit of the workstation of a super_block */
- struct erofs_workgroup {
--	/* the workgroup index in the workstation */
- 	pgoff_t index;
--
--	/* overall workgroup reference count */
--	atomic_t refcount;
-+	struct lockref lockref;
- };
- 
--static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
--						 int val)
--{
--	preempt_disable();
--	if (val != atomic_cmpxchg(&grp->refcount, val, EROFS_LOCKED_MAGIC)) {
--		preempt_enable();
--		return false;
--	}
--	return true;
--}
--
--static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
--					    int orig_val)
--{
--	/*
--	 * other observers should notice all modifications
--	 * in the freezing period.
--	 */
--	smp_mb();
--	atomic_set(&grp->refcount, orig_val);
--	preempt_enable();
--}
--
--static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
--{
--	return atomic_cond_read_relaxed(&grp->refcount,
--					VAL != EROFS_LOCKED_MAGIC);
--}
--
- enum erofs_kmap_type {
- 	EROFS_NO_KMAP,		/* don't map the buffer */
- 	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
-@@ -492,7 +458,7 @@ static inline void erofs_pagepool_add(struct page **pagepool, struct page *page)
- void erofs_release_pages(struct page **pagepool);
- 
- #ifdef CONFIG_EROFS_FS_ZIP
--int erofs_workgroup_put(struct erofs_workgroup *grp);
-+void erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
- 					     pgoff_t index);
- struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index 46627cb69abe..6ed79f10e2e2 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -33,22 +33,21 @@ void erofs_release_pages(struct page **pagepool)
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
- 
--static int erofs_workgroup_get(struct erofs_workgroup *grp)
-+static bool erofs_workgroup_get(struct erofs_workgroup *grp)
- {
--	int o;
-+	if (lockref_get_not_zero(&grp->lockref))
-+		return true;
- 
--repeat:
--	o = erofs_wait_on_workgroup_freezed(grp);
--	if (o <= 0)
--		return -1;
--
--	if (atomic_cmpxchg(&grp->refcount, o, o + 1) != o)
--		goto repeat;
-+	spin_lock(&grp->lockref.lock);
-+	if (__lockref_is_dead(&grp->lockref)) {
-+		spin_unlock(&grp->lockref.lock);
-+		return false;
-+	}
- 
--	/* decrease refcount paired by erofs_workgroup_put */
--	if (o == 1)
-+	if (!grp->lockref.count++)
- 		atomic_long_dec(&erofs_global_shrink_cnt);
--	return 0;
-+	spin_unlock(&grp->lockref.lock);
-+	return true;
- }
- 
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
-@@ -61,7 +60,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
- 	rcu_read_lock();
- 	grp = xa_load(&sbi->managed_pslots, index);
- 	if (grp) {
--		if (erofs_workgroup_get(grp)) {
-+		if (!erofs_workgroup_get(grp)) {
- 			/* prefer to relax rcu read side */
- 			rcu_read_unlock();
- 			goto repeat;
-@@ -80,11 +79,10 @@ struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
- 	struct erofs_workgroup *pre;
- 
- 	/*
--	 * Bump up a reference count before making this visible
--	 * to others for the XArray in order to avoid potential
--	 * UAF without serialized by xa_lock.
-+	 * Bump up before making this visible to others for the XArray in order
-+	 * to avoid potential UAF without serialized by xa_lock.
- 	 */
--	atomic_inc(&grp->refcount);
-+	lockref_get(&grp->lockref);
- 
- repeat:
- 	xa_lock(&sbi->managed_pslots);
-@@ -93,13 +91,13 @@ struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
- 	if (pre) {
- 		if (xa_is_err(pre)) {
- 			pre = ERR_PTR(xa_err(pre));
--		} else if (erofs_workgroup_get(pre)) {
-+		} else if (!erofs_workgroup_get(pre)) {
- 			/* try to legitimize the current in-tree one */
- 			xa_unlock(&sbi->managed_pslots);
- 			cond_resched();
- 			goto repeat;
- 		}
--		atomic_dec(&grp->refcount);
-+		lockref_put_return(&grp->lockref);
- 		grp = pre;
- 	}
- 	xa_unlock(&sbi->managed_pslots);
-@@ -112,38 +110,35 @@ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
- 	erofs_workgroup_free_rcu(grp);
- }
- 
--int erofs_workgroup_put(struct erofs_workgroup *grp)
-+void erofs_workgroup_put(struct erofs_workgroup *grp)
- {
--	int count = atomic_dec_return(&grp->refcount);
-+	if (lockref_put_not_zero(&grp->lockref))
-+		return;
- 
--	if (count == 1)
-+	spin_lock(&grp->lockref.lock);
-+	DBG_BUGON(__lockref_is_dead(&grp->lockref));
-+	if (grp->lockref.count == 1)
- 		atomic_long_inc(&erofs_global_shrink_cnt);
--	else if (!count)
--		__erofs_workgroup_free(grp);
--	return count;
-+	--grp->lockref.count;
-+	spin_unlock(&grp->lockref.lock);
- }
- 
- static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 					   struct erofs_workgroup *grp)
- {
--	/*
--	 * If managed cache is on, refcount of workgroups
--	 * themselves could be < 0 (freezed). In other words,
--	 * there is no guarantee that all refcounts > 0.
--	 */
--	if (!erofs_workgroup_try_to_freeze(grp, 1))
--		return false;
-+	int free = false;
-+
-+	spin_lock(&grp->lockref.lock);
-+	if (grp->lockref.count)
-+		goto out;
- 
- 	/*
--	 * Note that all cached pages should be unattached
--	 * before deleted from the XArray. Otherwise some
--	 * cached pages could be still attached to the orphan
--	 * old workgroup when the new one is available in the tree.
-+	 * Note that all cached pages should be detached before deleted from
-+	 * the XArray. Otherwise some cached pages could be still attached to
-+	 * the orphan old workgroup when the new one is available in the tree.
- 	 */
--	if (erofs_try_to_free_all_cached_pages(sbi, grp)) {
--		erofs_workgroup_unfreeze(grp, 1);
--		return false;
--	}
-+	if (erofs_try_to_free_all_cached_pages(sbi, grp))
-+		goto out;
- 
- 	/*
- 	 * It's impossible to fail after the workgroup is freezed,
-@@ -152,10 +147,13 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 	 */
- 	DBG_BUGON(__xa_erase(&sbi->managed_pslots, grp->index) != grp);
- 
--	/* last refcount should be connected with its managed pslot.  */
--	erofs_workgroup_unfreeze(grp, 0);
--	__erofs_workgroup_free(grp);
--	return true;
-+	lockref_mark_dead(&grp->lockref);
-+	free = true;
-+out:
-+	spin_unlock(&grp->lockref.lock);
-+	if (free)
-+		__erofs_workgroup_free(grp);
-+	return free;
- }
- 
- static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 15a383899540..2ea8e7f08372 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -643,7 +643,7 @@ int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
- 
- 	DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
- 	/*
--	 * refcount of workgroup is now freezed as 1,
-+	 * refcount of workgroup is now freezed as 0,
- 	 * therefore no need to worry about available decompression users.
- 	 */
- 	for (i = 0; i < pcl->pclusterpages; ++i) {
-@@ -676,10 +676,11 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 	if (!folio_test_private(folio))
- 		return true;
- 
--	if (!erofs_workgroup_try_to_freeze(&pcl->obj, 1))
--		return false;
--
- 	ret = false;
-+	spin_lock(&pcl->obj.lockref.lock);
-+	if (pcl->obj.lockref.count > 0)
-+		goto out;
-+
- 	DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
- 	for (i = 0; i < pcl->pclusterpages; ++i) {
- 		if (pcl->compressed_bvecs[i].page == &folio->page) {
-@@ -688,10 +689,10 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 			break;
- 		}
- 	}
--	erofs_workgroup_unfreeze(&pcl->obj, 1);
--
- 	if (ret)
- 		folio_detach_private(folio);
-+out:
-+	spin_unlock(&pcl->obj.lockref.lock);
- 	return ret;
- }
- 
-@@ -807,7 +808,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 	if (IS_ERR(pcl))
- 		return PTR_ERR(pcl);
- 
--	atomic_set(&pcl->obj.refcount, 1);
-+	spin_lock_init(&pcl->obj.lockref.lock);
- 	pcl->algorithmformat = map->m_algorithmformat;
- 	pcl->length = 0;
- 	pcl->partial = true;
--- 
-2.24.4
+Could we think out a better one?
 
+Thanks,
+Gao Xiang
