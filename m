@@ -1,62 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 827EA716E98
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 May 2023 22:24:33 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5F3716E99
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 May 2023 22:24:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QW3lg196pz3f77
-	for <lists+linux-erofs@lfdr.de>; Wed, 31 May 2023 06:24:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QW3lm27Ffz3cND
+	for <lists+linux-erofs@lfdr.de>; Wed, 31 May 2023 06:24:36 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1685478271;
-	bh=r/vOAfNORPiV2P2g/gE43OdkiuJv4jjSAdO+l4U4CVg=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=PrVbqsJICwMFGlSN/WZpE2Zfy8QegoM4TtiP9HMt65pF2tW8vX5C2cG2/fnNczfp7
-	 UzDD54reNifNODIvpfbOYRvhc0xPdSHPW3p4dC4Xn6QjmouzVKmNJl84kNlsfbT3G1
-	 GlSXyYhHqI7RThvD3k9x3DQK+39IC5kScuCyjZkDpMQVp5KmZy+2MeMHrUlnKgC++0
-	 O7FEpgD5lYBzNO9NCoJNYvOg8j41322gb6lokkPXZyNmmsLmBygVBGuylUba3IHBXO
-	 CMZsc5DYilh+lB6oUUupnK3FiM1K9/g5SLVKzyUaLltsH4j2LajdCG88CcEvYFg3Bt
-	 rZ4g2D4xFphAw==
+	s=201707; t=1685478276;
+	bh=M5llbHL5Be3EtuixSo+vMZDY1Lz6bORzEUzGqsYwx/Q=;
+	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=eCL8vyztnkJEhvFftxYpvZYNiL0ITPmA8KqYZzFDWF0mxABYY3nFI+9oEV70kIGn6
+	 51jOm3C6+HgyN88ENqdcxsYt7heSSw8tdeKTD/CaL5IB7gNLKHq4Y8ILg04KaLwNvc
+	 JyKDpD86CGF1kqC99Muq5d0U7ThbZv5agiCXnbDqO5ogKH+7YGRntr5OwKIaKi08Da
+	 p7t5E6bRMq6AX5SunUhbJ2hClnKL2fsKtKCTtbQXGTDkr+QU3frw9+EeKs4khPaH3f
+	 /yHfzued4RRWAOnXq0EyNqsNQXuYp1UwAsXi982tFE2v+P06uhd+3gPp9EMBWcZutU
+	 FgiJIYT8zw1nw==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--zhangkelvin.bounces.google.com (client-ip=2607:f8b0:4864:20::449; helo=mail-pf1-x449.google.com; envelope-from=3clt2zaskcy0iqjwptnuerwpxxpun.lxvurwdg-naxoburbcb.xiujkb.xap@flex--zhangkelvin.bounces.google.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--zhangkelvin.bounces.google.com (client-ip=2607:f8b0:4864:20::54a; helo=mail-pg1-x54a.google.com; envelope-from=3dlt2zaskczemunatxryivatbbtyr.pbzyvahk-rebsfyvfgf.bmynof.bet@flex--zhangkelvin.bounces.google.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20221208 header.b=JIQau8aE;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20221208 header.b=y3Go95US;
 	dkim-atps=neutral
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QW3lX1Xmhz3cLx
-	for <linux-erofs@lists.ozlabs.org>; Wed, 31 May 2023 06:24:22 +1000 (AEST)
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-64d44d14db4so115937b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 30 May 2023 13:24:22 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QW3lY05lBz3cLx
+	for <linux-erofs@lists.ozlabs.org>; Wed, 31 May 2023 06:24:24 +1000 (AEST)
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-53450fa3a18so4291434a12.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 30 May 2023 13:24:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685478259; x=1688070259;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r/vOAfNORPiV2P2g/gE43OdkiuJv4jjSAdO+l4U4CVg=;
-        b=AHt9ZhnrEi2Xs2brHDnjuOMIItLwezf+CPpmNh+x422viF009S98yEMm5skxgGcPbf
-         gPPc9FTE9XVv3bSGmM20w1TqxcUcERQqqFdFhVymEfOFeIAxVcj7Ci95P8/WjAZIVJ3T
-         C94bxUeiDzEqZh9XLVrTxNyue+IIgNLYooQLADNWnK4xi+z/1j4JHKt23nwvt25Gtttc
-         rGND6FdBjlUZICdepX9qnw7dvaa6taDqaKHNCfZSojPV9z2KNjfR+CNva3cJiziRi3mO
-         ybDiyo5hN1hnu2DAvfPIurv1Xq5EDNl2uN2cuzsVujLCTejMTbIptTf3ekYUMMN0kY4W
-         aP+w==
-X-Gm-Message-State: AC+VfDx8/tXQGQS01cl/bMYrYkhXNDmw2vxCfwk7fEo76PdTagqXGg4u
-	E1oMm+6eci7uYHzrKWWGmZN81KyZGpS+h3geD/OR6E3p1mrqXXLdUFlK4kUIlBbf9mFqXAQvCjM
-	GamW0VxhHN158ya0mIso8Z2WQ0NR+Di0yqJJpb3Vgq34yEwnIEjO8FkL7Mca5hgdNi2pSQJ2yyr
-	fo/V7EIWQ=
-X-Google-Smtp-Source: ACHHUZ7y+w+P2WvRsS86AyQpSqE9dJDQ+3egKL14OCvdhX9KkamPjbboizplD17ciT35ZKPUlz6F/B9zNa6pKGGJhQ==
+        d=1e100.net; s=20221208; t=1685478263; x=1688070263;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M5llbHL5Be3EtuixSo+vMZDY1Lz6bORzEUzGqsYwx/Q=;
+        b=U9t9bWeVXAEYGtDTY0LBt7uGVPxhS6x5PA8ra5sEa52M1kMCHr8SwnVdk/QhCJiXJd
+         B2xjJUT4a3HeXVNV7mkc93nog32n0pRmnHJ3bvpr60v/BpTL9eu2PMkTZDnEGiq0WxKH
+         F/KqqeoHDkzdiR41xGT79LqakAuvOamzDBnyGbVmpO5FObCeZFheRGj5JMAmDwO/d5hM
+         zVA/m2FkcQ04spiujEyciZO0wgpkffVaMm279MbOe4FkjrLKzYoeUU3I2wU2u0qlyYgk
+         xrrhJ8McCRzwRYklS+P6dsuNbP9hQ6FypZdIzvwnTQKTPtiAigLThqj+z2e2kSU/Nd7F
+         YFcQ==
+X-Gm-Message-State: AC+VfDzwHVvluq69O1bOnvSJfg37vbe8lxKHoxq38c8dxTIZ0BaVmmR5
+	TdeL39dTUgLFJjju+2lNR4jZPqGNsMjm3Cn6jn6ulzRafNtU5aRipvPgLke+C25LG0ExJyiYHG7
+	fXzUWq0EGftzNaXS6Eg+Q2szf5wrT0H8pmWuRr33vIQ5lEaXVTGaNaCxJN5wv1RcdCIrF0y7nq/
+	qs/5EdSE4=
+X-Google-Smtp-Source: ACHHUZ5gEJvgqD4wxtdu54CMEQCYsUmokL54f/NSPxbKuxEMezpeXi/+OUUE+F/xzUha8IEmTcYHUdWoMb+NtPib5g==
 X-Received: from zhangkelvin.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:2bb0])
- (user=zhangkelvin job=sendgmr) by 2002:a05:6a00:a29:b0:64a:f4ac:343a with
- SMTP id p41-20020a056a000a2900b0064af4ac343amr1399254pfh.2.1685478258989;
- Tue, 30 May 2023 13:24:18 -0700 (PDT)
-Date: Tue, 30 May 2023 13:24:12 -0700
+ (user=zhangkelvin job=sendgmr) by 2002:a63:4082:0:b0:53f:2302:8f6a with SMTP
+ id n124-20020a634082000000b0053f23028f6amr629937pga.8.1685478262619; Tue, 30
+ May 2023 13:24:22 -0700 (PDT)
+Date: Tue, 30 May 2023 13:24:13 -0700
+In-Reply-To: <20230530202413.2734743-1-zhangkelvin@google.com>
 Mime-Version: 1.0
+References: <20230530202413.2734743-1-zhangkelvin@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Message-ID: <20230530202413.2734743-1-zhangkelvin@google.com>
-Subject: [PATCH v1 1/2] Remove hardcoded block size shifts
+Message-ID: <20230530202413.2734743-2-zhangkelvin@google.com>
+Subject: [PATCH v1 2/2] Allow developer to manually set a max block size
 To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>, 
 	Fang Wei <fangwei1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -77,26 +80,25 @@ Cc: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This improves support for non 4K block sizes
-
 Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
 ---
- lib/compress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/erofs/internal.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/compress.c b/lib/compress.c
-index 06bacdb..ae0838c 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -766,7 +766,7 @@ static void z_erofs_write_mapheader(struct erofs_inode *inode,
- 		.h_algorithmtype = inode->z_algorithmtype[1] << 4 |
- 				   inode->z_algorithmtype[0],
- 		/* lclustersize */
--		.h_clusterbits = inode->z_logical_clusterbits - 12,
-+		.h_clusterbits = inode->z_logical_clusterbits - sbi.blkszbits,
- 	};
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index b3d04be..6eba35d 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -35,7 +35,9 @@ typedef unsigned short umode_t;
+ #define PAGE_SIZE		(1U << PAGE_SHIFT)
+ #endif
  
- 	if (inode->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)
++#ifndef EROFS_MAX_BLOCK_SIZE
+ #define EROFS_MAX_BLOCK_SIZE	PAGE_SIZE
++#endif
+ 
+ #define EROFS_ISLOTBITS		5
+ #define EROFS_SLOTSIZE		(1U << EROFS_ISLOTBITS)
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
