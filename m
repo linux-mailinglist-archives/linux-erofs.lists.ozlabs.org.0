@@ -2,39 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BCE1719167
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 05:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 171D271937F
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 08:47:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QWsJX1bznz3cdd
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 13:37:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QWxWc5BVkz3cfT
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 16:47:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QWsJP0v3Kz3bTf
-	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 13:37:07 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vk-pf-o_1685590621;
-Received: from 30.97.48.255(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk-pf-o_1685590621)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QWxWT6xqcz3cC5
+	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 16:46:59 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk27Bk0_1685602009;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk27Bk0_1685602009)
           by smtp.aliyun-inc.com;
-          Thu, 01 Jun 2023 11:37:02 +0800
-Message-ID: <8e69dcec-b038-4941-1157-8d80fd3f1afa@linux.alibaba.com>
-Date: Thu, 1 Jun 2023 11:37:00 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v5 6/6] erofs: use separate xattr parsers for
- listxattr/getxattr
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
-References: <20230601024347.108469-1-jefflexu@linux.alibaba.com>
- <20230601024347.108469-7-jefflexu@linux.alibaba.com>
+          Thu, 01 Jun 2023 14:46:53 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230601024347.108469-7-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: support detecting maximum block size
+Date: Thu,  1 Jun 2023 14:46:47 +0800
+Message-Id: <20230601064647.109292-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,181 +39,146 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Previously PAGE_SIZE was actually unset for most cases so that it was
+always hard-coded 4096.
 
+In order to set EROFS_MAX_BLOCK_SIZE correctly, let's detect the real
+page size when configuring.
 
-On 2023/6/1 10:43, Jingbo Xu wrote:
-> There's a callback styled xattr parser, i.e. xattr_foreach(), which is
-> shared among listxattr and getxattr.  Convert it to two separate xattr
-> parsers for listxattr and getxattr.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> ---
+Cc: Kelvin Zhang <zhangkelvin@google.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ configure.ac             | 38 ++++++++++++++++++++++++++++++++++++++
+ include/erofs/internal.h |  8 +++-----
+ lib/namei.c              |  2 +-
+ mkfs/main.c              |  4 ++--
+ 4 files changed, 44 insertions(+), 8 deletions(-)
 
-...
+diff --git a/configure.ac b/configure.ac
+index 4dbe86f..2ade490 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -59,6 +59,8 @@ AC_DEFUN([EROFS_UTILS_PARSE_DIRECTORY],
+  fi
+ ])
+ 
++AC_ARG_VAR([MAX_BLOCK_SIZE], [The maximum block size which erofs-utils supports])
++
+ AC_ARG_ENABLE([debug],
+     [AS_HELP_STRING([--enable-debug],
+                     [enable debugging mode @<:@default=no@:>@])],
+@@ -202,6 +204,35 @@ AC_CHECK_FUNCS(m4_flatten([
+ 	tmpfile64
+ 	utimensat]))
+ 
++# Detect maximum block size if necessary
++AS_IF([test "x$MAX_BLOCK_SIZE" = "x"], [
++  AC_CACHE_CHECK([sysconf (_SC_PAGESIZE)], [erofs_cv_max_block_size],
++               AC_RUN_IFELSE([AC_LANG_PROGRAM(
++[[
++#include <unistd.h>
++#include <stdio.h>
++]],
++[[
++    int result;
++    FILE *f;
++
++    result = sysconf(_SC_PAGESIZE);
++    if (result < 0)
++	return 1;
++
++    f = fopen("conftest.out", "w");
++    if (!f)
++	return 1;
++
++    fprintf(f, "%d", result);
++    fclose(f);
++    return 0;
++]])],
++                             [erofs_cv_max_block_size=`cat conftest.out`],
++                             [],
++                             []))
++], [erofs_cv_max_block_size=$MAX_BLOCK_SIZE])
++
+ # Configure debug mode
+ AS_IF([test "x$enable_debug" != "xno"], [], [
+   dnl Turn off all assert checking.
+@@ -367,6 +398,13 @@ if test "x${have_liblzma}" = "xyes"; then
+   AC_SUBST([liblzma_CFLAGS])
+ fi
+ 
++# Dump maximum block size
++AS_IF([test "x$erofs_cv_max_block_size" = "x"],
++      [$erofs_cv_max_block_size = 4096], [])
++
++AC_DEFINE_UNQUOTED([EROFS_MAX_BLOCK_SIZE], [$erofs_cv_max_block_size],
++		   [The maximum block size which erofs-utils supports])
++
+ AC_CONFIG_FILES([Makefile
+ 		 man/Makefile
+ 		 lib/Makefile
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index b3d04be..ee301e0 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -27,15 +27,13 @@ typedef unsigned short umode_t;
+ #define PATH_MAX        4096    /* # chars in a path name including nul */
+ #endif
+ 
+-#ifndef PAGE_SHIFT
+-#define PAGE_SHIFT		(12)
+-#endif
+-
+ #ifndef PAGE_SIZE
+-#define PAGE_SIZE		(1U << PAGE_SHIFT)
++#define PAGE_SIZE		4096
+ #endif
+ 
++#ifndef EROFS_MAX_BLOCK_SIZE
+ #define EROFS_MAX_BLOCK_SIZE	PAGE_SIZE
++#endif
+ 
+ #define EROFS_ISLOTBITS		5
+ #define EROFS_SLOTSIZE		(1U << EROFS_ISLOTBITS)
+diff --git a/lib/namei.c b/lib/namei.c
+index 3d0cf93..3751741 100644
+--- a/lib/namei.c
++++ b/lib/namei.c
+@@ -137,7 +137,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->u.chunkbits = sbi.blkszbits +
+ 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+ 	} else if (erofs_inode_is_data_compressed(vi->datalayout)) {
+-		if (erofs_blksiz() != PAGE_SIZE)
++		if (erofs_blksiz() != EROFS_MAX_BLOCK_SIZE)
+ 			return -EOPNOTSUPP;
+ 		return z_erofs_fill_inode(vi);
+ 	}
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 3ec4903..a6a2d0e 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -532,7 +532,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		cfg.c_dbg_lvl = EROFS_ERR;
+ 		cfg.c_showprogress = false;
+ 	}
+-	if (cfg.c_compr_alg[0] && erofs_blksiz() != PAGE_SIZE) {
++	if (cfg.c_compr_alg[0] && erofs_blksiz() != EROFS_MAX_BLOCK_SIZE) {
+ 		erofs_err("compression is unsupported for now with block size %u",
+ 			  erofs_blksiz());
+ 		return -EINVAL;
+@@ -670,7 +670,7 @@ static void erofs_mkfs_default_options(void)
+ {
+ 	cfg.c_showprogress = true;
+ 	cfg.c_legacy_compress = false;
+-	sbi.blkszbits = ilog2(PAGE_SIZE);
++	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
+ 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
+ 			     EROFS_FEATURE_COMPAT_MTIME;
+-- 
+2.24.4
 
-> +static int erofs_xattr_body(struct erofs_xattr_iter *it,
-> +			    unsigned int len, bool copy)
-
-It might be better to call it as "erofs_xattr_handle_string".
-
-
->   {
-> -	unsigned int base_index = entry->e_name_index;
-> -	unsigned int prefix_len, infix_len = 0;
-> +	unsigned int slice, processed = 0;
-> +	void *buf;
-> +	int err;
-> +
-> +	while (processed < len) {
-> +		err = erofs_xattr_iter_fixup(it, true);
-> +		if (err)
-> +			return err;
-> +
-> +		buf = it->kaddr + it->ofs;
-> +		slice = min_t(unsigned int, it->sb->s_blocksize - it->ofs,
-> +			      len - processed);
-> +		if (copy) {
-> +			memcpy(it->buffer + it->buffer_ofs, buf, slice);
-> +			it->buffer_ofs += slice;
-> +		} else if (memcmp(it->name.name + it->infix_len + processed,
-> +				  buf, slice)) {
-> +			return -ENOATTR;
-> +		}
-> +		it->ofs += slice;
-> +		processed += slice;
-> +	}
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Wen returning 0 or ENOATTR, erofs_[list|get]xattr_foreach() will end up
-> + * with `ofs' pointing to the next xattr item rather than an arbitrary position.
-> + */
-> +static int erofs_listxattr_foreach(struct erofs_xattr_iter *it)
-> +{
-> +	struct erofs_xattr_entry entry;
-> +	unsigned int base_index, prefix_len, infix_len = 0;
->   	const char *prefix, *infix = NULL;
-> +	int err;
->   
-> -	if (entry->e_name_index & EROFS_XATTR_LONG_PREFIX) {
-> +	/* 1. handle xattr entry */
-> +	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-> +	it->ofs += sizeof(struct erofs_xattr_entry);
-> +	base_index = entry.e_name_index;
-> +
-> +	if (entry.e_name_index & EROFS_XATTR_LONG_PREFIX) {
->   		struct erofs_sb_info *sbi = EROFS_SB(it->sb);
->   		struct erofs_xattr_prefix_item *pf = sbi->xattr_prefixes +
-> -			(entry->e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
-> +			(entry.e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
->   
->   		if (pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
-> -			return 1;
-> +			goto out;
->   		infix = pf->prefix->infix;
->   		infix_len = pf->infix_len;
->   		base_index = pf->prefix->base_index;
-> @@ -392,53 +252,99 @@ static int xattr_entrylist(struct erofs_xattr_iter *it,
->   
->   	prefix = erofs_xattr_prefix(base_index, it->dentry);
->   	if (!prefix)
-> -		return 1;
-> +		goto out;
->   	prefix_len = strlen(prefix);
->   
->   	if (!it->buffer) {
-> -		it->buffer_ofs += prefix_len + infix_len +
-> -					entry->e_name_len + 1;
-> -		return 1;
-> +		it->buffer_ofs += prefix_len + infix_len + entry.e_name_len + 1;
-> +		goto out;
->   	}
->   
->   	if (it->buffer_ofs + prefix_len + infix_len +
-> -		+ entry->e_name_len + 1 > it->buffer_size)
-> +		entry.e_name_len + 1 > it->buffer_size)
->   		return -ERANGE;
->   
->   	memcpy(it->buffer + it->buffer_ofs, prefix, prefix_len);
->   	memcpy(it->buffer + it->buffer_ofs + prefix_len, infix, infix_len);
->   	it->buffer_ofs += prefix_len + infix_len;
-> -	return 0;
-> -}
->   
-> -static int xattr_namelist(struct erofs_xattr_iter *it,
-> -			  unsigned int processed, char *buf, unsigned int len)
-> -{
-> -	memcpy(it->buffer + it->buffer_ofs, buf, len);
-> -	it->buffer_ofs += len;
-> +	/* 2. handle xattr name (err can't be ENOATTR) */
-> +	err = erofs_xattr_body(it, entry.e_name_len, true);
-> +	if (err)
-> +		return err;
-> +
-> +	it->buffer[it->buffer_ofs++] = '\0';
-> +	it->ofs += le16_to_cpu(entry.e_value_size);
-> +	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
-> +	return 0;
-> +out:
-> +	it->ofs = it->next_ofs;
->   	return 0;
->   }
->   
-> -static int xattr_skipvalue(struct erofs_xattr_iter *it,
-> -			   unsigned int value_sz)
-> +static int erofs_getxattr_foreach(struct erofs_xattr_iter *it)
->   {
-> -	it->buffer[it->buffer_ofs++] = '\0';
-> -	return 1;
-> -}
-> +	struct erofs_xattr_entry entry;
-> +	unsigned int value_sz;
-> +	int err;
->   
-> -static const struct xattr_iter_handlers list_xattr_handlers = {
-> -	.entry = xattr_entrylist,
-> -	.name = xattr_namelist,
-> -	.alloc_buffer = xattr_skipvalue,
-> -	.value = NULL
-> -};
-> +	/* 1. handle xattr entry */
-> +	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-> +	it->ofs += sizeof(struct erofs_xattr_entry);
-> +	value_sz = le16_to_cpu(entry.e_value_size);
-> +
-> +	err = -ENOATTR;
-> +	/* should also match the infix for long name prefixes */
-> +	if (entry.e_name_index & EROFS_XATTR_LONG_PREFIX) {
-> +		struct erofs_sb_info *sbi = EROFS_SB(it->sb);
-> +		struct erofs_xattr_prefix_item *pf = sbi->xattr_prefixes +
-> +			(entry.e_name_index & EROFS_XATTR_LONG_PREFIX_MASK);
-> +
-> +		if (pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
-> +			goto out;
-> +
-> +		if (it->index != pf->prefix->base_index ||
-> +		    it->name.len != entry.e_name_len + pf->infix_len)
-> +			goto out;
-> +
-> +		if (memcmp(it->name.name, pf->prefix->infix, pf->infix_len))
-> +			goto out;
-> +
-> +		it->infix_len = pf->infix_len;
-> +	} else {
-> +		if (it->index != entry.e_name_index ||
-> +		    it->name.len != entry.e_name_len)
-> +			goto out;
-
-please use "} else if {" here
-
-> +		it->infix_len = 0;
-> +	}
-> +
-
-Thanks,
-Gao Xiang
