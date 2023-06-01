@@ -1,37 +1,38 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6075719149
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 05:26:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B56B719155
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 05:30:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QWs4201hxz3cdd
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 13:26:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QWs8L08MSz3cdd
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 13:30:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QWs3t4HL6z3bnP
-	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 13:26:16 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vk-zNp2_1685589970;
-Received: from 30.97.48.255(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk-zNp2_1685589970)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QWs8G5VsFz3bnP
+	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 13:30:06 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vk-fSKn_1685590200;
+Received: from 30.97.48.255(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk-fSKn_1685590200)
           by smtp.aliyun-inc.com;
-          Thu, 01 Jun 2023 11:26:11 +0800
-Message-ID: <82d09500-46a2-1f21-96bb-1ffd75b3419f@linux.alibaba.com>
-Date: Thu, 1 Jun 2023 11:26:08 +0800
+          Thu, 01 Jun 2023 11:30:01 +0800
+Message-ID: <3997637a-b83a-627e-c2be-6beed51f9651@linux.alibaba.com>
+Date: Thu, 1 Jun 2023 11:29:58 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v5 3/6] erofs: unify xattr_iter structures
+Subject: Re: [PATCH v5 4/6] erofs: make the size of read data stored in
+ buffer_ofs
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
  chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 References: <20230601024347.108469-1-jefflexu@linux.alibaba.com>
- <20230601024347.108469-4-jefflexu@linux.alibaba.com>
+ <20230601024347.108469-5-jefflexu@linux.alibaba.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230601024347.108469-4-jefflexu@linux.alibaba.com>
+In-Reply-To: <20230601024347.108469-5-jefflexu@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -52,8 +53,9 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 On 2023/6/1 10:43, Jingbo Xu wrote:
-> Unify xattr_iter/listxattr_iter/getxattr_iter structures into
-> erofs_xattr_iter structure.
+> Since now xattr_iter structures have been unified, make the size of the
+> read data stored in buffer_ofs.  Don't bother reusing buffer_size for
+> this use, which may be confusing.
 > 
 > This is in preparation for the following further cleanup.
 > 
@@ -63,3 +65,39 @@ Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Thanks,
 Gao Xiang
+
+> ---
+>   fs/erofs/xattr.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+> index a691d539ae4f..19f9bf67440c 100644
+> --- a/fs/erofs/xattr.c
+> +++ b/fs/erofs/xattr.c
+> @@ -337,7 +337,7 @@ static int xattr_checkbuffer(struct erofs_xattr_iter *it,
+>   {
+>   	int err = it->buffer_size < value_sz ? -ERANGE : 0;
+>   
+> -	it->buffer_size = value_sz;
+> +	it->buffer_ofs = value_sz;
+>   	return !it->buffer ? 1 : err;
+>   }
+>   
+> @@ -370,7 +370,7 @@ static int inline_getxattr(struct inode *inode, struct erofs_xattr_iter *it)
+>   		if (ret != -ENOATTR)
+>   			break;
+>   	}
+> -	return ret ? ret : it->buffer_size;
+> +	return ret ? ret : it->buffer_ofs;
+>   }
+>   
+>   static int shared_getxattr(struct inode *inode, struct erofs_xattr_iter *it)
+> @@ -392,7 +392,7 @@ static int shared_getxattr(struct inode *inode, struct erofs_xattr_iter *it)
+>   		if (ret != -ENOATTR)
+>   			break;
+>   	}
+> -	return ret ? ret : it->buffer_size;
+> +	return ret ? ret : it->buffer_ofs;
+>   }
+>   
+>   static bool erofs_xattr_user_list(struct dentry *dentry)
