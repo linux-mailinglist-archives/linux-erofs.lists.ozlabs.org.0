@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171D271937F
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 08:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE5F719AEC
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 13:24:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QWxWc5BVkz3cfT
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 16:47:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QX3g62vggz3dqm
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Jun 2023 21:24:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QWxWT6xqcz3cC5
-	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 16:46:59 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk27Bk0_1685602009;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk27Bk0_1685602009)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QX3g26jRmz3bZv
+	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Jun 2023 21:23:57 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk5zEu._1685618622;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk5zEu._1685618622)
           by smtp.aliyun-inc.com;
-          Thu, 01 Jun 2023 14:46:53 +0800
+          Thu, 01 Jun 2023 19:23:50 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: support detecting maximum block size
-Date: Thu,  1 Jun 2023 14:46:47 +0800
-Message-Id: <20230601064647.109292-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: fix compact 4B support for 16k block size
+Date: Thu,  1 Jun 2023 19:23:41 +0800
+Message-Id: <20230601112341.56960-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -39,146 +39,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Kelvin Zhang <zhangkelvin@google.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously PAGE_SIZE was actually unset for most cases so that it was
-always hard-coded 4096.
+In compact 4B, two adjacent lclusters are packed together as a unit to
+form on-disk indexes for effective random access, as below:
 
-In order to set EROFS_MAX_BLOCK_SIZE correctly, let's detect the real
-page size when configuring.
+(amortized = 4, vcnt = 2)
+       _____________________________________________
+      |___@_____ encoded bits __________|_ blkaddr _|
+      0        .                                    amortized * vcnt = 8
+      .             .
+      .                  .              amortized * vcnt - 4 = 4
+      .                        .
+      .____________________________.
+      |_type (2 bits)_|_clusterofs_|
 
-Cc: Kelvin Zhang <zhangkelvin@google.com>
+Therefore, encoded bits for each pack are 32 bits (4 bytes). IOWs,
+since each lcluster can get 16 bits for its type and clusterofs, the
+maximum supported lclustersize for compact 4B format is 16k (14 bits).
+
+Fix this to enable compact 4B format for 16k lclusters (blocks), which
+is tested on an arm64 server with 16k page size.
+
+Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- configure.ac             | 38 ++++++++++++++++++++++++++++++++++++++
- include/erofs/internal.h |  8 +++-----
- lib/namei.c              |  2 +-
- mkfs/main.c              |  4 ++--
- 4 files changed, 44 insertions(+), 8 deletions(-)
+ fs/erofs/zmap.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 4dbe86f..2ade490 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -59,6 +59,8 @@ AC_DEFUN([EROFS_UTILS_PARSE_DIRECTORY],
-  fi
- ])
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index d37c5c89c728..920fb4dbc731 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -129,7 +129,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	u8 *in, type;
+ 	bool big_pcluster;
  
-+AC_ARG_VAR([MAX_BLOCK_SIZE], [The maximum block size which erofs-utils supports])
-+
- AC_ARG_ENABLE([debug],
-     [AS_HELP_STRING([--enable-debug],
-                     [enable debugging mode @<:@default=no@:>@])],
-@@ -202,6 +204,35 @@ AC_CHECK_FUNCS(m4_flatten([
- 	tmpfile64
- 	utimensat]))
- 
-+# Detect maximum block size if necessary
-+AS_IF([test "x$MAX_BLOCK_SIZE" = "x"], [
-+  AC_CACHE_CHECK([sysconf (_SC_PAGESIZE)], [erofs_cv_max_block_size],
-+               AC_RUN_IFELSE([AC_LANG_PROGRAM(
-+[[
-+#include <unistd.h>
-+#include <stdio.h>
-+]],
-+[[
-+    int result;
-+    FILE *f;
-+
-+    result = sysconf(_SC_PAGESIZE);
-+    if (result < 0)
-+	return 1;
-+
-+    f = fopen("conftest.out", "w");
-+    if (!f)
-+	return 1;
-+
-+    fprintf(f, "%d", result);
-+    fclose(f);
-+    return 0;
-+]])],
-+                             [erofs_cv_max_block_size=`cat conftest.out`],
-+                             [],
-+                             []))
-+], [erofs_cv_max_block_size=$MAX_BLOCK_SIZE])
-+
- # Configure debug mode
- AS_IF([test "x$enable_debug" != "xno"], [], [
-   dnl Turn off all assert checking.
-@@ -367,6 +398,13 @@ if test "x${have_liblzma}" = "xyes"; then
-   AC_SUBST([liblzma_CFLAGS])
- fi
- 
-+# Dump maximum block size
-+AS_IF([test "x$erofs_cv_max_block_size" = "x"],
-+      [$erofs_cv_max_block_size = 4096], [])
-+
-+AC_DEFINE_UNQUOTED([EROFS_MAX_BLOCK_SIZE], [$erofs_cv_max_block_size],
-+		   [The maximum block size which erofs-utils supports])
-+
- AC_CONFIG_FILES([Makefile
- 		 man/Makefile
- 		 lib/Makefile
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index b3d04be..ee301e0 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -27,15 +27,13 @@ typedef unsigned short umode_t;
- #define PATH_MAX        4096    /* # chars in a path name including nul */
- #endif
- 
--#ifndef PAGE_SHIFT
--#define PAGE_SHIFT		(12)
--#endif
--
- #ifndef PAGE_SIZE
--#define PAGE_SIZE		(1U << PAGE_SHIFT)
-+#define PAGE_SIZE		4096
- #endif
- 
-+#ifndef EROFS_MAX_BLOCK_SIZE
- #define EROFS_MAX_BLOCK_SIZE	PAGE_SIZE
-+#endif
- 
- #define EROFS_ISLOTBITS		5
- #define EROFS_SLOTSIZE		(1U << EROFS_ISLOTBITS)
-diff --git a/lib/namei.c b/lib/namei.c
-index 3d0cf93..3751741 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -137,7 +137,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->u.chunkbits = sbi.blkszbits +
- 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
- 	} else if (erofs_inode_is_data_compressed(vi->datalayout)) {
--		if (erofs_blksiz() != PAGE_SIZE)
-+		if (erofs_blksiz() != EROFS_MAX_BLOCK_SIZE)
- 			return -EOPNOTSUPP;
- 		return z_erofs_fill_inode(vi);
- 	}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 3ec4903..a6a2d0e 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -532,7 +532,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		cfg.c_dbg_lvl = EROFS_ERR;
- 		cfg.c_showprogress = false;
- 	}
--	if (cfg.c_compr_alg[0] && erofs_blksiz() != PAGE_SIZE) {
-+	if (cfg.c_compr_alg[0] && erofs_blksiz() != EROFS_MAX_BLOCK_SIZE) {
- 		erofs_err("compression is unsupported for now with block size %u",
- 			  erofs_blksiz());
- 		return -EINVAL;
-@@ -670,7 +670,7 @@ static void erofs_mkfs_default_options(void)
+-	if (1 << amortizedshift == 4)
++	if (1 << amortizedshift == 4 && lclusterbits <= 14)
+ 		vcnt = 2;
+ 	else if (1 << amortizedshift == 2 && lclusterbits == 12)
+ 		vcnt = 16;
+@@ -231,7 +231,6 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
  {
- 	cfg.c_showprogress = true;
- 	cfg.c_legacy_compress = false;
--	sbi.blkszbits = ilog2(PAGE_SIZE);
-+	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
- 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_LZ4_0PADDING;
- 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
- 			     EROFS_FEATURE_COMPAT_MTIME;
+ 	struct inode *const inode = m->inode;
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+-	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+ 	const erofs_off_t ebase = sizeof(struct z_erofs_map_header) +
+ 		ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
+ 	unsigned int totalidx = erofs_iblks(inode);
+@@ -239,9 +238,6 @@ static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
+ 	unsigned int amortizedshift;
+ 	erofs_off_t pos;
+ 
+-	if (lclusterbits != 12)
+-		return -EOPNOTSUPP;
+-
+ 	if (lcn >= totalidx)
+ 		return -EINVAL;
+ 
 -- 
 2.24.4
 
