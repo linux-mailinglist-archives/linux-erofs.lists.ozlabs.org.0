@@ -1,74 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3533C71FA20
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 08:31:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2415971FE08
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 11:38:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QXY7L67t2z3dy3
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 16:31:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QXdH05t4mz3dy4
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 19:38:36 +1000 (AEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=fmvauw7D;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=WtJoLwTq;
 	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62b; helo=mail-pl1-x62b.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=zbestahu@gmail.com; receiver=<UNKNOWN>)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=fmvauw7D;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=WtJoLwTq;
 	dkim-atps=neutral
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXY7D0RYNz3dwD
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 16:31:33 +1000 (AEST)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b18474cbb6so10499535ad.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Jun 2023 23:31:33 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXdGt6VdBz2yfg
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 19:38:30 +1000 (AEST)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-530638a60e1so1662040a12.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 02 Jun 2023 02:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685687490; x=1688279490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1685698706; x=1688290706;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X6MtzZnj1Q/JouhrJdG0rUybk5lL9m4qR0mzD08zfjc=;
-        b=fmvauw7D+oHP0YomKi7O5iV8roUBztozKZ78JNL/XEZlesQZ6l02IVXreDgPzmEJ/w
-         xgXAVCv45FPamAYZkKmMBQCTpHllPRFGruapJwJxL3cDPVYsUoWSp+ACIarcUJOvc1Aq
-         H7eZhxM/FyAwQrsnoyCfRI80FUBKAWfX27RgVbTWYNjyfM7yQzHgQzkW9JfC1l0n+III
-         j8hda6HBpEwQcO2QPXUV1lAPiHRz9gX7AZmegnsQgmolitCb7J2Q6wwn2qgFNMzPGw7B
-         XyFNuIpM0QMOBDTJC5D9YlhhS9FFmwnnxY+KvD72gZKQgD64j5zijYjeZ5RAbO99uDJi
-         e+SQ==
+        bh=1fs0Ja80UiXkAbe3BXXHzC2Nr3EUDWT8/KSXk/XuUIM=;
+        b=WtJoLwTqPutwvbd/FjfBfAO+1MmKw6/sBOVKatD0ZgfJnhk5hb17Hhgejot8swQYbM
+         G73yAG3Yis0hHvP79n5ttVE95KlzbpmqkC1CeNk+38/C8l/SGxOFaac48d9yhgFFwxfR
+         QvQoiofYm0KBkQotMQNlarFu6mHod0mpZ2Uu4ivihkQuOjZOS5h2LfyG0eoi+rO6QcXd
+         TvyUppKxpT3v3TWGljqAeogJIVCQYuvUFqrZVWm25j64Rs+pfQqlfn4c+S0i2U54d8Z8
+         0vFuhv7/GCEp31wtY+kQ0R5cOocckguOcvNqVFBePBCtz/BkkhH0s7T6w9+rP8Ws+TYm
+         qHIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685687490; x=1688279490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1685698706; x=1688290706;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=X6MtzZnj1Q/JouhrJdG0rUybk5lL9m4qR0mzD08zfjc=;
-        b=MuKGfs3KvprjslivQan1lysmWdk2GYALt3idN1fGD6dtuNkvPWReo0dg8+HeTJZ7Fj
-         KRe2PE7SxCV+sM5BgxRinCjkICOy5KC9HKWTA+hh6yOqClg7+b1fdO9B5CRqYplBGpz6
-         2MTLSdZVwhZkpZVGQND9MIm+wT/w3/vhidN4FckeJkikoOPn1rgSSy8q2GAQ2N5BZmy5
-         ztvdjZkxDtdSWc9XFkY5j3lv60fzZ1Vwoc2v+K8ds+e8vfrrARxoHiY7WDg4QxG+KONC
-         0IQt04zVS9S3tTvENLBCWC0s7RetVQIme8DVR66e7h9lkTTxO5dDMmUqVRhiycugWili
-         T7eg==
-X-Gm-Message-State: AC+VfDzMpTXNxnHcF1sCvDNGOQaF+WIejzTvXA+CsMQmC0MtCGnZ6YFy
-	Oe5wRUzNilnnN24b51ylltZZgf42rzg=
-X-Google-Smtp-Source: ACHHUZ6khm8cdqvngwj1ivnrxs4FEQePQ2PjaH145kWt0GIU0sJ1loPCZ5bv36CO6EwkIug6rYSlOQ==
-X-Received: by 2002:a17:902:a986:b0:1b1:9968:53be with SMTP id bh6-20020a170902a98600b001b1996853bemr787519plb.64.1685687490346;
-        Thu, 01 Jun 2023 23:31:30 -0700 (PDT)
-Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170902c3d500b001ae4e8e8edasm504754plj.18.2023.06.01.23.31.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 01 Jun 2023 23:31:30 -0700 (PDT)
-Date: Fri, 2 Jun 2023 14:39:39 +0800
+        bh=1fs0Ja80UiXkAbe3BXXHzC2Nr3EUDWT8/KSXk/XuUIM=;
+        b=YHop1oq8d2Z1qEO+Ift2ZlL9j1lItCF6WDC6jlgJe4BjyIFJpMJ5Wt5NGe1GI0GIee
+         T6ab/WKAPKO01UtXRZ4M4pBgHEne+saJaxzTvfbgDObAcN/HKCcfq6Gg3OBCyswNaul9
+         KRDms2DhH3Ze9kGLmB1c0KGz04lDmSouZEpnvtfs449qLKtZ2+X5xbLZmaxWwSi8rDrz
+         C24D6nkEUZpdFYuIQCpM9JG/cVE720+nSIRN7z3N1LEo16FgxBWyIzQOLpm33INWU/B5
+         0c6kUWIRxE1ValelN5c4zstsltDopjCLnsi8ONOTdWagE5/ioU0ln40h2uY67Jy5CIBS
+         GiIg==
+X-Gm-Message-State: AC+VfDzQSHNaPHHhEti7rKpQ6BHMzQljKwCMD1W+3DbKD/93MOehOiqg
+	VypnxfToOiyKVDukxezoZCQTldGr2es=
+X-Google-Smtp-Source: ACHHUZ7LZO85TS89HBzhjtKl/8G0FrHBT+xzG5K0GeCXHLf+Lzx6lo4c7svoNW3UQ8ZmcVE+6ttVxA==
+X-Received: by 2002:a17:902:b7c6:b0:1b0:7123:6ee8 with SMTP id v6-20020a170902b7c600b001b071236ee8mr1670548plz.61.1685698705788;
+        Fri, 02 Jun 2023 02:38:25 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id n24-20020a170902969800b001a072aedec7sm917210plp.75.2023.06.02.02.38.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jun 2023 02:38:25 -0700 (PDT)
 From: Yue Hu <zbestahu@gmail.com>
-To: Noboru Asai <asai@sijam.com>
-Subject: Re: [PATCH] erofs-utils: limit pclustersize in
- z_erofs_fixup_deduped_fragment()
-Message-ID: <20230602143939.00003b58.zbestahu@gmail.com>
-In-Reply-To: <20230602052039.615632-1-asai@sijam.com>
-References: <20230602052039.615632-1-asai@sijam.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs-utils: dump: read packed inode only by valid packed_nid
+Date: Fri,  2 Jun 2023 17:37:54 +0800
+Message-Id: <b07be6197e879b8200b4c25f91957d6a206dc143.1685697802.git.huyue2@coolpad.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,39 +72,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, huyue2@coolpad.com, zhangwen@coolpad.com
+Cc: sunshijie@xiaomi.com, huyue2@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri,  2 Jun 2023 14:20:39 +0900
-Noboru Asai <asai@sijam.com> wrote:
+From: Yue Hu <huyue2@coolpad.com>
 
-> The variable 'ctx->pclustersize' could be larger than max pclustersize.
-> 
-> Signed-off-by: Noboru Asai <asai@sijam.com>
-> ---
->  lib/compress.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 2e1dfb3..e943056 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -359,8 +359,9 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
->  
->  	/* try to fix again if it gets larger (should be rare) */
->  	if (inode->fragment_size < newsize) {
-> -		ctx->pclustersize = roundup(newsize - inode->fragment_size,
-> -					    erofs_blksiz());
-> +		ctx->pclustersize = min(z_erofs_get_max_pclusterblks(inode) * erofs_blksiz(),
-> +					roundup(newsize - inode->fragment_size,
-> +						erofs_blksiz()));
+Since dedupe feature is also using the same feature bit as fragments.
+Meanwhile, add missing dedupe feature to feature_lists[].
 
-Looks good to me.
+Fixes: a6336feefe37 ("erofs-utils: dump: support fragments")
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ dump/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
-
->  		return false;
->  	}
->  
+diff --git a/dump/main.c b/dump/main.c
+index fd1923f..b9aa0f5 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -99,6 +99,7 @@ static struct erofsdump_feature feature_lists[] = {
+ 	{ false, EROFS_FEATURE_INCOMPAT_DEVICE_TABLE, "device_table" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_ZTAILPACKING, "ztailpacking" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_FRAGMENTS, "fragments" },
++	{ false, EROFS_FEATURE_INCOMPAT_DEDUPE, "dedupe" },
+ };
+ 
+ static int erofsdump_readdir(struct erofs_dir_context *ctx);
+@@ -273,7 +274,7 @@ static int erofsdump_read_packed_inode(void)
+ 	erofs_off_t occupied_size = 0;
+ 	struct erofs_inode vi = { .nid = sbi.packed_nid };
+ 
+-	if (!erofs_sb_has_fragments())
++	if (!sbi.packed_nid)
+ 		return 0;
+ 
+ 	err = erofs_read_inode_from_disk(&vi);
+@@ -605,7 +606,7 @@ static void erofsdump_show_superblock(void)
+ 			sbi.xattr_blkaddr);
+ 	fprintf(stdout, "Filesystem root nid:                          %llu\n",
+ 			sbi.root_nid | 0ULL);
+-	if (erofs_sb_has_fragments())
++	if (sbi.packed_nid > 0)
+ 		fprintf(stdout, "Filesystem packed nid:                        %llu\n",
+ 			sbi.packed_nid | 0ULL);
+ 	fprintf(stdout, "Filesystem inode count:                       %llu\n",
+-- 
+2.17.1
 
