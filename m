@@ -1,60 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD80D71F81B
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 03:40:26 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5083971F8A9
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 05:02:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QXQgD099Sz3dwm
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 11:40:24 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=V1g0QT12;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QXSVG6sQMz3dwy
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 13:02:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.115; helo=mga14.intel.com; envelope-from=lkp@intel.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=V1g0QT12;
-	dkim-atps=neutral
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXQg470HVz3cdZ
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 11:40:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685670017; x=1717206017;
-  h=date:from:to:cc:subject:message-id;
-  bh=aGaU3HoMsQP3VybraULIg/ierYR/uITUjbZR2t2pZ0A=;
-  b=V1g0QT129TVMz13aJVxI3R3KcLtzQT6dTFyAISHSGgDBhsSzZwaDITJ8
-   K1+ykC4A/p216Z8st1jbaNOgMo9/54KryvU+lkSM+yeVQAZgrXGJuZYC5
-   4K5B6j3ABOLKsKyIbPIyDIdbTMXeEGe2y9KEYLIFAhow6PRdTi9gitvB+
-   WE1FRL+O5o4Aw9Ob9MtAjCKD8Vk6vgFEBWkKx5HvP6i/npSRboNeQCat+
-   qd+7qSTYiQqUUtWwU75P66r+BJissamYOssG26+H/+Lf9FpdSF/oSAPOs
-   uEd9+lVD4g2MmdHtPNR+gcp78PN3A38p/4N8T3SkJQvJrnCMAvgTZnZw3
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="355751638"
-X-IronPort-AV: E=Sophos;i="6.00,211,1681196400"; 
-   d="scan'208";a="355751638"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 18:39:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="658040978"
-X-IronPort-AV: E=Sophos;i="6.00,211,1681196400"; 
-   d="scan'208";a="658040978"
-Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 01 Jun 2023 18:39:54 -0700
-Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1q4tlh-0002tK-2K;
-	Fri, 02 Jun 2023 01:39:53 +0000
-Date: Fri, 02 Jun 2023 09:39:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- a050c691305bd53179a66bd47eb3abeeb07e97ba
-Message-ID: <20230602013942.t3N78%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXSV82QmFz3dvr
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 13:02:38 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk87tDO_1685674946;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk87tDO_1685674946)
+          by smtp.aliyun-inc.com;
+          Fri, 02 Jun 2023 11:02:30 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fsck: don't allocate/read too large extents
+Date: Fri,  2 Jun 2023 11:02:25 +0800
+Message-Id: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,116 +39,122 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Chaoming Yang <lometsj@live.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: a050c691305bd53179a66bd47eb3abeeb07e97ba  erofs: fix compact 4B support for 16k block size
+Since some crafted EROFS filesystem images could have insane large
+extents, which causes unexpected bahaviors when extracting data.
 
-elapsed time: 720m
+Fix it by extracting large extents with a buffer with a reasonable
+maximum size limit and reading multiple times instead.
 
-configs tested: 93
-configs skipped: 8
+Note that only `--extract` option is impacted.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+CVE: CVE-2023-33552
+Closes: https://nvd.nist.gov/vuln/detail/CVE-2023-33552
+Reported-by: Chaoming Yang <lometsj@live.com>
+Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fsck/main.c | 62 ++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r014-20230531   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r034-20230531   gcc  
-arc                  randconfig-r043-20230531   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r001-20230531   clang
-arm                  randconfig-r046-20230531   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r033-20230531   gcc  
-hexagon              randconfig-r031-20230531   clang
-hexagon              randconfig-r036-20230531   clang
-hexagon              randconfig-r041-20230531   clang
-hexagon              randconfig-r045-20230531   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r005-20230531   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230531   gcc  
-i386                 randconfig-i002-20230531   gcc  
-i386                 randconfig-i003-20230531   gcc  
-i386                 randconfig-i004-20230531   gcc  
-i386                 randconfig-i005-20230531   gcc  
-i386                 randconfig-i006-20230531   gcc  
-i386                 randconfig-i051-20230531   gcc  
-i386                 randconfig-i052-20230531   gcc  
-i386                 randconfig-i053-20230531   gcc  
-i386                 randconfig-i054-20230531   gcc  
-i386                 randconfig-i055-20230531   gcc  
-i386                 randconfig-i056-20230531   gcc  
-i386                 randconfig-i061-20230531   gcc  
-i386                 randconfig-i062-20230531   gcc  
-i386                 randconfig-i063-20230531   gcc  
-i386                 randconfig-i064-20230531   gcc  
-i386                 randconfig-i065-20230531   gcc  
-i386                 randconfig-i066-20230531   gcc  
-i386                 randconfig-r004-20230531   gcc  
-i386                 randconfig-r035-20230531   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r025-20230531   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r016-20230531   gcc  
-microblaze   buildonly-randconfig-r006-20230531   gcc  
-microblaze           randconfig-r003-20230531   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r024-20230531   gcc  
-parisc               randconfig-r032-20230531   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r005-20230531   gcc  
-riscv                randconfig-r021-20230531   clang
-riscv                randconfig-r042-20230531   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r015-20230531   clang
-s390                 randconfig-r044-20230531   clang
-sh                               allmodconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r002-20230531   gcc  
-sparc                randconfig-r011-20230531   gcc  
-sparc                randconfig-r012-20230531   gcc  
-sparc64              randconfig-r023-20230531   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230531   gcc  
-x86_64               randconfig-a002-20230531   gcc  
-x86_64               randconfig-a003-20230531   gcc  
-x86_64               randconfig-a004-20230531   gcc  
-x86_64               randconfig-a005-20230531   gcc  
-x86_64               randconfig-a006-20230531   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r003-20230531   gcc  
-
+diff --git a/fsck/main.c b/fsck/main.c
+index ad40537..6f89a1e 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -392,6 +392,8 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 	}
+ 
+ 	while (pos < inode->i_size) {
++		int alloc_rawsize;
++
+ 		map.m_la = pos;
+ 		if (compressed)
+ 			ret = z_erofs_map_blocks_iter(inode, &map,
+@@ -420,10 +422,27 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 		if (!(map.m_flags & EROFS_MAP_MAPPED) || !fsckcfg.check_decomp)
+ 			continue;
+ 
+-		if (map.m_plen > raw_size) {
+-			raw_size = map.m_plen;
+-			raw = realloc(raw, raw_size);
+-			BUG_ON(!raw);
++		if (map.m_plen > Z_EROFS_PCLUSTER_MAX_SIZE) {
++			if (compressed) {
++				erofs_err("invalid pcluster size %" PRIu64 " @ offset %" PRIu64 " of nid %" PRIu64,
++					  map.m_plen, map.m_la, inode->nid);
++				ret = -EFSCORRUPTED;
++				goto out;
++			}
++			alloc_rawsize = Z_EROFS_PCLUSTER_MAX_SIZE;
++		} else {
++			alloc_rawsize = map.m_plen;
++		}
++
++		if (alloc_rawsize > raw_size) {
++			char *newraw = realloc(raw, alloc_rawsize);
++
++			if (!newraw) {
++				ret = -ENOMEM;
++				goto out;
++			}
++			raw = newraw;
++			raw_size = alloc_rawsize;
+ 		}
+ 
+ 		if (compressed) {
+@@ -434,18 +453,25 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 			}
+ 			ret = z_erofs_read_one_data(inode, &map, raw, buffer,
+ 						    0, map.m_llen, false);
+-		} else {
+-			ret = erofs_read_one_data(&map, raw, 0, map.m_plen);
+-		}
+-		if (ret)
+-			goto out;
++			if (ret)
++				goto out;
+ 
+-		if (outfd >= 0 && write(outfd, compressed ? buffer : raw,
+-					map.m_llen) < 0) {
+-			erofs_err("I/O error occurred when verifying data chunk @ nid %llu",
+-				  inode->nid | 0ULL);
+-			ret = -EIO;
+-			goto out;
++			if (outfd >= 0 && write(outfd, buffer, map.m_llen) < 0)
++				goto fail_eio;
++		} else {
++			u64 count, p = 0;
++
++			do {
++				count = min_t(u64, alloc_rawsize, map.m_llen);
++				ret = erofs_read_one_data(&map, raw, p, count);
++				if (ret)
++					goto out;
++
++				if (outfd >= 0 && write(outfd, raw, count) < 0)
++					goto fail_eio;
++				map.m_llen -= count;
++				p += count;
++			} while (map.m_llen);
+ 		}
+ 	}
+ 
+@@ -460,6 +486,12 @@ out:
+ 	if (buffer)
+ 		free(buffer);
+ 	return ret < 0 ? ret : 0;
++
++fail_eio:
++	erofs_err("I/O error occurred when verifying data chunk @ nid %llu",
++		  inode->nid | 0ULL);
++	ret = -EIO;
++	goto out;
+ }
+ 
+ static inline int erofs_extract_dir(struct erofs_inode *inode)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.24.4
+
