@@ -1,33 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DBE171F8AC
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 05:05:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62E0471F9A2
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 07:21:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QXSYN6Lhwz3dx0
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 13:05:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QXWYp0H2Kz3dxN
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 15:21:02 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=sijam-com.20221208.gappssmtp.com header.i=@sijam-com.20221208.gappssmtp.com header.a=rsa-sha256 header.s=20221208 header.b=UNr164ki;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::22b; helo=mail-oi1-x22b.google.com; envelope-from=asai@sijam.com; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20221208.gappssmtp.com header.i=@sijam-com.20221208.gappssmtp.com header.a=rsa-sha256 header.s=20221208 header.b=UNr164ki;
+	dkim-atps=neutral
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXSYL1GKMz3cdx
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 13:05:25 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk8BVNE_1685675119;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk8BVNE_1685675119)
-          by smtp.aliyun-inc.com;
-          Fri, 02 Jun 2023 11:05:20 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: fsck: don't allocate/read too large extents
-Date: Fri,  2 Jun 2023 11:05:19 +0800
-Message-Id: <20230602030519.117071-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
-References: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXWYf3s3xz3dvt
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 15:20:52 +1000 (AEST)
+Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-39a50fcc719so1195381b6e.2
+        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Jun 2023 22:20:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sijam-com.20221208.gappssmtp.com; s=20221208; t=1685683249; x=1688275249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HdFpFkJpb/nW90v/f4mFibVLmV96mE5yKgu1SZSIz8w=;
+        b=UNr164kir/Aa+zXfeREGpFDuZtE0Ngjk5DAGVFUHeBVA8/ESoYST1p/pGBRm5edAG0
+         lw9qVsJnRdVzbBVEzTMSq3ZhNduXER6l3+be6mWEIk6K1koxksO9ljMIbfyrQrXB9SgD
+         ig1BfMCZ/vT6RqdupmLU5Uxw5IFsq+0atQ3w0om5Z8nB1bdfl+CrBQ7uQSqTNenwYeJx
+         iVGOZkxyG0vNhPOgmLOOaPBY8ZmzrbiVyfyIUftC7ClHKezV5K5wOtPuHvPv7jgwJT06
+         2iMEhzvPw/6Z2x77PNOEHWRLxynZ3+yOk2H6cYyDr8B8m+VCsXKN1Bk4HREtAJ8Ct5zW
+         Y2NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685683249; x=1688275249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HdFpFkJpb/nW90v/f4mFibVLmV96mE5yKgu1SZSIz8w=;
+        b=Z+gh3N016Xh8qye+gIiLTWvkfT1+x2BqEJy0pU8jmy3m6QIKKW/DwBE5nh3+bZKPfK
+         6LdbJ4/i6EdPkhY1JsstsmE2Q4RW3r0ulClQ1xaQ03/C5pIbopSOJm+U3Nr4JHVtmoGC
+         Y2GTE7GudMWqM6X/AGxntNLEyoJoRcIcKbY8hN2dBWS7hM0huZFO6guQuYRnvJHVQA6w
+         Ou9tI1QW8XkJElSN01d0njKBgnesgAsJxoKqFnD2BvrEKYiNp8OiHmJAQc/LFaM0Vno1
+         Zrd0WeaNE4SbC3AsR4isJUnn5ZPo6hJ4h9WL42HFGy6tUsY++Z6IJvsTCaW9NC+vHivD
+         XhVg==
+X-Gm-Message-State: AC+VfDyzz0borCGuSBvVrPYyELYu0raNa2m7KOVUvr1Gl64k/yAkmzYg
+	IZmy/m0vviWX5fwSjcXXDAw0+1oYJGQlPzNskwo=
+X-Google-Smtp-Source: ACHHUZ4cdfDMi/9VbSg+o7OqOyI1EIGfUWkeO3vYVrQuqp5y/VRgp2HMNFOiva9WZbaHZqP0tPlO+w==
+X-Received: by 2002:a05:6808:4d4:b0:398:f91:9660 with SMTP id a20-20020a05680804d400b003980f919660mr1438790oie.47.1685683249164;
+        Thu, 01 Jun 2023 22:20:49 -0700 (PDT)
+Received: from elric.localdomain (i121-112-72-48.s41.a027.ap.plala.or.jp. [121.112.72.48])
+        by smtp.gmail.com with ESMTPSA id y12-20020a170903010c00b001aaea39043dsm343317plc.41.2023.06.01.22.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 22:20:48 -0700 (PDT)
+From: Noboru Asai <asai@sijam.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	huyue2@coolpad.com
+Subject: [PATCH] erofs-utils: limit pclustersize in z_erofs_fixup_deduped_fragment()
+Date: Fri,  2 Jun 2023 14:20:39 +0900
+Message-Id: <20230602052039.615632-1-asai@sijam.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -41,125 +77,33 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Chaoming Yang <lometsj@live.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since some crafted EROFS filesystem images could have insane large
-extents, which causes unexpected bahaviors when extracting data.
+The variable 'ctx->pclustersize' could be larger than max pclustersize.
 
-Fix it by extracting large extents with a buffer with a reasonable
-maximum size limit and reading multiple times instead.
-
-Note that only `--extract` option is impacted.
-
-CVE: CVE-2023-33552
-Closes: https://nvd.nist.gov/vuln/detail/CVE-2023-33552
-Reported-by: Chaoming Yang <lometsj@live.com>
-Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Noboru Asai <asai@sijam.com>
 ---
-changes since v1:
- - use `unsigned int alloc_rawsize` instead.
- 
- fsck/main.c | 62 ++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 15 deletions(-)
+ lib/compress.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index ad40537..6f89a1e 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -392,6 +392,8 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+diff --git a/lib/compress.c b/lib/compress.c
+index 2e1dfb3..e943056 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -359,8 +359,9 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
+ 
+ 	/* try to fix again if it gets larger (should be rare) */
+ 	if (inode->fragment_size < newsize) {
+-		ctx->pclustersize = roundup(newsize - inode->fragment_size,
+-					    erofs_blksiz());
++		ctx->pclustersize = min(z_erofs_get_max_pclusterblks(inode) * erofs_blksiz(),
++					roundup(newsize - inode->fragment_size,
++						erofs_blksiz()));
+ 		return false;
  	}
  
- 	while (pos < inode->i_size) {
-+		unsigned int alloc_rawsize;
-+
- 		map.m_la = pos;
- 		if (compressed)
- 			ret = z_erofs_map_blocks_iter(inode, &map,
-@@ -420,10 +422,27 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 		if (!(map.m_flags & EROFS_MAP_MAPPED) || !fsckcfg.check_decomp)
- 			continue;
- 
--		if (map.m_plen > raw_size) {
--			raw_size = map.m_plen;
--			raw = realloc(raw, raw_size);
--			BUG_ON(!raw);
-+		if (map.m_plen > Z_EROFS_PCLUSTER_MAX_SIZE) {
-+			if (compressed) {
-+				erofs_err("invalid pcluster size %" PRIu64 " @ offset %" PRIu64 " of nid %" PRIu64,
-+					  map.m_plen, map.m_la, inode->nid);
-+				ret = -EFSCORRUPTED;
-+				goto out;
-+			}
-+			alloc_rawsize = Z_EROFS_PCLUSTER_MAX_SIZE;
-+		} else {
-+			alloc_rawsize = map.m_plen;
-+		}
-+
-+		if (alloc_rawsize > raw_size) {
-+			char *newraw = realloc(raw, alloc_rawsize);
-+
-+			if (!newraw) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			raw = newraw;
-+			raw_size = alloc_rawsize;
- 		}
- 
- 		if (compressed) {
-@@ -434,18 +453,25 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 			}
- 			ret = z_erofs_read_one_data(inode, &map, raw, buffer,
- 						    0, map.m_llen, false);
--		} else {
--			ret = erofs_read_one_data(&map, raw, 0, map.m_plen);
--		}
--		if (ret)
--			goto out;
-+			if (ret)
-+				goto out;
- 
--		if (outfd >= 0 && write(outfd, compressed ? buffer : raw,
--					map.m_llen) < 0) {
--			erofs_err("I/O error occurred when verifying data chunk @ nid %llu",
--				  inode->nid | 0ULL);
--			ret = -EIO;
--			goto out;
-+			if (outfd >= 0 && write(outfd, buffer, map.m_llen) < 0)
-+				goto fail_eio;
-+		} else {
-+			u64 count, p = 0;
-+
-+			do {
-+				count = min_t(u64, alloc_rawsize, map.m_llen);
-+				ret = erofs_read_one_data(&map, raw, p, count);
-+				if (ret)
-+					goto out;
-+
-+				if (outfd >= 0 && write(outfd, raw, count) < 0)
-+					goto fail_eio;
-+				map.m_llen -= count;
-+				p += count;
-+			} while (map.m_llen);
- 		}
- 	}
- 
-@@ -460,6 +486,12 @@ out:
- 	if (buffer)
- 		free(buffer);
- 	return ret < 0 ? ret : 0;
-+
-+fail_eio:
-+	erofs_err("I/O error occurred when verifying data chunk @ nid %llu",
-+		  inode->nid | 0ULL);
-+	ret = -EIO;
-+	goto out;
- }
- 
- static inline int erofs_extract_dir(struct erofs_inode *inode)
 -- 
-2.24.4
+2.40.1
 
