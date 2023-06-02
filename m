@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9987771F9CD
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 07:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA2B371F9E1
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 08:08:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QXXH15GjVz3dxh
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 15:53:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QXXct3Xk7z3dxj
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 16:08:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
@@ -14,20 +14,25 @@ Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyu
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXXGv1QnKz3cCy
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 15:53:09 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk8fjxQ_1685685177;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk8fjxQ_1685685177)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXXcp72CMz3cF6
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 16:08:41 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vk8hd7M_1685686113;
+Received: from 30.97.48.207(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk8hd7M_1685686113)
           by smtp.aliyun-inc.com;
-          Fri, 02 Jun 2023 13:53:03 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: fsck: block insane long paths when extracting images
-Date: Fri,  2 Jun 2023 13:52:56 +0800
-Message-Id: <20230602055256.18061-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+          Fri, 02 Jun 2023 14:08:34 +0800
+Message-ID: <9712ed04-a5ae-4c1f-7275-405e2e92f083@linux.alibaba.com>
+Date: Fri, 2 Jun 2023 14:08:33 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH] erofs-utils: limit pclustersize in
+ z_erofs_fixup_deduped_fragment()
+To: huyue2@coolpad.com
+References: <20230602052039.615632-1-asai@sijam.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230602052039.615632-1-asai@sijam.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,77 +44,40 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Chaoming Yang <lometsj@live.com>
+Cc: linux-erofs@lists.ozlabs.org, =?UTF-8?B?5a2Z5aOr5p2w?= <sunshijie@xiaomi.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since some crafted EROFS filesystem images could have insane deep
-hierarchy (or may cause directory loops) which triggers the
-PATH_MAX-sized path buffer OR stack overflow.
+Hi Yue,
 
-Actually such crafted images cannot be deemed as real corrupted
-images but over-PATH_MAX paths are not something that we'd like to
-support for now.
+On 2023/6/2 13:20, Noboru Asai wrote:
+> The variable 'ctx->pclustersize' could be larger than max pclustersize.
+> 
+> Signed-off-by: Noboru Asai <asai@sijam.com>
 
-CVE: CVE-2023-33551
-Closes: https://nvd.nist.gov/vuln/detail/CVE-2023-33551
-Reported-by: Chaoming Yang <lometsj@live.com>
-Fixes: f44043561491 ("erofs-utils: introduce fsck.erofs")
-Fixes: b11f84f593f9 ("erofs-utils: fsck: convert to use erofs_iterate_dir()")
-Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
-Signeo-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fsck/main.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+Please take a look at this patch.
++Cc Shijie Sun.
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 52fb7a0..3d1682c 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -680,28 +680,35 @@ again:
- static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
- {
- 	int ret;
--	size_t prev_pos = fsckcfg.extract_pos;
-+	size_t prev_pos, curr_pos;
- 
- 	if (ctx->dot_dotdot)
- 		return 0;
- 
--	if (fsckcfg.extract_path) {
--		size_t curr_pos = prev_pos;
-+	prev_pos = fsckcfg.extract_pos;
-+	curr_pos = prev_pos;
-+
-+	if (prev_pos + ctx->de_namelen >= PATH_MAX) {
-+		erofs_err("unable to fsck since the path is too long (%u)",
-+			  curr_pos + ctx->de_namelen);
-+		return -EOPNOTSUPP;
-+	}
- 
-+	if (fsckcfg.extract_path) {
- 		fsckcfg.extract_path[curr_pos++] = '/';
- 		strncpy(fsckcfg.extract_path + curr_pos, ctx->dname,
- 			ctx->de_namelen);
- 		curr_pos += ctx->de_namelen;
- 		fsckcfg.extract_path[curr_pos] = '\0';
--		fsckcfg.extract_pos = curr_pos;
-+	} else {
-+		curr_pos += ctx->de_namelen;
- 	}
--
-+	fsckcfg.extract_pos = curr_pos;
- 	ret = erofsfsck_check_inode(ctx->dir->nid, ctx->de_nid);
- 
--	if (fsckcfg.extract_path) {
-+	if (fsckcfg.extract_path)
- 		fsckcfg.extract_path[prev_pos] = '\0';
--		fsckcfg.extract_pos = prev_pos;
--	}
-+	fsckcfg.extract_pos = prev_pos;
- 	return ret;
- }
- 
--- 
-2.24.4
+Thanks,
+Gao Xiang
 
+> ---
+>   lib/compress.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/compress.c b/lib/compress.c
+> index 2e1dfb3..e943056 100644
+> --- a/lib/compress.c
+> +++ b/lib/compress.c
+> @@ -359,8 +359,9 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
+>   
+>   	/* try to fix again if it gets larger (should be rare) */
+>   	if (inode->fragment_size < newsize) {
+> -		ctx->pclustersize = roundup(newsize - inode->fragment_size,
+> -					    erofs_blksiz());
+> +		ctx->pclustersize = min(z_erofs_get_max_pclusterblks(inode) * erofs_blksiz(),
+> +					roundup(newsize - inode->fragment_size,
+> +						erofs_blksiz()));
+>   		return false;
+>   	}
+>   
