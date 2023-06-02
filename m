@@ -2,30 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5083971F8A9
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 05:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DBE171F8AC
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 05:05:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QXSVG6sQMz3dwy
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 13:02:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QXSYN6Lhwz3dx0
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Jun 2023 13:05:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXSV82QmFz3dvr
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 13:02:38 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk87tDO_1685674946;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk87tDO_1685674946)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QXSYL1GKMz3cdx
+	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Jun 2023 13:05:25 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vk8BVNE_1685675119;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vk8BVNE_1685675119)
           by smtp.aliyun-inc.com;
-          Fri, 02 Jun 2023 11:02:30 +0800
+          Fri, 02 Jun 2023 11:05:20 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: fsck: don't allocate/read too large extents
-Date: Fri,  2 Jun 2023 11:02:25 +0800
-Message-Id: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2] erofs-utils: fsck: don't allocate/read too large extents
+Date: Fri,  2 Jun 2023 11:05:19 +0800
+Message-Id: <20230602030519.117071-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
+References: <20230602030225.113085-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -57,6 +59,9 @@ Reported-by: Chaoming Yang <lometsj@live.com>
 Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+changes since v1:
+ - use `unsigned int alloc_rawsize` instead.
+ 
  fsck/main.c | 62 ++++++++++++++++++++++++++++++++++++++++-------------
  1 file changed, 47 insertions(+), 15 deletions(-)
 
@@ -68,7 +73,7 @@ index ad40537..6f89a1e 100644
  	}
  
  	while (pos < inode->i_size) {
-+		int alloc_rawsize;
++		unsigned int alloc_rawsize;
 +
  		map.m_la = pos;
  		if (compressed)
