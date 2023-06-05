@@ -1,31 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 786EF722C6B
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Jun 2023 18:23:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4024722D49
+	for <lists+linux-erofs@lfdr.de>; Mon,  5 Jun 2023 19:06:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QZf6n1z3Tz3f0s
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Jun 2023 02:23:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QZg474fCJz3f0h
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Jun 2023 03:06:15 +1000 (AEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bx3AvdNW;
+	dkim-atps=neutral
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bx3AvdNW;
+	dkim-atps=neutral
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QZf6j4Nllz3dxD
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Jun 2023 02:23:23 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VkShKw2_1685982191;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VkShKw2_1685982191)
-          by smtp.aliyun-inc.com;
-          Tue, 06 Jun 2023 00:23:16 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QZg412QF9z3dxd
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Jun 2023 03:06:09 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 874C5619E0;
+	Mon,  5 Jun 2023 17:06:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD19C433D2;
+	Mon,  5 Jun 2023 17:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685984765;
+	bh=tH9AmnTBfoxNJ2wdb07t/MPiK7BvwLY76o1H628aLnY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bx3AvdNWZxKaEeewmXRJFxrOv4/Wv6iv3MHKSVbqG2TCo3R0AyUfL8n4IrslEswYi
+	 rEWfCSTvAbA9YyUxz4B3oga/hz5HouIzBl1T9rXxyEVQ613JmSmxrGOCCdwBfaFFbq
+	 E2sgwlTJ7zAy7ZKuYWXnoKA2zCQZhkwECRfV6i0ObrUpRRr3pPwk5Z6cCfg+IoBl//
+	 fghT/80VrvYXqUpInucgCskvO7EN6Oe+yB3bsKa1Ev8E0zg5JA23Y2VZeII/6ftjLG
+	 lKDiM1sCvgQ4AH4bEJkPKayROCmyK5SFV7HZ2fO2GogC7/kqe68sZIZ6VZ99obezQB
+	 M1DfVTfmoMUvA==
+From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: fsck: add a preliminary fuzzer
-Date: Tue,  6 Jun 2023 00:23:11 +0800
-Message-Id: <20230605162311.70522-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+Subject: [PATCH v2] erofs-utils: fsck: add a preliminary fuzzer
+Date: Tue,  6 Jun 2023 01:05:51 +0800
+Message-Id: <20230605170551.273399-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230605162311.70522-1-hsiangkao@linux.alibaba.com>
+References: <20230605162311.70522-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -43,17 +63,24 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+
 Let's introduce a fuzzer for fsck.erofs by using libFuzzer:
  - Clang 6.0+ installed;
  - Build with "CC=clang ./configure --enable-fuzzing";
+ - Set stack size by using `ulimit -s` properly;
  - fsck/fuzz_erofsfsck -timeout=20 -max_total_time=300 CORPUS_DIR.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+changes since v1:
+ - fix compile warning;
+ - refine commit message.
+
  configure.ac     | 51 ++++++++++++++++++++++++++++++++++++++++++++++++
  fsck/Makefile.am |  9 +++++++++
- fsck/main.c      | 37 ++++++++++++++++++++++++++++++++++-
- 3 files changed, 96 insertions(+), 1 deletion(-)
+ fsck/main.c      | 39 ++++++++++++++++++++++++++++++++++--
+ 3 files changed, 97 insertions(+), 2 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
 index 2ade490..cd6be4a 100644
@@ -149,10 +176,31 @@ index e6a1fb6..9366a9d 100644
 +	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
 +endif
 diff --git a/fsck/main.c b/fsck/main.c
-index a0377a7..56a7d69 100644
+index 47c01d8..85df8a6 100644
 --- a/fsck/main.c
 +++ b/fsck/main.c
-@@ -787,7 +787,11 @@ out:
+@@ -263,10 +263,11 @@ static void erofsfsck_set_attributes(struct erofs_inode *inode, char *path)
+ 
+ static int erofs_check_sb_chksum(void)
+ {
+-	int ret;
++#ifndef FUZZING
+ 	u8 buf[EROFS_MAX_BLOCK_SIZE];
+ 	u32 crc;
+ 	struct erofs_super_block *sb;
++	int ret;
+ 
+ 	ret = blk_read(0, buf, 0, 1);
+ 	if (ret) {
+@@ -285,6 +286,7 @@ static int erofs_check_sb_chksum(void)
+ 		fsckcfg.corrupted = true;
+ 		return -1;
+ 	}
++#endif
+ 	return 0;
+ }
+ 
+@@ -792,7 +794,11 @@ out:
  	return ret;
  }
  
@@ -165,7 +213,7 @@ index a0377a7..56a7d69 100644
  {
  	int err;
  
-@@ -814,6 +818,10 @@ int main(int argc, char **argv)
+@@ -819,6 +825,10 @@ int main(int argc, char **argv)
  		goto exit;
  	}
  
@@ -176,20 +224,7 @@ index a0377a7..56a7d69 100644
  	err = dev_open_ro(cfg.c_img_path);
  	if (err) {
  		erofs_err("failed to open image file");
-@@ -826,10 +834,12 @@ int main(int argc, char **argv)
- 		goto exit_dev_close;
- 	}
- 
-+#ifndef FUZZING
- 	if (erofs_sb_has_sb_chksum() && erofs_check_sb_chksum()) {
- 		erofs_err("failed to verify superblock checksum");
- 		goto exit_put_super;
- 	}
-+#endif
- 
- 	if (erofs_sb_has_fragments() && sbi.packed_nid > 0) {
- 		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
-@@ -870,3 +880,28 @@ exit:
+@@ -875,3 +885,28 @@ exit:
  	erofs_exit_configure();
  	return err ? 1 : 0;
  }
@@ -198,7 +233,7 @@ index a0377a7..56a7d69 100644
 +int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size)
 +{
 +	int fd, ret;
-+	char filename[] = "erofsfsck_libfuzzer_XXXXXX";
++	char filename[] = "/tmp/erofsfsck_libfuzzer_XXXXXX";
 +	char *argv[] = {
 +		"fsck.erofs",
 +		"--extract",
@@ -219,5 +254,5 @@ index a0377a7..56a7d69 100644
 +}
 +#endif
 -- 
-2.24.4
+2.30.2
 
