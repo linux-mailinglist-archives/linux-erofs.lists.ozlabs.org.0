@@ -1,53 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4024722D49
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 Jun 2023 19:06:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3046B7235F7
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Jun 2023 05:56:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QZg474fCJz3f0h
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Jun 2023 03:06:15 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bx3AvdNW;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QZxVS6zRNz3ffy
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Jun 2023 13:56:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1686023793;
+	bh=NlKyWcxEovIfYtAw3ZP4nPPUwiFvq84SR0BwcKHm6SI=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=I9c8CkQCMEAwGz8nMo5r1PLqWiW9eF8kQ796ZSWLl1wh8DR9I/TXnBx4CHWqyvfBy
+	 aiJMwV9A+yIfu2pB0PxS9+QgTOhMG5GBapmPZttTZT+RSVkPwh+MFjw5wP/4CiV4mc
+	 2tPVvdl2bbvisFkBbqd1pQjaJANNnwutSqT9A2fC3pDjGYnlvajTeVlNWoH8Dd+2vJ
+	 aZrFZGQw4XOe7643nBIxTr+VCqPKnrKBqXPmKsfQuXcYvZGboyaEDnN/yl+UdFmV7j
+	 hzo9RmKRMsASxu8yMPkCZ85xc+joFzYuT0LsF1dxlXivwnj+GrJS17DbE+4/e3MdqU
+	 S88UAuartdPgA==
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bx3AvdNW;
-	dkim-atps=neutral
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=14.137.139.23; helo=frasgout11.his.huawei.com; envelope-from=guoxuenan@huaweicloud.com; receiver=<UNKNOWN>)
+Received: from frasgout11.his.huawei.com (unknown [14.137.139.23])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QZg412QF9z3dxd
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Jun 2023 03:06:09 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 874C5619E0;
-	Mon,  5 Jun 2023 17:06:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD19C433D2;
-	Mon,  5 Jun 2023 17:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685984765;
-	bh=tH9AmnTBfoxNJ2wdb07t/MPiK7BvwLY76o1H628aLnY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bx3AvdNWZxKaEeewmXRJFxrOv4/Wv6iv3MHKSVbqG2TCo3R0AyUfL8n4IrslEswYi
-	 rEWfCSTvAbA9YyUxz4B3oga/hz5HouIzBl1T9rXxyEVQ613JmSmxrGOCCdwBfaFFbq
-	 E2sgwlTJ7zAy7ZKuYWXnoKA2zCQZhkwECRfV6i0ObrUpRRr3pPwk5Z6cCfg+IoBl//
-	 fghT/80VrvYXqUpInucgCskvO7EN6Oe+yB3bsKa1Ev8E0zg5JA23Y2VZeII/6ftjLG
-	 lKDiM1sCvgQ4AH4bEJkPKayROCmyK5SFV7HZ2fO2GogC7/kqe68sZIZ6VZ99obezQB
-	 M1DfVTfmoMUvA==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: fsck: add a preliminary fuzzer
-Date: Tue,  6 Jun 2023 01:05:51 +0800
-Message-Id: <20230605170551.273399-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230605162311.70522-1-hsiangkao@linux.alibaba.com>
-References: <20230605162311.70522-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QZxTL2PTFz3f6g
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Jun 2023 13:55:32 +1000 (AEST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4QZxFC2YsdzB1B8H
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Jun 2023 11:45:03 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.170])
+	by APP1 (Coremail) with SMTP id 76C_BwD3j2Mgrn5kHjxtCA--.22318S2;
+	Tue, 06 Jun 2023 03:55:17 +0000 (GMT)
+To: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: dump: add some superblock fields display
+Date: Tue,  6 Jun 2023 11:55:11 +0800
+Message-Id: <20230606035511.1114101-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: 76C_BwD3j2Mgrn5kHjxtCA--.22318S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr17tr4fXr43tr13ZryxXwb_yoWrCF4Upw
+	1Ykr1fGrWFq3WIyFs3tFW09FyrCrZYyF1DG397Aw4rZrn3trZ7JFn3tF9YyryDWF98Wa4a
+	g3WFva4Yga1IvrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK
+	6c8Ij28IcwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUz3kuDUUUU
+X-CM-SenderInfo: xjxr53hhqd0q5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,200 +71,133 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+From: Guo Xuenan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Guo Xuenan <guoxuenan@huawei.com>
+Cc: jack.qiu@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+dump.erofs show compression algothrims and sb_exslots,
+and update feature information.
 
-Let's introduce a fuzzer for fsck.erofs by using libFuzzer:
- - Clang 6.0+ installed;
- - Build with "CC=clang ./configure --enable-fuzzing";
- - Set stack size by using `ulimit -s` properly;
- - fsck/fuzz_erofsfsck -timeout=20 -max_total_time=300 CORPUS_DIR.
+th current super block info displayed as follows:
+Filesystem magic number:                      0xE0F5E1E2
+Filesystem blocks:                            4637
+Filesystem inode metadata start block:        0
+Filesystem shared xattr metadata start block: 0
+Filesystem root nid:                          37
+Filesystem compr_algs:                        lz4 lzma
+Filesystem sb_extslots:                       0
+Filesystem inode count:                       36
+Filesystem created:                           Tue Jun  6 10:23:02 2023
+Filesystem features:                          sb_csum mtime lz4_0padding compr_cfgs big_pcluster
+Filesystem UUID:                              not available
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
 ---
-changes since v1:
- - fix compile warning;
- - refine commit message.
+ dump/main.c              | 34 +++++++++++++++++++++++++++++++++-
+ include/erofs/internal.h |  1 +
+ lib/super.c              |  5 +++++
+ 3 files changed, 39 insertions(+), 1 deletion(-)
 
- configure.ac     | 51 ++++++++++++++++++++++++++++++++++++++++++++++++
- fsck/Makefile.am |  9 +++++++++
- fsck/main.c      | 39 ++++++++++++++++++++++++++++++++++--
- 3 files changed, 97 insertions(+), 2 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index 2ade490..cd6be4a 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -29,6 +29,41 @@ else
-   AC_MSG_ERROR([pkg-config is required. See pkg-config.freedesktop.org])
- fi
+diff --git a/dump/main.c b/dump/main.c
+index efbc82b..20e1456 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -93,13 +93,25 @@ struct erofsdump_feature {
+ static struct erofsdump_feature feature_lists[] = {
+ 	{ true, EROFS_FEATURE_COMPAT_SB_CHKSUM, "sb_csum" },
+ 	{ true, EROFS_FEATURE_COMPAT_MTIME, "mtime" },
+-	{ false, EROFS_FEATURE_INCOMPAT_LZ4_0PADDING, "0padding" },
++	{ false, EROFS_FEATURE_INCOMPAT_LZ4_0PADDING, "lz4_0padding" },
++	{ false, EROFS_FEATURE_INCOMPAT_COMPR_CFGS, "compr_cfgs" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER, "big_pcluster" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_CHUNKED_FILE, "chunked_file" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_DEVICE_TABLE, "device_table" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_ZTAILPACKING, "ztailpacking" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_FRAGMENTS, "fragments" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_DEDUPE, "dedupe" },
++	{ false, EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES, "xattr_prefixes" },
++};
++
++struct available_alg {
++	int type;
++	const char *name;
++};
++
++static struct available_alg compr_cfgs[] = {
++	{ Z_EROFS_COMPRESSION_LZ4, "lz4" },
++	{ Z_EROFS_COMPRESSION_LZMA, "lzma" },
+ };
  
-+dnl Check if the flag is supported by compiler
-+dnl CC_CHECK_CFLAGS_SILENT([FLAG], [ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND])
-+AC_DEFUN([CC_CHECK_CFLAGS_SILENT], [
-+  AC_CACHE_VAL(AS_TR_SH([cc_cv_cflags_$1]),
-+    [ac_save_CFLAGS="$CFLAGS"
-+     CFLAGS="$CFLAGS $1"
-+     AC_LINK_IFELSE([AC_LANG_SOURCE([int main() { return 0; }])],
-+       [eval "AS_TR_SH([cc_cv_cflags_$1])='yes'"],
-+       [eval "AS_TR_SH([cc_cv_cflags_$1])='no'"])
-+     CFLAGS="$ac_save_CFLAGS"
-+    ])
-+
-+  AS_IF([eval test x$]AS_TR_SH([cc_cv_cflags_$1])[ = xyes],
-+    [$2], [$3])
-+])
-+
-+dnl Check if the flag is supported by compiler (cacheable)
-+dnl CC_CHECK_CFLAG([FLAG], [ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND])
-+AC_DEFUN([CC_CHECK_CFLAG], [
-+  AC_CACHE_CHECK([if $CC supports $1 flag],
-+    AS_TR_SH([cc_cv_cflags_$1]),
-+    CC_CHECK_CFLAGS_SILENT([$1]) dnl Don't execute actions here!
-+  )
-+
-+  AS_IF([eval test x$]AS_TR_SH([cc_cv_cflags_$1])[ = xyes],
-+    [$2], [$3])
-+])
-+
-+dnl CC_CHECK_CFLAGS([FLAG1 FLAG2], [action-if-found], [action-if-not])
-+AC_DEFUN([CC_CHECK_CFLAGS], [
-+  for flag in $1; do
-+    CC_CHECK_CFLAG($flag, [$2], [$3])
-+  done
-+])
-+
- dnl EROFS_UTILS_PARSE_DIRECTORY
- dnl Input:  $1 = a string to a relative or absolute directory
- dnl Output: $2 = the variable to set with the absolute directory
-@@ -73,6 +108,12 @@ AC_ARG_ENABLE([werror],
-     [enable_werror="$enableval"],
-     [enable_werror="no"])
- 
-+AC_ARG_ENABLE([fuzzing],
-+    [AS_HELP_STRING([--enable-fuzzing],
-+                    [set up fuzzing mode @<:@default=no@:>@])],
-+    [enable_fuzzing="$enableval"],
-+    [enable_fuzzing="no"])
-+
- AC_ARG_ENABLE(lz4,
-    [AS_HELP_STRING([--disable-lz4], [disable LZ4 compression support @<:@default=enabled@:>@])],
-    [enable_lz4="$enableval"], [enable_lz4="yes"])
-@@ -356,6 +397,16 @@ fi
- # Enable 64-bit off_t
- CFLAGS+=" -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
- 
-+# Configure fuzzing mode
-+AS_IF([test "x$enable_fuzzing" != "xyes"], [], [
-+  CC_CHECK_CFLAGS(["-fsanitize=address,fuzzer-no-link"], [
-+    CFLAGS="$CFLAGS -g -O1 -fsanitize=address,fuzzer-no-link"
-+  ], [
-+    AC_MSG_ERROR([Compiler doesn't support `-fsanitize=address,fuzzer-no-link`])
-+  ])
-+])
-+AM_CONDITIONAL([ENABLE_FUZZING], [test "x${enable_fuzzing}" = "xyes"])
-+
- # Set up needed symbols, conditionals and compiler/linker flags
- AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index e6a1fb6..9366a9d 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -8,3 +8,12 @@ fsck_erofs_SOURCES = main.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
- 	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-+
-+if ENABLE_FUZZING
-+noinst_PROGRAMS   = fuzz_erofsfsck
-+fuzz_erofsfsck_SOURCES = main.c
-+fuzz_erofsfsck_CFLAGS = -Wall -I$(top_srcdir)/include -DFUZZING
-+fuzz_erofsfsck_LDFLAGS = -fsanitize=address,fuzzer
-+fuzz_erofsfsck_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
-+	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-+endif
-diff --git a/fsck/main.c b/fsck/main.c
-index 47c01d8..85df8a6 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -263,10 +263,11 @@ static void erofsfsck_set_attributes(struct erofs_inode *inode, char *path)
- 
- static int erofs_check_sb_chksum(void)
- {
--	int ret;
-+#ifndef FUZZING
- 	u8 buf[EROFS_MAX_BLOCK_SIZE];
- 	u32 crc;
- 	struct erofs_super_block *sb;
-+	int ret;
- 
- 	ret = blk_read(0, buf, 0, 1);
- 	if (ret) {
-@@ -285,6 +286,7 @@ static int erofs_check_sb_chksum(void)
- 		fsckcfg.corrupted = true;
- 		return -1;
- 	}
-+#endif
- 	return 0;
+ static int erofsdump_readdir(struct erofs_dir_context *ctx);
+@@ -590,6 +602,17 @@ static void erofsdump_print_statistic(void)
+ 	erofsdump_filetype_distribution(file_types, OTHERFILETYPE);
  }
  
-@@ -792,7 +794,11 @@ out:
- 	return ret;
- }
- 
--int main(int argc, char **argv)
-+#ifdef FUZZING
-+int erofsfsck_fuzz_one(int argc, char *argv[])
-+#else
-+int main(int argc, char *argv[])
-+#endif
- {
- 	int err;
- 
-@@ -819,6 +825,10 @@ int main(int argc, char **argv)
- 		goto exit;
- 	}
- 
-+#ifdef FUZZING
-+	cfg.c_dbg_lvl = -1;
-+#endif
-+
- 	err = dev_open_ro(cfg.c_img_path);
- 	if (err) {
- 		erofs_err("failed to open image file");
-@@ -875,3 +885,28 @@ exit:
- 	erofs_exit_configure();
- 	return err ? 1 : 0;
- }
-+
-+#ifdef FUZZING
-+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size)
++static void erofsdump_show_comprcfgs(void)
 +{
-+	int fd, ret;
-+	char filename[] = "/tmp/erofsfsck_libfuzzer_XXXXXX";
-+	char *argv[] = {
-+		"fsck.erofs",
-+		"--extract",
-+		filename,
-+	};
++	int i = 0;
 +
-+	fd = mkstemp(filename);
-+	if (fd < 0)
-+		return -errno;
-+	if (write(fd, Data, Size) != Size) {
-+		close(fd);
-+		return -EIO;
++	for (; i < ARRAY_SIZE(compr_cfgs); i++) {
++		if (sbi.available_compr_algs & (1 << compr_cfgs[i].type))
++			fprintf(stdout, "%s ", compr_cfgs[i].name);
 +	}
-+	close(fd);
-+	ret = erofsfsck_fuzz_one(ARRAY_SIZE(argv), argv);
-+	unlink(filename);
-+	return ret ? -1 : 0;
++	fprintf(stdout, "\n");
 +}
-+#endif
++
+ static void erofsdump_show_superblock(void)
+ {
+ 	time_t time = sbi.build_time;
+@@ -609,6 +632,15 @@ static void erofsdump_show_superblock(void)
+ 	if (erofs_sb_has_fragments() && sbi.packed_nid > 0)
+ 		fprintf(stdout, "Filesystem packed nid:                        %llu\n",
+ 			sbi.packed_nid | 0ULL);
++	if (erofs_sb_has_compr_cfgs()) {
++		fprintf(stdout, "Filesystem compr_algs:                        ");
++		erofsdump_show_comprcfgs();
++	} else {
++		fprintf(stdout, "Filesystem lz4_max_dist:                      %u\n",
++		sbi.lz4_max_distance | 0U);
++	}
++	fprintf(stdout, "Filesystem sb_extslots:                       %u\n",
++			sbi.extslots | 0U);
+ 	fprintf(stdout, "Filesystem inode count:                       %llu\n",
+ 			sbi.inos | 0ULL);
+ 	fprintf(stdout, "Filesystem created:                           %s",
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 370cfac..a404008 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -74,6 +74,7 @@ struct erofs_sb_info {
+ 	u32 feature_incompat;
+ 	u64 build_time;
+ 	u32 build_time_nsec;
++	u8 extslots;
+ 
+ 	unsigned char islotbits;
+ 	unsigned char blkszbits;
+diff --git a/lib/super.c b/lib/super.c
+index 5f70686..f511b7d 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -105,11 +105,16 @@ int erofs_read_superblock(void)
+ 	sbi.packed_nid = le64_to_cpu(dsb->packed_nid);
+ 	sbi.inos = le64_to_cpu(dsb->inos);
+ 	sbi.checksum = le32_to_cpu(dsb->checksum);
++	sbi.extslots = dsb->sb_extslots;
+ 
+ 	sbi.build_time = le64_to_cpu(dsb->build_time);
+ 	sbi.build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
+ 
+ 	memcpy(&sbi.uuid, dsb->uuid, sizeof(dsb->uuid));
++	if (erofs_sb_has_compr_cfgs())
++		sbi.available_compr_algs = le16_to_cpu(dsb->u1.available_compr_algs);
++	else
++		sbi.lz4_max_distance = le16_to_cpu(dsb->u1.lz4_max_distance);
+ 	return erofs_init_devices(&sbi, dsb);
+ }
+ 
 -- 
-2.30.2
+2.31.1
 
