@@ -2,68 +2,35 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EB9A7268A5
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Jun 2023 20:26:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AFA7727EC1
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Jun 2023 13:30:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qbwm816wmz3dwL
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Jun 2023 04:26:48 +1000 (AEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=PgvSlIT7;
-	dkim-atps=neutral
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QcMTY6QYcz3dyV
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Jun 2023 21:30:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::634; helo=mail-ej1-x634.google.com; envelope-from=chilversc@gmail.com; receiver=<UNKNOWN>)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=PgvSlIT7;
-	dkim-atps=neutral
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qbwm06QBZz3cXl
-	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Jun 2023 04:26:39 +1000 (AEST)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-977c88c9021so768197166b.3
-        for <linux-erofs@lists.ozlabs.org>; Wed, 07 Jun 2023 11:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686162395; x=1688754395;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wODPx4uHZJHUTcdDegTDGQs4CeriK253kkjDqRsBvLs=;
-        b=PgvSlIT79OUd63jjASsNr92npBtidqBIIcr0/yPjJPwrQ/113jrShII9sGfjwbYNb3
-         bf1Erx4stn1BnaSvp0QRn3qhoAelcgpWg10/cZdcHU39eWCQ1zmmvFhsHckWl6Mpelo8
-         UrQi0n95qJH0NgcaprsRqK9EsuGGixeScoDOcZNRWhXrxGCKSJJrifQbQDpJ/NbpAVeB
-         jnMpK7MSMrzR6/c7dXnHLdH4Ep23xmPbYZOWN/75YGet+B2gqilLbPZb2Wn5na98SVuI
-         dVofyri9mYj/d28wmhB/SlSfcRQFKI3N6FrMTeZxK3M2g2XCX1xe1Rxen17YsRLYapOG
-         aV7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686162395; x=1688754395;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wODPx4uHZJHUTcdDegTDGQs4CeriK253kkjDqRsBvLs=;
-        b=AZFQ+y7ZfJd0Jtizl5cDkiFkU/5W6ULIXU48fR+NQAOz7/8h2wPihkaqRioWq6ZTDT
-         PfAPo9XnWoG7P5xHx4lB0N0Kjqq1MDnslzqY9wBQAhb98KqmE3vmoQU39nTGIWoFSBp5
-         caQjuPVYnHsWVSOhrd1qrj5Qjtc0yVm7ka/QcWbBaU76dTzwg5kBrQBbrHKa9YplCnXN
-         x62uH0uYcVMLLPunxOi5Epxtm1AEosbw6pq9AAiK+NcuN8i49e4b15ab6jfqGer3Gl1C
-         gA2/jnU5blkytjRl0RnHJLNHfggW7DTZwCp6Flb6tPvv/twwnfOtqJ4xNKTDamdo0spL
-         wYbw==
-X-Gm-Message-State: AC+VfDxxlFeCq0loXCuLTUQlj7KAquMiVR+26ZMIsUuAXLayIVDxknPw
-	7+hXXJQBQcWlRxkWfTRRwjtz8p+2QUemQzuBCKI=
-X-Google-Smtp-Source: ACHHUZ4gkb4uXmtBfRalz/8gTBT4f6/AWlotdJNjgnU0y7BmJ/z28Vm/frajygWJFDgVS+dJ1qAf3w6FaHOtUUKNuBY=
-X-Received: by 2002:a17:907:2d2c:b0:977:c8a7:bed5 with SMTP id
- gs44-20020a1709072d2c00b00977c8a7bed5mr7336385ejc.47.1686162395234; Wed, 07
- Jun 2023 11:26:35 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QcMTK0pG2z3dwp
+	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Jun 2023 21:30:27 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VkeCuqc_1686223820;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VkeCuqc_1686223820)
+          by smtp.aliyun-inc.com;
+          Thu, 08 Jun 2023 19:30:21 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v6 0/5] erofs: cleanup of xattr handling
+Date: Thu,  8 Jun 2023 19:30:15 +0800
+Message-Id: <20230608113020.66626-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-References: <20230216150701.3654894-1-dhowells@redhat.com> <CALF+zO=w2Gyz6JtzEoFgTVjH67-_CuTaK7e+2yoHEwXZ8bPx_A@mail.gmail.com>
- <CALF+zO=Y8dMsJ79RYp1e7n9B5_0=segpqW9_tetBqPhFiQcZxA@mail.gmail.com>
-In-Reply-To: <CALF+zO=Y8dMsJ79RYp1e7n9B5_0=segpqW9_tetBqPhFiQcZxA@mail.gmail.com>
-From: Chris Chilvers <chilversc@gmail.com>
-Date: Wed, 7 Jun 2023 19:26:23 +0100
-Message-ID: <CAAmbk-cBJprmRsW5uktAm49NtVw9WTLA=LPS7uLkwAknjs_1qA@mail.gmail.com>
-Subject: Re: [Linux-cachefs] [PATCH v6 0/2] mm, netfs, fscache: Stop read
- optimisation when folio removed from pagecache
-To: David Howells <dhowells@redhat.com>, Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,8 +42,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, David Wysochanski <dwysocha@redhat.com>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, linux-afs@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Any update on this? I assume it's too late for these patches to make 6.4.0.
+changes since v5:
+- patch 1: newly added into this series, in preparation for the
+  following cleanup
+- patch 5: rename erofs_xattr_body() to erofs_xattr_handle_string()
+
+changes since v4:
+- patch 1: make conversions from erofs_read_metabuf() in xattr.c
+  to "erofs_init_metabuf() + erofs_bread()" a separate patch
+- patch 6: add "bool copy" function parameter to erofs_xattr_body(), and
+  thus make erofs_xattr_namematch() and erofs_xattr_copy() inlined
+  inside erofs_xattr_body()
+
+changes since v3:
+- patch 1: make a unified erofs_xattr_iter_fixup() API with newly
+  introduced "bool nospan" argument; call erofs_init_metabuf() and
+  erofs_bread() separately instead of erofs_read_metabuf()
+- patch 2: avoid duplicated strlen() calculation in erofs_getxattr(); no
+  need zeroing other fields when initializing 'struct erofs_xattr_iter'
+- patch 4: don't explode 'struct erofs_xattr_iter' with inode/getxattr
+  fields; instead pass inode/getxattr parameters through function
+  parameters of erofs_iter_[inline|shared]_xattr()
+- patch 5: don't explode 'struct erofs_xattr_iter' with remaining field;
+  instead  calculate and check the remaining inside
+  erofs_iter_inline_xattr()
+
+changes since v2:
+- rebase to v6.4-rc2
+- passes xattr tests (erofs/019,020,021) of erofs-utils [1]
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests
+
+v5: https://lore.kernel.org/all/20230601024347.108469-1-jefflexu@linux.alibaba.com/
+v4: https://lore.kernel.org/all/20230531031330.3504-1-jefflexu@linux.alibaba.com/
+v3: https://lore.kernel.org/lkml/20230518024551.123990-1-jefflexu@linux.alibaba.com/
+v2: https://lore.kernel.org/all/20230330082910.125374-1-jefflexu@linux.alibaba.com/
+v1: https://lore.kernel.org/all/20230323000949.57608-1-jefflexu@linux.alibaba.com/
+
+
+Jingbo Xu (5):
+  erofs: use absolute position in xattr iterator
+  erofs: unify xattr_iter structures
+  erofs: make the size of read data stored in buffer_ofs
+  erofs: unify inline/share xattr iterators for listxattr/getxattr
+  erofs: use separate xattr parsers for listxattr/getxattr
+
+ fs/erofs/xattr.c | 652 +++++++++++++++++------------------------------
+ 1 file changed, 227 insertions(+), 425 deletions(-)
+
+-- 
+2.19.1.6.gb485710b
+
