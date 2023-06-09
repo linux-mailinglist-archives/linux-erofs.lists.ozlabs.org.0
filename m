@@ -2,35 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB616729409
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Jun 2023 11:02:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCFF1729588
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Jun 2023 11:39:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qcw8G3mNsz3f1K
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Jun 2023 19:02:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QcwyJ469dz3f5F
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Jun 2023 19:39:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=<UNKNOWN>)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=<UNKNOWN>)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qcw8971JGz3f0L
-	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Jun 2023 19:02:32 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VkhRsJ1_1686301345;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VkhRsJ1_1686301345)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qcwy85cCYz3f05
+	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Jun 2023 19:38:55 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vkhc1h9_1686303529;
+Received: from 30.97.48.228(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vkhc1h9_1686303529)
           by smtp.aliyun-inc.com;
-          Fri, 09 Jun 2023 17:02:26 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: twist calculation of shared_xattr_id
-Date: Fri,  9 Jun 2023 17:02:25 +0800
-Message-Id: <20230609090225.91890-1-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+          Fri, 09 Jun 2023 17:38:50 +0800
+Message-ID: <2a8a3417-b72d-c8aa-ed3c-dad50d99be43@linux.alibaba.com>
+Date: Fri, 9 Jun 2023 17:38:48 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH 1/4] erofs-utils: lib: refactor erofs compressors init
+To: Guo Xuenan <guoxuenan@huawei.com>, jefflexu@linux.alibaba.com,
+ linux-erofs@lists.ozlabs.org
+References: <20230609085041.14987-1-guoxuenan@huawei.com>
+ <20230609085041.14987-2-guoxuenan@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230609085041.14987-2-guoxuenan@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,38 +45,88 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: jack.qiu@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The on-disk format specifies that share xattr can be addressed by:
 
-  xattr offset = xattr_blkaddr * block_size + 4 * shared_xattr_id
 
-That is, the shared_xattr_id is calculated from the xattr offset
-(starting from xattr_blkaddr) divided by 4.  Make this semantics
-explicitly by calculating the divisor from 'sizeof(__le32)'.
+On 2023/6/9 16:50, Guo Xuenan via Linux-erofs wrote:
+> refactor compressor code using constructor.
+> 
+> Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+> ---
+>   lib/compressor.c         | 49 ++++++++++++++++++++++++++++++++++++++++
+>   lib/compressor.h         | 15 ++++++++++++
+>   lib/compressor_liblzma.c |  5 ++++
+>   lib/compressor_lz4.c     |  5 ++++
+>   lib/compressor_lz4hc.c   |  5 ++++
+>   5 files changed, 79 insertions(+)
+> 
+> diff --git a/lib/compressor.c b/lib/compressor.c
+> index 52eb761..0fa7105 100644
+> --- a/lib/compressor.c
+> +++ b/lib/compressor.c
+> @@ -22,6 +22,40 @@ static const struct erofs_compressor *compressors[] = {
+>   #endif
+>   };
+>   
+> +/* compressing configuration specified by users */
+> +static struct erofs_supported_algothrim {
+> +	int algtype;
+> +	const char *name;
+> +} erofs_supported_algothrims[] = {
+> +	{ Z_EROFS_COMPRESSION_LZ4, "lz4"},
+> +	{ Z_EROFS_COMPRESSION_LZ4, "lz4hc"},
+> +	{ Z_EROFS_COMPRESSION_LZMA, "lzma"},
+> +};
+> +
+> +static struct erofs_compressors_cfg erofs_ccfg;
+> +
+> +int erofs_compressor_num(void)
+> +{
+> +	return erofs_ccfg.erofs_ccfg_num;
 
-It has no logic change.
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- lib/xattr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/lib/xattr.c b/lib/xattr.c
-index dbe0519..1cd04cf 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -643,8 +643,7 @@ int erofs_build_shared_xattrs_from_path(const char *path)
- 			.e_value_size = cpu_to_le16(item->len[1])
- 		};
- 
--		item->shared_xattr_id = (off + p) /
--			sizeof(struct erofs_xattr_entry);
-+		item->shared_xattr_id = (off + p) / sizeof(__le32);
- 
- 		memcpy(buf + p, &entry, sizeof(entry));
- 		p += sizeof(struct erofs_xattr_entry);
--- 
-2.19.1.6.gb485710b
+> +}
+> +
+> +void erofs_compressor_register(const char *name, const struct erofs_compressor *alg)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < erofs_compressor_num(); i++) {
+> +		if (!strcmp(erofs_ccfg.compressors[i].name, name)) {
+> +			erofs_ccfg.compressors[i].handle.alg = alg;
 
+should we return error?  and also, why we need dynamicly
+register algorithms? liberofs expects to have given
+algorithms all the time...
+
+> +			return;
+> +		}
+> +	}
+> +
+> +	erofs_ccfg.compressors[i].name = name;
+> +	erofs_ccfg.compressors[i].handle.alg = alg;
+> +	erofs_ccfg.compressors[i].algorithmtype = erofs_supported_algothrims[i].algtype;
+> +	erofs_ccfg.erofs_ccfg_num = ++i;
+> +}
+> +
+>   int erofs_compress_destsize(const struct erofs_compress *c,
+>   			    const void *src, unsigned int *srcsize,
+>   			    void *dst, unsigned int dstsize, bool inblocks)
+> @@ -106,3 +140,18 @@ int erofs_compressor_exit(struct erofs_compress *c)
+>   		return c->alg->exit(c);
+>   	return 0;
+>   }
+> +
+> +void __attribute__((constructor(101))) __erofs_compressor_init(void)
+
+
+Honestly I don't like __attribute__((constructor)) and
+__attribute__((destructor)) which could causes unexpected behaviors and
+not good at compatiability.
+
+Thanks,
+Gao Xiang
