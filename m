@@ -2,30 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CF1A730F5C
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 08:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D94730F97
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 08:44:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QhXXQ58drz30fP
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 16:32:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QhXpB3wxZz30fP
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 16:44:34 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QhXXK3kDjz2y1b
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jun 2023 16:32:32 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vl9Oxes_1686810740;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vl9Oxes_1686810740)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QhXp52G0Cz302Q
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jun 2023 16:44:27 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vl9PPnE_1686811462;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vl9PPnE_1686811462)
           by smtp.aliyun-inc.com;
-          Thu, 15 Jun 2023 14:32:26 +0800
+          Thu, 15 Jun 2023 14:44:23 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: clean up zmap.c
-Date: Thu, 15 Jun 2023 14:32:19 +0800
-Message-Id: <20230615063219.87466-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2] erofs: clean up zmap.c
+Date: Thu, 15 Jun 2023 14:44:21 +0800
+Message-Id: <20230615064421.103178-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230615063219.87466-1-hsiangkao@linux.alibaba.com>
+References: <20230615063219.87466-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -55,11 +57,14 @@ No logic changes.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+changes since v1:
+ - fix a build error of `lcn` in z_erofs_extent_lookback(). 
+
  fs/erofs/zmap.c | 69 +++++++++++++++++++++----------------------------
  1 file changed, 29 insertions(+), 40 deletions(-)
 
 diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 920fb4dbc731..47f5a87be7b1 100644
+index 920fb4dbc731..1909ddafd9c7 100644
 --- a/fs/erofs/zmap.c
 +++ b/fs/erofs/zmap.c
 @@ -22,8 +22,8 @@ struct z_erofs_maprecorder {
@@ -161,7 +166,7 @@ index 920fb4dbc731..47f5a87be7b1 100644
 -		  vi->nid);
 +err_bogus:
 +	erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
-+		  lookback_distance, lcn, vi->nid);
++		  lookback_distance, m->lcn, vi->nid);
  	DBG_BUGON(1);
  	return -EFSCORRUPTED;
  }
