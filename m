@@ -1,42 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 298167318FB
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 14:29:18 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB2207320C1
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 22:15:42 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SDH1e0up;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QhhRw0X4Wz3bP2
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jun 2023 22:29:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Qhtp45RS0z3bTk
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Jun 2023 06:15:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SDH1e0up;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mga07.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 972 seconds by postgrey-1.37 at boromir; Fri, 16 Jun 2023 06:15:33 AEST
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QhhRs5yPZz2xpw
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jun 2023 22:29:13 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VlBPezQ_1686832147;
-Received: from 30.221.131.153(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VlBPezQ_1686832147)
-          by smtp.aliyun-inc.com;
-          Thu, 15 Jun 2023 20:29:09 +0800
-Message-ID: <93e6ab67-2d88-318a-f422-8bd0e385e545@linux.alibaba.com>
-Date: Thu, 15 Jun 2023 20:29:07 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v2 2/4] erofs-utils: lib: unify all identical compressor
- print function
-To: Guo Xuenan <guoxuenan@huaweicloud.com>, jefflexu@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org
-References: <20230615101727.946446-1-guoxuenan@huawei.com>
- <20230615101727.946446-3-guoxuenan@huawei.com>
- <bccba1a8-b934-ea2e-04db-42da6ee63e3a@linux.alibaba.com>
- <b52aefc8-34bf-6d36-3a41-d8ded30d065b@huaweicloud.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <b52aefc8-34bf-6d36-3a41-d8ded30d065b@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qhtnx0CTyz2xqp
+	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jun 2023 06:15:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686860133; x=1718396133;
+  h=date:from:to:cc:subject:message-id;
+  bh=JAYWOE1JPfhe+AMZDEgXFK6ftLlCULpTMHBlsHcjJsk=;
+  b=SDH1e0upj9Da8x6NtXOP+MXY4anKeQ+DDFTobEJQhoGx820M1XHpq4kS
+   qm2B0s1SLXLZGVrEfVJSWYKjI86ZZ5NDu+CRiT50vUtrhPtSEET8uU7+K
+   qbHRtKKZbAxHIv/Jgjx/Q/d85SDkKjkJLZtqtoJAtCVnfE8fvL/ucgOTB
+   e75j77x7nFb+QKTPHnj5lzJOWudV17pd/O17J5tVG0jG+XwqcNn8QEeFa
+   E/ymcoxnoThIIniYbU0B7XcOgtKYWyva3mNlnxnfiJ0LzcRv2bnhyekm0
+   0RvyA82DnL+EsGash4uhbut99JXSrC1mN7jtLqOKHASDgHjhkiXTRw6Td
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="424953070"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="424953070"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 12:43:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="712569284"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="712569284"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2023 12:43:48 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1q9ssl-0000KR-2O;
+	Thu, 15 Jun 2023 19:43:47 +0000
+Date: Fri, 16 Jun 2023 03:43:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 746f921a85ca11ef1d697b20c574dcadaba8da59
+Message-ID: <202306160338.J9HNGMaz-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,37 +67,99 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: jack.qiu@huawei.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 746f921a85ca11ef1d697b20c574dcadaba8da59  erofs: clean up zmap.c
 
+elapsed time: 722m
 
-On 2023/6/15 20:01, Guo Xuenan wrote:
-> 
-> On 2023/6/15 18:46, Gao Xiang wrote:
+configs tested: 76
+configs skipped: 7
 
-...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r002-20230614   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r032-20230615   gcc  
+alpha                randconfig-r036-20230615   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r003-20230614   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230615   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r022-20230615   gcc  
+arm                  randconfig-r046-20230615   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r004-20230615   clang
+hexagon              randconfig-r041-20230615   clang
+hexagon              randconfig-r045-20230615   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r003-20230615   gcc  
+loongarch            randconfig-r015-20230614   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r026-20230615   gcc  
+m68k                 randconfig-r034-20230615   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc             randconfig-r021-20230615   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r035-20230615   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r005-20230614   gcc  
+powerpc              randconfig-r011-20230614   gcc  
+powerpc              randconfig-r031-20230615   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv        buildonly-randconfig-r001-20230614   gcc  
+riscv        buildonly-randconfig-r004-20230614   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r014-20230614   gcc  
+riscv                randconfig-r025-20230615   clang
+riscv                randconfig-r042-20230615   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r012-20230614   gcc  
+s390                 randconfig-r023-20230615   clang
+s390                 randconfig-r044-20230615   clang
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r006-20230614   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r033-20230615   gcc  
+sparc64              randconfig-r001-20230615   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r016-20230614   gcc  
 
->>> +
->>> +void erofs_print_available_compressors(FILE *f)
->>> +{
->>
->> Should just erofs_print_supported_compressors(f, ~0) and avoid this helper?
->>
-> As commit message of this patch explained, available compressors means which algothrims are
-> currentlyavailable to user in binary tools. I mean fsck/mkfs.erofs binary tools may only support
-> lz4 compression.erofs_print_available_compressors should only print lz4; but for dump.erofs ,
-> which is not used tomake erofs image, there is a bit difference here. dump.erofs should identify
-> all supportedalgorithms.
-
-Oh, that makes sense, sorry about the noise.
-
->> Thanks,
->> Gao Xiang
->>
-> -- 
-> Best regards
-> Guo Xuenan
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
