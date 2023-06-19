@@ -1,60 +1,35 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCB47346FC
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 Jun 2023 18:29:46 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W+jPRkNc;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E96E8735526
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jun 2023 13:02:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qkddz15Tpz30PR
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jun 2023 02:29:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Ql6KN5LL2z30Ps
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jun 2023 21:02:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W+jPRkNc;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.126; helo=mga18.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qkddr14fXz2xq6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jun 2023 02:29:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687105776; x=1718641776;
-  h=date:from:to:cc:subject:message-id;
-  bh=ILmCVS2DOFyOOj2Q1uIQDJMVzGXXtBohFHnNqcICyj4=;
-  b=W+jPRkNcn7mGgICvkjCeWW35So3NhGhNLce0769fj2Us3UFrctugvR4B
-   EtDdcgI4pzv8iQGOW3GMGIK2Jv9lNhL+yTrtLZczKDf+onDKvREYtIhSD
-   fdkU/PPmnZdvKpLuxKYl3aEGi0hmfi/VJUD8soRCIaRay9QgpurHV47hr
-   9e087ZWPfbtrdGCtNOAKfSjr/K4VXiyCU474BxzpXMGlln0kWUGo3IkJZ
-   M3lJKunv4ymrPd2ZberKwKV2i1qHb+341Qc2cn3+Vl/fDSrlwRIbMXFmq
-   PAuapWJGpraU0M80PllaszghKwPR6M8AzDzqZCWTs5LNM6SvfoSKMclMV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10745"; a="344235446"
-X-IronPort-AV: E=Sophos;i="6.00,252,1681196400"; 
-   d="scan'208";a="344235446"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2023 09:29:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10745"; a="826344632"
-X-IronPort-AV: E=Sophos;i="6.00,252,1681196400"; 
-   d="scan'208";a="826344632"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jun 2023 09:29:24 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qAvHH-0003sz-1S;
-	Sun, 18 Jun 2023 16:29:23 +0000
-Date: Mon, 19 Jun 2023 00:29:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 30a33dc4a7d1070eff3476e287aeceb9812a6124
-Message-ID: <202306190004.siaYj7Zs-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ql6KK4dSNz300p
+	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jun 2023 21:01:56 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VlV8FlL_1687172510;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VlV8FlL_1687172510)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Jun 2023 19:01:51 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: add documentation for long xattr name prefixes feature
+Date: Mon, 19 Jun 2023 19:01:50 +0800
+Message-Id: <20230619110150.107958-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,186 +41,73 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 30a33dc4a7d1070eff3476e287aeceb9812a6124  erofs: clean up zmap.c
+Add documentation for the long xattr name prefixes feature, which has
+landed upstream since v6.4.
 
-elapsed time: 722m
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ Documentation/filesystems/erofs.rst | 47 +++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-configs tested: 163
-configs skipped: 10
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r016-20230618   gcc  
-alpha                randconfig-r022-20230618   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230618   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                                 defconfig   gcc  
-arm                        keystone_defconfig   gcc  
-arm                        multi_v7_defconfig   gcc  
-arm                  randconfig-r046-20230618   clang
-arm                        realview_defconfig   gcc  
-arm                             rpc_defconfig   gcc  
-arm                           sama7_defconfig   clang
-arm                         wpcm450_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r004-20230618   clang
-arm64                randconfig-r021-20230618   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r003-20230618   gcc  
-hexagon                             defconfig   clang
-hexagon              randconfig-r006-20230618   clang
-hexagon              randconfig-r013-20230618   clang
-hexagon              randconfig-r024-20230618   clang
-hexagon              randconfig-r034-20230618   clang
-hexagon              randconfig-r041-20230618   clang
-hexagon              randconfig-r045-20230618   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230618   clang
-i386         buildonly-randconfig-r005-20230618   clang
-i386         buildonly-randconfig-r006-20230618   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230618   clang
-i386                 randconfig-i002-20230618   clang
-i386                 randconfig-i003-20230618   clang
-i386                 randconfig-i004-20230618   clang
-i386                 randconfig-i005-20230618   clang
-i386                 randconfig-i006-20230618   clang
-i386                 randconfig-i011-20230618   gcc  
-i386                 randconfig-i012-20230618   gcc  
-i386                 randconfig-i013-20230618   gcc  
-i386                 randconfig-i014-20230618   gcc  
-i386                 randconfig-i015-20230618   gcc  
-i386                 randconfig-i016-20230618   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r003-20230618   gcc  
-loongarch            randconfig-r016-20230618   gcc  
-loongarch            randconfig-r025-20230618   gcc  
-loongarch            randconfig-r032-20230618   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
-m68k                 randconfig-r004-20230618   gcc  
-m68k                 randconfig-r011-20230618   gcc  
-m68k                 randconfig-r026-20230618   gcc  
-m68k                 randconfig-r032-20230618   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze           randconfig-r022-20230618   gcc  
-microblaze           randconfig-r031-20230618   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         db1xxx_defconfig   gcc  
-mips                      fuloong2e_defconfig   gcc  
-mips                           ip32_defconfig   gcc  
-mips                       lemote2f_defconfig   clang
-mips                 randconfig-r006-20230618   gcc  
-mips                 randconfig-r013-20230618   clang
-mips                 randconfig-r015-20230618   clang
-mips                 randconfig-r026-20230618   clang
-mips                 randconfig-r035-20230618   gcc  
-mips                           xway_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r035-20230618   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r012-20230618   gcc  
-parisc               randconfig-r023-20230618   gcc  
-parisc64                            defconfig   gcc  
-powerpc                      acadia_defconfig   clang
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 canyonlands_defconfig   gcc  
-powerpc                   lite5200b_defconfig   clang
-powerpc                     mpc512x_defconfig   clang
-powerpc                  mpc885_ads_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-powerpc              randconfig-r033-20230618   clang
-powerpc                     sequoia_defconfig   gcc  
-powerpc                    socrates_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r031-20230618   clang
-riscv                randconfig-r034-20230618   clang
-riscv                randconfig-r036-20230618   clang
-riscv                randconfig-r042-20230618   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r002-20230618   clang
-s390                 randconfig-r024-20230618   gcc  
-s390                 randconfig-r044-20230618   gcc  
-sh                               allmodconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                   randconfig-r001-20230618   gcc  
-sh                   randconfig-r021-20230618   gcc  
-sh                   randconfig-r023-20230618   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r014-20230618   gcc  
-sparc                randconfig-r025-20230618   gcc  
-sparc                randconfig-r033-20230618   gcc  
-sparc                       sparc32_defconfig   gcc  
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r011-20230618   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           alldefconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230618   clang
-x86_64       buildonly-randconfig-r002-20230618   clang
-x86_64       buildonly-randconfig-r003-20230618   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230618   clang
-x86_64               randconfig-a002-20230618   clang
-x86_64               randconfig-a003-20230618   clang
-x86_64               randconfig-a004-20230618   clang
-x86_64               randconfig-a005-20230618   clang
-x86_64               randconfig-a006-20230618   clang
-x86_64               randconfig-a011-20230618   gcc  
-x86_64               randconfig-a012-20230618   gcc  
-x86_64               randconfig-a013-20230618   gcc  
-x86_64               randconfig-a014-20230618   gcc  
-x86_64               randconfig-a015-20230618   gcc  
-x86_64               randconfig-a016-20230618   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-
+diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+index 4654ee57c1d5..d3408d25165e 100644
+--- a/Documentation/filesystems/erofs.rst
++++ b/Documentation/filesystems/erofs.rst
+@@ -328,3 +328,50 @@ but it's easy to know the size of such pcluster is 1 lcluster as well.
+ 
+ Since Linux v6.1, each pcluster can be used for multiple variable-sized extents,
+ therefore it can be used for compressed data deduplication.
++
++Long xattr name prefixes
++------------------------
++In use cases together with overlayfs like Composefs model, there are xattrs with
++diverse xattr values but only a few common xattr names (trusted.overlay.redirect,
++trusted.overlay.digest, and maybe more in the future).  The existing predefined
++prefixes mechanism, e.g. {.e_name_index = EROFS_XATTR_INDEX_TRUSTED,
++.e_name = "overlay.redirect"} for "trusted.overlay.redirect", works inefficiently
++in both image size and runtime performance in such scenarios.
++
++The long xattr name prefixes feature is introduced (since Linux v6.4) to address
++this issue.  The general idea is that, apart from the existing predefined
++prefixes, the xattr entry could also refer to user specified long xattr name
++prefixes, e.g. "trusted.overlay." in above described use cases.
++
++When referring to a long xattr name prefix, the highest bit (bit 7) of
++erofs_xattr_entry.e_name_index is set, while the lower bits (bit 0-6) as a whole
++represents the index of the referred long name prefix among all long xattr name
++prefixes.  Besides only the trailing part of the xattr name apart from the long
++xattr name prefix is stored in erofs_xattr_entry.e_name, which could be empty if
++the xattr name matches exactly as the long xattr name prefix.
++
++All long xattr prefixes are stored one by one in the packed inode as long as the
++packed inode exists, or meta inode otherwise.  The xattr_prefix_count (of
++on-disk superblock) represents the total number of the long xattr name prefixes,
++while (xattr_prefix_start * 4) indicates the start offset of long name prefixes
++in the packed/meta inode.  The long xattr name prefixes feature is not used when
++xattr_prefix_count is 0.
++
++Each long xattr name prefix (in packed/meta inode) is stored in the format:
++ALIGN({__le16 len, data}, 4), where len represents the total size of following
++data.  The data part, describing one long xattr name prefixes record, is
++represented by 'struct erofs_xattr_long_prefix', where base_index represents the
++index of the referred predefined short xattr name prefix, e.g.
++EROFS_XATTR_INDEX_TRUSTED for "trusted.overlay." long name prefix, while the
++infix string represents the string after stripping the short prefix, e.g.
++"overlay." for the above example.
++
++::
++
++         |-> aligned with 4 bytes               |-> aligned with 4 bytes
++     _________________________________________________________________________________
++    | .. | len | base_index | infix string | .. | len | base_index | infix string | ..
++    |____|_____|____________|______________|____|_____|____________|______________|___
++         ^     |<--  xattr_long_prefix  -->|          |<--  xattr_long_prefix  -->|
++	 .
++    + (xattr_prefix_start * 4) offset
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.19.1.6.gb485710b
+
