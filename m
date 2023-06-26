@@ -2,57 +2,114 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C73973D6E7
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Jun 2023 06:39:32 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XYevjjKM;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id ACCFB73EB26
+	for <lists+linux-erofs@lfdr.de>; Mon, 26 Jun 2023 21:20:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QqFVk3qX6z30f4
-	for <lists+linux-erofs@lfdr.de>; Mon, 26 Jun 2023 14:39:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Qqd3P6F99z30hW
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jun 2023 05:20:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XYevjjKM;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=contactmarketinglists.onmicrosoft.com (client-ip=2a01:111:f403:700f::302; helo=ind01-max-obe.outbound.protection.outlook.com; envelope-from=julia.anderson@contactmarketinglists.onmicrosoft.com; receiver=lists.ozlabs.org)
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01hn20302.outbound.protection.outlook.com [IPv6:2a01:111:f403:700f::302])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QqFVY6Vl6z2ys3
-	for <linux-erofs@lists.ozlabs.org>; Mon, 26 Jun 2023 14:39:17 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id CB7B960C68;
-	Mon, 26 Jun 2023 04:39:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082ACC433C8;
-	Mon, 26 Jun 2023 04:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687754354;
-	bh=Of4ysmu672KpbjZBfuoU0uRNcf9i4Uh3dPRn8YJ9Owc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XYevjjKMvRGIB4unL1n2cFePA+8Zjt2hmeFm42ccVi7bjbITuTRWsElC+DaqXhIxT
-	 FqVlh63eJzP9SGqNMMVJLhRPC3K9Nv+Y8l7pWxIEr4V6edsnvVuMz6ngBFWrE2ZIqe
-	 j3sprhNbitNQ5QvE63FHBaDeGdaRqWAOjUjcyDcQfLkDYk6+u9LvSj+M6XLXeMgBqN
-	 Wv9XdmUmGvcTfsSisXWiGgowukEtb/ptHrQG15kkL863gRsHgJHzoqHfjtqqsn1Ew9
-	 f2I46GDp+iBdtXti8akswksS46vpVBObgBg2eGyaR4tJT4flagETR3Z6S/I2cyk8TG
-	 gW8Sri3ODz0pA==
-Date: Mon, 26 Jun 2023 12:39:07 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 6.5-rc1
-Message-ID: <ZJkWa+t/WBCXs9XT@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>, Yue Hu <huyue2@coolpad.com>,
-	Yangtao Li <frank.li@vivo.com>, Chao Yu <chao@kernel.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qqd3L0gqwz2yL0
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jun 2023 05:20:28 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GObkvw5ckejIVPiPU6zGkdTpYd7PgZ1kkyxeX8Mt7/jWTsTTjLj4ZMZc9OWgtw3wMVnixk7raiu7Gxp58mk0ifX6bSbYfq3pedOXz3M5Yf16KkQnXPnhP3xjtz/bEGO9y8cyNz1XQD/1yUEP6jaqh0am9VRKWB8G+LGG452bLO5IczWGmy7flHlmU1zkQRJnPjM6NKNQWXlQUAXw0hppKa0DIIAryf3BrM6IFsXoN8OgW43H/PSuQXCoDFlfD/CxdtAPnFdjM1X9DiQv3z/VtPVXHLJ9+poi+1oyX7P8VDoI5HWmMlkuBt52mG6V5ep/aOLroig7oOHJayrWC3X8Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XNP+iQvmhOjQvaIpRlWoyS2RyMxbOM4Po6tYcKEQWiA=;
+ b=iBs7BMHEx8RGutQ6rhnMHkBbQF3wQEWkC3tRNeRz6/gexRueK0lNouf6AyPAEIix7aI2QoeLqKQ4eM4uFun69qgJH1yX34Tm51vBDeOZotSqaChJhWzbbZSID+G+t6dCvZlyAhDReYoUJdE/zI+zqDlmxq/5gTHWjF/YYKPPtc1qDkpBV9tVxv3lXZdgBlIhqRDIt+/yZNTJMjIDziDnVMW9cmFsAZk6yMKSUlMpqhLkPZfdGBDjgdN2fdq9kgOP6uMEx/o3as8zP0voQXyl18ibXWpRw+TPCgwQeUeTmpP+ynpce8iA33Z94v7ikFQEeKEn49q/C7paeaikkHoMIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=contactmarketinglists.onmicrosoft.com; dmarc=pass action=none
+ header.from=contactmarketinglists.onmicrosoft.com; dkim=pass
+ header.d=contactmarketinglists.onmicrosoft.com; arc=none
+Received: from PN2P287MB0317.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:ed::14)
+ by PN0P287MB0101.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:e0::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Mon, 26 Jun
+ 2023 19:20:05 +0000
+Received: from PN2P287MB0317.INDP287.PROD.OUTLOOK.COM
+ ([fe80::40f:a7b0:8d18:2d1f]) by PN2P287MB0317.INDP287.PROD.OUTLOOK.COM
+ ([fe80::40f:a7b0:8d18:2d1f%4]) with mapi id 15.20.6521.026; Mon, 26 Jun 2023
+ 19:20:05 +0000
+From: Julia Anderson <Julia.Anderson@ContactMarketinglists.onmicrosoft.com>
+To: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+Subject: lists Professional Training
+Thread-Topic: lists Professional Training
+Thread-Index: AQHZqGM25zgvmjrZkEik7iOcVBEpqw==
+Date: Mon, 26 Jun 2023 19:20:05 +0000
+Message-ID:  <bfe50401-2d9d-7023-53cc-ce98728a08d8@ContactMarketinglists.onmicrosoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none
+ header.from=ContactMarketinglists.onmicrosoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN2P287MB0317:EE_|PN0P287MB0101:EE_
+x-ms-office365-filtering-correlation-id: 0b60f08a-dd01-4ccb-2497-08db767a58fe
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  XzP4nl0A1WiMPya/7F4V1ezDwIWM5DtgPEDJSm72+F7xHmWca3ljwOq8b/KecvVMGEPPs1fRG+9K0pxdVtCUdiCpnm4ZtFojMHKz+HkCOqA8c1Jn71LbZOEaoGGiXwRbD2Tmhzj55YINO6Pobjq/JqNPBwCIuNQArffXGRJtz2ZQakPxnr5gFRC8DchTzmyzGJ/c3X/xUy71kW5Dd62OWH6XUsX5n7k/qGfcGviO0Wki5nPQ13+eanr0Bp7N6J2no7oBTRiiZcFWKN5vO6hV50Ic7Ih1oeRiGWJ3g8Zc6aYfw186vCD2ZpYctUPJApRvXoJMzgNwqzDVLbIWETkI79S+oS0Ubs8j/mWIg0t33SSdTxd9AfFVd0elaPDDOo4eZX6osXfMt1B5zKci2nqM4oiVZMvQayZTT/8bM1HR6txbuF4EOhbRnWgXNo8wlECjIFFtMtFO94C71URstfkVqF5MQuUSbUpZoPbXmWvpydSQEB2Im7yLLVPY1X5/oBnzbXeVd0J5i56z0sN9yxIp8gNcUQEniH7TjYyTq2DEHJHTfLTYsRW/tapXxAQlSY4spI9mlTD2wbBK0mt0nFLXYbTM9K/jHREC5wGDM4ncPlQGrglAYFQG487sFhknTV8RT/QdlaErAuXMgFcmDq31Qs/ujhjFp8SQhv3jL3n9SzAo+OSXVaotlg4+6yA1XQu6xx8PnsG7JeA4kU9iSEK3WWKmUjpUSRaJZ9y3YqMLWeWZ7cbBFskkA6NrWLjPtSqJikYCcPIMhI7Y5Uzfqh1h49hhJkLKGa6NQS2+BBBDbWPucypV3mBYUCmCf8l+oV8e1WH+duJMdxAfhJXuFBYA8ibniVDMAabcKeUd3ZjHCFcMcTfh3lXjopl8qtZjfPzuTEBET5hS/dkk/jPVq2xoLRRvRbOBYNlaiDWPuhR5Osk=
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:PN2P287MB0317.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:OSPM;SFS:(13230028)(366004)(396003)(346002)(39850400004)(136003)(376002)(451199021)(6506007)(31686004)(5660300002)(7116003)(76116006)(66556008)(91956017)(66476007)(64756008)(6916009)(316002)(66446008)(66946007)(478600001)(8676002)(8936002)(4744005)(2906002)(3480700007)(31696002)(86362001)(41300700001)(6486002)(186003)(6512007)(26005)(38070700005)(122000001)(71200400001)(38100700002)(2616005)(83380400001)(48640200004);DIR:OUT;SFP:1501;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?utf-8?B?NjY2d2o2R1FyLytUcUhvSlc1cnhRRXcyNEkyQWUzSktpMWcyTlZBWU9tTGtx?=
+ =?utf-8?B?T2ErbGgydkdXdHdkbndmR1JvK0NDUVdBYVdpVXpiUko0ekRPTXYrbGdrNitX?=
+ =?utf-8?B?Y1JiZ1V6N3JjK2xTSXVYdE4vM2VkTEczTjhIcUU2bUlmVlY0MTJ5eUE5WXRU?=
+ =?utf-8?B?N09nTWZNQ1plZTZCUHdmSWRTdXlKWTg0cGQ1b28zTjlPcmVJVXlTRmhDR2dG?=
+ =?utf-8?B?MnArSVZwNVdOeXcraHozRG5sWVpXdHllcmxhdHZDS1p2TjJHTU5RRHFtM3M2?=
+ =?utf-8?B?ekp6bDl5alNjWDg5SGtNUHJEYUMzYTVTMmQxRy8reFFiQmZucGwzZjk0TVRz?=
+ =?utf-8?B?NFBqVGxmWlpvbStyQTVzYkJLL3BQUWZ3SW9wQ2V0eHlVbXJsUzR1SXZXZUty?=
+ =?utf-8?B?THZtbHhOYlNvTEVJbjlEWU5pWm1DZUVQZzBldUdFNzVXOWhvbmZMQllBR2xZ?=
+ =?utf-8?B?SDExQk1vUjZlZUJVcUdUWi8xTmptSlcxL0ovaFltRUc0NXBpeE5RQTJBZlVV?=
+ =?utf-8?B?cExaWnp4YStTWUxyYmVZL1dpOGhscnBta09RYk51N3ozMlg0eG0rb0pkTnU5?=
+ =?utf-8?B?cVNaUC9qaXJkK3VEZ28zbEduQWdEQUV0VE9KSEdEek95UlJvR0xPZHNhL2J2?=
+ =?utf-8?B?ZWJITjB5THhkN0d1aTZMYnpqNldNaVNhSWxIZGRZc3p4WlY3TFdYTlZ4ak82?=
+ =?utf-8?B?TG5vYmZhU0g4dHpXb2FYVzR6T0FoYVVob1c4Ryt5TEVJbWF0R0Y1eklmTmR3?=
+ =?utf-8?B?TU10S3F2RFJKWnFGTEhyMExpcnAwT0J4dTNEc1hiaWI2bXdtaXhxNktWQ2lV?=
+ =?utf-8?B?aWxCWWkrdkRUNzlRMmdGeCtHMkVMaW1nQnRqRWY4aGNpbG1PeFM5SnY2NE9s?=
+ =?utf-8?B?cDNyNVI3TmhhQnorWkhpWHJXUzFLWXg4OEt0SUhod1lCeWZpa3VhRTBJV2lq?=
+ =?utf-8?B?ekhoZUpYelh3K1ZiTnVWRnI4SUI5cXN4a0FiYXprYzNxUlBiRElpT3EraXIv?=
+ =?utf-8?B?UStOSlZwTGNCZXdYR244MGtaY1ROK1BEc285elVpdytCaDYxc1gxRFZ1bmpB?=
+ =?utf-8?B?UFZhcTRRQkNZb2E2T2RCbmVWNkZyLzVMa1pwU3VodGtkZFdJaFZCTEN5VzZG?=
+ =?utf-8?B?Sm5ZMWFQNTdQWm9rTCs2ZFJQclFrdm5YTlBCSnVuZlR3TGFVaEtCSFU1Zm51?=
+ =?utf-8?B?aGN4TFFUekE0alVybXlJUnRBVjkrQXVPakl5WkRxZXhNNFk0K2o3ZDJuRWJt?=
+ =?utf-8?B?TkpSOGZ1MWt1dHhKcWlyWnBlNDZjT000L29EL0NKNGlveGZYekFnMFhVbExw?=
+ =?utf-8?B?dEE3QmNuaHI2dGxqZU5aSnhaeDNONU5uTEgzdnEwdmVoRXloY04wbmlvUHRR?=
+ =?utf-8?B?dExSRzNXeW5JVk1odHlrSWltVVFPM1RFbmMzZ21TWDRRUXcwcEZTUklmSXg4?=
+ =?utf-8?B?QXlRejkzb0ptNDRNakJEY3pSV1FkQ2hTUTFIL2lBdHJMMURGcDNZN1dLR1Bx?=
+ =?utf-8?B?bmRqSytvbkNPN2lRb0pWZ3U3VUErMXcwYTlRWm1jbFE3NFFvYzRUSzdFdVE1?=
+ =?utf-8?B?VU1zZzlTaFFnME1EZFhLQUFaSzJvTWxUbUdmblo1QmptTEJDbnRZV3FKdTRU?=
+ =?utf-8?B?TllJZ21iMUgyUURIdzU4OEttZE9mR050ZTZRQWZGUldTV3FEN3dyMjlEdmVi?=
+ =?utf-8?B?M3ZIRGlhWENzbERWTGlka21XV2tCVHpBNmFQOU9VTzQzZG9VK21ENytweGtn?=
+ =?utf-8?B?Tjc3SjNjaHdVTFNCNXJtZXh3Mm1HbDBoTXRjSmQzSG9CVlVCODJSVG5UcEtJ?=
+ =?utf-8?B?RjQvcWdOUStPci9PRmZwMnQ5RlpVSVpXVXJBZUFHZHN0dEJ5bG01bmhiQit6?=
+ =?utf-8?B?UWhCMnk5S0Nja29wbituS1c2Z2V4VHJjMnVCekUyOG91SFFIaFEva3Fsc3Ji?=
+ =?utf-8?B?NW5XRGExTDJ4RkVSazA0MDZ4cjFhUEpxNXRRR0RJd0ZmU3hpTVRBY0o4QmFq?=
+ =?utf-8?B?Mis3MG1kY2pWVlZzK1dadkpnWkdCN2sxK1dJQjFINFpCejVxVWlVUXpTd2FY?=
+ =?utf-8?B?MVEyMUNwVjUrR2xkWHcrV0pydkh5SEVNK1FRMGFDdG9ML0RUSlFMRmI4Nnhj?=
+ =?utf-8?B?SUVGWkt3R3MvMU9SMEcxUUpaczdWMGt0SHlhRGRmaDhaa2lQSzBVMjdPckha?=
+ =?utf-8?B?U0F6ZUxHcnVNeUFOQWFsVzZVVnNxd3dyZWNjUTdzMWU4dGpKNndpcW5IRGJY?=
+ =?utf-8?B?VHRycXF6Y3ArLzl1U0Y4T1RmNUd3PT0=?=
+Content-Type: multipart/alternative;
+	boundary="_000_bfe504012d9d702353ccce98728a08d8ContactMarketinglistson_"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-OriginatorOrg: ContactMarketinglists.onmicrosoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN2P287MB0317.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b60f08a-dd01-4ccb-2497-08db767a58fe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2023 19:20:05.3869
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 68101ce8-c5a8-4002-874b-83088ee11957
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kkfmbWvl/qUmjumEQuJ7TkBYZyDOm0QqvdSmdWKdED6M1x89SryRgW4/YYZILJd8AGlLXcO/REKj5W13Ef3Hh+B/+xjhG73r6efRCp5esiOq42t7qweFHn75xd7z4JoUzvzmVgIWh6Wef8a7K6brk+n3weCu/N5zVdsJ/pOdkhI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0101
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,91 +121,149 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yangtao Li <frank.li@vivo.com>, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+--_000_bfe504012d9d702353ccce98728a08d8ContactMarketinglistson_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Could you consider this pull request for 6.5-rc1?
+SGksDQoNCg0KV291bGQgeW91IGJlIGludGVyZXN0ZWQgaW4gcmVhY2hpbmcgb3V0IHRvIHRvcCBs
+ZXZlbCBkZWNpc2lvbnMgbWFrZXJzICB0byBwcm9tb3RlL3NlbGwgeW91ciBzZXJ2aWNlcz8NCg0K
+ICAgIExlYXJuaW5nL1RyYWluaW5nL1RhbGVudCBEZXZlbG9wbWVudA0KICAgIENWRCBIdW1hbiBS
+ZXNvdXJjZQ0KICAgIENWRCBMZWFybmluZw0KICAgIENvcnBvcmF0ZSBUcmFpbmluZw0KICAgIE1l
+ZXRpbmcgJiBFdmVudHMNCiAgICBPd25lcnMsIENFTywgUHJlc2lkZW50cyBldGMNCg0KDQpXZSB3
+b3VsZCBiZSBoYXBweSB0byBjdXN0b21pemUgeW91ciBsaXN0IGFjY29yZGluZ2x5IGZvciBhbnkg
+b3RoZXIgcmVxdWlyZW1lbnRzIHRoYXQgeW91IGhhdmUuDQoNCg0KSW5kdXN0cmllczoNCg0KSW5m
+b3JtYXRpb24gVGVjaG5vbG9neSB8RmluYW5jZSB8QWR2ZXJ0aXNpbmcgJiBNYXJrZXRpbmcgfENv
+bnN0cnVjdGlvbiBhbmQgUmVhbCBlc3RhdGUgfENoYXJpdHkgYW5kIE5HT+KAmXMgfEVkdWNhdGlv
+biB8UHVibGlzaGluZyB8UmV0YWlsIHwgQ29uc3VtZXIgfCBNYW51ZmFjdHVyaW5nIHxHb3Zlcm5t
+ZW50ICYgcHVibGljIGFnZW5jaWVzIHxFbGVjdHJvbmljcyBhbmQgVGVsZWNvbW11bmljYXRpb25z
+IHxJbmR1c3RyeSBhc3NvY2lhdGlvbnMgfEhlYWx0aGNhcmUgfCBIb3NwaXRhbGl0eSB8TGVnYWwg
+U2VydmljZXMgfEZvb2QgJiBCZXZlcmFnZXMgfE1lZGlhICYgRW50ZXJ0YWlubWVudCB8RW5lcmd5
+IGFuZCBjaGVtaWNhbHMgfEFlcm9zcGFjZSBhbmQgRGVmZW5zZSB8VHJhbnNwb3J0YXRpb24gYW5k
+IExvZ2lzdGljcyBFVEMuDQoNCg0KQXBwcmVjaWF0ZSB5b3VyIHJlc3BvbnNlLg0KDQpSZWdhcmRz
+LA0KSnVsaWEgQW5kZXJzb24gfCBNYXJrZXRpbmcgQ29uc3VsdGFudA0KDQpSZXBseSBvbmx5IG9w
+dC1vdXQgaW4gdGhlIHN1YmplY3QgbGluZSB0byByZW1vdmUgZnJvbSB0aGUgbWFpbGluZyBsaXN0
+Lg0K
 
-No outstanding new feature available for this cycle.  Most of these
-commits are decompression cleanups which are part of the ongoing
-development for subpage/folio compression support as well as xattr
-cleanups for the upcoming xattr bloom filter optimization [1].
+--_000_bfe504012d9d702353ccce98728a08d8ContactMarketinglistson_
+Content-Type: text/html; charset="utf-8"
+Content-ID: <C38824C851B80E4DB96FF2CBC2BA3581@INDP287.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 
-In addition, there are bugfixes to address some corner cases of
-compressed images due to global data de-duplication and arm64 16k
-pages.
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5Pg0KPGZvbnQgc2l6ZT0i
+MiIgZmFjZT0iQ2FsaWJyaSI+SGksPC9mb250Pjxicj4NCjxkaXYgY2xhc3M9Im1vei1mb3J3YXJk
+LWNvbnRhaW5lciI+DQo8ZGl2IGNsYXNzPSJtb3otZm9yd2FyZC1jb250YWluZXIiPg0KPGRpdiBj
+bGFzcz0ibW96LWZvcndhcmQtY29udGFpbmVyIj4NCjxkaXYgY2xhc3M9Im1vei1mb3J3YXJkLWNv
+bnRhaW5lciI+PGJyPg0KPGRpdiBjbGFzcz0ibW96LWZvcndhcmQtY29udGFpbmVyIj4NCjxkaXYg
+Y2xhc3M9Im1vei1mb3J3YXJkLWNvbnRhaW5lciI+DQo8cCBzdHlsZT0ibWFyZ2luOiAwY207IGZv
+bnQtc2l6ZTogbWVkaXVtOyBmb250LXN0eWxlOg0KICAgICAgICAgICAgICAgICAgbm9ybWFsOyBm
+b250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7DQogICAgICAgICAgICAgICAgICBmb250LXZh
+cmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogNDAwOw0KICAgICAgICAgICAgICAgICAg
+bGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7DQogICAgICAgICAgICAg
+ICAgICB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6
+DQogICAgICAgICAgICAgICAgICBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRl
+eHQtc3Ryb2tlLXdpZHRoOg0KICAgICAgICAgICAgICAgICAgMHB4OyB0ZXh0LWRlY29yYXRpb24t
+dGhpY2tuZXNzOiBpbml0aWFsOw0KICAgICAgICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uLXN0
+eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6DQogICAgICAgICAgICAgICAgICBp
+bml0aWFsOyI+DQo8Zm9udCBzaXplPSIyIiBmYWNlPSJDYWxpYnJpIj5Xb3VsZCB5b3UgYmUgaW50
+ZXJlc3RlZCBpbiByZWFjaGluZyBvdXQgdG8gdG9wIGxldmVsIGRlY2lzaW9ucyBtYWtlcnMmbmJz
+cDsgdG8gcHJvbW90ZS9zZWxsIHlvdXIgc2VydmljZXM/PGJyPg0KPC9mb250Pjxmb250IHNpemU9
+IjIiIGZhY2U9IkNhbGlicmkiPjxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyBMZWFybmluZy9UcmFp
+bmluZy9UYWxlbnQgRGV2ZWxvcG1lbnQ8YnI+DQo8L2ZvbnQ+PGZvbnQgc2l6ZT0iMiIgZmFjZT0i
+Q2FsaWJyaSI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IENWRCBIdW1hbiBSZXNvdXJjZTxicj4NCiZuYnNw
+OyZuYnNwOyZuYnNwOyBDVkQgTGVhcm5pbmc8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgQ29ycG9y
+YXRlIFRyYWluaW5nPGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7IE1lZXRpbmcgJmFtcDsgRXZlbnRz
+PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7IE93bmVycywgQ0VPLCBQcmVzaWRlbnRzIGV0YzwvZm9u
+dD48L3A+DQo8cCBzdHlsZT0ibWFyZ2luOiAwY207IGZvbnQtc2l6ZTogbWVkaXVtOyBmb250LXN0
+eWxlOg0KICAgICAgICAgICAgICAgICAgbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBu
+b3JtYWw7DQogICAgICAgICAgICAgICAgICBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250
+LXdlaWdodDogNDAwOw0KICAgICAgICAgICAgICAgICAgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsg
+dGV4dC1hbGlnbjogc3RhcnQ7DQogICAgICAgICAgICAgICAgICB0ZXh0LWluZGVudDogMHB4OyB0
+ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6DQogICAgICAgICAgICAgICAgICBub3Jt
+YWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOg0KICAgICAg
+ICAgICAgICAgICAgMHB4OyB0ZXh0LWRlY29yYXRpb24tdGhpY2tuZXNzOiBpbml0aWFsOw0KICAg
+ICAgICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29y
+YXRpb24tY29sb3I6DQogICAgICAgICAgICAgICAgICBpbml0aWFsOyI+DQo8Zm9udCBzaXplPSIy
+IiBmYWNlPSJDYWxpYnJpIj48YnI+DQo8L2ZvbnQ+PC9wPg0KPHAgc3R5bGU9Im1hcmdpbjogMGNt
+OyBmb250LXNpemU6IG1lZGl1bTsgZm9udC1zdHlsZToNCiAgICAgICAgICAgICAgICAgIG5vcm1h
+bDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczogbm9ybWFsOw0KICAgICAgICAgICAgICAgICAgZm9u
+dC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQwMDsNCiAgICAgICAgICAgICAg
+ICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0Ow0KICAgICAgICAg
+ICAgICAgICAgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNw
+YWNlOg0KICAgICAgICAgICAgICAgICAgbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtp
+dC10ZXh0LXN0cm9rZS13aWR0aDoNCiAgICAgICAgICAgICAgICAgIDBweDsgdGV4dC1kZWNvcmF0
+aW9uLXRoaWNrbmVzczogaW5pdGlhbDsNCiAgICAgICAgICAgICAgICAgIHRleHQtZGVjb3JhdGlv
+bi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOg0KICAgICAgICAgICAgICAg
+ICAgaW5pdGlhbDsiPg0KPGZvbnQgc2l6ZT0iMiIgZmFjZT0iQ2FsaWJyaSI+V2Ugd291bGQgYmUg
+aGFwcHkgdG8gY3VzdG9taXplIHlvdXIgbGlzdCBhY2NvcmRpbmdseSBmb3IgYW55IG90aGVyIHJl
+cXVpcmVtZW50cyB0aGF0IHlvdSBoYXZlLiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOw0K
+PGJyPg0KPC9mb250PjwvcD4NCjxwIHN0eWxlPSJtYXJnaW46IDBjbTsgZm9udC1zaXplOiBtZWRp
+dW07IGZvbnQtc3R5bGU6DQogICAgICAgICAgICAgICAgICBub3JtYWw7IGZvbnQtdmFyaWFudC1s
+aWdhdHVyZXM6IG5vcm1hbDsNCiAgICAgICAgICAgICAgICAgIGZvbnQtdmFyaWFudC1jYXBzOiBu
+b3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7DQogICAgICAgICAgICAgICAgICBsZXR0ZXItc3BhY2lu
+Zzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsNCiAgICAgICAgICAgICAgICAgIHRleHQtaW5k
+ZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZToNCiAgICAgICAgICAg
+ICAgICAgIG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lk
+dGg6DQogICAgICAgICAgICAgICAgICAwcHg7IHRleHQtZGVjb3JhdGlvbi10aGlja25lc3M6IGlu
+aXRpYWw7DQogICAgICAgICAgICAgICAgICB0ZXh0LWRlY29yYXRpb24tc3R5bGU6IGluaXRpYWw7
+IHRleHQtZGVjb3JhdGlvbi1jb2xvcjoNCiAgICAgICAgICAgICAgICAgIGluaXRpYWw7Ij4NCjxm
+b250IHNpemU9IjIiIGZhY2U9IkNhbGlicmkiPjxiPjxicj4NCjwvYj48L2ZvbnQ+PC9wPg0KPHAg
+c3R5bGU9Im1hcmdpbjogMGNtOyBmb250LXNpemU6IG1lZGl1bTsgZm9udC1zdHlsZToNCiAgICAg
+ICAgICAgICAgICAgIG5vcm1hbDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczogbm9ybWFsOw0KICAg
+ICAgICAgICAgICAgICAgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQw
+MDsNCiAgICAgICAgICAgICAgICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246
+IHN0YXJ0Ow0KICAgICAgICAgICAgICAgICAgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zv
+cm06IG5vbmU7IHdoaXRlLXNwYWNlOg0KICAgICAgICAgICAgICAgICAgbm9ybWFsOyB3b3JkLXNw
+YWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDoNCiAgICAgICAgICAgICAgICAg
+IDBweDsgdGV4dC1kZWNvcmF0aW9uLXRoaWNrbmVzczogaW5pdGlhbDsNCiAgICAgICAgICAgICAg
+ICAgIHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9y
+Og0KICAgICAgICAgICAgICAgICAgaW5pdGlhbDsiPg0KPGZvbnQgc2l6ZT0iMiIgZmFjZT0iQ2Fs
+aWJyaSI+PGI+SW48L2I+PHNwYW4+PHNwYW4+PHNwYW4+PGI+ZHVzdHJpZXM6PC9iPjwvc3Bhbj48
+L3NwYW4+PC9zcGFuPjwvZm9udD48L3A+DQo8cCBzdHlsZT0ibWFyZ2luOiAwY207IGZvbnQtc2l6
+ZTogbWVkaXVtOyBmb250LXN0eWxlOg0KICAgICAgICAgICAgICAgICAgbm9ybWFsOyBmb250LXZh
+cmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7DQogICAgICAgICAgICAgICAgICBmb250LXZhcmlhbnQt
+Y2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogNDAwOw0KICAgICAgICAgICAgICAgICAgbGV0dGVy
+LXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7DQogICAgICAgICAgICAgICAgICB0
+ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6DQogICAg
+ICAgICAgICAgICAgICBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ry
+b2tlLXdpZHRoOg0KICAgICAgICAgICAgICAgICAgMHB4OyB0ZXh0LWRlY29yYXRpb24tdGhpY2tu
+ZXNzOiBpbml0aWFsOw0KICAgICAgICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBp
+bml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6DQogICAgICAgICAgICAgICAgICBpbml0aWFs
+OyI+DQo8Zm9udCBzaXplPSIyIiBmYWNlPSJDYWxpYnJpIj48c3Bhbj48c3Bhbj48c3Bhbj5JbmZv
+cm1hdGlvbiBUZWNobm9sb2d5IHxGaW5hbmNlIHxBZHZlcnRpc2luZyAmYW1wOyBNYXJrZXRpbmcg
+fENvbnN0cnVjdGlvbiBhbmQgUmVhbCBlc3RhdGUgfENoYXJpdHkgYW5kIE5HT+KAmXMgfEVkdWNh
+dGlvbiB8UHVibGlzaGluZyB8UmV0YWlsIHwgQ29uc3VtZXIgfCBNYW51ZmFjdHVyaW5nIHxHb3Zl
+cm5tZW50ICZhbXA7IHB1YmxpYyBhZ2VuY2llcyB8RWxlY3Ryb25pY3MgYW5kDQogVGVsZWNvbW11
+bmljYXRpb25zIHxJbmR1c3RyeSBhc3NvY2lhdGlvbnMgfEhlYWx0aGNhcmUgfCBIb3NwaXRhbGl0
+eSB8TGVnYWwgU2VydmljZXMgfEZvb2QgJmFtcDsgQmV2ZXJhZ2VzIHxNZWRpYSAmYW1wOyBFbnRl
+cnRhaW5tZW50IHxFbmVyZ3kgYW5kIGNoZW1pY2FscyB8QWVyb3NwYWNlIGFuZCBEZWZlbnNlIHxU
+cmFuc3BvcnRhdGlvbiBhbmQgTG9naXN0aWNzIEVUQy48L3NwYW4+PC9zcGFuPjwvc3Bhbj48L2Zv
+bnQ+PC9wPg0KPHAgc3R5bGU9Im1hcmdpbjogMGNtOyBmb250LXNpemU6IG1lZGl1bTsgZm9udC1z
+dHlsZToNCiAgICAgICAgICAgICAgICAgIG5vcm1hbDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczog
+bm9ybWFsOw0KICAgICAgICAgICAgICAgICAgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9u
+dC13ZWlnaHQ6IDQwMDsNCiAgICAgICAgICAgICAgICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7
+IHRleHQtYWxpZ246IHN0YXJ0Ow0KICAgICAgICAgICAgICAgICAgdGV4dC1pbmRlbnQ6IDBweDsg
+dGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOg0KICAgICAgICAgICAgICAgICAgbm9y
+bWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDoNCiAgICAg
+ICAgICAgICAgICAgIDBweDsgdGV4dC1kZWNvcmF0aW9uLXRoaWNrbmVzczogaW5pdGlhbDsNCiAg
+ICAgICAgICAgICAgICAgIHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNv
+cmF0aW9uLWNvbG9yOg0KICAgICAgICAgICAgICAgICAgaW5pdGlhbDsiPg0KPGZvbnQgc2l6ZT0i
+MiIgZmFjZT0iQ2FsaWJyaSI+PHNwYW4+PHNwYW4+PHNwYW4+PGJyPg0KPC9zcGFuPjwvc3Bhbj48
+L3NwYW4+PC9mb250PjwvcD4NCjxmb250IHNpemU9IjIiIGZhY2U9IkNhbGlicmkiPkFwcHJlY2lh
+dGUgeW91ciByZXNwb25zZS48YnI+DQo8L2ZvbnQ+DQo8ZGl2IGNsYXNzPSJtb3otZm9yd2FyZC1j
+b250YWluZXIiPg0KPGRpdiBjbGFzcz0ibW96LWZvcndhcmQtY29udGFpbmVyIj4NCjxkaXYgY2xh
+c3M9Im1vei1mb3J3YXJkLWNvbnRhaW5lciI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iQ2FsaWJyaSI+
+Jm5ic3A7IDwvZm9udD48Zm9udCBzaXplPSIyIiBmYWNlPSJDYWxpYnJpIj48YnI+DQo8L2ZvbnQ+
+DQo8ZGl2IGNsYXNzPSJtb3otZm9yd2FyZC1jb250YWluZXIiPg0KPGRpdiBjbGFzcz0ibW96LWZv
+cndhcmQtY29udGFpbmVyIj4NCjxkaXYgY2xhc3M9Im1vei1mb3J3YXJkLWNvbnRhaW5lciI+DQo8
+ZGl2IGNsYXNzPSJtb3otdGV4dC1odG1sIiBsYW5nPSJ4LXVuaWNvZGUiPjxmb250IHNpemU9IjIi
+IGZhY2U9IkNhbGlicmkiPlJlZ2FyZHMsPGJyPg0KSnVsaWEgQW5kZXJzb24gfCBNYXJrZXRpbmcg
+Q29uc3VsdGFudDxicj4NCiZuYnNwOzxicj4NClJlcGx5IG9ubHkgb3B0LW91dCBpbiB0aGUgc3Vi
+amVjdCBsaW5lIHRvIHJlbW92ZSBmcm9tIHRoZSBtYWlsaW5nIGxpc3QuPC9mb250PjwvZGl2Pg0K
+PC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8
+L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
-All commits have been in -next for a while and no potential merge
-conflict is observed.
-
-Thanks,
-Gao Xiang
-
-[1] https://lore.kernel.org/r/20230621083209.116024-1-jefflexu@linux.alibaba.com
-
-The following changes since commit 7877cb91f1081754a1487c144d85dc0d2e2e7fc4:
-
-  Linux 6.4-rc4 (2023-05-28 07:49:00 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.5-rc1
-
-for you to fetch changes up to 8241fdd3cdfe88e31a3de09a72b5bff661e4534a:
-
-  erofs: clean up zmap.c (2023-06-22 21:16:34 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix rare I/O hang on deduplicated compressed images due to loop
-   hooked chains;
-
- - Fix compact compression layout of 16k blocks on arm64 devices;
-
- - Fix atomic context detection of async decompression;
-
- - Decompression/Xattr code cleanups.
-
-----------------------------------------------------------------
-Gao Xiang (8):
-      erofs: allocate extra bvec pages directly instead of retrying
-      erofs: avoid on-stack pagepool directly passed by arguments
-      erofs: kill hooked chains to avoid loops on deduplicated compressed images
-      erofs: adapt managed inode operations into folios
-      erofs: use struct lockref to replace handcrafted approach
-      erofs: use poison pointer to replace the hard-coded address
-      erofs: fix compact 4B support for 16k block size
-      erofs: clean up zmap.c
-
-Jingbo Xu (6):
-      erofs: convert erofs_read_metabuf() to erofs_bread() for xattr
-      erofs: use absolute position in xattr iterator
-      erofs: unify xattr_iter structures
-      erofs: make the size of read data stored in buffer_ofs
-      erofs: unify inline/shared xattr iterators for listxattr/getxattr
-      erofs: use separate xattr parsers for listxattr/getxattr
-
-Sandeep Dhavale (1):
-      erofs: Fix detection of atomic context
-
-Yangtao Li (1):
-      erofs: remove unnecessary goto
-
-Yue Hu (3):
-      erofs: fold in z_erofs_decompress()
-      erofs: remove the member readahead from struct z_erofs_decompress_frontend
-      erofs: clean up z_erofs_pcluster_readmore()
-
- fs/erofs/compress.h     |   3 +-
- fs/erofs/decompressor.c |   8 +-
- fs/erofs/internal.h     |  41 +--
- fs/erofs/super.c        |  69 +----
- fs/erofs/utils.c        |  86 +++----
- fs/erofs/xattr.c        | 670 +++++++++++++++++-------------------------------
- fs/erofs/zdata.c        | 269 +++++++++----------
- fs/erofs/zmap.c         |  75 +++---
- 8 files changed, 438 insertions(+), 783 deletions(-)
+--_000_bfe504012d9d702353ccce98728a08d8ContactMarketinglistson_--
