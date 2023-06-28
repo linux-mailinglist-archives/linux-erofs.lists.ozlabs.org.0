@@ -2,73 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36EA674039F
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jun 2023 20:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1904740850
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 04:26:31 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=web.de header.i=markus.elfring@web.de header.a=rsa-sha256 header.s=s29768273 header.b=YPBkIugz;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=V9lU33GD;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QrDRv0gtDz30PW
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 04:55:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QrQSP4sBWz30GJ
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 12:26:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=web.de header.i=markus.elfring@web.de header.a=rsa-sha256 header.s=s29768273 header.b=YPBkIugz;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=V9lU33GD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=web.de (client-ip=212.227.15.14; helo=mout.web.de; envelope-from=markus.elfring@web.de; receiver=lists.ozlabs.org)
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::334; helo=mail-ot1-x334.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrDRp5BzCz2xpp
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 04:55:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
- s=s29768273; t=1687892109; x=1688496909; i=markus.elfring@web.de;
- bh=XWZxvm2Kbt8hf9rPHRzI0lzOAByY+3tKkwS2i3SiQnw=;
- h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:In-Reply-To;
- b=YPBkIugzt7toYZw4weE/bKkQH3MZyukKEv5tXJslwUC1DS27OaRVI0qRvtuKS9Bgb3G9N5L
- oard6K4TOglhLPWybNDicZflUdQNK10OJtPDTxNUFT71Erjt5lJzlTpD7DggWBbFS/eoXPMnA
- FBM35hZlEUgrjFXYhMqpVEgVeIg0GRPoIjOzphAnKCAz6LNmPgi6th7iO5PWeM+3G86S2mFNa
- P7CFsvTmC7/PRz0lPIzapA9VDMIQ/GsPtEEC3utPkhhsn7au7Ymb4p2O0snqmEpxy/KOA6/uA
- Lfe5x8IisThMTNDm+CIsJDNSY2XmWoATDEe2JaM8M/Gu8KO0159g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.83]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mq1CA-1pixhv05J4-00mxeP; Tue, 27
- Jun 2023 20:55:09 +0200
-Message-ID: <63f626ad-276d-6daf-541d-c2d877eb0c19@web.de>
-Date: Tue, 27 Jun 2023 20:55:07 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
- kernel-janitors@vger.kernel.org
-References: <20230627161240.331-2-hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/2] erofs: simplify z_erofs_transform_plain()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20230627161240.331-2-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:g/3zX27NM8usez2j3C66BIrrEdg7ptQkkVGATvswtsSoyijda0T
- Ky76xOn2WUrQiJMqorLOwWm0srJAkiEbFu4EmCvpe6ShDkfpBoojJHcAJrtLkkeesD0Twn8
- bMfdQRXozytmqiLOSWBTmhwd5CTfe8Telh1+c3yA4TgB4GF7YdGbed2I5euPailk/XyEUPM
- ihQGqvcbZlqaoUi/3SMQg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RqJplO21vbI=;5g0lUSSXqmoFsmY/Gak34NvJdqb
- rjBIF/QgFpa4P/q6+5t4bMaGmv+90kRQRdwkxjLFYO/N8KAB8nJMh0FJfcY6uWpIQzzSsZaDA
- 0q/Uw3Mo4xmXD9dV6bPDv+UnSSFnLyegBLmCJT6nL5Md3549pVBd3NCaqjFZvUhGenJpJtIFQ
- hQdDE9GPspH3Y/m1GmIt4Dq55dpmq0DbDHCv/LS3osfm1np6F7qp8YpGrfhGiOC4pk41mcDIA
- /FU8YGVZvaLWsrk5FzBg2ifiryUhoJ9Ybly2aWhriXUTtxAlXUbnIZW6ZfvyY31QDiJG8iehE
- IV+gPASb1eYL6QVE7fBFst25qh1lcY3rQc0F2kneOBPgEt+2XJbf3tTrhU0vae8mH1Hcij7vV
- DDPby+kdunS2bpHzIUKc2lXTAtKSXpG1z9uoP2umOWc8F5hWZu36VI4e5v6ac85ZFmuyBJRhj
- rrdajy2ioUOn8v6+BPGmv76917pYoaA6L25gB1OkrFN1IUa8GFTsQt2KMOUOFZ/NAWLhY1zrR
- OZKXg51mWpgBrvr8IvRdPn4WNqw9IYpoHlghSmheuvyaXFrV8KTwdshkD9ij5p1tMyTsmVYcq
- R5blUpO4gGcSAxgCxEFCBDRnn3tRYhQGMiX78LLpigy/rxlgbyzfSOytP7mILF1sPLRsEWeuU
- InJxsaDgrXtRHewIqLg80C+KutEsuPbhWfcSLFx+NFRzobgTUOX9vz8aynoBJvhHa6qlVoUUT
- 4dIWF6aTtI2dgUBd0cbIOg4AncNGczRd3fA6aOf/AYm8kNTlL4c4p1aODqd8FHy9nF/QTtGxV
- KDPDFgKGOgGoPzVgPLT9FJ1n60KTZy/p/OWdZRH5vUHMflzsKXjR7afRl0ZSmWa36KSRa1bPX
- CiHmgxoXyftYldYpBO4YQnRZxBmyDCVNNB49c28RxFuK0Be8pqawp4VdBHeEb7l9Ivkm08mT6
- I6iuBg==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrQSF2XB2z2xqd
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 12:26:19 +1000 (AEST)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6b74791c948so2779234a34.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jun 2023 19:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687919175; x=1690511175;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=neV3rDyVNvPLFT5zcm/IVfNbRAa2DWk2HAJ0sr0tN8c=;
+        b=V9lU33GDR1/HNlgKjZ5jEh+J4PxCtNJlOks7idKlec4j8S89l2bfcSx2ZlrqzJI5N4
+         v79Q1UFbuNQ1EbghT94P5OeSAEdt7zxKgk/yGg96UL7dvpLtpYBSTFlC3kMn5IA2zIpU
+         NTFeV+zTdqB8H1CT3Anw2lmHUZrpoaBzU8FtBuZH7k8VJi0kCN8mrnemJzPyZTW4KXKf
+         gB7c53/iLy1qi4SfyfVNxyokJG+0EFvxO1gWn4O2swgzN5x3HauDfTbfj54xoAfwnrBe
+         EKdD0v/MKF2AIzWQczpq0SUPLTWlKo9mzBMLH5m9v/0TQZ4h5uNrekJVAR68t8zppVJz
+         NbnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687919175; x=1690511175;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=neV3rDyVNvPLFT5zcm/IVfNbRAa2DWk2HAJ0sr0tN8c=;
+        b=f3HZozi58unX4CSXKmhY7/OurgDkfTVgbAuqqv+LUHHrrGGfu3YyMu/RmK8+Sml++X
+         8j/xWaJt98i9xmrgbMK29clGXxqS//3uJ+74uQV+Sd8bJgGi2orvi57PIZML6NBWV5D7
+         0lQnZ33LoRUWlJzGA1LlSTgFsvzDrxtXlcTHjoxVD2b2Vkf3CEkMMrrIQSztqGouIGRB
+         xPhpfpGw/8oh8SoWsYjpGRUjbknEBT8zAKoFg/QIqV+S3iKstgC5Mljo9dUzQLAQ+loX
+         HTa+UVgghzkm36KcnJ8+mqY94SyFoeFs+PhLk2SfZStJPB0S7c3lRYU0Dn6Dj/SfofKy
+         ZpoQ==
+X-Gm-Message-State: AC+VfDwgAhcagm1njUzbItmzbIwT8JPuMmsLoWVc0Pohs1PTjyNrBzC5
+	W4Em4N1kdXYODrAcRKZbyv8vyUoqLdY=
+X-Google-Smtp-Source: ACHHUZ6/6cgXDHSg0mjZisiOt62iM4kAvZ7nkEJxL8aaKhYNZO8Yl0EkPN3NFt5jSbMYXHjgdYiVXw==
+X-Received: by 2002:a05:6359:d0a:b0:132:7a01:32ac with SMTP id gp10-20020a0563590d0a00b001327a0132acmr16077394rwb.16.1687919175448;
+        Tue, 27 Jun 2023 19:26:15 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id c11-20020a63da0b000000b0054fa8539681sm6470246pgh.34.2023.06.27.19.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jun 2023 19:26:15 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: fsck: add support for extracting hard links
+Date: Wed, 28 Jun 2023 10:25:58 +0800
+Message-Id: <20230628022558.6198-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,23 +72,230 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: huyue2@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> Use memcpy_to_page() instead of open-coding them.
->
-> In addition, add a missing flush_dcache_page() even though =E2=80=A6
+From: Yue Hu <huyue2@coolpad.com>
 
-Does such a wording really fit to the known requirement =E2=80=9CSolve onl=
-y one problem per patch.=E2=80=9D?
+Currently hard links can't be extracted correctly, let's support it now.
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.4#n81
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+v2:
+ - use new names erofsfsck_hardlink_entry/erofsfsck_link_hashtable
+ - remove unneeded list_empty in hardlink_find
+ - change to initialize hashtable before verifying packed inode
+ - add fsckcfg.extract_path check for hardlink_init/exit
 
+ fsck/main.c | 155 ++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 126 insertions(+), 29 deletions(-)
 
-How do you think about to add the tag =E2=80=9CFixes=E2=80=9D?
+diff --git a/fsck/main.c b/fsck/main.c
+index f816bec..608635e 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -49,6 +49,16 @@ static struct option long_options[] = {
+ 	{0, 0, 0, 0},
+ };
+ 
++#define NR_HARDLINK_HASHTABLE	16384
++
++struct erofsfsck_hardlink_entry {
++	struct list_head list;
++	erofs_nid_t nid;
++	char *path;
++};
++
++static struct list_head erofsfsck_link_hashtable[NR_HARDLINK_HASHTABLE];
++
+ static void print_available_decompressors(FILE *f, const char *delim)
+ {
+ 	unsigned int i = 0;
+@@ -550,6 +560,61 @@ static inline int erofs_extract_dir(struct erofs_inode *inode)
+ 	return 0;
+ }
+ 
++static char *erofsfsck_hardlink_find(erofs_nid_t nid)
++{
++	struct list_head *head =
++			&erofsfsck_link_hashtable[nid % NR_HARDLINK_HASHTABLE];
++	struct erofsfsck_hardlink_entry *entry;
++
++	list_for_each_entry(entry, head, list)
++		if (entry->nid == nid)
++			return entry->path;
++	return NULL;
++}
++
++static int erofsfsck_hardlink_insert(erofs_nid_t nid, const char *path)
++{
++	struct erofsfsck_hardlink_entry *entry;
++
++	entry = malloc(sizeof(*entry));
++	if (!entry)
++		return -ENOMEM;
++
++	entry->nid = nid;
++	entry->path = strdup(path);
++	if (!entry->path)
++		return -ENOMEM;
++
++	list_add_tail(&entry->list,
++		      &erofsfsck_link_hashtable[nid % NR_HARDLINK_HASHTABLE]);
++	return 0;
++}
++
++static void erofsfsck_hardlink_init(void)
++{
++	unsigned int i;
++
++	for (i = 0; i < NR_HARDLINK_HASHTABLE; ++i)
++		init_list_head(&erofsfsck_link_hashtable[i]);
++}
++
++static void erofsfsck_hardlink_exit(void)
++{
++	struct erofsfsck_hardlink_entry *entry, *n;
++	struct list_head *head;
++	unsigned int i;
++
++	for (i = 0; i < NR_HARDLINK_HASHTABLE; ++i) {
++		head = &erofsfsck_link_hashtable[i];
++
++		list_for_each_entry_safe(entry, n, head, list) {
++			if (entry->path)
++				free(entry->path);
++			free(entry);
++		}
++	}
++}
++
+ static inline int erofs_extract_file(struct erofs_inode *inode)
+ {
+ 	bool tryagain = true;
+@@ -719,6 +784,59 @@ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
+ 	return ret;
+ }
+ 
++static int erofsfsck_extract_inode(struct erofs_inode *inode)
++{
++	int ret;
++	char *oldpath;
++
++	if (!fsckcfg.extract_path) {
++verify:
++		/* verify data chunk layout */
++		return erofs_verify_inode_data(inode, -1);
++	}
++
++	oldpath = erofsfsck_hardlink_find(inode->nid);
++	if (oldpath) {
++		if (link(oldpath, fsckcfg.extract_path) == -1) {
++			erofs_err("failed to extract hard link: %s (%s)",
++				  fsckcfg.extract_path, strerror(errno));
++			return -errno;
++		}
++		return 0;
++	}
++
++	switch (inode->i_mode & S_IFMT) {
++	case S_IFDIR:
++		ret = erofs_extract_dir(inode);
++		break;
++	case S_IFREG:
++		if (erofs_is_packed_inode(inode))
++			goto verify;
++		ret = erofs_extract_file(inode);
++		break;
++	case S_IFLNK:
++		ret = erofs_extract_symlink(inode);
++		break;
++	case S_IFCHR:
++	case S_IFBLK:
++	case S_IFIFO:
++	case S_IFSOCK:
++		ret = erofs_extract_special(inode);
++		break;
++	default:
++		/* TODO */
++		goto verify;
++	}
++	if (ret && ret != -ECANCELED)
++		return ret;
++
++	/* record nid and old path for hardlink */
++	if (inode->i_nlink > 1 && !S_ISDIR(inode->i_mode))
++		ret = erofsfsck_hardlink_insert(inode->nid,
++						fsckcfg.extract_path);
++	return ret;
++}
++
+ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ {
+ 	int ret;
+@@ -740,34 +858,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 	if (ret)
+ 		goto out;
+ 
+-	if (fsckcfg.extract_path) {
+-		switch (inode.i_mode & S_IFMT) {
+-		case S_IFDIR:
+-			ret = erofs_extract_dir(&inode);
+-			break;
+-		case S_IFREG:
+-			if (erofs_is_packed_inode(&inode))
+-				goto verify;
+-			ret = erofs_extract_file(&inode);
+-			break;
+-		case S_IFLNK:
+-			ret = erofs_extract_symlink(&inode);
+-			break;
+-		case S_IFCHR:
+-		case S_IFBLK:
+-		case S_IFIFO:
+-		case S_IFSOCK:
+-			ret = erofs_extract_special(&inode);
+-			break;
+-		default:
+-			/* TODO */
+-			goto verify;
+-		}
+-	} else {
+-verify:
+-		/* verify data chunk layout */
+-		ret = erofs_verify_inode_data(&inode, -1);
+-	}
++	ret = erofsfsck_extract_inode(&inode);
+ 	if (ret && ret != -ECANCELED)
+ 		goto out;
+ 
+@@ -846,11 +937,14 @@ int main(int argc, char *argv[])
+ 		goto exit_put_super;
+ 	}
+ 
++	if (fsckcfg.extract_path)
++		erofsfsck_hardlink_init();
++
+ 	if (erofs_sb_has_fragments() && sbi.packed_nid > 0) {
+ 		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
+ 		if (err) {
+ 			erofs_err("failed to verify packed file");
+-			goto exit_put_super;
++			goto exit_hardlink;
+ 		}
+ 	}
+ 
+@@ -876,6 +970,9 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
++exit_hardlink:
++	if (fsckcfg.extract_path)
++		erofsfsck_hardlink_exit();
+ exit_put_super:
+ 	erofs_put_super();
+ exit_dev_close:
+-- 
+2.17.1
 
-Regards,
-Markus
