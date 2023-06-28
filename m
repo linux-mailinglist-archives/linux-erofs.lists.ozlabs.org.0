@@ -1,66 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1904740850
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 04:26:31 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=V9lU33GD;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D7907408FB
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 05:38:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QrQSP4sBWz30GJ
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 12:26:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QrS3M1fJ1z307y
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 13:38:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=V9lU33GD;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::334; helo=mail-ot1-x334.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrQSF2XB2z2xqd
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 12:26:19 +1000 (AEST)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6b74791c948so2779234a34.3
-        for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jun 2023 19:26:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687919175; x=1690511175;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=neV3rDyVNvPLFT5zcm/IVfNbRAa2DWk2HAJ0sr0tN8c=;
-        b=V9lU33GDR1/HNlgKjZ5jEh+J4PxCtNJlOks7idKlec4j8S89l2bfcSx2ZlrqzJI5N4
-         v79Q1UFbuNQ1EbghT94P5OeSAEdt7zxKgk/yGg96UL7dvpLtpYBSTFlC3kMn5IA2zIpU
-         NTFeV+zTdqB8H1CT3Anw2lmHUZrpoaBzU8FtBuZH7k8VJi0kCN8mrnemJzPyZTW4KXKf
-         gB7c53/iLy1qi4SfyfVNxyokJG+0EFvxO1gWn4O2swgzN5x3HauDfTbfj54xoAfwnrBe
-         EKdD0v/MKF2AIzWQczpq0SUPLTWlKo9mzBMLH5m9v/0TQZ4h5uNrekJVAR68t8zppVJz
-         NbnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687919175; x=1690511175;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=neV3rDyVNvPLFT5zcm/IVfNbRAa2DWk2HAJ0sr0tN8c=;
-        b=f3HZozi58unX4CSXKmhY7/OurgDkfTVgbAuqqv+LUHHrrGGfu3YyMu/RmK8+Sml++X
-         8j/xWaJt98i9xmrgbMK29clGXxqS//3uJ+74uQV+Sd8bJgGi2orvi57PIZML6NBWV5D7
-         0lQnZ33LoRUWlJzGA1LlSTgFsvzDrxtXlcTHjoxVD2b2Vkf3CEkMMrrIQSztqGouIGRB
-         xPhpfpGw/8oh8SoWsYjpGRUjbknEBT8zAKoFg/QIqV+S3iKstgC5Mljo9dUzQLAQ+loX
-         HTa+UVgghzkm36KcnJ8+mqY94SyFoeFs+PhLk2SfZStJPB0S7c3lRYU0Dn6Dj/SfofKy
-         ZpoQ==
-X-Gm-Message-State: AC+VfDwgAhcagm1njUzbItmzbIwT8JPuMmsLoWVc0Pohs1PTjyNrBzC5
-	W4Em4N1kdXYODrAcRKZbyv8vyUoqLdY=
-X-Google-Smtp-Source: ACHHUZ6/6cgXDHSg0mjZisiOt62iM4kAvZ7nkEJxL8aaKhYNZO8Yl0EkPN3NFt5jSbMYXHjgdYiVXw==
-X-Received: by 2002:a05:6359:d0a:b0:132:7a01:32ac with SMTP id gp10-20020a0563590d0a00b001327a0132acmr16077394rwb.16.1687919175448;
-        Tue, 27 Jun 2023 19:26:15 -0700 (PDT)
-Received: from localhost.localdomain ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id c11-20020a63da0b000000b0054fa8539681sm6470246pgh.34.2023.06.27.19.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 19:26:15 -0700 (PDT)
-From: Yue Hu <zbestahu@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: fsck: add support for extracting hard links
-Date: Wed, 28 Jun 2023 10:25:58 +0800
-Message-Id: <20230628022558.6198-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrS3H4xNTz2y1Y
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 13:38:18 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vm85EE4_1687923491;
+Received: from 30.221.149.82(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vm85EE4_1687923491)
+          by smtp.aliyun-inc.com;
+          Wed, 28 Jun 2023 11:38:12 +0800
+Message-ID: <c316bc55-cc4d-f05a-8936-2cde217b8dd2@linux.alibaba.com>
+Date: Wed, 28 Jun 2023 11:38:08 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [RFC 0/2] erofs: introduce bloom filter for xattr
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com, chao@kernel.org, huyue2@coolpad.com,
+ linux-erofs@lists.ozlabs.org
+References: <20230621083209.116024-1-jefflexu@linux.alibaba.com>
+In-Reply-To: <20230621083209.116024-1-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,230 +45,167 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, zhangwen@coolpad.com
+Cc: linux-kernel@vger.kernel.org, alexl@redhat.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yue Hu <huyue2@coolpad.com>
+Hi all,
 
-Currently hard links can't be extracted correctly, let's support it now.
+Sorry for the late reply as I was on vacation these days.
 
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
----
-v2:
- - use new names erofsfsck_hardlink_entry/erofsfsck_link_hashtable
- - remove unneeded list_empty in hardlink_find
- - change to initialize hashtable before verifying packed inode
- - add fsckcfg.extract_path check for hardlink_init/exit
+I test the hash bit for all xattrs given by Alex[1], to see if each
+xattr could be mapped into one unique bit in the 32-bit bloom filter.
 
- fsck/main.c | 155 ++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 126 insertions(+), 29 deletions(-)
+[1]
+https://lore.kernel.org/all/CAL7ro1HhYUDrOX7A-13p7rLBZSWHTQWGOdOzVcYkddkU_LArUw@mail.gmail.com/
 
-diff --git a/fsck/main.c b/fsck/main.c
-index f816bec..608635e 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -49,6 +49,16 @@ static struct option long_options[] = {
- 	{0, 0, 0, 0},
- };
- 
-+#define NR_HARDLINK_HASHTABLE	16384
-+
-+struct erofsfsck_hardlink_entry {
-+	struct list_head list;
-+	erofs_nid_t nid;
-+	char *path;
-+};
-+
-+static struct list_head erofsfsck_link_hashtable[NR_HARDLINK_HASHTABLE];
-+
- static void print_available_decompressors(FILE *f, const char *delim)
- {
- 	unsigned int i = 0;
-@@ -550,6 +560,61 @@ static inline int erofs_extract_dir(struct erofs_inode *inode)
- 	return 0;
- }
- 
-+static char *erofsfsck_hardlink_find(erofs_nid_t nid)
-+{
-+	struct list_head *head =
-+			&erofsfsck_link_hashtable[nid % NR_HARDLINK_HASHTABLE];
-+	struct erofsfsck_hardlink_entry *entry;
-+
-+	list_for_each_entry(entry, head, list)
-+		if (entry->nid == nid)
-+			return entry->path;
-+	return NULL;
-+}
-+
-+static int erofsfsck_hardlink_insert(erofs_nid_t nid, const char *path)
-+{
-+	struct erofsfsck_hardlink_entry *entry;
-+
-+	entry = malloc(sizeof(*entry));
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->nid = nid;
-+	entry->path = strdup(path);
-+	if (!entry->path)
-+		return -ENOMEM;
-+
-+	list_add_tail(&entry->list,
-+		      &erofsfsck_link_hashtable[nid % NR_HARDLINK_HASHTABLE]);
-+	return 0;
-+}
-+
-+static void erofsfsck_hardlink_init(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < NR_HARDLINK_HASHTABLE; ++i)
-+		init_list_head(&erofsfsck_link_hashtable[i]);
-+}
-+
-+static void erofsfsck_hardlink_exit(void)
-+{
-+	struct erofsfsck_hardlink_entry *entry, *n;
-+	struct list_head *head;
-+	unsigned int i;
-+
-+	for (i = 0; i < NR_HARDLINK_HASHTABLE; ++i) {
-+		head = &erofsfsck_link_hashtable[i];
-+
-+		list_for_each_entry_safe(entry, n, head, list) {
-+			if (entry->path)
-+				free(entry->path);
-+			free(entry);
-+		}
-+	}
-+}
-+
- static inline int erofs_extract_file(struct erofs_inode *inode)
- {
- 	bool tryagain = true;
-@@ -719,6 +784,59 @@ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
- 	return ret;
- }
- 
-+static int erofsfsck_extract_inode(struct erofs_inode *inode)
-+{
-+	int ret;
-+	char *oldpath;
-+
-+	if (!fsckcfg.extract_path) {
-+verify:
-+		/* verify data chunk layout */
-+		return erofs_verify_inode_data(inode, -1);
-+	}
-+
-+	oldpath = erofsfsck_hardlink_find(inode->nid);
-+	if (oldpath) {
-+		if (link(oldpath, fsckcfg.extract_path) == -1) {
-+			erofs_err("failed to extract hard link: %s (%s)",
-+				  fsckcfg.extract_path, strerror(errno));
-+			return -errno;
-+		}
-+		return 0;
-+	}
-+
-+	switch (inode->i_mode & S_IFMT) {
-+	case S_IFDIR:
-+		ret = erofs_extract_dir(inode);
-+		break;
-+	case S_IFREG:
-+		if (erofs_is_packed_inode(inode))
-+			goto verify;
-+		ret = erofs_extract_file(inode);
-+		break;
-+	case S_IFLNK:
-+		ret = erofs_extract_symlink(inode);
-+		break;
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFIFO:
-+	case S_IFSOCK:
-+		ret = erofs_extract_special(inode);
-+		break;
-+	default:
-+		/* TODO */
-+		goto verify;
-+	}
-+	if (ret && ret != -ECANCELED)
-+		return ret;
-+
-+	/* record nid and old path for hardlink */
-+	if (inode->i_nlink > 1 && !S_ISDIR(inode->i_mode))
-+		ret = erofsfsck_hardlink_insert(inode->nid,
-+						fsckcfg.extract_path);
-+	return ret;
-+}
-+
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- {
- 	int ret;
-@@ -740,34 +858,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- 	if (ret)
- 		goto out;
- 
--	if (fsckcfg.extract_path) {
--		switch (inode.i_mode & S_IFMT) {
--		case S_IFDIR:
--			ret = erofs_extract_dir(&inode);
--			break;
--		case S_IFREG:
--			if (erofs_is_packed_inode(&inode))
--				goto verify;
--			ret = erofs_extract_file(&inode);
--			break;
--		case S_IFLNK:
--			ret = erofs_extract_symlink(&inode);
--			break;
--		case S_IFCHR:
--		case S_IFBLK:
--		case S_IFIFO:
--		case S_IFSOCK:
--			ret = erofs_extract_special(&inode);
--			break;
--		default:
--			/* TODO */
--			goto verify;
--		}
--	} else {
--verify:
--		/* verify data chunk layout */
--		ret = erofs_verify_inode_data(&inode, -1);
--	}
-+	ret = erofsfsck_extract_inode(&inode);
- 	if (ret && ret != -ECANCELED)
- 		goto out;
- 
-@@ -846,11 +937,14 @@ int main(int argc, char *argv[])
- 		goto exit_put_super;
- 	}
- 
-+	if (fsckcfg.extract_path)
-+		erofsfsck_hardlink_init();
-+
- 	if (erofs_sb_has_fragments() && sbi.packed_nid > 0) {
- 		err = erofsfsck_check_inode(sbi.packed_nid, sbi.packed_nid);
- 		if (err) {
- 			erofs_err("failed to verify packed file");
--			goto exit_put_super;
-+			goto exit_hardlink;
- 		}
- 	}
- 
-@@ -876,6 +970,9 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
-+exit_hardlink:
-+	if (fsckcfg.extract_path)
-+		erofsfsck_hardlink_exit();
- exit_put_super:
- 	erofs_put_super();
- exit_dev_close:
+
+On 6/21/23 4:32 PM, Jingbo Xu wrote:
+> 
+> 3.2. input of hash function
+> -------------------------
+> As previously described, each hash function will map the given data into
+> one bit of the bloom filter map.  In our use case, xattr name serves as
+> the key of hash function.
+> 
+> When .getxattr() gets called, only index (e.g. EROFS_XATTR_INDEX_USER)
+> and the remaining name apart from the prefix are handy.  To avoid
+> constructing the full xattr name, the above index and name are fed into
+> the hash function directly in the following way:
+> 
+> ```
+> bit = xxh32(name, strlen(name), index + i);
+> ```
+> 
+> where index serves as part of seed, so that it gets involved in the
+> calculation for the hash.
+
+
+All xattrs are hashed with one single hash function.
+
+I first tested with the following hash function:
+
+```
+xxh32(name, strlen(name), index)
+```
+
+where `index` represents the index of corresponding predefined name
+prefix (e.g. EROFS_XATTR_INDEX_USER), while `name` represents the name
+after stripping the above predefined name prefix (e.g.
+"overlay.metacopy" for "user.overlay.metacopy")
+
+
+The mapping results are:
+
+bit  0: security.SMACK64EXEC
+bit  1:
+bit  2: user.overlay.protattr
+bit  3: trusted.overlay.impure, user.overlay.opaque, user.mime_type
+bit  4:
+bit  5: user.overlay.origin
+bit  6: user.overlay.metacopy, security.evm
+bit  8: trusted.overlay.opaque
+bit  9: trusted.overlay.origin
+bit 10: trusted.overlay.upper, trusted.overlay.protattr
+bit 11: security.apparmor, security.capability
+bit 12: security.SMACK64
+bit 13: user.overlay.redirect, security.ima
+bit 14: user.overlay.upper
+bit 15: trusted.overlay.redirect
+bit 16: security.SMACK64IPOUT
+bit 17:
+bit 18: system.posix_acl_access
+bit 19: security.selinux
+bit 20:
+bit 21:
+bit 22: system.posix_acl_default
+bit 23: security.SMACK64MMAP
+bit 24: user.overlay.impure, user.overlay.nlink, security.SMACK64TRANSMUTE
+bit 25: trusted.overlay.metacopy
+bit 26:
+bit 27: security.SMACK64IPIN
+bit 28:
+bit 29:
+bit 30: trusted.overlay.nlink
+bit 31:
+
+Here 30 xattrs are mapped into 22 bits.  There are two potential
+conflicts, i.e. bit 10 (trusted.overlay.upper, trusted.overlay.protattr)
+and bit 24 (user.overlay.impure, user.overlay.nlink).
+
+
+> 
+> An alternative way is to calculate the hash from the full xattr name by
+> feeding the prefix string and the remaining name string separately in
+> the following way:
+> 
+> ```
+> xxh32_reset()
+> xxh32_update(prefix string, ...)
+> xxh32_update(remaining name, ...)
+> xxh32_digest()
+> ```
+> 
+> But I doubt if it really deserves to call multiple APIs instead of one
+> single xxh32().
+
+
+I also tested with the following hash function, where the full name of
+the xattr, e.g. "user.overlay.metacopy", is fed into the hash function.
+
+```
+xxh32(name, strlen(name), 0)
+```
+
+
+Following are the mapping results:
+
+bit  0: trusted.overlay.impure, user.overlay.protattr
+bit  1: security.SMACK64IPOUT
+bit  2:
+bit  3: security.capability
+bit  4: security.selinux
+bit  5: security.ima
+bit  6: user.overlay.metacopy
+bit  8:
+bit  9: trusted.overlay.redirect, security.SMACK64EXEC
+bit 10: system.posix_acl_access
+bit 11: trusted.overlay.nlink
+bit 12: trusted.overlay.opaque
+bit 13:
+bit 14:
+bit 15:
+bit 16:
+bit 17: user.overlay.impure
+bit 18: security.apparmor
+bit 19:
+bit 20: user.overlay.origin, user.overlay.nlink, security.SMACK64TRANSMUTE
+bit 21:
+bit 22: trusted.overlay.metacopy, trusted.overlay.protattr
+bit 23: user.overlay.upper, security.evm
+bit 24: user.overlay.redirect, security.SMACK64IPIN,
+system.posix_acl_default
+bit 25: security.SMACK64
+bit 26:
+bit 27: trusted.overlay.upper, security.SMACK64MMAP
+bit 28: trusted.overlay.origin, user.mime_type
+bit 29:
+bit 30:
+bit 31: user.overlay.opaque
+
+30 xattrs are mapped into 20 bits.  Similarly there are two potential
+conflicts, i.e. bit 20 (user.overlay.origin, user.overlay.nlink) and bit
+22 (trusted.overlay.metacopy, trusted.overlay.protattr).
+
+
+Summary
+=======
+
+Personally I would prefer the former, as it maps xattrs into the bloom
+filter more evenly (22 bits vs 20 bits) and can better cooperate with
+the kernel routine (index and the remaining name string, rather than the
+full name string, are handy).
+
 -- 
-2.17.1
-
+Thanks,
+Jingbo
