@@ -1,70 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A42A74096E
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 08:30:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11F377409D2
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 09:49:10 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=Rf34AQ3S;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=NrRK+CSI;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QrWsP3lmtz30Ky
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 16:30:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QrYcg6h55z30MS
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jun 2023 17:49:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=Rf34AQ3S;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=NrRK+CSI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::435; helo=mail-pf1-x435.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::432; helo=mail-pf1-x432.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrWsG304dz2xdt
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 16:29:52 +1000 (AEST)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-666edfc50deso454496b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jun 2023 23:29:52 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QrYcb639Kz2yGY
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 17:49:01 +1000 (AEST)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-668709767b1so3569762b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 00:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687933787; x=1690525787;
+        d=gmail.com; s=20221208; t=1687938538; x=1690530538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=phnago+xzA34WP8EE3UKK7H8eHuABENEW5hNL2bsXgo=;
-        b=Rf34AQ3SyUxDh5/NakzYjzWoF3lNk+M8I9oxWiCn/1AIPJZr+ilobnH5zzVIpONcT8
-         JPrG8pdW010my4xLl96N8Govm5c32rk4FpI79TCcPw99u6Xq5SNtHkeNXKVyjXpLyXhC
-         rGTbT/XZ5gyxDeGMR9ts0twHRVOTIXVGaPuFbqqb0kPJMVvK4g6M1y+MfDcE16qbK1bH
-         UPDb0VnLCafeAp+Cfd4aCpBUtJGzhHtNTBssdmAL8yXtiFZIGs3IVSPw5K3fivrXaebI
-         KW72REL9gXJ8I1PR82usdX06HcLHCK+sqqltS6XRC3JXwDow4JQ6epmKw0szmYVDfIjH
-         TSfA==
+        bh=Kl6zRFJwJX4TVX+FX/9X3H88Ay6pIJMzZMs21mv/0NU=;
+        b=NrRK+CSI8eMfYu5Gq2CbMcDfu2x1Yaste+JlD6ixflAlT8E7k3m5Cv7WrKS25tHsmG
+         8LnIvoCx9M6SGUMMt96qW/nM53mULeJ+Qwtr4UB+cccFziwMcjQtadh5F5Ql9C6FhCYj
+         zCcJFRRvpsDR1hCeNfoLdJavBTBGxtQJs9uSM4ADudz0FgR2mu9cDkYM7oAbrE+Jwx2t
+         anIUNGPDGNpopmLbLabw3j6Hh4YElBpWZRJ7FnVYAhPMgBRPLDeZ5SV3R5Ix3nHnDlw8
+         ANfIIh3SMvmcO5KqfI8Icank/drf1oRTv8xw9kPkyMvz6ubhr/kgtMXHmIMAOQxZ1bZw
+         7mlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687933787; x=1690525787;
+        d=1e100.net; s=20221208; t=1687938538; x=1690530538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=phnago+xzA34WP8EE3UKK7H8eHuABENEW5hNL2bsXgo=;
-        b=JX5ftjLRV9toPHNB0ZOB5aA5905xN4cwk8K8sLIQz3o/9jYGd/Z6V1Syx/LYPP4lqW
-         OFIPtYt8MKG84IwpwCSGly4YpPuivlFAaUiDWwCHTByQrp55w8ApkK7av7BERd2Ireft
-         LQkbYOoE7B0xcvUsTbyWtBlrBFZYQeDuV6ue1xERSq7yu0bOFP4C5V8CAmBz5AuTH91P
-         oKGh5GJu9pFcmIM+w46N30JSi09jsdohUE8FBwB8TTlyzG0ReiLb2qJ/x8eXDw8M4tOK
-         XC/Qx5j36vpfpxup+Vka2B8naiOxyvWFsSb/djt/d45UR66+1RqKrwnfwF6Hl88ivtBm
-         zLmg==
-X-Gm-Message-State: AC+VfDy54aJXzvvQnf0GOh/yaWEgfF+az9dNTcSL3ExmKUjlZ/Uq8O9V
-	ifUc4CP1b3bukwqrGjBs3nw=
-X-Google-Smtp-Source: ACHHUZ6d3pfVKObgk4siK5Lfysl0LC//sE6BdgoH94VJaOHujpnL0KaZh3s8HVVzfMUVJL14DMjXOg==
-X-Received: by 2002:a05:6a20:7d9a:b0:12b:d525:2cac with SMTP id v26-20020a056a207d9a00b0012bd5252cacmr705356pzj.17.1687933786661;
-        Tue, 27 Jun 2023 23:29:46 -0700 (PDT)
+        bh=Kl6zRFJwJX4TVX+FX/9X3H88Ay6pIJMzZMs21mv/0NU=;
+        b=WGVxVkHKMcEp31yapmnZGoUDS2usKXfDJ6xjjM8mnyG9mLQntehFOAcgxxff/ASkJc
+         FlFFmas8AnnO7C8de1ux8dsFx0V+iWSEZUU8HAsiriMrelnwOKWY3mOQvdfy2gVrrQp2
+         5xL6R9qBEiHwc2gpdPzGZ7//IfGR778H8hErroKw99WCUaVV4DSBGNGSWTGLtdkiOCL6
+         qgcAU3yPh+GGXAMITp2Bnxs2aC0z6ZFrwMVSYoczDQH4bLQEcrNHk/TAWm86d2qpF4Q0
+         e6rkbTH91CzGFmdiLA3ZJvZxokyabSA3C+wS8cFaoNGW5I8QTx1VDp2C0ZmsL3/+CK2o
+         Jd6w==
+X-Gm-Message-State: AC+VfDyUf9aPZgq5vdLagXPmcLr6FltcUpEo6Ys94nYHwoI/6SLfzoJa
+	odZ0Qh1MCzLoVyrZd2M+Qao=
+X-Google-Smtp-Source: ACHHUZ6JRGIUhgEO5FJSQSbiiil8v67RVs0NzWdjFNveJ+SE3EwyVqvk0R0XDfh2xtMRMHlWi+ekJA==
+X-Received: by 2002:a05:6a20:7da1:b0:123:9582:e9fb with SMTP id v33-20020a056a207da100b001239582e9fbmr18239344pzj.50.1687938538548;
+        Wed, 28 Jun 2023 00:48:58 -0700 (PDT)
 Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id z19-20020aa785d3000000b00666e649ca46sm748799pfn.101.2023.06.27.23.29.45
+        by smtp.gmail.com with ESMTPSA id w5-20020a170902d3c500b001b1a2bf5277sm914932plb.39.2023.06.28.00.48.57
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Jun 2023 23:29:46 -0700 (PDT)
-Date: Wed, 28 Jun 2023 14:38:30 +0800
+        Wed, 28 Jun 2023 00:48:58 -0700 (PDT)
+Date: Wed, 28 Jun 2023 15:57:42 +0800
 From: Yue Hu <zbestahu@gmail.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/2] erofs: simplify z_erofs_transform_plain()
-Message-ID: <20230628143830.0000186f.zbestahu@gmail.com>
-In-Reply-To: <20230627161240.331-2-hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] erofs: get rid of the remaining kmap_atomic()
+Message-ID: <20230628155742.0000038e.zbestahu@gmail.com>
+In-Reply-To: <20230627161240.331-1-hsiangkao@linux.alibaba.com>
 References: <20230627161240.331-1-hsiangkao@linux.alibaba.com>
-	<20230627161240.331-2-hsiangkao@linux.alibaba.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -84,66 +83,12 @@ Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.ke
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, 28 Jun 2023 00:12:40 +0800
+On Wed, 28 Jun 2023 00:12:39 +0800
 Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> Use memcpy_to_page() instead of open-coding them.
-> 
-> In addition, add a missing flush_dcache_page() even though almost all
-> modern architectures clear `PG_dcache_clean` flag for new file cache
-> pages so that it doesn't change anything in practice.
+> It's unnecessary to use kmap_atomic() compared with kmap_local_page().
+> In addition, kmap_atomic() is deprecated now.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Yue Hu <huyue2@coolpad.com>
-
-> ---
-> preliminary tested with silesia dataset.
-> 
->  fs/erofs/decompressor.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index ad53cf52d899..cfad1eac7fd9 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -328,7 +328,7 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
->  	const unsigned int lefthalf = rq->outputsize - righthalf;
->  	const unsigned int interlaced_offset =
->  		rq->alg == Z_EROFS_COMPRESSION_SHIFTED ? 0 : rq->pageofs_out;
-> -	unsigned char *src, *dst;
-> +	u8 *src;
->  
->  	if (outpages > 2 && rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
->  		DBG_BUGON(1);
-> @@ -341,22 +341,19 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
->  	}
->  
->  	src = kmap_local_page(rq->in[inpages - 1]) + rq->pageofs_in;
-> -	if (rq->out[0]) {
-> -		dst = kmap_local_page(rq->out[0]);
-> -		memcpy(dst + rq->pageofs_out, src + interlaced_offset,
-> -		       righthalf);
-> -		kunmap_local(dst);
-> -	}
-> +	if (rq->out[0])
-> +		memcpy_to_page(rq->out[0], rq->pageofs_out,
-> +			       src + interlaced_offset, righthalf);
->  
->  	if (outpages > inpages) {
->  		DBG_BUGON(!rq->out[outpages - 1]);
->  		if (rq->out[outpages - 1] != rq->in[inpages - 1]) {
-> -			dst = kmap_local_page(rq->out[outpages - 1]);
-> -			memcpy(dst, interlaced_offset ? src :
-> -					(src + righthalf), lefthalf);
-> -			kunmap_local(dst);
-> +			memcpy_to_page(rq->out[outpages - 1], 0, src +
-> +					(interlaced_offset ? 0 : righthalf),
-> +				       lefthalf);
->  		} else if (!interlaced_offset) {
->  			memmove(src, src + righthalf, lefthalf);
-> +			flush_dcache_page(rq->in[inpages - 1]);
->  		}
->  	}
->  	kunmap_local(src);
-
