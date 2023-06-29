@@ -2,97 +2,123 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C87FC741D4B
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jun 2023 02:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 457DC741ED7
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jun 2023 05:45:21 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Kfsq1hgW;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Kfsq1hgW;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=ko8imOsQ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qs03R369gz30PC
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jun 2023 10:40:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Qs48r4bxLz30fM
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jun 2023 13:45:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Kfsq1hgW;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Kfsq1hgW;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=ko8imOsQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=xiubli@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::706; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=frank.li@vivo.com; receiver=lists.ozlabs.org)
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on20706.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::706])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qs03M6pvrz2xdp
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jun 2023 10:40:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687999211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GBoFOtIWRHIKoWf0lrD2wG9OyN2hTf5a/5og68Y1whI=;
-	b=Kfsq1hgWTWpirEq6xx6bOJnrE1kLY9WrKHFKbN6c8B40fCOjl0lIDjwhdutx96D/vZ687v
-	cYElKSWzYKUWs52T1n+MtxUEiLqGuDQkvpt6+hhQfTsjYPBncmj7Y/f08y5IeGtQwcxTnH
-	TIjaUA94lR0eViCevVBY97p3JprxC7g=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687999211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GBoFOtIWRHIKoWf0lrD2wG9OyN2hTf5a/5og68Y1whI=;
-	b=Kfsq1hgWTWpirEq6xx6bOJnrE1kLY9WrKHFKbN6c8B40fCOjl0lIDjwhdutx96D/vZ687v
-	cYElKSWzYKUWs52T1n+MtxUEiLqGuDQkvpt6+hhQfTsjYPBncmj7Y/f08y5IeGtQwcxTnH
-	TIjaUA94lR0eViCevVBY97p3JprxC7g=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-249-yif82JVmMiSSoldbPcN1wQ-1; Wed, 28 Jun 2023 20:40:08 -0400
-X-MC-Unique: yif82JVmMiSSoldbPcN1wQ-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-53f44c2566dso79357a12.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jun 2023 17:40:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687999207; x=1690591207;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GBoFOtIWRHIKoWf0lrD2wG9OyN2hTf5a/5og68Y1whI=;
-        b=JI1dQvBA49XJPgos+AsKznBfN7d6kb3r42L5OPipA53Q+Jr3rsMibce2acUWJrmr2y
-         o5zhPr2cj8v/jb1IYypg28i2mAqGcCAB5LwW/Ti/OUKAHKPVC50KGZaMRoa224BIyC47
-         m44nTgJdcjjVDm02iBSz/AYuTVOunjSgcu6a8ImZtgA39/rwlphHP0f90EqMOGaPX/BC
-         kZBd5Qa7KxXf6A/TjBlTQA8UoCXOMqb9QYrXLLkaFlFSTRHxPJVvpDM0drIytOZT72E2
-         gGdsfnfOr4bXkgz2DeUTboyRKOEV/oqTMsXQWOepvOjaxnDHm+6iTF5anFqbmQ6FqHoV
-         khMg==
-X-Gm-Message-State: AC+VfDwEWg/By/izfHbZpbfSWNPHH80CJRnIN2hak0EopNF0ibJgF8rj
-	Sh/rNaWPEARoypJGQeg3Ga/0JJan02V7CjosHyv8/tRJ6tGfW13OyIbntruoegMN+PA4k6BGfDw
-	ZaniC0Im2SgD8DfCMv2mVJaAK
-X-Received: by 2002:a05:6a21:32a2:b0:125:699a:599b with SMTP id yt34-20020a056a2132a200b00125699a599bmr15662845pzb.34.1687999206977;
-        Wed, 28 Jun 2023 17:40:06 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5vLdftDDvS6DadhOeggrwPU/ORSuzVvDK1nPTA87qiG12zTXbeuXwcom3dX8ucd1whR5HDYQ==
-X-Received: by 2002:a05:6a21:32a2:b0:125:699a:599b with SMTP id yt34-20020a056a2132a200b00125699a599bmr15662825pzb.34.1687999206657;
-        Wed, 28 Jun 2023 17:40:06 -0700 (PDT)
-Received: from [10.72.13.91] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d14-20020aa78e4e000000b0067acbc74977sm4268764pfr.96.2023.06.28.17.40.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jun 2023 17:40:06 -0700 (PDT)
-Message-ID: <41e1c831-29de-8494-d925-6e2eb379567f@redhat.com>
-Date: Thu, 29 Jun 2023 08:39:58 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Linux-cachefs] [PATCH v7 2/2] mm, netfs, fscache: Stop read
- optimisation when folio removed from pagecache
-To: David Howells <dhowells@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20230628104852.3391651-1-dhowells@redhat.com>
- <20230628104852.3391651-3-dhowells@redhat.com>
-From: Xiubo Li <xiubli@redhat.com>
-In-Reply-To: <20230628104852.3391651-3-dhowells@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qs48k1fHcz30Pm
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jun 2023 13:45:08 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PNdmt96TFs0lyRQgZ8IQTH5UqVpuvHL7CDZ5Zf4VmbTA4586FD338lIpiSIjXJUGkHqFOzK1XFLtiAy/MlRHeSiQCj5Qq8nFqhx/Rcd1q25e7I2jvC7Y7NZQEUA1EUg3h1UVEm76JQS03xpWNNVh9oh49UMT/ciVLmyint/rn5HtvliEIkBQlJdUD9ZAi7k3hquFFGeo6rTl8D2+6465JL+XLF1IAuSKeP9nOxKr9AWJGJy5flLunAhQ9RTE266ApZGdIAr++TUSMqusSfL83cT6jxfP/zyAPsPUKAjj4y3ks/vVA6qWqOYUm7SRsvQWCTFTfr2jKgGbnHn6VwjA3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GbKm/FCqArMGc67sepeNxrec5XpxYd089ot+2J/FL/s=;
+ b=Zx99c62WiltOH+q8tKGd3LAJBVmtXL6FTUvvgmJBATg/HD4XBVFxnLSbvaw2NCi2anQBuuPjcMDJu/CYQ2RmdfLAgfIQA1/ce3u0xcST5cP8xyDerTQOtRMje2gAO36+D5y0qGLHsU16DaoNceniw/gLTreEpDEcPk1/cqgQpMaCuXviTp3pwLjVdS1q9iiiXRt27AbYgOZ8o95TsPFfgx/iHdRp58DaUjTjGZTl12qCY8nvWIkJJIwck6l5WCqAESQt6usbrJC3Rq3KX0zPss28djakjx+BtKe3Tx2azVvhwjZfvxvAJAK+V9eTD50AAl47m79mDt3z1UaMEEIi1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GbKm/FCqArMGc67sepeNxrec5XpxYd089ot+2J/FL/s=;
+ b=ko8imOsQWVOPcKwUXaXkoaX9+bAaU31TeGo4Uv+Wx0VTlDW44oMhSnnC1vNn1XVMWD+OwuRs31tHcMFV/8kGR83c6w/AWRnDljXVBZQrFxI9FmFr42/KCoUR8AzzIB72YIB5+SqICNKmuvx0jeUappZqQRTa+mebDwYqE6BLPR1/mbELnAX3h1DOp0CWJkg5DbLC2wX2HhdyriZKYb2aflLyahopNyvEzoww1g1CBAE2un6nHAhxrrkmursqJenyAGMVR35v21ERfWY5YxqwT/LPscJWBJoNQNX2F3pky40t2Ji8vCgOI5Ypkx3oB2o620gJ5AKVGRnqm7GWZjBj0Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by TYSPR06MB6433.apcprd06.prod.outlook.com (2603:1096:400:47a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.26; Thu, 29 Jun
+ 2023 03:44:42 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::fa0e:6c06:7474:285c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::fa0e:6c06:7474:285c%5]) with mapi id 15.20.6521.023; Thu, 29 Jun 2023
+ 03:44:42 +0000
+Message-ID: <ee27ca83-a144-7468-4515-efa93f01aa43@vivo.com>
+Date: Thu, 29 Jun 2023 11:44:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH 1/7] block: add queue_logical_block_mask() and
+ bdev_logical_block_mask()
+To: Matthew Wilcox <willy@infradead.org>
+References: <20230628093500.68779-1-frank.li@vivo.com>
+ <ZJxj6odz49iB5Mmm@casper.infradead.org>
+From: Yangtao Li <frank.li@vivo.com>
+In-Reply-To: <ZJxj6odz49iB5Mmm@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR04CA0013.apcprd04.prod.outlook.com
+ (2603:1096:4:197::6) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|TYSPR06MB6433:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29630706-8e9d-4152-3a2b-08db78532bcf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	i99cAzY5KTZEYK05vF5As5XRfGfxUugkS5p/Z4w5mvxpgx/xVa/JrNMmIcCxS3UKAA2ZStAwRuhlxOK38pE/J//zewH/IdZd9l4JNLKUFpx4llBlpPFQUDbohDjUJVGJk3sz8vPnlZEJCaMJkLWmT405HGiLKmo06p1DQDSrtJJxrv4rpjuNfGXhPdiSmMmiLdqfpVu3FB67kvMp2NwxZ4KkQuwA6flgP2yyzCZk5tKhauUCXeUXzef5MHnU704XbytWsJRFgKvgwX/PLGVa8G4j6fQfXFw1Q4ZRHYE2/vU1sNAXcB32DdCdZSx2yMqe1w5BJw7rb5mcjZjCdQ/NBdli1Unwj/mA3c98mUzFfvEOHGUHmUDkBmdw+z5EqYAO7lfDz5WCVtVf2TCy5JlGoKXRyY6+i/HUphyoSUPOkMbyiYwonL7G6QOk7aO4GjI/d72zNZS9Xf3rkOh6ZwKuv7D6zqsXjY0pBbXpkq1qh73mGh6SlwEFHtykCk6e1lYNcKw6Pg/hFtc7Ej1muSBZITTj2LC1zbf+ABY7uTPb9NfHP0WEL5YeYnAKeFHcP9F3nA5POuAPeQhuRmvWnO3xFMWqMpcXz4v76Ab+JhkvbA7zQZvhdLJoY+GzOvDiAQ6B5V3zBfMEfVfG9Rok0HU0o9v80pGuri/qUptPdThIBbeGCkc0WGOKXK3+uia1sOO1
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(136003)(376002)(366004)(451199021)(31686004)(6512007)(66556008)(66476007)(4326008)(66946007)(36756003)(7416002)(86362001)(6916009)(316002)(38350700002)(41300700001)(8936002)(5660300002)(8676002)(31696002)(38100700002)(478600001)(6506007)(26005)(4744005)(2616005)(2906002)(186003)(6666004)(52116002)(53546011)(6486002)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?Z1hWcDMyWHk4L1RhdnRnMHBuSWZadVVOMURuYWIzRzJqN3ROTFIwV3BhaEQy?=
+ =?utf-8?B?OXUvR1plREFJMHNIQkg4ckRKcW5ZVE5GaHFqRllGY1BYRW9kdGV2WlNydVp0?=
+ =?utf-8?B?ZmZLOXRUbnlVdVUrcGdaQS9INWxpTUhtT1phWFFPWUQ5VGNkSStxNEIzcmtB?=
+ =?utf-8?B?MnlSRW03RVJNYXFFeXMzTmV2dEhwcVZyR3lpM2tYMmswcjF3UHdzWkltc05I?=
+ =?utf-8?B?Z1FBT3J2anpyVXN4VnhqaTFlS3BXbUFEK0dVSFROaU5DQzEvYzB3VUhsb2Uy?=
+ =?utf-8?B?OXB4VzlVenNVL2tlMnQ2S1lZUVpkN1lzTEVtcFR4dEVqZlQ5bmhqM1BscFU0?=
+ =?utf-8?B?UGd5RXRWQTlSNkVnbUtLNHB6L245NXlZSTJnc3V6YzlBQmZDdUNMSVpPS05H?=
+ =?utf-8?B?cHNJdHYwS0pCdWEzdm0xY3JHcGllandoaW9zeDhRSEN5Z3lyTnpkeXg5V2JQ?=
+ =?utf-8?B?ZVJvNjk4NGlVcjNRcjhXVDFLZ2tJeXdWK2MrZkZoQ2lQaHJQWVVqYXoraExR?=
+ =?utf-8?B?ZE1xcEcxY0Z6QjludWRyZjJaVnEwSVIra2dpOFZpaVhlQkxsc2VIakdLaXl5?=
+ =?utf-8?B?V3NmVnNQU0ZreGtTaUtwdm1zQWlNaUEwY1JYeHNZVnd3TUVwaGFTNU5RVHhN?=
+ =?utf-8?B?RXJVZTRiU05YNmQ4aGhYUFRrU0FmSG5jeXExTUY1U3NPNEF6OUV3QnVDNEEw?=
+ =?utf-8?B?c2dxQ2ozVlpRKzlWM0l1RzllSHhMN0NmbmhaSml2Ymo2Nzc3QXV0MUpPL2wz?=
+ =?utf-8?B?em5ZNFplSW8zSWRrdVpWUlpJc01jUW5vTnlsRk9Vb2dqN3hKTkpGZ0tWL3hF?=
+ =?utf-8?B?aUlxdTlsWUtVMndLcnFTUllTTkd3NmpaQVF2NldsTGtHL1pqS2pieWU2VTVD?=
+ =?utf-8?B?am1ndzNZQ0JVbi9mYUNMb3k2emxEeVZDOTR1Vkl5UGpxaFkxVDMwSlU0NVln?=
+ =?utf-8?B?RVpjcVRxbWJRSGR1b0JKUzMrdGcrdU04UVdLU0ZZTytFUTVIOHloL2FBWmRo?=
+ =?utf-8?B?bjAvRVVzRmFhUGVlaVBvQTU5WS9vMk5nRTFTb2dzNkI1SXpPQ0l3SzkvV2pu?=
+ =?utf-8?B?VW94RjNiYkh5dCtCMXpTc0RkQmdwQkhUOVNybEVFYXlmZ3VPVjBOcmlKcENh?=
+ =?utf-8?B?cEVud2xOa2I4TXdScy9Da3lVNDdsNnFzMUtUWEJNc29kSVAwcHo0djBqajVD?=
+ =?utf-8?B?U3AyL3VPOEtyQ2JpemRLQUhNdU51Wk1STlU0bk01L25veVRmSk1vZ3NPcmhJ?=
+ =?utf-8?B?TVQzOWVBa2drbzNYL2xxZEc5emFVWGpXSVh6T1FHbXlKL2RwZHVJWnJ0V1p1?=
+ =?utf-8?B?QVVLc29IRWp3d1BweHlPY2RlUDZveHZkaEpmdkU2L3AyVlVZYXhvMmFHQ1l2?=
+ =?utf-8?B?ckZZZlh3dU5zanY4czhEQ25JREN0aEdQR2xyUUV5SVh0RS9sQkdUaHR4QVJt?=
+ =?utf-8?B?QlFGR0tMeDVZWDBrMnhxSlZ3aTA5YjFMTkY2MVNFeUhuVGdjS3Q2SUk0OURy?=
+ =?utf-8?B?R3VDaUxQWEpEeEtNSGQ2VWswZ0pLeXR6U2ltYVo2UGRCTDFhbm56Q0VKYUx0?=
+ =?utf-8?B?RGFvczk0WFhjdldoMXd2RFl2cU5SK1Q3MFErYyt2SEZFeUNzdUgrYTlHUzNi?=
+ =?utf-8?B?aHlUa1FyZ25NcjlkVTltNmhaSTRLS29uc2R5MnJRbVN0dlpuazRrVDhNVHVP?=
+ =?utf-8?B?bnRnWHdqTVFwOTdsZUdCaWJDaDlHc2J5VkIyd2NDaDFGdXdGbE5VcDhycXBh?=
+ =?utf-8?B?U3RjbHdJdlIrWU1lY3BtcksyTGJ1N1FtVzZZcGhpOE5zRC8wdlorZ3gvdTZK?=
+ =?utf-8?B?aXh2am1OVEpYcjBBT1hiTGJ4R2NlQndhRS8zZ3J1c0loVndwNjRZQUt4M0FD?=
+ =?utf-8?B?UlpCenJkTjJkVHJFekh2cTBocE1vQUg3blZKWHhJbzlIYnQ5ZnNKa25kTmYv?=
+ =?utf-8?B?NkZsNkNqU0FqdGx6L2tvRjRWelpIano1VFJVZHBVeXBXdTE5cmtpVHZuVGhG?=
+ =?utf-8?B?dEdlbllhRldXcXhGZG04ekI3L3BRbkJKMFNmVDNEck53M29mWDF1L2ZmSFk3?=
+ =?utf-8?B?RFFLN0Uzb0dIdkJXUWZDVFlBN0NpZlBXV0c4S01VQ0NiL1BwejBhakJNTHBr?=
+ =?utf-8?Q?YVU6Fj+ZQlfEhECBoDD8s76xr?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29630706-8e9d-4152-3a2b-08db78532bcf
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2023 03:44:41.9906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eEQfGYhmsrO+wgcOJN8QbCczw65GxZTEgfnJA53ZaDHebqt0SgR6pbbnSIJkmDp7ryB8ACBH25mSOooPtpjUFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6433
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -104,246 +130,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Shyam Prasad N <nspmangalore@gmail.com>, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, Rohith Surabattula <rohiths.msft@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, linux-afs@lists.infradead.org, Christoph Hellwig <hch@infradead.org>, Steve French <sfrench@samba.org>, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, v9fs-developer@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, ceph-devel@vger.kernel.org
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, brauner@kernel.org, linux-raid@vger.kernel.org, djwong@kernel.org, linux-kernel@vger.kernel.org, hch@infradead.org, song@kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On 2023/6/29 0:46, Matthew Wilcox wrote:
 
-On 6/28/23 18:48, David Howells wrote:
-> Fscache has an optimisation by which reads from the cache are skipped until
-> we know that (a) there's data there to be read and (b) that data isn't
-> entirely covered by pages resident in the netfs pagecache.  This is done
-> with two flags manipulated by fscache_note_page_release():
->
-> 	if (...
-> 	    test_bit(FSCACHE_COOKIE_HAVE_DATA, &cookie->flags) &&
-> 	    test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags))
-> 		clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
->
-> where the NO_DATA_TO_READ flag causes cachefiles_prepare_read() to indicate
-> that netfslib should download from the server or clear the page instead.
->
-> The fscache_note_page_release() function is intended to be called from
-> ->releasepage() - but that only gets called if PG_private or PG_private_2
-> is set - and currently the former is at the discretion of the network
-> filesystem and the latter is only set whilst a page is being written to the
-> cache, so sometimes we miss clearing the optimisation.
->
-> Fix this by following Willy's suggestion[1] and adding an address_space
-> flag, AS_RELEASE_ALWAYS, that causes filemap_release_folio() to always call
-> ->release_folio() if it's set, even if PG_private or PG_private_2 aren't
-> set.
->
-> Note that this would require folio_test_private() and page_has_private() to
-> become more complicated.  To avoid that, in the places[*] where these are
-> used to conditionalise calls to filemap_release_folio() and
-> try_to_release_page(), the tests are removed the those functions just
-> jumped to unconditionally and the test is performed there.
->
-> [*] There are some exceptions in vmscan.c where the check guards more than
-> just a call to the releaser.  I've added a function, folio_needs_release()
-> to wrap all the checks for that.
->
-> AS_RELEASE_ALWAYS should be set if a non-NULL cookie is obtained from
-> fscache and cleared in ->evict_inode() before truncate_inode_pages_final()
-> is called.
->
-> Additionally, the FSCACHE_COOKIE_NO_DATA_TO_READ flag needs to be cleared
-> and the optimisation cancelled if a cachefiles object already contains data
-> when we open it.
->
-> Fixes: 1f67e6d0b188 ("fscache: Provide a function to note the release of a page")
-> Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
-> Reported-by: Rohith Surabattula <rohiths.msft@gmail.com>
-> Suggested-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Matthew Wilcox <willy@infradead.org>
-> cc: Linus Torvalds <torvalds@linux-foundation.org>
-> cc: Steve French <sfrench@samba.org>
-> cc: Shyam Prasad N <nspmangalore@gmail.com>
-> cc: Rohith Surabattula <rohiths.msft@gmail.com>
-> cc: Dave Wysochanski <dwysocha@redhat.com>
-> cc: Dominique Martinet <asmadeus@codewreck.org>
-> cc: Ilya Dryomov <idryomov@gmail.com>
-> cc: linux-cachefs@redhat.com
-> cc: linux-cifs@vger.kernel.org
-> cc: linux-afs@lists.infradead.org
-> cc: v9fs-developer@lists.sourceforge.net
-> cc: ceph-devel@vger.kernel.org
-> cc: linux-nfs@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-mm@kvack.org
-> ---
->
-> Notes:
->      ver #7)
->       - Make NFS set AS_RELEASE_ALWAYS.
->      
->      ver #4)
->       - Split out merging of folio_has_private()/filemap_release_folio() call
->         pairs into a preceding patch.
->       - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
->      
->      ver #3)
->       - Fixed mapping_clear_release_always() to use clear_bit() not set_bit().
->       - Moved a '&&' to the correct line.
->      
->      ver #2)
->       - Rewrote entirely according to Willy's suggestion[1].
->
->   fs/9p/cache.c           |  2 ++
->   fs/afs/internal.h       |  2 ++
->   fs/cachefiles/namei.c   |  2 ++
->   fs/ceph/cache.c         |  2 ++
->   fs/nfs/fscache.c        |  3 +++
->   fs/smb/client/fscache.c |  2 ++
->   include/linux/pagemap.h | 16 ++++++++++++++++
->   mm/internal.h           |  5 ++++-
->   8 files changed, 33 insertions(+), 1 deletion(-)
+> On Wed, Jun 28, 2023 at 05:34:54PM +0800, Yangtao Li wrote:
+>> Introduce queue_logical_block_mask() and bdev_logical_block_mask()
+>> to simplify code, which replace (queue_logical_block_size(q) - 1)
+>> and (bdev_logical_block_size(bdev) - 1).
+> The thing is that I know what queue_logical_block_size - 1 does.
+> That's the low bits.  _Which_ bits are queue_logical_block_mask?
+> The high bits or the low bits?  And before you say "It's obviously",
+> we have both ways round in the kernel today.
 
-Just one question. Shouldn't do this in 'fs/erofs/fscache.c' too ?
+
+I guess for this you mentioned, can we name it bdev_logical_block_lmask 
+and queue_logical_block_lmask?
+
+
+Thx,
 
 >
-> diff --git a/fs/9p/cache.c b/fs/9p/cache.c
-> index cebba4eaa0b5..12c0ae29f185 100644
-> --- a/fs/9p/cache.c
-> +++ b/fs/9p/cache.c
-> @@ -68,6 +68,8 @@ void v9fs_cache_inode_get_cookie(struct inode *inode)
->   				       &path, sizeof(path),
->   				       &version, sizeof(version),
->   				       i_size_read(&v9inode->netfs.inode));
-> +	if (v9inode->netfs.cache)
-> +		mapping_set_release_always(inode->i_mapping);
->   
->   	p9_debug(P9_DEBUG_FSC, "inode %p get cookie %p\n",
->   		 inode, v9fs_inode_cookie(v9inode));
-> diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-> index 9d3d64921106..da73b97e19a9 100644
-> --- a/fs/afs/internal.h
-> +++ b/fs/afs/internal.h
-> @@ -681,6 +681,8 @@ static inline void afs_vnode_set_cache(struct afs_vnode *vnode,
->   {
->   #ifdef CONFIG_AFS_FSCACHE
->   	vnode->netfs.cache = cookie;
-> +	if (cookie)
-> +		mapping_set_release_always(vnode->netfs.inode.i_mapping);
-
-If all the cookie need to do the same thing, then how about doing this 
-in 'fscache_acquire_cookie()' ?
-
-Thanks
-
-- Xiubo
-
->   #endif
->   }
->   
-> diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-> index d9d22d0ec38a..7bf7a5fcc045 100644
-> --- a/fs/cachefiles/namei.c
-> +++ b/fs/cachefiles/namei.c
-> @@ -585,6 +585,8 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
->   	if (ret < 0)
->   		goto check_failed;
->   
-> +	clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &object->cookie->flags);
-> +
->   	object->file = file;
->   
->   	/* Always update the atime on an object we've just looked up (this is
-> diff --git a/fs/ceph/cache.c b/fs/ceph/cache.c
-> index 177d8e8d73fe..de1dee46d3df 100644
-> --- a/fs/ceph/cache.c
-> +++ b/fs/ceph/cache.c
-> @@ -36,6 +36,8 @@ void ceph_fscache_register_inode_cookie(struct inode *inode)
->   				       &ci->i_vino, sizeof(ci->i_vino),
->   				       &ci->i_version, sizeof(ci->i_version),
->   				       i_size_read(inode));
-> +	if (ci->netfs.cache)
-> +		mapping_set_release_always(inode->i_mapping);
->   }
->   
->   void ceph_fscache_unregister_inode_cookie(struct ceph_inode_info *ci)
-> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-> index 8c35d88a84b1..b05717fe0d4e 100644
-> --- a/fs/nfs/fscache.c
-> +++ b/fs/nfs/fscache.c
-> @@ -180,6 +180,9 @@ void nfs_fscache_init_inode(struct inode *inode)
->   					       &auxdata,      /* aux_data */
->   					       sizeof(auxdata),
->   					       i_size_read(inode));
-> +
-> +	if (netfs_inode(inode)->cache)
-> +		mapping_set_release_always(inode->i_mapping);
->   }
->   
->   /*
-> diff --git a/fs/smb/client/fscache.c b/fs/smb/client/fscache.c
-> index 8f6909d633da..3677525ee993 100644
-> --- a/fs/smb/client/fscache.c
-> +++ b/fs/smb/client/fscache.c
-> @@ -108,6 +108,8 @@ void cifs_fscache_get_inode_cookie(struct inode *inode)
->   				       &cifsi->uniqueid, sizeof(cifsi->uniqueid),
->   				       &cd, sizeof(cd),
->   				       i_size_read(&cifsi->netfs.inode));
-> +	if (cifsi->netfs.cache)
-> +		mapping_set_release_always(inode->i_mapping);
->   }
->   
->   void cifs_fscache_unuse_inode_cookie(struct inode *inode, bool update)
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index a56308a9d1a4..a1176ceb4a0c 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -199,6 +199,7 @@ enum mapping_flags {
->   	/* writeback related tags are not used */
->   	AS_NO_WRITEBACK_TAGS = 5,
->   	AS_LARGE_FOLIO_SUPPORT = 6,
-> +	AS_RELEASE_ALWAYS,	/* Call ->release_folio(), even if no private data */
->   };
->   
->   /**
-> @@ -269,6 +270,21 @@ static inline int mapping_use_writeback_tags(struct address_space *mapping)
->   	return !test_bit(AS_NO_WRITEBACK_TAGS, &mapping->flags);
->   }
->   
-> +static inline bool mapping_release_always(const struct address_space *mapping)
-> +{
-> +	return test_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-> +}
-> +
-> +static inline void mapping_set_release_always(struct address_space *mapping)
-> +{
-> +	set_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-> +}
-> +
-> +static inline void mapping_clear_release_always(struct address_space *mapping)
-> +{
-> +	clear_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-> +}
-> +
->   static inline gfp_t mapping_gfp_mask(struct address_space * mapping)
->   {
->   	return mapping->gfp_mask;
-> diff --git a/mm/internal.h b/mm/internal.h
-> index a76314764d8c..86aef26df905 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -175,7 +175,10 @@ static inline void set_page_refcounted(struct page *page)
->    */
->   static inline bool folio_needs_release(struct folio *folio)
->   {
-> -	return folio_has_private(folio);
-> +	struct address_space *mapping = folio->mapping;
-> +
-> +	return folio_has_private(folio) ||
-> +		(mapping && mapping_release_always(mapping));
->   }
->   
->   extern unsigned long highest_memmap_pfn;
-> --
-> Linux-cachefs mailing list
-> Linux-cachefs@redhat.com
-> https://listman.redhat.com/mailman/listinfo/linux-cachefs
->
-
+> I am not in favour of this change.  I might be in favour of bool
+> queue_logical_block_aligned(q, x), but even then it doesn't seem worth
+> the bits.
