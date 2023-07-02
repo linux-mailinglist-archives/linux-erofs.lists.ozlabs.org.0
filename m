@@ -2,58 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F0EA7450BC
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jul 2023 21:41:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 892437452E5
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 00:16:31 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BV9SeNc6;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=d/joY9YV;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QvKDj2s1qz30fh
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 05:41:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QvNgb5x9mz302R
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 08:16:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BV9SeNc6;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=d/joY9YV;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::834; helo=mail-qt1-x834.google.com; envelope-from=nolange79@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvKDc0G0Hz3038
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 05:41:20 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9B14F60D2D;
-	Sun,  2 Jul 2023 19:41:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDA4C433CA;
-	Sun,  2 Jul 2023 19:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688326877;
-	bh=wiyEzbvdAoEVanuz3dTj+uFJ7dD+RlYWSclkQ4BUav4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BV9SeNc6k2D5/0LUsAkQ2w0mXcj6KU820847x3otBHs8c5VKDffVJt560Oh6bHD0m
-	 V2aeKo8HnByh8kkulY2bADAE24Uqe0FJan9Hz5ZVODa4dmIFO3Uimcg+Usy+QVfVA4
-	 kRJdpEU29OpjBx07jatssr77W6kG0mUukFuJB3i6lkJ8QT/yjUP1dW8XPxjFxspWQv
-	 +qZRHZQnT4P1CxuWi/f2hK2tFoJ1j7uYyDXSNOpR7A9YswSsKIwHEwvL4zQlB1VQOs
-	 PXlWv93l1zKPYw9hdCgj6lg9ot1KkQJ/QzO1ZagQvvHphaZAU6ksq/+AV1C1+a8TE8
-	 CJ58yV4Z7fVig==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 14/14] erofs: Fix detection of atomic context
-Date: Sun,  2 Jul 2023 15:40:53 -0400
-Message-Id: <20230702194053.1777356-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230702194053.1777356-1-sashal@kernel.org>
-References: <20230702194053.1777356-1-sashal@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvNgS6gnyz2xnK
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 08:16:19 +1000 (AEST)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-40355e76338so8813011cf.3
+        for <linux-erofs@lists.ozlabs.org>; Sun, 02 Jul 2023 15:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688336174; x=1690928174;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kyPoPPRph9/x0oRy1V2qLrUaf5m/Bp0RgKWxSicfhQY=;
+        b=d/joY9YVsfZOnXMpIw+e3etzKL+9JqZTwuHNpC7Gv3mFNssn3ao31VNzAq94x60MLS
+         wAdfp2sTPXaR/GuYiCI0+l4ReI0Imrb7leF0jG65U7lXXFN0V333nddmlHeXD16syHZS
+         NLlZUMWU4/IDI6RW80q2S6dpR+NbT4elwpTqj0g5ikapEBdSGICSN10TXZzmnfy9JmZE
+         fdR+RqR/ELbxBG/m+3Om1OO149yUdd+BuXH5wUd399zEGyyL4EGb/JadyeI2Ti2TvSz4
+         tb0tCQ58EeGb/ADSU5Ecf3jTvqBCBXpezJpmX2j7N8Nlp4S00ztLkPhCyeCv5ZKMXvOf
+         Ihzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688336174; x=1690928174;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kyPoPPRph9/x0oRy1V2qLrUaf5m/Bp0RgKWxSicfhQY=;
+        b=k33mRKh6KRrYiWyB6Evv+th3AFXImkvsMh9WhlHYzfOgw9VBdsJgEez7Va87c9NvNY
+         P1GuWEHHdKmvHlT2ESGsjbuMzejJp5l0PaRVLH8gFyqq04rIAnb71Zx/2adMgoqR+GCb
+         SfKtbxLBrWPfq9NK4of/LmuN+Bsswhd0e3TR/3D83Rbiux9wrXGZCH7xPpVkjQrxW+iO
+         eJs7GdQB5lIvUqmK8657lFPVooYZ4eNhjt1T0Vxl5kGTNqMyYWEA2CxYMqPyC7Hy+WgB
+         oFwugCX0YWa/5TW9NHOCRJhy4KARQfgAM2YIht51Q/WOxcHPYl4EvRPVKs2w69BQ34A8
+         1tpQ==
+X-Gm-Message-State: AC+VfDxtNiS2DS5A0FYyn/s26PBtMsgPKDt+bBEr3uqKA73vlqElFaRa
+	6hCQ7H1KDYdiw30IKcoDt85xBXOliNFRWM2+QaY=
+X-Google-Smtp-Source: APBJJlGei6+qoWV9JZjaxL5H2RuYqanHlMQzW22tXjPmlDcQHYgzpDgcSOraHKZZ5CVjOdtmuTUrTyBYiQsyi63/oUg=
+X-Received: by 2002:ac8:5cc6:0:b0:400:829e:c395 with SMTP id
+ s6-20020ac85cc6000000b00400829ec395mr10431717qta.6.1688336173932; Sun, 02 Jul
+ 2023 15:16:13 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.3.11
-Content-Transfer-Encoding: 8bit
+References: <20230702101907.5081-1-nolange79@gmail.com> <b737bdff-9f90-e8cc-84b5-a6ee24ef291b@linux.alibaba.com>
+In-Reply-To: <b737bdff-9f90-e8cc-84b5-a6ee24ef291b@linux.alibaba.com>
+From: Norbert Lange <nolange79@gmail.com>
+Date: Mon, 3 Jul 2023 00:16:02 +0200
+Message-ID: <CADYdroNuhDhbK029bP04NUVReyf2_vOjLAAPN_a4we8eD_fSAA@mail.gmail.com>
+Subject: Re: [PATCH] erofs-utils: Provide identical functionality without libuuid
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,102 +73,189 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Sasha Levin <sashal@kernel.org>, Alexandre Mergnat <amergnat@baylibre.com>, Will Shiu <Will.Shiu@mediatek.com>, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-erofs@lists.ozlabs.org, Huang Jianan <huangjianan@oppo.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Sandeep Dhavale <dhavale@google.com>
+Am So., 2. Juli 2023 um 13:07 Uhr schrieb Gao Xiang
+<hsiangkao@linux.alibaba.com>:
+>
+> Hi Norbert,
+>
+> On 2023/7/2 18:19, Norbert Lange wrote:
+> > The motivation is to have standalone (statically linked) erofs binaries
+> > for simple initrd images, that are nevertheless able to (re)create
+> > erofs images with a given UUID.
+> >
+> > For this reason a few of libuuid functions have implementations added
+> > directly in erofs-utils.
+> > A header liberofs_uuid.h provides the new functions, which are
+> > always available. A further sideeffect is that code can be simplified
+> > which calls into this functionality.
+> >
+> > The uuid_unparse function replacement is always a private
+> > implementation and split into its own file, this further restricts
+> > the (optional) dependency on libuuid only to the erofs-mkfs tool.
+> >
+> > Signed-off-by: Norbert Lange <nolange79@gmail.com>
+>
+> Yeah, overall it looks good to me, some minor nits as below:
+>
+> (Also currently UUID makes the image nonreproducable, I wonder if we
+>   could use some image hash to calculate the whole UUID instead...)
 
-[ Upstream commit 12d0a24afd9ea58e581ea64d64e066f2027b28d9 ]
+Not the usecase I am after, I need to use an already known UUID for
+mounting, even if the content changed.
 
-Current check for atomic context is not sufficient as
-z_erofs_decompressqueue_endio can be called under rcu lock
-from blk_mq_flush_plug_list(). See the stacktrace [1]
+>
+> > ---
+> >   dump/Makefile.am    |   2 +-
+> >   dump/main.c         |   8 +---
+> >   fsck/Makefile.am    |   2 +-
+> >   lib/Makefile.am     |   4 +-
+> >   lib/liberofs_uuid.h |   9 ++++
+> >   lib/uuid.c          | 106 ++++++++++++++++++++++++++++++++++++++++++++
+> >   lib/uuid_unparse.c  |  21 +++++++++
+> >   mkfs/Makefile.am    |   6 +--
+> >   mkfs/main.c         |  21 ++-------
+> >   9 files changed, 149 insertions(+), 30 deletions(-)
+> >   create mode 100644 lib/liberofs_uuid.h
+> >   create mode 100644 lib/uuid.c
+> >   create mode 100644 lib/uuid_unparse.c
+> >
+> > diff --git a/dump/Makefile.am b/dump/Makefile.am
+> > index c2bef6d..90227a5 100644
+> > --- a/dump/Makefile.am
+> > +++ b/dump/Makefile.am
+> > @@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
+> >   dump_erofs_SOURCES = main.c
+> >   dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+> >   dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+> > -     ${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
+> > +     ${liblz4_LIBS} ${liblzma_LIBS}
+> > diff --git a/dump/main.c b/dump/main.c
+> > index bc4e028..40af09f 100644
+> > --- a/dump/main.c
+> > +++ b/dump/main.c
+> > @@ -17,10 +17,8 @@
+> >   #include "erofs/compress.h"
+> >   #include "erofs/fragments.h"
+> >   #include "../lib/liberofs_private.h"
+> > +#include "../lib/liberofs_uuid.h"
+> >
+> > -#ifdef HAVE_LIBUUID
+> > -#include <uuid.h>
+> > -#endif
+> >
+> >   struct erofsdump_cfg {
+> >       unsigned int totalshow;
+> > @@ -620,9 +618,7 @@ static void erofsdump_show_superblock(void)
+> >               if (feat & feature_lists[i].flag)
+> >                       fprintf(stdout, "%s ", feature_lists[i].name);
+> >       }
+> > -#ifdef HAVE_LIBUUID
+> > -     uuid_unparse_lower(sbi.uuid, uuid_str);
+> > -#endif
+> > +     erofs_uuid_unparse_lower(sbi.uuid, uuid_str);
+> >       fprintf(stdout, "\nFilesystem UUID:                              %s\n",
+> >                       uuid_str);
+> >   }
+> > diff --git a/fsck/Makefile.am b/fsck/Makefile.am
+> > index e6a1fb6..4176d86 100644
+> > --- a/fsck/Makefile.am
+> > +++ b/fsck/Makefile.am
+> > @@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
+> >   fsck_erofs_SOURCES = main.c
+> >   fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+> >   fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+> > -     ${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
+> > +     ${liblz4_LIBS} ${liblzma_LIBS}
+> > diff --git a/lib/Makefile.am b/lib/Makefile.am
+> > index faa7311..e243c1c 100644
+> > --- a/lib/Makefile.am
+> > +++ b/lib/Makefile.am
+> > @@ -29,9 +29,9 @@ noinst_HEADERS += compressor.h
+> >   liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+> >                     namei.c data.c compress.c compressor.c zmap.c decompress.c \
+> >                     compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+> > -                   fragments.c rb_tree.c dedupe.c
+> > +                   fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c
+> >
+> > -liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
+> > +liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
+> >   if ENABLE_LZ4
+> >   liberofs_la_CFLAGS += ${LZ4_CFLAGS}
+> >   liberofs_la_SOURCES += compressor_lz4.c
+> > diff --git a/lib/liberofs_uuid.h b/lib/liberofs_uuid.h
+> > new file mode 100644
+> > index 0000000..d156699
+> > --- /dev/null
+> > +++ b/lib/liberofs_uuid.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> > +#ifndef __EROFS_LIB_UUID_H
+> > +#define __EROFS_LIB_UUID_H
+> > +
+> > +void erofs_uuid_generate(unsigned char *out);
+> > +void erofs_uuid_unparse_lower(const unsigned char *buf, char *out);
+> > +int erofs_uuid_parse(const char *in, unsigned char *uu);
+> > +
+> > +#endif
+> > \ No newline at end of file
+> > diff --git a/lib/uuid.c b/lib/uuid.c
+> > new file mode 100644
+> > index 0000000..acff81a
+> > --- /dev/null
+> > +++ b/lib/uuid.c
+> > @@ -0,0 +1,106 @@
+> > +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> > +/*
+> > + * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
+> > + */
+> > +
+> > +#include <string.h>
+> > +#include <errno.h>
+> > +
+> > +#include "erofs/config.h"
+> > +#include "erofs/defs.h"
+> > +#include "liberofs_uuid.h"
+> > +
+> > +#ifdef HAVE_LIBUUID
+> > +#include <uuid.h>
+> > +#else
+> > +
+> > +#include <stdlib.h>
+> > +#include <sys/random.h>
+> > +
+> > +/* Flags to be used, will be modified if kernel does not support them */
+> > +static unsigned erofs_grnd_flag =
+>
+> Could we switch to "unsigned int" for this?
 
-In such case we should hand off the decompression work for async
-processing rather than trying to do sync decompression in current
-context. Patch fixes the detection by checking for
-rcu_read_lock_any_held() and while at it use more appropriate
-!in_task() check than in_atomic().
+Sure
 
-Background: Historically erofs would always schedule a kworker for
-decompression which would incur the scheduling cost regardless of
-the context. But z_erofs_decompressqueue_endio() may not always
-be in atomic context and we could actually benefit from doing the
-decompression in z_erofs_decompressqueue_endio() if we are in
-thread context, for example when running with dm-verity.
-This optimization was later added in patch [2] which has shown
-improvement in performance benchmarks.
+>
+> > +#ifdef GRND_INSECURE
+> > +    GRND_INSECURE;
+> > +#else
+> > +    0x0004;
+> > +#endif
+> > +
+> > +static int s_getrandom(void *pUid, unsigned size, bool insecure)
+> > +{
+> > +    unsigned kflags = erofs_grnd_flag;
+> > +    unsigned flags = insecure ? kflags : 0;
+>
+> same here.
+>
+> Otherwise it looks good to me.
 
-==============================================
-[1] Problem stacktrace
-[name:core&]BUG: sleeping function called from invalid context at kernel/locking/mutex.c:291
-[name:core&]in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 1615, name: CpuMonitorServi
-[name:core&]preempt_count: 0, expected: 0
-[name:core&]RCU nest depth: 1, expected: 0
-CPU: 7 PID: 1615 Comm: CpuMonitorServi Tainted: G S      W  OE      6.1.25-android14-5-maybe-dirty-mainline #1
-Hardware name: MT6897 (DT)
-Call trace:
- dump_backtrace+0x108/0x15c
- show_stack+0x20/0x30
- dump_stack_lvl+0x6c/0x8c
- dump_stack+0x20/0x48
- __might_resched+0x1fc/0x308
- __might_sleep+0x50/0x88
- mutex_lock+0x2c/0x110
- z_erofs_decompress_queue+0x11c/0xc10
- z_erofs_decompress_kickoff+0x110/0x1a4
- z_erofs_decompressqueue_endio+0x154/0x180
- bio_endio+0x1b0/0x1d8
- __dm_io_complete+0x22c/0x280
- clone_endio+0xe4/0x280
- bio_endio+0x1b0/0x1d8
- blk_update_request+0x138/0x3a4
- blk_mq_plug_issue_direct+0xd4/0x19c
- blk_mq_flush_plug_list+0x2b0/0x354
- __blk_flush_plug+0x110/0x160
- blk_finish_plug+0x30/0x4c
- read_pages+0x2fc/0x370
- page_cache_ra_unbounded+0xa4/0x23c
- page_cache_ra_order+0x290/0x320
- do_sync_mmap_readahead+0x108/0x2c0
- filemap_fault+0x19c/0x52c
- __do_fault+0xc4/0x114
- handle_mm_fault+0x5b4/0x1168
- do_page_fault+0x338/0x4b4
- do_translation_fault+0x40/0x60
- do_mem_abort+0x60/0xc8
- el0_da+0x4c/0xe0
- el0t_64_sync_handler+0xd4/0xfc
- el0t_64_sync+0x1a0/0x1a4
+Found few a formatting inconsistencies as well, already fixed this locally.
+Guess I will wait a bit more for feedback before posting a v2? Not sure
+whats the proper order.
 
-[2] Link: https://lore.kernel.org/all/20210317035448.13921-1-huangjianan@oppo.com/
+>
+> Thanks,
+> Gao Xiang
 
-Reported-by: Will Shiu <Will.Shiu@mediatek.com>
-Suggested-by: Gao Xiang <xiang@kernel.org>
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
-Link: https://lore.kernel.org/r/20230621220848.3379029-1-dhavale@google.com
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/erofs/zdata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index d7add72a09437..77eb6a0c4853c 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1455,7 +1455,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
- 	if (atomic_add_return(bios, &io->pending_bios))
- 		return;
- 	/* Use (kthread_)work and sync decompression for atomic contexts only */
--	if (in_atomic() || irqs_disabled()) {
-+	if (!in_task() || irqs_disabled() || rcu_read_lock_any_held()) {
- #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
- 		struct kthread_worker *worker;
- 
--- 
-2.39.2
-
+regards, Norbert
