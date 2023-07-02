@@ -2,57 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC93C7450B3
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jul 2023 21:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F0EA7450BC
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Jul 2023 21:41:27 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fSKon93U;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BV9SeNc6;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QvKDG6LQyz30fh
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 05:41:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QvKDj2s1qz30fh
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 05:41:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fSKon93U;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BV9SeNc6;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvKD81nHZz3038
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 05:40:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvKDc0G0Hz3038
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 05:41:20 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 5518760C91;
-	Sun,  2 Jul 2023 19:40:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72755C433C9;
-	Sun,  2 Jul 2023 19:40:51 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 9B14F60D2D;
+	Sun,  2 Jul 2023 19:41:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDA4C433CA;
+	Sun,  2 Jul 2023 19:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688326852;
-	bh=AibRHF3+wnb0aqVi5rHkyG/9K3JaqbyxVTR4d+bai4E=;
+	s=k20201202; t=1688326877;
+	bh=wiyEzbvdAoEVanuz3dTj+uFJ7dD+RlYWSclkQ4BUav4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fSKon93UcJ/WhBZZmdg/F9qZJAZ4YUJnIQqsJYrll0c6wHes8yXBgN5MOl7nOqDWE
-	 xalqJo+1myA2dck8A5A3MlhO25JG2jT9ZvUZff8nyd+XfbwpD6UHgnIcNLhIeyEn+P
-	 oK7BttXc35YxLEzu3X6PKas3ZHSO23e0AvqCVvwzyHLfa8iB2sXMS0DXLOuiplGzga
-	 qRggs/kaDFKiWoodSxTD8QOkXAloVZJBczFGhyzytzVhoSsyR+QZN6GcRtzp7VM+RZ
-	 hi7/GNUecUv4/tWw+nIqKMO12qQnFPjouLjaVPqU12L3qg44DaiJsU+HjsciULlVHN
-	 W4qBFA5J+61Cg==
+	b=BV9SeNc6k2D5/0LUsAkQ2w0mXcj6KU820847x3otBHs8c5VKDffVJt560Oh6bHD0m
+	 V2aeKo8HnByh8kkulY2bADAE24Uqe0FJan9Hz5ZVODa4dmIFO3Uimcg+Usy+QVfVA4
+	 kRJdpEU29OpjBx07jatssr77W6kG0mUukFuJB3i6lkJ8QT/yjUP1dW8XPxjFxspWQv
+	 +qZRHZQnT4P1CxuWi/f2hK2tFoJ1j7uYyDXSNOpR7A9YswSsKIwHEwvL4zQlB1VQOs
+	 PXlWv93l1zKPYw9hdCgj6lg9ot1KkQJ/QzO1ZagQvvHphaZAU6ksq/+AV1C1+a8TE8
+	 CJ58yV4Z7fVig==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.4 15/15] erofs: Fix detection of atomic context
-Date: Sun,  2 Jul 2023 15:40:20 -0400
-Message-Id: <20230702194020.1776895-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.3 14/14] erofs: Fix detection of atomic context
+Date: Sun,  2 Jul 2023 15:40:53 -0400
+Message-Id: <20230702194053.1777356-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230702194020.1776895-1-sashal@kernel.org>
-References: <20230702194020.1776895-1-sashal@kernel.org>
+In-Reply-To: <20230702194053.1777356-1-sashal@kernel.org>
+References: <20230702194053.1777356-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.4.1
+X-stable-base: Linux 6.3.11
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -149,10 +149,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 160b3da43aecd..e5dddaa1f25d3 100644
+index d7add72a09437..77eb6a0c4853c 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -1452,7 +1452,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+@@ -1455,7 +1455,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
  	if (atomic_add_return(bios, &io->pending_bios))
  		return;
  	/* Use (kthread_)work and sync decompression for atomic contexts only */
