@@ -2,39 +2,88 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C7C74540A
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 05:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD0A7455F8
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 09:25:52 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BJ2aJlam;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dvl/LLnU;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QvW2T0X63z30h7
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 13:03:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QvcsT5hhQz30hQ
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 17:25:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BJ2aJlam;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dvl/LLnU;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=alexl@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvW2N6ZF8z2yyT
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 13:03:07 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VmRG-Mf_1688353380;
-Received: from 30.97.48.250(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VmRG-Mf_1688353380)
-          by smtp.aliyun-inc.com;
-          Mon, 03 Jul 2023 11:03:01 +0800
-Message-ID: <9862c0f5-aeeb-9bfa-889c-ec789cd82f1a@linux.alibaba.com>
-Date: Mon, 3 Jul 2023 11:03:00 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QvcsL2ZLTz2ydP
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Jul 2023 17:25:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1688369134;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X8K7BQdTCFcPMOKT0p8Mp9q5MKPmEZzCzLNkquYu4m0=;
+	b=BJ2aJlamNwqURqHQoP6hmrtSiGxk/zRaSXV+b0Tj79l4evhN028EEcFqJgweTeuyGPpHId
+	003fghRxeoffa3ehxVHs9nT0udAGlTovU61h4VmzkJNtmcAtn4IxKSZ6X7cjBDAmbYVjvd
+	9RUe9jMOtgkuglafdewEyH2sGF7O7y0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1688369135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X8K7BQdTCFcPMOKT0p8Mp9q5MKPmEZzCzLNkquYu4m0=;
+	b=dvl/LLnUt0QsTZEDfxNyFxhz7DQj3RKPxHa7o0hcxcS7MmmTW4IjPdH46oXiv1ww6Vcv45
+	HaRFGrZm4X4Nf+4olCVhWj1BL9r1bkUZwTLJat6xvNigB2OJc9funhvkq8Eu/AKdf/Yo8W
+	AniIT9r7kXaRgTS4B8OMxf57W7UpUCY=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-393-HKRzB5pfM1enBtQuUay4_w-1; Mon, 03 Jul 2023 03:25:33 -0400
+X-MC-Unique: HKRzB5pfM1enBtQuUay4_w-1
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-77e41268d40so181487039f.3
+        for <linux-erofs@lists.ozlabs.org>; Mon, 03 Jul 2023 00:25:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688369132; x=1690961132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X8K7BQdTCFcPMOKT0p8Mp9q5MKPmEZzCzLNkquYu4m0=;
+        b=lDCz2UlpqrbAVQIDcbdThJQvQRYB48+CMpHv8Ix6P5xMEfWI8s5XZ3vuaXeIDb5ZU+
+         zWfG7deRzoizIwEnGXB4D/lRAV5iLYTP3ZFkdjCvI53FJHV/rDl790Fg5Wwxv287W5SE
+         UTkBLuvzzsa5g1PqrxbIXGXqOiwEM+bCvjVDkervCK4yXwfEZbdcf43KHm8NU5yfFt59
+         0Iqm3kwhSLqI5QVodXCBodqlozWEFYsakzJmAuKciibZmEK/iec7k449hr5XVKpkeE3k
+         W/ObAb5SxjUfLKVayI29w9NvRs8uUpdhHtJtwmH5FobTT8cW1pwslSwViicAcjnXb/eG
+         AvQQ==
+X-Gm-Message-State: ABy/qLYFxHbXkA9sMKGpE6egqDa5e5wjTRuB+0XCDXJwF1hq3moVEv/T
+	xxkPS7KUENJmqV6IFMOnqq/WsXW9Z3lM1O76kk+EcyXDm9JQSmZy1lQ6Tt7tbDBoPqNytySRvGd
+	X7WPT3eGD4UPufwZP4ZxFigFS2ecSWQlVlGnTO8UZ
+X-Received: by 2002:a92:7304:0:b0:345:d277:18eb with SMTP id o4-20020a927304000000b00345d27718ebmr7747436ilc.30.1688369132635;
+        Mon, 03 Jul 2023 00:25:32 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHxAGjG5dGftIWqldWWYnIv5mQYfMJ0B2jptkgu7YvlMJjeSzqyGrFcUlTo77pTsoU5o6WVwk2Lg7iaLQnlteQ=
+X-Received: by 2002:a92:7304:0:b0:345:d277:18eb with SMTP id
+ o4-20020a927304000000b00345d27718ebmr7747429ilc.30.1688369132335; Mon, 03 Jul
+ 2023 00:25:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH] erofs-utils: Provide identical functionality without
- libuuid
-To: Norbert Lange <nolange79@gmail.com>
-References: <20230702101907.5081-1-nolange79@gmail.com>
- <b737bdff-9f90-e8cc-84b5-a6ee24ef291b@linux.alibaba.com>
- <CADYdroNuhDhbK029bP04NUVReyf2_vOjLAAPN_a4we8eD_fSAA@mail.gmail.com>
-In-Reply-To: <CADYdroNuhDhbK029bP04NUVReyf2_vOjLAAPN_a4we8eD_fSAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230621083209.116024-1-jefflexu@linux.alibaba.com> <c316bc55-cc4d-f05a-8936-2cde217b8dd2@linux.alibaba.com>
+In-Reply-To: <c316bc55-cc4d-f05a-8936-2cde217b8dd2@linux.alibaba.com>
+From: Alexander Larsson <alexl@redhat.com>
+Date: Mon, 3 Jul 2023 09:25:21 +0200
+Message-ID: <CAL7ro1FjnO52tawLeu-wNtk+upN1ShxeFYE1AiFUh1JN2oo0hA@mail.gmail.com>
+Subject: Re: [RFC 0/2] erofs: introduce bloom filter for xattr
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,195 +95,188 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Huang Jianan <huangjianan@oppo.com>
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Wed, Jun 28, 2023 at 5:38=E2=80=AFAM Jingbo Xu <jefflexu@linux.alibaba.c=
+om> wrote:
+>
+> Hi all,
+>
+> Sorry for the late reply as I was on vacation these days.
+>
+> I test the hash bit for all xattrs given by Alex[1], to see if each
+> xattr could be mapped into one unique bit in the 32-bit bloom filter.
+>
+> [1]
+> https://lore.kernel.org/all/CAL7ro1HhYUDrOX7A-13p7rLBZSWHTQWGOdOzVcYkddkU=
+_LArUw@mail.gmail.com/
+>
+>
+> On 6/21/23 4:32 PM, Jingbo Xu wrote:
+> >
+> > 3.2. input of hash function
+> > -------------------------
+> > As previously described, each hash function will map the given data int=
+o
+> > one bit of the bloom filter map.  In our use case, xattr name serves as
+> > the key of hash function.
+> >
+> > When .getxattr() gets called, only index (e.g. EROFS_XATTR_INDEX_USER)
+> > and the remaining name apart from the prefix are handy.  To avoid
+> > constructing the full xattr name, the above index and name are fed into
+> > the hash function directly in the following way:
+> >
+> > ```
+> > bit =3D xxh32(name, strlen(name), index + i);
+> > ```
+> >
+> > where index serves as part of seed, so that it gets involved in the
+> > calculation for the hash.
+>
+>
+> All xattrs are hashed with one single hash function.
+>
+> I first tested with the following hash function:
+>
+> ```
+> xxh32(name, strlen(name), index)
+> ```
+>
+> where `index` represents the index of corresponding predefined name
+> prefix (e.g. EROFS_XATTR_INDEX_USER), while `name` represents the name
+> after stripping the above predefined name prefix (e.g.
+> "overlay.metacopy" for "user.overlay.metacopy")
+>
+>
+> The mapping results are:
+>
+> bit  0: security.SMACK64EXEC
+> bit  1:
+> bit  2: user.overlay.protattr
+> bit  3: trusted.overlay.impure, user.overlay.opaque, user.mime_type
+> bit  4:
+> bit  5: user.overlay.origin
+> bit  6: user.overlay.metacopy, security.evm
+> bit  8: trusted.overlay.opaque
+> bit  9: trusted.overlay.origin
+> bit 10: trusted.overlay.upper, trusted.overlay.protattr
+> bit 11: security.apparmor, security.capability
+> bit 12: security.SMACK64
+> bit 13: user.overlay.redirect, security.ima
+> bit 14: user.overlay.upper
+> bit 15: trusted.overlay.redirect
+> bit 16: security.SMACK64IPOUT
+> bit 17:
+> bit 18: system.posix_acl_access
+> bit 19: security.selinux
+> bit 20:
+> bit 21:
+> bit 22: system.posix_acl_default
+> bit 23: security.SMACK64MMAP
+> bit 24: user.overlay.impure, user.overlay.nlink, security.SMACK64TRANSMUT=
+E
+> bit 25: trusted.overlay.metacopy
+> bit 26:
+> bit 27: security.SMACK64IPIN
+> bit 28:
+> bit 29:
+> bit 30: trusted.overlay.nlink
+> bit 31:
+>
+> Here 30 xattrs are mapped into 22 bits.  There are two potential
+> conflicts, i.e. bit 10 (trusted.overlay.upper, trusted.overlay.protattr)
+> and bit 24 (user.overlay.impure, user.overlay.nlink).
 
+Bit 11 (apparmor and capabilities) seems like the most likely thing to
+run into. I.e. on an apparmor-using system, many files would have
+apparmor xattr set, so looking up security.capabilities on it would
+cause a false negative and we'd unnecessarily read the xattrs.
 
-On 2023/7/3 06:16, Norbert Lange wrote:
-> Am So., 2. Juli 2023 um 13:07 Uhr schrieb Gao Xiang
-> <hsiangkao@linux.alibaba.com>:
->>
->> Hi Norbert,
->>
->> On 2023/7/2 18:19, Norbert Lange wrote:
->>> The motivation is to have standalone (statically linked) erofs binaries
->>> for simple initrd images, that are nevertheless able to (re)create
->>> erofs images with a given UUID.
->>>
->>> For this reason a few of libuuid functions have implementations added
->>> directly in erofs-utils.
->>> A header liberofs_uuid.h provides the new functions, which are
->>> always available. A further sideeffect is that code can be simplified
->>> which calls into this functionality.
->>>
->>> The uuid_unparse function replacement is always a private
->>> implementation and split into its own file, this further restricts
->>> the (optional) dependency on libuuid only to the erofs-mkfs tool.
->>>
->>> Signed-off-by: Norbert Lange <nolange79@gmail.com>
->>
->> Yeah, overall it looks good to me, some minor nits as below:
->>
->> (Also currently UUID makes the image nonreproducable, I wonder if we
->>    could use some image hash to calculate the whole UUID instead...)
-> 
-> Not the usecase I am after, I need to use an already known UUID for
-> mounting, even if the content changed.
+> > An alternative way is to calculate the hash from the full xattr name by
+> > feeding the prefix string and the remaining name string separately in
+> > the following way:
+> >
+> > ```
+> > xxh32_reset()
+> > xxh32_update(prefix string, ...)
+> > xxh32_update(remaining name, ...)
+> > xxh32_digest()
+> > ```
+> >
+> > But I doubt if it really deserves to call multiple APIs instead of one
+> > single xxh32().
+>
+>
+> I also tested with the following hash function, where the full name of
+> the xattr, e.g. "user.overlay.metacopy", is fed into the hash function.
+>
+> ```
+> xxh32(name, strlen(name), 0)
+> ```
+>
+>
+> Following are the mapping results:
+>
+> bit  0: trusted.overlay.impure, user.overlay.protattr
+> bit  1: security.SMACK64IPOUT
+> bit  2:
+> bit  3: security.capability
+> bit  4: security.selinux
+> bit  5: security.ima
+> bit  6: user.overlay.metacopy
+> bit  8:
+> bit  9: trusted.overlay.redirect, security.SMACK64EXEC
+> bit 10: system.posix_acl_access
+> bit 11: trusted.overlay.nlink
+> bit 12: trusted.overlay.opaque
+> bit 13:
+> bit 14:
+> bit 15:
+> bit 16:
+> bit 17: user.overlay.impure
+> bit 18: security.apparmor
+> bit 19:
+> bit 20: user.overlay.origin, user.overlay.nlink, security.SMACK64TRANSMUT=
+E
+> bit 21:
+> bit 22: trusted.overlay.metacopy, trusted.overlay.protattr
+> bit 23: user.overlay.upper, security.evm
+> bit 24: user.overlay.redirect, security.SMACK64IPIN,
+> system.posix_acl_default
+> bit 25: security.SMACK64
+> bit 26:
+> bit 27: trusted.overlay.upper, security.SMACK64MMAP
+> bit 28: trusted.overlay.origin, user.mime_type
+> bit 29:
+> bit 30:
+> bit 31: user.overlay.opaque
+>
+> 30 xattrs are mapped into 20 bits.  Similarly there are two potential
+> conflicts, i.e. bit 20 (user.overlay.origin, user.overlay.nlink) and bit
+> 22 (trusted.overlay.metacopy, trusted.overlay.protattr).
+>
+>
+> Summary
+> =3D=3D=3D=3D=3D=3D=3D
+>
+> Personally I would prefer the former, as it maps xattrs into the bloom
+> filter more evenly (22 bits vs 20 bits) and can better cooperate with
+> the kernel routine (index and the remaining name string, rather than the
+> full name string, are handy).
 
-Okay.
+I agree that we want the approach with better cooperation with the
+kernel function. However, I would much prefer if all the xattrs that
+are commonly set on many files are unconflicted. This would be at
+least: selinux, ima, evm, apparmor.
 
-> 
->>
->>> ---
->>>    dump/Makefile.am    |   2 +-
->>>    dump/main.c         |   8 +---
->>>    fsck/Makefile.am    |   2 +-
->>>    lib/Makefile.am     |   4 +-
->>>    lib/liberofs_uuid.h |   9 ++++
->>>    lib/uuid.c          | 106 ++++++++++++++++++++++++++++++++++++++++++++
->>>    lib/uuid_unparse.c  |  21 +++++++++
->>>    mkfs/Makefile.am    |   6 +--
->>>    mkfs/main.c         |  21 ++-------
->>>    9 files changed, 149 insertions(+), 30 deletions(-)
->>>    create mode 100644 lib/liberofs_uuid.h
->>>    create mode 100644 lib/uuid.c
->>>    create mode 100644 lib/uuid_unparse.c
->>>
->>> diff --git a/dump/Makefile.am b/dump/Makefile.am
->>> index c2bef6d..90227a5 100644
->>> --- a/dump/Makefile.am
->>> +++ b/dump/Makefile.am
->>> @@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
->>>    dump_erofs_SOURCES = main.c
->>>    dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
->>>    dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
->>> -     ${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
->>> +     ${liblz4_LIBS} ${liblzma_LIBS}
->>> diff --git a/dump/main.c b/dump/main.c
->>> index bc4e028..40af09f 100644
->>> --- a/dump/main.c
->>> +++ b/dump/main.c
->>> @@ -17,10 +17,8 @@
->>>    #include "erofs/compress.h"
->>>    #include "erofs/fragments.h"
->>>    #include "../lib/liberofs_private.h"
->>> +#include "../lib/liberofs_uuid.h"
->>>
->>> -#ifdef HAVE_LIBUUID
->>> -#include <uuid.h>
->>> -#endif
->>>
->>>    struct erofsdump_cfg {
->>>        unsigned int totalshow;
->>> @@ -620,9 +618,7 @@ static void erofsdump_show_superblock(void)
->>>                if (feat & feature_lists[i].flag)
->>>                        fprintf(stdout, "%s ", feature_lists[i].name);
->>>        }
->>> -#ifdef HAVE_LIBUUID
->>> -     uuid_unparse_lower(sbi.uuid, uuid_str);
->>> -#endif
->>> +     erofs_uuid_unparse_lower(sbi.uuid, uuid_str);
->>>        fprintf(stdout, "\nFilesystem UUID:                              %s\n",
->>>                        uuid_str);
->>>    }
->>> diff --git a/fsck/Makefile.am b/fsck/Makefile.am
->>> index e6a1fb6..4176d86 100644
->>> --- a/fsck/Makefile.am
->>> +++ b/fsck/Makefile.am
->>> @@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
->>>    fsck_erofs_SOURCES = main.c
->>>    fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
->>>    fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
->>> -     ${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
->>> +     ${liblz4_LIBS} ${liblzma_LIBS}
->>> diff --git a/lib/Makefile.am b/lib/Makefile.am
->>> index faa7311..e243c1c 100644
->>> --- a/lib/Makefile.am
->>> +++ b/lib/Makefile.am
->>> @@ -29,9 +29,9 @@ noinst_HEADERS += compressor.h
->>>    liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
->>>                      namei.c data.c compress.c compressor.c zmap.c decompress.c \
->>>                      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
->>> -                   fragments.c rb_tree.c dedupe.c
->>> +                   fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c
->>>
->>> -liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
->>> +liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
->>>    if ENABLE_LZ4
->>>    liberofs_la_CFLAGS += ${LZ4_CFLAGS}
->>>    liberofs_la_SOURCES += compressor_lz4.c
->>> diff --git a/lib/liberofs_uuid.h b/lib/liberofs_uuid.h
->>> new file mode 100644
->>> index 0000000..d156699
->>> --- /dev/null
->>> +++ b/lib/liberofs_uuid.h
->>> @@ -0,0 +1,9 @@
->>> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
->>> +#ifndef __EROFS_LIB_UUID_H
->>> +#define __EROFS_LIB_UUID_H
->>> +
->>> +void erofs_uuid_generate(unsigned char *out);
->>> +void erofs_uuid_unparse_lower(const unsigned char *buf, char *out);
->>> +int erofs_uuid_parse(const char *in, unsigned char *uu);
->>> +
->>> +#endif
->>> \ No newline at end of file
->>> diff --git a/lib/uuid.c b/lib/uuid.c
->>> new file mode 100644
->>> index 0000000..acff81a
->>> --- /dev/null
->>> +++ b/lib/uuid.c
->>> @@ -0,0 +1,106 @@
->>> +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
->>> +/*
->>> + * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
->>> + */
->>> +
->>> +#include <string.h>
->>> +#include <errno.h>
->>> +
->>> +#include "erofs/config.h"
->>> +#include "erofs/defs.h"
->>> +#include "liberofs_uuid.h"
->>> +
->>> +#ifdef HAVE_LIBUUID
->>> +#include <uuid.h>
->>> +#else
->>> +
->>> +#include <stdlib.h>
->>> +#include <sys/random.h>
->>> +
->>> +/* Flags to be used, will be modified if kernel does not support them */
->>> +static unsigned erofs_grnd_flag =
->>
->> Could we switch to "unsigned int" for this?
-> 
-> Sure
-> 
->>
->>> +#ifdef GRND_INSECURE
->>> +    GRND_INSECURE;
->>> +#else
->>> +    0x0004;
->>> +#endif
->>> +
->>> +static int s_getrandom(void *pUid, unsigned size, bool insecure)
->>> +{
->>> +    unsigned kflags = erofs_grnd_flag;
->>> +    unsigned flags = insecure ? kflags : 0;
->>
->> same here.
->>
->> Otherwise it looks good to me.
-> 
-> Found few a formatting inconsistencies as well, already fixed this locally.
-> Guess I will wait a bit more for feedback before posting a v2? Not sure
-> whats the proper order.
+Can't you just add a magic constant to the seed? Then we can come up
+with one that gives a good spread and hardcode that.
 
-Looks good to me, yet erofs-utils has rare people to work on reviewing,
-I'm fine with either way.
+--=20
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+ Alexander Larsson                                Red Hat, Inc
+       alexl@redhat.com         alexander.larsson@gmail.com
 
-Thanks,
-Gao Xiang
