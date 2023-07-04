@@ -2,68 +2,39 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 419F374653E
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Jul 2023 23:59:22 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=pyD/ZQNn;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 43AE574693D
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Jul 2023 07:56:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qw0FM6Gv8z30ht
-	for <lists+linux-erofs@lfdr.de>; Tue,  4 Jul 2023 07:59:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QwBqk1g19z30Kf
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Jul 2023 15:56:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=pyD/ZQNn;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::62e; helo=mail-ej1-x62e.google.com; envelope-from=nolange79@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qw0FD6VG3z30fV
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Jul 2023 07:59:11 +1000 (AEST)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-992ca792065so505777766b.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 03 Jul 2023 14:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688421542; x=1691013542;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NwT4ykH2V05v2M+Ye4qRNdfQXjfQ5dmmXYkSdOVTdgM=;
-        b=pyD/ZQNnfImFBAxzgeupEDQFdwGVAvGDdjUxiNsTJkgcHMvrL1HHf08d6dJokVGna4
-         ZgTNyGeSqA8zGrzUKr0W6jXDxcoSL4QE/clJegJl3KWT0iqoIIgI5goHGP3PSArBomrR
-         tmCnapJqdyrUel7lskCFXjJzVTm8dda8BUrned7q2COFI580vUqOU2Gofwq2Ph/CBsl7
-         t7j3X8m7/K2pmrz8zKoUC6hLH6WTjXaGC9MWsOSRdowt15Tcc3vor+NxX/RGFDHcu0+3
-         nCEnTnNs27cxBKykFl37JJB6br5tKPtkIf9Hgu3sC+sC64ZfuhEkGcGz/g6YKgNyapEV
-         5uvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688421542; x=1691013542;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NwT4ykH2V05v2M+Ye4qRNdfQXjfQ5dmmXYkSdOVTdgM=;
-        b=NKW1MwLK7nGgn5wd7P6dZCFdVzcSMlpO226qk33056jjb93PbkXiKaO5AMyWpUJU6G
-         qzranax1PY6A2RUgdb4fqdP4cj07cqxjnJ3g/evdsEzGnb7q1z1jtU8fhUfvB8nqj3Dt
-         SgnhF2al3ro2zWPXEYKzx1BC6zhU0LewPCaNQrzAgTLTY4OyEpTQdXcBxDn5pArNH3Wj
-         SW2f5u+ISLe8ClxHXDNinY1kNRbnqZfBF2o4M0djJxx3PGGqxE9R7uVnO3na49RWgr13
-         Q0IufoKWbM3LtXobZ6/aKj0v+2yBf2kw3EX2ttwYkIzsPz8EX9KBPNN6uYBRcpqgLta5
-         f3dw==
-X-Gm-Message-State: ABy/qLZVIjuCH3VTKpU0+15u30LYMkBLKY7pkDF/IspL0feMesC5iB3x
-	/WfDkYrzkLcGTW0OSC2JWrgtNjQfE1k=
-X-Google-Smtp-Source: APBJJlGr4EkOiIsMmgXD11bqmvLYy+GyZd7Jj41kjIuz5lRpHKUdJiTGcKHpKr3yJaSx9NE7R7BDZQ==
-X-Received: by 2002:a17:906:29ce:b0:987:6372:c31f with SMTP id y14-20020a17090629ce00b009876372c31fmr8473519eje.37.1688421541499;
-        Mon, 03 Jul 2023 14:59:01 -0700 (PDT)
-Received: from debian-noppl.. (84-113-221-34.cable.dynamic.surfer.at. [84.113.221.34])
-        by smtp.gmail.com with ESMTPSA id h22-20020a170906829600b009931a3adf64sm4123908ejx.17.2023.07.03.14.59.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 14:59:01 -0700 (PDT)
-From: Norbert Lange <nolange79@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: Provide identical functionality without libuuid
-Date: Mon,  3 Jul 2023 23:58:03 +0200
-Message-Id: <20230703215803.4476-1-nolange79@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QwBqf4Lgpz301d
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Jul 2023 15:56:13 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VmbECYU_1688450166;
+Received: from 30.221.145.16(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VmbECYU_1688450166)
+          by smtp.aliyun-inc.com;
+          Tue, 04 Jul 2023 13:56:07 +0800
+Message-ID: <74a8a369-c3b0-b338-fa8f-fdd7c252efaf@linux.alibaba.com>
+Date: Tue, 4 Jul 2023 13:56:05 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [RFC 0/2] erofs: introduce bloom filter for xattr
+Content-Language: en-US
+To: Alexander Larsson <alexl@redhat.com>
+References: <20230621083209.116024-1-jefflexu@linux.alibaba.com>
+ <c316bc55-cc4d-f05a-8936-2cde217b8dd2@linux.alibaba.com>
+ <CAL7ro1FjnO52tawLeu-wNtk+upN1ShxeFYE1AiFUh1JN2oo0hA@mail.gmail.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <CAL7ro1FjnO52tawLeu-wNtk+upN1ShxeFYE1AiFUh1JN2oo0hA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,369 +46,213 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Norbert Lange <nolange79@gmail.com>, Huang Jianan <huangjianan@oppo.com>
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The motivation is to have standalone (statically linked) erofs binaries
-for simple initrd images, that are nevertheless able to (re)create
-erofs images with a given UUID.
 
-For this reason a few of libuuid functions have implementations added
-directly in erofs-utils.
-A header liberofs_uuid.h provides the new functions, which are
-always available. A further sideeffect is that code can be simplified
-which calls into this functionality.
 
-The uuid_unparse function replacement is always a private
-implementation and split into its own file, this further restricts
-the (optional) dependency on libuuid only to the erofs-mkfs tool.
+On 7/3/23 3:25 PM, Alexander Larsson wrote:
 
-Signed-off-by: Norbert Lange <nolange79@gmail.com>
----
-/* v2 */
-- Norbert Lange <nolange79@gmail.com>
-  - Change to useing unsigned int
-  - Some small formatting fixes
-  - Remove some now useless "not available" inititalisations of
-    uuid strings
----
----
- dump/Makefile.am    |   2 +-
- dump/main.c         |  10 ++--
- fsck/Makefile.am    |   2 +-
- lib/Makefile.am     |   4 +-
- lib/liberofs_uuid.h |   9 ++++
- lib/uuid.c          | 108 ++++++++++++++++++++++++++++++++++++++++++++
- lib/uuid_unparse.c  |  21 +++++++++
- mkfs/Makefile.am    |   6 +--
- mkfs/main.c         |  23 ++--------
- 9 files changed, 153 insertions(+), 32 deletions(-)
- create mode 100644 lib/liberofs_uuid.h
- create mode 100644 lib/uuid.c
- create mode 100644 lib/uuid_unparse.c
+> 
+> Can't you just add a magic constant to the seed? Then we can come up
+> with one that gives a good spread and hardcode that.
+> 
 
-diff --git a/dump/Makefile.am b/dump/Makefile.am
-index c2bef6d..90227a5 100644
---- a/dump/Makefile.am
-+++ b/dump/Makefile.am
-@@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- dump_erofs_SOURCES = main.c
- dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS}
-diff --git a/dump/main.c b/dump/main.c
-index bc4e028..6ba658c 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -17,10 +17,8 @@
- #include "erofs/compress.h"
- #include "erofs/fragments.h"
- #include "../lib/liberofs_private.h"
-+#include "../lib/liberofs_uuid.h"
- 
--#ifdef HAVE_LIBUUID
--#include <uuid.h>
--#endif
- 
- struct erofsdump_cfg {
- 	unsigned int totalshow;
-@@ -592,7 +590,7 @@ static void erofsdump_print_statistic(void)
- static void erofsdump_show_superblock(void)
- {
- 	time_t time = sbi.build_time;
--	char uuid_str[37] = "not available";
-+	char uuid_str[37];
- 	int i = 0;
- 
- 	fprintf(stdout, "Filesystem magic number:                      0x%04X\n",
-@@ -620,9 +618,7 @@ static void erofsdump_show_superblock(void)
- 		if (feat & feature_lists[i].flag)
- 			fprintf(stdout, "%s ", feature_lists[i].name);
- 	}
--#ifdef HAVE_LIBUUID
--	uuid_unparse_lower(sbi.uuid, uuid_str);
--#endif
-+	erofs_uuid_unparse_lower(sbi.uuid, uuid_str);
- 	fprintf(stdout, "\nFilesystem UUID:                              %s\n",
- 			uuid_str);
- }
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index e6a1fb6..4176d86 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- fsck_erofs_SOURCES = main.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS}
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index faa7311..e243c1c 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -29,9 +29,9 @@ noinst_HEADERS += compressor.h
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
- 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
--		      fragments.c rb_tree.c dedupe.c
-+		      fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c
- 
--liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
-+liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${LZ4_CFLAGS}
- liberofs_la_SOURCES += compressor_lz4.c
-diff --git a/lib/liberofs_uuid.h b/lib/liberofs_uuid.h
-new file mode 100644
-index 0000000..d156699
---- /dev/null
-+++ b/lib/liberofs_uuid.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+#ifndef __EROFS_LIB_UUID_H
-+#define __EROFS_LIB_UUID_H
-+
-+void erofs_uuid_generate(unsigned char *out);
-+void erofs_uuid_unparse_lower(const unsigned char *buf, char *out);
-+int erofs_uuid_parse(const char *in, unsigned char *uu);
-+
-+#endif
-\ No newline at end of file
-diff --git a/lib/uuid.c b/lib/uuid.c
-new file mode 100644
-index 0000000..1d2409c
---- /dev/null
-+++ b/lib/uuid.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
-+ */
-+
-+#include <string.h>
-+#include <errno.h>
-+
-+#include "erofs/config.h"
-+#include "erofs/defs.h"
-+#include "liberofs_uuid.h"
-+
-+#ifdef HAVE_LIBUUID
-+#include <uuid.h>
-+#else
-+
-+#include <stdlib.h>
-+#include <sys/random.h>
-+
-+/* Flags to be used, will be modified if kernel does not support them */
-+static unsigned int erofs_grnd_flag = 
-+#ifdef GRND_INSECURE
-+	GRND_INSECURE;
-+#else
-+	0x0004;
-+#endif
-+
-+static int s_getrandom(void *out, unsigned size, bool insecure)
-+{
-+	unsigned int kflags = erofs_grnd_flag;
-+	unsigned int flags = insecure ? kflags : 0;
-+
-+	for (;;)
-+	{
-+		ssize_t r = getrandom(out, size, flags);
-+		int err;
-+
-+		if (r == size)
-+			break;
-+		err = errno;
-+		if (err != EINTR) {
-+			if (err == EINVAL && kflags) {
-+				// Kernel likely does not support GRND_INSECURE
-+				erofs_grnd_flag = 0;
-+				kflags = 0;
-+				continue;
-+			}
-+			return -err;
-+		}
-+	}
-+	return 0;
-+}
-+#endif
-+
-+void erofs_uuid_generate(unsigned char *out)
-+{
-+#ifdef HAVE_LIBUUID
-+	uuid_t new_uuid;
-+
-+	do {
-+		uuid_generate(new_uuid);
-+	} while (uuid_is_null(new_uuid));
-+#else
-+	unsigned char new_uuid[16];
-+	int res __maybe_unused;
-+
-+	res = s_getrandom(new_uuid, sizeof(new_uuid), true);
-+	BUG_ON(res != 0);
-+
-+	// UID type + version bits
-+	new_uuid[0] = (new_uuid[4 + 2] & 0x0f) | 0x40;
-+	new_uuid[1] = (new_uuid[4 + 2 + 2] & 0x3f) | 0x80;
-+#endif
-+	memcpy(out, new_uuid, sizeof(new_uuid));
-+}
-+
-+int erofs_uuid_parse(const char *in, unsigned char *uu) {
-+#ifdef HAVE_LIBUUID
-+	return uuid_parse((char *)in, uu);
-+#else
-+	unsigned char new_uuid[16];
-+	unsigned int hypens = ((1U << 3) | (1U << 5) | (1U << 7) | (1U << 9));
-+	int i;
-+
-+	for (i = 0; i < sizeof(new_uuid); hypens >>= 1, i++)
-+	{
-+		char c[] = { in[0], in[1], '\0' };
-+		char* endptr = c;
-+		unsigned long val = strtoul(c, &endptr, 16);
-+
-+		if (endptr - c != 2)
-+			return -EINVAL;
-+
-+		in += 2;
-+
-+		if ((hypens & 1U) != 0) {
-+			if (*in++ != '-')
-+				return -EINVAL;
-+		}
-+		new_uuid[i] = (unsigned char)val;
-+	}
-+
-+	if (*in != '\0')
-+		return -EINVAL;
-+	memcpy(uu, new_uuid, sizeof(new_uuid));
-+	return 0;
-+#endif
-+}
-\ No newline at end of file
-diff --git a/lib/uuid_unparse.c b/lib/uuid_unparse.c
-new file mode 100644
-index 0000000..3255c4b
---- /dev/null
-+++ b/lib/uuid_unparse.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
-+ */
-+
-+#include <stdio.h>
-+
-+#include "erofs/config.h"
-+#include "liberofs_uuid.h"
-+
-+void erofs_uuid_unparse_lower(const unsigned char *buf, char *out) {
-+	sprintf(out, "%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
-+			(buf[0] << 8) | buf[1],
-+			(buf[2] << 8) | buf[3],
-+			(buf[4] << 8) | buf[5],
-+			(buf[6] << 8) | buf[7],
-+			(buf[8] << 8) | buf[9],
-+			(buf[10] << 8) | buf[11],
-+			(buf[12] << 8) | buf[13],
-+			(buf[14] << 8) | buf[15]);
-+}
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index 709d9bf..a08dc53 100644
---- a/mkfs/Makefile.am
-+++ b/mkfs/Makefile.am
-@@ -2,8 +2,8 @@
- 
- AUTOMAKE_OPTIONS = foreign
- bin_PROGRAMS     = mkfs.erofs
--AM_CPPFLAGS = ${libuuid_CFLAGS} ${libselinux_CFLAGS}
-+AM_CPPFLAGS = ${libselinux_CFLAGS}
- mkfs_erofs_SOURCES = main.c
- mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
--mkfs_erofs_LDADD = ${libuuid_LIBS} $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS}
-+mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
-+	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 94f51df..18aed50 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -26,10 +26,7 @@
- #include "erofs/blobchunk.h"
- #include "erofs/fragments.h"
- #include "../lib/liberofs_private.h"
--
--#ifdef HAVE_LIBUUID
--#include <uuid.h>
--#endif
-+#include "../lib/liberofs_uuid.h"
- 
- #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
- 
-@@ -90,9 +87,7 @@ static void usage(void)
- 	      " -EX[,...]             X=extended options\n"
- 	      " -L volume-label       set the volume label (maximum 16)\n"
- 	      " -T#                   set a fixed UNIX timestamp # to all files\n"
--#ifdef HAVE_LIBUUID
- 	      " -UX                   use a given filesystem UUID\n"
--#endif
- 	      " --all-root            make all files owned by root\n"
- 	      " --blobdev=X           specify an extra device X to store chunked data\n"
- 	      " --chunksize=#         generate chunk-based files with #-byte chunks\n"
-@@ -328,14 +323,12 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 			}
- 			cfg.c_timeinherit = TIMESTAMP_FIXED;
- 			break;
--#ifdef HAVE_LIBUUID
- 		case 'U':
--			if (uuid_parse(optarg, sbi.uuid)) {
-+			if (erofs_uuid_parse(optarg, sbi.uuid)) {
- 				erofs_err("invalid UUID %s", optarg);
- 				return -EINVAL;
- 			}
- 			break;
--#endif
- 		case 2:
- 			opt = erofs_parse_exclude_path(optarg, false);
- 			if (opt) {
-@@ -626,11 +619,7 @@ static void erofs_mkfs_default_options(void)
- 			     EROFS_FEATURE_COMPAT_MTIME;
- 
- 	/* generate a default uuid first */
--#ifdef HAVE_LIBUUID
--	do {
--		uuid_generate(sbi.uuid);
--	} while (uuid_is_null(sbi.uuid));
--#endif
-+	erofs_uuid_generate(sbi.uuid);
- }
- 
- /* https://reproducible-builds.org/specs/source-date-epoch/ for more details */
-@@ -675,7 +664,7 @@ int main(int argc, char **argv)
- 	struct stat st;
- 	erofs_blk_t nblocks;
- 	struct timeval t;
--	char uuid_str[37] = "not available";
-+	char uuid_str[37];
- 
- 	erofs_init_configure();
- 	erofs_mkfs_default_options();
-@@ -803,9 +792,7 @@ int main(int argc, char **argv)
- 			  erofs_strerror(err));
- 		goto exit;
- 	}
--#ifdef HAVE_LIBUUID
--	uuid_unparse_lower(sbi.uuid, uuid_str);
--#endif
-+	erofs_uuid_unparse_lower(sbi.uuid, uuid_str);
- 	erofs_info("filesystem UUID: %s", uuid_str);
- 
- 	erofs_inode_manager_init();
+I tried Alex's proposal of making a constant magic as part of the seed like:
+
+```
+xxh32(name, strlen(name), SEED_MAGIC + index)
+```
+
+>> where `index` represents the index of corresponding predefined name
+>> prefix (e.g. EROFS_XATTR_INDEX_USER), while `name` represents the name
+>> after stripping the above predefined name prefix (e.g.
+>> "overlay.metacopy" for "user.overlay.metacopy")
+
+
+I tried SEED_MAGIC in range [0, UINT32_MAX], trying to find a constant
+magic giving a best spread.
+
+There are totally 30 commonly used xattrs and 32 bits could be mapped
+into.  I failed to find the most perfect constant magic which maps these
+30 xattrs to exactly 30 bits with no conflict.
+
+Later I can only select a magic from those that 1) maps 30 xattrs into
+29 bits (with one conflict) and 2) at least xattrs like selinux, ima,
+evm, apparmor are unconflicted to each other.  Following are all
+candidates and the conflicted xattrs:
+
+```
+seed: 745a51e
+bit 29: user.overlay.opaque, security.selinux,
+
+seed: fb08ad9
+bit 10: user.overlay.impure, system.posix_acl_access,
+
+seed: 11aa6c32
+bit 19: user.overlay.redirect, security.SMACK64MMAP,
+
+seed: 1438d503
+bit 10: trusted.overlay.protattr, security.ima,
+
+seed: 14ccea75
+bit 30: user.overlay.upper, security.ima,
+
+seed: 1d6a0d15
+bit 31: trusted.overlay.upper, user.overlay.metacopy,
+
+seed: 25bbe08f
+bit 31: trusted.overlay.metacopy, user.overlay.metacopy,
+
+seed: 2649da2a
+bit  6: user.overlay.nlink, security.SMACK64TRANSMUTE,
+
+seed: 2b9180b2
+bit 29: user.overlay.impure, security.evm,
+
+seed: 2c5d7862
+bit 16: user.overlay.upper, system.posix_acl_default,
+
+seed: 322040a6
+bit 17: trusted.overlay.impure, user.overlay.metacopy,
+
+seed: 328bcb8c
+bit 30: user.overlay.opaque, security.evm,
+
+seed: 35afc469
+bit  3: trusted.overlay.opaque, user.overlay.origin,
+
+seed: 435bed25
+bit  4: trusted.overlay.upper, security.SMACK64MMAP,
+
+seed: 43a853af
+bit  3: trusted.overlay.protattr, security.selinux,
+
+seed: 4930f511
+bit 22: trusted.overlay.origin, security.SMACK64,
+
+seed: 4acdce1d
+bit 21: user.overlay.opaque, security.selinux,
+
+seed: 4fc5f2b0
+bit 24: user.overlay.redirect, system.posix_acl_default,
+
+seed: 50632396
+bit  6: security.SMACK64, system.posix_acl_access,
+
+seed: 535f6351
+bit  3: system.posix_acl_access, user.mime_type,
+
+seed: 56f4306e
+bit  9: user.overlay.redirect, security.SMACK64MMAP,
+
+seed: 637e2bd9
+bit 22: trusted.overlay.upper, security.evm,
+
+seed: 6ab57b38
+bit  9: trusted.overlay.upper, user.overlay.metacopy,
+
+seed: 7113bd57
+bit 19: trusted.overlay.redirect, security.SMACK64,
+
+seed: 753e3f24
+bit  6: user.overlay.redirect, security.SMACK64EXEC,
+
+seed: 81883030
+bit  0: trusted.overlay.upper, security.SMACK64IPOUT,
+
+seed: 835f9f14
+bit 27: security.SMACK64EXEC, system.posix_acl_access,
+
+seed: 938fbb78
+bit 28: user.overlay.upper, security.apparmor,
+
+seed: 953bb3e9
+bit 30: user.overlay.protattr, system.posix_acl_access,
+
+seed: 962ccd7f
+bit 29: trusted.overlay.nlink, security.SMACK64IPOUT,
+
+seed: 9fff798e
+bit  3: user.overlay.nlink, user.mime_type,
+
+seed: a2e324eb
+bit 28: trusted.overlay.nlink, user.overlay.impure,
+
+seed: a6e00cef
+bit 26: user.overlay.opaque, security.SMACK64TRANSMUTE,
+
+seed: ae26aaa9
+bit  0: trusted.overlay.metacopy, user.overlay.impure,
+
+seed: b2172573
+bit 14: trusted.overlay.upper, security.ima,
+
+seed: b5917739
+bit  8: trusted.overlay.protattr, user.overlay.impure,
+
+seed: c01a4919
+bit 22: trusted.overlay.nlink, user.overlay.upper,
+
+seed: c1fa0c0a
+bit 19: security.SMACK64TRANSMUTE, user.mime_type,
+
+seed: cbd314d7
+bit  6: trusted.overlay.upper, security.SMACK64IPOUT,
+
+seed: cc6dd8ee
+bit  2: trusted.overlay.nlink, user.overlay.upper,
+
+seed: cc922efd
+bit  3: trusted.overlay.opaque, user.overlay.opaque,
+
+seed: cd478c17
+bit  6: trusted.overlay.metacopy, user.overlay.metacopy,
+
+seed: d35be1c8
+bit  9: trusted.overlay.protattr, security.SMACK64MMAP,
+
+seed: d3914458
+bit  1: trusted.overlay.redirect, security.SMACK64IPIN,
+
+seed: f3251337
+bit  7: user.overlay.opaque, security.SMACK64IPOUT,
+
+seed: f37d8900
+bit  9: trusted.overlay.impure, user.overlay.protattr,
+
+seed: fafd6c93
+bit  0: security.SMACK64, user.mime_type,
+
+seed: fcd35cbb
+bit  3: trusted.overlay.upper, user.overlay.redirect,
+
+seed: fe2e058a
+bit 14: user.overlay.impure, user.mime_type,
+```
+
+
+Among all these candidates, I would prefer the following three
+candidates as for each inode the same xattr of overlayfs family xattrs,
+e.g. "overlay.metacopy", can not be prefixed with "trusted." and "user."
+at the same time.
+
+```
+seed: 25bbe08f
+bit 31: trusted.overlay.metacopy, user.overlay.metacopy,
+
+seed: cc922efd
+bit  3: trusted.overlay.opaque, user.overlay.opaque,
+
+seed: cd478c17
+bit  6: trusted.overlay.metacopy, user.overlay.metacopy,
+```
+
+
+Any other idea?
+
+
 -- 
-2.39.2
-
+Thanks,
+Jingbo
