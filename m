@@ -1,42 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ABF2747F26
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 10:14:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7790C7481FE
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 12:21:42 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=rK+eFTza;
+	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=0Ik5A3fa;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QwsrF2bPzz30QD
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 18:14:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QwwgS2gJKz30fn
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 20:21:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=rK+eFTza;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=0Ik5A3fa;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.220.29; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qwsr960sJz3020
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jul 2023 18:14:00 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vmg1QJi_1688544835;
-Received: from 30.97.48.243(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vmg1QJi_1688544835)
-          by smtp.aliyun-inc.com;
-          Wed, 05 Jul 2023 16:13:56 +0800
-Message-ID: <a0c4ab4a-0ac9-91df-7b19-0279098a9143@linux.alibaba.com>
-Date: Wed, 5 Jul 2023 16:13:54 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QwwgK44YDz30P3
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jul 2023 20:21:33 +1000 (AEST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 58F0C1F6E6;
+	Wed,  5 Jul 2023 10:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1688552489; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqER76PXnxWxMVZH46uY+IP0A7ISNxa4dFOpqm8Npig=;
+	b=rK+eFTza2+XXgbRvOv5tQtV93F/4zZpu7norREAepZy5yow7baD/dvvqWhpeeItBt0IPcu
+	Y5rwLWutv/on4mwv5EJraqTeqhb05mRkTW0yYXikGz/UA9AQcATVDIgxrBuvXRHMAszN6R
+	RSIAN/j2D8s9RJrt3/Umhb+lT3pvazU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1688552489;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqER76PXnxWxMVZH46uY+IP0A7ISNxa4dFOpqm8Npig=;
+	b=0Ik5A3faiNr6MKUo0ZlFf0SVDy0zGGeX4x6PTOEnPlUJVjHk96v3tsbq/TGqKcufwhGJGx
+	3sf2EXg0rHzUTICQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 44C0D13460;
+	Wed,  5 Jul 2023 10:21:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id Xem5EClEpWRSCwAAMHmgww
+	(envelope-from <jack@suse.cz>); Wed, 05 Jul 2023 10:21:29 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C5467A0707; Wed,  5 Jul 2023 12:21:28 +0200 (CEST)
+Date: Wed, 5 Jul 2023 12:21:28 +0200
+From: Jan Kara <jack@suse.cz>
+To: Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
+Message-ID: <20230705102128.vquve4qencbbn2br@quack3>
+References: <20230629165206.383-1-jack@suse.cz>
+ <20230704122224.16257-1-jack@suse.cz>
+ <ZKRItBRhm8f5Vba/@kbusch-mbp>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v2 1/2] erofs: update on-disk format for xattr name filter
-To: Alexander Larsson <alexl@redhat.com>
-References: <20230705070427.92579-1-jefflexu@linux.alibaba.com>
- <20230705070427.92579-2-jefflexu@linux.alibaba.com>
- <2eda59f2-a302-04a5-08de-c4ab7cf2e744@linux.alibaba.com>
- <CAL7ro1GayuYup4V0arhEWZDztFN1Gxx5jwdL3uFaGfQZ4hw41g@mail.gmail.com>
- <22894dd5-a74c-a459-ea45-63bae7b5a295@linux.alibaba.com>
- <CAL7ro1GULoAwTfxcvSZo=exqhJppqPBPtKqr=kdYCatkvGyPGQ@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAL7ro1GULoAwTfxcvSZo=exqhJppqPBPtKqr=kdYCatkvGyPGQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZKRItBRhm8f5Vba/@kbusch-mbp>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,171 +81,40 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@coolpad.com
+Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, Jan Kara <jack@suse.cz>, "Darrick J. Wong" <djwong@kernel.org>, linux-nvme@lists.infradead.org, Joseph Qi <joseph.qi@linux.alibaba.com>, dm-devel@redhat.com, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, Jack Wang <jinpu.wang@ionos.com>, Alasdair Kergon <agk@redhat.com>, drbd-dev@lists.linbit.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Christoph Hellwig <hch@infradead.org>, xen-devel@lists.xenproject.org, Christian Borntraeger <borntraeger@linux.ibm.com>, Kent Overstreet <kent.overstreet@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, linux-pm@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Joern Engel <joern@lazybastard.org>, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Trond Myklebust
+  <trond.myklebust@hammerspace.com>, Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Ted Tso <tytso@mit.edu>, linux-mm@kvack.org, Song Liu <song@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2023/7/5 16:12, Alexander Larsson wrote:
-> On Wed, Jul 5, 2023 at 9:51 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2023/7/5 15:43, Alexander Larsson wrote:
->>> On Wed, Jul 5, 2023 at 9:25 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2023/7/5 15:04, Jingbo Xu wrote:
->>>>> The xattr name bloom filter feature is going to be introduced to speed
->>>>> up the negative xattr lookup, e.g. system.posix_acl_[access|default]
->>>>> lookup when running "ls -lR" workload.
->>>>>
->>>>> The number of common used extended attributes (n) is approximately 30.
->>>>
->>>> There are some commonly used extended attributes (n) and the total number
->>>> of these is 31:
->>>>
->>>>>
->>>>>         trusted.overlay.opaque
->>>>>         trusted.overlay.redirect
->>>>>         trusted.overlay.origin
->>>>>         trusted.overlay.impure
->>>>>         trusted.overlay.nlink
->>>>>         trusted.overlay.upper
->>>>>         trusted.overlay.metacopy
->>>>>         trusted.overlay.protattr
->>>>>         user.overlay.opaque
->>>>>         user.overlay.redirect
->>>>>         user.overlay.origin
->>>>>         user.overlay.impure
->>>>>         user.overlay.nlink
->>>>>         user.overlay.upper
->>>>>         user.overlay.metacopy
->>>>>         user.overlay.protattr
->>>>>         security.evm
->>>>>         security.ima
->>>>>         security.selinux
->>>>>         security.SMACK64
->>>>>         security.SMACK64IPIN
->>>>>         security.SMACK64IPOUT
->>>>>         security.SMACK64EXEC
->>>>>         security.SMACK64TRANSMUTE
->>>>>         security.SMACK64MMAP
->>>>>         security.apparmor
->>>>>         security.capability
->>>>>         system.posix_acl_access
->>>>>         system.posix_acl_default
->>>>>         user.mime_type
->>>>>
->>>>> Given the number of bits of the bloom filter (m) is 32, the optimal
->>>>> value for the number of the hash functions (k) is 1 (ln2 * m/n = 0.74).
->>>>>
->>>>> The single hash function is implemented as:
->>>>>
->>>>>         xxh32(name, strlen(name), EROFS_XATTR_FILTER_SEED + index)
->>>>>
->>>>> where index represents the index of corresponding predefined short name
->>>>
->>>> where `index`...
->>>>
->>>>
->>>>
->>>>> prefix, while name represents the name string after stripping the above
->>>>> predefined name prefix.
->>>>>
->>>>> The constant magic number EROFS_XATTR_FILTER_SEED, i.e. 0x25BBE08F, is
->>>>> used to give a better spread when mapping these 30 extended attributes
->>>>> into 32-bit bloom filter as:
->>>>>
->>>>>         bit  0: security.ima
->>>>>         bit  1:
->>>>>         bit  2: trusted.overlay.nlink
->>>>>         bit  3:
->>>>>         bit  4: user.overlay.nlink
->>>>>         bit  5: trusted.overlay.upper
->>>>>         bit  6: user.overlay.origin
->>>>>         bit  7: trusted.overlay.protattr
->>>>>         bit  8: security.apparmor
->>>>>         bit  9: user.overlay.protattr
->>>>>         bit 10: user.overlay.opaque
->>>>>         bit 11: security.selinux
->>>>>         bit 12: security.SMACK64TRANSMUTE
->>>>>         bit 13: security.SMACK64
->>>>>         bit 14: security.SMACK64MMAP
->>>>>         bit 15: user.overlay.impure
->>>>>         bit 16: security.SMACK64IPIN
->>>>>         bit 17: trusted.overlay.redirect
->>>>>         bit 18: trusted.overlay.origin
->>>>>         bit 19: security.SMACK64IPOUT
->>>>>         bit 20: trusted.overlay.opaque
->>>>>         bit 21: system.posix_acl_default
->>>>>         bit 22:
->>>>>         bit 23: user.mime_type
->>>>>         bit 24: trusted.overlay.impure
->>>>>         bit 25: security.SMACK64EXEC
->>>>>         bit 26: user.overlay.redirect
->>>>>         bit 27: user.overlay.upper
->>>>>         bit 28: security.evm
->>>>>         bit 29: security.capability
->>>>>         bit 30: system.posix_acl_access
->>>>>         bit 31: trusted.overlay.metacopy, user.overlay.metacopy
->>>>>
->>>>> The h_name_filter field is introduced to the on-disk per-inode xattr
->>>>> header to place the corresponding xattr name filter, where bit value 1
->>>>> indicates non-existence for compatibility.
->>>>>
->>>>> This feature is indicated by EROFS_FEATURE_COMPAT_XATTR_FILTER
->>>>> compatible feature bit.
->>>>>
->>>>> Suggested-by: Alexander Larsson <alexl@redhat.com>
->>>>> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
->>>>> ---
->>>>>     fs/erofs/erofs_fs.h | 8 +++++++-
->>>>>     1 file changed, 7 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->>>>> index 2c7b16e340fe..b4b6235fd720 100644
->>>>> --- a/fs/erofs/erofs_fs.h
->>>>> +++ b/fs/erofs/erofs_fs.h
->>>>> @@ -13,6 +13,7 @@
->>>>>
->>>>>     #define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
->>>>>     #define EROFS_FEATURE_COMPAT_MTIME              0x00000002
->>>>> +#define EROFS_FEATURE_COMPAT_XATTR_FILTER    0x00000004
->>>>
->>>> I'd suggest that if we could leave one reserved byte in the
->>>> superblock for now (and checking if it's 0) since
->>>>      1) xattr filter feature is a compatible feature;
->>>>      2) I'm not sure if the implementation could be changed.
->>>>
->>>> so that later implementation changes won't bother compat bits
->>>> again.
->>>
->>> I would very much like to generate these bloom filters in composefs
->>> right now, before the composefs v1 format is completely locked down,
->>> and this should be fully possible given that this is a backwards
->>> compat change. But this is only possible if it doesn't require a
->>> feature flag like this that makes old erofs versions not mount the
->>> image.
->>
->> EROFS has two types of feature bits:
->>
->>    1) compat flags, which doesn't block mounting on old kernels;
->>    2) incompat flags, which will block mounting on old kernels.
->>
->> here bloom filter use a new compat flag, so old kernels will just
->> ignore this and mount.  compat flags just indicates that "an image
->> with a feature, and you could use it or not".
->>
->> Here I just meant the bloom filter internals are fixed for now,
->> so that we might reserve a byte in the on-disk super block for
->> later potential changes (if any).  And don't need to bother another
->> new compat flag.
+On Tue 04-07-23 10:28:36, Keith Busch wrote:
+> On Tue, Jul 04, 2023 at 02:21:28PM +0200, Jan Kara wrote:
+> > +struct bdev_handle *blkdev_get_handle_by_dev(dev_t dev, blk_mode_t mode,
+> > +		void *holder, const struct blk_holder_ops *hops)
+> > +{
+> > +	struct bdev_handle *handle = kmalloc(sizeof(struct bdev_handle),
+> > +					     GFP_KERNEL);
 > 
-> Cool. Then we're all good!
+> I believe 'sizeof(*handle)' is the preferred style.
 
-:)
+OK.
 
+> > +	struct block_device *bdev;
+> > +
+> > +	if (!handle)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	bdev = blkdev_get_by_dev(dev, mode, holder, hops);
+> > +	if (IS_ERR(bdev))
+> > +		return ERR_CAST(bdev);
 > 
+> Need a 'kfree(handle)' before the error return. Or would it be simpler
+> to get the bdev first so you can check the mode settings against a
+> read-only bdev prior to the kmalloc?
+
+Yeah. Good point with kfree(). I'm not sure calling blkdev_get_by_dev()
+first will be "simpler" - then we need blkdev_put() in case of kmalloc()
+failure. Thanks for review!
+ 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
