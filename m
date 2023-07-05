@@ -2,59 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32C3B7487C0
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 17:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34A7B748901
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 18:12:40 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=pVxtRSYx;
+	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6GnGLv2M;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qx3HB65bjz3bSt
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jul 2023 01:19:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Qx4SQ0nHBz3bXX
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jul 2023 02:12:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.166.53; helo=mail-io1-f53.google.com; envelope-from=bart.vanassche@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=pVxtRSYx;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6GnGLv2M;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.220.28; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qx3H43Spyz2ynx
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Jul 2023 01:19:27 +1000 (AEST)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-78654448524so178475539f.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 05 Jul 2023 08:19:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688570364; x=1691162364;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vhOVd+fM39By6Neo4SNlvIwXWgDBhgramNmEhS79nFc=;
-        b=Q/QuLF8skCZZ1TQHqOqY2lk7hZjG46d19+B5OSnovxC/e2127tqpGZEBqd1cTLx3Mq
-         UXipIF8Rc8PvnWYyH/0LmotPoKVx+F8QtQJPLqHls4Gdd8qT9uyTBPgZRMdRCqgL6Ovo
-         dDCnRwfJoj9Xqb7b2+fgISA7Y6PUTzmMcHx2F5PXYNATIeijWszO2RIBnkBoyJ46bQPz
-         Six974RDWeDl5Fn6AcS2dbq7I/CmfOFqbprg7lgdpI4qpmNG6CMDbzjCPowQKBWjSFBY
-         dePDlmGZmvM6gKYJyeSlZ5tT1GL842149/KY2rU+7ycQrm06W9JcfjdwE37G5tgwhLec
-         SbDA==
-X-Gm-Message-State: AC+VfDxzpgJR0+QZzyr9uC2ehOC/NXi+I7GIjSMUZn8n1ClMynG8oTZE
-	OEL5HqgBt91ZH01kObdYTvM=
-X-Google-Smtp-Source: ACHHUZ70uoI88DRVhGiNe4v8NMOn4CckRug5A25bO6UrnrhXn4O+oQb9CB+u9z1UucgpvIObIHjohw==
-X-Received: by 2002:a05:6602:2113:b0:784:314f:8d68 with SMTP id x19-20020a056602211300b00784314f8d68mr18093430iox.1.1688570364015;
-        Wed, 05 Jul 2023 08:19:24 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:c1f1:7d21:6172:cbd2? ([2620:15c:211:201:c1f1:7d21:6172:cbd2])
-        by smtp.gmail.com with ESMTPSA id l6-20020a656806000000b005579c73d209sm15456631pgt.1.2023.07.05.08.19.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jul 2023 08:19:23 -0700 (PDT)
-Message-ID: <1ea08f84-f900-92f2-e32b-2db242a74559@acm.org>
-Date: Wed, 5 Jul 2023 08:19:16 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qx4SH0C6gz3bPV
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Jul 2023 02:12:30 +1000 (AEST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CB46921E20;
+	Wed,  5 Jul 2023 16:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1688573545; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laJnl7HhQK/Tv/PqzUYoidR/wXDE+WAIJVPIFf2lcfQ=;
+	b=pVxtRSYxDum30xk4c2JQyuaRHFNvjqGI5pa+1l9TjK2H7ROMjo7EdIGdDlzQXwaIwGyi0D
+	MYHnvgKqRst/eyFC+Okrc961iU1V/Mr8qyrvjiZzwHXWReUpWSrhSFOpe79t3kyTfJeQAV
+	Hf2p1cnNnsYhDEREwuHH1JI7foWXj1M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1688573545;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laJnl7HhQK/Tv/PqzUYoidR/wXDE+WAIJVPIFf2lcfQ=;
+	b=6GnGLv2MGHnmlspZbI9IPcwZjE0UgNGbJUyuJME/ujhWk8XPp6xGrnnDrvfBxv6bSto5fw
+	0j8hz2dNTzGg/WAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A8D5D134F3;
+	Wed,  5 Jul 2023 16:12:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id p7ssKWmWpWRbQAAAMHmgww
+	(envelope-from <jack@suse.cz>); Wed, 05 Jul 2023 16:12:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1C3A6A0707; Wed,  5 Jul 2023 18:12:25 +0200 (CEST)
+Date: Wed, 5 Jul 2023 18:12:25 +0200
+From: Jan Kara <jack@suse.cz>
+To: Bart Van Assche <bvanassche@acm.org>
 Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>
+Message-ID: <20230705161225.cwig5a3mo6oz7lew@quack3>
 References: <20230629165206.383-1-jack@suse.cz>
  <20230704122224.16257-1-jack@suse.cz>
  <bb91e76b-0bd8-a949-f8b9-868f919ebcb9@acm.org>
- <ZKRFSZQglwCba9/i@casper.infradead.org>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <ZKRFSZQglwCba9/i@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb91e76b-0bd8-a949-f8b9-868f919ebcb9@acm.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,25 +86,38 @@ Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, Jan
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 7/4/23 09:14, Matthew Wilcox wrote:
-> On Tue, Jul 04, 2023 at 07:06:26AM -0700, Bart Van Assche wrote:
->> On 7/4/23 05:21, Jan Kara wrote:
->>> +struct bdev_handle {
->>> +	struct block_device *bdev;
->>> +	void *holder;
->>> +};
->>
->> Please explain in the patch description why a holder pointer is introduced
->> in struct bdev_handle and how it relates to the bd_holder pointer in struct
->> block_device. Is one of the purposes of this patch series perhaps to add
->> support for multiple holders per block device?
+On Tue 04-07-23 07:06:26, Bart Van Assche wrote:
+> On 7/4/23 05:21, Jan Kara wrote:
+> > +struct bdev_handle {
+> > +	struct block_device *bdev;
+> > +	void *holder;
+> > +};
 > 
-> That is all in patch 0/32.  Why repeat it?
+> Please explain in the patch description why a holder pointer is introduced
+> in struct bdev_handle and how it relates to the bd_holder pointer in struct
+> block_device. Is one of the purposes of this patch series perhaps to add
+> support for multiple holders per block device?
 
-This cover letter: https://lore.kernel.org/linux-block/20230629165206.383-1-jack@suse.cz/T/#t?
+No. The reason for adding holder to struct bdev_handle is that it is an
+argument blkdev_put() needs. Currently, every user of blkdev_put() has to
+remember what it has passed as 'holder' to blkdev_get_by_*() call and pass
+that to blkdev_put(). With struct bdev_handle this will happen
+automatically. This is already explained in the changelog of this patch:
 
-The word "holder" doesn't even occur in that cover letter so how could the
-answer to my question be present in the cover letter?
+"Create struct bdev_handle that contains all parameters that need to be
+passed to blkdev_put()..."
 
-Bart.
+If it was only about holder, the intrusive patches would not be warranted
+but as the description also says:
 
+"This will eventually allow us to pass one more argument to blkdev_put()
+without too much hassle."
+
+Because we will additionaly need to propagate the 'mode' argument used at
+open to blkdev_put().
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
