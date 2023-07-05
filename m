@@ -1,33 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33F29747DF8
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 09:10:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39894747DF9
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 09:10:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QwrQx0vwpz30hG
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 17:10:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QwrR018pCz30PD
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jul 2023 17:10:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QwrQl5P4Dz2x9L
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jul 2023 17:10:23 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VmflTYd_1688541018;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VmflTYd_1688541018)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QwrQn5L8Gz2x9L
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jul 2023 17:10:25 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VmfgKGd_1688541019;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VmfgKGd_1688541019)
           by smtp.aliyun-inc.com;
-          Wed, 05 Jul 2023 15:10:19 +0800
+          Wed, 05 Jul 2023 15:10:20 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: hsiangkao@linux.alibaba.com,
 	chao@kernel.org,
 	huyue2@coolpad.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 1/3] erofs-utils: add xxh32 library
-Date: Wed,  5 Jul 2023 15:10:15 +0800
-Message-Id: <20230705071017.104130-2-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 2/3] erofs-utils: update on-disk format for xattr name filter
+Date: Wed,  5 Jul 2023 15:10:16 +0800
+Message-Id: <20230705071017.104130-3-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230705071017.104130-1-jefflexu@linux.alibaba.com>
 References: <20230705071017.104130-1-jefflexu@linux.alibaba.com>
@@ -48,170 +48,139 @@ Cc: alexl@redhat.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add xxh32 library which could be used by following xattr bloom filter
-feature.
+The xattr name bloom filter feature is going to be introduced to speed
+up the negative xattr lookup, e.g. system.posix_acl_[access|default]
+lookup when running "ls -lR" workload.
 
+The number of common used extended attributes (n) is approximately 30.
+
+	trusted.overlay.opaque
+	trusted.overlay.redirect
+	trusted.overlay.origin
+	trusted.overlay.impure
+	trusted.overlay.nlink
+	trusted.overlay.upper
+	trusted.overlay.metacopy
+	trusted.overlay.protattr
+	user.overlay.opaque
+	user.overlay.redirect
+	user.overlay.origin
+	user.overlay.impure
+	user.overlay.nlink
+	user.overlay.upper
+	user.overlay.metacopy
+	user.overlay.protattr
+	security.evm
+	security.ima
+	security.selinux
+	security.SMACK64
+	security.SMACK64IPIN
+	security.SMACK64IPOUT
+	security.SMACK64EXEC
+	security.SMACK64TRANSMUTE
+	security.SMACK64MMAP
+	security.apparmor
+	security.capability
+	system.posix_acl_access
+	system.posix_acl_default
+	user.mime_type
+
+Given the number of bits of the bloom filter (m) is 32, the optimal
+value for the number of the hash functions (k) is 1 (ln2 * m/n = 0.74).
+
+The single hash function is implemented as:
+
+	xxh32(name, strlen(name), EROFS_XATTR_FILTER_SEED + index)
+
+where index represents the index of corresponding predefined short name
+prefix, while name represents the name string after stripping the above
+predefined name prefix.
+
+The constant magic number EROFS_XATTR_FILTER_SEED, i.e. 0x25BBE08F, is
+used to give a better spread when mapping these 30 extended attributes
+into 32-bit bloom filter as:
+
+	bit  0: security.ima
+	bit  1:
+	bit  2: trusted.overlay.nlink
+	bit  3:
+	bit  4: user.overlay.nlink
+	bit  5: trusted.overlay.upper
+	bit  6: user.overlay.origin
+	bit  7: trusted.overlay.protattr
+	bit  8: security.apparmor
+	bit  9: user.overlay.protattr
+	bit 10: user.overlay.opaque
+	bit 11: security.selinux
+	bit 12: security.SMACK64TRANSMUTE
+	bit 13: security.SMACK64
+	bit 14: security.SMACK64MMAP
+	bit 15: user.overlay.impure
+	bit 16: security.SMACK64IPIN
+	bit 17: trusted.overlay.redirect
+	bit 18: trusted.overlay.origin
+	bit 19: security.SMACK64IPOUT
+	bit 20: trusted.overlay.opaque
+	bit 21: system.posix_acl_default
+	bit 22:
+	bit 23: user.mime_type
+	bit 24: trusted.overlay.impure
+	bit 25: security.SMACK64EXEC
+	bit 26: user.overlay.redirect
+	bit 27: user.overlay.upper
+	bit 28: security.evm
+	bit 29: security.capability
+	bit 30: system.posix_acl_access
+	bit 31: trusted.overlay.metacopy, user.overlay.metacopy
+
+The h_name_filter field is introduced to the on-disk per-inode xattr
+header to place the corresponding xattr name filter, where bit value 1
+indicates non-existence for compatibility.
+
+This feature is indicated by EROFS_FEATURE_COMPAT_XATTR_FILTER
+compatible feature bit.
+
+Suggested-by: Alexander Larsson <alexl@redhat.com>
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/xxhash.h | 35 +++++++++++++++++
- lib/Makefile.am        |  3 +-
- lib/xxhash.c           | 85 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+), 1 deletion(-)
- create mode 100644 include/erofs/xxhash.h
- create mode 100644 lib/xxhash.c
+ include/erofs_fs.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/xxhash.h b/include/erofs/xxhash.h
-new file mode 100644
-index 0000000..fd9384e
---- /dev/null
-+++ b/include/erofs/xxhash.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __EROFS_XXHASH_H
-+#define __EROFS_XXHASH_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "defs.h"
-+
-+/*
-+ * Copied from
-+ * 	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-+ * xxHash - Extremely Fast Hash algorithm
-+ */
-+
-+/**
-+ * xxh32() - calculate the 32-bit hash of the input with a given seed.
-+ *
-+ * @input:  The data to hash.
-+ * @length: The length of the data to hash.
-+ * @seed:   The seed can be used to alter the result predictably.
-+ *
-+ * Speed on Core 2 Duo @ 3 GHz (single thread, SMHasher benchmark) : 5.4 GB/s
-+ *
-+ * Return:  The 32-bit hash of the data.
-+ */
-+uint32_t xxh32(const void *input, size_t length, uint32_t seed);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index faa7311..a049af6 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -23,13 +23,14 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/xattr.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-       $(top_srcdir)/include/erofs/fragments.h \
-+      $(top_srcdir)/include/erofs/xxhash.h \
-       $(top_srcdir)/lib/liberofs_private.h
+diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+index 3697882..1ffaaef 100644
+--- a/include/erofs_fs.h
++++ b/include/erofs_fs.h
+@@ -14,6 +14,7 @@
  
- noinst_HEADERS += compressor.h
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
- 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
--		      fragments.c rb_tree.c dedupe.c
-+		      fragments.c rb_tree.c dedupe.c xxhash.c
+ #define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
+ #define EROFS_FEATURE_COMPAT_MTIME              0x00000002
++#define EROFS_FEATURE_COMPAT_XATTR_FILTER	0x00000004
  
- liberofs_la_CFLAGS = -Wall -I$(top_srcdir)/include
- if ENABLE_LZ4
-diff --git a/lib/xxhash.c b/lib/xxhash.c
-new file mode 100644
-index 0000000..e5f511c
---- /dev/null
-+++ b/lib/xxhash.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copied from
-+ * 	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-+ * xxHash - Extremely Fast Hash algorithm
-+ */
-+#include "erofs/xxhash.h"
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+@@ -201,7 +202,7 @@ struct erofs_inode_extended {
+  * for read-only fs, no need to introduce h_refcount
+  */
+ struct erofs_xattr_ibody_header {
+-	__le32 h_reserved;
++	__le32 h_name_filter;		/* bit value 1 indicates not-present */
+ 	__u8   h_shared_count;
+ 	__u8   h_reserved2[7];
+ 	__le32 h_shared_xattrs[0];      /* shared xattr id array */
+@@ -222,6 +223,13 @@ struct erofs_xattr_ibody_header {
+ #define EROFS_XATTR_LONG_PREFIX		0x80
+ #define EROFS_XATTR_LONG_PREFIX_MASK	0x7f
+ 
++#define EROFS_XATTR_NAME_LEN_MAX	UCHAR_MAX
 +
-+/*-*************************************
-+ * Macros
-+ **************************************/
-+#define xxh_rotl32(x, r) ((x << r) | (x >> (32 - r)))
++#define EROFS_XATTR_FILTER_BITS		32
++#define EROFS_XATTR_FILTER_MASK		(EROFS_XATTR_FILTER_BITS - 1)
++#define EROFS_XATTR_FILTER_DEFAULT	UINT32_MAX
++#define EROFS_XATTR_FILTER_SEED		0x25BBE08F
 +
-+/*-*************************************
-+ * Constants
-+ **************************************/
-+static const uint32_t PRIME32_1 = 2654435761U;
-+static const uint32_t PRIME32_2 = 2246822519U;
-+static const uint32_t PRIME32_3 = 3266489917U;
-+static const uint32_t PRIME32_4 =  668265263U;
-+static const uint32_t PRIME32_5 =  374761393U;
-+
-+/*-***************************
-+ * Simple Hash Functions
-+ ****************************/
-+static uint32_t xxh32_round(uint32_t seed, const uint32_t input)
-+{
-+	seed += input * PRIME32_2;
-+	seed = xxh_rotl32(seed, 13);
-+	seed *= PRIME32_1;
-+	return seed;
-+}
-+
-+uint32_t xxh32(const void *input, const size_t len, const uint32_t seed)
-+{
-+	const uint8_t *p = (const uint8_t *)input;
-+	const uint8_t *b_end = p + len;
-+	uint32_t h32;
-+
-+	if (len >= 16) {
-+		const uint8_t *const limit = b_end - 16;
-+		uint32_t v1 = seed + PRIME32_1 + PRIME32_2;
-+		uint32_t v2 = seed + PRIME32_2;
-+		uint32_t v3 = seed + 0;
-+		uint32_t v4 = seed - PRIME32_1;
-+
-+		do {
-+			v1 = xxh32_round(v1, get_unaligned_le32(p));
-+			p += 4;
-+			v2 = xxh32_round(v2, get_unaligned_le32(p));
-+			p += 4;
-+			v3 = xxh32_round(v3, get_unaligned_le32(p));
-+			p += 4;
-+			v4 = xxh32_round(v4, get_unaligned_le32(p));
-+			p += 4;
-+		} while (p <= limit);
-+
-+		h32 = xxh_rotl32(v1, 1) + xxh_rotl32(v2, 7) +
-+			xxh_rotl32(v3, 12) + xxh_rotl32(v4, 18);
-+	} else {
-+		h32 = seed + PRIME32_5;
-+	}
-+
-+	h32 += (uint32_t)len;
-+
-+	while (p + 4 <= b_end) {
-+		h32 += get_unaligned_le32(p) * PRIME32_3;
-+		h32 = xxh_rotl32(h32, 17) * PRIME32_4;
-+		p += 4;
-+	}
-+
-+	while (p < b_end) {
-+		h32 += (*p) * PRIME32_5;
-+		h32 = xxh_rotl32(h32, 11) * PRIME32_1;
-+		p++;
-+	}
-+
-+	h32 ^= h32 >> 15;
-+	h32 *= PRIME32_2;
-+	h32 ^= h32 >> 13;
-+	h32 *= PRIME32_3;
-+	h32 ^= h32 >> 16;
-+
-+	return h32;
-+}
+ /* xattr entry (for both inline & shared xattrs) */
+ struct erofs_xattr_entry {
+ 	__u8   e_name_len;      /* length of name */
 -- 
 2.19.1.6.gb485710b
 
