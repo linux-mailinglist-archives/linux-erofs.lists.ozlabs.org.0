@@ -1,38 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93FE774A0B1
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jul 2023 17:16:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7869874A13D
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jul 2023 17:39:09 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LJt1aHPp;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Qxg9h3qTRz3bw3
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Jul 2023 01:16:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QxggH0grrz3bvX
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Jul 2023 01:39:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=LJt1aHPp;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+3c95f280863011604c0c+7256+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qxg9Y5mRSz3bsj
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Jul 2023 01:16:49 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VmlC6s._1688656603;
-Received: from 192.168.3.2(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VmlC6s._1688656603)
-          by smtp.aliyun-inc.com;
-          Thu, 06 Jul 2023 23:16:45 +0800
-Message-ID: <88a298eb-eb7d-e03b-99b9-ead385894f95@linux.alibaba.com>
-Date: Thu, 6 Jul 2023 23:16:42 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH 22/32] erofs: Convert to use blkdev_get_handle_by_path()
-To: Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QxggB6Mntz301b
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Jul 2023 01:39:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YwAEpZO7Vu5hoax5tz5QpnX5k8pjtsK6yDO/dOzPntw=; b=LJt1aHPpR1VtNNU97F662mFcBQ
+	04pv5pjmhELPxcfY8IU2J9oyhfgQvItd1fUo/P+Wom3ADKBICTxeaU2ubravoUlJ9bJKThqcbtmZO
+	YHZ6Bq5JNF5Oy1kZk0vGrojv9a9LNU4bL+WXTD5k/gljEqzdXg69aNBObe/lnHCHtRlMc6Ppc7Hqe
+	+NefvxaKjDH4eBZ/aYpgK8N4uyEQGVFSG36iqC/zjMjHjPuCdtgFFvp4F+STCUxI3HsTMMx8Jecfh
+	X5dQPxytEjbEWkMaTy11b/rkROV7wOirXDfTif06nI996QOXUgedgb0owSphnlvJb3u4X61SBTklq
+	DymCsIxA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1qHR44-0021w3-0C;
+	Thu, 06 Jul 2023 15:38:40 +0000
+Date: Thu, 6 Jul 2023 08:38:40 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
+Message-ID: <ZKbgAG5OoHVyUKOG@infradead.org>
 References: <20230629165206.383-1-jack@suse.cz>
- <20230704122224.16257-22-jack@suse.cz>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230704122224.16257-22-jack@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20230704122224.16257-1-jack@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230704122224.16257-1-jack@suse.cz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,110 +58,28 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, "Darrick J. Wong" <djwong@kernel.org>, linux-nvme@lists.infradead.org, Joseph Qi <joseph.qi@linux.alibaba.com>, dm-devel@redhat.com, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, Jack Wang <jinpu.wang@ionos.com>, Alasdair Kergon <agk@redhat.com>, drbd-dev@lists.linbit.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Christoph Hellwig <hch@infradead.org>, xen-devel@lists.xenproject.org, Christian Borntraeger <borntraeger@linux.ibm.com>, Kent Overstreet <kent.overstreet@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, linux-pm@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Joern Engel <joern@lazybastard.org>, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Trond Myklebust <trond.myklebust@hammers
+ pace.com>, Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Ted Tso <tytso@mit.edu>, linux-mm@kvack.org, Song Liu <song@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Tue, Jul 04, 2023 at 02:21:28PM +0200, Jan Kara wrote:
+> Create struct bdev_handle that contains all parameters that need to be
+> passed to blkdev_put() and provide blkdev_get_handle_* functions that
+> return this structure instead of plain bdev pointer. This will
+> eventually allow us to pass one more argument to blkdev_put() without
+> too much hassle.
 
+Can we use the opportunity to come up with better names?  blkdev_get_*
+was always a rather horrible naming convention for something that
+ends up calling into ->open.
 
-On 2023/7/4 20:21, Jan Kara wrote:
-> Convert erofs to use blkdev_get_handle_by_path() and pass the handle
-> around.
-> 
-> CC: Gao Xiang <xiang@kernel.org>
-> CC: Chao Yu <chao@kernel.org>
-> CC: linux-erofs@lists.ozlabs.org
-> Signed-off-by: Jan Kara <jack@suse.cz>
+What about:
 
-Thanks for this:
-Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
+		const struct blk_holder_ops *hops);
+struct bdev_handle *bdev_open_by_path(dev_t dev, blk_mode_t mode,
+		void *holder, const struct blk_holder_ops *hops);
+void bdev_release(struct bdev_handle *handle);
 
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/data.c     |  4 ++--
->   fs/erofs/internal.h |  2 +-
->   fs/erofs/super.c    | 20 ++++++++++----------
->   3 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index db5e4b7636ec..1fa60cfff267 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -222,7 +222,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->   			up_read(&devs->rwsem);
->   			return 0;
->   		}
-> -		map->m_bdev = dif->bdev;
-> +		map->m_bdev = dif->bdev_handle->bdev;
->   		map->m_daxdev = dif->dax_dev;
->   		map->m_dax_part_off = dif->dax_part_off;
->   		map->m_fscache = dif->fscache;
-> @@ -240,7 +240,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->   			if (map->m_pa >= startoff &&
->   			    map->m_pa < startoff + length) {
->   				map->m_pa -= startoff;
-> -				map->m_bdev = dif->bdev;
-> +				map->m_bdev = dif->bdev_handle->bdev;
->   				map->m_daxdev = dif->dax_dev;
->   				map->m_dax_part_off = dif->dax_part_off;
->   				map->m_fscache = dif->fscache;
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 36e32fa542f0..fabd3bb0c194 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -47,7 +47,7 @@ typedef u32 erofs_blk_t;
->   struct erofs_device_info {
->   	char *path;
->   	struct erofs_fscache *fscache;
-> -	struct block_device *bdev;
-> +	struct bdev_handle *bdev_handle;
->   	struct dax_device *dax_dev;
->   	u64 dax_part_off;
->   
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 9d6a3c6158bd..a4742cc05f95 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -230,7 +230,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
->   	struct erofs_fscache *fscache;
->   	struct erofs_deviceslot *dis;
-> -	struct block_device *bdev;
-> +	struct bdev_handle *bdev_handle;
->   	void *ptr;
->   
->   	ptr = erofs_read_metabuf(buf, sb, erofs_blknr(sb, *pos), EROFS_KMAP);
-> @@ -254,13 +254,13 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
->   			return PTR_ERR(fscache);
->   		dif->fscache = fscache;
->   	} else if (!sbi->devs->flatdev) {
-> -		bdev = blkdev_get_by_path(dif->path, BLK_OPEN_READ, sb->s_type,
-> -					  NULL);
-> -		if (IS_ERR(bdev))
-> -			return PTR_ERR(bdev);
-> -		dif->bdev = bdev;
-> -		dif->dax_dev = fs_dax_get_by_bdev(bdev, &dif->dax_part_off,
-> -						  NULL, NULL);
-> +		bdev_handle = blkdev_get_handle_by_path(dif->path,
-> +				BLK_OPEN_READ, sb->s_type, NULL);
-> +		if (IS_ERR(bdev_handle))
-> +			return PTR_ERR(bdev_handle);
-> +		dif->bdev_handle = bdev_handle;
-> +		dif->dax_dev = fs_dax_get_by_bdev(bdev_handle->bdev,
-> +				&dif->dax_part_off, NULL, NULL);
->   	}
->   
->   	dif->blocks = le32_to_cpu(dis->blocks);
-> @@ -815,8 +815,8 @@ static int erofs_release_device_info(int id, void *ptr, void *data)
->   	struct erofs_device_info *dif = ptr;
->   
->   	fs_put_dax(dif->dax_dev, NULL);
-> -	if (dif->bdev)
-> -		blkdev_put(dif->bdev, &erofs_fs_type);
-> +	if (dif->bdev_handle)
-> +		blkdev_handle_put(dif->bdev_handle);
->   	erofs_fscache_unregister_cookie(dif->fscache);
->   	dif->fscache = NULL;
->   	kfree(dif->path);
+?
