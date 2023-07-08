@@ -2,55 +2,110 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D459974B70A
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Jul 2023 21:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C600474BC60
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jul 2023 08:26:09 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tgLCFacD;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=RfnDyjGw;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QyNbS4Plkz3c24
-	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jul 2023 05:23:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QygJG5VqMz3bnm
+	for <lists+linux-erofs@lfdr.de>; Sat,  8 Jul 2023 16:26:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tgLCFacD;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=RfnDyjGw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sj@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:704b::72b; helo=apc01-tyz-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2072b.outbound.protection.outlook.com [IPv6:2a01:111:f403:704b::72b])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QyNbL1hkfz3bwd
-	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Jul 2023 05:23:10 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id B601A61A34;
-	Fri,  7 Jul 2023 19:23:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63501C433C7;
-	Fri,  7 Jul 2023 19:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688757785;
-	bh=94A738552oPcNLUcdadUB8TIEGBu7Z7b4zP4i/CSZhk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tgLCFacDRH2vFBvGsS1BdApLvk5sLS7WaSV2sgoXnSapnBONfvmv9X8eKnvugMJHE
-	 jqjgRwSKqOqTX8fmIldEGKg0KhXTvE0Bema9AGOztxJ3On1k5IAODVtjRLYQSXxP2D
-	 t/ZQ+Qpmi+iWBisfwT5UB4sgtSMbE1mZirUi9Sv4DwscQ0HrO92bVw63QK67r9cxrQ
-	 QxbM6U35zant3vdXmjw3fsF5Ss+czDaGBBWJvUTejeoPPj3ruozwzQAv9CaKvhOlKV
-	 2nM3B31uev1RK+ZATSoyzNzgygragekkgVMBHp/70Fr46Mi/QGbs3iEtE2igexxk6o
-	 AYNbqLhudXizg==
-From: SeongJae Park <sj@kernel.org>
-To: David Wysochanski <dwysocha@redhat.com>
-Subject: Re: [BUG mm-unstable] BUG: KASAN: use-after-free in shrink_folio_list+0x9f4/0x1ae0
-Date: Fri,  7 Jul 2023 19:23:01 +0000
-Message-Id: <20230707192301.27308-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CALF+zO=nGdoxcT-ya3aaUCBi-4iKPo3kZyzcWYCKMCf4n2wVbA@mail.gmail.com>
-References: 
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QygJ62P9wz3039
+	for <linux-erofs@lists.ozlabs.org>; Sat,  8 Jul 2023 16:25:56 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RWTetpgVFFU5Ra2Ha+YqwPAfGMXsgbJUdzTltWelxciyhITa/XJybqkGgFym5Ebg5f6tBH235CoSboESeIV7VEZqGUe62jxp32qTPywNpkABYRWPjThnKCI3803HrdzFHvH1/Olkz5wRRY9TYHx5cSzX6C5V6ONJowQTolRaG4reSUF1WiHU74K4Xq3wAGce74mZ8wHrv1E9sKL4RZ0lkAzpm1GByAF+DrGCFqPIkykQI0dIAsnYk9YmLf3VAEERJtliqUnuaZt6W2h/Yza7cO/an4CuznC33wyukDtbvn8O8DoXmzjDDT4hkYouIVvRbfkCojfLoNOSSgexydW5jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D5hyXC2cc1KjGWSui4/Lb6jxFgrEn2mlVSFkJ8lo3uw=;
+ b=nEXs6ktm7YpUz+As5BCC8MOcwX/RMz6lW++1jyrQYuzKt5mhf7rDnNllvIfVs+Fk6u0NfKPbzg4ehVwUAlNpwYUWsDVl9MYuqGgtXRwLcPvqR0l/0ItZYba4XXPd9vJLYEV5zMzRfElJAHXagWbpjXoXe3fT2D71DaVOXbkMBAx6aJh7RgBCDqPwinToVZ9sdwT7bYLjJozGAfzK0XOkHmlrWtaulKvNe0Wdg+lAV7zR6Z8Dah4ei8CQqp5dl99p5Ia570K/bO9DbSW1+riEuKJWIYTqizwXfWy59iFzVteDTgMYanOQkGCBYIs2yyTIECA+FaTvjZ4J/Om5Y3sdzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D5hyXC2cc1KjGWSui4/Lb6jxFgrEn2mlVSFkJ8lo3uw=;
+ b=RfnDyjGwPMk98Otlm+V/A6jvHPh5OZlpj0Bkq+RE1z3EsHX42n/XGBYXYFvksiG8h/7U8tkOJNKvqxHccMecbMOxd8y0KhlWf6Ye05xy9ltHrK+NhQ7cUZYyVrEQBzxmfnDmGxHzaGc04DFRTzK/G066N6yXZtgPxOEJ3wR19IedlpBD+p0AtQSXD3faiK5/UjuYjRCJgk2Qkui7YB8Vlaj5wVNCKt7KmbIYvE3KDRevL6UoleMsWn09xpQd/51AWRFpLYYAlR1ZCMSUiTmcWOgZdsuwtfhE1SWCTGweRULbCZbYDVkb66h05kV3v4j2bqCMTw8TCPirgZy/06yeTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TY2PR06MB3342.apcprd06.prod.outlook.com (2603:1096:404:fb::23)
+ by PSAPR06MB4503.apcprd06.prod.outlook.com (2603:1096:301:8c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.26; Sat, 8 Jul
+ 2023 06:25:33 +0000
+Received: from TY2PR06MB3342.apcprd06.prod.outlook.com
+ ([fe80::2b85:24ad:2492:c96c]) by TY2PR06MB3342.apcprd06.prod.outlook.com
+ ([fe80::2b85:24ad:2492:c96c%5]) with mapi id 15.20.6565.026; Sat, 8 Jul 2023
+ 06:25:33 +0000
+From: Chunhai Guo <guochunhai@vivo.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: fix two loop issues when read page beyond EOF
+Date: Sat,  8 Jul 2023 14:24:32 +0800
+Message-Id: <20230708062432.67344-1-guochunhai@vivo.com>
+X-Mailer: git-send-email 2.39.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0023.apcprd02.prod.outlook.com
+ (2603:1096:4:195::11) To TY2PR06MB3342.apcprd06.prod.outlook.com
+ (2603:1096:404:fb::23)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PR06MB3342:EE_|PSAPR06MB4503:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc6bf441-165d-4a18-1938-08db7f7c2208
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	52RwkpjHMX47KBzbp6ThDAmhC/roiw/LiVeyt23pBX3GIy9NMvzPhf86y3o2tueqjy/h5oJvDiGvdMeYEmnTlWxPk5Qh60NHHFyoA77EIW65UOxXqGE8wzc/nIUxJxmDF9LGen9CYqUchLzcbHh5gcjX4SxW+fv+9nBHpqwgFRKuLur4PQCXId4yp+ADC1L05VvUT5Y5TPkb7oAPOme7AhO1AXNsJ3T+8OjdkysDfXLWL9xRDmD+VOB8tLgRS2v0RMDiucZM/3izn/268qVMyvEQtTZbk4p/18mjWgI1T+EoIRExSOJ+ETf2PlqhWqMEpKvpS5zRH3XTL4Kit4Z9JP/hNlrxUqpt3dzKfVqle2YEJ0Aag8uOSoJH+3PWfOREJxY4YwtqTcdilMcy7IDLjRGkFnCvw80VznnVauIQg6+3SzSifUu6Q0CcYO8TbvAMf40MEDmIiwoFQyKyctbn0A9CsELjL4uBYkBSzjP41qUy0mSfyiPAMhJB8UvPW64Oq6y+R2pRaeswLv+MnMy+fiLOiGPlrjOd1Dq3Nq8qyd00F9lEZfiAjzc7XklA0iE9A8MD3ci0HsYL19zTb5B04ZfM+kmY1RM24sun+tT4tRf0iTsVseenGMfF6qHe7YIA
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3342.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(366004)(136003)(396003)(39850400004)(451199021)(41300700001)(5660300002)(6486002)(2906002)(316002)(8676002)(8936002)(4326008)(66476007)(66556008)(66946007)(36756003)(52116002)(6512007)(478600001)(107886003)(86362001)(186003)(38100700002)(2616005)(38350700002)(83380400001)(6506007)(1076003)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?eAGsGzH40NzUXhkzbB12d9DTJ5aI6I03ulawyNt90nMnr+96sc3cBgkxGX+8?=
+ =?us-ascii?Q?XELQQjq6eGCG4l6eiTylwyt8tv/TKWOVEQ73rep4P1nKxKuBcHUCFOBtTzU+?=
+ =?us-ascii?Q?DcNCcpKGERf1pVCKnaUVCkt3YdcX58PlUeu9/iLsgF19XCFJWgpKKLz9+Eo3?=
+ =?us-ascii?Q?tgpd+I0nJ3REyIYMiC5PBHzM4ek4DzFXiiXFOBxK3fy0h/8JbfXkofRH6nRX?=
+ =?us-ascii?Q?EyTS2/5DbvUWTKrZ0qSMVRFkFVK0ZKetIJ4+8qYdZ3wYEjKL34SNvBvpiltG?=
+ =?us-ascii?Q?ZSf2VUR9benPDhlMkJZuCdYds/sbL1aewCjrSKtIDPzY0nHzhLi1iGdsIPTP?=
+ =?us-ascii?Q?7un6vU6QG9JdtBYye1N8Jr5cl/2iAsjCERzY9aNuFnYsK9xgp6Mc5Y0W7dI0?=
+ =?us-ascii?Q?SxlQrD10e9kedM5KuQJqTOnOHT3Bsf650NzYoo4qgqJfPHjSV/XK5ROmB2js?=
+ =?us-ascii?Q?U1Z5PMAZdk2UXR2e9QQVSWT/eGpbS7X2vBFk3WE8Ur35OjwLvYbj3WH5WJyp?=
+ =?us-ascii?Q?xBQQbId6GyBYgVBGoVmCbkFPQV5gEdX294SSgjrlEjCMpsCdJtPFyJhVO0Gg?=
+ =?us-ascii?Q?sCldQKZf23S4YG0jZHA7JpC0bE4E3ERtiK693Pnsq2HUyeuoNRA5oXdSUdh7?=
+ =?us-ascii?Q?AOxyvKs8LJ0p4syy2hxIHfAbEfAnrPi6vblDOFFFJdMRi/7MOAuBidprGail?=
+ =?us-ascii?Q?v8NF1I6vMZOZZvu1FYxh0d3ei9HkQSGHkK8XILXHBDMSA1em3buR9HoZQm6X?=
+ =?us-ascii?Q?3Pu6zrdJ6VIofGrMUP5cJu2BY1zubfVfKw2/jAvQNZlUuCN8Xe4aWKMpEYec?=
+ =?us-ascii?Q?HW+eDDl3lhqlkN0bRqkOsCyomJ3u/mrtk900y2AjXbXc+tFMsC1rf/hyp47L?=
+ =?us-ascii?Q?3O3fQc0Hh/SFj8pSqCEkfRV+lEHYmNduYJjBa9pG3C/eBlK9QTRixwQZPm/c?=
+ =?us-ascii?Q?iMyy0GJwKxMo8saPctViroTGNt8oHMlV1rprWQKWTcYM6LfsZbnPpse8xE86?=
+ =?us-ascii?Q?XYtfyM79IpVc05qIEAmIntOdvI+ypCtRy4lAagtIDoLjwgxhqrqlhBjFmrXp?=
+ =?us-ascii?Q?aUsxtUCzm9haZ3n+DSkP6VgwdTi/PMvs3sMZO/USvTpgqNF9Xo1Gql/NQBhR?=
+ =?us-ascii?Q?JMVHxjsfucj+mZTH7f4NDBlMB++Ekg/fM+ueby0VEV+cEiucajGmVzunPjPm?=
+ =?us-ascii?Q?91mNbHtZwrlSv42bP057W/nRHDU1XLhk5SV25Dute/AL9PBmn1BVc6POX5yf?=
+ =?us-ascii?Q?4zEf/d1ScHwrlcgKefUTNwuhztMQ3GvcB3uajO7FJbngngUEgutS02ZxUc17?=
+ =?us-ascii?Q?N9/DebyU+jQ1OsU0cO55EZ5uKnGLEQR3lUHqJXUX6KEK5IpkPnbAcNtyPATX?=
+ =?us-ascii?Q?w7QcjqOQ7WTBy1GCmX2GJl/VENcHPIaBplqwegtALi+4KNoH2GdS1sM0eqNn?=
+ =?us-ascii?Q?IECapZTOaB1ACLmq5OEEOaXRaiXsqsKYSakfq+oddGqhdJQEKJh/bzvOaCHr?=
+ =?us-ascii?Q?PEyTIuD/1zjb9QN6QJHMKk30AuLBW81LexoNw1Cek9lOmcx/y703J2zfaodh?=
+ =?us-ascii?Q?medgDs3dws3YKQWNEpTEKTUELzApaS+jG65aKdAx?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc6bf441-165d-4a18-1938-08db7f7c2208
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3342.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2023 06:25:32.9775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pRb6DHBizRuKwg6+3Jz56Mbm8V/y6awwPVC/UT7WzdUXJQZWjiz9SBdr7JuxFeF1ymeoRxRC3lG/Eo7Iy1yQ4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR06MB4503
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,143 +117,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-afs@lists.infradead.org, Shyam Prasad N <nspmangalore@gmail.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@infradead.org>, linux-cachefs@redhat.com, v9fs-developer@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, linux-ext4@vger.kernel.org, ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org, SeongJae Park <sj@kernel.org>, Rohith Surabattula <rohiths.msft@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, Steve French <sfrench@samba.org>, Daire Byrne <daire.byrne@gmail.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
+Cc: Chunhai Guo <guochunhai@vivo.com>, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, 7 Jul 2023 14:12:06 -0400 David Wysochanski <dwysocha@redhat.com> wrote:
+When z_erofs_read_folio() reads a page with an offset far beyond EOF, two
+issues may occur:
+- z_erofs_pcluster_readmore() may take a long time to loop when the offset
+  is big enough, which is unnecessary.
+    - For example, it will loop 4691368 times and take about 27 seconds
+      with following case.
+        - offset = 19217289215
+        - inode_size = 1442672
+- z_erofs_do_read_page() may loop infinitely due to the inappropriate
+  truncation in the below statement. Since the offset is 64 bits and
+min_t() truncates the result to 32 bits. The solution is to replace
+unsigned int with another 64-bit type, such as erofs_off_t.
+    cur = end - min_t(unsigned int, offset + end - map->m_la, end);
+    - For example:
+        - offset = 0x400160000
+        - end = 0x370
+        - map->m_la = 0x160370
+        - offset + end - map->m_la = 0x400000000
+        - offset + end - map->m_la = 0x00000000 (truncated as unsigned int)
+    - Expected result:
+        - cur = 0
+    - Actual result:
+        - cur = 0x370
 
-> On Fri, Jul 7, 2023 at 12:46 PM Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-> >
-> > On Sat, Jul 8, 2023 at 1:39 AM Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-> > >
-> > > On Wed, Jun 28, 2023 at 11:48:52AM +0100, David Howells wrote:
-> > > > Fscache has an optimisation by which reads from the cache are skipped until
-> > > > we know that (a) there's data there to be read and (b) that data isn't
-> > > > entirely covered by pages resident in the netfs pagecache.  This is done
-> > > > with two flags manipulated by fscache_note_page_release():
-> > > >
-> > > >       if (...
-> > > >           test_bit(FSCACHE_COOKIE_HAVE_DATA, &cookie->flags) &&
-> > > >           test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags))
-> > > >               clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
-> > > >
-> > > > where the NO_DATA_TO_READ flag causes cachefiles_prepare_read() to indicate
-> > > > that netfslib should download from the server or clear the page instead.
-> > > >
-> > > > The fscache_note_page_release() function is intended to be called from
-> > > > ->releasepage() - but that only gets called if PG_private or PG_private_2
-> > > > is set - and currently the former is at the discretion of the network
-> > > > filesystem and the latter is only set whilst a page is being written to the
-> > > > cache, so sometimes we miss clearing the optimisation.
-> > > >
-> > > > Fix this by following Willy's suggestion[1] and adding an address_space
-> > > > flag, AS_RELEASE_ALWAYS, that causes filemap_release_folio() to always call
-> > > > ->release_folio() if it's set, even if PG_private or PG_private_2 aren't
-> > > > set.
-> > > >
-> > > > Note that this would require folio_test_private() and page_has_private() to
-> > > > become more complicated.  To avoid that, in the places[*] where these are
-> > > > used to conditionalise calls to filemap_release_folio() and
-> > > > try_to_release_page(), the tests are removed the those functions just
-> > > > jumped to unconditionally and the test is performed there.
-> > > >
-> > > > [*] There are some exceptions in vmscan.c where the check guards more than
-> > > > just a call to the releaser.  I've added a function, folio_needs_release()
-> > > > to wrap all the checks for that.
-> > > >
-> > > > AS_RELEASE_ALWAYS should be set if a non-NULL cookie is obtained from
-> > > > fscache and cleared in ->evict_inode() before truncate_inode_pages_final()
-> > > > is called.
-> > > >
-> > > > Additionally, the FSCACHE_COOKIE_NO_DATA_TO_READ flag needs to be cleared
-> > > > and the optimisation cancelled if a cachefiles object already contains data
-> > > > when we open it.
-> > > >
-> > > > Fixes: 1f67e6d0b188 ("fscache: Provide a function to note the release of a page")
-> > > > Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
-> > > > Reported-by: Rohith Surabattula <rohiths.msft@gmail.com>
-> > > > Suggested-by: Matthew Wilcox <willy@infradead.org>
-> > > > Signed-off-by: David Howells <dhowells@redhat.com>
-> > >
-> > > Hi David,
-> > >
-> > > I was bisecting a use-after-free BUG on the latest mm-unstable,
-> > > where HEAD is 347e208de0e4 ("rmap: pass the folio to __page_check_anon_rmap()").
-> > >
-> > > According to my bisection, this is the first bad commit.
-> > > Use-After-Free is triggered on reclamation path when swap is enabled.
-> >
-> > This was originally occurred during kernel compilation but
-> > can easily be reproduced via:
-> >
-> > stress-ng --bigheap $(nproc)
-> >
-> > > (and couldn't trigger without swap enabled)
-> > >
-> > > the config, KASAN splat, bisect log are attached.
-> > > hope this isn't too late :(
-> > >
-> > > > cc: Matthew Wilcox <willy@infradead.org>
-> > > > cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > > cc: Steve French <sfrench@samba.org>
-> > > > cc: Shyam Prasad N <nspmangalore@gmail.com>
-> > > > cc: Rohith Surabattula <rohiths.msft@gmail.com>
-> > > > cc: Dave Wysochanski <dwysocha@redhat.com>
-> > > > cc: Dominique Martinet <asmadeus@codewreck.org>
-> > > > cc: Ilya Dryomov <idryomov@gmail.com>
-> > > > cc: linux-cachefs@redhat.com
-> > > > cc: linux-cifs@vger.kernel.org
-> > > > cc: linux-afs@lists.infradead.org
-> > > > cc: v9fs-developer@lists.sourceforge.net
-> > > > cc: ceph-devel@vger.kernel.org
-> > > > cc: linux-nfs@vger.kernel.org
-> > > > cc: linux-fsdevel@vger.kernel.org
-> > > > cc: linux-mm@kvack.org
-> > > > ---
-> > > >
-> > > > Notes:
-> > > >     ver #7)
-> > > >      - Make NFS set AS_RELEASE_ALWAYS.
-> > > >
-> > > >     ver #4)
-> > > >      - Split out merging of folio_has_private()/filemap_release_folio() call
-> > > >        pairs into a preceding patch.
-> > > >      - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
-> > > >
-> > > >     ver #3)
-> > > >      - Fixed mapping_clear_release_always() to use clear_bit() not set_bit().
-> > > >      - Moved a '&&' to the correct line.
-> > > >
-> > > >     ver #2)
-> > > >      - Rewrote entirely according to Willy's suggestion[1].
-> > > >
-> > > >  fs/9p/cache.c           |  2 ++
-> > > >  fs/afs/internal.h       |  2 ++
-> > > >  fs/cachefiles/namei.c   |  2 ++
-> > > >  fs/ceph/cache.c         |  2 ++
-> > > >  fs/nfs/fscache.c        |  3 +++
-> > > >  fs/smb/client/fscache.c |  2 ++
-> > > >  include/linux/pagemap.h | 16 ++++++++++++++++
-> > > >  mm/internal.h           |  5 ++++-
-> > > >  8 files changed, 33 insertions(+), 1 deletion(-)
-> 
-> 
-> I think myself / Daire Byrne may have already tracked this down and I
-> found a 1-liner that fixed a similar crash in his environment.
-> 
-> Can you try this patch on top and let me know if it still crashes?
-> https://github.com/DaveWysochanskiRH/kernel/commit/902c990e311120179fa5de99d68364b2947b79ec
+Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+---
+ fs/erofs/zdata.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-I also encountered this issue with my DAMON tests, and was trying to find a
-time slot for deep dive.  And I confirmed your fix works.  Thank you for this
-great work.  Please Cc me when you post the patch if possible.
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 5f1890e309c6..6abbd4510076 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -972,7 +972,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	struct erofs_map_blocks *const map = &fe->map;
+ 	const loff_t offset = page_offset(page);
+ 	bool tight = true, exclusive;
+-	unsigned int cur, end, spiltted;
++	erofs_off_t cur, end;
++	unsigned int spiltted;
+ 	int err = 0;
+ 
+ 	/* register locked file pages as online pages in pack */
+@@ -1035,7 +1036,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	 */
+ 	tight &= (fe->mode > Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE);
+ 
+-	cur = end - min_t(unsigned int, offset + end - map->m_la, end);
++	cur = end - min_t(erofs_off_t, offset + end - map->m_la, end);
+ 	if (!(map->m_flags & EROFS_MAP_MAPPED)) {
+ 		zero_user_segment(page, cur, end);
+ 		goto next_part;
+@@ -1841,7 +1842,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ 	}
+ 
+ 	cur = map->m_la + map->m_llen - 1;
+-	while (cur >= end) {
++	while ((cur >= end) && (cur < i_size_read(inode))) {
+ 		pgoff_t index = cur >> PAGE_SHIFT;
+ 		struct page *page;
+ 
+@@ -1876,6 +1877,12 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ 	trace_erofs_readpage(page, false);
+ 	f.headoffset = (erofs_off_t)page->index << PAGE_SHIFT;
+ 
++	/* when trying to read beyond EOF, return zero page directly */
++	if (f.headoffset >= i_size_read(inode)) {
++		zero_user_segment(page, 0, PAGE_SIZE);
++		return 0;
++	}
++
+ 	z_erofs_pcluster_readmore(&f, NULL, true);
+ 	err = z_erofs_do_read_page(&f, page);
+ 	z_erofs_pcluster_readmore(&f, NULL, false);
+-- 
+2.25.1
 
-Tested-by: SeongJae Park <sj@kernel.org>
-
-
-Thanks,
-SJ
-
-> 
-> 
