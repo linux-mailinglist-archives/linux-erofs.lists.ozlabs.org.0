@@ -2,59 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2D0674E271
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 02:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FE7974E3DD
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 04:06:53 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VNDL1Vb4;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=lcZg/5Hf;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R0LlH6fDFz3bZ3
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 10:06:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R0PPj5jRcz3bbZ
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 12:06:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VNDL1Vb4;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=lcZg/5Hf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R0Ll83rhdz2yLV
-	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jul 2023 10:06:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689034004; x=1720570004;
-  h=date:from:to:cc:subject:message-id;
-  bh=AhW+4LQGTUwIS5qiZk2edSbPgh6H21y+yx+uZjcKCqs=;
-  b=VNDL1Vb4buw0toX7kwM++ySc1Myo2BS5q19Gy7alQ6kRe7B5rin0OTUA
-   3d0DR59MJpi+x1hUuEgA2QvGYWpxlfnwhVnd2q5n4cU/i8l3AwsN7lvQl
-   SjyA4UhJJ9qSbRTs4tBuseAgDP4QfV98qmeAxqDz/p5bZBUPWkNLK5gvl
-   Px5hnJz961n+tOBBAozVzndnEUSybxtp6KF1fYoJ1SvC1+ghpV5ggD4Sb
-   zQ/edZMAcJtUT9jLZuBsXIr5KJaFVjYyS41o/rxffuepjAhYxU8V2LT2C
-   ogAo2uBs+H7FaQKBLY04g5//mGNRcUwMzQO/SJ5aS8pOaQIOx24m2Immv
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="367066563"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="367066563"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 17:06:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="894971940"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="894971940"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 10 Jul 2023 17:06:33 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qJ0tk-00047m-1X;
-	Tue, 11 Jul 2023 00:06:32 +0000
-Date: Tue, 11 Jul 2023 08:06:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 770c413f54a4a69e1f398228aa12147b7cdaa4b4
-Message-ID: <202307110809.OhAsg3B7-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R033W2KDyz304l;
+	Mon, 10 Jul 2023 22:19:51 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 78E6460FAA;
+	Mon, 10 Jul 2023 12:19:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD76EC433C7;
+	Mon, 10 Jul 2023 12:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1688991587;
+	bh=2J+fX1q6zGco9Qkkut7k1oGUom0kvdTsmG/UR5nBS/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lcZg/5Hf6Blw0S0KBVmLS7XuB4wH3HsrCXsC5h2hKYACqGAETSqwGiuAn1zv2/Rsl
+	 YOfRjkeYMFIcaW7p23OxWcTEiGLmzVZP8u7MfCw251UdZXm1FaRYowg+5pVNRUg4SH
+	 rGbxakRBAw9Je/7IcFdyUw/AWroEm+9K1nQHsFNnUlEt3jB8MrvNjS2zRswA08V8pZ
+	 wds+9xHOVtRXpxw7AKs0S8ikoHFutTN5KKOCQTdSntzEeWNrOBLYZvNJ58I4jWKMO4
+	 trOiZmcTQJEaQV42w0QGQ4l/lY6Yv8dXtuTOWkUkO0al5gZVMemGZipC4IDHXdVMiv
+	 89FE2RmemJaUA==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v2 00/92] fs: new accessors for inode->i_ctime
+Date: Mon, 10 Jul 2023 14:18:51 +0200
+Message-Id: <20230710-stift-flexibel-0867d393e8fa@brauner>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230705185812.579118-1-jlayton@kernel.org>
+References: <20230705185812.579118-1-jlayton@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11283; i=brauner@kernel.org; h=from:subject:message-id; bh=2J+fX1q6zGco9Qkkut7k1oGUom0kvdTsmG/UR5nBS/g=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSs/vZNcyJHQ0Srmfqv55c3nchaqnLhiXDZo5JbRxU5e1cl n+5y6yhlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiIeSLDPw3jLbFNd8SdNfmWvzKRN5 4i/XfC34/Ccjwx+uq6O0V4vRgZbnS7HzHcMNt5f8KEj277edSLOHh1Hm9NW7nW7fLG/4kybAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
+X-Mailman-Approved-At: Tue, 11 Jul 2023 12:06:47 +1000
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,143 +65,227 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: lucho@ionkov.net, rafael@kernel.org, djwong@kernel.org, al@alarsen.net, cmllamas@google.com, andrii@kernel.org, hughd@google.com, john.johansen@canonical.com, agordeev@linux.ibm.com, hch@lst.de, hubcap@omnibond.com, pc@manguebit.com, linux-xfs@vger.kernel.org, bvanassche@acm.org, jeffxu@chromium.org, mpe@ellerman.id.au, john@keeping.me.uk, yi.zhang@huawei.com, jmorris@namei.org, christophe.leroy@csgroup.eu, code@tyhicks.com, stern@rowland.harvard.edu, borntraeger@linux.ibm.com, devel@lists.orangefs.org, mirimmad17@gmail.com, sprasad@microsoft.com, jaharkes@cs.cmu.edu, linux-um@lists.infradead.org, npiggin@gmail.com, viro@zeniv.linux.org.uk, ericvh@kernel.org, surenb@google.com, trond.myklebust@hammerspace.com, anton@tuxera.com, Christian Brauner <brauner@kernel.org>, wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, lsahlber@redhat.com, senozhatsky@chromium.org, arve@android.com, 
+ chuck.lever@oracle.com, svens@linux.ibm.com, jolsa@kernel.org, jack@suse.com, tj@kernel.org, akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, xu.xin16@zte.com.cn, shaggy@kernel.org, penguin-kernel@I-love.SAKURA.ne.jp, zohar@linux.ibm.com, linux-mm@kvack.org, joel@joelfernandes.org, edumazet@google.com, sdf@google.com, jomajm@gmail.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, paul@paul-moore.com, leon@kernel.org, john.fastabend@gmail.com, mcgrof@kernel.org, chi.minghao@zte.com.cn, codalist@coda.cs.cmu.edu, selinux@vger.kernel.org, zhangpeng362@huawei.com, quic_ugoswami@quicinc.com, yhs@fb.com, yzaikin@google.com, linkinjeon@kernel.org, mhiramat@kernel.org, ecryptfs@vger.kernel.org, tkjos@android.com, madkar@cs.stonybrook.edu, gor@linux.ibm.com, yuzhe@nfschina.com, linuxppc-dev@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, miklos@szeredi.hu, huyue2@coolpad.com, jaegeuk@kernel.org, gargaditya08@live.com, maco@android.com, hirofumi@mail.parknet.co.jp, 
+ haoluo@google.com, tony.luck@intel.com, tytso@mit.edu, nico@fluxnic.net, linux-ntfs-dev@lists.sourceforge.net, muchun.song@linux.dev, roberto.sassu@huawei.com, linux-f2fs-devel@lists.sourceforge.net, yang.yang29@zte.com.cn, gpiccoli@igalia.com, ebiederm@xmission.com, anna@kernel.org, quic_uaggarwa@quicinc.com, bwarrum@linux.ibm.com, mike.kravetz@oracle.com, jingyuwang_vip@163.com, linux-efi@vger.kernel.org, error27@gmail.com, martin@omnibond.com, trix@redhat.com, ocfs2-devel@lists.linux.dev, ast@kernel.org, sebastian.reichel@collabora.com, clm@fb.com, linux-mtd@lists.infradead.org, willy@infradead.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, raven@themaw.net, naohiro.aota@wdc.com, daniel@iogearbox.net, dennis.dalessandro@cornelisnetworks.com, linux-rdma@vger.kernel.org, quic_linyyuan@quicinc.com, coda@cs.cmu.edu, slava@dubeyko.com, idryomov@gmail.com, pabeni@redhat.com, adobriyan@gmail.com, serge@hallyn.com, chengzhihao1@huawei.com, axboe@kernel.dk, amir73il@gmail.c
+ om, linuszeng@tencent.com, keescook@chromium.org, arnd@arndb.de, autofs@vger.kernel.org, rostedt@goodmis.org, yifeliu@cs.stonybrook.edu, dlemoal@kernel.org, eparis@parisplace.org, ceph-devel@vger.kernel.org, yijiangshan@kylinos.cn, dhowells@redhat.com, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, kolga@netapp.com, song@kernel.org, samba-technical@lists.samba.org, sfrench@samba.org, jk@ozlabs.org, netdev@vger.kernel.org, rpeterso@redhat.com, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, ntfs3@lists.linux.dev, linux-erofs@lists.ozlabs.org, davem@davemloft.net, jfs-discussion@lists.sourceforge.net, princekumarmaurya06@gmail.com, ebiggers@google.com, neilb@suse.de, asmadeus@codewreck.org, linux_oss@crudebyte.com, me@bobcopeland.com, kpsingh@kernel.org, okanatov@gmail.com, almaz.alexandrovich@paragon-software.com, joseph.qi@linux.alibaba.com, hayama@lineo.co.jp, adilger.kernel@dilger.ca, mikulas@artax.karlin.mff.cuni.cz, shaozhengchao@huawei.com, chenzhongjin@huawei.com, 
+ ardb@kernel.org, anton.ivanov@cambridgegreys.com, agruenba@redhat.com, richard@nod.at, mark@fasheh.com, shr@devkernel.io, Dai.Ngo@oracle.com, cluster-devel@redhat.com, jgg@ziepe.ca, kuba@kernel.org, riel@surriel.com, salah.triki@gmail.com, dushistov@mail.ru, linux-cifs@vger.kernel.org, hca@linux.ibm.com, apparmor@lists.ubuntu.com, josef@toxicpanda.com, Liam.Howlett@Oracle.com, tom@talpey.com, hdegoede@redhat.com, linux-hardening@vger.kernel.org, aivazian.tigran@gmail.com, dchinner@redhat.com, dsterba@suse.com, xiubli@redhat.com, konishi.ryusuke@gmail.com, jgross@suse.com, jth@kernel.org, rituagar@linux.ibm.com, luisbg@kernel.org, martin.lau@linux.dev, v9fs@lists.linux.dev, fmdefrancesco@gmail.com, linux-unionfs@vger.kernel.org, lrh2000@pku.edu.cn, linux-security-module@vger.kernel.org, ezk@cs.stonybrook.edu, linux@treblig.org, hannes@cmpxchg.org, phillip@squashfs.org.uk, johannes@sipsolutions.net, sj1557.seo@samsung.com, dwmw2@infradead.org, linux-karma-devel@lists.sourceforge.net, 
+ linux-btrfs@vger.kernel.org, jlbec@evilplan.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 770c413f54a4a69e1f398228aa12147b7cdaa4b4  erofs: avoid infinite loop in z_erofs_do_read_page() when reading beyond EOF
+On Wed, 05 Jul 2023 14:58:09 -0400, Jeff Layton wrote:
+> v2:
+> - prepend patches to add missing ctime updates
+> - add simple_rename_timestamp helper function
+> - rename ctime accessor functions as inode_get_ctime/inode_set_ctime_*
+> - drop individual inode_ctime_set_{sec,nsec} helpers
+> 
+> I've been working on a patchset to change how the inode->i_ctime is
+> accessed in order to give us conditional, high-res timestamps for the
+> ctime and mtime. struct timespec64 has unused bits in it that we can use
+> to implement this. In order to do that however, we need to wrap all
+> accesses of inode->i_ctime to ensure that bits used as flags are
+> appropriately handled.
+> 
+> [...]
 
-elapsed time: 725m
+Applied to the vfs.ctime branch of the vfs/vfs.git tree.
+Patches in the vfs.ctime branch should appear in linux-next soon.
 
-configs tested: 120
-configs skipped: 9
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r011-20230710   gcc  
-alpha                randconfig-r014-20230710   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arc                  randconfig-r001-20230710   gcc  
-arc                  randconfig-r043-20230710   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   clang
-arm                                 defconfig   gcc  
-arm                            dove_defconfig   clang
-arm                   milbeaut_m10v_defconfig   clang
-arm                        neponset_defconfig   clang
-arm                            qcom_defconfig   gcc  
-arm                  randconfig-r025-20230710   gcc  
-arm                  randconfig-r046-20230710   gcc  
-arm                         s5pv210_defconfig   clang
-arm                           stm32_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r041-20230710   clang
-hexagon              randconfig-r045-20230710   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230710   gcc  
-i386         buildonly-randconfig-r005-20230710   gcc  
-i386         buildonly-randconfig-r006-20230710   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230710   gcc  
-i386                 randconfig-i002-20230710   gcc  
-i386                 randconfig-i003-20230710   gcc  
-i386                 randconfig-i004-20230710   gcc  
-i386                 randconfig-i005-20230710   gcc  
-i386                 randconfig-i006-20230710   gcc  
-i386                 randconfig-i011-20230710   clang
-i386                 randconfig-i012-20230710   clang
-i386                 randconfig-i013-20230710   clang
-i386                 randconfig-i014-20230710   clang
-i386                 randconfig-i015-20230710   clang
-i386                 randconfig-i016-20230710   clang
-i386                 randconfig-r024-20230710   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r034-20230710   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r006-20230710   gcc  
-m68k                 randconfig-r016-20230710   gcc  
-microblaze           randconfig-r003-20230710   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          ath25_defconfig   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r012-20230710   gcc  
-nios2                randconfig-r013-20230710   gcc  
-nios2                randconfig-r032-20230710   gcc  
-openrisc             randconfig-r033-20230710   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                        cell_defconfig   gcc  
-powerpc                      katmai_defconfig   clang
-powerpc                 mpc832x_rdb_defconfig   clang
-powerpc                     sequoia_defconfig   gcc  
-powerpc                     tqm8560_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r026-20230710   clang
-riscv                randconfig-r042-20230710   clang
-riscv                          rv32_defconfig   gcc  
-s390                             alldefconfig   clang
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230710   clang
-sh                               allmodconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r031-20230710   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230710   gcc  
-x86_64       buildonly-randconfig-r002-20230710   gcc  
-x86_64       buildonly-randconfig-r003-20230710   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230710   clang
-x86_64               randconfig-x002-20230710   clang
-x86_64               randconfig-x003-20230710   clang
-x86_64               randconfig-x004-20230710   clang
-x86_64               randconfig-x005-20230710   clang
-x86_64               randconfig-x006-20230710   clang
-x86_64               randconfig-x011-20230710   gcc  
-x86_64               randconfig-x012-20230710   gcc  
-x86_64               randconfig-x013-20230710   gcc  
-x86_64               randconfig-x014-20230710   gcc  
-x86_64               randconfig-x015-20230710   gcc  
-x86_64               randconfig-x016-20230710   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-xtensa               randconfig-r004-20230710   gcc  
-xtensa               randconfig-r035-20230710   gcc  
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.ctime
+
+[01/92] ibmvmc: update ctime in conjunction with mtime on write
+        https://git.kernel.org/vfs/vfs/c/ead310563ad2
+[02/92] bfs: update ctime in addition to mtime when adding entries
+        https://git.kernel.org/vfs/vfs/c/f42faf14b838
+[03/92] efivarfs: update ctime when mtime changes on a write
+        https://git.kernel.org/vfs/vfs/c/d8d026e0d1f2
+[04/92] exfat: ensure that ctime is updated whenever the mtime is
+        https://git.kernel.org/vfs/vfs/c/d84bd8fa48d7
+[05/92] apparmor: update ctime whenever the mtime changes on an inode
+        https://git.kernel.org/vfs/vfs/c/73955caedfae
+[06/92] cifs: update the ctime on a partial page write
+        https://git.kernel.org/vfs/vfs/c/c2f784379c99
+[07/92] fs: add ctime accessors infrastructure
+        https://git.kernel.org/vfs/vfs/c/64f0367de800
+[08/92] fs: new helper: simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/54ced54a0239
+[09/92] btrfs: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/218e0f662fee
+[10/92] ubifs: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/caac4f65568d
+[11/92] shmem: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/d3d11e9927b6
+[12/92] exfat: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/71534b484c63
+[13/92] ntfs3: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/140880821ce0
+[14/92] reiserfs: convert to simple_rename_timestamp
+        https://git.kernel.org/vfs/vfs/c/1a1a4df5e8fc
+[15/92] spufs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/784e5a93c9cf
+[16/92] s390: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/1cece1f8e5c2
+[17/92] binderfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/0bcd830a76f3
+[18/92] infiniband: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/811f97f80b01
+[19/92] ibm: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/b447ed7597f0
+[20/92] usb: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/2557dc7f2dde
+[21/92] 9p: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/4cd4b11385ef
+[22/92] adfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/e257d7ade66e
+[23/92] affs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/770619f19a77
+[24/92] afs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/758506e44668
+[25/92] fs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/a0a5a9810b37
+[26/92] autofs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d7d1363cc3f6
+[27/92] befs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d6218773de2d
+[28/92] bfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/368b313ac2ab
+[29/92] btrfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d3d15221956a
+[30/92] ceph: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/818fc6e0129a
+[31/92] coda: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/4e0b22fbc012
+[32/92] configfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/69c977798a6a
+[33/92] cramfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/911f086eae23
+[34/92] debugfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/634a50390dbb
+[35/92] devpts: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/92bb29a24707
+[36/92] ecryptfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/16d21856dfd6
+[37/92] efivarfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/cfeee05a50e1
+[38/92] efs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/3a30b097319f
+[39/92] erofs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/e3594996216f
+[40/92] exfat: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/8bd562d6f46d
+[41/92] ext2: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/7483252e8894
+[42/92] ext4: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/f2ddb05870fb
+[43/92] 9afc475653af f2fs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/f2ddb05870fb
+[44/92] fat: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/8a0c417b695b
+[45/92] freevxfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/7affaeb5b914
+[46/92] fuse: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/688279761436
+[47/92] gfs2: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/9e5b114b5ee4
+[48/92] hfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d41f5876a177
+[49/92] hfsplus: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/147f3dd171d2
+[50/92] hostfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/2ceaa835b4f5
+[51/92] hpfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/e6fd7f49daa7
+[52/92] hugetlbfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/f5950f079b1a
+[53/92] isofs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/53f2bb3567f0
+[54/92] jffs2: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/7e8dc4ab1afb
+[55/92] jfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/77737373dbb3
+[56/92] kernfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/8b0e3c2e9900
+[57/92] nfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/12844cb15dc6
+[58/92] nfsd: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/f297728268bf
+[59/92] nilfs2: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/1e9f083bc9cd
+[60/92] ntfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/3cc66672eaa5
+[61/92] ntfs3: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/9438de01396e
+[62/92] ocfs2: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/da5b97da32e7
+[63/92] omfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/563d772c8d70
+[64/92] openpromfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/5f0978a6f0a6
+[65/92] orangefs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/6a83804b4325
+[66/92] overlayfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/60dcee636746
+[67/92] procfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/85e0a6b3b8cf
+[68/92] pstore: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/2b8125b5e7c6
+[69/92] qnx4: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/77eb00659cb5
+[70/92] qnx6: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/af1acd38df36
+[71/92] ramfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/0eb8012f4b0b
+[72/92] reiserfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/e3e5f5f70292
+[73/92] romfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/b6058a9af143
+[74/92] smb: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d5c263f2187d
+[75/92] squashfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/eaace9c73ba8
+[76/92] sysv: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/41b6f4fbbe32
+[77/92] tracefs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/5f69a5364568
+[78/92] ubifs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/5bb225ba81c0
+[79/92] udf: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/e251f0e98433
+[80/92] ufs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/376ef9f6cab1
+[81/92] vboxsf: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/9f06612951d5
+[82/92] xfs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/4e8c1361146f
+[83/92] zonefs: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/cbdc6aa5f65d
+[84/92] linux: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/ff12abb4a71a
+[85/92] mqueue: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/a6b5a0055142
+[86/92] bpf: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/d2b6a0a3863a
+[87/92] shmem: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/ffcd778237d3
+[88/92] sunrpc: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/ccf1c9002d71
+[89/92] apparmor: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/ff91aaa76f1a
+[90/92] security: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/701071f9ad33
+[91/92] selinux: convert to ctime accessor functions
+        https://git.kernel.org/vfs/vfs/c/cb6dfffdc7e9
+[92/92] fs: rename i_ctime field to __i_ctime
+        https://git.kernel.org/vfs/vfs/c/c06d4bf5e207
