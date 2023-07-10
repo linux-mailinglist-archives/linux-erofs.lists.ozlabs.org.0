@@ -2,57 +2,109 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F0A574CB20
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 06:16:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E68074CB30
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 06:26:23 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hri1KLDJ;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=BbNVcOeY;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QzrL90dhtz3bNp
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 14:16:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4QzrY93r7Pz3bX2
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 14:26:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hri1KLDJ;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=BbNVcOeY;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=ebiggers@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feab::719; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on20719.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::719])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QzrL30XZlz2ygG
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 14:16:42 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id A497860B38;
-	Mon, 10 Jul 2023 04:16:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046DDC433C9;
-	Mon, 10 Jul 2023 04:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688962600;
-	bh=7x2z1cVqOH97MomVFRhY8bwQX1KyTdak49YFSUhCNfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hri1KLDJdtUg8RimgGrqETeZC+r/SyNirEr9gb++bdyQ/KH6eVAFTLB/Av98LjJ1X
-	 tqJRRPzpR/r55Kn5wkN6NdETK1ckVPHdzvG/lq7X57e1rUjLHDKqsY4JDtpL4eybbH
-	 fswfVStqtLPUJy7wtlmVFfz2F1acVpgo7tiYQDCTUDHYMS0k+lX/FQrIXKp0sgT68V
-	 JkqPFjAKZBtSijSl7xWNauQ7BEQ7CGuwyn9jJyPLn/vZK+m7SzTXRap5T9R14AIXIc
-	 tu8C+Yd0U5dlBAT7exos/5N8c8jyRrsVl6tNjwdi6OKEbN7NpbOTCldpVFCoa/4nE0
-	 MEGEXPZCk3ZpA==
-Date: Sun, 9 Jul 2023 21:16:38 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 2/4] erofs-utils: add a built-in DEFLATE compressor
-Message-ID: <20230710041638.GA21080@sol.localdomain>
-References: <20230709182511.96954-1-hsiangkao@linux.alibaba.com>
- <20230709182511.96954-3-hsiangkao@linux.alibaba.com>
- <20230710023300.GA185469@sol.localdomain>
- <52875e72-4871-7615-3f20-f02cd9548898@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4QzrY40bWVz301R
+	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 14:26:14 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gREy369J+X8lWvyW5CFcVrqvf6IVLy7b57kxyobVg7QGvp7BRfxQBXHk/tve02eHy3Czr+LdBRP/IbDUbj4IBPJ6gB/CKreedbFttCYdk4vyyS1plw3mSG7/h01k7yOQ1/b6PDIsnHC/En54nE9/zq+gnbFiOCVzJbFj9E+b8btZ7w1KrxvOUEUcaMQgQK+K3GyN9XZK/TeV0jh58w+gKxEvpJhF/Tosveh1wYGOIZ6mhgG9REOz464u2EvGWO+s1Td6zhfPscTMIPTdhDEQ7cl/7Pas2xUzFZyfn1QgdSKtPUk09rgb4eITvJSxGGVCwJL3a+wbE1Oq6uEzgb8cBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=but9xGWUClSCNyz/budytUTSCviuryC7CaZzX6GmDN4=;
+ b=DbT0+JFhrCiuAbAqK0lyCBQ9ae79kvWl//0+//kSfrWOwh3yRykLnbkJlH8zYyHEIQEASYm4NWT26pwcEdYbF6GMZQjD10SZ7nY+cIi+hZrN+DiaaoDZeEhFWrLuGIh12FqEjkhH5HzPQnvFlW/OjZhf+v2xHo45dCifsHaa6A/oYnttIfxKVE/xUfvKKjDUxyiRYQCoTR39/wd0daWn2LRgnSLN9AyGbEWsTQzCECx9q1PAjG7Ym0mCbhpOyFu3yis2ueIsrALy7zVKK/Ft6AU2YM6xJsgnDIstI0SOkQgAtFOcHTcmmzgOLB62QV8BkEjriyeubfRP5qoJ0f9AsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=but9xGWUClSCNyz/budytUTSCviuryC7CaZzX6GmDN4=;
+ b=BbNVcOeYp4NCwPeKXa9lLvEOc5fRwEk1sEMB8MO2SpigBggyPTL08SjNJxdlNKmX9lc5pp8UvoipULnjKj1lZOhd6F7iIYwaAGdGAc9SiTVnBLgIMSUaMn/+VL+rA6hZc1gM7aelVqnuDx9G2d+2x1GejSoy5gwHrDmQIXIWspHUmGK/Fxpjf2PbgW3MeobwE3dkpbizwZklhX/IZrgduU1OCJ0CJu6wgqRkoNxBRcNBfBC0Gj1s8KWUEjqMUVm5ltDAjAMoREny/VKSGRWDUpXfq1BTU8PDejOpjdA3+0vHIUbElcVogn6kAIF++abvI/wFnTuvoMToiYzf7fXpog==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3338.apcprd06.prod.outlook.com (2603:1096:4:97::23) by
+ TYZPR06MB4109.apcprd06.prod.outlook.com (2603:1096:400:2a::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6565.26; Mon, 10 Jul 2023 04:25:50 +0000
+Received: from SG2PR06MB3338.apcprd06.prod.outlook.com
+ ([fe80::a05b:2f8b:fba5:50fb]) by SG2PR06MB3338.apcprd06.prod.outlook.com
+ ([fe80::a05b:2f8b:fba5:50fb%7]) with mapi id 15.20.6565.028; Mon, 10 Jul 2023
+ 04:25:50 +0000
+From: Chunhai Guo <guochunhai@vivo.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH] erofs: avoid unnecessary loops in z_erofs_pcluster_readmore() when read page beyond EOF
+Date: Mon, 10 Jul 2023 12:25:31 +0800
+Message-Id: <20230710042531.28761-1-guochunhai@vivo.com>
+X-Mailer: git-send-email 2.39.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0023.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::17) To SG2PR06MB3338.apcprd06.prod.outlook.com
+ (2603:1096:4:97::23)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <52875e72-4871-7615-3f20-f02cd9548898@linux.alibaba.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3338:EE_|TYZPR06MB4109:EE_
+X-MS-Office365-Filtering-Correlation-Id: 724ee590-16f6-44cf-9848-08db80fdbdf4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	6sLh54XM3cTBcQQwqV3YZNT6HMj849pQm05xl2dMXiCHTiiCSMky5JrJoxSEQGS+Ot/KlSCyzivKmQzwQ5oJVfIR3gKvPG4zdDLOMTtvGp4RCaCmLU4tfi56gdBVBGdnpdeQGNgwBQi/7bIPvz4xT38AhOtvADHjupRL9P/W4YYO6zjFVtJtG5DJ1fMN7ZSpsJjz0Yj39cZ7Y84241amhesUitbDZ57PskaOMuE4hj8sTWBaFEgr+RJcf8gkNdx8sYFy03jM6kmTjynUXL+DjCgGc/05MInp4UNtUiwzId4fRnWjt80iLPplfebEWLY3ctwytNUoRRrrCPyb2wXTbGjiGseCXPCZyVTS60L9sLuDsdZ6eZ2sVeT4N2azgW4GFYSv5Aa2B5M9jZMAong1V+R92MKMW0MIBlzl6vrAq79KzZHUPnp0raB8g4s3S7HWpmvD9yzB8lxyURi0M0NJBIgDnaV597nO2kg8pQk1RXy7mDC5iDM29V315GwQXn91o/CiA/c7Cax32Vn9ghtEU4MDQRaI0u+cESFoYsEYR2gzIdBCnI3W32xMj+Zo7wAqV15A8/znPlKNJF4VHMU9nqlcti2l35pdZ/l84+DS9J8=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3338.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39850400004)(136003)(376002)(396003)(366004)(346002)(451199021)(6666004)(4326008)(66556008)(66946007)(66476007)(38100700002)(2616005)(38350700002)(86362001)(186003)(26005)(107886003)(6506007)(1076003)(83380400001)(52116002)(36756003)(478600001)(4744005)(41300700001)(5660300002)(8936002)(8676002)(6512007)(6486002)(316002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?DlGh5m+wm4exOdPjIa11oK4Jo+rx2W1/DF4tSwAbAflcPpDSmGz5deiUL1ek?=
+ =?us-ascii?Q?Q9xCoKNu6haQtCHkvGWh+olxSO1DaabTmRiPG96o2ExVGWBnQ3BOVj/08SPJ?=
+ =?us-ascii?Q?Fq+KV6SbnAgLP1gi3phrqxS2T8v7HyGRM7ZCBDxMoC06z0Z259Hsi2Mznrc5?=
+ =?us-ascii?Q?Xee5TB07j5Uw4SYRBS2XSNbiCmAHM6qdMU1s7XrKuW24W4bMFyOQhQc6xkyj?=
+ =?us-ascii?Q?Xg3IPeBwc+IjGG5ZHb/YTND7/X8dDcfh4kN5YS99ZtH1rQ0Sdgh3fCbA3gvd?=
+ =?us-ascii?Q?OJuNFJqw2vOY4sg6VB5mxMmmbU4R8fPs4BFzjyf3E1EOgvYLZR60uZKmuC5d?=
+ =?us-ascii?Q?MeYBZwVvl6YdFb67GvaO+1iTADgqeO4eXXWUPwBaKaAwQjIrml2cRw1TmFPo?=
+ =?us-ascii?Q?At5JuQH8V704iqKPTTvN3UVJRer2NGd7xDMfpZLHK2MBvMhnnTucpTMyyo2a?=
+ =?us-ascii?Q?buVyXYv7NFdfKVFSw9GR9b243K3SIGLGEUU/vh/6Gxuk+d3KrX7JJCAlGvqs?=
+ =?us-ascii?Q?1GdBnhcQ3Z1nj+37kIRpcPoIg/yxEm3k2cp1fPzTG58g+HltTQfhgRmXSyOl?=
+ =?us-ascii?Q?HD5VfwzMqRc3aJIyjoWZkHJVn+oz9Pbl+G/YD5brNhNTCKxjOiIm1z2993p+?=
+ =?us-ascii?Q?4v6VAJUMBYikV2bz7k3eA2rr+G4lRpd9en/noLnUXaCjYuaTioMvjaiDgeCJ?=
+ =?us-ascii?Q?/OACE1KUUakc5dftgT4S/Sk2iTrQron/WVyMRXHd/N9K9FfLmw5D4QqqvhXq?=
+ =?us-ascii?Q?M1rnqIgi7m/+0XaIoW2DiLyNACNFJjcUYYFYoGv10Vse+JgssgZ6tIJTCREP?=
+ =?us-ascii?Q?QYIyMe8b/7vU0WQzOM1G+EDwmKhUUBey+eQAWZaY0Z4Nyho2dCocAq6CKboR?=
+ =?us-ascii?Q?BlWfA0lP8q6+dub/qgFeJYqoNAq4cgFAi5HIQKuq4Llmfqyu4CycbCW830wi?=
+ =?us-ascii?Q?aktFyf1PjgG7BRCkLUvKqanCLxc6hLXCQ2NjyTSgKneaYZpwCCdQ1mUZkxQT?=
+ =?us-ascii?Q?ngVl3UiMUv3T79nwC9xmxz1/FlQhC/ZqO8wTwL1i0o+Ygct6B72nFFCVSKId?=
+ =?us-ascii?Q?9lacMdgZvDqBTne1FsmXxOxj/El0S1/WSqtzWjVYbsxyiUBUagvLPd/V8JGB?=
+ =?us-ascii?Q?N+remP51qUtV/zGa6HCiMJiDwjyVa5gVfW1uKKiL6Wy8PIZHwUNfVXxY7RM4?=
+ =?us-ascii?Q?phOcGiR8VM7KwrVsUJBsC+CNeA4+fno2ppWIn8/KAg0zq6YUXVR9AsZZH6Tm?=
+ =?us-ascii?Q?j1ZlAH7xk1KJ/sCm0vIZRErd7y7/H9FBtSnXDkC0tFURLU2JjcJ4b/bNLi/I?=
+ =?us-ascii?Q?pyDLNCrj0mVX/t/kme1JJN5qb3li78F35U6mwEc192YGAZ7K15anSup6c3VB?=
+ =?us-ascii?Q?EoZ9Rpx20CCkI7tLpuueunX+hUcblrik8cDiZPeqzxY6GeNhWqQ21IzWRzsR?=
+ =?us-ascii?Q?EjuGrDJe4VZaat5Kw++05IWVkdWFQzSvoE/gHfD6MKVKWkn+xnJfD7fnjQCJ?=
+ =?us-ascii?Q?71KWO7P1huJoSZaFmz8VXHSQyaJyJVpynzmnPDB8y0Q6mdnUzwzNcvOARBJA?=
+ =?us-ascii?Q?eVKuxn+m1IyO95WV+552gBk99saJjA/F+XjydgdM?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 724ee590-16f6-44cf-9848-08db80fdbdf4
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3338.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2023 04:25:50.6277
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H0VWPcOmRPTpL5O1IRR2Q7MQSutGtvr4Nn3n05Reg5h16mRVycnXjMEMKaLLcN4xpWzUdo5xc9kLmLr52rQCWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB4109
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,339 +116,35 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Chunhai Guo <guochunhai@vivo.com>, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Jul 10, 2023 at 11:01:16AM +0800, Gao Xiang wrote:
-> Hi Eric,
-> 
-> On 2023/7/10 10:33, Eric Biggers wrote:
-> > Hi Gao,
-> > 
-> > On Mon, Jul 10, 2023 at 02:25:09AM +0800, Gao Xiang wrote:
-> > > 
-> > > Since there is _no fixed-sized output DEFLATE compression appoach_
-> > > available in public (fitblk is somewhat ineffective) and the original
-> > > zlib is quite slowly developping, let's work out one for our use cases.
-> > > Fortunately, it's only less than 1.5kLOC with lazy matching to match
-> > > the basic zlib ability.  Besides, near-optimal block splitting (based
-> > > on price function) doesn't support for now since it's not rush for us.
-> > > 
-> > > In the future, there may be more built-in optimizers landed to fulfill
-> > > our needs even further.  In addition, I'd be quite happy to see more
-> > > popular encoders to support fixed-sized output compression too.
-> > > 
-> > > [1] https://developer.apple.com/documentation/compression/compression_algorithm
-> > > [2] https://datatracker.ietf.org/doc/html/rfc1951
-> > > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > > ---
-> > >   lib/Makefile.am    |    2 +
-> > >   lib/kite_deflate.c | 1267 ++++++++++++++++++++++++++++++++++++++++++++
-> > >   2 files changed, 1269 insertions(+)
-> > >   create mode 100644 lib/kite_deflate.c
-> > 
-> > Have you considered simply running any standard compressor multiple times to
-> > find the maximum input size that compresses to less than or equal to the desired
-> > output size?  It may sound too slow, but it can be made to do the search in a
-> 
-> Thanks for your interest and reply!
-> 
-> Actually I've tried several ways before (just like fitblk.c or binary search),
-> but the compression ratios is sliently impacted
+z_erofs_pcluster_readmore() may take a long time to loop when the page
+offset is large enough, which is unnecessary should be prevented.
+For example, when the following case is encountered, it will loop 4691368
+times, taking about 27 seconds.
+    - offset = 19217289215
+    - inode_size = 1442672
 
-That's strange, since the method I suggested should improve the compression
-ratio.
+Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+---
+ fs/erofs/zdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> and compression speed is really
-> impacted (maybe we need to develop segment-splitted multi-threadded compression
-> as well, and it's developping by a college student now but I'm not sure the
-> progress.)
-
-I'm surprised that multi-threaded compression isn't something you have already!
-
-> 
-> I think we could use this way first for the new Zstd support (if they don't have
-> bandwidth to add a offical fixed-sized output approach), but considering deflate
-> algorithm is quite easy for me to understand so at least I could have a simple
-> built-in one to avoid external dependency (mainly considering zlib since it's
-> quite outdated).  Since EROFS is actually offline compression so the compressed
-> data correctness can always be checked in advance before image release.
-
-Writing an optimized compressor, especially one that implements high compression
-levels, is very hard.  Are you sure it's something you want to implement and
-maintain in erofs-utils?
-
-> Also I have more ideas to optimize the last symbol from matchfinders (even lazy
-> matching) for fixed-sized output approaches to get even better compression
-> ratios (especially for smaller filesystem cluster like 4kb.)
-
-Yes, there are some tricks that compressors that natively support
-fixed-size-output mode could use in order to avoid redundant work.
-
-> > smart way (binary search + heuristics).  Also, it would easily work with every
-> > compressor, and it would always produce the optimal input size.
-> > 
-> > I wrote a proof-of-concept patch that implements this idea in the benchmark
-> > program in libdeflate.  It finds the optimal input size in about 8 attempts on
-> > average for a target output size of 4096, or about 13 for a target output size
-> > of 65536.  Note, if an optimal solution is not needed, it could be sped up
-> > slightly by stopping when the output size is at, or just under (if desired), the
-> > target output size.  Also keep in mind that any compression level can be used.
-> > 
-> > The full code I tested is currently at
-> > https://github.com/ebiggers/libdeflate/tree/fixed-output-size, but below is the
-> > actual algorithm:
-> 
-> If libdeflate officically supports this mode, I'm very happy to integrate
-> libdeflate in this way as an alternative encoder (if you could merge this), and
-> if the compression speed is improved, I could switch it to the default encoder
-> then. In the other words, I really hope there could be an official deflate
-> encoder to support this mode as well.  Also I think the in-kernel zlib
-> decompression is somewhat slow just due to some non-technical reasons, I might
-> need to improve this eveutually but it's no rush for us compared to support
-> DEFLATE format first as well.
-> 
-> > 
-> > /*
-> >   * Compresses the largest prefix of 'in', with maximum size 'in_nbytes', whose
-> >   * compressed output is at most 'target_output_size' bytes.  The compressed size
-> >   * is returned as the return value, and the uncompressed size is returned in
-> >   * *actual_in_nbytes_ret.  The output buffer 'out' has size 'out_nbytes_avail',
-> >   * which should be at least 'target_output_size + 9'.  'tmpbuf' must be a buffer
-> >   * the same size as 'out'.
-> >   */
-> > static size_t
-> > do_compress_withfixedoutputsize(struct compressor *c,
-> > 				const u8 *in, size_t in_nbytes,
-> > 				u8 *out, size_t out_nbytes_avail,
-> > 				size_t target_output_size,
-> > 				size_t last_uncompressed_size,
-> > 				u8 *tmpbuf,
-> > 				size_t *actual_in_nbytes_ret)
-> > {
-> > 	size_t l = 0; /* largest input that fits so far */
-> > 	size_t l_csize = 0;
-> > 	size_t r = in_nbytes + 1; /* smallest input that doesn't fit so far */
-> > 	size_t m;
-> > 
-> > 	if (last_uncompressed_size)
-> > 		m = last_uncompressed_size * 15 / 16;
-> > 	else
-> > 		m = target_output_size * 4;
-> > 	for (;;) {
-> > 		size_t csize;
-> > 
-> > 		m = MAX(m, l + 1);
-> > 		m = MIN(m, r - 1);
-> > 
-> > 		csize = do_compress(c, in, m, tmpbuf, out_nbytes_avail);
-> > 		if (csize > 0 && csize <= target_output_size) {
-> > 			/* Fits */
-> > 			memcpy(out, tmpbuf, csize);
-> > 			l = m;
-> > 			l_csize = csize;
-> > 			if (r <= l + 1)
-> > 				break;
-> > 			/*
-> > 			 * Estimate needed input prefix size based on current
-> > 			 * compression ratio.
-> > 			 */
-> > 			m = (target_output_size * m) / csize;
-> > 		} else {
-> > 			/* Doesn't fit */
-> > 			r = m;
-> > 			if (r <= l + 1)
-> > 				break;
-> > 			m = (l + r) / 2;
-> > 		}
-> > 	}
-> > 	*actual_in_nbytes_ret = l;
-> > 	return l_csize;
-> > }
-> > 
-> > What do you think?
-> 
-> Thank you for the time and your efforts, I much appreciate if it could be
-> supported so I could add a alternative encoder for this.
-> 
-
-Native fixed-size-output size support in libdeflate is something I'll think
-about.  However, the point I'm making is that it's unclear how valuable native
-fixed-size-output size support in compressors is, given that the search
-algorithm I described above actually seems to work fairly well, and it can
-produce the optimal solution.
-
-Here's a quick proof of concept patch for mkfs.erofs:
-
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 553b387..f58a684 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -45,3 +45,4 @@ liberofs_la_SOURCES += compressor_liblzma.c
- endif
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 5f1890e309c6..d9a0763f4595 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1841,7 +1841,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ 	}
  
- liberofs_la_SOURCES += kite_deflate.c compressor_deflate.c
-+liberofs_la_LDFLAGS = -ldeflate
-diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
-index ad76b7c..d7a5e90 100644
---- a/lib/compressor_deflate.c
-+++ b/lib/compressor_deflate.c
-@@ -6,6 +6,7 @@
- #include "erofs/internal.h"
- #include "erofs/print.h"
- #include "erofs/config.h"
-+#include "libdeflate.h"
- #include "compressor.h"
+ 	cur = map->m_la + map->m_llen - 1;
+-	while (cur >= end) {
++	while ((cur >= end) && (cur < i_size_read(inode))) {
+ 		pgoff_t index = cur >> PAGE_SHIFT;
+ 		struct page *page;
  
- void *kite_deflate_init(int level, unsigned int dict_size);
-@@ -13,16 +14,64 @@ void kite_deflate_end(void *s);
- int kite_deflate_destsize(void *s, const u8 *in, u8 *out,
- 			  unsigned int *srcsize, unsigned int target_dstsize);
- 
-+#define USE_LIBDEFLATE
-+
- static int deflate_compress_destsize(const struct erofs_compress *c,
- 				     const void *src, unsigned int *srcsize,
- 				     void *dst, unsigned int dstsize)
- {
-+#ifdef USE_LIBDEFLATE
-+	static size_t last_uncompressed_size = 0;
-+	size_t l = 0; /* largest input that fits so far */
-+	size_t l_csize = 0;
-+	size_t r = *srcsize + 1; /* smallest input that doesn't fit so far */
-+	size_t m;
-+	u8 tmpbuf[dstsize + 9];
-+
-+	if (last_uncompressed_size)
-+		m = last_uncompressed_size * 15 / 16;
-+	else
-+		m = dstsize * 4;
-+	for (;;) {
-+		size_t csize;
-+
-+		m = max(m, l + 1);
-+		m = min(m, r - 1);
-+
-+		csize = libdeflate_deflate_compress(c->private_data, src, m, tmpbuf, dstsize + 9);
-+		/*printf("Tried %zu => %zu\n", m, csize);*/
-+		if (csize > 0 && csize <= dstsize) {
-+			/* Fits */
-+			memcpy(dst, tmpbuf, csize);
-+			l = m;
-+			l_csize = csize;
-+			if (r <= l + 1 || csize + (22 - 2*(int)c->compression_level) >= dstsize)
-+				break;
-+			/*
-+			 * Estimate needed input prefix size based on current
-+			 * compression ratio.
-+			 */
-+			m = (dstsize * m) / csize;
-+		} else {
-+			/* Doesn't fit */
-+			r = m;
-+			if (r <= l + 1)
-+				break;
-+			m = (l + r) / 2;
-+		}
-+	}
-+	/*printf("Choosing %zu => %zu\n", l, l_csize);*/
-+	*srcsize = l;
-+	last_uncompressed_size = l;
-+	return l_csize;
-+#else
- 	int rc = kite_deflate_destsize(c->private_data, src, dst,
- 				       srcsize, dstsize);
- 
- 	if (rc <= 0)
- 		return -EFAULT;
- 	return rc;
-+#endif
- }
- 
- static int compressor_deflate_exit(struct erofs_compress *c)
-@@ -30,7 +79,11 @@ static int compressor_deflate_exit(struct erofs_compress *c)
- 	if (!c->private_data)
- 		return -EINVAL;
- 
-+#ifdef USE_LIBDEFLATE
-+	libdeflate_free_compressor(c->private_data);
-+#else
- 	kite_deflate_end(c->private_data);
-+#endif
- 	return 0;
- }
- 
-@@ -47,8 +100,13 @@ static int compressor_deflate_init(struct erofs_compress *c)
- static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- 					     int compression_level)
- {
--	void *s;
-+	if (compression_level < 0)
-+		compression_level = erofs_compressor_deflate.default_level;
- 
-+#ifdef USE_LIBDEFLATE
-+	libdeflate_free_compressor(c->private_data);
-+	c->private_data = libdeflate_alloc_compressor(compression_level);
-+#else
- 	if (c->private_data) {
- 		kite_deflate_end(c->private_data);
- 		c->private_data = NULL;
-@@ -57,11 +115,13 @@ static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- 	if (compression_level < 0)
- 		compression_level = erofs_compressor_deflate.default_level;
- 
--	s = kite_deflate_init(compression_level, cfg.c_dict_size);
-+	void *s = kite_deflate_init(compression_level, cfg.c_dict_size);
- 	if (IS_ERR(s))
- 		return PTR_ERR(s);
- 
- 	c->private_data = s;
-+#endif
-+
- 	c->compression_level = compression_level;
- 	return 0;
- }
-@@ -69,7 +129,11 @@ static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- const struct erofs_compressor erofs_compressor_deflate = {
- 	.name = "deflate",
- 	.default_level = 1,
-+#ifdef USE_LIBDEFLATE
-+	.best_level = 12,
-+#else
- 	.best_level = 9,
-+#endif
- 	.init = compressor_deflate_init,
- 	.exit = compressor_deflate_exit,
- 	.setlevel = erofs_compressor_deflate_setlevel,
+-- 
+2.25.1
 
-Here are some quick benchmarks I did of mkfs.erofs showing the size of the
-resulting filesystem and the time it took for mkfs.erofs to run:
-
--zdeflate,1
-    kite_deflate: 10772480 bytes in 0.474s
-    libdeflate: 10366976 bytes in 0.468s
--zdeflate,3
-    kite_deflate: 10203136 bytes in 0.511s
-    libdeflate: 10092544 bytes in 0.702s
--zdeflate,5
-    kite_deflate: 10080256 bytes in 0.596s
-    libdeflate: 9973760 bytes in 0.896s
--zdeflate,6
-    kite_deflate: 9977856 bytes in 0.650s
-    libdeflate: 9936896 bytes in 0.981s
--zdeflate,7
-    kite_deflate: 9969664 bytes in 0.690s
-    libdeflate: 9920512 bytes in 1.187s
--zdeflate,9
-    kite_deflate: 9945088 bytes in 0.986s
-    libdeflate: 9871360 bytes in 2.041s
--zdeflate,12
-    kite_deflate: N/A
-    libdeflate: 9740288 bytes in 28.080s
-
-So it seems my "naive" search algorithm, when combined with libdeflate, actually
-does about as well as kite_deflate...  Plus it automatically brings in support
-for higher compression levels.
-
-- Eric
