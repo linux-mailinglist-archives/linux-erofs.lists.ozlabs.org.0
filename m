@@ -1,42 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E85F74CB7A
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 07:03:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23DE974CEA8
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 09:39:24 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=OZV5e6X8;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4QzsMc2jM1z3bP2
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 15:03:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Qzwqt0GJtz3c1B
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 17:39:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=OZV5e6X8;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::22d; helo=mail-oi1-x22d.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4QzsMX71Lhz2yyX
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 15:03:03 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Vmy4O50_1688965378;
-Received: from 30.97.48.247(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vmy4O50_1688965378)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Jul 2023 13:02:59 +0800
-Message-ID: <1a107593-e411-70a0-b6b8-3c34a9036ff3@linux.alibaba.com>
-Date: Mon, 10 Jul 2023 13:02:58 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Qzwqj300kz3bvy
+	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 17:39:12 +1000 (AEST)
+Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-3a337ddff16so3220081b6e.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 00:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688974747; x=1691566747;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nylNd4bJypqjy2p+mIjX7+lH56E0VvWsXGVw57XSk4s=;
+        b=OZV5e6X85cMz8lstlN5z4lDR4f9EVfhUISluyAD1bMUMFNGBNEe2n/U1bxS+AnNDN/
+         Tb2JYyz1IyFaCCnPpVnCpvk5jVwaGpDInbvV0mIuaI+M4vTvWTcnuyEqyiEMVkNyXTZD
+         3Tz3BHIKy0uFm4Rhqh2X+ZWquLnT8ZVk6ELdS4RJtNpxWrcPpKjE3M++9Wwkg6GikQjx
+         CW+HmyaO9PMaJlS7G7xQrrhExKMWpP3/ROvzwUAMBxv97jlGuUSLG92QhUU32DoYkql+
+         28sGW10aQBzkhFqPR3Eq0Zs3TdZD1I+FaVWN0nmg+QgUk+DmRZfaHvtRhIAxEh8Vt33l
+         wYIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688974747; x=1691566747;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nylNd4bJypqjy2p+mIjX7+lH56E0VvWsXGVw57XSk4s=;
+        b=c6I62VFL2Uy61EgPhjdNWowG3dF/yQDYMsnawV8303NnPN/NrMTXzMiumBWwxw0Sxc
+         nGAN841WukSSmyW8rsO+m+ezuiOTllUpcmdgiMFxvph1zYjD9+9mckTRG7u+H2oV+6u6
+         OFnGCQtiT6g5t41Cur03/ou0kyr5ZYmjMJZtA5nedQgP7a3yETsl1zOJO38GdaH96+W8
+         O6JHFI/Yt6aXnceHps4wPZ/pBO9cj/+a9HZfFFPXHFnN7UC7e4Nb/vsbJut1TSV/jPHO
+         6VuclJ5eNG68HLIWsTve9kZInI1VR/SHKZRtL3le/LN/UveuLH+VL8HOYBFhZKWj/F/Q
+         pngg==
+X-Gm-Message-State: ABy/qLblD3guMWo5PG/zNJmfdLicwaUd3dmg3kY2Xwczix2S9vhtLbM5
+	NKjWf3HUGRj4kDuukw5yP/w=
+X-Google-Smtp-Source: APBJJlHbIXs5YdWo0jHlQBb/TaAyGsm319HHwbaGco+P3H2xoPcTXP9B03R5HOdngBmrnSQ7KhrYmA==
+X-Received: by 2002:a05:6358:2794:b0:133:7c4:e752 with SMTP id l20-20020a056358279400b0013307c4e752mr13392849rwb.26.1688974747335;
+        Mon, 10 Jul 2023 00:39:07 -0700 (PDT)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id c1-20020aa781c1000000b0067eb174cb9asm6488392pfn.136.2023.07.10.00.39.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jul 2023 00:39:07 -0700 (PDT)
+Date: Mon, 10 Jul 2023 15:48:03 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Chunhai Guo <guochunhai@vivo.com>
+Subject: Re: [PATCH] erofs: avoid unnecessary loops in
+ z_erofs_pcluster_readmore() when read page beyond EOF
+Message-ID: <20230710154803.00004047.zbestahu@gmail.com>
+In-Reply-To: <20230710042531.28761-1-guochunhai@vivo.com>
+References: <20230710042531.28761-1-guochunhai@vivo.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH] erofs: fix two loop issues when read page beyond EOF
-To: Chunhai Guo <guochunhai@vivo.com>, "xiang@kernel.org" <xiang@kernel.org>,
- "chao@kernel.org" <chao@kernel.org>
-References: <20230708062432.67344-1-guochunhai@vivo.com>
- <97875049-8df9-e041-61ca-d90723ba6e82@linux.alibaba.com>
- <d6ee4571-64d6-ebd2-4adb-83f33e5e608d@vivo.com>
- <fd738d38-17de-4b61-e4e8-d4f98ef8d1db@linux.alibaba.com>
- <ac05d6e3-79b4-a470-2a30-8c809c277209@vivo.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <ac05d6e3-79b4-a470-2a30-8c809c277209@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,77 +80,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "huyue2@coolpad.com" <huyue2@coolpad.com>, "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Mon, 10 Jul 2023 12:25:31 +0800
+Chunhai Guo <guochunhai@vivo.com> wrote:
 
-
-On 2023/7/10 12:35, Chunhai Guo wrote:
+> z_erofs_pcluster_readmore() may take a long time to loop when the page
+> offset is large enough, which is unnecessary should be prevented.
+> For example, when the following case is encountered, it will loop 4691368
+> times, taking about 27 seconds.
+>     - offset = 19217289215
+>     - inode_size = 1442672
 > 
+> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+> ---
+>  fs/erofs/zdata.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> On 2023/7/10 11:37, Gao Xiang wrote:
->>
->>
->> On 2023/7/10 11:32, Chunhai Guo wrote:
->>> Hi Xiang,
->>>
->>> On 2023/7/8 17:00, Gao Xiang wrote:
->>>> Hi Chunhai,
->>>>
->>>> On 2023/7/8 14:24, Chunhai Guo wrote:
->>>>> When z_erofs_read_folio() reads a page with an offset far beyond EOF, two
->>>>> issues may occur:
->>>>> - z_erofs_pcluster_readmore() may take a long time to loop when the offset
->>>>>      is big enough, which is unnecessary.
->>>>>        - For example, it will loop 4691368 times and take about 27 seconds
->>>>>          with following case.
->>>>>            - offset = 19217289215
->>>>>            - inode_size = 1442672
->>>>> - z_erofs_do_read_page() may loop infinitely due to the inappropriate
->>>>>      truncation in the below statement. Since the offset is 64 bits and
->>>>> min_t() truncates the result to 32 bits. The solution is to replace
->>>>> unsigned int with another 64-bit type, such as erofs_off_t.
->>>>>        cur = end - min_t(unsigned int, offset + end - map->m_la, end);
->>>>>        - For example:
->>>>>            - offset = 0x400160000
->>>>>            - end = 0x370
->>>>>            - map->m_la = 0x160370
->>>>>            - offset + end - map->m_la = 0x400000000
->>>>>            - offset + end - map->m_la = 0x00000000 (truncated as unsigned int)
->>>>
->>>> Thanks for the catch!
->>>>
->>>> Could you split these two into two patches?
->>>>
->>>> how about using:
->>>> cur = end - min_t(erofs_off_t, offend + end - map->m_la, end)
->>>> for this?
->>>>
->>>> since cur and end are all [0, PAGE_SIZE - 1] for now, and
->>>> folio_size() later.
->>>
->>> OK. I will split the patch.
->>>
->>> Sorry that I can not understand what is 'offend' refer to and what do you mean. Could you please describe it more clearly?
->>
->> Sorry, there is a typo here, I meant 'offset'.
->>
->> `cur` and `end` both are not exceed 4096 if your page_size
->> is 4096.
->>
->> Does
->> cur = end - min_t(erofs_off_t, offset + end - map->m_la, end)
->>
->> fix your issue?
-> 
-> Yes. I think this will fix this issue. Do you mean the below change is unncessary?
->  >>>> -    unsigned int cur, end, spiltted;
->  >>>> +    erofs_off_t cur, end;
->  >>>> +    unsigned int spiltted;
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 5f1890e309c6..d9a0763f4595 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1841,7 +1841,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+>  	}
+>  
+>  	cur = map->m_la + map->m_llen - 1;
+> -	while (cur >= end) {
+> +	while ((cur >= end) && (cur < i_size_read(inode))) {
+>  		pgoff_t index = cur >> PAGE_SHIFT;
+>  		struct page *page;
+>  
 
-Yes, please help send a fix for this!
-
-Thanks,
-Gao Xiang
-
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
