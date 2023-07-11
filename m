@@ -1,35 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FB0174D423
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 13:03:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D0674E271
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 02:06:54 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VNDL1Vb4;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R01MG3Fb6z3bmv
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Jul 2023 21:03:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R0LlH6fDFz3bZ3
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jul 2023 10:06:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VNDL1Vb4;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.24; helo=mga09.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R01Lz4vxcz304g
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Jul 2023 21:03:07 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vn2HVzp_1688986981;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vn2HVzp_1688986981)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Jul 2023 19:03:03 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3 4/4] erofs-utils: mkfs: add libdeflate compressor support
-Date: Mon, 10 Jul 2023 19:02:51 +0800
-Message-Id: <20230710110251.89464-5-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230710110251.89464-1-hsiangkao@linux.alibaba.com>
-References: <20230710110251.89464-1-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R0Ll83rhdz2yLV
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jul 2023 10:06:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689034004; x=1720570004;
+  h=date:from:to:cc:subject:message-id;
+  bh=AhW+4LQGTUwIS5qiZk2edSbPgh6H21y+yx+uZjcKCqs=;
+  b=VNDL1Vb4buw0toX7kwM++ySc1Myo2BS5q19Gy7alQ6kRe7B5rin0OTUA
+   3d0DR59MJpi+x1hUuEgA2QvGYWpxlfnwhVnd2q5n4cU/i8l3AwsN7lvQl
+   SjyA4UhJJ9qSbRTs4tBuseAgDP4QfV98qmeAxqDz/p5bZBUPWkNLK5gvl
+   Px5hnJz961n+tOBBAozVzndnEUSybxtp6KF1fYoJ1SvC1+ghpV5ggD4Sb
+   zQ/edZMAcJtUT9jLZuBsXIr5KJaFVjYyS41o/rxffuepjAhYxU8V2LT2C
+   ogAo2uBs+H7FaQKBLY04g5//mGNRcUwMzQO/SJ5aS8pOaQIOx24m2Immv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="367066563"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="367066563"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 17:06:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="894971940"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="894971940"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 10 Jul 2023 17:06:33 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qJ0tk-00047m-1X;
+	Tue, 11 Jul 2023 00:06:32 +0000
+Date: Tue, 11 Jul 2023 08:06:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 770c413f54a4a69e1f398228aa12147b7cdaa4b4
+Message-ID: <202307110809.OhAsg3B7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,248 +66,143 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Eric suggests a "binary search + heuristics" way by using the
-current libdeflate APIs to generate fixed-sized output DEFLATE streams.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 770c413f54a4a69e1f398228aa12147b7cdaa4b4  erofs: avoid infinite loop in z_erofs_do_read_page() when reading beyond EOF
 
-Compared to the previous built-in one, it will generate smaller images
-(which is expected since the built-in one is roughly just the original
-zlib replacement), yet the total compression time might be amplified a
-lot especially if some larger pclusters are used by users compared to
-the built-in one.
+elapsed time: 725m
 
-For example:
-$ time mkfs.erofs -zdeflate,9 -C65536 enwik8.z enwik8
-real    0m9.559s
-user    0m9.453s
-sys     0m0.069s
+configs tested: 120
+configs skipped: 9
 
-$ time mkfs.erofs -zlibdeflate,9 -C65536 enwik8.libdeflate.9.z enwik8
-real    0m50.184s
-user    0m50.082s
-sys     0m0.074s
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-$ mkfs/mkfs.erofs -zlibdeflate,6 -C65536 enwik8.libdeflate.6.z enwik8
-real    0m23.428s
-user    0m23.329s
-sys     0m0.067s
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r011-20230710   gcc  
+alpha                randconfig-r014-20230710   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arc                  randconfig-r001-20230710   gcc  
+arc                  randconfig-r043-20230710   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   clang
+arm                                 defconfig   gcc  
+arm                            dove_defconfig   clang
+arm                   milbeaut_m10v_defconfig   clang
+arm                        neponset_defconfig   clang
+arm                            qcom_defconfig   gcc  
+arm                  randconfig-r025-20230710   gcc  
+arm                  randconfig-r046-20230710   gcc  
+arm                         s5pv210_defconfig   clang
+arm                           stm32_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r041-20230710   clang
+hexagon              randconfig-r045-20230710   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230710   gcc  
+i386         buildonly-randconfig-r005-20230710   gcc  
+i386         buildonly-randconfig-r006-20230710   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230710   gcc  
+i386                 randconfig-i002-20230710   gcc  
+i386                 randconfig-i003-20230710   gcc  
+i386                 randconfig-i004-20230710   gcc  
+i386                 randconfig-i005-20230710   gcc  
+i386                 randconfig-i006-20230710   gcc  
+i386                 randconfig-i011-20230710   clang
+i386                 randconfig-i012-20230710   clang
+i386                 randconfig-i013-20230710   clang
+i386                 randconfig-i014-20230710   clang
+i386                 randconfig-i015-20230710   clang
+i386                 randconfig-i016-20230710   clang
+i386                 randconfig-r024-20230710   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r034-20230710   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r006-20230710   gcc  
+m68k                 randconfig-r016-20230710   gcc  
+microblaze           randconfig-r003-20230710   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath25_defconfig   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r012-20230710   gcc  
+nios2                randconfig-r013-20230710   gcc  
+nios2                randconfig-r032-20230710   gcc  
+openrisc             randconfig-r033-20230710   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                      katmai_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc                     sequoia_defconfig   gcc  
+powerpc                     tqm8560_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r026-20230710   clang
+riscv                randconfig-r042-20230710   clang
+riscv                          rv32_defconfig   gcc  
+s390                             alldefconfig   clang
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230710   clang
+sh                               allmodconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r031-20230710   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230710   gcc  
+x86_64       buildonly-randconfig-r002-20230710   gcc  
+x86_64       buildonly-randconfig-r003-20230710   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230710   clang
+x86_64               randconfig-x002-20230710   clang
+x86_64               randconfig-x003-20230710   clang
+x86_64               randconfig-x004-20230710   clang
+x86_64               randconfig-x005-20230710   clang
+x86_64               randconfig-x006-20230710   clang
+x86_64               randconfig-x011-20230710   gcc  
+x86_64               randconfig-x012-20230710   gcc  
+x86_64               randconfig-x013-20230710   gcc  
+x86_64               randconfig-x014-20230710   gcc  
+x86_64               randconfig-x015-20230710   gcc  
+x86_64               randconfig-x016-20230710   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+xtensa               randconfig-r004-20230710   gcc  
+xtensa               randconfig-r035-20230710   gcc  
 
-37175296	enwik8.libdeflate.6.z
-37142528	enwik8.z
-36835328	enwik8.libdeflate.9.z
-
-Anyway, let's use the current APIs for users who needs smaller image
-sizes for now.  Besides, EROFS also supports multiple per-file
-algorithms in one image, so it can be used for specific files as well.
-
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- configure.ac                |   1 +
- lib/Makefile.am             |   3 +
- lib/compress.c              |   2 +-
- lib/compressor.c            |   3 +
- lib/compressor.h            |   1 +
- lib/compressor_libdeflate.c | 114 ++++++++++++++++++++++++++++++++++++
- mkfs/Makefile.am            |   2 +-
- 7 files changed, 124 insertions(+), 2 deletions(-)
- create mode 100644 lib/compressor_libdeflate.c
-
-diff --git a/configure.ac b/configure.ac
-index d6dc7af..ac0b0ed 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -450,6 +450,7 @@ AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
- AM_CONDITIONAL([ENABLE_FUSE], [test "x${have_fuse}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LIBLZMA], [test "x${have_liblzma}" = "xyes"])
-+AM_CONDITIONAL([ENABLE_LIBDEFLATE], [test "x${have_libdeflate}" = "xyes"])
- 
- if test "x$have_uuid" = "xyes"; then
-   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index ae19b74..694888e 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -45,3 +45,6 @@ liberofs_la_SOURCES += compressor_liblzma.c
- endif
- 
- liberofs_la_SOURCES += kite_deflate.c compressor_deflate.c
-+if ENABLE_LIBDEFLATE
-+liberofs_la_SOURCES += compressor_libdeflate.c
-+endif
-diff --git a/lib/compress.c b/lib/compress.c
-index 318b8de..6fb63cb 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1026,7 +1026,7 @@ static int erofs_get_compress_algorithm_id(const char *name)
- 		return Z_EROFS_COMPRESSION_LZ4;
- 	if (!strcmp(name, "lzma"))
- 		return Z_EROFS_COMPRESSION_LZMA;
--	if (!strcmp(name, "deflate"))
-+	if (!strcmp(name, "deflate") || !strcmp(name, "libdeflate"))
- 		return Z_EROFS_COMPRESSION_DEFLATE;
- 	return -ENOTSUP;
- }
-diff --git a/lib/compressor.c b/lib/compressor.c
-index ca4d364..f81db5b 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -21,6 +21,9 @@ static const struct erofs_compressor *compressors[] = {
- 		&erofs_compressor_lzma,
- #endif
- 		&erofs_compressor_deflate,
-+#if HAVE_LIBDEFLATE
-+		&erofs_compressor_libdeflate,
-+#endif
- };
- 
- int erofs_compress_destsize(const struct erofs_compress *c,
-diff --git a/lib/compressor.h b/lib/compressor.h
-index c1eee20..f699fe7 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -45,6 +45,7 @@ extern const struct erofs_compressor erofs_compressor_lz4;
- extern const struct erofs_compressor erofs_compressor_lz4hc;
- extern const struct erofs_compressor erofs_compressor_lzma;
- extern const struct erofs_compressor erofs_compressor_deflate;
-+extern const struct erofs_compressor erofs_compressor_libdeflate;
- 
- int erofs_compress_destsize(const struct erofs_compress *c,
- 			    const void *src, unsigned int *srcsize,
-diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
-new file mode 100644
-index 0000000..15c90a4
---- /dev/null
-+++ b/lib/compressor_libdeflate.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+#include "erofs/internal.h"
-+#include "erofs/print.h"
-+#include "erofs/config.h"
-+#include <libdeflate.h>
-+#include "compressor.h"
-+
-+static int libdeflate_compress_destsize(const struct erofs_compress *c,
-+				        const void *src, unsigned int *srcsize,
-+				        void *dst, unsigned int dstsize)
-+{
-+	static size_t last_uncompressed_size = 0;
-+	size_t l = 0; /* largest input that fits so far */
-+	size_t l_csize = 0;
-+	size_t r = *srcsize + 1; /* smallest input that doesn't fit so far */
-+	size_t m;
-+	u8 tmpbuf[dstsize + 9];
-+
-+	if (last_uncompressed_size)
-+		m = last_uncompressed_size * 15 / 16;
-+	else
-+		m = dstsize * 4;
-+	for (;;) {
-+		size_t csize;
-+
-+		m = max(m, l + 1);
-+		m = min(m, r - 1);
-+
-+		csize = libdeflate_deflate_compress(c->private_data, src, m,
-+						    tmpbuf, dstsize + 9);
-+		/*printf("Tried %zu => %zu\n", m, csize);*/
-+		if (csize > 0 && csize <= dstsize) {
-+			/* Fits */
-+			memcpy(dst, tmpbuf, csize);
-+			l = m;
-+			l_csize = csize;
-+			if (r <= l + 1 || csize +
-+				(22 - 2*(int)c->compression_level) >= dstsize)
-+				break;
-+			/*
-+			 * Estimate needed input prefix size based on current
-+			 * compression ratio.
-+			 */
-+			m = (dstsize * m) / csize;
-+		} else {
-+			/* Doesn't fit */
-+			r = m;
-+			if (r <= l + 1)
-+				break;
-+			m = (l + r) / 2;
-+		}
-+	}
-+
-+	/*
-+	 * Since generic EROFS on-disk compressed data will be filled with
-+	 * leading 0s (but no more than one block, 4KB for example, even the
-+	 * whole pcluster is 128KB) if not filled, it will be used to identify
-+	 * the actual compressed length as well without taking more reserved
-+	 * compressed bytes or some extra metadata to record this.
-+	 *
-+	 * DEFLATE streams can also be used in this way, if it starts from a
-+	 * non-last stored block, flag an unused bit instead to avoid the zero
-+	 * byte. It's still a valid one according to the DEFLATE specification.
-+	 */
-+	if (!((u8 *)dst)[0])
-+	       ((u8 *)dst)[0] = 1 << (2 + 1);
-+
-+	/*printf("Choosing %zu => %zu\n", l, l_csize);*/
-+	*srcsize = l;
-+	last_uncompressed_size = l;
-+	return l_csize;
-+}
-+
-+static int compressor_libdeflate_exit(struct erofs_compress *c)
-+{
-+	if (!c->private_data)
-+		return -EINVAL;
-+
-+	libdeflate_free_compressor(c->private_data);
-+	return 0;
-+}
-+
-+static int compressor_libdeflate_init(struct erofs_compress *c)
-+{
-+	c->alg = &erofs_compressor_libdeflate;
-+	c->private_data = NULL;
-+
-+	erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
-+	return 0;
-+}
-+
-+static int erofs_compressor_libdeflate_setlevel(struct erofs_compress *c,
-+						int compression_level)
-+{
-+	if (compression_level < 0)
-+		compression_level = erofs_compressor_deflate.default_level;
-+
-+	libdeflate_free_compressor(c->private_data);
-+	c->private_data = libdeflate_alloc_compressor(compression_level);
-+	if (!c->private_data)
-+		return -ENOMEM;
-+	c->compression_level = compression_level;
-+	return 0;
-+}
-+
-+const struct erofs_compressor erofs_compressor_libdeflate = {
-+	.name = "libdeflate",
-+	.default_level = 1,
-+	.best_level = 12,
-+	.init = compressor_libdeflate_init,
-+	.exit = compressor_libdeflate_exit,
-+	.setlevel = erofs_compressor_libdeflate_setlevel,
-+	.compress_destsize = libdeflate_compress_destsize,
-+};
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index a08dc53..603c2f3 100644
---- a/mkfs/Makefile.am
-+++ b/mkfs/Makefile.am
-@@ -6,4 +6,4 @@ AM_CPPFLAGS = ${libselinux_CFLAGS}
- mkfs_erofs_SOURCES = main.c
- mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS}
-+	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${libdeflate_LIBS}
 -- 
-2.24.4
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
