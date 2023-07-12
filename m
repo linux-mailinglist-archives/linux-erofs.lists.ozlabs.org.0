@@ -1,60 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA6AE74FEC4
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 07:39:01 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hp6ys/ac;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98E74750720
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 13:51:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R16432R3sz3bmj
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 15:38:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R1GL92sBVz3bx1
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 21:51:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hp6ys/ac;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mga17.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R163v74W1z30fl
-	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Jul 2023 15:38:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689140332; x=1720676332;
-  h=date:from:to:cc:subject:message-id;
-  bh=DaCHuyb/gJlmAetBdu7+wM9nmEHwOgrLLYQQavL20Xo=;
-  b=Hp6ys/acSg9yYwVfO+kxFcAhEuP+f/u+YyK5HjYLBdlgLjgk/93eOojX
-   P+FOXJMYe0KZYIb7sQn582RKp98d/lKW4AfiK41A7xTmIOsCtyD2uQkHa
-   nLNLmZYn5MEWn0xJK6YueM8bigQpHKb+Z+um5B6ETnVThcR+DFDPsnAOP
-   /qI1B6ryJBLGzs5Y3f+f0I49QM1TGHz3M7naXdNVBvGTKJChLJl6/Hym+
-   gmJUwyVK2iuGpBtxy1ZzyTFrOmc94I0zeauOZih0zrhzi3ZwAdQA584Qz
-   mAexofsY6NEWOCau4vL4boykVjCzS0KdM8tddtHYadJStVT0CkZIZijar
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="345120239"
-X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
-   d="scan'208";a="345120239"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 22:38:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="751036753"
-X-IronPort-AV: E=Sophos;i="6.01,198,1684825200"; 
-   d="scan'208";a="751036753"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 11 Jul 2023 22:38:41 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qJSYi-0005Qb-36;
-	Wed, 12 Jul 2023 05:38:40 +0000
-Date: Wed, 12 Jul 2023 13:37:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 18bddc5b67038722cb88fcf51fbf41a0277092cb
-Message-ID: <202307121354.dwZRtfmN-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1GL33lHKz306t
+	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Jul 2023 21:51:35 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VnCpXQm_1689162683;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VnCpXQm_1689162683)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Jul 2023 19:51:24 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3 0/2] erofs: introduce xattr name bloom filter
+Date: Wed, 12 Jul 2023 19:51:21 +0800
+Message-Id: <20230712115123.33712-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,257 +42,210 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, alexl@redhat.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 18bddc5b67038722cb88fcf51fbf41a0277092cb  erofs: fix fsdax unavailability for chunk-based regular files
+changes since v2:
+- patch 1: polish the commit message; introduce xattr_filter_reserved in
+  on-disk superblock; remove EROFS_XATTR_FILTER_MASK (Gao Xiang)
 
-elapsed time: 725m
+changes since RFC:
+- the number of hash functions is 1, and now it's implemented as:
+    xxh32(name, strlen(name), EROFS_XATTR_FILTER_SEED + index),
+  where the constant magic number EROFS_XATTR_FILTER_SEED [*] is used to
+  give a better spread for the mapping. (Alexander Larsson)
+  Refer to patch 1 for more details.
+- fix the value of EROFS_FEATURE_COMPAT_XATTR_BLOOM; rename
+  EROFS_XATTR_BLOOM_* to EROFS_XATTR_FILTER_* (Gao Xiang)
+- pass all tests in erofs-utils (MKFS_OPTIONS="--xattr-filter" make
+  check)
 
-configs tested: 234
-configs skipped: 11
+[*] https://lore.kernel.org/all/74a8a369-c3b0-b338-fa8f-fdd7c252efaf@linux.alibaba.com/
+RFC: https://lore.kernel.org/all/20230621083209.116024-1-jefflexu@linux.alibaba.com/
+v2: https://lore.kernel.org/all/20230705070427.92579-1-jefflexu@linux.alibaba.com/
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Background
+==========
+Filesystems with ACL enabled generally need to read
+"system.posix_acl_access"/"system.posix_acl_default" xattr to get the
+access and default ACL.  When filesystem is mounted with ACL enabled
+while files in the system have not set access/default ACL, the getattr()
+will run in vain while the round trip can decrease the performance in
+workload like "ls -lR".
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r002-20230712   gcc  
-alpha                randconfig-r006-20230711   gcc  
-alpha                randconfig-r022-20230710   gcc  
-alpha                randconfig-r022-20230712   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r001-20230711   gcc  
-arc                  randconfig-r034-20230712   gcc  
-arc                  randconfig-r036-20230712   gcc  
-arc                  randconfig-r043-20230711   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   gcc  
-arm                             pxa_defconfig   gcc  
-arm                  randconfig-r012-20230712   gcc  
-arm                  randconfig-r015-20230712   gcc  
-arm                  randconfig-r021-20230710   gcc  
-arm                  randconfig-r046-20230711   clang
-arm                       spear13xx_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230712   gcc  
-arm64                randconfig-r002-20230712   gcc  
-arm64                randconfig-r004-20230712   gcc  
-arm64                randconfig-r005-20230711   clang
-arm64                randconfig-r033-20230710   gcc  
-arm64                randconfig-r034-20230710   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r002-20230712   gcc  
-csky                 randconfig-r004-20230712   gcc  
-csky                 randconfig-r006-20230712   gcc  
-csky                 randconfig-r026-20230710   gcc  
-csky                 randconfig-r031-20230710   gcc  
-csky                 randconfig-r036-20230710   gcc  
-hexagon              randconfig-r023-20230710   clang
-hexagon              randconfig-r033-20230710   clang
-hexagon              randconfig-r035-20230710   clang
-hexagon              randconfig-r041-20230710   clang
-hexagon              randconfig-r041-20230711   clang
-hexagon              randconfig-r041-20230712   clang
-hexagon              randconfig-r045-20230710   clang
-hexagon              randconfig-r045-20230711   clang
-hexagon              randconfig-r045-20230712   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230711   clang
-i386         buildonly-randconfig-r005-20230711   clang
-i386         buildonly-randconfig-r006-20230711   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230710   gcc  
-i386                 randconfig-i001-20230711   clang
-i386                 randconfig-i001-20230712   gcc  
-i386                 randconfig-i002-20230710   gcc  
-i386                 randconfig-i002-20230711   clang
-i386                 randconfig-i002-20230712   gcc  
-i386                 randconfig-i003-20230710   gcc  
-i386                 randconfig-i003-20230711   clang
-i386                 randconfig-i003-20230712   gcc  
-i386                 randconfig-i004-20230710   gcc  
-i386                 randconfig-i004-20230711   clang
-i386                 randconfig-i004-20230712   gcc  
-i386                 randconfig-i005-20230710   gcc  
-i386                 randconfig-i005-20230711   clang
-i386                 randconfig-i005-20230712   gcc  
-i386                 randconfig-i006-20230710   gcc  
-i386                 randconfig-i006-20230711   clang
-i386                 randconfig-i006-20230712   gcc  
-i386                 randconfig-i011-20230711   gcc  
-i386                 randconfig-i011-20230712   clang
-i386                 randconfig-i012-20230711   gcc  
-i386                 randconfig-i012-20230712   clang
-i386                 randconfig-i013-20230711   gcc  
-i386                 randconfig-i013-20230712   clang
-i386                 randconfig-i014-20230711   gcc  
-i386                 randconfig-i014-20230712   clang
-i386                 randconfig-i015-20230711   gcc  
-i386                 randconfig-i015-20230712   clang
-i386                 randconfig-i016-20230711   gcc  
-i386                 randconfig-i016-20230712   clang
-i386                 randconfig-r013-20230712   clang
-i386                 randconfig-r014-20230711   gcc  
-i386                 randconfig-r024-20230710   clang
-i386                 randconfig-r036-20230710   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r003-20230712   gcc  
-loongarch            randconfig-r006-20230712   gcc  
-loongarch            randconfig-r014-20230711   gcc  
-loongarch            randconfig-r026-20230712   gcc  
-loongarch            randconfig-r032-20230710   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-m68k                 randconfig-r004-20230711   gcc  
-m68k                 randconfig-r011-20230712   gcc  
-m68k                 randconfig-r013-20230711   gcc  
-m68k                 randconfig-r013-20230712   gcc  
-m68k                 randconfig-r025-20230710   gcc  
-m68k                 randconfig-r035-20230712   gcc  
-microblaze           randconfig-r003-20230711   gcc  
-microblaze           randconfig-r005-20230712   gcc  
-microblaze           randconfig-r012-20230711   gcc  
-microblaze           randconfig-r015-20230711   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   clang
-mips                 randconfig-r024-20230710   gcc  
-mips                 randconfig-r031-20230710   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230712   gcc  
-nios2                randconfig-r012-20230712   gcc  
-nios2                randconfig-r016-20230711   gcc  
-openrisc                            defconfig   gcc  
-openrisc             randconfig-r006-20230712   gcc  
-openrisc             randconfig-r032-20230710   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r011-20230712   gcc  
-parisc               randconfig-r014-20230712   gcc  
-parisc               randconfig-r015-20230711   gcc  
-parisc               randconfig-r016-20230712   gcc  
-parisc               randconfig-r021-20230712   gcc  
-parisc               randconfig-r025-20230710   gcc  
-parisc               randconfig-r033-20230712   gcc  
-parisc               randconfig-r035-20230712   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r003-20230712   gcc  
-powerpc              randconfig-r035-20230710   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r004-20230712   gcc  
-riscv                randconfig-r042-20230710   clang
-riscv                randconfig-r042-20230711   gcc  
-riscv                randconfig-r042-20230712   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r003-20230712   gcc  
-s390                 randconfig-r026-20230710   clang
-s390                 randconfig-r044-20230710   clang
-s390                 randconfig-r044-20230711   gcc  
-s390                 randconfig-r044-20230712   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r011-20230711   gcc  
-sh                   randconfig-r021-20230710   gcc  
-sh                   randconfig-r023-20230710   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r011-20230711   gcc  
-sparc                randconfig-r014-20230712   gcc  
-sparc                randconfig-r016-20230711   gcc  
-sparc                randconfig-r023-20230710   gcc  
-sparc                randconfig-r033-20230712   gcc  
-sparc64              randconfig-r002-20230711   gcc  
-sparc64              randconfig-r012-20230711   gcc  
-sparc64              randconfig-r014-20230712   gcc  
-sparc64              randconfig-r026-20230710   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r016-20230712   gcc  
-um                   randconfig-r024-20230710   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230711   clang
-x86_64       buildonly-randconfig-r002-20230711   clang
-x86_64       buildonly-randconfig-r003-20230711   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r015-20230712   clang
-x86_64               randconfig-r016-20230712   clang
-x86_64               randconfig-r021-20230710   clang
-x86_64               randconfig-r031-20230712   gcc  
-x86_64               randconfig-x001-20230710   clang
-x86_64               randconfig-x001-20230711   gcc  
-x86_64               randconfig-x001-20230712   clang
-x86_64               randconfig-x002-20230710   clang
-x86_64               randconfig-x002-20230711   gcc  
-x86_64               randconfig-x002-20230712   clang
-x86_64               randconfig-x003-20230710   clang
-x86_64               randconfig-x003-20230711   gcc  
-x86_64               randconfig-x003-20230712   clang
-x86_64               randconfig-x004-20230710   clang
-x86_64               randconfig-x004-20230711   gcc  
-x86_64               randconfig-x004-20230712   clang
-x86_64               randconfig-x005-20230710   clang
-x86_64               randconfig-x005-20230711   gcc  
-x86_64               randconfig-x005-20230712   clang
-x86_64               randconfig-x006-20230710   clang
-x86_64               randconfig-x006-20230711   gcc  
-x86_64               randconfig-x006-20230712   clang
-x86_64               randconfig-x011-20230710   gcc  
-x86_64               randconfig-x011-20230711   clang
-x86_64               randconfig-x011-20230712   gcc  
-x86_64               randconfig-x012-20230710   gcc  
-x86_64               randconfig-x012-20230711   clang
-x86_64               randconfig-x012-20230712   gcc  
-x86_64               randconfig-x013-20230710   gcc  
-x86_64               randconfig-x013-20230711   clang
-x86_64               randconfig-x013-20230712   gcc  
-x86_64               randconfig-x014-20230710   gcc  
-x86_64               randconfig-x014-20230711   clang
-x86_64               randconfig-x014-20230712   gcc  
-x86_64               randconfig-x015-20230710   gcc  
-x86_64               randconfig-x015-20230711   clang
-x86_64               randconfig-x015-20230712   gcc  
-x86_64               randconfig-x016-20230710   gcc  
-x86_64               randconfig-x016-20230711   clang
-x86_64               randconfig-x016-20230712   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-kvm   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r013-20230712   gcc  
-xtensa               randconfig-r024-20230712   gcc  
+For example, there's a 12% performance boost if erofs is mounted with
+"noacl" when running "ls -lR" workload on dataset [1] (given in [2]).
+
+We'd better offer a fastpath to boost the above workload, as well as
+other negative xattr lookup.
+
+
+Proposal
+========
+Introduce a per-inode bloom filter for xattrs to boost the negative
+xattr queries.
+
+As following shows, a 32-bit bloom filter is introduced for each inode,
+describing if a xattr with specific name exists on this inode.
+
+```
+ struct erofs_xattr_ibody_header {
+-       __le32 h_reserved;
++       __le32 h_map; /* bloom filter */
+	...
+}
+```
+
+Following are some implementation details for bloom filter.
+
+1. Reverse bit value
+--------------------
+The bloom filter structure describes if a given data is inside the set.
+It will map the given data into several bits of the bloom filter map.
+The data must not exist inside the set if any mapped bit is 0, while the
+data may be not inside the set even if all mapped bits is 1.
+
+While in our use case, as erofs_xattr_ibody_header.h_map is previously a
+(all zero) reserved field, the bit value for the bloom filter has a
+reverse semantics in consideration for compatibility.  That is, for a
+given data, the mapped bits will be cleared to 0.  Thus for a previously
+built image without support for bloom filter, the bloom filter is all
+zero and when it's mounted by the new kernel with support for bloom
+filter, it can not determine if the queried xattr exists on the inode and
+thus will fallback to the original routine of iterating all on-disk
+xattrs to determine if the queried xattr exists.
+
+
+2. The number of hash functions
+-------------------------------
+The optimal value for the number of the hash functions (k) is (ln2 *
+m/n), where m stands the number of bits of the bloom filter map, while n
+stands the number of all candidates may be inside the set.
+
+In our use case, the number of common used xattr (n) is approximately 8,
+including system.[posix_acl_access|posix_acl_default],
+security.[capability|selinux] and
+security.[SMACK64|SMACK64TRANSMUTE|SMACK64EXEC|SMACK64MMAP].
+
+Given the number of bits of the bloom filter (m) is 32, the optimal value
+for the number of the hash functions (k) is 2 (ln2 * m/n = 2.7).
+
+
+3. The hash function
+--------------------
+xxh32() is chosen as the hash function.
+
+Following are some tested statistics of several candidate hash
+functions.  Listed are time (in millionsecond) consumed when these hash
+functions process input data in chunks of 24, 32, 64 and 4096 bytes.
+
+	| 24 B 	| 32 B	| 64 B	| 4 KB
+--------+-------+-------+-------+------
+jhash	| 1325	| 2041 	| 4016	|  2294
+jhash2	| 1323	| 2035	| 4011	|  2310
+crc16	| 7918	| 1056	| 2110	| 13784
+crc32	| 1824	| 2436	| 4873	|  3107
+crc32c	| 2120	| 2708	| 5142	|  3109
+xxhash	| 1320	| 1967	| 2131	|   429
+xxh32	| 1458	| 1358	| 1848	|   836
+xxh64	| 1321	| 2081	| 2128	|   429
+
+
+3.1. multiple hash functions with various seeds
+-----------------------------------------------
+As previously described, the given data will be mapped into several bits
+of the bloom filter map with hash functions.  There could be several
+hash functions (k), with each hash function mapping the given data into
+one bit of the bloom filter map.  Thus given the number of hash
+functions (k), each xattr name will be mapped into k bits of the bloom
+filter map.
+
+Here in our use case, k hash functions are all xxh32() but with
+different seeds.  As following shows, the seed is (index + i), where i
+stands the index of the current hash function among all hash functions.
+In this way, each hash function is distinguishable with others.
+
+```
+for (i = 0; i < k; i++)
+	bit = xxh32(name, strlen(name), index + i);
+```
+
+3.2. input of hash function
+-------------------------
+As previously described, each hash function will map the given data into
+one bit of the bloom filter map.  In our use case, xattr name serves as
+the key of hash function.
+
+When .getxattr() gets called, only index (e.g. EROFS_XATTR_INDEX_USER)
+and the remaining name apart from the prefix are handy.  To avoid
+constructing the full xattr name, the above index and name are fed into
+the hash function directly in the following way:
+
+```
+bit = xxh32(name, strlen(name), index + i);
+```
+
+where index serves as part of seed, so that it gets involved in the
+calculation for the hash.
+
+An alternative way is to calculate the hash from the full xattr name by
+feeding the prefix string and the remaining name string separately in
+the following way:
+
+```
+xxh32_reset()
+xxh32_update(prefix string, ...)
+xxh32_update(remaining name, ...)
+xxh32_digest()
+```
+
+But I doubt if it really deserves to call multiple APIs instead of one
+single xxh32().
+
+
+Also be noted that for xattrs with long xattr name prefixes, the
+above "name" is the xattr name after stripping the corresponding short
+predefined xattr name prefix rather than the long xattr name prefix, as
+only the former is handy in the kernel routine.
+
+
+3.3. discussions
+----------------
+I think a wider discussion on the implementation details is needed,
+including the number of the hash functions, and all other implementation
+details mentioned above, as they are also part of the on-disk format.
+
+
+Performance Improvement
+=======================
+The performance statistics are tested with 'ls -lR' workload upon the
+dataset [1].
+			| uncached(ms)  | cached(ms)
+------------------------+---------------+----------
+erofs.share		| 468		| 264
+erofs.share.bloom	| 370		| 254
+erofs.share.noacl	| 412		| 216
+erofs.share.noacl.bloom	| 318		| 206
+
+The tested erofs image is built in shared xattr layout.  It indicates
+~20% performance improvement with bloom filter in uncached scenarios.
+
+
+[1] https://my.owndrive.com/index.php/s/irHJXRpZHtT3a5i
+[2] https://lore.kernel.org/all/071074ad149b189661681aada453995741f75039.camel@redhat.com/
+
+
+Jingbo Xu (2):
+  erofs: update on-disk format for xattr name filter
+  erofs: boost negative xattr lookup with bloom filter
+
+ fs/erofs/erofs_fs.h | 10 ++++++++--
+ fs/erofs/internal.h |  3 +++
+ fs/erofs/super.c    |  1 +
+ fs/erofs/xattr.c    | 13 +++++++++++++
+ 4 files changed, 25 insertions(+), 2 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.19.1.6.gb485710b
+
