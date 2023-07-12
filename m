@@ -1,35 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A40EA7514C3
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 01:52:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D2807514D2
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 01:56:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R1ZKQ3zNCz3by2
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 09:52:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R1ZQn3RH3z3bxr
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 09:56:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1ZKK41jHz3bv0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jul 2023 09:52:05 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VnEZ5ZU_1689205918;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VnEZ5ZU_1689205918)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1ZQh3pD1z2xVn
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jul 2023 09:56:43 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VnEWYjT_1689206197;
+Received: from 192.168.3.2(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VnEWYjT_1689206197)
           by smtp.aliyun-inc.com;
-          Thu, 13 Jul 2023 07:51:59 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 2/4] erofs-utils: fuse,fsck: add DEFLATE algorithm support
-Date: Thu, 13 Jul 2023 07:51:43 +0800
-Message-Id: <20230712235143.10125-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230710110251.89464-3-hsiangkao@linux.alibaba.com>
-References: <20230710110251.89464-3-hsiangkao@linux.alibaba.com>
+          Thu, 13 Jul 2023 07:56:37 +0800
+Message-ID: <a76b6126-be35-cf24-752c-545168ce5174@linux.alibaba.com>
+Date: Thu, 13 Jul 2023 07:56:36 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH RESEND] erofs: DEFLATE compression support
+To: Randy Dunlap <rdunlap@infradead.org>, linux-erofs@lists.ozlabs.org
+References: <20230712233026.118706-1-hsiangkao@linux.alibaba.com>
+ <20230712233347.122544-1-hsiangkao@linux.alibaba.com>
+ <e3a637af-ed6f-cd18-9423-bdb34ae60f3b@infradead.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <e3a637af-ed6f-cd18-9423-bdb34ae60f3b@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,326 +45,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds DEFLATE compression algorithm support to erofsfuse
-by using zlib (by default) and libdeflate.  libdeflate will be used
-instead of zlib if libdeflate is enabled.
+Hi Randy,
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-change since v3:
- - fix improper Z_EROFS_COMPRESSION_DEFLATE number. 
- configure.ac       |  45 ++++++++++++++
- dump/Makefile.am   |   2 +-
- fsck/Makefile.am   |   4 +-
- fuse/Makefile.am   |   2 +-
- include/erofs_fs.h |   7 +++
- lib/decompress.c   | 147 +++++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 203 insertions(+), 4 deletions(-)
+On 2023/7/13 07:46, Randy Dunlap wrote:
+> Hi--
+> 
+> On 7/12/23 16:33, Gao Xiang wrote:
+>> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+>> index f259d92c9720..d7b5327215f0 100644
+>> --- a/fs/erofs/Kconfig
+>> +++ b/fs/erofs/Kconfig
+>> @@ -99,6 +99,21 @@ config EROFS_FS_ZIP_LZMA
+>>   
+>>   	  If unsure, say N.
+>>   
+>> +config EROFS_FS_ZIP_DEFLATE
+>> +	bool "EROFS DEFLATE compressed data support"
+>> +	depends on EROFS_FS_ZIP
+>> +	select ZLIB_INFLATE
+>> +	help
+>> +	  Saying Y here includes support for reading EROFS file systems
+>> +	  containing DEFLATE compressed data.  It gives better compression
+>> +	  ratios than the default LZ4 format, whileas it costs more CPU
+> 
+> 	                                      while
+> or	  although
+> or	  but
 
-diff --git a/configure.ac b/configure.ac
-index 54608fb..d6dc7af 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -122,6 +122,15 @@ AC_ARG_ENABLE(lzma,
-    [AS_HELP_STRING([--enable-lzma], [enable LZMA compression support @<:@default=no@:>@])],
-    [enable_lzma="$enableval"], [enable_lzma="no"])
- 
-+AC_ARG_WITH(zlib,
-+   [AS_HELP_STRING([--without-zlib],
-+      [Ignore presence of zlib inflate support @<:@default=enabled@:>@])])
-+
-+AC_ARG_WITH(libdeflate,
-+   [AS_HELP_STRING([--with-libdeflate],
-+      [Enable and build with libdeflate inflate support @<:@default=disabled@:>@])], [],
-+      [with_libdeflate="no"])
-+
- AC_ARG_ENABLE(fuse,
-    [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
-    [enable_fuse="$enableval"], [enable_fuse="no"])
-@@ -395,6 +404,34 @@ if test "x$enable_lzma" = "xyes"; then
-   CPPFLAGS="${saved_CPPFLAGS}"
- fi
- 
-+# Configure zlib
-+AS_IF([test "x$with_zlib" != "xno"], [
-+  PKG_CHECK_MODULES([zlib], [zlib])
-+  # Paranoia: don't trust the result reported by pkgconfig before trying out
-+  saved_LIBS="$LIBS"
-+  saved_CPPFLAGS=${CPPFLAGS}
-+  CPPFLAGS="${zlib_CFLAGS} ${CPPFLAGS}"
-+  LIBS="${zlib_LIBS} $LIBS"
-+  AC_CHECK_LIB(z, inflate, [
-+    have_zlib="yes" ], [
-+    AC_MSG_ERROR([zlib doesn't work properly])])
-+  LIBS="${saved_LIBS}"
-+  CPPFLAGS="${saved_CPPFLAGS}"], [have_zlib="no"])
-+
-+# Configure libdeflate
-+AS_IF([test "x$with_libdeflate" != "xno"], [
-+  PKG_CHECK_MODULES([libdeflate], [libdeflate])
-+  # Paranoia: don't trust the result reported by pkgconfig before trying out
-+  saved_LIBS="$LIBS"
-+  saved_CPPFLAGS=${CPPFLAGS}
-+  CPPFLAGS="${libdeflate_CFLAGS} ${CPPFLAGS}"
-+  LIBS="${libdeflate_LIBS} $LIBS"
-+  AC_CHECK_LIB(deflate, libdeflate_deflate_decompress, [
-+    have_libdeflate="yes" ], [
-+    AC_MSG_ERROR([libdeflate doesn't work properly])])
-+  LIBS="${saved_LIBS}"
-+  CPPFLAGS="${saved_CPPFLAGS}"], [have_libdeflate="no"])
-+
- # Enable 64-bit off_t
- CFLAGS+=" -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
- 
-@@ -450,6 +487,14 @@ if test "x${have_liblzma}" = "xyes"; then
-   AC_SUBST([liblzma_CFLAGS])
- fi
- 
-+if test "x$have_zlib" = "xyes"; then
-+  AC_DEFINE([HAVE_ZLIB], 1, [Define to 1 if zlib is found])
-+fi
-+
-+if test "x$have_libdeflate" = "xyes"; then
-+  AC_DEFINE([HAVE_LIBDEFLATE], 1, [Define to 1 if libdeflate is found])
-+fi
-+
- # Dump maximum block size
- AS_IF([test "x$erofs_cv_max_block_size" = "x"],
-       [$erofs_cv_max_block_size = 4096], [])
-diff --git a/dump/Makefile.am b/dump/Makefile.am
-index 90227a5..aed20c2 100644
---- a/dump/Makefile.am
-+++ b/dump/Makefile.am
-@@ -7,4 +7,4 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- dump_erofs_SOURCES = main.c
- dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index 369cb2f..d024405 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -7,7 +7,7 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- fsck_erofs_SOURCES = main.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
- 
- if ENABLE_FUZZING
- noinst_PROGRAMS   = fuzz_erofsfsck
-@@ -15,5 +15,5 @@ fuzz_erofsfsck_SOURCES = main.c
- fuzz_erofsfsck_CFLAGS = -Wall -I$(top_srcdir)/include -DFUZZING
- fuzz_erofsfsck_LDFLAGS = -fsanitize=address,fuzzer
- fuzz_erofsfsck_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
- endif
-diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index 3179a2b..50be783 100644
---- a/fuse/Makefile.am
-+++ b/fuse/Makefile.am
-@@ -7,4 +7,4 @@ erofsfuse_SOURCES = main.c
- erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
- erofsfuse_CFLAGS += -DFUSE_USE_VERSION=26 ${libfuse_CFLAGS} ${libselinux_CFLAGS}
- erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse_LIBS} ${liblz4_LIBS} \
--	${libselinux_LIBS} ${liblzma_LIBS}
-+	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 3697882..850438a 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -297,6 +297,7 @@ enum {
- enum {
- 	Z_EROFS_COMPRESSION_LZ4		= 0,
- 	Z_EROFS_COMPRESSION_LZMA	= 1,
-+	Z_EROFS_COMPRESSION_DEFLATE	= 2,
- 	Z_EROFS_COMPRESSION_MAX
- };
- #define Z_EROFS_ALL_COMPR_ALGS		((1 << Z_EROFS_COMPRESSION_MAX) - 1)
-@@ -317,6 +318,12 @@ struct z_erofs_lzma_cfgs {
- 
- #define Z_EROFS_LZMA_MAX_DICT_SIZE	(8 * Z_EROFS_PCLUSTER_MAX_SIZE)
- 
-+/* 6 bytes (+ length field = 8 bytes) */
-+struct z_erofs_deflate_cfgs {
-+	u8 windowbits;			/* 8..15 for DEFLATE */
-+	u8 reserved[5];
-+} __packed;
-+
- /*
-  * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-  *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
-diff --git a/lib/decompress.c b/lib/decompress.c
-index 59a9ca0..0b41ff4 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -9,6 +9,149 @@
- #include "erofs/err.h"
- #include "erofs/print.h"
- 
-+#ifdef HAVE_LIBDEFLATE
-+/* if libdeflate is available, use libdeflate instead. */
-+#include <libdeflate.h>
-+
-+static int z_erofs_decompress_deflate(struct z_erofs_decompress_req *rq)
-+{
-+	u8 *dest = (u8 *)rq->out;
-+	u8 *src = (u8 *)rq->in;
-+	u8 *buff = NULL;
-+	size_t actual_out;
-+	unsigned int inputmargin = 0;
-+	struct libdeflate_decompressor *inf;
-+	enum libdeflate_result ret;
-+
-+	while (!src[inputmargin & (erofs_blksiz() - 1)])
-+		if (!(++inputmargin & (erofs_blksiz() - 1)))
-+			break;
-+
-+	if (inputmargin >= rq->inputsize)
-+		return -EFSCORRUPTED;
-+
-+	if (rq->decodedskip) {
-+		buff = malloc(rq->decodedlength);
-+		if (!buff)
-+			return -ENOMEM;
-+		dest = buff;
-+	}
-+
-+	inf = libdeflate_alloc_decompressor();
-+	if (!inf)
-+		return -ENOMEM;
-+
-+	if (rq->partial_decoding) {
-+		ret = libdeflate_deflate_decompress(inf, src + inputmargin,
-+				rq->inputsize - inputmargin, dest,
-+				rq->decodedlength, &actual_out);
-+		if (ret && ret != LIBDEFLATE_INSUFFICIENT_SPACE) {
-+			ret = -EIO;
-+			goto out_inflate_end;
-+		}
-+
-+		if (actual_out != rq->decodedlength) {
-+			ret = -EIO;
-+			goto out_inflate_end;
-+		}
-+	} else {
-+		ret = libdeflate_deflate_decompress(inf, src + inputmargin,
-+				rq->inputsize - inputmargin, dest,
-+				rq->decodedlength, NULL);
-+		if (ret) {
-+			ret = -EIO;
-+			goto out_inflate_end;
-+		}
-+	}
-+
-+	if (rq->decodedskip)
-+		memcpy(rq->out, dest + rq->decodedskip,
-+		       rq->decodedlength - rq->decodedskip);
-+
-+out_inflate_end:
-+	libdeflate_free_decompressor(inf);
-+	if (buff)
-+		free(buff);
-+	return ret;
-+}
-+#elif defined(HAVE_ZLIB)
-+#include <zlib.h>
-+
-+/* report a zlib or i/o error */
-+static int zerr(int ret)
-+{
-+	switch (ret) {
-+	case Z_STREAM_ERROR:
-+		return -EINVAL;
-+	case Z_DATA_ERROR:
-+		return -EIO;
-+	case Z_MEM_ERROR:
-+		return -ENOMEM;
-+	case Z_ERRNO:
-+	case Z_VERSION_ERROR:
-+	default:
-+		return -EFAULT;
-+	}
-+}
-+
-+static int z_erofs_decompress_deflate(struct z_erofs_decompress_req *rq)
-+{
-+	int ret = 0;
-+	u8 *dest = (u8 *)rq->out;
-+	u8 *src = (u8 *)rq->in;
-+	u8 *buff = NULL;
-+	unsigned int inputmargin = 0;
-+	z_stream strm;
-+
-+	while (!src[inputmargin & (erofs_blksiz() - 1)])
-+		if (!(++inputmargin & (erofs_blksiz() - 1)))
-+			break;
-+
-+	if (inputmargin >= rq->inputsize)
-+		return -EFSCORRUPTED;
-+
-+	if (rq->decodedskip) {
-+		buff = malloc(rq->decodedlength);
-+		if (!buff)
-+			return -ENOMEM;
-+		dest = buff;
-+	}
-+
-+	/* allocate inflate state */
-+	strm.zalloc = Z_NULL;
-+	strm.zfree = Z_NULL;
-+	strm.opaque = Z_NULL;
-+	strm.avail_in = 0;
-+	strm.next_in = Z_NULL;
-+	ret = inflateInit2(&strm, -15);
-+	if (ret != Z_OK)
-+		return zerr(ret);
-+
-+	strm.next_in = src + inputmargin;
-+	strm.avail_in = rq->inputsize - inputmargin;
-+	strm.next_out = dest;
-+	strm.avail_out = rq->decodedlength;
-+
-+	ret = inflate(&strm, rq->partial_decoding ? Z_SYNC_FLUSH : Z_FINISH);
-+	if (ret != Z_STREAM_END || strm.total_out != rq->decodedlength) {
-+		if (ret != Z_OK || !rq->partial_decoding) {
-+			ret = zerr(ret);
-+			goto out_inflate_end;
-+		}
-+	}
-+
-+	if (rq->decodedskip)
-+		memcpy(rq->out, dest + rq->decodedskip,
-+		       rq->decodedlength - rq->decodedskip);
-+
-+out_inflate_end:
-+	inflateEnd(&strm);
-+	if (buff)
-+		free(buff);
-+	return ret;
-+}
-+#endif
-+
- #ifdef HAVE_LIBLZMA
- #include <lzma.h>
- 
-@@ -167,6 +310,10 @@ int z_erofs_decompress(struct z_erofs_decompress_req *rq)
- #ifdef HAVE_LIBLZMA
- 	if (rq->alg == Z_EROFS_COMPRESSION_LZMA)
- 		return z_erofs_decompress_lzma(rq);
-+#endif
-+#if defined(HAVE_ZLIB) || defined(HAVE_LIBDEFLATE)
-+	if (rq->alg == Z_EROFS_COMPRESSION_DEFLATE)
-+		return z_erofs_decompress_deflate(rq);
- #endif
- 	return -EOPNOTSUPP;
- }
--- 
-2.24.4
+Thanks for pointing out, let me fix in the next version!
 
+Thanks,
+Gao Xiang
