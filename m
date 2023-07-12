@@ -2,63 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19A9B750D8C
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 18:07:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1689178023;
-	bh=8X6ArMXh62A5UxRR3ZN+q1CvObhoeb8ltfmXU1xj+zw=;
-	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=oYsLw2Agj0vyEGHDfW9nl4qDR73SEk/PKAq9Q75wKHe1PH+GzDRZ7HayCMRiTUtfY
-	 mx8NP0cDmtw2mDGcLjS1v8M37d7p6NZuOdqIfBe3xvifU/XbaU4LsKTCLWfc17amco
-	 HjsDhf7N1/ZjPJ8JZrGAOyCV2BlHY9C1g15CXaB9aj53G4wNB5pYndHRLSTNIvlPZW
-	 Xceh7yaPgcKKW3P+4QX/7eJwRb2OKCEtHA8FgH9iIuAV7mTSsAf8+Nd4chuaLf115R
-	 7LfKcCZxEGgDngXHSQJDJVlUp1KHybD6EN+tw0varIJrMu+hZSmRQBiCEnb+60osEX
-	 UkmlOmGiV7RYQ==
+	by mail.lfdr.de (Postfix) with ESMTPS id 906D8750F30
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jul 2023 19:03:02 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=joelfernandes.org header.i=@joelfernandes.org header.a=rsa-sha256 header.s=google header.b=cqQDuh7K;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R1N0l694Rz3c0n
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 02:07:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R1PFJ39QYz3c1Y
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 03:03:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=ionos.com header.i=@ionos.com header.a=rsa-sha256 header.s=google header.b=V0Mwyzpf;
+	dkim=pass (1024-bit key; unprotected) header.d=joelfernandes.org header.i=@joelfernandes.org header.a=rsa-sha256 header.s=google header.b=cqQDuh7K;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Void lookup limit of 2 exceeded) smtp.mailfrom=ionos.com (client-ip=2a00:1450:4864:20::12c; helo=mail-lf1-x12c.google.com; envelope-from=haris.iqbal@ionos.com; receiver=lists.ozlabs.org)
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=joelfernandes.org (client-ip=2a00:1450:4864:20::236; helo=mail-lj1-x236.google.com; envelope-from=joel@joelfernandes.org; receiver=lists.ozlabs.org)
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1N0d10pRz3bv0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jul 2023 02:06:54 +1000 (AEST)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so11508999e87.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 12 Jul 2023 09:06:54 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1PFC4wHsz30ft
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jul 2023 03:02:53 +1000 (AEST)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b74209fb60so2210871fa.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 12 Jul 2023 10:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1689181367; x=1691773367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OvoEOajiEwYXBD3xzLluGfgCVtGjTJSaHMHQydgzNEE=;
+        b=cqQDuh7KkBC7Bp6ndhg7nXNYsINnQl/XnlT+1UAc8RaZTq+BuxgRGEoG8mqoOpE6js
+         XKPABgipIV5zI1bbzGToaFdttSQ9on3vO/0h7AHhN2349r+/o4nXk2tQ9zir/uj+PMqf
+         7U3DT3YK7cdjRWUEqF0PhnLEVmVuRgxy0mUC0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689178006; x=1691770006;
+        d=1e100.net; s=20221208; t=1689181367; x=1691773367;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8X6ArMXh62A5UxRR3ZN+q1CvObhoeb8ltfmXU1xj+zw=;
-        b=Xxd/hMWk4ze4qfHhul6whVHyXC7OkZaxul7ipQv0+pNyGqh6GfFQsJ9zIk6zXVzkoQ
-         eBiH3ICW+Grs6ou0LuHqzI8ADE8Zjoh0YJc/rrIRBEbYnozlF9yaaznTZwB6L/b4xYpg
-         jbHj6Ma8bmOpfOpnHT/HP6GMqCxf9aFnfRq47LEw9o3Y7+vt3cyKd+H22nG+nAFgFNNh
-         EMh0eXMq1yfzlrBUU+BZNdqC2l3WY+JdOhKg+CizlJKRWPAiiCRaK3nBkgnRaslRV0o+
-         0WaD3HiRyj3zkF/QTJeldVCF7q99ccr5Cjj0aY7Y7t62B/9blh0aw6LVUvlPIzKcl0ue
-         yDgA==
-X-Gm-Message-State: ABy/qLYc3y5FZ6C1KLiZC5LdUlUyGsxyibnQP5DgukzQ+L1v149MEHYW
-	GgQhjGENzCSkAwgYg65ZveSYFufClFyElAbibhRZ3g==
-X-Google-Smtp-Source: APBJJlHjPtNIqZNhhKZT3JSG1orBAozCwd3+TwwvFjulJuToD7D5iIrA7grwKZQU8Z67qc0UJ0oDxWof6WbkdfMRi3A=
-X-Received: by 2002:ac2:5b1d:0:b0:4fb:7a90:1abe with SMTP id
- v29-20020ac25b1d000000b004fb7a901abemr15797051lfn.49.1689178006211; Wed, 12
- Jul 2023 09:06:46 -0700 (PDT)
+        bh=OvoEOajiEwYXBD3xzLluGfgCVtGjTJSaHMHQydgzNEE=;
+        b=fC75ku4as0A3az+0H9tXcmfT7nHKUsLgn77mzSplZEKHJ7Ief1YVubVOQJbzuKetay
+         L/pkiYeCfvvLsQ1hLRnDUhwlGZUWCqgnIFYoxtcONFroHnhbw+niYLqnMh0FQuLWravb
+         BvLGPWJcVTqPSnaAgl9mKeeHk01ry/57zPgb92EcAkSsMOv0tnXb4SOZ9Y/NolBK1/Dq
+         ofBNWgRq1UA2PejVKpg6nxdMQjUPi4bT0VOiGnpKa6+03+k45+GtOiaB4CBXZtlgnjmK
+         bRL9cgfxnwCvZ3dtTHBe0vcdqG6NY332Vwaobx8e7Wx5AHLKkjyEYlVVbNM3QxKdtEmA
+         y3Zw==
+X-Gm-Message-State: ABy/qLZC5m6Rqqzkf9enLguc5UgXCwnZ+kGbj6aE+QMIbZQvQEBuLrs7
+	XyRo5sQ3+w8NZ6ABJSzvU6Ir/xBeKH1er1u0KdTFjg==
+X-Google-Smtp-Source: APBJJlGlT858DQ/NfqPA3OlYGxIXp57HPZH8ded5Q4ToS48ybKGBOA2p1X6hcXClrEz/A6yz7yx5y/8vtOtl4ryFQpk=
+X-Received: by 2002:a2e:8909:0:b0:2b6:9f5d:e758 with SMTP id
+ d9-20020a2e8909000000b002b69f5de758mr19193207lji.9.1689181367032; Wed, 12 Jul
+ 2023 10:02:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230629165206.383-1-jack@suse.cz> <20230704122224.16257-1-jack@suse.cz>
- <ZKbgAG5OoHVyUKOG@infradead.org>
-In-Reply-To: <ZKbgAG5OoHVyUKOG@infradead.org>
-Date: Wed, 12 Jul 2023 18:06:35 +0200
-Message-ID: <CAJpMwyiUcw+mH0sZa8f8UJsaSZ7NSE65s2gZDEia+pASyP_gJQ@mail.gmail.com>
-Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
-To: Christoph Hellwig <hch@infradead.org>
+References: <20230711233816.2187577-1-dhavale@google.com>
+In-Reply-To: <20230711233816.2187577-1-dhavale@google.com>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 12 Jul 2023 13:02:35 -0400
+Message-ID: <CAEXW_YQvpiFEaaNoS=Msgi17mU3kZD+q8bNBaHYasMArG9aPig@mail.gmail.com>
+Subject: Re: [PATCH v1] rcu: Fix and improve RCU read lock checks when !CONFIG_DEBUG_LOCK_ALLOC
+To: Sandeep Dhavale <dhavale@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -72,42 +72,152 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Haris Iqbal via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Haris Iqbal <haris.iqbal@ionos.com>
-Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, Jan Kara <jack@suse.cz>, "Darrick J. Wong" <djwong@kernel.org>, linux-nvme@lists.infradead.org, Joseph Qi <joseph.qi@linux.alibaba.com>, dm-devel@redhat.com, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, Jack Wang <jinpu.wang@ionos.com>, Alasdair Kergon <agk@redhat.com>, drbd-dev@lists.linbit.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, xen-devel@lists.xenproject.org, Christian Borntraeger <borntraeger@linux.ibm.com>, Kent Overstreet <kent.overstreet@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, linux-pm@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Joern Engel <joern@lazybastard.org>, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, Jen
- s Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Ted Tso <tytso@mit.edu>, linux-mm@kvack.org, Song Liu <song@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: kernel-team@android.com, "Paul E. McKenney" <paulmck@kernel.org>, Will Shiu <Will.Shiu@mediatek.com>, linux-erofs@lists.ozlabs.org, Boqun Feng <boqun.feng@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Josh Triplett <josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Zqiang <qiang.zhang1211@gmail.com>, Neeraj Upadhyay <quic_neeraju@quicinc.com>, Frederic Weisbecker <frederic@kernel.org>, linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Jul 6, 2023 at 5:38=E2=80=AFPM Christoph Hellwig <hch@infradead.org=
+On Tue, Jul 11, 2023 at 7:38=E2=80=AFPM Sandeep Dhavale <dhavale@google.com=
 > wrote:
 >
-> On Tue, Jul 04, 2023 at 02:21:28PM +0200, Jan Kara wrote:
-> > Create struct bdev_handle that contains all parameters that need to be
-> > passed to blkdev_put() and provide blkdev_get_handle_* functions that
-> > return this structure instead of plain bdev pointer. This will
-> > eventually allow us to pass one more argument to blkdev_put() without
-> > too much hassle.
+> Currently if CONFIG_DEBUG_LOCK_ALLOC is not set
 >
-> Can we use the opportunity to come up with better names?  blkdev_get_*
-> was always a rather horrible naming convention for something that
-> ends up calling into ->open.
+> - rcu_read_lock_held() always returns 1
+> - rcu_read_lock_any_held() may return 0 with CONFIG_PREEMPT_RCU
 >
-> What about:
+> This is inconsistent and it was discovered when trying a fix
+> for problem reported [1] with CONFIG_DEBUG_LOCK_ALLOC is not
+> set and CONFIG_PREEMPT_RCU is enabled. Gist of the problem is
+> that EROFS wants to detect atomic context so it can do inline
+> decompression whenever possible, this is important performance
+> optimization. It turns out that z_erofs_decompressqueue_endio()
+> can be called from blk_mq_flush_plug_list() with rcu lock held
+> and hence fix uses rcu_read_lock_any_held() to decide to use
+> sync/inline decompression vs async decompression.
 >
-> struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *ho=
-lder,
->                 const struct blk_holder_ops *hops);
-> struct bdev_handle *bdev_open_by_path(dev_t dev, blk_mode_t mode,
->                 void *holder, const struct blk_holder_ops *hops);
-> void bdev_release(struct bdev_handle *handle);
+> As per documentation, we should return lock is held if we aren't
+> certain. But it seems we can improve the checks for if the lock
+> is held even if CONFIG_DEBUG_LOCK_ALLOC is not set instead of
+> hardcoding to always return true.
+>
+> * rcu_read_lock_held()
+> - For CONFIG_PREEMPT_RCU using rcu_preempt_depth()
+> - using preemptible() (indirectly preempt_count())
+>
+> * rcu_read_lock_bh_held()
+> - For CONFIG_PREEMPT_RT Using in_softirq() (indirectly softirq_cont())
+> - using preemptible() (indirectly preempt_count())
+>
+> Lastly to fix the inconsistency, rcu_read_lock_any_held() is updated
+> to use other rcu_read_lock_*_held() checks.
+>
+> Two of the improved checks are moved to kernel/rcu/update.c because
+> rcupdate.h is included from the very low level headers which do not know
+> what current (task_struct) is so the macro rcu_preempt_depth() cannot be
+> expanded in the rcupdate.h. See the original comment for
+> rcu_preempt_depth() in patch at [2] for more information.
+>
+> [1]
+> https://lore.kernel.org/all/20230621220848.3379029-1-dhavale@google.com/
+> [2]
+> https://lore.kernel.org/all/1281392111-25060-8-git-send-email-paulmck@lin=
+ux.vnet.ibm.com/
+>
+> Reported-by: Will Shiu <Will.Shiu@mediatek.com>
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+>  include/linux/rcupdate.h | 12 +++---------
+>  kernel/rcu/update.c      | 21 ++++++++++++++++++++-
+>  2 files changed, 23 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 5e5f920ade90..0d1d1d8c2360 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -319,14 +319,11 @@ int rcu_read_lock_any_held(void);
+>  # define rcu_lock_acquire(a)           do { } while (0)
+>  # define rcu_lock_release(a)           do { } while (0)
+>
+> -static inline int rcu_read_lock_held(void)
+> -{
+> -       return 1;
+> -}
+> +int rcu_read_lock_held(void);
+>
+>  static inline int rcu_read_lock_bh_held(void)
+>  {
+> -       return 1;
+> +       return !preemptible() || in_softirq();
+>  }
+>
+>  static inline int rcu_read_lock_sched_held(void)
+> @@ -334,10 +331,7 @@ static inline int rcu_read_lock_sched_held(void)
+>         return !preemptible();
+>  }
+>
+> -static inline int rcu_read_lock_any_held(void)
+> -{
+> -       return !preemptible();
+> -}
+> +int rcu_read_lock_any_held(void);
+>
+>  static inline int debug_lockdep_rcu_enabled(void)
+>  {
+> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> index 19bf6fa3ee6a..b34fc5bb96cf 100644
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -390,8 +390,27 @@ int rcu_read_lock_any_held(void)
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
+>
+> -#endif /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
+> +#else /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
+>
+> +int rcu_read_lock_held(void)
+> +{
+> +       if (IS_ENABLED(CONFIG_PREEMPT_RCU))
+> +               return rcu_preempt_depth();
+> +       return !preemptible();
+> +}
+> +EXPORT_SYMBOL_GPL(rcu_read_lock_held);
+> +
+> +int rcu_read_lock_any_held(void)
+> +{
+> +       if (rcu_read_lock_held() ||
+> +           rcu_read_lock_bh_held() ||
+> +           rcu_read_lock_sched_held())
+> +               return 1;
+> +       return !preemptible();
 
-+1 to this.
-Also, if we are removing "handle" from the function, should the name
-of the structure it returns also change? Would something like bdev_ctx
-be better?
+Actually even the original code is incorrect (the lockdep version)
+since preemptible() cannot be relied upon if CONFIG_PREEMPT_COUNT is
+not set. However, that's debug code. In this case, it is a real
+user (the fs code). In non-preemptible kernels, we are always in an
+RCU-sched section. So you can't really see if anyone called your code
+under rcu_read_lock(). The rcu_read_lock/unlock() would be getting
+NOOPed. In such a kernel, it will always tell your code it is in an
+RCU reader. That's not ideal for that erofs code?
 
-(Apologies for the previous non-plaintext email)
+Also, per that erofs code:
+        /* Use (kthread_)work and sync decompression for atomic contexts on=
+ly */
+        if (!in_task() || irqs_disabled() || rcu_read_lock_any_held()) {
 
->
-> ?
+I guess you are also assuming that rcu_read_lock_any_held() tells you
+something about atomicity but strictly speaking, it doesn't because
+preemptible RCU readers are preemptible. You can't block but
+preemption is possible so it is not "atomic". Maybe you meant "cannot
+block"?
+
+As such this patch looks correct to me, one thing I noticed is that
+you can check rcu_is_watching() like the lockdep-enabled code does.
+That will tell you also if a reader-section is possible because in
+extended-quiescent-states, RCU readers should be non-existent or
+that's a bug.
+
+Could you also verify that this patch does not cause bloating of the
+kernel if lockdep is disabled?
+
+thanks,
+
+ - Joel
