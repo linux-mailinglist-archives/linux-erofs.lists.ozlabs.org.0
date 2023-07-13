@@ -1,28 +1,28 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 503F875280F
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 18:10:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A827752810
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 18:10:25 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
 	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=c2E9mIDJ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R20211T0Wz3c5J
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 02:10:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R2027037Hz3c5t
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 02:10:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
 	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=c2E9mIDJ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::435; helo=mail-pf1-x435.google.com; envelope-from=mmpgouride@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42c; helo=mail-pf1-x42c.google.com; envelope-from=mmpgouride@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R201v4Q2Gz3c49
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R201v4SXqz3c4B
 	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jul 2023 02:10:09 +1000 (AEST)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-66869feb7d1so607173b3a.3
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-666e64e97e2so611972b3a.1
         for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jul 2023 09:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20221208; t=1689264606; x=1691856606;
@@ -42,19 +42,19 @@ X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
          :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=iFA+rAOBlK7dj9RX5CVH5OmkQ4lR5Bx+d7rkJn4GaaE=;
-        b=UETJh0LGUczFJwUx6k51Qt7Bic9thfZby4xL+DHG2fsUgLzpWyG5WpYEW8sGATR1es
-         MJP66cBTbgxfjmkd8gddIWC6/5st67RJ/nB6EgawBLPavyFPp/Di0uAIuJUb+tSMyXgC
-         ZcVtw5+BE6rkCVPuqP0k292L21pUjCEo/D+C7ScQ8OWwX8C8Z+d0eioYcsxyT5gVv3ba
-         j3EKY0tyWNTKUEzUbHp0hH/O/jvf9Y2DOdxs2+5FKcW/a9WwXq5qYz4Z3psmPXCBBUMH
-         1egCUYTU39f6uoO7E8E2jcWyxyeZT4nPzs2s5syThDymuuX6SojvMOIItx3zmedA//1k
-         dh/g==
-X-Gm-Message-State: ABy/qLa8Mq0G6llTA/j0MJFwh+Q1R4kL5uNBd5e67DgAUyjSgZHxfKWY
-	rBI3VFF2Gxo9vfcxa20ti8c=
-X-Google-Smtp-Source: APBJJlF//ZLeGR7hxcXpHjt+wbqlsryzMUKsUz5sg0f7ha+7KhPYLSQlV/dqtvVvjLCaxGfQkQPG3w==
-X-Received: by 2002:a17:902:bb89:b0:1b0:2658:daf7 with SMTP id m9-20020a170902bb8900b001b02658daf7mr1271207pls.36.1689264606583;
+        b=OvYqw/M4ehnFP5czPnfepuq4PYPk+92ULHmFZ4G3CFutoOuPRHKL3eJJaaTsIkXuup
+         4OdwTZxBlgulMJoN+NcuIpTxpiDai8hz8hDOL66EJFxyop6PmInm6bgGB9xrMrQhrQhY
+         14RArBP1wC3DI1F5t4WKL831HruPtsBNTs/u6uemtDgC3TBob1GQjPIhJWYY9LK9x5wW
+         NohPy42BqTHgcQe35Vp/mmkIoUWg6/MI/dcrcEg+AZh9yP9gzscsa3hIYFBBvmXOe9C+
+         iyiU9naKgxXc6UYxKrI+psdCxg/FkzF0PiKyV/SiFJe1TFWOws2F6JYirTyEOgrC9vav
+         ugwQ==
+X-Gm-Message-State: ABy/qLacSfvf7dwSG8hTQ5zrNvKU24k2R+vGBzNawuxHMA7qhb/us94l
+	yUVR7c9GJ3NEDkd1lXgJ0gI=
+X-Google-Smtp-Source: APBJJlEOQI97UkYB7yQeECxP4vBgNRNjHuceh4nJwenUgjmqewfKsIPdGHyFHU4hY1e2IQXDe3vgZA==
+X-Received: by 2002:a05:6a20:13da:b0:131:6464:2179 with SMTP id ho26-20020a056a2013da00b0013164642179mr1426602pzc.25.1689264606465;
         Thu, 13 Jul 2023 09:10:06 -0700 (PDT)
 Received: from smtpclient.apple ([2402:d0c0:2:a2a::1])
-        by smtp.gmail.com with ESMTPSA id i5-20020a1709026ac500b001b8918da8d1sm6118793plt.80.2023.07.13.09.09.45
+        by smtp.gmail.com with ESMTPSA id j20-20020aa79294000000b006833bcc95b0sm2229847pfa.115.2023.07.13.09.09.47
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 13 Jul 2023 09:10:05 -0700 (PDT)
 Content-Type: text/plain;
