@@ -1,47 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91088752547
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 16:35:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B7D7526ED
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jul 2023 17:28:02 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OXtC9Zny;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R1xwJ3Vt8z3c4R
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 00:35:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R1z5C4HP2z3c4t
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 01:27:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OXtC9Zny;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1xwD0DP4z2yHT
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jul 2023 00:35:05 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VnIKFjW_1689258886;
-Received: from 30.27.122.43(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VnIKFjW_1689258886)
-          by smtp.aliyun-inc.com;
-          Thu, 13 Jul 2023 22:34:50 +0800
-Message-ID: <894a3b64-a369-7bc6-c8a8-0910843cc587@linux.alibaba.com>
-Date: Thu, 13 Jul 2023 22:34:45 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R1z593QZyz3c4G
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jul 2023 01:27:57 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 7800061087;
+	Thu, 13 Jul 2023 15:27:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C87CC433C7;
+	Thu, 13 Jul 2023 15:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689262074;
+	bh=Yb0FwToWR1mPgzJmQRpGI5uiW5wHMqCirUi7MRvIv3A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OXtC9ZnyPa+EXeMNNjdqCu+mrCGWsYsc+qdrKid8H31wbOOA/FE9gbctWtSg3/5pJ
+	 ssiz/sqS6p3iVFF948KQseuq7J0TE6XaGq+wkFvt+5HkQGHid1It7lE4nz4H8b5a4o
+	 KGMrusNec3GwkBOEx+gKZrr9rpgSsS9TEyeX0nxWLtF1ep93fdRZoxriE7GPRPHqdq
+	 ieQ+i56bDarBQ/O4G7nYIZJqo4GiWchTnTGhKQ0SzGd78kniB+gv5prsJ/uEDr08jw
+	 8jPhKMze3TSccSZRiYfZtBcfI2GzbjpflAhiNDCyKt1LxJY+UB6j7q/wLL816azo98
+	 nA3lR1F0hvyRQ==
+Date: Thu, 13 Jul 2023 23:27:49 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 6.5-rc2
+Message-ID: <ZLAX9WApf3wGm5Q+@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Xin Yin <yinxin.x@bytedance.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Yue Hu <huyue2@coolpad.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v1] rcu: Fix and improve RCU read lock checks when
- !CONFIG_DEBUG_LOCK_ALLOC
-To: Joel Fernandes <joel@joelfernandes.org>
-References: <20230711233816.2187577-1-dhavale@google.com>
- <CAEXW_YQvpiFEaaNoS=Msgi17mU3kZD+q8bNBaHYasMArG9aPig@mail.gmail.com>
- <CAB=BE-Rm0ycTZXj=wHW_FBCCKbswG+dh3L+o1+CUW=Pg_oWnyw@mail.gmail.com>
- <20230713003201.GA469376@google.com>
- <161f1615-3d85-cf47-d2d5-695adf1ca7d4@linux.alibaba.com>
- <0d9e7b4d-6477-47a6-b3d2-2c9d9b64903d@paulmck-laptop>
- <f124e041-6a82-2069-975c-4f393e5c4137@linux.alibaba.com>
- <87292a44-cc02-4d95-940e-e4e31d0bc6f2@paulmck-laptop>
- <f1c60dcb-e32f-7b7e-bf0d-5dec999e9299@linux.alibaba.com>
- <CAEXW_YSODXRfgkR0D2G-x=0uZdsqvF3kZL+LL3DcRX-5CULJ1Q@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAEXW_YSODXRfgkR0D2G-x=0uZdsqvF3kZL+LL3DcRX-5CULJ1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,108 +63,63 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-team@android.com, paulmck@kernel.org, Will Shiu <Will.Shiu@mediatek.com>, linux-erofs@lists.ozlabs.org, Boqun Feng <boqun.feng@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Josh Triplett <josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Zqiang <qiang.zhang1211@gmail.com>, Neeraj Upadhyay <quic_neeraju@quicinc.com>, Frederic Weisbecker <frederic@kernel.org>, linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>, Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi Linus,
 
+Could you consider these patches for 6.5-rc2?
 
-On 2023/7/13 22:07, Joel Fernandes wrote:
-> On Thu, Jul 13, 2023 at 12:59 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->> On 2023/7/13 12:52, Paul E. McKenney wrote:
->>> On Thu, Jul 13, 2023 at 12:41:09PM +0800, Gao Xiang wrote:
->>>>
->>>>
->>
->> ...
->>
->>>>
->>>> There are lots of performance issues here and even a plumber
->>>> topic last year to show that, see:
->>>>
->>>> [1] https://lore.kernel.org/r/20230519001709.2563-1-tj@kernel.org
->>>> [2] https://lore.kernel.org/r/CAHk-=wgE9kORADrDJ4nEsHHLirqPCZ1tGaEPAZejHdZ03qCOGg@mail.gmail.com
->>>> [3] https://lore.kernel.org/r/CAB=BE-SBtO6vcoyLNA9F-9VaN5R0t3o_Zn+FW8GbO6wyUqFneQ@mail.gmail.com
->>>> [4] https://lpc.events/event/16/contributions/1338/
->>>> and more.
->>>>
->>>> I'm not sure if it's necessary to look info all of that,
->>>> andSandeep knows more than I am (the scheduling issue
->>>> becomes vital on some aarch64 platform.)
->>>
->>> Hmmm...  Please let me try again.
->>>
->>> Assuming that this approach turns out to make sense, the resulting
->>> patch will need to clearly state the performance benefits directly in
->>> the commit log.
->>>
->>> And of course, for the approach to make sense, it must avoid breaking
->>> the existing lockdep-RCU debugging code.
->>>
->>> Is that more clear?
->>
->> Personally I'm not working on Android platform any more so I don't
->> have a way to reproduce, hopefully Sandeep could give actually
->> number _again_ if dm-verity is enabled and trigger another
->> workqueue here and make a comparsion why the scheduling latency of
->> the extra work becomes unacceptable.
->>
-> 
-> Question from my side, are we talking about only performance issues or
-> also a crash? It appears z_erofs_decompress_pcluster() takes
-> mutex_lock(&pcl->lock);
-> 
-> So if it is either in an RCU read-side critical section or in an
-> atomic section, like the softirq path, then it may
-> schedule-while-atomic or trigger RCU warnings.
-> 
-> z_erofs_decompressqueue_endio
-> -> z_erofs_decompress_kickoff
->   ->z_erofs_decompressqueue_work
->    ->z_erofs_decompress_queue
->     -> z_erofs_decompress_pcluster
->      -> mutex_lock
-> 
+Three patches address regressions related to post-EOF unexpected
+behaviors and fsdax unavailability of chunk-based regular files.
 
-Why does the softirq path not trigger a workqueue instead? why here
-it triggers "schedule-while-atomic" in the softirq context?
+The other two patches mainly get rid of kmap_atomic() and simplify
+z_erofs_transform_plain() which I think they are simple enough to
+be addressed in this cycle.
 
-> Per Sandeep in [1], this stack happens under RCU read-lock in:
-> 
-> #define __blk_mq_run_dispatch_ops(q, check_sleep, dispatch_ops) \
-> [...]
->                  rcu_read_lock();
->                  (dispatch_ops);
->                  rcu_read_unlock();
-> [...]
-> 
-> Coming from:
-> blk_mq_flush_plug_list ->
->                             blk_mq_run_dispatch_ops(q,
->                                  __blk_mq_flush_plug_list(q, plug));
-> 
-> and __blk_mq_flush_plug_list does this:
->            q->mq_ops->queue_rqs(&plug->mq_list);
-> 
-> This somehow ends up calling the bio_endio and the
-> z_erofs_decompressqueue_endio which grabs the mutex.
-> 
-> So... I have a question, it looks like one of the paths in
-> __blk_mq_run_dispatch_ops() uses SRCU.  Where are as the alternate
-> path uses RCU. Why does this alternate want to block even if it is not
-> supposed to? Is the real issue here that the BLK_MQ_F_BLOCKING should
-> be set? It sounds like you want to block in the "else" path even
-> though BLK_MQ_F_BLOCKING is not set:
-
-BLK_MQ_F_BLOCKING is not a flag that a filesystem can do anything with.
-That is block layer and mq device driver stuffs. filesystems cannot set
-this value.
-
-As I said, as far as I understand, previously,
-.end_io() can only be called without RCU context, so it will be fine,
-but I don't know when .end_io() can be called under some RCU context
-now.
-
+All commits have been in -next for a while and no potential merge
+conflict is observed.
 
 Thanks,
 Gao Xiang
+
+The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
+
+  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.5-rc2-fixes
+
+for you to fetch changes up to 18bddc5b67038722cb88fcf51fbf41a0277092cb:
+
+  erofs: fix fsdax unavailability for chunk-based regular files (2023-07-12 00:50:56 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix two unexpected loop cases when reading beyond EOF;
+
+ - Fix fsdax unavailability for chunk-based regular files;
+
+ - Get rid of the remaining kmap_atomic();
+
+ - Minor cleanups.
+
+----------------------------------------------------------------
+Chunhai Guo (2):
+      erofs: avoid useless loops in z_erofs_pcluster_readmore() when reading beyond EOF
+      erofs: avoid infinite loop in z_erofs_do_read_page() when reading beyond EOF
+
+Gao Xiang (2):
+      erofs: get rid of the remaining kmap_atomic()
+      erofs: simplify z_erofs_transform_plain()
+
+Xin Yin (1):
+      erofs: fix fsdax unavailability for chunk-based regular files
+
+ fs/erofs/decompressor.c | 37 +++++++++++++++++--------------------
+ fs/erofs/inode.c        |  3 ++-
+ fs/erofs/zdata.c        |  4 ++--
+ 3 files changed, 21 insertions(+), 23 deletions(-)
