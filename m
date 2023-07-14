@@ -1,38 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73C2A752FBF
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 05:11:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8CF3752FD8
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 05:17:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R2GhM2qLMz3c3R
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 13:10:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R2Gqb5DgSz3c1q
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Jul 2023 13:17:15 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
 Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R2Gh527Lvz3bqw
-	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jul 2023 13:10:44 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VnJxOQD_1689304236;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VnJxOQD_1689304236)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R2GqY265Dz3031
+	for <linux-erofs@lists.ozlabs.org>; Fri, 14 Jul 2023 13:17:12 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VnK7oAI_1689304613;
+Received: from 172.20.10.3(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VnK7oAI_1689304613)
           by smtp.aliyun-inc.com;
-          Fri, 14 Jul 2023 11:10:37 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 2/2] erofs: boost negative xattr lookup with bloom filter
-Date: Fri, 14 Jul 2023 11:10:34 +0800
-Message-Id: <20230714031034.53210-3-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230714031034.53210-1-jefflexu@linux.alibaba.com>
-References: <20230714031034.53210-1-jefflexu@linux.alibaba.com>
+          Fri, 14 Jul 2023 11:16:56 +0800
+Message-ID: <058e7ee9-0380-eb1b-d9a8-b184cba6ed53@linux.alibaba.com>
+Date: Fri, 14 Jul 2023 11:16:52 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH v1] rcu: Fix and improve RCU read lock checks when
+ !CONFIG_DEBUG_LOCK_ALLOC
+To: paulmck@kernel.org, Sandeep Dhavale <dhavale@google.com>
+References: <20230713003201.GA469376@google.com>
+ <161f1615-3d85-cf47-d2d5-695adf1ca7d4@linux.alibaba.com>
+ <0d9e7b4d-6477-47a6-b3d2-2c9d9b64903d@paulmck-laptop>
+ <f124e041-6a82-2069-975c-4f393e5c4137@linux.alibaba.com>
+ <87292a44-cc02-4d95-940e-e4e31d0bc6f2@paulmck-laptop>
+ <f1c60dcb-e32f-7b7e-bf0d-5dec999e9299@linux.alibaba.com>
+ <CAEXW_YSODXRfgkR0D2G-x=0uZdsqvF3kZL+LL3DcRX-5CULJ1Q@mail.gmail.com>
+ <894a3b64-a369-7bc6-c8a8-0910843cc587@linux.alibaba.com>
+ <CAEXW_YSM1yik4yWTgZoxCS9RM6TbsL26VCVCH=41+uMA8chfAQ@mail.gmail.com>
+ <58b661d0-0ebb-4b45-a10d-c5927fb791cd@paulmck-laptop>
+ <7d433fac-a62d-4e81-b8e5-57cf5f2d1d55@paulmck-laptop>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <7d433fac-a62d-4e81-b8e5-57cf5f2d1d55@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,128 +54,54 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, alexl@redhat.com
+Cc: kernel-team@android.com, Will Shiu <Will.Shiu@mediatek.com>, linux-erofs@lists.ozlabs.org, Frederic Weisbecker <frederic@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, Josh Triplett <josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Zqiang <qiang.zhang1211@gmail.com>, Neeraj Upadhyay <quic_neeraju@quicinc.com>, Boqun Feng <boqun.feng@gmail.com>, linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Optimise the negative xattr lookup with bloom filter.
 
-The bit value for the bloom filter map has a reverse semantics for
-compatibility.  That is, the bit value of 0 indicates existence, while
-the bit value of 1 indicates the absence of corresponding xattr.
 
-This feature is enabled only when xattr_filter_reserved is non-zero.
-The on-disk format for the filter map may change in the future, in which
-case the reserved flag will be set non-zero and we don't need bothering
-the compatible bits again at that time.  For now disable the optimization
-if this reserved flag is non-zero.
+On 2023/7/14 10:16, Paul E. McKenney wrote:
+> On Thu, Jul 13, 2023 at 09:33:35AM -0700, Paul E. McKenney wrote:
+>> On Thu, Jul 13, 2023 at 11:33:24AM -0400, Joel Fernandes wrote:
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- fs/erofs/Kconfig    |  1 +
- fs/erofs/internal.h |  3 +++
- fs/erofs/super.c    |  1 +
- fs/erofs/xattr.c    | 13 +++++++++++++
- 4 files changed, 18 insertions(+)
+...
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index f259d92c9720..f49669def828 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -38,6 +38,7 @@ config EROFS_FS_DEBUG
- config EROFS_FS_XATTR
- 	bool "EROFS extended attributes"
- 	depends on EROFS_FS
-+	select XXHASH
- 	default y
- 	help
- 	  Extended attributes are name:value pairs associated with inodes by
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 36e32fa542f0..ebcad25e3750 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -151,6 +151,7 @@ struct erofs_sb_info {
- 	u32 xattr_prefix_start;
- 	u8 xattr_prefix_count;
- 	struct erofs_xattr_prefix_item *xattr_prefixes;
-+	unsigned int xattr_filter_reserved;
- #endif
- 	u16 device_id_mask;	/* valid bits of device id to be used */
- 
-@@ -251,6 +252,7 @@ EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
- EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
-+EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
- 
- /* atomic flag definitions */
- #define EROFS_I_EA_INITED_BIT	0
-@@ -270,6 +272,7 @@ struct erofs_inode {
- 	unsigned char inode_isize;
- 	unsigned int xattr_isize;
- 
-+	unsigned long xattr_name_filter;
- 	unsigned int xattr_shared_count;
- 	unsigned int *xattr_shared_xattrs;
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 9d6a3c6158bd..72122323300e 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -388,6 +388,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
- 	sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
- 	sbi->xattr_prefix_count = dsb->xattr_prefix_count;
-+	sbi->xattr_filter_reserved = dsb->xattr_filter_reserved;
- #endif
- 	sbi->islotbits = ilog2(sizeof(struct erofs_inode_compact));
- 	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 40178b6e0688..eb1d1974d4b3 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2021-2022, Alibaba Cloud
-  */
- #include <linux/security.h>
-+#include <linux/xxhash.h>
- #include "xattr.h"
- 
- struct erofs_xattr_iter {
-@@ -87,6 +88,7 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	}
- 
- 	ih = it.kaddr + erofs_blkoff(sb, it.pos);
-+	vi->xattr_name_filter = le32_to_cpu(ih->h_name_filter);
- 	vi->xattr_shared_count = ih->h_shared_count;
- 	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
- 						sizeof(uint), GFP_KERNEL);
-@@ -392,7 +394,10 @@ int erofs_getxattr(struct inode *inode, int index, const char *name,
- 		   void *buffer, size_t buffer_size)
- {
- 	int ret;
-+	uint32_t bit;
- 	struct erofs_xattr_iter it;
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
- 
- 	if (!name)
- 		return -EINVAL;
-@@ -401,6 +406,14 @@ int erofs_getxattr(struct inode *inode, int index, const char *name,
- 	if (ret)
- 		return ret;
- 
-+	/* reserved flag is non-zero if there's any change of on-disk format */
-+	if (erofs_sb_has_xattr_filter(sbi) && !sbi->xattr_filter_reserved) {
-+		bit = xxh32(name, strlen(name), EROFS_XATTR_FILTER_SEED + index);
-+		bit &= EROFS_XATTR_FILTER_BITS - 1;
-+		if (test_bit(bit, &vi->xattr_name_filter))
-+			return -ENOATTR;
-+	}
-+
- 	it.index = index;
- 	it.name = (struct qstr)QSTR_INIT(name, strlen(name));
- 	if (it.name.len > EROFS_NAME_LEN)
--- 
-2.19.1.6.gb485710b
+>>>
+>>> >From what Sandeep described, the code path is in an RCU reader. My
+>>> question is more, why doesn't it use SRCU instead since it clearly
+>>> does so if BLK_MQ_F_BLOCKING. What are the tradeoffs? IMHO, a deeper
+>>> dive needs to be made into that before concluding that the fix is to
+>>> use rcu_read_lock_any_held().
+>>
+>> How can this be solved?
+>>
+>> 1.	Always use a workqueue.  Simple, but is said to have performance
+>> 	issues.
+>>
+>> 2.	Pass a flag in that indicates whether or not the caller is in an
+>> 	RCU read-side critical section.  Conceptually simple, but might
+>> 	or might not be reasonable to actually implement in the code as
+>> 	it exists now.	(You tell me!)
+>>
+>> 3.	Create a function in z_erofs that gives you a decent
+>> 	approximation, maybe something like the following.
+>>
+>> 4.	Other ideas here.
+> 
+> 5.	#3 plus make the corresponding Kconfig option select
+> 	PREEMPT_COUNT, assuming that any users needing compression in
+> 	non-preemptible kernels are OK with PREEMPT_COUNT being set.
+> 	(Some users of non-preemptible kernels object strenuously
+> 	to the added overhead from CONFIG_PREEMPT_COUNT=y.)
 
+I'm not sure if it's a good idea, we need to work on
+CONFIG_PREEMPT_COUNT=n (why not?), we could just always trigger a
+workqueue for this.
+
+Anyway, before we proceed, I also think it'd be better to get some
+performance numbers first for this (e.g. with dm-verity) and record
+the numbers in the commit message to justify this.  Otherwise, I guess
+the same question will be raised again and again.
+
+Thanks,
+Gao Xiang
