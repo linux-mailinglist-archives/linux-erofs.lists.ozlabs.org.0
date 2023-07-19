@@ -2,30 +2,33 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1D82758E28
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jul 2023 08:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 844A3758F14
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jul 2023 09:33:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R5RQx1Q3Wz2ypx
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jul 2023 16:55:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R5SH63dtHz3c7S
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jul 2023 17:33:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R5RQs2XNVz2yF9
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Jul 2023 16:55:15 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vnkhvgd_1689749700;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vnkhvgd_1689749700)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R5SGt5Jqpz30MQ
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Jul 2023 17:33:25 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VnkthRO_1689751999;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VnkthRO_1689751999)
           by smtp.aliyun-inc.com;
-          Wed, 19 Jul 2023 14:55:06 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix wrong primary bvec selection on deduplicated extents
-Date: Wed, 19 Jul 2023 14:54:59 +0800
-Message-Id: <20230719065459.60083-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+          Wed, 19 Jul 2023 15:33:20 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 0/2] erofs-utils: remove global sbi in library
+Date: Wed, 19 Jul 2023 15:33:17 +0800
+Message-Id: <20230719073319.27996-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -39,63 +42,68 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Shijie Sun <sunshijie@xiaomi.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When handling deduplicated compressed data, there can be multiple
-decompressed extents pointing to the same compressed data in one shot.
 
-In such cases, the bvecs which belong to the longest extent will be
-selected as the primary bvecs for real decompressors to decode and the
-other duplicated bvecs will be directly copied from the primary bvecs.
+changes since v1:
+- patch 1: rename iloc() to erofs_iloc() (Gao Xiang)
 
-Previously, only relative offsets of the longest extent was checked to
-decompress the primary bvecs.  On rare occasions, it can be incorrect
-if there are several extents with the same start relative offset.
-As a result, some short bvecs could be selected for decompression and
-then cause data corruption.
+v1: https://lore.kernel.org/all/20230718052101.124039-1-jefflexu@linux.alibaba.com/
 
-For example, as Shijie Sun reported off-list, considering the following
-extents of a file:
- 117:   903345..  915250 |   11905 :     385024..    389120 |    4096
-...
- 119:   919729..  930323 |   10594 :     385024..    389120 |    4096
-...
- 124:   968881..  980786 |   11905 :     385024..    389120 |    4096
 
-The start relative offset is the same: 2225, but extent 119 (919729..
-930323) is shorter than the others.
+Later mkfs is going to be capable of converting multiple erofs images
+into one merged erofs image, in which case there are multiple device
+context and sbi instances.
 
-Let's restrict the bvec length in addition to the start offset if bvecs
-are not full.
+In preparation for that, remove global device context and sbi in all
+libraries except buffer block library, as there's still only one output
+erofs image.
 
-Reported-by: Shijie Sun <sunshijie@xiaomi.com>
-Fixes: 5c2a64252c5d ("erofs: introduce partial-referenced pclusters")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/zdata.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+The device context is inlined into sbi.  Each erofs_inode keeps a
+reference to corresponding sbi through vi->sbi.  Global sbi is remained
+but only used by utils directly, e.g. mkfs/dump/fsck.
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index b69d89a11dd0..de4f12152b62 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1144,10 +1144,11 @@ static void z_erofs_do_decompressed_bvec(struct z_erofs_decompress_backend *be,
- 					 struct z_erofs_bvec *bvec)
- {
- 	struct z_erofs_bvec_item *item;
-+	unsigned int pgnr;
- 
--	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK)) {
--		unsigned int pgnr;
--
-+	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK) &&
-+	    (bvec->end == PAGE_SIZE ||
-+	     bvec->offset + bvec->end == be->pcl->length)) {
- 		pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
- 		DBG_BUGON(pgnr >= be->nr_pages);
- 		if (!be->decompressed_pages[pgnr]) {
+
+Jingbo Xu (2):
+  erofs-utils: simplify iloc()
+  erofs-utils: remove global sbi in library
+
+ dump/main.c                    |  30 +++---
+ fsck/main.c                    |  41 ++++----
+ fuse/main.c                    |  24 ++---
+ include/erofs/blobchunk.h      |   4 +-
+ include/erofs/cache.h          |   6 +-
+ include/erofs/compress.h       |   8 +-
+ include/erofs/compress_hints.h |   2 +-
+ include/erofs/decompress.h     |   1 +
+ include/erofs/dir.h            |   3 +-
+ include/erofs/internal.h       |  59 ++++++------
+ include/erofs/io.h             |  38 ++++----
+ include/erofs/tar.h            |   4 +-
+ include/erofs/xattr.h          |  16 ++--
+ lib/blobchunk.c                |  45 ++++-----
+ lib/cache.c                    |  42 ++++-----
+ lib/compress.c                 | 165 ++++++++++++++++++---------------
+ lib/compress_hints.c           |  10 +-
+ lib/compressor.c               |  15 +--
+ lib/compressor.h               |   4 +-
+ lib/compressor_lz4.c           |   2 +-
+ lib/compressor_lz4hc.c         |   2 +-
+ lib/data.c                     |  69 +++++++-------
+ lib/decompress.c               |  29 +++---
+ lib/dir.c                      |  21 +++--
+ lib/fragments.c                |   2 +-
+ lib/inode.c                    | 118 ++++++++++++-----------
+ lib/io.c                       | 119 +++++++++++-------------
+ lib/namei.c                    |  36 ++++---
+ lib/super.c                    |  51 +++++-----
+ lib/tar.c                      |  36 +++----
+ lib/xattr.c                    |  75 ++++++++-------
+ lib/zmap.c                     |  43 +++++----
+ mkfs/main.c                    |  62 ++++++-------
+ 33 files changed, 627 insertions(+), 555 deletions(-)
+
 -- 
-2.24.4
+2.19.1.6.gb485710b
 
