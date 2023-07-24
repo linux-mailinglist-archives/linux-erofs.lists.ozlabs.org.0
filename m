@@ -1,60 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEA8775EA1D
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 05:39:38 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eLwV6GkJ;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE35075EAF6
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 07:44:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R8Qrm64V3z2yVq
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 13:39:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R8TdB5vmLz2yth
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 15:44:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eLwV6GkJ;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.93; helo=mga11.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=lyy0627@sjtu.edu.cn; receiver=lists.ozlabs.org)
+X-Greylist: delayed 532 seconds by postgrey-1.37 at boromir; Mon, 24 Jul 2023 15:44:40 AEST
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R8Qrh3hmdz2yVq
-	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Jul 2023 13:39:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690169972; x=1721705972;
-  h=date:from:to:cc:subject:message-id;
-  bh=Pjn/o3RGR0r+ZzCsMD5mm1Uf+QbJOMpjG9+aUFRJROg=;
-  b=eLwV6GkJaOCJ/Lc0DROYCdDPLmhgF1CE/8P1t3SkvswFbYYGlqn4u/5T
-   mRjVy/McyYMKR7kLHiPD7UwldOc3l26FVy8wz2xxpukXJnVUsyihmyKpd
-   LhCQZmO5QOUNO5mvwJFV1tkMsAcjr0CrUtp06h49M9VIkKWc+feJeP+5p
-   g1E6ILBqVANSRo/P2yn8w0QOk+DD33yiZNgeXEAf6140hwm+59/4ZXNrV
-   t/8xfc8IBkVpEjCV/OnFdhzL6g9KeJLzrXTnjf4ZBHH4SxGNlvP3Gx1OE
-   ftbLr8GeXz+T4IB4htlxjSwCDwayvKF4z0tU/kBdlNFfqe4i4OSSGdSQD
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="364797491"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="364797491"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2023 20:39:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="795625772"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="795625772"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2023 20:39:21 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qNmPo-0009SU-1r;
-	Mon, 24 Jul 2023 03:39:20 +0000
-Date: Mon, 24 Jul 2023 11:38:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 1f9beb807470ae60210f4d4e96dac3a7733dd117
-Message-ID: <202307241138.mgT54DA0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R8Td44P4hz2yGQ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Jul 2023 15:44:38 +1000 (AEST)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 4A3BD10085AEC;
+	Mon, 24 Jul 2023 13:35:36 +0800 (CST)
+Received: from lee-WorkStation.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id E7AF737C923;
+	Mon, 24 Jul 2023 13:35:33 +0800 (CST)
+From: Li Yiyan <lyy0627@sjtu.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: add support for fuse 2/3 lowlevel API
+Date: Mon, 24 Jul 2023 13:35:27 +0800
+Message-Id: <20230724053527.3474082-1-lyy0627@sjtu.edu.cn>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,128 +42,778 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Li Yiyan <lyy0627@sjtu.edu.cn>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 1f9beb807470ae60210f4d4e96dac3a7733dd117  erofs: boost negative xattr lookup with bloom filter
+Add support for fuse2/3 lowlevel API in erofsfuse,
+pass the make check test in experimental-test branch.
+Conduct performance evaluation, providing higher
+performance compared to highlevel API while
+retaining compatibility with highlevel API of fuse 2.
 
-elapsed time: 726m
+Signed-off-by: Li Yiyan <lyy0627@sjtu.edu.cn>
+---
+ configure.ac     |  26 ++-
+ fuse/Makefile.am |   6 +-
+ fuse/lowlevel.c  | 553 +++++++++++++++++++++++++++++++++++++++++++++++
+ fuse/main.c      |  83 ++++++-
+ 4 files changed, 653 insertions(+), 15 deletions(-)
+ create mode 100644 fuse/lowlevel.c
 
-configs tested: 105
-configs skipped: 6
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r033-20230723   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r002-20230723   gcc  
-arc                  randconfig-r026-20230723   gcc  
-arc                  randconfig-r043-20230723   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r046-20230723   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r004-20230723   gcc  
-hexagon              randconfig-r021-20230723   clang
-hexagon              randconfig-r041-20230723   clang
-hexagon              randconfig-r045-20230723   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230723   clang
-i386         buildonly-randconfig-r005-20230723   clang
-i386         buildonly-randconfig-r006-20230723   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230723   clang
-i386                 randconfig-i002-20230723   clang
-i386                 randconfig-i003-20230723   clang
-i386                 randconfig-i004-20230723   clang
-i386                 randconfig-i005-20230723   clang
-i386                 randconfig-i006-20230723   clang
-i386                 randconfig-i011-20230723   gcc  
-i386                 randconfig-i012-20230723   gcc  
-i386                 randconfig-i013-20230723   gcc  
-i386                 randconfig-i014-20230723   gcc  
-i386                 randconfig-i015-20230723   gcc  
-i386                 randconfig-i016-20230723   gcc  
-i386                 randconfig-r032-20230723   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r005-20230723   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r024-20230723   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230723   gcc  
-nios2                randconfig-r006-20230723   gcc  
-nios2                randconfig-r031-20230723   gcc  
-openrisc             randconfig-r016-20230723   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r015-20230723   gcc  
-parisc               randconfig-r035-20230723   gcc  
-parisc               randconfig-r036-20230723   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r003-20230723   clang
-powerpc              randconfig-r014-20230723   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r011-20230723   gcc  
-riscv                randconfig-r042-20230723   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230723   gcc  
-sh                               allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230723   clang
-x86_64       buildonly-randconfig-r002-20230723   clang
-x86_64       buildonly-randconfig-r003-20230723   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r022-20230723   gcc  
-x86_64               randconfig-x001-20230723   gcc  
-x86_64               randconfig-x002-20230723   gcc  
-x86_64               randconfig-x003-20230723   gcc  
-x86_64               randconfig-x004-20230723   gcc  
-x86_64               randconfig-x005-20230723   gcc  
-x86_64               randconfig-x006-20230723   gcc  
-x86_64               randconfig-x011-20230723   clang
-x86_64               randconfig-x012-20230723   clang
-x86_64               randconfig-x013-20230723   clang
-x86_64               randconfig-x014-20230723   clang
-x86_64               randconfig-x015-20230723   clang
-x86_64               randconfig-x016-20230723   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r013-20230723   gcc  
-
+diff --git a/configure.ac b/configure.ac
+index a8cecd0..d8d648e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -336,15 +336,27 @@ AS_IF([test "x$with_selinux" != "xno"], [
+ 
+ # Configure fuse
+ AS_IF([test "x$enable_fuse" != "xno"], [
+-  PKG_CHECK_MODULES([libfuse], [fuse >= 2.6])
+-  # Paranoia: don't trust the result reported by pkgconfig before trying out
+   saved_LIBS="$LIBS"
+   saved_CPPFLAGS=${CPPFLAGS}
+-  CPPFLAGS="${libfuse_CFLAGS} ${CPPFLAGS}"
+-  LIBS="${libfuse_LIBS} $LIBS"
+-  AC_CHECK_LIB(fuse, fuse_main, [
+-    have_fuse="yes" ], [
+-    AC_MSG_ERROR([libfuse (>= 2.6) doesn't work properly])])
++  PKG_CHECK_MODULES([libfuse3], [fuse3 >= 3.0], [
++    AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
++    CPPFLAGS="${libfuse3_CFLAGS} ${CPPFLAGS}"
++    LIBS="${libfuse3_LIBS} $LIBS"
++    AC_CHECK_LIB(fuse3, fuse_session_new, [ AC_DEFINE([USE_LOWLEVEL], [1], [Define to 1 if libfuse lowlevel api available]) ], [
++    AC_MSG_ERROR([libfuse3 (>= 3.0) doesn't work properly for lowlevel api])])
++    have_fuse="yes"
++  ], [
++    PKG_CHECK_MODULES([libfuse2], [fuse >= 2.6], [
++      AC_DEFINE([FUSE_USE_VERSION], [26], [used FUSE API version])
++      CPPFLAGS="${libfuse2_CFLAGS} ${CPPFLAGS}"
++      LIBS="${libfuse2_LIBS} $LIBS"
++      AC_CHECK_LIB(fuse, fuse_lowlevel_new, [ AC_DEFINE([USE_LOWLEVEL], [1], [Define to 1 if libfuse lowlevel api available]) ], [
++        AC_MSG_NOTICE([libfuse (>= 2.6) doesn't work properly for lowlevel api])])
++      AC_CHECK_LIB(fuse, fuse_main, , [
++        AC_MSG_ERROR([libfuse (>= 2.6) doesn't work properly for highlevel api and lowlevel api])])
++      have_fuse="yes"
++    ], [have_fuse="no"])
++  ])
+   LIBS="${saved_LIBS}"
+   CPPFLAGS="${saved_CPPFLAGS}"], [have_fuse="no"])
+ 
+diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+index 50be783..d54fc89 100644
+--- a/fuse/Makefile.am
++++ b/fuse/Makefile.am
+@@ -3,8 +3,8 @@
+ AUTOMAKE_OPTIONS = foreign
+ noinst_HEADERS = $(top_srcdir)/fuse/macosx.h
+ bin_PROGRAMS     = erofsfuse
+-erofsfuse_SOURCES = main.c
++erofsfuse_SOURCES = main.c lowlevel.c
+ erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
+-erofsfuse_CFLAGS += -DFUSE_USE_VERSION=26 ${libfuse_CFLAGS} ${libselinux_CFLAGS}
+-erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse_LIBS} ${liblz4_LIBS} \
++erofsfuse_CFLAGS += ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
++erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LIBS} ${liblz4_LIBS} \
+ 	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
+diff --git a/fuse/lowlevel.c b/fuse/lowlevel.c
+new file mode 100644
+index 0000000..89d3077
+--- /dev/null
++++ b/fuse/lowlevel.c
+@@ -0,0 +1,553 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Created by Li Yiyan <lyy0627@sjtu.edu.com>
++ */
++#include "erofs/config.h"
++#include "erofs/dir.h"
++#include "erofs/inode.h"
++#include "erofs/io.h"
++#include "erofs/print.h"
++#include "macosx.h"
++#include "config.h"
++#include <fuse_opt.h>
++#include <libgen.h>
++#include <signal.h>
++#include <stdlib.h>
++#include <string.h>
++#include <float.h>
++
++#if FUSE_USE_VERSION >= 30
++#include <fuse3/fuse_lowlevel.h>
++#include <fuse3/fuse.h>
++#else
++#include <fuse.h>
++#include <fuse_lowlevel.h>
++#endif
++
++#define TMP_BUF_SIZE 4096
++static const double EROFS_TIMEOUT = DBL_MAX;
++
++struct erofsfuse_ll_dir_context {
++	struct erofs_dir_context ctx;
++
++	fuse_req_t req;
++	void *buf;
++	int is_plus;
++	size_t offset;
++	size_t buf_size;
++	size_t start_off;
++	struct fuse_file_info *fi;
++};
++
++struct erofsfuse_ll_dir_search_context {
++	struct erofs_dir_context ctx;
++
++	const char *target_name;
++	size_t target_name_len;
++	struct fuse_entry_param *ent;
++};
++
++static int erofsfuse_ll_fill_dentries(struct erofs_dir_context *ctx)
++{
++	size_t r = 0;
++	struct stat st = { 0 };
++#if FUSE_USE_VERSION >= 30
++	struct fuse_entry_param param;
++#endif
++	char dname[EROFS_NAME_LEN + 1];
++	struct erofsfuse_ll_dir_context *fusectx = (void *)ctx;
++
++	if (fusectx->offset < fusectx->start_off) {
++		fusectx->offset +=
++			ctx->de_namelen + sizeof(struct erofs_dirent);
++		return 0;
++	}
++
++	strncpy(dname, ctx->dname, ctx->de_namelen);
++	dname[ctx->de_namelen] = '\0';
++	fusectx->offset += ctx->de_namelen + sizeof(struct erofs_dirent);
++
++	if (!fusectx->is_plus) {
++		st.st_mode = erofs_ftype_to_dtype(ctx->de_ftype);
++		st.st_ino = ctx->de_nid;
++
++		r = fuse_add_direntry(fusectx->req, fusectx->buf,
++				      fusectx->buf_size, dname, &st,
++				      fusectx->offset);
++	} else {
++#if FUSE_USE_VERSION >= 30
++		param.ino = ctx->de_nid;
++		param.generation = 0;
++		param.attr.st_ino = ctx->de_nid;
++		param.attr.st_mode = erofs_ftype_to_dtype(ctx->de_ftype);
++		param.attr_timeout = EROFS_TIMEOUT;
++		param.entry_timeout = EROFS_TIMEOUT;
++
++		r = fuse_add_direntry_plus(fusectx->req, fusectx->buf,
++					   fusectx->buf_size, dname, &param,
++					   fusectx->offset);
++#endif
++	}
++
++	if (r > fusectx->buf_size) {
++		fusectx->offset -=
++			ctx->de_namelen + sizeof(struct erofs_dirent);
++		return 1;
++	}
++	fusectx->buf += r;
++	fusectx->buf_size -= r;
++	return 0;
++}
++
++static void erofsfuse_ll_fill_stat(struct erofs_inode *vi, struct stat *stbuf)
++{
++	stbuf->st_mode = vi->i_mode;
++	stbuf->st_nlink = vi->i_nlink;
++
++	if (!S_ISDIR(stbuf->st_mode))
++		stbuf->st_size = vi->i_size;
++	if (S_ISBLK(vi->i_mode) || S_ISCHR(vi->i_mode))
++		stbuf->st_rdev = vi->u.i_rdev;
++
++	stbuf->st_blocks = roundup(vi->i_size, erofs_blksiz()) >> 9;
++
++	stbuf->st_uid = vi->i_uid;
++	stbuf->st_gid = vi->i_gid;
++
++	stbuf->st_ctime = vi->i_mtime;
++	stbuf->st_mtime = stbuf->st_ctime;
++	stbuf->st_atime = stbuf->st_ctime;
++}
++
++static int erofsfuse_ll_search_dentries(struct erofs_dir_context *ctx)
++{
++	int r = 0;
++	struct erofs_inode vi;
++	struct erofsfuse_ll_dir_search_context *search_ctx = (void *)ctx;
++
++	if (search_ctx->ent->ino == 0 &&
++	    search_ctx->target_name_len == ctx->de_namelen &&
++	    strncmp(search_ctx->target_name, ctx->dname, ctx->de_namelen) ==
++		    0) {
++		search_ctx->ent->ino = ctx->de_nid;
++		search_ctx->ent->attr.st_ino = ctx->de_nid;
++		vi.nid = (erofs_nid_t)ctx->de_nid;
++
++		r = erofs_read_inode_from_disk(&vi);
++		if (r < 0)
++			return r;
++
++		erofsfuse_ll_fill_stat(&vi, &(search_ctx->ent->attr));
++	}
++
++	return 0;
++}
++
++void erofsfuse_ll_readdir(fuse_req_t req, fuse_ino_t ino, size_t size,
++			  off_t off, struct fuse_file_info *fi)
++{
++	int err = 0;
++	char *buf = malloc(size);
++	struct erofsfuse_ll_dir_context ctx;
++	struct erofs_inode *vi = (struct erofs_inode *)fi->fh;
++
++	erofs_dbg("readdir, ino: %lu, req: %p, fh: %lu, size: %lu, off: %lu\n",
++		  ino, req, fi->fh, size, off);
++	if (!buf) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++	ctx.ctx.dir = vi;
++	ctx.ctx.cb = erofsfuse_ll_fill_dentries;
++
++	ctx.fi = fi;
++	ctx.buf = buf;
++	ctx.buf_size = size;
++	ctx.req = req;
++	ctx.offset = 0;
++	ctx.is_plus = 0;
++	ctx.start_off = off;
++
++#ifdef NDEBUG
++	err = erofs_iterate_dir(&ctx.ctx, false);
++#else
++	err = erofs_iterate_dir(&ctx.ctx, true);
++#endif
++
++	if (err < 0) /* if buffer insufficient, return 1 */
++		fuse_reply_err(req, EIO);
++	else
++		fuse_reply_buf(req, buf, size - ctx.buf_size);
++
++	free(buf);
++}
++
++void erofsfuse_ll_init(void *userdata, struct fuse_conn_info *conn)
++{
++	erofs_inode_manager_init();
++}
++
++void erofsfuse_ll_open(fuse_req_t req, fuse_ino_t ino,
++		       struct fuse_file_info *fi)
++{
++	int ret = 0;
++	struct erofs_inode *vi;
++
++	erofs_dbg("open, ino = %lu, req = %p\n", ino, req);
++	if (fi->flags & (O_WRONLY | O_RDWR)) {
++		fuse_reply_err(req, EROFS);
++		return;
++	}
++
++	if (ino == FUSE_ROOT_ID) {
++		fuse_reply_err(req, EISDIR);
++		return;
++	}
++
++	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
++	if (!vi) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	vi->nid = (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++
++	if (!S_ISREG(vi->i_mode)) {
++		fuse_reply_err(req, EISDIR);
++		goto out;
++	} else {
++		fi->fh = (uint64_t)vi;
++		fi->keep_cache = 1;
++		fuse_reply_open(req, fi);
++		return;
++	}
++
++out:
++	free(vi);
++}
++
++void erofsfuse_ll_getattr(fuse_req_t req, fuse_ino_t ino,
++			  struct fuse_file_info *fi)
++{
++	int ret;
++	struct stat stbuf = { 0 };
++	struct erofs_inode vi;
++
++	erofs_dbg("getattr triggered, ino: %lu, req: %p\n", ino, req);
++	vi.nid = ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(&vi);
++	if (ret < 0) {
++		erofs_dbg("read inode from disk failed, nid = %lu\n", vi.nid);
++		fuse_reply_err(req, ENOENT);
++	}
++
++	erofsfuse_ll_fill_stat(&vi, &stbuf);
++	stbuf.st_ino = ino;
++
++	fuse_reply_attr(req, &stbuf, EROFS_TIMEOUT);
++}
++
++void erofsfuse_ll_opendir(fuse_req_t req, fuse_ino_t ino,
++			  struct fuse_file_info *fi)
++{
++	int ret;
++	struct erofs_inode *vi;
++
++	erofs_dbg("opendir, ino = %lu\n", ino);
++	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
++	if (!vi) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	vi->nid = ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++
++	if (!S_ISDIR(vi->i_mode)) {
++		fuse_reply_err(req, ENOTDIR);
++		goto out;
++	}
++
++	fi->fh = (uint64_t)vi;
++	fuse_reply_open(req, fi);
++	return;
++
++out:
++	free(vi);
++}
++
++void erofsfuse_ll_releasedir(fuse_req_t req, fuse_ino_t ino,
++			     struct fuse_file_info *fi)
++{
++	free((struct erofs_inode *)fi->fh);
++	fi->fh = 0;
++	fuse_reply_err(req, 0);
++}
++
++void erofsfuse_ll_release(fuse_req_t req, fuse_ino_t ino,
++			  struct fuse_file_info *fi)
++{
++	free((struct erofs_inode *)fi->fh);
++	fi->fh = 0;
++	fuse_reply_err(req, 0);
++}
++
++void erofsfuse_ll_lookup(fuse_req_t req, fuse_ino_t parent, const char *name)
++{
++	int err, ret;
++	struct erofs_inode *vi;
++	struct fuse_entry_param fentry;
++	struct erofsfuse_ll_dir_search_context ctx;
++
++	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
++	if (!vi) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	vi->nid = parent == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)parent;
++	ret = erofs_read_inode_from_disk(vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++	if (!S_ISDIR(vi->i_mode)) {
++		fuse_reply_err(req, ENOTDIR);
++		goto out;
++	}
++
++	memset(&fentry, 0, sizeof(fentry));
++	fentry.ino = 0;
++	fentry.attr_timeout = fentry.entry_timeout = EROFS_TIMEOUT;
++	ctx.ctx.dir = vi;
++	ctx.ctx.cb = erofsfuse_ll_search_dentries;
++
++	ctx.ent = &fentry;
++	ctx.target_name = name;
++	ctx.target_name_len = strlen(name);
++
++#ifdef NDEBUG
++	err = erofs_iterate_dir(&ctx.ctx, false);
++#else
++	err = erofs_iterate_dir(&ctx.ctx, true);
++#endif
++
++	if (err < 0) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++	fuse_reply_entry(req, &fentry);
++
++out:
++	free(vi);
++}
++
++void erofsfuse_ll_read(fuse_req_t req, fuse_ino_t ino, size_t size, off_t off,
++		       struct fuse_file_info *fi)
++{
++	int ret;
++	struct erofs_inode *vi = (struct erofs_inode *)fi->fh;
++	char *buf = malloc(size);
++
++	erofs_dbg("read, ino = %lu, size = %lu, off = %lu, fh = %lu\n", ino,
++		  size, off, fi->fh);
++	if (!buf) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	if (!S_ISREG(vi->i_mode)) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++
++	ret = erofs_pread(vi, buf, size, off);
++	if (ret == 0) {
++		if (off >= vi->i_size)
++			ret = 0;
++		else if (off + size > vi->i_size)
++			ret = vi->i_size - off;
++		else
++			ret = size;
++	} else {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++
++	fuse_reply_buf(req, buf, ret);
++
++out:
++	free(buf);
++}
++
++void erofsfuse_ll_readlink(fuse_req_t req, fuse_ino_t ino)
++{
++	int ret;
++	char *dst;
++	struct erofs_inode vi;
++
++	erofs_dbg("read_link, ino = %lu\n", ino);
++	vi.nid = ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(&vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		return;
++	}
++
++	if (!S_ISLNK(vi.i_mode)) {
++		fuse_reply_err(req, EINVAL);
++		return;
++	}
++
++	dst = malloc(vi.i_size + 1);
++	if (!dst) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	ret = erofs_pread(&vi, dst, vi.i_size, 0);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		goto out;
++	}
++
++	dst[vi.i_size] = '\0';
++	fuse_reply_readlink(req, dst);
++
++out:
++	free(dst);
++}
++
++void erofsfuse_ll_getxattr(fuse_req_t req, fuse_ino_t ino, const char *name,
++			   size_t size)
++{
++	int ret;
++	char *buf = NULL;
++	struct erofs_inode vi;
++	size_t real = size == 0 ? TMP_BUF_SIZE : size;
++
++	erofs_dbg("getxattr, ino = %lu, name = %s, size = %lu\n", ino, name,
++		  size);
++	vi.nid = ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(&vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		return;
++	}
++
++	buf = malloc(real);
++	if (!buf) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	ret = erofs_getxattr(&vi, name, buf, real);
++	if (ret < 0)
++		fuse_reply_err(req, -ret);
++	else if (size == 0)
++		fuse_reply_xattr(req, ret);
++	else
++		fuse_reply_buf(req, buf, ret);
++
++	free(buf);
++}
++
++void erofsfuse_ll_listxattr(fuse_req_t req, fuse_ino_t ino, size_t size)
++{
++	int ret;
++	char *buf = NULL;
++	struct erofs_inode vi;
++	size_t real = size == 0 ? TMP_BUF_SIZE : size;
++
++	erofs_dbg("listxattr, ino = %lu, size = %lu\n", ino, size);
++	vi.nid = ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
++	ret = erofs_read_inode_from_disk(&vi);
++	if (ret < 0) {
++		fuse_reply_err(req, EIO);
++		return;
++	}
++
++	buf = malloc(real);
++	if (!buf) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++
++	ret = erofs_listxattr(&vi, buf, real);
++	if (ret < 0)
++		fuse_reply_err(req, -ret);
++	else if (size == 0)
++		fuse_reply_xattr(req, ret);
++	else
++		fuse_reply_buf(req, buf, ret);
++
++	free(buf);
++}
++
++#if FUSE_USE_VERSION >= 30
++void erofsfuse_ll_readdirplus(fuse_req_t req, fuse_ino_t ino, size_t size,
++			      off_t off, struct fuse_file_info *fi)
++{
++	int err = 0;
++	char *buf = malloc(size);
++	struct erofsfuse_ll_dir_context ctx;
++	struct erofs_inode *vi = (struct erofs_inode *)fi->fh;
++
++	erofs_dbg("readdirplus, ino = %lu, size = %lu, off = %lu, fh = %lu\n",
++		  ino, size, off, fi->fh);
++	if (!buf) {
++		fuse_reply_err(req, ENOMEM);
++		return;
++	}
++	ctx.ctx.dir = vi;
++	ctx.ctx.cb = erofsfuse_ll_fill_dentries;
++
++	ctx.fi = fi;
++	ctx.buf = buf;
++	ctx.buf_size = size;
++	ctx.req = req;
++	ctx.offset = 0;
++	ctx.is_plus = 1;
++	ctx.start_off = off;
++
++#ifdef NDEBUG
++	err = erofs_iterate_dir(&ctx.ctx, false);
++#else
++	err = erofs_iterate_dir(&ctx.ctx, true);
++#endif
++
++	if (err < 0) /* if buffer insufficient, return 1 */
++		fuse_reply_err(req, EIO);
++	else
++		fuse_reply_buf(req, buf, size - ctx.buf_size);
++
++	free(buf);
++}
++#endif
++
++struct fuse_lowlevel_ops erofsfuse_lops = {
++	.getxattr = erofsfuse_ll_getxattr,
++	.opendir = erofsfuse_ll_opendir,
++	.releasedir = erofsfuse_ll_releasedir,
++	.release = erofsfuse_ll_release,
++	.lookup = erofsfuse_ll_lookup,
++	.listxattr = erofsfuse_ll_listxattr,
++	.readlink = erofsfuse_ll_readlink,
++	.getattr = erofsfuse_ll_getattr,
++	.readdir = erofsfuse_ll_readdir,
++#if FUSE_USE_VERSION >= 30
++	.readdirplus = erofsfuse_ll_readdirplus,
++#endif
++	.open = erofsfuse_ll_open,
++	.read = erofsfuse_ll_read,
++	.init = erofsfuse_ll_init,
++};
+diff --git a/fuse/main.c b/fuse/main.c
+index b060e06..11726c1 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -6,8 +6,6 @@
+ #include <string.h>
+ #include <signal.h>
+ #include <libgen.h>
+-#include <fuse.h>
+-#include <fuse_opt.h>
+ #include "macosx.h"
+ #include "erofs/config.h"
+ #include "erofs/print.h"
+@@ -15,6 +13,23 @@
+ #include "erofs/dir.h"
+ #include "erofs/inode.h"
+ 
++#if FUSE_USE_VERSION >= 30
++#include <fuse3/fuse.h>
++#include <fuse3/fuse_lowlevel.h>
++#else
++#include <fuse.h>
++#include <fuse_lowlevel.h>
++#endif
++
++#if USE_LOWLEVEL
++#include <float.h>
++
++extern struct fuse_lowlevel_ops erofsfuse_lops;
++
++struct erofs_ll_ctx {
++	unsigned int debug_lvl;
++};
++#else
+ struct erofsfuse_dir_context {
+ 	struct erofs_dir_context ctx;
+ 	fuse_fill_dir_t filler;
+@@ -176,7 +191,7 @@ static int erofsfuse_listxattr(const char *path, char *list, size_t size)
+ 	return erofs_listxattr(&vi, list, size);
+ }
+ 
+-static struct fuse_operations erofs_ops = {
++static struct fuse_operations erofsfuse_ops = {
+ 	.getxattr = erofsfuse_getxattr,
+ 	.listxattr = erofsfuse_listxattr,
+ 	.readlink = erofsfuse_readlink,
+@@ -187,6 +202,8 @@ static struct fuse_operations erofs_ops = {
+ 	.init = erofsfuse_init,
+ };
+ 
++#endif
++
+ static struct options {
+ 	const char *disk;
+ 	const char *mountpoint;
+@@ -207,7 +224,9 @@ static const struct fuse_opt option_spec[] = {
+ 
+ static void usage(void)
+ {
++#if FUSE_MAJOR_VERSION < 3
+ 	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
++#endif
+ 
+ 	fputs("usage: [options] IMAGE MOUNTPOINT\n\n"
+ 	      "Options:\n"
+@@ -257,8 +276,12 @@ static int optional_opt_func(void *data, const char *arg, int key,
+ 			fusecfg.disk = strdup(arg);
+ 			return 0;
+ 		}
+-		if (!fusecfg.mountpoint)
++		if (!fusecfg.mountpoint) {
+ 			fusecfg.mountpoint = strdup(arg);
++#if USE_LOWLEVEL
++			return 0;
++#endif
++		}
+ 	case FUSE_OPT_KEY_OPT:
+ 		if (!strcmp(arg, "-d"))
+ 			fusecfg.odebug = true;
+@@ -337,8 +360,58 @@ int main(int argc, char *argv[])
+ 		goto err_dev_close;
+ 	}
+ 
+-	ret = fuse_main(args.argc, args.argv, &erofs_ops, NULL);
++#if USE_LOWLEVEL
++	struct erofs_ll_ctx *ll_ctx;
++	struct fuse_session *se;
++
++	ll_ctx = malloc(sizeof(struct erofs_ll_ctx));
++	if (!ll_ctx) {
++		fprintf(stderr, "failed to alloc memory for ll_ctx\n");
++		goto err_sb_put;
++	}
++
++#if FUSE_USE_VERSION >= 30
++	se = fuse_session_new(&args, &erofsfuse_lops, sizeof(erofsfuse_lops),
++			      ll_ctx);
++	if (se != NULL) {
++		fuse_set_signal_handlers(se);
++		fuse_session_mount(se, fusecfg.mountpoint);
++
++		ret = fuse_session_loop(se);
++
++		fuse_remove_signal_handlers(se);
++		fuse_session_unmount(se);
++		fuse_session_destroy(se);
++	}
++#else
++	struct fuse_chan *ch;
++
++	ch = fuse_mount(fusecfg.mountpoint, &args);
++	if (ch != NULL) {
++		se = fuse_lowlevel_new(&args, &erofsfuse_lops,
++				       sizeof(erofsfuse_lops), ll_ctx);
++		if (se != NULL) {
++			if (fuse_set_signal_handlers(se) != -1) {
++				fuse_session_add_chan(se, ch);
++				ret = fuse_session_loop(se);
++				fuse_remove_signal_handlers(se);
++				fuse_session_remove_chan(ch);
++			}
++			fuse_session_destroy(se);
++		}
++		fuse_unmount(fusecfg.mountpoint, ch);
++	}
++#endif
++
++	free(ll_ctx);
+ 
++#else
++	ret = fuse_main(args.argc, args.argv, &erofsfuse_ops, NULL);
++#endif
++
++#if USE_LOWLEVEL
++err_sb_put:
++#endif
+ 	erofs_put_super();
+ err_dev_close:
+ 	blob_closeall();
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
