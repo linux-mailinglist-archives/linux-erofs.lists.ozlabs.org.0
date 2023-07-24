@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 879F775FCE6
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 19:07:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FCC575FCE7
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jul 2023 19:07:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R8mmS34pjz30XP
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 03:07:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R8mmW3LXYz30YV
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 03:07:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R8mmN5SKkz2yDL
-	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 03:06:59 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vo9mmUY_1690218413;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vo9mmUY_1690218413)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R8mmP0Ff5z2yGT
+	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 03:07:00 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vo9mmV6_1690218415;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vo9mmV6_1690218415)
           by smtp.aliyun-inc.com;
-          Tue, 25 Jul 2023 01:06:55 +0800
+          Tue, 25 Jul 2023 01:06:56 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/3] erofs-utils: lib: tidy up erofs_blob_getchunk()
-Date: Tue, 25 Jul 2023 01:06:45 +0800
-Message-Id: <20230724170646.22281-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 3/3] erofs-utils: merge consecutive chunks if possible
+Date: Tue, 25 Jul 2023 01:06:46 +0800
+Message-Id: <20230724170646.22281-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20230724170646.22281-1-hsiangkao@linux.alibaba.com>
 References: <20230724170646.22281-1-hsiangkao@linux.alibaba.com>
@@ -45,169 +45,137 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Mainly get rid of memory allocation on each chunk.
+Since EROFS chunk size can be configured on a per-file basis,
+let's generate indexes with the best chunk size.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/blobchunk.c | 92 +++++++++++++++++++++++++++----------------------
- 1 file changed, 51 insertions(+), 41 deletions(-)
+ include/erofs/defs.h |  5 +++++
+ lib/blobchunk.c      | 53 ++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 54 insertions(+), 4 deletions(-)
 
+diff --git a/include/erofs/defs.h b/include/erofs/defs.h
+index 44af557..20f9741 100644
+--- a/include/erofs/defs.h
++++ b/include/erofs/defs.h
+@@ -286,6 +286,11 @@ static inline unsigned int fls_long(unsigned long x)
+ 	return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
+ }
+ 
++static inline unsigned long lowbit(unsigned long n)
++{
++	return n & -n;
++}
++
+ /**
+  * __roundup_pow_of_two() - round up to nearest power of two
+  * @n: value to round up
 diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index c0df2f7..4619057 100644
+index 4619057..4e4295e 100644
 --- a/lib/blobchunk.c
 +++ b/lib/blobchunk.c
-@@ -51,60 +51,57 @@ struct erofs_blobchunk *erofs_get_unhashed_chunk(erofs_off_t chunksize,
+@@ -179,13 +179,47 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 	return dev_write(inode->sbi, inode->chunkindexes, off, inode->extent_isize);
  }
  
- static struct erofs_blobchunk *erofs_blob_getchunk(struct erofs_sb_info *sbi,
--		int fd, erofs_off_t chunksize)
-+						u8 *buf, erofs_off_t chunksize)
- {
- 	static u8 zeroed[EROFS_MAX_BLOCK_SIZE];
--	u8 *chunkdata, sha256[32];
--	int ret;
--	unsigned int hash;
--	erofs_off_t blkpos;
- 	struct erofs_blobchunk *chunk;
-+	unsigned int hash, padding;
-+	u8 sha256[32];
-+	erofs_off_t blkpos;
-+	int ret;
- 
--	chunkdata = malloc(chunksize);
--	if (!chunkdata)
--		return ERR_PTR(-ENOMEM);
--
--	ret = read(fd, chunkdata, chunksize);
--	if (ret < chunksize) {
--		chunk = ERR_PTR(-EIO);
--		goto out;
--	}
--	erofs_sha256(chunkdata, chunksize, sha256);
-+	erofs_sha256(buf, chunksize, sha256);
- 	hash = memhash(sha256, sizeof(sha256));
- 	chunk = hashmap_get_from_hash(&blob_hashmap, hash, sha256);
- 	if (chunk) {
- 		DBG_BUGON(chunksize != chunk->chunksize);
--		goto out;
-+		erofs_dbg("Found duplicated chunk at %u", chunk->blkaddr);
-+		return chunk;
- 	}
++int erofs_blob_mergechunks(struct erofs_inode *inode, unsigned int chunkbits,
++			   unsigned int new_chunkbits)
++{
++	struct erofs_sb_info *sbi = inode->sbi;
++	unsigned int dst, src, unit, count;
 +
- 	chunk = malloc(sizeof(struct erofs_blobchunk));
--	if (!chunk) {
--		chunk = ERR_PTR(-ENOMEM);
--		goto out;
--	}
-+	if (!chunk)
-+		return ERR_PTR(-ENOMEM);
- 
- 	chunk->chunksize = chunksize;
-+	memcpy(chunk->sha256, sha256, sizeof(sha256));
- 	blkpos = ftell(blobfile);
- 	DBG_BUGON(erofs_blkoff(sbi, blkpos));
--	chunk->device_id = 0;
++	if (new_chunkbits - sbi->blkszbits > EROFS_CHUNK_FORMAT_BLKBITS_MASK)
++		new_chunkbits = EROFS_CHUNK_FORMAT_BLKBITS_MASK + sbi->blkszbits;
++	if (chunkbits >= new_chunkbits)		/* no need to merge */
++		goto out;
 +
-+	if (multidev)
-+		chunk->device_id = 1;
++	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
++		unit = sizeof(struct erofs_inode_chunk_index);
 +	else
-+		chunk->device_id = 0;
- 	chunk->blkaddr = erofs_blknr(sbi, blkpos);
--	memcpy(chunk->sha256, sha256, sizeof(sha256));
--	hashmap_entry_init(&chunk->ent, hash);
--	hashmap_add(&blob_hashmap, chunk);
- 
- 	erofs_dbg("Writing chunk (%u bytes) to %u", chunksize, chunk->blkaddr);
--	ret = fwrite(chunkdata, chunksize, 1, blobfile);
--	if (ret == 1 && erofs_blkoff(sbi, chunksize))
--		ret = fwrite(zeroed,
--			     erofs_blksiz(sbi) - erofs_blkoff(sbi, chunksize),
--			     1, blobfile);
-+	ret = fwrite(buf, chunksize, 1, blobfile);
-+	padding = erofs_blkoff(sbi, chunksize);
-+	if (ret == 1) {
-+		padding = erofs_blkoff(sbi, chunksize);
-+		if (padding) {
-+			padding = erofs_blksiz(sbi) - padding;
-+			ret = fwrite(zeroed, padding, 1, blobfile);
-+		}
++		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
++
++	count = round_up(inode->i_size, 1ULL << new_chunkbits) >> new_chunkbits;
++	for (dst = src = 0; dst < count; ++dst) {
++		*((void **)inode->chunkindexes + dst) =
++			*((void **)inode->chunkindexes + src);
++		src += 1U << (new_chunkbits - chunkbits);
 +	}
 +
- 	if (ret < 1) {
--		hashmap_remove(&blob_hashmap, &chunk->ent);
- 		free(chunk);
--		chunk = ERR_PTR(-ENOSPC);
--		goto out;
-+		return ERR_PTR(-ENOSPC);
- 	}
--out:
--	free(chunkdata);
++	DBG_BUGON(count * unit >= inode->extent_isize);
++	inode->extent_isize = count * unit;
++	chunkbits = new_chunkbits;
++out:
++	inode->u.chunkformat = (chunkbits - sbi->blkszbits) |
++		(inode->u.chunkformat & ~EROFS_CHUNK_FORMAT_BLKBITS_MASK);
++	return 0;
++}
 +
-+	hashmap_entry_init(&chunk->ent, hash);
-+	hashmap_add(&blob_hashmap, chunk);
- 	return chunk;
- }
- 
-@@ -189,6 +186,7 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	unsigned int chunkbits = cfg.c_chunkbits;
  	unsigned int count, unit;
++	struct erofs_blobchunk *chunk, *lastch;
  	struct erofs_inode_chunk_index *idx;
  	erofs_off_t pos, len, chunksize;
-+	u8 *chunkdata;
++	erofs_blk_t lb, minextblks;
+ 	u8 *chunkdata;
  	int ret;
  
- #ifdef SEEK_DATA
-@@ -212,11 +210,17 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+@@ -201,10 +235,9 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+ 		chunkbits = EROFS_CHUNK_FORMAT_BLKBITS_MASK + sbi->blkszbits;
+ 	chunksize = 1ULL << chunkbits;
+ 	count = DIV_ROUND_UP(inode->i_size, chunksize);
+-	inode->u.chunkformat |= chunkbits - sbi->blkszbits;
++
+ 	if (multidev)
+ 		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
+-
+ 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(struct erofs_inode_chunk_index);
  	else
- 		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
+@@ -222,8 +255,9 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+ 	}
+ 	idx = inode->chunkindexes;
  
--	inode->extent_isize = count * unit;
--	idx = malloc(count * max(sizeof(*idx), sizeof(void *)));
--	if (!idx)
-+	chunkdata = malloc(chunksize);
-+	if (!chunkdata)
- 		return -ENOMEM;
--	inode->chunkindexes = idx;
-+
-+	inode->extent_isize = count * unit;
-+	inode->chunkindexes = malloc(count * max(sizeof(*idx), sizeof(void *)));
-+	if (!inode->chunkindexes) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+	idx = inode->chunkindexes;
- 
++	lastch = NULL;
++	minextblks = BLK_ROUND_UP(sbi, inode->i_size);
  	for (pos = 0; pos < inode->i_size; pos += len) {
- 		struct erofs_blobchunk *chunk;
-@@ -248,20 +252,26 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
- #endif
+-		struct erofs_blobchunk *chunk;
+ #ifdef SEEK_DATA
+ 		off_t offset = lseek(fd, pos, SEEK_DATA);
  
- 		len = min_t(u64, inode->i_size - pos, chunksize);
--		chunk = erofs_blob_getchunk(sbi, fd, len);
-+		ret = read(fd, chunkdata, len);
-+		if (ret < len) {
-+			ret = -EIO;
-+			goto err;
-+		}
-+
-+		chunk = erofs_blob_getchunk(sbi, chunkdata, len);
- 		if (IS_ERR(chunk)) {
+@@ -247,6 +281,7 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
+ 				pos += chunksize;
+ 			} while (pos < offset);
+ 			DBG_BUGON(pos != offset);
++			lastch = NULL;
+ 			continue;
+ 		}
+ #endif
+@@ -263,11 +298,21 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd)
  			ret = PTR_ERR(chunk);
  			goto err;
  		}
--		if (multidev)
--			chunk->device_id = 1;
++
++		if (lastch && (lastch->device_id != chunk->device_id ||
++		    erofs_pos(sbi, lastch->blkaddr) + lastch->chunksize !=
++		    erofs_pos(sbi, chunk->blkaddr))) {
++			lb = lowbit(pos >> sbi->blkszbits);
++			if (lb && lb < minextblks)
++				minextblks = lb;
++		}
  		*(void **)idx++ = chunk;
++		lastch = chunk;
  	}
  	inode->datalayout = EROFS_INODE_CHUNK_BASED;
-+	free(chunkdata);
- 	return 0;
+ 	free(chunkdata);
+-	return 0;
++	return erofs_blob_mergechunks(inode, chunkbits,
++				      ilog2(minextblks) + sbi->blkszbits);
  err:
  	free(inode->chunkindexes);
  	inode->chunkindexes = NULL;
-+	free(chunkdata);
- 	return ret;
- }
- 
 -- 
 2.24.4
 
