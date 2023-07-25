@@ -1,74 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24918760FDC
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 11:56:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1690279017;
-	bh=/casiWQBa8FLPDyI/Gjog1Q/iFy65e/7JWaM5Gwrppw=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=HxLO0Bud6tIZpH5udOdvbzUEpakqbIQ7XDLBd99M8Xr0DmFaDgIdch9OetXyJ/UzM
-	 HYWkdtTByVKjSg04wQKQzvv8thgw2ab0Z/whcx7RkcOd4SKe3u9lTNFQVQATDmjH+4
-	 2BOtLjAjUHClIZJQsDH9MvsPZPw6ZLNOx/dkOLsq73hZgHydkBMbd39JWgpEtP0EuU
-	 JAevnJy9pdg1re5/H6vJCDfpylQY4SmIxpdmUe04NI0MqcsFROG9CJ2iAy4V6Dy/CP
-	 ptDyvTNnqAbw3F58L6iwRkkaII4bhTyJw4ezRQEyIsN27nHjyM+/1z7cA1Ptvck+H5
-	 W0YSgTcKYqvwg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 757027610F2
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 12:33:51 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=DEbRxmZ0;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9C9j0KxBz2yTt
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 19:56:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9D0F2Vqvz30Ng
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 20:33:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=kzP9jxhd;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=DEbRxmZ0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::102f; helo=mail-pj1-x102f.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9C9Z26mgz2xVV
-	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 19:56:48 +1000 (AEST)
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-2680edb9767so399430a91.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 02:56:48 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9D0648Tpz30Qm
+	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 20:33:40 +1000 (AEST)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-66f5faba829so3377386b3a.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 03:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690281217; x=1690886017;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jvw5viEmdhT9SlpYOUIqYZkYci2KqN5iCjN5BpBJryU=;
+        b=DEbRxmZ0fYEFcDFDIvjG2Nqx88cfSh/cqzo2mjLDdM7lsnEBymfIVqERjDPBH09GPw
+         RXgKXJEA1Ftgw6Xk5UNowVQqWQazM/InM5ukkMPccXkhcqvSD27cZxCgtJguGHBzDM1y
+         EEzJmfw+6AHIpnDqj6e3HYrdN0OQ7cBHg58SCXg59UTp1AGPGlNK5TFo4kEMvFcMQnDt
+         9OjQfJqG9hREodBIeS7IewhyXE1mAFnVWWDmM5+c/ge9BJWDXeTsMI9iwEy3+TowQd4Z
+         pzvW/f5lCEuuX2tO8h69JMdrdO1/+A1ivCNVB7zgRfrRsNu+1huJec473PMpnC00YdmC
+         pdnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690279003; x=1690883803;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/casiWQBa8FLPDyI/Gjog1Q/iFy65e/7JWaM5Gwrppw=;
-        b=KbmzxuadRaKiTVM0+KMQvwln79EwVmNDhyXkpsGsyZUN8i3jPzfXWZvYyMoGsg3GXK
-         VRKIo41fRdwLP2NB7a5ZDYEglghqs8BPvGvhYm+JXs7caG4s+oy8us6n28GFY20v3ZP/
-         al3rfx0o2wgQubJrBW4BTZHpWhjN6clW02qVVERATY3ZKSeSQSCV1XC1zza+O9YItu5J
-         r396LtyRMjpwIktRR+JA4HJiIlH2h16F0gybJ6vud0VzNlxHHJqGWRcc/r1X5Wpu97Nm
-         sr2zoFAffc2ODQAmKPiPfn4dnuc5/WmQMxfW14FSdrZogzXswfL61uMp+XMLCpVZsj63
-         k97A==
-X-Gm-Message-State: ABy/qLZ6mlxR6P6jrvKD5Vcq/GePGI55CdTz8JlY59rSwCAnJuyNEm+m
-	tGXcOxJAY8a+3MhWvOI1jpafpg==
-X-Google-Smtp-Source: APBJJlE4g3zxacKAsn4H4YysRKAp71VN9gqUpsqodFXfAXxBRsoAel6FjePiWo+WkUy1agkNvA6LJQ==
-X-Received: by 2002:a17:90a:74cf:b0:268:196f:9656 with SMTP id p15-20020a17090a74cf00b00268196f9656mr4627258pjl.1.1690279003192;
-        Tue, 25 Jul 2023 02:56:43 -0700 (PDT)
-Received: from [10.70.252.135] ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id j8-20020a170902da8800b001b39ffff838sm10605398plx.25.2023.07.25.02.56.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jul 2023 02:56:42 -0700 (PDT)
-Message-ID: <c1a1952f-0c3e-2fa1-fdf9-8b3b8a592b23@bytedance.com>
-Date: Tue, 25 Jul 2023 17:56:29 +0800
+        d=1e100.net; s=20221208; t=1690281217; x=1690886017;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jvw5viEmdhT9SlpYOUIqYZkYci2KqN5iCjN5BpBJryU=;
+        b=VGQRE/jwQRqw8Vb4SBgMelNhoamFq0ClAMK3c1859dEBdGmw71kV6+Ix3TOGwjWhcM
+         2VEPkdBbkoRkyfrp/kPpb07yMHBXusDunE0bRs/5xAu0ifivVR/hyTjFGJsGECyd8fCB
+         S+Dw9cuPN6VZj6gc9QhwTuVLq5PN81npBd/g44l7RxTqS6Jmdz6ABQd2GcZyllMmq1X5
+         DiiWt02wgdAxZBzc4XDdtU3Iya6OBSXUnZ+PTWD0S69Y0wZUFzyQwHFbxrWmX5HHlxnK
+         9KBRCf7c/lYRhQDZsrm/f5pSRUXeEeLIVzsfJxGVtKa7TbSd4p+Uwrdle5oOti6zuU0F
+         ycnw==
+X-Gm-Message-State: ABy/qLbtD4At0mXYOXqmmdpWZ4JDZNf+ziaMANKvdkkfbnnN3wCciuH7
+	6uSYHmjnCZ5LcSqwAZa3IS8=
+X-Google-Smtp-Source: APBJJlGEw3dZZ9AxZm0g2PEYC/zJdU4AYmELJsu3zzFTNCx0ehq2axTX9oCZFvNq97HqnmXeY4lccw==
+X-Received: by 2002:a05:6a20:144e:b0:134:2e3c:9845 with SMTP id a14-20020a056a20144e00b001342e3c9845mr15220752pzi.22.1690281217252;
+        Tue, 25 Jul 2023 03:33:37 -0700 (PDT)
+Received: from localhost ([156.236.96.165])
+        by smtp.gmail.com with ESMTPSA id t7-20020a1709027fc700b001bba1475c92sm4323526plb.113.2023.07.25.03.33.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Jul 2023 03:33:36 -0700 (PDT)
+Date: Tue, 25 Jul 2023 18:42:49 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Li Yiyan <lyy0627@sjtu.edu.cn>
+Subject: Re: [PATCH v2] erofs-utils: add support for fuse 2/3 lowlevel API
+Message-ID: <20230725184249.00007d96.zbestahu@gmail.com>
+In-Reply-To: <20230725070016.846411-1-lyy0627@sjtu.edu.cn>
+References: <20230725070016.846411-1-lyy0627@sjtu.edu.cn>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v2 03/47] mm: shrinker: add infrastructure for dynamically
- allocating shrinker
-Content-Language: en-US
-To: Muchun Song <muchun.song@linux.dev>
-References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-4-zhengqi.arch@bytedance.com>
- <3648ca69-d65e-8431-135a-a5738586bc25@linux.dev>
-In-Reply-To: <3648ca69-d65e-8431-135a-a5738586bc25@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,298 +79,906 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: kvm@vger.kernel.org, djwong@kernel.org, roman.gushchin@linux.dev, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, paulmck@kernel.org, linux-arm-msm@vger.kernel.org, brauner@kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, yujie.liu@intel.com, vbabka@suse.cz, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, senozhatsky@chromium.org, gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Muchun,
+On Tue, 25 Jul 2023 15:00:16 +0800
+Li Yiyan <lyy0627@sjtu.edu.cn> wrote:
 
-On 2023/7/25 17:02, Muchun Song wrote:
+> Add support for fuse2/3 lowlevel API in erofsfuse,
+> pass the make check test in experimental-test branch.
+> Conduct performance evaluation, providing higher
+> performance compared to highlevel API. Compatible with
+> fuse 2(>=2.6) and 3(>=3.0)
 > 
+> Signed-off-by: Li Yiyan <lyy0627@sjtu.edu.cn>
+> ---
+> Changes since v1:
+> - remove highlevel fallback path
+> - remove redundant code
+> - add static for erofsfuse_ll_func
+> ---
+>  configure.ac     |  23 ++-
+>  fuse/Makefile.am |   6 +-
+>  fuse/lowlevel.c  | 527 +++++++++++++++++++++++++++++++++++++++++++++++
+>  fuse/main.c      | 216 ++++---------------
+>  4 files changed, 589 insertions(+), 183 deletions(-)
+>  create mode 100644 fuse/lowlevel.c
 > 
-> On 2023/7/24 17:43, Qi Zheng wrote:
->> Currently, the shrinker instances can be divided into the following three
->> types:
->>
->> a) global shrinker instance statically defined in the kernel, such as
->>     workingset_shadow_shrinker.
->>
->> b) global shrinker instance statically defined in the kernel modules, 
->> such
->>     as mmu_shrinker in x86.
->>
->> c) shrinker instance embedded in other structures.
->>
->> For case a, the memory of shrinker instance is never freed. For case b,
->> the memory of shrinker instance will be freed after synchronize_rcu() 
->> when
->> the module is unloaded. For case c, the memory of shrinker instance will
->> be freed along with the structure it is embedded in.
->>
->> In preparation for implementing lockless slab shrink, we need to
->> dynamically allocate those shrinker instances in case c, then the memory
->> can be dynamically freed alone by calling kfree_rcu().
->>
->> So this commit adds the following new APIs for dynamically allocating
->> shrinker, and add a private_data field to struct shrinker to record and
->> get the original embedded structure.
->>
->> 1. shrinker_alloc()
->>
->> Used to allocate shrinker instance itself and related memory, it will
->> return a pointer to the shrinker instance on success and NULL on failure.
->>
->> 2. shrinker_free_non_registered()
->>
->> Used to destroy the non-registered shrinker instance.
-> 
-> At least I don't like this name. I know you want to tell others
-> this function only should be called when shrinker has not been
-> registed but allocated. Maybe shrinker_free() is more simple.
-> And and a comment to tell the users when to use it.
+> diff --git a/configure.ac b/configure.ac
+> index a8cecd0..4046856 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -336,15 +336,26 @@ AS_IF([test "x$with_selinux" != "xno"], [
+>  
+>  # Configure fuse
+>  AS_IF([test "x$enable_fuse" != "xno"], [
+> -  PKG_CHECK_MODULES([libfuse], [fuse >= 2.6])
+>    # Paranoia: don't trust the result reported by pkgconfig before trying out
+>    saved_LIBS="$LIBS"
+>    saved_CPPFLAGS=${CPPFLAGS}
+> -  CPPFLAGS="${libfuse_CFLAGS} ${CPPFLAGS}"
+> -  LIBS="${libfuse_LIBS} $LIBS"
+> -  AC_CHECK_LIB(fuse, fuse_main, [
+> -    have_fuse="yes" ], [
+> -    AC_MSG_ERROR([libfuse (>= 2.6) doesn't work properly])])
+> +  PKG_CHECK_MODULES([libfuse3], [fuse3 >= 3.0], [
+> +    AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
+> +    CPPFLAGS="${libfuse3_CFLAGS} ${CPPFLAGS}"
+> +    LIBS="${libfuse3_LIBS} $LIBS"
+> +    AC_CHECK_LIB(fuse3, fuse_session_new, [], [
+> +    AC_MSG_ERROR([libfuse3 (>= 3.0) doesn't work properly for lowlevel api])])
+> +    have_fuse="yes"
+> +  ], [
+> +    PKG_CHECK_MODULES([libfuse2], [fuse >= 2.6], [
+> +      AC_DEFINE([FUSE_USE_VERSION], [26], [used FUSE API version])
+> +      CPPFLAGS="${libfuse2_CFLAGS} ${CPPFLAGS}"
+> +      LIBS="${libfuse2_LIBS} $LIBS"
+> +      AC_CHECK_LIB(fuse, fuse_lowlevel_new, [], [
+> +        AC_MSG_ERROR([libfuse (>= 2.6) doesn't work properly for highlevel api and lowlevel api])])
 
-OK, if no one else objects, I will change it to shrinker_free() in
-the next version.
+We have only lowlevel now.
 
-> 
->>
->> 3. shrinker_register()
->>
->> Used to register the shrinker instance, which is same as the current
->> register_shrinker_prepared().
->>
->> 4. shrinker_unregister()
->>
->> Used to unregister and free the shrinker instance.
->>
->> In order to simplify shrinker-related APIs and make shrinker more
->> independent of other kernel mechanisms, subsequent submissions will use
->> the above API to convert all shrinkers (including case a and b) to
->> dynamically allocated, and then remove all existing APIs.
->>
->> This will also have another advantage mentioned by Dave Chinner:
->>
->> ```
->> The other advantage of this is that it will break all the existing
->> out of tree code and third party modules using the old API and will
->> no longer work with a kernel using lockless slab shrinkers. They
->> need to break (both at the source and binary levels) to stop bad
->> things from happening due to using uncoverted shrinkers in the new
->> setup.
->> ```
->>
->> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->> ---
->>   include/linux/shrinker.h |   6 +++
->>   mm/shrinker.c            | 113 +++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 119 insertions(+)
->>
->> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
->> index 961cb84e51f5..296f5e163861 100644
->> --- a/include/linux/shrinker.h
->> +++ b/include/linux/shrinker.h
->> @@ -70,6 +70,8 @@ struct shrinker {
->>       int seeks;    /* seeks to recreate an obj */
->>       unsigned flags;
->> +    void *private_data;
->> +
->>       /* These are for internal use */
->>       struct list_head list;
->>   #ifdef CONFIG_MEMCG
->> @@ -98,6 +100,10 @@ struct shrinker {
->>   unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup 
->> *memcg,
->>                 int priority);
->> +struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, 
->> ...);
->> +void shrinker_free_non_registered(struct shrinker *shrinker);
->> +void shrinker_register(struct shrinker *shrinker);
->> +void shrinker_unregister(struct shrinker *shrinker);
->>   extern int __printf(2, 3) prealloc_shrinker(struct shrinker *shrinker,
->>                           const char *fmt, ...);
->> diff --git a/mm/shrinker.c b/mm/shrinker.c
->> index 0a32ef42f2a7..d820e4cc5806 100644
->> --- a/mm/shrinker.c
->> +++ b/mm/shrinker.c
->> @@ -548,6 +548,119 @@ unsigned long shrink_slab(gfp_t gfp_mask, int 
->> nid, struct mem_cgroup *memcg,
->>       return freed;
->>   }
->> +struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, 
->> ...)
->> +{
->> +    struct shrinker *shrinker;
->> +    unsigned int size;
->> +    va_list __maybe_unused ap;
->> +    int err;
->> +
->> +    shrinker = kzalloc(sizeof(struct shrinker), GFP_KERNEL);
->> +    if (!shrinker)
->> +        return NULL;
->> +
->> +#ifdef CONFIG_SHRINKER_DEBUG
->> +    va_start(ap, fmt);
->> +    shrinker->name = kvasprintf_const(GFP_KERNEL, fmt, ap);
->> +    va_end(ap);
->> +    if (!shrinker->name)
->> +        goto err_name;
->> +#endif
-> 
-> So why not introduce another helper to handle this and declare it
-> as a void function when !CONFIG_SHRINKER_DEBUG? Something like the
-> following:
-> 
-> #ifdef CONFIG_SHRINKER_DEBUG
-> static int shrinker_debugfs_name_alloc(struct shrinker *shrinker, const 
-> char *fmt,
->                                         va_list vargs)
-> 
-> {
->      shrinker->name = kvasprintf_const(GFP_KERNEL, fmt, vargs);
->      return shrinker->name ? 0 : -ENOMEM;
-> }
-> #else
-> static int shrinker_debugfs_name_alloc(struct shrinker *shrinker, const 
-> char *fmt,
->                                         va_list vargs)
-> {
->      return 0;
-> }
-> #endif
+> +      have_fuse="yes"
+> +    ], [have_fuse="no"])
+> +  ])
+>    LIBS="${saved_LIBS}"
+>    CPPFLAGS="${saved_CPPFLAGS}"], [have_fuse="no"])
+>  
+> diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+> index 50be783..d54fc89 100644
+> --- a/fuse/Makefile.am
+> +++ b/fuse/Makefile.am
+> @@ -3,8 +3,8 @@
+>  AUTOMAKE_OPTIONS = foreign
+>  noinst_HEADERS = $(top_srcdir)/fuse/macosx.h
+>  bin_PROGRAMS     = erofsfuse
+> -erofsfuse_SOURCES = main.c
+> +erofsfuse_SOURCES = main.c lowlevel.c
 
-Will do in the next version.
+Let's move lowlevel.c into main.c directly since highlevel code is removed now.
 
-> 
->> +    shrinker->flags = flags;
->> +
->> +    if (flags & SHRINKER_MEMCG_AWARE) {
->> +        err = prealloc_memcg_shrinker(shrinker);
->> +        if (err == -ENOSYS)
->> +            shrinker->flags &= ~SHRINKER_MEMCG_AWARE;
->> +        else if (err == 0)
->> +            goto done;
->> +        else
->> +            goto err_flags;
->> +    }
->> +
->> +    /*
->> +     * The nr_deferred is available on per memcg level for memcg aware
->> +     * shrinkers, so only allocate nr_deferred in the following cases:
->> +     *  - non memcg aware shrinkers
->> +     *  - !CONFIG_MEMCG
->> +     *  - memcg is disabled by kernel command line
->> +     */
->> +    size = sizeof(*shrinker->nr_deferred);
->> +    if (flags & SHRINKER_NUMA_AWARE)
->> +        size *= nr_node_ids;
->> +
->> +    shrinker->nr_deferred = kzalloc(size, GFP_KERNEL);
->> +    if (!shrinker->nr_deferred)
->> +        goto err_flags;
->> +
->> +done:
->> +    return shrinker;
->> +
->> +err_flags:
->> +#ifdef CONFIG_SHRINKER_DEBUG
->> +    kfree_const(shrinker->name);
->> +    shrinker->name = NULL;
-> 
-> This could be shrinker_debugfs_name_free()
+>  erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
+> -erofsfuse_CFLAGS += -DFUSE_USE_VERSION=26 ${libfuse_CFLAGS} ${libselinux_CFLAGS}
+> -erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse_LIBS} ${liblz4_LIBS} \
+> +erofsfuse_CFLAGS += ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
+> +erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LIBS} ${liblz4_LIBS} \
+>  	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
+> diff --git a/fuse/lowlevel.c b/fuse/lowlevel.c
+> new file mode 100644
+> index 0000000..fe8c51a
+> --- /dev/null
+> +++ b/fuse/lowlevel.c
+> @@ -0,0 +1,527 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Created by Li Yiyan <lyy0627@sjtu.edu.com>
+> + */
+> +#include "erofs/config.h"
+> +#include "erofs/dir.h"
+> +#include "erofs/inode.h"
+> +#include "erofs/io.h"
+> +#include "erofs/print.h"
+> +#include "macosx.h"
+> +#include "config.h"
+> +#include <fuse_opt.h>
+> +#include <libgen.h>
+> +#include <signal.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <float.h>
+> +
+> +#include <fuse.h>
+> +#include <fuse_lowlevel.h>
+> +
+> +/* used in list/getxattr, given buf size is 0 and
+> + * expected return val is xattr size
+> + */
+> +#define TMP_BUF_SIZE 4096
+> +static const double EROFS_TIMEOUT = DBL_MAX;
 
-Will do.
+EROFSFUSE_TIMEOUT
 
-> 
->> +err_name:
->> +#endif
->> +    kfree(shrinker);
->> +    return NULL;
->> +}
->> +EXPORT_SYMBOL(shrinker_alloc);
->> +
->> +void shrinker_free_non_registered(struct shrinker *shrinker)
->> +{
->> +#ifdef CONFIG_SHRINKER_DEBUG
->> +    kfree_const(shrinker->name);
->> +    shrinker->name = NULL;
-> 
-> This could be shrinker_debugfs_name_free()
-> 
->> +#endif
->> +    if (shrinker->flags & SHRINKER_MEMCG_AWARE) {
->> +        down_write(&shrinker_rwsem);
->> +        unregister_memcg_shrinker(shrinker);
->> +        up_write(&shrinker_rwsem);
->> +    }
->> +
->> +    kfree(shrinker->nr_deferred);
->> +    shrinker->nr_deferred = NULL;
->> +
->> +    kfree(shrinker);
->> +}
->> +EXPORT_SYMBOL(shrinker_free_non_registered);
->> +
->> +void shrinker_register(struct shrinker *shrinker)
->> +{
->> +    down_write(&shrinker_rwsem);
->> +    list_add_tail(&shrinker->list, &shrinker_list);
->> +    shrinker->flags |= SHRINKER_REGISTERED;
->> +    shrinker_debugfs_add(shrinker);
->> +    up_write(&shrinker_rwsem);
->> +}
->> +EXPORT_SYMBOL(shrinker_register);
->> +
->> +void shrinker_unregister(struct shrinker *shrinker)
-> 
-> You have made all shrinkers to be dynamically allocated, so
-> we should prevent users from allocating shrinkers statically and
-> use this function to unregister it. It is better to add a
-> flag like SHRINKER_ALLOCATED which is set in shrinker_alloc(),
-> and check whether it is set in shrinker_unregister(), if not
-> maybe a warning should be added to tell the users what happened.
+> +
+> +struct erofsfuse_ll_dir_context {
+> +	struct erofs_dir_context ctx;
+> +
+> +	fuse_req_t req;
+> +	void *buf;
+> +	int is_plus;
+> +	size_t offset;
+> +	size_t buf_size;
+> +	size_t start_off;
+> +	struct fuse_file_info *fi;
+> +};
+> +
+> +struct erofsfuse_ll_dir_search_context {
+> +	struct erofs_dir_context ctx;
+> +
+> +	const char *target_name;
+> +	size_t target_name_len;
 
-Make sense, will do.
+Really need to record the length memory?
 
-> 
->> +{
->> +    struct dentry *debugfs_entry;
->> +    int debugfs_id;
->> +
->> +    if (!shrinker || !(shrinker->flags & SHRINKER_REGISTERED))
->> +        return;
->> +
->> +    down_write(&shrinker_rwsem);
->> +    list_del(&shrinker->list);
->> +    shrinker->flags &= ~SHRINKER_REGISTERED;
->> +    if (shrinker->flags & SHRINKER_MEMCG_AWARE)
->> +        unregister_memcg_shrinker(shrinker);
->> +    debugfs_entry = shrinker_debugfs_detach(shrinker, &debugfs_id);
-> 
-> In the internal of this function, you also could use
-> shrinker_debugfs_name_free().
+> +	struct fuse_entry_param *ent;
+> +};
+> +
+> +static int erofsfuse_ll_fill_dentries(struct erofs_dir_context *ctx)
+> +{
+> +	size_t r = 0;
+> +	struct stat st = { 0 };
+> +	char dname[EROFS_NAME_LEN + 1];
+> +	struct erofsfuse_ll_dir_context *fusectx =
+> +		(struct erofsfuse_ll_dir_context *)ctx;
+> +#if FUSE_USE_VERSION >= 30
 
-Yeah, will do.
+We used `FUSE_MAJOR_VERSION` before, could we stay the same for the version branch?
 
-Thanks,
-Qi
+> +	struct fuse_entry_param param;
 
-> 
-> Thanks.
-> 
->> +    up_write(&shrinker_rwsem);
->> +
->> +    shrinker_debugfs_remove(debugfs_entry, debugfs_id);
->> +
->> +    kfree(shrinker->nr_deferred);
->> +    shrinker->nr_deferred = NULL;
->> +
->> +    kfree(shrinker);
->> +}
->> +EXPORT_SYMBOL(shrinker_unregister);
->> +
->>   /*
->>    * Add a shrinker callback to be called from the vm.
->>    */
-> 
+We can move this to #else below.
+
+> +#endif
+> +
+> +	if (fusectx->offset < fusectx->start_off) {
+> +		fusectx->offset +=
+> +			ctx->de_namelen + sizeof(struct erofs_dirent);
+> +		return 0;
+> +	}
+> +
+> +	strncpy(dname, ctx->dname, ctx->de_namelen);
+> +	dname[ctx->de_namelen] = '\0';
+> +	fusectx->offset += ctx->de_namelen + sizeof(struct erofs_dirent);
+> +
+> +	if (!fusectx->is_plus) { /* fuse 3 still use non-plus readdir */
+> +		st.st_mode = erofs_ftype_to_dtype(ctx->de_ftype);
+> +		st.st_ino = ctx->de_nid;
+> +
+> +		r = fuse_add_direntry(fusectx->req, fusectx->buf,
+> +				      fusectx->buf_size, dname, &st,
+> +				      fusectx->offset);
+> +	} else {
+> +#if FUSE_USE_VERSION >= 30
+
+		struct fuse_entry_param param;
+
+> +		param.ino = ctx->de_nid;
+> +		param.generation = 0;
+> +		param.attr.st_ino = ctx->de_nid;
+> +		param.attr.st_mode = erofs_ftype_to_dtype(ctx->de_ftype);
+> +		param.attr_timeout = EROFS_TIMEOUT;
+> +		param.entry_timeout = EROFS_TIMEOUT;
+> +
+> +		r = fuse_add_direntry_plus(fusectx->req, fusectx->buf,
+> +					   fusectx->buf_size, dname, &param,
+> +					   fusectx->offset);
+> +#else
+> +		erofs_err("fuse 2 readdirplus is not supported\n");
+> +#endif
+> +	}
+> +
+> +	if (r > fusectx->buf_size) {
+> +		fusectx->offset -=
+> +			ctx->de_namelen + sizeof(struct erofs_dirent);
+> +		return 1;
+> +	}
+> +	fusectx->buf += r;
+> +	fusectx->buf_size -= r;
+> +	return 0;
+> +}
+> +
+> +static void erofsfuse_ll_fill_stat(struct erofs_inode *vi, struct stat *stbuf)
+> +{
+> +	stbuf->st_mode = vi->i_mode;
+> +	stbuf->st_nlink = vi->i_nlink;
+> +
+> +	if (!S_ISDIR(stbuf->st_mode))
+> +		stbuf->st_size = vi->i_size;
+> +	if (S_ISBLK(vi->i_mode) || S_ISCHR(vi->i_mode))
+> +		stbuf->st_rdev = vi->u.i_rdev;
+> +
+> +	stbuf->st_blocks = roundup(vi->i_size, erofs_blksiz()) >> 9;
+> +
+> +	stbuf->st_uid = vi->i_uid;
+> +	stbuf->st_gid = vi->i_gid;
+> +
+> +	stbuf->st_ctime = vi->i_mtime;
+> +	stbuf->st_mtime = stbuf->st_ctime;
+> +	stbuf->st_atime = stbuf->st_ctime;
+> +}
+> +
+> +static int erofsfuse_ll_search_dentries(struct erofs_dir_context *ctx)
+> +{
+> +	int r = 0;
+> +	struct erofs_inode vi;
+> +	struct erofsfuse_ll_dir_search_context *search_ctx =
+> +		(struct erofsfuse_ll_dir_search_context *)ctx;
+> +
+> +	if (search_ctx->ent->ino == 0 &&
+> +	    search_ctx->target_name_len == ctx->de_namelen &&
+> +	    strncmp(search_ctx->target_name, ctx->dname, ctx->de_namelen) ==
+
+!strncmp(search_ctx->target_name, ctx->dname, ctx->de_namelen) {
+
+> +		    0) {
+> +		search_ctx->ent->ino = ctx->de_nid;
+> +		search_ctx->ent->attr.st_ino = ctx->de_nid;
+> +		vi.nid = (erofs_nid_t)ctx->de_nid;
+> +
+> +		r = erofs_read_inode_from_disk(&vi);
+> +		if (r < 0)
+> +			return r;
+> +
+> +		erofsfuse_ll_fill_stat(&vi, &(search_ctx->ent->attr));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline erofs_nid_t erofsfuse_ll_getnid(fuse_ino_t ino)
+> +{
+> +	return ino == FUSE_ROOT_ID ? sbi.root_nid : (erofs_nid_t)ino;
+> +}
+> +
+> +static inline void erofsfuse_readdir_general(fuse_req_t req, fuse_ino_t ino,
+> +					     size_t size, off_t off,
+> +					     struct fuse_file_info *fi,
+> +					     int plus)
+> +{
+> +	int err = 0;
+> +	char *buf = malloc(size);
+> +	struct erofsfuse_ll_dir_context ctx;
+> +	struct erofs_inode *vi = (struct erofs_inode *)fi->fh;
+> +
+> +	erofs_dbg("readdir, ino: %lu, req: %p, fh: %lu, size: %lu, off: %lu\n",
+> +		  ino, req, fi->fh, size, off);
+> +	if (!buf) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +	ctx.ctx.dir = vi;
+> +	ctx.ctx.cb = erofsfuse_ll_fill_dentries;
+> +
+> +	ctx.fi = fi;
+> +	ctx.buf = buf;
+> +	ctx.buf_size = size;
+> +	ctx.req = req;
+> +	ctx.offset = 0;
+> +	ctx.start_off = off;
+> +	ctx.is_plus = plus;
+> +
+> +#ifdef NDEBUG
+> +	err = erofs_iterate_dir(&ctx.ctx, false);
+> +#else
+> +	err = erofs_iterate_dir(&ctx.ctx, true);
+> +#endif
+> +
+> +	if (err < 0) /* if buffer insufficient, return 1 */
+> +		fuse_reply_err(req, EIO);
+> +	else
+> +		fuse_reply_buf(req, buf, size - ctx.buf_size);
+> +
+> +	free(buf);
+> +}
+> +
+> +static void erofsfuse_ll_readdir(fuse_req_t req, fuse_ino_t ino, size_t size,
+> +				 off_t off, struct fuse_file_info *fi)
+> +{
+> +	erofsfuse_readdir_general(req, ino, size, off, fi, 0);
+> +}
+> +
+> +#if FUSE_USE_VERSION >= 30
+> +static void erofsfuse_ll_readdirplus(fuse_req_t req, fuse_ino_t ino,
+> +				     size_t size, off_t off,
+> +				     struct fuse_file_info *fi)
+> +{
+> +	erofsfuse_readdir_general(req, ino, size, off, fi, 1);
+> +}
+> +#endif
+> +
+> +static void erofsfuse_ll_init(void *userdata, struct fuse_conn_info *conn)
+> +{
+> +	erofs_dbg("init fuse lowlevel erofs\n");
+> +}
+> +
+> +static void erofsfuse_ll_open(fuse_req_t req, fuse_ino_t ino,
+> +			      struct fuse_file_info *fi)
+> +{
+> +	int ret = 0;
+> +	struct erofs_inode *vi;
+> +
+> +	erofs_dbg("open, ino = %lu, req = %p\n", ino, req);
+> +	if (fi->flags & (O_WRONLY | O_RDWR)) {
+> +		fuse_reply_err(req, EROFS);
+> +		return;
+> +	}
+> +
+> +	if (ino == FUSE_ROOT_ID) {
+> +		fuse_reply_err(req, EISDIR);
+> +		return;
+> +	}
+> +
+> +	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
+> +	if (!vi) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	vi->nid = (erofs_nid_t)ino;
+> +	ret = erofs_read_inode_from_disk(vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +
+> +	if (!S_ISREG(vi->i_mode)) {
+> +		fuse_reply_err(req, EISDIR);
+> +	} else {
+> +		fi->fh = (uint64_t)vi;
+> +		fi->keep_cache = 1;
+> +		fuse_reply_open(req, fi);
+> +		return;
+> +	}
+> +
+> +out:
+> +	free(vi);
+> +}
+> +
+> +static void erofsfuse_ll_getattr(fuse_req_t req, fuse_ino_t ino,
+> +				 struct fuse_file_info *fi)
+> +{
+> +	int ret;
+> +	struct stat stbuf = { 0 };
+> +	struct erofs_inode vi;
+> +
+> +	erofs_dbg("getattr, ino: %lu, req: %p\n", ino, req);
+> +	vi.nid = erofsfuse_ll_getnid(ino);
+> +	ret = erofs_read_inode_from_disk(&vi);
+> +	if (ret < 0) {
+> +		erofs_dbg("read inode from disk failed, nid = %lu\n", vi.nid);
+> +		fuse_reply_err(req, ENOENT);
+> +	}
+> +
+> +	erofsfuse_ll_fill_stat(&vi, &stbuf);
+> +	stbuf.st_ino = ino;
+> +
+> +	fuse_reply_attr(req, &stbuf, EROFS_TIMEOUT);
+> +}
+> +
+> +static void erofsfuse_ll_opendir(fuse_req_t req, fuse_ino_t ino,
+> +				 struct fuse_file_info *fi)
+> +{
+> +	int ret;
+> +	struct erofs_inode *vi;
+> +
+> +	erofs_dbg("opendir, ino = %lu\n", ino);
+> +	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
+> +	if (!vi) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	vi->nid = erofsfuse_ll_getnid(ino);
+> +	ret = erofs_read_inode_from_disk(vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +
+> +	if (!S_ISDIR(vi->i_mode)) {
+> +		fuse_reply_err(req, ENOTDIR);
+> +		goto out;
+> +	}
+> +
+> +	fi->fh = (uint64_t)vi;
+> +	fuse_reply_open(req, fi);
+> +	return;
+> +
+> +out:
+> +	free(vi);
+> +}
+> +
+> +static void erofsfuse_ll_release(fuse_req_t req, fuse_ino_t ino,
+> +				 struct fuse_file_info *fi)
+> +{
+> +	free((struct erofs_inode *)fi->fh);
+> +	fi->fh = 0;
+> +	fuse_reply_err(req, 0);
+> +}
+> +
+> +static void erofsfuse_ll_lookup(fuse_req_t req, fuse_ino_t parent,
+> +				const char *name)
+> +{
+> +	int err, ret;
+> +	struct erofs_inode *vi;
+> +	struct fuse_entry_param fentry;
+> +	struct erofsfuse_ll_dir_search_context ctx;
+> +
+> +	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
+> +	if (!vi) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	vi->nid = erofsfuse_ll_getnid(parent);
+> +	ret = erofs_read_inode_from_disk(vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +	if (!S_ISDIR(vi->i_mode)) {
+> +		fuse_reply_err(req, ENOTDIR);
+> +		goto out;
+> +	}
+> +
+> +	memset(&fentry, 0, sizeof(fentry));
+> +	fentry.ino = 0;
+> +	fentry.attr_timeout = fentry.entry_timeout = EROFS_TIMEOUT;
+> +	ctx.ctx.dir = vi;
+> +	ctx.ctx.cb = erofsfuse_ll_search_dentries;
+> +
+> +	ctx.ent = &fentry;
+> +	ctx.target_name = name;
+> +	ctx.target_name_len = strlen(name);
+> +
+> +#ifdef NDEBUG
+> +	err = erofs_iterate_dir(&ctx.ctx, false);
+> +#else
+> +	err = erofs_iterate_dir(&ctx.ctx, true);
+> +#endif
+> +
+> +	if (err < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +	fuse_reply_entry(req, &fentry);
+> +
+> +out:
+> +	free(vi);
+> +}
+> +
+> +static void erofsfuse_ll_read(fuse_req_t req, fuse_ino_t ino, size_t size,
+> +			      off_t off, struct fuse_file_info *fi)
+> +{
+> +	int ret;
+> +	struct erofs_inode *vi = (struct erofs_inode *)fi->fh;
+> +	char *buf = malloc(size);
+> +
+> +	erofs_dbg("read, ino = %lu, size = %lu, off = %lu, fh = %lu\n", ino,
+> +		  size, off, fi->fh);
+> +	if (!buf) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	if (!S_ISREG(vi->i_mode)) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +
+> +	ret = erofs_pread(vi, buf, size, off);
+> +	if (ret) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +	if (off >= vi->i_size)
+> +		ret = 0;
+> +	else if (off + size > vi->i_size)
+> +		ret = vi->i_size - off;
+> +	else
+> +		ret = size;
+> +
+> +	fuse_reply_buf(req, buf, ret);
+> +
+> +out:
+> +	free(buf);
+> +}
+> +
+> +static void erofsfuse_ll_readlink(fuse_req_t req, fuse_ino_t ino)
+> +{
+> +	int ret;
+> +	char *dst;
+> +	struct erofs_inode vi;
+> +
+> +	erofs_dbg("read_link, ino = %lu\n", ino);
+> +	vi.nid = erofsfuse_ll_getnid(ino);
+> +	ret = erofs_read_inode_from_disk(&vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		return;
+> +	}
+> +
+> +	if (!S_ISLNK(vi.i_mode)) {
+> +		fuse_reply_err(req, EINVAL);
+> +		return;
+> +	}
+> +
+> +	dst = malloc(vi.i_size + 1);
+> +	if (!dst) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	ret = erofs_pread(&vi, dst, vi.i_size, 0);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		goto out;
+> +	}
+> +
+> +	dst[vi.i_size] = '\0';
+> +	fuse_reply_readlink(req, dst);
+> +
+> +out:
+> +	free(dst);
+> +}
+> +
+> +static void erofsfuse_ll_getxattr(fuse_req_t req, fuse_ino_t ino,
+> +				  const char *name, size_t size)
+> +{
+> +	int ret;
+> +	char *buf = NULL;
+> +	struct erofs_inode vi;
+> +	size_t real = size == 0 ? TMP_BUF_SIZE : size;
+> +
+> +	erofs_dbg("getxattr, ino = %lu, name = %s, size = %lu\n", ino, name,
+> +		  size);
+> +	vi.nid = erofsfuse_ll_getnid(ino);
+> +	ret = erofs_read_inode_from_disk(&vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		return;
+> +	}
+> +
+> +	buf = malloc(real);
+> +	if (!buf) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	ret = erofs_getxattr(&vi, name, buf, real);
+> +	if (ret < 0)
+> +		fuse_reply_err(req, -ret);
+> +	else if (size == 0)
+> +		fuse_reply_xattr(req, ret);
+> +	else
+> +		fuse_reply_buf(req, buf, ret);
+> +
+> +	free(buf);
+> +}
+> +
+> +static void erofsfuse_ll_listxattr(fuse_req_t req, fuse_ino_t ino, size_t size)
+> +{
+> +	int ret;
+> +	char *buf = NULL;
+> +	struct erofs_inode vi;
+> +	size_t real = size == 0 ? TMP_BUF_SIZE : size;
+> +
+> +	erofs_dbg("listxattr, ino = %lu, size = %lu\n", ino, size);
+> +	vi.nid = erofsfuse_ll_getnid(ino);
+> +	ret = erofs_read_inode_from_disk(&vi);
+> +	if (ret < 0) {
+> +		fuse_reply_err(req, EIO);
+> +		return;
+> +	}
+> +
+> +	buf = malloc(real);
+> +	if (!buf) {
+> +		fuse_reply_err(req, ENOMEM);
+> +		return;
+> +	}
+> +
+> +	ret = erofs_listxattr(&vi, buf, real);
+> +	if (ret < 0)
+> +		fuse_reply_err(req, -ret);
+> +	else if (size == 0)
+> +		fuse_reply_xattr(req, ret);
+> +	else
+> +		fuse_reply_buf(req, buf, ret);
+> +
+> +	free(buf);
+> +}
+> +
+> +struct fuse_lowlevel_ops erofsfuse_lops = {
+> +	.getxattr = erofsfuse_ll_getxattr,
+> +	.opendir = erofsfuse_ll_opendir,
+> +	.releasedir = erofsfuse_ll_release,
+> +	.release = erofsfuse_ll_release,
+> +	.lookup = erofsfuse_ll_lookup,
+> +	.listxattr = erofsfuse_ll_listxattr,
+> +	.readlink = erofsfuse_ll_readlink,
+> +	.getattr = erofsfuse_ll_getattr,
+> +	.readdir = erofsfuse_ll_readdir,
+> +#if FUSE_USE_VERSION >= 30
+> +	.readdirplus = erofsfuse_ll_readdirplus,
+> +#endif
+> +	.open = erofsfuse_ll_open,
+> +	.read = erofsfuse_ll_read,
+> +	.init = erofsfuse_ll_init,
+> +};
+> diff --git a/fuse/main.c b/fuse/main.c
+> index b060e06..049d100 100644
+> --- a/fuse/main.c
+> +++ b/fuse/main.c
+> @@ -6,8 +6,6 @@
+>  #include <string.h>
+>  #include <signal.h>
+>  #include <libgen.h>
+> -#include <fuse.h>
+> -#include <fuse_opt.h>
+>  #include "macosx.h"
+>  #include "erofs/config.h"
+>  #include "erofs/print.h"
+> @@ -15,177 +13,11 @@
+>  #include "erofs/dir.h"
+>  #include "erofs/inode.h"
+>  
+> -struct erofsfuse_dir_context {
+> -	struct erofs_dir_context ctx;
+> -	fuse_fill_dir_t filler;
+> -	struct fuse_file_info *fi;
+> -	void *buf;
+> -};
+> -
+> -static int erofsfuse_fill_dentries(struct erofs_dir_context *ctx)
+> -{
+> -	struct erofsfuse_dir_context *fusectx = (void *)ctx;
+> -	struct stat st = {0};
+> -	char dname[EROFS_NAME_LEN + 1];
+> -
+> -	strncpy(dname, ctx->dname, ctx->de_namelen);
+> -	dname[ctx->de_namelen] = '\0';
+> -	st.st_mode = erofs_ftype_to_dtype(ctx->de_ftype) << 12;
+> -	fusectx->filler(fusectx->buf, dname, &st, 0);
+> -	return 0;
+> -}
+> -
+> -int erofsfuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+> -		      off_t offset, struct fuse_file_info *fi)
+> -{
+> -	int ret;
+> -	struct erofs_inode dir;
+> -	struct erofsfuse_dir_context ctx = {
+> -		.ctx.dir = &dir,
+> -		.ctx.cb = erofsfuse_fill_dentries,
+> -		.filler = filler,
+> -		.fi = fi,
+> -		.buf = buf,
+> -	};
+> -	erofs_dbg("readdir:%s offset=%llu", path, (long long)offset);
+> -
+> -	ret = erofs_ilookup(path, &dir);
+> -	if (ret)
+> -		return ret;
+> -
+> -	erofs_dbg("path=%s nid = %llu", path, dir.nid | 0ULL);
+> -	if (!S_ISDIR(dir.i_mode))
+> -		return -ENOTDIR;
+> -
+> -	if (!dir.i_size)
+> -		return 0;
+> -#ifdef NDEBUG
+> -	return erofs_iterate_dir(&ctx.ctx, false);
+> -#else
+> -	return erofs_iterate_dir(&ctx.ctx, true);
+> -#endif
+> -}
+> -
+> -static void *erofsfuse_init(struct fuse_conn_info *info)
+> -{
+> -	erofs_info("Using FUSE protocol %d.%d", info->proto_major, info->proto_minor);
+> -	return NULL;
+> -}
+> -
+> -static int erofsfuse_open(const char *path, struct fuse_file_info *fi)
+> -{
+> -	erofs_dbg("open path=%s", path);
+> -
+> -	if ((fi->flags & O_ACCMODE) != O_RDONLY)
+> -		return -EACCES;
+> -
+> -	return 0;
+> -}
+> -
+> -static int erofsfuse_getattr(const char *path, struct stat *stbuf)
+> -{
+> -	struct erofs_inode vi = {};
+> -	int ret;
+> -
+> -	erofs_dbg("getattr(%s)", path);
+> -	ret = erofs_ilookup(path, &vi);
+> -	if (ret)
+> -		return -ENOENT;
+> -
+> -	stbuf->st_mode  = vi.i_mode;
+> -	stbuf->st_nlink = vi.i_nlink;
+> -	stbuf->st_size  = vi.i_size;
+> -	stbuf->st_blocks = roundup(vi.i_size, erofs_blksiz()) >> 9;
+> -	stbuf->st_uid = vi.i_uid;
+> -	stbuf->st_gid = vi.i_gid;
+> -	if (S_ISBLK(vi.i_mode) || S_ISCHR(vi.i_mode))
+> -		stbuf->st_rdev = vi.u.i_rdev;
+> -	stbuf->st_ctime = vi.i_mtime;
+> -	stbuf->st_mtime = stbuf->st_ctime;
+> -	stbuf->st_atime = stbuf->st_ctime;
+> -	return 0;
+> -}
+> -
+> -static int erofsfuse_read(const char *path, char *buffer,
+> -			  size_t size, off_t offset,
+> -			  struct fuse_file_info *fi)
+> -{
+> -	int ret;
+> -	struct erofs_inode vi;
+> -
+> -	erofs_dbg("path:%s size=%zd offset=%llu", path, size, (long long)offset);
+> -
+> -	ret = erofs_ilookup(path, &vi);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = erofs_pread(&vi, buffer, size, offset);
+> -	if (ret)
+> -		return ret;
+> -	if (offset >= vi.i_size)
+> -		return 0;
+> -	if (offset + size > vi.i_size)
+> -		return vi.i_size - offset;
+> -	return size;
+> -}
+> -
+> -static int erofsfuse_readlink(const char *path, char *buffer, size_t size)
+> -{
+> -	int ret = erofsfuse_read(path, buffer, size, 0, NULL);
+> -
+> -	if (ret < 0)
+> -		return ret;
+> -	DBG_BUGON(ret > size);
+> -	if (ret == size)
+> -		buffer[size - 1] = '\0';
+> -	erofs_dbg("readlink(%s): %s", path, buffer);
+> -	return 0;
+> -}
+> -
+> -static int erofsfuse_getxattr(const char *path, const char *name, char *value,
+> -			size_t size
+> -#ifdef __APPLE__
+> -			, uint32_t position)
+> -#else
+> -			)
+> -#endif
+> -{
+> -	int ret;
+> -	struct erofs_inode vi;
+> -
+> -	erofs_dbg("getxattr(%s): name=%s size=%llu", path, name, size);
+> -
+> -	ret = erofs_ilookup(path, &vi);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return erofs_getxattr(&vi, name, value, size);
+> -}
+> -
+> -static int erofsfuse_listxattr(const char *path, char *list, size_t size)
+> -{
+> -	int ret;
+> -	struct erofs_inode vi;
+> -
+> -	erofs_dbg("listxattr(%s): size=%llu", path, size);
+> -
+> -	ret = erofs_ilookup(path, &vi);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return erofs_listxattr(&vi, list, size);
+> -}
+> +#include <float.h>
+> +#include <fuse.h>
+> +#include <fuse_lowlevel.h>
+>  
+> -static struct fuse_operations erofs_ops = {
+> -	.getxattr = erofsfuse_getxattr,
+> -	.listxattr = erofsfuse_listxattr,
+> -	.readlink = erofsfuse_readlink,
+> -	.getattr = erofsfuse_getattr,
+> -	.readdir = erofsfuse_readdir,
+> -	.open = erofsfuse_open,
+> -	.read = erofsfuse_read,
+> -	.init = erofsfuse_init,
+> -};
+> +extern struct fuse_lowlevel_ops erofsfuse_lops;
+>  
+>  static struct options {
+>  	const char *disk;
+> @@ -207,7 +39,9 @@ static const struct fuse_opt option_spec[] = {
+>  
+>  static void usage(void)
+>  {
+> +#if FUSE_MAJOR_VERSION < 3
+>  	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
+> +#endif
+>  
+>  	fputs("usage: [options] IMAGE MOUNTPOINT\n\n"
+>  	      "Options:\n"
+> @@ -257,8 +91,10 @@ static int optional_opt_func(void *data, const char *arg, int key,
+>  			fusecfg.disk = strdup(arg);
+>  			return 0;
+>  		}
+> -		if (!fusecfg.mountpoint)
+> +		if (!fusecfg.mountpoint) {
+>  			fusecfg.mountpoint = strdup(arg);
+> +			return 0;
+> +		}
+>  	case FUSE_OPT_KEY_OPT:
+>  		if (!strcmp(arg, "-d"))
+>  			fusecfg.odebug = true;
+> @@ -297,6 +133,7 @@ static void signal_handle_sigsegv(int signal)
+>  int main(int argc, char *argv[])
+>  {
+>  	int ret;
+> +	struct fuse_session *se;
+>  	struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
+>  
+>  	erofs_init_configure();
+> @@ -337,7 +174,38 @@ int main(int argc, char *argv[])
+>  		goto err_dev_close;
+>  	}
+>  
+> -	ret = fuse_main(args.argc, args.argv, &erofs_ops, NULL);
+> +#if FUSE_USE_VERSION >= 30
+> +	se = fuse_session_new(&args, &erofsfuse_lops, sizeof(erofsfuse_lops),
+> +			      NULL);
+> +	if (se != NULL) {
+> +		fuse_set_signal_handlers(se);
+> +		fuse_session_mount(se, fusecfg.mountpoint);
+> +
+> +		ret = fuse_session_loop(se);
+> +
+> +		fuse_remove_signal_handlers(se);
+> +		fuse_session_unmount(se);
+> +		fuse_session_destroy(se);
+> +	}
+> +#else
+> +	struct fuse_chan *ch;
+> +
+> +	ch = fuse_mount(fusecfg.mountpoint, &args);
+> +	if (ch != NULL) {
+> +		se = fuse_lowlevel_new(&args, &erofsfuse_lops,
+> +				       sizeof(erofsfuse_lops), NULL);
+> +		if (se != NULL) {
+> +			if (fuse_set_signal_handlers(se) != -1) {
+> +				fuse_session_add_chan(se, ch);
+> +				ret = fuse_session_loop(se);
+> +				fuse_remove_signal_handlers(se);
+> +				fuse_session_remove_chan(ch);
+> +			}
+> +			fuse_session_destroy(se);
+> +		}
+> +		fuse_unmount(fusecfg.mountpoint, ch);
+> +	}
+> +#endif
+>  
+>  	erofs_put_super();
+>  err_dev_close:
+
