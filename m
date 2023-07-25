@@ -1,50 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E71D3760E60
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 11:20:38 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACECD760E82
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 11:22:52 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hQXVvzFc;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xJfsnq4t;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9BMm5xcQz3bVJ
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 19:20:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9BQL48cSz3bVJ
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 19:22:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hQXVvzFc;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xJfsnq4t;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=91.218.175.1; helo=out-1.mta0.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
-Received: from out-1.mta0.migadu.com (out-1.mta0.migadu.com [91.218.175.1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=95.215.58.56; helo=out-56.mta1.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
+X-Greylist: delayed 24387 seconds by postgrey-1.37 at boromir; Tue, 25 Jul 2023 19:22:44 AEST
+Received: from out-56.mta1.migadu.com (out-56.mta1.migadu.com [95.215.58.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9BMf2Sqmz30hb
-	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 19:20:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9BQD3jtwz30hb
+	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jul 2023 19:22:44 +1000 (AEST)
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1690276823;
+	t=1690276959;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lWqqPzpNBtB6jTVVrWh0b/e9soljzkJiIrV3enhBysE=;
-	b=hQXVvzFcrWWWpy9SLwyFzJJZuDADbBS2OdiYg60cVhz1X3iYVafxnHWqF9F5gbQE+t5rUv
-	I46fSuLx9fxRRB/KaBl036o5sGpNNMaguRBPQls2fbyMfQnAsVHD21W1LE1DjorXmO7V65
-	cgmVLn1Ua4w1+HIDSsYSdCmvQqociDo=
+	bh=O0aj+CEvUWLWW/lym+SjHnwm8OSi0vQ8fgtochDa6Vs=;
+	b=xJfsnq4tfri4+FrxQ/wgEMA3zFz0o0z0uW0gHHJCvckela5K3HUZXJd8znm8ohjnxlmbHS
+	uH4lNpUNfMnIh4HG6zSYXwQDD4QbiVOnWxcUq/Ckyge75DILepht+8WUJVUEtTuA6yQWPk
+	2nBkRdUkFluXDihkXSSSRwQEBatV+pk=
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 06/47] drm/ttm: dynamically allocate the drm-ttm_pool
- shrinker
+Subject: Re: [PATCH v2 07/47] xenbus/backend: dynamically allocate the
+ xen-backend shrinker
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230724094354.90817-7-zhengqi.arch@bytedance.com>
-Date: Tue, 25 Jul 2023 17:19:40 +0800
+In-Reply-To: <20230724094354.90817-8-zhengqi.arch@bytedance.com>
+Date: Tue, 25 Jul 2023 17:22:00 +0800
 Content-Transfer-Encoding: 7bit
-Message-Id: <1A349AE9-C4B3-42EB-B2D6-018583CCB102@linux.dev>
+Message-Id: <CD39258F-AAA8-42A7-BBA9-6528A629B315@linux.dev>
 References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-7-zhengqi.arch@bytedance.com>
+ <20230724094354.90817-8-zhengqi.arch@bytedance.com>
 To: Qi Zheng <zhengqi.arch@bytedance.com>
 X-Migadu-Flow: FLOW_OUT
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -67,7 +68,7 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 > On Jul 24, 2023, at 17:43, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
 > 
-> Use new APIs to dynamically allocate the drm-ttm_pool shrinker.
+> Use new APIs to dynamically allocate the xen-backend shrinker.
 > 
 > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
