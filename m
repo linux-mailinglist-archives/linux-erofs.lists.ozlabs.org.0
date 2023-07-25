@@ -2,52 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4431761C80
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 16:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DFCD761C87
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jul 2023 16:59:26 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=n2fO+6f3;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OKVh6IhR;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9KtZ5Rxyz2yFQ
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 00:59:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9Kth2sYsz3bl6
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 00:59:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=n2fO+6f3;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OKVh6IhR;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9KtT0v8lz3bhr
-	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 00:59:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9Ktb5Rk9z3bq4
+	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 00:59:19 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 7490661788;
+	by dfw.source.kernel.org (Postfix) with ESMTPS id C9414617AF;
+	Tue, 25 Jul 2023 14:59:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE35C433BA;
 	Tue, 25 Jul 2023 14:59:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC60C433B6;
-	Tue, 25 Jul 2023 14:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690297150;
-	bh=2uDpIMGQVMt/gC4T/BxJPAgKQID6PeU0gqKfksNKWnI=;
+	s=k20201202; t=1690297157;
+	bh=1/8G5JaqUI6KuuI2rdJCgZt0gS2ge3CDkWe83TSi7uM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=n2fO+6f3o9pY7IlFzt0rPNlCPvC97bsCNM+BfmqJUquIMuUUrh8omevU9O4/AHkm1
-	 BUhGetnUcCuK1rxWP8h5CviIrVUp9eXO8jpGbYi5hteTH5Xqe5ITh/GzhKNHYCKlZk
-	 vlcYpaRegzQJvuY8ntTnypuLjutaWGFpxjpGt7wd4i0rEDrs0fPNKp6yIhyqEEdtAb
-	 8/r999SguPHVOPOVMoBGAZsACOuuAASF/w90W4MAecKdLt6gEneLVh/fG/faExs3M6
-	 nCO0XjvC7eMTX9Xqd+6QSmh67WMiduueljqyzpsqyRjLawhI4Oj6HHr3+rEmH8yk8G
-	 2Ixb9ASBBSh0Q==
+	b=OKVh6IhRvMPzZaUNNT/6mBAoahekKV8Su19ujYhua5dNsSJXGr2MngNtpKOYADlS5
+	 Hcq3wM7FDUZ1AhwU5l0SkI1+lCCn8xOR0JJEjELHxkXsYQRXohxF15c8QjQl0Xm+Dp
+	 AabYaBtk81zigqO/ZNjxOWuBUbzqMLIiq+sCKRMr913CtPRA3nMy4ZQya2P+aMfBUm
+	 DfLibUhnVNjPNL0YkM5WeV2HMZF3SVAzWSiYRKfJIayN7D5eWYtRDof0ETICfcAJhP
+	 1QdzIniwIyLPb29vjUNBQTa5/ioEZS6W4QeTzhNnSbuJelJPSwWTBbQCum2wVq78oc
+	 3sGYY+SrEP5rg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 25 Jul 2023 10:58:16 -0400
-Subject: [PATCH v6 3/7] tmpfs: bump the mtime/ctime/iversion when page
- becomes writeable
+Date: Tue, 25 Jul 2023 10:58:17 -0400
+Subject: [PATCH v6 4/7] tmpfs: add support for multigrain timestamps
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230725-mgctime-v6-3-a794c2b7abca@kernel.org>
+Message-Id: <20230725-mgctime-v6-4-a794c2b7abca@kernel.org>
 References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
 In-Reply-To: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
 To: Eric Van Hensbergen <ericvh@kernel.org>, 
@@ -86,20 +85,20 @@ To: Eric Van Hensbergen <ericvh@kernel.org>,
  Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
  "Darrick J. Wong" <djwong@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1641; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=2uDpIMGQVMt/gC4T/BxJPAgKQID6PeU0gqKfksNKWnI=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkv+MjNDHnc3VpUZs/F8L9rjN3Zof/qnAfmWfPJ
- HHeEPSmh46JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZL/jIwAKCRAADmhBGVaC
- FcRQEAC4JBQVQ/gYYTowPETQ4WpI/KRmcf8ArByri6vezI/PnnC+6/c78VVo2CeuLvo39NWHvEc
- WjMBGKoIjC/rRO0g9ZTnQyG5xMCVFJm+txy5uj0RrkqVeSajWVGMi40jIG0PKIJonSTnuHRNnvv
- r0qqzIRryKNHPBIqhnaRnVE7lXDmsMo5PQmseWqdieD39P983bSTK3hdLBday25rstPj4a2TwIt
- U65Yd+CzgPnnCD8f/dWD0LThNK7BtgniJDaWOop13mmeXYnImIgU1M8iY29eCS+EPq8YjysZad3
- /bEH2S2nqMnbI/nw3UQ941Rxnnmw6bEPVJnqJAOILyOesX5D82MfHRraU5UCMLp1UUkr/S/iRZf
- +CarYlZ09IaFEzrA5A2xvr7M4KiNkRaOEhxzDIsQnsRlyqq5jSyU3JRapUwrSogBCkWuAMZRIyG
- JCaLNaT6v0B5u06FAdINF6uBlVGTmgb4jdavZFZgdI9vrNqAhU42ctOi+vRusrge9q3OR0LDnTU
- qMHqNtWGe3Hsc2mZEDzSRaXyzcEYKHXBLlXvun2i/eibMafbVx3qIaTbmDNpFzpim2LoIXyGBld
- HgWK8WxTS/Hc2mF2qYRoCmLCYwcXO/X1WknZcNwcoUCIy50fLXiWyW+IvPAQjYx/4uETnI8jV8R
- chM8OWlWlDNeYjA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=769; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=1/8G5JaqUI6KuuI2rdJCgZt0gS2ge3CDkWe83TSi7uM=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkv+Mkeyk/syoIEMjY8h9EHJqsxQ0aWd6cS3gVn
+ sS0hR6R/6SJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZL/jJAAKCRAADmhBGVaC
+ FYYkD/9ytQv3AFDwSgID22VN0gkInS/gdWOU/XMQQ111VBBi+jtoL8sLhVN5+hTN45+z+uGCwcK
+ ELptnx+sw1zyhpa/86b54P+Vj5/WEHTeyw/CugTFYvMMoxwZw3ZF8vYg4M+6ynQZWEJf2tQTk2K
+ tdiekC/jrc+9KjYzeRXXoAq7TsgQVc8u4/u2BW+1mdUZ98N9dl6u4nDXkARcLRI+LqNSqh9d6yO
+ IxOufKgdLh3pGMAHW0q+fSoPiNMaAQfCgxRx5Zy5ia1ZTPZzU6Mby8JrQ1f7U5WMxcYwL5SocmN
+ G1UQX9z0RwE31B3CXLu6imdPlx5v9rro+6PBLF3MSRTzzmiLn5NVhf3ASxqYHB88Pxb8/YrZ5Hf
+ p/mwAO9pFriehz2pTk7gj/rsg8EUkXvtGxT5/Ud0BQecMRLtzeelj7BsIirEdqiFM+oyJieS+6R
+ yLQRWQ90+womEnX2UOBBDcSKJ4IRMVFTxqfRtTbtj+avSSM1HsqYg0PG+ZTcD7VzonTutJSupea
+ MDCgNVtA3BSf4FlJtanXc6obMiQXMpaMbvRF7g7ZZQQ+I6clgjwlo2maEMVCXlobjZ7og+2Vn/L
+ zdsEdNjCGYRoIRNzoAeGM8rXQ6ra0wNwBlgnVC6G77t8+98CH+j80wmzcqQzAx9NPFqiEcsD79b
+ 2pTWmlY/xVg/8Xw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -117,55 +116,30 @@ Cc: Jeff Layton <jlayton@kernel.org>, Dave Chinner <david@fromorbit.com>, linux-
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Most filesystems that use the pagecache will update the mtime, ctime,
-and change attribute when a page becomes writeable. Add a page_mkwrite
-operation for tmpfs and just use it to bump the mtime, ctime and change
-attribute.
+Enable multigrain timestamps, which should ensure that there is an
+apparent change to the timestamp whenever it has been written after
+being actively observed via getattr.
 
-This fixes xfstest generic/080 on tmpfs.
+tmpfs only requires the FS_MGTIME flag.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- mm/shmem.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ mm/shmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/shmem.c b/mm/shmem.c
-index b154af49d2df..654d9a585820 100644
+index 654d9a585820..b6019c905058 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -2169,6 +2169,16 @@ static vm_fault_t shmem_fault(struct vm_fault *vmf)
- 	return ret;
- }
- 
-+static vm_fault_t shmem_page_mkwrite(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct inode *inode = file_inode(vma->vm_file);
-+
-+	file_update_time(vma->vm_file);
-+	inode_inc_iversion(inode);
-+	return 0;
-+}
-+
- unsigned long shmem_get_unmapped_area(struct file *file,
- 				      unsigned long uaddr, unsigned long len,
- 				      unsigned long pgoff, unsigned long flags)
-@@ -4210,6 +4220,7 @@ static const struct super_operations shmem_ops = {
- 
- static const struct vm_operations_struct shmem_vm_ops = {
- 	.fault		= shmem_fault,
-+	.page_mkwrite	= shmem_page_mkwrite,
- 	.map_pages	= filemap_map_pages,
- #ifdef CONFIG_NUMA
- 	.set_policy     = shmem_set_policy,
-@@ -4219,6 +4230,7 @@ static const struct vm_operations_struct shmem_vm_ops = {
- 
- static const struct vm_operations_struct shmem_anon_vm_ops = {
- 	.fault		= shmem_fault,
-+	.page_mkwrite	= shmem_page_mkwrite,
- 	.map_pages	= filemap_map_pages,
- #ifdef CONFIG_NUMA
- 	.set_policy     = shmem_set_policy,
+@@ -4264,7 +4264,7 @@ static struct file_system_type shmem_fs_type = {
+ #endif
+ 	.kill_sb	= kill_litter_super,
+ #ifdef CONFIG_SHMEM
+-	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
++	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
+ #else
+ 	.fs_flags	= FS_USERNS_MOUNT,
+ #endif
 
 -- 
 2.41.0
