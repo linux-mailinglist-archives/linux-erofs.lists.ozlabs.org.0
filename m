@@ -1,52 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E529763232
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 11:32:06 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BJaw31GH;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13CF076322A
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 11:31:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1690363896;
+	bh=1c1HMAKYJ9E5B+Yw2yBJ71y5Qnnu7lxJRJAz0VpzdjM=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=FEkhWGt4vZvH/N1d+pqj7Dcv0ZjklQcPAXTZluTTnvQyRftBzuzAW1I4mQeHw7PWN
+	 J6LEH3M7OWXAO4KZaByBdEFY6PgrBrNAgAfArLDtDWuGtoQ+hH4h2y2bprbxMl6mN2
+	 344YXkSicn6FPZzG+UanEKwfD8oQUiQPK6yjn3ip8Pljrx/VFQQ340YsMl1DquwXYp
+	 NfhzCPTaJ9++JvID9l9jBZ8x0k02KEskD/AcmEbBN1N/O1+ai8LppL5+dRckgSy3lv
+	 x2duIUcutptiD5CeU4P8CcpJjfCpcUawlN1wLBEoPUDPO8CJlYNKHOl1aAh43yEq+a
+	 CqWDBeqirVllQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9pZX3SXhz3bZF
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 19:32:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9pZ06h3fz3bNq
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 19:31:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BJaw31GH;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=EQF1AXz3;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:1004:224b::f; helo=out-15.mta0.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
-Received: from out-15.mta0.migadu.com (out-15.mta0.migadu.com [IPv6:2001:41d0:1004:224b::f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::530; helo=mail-pg1-x530.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9pZM5yHHz2yV0
-	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 19:31:53 +1000 (AEST)
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1690363901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C9JATXkXZaN7f0jrXVOoaEMLIPnzZ4EB9BwhBVu88/k=;
-	b=BJaw31GHkPVMB5J3bFLk7nCWUXBih3Evut0vs64rGABml16vhPPP+VTCvSpnvcgPtpNdnt
-	lUE24RniQLpCmG5kFgpHNW+1PDmB/qhB9l9vhPT5YKqpl2p08nrVkD19PS1VqQI3/KFSOu
-	LvMc1Yox7zbU5EqPQ+5oAKbHUZVLA0E=
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9pYv5BH1z2yV5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 19:31:31 +1000 (AEST)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-55c79b62f3aso258782a12.1
+        for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 02:31:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690363888; x=1690968688;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1c1HMAKYJ9E5B+Yw2yBJ71y5Qnnu7lxJRJAz0VpzdjM=;
+        b=VwvLmin1BF7ch7APCSF+dD/4ze50aeoymvcG+EBGDAvrauWFyS8gASh/jHKjoprzkr
+         U9tScao27TLJhYH6bq+dVJQuYIY7dU4GKKSgIDTamEPIwk0t77BH39v0KmckMiUqVUn3
+         GO4xXDlY/zU0uuk8iYb/9VCu2XNRsnYqY3V72yVZHoKxCfUChUbSc97PWcI96MFqlZz7
+         DopoLRt85WogdqKs9s1FhT3qGogCzLv2sSZIoVQ8EiZ+UHBcPASH6es1JFCIWett4xKl
+         cMwapke1zTi9df6thconRLFAiY9bHi6bh+fOwhhBBTorX1I/RlDuHC19n2WtqL3wGDNw
+         2Scg==
+X-Gm-Message-State: ABy/qLZpCKvFayiYMnIDKESUTYZ0LejIZuH+Fb/TkxNESwTlyKDZ7YsU
+	Bg7NkgzGWeinJaHyyYF7sqd+SA==
+X-Google-Smtp-Source: APBJJlEqsGncSKz6JEtDSHUBqLuH7hBKwqIpyMup6VZ4SlPsq4lxhQ8OawAhUiBJ+OlnlseBEBKBeQ==
+X-Received: by 2002:a05:6a00:4a10:b0:686:b990:560f with SMTP id do16-20020a056a004a1000b00686b990560fmr1620878pfb.2.1690363888304;
+        Wed, 26 Jul 2023 02:31:28 -0700 (PDT)
+Received: from [10.70.252.135] ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id z5-20020aa791c5000000b0065446092699sm11395167pfa.141.2023.07.26.02.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 02:31:27 -0700 (PDT)
+Message-ID: <b941338c-56e7-65e7-da45-bfefc484ad80@bytedance.com>
+Date: Wed, 26 Jul 2023 17:31:14 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 43/47] mm: shrinker: add a secondary array for
- shrinker_info::{map, nr_deferred}
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230724094354.90817-44-zhengqi.arch@bytedance.com>
-Date: Wed, 26 Jul 2023 17:30:53 +0800
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B421DD89-09B5-4488-BEC1-D6F88C6DE75A@linux.dev>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v2 23/47] drm/msm: dynamically allocate the drm-msm_gem
+ shrinker
+Content-Language: en-US
+To: Muchun Song <muchun.song@linux.dev>
 References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-44-zhengqi.arch@bytedance.com>
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-X-Migadu-Flow: FLOW_OUT
+ <20230724094354.90817-24-zhengqi.arch@bytedance.com>
+ <17de3f5b-3bef-be38-9801-0e84cfe8539b@linux.dev>
+In-Reply-To: <17de3f5b-3bef-be38-9801-0e84cfe8539b@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,67 +80,157 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kvm@vger.kernel.org, djwong@kernel.org, Roman Gushchin <roman.gushchin@linux.dev>, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, Linux Memory Management List <linux-mm@kvack.org>, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, linux-arm-msm@vger.kernel.org, linux-nfs@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, yujie.liu@intel.com, Vlastimil Babka <vbabka@suse.cz>, linux-raid@vger.kernel.org, Christian Brauner <brauner@kernel.org>, tytso@mit.edu, Greg KH <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, netdev <netdev@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foun
- dation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
+From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: kvm@vger.kernel.org, djwong@kernel.org, roman.gushchin@linux.dev, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, paulmck@kernel.org, linux-arm-msm@vger.kernel.org, brauner@kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, yujie.liu@intel.com, vbabka@suse.cz, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, senozhatsky@chromium.org, gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
 
-> On Jul 24, 2023, at 17:43, Qi Zheng <zhengqi.arch@bytedance.com> =
-wrote:
->=20
-> Currently, we maintain two linear arrays per node per memcg, which are
-> shrinker_info::map and shrinker_info::nr_deferred. And we need to =
-resize
-> them when the shrinker_nr_max is exceeded, that is, allocate a new =
-array,
-> and then copy the old array to the new array, and finally free the old
-> array by RCU.
->=20
-> For shrinker_info::map, we do set_bit() under the RCU lock, so we may =
-set
-> the value into the old map which is about to be freed. This may cause =
-the
-> value set to be lost. The current solution is not to copy the old map =
-when
-> resizing, but to set all the corresponding bits in the new map to 1. =
-This
-> solves the data loss problem, but bring the overhead of more pointless
-> loops while doing memcg slab shrink.
->=20
-> For shrinker_info::nr_deferred, we will only modify it under the read =
-lock
-> of shrinker_rwsem, so it will not run concurrently with the resizing. =
-But
-> after we make memcg slab shrink lockless, there will be the same data =
-loss
-> problem as shrinker_info::map, and we can't work around it like the =
-map.
->=20
-> For such resizable arrays, the most straightforward idea is to change =
-it
-> to xarray, like we did for list_lru [1]. We need to do xa_store() in =
-the
-> list_lru_add()-->set_shrinker_bit(), but this will cause memory
-> allocation, and the list_lru_add() doesn't accept failure. A possible
-> solution is to pre-allocate, but the location of pre-allocation is not
-> well determined.
->=20
-> Therefore, this commit chooses to introduce a secondary array for
-> shrinker_info::{map, nr_deferred}, so that we only need to copy this
-> secondary array every time the size is resized. Then even if we get =
-the
-> old secondary array under the RCU lock, the found map and nr_deferred =
-are
-> also true, so no data is lost.
->=20
-> [1]. =
-https://lore.kernel.org/all/20220228122126.37293-13-songmuchun@bytedance.c=
-om/
->=20
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+On 2023/7/26 15:24, Muchun Song wrote:
+> 
+> 
+> On 2023/7/24 17:43, Qi Zheng wrote:
+>> In preparation for implementing lockless slab shrink, use new APIs to
+>> dynamically allocate the drm-msm_gem shrinker, so that it can be freed
+>> asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
+>> read-side critical section when releasing the struct msm_drm_private.
+>>
+>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+> 
+> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+> 
+> A nit bellow.
+> 
+>> ---
+>>   drivers/gpu/drm/msm/msm_drv.c          |  4 ++-
+>>   drivers/gpu/drm/msm/msm_drv.h          |  4 +--
+>>   drivers/gpu/drm/msm/msm_gem_shrinker.c | 36 ++++++++++++++++----------
+>>   3 files changed, 28 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/msm_drv.c 
+>> b/drivers/gpu/drm/msm/msm_drv.c
+>> index 891eff8433a9..7f6933be703f 100644
+>> --- a/drivers/gpu/drm/msm/msm_drv.c
+>> +++ b/drivers/gpu/drm/msm/msm_drv.c
+>> @@ -461,7 +461,9 @@ static int msm_drm_init(struct device *dev, const 
+>> struct drm_driver *drv)
+>>       if (ret)
+>>           goto err_msm_uninit;
+>> -    msm_gem_shrinker_init(ddev);
+>> +    ret = msm_gem_shrinker_init(ddev);
+>> +    if (ret)
+>> +        goto err_msm_uninit;
+>>       if (priv->kms_init) {
+>>           ret = priv->kms_init(ddev);
+>> diff --git a/drivers/gpu/drm/msm/msm_drv.h 
+>> b/drivers/gpu/drm/msm/msm_drv.h
+>> index e13a8cbd61c9..84523d4a1e58 100644
+>> --- a/drivers/gpu/drm/msm/msm_drv.h
+>> +++ b/drivers/gpu/drm/msm/msm_drv.h
+>> @@ -217,7 +217,7 @@ struct msm_drm_private {
+>>       } vram;
+>>       struct notifier_block vmap_notifier;
+>> -    struct shrinker shrinker;
+>> +    struct shrinker *shrinker;
+>>       struct drm_atomic_state *pm_state;
+>> @@ -279,7 +279,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, 
+>> void *data,
+>>   unsigned long msm_gem_shrinker_shrink(struct drm_device *dev, 
+>> unsigned long nr_to_scan);
+>>   #endif
+>> -void msm_gem_shrinker_init(struct drm_device *dev);
+>> +int msm_gem_shrinker_init(struct drm_device *dev);
+>>   void msm_gem_shrinker_cleanup(struct drm_device *dev);
+>>   int msm_gem_prime_mmap(struct drm_gem_object *obj, struct 
+>> vm_area_struct *vma);
+>> diff --git a/drivers/gpu/drm/msm/msm_gem_shrinker.c 
+>> b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+>> index f38296ad8743..7daab1298c11 100644
+>> --- a/drivers/gpu/drm/msm/msm_gem_shrinker.c
+>> +++ b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+>> @@ -34,8 +34,7 @@ static bool can_block(struct shrink_control *sc)
+>>   static unsigned long
+>>   msm_gem_shrinker_count(struct shrinker *shrinker, struct 
+>> shrink_control *sc)
+>>   {
+>> -    struct msm_drm_private *priv =
+>> -        container_of(shrinker, struct msm_drm_private, shrinker);
+>> +    struct msm_drm_private *priv = shrinker->private_data;
+>>       unsigned count = priv->lru.dontneed.count;
+>>       if (can_swap())
+>> @@ -100,8 +99,7 @@ active_evict(struct drm_gem_object *obj)
+>>   static unsigned long
+>>   msm_gem_shrinker_scan(struct shrinker *shrinker, struct 
+>> shrink_control *sc)
+>>   {
+>> -    struct msm_drm_private *priv =
+>> -        container_of(shrinker, struct msm_drm_private, shrinker);
+>> +    struct msm_drm_private *priv = shrinker->private_data;
+>>       struct {
+>>           struct drm_gem_lru *lru;
+>>           bool (*shrink)(struct drm_gem_object *obj);
+>> @@ -148,10 +146,11 @@ msm_gem_shrinker_shrink(struct drm_device *dev, 
+>> unsigned long nr_to_scan)
+>>       struct shrink_control sc = {
+>>           .nr_to_scan = nr_to_scan,
+>>       };
+>> -    int ret;
+>> +    unsigned long ret = SHRINK_STOP;
+>>       fs_reclaim_acquire(GFP_KERNEL);
+>> -    ret = msm_gem_shrinker_scan(&priv->shrinker, &sc);
+>> +    if (priv->shrinker)
+>> +        ret = msm_gem_shrinker_scan(priv->shrinker, &sc);
+>>       fs_reclaim_release(GFP_KERNEL);
+>>       return ret;
+>> @@ -210,16 +209,27 @@ msm_gem_shrinker_vmap(struct notifier_block *nb, 
+>> unsigned long event, void *ptr)
+>>    *
+>>    * This function registers and sets up the msm shrinker.
+>>    */
+>> -void msm_gem_shrinker_init(struct drm_device *dev)
+>> +int msm_gem_shrinker_init(struct drm_device *dev)
+>>   {
+>>       struct msm_drm_private *priv = dev->dev_private;
+>> -    priv->shrinker.count_objects = msm_gem_shrinker_count;
+>> -    priv->shrinker.scan_objects = msm_gem_shrinker_scan;
+>> -    priv->shrinker.seeks = DEFAULT_SEEKS;
+>> -    WARN_ON(register_shrinker(&priv->shrinker, "drm-msm_gem"));
+>> +
+>> +    priv->shrinker = shrinker_alloc(0, "drm-msm_gem");
+>> +    if (!priv->shrinker) {
+> 
+> Just "if (WARN_ON(!priv->shrinker))"
 
-Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+As suggested by Steven Pric in patch #24, this warning is
+unnecessary, so I will remove it in the next version.
 
-
+> 
+>> +        WARN_ON(1);
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    priv->shrinker->count_objects = msm_gem_shrinker_count;
+>> +    priv->shrinker->scan_objects = msm_gem_shrinker_scan;
+>> +    priv->shrinker->seeks = DEFAULT_SEEKS;
+>> +    priv->shrinker->private_data = priv;
+>> +
+>> +    shrinker_register(priv->shrinker);
+>>       priv->vmap_notifier.notifier_call = msm_gem_shrinker_vmap;
+>>       WARN_ON(register_vmap_purge_notifier(&priv->vmap_notifier));
+>> +
+>> +    return 0;
+>>   }
+>>   /**
+>> @@ -232,8 +242,8 @@ void msm_gem_shrinker_cleanup(struct drm_device *dev)
+>>   {
+>>       struct msm_drm_private *priv = dev->dev_private;
+>> -    if (priv->shrinker.nr_deferred) {
+>> +    if (priv->shrinker) {
+>>           WARN_ON(unregister_vmap_purge_notifier(&priv->vmap_notifier));
+>> -        unregister_shrinker(&priv->shrinker);
+>> +        shrinker_unregister(priv->shrinker);
+>>       }
+>>   }
+> 
