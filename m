@@ -2,49 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77B77762E33
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 09:43:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3C7B762E3A
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 09:44:03 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=F+MJm/ne;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nYQ62uKj;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9m9P2g7qz30YV
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 17:43:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9m9s6Nc4z30YV
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 17:44:01 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=F+MJm/ne;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nYQ62uKj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:1004:224b::39; helo=out-57.mta0.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
-Received: from out-57.mta0.migadu.com (out-57.mta0.migadu.com [IPv6:2001:41d0:1004:224b::39])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=91.218.175.39; helo=out-39.mta0.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
+Received: from out-39.mta0.migadu.com (out-39.mta0.migadu.com [91.218.175.39])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9m9J2KFsz2yVn
-	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 17:43:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9m9l3NG9z2yVn
+	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 17:43:55 +1000 (AEST)
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1690357405;
+	t=1690357431;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+aerI/sO0j2fmQVgjSVx0YO7MkLGWoxsUQn7du25+U0=;
-	b=F+MJm/neBJbq7tW7eIkjIVqgdq36l373zW3oIPnHFEgcEO1ErqNG0rkAJcj4mKstGsmy6p
-	MJoebA2utTLKaQltPP+gkceIYICCJsEmZisKkNbcYMVLD4F1Y7MjGsWhMbpE+a9xd07m05
-	Y5cUxoHDptpMUDVldJ/eAJXVrJl4pbg=
+	bh=a3ULO+Vxmkb6xksXoS4ybd7NRJZ1IUtzBzsRjrvus9c=;
+	b=nYQ62uKjxX88WM5P8sDgL4eT+IxccKZ1Bz9uh79DZNvhsKrwxOFwGCLy84LISyYseR95J2
+	yYS6BxTbWUyEJx1Geopid+DDx1DrJ04Fmbfb1W5NRe89QJmgxfeZm0I8SUGCOcTGjkjLL+
+	GWNJBEk3EgYkStTpHlPsv4QWLHeCki4=
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 37/47] xfs: dynamically allocate the xfs-inodegc
- shrinker
+Subject: Re: [PATCH v2 38/47] xfs: dynamically allocate the xfs-qm shrinker
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230724094354.90817-38-zhengqi.arch@bytedance.com>
-Date: Wed, 26 Jul 2023 15:42:45 +0800
+In-Reply-To: <20230724094354.90817-39-zhengqi.arch@bytedance.com>
+Date: Wed, 26 Jul 2023 15:43:12 +0800
 Content-Transfer-Encoding: 7bit
-Message-Id: <FB641EED-655F-4F87-83DC-1B2B30ECCC24@linux.dev>
+Message-Id: <99BAA621-E9B3-4D87-A1DD-D5242D0BC483@linux.dev>
 References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-38-zhengqi.arch@bytedance.com>
+ <20230724094354.90817-39-zhengqi.arch@bytedance.com>
 To: Qi Zheng <zhengqi.arch@bytedance.com>
 X-Migadu-Flow: FLOW_OUT
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -58,8 +57,8 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kvm@vger.kernel.org, djwong@kernel.org, Roman Gushchin <roman.gushchin@linux.dev>, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, linux-arm-msm@vger.kernel.org, linux-nfs@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, yujie.liu@intel.com, Vlastimil Babka <vbabka@suse.cz>, linux-raid@vger.kernel.org, Christian Brauner <brauner@kernel.org>, tytso@mit.edu, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vg
- er.kernel.org, tkhai@ya.ru
+Cc: kvm@vger.kernel.org, djwong@kernel.org, Roman Gushchin <roman.gushchin@linux.dev>, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, linux-arm-msm@vger.kernel.org, linux-nfs@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, yujie.liu@intel.com, Vlastimil Babka <vbabka@suse.cz>, linux-raid@vger.kernel.org, Christian Brauner <brauner@kernel.org>, tytso@mit.edu, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, senozhatsky@chromium.org, netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@
+ ya.ru
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
@@ -68,9 +67,9 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 > On Jul 24, 2023, at 17:43, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
 > 
 > In preparation for implementing lockless slab shrink, use new APIs to
-> dynamically allocate the xfs-inodegc shrinker, so that it can be freed
+> dynamically allocate the xfs-qm shrinker, so that it can be freed
 > asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
-> read-side critical section when releasing the struct xfs_mount.
+> read-side critical section when releasing the struct xfs_quotainfo.
 > 
 > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
