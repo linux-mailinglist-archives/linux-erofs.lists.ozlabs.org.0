@@ -2,48 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A172D762C7F
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 09:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 01416762C91
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 09:06:21 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=USoqEnOQ;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vw9dtxap;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4R9lKB3qSSz2ytG
-	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 17:05:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4R9lLL6BjJz2ytG
+	for <lists+linux-erofs@lfdr.de>; Wed, 26 Jul 2023 17:06:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=USoqEnOQ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vw9dtxap;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:203:375::c; helo=out-12.mta1.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
-Received: from out-12.mta1.migadu.com (out-12.mta1.migadu.com [IPv6:2001:41d0:203:375::c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:203:375::24; helo=out-36.mta1.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
+Received: from out-36.mta1.migadu.com (out-36.mta1.migadu.com [IPv6:2001:41d0:203:375::24])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9lK73kmmz2yL0
-	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 17:05:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4R9lLD4XBZz2yL0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 26 Jul 2023 17:06:12 +1000 (AEST)
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1690355108;
+	t=1690355165;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KXYamYs9irq65yhoLRu1td82YuFMeMDqOuwaU+oDyHM=;
-	b=USoqEnOQU6eM3+N9zIAHCDwhNC+8+UNIWLHIgerhexBlGJCaVmSRSO1wU4o3mjHNGYO9Rs
-	DYRZMApHrS1Pjvb6NJH1mJ50Vk6voJ6kQPH4oorM80xUHt6/RAFEITooiN15iQlceLlIh+
-	2SDmjYt2iC3yWxkOb7vPU57vNB82awk=
+	bh=qP6Rsnsz9/WW+azSq2vXZZSPSLEyAJb/Z8peE40gYgo=;
+	b=vw9dtxapJigzblTo3NGynfsv+/mQB1bNWjl6Q4rEAUF9PXc7LtA8X1zBeOoHG+17byUEV5
+	rePGXHXPmPLeGOzGrE1/eqTwEdZgvDm17pzQtihT75dgxUeL35Q3sxqIVQekgyvV9/7bXJ
+	pXhSlPCuY6BK9bze6xRNH/dP9jDuXVc=
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 17/47] rcu: dynamically allocate the rcu-lazy shrinker
+Subject: Re: [PATCH v2 18/47] rcu: dynamically allocate the rcu-kfree shrinker
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230724094354.90817-18-zhengqi.arch@bytedance.com>
-Date: Wed, 26 Jul 2023 15:04:30 +0800
+In-Reply-To: <20230724094354.90817-19-zhengqi.arch@bytedance.com>
+Date: Wed, 26 Jul 2023 15:05:26 +0800
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <3A164818-56E1-4EB4-A927-1B2D23B81659@linux.dev>
+Message-Id: <07191509-5186-487B-96D5-F859498CB93E@linux.dev>
 References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-18-zhengqi.arch@bytedance.com>
+ <20230724094354.90817-19-zhengqi.arch@bytedance.com>
 To: Qi Zheng <zhengqi.arch@bytedance.com>
 X-Migadu-Flow: FLOW_OUT
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -67,30 +67,28 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 > On Jul 24, 2023, at 17:43, Qi Zheng <zhengqi.arch@bytedance.com> =
 wrote:
 >=20
-> Use new APIs to dynamically allocate the rcu-lazy shrinker.
+> Use new APIs to dynamically allocate the rcu-kfree shrinker.
 >=20
 > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 > ---
-> kernel/rcu/tree_nocb.h | 19 +++++++++++--------
-> 1 file changed, 11 insertions(+), 8 deletions(-)
+> kernel/rcu/tree.c | 21 +++++++++++++--------
+> 1 file changed, 13 insertions(+), 8 deletions(-)
 >=20
-> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> index 43229d2b0c44..919f17561733 100644
-> --- a/kernel/rcu/tree_nocb.h
-> +++ b/kernel/rcu/tree_nocb.h
-> @@ -1397,12 +1397,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, =
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1449cb69a0e0..d068ce3567fc 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3445,12 +3445,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, =
 struct shrink_control *sc)
-> return count ? count : SHRINK_STOP;
+> return freed =3D=3D 0 ? SHRINK_STOP : freed;
 > }
 >=20
-> -static struct shrinker lazy_rcu_shrinker =3D {
-> -	.count_objects =3D lazy_rcu_shrink_count,
-> -	.scan_objects =3D lazy_rcu_shrink_scan,
+> -static struct shrinker kfree_rcu_shrinker =3D {
+> -	.count_objects =3D kfree_rcu_shrink_count,
+> -	.scan_objects =3D kfree_rcu_shrink_scan,
 > -	.batch =3D 0,
 > -	.seeks =3D DEFAULT_SEEKS,
 > -};
-> +static struct shrinker *lazy_rcu_shrinker;
+> +static struct shrinker *kfree_rcu_shrinker;
 
-Seems there is no users of this variable, maybe we could drop
-this.
-
+Same as patch #17.=
