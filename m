@@ -1,59 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D7B8764B11
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:14:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4104E764B28
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:14:16 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1690445642;
-	bh=wkWZ9/xaCXa97bQ5JXnZc5xW9B3SNGrJMT1hKcCw6ws=;
+	s=201707; t=1690445654;
+	bh=sPvPF+4cfnCSPpn5pwfgQmnhLHHD8eUNQAmayNodhE0=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=AAmHRpuKVDWdEuHWtBaObW05typyxQaPnOQe99fXdTEulQWGzZ2qLWUg9GrwGSM1I
-	 TO9GA1fDF4nqDWUpE8xsiULsyGk7QFOFSSmaptT3hSp0IkGAHFXL5gVskG8rr/5URc
-	 nxLhM3pLa88acqZw8tijZw8GHKmgnQ759qAjhJ4BZFhNhrKvNGI6/ebf8nTy0oTV13
-	 ffvhAwDpaokzUFibfoNH/DF0Cz5xJrRHXgSWNnSxA2BQ6sRYGoGh4+BiymwVsrJQOE
-	 45FQgofEFd/XSEcXM0YcPnOOdauFYW9EsbvWWrsDobt0S65ekLriVi85zqsnbwUcz5
-	 Xgcbq0WbDJilQ==
+	b=dtSLrMZHzqeb1DB++JWe/RL0EQTDnFS8kgS9q38yCZXDeltyDccglm8wmpeSjnxtS
+	 ORLUfZNrL3DeAuw5SXpuOV7Prn59n55MlOUm47JsgbH+tp0j4UkX7OMWtbR32v2YwL
+	 jSVbHJ+iul69xuuAtLUefSDr/FXDjijOijYL4syGsBdwVVSzm+lvMIXcHnrwAsRZC4
+	 0lqvCuv2upHxmWp7+uF22EpZRpfM/fC7gQCmdBFIhirrejWUza292G1rdKWgNwPEZH
+	 sl0KhE+VwN+eZZBhjBZgemNaY656g20txlVpsSw5sCF00s0ckITSm+aQUaVAp4ft4Z
+	 DMtLlTLx+y5pA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNp22x10z3cJ6
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:14:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNpG19D3z3c60
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:14:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=EDfCdETq;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=YUtSHImz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::42a; helo=mail-pf1-x42a.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNnz1w75z2y1b
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:13:59 +1000 (AEST)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-686f6231bdeso113895b3a.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:13:59 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNpC26v4z2xq7
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:14:11 +1000 (AEST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6748a616e17so183924b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:14:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690445637; x=1691050437;
+        d=1e100.net; s=20221208; t=1690445649; x=1691050449;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wkWZ9/xaCXa97bQ5JXnZc5xW9B3SNGrJMT1hKcCw6ws=;
-        b=Upe24z5Rn4FbL1xL3r2VGG4vRCqTaiooLdHG+v5hyb8o/dAWr4lZ+prN9gXzMIlGqT
-         4LeFP+Y4yr+LgjkTqDGVelXIJBdYp1Ynyp+GFX4AcMfh8hidM2L/vdPxwhmh3vmFQgt4
-         Em5R+4rUO6E9uoVTaIAWKwLpbGIWjzCphhtq8idiQGF2Qe10ZhMzaKBGEi0iqzyauDUN
-         Jrf+sitcDxMOdQxQeMSm+SXI8q0QJ/3tNj5jKrIsJXEINs8ZaZMzX56ICfI+xOxHFV4j
-         tPzIZVvrlld+NPGgF3eecW5CTSxrQn6Vksf/jVkf6j/Njt5EbCR1KPpXeLFuKPiNu1Yj
-         gaUg==
-X-Gm-Message-State: ABy/qLbMU1QLk41ZdqZ/McmjuyY2vxXycv0Mq9hnaFJlXU2GV0+JfmZ7
-	hg8BsNOWI3AJG8MRyU52mX0UeA==
-X-Google-Smtp-Source: APBJJlHv3kehM44VAWCca2syD2CKM7i434EcumRqZh5gO/U3rxv+9ZnIssQP5Ien17rj+O8gWl3H0Q==
-X-Received: by 2002:a05:6a00:1586:b0:67f:8ef5:2643 with SMTP id u6-20020a056a00158600b0067f8ef52643mr5213351pfk.2.1690445637383;
-        Thu, 27 Jul 2023 01:13:57 -0700 (PDT)
+        bh=sPvPF+4cfnCSPpn5pwfgQmnhLHHD8eUNQAmayNodhE0=;
+        b=GV3pLYogwWZ9iglR1RBwl8RfKiPo2wjjt1+MPEWJE8GeSL1aXePkqhYCmUVfWhEkR+
+         gb9nTTVSN4KDi3k76ADMXcLXQtS8jeGQ2roD8l+jssVuuAPRn0YYnczcfbcJmvFikZBj
+         GR3lEQau8HGWOJLKfCg53TmgItOpFclUAJgsruipZyQymz8WZ2xwLBBPnsRWG+SBIQ1s
+         x4/95JwfHYDVncY8vlWWfAAZ6TZifNPtWKt0wOu1D83S5Yw3CAiy8RK6WNkwTrPI114t
+         EEOlRLj9Ue49K7yPWybyQn2TTvle0d9ku9E0llP2EMXUL3N2DuQNmQxcCKptyc1Pb5a1
+         yjVA==
+X-Gm-Message-State: ABy/qLYnjRN5AAU19Bkyp078i4wGCFsruHZknMmnq7ki4VjjqqwRICik
+	/ikIlnFl0AO0dqSPqFQTH7oiMg==
+X-Google-Smtp-Source: APBJJlHWG/nG8cYGh+bA6ihiUuY1h+OmDGzY+AfGFIW0cwXlJC7qa3aS8ftT4KQ6i8EuYK6gaQtAEg==
+X-Received: by 2002:a05:6a20:918e:b0:11a:dbb3:703b with SMTP id v14-20020a056a20918e00b0011adbb3703bmr5557054pzd.6.1690445649366;
+        Thu, 27 Jul 2023 01:14:09 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.13.45
+        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 01:13:57 -0700 (PDT)
+        Thu, 27 Jul 2023 01:14:08 -0700 (PDT)
 To: akpm@linux-foundation.org,
 	david@fromorbit.com,
 	tkhai@ya.ru,
@@ -69,9 +69,9 @@ To: akpm@linux-foundation.org,
 	yujie.liu@intel.com,
 	gregkh@linuxfoundation.org,
 	muchun.song@linux.dev
-Subject: [PATCH v3 40/49] xfs: dynamically allocate the xfs-qm shrinker
-Date: Thu, 27 Jul 2023 16:04:53 +0800
-Message-Id: <20230727080502.77895-41-zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 41/49] zsmalloc: dynamically allocate the mm-zspool shrinker
+Date: Thu, 27 Jul 2023 16:04:54 +0800
+Message-Id: <20230727080502.77895-42-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
 References: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
@@ -95,90 +95,81 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 In preparation for implementing lockless slab shrink, use new APIs to
-dynamically allocate the xfs-qm shrinker, so that it can be freed
+dynamically allocate the mm-zspool shrinker, so that it can be freed
 asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
-read-side critical section when releasing the struct xfs_quotainfo.
+read-side critical section when releasing the struct zs_pool.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 ---
- fs/xfs/xfs_qm.c | 26 +++++++++++++-------------
- fs/xfs/xfs_qm.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ mm/zsmalloc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 6abcc34fafd8..032f0a208bd2 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -504,8 +504,7 @@ xfs_qm_shrink_scan(
- 	struct shrinker		*shrink,
- 	struct shrink_control	*sc)
- {
--	struct xfs_quotainfo	*qi = container_of(shrink,
--					struct xfs_quotainfo, qi_shrinker);
-+	struct xfs_quotainfo	*qi = shrink->private_data;
- 	struct xfs_qm_isolate	isol;
- 	unsigned long		freed;
- 	int			error;
-@@ -539,8 +538,7 @@ xfs_qm_shrink_count(
- 	struct shrinker		*shrink,
- 	struct shrink_control	*sc)
- {
--	struct xfs_quotainfo	*qi = container_of(shrink,
--					struct xfs_quotainfo, qi_shrinker);
-+	struct xfs_quotainfo	*qi = shrink->private_data;
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index b96230402a8d..e63302e07c97 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -229,7 +229,7 @@ struct zs_pool {
+ 	struct zs_pool_stats stats;
  
- 	return list_lru_shrink_count(&qi->qi_lru, sc);
+ 	/* Compact classes */
+-	struct shrinker shrinker;
++	struct shrinker *shrinker;
+ 
+ #ifdef CONFIG_ZSMALLOC_STAT
+ 	struct dentry *stat_dentry;
+@@ -2086,8 +2086,7 @@ static unsigned long zs_shrinker_scan(struct shrinker *shrinker,
+ 		struct shrink_control *sc)
+ {
+ 	unsigned long pages_freed;
+-	struct zs_pool *pool = container_of(shrinker, struct zs_pool,
+-			shrinker);
++	struct zs_pool *pool = shrinker->private_data;
+ 
+ 	/*
+ 	 * Compact classes and calculate compaction delta.
+@@ -2105,8 +2104,7 @@ static unsigned long zs_shrinker_count(struct shrinker *shrinker,
+ 	int i;
+ 	struct size_class *class;
+ 	unsigned long pages_to_free = 0;
+-	struct zs_pool *pool = container_of(shrinker, struct zs_pool,
+-			shrinker);
++	struct zs_pool *pool = shrinker->private_data;
+ 
+ 	for (i = ZS_SIZE_CLASSES - 1; i >= 0; i--) {
+ 		class = pool->size_class[i];
+@@ -2121,18 +2119,24 @@ static unsigned long zs_shrinker_count(struct shrinker *shrinker,
+ 
+ static void zs_unregister_shrinker(struct zs_pool *pool)
+ {
+-	unregister_shrinker(&pool->shrinker);
++	shrinker_free(pool->shrinker);
  }
-@@ -680,16 +678,18 @@ xfs_qm_init_quotainfo(
- 	if (XFS_IS_PQUOTA_ON(mp))
- 		xfs_qm_set_defquota(mp, XFS_DQTYPE_PROJ, qinf);
  
--	qinf->qi_shrinker.count_objects = xfs_qm_shrink_count;
--	qinf->qi_shrinker.scan_objects = xfs_qm_shrink_scan;
--	qinf->qi_shrinker.seeks = DEFAULT_SEEKS;
--	qinf->qi_shrinker.flags = SHRINKER_NUMA_AWARE;
--
--	error = register_shrinker(&qinf->qi_shrinker, "xfs-qm:%s",
--				  mp->m_super->s_id);
--	if (error)
-+	qinf->qi_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE, "xfs-qm:%s",
-+					   mp->m_super->s_id);
-+	if (!qinf->qi_shrinker)
- 		goto out_free_inos;
- 
-+	qinf->qi_shrinker->count_objects = xfs_qm_shrink_count;
-+	qinf->qi_shrinker->scan_objects = xfs_qm_shrink_scan;
-+	qinf->qi_shrinker->seeks = DEFAULT_SEEKS;
-+	qinf->qi_shrinker->private_data = qinf;
+ static int zs_register_shrinker(struct zs_pool *pool)
+ {
+-	pool->shrinker.scan_objects = zs_shrinker_scan;
+-	pool->shrinker.count_objects = zs_shrinker_count;
+-	pool->shrinker.batch = 0;
+-	pool->shrinker.seeks = DEFAULT_SEEKS;
++	pool->shrinker = shrinker_alloc(0, "mm-zspool:%s", pool->name);
++	if (!pool->shrinker)
++		return -ENOMEM;
 +
-+	shrinker_register(qinf->qi_shrinker);
++	pool->shrinker->scan_objects = zs_shrinker_scan;
++	pool->shrinker->count_objects = zs_shrinker_count;
++	pool->shrinker->batch = 0;
++	pool->shrinker->seeks = DEFAULT_SEEKS;
++	pool->shrinker->private_data = pool;
+ 
+-	return register_shrinker(&pool->shrinker, "mm-zspool:%s",
+-				 pool->name);
++	shrinker_register(pool->shrinker);
 +
- 	return 0;
++	return 0;
+ }
  
- out_free_inos:
-@@ -718,7 +718,7 @@ xfs_qm_destroy_quotainfo(
- 	qi = mp->m_quotainfo;
- 	ASSERT(qi != NULL);
- 
--	unregister_shrinker(&qi->qi_shrinker);
-+	shrinker_free(qi->qi_shrinker);
- 	list_lru_destroy(&qi->qi_lru);
- 	xfs_qm_destroy_quotainos(qi);
- 	mutex_destroy(&qi->qi_tree_lock);
-diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-index 9683f0457d19..d5c9fc4ba591 100644
---- a/fs/xfs/xfs_qm.h
-+++ b/fs/xfs/xfs_qm.h
-@@ -63,7 +63,7 @@ struct xfs_quotainfo {
- 	struct xfs_def_quota	qi_usr_default;
- 	struct xfs_def_quota	qi_grp_default;
- 	struct xfs_def_quota	qi_prj_default;
--	struct shrinker		qi_shrinker;
-+	struct shrinker		*qi_shrinker;
- 
- 	/* Minimum and maximum quota expiration timestamp values. */
- 	time64_t		qi_expiry_min;
+ static int calculate_zspage_chain_size(int class_size)
 -- 
 2.30.2
 
