@@ -1,38 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 250A676452E
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 06:58:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B45F764683
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 08:12:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBJRr0hy7z3cLV
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 14:58:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBL5j3bGcz3c3C
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 16:12:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBJRC3MCsz3c3c
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 14:57:27 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VoJALXg_1690433842;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VoJALXg_1690433842)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBL5b1Bbgz3bX2
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 16:12:17 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VoJV66S_1690438331;
+Received: from 30.97.49.7(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VoJV66S_1690438331)
           by smtp.aliyun-inc.com;
-          Thu, 27 Jul 2023 12:57:23 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	huyue2@coolpad.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 9/9] erofs-utils: introduce union mode
-Date: Thu, 27 Jul 2023 12:57:12 +0800
-Message-Id: <20230727045712.45226-9-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230727045712.45226-1-jefflexu@linux.alibaba.com>
-References: <20230727045712.45226-1-jefflexu@linux.alibaba.com>
+          Thu, 27 Jul 2023 14:12:12 +0800
+Message-ID: <decd1dd2-c248-674f-1c1e-1e4922589cb0@linux.alibaba.com>
+Date: Thu, 27 Jul 2023 14:12:11 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH 6/9] erofs-utils: add inode hash helper
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, chao@kernel.org,
+ huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+References: <20230727045712.45226-1-jefflexu@linux.alibaba.com>
+ <20230727045712.45226-6-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230727045712.45226-6-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -47,796 +48,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce a new "union "mode for mkfs.erofs.
 
-The new mode merges multiple erofs images into a new erofs image.  It
-can be enabled with [--union] option.
 
-Currently it is mainly used to merge images generated from tarerofs
-mode, with following special handling:
+On 2023/7/27 12:57, Jingbo Xu wrote:
+> Add erofs_insert_ihash() helper inserting inode into inode hash table,
+> and erofs_cleanup_ihash() helper cleaning up inode hash table.
+> 
+> Also add prototypes of erofs_iget() and erofs_iget_by_nid() in the
+> header file.
+> 
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>   include/erofs/inode.h |  4 ++++
+>   lib/inode.c           | 22 +++++++++++++++++++---
+>   2 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+> index e8a5670..aba2a94 100644
+> --- a/include/erofs/inode.h
+> +++ b/include/erofs/inode.h
+> @@ -25,6 +25,10 @@ u32 erofs_new_encode_dev(dev_t dev);
+>   unsigned char erofs_mode_to_ftype(umode_t mode);
+>   unsigned char erofs_ftype_to_dtype(unsigned int filetype);
+>   void erofs_inode_manager_init(void);
+> +void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
+> +void erofs_cleanup_ihash(void);
+> +struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
+> +struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
+>   unsigned int erofs_iput(struct erofs_inode *inode);
+>   erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
+>   struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+> diff --git a/lib/inode.c b/lib/inode.c
+> index d54f84f..d82ea95 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -75,6 +75,24 @@ void erofs_inode_manager_init(void)
+>   		init_list_head(&inode_hashtable[i]);
+>   }
+>   
+> +void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
+> +{
+> +	list_add(&inode->i_hash,
+> +		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
+> +}
+> +
+> +void erofs_cleanup_ihash(void)
+> +{
+> +	unsigned int i;
+> +	struct erofs_inode *inode, *n;
+> +
+> +	for (i = 0; i < NR_INODE_HASHTABLE; ++i) {
+> +		list_for_each_entry_safe(inode, n, &inode_hashtable[i], i_hash)
 
-- whiteout and opaque directory (marked with "trusted.overlay.opaque"
-  xattr) are specially handled to fit the overlayfs model.
-- data of regular file is handled in fallocate like style, i.e. the
-  space is allocated in the image for the file data, while the file
-  content is not written to the image.  In this way the erofs image only
-  offers metadata and it depends on other container image orchestra to
-  help derive the corresponding file data somehow.
+Why are there still inodes here? I think we should just check:
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
----
- include/erofs/config.h   |   4 +
- include/erofs/inode.h    |   1 +
- include/erofs/internal.h |  16 +++
- include/erofs/union.h    |  20 +++
- lib/Makefile.am          |   4 +-
- lib/config.c             |  33 +++++
- lib/inode.c              |  95 +++++++++++++-
- lib/tar.c                |   2 -
- lib/union.c              | 266 +++++++++++++++++++++++++++++++++++++++
- mkfs/Makefile.am         |   3 +-
- mkfs/main.c              |  81 ++++++++----
- 11 files changed, 496 insertions(+), 29 deletions(-)
- create mode 100644 include/erofs/union.h
- create mode 100644 lib/union.c
+DBG_BUGON(!list_empty(&inode_hashtable[i]));
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 8f52d2c..bef7085 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -53,6 +53,7 @@ struct erofs_configure {
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
- 	bool c_extra_ea_name_prefixes;
-+	bool c_union;
- 
- #ifdef HAVE_LIBSELINUX
- 	struct selabel_handle *sehnd;
-@@ -107,6 +108,9 @@ static inline int erofs_selabel_open(const char *file_contexts)
- void erofs_update_progressinfo(const char *fmt, ...);
- char *erofs_trim_for_progressinfo(const char *str, int placeholder);
- 
-+int erofs_insert_img(const char *path);
-+void erofs_cleanup_imgs(void);
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index aba2a94..00ecf97 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -34,6 +34,7 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- 				   const char *name);
- int tarerofs_dump_tree(struct erofs_inode *dir);
-+int erofs_union_dump_tree(struct erofs_inode *dir);
- int erofs_init_empty_dir(struct erofs_inode *dir);
- struct erofs_inode *erofs_new_inode(void);
- struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path);
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 83a2e22..b690a1e 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -44,6 +44,8 @@ typedef u32 erofs_blk_t;
- /* global sbi */
- extern struct erofs_sb_info sbi;
- 
-+extern struct list_head imgs_list;
-+
- #define erofs_blksiz(sbi)	(1u << (sbi)->blkszbits)
- #define erofs_blknr(sbi, addr)  ((addr) >> (sbi)->blkszbits)
- #define erofs_blkoff(sbi, addr) ((addr) & (erofs_blksiz(sbi) - 1))
-@@ -69,6 +71,9 @@ struct erofs_sb_info {
- 	erofs_blk_t meta_blkaddr;
- 	erofs_blk_t xattr_blkaddr;
- 
-+	erofs_blk_t data_blkaddr;
-+	unsigned long data_blks;
-+
- 	u32 feature_compat;
- 	u32 feature_incompat;
- 	u64 build_time;
-@@ -136,6 +141,8 @@ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- #define EROFS_I_EA_INITED	(1 << 0)
- #define EROFS_I_Z_INITED	(1 << 1)
- 
-+#define S_SHIFT                 12
-+
- struct erofs_inode {
- 	struct list_head i_hash, i_subdirs, i_xattrs;
- 
-@@ -183,6 +190,7 @@ struct erofs_inode {
- 	bool compressed_idata;
- 	bool lazy_tailblock;
- 	bool with_tmpfile;
-+	bool remap_blkaddr;
- 
- 	unsigned int xattr_isize;
- 	unsigned int extent_isize;
-@@ -415,6 +423,14 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
- 	return crc;
- }
- 
-+#define EROFS_WHITEOUT_DEV	0
-+
-+struct erofs_img {
-+	struct list_head list;
-+	char *path;
-+	struct erofs_sb_info sbi;
-+};
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/include/erofs/union.h b/include/erofs/union.h
-new file mode 100644
-index 0000000..999a20c
---- /dev/null
-+++ b/include/erofs/union.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+#ifndef __EROFS_UNION_H
-+#define __EROFS_UNION_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "internal.h"
-+
-+struct erofs_inode *erofs_union_load_imgs(void);
-+int erofs_union_dump_tree(struct erofs_inode *dir);
-+int erofs_union_remap(struct erofs_sb_info *sbi);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index ebe466b..b8af149 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -24,13 +24,15 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/xattr.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-       $(top_srcdir)/include/erofs/fragments.h \
-+      $(top_srcdir)/include/erofs/union.h \
-       $(top_srcdir)/lib/liberofs_private.h
- 
- noinst_HEADERS += compressor.h
- liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
- 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
--		      fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c tar.c
-+		      fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c tar.c \
-+		      union.c
- 
- liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
- if ENABLE_LZ4
-diff --git a/lib/config.c b/lib/config.c
-index a3235c8..cc214ae 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -17,6 +17,8 @@
- struct erofs_configure cfg;
- struct erofs_sb_info sbi;
- 
-+LIST_HEAD(imgs_list);
-+
- void erofs_init_configure(void)
- {
- 	memset(&cfg, 0, sizeof(cfg));
-@@ -158,3 +160,34 @@ void erofs_update_progressinfo(const char *fmt, ...)
- 	__erofs_is_progressmsg = true;
- 	fflush(stdout);
- }
-+
-+int erofs_insert_img(const char *path)
-+{
-+	struct erofs_img *img;
-+
-+	img = malloc(sizeof(*img));
-+	if (!img)
-+		return -ENOMEM;
-+
-+	img->path = realpath(path, NULL);
-+	if (!img->path) {
-+		erofs_err("failed to parse image file (%s): %s",
-+				path, erofs_strerror(-errno));
-+		free(img);
-+		return -ENOENT;
-+	}
-+
-+	list_add_tail(&img->list, &imgs_list);
-+	return 0;
-+}
-+
-+void erofs_cleanup_imgs(void)
-+{
-+	struct erofs_img *img, *n;
-+
-+	list_for_each_entry_safe(img, n, &imgs_list, list) {
-+		list_del(&img->list);
-+		free(img->path);
-+		free(img);
-+	}
-+}
-diff --git a/lib/inode.c b/lib/inode.c
-index d82ea95..0a56f3b 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -26,9 +26,10 @@
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
- #include "erofs/fragments.h"
-+#include "erofs/dir.h"
-+#include "erofs/tar.h"
- #include "liberofs_private.h"
- 
--#define S_SHIFT                 12
- static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
- 	[S_IFREG >> S_SHIFT]  = EROFS_FT_REG_FILE,
- 	[S_IFDIR >> S_SHIFT]  = EROFS_FT_DIR,
-@@ -508,6 +509,9 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- 	} u = { {0}, };
- 	int ret;
- 
-+	if (inode->remap_blkaddr)
-+		inode->u.i_blkaddr += inode->sbi->data_blkaddr;
-+
- 	switch (inode->inode_isize) {
- 	case sizeof(struct erofs_inode_compact):
- 		u.dic.i_format = cpu_to_le16(0 | (inode->datalayout << 1));
-@@ -1414,3 +1418,92 @@ int tarerofs_dump_tree(struct erofs_inode *dir)
- 	dir->bh->op = &erofs_write_inode_bhops;
- 	return 0;
- }
-+
-+static bool erofs_inode_is_whiteout(struct erofs_inode *inode)
-+{
-+	return S_ISCHR(inode->i_mode) && inode->u.i_rdev == EROFS_WHITEOUT_DEV;
-+}
-+
-+int erofs_union_dump_tree(struct erofs_inode *dir)
-+{
-+	struct erofs_dentry *d, *n;
-+	unsigned int nr_subdirs;
-+	int ret;
-+
-+	if (erofs_should_use_inode_extended(dir)) {
-+		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
-+			erofs_err("file %s cannot be in compact form",
-+				  dir->i_srcpath);
-+			return -EINVAL;
-+		}
-+		dir->inode_isize = sizeof(struct erofs_inode_extended);
-+	} else {
-+		dir->inode_isize = sizeof(struct erofs_inode_compact);
-+	}
-+
-+	ret = erofs_prepare_xattr_ibody(dir);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!S_ISDIR(dir->i_mode)) {
-+		if (dir->bh)
-+			return 0;
-+		if (S_ISLNK(dir->i_mode)) {
-+			ret = erofs_write_file_from_buffer(dir, dir->i_link);
-+			if (ret)
-+				return ret;
-+			free(dir->i_link);
-+			dir->i_link = NULL;
-+		}
-+		ret = erofs_prepare_inode_buffer(dir);
-+		if (ret)
-+			return ret;
-+		erofs_write_tail_end(dir);
-+		return 0;
-+	}
-+
-+	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
-+		if (erofs_inode_is_whiteout(d->inode)) {
-+			erofs_dbg("file %s: skip whiteout", d->inode->i_srcpath);
-+			erofs_d_invalidate(d);
-+			list_del(&d->d_child);
-+			free(d);
-+			continue;
-+		}
-+	}
-+
-+	nr_subdirs = 0;
-+	list_for_each_entry(d, &dir->i_subdirs, d_child)
-+		++nr_subdirs;
-+
-+	ret = erofs_prepare_dir_layout(dir, nr_subdirs);
-+	if (ret)
-+		return ret;
-+
-+	ret = erofs_prepare_inode_buffer(dir);
-+	if (ret)
-+		return ret;
-+	dir->bh->op = &erofs_skip_write_bhops;
-+
-+	if (IS_ROOT(dir))
-+		erofs_fixup_meta_blkaddr(dir);
-+
-+	list_for_each_entry(d, &dir->i_subdirs, d_child) {
-+		struct erofs_inode *inode;
-+
-+		if (is_dot_dotdot(d->name))
-+			continue;
-+
-+		inode = erofs_igrab(d->inode);
-+		ret = erofs_union_dump_tree(inode);
-+		if (erofs_mode_to_ftype(inode->i_mode) == EROFS_FT_DIR)
-+			dir->i_nlink++;
-+		erofs_iput(inode);
-+		if (ret)
-+			return ret;
-+	}
-+	erofs_write_dir_file(dir);
-+	erofs_write_tail_end(dir);
-+	dir->bh->op = &erofs_write_inode_bhops;
-+	return 0;
-+}
-diff --git a/lib/tar.c b/lib/tar.c
-index 10ae89c..51af638 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -19,8 +19,6 @@
- #include "erofs/xattr.h"
- #include "erofs/blobchunk.h"
- 
--#define EROFS_WHITEOUT_DEV	0
--
- static char erofs_libbuf[16384];
- 
- struct tar_header {
-diff --git a/lib/union.c b/lib/union.c
-new file mode 100644
-index 0000000..15c546c
---- /dev/null
-+++ b/lib/union.c
-@@ -0,0 +1,266 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+#define _GNU_SOURCE
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include "erofs/print.h"
-+#include "erofs/cache.h"
-+#include "erofs/tar.h"
-+#include "erofs/inode.h"
-+#include "erofs/io.h"
-+#include "erofs/xattr.h"
-+#include "erofs/dir.h"
-+#include "erofs/internal.h"
-+
-+struct erofs_union_dir_context {
-+	struct erofs_dir_context ctx;
-+	struct erofs_inode *root;
-+};
-+
-+static int erofs_union_fill_inode(struct erofs_inode *inode,
-+				  struct erofs_inode *vi)
-+{
-+	int ret = 0;
-+
-+	inode->i_srcpath = strdup(vi->i_srcpath);
-+	inode->i_mode = vi->i_mode;
-+	inode->i_uid = vi->i_uid;
-+	inode->i_gid = vi->i_gid;
-+	inode->i_mtime = vi->i_mtime;
-+	inode->i_ino[1] = vi->i_ino[0];
-+	inode->i_nlink = 1;
-+
-+	switch (inode->i_mode & S_IFMT) {
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFIFO:
-+	case S_IFSOCK:
-+		inode->u.i_rdev = erofs_new_encode_dev(vi->u.i_rdev);
-+		inode->i_size = 0;
-+		erofs_dbg("\tdev: %d %d", major(vi->u.i_rdev),
-+			  minor(vi->u.i_rdev));
-+		break;
-+	case S_IFDIR:
-+		inode->i_size = 0;
-+		ret = erofs_init_empty_dir(inode);
-+		break;
-+	case S_IFLNK:
-+		inode->i_size = vi->i_size;
-+		inode->i_link = malloc(inode->i_size + 1);
-+		ret = erofs_pread(vi, inode->i_link, inode->i_size, 0);
-+		erofs_dbg("\tsymlink: %s -> %s", inode->i_srcpath, inode->i_link);
-+		break;
-+	case S_IFREG:
-+		inode->i_size = vi->i_size;
-+		if (inode->i_size) {
-+			inode->u.i_blkaddr = inode->sbi->data_blks;
-+			inode->sbi->data_blks += BLK_ROUND_UP(inode->sbi,
-+							      inode->i_size);
-+			inode->remap_blkaddr = true;
-+		} else {
-+			inode->u.i_blkaddr = NULL_ADDR;
-+		}
-+		erofs_dbg("\tregfile: i_blkaddr %d, i_size %d",
-+			  inode->u.i_blkaddr, inode->i_size);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+
-+static int erofs_union_dirent_iter(struct erofs_dir_context *ctx)
-+{
-+	struct erofs_union_dir_context *uctx = (void *)ctx;
-+	struct erofs_inode *dir = ctx->dir;
-+	struct erofs_sb_info *sbi = dir->sbi;
-+	struct erofs_inode *inode, vi = {};
-+	struct erofs_dentry *d;
-+	char *path;
-+	int ret;
-+
-+	if (ctx->dot_dotdot)
-+		return 0;
-+
-+	vi.nid = ctx->de_nid;
-+	vi.sbi = sbi;
-+	ret = erofs_read_inode_from_disk(&vi);
-+	if (ret) {
-+		erofs_err("file %s/%.*s: read failed",
-+			  dir->i_srcpath, ctx->de_namelen, ctx->dname);
-+		return ret;
-+	}
-+
-+	ret = asprintf(&path, "%s/%.*s", dir->i_srcpath, ctx->de_namelen,
-+		       ctx->dname);
-+	if (ret < 0) {
-+		erofs_err("file %s/%.*s: failed to alloc path",
-+			  dir->i_srcpath, ctx->de_namelen, ctx->dname);
-+		return ret;
-+	}
-+	vi.i_srcpath = path;
-+
-+	d = erofs_get_dentry(uctx->root, path, false, NULL, NULL);
-+	if (IS_ERR(d)) {
-+		ret = PTR_ERR(d);
-+		goto exit;
-+	}
-+
-+	if (d->type != EROFS_FT_UNKNOWN) {
-+		inode = d->inode;
-+		DBG_BUGON((inode->i_mode & S_IFMT) != (vi.i_mode & S_IFMT));
-+		if (!S_ISDIR(inode->i_mode) || inode->opaque) {
-+			erofs_dbg("file %s: %s (%d) exists",
-+				  path, inode->i_srcpath,
-+				  erofs_mode_to_ftype(inode->i_mode));
-+			free(path);
-+			return 0;
-+		}
-+		erofs_dbg("dir %s: %s merging", path, inode->i_srcpath);
-+	} else {
-+		erofs_dbg("loading file: %s (%d) (nid %llu)",
-+			  path, erofs_mode_to_ftype(vi.i_mode), ctx->de_nid);
-+		if (S_ISREG(vi.i_mode) && vi.i_nlink > 1 &&
-+		    (inode = erofs_iget(0, vi.i_ino[0]))) {
-+			/* hardlink file */
-+			if (S_ISDIR(inode->i_mode)) {
-+				erofs_dbg("hardlink directory not supported");
-+				erofs_iput(inode);
-+				return -EISDIR;
-+			}
-+			inode->i_nlink++;
-+			erofs_dbg("\thardlink: %s -> %s",
-+				  vi.i_srcpath, inode->i_srcpath);
-+		} else {
-+			inode = erofs_new_inode();
-+			if (IS_ERR(inode)) {
-+				ret = PTR_ERR(inode);
-+				goto exit;
-+			}
-+
-+			inode->i_parent = d->inode;
-+			ret = erofs_union_fill_inode(inode, &vi);
-+			if (ret)
-+				goto exit_inode;
-+
-+			ret = erofs_read_xattrs_from_disk(&vi);
-+			if (ret)
-+				goto exit_inode;
-+			list_splice_tail(&vi.i_xattrs, &inode->i_xattrs);
-+			erofs_inode_tag_opaque(inode);
-+
-+			/* build per-image hash table for hardlink querying */
-+			erofs_insert_ihash(inode, 0, inode->i_ino[1]);
-+		}
-+
-+		d->inode = inode;
-+		d->type = erofs_mode_to_ftype(inode->i_mode);
-+	}
-+
-+	ret = 0;
-+	if (S_ISDIR(vi.i_mode)) {
-+		struct erofs_union_dir_context nctx = {
-+			.ctx.dir = &vi,
-+			.ctx.cb = erofs_union_dirent_iter,
-+			.root = uctx->root,
-+		};
-+		ret = erofs_iterate_dir(&nctx.ctx, false);
-+	}
-+exit:
-+	free(path);
-+	return ret;
-+exit_inode:
-+	erofs_iput(inode);
-+	goto exit;
-+}
-+
-+static int erofs_union_load_img(struct erofs_inode *root, struct erofs_img *img)
-+{
-+	struct erofs_inode inode = {};
-+	struct erofs_sb_info *sbi = &img->sbi;
-+	struct erofs_union_dir_context ctx;
-+	int ret;
-+
-+	erofs_dbg("Loading image %s...", img->path);
-+	ret = dev_open_ro(sbi, img->path);
-+	if (ret) {
-+		erofs_err("failed to open image %s", img->path);
-+		return ret;
-+	}
-+
-+	ret = erofs_read_superblock(sbi);
-+	if (ret) {
-+		erofs_err("failed to read superblock of image %s", img->path);
-+		goto exit;
-+	}
-+
-+	inode.nid = sbi->root_nid;
-+	inode.sbi = sbi;
-+	ret = erofs_read_inode_from_disk(&inode);
-+	if (ret) {
-+		erofs_err("failed to read root inode of image %s", img->path);
-+		goto exit;
-+	}
-+	inode.i_srcpath = strdup("/");
-+
-+	ctx = (struct erofs_union_dir_context) {
-+		.ctx.dir = &inode,
-+		.ctx.cb = erofs_union_dirent_iter,
-+		.root = root,
-+	};
-+	ret = erofs_iterate_dir(&ctx.ctx, false);
-+exit:
-+	erofs_cleanup_ihash();
-+	dev_close(sbi);
-+	return ret;
-+}
-+
-+struct erofs_inode *erofs_union_load_imgs(void)
-+{
-+	struct erofs_img *img;
-+	struct erofs_inode *root;
-+	int ret;
-+
-+	sbi.data_blks = 0;
-+
-+	root = erofs_new_inode();
-+	if (IS_ERR(root))
-+		return root;
-+	root->i_srcpath = strdup("/");
-+	root->i_mode = S_IFDIR | 0777;
-+	root->i_parent = root;
-+	root->i_mtime = root->sbi->build_time;
-+	root->i_mtime_nsec = root->sbi->build_time_nsec;
-+	erofs_init_empty_dir(root);
-+
-+	list_for_each_entry(img, &imgs_list, list) {
-+		ret = erofs_union_load_img(root, img);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+	return root;
-+}
-+
-+int erofs_union_remap(struct erofs_sb_info *sbi)
-+{
-+	struct erofs_buffer_head *bh;
-+	int ret;
-+
-+	if (!sbi->data_blks)
-+		return 0;
-+
-+	bh = erofs_balloc(DATA, erofs_pos(sbi, sbi->data_blks), 0, 0);
-+	if (IS_ERR(bh))
-+		return PTR_ERR(bh);
-+
-+	ret = erofs_mapbh(bh->block);
-+	DBG_BUGON(ret < 0);
-+
-+	sbi->data_blkaddr = erofs_blknr(sbi, erofs_btell(bh, false));
-+	erofs_dbg("data blkaddr %d, blks %d", sbi->data_blkaddr, sbi->data_blks);
-+	bh->op = &erofs_drop_directly_bhops;
-+	erofs_bdrop(bh, false);
-+	return 0;
-+}
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index 603c2f3..dd75485 100644
---- a/mkfs/Makefile.am
-+++ b/mkfs/Makefile.am
-@@ -6,4 +6,5 @@ AM_CPPFLAGS = ${libselinux_CFLAGS}
- mkfs_erofs_SOURCES = main.c
- mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${libdeflate_LIBS}
-+	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} \
-+	${libdeflate_LIBS}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index bc5ed87..4a47b24 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -26,6 +26,7 @@
- #include "erofs/compress_hints.h"
- #include "erofs/blobchunk.h"
- #include "erofs/fragments.h"
-+#include "erofs/union.h"
- #include "../lib/liberofs_private.h"
- #include "../lib/liberofs_uuid.h"
- 
-@@ -56,6 +57,7 @@ static struct option long_options[] = {
- 	{"gid-offset", required_argument, NULL, 17},
- 	{"tar", optional_argument, NULL, 20},
- 	{"aufs", no_argument, NULL, 21},
-+	{"union", no_argument, NULL, 22},
- 	{"mount-point", required_argument, NULL, 512},
- 	{"xattr-prefix", required_argument, NULL, 19},
- #ifdef WITH_ANDROID
-@@ -112,6 +114,7 @@ static void usage(void)
- 	      " --preserve-mtime      keep per-file modification time strictly\n"
- 	      " --aufs                replace aufs special files with overlayfs metadata\n"
- 	      " --tar=[fi]            generate an image from tarball(s)\n"
-+	      " --union               generate a merged image from multiple erofs images\n"
- 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
-@@ -491,6 +494,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 21:
- 			erofstar.aufs = true;
- 			break;
-+		case 22:
-+			cfg.c_union = true;
-+			break;
- 		case 1:
- 			usage();
- 			exit(0);
-@@ -522,13 +528,26 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		return -ENOMEM;
- 
- 	if (optind >= argc) {
--		if (!tar_mode) {
--			erofs_err("missing argument: DIRECTORY");
-+		if (tar_mode) {
-+			erofstar.fd = STDIN_FILENO;
-+		} else if (cfg.c_union) {
-+			erofs_err("missing argument: IMAGES");
- 			return -EINVAL;
- 		} else {
--			erofstar.fd = STDIN_FILENO;
-+			erofs_err("missing argument: DIRECTORY");
-+			return -EINVAL;
- 		}
--	}else {
-+	} else if (cfg.c_union) {
-+		while (optind < argc) {
-+			opt = erofs_insert_img(argv[optind++]);
-+			if (opt) {
-+				erofs_err("failed to parse image file: %s",
-+						erofs_strerror(-errno));
-+				erofs_cleanup_imgs();
-+				return -ENOENT;
-+			}
-+		}
-+	} else {
- 		cfg.c_src_path = realpath(argv[optind++], NULL);
- 		if (!cfg.c_src_path) {
- 			erofs_err("failed to parse source directory: %s",
-@@ -754,7 +773,7 @@ int main(int argc, char **argv)
- 		return 1;
- 	}
- 
--	if (!tar_mode) {
-+	if (!tar_mode && !cfg.c_union) {
- 		err = lstat(cfg.c_src_path, &st);
- 		if (err)
- 			return 1;
-@@ -901,23 +920,7 @@ int main(int argc, char **argv)
- 	if (cfg.c_extra_ea_name_prefixes)
- 		erofs_xattr_write_name_prefixes(&sbi, packedfile);
- 
--	if (!tar_mode) {
--		err = erofs_build_shared_xattrs_from_path(&sbi, cfg.c_src_path);
--		if (err) {
--			erofs_err("failed to build shared xattrs: %s",
--				  erofs_strerror(err));
--			goto exit;
--		}
--
--		if (cfg.c_extra_ea_name_prefixes)
--			erofs_xattr_write_name_prefixes(&sbi, packedfile);
--
--		root_inode = erofs_mkfs_build_tree_from_path(cfg.c_src_path);
--		if (IS_ERR(root_inode)) {
--			err = PTR_ERR(root_inode);
--			goto exit;
--		}
--	} else {
-+	if (tar_mode) {
- 		root_inode = erofs_new_inode();
- 		if (IS_ERR(root_inode)) {
- 			err = PTR_ERR(root_inode);
-@@ -938,15 +941,44 @@ int main(int argc, char **argv)
- 		err = tarerofs_dump_tree(root_inode);
- 		if (err < 0)
- 			goto exit;
-+	} else if (cfg.c_union) {
-+		root_inode = erofs_union_load_imgs();
-+		if (IS_ERR(root_inode)) {
-+			err = PTR_ERR(root_inode);
-+			goto exit;
-+		}
-+
-+		err = erofs_union_dump_tree(root_inode);
-+		if (err)
-+			goto exit;
-+	} else {
-+		err = erofs_build_shared_xattrs_from_path(&sbi, cfg.c_src_path);
-+		if (err) {
-+			erofs_err("failed to build shared xattrs: %s",
-+				  erofs_strerror(err));
-+			goto exit;
-+		}
-+
-+		if (cfg.c_extra_ea_name_prefixes)
-+			erofs_xattr_write_name_prefixes(&sbi, packedfile);
-+
-+		root_inode = erofs_mkfs_build_tree_from_path(cfg.c_src_path);
-+		if (IS_ERR(root_inode)) {
-+			err = PTR_ERR(root_inode);
-+			goto exit;
-+		}
- 	}
- 	root_nid = erofs_lookupnid(root_inode);
- 	erofs_iput(root_inode);
- 
- 	if (tar_mode)
- 		tarerofs_write_devtable(&sbi, &erofstar);
--	if (cfg.c_chunkbits) {
-+	if (cfg.c_chunkbits || cfg.c_union) {
- 		erofs_info("total metadata: %u blocks", erofs_mapbh(NULL));
--		err = erofs_blob_remap(&sbi);
-+		if (cfg.c_chunkbits)
-+			err = erofs_blob_remap(&sbi);
-+		else
-+			err = erofs_union_remap(&sbi);
- 		if (err)
- 			goto exit;
- 	}
-@@ -992,6 +1024,7 @@ exit:
- 		z_erofs_fragments_exit();
- 	erofs_packedfile_exit();
- 	erofs_xattr_cleanup_name_prefixes();
-+	erofs_cleanup_imgs();
- 	erofs_exit_configure();
- 
- 	if (err) {
--- 
-2.19.1.6.gb485710b
-
+Thanks,
+Gao Xiang
