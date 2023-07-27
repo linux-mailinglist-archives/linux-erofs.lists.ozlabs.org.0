@@ -2,58 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2678A764A37
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 048CE764A49
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:08:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1690445265;
-	bh=bO4yc6b0222dRNj48HoFyPuU9QjRVolFKKVhhMGpLKw=;
+	s=201707; t=1690445320;
+	bh=ubpyp4SIhGXjO6/VTKiZvWjlRzyN8ANvKHVN5xSGnIw=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=OvddN40btnfnHuoYyWnFQ0pho2npwlDlM7zIv74t3OAj+C5yApjWkd4liownu09QH
-	 FCmAhAzxZDu4FeNqAC7GWyXeVM3x4eLSeBhU6/Lt3lQpecYZ2lS0oDJiu7mFUCF6hQ
-	 WvMCkMXW+qkmMGWtodwYuNMxUkLeRtHpOgAIAaPttLKH4iX70G5NXOQHcdobeD+W56
-	 F4s3JmHqnW341WIJMGP77qlj+XF32fxoGbK9oZ0k1XRtSX38v6Bh09OPLl2fegAZsp
-	 eM30uHjHgSzcSEfqDwvzHlTgOp70lK2/0xwPFfOY59uOqtoZKRpXlZZmA8K1bW8iFH
-	 o779Bj/aDl67Q==
+	b=RCEXR7IWgpG/0HdhGhrvVaHiZc9HpzvaS42bMrG5Cr3ayv5j1BvBjQalSTz1ythM6
+	 S8mntVJOE+d2ho5En8YMSV3ove6BYkAR9STvH3k6D7XqIjvllGWtz2V18DtXJp7VHH
+	 3n0JxRPCbo8LubC8hfzBLmWIF/jqOK4tFGz12nbPEglYAFUkTMgDoa6M3RCDw2pheh
+	 cV8fPyfZt4MPhnGDrSg1/z8eXzB6TFlDiCLz8PjIB0mMw6DND59Bvnywk+zaolofD5
+	 GMCcixAJCrW4AQOLAsfb9VsOCKQMDOXLa1zwmFh/Kzk/4mKtK6fF6Pa6Tt+/RVGG/q
+	 bLqp5waqB5YQg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNfn0R9sz3cTm
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:07:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNgr6XWFz3cVS
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:08:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=OaYrF17g;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=JnEFWCJ0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNfj47r1z3cGx
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:07:41 +1000 (AEST)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-682ae5d4184so170627b3a.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:07:41 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNfy1ZF5z3dG0
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:07:54 +1000 (AEST)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6862d4a1376so188563b3a.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:07:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690445260; x=1691050060;
+        d=1e100.net; s=20221208; t=1690445272; x=1691050072;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bO4yc6b0222dRNj48HoFyPuU9QjRVolFKKVhhMGpLKw=;
-        b=OPPYdNDf4yZHb9yoeCS95OzyvktpdTc1453FBI/FFJF5Td0GJY+7ZEb7lWgRtSLmxC
-         0ry/7KCPthyNw1sALSkr4b0/BxG5RLoI33jj19RioYUl6YXSSURKUxiK7nELPbR1nYnu
-         UxEMMWi85JdvFjt02w0qv2PO5NilqQz5svkxaz8cVKQ5DH8+LRGu7J6gY6oqltYETcvk
-         +dRj3yms9l7x/EUWOXiMnB0AGE/SElFhQvct3imjeyzHPinJpdJYZRxu87/1COYcITrl
-         73uBrOI8x8g4Dx1i3aSG/2OYwQ9uYOL/bYVcpneHBgY42MtN4mxaoec7zvlW0e9myFIx
-         xuiw==
-X-Gm-Message-State: ABy/qLZgqZztKiNVIw8PWeTocKDKQXZHQrPdhKWki/RkyfVMGKM7VLgu
-	eSjnKZJz0AjKjRYItWOlit2BUw==
-X-Google-Smtp-Source: APBJJlEtjuu7JvMViG/zI1+BRK6QgnXajX34xFKdSMMqB1WswZOW9mIhLIlLvIrLtx031P4ulw5hGg==
-X-Received: by 2002:a05:6a20:9381:b0:137:8f19:1de7 with SMTP id x1-20020a056a20938100b001378f191de7mr6160325pzh.0.1690445259706;
-        Thu, 27 Jul 2023 01:07:39 -0700 (PDT)
+        bh=ubpyp4SIhGXjO6/VTKiZvWjlRzyN8ANvKHVN5xSGnIw=;
+        b=mBzD4Kjcm/34iTiD8hJ49uRVbdGC+XYKhQ8eUI2D0YysKEXYLWJg2InnyYdHW1jcGP
+         z4KONLgz8KaMu59bAoJUgWWa+6amEkwf7iEDjtTJ/hDEhHrt8FPIorXNh4bhbSvYOnWZ
+         KYfv3II/xMnG5PhPGfkXfXaGIMi50hLcu3A/jaRdku0WJAtYljRIXrY5Yxn1qz2hPB32
+         KUh1kgH4R++Q0owFeSYeAcheQy9O/6yF/g2JmHbrsUG1kcCTQqS56KvFtWlhdscUFP56
+         lllPEYKvccgWi15fhkFY6rgUHsEoF87iQmfi9YytRg9NHnXXzgUhltg9IQkAeHk2URi5
+         iPtw==
+X-Gm-Message-State: ABy/qLbvkuUexsW4yMx2C4NdeCuImjhLt8IAow4+PemdtKtWDaxEwCVe
+	6NkOyG0ZmCwNkAvFRSQ1UTxuqA==
+X-Google-Smtp-Source: APBJJlH8Hm//FCUnZvKJ1Fsda02AnYQWQqq2rUtStc8LnYU5/NdJ+w8F5lFLyohrr/NHLskzxbNOmQ==
+X-Received: by 2002:a05:6a00:2d09:b0:682:59aa:178d with SMTP id fa9-20020a056a002d0900b0068259aa178dmr4647270pfb.1.1690445272018;
+        Thu, 27 Jul 2023 01:07:52 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.07.26
+        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.07.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 01:07:39 -0700 (PDT)
+        Thu, 27 Jul 2023 01:07:51 -0700 (PDT)
 To: akpm@linux-foundation.org,
 	david@fromorbit.com,
 	tkhai@ya.ru,
@@ -69,9 +69,9 @@ To: akpm@linux-foundation.org,
 	yujie.liu@intel.com,
 	gregkh@linuxfoundation.org,
 	muchun.song@linux.dev
-Subject: [PATCH v3 09/49] xenbus/backend: dynamically allocate the xen-backend shrinker
-Date: Thu, 27 Jul 2023 16:04:22 +0800
-Message-Id: <20230727080502.77895-10-zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 10/49] erofs: dynamically allocate the erofs-shrinker
+Date: Thu, 27 Jul 2023 16:04:23 +0800
+Message-Id: <20230727080502.77895-11-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
 References: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
@@ -94,52 +94,51 @@ Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.l
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use new APIs to dynamically allocate the xen-backend shrinker.
+Use new APIs to dynamically allocate the erofs-shrinker.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 ---
- drivers/xen/xenbus/xenbus_probe_backend.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ fs/erofs/utils.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-index da96c260e26b..929c41a5ccee 100644
---- a/drivers/xen/xenbus/xenbus_probe_backend.c
-+++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-@@ -284,13 +284,9 @@ static unsigned long backend_shrink_memory_count(struct shrinker *shrinker,
- 	return 0;
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index cc6fb9e98899..6e1a828e6ca3 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -270,19 +270,25 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
+ 	return freed;
  }
  
--static struct shrinker backend_memory_shrinker = {
--	.count_objects = backend_shrink_memory_count,
+-static struct shrinker erofs_shrinker_info = {
+-	.scan_objects = erofs_shrink_scan,
+-	.count_objects = erofs_shrink_count,
 -	.seeks = DEFAULT_SEEKS,
 -};
--
- static int __init xenbus_probe_backend_init(void)
++static struct shrinker *erofs_shrinker_info;
+ 
+ int __init erofs_init_shrinker(void)
  {
-+	struct shrinker *backend_memory_shrinker;
- 	static struct notifier_block xenstore_notifier = {
- 		.notifier_call = backend_probe_and_watch
- 	};
-@@ -305,8 +301,16 @@ static int __init xenbus_probe_backend_init(void)
- 
- 	register_xenstore_notifier(&xenstore_notifier);
- 
--	if (register_shrinker(&backend_memory_shrinker, "xen-backend"))
--		pr_warn("shrinker registration failed\n");
-+	backend_memory_shrinker = shrinker_alloc(0, "xen-backend");
-+	if (!backend_memory_shrinker) {
-+		pr_warn("shrinker allocation failed\n");
-+		return 0;
-+	}
+-	return register_shrinker(&erofs_shrinker_info, "erofs-shrinker");
++	erofs_shrinker_info = shrinker_alloc(0, "erofs-shrinker");
++	if (!erofs_shrinker_info)
++		return -ENOMEM;
 +
-+	backend_memory_shrinker->count_objects = backend_shrink_memory_count;
-+	backend_memory_shrinker->seeks = DEFAULT_SEEKS;
++	erofs_shrinker_info->count_objects = erofs_shrink_count;
++	erofs_shrinker_info->scan_objects = erofs_shrink_scan;
++	erofs_shrinker_info->seeks = DEFAULT_SEEKS;
 +
-+	shrinker_register(backend_memory_shrinker);
- 
- 	return 0;
++	shrinker_register(erofs_shrinker_info);
++
++	return 0;
  }
+ 
+ void erofs_exit_shrinker(void)
+ {
+-	unregister_shrinker(&erofs_shrinker_info);
++	shrinker_free(erofs_shrinker_info);
+ }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
 -- 
 2.30.2
 
