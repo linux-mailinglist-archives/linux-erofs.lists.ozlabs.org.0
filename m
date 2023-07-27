@@ -1,33 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A141764528
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 06:57:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 089D2764529
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 06:57:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBJRH60jLz3cHp
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 14:57:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBJRN6l16z3cGM
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 14:57:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBJR41hn5z30F5
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 14:57:19 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VoJALVP_1690433834;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VoJALVP_1690433834)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBJR46XsSz30F5
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 14:57:20 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VoJALVo_1690433835;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VoJALVo_1690433835)
           by smtp.aliyun-inc.com;
-          Thu, 27 Jul 2023 12:57:15 +0800
+          Thu, 27 Jul 2023 12:57:16 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: hsiangkao@linux.alibaba.com,
 	chao@kernel.org,
 	huyue2@coolpad.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/9] erofs-utils: read i_ino in erofs_read_inode_from_disk()
-Date: Thu, 27 Jul 2023 12:57:06 +0800
-Message-Id: <20230727045712.45226-3-jefflexu@linux.alibaba.com>
+Subject: [PATCH 4/9] erofs-utils: add erofs_read_xattrs_from_disk() helper
+Date: Thu, 27 Jul 2023 12:57:07 +0800
+Message-Id: <20230727045712.45226-4-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230727045712.45226-1-jefflexu@linux.alibaba.com>
 References: <20230727045712.45226-1-jefflexu@linux.alibaba.com>
@@ -47,33 +47,114 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Read on-disk ino and store it in i_ino[0].
+Add erofs_read_xattrs_from_disk() helper to read extended attributes
+from disk.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/namei.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/erofs/xattr.h |  1 +
+ lib/xattr.c           | 76 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/lib/namei.c b/lib/namei.c
-index 1023a9a..2bb1d4c 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -60,6 +60,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		die = (struct erofs_inode_extended *)buf;
- 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
- 		vi->i_mode = le16_to_cpu(die->i_mode);
-+		vi->i_ino[0] = le32_to_cpu(die->i_ino);
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index dc27cf6..634daf9 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -85,6 +85,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
  
- 		switch (vi->i_mode & S_IFMT) {
- 		case S_IFREG:
-@@ -95,6 +96,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->inode_isize = sizeof(struct erofs_inode_compact);
- 		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
- 		vi->i_mode = le16_to_cpu(dic->i_mode);
-+		vi->i_ino[0] = le32_to_cpu(dic->i_ino);
+ int erofs_setxattr(struct erofs_inode *inode, char *key,
+ 		   const void *value, size_t size);
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
  
- 		switch (vi->i_mode & S_IFMT) {
- 		case S_IFREG:
+ #ifdef __cplusplus
+ }
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 12f580e..8d8f9f0 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -493,6 +493,82 @@ int erofs_scan_file_xattrs(struct erofs_inode *inode)
+ 	return erofs_droid_xattr_set_caps(inode);
+ }
+ 
++static struct xattr_item *erofs_read_xattr_from_disk(struct erofs_inode *inode,
++						     char *key)
++{
++	ssize_t ret;
++	u8 prefix;
++	u16 prefixlen;
++	unsigned int len[2];
++	char *kvbuf;
++
++	if (!match_prefix(key, &prefix, &prefixlen))
++		return ERR_PTR(-ENODATA);
++
++	ret = erofs_getxattr(inode, key, NULL, 0);
++	if (ret < 0)
++		return ERR_PTR(-errno);
++
++	/* allocate key-value buffer */
++	len[0] = strlen(key) - prefixlen;
++	len[1] = ret;
++	kvbuf = malloc(len[0] + len[1]);
++	if (!kvbuf)
++		return ERR_PTR(-ENOMEM);
++	memcpy(kvbuf, key + prefixlen, len[0]);
++	if (len[1]) {
++		ret = erofs_getxattr(inode, key, kvbuf + len[0], len[1]);
++		if (ret < 0) {
++			free(kvbuf);
++			return ERR_PTR(-errno);
++		}
++		if (ret != len[1]) {
++			erofs_err("size of xattr value got changed just now (%u-> %ld)",
++				  len[1], (long)ret);
++			len[1] = ret;
++		}
++	}
++	return get_xattritem(prefix, kvbuf, len);
++}
++
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
++{
++	ssize_t kllen;
++	char *keylst, *key;
++	struct xattr_item *item;
++	int ret;
++
++	init_list_head(&inode->i_xattrs);
++	kllen = erofs_listxattr(inode, NULL, 0);
++	if (kllen < 0)
++		return kllen;
++	if (kllen <= 1)
++		return 0;
++
++	keylst = malloc(kllen);
++	if (!keylst)
++		return -ENOMEM;
++
++	ret = erofs_listxattr(inode, keylst, kllen);
++	if (ret < 0)
++		goto err;
++
++	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
++		item = erofs_read_xattr_from_disk(inode, key);
++		if (IS_ERR(item)) {
++			ret = PTR_ERR(item);
++			goto err;
++		}
++
++		ret = erofs_xattr_add(&inode->i_xattrs, item);
++		if (ret < 0)
++			goto err;
++	}
++err:
++	free(keylst);
++	return ret;
++}
++
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ {
+ 	int ret;
 -- 
 2.19.1.6.gb485710b
 
