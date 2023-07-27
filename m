@@ -1,76 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59307764F57
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 11:20:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1690449610;
-	bh=cb79b5va6gFfSJneJi5lY4rGeRwgOukMupryAUVW6kI=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=gB4QkMZ0pw6WV6Xl1Y0ceCiCzifadQf4XQ4LmRCvLfcSMcaccjmVwSUCKzFQ0MSNS
-	 aH03Sqk+WdrhwDG/hYwFZs1Z+GIFWP7B5PJzzZHzS6g+DUb1nYALayc81dmVcjUOp8
-	 qI/zxQ1XuwKqwl38jYSX0SKM0GApT5fvk7SccZT5lvP29sVJB5U7T7RPB06PWlhmcy
-	 57b3oddNRkug6LXFLHzcYNep7WQ5wrSgQteg2c8BZ4rdcLkunLXWN7WgYNuHVWdttV
-	 TQx4w2hi4ljqlc/H84eXQNkWlmTMf7hkJEhBmjurSHiiwLPEgfFvcnVWwHDbgZgZvd
-	 WUWmnDzrP/vZw==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7D5A7650E8
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 12:21:56 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VjGCTE5f;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBQGL1SRfz3cCl
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 19:20:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBRdZ4cf5z3cLY
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 20:21:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=YCWSTu9U;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VjGCTE5f;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::531; helo=mail-pg1-x531.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=dlemoal@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBQGG5Wqpz3bP2
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 19:20:05 +1000 (AEST)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-55b78bf0423so53662a12.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 02:20:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690449603; x=1691054403;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cb79b5va6gFfSJneJi5lY4rGeRwgOukMupryAUVW6kI=;
-        b=M7Tq1cSmoFNxMxVJNy8Ey3v7+NSS4xcd8Az9I6hSk9EN8FwRksayejjAgscMFbHvNo
-         SOb20ogwzgit4WzogQSkZO3Q1Ab1g9fjIUJI9oOutG2xsGaF+AuWQ/T24uFj5YEYin9z
-         34LfYld1AUG/6X8usTHDNyifkhECm7k6u6YKlx9Sl7IuBjoR5LaoyBjR7ZT/EcI67Pge
-         Flmif+IzY8MLzumy+gkS4HdL38/Fo9ng0pfAQWpG0ynaOZish5u5C+HGf1+zy0ysSU4Z
-         Vh5b4ISOkPLsUunVlhDMbRdNVeCWEjhIMYDRBh0rn6CskUClUcS0z/spww6EIDK7UkDt
-         /uYw==
-X-Gm-Message-State: ABy/qLbo3HbLyCntop7/M4JsVqkLg5dzI9gBuXb/7lKu39aue/dhgezm
-	F3GtzFIeAErReRzguVzMslHASw==
-X-Google-Smtp-Source: APBJJlH+dm0mCsob/js+yZXnXAfwEH4KDToex0aS0MQ56gbjyJxo+xxDZzOa2lZ9gy3mjvwdmWQa2g==
-X-Received: by 2002:a17:902:da82:b0:1b8:811:b079 with SMTP id j2-20020a170902da8200b001b80811b079mr5785873plx.0.1690449602958;
-        Thu, 27 Jul 2023 02:20:02 -0700 (PDT)
-Received: from [10.70.252.135] ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902c24500b001bbb7d8fff2sm1109046plg.116.2023.07.27.02.19.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jul 2023 02:20:02 -0700 (PDT)
-Message-ID: <5f1b85b8-3655-1700-4d16-fa056b31ceeb@bytedance.com>
-Date: Thu, 27 Jul 2023 17:19:49 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBRcQ2S1cz3cNQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 20:20:54 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 44B6761DD3;
+	Thu, 27 Jul 2023 10:20:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9266C433C8;
+	Thu, 27 Jul 2023 10:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690453251;
+	bh=Uv0jglg4XDxm5uiOcl1Fs0VDdmS3vnj5J06IHksC3j0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VjGCTE5fXWQGMkstr5mWfG/olGcukHbx9MJ5gIHM1kJfwo/BiFcjiuEaiA2TxQad6
+	 b/CL9D78jYHhDiLBxLD9gCBB6CtR9Pngnq1E4RM+cWQl1ITCzXzhPBEMorh0UStJGb
+	 V5QypMia7H1mT7Yv9W7oIRfkDRB1G3xJIxfo7Y/Lymzj+mXx3lcBAFmRFbWxhh8lk9
+	 h4N9LjcMkMC3/ZfJEah0qCVly/fWQ4ostsbFgLI1m7GG/WQbkHJ87BAgn9cUsNUERW
+	 XrnUyEDaK9+tFU+Iukly/qv+tfC9IZiVkgJJJYsmEkH+2gmJEivzAz4IAcCpkEsNUW
+	 WY8rxT9ubVHrA==
+Message-ID: <ba0868b2-9f90-3d81-1c91-8810057fb3ce@kernel.org>
+Date: Thu, 27 Jul 2023 19:20:46 +0900
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v3 40/49] xfs: dynamically allocate the xfs-qm shrinker
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 28/49] dm zoned: dynamically allocate the dm-zoned-meta
+ shrinker
 Content-Language: en-US
-To: akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
- vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
- brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu, steven.price@arm.com,
- cel@kernel.org, senozhatsky@chromium.org, yujie.liu@intel.com,
- gregkh@linuxfoundation.org, muchun.song@linux.dev
+To: Qi Zheng <zhengqi.arch@bytedance.com>
 References: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
- <20230727080502.77895-41-zhengqi.arch@bytedance.com>
-In-Reply-To: <20230727080502.77895-41-zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20230727080502.77895-29-zhengqi.arch@bytedance.com>
+ <baaf7de4-9a0e-b953-2b6a-46e60c415614@kernel.org>
+ <56ee1d92-28ee-81cb-9c41-6ca7ea6556b0@bytedance.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <56ee1d92-28ee-81cb-9c41-6ca7ea6556b0@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,100 +69,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: kvm@vger.kernel.org, djwong@kernel.org, roman.gushchin@linux.dev, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, paulmck@kernel.org, linux-arm-msm@vger.kernel.org, brauner@kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>, yujie.liu@intel.com, vbabka@suse.cz, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu, netdev@vger.kernel.org, muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, senozhatsky@chromium.org, gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2023/7/27 16:04, Qi Zheng wrote:
-> In preparation for implementing lockless slab shrink, use new APIs to
-> dynamically allocate the xfs-qm shrinker, so that it can be freed
-> asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
-> read-side critical section when releasing the struct xfs_quotainfo.
+On 7/27/23 17:55, Qi Zheng wrote:
+>>>           goto err;
+>>>       }
+>>>   +    zmd->mblk_shrinker->count_objects = dmz_mblock_shrinker_count;
+>>> +    zmd->mblk_shrinker->scan_objects = dmz_mblock_shrinker_scan;
+>>> +    zmd->mblk_shrinker->seeks = DEFAULT_SEEKS;
+>>> +    zmd->mblk_shrinker->private_data = zmd;
+>>> +
+>>> +    shrinker_register(zmd->mblk_shrinker);
+>>
+>> I fail to see how this new shrinker API is better... Why isn't there a
+>> shrinker_alloc_and_register() function ? That would avoid adding all this code
+>> all over the place as the new API call would be very similar to the current
+>> shrinker_register() call with static allocation.
 > 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->   fs/xfs/xfs_qm.c | 26 +++++++++++++-------------
->   fs/xfs/xfs_qm.h |  2 +-
->   2 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 6abcc34fafd8..032f0a208bd2 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -504,8 +504,7 @@ xfs_qm_shrink_scan(
->   	struct shrinker		*shrink,
->   	struct shrink_control	*sc)
->   {
-> -	struct xfs_quotainfo	*qi = container_of(shrink,
-> -					struct xfs_quotainfo, qi_shrinker);
-> +	struct xfs_quotainfo	*qi = shrink->private_data;
->   	struct xfs_qm_isolate	isol;
->   	unsigned long		freed;
->   	int			error;
-> @@ -539,8 +538,7 @@ xfs_qm_shrink_count(
->   	struct shrinker		*shrink,
->   	struct shrink_control	*sc)
->   {
-> -	struct xfs_quotainfo	*qi = container_of(shrink,
-> -					struct xfs_quotainfo, qi_shrinker);
-> +	struct xfs_quotainfo	*qi = shrink->private_data;
->   
->   	return list_lru_shrink_count(&qi->qi_lru, sc);
->   }
-> @@ -680,16 +678,18 @@ xfs_qm_init_quotainfo(
->   	if (XFS_IS_PQUOTA_ON(mp))
->   		xfs_qm_set_defquota(mp, XFS_DQTYPE_PROJ, qinf);
->   
-> -	qinf->qi_shrinker.count_objects = xfs_qm_shrink_count;
-> -	qinf->qi_shrinker.scan_objects = xfs_qm_shrink_scan;
-> -	qinf->qi_shrinker.seeks = DEFAULT_SEEKS;
-> -	qinf->qi_shrinker.flags = SHRINKER_NUMA_AWARE;
-> -
-> -	error = register_shrinker(&qinf->qi_shrinker, "xfs-qm:%s",
-> -				  mp->m_super->s_id);
-> -	if (error)
-> +	qinf->qi_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE, "xfs-qm:%s",
-> +					   mp->m_super->s_id);
-> +	if (!qinf->qi_shrinker)
+> In some registration scenarios, memory needs to be allocated in advance.
+> So we continue to use the previous prealloc/register_prepared()
+> algorithm. The shrinker_alloc_and_register() is just a helper function
+> that combines the two, and this increases the number of APIs that
+> shrinker exposes to the outside, so I choose not to add this helper.
 
-Here should set error to -ENOMEM, will fix.
+And that results in more code in many places instead of less code + a simple
+inline helper in the shrinker header file... So not adding that super simple
+helper is not exactly the best choice in my opinion.
 
->   		goto out_free_inos;
->   
-> +	qinf->qi_shrinker->count_objects = xfs_qm_shrink_count;
-> +	qinf->qi_shrinker->scan_objects = xfs_qm_shrink_scan;
-> +	qinf->qi_shrinker->seeks = DEFAULT_SEEKS;
-> +	qinf->qi_shrinker->private_data = qinf;
-> +
-> +	shrinker_register(qinf->qi_shrinker);
-> +
->   	return 0;
->   
->   out_free_inos:
-> @@ -718,7 +718,7 @@ xfs_qm_destroy_quotainfo(
->   	qi = mp->m_quotainfo;
->   	ASSERT(qi != NULL);
->   
-> -	unregister_shrinker(&qi->qi_shrinker);
-> +	shrinker_free(qi->qi_shrinker);
->   	list_lru_destroy(&qi->qi_lru);
->   	xfs_qm_destroy_quotainos(qi);
->   	mutex_destroy(&qi->qi_tree_lock);
-> diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-> index 9683f0457d19..d5c9fc4ba591 100644
-> --- a/fs/xfs/xfs_qm.h
-> +++ b/fs/xfs/xfs_qm.h
-> @@ -63,7 +63,7 @@ struct xfs_quotainfo {
->   	struct xfs_def_quota	qi_usr_default;
->   	struct xfs_def_quota	qi_grp_default;
->   	struct xfs_def_quota	qi_prj_default;
-> -	struct shrinker		qi_shrinker;
-> +	struct shrinker		*qi_shrinker;
->   
->   	/* Minimum and maximum quota expiration timestamp values. */
->   	time64_t		qi_expiry_min;
+-- 
+Damien Le Moal
+Western Digital Research
+
