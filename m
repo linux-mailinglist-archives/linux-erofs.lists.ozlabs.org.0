@@ -2,58 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECC6C764A19
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 680CF764A1D
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 10:07:06 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1690445218;
-	bh=5ddhCZTkz2TFo7oGCFzg4uU7nrLecafIDKLLill2eh8=;
+	s=201707; t=1690445224;
+	bh=BqN9tp9prAKwSL/xaaZwvgP8yGlZqKh7lkz65rMIkwI=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=dI0TVD26nYuireb42gPNiHWRz/J5UhniWBjLzTnBxDK+5z/gk2UUTjmXcYk1Dgr8n
-	 r7qIB9dWfFqwpAdvjQjbAY2hP0pyrCSe70Sjnjmk6s8DPiID8tbC9dFO62Qqq/qjVJ
-	 F565SblPZJzUEs+7jr7Fy2ZmZH2Irpd7sgSeqdEYrfgqA3GOEHcFsHubhO/xxAcdwr
-	 2GKFM+sNf6ueaZDjegCCx5io3yE9UdY+mruSpAYoo6HuZeH3f6WulFgDJRvKaZ+gC1
-	 6P0/0NadcwY2roto4tIuiZQavjOyZB/ubkJL672Vf9W0NGEt2WcT58huu/3w04t7iS
-	 qGxHtBCrKkL7w==
+	b=Y9OdSJM8xlZVWc7KJjjixEMGWeXWazNUN1sRjjr+pwmV4L+IgQ2RxJnCpuDnJU+kI
+	 dRnvBONoBS57MlLpdiWsj0hAgTfKqRXOYG/hF4D4Y/vmSMTzf6sJDV3Cx0l6xouQsY
+	 i6D6hfvMxl17aCk5trlU+KQXlZaNLAVy3VqlgBoJJNMPxzwdgOyGoBh27ZSqWfcDho
+	 B0Ezm/OcksSzrlqSlWhQH3/rQgQUcPkI1feuYGsvp3sBm20J6MnQ3NKDIHQvqdwwQ3
+	 IlcyavZvcGjuqeNGlBsueLznLmxhHM+ZSn0x+c97Q7u2eAIAsW5yFRdDK8bjvRd6gM
+	 brmEvC1z+tEBw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNdt68rzz3cRn
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:06:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RBNf02JdNz3dC5
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jul 2023 18:07:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=EEgKRQyP;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=GBN6icr0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::42c; helo=mail-pf1-x42c.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNdW5J2Dz3dRP
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:06:39 +1000 (AEST)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6862d4a1376so188280b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:06:39 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RBNdn2VZTz3dG1
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 18:06:53 +1000 (AEST)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6862d4a1376so188327b3a.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jul 2023 01:06:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690445196; x=1691049996;
+        d=1e100.net; s=20221208; t=1690445210; x=1691050010;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5ddhCZTkz2TFo7oGCFzg4uU7nrLecafIDKLLill2eh8=;
-        b=JtJWv5tIIBxAqaWNJzjKj5oy/iIW6NxyR0sCtrQK2TGuS4SkDQSp+5p4zJI53O0wKi
-         2wRAP1QoGT9uhjZ0jIwzTIdKo38XWitVKegkVUgSfHBzqgyIsDmO8ru3TFnSQz2Rx7vR
-         x7BM3sI/k4shy1+XkmJgOjDLR/nLj2hbjaVbwn2to0ifVHSXBrVUHhQm4WwKbP/RPsX6
-         tLPJ/2vXUz0MtVSUolUTGRsJXeW7kxzYRS6B6O5EefpCcHyo8P4dofbbkNGXVrB7H6ZG
-         RdqzQ2xniwtiGwa0p9MrT0hEvfkEMJlLr5r4mBZSZ3Jt1R5Dmyt1kmPUUlIEKlmwA6F8
-         znyQ==
-X-Gm-Message-State: ABy/qLbGEcdX6X70nQqcS13uHRIZhER3J5a/8FXgAYgv32eh8RrqlzpP
-	yCnnmyQivYf5w7T3/RuENlroyQ==
-X-Google-Smtp-Source: APBJJlGC9GcjpF//RTfgHk/e3ibfMuX5WCzda5QO/QIZ+yDcAz1vV0DX9dFwhd70yzWPOAQ384luFQ==
-X-Received: by 2002:a05:6a21:6da1:b0:134:1671:6191 with SMTP id wl33-20020a056a216da100b0013416716191mr5882289pzb.0.1690445196605;
-        Thu, 27 Jul 2023 01:06:36 -0700 (PDT)
+        bh=BqN9tp9prAKwSL/xaaZwvgP8yGlZqKh7lkz65rMIkwI=;
+        b=BHuYb7lKjzKa8bcPp7t/4icwYXIMQ6IoT1XSWVvtn11M3XAuTdp2RhmpEjOYfqBX3P
+         VDYmr5didlwBOf65rI4/NTGHrf6EfxUACw8NmCLiVH6bx7FrUXlmTgTi6p8dZwQBTuqt
+         kmNX+9obHJVXRayMf5Uf5GdDsFcNA1LgyZ+8JyOZ2Rc+HaiBXINNpmcWNcPsjCqz1hBw
+         gx0Hyp9tn77CnK3LxSBfkA0qS1004XbPqicil2qWyOslk75YEyIsqxn7kHInlTJNMUc6
+         02d1+ss/NjVkj/Sv/gfU2YfRHkvnchVj7/GepxP9O2a42A3VUE3YkF7kqNRDx99MojH2
+         5usw==
+X-Gm-Message-State: ABy/qLYmcWIQCSsYbnvQO7DNvz2cZ9TQcaRWByv2SXuwtM9rLJajp9ZO
+	+o1b/ECcxmQGAaa5HmbhAp6H7Q==
+X-Google-Smtp-Source: APBJJlGqyHUGzcwYP72gZn72jBkXTN2mSwLe5z3KDdW3R9YyUcC+gdVHx8KhimUXzhfrGyXx8SlIVg==
+X-Received: by 2002:a05:6a20:918e:b0:11a:dbb3:703b with SMTP id v14-20020a056a20918e00b0011adbb3703bmr5539836pzd.6.1690445210111;
+        Thu, 27 Jul 2023 01:06:50 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.06.24
+        by smtp.gmail.com with ESMTPSA id j8-20020aa78d08000000b006828e49c04csm885872pfe.75.2023.07.27.01.06.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 01:06:36 -0700 (PDT)
+        Thu, 27 Jul 2023 01:06:48 -0700 (PDT)
 To: akpm@linux-foundation.org,
 	david@fromorbit.com,
 	tkhai@ya.ru,
@@ -69,9 +69,9 @@ To: akpm@linux-foundation.org,
 	yujie.liu@intel.com,
 	gregkh@linuxfoundation.org,
 	muchun.song@linux.dev
-Subject: [PATCH v3 04/49] mm: shrinker: remove redundant shrinker_rwsem in debugfs operations
-Date: Thu, 27 Jul 2023 16:04:17 +0800
-Message-Id: <20230727080502.77895-5-zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 05/49] mm: shrinker: add infrastructure for dynamically allocating shrinker
+Date: Thu, 27 Jul 2023 16:04:18 +0800
+Message-Id: <20230727080502.77895-6-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
 References: <20230727080502.77895-1-zhengqi.arch@bytedance.com>
@@ -90,74 +90,273 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>, Muchun Song <songmuchun@bytedance.com>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The debugfs_remove_recursive() will wait for debugfs_file_put() to return,
-so the shrinker will not be freed when doing debugfs operations (such as
-shrinker_debugfs_count_show() and shrinker_debugfs_scan_write()), so there
-is no need to hold shrinker_rwsem during debugfs operations.
+Currently, the shrinker instances can be divided into the following three
+types:
+
+a) global shrinker instance statically defined in the kernel, such as
+   workingset_shadow_shrinker.
+
+b) global shrinker instance statically defined in the kernel modules, such
+   as mmu_shrinker in x86.
+
+c) shrinker instance embedded in other structures.
+
+For case a, the memory of shrinker instance is never freed. For case b,
+the memory of shrinker instance will be freed after synchronize_rcu() when
+the module is unloaded. For case c, the memory of shrinker instance will
+be freed along with the structure it is embedded in.
+
+In preparation for implementing lockless slab shrink, we need to
+dynamically allocate those shrinker instances in case c, then the memory
+can be dynamically freed alone by calling kfree_rcu().
+
+So this commit adds the following new APIs for dynamically allocating
+shrinker, and add a private_data field to struct shrinker to record and
+get the original embedded structure.
+
+1. shrinker_alloc()
+
+Used to allocate shrinker instance itself and related memory, it will
+return a pointer to the shrinker instance on success and NULL on failure.
+
+2. shrinker_register()
+
+Used to register the shrinker instance, which is same as the current
+register_shrinker_prepared().
+
+3. shrinker_free()
+
+Used to unregister (if needed) and free the shrinker instance.
+
+In order to simplify shrinker-related APIs and make shrinker more
+independent of other kernel mechanisms, subsequent submissions will use
+the above API to convert all shrinkers (including case a and b) to
+dynamically allocated, and then remove all existing APIs.
+
+This will also have another advantage mentioned by Dave Chinner:
+
+```
+The other advantage of this is that it will break all the existing
+out of tree code and third party modules using the old API and will
+no longer work with a kernel using lockless slab shrinkers. They
+need to break (both at the source and binary levels) to stop bad
+things from happening due to using uncoverted shrinkers in the new
+setup.
+```
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/shrinker_debug.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ include/linux/shrinker.h |   7 +++
+ mm/internal.h            |  11 +++++
+ mm/shrinker.c            | 101 +++++++++++++++++++++++++++++++++++++++
+ mm/shrinker_debug.c      |  17 ++++++-
+ 4 files changed, 134 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+index 8dc15aa37410..cc23ff0aee20 100644
+--- a/include/linux/shrinker.h
++++ b/include/linux/shrinker.h
+@@ -70,6 +70,8 @@ struct shrinker {
+ 	int seeks;	/* seeks to recreate an obj */
+ 	unsigned flags;
+ 
++	void *private_data;
++
+ 	/* These are for internal use */
+ 	struct list_head list;
+ #ifdef CONFIG_MEMCG
+@@ -95,6 +97,11 @@ struct shrinker {
+  * non-MEMCG_AWARE shrinker should not have this flag set.
+  */
+ #define SHRINKER_NONSLAB	(1 << 3)
++#define SHRINKER_ALLOCATED	(1 << 4)
++
++struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, ...);
++void shrinker_register(struct shrinker *shrinker);
++void shrinker_free(struct shrinker *shrinker);
+ 
+ extern int __printf(2, 3) prealloc_shrinker(struct shrinker *shrinker,
+ 					    const char *fmt, ...);
+diff --git a/mm/internal.h b/mm/internal.h
+index 8b82038dcc6a..38434175df86 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1144,6 +1144,9 @@ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
+ 
+ #ifdef CONFIG_SHRINKER_DEBUG
+ extern int shrinker_debugfs_add(struct shrinker *shrinker);
++extern int shrinker_debugfs_name_alloc(struct shrinker *shrinker,
++				       const char *fmt, va_list ap);
++extern void shrinker_debugfs_name_free(struct shrinker *shrinker);
+ extern struct dentry *shrinker_debugfs_detach(struct shrinker *shrinker,
+ 					      int *debugfs_id);
+ extern void shrinker_debugfs_remove(struct dentry *debugfs_entry,
+@@ -1153,6 +1156,14 @@ static inline int shrinker_debugfs_add(struct shrinker *shrinker)
+ {
+ 	return 0;
+ }
++static inline int shrinker_debugfs_name_alloc(struct shrinker *shrinker,
++					      const char *fmt, va_list ap)
++{
++	return 0;
++}
++static inline void shrinker_debugfs_name_free(struct shrinker *shrinker)
++{
++}
+ static inline struct dentry *shrinker_debugfs_detach(struct shrinker *shrinker,
+ 						     int *debugfs_id)
+ {
+diff --git a/mm/shrinker.c b/mm/shrinker.c
+index 043c87ccfab4..43a375f954f3 100644
+--- a/mm/shrinker.c
++++ b/mm/shrinker.c
+@@ -550,6 +550,107 @@ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
+ 	return freed;
+ }
+ 
++struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, ...)
++{
++	struct shrinker *shrinker;
++	unsigned int size;
++	va_list ap;
++	int err;
++
++	shrinker = kzalloc(sizeof(struct shrinker), GFP_KERNEL);
++	if (!shrinker)
++		return NULL;
++
++	va_start(ap, fmt);
++	err = shrinker_debugfs_name_alloc(shrinker, fmt, ap);
++	va_end(ap);
++	if (err)
++		goto err_name;
++
++	shrinker->flags = flags | SHRINKER_ALLOCATED;
++
++	if (flags & SHRINKER_MEMCG_AWARE) {
++		err = prealloc_memcg_shrinker(shrinker);
++		if (err == -ENOSYS)
++			shrinker->flags &= ~SHRINKER_MEMCG_AWARE;
++		else if (err == 0)
++			goto done;
++		else
++			goto err_flags;
++	}
++
++	/*
++	 * The nr_deferred is available on per memcg level for memcg aware
++	 * shrinkers, so only allocate nr_deferred in the following cases:
++	 *  - non memcg aware shrinkers
++	 *  - !CONFIG_MEMCG
++	 *  - memcg is disabled by kernel command line
++	 */
++	size = sizeof(*shrinker->nr_deferred);
++	if (flags & SHRINKER_NUMA_AWARE)
++		size *= nr_node_ids;
++
++	shrinker->nr_deferred = kzalloc(size, GFP_KERNEL);
++	if (!shrinker->nr_deferred)
++		goto err_flags;
++
++done:
++	return shrinker;
++
++err_flags:
++	shrinker_debugfs_name_free(shrinker);
++err_name:
++	kfree(shrinker);
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(shrinker_alloc);
++
++void shrinker_register(struct shrinker *shrinker)
++{
++	if (unlikely(!(shrinker->flags & SHRINKER_ALLOCATED))) {
++		pr_warn("Must use shrinker_alloc() to dynamically allocate the shrinker");
++		return;
++	}
++
++	down_write(&shrinker_rwsem);
++	list_add_tail(&shrinker->list, &shrinker_list);
++	shrinker->flags |= SHRINKER_REGISTERED;
++	shrinker_debugfs_add(shrinker);
++	up_write(&shrinker_rwsem);
++}
++EXPORT_SYMBOL_GPL(shrinker_register);
++
++void shrinker_free(struct shrinker *shrinker)
++{
++	struct dentry *debugfs_entry = NULL;
++	int debugfs_id;
++
++	if (!shrinker)
++		return;
++
++	down_write(&shrinker_rwsem);
++	if (shrinker->flags & SHRINKER_REGISTERED) {
++		list_del(&shrinker->list);
++		debugfs_entry = shrinker_debugfs_detach(shrinker, &debugfs_id);
++		shrinker->flags &= ~SHRINKER_REGISTERED;
++	} else {
++		shrinker_debugfs_name_free(shrinker);
++	}
++
++	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
++		unregister_memcg_shrinker(shrinker);
++	up_write(&shrinker_rwsem);
++
++	if (debugfs_entry)
++		shrinker_debugfs_remove(debugfs_entry, debugfs_id);
++
++	kfree(shrinker->nr_deferred);
++	shrinker->nr_deferred = NULL;
++
++	kfree(shrinker);
++}
++EXPORT_SYMBOL_GPL(shrinker_free);
++
+ /*
+  * Add a shrinker callback to be called from the vm.
+  */
 diff --git a/mm/shrinker_debug.c b/mm/shrinker_debug.c
-index 3ab53fad8876..f1becfd45853 100644
+index f1becfd45853..506257585408 100644
 --- a/mm/shrinker_debug.c
 +++ b/mm/shrinker_debug.c
-@@ -55,11 +55,6 @@ static int shrinker_debugfs_count_show(struct seq_file *m, void *v)
- 	if (!count_per_node)
- 		return -ENOMEM;
+@@ -191,6 +191,20 @@ int shrinker_debugfs_add(struct shrinker *shrinker)
+ 	return 0;
+ }
  
--	ret = down_read_killable(&shrinker_rwsem);
--	if (ret) {
--		kfree(count_per_node);
--		return ret;
--	}
- 	rcu_read_lock();
++int shrinker_debugfs_name_alloc(struct shrinker *shrinker, const char *fmt,
++				va_list ap)
++{
++	shrinker->name = kvasprintf_const(GFP_KERNEL, fmt, ap);
++
++	return shrinker->name ? 0 : -ENOMEM;
++}
++
++void shrinker_debugfs_name_free(struct shrinker *shrinker)
++{
++	kfree_const(shrinker->name);
++	shrinker->name = NULL;
++}
++
+ int shrinker_debugfs_rename(struct shrinker *shrinker, const char *fmt, ...)
+ {
+ 	struct dentry *entry;
+@@ -239,8 +253,7 @@ struct dentry *shrinker_debugfs_detach(struct shrinker *shrinker,
  
- 	memcg_aware = shrinker->flags & SHRINKER_MEMCG_AWARE;
-@@ -92,7 +87,6 @@ static int shrinker_debugfs_count_show(struct seq_file *m, void *v)
- 	} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
+ 	lockdep_assert_held(&shrinker_rwsem);
  
- 	rcu_read_unlock();
--	up_read(&shrinker_rwsem);
+-	kfree_const(shrinker->name);
+-	shrinker->name = NULL;
++	shrinker_debugfs_name_free(shrinker);
  
- 	kfree(count_per_node);
- 	return ret;
-@@ -117,7 +111,6 @@ static ssize_t shrinker_debugfs_scan_write(struct file *file,
- 	struct mem_cgroup *memcg = NULL;
- 	int nid;
- 	char kbuf[72];
--	ssize_t ret;
- 
- 	read_len = size < (sizeof(kbuf) - 1) ? size : (sizeof(kbuf) - 1);
- 	if (copy_from_user(kbuf, buf, read_len))
-@@ -146,12 +139,6 @@ static ssize_t shrinker_debugfs_scan_write(struct file *file,
- 		return -EINVAL;
- 	}
- 
--	ret = down_read_killable(&shrinker_rwsem);
--	if (ret) {
--		mem_cgroup_put(memcg);
--		return ret;
--	}
--
- 	sc.nid = nid;
- 	sc.memcg = memcg;
- 	sc.nr_to_scan = nr_to_scan;
-@@ -159,7 +146,6 @@ static ssize_t shrinker_debugfs_scan_write(struct file *file,
- 
- 	shrinker->scan_objects(shrinker, &sc);
- 
--	up_read(&shrinker_rwsem);
- 	mem_cgroup_put(memcg);
- 
- 	return size;
+ 	*debugfs_id = entry ? shrinker->debugfs_id : -1;
+ 	shrinker->debugfs_entry = NULL;
 -- 
 2.30.2
 
