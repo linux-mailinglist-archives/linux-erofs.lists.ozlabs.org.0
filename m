@@ -1,36 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F65076A74C
-	for <lists+linux-erofs@lfdr.de>; Tue,  1 Aug 2023 05:05:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40F8F76A74D
+	for <lists+linux-erofs@lfdr.de>; Tue,  1 Aug 2023 05:05:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RFKjq45ccz3brX
-	for <lists+linux-erofs@lfdr.de>; Tue,  1 Aug 2023 13:05:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RFKk70f5Rz30QQ
+	for <lists+linux-erofs@lfdr.de>; Tue,  1 Aug 2023 13:05:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RFKjD68Rsz3bTV
-	for <linux-erofs@lists.ozlabs.org>; Tue,  1 Aug 2023 13:05:03 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VojMeRK_1690859097;
-Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VojMeRK_1690859097)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RFKk45V6Lz2ys8
+	for <linux-erofs@lists.ozlabs.org>; Tue,  1 Aug 2023 13:05:48 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vojenn5_1690859140;
+Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vojenn5_1690859140)
           by smtp.aliyun-inc.com;
-          Tue, 01 Aug 2023 11:04:58 +0800
-Message-ID: <dabbebd2-358d-19ea-f123-9c2f1217b873@linux.alibaba.com>
-Date: Tue, 1 Aug 2023 11:04:56 +0800
+          Tue, 01 Aug 2023 11:05:41 +0800
+Message-ID: <0c737739-5c6a-c913-0f13-7ca0bd8f3e82@linux.alibaba.com>
+Date: Tue, 1 Aug 2023 11:05:39 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.13.0
 Subject: Re: [PATCH] erofs-utils: generate preallocated extents for tarerofs
 To: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20230729133201.16894-1-hsiangkao@linux.alibaba.com>
- <cd2963e7-9813-c378-e9db-632089f50bf0@linux.alibaba.com>
+ <21b99702-180d-464c-78dc-e30df5adf0a2@linux.alibaba.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <cd2963e7-9813-c378-e9db-632089f50bf0@linux.alibaba.com>
+In-Reply-To: <21b99702-180d-464c-78dc-e30df5adf0a2@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -49,26 +49,21 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 
-On 2023/8/1 10:52, Jingbo Xu wrote:
+On 2023/7/31 12:51, Jingbo Xu wrote:
 > 
 > 
 > On 7/29/23 9:32 PM, Gao Xiang wrote:
+>> @@ -795,7 +798,8 @@ int main(int argc, char **argv)
+>>   		return 1;
+>>   	}
 >>   
->> -int erofs_blob_remap(struct erofs_sb_info *sbi)
->> +int tarerofs_write_chunk_data(struct erofs_inode *inode, erofs_off_t data_offset)
->> +{
->> +	struct erofs_sb_info *sbi = inode->sbi;
->> +	unsigned int chunkbits = ilog2(inode->i_size - 1) + 1;
+>> -	if (cfg.block_list_file && erofs_droid_blocklist_fopen() < 0) {
+>> +	if (cfg.block_list_file &&
+>> +	    erofs_blocklist_open(block_list_file, false) < 0) {
 > 
-> What if inode->i_size is 0 ?
+> 	    erofs_blocklist_open(cfg.block_list_file, false) ?
 
-if (chunkbits - sbi->blkszbits > EROFS_CHUNK_FORMAT_BLKBITS_MASK)
-	chunkbits = EROFS_CHUNK_FORMAT_BLKBITS_MASK + sbi->blkszbits;
-
-will just generate a large chunk for this.
-
-Actually I think we shouldn't use chunk-based format if inode->i_size
-is 0, it needs to be fixed in a seperate commit.
+Nice catch, will fix it.
 
 Thanks,
 Gao Xiang
