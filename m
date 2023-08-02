@@ -2,73 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5008976D7F9
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 21:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B042F76D7FD
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 21:38:15 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=UU3Tm3G6;
-	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NX6MG0fd;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=LhplXH4J;
+	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OOAabGww;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RGMhM1R0Pz3bdG
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 05:37:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RGMhj4N3Jz30gn
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 05:38:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=UU3Tm3G6;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NX6MG0fd;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=LhplXH4J;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OOAabGww;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=suse.cz (client-ip=2001:67c:2178:6::1c; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=suse.cz (client-ip=2001:67c:2178:6::1d; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGMhG0fT4z2yD8
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 05:37:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGMhc1fx2z2yD8
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 05:38:08 +1000 (AEST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DCAD821A35;
-	Wed,  2 Aug 2023 19:37:44 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BBBB81F390;
+	Wed,  2 Aug 2023 19:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1691005064; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1691005084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hej32SUQUL4wq5J7Js3JkDxcXNHsWA1VwQ0tN8Q+liI=;
-	b=UU3Tm3G6FjCiIipHgljAOgzfMZUvjNWSdsYJJguFbMcYv2scO9r7dcYFw5uMe9CC4Ad2Qy
-	FUudTxu/2yivhdo/UZ5ja6uq7Y8xdfcD076CUCQw9ZWJtvqXlN1rOkolKNpsEKUGhppUdv
-	mjpPxkrZ0aUM04DZ+ksCa0CPDmtuXDE=
+	bh=hQKpatODDlYJjI5h6ON2K0Xm2qnmIDyhIc44gu3NWBE=;
+	b=LhplXH4J5uUbAjgtJUQ8qRPaaSWgOUuCpAHU5WpGZ3ZAa8UXXkk/2huxZA8KHPddB0sxWg
+	82L3KRAWJBUdPEoSRzDYuyi9h1xUjxTNvcAYVw2CReEhTitiu/Xav/t4Oc3Djs3GIk7CnS
+	UDsWSZfelZno+J9gahI+zq5QLWxp4pM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1691005064;
+	s=susede2_ed25519; t=1691005084;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hej32SUQUL4wq5J7Js3JkDxcXNHsWA1VwQ0tN8Q+liI=;
-	b=NX6MG0fdteUMkKXyD+4G36a30wQWbVAM4a8TsTJKCdzWP/Zccm95SaZr1qpnKF7LvVwXes
-	KKCtU/rORrmysuAg==
+	bh=hQKpatODDlYJjI5h6ON2K0Xm2qnmIDyhIc44gu3NWBE=;
+	b=OOAabGwwpODl/y0IYa1Ey56S8QpPiHacMq0qFwPFteERmRpVU6lGbeF0lh1V5mr0JH+VK9
+	pnHPb7fzF+uFUUAA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 973B01391A;
-	Wed,  2 Aug 2023 19:37:44 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9A12E1391A;
+	Wed,  2 Aug 2023 19:38:04 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 1UjoJIiwymQKHwAAMHmgww
-	(envelope-from <jack@suse.cz>); Wed, 02 Aug 2023 19:37:44 +0000
+	id kteGJZywymRaHwAAMHmgww
+	(envelope-from <jack@suse.cz>); Wed, 02 Aug 2023 19:38:04 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B8B08A076B; Wed,  2 Aug 2023 21:37:43 +0200 (CEST)
-Date: Wed, 2 Aug 2023 21:37:43 +0200
+	id EBAAAA076B; Wed,  2 Aug 2023 21:38:03 +0200 (CEST)
+Date: Wed, 2 Aug 2023 21:38:03 +0200
 From: Jan Kara <jack@suse.cz>
 To: Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v6 4/7] tmpfs: add support for multigrain timestamps
-Message-ID: <20230802193743.3nomcrox6pqhsc5x@quack3>
+Subject: Re: [PATCH v6 6/7] ext4: switch to multigrain timestamps
+Message-ID: <20230802193803.onjopgwdqjonzkwa@quack3>
 References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
- <20230725-mgctime-v6-4-a794c2b7abca@kernel.org>
+ <20230725-mgctime-v6-6-a794c2b7abca@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230725-mgctime-v6-4-a794c2b7abca@kernel.org>
+In-Reply-To: <20230725-mgctime-v6-6-a794c2b7abca@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -86,12 +86,12 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue 25-07-23 10:58:17, Jeff Layton wrote:
+On Tue 25-07-23 10:58:19, Jeff Layton wrote:
 > Enable multigrain timestamps, which should ensure that there is an
 > apparent change to the timestamp whenever it has been written after
 > being actively observed via getattr.
 > 
-> tmpfs only requires the FS_MGTIME flag.
+> For ext4, we only need to enable the FS_MGTIME flag.
 > 
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
@@ -102,22 +102,22 @@ Reviewed-by: Jan Kara <jack@suse.cz>
 								Honza
 
 > ---
->  mm/shmem.c | 2 +-
+>  fs/ext4/super.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 654d9a585820..b6019c905058 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -4264,7 +4264,7 @@ static struct file_system_type shmem_fs_type = {
->  #endif
->  	.kill_sb	= kill_litter_super,
->  #ifdef CONFIG_SHMEM
-> -	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-> +	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
->  #else
->  	.fs_flags	= FS_USERNS_MOUNT,
->  #endif
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index b54c70e1a74e..cb1ff47af156 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -7279,7 +7279,7 @@ static struct file_system_type ext4_fs_type = {
+>  	.init_fs_context	= ext4_init_fs_context,
+>  	.parameters		= ext4_param_specs,
+>  	.kill_sb		= kill_block_super,
+> -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+> +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
+>  };
+>  MODULE_ALIAS_FS("ext4");
+>  
 > 
 > -- 
 > 2.41.0
