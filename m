@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F7E376C947
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A7E176C94B
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:21 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xF71l8z3bXH
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xQ6yMKz3bb4
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x42Mt3z2ymM
-	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:00 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouSZHf_1690967875;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouSZHf_1690967875)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x56RcYz2ypx
+	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:01 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouSZI5_1690967876;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouSZI5_1690967876)
           by smtp.aliyun-inc.com;
-          Wed, 02 Aug 2023 17:17:55 +0800
+          Wed, 02 Aug 2023 17:17:56 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 05/16] erofs-utils: read dis->blocks in erofs_init_devices()
-Date: Wed,  2 Aug 2023 17:17:39 +0800
-Message-Id: <20230802091750.74181-5-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 06/16] erofs-utils: add erofs_read_xattrs_from_disk() helper
+Date: Wed,  2 Aug 2023 17:17:40 +0800
+Message-Id: <20230802091750.74181-6-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
 References: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
@@ -45,45 +45,114 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Read dis->blocks in erofs_init_devices().  Also fix the missing
-le32_to_cpu() when reading mapped_blkaddr.
-
-Initialize sbi->extra_devices from on-disk extra_devices.
+Add erofs_read_xattrs_from_disk() helper to read extended attributes
+from disk.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/super.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ include/erofs/xattr.h |  1 +
+ lib/xattr.c           | 76 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/lib/super.c b/lib/super.c
-index 16a1d62..1e4f9f4 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -36,11 +36,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 	else
- 		ondisk_extradevs = le16_to_cpu(dsb->extra_devices);
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index dc27cf6..634daf9 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -85,6 +85,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
  
--	if (ondisk_extradevs != sbi->extra_devices) {
--		erofs_err("extra devices don't match (ondisk %u, given %u)",
--			  ondisk_extradevs, sbi->extra_devices);
--		return -EINVAL;
--	}
-+	sbi->extra_devices = ondisk_extradevs;
- 	if (!ondisk_extradevs)
- 		return 0;
+ int erofs_setxattr(struct erofs_inode *inode, char *key,
+ 		   const void *value, size_t size);
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
  
-@@ -59,8 +55,9 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 			return ret;
- 		}
+ #ifdef __cplusplus
+ }
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 12f580e..8d8f9f0 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -493,6 +493,82 @@ int erofs_scan_file_xattrs(struct erofs_inode *inode)
+ 	return erofs_droid_xattr_set_caps(inode);
+ }
  
--		sbi->devs[i].mapped_blkaddr = dis.mapped_blkaddr;
--		sbi->total_blocks += dis.blocks;
-+		sbi->devs[i].mapped_blkaddr = le32_to_cpu(dis.mapped_blkaddr);
-+		sbi->devs[i].blocks = le32_to_cpu(dis.blocks);
-+		sbi->total_blocks += sbi->devs[i].blocks;
- 		pos += EROFS_DEVT_SLOT_SIZE;
- 	}
- 	return 0;
++static struct xattr_item *erofs_read_xattr_from_disk(struct erofs_inode *inode,
++						     char *key)
++{
++	ssize_t ret;
++	u8 prefix;
++	u16 prefixlen;
++	unsigned int len[2];
++	char *kvbuf;
++
++	if (!match_prefix(key, &prefix, &prefixlen))
++		return ERR_PTR(-ENODATA);
++
++	ret = erofs_getxattr(inode, key, NULL, 0);
++	if (ret < 0)
++		return ERR_PTR(-errno);
++
++	/* allocate key-value buffer */
++	len[0] = strlen(key) - prefixlen;
++	len[1] = ret;
++	kvbuf = malloc(len[0] + len[1]);
++	if (!kvbuf)
++		return ERR_PTR(-ENOMEM);
++	memcpy(kvbuf, key + prefixlen, len[0]);
++	if (len[1]) {
++		ret = erofs_getxattr(inode, key, kvbuf + len[0], len[1]);
++		if (ret < 0) {
++			free(kvbuf);
++			return ERR_PTR(-errno);
++		}
++		if (ret != len[1]) {
++			erofs_err("size of xattr value got changed just now (%u-> %ld)",
++				  len[1], (long)ret);
++			len[1] = ret;
++		}
++	}
++	return get_xattritem(prefix, kvbuf, len);
++}
++
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
++{
++	ssize_t kllen;
++	char *keylst, *key;
++	struct xattr_item *item;
++	int ret;
++
++	init_list_head(&inode->i_xattrs);
++	kllen = erofs_listxattr(inode, NULL, 0);
++	if (kllen < 0)
++		return kllen;
++	if (kllen <= 1)
++		return 0;
++
++	keylst = malloc(kllen);
++	if (!keylst)
++		return -ENOMEM;
++
++	ret = erofs_listxattr(inode, keylst, kllen);
++	if (ret < 0)
++		goto err;
++
++	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
++		item = erofs_read_xattr_from_disk(inode, key);
++		if (IS_ERR(item)) {
++			ret = PTR_ERR(item);
++			goto err;
++		}
++
++		ret = erofs_xattr_add(&inode->i_xattrs, item);
++		if (ret < 0)
++			goto err;
++	}
++err:
++	free(keylst);
++	return ret;
++}
++
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ {
+ 	int ret;
 -- 
 2.19.1.6.gb485710b
 
