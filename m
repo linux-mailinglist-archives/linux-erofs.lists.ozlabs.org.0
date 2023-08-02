@@ -2,55 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 056EB76D5FD
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C8FCE76D6B9
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 20:22:04 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mvxuU6kS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Lq45skxq;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RGKGg6F7nz3bcD
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 03:48:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RGL0p50G5z3bNq
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 04:22:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mvxuU6kS;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Lq45skxq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGKGd0WsYz2yh3
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 03:48:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGL0l1G4nz2xpv
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 04:21:59 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D2B11615A2;
-	Wed,  2 Aug 2023 17:48:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB32C433C7;
-	Wed,  2 Aug 2023 17:48:54 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 1C9E261A88;
+	Wed,  2 Aug 2023 18:21:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51C95C433C8;
+	Wed,  2 Aug 2023 18:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690998534;
-	bh=llcebvZe/hkTeRKgHM9EKZHOV4OnEZQnmHgz/2BQCWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mvxuU6kSe40eik5JXODSzEUcQCom178bEIK/ueyoWRpPBYA045brCsn1TKHc//Xbp
-	 0ObmccZq1JK/3BS0VYByWWa5KMlUgDASDUx+Tg3MIvNOAUYxUN5IA3Q6lhJnKpS+Kr
-	 sJpmoKfyS9TkkEjB5QiyyKjYqppx1pnxNqB5iMeyjJu+17+GIbmic7cVmXJSuLaPLd
-	 3IndlMaTUYFSp0rFtJkAhEAA+wijtIBWkzROVqk80WuAfa/+5o+BWPM09WvvAR3rkz
-	 JrCY5Grb5YAFwp2aCPycS4pLSm1cHlwT5kTUQjtvoINT5B7AR/RvqxCMtj/D0aZcEn
-	 M8gGWOmNe33KQ==
-Date: Wed, 2 Aug 2023 10:48:53 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
+	s=k20201202; t=1691000516;
+	bh=ycwx/5PKSOfdsJleD1GrXVU/2tvqnKBKqdlrqiXz2a4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Lq45skxqh7cpBQLhcIe1Gw+lovpqkvSzuzb8uAcyF5FrElk/i/Ef62Ff+U85B0JYe
+	 gb5CgOGTY1TKw/GZkOMcRDcxztlWQJmGUpbe2PB0ZZtJhOtSfNtibfRZFTg6XykiV4
+	 x4PKksy3wl2+3UvlwVruRvycuEHFr6v641nEPFf7oKydUHdevtCfIP62s3qFywogxs
+	 bUSv3T3yZ3RUK3kjfZ3Erjub/WKAY+sdkcU6WTTdHAgJrOMM/i9gdSpZrws8Unwtrq
+	 tNeLRJIXs/0bUybd4cEYmTQYz1K0b/J8KC16T4R6xltE9tlCNFzbPuAaxgMh/CIZB5
+	 7bXA8nQ4jZd1w==
+Message-ID: <16f46a9e6d88582d53d31a320589a7ba9d232e0c.camel@kernel.org>
 Subject: Re: [PATCH v6 5/7] xfs: switch to multigrain timestamps
-Message-ID: <20230802174853.GC11352@frogsfrogsfrogs>
+From: Jeff Layton <jlayton@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>, Christian Brauner
+	 <brauner@kernel.org>
+Date: Wed, 02 Aug 2023 14:21:49 -0400
+In-Reply-To: <20230802174853.GC11352@frogsfrogsfrogs>
 References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
- <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
+	 <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
+	 <20230802174853.GC11352@frogsfrogsfrogs>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,83 +71,73 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Jul 25, 2023 at 10:58:18AM -0400, Jeff Layton wrote:
-> Enable multigrain timestamps, which should ensure that there is an
-> apparent change to the timestamp whenever it has been written after
-> being actively observed via getattr.
-> 
-> Also, anytime the mtime changes, the ctime must also change, and those
-> are now the only two options for xfs_trans_ichgtime. Have that function
-> unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
-> always set.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
->  fs/xfs/xfs_iops.c               | 4 ++--
->  fs/xfs/xfs_super.c              | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-> index 6b2296ff248a..ad22656376d3 100644
-> --- a/fs/xfs/libxfs/xfs_trans_inode.c
-> +++ b/fs/xfs/libxfs/xfs_trans_inode.c
-> @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
->  	ASSERT(tp);
->  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
->  
-> -	tv = current_time(inode);
-> +	/* If the mtime changes, then ctime must also change */
-> +	ASSERT(flags & XFS_ICHGTIME_CHG);
->  
-> +	tv = inode_set_ctime_current(inode);
->  	if (flags & XFS_ICHGTIME_MOD)
->  		inode->i_mtime = tv;
-> -	if (flags & XFS_ICHGTIME_CHG)
-> -		inode_set_ctime_to_ts(inode, tv);
->  	if (flags & XFS_ICHGTIME_CREATE)
->  		ip->i_crtime = tv;
->  }
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 3a9363953ef2..3f89ef5a2820 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -573,10 +573,10 @@ xfs_vn_getattr(
->  	stat->gid = vfsgid_into_kgid(vfsgid);
->  	stat->ino = ip->i_ino;
->  	stat->atime = inode->i_atime;
-> -	stat->mtime = inode->i_mtime;
-> -	stat->ctime = inode_get_ctime(inode);
->  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
->  
-> +	fill_mg_cmtime(request_mask, inode, stat);
+On Wed, 2023-08-02 at 10:48 -0700, Darrick J. Wong wrote:
+> On Tue, Jul 25, 2023 at 10:58:18AM -0400, Jeff Layton wrote:
+> > Enable multigrain timestamps, which should ensure that there is an
+> > apparent change to the timestamp whenever it has been written after
+> > being actively observed via getattr.
+> >=20
+> > Also, anytime the mtime changes, the ctime must also change, and those
+> > are now the only two options for xfs_trans_ichgtime. Have that function
+> > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> > always set.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
+> >  fs/xfs/xfs_iops.c               | 4 ++--
+> >  fs/xfs/xfs_super.c              | 2 +-
+> >  3 files changed, 6 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_=
+inode.c
+> > index 6b2296ff248a..ad22656376d3 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+> >  	ASSERT(tp);
+> >  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> > =20
+> > -	tv =3D current_time(inode);
+> > +	/* If the mtime changes, then ctime must also change */
+> > +	ASSERT(flags & XFS_ICHGTIME_CHG);
+> > =20
+> > +	tv =3D inode_set_ctime_current(inode);
+> >  	if (flags & XFS_ICHGTIME_MOD)
+> >  		inode->i_mtime =3D tv;
+> > -	if (flags & XFS_ICHGTIME_CHG)
+> > -		inode_set_ctime_to_ts(inode, tv);
+> >  	if (flags & XFS_ICHGTIME_CREATE)
+> >  		ip->i_crtime =3D tv;
+> >  }
+> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > index 3a9363953ef2..3f89ef5a2820 100644
+> > --- a/fs/xfs/xfs_iops.c
+> > +++ b/fs/xfs/xfs_iops.c
+> > @@ -573,10 +573,10 @@ xfs_vn_getattr(
+> >  	stat->gid =3D vfsgid_into_kgid(vfsgid);
+> >  	stat->ino =3D ip->i_ino;
+> >  	stat->atime =3D inode->i_atime;
+> > -	stat->mtime =3D inode->i_mtime;
+> > -	stat->ctime =3D inode_get_ctime(inode);
+> >  	stat->blocks =3D XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks=
+);
+> > =20
+> > +	fill_mg_cmtime(request_mask, inode, stat);
+>=20
+> Huh.  I would've thought @stat would come first since that's what we're
+> acting upon, but ... eh. :)
+>=20
+> If everyone else is ok with the fill_mg_cmtime signature,
+> Acked-by: Darrick J. Wong <djwong@kernel.org>
+>=20
+>=20
 
-Huh.  I would've thought @stat would come first since that's what we're
-acting upon, but ... eh. :)
+Good point. We can change the signature. I think xfs is the only caller
+outside of the generic vfs right now, and it'd be best to do it now.
 
-If everyone else is ok with the fill_mg_cmtime signature,
-Acked-by: Darrick J. Wong <djwong@kernel.org>
-
---D
-
-> +
->  	if (xfs_has_v3inodes(mp)) {
->  		if (request_mask & STATX_BTIME) {
->  			stat->result_mask |= STATX_BTIME;
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 818510243130..4b10edb2c972 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -2009,7 +2009,7 @@ static struct file_system_type xfs_fs_type = {
->  	.init_fs_context	= xfs_init_fs_context,
->  	.parameters		= xfs_fs_parameters,
->  	.kill_sb		= kill_block_super,
-> -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-> +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
->  };
->  MODULE_ALIAS_FS("xfs");
->  
-> 
-> -- 
-> 2.41.0
-> 
+Christian, would you prefer that I send an updated series, or patches on
+top of vfs.ctime that can be folded in?
+=20
+--=20
+Jeff Layton <jlayton@kernel.org>
