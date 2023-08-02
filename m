@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171F376C94A
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F7E376C947
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xN0BXpz30YT
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xF71l8z3bXH
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
@@ -14,18 +14,18 @@ Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x4314Wz2ypy
-	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:17:59 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouWeDL_1690967873;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouWeDL_1690967873)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x42Mt3z2ymM
+	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:00 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouSZHf_1690967875;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouSZHf_1690967875)
           by smtp.aliyun-inc.com;
-          Wed, 02 Aug 2023 17:17:54 +0800
+          Wed, 02 Aug 2023 17:17:55 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 04/16] erofs-utils: read i_ino in erofs_read_inode_from_disk()
-Date: Wed,  2 Aug 2023 17:17:38 +0800
-Message-Id: <20230802091750.74181-4-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 05/16] erofs-utils: read dis->blocks in erofs_init_devices()
+Date: Wed,  2 Aug 2023 17:17:39 +0800
+Message-Id: <20230802091750.74181-5-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
 References: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
@@ -45,33 +45,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Read on-disk ino and store it in i_ino[0].
+Read dis->blocks in erofs_init_devices().  Also fix the missing
+le32_to_cpu() when reading mapped_blkaddr.
+
+Initialize sbi->extra_devices from on-disk extra_devices.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/namei.c | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/super.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/lib/namei.c b/lib/namei.c
-index 1023a9a..2bb1d4c 100644
---- a/lib/namei.c
-+++ b/lib/namei.c
-@@ -60,6 +60,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		die = (struct erofs_inode_extended *)buf;
- 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
- 		vi->i_mode = le16_to_cpu(die->i_mode);
-+		vi->i_ino[0] = le32_to_cpu(die->i_ino);
+diff --git a/lib/super.c b/lib/super.c
+index 16a1d62..1e4f9f4 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -36,11 +36,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
+ 	else
+ 		ondisk_extradevs = le16_to_cpu(dsb->extra_devices);
  
- 		switch (vi->i_mode & S_IFMT) {
- 		case S_IFREG:
-@@ -95,6 +96,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		vi->inode_isize = sizeof(struct erofs_inode_compact);
- 		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
- 		vi->i_mode = le16_to_cpu(dic->i_mode);
-+		vi->i_ino[0] = le32_to_cpu(dic->i_ino);
+-	if (ondisk_extradevs != sbi->extra_devices) {
+-		erofs_err("extra devices don't match (ondisk %u, given %u)",
+-			  ondisk_extradevs, sbi->extra_devices);
+-		return -EINVAL;
+-	}
++	sbi->extra_devices = ondisk_extradevs;
+ 	if (!ondisk_extradevs)
+ 		return 0;
  
- 		switch (vi->i_mode & S_IFMT) {
- 		case S_IFREG:
+@@ -59,8 +55,9 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
+ 			return ret;
+ 		}
+ 
+-		sbi->devs[i].mapped_blkaddr = dis.mapped_blkaddr;
+-		sbi->total_blocks += dis.blocks;
++		sbi->devs[i].mapped_blkaddr = le32_to_cpu(dis.mapped_blkaddr);
++		sbi->devs[i].blocks = le32_to_cpu(dis.blocks);
++		sbi->total_blocks += sbi->devs[i].blocks;
+ 		pos += EROFS_DEVT_SLOT_SIZE;
+ 	}
+ 	return 0;
 -- 
 2.19.1.6.gb485710b
 
