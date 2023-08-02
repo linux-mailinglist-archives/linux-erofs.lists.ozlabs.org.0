@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 254B176C94C
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BB6B76C94D
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xV0dLWz3c3s
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xY0KcFz3bt0
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x65373z2ypx
-	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:02 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouWEu._1690967877;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouWEu._1690967877)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5x83RK5z30XP
+	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:04 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouSZIy_1690967878;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouSZIy_1690967878)
           by smtp.aliyun-inc.com;
-          Wed, 02 Aug 2023 17:17:57 +0800
+          Wed, 02 Aug 2023 17:17:59 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 07/16] erofs-utils: add erofs_inode_tag_opaque() helper
-Date: Wed,  2 Aug 2023 17:17:41 +0800
-Message-Id: <20230802091750.74181-7-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 08/16] erofs-utils: add erofs_insert_ihash() helper
+Date: Wed,  2 Aug 2023 17:17:42 +0800
+Message-Id: <20230802091750.74181-8-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
 References: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
@@ -45,140 +45,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add erofs_inode_tag_opaque() helper checking if it's an opaque directory.
+Add erofs_insert_ihash() helper inserting inode into inode hash table.
+
+Also add prototypes of erofs_iget() and erofs_iget_by_nid() in the
+header file.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/internal.h |  2 ++
- include/erofs/xattr.h    | 22 ++++++++++++++++++++
- lib/tar.c                |  5 -----
- lib/xattr.c              | 44 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 68 insertions(+), 5 deletions(-)
+ include/erofs/inode.h |  3 +++
+ lib/inode.c           | 10 +++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 04a9a69..83a2e22 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -218,6 +218,8 @@ struct erofs_inode {
- #endif
- 	erofs_off_t fragmentoff;
- 	unsigned int fragment_size;
-+
-+	bool opaque;
- };
- 
- static inline erofs_off_t erofs_iloc(struct erofs_inode *inode)
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 634daf9..21d669b 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -73,6 +73,27 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
- #ifndef XATTR_NAME_POSIX_ACL_DEFAULT
- #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
- #endif
-+#ifndef OVL_XATTR_NAMESPACE
-+#define OVL_XATTR_NAMESPACE "overlay."
-+#endif
-+#ifndef OVL_XATTR_OPAQUE_POSTFIX
-+#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
-+#endif
-+#ifndef OVL_XATTR_TRUSTED_PREFIX
-+#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
-+#endif
-+#ifndef OVL_XATTR_OPAQUE_SUFFIX
-+#define OVL_XATTR_OPAQUE_SUFFIX OVL_XATTR_NAMESPACE OVL_XATTR_OPAQUE_POSTFIX
-+#endif
-+#ifndef OVL_XATTR_OPAQUE_SUFFIX_LEN
-+#define OVL_XATTR_OPAQUE_SUFFIX_LEN (sizeof(OVL_XATTR_OPAQUE_SUFFIX) - 1)
-+#endif
-+#ifndef OVL_XATTR_OPAQUE
-+#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
-+#endif
-+#ifndef OVL_XATTR_OPAQUE_LEN
-+#define OVL_XATTR_OPAQUE_LEN (sizeof(OVL_XATTR_OPAQUE) - 1)
-+#endif
- 
- int erofs_scan_file_xattrs(struct erofs_inode *inode);
- int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
-@@ -86,6 +107,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
- int erofs_setxattr(struct erofs_inode *inode, char *key,
- 		   const void *value, size_t size);
- int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
-+void erofs_inode_tag_opaque(struct erofs_inode *inode);
- 
- #ifdef __cplusplus
- }
-diff --git a/lib/tar.c b/lib/tar.c
-index 54ee33f..3180ee4 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -19,11 +19,6 @@
- #include "erofs/xattr.h"
- #include "erofs/blobchunk.h"
- 
--#define OVL_XATTR_NAMESPACE "overlay."
--#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
--#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
--#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
--
- #define EROFS_WHITEOUT_DEV	0
- 
- static char erofs_libbuf[16384];
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 8d8f9f0..e9aff53 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -1421,6 +1421,50 @@ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size)
- 	return shared_listxattr(vi, &it);
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index e8a5670..1c602a8 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -25,6 +25,9 @@ u32 erofs_new_encode_dev(dev_t dev);
+ unsigned char erofs_mode_to_ftype(umode_t mode);
+ unsigned char erofs_ftype_to_dtype(unsigned int filetype);
+ void erofs_inode_manager_init(void);
++void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
++struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
++struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
+ unsigned int erofs_iput(struct erofs_inode *inode);
+ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
+ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+diff --git a/lib/inode.c b/lib/inode.c
+index d54f84f..b967aab 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -75,6 +75,12 @@ void erofs_inode_manager_init(void)
+ 		init_list_head(&inode_hashtable[i]);
  }
  
-+static bool erofs_xattr_is_opaque(struct xattr_item *item)
++void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
 +{
-+	struct ea_type_node *tnode;
-+	unsigned int plen;
-+	const char *prefix;
-+
-+	if (item->prefix == EROFS_XATTR_INDEX_TRUSTED &&
-+	    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE_SUFFIX,
-+		     OVL_XATTR_OPAQUE_SUFFIX_LEN))
-+		return true;
-+
-+	if (item->prefix & EROFS_XATTR_LONG_PREFIX) {
-+		list_for_each_entry(tnode, &ea_name_prefixes, list) {
-+			prefix = tnode->type.prefix;
-+			plen = tnode->type.prefix_len;
-+			if (tnode->index == item->prefix &&
-+			    plen + item->len[0] == OVL_XATTR_OPAQUE_LEN &&
-+			    !strncmp(prefix, OVL_XATTR_OPAQUE, plen) &&
-+			    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE + plen,
-+				     item->len[0]))
-+				return true;
-+		}
-+	}
-+	return false;
++	list_add(&inode->i_hash,
++		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
 +}
 +
-+void erofs_inode_tag_opaque(struct erofs_inode *inode)
-+{
-+	struct inode_xattr_node *node, *n;
-+
-+	list_for_each_entry_safe(node, n, &inode->i_xattrs, list) {
-+		if (erofs_xattr_is_opaque(node->item)) {
-+			if (S_ISDIR(inode->i_mode))
-+				inode->opaque = true;
-+			else
-+				erofs_dbg("file %s: opaque xattr on non-dir",
-+					  inode->i_srcpath);
-+			/* strip overlayfs xattrs */
-+			list_del(&node->list);
-+			free(node);
-+		}
-+	}
-+}
-+
- int erofs_xattr_insert_name_prefix(const char *prefix)
+ /* get the inode from the (source) inode # */
+ struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
  {
- 	struct ea_type_node *tnode;
+@@ -976,9 +982,7 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		inode->inode_isize = sizeof(struct erofs_inode_compact);
+ 	}
+ 
+-	list_add(&inode->i_hash,
+-		 &inode_hashtable[(st->st_ino ^ st->st_dev) %
+-				  NR_INODE_HASHTABLE]);
++	erofs_insert_ihash(inode, st->st_dev, st->st_ino);
+ 	return 0;
+ }
+ 
 -- 
 2.19.1.6.gb485710b
 
