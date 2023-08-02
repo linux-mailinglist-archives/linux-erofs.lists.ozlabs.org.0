@@ -1,31 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F68D76C950
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F382D76C951
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 11:18:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xk0Txkz3c3f
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RG5xn0MvZz3cHc
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Aug 2023 19:18:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5xC5P71z2ysB
-	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:07 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouWeGK_1690967881;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouWeGK_1690967881)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RG5xD3R64z3c1W
+	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Aug 2023 19:18:08 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VouSZKn_1690967882;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VouSZKn_1690967882)
           by smtp.aliyun-inc.com;
-          Wed, 02 Aug 2023 17:18:02 +0800
+          Wed, 02 Aug 2023 17:18:03 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 11/16] erofs-utils: make erofs_get_unhashed_chunk() global
-Date: Wed,  2 Aug 2023 17:17:45 +0800
-Message-Id: <20230802091750.74181-11-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 12/16] erofs-utils: add erofs image helper
+Date: Wed,  2 Aug 2023 17:17:46 +0800
+Message-Id: <20230802091750.74181-12-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
 References: <20230802091750.74181-1-jefflexu@linux.alibaba.com>
@@ -45,40 +45,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-... so that it could be called from outside blobchunk.c later.
+Later we are going to introduce new feature of merging multiple erofs
+images generated from tarfs mode.  Add helpers registering and cleaning
+these images.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/blobchunk.h | 2 ++
- lib/blobchunk.c           | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ include/erofs/rebuild.h | 12 +++++++++++
+ lib/rebuild.c           | 45 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
 
-diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
-index 010aee1..fb85d8e 100644
---- a/include/erofs/blobchunk.h
-+++ b/include/erofs/blobchunk.h
-@@ -14,6 +14,8 @@ extern "C"
+diff --git a/include/erofs/rebuild.h b/include/erofs/rebuild.h
+index 92873c9..df7613a 100644
+--- a/include/erofs/rebuild.h
++++ b/include/erofs/rebuild.h
+@@ -9,6 +9,18 @@ extern "C"
  
- #include "erofs/internal.h"
+ #include "internal.h"
  
-+struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
-+		erofs_blk_t blkaddr, erofs_off_t sourceoffset);
- int erofs_blob_write_chunk_indexes(struct erofs_inode *inode, erofs_off_t off);
- int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd);
- int tarerofs_write_chunkes(struct erofs_inode *inode, erofs_off_t data_offset);
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index cada5bb..07f18bd 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -38,7 +38,7 @@ struct erofs_blobchunk erofs_holechunk = {
- };
- static LIST_HEAD(unhashed_blobchunks);
++struct erofs_img {
++	struct list_head list;
++	char *path;
++	dev_t dev;
++	struct erofs_sb_info sbi;
++};
++
++extern unsigned int imgs_count;
++struct erofs_img *erofs_get_img(const char *path);
++int erofs_add_img(const char *path);
++void erofs_cleanup_imgs(void);
++
+ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+ 		char *path, bool aufs, bool *whout, bool *opq);
  
--static struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
-+struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
- 		erofs_blk_t blkaddr, erofs_off_t sourceoffset)
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 7aaa071..e2f6c1d 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -16,6 +16,9 @@
+ #define AUFS_WH_DIROPQ		AUFS_WH_PFX AUFS_DIROPQ_NAME
+ #endif
+ 
++unsigned int imgs_count;
++static LIST_HEAD(imgs_list);
++
+ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
+ 						const char *s)
  {
- 	struct erofs_blobchunk *chunk;
+@@ -115,3 +118,45 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+ 	}
+ 	return d;
+ }
++
++struct erofs_img *erofs_get_img(const char *path)
++{
++	struct erofs_img *img = malloc(sizeof(*img));
++
++	if (!img)
++		return ERR_PTR(-ENOMEM);
++
++	img->path = realpath(path, NULL);
++	if (!img->path) {
++		erofs_err("failed to parse image file (%s): %s",
++			  path, erofs_strerror(-errno));
++		free(img);
++		return ERR_PTR(-ENOENT);
++	}
++
++	img->dev = ++imgs_count;
++	return img;
++}
++
++int erofs_add_img(const char *path)
++{
++	struct erofs_img *img = erofs_get_img(path);
++
++	if (IS_ERR(img))
++		return PTR_ERR(img);
++
++	list_add_tail(&img->list, &imgs_list);
++	return 0;
++}
++
++void erofs_cleanup_imgs(void)
++{
++	struct erofs_img *img, *n;
++
++	list_for_each_entry_safe(img, n, &imgs_list, list) {
++		list_del(&img->list);
++		free(img->path);
++		free(img);
++	}
++	imgs_count = 0;
++}
 -- 
 2.19.1.6.gb485710b
 
