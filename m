@@ -2,32 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7933376DF7E
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 07:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F8F376E0D1
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 09:06:25 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K7UhWAmH;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RGc9x04MMz30g8
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 15:00:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RGfyl0Djzz3bZF
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Aug 2023 17:06:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K7UhWAmH;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGc9n3ZCkz30g8
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 15:00:43 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VoxOOF1_1691038832;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VoxOOF1_1691038832)
-          by smtp.aliyun-inc.com;
-          Thu, 03 Aug 2023 13:00:37 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: dump: use a new subdir context for erofs_get_pathname()
-Date: Thu,  3 Aug 2023 13:00:31 +0800
-Message-Id: <20230803050031.130026-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RGfyc49bNz2yhL
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Aug 2023 17:06:16 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 9037661C17;
+	Thu,  3 Aug 2023 07:06:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8B8C433C7;
+	Thu,  3 Aug 2023 07:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691046373;
+	bh=q5HEh93m22+IZ7gJ0ht4CIPca9ZIugEYnaPvq20Gjuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K7UhWAmHViQApxb4uEFZrC7NgM4L98YWGA8RqmJSuKws6QfloHZYz2gu1jyPObkgz
+	 rJxDzSRQnw1K4pXJOSbYSQwEHQGHEgpocuMnPLyGqXwysQNLhUfpr9nXqz/I7vEWHU
+	 Xyq0E7GBSXm+tlg7gDzjWZJiiMF3px3+dfpcHG121egWkUzTPQBnCY0uSqoCY/0Kr0
+	 ZBpFxVuNI9TULQg5bdi3e7SZRLX5rY79l7KLMQCUVHdnr6WpsAje202RHEqOcZVFgo
+	 7miM6YWTEiuxqRbsDMbuOSLOG9Nu93OzU+EfWoCfeFibJ4Z6IjLTxS3vlPbG54qPVW
+	 uZsk7io+itqAw==
+Date: Thu, 3 Aug 2023 09:05:55 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v6 5/7] xfs: switch to multigrain timestamps
+Message-ID: <20230803-mulmig-rennen-adbe9b2a6608@brauner>
+References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
+ <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
+ <20230802174853.GC11352@frogsfrogsfrogs>
+ <16f46a9e6d88582d53d31a320589a7ba9d232e0c.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <16f46a9e6d88582d53d31a320589a7ba9d232e0c.camel@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -39,43 +64,79 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, Dave Chinner <david@fromorbit.com>, David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>, Andreas Dilger <adilger.kernel@dilger.ca>, Hans de Goede <hdegoede@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, codalist@coda.cs.cmu.edu, linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Andreas Gruenbacher <agruenba@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>, Hugh Dickins <hughd@google.com>, Tyler Hicks <code@tyhicks.com>, cluster-devel@redhat.com, coda@cs.cmu.edu, linux-mm@kvack.org,
+  linux-f2fs-devel@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, Iurii Zaikin <yzaikin@google.com>, Namjae Jeon <linkinjeon@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, Shyam Prasad N <sprasad@microsoft.com>, ecryptfs@vger.kernel.org, Kees Cook <keescook@chromium.org>, ocfs2-devel@lists.linux.dev, Anthony Iliopoulos <ailiop@suse.com>, Josef Bacik <josef@toxicpanda.com>, Tom Talpey <tom@talpey.com>, Tejun Heo <tj@kernel.org>, Yue Hu <huyue2@coolpad.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-mtd@lists.infradead.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org, Xiubo Li <xiubli@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Jan Harkes <jaharkes@cs.cmu.edu>, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Joseph Qi <joseph.qi@linux.alibaba.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, v9fs@lists.linux.dev, ntfs3@lists.linux.dev, samba-tech
+ nical@lists.samba.org, linux-kernel@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>, Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, devel@lists.orangefs.org, Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Sungjong Seo <sj1557.seo@samsung.com>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, Joel Becker <jlbec@evilplan.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It's absolutely unsafe to reuse struct erofs_dir_context.  Also,
-we'd like to refactor erofs_get_pathname() in the future.
+On Wed, Aug 02, 2023 at 02:21:49PM -0400, Jeff Layton wrote:
+> On Wed, 2023-08-02 at 10:48 -0700, Darrick J. Wong wrote:
+> > On Tue, Jul 25, 2023 at 10:58:18AM -0400, Jeff Layton wrote:
+> > > Enable multigrain timestamps, which should ensure that there is an
+> > > apparent change to the timestamp whenever it has been written after
+> > > being actively observed via getattr.
+> > > 
+> > > Also, anytime the mtime changes, the ctime must also change, and those
+> > > are now the only two options for xfs_trans_ichgtime. Have that function
+> > > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> > > always set.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
+> > >  fs/xfs/xfs_iops.c               | 4 ++--
+> > >  fs/xfs/xfs_super.c              | 2 +-
+> > >  3 files changed, 6 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+> > > index 6b2296ff248a..ad22656376d3 100644
+> > > --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> > > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> > > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+> > >  	ASSERT(tp);
+> > >  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> > >  
+> > > -	tv = current_time(inode);
+> > > +	/* If the mtime changes, then ctime must also change */
+> > > +	ASSERT(flags & XFS_ICHGTIME_CHG);
+> > >  
+> > > +	tv = inode_set_ctime_current(inode);
+> > >  	if (flags & XFS_ICHGTIME_MOD)
+> > >  		inode->i_mtime = tv;
+> > > -	if (flags & XFS_ICHGTIME_CHG)
+> > > -		inode_set_ctime_to_ts(inode, tv);
+> > >  	if (flags & XFS_ICHGTIME_CREATE)
+> > >  		ip->i_crtime = tv;
+> > >  }
+> > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > > index 3a9363953ef2..3f89ef5a2820 100644
+> > > --- a/fs/xfs/xfs_iops.c
+> > > +++ b/fs/xfs/xfs_iops.c
+> > > @@ -573,10 +573,10 @@ xfs_vn_getattr(
+> > >  	stat->gid = vfsgid_into_kgid(vfsgid);
+> > >  	stat->ino = ip->i_ino;
+> > >  	stat->atime = inode->i_atime;
+> > > -	stat->mtime = inode->i_mtime;
+> > > -	stat->ctime = inode_get_ctime(inode);
+> > >  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
+> > >  
+> > > +	fill_mg_cmtime(request_mask, inode, stat);
+> > 
+> > Huh.  I would've thought @stat would come first since that's what we're
+> > acting upon, but ... eh. :)
+> > 
+> > If everyone else is ok with the fill_mg_cmtime signature,
+> > Acked-by: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > 
+> 
+> Good point. We can change the signature. I think xfs is the only caller
+> outside of the generic vfs right now, and it'd be best to do it now.
+> 
+> Christian, would you prefer that I send an updated series, or patches on
+> top of vfs.ctime that can be folded in?
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/dir.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/lib/dir.c b/lib/dir.c
-index e8df9f7..fff0bc0 100644
---- a/lib/dir.c
-+++ b/lib/dir.c
-@@ -217,10 +217,16 @@ static int erofs_get_pathname_iter(struct erofs_dir_context *ctx)
- 		}
- 
- 		if (S_ISDIR(dir.i_mode)) {
--			ctx->dir = &dir;
--			pathctx->pos = pos + len + 1;
--			ret = erofs_iterate_dir(ctx, false);
--			pathctx->pos = pos;
-+			struct erofs_get_pathname_context nctx = {
-+				.ctx.flags = 0,
-+				.ctx.dir = &dir,
-+				.ctx.cb = erofs_get_pathname_iter,
-+				.target_nid = pathctx->target_nid,
-+				.buf = pathctx->buf,
-+				.size = pathctx->size,
-+				.pos = pos + len + 1,
-+			};
-+			ret = erofs_iterate_dir(&nctx.ctx, false);
- 			if (ret == EROFS_PATHNAME_FOUND) {
- 				pathctx->buf[pos++] = '/';
- 				strncpy(pathctx->buf + pos, dname, len);
--- 
-2.24.4
-
+Let's fold instead of inundate everyone with almost 100 patches.
+When I'll apply I'll remind everyone where the series can be pulled
+from anyway.
