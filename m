@@ -2,58 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 854E777201B
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 13:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B44C677202B
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 13:14:07 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1691406833;
-	bh=GSWsN00ewH1CUxuL2on0amogNZtYjpfZMPk3tXk1MLc=;
+	s=201707; t=1691406845;
+	bh=a0ijFA9s9bGVMHT4vLgTYS12L8yx2Rc7o6TjM9ZoJx8=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=DLdwqvM1rYFzyfQiBn84nQx5lXGNW4je0FSrBcgZVO5jwzcAj9/d04+z+a4Lm+bL9
-	 thGIct33cJFzWCfAGroziwnqBbsvkygvTG0U7yxCcSXTCSJZ7gTp69lKyPJ5P7guzJ
-	 7xvUgjqiR5HrEPtwaC1D7P98jtiyuYen3ZS+3xVskm/qz3BFFzwoaAqFLADdoZOmy8
-	 FDeap91epQVX1ocO1R8esTwWwfl6WIttdHdIMntn2vL+JNv7C5O1Iott2DW16mTMsG
-	 Go43hXkuls4Jr6r26e0y8p7nqwLJfUAXUfDplEgPjv46Szpm6FqzSJFRFVo3ZW6HPx
-	 rbLjCWisaojvw==
+	b=UPFyggRp4dJ6Uwb3bTZWkRNfNcQMpgkg9/XyAm6MPM7zfU7QHwYeLm6jcZjk3kPIZ
+	 9ZgDEcurGiejbuh2dZaBnU70uElmsUu6SlbbrIgVLa4sk0yGoz+L/H3ySY0KOHvzdD
+	 d/9RIx1vmgZ+yVoDmm7ecFBRLMNBqoIHdppK5tLYPfNP36mmDIog7XZlVN7x1mMAVf
+	 PTUzg0uJwl8VEBWsCezVmSIhb65OSu1QQW+IVHNchFRuBOdH1P0YMk1orMhU1YKCYi
+	 fYhV7DSz1hMGt9GLER+RqfrqGW87NpqeCl+TfyjzttXLXsS0AqqLQzVx3Kx/z4my5n
+	 wNCRCtgo1IeKg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RKDGT36b0z2ypy
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 21:13:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RKDGj4TmKz2yhT
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 21:14:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=dRL5OTw5;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=j23yTPIu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::52e; helo=mail-pg1-x52e.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::52d; helo=mail-pg1-x52d.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKDGR43Dmz2yGB
-	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Aug 2023 21:13:51 +1000 (AEST)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-564670fad4bso390196a12.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Aug 2023 04:13:51 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKDGf70frz2yV5
+	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Aug 2023 21:14:02 +1000 (AEST)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-55b5a37acb6so362205a12.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Aug 2023 04:14:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691406829; x=1692011629;
+        d=1e100.net; s=20221208; t=1691406841; x=1692011641;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GSWsN00ewH1CUxuL2on0amogNZtYjpfZMPk3tXk1MLc=;
-        b=gr0WfmD4okaylEqH+uygGXH8n5kYGrK+aKBN2ShkoxGUc/C0vD62rcLR3Yv58mWoPH
-         3lVnHXhsMWvVX8y9qN3sDTvaebUZC+hMCLAQgo58wBLY+1yOGNIQVWIyBF2LU5e9z6Ac
-         Ws4TqbnvEuLhjNxFpAKlszpfEFLqehxdmtSAYQ/nTmodSgrVacrVgcNnkaVjmsm0W+AD
-         9Lgwwcy7HdYzIYkbPOabRIwuhbtPc7ogvSK24bbk8iRLktOatQoHZav7l6ezLVw5q0Wq
-         ebiEhp4qZgqkxCJ0TnOe+H3+uPvC7kBEA9RK0StcPPJKAjgrn2BU0iIhUNzvqirWxtGY
-         JVig==
-X-Gm-Message-State: ABy/qLaBK3+x1c9lVJWlEmH+J4/H1CG/xudxuNpJnE2VOClByPWXcG6r
-	F1jZuIpP6Sk4l2tLkfE/MbdZJw==
-X-Google-Smtp-Source: APBJJlEEwhe0wjgrc7nxC5j9G5K3ZI0sWgwDykpBRAx7nLtKV2LZNd6jgA89VvGSaryf9LAeIFxakg==
-X-Received: by 2002:a17:90a:901:b0:268:3a31:3e4d with SMTP id n1-20020a17090a090100b002683a313e4dmr23070871pjn.2.1691406828996;
-        Mon, 07 Aug 2023 04:13:48 -0700 (PDT)
+        bh=a0ijFA9s9bGVMHT4vLgTYS12L8yx2Rc7o6TjM9ZoJx8=;
+        b=kUinyhTfD5OKrRp+o34T4WcgA7v5z6WqUmPcDsPqYeXMnaZC+b60wDpAT90zz1iHxq
+         OeyVKspOZi3pQJO2ZbX08AobkyDhojC/FN9Dd7hTy0HqXVaiXPl2b/AWDkNYqNYWb+F4
+         dsI3JBdf2cTuUeJg3icypss1GLE4Z8HeeyqqJdEYTvwf0fo9U8wGP71D0eel4kU6wSXQ
+         DeIxjtVbeSgka+aprutbyeT/2OmUa2EuKHH/5ETDyRS14euOHJeE58Z3t0MjGtpNHy2k
+         n4e1fYq4JbUou1EfdwsQsZNi6+Ik0sBwf21+FN4xJ7BcE6eaErDKwQhPV5uuYEhF8/wP
+         IHOg==
+X-Gm-Message-State: AOJu0YxDkTLak56CZwh6zCTHS1V4TBOQsI2gQefbjsyYON36dSTYhzoi
+	h7O6XGTn4wRXuc3shJjq8L2Krg==
+X-Google-Smtp-Source: AGHT+IELWLhV4Bj40lkko/D2F7gtSRcHKPclt9k8JlXsq8dyT7OdoG/0VZRRAUzfMJnehzLNwTS/oA==
+X-Received: by 2002:a17:90a:2909:b0:269:5bf7:d79c with SMTP id g9-20020a17090a290900b002695bf7d79cmr2214416pjd.1.1691406841328;
+        Mon, 07 Aug 2023 04:14:01 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b0025be7b69d73sm5861191pjt.12.2023.08.07.04.13.37
+        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b0025be7b69d73sm5861191pjt.12.2023.08.07.04.13.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 04:13:48 -0700 (PDT)
+        Mon, 07 Aug 2023 04:14:01 -0700 (PDT)
 To: akpm@linux-foundation.org,
 	david@fromorbit.com,
 	tkhai@ya.ru,
@@ -71,9 +71,9 @@ To: akpm@linux-foundation.org,
 	muchun.song@linux.dev,
 	simon.horman@corigine.com,
 	dlemoal@kernel.org
-Subject: [PATCH v4 18/48] rcu: dynamically allocate the rcu-lazy shrinker
-Date: Mon,  7 Aug 2023 19:09:06 +0800
-Message-Id: <20230807110936.21819-19-zhengqi.arch@bytedance.com>
+Subject: [PATCH v4 19/48] rcu: dynamically allocate the rcu-kfree shrinker
+Date: Mon,  7 Aug 2023 19:09:07 +0800
+Message-Id: <20230807110936.21819-20-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
 References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
@@ -96,58 +96,60 @@ Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.l
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use new APIs to dynamically allocate the rcu-lazy shrinker.
+Use new APIs to dynamically allocate the rcu-kfree shrinker.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 ---
- kernel/rcu/tree_nocb.h | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ kernel/rcu/tree.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-index 5598212d1f27..e1c59c33738a 100644
---- a/kernel/rcu/tree_nocb.h
-+++ b/kernel/rcu/tree_nocb.h
-@@ -1396,13 +1396,6 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 
- 	return count ? count : SHRINK_STOP;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 7c79480bfaa0..3b20fc46c514 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3449,13 +3449,6 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	return freed == 0 ? SHRINK_STOP : freed;
  }
--
--static struct shrinker lazy_rcu_shrinker = {
--	.count_objects = lazy_rcu_shrink_count,
--	.scan_objects = lazy_rcu_shrink_scan,
+ 
+-static struct shrinker kfree_rcu_shrinker = {
+-	.count_objects = kfree_rcu_shrink_count,
+-	.scan_objects = kfree_rcu_shrink_scan,
 -	.batch = 0,
 -	.seeks = DEFAULT_SEEKS,
 -};
- #endif // #ifdef CONFIG_RCU_LAZY
- 
- void __init rcu_init_nohz(void)
-@@ -1410,6 +1403,7 @@ void __init rcu_init_nohz(void)
+-
+ void __init kfree_rcu_scheduler_running(void)
+ {
  	int cpu;
- 	struct rcu_data *rdp;
- 	const struct cpumask *cpumask = NULL;
-+	struct shrinker * __maybe_unused lazy_rcu_shrinker;
+@@ -4931,6 +4924,7 @@ static void __init kfree_rcu_batch_init(void)
+ {
+ 	int cpu;
+ 	int i, j;
++	struct shrinker *kfree_rcu_shrinker;
  
- #if defined(CONFIG_NO_HZ_FULL)
- 	if (tick_nohz_full_running && !cpumask_empty(tick_nohz_full_mask))
-@@ -1436,8 +1430,16 @@ void __init rcu_init_nohz(void)
- 		return;
- 
- #ifdef CONFIG_RCU_LAZY
--	if (register_shrinker(&lazy_rcu_shrinker, "rcu-lazy"))
--		pr_err("Failed to register lazy_rcu shrinker!\n");
-+	lazy_rcu_shrinker = shrinker_alloc(0, "rcu-lazy");
-+	if (!lazy_rcu_shrinker) {
-+		pr_err("Failed to allocate lazy_rcu shrinker!\n");
-+	} else {
-+		lazy_rcu_shrinker->count_objects = lazy_rcu_shrink_count;
-+		lazy_rcu_shrinker->scan_objects = lazy_rcu_shrink_scan;
-+		lazy_rcu_shrinker->seeks = DEFAULT_SEEKS;
+ 	/* Clamp it to [0:100] seconds interval. */
+ 	if (rcu_delay_page_cache_fill_msec < 0 ||
+@@ -4962,8 +4956,18 @@ static void __init kfree_rcu_batch_init(void)
+ 		INIT_DELAYED_WORK(&krcp->page_cache_work, fill_page_cache_func);
+ 		krcp->initialized = true;
+ 	}
+-	if (register_shrinker(&kfree_rcu_shrinker, "rcu-kfree"))
+-		pr_err("Failed to register kfree_rcu() shrinker!\n");
 +
-+		shrinker_register(lazy_rcu_shrinker);
++	kfree_rcu_shrinker = shrinker_alloc(0, "rcu-kfree");
++	if (!kfree_rcu_shrinker) {
++		pr_err("Failed to allocate kfree_rcu() shrinker!\n");
++		return;
 +	}
- #endif // #ifdef CONFIG_RCU_LAZY
++
++	kfree_rcu_shrinker->count_objects = kfree_rcu_shrink_count;
++	kfree_rcu_shrinker->scan_objects = kfree_rcu_shrink_scan;
++	kfree_rcu_shrinker->seeks = DEFAULT_SEEKS;
++
++	shrinker_register(kfree_rcu_shrinker);
+ }
  
- 	if (!cpumask_subset(rcu_nocb_mask, cpu_possible_mask)) {
+ void __init rcu_init(void)
 -- 
 2.30.2
 
