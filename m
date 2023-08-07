@@ -2,59 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DE67772543
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 15:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E044C77274A
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 16:15:17 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cBwD5oZ7;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=joelfernandes.org header.i=@joelfernandes.org header.a=rsa-sha256 header.s=google header.b=rUbGf+JZ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RKH1S1pmbz2yjj
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 23:17:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RKJHg4cTmz2yh2
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Aug 2023 00:15:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cBwD5oZ7;
+	dkim=pass (1024-bit key; unprotected) header.d=joelfernandes.org header.i=@joelfernandes.org header.a=rsa-sha256 header.s=google header.b=rUbGf+JZ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=joelfernandes.org (client-ip=2a00:1450:4864:20::234; helo=mail-lj1-x234.google.com; envelope-from=joel@joelfernandes.org; receiver=lists.ozlabs.org)
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKH1J3gq2z2yDd
-	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Aug 2023 23:17:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691414260; x=1722950260;
-  h=date:from:to:cc:subject:message-id;
-  bh=uiO2hwWy1Vj2kvOPDCNQ4xwN0F7aI6gAO7tf+rCN1+8=;
-  b=cBwD5oZ7WfWvEsil9xBMAw83TKFb19TuCm0TjBlIT8HSkQggDnWsUbyq
-   x53t6y8MoxO+mksyWszvitntxWkuU23nsD0iR56xoz82Y4CPP1U+IU9ZQ
-   N/QTM3RWvS5hB9ukegc0NG5j5/6Qfxc106La//t4hyvj8/c599cLISoMJ
-   j0/wynBI0PxnP8Tb8BSCPzNgg4q1rK8f6KHdJleqar37/pXo7CYzNd/Xn
-   kc+JxmJSbTdH/GAMbeWus4WMQEP0rK8l6X3kRjgWApbqU2ixzYKSEz23R
-   JBDbVmDgN5l9X//02aidMd+YCCeRI1hpzISfUZWyTcTeYUrmXCMTOiCTs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="401512565"
-X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
-   d="scan'208";a="401512565"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 06:09:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="766001639"
-X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
-   d="scan'208";a="766001639"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 07 Aug 2023 06:09:54 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qSzzd-0004gL-0y;
-	Mon, 07 Aug 2023 13:09:53 +0000
-Date: Mon, 07 Aug 2023 21:08:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 8803c7fbb7f1907eb999d3100559687a853eeee3
-Message-ID: <202308072157.bZxoKjfs-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKJHY1tl5z2yVH
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Aug 2023 00:15:03 +1000 (AEST)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b9f0b7af65so70124711fa.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Aug 2023 07:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1691417694; x=1692022494;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=miXhKIkPE3lmozcU/B+jO2gbohIQfxtvXQrL6JQrLaA=;
+        b=rUbGf+JZcp35dmq7w8slw0nHgKluYcuW30g35dHvkRNE8GAplx/bmohiweQc5R1m+t
+         n8zrOL6x18GLNviLyBdF1SBbwknD+YT0R92Z3r7ozf/LbxR/ZX+oGNC6AweYXTnFy1Td
+         qjM3KL4IzdURsMRiax7oRl3ig1sdRDyJ5+2Ck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691417694; x=1692022494;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=miXhKIkPE3lmozcU/B+jO2gbohIQfxtvXQrL6JQrLaA=;
+        b=SMgPmgGoHa4mADgyecpALROsS74pwJO2cIQ1civPIl4VKfEI93KXQQIefMljZTsOjy
+         EaeWh3HO+t3ghbCGFhUgrsNV+g5+2ZMmNLKTSFphIV3g80dkYIzcMQ/aISGK+ebygyWA
+         /covxZNo9tmHzl5pfIeD0Ea0kpQWhKw/wNIjZU+MFMOccLEJiXBmkPu47sAaYLALXAKb
+         pwNiogxWzwUrps1Jbl4s0JntOcXt4bNjqBZ2MRXIopgZF9kC5gD4ZpyHIX1A1dsDVv93
+         ZYUX5AnHPx0PVWufjyewWLI09py98fvXBJiDwcmPudDQuNjAebdgGpET0KjebPLez5EK
+         5Qhg==
+X-Gm-Message-State: AOJu0Yxa6nnN052tClTabNZzw5+Qku/05F5EDUDO/L5Z3V5lVIhA46tI
+	xD4I8SR3UfNSOegue9bzIKL4XCNf6mYNhm/tUFWw4w==
+X-Google-Smtp-Source: AGHT+IEUzxQ8uhfef4Gwj5w4R2S1a/fG2YmFdaAnrERcAODuTjnUg5MW8ffcyCI3WwFTK01hsv/WyE2OTkrmMwFZBOU=
+X-Received: by 2002:a2e:9254:0:b0:2b6:dfef:d526 with SMTP id
+ v20-20020a2e9254000000b002b6dfefd526mr6547671ljg.11.1691417693488; Mon, 07
+ Aug 2023 07:14:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230807110936.21819-1-zhengqi.arch@bytedance.com> <20230807110936.21819-20-zhengqi.arch@bytedance.com>
+In-Reply-To: <20230807110936.21819-20-zhengqi.arch@bytedance.com>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Mon, 7 Aug 2023 10:14:48 -0400
+Message-ID: <CAEXW_YQHGBE2kKupLf12BGOEU5GnQsBUtVQcyMnzxUZ4y48QFA@mail.gmail.com>
+Subject: Re: [PATCH v4 19/48] rcu: dynamically allocate the rcu-kfree shrinker
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,157 +72,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: kvm@vger.kernel.org, djwong@kernel.org, roman.gushchin@linux.dev, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, simon.horman@corigine.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, paulmck@kernel.org, linux-arm-msm@vger.kernel.org, linux-nfs@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, dlemoal@kernel.org, yujie.liu@intel.com, vbabka@suse.cz, linux-raid@vger.kernel.org, brauner@kernel.org, tytso@mit.edu, gregkh@linuxfoundation.org, muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, senozhatsky@chromium.org, netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 8803c7fbb7f1907eb999d3100559687a853eeee3  erofs: boost negative xattr lookup with bloom filter
+On Mon, Aug 7, 2023 at 7:17=E2=80=AFAM Qi Zheng <zhengqi.arch@bytedance.com=
+> wrote:
+>
+> Use new APIs to dynamically allocate the rcu-kfree shrinker.
+>
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
-elapsed time: 724m
+For RCU:
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-configs tested: 134
-configs skipped: 5
+thanks,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+- Joel
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r003-20230807   gcc  
-alpha                randconfig-r006-20230807   gcc  
-alpha                randconfig-r016-20230807   gcc  
-alpha                randconfig-r025-20230807   gcc  
-alpha                randconfig-r026-20230807   gcc  
-alpha                randconfig-r031-20230807   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230807   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r013-20230807   gcc  
-arm                  randconfig-r024-20230807   gcc  
-arm                  randconfig-r046-20230807   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230807   gcc  
-arm64                randconfig-r004-20230807   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r013-20230807   gcc  
-csky                 randconfig-r014-20230807   gcc  
-csky                 randconfig-r025-20230807   gcc  
-csky                 randconfig-r033-20230807   gcc  
-hexagon              randconfig-r011-20230807   clang
-hexagon              randconfig-r012-20230807   clang
-hexagon              randconfig-r041-20230807   clang
-hexagon              randconfig-r045-20230807   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230807   gcc  
-i386         buildonly-randconfig-r005-20230807   gcc  
-i386         buildonly-randconfig-r006-20230807   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230807   gcc  
-i386                 randconfig-i002-20230807   gcc  
-i386                 randconfig-i003-20230807   gcc  
-i386                 randconfig-i004-20230807   gcc  
-i386                 randconfig-i005-20230807   gcc  
-i386                 randconfig-i006-20230807   gcc  
-i386                 randconfig-i011-20230807   clang
-i386                 randconfig-i012-20230807   clang
-i386                 randconfig-i013-20230807   clang
-i386                 randconfig-i014-20230807   clang
-i386                 randconfig-i015-20230807   clang
-i386                 randconfig-i016-20230807   clang
-i386                 randconfig-r002-20230807   gcc  
-i386                 randconfig-r025-20230807   clang
-i386                 randconfig-r036-20230807   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r005-20230807   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r005-20230807   gcc  
-m68k                 randconfig-r015-20230807   gcc  
-m68k                 randconfig-r024-20230807   gcc  
-microblaze           randconfig-r026-20230807   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r016-20230807   gcc  
-mips                 randconfig-r033-20230807   clang
-mips                 randconfig-r036-20230807   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r022-20230807   gcc  
-nios2                randconfig-r023-20230807   gcc  
-nios2                randconfig-r035-20230807   gcc  
-openrisc             randconfig-r032-20230807   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r022-20230807   gcc  
-parisc               randconfig-r032-20230807   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r012-20230807   clang
-powerpc              randconfig-r035-20230807   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r006-20230807   gcc  
-riscv                randconfig-r034-20230807   gcc  
-riscv                randconfig-r042-20230807   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r011-20230807   clang
-s390                 randconfig-r044-20230807   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r001-20230807   gcc  
-sh                   randconfig-r002-20230807   gcc  
-sh                   randconfig-r026-20230807   gcc  
-sh                   randconfig-r031-20230807   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r022-20230807   gcc  
-sparc                randconfig-r034-20230807   gcc  
-sparc64              randconfig-r021-20230807   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r003-20230807   clang
-um                   randconfig-r014-20230807   gcc  
-um                   randconfig-r015-20230807   gcc  
-um                   randconfig-r023-20230807   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230807   gcc  
-x86_64       buildonly-randconfig-r002-20230807   gcc  
-x86_64       buildonly-randconfig-r003-20230807   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230807   clang
-x86_64               randconfig-x002-20230807   clang
-x86_64               randconfig-x003-20230807   clang
-x86_64               randconfig-x004-20230807   clang
-x86_64               randconfig-x005-20230807   clang
-x86_64               randconfig-x006-20230807   clang
-x86_64               randconfig-x011-20230807   gcc  
-x86_64               randconfig-x012-20230807   gcc  
-x86_64               randconfig-x013-20230807   gcc  
-x86_64               randconfig-x014-20230807   gcc  
-x86_64               randconfig-x015-20230807   gcc  
-x86_64               randconfig-x016-20230807   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  kernel/rcu/tree.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 7c79480bfaa0..3b20fc46c514 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3449,13 +3449,6 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, str=
+uct shrink_control *sc)
+>         return freed =3D=3D 0 ? SHRINK_STOP : freed;
+>  }
+>
+> -static struct shrinker kfree_rcu_shrinker =3D {
+> -       .count_objects =3D kfree_rcu_shrink_count,
+> -       .scan_objects =3D kfree_rcu_shrink_scan,
+> -       .batch =3D 0,
+> -       .seeks =3D DEFAULT_SEEKS,
+> -};
+> -
+>  void __init kfree_rcu_scheduler_running(void)
+>  {
+>         int cpu;
+> @@ -4931,6 +4924,7 @@ static void __init kfree_rcu_batch_init(void)
+>  {
+>         int cpu;
+>         int i, j;
+> +       struct shrinker *kfree_rcu_shrinker;
+>
+>         /* Clamp it to [0:100] seconds interval. */
+>         if (rcu_delay_page_cache_fill_msec < 0 ||
+> @@ -4962,8 +4956,18 @@ static void __init kfree_rcu_batch_init(void)
+>                 INIT_DELAYED_WORK(&krcp->page_cache_work, fill_page_cache=
+_func);
+>                 krcp->initialized =3D true;
+>         }
+> -       if (register_shrinker(&kfree_rcu_shrinker, "rcu-kfree"))
+> -               pr_err("Failed to register kfree_rcu() shrinker!\n");
+> +
+> +       kfree_rcu_shrinker =3D shrinker_alloc(0, "rcu-kfree");
+> +       if (!kfree_rcu_shrinker) {
+> +               pr_err("Failed to allocate kfree_rcu() shrinker!\n");
+> +               return;
+> +       }
+> +
+> +       kfree_rcu_shrinker->count_objects =3D kfree_rcu_shrink_count;
+> +       kfree_rcu_shrinker->scan_objects =3D kfree_rcu_shrink_scan;
+> +       kfree_rcu_shrinker->seeks =3D DEFAULT_SEEKS;
+> +
+> +       shrinker_register(kfree_rcu_shrinker);
+>  }
+>
+>  void __init rcu_init(void)
+> --
+> 2.30.2
+>
