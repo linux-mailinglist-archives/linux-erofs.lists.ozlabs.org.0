@@ -1,84 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A8A8772142
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 13:20:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1691407219;
-	bh=+T9zoPssix7N9qfaGNa68znQHEAFyeYciCKXdVaHQFo=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=R2pe2w4S+BtMjfyXA0OmNkYyZjgn3oGPD0k9M4zZVfclS9GMtxdEOYdgmnWWHWSQT
-	 E5p1ATNXLpIZjh65IZ3SZ74SB3YqAIrgJTwO4R8D87La73QT4f49MzjkLlQLU9raXz
-	 A7oASOzfy8VntSnmxlj42dgX2fMnnlhQZorfd59z1VAPgIyN1jG+Jr6TwUOuOARF9M
-	 JPsmQFKExLKw7sW6SkRt2pvbum2ja7KytZtICGWl8vUMGe99PGRmIxmMfTD9uxK2vF
-	 Mh+RW3opsw0/4ty7LaFNCLUDVJPXC2P3dXO/PgxP7we7T4CL/VhbUfcxAbU+c8YUOF
-	 4PaZJKWKPtlHQ==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DE67772543
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 15:17:50 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cBwD5oZ7;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RKDPv1hXQz2yh2
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 21:20:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RKH1S1pmbz2yjj
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Aug 2023 23:17:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=AEtfoTIx;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cBwD5oZ7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1035; helo=mail-pj1-x1035.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.88; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKDPq2q8tz2yV5
-	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Aug 2023 21:20:14 +1000 (AEST)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2690803a368so591680a91.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Aug 2023 04:20:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691407213; x=1692012013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+T9zoPssix7N9qfaGNa68znQHEAFyeYciCKXdVaHQFo=;
-        b=iIgS4ulEZ7LN7xbME4FcUC8a7C69+NUlHK2reFIf+D18mK7PDetaqI2AYox1FyvCvb
-         IQ+RSyltL1RkPyhAECluFT/rwTElE+q0k4PmENlLydJ1XpLvyqbkZPRdzHurdbffsF0T
-         ObT3QO4QDfVjJ1jWS32cfoSBUSncwlgkPSBtAWWq8Q2UJqY1Lwnz+yqqt4+BYZZ1mJ2z
-         sq3xuIuXF2/XlVPYXnYx/kJV3m/Li+0T+0bUK8VkR1GVYzt+N5PBpqL568sUCqciEJRk
-         ofO7oY+wS/K67+8jhFtAuBXEzZFZNAtp9wRbk6VQXTizHClT5MOcQzoV93YHotHrNE0v
-         7w/w==
-X-Gm-Message-State: AOJu0Yz24/CxEpT8zAM6tLT1sOn7ep7dvuvJua99gMd0LiUz1q3HPd5U
-	mtItUyIzcf+rNhumS3vGjLJ5aQ==
-X-Google-Smtp-Source: AGHT+IF0evmdLrDlsDTr5Y4TU4NmdZynXgLSKug5uHjkOo8cedCVYEqxJp+s7Xi+ZKGxMcrB3jNS6g==
-X-Received: by 2002:a17:90a:648:b0:269:60ed:d493 with SMTP id q8-20020a17090a064800b0026960edd493mr1830877pje.4.1691407213020;
-        Mon, 07 Aug 2023 04:20:13 -0700 (PDT)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b0025be7b69d73sm5861191pjt.12.2023.08.07.04.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 04:20:12 -0700 (PDT)
-To: akpm@linux-foundation.org,
-	david@fromorbit.com,
-	tkhai@ya.ru,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	paulmck@kernel.org,
-	tytso@mit.edu,
-	steven.price@arm.com,
-	cel@kernel.org,
-	senozhatsky@chromium.org,
-	yujie.liu@intel.com,
-	gregkh@linuxfoundation.org,
-	muchun.song@linux.dev,
-	simon.horman@corigine.com,
-	dlemoal@kernel.org
-Subject: [PATCH v4 48/48] mm: shrinker: convert shrinker_rwsem to mutex
-Date: Mon,  7 Aug 2023 19:09:36 +0800
-Message-Id: <20230807110936.21819-49-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
-References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKH1J3gq2z2yDd
+	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Aug 2023 23:17:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691414260; x=1722950260;
+  h=date:from:to:cc:subject:message-id;
+  bh=uiO2hwWy1Vj2kvOPDCNQ4xwN0F7aI6gAO7tf+rCN1+8=;
+  b=cBwD5oZ7WfWvEsil9xBMAw83TKFb19TuCm0TjBlIT8HSkQggDnWsUbyq
+   x53t6y8MoxO+mksyWszvitntxWkuU23nsD0iR56xoz82Y4CPP1U+IU9ZQ
+   N/QTM3RWvS5hB9ukegc0NG5j5/6Qfxc106La//t4hyvj8/c599cLISoMJ
+   j0/wynBI0PxnP8Tb8BSCPzNgg4q1rK8f6KHdJleqar37/pXo7CYzNd/Xn
+   kc+JxmJSbTdH/GAMbeWus4WMQEP0rK8l6X3kRjgWApbqU2ixzYKSEz23R
+   JBDbVmDgN5l9X//02aidMd+YCCeRI1hpzISfUZWyTcTeYUrmXCMTOiCTs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="401512565"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="401512565"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 06:09:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="766001639"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="766001639"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 07 Aug 2023 06:09:54 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qSzzd-0004gL-0y;
+	Mon, 07 Aug 2023 13:09:53 +0000
+Date: Mon, 07 Aug 2023 21:08:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 8803c7fbb7f1907eb999d3100559687a853eeee3
+Message-ID: <202308072157.bZxoKjfs-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,241 +66,157 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org, cluster-devel@redhat.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Now there are no readers of shrinker_rwsem, so we can simply replace it
-with mutex lock.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 8803c7fbb7f1907eb999d3100559687a853eeee3  erofs: boost negative xattr lookup with bloom filter
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- drivers/md/dm-cache-metadata.c |  2 +-
- fs/super.c                     |  2 +-
- mm/shrinker.c                  | 28 ++++++++++++++--------------
- mm/shrinker_debug.c            | 14 +++++++-------
- 4 files changed, 23 insertions(+), 23 deletions(-)
+elapsed time: 724m
 
-diff --git a/drivers/md/dm-cache-metadata.c b/drivers/md/dm-cache-metadata.c
-index acffed750e3e..9e0c69958587 100644
---- a/drivers/md/dm-cache-metadata.c
-+++ b/drivers/md/dm-cache-metadata.c
-@@ -1828,7 +1828,7 @@ int dm_cache_metadata_abort(struct dm_cache_metadata *cmd)
- 	 * Replacement block manager (new_bm) is created and old_bm destroyed outside of
- 	 * cmd root_lock to avoid ABBA deadlock that would result (due to life-cycle of
- 	 * shrinker associated with the block manager's bufio client vs cmd root_lock).
--	 * - must take shrinker_rwsem without holding cmd->root_lock
-+	 * - must take shrinker_mutex without holding cmd->root_lock
- 	 */
- 	new_bm = dm_block_manager_create(cmd->bdev, DM_CACHE_METADATA_BLOCK_SIZE << SECTOR_SHIFT,
- 					 CACHE_MAX_CONCURRENT_LOCKS);
-diff --git a/fs/super.c b/fs/super.c
-index a28193045345..60c2d290c754 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -54,7 +54,7 @@ static char *sb_writers_name[SB_FREEZE_LEVELS] = {
-  * One thing we have to be careful of with a per-sb shrinker is that we don't
-  * drop the last active reference to the superblock from within the shrinker.
-  * If that happens we could trigger unregistering the shrinker from within the
-- * shrinker path and that leads to deadlock on the shrinker_rwsem. Hence we
-+ * shrinker path and that leads to deadlock on the shrinker_mutex. Hence we
-  * take a passive reference to the superblock to avoid this from occurring.
-  */
- static unsigned long super_cache_scan(struct shrinker *shrink,
-diff --git a/mm/shrinker.c b/mm/shrinker.c
-index a12dede5d21f..3d44a335ef3c 100644
---- a/mm/shrinker.c
-+++ b/mm/shrinker.c
-@@ -8,7 +8,7 @@
- #include "internal.h"
- 
- LIST_HEAD(shrinker_list);
--DECLARE_RWSEM(shrinker_rwsem);
-+DEFINE_MUTEX(shrinker_mutex);
- 
- #ifdef CONFIG_MEMCG
- static int shrinker_nr_max;
-@@ -80,7 +80,7 @@ int alloc_shrinker_info(struct mem_cgroup *memcg)
- 	int nid, ret = 0;
- 	int array_size = 0;
- 
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	array_size = shrinker_unit_size(shrinker_nr_max);
- 	for_each_node(nid) {
- 		info = kvzalloc_node(sizeof(*info) + array_size, GFP_KERNEL, nid);
-@@ -91,7 +91,7 @@ int alloc_shrinker_info(struct mem_cgroup *memcg)
- 			goto err;
- 		rcu_assign_pointer(memcg->nodeinfo[nid]->shrinker_info, info);
- 	}
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 
- 	return ret;
- 
-@@ -104,7 +104,7 @@ static struct shrinker_info *shrinker_info_protected(struct mem_cgroup *memcg,
- 						     int nid)
- {
- 	return rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_info,
--					 lockdep_is_held(&shrinker_rwsem));
-+					 lockdep_is_held(&shrinker_mutex));
- }
- 
- static struct shrinker_info *shrinker_info_rcu(struct mem_cgroup *memcg,
-@@ -161,7 +161,7 @@ static int expand_shrinker_info(int new_id)
- 	if (!root_mem_cgroup)
- 		goto out;
- 
--	lockdep_assert_held(&shrinker_rwsem);
-+	lockdep_assert_held(&shrinker_mutex);
- 
- 	new_size = shrinker_unit_size(new_nr_max);
- 	old_size = shrinker_unit_size(shrinker_nr_max);
-@@ -224,7 +224,7 @@ static int shrinker_memcg_alloc(struct shrinker *shrinker)
- 	if (mem_cgroup_disabled())
- 		return -ENOSYS;
- 
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	id = idr_alloc(&shrinker_idr, shrinker, 0, 0, GFP_KERNEL);
- 	if (id < 0)
- 		goto unlock;
-@@ -238,7 +238,7 @@ static int shrinker_memcg_alloc(struct shrinker *shrinker)
- 	shrinker->id = id;
- 	ret = 0;
- unlock:
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 	return ret;
- }
- 
-@@ -248,7 +248,7 @@ static void shrinker_memcg_remove(struct shrinker *shrinker)
- 
- 	BUG_ON(id < 0);
- 
--	lockdep_assert_held(&shrinker_rwsem);
-+	lockdep_assert_held(&shrinker_mutex);
- 
- 	idr_remove(&shrinker_idr, id);
- }
-@@ -299,7 +299,7 @@ void reparent_shrinker_deferred(struct mem_cgroup *memcg)
- 		parent = root_mem_cgroup;
- 
- 	/* Prevent from concurrent shrinker_info expand */
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	for_each_node(nid) {
- 		child_info = shrinker_info_protected(memcg, nid);
- 		parent_info = shrinker_info_protected(parent, nid);
-@@ -312,7 +312,7 @@ void reparent_shrinker_deferred(struct mem_cgroup *memcg)
- 			}
- 		}
- 	}
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- }
- #else
- static int shrinker_memcg_alloc(struct shrinker *shrinker)
-@@ -708,11 +708,11 @@ void shrinker_register(struct shrinker *shrinker)
- 		return;
- 	}
- 
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	list_add_tail_rcu(&shrinker->list, &shrinker_list);
- 	shrinker->flags |= SHRINKER_REGISTERED;
- 	shrinker_debugfs_add(shrinker);
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 
- 	init_completion(&shrinker->done);
- 	/*
-@@ -745,7 +745,7 @@ void shrinker_free(struct shrinker *shrinker)
- 		wait_for_completion(&shrinker->done);
- 	}
- 
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	if (shrinker->flags & SHRINKER_REGISTERED) {
- 		/*
- 		 * Lookups on the shrinker are over and will fail in the future,
-@@ -760,7 +760,7 @@ void shrinker_free(struct shrinker *shrinker)
- 
- 	if (shrinker->flags & SHRINKER_MEMCG_AWARE)
- 		shrinker_memcg_remove(shrinker);
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 
- 	if (debugfs_entry)
- 		shrinker_debugfs_remove(debugfs_entry, debugfs_id);
-diff --git a/mm/shrinker_debug.c b/mm/shrinker_debug.c
-index aa2027075ed9..b698ca9e309e 100644
---- a/mm/shrinker_debug.c
-+++ b/mm/shrinker_debug.c
-@@ -7,7 +7,7 @@
- #include <linux/memcontrol.h>
- 
- /* defined in vmscan.c */
--extern struct rw_semaphore shrinker_rwsem;
-+extern struct mutex shrinker_mutex;
- extern struct list_head shrinker_list;
- 
- static DEFINE_IDA(shrinker_debugfs_ida);
-@@ -163,7 +163,7 @@ int shrinker_debugfs_add(struct shrinker *shrinker)
- 	char buf[128];
- 	int id;
- 
--	lockdep_assert_held(&shrinker_rwsem);
-+	lockdep_assert_held(&shrinker_mutex);
- 
- 	/* debugfs isn't initialized yet, add debugfs entries later. */
- 	if (!shrinker_debugfs_root)
-@@ -220,7 +220,7 @@ int shrinker_debugfs_rename(struct shrinker *shrinker, const char *fmt, ...)
- 	if (!new)
- 		return -ENOMEM;
- 
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 
- 	old = shrinker->name;
- 	shrinker->name = new;
-@@ -238,7 +238,7 @@ int shrinker_debugfs_rename(struct shrinker *shrinker, const char *fmt, ...)
- 			shrinker->debugfs_entry = entry;
- 	}
- 
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 
- 	kfree_const(old);
- 
-@@ -251,7 +251,7 @@ struct dentry *shrinker_debugfs_detach(struct shrinker *shrinker,
- {
- 	struct dentry *entry = shrinker->debugfs_entry;
- 
--	lockdep_assert_held(&shrinker_rwsem);
-+	lockdep_assert_held(&shrinker_mutex);
- 
- 	shrinker_debugfs_name_free(shrinker);
- 
-@@ -279,14 +279,14 @@ static int __init shrinker_debugfs_init(void)
- 	shrinker_debugfs_root = dentry;
- 
- 	/* Create debugfs entries for shrinkers registered at boot */
--	down_write(&shrinker_rwsem);
-+	mutex_lock(&shrinker_mutex);
- 	list_for_each_entry(shrinker, &shrinker_list, list)
- 		if (!shrinker->debugfs_entry) {
- 			ret = shrinker_debugfs_add(shrinker);
- 			if (ret)
- 				break;
- 		}
--	up_write(&shrinker_rwsem);
-+	mutex_unlock(&shrinker_mutex);
- 
- 	return ret;
- }
+configs tested: 134
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r003-20230807   gcc  
+alpha                randconfig-r006-20230807   gcc  
+alpha                randconfig-r016-20230807   gcc  
+alpha                randconfig-r025-20230807   gcc  
+alpha                randconfig-r026-20230807   gcc  
+alpha                randconfig-r031-20230807   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230807   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r013-20230807   gcc  
+arm                  randconfig-r024-20230807   gcc  
+arm                  randconfig-r046-20230807   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230807   gcc  
+arm64                randconfig-r004-20230807   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r013-20230807   gcc  
+csky                 randconfig-r014-20230807   gcc  
+csky                 randconfig-r025-20230807   gcc  
+csky                 randconfig-r033-20230807   gcc  
+hexagon              randconfig-r011-20230807   clang
+hexagon              randconfig-r012-20230807   clang
+hexagon              randconfig-r041-20230807   clang
+hexagon              randconfig-r045-20230807   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230807   gcc  
+i386         buildonly-randconfig-r005-20230807   gcc  
+i386         buildonly-randconfig-r006-20230807   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230807   gcc  
+i386                 randconfig-i002-20230807   gcc  
+i386                 randconfig-i003-20230807   gcc  
+i386                 randconfig-i004-20230807   gcc  
+i386                 randconfig-i005-20230807   gcc  
+i386                 randconfig-i006-20230807   gcc  
+i386                 randconfig-i011-20230807   clang
+i386                 randconfig-i012-20230807   clang
+i386                 randconfig-i013-20230807   clang
+i386                 randconfig-i014-20230807   clang
+i386                 randconfig-i015-20230807   clang
+i386                 randconfig-i016-20230807   clang
+i386                 randconfig-r002-20230807   gcc  
+i386                 randconfig-r025-20230807   clang
+i386                 randconfig-r036-20230807   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r005-20230807   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r005-20230807   gcc  
+m68k                 randconfig-r015-20230807   gcc  
+m68k                 randconfig-r024-20230807   gcc  
+microblaze           randconfig-r026-20230807   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r016-20230807   gcc  
+mips                 randconfig-r033-20230807   clang
+mips                 randconfig-r036-20230807   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r022-20230807   gcc  
+nios2                randconfig-r023-20230807   gcc  
+nios2                randconfig-r035-20230807   gcc  
+openrisc             randconfig-r032-20230807   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r022-20230807   gcc  
+parisc               randconfig-r032-20230807   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r012-20230807   clang
+powerpc              randconfig-r035-20230807   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r006-20230807   gcc  
+riscv                randconfig-r034-20230807   gcc  
+riscv                randconfig-r042-20230807   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r011-20230807   clang
+s390                 randconfig-r044-20230807   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r001-20230807   gcc  
+sh                   randconfig-r002-20230807   gcc  
+sh                   randconfig-r026-20230807   gcc  
+sh                   randconfig-r031-20230807   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r022-20230807   gcc  
+sparc                randconfig-r034-20230807   gcc  
+sparc64              randconfig-r021-20230807   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r003-20230807   clang
+um                   randconfig-r014-20230807   gcc  
+um                   randconfig-r015-20230807   gcc  
+um                   randconfig-r023-20230807   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230807   gcc  
+x86_64       buildonly-randconfig-r002-20230807   gcc  
+x86_64       buildonly-randconfig-r003-20230807   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230807   clang
+x86_64               randconfig-x002-20230807   clang
+x86_64               randconfig-x003-20230807   clang
+x86_64               randconfig-x004-20230807   clang
+x86_64               randconfig-x005-20230807   clang
+x86_64               randconfig-x006-20230807   clang
+x86_64               randconfig-x011-20230807   gcc  
+x86_64               randconfig-x012-20230807   gcc  
+x86_64               randconfig-x013-20230807   gcc  
+x86_64               randconfig-x014-20230807   gcc  
+x86_64               randconfig-x015-20230807   gcc  
+x86_64               randconfig-x016-20230807   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
 -- 
-2.30.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
