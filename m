@@ -1,56 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92407773A26
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Aug 2023 14:31:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1691497885;
-	bh=pJdo61ItYoYPlAvwjs9Ung9FYQ9H/sCTjVhxj63GCu8=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=L6ntEWtUR8tNBaxeLsYDQ/x3io7XsVq4edMG+t/FQu0pZj9BP8kZJqyBJ+d9ErLgZ
-	 umcHlgnhQIXWJv4+HqQ1BviS2vRlcXS4UegHrSOVv5ux6wky/kBQZg4x1nHIwz5jOy
-	 PuhUcRLv+hJyLxGzY1jfyDlDZksJKXvIaB7Qg4SO+yL9cPW+0UP9sMM8s9jgYIg4d5
-	 8QpDFqa44k2OQiGq/ipwaFTg1lEaPqa7bOlAcNFBCb2zp2VDMng4K2iZFWFRn6gZMS
-	 h490fzYdTHo8yZEhh2uzJ5U871f0Q+gmtdJHxFNhJnuZP9z7VWpZj0kwvDOWIyF/2V
-	 /jxQWB71bpqnw==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0B3E773A1B
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Aug 2023 14:22:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RKsxT3V03z304l
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Aug 2023 22:31:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RKskf3ln1z304g
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Aug 2023 22:22:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=guoxuenan@huawei.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 981 seconds by postgrey-1.37 at boromir; Tue, 08 Aug 2023 22:31:20 AEST
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=14.137.139.154; helo=frasgout12.his.huawei.com; envelope-from=guoxuenan@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from frasgout12.his.huawei.com (unknown [14.137.139.154])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKsxN6tbRz2ytb
-	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Aug 2023 22:31:20 +1000 (AEST)
-Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RKsY50Qnrz1L8cK;
-	Tue,  8 Aug 2023 20:13:45 +0800 (CST)
-Received: from [10.174.177.238] (10.174.177.238) by
- kwepemi500019.china.huawei.com (7.221.188.117) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 8 Aug 2023 20:14:54 +0800
-Message-ID: <610e3d3b-0290-091a-b053-d52eba7b2689@huawei.com>
-Date: Tue, 8 Aug 2023 20:14:38 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RKskZ5fBnz2xWc
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Aug 2023 22:21:56 +1000 (AEST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4RKsQf08z6z9v7Gy
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Aug 2023 20:08:10 +0800 (CST)
+Received: from [10.174.177.238] (unknown [10.174.177.238])
+	by APP1 (Coremail) with SMTP id 76C_BwAHuOFTM9Jkz3mgAA--.5185S2;
+	Tue, 08 Aug 2023 12:21:42 +0000 (GMT)
+Message-ID: <ff2af7dc-910d-454b-a224-323b607a297e@huaweicloud.com>
+Date: Tue, 8 Aug 2023 20:21:37 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
 Subject: Re: [PATCH v2 1/2] erofs-utils: lib: add a way to request supported
  algorithms
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-References: <20230808092335.111834-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20230808092335.111834-1-hsiangkao@linux.alibaba.com>
+From: Guo Xuenan <guoxuenan@huaweicloud.com>
 In-Reply-To: <20230808092335.111834-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.238]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500019.china.huawei.com (7.221.188.117)
+X-CM-TRANSID: 76C_BwAHuOFTM9Jkz3mgAA--.5185S2
+X-Coremail-Antispam: 1UD129KBjvAXoW3CFWrJF1ftr15KF15Xr1UWrg_yoW8Gr1kXo
+	W8Jan8ua1rGryUWFn2kr1Igw43ZF1Uu3W7CFWDJws093ZFqr1YkrWUGw1jgFyrur4YgrWk
+	KaykAa4Dtr4DZw1rn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUU5E7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK
+	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26r1j6r4UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
+X-CM-SenderInfo: xjxr53hhqd0q5kxd4v5lfo033gof0z/
 X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -63,8 +65,6 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Guo Xuenan via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Guo Xuenan <guoxuenan@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
@@ -72,6 +72,7 @@ Tested-by: Guo Xuenan <guoxuenan@huawei.com>
 
 Thanks
 Xuenan
+
 On 2023/8/8 17:23, Gao Xiang wrote:
 > dump.erofs needs to print supported algorithms instead of available
 > compressors.
@@ -505,7 +506,6 @@ On 2023/8/8 17:23, Gao Xiang wrote:
 >   }
 
 -- 
-Guo Xuenan [OS Kernel Lab]
------------------------------
-Email: guoxuenan@huawei.com
+Best regards
+Guo Xuenan
 
