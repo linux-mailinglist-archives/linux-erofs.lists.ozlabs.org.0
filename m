@@ -1,41 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 506677755BB
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 10:45:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58FB077559C
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 10:41:21 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLNtX3yqGz304l
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 18:45:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLNnW1Wnqz304l
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 18:41:19 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=parknet.co.jp (client-ip=210.171.160.6; helo=mail.parknet.co.jp; envelope-from=hirofumi@parknet.co.jp; receiver=lists.ozlabs.org)
+X-Greylist: delayed 192 seconds by postgrey-1.37 at boromir; Wed, 09 Aug 2023 18:41:12 AEST
 Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLNtT5Ss2z2yTv
-	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Aug 2023 18:45:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLNnN74s1z2yVb
+	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Aug 2023 18:41:12 +1000 (AEST)
 Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 5F6A22055F9C;
-	Wed,  9 Aug 2023 17:37:57 +0900 (JST)
+	by mail.parknet.co.jp (Postfix) with ESMTPSA id 2BF732055FA1;
+	Wed,  9 Aug 2023 17:41:12 +0900 (JST)
 Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 3798btR4208465
+	by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 3798fAMk208573
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 9 Aug 2023 17:37:56 +0900
+	Wed, 9 Aug 2023 17:41:11 +0900
 Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 3798btTt140448
+	by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 3798fAiA140744
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 9 Aug 2023 17:37:55 +0900
+	Wed, 9 Aug 2023 17:41:10 +0900
 Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 3798biDW140435;
-	Wed, 9 Aug 2023 17:37:44 +0900
+	by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 3798f9uW140743;
+	Wed, 9 Aug 2023 17:41:09 +0900
 From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 To: Jeff Layton <jlayton@kernel.org>
 Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
-In-Reply-To: <20230807-mgctime-v7-5-d1dec143a704@kernel.org> (Jeff Layton's
-	message of "Mon, 07 Aug 2023 15:38:36 -0400")
+In-Reply-To: <87msz08vc7.fsf@mail.parknet.co.jp> (OGAWA Hirofumi's message of
+	"Wed, 09 Aug 2023 17:37:44 +0900")
 References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
 	<20230807-mgctime-v7-5-d1dec143a704@kernel.org>
-Date: Wed, 09 Aug 2023 17:37:44 +0900
-Message-ID: <87msz08vc7.fsf@mail.parknet.co.jp>
+	<87msz08vc7.fsf@mail.parknet.co.jp>
+Date: Wed, 09 Aug 2023 17:41:09 +0900
+Message-ID: <87il9o8v6i.fsf@mail.parknet.co.jp>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -56,45 +58,21 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jeff Layton <jlayton@kernel.org> writes:
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp> writes:
 
-> Also, it may be that things have changed by the time we get to calling
-> fat_update_time after checking inode_needs_update_time. Ensure that we
-> attempt the i_version bump if any of the S_* flags besides S_ATIME are
-> set.
-
-I'm not sure what it meaning though, this is from
-generic_update_time(). Are you going to change generic_update_time()
-too? If so, it doesn't break lazytime feature?
-
-Thanks.
-
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/fat/misc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Jeff Layton <jlayton@kernel.org> writes:
 >
-> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
-> index 67006ea08db6..8cab87145d63 100644
-> --- a/fs/fat/misc.c
-> +++ b/fs/fat/misc.c
-> @@ -347,14 +347,14 @@ int fat_update_time(struct inode *inode, struct timespec64 *now, int flags)
->  		return 0;
->  
->  	if (flags & (S_ATIME | S_CTIME | S_MTIME)) {
-> -		fat_truncate_time(inode, now, flags);
-> +		fat_truncate_time(inode, NULL, flags);
->  		if (inode->i_sb->s_flags & SB_LAZYTIME)
->  			dirty_flags |= I_DIRTY_TIME;
->  		else
->  			dirty_flags |= I_DIRTY_SYNC;
->  	}
->  
-> -	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
-> +	if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion(inode, false))
->  		dirty_flags |= I_DIRTY_SYNC;
->  
->  	__mark_inode_dirty(inode, dirty_flags);
+>> Also, it may be that things have changed by the time we get to calling
+>> fat_update_time after checking inode_needs_update_time. Ensure that we
+>> attempt the i_version bump if any of the S_* flags besides S_ATIME are
+>> set.
+>
+> I'm not sure what it meaning though, this is from
+> generic_update_time(). Are you going to change generic_update_time()
+> too? If so, it doesn't break lazytime feature?
+>
+> Thanks.
 
+BTW, fat is not implementing lazytime now, but it is for future.
 -- 
 OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
