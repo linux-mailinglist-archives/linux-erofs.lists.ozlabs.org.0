@@ -1,45 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8A1D7762D5
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 16:44:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B247A77630D
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 16:52:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLXrn51f5z2ywL
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 00:44:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLY1Y4mSsz3072
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 00:52:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=parknet.co.jp (client-ip=210.171.160.6; helo=mail.parknet.co.jp; envelope-from=hirofumi@parknet.co.jp; receiver=lists.ozlabs.org)
 Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLXrg2xfxz2xgp
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 00:44:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLY1V2Tb2z2ygX
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 00:52:14 +1000 (AEST)
 Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 593222055FA0;
-	Wed,  9 Aug 2023 23:44:33 +0900 (JST)
+	by mail.parknet.co.jp (Postfix) with ESMTPSA id 7D4BE2055FA3;
+	Wed,  9 Aug 2023 23:52:13 +0900 (JST)
 Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379EiWdd218003
+	by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379EqCN9218206
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 9 Aug 2023 23:44:33 +0900
+	Wed, 9 Aug 2023 23:52:13 +0900
 Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379EiV6k197737
+	by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379EqCeg199482
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 9 Aug 2023 23:44:31 +0900
+	Wed, 9 Aug 2023 23:52:12 +0900
 Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 379EiQ5o197730;
-	Wed, 9 Aug 2023 23:44:26 +0900
+	by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 379EqA73199481;
+	Wed, 9 Aug 2023 23:52:10 +0900
 From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 To: Jeff Layton <jlayton@kernel.org>
 Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
-In-Reply-To: <7edc9239f73022b9c2a1d3f4f946153f85f94739.camel@kernel.org> (Jeff
-	Layton's message of "Wed, 09 Aug 2023 10:22:54 -0400")
+In-Reply-To: <874jl88ed1.fsf@mail.parknet.co.jp> (OGAWA Hirofumi's message of
+	"Wed, 09 Aug 2023 23:44:26 +0900")
 References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
 	<20230807-mgctime-v7-5-d1dec143a704@kernel.org>
 	<87msz08vc7.fsf@mail.parknet.co.jp>
 	<52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
 	<878rak8hia.fsf@mail.parknet.co.jp>
 	<7edc9239f73022b9c2a1d3f4f946153f85f94739.camel@kernel.org>
-Date: Wed, 09 Aug 2023 23:44:26 +0900
-Message-ID: <874jl88ed1.fsf@mail.parknet.co.jp>
+	<874jl88ed1.fsf@mail.parknet.co.jp>
+Date: Wed, 09 Aug 2023 23:52:10 +0900
+Message-ID: <87zg306zfp.fsf@mail.parknet.co.jp>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -60,76 +61,42 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jeff Layton <jlayton@kernel.org> writes:
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp> writes:
 
-> I'm a little confused too. Why do you believe this will break
-> -o relatime handling? This patch changes two things:
+> Jeff Layton <jlayton@kernel.org> writes:
 >
-> 1/ it has fat_update_time fetch its own timestamp (and ignore the "now"
-> parameter). This is in line with the changes in patch #3 of this series,
-> which explains the rationale for this in more detail.
+>> I'm a little confused too. Why do you believe this will break
+>> -o relatime handling? This patch changes two things:
+>>
+>> 1/ it has fat_update_time fetch its own timestamp (and ignore the "now"
+>> parameter). This is in line with the changes in patch #3 of this series,
+>> which explains the rationale for this in more detail.
+>>
+>> 2/ it changes fat_update_time to also update the i_version if any of
+>> S_CTIME|S_MTIME|S_VERSION are set. relatime is all about the S_ATIME,
+>> and it is specifically excluded from that set.
+>>
+>> The rationale for the second change is is also in patch #3, but
+>> basically, we can't guarantee that current_time hasn't changed since we
+>> last checked for inode_needs_update_time, so if any of
+>> S_CTIME/S_MTIME/S_VERSION have changed, then we need to assume that any
+>> of them may need to be changed and attempt to update all 3.
+>>
+>> That said, I think the logic in fat_update_time isn't quite right. I
+>> think want something like this on top of this patch to ensure that the
+>> S_CTIME and S_MTIME get updated, even if the flags only have S_VERSION
+>> set.
+>>
+>> Thoughts?
 >
-> 2/ it changes fat_update_time to also update the i_version if any of
-> S_CTIME|S_MTIME|S_VERSION are set. relatime is all about the S_ATIME,
-> and it is specifically excluded from that set.
+> I'm not talking about "relatime" at all, I'm always talking about
+> "lazytime".
 >
-> The rationale for the second change is is also in patch #3, but
-> basically, we can't guarantee that current_time hasn't changed since we
-> last checked for inode_needs_update_time, so if any of
-> S_CTIME/S_MTIME/S_VERSION have changed, then we need to assume that any
-> of them may need to be changed and attempt to update all 3.
->
-> That said, I think the logic in fat_update_time isn't quite right. I
-> think want something like this on top of this patch to ensure that the
-> S_CTIME and S_MTIME get updated, even if the flags only have S_VERSION
-> set.
->
-> Thoughts?
+> I_DIRTY_TIME delays to update on disk inode only if changed
+> timestamp. But you changed it to I_DIRTY_SYNC, i.e. always update on
+> disk inode by timestamp.
 
-I'm not talking about "relatime" at all, I'm always talking about
-"lazytime".
-
-I_DIRTY_TIME delays to update on disk inode only if changed
-timestamp. But you changed it to I_DIRTY_SYNC, i.e. always update on
-disk inode by timestamp.
-
-Thanks.
-
-> ---------------------8<-----------------------
->
-> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
-> index 080a5035483f..313eef02f45c 100644
-> --- a/fs/fat/misc.c
-> +++ b/fs/fat/misc.c
-> @@ -346,15 +346,21 @@ int fat_update_time(struct inode *inode, int flags)
->         if (inode->i_ino == MSDOS_ROOT_INO)
->                 return 0;
->  
-> -       if (flags & (S_ATIME | S_CTIME | S_MTIME)) {
-> -               fat_truncate_time(inode, NULL, flags);
-> -               if (inode->i_sb->s_flags & SB_LAZYTIME)
-> -                       dirty_flags |= I_DIRTY_TIME;
-> -               else
-> -                       dirty_flags |= I_DIRTY_SYNC;
-> -       }
-> +       /*
-> +        * If any of the flags indicate an expicit change to the file, then we
-> +        * need to ensure that we attempt to update all of 3. We do not do
-> +        * this in the case of an S_ATIME-only update.
-> +        */
-> +       if (flags & (S_CTIME | S_MTIME | S_VERSION))
-> +               flags |= S_CTIME | S_MTIME | S_VERSION;
-> +
-> +       fat_truncate_time(inode, NULL, flags);
-> +       if (inode->i_sb->s_flags & SB_LAZYTIME)
-> +               dirty_flags |= I_DIRTY_TIME;
-> +       else
-> +               dirty_flags |= I_DIRTY_SYNC;
->  
-> -       if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion(inode, false))
-> +       if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
->                 dirty_flags |= I_DIRTY_SYNC;
->
-
+And if change like it, why doesn't same change goes to generic_update_time()?
+It looks like generic_update_time() in this series doesn't work like you said.
 -- 
 OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
