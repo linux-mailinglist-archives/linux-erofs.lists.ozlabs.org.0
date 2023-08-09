@@ -2,57 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59114775387
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 09:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 690D577539C
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 09:08:38 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bD7f0dTI;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XBXM6YuN;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLLhh1k4Gz300C
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 17:07:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLLkW56R9z306p
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Aug 2023 17:08:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=bD7f0dTI;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XBXM6YuN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RLLhd3cYhz2xFm
-	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Aug 2023 17:06:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RLLkT0NsVz2yVp
+	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Aug 2023 17:08:33 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9B61A62FBF;
-	Wed,  9 Aug 2023 07:06:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BD8C433C7;
-	Wed,  9 Aug 2023 07:06:37 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 4397D60AD5;
+	Wed,  9 Aug 2023 07:08:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB972C433C8;
+	Wed,  9 Aug 2023 07:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691564812;
-	bh=LyptcIlHZJMPRLgCQdT8M5vqzNKCvVA2tglx+SSzKhk=;
+	s=k20201202; t=1691564910;
+	bh=/rZSqjAZtsBizYYtIOB21nSsnZRBJybWyyf062l+VJQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bD7f0dTITrbaEv4ks9HGhx0VVGQl2go0/eu1op4nP82j4N7TgX5btWqWiaSGoe8jp
-	 i6+z7Q/Jk2DuDRVzKbPo4bN2rJnb7ZSAdXE4Z0xYd+h6nr/dULJQsuanMXc8U/mPWC
-	 durewToMDZYiugVbqFDpM/vlNxIknI7IjiKj4iWyBj6wWmzWhg0/t+ygbJ1TK6LZ+2
-	 DAg/4gaYUGbCnyrWc2K3wnSswvzR8b++oY6In8hF21Owe2spxR27o2A1Ew8ijOuuN3
-	 Wo+4rLZHSLxhk9EzIXmcSquBg+Bnp2nKOE70h2bjG7fT6iPfQRAHqxOjlzas9G4WAl
-	 a1bfUfvPCKxNg==
-Date: Wed, 9 Aug 2023 09:06:34 +0200
+	b=XBXM6YuN/DJfcAIiFmHbtES3QfTM1C8dTZvNbHpT0ojlG4HZRC1KRdUNiYIozuLtf
+	 Mj8KiYlNBlPNH6bVN/SdgMEWVqW0bd0EXRksBsHLCfEXTYWFcUxKPmMlZQa4BLXc+u
+	 HVWJiPLV6I93Alqf8bHPAj4p352DMAD62OU7S075NpSOa7OY8Rzy7Lkh+DmR2NEoSD
+	 3F9BROSdL1LVyjHyT/qVqpX14CEeISxG8JvWDSf6VlsP5oBPdi9SjzN2dJtXprrLw2
+	 PAttEXxJZrNwNwPks/SfSAHbRPRAuqTa/QqJFHQ6a/wwq8PwFX8puWJ6ZzYsWf6rHi
+	 p6EZ4DAxuERvA==
+Date: Wed, 9 Aug 2023 09:08:13 +0200
 From: Christian Brauner <brauner@kernel.org>
 To: Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v7 06/13] ubifs: have ubifs_update_time use
- inode_update_timestamps
-Message-ID: <20230809-handreichung-umgearbeitet-951eebed4d61@brauner>
+Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
+Message-ID: <20230809-goldpreis-nennen-798a895973be@brauner>
 References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
- <20230807-mgctime-v7-6-d1dec143a704@kernel.org>
- <20230808093701.ggyj7tyqonivl7tb@quack3>
+ <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
+ <20230808093226.bq2qfxv5npckk643@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230808093701.ggyj7tyqonivl7tb@quack3>
+In-Reply-To: <20230808093226.bq2qfxv5npckk643@quack3>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,39 +69,12 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 08, 2023 at 11:37:01AM +0200, Jan Kara wrote:
-> On Mon 07-08-23 15:38:37, Jeff Layton wrote:
+On Tue, Aug 08, 2023 at 11:32:26AM +0200, Jan Kara wrote:
+> On Mon 07-08-23 15:38:36, Jeff Layton wrote:
 > > In later patches, we're going to drop the "now" parameter from the
-> > update_time operation. Prepare ubifs for this, by having it use the new
-> > inode_update_timestamps helper.
-> > 
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> 
-> One comment below:
-> 
-> > diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-> > index df9086b19cd0..2d0178922e19 100644
-> > --- a/fs/ubifs/file.c
-> > +++ b/fs/ubifs/file.c
-> > @@ -1397,15 +1397,9 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
-> >  		return err;
-> >  
-> >  	mutex_lock(&ui->ui_mutex);
-> > -	if (flags & S_ATIME)
-> > -		inode->i_atime = *time;
-> > -	if (flags & S_CTIME)
-> > -		inode_set_ctime_to_ts(inode, *time);
-> > -	if (flags & S_MTIME)
-> > -		inode->i_mtime = *time;
-> > -
-> > -	release = ui->dirty;
-> > +	inode_update_timestamps(inode, flags);
-> >  	__mark_inode_dirty(inode, I_DIRTY_SYNC);
-> > +	release = ui->dirty;
-> >  	mutex_unlock(&ui->ui_mutex);
-> 
-> I think this is wrong. You need to keep sampling ui->dirty before calling
-> __mark_inode_dirty(). Otherwise you could release budget for inode update
-> you really need...
+> > update_time operation. Fix fat_update_time to fetch its own timestamp.
+> > It turns out that this is easily done by just passing a NULL timestamp
+> > pointer to fat_update_time.
+>              ^^^ fat_truncate_time()
 
-Fixed in-tree.
+Fixed in-tree, thanks!
