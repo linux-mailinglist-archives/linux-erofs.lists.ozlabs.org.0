@@ -2,72 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43F05776DE9
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 04:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3E19776E39
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 04:53:22 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=JAfqWE3U;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Pv+6fOnv;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLr4J0TfRz3cGJ
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 12:10:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLs1X40kLz3c5T
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 12:53:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=JAfqWE3U;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Pv+6fOnv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RLr4835c6z2yw4
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 12:10:31 +1000 (AEST)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-686ba29ccb1so308825b3a.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 09 Aug 2023 19:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691633429; x=1692238229;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kHnppH8OkHE3+a/XnL69tDk6mKlaaFEW6slsoeTV/t4=;
-        b=JAfqWE3U8jNNlTcGM/mwc4vGcdo7iZq4rU6vElQtrpc7VfBiz+GxIa9t1PD10V5aJn
-         IqfW5QNYs78BJ3Wpd1i+mnZIsGBiaEvuoEQvWNz9GvFAvTCEFCInvqu2MbXnRYBUMtvF
-         FLcjHMl8FnuEP2K2/9zocgsKB1aY3E5RJf4mP5EW1kvChgc/0x9rgDwvnOZbGD1yKw1c
-         XiE1LfvwZMi3LapcNLMqSlksTuV/1nrsYp/dQP6Gktln6wD5bkrHKoO0eyX4zYetoUFr
-         hSKLe8QazoaEeMWcwJPN+r45SM6txTzNCUSgKI+ROEGjZeU+ysCUejrPoNbKZmpUuBzG
-         Z81Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691633429; x=1692238229;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kHnppH8OkHE3+a/XnL69tDk6mKlaaFEW6slsoeTV/t4=;
-        b=V3xHIxswTXvvaAjVj7+eiMW2cIB83ppmjmSyluu8+cNHosHwEvh0rQFZWj7AVtunxt
-         NLPpBsxBRiqM62/av3asZRASeYQS+842V+IQp30lSAo86YqaFulgPbuT7dcMmF2n4jaI
-         Xr5JBxW7SrK56RnlGQoo15wZLp6m7TYmGB9QLhbCT0r+m27ZZwMXs/4BObMcymOjazTx
-         cLDnP9misHzJRAMqT8LPasLTPuiWEQ+fkODkFPk+DNr69/xhAdnR9alN3tjYW9eyf7VJ
-         92R3et5EuVsSTUeJ/62sjcyEV95DBs6ipGRAr4Lq3e2pw47aq9s+fX6ecbimtPMIrXoY
-         3O8A==
-X-Gm-Message-State: AOJu0YxFHEmwf4IUJObvsildb99MItJj0spqWeXeZ2xmBZ96ycYiLd5S
-	hEA7RbQUpeo9NhFYHXNHc9Q=
-X-Google-Smtp-Source: AGHT+IFqvlpc/IFhkjVNrtHO+AXON6RNj41vm63XDEqctsSKSr4BgGm2t15oZ9rm2Gk6eZLtco/okA==
-X-Received: by 2002:a05:6a00:189c:b0:687:1300:22ff with SMTP id x28-20020a056a00189c00b00687130022ffmr1294241pfh.1.1691633429485;
-        Wed, 09 Aug 2023 19:10:29 -0700 (PDT)
-Received: from localhost ([156.236.96.163])
-        by smtp.gmail.com with ESMTPSA id 24-20020aa79218000000b006827c26f148sm256157pfo.195.2023.08.09.19.10.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Aug 2023 19:10:29 -0700 (PDT)
-Date: Thu, 10 Aug 2023 10:20:01 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Ferry Meng <mengferry@linux.alibaba.com>
-Subject: Re: [PATCH] erofs: refine warning messages for data I/Os
-Message-ID: <20230810102001.000035ca.zbestahu@gmail.com>
-In-Reply-To: <20230809060637.21311-1-mengferry@linux.alibaba.com>
-References: <20230809060637.21311-1-mengferry@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RLs1R2Kztz2yDM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 12:53:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691635995; x=1723171995;
+  h=date:from:to:cc:subject:message-id;
+  bh=ir6D0s3UnTbbO+5kDPAmlNTDPFnaeyzdHYUg/oLajYQ=;
+  b=Pv+6fOnvWqCXHHFanfAeXDAL/ru6Vaun/sucLxfXP/PBIbQoCa/YKh66
+   tsE7vY8q+SOpDeVevMMdJ+sK+B389FZ23JMsZAZ/WBja3s0hxuwD5jG1R
+   GxA6y4giyomdWCx+gQYXpAk6No+2y3vTAp2xxO6u+Vt3EPi++ozm4vZq7
+   7aN/dye/ZBFnUvNmsMepmx+KUvgdgIGHDlck2OQbCDCdkxgHT2f7uMMK4
+   ro/pB3I8KQpWAM3U26X6wAqQIyUfgwJgCsFmZWtO+/EsonPXVh6rmX3xu
+   nQzXuNOzd2YzOEEaX3u2yyLqVLcdlSpXxh27FbebF8lMwPU2R8M7rsf1Z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="437639850"
+X-IronPort-AV: E=Sophos;i="6.01,160,1684825200"; 
+   d="scan'208";a="437639850"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2023 19:52:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="846195759"
+X-IronPort-AV: E=Sophos;i="6.01,160,1684825200"; 
+   d="scan'208";a="846195759"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Aug 2023 19:52:57 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qTvnE-0006fg-1f;
+	Thu, 10 Aug 2023 02:52:56 +0000
+Date: Thu, 10 Aug 2023 10:52:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ c51ed3ef05670581780a820928520064fbcb9e37
+Message-ID: <202308101049.fitAVqoQ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,73 +66,147 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed,  9 Aug 2023 14:06:37 +0800
-Ferry Meng <mengferry@linux.alibaba.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: c51ed3ef05670581780a820928520064fbcb9e37  erofs: refine warning messages for data I/Os
 
-erofs: refine warning messages for zdata I/Os
+elapsed time: 781m
 
-> Don't warn users since -EINTR is returned due to user interruption.
-> Also suppress warning messages of readmore.
-> 
-> Signed-off-by: Ferry Meng <mengferry@linux.alibaba.com>
+configs tested: 124
+configs skipped: 9
 
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> ---
->  fs/erofs/zdata.c | 23 +++++++++--------------
->  1 file changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index de4f12152b62..53820271e538 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -1848,15 +1848,10 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
->  
->  		page = erofs_grab_cache_page_nowait(inode->i_mapping, index);
->  		if (page) {
-> -			if (PageUptodate(page)) {
-> +			if (PageUptodate(page))
->  				unlock_page(page);
-> -			} else {
-> -				err = z_erofs_do_read_page(f, page);
-> -				if (err)
-> -					erofs_err(inode->i_sb,
-> -						  "readmore error at page %lu @ nid %llu",
-> -						  index, EROFS_I(inode)->nid);
-> -			}
-> +			else
-> +				(void)z_erofs_do_read_page(f, page);
->  			put_page(page);
->  		}
->  
-> @@ -1885,8 +1880,9 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
->  	/* if some compressed cluster ready, need submit them anyway */
->  	z_erofs_runqueue(&f, z_erofs_is_sync_decompress(sbi, 0), false);
->  
-> -	if (err)
-> -		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
-> +	if (err && err != -EINTR)
-> +		erofs_err(inode->i_sb, "read error %d @ %lu of nid %llu",
-> +			  err, folio->index, EROFS_I(inode)->nid);
->  
->  	erofs_put_metabuf(&f.map.buf);
->  	erofs_release_pages(&f.pagepool);
-> @@ -1920,10 +1916,9 @@ static void z_erofs_readahead(struct readahead_control *rac)
->  		head = (void *)page_private(page);
->  
->  		err = z_erofs_do_read_page(&f, page);
-> -		if (err)
-> -			erofs_err(inode->i_sb,
-> -				  "readahead error at page %lu @ nid %llu",
-> -				  page->index, EROFS_I(inode)->nid);
-> +		if (err && err != -EINTR)
-> +			erofs_err(inode->i_sb, "readahead error %d @ %lu of nid %llu",
-> +				  err, page->index, EROFS_I(inode)->nid);
->  		put_page(page);
->  	}
->  	z_erofs_pcluster_readmore(&f, rac, false);
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r002-20230809   gcc  
+arc                  randconfig-r003-20230809   gcc  
+arc                  randconfig-r025-20230809   gcc  
+arc                  randconfig-r043-20230809   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r015-20230809   gcc  
+arm                  randconfig-r046-20230809   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r036-20230809   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r022-20230809   gcc  
+csky                 randconfig-r033-20230809   gcc  
+csky                 randconfig-r034-20230809   gcc  
+csky                 randconfig-r035-20230809   gcc  
+hexagon              randconfig-r023-20230809   clang
+hexagon              randconfig-r033-20230809   clang
+hexagon              randconfig-r041-20230809   clang
+hexagon              randconfig-r045-20230809   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230809   gcc  
+i386         buildonly-randconfig-r005-20230809   gcc  
+i386         buildonly-randconfig-r006-20230809   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230809   gcc  
+i386                 randconfig-i002-20230809   gcc  
+i386                 randconfig-i003-20230809   gcc  
+i386                 randconfig-i004-20230809   gcc  
+i386                 randconfig-i005-20230809   gcc  
+i386                 randconfig-i006-20230809   gcc  
+i386                 randconfig-i011-20230809   clang
+i386                 randconfig-i012-20230809   clang
+i386                 randconfig-i013-20230809   clang
+i386                 randconfig-i014-20230809   clang
+i386                 randconfig-i015-20230809   clang
+i386                 randconfig-i016-20230809   clang
+i386                 randconfig-r016-20230809   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r025-20230809   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r013-20230809   gcc  
+m68k                 randconfig-r021-20230809   gcc  
+m68k                 randconfig-r034-20230809   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r004-20230809   clang
+mips                 randconfig-r006-20230809   clang
+mips                 randconfig-r014-20230809   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r011-20230809   gcc  
+nios2                randconfig-r012-20230809   gcc  
+nios2                randconfig-r035-20230809   gcc  
+openrisc             randconfig-r001-20230809   gcc  
+openrisc             randconfig-r021-20230809   gcc  
+openrisc             randconfig-r032-20230809   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r002-20230809   gcc  
+riscv                randconfig-r005-20230809   gcc  
+riscv                randconfig-r042-20230809   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r022-20230809   clang
+s390                 randconfig-r023-20230809   clang
+s390                 randconfig-r044-20230809   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r001-20230809   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r013-20230809   gcc  
+sparc                randconfig-r036-20230809   gcc  
+sparc64              randconfig-r024-20230809   gcc  
+sparc64              randconfig-r026-20230809   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r004-20230809   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230809   gcc  
+x86_64       buildonly-randconfig-r002-20230809   gcc  
+x86_64       buildonly-randconfig-r003-20230809   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r005-20230809   gcc  
+x86_64               randconfig-r014-20230809   clang
+x86_64               randconfig-r026-20230809   clang
+x86_64               randconfig-x001-20230809   clang
+x86_64               randconfig-x002-20230809   clang
+x86_64               randconfig-x003-20230809   clang
+x86_64               randconfig-x004-20230809   clang
+x86_64               randconfig-x005-20230809   clang
+x86_64               randconfig-x006-20230809   clang
+x86_64               randconfig-x011-20230809   gcc  
+x86_64               randconfig-x012-20230809   gcc  
+x86_64               randconfig-x013-20230809   gcc  
+x86_64               randconfig-x014-20230809   gcc  
+x86_64               randconfig-x015-20230809   gcc  
+x86_64               randconfig-x016-20230809   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r015-20230809   gcc  
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
