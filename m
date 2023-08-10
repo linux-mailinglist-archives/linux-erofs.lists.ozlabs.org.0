@@ -1,56 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6A85776C51
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 00:38:13 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43F05776DE9
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 04:10:42 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=JAfqWE3U;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLlM64RG3z3bYx
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 08:38:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RLr4J0TfRz3cGJ
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Aug 2023 12:10:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=parknet.co.jp (client-ip=210.171.160.6; helo=mail.parknet.co.jp; envelope-from=hirofumi@parknet.co.jp; receiver=lists.ozlabs.org)
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RLlLy1YCmz30fV
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 08:38:01 +1000 (AEST)
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 3CD87205DB98;
-	Thu, 10 Aug 2023 07:38:00 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379Mbwf6230731
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Aug 2023 07:38:00 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379MbwGI248785
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Aug 2023 07:37:58 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 379MbqTh248778;
-	Thu, 10 Aug 2023 07:37:52 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
-In-Reply-To: <e4cee2590f5cb9a13a8d4445e550e155d551670d.camel@kernel.org> (Jeff
-	Layton's message of "Wed, 09 Aug 2023 18:07:29 -0400")
-References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
-	<20230807-mgctime-v7-5-d1dec143a704@kernel.org>
-	<87msz08vc7.fsf@mail.parknet.co.jp>
-	<52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
-	<878rak8hia.fsf@mail.parknet.co.jp>
-	<20230809150041.452w7gucjmvjnvbg@quack3>
-	<87v8do6y8q.fsf@mail.parknet.co.jp>
-	<2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org>
-	<87leek6rh1.fsf@mail.parknet.co.jp>
-	<ccffe6ca3397c8374352b002fe01d55b09d84ef4.camel@kernel.org>
-	<87h6p86p9z.fsf@mail.parknet.co.jp>
-	<edf8e8ca3b38e56f30e0d24ac7293f848ffee371.camel@kernel.org>
-	<87a5v06kij.fsf@mail.parknet.co.jp>
-	<e4cee2590f5cb9a13a8d4445e550e155d551670d.camel@kernel.org>
-Date: Thu, 10 Aug 2023 07:37:52 +0900
-Message-ID: <87zg2z3kqn.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=JAfqWE3U;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RLr4835c6z2yw4
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Aug 2023 12:10:31 +1000 (AEST)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-686ba29ccb1so308825b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Wed, 09 Aug 2023 19:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691633429; x=1692238229;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kHnppH8OkHE3+a/XnL69tDk6mKlaaFEW6slsoeTV/t4=;
+        b=JAfqWE3U8jNNlTcGM/mwc4vGcdo7iZq4rU6vElQtrpc7VfBiz+GxIa9t1PD10V5aJn
+         IqfW5QNYs78BJ3Wpd1i+mnZIsGBiaEvuoEQvWNz9GvFAvTCEFCInvqu2MbXnRYBUMtvF
+         FLcjHMl8FnuEP2K2/9zocgsKB1aY3E5RJf4mP5EW1kvChgc/0x9rgDwvnOZbGD1yKw1c
+         XiE1LfvwZMi3LapcNLMqSlksTuV/1nrsYp/dQP6Gktln6wD5bkrHKoO0eyX4zYetoUFr
+         hSKLe8QazoaEeMWcwJPN+r45SM6txTzNCUSgKI+ROEGjZeU+ysCUejrPoNbKZmpUuBzG
+         Z81Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691633429; x=1692238229;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kHnppH8OkHE3+a/XnL69tDk6mKlaaFEW6slsoeTV/t4=;
+        b=V3xHIxswTXvvaAjVj7+eiMW2cIB83ppmjmSyluu8+cNHosHwEvh0rQFZWj7AVtunxt
+         NLPpBsxBRiqM62/av3asZRASeYQS+842V+IQp30lSAo86YqaFulgPbuT7dcMmF2n4jaI
+         Xr5JBxW7SrK56RnlGQoo15wZLp6m7TYmGB9QLhbCT0r+m27ZZwMXs/4BObMcymOjazTx
+         cLDnP9misHzJRAMqT8LPasLTPuiWEQ+fkODkFPk+DNr69/xhAdnR9alN3tjYW9eyf7VJ
+         92R3et5EuVsSTUeJ/62sjcyEV95DBs6ipGRAr4Lq3e2pw47aq9s+fX6ecbimtPMIrXoY
+         3O8A==
+X-Gm-Message-State: AOJu0YxFHEmwf4IUJObvsildb99MItJj0spqWeXeZ2xmBZ96ycYiLd5S
+	hEA7RbQUpeo9NhFYHXNHc9Q=
+X-Google-Smtp-Source: AGHT+IFqvlpc/IFhkjVNrtHO+AXON6RNj41vm63XDEqctsSKSr4BgGm2t15oZ9rm2Gk6eZLtco/okA==
+X-Received: by 2002:a05:6a00:189c:b0:687:1300:22ff with SMTP id x28-20020a056a00189c00b00687130022ffmr1294241pfh.1.1691633429485;
+        Wed, 09 Aug 2023 19:10:29 -0700 (PDT)
+Received: from localhost ([156.236.96.163])
+        by smtp.gmail.com with ESMTPSA id 24-20020aa79218000000b006827c26f148sm256157pfo.195.2023.08.09.19.10.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Aug 2023 19:10:29 -0700 (PDT)
+Date: Thu, 10 Aug 2023 10:20:01 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Ferry Meng <mengferry@linux.alibaba.com>
+Subject: Re: [PATCH] erofs: refine warning messages for data I/Os
+Message-ID: <20230810102001.000035ca.zbestahu@gmail.com>
+In-Reply-To: <20230809060637.21311-1-mengferry@linux.alibaba.com>
+References: <20230809060637.21311-1-mengferry@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,64 +79,73 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Jan Kara <jack@suse.cz>, "Darrick J. Wong" <djwong@kernel.org>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, ecryptfs@vger.kernel.org, Yue Hu <huyue2@gl0jj8bn.sched.sma.tdnsstic1.cn>, David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>, Andreas Dilger <adilger.kernel@dilger.ca>, Hans de Goede <hdegoede@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, linux-xfs@vger.kernel.org, linux-afs@lists.infradead.org, linux-mtd@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Andreas Gruenbacher <agruenba@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>, linux-unionfs@vger.kernel.org, Hugh Dickins <hughd@google.
- com>, Benjamin Coddington <bcodding@redhat.com>, Tyler Hicks <code@tyhicks.com>, cluster-devel@redhat.com, coda@cs.cmu.edu, linux-mm@kvack.org, Iurii Zaikin <yzaikin@google.com>, Namjae Jeon <linkinjeon@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, codalist@telemann.coda.cs.cmu.edu, Shyam Prasad N <sprasad@microsoft.com>, Amir Goldstein <amir73il@gmail.com>, Kees Cook <keescook@chromium.org>, ocfs2-devel@lists.linux.dev, linux-erofs@lists.ozlabs.org, Josef Bacik <josef@toxicpanda.com>, Tom Talpey <tom@talpey.com>, Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>, Christian Brauner <brauner@kernel.org>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Frank Sorenson <sorenson@redhat.com>, Greg Kroah-Hart
- man <gregkh@linuxfoundation.org>, v9fs@lists.linux.dev, ntfs3@lists.linux.dev, samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, devel@lists.orangefs.org, Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Sungjong Seo <sj1557.seo@samsung.com>, Joseph Qi <joseph.qi@linux.alibaba.com>, linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org, Joel Becker <jlbec@evilplan.org>
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jeff Layton <jlayton@kernel.org> writes:
+On Wed,  9 Aug 2023 14:06:37 +0800
+Ferry Meng <mengferry@linux.alibaba.com> wrote:
 
-> If you do that then the i_version counter would never be incremented.
-> But...I think I see what you're getting at.
->
-> Most filesystems that support the i_version counter have an on-disk
-> field for it. FAT obviously has no such thing. I suspect the i_version
-> bits in fat_update_time were added by mistake. FAT doesn't set
-> SB_I_VERSION so there's no need to do anything to the i_version field at
-> all.
->
-> Also, given that the mtime and ctime are always kept in sync on FAT,
-> we're probably fine to have it look something like this:
+erofs: refine warning messages for zdata I/Os
 
-Yes.
+> Don't warn users since -EINTR is returned due to user interruption.
+> Also suppress warning messages of readmore.
+> 
+> Signed-off-by: Ferry Meng <mengferry@linux.alibaba.com>
 
-IIRC, when I wrote, I decided to make it keep similar with generic
-function, instead of heavily customize for FAT (for maintenance
-reason). It is why. There would be other places with same reason.
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
 
-E.g. LAZYTIME check is same reason too. (current FAT doesn't support it)
+> ---
+>  fs/erofs/zdata.c | 23 +++++++++--------------
+>  1 file changed, 9 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index de4f12152b62..53820271e538 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1848,15 +1848,10 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+>  
+>  		page = erofs_grab_cache_page_nowait(inode->i_mapping, index);
+>  		if (page) {
+> -			if (PageUptodate(page)) {
+> +			if (PageUptodate(page))
+>  				unlock_page(page);
+> -			} else {
+> -				err = z_erofs_do_read_page(f, page);
+> -				if (err)
+> -					erofs_err(inode->i_sb,
+> -						  "readmore error at page %lu @ nid %llu",
+> -						  index, EROFS_I(inode)->nid);
+> -			}
+> +			else
+> +				(void)z_erofs_do_read_page(f, page);
+>  			put_page(page);
+>  		}
+>  
+> @@ -1885,8 +1880,9 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+>  	/* if some compressed cluster ready, need submit them anyway */
+>  	z_erofs_runqueue(&f, z_erofs_is_sync_decompress(sbi, 0), false);
+>  
+> -	if (err)
+> -		erofs_err(inode->i_sb, "failed to read, err [%d]", err);
+> +	if (err && err != -EINTR)
+> +		erofs_err(inode->i_sb, "read error %d @ %lu of nid %llu",
+> +			  err, folio->index, EROFS_I(inode)->nid);
+>  
+>  	erofs_put_metabuf(&f.map.buf);
+>  	erofs_release_pages(&f.pagepool);
+> @@ -1920,10 +1916,9 @@ static void z_erofs_readahead(struct readahead_control *rac)
+>  		head = (void *)page_private(page);
+>  
+>  		err = z_erofs_do_read_page(&f, page);
+> -		if (err)
+> -			erofs_err(inode->i_sb,
+> -				  "readahead error at page %lu @ nid %llu",
+> -				  page->index, EROFS_I(inode)->nid);
+> +		if (err && err != -EINTR)
+> +			erofs_err(inode->i_sb, "readahead error %d @ %lu of nid %llu",
+> +				  err, page->index, EROFS_I(inode)->nid);
+>  		put_page(page);
+>  	}
+>  	z_erofs_pcluster_readmore(&f, rac, false);
 
-So I personally I would prefer to leave it. But if you want to remove
-it, it would be ok too.
-
-Thanks.
-
-> --------------------8<------------------
-> int fat_update_time(struct inode *inode, int flags) 
-> { 
->         int dirty_flags = 0;
->
->         if (inode->i_ino == MSDOS_ROOT_INO) 
->                 return 0;
->
->         fat_truncate_time(inode, NULL, flags);
->         if (inode->i_sb->s_flags & SB_LAZYTIME)
->                 dirty_flags |= I_DIRTY_TIME;
->         else
->                 dirty_flags |= I_DIRTY_SYNC;
->
->         __mark_inode_dirty(inode, dirty_flags);
->         return 0;
-> } 
-> --------------------8<------------------
->
-> ...and we should probably do that in a separate patch in advance of the
-> update_time rework, since it's really a different change.
->
-> If you're in agreement, then I'll plan to respin the series with this
-> fixed and resend.
->
-> Thanks for being patient!
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
