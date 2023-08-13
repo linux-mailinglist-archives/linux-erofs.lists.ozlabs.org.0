@@ -2,59 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 733DB779576
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Aug 2023 19:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F9B77A6EA
+	for <lists+linux-erofs@lfdr.de>; Sun, 13 Aug 2023 16:27:34 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bfdoRRCA;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=OvYEl9eR;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RMqmD2468z3c2f
-	for <lists+linux-erofs@lfdr.de>; Sat, 12 Aug 2023 03:00:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RP0H738vYz2ys8
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 00:27:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bfdoRRCA;
+	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=OvYEl9eR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.55.52.151; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2607:f8b0:4864:20::134; helo=mail-il1-x134.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RMqm56cljz2yD7
-	for <linux-erofs@lists.ozlabs.org>; Sat, 12 Aug 2023 03:00:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691773206; x=1723309206;
-  h=date:from:to:cc:subject:message-id;
-  bh=XDxwAkefPyK8G718ZEbp4rkpBhfU6cxgZTT/4uCo8YY=;
-  b=bfdoRRCAFKq/e1IrRFopuOeCzm9m0Yf0ykmpv/qzycS+OALSU/R9L+qW
-   IKebLE4HrNob1jW5SP9u7/kO5569UiRb1Go7aOcRCqgpQctmqY7ZmXu4s
-   rEab8YimRtsRTfuwjpJm7W3GfYZ06dDlC3lVuVPH3BKAor1BAirOHNNF9
-   NAPtEWXMzdqwnyDQbYSbLl3I3HsUqm/r8kahqNeJiuB09jwJyQeKTamQ8
-   ellUTDt/2i90J3PwTKHiDpFUms0e8bJkVyqG4WxO6nthvLyQLRhgsm+w5
-   VhvqraWXUuvD3F8jswDU+iPsRZrXw/chSsbJQ/VvvyVA0AuyT8l2g5RpD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10799"; a="352045087"
-X-IronPort-AV: E=Sophos;i="6.01,166,1684825200"; 
-   d="scan'208";a="352045087"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 09:59:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10799"; a="856353327"
-X-IronPort-AV: E=Sophos;i="6.01,166,1684825200"; 
-   d="scan'208";a="856353327"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 11 Aug 2023 09:59:46 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qUVUH-0007ta-1H;
-	Fri, 11 Aug 2023 16:59:45 +0000
-Date: Sat, 12 Aug 2023 00:59:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- c23df8256b55297179aa7c0d874e8a82e1e443fd
-Message-ID: <202308120013.YkjVPcHJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RP0H269wdz2y1d
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 00:27:24 +1000 (AEST)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-3490cce329bso8141185ab.0
+        for <linux-erofs@lists.ozlabs.org>; Sun, 13 Aug 2023 07:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691936839; x=1692541639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LTkTYG2V7V+b/XJGrS5FjZaEUNwdXXPW8dIYQ+5i7g=;
+        b=OvYEl9eRsMW34XwD8LzRf6sWxh0Bz+FGRcwLZ7VsyynHiM2YEmXzHqJz/eIoQCntQ6
+         kOToaBlHMmL4jY0YT4G92MbR7hl7jgx/vJzsk8tosDjReYBLX807bbJg5McpAsV3SXWd
+         FK9KxldwSl4hUhsyZw8hnPFnnzwfhier9cr9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691936839; x=1692541639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7LTkTYG2V7V+b/XJGrS5FjZaEUNwdXXPW8dIYQ+5i7g=;
+        b=JDD43nOPPbCtkscBcvZyp1gtpMvJBLczpAimnEgLcun8mlMlk2OmpmSko1/gbyE6BB
+         4Eg+VFsZNkBotkPRcgocBowzHeCNMRw2v0fxD6+dQEt+kRS0R3UhOrHzSfqXnbWfNwbO
+         hd0lWpTF9h+TqtsKjlW1Fxt2DJnBGqFj4m7IOKUvbV8+u3x0qBMMdU9THq+zJGn/TOz8
+         xXx6smlIDIlbN/lJiozT0Fk5V6Lv1rrFiWiOvGbpC1INs+/x2MGt9EsGLlIQp+qSsTWq
+         rNuNdv1w3s9h7YLH9CLUXDk1s63dVlN2YrWEh1nsZkDl1x92GC+QiDdeJYSWQHWcet5U
+         bnjw==
+X-Gm-Message-State: AOJu0Yzy+56wmTVJKiHm274ekxT85j4pOOlj659ujQUqsERcNnlPqb3t
+	7Ab1ybopLo0oi7JXp5A8jY+cTg==
+X-Google-Smtp-Source: AGHT+IE2I+zPO+NcmP+2OWQP6eHhowhjF1Wna3VKls0yj7SVnk718cfnowrtu6RoIjrP+2KSyuqHig==
+X-Received: by 2002:a05:6e02:1a82:b0:349:9328:6554 with SMTP id k2-20020a056e021a8200b0034993286554mr11496520ilv.16.1691936839053;
+        Sun, 13 Aug 2023 07:27:19 -0700 (PDT)
+Received: from sjg1.lan (c-73-14-173-85.hsd1.co.comcast.net. [73.14.173.85])
+        by smtp.gmail.com with ESMTPSA id w7-20020a02cf87000000b00430cf006d9bsm2280952jar.30.2023.08.13.07.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Aug 2023 07:27:18 -0700 (PDT)
+From: Simon Glass <sjg@chromium.org>
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Subject: [PATCH 00/24] bootstd: Support ChromiumOS better
+Date: Sun, 13 Aug 2023 08:26:28 -0600
+Message-ID: <20230813142708.361456-1-sjg@chromium.org>
+X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,141 +72,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Marek Vasut <marex@denx.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>, Jose Marinho <jose.marinho@arm.com>, Dzmitry Sankouski <dsankouski@gmail.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Simon Glass <sjg@chromium.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, Joshua Watt <jpewhacker@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Nikhil M Jain <n-jain1@ti.com>, Bin Meng <bmeng.cn@gmail.com>, linux-erofs@lists.ozlabs.org, Pavel Herrmann <morpheus.ibis@gmail.com>, Tobias Waldekranz <tobias@waldekranz.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: c23df8256b55297179aa7c0d874e8a82e1e443fd  erofs: refine warning messages for zdata I/Os
+This updates the ChromiumOS bootmeth to detect multiple kernel partitions
+on a disk.
 
-elapsed time: 720m
+It also includes minor code improvements to the partition drivers,
+including accessors for the optional fields.
 
-configs tested: 118
-configs skipped: 10
+This series also includes some other related tweaks in testing.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It is available at u-boot-dm/methb-working
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r003-20230811   gcc  
-alpha                randconfig-r006-20230811   gcc  
-alpha                randconfig-r011-20230811   gcc  
-alpha                randconfig-r015-20230811   gcc  
-alpha                randconfig-r025-20230811   gcc  
-alpha                randconfig-r034-20230811   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r033-20230811   gcc  
-arc                  randconfig-r043-20230811   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r026-20230811   clang
-arm                  randconfig-r036-20230811   gcc  
-arm                  randconfig-r046-20230811   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r031-20230811   clang
-csky                                defconfig   gcc  
-hexagon              randconfig-r013-20230811   clang
-hexagon              randconfig-r041-20230811   clang
-hexagon              randconfig-r045-20230811   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r006-20230811   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i002-20230811   clang
-i386                 randconfig-i003-20230811   clang
-i386                 randconfig-i004-20230811   clang
-i386                 randconfig-i005-20230811   clang
-i386                 randconfig-i006-20230811   clang
-i386                 randconfig-i011-20230811   gcc  
-i386                 randconfig-i012-20230811   gcc  
-i386                 randconfig-i013-20230811   gcc  
-i386                 randconfig-i014-20230811   gcc  
-i386                 randconfig-i016-20230811   gcc  
-i386                 randconfig-r031-20230811   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r016-20230811   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r024-20230811   gcc  
-m68k                 randconfig-r032-20230811   gcc  
-microblaze           randconfig-r021-20230811   gcc  
-microblaze           randconfig-r026-20230811   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r001-20230811   gcc  
-mips                 randconfig-r005-20230811   gcc  
-mips                 randconfig-r006-20230811   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r023-20230811   gcc  
-nios2                randconfig-r031-20230811   gcc  
-nios2                randconfig-r032-20230811   gcc  
-openrisc             randconfig-r006-20230811   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r012-20230811   gcc  
-parisc               randconfig-r022-20230811   gcc  
-parisc               randconfig-r035-20230811   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r005-20230811   clang
-powerpc              randconfig-r022-20230811   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r011-20230811   gcc  
-riscv                randconfig-r015-20230811   gcc  
-riscv                randconfig-r042-20230811   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r001-20230811   clang
-s390                 randconfig-r004-20230811   clang
-s390                 randconfig-r014-20230811   gcc  
-s390                 randconfig-r016-20230811   gcc  
-s390                 randconfig-r034-20230811   clang
-s390                 randconfig-r035-20230811   clang
-s390                 randconfig-r036-20230811   clang
-s390                 randconfig-r044-20230811   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r005-20230811   gcc  
-sh                   randconfig-r021-20230811   gcc  
-sh                   randconfig-r033-20230811   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r002-20230811   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r002-20230811   clang
-x86_64               randconfig-r004-20230811   clang
-x86_64               randconfig-r012-20230811   gcc  
-x86_64               randconfig-x001-20230811   gcc  
-x86_64               randconfig-x003-20230811   gcc  
-x86_64               randconfig-x006-20230811   gcc  
-x86_64               randconfig-x012-20230811   clang
-x86_64               randconfig-x013-20230811   clang
-x86_64               randconfig-x014-20230811   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r035-20230811   gcc  
+
+Simon Glass (24):
+  part: Use desc instead of dev_desc
+  part: amiga: Use desc instead of dev_desc
+  part: dos: Use desc instead of dev_desc
+  part: efi: Use desc instead of dev_desc
+  part: iso: Use desc instead of dev_desc
+  part: nac: Use desc instead of dev_desc
+  part: Add comments for static functions
+  part: Add accessors for struct disk_partition uuid
+  part: Add accessors for struct disk_partition type_uuid
+  part: Add an accessor for struct disk_partition sys_ind
+  part: efi: Add debugging for the signature check
+  fs/erofs: Quieten test for filesystem presence
+  dm: core: Correct error handling when event fails
+  uuid: Move function comments to header file
+  sandbox: Add a way to access persistent test files
+  test: Move 1MB.fat32.img and 2MB.ext2.img
+  bootflow: Show an empty filename when there is none
+  bootstd: test: Allow binding and using any mmc device
+  bootstd: Add a test for bootmeth_cros
+  part: Add a fallback for part_get_bootable()
+  bootstd: Support bootmeths which can scan any partition
+  uuid: Add ChromiumOS partition types
+  bootstd: cros: Allow detection of any kernel partition
+  CI: Add ChromiumOS utilities
+
+ arch/sandbox/cpu/os.c      |  24 ++++
+ arch/sandbox/dts/test.dts  |   9 ++
+ boot/Kconfig               |   2 +
+ boot/bootdev-uclass.c      |  24 +++-
+ boot/bootmeth_cros.c       |  48 ++++---
+ cmd/bootflow.c             |   2 +-
+ cmd/gpt.c                  |  10 +-
+ configs/snow_defconfig     |   1 +
+ disk/part.c                | 226 +++++++++++++++--------------
+ disk/part_amiga.c          |  34 ++---
+ disk/part_dos.c            |  78 +++++-----
+ disk/part_efi.c            | 281 +++++++++++++++++++------------------
+ disk/part_iso.c            |  52 +++----
+ disk/part_mac.c            |  59 ++++----
+ doc/develop/bootstd.rst    |  11 +-
+ drivers/core/device.c      |   3 +-
+ fs/erofs/super.c           |   4 +-
+ fs/fat/fat.c               |   4 +-
+ include/bootmeth.h         |   3 +
+ include/os.h               |  10 ++
+ include/part.h             | 215 ++++++++++++++++++----------
+ include/part_efi.h         |  14 ++
+ include/uuid.h             |  94 +++++++++++++
+ lib/uuid.c                 |  93 +-----------
+ test/boot/bootflow.c       |  80 ++++++++---
+ test/dm/host.c             |  44 +++---
+ test/py/tests/fs_helper.py |   6 +-
+ test/py/tests/test_ut.py   | 148 ++++++++++++++++++-
+ tools/docker/Dockerfile    |   3 +
+ 29 files changed, 982 insertions(+), 600 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0.640.ga95def55d0-goog
+
