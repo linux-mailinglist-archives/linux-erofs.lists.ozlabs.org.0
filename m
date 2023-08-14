@@ -1,31 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D23E277B03C
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:08 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B539177B03D
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKx6526sz3bWW
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKx94nVPz3bsW
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwp5hK0z2yD6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vpelypi_1691984564;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vpelypi_1691984564)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwq6h82z2yD6
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:51 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VpepBJQ_1691984565;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VpepBJQ_1691984565)
           by smtp.aliyun-inc.com;
-          Mon, 14 Aug 2023 11:42:45 +0800
+          Mon, 14 Aug 2023 11:42:46 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 04/13] erofs-utils: lib: fix erofs_init_devices() in multidev mode
-Date: Mon, 14 Aug 2023 11:42:30 +0800
-Message-Id: <20230814034239.54660-5-jefflexu@linux.alibaba.com>
+Subject: [PATCH 05/13] erofs-utils: lib: keep self maintained devname
+Date: Mon, 14 Aug 2023 11:42:31 +0800
+Message-Id: <20230814034239.54660-6-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
 References: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
@@ -45,45 +45,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix the missing le32_to_cpu().  Read and cache blocks of each device for
-later use.
-
-Initialize sbi->extra_devices from on-disk extra_devices.
+Keep self allocated and maintained devname in erofs_sb_info.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/super.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ include/erofs/internal.h |  2 +-
+ lib/io.c                 | 14 ++++++++++++--
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/lib/super.c b/lib/super.c
-index e8e84aa..54ab29b 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -36,11 +36,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 	else
- 		ondisk_extradevs = le16_to_cpu(dsb->extra_devices);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index a04e6a6..892dc96 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -61,7 +61,7 @@ struct erofs_device_info {
  
--	if (ondisk_extradevs != sbi->extra_devices) {
--		erofs_err("extra devices don't match (ondisk %u, given %u)",
--			  ondisk_extradevs, sbi->extra_devices);
--		return -EINVAL;
--	}
-+	sbi->extra_devices = ondisk_extradevs;
- 	if (!ondisk_extradevs)
- 		return 0;
+ struct erofs_sb_info {
+ 	struct erofs_device_info *devs;
+-	const char *devname;
++	char *devname;
  
-@@ -59,8 +55,9 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 			return ret;
- 		}
- 
--		sbi->devs[i].mapped_blkaddr = dis.mapped_blkaddr;
--		sbi->total_blocks += dis.blocks;
-+		sbi->devs[i].mapped_blkaddr = le32_to_cpu(dis.mapped_blkaddr);
-+		sbi->devs[i].blocks = le32_to_cpu(dis.blocks);
-+		sbi->total_blocks += sbi->devs[i].blocks;
- 		pos += EROFS_DEVT_SLOT_SIZE;
+ 	u64 total_blocks;
+ 	u64 primarydevice_blocks;
+diff --git a/lib/io.c b/lib/io.c
+index 8d84de2..1545436 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -10,6 +10,7 @@
+ #ifndef _GNU_SOURCE
+ #define _GNU_SOURCE
+ #endif
++#include <stdlib.h>
+ #include <sys/stat.h>
+ #include <sys/ioctl.h>
+ #include "erofs/io.h"
+@@ -46,6 +47,7 @@ static int dev_get_blkdev_size(int fd, u64 *bytes)
+ void dev_close(struct erofs_sb_info *sbi)
+ {
+ 	close(sbi->devfd);
++	free(sbi->devname);
+ 	sbi->devname = NULL;
+ 	sbi->devfd   = -1;
+ 	sbi->devsz   = 0;
+@@ -95,7 +97,11 @@ int dev_open(struct erofs_sb_info *sbi, const char *dev)
+ 		return -EINVAL;
  	}
+ 
+-	sbi->devname = dev;
++	sbi->devname = strdup(dev);
++	if (!sbi->devname) {
++		close(fd);
++		return -ENOMEM;
++	}
+ 	sbi->devfd = fd;
+ 
+ 	erofs_info("successfully to open %s", dev);
+@@ -136,8 +142,12 @@ int dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
+ 		return -errno;
+ 	}
+ 
++	sbi->devname = strdup(dev);
++	if (!sbi->devname) {
++		close(fd);
++		return -ENOMEM;
++	}
+ 	sbi->devfd = fd;
+-	sbi->devname = dev;
+ 	sbi->devsz = INT64_MAX;
  	return 0;
+ }
 -- 
 2.19.1.6.gb485710b
 
