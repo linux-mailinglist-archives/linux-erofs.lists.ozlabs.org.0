@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C129A77B043
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C8ED477B044
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKxW4VRRz30gn
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKxZ4jxZz30Dm
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwx2sSRz3072
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:57 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VpepBMC_1691984572;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VpepBMC_1691984572)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwy5xtHz3c4s
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:58 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VpelytL_1691984573;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VpelytL_1691984573)
           by smtp.aliyun-inc.com;
-          Mon, 14 Aug 2023 11:42:53 +0800
+          Mon, 14 Aug 2023 11:42:54 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 11/13] erofs-utils: lib: add erofs_rebuild_get_dentry() helper
-Date: Mon, 14 Aug 2023 11:42:37 +0800
-Message-Id: <20230814034239.54660-12-jefflexu@linux.alibaba.com>
+Subject: [PATCH 12/13] erofs-utils: lib: add erofs_rebuild_load_tree() helper
+Date: Mon, 14 Aug 2023 11:42:38 +0800
+Message-Id: <20230814034239.54660-13-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
 References: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
@@ -45,337 +45,345 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Rename tarerofs_get_dentry() to erofs_rebuild_get_dentry().
+Add erofs_rebuild_load_tree() helper loading inode tree from given erofs
+image, and making it merged into a given inode tree in an overlayfs like
+model.
 
-Also make `whout` and 'opq' parameter optional when `aufs` is false.
+Since we need to read the content of the symlink file from disk when
+loading tree, add dependency on zlib_LIBS for mkfs.erofs.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/rebuild.h |  19 +++++++
- lib/Makefile.am         |   3 +-
- lib/rebuild.c           | 117 ++++++++++++++++++++++++++++++++++++++++
- lib/tar.c               | 109 ++-----------------------------------
- 4 files changed, 141 insertions(+), 107 deletions(-)
- create mode 100644 include/erofs/rebuild.h
- create mode 100644 lib/rebuild.c
+ include/erofs/internal.h |   1 +
+ include/erofs/rebuild.h  |   2 +
+ lib/rebuild.c            | 270 +++++++++++++++++++++++++++++++++++++++
+ mkfs/Makefile.am         |   3 +-
+ 4 files changed, 275 insertions(+), 1 deletion(-)
 
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 179ecb3..513e860 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -102,6 +102,7 @@ struct erofs_sb_info {
+ 
+ 	int devfd;
+ 	u64 devsz;
++	dev_t dev;
+ 	unsigned int nblobs;
+ 	unsigned int blobfd[256];
+ };
 diff --git a/include/erofs/rebuild.h b/include/erofs/rebuild.h
-new file mode 100644
-index 0000000..92873c9
---- /dev/null
+index 92873c9..3ac074c 100644
+--- a/include/erofs/rebuild.h
 +++ b/include/erofs/rebuild.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+#ifndef __EROFS_REBUILD_H
-+#define __EROFS_REBUILD_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "internal.h"
-+
-+struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
-+		char *path, bool aufs, bool *whout, bool *opq);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 7a5dc03..4bcc09b 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -24,6 +24,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/xattr.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-       $(top_srcdir)/include/erofs/fragments.h \
-+      $(top_srcdir)/include/erofs/rebuild.h \
-       $(top_srcdir)/lib/liberofs_private.h
+@@ -12,6 +12,8 @@ extern "C"
+ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+ 		char *path, bool aufs, bool *whout, bool *opq);
  
- noinst_HEADERS += compressor.h
-@@ -31,7 +32,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
- 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
- 		      fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c tar.c \
--		      block_list.c
-+		      block_list.c rebuild.c
- 
- liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
- if ENABLE_LZ4
++int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi);
++
+ #ifdef __cplusplus
+ }
+ #endif
 diff --git a/lib/rebuild.c b/lib/rebuild.c
-new file mode 100644
-index 0000000..7aaa071
---- /dev/null
+index 7aaa071..b7e08b2 100644
+--- a/lib/rebuild.c
 +++ b/lib/rebuild.c
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+#define _GNU_SOURCE
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include "erofs/print.h"
-+#include "erofs/inode.h"
-+#include "erofs/rebuild.h"
-+#include "erofs/internal.h"
-+
-+#ifdef HAVE_LINUX_AUFS_TYPE_H
-+#include <linux/aufs_type.h>
-+#else
-+#define AUFS_WH_PFX		".wh."
-+#define AUFS_DIROPQ_NAME	AUFS_WH_PFX ".opq"
-+#define AUFS_WH_DIROPQ		AUFS_WH_PFX AUFS_DIROPQ_NAME
-+#endif
-+
-+static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
-+						const char *s)
-+{
-+	struct erofs_inode *inode;
-+	struct erofs_dentry *d;
-+
-+	inode = erofs_new_inode();
-+	if (IS_ERR(inode))
-+		return ERR_CAST(inode);
-+
-+	inode->i_mode = S_IFDIR | 0755;
-+	inode->i_parent = dir;
-+	inode->i_uid = getuid();
-+	inode->i_gid = getgid();
-+	inode->i_mtime = inode->sbi->build_time;
-+	inode->i_mtime_nsec = inode->sbi->build_time_nsec;
-+	erofs_init_empty_dir(inode);
-+
-+	d = erofs_d_alloc(dir, s);
-+	if (!IS_ERR(d)) {
-+		d->type = EROFS_FT_DIR;
-+		d->inode = inode;
-+	}
-+	return d;
-+}
-+
-+struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
-+		char *path, bool aufs, bool *whout, bool *opq)
-+{
-+	struct erofs_dentry *d = NULL;
-+	unsigned int len = strlen(path);
-+	char *s = path;
-+
-+	if (aufs) {
-+		*whout = false;
-+		*opq = false;
-+	}
-+
-+	while (s < path + len) {
-+		char *slash = memchr(s, '/', path + len - s);
-+		if (slash) {
-+			if (s == slash) {
-+				while (*++s == '/');	/* skip '//...' */
-+				continue;
-+			}
-+			*slash = '\0';
-+		}
-+
-+		if (!memcmp(s, ".", 2)) {
-+			/* null */
-+		} else if (!memcmp(s, "..", 3)) {
-+			pwd = pwd->i_parent;
-+		} else {
-+			struct erofs_inode *inode = NULL;
-+
-+			if (aufs && !slash) {
-+				if (!memcmp(s, AUFS_WH_DIROPQ, sizeof(AUFS_WH_DIROPQ))) {
-+					*opq = true;
-+					break;
-+				}
-+				if (!memcmp(s, AUFS_WH_PFX, sizeof(AUFS_WH_PFX) - 1)) {
-+					s += sizeof(AUFS_WH_PFX) - 1;
-+					*whout = true;
-+				}
-+			}
-+
-+			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
-+				if (!strcmp(d->name, s)) {
-+					if (d->type != EROFS_FT_DIR && slash)
-+						return ERR_PTR(-EIO);
-+					inode = d->inode;
-+					break;
-+				}
-+			}
-+
-+			if (inode) {
-+				pwd = inode;
-+			} else if (!slash) {
-+				d = erofs_d_alloc(pwd, s);
-+				if (IS_ERR(d))
-+					return d;
-+				d->type = EROFS_FT_UNKNOWN;
-+				d->inode = pwd;
-+			} else {
-+				d = erofs_rebuild_mkdir(pwd, s);
-+				if (IS_ERR(d))
-+					return d;
-+				pwd = d->inode;
-+			}
-+		}
-+		if (slash) {
-+			*slash = '/';
-+			s = slash + 1;
-+		} else {
-+			break;
-+		}
-+	}
-+	return d;
-+}
-diff --git a/lib/tar.c b/lib/tar.c
-index 3205f06..9a45b1c 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -3,13 +3,6 @@
+@@ -3,9 +3,18 @@
+ #include <unistd.h>
  #include <stdlib.h>
  #include <string.h>
- #include <sys/stat.h>
--#ifdef HAVE_LINUX_AUFS_TYPE_H
--#include <linux/aufs_type.h>
--#else
--#define AUFS_WH_PFX		".wh."
--#define AUFS_DIROPQ_NAME	AUFS_WH_PFX ".opq"
--#define AUFS_WH_DIROPQ		AUFS_WH_PFX AUFS_DIROPQ_NAME
--#endif
++#include <sys/stat.h>
++#include <config.h>
++#if defined(HAVE_SYS_SYSMACROS_H)
++#include <sys/sysmacros.h>
++#endif
  #include "erofs/print.h"
- #include "erofs/cache.h"
  #include "erofs/inode.h"
-@@ -18,6 +11,7 @@
- #include "erofs/io.h"
- #include "erofs/xattr.h"
- #include "erofs/blobchunk.h"
-+#include "erofs/rebuild.h"
+ #include "erofs/rebuild.h"
++#include "erofs/io.h"
++#include "erofs/dir.h"
++#include "erofs/xattr.h"
++#include "erofs/blobchunk.h"
+ #include "erofs/internal.h"
  
- static char erofs_libbuf[16384];
- 
-@@ -131,103 +125,6 @@ static long long tarerofs_parsenum(const char *ptr, int len)
- 	return tarerofs_otoi(ptr, len);
+ #ifdef HAVE_LINUX_AUFS_TYPE_H
+@@ -115,3 +124,264 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+ 	}
+ 	return d;
  }
- 
--static struct erofs_dentry *tarerofs_mkdir(struct erofs_inode *dir, const char *s)
--{
--	struct erofs_inode *inode;
--	struct erofs_dentry *d;
--
--	inode = erofs_new_inode();
--	if (IS_ERR(inode))
--		return ERR_CAST(inode);
--
--	inode->i_mode = S_IFDIR | 0755;
--	inode->i_parent = dir;
--	inode->i_uid = getuid();
--	inode->i_gid = getgid();
--	inode->i_mtime = inode->sbi->build_time;
--	inode->i_mtime_nsec = inode->sbi->build_time_nsec;
--	erofs_init_empty_dir(inode);
--
--	d = erofs_d_alloc(dir, s);
--	if (!IS_ERR(d)) {
--		d->type = EROFS_FT_DIR;
--		d->inode = inode;
--	}
--	return d;
--}
--
--static struct erofs_dentry *tarerofs_get_dentry(struct erofs_inode *pwd, char *path,
--					        bool aufs, bool *whout, bool *opq)
--{
--	struct erofs_dentry *d = NULL;
--	unsigned int len = strlen(path);
--	char *s = path;
--
--	*whout = false;
--	*opq = false;
--
--	while (s < path + len) {
--		char *slash = memchr(s, '/', path + len - s);
--		if (slash) {
--			if (s == slash) {
--				while (*++s == '/');	/* skip '//...' */
--				continue;
--			}
--			*slash = '\0';
--		}
--
--		if (!memcmp(s, ".", 2)) {
--			/* null */
--		} else if (!memcmp(s, "..", 3)) {
--			pwd = pwd->i_parent;
--		} else {
--			struct erofs_inode *inode = NULL;
--
--			if (aufs && !slash) {
--				if (!memcmp(s, AUFS_WH_DIROPQ, sizeof(AUFS_WH_DIROPQ))) {
--					*opq = true;
--					break;
--				}
--				if (!memcmp(s, AUFS_WH_PFX, sizeof(AUFS_WH_PFX) - 1)) {
--					s += sizeof(AUFS_WH_PFX) - 1;
--					*whout = true;
--				}
--			}
--
--			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
--				if (!strcmp(d->name, s)) {
--					if (d->type != EROFS_FT_DIR && slash)
--						return ERR_PTR(-EIO);
--					inode = d->inode;
--					break;
--				}
--			}
--
--			if (inode) {
--				pwd = inode;
--			} else if (!slash) {
--				d = erofs_d_alloc(pwd, s);
--				if (IS_ERR(d))
--					return d;
--				d->type = EROFS_FT_UNKNOWN;
--				d->inode = pwd;
--			} else {
--				d = tarerofs_mkdir(pwd, s);
--				if (IS_ERR(d))
--					return d;
--				pwd = d->inode;
--			}
--		}
--		if (slash) {
--			*slash = '/';
--			s = slash + 1;
--		} else {
--			break;
--		}
--	}
--	return d;
--}
--
- int tarerofs_parse_pax_header(int fd, struct erofs_pax_header *eh, u32 size)
- {
- 	char *buf, *p;
-@@ -610,7 +507,7 @@ restart:
- 
- 	erofs_dbg("parsing %s (mode %05o)", eh.path, st.st_mode);
- 
--	d = tarerofs_get_dentry(root, eh.path, tar->aufs, &whout, &opq);
-+	d = erofs_rebuild_get_dentry(root, eh.path, tar->aufs, &whout, &opq);
- 	if (IS_ERR(d)) {
- 		ret = PTR_ERR(d);
- 		goto out;
-@@ -643,7 +540,7 @@ restart:
- 		}
- 		d->inode = NULL;
- 
--		d2 = tarerofs_get_dentry(root, eh.link, tar->aufs, &dumb, &dumb);
-+		d2 = erofs_rebuild_get_dentry(root, eh.link, tar->aufs, &dumb, &dumb);
- 		if (IS_ERR(d2)) {
- 			ret = PTR_ERR(d2);
- 			goto out;
++
++static int erofs_rebuild_fill_inode_map(struct erofs_inode *inode,
++				struct erofs_inode *vi, dev_t dev)
++{
++	int ret;
++	struct erofs_sb_info *sbi = vi->sbi;
++	unsigned int count, unit, chunkbits, i;
++	unsigned int deviceid = dev;
++	erofs_off_t chunksize;
++	erofs_blk_t blkaddr;
++	struct erofs_inode_chunk_index *idx;
++
++	/* TODO: fill data map in other layouts */
++	if (vi->datalayout != EROFS_INODE_CHUNK_BASED &&
++	    vi->datalayout != EROFS_INODE_FLAT_PLAIN) {
++		erofs_err("unsupported datalayout %d", vi->datalayout);
++		return -EOPNOTSUPP;
++	}
++
++	if (sbi->extra_devices) {
++		chunkbits = vi->u.chunkbits;
++		inode->u.chunkformat = vi->u.chunkformat;
++	} else {
++		chunkbits = ilog2(inode->i_size - 1) + 1;
++		if (chunkbits < sbi->blkszbits)
++			chunkbits = sbi->blkszbits;
++		if (chunkbits - sbi->blkszbits > EROFS_CHUNK_FORMAT_BLKBITS_MASK)
++			chunkbits = EROFS_CHUNK_FORMAT_BLKBITS_MASK + sbi->blkszbits;
++		inode->u.chunkformat = EROFS_CHUNK_FORMAT_INDEXES;
++		inode->u.chunkformat |= chunkbits - sbi->blkszbits;
++	}
++	chunksize = 1ULL << chunkbits;
++	count = DIV_ROUND_UP(inode->i_size, chunksize);
++
++	unit = sizeof(struct erofs_inode_chunk_index);
++	inode->extent_isize = count * unit;
++	idx = malloc(max(sizeof(*idx), sizeof(void *)));
++	if (!idx)
++		return -ENOMEM;
++	inode->chunkindexes = idx;
++
++	for (i = 0; i < count; i++) {
++		struct erofs_blobchunk *chunk;
++		struct erofs_map_blocks map = {
++			.index = UINT_MAX,
++		};
++
++		map.m_la = i << chunkbits;
++		ret = erofs_map_blocks(vi, &map, 0);
++		if (ret)
++			goto err;
++
++		blkaddr = erofs_blknr(sbi, map.m_pa);
++		chunk = erofs_get_unhashed_chunk(deviceid, blkaddr, 0);
++		if (IS_ERR(chunk)) {
++			ret = PTR_ERR(chunk);
++			goto err;
++		}
++		*(void **)idx++ = chunk;
++		erofs_dbg("\t%s: chunk %d (deviceid %u, blkaddr %u)",
++			inode->i_srcpath, i, deviceid, blkaddr);
++
++	}
++	inode->datalayout = EROFS_INODE_CHUNK_BASED;
++	return 0;
++err:
++	free(idx);
++	inode->chunkindexes = NULL;
++	return ret;
++}
++
++static int erofs_rebuild_fill_inode(struct erofs_inode *inode,
++			struct erofs_inode *vi, dev_t dev)
++{
++	int ret = 0;
++
++	inode->i_srcpath = strdup(vi->i_srcpath);
++	inode->i_mode = vi->i_mode;
++	inode->i_uid = vi->i_uid;
++	inode->i_gid = vi->i_gid;
++	inode->i_mtime = vi->i_mtime;
++	inode->i_ino[1] = vi->i_ino[0];
++	inode->i_nlink = 1;
++
++	switch (inode->i_mode & S_IFMT) {
++	case S_IFCHR:
++	case S_IFBLK:
++	case S_IFIFO:
++	case S_IFSOCK:
++		inode->u.i_rdev = erofs_new_encode_dev(vi->u.i_rdev);
++		inode->i_size = 0;
++		erofs_dbg("\tdev: %d %d", major(vi->u.i_rdev),
++			  minor(vi->u.i_rdev));
++		break;
++	case S_IFDIR:
++		inode->i_size = 0;
++		ret = erofs_init_empty_dir(inode);
++		break;
++	case S_IFLNK:
++		inode->i_size = vi->i_size;
++		inode->i_link = malloc(inode->i_size + 1);
++		ret = erofs_pread(vi, inode->i_link, inode->i_size, 0);
++		erofs_dbg("\tsymlink: %s -> %s", inode->i_srcpath, inode->i_link);
++		break;
++	case S_IFREG:
++		inode->i_size = vi->i_size;
++		if (inode->i_size)
++			ret = erofs_rebuild_fill_inode_map(inode, vi, dev);
++		else
++			inode->u.i_blkaddr = NULL_ADDR;
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++struct erofs_rebuild_dir_context {
++	struct erofs_dir_context ctx;
++	struct erofs_inode *root;
++	dev_t dev;
++};
++
++static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
++{
++	struct erofs_rebuild_dir_context *rctx = (void *)ctx;
++	struct erofs_inode *dir = ctx->dir;
++	struct erofs_sb_info *sbi = dir->sbi;
++	struct erofs_inode *inode, vi = {};
++	struct erofs_dentry *d;
++	char *path;
++	int ret;
++
++	if (ctx->dot_dotdot)
++		return 0;
++
++	vi.nid = ctx->de_nid;
++	vi.sbi = sbi;
++	ret = erofs_read_inode_from_disk(&vi);
++	if (ret) {
++		erofs_err("file %s/%.*s: read failed",
++			  dir->i_srcpath, ctx->de_namelen, ctx->dname);
++		return ret;
++	}
++
++	ret = asprintf(&path, "%s/%.*s", dir->i_srcpath, ctx->de_namelen,
++		       ctx->dname);
++	if (ret < 0) {
++		erofs_err("file %s/%.*s: failed to alloc path",
++			  dir->i_srcpath, ctx->de_namelen, ctx->dname);
++		return ret;
++	}
++	vi.i_srcpath = path;
++
++	d = erofs_rebuild_get_dentry(rctx->root, path, false, NULL, NULL);
++	if (IS_ERR(d)) {
++		ret = PTR_ERR(d);
++		goto exit;
++	}
++
++	if (d->type != EROFS_FT_UNKNOWN) {
++		inode = d->inode;
++		DBG_BUGON((inode->i_mode & S_IFMT) != (vi.i_mode & S_IFMT));
++		if (!S_ISDIR(inode->i_mode) || inode->opaque) {
++			erofs_dbg("file %s: %s (%d) exists",
++				  path, inode->i_srcpath,
++				  erofs_mode_to_ftype(inode->i_mode));
++			free(path);
++			return 0;
++		}
++		erofs_dbg("dir %s: %s merging", path, inode->i_srcpath);
++	} else {
++		erofs_dbg("loading file: %s (%d) (nid %llu)",
++			  path, erofs_mode_to_ftype(vi.i_mode), ctx->de_nid);
++		if (S_ISREG(vi.i_mode) && vi.i_nlink > 1 &&
++		    (inode = erofs_iget(rctx->dev, vi.i_ino[0]))) {
++			/* hardlink file */
++			if (S_ISDIR(inode->i_mode)) {
++				erofs_dbg("hardlink directory not supported");
++				erofs_iput(inode);
++				return -EISDIR;
++			}
++			inode->i_nlink++;
++			erofs_dbg("\thardlink: %s -> %s", vi.i_srcpath, inode->i_srcpath);
++		} else {
++			inode = erofs_new_inode();
++			if (IS_ERR(inode)) {
++				ret = PTR_ERR(inode);
++				goto exit;
++			}
++
++			inode->i_parent = d->inode;
++			inode->dev = rctx->dev;
++			ret = erofs_rebuild_fill_inode(inode, &vi, rctx->dev);
++			if (ret)
++				goto exit_inode;
++
++			ret = erofs_read_xattrs_from_disk(&vi);
++			if (ret)
++				goto exit_inode;
++			list_splice_tail(&vi.i_xattrs, &inode->i_xattrs);
++			erofs_inode_tag_opaque(inode);
++
++			erofs_insert_ihash(inode, rctx->dev, inode->i_ino[1]);
++		}
++
++		d->inode = inode;
++		d->type = erofs_mode_to_ftype(inode->i_mode);
++	}
++
++	ret = 0;
++	if (S_ISDIR(vi.i_mode)) {
++		struct erofs_rebuild_dir_context nctx = *rctx;
++		nctx.ctx.dir = &vi;
++		ret = erofs_iterate_dir(&nctx.ctx, false);
++	}
++exit:
++	free(path);
++	return ret;
++exit_inode:
++	erofs_iput(inode);
++	goto exit;
++}
++
++int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi)
++{
++	struct erofs_inode inode = {};
++	struct erofs_rebuild_dir_context ctx;
++	int ret;
++
++	if (!sbi->devname) {
++		erofs_err("please open the device first");
++		return -EINVAL;
++	}
++
++	ret = erofs_read_superblock(sbi);
++	if (ret) {
++		erofs_err("failed to read superblock of img %s", sbi->devname);
++		return ret;
++	}
++
++	inode.nid = sbi->root_nid;
++	inode.sbi = sbi;
++	ret = erofs_read_inode_from_disk(&inode);
++	if (ret) {
++		erofs_err("failed to read root inode of img %s", sbi->devname);
++		return ret;
++	}
++	inode.i_srcpath = strdup("/");
++
++	ctx = (struct erofs_rebuild_dir_context) {
++		.ctx.dir = &inode,
++		.ctx.cb = erofs_rebuild_dirent_iter,
++		.root = root,
++		.dev = sbi->dev,
++	};
++	ret = erofs_iterate_dir(&ctx.ctx, false);
++	free(inode.i_srcpath);
++	return ret;
++}
+diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
+index 603c2f3..dd75485 100644
+--- a/mkfs/Makefile.am
++++ b/mkfs/Makefile.am
+@@ -6,4 +6,5 @@ AM_CPPFLAGS = ${libselinux_CFLAGS}
+ mkfs_erofs_SOURCES = main.c
+ mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+ mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+-	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${libdeflate_LIBS}
++	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} \
++	${libdeflate_LIBS}
 -- 
 2.19.1.6.gb485710b
 
