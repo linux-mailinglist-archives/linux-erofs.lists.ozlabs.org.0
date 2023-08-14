@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3F3277B03F
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC03C77B040
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKxH4c91z30f9
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKxL4L2nz30XM
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwt1GN3z300q
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:53 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VpemM0C_1691984567;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VpemM0C_1691984567)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwv0fgfz300q
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:54 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vpelyrr_1691984569;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vpelyrr_1691984569)
           by smtp.aliyun-inc.com;
-          Mon, 14 Aug 2023 11:42:48 +0800
+          Mon, 14 Aug 2023 11:42:49 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 07/13] erofs-utils: lib: add erofs_read_xattrs_from_disk() helper
-Date: Mon, 14 Aug 2023 11:42:33 +0800
-Message-Id: <20230814034239.54660-8-jefflexu@linux.alibaba.com>
+Subject: [PATCH 08/13] erofs-utils: lib: add erofs_inode_tag_opaque() helper
+Date: Mon, 14 Aug 2023 11:42:34 +0800
+Message-Id: <20230814034239.54660-9-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
 References: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
@@ -45,114 +45,140 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add erofs_read_xattrs_from_disk() helper to read extended attributes
-from disk.
+Add erofs_inode_tag_opaque() helper checking if it's an opaque directory.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/xattr.h |  1 +
- lib/xattr.c           | 76 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+ include/erofs/internal.h |  2 ++
+ include/erofs/xattr.h    | 22 ++++++++++++++++++++
+ lib/tar.c                |  5 -----
+ lib/xattr.c              | 44 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 68 insertions(+), 5 deletions(-)
 
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 892dc96..3631cc1 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -219,6 +219,8 @@ struct erofs_inode {
+ #endif
+ 	erofs_off_t fragmentoff;
+ 	unsigned int fragment_size;
++
++	bool opaque;
+ };
+ 
+ static inline erofs_off_t erofs_iloc(struct erofs_inode *inode)
 diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index dc27cf6..634daf9 100644
+index 634daf9..21d669b 100644
 --- a/include/erofs/xattr.h
 +++ b/include/erofs/xattr.h
-@@ -85,6 +85,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
+@@ -73,6 +73,27 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
+ #ifndef XATTR_NAME_POSIX_ACL_DEFAULT
+ #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
+ #endif
++#ifndef OVL_XATTR_NAMESPACE
++#define OVL_XATTR_NAMESPACE "overlay."
++#endif
++#ifndef OVL_XATTR_OPAQUE_POSTFIX
++#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
++#endif
++#ifndef OVL_XATTR_TRUSTED_PREFIX
++#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
++#endif
++#ifndef OVL_XATTR_OPAQUE_SUFFIX
++#define OVL_XATTR_OPAQUE_SUFFIX OVL_XATTR_NAMESPACE OVL_XATTR_OPAQUE_POSTFIX
++#endif
++#ifndef OVL_XATTR_OPAQUE_SUFFIX_LEN
++#define OVL_XATTR_OPAQUE_SUFFIX_LEN (sizeof(OVL_XATTR_OPAQUE_SUFFIX) - 1)
++#endif
++#ifndef OVL_XATTR_OPAQUE
++#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
++#endif
++#ifndef OVL_XATTR_OPAQUE_LEN
++#define OVL_XATTR_OPAQUE_LEN (sizeof(OVL_XATTR_OPAQUE) - 1)
++#endif
  
+ int erofs_scan_file_xattrs(struct erofs_inode *inode);
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
+@@ -86,6 +107,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
  int erofs_setxattr(struct erofs_inode *inode, char *key,
  		   const void *value, size_t size);
-+int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
+ int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
++void erofs_inode_tag_opaque(struct erofs_inode *inode);
  
  #ifdef __cplusplus
  }
+diff --git a/lib/tar.c b/lib/tar.c
+index 42590d2..d7a58d2 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -19,11 +19,6 @@
+ #include "erofs/xattr.h"
+ #include "erofs/blobchunk.h"
+ 
+-#define OVL_XATTR_NAMESPACE "overlay."
+-#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
+-#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
+-#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
+-
+ #define EROFS_WHITEOUT_DEV	0
+ 
+ static char erofs_libbuf[16384];
 diff --git a/lib/xattr.c b/lib/xattr.c
-index 12f580e..8d8f9f0 100644
+index 8d8f9f0..e9aff53 100644
 --- a/lib/xattr.c
 +++ b/lib/xattr.c
-@@ -493,6 +493,82 @@ int erofs_scan_file_xattrs(struct erofs_inode *inode)
- 	return erofs_droid_xattr_set_caps(inode);
+@@ -1421,6 +1421,50 @@ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size)
+ 	return shared_listxattr(vi, &it);
  }
  
-+static struct xattr_item *erofs_read_xattr_from_disk(struct erofs_inode *inode,
-+						     char *key)
++static bool erofs_xattr_is_opaque(struct xattr_item *item)
 +{
-+	ssize_t ret;
-+	u8 prefix;
-+	u16 prefixlen;
-+	unsigned int len[2];
-+	char *kvbuf;
++	struct ea_type_node *tnode;
++	unsigned int plen;
++	const char *prefix;
 +
-+	if (!match_prefix(key, &prefix, &prefixlen))
-+		return ERR_PTR(-ENODATA);
++	if (item->prefix == EROFS_XATTR_INDEX_TRUSTED &&
++	    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE_SUFFIX,
++		     OVL_XATTR_OPAQUE_SUFFIX_LEN))
++		return true;
 +
-+	ret = erofs_getxattr(inode, key, NULL, 0);
-+	if (ret < 0)
-+		return ERR_PTR(-errno);
-+
-+	/* allocate key-value buffer */
-+	len[0] = strlen(key) - prefixlen;
-+	len[1] = ret;
-+	kvbuf = malloc(len[0] + len[1]);
-+	if (!kvbuf)
-+		return ERR_PTR(-ENOMEM);
-+	memcpy(kvbuf, key + prefixlen, len[0]);
-+	if (len[1]) {
-+		ret = erofs_getxattr(inode, key, kvbuf + len[0], len[1]);
-+		if (ret < 0) {
-+			free(kvbuf);
-+			return ERR_PTR(-errno);
-+		}
-+		if (ret != len[1]) {
-+			erofs_err("size of xattr value got changed just now (%u-> %ld)",
-+				  len[1], (long)ret);
-+			len[1] = ret;
++	if (item->prefix & EROFS_XATTR_LONG_PREFIX) {
++		list_for_each_entry(tnode, &ea_name_prefixes, list) {
++			prefix = tnode->type.prefix;
++			plen = tnode->type.prefix_len;
++			if (tnode->index == item->prefix &&
++			    plen + item->len[0] == OVL_XATTR_OPAQUE_LEN &&
++			    !strncmp(prefix, OVL_XATTR_OPAQUE, plen) &&
++			    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE + plen,
++				     item->len[0]))
++				return true;
 +		}
 +	}
-+	return get_xattritem(prefix, kvbuf, len);
++	return false;
 +}
 +
-+int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
++void erofs_inode_tag_opaque(struct erofs_inode *inode)
 +{
-+	ssize_t kllen;
-+	char *keylst, *key;
-+	struct xattr_item *item;
-+	int ret;
++	struct inode_xattr_node *node, *n;
 +
-+	init_list_head(&inode->i_xattrs);
-+	kllen = erofs_listxattr(inode, NULL, 0);
-+	if (kllen < 0)
-+		return kllen;
-+	if (kllen <= 1)
-+		return 0;
-+
-+	keylst = malloc(kllen);
-+	if (!keylst)
-+		return -ENOMEM;
-+
-+	ret = erofs_listxattr(inode, keylst, kllen);
-+	if (ret < 0)
-+		goto err;
-+
-+	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
-+		item = erofs_read_xattr_from_disk(inode, key);
-+		if (IS_ERR(item)) {
-+			ret = PTR_ERR(item);
-+			goto err;
++	list_for_each_entry_safe(node, n, &inode->i_xattrs, list) {
++		if (erofs_xattr_is_opaque(node->item)) {
++			if (S_ISDIR(inode->i_mode))
++				inode->opaque = true;
++			else
++				erofs_dbg("file %s: opaque xattr on non-dir",
++					  inode->i_srcpath);
++			/* strip overlayfs xattrs */
++			list_del(&node->list);
++			free(node);
 +		}
-+
-+		ret = erofs_xattr_add(&inode->i_xattrs, item);
-+		if (ret < 0)
-+			goto err;
 +	}
-+err:
-+	free(keylst);
-+	return ret;
 +}
 +
- int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ int erofs_xattr_insert_name_prefix(const char *prefix)
  {
- 	int ret;
+ 	struct ea_type_node *tnode;
 -- 
 2.19.1.6.gb485710b
 
