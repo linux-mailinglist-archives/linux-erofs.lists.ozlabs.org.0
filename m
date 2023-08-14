@@ -2,39 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0E0B77B208
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 09:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8131477B672
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 12:19:12 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=nY0rJfnE;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RPQRQ60bsz30Dm
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 17:06:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RPVk62s9xz307s
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 20:19:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=nY0rJfnE;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62f; helo=mail-pl1-x62f.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPQRL476Bz300q
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 17:06:04 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vpi6r9d_1691996757;
-Received: from 30.97.49.36(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vpi6r9d_1691996757)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Aug 2023 15:05:59 +0800
-Message-ID: <5c8cc911-a417-30d1-4c85-fe2724dae5ef@linux.alibaba.com>
-Date: Mon, 14 Aug 2023 15:05:56 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH 08/13] erofs-utils: lib: add erofs_inode_tag_opaque()
- helper
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
- linux-erofs@lists.ozlabs.org
-References: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
- <20230814034239.54660-9-jefflexu@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230814034239.54660-9-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPVk26xdcz303d
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 20:19:06 +1000 (AEST)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1bc0d39b52cso24293735ad.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 03:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692008341; x=1692613141;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vm7sv6ZxKCw6lJEOWIlbSRKSHLtdctNopMhaNebjyZw=;
+        b=nY0rJfnE7dvtLLQLOLCDqH6AsVS2sdJBYSXPRiyLBj3jwQmcNPfXAuBuC3GCwtg31p
+         hm6i/ODIAMUTc7pSFZ823D7Ueoe6+BZoZT1ueCSJJ7ua3eUljKjzsCvBnmYDYbWGtMDU
+         c8N5JRpT5WWQHRXgQhZX4JUdnA0KWfnwvvFhswj5pkxRORk/9clHpvEMb9ZxYW8kAy7J
+         whuM6Zm+z0i8fgPEOXe+CmdK3pDcLLCExxBrDg5QaJUUTRSyLmr3UAufXXOS9QTLWut6
+         5cNxzku5T0hjZk1TazobnTpsabU2pjx//cATjRWYCvp9WwQl4BxgBBvEcSjvKgKh/AZt
+         mIGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692008341; x=1692613141;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vm7sv6ZxKCw6lJEOWIlbSRKSHLtdctNopMhaNebjyZw=;
+        b=QcYQbBtIzeH8pNZBcF845tYXZa/c4EChgahuSJZyf2/Yc+Oljm+TfvlRmw1DKIdQ6d
+         p+eV+FZneE9NIhMueTJSmuV1MtbxlIG6cMP15FImLLT1hsaRE8fI7m0xmvmX2YEyXiy/
+         eyNfqzhbsNvkcH+owguiuqTDbh/OCQgxg9EjpA36joYVUzFfnNe54/JCrVECQ0W4s6+S
+         w5XTu+73i+46UUZBqUX+JjHB5GVD5/fEhGVtF32jgcuoELAQKUSv42LnLPNspVDWhxua
+         jHUuCLR8fRyksBbhuwOkqo7yahbLHNw5VDL1rC+SHqv/PeAHX79ors/NYZKgeMs1yicG
+         qn9A==
+X-Gm-Message-State: AOJu0Yw4UOqjRnr7S27iLy+HHHxJhDFUVNdY5SrHRGlpDQBokpOcsCz8
+	11KD+M0K7A+fHc+MfnCHDsYOCt525o4=
+X-Google-Smtp-Source: AGHT+IGbllq6kUbPvX+FawJDx62s0hsZFTZMpgh56qPc6KTfFI1/w1dov3J4hLgMpDF85F76BrhPZw==
+X-Received: by 2002:a17:902:c60a:b0:1bc:5924:2da2 with SMTP id r10-20020a170902c60a00b001bc59242da2mr6677312plr.56.1692008341258;
+        Mon, 14 Aug 2023 03:19:01 -0700 (PDT)
+Received: from localhost.localdomain ([156.236.96.163])
+        by smtp.gmail.com with ESMTPSA id n10-20020a170902e54a00b001b66a71a4a0sm9015193plf.32.2023.08.14.03.18.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Aug 2023 03:19:00 -0700 (PDT)
+From: Yue Hu <zbestahu@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] AOSP: erofs-utils: pass `first_block` to the tail block map in block list
+Date: Mon, 14 Aug 2023 18:18:13 +0800
+Message-Id: <235c626c925f8eed2548aa88afeb75920b2ab733.1692008092.git.huyue2@coolpad.com>
+X-Mailer: git-send-email 2.17.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,131 +72,110 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: huyue2@coolpad.com, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Yue Hu <huyue2@coolpad.com>
 
+We can determine whether the tail block is the first one or not during
+the writing process.  Therefore, instead of internally checking the
+block number in the block list, just simply pass the flag.
 
-On 2023/8/14 11:42, Jingbo Xu wrote:
-> Add erofs_inode_tag_opaque() helper checking if it's an opaque directory.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> ---
->   include/erofs/internal.h |  2 ++
->   include/erofs/xattr.h    | 22 ++++++++++++++++++++
->   lib/tar.c                |  5 -----
->   lib/xattr.c              | 44 ++++++++++++++++++++++++++++++++++++++++
->   4 files changed, 68 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> index 892dc96..3631cc1 100644
-> --- a/include/erofs/internal.h
-> +++ b/include/erofs/internal.h
-> @@ -219,6 +219,8 @@ struct erofs_inode {
->   #endif
->   	erofs_off_t fragmentoff;
->   	unsigned int fragment_size;
-> +
-> +	bool opaque;
+Also, add the missing sbi argument to macro "erofs_blknr".
 
-could we move it upwards? for example, just under
-	bool with_tmpfile;
+Signed-off-by: Yue Hu <huyue2@coolpad.com>
+---
+ include/erofs/block_list.h | 4 ++--
+ lib/block_list.c           | 5 ++---
+ lib/inode.c                | 9 +++++++--
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
->   };
->   
->   static inline erofs_off_t erofs_iloc(struct erofs_inode *inode)
-> diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-> index 634daf9..21d669b 100644
-> --- a/include/erofs/xattr.h
-> +++ b/include/erofs/xattr.h
-> @@ -73,6 +73,27 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
->   #ifndef XATTR_NAME_POSIX_ACL_DEFAULT
->   #define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
->   #endif
-> +#ifndef OVL_XATTR_NAMESPACE
-> +#define OVL_XATTR_NAMESPACE "overlay."
-> +#endif
-> +#ifndef OVL_XATTR_OPAQUE_POSTFIX
-> +#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
-> +#endif
-> +#ifndef OVL_XATTR_TRUSTED_PREFIX
-> +#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
-> +#endif
-> +#ifndef OVL_XATTR_OPAQUE_SUFFIX
-> +#define OVL_XATTR_OPAQUE_SUFFIX OVL_XATTR_NAMESPACE OVL_XATTR_OPAQUE_POSTFIX
-> +#endif
-> +#ifndef OVL_XATTR_OPAQUE_SUFFIX_LEN
-> +#define OVL_XATTR_OPAQUE_SUFFIX_LEN (sizeof(OVL_XATTR_OPAQUE_SUFFIX) - 1)
-> +#endif
-> +#ifndef OVL_XATTR_OPAQUE
-> +#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
-> +#endif
-> +#ifndef OVL_XATTR_OPAQUE_LEN
-> +#define OVL_XATTR_OPAQUE_LEN (sizeof(OVL_XATTR_OPAQUE) - 1)
-> +#endif
+diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
+index 78fab44..e0dced8 100644
+--- a/include/erofs/block_list.h
++++ b/include/erofs/block_list.h
+@@ -19,7 +19,7 @@ void erofs_droid_blocklist_fclose(void);
+ void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 				 erofs_blk_t blk_start, erofs_blk_t nblocks);
+ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr);
++					  erofs_blk_t blkaddr, bool first_block);
+ void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
+ 					erofs_blk_t blk_start, erofs_blk_t nblocks,
+ 					bool first_extent, bool last_extent);
+@@ -28,7 +28,7 @@ static inline void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ 				 erofs_blk_t blk_start, erofs_blk_t nblocks) {}
+ static inline void
+ erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr) {}
++				     erofs_blk_t blkaddr, bool first_block) {}
+ static inline void
+ erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
+ 				   erofs_blk_t blk_start, erofs_blk_t nblocks,
+diff --git a/lib/block_list.c b/lib/block_list.c
+index 896fb01..a1c719d 100644
+--- a/lib/block_list.c
++++ b/lib/block_list.c
+@@ -85,7 +85,7 @@ void erofs_droid_blocklist_write(struct erofs_inode *inode,
+ }
+ 
+ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr)
++					  erofs_blk_t blkaddr, bool first_block)
+ {
+ 	if (!block_list_fp || !cfg.mount_point)
+ 		return;
+@@ -94,8 +94,7 @@ void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+ 	if (S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))
+ 		return;
+ 
+-	/* XXX: another hack, which means it has been outputed before */
+-	if (erofs_blknr(inode->i_size)) {
++	if (!first_block) {
+ 		if (blkaddr == NULL_ADDR)
+ 			fprintf(block_list_fp, "\n");
+ 		else
+diff --git a/lib/inode.c b/lib/inode.c
+index c4d1476..7cd3e69 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -734,12 +734,15 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct erofs_buffer_head *bh, *ibh;
++	bool first_block;
+ 
+ 	bh = inode->bh_data;
+ 
+ 	if (!inode->idata_size)
+ 		goto out;
+ 
++	first_block = !erofs_blknr(sbi, inode->i_size);
++
+ 	/* have enough room to inline data */
+ 	if (inode->bh_inline) {
+ 		ibh = inode->bh_inline;
+@@ -747,7 +750,8 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 		ibh->fsprivate = erofs_igrab(inode);
+ 		ibh->op = &erofs_write_inline_bhops;
+ 
+-		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR);
++		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR,
++						     first_block);
+ 	} else {
+ 		int ret;
+ 		erofs_off_t pos, zero_pos;
+@@ -801,7 +805,8 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 		free(inode->idata);
+ 		inode->idata = NULL;
+ 
+-		erofs_droid_blocklist_write_tail_end(inode, erofs_blknr(sbi, pos));
++		erofs_droid_blocklist_write_tail_end(inode, erofs_blknr(sbi, pos),
++						     first_block);
+ 	}
+ out:
+ 	/* now bh_data can drop directly */
+-- 
+2.17.1
 
-I'd like to avoid export these symbols in the headers, how about moving all
-related logic into lib/xattr.c?
-
->   
->   int erofs_scan_file_xattrs(struct erofs_inode *inode);
->   int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
-> @@ -86,6 +107,7 @@ int erofs_xattr_write_name_prefixes(struct erofs_sb_info *sbi, FILE *f);
->   int erofs_setxattr(struct erofs_inode *inode, char *key,
->   		   const void *value, size_t size);
->   int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
-> +void erofs_inode_tag_opaque(struct erofs_inode *inode);
->   
->   #ifdef __cplusplus
->   }
-> diff --git a/lib/tar.c b/lib/tar.c
-> index 42590d2..d7a58d2 100644
-> --- a/lib/tar.c
-> +++ b/lib/tar.c
-> @@ -19,11 +19,6 @@
->   #include "erofs/xattr.h"
->   #include "erofs/blobchunk.h"
->   
-> -#define OVL_XATTR_NAMESPACE "overlay."
-> -#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
-> -#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
-> -#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
-> -
->   #define EROFS_WHITEOUT_DEV	0
->   
->   static char erofs_libbuf[16384];
-> diff --git a/lib/xattr.c b/lib/xattr.c
-> index 8d8f9f0..e9aff53 100644
-> --- a/lib/xattr.c
-> +++ b/lib/xattr.c
-> @@ -1421,6 +1421,50 @@ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size)
->   	return shared_listxattr(vi, &it);
->   }
->   
-> +static bool erofs_xattr_is_opaque(struct xattr_item *item)
-> +{
-> +	struct ea_type_node *tnode;
-> +	unsigned int plen;
-> +	const char *prefix;
-> +
-> +	if (item->prefix == EROFS_XATTR_INDEX_TRUSTED &&
-> +	    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE_SUFFIX,
-> +		     OVL_XATTR_OPAQUE_SUFFIX_LEN))
-> +		return true;
-> +
-> +	if (item->prefix & EROFS_XATTR_LONG_PREFIX) {
-> +		list_for_each_entry(tnode, &ea_name_prefixes, list) {
-> +			prefix = tnode->type.prefix;
-> +			plen = tnode->type.prefix_len;
-> +			if (tnode->index == item->prefix &&
-> +			    plen + item->len[0] == OVL_XATTR_OPAQUE_LEN &&
-> +			    !strncmp(prefix, OVL_XATTR_OPAQUE, plen) &&
-> +			    !strncmp(item->kvbuf, OVL_XATTR_OPAQUE + plen,
-> +				     item->len[0]))
-> +				return true;
-
-These looks too complicated to me, how about just connect prefix and
-suffix strings and do a string comparsion together?
-
-Thanks,
-Gao Xiang
