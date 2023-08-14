@@ -1,67 +1,32 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3073877A6EB
-	for <lists+linux-erofs@lfdr.de>; Sun, 13 Aug 2023 16:27:44 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=CNBDVgv3;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC39D77B03A
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 05:43:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RP0HK73rJz2ytr
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 00:27:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RPKx05WMJz3bnN
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Aug 2023 13:43:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=CNBDVgv3;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2607:f8b0:4864:20::135; helo=mail-il1-x135.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RP0HG2tq6z2yDY
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 00:27:38 +1000 (AEST)
-Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-3492cd048c9so15723745ab.1
-        for <linux-erofs@lists.ozlabs.org>; Sun, 13 Aug 2023 07:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691936855; x=1692541655;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mw4GG5UZT4ju06xkyXiTq0DXE77GO29yWYaiJZLNCaw=;
-        b=CNBDVgv38BYdCrAM/06+P85CnPqG7zarGVB5SpNdQsJ1Ma5YbLU//L9FOzdo57wmSy
-         Yk8G1cAm80gkdjgP73nL9kCOZa5D1JZtWyShgT2ugacOEHkA7YbKRK46Wr8yi4lblIbZ
-         DCDeM5olmGAgzFgRJbfqHxZNti+VLN5y/K+c8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691936855; x=1692541655;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mw4GG5UZT4ju06xkyXiTq0DXE77GO29yWYaiJZLNCaw=;
-        b=BQl6yNueMauYUJ3oeL5HQR2yYTxhcKI7jcuuIdADMYsq7Qe5/pPr5luF7aME0id1fc
-         KUDT1loj8fs81lSBvetEhoTwbTyZW3vrsn68SO2mH4iek+OSeiDIoHLMGbguh/0n8hPE
-         30JPeAXfubT+5aPw5Jyst7dqLoI1wU7I/2QjLx8bcf4pyoDCs/OKB/OO9NH0iO4Yr+r2
-         m23EBPP3UW/yVuuiSihu50/DssEtltUs4PzrSK3Fj8j8y2Go5R9QjV4+8SFYV0NNnmfQ
-         PnPQhyTgineyWwvold5fp8THxVpiAjXHG9UtjgqIUMBFahnHd8BTXHgd3nl2yzlSF/KN
-         D4GQ==
-X-Gm-Message-State: AOJu0YwBhLp30+2FAampr+VUnisSvro4lZ+hjTOkkt81LVHqqHN6HqoA
-	BrPgDadr6SSWV/URW1yWvNSK+g==
-X-Google-Smtp-Source: AGHT+IEuYboGs4ZmqPBIRUy3sMFL2kd5ZxAStRQxhojTsSYeawY7BQPJ/Y/4rM1y+LnjMHAwLQfxGQ==
-X-Received: by 2002:a05:6e02:190e:b0:345:6ce1:d259 with SMTP id w14-20020a056e02190e00b003456ce1d259mr14165965ilu.28.1691936855232;
-        Sun, 13 Aug 2023 07:27:35 -0700 (PDT)
-Received: from sjg1.lan (c-73-14-173-85.hsd1.co.comcast.net. [73.14.173.85])
-        by smtp.gmail.com with ESMTPSA id w7-20020a02cf87000000b00430cf006d9bsm2280952jar.30.2023.08.13.07.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Aug 2023 07:27:35 -0700 (PDT)
-From: Simon Glass <sjg@chromium.org>
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Subject: [PATCH 12/24] fs/erofs: Quieten test for filesystem presence
-Date: Sun, 13 Aug 2023 08:26:40 -0600
-Message-ID: <20230813142708.361456-13-sjg@chromium.org>
-X-Mailer: git-send-email 2.41.0.640.ga95def55d0-goog
-In-Reply-To: <20230813142708.361456-1-sjg@chromium.org>
-References: <20230813142708.361456-1-sjg@chromium.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RPKwp0LNTz2yD6
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 13:42:48 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VpemLy9_1691984559;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VpemLy9_1691984559)
+          by smtp.aliyun-inc.com;
+          Mon, 14 Aug 2023 11:42:40 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH 00/13] erofs-utils: mkfs: introduce rebuild mode
+Date: Mon, 14 Aug 2023 11:42:26 +0800
+Message-Id: <20230814034239.54660-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -75,49 +40,64 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Simon Glass <sjg@chromium.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-At present listing a partition produces lots of errors about this
-filesystem:
+Introduce a new rebuild mode merging multiple erofs images generated
+from either tarerfs index mode (--tar=i):
 
-   => part list mmc 4
-   cannot find valid erofs superblock
-   cannot find valid erofs superblock
-   cannot read erofs superblock: -5
-   [9 more similar lines]
+	mkfs.erofs --tar=i --aufs layer0.erofs layer0.tar
+	...
+	mkfs.erofs --tar=i --aufs layerN.erofs layerN.tar
 
-Use debugging rather than errors when unable to find a signature, as is
-done with other filesystems.
+	mkfs.erofs merge.erofs layerN.erofs ... layer0.erofs
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
+or tarerofs non-index mode (--tar=f):
 
- fs/erofs/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	mkfs.erofs --tar=f -Enoinline_data --aufs layer0.erofs layer0.tar
+	...
+	mkfs.erofs --tar=f -Enoinline_data --aufs layerN.erofs layerN.tar
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index d33926281b47..d405d488fd27 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -68,14 +68,14 @@ int erofs_read_superblock(void)
- 
- 	ret = erofs_blk_read(data, 0, erofs_blknr(sizeof(data)));
- 	if (ret < 0) {
--		erofs_err("cannot read erofs superblock: %d", ret);
-+		erofs_dbg("cannot read erofs superblock: %d", ret);
- 		return -EIO;
- 	}
- 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
- 
- 	ret = -EINVAL;
- 	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
--		erofs_err("cannot find valid erofs superblock");
-+		erofs_dbg("cannot find valid erofs superblock");
- 		return ret;
- 	}
- 
+	mkfs.erofs merge.erofs layerN.erofs ... layer0.erofs
+
+The rebuild mode doesn't support flat inline datalayout yet.
+
+Jingbo Xu (13):
+  erofs-utils: fix overriding of i_rdev for special device
+  erofs-utils: lib: add list_splice_tail() helper
+  erofs-utils: lib: read i_ino in erofs_read_inode_from_disk()
+  erofs-utils: lib: fix erofs_init_devices() in multidev mode
+  erofs-utils: lib: keep self maintained devname
+  erofs-utils: lib: make erofs_get_unhashed_chunk() global
+  erofs-utils: lib: add erofs_read_xattrs_from_disk() helper
+  erofs-utils: lib: add erofs_inode_tag_opaque() helper
+  erofs-utils: lib: add erofs_insert_ihash() helper
+  erofs-utils: lib: add erofs_rebuild_dump_tree() helper
+  erofs-utils: lib: add erofs_rebuild_get_dentry() helper
+  erofs-utils: lib: add erofs_rebuild_load_tree() helper
+  erofs-utils: mkfs: introduce rebuild mode
+
+ include/erofs/blobchunk.h |   2 +
+ include/erofs/inode.h     |   5 +-
+ include/erofs/internal.h  |   9 +-
+ include/erofs/list.h      |  20 ++
+ include/erofs/rebuild.h   |  21 +++
+ include/erofs/xattr.h     |  23 +++
+ lib/Makefile.am           |   3 +-
+ lib/blobchunk.c           |   2 +-
+ lib/inode.c               |  33 +++-
+ lib/io.c                  |  14 +-
+ lib/namei.c               |   2 +
+ lib/rebuild.c             | 387 ++++++++++++++++++++++++++++++++++++++
+ lib/super.c               |  11 +-
+ lib/tar.c                 | 193 +++++--------------
+ lib/xattr.c               | 120 ++++++++++++
+ mkfs/Makefile.am          |   3 +-
+ mkfs/main.c               | 198 ++++++++++++++-----
+ 17 files changed, 839 insertions(+), 207 deletions(-)
+ create mode 100644 include/erofs/rebuild.h
+ create mode 100644 lib/rebuild.c
+
 -- 
-2.41.0.640.ga95def55d0-goog
+2.19.1.6.gb485710b
 
