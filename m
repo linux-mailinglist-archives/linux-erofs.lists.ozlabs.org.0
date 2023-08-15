@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E68FB77CA23
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 11:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0564C77CA27
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 11:15:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ5GM5chrz3cLV
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 19:15:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ5GQ68Nhz3cHP
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 19:15:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ5GB21FKz3bdm
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 19:15:29 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VprJmkM_1692090922;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VprJmkM_1692090922)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ5GB4wqqz3bx0
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 19:15:30 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VprN0jQ_1692090924;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VprN0jQ_1692090924)
           by smtp.aliyun-inc.com;
-          Tue, 15 Aug 2023 17:15:23 +0800
+          Tue, 15 Aug 2023 17:15:24 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/3] erofs-utils: lib: fix potential out-of-bound in xattr_entrylist()
-Date: Tue, 15 Aug 2023 17:15:19 +0800
-Message-Id: <20230815091521.74661-2-jefflexu@linux.alibaba.com>
+Subject: [PATCH 2/3] erofs-utils: lib: add match_base_prefix() helper
+Date: Tue, 15 Aug 2023 17:15:20 +0800
+Message-Id: <20230815091521.74661-3-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230815091521.74661-1-jefflexu@linux.alibaba.com>
 References: <20230815091521.74661-1-jefflexu@linux.alibaba.com>
@@ -45,36 +45,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Check the index before accessing array to avoid the potential
-out-of-bound access.
+Since the introduction of long xattr name prefix, match_prefix() will
+search among the long xattr name prefixes first and return the matched
+prefix, while erofs_getxattr() expects a base prefix even when the
+queried xattr name matches a long prefix.
 
-Fixes: c47df5aa2d16 ("erofs-utils: fuse: introduce xattr support")
+Thus introduce match_base_prefix() helper to do this.
+
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/xattr.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/xattr.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
 diff --git a/lib/xattr.c b/lib/xattr.c
-index 12f580e..2548750 100644
+index 2548750..4091fe6 100644
 --- a/lib/xattr.c
 +++ b/lib/xattr.c
-@@ -1229,11 +1229,14 @@ static int xattr_entrylist(struct xattr_iter *_it,
+@@ -137,27 +137,34 @@ static struct xattr_item *get_xattritem(u8 prefix, char *kvbuf,
+ 	return item;
+ }
+ 
+-static bool match_prefix(const char *key, u8 *index, u16 *len)
++static bool match_base_prefix(const char *key, u8 *index, u16 *len)
  {
- 	struct listxattr_iter *it =
- 		container_of(_it, struct listxattr_iter, it);
-+	unsigned int base_index = entry->e_name_index;
- 	unsigned int prefix_len;
- 	const char *prefix;
+ 	struct xattr_prefix *p;
+-	struct ea_type_node *tnode;
  
--	prefix = xattr_types[entry->e_name_index].prefix;
--	prefix_len = xattr_types[entry->e_name_index].prefix_len;
-+	if (base_index >= ARRAY_SIZE(xattr_types))
-+		return 1;
-+	prefix = xattr_types[base_index].prefix;
-+	prefix_len = xattr_types[base_index].prefix_len;
+-	list_for_each_entry(tnode, &ea_name_prefixes, list) {
+-		p = &tnode->type;
++	for (p = xattr_types; p < xattr_types + ARRAY_SIZE(xattr_types); ++p) {
+ 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
+ 			*len = p->prefix_len;
+-			*index = tnode->index;
++			*index = p - xattr_types;
+ 			return true;
+ 		}
+ 	}
+-	for (p = xattr_types; p < xattr_types + ARRAY_SIZE(xattr_types); ++p) {
++	return false;
++}
++
++static bool match_prefix(const char *key, u8 *index, u16 *len)
++{
++	struct xattr_prefix *p;
++	struct ea_type_node *tnode;
++
++	list_for_each_entry(tnode, &ea_name_prefixes, list) {
++		p = &tnode->type;
+ 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
+ 			*len = p->prefix_len;
+-			*index = p - xattr_types;
++			*index = tnode->index;
+ 			return true;
+ 		}
+ 	}
+-	return false;
++	return match_base_prefix(key, index, len);
+ }
  
- 	if (!it->buffer) {
- 		it->buffer_ofs += prefix_len + entry->e_name_len + 1;
+ static struct xattr_item *parse_one_xattr(const char *path, const char *key,
+@@ -1198,7 +1205,7 @@ int erofs_getxattr(struct erofs_inode *vi, const char *name, char *buffer,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!match_prefix(name, &prefix, &prefixlen))
++	if (!match_base_prefix(name, &prefix, &prefixlen))
+ 		return -ENODATA;
+ 
+ 	it.it.sbi = vi->sbi;
 -- 
 2.19.1.6.gb485710b
 
