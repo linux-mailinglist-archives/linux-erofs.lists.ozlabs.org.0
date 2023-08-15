@@ -2,80 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01A7D77C81D
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 08:50:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3135C77C970
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 10:37:29 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=GTtw7kcS;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vz0KHcPQ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ23J6HDgz3bc0
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 16:50:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ4QG1t44z3c5b
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 18:37:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=GTtw7kcS;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vz0KHcPQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:1004:224b::36; helo=out-54.mta0.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
+Received: from out-54.mta0.migadu.com (out-54.mta0.migadu.com [IPv6:2001:41d0:1004:224b::36])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ23D53dHz2yVp
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 16:50:47 +1000 (AEST)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bdbbede5d4so31174045ad.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 14 Aug 2023 23:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692082244; x=1692687044;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1HEp3XtRdvIs5VDLFrCQX4zg0yyTRrj4tszI8loP4A=;
-        b=GTtw7kcS1mmjV31pp+8NvCPLzu0HL+sNIaXarpa0U8xraztJip+x4wlxgnTLEvJQGx
-         uKSs+AxXUpImHtAyBa8eY7pkEh87JiIwSehrbXxC/QT0Q1D+ltDekdQ7bbxrH9XmDF1g
-         hQnUXgHAWrcL/2+nfFtXNjnRXiPxo/bdg8I7qlhVUJGQ43Nq6oVbmloYeDyMU6dI3f/M
-         xNo5Nv610ge+vSz3OiRmYh6N9dX9z632imiBKj4oJgb7mlxbn6k91fmopPQy5C43nYSE
-         u+LA33lSWANKotSB1QMhl4xQhvSb2mVuzhMItKOn8K/DM2+gTmM6g7kQAmut+MEi5DHg
-         FCzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692082244; x=1692687044;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1HEp3XtRdvIs5VDLFrCQX4zg0yyTRrj4tszI8loP4A=;
-        b=RXJMzte6b+Eet5sbld1vOrcCIeewP27eSiAsRvSHhD2HJIjJbntxwWwbvgVv+eaC1O
-         a+IHY2ojuI31uePmDCVYaTbZCG50bWQumPDn8zrHdB8GeYPIG6aO2QWt0umVNOECcHyt
-         QJ3i7jb7ejxcmBQvjnPCpQ9zwaeHQ2I+7wvRGKnRQbna5ftjnUgPy+jSQIHFs+TdSSaa
-         bUDToqD3GUxLbgj48K5c6zeGKyWnDIyuDaZBxBVoSc68jwxxDMdNy1whTyQSsBOh0rBL
-         aOXFLo5130zcvL0LmZeQyUQX5yr4FnS3TalrTqyj9BILYMeV994uGjczFQHbvS4eh+8k
-         FPIA==
-X-Gm-Message-State: AOJu0YxA5Ul6yZ66vXR3vcv6OgBXzt3oiEDtca0HHLFcEgEOy45RoErX
-	M24jJYy21ZkTBO93BK4vicR1GdL0bIU=
-X-Google-Smtp-Source: AGHT+IENJL3+ztq6ePULZA9o6rv0DAb2uWKHF9wR+hWJHa+YXTKFgDGRT6KVhFkBSCyoZVKyvJqEpg==
-X-Received: by 2002:a17:903:41d2:b0:1bc:210d:635f with SMTP id u18-20020a17090341d200b001bc210d635fmr15709863ple.28.1692082244298;
-        Mon, 14 Aug 2023 23:50:44 -0700 (PDT)
-Received: from localhost ([156.236.96.163])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902c14400b001bdeb6bdfbasm2534675plj.241.2023.08.14.23.50.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 14 Aug 2023 23:50:44 -0700 (PDT)
-Date: Tue, 15 Aug 2023 15:00:23 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 1/2 v2] AOSP: erofs-utils: pass a parameter to write
- tail end in block list
-Message-ID: <20230815150023.00001c8b.zbestahu@gmail.com>
-In-Reply-To: <c31a3fb2-eb7a-9b99-6e2c-981f108db671@linux.alibaba.com>
-References: <20230815045525.17990-1-zbestahu@gmail.com>
-	<953e0c41-c3a1-9681-b1a4-723596b0f89c@linux.alibaba.com>
-	<20230815134010.0000268a.zbestahu@gmail.com>
-	<52a561ce-8e57-8f59-c366-c6b3fd9724ba@linux.alibaba.com>
-	<20230815142107.00007b58.zbestahu@gmail.com>
-	<70f6cf8e-16e2-b08f-9ded-ae0edcb29cb0@linux.alibaba.com>
-	<20230815144515.000031b7.zbestahu@gmail.com>
-	<c31a3fb2-eb7a-9b99-6e2c-981f108db671@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ4Q73rXLz2ytk
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 18:37:16 +1000 (AEST)
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1692088626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uBmn5bY96EnmwKJFlv+WltFrhGvpjIbZEKIiYirKvRY=;
+	b=vz0KHcPQmyiJWfmlN0KqRtShPV8OO94S7Ve+8NAyKaJzlfD3l3Gwdcs50vzwkyJwFeNk42
+	wWmdUe83i5yu+zc+P73iwMyGZC6f36VMufdeZyZpMS2xcjecgpOeJWBucmjek3/RmzHbqM
+	Esg+z/IvqlGN9dYsqiRnMi0+1ICkj/k=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 01/48] mm: move some shrinker-related function
+ declarations to mm/internal.h
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20230807110936.21819-2-zhengqi.arch@bytedance.com>
+Date: Tue, 15 Aug 2023 16:36:31 +0800
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FC3AE898-443D-4ACB-BCB4-0F8F2F48CDD0@linux.dev>
+References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
+ <20230807110936.21819-2-zhengqi.arch@bytedance.com>
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,94 +58,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zhangwen@coolpad.com
+Cc: kvm@vger.kernel.org, djwong@kernel.org, Roman Gushchin <roman.gushchin@linux.dev>, david@fromorbit.com, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, Linux-MM <linux-mm@kvack.org>, dm-devel@redhat.com, linux-mtd@lists.infradead.org, cel@kernel.org, x86@kernel.org, steven.price@arm.com, cluster-devel@redhat.com, simon.horman@corigine.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, linux-arm-msm@vger.kernel.org, linux-nfs@vger.kernel.org, rcu@vger.kernel.org, linux-bcache@vger.kernel.org, dlemoal@kernel.org, yujie.liu@intel.com, Vlastimil Babka <vbabka@suse.cz>, linux-raid@vger.kernel.org, Christian Brauner <brauner@kernel.org>, tytso@mit.edu, Greg KH <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org, Andrew Morto
+ n <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, tkhai@ya.ru
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 15 Aug 2023 14:44:23 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> On 2023/8/15 14:45, Yue Hu wrote:
-> > On Tue, 15 Aug 2023 14:18:08 +0800
-> > Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> >   
-> >> On 2023/8/15 14:21, Yue Hu wrote:  
-> >>> On Tue, 15 Aug 2023 13:36:46 +0800
-> >>> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> >>>      
-> >>>> On 2023/8/15 13:40, Yue Hu wrote:  
-> >>>>> On Tue, 15 Aug 2023 12:59:56 +0800
-> >>>>> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> >>>>>         
-> >>>>>> On 2023/8/15 12:55, Yue Hu wrote:  
-> >>>>>>> From: Yue Hu <huyue2@coolpad.com>
-> >>>>>>>
-> >>>>>>> We can determine whether the tail block is the first one or not during
-> >>>>>>> the writing process.  Therefore, instead of internally checking the
-> >>>>>>> block number for the tail block map, just simply pass the flag.
-> >>>>>>>
-> >>>>>>> Also, add the missing sbi argument to macro erofs_blknr.  
-> >>>>>>
-> >>>>>> Could you submit a patch to fix this issue first?  
-> >>>>>
-> >>>>> ok, will do that.
-> >>>>>         
-> >>>>>>        
-> >>>>>>>
-> >>>>>>> Signed-off-by: Yue Hu <huyue2@coolpad.com>
-> >>>>>>> ---
-> >>>>>>> v2: change commit message a bit
-> >>>>>>>
-> >>>>>>>      include/erofs/block_list.h | 4 ++--
-> >>>>>>>      lib/block_list.c           | 5 ++---
-> >>>>>>>      lib/inode.c                | 9 +++++++--
-> >>>>>>>      3 files changed, 11 insertions(+), 7 deletions(-)
-> >>>>>>>
-> >>>>>>> diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
-> >>>>>>> index 78fab44..e0dced8 100644
-> >>>>>>> --- a/include/erofs/block_list.h
-> >>>>>>> +++ b/include/erofs/block_list.h
-> >>>>>>> @@ -19,7 +19,7 @@ void erofs_droid_blocklist_fclose(void);
-> >>>>>>>      void erofs_droid_blocklist_write(struct erofs_inode *inode,
-> >>>>>>>      				 erofs_blk_t blk_start, erofs_blk_t nblocks);
-> >>>>>>>      void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
-> >>>>>>> -					  erofs_blk_t blkaddr);
-> >>>>>>> +					  erofs_blk_t blkaddr, bool first_block);  
-> >>>>>>
-> >>>>>> I still have no idea why we need this, could you describe the Android
-> >>>>>> block map details for discussion?  
-> >>>>>
-> >>>>> Android block map is just adding file blocks to a range.
-> >>>>>
-> >>>>> So, the tail block should be needed in this range as well.
-> >>>>> I think one simple way is just appending the tail block address in it as below:
-> >>>>>
-> >>>>> /`file_path` `block1_address`-`blockn_address` `tail_block_address`  
-> >>>>
-> >>>> why `tail_block_address` needs a seperate field?  
-> >>>
-> >>> Well, `erofs_write_tail_end()` is a separate logic and i think appending this block is
-> >>> simple enough since i don't need to consider whether the block address is contiguous
-> >>> with previous one.
-> >>>
-> >>> And i think Android block map can handle this since i have saw below in ext4:
-> >>>
-> >>> /system/.../libclang_rt.ubsan_standalone-arm-android.so 51276-51309 0 51310-51403  
-> >>
-> >> What's the meaning of 0 here?  
-> > 
-> > I have not check that yet, maybe i need to find time...
-> > 
-> > And check this: "/.../libxxx.so 87378-88630 0 0 0 88631 0 0 88632-88637 0 0 0 88638-88663"
-> > 
-> > so, i guess it looks like null block.  
-> 
-> So here erofs_droid_blocklist_write_tail_end is not actually needed in principle?
-> 0 is just used for sparse block?
 
-We need to confirm this.
+> On Aug 7, 2023, at 19:08, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+>=20
+> The following functions are only used inside the mm subsystem, so it's
+> better to move their declarations to the mm/internal.h file.
+>=20
+> 1. shrinker_debugfs_add()
+> 2. shrinker_debugfs_detach()
+> 3. shrinker_debugfs_remove()
+>=20
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
-> 
-> Thanks,
-> Gao Xiang
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+
+One nit bellow.
+
+[...]
+
+> +
+> +/*
+> + * shrinker related functions
+> + */
+
+This is a multi-comment format. "/* shrinker related functions. */" is
+the right one-line format of comment.
+
+> +
+> +#ifdef CONFIG_SHRINKER_DEBUG
+> +extern int shrinker_debugfs_add(struct shrinker *shrinker);
+> +extern struct dentry *shrinker_debugfs_detach(struct shrinker =
+*shrinker,
+> +      int *debugfs_id);
+> +extern void shrinker_debugfs_remove(struct dentry *debugfs_entry,
+> +    int debugfs_id);
+> +#else /* CONFIG_SHRINKER_DEBUG */
+> +static inline int shrinker_debugfs_add(struct shrinker *shrinker)
+> +{
+> +	return 0;
+> +}
+> +static inline struct dentry *shrinker_debugfs_detach(struct shrinker =
+*shrinker,
+> +     int *debugfs_id)
+> +{
+> +	*debugfs_id =3D -1;
+> +	return NULL;
+> +}
+> +static inline void shrinker_debugfs_remove(struct dentry =
+*debugfs_entry,
+> +	int debugfs_id)
+> +{
+> +}
+> +#endif /* CONFIG_SHRINKER_DEBUG */
+> +
+> #endif /* __MM_INTERNAL_H */
+> --=20
+> 2.30.2
+>=20
 
