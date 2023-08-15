@@ -2,49 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1BF377C98C
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 10:45:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C0F377C9D2
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 10:57:09 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FRL/ltyD;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ZboKTnDN;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ4bQ3cvSz3c5b
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 18:45:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RQ4rz0NfTz3cB1
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Aug 2023 18:57:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FRL/ltyD;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ZboKTnDN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=2001:41d0:203:375::21; helo=out-33.mta1.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
-Received: from out-33.mta1.migadu.com (out-33.mta1.migadu.com [IPv6:2001:41d0:203:375::21])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.dev (client-ip=95.215.58.32; helo=out-32.mta1.migadu.com; envelope-from=muchun.song@linux.dev; receiver=lists.ozlabs.org)
+Received: from out-32.mta1.migadu.com (out-32.mta1.migadu.com [95.215.58.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ4bJ4g53z2yZV
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 18:45:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQ4rr12s0z30gB
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Aug 2023 18:56:58 +1000 (AEST)
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1692089107;
+	t=1692089813;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d2GQT27JBORMGN4q7RKbUYlAoigLeQM193KWTjK1+1c=;
-	b=FRL/ltyDk6h6CRg5cbkY9bVyLglBaTn6TN1AqP0hvLYmbCo7IPQK7K10OejYDI/exkfKch
-	6u6X9SpuAcMC1xJitcw9cZ/1rhmfJ5U48AMYSFpK2Bsy4fCi0AC+IGqXx9ZTbYi9bkVata
-	zUMcVl/PuRM8qvEN8trILpirtVGTVQA=
+	bh=P6bHve1nYg/bJoXU/AFGmk5Zl6IycrFBw1mdd3eghAw=;
+	b=ZboKTnDNrg6vIJPIGhqfQcqeDe/jt4ERjlf13Tk6VPjXBVQvvsAtANiKpbjOjVSgRfY40A
+	qV1OgTNlJhRtArT95ncotHyqj7m2j8VDwj2zwa0fIqDGhtCIIoQOUE7bkXfa+YKA3QuuoE
+	8EIeURUh5iYzv41wHSUftY3Kgi5uKPM=
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 02/48] mm: vmscan: move shrinker-related code into a
- separate file
+Subject: Re: [PATCH v4 12/48] gfs2: dynamically allocate the gfs2-qd shrinker
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230807110936.21819-3-zhengqi.arch@bytedance.com>
-Date: Tue, 15 Aug 2023 16:44:21 +0800
+In-Reply-To: <20230807110936.21819-13-zhengqi.arch@bytedance.com>
+Date: Tue, 15 Aug 2023 16:56:06 +0800
 Content-Transfer-Encoding: 7bit
-Message-Id: <BEE5622B-8E74-405C-9A5B-0CF410F8344E@linux.dev>
+Message-Id: <D38951C4-3BC6-409C-90C4-C72E772ECFF0@linux.dev>
 References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
- <20230807110936.21819-3-zhengqi.arch@bytedance.com>
+ <20230807110936.21819-13-zhengqi.arch@bytedance.com>
 To: Qi Zheng <zhengqi.arch@bytedance.com>
 X-Migadu-Flow: FLOW_OUT
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -65,12 +64,12 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 
-> On Aug 7, 2023, at 19:08, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+> On Aug 7, 2023, at 19:09, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
 > 
-> The mm/vmscan.c file is too large, so separate the shrinker-related
-> code from it into a separate file. No functional changes.
+> Use new APIs to dynamically allocate the gfs2-qd shrinker.
 > 
 > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
 Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+
 
