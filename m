@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3CEB77D83B
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Aug 2023 04:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 04F6277D83C
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Aug 2023 04:14:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RQWst64xxz3cSR
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Aug 2023 12:14:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RQWsx6h4bz3cSK
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Aug 2023 12:14:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
@@ -14,18 +14,18 @@ Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyu
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQWsP64yfz3cNt
-	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Aug 2023 12:14:01 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VptkfNs_1692152036;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VptkfNs_1692152036)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RQWsQ2pBVz3cPy
+	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Aug 2023 12:14:02 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vptqv9t_1692152037;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vptqv9t_1692152037)
           by smtp.aliyun-inc.com;
-          Wed, 16 Aug 2023 10:13:57 +0800
+          Wed, 16 Aug 2023 10:13:58 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: xiang@kernel.org,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 08/12] erofs-utils: lib: add erofs_insert_ihash() helper
-Date: Wed, 16 Aug 2023 10:13:43 +0800
-Message-Id: <20230816021347.126886-9-jefflexu@linux.alibaba.com>
+Subject: [PATCH v2 09/12] erofs-utils: lib: add erofs_rebuild_dump_tree() helper
+Date: Wed, 16 Aug 2023 10:13:44 +0800
+Message-Id: <20230816021347.126886-10-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230816021347.126886-1-jefflexu@linux.alibaba.com>
 References: <20230816021347.126886-1-jefflexu@linux.alibaba.com>
@@ -45,59 +45,120 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add erofs_insert_ihash() helper inserting inode into inode hash table.
-
-Also add prototypes of erofs_iget() and erofs_iget_by_nid() in the
-header file.
+Enhance tarerofs_dump_tree() so that it could optionally skip whiteout
+files when it's supposed to output image in merged view.  Rename it to
+erofs_rebuild_dump_tree().
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/inode.h |  3 +++
- lib/inode.c           | 10 +++++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ include/erofs/inode.h    |  2 +-
+ include/erofs/internal.h |  2 ++
+ lib/inode.c              | 23 ++++++++++++++++++++---
+ lib/tar.c                |  2 --
+ mkfs/main.c              |  2 +-
+ 5 files changed, 24 insertions(+), 7 deletions(-)
 
 diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index e8a5670..1c602a8 100644
+index 1c602a8..f273e9e 100644
 --- a/include/erofs/inode.h
 +++ b/include/erofs/inode.h
-@@ -25,6 +25,9 @@ u32 erofs_new_encode_dev(dev_t dev);
- unsigned char erofs_mode_to_ftype(umode_t mode);
- unsigned char erofs_ftype_to_dtype(unsigned int filetype);
- void erofs_inode_manager_init(void);
-+void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
-+struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
-+struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
- unsigned int erofs_iput(struct erofs_inode *inode);
+@@ -32,7 +32,7 @@ unsigned int erofs_iput(struct erofs_inode *inode);
  erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
  struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+ 				   const char *name);
+-int tarerofs_dump_tree(struct erofs_inode *dir);
++int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool merged_view);
+ int erofs_init_empty_dir(struct erofs_inode *dir);
+ struct erofs_inode *erofs_new_inode(void);
+ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index de8c7e8..6e54c1f 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -415,6 +415,8 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
+ 	return crc;
+ }
+ 
++#define EROFS_WHITEOUT_DEV	0
++
+ #ifdef __cplusplus
+ }
+ #endif
 diff --git a/lib/inode.c b/lib/inode.c
-index d54f84f..b967aab 100644
+index b967aab..7f59a58 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -75,6 +75,12 @@ void erofs_inode_manager_init(void)
- 		init_list_head(&inode_hashtable[i]);
+@@ -1323,9 +1323,14 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
+ 	return inode;
  }
  
-+void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
-+{
-+	list_add(&inode->i_hash,
-+		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
+-int tarerofs_dump_tree(struct erofs_inode *dir)
++static bool erofs_inode_is_whiteout(struct erofs_inode *inode)
+ {
+-	struct erofs_dentry *d;
++	return S_ISCHR(inode->i_mode) && inode->u.i_rdev == EROFS_WHITEOUT_DEV;
 +}
 +
- /* get the inode from the (source) inode # */
- struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
- {
-@@ -976,9 +982,7 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
- 		inode->inode_isize = sizeof(struct erofs_inode_compact);
++int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool merged_view)
++{
++	struct erofs_dentry *d, *n;
+ 	unsigned int nr_subdirs;
+ 	int ret;
+ 
+@@ -1368,6 +1373,18 @@ int tarerofs_dump_tree(struct erofs_inode *dir)
+ 		return 0;
  	}
  
--	list_add(&inode->i_hash,
--		 &inode_hashtable[(st->st_ino ^ st->st_dev) %
--				  NR_INODE_HASHTABLE]);
-+	erofs_insert_ihash(inode, st->st_dev, st->st_ino);
- 	return 0;
- }
++	if (merged_view) {
++		list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
++			if (erofs_inode_is_whiteout(d->inode)) {
++				erofs_dbg("skip whiteout %s", d->inode->i_srcpath);
++				erofs_d_invalidate(d);
++				list_del(&d->d_child);
++				free(d);
++				continue;
++			}
++		}
++	}
++
+ 	nr_subdirs = 0;
+ 	list_for_each_entry(d, &dir->i_subdirs, d_child)
+ 		++nr_subdirs;
+@@ -1391,7 +1408,7 @@ int tarerofs_dump_tree(struct erofs_inode *dir)
+ 			continue;
  
+ 		inode = erofs_igrab(d->inode);
+-		ret = tarerofs_dump_tree(inode);
++		ret = erofs_rebuild_dump_tree(inode, merged_view);
+ 		dir->i_nlink += (erofs_mode_to_ftype(inode->i_mode) == EROFS_FT_DIR);
+ 		erofs_iput(inode);
+ 		if (ret)
+diff --git a/lib/tar.c b/lib/tar.c
+index 278af8c..180ad94 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -19,8 +19,6 @@
+ #include "erofs/xattr.h"
+ #include "erofs/blobchunk.h"
+ 
+-#define EROFS_WHITEOUT_DEV	0
+-
+ static char erofs_libbuf[16384];
+ 
+ struct tar_header {
+diff --git a/mkfs/main.c b/mkfs/main.c
+index c03a7a8..269ccf4 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -946,7 +946,7 @@ int main(int argc, char **argv)
+ 		if (err < 0)
+ 			goto exit;
+ 
+-		err = tarerofs_dump_tree(root_inode);
++		err = erofs_rebuild_dump_tree(root_inode, false);
+ 		if (err < 0)
+ 			goto exit;
+ 	}
 -- 
 2.19.1.6.gb485710b
 
