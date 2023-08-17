@@ -2,32 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2BF477F21E
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Aug 2023 10:28:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A272977F24A
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Aug 2023 10:39:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RRJ7Y4KcDz3cBh
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Aug 2023 18:28:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RRJND3gByz3bWy
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Aug 2023 18:39:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RRJ775Xdsz3bw8
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Aug 2023 18:28:35 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vpz9R3t_1692260909;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vpz9R3t_1692260909)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RRJN75cdkz2yhL
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Aug 2023 18:39:49 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VpzBcn4_1692261583;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VpzBcn4_1692261583)
           by smtp.aliyun-inc.com;
-          Thu, 17 Aug 2023 16:28:30 +0800
+          Thu, 17 Aug 2023 16:39:44 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 8/8] erofs: adapt folios for z_erofs_read_folio()
-Date: Thu, 17 Aug 2023 16:28:13 +0800
-Message-Id: <20230817082813.81180-8-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 8/8] erofs: adapt folios for z_erofs_read_folio()
+Date: Thu, 17 Aug 2023 16:39:42 +0800
+Message-Id: <20230817083942.103303-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230817082813.81180-1-hsiangkao@linux.alibaba.com>
-References: <20230817082813.81180-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230817082813.81180-8-hsiangkao@linux.alibaba.com>
+References: <20230817082813.81180-8-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -50,7 +50,8 @@ it renames the corresponding tracepoint.)
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-erofs stress test passes.
+changes since v1:
+ - folio->index is still indexed in the page unit, so PAGE_SHIFT is needed.
 
  fs/erofs/zdata.c             |  9 ++++-----
  include/trace/events/erofs.h | 16 ++++++++--------
@@ -74,7 +75,7 @@ index 79cadb88e8bf..ace727bfe5b2 100644
 -	trace_erofs_readpage(page, false);
 -	f.headoffset = (erofs_off_t)page->index << PAGE_SHIFT;
 +	trace_erofs_read_folio(folio, false);
-+	f.headoffset = (erofs_off_t)folio->index << folio_shift(folio);
++	f.headoffset = (erofs_off_t)folio->index << PAGE_SHIFT;
  
  	z_erofs_pcluster_readmore(&f, NULL, true);
 -	err = z_erofs_do_read_page(&f, page);
