@@ -1,39 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CE887827CE
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Aug 2023 13:20:28 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82849783744
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Aug 2023 03:17:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1692667022;
+	bh=PyNKln6QpzvJsp+uUe84YdiuadZLDGhmt8zTvh3ayO8=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=jAGkfpficjCcMKmHggdSkbnDBVcr5zt1JjyIHSCSt6+Pkf8XAqVcT2ZnUoz7/HwJq
+	 BPFsFCvdLm5G/3iTf2HMKOyvizxgaC8aBEfb1qIWCnbp3wXrtemrd67yEdjziqC6ra
+	 /ic6RmxcAZrdPn/7KPKKDMWWgwTWauBB4/EBUqRsTD5rPOGp9q0AQpHbCnRKcnoeYV
+	 Z5A0AkkyVnWcav+J8HCcn05dUc6wnaID8dRWNiP64i5DVW9E9bUS4tRPtHI5cywe/L
+	 FKM7hxv1rIcuvdpc/HkmV+hWnh02YX6bE0AsrKm+ncs3mj6KhZ4SrrfqrD3z53wxMr
+	 J5rZOz2Ww/EPQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RTqlW1vl2z30f4
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Aug 2023 21:20:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RVBJt2p2Jz2yW4
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Aug 2023 11:17:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=guoxuenan@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RTqlL1pBmz2yjD
-	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Aug 2023 21:20:12 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VqHOw5K_1692616803;
-Received: from 30.221.146.126(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VqHOw5K_1692616803)
-          by smtp.aliyun-inc.com;
-          Mon, 21 Aug 2023 19:20:04 +0800
-Message-ID: <1e0c8826-7e6b-0eae-336d-2d3902e0cc3f@linux.alibaba.com>
-Date: Mon, 21 Aug 2023 19:20:00 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RVBJm6tPPz2y1Y
+	for <linux-erofs@lists.ozlabs.org>; Tue, 22 Aug 2023 11:16:56 +1000 (AEST)
+Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RVBF70q64zLp9X;
+	Tue, 22 Aug 2023 09:13:47 +0800 (CST)
+Received: from [10.174.177.238] (10.174.177.238) by
+ kwepemi500019.china.huawei.com (7.221.188.117) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 22 Aug 2023 09:16:50 +0800
+Message-ID: <039de23f-7a72-7863-5718-d7f8eaaafdce@huawei.com>
+Date: Tue, 22 Aug 2023 09:16:49 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v2] erofs-utils: sbi->devs should be cleared after freed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [RFC PATCH] erofs-utils: mkfs: introduce multi-thread compression
 Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20230821070901.121008-1-hsiangkao@linux.alibaba.com>
- <20230821093929.17146-1-hsiangkao@linux.alibaba.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20230821093929.17146-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>,
+	Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+References: <20230819180104.4824-1-zhaoyifan@sjtu.edu.cn>
+ <8e890c0d-bddb-139d-def0-9e5fac977d37@linux.alibaba.com>
+ <3c645595-e612-f6a2-f301-4bc28f845a6d@huawei.com>
+ <ea93ff7d-fa24-5151-0504-020f0278c57b@linux.alibaba.com>
+In-Reply-To: <ea93ff7d-fa24-5151-0504-020f0278c57b@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.238]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500019.china.huawei.com (7.221.188.117)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,63 +65,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Guo Xuenan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Guo Xuenan <guoxuenan@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi  Xiang,
 
+On 2023/8/21 13:20, Gao Xiang wrote:
+>
+>
+> On 2023/8/21 13:11, Guo Xuenan via Linux-erofs wrote:
+>> Hi，Xiang
+>>
+>> Is there a develop branch for multi-thread compression，
+>> then we can work together to make it better.
+>
+> If needed, an erofs-utils fork can be made for collaboration
+> on github.
+>
+> What's your github username (and yifan's github username as
+> well)?  Let me send some invitation to you.
+>
+OK, got the invitation, thanks  :)
 
-On 8/21/23 5:39 PM, Gao Xiang wrote:
-> Otherwise, it could cause double-free if sbi reuses
-> when fuzzing [1].
-> 
-> [1] https://github.com/erofs/erofsnightly/actions/runs/5921003885/job/16053013007
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-LGTM.
-
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-
-> ---
-> changes since v1:
->  - add a missing sbi->devs = NULL in erofs_init_devices().
-> 
->  lib/super.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/super.c b/lib/super.c
-> index 58e2574..38caf4d 100644
-> --- a/lib/super.c
-> +++ b/lib/super.c
-> @@ -53,6 +53,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
->  		ret = dev_read(sbi, 0, &dis, pos, sizeof(dis));
->  		if (ret < 0) {
->  			free(sbi->devs);
-> +			sbi->devs = NULL;
->  			return ret;
->  		}
->  
-> @@ -123,14 +124,18 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
->  		return ret;
->  
->  	ret = erofs_xattr_prefixes_init(sbi);
-> -	if (ret)
-> +	if (ret && sbi->devs) {
->  		free(sbi->devs);
-> +		sbi->devs = NULL;
-> +	}
->  	return ret;
->  }
->  
->  void erofs_put_super(struct erofs_sb_info *sbi)
->  {
-> -	if (sbi->devs)
-> +	if (sbi->devs) {
->  		free(sbi->devs);
-> +		sbi->devs = NULL;
-> +	}
->  	erofs_xattr_prefixes_cleanup(sbi);
->  }
-
+Best regards
+Xuenan
+> Thanks,
+> Gao Xiang
+>
+>>
+>> Thanks
+>> Xuenan
+>
 -- 
-Thanks,
-Jingbo
+Guo Xuenan [OS Kernel Lab]
+-----------------------------
+Email: guoxuenan@huawei.com
+
