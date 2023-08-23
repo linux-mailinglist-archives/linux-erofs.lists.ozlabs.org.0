@@ -2,39 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED68C785BF0
-	for <lists+linux-erofs@lfdr.de>; Wed, 23 Aug 2023 17:23:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BE49785BF3
+	for <lists+linux-erofs@lfdr.de>; Wed, 23 Aug 2023 17:23:09 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Xw+CuoaD;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RW92V5YHmz3c5P
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Aug 2023 01:22:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RW92g2C3wz3c5P
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Aug 2023 01:23:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Xw+CuoaD;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RW92M5wFCz2yhZ
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Aug 2023 01:22:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VqQfGU._1692804159;
-Received: from 30.25.196.234(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VqQfGU._1692804159)
-          by smtp.aliyun-inc.com;
-          Wed, 23 Aug 2023 23:22:43 +0800
-Message-ID: <4f6d7e71-d989-03d7-0d7b-832a539d1f36@linux.alibaba.com>
-Date: Wed, 23 Aug 2023 23:22:39 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RW92c0tmNz2yhZ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Aug 2023 01:23:04 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 571116355C;
+	Wed, 23 Aug 2023 15:23:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CBBC433CA;
+	Wed, 23 Aug 2023 15:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692804181;
+	bh=MwvciWjJAxrGTHVjYjuHMxSMWQJURLQ+4pJNMNFITpw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xw+CuoaDzA4jVZFlSn4MdBYYlizTsgBZIk+RD988KutEHGl9ju/msFCSCTbPLB1JB
+	 0SDd/DlnaUfs5uiAo+J3fGMmFpPAOb7z7PHlodg+J6ONfyuqWVw5npXxBWrmP9uBft
+	 wCuYbihiWAl8JSZuTCsKdtMuyVsf3fd/gFiKyIN6vJNWYRRJKryiDRu3kD3qeNmiBd
+	 j5kvnaEXMZrAmeUg+zLVFx65M8aJukNVgNgHTvSlCps9pFUolgXhPJIOx7LFmgu+Qy
+	 Qc4lt4G4m64HgHcd8kgDEzO/xOpmCZuUOjV/x4XmAk42rNUgDvCVnjjZm9woC26P1B
+	 jdAaz2b5FGC7w==
+Message-ID: <4994e087-47cc-6b32-1daf-abf7026bdca4@kernel.org>
+Date: Wed, 23 Aug 2023 23:22:59 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH 3/8] erofs: move preparation logic into
- z_erofs_pcluster_begin()
-To: Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 7/8] erofs: adapt folios for z_erofs_readahead()
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20230817082813.81180-1-hsiangkao@linux.alibaba.com>
- <20230817082813.81180-3-hsiangkao@linux.alibaba.com>
- <48235010-25e4-341f-77a3-a3399af3b6be@kernel.org>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <48235010-25e4-341f-77a3-a3399af3b6be@kernel.org>
+ <20230817082813.81180-7-hsiangkao@linux.alibaba.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20230817082813.81180-7-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,88 +69,21 @@ Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2023/8/23 23:05, Chao Yu wrote:
-> On 2023/8/17 16:28, Gao Xiang wrote:
->> Some preparation logic should be part of z_erofs_pcluster_begin()
->> instead of z_erofs_do_read_page().  Let's move now.
->>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/zdata.c | 59 +++++++++++++++++++++---------------------------
->>   1 file changed, 26 insertions(+), 33 deletions(-)
->>
->> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->> index 4ed99346c4e1..30ecdfe41836 100644
->> --- a/fs/erofs/zdata.c
->> +++ b/fs/erofs/zdata.c
->> @@ -852,7 +852,10 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
->>   static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
->>   {
->>       struct erofs_map_blocks *map = &fe->map;
->> +    struct super_block *sb = fe->inode->i_sb;
->> +    erofs_blk_t blknr = erofs_blknr(sb, map->m_pa);
->>       struct erofs_workgroup *grp = NULL;
->> +    void *mptr;
->>       int ret;
->>       DBG_BUGON(fe->pcl);
->> @@ -861,8 +864,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
->>       DBG_BUGON(fe->owned_head == Z_EROFS_PCLUSTER_NIL);
->>       if (!(map->m_flags & EROFS_MAP_META)) {
->> -        grp = erofs_find_workgroup(fe->inode->i_sb,
->> -                       map->m_pa >> PAGE_SHIFT);
->> +        grp = erofs_find_workgroup(sb, blknr);
->>       } else if ((map->m_pa & ~PAGE_MASK) + map->m_plen > PAGE_SIZE) {
->>           DBG_BUGON(1);
->>           return -EFSCORRUPTED;
->> @@ -881,9 +883,24 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
->>       } else if (ret) {
->>           return ret;
->>       }
->> +
->>       z_erofs_bvec_iter_begin(&fe->biter, &fe->pcl->bvset,
->>                   Z_EROFS_INLINE_BVECS, fe->pcl->vcnt);
->> -    /* since file-backed online pages are traversed in reverse order */
->> +    if (!z_erofs_is_inline_pcluster(fe->pcl)) {
->> +        /* bind cache first when cached decompression is preferred */
->> +        z_erofs_bind_cache(fe);
->> +    } else {
+On 2023/8/17 16:28, Gao Xiang wrote:
+> It's a straight-forward conversion except that readahead_folio()
+> will do folio_put() in advance but it doesn't matter since folios
+> are still locked.
 > 
-> Nitpick, mptr can be defined here.
-
-Okay, will apply the following diff directly:
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 3730775650f4..036f610e044b 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -848,7 +848,6 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
-         struct super_block *sb = fe->inode->i_sb;
-         erofs_blk_t blknr = erofs_blknr(sb, map->m_pa);
-         struct erofs_workgroup *grp = NULL;
--       void *mptr;
-         int ret;
-
-         DBG_BUGON(fe->pcl);
-@@ -883,6 +882,8 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
-                 /* bind cache first when cached decompression is preferred */
-                 z_erofs_bind_cache(fe);
-         } else {
-+               void *mptr;
-+
-                 mptr = erofs_read_metabuf(&map->buf, sb, blknr, EROFS_NO_KMAP);
-                 if (IS_ERR(mptr)) {
-                         ret = PTR_ERR(mptr);
-
+> As before, since file-backed folios (pages for now) are locked, so
+> we could temporarily use folio->private as an internal counter to
+> indicate split parts of each folio for the corresponding pclusters
+> to decompress.
 > 
-> Reviewed-by: Chao Yu <chao@kernel.org>
+> When such counter becomes zero, the folio will be finally unlocked
+> (see compress.h and z_erofs_onlinepage_endio()).
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Thanks!
+Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> 
