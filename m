@@ -1,82 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A2807865F4
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Aug 2023 05:44:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1692848691;
-	bh=lY6Vi/2E/8aKoDMoFhdgeDuzJGEBhcHcwJKxLN5aRm4=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=c/xcJH6MG3KhS3K/32mw5unyX4JzdoIzcTR6LJpjkF+tLh+jAiPmtv+rYOZwMq2TW
-	 /9l9nlEvHU7eJeKjYX5pXFsF03QrCmayzoAQYxfgKJxDAMV9oYxMpIJclfV6ws+lmj
-	 +Pz5fht+lJXPAu5xxZ7AzUf0ODySvlkBdvk+6l/YQZ4/YnsalseVCeNurqjJTnDXJo
-	 S9NW3ImXAWbu+94gVY5Qp/uHtyiHCGDJtvVCyREpI1Fs7BXhkLXVJ/EgE+ZnucVx7L
-	 dhyRrJUc8ydVOzp9+AR7dhyKdyjF9wW4x+1unGMr9BeHEHyCVvUPz65NTnnoA3pHOP
-	 x0OzWDZSpOCNw==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E08A478773B
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Aug 2023 19:44:02 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=qIxr9oe0;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RWTVW6gv6z3c5K
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Aug 2023 13:44:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RWr6m3jSmz3c5C
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Aug 2023 03:44:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=gHtaEy0l;
+	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=qIxr9oe0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::236; helo=mail-oi1-x236.google.com; envelope-from=zhengqi.arch@bytedance.com; receiver=lists.ozlabs.org)
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::1132; helo=mail-yw1-x1132.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org)
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RWTVP0lWrz2xdl
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Aug 2023 13:44:43 +1000 (AEST)
-Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3a86b1114ceso349122b6e.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 23 Aug 2023 20:44:43 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RWr6g0YWZz3c5C
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Aug 2023 03:43:53 +1000 (AEST)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-59209b12c50so1878527b3.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Aug 2023 10:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1692899030; x=1693503830;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ibk2ad6vG++zB2qc8IXBxsKxSt1w/IwmNZC2NEjluRE=;
+        b=qIxr9oe0HywRUtldztNfAtTx22zWsEw+rH1C9bBejbTexZsytRTq64f5uQRnk0YsT4
+         4ovHFZHyZauXkAmn5MyDNZQulPBfkPGG4Wb5ClpxbYenrVUHDb1Q1FyfhvLdgJIqZjSf
+         Ml/aC8s+0TCjrOmS0JIkAjunwEeTiaLkn+3n4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692848681; x=1693453481;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lY6Vi/2E/8aKoDMoFhdgeDuzJGEBhcHcwJKxLN5aRm4=;
-        b=Lu6tFaujtahKK3t2EP5wj6Sx5/XaJLDaZGQ5WuCoCQAvokoZKYWYi1dwd9fEZwRO5s
-         wGwtmsG1Po8Ee03oueRZ44XS2FZTL7I083QideQNEGZxL3CB6nLvh/hcM8AcpUfqr/FC
-         9nURxZKH6xMi0aQn7eNOoTCxs77k3+csAAdDDhnRpSlxeNONSEdw+vCJpNA9aQEc2JgP
-         R0N0rXX5+inMWRK4q1dnmLyfzU4KJTf6r0fqAwQbelL+13BIc2YHN5YI+Zg7FyupAofP
-         qIu8yeOE6Z9fYjhQ0jPD3fRVaqeXDR7GduXN/nYQhS4He7zHUOSV6uDbfu+Q1Z8ZKy8z
-         Il3w==
-X-Gm-Message-State: AOJu0Yzr2JCP/RI85WrQPG1GrE2yT/9gHVErBRgo5c9jmYIxkEl/ihsV
-	UAdSIonzhUl/jDk14xfg1UGNzQ==
-X-Google-Smtp-Source: AGHT+IGSn8aXVXktFOZZa/BcVGbtb8f6zEZDLrwOYj68DXtiQe8FLStK6m/pgQCqQbi7Z2XDHrDQOQ==
-X-Received: by 2002:a05:6808:30a7:b0:3a7:2eb4:ce04 with SMTP id bl39-20020a05680830a700b003a72eb4ce04mr17475307oib.5.1692848680931;
-        Wed, 23 Aug 2023 20:44:40 -0700 (PDT)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id t6-20020a63b246000000b005579f12a238sm10533157pgo.86.2023.08.23.20.44.31
+        d=1e100.net; s=20221208; t=1692899030; x=1693503830;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ibk2ad6vG++zB2qc8IXBxsKxSt1w/IwmNZC2NEjluRE=;
+        b=HIhXe0VF2xG4sRkzSb7IDmY+65sn0UzEc6WdFLD3A2rxPThd5ca4Nz9hpFA0MCrl2e
+         dCf6NogWAje3bNRlw7jJM8i7tG/goJ7wW+SegMsS94lepMVUK2kiMIheeANwm3CD9ufJ
+         fh3gP9aFI8Y1+oWrmVqOuu//LgeaiU3zzjddYb489qMGRwQ4c2k7ecKGMHqTpO8Fxmwp
+         v3popV31RIh+jmYpTO/mxh90UIxMw4HOnRPRoM/s/H3xicIYdgU3TzwVhV17Mc4YM/7K
+         7zDdDBPufgq98hx622844mns83s5phf/1cHUMxKtFYZVD3n+u1rz1Q0m1r21mcMbvk+I
+         CCew==
+X-Gm-Message-State: AOJu0YyJkwZvojJAqg7XL1098ANTrDN9mynBYCfkDggHL7TMHho6+mpV
+	YwxRpEIh5AQXQ4OXYMBbKkMKZQ==
+X-Google-Smtp-Source: AGHT+IHWk0nWPORQqHZmK8o8CGuea0600RU0NARnBcUi+5pQepIJCt76YoGvBD3NE+j1mVsOcFgJQA==
+X-Received: by 2002:a0d:d752:0:b0:58f:9cd8:9e4d with SMTP id z79-20020a0dd752000000b0058f9cd89e4dmr18774430ywd.46.1692899030170;
+        Thu, 24 Aug 2023 10:43:50 -0700 (PDT)
+Received: from bill-the-cat (2603-6081-7b00-6400-37ed-1199-bcc5-406f.res6.spectrum.com. [2603:6081:7b00:6400:37ed:1199:bcc5:406f])
+        by smtp.gmail.com with ESMTPSA id df5-20020a05690c0f8500b005928ba6806dsm12057ywb.97.2023.08.24.10.43.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Aug 2023 20:44:40 -0700 (PDT)
-To: akpm@linux-foundation.org,
-	david@fromorbit.com,
-	tkhai@ya.ru,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	paulmck@kernel.org,
-	tytso@mit.edu,
-	steven.price@arm.com,
-	cel@kernel.org,
-	senozhatsky@chromium.org,
-	yujie.liu@intel.com,
-	gregkh@linuxfoundation.org,
-	muchun.song@linux.dev
-Subject: [PATCH v5 06/45] erofs: dynamically allocate the erofs-shrinker
-Date: Thu, 24 Aug 2023 11:42:25 +0800
-Message-Id: <20230824034304.37411-7-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
-References: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
+        Thu, 24 Aug 2023 10:43:49 -0700 (PDT)
+Date: Thu, 24 Aug 2023 13:43:47 -0400
+From: Tom Rini <trini@konsulko.com>
+To: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH 00/24] bootstd: Support ChromiumOS better
+Message-ID: <20230824174347.GA2382340@bill-the-cat>
+References: <20230813142708.361456-1-sjg@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jNhTEQqbNpxBcVgD"
+Content-Disposition: inline
+In-Reply-To: <20230813142708.361456-1-sjg@chromium.org>
+X-Clacks-Overhead: GNU Terry Pratchett
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -88,62 +76,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Qi Zheng via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: linux-kernel@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>, linux-mm@kvack.org, Yue Hu <huyue2@coolpad.com>, Muchun Song <songmuchun@bytedance.com>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Marek Vasut <marex@denx.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Jose Marinho <jose.marinho@arm.com>, Dzmitry Sankouski <dsankouski@gmail.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Pavel Herrmann <morpheus.ibis@gmail.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, Joshua Watt <jpewhacker@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, U-Boot Mailing List <u-boot@lists.denx.de>, Nikhil M Jain <n-jain1@ti.com>, Tobias Waldekranz <tobias@waldekranz.com>, Bin Meng <bmeng.cn@gmail.com>, linux-erofs@lists.ozlabs.org, Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use new APIs to dynamically allocate the erofs-shrinker.
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Reviewed-by: Muchun Song <songmuchun@bytedance.com>
-CC: Gao Xiang <xiang@kernel.org>
-CC: Chao Yu <chao@kernel.org>
-CC: Yue Hu <huyue2@coolpad.com>
-CC: Jeffle Xu <jefflexu@linux.alibaba.com>
-CC: linux-erofs@lists.ozlabs.org
----
- fs/erofs/utils.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+--jNhTEQqbNpxBcVgD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index cc6fb9e98899..6e1a828e6ca3 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -270,19 +270,25 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
- 	return freed;
- }
- 
--static struct shrinker erofs_shrinker_info = {
--	.scan_objects = erofs_shrink_scan,
--	.count_objects = erofs_shrink_count,
--	.seeks = DEFAULT_SEEKS,
--};
-+static struct shrinker *erofs_shrinker_info;
- 
- int __init erofs_init_shrinker(void)
- {
--	return register_shrinker(&erofs_shrinker_info, "erofs-shrinker");
-+	erofs_shrinker_info = shrinker_alloc(0, "erofs-shrinker");
-+	if (!erofs_shrinker_info)
-+		return -ENOMEM;
-+
-+	erofs_shrinker_info->count_objects = erofs_shrink_count;
-+	erofs_shrinker_info->scan_objects = erofs_shrink_scan;
-+	erofs_shrinker_info->seeks = DEFAULT_SEEKS;
-+
-+	shrinker_register(erofs_shrinker_info);
-+
-+	return 0;
- }
- 
- void erofs_exit_shrinker(void)
- {
--	unregister_shrinker(&erofs_shrinker_info);
-+	shrinker_free(erofs_shrinker_info);
- }
- #endif	/* !CONFIG_EROFS_FS_ZIP */
--- 
-2.30.2
+On Sun, Aug 13, 2023 at 08:26:28AM -0600, Simon Glass wrote:
 
+> This updates the ChromiumOS bootmeth to detect multiple kernel partitions
+> on a disk.
+>=20
+> It also includes minor code improvements to the partition drivers,
+> including accessors for the optional fields.
+>=20
+> This series also includes some other related tweaks in testing.
+>=20
+> It is available at u-boot-dm/methb-working
+
+Please rebase this on top of current next, thanks.
+
+--=20
+Tom
+
+--jNhTEQqbNpxBcVgD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmTnlskACgkQFHw5/5Y0
+tyy7Swv+LjUacHIp/i+qatBi0yxY0inbYdYAaEaNEN01ZkHSZmET1yImpRJ0uA0j
+eEISAcLa913uAT3zmW3f0L/Fqz1/Tt6/aQsY5JJely7YuPd5FZGVh1FYNxgbkZi2
+zHxHmxMCCZ20ewmObH1xLcHMPKRs+xduaAd1ezteCI/Ibj8c97qEdlKg5DrJVBvI
+d4OREoM2lL7S/G1b4z0XkVbfg33lgYJcV2Uj6PULwxptc2akLjtIKMHPZJhUc+Yt
+pQYh1hCu2U0CF9y5k1fBomYYmrKiCOc541gEAeH3+wKtTaIUQLFIMdGsVK0C9AMz
+MeVl+6QvYy7oGBmEXCEPlqtreY/89c2TWgETQtL+WlI1yjtfuZhEmAS7hgCtm/xH
+5NJxznGCP9qNguk2biQ+UVTddh0pluQR1Xdw/CR26VCQ+byJjRcDM0a0mllAKZN3
+z52fht+v3zz+HPbOv/i1FYqInQdUNDvi2mA6KEYlvElXvcg7eeKTMgtvJcpxJpEq
+pm8d00gq
+=qhNI
+-----END PGP SIGNATURE-----
+
+--jNhTEQqbNpxBcVgD--
