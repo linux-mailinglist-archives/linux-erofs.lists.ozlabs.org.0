@@ -2,41 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEDE4787E10
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Aug 2023 04:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B287788736
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Aug 2023 14:28:02 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=r7Zyoejk;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RX4Kt3W2Wz3c9t
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Aug 2023 12:54:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RXK3f6hp5z2yWD
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Aug 2023 22:27:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=r7Zyoejk;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RX4Kl3pycz30NN
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Aug 2023 12:54:17 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0VqVRP4b_1692932044;
-Received: from 30.97.48.238(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VqVRP4b_1692932044)
-          by smtp.aliyun-inc.com;
-          Fri, 25 Aug 2023 10:54:07 +0800
-Message-ID: <d26b3da5-a3f6-f07b-e93f-d895eb230bf4@linux.alibaba.com>
-Date: Fri, 25 Aug 2023 10:54:03 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RXK3X6CBVz2yVQ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Aug 2023 22:27:52 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 8A12F61FFB;
+	Fri, 25 Aug 2023 12:27:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7141C433CB;
+	Fri, 25 Aug 2023 12:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692966467;
+	bh=X1sEmR7Wgo9iEx4Nm5FGEwpQOX2GMPaKb2K7hO0NWmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r7Zyoejkzwbp96OecrluACIPS19q3kRmBAIAhMXW9X6N3gDcuzK6W06bnJV8X00W+
+	 QQ2W0j+IHgi/b1O77QFPRD+Ho5mMoO+d/qLdM/tjCxsVEKAYnsSYDun3s0Hl7GlRaT
+	 4Fp1xxh1rwlfzvw1sYMR67VlStTY0jb4pIfAfLqWpo2bxKCs1Vxo9cBUSLQ0p6Z7BF
+	 EVYZrab9lBcUKigXaRDTDDw8XHAO0PtZW71bg0dmdRnj6622bz2LRZWLKbL7GGusXm
+	 rG8dAVbMdX7UbX4Jo9+Sogv6S+7eiP59Av2Y6LgP8mlVijqREN9oIqOtpZjb6h6ar5
+	 X/d0w/NZgZ9rg==
+Date: Fri, 25 Aug 2023 14:27:41 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 21/29] erofs: Convert to use bdev_open_by_path()
+Message-ID: <20230825-tosend-geldforderungen-6b4c43bcdcfe@brauner>
+References: <20230818123232.2269-1-jack@suse.cz>
+ <20230823104857.11437-21-jack@suse.cz>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v5 06/45] erofs: dynamically allocate the erofs-shrinker
-To: Qi Zheng <zhengqi.arch@bytedance.com>, akpm@linux-foundation.org,
- david@fromorbit.com, tkhai@ya.ru, vbabka@suse.cz, roman.gushchin@linux.dev,
- djwong@kernel.org, brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
- steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
- yujie.liu@intel.com, gregkh@linuxfoundation.org, muchun.song@linux.dev
-References: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
- <20230824034304.37411-7-zhengqi.arch@bytedance.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230824034304.37411-7-zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230823104857.11437-21-jack@suse.cz>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -48,24 +62,20 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, Yue Hu <huyue2@coolpad.com>, Muchun Song <songmuchun@bytedance.com>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2023/8/24 11:42, Qi Zheng wrote:
-> Use new APIs to dynamically allocate the erofs-shrinker.
+On Wed, Aug 23, 2023 at 12:48:32PM +0200, Jan Kara wrote:
+> Convert erofs to use bdev_open_by_path() and pass the handle around.
 > 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 > CC: Gao Xiang <xiang@kernel.org>
 > CC: Chao Yu <chao@kernel.org>
-> CC: Yue Hu <huyue2@coolpad.com>
-> CC: Jeffle Xu <jefflexu@linux.alibaba.com>
 > CC: linux-erofs@lists.ozlabs.org
+> Acked-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
+Looks good to me,
+Reviewed-by: Christian Brauner <brauner@kernel.org>
