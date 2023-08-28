@@ -2,58 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFE2878A3B0
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Aug 2023 02:49:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1D3F78B17C
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Aug 2023 15:21:18 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jXthRA8q;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dGzUUvJG;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RYsQ40QsFz30P3
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Aug 2023 10:49:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RZB5m5gN4z300f
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Aug 2023 23:21:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jXthRA8q;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dGzUUvJG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RYsPw3R7Cz2yTc
-	for <linux-erofs@lists.ozlabs.org>; Mon, 28 Aug 2023 10:49:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RZB5f03KKz2xdl
+	for <linux-erofs@lists.ozlabs.org>; Mon, 28 Aug 2023 23:21:09 +1000 (AEST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id A40706158B;
-	Mon, 28 Aug 2023 00:49:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87088C433C8;
-	Mon, 28 Aug 2023 00:49:00 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 1E9A96187E;
+	Mon, 28 Aug 2023 13:21:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6569C433C8;
+	Mon, 28 Aug 2023 13:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693183744;
-	bh=isLSogShEm+StyBle5cEQXjXtHddLdzVBe/ZdHNg4WI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jXthRA8qjPJ4vV3NfTOzbg7kDf8OtWAgJ2Ba/qojw/DmMBoPG3/PS36zVaKdJVG/C
-	 IfJOiSRcjPQFZX9LCyxnL3qW2s+9ikrq3CE8U/gpkx+vRs14lAWb+jjp34T0ZVaZIS
-	 TVfajmbqeLaylbUe/XAAd9q0tqBWCUqg1KArg0cK1pcNjMbggz6uMj/MQNsOR2mb1S
-	 gLLdZv9BLmFX5k4iqb38UDtPwwqISMmf55Ar1QByIC9TczIy9VIsoVXTwzrl46ucQ8
-	 Vca6kf5BpxMih+fYY87nXJr13DdqNzkS4C6ohRL9nbl7xaVIQaP+7ZTr3QPRrmor4a
-	 mcLoBJFXIFlYA==
-Date: Mon, 28 Aug 2023 08:48:50 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 6.6-rc1
-Message-ID: <ZOvu8n2Js03Oa7lN@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Ferry Meng <mengferry@linux.alibaba.com>,
-	Alexander Larsson <alexl@redhat.com>, Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>
+	s=k20201202; t=1693228864;
+	bh=QtirhpZ6M4wRBs0PcZuQKaZInNnIQCord7zI9oR3eYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dGzUUvJG87+eWzsz6xzROYCBNDl7W5LTOJNZSdrdj6kC4UZhu/D9tYCBTY1kzrQPe
+	 x7WILXB1VLYusnI7i57xbkDNp7AlezoIITxDEYtPZbpKeaRaDjmpnSpx19pqxTzCO1
+	 eHWv5jG6Kk405k0HzfGlQ5FnGrphH6RQF/qbsChQZpHtUi1E5k/RJY2W8E0veW1Pw4
+	 WmlHIAC8kSpEcFeEGWLjHX2ee4G742ubGUZGwha6A7RHD325wN5SUYbEQ3omUMFDG/
+	 CM1aA/cNlMXqkEYlHa/Phek8pvPKy4SQPmUA3IhuobWAQwG6yFUbEhG6jgGYrQO+H2
+	 J9dq9/E4F2ZeQ==
+Date: Mon, 28 Aug 2023 15:20:47 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2 0/29] block: Make blkdev_get_by_*() return handle
+Message-ID: <20230828-durften-hauswand-67319ee0c17c@brauner>
+References: <20230810171429.31759-1-jack@suse.cz>
+ <20230825015843.GB95084@ZenIV>
+ <20230825134756.o3wpq6bogndukn53@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20230825134756.o3wpq6bogndukn53@quack3>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,91 +63,17 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, LKML <linux-kernel@vger.kernel.org>, Ferry Meng <mengferry@linux.alibaba.com>, Alexander Larsson <alexl@redhat.com>, linux-erofs@lists.ozlabs.org
+Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, "Darrick J. Wong" <djwong@kernel.org>, linux-nvme@lists.infradead.org, Joseph Qi <joseph.qi@linux.alibaba.com>, dm-devel@redhat.com, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, Jack Wang <jinpu.wang@ionos.com>, Alasdair Kergon <agk@redhat.com>, drbd-dev@lists.linbit.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Christoph Hellwig <hch@infradead.org>, xen-devel@lists.xenproject.org, Christian Borntraeger <borntraeger@linux.ibm.com>, Kent Overstreet <kent.overstreet@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, linux-pm@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Joern Engel <joern@lazybastard.org>, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Trond
+  Myklebust <trond.myklebust@hammerspace.com>, Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Ted Tso <tytso@mit.edu>, linux-mm@kvack.org, Song Liu <song@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+> So besides my last fput() worry about I think this could work and would be
+> probably a bit nicer than what I have. But before going and redoing the whole
+> series let me gather some more feedback so that we don't go back and forth.
+> Christoph, Christian, Jens, any opinion?
 
-Could you consider this pull request for 6.6-rc1?
-
-In this cycle, xattr bloom filter feature is introduced to speed up
-negative xattr lookups, which was originally suggested by Alexander
-for Composefs use cases.
-
-Besides, DEFLATE algorithm is now supported, which can be used together
-with hardware accelerators for our cloud workloads.  Each supported
-compression algorithm can be selected on a per-file basis for specific
-access patterns too.
-
-There are some random fix and cleanups as usual.  All commits have been
-in -next for a while and no potential merge conflict is observed.
-
-Thanks,
-Gao Xiang
-
-The following changes since commit 52a93d39b17dc7eb98b6aa3edb93943248e03b2f:
-
-  Linux 6.5-rc5 (2023-08-06 15:07:51 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.6-rc1
-
-for you to fetch changes up to 91b1ad0815fbb1095c8b9e8a2bf4201186afe304:
-
-  erofs: release ztailpacking pclusters properly (2023-08-23 23:57:03 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Support xattr bloom filter to optimize negative xattr lookups;
-
- - Support DEFLATE compression algorithm as an alternative;
-
- - Fix a regression that ztailpacking pclusters don't release properly;
-
- - Avoid warning dedupe and fragments features anymore;
-
- - Some folio conversions and cleanups.
-
-----------------------------------------------------------------
-Ferry Meng (4):
-      erofs: refine warning messages for zdata I/Os
-      erofs: clean up redundant comment and adjust code alignment
-      erofs: add necessary kmem_cache_create flags for erofs inode cache
-      erofs: remove redundant erofs_fs_type declaration in super.c
-
-Gao Xiang (9):
-      erofs: DEFLATE compression support
-      erofs: simplify z_erofs_read_fragment()
-      erofs: avoid obsolete {collector,collection} terms
-      erofs: move preparation logic into z_erofs_pcluster_begin()
-      erofs: tidy up z_erofs_do_read_page()
-      erofs: drop z_erofs_page_mark_eio()
-      erofs: get rid of fe->backmost for cache decompression
-      erofs: adapt folios for z_erofs_readahead()
-      erofs: adapt folios for z_erofs_read_folio()
-
-Jingbo Xu (3):
-      erofs: update on-disk format for xattr name filter
-      erofs: boost negative xattr lookup with bloom filter
-      erofs: release ztailpacking pclusters properly
-
-sunshijie (1):
-      erofs: don't warn dedupe and fragments features anymore
-
- fs/erofs/Kconfig                |  16 +++
- fs/erofs/Makefile               |   1 +
- fs/erofs/compress.h             |   2 +
- fs/erofs/decompressor.c         |   6 +
- fs/erofs/decompressor_deflate.c | 247 ++++++++++++++++++++++++++++++++++++
- fs/erofs/erofs_fs.h             |  17 ++-
- fs/erofs/internal.h             |  23 ++++
- fs/erofs/super.c                |  44 +++----
- fs/erofs/xattr.c                |  14 ++
- fs/erofs/zdata.c                | 274 +++++++++++++++++-----------------------
- fs/erofs/zmap.c                 |   5 +-
- include/trace/events/erofs.h    |  16 +--
- 12 files changed, 467 insertions(+), 198 deletions(-)
- create mode 100644 fs/erofs/decompressor_deflate.c
+I'll be a bit under water for the next few days, I expect but I'll get
+back to this. I think not making you redo this whole thing from scratch
+is what I'd prefer unless there's really clear advantages. But I don't
+want to offer a haphazard opinion in the middle of the merge window.
