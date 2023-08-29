@@ -1,57 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25D5978CBB7
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Aug 2023 20:07:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD5F378CF9C
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 00:47:29 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YxtfCmyF;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=q1V5fHa/;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RZwPw3SDNz3bYc
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 04:07:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rb2cW0018z30Db
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 08:47:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YxtfCmyF;
+	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=q1V5fHa/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RZwPr2WBfz2ygT
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 04:07:44 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 15F5E63CA3;
-	Tue, 29 Aug 2023 18:07:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800F5C433C9;
-	Tue, 29 Aug 2023 18:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693332460;
-	bh=1CDXNyUw4y5DM7LJfAZa2+z3r8AtGNR77PlV9HtaVY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YxtfCmyFcqxOrS5csGoLeHwtQZZi0BTPHpiieEle6peAvLC34LtDBRtsZbOE5Z2tV
-	 4J6HB2yhwNgWmoXi1CMJv4kKvd0/yR49rTUsQFN0vHTYJUSLNd1MYeksal5779NifC
-	 KEr2rSt2PkX25Mi/4ZXOZdNJ/oU7aUwVO5ETn9pzPMgcpkJsIDDktFWMqHvAobQ5PO
-	 7HpjoU4VXRhSJofe76+R/0CfCQ9kvYlvlPNGRL5xIamzQAG59LnSwzqIqQxSQnKp1E
-	 tTYTnzLpScWVTUqsLNWWI2lrWS0pSeBuTwTwTalbw9b+1AwTGxH1Om05rAROHKldph
-	 zKGVeqs4GroAQ==
-Date: Wed, 30 Aug 2023 02:07:35 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v7 0/3] erofs-utils: introduce xattr name bloom filter
-Message-ID: <ZO4z5/l3bVC6aE+8@debian>
-Mail-Followup-To: Jingbo Xu <jefflexu@linux.alibaba.com>,
-	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
-References: <20230829145504.93567-1-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rb2cL4yfkz2yKy
+	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 08:47:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XGuBrJRA9Fd4AduQK/hSseIFrv8V5F+R7owbTsvIznw=; b=q1V5fHa/AXkRLdmnc9TtDTItxb
+	sjv5FpbdJarUSWDm8h5uqmHXkHTGtBOUlKVK5U/4PExCLqpYcowYZaV/PvP/kk1bfsDWLvRZIDMi6
+	J4YRKXkMJOy3sqhHWZHu4Fl1bfB/qtOHn3XYeh3dGmGOC0qbSQkD2Y+wYSoEusMnNBuy4+VyYQnkY
+	Lc4KlaQORaxPNCRh9pBUGO98Ft5v23nvU0WQJiozkEiistd3znn+J2fx0QgNh+u6E23YopsyfOSpr
+	Rmce2YRpGqgEixjkKJHtsYkWfKbeh3RTX6XJKjEhssGOmTvrkXGjl1f8Qxu8W6gub1Ziw1YBVxlnq
+	0FDl8ZIQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1qb7SA-001wYO-34;
+	Tue, 29 Aug 2023 22:44:55 +0000
+Date: Tue, 29 Aug 2023 23:44:54 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
+Message-ID: <20230829224454.GA461907@ZenIV>
+References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
+ <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230829145504.93567-1-jefflexu@linux.alibaba.com>
+In-Reply-To: <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,137 +57,27 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, Dave Chinner <david@fromorbit.com>, David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>, Andreas Dilger <adilger.kernel@dilger.ca>, Hans de Goede <hdegoede@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, codalist@coda.cs.cmu.edu, linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Andreas Gruenbacher <agruenba@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>, Hugh Dickins <hughd@google.com>, Tyler Hicks <code@tyhicks.com>, cluster-devel@redhat.com, coda@cs.cmu.edu, linux-mm@kvack.org,
+  linux-f2fs-devel@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, Iurii Zaikin <yzaikin@google.com>, Namjae Jeon <linkinjeon@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, Shyam Prasad N <sprasad@microsoft.com>, ecryptfs@vger.kernel.org, Kees Cook <keescook@chromium.org>, ocfs2-devel@lists.linux.dev, Anthony Iliopoulos <ailiop@suse.com>, Josef Bacik <josef@toxicpanda.com>, Tom Talpey <tom@talpey.com>, Tejun Heo <tj@kernel.org>, Yue Hu <huyue2@coolpad.com>, Joel Becker <jlbec@evilplan.org>, linux-mtd@lists.infradead.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org, Xiubo Li <xiubli@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Jan Harkes <jaharkes@cs.cmu.edu>, Christian Brauner <brauner@kernel.org>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Joseph Qi <joseph.qi@linux.alibaba.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, v9fs@lists.linux.dev, ntfs3@lists.linux.dev, samba
+ -technical@lists.samba.org, linux-kernel@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>, Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, devel@lists.orangefs.org, Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Sungjong Seo <sj1557.seo@samsung.com>, linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 29, 2023 at 10:55:01PM +0800, Jingbo Xu wrote:
-> changes since v6:
-> - patch 1: polish license disclaimer; tweak included headers (Gao Xiang)
-> - patch 2: drop unused `EROFS_XATTR_NAME_LEN_MAX`; polish commit message
->   (Gao Xiang)
-> - patch 3: add warning when failed to calculate hashbit; tweak code of
->   assigning `header->h_name_filter` (Gao Xiang)
->
+On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
+> generic_fillattr just fills in the entire stat struct indiscriminately
+> today, copying data from the inode. There is at least one attribute
+> (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
+> and we're looking at adding more with the addition of multigrain
+> timestamps.
+> 
+> Add a request_mask argument to generic_fillattr and have most callers
+> just pass in the value that is passed to getattr. Have other callers
+> (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
+> STATX_CHANGE_COOKIE into generic_fillattr.
 
-Applied with several update by hand, also I tend to append the following
-patch:
+Out of curiosity - how much PITA would it be to put request_mask into
+kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
+on smbd side) and don't bother with that kind of propagation boilerplate
+- just have generic_fillattr() pick it there...
 
-From 3142cab6c82a779096abbd24d8bd1b9b555997ac Mon Sep 17 00:00:00 2001
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Date: Wed, 30 Aug 2023 01:54:46 +0800
-Subject: [PATCH] erofs-utils: mkfs: enable xattr name filter feature by
- default
-
-Turn it on by default since it's a compatible feature.  Instead,
-it can be disabled explicitly with "-E^xattr-name-filter".
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/xattr.h |  2 +-
- lib/inode.c           |  4 ++--
- lib/xattr.c           |  6 +++++-
- mkfs/main.c           | 13 +++++++++++--
- 4 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 748442a..cf02257 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -76,7 +76,7 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
- 
- int erofs_scan_file_xattrs(struct erofs_inode *inode);
- int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
--char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
-+char *erofs_export_xattr_ibody(struct erofs_inode *inode);
- int erofs_build_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *path);
- 
- int erofs_xattr_insert_name_prefix(const char *prefix);
-diff --git a/lib/inode.c b/lib/inode.c
-index d54f84f..85eacab 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -574,8 +574,8 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- 	off += inode->inode_isize;
- 
- 	if (inode->xattr_isize) {
--		char *xattrs = erofs_export_xattr_ibody(&inode->i_xattrs,
--							inode->xattr_isize);
-+		char *xattrs = erofs_export_xattr_ibody(inode);
-+
- 		if (IS_ERR(xattrs))
- 			return false;
- 
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 65dd9a0..0cab29f 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -843,8 +843,10 @@ static u32 erofs_xattr_filter_map(struct list_head *ixattrs)
- 	return EROFS_XATTR_FILTER_DEFAULT & ~name_filter;
- }
- 
--char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
-+char *erofs_export_xattr_ibody(struct erofs_inode *inode)
- {
-+	struct list_head *ixattrs = &inode->i_xattrs;
-+	unsigned int size = inode->xattr_isize;
- 	struct inode_xattr_node *node, *n;
- 	struct erofs_xattr_ibody_header *header;
- 	LIST_HEAD(ilst);
-@@ -860,6 +862,8 @@ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
- 	if (cfg.c_xattr_name_filter) {
- 		header->h_name_filter =
- 			cpu_to_le32(erofs_xattr_filter_map(ixattrs));
-+		if (header->h_name_filter)
-+			erofs_sb_set_xattr_filter(inode->sbi);
- 	}
- 
- 	p = sizeof(struct erofs_xattr_ibody_header);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index fad80b1..1d136a9 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -145,6 +145,7 @@ static int parse_extended_opts(const char *opts)
- 
- 	value = NULL;
- 	for (token = opts; *token != '\0'; token = next) {
-+		bool clear = false;
- 		const char *p = strchr(token, ',');
- 
- 		next = NULL;
-@@ -168,6 +169,14 @@ static int parse_extended_opts(const char *opts)
- 			vallen = 0;
- 		}
- 
-+		if (token[0] == '^') {
-+			if (keylen < 2)
-+				return -EINVAL;
-+			++token;
-+			--keylen;
-+			clear = true;
-+		}
-+
- 		if (MATCH_EXTENTED_OPT("legacy-compress", token, keylen)) {
- 			if (vallen)
- 				return -EINVAL;
-@@ -249,8 +258,7 @@ handle_fragment:
- 		if (MATCH_EXTENTED_OPT("xattr-name-filter", token, keylen)) {
- 			if (vallen)
- 				return -EINVAL;
--			cfg.c_xattr_name_filter = true;
--			erofs_sb_set_xattr_filter(&sbi);
-+			cfg.c_xattr_name_filter = !clear;
- 		}
- 	}
- 	return 0;
-@@ -695,6 +703,7 @@ static void erofs_mkfs_default_options(void)
- {
- 	cfg.c_showprogress = true;
- 	cfg.c_legacy_compress = false;
-+	cfg.c_xattr_name_filter = true;
- 	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
- 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_ZERO_PADDING;
- 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
--- 
-2.30.2
-
+Reduces the patchset size quite a bit...
